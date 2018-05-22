@@ -156,7 +156,7 @@ class SmileysAdministration {
 
             $error = "";
             $error .= empty($this->data['smiley_image']) ? self::$locale['SMLY_418'] : "";
-            $error .= dbcount("(smiley_id)", DB_SMILEYS, "smiley_id !=:smileyid AND smiley_code=:smileycode", [':smileyid' =>intval($this->data['smiley_id']), ':smileycode' =>]$this->data['smiley_code']) ? self::$locale['SMLY_415'] : "";
+            $error .= dbcount("(smiley_id)", DB_SMILEYS, "smiley_id !=:smileyid AND smiley_code=:smileycode", [':smileyid' => intval($this->data['smiley_id']), ':smileycode' =>]$this->data['smiley_code']) ? self::$locale['SMLY_415'] : "";
             $error .= dbcount("(smiley_id)", DB_SMILEYS, "smiley_id !=:smileyid AND smiley_text=:smileytext", [':smileyid' => intval($this->data['smiley_id']), ':smileytext' => $this->data['smiley_text']]) ? self::$locale['SMLY_414'] : "";
 
             if (\defender::safe()) {

@@ -43,30 +43,30 @@ if (isset($_GET['id']) && isnum($_GET['id'])) {
 
 echo '<!DOCTYPE html>';
 echo '<html dir="'.fusion_get_locale('text-direction').'">';
-    echo '<head>';
-        echo '<meta charset="'.fusion_get_locale('charset').'"/>';
-        echo '<title>'.fusion_get_settings('sitename').'</title>';
-        echo '<link rel="stylesheet" type="text/css" href="'.THEME.'styles.css"/>';
-        if (!defined('NO_DEFAULT_CSS')) {
-            echo '<link rel="stylesheet" type="text/css" href="'.THEMES.'templates/default.min.css"/>';
-        }
-        echo '<meta http-equiv="refresh" content="2; url='.$urlprefix.$url.'" />';
-        echo render_favicons(defined('THEME_ICON') ? THEME_ICON : IMAGES.'favicons/');
-        echo \PHPFusion\OutputHandler::$pageHeadTags;
-    echo '</head>';
-    echo '<body>';
-        echo '<div class="align-center" style="margin-top: 15%;">';
-            echo '<img src="'.BASEDIR.fusion_get_settings('sitebanner').'" alt="'.fusion_get_settings('sitename').'"/><br/>';
-            echo '<a href="'.$urlprefix.$url.'" rel="nofollow">'.sprintf($locale['global_500'], $urlprefix.$url).'</a>';
-        echo '</div>';
+echo '<head>';
+echo '<meta charset="'.fusion_get_locale('charset').'"/>';
+echo '<title>'.fusion_get_settings('sitename').'</title>';
+echo '<link rel="stylesheet" type="text/css" href="'.THEME.'styles.css"/>';
+if (!defined('NO_DEFAULT_CSS')) {
+    echo '<link rel="stylesheet" type="text/css" href="'.THEMES.'templates/default.min.css"/>';
+}
+echo '<meta http-equiv="refresh" content="2; url='.$urlprefix.$url.'" />';
+echo render_favicons(defined('THEME_ICON') ? THEME_ICON : IMAGES.'favicons/');
+echo \PHPFusion\OutputHandler::$pageHeadTags;
+echo '</head>';
+echo '<body>';
+echo '<div class="align-center" style="margin-top: 15%;">';
+echo '<img src="'.BASEDIR.fusion_get_settings('sitebanner').'" alt="'.fusion_get_settings('sitename').'"/><br/>';
+echo '<a href="'.$urlprefix.$url.'" rel="nofollow">'.sprintf($locale['global_500'], $urlprefix.$url).'</a>';
+echo '</div>';
 
-        $fusion_jquery_tags = PHPFusion\OutputHandler::$jqueryTags;
-        if (!empty($fusion_jquery_tags)) {
-            $fusion_jquery_tags = \PHPFusion\Minifier::minify($fusion_jquery_tags, ['flaggedComments' => FALSE]);
-            echo "<script type='text/javascript'>$(function() { $fusion_jquery_tags; });</script>\n";
-        }
-        echo \PHPFusion\OutputHandler::$pageFooterTags;
-    echo '</body>';
+$fusion_jquery_tags = PHPFusion\OutputHandler::$jqueryTags;
+if (!empty($fusion_jquery_tags)) {
+    $fusion_jquery_tags = \PHPFusion\Minifier::minify($fusion_jquery_tags, ['flaggedComments' => FALSE]);
+    echo "<script type='text/javascript'>$(function() { $fusion_jquery_tags; });</script>\n";
+}
+echo \PHPFusion\OutputHandler::$pageFooterTags;
+echo '</body>';
 echo '</html>';
 
 if (ob_get_length() !== FALSE) {

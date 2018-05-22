@@ -172,12 +172,12 @@ class Members_Profile extends Members_Admin {
                             // Update thread last post author, date and id
                             $last_thread_post = dbarray(dbquery("SELECT post_id, post_author, post_datestamp FROM ".DB_FORUM_POSTS." WHERE thread_id=:thread_id ORDER BY post_id DESC LIMIT 0,1", [':thread_id' => $thread['thread_id']]));
                             dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost=:thread_lastpost, thread_lastpostid=:thread_lastpostid, thread_lastuser=:thread_lastuser WHERE thread_id=:thread_id",
-                            [
-                                ':thread_lastpost'   => $last_thread_post['post_datestamp'],
-                                ':thread_lastpostid' => $last_thread_post['post_id'],
-                                ':thread_lastuser'   => $last_thread_post['post_author'],
-                                ':thread_id'         => $thread['thread_id']
-                            ]);
+                                [
+                                    ':thread_lastpost'   => $last_thread_post['post_datestamp'],
+                                    ':thread_lastpostid' => $last_thread_post['post_id'],
+                                    ':thread_lastuser'   => $last_thread_post['post_author'],
+                                    ':thread_id'         => $thread['thread_id']
+                                ]);
                             // Update thread posts count
                             $posts_count = dbcount("(post_id)", DB_FORUM_POSTS, "thread_id=:thread_id", [':thread_id' => $thread['thread_id']]);
                             dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_postcount=:thread_postcount WHERE thread_id=:thread_id", [':thread_postcount' => $posts_count, ':thread_id' => $thread['thread_id']]);
@@ -185,12 +185,12 @@ class Members_Profile extends Members_Admin {
                             list($threadcount, $postcount) = dbarraynum(dbquery("SELECT COUNT(thread_id), SUM(thread_postcount) FROM ".DB_FORUM_THREADS." WHERE forum_id=:forum_id AND thread_lastuser=:thread_lastuser AND thread_hidden=:thread_hidden", [':forum_id' => $thread['forum_id'], ':thread_lastuser' => $user_id, ':thread_hidden' => '0']));
                             if (isnum($threadcount) && isnum($postcount)) {
                                 dbquery("UPDATE ".DB_FORUMS." SET forum_postcount=:forum_postcount, forum_threadcount=:forum_threadcount WHERE forum_id=:forum_id AND forum_lastuser=:forum_lastuser",
-                                [
-                                    ':forum_postcount'   => $postcount,
-                                    ':forum_threadcount' => $threadcount,
-                                    ':forum_id'          => $thread['forum_id'],
-                                    ':forum_lastuser'    => $user_id
-                                ]);
+                                    [
+                                        ':forum_postcount'   => $postcount,
+                                        ':forum_threadcount' => $threadcount,
+                                        ':forum_id'          => $thread['forum_id'],
+                                        ':forum_lastuser'    => $user_id
+                                    ]);
                             }
                         }
                     }
@@ -200,12 +200,12 @@ class Members_Profile extends Members_Admin {
                             // find the user one before the current user's post
                             $last_forum_post = dbarray(dbquery("SELECT post_id, post_author, post_datestamp FROM ".DB_FORUM_POSTS." WHERE forum_id=:forum_id ORDER BY post_id DESC LIMIT 0,1", [':forum_id' => $forum['forum_id']]));
                             dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost=:forum_lastpost, forum_lastuser=:forum_lastuser WHERE forum_id=:forum_id AND forum_lastuser=:forum_lastuser",
-                            [
-                                ':forum_lastpost' => $last_forum_post['post_datestamp'],
-                                ':forum_lastuser' => $last_forum_post['post_author'],
-                                ':forum_id'       => $forum['forum_id'],
-                                ':forum_lastuser' => $user_id
-                            ]);
+                                [
+                                    ':forum_lastpost' => $last_forum_post['post_datestamp'],
+                                    ':forum_lastuser' => $last_forum_post['post_author'],
+                                    ':forum_id'       => $forum['forum_id'],
+                                    ':forum_lastuser' => $user_id
+                                ]);
                         }
                     }
                     // Delete all threads that has been started by the user.

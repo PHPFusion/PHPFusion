@@ -124,7 +124,7 @@ class BannersAdministration {
             $master_tab_title['id'][] = 'banners_form';
             $master_tab_title['icon'][] = "";
         }
-        if (isset($_GET['section']) && $edit){
+        if (isset($_GET['section']) && $edit) {
             \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $master_tab_title['title'][1]]);
         }
 
@@ -144,7 +144,7 @@ class BannersAdministration {
     }
 
     public function list_banner() {
-    	$aidlink = fusion_get_aidlink();
+        $aidlink = fusion_get_aidlink();
         echo openform('bannerform', 'post', FUSION_SELF.$aidlink."&amp;section=banners_form");
         $banner1 = "<div class='pull-right btn-group'>";
         $banner1 .= "<a class='btn btn-default btn-sm' href='".FUSION_SELF.$aidlink."&amp;ref=banners_form&amp;section=banners_form&amp;action=edit&amp;banner_id=sitebanner1'><i class='fa fa-edit fa-fw'></i> ".self::$locale['edit']."</a>";
