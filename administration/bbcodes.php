@@ -105,16 +105,16 @@ function bbcode_form() {
     $__BBCODE__ = [];
 
     if ((isset($_GET['action']) && $_GET['action'] == "mup") && (isset($_GET['bbcode_id']) && isnum($_GET['bbcode_id']))) {
-        $data = dbarray(dbquery("SELECT bbcode_id FROM ".DB_BBCODES." WHERE bbcode_order='".intval($_GET['order'])."'"));
-        dbquery("UPDATE ".DB_BBCODES." SET bbcode_order=bbcode_order+1 WHERE bbcode_id='".$data['bbcode_id']."'");
-        dbquery("UPDATE ".DB_BBCODES." SET bbcode_order=bbcode_order-1 WHERE bbcode_id='".$_GET['bbcode_id']."'");
+        $data = dbarray(dbquery("SELECT bbcode_id FROM ".DB_BBCODES." WHERE bbcode_order=:bbcodeorder", [':bbcodeorder' => intval($_GET['order'])]));
+        dbquery("UPDATE ".DB_BBCODES." SET bbcode_order=bbcode_order+1 WHERE bbcode_id=:bbcodeid", [':bbcodeid' => $data['bbcode_id']]);
+        dbquery("UPDATE ".DB_BBCODES." SET bbcode_order=bbcode_order-1 WHERE bbcode_id=:bbcode", [':bbcode' => $_GET['bbcode_id']]);
         addNotice('info', $locale['BBCA_430']);
         redirect(clean_request('', ['section', 'action', 'bbcode_id', 'order'], FALSE));
 
     } else if ((isset($_GET['action']) && $_GET['action'] == "mdown") && (isset($_GET['bbcode_id']) && isnum($_GET['bbcode_id']))) {
-        $data = dbarray(dbquery("SELECT bbcode_id FROM ".DB_BBCODES." WHERE bbcode_order='".intval($_GET['order'])."'"));
-        dbquery("UPDATE ".DB_BBCODES." SET bbcode_order=bbcode_order-1 WHERE bbcode_id='".$data['bbcode_id']."'");
-        dbquery("UPDATE ".DB_BBCODES." SET bbcode_order=bbcode_order+1 WHERE bbcode_id='".$_GET['bbcode_id']."'");
+        $data = dbarray(dbquery("SELECT bbcode_id FROM ".DB_BBCODES." WHERE bbcode_order=:bbcodeorder", [':bbcodeorder' => intval($_GET['order'])]));
+        dbquery("UPDATE ".DB_BBCODES." SET bbcode_order=bbcode_order-1 WHERE bbcode_id=:bbcodeid", [':bbcodeid' => $data['bbcode_id']]);
+        dbquery("UPDATE ".DB_BBCODES." SET bbcode_order=bbcode_order+1 WHERE bbcode_id=:bbcode", [':bbcode' => $_GET['bbcode_id']]);
         addNotice('info', $locale['BBCA_431']);
         redirect(clean_request('', ['section', 'action', 'bbcode_id', 'order'], FALSE));
 
@@ -136,11 +136,11 @@ function bbcode_form() {
         redirect(clean_request('', ['section', 'enable'], FALSE));
 
     } else if (isset($_GET['disable']) && isnum($_GET['disable'])) {
-        dbquery("DELETE FROM ".DB_BBCODES." WHERE bbcode_id='".$_GET['disable']."'");
+        dbquery("DELETE FROM ".DB_BBCODES." WHERE bbcode_id=:bbcodeid", [':bbcodeid' => $_GET['disable']]);
         $result = dbquery("SELECT bbcode_order FROM ".DB_BBCODES." ORDER BY bbcode_order");
         $order = 1;
         while ($data = dbarray($result)) {
-            dbquery("UPDATE ".DB_BBCODES." SET bbcode_order='".$order."' WHERE bbcode_order='".$data['bbcode_order']."'");
+            dbquery("UPDATE ".DB_BBCODES." SET bbcode_order=:norder WHERE bbcode_order=:bbcodeorder", [':norder' => $order, ':bbcodeorder' => $data['bbcode_order']]);
             $order++;
         }
         addNotice('warning', $locale['BBCA_433']);

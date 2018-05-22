@@ -154,21 +154,18 @@ echo form_text('template_sender_name', $data['template_key'] == "CONTACT" ? $loc
     'required'   => TRUE,
     'error_text' => $locale['MAIL_017'],
     'inline'     => TRUE,
-    'class'      => 'm-b-0'
+    'class'      => 'm-b-0',
+    'ext_tip'    => ($data['template_key'] == "CONTACT" ? $locale['MAIL_018'] : '')
 ]);
 
-if ($data['template_key'] == "CONTACT") {
-    echo "<p><small>** ".$locale['MAIL_018']."</small>\n</p>\n";
-}
 echo form_text('template_sender_email', $data['template_key'] == "CONTACT" ? $locale['MAIL_019'] : $locale['MAIL_020'], $data['template_sender_email'], [
     'required'   => TRUE,
     'error_text' => $locale['MAIL_021'],
     'inline'     => TRUE,
     'class'      => 'm-b-0',
+    'ext_tip'    => ($data['template_key'] == "CONTACT" ? $locale['MAIL_018'] : '')
+
 ]);
-if ($data['template_key'] == "CONTACT") {
-    echo "<p><small>** ".$locale['MAIL_022']."</small>\n</p>\n";
-}
 echo "</div>\n";
 echo "<div class='col-xs-12 col-sm-4'>\n";
 openside("");

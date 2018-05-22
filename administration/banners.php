@@ -34,14 +34,14 @@ class BannersAdministration {
                 if (empty($_GET['banner_id'])) {
                     \defender::stop();
                     addNotice('danger', self::$locale['BN_014']);
-                    redirect(clean_request("", ["section=banners_list", "aid"], TRUE));
+                    redirect(clean_request('', ['section=banners_list', 'aid'], TRUE));
                 }
                 break;
             default:
                 break;
         }
 
-        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'banners.php'.fusion_get_aidlink(), "title" => self::$locale['BN_000']]);
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'banners.php'.fusion_get_aidlink(), 'title' => self::$locale['BN_000']]);
     }
 
     public static function getInstance() {
@@ -57,31 +57,31 @@ class BannersAdministration {
         if (isset($_POST['upload_banner'])) {
             if (\defender::safe()) {
                 if (!empty($_FILES['banner_image']) && is_uploaded_file($_FILES['banner_image']['tmp_name'])) {
-                    $upload = form_sanitizer($_FILES['banner_image'], "", "banner_image");
+                    $upload = form_sanitizer($_FILES['banner_image'], '', 'banner_image');
                     if ($upload['error'] == 0) {
                         addNotice('success', self::$locale['BN_010']);
-                        redirect(clean_request("", ["section=banners_list", "aid"], TRUE));
+                        redirect(clean_request('', ['section=banners_list', 'aid'], TRUE));
                     }
                 } else {
                     addNotice('danger', self::$locale['BN_011']);
-                    redirect(clean_request("", ["section=banners_list", "aid"], TRUE));
+                    redirect(clean_request('', ['section=banners_list', 'aid'], TRUE));
                 }
             }
         }
 
         if (isset($_POST['save_banners'])) {
             $settings_main = [
-                'sitebanner1' => isset($_POST['sitebanner1']) ? addslash($_POST['sitebanner1']) : self::$banner_settings['sitebanner1'],
-                'sitebanner2' => isset($_POST['sitebanner2']) ? addslash($_POST['sitebanner2']) : self::$banner_settings['sitebanner2'],
+                'sitebanner1' => isset($_POST['sitebanner1']) ? descript(addslashes($_POST['sitebanner1'])) : self::$banner_settings['sitebanner1'],
+                'sitebanner2' => isset($_POST['sitebanner2']) ? descript(addslashes($_POST['sitebanner2'])) : self::$banner_settings['sitebanner2'],
             ];
 
             if (\defender::safe()) {
                 foreach ($settings_main as $settings_key => $settings_value) {
-                    dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_value."' WHERE settings_name='".$settings_key."'");
+                    dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:value WHERE settings_name=:name", [':value' => $settings_value, ':name' => $settings_key]);
                     addNotice('success', self::$locale['BN_012']);
                 }
 
-                redirect(clean_request("", ["section=banners_list", "aid"], TRUE));
+                redirect(clean_request('', ['section=banners_list', 'aid'], TRUE));
             }
         }
 
@@ -93,32 +93,45 @@ class BannersAdministration {
 
             if (\defender::safe()) {
                 foreach ($settings_main as $settings_key => $settings_value) {
-                    dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_value."' WHERE settings_name='".$settings_key."'");
+                    dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:value WHERE settings_name=:name", [':value' => $settings_value, ':name' => $settings_key]);
                 }
                 addNotice('warning', self::$locale['BN_013']);
-                redirect(clean_request("", ["section=banners_list", "aid"], TRUE));
+                redirect(clean_request('', ['section=banners_list', 'aid'], TRUE));
             }
         }
     }
 
     public function display_admin() {
         opentable(self::$locale['BN_000']);
-        $allowed_section = ["banners_form", "banners_list", "bannerUp_form"];
+        $allowed_section = ['banners_form', 'banners_list', 'bannerUp_form'];
+        if (isset($_GET['section']) && $_GET['section'] == "back") {
+            redirect(clean_request('', ['ref', 'section', 'action', 'banner_id'], FALSE));
+        }
         $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_section) ? $_GET['section'] : 'banners_list';
         $edit = (isset($_GET['action']) && $_GET['action'] == 'edit') ? TRUE : FALSE;
+
+        if (!empty($_GET['ref']) || isset($_GET['banner_id'])) {
+            $master_tab_title['title'][] = self::$locale['back'];
+            $master_tab_title['id'][] = "back";
+            $master_tab_title['icon'][] = "fa fa-fw fa-arrow-left";
+        }
         $master_tab_title['title'][] = self::$locale['BN_000'];
         $master_tab_title['id'][] = 'banners_list';
+        $master_tab_title['icon'][] = "";
 
         if ($edit) {
             $master_tab_title['title'][] = self::$locale['edit'];
             $master_tab_title['id'][] = 'banners_form';
+            $master_tab_title['icon'][] = "";
+        }
+        if (isset($_GET['section']) && $edit){
+            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $master_tab_title['title'][1]]);
         }
 
         echo opentab($master_tab_title, $_GET['section'], 'banners_list', TRUE, 'nav-tabs m-b-20');
         switch ($_GET['section']) {
             case "banners_form":
                 if ($edit) {
-                    \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, "title" => $master_tab_title['title'][1]]);
                     $this->bannerForm();
                 }
                 break;
@@ -131,10 +144,11 @@ class BannersAdministration {
     }
 
     public function list_banner() {
-        echo openform('bannerform', 'post', FUSION_SELF.fusion_get_aidlink()."&amp;section=banners_form");
+    	$aidlink = fusion_get_aidlink();
+        echo openform('bannerform', 'post', FUSION_SELF.$aidlink."&amp;section=banners_form");
         $banner1 = "<div class='pull-right btn-group'>";
-        $banner1 .= "<a class='btn btn-default btn-sm' href='".FUSION_SELF.fusion_get_aidlink()."&amp;section=banners_form&amp;action=edit&amp;banner_id=sitebanner1'><i class='fa fa-edit fa-fw'></i> ".self::$locale['edit']."</a>";
-        $banner1 .= "<a class='btn btn-danger btn-sm' href='".FUSION_SELF.fusion_get_aidlink()."&amp;section=banners_list&amp;action=delete&amp;banner_id=sitebanner1' onclick=\"return confirm('".self::$locale['BN_015']."');\"><i class='fa fa-trash fa-fw'></i> ".self::$locale['delete']."</a>";
+        $banner1 .= "<a class='btn btn-default btn-sm' href='".FUSION_SELF.$aidlink."&amp;ref=banners_form&amp;section=banners_form&amp;action=edit&amp;banner_id=sitebanner1'><i class='fa fa-edit fa-fw'></i> ".self::$locale['edit']."</a>";
+        $banner1 .= "<a class='btn btn-danger btn-sm' href='".FUSION_SELF.$aidlink."&amp;section=banners_list&amp;action=delete&amp;banner_id=sitebanner1' onclick=\"return confirm('".self::$locale['BN_015']."');\"><i class='fa fa-trash fa-fw'></i> ".self::$locale['delete']."</a>";
         $banner1 .= "</div>\n";
         openside(self::$locale['sitebanner1'].$banner1);
         if (!empty(self::$banner_settings['sitebanner1'])) {
@@ -142,8 +156,8 @@ class BannersAdministration {
         }
         closeside();
         $banner2 = "<div class='pull-right btn-group'>";
-        $banner2 .= "<a class='btn btn-default btn-sm' href='".FUSION_SELF.fusion_get_aidlink()."&amp;section=banners_form&amp;action=edit&amp;banner_id=sitebanner2'><i class='fa fa-edit fa-fw'></i> ".self::$locale['edit']."</a>";
-        $banner2 .= "<a class='btn btn-danger btn-sm' href='".FUSION_SELF.fusion_get_aidlink()."&amp;section=banners_list&amp;action=delete&amp;banner_id=sitebanner2' onclick=\"return confirm('".self::$locale['BN_015']."');\"><i class='fa fa-trash fa-fw'></i> ".self::$locale['delete']."</a>";
+        $banner2 .= "<a class='btn btn-default btn-sm' href='".FUSION_SELF.$aidlink."&amp;ref=banners_form&amp;section=banners_form&amp;action=edit&amp;banner_id=sitebanner2'><i class='fa fa-edit fa-fw'></i> ".self::$locale['edit']."</a>";
+        $banner2 .= "<a class='btn btn-danger btn-sm' href='".FUSION_SELF.$aidlink."&amp;section=banners_list&amp;action=delete&amp;banner_id=sitebanner2' onclick=\"return confirm('".self::$locale['BN_015']."');\"><i class='fa fa-trash fa-fw'></i> ".self::$locale['delete']."</a>";
         $banner2 .= "</div>\n";
         openside(self::$locale['sitebanner2'].$banner2);
         if (!empty(self::$banner_settings['sitebanner2'])) {

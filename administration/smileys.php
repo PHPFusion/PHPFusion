@@ -46,7 +46,7 @@ class SmileysAdministration {
                     $this->data = self::load_smileys($_GET['smiley_id']);
                     $this->formaction = FUSION_SELF.$aidlink."&amp;section=smiley_form&amp;action=edit&amp;smiley_id=".$_GET['smiley_id'];
                 } else {
-                    redirect(FUSION_SELF.$aidlink);
+                    redirect(FUSION_REQUEST);
                 }
                 break;
             case 'delete':
@@ -97,7 +97,7 @@ class SmileysAdministration {
         if (isnum($id)) {
             $result = dbquery("SELECT smiley_id, smiley_code, smiley_image, smiley_text
             FROM ".DB_SMILEYS."
-            WHERE smiley_id='".intval($id)."'"
+            WHERE smiley_id=:smileyid", [':smileyid' => intval($id)]
             );
             if (dbrows($result) > 0) {
                 return dbarray($result);
@@ -109,7 +109,7 @@ class SmileysAdministration {
 
     static function verify_smileys($id) {
         if (isnum($id)) {
-            return dbcount("(smiley_id)", DB_SMILEYS, "smiley_id='".intval($id)."'");
+            return dbcount("(smiley_id)", DB_SMILEYS, "smiley_id=:smileyid", [':smileyid' => intval($id)]);
         }
 
         return FALSE;
@@ -118,14 +118,14 @@ class SmileysAdministration {
     private static function delete_smileys($id) {
         if (self::verify_smileys($id)) {
             $data = self::load_smileys($id);
-            dbquery("DELETE FROM ".DB_SMILEYS." WHERE smiley_id='".intval($id)."'");
+            dbquery("DELETE FROM ".DB_SMILEYS." WHERE smiley_id=:smileyid", [':smileyid' => intval($id)]);
             if (!empty(isset($_GET['inact']))) {
                 if (!empty($data['smiley_image']) && file_exists(IMAGES."smiley/".$data['smiley_image'])) {
                     unlink(IMAGES."smiley/".$data['smiley_image']);
                 }
             }
             addNotice('warning', (isset($_GET['inact']) ? self::$locale['SMLY_412'] : self::$locale['SMLY_413']));
-            redirect(clean_request("", ["section=smiley_list", "aid"], TRUE));
+            redirect(clean_request('', ['section=smiley_list', 'aid'], TRUE));
         }
     }
 
@@ -144,7 +144,7 @@ class SmileysAdministration {
 
             if (!empty($_FILES['smiley_file']) && is_uploaded_file($_FILES['smiley_file']['tmp_name'])) {
 
-                $upload = form_sanitizer($_FILES['smiley_file'], "", "smiley_file");
+                $upload = form_sanitizer($_FILES['smiley_file'], '', 'smiley_file');
                 if ($upload['error'] == 0) {
                     $this->data['smiley_image'] = $upload['image_name'];
                 }
@@ -156,14 +156,14 @@ class SmileysAdministration {
 
             $error = "";
             $error .= empty($this->data['smiley_image']) ? self::$locale['SMLY_418'] : "";
-            $error .= dbcount("(smiley_id)", DB_SMILEYS, "smiley_id !='".intval($this->data['smiley_id'])."' and smiley_code='".$this->data['smiley_code']."'") ? self::$locale['SMLY_415'] : "";
-            $error .= dbcount("(smiley_id)", DB_SMILEYS, "smiley_id !='".intval($this->data['smiley_id'])."' and smiley_text='".$this->data['smiley_text']."'") ? self::$locale['SMLY_414'] : "";
+            $error .= dbcount("(smiley_id)", DB_SMILEYS, "smiley_id !=:smileyid AND smiley_code=:smileycode", [':smileyid' =>intval($this->data['smiley_id']), ':smileycode' =>]$this->data['smiley_code']) ? self::$locale['SMLY_415'] : "";
+            $error .= dbcount("(smiley_id)", DB_SMILEYS, "smiley_id !=:smileyid AND smiley_text=:smileytext", [':smileyid' => intval($this->data['smiley_id']), ':smileytext' => $this->data['smiley_text']]) ? self::$locale['SMLY_414'] : "";
 
             if (\defender::safe()) {
                 if ($error == "") {
                     dbquery_insert(DB_SMILEYS, $this->data, empty($this->data['smiley_id']) ? 'save' : 'update');
                     addNotice('success', empty($this->data['smiley_id']) ? self::$locale['SMLY_410'] : self::$locale['SMLY_411']);
-                    redirect(clean_request("", ["section=smiley_list", "aid"], TRUE));
+                    redirect(clean_request('', ['section=smiley_list', 'aid'], TRUE));
 
                 } else {
                     addNotice('danger', $error);
@@ -203,7 +203,7 @@ class SmileysAdministration {
     }
 
     public function smiley_listing() {
-        global $aidlink;
+        $aidlink = fusion_get_aidlink();
 
         $all_smileys = self::load_all_smileys();
         $smileys_list = self::smiley_list();
