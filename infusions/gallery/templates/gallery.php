@@ -29,7 +29,7 @@ if (!function_exists("render_gallery")) {
         if (isset($info['item'])) {
             function render_photoAlbum(array $info = []) {
                 // add admin edit.
-                global $gallery_settings;
+                $gallery_settings = get_settings('gallery');
                 $locale = fusion_get_locale();
                 echo "<div class='panel panel-default'>\n";
                 echo "<div class='panel-heading'>\n";
@@ -97,7 +97,7 @@ if (!function_exists('render_photo_album')) {
         echo "<!--sub_album_info-->";
         $counter = 0;
         function render_photo_items(array $info = []) {
-            global $gallery_settings;
+            $gallery_settings = get_settings('gallery');
             $locale = fusion_get_locale();
             echo "<div class='panel panel-default'>\n";
             echo "<div class='overflow-hide' style='height: 120px;'>\n";

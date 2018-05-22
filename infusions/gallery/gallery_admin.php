@@ -71,8 +71,30 @@ add_to_head("
 }
 </style>
 ");
+$allowed_pages = ['album_form', 'photo_form', 'settings', 'submissions', 'actions'];
+$_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_pages) ? $_GET['section'] : 'gallery';
+$_GET['album'] = 0;
+if (isset($_GET['section'])){
+    switch ($_GET['section']) {
+        case "photo_form":
+            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['gallery_0002']]);
+            break;
+        case "album_form":
+            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['gallery_0004']]);
+            break;
+        case "settings":
+            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['gallery_0006']]);
+            break;
+        case "submissions":
+            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['gallery_0007']]);
+            break;
+        default:
+            break;
+    }
+}
 $album_edit = isset($_GET['action']) && $_GET['action'] == "edit" && isset($_GET['cat_id']) && isnum($_GET['cat_id']) ? TRUE : FALSE;
 $photo_edit = isset($_GET['action']) && $_GET['action'] == "edit" && isset($_GET['photo_id']) && isnum($_GET['photo_id']) ? TRUE : FALSE;
+
 $tab['title'][] = $locale['gallery_0001'];
 $tab['id'][] = "gallery";
 $tab['icon'][] = "fa fa-camera-retro";
@@ -88,9 +110,6 @@ $tab['icon'][] = "fa fa-inbox";
 $tab['title'][] = $locale['gallery_0006'];
 $tab['id'][] = "settings";
 $tab['icon'][] = "fa fa-cogs";
-$allowed_pages = ["album_form", "photo_form", "settings", "submissions", "actions"];
-$_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_pages) ? $_GET['section'] : "gallery";
-$_GET['album'] = 0;
 
 // Need to put breadcrumb here before opentable, or else it won't cache in Artemis.
 // @todo Class so that query data can be passed around.
@@ -109,22 +128,18 @@ echo opentab($tab, $_GET['section'], "gallery_admin", TRUE, "nav-tabs m-t-20", '
 switch ($_GET['section']) {
     case "photo_form":
         include "admin/photos.php";
-        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $locale['gallery_0002']]);
         break;
     case "album_form":
         include "admin/gallery_cat.php";
-        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $locale['gallery_0004']]);
         break;
     case "actions":
         include "admin/gallery_actions.php";
         break;
     case "settings":
         include "admin/gallery_settings.php";
-        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $locale['gallery_0006']]);
         break;
     case "submissions":
         include "admin/photo_submissions.php";
-        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $locale['gallery_0007']]);
         break;
     default:
         if (isset($_GET['album_id']) && isnum($_GET['album_id'])) {
@@ -148,8 +163,8 @@ function rating_vote($id, $type) {
     $count_db = dbarray(dbquery("SELECT
                 IF(SUM(rating_vote)>0, SUM(rating_vote), 0) AS total_votes
                 FROM ".DB_RATINGS."
-                WHERE rating_item_id='".$id."' AND rating_type='".$type."'
-             "));
+                WHERE rating_item_id=:ratingid AND rating_type=:ratingtype", [':ratingid' => $id, ':ratingtype' => $type]
+             ));
     return $count_db['total_votes'];
 }
 
@@ -157,8 +172,8 @@ function rating_count($id, $type) {
     $count_db = dbarray(dbquery("SELECT
                 COUNT(rating_id) AS rating_count
                 FROM ".DB_RATINGS."
-                WHERE rating_item_id='".$id."' AND rating_type='".$type."'
-             "));
+                WHERE rating_item_id=:ratingid AND rating_type=:ratingtype", [':ratingid' => $id, ':ratingtype' => $type]
+             ));
     return $count_db['rating_count'];
 }
 
@@ -168,26 +183,24 @@ function gallery_photo_listing() {
     $aidlink = fusion_get_aidlink();
 
     // xss
-    $photoRows = dbcount("(photo_id)", DB_PHOTOS, "album_id='".intval($_GET['album_id'])."'");
+    $photoRows = dbcount("(photo_id)", DB_PHOTOS, "album_id=:albumid", [':albumid' => intval($_GET['album_id'])]);
     $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $photoRows ? $_GET['rowstart'] : 0;
     if (!empty($photoRows)) {
-        $result = dbquery("
-        select photos.*,
-        album.*,
+        $result = dbquery("SELECT photos.*, album.*,
         photos.photo_user as user_id, u.user_name, u.user_status, u.user_avatar,
-        count(comment_id) as comment_count
+        COUNT(comment_id) as comment_count
         FROM ".DB_PHOTOS." photos
         INNER JOIN ".DB_PHOTO_ALBUMS." album on photos.album_id = album.album_id
         INNER JOIN ".DB_USERS." u on u.user_id = photos.photo_user
         LEFT JOIN ".DB_COMMENTS." comment on comment.comment_item_id= photos.photo_id AND comment_type = 'P'
-        WHERE ".groupaccess('album.album_access')." and photos.album_id = '".intval($_GET['album_id'])."'
+        WHERE ".groupaccess('album.album_access')." AND photos.album_id = '".intval($_GET['album_id'])."'
         GROUP BY photo_id
         ORDER BY photos.photo_order ASC, photos.photo_datestamp DESC LIMIT ".intval($_GET['rowstart']).", ".intval($gll_settings['gallery_pagination'])."
         ");
         $rows = dbrows($result);
         // Photo Album header
 
-        $album_data = dbarray(dbquery("select album_id, album_title, album_description, album_datestamp, album_access from ".DB_PHOTO_ALBUMS." WHERE album_id='".intval($_GET['album_id'])."'"));
+        $album_data = dbarray(dbquery("SELECT album_id, album_title, album_description, album_datestamp, album_access FROM ".DB_PHOTO_ALBUMS." WHERE album_id=:albumid", [':albumid' => intval($_GET['album_id'])]));
 
         echo "<h2><strong>\n".$album_data['album_title']."</strong></h2>\n";
 
@@ -245,10 +258,10 @@ function gallery_photo_listing() {
             }
             echo "</div>\n";
         } else {
-            redirect(FUSION_SELF.$aidlink);
+            redirect(FUSION_REQUEST);
         }
     } else {
-        redirect(FUSION_SELF.$aidlink);
+        redirect(FUSION_REQUEST);
     }
 }
 
@@ -263,7 +276,7 @@ function gallery_album_listing() {
     // xss
     $albumRows = dbcount("(album_id)", DB_PHOTO_ALBUMS, multilang_table("PG") ? "album_language='".LANGUAGE."'" : "");
     $photoRows = dbcount("(photo_id)", DB_PHOTOS, "");
-    $update = dbarray(dbquery("select max(photo_datestamp) 'last_updated' from ".DB_PHOTOS.""));
+    $update = dbarray(dbquery("SELECT MAX(photo_datestamp) 'last_updated' FROM ".DB_PHOTOS.""));
     $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $albumRows ? $_GET['rowstart'] : 0;
     if (!empty($albumRows)) {
         // get albums.
@@ -349,7 +362,7 @@ function gallery_album_listing() {
  */
 function get_albumOpts() {
     $list = [];
-    $result = dbquery("SELECT * FROM ".DB_PHOTO_ALBUMS." ".(multilang_table("PG") ? "where album_language='".LANGUAGE."'" : "")." order by album_order asc");
+    $result = dbquery("SELECT * FROM ".DB_PHOTO_ALBUMS." ".(multilang_table("PG") ? "where album_language='".LANGUAGE."'" : "")." ORDER BY album_order ASC");
     if (dbrows($result) > 0) {
         while ($data = dbarray($result)) {
             $list[$data['album_id']] = $data['album_title'];
@@ -368,9 +381,11 @@ function purgeAlbumImage($albumData) {
     if (!empty($albumData['album_image']) && file_exists(IMAGES_G.$albumData['album_image'])) {
         unlink(IMAGES_G.$albumData['album_image']);
     }
+    sleep(0.3);
     if (!empty($albumData['album_thumb1']) && file_exists(IMAGES_G_T.$albumData['album_thumb1'])) {
         unlink(IMAGES_G_T.$albumData['album_thumb1']);
     }
+    sleep(0.3);
     if (!empty($albumData['album_thumb2']) && file_exists(IMAGES_G_T.$albumData['album_thumb2'])) {
         unlink(IMAGES_G_T.$albumData['album_thumb2']);
     }
@@ -385,9 +400,11 @@ function purgePhotoImage($photoData) {
     if (!empty($photoData['photo_filename']) && file_exists(IMAGES_G.$photoData['photo_filename'])) {
         unlink(IMAGES_G.$photoData['photo_filename']);
     }
+    sleep(0.3);
     if (!empty($photoData['photo_thumb1']) && file_exists(IMAGES_G_T.$photoData['photo_thumb1'])) {
         unlink(IMAGES_G_T.$photoData['photo_thumb1']);
     }
+    sleep(0.3);
     if (!empty($photoData['photo_thumb2']) && file_exists(IMAGES_G_T.$photoData['photo_thumb2'])) {
         unlink(IMAGES_G_T.$photoData['photo_thumb2']);
     }
@@ -404,9 +421,11 @@ function purgeSubmissionsPhotoImage($photoData) {
     if (!empty($photoData['photo_filename']) && file_exists($submissions_dir.$photoData['photo_filename'])) {
         unlink($submissions_dir.$photoData['photo_filename']);
     }
+    sleep(0.3);
     if (!empty($photoData['photo_thumb1']) && file_exists($submissions_dir_t.$photoData['photo_thumb1'])) {
         unlink($submissions_dir_t.$photoData['photo_thumb1']);
     }
+    sleep(0.3);
     if (!empty($photoData['photo_thumb2']) && file_exists($submissions_dir_t.$photoData['photo_thumb2'])) {
         unlink($submissions_dir_t.$photoData['photo_thumb2']);
     }
@@ -423,7 +442,7 @@ function purgeSubmissionsPhotoImage($photoData) {
  * @return string
  */
 function displayAlbumImage($album_image, $album_thumb1, $album_thumb2, $link) {
-    global $gll_settings;
+    $gll_settings = get_settings('gallery');
     // Thumb will have 2 possible path following v7
     if (!empty($album_thumb1) && (file_exists(IMAGES_G_T.$album_thumb1) || file_exists(IMAGES_G.$album_thumb1))) {
         if (file_exists(IMAGES_G.$album_thumb1)) {
@@ -457,7 +476,7 @@ function displayAlbumImage($album_image, $album_thumb1, $album_thumb2, $link) {
  * @return string
  */
 function displayPhotoImage($photo_filename, $photo_thumb1, $photo_thumb2, $link) {
-    global $gll_settings;
+    $gll_settings = get_settings('gallery');
     // Thumb will have 2 possible path following v7
     if (!empty($photo_thumb1) && (file_exists(IMAGES_G_T.$photo_thumb1) || file_exists(IMAGES_G.$photo_thumb1))) {
         if (file_exists(IMAGES_G.$photo_thumb1)) {
