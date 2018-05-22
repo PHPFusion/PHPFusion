@@ -167,25 +167,13 @@ if (!empty($_GET['readmore'])) {
             $item += [
                 "blog_subject"       => "<a class='blog_subject text-dark' href='".INFUSIONS."blog/blog.php?readmore=".$item['blog_id']."'>".$item['blog_subject']."</a>",
                 "blog_blog"          => preg_replace("/<!?--\s*pagebreak\s*-->/i", "", $item['blog_blog']),
-                "blog_extended"      => preg_split("/<!?--\s*pagebreak\s*-->/i", $item['blog_extended']),
-                "blog_pagecount"     => 1,
                 "print_link"         => BASEDIR."print.php?type=B&amp;item_id=".$item['blog_id'],
                 "blog_post_author"   => display_avatar($item, '25px', '', TRUE, 'img-rounded m-r-5').profile_link($item['user_id'], $item['user_name'], $item['user_status']),
                 "blog_category_link" => "",
                 "blog_post_time"     => $locale['global_049']." ".timer($item['blog_datestamp']),
+                'blog_nav'           => ''
             ];
 
-            if (empty($item['blog_extended'])) {
-                $item['blog_extended'] = $item['blog_blog'];
-            }
-
-            if (is_array($item['blog_extended'])) {
-                $item['blog_pagecount'] = count($item['blog_extended']);
-                $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= count($item['blog_extended']) ? $_GET['rowstart'] : 0;
-                $item['blog_extended'] = $item['blog_extended'][$_GET['rowstart']];
-            } else {
-                $_GET['rowstart'] = 0;
-            }
             $item['blog_blog'] = parse_textarea($item['blog_blog'], FALSE, FALSE, TRUE, FALSE, $item['blog_breaks'] == "y" ? TRUE : FALSE);
             $item['blog_extended'] = parse_textarea($item['blog_extended'], FALSE, FALSE, TRUE, FALSE, $item['blog_breaks'] == "y" ? TRUE : FALSE);
 
@@ -251,8 +239,21 @@ if (!empty($_GET['readmore'])) {
                 ];
             }
 
-            if ($item['blog_pagecount'] > 1) {
-                $info['blog_nav'] = makepagenav($_GET['rowstart'], 1, $item['blog_pagecount'], 3, INFUSIONS."blog/blog.php?readmore=".$_GET['readmore']."&amp;")."\n";
+            $blog_pagecount = 1;
+            $blog_extended = preg_split("/<!?--\s*pagebreak\s*-->/i", $item['blog_breaks'] == "y" ? nl2br($item['blog_extended']) : $item['blog_extended']);
+            $blog_pagecount = count($blog_extended);
+            $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? intval($_GET['rowstart']) : 0;
+
+            if (is_array($blog_extended)) {
+                $item['blog_extended'] = $blog_extended[$_GET['rowstart']];
+            }
+
+            if ($blog_pagecount > 1) {
+                $item['blog_nav'] = makepagenav($_GET['rowstart'], 1, $blog_pagecount, 3, INFUSIONS."blog/blog.php?readmore=".$_GET['readmore']."&amp;")."\n";
+            }
+
+            if (empty($item['blog_extended'])) {
+                $item['blog_extended'] = $item['blog_blog'];
             }
 
             \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([

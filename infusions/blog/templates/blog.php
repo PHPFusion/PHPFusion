@@ -105,6 +105,11 @@ if (!function_exists('display_blog_item')) {
             </a>";
         }
         echo $data['blog_extended'];
+
+        if (!empty($data['blog_nav'])) {
+            echo '<div class="text-center">'.$data['blog_nav'].'</div>';
+        }
+
         echo "</div>\n";
         echo "<div class='m-b-20 well'>".$data['blog_author_info']."</div>";
 
