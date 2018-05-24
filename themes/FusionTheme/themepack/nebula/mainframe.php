@@ -41,9 +41,9 @@ class MainFrame extends Core {
             if (!isset($theme_settings['home_installed'])) {
 
                 if (file_exists(THEME.'themefactory/lib/installer/locale/'.LANGUAGE.'.php')) {
-                    $qLocale = fusion_get_locale('', THEME.'themefactory/lib/installer/locale/'.LANGUAGE.'.php');
+                    $locale = fusion_get_locale('', THEME.'themefactory/lib/installer/locale/'.LANGUAGE.'.php');
                 } else {
-                    $qLocale = fusion_get_locale('', THEME.'themefactory/lib/installer/locale/English.php');
+                    $locale = fusion_get_locale('', THEME.'themefactory/lib/installer/locale/English.php');
                 }
 
                 if (isset($_POST['install_default_homepage'])) {
@@ -62,9 +62,9 @@ class MainFrame extends Core {
                 }
                 $form = "<div class='container'>\n";
                 $form .= openform('submit_installer', 'post', clean_request(), ['class' => 'm-t-10']);
-                $form .= "<h4>".$qLocale['homeSetup_0200']."</h4>\n";
-                $form .= form_button('install_default_homepage', $qLocale['homeSetup_0201'], 'yes', ['class' => 'btn-success']);
-                $form .= form_button('install_default_homepage', $qLocale['homeSetup_0202'], 'no');
+                $form .= "<h4>".$locale['homeSetup_0200']."</h4>\n";
+                $form .= form_button('install_default_homepage', $locale['homeSetup_0201'], 'yes', ['class' => 'btn-success']);
+                $form .= form_button('install_default_homepage', $locale['homeSetup_0202'], 'no');
                 $form .= closeform();
                 $form .= "</div>\n";
                 addNotice('warning', $form);
