@@ -31,6 +31,10 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
     public function displayArticlesAdmin() {
         pageAccess("A");
         $this->locale = self::get_articleAdminLocale();
+        // Cancel Form
+        if (isset($_POST['cancel'])) {
+            redirect(FUSION_SELF.fusion_get_aidlink()."&section=article_category");
+        }
         if (isset($_GET['ref']) && $_GET['ref'] == "article_cat_form") {
             $this->display_article_cat_form();
         } else {
@@ -43,21 +47,16 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
      */
     private function display_article_cat_form() {
 
-        // Cancel Form
-        if (isset($_POST['cancel'])) {
-            redirect(FUSION_SELF.fusion_get_aidlink()."&section=article_category");
-        }
-
         // Empty
         $data = [
-            "article_cat_id"          => 0,
-            "article_cat_name"        => "",
-            "article_cat_parent"      => 0,
-            "article_cat_description" => "",
-            "article_cat_status"      => 1,
-            "article_cat_visibility"  => iGUEST,
-            "article_cat_language"    => LANGUAGE,
-            "article_cat_hidden"      => ""
+            'article_cat_id'          => 0,
+            'article_cat_name'        => '',
+            'article_cat_parent'      => 0,
+            'article_cat_description' => '',
+            'article_cat_status'      => 1,
+            'article_cat_visibility'  => iGUEST,
+            'article_cat_language'    => LANGUAGE,
+            'article_cat_hidden'      => ''
         ];
 
         // Form
@@ -73,53 +72,53 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
 
             // Check Fields
             $inputArray = [
-                "article_cat_id"          => form_sanitizer($_POST['article_cat_id'], "", "article_cat_id"),
-                "article_cat_name"        => form_sanitizer($_POST['article_cat_name'], "", "article_cat_name"),
-                "article_cat_description" => form_sanitizer($cat_desc, "", "article_cat_description"),
-                "article_cat_parent"      => form_sanitizer($_POST['article_cat_parent'], 0, "article_cat_parent"),
-                "article_cat_visibility"  => form_sanitizer($_POST['article_cat_visibility'], 0, "article_cat_visibility"),
-                "article_cat_status"      => form_sanitizer($_POST['article_cat_status'], 0, "article_cat_status"),
-                "article_cat_language"    => form_sanitizer($_POST['article_cat_language'], LANGUAGE, "article_cat_language")
+                'article_cat_id'          => form_sanitizer($_POST['article_cat_id'], '', 'article_cat_id'),
+                'article_cat_name'        => form_sanitizer($_POST['article_cat_name'], '', 'article_cat_name'),
+                'article_cat_description' => form_sanitizer($cat_desc, '', 'article_cat_description'),
+                'article_cat_parent'      => form_sanitizer($_POST['article_cat_parent'], 0, 'article_cat_parent'),
+                'article_cat_visibility'  => form_sanitizer($_POST['article_cat_visibility'], 0, 'article_cat_visibility'),
+                'article_cat_status'      => form_sanitizer($_POST['article_cat_status'], 0, 'article_cat_status'),
+                'article_cat_language'    => form_sanitizer($_POST['article_cat_language'], LANGUAGE, 'article_cat_language')
             ];
 
             // Check Where Condition
             $categoryNameCheck = [
-                "when_updating" => "article_cat_name='".$inputArray['article_cat_name']."' and article_cat_id !='".$inputArray['article_cat_id']."' ".(multilang_table("AR") ? "and article_cat_language = '".LANGUAGE."'" : ""),
-                "when_saving"   => "article_cat_name='".$inputArray['article_cat_name']."' ".(multilang_table("AR") ? "and article_cat_language = '".LANGUAGE."'" : ""),
+                "when_updating" => "article_cat_name='".$inputArray['article_cat_name']."' AND article_cat_id !='".$inputArray['article_cat_id']."' ".(multilang_table("AR") ? "AND article_cat_language = '".LANGUAGE."'" : ""),
+                "when_saving"   => "article_cat_name='".$inputArray['article_cat_name']."' ".(multilang_table("AR") ? "AND article_cat_language = '".LANGUAGE."'" : ""),
             ];
 
             // Save
             if (\defender::safe()) {
 
                 // Update
-                if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_id='".$inputArray['article_cat_id']."'")) {
+                if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_id=:articlecatid", [':articlecatid' => $inputArray['article_cat_id']])) {
                     if (!dbcount("(article_cat_id)", DB_ARTICLE_CATS, $categoryNameCheck['when_updating'])) {
-                        dbquery_insert(DB_ARTICLE_CATS, $inputArray, "update");
-                        addNotice("success", $this->locale['article_0041']);
+                        dbquery_insert(DB_ARTICLE_CATS, $inputArray, 'update');
+                        addNotice('success', $this->locale['article_0041']);
 
                         if (isset($_POST['save_cat_and_close'])) {
-                            redirect(clean_request("", ["action", "ref"], FALSE));
+                            redirect(clean_request('', ['action', 'ref'], FALSE));
                         } else {
                             redirect(FUSION_REQUEST);
                         }
 
                     } else {
-                        addNotice("danger", $this->locale['article_0321']);
+                        addNotice('danger', $this->locale['article_0321']);
                     }
 
                     // Insert
                 } else {
                     if (!dbcount("(article_cat_id)", DB_ARTICLE_CATS, $categoryNameCheck['when_saving'])) {
-                        dbquery_insert(DB_ARTICLE_CATS, $inputArray, "save");
-                        addNotice("success", $this->locale['article_0040']);
+                        dbquery_insert(DB_ARTICLE_CATS, $inputArray, 'save');
+                        addNotice('success', $this->locale['article_0040']);
 
                         if (isset($_POST['save_cat_and_close'])) {
-                            redirect(clean_request("", ["action", "ref"], FALSE));
+                            redirect(clean_request('', ['action', 'ref'], FALSE));
                         } else {
                             redirect(FUSION_REQUEST);
                         }
                     } else {
-                        addNotice("danger", $this->locale['article_0321']);
+                        addNotice('danger', $this->locale['article_0321']);
                     }
                 }
             }
@@ -127,57 +126,57 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
 
             // Edit
         } else if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
-            $result = dbquery("SELECT * FROM ".DB_ARTICLE_CATS." ".(multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."' AND" : "WHERE")." article_cat_id='".$_GET['cat_id']."'");
+            $result = dbquery("SELECT * FROM ".DB_ARTICLE_CATS." ".(multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."' AND" : "WHERE")." article_cat_id=:articlecatid", [':articlecatid' => $_GET['cat_id']]);
             if (dbrows($result)) {
                 $data = dbarray($result);
             } else {
-                redirect(clean_request("", ["action"], FALSE));
+                redirect(clean_request('', ['action'], FALSE));
             }
 
             // Delete
         } else if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
-            if (!dbcount("(article_id)", DB_ARTICLES, "article_cat='".$_GET['cat_id']."'") && !dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_parent='".$_GET['cat_id']."'")) {
-                dbquery("DELETE FROM  ".DB_ARTICLE_CATS." WHERE article_cat_id='".$_GET['cat_id']."'");
-                addNotice("success", $this->locale['article_0042']);
+            if (!dbcount("(article_id)", DB_ARTICLES, "article_cat=:articlecat", [':articlecat' => $_GET['cat_id']]) && !dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_parent=:catparent", [':catparent' => $_GET['cat_id']])) {
+                dbquery("DELETE FROM  ".DB_ARTICLE_CATS." WHERE article_cat_id=:articlecat", [':articlecat' => $_GET['cat_id']]);
+                addNotice('success', $this->locale['article_0042']);
             } else {
-                addNotice("warning", $this->locale['article_0043']);
-                addNotice("warning", $this->locale['article_0044']);
+                addNotice('warning', $this->locale['article_0043']);
+                addNotice('warning', $this->locale['article_0044']);
             }
-            redirect(clean_request("", ["ref", "action", "cat_id"], FALSE));
+            redirect(clean_request('', ['ref', 'action', 'cat_id'], FALSE));
         }
 
         // Form ?>
         <div class="m-t-20 m-b-20">
-            <?php echo openform("catform", "post", $formAction); ?>
+            <?php echo openform('catform', 'post', $formAction); ?>
             <div class="row">
 
                 <!-- Left Column -->
                 <div class="col-xs-12 col-sm-8">
                     <?php
-                    echo form_hidden("article_cat_id", "", $data['article_cat_id']);
+                    echo form_hidden('article_cat_id', '', $data['article_cat_id']);
 
-                    echo form_text("article_cat_name", $this->locale['article_0150'], $data['article_cat_name'], [
-                        "required"   => TRUE,
-                        "inline"     => TRUE,
-                        "error_text" => $this->locale['article_0320']
+                    echo form_text('article_cat_name', $this->locale['article_0150'], $data['article_cat_name'], [
+                        'required'   => TRUE,
+                        'inline'     => TRUE,
+                        'error_text' => $this->locale['article_0320']
                     ]);
 
-                    echo form_select_tree("article_cat_parent", $this->locale['article_0303'], $data['article_cat_parent'], [
-                        "inline"        => TRUE,
-                        "disable_opts"  => $data['article_cat_id'],
-                        "hide_disabled" => TRUE,
-                        "query"         => (multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "")
+                    echo form_select_tree('article_cat_parent', $this->locale['article_0303'], $data['article_cat_parent'], [
+                        'inline'        => TRUE,
+                        'disable_opts'  => $data['article_cat_id'],
+                        'hide_disabled' => TRUE,
+                        'query'         => (multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "")
                     ], DB_ARTICLE_CATS, "article_cat_name", "article_cat_id", "article_cat_parent");
 
-                    echo form_textarea("article_cat_description", $this->locale['article_0304'], $data['article_cat_description'], [
-                        "required"   => TRUE,
-                        "type"       => fusion_get_settings("tinymce_enabled") ? "tinymce" : "html",
-                        "tinymce"    => fusion_get_settings("tinymce_enabled") && iADMIN ? "advanced" : "",
-                        "autosize"   => TRUE,
-                        "inline"     => TRUE,
-                        "preview"    => TRUE,
-                        "form_name"  => "catform",
-                        "error_text" => $this->locale['article_0322']
+                    echo form_textarea('article_cat_description', $this->locale['article_0304'], $data['article_cat_description'], [
+                        'required'   => TRUE,
+                        'type'       => fusion_get_settings('tinymce_enabled') ? 'tinymce' : 'html',
+                        'tinymce'    => fusion_get_settings('tinymce_enabled') && iADMIN ? 'advanced' : '',
+                        'autosize'   => TRUE,
+                        'inline'     => TRUE,
+                        'preview'    => TRUE,
+                        'form_name'  => 'catform',
+                        'error_text' => $this->locale['article_0322']
                     ]);
                     ?>
                 </div>
@@ -188,39 +187,35 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
                     openside($this->locale['article_0261']);
 
                     if (multilang_table("AR")) {
-                        echo form_select("article_cat_language", $this->locale['language'], $data['article_cat_language'], [
-                            "inline"      => TRUE,
-                            "options"     => fusion_get_enabled_languages(),
-                            "placeholder" => $this->locale['choose']
+                        echo form_select('article_cat_language', $this->locale['language'], $data['article_cat_language'], [
+                            'inline'      => TRUE,
+                            'options'     => fusion_get_enabled_languages(),
+                            'placeholder' => $this->locale['choose']
                         ]);
                     } else {
-                        echo form_hidden("article_cat_language", "", $data['article_cat_language']);
+                        echo form_hidden('article_cat_language', '', $data['article_cat_language']);
                     }
 
-                    echo form_select("article_cat_visibility", $this->locale['article_0106'], $data['article_cat_visibility'], [
-                        "options"     => fusion_get_groups(),
-                        "placeholder" => $this->locale['choose'],
-                        "inline"      => TRUE,
+                    echo form_select('article_cat_visibility', $this->locale['article_0106'], $data['article_cat_visibility'], [
+                        'options'     => fusion_get_groups(),
+                        'placeholder' => $this->locale['choose'],
+                        'inline'      => TRUE
                     ]);
 
-                    echo form_select("article_cat_status", $this->locale['article_0152'], $data['article_cat_status'], [
-                        "options"     => [0 => $this->locale['unpublish'], 1 => $this->locale['publish']],
-                        "placeholder" => $this->locale['choose'],
-                        "inline"      => TRUE,
+                    echo form_select('article_cat_status', $this->locale['article_0152'], $data['article_cat_status'], [
+                        'options'     => [0 => $this->locale['unpublish'], 1 => $this->locale['publish']],
+                        'placeholder' => $this->locale['choose'],
+                        'inline'      => TRUE
                     ]);
-
-                    echo form_button("cancel", $this->locale['cancel'], $this->locale['cancel'], ["class" => "btn-default btn-sm", "icon" => "fa fa-fw fa-times"]);
-                    echo form_button("save_cat", $this->locale['save'], $this->locale['save'], ["class" => "btn-success btn-sm m-l-10", "icon" => "fa fa-fw fa-hdd-o"]);
-                    echo form_button("save_cat_and_close", $this->locale['save_and_close'], $this->locale['save_and_close'], ["class" => "btn-primary btn-sm m-l-10", "icon" => "fa fa-fw fa-floppy-o"]);
 
                     closeside();
                     ?>
                 </div>
             </div>
             <?php
-            echo form_button("cancel", $this->locale['cancel'], $this->locale['cancel'], ["class" => "btn-default", "icon" => "fa fa-fw fa-times"]);
-            echo form_button("save_cat", $this->locale['save'], $this->locale['save'], ["class" => "btn-success m-l-10", "icon" => "fa fa-fw fa-hdd-o"]);
-            echo form_button("save_cat_and_close", $this->locale['save_and_close'], $this->locale['save_and_close'], ["class" => "btn-primary m-l-10", "icon" => "fa fa-fw fa-floppy-o"]);
+            echo form_button('cancel', $this->locale['cancel'], $this->locale['cancel'], ['class' => 'btn-default', 'icon' => 'fa-times']);
+            echo form_button('save_cat', $this->locale['save'], $this->locale['save'], ['class' => 'btn-success m-l-10', 'icon' => 'fa-hdd-o']);
+            echo form_button('save_cat_and_close', $this->locale['save_and_close'], $this->locale['save_and_close'], ['class' => 'btn-primary m-l-10', 'icon' => 'fa-floppy-o']);
             echo closeform();
             ?>
         </div>
@@ -233,32 +228,32 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
     private function display_article_cat_listing() {
 
         // Run functions
-        $allowed_actions = array_flip(["publish", "unpublish", "delete"]);
+        $allowed_actions = array_flip(['publish', 'unpublish', 'delete']);
 
         // Table Actions
         if (isset($_POST['table_action']) && isset($allowed_actions[$_POST['table_action']])) {
 
-            $input = !empty($_POST['article_cat_id']) ? form_sanitizer($_POST['article_cat_id'], "", "article_cat_id") : "";
+            $input = !empty($_POST['article_cat_id']) ? form_sanitizer($_POST['article_cat_id'], '', 'article_cat_id') : '';
             if (!empty($input)) {
                 $input = ($input ? explode(",", $input) : []);
                 foreach ($input as $article_cat_id) {
                     // check input table
-                    if (dbcount("('article_cat_id')", DB_ARTICLE_CATS,
-                            "article_cat_id='".intval($article_cat_id)."'") && \defender::safe()
-                    ) {
+                    if (dbcount("('article_cat_id')", DB_ARTICLE_CATS, "article_cat_id=:articlecat", [':articlecat' => intval($article_cat_id)]) && \defender::safe()) {
+
+
                         switch ($_POST['table_action']) {
                             case "publish":
-                                dbquery("UPDATE ".DB_ARTICLE_CATS." SET article_cat_status='1' WHERE article_cat_id='".intval($article_cat_id)."'");
+                                dbquery("UPDATE ".DB_ARTICLE_CATS." SET article_cat_status=:catstatus WHERE article_cat_id=:catid", [':catstatus' => '1', ':catid' => intval($article_cat_id)]);
                                 break;
                             case "unpublish":
-                                dbquery("UPDATE ".DB_ARTICLE_CATS." SET article_cat_status='0' WHERE article_cat_id='".intval($article_cat_id)."'");
+                                dbquery("UPDATE ".DB_ARTICLE_CATS." SET article_cat_status=:catstatus WHERE article_cat_id=:catid", [':catstatus' => '0', ':catid' => intval($article_cat_id)]);
                                 break;
                             case "delete":
-                                if (!dbcount("(article_id)", DB_ARTICLES, "article_cat='".$article_cat_id."'") && !dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_parent='".$article_cat_id."'")) {
-                                    dbquery("DELETE FROM  ".DB_ARTICLE_CATS." WHERE article_cat_id='".intval($article_cat_id)."'");
+                                if (!dbcount("(article_id)", DB_ARTICLES, "article_cat=:articlecat", [':articlecat' => $article_cat_id]) && !dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_parent=:catparent", [':catparent' => $article_cat_id])) {
+                                    dbquery("DELETE FROM  ".DB_ARTICLE_CATS." WHERE article_cat_id=:articlecatid", [':articlecatid' => intval($article_cat_id)]);
                                 } else {
-                                    addNotice("warning", $this->locale['article_0046']);
-                                    addNotice("warning", $this->locale['article_0044']);
+                                    addNotice('warning', $this->locale['article_0046']);
+                                    addNotice('warning', $this->locale['article_0044']);
                                 }
                                 break;
                             default:
@@ -266,10 +261,10 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
                         }
                     }
                 }
-                addNotice("success", $this->locale['article_0045']);
+                addNotice('success', $this->locale['article_0045']);
                 redirect(FUSION_REQUEST);
             } else {
-                addNotice("warning", $this->locale['article_0048']);
+                addNotice('warning', $this->locale['article_0048']);
                 redirect(FUSION_REQUEST);
             }
         }
@@ -284,30 +279,39 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
         $search_string = [];
         if (isset($_POST['p-submit-article_cat_name'])) {
             $search_string['article_cat_name'] = [
-                "input" => form_sanitizer($_POST['article_cat_name'], "", "article_cat_name"), "operator" => "LIKE"
+                'input'    => form_sanitizer($_POST['article_cat_name'], '', 'article_cat_name'),
+                'operator' => "LIKE"
             ];
         }
 
         if (!empty($_POST['article_cat_status']) && isnum($_POST['article_cat_status'])) {
             switch ($_POST['article_cat_status']) {
                 case 1: // published
-                    $search_string['article_cat_status'] = ["input" => 1, "operator" => "="];
+                    $search_string['article_cat_status'] = [
+                        'input'    => 1,
+                        'operator' => '='
+                    ];
                     break;
                 case 2: // unpublished
-                    $search_string['article_cat_status'] = ["input" => 0, "operator" => "="];
+                    $search_string['article_cat_status'] = [
+                        'input'    => 0,
+                        'operator' => '='
+                    ];
                     break;
             }
         }
 
         if (!empty($_POST['article_cat_visibility'])) {
             $search_string['article_cat_visibility'] = [
-                "input" => form_sanitizer($_POST['article_cat_visibility'], "", "article_cat_visibility"), "operator" => "="
+                'input'    => form_sanitizer($_POST['article_cat_visibility'], '', 'article_cat_visibility'),
+                'operator' => "="
             ];
         }
 
         if (!empty($_POST['article_cat_language'])) {
             $search_string['article_cat_language'] = [
-                "input" => form_sanitizer($_POST['article_cat_language'], "", "article_cat_language"), "operator" => "="
+                'input'    => form_sanitizer($_POST['article_cat_language'], '', 'article_cat_language'),
+                'operator' => "="
             ];
         }
 
@@ -331,10 +335,10 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
 
         // Filters
         $filter_values = [
-            "article_cat_name"       => !empty($_POST['article_cat_name']) ? form_sanitizer($_POST['article_cat_name'], "", "article_cat_name") : "",
-            "article_cat_status"     => !empty($_POST['article_cat_status']) ? form_sanitizer($_POST['article_cat_status'], "", "article_cat_status") : "",
-            "article_cat_visibility" => !empty($_POST['article_cat_visibility']) ? form_sanitizer($_POST['article_cat_visibility'], "", "article_cat_visibility") : "",
-            "article_cat_language"   => !empty($_POST['article_cat_language']) ? form_sanitizer($_POST['article_cat_language'], "", "article_cat_language") : ""
+            'article_cat_name'       => !empty($_POST['article_cat_name']) ? form_sanitizer($_POST['article_cat_name'], '', 'article_cat_name') : '',
+            'article_cat_status'     => !empty($_POST['article_cat_status']) ? form_sanitizer($_POST['article_cat_status'], '', 'article_cat_status') : '',
+            'article_cat_visibility' => !empty($_POST['article_cat_visibility']) ? form_sanitizer($_POST['article_cat_visibility'], '', 'article_cat_visibility') : '',
+            'article_cat_language'   => !empty($_POST['article_cat_language']) ? form_sanitizer($_POST['article_cat_language'], '', 'article_cat_language') : ''
         ];
 
         $filter_empty = TRUE;
@@ -351,7 +355,7 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
 
         <!-- Display Search, Filters and Actions -->
         <div class="m-t-15">
-            <?php echo openform("article_filter", "post", FUSION_REQUEST); ?>
+            <?php echo openform('article_filter', 'post', FUSION_REQUEST); ?>
             <div class="clearfix">
 
                 <!-- Actions -->
@@ -369,13 +373,13 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
 
                 <!-- Search -->
                 <div class="display-inline-block pull-left m-r-10" style="width: 300px;">
-                    <?php echo form_text("article_cat_name", "", $filter_values['article_cat_name'], [
-                        "placeholder"       => $this->locale['article_0150'],
-                        "append_button"     => TRUE,
-                        "append_value"      => "<i class='fa fa-fw fa-search'></i>",
-                        "append_form_value" => "search_article",
-                        "width"             => "250px",
-                        "group_size"        => "sm"
+                    <?php echo form_text('article_cat_name', '', $filter_values['article_cat_name'], [
+                        'placeholder'       => $this->locale['article_0150'],
+                        'append_button'     => TRUE,
+                        'append_value'      => "<i class='fa fa-fw fa-search'></i>",
+                        'append_form_value' => 'search_article',
+                        'width'             => '250px',
+                        'group_size'        => 'sm'
                     ]); ?>
                 </div>
                 <div class="display-inline-block">
@@ -385,33 +389,43 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
                         <span id="filter_caret"
                               class="fa <?php echo(!$filter_empty ? "fa-caret-up" : "fa-caret-down"); ?>"></span>
                     </a>
-                    <?php echo form_button("article_clear", $this->locale['article_0122'], "clear", ['class' => 'btn-default btn-sm']); ?>
+                    <?php echo form_button('article_clear', $this->locale['article_0122'], 'clear', ['class' => 'btn-default btn-sm']); ?>
                 </div>
             </div>
 
             <!-- Display Filters -->
             <div id="article_filter_options"<?php echo($filter_empty ? " style='display: none;'" : ""); ?>>
                 <div class="display-inline-block">
-                    <?php echo form_select("article_cat_status", "", $filter_values['article_cat_status'], [
-                        "allowclear" => TRUE, "placeholder" => "- ".$this->locale['article_0123']." -", "options" => [0 => $this->locale['article_0124'], 2 => $this->locale['unpublish'], 1 => $this->locale['publish']]
+                    <?php echo form_select('article_cat_status', '', $filter_values['article_cat_status'], [
+                        'allowclear'  => TRUE,
+                        'placeholder' => '- '.$this->locale['article_0123'].' -',
+                        'options'     => [
+                            0 => $this->locale['article_0124'],
+                            2 => $this->locale['unpublish'],
+                            1 => $this->locale['publish']
+                        ]
                     ]); ?>
                 </div>
                 <div class="display-inline-block">
-                    <?php echo form_select("article_cat_visibility", "", $filter_values['article_cat_visibility'], [
-                        "allowclear" => TRUE, "placeholder" => "-  ".$this->locale['article_0125']." -", "options" => fusion_get_groups()
+                    <?php echo form_select('article_cat_visibility', '', $filter_values['article_cat_visibility'], [
+                        'allowclear'  => TRUE,
+                        'placeholder' => '-  '.$this->locale['article_0125'].' -',
+                        'options'     => fusion_get_groups()
                     ]); ?>
                 </div>
                 <div class="display-inline-block">
-                    <?php echo form_select("article_cat_language", "", $filter_values['article_cat_language'], [
-                        "allowclear" => TRUE, "placeholder" => "-  ".$this->locale['article_0128']." -", "options" => $language_opts
+                    <?php echo form_select('article_cat_language', '', $filter_values['article_cat_language'], [
+                        'allowclear'  => TRUE,
+                        'placeholder' => '- '.$this->locale['article_0128'].' -',
+                        'options'     => $language_opts
                     ]); ?>
                 </div>
             </div>
             <?php echo closeform(); ?>
         </div>
 
-        <?php echo openform("article_table", "post", FUSION_REQUEST);
-        echo form_hidden("table_action", "", "");
+        <?php echo openform('article_table', 'post', FUSION_REQUEST);
+        echo form_hidden('table_action', '', '');
         $this->display_article_category($result);
         echo closeform();
 
@@ -481,7 +495,7 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
                 $delete_link = clean_request("section=article_category&ref=article_cat_form&action=delete&cat_id=".$cat_id, ["section", "ref", "action", "cat_id"], FALSE);
                 ?>
                 <tr data-id="<?php echo $cat_id; ?>" id="cat<?php echo $cat_id; ?>">
-                    <td><?php echo form_checkbox("article_cat_id[]", "", "", ["value" => $cat_id, "input_id" => "checkbox".$cat_id, "class" => "m-b-0"]);
+                    <td><?php echo form_checkbox('article_cat_id[]', '', '', ['value' => $cat_id, 'input_id' => 'checkbox'.$cat_id, 'class' => 'm-b-0']);
                         add_to_jquery('$("#checkbox'.$cat_id.'").click(function() {
                         if ($(this).prop("checked")) {
                             $("#cat'.$cat_id.'").addClass("active");

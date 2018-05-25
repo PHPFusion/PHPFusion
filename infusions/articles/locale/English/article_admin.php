@@ -53,6 +53,7 @@ $locale['article_0150'] = "Name";
 $locale['article_0152'] = "Status";
 $locale['article_0161'] = "Delete this Category?";
 $locale['article_0162'] = "There are no Categories defined.";
+$locale['article_0163'] = "Article Subject";
 $locale['article_0200'] = "ID";
 $locale['article_0202'] = "Submissioner";
 $locale['article_0203'] = "Date";

@@ -37,23 +37,23 @@ class ArticlesSettingsAdmin extends ArticlesAdminModel {
         // Save
         if (isset($_POST['savesettings'])) {
             $inputArray = [
-                "article_pagination"        => form_sanitizer($_POST['article_pagination'], 15, "article_pagination"),
-                "article_allow_submission"  => form_sanitizer($_POST['article_allow_submission'], 0, "article_allow_submission"),
-                "article_extended_required" => form_sanitizer($_POST['article_extended_required'], 0, "article_extended_required")
+                'article_pagination'        => form_sanitizer($_POST['article_pagination'], 15, 'article_pagination'),
+                'article_allow_submission'  => form_sanitizer($_POST['article_allow_submission'], 0, 'article_allow_submission'),
+                'article_extended_required' => form_sanitizer($_POST['article_extended_required'], 0, 'article_extended_required')
             ];
 
             // Update
             if (\defender::safe()) {
                 foreach ($inputArray as $settings_name => $settings_value) {
                     $inputSettings = [
-                        "settings_name" => $settings_name, "settings_value" => $settings_value, "settings_inf" => "articles",
+                        'settings_name' => $settings_name, 'settings_value' => $settings_value, 'settings_inf' => 'articles',
                     ];
-                    dbquery_insert(DB_SETTINGS_INF, $inputSettings, "update", ["primary_key" => "settings_name"]);
+                    dbquery_insert(DB_SETTINGS_INF, $inputSettings, 'update', ['primary_key' => 'settings_name']);
                 }
-                addNotice("success", $this->locale['900']);
+                addNotice('success', $this->locale['900']);
                 redirect(FUSION_REQUEST);
             } else {
-                addNotice("danger", $this->locale['901']);
+                addNotice('danger', $this->locale['901']);
                 $article_settings = $inputArray;
             }
         }
@@ -64,11 +64,23 @@ class ArticlesSettingsAdmin extends ArticlesAdminModel {
             <?php echo $this->locale['article_0400']; ?>
         </div>
         <?php
-        echo openform("settingsform", "post", FUSION_REQUEST, ['class' => 'spacer-sm']);
-        echo form_text("article_pagination", $this->locale['article_0401'], $article_settings['article_pagination'], ['inline' => TRUE, 'max_length' => 4, 'inner_width' => '250px', 'width' => '150px', 'type' => 'number']);
-        echo form_select("article_allow_submission", $this->locale['article_0007'], $article_settings['article_allow_submission'], ["inline" => TRUE, "options" => [$this->locale['disable'], $this->locale['enable']]]);
-        echo form_select("article_extended_required", $this->locale['article_0403'], $article_settings['article_extended_required'], ["inline" => TRUE, "options" => [$this->locale['disable'], $this->locale['enable']]]);
-        echo form_button("savesettings", $this->locale['750'], $this->locale['750'], ["class" => "btn-success"]);
+        echo openform('settingsform', 'post', FUSION_REQUEST, ['class' => 'spacer-sm']);
+        echo form_text('article_pagination', $this->locale['article_0401'], $article_settings['article_pagination'], [
+            'inline'      => TRUE,
+            'max_length'  => 4,
+            'inner_width' => '250px',
+            'width'       => '150px',
+            'type'        => 'number'
+        ]);
+        echo form_select('article_allow_submission', $this->locale['article_0007'], $article_settings['article_allow_submission'], [
+            'inline'  => TRUE,
+            'options' => [$this->locale['disable'], $this->locale['enable']]
+        ]);
+        echo form_select('article_extended_required', $this->locale['article_0403'], $article_settings['article_extended_required'], [
+            'inline'  => TRUE,
+            'options' => [$this->locale['disable'], $this->locale['enable']]
+        ]);
+        echo form_button('savesettings', $this->locale['750'], $this->locale['750'], ['class' => 'btn-success']);
         echo closeform();
     }
 }
