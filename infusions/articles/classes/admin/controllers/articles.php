@@ -102,9 +102,9 @@ class ArticlesAdmin extends ArticlesAdminModel {
                 'article_keywords'       => form_sanitizer($_POST['article_keywords'], '', 'article_keywords'),
                 'article_datestamp'      => form_sanitizer($_POST['article_datestamp'], '', 'article_datestamp'),
                 'article_visibility'     => form_sanitizer($_POST['article_visibility'], 0, 'article_visibility'),
-                'article_draft'          => isset($_POST['article_draft']) ? '1' : '0',
-                'article_allow_comments' => isset($_POST['article_allow_comments']) ? '1' : '0',
-                'article_allow_ratings'  => isset($_POST['article_allow_ratings']) ? '1' : '0',
+                'article_draft'          => isset($_POST['article_draft']) ? $_POST['article_draft'] : '0',
+                'article_allow_comments' => isset($_POST['article_allow_comments']) ? $_POST['article_allow_comments'] : '0',
+                'article_allow_ratings'  => isset($_POST['article_allow_ratings']) ? $_POST['article_allow_ratings'] : '0',
                 'article_language'       => form_sanitizer($_POST['article_language'], LANGUAGE, 'article_language')
             ];
 
@@ -227,8 +227,8 @@ class ArticlesAdmin extends ArticlesAdminModel {
             'inline'      => TRUE,
             'inner_width' => '100%',
             'options'     => [
-                0 => $this->locale['draft'],
-                1 => $this->locale['publish']
+                1 => $this->locale['draft'],
+                0 => $this->locale['publish']
             ]
         ]);
         echo form_select_tree('article_cat', $this->locale['article_0101'], $this->article_data['article_cat'], [
@@ -343,7 +343,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
                                 dbquery("UPDATE ".DB_ARTICLES." SET article_draft=:draft WHERE article_id=:articleid", [':draft' => '0', ':articleid' => intval($article_id)]);
                                 break;
                             case "unpublish":
-                                dbquery("UPDATE ".DB_ARTICLES." SET article_draft=:draft WHERE article_id=:articleid", [':draft' => '0', ':articleid' => intval($article_id)]);
+                                dbquery("UPDATE ".DB_ARTICLES." SET article_draft=:draft WHERE article_id=:articleid", [':draft' => '1', ':articleid' => intval($article_id)]);
                                 break;
                             case "delete":
                                 dbquery("DELETE FROM ".DB_ARTICLES." WHERE article_id=:articleid", [':articleid' => intval($article_id)]);
