@@ -226,7 +226,6 @@ class ArticlesAdmin extends ArticlesAdminModel {
         echo form_select('article_draft', $this->locale['status'], $this->article_data['article_draft'], [
             'inline'      => TRUE,
             'inner_width' => '100%',
-            'class'       => 'm-b-5',
             'options'     => [
                 0 => $this->locale['draft'],
                 1 => $this->locale['publish']
