@@ -49,18 +49,18 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
             }
 
             $this->inputArray = [
-                "article_subject"        => form_sanitizer($_POST['article_subject'], "", "article_subject"),
-                "article_cat"            => form_sanitizer($_POST['article_cat'], 0, "article_cat"),
-                "article_language"       => form_sanitizer($_POST['article_language'], LANGUAGE, "article_language"),
-                "article_visibility"     => form_sanitizer($_POST['article_visibility'], 0, "article_visibility"),
-                "article_datestamp"      => form_sanitizer($_POST['article_datestamp'], time(), "article_datestamp"),
-                "article_name"           => form_sanitizer($_POST['article_name'], 0, "article_name"),
-                "article_snippet"        => form_sanitizer($article_snippet, "", "article_snippet"),
-                "article_article"        => form_sanitizer($article_article, "", "article_article"),
-                "article_keywords"       => form_sanitizer($_POST['article_keywords'], "", "article_keywords"),
-                "article_draft"          => isset($_POST['article_draft']) ? "1" : "0",
-                "article_allow_comments" => isset($_POST['article_allow_comments']) ? "1" : "0",
-                "article_allow_ratings"  => isset($_POST['article_allow_ratings']) ? "1" : "0"
+                'article_subject'        => form_sanitizer($_POST['article_subject'], '', 'article_subject'),
+                'article_cat'            => form_sanitizer($_POST['article_cat'], 0, 'article_cat'),
+                'article_language'       => form_sanitizer($_POST['article_language'], LANGUAGE, 'article_language'),
+                'article_visibility'     => form_sanitizer($_POST['article_visibility'], 0, 'article_visibility'),
+                'article_datestamp'      => form_sanitizer($_POST['article_datestamp'], time(), 'article_datestamp'),
+                'article_name'           => form_sanitizer($_POST['article_name'], 0, 'article_name'),
+                'article_snippet'        => form_sanitizer($article_snippet, '', 'article_snippet'),
+                'article_article'        => form_sanitizer($article_article, '', 'article_article'),
+                'article_keywords'       => form_sanitizer($_POST['article_keywords'], '', 'article_keywords'),
+                'article_draft'          => isset($_POST['article_draft']) ? $_POST['article_draft'] : '0',
+                'article_allow_comments' => isset($_POST['article_allow_comments']) ? $_POST['article_allow_comments'] : '0',
+                'article_allow_ratings'  => isset($_POST['article_allow_ratings']) ? $_POST['article_allow_ratings'] : '0'
             ];
 
             // Line Breaks
@@ -75,10 +75,10 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
 
                 // Publish Submission
                 if (isset($_POST['publish_submission'])) {
-                    dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id='".$_GET['submit_id']."' AND submit_type='a'");
-                    dbquery_insert(DB_ARTICLES, $this->inputArray, "save");
-                    addNotice("success", (!$this->inputArray['article_draft'] ? $this->locale['article_0060'] : $this->locale['article_0061']));
-                    redirect(clean_request("", ["submit_id"], FALSE));
+                    dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id=:submitid AND submit_type=:submittype", [':submitid' => $_GET['submit_id'], ':submittype' => 'a']);
+                    dbquery_insert(DB_ARTICLES, $this->inputArray, 'save');
+                    addNotice('success', (!$this->inputArray['article_draft'] ? $this->locale['article_0060'] : $this->locale['article_0061']));
+                    redirect(clean_request('', ['submit_id'], FALSE));
                 }
 
                 // Preview Submission
@@ -101,9 +101,9 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
      */
     private function handleDeleteSubmission() {
         if (isset($_POST['delete_submission'])) {
-            dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id='".$_GET['submit_id']."' AND submit_type='a'");
-            addNotice("success", $this->locale['article_0062']);
-            redirect(clean_request("", ["submit_id"], FALSE));
+            dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id=:submitid AND submit_type=:submittype", [':submitid' => $_GET['submit_id'], ':submittype' => 'a']);
+            addNotice('success', $this->locale['article_0062']);
+            redirect(clean_request('', ['submit_id'], FALSE));
         }
     }
 
@@ -111,36 +111,34 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
      * Get unserialize Datas for a Submission
      */
     private function unserializeData() {
-        $result = dbquery("
-            SELECT
-                s.*
+        $result = dbquery("SELECT s.*
             FROM ".DB_SUBMISSIONS." AS s
-            WHERE s.submit_id='".$_GET['submit_id']."'
-            LIMIT 0,1
-        ");
+            WHERE s.submit_id=:submitid
+            LIMIT 0,1", [':submitid' => $_GET['submit_id']]
+        );
 
         if (dbrows($result) > 0) {
             $data = dbarray($result);
 
-            $submit_criteria = unserialize($data['submit_criteria']);
+            $submit_criteria = \defender::decode($data['submit_criteria']);
             $returnInformations = [
-                "article_subject"        => $submit_criteria['article_subject'],
-                "article_snippet"        => phpentities(stripslashes($submit_criteria['article_snippet'])),
-                "article_article"        => phpentities(stripslashes($submit_criteria['article_article'])),
-                "article_keywords"       => $submit_criteria['article_keywords'],
-                "article_cat"            => $submit_criteria['article_cat'],
-                "article_visibility"     => 0,
-                "article_language"       => $submit_criteria['article_language'],
-                "article_datestamp"      => $data['submit_datestamp'],
-                "article_draft"          => 0,
-                "article_breaks"         => fusion_get_settings("tinyce_enabled") ? TRUE : FALSE,
-                "article_name"           => $data['submit_user'],
-                "article_allow_comments" => 0,
-                "article_allow_ratings"  => 0
+                'article_subject'        => $submit_criteria['article_subject'],
+                'article_snippet'        => phpentities(stripslashes($submit_criteria['article_snippet'])),
+                'article_article'        => phpentities(stripslashes($submit_criteria['article_article'])),
+                'article_keywords'       => $submit_criteria['article_keywords'],
+                'article_cat'            => $submit_criteria['article_cat'],
+                'article_visibility'     => 0,
+                'article_language'       => $submit_criteria['article_language'],
+                'article_datestamp'      => $data['submit_datestamp'],
+                'article_draft'          => 0,
+                'article_breaks'         => fusion_get_settings('tinyce_enabled') ? TRUE : FALSE,
+                'article_name'           => $data['submit_user'],
+                'article_allow_comments' => 0,
+                'article_allow_ratings'  => 0
             ];
             return $returnInformations;
         } else {
-            redirect(clean_request("", [], FALSE));
+            redirect(clean_request('', [], FALSE));
             return NULL;
         }
     }
@@ -152,25 +150,47 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
         // Textarea Settings
         if (!fusion_get_settings("tinymce_enabled")) {
             $articleSnippetSettings = [
-                "required"   => TRUE, "preview" => TRUE, "html" => TRUE, "autosize" => TRUE, "placeholder" => $this->locale['article_0254'],
-                "error_text" => $this->locale['article_0271'], "form_name" => "articleform", "wordcount" => TRUE
+                'required'    => TRUE,
+                'preview'     => TRUE,
+                'html'        => TRUE,
+                'autosize'    => TRUE,
+                'placeholder' => $this->locale['article_0254'],
+                'error_text'  => $this->locale['article_0271'],
+                'form_name'   => 'articleform',
+                'wordcount'  => TRUE
             ];
             $articleExtendedSettings = [
-                "required"   => ($this->articleSettings['article_extended_required'] ? TRUE : FALSE), "preview" => TRUE, "html" => TRUE, "autosize" => TRUE, "placeholder" => $this->locale['article_0253'],
-                "error_text" => $this->locale['article_0272'], "form_name" => "articleform", "wordcount" => TRUE
+                'required'    => ($this->articleSettings['article_extended_required'] ? TRUE : FALSE),
+                'preview'     => TRUE,
+                'html'        => TRUE,
+                'autosize'    => TRUE,
+                'placeholder' => $this->locale['article_0253'],
+                'error_text'  => $this->locale['article_0272'],
+                'form_name'   => 'articleform',
+                'wordcount'   => TRUE
             ];
         } else {
-            $articleSnippetSettings = ["required" => TRUE, "type" => "tinymce", "tinymce" => "advanced", "error_text" => $this->locale['article_0271']];
-            $articleExtendedSettings = ["required" => ($this->articleSettings['article_extended_required'] ? TRUE : FALSE), "type" => "tinymce", "tinymce" => "advanced", "error_text" => $this->locale['article_0272']];
+            $articleSnippetSettings = [
+                'required'   => TRUE,
+                'type'       => 'tinymce',
+                'tinymce'    => 'advanced',
+                'error_text' => $this->locale['article_0271']
+            ];
+            $articleExtendedSettings = [
+                'required'   => ($this->articleSettings['article_extended_required'] ? TRUE : FALSE),
+                'type'       => 'tinymce',
+                'tinymce'    => 'advanced',
+                'error_text' => $this->locale['article_0272']
+            ];
         }
 
         // Start Form
-        echo openform("submissionform", "post", FUSION_REQUEST);
-        echo form_hidden("article_name", "", $this->inputArray['article_name']);
+        echo openform('submissionform', 'post', FUSION_REQUEST);
+        echo form_hidden('article_name', '', $this->inputArray['article_name']);
         ?>
         <div class="well clearfix m-t-15">
             <div class="pull-left">
-                <?php echo display_avatar($this->dataUser, "30px", "", FALSE, "img-rounded m-t-5 m-r-5"); ?>
+                <?php echo display_avatar($this->dataUser, '30px', '', FALSE, 'img-rounded m-t-5 m-r-5'); ?>
             </div>
             <div class="overflow-hide">
                 <?php
@@ -185,7 +205,7 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
                 ?>
             </div>
         </div>
-        <?php self::displayFormButtons("formstart", TRUE); ?>
+        <?php self::displayFormButtons("formstart"); ?>
 
         <!-- Display Form -->
         <div class="row">
@@ -193,17 +213,24 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
             <!-- Display Left Column -->
             <div class="col-xs-12 col-sm-12 col-md-7 col-lg-8">
                 <?php
-                echo form_text("article_subject", $this->locale['article_0100'], $this->inputArray['article_subject'], [
-                    "required" => TRUE, "max_lenght" => 200, "error_text" => $this->locale['article_0270']
+                echo form_text('article_subject', $this->locale['article_0100'], $this->inputArray['article_subject'], [
+                    'required'   => TRUE,
+                    'max_lenght' => 200,
+                    'error_text' => $this->locale['article_0270']
                 ]);
 
-                echo form_select("article_keywords", $this->locale['article_0260'], $this->inputArray['article_keywords'], [
-                    "max_length" => 320, "placeholder" => $this->locale['article_0260a'], "width" => "100%", "inner_width" => "100%", "tags" => TRUE, "multiple" => TRUE
+                echo form_select('article_keywords', $this->locale['article_0260'], $this->inputArray['article_keywords'], [
+                    'max_length'  => 320,
+                    'placeholder' => $this->locale['article_0260a'],
+                    'width'       => '100%',
+                    'inner_width' => '100%',
+                    'tags'        => TRUE,
+                    'multiple'    => TRUE
                 ]);
 
-                echo form_textarea("article_snippet", $this->locale['article_0251'], $this->inputArray['article_snippet'], $articleSnippetSettings);
+                echo form_textarea('article_snippet', $this->locale['article_0251'], $this->inputArray['article_snippet'], $articleSnippetSettings);
 
-                echo form_textarea("article_article", $this->locale['article_0252'], $this->inputArray['article_article'], $articleExtendedSettings);
+                echo form_textarea('article_article', $this->locale['article_0252'], $this->inputArray['article_article'], $articleExtendedSettings);
                 ?>
             </div>
 
@@ -213,51 +240,67 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
 
                 openside($this->locale['article_0261']);
 
-                echo form_select_tree("article_cat", $this->locale['article_0101'], $this->inputArray['article_cat'], [
-                    "required" => TRUE, "error_text" => $this->locale['article_0273'], "inner_width" => "100%", "inline" => TRUE, "parent_value" => $this->locale['choose'],
-                    "query"    => (multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "")
+                echo form_select_tree('article_cat', $this->locale['article_0101'], $this->inputArray['article_cat'], [
+                    'required'     => TRUE,
+                    'error_text'   => $this->locale['article_0273'],
+                    'inner_width'  => '100%',
+                    'inline'       => TRUE,
+                    'parent_value' => $this->locale['choose'],
+                    'query'        => (multilang_table('AR') ? "WHERE article_cat_language='".LANGUAGE."'" : '')
                 ],
                     DB_ARTICLE_CATS, "article_cat_name", "article_cat_id", "article_cat_parent"
                 );
 
-                echo form_select("article_visibility", $this->locale['article_0106'], $this->inputArray['article_visibility'], [
-                    "options" => fusion_get_groups(), "placeholder" => $this->locale['choose'], "inner_width" => "100%", "inline" => TRUE,
+                echo form_select('article_visibility', $this->locale['article_0106'], $this->inputArray['article_visibility'], [
+                    'inline'      => TRUE,
+                    'placeholder' => $this->locale['choose'],
+                    'inner_width' => '100%',
+                    'options'     => fusion_get_groups()
                 ]);
 
                 if (multilang_table("AR")) {
-                    echo form_select("article_language", $this->locale['language'], $this->inputArray['article_language'], [
-                        "options" => fusion_get_enabled_languages(), "placeholder" => $this->locale['choose'], "inner_width" => "100%", "inline" => TRUE,
+                    echo form_select('article_language', $this->locale['language'], $this->inputArray['article_language'], [
+                        'inline'      => TRUE,
+                        'placeholder' => $this->locale['choose'],
+                        'inner_width' => '100%',
+                        'options'     => fusion_get_enabled_languages(),
                     ]);
                 } else {
-                    echo form_hidden("article_language", "", $this->inputArray['article_language']);
+                    echo form_hidden('article_language', '', $this->inputArray['article_language']);
                 }
 
-                echo form_datepicker("article_datestamp", $this->locale['article_0203'], $this->inputArray['article_datestamp'], [
-                    "inline" => TRUE, "inner_width" => "100%"
+                echo form_datepicker('article_datestamp', $this->locale['article_0203'], $this->inputArray['article_datestamp'], [
+                    'inline'      => TRUE,
+                    'inner_width' => '100%'
                 ]);
 
                 closeside();
 
                 openside($this->locale['article_0262']);
 
-                echo form_checkbox("article_draft", $this->locale['article_0256'], $this->inputArray['article_draft'], [
-                    "class" => "m-b-5", "reverse_label" => TRUE
+                echo form_checkbox('article_draft', $this->locale['article_0256'], $this->inputArray['article_draft'], [
+                    'reverse_label' => TRUE,
+                    'class'         => 'm-b-5'
                 ]);
 
-                if (fusion_get_settings("tinymce_enabled") != 1) {
-                    echo form_checkbox("article_breaks", $this->locale['article_0257'], $this->inputArray['article_breaks'], [
-                        "value" => "y", "class" => "m-b-5", "reverse_label" => TRUE
+                if (fusion_get_settings('tinymce_enabled') != 1) {
+                    echo form_checkbox('article_breaks', $this->locale['article_0257'], $this->inputArray['article_breaks'], [
+                        'value'         => 'y',
+                        'reverse_label' => TRUE,
+                        'class'         => 'm-b-5'
                     ]);
                 }
 
                 echo form_checkbox("article_allow_comments", $this->locale['article_0258'], $this->inputArray['article_allow_comments'], [
-                    "class"   => "m-b-5", "reverse_label" => TRUE,
-                    "ext_tip" => (!fusion_get_settings("comments_enabled") ? "<div class='alert alert-warning'>".sprintf($this->locale['article_0274'], $this->locale['comments'])."</div>" : "")
+                    'class'         => 'm-b-5',
+                    'reverse_label' => TRUE,
+                    'ext_tip'       => (!fusion_get_settings('comments_enabled') ? "<div class='alert alert-warning'>".sprintf($this->locale['article_0274'], $this->locale['comments'])."</div>" : "")
                 ]);
 
-                echo form_checkbox("article_allow_ratings", $this->locale['article_0259'], $this->inputArray['article_allow_ratings'], [
-                    "class"   => "m-b-5", "reverse_label" => TRUE,
-                    "ext_tip" => (!fusion_get_settings("ratings_enabled") ? "<div class='alert alert-warning'>".sprintf($this->locale['article_0274'], $this->locale['ratings'])."</div>" : "")
+                echo form_checkbox('article_allow_ratings', $this->locale['article_0259'], $this->inputArray['article_allow_ratings'], [
+                    'class'         => 'm-b-5',
+                    'reverse_label' => TRUE,
+                    'ext_tip'       => (!fusion_get_settings('ratings_enabled') ? "<div class='alert alert-warning'>".sprintf($this->locale['article_0274'], $this->locale['ratings'])."</div>" : "")
                 ]);
                 closeside();
                 ?>
@@ -265,7 +308,7 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
             </div>
         </div>
         <?php
-        self::displayFormButtons("formend", FALSE);
+        self::displayFormButtons("formend");
         echo closeform();
     }
 
@@ -275,16 +318,22 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
      * @param      $unique_id
      * @param bool $breaker
      */
-    private function displayFormButtons($unique_id, $breaker = TRUE) {
-        ?>
-        <div class="m-t-20">
-            <?php echo form_button("preview_submission", $this->locale['preview'], $this->locale['preview'], ["class" => "btn-default m-r-10", "icon" => "fa fa-fw fa-eye", "input-id" => "preview_submission-".$unique_id.""]); ?>
-            <?php echo form_button("publish_submission", $this->locale['article_0352'], $this->locale['article_0352'], ["class" => "btn-success m-r-10", "icon" => "fa fa-fw fa-hdd-o", "input-id" => "publish_submission-".$unique_id.""]); ?>
-            <?php echo form_button("delete_submission", $this->locale['delete'], $this->locale['delete'], ["class" => "btn-danger m-r-10", "icon" => "fa fa-fw fa-trash", "input-id" => "delete_submission-".$unique_id.""]); ?>
-        </div>
-        <?php if ($breaker) { ?>
-            <hr/><?php } ?>
-        <?php
+    private function displayFormButtons($unique_id) {
+        echo form_button('preview_submission', $this->locale['preview'], $this->locale['preview'], [
+            'class'    => 'btn-default m-r-10',
+            'icon'     => 'fa-eye',
+            'input-id' => 'preview_submission-'.$unique_id
+        ]);
+        echo form_button('publish_submission', $this->locale['article_0352'], $this->locale['article_0352'], [
+            'class'    => 'btn-success m-r-10',
+            'icon'     => 'fa-hdd-o',
+            'input-id' => 'publish_submission-'.$unique_id
+        ]);
+        echo form_button('delete_submission', $this->locale['delete'], $this->locale['delete'], [
+            'class'    => 'btn-danger m-r-10',
+            'icon'     => 'fa-trash',
+            'input-id' => 'delete_submission-'.$unique_id
+        ]);
     }
 
     /**
@@ -316,14 +365,14 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
                 <?php if (dbrows($result) > 0) :
                     while ($data = dbarray($result)) : ?>
                         <?php
-                        $submitData = unserialize($data['submit_criteria']);
+                        $submitData = \defender::decode($data['submit_criteria']);
                         $submitUser = $this->locale['user_na'];
                         if ($data['user_name']) {
                             $submitUser = display_avatar($data, '20px', '', TRUE, 'img-rounded m-r-5');
                             $submitUser .= profile_link($data['user_id'], $data['user_name'], $data['user_status']);
                         }
 
-                        $reviewLink = clean_request("section=submissions&submit_id=".$data['submit_id'], ["section", "ref", "action", "submit_id"], FALSE);
+                        $reviewLink = clean_request("section=submissions&submit_id=".$data['submit_id'], ['section', 'ref', 'action', 'submit_id'], FALSE);
                         ?>
                         <tr>
                             <td>#<?php echo $data['submit_id']; ?></td>
@@ -361,15 +410,15 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
         $this->articleSettings = self::get_article_settings();
 
         // Handle a Submission
-        if (isset($_GET['submit_id']) && isNum($_GET['submit_id']) && dbcount("(submit_id)", DB_SUBMISSIONS, "submit_id='".$_GET['submit_id']."' AND submit_type='a'")) {
+        if (isset($_GET['submit_id']) && isNum($_GET['submit_id']) && dbcount("(submit_id)", DB_SUBMISSIONS, "submit_id=:submitid AND submit_type=:submittype", ['submitid' => $_GET['submit_id'], ':submittype' => 'a'])) {
             $this->inputArray = self::unserializeData();
 
             // Get Infos about Submissioner
-            $resultUser = dbquery("SELECT user_id, user_name, user_status, user_avatar FROM ".DB_USERS." WHERE user_id='".$this->inputArray['article_name']."' LIMIT 0,1");
+            $resultUser = dbquery("SELECT user_id, user_name, user_status, user_avatar FROM ".DB_USERS." WHERE user_id=:userid LIMIT 0,1", [':userid' => $this->inputArray['article_name']]);
             if (dbrows($resultUser) > 0) {
                 $this->dataUser = dbarray($resultUser);
             } else {
-                $this->dataUser = ["user_id" => $this->inputArray['article_name'], "user_name" => $this->locale['user_na'], "user_status" => 0, "user_avatar" => FALSE];
+                $this->dataUser = ['user_id' => $this->inputArray['article_name'], 'user_name' => $this->locale['user_na'], 'user_status' => 0, 'user_avatar' => FALSE];
             }
 
             // Delete, Publish, Preview

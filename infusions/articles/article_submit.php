@@ -20,7 +20,7 @@ if (!defined("IN_FUSION")) {
 }
 
 // Settings
-$articleSettings = get_settings("articles");
+$articleSettings = get_settings('articles');
 
 // Locale
 $locale = fusion_get_locale('', ARTICLE_ADMIN_LOCALE);
@@ -32,12 +32,12 @@ add_to_title($locale['global_200'].$locale['article_0900']);
 if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_status='1' AND ".groupaccess("article_cat_visibility")."")) {
     if (iMEMBER && $articleSettings['article_allow_submission']) {
         $criteriaArray = [
-            "article_subject"  => "",
-            "article_keywords" => "",
-            "article_cat"      => 0,
-            "article_language" => LANGUAGE,
-            "article_snippet"  => "",
-            "article_article"  => ""
+            'article_subject'  => '',
+            'article_keywords' => '',
+            'article_cat'      => 0,
+            'article_language' => LANGUAGE,
+            'article_snippet'  => '',
+            'article_article'  => ''
         ];
 
         if (isset($_POST['cancel_article'])) {
@@ -57,23 +57,25 @@ if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_status='1' AND ".g
             }
 
             $criteriaArray = [
-                "article_subject"  => form_sanitizer($_POST['article_subject'], "", "article_subject"),
-                "article_cat"      => form_sanitizer($_POST['article_cat'], 0, "article_cat"),
-                "article_snippet"  => form_sanitizer($article_snippet, "", "article_snippet"),
-                "article_article"  => form_sanitizer($article_article, "", "article_article"),
-                "article_keywords" => form_sanitizer($_POST['article_keywords'], "", "article_keywords"),
-                "article_language" => form_sanitizer($_POST['article_language'], LANGUAGE, "article_language"),
+                'article_subject'  => form_sanitizer($_POST['article_subject'], '', 'article_subject'),
+                'article_cat'      => form_sanitizer($_POST['article_cat'], 0, 'article_cat'),
+                'article_snippet'  => form_sanitizer($article_snippet, '', 'article_snippet'),
+                'article_article'  => form_sanitizer($article_article, '', 'article_article'),
+                'article_keywords' => form_sanitizer($_POST['article_keywords'], '', 'article_keywords'),
+                'article_language' => form_sanitizer($_POST['article_language'], LANGUAGE, 'article_language'),
             ];
 
             // Save
             if (defender::safe() && isset($_POST['submit_article'])) {
                 $inputArray = [
-                    "submit_type"     => "a", "submit_user" => $userdata['user_id'], "submit_datestamp" => time(),
-                    "submit_criteria" => addslashes(serialize($criteriaArray))
+                    'submit_type'      => "a",
+                    'submit_user'      => fusion_get_userdata('user_id'),
+                    'submit_datestamp' => time(),
+                    'submit_criteria'  => \defender::encode($criteriaArray)
                 ];
-                dbquery_insert(DB_SUBMISSIONS, $inputArray, "save");
-                addNotice("success", $locale['article_0910']);
-                redirect(clean_request("submitted=a", ["stype"], TRUE));
+                dbquery_insert(DB_SUBMISSIONS, $inputArray, 'save');
+                addNotice('success', $locale['article_0910']);
+                redirect(clean_request('submitted=a', ['stype'], TRUE));
             }
 
             // Display
@@ -108,63 +110,98 @@ if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_status='1' AND ".g
             // Textarea Settings
             if (!fusion_get_settings("tinymce_enabled")) {
                 $articleSnippetSettings = [
-                    "required"   => TRUE, "preview" => TRUE, "html" => TRUE, "autosize" => TRUE, "placeholder" => $locale['article_0254'],
-                    "error_text" => $locale['article_0271'], "form_name" => "submissionform", "wordcount" => TRUE
+                    'required'    => TRUE,
+                    'preview'     => TRUE,
+                    'html'        => TRUE,
+                    'autosize'    => TRUE,
+                    'placeholder' => $locale['article_0254'],
+                    'error_text'  => $locale['article_0271'],
+                    'form_name'   => 'submissionform',
+                    'wordcount'   => TRUE
                 ];
                 $articleExtendedSettings = [
-                    "required"   => ($articleSettings['article_extended_required'] ? TRUE : FALSE), "preview" => TRUE, "html" => TRUE, "autosize" => TRUE, "placeholder" => $locale['article_0253'],
-                    "error_text" => $locale['article_0272'], "form_name" => "submissionform", "wordcount" => TRUE
+                    'required'    => ($articleSettings['article_extended_required'] ? TRUE : FALSE),
+                    'preview'     => TRUE,
+                    'html'        => TRUE,
+                    'autosize'    => TRUE,
+                    'placeholder' => $locale['article_0253'],
+                    'error_text'  => $locale['article_0272'],
+                    'form_name'   => 'submissionform',
+                    'wordcount'   => TRUE
                 ];
             } else {
-                $articleSnippetSettings = ["required" => TRUE, "type" => "tinymce", "tinymce" => "advanced", "error_text" => $locale['article_0271']];
-                $articleExtendedSettings = ["required" => ($articleSettings['article_extended_required'] ? TRUE : FALSE), "type" => "tinymce", "tinymce" => "advanced", "error_text" => $locale['article_0272']];
+                $articleSnippetSettings = [
+                    'required'   => TRUE,
+                    'type'       => 'tinymce',
+                    'tinymce'    => 'advanced',
+                    'error_text' => $locale['article_0271']
+                ];
+                $articleExtendedSettings = [
+                    'required'   => ($articleSettings['article_extended_required'] ? TRUE : FALSE),
+                    'type'       => 'tinymce',
+                    'tinymce'    => 'advanced',
+                    'error_text' => $locale['article_0272']
+                ];
             }
 
-            echo openform("submissionform", "post", BASEDIR."submit.php?stype=a");
+            echo openform('submissionform', 'post', BASEDIR.'submit.php?stype=a');
 
-            echo form_text("article_subject", $locale['article_0100'], $criteriaArray['article_subject'], [
-                "required" => TRUE, "max_lenght" => 200, "error_text" => $locale['article_0270']
+            echo form_text('article_subject', $locale['article_0100'], $criteriaArray['article_subject'], [
+                'required'   => TRUE,
+                'max_lenght' => 200,
+                'error_text' => $locale['article_0270']
             ]);
 
-            echo form_select("article_keywords", $locale['article_0260'], $criteriaArray['article_keywords'], [
-                "max_length" => 320, "placeholder" => $locale['article_0260a'], "width" => "100%", "inner_width" => "100%", "tags" => TRUE, "multiple" => TRUE
+            echo form_select('article_keywords', $locale['article_0260'], $criteriaArray['article_keywords'], [
+                'max_length'  => 320,
+                'placeholder' => $locale['article_0260a'],
+                'width'       => '100%',
+                'inner_width' => '100%',
+                'tags'        => TRUE,
+                'multiple'    => TRUE
             ]);
 
-            echo form_textarea("article_snippet", $locale['article_0251'], $criteriaArray['article_snippet'], $articleSnippetSettings);
+            echo form_textarea('article_snippet', $locale['article_0251'], $criteriaArray['article_snippet'], $articleSnippetSettings);
 
-            echo form_textarea("article_article", $locale['article_0252'], $criteriaArray['article_article'], $articleExtendedSettings);
+            echo form_textarea('article_article', $locale['article_0252'], $criteriaArray['article_article'], $articleExtendedSettings);
 
-            echo form_select_tree("article_cat", $locale['article_0101'], $criteriaArray['article_cat'], [
-                "required" => TRUE, "error_text" => $locale['article_0273'], "inner_width" => "100%", "inline" => TRUE, "parent_value" => $locale['choose'],
-                "query"    => (multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "")
+            echo form_select_tree('article_cat', $locale['article_0101'], $criteriaArray['article_cat'], [
+                'required'     => TRUE,
+                'error_text'   => $locale['article_0273'],
+                'inner_width'  => '100%',
+                'inline'       => TRUE,
+                'parent_value' => $locale['choose'],
+                'query'        => (multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "")
             ],
                 DB_ARTICLE_CATS, "article_cat_name", "article_cat_id", "article_cat_parent"
             );
 
             if (multilang_table("AR")) {
-                echo form_select("article_language", $locale['language'], $criteriaArray['article_language'], [
-                    "options" => fusion_get_enabled_languages(), "placeholder" => $locale['choose'], "inner_width" => "100%", "inline" => TRUE,
+                echo form_select('article_language', $locale['language'], $criteriaArray['article_language'], [
+                    'options'     => fusion_get_enabled_languages(),
+                    'placeholder' => $locale['choose'],
+                    'inner_width' => '100%',
+                    'inline'      => TRUE,
                 ]);
             } else {
-                echo form_hidden("article_language", "", $criteriaArray['article_language']);
+                echo form_hidden('article_language', '', $criteriaArray['article_language']);
             }
 
-            echo '<div class="m-t-20">';
-            echo form_button("cancel_article", $locale['cancel'], $locale['cancel'], ["class" => "btn-default m-r-10", "icon" => "fa fa-fw fa-times"]);
-            echo form_button("submit_article", $locale['article_0900'], $locale['article_0900'], ["class" => "btn-success m-r-10", "icon" => "fa fa-fw fa-hdd-o"]);
-            echo form_button("preview_article", $locale['preview'], $locale['preview'], ["class" => "btn-primary m-r-10", "icon" => "fa fa-fw fa-eye"]);
-            echo '</div>';
+            echo "<div class='m-t-20'>";
+            echo form_button('submit_article', $locale['article_0900'], $locale['article_0900'], ['class' => 'btn-success m-r-10', 'icon' => 'fa-hdd-o']);
+            echo form_button('preview_article', $locale['preview'], $locale['preview'], ['class' => 'btn-primary m-r-10', 'icon' => 'fa-eye']);
+            echo "</div>";
 
             echo closeform();
         }
 
     } else if (!iMEMBER && $articleSettings['article_allow_submission']) {
-        echo '<div class="well text-center"><p>'.$locale['article_0921'].'</p></div>';
+        echo "<div class='well text-center'><p>".$locale['article_0921']."</p></div>";
     } else {
-        echo '<div class="well text-center"><p>'.$locale['article_0922'].'</p></div>';
+        echo "<div class='well text-center'><p>".$locale['article_0922']."</p></div>";
     }
 } else {
-    echo '<div class="well text-center"><p>'.$locale['article_0923'].'</p></div>';
+    echo "<div class='well text-center'><p>".$locale['article_0923']."</p></div>";
 }
 
 closetable();
