@@ -77,7 +77,7 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
                 if (isset($_POST['publish_submission'])) {
                     dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id=:submitid AND submit_type=:submittype", [':submitid' => $_GET['submit_id'], ':submittype' => 'a']);
                     dbquery_insert(DB_ARTICLES, $this->inputArray, 'save');
-                    addNotice('success', (!$this->inputArray['article_draft'] ? $this->locale['article_0060'] : $this->locale['article_0061']));
+                    addNotice('success', ($this->inputArray['article_draft'] ? $this->locale['article_0060'] : $this->locale['article_0061']));
                     redirect(clean_request('', ['submit_id'], FALSE));
                 }
 
@@ -240,7 +240,15 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
 
                 openside($this->locale['article_0261']);
 
-                echo form_select_tree('article_cat', $this->locale['article_0101'], $this->inputArray['article_cat'], [
+            echo form_select('article_draft', $this->locale['status'], $this->inputArray['article_draft'], [
+                'inline'      => TRUE,
+                'inner_width' => '100%',
+                'options'     => [
+                    0 => $this->locale['draft'],
+                    1 => $this->locale['publish']
+                ]
+            ]);
+            echo form_select_tree('article_cat', $this->locale['article_0101'], $this->inputArray['article_cat'], [
                     'required'     => TRUE,
                     'error_text'   => $this->locale['article_0273'],
                     'inner_width'  => '100%',
@@ -277,11 +285,6 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
                 closeside();
 
                 openside($this->locale['article_0262']);
-
-                echo form_checkbox('article_draft', $this->locale['article_0256'], $this->inputArray['article_draft'], [
-                    'reverse_label' => TRUE,
-                    'class'         => 'm-b-5'
-                ]);
 
                 if (fusion_get_settings('tinymce_enabled') != 1) {
                     echo form_checkbox('article_breaks', $this->locale['article_0257'], $this->inputArray['article_breaks'], [

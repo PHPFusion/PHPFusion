@@ -58,12 +58,8 @@ class ArticlesSettingsAdmin extends ArticlesAdminModel {
             }
         }
 
-        //opentable("");
-        ?>
-        <div class="well m-t-10">
-            <?php echo $this->locale['article_0400']; ?>
-        </div>
-        <?php
+        echo "<div class='well m-t-10'>".$this->locale['article_0400']."</div>";
+
         echo openform('settingsform', 'post', FUSION_REQUEST, ['class' => 'spacer-sm']);
         echo form_text('article_pagination', $this->locale['article_0401'], $article_settings['article_pagination'], [
             'inline'      => TRUE,
