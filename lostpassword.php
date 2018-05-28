@@ -22,8 +22,10 @@ require_once INCLUDES."sendmail_include.php";
 if (iMEMBER) {
     redirect(BASEDIR.'index.php');
 }
+
 add_to_title($locale['global_200'].$locale['400']);
-opentable($locale['400']);
+
+ob_start();
 $obj = new PHPFusion\LostPassword();
 if (isset($_GET['user_email']) && isset($_GET['account'])) {
     $obj->checkPasswordRequest($_GET['user_email'], $_GET['account']);
@@ -35,5 +37,20 @@ if (isset($_GET['user_email']) && isset($_GET['account'])) {
     $obj->renderInputForm();
     $obj->displayOutput();
 }
-closetable();
+$content = ob_get_contents();
+ob_end_clean();
+
+if (!function_exists("display_lostpassword")) {
+    function display_lostpassword($content) {
+        $locale = fusion_get_locale();
+
+        opentable($locale['400']);
+        echo $content;
+        closetable();
+    }
+}
+
+
+display_lostpassword($content);
+
 require_once THEMES."templates/footer.php";
