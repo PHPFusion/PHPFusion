@@ -227,8 +227,8 @@ class ArticlesAdmin extends ArticlesAdminModel {
             'inline'      => TRUE,
             'inner_width' => '100%',
             'options'     => [
-                0 => $this->locale['draft'],
-                1 => $this->locale['publish']
+                1 => $this->locale['draft'],
+                0 => $this->locale['publish']
             ]
         ]);
         echo form_select_tree('article_cat', $this->locale['article_0101'], $this->article_data['article_cat'], [
@@ -340,10 +340,10 @@ class ArticlesAdmin extends ArticlesAdminModel {
 
                         switch ($_POST['table_action']) {
                             case "publish":
-                                dbquery("UPDATE ".DB_ARTICLES." SET article_draft=:draft WHERE article_id=:articleid", [':draft' => '1', ':articleid' => intval($article_id)]);
+                                dbquery("UPDATE ".DB_ARTICLES." SET article_draft=:draft WHERE article_id=:articleid", [':draft' => '0', ':articleid' => intval($article_id)]);
                                 break;
                             case "unpublish":
-                                dbquery("UPDATE ".DB_ARTICLES." SET article_draft=:draft WHERE article_id=:articleid", [':draft' => '0', ':articleid' => intval($article_id)]);
+                                dbquery("UPDATE ".DB_ARTICLES." SET article_draft=:draft WHERE article_id=:articleid", [':draft' => '1', ':articleid' => intval($article_id)]);
                                 break;
                             case "delete":
                                 dbquery("DELETE FROM ".DB_ARTICLES." WHERE article_id=:articleid", [':articleid' => intval($article_id)]);
@@ -633,7 +633,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
                                 </a>
                             </td>
                             <td>
-                                <span class="badge"><?php echo $data['article_draft'] ? $this->locale['no'] : $this->locale['yes']; ?></span>
+                                <span class="badge"><?php echo $data['article_draft'] ? $this->locale['yes'] : $this->locale['no']; ?></span>
                             </td>
                             <td><?php echo($data['article_allow_comments'] ? format_word($data['comments_count'], $this->locale['fmt_comment']) : $this->locale['disable']); ?></td>
                             <td><?php echo($data['article_allow_ratings'] ? format_word($data['ratings_count'], $this->locale['fmt_rating']) : $this->locale['disable']); ?></td>

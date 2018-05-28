@@ -77,7 +77,7 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
                 if (isset($_POST['publish_submission'])) {
                     dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id=:submitid AND submit_type=:submittype", [':submitid' => $_GET['submit_id'], ':submittype' => 'a']);
                     dbquery_insert(DB_ARTICLES, $this->inputArray, 'save');
-                    addNotice('success', ($this->inputArray['article_draft'] ? $this->locale['article_0060'] : $this->locale['article_0061']));
+                    addNotice('success', (!$this->inputArray['article_draft'] ? $this->locale['article_0060'] : $this->locale['article_0061']));
                     redirect(clean_request('', ['submit_id'], FALSE));
                 }
 
@@ -244,8 +244,8 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
                 'inline'      => TRUE,
                 'inner_width' => '100%',
                 'options'     => [
-                    0 => $this->locale['draft'],
-                    1 => $this->locale['publish']
+                    1 => $this->locale['draft'],
+                    0 => $this->locale['publish']
                 ]
             ]);
             echo form_select_tree('article_cat', $this->locale['article_0101'], $this->inputArray['article_cat'], [
