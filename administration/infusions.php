@@ -25,9 +25,9 @@ add_to_jquery("$('.defuse').bind('click', function() {return confirm('".$locale[
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'infusions.php'.fusion_get_aidlink(), 'title' => $locale['400']]);
 
 if (($folder = filter_input(INPUT_POST, 'infuse'))) {
-    PHPFusion\Installer\Infusion_Core::getInstance()->infuse($folder);
+    \PHPFusion\Installer\Infusion_Core::getInstance()->infuse($folder);
 } else if ($folder = filter_input(INPUT_POST, 'defuse')) {
-    PHPFusion\Installer\Infusion_Core::getInstance()->defuse($folder);
+    \PHPFusion\Installer\Infusion_Core::getInstance()->defuse($folder);
 }
 
 opentable($locale['400']);
@@ -38,7 +38,7 @@ echo "</div>\n";
 $infs = [];
 $temp = makefilelist(INFUSIONS, ".|..|index.php", TRUE, "folders");
 foreach ($temp as $folders) {
-    $inf = PHPFusion\Installer\Infusion_Core::load_infusion($folders);
+    $inf = \PHPFusion\Installer\Infusion_Core::load_infusion($folders);
     if (!empty($inf)) {
         $infs[$folders] = $inf;
     }
@@ -65,7 +65,7 @@ if (!isset($_POST['infuse']) && !isset($_POST['infusion']) && !isset($_GET['defu
             $content .= "<div class='col-xs-2 col-sm-4 col-md-2'>\n";
             if ($inf['status'] > 0) {
                 if ($inf['status'] > 1) {
-                    $content .= form_button('infuse', $locale['416'], $inf['folder'], ['class' => 'btn-info m-t-5 infuse', 'icon' => ' fa fa-magnet', 'input_id' => 'infuse_'.$i]);
+                    $content .= form_button('infuse', $locale['416'], $inf['folder'], ['class' => 'btn-info m-t-5 infuse', 'icon' => 'fa fa-magnet', 'input_id' => 'infuse_'.$i]);
                 } else {
                     $content .= form_button('defuse', $locale['411'], $inf['folder'], ['class' => 'btn-default m-t-5 defuse', 'icon' => 'fa fa-trash', 'input_id' => 'defuse_'.$i]);
                 }
