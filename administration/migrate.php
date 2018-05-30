@@ -5,8 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: migrate.php
-| Author: Frederick Chan MC (Chan)
-| Co-Author: Joakim Falk (Falk)
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -27,9 +26,9 @@ $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/migrate.php');
 opentable($locale['MIG_100']);
 
 if (isset($_POST['migrate'])) {
-	print_p($_POST);
     $user_primary_id = form_sanitizer($_POST['user_primary'], '', 'user_primary');
     $user_temp_id = form_sanitizer($_POST['user_migrate'], '', 'user_migrate');
+
     if ($user_primary_id == $user_temp_id || !isnum($user_primary_id) || !isnum($user_temp_id)) {
         \defender::stop();
         addNotice('danger', $locale['MIG_101']);
@@ -37,7 +36,6 @@ if (isset($_POST['migrate'])) {
     }
 
     if (\defender::safe()) {
-     //else {
         $result = dbquery("SELECT user_id, user_name FROM ".DB_USERS." WHERE user_id=:userid", [':userid' => $user_primary_id]);
         if (dbrows($result) > 0) {
             $result2 = dbquery("SELECT user_id, user_name FROM ".DB_USERS." WHERE user_id=:userid", [':userid' => $user_temp_id]);
@@ -111,9 +109,7 @@ if (isset($_POST['migrate'])) {
         }
     }
 } else {
-
     user_posts_migrate_console();
-
 }
 closetable();
 
@@ -188,54 +184,54 @@ function user_posts_migrate_console() {
         ],
     ];
 
-echo openform('inputform', 'post', FUSION_REQUEST);
-echo "<div class='m-t-20'>";
-echo "<div class='col-xs-12 col-sm-12'>\n";
-echo "<div class='row'>\n";
-echo "<div class='col-xs-12 col-sm-4'>\n";
-echo form_user_select('user_primary', $locale['MIG_135'], (isset($_POST['user_primary']) && isnum($_POST['user_primary']) ? $_POST['user_primary'] : ''), [
-    'placeholder' => $locale['MIG_136']
-]);
-echo "</div>";
-echo "<div class='col-xs-12 col-sm-8'>\n";
-echo form_user_select('user_migrate', $locale['MIG_137'], (isset($_POST['user_migrate']) && isnum($_POST['user_migrate']) ? $_POST['user_migrate'] : ''), [
-    'placeholder' => $locale['MIG_138']
-]);
-echo "</div>";
-//echo "<div class='col-xs-12 col-sm-4'>\n</div>\n";
-echo "</div>\n";
-echo "<div class='row'>\n";
-echo "<div class='col-xs-12 col-sm-4'><h4 class='m-0'>".$locale['MIG_139']."</h4><i>".$locale['MIG_140']."</i></div>\n";
-echo "<div class='col-xs-12 col-sm-8'>\n";
-foreach ($chkbox as $key => $chkboxinfo) {
-    if (!empty($chkboxinfo['activ'])) {
-        echo "<div class='display-block overflow-hide'>";
-        echo form_checkbox($key, $chkboxinfo['text'], $chkboxinfo['value'], [
-            'type'          => 'checkbox',
-            'reverse_label' => TRUE,
-            'class'         => 'm-b-0'
-        ]);
-        echo "</div>\n";
+    echo openform('inputform', 'post', FUSION_REQUEST);
+    echo "<div class='m-t-20'>";
+    echo "<div class='col-xs-12 col-sm-12'>\n";
+    echo "<div class='row'>\n";
+    echo "<div class='col-xs-12 col-sm-4'>\n";
+    echo form_user_select('user_primary', $locale['MIG_135'], (isset($_POST['user_primary']) && isnum($_POST['user_primary']) ? $_POST['user_primary'] : ''), [
+        'placeholder' => $locale['MIG_136']
+    ]);
+    echo "</div>";
+    echo "<div class='col-xs-12 col-sm-8'>\n";
+    echo form_user_select('user_migrate', $locale['MIG_137'], (isset($_POST['user_migrate']) && isnum($_POST['user_migrate']) ? $_POST['user_migrate'] : ''), [
+        'placeholder' => $locale['MIG_138']
+    ]);
+    echo "</div>";
+
+    echo "</div>\n";
+    echo "<div class='row'>\n";
+    echo "<div class='col-xs-12 col-sm-4'><h4 class='m-0'>".$locale['MIG_139']."</h4><i>".$locale['MIG_140']."</i></div>\n";
+    echo "<div class='col-xs-12 col-sm-8'>\n";
+    foreach ($chkbox as $key => $chkboxinfo) {
+        if (!empty($chkboxinfo['activ'])) {
+            echo "<div class='display-block overflow-hide'>";
+            echo form_checkbox($key, $chkboxinfo['text'], $chkboxinfo['value'], [
+                'type'          => 'checkbox',
+                'reverse_label' => TRUE,
+                'class'         => 'm-b-0'
+            ]);
+            echo "</div>\n";
+        }
     }
-}
-echo "</div>\n</div>\n";
-echo "<div class='row m-t-20'>\n";
-echo "<div class='col-xs-12 col-sm-4'><h4 class='m-0'>".$locale['MIG_141']."</h4><i>".$locale['MIG_142']."</i></div>\n";
-echo "<div class='col-xs-12 col-sm-8'>\n";
-echo "<div class='display-block overflow-hide'>";
-echo form_checkbox('del_user', $locale['MIG_170'], '', [
-    'type'          => 'checkbox',
-    'reverse_label' => TRUE,
-    'ext_tip'       => $locale['MIG_171'],
-    'class'         => 'm-b-0'
-]);
-echo "</div>\n";
-echo "</div>\n";
-echo "</div>\n";
-echo "</div>\n";
-echo form_button('migrate', $locale['MIG_175'], $locale['MIG_175'], ['inline' => TRUE, 'class' => 'btn-primary m-t-20']);
-echo "</div>\n";
-echo closeform();
+    echo "</div>\n</div>\n";
+    echo "<div class='row m-t-20'>\n";
+    echo "<div class='col-xs-12 col-sm-4'><h4 class='m-0'>".$locale['MIG_141']."</h4><i>".$locale['MIG_142']."</i></div>\n";
+    echo "<div class='col-xs-12 col-sm-8'>\n";
+    echo "<div class='display-block overflow-hide'>";
+    echo form_checkbox('del_user', $locale['MIG_170'], '', [
+        'type'          => 'checkbox',
+        'reverse_label' => TRUE,
+        'ext_tip'       => $locale['MIG_171'],
+        'class'         => 'm-b-0'
+    ]);
+    echo "</div>\n";
+    echo "</div>\n";
+    echo "</div>\n";
+    echo "</div>\n";
+    echo form_button('migrate', $locale['MIG_175'], $locale['MIG_175'], ['inline' => TRUE, 'class' => 'btn-primary m-t-20']);
+    echo "</div>\n";
+    echo closeform();
 }
 
 function user_posts_migrate($user_primary_id, $user_temp_id, $db, $user_column, $name) {
