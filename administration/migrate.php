@@ -17,272 +17,264 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
-pageAccess('MI');
-
 require_once THEMES."templates/admin_header.php";
-
-if (isset($_POST['user_primary']) && !isnum($_POST['user_primary'])) {
-    die("Access Denied");
-}
-if (isset($_POST['user_migrate']) && !isnum($_POST['user_migrate'])) {
-    die("Access Denied");
-}
+pageAccess('MI');
 
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/migrate.php');
 
-\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'migrate.php'.fusion_get_aidlink(), 'title' => $locale['100']]);
+\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'migrate.php'.fusion_get_aidlink(), 'title' => $locale['MIG_100']]);
 
-$settings = fusion_get_settings();
+opentable($locale['MIG_100']);
 
 if (isset($_POST['migrate'])) {
-    $user_primary_id = stripinput($_POST['user_primary']);
-    $user_temp_id = stripinput($_POST['user_migrate']);
-    if ($user_primary_id == $user_temp_id) {
-        echo "<div class='well text-center'>".$locale['101']."</div>\n";
-    } else {
-        $result = dbquery("SELECT user_id, user_name FROM ".DB_USERS." WHERE user_id='$user_primary_id'");
+	print_p($_POST);
+    $user_primary_id = form_sanitizer($_POST['user_primary'], '', 'user_primary');
+    $user_temp_id = form_sanitizer($_POST['user_migrate'], '', 'user_migrate');
+    if ($user_primary_id == $user_temp_id || !isnum($user_primary_id) || !isnum($user_temp_id)) {
+        \defender::stop();
+        addNotice('danger', $locale['MIG_101']);
+        redirect(FUSION_REQUEST);
+    }
+
+    if (\defender::safe()) {
+     //else {
+        $result = dbquery("SELECT user_id, user_name FROM ".DB_USERS." WHERE user_id=:userid", [':userid' => $user_primary_id]);
         if (dbrows($result) > 0) {
-            $result2 = dbquery("SELECT user_id, user_name FROM ".DB_USERS." WHERE user_id='$user_temp_id'");
+            $result2 = dbquery("SELECT user_id, user_name FROM ".DB_USERS." WHERE user_id=:userid", [':userid' => $user_temp_id]);
             if (dbrows($result2) > 0) {
                 if (isset($_POST['forum']) == '1') {
-                    user_posts_migrate($user_primary_id, $user_temp_id, DB_FORUM_THREAD_NOTIFY, 'notify_user', $locale['102']);
-                    user_posts_migrate($user_primary_id, $user_temp_id, DB_FORUM_THREADS, 'thread_author', $locale['103']);
-                    user_posts_migrate($user_primary_id, $user_temp_id, DB_FORUM_THREADS, 'thread_lastuser', $locale['104']);
-                    user_posts_migrate($user_primary_id, $user_temp_id, DB_FORUM_POSTS, 'post_author', $locale['105']);
-                    user_posts_migrate($user_primary_id, $user_temp_id, DB_FORUMS, 'forum_lastuser', $locale['106']);
-                    user_posts_migrate($user_primary_id, $user_temp_id, DB_FORUM_POLL_VOTERS, 'forum_vote_user_id', $locale['107']);
+                    user_posts_migrate($user_primary_id, $user_temp_id, DB_FORUM_THREAD_NOTIFY, 'notify_user', $locale['MIG_102']);
+                    user_posts_migrate($user_primary_id, $user_temp_id, DB_FORUM_THREADS, 'thread_author', $locale['MIG_103']);
+                    user_posts_migrate($user_primary_id, $user_temp_id, DB_FORUM_THREADS, 'thread_lastuser', $locale['MIG_104']);
+                    user_posts_migrate($user_primary_id, $user_temp_id, DB_FORUM_POSTS, 'post_author', $locale['MIG_105']);
+                    user_posts_migrate($user_primary_id, $user_temp_id, DB_FORUMS, 'forum_lastuser', $locale['MIG_106']);
+                    user_posts_migrate($user_primary_id, $user_temp_id, DB_FORUM_POLL_VOTERS, 'forum_vote_user_id', $locale['MIG_107']);
+                    user_posts_migrate($user_primary_id, $user_temp_id, DB_FORUM_VOTES, 'vote_user', $locale['MIG_108']);
+                    user_posts_migrate($user_primary_id, $user_temp_id, DB_USERS, 'user_reputation', $locale['MIG_109']);
 
-                    $result = dbquery("SELECT post_author, COUNT(post_id) as num_posts FROM ".DB_FORUM_POSTS." GROUP BY post_author");
-                    if (dbrows($result)) {
-                        while ($data = dbarray($result)) {
-                            $result2 = dbquery("UPDATE ".DB_USERS." SET user_posts='".$data['num_posts']."' WHERE user_id='".$data['post_author']."'");
-                        }
+                    $posts = dbcount("(post_id)", DB_FORUM_POSTS, "post_author=:postauthor", [':postauthor' => $user_temp_id]);
+                    if ($posts > 0) {
+                        dbquery("UPDATE ".DB_USERS." SET user_posts=:userposts WHERE user_id=:userid", [':userposts' => $posts, ':userid' => $user_primary_id]);
                     }
                 }
                 if (isset($_POST['comments']) == '1') {
-                    user_posts_migrate($user_primary_id, $user_temp_id, DB_COMMENTS, 'comment_name', $locale['108']);
+                    user_posts_migrate($user_primary_id, $user_temp_id, DB_COMMENTS, 'comment_name', $locale['MIG_115']);
                 }
                 if (isset($_POST['ratings']) == '1') {
-                    user_posts_migrate($user_primary_id, $user_temp_id, DB_RATINGS, 'rating_user', $locale['109']);
-                }
-                if (isset($_POST['polls']) == '1') {
-                    user_posts_migrate($user_primary_id, $user_temp_id, DB_POLL_VOTES, 'vote_user', $locale['110']);
-                }
-                if (isset($_POST['shoutbox']) == '1') {
-                    $result = dbcount("(inf_id)", DB_INFUSIONS, "inf_folder='shoutbox_panel'");
-                    if ($result > 0) {
-                        require_once INFUSIONS."shoutbox_panel/infusion_db.php";
-                        user_posts_migrate($user_primary_id, $user_temp_id, DB_SHOUTBOX, 'shout_name', $locale['111']);
-                    }
+                    user_posts_migrate($user_primary_id, $user_temp_id, DB_RATINGS, 'rating_user', $locale['MIG_116']);
                 }
                 if (isset($_POST['messages']) == '1') {
-                    user_posts_migrate($user_primary_id, $user_temp_id, DB_MESSAGES, 'message_to', $locale['112']);
-                    user_posts_migrate($user_primary_id, $user_temp_id, DB_MESSAGES, 'message_from', $locale['113']);
-                    user_posts_migrate($user_primary_id, $user_temp_id, DB_MESSAGES, 'message_user', $locale['114']);
-                    $result = dbquery("DELETE FROM ".DB_MESSAGES."_options WHERE user_id='".$user_temp_id."'");
+                    user_posts_migrate($user_primary_id, $user_temp_id, DB_MESSAGES, 'message_to', $locale['MIG_117']);
+                    user_posts_migrate($user_primary_id, $user_temp_id, DB_MESSAGES, 'message_from', $locale['MIG_118']);
+                    user_posts_migrate($user_primary_id, $user_temp_id, DB_MESSAGES, 'message_user', $locale['MIG_119']);
+                    $result = dbquery("DELETE FROM ".DB_MESSAGES."_options WHERE user_id=:userid", [':userid' => $user_temp_id]);
+                }
+                if (isset($_POST['polls']) == '1') {
+                    user_posts_migrate($user_primary_id, $user_temp_id, DB_POLL_VOTES, 'vote_user', $locale['MIG_120']);
+                }
+                if (isset($_POST['shoutbox']) == '1') {
+                    user_posts_migrate($user_primary_id, $user_temp_id, DB_SHOUTBOX, 'shout_name', $locale['MIG_121']);
                 }
                 if (isset($_POST['articles']) == '1') {
-                    user_posts_migrate($user_primary_id, $user_temp_id, DB_ARTICLES, 'article_name', $locale['115']);
+                    user_posts_migrate($user_primary_id, $user_temp_id, DB_ARTICLES, 'article_name', $locale['MIG_122']);
+                }
+                if (isset($_POST['faq']) == '1') {
+                    user_posts_migrate($user_primary_id, $user_temp_id, DB_FAQS, 'faq_name', $locale['MIG_123']);
                 }
                 if (isset($_POST['news']) == '1') {
-                    user_posts_migrate($user_primary_id, $user_temp_id, DB_NEWS, 'news_name', $locale['116']);
+                    user_posts_migrate($user_primary_id, $user_temp_id, DB_NEWS, 'news_name', $locale['MIG_124']);
                 }
                 if (isset($_POST['blog']) == '1') {
-                    user_posts_migrate($user_primary_id, $user_temp_id, DB_BLOG, 'blog_name', $locale['117']);
+                    user_posts_migrate($user_primary_id, $user_temp_id, DB_BLOG, 'blog_name', $locale['MIG_125']);
                 }
                 if (isset($_POST['downloads']) == '1') {
-                    user_posts_migrate($user_primary_id, $user_temp_id, DB_DOWNLOADS, 'download_user', $locale['118']);
+                    user_posts_migrate($user_primary_id, $user_temp_id, DB_DOWNLOADS, 'download_user', $locale['MIG_126']);
                 }
                 if (isset($_POST['photos']) == '1') {
-                    user_posts_migrate($user_primary_id, $user_temp_id, DB_PHOTOS, 'photo_user', $locale['119']);
+                    user_posts_migrate($user_primary_id, $user_temp_id, DB_PHOTOS, 'photo_user', $locale['MIG_127']);
                 }
                 if (isset($_POST['user_level']) == '1') {
                     user_rights_migrate($user_primary_id, $user_temp_id);
                 }
                 if (isset($_POST['del_user']) == '1') {
-                    $result = dbquery("DELETE FROM ".DB_USERS." WHERE user_id='$user_temp_id'");
+                    $result = dbquery("DELETE FROM ".DB_USERS." WHERE user_id=:userid", [':userid' => $user_temp_id]);
                 } else {
                     require_once INCLUDES."suspend_include.php";
-                    $result = dbquery("UPDATE ".DB_USERS." SET user_status='7' WHERE user_id='$user_temp_id'");
-                    suspend_log($user_temp_id, '7', $locale['121']);
+                    $result = dbquery("UPDATE ".DB_USERS." SET user_status=:status WHERE user_id=:userid", [':status' => '7', ':userid' => $user_temp_id]);
+                    suspend_log($user_temp_id, '7', $locale['MIG_130']);
                 }
             } else {
-                echo "<div class='well text-center'>".$locale['122']."</div>\n";
+                addNotice('danger', $locale['MIG_131']);
             }
         } else {
-            echo "<div class='well text-center'>".$locale['123']."</div>\n";
+            addNotice('danger', $locale['MIG_132']);
         }
     }
-}
+} else {
 
-opentable($locale['100']);
-user_posts_migrate_console();
+    user_posts_migrate_console();
+
+}
 closetable();
 
 function user_posts_migrate_console() {
     $locale = fusion_get_locale();
 
-    $result = dbquery("SELECT user_id, user_name FROM ".DB_USERS."");
-    if (dbrows($result) > 0) {
-        while ($user_data = dbarray($result)) {
-            $data[$user_data['user_id']] = "".$user_data['user_name']."";
-        }
-    } else {
-        $data['0'] = $locale['124'];
-    }
+    $chkbox = [
+        'user_level' => [
+            'value' => !empty($_POST['user_level']) ? $_POST['user_level'] : 0,
+            'text'  => $locale['MIG_150'],
+            'activ' => TRUE
+        ],
+        'messages'   => [
+            'value' => !empty($_POST['messages']) ? $_POST['messages'] : 0,
+            'text'  => $locale['MIG_151'],
+            'activ' => TRUE
+        ],
+        'comments'   => [
+            'value' => !empty($_POST['comments']) ? $_POST['comments'] : 0,
+            'text'  => $locale['MIG_152'],
+            'activ' => TRUE
+        ],
+        'ratings'    => [
+            'value' => !empty($_POST['ratings']) ? $_POST['ratings'] : 0,
+            'text'  => $locale['MIG_153'],
+            'activ' => TRUE
+        ],
+        'forum'      => [
+            'value' => !empty($_POST['forum']) ? $_POST['forum'] : 0,
+            'text'  => $locale['MIG_154'],
+            'activ' => db_exists(DB_FORUMS) ? TRUE : FALSE
+        ],
+        'articles'   => [
+            'value' => !empty($_POST['articles']) ? $_POST['articles'] : 0,
+            'text'  => $locale['MIG_155'],
+            'activ' => db_exists(DB_ARTICLES) ? TRUE : FALSE
+        ],
+        'faq'        => [
+            'value' => !empty($_POST['faq']) ? $_POST['faq'] : 0,
+            'text'  => $locale['MIG_156'],
+            'activ' => db_exists(DB_FAQS) ? TRUE : FALSE
+        ],
+        'polls'      => [
+            'value' => !empty($_POST['polls']) ? $_POST['polls'] : 0,
+            'text'  => $locale['MIG_157'],
+            'activ' => db_exists(DB_POLLS) ? TRUE : FALSE
+        ],
+        'news'       => [
+            'value' => !empty($_POST['news']) ? $_POST['news'] : 0,
+            'text'  => $locale['MIG_158'],
+            'activ' => db_exists(DB_NEWS) ? TRUE : FALSE
+        ],
+        'blog'       => [
+            'value' => !empty($_POST['blog']) ? $_POST['blog'] : 0,
+            'text'  => $locale['MIG_159'],
+            'activ' => db_exists(DB_BLOG) ? TRUE : FALSE
+        ],
+        'downloads'  => [
+            'value' => !empty($_POST['downloads']) ? $_POST['downloads'] : 0,
+            'text'  => $locale['MIG_160'],
+            'activ' => db_exists(DB_DOWNLOADS) ? TRUE : FALSE
+        ],
+        'photos'     => [
+            'value' => !empty($_POST['photos']) ? $_POST['photos'] : 0,
+            'text'  => $locale['MIG_161'],
+            'activ' => db_exists(DB_PHOTOS) ? TRUE : FALSE
+        ],
+        'shoutbox'   => [
+            'value' => !empty($_POST['shoutbox']) ? $_POST['shoutbox'] : 0,
+            'text'  => $locale['MIG_162'],
+            'activ' => db_exists(DB_SHOUTBOX) ? TRUE : FALSE
+        ],
+    ];
 
-    echo openform('inputform', 'post', FUSION_SELF.fusion_get_aidlink());
-    echo "<div class='table-responsive'><table class='table table-striped'>\n";
-    echo "<thead>\n";
-    echo "<tr><th style='width:33%; text-align:left'>".$locale['125']."</th><th style='width:33%; text-align:left;'>".$locale['126']."</th><th class='text-left'>&nbsp;</th>\n</tr>\n";
-    echo "</thead>\n";
-    echo "<tbody>\n";
-    echo "<tr>\n";
-    echo "<td>\n";
-    echo form_user_select('user_primary', '', isset($_POST['user_primary']) && isnum($_POST['user_primary'] ?: ''),
-        ['placeholder' => $locale['127']]);
-    echo "</td>\n";
-    echo "<td>\n";
-    echo form_user_select('user_migrate', '', isset($_POST['user_migrate']) && isnum($_POST['user_migrate'] ?: ''),
-        ['placeholder' => $locale['128']]);
-    echo "</td>\n";
-    echo "<td>\n";
-    echo form_button('migrate', $locale['129'], $locale['129'], ['inline' => TRUE, 'class' => 'btn btn-sm btn-primary']);
-    echo "</td>\n";
-    echo "</tr>\n";
-    echo "<tr>\n";
-    echo "<td>".$locale['130']."</td>";
-    echo "<td colspan='2'>\n";
-    echo form_checkbox('comments', $locale['132'], (isset($_POST['comments']) == '1' ? $_POST['comments'] : 0), [
-        'type'          => 'checkbox',
-        'reverse_label' => TRUE,
-        'class'         => 'm-b-0'
-    ]);
-    echo form_checkbox('ratings', $locale['133'], (isset($_POST['ratings']) == '1' ? $_POST['ratings'] : 0), [
-        'type'          => 'checkbox',
-        'reverse_label' => TRUE,
-        'class'         => 'm-b-0'
-    ]);
-    echo form_checkbox('polls', $locale['134'], (isset($_POST['polls']) == '1' ? $_POST['polls'] : 0), [
-        'type'          => 'checkbox',
-        'reverse_label' => TRUE,
-        'class'         => 'm-b-0'
-    ]);
-    echo form_checkbox('messages', $locale['136'], (isset($_POST['messages']) == '1' ? $_POST['messages'] : 0), [
-        'type'          => 'checkbox',
-        'reverse_label' => TRUE,
-        'class'         => 'm-b-0'
-    ]);
-    echo form_checkbox('user_level', $locale['142'], (isset($_POST['user_level']) == '1' ? $_POST['user_level'] : 0), [
-        'type'          => 'checkbox',
-        'reverse_label' => TRUE,
-    ]);
-
-    if (db_exists(DB_FORUMS)) {
-        echo form_checkbox('forum', $locale['131'], (isset($_POST['forum']) == '1' ? $_POST['forum'] : 0), [
+echo openform('inputform', 'post', FUSION_REQUEST);
+echo "<div class='m-t-20'>";
+echo "<div class='col-xs-12 col-sm-12'>\n";
+echo "<div class='row'>\n";
+echo "<div class='col-xs-12 col-sm-4'>\n";
+echo form_user_select('user_primary', $locale['MIG_135'], (isset($_POST['user_primary']) && isnum($_POST['user_primary']) ? $_POST['user_primary'] : ''), [
+    'placeholder' => $locale['MIG_136']
+]);
+echo "</div>";
+echo "<div class='col-xs-12 col-sm-8'>\n";
+echo form_user_select('user_migrate', $locale['MIG_137'], (isset($_POST['user_migrate']) && isnum($_POST['user_migrate']) ? $_POST['user_migrate'] : ''), [
+    'placeholder' => $locale['MIG_138']
+]);
+echo "</div>";
+//echo "<div class='col-xs-12 col-sm-4'>\n</div>\n";
+echo "</div>\n";
+echo "<div class='row'>\n";
+echo "<div class='col-xs-12 col-sm-4'><h4 class='m-0'>".$locale['MIG_139']."</h4><i>".$locale['MIG_140']."</i></div>\n";
+echo "<div class='col-xs-12 col-sm-8'>\n";
+foreach ($chkbox as $key => $chkboxinfo) {
+    if (!empty($chkboxinfo['activ'])) {
+        echo "<div class='display-block overflow-hide'>";
+        echo form_checkbox($key, $chkboxinfo['text'], $chkboxinfo['value'], [
             'type'          => 'checkbox',
             'reverse_label' => TRUE,
             'class'         => 'm-b-0'
         ]);
+        echo "</div>\n";
     }
-    if (db_exists(DB_ARTICLES)) {
-        echo form_checkbox('articles', $locale['137'], (isset($_POST['articles']) == '1' ? $_POST['articles'] : 0), [
-            'type'          => 'checkbox',
-            'reverse_label' => TRUE,
-            'class'         => 'm-b-0'
-        ]);
-    }
-    if (db_exists(DB_NEWS)) {
-        echo form_checkbox('news', $locale['138'], (isset($_POST['news']) == '1' ? $_POST['news'] : 0), [
-            'type'          => 'checkbox',
-            'reverse_label' => TRUE,
-            'class'         => 'm-b-0'
-        ]);
-    }
-    if (db_exists(DB_BLOG)) {
-        echo form_checkbox('blog', $locale['139'], (isset($_POST['blog']) == '1' ? $_POST['blog'] : 0), [
-            'type'          => 'checkbox',
-            'reverse_label' => TRUE,
-            'class'         => 'm-b-0'
-        ]);
-    }
-    if (db_exists(DB_DOWNLOADS)) {
-        echo form_checkbox('downloads', $locale['140'], (isset($_POST['downloads']) == '1' ? $_POST['downloads'] : 0), [
-            'type'          => 'checkbox',
-            'reverse_label' => TRUE,
-            'class'         => 'm-b-0'
-        ]);
-    }
-    if (db_exists(DB_PHOTOS)) {
-        echo form_checkbox('photos', $locale['141'], (isset($_POST['photos']) == '1' ? $_POST['photos'] : 0), [
-            'type'          => 'checkbox',
-            'reverse_label' => TRUE,
-            'class'         => 'm-b-0'
-        ]);
-    }
-    $shoutbox = dbcount("(inf_id)", DB_INFUSIONS, "inf_folder='shoutbox_panel'");
-    if ($shoutbox > 0) {
-        echo form_checkbox('shoutbox', $locale['135'], (isset($_POST['shoutbox']) == '1' ? $_POST['shoutbox'] : 0), [
-            'type'          => 'checkbox',
-            'reverse_label' => TRUE,
-            'class'         => 'm-b-0'
-        ]);
-    }
-    echo "</td>\n";
-    echo "</tr>\n";
-    echo "<tr>\n";
-    echo "<td>".$locale['143']."</td>";
-    echo "<td colspan='2'>\n";
-    echo form_checkbox('del_user', $locale['144'], '', [
-        'type'          => 'checkbox',
-        'reverse_label' => TRUE,
-        'ext_tip'       => $locale['145'],
-        'class'         => 'm-b-0'
-    ]);
-    echo "</td>\n";
-    echo "</tr>\n";
-    echo "</tbody>\n";
-    echo "</table>\n</div>";
-    echo closeform();
+}
+echo "</div>\n</div>\n";
+echo "<div class='row m-t-20'>\n";
+echo "<div class='col-xs-12 col-sm-4'><h4 class='m-0'>".$locale['MIG_141']."</h4><i>".$locale['MIG_142']."</i></div>\n";
+echo "<div class='col-xs-12 col-sm-8'>\n";
+echo "<div class='display-block overflow-hide'>";
+echo form_checkbox('del_user', $locale['MIG_170'], '', [
+    'type'          => 'checkbox',
+    'reverse_label' => TRUE,
+    'ext_tip'       => $locale['MIG_171'],
+    'class'         => 'm-b-0'
+]);
+echo "</div>\n";
+echo "</div>\n";
+echo "</div>\n";
+echo "</div>\n";
+echo form_button('migrate', $locale['MIG_175'], $locale['MIG_175'], ['inline' => TRUE, 'class' => 'btn-primary m-t-20']);
+echo "</div>\n";
+echo closeform();
 }
 
 function user_posts_migrate($user_primary_id, $user_temp_id, $db, $user_column, $name) {
-    global $locale;
+    $locale = fusion_get_locale();
 
-    $users = dbarray(dbquery("SELECT user_name FROM ".DB_USERS." WHERE user_id='$user_temp_id'"));
-    $p_user = dbarray(dbquery("SELECT user_name FROM ".DB_USERS." WHERE user_id='$user_primary_id'"));
-    $rows = dbcount("($user_column)", $db, "$user_column='$user_temp_id'");
+    $users = dbarray(dbquery("SELECT user_name FROM ".DB_USERS." WHERE user_id=:userid", [':userid' => $user_temp_id]));
+    $p_user = dbarray(dbquery("SELECT user_name FROM ".DB_USERS." WHERE user_id=:userid", [':userid' => $user_primary_id]));
+    $rows = dbcount("($user_column)", $db, "$user_column=:usercolumn", [':usercolumn' => $user_temp_id]);
 
     if (($rows) > 0) {
-        $result = dbquery("UPDATE ".$db." SET $user_column='$user_primary_id' WHERE $user_column='$user_temp_id'");
+        $result = dbquery("UPDATE ".$db." SET $user_column=:primaryid WHERE $user_column=:tempid", [':primaryid' => $user_primary_id, ':tempid' => $user_temp_id]);
         if (!$result) {
-            echo "<div class='well text-center'>".$locale['146']."</div>";
+            addNotice('danger', $locale['MIG_200']);
         } else {
-            echo "<div class='well text-center'>$rows ".($rows > 1 ? $locale['147'] : $locale['148'])." ".$locale['149']." <strong>$name</strong> ".$locale['150']." ".$users['user_name']." ".$locale['151']." ".$p_user['user_name'].".</div>";
+            echo "<div class='well text-center'>".(sprintf($locale['MIG_201'], $rows, $name, $users['user_name'], $p_user['user_name']))."</div>";
         }
     } else {
-        echo "<div class='well text-center'>".$locale['152']." <strong>$name</strong></div>\n";
+        echo "<div class='well text-center'>".(sprintf($locale['MIG_202'], $name))."</div>\n";
     }
 }
 
 function user_rights_migrate($user_primary_id, $user_temp_id) {
-    global $locale;
+    $locale = fusion_get_locale();
 
-    $result = dbquery("SELECT * FROM ".DB_USERS." WHERE user_id='$user_temp_id'");
+    $result = dbquery("SELECT * FROM ".DB_USERS." WHERE user_id=:userid", [':userid' => $user_temp_id]);
     if (dbrows($result) > 0) {
         $data = dbarray($result);
-        $result2 = dbquery("SELECT * FROM ".DB_USERS." WHERE user_id='$user_primary_id'");
+        $result2 = dbquery("SELECT * FROM ".DB_USERS." WHERE user_id=:userid", [':userid' => $user_primary_id]);
         if (dbrows($result2) > 0) {
             $cdata = dbarray($result2);
             $old_user_rights = explode(".", $data['user_rights']);
             $new_user_rights = explode(".", $cdata['user_rights']);
             if (is_array($old_user_rights)) {
                 if (empty($new_user_rights['0'])) {
-                    $result = dbquery("UPDATE ".DB_USERS." SET user_rights='".$data['user_rights']."' WHERE user_id='$user_primary_id'");
+                    $result = dbquery("UPDATE ".DB_USERS." SET user_rights=:rights WHERE user_id=:userid", [':rights' => $data['user_rights'], ':userid' => $user_primary_id]);
                     if (!$result) {
-                        echo "<div class='well text-center'>".$locale['153']."</div>\n";
+                        addNotice('danger', $locale['MIG_203']);
                     } else {
-                        echo "<div class='well text-center'>".count($old_user_rights)." ".$locale['154']." <strong>".$locale['155']."</strong> ".$locale['156']." ".$data['user_name']." ".$locale['151']." ".$cdata['user_name'].".</div>\n";
+                        echo "<div class='well text-center'>".(sprintf($locale['MIG_204'], count($old_user_rights), $data['user_name'], $cdata['user_name']))."</div>\n";
                     }
                 } else {
                     $rights_dump = [];
@@ -293,24 +285,24 @@ function user_rights_migrate($user_primary_id, $user_temp_id) {
                     }
                     $new_rights = array_merge($rights_dump, $new_user_rights);
                     $rights = implode($new_rights, '.');
-                    $result = dbquery("UPDATE ".DB_USERS." SET user_rights='$rights' WHERE user_id='$user_primary_id'");
+                    $result = dbquery("UPDATE ".DB_USERS." SET user_rights=:rights WHERE user_id=:userid", [':rights' => $rights, ':userid' => $user_primary_id]);
                     if (!$result) {
-                        echo "<div class='well text-center'>".$locale['153']."</div>\n";
+                        addNotice('danger', $locale['MIG_203']);
                     } else {
-                        echo "<div class='well text-center'>".count($rights_dump)." ".$locale['154']." <strong>".$locale['155']."</strong> ".$locale['156']." ".$data['user_name']." ".$locale['151']." ".$cdata['user_name'].".</div>\n";
+                        echo "<div class='well text-center'>".(sprintf($locale['MIG_204'], count($rights_dump), $data['user_name'], $cdata['user_name']))."</div>\n";
                     }
                 }
             }
 
             $old_user_groups = explode(".", $data['user_groups']);
-            $new_user_groups = explode(".", $data['user_groups']);
+            $new_user_groups = explode(".", $cdata['user_groups']);
             if (is_array($old_user_groups)) {
                 if (empty($new_user_groups['0'])) {
-                    $result = dbquery("UPDATE ".DB_USERS." SET user_groups='".$data['user_groups']."' WHERE user_id='$user_primary_id'");
+                    $result = dbquery("UPDATE ".DB_USERS." SET user_groups=:groups WHERE user_id=:userid", [':groups' => $data['user_groups'], ':userid' => $user_primary_id]);
                     if (!$result) {
-                        echo "<div class='well text-center'>".$locale['157']."</div>\n";
+                        addNotice('danger', $locale['MIG_205']);
                     } else {
-                        echo "<div class='well text-center'>".count($old_user_groups)." ".$locale['154']." <strong>".$locale['158']."</strong> ".$locale['156']." ".$data['user_name']." ".$locale['151']." ".$cdata['user_name'].".</div>\n";
+                        echo "<div class='well text-center'>".(sprintf($locale['MIG_206'], count($old_user_groups), $data['user_name'], $cdata['user_name']))."</div>\n";
                     }
                 } else {
                     $group_dump = [];
@@ -321,30 +313,30 @@ function user_rights_migrate($user_primary_id, $user_temp_id) {
                     }
                     $new_group = array_merge($group_dump, $new_user_groups);
                     $groups = implode($new_group, '.');
-                    $result = dbquery("UPDATE ".DB_USERS." SET user_groups='$groups' WHERE user_id='$user_primary_id'");
+                    $result = dbquery("UPDATE ".DB_USERS." SET user_groups=:groups WHERE user_id=:userid", [':groups' => $groups, ':userid' => $user_primary_id]);
                     if (!$result) {
-                        echo "<div class='well text-center'>".$locale['157']."</div>\n";
+                        addNotice('danger', $locale['MIG_205']);
                     } else {
-                        echo "<div class='well text-center'>".count($group_dump)." ".$locale['154']." <strong>".$locale['158']."</strong> ".$locale['156']." ".$data['user_name']." ".$locale['151']." ".$cdata['user_name'].".</div>\n";
+                        echo "<div class='well text-center'>".(sprintf($locale['MIG_206'], count($group_dump), $data['user_name'], $cdata['user_name']))."</div>\n";
                     }
                 }
             }
 
             if ($data['user_level'] > $cdata['user_level']) {
-                $result = dbquery("UPDATE ".DB_USERS." SET user_level='".$data['user_level']."' WHERE user_id='$user_primary_id'");
+                $result = dbquery("UPDATE ".DB_USERS." SET user_level=:level WHERE user_id=:userid", [':level' => $data['user_level'], ':userid' => $user_primary_id]);
                 if (!$result) {
-                    echo "<div class='well text-center'>".$locale['159']."</div>\n";
+                    addNotice('danger', $locale['MIG_207']);
                 } else {
-                    echo "<div class='well text-center'><strong>".$locale['160']." ".$data['user_level']."</strong> ".$locale['156']." ".$data['user_name']." ".$locale['151']." ".$cdata['user_name'].".</div>\n";
+                    echo "<div class='well text-center'>".(sprintf($locale['MIG_208'], $data['user_level'], $data['user_name'], $cdata['user_name']))."</div>\n";
                 }
             } else {
-                echo "<div class='well text-center'>".$locale['161']."</div>\n";
+                addNotice('danger', $locale['MIG_209']);
             }
         } else {
-            echo "<div class='well text-center'>".$locale['162']." $user_primary_id.</div>\n";
+            addNotice('danger', $locale['MIG_207'].$user_primary_id);
         }
     } else {
-        echo "<div class='well text-center'>".$locale['162']." $user_temp_id.</div>\n";
+        addNotice('danger', $locale['MIG_207'].$user_temp_id);
     }
 }
 
