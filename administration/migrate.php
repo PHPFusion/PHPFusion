@@ -216,7 +216,7 @@ function user_posts_migrate_console() {
     }
     echo "</div>\n</div>\n";
     echo "<div class='row m-t-20'>\n";
-    echo "<div class='col-xs-12 col-sm-4'><h4 class='m-0'>".$locale['MIG_141']."</h4><i>".$locale['MIG_142']."</i></div>\n";
+    echo "<div class='col-xs-12 col-sm-4'><h4 class='m-0'>".$locale['MIG_141']."</h4></div>\n";
     echo "<div class='col-xs-12 col-sm-8'>\n";
     echo "<div class='display-block overflow-hide'>";
     echo form_checkbox('del_user', $locale['MIG_170'], '', [
