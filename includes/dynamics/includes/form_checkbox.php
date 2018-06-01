@@ -85,25 +85,12 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
         // if there are options, and i want the options to be having input value.
         // options_value
         $input_value = [];
-
         $default_checked = empty($option_value) ? TRUE : FALSE;
 
         foreach (array_keys($options['options']) as $key) {
             $input_value[$key] = isset($option_value[$key]) ? (!empty($options['options_value'][$key]) ? $options['options_value'][$key] : 1) : 0;
         }
-        if (!empty($label) && empty($options['options'])) {
-            add_to_jquery("
-            $('#".$options['input_id']."-field > .control-label').bind('click', function() {
-                var checked_status = $(this).data('checked');
-                $('#".$options['input_id']."-field input:checkbox').prop('checked', $(this).data('checked'));
-                if ($(this).data('checked') == '1') {
-                    $(this).data('checked', 0);
-                } else {
-                    $(this).data('checked', 1);
-                }
-            });
-            ");
-        }
+
     } else {
         $switch_class = $options['toggle'] ? "is-bootstrap-switch" : "";
         $on_label = $options['toggle_text'][1];
@@ -138,15 +125,10 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
     $html .= ($options['reverse_label'] == TRUE) ? $checkbox : "";
     $html .= (!empty($label)) ? "<div class='overflow-hide'>\n".$label.($options['required'] == 1 ? "<span class='required'>&nbsp;*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle text-lighter' title='".$options['tip']."'></i>" : '')."</div>\n</label>\n" : "";
     $html .= ($options['reverse_label'] == FALSE) ? $checkbox : "";
-
     $html .= $options['ext_tip'] ? "<br/>\n<span class='tip'><i>".$options['ext_tip']."</i></span>" : "";
-
     $html .= \defender::inputHasError($input_name) ? "<span class='m-l-10'></span>" : "";
-
     $html .= \defender::inputHasError($input_name) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
-
     $html .= $options['inline'] ? "</div>\n" : "";
-
     $html .= "</div>\n";
 
     \defender::add_field_session([
