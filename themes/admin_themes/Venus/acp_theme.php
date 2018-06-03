@@ -156,12 +156,16 @@ function render_admin_panel() {
 
         <!---main panel-->
         <div id="acp-main">
-            <aside id="acp-content" class="m-t-20">
-                <?php
-                echo render_breadcrumbs();
-                echo renderNotices(getNotices());
-                echo CONTENT;
-                ?>
+            <aside id="acp-content">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <?php
+                        echo render_breadcrumbs();
+                        echo renderNotices(getNotices());
+                        echo CONTENT;
+                        ?>
+                    </div>
+                </div>
                 <footer>
                     <?php
                     echo "Venus Admin Theme &copy; ".date("Y")." created by <a href='https://www.php-fusion.co.uk'><strong>PHP-Fusion Inc.</strong></a>\n";
