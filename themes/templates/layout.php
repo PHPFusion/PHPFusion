@@ -57,7 +57,9 @@ if (defined('FONTAWESOME-V4')) {
 if (!defined('NO_DEFAULT_CSS')) {
     echo "<link href='".THEMES."templates/default.min.css' rel='stylesheet' type='text/css' media='screen' />\n";
 }
-echo "<link href='".THEME."styles.css' rel='stylesheet' type='text/css' media='screen' />\n";
+
+$theme_css = file_exists(THEME.'styles.min.css') ? THEME.'styles.min.css' : THEME.'styles.css';
+echo "<link href='".$theme_css."' rel='stylesheet' type='text/css' media='screen' />\n";
 
 if (fusion_get_settings('bootstrap') == TRUE || defined('BOOTSTRAP')) {
     $user_theme = fusion_get_userdata('user_theme');
