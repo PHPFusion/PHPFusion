@@ -49,6 +49,7 @@ $settings_seo = [
 if (isset($_POST['cancel'])) {
     redirect(FUSION_SELF.$aidlink);
 }
+
 if (isset($_POST['savesettings'])) {
     foreach ($settings_seo as $key => $value) {
         $settings_seo[$key] = form_sanitizer($_POST[$key], 0, $key);
@@ -85,23 +86,24 @@ if (isset($_POST['savepermalinks'])) {
         } else if ($error == 1) {
             addNotice('danger', $locale['PL_420']);
         }
-        redirect(clean_request('section=pl', ['edit'], FALSE));
     }
+    redirect(clean_request('section=pl', ['edit'], FALSE));
 }
 
 if (isset($_GET['enable']) && file_exists(INCLUDES."rewrites/".stripinput($_GET['enable'])."_rewrite_include.php")) {
 
     $rewrite_name = stripinput($_GET['enable']);
+    $permalink_name = '';
 
     include INCLUDES."rewrites/".$rewrite_name."_rewrite_include.php";
 
     if (file_exists(LOCALE.LOCALESET."permalinks/".$rewrite_name.".php")) {
         $locale = fusion_get_locale('', LOCALE.LOCALESET."permalinks/".$rewrite_name.".php");
     }
-
     if (file_exists(INCLUDES."rewrites/".$rewrite_name."_rewrite_info.php")) {
         include INCLUDES."rewrites/".$rewrite_name."_rewrite_info.php";
     }
+
 
     $rows = dbcount("(rewrite_id)", DB_PERMALINK_REWRITE, "rewrite_name=:rwname", [':rwname' => $rewrite_name]);
     // If the Rewrite doesn't already exist
@@ -129,18 +131,20 @@ if (isset($_GET['enable']) && file_exists(INCLUDES."rewrites/".stripinput($_GET[
             }
         }
         if ($error == 0) {
-            addNotice('success', sprintf($locale['PL_424'], $rewrite_name));
+            addNotice('success', sprintf($locale['PL_424'], $permalink_name));
         } else if ($error == 1) {
             addNotice('danger', $locale['PL_420']);
         }
     } else {
-        addNotice('warning', sprintf($locale['PL_425'], $rewrite_name));
+        addNotice('warning', sprintf($locale['PL_425'], $permalink_name));
     }
     redirect(clean_request('section=pl2', ['enable'], FALSE));
 
 } else if (isset($_GET['disable'])) {
 
     $rewrite_name = stripinput($_GET['disable']);
+    $permalink_name = '';
+
     if (file_exists(LOCALE.LOCALESET."permalinks/".$rewrite_name.".php")) {
         $locale = fusion_get_locale('', LOCALE.LOCALESET."permalinks/".$rewrite_name.".php");
     }
@@ -149,12 +153,11 @@ if (isset($_GET['enable']) && file_exists(INCLUDES."rewrites/".stripinput($_GET[
     }
 
     // Delete Data
-
     $rewrite_id = dbarray(dbquery("SELECT rewrite_id FROM ".DB_PERMALINK_REWRITE." WHERE rewrite_name=:rewritename LIMIT 1", [':rewritename' => $rewrite_name]));
     $result = dbquery("DELETE FROM ".DB_PERMALINK_REWRITE." WHERE rewrite_id=:rewriteid", [':rewriteid' => $rewrite_id['rewrite_id']]);
     $result = dbquery("DELETE FROM ".DB_PERMALINK_METHOD." WHERE pattern_type=:rewritetype", [':rewritetype' => $rewrite_id['rewrite_id']]);
 
-    addNotice('success', sprintf($locale['PL_426'], $rewrite_name));
+    addNotice('success', sprintf($locale['PL_426'], $permalink_name));
     redirect(clean_request('section=pl', ['disable'], FALSE));
 
 } else if (isset($_GET['reinstall'])) {
@@ -164,6 +167,7 @@ if (isset($_GET['enable']) && file_exists(INCLUDES."rewrites/".stripinput($_GET[
      */
     $error = 0;
     $rewrite_name = stripinput($_GET['reinstall']);
+    $permalink_name = '';
 
     include INCLUDES."rewrites/".$rewrite_name."_rewrite_include.php";
 
@@ -178,7 +182,6 @@ if (isset($_GET['enable']) && file_exists(INCLUDES."rewrites/".stripinput($_GET[
 
     if (dbrows($rewrite_query) > 0) {
         $rewrite_id = dbarray($rewrite_query);
-        //$rewrite_id = dbarray(dbquery("SELECT rewrite_id FROM ".DB_PERMALINK_REWRITE." WHERE rewrite_name=:rewritename LIMIT 1", [':rewritename' => $rewrite_name]));
 
         $result = dbquery("DELETE FROM ".DB_PERMALINK_REWRITE." WHERE rewrite_id=:rewriteid", [':rewriteid' => $rewrite_id['rewrite_id']]);
 
@@ -190,7 +193,6 @@ if (isset($_GET['enable']) && file_exists(INCLUDES."rewrites/".stripinput($_GET[
      * Reinsert Data (Copied from Enable)
      */
 
-    $permalink_name = '';
     $result = dbquery("INSERT INTO ".DB_PERMALINK_REWRITE." (rewrite_name) VALUES ('".$rewrite_name."')");
     if (!$result) {
         $error = 1;
