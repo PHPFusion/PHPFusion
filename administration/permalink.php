@@ -22,9 +22,7 @@ pageAccess('PL');
 require_once THEMES."templates/admin_header.php";
 
 $locale = fusion_get_locale('', [LOCALE.LOCALESET.'admin/settings.php', LOCALE.LOCALESET.'admin/permalinks.php']);
-
 $settings = fusion_get_settings();
-
 $aidlink = fusion_get_aidlink();
 
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'permalink.php'.$aidlink, 'title' => $locale['PL_428']]);
@@ -43,9 +41,9 @@ if (function_exists('apache_get_modules') && in_array('mod_rewrite', apache_get_
 define('MOD_REWRITE', $mod_rewrite);
 
 $settings_seo = [
-    'site_seo'      => fusion_get_settings('site_seo'),
-    'normalize_seo' => fusion_get_settings('normalize_seo'),
-    'debug_seo'     => fusion_get_settings('debug_seo')
+    'site_seo'      => $settings['site_seo'],
+    'normalize_seo' => $settings['normalize_seo'],
+    'debug_seo'     => $settings['debug_seo']
 ];
 
 if (isset($_POST['savesettings'])) {
@@ -405,7 +403,7 @@ switch ($_GET['section']) {
 
                 echo "</tbody>\n</table>\n</div>";
             } else {
-            	echo "<div class='well text-center m-t-15'>".$locale['PL_427']."</div>";
+                echo "<div class='well text-center m-t-15'>".$locale['PL_427']."</div>";
             }
         }
         break;
@@ -422,7 +420,7 @@ switch ($_GET['section']) {
             foreach ($available_rewrites as $available_rewrite) {
                 if (!in_array($available_rewrite, $enabled_rewrites)) {
                     if (file_exists(INCLUDES."rewrites/".$available_rewrite."_rewrite_info.php") && file_exists(LOCALE.LOCALESET."permalinks/".$available_rewrite.".php")) {
-                        $locale =  fusion_get_locale('', LOCALE.LOCALESET."permalinks/".$available_rewrite.".php");
+                        $locale = fusion_get_locale('', LOCALE.LOCALESET."permalinks/".$available_rewrite.".php");
                         include INCLUDES."rewrites/".$available_rewrite."_rewrite_info.php";
                         echo "<tr>\n";
                         echo "<td><strong>".$permalink_name."</strong></td>\n";
