@@ -46,6 +46,9 @@ $settings_seo = [
     'debug_seo'     => $settings['debug_seo']
 ];
 
+if (isset($_POST['cancel'])) {
+    redirect(FUSION_SELF.$aidlink);
+}
 if (isset($_POST['savesettings'])) {
     foreach ($settings_seo as $key => $value) {
         $settings_seo[$key] = form_sanitizer($_POST[$key], 0, $key);
@@ -344,13 +347,13 @@ switch ($_GET['section']) {
             ob_end_clean();
 
             echo "<div class='text-right display-block'>\n";
-            echo form_button('pButton', $locale['help'], $locale['help'], ['input_id' => 'pButton', 'type' => 'button']);
+            echo form_button('cancel', $locale['cancel'], $locale['cancel'], ['class' => 'btn-default', 'input_id' => 'cancel']);
+            echo form_button('pButton', $locale['help'], $locale['help'], ['class' => 'btn-success m-l-10', 'input_id' => 'pButton']);
             echo form_button('savepermalinks', $locale['save_changes'], $locale['PL_413'], ['class' => 'btn-primary m-l-10', 'input_id' => 'save_top']);
             echo "</div>\n";
 
             // Driver Rules Installed
             echo "<h4>".$locale['PL_409']."</h4>\n";
-            $i = 1;
             foreach ($driver as $data) {
 
                 echo "<div class='list-group-item m-b-20'>\n";
@@ -367,7 +370,6 @@ switch ($_GET['section']) {
                     'class'         => 'm-b-0'
                 ]);
                 echo "</div>\n";
-                $i++;
             }
             echo form_button('savepermalinks', $locale['save_changes'], $locale['PL_413'], ['class' => 'btn-primary m-b-20']);
             echo closeform();
@@ -408,8 +410,8 @@ switch ($_GET['section']) {
         }
         break;
     case "pl2":
-        echo "<div class='table-responsive'><table class='table table-hover table-striped'>\n<tbody>\n<tr>\n";
         if (count($available_rewrites) != count($enabled_rewrites)) {
+            echo "<div class='table-responsive'><table class='table table-hover table-striped'>\n";
             echo "<thead><tr>\n";
             echo "<th>".$locale['PL_402']."</th>\n";
             echo "<th><strong>".$locale['PL_403']."</th>\n";
@@ -430,8 +432,8 @@ switch ($_GET['section']) {
                     }
                 }
             }
+            echo "</tbody>\n</table>\n</div>";
         }
-        echo "</tbody>\n</table>\n</div>";
         break;
     case "pls":
         echo openform('settingsseo', 'post', FUSION_REQUEST);
