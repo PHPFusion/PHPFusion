@@ -35,7 +35,7 @@ $settings2 = [
     'avatar_ratio'          => $settings['avatar_ratio'],
     'userNameChange'        => $settings['userNameChange'],
     'userthemes'            => $settings['userthemes'],
-    'multiple_logins'       => $settings['multiple_logins'],
+    'multiple_logins'       => $settings['multiple_logins']
 ];
 
 if (isset($_POST['savesettings'])) {
@@ -66,7 +66,7 @@ if (isset($_POST['savesettings'])) {
         if ($_POST['enable_deactivation'] == '0') {
             $result = dbquery("UPDATE ".DB_USERS." SET user_status='0' WHERE user_status='5'");
         }
-        addNotice("success", $locale['900']);
+        addNotice('success', $locale['900']);
         redirect(FUSION_REQUEST);
     }
 }
@@ -97,29 +97,31 @@ echo form_select('deactivation_action', $locale['1011'], $settings2['deactivatio
 closeside();
 openside('');
 echo "<div class='display-block overflow-hide'>
-    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='photo_max_w'>".$locale['1008']."</label>
+    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3' for='photo_max_w'>".$locale['1008']."</label>
     <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
     ".form_text('avatar_width', '', $settings2['avatar_width'], [
-        'class'      => 'pull-left',
-        'max_length' => 4,
-        'type'       => 'number',
-        'width'      => '150px'
+        'class'         => 'pull-left m-r-10',
+        'max_length'    => 4,
+        'type'          => 'number',
+        'prepend'       => TRUE,
+        'prepend_value' => $locale['1015'],
+        'width'         => '170px'
     ])."
-    <i class='fa fa-close pull-left m-r-5 m-l-5 m-t-10'></i>
     ".form_text('avatar_height', '', $settings2['avatar_height'], [
-        'class'      => 'pull-left',
-        'max_length' => 4,
-        'type'       => 'number',
-        'width'      => '150px'
+        'class'         => 'pull-left',
+        'max_length'    => 4,
+        'type'          => 'number',
+        'prepend'       => TRUE,
+        'prepend_value' => $locale['1016'],
+        'width'         => '170px'
     ])."
-    <small class='mid-opacity text-uppercase pull-left m-t-10 m-l-5'>(".$locale['604'].")</small>
     </div>
 </div>";
 $calc_c = calculate_byte($settings2['avatar_filesize']);
 $calc_b = $settings2['avatar_filesize'] / $calc_c;
 
 echo "<div class='display-block overflow-hide'>
-    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='calc_b'>".$locale['605']."</label>
+    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3' for='calc_b'>".$locale['605']."</label>
     <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
     ".form_text('calc_b', '', $calc_b, [
         'required'   => TRUE,

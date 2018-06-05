@@ -241,6 +241,8 @@ $locale['1012'] = "Anonymize Users";
 $locale['1013'] = "Delete Users";
 $locale['1014'] = "Users can log in on different devices simultaneously?";
 $locale['1014a'] = "Disable for better security";
+$locale['1015'] = "Width";
+$locale['1016'] = "Height";
 
 $locale['1020'] = [1 => 'Bytes (bytes)', 1024 => 'KB (Kilobytes)', 1048576 => 'MB (Megabytes)'];
 

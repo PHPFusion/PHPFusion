@@ -95,7 +95,7 @@ echo form_select('tinymce_enabled', $locale['662'], $settings_misc['tinymce_enab
 ]);
 closeside();
 openside('');
-echo form_text('smtp_host', $locale['664']."<br/>", $settings_misc['smtp_host'], [
+echo form_text('smtp_host', $locale['664'], $settings_misc['smtp_host'], [
     'max_length' => 200,
     'inline'     => TRUE
 ]);
@@ -122,7 +122,7 @@ $opts = ['0' => $locale['no'], '1' => $locale['689'], '2' => $locale['690']];
 echo form_checkbox('rendertime_enabled', $locale['688'], $settings_misc['rendertime_enabled'], [
     'options' => $opts,
     'inline'  => TRUE,
-    'type'    => 'radio',
+    'type'    => 'radio'
 ]);
 closeside();
 
@@ -143,12 +143,12 @@ $sort_opts = ['ASC' => $locale['685'], 'DESC' => $locale['686']];
 echo form_checkbox('comments_sorting', $locale['684'], $settings_misc['comments_sorting'], [
     'inline'  => TRUE,
     'options' => $sort_opts,
-    'type'    => 'radio',
+    'type'    => 'radio'
 ]);
 echo form_checkbox('comments_avatar', $locale['656'], $settings_misc['comments_avatar'], [
     'inline'  => TRUE,
     'options' => $choice_arr,
-    'type'    => 'radio',
+    'type'    => 'radio'
 ]);
 closeside();
 

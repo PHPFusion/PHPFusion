@@ -202,7 +202,7 @@ echo form_select('recaptcha_theme', $locale['grecaptcha_0102'], $settings['recap
         'dark'  => $locale['grecaptcha_0102b']
     ],
     'inner_width' => '100%',
-    'width'       => '100%',
+    'width'       => '100%'
 ]);
 echo form_select('recaptcha_type', $locale['grecaptcha_0103'], $settings['recaptcha_type'], [
     'options'     => [
@@ -235,7 +235,7 @@ $yes_no_array = ['1' => $locale['yes'], '0' => $locale['no']];
 echo form_select('bad_words_enabled', $locale['659'], $settings['bad_words_enabled'], [
     'options'     => $yes_no_array,
     'inner_width' => '100%',
-    'width'       => '100%',
+    'width'       => '100%'
 ]);
 echo form_text('bad_word_replace', $locale['654'], $settings['bad_word_replace']);
 echo form_textarea('bad_words', $locale['651'], $settings['bad_words'], [
@@ -252,7 +252,7 @@ echo "<div class='alert alert-danger'>".$locale['695']."</div>\n";
 echo form_select('allow_php_exe', $locale['694'], $settings['allow_php_exe'], [
     'options'     => $yes_no_array,
     'inner_width' => '100%',
-    'width'       => '100%',
+    'width'       => '100%'
 ]);
 closeside();
 echo "</div>\n</div>\n";
