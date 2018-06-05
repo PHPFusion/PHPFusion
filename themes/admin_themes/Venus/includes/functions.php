@@ -369,7 +369,7 @@ function render_admin_icon() {
     echo "<div class='row'>\n";
     if (count($admin_icons['data']) > 0) {
         foreach ($admin_icons['data'] as $i => $data) {
-            echo "<div class='icon-wrapper col-xs-6 col-sm-3 col-md-2 col-lg-2'>\n";
+            echo "<div class='icon-wrapper col-xs-6 col-sm-3 col-md-2 col-lg-2' style='height: 135px;'>\n";
             if ($admin_images) {
                 echo "<div class='icon-container'>\n";
                 echo "<a href='".$data['admin_link'].$aidlink."'><img src='".get_image("ac_".$data['admin_rights'])."' alt='".$data['admin_title']."'/>\n</a>\n";
