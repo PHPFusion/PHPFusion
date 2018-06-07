@@ -570,16 +570,15 @@ if (!function_exists("showsublinks")) {
 
 if (!function_exists("showsubdate")) {
     function showsubdate() {
-        global $settings;
 
-        return ucwords(showdate($settings['subheaderdate'], time()));
+        return ucwords(showdate(fusion_get_settings('subheaderdate'), time()));
     }
 }
 
 if (!function_exists("newsposter")) {
     function newsposter($info, $sep = "", $class = "") {
         $locale = fusion_get_locale();
-        $link_class = $class ? " class='$class' " : "";
+        $link_class = $class ? "class='$class'" : "";
         $res = THEME_BULLET." <span ".$link_class.">".profile_link($info['user_id'], $info['user_name'], $info['user_status'])."</span> ";
         $res .= $locale['global_071'].showdate("newsdate", $info['news_date']);
         $res .= $info['news_ext'] == "y" || $info['news_allow_comments'] ? $sep."\n" : "\n";
@@ -592,7 +591,7 @@ if (!function_exists("newsopts")) {
     function newsopts($info, $sep, $class = "") {
         $locale = fusion_get_locale();
         $res = "";
-        $link_class = $class ? " class='$class' " : "";
+        $link_class = $class ? "class='$class'" : "";
         if (!isset($_GET['readmore']) && $info['news_ext'] == "y") {
             $res = "<a href='".INFUSIONS."news/news.php?readmore=".$info['news_id']."' ".$link_class.">".$locale['global_072']."</a> ".$sep." ";
         }
@@ -612,12 +611,12 @@ if (!function_exists("newscat")) {
     function newscat($info, $sep = "", $class = "") {
         $locale = fusion_get_locale();
         $res = "";
-        $link_class = $class ? " class='$class' " : "";
+        $link_class = $class ? "class='$class'" : "";
         $res .= $locale['global_079'];
         if ($info['cat_id']) {
-            $res .= "<a href='news_cats.php?cat_id=".$info['cat_id']."' $link_class>".$info['cat_name']."</a>";
+            $res .= "<a href='news_cats.php?cat_id=".$info['cat_id']."' ".$link_class.">".$info['cat_name']."</a>";
         } else {
-            $res .= "<a href='news_cats.php?cat_id=0'  $link_class>".$locale['global_080']."</a>";
+            $res .= "<a href='news_cats.php?cat_id=0' ".$link_class.">".$locale['global_080']."</a>";
         }
 
         return "<!--news_cat-->".$res." $sep ";
@@ -627,7 +626,7 @@ if (!function_exists("newscat")) {
 if (!function_exists("articleposter")) {
     function articleposter($info, $sep = "", $class = "") {
         $locale = fusion_get_locale();
-        $link_class = $class ? " class='$class' " : "";
+        $link_class = $class ? "class='$class'" : "";
         $res = THEME_BULLET." ".$locale['global_070']."<span ".$link_class.">".profile_link($info['user_id'], $info['user_name'], $info['user_status'])."</span>\n";
         $res .= $locale['global_071'].showdate("newsdate", $info['article_date']);
         $res .= ($info['article_allow_comments'] && fusion_get_settings('comments_enabled') == "1" ? $sep."\n" : "\n");
@@ -654,12 +653,12 @@ if (!function_exists("articlecat")) {
     function articlecat($info, $sep = "", $class = "") {
         $locale = fusion_get_locale();
         $res = "";
-        $link_class = $class ? " class='$class' " : "";
+        $link_class = $class ? "class='$class'" : "";
         $res .= $locale['global_079'];
         if ($info['cat_id']) {
-            $res .= "<a href='articles.php?cat_id=".$info['cat_id']."' $link_class>".$info['cat_name']."</a>";
+            $res .= "<a href='articles.php?cat_id=".$info['cat_id']."' ".$link_class.">".$info['cat_name']."</a>";
         } else {
-            $res .= "<a href='articles.php?cat_id=0' $link_class>".$locale['global_080']."</a>";
+            $res .= "<a href='articles.php?cat_id=0' ".$link_class.">".$locale['global_080']."</a>";
         }
 
         return "<!--article_cat-->".$res." $sep ";
