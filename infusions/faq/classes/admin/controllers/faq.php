@@ -364,13 +364,8 @@ class FaqAdmin extends FaqAdminModel {
                                 addNotice("warning", $this->locale['faq_0038']);
                                 break;
                             case 'delete':
-                                if (!dbcount("(faq_id)", DB_FAQS, "faq_cat_id=:faqcatid", [':faqcatid' => $faq_id])) {
-                                    dbquery("DELETE FROM  ".DB_FAQS." WHERE faq_id=:faqid", [':faqid' => intval($faq_id)]);
-                                    addNotice('warning', $this->locale['faq_0032']);
-                                } else {
-                                    addNotice('warning', $this->locale['faq_0035']);
-                                    addNotice('warning', $this->locale['faq_0036']);
-                                }
+                                dbquery("DELETE FROM  ".DB_FAQS." WHERE faq_id=:faqid", [':faqid' => intval($faq_id)]);
+                                addNotice('success', $this->locale['faq_0032']);
                                 break;
                             default:
                                 redirect(FUSION_REQUEST);

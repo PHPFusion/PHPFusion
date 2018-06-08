@@ -290,23 +290,23 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
             echo "</thead>\n";
             echo "<tbody>\n";
 
-                foreach ($data as $key => $info) {
-                    $submitData = \defender::decode($info['submit_criteria']);
-                    $submitUser = $this->locale['user_na'];
-                    if ($info['user_name']) {
-                        $submitUser = display_avatar($info, '20px', '', TRUE, 'img-rounded m-r-5');
-                        $submitUser .= profile_link($info['user_id'], $info['user_name'], $info['user_status']);
-                    }
-
-                    $reviewLink = clean_request('section=submissions&submit_id='.$info['submit_id'], ['section', 'ref', 'action', 'submit_id'], FALSE);
-
-                    echo "<tr>\n";
-                    echo "<td>".$info['submit_id']."</td>\n";
-                    echo "<td><a href='".$reviewLink."'>".$submitData['faq_question']."</a></td>\n";
-                    echo "<td>".$submitUser."</td>\n";
-                    echo "<td>".timer($info['submit_datestamp'])."</td>\n";
-                    echo "</tr>\n";
+            foreach ($data as $key => $info) {
+                $submitData = \defender::decode($info['submit_criteria']);
+                $submitUser = $this->locale['user_na'];
+                if ($info['user_name']) {
+                    $submitUser = display_avatar($info, '20px', '', TRUE, 'img-rounded m-r-5');
+                    $submitUser .= profile_link($info['user_id'], $info['user_name'], $info['user_status']);
                 }
+
+                $reviewLink = clean_request('section=submissions&submit_id='.$info['submit_id'], ['section', 'ref', 'action', 'submit_id'], FALSE);
+
+                echo "<tr>\n";
+                echo "<td>".$info['submit_id']."</td>\n";
+                echo "<td><a href='".$reviewLink."'>".$submitData['faq_question']."</a></td>\n";
+                echo "<td>".$submitUser."</td>\n";
+                echo "<td>".timer($info['submit_datestamp'])."</td>\n";
+                echo "</tr>\n";
+            }
 
             echo "</tbody>\n";
             echo "</table>\n</div>";

@@ -87,14 +87,20 @@ abstract class Faq extends FaqServer {
                     'faq_cat_id'          => 0,
                     'faq_cat_name'        => self::$locale['faq_0010'],
                     'faq_cat_link'        => INFUSIONS."faq/faq.php?cat_id=0",
-                    'faq_cat_description' => ''
+                    'faq_cat_description' => '',
+                    'faq_count'           => 0
                 ]
             ],
         ];
-        $c_result = dbquery("SELECT *
-            FROM ".DB_FAQ_CATS."
-            ".(multilang_table('FQ') ? "WHERE faq_cat_language='".LANGUAGE."' ".($cat ? "AND faq_cat_id='".$cat."' " : '') : ($cat ? "WHERE faq_cat_id='".$cat."' " : ''))."
-            ORDER BY faq_cat_id ASC");
+
+        $c_result = dbquery("SELECT fc.*, count(fq.faq_id) 'faq_count'
+            FROM ".DB_FAQ_CATS." fc
+            LEFT JOIN ".DB_FAQS." fq using (faq_cat_id)
+            ".(multilang_table("FQ") ? "WHERE faq_cat_language='".LANGUAGE."'" : "")."
+            GROUP BY fc.faq_cat_id
+            ORDER BY faq_cat_id ASC
+        ");
+
         if (dbrows($c_result)) {
             while ($c_data = dbarray($c_result)) {
                 $info['faq_categories'][$c_data['faq_cat_id']] = $c_data;
@@ -111,6 +117,7 @@ abstract class Faq extends FaqServer {
             (multilang_table('FQ') ? " AND fq.faq_language='".LANGUAGE."'" : '').($cat ? " AND fq.faq_cat_id='$cat'" : ' AND fq.faq_cat_id=0')."
             GROUP BY fq.faq_id ORDER BY fq.faq_cat_id ASC, fq.faq_id ASC
         ");
+
         if (dbrows($result)) {
             while ($data = dbarray($result)) {
                 $data['faq_answer'] = parse_textarea($data['faq_answer'], FALSE, FALSE, TRUE, FALSE, $data['faq_breaks'] == 'y' ? TRUE : FALSE);

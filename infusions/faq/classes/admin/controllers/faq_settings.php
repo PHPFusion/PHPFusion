@@ -60,7 +60,7 @@ class FaqSettingsAdmin extends FaqAdminModel {
         echo "<div class='well spacer-xs'>".$this->locale['faq_0400']."</div>\n";
 
         echo form_select('faq_allow_submission', $this->locale['faq_0005'], self::$faq_settings['faq_allow_submission'], [
-            'inline' => TRUE,
+            'inline'  => TRUE,
             'options' => [$this->locale['disable'], $this->locale['enable']]
         ]);
 

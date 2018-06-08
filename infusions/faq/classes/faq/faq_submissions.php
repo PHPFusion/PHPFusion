@@ -79,12 +79,12 @@ class FaqSubmissions extends FaqServer {
             }
 
             if (isset($_GET['submitted']) && $_GET['submitted'] == "q") {
-            	$info['confirm'] = [
-            	    'title'       => $this->locale['faq_0911'],
-            	    'submit_link' => "<a href='".BASEDIR."submit.php?stype=q'>".$this->locale['faq_0912']."</a>",
-            	    'index_link'  => "<a href='".BASEDIR."index.php'>".str_replace("[SITENAME]", fusion_get_settings("sitename"), $this->locale['faq_0913'])."</a>"
-            	];
-            	$info += $this->info;
+                $info['confirm'] = [
+                    'title'       => $this->locale['faq_0911'],
+                    'submit_link' => "<a href='".BASEDIR."submit.php?stype=q'>".$this->locale['faq_0912']."</a>",
+                    'index_link'  => "<a href='".BASEDIR."index.php'>".str_replace("[SITENAME]", fusion_get_settings("sitename"), $this->locale['faq_0913'])."</a>"
+                ];
+                $info += $this->info;
                 return (array)$info;
             } else {
                 $options = [];
@@ -97,7 +97,7 @@ class FaqSubmissions extends FaqServer {
                     }
                 }
 
-            	$info['item'] = [
+                $info['item'] = [
                     'guidelines'     => str_replace("[SITENAME]", fusion_get_settings("sitename"), $this->locale['faq_0920']),
                     'openform'       => openform('submit_form', 'post', BASEDIR."submit.php?stype=q", ['enctype' => self::$faq_settings['faq_allow_submission'] ? TRUE : FALSE]),
                     'faq_question'   => form_text('faq_question', $this->locale['faq_0100'], $criteriaArray['faq_question'],
@@ -129,8 +129,8 @@ class FaqSubmissions extends FaqServer {
                     'faq_submit'     => form_button('submit_link', $this->locale['submit'], $this->locale['submit'], ['class' => 'btn-success', 'icon' => 'fa fa-fw fa-hdd-o']),
                     'criteria_array' => $criteriaArray
 
-            	];
-            	$info += $this->info;
+                ];
+                $info += $this->info;
                 return (array)$info;
             }
         } else {
