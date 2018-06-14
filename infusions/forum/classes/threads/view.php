@@ -30,6 +30,8 @@ class ViewThread extends ForumServer {
 
         $info = self::thread()->get_threadInfo();
 
+        $this->set_ThreadJs();
+
         if (isset($_GET['action'])) {
 
             switch ($_GET['action']) {
@@ -829,7 +831,7 @@ class ViewThread extends ForumServer {
                 $higlight .= ($i < $c_words ? "," : "");
                 $i++;
             }
-            add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/jquery.highlight.js'></script>");
+            add_to_footer("<script type='text/javascript' src='".INCLUDES."jquery/jquery.highlight.js'></script>");
             $highlight_js .= "$('.search_result').highlight([".$higlight."],{wordsOnly:true});";
             $highlight_js .= "$('.highlight').css({backgroundColor:'#FFFF88'});"; //better via theme or settings
         }
@@ -845,15 +847,12 @@ class ViewThread extends ForumServer {
         if (!empty($highlight_js) || !empty($colorbox_js) || !empty($edit_reason_js)) {
             $viewthread_js .= $highlight_js.$colorbox_js.$edit_reason_js;
         }
-        $viewthread_js .= "$('a[href=#top]').click(function(){";
-        $viewthread_js .= "$('html, body').animate({scrollTop:0}, 'slow');";
-        $viewthread_js .= "return false;";
-        $viewthread_js .= "});";
-        $viewthread_js .= "});";
+
         // below functions could be made more unobtrusive thanks to jQuery, giving a more accessible cms
         $viewthread_js .= "function jumpforum(forum_id){";
         $viewthread_js .= "document.location.href='".INFUSIONS."forum/viewforum.php?forum_id='+forum_id;";
         $viewthread_js .= "}";
+
         add_to_jquery($viewthread_js);
     }
 }

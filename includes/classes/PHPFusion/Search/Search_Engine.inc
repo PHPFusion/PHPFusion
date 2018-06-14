@@ -372,7 +372,7 @@ class Search_Engine extends Search_Model {
             $highlighted_text .= ($i < self::$c_swords ? "," : "");
             $i++;
         }
-        add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/jquery.highlight.js'></script>");
+        add_to_footer("<script type='text/javascript' src='".INCLUDES."jquery/jquery.highlight.js'></script>");
         add_to_jquery("$('.search_result').highlight([".$highlighted_text."],{wordsOnly:true}); $('.highlight').css({backgroundColor:'#FFFF88'});");
 
         /*
