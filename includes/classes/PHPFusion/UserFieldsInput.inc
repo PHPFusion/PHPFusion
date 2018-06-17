@@ -129,8 +129,8 @@ class UserFieldsInput {
                 $this->_completeMessage = $locale['u160']." - ".$locale['u161'];
 
                 if (defined("ADMIN_PANEL")) {
-                    global $aidlink;
-                    require_once LOCALE.LOCALESET."admin/members_email.php";
+                    $aidlink = fusion_get_aidlink();;
+                    $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/members_email.php");
                     require_once INCLUDES."sendmail_include.php";
                     $subject = str_replace("[SITENAME]", $settings['sitename'], $locale['email_create_subject']);
                     $replace_this = ["[USER_NAME]", "[PASSWORD]", "[SITENAME]", "[SITEUSERNAME]"];
@@ -590,10 +590,10 @@ class UserFieldsInput {
         $user_code = md5($this->_userEmail.$salt);
         $email_verify_link = $settings['siteurl']."edit_profile.php?code=".$user_code;
         $mailbody = str_replace("[EMAIL_VERIFY_LINK]", $email_verify_link, $locale['u203']);
-        $mailbody = str_replace("[SITENAME]", fusion_get_settings("sitename"), $mailbody);
-        $mailbody = str_replace("[SITEUSERNAME]", fusion_get_settings("siteusername"), $mailbody);
+        $mailbody = str_replace("[SITENAME]", $settings['sitename'], $mailbody);
+        $mailbody = str_replace("[SITEUSERNAME]", $settings['siteusername'], $mailbody);
         $mailbody = str_replace("[USER_NAME]", $userdata['user_name'], $mailbody);
-        $mailSubject = str_replace("[SITENAME]", fusion_get_settings("sitename"), $locale['u202']);
+        $mailSubject = str_replace("[SITENAME]", $settings['sitename'], $locale['u202']);
         sendemail($this->_userName, $this->_userEmail, $settings['siteusername'], $settings['siteemail'], $mailSubject, $mailbody);
         addNotice('warning', strtr($locale['u200'], ['(%s)' => $this->_userEmail]));
         dbquery("DELETE FROM ".DB_EMAIL_VERIFY." WHERE user_id='".$this->userData['user_id']."'");
@@ -625,11 +625,11 @@ class UserFieldsInput {
         $userCode = hash_hmac("sha1", PasswordAuth::getNewPassword(), $this->_userEmail);
         $activationUrl = $settings['siteurl']."register.php?email=".$this->_userEmail."&code=".$userCode;
         $message = str_replace("USER_NAME", $this->_userName, $locale['u152']);
-        $message = str_replace("SITENAME", fusion_get_settings("sitename"), $message);
-        $message = str_replace("SITEUSERNAME", fusion_get_settings("siteusername"), $message);
+        $message = str_replace("SITENAME", $settings['sitename'], $message);
+        $message = str_replace("SITEUSERNAME", $settings['siteusername'], $message);
         $message = str_replace("USER_PASSWORD", $this->_newUserPassword, $message);
         $message = str_replace("ACTIVATION_LINK", $activationUrl, $message);
-        $subject = str_replace("[SITENAME]", fusion_get_settings("sitename"), $locale['u151']);
+        $subject = str_replace("[SITENAME]", $settings['sitename'], $locale['u151']);
         if (!sendemail($this->_userName, $this->_userEmail, $settings['siteusername'], $settings['siteemail'], $subject, $message)) {
             $message = strtr($locale['u154'], [
                 '[LINK]'  => "<a href='".BASEDIR."contact.php'><strong>",
@@ -773,16 +773,17 @@ class UserFieldsInput {
     }
 
     public function verifyCode($value) {
-        global $locale, $userdata;
+        $locale = fusion_get_locale();
+        $userdata = fusion_get_userdata();
         if (!preg_check("/^[0-9a-z]{32}$/i", $value)) {
-            redirect("index.php");
+            redirect(BASEDIR.'index.php');
         }
-        $result = dbquery("SELECT * FROM ".DB_EMAIL_VERIFY." WHERE user_code='".$value."'");
+        $result = dbquery("SELECT * FROM ".DB_EMAIL_VERIFY." WHERE user_code=:usercode", [':usercode' => $value]);
         if (dbrows($result)) {
             $data = dbarray($result);
             if ($data['user_id'] == $userdata['user_id']) {
                 if ($data['user_email'] != $userdata['user_email']) {
-                    $result = dbquery("SELECT user_email FROM ".DB_USERS." WHERE user_email='".$data['user_email']."'");
+                    $result = dbquery("SELECT user_email FROM ".DB_USERS." WHERE user_email=:useremail", [':useremail' => $data['user_email']]);
                     if (dbrows($result) > 0) {
                         addNotice("danger", $locale['u164']."<br />\n".$locale['u121']);
                     } else {
@@ -792,10 +793,10 @@ class UserFieldsInput {
                     dbquery("DELETE FROM ".DB_EMAIL_VERIFY." WHERE user_id='".$data['user_id']."'");
                 }
             } else {
-                redirect("index.php");
+                redirect(BASEDIR.'index.php');
             }
         } else {
-            redirect("index.php");
+            redirect(BASEDIR.'index.php');
         }
     }
 
