@@ -76,7 +76,7 @@ class ArticlesSettingsAdmin extends ArticlesAdminModel {
             'inline'  => TRUE,
             'options' => [$this->locale['disable'], $this->locale['enable']]
         ]);
-        echo form_button('savesettings', $this->locale['750'], $this->locale['750'], ['class' => 'btn-success']);
+        echo form_button('savesettings', $this->locale['750'], $this->locale['750'], ['class' => 'btn-success', 'icon' => 'fa fa-fw fa-hdd-o']);
         echo closeform();
     }
 }

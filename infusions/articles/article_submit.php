@@ -188,8 +188,8 @@ if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_status='1' AND ".g
             }
 
             echo "<div class='m-t-20'>";
-            echo form_button('submit_article', $locale['article_0900'], $locale['article_0900'], ['class' => 'btn-success m-r-10', 'icon' => 'fa-hdd-o']);
-            echo form_button('preview_article', $locale['preview'], $locale['preview'], ['class' => 'btn-primary m-r-10', 'icon' => 'fa-eye']);
+            echo form_button('submit_article', $locale['article_0900'], $locale['article_0900'], ['class' => 'btn-success m-r-10', 'icon' => 'fa fa-fw fa-hdd-o']);
+            echo form_button('preview_article', $locale['preview'], $locale['preview'], ['class' => 'btn-primary m-r-10', 'icon' => 'fa fa-fw fa-eye']);
             echo "</div>";
 
             echo closeform();

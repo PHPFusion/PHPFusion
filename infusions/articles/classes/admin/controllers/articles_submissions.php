@@ -324,17 +324,17 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
     private function displayFormButtons($unique_id) {
         echo form_button('preview_submission', $this->locale['preview'], $this->locale['preview'], [
             'class'    => 'btn-default m-r-10',
-            'icon'     => 'fa-eye',
+            'icon'     => 'fa fa-fw fa-eye',
             'input-id' => 'preview_submission-'.$unique_id
         ]);
         echo form_button('publish_submission', $this->locale['article_0352'], $this->locale['article_0352'], [
             'class'    => 'btn-success m-r-10',
-            'icon'     => 'fa-hdd-o',
+            'icon'     => 'fa fa-fw fa-hdd-o',
             'input-id' => 'publish_submission-'.$unique_id
         ]);
         echo form_button('delete_submission', $this->locale['delete'], $this->locale['delete'], [
             'class'    => 'btn-danger m-r-10',
-            'icon'     => 'fa-trash',
+            'icon'     => 'fa fa-fw fa-trash',
             'input-id' => 'delete_submission-'.$unique_id
         ]);
     }

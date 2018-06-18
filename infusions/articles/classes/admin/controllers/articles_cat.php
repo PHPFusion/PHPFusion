@@ -213,9 +213,9 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
                 </div>
             </div>
             <?php
-            echo form_button('cancel', $this->locale['cancel'], $this->locale['cancel'], ['class' => 'btn-default', 'icon' => 'fa-times']);
-            echo form_button('save_cat', $this->locale['save'], $this->locale['save'], ['class' => 'btn-success m-l-10', 'icon' => 'fa-hdd-o']);
-            echo form_button('save_cat_and_close', $this->locale['save_and_close'], $this->locale['save_and_close'], ['class' => 'btn-primary m-l-10', 'icon' => 'fa-floppy-o']);
+            echo form_button('cancel', $this->locale['cancel'], $this->locale['cancel'], ['class' => 'btn-default', 'icon' => 'fa fa-fw fa-times']);
+            echo form_button('save_cat', $this->locale['save'], $this->locale['save'], ['class' => 'btn-success m-l-10', 'icon' => 'fa fa-fw fa-hdd-o']);
+            echo form_button('save_cat_and_close', $this->locale['save_and_close'], $this->locale['save_and_close'], ['class' => 'btn-primary m-l-10', 'icon' => 'fa fa-fw fa-floppy-o']);
             echo closeform();
             ?>
         </div>
