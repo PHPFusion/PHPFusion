@@ -358,10 +358,10 @@ switch ($_GET['section']) {
             echo "<h4>".$locale['PL_409']."</h4>\n";
             foreach ($driver as $data) {
 
-                echo "<div class='list-group-item m-b-20'>\n";
+                echo "<div class='panel panel-default panel-body m-b-10'>\n";
                 $source = preg_replace("/%(.*?)%/i", "<kbd class='m-2'>%$1%</kbd>", $data['pattern_source']);
                 $target = preg_replace("/%(.*?)%/i", "<kbd class='m-2'>%$1%</kbd>", $data['pattern_target']);
-                echo "<p class='m-t-10 m-b-10'>
+                echo "<p class='m-b-10'>
                 <label class='label' style='background:#ddd; color: #000; font-weight:normal; font-size: 1rem;'>
                 ".$target."\n</label>\n";
                 echo "</p>\n";

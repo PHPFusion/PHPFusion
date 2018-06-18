@@ -218,10 +218,9 @@ class DbBackupAdministration {
                 addNotice("success", $this->locale['404']);
                 redirect(FUSION_SELF.fusion_get_aidlink());
             } else {
-
                 echo openform("frm_info", "post", clean_request('section=restore_db', ['action', 'section'], FALSE));
                 echo "<h4>".$this->locale['400']."</h4>\n";
-                echo "<div class='text-center list-group-item'>\n";
+                echo "<div class='text-center panel panel-default panel-body'>\n";
                 echo $this->locale['401']."<br /><br />".$this->locale['402'];
                 echo "</div>\n";
                 echo form_button('btn_cancel', $this->locale['403'], $this->locale['403'], ['class' => 'btn-default spacer-xs']);
@@ -289,7 +288,7 @@ class DbBackupAdministration {
                 function tableSelectNone(){for(i=0;i<document.restoreform.elements['list_tbl[]'].length;i++){document.restoreform.elements['list_tbl[]'].options[i].selected=false;}}
                 function populateSelectAll(){for(i=0;i<document.restoreform.elements['list_ins[]'].length;i++){document.restoreform.elements['list_ins[]'].options[i].selected=true;}}
                 function populateSelectNone(){for(i=0;i<document.restoreform.elements['list_ins[]'].length;i++){document.restoreform.elements['list_ins[]'].options[i].selected=false;}}
-            
+
                 $('#tableSelectAll').on('click', function () {tableSelectAll()});
                 $('#tableSelectNone').on('click', function () {tableSelectNone()});
                 $('#populateSelectAll').on('click', function () {populateSelectAll()});
@@ -327,10 +326,9 @@ class DbBackupAdministration {
             echo closeform();
 
         } else {
-
             $file_types = (function_exists("gzencode")) ? ".gz " : ""; // added
             echo openform('restore', 'post', clean_request('action=restore', ['action'], FALSE), ['enctype' => 1, 'class' => 'spacer-xs']);
-            echo "<div class='list-group-item'>\n";
+            echo "<div class='panel panel-default panel-body'>\n";
             echo form_fileinput("upload_backup_file", $this->locale['431'], "", [
                 'inline'    => FALSE,
                 'type'      => "object",

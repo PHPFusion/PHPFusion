@@ -302,7 +302,7 @@ class Members_Action extends Members_Admin {
 
     private function user_block_template() {
         return "
-        <div class='display-inline-block list-group-item p-0'>\n
+        <div class='display-inline-block panel panel-default panel-body p-0'>\n
         <div class='pull-left m-r-10'>{%user_avatar%}</div>\n
         <div class='overflow-hide'>\n
         <span class='va' style='height:{%height%};'></span>\n

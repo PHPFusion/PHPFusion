@@ -767,7 +767,7 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
 
         echo "<tr class='qform'>\n";
         echo "<td colspan='10'>\n";
-        echo "<div class='list-group-item m-t-20 m-b-20'>\n";
+        echo "<div class='panel panel-default panel-body m-t-20 m-b-20'>\n";
         echo "<div class='row'>\n";
         echo "<div class='col-xs-12 col-sm-5 col-md-12 col-lg-6'>\n";
         echo form_hidden("link_item_id", "", '', ['input_id' => 'sl_id']);

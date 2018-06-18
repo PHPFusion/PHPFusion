@@ -76,19 +76,6 @@ class ArticlesAdminView extends ArticlesAdminModel {
             }
         }
 
-        if ($_GET['section'] == "article_category") {
-            BreadCrumbs::getInstance()->addBreadCrumb(["link" => INFUSIONS."articles/articles_admin.php".fusion_get_aidlink()."&amp;section=article_category", "title" => self::$locale['article_0004']]);
-            if (isset($_GET['ref']) && $_GET['ref'] == "article_cat_form") {
-                if (!isset($_GET['cat_id'])) {
-                    BreadCrumbs::getInstance()->addBreadCrumb(["link" => INFUSIONS."articles/articles_admin.php".fusion_get_aidlink()."&amp;section=article_category&amp;ref=article_cat_form", "title" => self::$locale['article_0005']]);
-                    $articleCatTitle = self::$locale['article_0005'];
-                } else {
-                    BreadCrumbs::getInstance()->addBreadCrumb(["link" => INFUSIONS."articles/articles_admin.php".fusion_get_aidlink()."&amp;section=article_category&amp;ref=article_cat_form", "title" => self::$locale['article_0006']]);
-                    $articleCatTitle = self::$locale['article_0006'];
-                }
-            }
-        }
-
         // Handle Tabs
         if (!empty($_GET['ref']) || isset($_GET['submit_id'])) {
             $tab['title'][] = self::$locale['back'];
