@@ -22,7 +22,7 @@ use \PHPFusion\Breadcrumbs;
 class WeblinksAdminView extends WeblinksAdminModel {
     private $locale = [];
 
-    private $allowed_pages = ["weblinks", "weblinks_category", "weblinks_form", "submissions", "settings"];
+    private $allowed_pages = ['weblinks', 'weblinks_category', 'weblinks_form', 'submissions', 'settings'];
 
     public function display_admin() {
 
@@ -30,7 +30,7 @@ class WeblinksAdminView extends WeblinksAdminModel {
 
         // Back and Check Section
         if (isset($_GET['section']) && $_GET['section'] == "back") {
-            redirect(clean_request("", ["ref", "section", "weblink_id", "action", "cat_id", "weblink_cat_id", "submit_id"], FALSE));
+            redirect(clean_request('', ['ref', 'section', 'weblink_id', 'action', 'cat_id', 'weblink_cat_id', 'submit_id'], FALSE));
         }
         $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $this->allowed_pages) ? $_GET['section'] : $this->allowed_pages[0];
 
@@ -40,7 +40,7 @@ class WeblinksAdminView extends WeblinksAdminModel {
         // Handle Breadcrumbs and Titles
         $weblinkTitle = $this->locale['WLS_0001'];
         $weblinkCatTitle = $this->locale['WLS_0004'];
-        BreadCrumbs::getInstance()->addBreadCrumb(["link" => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink(), "title" => $weblinkTitle]);
+        BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink(), 'title' => $weblinkTitle]);
 
         if (!empty($_GET['section'])) {
             switch ($_GET['section']) {
@@ -54,7 +54,7 @@ class WeblinksAdminView extends WeblinksAdminModel {
                     BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink()."&amp;section=weblinks_category", 'title' => $weblinkCatTitle]);
                     if (isset($_GET['ref']) && $_GET['ref'] == "weblink_cat_form") {
                         $weblinkCatTitle = (empty($_GET['cat_id']) ? $this->locale['WLS_0005'] : $this->locale['WLS_0006']);
-                        BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $weblinkCatTitle]);
+                        BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $weblinkCatTitle]);
                     }
                     break;
                 case "settings":

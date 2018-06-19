@@ -57,10 +57,10 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
 
                 // Publish Submission
                 if (isset($_POST['publish_submission'])) {
-                    dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id='".intval($_GET['submit_id'])."' AND submit_type='l'");
-                    dbquery_insert(DB_WEBLINKS, $this->inputArray, "save");
-                    addNotice("success", $this->locale['WLS_0060']);
-                    redirect(clean_request("", ["submit_id"], FALSE));
+                    dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id=:submitid AND submit_type=:submittype", [':submitid' => intval($_GET['submit_id']), ':submittype' => 'l']);
+                    dbquery_insert(DB_WEBLINKS, $this->inputArray, 'save');
+                    addNotice('success', $this->locale['WLS_0060']);
+                    redirect(clean_request('', ['submit_id'], FALSE));
                 }
 
             }
@@ -72,9 +72,9 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
      */
     private function DeleteSubmission() {
         if (isset($_POST['delete_submission'])) {
-            dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id='".intval($_GET['submit_id'])."' AND submit_type='l'");
-            addNotice("success", $this->locale['WLS_0061']);
-            redirect(clean_request("", ["submit_id"], FALSE));
+            dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id=:submitid AND submit_type=:submittype", [':submitid' => intval($_GET['submit_id']), ':submittype' => 'l']);
+            addNotice('success', $this->locale['WLS_0061']);
+            redirect(clean_request('', ['submit_id'], FALSE));
         }
     }
 
@@ -83,8 +83,7 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
      */
     private function unserializeData() {
 
-        $result = dbquery("
-            SELECT s.*
+        $result = dbquery("SELECT s.*
             FROM ".DB_SUBMISSIONS." AS s
             WHERE s.submit_id='".intval($_GET['submit_id'])."'
             LIMIT 0,1
@@ -94,16 +93,16 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
             $data = dbarray($result);
             $submit_criteria = \defender::decode($data['submit_criteria']);
             $returnInformations = [
-                "weblink_user_name"   => $data['submit_user'],
-                "weblink_name"        => $submit_criteria['weblink_name'],
-                "weblink_cat"         => $submit_criteria['weblink_cat'],
-                "weblink_description" => phpentities(stripslashes($submit_criteria['weblink_description'])),
-                "weblink_url"         => $submit_criteria['weblink_url'],
-                "weblink_visibility"  => 0,
-                "weblink_language"    => $submit_criteria['weblink_language'],
-                "weblink_datestamp"   => $data['submit_datestamp'],
-                "weblink_user"        => $data['submit_user'],
-                "weblink_status"      => 0
+                'weblink_user_name'   => $data['submit_user'],
+                'weblink_name'        => $submit_criteria['weblink_name'],
+                'weblink_cat'         => $submit_criteria['weblink_cat'],
+                'weblink_description' => phpentities(stripslashes($submit_criteria['weblink_description'])),
+                'weblink_url'         => $submit_criteria['weblink_url'],
+                'weblink_visibility'  => 0,
+                'weblink_language'    => $submit_criteria['weblink_language'],
+                'weblink_datestamp'   => $data['submit_datestamp'],
+                'weblink_user'        => $data['submit_user'],
+                'weblink_status'      => 0
             ];
             return $returnInformations;
         } else {
@@ -119,17 +118,26 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
         // Textarea Settings
         if (!fusion_get_settings("tinymce_enabled")) {
             $weblinkSnippetSettings = [
-                "required"   => TRUE, "preview" => TRUE, "html" => TRUE, "autosize" => TRUE, "placeholder" => $this->locale['WLS_0255'],
-                "error_text" => $this->locale['WLS_0270']
+                'required'    => TRUE,
+                'preview'     => TRUE,
+                'html'        => TRUE,
+                'autosize'    => TRUE,
+                'placeholder' => $this->locale['WLS_0255'],
+                'error_text'  => $this->locale['WLS_0270']
             ];
         } else {
-            $weblinkSnippetSettings = ["required" => TRUE, "type" => "tinymce", "tinymce" => "advanced", "error_text" => $this->locale['WLS_0270']];
+            $weblinkSnippetSettings = [
+                'required'   => TRUE,
+                'type'       => "tinymce",
+                'tinymce'    => "advanced",
+                'error_text' => $this->locale['WLS_0270']
+            ];
         }
 
         // Start Form
-        echo openform("submissionform", "post", FUSION_REQUEST);
-        echo form_hidden("weblink_status", "", 1);
-        echo form_hidden("weblink_user_name", "", $this->inputArray['weblink_user_name']);
+        echo openform('submissionform', 'post', FUSION_REQUEST);
+        echo form_hidden('weblink_status', '', 1);
+        echo form_hidden('weblink_user_name', '', $this->inputArray['weblink_user_name']);
         ?>
         <div class="well clearfix m-t-15">
             <div class="pull-left">
@@ -157,15 +165,19 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
             <div class="col-xs-12 col-sm-12 col-md-7 col-lg-8">
                 <?php
 
-                echo form_text("weblink_name", $this->locale['WLS_0201'], $this->inputArray['weblink_name'], [
-                    "required" => TRUE, "placeholder" => $this->locale['WLS_0201'], "error_text" => $this->locale['WLS_0252']
+                echo form_text('weblink_name', $this->locale['WLS_0201'], $this->inputArray['weblink_name'], [
+                    'required'    => TRUE,
+                    'placeholder' => $this->locale['WLS_0201'],
+                    'error_text'  => $this->locale['WLS_0252']
                 ]);
 
-                echo form_text("weblink_url", $this->locale['WLS_0253'], $this->inputArray['weblink_url'], [
-                    "required" => TRUE, "type" => "url", "placeholder" => "http://"
+                echo form_text('weblink_url', $this->locale['WLS_0253'], $this->inputArray['weblink_url'], [
+                    'required'    => TRUE,
+                    'type'        => "url",
+                    'placeholder' => "http://"
                 ]);
 
-                echo form_textarea("weblink_description", $this->locale['WLS_0254'], $this->inputArray['weblink_description'], $weblinkSnippetSettings);
+                echo form_textarea('weblink_description', $this->locale['WLS_0254'], $this->inputArray['weblink_description'], $weblinkSnippetSettings);
 
                 ?>
             </div>
@@ -176,28 +188,32 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
 
                 openside($this->locale['WLS_0260']);
 
-                echo form_select_tree("weblink_cat", $this->locale['WLS_0101'], $this->inputArray['weblink_cat'], [
-                    "no_root"     => TRUE,
-                    "inner_width" => "100%",
-                    "placeholder" => $this->locale['choose'],
-                    "query"       => (multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."'" : "")
+                echo form_select_tree('weblink_cat', $this->locale['WLS_0101'], $this->inputArray['weblink_cat'], [
+                    'no_root'     => TRUE,
+                    'inner_width' => '100%',
+                    'placeholder' => $this->locale['choose'],
+                    'query'       => (multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."'" : "")
                 ], DB_WEBLINK_CATS, "weblink_cat_name", "weblink_cat_id", "weblink_cat_parent");
 
                 echo form_select('weblink_visibility', $this->locale['WLS_0103'], $this->inputArray['weblink_visibility'], [
-                    "options" => fusion_get_groups(), "placeholder" => $this->locale['choose'], "inner_width" => "100%",
+                    'options'     => fusion_get_groups(),
+                    'placeholder' => $this->locale['choose'],
+                    'inner_width' => "100%"
                 ]);
 
                 if (multilang_table("WL")) {
-                    echo form_select("weblink_language", $this->locale['language'], $this->inputArray['weblink_language'], [
-                        "options" => fusion_get_enabled_languages(), "placeholder" => $this->locale['choose'], "inner_width" => "100%",
+                    echo form_select('weblink_language', $this->locale['language'], $this->inputArray['weblink_language'], [
+                        'options'     => fusion_get_enabled_languages(),
+                        'placeholder' => $this->locale['choose'],
+                        'inner_width' => '100%'
                     ]);
                 } else {
-                    echo form_hidden("article_language", "", $this->inputArray['article_language']);
+                    echo form_hidden('article_language', '', $this->inputArray['article_language']);
                 }
 
                 /**/
-                echo form_datepicker("weblink_datestamp", $this->locale['WLS_0103'], $this->inputArray['weblink_datestamp'], [
-                    "inner_width" => "100%"
+                echo form_datepicker('weblink_datestamp', $this->locale['WLS_0103'], $this->inputArray['weblink_datestamp'], [
+                    'inner_width' => '100%'
                 ]);
                 self::displayFormButtons("formstart", FALSE);
                 closeside();
@@ -218,14 +234,21 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
      * @param bool $breaker
      */
     private function displayFormButtons($unique_id, $breaker = TRUE) {
-        ?>
-        <div class="m-t-20">
-            <?php echo form_button("publish_submission", $this->locale['publish'], $this->locale['publish'], ["class" => "btn-success m-r-10", "icon" => "fa fa-fw fa-hdd-o", "input-id" => "publish_submission-".$unique_id.""]); ?>
-            <?php echo form_button("delete_submission", $this->locale['delete'], $this->locale['delete'], ["class" => "btn-danger m-r-10", "icon" => "fa fa-fw fa-trash", "input-id" => "delete_submission-".$unique_id.""]); ?>
-        </div>
-        <?php if ($breaker) { ?>
-            <hr/><?php } ?>
-        <?php
+        echo "<div class='m-t-20'>";
+        echo form_button('publish_submission', $this->locale['publish'], $this->locale['publish'], [
+            'class'    => "btn-success m-r-10",
+            'icon'     => "fa fa-fw fa-hdd-o",
+            'input-id' => "publish_submission-".$unique_id
+        ]);
+        echo form_button('delete_submission', $this->locale['delete'], $this->locale['delete'], [
+            'class'    => "btn-danger m-r-10",
+            'icon'     => "fa fa-fw fa-trash",
+            'input-id' => "delete_submission-".$unique_id
+        ]);
+        echo "</div>";
+        if ($breaker) {
+            echo "<hr/>";
+        }
     }
 
     /**
@@ -303,15 +326,15 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
         $this->weblinksettings = self::get_weblink_settings();
 
         // Handle a Submission
-        if (isset($_GET['submit_id']) && isNum($_GET['submit_id']) && dbcount("(submit_id)", DB_SUBMISSIONS, "submit_id='".$_GET['submit_id']."' AND submit_type='l'")) {
+        if (isset($_GET['submit_id']) && isNum($_GET['submit_id']) && dbcount("(submit_id)", DB_SUBMISSIONS, "submit_id=:submitid AND submit_type=:submittype", [':submitid' => $_GET['submit_id'], ':submittype' => 'l'])) {
             $this->inputArray = self::unserializeData();
 
             // Get Infos about Submissioner
-            $resultUser = dbquery("SELECT user_id, user_name, user_status, user_avatar FROM ".DB_USERS." WHERE user_id='".$this->inputArray['weblink_user']."' LIMIT 0,1");
+            $resultUser = dbquery("SELECT user_id, user_name, user_status, user_avatar FROM ".DB_USERS." WHERE user_id=:userid LIMIT 0,1", [':userid' => $this->inputArray['weblink_user']]);
             if (dbrows($resultUser) > 0) {
                 $this->dataUser = dbarray($resultUser);
             } else {
-                $this->dataUser = ["user_id" => $this->inputArray['weblink_name'], "user_name" => $this->locale['user_na'], "user_status" => 0, "user_avatar" => FALSE];
+                $this->dataUser = ['user_id' => $this->inputArray['weblink_name'], 'user_name' => $this->locale['user_na'], 'user_status' => 0, 'user_avatar' => FALSE];
             }
 
             // Delete, Publish, Preview
