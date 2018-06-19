@@ -38,23 +38,23 @@ class WeblinksSettingsAdmin extends WeblinksAdminModel {
         // Save
         if (isset($_POST['savesettings'])) {
             $inputArray = [
-                "links_per_page"          => form_sanitizer($_POST['links_per_page'], 15, "links_per_page"),
-                "links_allow_submission"  => form_sanitizer($_POST['links_allow_submission'], 0, "links_allow_submission"),
-                "links_extended_required" => form_sanitizer($_POST['links_extended_required'], 0, "links_extended_required")
+                'links_per_page'          => form_sanitizer($_POST['links_per_page'], 15, 'links_per_page'),
+                'links_allow_submission'  => form_sanitizer($_POST['links_allow_submission'], 0, 'links_allow_submission'),
+                'links_extended_required' => form_sanitizer($_POST['links_extended_required'], 0, 'links_extended_required')
             ];
 
             // Update
             if (\defender::safe()) {
                 foreach ($inputArray as $settings_name => $settings_value) {
                     $inputSettings = [
-                        "settings_name" => $settings_name, "settings_value" => $settings_value, "settings_inf" => "weblinks",
+                        'settings_name' => $settings_name, 'settings_value' => $settings_value, 'settings_inf' => "weblinks",
                     ];
-                    dbquery_insert(DB_SETTINGS_INF, $inputSettings, "update", ["primary_key" => "settings_name"]);
+                    dbquery_insert(DB_SETTINGS_INF, $inputSettings, 'update', ['primary_key' => 'settings_name']);
                 }
-                addNotice("success", $this->locale['900']);
+                addNotice('success', $this->locale['900']);
                 redirect(FUSION_REQUEST);
             } else {
-                addNotice("danger", $this->locale['901']);
+                addNotice('danger', $this->locale['901']);
                 $weblink_settings = $inputArray;
             }
         }
@@ -66,15 +66,20 @@ class WeblinksSettingsAdmin extends WeblinksAdminModel {
         echo "<div class='col-xs-12 col-sm-12'>\n";
 
         echo form_text('links_per_page', $this->locale['WLS_0132'], $weblink_settings['links_per_page'], [
-            'max_length' => 4, 'inner_width' => '250px', 'type' => 'number', 'inline' => TRUE
+            'max_length'  => 4,
+            'inner_width' => '250px',
+            'type'        => 'number',
+            'inline'      => TRUE
         ]);
 
         echo form_select('links_allow_submission', $this->locale['WLS_0007'], $weblink_settings['links_allow_submission'], [
-            'options' => [$this->locale['disable'], $this->locale['enable']], 'inline' => TRUE
+            'options' => [$this->locale['disable'], $this->locale['enable']],
+            'inline'  => TRUE
         ]);
 
         echo form_select('links_extended_required', $this->locale['WLS_0403'], $weblink_settings['links_extended_required'], [
-            'options' => [$this->locale['disable'], $this->locale['enable']], 'inline' => TRUE
+            'options' => [$this->locale['disable'], $this->locale['enable']],
+            'inline'  => TRUE
         ]);
         echo "</div>\n";
         echo "</div>\n";
