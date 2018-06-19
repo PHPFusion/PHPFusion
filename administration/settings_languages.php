@@ -21,7 +21,6 @@ require_once THEMES."templates/admin_header.php";
 $locale = fusion_get_locale('', [LOCALE.LOCALESET.'admin/settings.php', LOCALE.LOCALESET.'setup.php']);
 
 // Just follow the display of the current admin language.
-$settings = fusion_get_settings();
 if (!empty($locale['setup_3007'])) {
     dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['setup_3007']."' WHERE mlt_rights='CP'");
 }
@@ -101,17 +100,12 @@ if (isset($_POST['savesettings'])) {
          */
 
         if ($inputData['old_enabled_languages'] != $inputData['enabled_languages']) { // language family have changed
-
             $added_language = array_diff($array['enabled_languages'], $array['old_enabled_languages']);
-
             $removed_language = array_diff($array['old_enabled_languages'], $array['enabled_languages']);
 
             dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$core_SQLVal['enabled_languages']."' WHERE settings_name='enabled_languages'");
-
             dbquery("UPDATE ".DB_PANELS." SET panel_languages='".$core_SQLVal['enabled_languages']."'");
-
             dbquery("UPDATE ".DB_USERS." SET user_language='Default' WHERE user_language NOT IN ('".$inArray_SQLCond['enabled_languages']."')");
-
 
             if (!empty($added_language)) {
                 foreach ($added_language as $language) {
@@ -123,6 +117,7 @@ if (isset($_POST['savesettings'])) {
                     $language_exist = dbarray(dbquery("SELECT template_language FROM ".DB_EMAIL_TEMPLATES." WHERE template_language ='".$language."'"));
                     if (is_null($language_exist['template_language'])) {
                         $locale = fusion_get_locale('', LOCALE.$language."/setup.php");
+                        $settings = fusion_get_settings();
                         dbquery("INSERT INTO ".DB_EMAIL_TEMPLATES." (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'PM', 'html', '0', '".$locale['setup_3801']."', '".$locale['setup_3802']."', '".$locale['setup_3803']."', '".$settings['siteusername']."', '".$settings['siteemail']."', '".$language."')");
                         dbquery("INSERT INTO ".DB_EMAIL_TEMPLATES." (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'POST', 'html', '0', '".$locale['setup_3804']."', '".$locale['setup_3805']."', '".$locale['setup_3806']."', '".$settings['siteusername']."', '".$settings['siteemail']."', '".$language."')");
                         dbquery("INSERT INTO ".DB_EMAIL_TEMPLATES." (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'CONTACT', 'html', '0', '".$locale['setup_3807']."', '".$locale['setup_3808']."', '".$locale['setup_3809']."', '".$settings['siteusername']."', '".$settings['siteemail']."', '".$language."')");
