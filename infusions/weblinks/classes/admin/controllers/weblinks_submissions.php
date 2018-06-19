@@ -82,7 +82,6 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
      * Get unserialize Datas for a Submission
      */
     private function unserializeData() {
-
         $result = dbquery("SELECT s.*
             FROM ".DB_SUBMISSIONS." AS s
             WHERE s.submit_id='".intval($_GET['submit_id'])."'
@@ -108,6 +107,8 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
         } else {
             redirect(clean_request("", [], FALSE));
         }
+
+        return NULL;
     }
 
     /**

@@ -2,7 +2,7 @@
 <div class='spacer-sm'>{%breadcrumb%}</div>
 <ul class='list-group-item list-style-none'>
     {filter_item.{
-        <li class="display-inline-block m-t-5 m-r-10"{%active%}><a href='{%link%}' class='display-inline {%active%} m-r-10'>{%title%}</a></li>
+        <li class="display-inline-block m-t-5 m-r-10" {%active%}><a href='{%link%}' class='display-inline {%active%} m-r-10'>{%title%}</a></li>
     }}
     {navbar_item.{
         <li class="display-inline-block m-r-10">{%links%}</li>
@@ -13,26 +13,22 @@
         <div class='text-right'>{%pagenav%}</div>
     }}
     {weblink.{
-        <div id='weblink-{%weblink_id%}'
-             class='col-xs-12 col-sm-{%weblinks_span%} col-md-{%weblinks_span%} col-lg-{%weblinks_span%}'>
-            <div class='panel panel-default'>
-                <div class='panel-body'>
-                    <h4 class='weblink-title panel-title'>
-                        <i class='fa fa-fw fa-link'></i><a target='_blank' href='{%weblink_link%}' class='strong'>{%weblink_name%}</a>
-                    </h4>
-                    <div class='weblink-text overflow-hide m-t-5'>{%weblink_description%}</div>
-                    <div class='weblink-category m-t-5'>
-                        <i class="fa fa-fw fa-folder"></i><a href='{%weblink_cat_link%}'>{%weblink_cat_name%}</a>
-                    </div>
-                </div>
-                <div class='panel-footer'>
-                    <i class='fa fa-fw fa-eye'></i>{%weblink_count%}
-                    <i class='fa fa-fw fa-upload m-l-10'></i>{%weblink_datestamp%}
-                    {%admin_edit_link%}
-                    {%admin_delete_link%}
-                </div>
+    <div id='weblink-{%weblink_id%}'
+         class='col-xs-12 col-sm-{%weblinks_span%} col-md-{%weblinks_span%} col-lg-{%weblinks_span%}'>
+        <div class='panel panel-default'>
+            <div class='panel-body'>
+                <h4 class='weblink-title panel-title'><i class='fa fa-fw fa-link'></i><a target='_blank' href='{%weblink_link%}' class='strong'>{%weblink_name%}</a></h4>
+                <div class='weblink-text overflow-hide m-t-5'>{%weblink_description%}</div>
+                <div class='weblink-category m-t-5'><i class="fa fa-fw fa-folder"></i><a href='{%weblink_cat_link%}'>{%weblink_cat_name%}</a></div>
+            </div>
+            <div class='panel-footer'>
+                <i class='fa fa-fw fa-eye'></i>{%weblink_count%}
+                <i class='fa fa-fw fa-upload m-l-10'></i>{%weblink_datestamp%}
+                {%admin_edit_link%}
+                {%admin_delete_link%}
             </div>
         </div>
+    </div>
     }}
 </div>
 {pagenav2.{

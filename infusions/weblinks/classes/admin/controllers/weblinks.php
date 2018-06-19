@@ -231,8 +231,8 @@ class WeblinksAdmin extends WeblinksAdminModel {
             'input-id' => 'cancel-'.$unique_id
         ]);
         echo form_button('save', $this->locale['save'], $this->locale['save'], [
-            'class' => 'btn-success m-r-10',
-            'icon' => 'fa fa-fw fa-hdd-o',
+            'class'    => 'btn-success m-r-10',
+            'icon'     => 'fa fa-fw fa-hdd-o',
             'input-id' => 'save-'.$unique_id
         ]);
         echo form_button('save_and_close', $this->locale['save_and_close'], $this->locale['save_and_close'], [
@@ -391,18 +391,12 @@ class WeblinksAdmin extends WeblinksAdminModel {
             <div class="clearfix">
                 <div class="pull-right">
                     <?php if ($weblink_cats) { ?>
-                        <a class="btn btn-success btn-sm m-r-10"
-                           href="<?php echo clean_request("ref=weblinkform", ["ref"], FALSE); ?>"><i
-                                    class="fa fa-fw fa-plus"></i> <?php echo $this->locale['WLS_0002']; ?></a>
+                        <a class="btn btn-success btn-sm m-r-10" href="<?php echo clean_request("ref=weblinkform", ["ref"], FALSE); ?>"><i class="fa fa-fw fa-plus"></i> <?php echo $this->locale['WLS_0002']; ?></a>
                     <?php } ?>
-                    <a class="btn btn-default btn-sm m-r-10" onclick="run_admin('verify');"><i
-                                class="fa fa-fw fa-globe"></i> <?php echo $this->locale['WLS_0261']; ?></a>
-                    <a class="btn btn-default btn-sm m-r-10" onclick="run_admin('publish');"><i
-                                class="fa fa-fw fa-check"></i> <?php echo $this->locale['publish']; ?></a>
-                    <a class="btn btn-default btn-sm m-r-10" onclick="run_admin('unpublish');"><i
-                                class="fa fa-fw fa-ban"></i> <?php echo $this->locale['unpublish']; ?></a>
-                    <a class="btn btn-danger btn-sm m-r-10" onclick="run_admin('delete');"><i
-                                class="fa fa-fw fa-trash-o"></i> <?php echo $this->locale['delete']; ?></a>
+                    <a class="btn btn-default btn-sm m-r-10" onclick="run_admin('verify', 'table_action', 'weblink_table');"><i class="fa fa-fw fa-globe"></i> <?php echo $this->locale['WLS_0261']; ?></a>
+                    <a class="btn btn-default btn-sm m-r-10" onclick="run_admin('publish', 'table_action', 'weblink_table');"><i class="fa fa-fw fa-check"></i> <?php echo $this->locale['publish']; ?></a>
+                    <a class="btn btn-default btn-sm m-r-10" onclick="run_admin('unpublish', 'table_action', 'weblink_table');"><i class="fa fa-fw fa-ban"></i> <?php echo $this->locale['unpublish']; ?></a>
+                    <a class="btn btn-danger btn-sm m-r-10" onclick="run_admin('delete', 'table_action', 'weblink_table');"><i class="fa fa-fw fa-trash-o"></i> <?php echo $this->locale['delete']; ?></a>
                 </div>
 
                 <div class="display-inline-block pull-left m-r-10" style="width: 300px;">
@@ -554,16 +548,16 @@ class WeblinksAdmin extends WeblinksAdminModel {
                         echo form_checkbox('check_all', $this->locale['WLS_0206'], '', ['class' => 'm-b-0', 'reverse_label' => TRUE]);
 
                         add_to_jquery("
-                    $('#check_all').bind('click', function() {
-                        if ($(this).is(':checked')) {
-                            $('input[name^=weblink_id]:checkbox').prop('checked', true);
-                            $('#links-table tbody tr').addClass('active');
-                        } else {
-                            $('input[name^=weblink_id]:checkbox').prop('checked', false);
-                            $('#links-table tbody tr').removeClass('active');
-                        }
-                    });
-                ");
+                            $('#check_all').bind('click', function() {
+                                if ($(this).is(':checked')) {
+                                    $('input[name^=weblink_id]:checkbox').prop('checked', true);
+                                    $('#links-table tbody tr').addClass('active');
+                                } else {
+                                    $('input[name^=weblink_id]:checkbox').prop('checked', false);
+                                    $('#links-table tbody tr').removeClass('active');
+                                }
+                            });
+                        ");
                         ?></th>
                 <?php else: ?>
                     <tr>
@@ -598,35 +592,6 @@ class WeblinksAdmin extends WeblinksAdminModel {
                 $(this).closest('form').submit();
             });
         ");
-
-        // Javascript
-        add_to_footer("
-            <script type='text/javascript'>
-                function run_admin(action) {
-                    $('#table_action').val(action);
-                    $('#weblink_table').submit();
-                }
-            </script>
-        ");
-
-    }
-
-
-    private function verify_link($url) {
-
-        if (function_exists('curl_version')) {
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-            curl_exec($ch);
-            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
-            return ($httpcode >= 200 && $httpcode < 307 ? TRUE : FALSE);
-        } else if (filter_var($url, FILTER_VALIDATE_URL, FILTER_FLAG_HOST_REQUIRED) === FALSE) {
-            return FALSE;
-        }
     }
 
     private function verifyLink($id = 0) {
@@ -636,20 +601,18 @@ class WeblinksAdmin extends WeblinksAdminModel {
         if (dbrows($result) > 0) {
             $i = 0;
             while ($cdata = dbarray($result)) {
-                if (self::verify_link($cdata['weblink_url']) == FALSE) {
-                    dbquery("UPDATE ".DB_WEBLINKS." SET weblink_status='0' WHERE weblink_id='".intval($cdata['weblink_id'])."'");
-                    $i++;
-                }
+                dbquery("UPDATE ".DB_WEBLINKS." SET weblink_status='0' WHERE weblink_id='".intval($cdata['weblink_id'])."'");
+                $i++;
             }
             addNotice('success', sprintf($this->locale['WLS_0115'], $i));
-            if ($i > 0)
+            if ($i > 0) {
                 addNotice('success', $this->locale['WLS_0116']);
+            }
         }
     }
 
     // Weblinks Delete Function
     private function execute_Delete() {
-
         if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['weblink_id']) && isnum($_GET['weblink_id'])) {
             $weblink_id = intval($_GET['weblink_id']);
 

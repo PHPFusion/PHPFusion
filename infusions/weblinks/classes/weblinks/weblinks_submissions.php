@@ -91,15 +91,15 @@ class WeblinksSubmissions extends WeblinksServer {
             }
 
             if (isset($_GET['submitted']) && $_GET['submitted'] == "l") {
-            	$info['confirm'] = [
-            	    'title'       => $this->locale['WLS_0911'],
-            	    'submit_link' => "<a href='".BASEDIR."submit.php?stype=l'>".$this->locale['WLS_0912']."</a>",
-            	    'index_link'  => "<a href='".BASEDIR."index.php'>".str_replace("[SITENAME]", fusion_get_settings("sitename"), $this->locale['WLS_0913'])."</a>"
-            	];
-            	$info += $this->info;
+                $info['confirm'] = [
+                    'title'       => $this->locale['WLS_0911'],
+                    'submit_link' => "<a href='".BASEDIR."submit.php?stype=l'>".$this->locale['WLS_0912']."</a>",
+                    'index_link'  => "<a href='".BASEDIR."index.php'>".str_replace("[SITENAME]", fusion_get_settings("sitename"), $this->locale['WLS_0913'])."</a>"
+                ];
+                $info += $this->info;
                 return (array)$info;
             } else {
-            	$info['item'] = [
+                $info['item'] = [
                     'guidelines'          => str_replace("[SITENAME]", fusion_get_settings("sitename"), $this->locale['WLS_0920']),
                     'openform'            => openform('submit_form', 'post', BASEDIR."submit.php?stype=l", ['enctype' => self::$weblink_settings['links_allow_submission'] ? TRUE : FALSE]),
                     'weblink_cat'         => form_select_tree('weblink_cat', $this->locale['WLS_0101'], $criteriaArray['weblink_cat'],
@@ -127,19 +127,19 @@ class WeblinksSubmissions extends WeblinksServer {
                             'width'       => '250px',
                             'inline'      => TRUE,
                         ]) : form_hidden('weblink_language', '', $criteriaArray['weblink_language'])),
-            	    'weblink_description' => form_textarea('weblink_description', $this->locale['WLS_0254'], $criteriaArray['weblink_description'],
-            	        [
+                    'weblink_description' => form_textarea('weblink_description', $this->locale['WLS_0254'], $criteriaArray['weblink_description'],
+                        [
                             'required'  => self::$weblink_settings['links_extended_required'] ? TRUE : FALSE,
                             'type'      => fusion_get_settings('tinymce_enabled') ? 'tinymce' : 'html',
                             'tinymce'   => fusion_get_settings('tinymce_enabled') && iADMIN ? 'advanced' : 'simple',
                             'autosize'  => TRUE,
                             'form_name' => 'submit_form',
-            	        ]),
+                        ]),
                     'weblink_submit'      => form_button('submit_link', $this->locale['submit'], $this->locale['submit'], ['class' => 'btn-success', 'icon' => 'fa fa-fw fa-hdd-o'])
 
-            	];
+                ];
 
-            	$info += $this->info;
+                $info += $this->info;
                 return (array)$info;
             }
 
