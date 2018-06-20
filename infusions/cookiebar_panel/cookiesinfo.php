@@ -100,4 +100,4 @@ echo "<h1>".$locale['CBP104']."</h1>
 <td>".$locale['CBP146']."</td>
 <td>".$locale['CBP147']."</td>
 <td>".$locale['CBP140']."</td>
-</tr></body></table></div>";
+</tr></tbody></table></div>";
