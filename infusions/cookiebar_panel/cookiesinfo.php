@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: cookiebar_panel.php
+| Filename: cookiebar_panel/cookiesinfo.php
 | Author: PHP-Fusion Development Team
 | Co-Author: Joakim Falk (Domi)
 +--------------------------------------------------------+
@@ -16,19 +16,19 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once __DIR__."/../../maincore.php";
+require_once __DIR__.'/../../maincore.php';
 
-$locale = fusion_get_locale('', file_exists(INFUSIONS."cookiebar_panel/locale/".$settings['locale'].".php") ? INFUSIONS."cookiebar_panel/locale/".$settings['locale'].".php" : INFUSIONS."cookiebar_panel/locale/English.php");
+$locale = fusion_get_locale("", COOKIE_LOCALE);
 
 echo "<h1>".$locale['CBP104']."</h1>
-<table class='table'>
+<div class='table-responsive'><table class='table table-hover table-striped'>
 <thead>
 <tr>
-<th  class='text-center'>".$locale['CBP105']."</th>
-<th  class='text-center'>".$locale['CBP106']."</th>
+<th class='text-center'>".$locale['CBP105']."</th>
+<th class='text-center'>".$locale['CBP106']."</th>
 <th class='text-center'>".$locale['CBP107']."</th>
 <th class='text-center'>".$locale['CBP108']."</th>
-<th  class='text-center'>".$locale['CBP109']."</th>
+<th class='text-center'>".$locale['CBP109']."</th>
 </tr>
 </thead><tbody>
 <tr>
@@ -100,4 +100,4 @@ echo "<h1>".$locale['CBP104']."</h1>
 <td>".$locale['CBP146']."</td>
 <td>".$locale['CBP147']."</td>
 <td>".$locale['CBP140']."</td>
-</tr></body></table>";
+</tr></body></table></div>";

@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: cookiebar_panel/consentcookies.php
+| Filename: infusion_db.php
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -15,8 +15,14 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once __DIR__.'/../../maincore.php';
-if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest')) {
-    setcookie(COOKIE_PREFIX."cookieconsent", "yes", time() + 31536000, "/", "", "0");
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
 }
-exit;
+
+if (!defined("COOKIE_LOCALE")) {
+    if (file_exists(INFUSIONS."cookiebar_panel/locale/".LANGUAGE.".php")) {
+        define("COOKIE_LOCALE", INFUSIONS."cookiebar_panel/locale/".LANGUAGE.".php");
+    } else {
+        define("COOKIE_LOCALE", INFUSIONS."cookiebar_panel/locale/English.php");
+    }
+}
