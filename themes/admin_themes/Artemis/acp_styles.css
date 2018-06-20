@@ -1730,9 +1730,9 @@ table {
     -o-transition: 50ms border-color ease-in-out;
     -moz-transition: 50ms border-color ease-in-out;
     transition: 50ms border-color ease-in-out;
-    padding: 2px 5px;
+    /*padding: 2px 5px;
     font-size: 14px;
-    height: 28px;
+    height: 28px;*/
 }
 
 .form-group > label > span:not(.required) {
@@ -1871,13 +1871,19 @@ textarea.form-control {
     border-color: #ccc;
     margin-bottom: 0 !important;
 }
-
 .tab-content {
     background: #fff;
     padding: 10px 15px;
     border-left: 1px solid #ccc;
     border-right: 1px solid #ccc;
     border-bottom: 1px solid #ccc;
+}
+.nav-wrapper > .nav-pills:not(.nav-stacked) > li {
+    margin-right: 10px;
+}
+.nav-pills + .tab-content {
+    border: 0 !important;
+    padding: 0;
 }
 
 .nav-tabs > li {
@@ -2230,13 +2236,13 @@ div.mce-edit-area {
 }
 
 .input-group .form-control {
-    padding: 0 15px 0;
+    padding: 2px 5px;
 }
-
+/*
 .input-group-btn .btn, .form-group .btn {
     padding: 3px 6px;
 }
-
+*/
 .form-group .btn {
     margin-top: -3px;
     position: relative;
