@@ -55,8 +55,7 @@ class Members_View {
             <tfoot>
             {%list_footer%}
             </tfoot>
-        </table></div>
-        {%page_nav%}
+        </table></div>        
         ";
     }
 
