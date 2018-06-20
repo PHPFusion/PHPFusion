@@ -32,12 +32,27 @@
  * @param bool  $input_value
  * @param array $options
  *
- * Chaining a secondary field to another field
- * $options['chainable']  true
- * $options['chain_to_id']  the input id of the primary field that the current field is chained to
- * $options['chain_index'] = a list of array with array of key & value
- * array    key - current option value (i.e. +60)
- *          value - parent value that this option value is chained against (i.e. Malaysia)
+ * Setting up a select chain
+ *
+ * There will be 2 select box, Parent Select and Child Select
+ * Parent Select has options value of: array(1 => 'Parent A', 2 => 'Parent B')
+ * Parent Child has options value of: array(3 => 'Child A', 4 => 'Child B');
+ * The way that these two select chain to each other is via $options['chain_index'] with a value of:
+ * array(3 => 1, 4 => 1); ***
+ * The above array is the 'id of child A' => 'id of parent of A'
+ * key - current option value (i.e. +60)
+ * value - parent value that this option value is chained against (i.e. Malaysia)
+ *
+ * Implementation
+ * 1. Do nothing for Parent Select
+ * 2. In Child Select add:
+ * $options['chainable'] - set to true
+ * $options['chain_to_id'] - unique input_id of the Parent Select
+ * $options['chain_index'] - the chain array (see ***)
+ *
+ * Example code
+ * form_select('parent', 'Parent Sample', $parent_callback_value, ['options'=>$parent_opts]);
+ * form_select('child', 'Child Sample', $child_callback_value, ['options' => $child_opts, 'chainable'=>TRUE, 'chain_to_id'=>'parent', 'chain_index'=>$chain_index_opts]);
  *
  * @return string
  *
@@ -45,7 +60,6 @@
  */
 
 function form_select($input_name, $label = "", $input_value, array $options = []) {
-
     $locale = fusion_get_locale();
 
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
@@ -217,7 +231,6 @@ function form_select($input_name, $label = "", $input_value, array $options = []
                     }
 
                     return (array)$list;
-
                 }
             }
         }
@@ -248,7 +261,6 @@ function form_select($input_name, $label = "", $input_value, array $options = []
             add_to_footer("<script src='".DYNAMICS."assets/chainselect/jquery.chained.js'></script>");
         }
         add_to_jquery("$('#".$options['input_id']."').chained('#".$options['chain_to_id']."');");
-
     }
 
     // Optgroup with Hierarchy
@@ -390,7 +402,7 @@ function form_select($input_name, $label = "", $input_value, array $options = []
                         $html .= (!$hide ? "<option value='$v'".$chain.$select.($disabled ? 'disabled' : '').">$v ".($options['show_current'] && $input_value == $v ? '(Current Item)' : '')."</option>\n" : "");
                     } else {
                         if ($input_value !== '') {
-                            $input_value = stripinput($input_value); // not sure if can turn FALSE to zero not null.
+                            //$input_value = stripinput($input_value); // not sure if can turn FALSE to zero not null.
                             $select = (isset($input_value) && $input_value == $arr) ? ' selected' : '';
                         }
                         $disabled = $disable_opts && in_array($arr, $disable_opts) ? TRUE : FALSE;
