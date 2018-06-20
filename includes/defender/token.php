@@ -55,16 +55,21 @@ class Token extends \defender {
         $error = FALSE;
         // Validate the Token When POST is not Empty Automatically
         if (!empty($_POST)) {
+
             if (!isset($_POST['fusion_token']) || !isset($_POST['form_id']) || !is_string($_POST['fusion_token']) || !is_string($_POST['form_id'])) {
                 // Check if a token is being posted and make sure is a string
                 $error = $locale['token_error_2'];
+
             } else if (!isset($_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']])) {
                 // Cannot find any token for this form
                 $error = $locale['token_error_9'];
-                // Check if the token exists in storage
+
             } else if (!in_array($_POST['fusion_token'], $_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']])) {
+                // Check if the token exists in storage
                 $error = $locale['token_error_10'].stripinput($_POST['fusion_token']);
+
             } else if ($error = self::verify_token()) {
+                // Unable to Verify Token
                 $error = $locale['token_error_3'].stripinput($_POST['fusion_token']).$error;
             }
 
@@ -98,7 +103,7 @@ class Token extends \defender {
 
         if ($error) {
             self::$tokenIsValid = FALSE;
-            self::stop($error);
+            self::stop();
             if (self::$debug === TRUE) {
                 addNotice('danger', $_SERVER['PHP_SELF']);
                 addNotice('danger', $error);
@@ -181,10 +186,12 @@ class Token extends \defender {
                 array_shift($_SESSION['csrf_tokens'][self::pageHash($file)][$form_id]);
             }
         } else {
-            $token_ring = $_SESSION['csrf_tokens'][self::pageHash($file)][$form_id];
+            $page_url = self::pageHash($file);
+            $token_ring = $_SESSION['csrf_tokens'][$page_url][$form_id];
             $ring = array_rand($token_ring, 1);
             $token = $token_ring[$ring];
         }
+
         // Debugging section
         if (self::$debug) {
             if (!self::safe()) {

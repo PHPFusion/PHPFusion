@@ -445,7 +445,7 @@ class defender {
                     addNotice("danger", $notice);
                 }
             }
-            addNotice('danger', '<strong>'.fusion_get_locale('error_request', LOCALE.LOCALESET.'defender.php').'</strong>');
+            //addNotice('danger', '<strong>'.fusion_get_locale('error_request', LOCALE.LOCALESET.'defender.php').'</strong>');
             if (self::$debug) {
                 debug_print_backtrace();
                 define("STOP_REDIRECT", TRUE);
