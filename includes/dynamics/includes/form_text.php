@@ -53,6 +53,8 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 
+    $id = trim($input_name, "[]");
+
     $default_options = [
         'type'               => 'text',
         'required'           => FALSE,
@@ -62,7 +64,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         'regex'              => '',
         'regex_error_text'   => '',
         'callback_check'     => FALSE,
-        'input_id'           => $input_name,
+        'input_id'           => $id,
         'placeholder'        => '',
         'deactivate'         => FALSE,
         'width'              => '',
@@ -85,6 +87,8 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         'append_size'        => '',
         'append_class'       => 'btn-default',
         'append_type'        => 'submit',
+        'prepend_id' => "p-".$id."-prepend",
+        'append_id' => "p-".$id."-append",
         'prepend_button'     => '',
         'prepend_value'      => '',
         'prepend_form_value' => '',
@@ -99,6 +103,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         'data'               => [],
         'append_html'        => '',
         'censor_words'       => TRUE,
+
     ];
 
     $options += $default_options;
@@ -108,9 +113,6 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
     ];
 
     $options['type'] = in_array($options['type'], $valid_types) ? $options['type'] : 'text';
-
-    // always trim id
-    $options['input_id'] = trim($options['input_id'], "[]");
 
     $options += [
         'append_button_name'  => !empty($options['append_button_name']) ? $options['append_button_name'] : "p-submit-".$options['input_id'],
@@ -183,14 +185,14 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
     $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-12 col-md-3 col-lg-3" : '')."' for='".$options['input_id']."'>".$options['label_icon'].$label.($options['required'] ? "<span class='required'>&nbsp;*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."</label>\n" : '';
     $html .= ($options['inline'] && $label) ? "<div class='col-xs-12 col-sm-12 col-md-9 col-lg-9'>\n" : "";
 
-    $html .= ($options['append_button'] || $options['prepend_button'] || $options['append_value'] || $options['prepend_value']) ? "<div class='input-group ".($options['group_size'] ? ' input-group-'.$options['group_size'] : '')."' ".($options['width'] ? "style='width: ".$options['width']."'" : '').">\n" : "";
+    $html .= ($options['append_button'] || $options['prepend_button'] || $options['append_value'] || $options['prepend_value']) ? "<div class='input-group".($options['group_size'] ? ' input-group-'.$options['group_size'] : '')."' ".($options['width'] ? "style='width: ".$options['width']."'" : '').">\n" : "";
 
     if ($options['prepend_button'] && $options['prepend_type'] && $options['prepend_form_value'] && $options['prepend_class'] && $options['prepend_value']) {
         $html .= "<span class='input-group-btn'>\n";
         $html .= "<button id='".$options['prepend_button_id']."' name='".$options['prepend_button_name']."' type='".$options['prepend_type']."' value='".$options['prepend_form_value']."' class='btn ".$options['prepend_size']." ".$options['prepend_class']."'>".$options['prepend_value']."</button>\n";
         $html .= "</span>\n";
     } else if ($options['prepend_value']) {
-        $html .= "<span class='input-group-addon' id='p-".$options['input_id']."-prepend'>".$options['prepend_value']."</span>\n";
+        $html .= "<span class='input-group-addon' id='".$options['prepend_id']."'>".$options['prepend_value']."</span>\n";
     }
 
     $min = '';
@@ -225,7 +227,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 
     } else if ($options['append_value']) {
 
-        $html .= "<span class='input-group-addon' id='p-".$options['input_id']."-append'>".$options['append_value']."</span>\n";
+        $html .= "<span class='input-group-addon' id='".$options['append_id']."'>".$options['append_value']."</span>\n";
 
     }
 
