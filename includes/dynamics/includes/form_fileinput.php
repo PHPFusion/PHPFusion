@@ -75,7 +75,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
         'media'             => FALSE,
         'placeholder'       => '',
         'form_id'           => '',
-        'hide_upload'       => FALSE,
+        'hide_upload'       => TRUE,
         'hide_remove'       => FALSE,
         'replace_upload'    => FALSE, // makes upload unique (i.e. overwrite instead of creating new)
     ];
@@ -289,8 +289,8 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
                 browseLabel: '".$browseLabel."',
                 browseIcon: '<i class=\"".$options['icon']." m-r-10\"></i>',
                 ".($options['jsonurl'] ? "uploadUrl : '".$options['jsonurl']."'," : '')."
-                ".($options['jsonurl'] && $options['hide_upload'] ? 'showUpload: false,' : '')."
-                ".($options['jsonurl'] && $options['hide_remove'] ? 'showRemove: false,' : '')."
+                ".($options['hide_upload'] ? 'showUpload: false,' : '')."
+                ".($options['hide_remove'] ? 'showRemove: false,' : '')."
                 dropZoneEnabled: ".($options['dropzone'] ? "true" : "false").",
                 $extra_data_js
                 ".$lang."
@@ -316,8 +316,8 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
                 showRemove: false,
                 ".($options['jsonurl'] ? "uploadUrl : '".$options['jsonurl']."'," : '')."
                 dropZoneEnabled: ".($options['dropzone'] ? "true" : "false").",
-                ".($options['jsonurl'] && $options['hide_upload'] ? 'showUpload: false,' : '')."
-                ".($options['jsonurl'] && $options['hide_remove'] ? 'showRemove: false,' : '')."
+                ".($options['hide_upload'] ? 'showUpload: false,' : '')."
+                ".($options['hide_remove'] ? 'showRemove: false,' : '')."
                 $extra_data_js
                 layoutTemplates: {
                     main2: '<div class=\"btn-photo-upload btn-link\">'+' {browse}'+' </div></span></div> {preview}',
@@ -345,8 +345,8 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
                 showCaption: false,
                 showRemove: false,
                 ".($options['jsonurl'] ? "uploadUrl : '".$options['jsonurl']."'," : '')."
-                ".($options['jsonurl'] && $options['hide_upload'] ? 'showUpload: false,' : '')."
-                ".($options['jsonurl'] && $options['hide_remove'] ? 'showRemove: false,' : '')."
+                ".($options['hide_upload'] ? 'showUpload: false,' : '')."
+                ".($options['hide_remove'] ? 'showRemove: false,' : '')."
                 dropZoneEnabled: ".($options['dropzone'] ? "true" : "false").",
                 $extra_data_js
                 layoutTemplates: {
