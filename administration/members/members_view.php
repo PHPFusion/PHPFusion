@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 namespace Administration\Members;
 
-class Members_View extends Members_Admin {
+class Members_View {
 
     public static function display_members() {
         return "<div class='clearfix'>
@@ -28,13 +28,13 @@ class Members_View extends Members_Admin {
         <div id='filter_panel' class='m-t-10' style='display:none'>
             <div class='panel panel-default panel-body'>
                 <div class='row'>
-                    <div class='col-xs-3'><strong>".self::$locale['ME_560']."</strong></div>
+                    <div class='col-xs-3'><strong>{[ME_560]}</strong></div>
                     <div class='col-xs-9'>{%filter_options%}{%filter_extras%}</div>
                 </div>
             </div>
             <div class='panel panel-default panel-body spacer-xs'>
                 <div class='row'>
-                    <div class='col-xs-3'><strong>".self::$locale['ME_561']."</strong></div>
+                    <div class='col-xs-3'><strong>{[ME_561]}</strong></div>
                     <div class='col-xs-9'>{%filter_status%}</div>
                 </div>
             </div>
@@ -43,7 +43,7 @@ class Members_View extends Members_Admin {
         <!--//filter-->
         <hr/>
         <div class='clearfix spacer-xs'>{%page_count%}<div class='pull-right'>{%page_nav%}</div></div>
-        <div id='user_action_bar' class='panel panel-default panel-body spacer-sm p-10 text-center'>{%user_actions%}</div>
+        <div id='user_action_bar' class='panel panel-default panel-body spacer-sm p-10'>{%user_actions%}</div>
         <div class='table-responsive'><table id='user_table' class='table table-hover table-striped ".fusion_sort_table('user_table')."'>
             <thead>
                 {%list_head%}
@@ -56,6 +56,7 @@ class Members_View extends Members_Admin {
             {%list_footer%}
             </tfoot>
         </table></div>
+        {%page_nav%}
         ";
     }
 

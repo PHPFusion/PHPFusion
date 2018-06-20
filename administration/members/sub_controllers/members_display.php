@@ -15,11 +15,13 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 namespace Administration\Members\Sub_Controllers;
 
 use Administration\Members\Members_Admin;
 use Administration\Members\Members_View;
 use PHPFusion\QuantumFields;
+use PHPFusion\Template;
 
 /**
  * Class Members_Display
@@ -27,7 +29,13 @@ use PHPFusion\QuantumFields;
  * @package Administration\Members\Sub_Controllers
  */
 class Members_Display extends Members_Admin {
+
+    /**
+     * List members
+     * @return string
+     */
     public static function render_listing() {
+
         add_to_footer("<script type='text/javascript' src='".ADMIN."members/js/user_display.js'></script>");
 
         $c_name = 'usertbl_results';
@@ -184,7 +192,7 @@ class Members_Display extends Members_Admin {
         $rowstart = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $rowCount ? intval($_GET['rowstart']) : 0;
         $limit = 16;
         if (in_array(2, $selected_status)) {
-            $nquery = "SELECT * FROM ".DB_NEW_USERS."";
+            $nquery = "SELECT * FROM ".DB_NEW_USERS;
             $nresult = dbquery($nquery);
             $i = 999999;
             while ($data = dbarray($nresult)) {
@@ -199,8 +207,8 @@ class Members_Display extends Members_Admin {
                 ];
                 $i++;
             }
-
         }
+
         $query = "SELECT user_id, user_name, user_avatar, user_email, user_level, user_status ".($cookie_selected ? ', '.$cookie_selected : '')."
                   FROM ".DB_USERS.$status_cond.$search_cond." LIMIT $rowstart, $limit
                   ";
@@ -243,6 +251,7 @@ class Members_Display extends Members_Admin {
                 }
 
                 $list[$data['user_id']]['checkbox'] = ($data['user_level'] > USER_LEVEL_SUPER_ADMIN) ? form_checkbox('user_id[]', '', '', ['input_id' => 'user_id_'.$data['user_id'], 'value' => $data['user_id']]) : '';
+
                 $list[$data['user_id']]['user_name'] = "<div class='clearfix'>\n<div class='pull-left m-r-10'>".display_avatar($data, '35px', '', FALSE, '')."</div>\n
                 <div class='overflow-hide'><a href='".self::$status_uri['view'].$data['user_id']."'>".$data['user_name']."</a><br/>".getsuspension($data['user_status'])."</div>
                 </div>\n";
@@ -250,13 +259,16 @@ class Members_Display extends Members_Admin {
                 $list[$data['user_id']]['user_actions'] = ($data['user_level'] > USER_LEVEL_SUPER_ADMIN ? "<a href='".self::$status_uri['edit'].$data['user_id']."'>".self::$locale['edit']."</a> - <a href='".self::$status_uri['delete'].$data['user_id']."'>".self::$locale['delete']."</a> -" : "")." <a href='".self::$status_uri['view'].$data['user_id']."'>".self::$locale['view']."</a>";
 
                 $list[$data['user_id']]['user_level'] = getuserlevel($data['user_level']);
+
                 $list[$data['user_id']]['user_email'] = $data['user_email'];
+
                 $list[$data['user_id']]['user_status'] = getuserstatus($data['user_status']);
             }
         }
 
         // Render table header and table result
-        $table_head = "<tr><th></th><th colspan='4' class='text-center'>".self::$locale['ME_408']."</th><th colspan='".count($selected_fields)."' class='text-center'>".self::$locale['ME_409']."</th></tr>";
+        $detail_span = count($selected_fields) + 1;
+        $table_head = "<tr><th class='min'></th><th colspan='4' class='text-center'>".self::$locale['ME_408']."</th><th colspan='$detail_span' class='text-center'>".self::$locale['ME_409']."</th></tr>";
 
         $table_subheader = "<th></th><th colspan='2' class='col-xs-2'>".self::$locale['ME_410']."</th><th class='min'>".self::$locale['ME_411']."</th>\n<th>".self::$locale['ME_427']."</th>\n<th class='min'>".self::$locale['ME_412']."</th>";
 
@@ -264,7 +276,7 @@ class Members_Display extends Members_Admin {
             $table_subheader .= "<th>".$tLocale[$column]."</th>\n";
         }
         $table_subheader = "<tr>$table_subheader</tr>\n";
-        $table_footer = "<tr><th class='p-10 min' colspan='5'>".form_checkbox('check_all', self::$locale['ME_414'], '', ['class' => 'm-b-0', 'reverse_label' => TRUE])."</th><th colspan='".(count($selected_fields))."' class='text-right'>$page_nav</th></tr>\n";
+        $table_footer = "<tr><th class='p-10 min' colspan='5'>".form_checkbox('check_all', self::$locale['ME_414'], '', ['class' => 'm-b-0', 'reverse_label' => TRUE])."</th><th colspan='$detail_span' class='text-right'>$page_nav</th></tr>\n";
         $list_result = "<tr>\n<td colspan='".(count($selected_fields) + 5)."' class='text-center'>".self::$locale['ME_405']."</td>\n</tr>\n";
 
         if (!empty($list)) {
@@ -286,40 +298,56 @@ class Members_Display extends Members_Admin {
 
         $html = openform('member_frm', 'post', FUSION_SELF.fusion_get_aidlink(), ['class' => 'form-inline']);
         $html .= form_hidden('aid', '', iAUTH);
-        $html .= strtr(Members_View::display_members(), [
-                '{%filter_text%}'         => form_text('search_text', '', '', ['placeholder'        => self::$locale['ME_401'],
-                                                                               'append'             => TRUE,
-                                                                               'append_button'      => TRUE,
-                                                                               'append_value'       => self::$locale['search'],
-                                                                               'append_form_value'  => 'search_member',
-                                                                               'append_button_name' => 'search_member',
-                                                                               'class'              => 'm-b-0'
-                ]),
-                '{%filter_button%}'       => form_button('filter_btn', self::$locale['ME_402'], 'filter_btn', ['icon' => 'caret']),
-                '{%action_button%}'       => "<a class='btn btn-success' href='".FUSION_SELF.fusion_get_aidlink()."&amp;ref=add'>".self::$locale['ME_403']."</a>\n",
-                '{%filter_status%}'       => "<span class='m-r-15'>".implode("</span><span class='m-r-15'>", array_values($field_status))."</span>",
-                '{%filter_options%}'      => "<span class='m-r-15'>".implode("</span><span class='m-r-15'>", array_values($field_checkboxes))."</span>",
-                '{%filter_extras%}'       => "<span class='m-r-15'>".implode("</span><span class='m-r-15'>", array_values($extra_checkboxes))."</span>",
-                '{%filter_apply_button%}' => form_button('apply_filter', self::$locale['ME_404'], 'apply_filter', ['class' => 'btn-primary']),
-                '{%page_count%}'          => $list_sum,
-                '{%list_head%}'           => $table_head,
-                '{%list_column%}'         => $table_subheader,
-                '{%list_result%}'         => $list_result,
-                '{%list_footer%}'         => $table_footer,
-                '{%page_nav%}'            => $page_nav,
-                '{%user_actions%}'        => $user_actions,
-            ]
-        );
+
+        $tpl = Template::getInstance('member_listing');
+        $tpl->set_locale(self::$locale);
+        $tpl->set_tag('filter_text', form_text('search_text', '', '', [
+            'placeholder'        => self::$locale['ME_401'],
+            'append'             => TRUE,
+            'append_button'      => TRUE,
+            'append_value'       => self::$locale['search'],
+            'append_form_value'  => 'search_member',
+            'append_button_name' => 'search_member',
+            'class'              => 'm-b-0'
+        ]));
+        $tpl->set_tag('filter_button', form_button('filter_btn', self::$locale['ME_402'], 'filter_btn', ['icon' => 'caret']));
+        $tpl->set_tag('action_button', "<a class='btn btn-success' href='".FUSION_SELF.fusion_get_aidlink()."&amp;ref=add'>".self::$locale['ME_403']."</a>");
+        $tpl->set_tag('filter_status', "<span class='m-r-15'>".implode("</span><span class='m-r-15'>", array_values($field_status))."</span>");
+        $tpl->set_tag('filter_options', "<span class='m-r-15'>".implode("</span><span class='m-r-15'>", array_values($field_checkboxes))."</span>");
+        $tpl->set_tag('filter_extras', "<span class='m-r-15'>".implode("</span><span class='m-r-15'>", array_values($extra_checkboxes))."</span>");
+        $tpl->set_tag('filter_apply_button', form_button('apply_filter', self::$locale['ME_404'], 'apply_filter', ['class' => 'btn-primary']));
+        $tpl->set_tag('page_count', $list_sum);
+        $tpl->set_tag('list_head', $table_head);
+        $tpl->set_tag('list_column', $table_subheader);
+        $tpl->set_tag('list_result', $list_result);
+        $tpl->set_tag('list_footer', $table_footer);
+        $tpl->set_tag('page_nav', $page_nav);
+        $tpl->set_tag('user_actions', $user_actions);
+        $tpl->set_text(Members_View::display_members());
+
+        $html .= $tpl->get_output();
         $html .= closeform();
-        return $html;
+
+        return (string)$html;
     }
 
+    /**
+     * List member link
+     * @param $value
+     *
+     * @return string
+     */
     protected function list_uri($value) {
         return "<a href='".self::$status_uri[$value]."'><strong>".getsuspension($value)."</strong></a>\n";
     }
 
-    /*
-     * Render Listing Functions
+    /**
+     * Listing formatter for user results
+     * @param $user_id
+     * @param $list
+     * @param $selected_fields
+     *
+     * @return string
      */
     protected static function list_func($user_id, $list, $selected_fields) {
         $html = "<tr id='user-".$user_id."'>\n
@@ -331,11 +359,11 @@ class Members_Display extends Members_Admin {
                 <td>\n".$list[$user_id]['user_email']."</td>\n";
 
         add_to_jquery('$("#user_id_'.$user_id.'").click(function() {
-            if ($(this).prop("checked")) {
-                $("#user-'.$user_id.'").addClass("active");
-            } else {
-                $("#user-'.$user_id.'").removeClass("active");
-            }
+        if ($(this).prop("checked")) {
+            $("#user-'.$user_id.'").addClass("active");
+        } else {
+            $("#user-'.$user_id.'").removeClass("active");
+        }
         });');
 
         foreach ($selected_fields as $column) {
@@ -346,4 +374,5 @@ class Members_Display extends Members_Admin {
 
         return $html;
     }
+
 }
