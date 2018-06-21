@@ -18,6 +18,13 @@ To sync to this database and not to conflict with your work, please do the follo
   ````
   $ git fetch origin Andromeda-9.0.3:Andromeda-9.0.3  
   ````
+  
+  
+Development Discord
+---
+PHP-Fusion Official Developer Discord Channel - https://discord.gg/DcESUW
+Those who are active on PHP-Fusion Development is encouraged to join. 
+  
 What's new on this repository management?
 ---
 The latest repository contains all the previous commits done by all the core developers.
