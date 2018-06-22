@@ -15,12 +15,14 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 require_once __DIR__.'/maincore.php';
 require_once THEMES.'templates/header.php';
 
+$settings = fusion_get_settings();
+
 echo "<h1>Andromeda Security Settings Upgrade Patch 1.00</h1>\n";
 $changed = FALSE;
+
 if (!db_exists(DB_SESSIONS)) {
     // Create tables
     dbquery("CREATE TABLE `".DB_SESSIONS."` (
@@ -31,18 +33,21 @@ if (!db_exists(DB_SESSIONS)) {
     ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
     $changed = TRUE;
 }
-if (empty(fusion_get_settings('database_sessions'))) {
-    dbquery("INSERT INTO ".DB_SETTINGS." (settings_name, settings_value) VALUES ('database_sessions', 0)");
-    $changed = TRUE;
+
+$update_settings_tbl = [
+    'database_sessions' => 0,
+    'form_tokens'       => 5,
+    'user_name_ban'     => '',
+    'domain_server'     => '',
+];
+
+foreach ($update_settings_tbl as $key => $value) {
+    if (isset($settings[$key])) {
+        $inf_updatedbrow[] = DB_SETTINGS." SET settings_value='$value' WHERE settings_name='$key'";
+        $changed = TRUE;
+    }
 }
-if (empty(fusion_get_settings('form_tokens'))) {
-    dbquery("INSERT INTO ".DB_SETTINGS." (settings_name, settings_value) VALUES ('form_tokens', 5)");
-    $changed = TRUE;
-}
-if (!fusion_get_settings('form_tokens')) {
-    dbquery("INSERT INTO ".DB_SETTINGS." (settings_name, settings_value) VALUES ('user_name_ban', '')");
-    $changed = TRUE;
-}
+
 if ($changed === TRUE) {
     addNotice("success", "You have successfully upgraded to Andromeda's New Sessions Management Patch 1.0");
 }
