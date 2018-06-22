@@ -31,6 +31,7 @@ class Uri extends \Defender\Validation {
             \defender::stop();
             \defender::setInputError(self::$inputName);
         }
+
         if (self::$inputValue) {
             $url_parts = parse_url(self::$inputValue);
             $internal_url = fusion_get_settings('siteurl').self::$inputValue;
@@ -50,9 +51,9 @@ class Uri extends \Defender\Validation {
                     return self::$inputValue;
                 }
             }
-
-            return FALSE;
         }
+
+        return FALSE;
     }
 
 
@@ -80,13 +81,14 @@ class Uri extends \Defender\Validation {
                 curl_close($fp);
                 return $url;
             }
-        } else if (filter_var($url, FILTER_VALIDATE_URL, FILTER_FLAG_HOST_REQUIRED) === FALSE) {
-            return FALSE;
+        } else if (filter_var($url, FILTER_VALIDATE_URL, FILTER_FLAG_HOST_REQUIRED)) {
+            return $url;
+        } else if (preg_match("/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i", $url)) {
+            return $url;
         }
 
         return FALSE;
     }
-
 
     /**
      * Verify Paths within CMS
