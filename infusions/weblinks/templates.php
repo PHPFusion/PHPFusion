@@ -29,13 +29,20 @@ if (!function_exists('display_main_weblinks')) {
 
         if (!empty($info['weblink_categories'])) {
             foreach ($info['weblink_categories'] as $cat_id => $cat_data) {
+                
+				$para_cat_id = 0;//mainfolder = 0	
+				if (isset($_GET['cat_id'])){
+					$para_cat_id = $_GET['cat_id'];				
+				}
+				if (($para_cat_id == $cat_data['parent'])){               
                 $html->set_block('categories', [
                     'cat_id'          => $cat_data['cat_id'],
                     'cat_link'        => $cat_data['link'],
                     'cat_name'        => $cat_data['name'],
+                    'cat_parent'	  => $cat_data['parent'],
                     'cat_count'       => $cat_data['count'],
                     'cat_description' => $cat_data['description']
-                ]);
+                ]);}
             }
         } else {
             $html->set_block('no_item', ['message' => fusion_get_locale('web_0062')]);
