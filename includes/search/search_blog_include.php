@@ -27,7 +27,7 @@ if (!defined("IN_FUSION")) {
 if (db_exists(DB_BLOG)) {
     $locale = fusion_get_locale('', LOCALE.LOCALESET."search/blog.php");
     $formatted_result = '';
-    $item_count = "0 ".$locale['n402']." ".$locale['522']."<br />\n";
+    $item_count = "0 ".$locale['b402']." ".$locale['522']."<br />\n";
     if (Search_Engine::get_param('stype') == "blog" || Search_Engine::get_param('stype') == "all") {
         $sort_by = [
             'datestamp' => "blog_datestamp",
@@ -68,7 +68,7 @@ if (db_exists(DB_BLOG)) {
         }
 
         if ($rows != 0) {
-            $item_count = "<a href='".BASEDIR."search.php?stype=blog&amp;stext=".Search_Engine::get_param('stext')."&amp;".Search_Engine::get_param('composevars')."'>".$rows." ".($rows == 1 ? $locale['n401'] : $locale['n402'])." ".$locale['522']."</a><br />\n";
+            $item_count = "<a href='".BASEDIR."search.php?stype=blog&amp;stext=".Search_Engine::get_param('stext')."&amp;".Search_Engine::get_param('composevars')."'>".$rows." ".($rows == 1 ? $locale['b401'] : $locale['b402'])." ".$locale['522']."</a><br />\n";
 
             $query = "
             SELECT tn.*, tu.user_id, tu.user_name, tu.user_status, tu.user_avatar, tu.user_joined, tu.user_level
@@ -94,9 +94,9 @@ if (db_exists(DB_BLOG)) {
                 $meta = "<span class='small2'>".$locale['global_070'].profile_link($data['user_id'], $data['user_name'], $data['user_status'])."\n";
                 $meta .= $locale['global_071'].showdate("longdate", $data['blog_datestamp'])."</span><br />\n";
 
-                $criteria = "<span class='small'>".$subj_c." ".($subj_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['n403']." ".$locale['n404'].", ";
-                $criteria .= $text_c." ".($text_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['n403']." ".$locale['n405'].", ";
-                $criteria .= $text_c2." ".($text_c2 == 1 ? $locale['520'] : $locale['521'])." ".$locale['n403']." ".$locale['n406']."</span>";
+                $criteria = "<span class='small'>".$subj_c." ".($subj_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['b403']." ".$locale['b404'].", ";
+                $criteria .= $text_c." ".($text_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['b403']." ".$locale['b405'].", ";
+                $criteria .= $text_c2." ".($text_c2 == 1 ? $locale['520'] : $locale['521'])." ".$locale['b403']." ".$locale['b406']."</span>";
 
                 $search_result .= strtr(Search::render_search_item_list(), [
                         '{%item_url%}'             => INFUSIONS."blog/blog.php?readmore=".$data['blog_id']."&sref=search",
@@ -113,9 +113,9 @@ if (db_exists(DB_BLOG)) {
 
             // Pass strings for theme developers
             $formatted_result = strtr(Search::render_search_item_wrapper(), [
-                '{%image%}'          => "<img src='".ImageRepo::getimage('ac_BLOG')."' alt='".$locale['n400']."' style='width:32px;'/>",
+                '{%image%}'          => "<img src='".ImageRepo::getimage('ac_BLOG')."' alt='".$locale['b400']."' style='width:32px;'/>",
                 '{%icon_class%}'     => "fa fa-pencil-square fa-lg fa-fw",
-                '{%search_title%}'   => $locale['n400'],
+                '{%search_title%}'   => $locale['b400'],
                 '{%search_result%}'  => $item_count,
                 '{%search_content%}' => $search_result
             ]);
