@@ -89,7 +89,7 @@ class WeblinksAdminView extends WeblinksAdminModel {
         // Display Content
         opentable($this->locale['WLS_0001']);
 
-        echo opentab($master_title, $_GET['section'], "weblinks_admin", TRUE, "", "section");
+        echo opentab($master_title, $_GET['section'], "weblinks_admin", TRUE, "nav-tabs m-b-15", "section");
         switch ($_GET['section']) {
             case "weblinks_category":
                 WeblinksCategoryAdmin::getInstance()->displayWeblinksAdmin();
