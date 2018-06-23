@@ -55,7 +55,7 @@ abstract class Weblinks extends WeblinksServer {
             "weblink_cat_description" => "",
             "weblink_cat_language"    => LANGUAGE,
             "weblink_categories"      => [],
-            "weblink_parent"	      => "",
+            "weblink_parent"          => "",
             "weblink_tablename"       => self::$locale['web_0000'],
         ];
 
@@ -97,7 +97,7 @@ abstract class Weblinks extends WeblinksServer {
      * @return mixed
      */
     protected function get_WeblinkCategories() {
-        $info['weblink_categories'] = [];
+        $info['weblink_categories'][0] = [];
         $result = dbquery("
             SELECT wc.weblink_cat_id, wc.weblink_cat_name, wc.weblink_cat_parent, wc.weblink_cat_description, w.weblink_status, count(w.weblink_id) 'weblink_count'
             FROM ".DB_WEBLINK_CATS." wc
@@ -107,24 +107,17 @@ abstract class Weblinks extends WeblinksServer {
             GROUP BY wc.weblink_cat_id
             ORDER BY wc.weblink_cat_id ASC
         ");
+
         if (dbrows($result) > 0) {
             while ($cdata = dbarray($result)) {
-                $count_subs = ($cdata['weblink_status'] == 1) ? $cdata['weblink_count'] : 0;
-				//Main folder
-				if($cdata['weblink_cat_parent'] == 0){
-					// sub folder
-					$result2 = dbquery("SELECT * FROM ".DB_WEBLINK_CATS." WHERE weblink_cat_parent='".$cdata['weblink_cat_id']."' ");
-					while ($cdata2 = dbarray($result2)) {
-						$count_subs = $count_subs +1;
-					}
-				} 
-                $info['weblink_categories'][$cdata['weblink_cat_id']] = [
+                $parent_id = $cdata['weblink_cat_parent'] === NULL ? 'NULL' : $cdata['weblink_cat_parent'];
+                $info['weblink_categories'][$parent_id][$cdata['weblink_cat_id']] = [
                     "cat_id"      => $cdata['weblink_cat_id'],
                     "link"        => INFUSIONS."weblinks/weblinks.php?cat_id=".$cdata['weblink_cat_id'],
                     "name"        => $cdata['weblink_cat_name'],
                     "parent"      => $cdata['weblink_cat_parent'],
                     "description" => parse_textarea($cdata['weblink_cat_description'], TRUE, TRUE, FALSE, '', TRUE),
-                    "count"       => $count_subs
+                    "count"       => $cdata['weblink_count']
                 ];
             }
         }

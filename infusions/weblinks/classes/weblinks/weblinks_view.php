@@ -29,12 +29,7 @@ class WeblinksView extends Weblinks {
             self::set_WeblinkCount($_GET['weblink_id']);
         } else if (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
             $info = $this->set_WeblinkCatInfo($_GET['cat_id']);
-			if(count($info['weblink_items']) >0){
-                display_weblinks_item($info);			
-			} else {
-			    $info = $this->set_WeblinksInfo();
-			    display_main_weblinks($info);
-			}
+            display_weblinks_item($info);
         } else {
             $info = $this->set_WeblinksInfo();
             display_main_weblinks($info);
