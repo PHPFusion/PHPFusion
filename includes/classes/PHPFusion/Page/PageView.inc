@@ -24,7 +24,7 @@ class PageView extends PageController {
      *
      * @param int $page_id
      */
-    public function View(int $page_id = 0) {
+    public function View($page_id = 0) {
         require_once THEMES."templates/global/custompage.php";
         self::set_PageInfo($page_id);
         display_page(self::$info);
