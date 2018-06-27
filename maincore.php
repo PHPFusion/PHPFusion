@@ -266,6 +266,7 @@ $fusion_dynamics = Dynamics::getInstance();
 $fusion_page_head_tags = &\PHPFusion\OutputHandler::$pageHeadTags;
 $fusion_page_footer_tags = &\PHPFusion\OutputHandler::$pageFooterTags;
 $fusion_jquery_tags = &\PHPFusion\OutputHandler::$jqueryTags;
+$fusion_css_tags = &\PHPFusion\OutputHandler::$cssTags;
 
 // Set theme using $_GET as well.
 // Set theme

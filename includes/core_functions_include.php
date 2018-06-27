@@ -1144,9 +1144,9 @@ function user_blacklisted($user_id) {
  * Create a list of files or folders and store them in an array
  *
  * @param string  $folder
- * @param string  $filter     - The names of the filtered folder separated by "|", FALSE to use default filter
- * @param boolean $sort       - FALSE if you don't want to sort the result. TRUE by default
- * @param string  $type       - possible values: 'files' to list files, 'folders' to list folders
+ * @param string  $filter - The names of the filtered folder separated by "|", FALSE to use default filter
+ * @param boolean $sort - FALSE if you don't want to sort the result. TRUE by default
+ * @param string  $type - possible values: 'files' to list files, 'folders' to list folders
  * @param string  $ext_filter - file extensions separated by "|". Only when $type is 'files'
  *
  * @return array
@@ -1936,13 +1936,12 @@ function save_user_log($user_id, $column_name, $new_value, $old_value) {
  *
  * @param $code
  *
- * @return bool|string
- * @throws Exception
+ * @return string
  */
 function jsminify($code) {
-    $min = \PHPFusion\Minifier::minify($code, ['flaggedComments' => FALSE]);
+    $minifier = new \PHPFusion\Minify\JS($code);
 
-    return $min;
+    return $minifier->minify();
 }
 
 /**
@@ -1951,8 +1950,6 @@ function jsminify($code) {
  * as the original file_put_contents and invalidate the cache of the file.
  * It is needed when you create a file dynamically and want to include it
  * before the cache is invalidated. Redirection does not matter.
- *
- * @todo Find a better place and/or name for this function
  *
  * @param string          $file file path
  * @param string|string[] $data

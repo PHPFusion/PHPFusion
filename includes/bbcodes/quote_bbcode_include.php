@@ -44,27 +44,21 @@ for ($i = 0; $i < $qcount; $i++) {
 // Add once only
 if (!defined('bbcode_quote_js')) {
     define('bbcode_quote_js', TRUE);
-    if (function_exists('add_to_footer')) {
-        add_to_footer("<script type='text/javascript'>".jsminify("/* <![CDATA[ */
-        jQuery(document).ready(function() {
+    add_to_footer("<script type='text/javascript'>".jsminify("$(function() {
         /*!
          * Extended Quote BBcode for PHP-Fusion
          * with jQuery Quote Collapse
-         *
          * Author: JoiNNN
-         *
-         * Copyright (c) 2002 - 2012 by Nick Jones
-         * Released as free software without warranties under GNU Affero GPL v3. 
          */        
-        var quoteColHeight	= 184,			//0 - disables quote collapse
-            colCls			= 'collapsed',	//class when collapsed
-            expCls			= 'expanded';	//class when expanded
+        var quoteColHeight = 184,        // 0 - disables quote collapse
+            colCls         = 'collapsed',// class when collapsed
+            expCls         = 'expanded'; // class when expanded
         
         if (quoteColHeight > 0) {
         // On page load
         jQuery('.quote').each(function() {
-            var quote		= jQuery(this),
-                block		= quote.find('.blockquote').first();
+            var quote = jQuery(this),
+                block = quote.find('.blockquote').first();
         
             //On load add expand link if quote is long enough
             if (block.height() > quoteColHeight) {
@@ -77,9 +71,9 @@ if (!defined('bbcode_quote_js')) {
         // On click
         jQuery('.toggle-quote').click(function(e) {
             e.preventDefault();
-            var toggler		= jQuery(this),
-                quote		= toggler.parent().parent(),
-                block		= quote.find('.blockquote').first();
+            var toggler = jQuery(this),
+                quote   = toggler.parent().parent(),
+                block   = quote.find('.blockquote').first();
         
             if (block.height() > quoteColHeight) {
                 block.stop().animate({'height': quoteColHeight + 'px'}, 200);
@@ -105,10 +99,6 @@ if (!defined('bbcode_quote_js')) {
                 e.preventDefault();
             }
         });
-        
         }
-        });/* ]]> */
-        ")."</script>
-        ");
-    }
+    });")."</script>");
 }

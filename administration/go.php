@@ -53,6 +53,11 @@ if (!defined('NO_DEFAULT_CSS')) {
 echo '<meta http-equiv="refresh" content="2; url='.$urlprefix.$url.'" />';
 echo render_favicons(defined('THEME_ICON') ? THEME_ICON : IMAGES.'favicons/');
 echo \PHPFusion\OutputHandler::$pageHeadTags;
+$fusion_css_tags = \PHPFusion\OutputHandler::$cssTags;
+if (!empty($fusion_css_tags)) {
+    $minifier = new \PHPFusion\Minify\CSS($fusion_css_tags);
+    echo "<style type='text/css'>".$minifier->minify()."</style>\n";
+}
 echo '</head>';
 echo '<body>';
 echo '<div class="align-center" style="margin-top: 15%;">';
@@ -60,12 +65,13 @@ echo '<img src="'.BASEDIR.fusion_get_settings('sitebanner').'" alt="'.fusion_get
 echo '<a href="'.$urlprefix.$url.'" rel="nofollow">'.sprintf($locale['global_500'], $urlprefix.$url).'</a>';
 echo '</div>';
 
+echo \PHPFusion\OutputHandler::$pageFooterTags;
+
 $fusion_jquery_tags = PHPFusion\OutputHandler::$jqueryTags;
 if (!empty($fusion_jquery_tags)) {
-    $fusion_jquery_tags = \PHPFusion\Minifier::minify($fusion_jquery_tags, ['flaggedComments' => FALSE]);
-    echo "<script type='text/javascript'>$(function() { $fusion_jquery_tags; });</script>\n";
+    $minifier = new PHPFusion\Minify\JS($fusion_jquery_tags);
+    echo "<script type='text/javascript'>$(function(){".$minifier->minify()."});</script>\n";
 }
-echo \PHPFusion\OutputHandler::$pageFooterTags;
 echo '</body>';
 echo '</html>';
 
