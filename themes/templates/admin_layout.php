@@ -68,6 +68,12 @@ echo render_favicons(defined('THEME_ICON') ? THEME_ICON : IMAGES.'favicons/');
 if (function_exists("get_head_tags")) {
     echo get_head_tags();
 }
+
+// Output lines added with add_to_css()
+if (!empty($fusion_css_tags)) {
+    $minifier = new \PHPFusion\Minify\CSS($fusion_css_tags);
+    echo "<style type='text/css'>".$minifier->minify()."</style>\n";
+}
 echo "</head>";
 
 /**
@@ -106,11 +112,10 @@ if (!defined('FONTAWESOME-V4')) {
 
 // Output lines added with add_to_footer()
 echo $fusion_page_footer_tags;
-
 // Output lines added with add_to_jquery()
 if (!empty($fusion_jquery_tags)) {
-    $fusion_jquery_tags = \PHPFusion\Minifier::minify($fusion_jquery_tags, ['flaggedComments' => FALSE]);
-    echo "<script type='text/javascript'>$(function() { $fusion_jquery_tags; });</script>\n";
+    $minifier = new PHPFusion\Minify\JS($fusion_jquery_tags);
+    echo "<script type='text/javascript'>$(function(){".$minifier->minify()."});</script>\n";
 }
 
 // Uncomment to guide your theme development

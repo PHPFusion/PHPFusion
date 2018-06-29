@@ -114,3 +114,12 @@ function handle_output($output) {
 function add_to_jquery($tag = "") {
     OutputHandler::addToJQuery($tag);
 }
+
+/**
+ * Add css code to the output
+ *
+ * @param string $tag
+ */
+function add_to_css($tag = "") {
+    OutputHandler::addToCss($tag);
+}

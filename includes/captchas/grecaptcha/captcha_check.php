@@ -25,7 +25,7 @@ $resp = NULL;
 
 $reCaptcha = new ReCaptcha(fusion_get_settings('recaptcha_private'));
 
-if ($_POST['g-recaptcha-response']) {
+if (isset($_POST['g-recaptcha-response'])) {
     $resp = $reCaptcha->verifyResponse(
         $_SERVER['REMOTE_ADDR'],
         $_POST['g-recaptcha-response']

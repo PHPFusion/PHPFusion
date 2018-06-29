@@ -28,13 +28,26 @@ if (!function_exists('display_main_weblinks')) {
         $html->set_tag('closetable', fusion_get_function('closetable'));
 
         if (!empty($info['weblink_categories'])) {
-            foreach ($info['weblink_categories'] as $cat_id => $cat_data) {
+            foreach ($info['weblink_categories'][0] as $cat_id => $cat_data) {
+                $sub_categories = '';
+
+                if ($cat_id != 0 && $info['weblink_categories'] != 0) {
+                    foreach ($info['weblink_categories'] as $sub_cats_id => $sub_cats) {
+                        foreach ($sub_cats as $sub_cat_id => $sub_cat_data) {
+                            if (!empty($sub_cat_data['parent']) && $sub_cat_data['parent'] == $cat_id) {
+                                $sub_categories .= '<a href="'.$sub_cat_data['link'].'" '.(!empty($sub_cat_data['description']) ? 'title="'.$sub_cat_data['description'].'"' : '').'>'.$sub_cat_data['name'].' ('.$sub_cat_data['count'].')</a><br/>';
+                            }
+                        }
+                    }
+                }
+
                 $html->set_block('categories', [
                     'cat_id'          => $cat_data['cat_id'],
                     'cat_link'        => $cat_data['link'],
                     'cat_name'        => $cat_data['name'],
                     'cat_count'       => $cat_data['count'],
-                    'cat_description' => $cat_data['description']
+                    'cat_description' => $cat_data['description'],
+                    'sub_categories'  => $sub_categories
                 ]);
             }
         } else {

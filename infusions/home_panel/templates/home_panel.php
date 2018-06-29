@@ -20,22 +20,67 @@
  */
 if (!function_exists('display_home')) {
     function display_home($info) {
+        add_to_css('
+            figure {
+                margin: 0;
+                padding: 0;
+                border: 0;
+                font: inherit;
+                vertical-align: baseline;
+                display: block;
+            }
+            
+            .item {
+                padding: 0;
+                height: inherit;
+            }
+            
+            .item .thumb {
+                float: left;
+                height: 120px;
+                overflow: hidden;
+                margin-right: 10px;
+            }
+            
+            .item .thumb img {
+                vertical-align: middle;
+                object-fit: contain;
+                width: 100%;
+                max-width: 140px;
+                -webkit-transform: scale(1.5);
+                -ms-transform: scale(1.5);
+                -o-transform: scale(1.5);
+                transform: scale(1.5);
+                margin-top: 10px;
+            }
+            
+            @media (min-width: 900px) {
+                .item .thumb {
+                    float: inherit;
+                    height: 150px;
+                    margin-right: inherit;
+                }
+                .item .thumb img {
+                    max-width: 100%;
+                    max-height: 100%;
+                    -webkit-transform: scale(1.5);
+                    -ms-transform: scale(1.5);
+                    -o-transform: scale(1.5);
+                    transform: scale(1.5);
+                    margin-top: 15px;
+                }
+                .item .post .meta {
+                    margin: 0;
+                    padding: 3px 0 10px;
+                    font-size: 12px;
+                }
+            }          
+        ');
+
         foreach ($info as $db_id => $content) {
             $colwidth = $content['colwidth'];
             opentable($content['blockTitle']);
             if ($colwidth) {
-                add_to_head('<style type="text/css">
-                    figure {margin: 0;padding: 0;border: 0;font: inherit;vertical-align: baseline;display: block;}
-                    .item {padding: 0;height: inherit;}
-                    .item .thumb {float: left;height: 120px;overflow: hidden;margin-right: 10px;}
-                    .item .thumb img {vertical-align: middle;object-fit: contain;width: 100%;max-width: 140px;-webkit-transform: scale(1.5);-ms-transform: scale(1.5);-o-transform: scale(1.5);transform: scale(1.5);margin-top: 10px;}
-                    @media (min-width: 900px) {
-                        .item .thumb {float: inherit;height: 150px;margin-right: inherit;}
-                        .item .thumb img {max-width: 100%;max-height: 100%;-webkit-transform: scale(1.5);-ms-transform: scale(1.5);-o-transform: scale(1.5);transform: scale(1.5);margin-top: 15px;}
-                        .item .post .meta {margin: 0;padding: 3px 0 10px;font-size: 12px;}
-                    }
-                </style>');
-
                 echo '<div class="row">';
                 foreach ($content['data'] as $data) {
                     echo '<div class="col-xs-12 col-sm-'.$colwidth.' col-md-'.$colwidth.' col-lg-'.$colwidth.' content clearfix">';

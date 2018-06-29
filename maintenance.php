@@ -110,14 +110,20 @@ echo render_favicons(defined('THEME_ICON') ? THEME_ICON : IMAGES.'favicons/');
 
 echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery.js'></script>\n";
 echo \PHPFusion\OutputHandler::$pageHeadTags;
+$fusion_css_tags = \PHPFusion\OutputHandler::$cssTags;
+if (!empty($fusion_css_tags)) {
+    $minifier = new \PHPFusion\Minify\CSS($fusion_css_tags);
+    echo "<style type='text/css'>".$minifier->minify()."</style>\n";
+}
 echo "</head>\n";
 
 display_maintenance($info);
 
 echo \PHPFusion\OutputHandler::$pageFooterTags;
-$jquery_tags = \PHPFusion\Minifier::minify(\PHPFusion\OutputHandler::$jqueryTags, ['flaggedComments' => FALSE]);
-if (!empty($jquery_tags)) {
-    echo "<script type='text/javascript'>$(function() { $jquery_tags });</script>\n";
+$fusion_jquery_tags = PHPFusion\OutputHandler::$jqueryTags;
+if (!empty($fusion_jquery_tags)) {
+    $minifier = new PHPFusion\Minify\JS($fusion_jquery_tags);
+    echo "<script type='text/javascript'>$(function(){".$minifier->minify()."});</script>\n";
 }
 
 if (fusion_get_settings('bootstrap') || defined('BOOTSTRAP')) {

@@ -91,7 +91,7 @@ if (db_exists(DB_SETTINGS)) {
 
     foreach ($update_settings_tbl as $key => $value) {
         if (isset($settings[$key])) {
-            $inf_updatedbrow[] = DB_SETTINGS." SET settings_value='$value' WHERE settings_name='$key'";;
+            $inf_updatedbrow[] = DB_SETTINGS." SET settings_value='$value' WHERE settings_name='$key'";
         }
     }
 

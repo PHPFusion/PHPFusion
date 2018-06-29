@@ -24,7 +24,7 @@ $update_settings_tbl = [
 
 foreach ($update_settings_tbl as $key => $value) {
     if (isset($settings[$key])) {
-        $inf_updatedbrow[] = DB_SETTINGS." SET settings_value='$value' WHERE settings_name='$key'";;
+        $inf_updatedbrow[] = DB_SETTINGS." SET settings_value='$value' WHERE settings_name='$key'";
     }
 }
 
@@ -32,7 +32,7 @@ $insert_settings_tbl = [
     'user_name_ban'     => '',
     'database_sessions' => 1,
     'domain_server'     => '',
-    'form_tokens'       => 1,
+    'form_tokens'       => 5,
 ];
 
 foreach ($insert_settings_tbl as $key => $value) {

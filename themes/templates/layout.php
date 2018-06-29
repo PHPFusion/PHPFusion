@@ -79,6 +79,12 @@ if (function_exists("get_head_tags")) {
 
 echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery.min.js'></script>\n";
 echo "<script type='text/javascript' src='".INCLUDES."jscripts/jscript.js'></script>\n";
+
+// Output lines added with add_to_css()
+if (!empty($fusion_css_tags)) {
+    $minifier = new \PHPFusion\Minify\CSS($fusion_css_tags);
+    echo "<style type='text/css'>".$minifier->minify()."</style>\n";
+}
 echo "</head>\n";
 
 /**
@@ -110,22 +116,20 @@ if (function_exists("render_page")) {
 }
 // Output lines added with add_to_footer()
 echo $fusion_page_footer_tags;
-if (!empty($footerError)) {
-    echo "<div class='admin-message container'>".$footerError."</div>\n";
-}
 
 echo "<script type='text/javascript' src='".INCLUDES."jquery/admin-scripts.js'></script>\n";
+
 // Output lines added with add_to_jquery()
 $jquery_tags = "$('[data-submenu]').submenupicker();";
 // Fix select2 on modal - http://stackoverflow.com/questions/13649459/twitter-bootstrap-multiple-modal-error/15856139#15856139
 $jquery_tags .= "$.fn.modal.Constructor.prototype.enforceFocus = function () {};";
 
+// Output lines added with add_to_jquery()
 if (!empty($fusion_jquery_tags)) {
     $jquery_tags .= $fusion_jquery_tags;
+    $minifier = new PHPFusion\Minify\JS($jquery_tags);
+    echo "<script type='text/javascript'>$(function(){".$minifier->minify()."});</script>\n";
 }
-
-$jquery_tags = \PHPFusion\Minifier::minify($jquery_tags, ['flaggedComments' => FALSE]);
-echo "<script type='text/javascript'>$(function() { $jquery_tags });</script>\n";
 
 // Load bootstrap javascript
 if (fusion_get_settings('bootstrap') || defined('BOOTSTRAP')) {

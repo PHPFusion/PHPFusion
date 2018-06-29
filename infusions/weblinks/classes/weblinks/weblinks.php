@@ -55,6 +55,7 @@ abstract class Weblinks extends WeblinksServer {
             "weblink_cat_description" => "",
             "weblink_cat_language"    => LANGUAGE,
             "weblink_categories"      => [],
+            "weblink_parent"          => "",
             "weblink_tablename"       => self::$locale['web_0000'],
         ];
 
@@ -96,9 +97,9 @@ abstract class Weblinks extends WeblinksServer {
      * @return mixed
      */
     protected function get_WeblinkCategories() {
-        $info['weblink_categories'] = [];
+        $info['weblink_categories'][0] = [];
         $result = dbquery("
-            SELECT wc.weblink_cat_id, wc.weblink_cat_name, wc.weblink_cat_description, w.weblink_status, count(w.weblink_id) 'weblink_count'
+            SELECT wc.weblink_cat_id, wc.weblink_cat_name, wc.weblink_cat_parent, wc.weblink_cat_description, w.weblink_status, count(w.weblink_id) 'weblink_count'
             FROM ".DB_WEBLINK_CATS." wc
             LEFT JOIN ".DB_WEBLINKS." w on w.weblink_cat = wc.weblink_cat_id AND ".groupaccess("weblink_visibility")."
             WHERE wc.weblink_cat_status='1' AND ".groupaccess("wc.weblink_cat_visibility")."
@@ -106,14 +107,17 @@ abstract class Weblinks extends WeblinksServer {
             GROUP BY wc.weblink_cat_id
             ORDER BY wc.weblink_cat_id ASC
         ");
+
         if (dbrows($result) > 0) {
             while ($cdata = dbarray($result)) {
-                $info['weblink_categories'][$cdata['weblink_cat_id']] = [
+                $parent_id = $cdata['weblink_cat_parent'] === NULL ? 'NULL' : $cdata['weblink_cat_parent'];
+                $info['weblink_categories'][$parent_id][$cdata['weblink_cat_id']] = [
                     "cat_id"      => $cdata['weblink_cat_id'],
                     "link"        => INFUSIONS."weblinks/weblinks.php?cat_id=".$cdata['weblink_cat_id'],
                     "name"        => $cdata['weblink_cat_name'],
+                    "parent"      => $cdata['weblink_cat_parent'],
                     "description" => parse_textarea($cdata['weblink_cat_description'], TRUE, TRUE, FALSE, '', TRUE),
-                    "count"       => ($cdata['weblink_status'] == 1) ? $cdata['weblink_count'] : 0
+                    "count"       => $cdata['weblink_count']
                 ];
             }
         }
@@ -141,6 +145,7 @@ abstract class Weblinks extends WeblinksServer {
             "weblink_cat_description" => "",
             "weblink_cat_language"    => LANGUAGE,
             "weblink_categories"      => [],
+            "weblink_parent"          => "",
             "weblink_item_rows"       => 0,
             "weblink_tablename"       => self::$locale['web_0000'],
             "weblink_items"           => []
@@ -184,6 +189,7 @@ abstract class Weblinks extends WeblinksServer {
             $info['weblink_cat_name'] = $data['weblink_cat_name'];
             $info['weblink_cat_description'] = parse_textarea($data['weblink_cat_description'], TRUE, TRUE, TRUE, '', TRUE);
             $info['weblink_cat_language'] = $data['weblink_cat_language'];
+            $info['weblink_cat_parent'] = $data['weblink_cat_parent'];
 
             $max_weblink_rows = dbcount("(weblink_id)", DB_WEBLINKS, "weblink_cat='".$data['weblink_cat_id']."' AND ".groupaccess("weblink_visibility").(multilang_table("WL") ? " AND weblink_language='".LANGUAGE."'" : "")." AND weblink_status='1'");
 

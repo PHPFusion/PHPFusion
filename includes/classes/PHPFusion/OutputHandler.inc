@@ -37,6 +37,12 @@ class OutputHandler {
      */
     public static $jqueryTags = "";
     /**
+     * Additional css
+     *
+     * @var string
+     */
+    public static $cssTags = "";
+    /**
      * The title in the "title" tag
      *
      * @var string
@@ -155,6 +161,15 @@ class OutputHandler {
      */
     public static function addToJQuery($tag = "") {
         self::$jqueryTags .= $tag;
+    }
+
+    /**
+     * Add css code to the output
+     *
+     * @param string $tag
+     */
+    public static function addToCss($tag = "") {
+        self::$cssTags .= $tag;
     }
 
     /**

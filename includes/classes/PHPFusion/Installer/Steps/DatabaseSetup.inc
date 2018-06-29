@@ -20,7 +20,7 @@ namespace PHPFusion\Steps;
 use PHPFusion\Installer\Batch_Core;
 use PHPFusion\Installer\Install_Core;
 use PHPFusion\Installer\Requirements;
-use function PHPFusion\Installer\write_config;
+use PHPFusion\Installer;
 
 class InstallerDbSetup extends Install_Core {
 
@@ -359,7 +359,7 @@ class InstallerDbSetup extends Install_Core {
                 if (!$errors) {
                     if ($debug_process === FALSE) {
                         require_once(INCLUDES.'htaccess_include.php');
-                        write_config(self::$connection);
+                        Installer\write_config(self::$connection);
                         write_htaccess();
                         if (!empty($to_upgrade)) {
                             self::installer_step(self::STEP_INFUSIONS);
