@@ -194,8 +194,7 @@ class ComposeEngine extends PageAdmin {
      */
     protected static function execute_RowDelete() {
         if (!empty(self::$rowData['page_grid_id'])) {
-            $query = "SELECT * FROM ".DB_CUSTOM_PAGES_CONTENT." WHERE page_grid_id=".self::$rowData['page_grid_id'];
-            $result = dbquery($query);
+            $result = dbquery("SELECT * FROM ".DB_CUSTOM_PAGES_CONTENT." WHERE page_grid_id=:pagegrid", [':pagegrid' => self::$rowData['page_grid_id']]);
             if (dbrows($result) > 0) {
                 while ($colData = dbarray($result)) {
                     dbquery_insert(DB_CUSTOM_PAGES_CONTENT, $colData, 'delete');
@@ -203,10 +202,10 @@ class ComposeEngine extends PageAdmin {
             }
             dbquery_insert(DB_CUSTOM_PAGES_GRID, self::$rowData, 'delete');
             if (\defender::safe()) {
-                addNotice("success", self::$locale['page_0403']);
+                addNotice('success', self::$locale['page_0403']);
             }
         } else {
-            addNotice("danger", self::$locale['page_0404']);
+            addNotice('danger', self::$locale['page_0404']);
         }
         redirect(clean_request('', self::$composer_exclude, FALSE));
     }
@@ -225,8 +224,7 @@ class ComposeEngine extends PageAdmin {
                 addNotice("danger", self::$locale['page_0405']);
             }
             // now check for all content and also duplicate it.
-            $query = "SELECT * FROM ".DB_CUSTOM_PAGES_CONTENT." WHERE page_grid_id=".self::$rowData['page_grid_id'];
-            $result = dbquery($query);
+            $result = dbquery("SELECT * FROM ".DB_CUSTOM_PAGES_CONTENT." WHERE page_grid_id=:pagegrid", [':pagegrid' => self::$rowData['page_grid_id']]);
             if (dbrows($result) > 0) {
                 while ($colData = dbarray($result)) {
                     $colData['page_content_id'] = 0; // resets the primary key
@@ -234,15 +232,15 @@ class ComposeEngine extends PageAdmin {
                     $colId = dbquery_insert(DB_CUSTOM_PAGES_CONTENT, $colData, 'save');
                     if (!$colId) {
                         \defender::stop();
-                        addNotice("danger", self::$locale['page_0406']);
+                        addNotice('danger', self::$locale['page_0406']);
                     }
                 }
             }
             if (\defender::safe()) {
-                addNotice("success", self::$locale['page_0407']);
+                addNotice('success', self::$locale['page_0407']);
             }
         } else {
-            addNotice("danger", self::$locale['page_0404']);
+            addNotice('danger', self::$locale['page_0404']);
         }
         redirect(clean_request('', self::$composer_exclude, FALSE));
     }
@@ -260,7 +258,7 @@ class ComposeEngine extends PageAdmin {
         ];
 
         if (empty(self::$rowData['page_grid_order'])) {
-            self::$rowData['page_grid_order'] = dbresult(dbquery("SELECT COUNT(page_grid_id) FROM ".DB_CUSTOM_PAGES_GRID." WHERE page_id=".self::$data['page_id']),
+            self::$rowData['page_grid_order'] = dbresult(dbquery("SELECT COUNT(page_grid_id) FROM ".DB_CUSTOM_PAGES_GRID." WHERE page_id=:pageid", [':pageid' => self::$data['page_id']]),
                     0) + 1;
         }
     }
@@ -329,7 +327,10 @@ class ComposeEngine extends PageAdmin {
                 <?php
                 if (!empty($widget_cache)) : ?>
                     <div class='row'>
-                        <?php foreach (self::cache_widget() as $widget_file => $widget) :
+                        <?php $i = 0; foreach (self::cache_widget() as $widget_file => $widget) :
+                        if ($i > 3) {
+                        	?>  </div><div class='row'> <?php $i=0;
+                        }
                             ?>
                             <div class='col-xs-4 col-sm-3 text-center'>
                                 <div class='panel panel-default'>
@@ -347,7 +348,7 @@ class ComposeEngine extends PageAdmin {
                                     </div>
                                 </div>
                             </div>
-                        <?php endforeach; ?>
+                        <?php $i++; endforeach; ?>
                     </div>
                 <?php endif; ?>
             </div>
@@ -518,12 +519,12 @@ class ComposeEngine extends PageAdmin {
      */
     protected static function execute_ColDuplicate() {
         if (isset($_GET['col_id']) && isnum($_GET['col_id'])) {
-            $result = dbquery("SELECT * FROM ".DB_CUSTOM_PAGES_CONTENT." WHERE page_content_id=".intval($_GET['col_id']));
+            $result = dbquery("SELECT * FROM ".DB_CUSTOM_PAGES_CONTENT." WHERE page_content_id=:pagecontent", [':pagecontent' => intval($_GET['col_id'])]);
             if (dbrows($result) > 0) {
                 $data = dbarray($result);
                 $data['page_content_id'] = 0;
-                $data['page_content_order'] = dbcount("(page_content_id)", DB_CUSTOM_PAGES_CONTENT,
-                        "page_grid_id=".self::$rowData['page_grid_id']) + 1;
+                $data['page_content_order'] = dbcount("(page_content_id)", DB_CUSTOM_PAGES_CONTENT, "page_grid_id=".self::$rowData['page_grid_id']) + 1;
+
                 $colId = dbquery_insert(DB_CUSTOM_PAGES_CONTENT, $data, 'save');
                 if (!$colId) {
                     \defender::stop();
