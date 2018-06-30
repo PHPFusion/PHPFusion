@@ -1,0 +1,42 @@
+<div class='spacer-sm'>{%breadcrumb%}</div>
+<div class='forum-header' style="background: url({%background_src%}) no-repeat; background-size:cover;">
+    <div class='banner' style='display:block; height:180px; overflow:hidden;'>
+        <div class='center-y p-20'>
+            <!--- add forum image here --->
+            <h2 class='text-white'>{%title%}</h2>
+            <div class='forum-description text-white'>{%description%}</div>
+        </div>
+    </div>
+</div>
+<nav class='navbar navbar-inverse forum-navbar' style='margin-top:-15px; border-radius: 0;'>
+    <div class="container-fluid">
+        <ul class='nav navbar-nav'>
+            {navbar_item.{
+            <li {%active%}><a href='{%link%}'>{%title%}</a></li>
+            }}
+        </ul>
+    </div>
+</nav>
+{rules.{
+<div>{%forum_rules%}</div>}}
+<div class='spacer-md'>
+    <div class='row'>
+        <div class='col-xs-12 text-right m-b-20'>
+            {post_button.{<a class='btn btn-primary' href='{%new_thread_link_url%}'><i class='m-r-10 fa fa-comment'></i>{%new_thread_link_title%}</a>}}
+        </div>
+        <div class='col-xs-12'>
+            {view.{ {%content%} }}
+        </div>
+    </div>
+</div>
+<div class='list-group-item m-t-20'>
+    <span>{%can_access%}</span><br/>
+    <span>{%can_post%}</span><br/>
+    <span>{%can_create_poll%}</span><br/>
+    <span>{%can_upload_attach%}</span><br/>
+    <span>{%can_download_attach%}</span><br/>
+</div>
+
+{moderator_list.{
+    <div class='list-group-item'><strong>{%mod_title%}</strong> {%moderators%}</div>
+}}

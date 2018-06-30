@@ -1,0 +1,99 @@
+{%post_html_comment%}
+<div id='{%item_marker_id%}' class='clearfix post_items'>
+    <div class='clearfix'>
+        <div class='forum_avatar text-center'>{%user_avatar%}{%user_avatar_rank%}</div>
+        <!--forum_thread_user_name-->
+        <div class='m-b-10 post_info'>
+            <span style='color:#5CB85C'><i class='{%user_online_status%}'></i></span>
+            <span class='text-smaller'><span class='forum_poster'>{%user_profile_link%}</span>{%user_rank%}{%post_date%}</span>
+            <div class='pull-right m-l-10'>
+                <div class='clearfix'>
+                    <div class='btn-group btn-group-xs'>
+                        {quote_btn.{
+                            <a class='btn btn-default btn-sm quote-link' href='{%link_url%}' title='{%link_title%}'>{%title%}</a>
+                        }}
+                        {reply_btn.{
+                            <a class='btn btn-default btn-sm reply-link' href='{%link_url%}' title='{%link_title%}'>{%title%}</a>
+                        }}
+                        {edit_btn.{
+                            <a class='btn btn-default btn-sm edit-link' href='{%link_url%}' title='{%link_title%}'>{%title%}</a>
+                        }}
+                        <a class='dropdown-toggle btn btn-sm btn-default' data-toggle='dropdown'><i
+                                class='fa fa-ellipsis-v'></i></a>
+                        <ul class='dropdown-menu forum-post-options'>
+                            {li_ip.{
+                                <li class='dropdown-header'>IP: {%title%}</li>
+                            }}
+                            {li_post_count.{
+                                <li class='dropdown-header'><i class='fa fa-comments fa-fw'></i> {%title%}</li>
+                            }}
+                            <li class='divider'></li>
+                            {li_um.{
+                                <li><a href='{%link_url%}' title='{%link_title%}'>{%title%}</a></li>
+                                <li class='divider'></li>
+                            }}
+                            {li_web.{
+                                <li>{%noindex_a%}<a href='{%link_url%}' title='{%link_title%}' {%index_rel%}>{%title%}</a>{%noindex_b%}</li>
+                            }}
+                            {li_print.{
+                                <li><a href='{%link_url%}' title='{%link_title%}'>{%title%}</a></li>
+                                <li class='divider'></li>
+                            }}
+                            {li_quote.{
+                                <li><a href='{%link_url%}' title='{%link_title%}'>{%title%}</a></li>
+                            }}
+                            {li_edit.{
+                            <li><a href='{%link_url%}' title='{%link_title%}'>{%title%}</a></li>
+                            }}
+                            {li_admin_title.{
+                                <li class='divider'></li>
+                                <li class='dropdown-header'>{%title%}</li>
+                            }}
+                            {li_edit_user.{
+                                <li><a href='{%link_url%}' title='{%link_title%}'>{%title%}</a></li>
+                            }}
+                            {li_ban_user.{
+                                <li><a href='{%link_url%}' title='{%link_title%}'>{%title%}</a></li>
+                            }}
+                            {li_delete_user.{
+                                <li><a href='{%link_url%}' title='{%link_title%}'>{%title%}</a></li>
+                            }}
+                        </ul>
+                    </div>
+                    <h3 class='display-inline-block pull-right m-l-5' style='margin-top: -1px;'><a href='#{%item_marker_id%}'>#{%item_id%}</a></h3>
+                    <div class='display-inline-block m-l-10 pull-right'>{%checkbox_input%}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class='overflow-hide'>
+        {votebox.{
+        <div class='pull-left m-r-15'>{%input%}{%status%}</div>
+        }}
+        {user_profiles.{
+        <div class='m-l-5 post_profile_container'>
+            {%profiles%}
+        </div>
+        }}
+        <div class='overflow-hide'>
+            <div class='post_message'>{%post_message%}</div>
+            {%user_signature%}
+            {post_attachments.{
+            <div class='forum_attachments'>{%attach%}</div>
+            }}
+        </div>
+        <!--sub_forum_post_message-->
+        <div class='post_info m-t-20'>
+            {%post_edit_reason%}
+            {%post_reply_message%}
+            {%post_mood_message%}
+        </div>
+        <!--//sub_forum_post_message-->
+    </div>
+    {mood_messages.{<!--forum_mood-->
+    <div class='pull-right m-t-10 m-b-10'>{%btns%}</div><!--//forum_mood-->}}
+    {bounty_btn.{
+    <!---bounty--><a class='btn btn-success pull-right' title='{%link_title%}' href='{%link_url%}'>{%title%}</a>
+    <!--//post_bounty-->
+    }}
+</div>
