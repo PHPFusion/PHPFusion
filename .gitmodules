@@ -2,3 +2,7 @@
 	path = infusions/forum
 	url = https://github.com/php-fusion/ci-Forum.git
 	branch = master
+[submodule "infusions/gallery"]
+	path = infusions/gallery
+	url = https://github.com/php-fusion/ci-Gallery.git
+	branch = master
