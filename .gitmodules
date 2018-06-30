@@ -1,4 +1,4 @@
 [submodule "infusions/forum"]
 	path = infusions/forum
 	url = https://github.com/php-fusion/ci-Forum.git
-	branch = 2.0
+	branch = master
