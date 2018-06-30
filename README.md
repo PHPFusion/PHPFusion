@@ -33,6 +33,49 @@ The latest repository contains all the previous commits done by all the core dev
 - 9.02 is beta 2
 - Removed 9.1 branch
 - Protected 7.03 branch from branch removal
+- Submodules added to /infusions (Transition is in progress)
+
+New Changes: About Submodules and Git Management of Core Infusions (CI)
+===
+As of latest update on code management, the core team will have our <a href='https://github.com/php-fusion/PHP-Fusion/tree/Andromeda-9.0.3/infusions'>Latest Core Infusions</a> to see them as a submodules. Submodules are alias that are being linked from each CI repositories now being for example,
+ci-Forum, ci-News, ci-Blog, ci-Weblinks, ci-Faq, ci-Downloads, ci-Gallery, etc. 
+ 
+PHP-Fusion 9 will now release with just "Custom Page, Navigation, Users Management, SEF Management, and Server Management", essentially a bare bone system. 
+The core developers will in turn provide a download customizer to bundle your download package in the future.
+
+Each CI will be enhanced through its own review and issue progress independent of PHP-Fusion CMS.  
+
+Each CI package will have better reviews to each versions instead of collectively just being tied to PHP-Fusion Version as a whole. 
+
+Independent CI repositories serves as a better code and project tracker for the better quality of Infusions, and each of their progress will not hinder PHP-Fusion releases. As a guideline to everyone, always use the 'master' branch for CI repository for they are the most stable to use.
+
+For those who are more into experimental, feel free to checkout the latest version, but we cannot guarantee you will be in a bug free state. All issues regarding the CIs will be moved to the CI repository.
+
+How does this affect pulling and cloning from Git as a Developer?
+===
+While developer will work on the next generation in the branches respectively, which often destabilize a stable package, The Main Repository Infusions page will be always tied to the 'master' branch of the CI repositories which will contain the latest stable copy.
+If you are a developer and wish to test out on a specific working branch, you need to use a git checkout for submodule management.
+
+**Cloning of the main repository including updating all CI repository submodules:**
+````git
+C:\ git clone --recursive https://github.com/php-fusion/PHP-Fusion.git php-fusion
+````
+In order to switch branch in the CIs, you need to browse to the `infusions/<name of the ci>` folder:
+````git
+C:\php-fusion> cd infusions/forum
+````
+Checkout to new branch (using the CI's own VCS root):
+````git
+C:\php-fusion\infusions\forum> git checkout 2.0
+````
+Updating (using the CI's own VCS root):
+````git
+C:\php-fusion\infusions\forum> git submodule update 
+````
+Pulling a CI changes (using the CI's own VCS root):
+````git
+C:\php-fusion\infusions\forum> git pull 
+````
 
 New Core Team Project Colloboration
 ====
