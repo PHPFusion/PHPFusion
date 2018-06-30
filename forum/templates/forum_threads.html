@@ -1,0 +1,97 @@
+{%breadcrumb%}
+<section class='thread'>
+    <h2>{%sticky_icon%}{%locked_icon%}{%thread_subject%}</h2>
+    <div class='clearfix m-b-20'>
+        <div class='last-updated'><i class='fa fa-calendar fa-fw m-r-10'></i>{%time_updated%}</div>
+        {thread_tags.{
+        <div class='clearfix'><i class='fa fa-tags text-lighter fa-fw'></i>{%tags%}</div>
+        }}
+    </div>
+    {poll_form.{
+    <div class='well'>{%poll%}</div>
+    }}
+    <div class='clearfix'>
+        <div class='clearfix'>
+            <div class='pull-right'>
+                {bounty_btn.{
+                <a class='btn btn-primary m-r-10 {%disabled%}' title='{%link_title%}' href='{%link_url%}'>{%title%} <i class='fa fa-dot-circle-o'></i></a>
+                }}
+                {poll_btn.{
+                <a class='btn btn-success m-r-10 {%disabled%}' title='{%link_title%}' href='{%link_url%}'>{%title%} <i class='fa fa-pie-chart'></i></a>
+                }}
+                {newthread_btn.{
+                <a class='btn btn-primary m-r-10 {%disabled%}' title='{%link_title%}' href='{%link_url%}'>{%title%}</a>
+                }}
+            </div>
+            <div class='pull-left'>
+                {thread_filter.{
+                <div class='dropdown display-inline-block m-r-10'>
+                    <a class='btn btn-default dropdown-toggle' data-toggle='dropdown'><strong>{%filter_label%}</strong> {%filter_word%}<span class='caret'></span></a>
+                    <ul class='dropdown-menu text-smaller'>
+                        {%filter_opts%}
+                    </ul>
+                </div>
+                }}
+                <div class='btn-group'>
+                    {notify_btn.{
+                    <a class='btn btn-default {%disabled%}' title='{%link_title%}' href='{%link_url%}'>{%title%}</a>
+                    }}
+                    {print_btn.{
+                    <a class='btn btn-default' title='{%link_title%}' href='{%link_url%}'>{%title%} <i class='fa fa-print'></i></a>
+                    }}
+                </div>
+            </div>
+        </div>
+        {pagenav.{
+        <div class='pull-right m-t-10 text-lighter clearfix'>{%pagenav%}</div>
+        }}
+    </div>
+    <!--pre_forum_thread-->
+    {post_firstpost_item.{
+    {%content%}
+    }}
+    {thread_info.{
+    <div class='text-right spacer-md'>
+        <h4 class='display-inline-block'><strong>{%thread_post%}</strong></h4>
+        <a class='m-l-20 btn btn-success btn-md vatop {%disabled%}' title='{%title%}' href='{%link_url%}'>{%link_title%}</a>
+    </div>
+    }}
+    {thread_bounty_info.{ {%message%} }}
+    {post_item.{
+    {%content%}
+    }}
+
+    {modform.{
+    <div class='list-group-item'>{%form%}</div>
+    }}
+
+    <div class='clearfix m-t-20'>
+        <div class='pull-left m-t-10'>
+            {newthread_btn2.{
+            <a class='btn btn-primary m-r-10 {%disabled%}' title='{%link_title%}' href='{%link_url%}'>{%title%}</a>
+            }}
+            {reply_btn.{
+            <a class='btn btn-primary m-r-10 {%disabled%}' title='{%link_title%}' href='{%link_url%}'>{%title%}</a>
+            }}
+        </div>
+    </div>
+    {%quick_reply_form%}
+    <div class='list-group-item m-t-20 m-b-20'>
+        {%info_access%}
+        {%info_bounty%}
+        {%info_post%}
+        {%info_reply%}
+        {%info_create_poll%}
+        {%info_edit_poll%}
+        {%info_vote_poll%}
+        {%info_upload%}
+        {%info_download%}
+        {%info_rate%}
+    </div>
+    {%info_moderators%}
+    {participated_users.{
+    <div class='list-group-item spacer-sm'>
+		<strong>{%title%}</strong> {%user_profile_links%}
+    </div>
+    }}
+</section>
