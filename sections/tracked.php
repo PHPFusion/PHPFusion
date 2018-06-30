@@ -52,17 +52,17 @@ $this->forum_info['threads_time_filter'] = openform('filter_form', 'post', INFUS
 
 $threads = \PHPFusion\Forums\ForumServer::thread(FALSE)->get_forum_thread(0,
     [
-        'count_query' => "SELECT tn.thread_id 
+        'count_query' => "SELECT tn.thread_id
         FROM ".DB_FORUM_THREAD_NOTIFY." tn
         INNER JOIN ".DB_FORUM_THREADS." t ON tn.thread_id = t.thread_id
         INNER JOIN ".DB_FORUMS." tf ON t.forum_id = tf.forum_id
         WHERE ".$time_sql." tn.notify_user='".$userdata['user_id']."' AND ".groupaccess('forum_access')." AND t.thread_hidden='0'
         ",
-        'query'       => "SELECT tf.forum_id, tf.forum_name, tf.forum_access, tf.forum_type, tf.forum_mods, 
+        'query'       => "SELECT tf.forum_id, tf.forum_name, tf.forum_access, tf.forum_type, tf.forum_mods,
         tn.thread_id, tn.notify_datestamp, tn.notify_user, tn.thread_id 'track_button',
-        ttc.forum_id AS forum_cat_id, ttc.forum_name AS forum_cat_name,                
+        ttc.forum_id AS forum_cat_id, ttc.forum_name AS forum_cat_name,
         t.thread_subject, t.forum_id, t.thread_lastpost, t.thread_lastpostid, t.thread_lastuser, t.thread_postcount, t.thread_views, t.thread_locked,
-        t.thread_author, t.thread_poll, t.thread_sticky                                
+        t.thread_author, t.thread_poll, t.thread_sticky
         FROM ".DB_FORUM_THREAD_NOTIFY." tn
         INNER JOIN ".DB_FORUM_THREADS." t ON tn.thread_id = t.thread_id
         INNER JOIN ".DB_FORUMS." tf ON t.forum_id = tf.forum_id

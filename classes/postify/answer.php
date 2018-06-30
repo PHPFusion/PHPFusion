@@ -31,11 +31,11 @@ class Postify_Answer extends Forum_Postify {
     public function execute() {
         // no need for permissions.
         $thread_data = dbarray(dbquery("
-        SELECT t.thread_id, t.forum_id, t.thread_lastpostid, t.thread_postcount, t.thread_subject, p.post_id, p.post_author, p.post_answer, 
+        SELECT t.thread_id, t.forum_id, t.thread_lastpostid, t.thread_postcount, t.thread_subject, p.post_id, p.post_author, p.post_answer,
         f.forum_mods, t.thread_answered, t.thread_author
-        FROM ".DB_FORUM_THREADS." t 
+        FROM ".DB_FORUM_THREADS." t
         INNER JOIN ".DB_FORUMS." f ON f.forum_id=t.forum_id
-        INNER JOIN ".DB_FORUM_POSTS." p ON p.thread_id = t.thread_id 
+        INNER JOIN ".DB_FORUM_POSTS." p ON p.thread_id = t.thread_id
         WHERE t.thread_id=:thread_id AND p.post_id=:post_id",
                 [
                     ':thread_id' => $_GET['thread_id'],
@@ -106,8 +106,8 @@ class Postify_Answer extends Forum_Postify {
                     } else {
 
                         $c_result = dbquery("
-                            SELECT r.rep_id, p.post_id, p.thread_id, p.post_author 
-                            FROM ".DB_FORUM_POSTS." p  
+                            SELECT r.rep_id, p.post_id, p.thread_id, p.post_author
+                            FROM ".DB_FORUM_POSTS." p
                             LEFT JOIN  ".DB_FORUM_USER_REP." r ON r.post_id = p.post_id AND r.rep_answer=:answer AND r.user_id=:user_id
                             WHERE  p.thread_id=:thread_id AND p.post_answer=:answer01",
                             [

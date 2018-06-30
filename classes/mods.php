@@ -969,11 +969,11 @@ class Moderator {
 
                                     // ReUpdate the target thread
                                     dbquery("
-                                    UPDATE ".DB_FORUM_THREADS." SET 
-                                    thread_lastpost=:thread_lastpost, 
-                                    thread_lastpostid=:thread_lastpostid, 
-                                    thread_postcount=thread_postcount+".intval($pdata['num_posts']).", 
-                                    thread_lastuser=:thread_lastuser                                    
+                                    UPDATE ".DB_FORUM_THREADS." SET
+                                    thread_lastpost=:thread_lastpost,
+                                    thread_lastpostid=:thread_lastpostid,
+                                    thread_postcount=thread_postcount+".intval($pdata['num_posts']).",
+                                    thread_lastuser=:thread_lastuser
                                     WHERE thread_id=:new_thread_id", [
                                             ':thread_lastpost'   => $param[':thread_lastpost'],
                                             ':thread_lastpostid' => $param[':thread_lastpostid'],
@@ -983,9 +983,9 @@ class Moderator {
                                     );
 
                                     // Re update the target forum
-                                    dbquery("UPDATE ".DB_FORUMS." SET 
-                                    forum_lastpost=:thread_lastpost, 
-                                    forum_postcount=forum_postcount+".intval($pdata['num_posts']).", 
+                                    dbquery("UPDATE ".DB_FORUMS." SET
+                                    forum_lastpost=:thread_lastpost,
+                                    forum_postcount=forum_postcount+".intval($pdata['num_posts']).",
                                     forum_lastuser=:thread_lastuser WHERE forum_id=:new_forum_id", [
                                         ':thread_lastpost' => $param[':thread_lastpost'],
                                         ':thread_lastuser' => $param[':thread_lastuser'],
@@ -997,14 +997,14 @@ class Moderator {
                                         // Select
 
                                         $forum_lastpost_res = dbarray(dbquery("
-                                        SELECT post_author, post_datestamp FROM ".DB_FORUM_POSTS." WHERE forum_id='".intval($pdata['forum_id'])."' ORDER BY post_datestamp DESC 
+                                        SELECT post_author, post_datestamp FROM ".DB_FORUM_POSTS." WHERE forum_id='".intval($pdata['forum_id'])."' ORDER BY post_datestamp DESC
                                         LIMIT 1
                                         "));
 
-                                        dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".intval($forum_lastpost_res['post_datestamp'])."', 
-                                        forum_postcount=forum_postcount-".intval($pdata['num_posts']).", 
-                                        forum_threadcount='".(dbcount("(thread_id)", DB_FORUM_THREADS, "forum_id='".intval($pdata['forum_id'])."'") - 1)."', 
-                                        forum_lastuser='".intval($forum_lastpost_res['post_author'])."' 
+                                        dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".intval($forum_lastpost_res['post_datestamp'])."',
+                                        forum_postcount=forum_postcount-".intval($pdata['num_posts']).",
+                                        forum_threadcount='".(dbcount("(thread_id)", DB_FORUM_THREADS, "forum_id='".intval($pdata['forum_id'])."'") - 1)."',
+                                        forum_lastuser='".intval($forum_lastpost_res['post_author'])."'
                                         WHERE forum_id='".intval($pdata['forum_id'])."'");
 
                                         dbquery("DELETE FROM ".DB_FORUM_THREADS." WHERE thread_id='".intval($pdata['thread_id'])."'");

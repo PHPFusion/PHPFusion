@@ -62,7 +62,7 @@ class Postify_Vote extends Forum_Postify {
                 if ($thread_data['forum_type'] == 4 && (iMOD || (checkgroup($thread_data['forum_post_ratings']) && $thread_data['forum_lock'] == FALSE && $thread_data['thread_locked'] == FALSE))) {
                     if ($thread_data['post_author'] !== fusion_get_userdata('user_id')) {
                         $vote_query = "
-                        SELECT v.vote_id, r.rep_id 
+                        SELECT v.vote_id, r.rep_id
                         FROM ".DB_FORUM_VOTES." v
                         INNER JOIN ".DB_FORUM_USER_REP." r ON v.post_id=r.post_id AND v.vote_user=r.voter_id
                         WHERE v.vote_user=:my_id AND v.post_id=:post_id

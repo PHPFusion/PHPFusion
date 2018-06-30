@@ -44,15 +44,15 @@ $this->forum_info['threads_time_filter'] = openform('filter_form', 'post', INFUS
 // Select the latest threads - LATEST THREADS, meaning you need a thread that is the latest.
 $threads = \PHPFusion\Forums\ForumServer::thread(FALSE)->get_forum_thread(0,
     [
-        "count_query" => "SELECT t.thread_id                  
+        "count_query" => "SELECT t.thread_id
         FROM ".DB_FORUM_THREADS." t
-        INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id                        
+        INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id
         ".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND " : "WHERE ").$time_sql." t.thread_hidden='0' AND ".groupaccess('tf.forum_access')." GROUP BY t.thread_id",
 
-        "query" => "SELECT t.thread_id, t.thread_subject, t.thread_author, t.thread_lastuser, t.thread_lastpost, t.thread_lastpostid, t.thread_postcount, t.thread_locked, t.thread_sticky, t.thread_poll, t.thread_postcount, t.thread_views,             
+        "query" => "SELECT t.thread_id, t.thread_subject, t.thread_author, t.thread_lastuser, t.thread_lastpost, t.thread_lastpostid, t.thread_postcount, t.thread_locked, t.thread_sticky, t.thread_poll, t.thread_postcount, t.thread_views,
         t.forum_id 'forum_id', tf.forum_name, tf.forum_access, tf.forum_type, tf.forum_cat
         FROM ".DB_FORUMS." tf
-        INNER JOIN ".DB_FORUM_THREADS." t ON t.forum_id=tf.forum_id   		
+        INNER JOIN ".DB_FORUM_THREADS." t ON t.forum_id=tf.forum_id
         ".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND " : "WHERE ").$time_sql." ".groupaccess('tf.forum_access')."
         GROUP BY t.thread_id ORDER BY t.thread_lastpost DESC
         "

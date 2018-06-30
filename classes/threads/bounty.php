@@ -189,7 +189,7 @@ class Forum_Bounty extends ForumServer {
             if (self::$data['thread_bounty']) { // have a bounty
                 // find the highest post
                 $result = dbquery("
-                    SELECT v.post_id, p.post_author, u.user_id, u.user_name, u.user_status 
+                    SELECT v.post_id, p.post_author, u.user_id, u.user_name, u.user_status
                     FROM ".DB_FORUM_VOTES." v
                     INNER JOIN ".DB_FORUM_POSTS." p.post_id=v.post_id
                     INNER JOIN ".DB_USERS." u.user_id=p.post_author

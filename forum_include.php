@@ -69,7 +69,7 @@ function get_thread($thread_id) {
  */
 
 function set_forumVotes($info, $points = 0) {
-    global $userdata;
+    $userdata = fusion_get_userdata();;
     // @todo: extend on user's rank threshold before can vote. - Reputation threshold- Roadmap 9.1
     // @todo: allow multiple votes / drop $res - Roadmap 9.1
     if (checkgroup($info['forum_vote']) && dbcount("('thread_id')", DB_FORUM_THREADS, "thread_locked='0'")) {
