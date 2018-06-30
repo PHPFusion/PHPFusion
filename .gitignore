@@ -4,3 +4,4 @@
 *.db
 *.config
 /.github/
+/.gitattributes
