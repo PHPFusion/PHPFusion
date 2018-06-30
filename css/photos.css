@@ -1,0 +1,70 @@
+.panel-image {
+    min-height: 150px;
+    max-height: 150px;
+    overflow: hidden;
+    position: relative;
+    text-align: center;
+}
+
+.panel-image img {
+    min-width: 100%;
+    margin: 0 auto;
+}
+
+.photo-item-title {
+    font-weight: 600;
+}
+
+.album_title {
+    font-size: 18px;
+    color: rgb(0, 0, 0);
+    margin-bottom: 10px;
+}
+
+.album_comments, .album_ratings, .album_views {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.photo_author {
+    display: inline-block;
+    margin-bottom: 10px;
+}
+
+.photo_cover {
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+.photo_cover img {
+    margin: 0 auto;
+}
+
+.photo_title {
+    display: inline-block;
+    font-size: 15px !important;
+    font-weight: 600;
+}
+
+.photo_count {
+    font-size: 13px;
+    margin-right: 15px;
+    display: inline-block;
+    text-align: center;
+    padding: 5px;
+}
+
+.photo_count span {
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.photo_date {
+    margin-bottom: 15px;
+}
+
+.photo_info {
+    padding-right: 15px;
+}
