@@ -10,3 +10,7 @@
 	path = infusions/news
 	url = https://github.com/php-fusion/ci-News.git
 	branch = master
+[submodule "infusions/articles"]
+	path = infusions/articles
+	url = https://github.com/php-fusion/ci-Articles.git
+	branch = master
