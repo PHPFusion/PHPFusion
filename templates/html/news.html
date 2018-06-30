@@ -1,0 +1,59 @@
+<div class="spacer-md">
+    <!--carousel-->
+    {%breadcrumb%}
+    {carousel_1_start.{
+    <div id="news-carousel" class="carousel slide" data-interval="20000" data-ride="carousel">
+        }}
+        {carousel_2_start.{
+        <ol class="carousel-indicators">}}
+            {carousel_indicator.{
+            <li data-target="#news-carousel" data-slide-to="{%indicator_num%}" {%indicator_class%}></li>
+            }}
+            {carousel_2_end.{
+        </ol>
+        }}
+
+        {carousel_3_start.{
+        <div class="carousel-inner" style="height:500px;" role="listbox">
+            }}
+            {carousel_item.{
+            <div class="item{%carousel_item_active%}">
+                <img class="img-responsive position-absolute display-block" src="{%news_image_src%}"
+                     alt="{%news_subject%}"/>
+                <div class="carousel-caption">
+                    <time datetime="{%news_phpdate%}"><i class="fas fa-clock m-r-5 text-success"></i>{%news_date%}
+                    </time>
+                    <h2 class="text-white strong">{%news_subject%}</h2>
+                    <p>{%news_news%}</p>
+                    <a class="btn btn-default text-white" href="{%news_link%}">{[news_0001]}</a>
+                </div>
+            </div>
+            }}
+            {carousel_3_end.{
+        </div>
+        }}
+        {carousel_1_end.{
+        <a class="left carousel-control" href="#news-carousel" role="button" data-slide="prev">
+            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+            <span class="sr-only">{[previous]}</span>
+        </a>
+        <a class="right carousel-control" href="#news-carousel" role="button" data-slide="next">
+            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+            <span class="sr-only">{[next]}</span>
+        </a>
+    </div>
+    }}
+    <div class="clearfix">
+        {%menu%}
+    </div>
+    <!--sub_carousel-->
+    <div class="clearfix"><br/></div>
+    <div class="spacer-sm">
+        <div class="pull-right">{%pagenav%}</div>
+        <strong>{[news_0008]}: {%last_update%}</strong>
+    </div>
+    <div class="clearfix"><br/></div>
+    <div class="row">
+        {%news_items%}
+    </div>
+</div>
