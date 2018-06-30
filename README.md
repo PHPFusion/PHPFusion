@@ -22,7 +22,7 @@ To sync to this database and not to conflict with your work, please do the follo
   
 Development Discord
 ---
-PHP-Fusion Official Developer Discord Channel - https://discord.gg/Ymf6cTf
+PHP-Fusion Official Developer Discord Channel - https://discord.gg/CGSYU8r
 
 Those who are active on PHP-Fusion Development is encouraged to join. 
   
