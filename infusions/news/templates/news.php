@@ -264,7 +264,7 @@ if (!function_exists('render_news_item')) {
         echo "<span class='news-action m-l-10'><i class='fa fa-calendar'></i> ".showdate("newsdate", $data['news_datestamp'])."</span>\n";
         echo "<span class='news-action m-l-10'><i class='fa fa-eye'></i> <span class='text-dark'>".number_format($data['news_reads'])."</span>\n</span>";
         echo '<i class="fa fa-comments-o m-l-10"></i> '.$data['news_display_comments'];
-        echo '<i class="fa fa-star-o m-l-10"></i> '.$data['news_display_ratings'];
+        echo $data['news_display_ratings'];
         echo "<i class='fa fa-print m-l-10'></i> <a title='".$locale['news_0002']."' href='".BASEDIR."print.php?type=N&amp;item_id=".$data['news_id']."' target='_blank'>".$locale['print']."</a>";
         echo "</div>";
         echo "<!--news_sub_readmore-->";

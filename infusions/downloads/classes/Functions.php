@@ -43,7 +43,7 @@ class Functions {
      */
     public static function get_downloadCatData($id) {
         if (self::validate_downloadCat($id)) {
-            return dbarray(dbquery("SELECT * FROM ".DB_DOWNLOAD_CATS." WHERE download_cat_id='".intval($id)."'"));
+            return dbarray(dbquery("SELECT * FROM ".DB_DOWNLOAD_CATS." WHERE download_cat_id=:catid", [':catid' => intval($id)]));
         }
 
         return FALSE;
@@ -61,7 +61,7 @@ class Functions {
             if ($id < 1) {
                 return 1;
             } else {
-                return dbcount("('download_cat_id')", DB_DOWNLOAD_CATS, "download_cat_id='".intval($id)."'");
+                return dbcount("('download_cat_id')", DB_DOWNLOAD_CATS, "download_cat_id=:catid", [':catid' => intval($id)]);
             }
         }
 
@@ -103,7 +103,7 @@ class Functions {
      */
     public static function validate_download($id) {
         if (isnum($id)) {
-            return (int)dbcount("('download_id')", DB_DOWNLOADS, "download_id='".intval($id)."'");
+            return (int)dbcount("('download_id')", DB_DOWNLOADS, "download_id=:downloadid", [':downloadid' => intval($id)]);
         }
 
         return (int)FALSE;

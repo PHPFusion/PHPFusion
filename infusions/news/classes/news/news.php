@@ -162,21 +162,24 @@ abstract class News extends NewsServer {
     protected static function get_NewsQuery(array $filters = []) {
         $news_settings = self::get_news_settings();
         $cat_filter = self::check_NewsFilter();
-        $query = "SELECT tn.*, tc.*,
-                tu.user_id, tu.user_name, tu.user_status, tu.user_avatar , tu.user_level, tu.user_joined,
-                ".(!empty($cat_filter['count']) ? $cat_filter['count'] : '')."
-                ni.news_image, ni.news_image_t1, ni.news_image_t2
-                FROM ".DB_NEWS." tn
-                LEFT JOIN ".DB_NEWS_IMAGES." ni ON ni.news_id=tn.news_id AND ".(!empty($_GET['readmore']) ? "tn.news_image_full_default=ni.news_image_id" : "tn.news_image_front_default=ni.news_image_id")."
-                LEFT JOIN ".DB_USERS." tu ON tn.news_name=tu.user_id
-                LEFT JOIN ".DB_NEWS_CATS." tc ON tn.news_cat=tc.news_cat_id
-                ".(!empty($cat_filter['join']) ? $cat_filter['join'] : '')."
-                ".(multilang_table("NS") ? "WHERE news_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('news_visibility')." AND (news_start='0'||news_start<='".TIME."')
-                AND (news_end='0'||news_end>='".TIME."') AND news_draft='0'
-                ".(!empty($filters['condition']) ? "AND ".$filters['condition'] : '')."
-                GROUP BY ".(!empty($filters['group_by']) ? $filters['group_by'] : 'news_id')."
-                ORDER BY ".(!empty($filters['order']) ? $filters['order'].',' : '')." news_sticky DESC, ".$cat_filter['order']."
-                LIMIT ".(!empty($filters['limit']) ? $filters['limit'] : $_GET['rowstart'].",".(!empty($news_settings['news_pagination']) ? $news_settings['news_pagination'] : 12));
+        $pattern = "SELECT %s(nr.rating_vote) FROM ".DB_RATINGS." AS nr WHERE nr.rating_item_id = n.news_id AND nr.rating_type = 'N'";
+        $sql_count = sprintf($pattern, 'COUNT');
+        $sql_sum = sprintf($pattern, 'SUM');
+        $query = "SELECT n.*, nc.*, nu.user_id, nu.user_name, nu.user_status, nu.user_avatar , nu.user_level, nu.user_joined,
+            ($sql_sum) AS news_sum_rating,
+            ($sql_count) AS news_count_votes,
+            (SELECT COUNT(ncc.comment_id) FROM ".DB_COMMENTS." AS ncc WHERE ncc.comment_item_id = n.news_id AND ncc.comment_type = 'N' AND ncc.comment_hidden = '0') AS count_comment,
+            ni.news_image, ni.news_image_t1, ni.news_image_t2
+            FROM ".DB_NEWS." AS n
+            LEFT JOIN ".DB_NEWS_IMAGES." AS ni ON ni.news_id=n.news_id AND ".(!empty($_GET['readmore']) ? "n.news_image_full_default=ni.news_image_id" : "n.news_image_front_default=ni.news_image_id")."
+            LEFT JOIN ".DB_USERS." AS nu ON n.news_name=nu.user_id
+            LEFT JOIN ".DB_NEWS_CATS." AS nc ON n.news_cat=nc.news_cat_id
+            ".(multilang_table("NS") ? "WHERE news_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('news_visibility')." AND (news_start='0'||news_start<='".TIME."')
+            AND (news_end='0'||news_end>='".TIME."') AND news_draft='0'
+            ".(!empty($filters['condition']) ? "AND ".$filters['condition'] : '')."
+            GROUP BY ".(!empty($filters['group_by']) ? $filters['group_by'] : 'news_id')."
+            ORDER BY ".(!empty($filters['order']) ? $filters['order'].',' : '')." news_sticky DESC, ".$cat_filter['order']."
+            LIMIT ".(!empty($filters['limit']) ? $filters['limit'] : $_GET['rowstart'].",".(!empty($news_settings['news_pagination']) ? $news_settings['news_pagination'] : 12));
 
         return $query;
     }
@@ -249,15 +252,15 @@ abstract class News extends NewsServer {
                 // order by comment_count
                 $cat_filter = [
                     'order' => 'count_comment DESC',
-                    'count' => 'COUNT(td.comment_item_id) AS count_comment,',
-                    'join'  => "LEFT JOIN ".DB_COMMENTS." td ON td.comment_item_id = tn.news_id AND td.comment_type='N' AND td.comment_hidden='0'",
+                    //'count' => 'COUNT(td.comment_item_id) AS count_comment,',
+                    //'join'  => "LEFT JOIN ".DB_COMMENTS." td ON td.comment_item_id = tn.news_id AND td.comment_type='N' AND td.comment_hidden='0'",
                 ];
             } else if ($current_filter == 'rating') {
                 // order by download_title
                 $cat_filter = [
-                    'order' => 'sum_rating DESC',
-                    'count' => 'IF(SUM(tr.rating_vote)>0, SUM(tr.rating_vote), 0) AS sum_rating, COUNT(tr.rating_item_id) AS count_votes,',
-                    'join'  => "LEFT JOIN ".DB_RATINGS." tr ON tr.rating_item_id = tn.news_id AND tr.rating_type='N'",
+                    'order' => 'news_sum_rating DESC',
+                    //'count' => 'IF(SUM(tr.rating_vote)>0, SUM(tr.rating_vote), 0) AS sum_rating, COUNT(tr.rating_item_id) AS count_votes,',
+                    //'join'  => "LEFT JOIN ".DB_RATINGS." tr ON tr.rating_item_id = tn.news_id AND tr.rating_type='N'",
                 ];
             }
         } else {
@@ -395,9 +398,9 @@ abstract class News extends NewsServer {
             $news_sum_rating = 0;
             $news_count_votes = 0;
             if ($data['news_allow_ratings']) {
-                $ratings = self::count_ratings($data['news_id']);
-                $news_count_votes = $ratings['news_count_votes'];
-                $news_sum_rating = $ratings['news_sum_rating'];
+                $ratings = $data['news_sum_rating'];
+                $news_count_votes = $data['news_count_votes'];
+                $news_sum_rating = $data['news_sum_rating'];
             }
 
             $info = [
@@ -426,11 +429,11 @@ abstract class News extends NewsServer {
                 "news_image_optimized"  => $imageSource, // optimized image
                 "news_ext"              => $data['news_extended'] ? "y" : "n",
                 "news_reads"            => $data['news_reads'],
-                "news_comments"         => self::count_comments($data['news_id']),
+                "news_comments"         => $data['count_comment'],
                 'news_sum_rating'       => $news_sum_rating,
                 'news_count_votes'      => $news_count_votes,
                 "news_allow_comments"   => $data['news_allow_comments'],
-                "news_display_comments" => $data['news_allow_comments'] ? display_comments(self::count_comments($data['news_id']), INFUSIONS."news/news.php?readmore=".$data['news_id']."#comments", '', 1) : '',
+                "news_display_comments" => $data['news_allow_comments'] ? display_comments($data['news_count_votes'], INFUSIONS."news/news.php?readmore=".$data['news_id']."#comments", '', 1) : '',
                 "news_allow_ratings"    => $data['news_allow_ratings'],
                 "news_display_ratings"  => $data['news_allow_ratings'] ? display_ratings($news_sum_rating, $news_count_votes, INFUSIONS."news/news.php?readmore=".$data['news_id']."#postrating", '', 1) : '',
                 'news_pagenav'          => $news_pagenav,
@@ -630,7 +633,7 @@ abstract class News extends NewsServer {
         $result = dbquery(
             self::get_NewsQuery(
                 [
-                    'condition' => 'tn.news_id='.intval($news_id),
+                    'condition' => 'n.news_id='.intval($news_id),
                     'limit'     => '1'
                 ]
             )

@@ -149,7 +149,7 @@ class News extends Core {
                     </ul>
                     <ul class='meta-right'>
                         <li><i class='fa fa-comment-o'></i> <?php echo $info['news_display_comments'] ?></li>
-                        <li><i class='fa fa-heart-o'></i> <?php echo $info['news_display_ratings'] ?></li>
+                        <li> <?php echo $info['news_display_ratings'] ?></li>
                         <?php if (!empty($info['news_admin_actions'])) : ?>
                             <li>
                                 <?php

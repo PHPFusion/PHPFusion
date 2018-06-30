@@ -431,21 +431,19 @@ class ArticlesAdmin extends ArticlesAdminModel {
         if (!isset($_POST['article_display'])) {
             $rowstart = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $max_rows ? $_GET['rowstart'] : 0);
         }
-
         // Query
-        $result2 = dbquery("
-            SELECT a.*, ac.*, count(c.comment_id) 'comments_count', count(r.rating_id) 'ratings_count', u.user_id, u.user_name, u.user_status, u.user_avatar
+        $sql = "SELECT a.*, ac.*, u.user_id, u.user_name, u.user_status, u.user_avatar,
+            (SELECT COUNT(ar.rating_vote) FROM ".DB_RATINGS." ar WHERE ar.rating_item_id = a.article_id AND ar.rating_type = 'A') AS ratings_count,
+            (SELECT COUNT(ad.comment_id) FROM ".DB_COMMENTS." ad WHERE ad.comment_item_id = a.article_id AND ad.comment_type = 'A' AND ad.comment_hidden = '0') AS comments_count
             FROM ".DB_ARTICLES." a
             LEFT JOIN ".DB_ARTICLE_CATS." ac ON ac.article_cat_id=a.article_cat
-            LEFT JOIN ".DB_COMMENTS." c ON c.comment_item_id=a.article_id AND c.comment_type='A'
-            LEFT JOIN ".DB_RATINGS." r ON r.rating_item_id=a.article_id AND r.rating_type='A'
             INNER JOIN ".DB_USERS." u ON u.user_id=a.article_name
             ".($sql_condition ? " WHERE ".$sql_condition : "")."
             GROUP BY a.article_id
             ORDER BY article_draft DESC, article_datestamp DESC
             LIMIT $rowstart, $limit
-        ");
-
+        ";
+        $result2 = dbquery($sql);
         $article_rows = dbrows($result2);
         $article_cats = dbcount("(article_cat_id)", DB_ARTICLE_CATS, "");
 
