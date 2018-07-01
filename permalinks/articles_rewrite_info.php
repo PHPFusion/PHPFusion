@@ -19,6 +19,7 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
+
 $permalink_name = $locale['pl_articles_title'];
 $permalink_desc = $locale['pl_articles_desc'];
 $permalink_author = "PHP-Fusion Dev Team";
