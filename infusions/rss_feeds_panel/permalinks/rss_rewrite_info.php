@@ -5,8 +5,8 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | File Category: Core Rewrite Modules
-| Filename: downloads_rewrite_info.php
-| Author: Chan (Frederick MC Chan)
+| Filename: rss_rewrite_info.php
+| Author: Rizado (Chubatyj Vitalij)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -19,5 +19,8 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
-$permalink_name = $locale['pl_downloads_title'];
-$permalink_desc = $locale['pl_downloads_desc'];
+
+$permalink_name = $locale['pl_rss_title'];
+$permalink_desc = $locale['pl_rss_desc'];
+$permalink_author = "PHP-Fusion Dev Team";
+$permalink_version = "1.0";

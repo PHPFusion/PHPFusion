@@ -33,10 +33,10 @@ class MemberPoll {
     ];
 
     public function __construct() {
-        if (file_exists(INFUSIONS."member_poll_panel/locale/".LANGUAGE.".php")) {
-            self::$locale = fusion_get_locale("", INFUSIONS."member_poll_panel/locale/".LANGUAGE.".php");
+        if (file_exists(INFUSIONS."member_poll_panel/locale/".LANGUAGE."/polls.php")) {
+            self::$locale = fusion_get_locale("", INFUSIONS."member_poll_panel/locale/".LANGUAGE."/polls.php");
         } else {
-            self::$locale = fusion_get_locale("", INFUSIONS."member_poll_panel/locale/English.php");
+            self::$locale = fusion_get_locale("", INFUSIONS."member_poll_panel/locale/English/polls.php");
         }
 
         $_GET['action'] = isset($_GET['action']) ? $_GET['action'] : '';
