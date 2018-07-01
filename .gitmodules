@@ -18,3 +18,7 @@
 	path = infusions/downloads
 	url = https://github.com/php-fusion/ci-Downloads.git
 	branch = master
+[submodule "infusions/weblinks"]
+	path = infusions/weblinks
+	url = https://github.com/php-fusion/ci-Weblinks.git
+	branch = master
