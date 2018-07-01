@@ -36,9 +36,10 @@ $locale['PL_423'] = "Permalink not found.";
 $locale['PL_424'] = "Enabled Permalinks for %s successfully.";
 $locale['PL_425'] = "Permalinks for %s are already enabled.";
 $locale['PL_426'] = "Disabled Permalinks for %s successfully.";
+$locale['PL_429'] = "Permalink Driver for %s";
 
 // Other
 $locale['PL_427'] = "No Permalinks are enabled.";
 $locale['PL_428'] = "Permalinks";
 $locale['seo_htc_warning'] = "Please note that if you change any of these settings the content of `.htaccess` will be overwritten and any changes previously done to this file will be lost.";
-//$locale['rewrite_disabled'] = "It looks like `mod_rewrite` is not enabled on your host. Enabling SEF urls might break your website. Please contact your hosting provider about enabling `mod_rewrite` on your host.";
+$locale['rewrite_disabled'] = "It looks like `mod_rewrite` is not enabled on your host. Enabling SEF urls might break your website. Please contact your hosting provider about enabling `mod_rewrite` on your host.";
