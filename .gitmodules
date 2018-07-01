@@ -26,3 +26,7 @@
 	path = infusions/faq
 	url = https://github.com/php-fusion/ci-Faq.git
 	branch = master
+[submodule "infusions/blog"]
+	path = infusions/blog
+	url = https://github.com/php-fusion/ci-Blog.git
+	branch = master
