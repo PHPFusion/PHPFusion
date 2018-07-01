@@ -198,7 +198,7 @@ if (isset($_GET['enable']) && !empty($rewrite_registers[$_GET['enable']])) {
     } else {
         addNotice('warning', sprintf($locale['PL_425'], $permalink_name));
     }
-    redirect(clean_request('section=pl2', ['enable'], FALSE));
+    redirect(clean_request('', ['enable', 'section'], FALSE));
 } elseif (isset($_GET['disable'])) {
     $rewrite_name = stripinput($_GET['disable']);
 
@@ -217,7 +217,7 @@ if (isset($_GET['enable']) && !empty($rewrite_registers[$_GET['enable']])) {
     $permalink_name = !empty($permalink_name) ? $permalink_name : ucfirst($rewrite_name);
 
     addNotice('success', sprintf($locale['PL_426'], $permalink_name));
-    redirect(clean_request('section=pl', ['disable'], FALSE));
+    redirect(clean_request('', ['disable', 'section'], FALSE));
 } elseif (isset($_GET['reinstall']) && !empty($rewrite_registers[$_GET['reinstall']])) {
     /**
      * Delete Data (Copied from Disable)
@@ -265,20 +265,17 @@ if (isset($_GET['enable']) && !empty($rewrite_registers[$_GET['enable']])) {
     } else if ($error == 1) {
         addNotice('danger', $locale['PL_420']);
     }
-    redirect(clean_request('section=pl', ['reinstall'], FALSE));
+    redirect(clean_request('', ['reinstall', 'section'], FALSE));
 }
 
 
-$allowed_sections = ['pl', 'pls', 'pl2'];
+$allowed_sections = ['pl', 'pls'];
 $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_sections) ? $_GET['section'] : $allowed_sections[0];
 $edit_name = FALSE;
 
 switch ($_GET['section']) {
     case "pl":
         \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'permalink.php'.$aidlink, 'title' => $locale['400']]);
-        break;
-    case "pl2":
-        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'permalink.php'.$aidlink, 'title' => $locale['PL_401']]);
         break;
     case "pls":
         \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'permalink.php'.$aidlink, 'title' => $locale['PL_401a']]);
