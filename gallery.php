@@ -24,10 +24,11 @@ $locale = fusion_get_locale('', GALLERY_LOCALE);
 include INFUSIONS."gallery/templates/gallery.php";
 require_once INCLUDES."infusions_include.php";
 
-$gallery_settings = get_settings("gallery");
 if (!defined('SAFEMODE')) {
     define("SAFEMODE", @ini_get("safe_mode") ? TRUE : FALSE);
 }
+
+$gallery_settings = get_settings("gallery");
 
 $gallery_settings['gallery_pagination'] = !empty($gallery_settings['gallery_pagination']) ? $gallery_settings['gallery_pagination'] : 24;
 
