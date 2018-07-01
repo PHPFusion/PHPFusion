@@ -27,9 +27,9 @@ if (!defined("DB_SHOUTBOX")) {
 
 // Added Shoutbox Locale Constant
 if (!defined("SHOUTBOX_LOCALE")) {
-    if (file_exists(INFUSIONS."shoutbox_panel/locale/".LANGUAGE.".php")) {
-        define("SHOUTBOX_LOCALE", INFUSIONS."shoutbox_panel/locale/".LANGUAGE.".php");
+    if (file_exists(INFUSIONS."shoutbox_panel/locale/".LANGUAGE."/shoutbox.php")) {
+        define("SHOUTBOX_LOCALE", INFUSIONS."shoutbox_panel/locale/".LANGUAGE."/shoutbox.php");
     } else {
-        define("SHOUTBOX_LOCALE", INFUSIONS."shoutbox_panel/locale/English.php");
+        define("SHOUTBOX_LOCALE", INFUSIONS."shoutbox_panel/locale/English/shoutbox.php");
     }
 }
