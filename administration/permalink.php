@@ -414,13 +414,13 @@ switch ($_GET['section']) {
                         }
                         echo "<tr".$row_class.">\n";
                         echo "<td>\n<h4 class='m-b-5'>".$name."</h4>$link</td>\n";
-                        echo "<td>\n<div class='spacer-xs'><p>".$description."</p><span>Version $version</span><span class='m-l-5 m-r-5'>|</span><span>By $author</span></div></td>\n";
+                        echo "<td>\n<div class='spacer-xs'><p>".$description."</p><span>v$version</span> <span>".$locale['by']." $author</span></div></td>\n";
                         echo "</tr>\n";
                     } else {
                         echo "<tr><td colspan='2'><strong>".$locale['PL_411'].":</strong> ".sprintf($locale['412'], $data['rewrite_name'])."</td>\n</tr>";
                     }
                 }
-                echo "</tbody>\n</table>\n";
+                echo "</tbody>\n</table>\n</div>";
             } else {
                 echo "<h4 class='text-center spacer-md'>".$locale['PL_427']."</h4>";
             }
