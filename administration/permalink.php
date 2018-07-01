@@ -399,7 +399,7 @@ switch ($_GET['section']) {
                         include $rewrite_registers[$rewrite_name]['info_path'];
 
                         $name = (!empty($permalink_name) ? $permalink_name : ucfirst($available_rewrites));
-                        $version = (!empty($permalink_version) && isnum($permalink_version) ? $permalink_version : "1.00");
+                        $version = (!empty($permalink_version) ? $permalink_version : "1.00");
                         $author = (!empty($permalink_author) ? $permalink_author : "PHP-Fusion Core Developers Team");
                         $description = (!empty($permalink_desc) ? $permalink_desc : sprintf($locale['PL_429'], $permalink_name) );
                         $row_class = "";

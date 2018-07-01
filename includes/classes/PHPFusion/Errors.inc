@@ -325,11 +325,13 @@ class Errors {
         $locale = self::$locale;
 
         // Use clean request for absolute escape from SEO converging form path
-        $html = openform('error_logform', 'post', clean_request('', [], FALSE), ['class' => 'text-center well m-t-5 m-b-5']);
+        $html = openform('error_logform', 'post', clean_request('', [], FALSE));
+        $html .= '<div class="text-center well m-t-5 m-b-5">';
         $html .= "<div class='display-inline-block text-right m-r-10'>".$locale['ERROR_440']."</div>\n";
         $html .= "<div class='display-inline-block'>\n";
         $html .= form_select('delete_status', '', '', ['allowclear' => TRUE, 'options' => self::get_logTypes(), 'inline' => TRUE]);
         $html .= form_button('delete_entries', $locale['ERROR_453'], $locale['ERROR_453'], ['class' => 'm-l-10 btn-primary btn-sm']);
+        $html .= "</div>\n";
         $html .= "</div>\n";
         $html .= closeform();
 
