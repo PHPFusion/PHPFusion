@@ -14,3 +14,7 @@
 	path = infusions/articles
 	url = https://github.com/php-fusion/ci-Articles.git
 	branch = master
+[submodule "infusions/downloads"]
+	path = infusions/downloads
+	url = https://github.com/php-fusion/ci-Downloads.git
+	branch = master
