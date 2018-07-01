@@ -22,3 +22,7 @@
 	path = infusions/weblinks
 	url = https://github.com/php-fusion/ci-Weblinks.git
 	branch = master
+[submodule "infusions/faq"]
+	path = infusions/faq
+	url = https://github.com/php-fusion/ci-Faq.git
+	branch = master
