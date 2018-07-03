@@ -27,6 +27,12 @@ if (!function_exists('display_main_weblinks')) {
         $html->set_tag('opentable', fusion_get_function('opentable', $info['weblink_tablename']));
         $html->set_tag('closetable', fusion_get_function('closetable'));
 
+        add_to_css('.sub-cats-icon {
+            -webkit-transform: scaleX(-1) rotate(90deg);
+            -ms-transform: scaleX(-1) rotate(90deg);
+            transform: scaleX(-1) rotate(90deg);
+        }');
+
         if (!empty($info['weblink_categories'])) {
             foreach ($info['weblink_categories'][0] as $cat_id => $cat_data) {
                 $sub_categories = '';
@@ -35,7 +41,7 @@ if (!function_exists('display_main_weblinks')) {
                     foreach ($info['weblink_categories'] as $sub_cats_id => $sub_cats) {
                         foreach ($sub_cats as $sub_cat_id => $sub_cat_data) {
                             if (!empty($sub_cat_data['parent']) && $sub_cat_data['parent'] == $cat_id) {
-                                $sub_categories .= '<a href="'.$sub_cat_data['link'].'" '.(!empty($sub_cat_data['description']) ? 'title="'.$sub_cat_data['description'].'"' : '').'>'.$sub_cat_data['name'].' ('.$sub_cat_data['count'].')</a><br/>';
+                                $sub_categories .= '<h4 class="m-b-5"><i class="fas fa-level-down-alt sub-cats-icon"></i> <a href="'.$sub_cat_data['link'].'">'.$sub_cat_data['name'].' ('.$sub_cat_data['count'].')</a></h4>'.$sub_cat_data['description'];
                             }
                         }
                     }
