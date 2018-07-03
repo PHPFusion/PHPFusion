@@ -173,7 +173,7 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
                         'type'       => fusion_get_settings('tinymce_enabled') ? 'tinymce' : 'html',
                         'tinymce'    => fusion_get_settings('tinymce_enabled') && iADMIN ? 'advanced' : '',
                         'autosize'   => TRUE,
-                        'inline'     => TRUE,
+                        'inline'     => FALSE,
                         'preview'    => TRUE,
                         'form_name'  => 'catform',
                         'error_text' => $this->locale['article_0322']
