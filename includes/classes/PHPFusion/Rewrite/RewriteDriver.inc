@@ -197,6 +197,16 @@ abstract class RewriteDriver {
                         $this->pattern_tables[$name] = $pattern_tables;
                         unset($pattern_tables);
                     }
+                } else if (file_exists(INFUSIONS.$name."/permalinks/".$name."_rewrite_include.php")) {
+                	include_once INFUSIONS.$name."/permalinks/".$name."_rewrite_include.php";
+                    if (isset($regex) && is_array($regex)) {
+                    	$this->addRegexTag($regex, $name);
+                    	unset($regex);
+                    }
+                    if (isset($pattern_tables) && is_array($pattern_tables)) {
+                        $this->pattern_tables[$name] = $pattern_tables;
+                        unset($pattern_tables);
+                    }
                 } else {
                     $this->setWarning(4, $name."_rewrite_include.php");
                 }
@@ -286,6 +296,17 @@ abstract class RewriteDriver {
                 if (file_exists(BASEDIR."includes/rewrites/".$name."_rewrite_include.php")) {
                     // If the File is found, include it
                     include BASEDIR."includes/rewrites/".$name."_rewrite_include.php";
+                    if (isset($regex) && is_array($regex)) {
+                        $this->addRegexTag($regex, $name);
+                        unset($regex);
+                    }
+                    // Load pattern tables into driver
+                    if (isset($pattern_tables) && is_array($pattern_tables)) {
+                        $this->pattern_tables[$name] = $pattern_tables;
+                        unset($pattern_tables);
+                    }
+                } else if (file_exists(INFUSIONS.$name."/permalinks/".$name."_rewrite_include.php")) {
+                	include INFUSIONS.$name."/permalinks/".$name."_rewrite_include.php";
                     if (isset($regex) && is_array($regex)) {
                         $this->addRegexTag($regex, $name);
                         unset($regex);
