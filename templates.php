@@ -22,6 +22,7 @@ if (!defined("IN_FUSION")) {
 if (!function_exists('display_main_weblinks')) {
     function display_main_weblinks($info) {
         $html = \PHPFusion\Template::getInstance('main_weblinks');
+        $html2 = \PHPFusion\Template::getInstance('weblink_subcats');
         $html->set_template(__DIR__.'/templates/main_weblinks.html');
         $html->set_tag('breadcrumb', render_breadcrumbs());
         $html->set_tag('opentable', fusion_get_function('opentable', $info['weblink_tablename']));
@@ -35,17 +36,29 @@ if (!function_exists('display_main_weblinks')) {
 
         if (!empty($info['weblink_categories'])) {
             foreach ($info['weblink_categories'][0] as $cat_id => $cat_data) {
-                $sub_categories = '';
-
                 if ($cat_id != 0 && $info['weblink_categories'] != 0) {
                     foreach ($info['weblink_categories'] as $sub_cats_id => $sub_cats) {
                         foreach ($sub_cats as $sub_cat_id => $sub_cat_data) {
                             if (!empty($sub_cat_data['parent']) && $sub_cat_data['parent'] == $cat_id) {
-                                $sub_categories .= '<h4 class="m-b-5"><i class="fas fa-level-down-alt sub-cats-icon"></i> <a href="'.$sub_cat_data['link'].'">'.$sub_cat_data['name'].' ('.$sub_cat_data['count'].')</a></h4>'.$sub_cat_data['description'];
+                                $html2->set_block('sub_categories', [
+                                    'link'        => $sub_cat_data['link'],
+                                    'name'        => $sub_cat_data['name'],
+                                    'count'       => $sub_cat_data['count'],
+                                    'description' => $sub_cat_data['description']
+                                ]);
                             }
                         }
                     }
                 }
+
+                $html2->set_text('{sub_categories.{
+                    <div class="clearfix">
+                        <h4 class="m-b-5"><i class="fas fa-level-down-alt sub-cats-icon"></i> <a href="{%link%}">{%name%} ({%count%})</a></h4>
+                        {%description%}
+                    </div>
+                }}');
+
+                $sub_cats = $html2->get_output();
 
                 $html->set_block('categories', [
                     'cat_id'          => $cat_data['cat_id'],
@@ -53,7 +66,7 @@ if (!function_exists('display_main_weblinks')) {
                     'cat_name'        => $cat_data['name'],
                     'cat_count'       => $cat_data['count'],
                     'cat_description' => $cat_data['description'],
-                    'sub_categories'  => $sub_categories
+                    'sub_categories'  => $sub_cats
                 ]);
             }
         } else {
