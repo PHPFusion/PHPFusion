@@ -328,7 +328,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         $tab_active = tab_active($tab_title, 1);
     }
 
-    $html .= ($options['type'] == "html" || $options['type'] == "bbcode") ? "<div class='panel panel-default panel-txtarea m-b-0' ".($options['preview'] ? "style='border-radius:0 !important;'" : '').">\n
+    $html .= ($options['type'] == "html" || $options['type'] == "bbcode") ? "<div class='panel panel-default panel-txtarea m-b-0' ".($options['preview'] ? "style='border-radius:0;'" : '').">\n
     <div class='panel-heading clearfix'>\n" : '';
 
     if ($options['preview'] && ($options['type'] == "bbcode" || $options['type'] == "html")) {
@@ -401,7 +401,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         if ($('#".$options['input_id']."').length) {
             var init_str = $('#".$options['input_id']."').val().replace(/<[^>]+>/ig, '').replace(/\\n/g,'').replace(/ /g, '').length;
             $('#".$options['input_id']."-wordcount').text(init_str);
-        }        
+        }
         $('#".$options['input_id']."').on('input propertychange paste', function() {
         var str = $(this).val().replace(/<[^>]+>/ig, '').replace(/\\n/g,'').replace(/ /g, '').length;
         $('#".$options['input_id']."-wordcount').text(str);
