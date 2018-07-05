@@ -5176,10 +5176,6 @@ label {
     margin: 5px;
 }
 
-.panel-txtarea .bbcode_input {
-    height: 35px;
-}
-
 .panel-txtarea .editor-wrapper > .nav > li a:active,
 .panel-txtarea .editor-wrapper > .nav > li.active > a {
     background-color: #e6e6e6;
