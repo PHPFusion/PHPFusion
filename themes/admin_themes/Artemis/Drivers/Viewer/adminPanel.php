@@ -58,7 +58,7 @@ class adminPanel extends resource {
                 </div>
             </div>
             <div id="main_content" class="content<?php echo $collapsed; ?>">
-                <header class="header affix" data-spy="affix" data-offset-top="10">
+                <header class="header" data-spy="affix" data-offset-top="0">
                     <?php $this->adminHeader() ?>
                 </header>
                 <aside class="header">
@@ -66,7 +66,7 @@ class adminPanel extends resource {
                 </aside>
                 <div class="content">
                     <?php echo CONTENT; ?>
-                    <div class="copyright">
+                    <div class="copyright clearfix">
                         <?php echo showcopyright('', TRUE) ?>
                     </div>
                 </div>

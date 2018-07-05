@@ -248,6 +248,7 @@ a:hover, a:focus {
     -o-transition: background .2s;
     -moz-transition: background .2s;
     transition: background .2s;
+    list-style: none;
 }
 
 #devlpr .app_menu .app_list li + li {
@@ -481,7 +482,7 @@ a:hover, a:focus {
 
 #devlpr #main_content > header ul.nav > li > a {
     border: none;
-    padding: 20px 15px 28px 15px !important;
+    padding: 23px 15px !important;
 }
 
 #devlpr #main_content > header ul.nav > li {
@@ -497,12 +498,14 @@ a:hover, a:focus {
     -webkit-box-shadow: 0 5px 6px rgba(0, 0, 0, 0.3);
     -moz-box-shadow: 0 5px 6px rgba(0, 0, 0, 0.3);
     box-shadow: 0 5px 6px rgba(0, 0, 0, 0.3);
-    min-width: 185px;
+    min-width: 220px;
     padding: 9px 0;
     position: absolute;
     text-align: left;
     white-space: nowrap;
     margin-top: -3px;
+    left: auto;
+    right: 0;
 }
 
 #devlpr #main_content > header .dropdown-menu > li {
@@ -1871,6 +1874,7 @@ textarea.form-control {
     border-color: #ccc;
     margin-bottom: 0 !important;
 }
+
 .tab-content {
     background: #fff;
     padding: 10px 15px;
@@ -1878,9 +1882,11 @@ textarea.form-control {
     border-right: 1px solid #ccc;
     border-bottom: 1px solid #ccc;
 }
+
 .nav-wrapper > .nav-pills:not(.nav-stacked) > li {
     margin-right: 10px;
 }
+
 .nav-pills + .tab-content {
     border: 0 !important;
     padding: 0;
@@ -2238,6 +2244,7 @@ div.mce-edit-area {
 .input-group .form-control {
     padding: 2px 5px;
 }
+
 /*
 .input-group-btn .btn, .form-group .btn {
     padding: 3px 6px;

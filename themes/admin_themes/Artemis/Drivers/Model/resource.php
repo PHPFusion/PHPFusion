@@ -42,9 +42,9 @@ abstract class resource extends Admins {
 
         $sections = Admins::getInstance()->getAdminSections();
 
-        $pages = parent::getAdminPages();
+        $pages = Admins::getInstance()->getAdminPages();
 
-        $is_current_page = parent::getCurrentPage();
+        $is_current_page = Admins::getInstance()->getCurrentPage();
 
         if (!empty($sections) && !empty($pages)) {
 
