@@ -23,8 +23,13 @@ $__BBCODE__[] = [
     'value'          => "olist", 'bbcode_start' => "[olist=TYPE]", 'bbcode_end' => '[/olist]',
     'usage'          => "[olist=(1|a|A|i|I)]".$locale['bb_olist_usage']."[/olist]",
     'onclick'        => "return overlay(this, 'bbcode_olist_".$textarea_name."', 'rightbottom');", 'onmouseover' => "", 'onmouseout' => "",
-    'html_start'     => "<div id='bbcode_olist_".$textarea_name."' class='tbl1 bbcode-popup' style='display: none; border:1px solid black; position: absolute; width: auto; height: auto; text-align: center' onclick=\"overlayclose('bbcode_olist_".$textarea_name."');\">",
+    'html_start'     => "<ul id='bbcode_olist_".$textarea_name."' class='bbcode-popup dropdown-menu' style='display: none; width: 30px;' onclick=\"overlayclose('bbcode_olist_".$textarea_name."');\">",
     'includejscript' => "", 'calljscript' => "", 'phpfunction' => "",
-    'html_middle'    => "<input type='button' value='1' class='button' style='width:30px' onclick=\"addText('".$textarea_name."', '[olist=1]', '[/olist]', '".$inputform_name."');return false;\" /><br /><input type='button' value='a' class='button' style='width:30px' onclick=\"addText('".$textarea_name."', '[olist=a]', '[/olist]', '".$inputform_name."');return false;\" /><br /><input type='button' value='A' class='button' style='width:30px' onclick=\"addText('".$textarea_name."', '[olist=A]', '[/olist]', '".$inputform_name."');return false;\" /><br /><input type='button' value='i' class='button' style='width:30px' onclick=\"addText('".$textarea_name."', '[olist=i]', '[/olist]', '".$inputform_name."');return false;\" /><br /><input type='button' value='I' class='button' style='width:30px' onclick=\"addText('".$textarea_name."', '[olist=I]', '[/olist]', '".$inputform_name."');return false;\" />",
-    'html_end'       => "</div>"
+    'html_middle'    => "<li><input type='button' value='1' class='button btn btn-link btn-block btn-xs' onclick=\"addText('".$textarea_name."', '[olist=1]', '[/olist]', '".$inputform_name."');return false;\" /></li>
+                         <li><input type='button' value='a' class='button btn btn-link btn-block btn-xs' onclick=\"addText('".$textarea_name."', '[olist=a]', '[/olist]', '".$inputform_name."');return false;\" /></li>
+                         <li><input type='button' value='A' class='button btn btn-link btn-block btn-xs' onclick=\"addText('".$textarea_name."', '[olist=A]', '[/olist]', '".$inputform_name."');return false;\" /></li>
+                         <li><input type='button' value='i' class='button btn btn-link btn-block btn-xs' onclick=\"addText('".$textarea_name."', '[olist=i]', '[/olist]', '".$inputform_name."');return false;\" /></li>
+                         <li><input type='button' value='I' class='button btn btn-link btn-block btn-xs' onclick=\"addText('".$textarea_name."', '[olist=I]', '[/olist]', '".$inputform_name."');return false;\" /></li>",
+    'html_end'       => "</ul>",
+    'dropdown'       => TRUE
 ];

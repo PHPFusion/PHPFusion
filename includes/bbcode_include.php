@@ -95,8 +95,14 @@ function display_bbcodes($width, $textarea_name = "message", $inputform_name = "
         } else {
             $phpfunction = "";
         }
-        $bbcodes .= substr($bbdata['value'], 0,
-            1) != "!" ? "<input ".$type." class='bbcode' onclick=\"".$onclick."\" ".$onmouseover." ".$onmouseout." title='".$bbdata['description']."' />\n" : "";
+        if (array_key_exists('dropdown', $bbdata) && $bbdata['dropdown'] != "") {
+            $dropdown = ' <span class="caret" style="margin-top: -30px;margin-left: -8px;"></span>';
+        } else {
+            $dropdown = "";
+        }
+
+        $bbcodes .= substr($bbdata['value'], 0, 1) != "!" ? "<div class='bbcode-img display-inline'><input ".$type." class='bbcode' onclick=\"".$onclick."\" ".$onmouseover." ".$onmouseout." title='".$bbdata['description']."' />".$dropdown."</div>\n" : "";
+
         if (array_key_exists('html_start', $bbdata) && $bbdata['html_start'] != "") {
             $bbcodes .= $bbdata['html_start']."\n";
         }

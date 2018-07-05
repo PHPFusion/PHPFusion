@@ -26,5 +26,6 @@ $__BBCODE__[] = [
     "html_start"  => "<div id='bbcode_smileys_list_".$textarea_name."' class='bbcode-popup' style='display:none; border: 1px solid #ccc; position: absolute; overflow: auto; height: auto; padding: 6px 15px; background: #fff;' onclick=\"overlayclose('bbcode_smileys_list_".$textarea_name."');\">",
     "phpfunction" => "echo displaysmileys('$textarea_name', '$inputform_name');",
     "html_middle" => "",
-    "html_end"    => "</div>"
+    "html_end"    => "</div>",
+    'dropdown'    => TRUE
 ];

@@ -27,4 +27,5 @@ $__BBCODE__[] = [
     "includejscript" => "color_bbcode_include_js.js",
     "calljscript"    => "ColorMap('".$textarea_name."', '".$inputform_name."');", "phpfunction" => "",
     "html_middle"    => "", "html_end" => "</div>",
+    'dropdown'       => TRUE
 ];

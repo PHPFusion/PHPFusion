@@ -55,7 +55,11 @@ class Locale {
      */
     public static function load_locale_file($filename) {
         $locale = [];
-        include $filename;
+
+        if (file_exists($filename)) {
+            include $filename;
+        }
+
         self::$locale += $locale;
         self::$locale_file[$filename] = debug_backtrace();
     }

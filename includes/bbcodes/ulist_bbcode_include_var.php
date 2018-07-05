@@ -25,7 +25,10 @@ $__BBCODE__[] = [
     "usage"       => "[ulist=(disc|circle|square)]".$locale['bb_ulist_usage']."[/ulist]",
     "onclick"     => "return overlay(this, 'bbcode_ulist_".$textarea_name."', 'rightbottom');",
     "onmouseover" => "", "onmouseout" => "", "includejscript" => "", "calljscript" => "", "phpfunction" => "",
-    "html_start"  => "<div id='bbcode_ulist_".$textarea_name."' class='tbl1 bbcode-popup' style='display: none; border:1px solid black; position: absolute; width: auto; height: auto; text-align: center' onclick=\"overlayclose('bbcode_ulist_".$textarea_name."');\">",
-    "html_middle" => "<input type='button' value='".$locale['bb_ulist_1']."' class='button' style='width:70px' onclick=\"addText('".$textarea_name."', '[ulist=disc]', '[/ulist]', '".$inputform_name."');return false;\" /><br /><input type='button' value='".$locale['bb_ulist_2']."' class='button' style='width:70px' onclick=\"addText('".$textarea_name."', '[ulist=circle]', '[/ulist]', '".$inputform_name."');return false;\" /><br /><input type='button' value='".$locale['bb_ulist_3']."' class='button' style='width:70px' onclick=\"addText('".$textarea_name."', '[ulist=square]', '[/ulist]', '".$inputform_name."');return false;\" />",
-    "html_end"    => "</div>"
+    "html_start"  => "<ul id='bbcode_ulist_".$textarea_name."' class='bbcode-popup dropdown-menu' style='display: none; width:70px' onclick=\"overlayclose('bbcode_ulist_".$textarea_name."');\">",
+    "html_middle" => "<li><input type='button' value='".$locale['bb_ulist_1']."' class='button btn btn-link btn-block btn-xs' onclick=\"addText('".$textarea_name."', '[ulist=disc]', '[/ulist]', '".$inputform_name."');return false;\" /></li>
+                      <li><input type='button' value='".$locale['bb_ulist_2']."' class='button btn btn-link btn-block btn-xs' onclick=\"addText('".$textarea_name."', '[ulist=circle]', '[/ulist]', '".$inputform_name."');return false;\" /></li>
+                      <li><input type='button' value='".$locale['bb_ulist_3']."' class='button btn btn-link btn-block btn-xs' onclick=\"addText('".$textarea_name."', '[ulist=square]', '[/ulist]', '".$inputform_name."');return false;\" /></li>",
+    "html_end"    => "</ul>",
+    'dropdown'    => TRUE
 ];
