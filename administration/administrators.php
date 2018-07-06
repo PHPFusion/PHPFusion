@@ -265,9 +265,7 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
                 ]);
             }
             echo form_button('add_admin', $locale['ADM_461'], $locale['ADM_461'], ['class' => 'btn-primary']);
-            add_to_jquery("
-                $('#add_admin').bind('click', function() { confirm('".$locale['ADM_461']."'); });
-            ");
+            add_to_jquery("$('#add_admin').bind('click', function() { return confirm('".$locale['ADM_461']."'); });");
             echo "</div>\n";
             echo "</div>\n";
             echo closeform();
