@@ -199,6 +199,9 @@ $locale['708'] = "Default values for user options";
 $locale['709'] = "Email notification?";
 $locale['710'] = "Save sent PM's?";
 $locale['711'] = "Note: Individual user options take precedence if they're set. If no user option is set, then the global options are applied.";
+$locale['712'] = "Messages has been deleted.";
+$locale['713'] = "Are you sure to delete all private messages?";
+$locale['714'] = "Delete Messages";
 
 // Save Settings
 $locale['750'] = "Save Settings";
