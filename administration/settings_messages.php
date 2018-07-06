@@ -53,11 +53,17 @@ if (isset($_POST['save_settings'])) {
     }
 }
 
+if (isset($_POST['delete-messages'])) {
+    dbquery("TRUNCATE TABLE ".DB_MESSAGES);
+    addNotice('success', $locale['712']);
+    redirect(FUSION_REQUEST);
+}
+
 opentable($locale['message_settings']);
 echo "<div class='well'>".$locale['message_description']."</div>\n";
 echo openform('settingsform', 'post', FUSION_REQUEST);
 echo "<div class='row'>\n<div class='col-xs-12 col-sm-6'>\n";
-openside('');
+echo "<div class='panel panel-danger'><div class='panel-body'>";
 echo form_text('pm_inbox_limit', $locale['701'], $pm_settings['pm_inbox_limit'], [
     'type'        => 'number',
     'max_length'  => 2,
@@ -77,10 +83,11 @@ echo form_text('pm_archive_limit', $locale['703'], $pm_settings['pm_archive_limi
     'inner_width' => '100px',
     'inline'      => TRUE
 ]);
-closeside();
+echo "</div></div>";
+
 echo "</div>\n";
 echo "<div class='col-xs-12 col-sm-6'>\n";
-openside('');
+echo "<div class='panel panel-danger'><div class='panel-body'>";
 echo form_select('pm_email_notify', $locale['709'], $pm_settings['pm_email_notify'], [
     'options' => ['1' => $locale['no'], '2' => $locale['yes']],
     'width'   => '100%'
@@ -89,21 +96,14 @@ echo form_select('pm_save_sent', $locale['710'], $pm_settings['pm_save_sent'], [
     'options' => ['1' => $locale['no'], '2' => $locale['yes']],
     'width'   => '100%'
 ]);
-closeside();
+echo "</div></div>";
 
-if (isset($_POST['delete-messages'])) {
-    dbquery("TRUNCATE TABLE ".DB_MESSAGES);
-    addNotice('success', $locale['712']);
-    redirect(FUSION_REQUEST);
-}
-
-echo '<div class="panel panel-danger"><div class="panel-body">';
+echo "<div class='panel panel-danger'><div class='panel-body'>";
 openform('delete-pm', 'post', FUSION_REQUEST);
 fusion_confirm_exit();
 add_to_jquery("$('#delete-messages').bind('click', function() { return confirm('".$locale['713']."'); });");
-echo form_button('delete-messages', $locale['714'], 'deletepm', ['class' => 'btn-danger']);
-echo '</div></div>';
-closeside();
+echo form_button('delete-messages', $locale['714'], $locale['714'], ['class' => 'btn-danger', 'icon' => 'fa fa-trash-o']);
+echo "</div></div>";
 
 echo "</div>\n</div>\n";
 echo form_button('save_settings', $locale['750'], $locale['750'], ['class' => 'btn-success']);
