@@ -380,17 +380,20 @@ function trim_text($str, $length = FALSE) {
 
 /**
  * Validate numeric input
- * Note : Negative numbers are not numbers. Use is_numeric($value) instead.
  *
  * @param            $value
  * @param bool|FALSE $decimal
+ * @param bool       $negative
  *
  * @return bool
  */
-function isnum($value, $decimal = FALSE) {
-    $float = $decimal ? '(\.{0,1})[0-9]*' : '';
-
-    return !is_array($value) and preg_match("/^[0-9]+".$float."$/", $value);
+function isnum($value, $decimal = FALSE, $negative = FALSE) {
+    if ($negative == TRUE) {
+        return is_numeric($value);
+    } else {
+        $float = $decimal ? '(.{0,1})[0-9]*' : '';
+        return !is_array($value) and preg_match("/^[0-9]+".$float."$/", $value);
+    }
 }
 
 /**
