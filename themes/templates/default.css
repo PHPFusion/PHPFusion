@@ -692,7 +692,6 @@ Grids
     color: rgb(138, 109, 59) !important;
 }
 
-
 .blur {
     -webkit-filter: blur(5px) grayscale(50%);
 }
@@ -998,21 +997,6 @@ dl, dt, dd {
     -o-transition: height 0.2s;
     -moz-transition: height 0.2s;
     transition: height 0.2s;
-}
-
-/* Editor */
-.editor-wrapper .nav {
-    display: inline-block;
-    float: right;
-    padding: 0;
-}
-
-.editor-wrapper .panel-heading, .editor-wrapper .panel-footer {
-    background: transparent;
-}
-
-.editor-wrapper > ul > li {
-    float: right;
 }
 
 /* List group item */
@@ -1397,6 +1381,25 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
     background-color: #f5f4f4;
     word-wrap: break-word;
     word-break: break-all;
+}
+
+.panel-txtarea .bbcode {
+    margin: 5px 1px;
+}
+
+/* Editor */
+.editor-wrapper .nav {
+    display: inline-block;
+    float: right;
+    padding: 0;
+}
+
+.editor-wrapper .panel-heading, .editor-wrapper .panel-footer {
+    background: transparent;
+}
+
+.editor-wrapper > ul > li {
+    float: right;
 }
 
 /** Media containers*/
