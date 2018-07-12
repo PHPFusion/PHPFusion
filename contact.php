@@ -94,6 +94,8 @@ $site_email = hide_email(fusion_get_settings('siteemail'));
 $info['message'] = str_replace(["[PM_LINK]", "[SITE_EMAIL]"], ["<a href='messages.php?msg_send=1'>".$locale['global_121']."</a>", $site_email], $locale['CT_401']);
 $info['input'] = $input;
 
+$info['captcha_code'] = '';
+
 if (iGUEST) {
     include INCLUDES.'captchas/'.$settings['captcha'].'/captcha_display.php';
     $captcha_settings = [
