@@ -80,9 +80,6 @@ class ImageRepo {
             //M
             //N
             "noavatar"      => IMAGES."avatars/no-avatar.jpg",
-            "noavatar50"    => IMAGES."avatars/noavatar50.png",
-            "noavatar100"   => IMAGES."avatars/noavatar100.png",
-            "noavatar150"   => IMAGES."avatars/noavatar150.png",
             //O
             //P
             "panel_on"      => IMAGES."panel_on.gif",

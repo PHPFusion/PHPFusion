@@ -630,7 +630,7 @@ function user_search($user_id) {
     if (dbrows($result) > 0) {
         while ($udata = dbarray($result)) {
             $user_id = $udata['user_id'];
-            $user_avatar = ($udata['user_avatar']) ? $udata['user_avatar'] : "noavatar50.png";
+            $user_avatar = ($udata['user_avatar']) ? $udata['user_avatar'] : "noavatar.jpg";
             $user_name = $udata['user_name'];
             $user_level = getuserlevel($udata['user_level']);
             $user_opts[] = [

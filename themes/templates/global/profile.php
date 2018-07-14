@@ -157,7 +157,7 @@ if (!function_exists('display_user_profile')) {
                         $avatar['user_name'] = $info['user_name'];
                         $avatar['user_avatar'] = $field_data['value'];
                         $avatar['user_status'] = $field_data['status'];
-                        $user_avatar = display_avatar($avatar, '550px', 'profile-avatar', FALSE, 'img-responsive');
+                        $user_avatar = display_avatar($avatar, '130px', 'profile-avatar', FALSE, 'img-responsive');
                         break;
                     case 'profile_user_name':
                         $user_name = $field_data['value'];

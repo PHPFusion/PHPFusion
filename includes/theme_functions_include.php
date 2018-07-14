@@ -47,7 +47,7 @@ function showrendertime($queries = TRUE) {
 /**
  * Developer tools only (Translations not Required)
  *
- * @param bool   $show_sql_performance  - true to pop up SQL analysis modal
+ * @param bool   $show_sql_performance - true to pop up SQL analysis modal
  * @param string $performance_threshold - results that is slower than this will be highlighted
  *
  * @return string
@@ -750,6 +750,7 @@ if (!function_exists('display_avatar')) {
         if (empty($userdata)) {
             $userdata = [];
         }
+
         $userdata += [
             'user_id'     => 0,
             'user_name'   => '',
@@ -760,16 +761,49 @@ if (!function_exists('display_avatar')) {
         if (!$userdata['user_id']) {
             $userdata['user_id'] = 1;
         }
+
         $link = fusion_get_settings('hide_userprofiles') == TRUE ? (iMEMBER ? $link : FALSE) : $link;
         $class = ($class) ? "class='$class'" : '';
-        // Need a full path - or else Jquery script cannot use this function.
-        $default_avatar = !empty($custom_avatar) ? $custom_avatar : fusion_get_settings('siteurl')."images/avatars/no-avatar.jpg";
-        $user_avatar = fusion_get_settings('siteurl')."images/avatars/".$userdata['user_avatar'];
+
         $hasAvatar = $userdata['user_avatar'] && file_exists(IMAGES."avatars/".$userdata['user_avatar']) && $userdata['user_status'] != '5' && $userdata['user_status'] != '6';
-        $imgTpl = "<img class='avatar img-responsive $img_class' alt='".(!empty($userdata['user_name']) ? $userdata['user_name'] : 'Guest')."' data-pin-nopin='true' style='display:inline; width:$size; max-height:$size;' src='%s'>";
-        $img = sprintf($imgTpl, $hasAvatar ? $user_avatar : $default_avatar);
+        $name = !empty($userdata['user_name']) ? $userdata['user_name'] : 'Guest';
+
+        if ($hasAvatar) {
+            $user_avatar = fusion_get_settings('siteurl')."images/avatars/".$userdata['user_avatar'];
+            $imgTpl = "<img class='avatar img-responsive $img_class' alt='".$name."' data-pin-nopin='true' style='display:inline; width:$size; max-height:$size;' src='%s'>";
+            $img = sprintf($imgTpl, $user_avatar);
+        } else {
+            if (!empty($custom_avatar) && file_exists($custom_avatar)) {
+                $imgTpl = "<img class='avatar img-responsive $img_class' alt='".$name."' data-pin-nopin='true' style='display:inline; width:$size; max-height:$size;' src='%s'>";
+                $img = sprintf($imgTpl, $custom_avatar);
+            } else {
+                $color = stringToColorCode($userdata['user_name']);
+                $font_color = get_brightness($color) > 130 ? '000' : 'fff';
+                $font_size = str_replace(['px', '%', 'em', 'rem'], '', $size) / 1.5;
+                $first_char = substr($userdata['user_name'], 0, 1);
+                $first_char = strtoupper($first_char);
+                $img = '<div class="display-inline-block va"><div style="width:'.$size.';height:'.$size.';background:#'.$color.';color:#'.$font_color.';font-size:'.$font_size.'px;" class="defaultavatar '.$img_class.'"><span>'.$first_char.'</span></div></div>';
+            }
+        }
+
         return $link ? sprintf("<a $class title='".$userdata['user_name']."' href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'>%s</a>", $img) : $img;
     }
+}
+
+function stringToColorCode($str) {
+    $code = dechex(crc32($str));
+    $code = substr($code, 0, 6);
+
+    return $code;
+}
+
+function get_brightness($hex) {
+    $hex = str_replace('#', '', $hex);
+    $r = hexdec(substr($hex, 0, 2));
+    $g = hexdec(substr($hex, 2, 2));
+    $b = hexdec(substr($hex, 4, 2));
+
+    return (($r * 299) + ($g * 587) + ($b * 114)) / 1000;
 }
 
 if (!function_exists('colorbox')) {
