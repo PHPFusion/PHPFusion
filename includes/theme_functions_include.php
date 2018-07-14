@@ -782,7 +782,7 @@ if (!function_exists('display_avatar')) {
                 $font_size = str_replace(['px', '%', 'em', 'rem'], '', $size) / 1.5;
                 $first_char = substr($userdata['user_name'], 0, 1);
                 $first_char = strtoupper($first_char);
-                $img = '<div class="display-inline-block va"><div style="width:'.$size.';height:'.$size.';background:#'.$color.';color:#'.$font_color.';font-size:'.$font_size.'px;" class="defaultavatar '.$img_class.'"><span>'.$first_char.'</span></div></div>';
+                $img = '<div class="display-inline-block va '.$img_class.'"><div style="width:'.$size.';height:'.$size.';background:#'.$color.';color:#'.$font_color.';font-size:'.$font_size.'px;" class="defaultavatar"><span>'.$first_char.'</span></div></div>';
             }
         }
 
