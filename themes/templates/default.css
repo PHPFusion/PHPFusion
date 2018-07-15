@@ -1571,16 +1571,6 @@ tr:hover > td .tbl_actions {
     width: 100%;
 }
 
-.defaultavatar {
-    display: table;
-    text-align: center;
-}
-
-.defaultavatar > span {
-    display: table-cell;
-    vertical-align: middle;
-}
-
 html[dir="rtl"] body {
     direction: rtl;
 }

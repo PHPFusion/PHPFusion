@@ -780,10 +780,9 @@ if (!function_exists('display_avatar')) {
             } else {
                 $color = stringToColorCode($userdata['user_name']);
                 $font_color = get_brightness($color) > 130 ? '000' : 'fff';
-                $font_size = str_replace(['px', '%', 'em', 'rem'], '', $size) / 1.5;
                 $first_char = substr($userdata['user_name'], 0, 1);
                 $first_char = strtoupper($first_char);
-                $img = '<div class="display-inline-block va '.$img_class.'"><div style="width:'.$size.';height:'.$size.';background:#'.$color.';color:#'.$font_color.';font-size:'.$font_size.'px;" class="defaultavatar"><span>'.$first_char.'</span></div></div>';
+                $img = '<div class="display-inline-block va avatar img-responsive" style="width:'.$size.';max-height:'.$size.';"><svg class="'.$img_class.'" version="1.1" viewBox="0 0 20 20"><rect fill="#'.$color.'" stroke-width="0" y="0" x="0" height="100%" width="100%"/><text fill="#'.$font_color.'" x="50%" y="50%" text-anchor="middle" alignment-baseline="central" dy="-0.05em">'.$first_char.'</text></svg></div>';
             }
         }
 
