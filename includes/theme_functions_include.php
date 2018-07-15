@@ -746,7 +746,7 @@ if (!function_exists('tablebreak')) {
  * @return string
  */
 if (!function_exists('display_avatar')) {
-    function display_avatar(array $userdata, $size, $class = '', $link = TRUE, $img_class = 'img-thumbnail', $custom_avatar = '') {
+    function display_avatar(array $userdata, $size, $class = '', $link = TRUE, $img_class = '', $custom_avatar = '') {
         if (empty($userdata)) {
             $userdata = [];
         }
@@ -763,6 +763,7 @@ if (!function_exists('display_avatar')) {
         }
 
         $link = fusion_get_settings('hide_userprofiles') == TRUE ? (iMEMBER ? $link : FALSE) : $link;
+        $img_class = $img_class ? $img_class : 'img-thumbnail';
         $class = ($class) ? "class='$class'" : '';
 
         $hasAvatar = $userdata['user_avatar'] && file_exists(IMAGES."avatars/".$userdata['user_avatar']) && $userdata['user_status'] != '5' && $userdata['user_status'] != '6';
