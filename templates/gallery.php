@@ -40,18 +40,16 @@ if (!function_exists("render_gallery")) {
                 echo "</div>\n";
                 echo "<div class='panel-body'>\n";
                 echo "<span class='album_count'>".format_word($info['photo_rows'], $locale['461'])."</span>";
+                echo "<br/><span><abbr title='".$locale['464'].showdate("shortdate", $info['album_datestamp'])."'><i class='fa fa-calendar text-lighter'></i></abbr> ".timer($info['album_datestamp']).'</span>';
                 echo "</div>\n";
-                echo "<div class='panel-footer'>\n";
-                echo "<abbr title='".$locale['464'].showdate("shortdate",
-                        $info['album_datestamp'])."'><i class='fa fa-calendar text-lighter'></i></abbr> ".timer($info['album_datestamp'])."";
+
                 if (!empty($info['album_edit']) && !empty($info['album_delete'])) {
-                    echo "</div>\n<div class='panel-footer'>\n";
-                    echo '<div class="btn-group btn-group-sm">';
+                    echo "<div class='panel-footer text-center'><div class='btn-group btn-group-sm'>";
                     echo "<a class='btn btn-default' href='".$info['album_edit']['link']."' title='".$info['album_edit']['name']."'><i class='fa fa-edit fa-lg'></i></a>\n";
                     echo "<a class='btn btn-danger' href='".$info['album_delete']['link']."' title='".$info['album_delete']['name']."'><i class='fa fa-trash fa-lg'></i></a>\n";
-                    echo '</div>';
+                    echo '</div></div>';
                 }
-                echo "</div></div>\n";
+                echo "</div>\n";
             }
 
             echo "<div class='row m-t-20 m-b-20'>\n";
@@ -76,21 +74,40 @@ if (!function_exists('render_photo_album')) {
     function render_photo_album($info) {
         $locale = fusion_get_locale();
         echo render_breadcrumbs();
-        opentable($locale['430']);
-        echo "<!--pre_album_info-->\n";
-        echo "<div class='clearfix well'>\n";
-        echo "<h4 class='album_title m-t-0'>".$info['album_title']."</h4>\n";
-        if (isset($info['album_stats'])) {
-            echo "<span class='album_stats'>\n".$info['album_stats']."</span>\n";
+
+        add_to_css("
+        .panel-default > .panel-image-wrapper {
+            height: 120px;
+            max-height: 120px;
+            min-width: 100%;
+            overflow: hidden;
         }
-        if ($info['album_description']) {
-            echo "<div class='m-t-20'>\n";
-            echo "<!--photogallery_album_desc-->\n";
-            echo "<span class='album_description'>\n".parse_textarea($info['album_description'], TRUE, TRUE, FALSE, '', TRUE)."</span><br/>\n";
+        .panel-default > .panel-image-wrapper img {
+            margin-top: inherit !important;
+            margin-left: inherit !important;
+        }
+        .panel-default > .panel-image-wrapper .thumb > a > img {
+            display: block;
+            width: 100%;
+        }");
+
+        opentable($info['album_title']);
+        echo "<!--pre_album_info-->\n";
+
+        if (!empty($info['album_stats']) || !empty($info['album_description'])) {
+            echo "<div class='clearfix well'>\n";
+            if (isset($info['album_stats'])) {
+                echo "<span class='album_stats'>\n".$info['album_stats']."</span>\n";
+            }
+            if ($info['album_description']) {
+                echo "<div class='m-t-20'>\n";
+                echo "<!--photogallery_album_desc-->\n";
+                echo "<span class='album_description'>\n".parse_textarea($info['album_description'], TRUE, TRUE, FALSE, '', TRUE)."</span><br/>\n";
+                echo "</div>\n";
+            }
             echo "</div>\n";
         }
-        echo "</div>\n";
-        echo "<hr/>\n";
+
         if (isset($info['page_nav'])) {
             echo $info['page_nav'];
         }
@@ -100,26 +117,29 @@ if (!function_exists('render_photo_album')) {
             $gallery_settings = get_settings('gallery');
             $locale = fusion_get_locale();
             echo "<div class='panel panel-default'>\n";
-            echo "<div class='overflow-hide' style='height: 120px;'>\n";
+            echo "<div class='panel-image-wrapper' title='".$locale['450']."'>\n";
             echo $info['image'];
             echo "</div>\n";
-            echo "<div class='panel-body'>\n";
-            echo "<a class='word-break' href='".$info['photo_link']['link']."'><strong>".$locale['450']."</strong></a>\n<br/>";
-            echo "</div>\n";
+
             echo "<div class='panel-footer'>\n";
-            echo "<span><i class='fa fa-eye fa-fw'></i>".$info['photo_views']."</span></br>\n";
+            echo '<div class="clearfix text-center">';
+            echo "<span class='m-r-5'><i class='fa fa-eye fa-fw'></i> ".$info['photo_views']."</span>\n";
             if (isset($info['photo_comments'])) {
-                echo "<span><i class='fa fa-comment-o fa-fw'></i><a href='".$info['photo_comments']['link']."'>".$info['photo_comments']['word']."</a>\n</span></br>\n";
+                echo "<span class='m-r-5'><i class='fa fa-comment-o fa-fw'></i> <a href='".$info['photo_comments']['link']."'>".$info['photo_comments']['name']."</a>\n</span>\n";
             }
             if (isset($info['photo_ratings'])) {
-                echo "<span><i class='fa fa-star-o fa-fw'></i><a href='".$info['photo_ratings']['link']."'>".$info['photo_ratings']['word']."</a>\n</span></br>\n";
+                echo "<span><i class='fa fa-star-o fa-fw'></i> <a href='".$info['photo_ratings']['link']."'>".$info['photo_ratings']['name']."</a>\n</span>\n";
             }
+            echo '</div>';
+
+            echo '</div>';
+            echo "<div class='panel-footer'>\n";
 
             echo "<small><strong>".$locale['434']."</strong></small> ";
-            echo display_avatar($info, "15px", "m-l-5 m-r-5", "", "");
+            echo display_avatar($info, "15px", "m-l-5 m-r-5", "", "img-rounded");
             echo ' '.profile_link($info['user_id'], $info['user_name'], $info['user_status']);
             echo "<br/><abbr title='".$locale['464'].showdate("shortdate", $info['photo_datestamp'])."'>
-			<i class='fa fa-calendar text-lighter'></i></abbr> ".timer($info['photo_datestamp'])."";
+            <i class='fa fa-calendar text-lighter'></i></abbr> ".timer($info['photo_datestamp'])."";
             if (!empty($info['photo_edit']) && !empty($info['photo_delete'])) {
                 echo "</div>\n<div class='panel-footer'>\n";
                 echo '<div class="btn-group center-x">';
