@@ -191,11 +191,15 @@ class Members_Display extends Members_Admin {
         $rowCount = dbcount('(user_id)', DB_USERS, ltrim($status_cond, 'WHERE ').$search_cond, $query_bind);
         $rowstart = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $rowCount ? intval($_GET['rowstart']) : 0;
         $limit = 16;
+        $newrows = 0;
+        $newrowsCount = 0;
         if (in_array(2, $selected_status)) {
+        $newrowsCount = dbcount('(user_name)', DB_NEW_USERS, '');
             $nquery = "SELECT * FROM ".DB_NEW_USERS;
             $nresult = dbquery($nquery);
             $i = 999999;
             while ($data = dbarray($nresult)) {
+                $newrows++;
                 $list[$data['user_name']] = [
                     'user_id'      => $i,
                     'checkbox'     => '',
@@ -219,7 +223,7 @@ class Members_Display extends Members_Admin {
         $page_nav = $rowCount > $limit ? makepagenav($rowstart, $limit, $rowCount, 5, FUSION_SELF.fusion_get_aidlink().'&amp;') : '';
         $interface = new static();
 
-        $list_sum = sprintf(self::$locale['ME_407'], implode(', ', array_map([$interface, 'list_uri'], $statuses)), $rows, $rowCount);
+        $list_sum = sprintf(self::$locale['ME_407'], implode(', ', array_map([$interface, 'list_uri'], $statuses)), $rows+$newrows, $rowCount+$newrowsCount);
 
         if ($rows != '0') {
             while ($data = dbarray($result)) {
