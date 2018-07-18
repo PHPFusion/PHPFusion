@@ -32,6 +32,7 @@ class Members_Display extends Members_Admin {
 
     /**
      * List members
+     *
      * @return string
      */
     public static function render_listing() {
@@ -194,7 +195,7 @@ class Members_Display extends Members_Admin {
         $newrows = 0;
         $newrowsCount = 0;
         if (in_array(2, $selected_status)) {
-        $newrowsCount = dbcount('(user_name)', DB_NEW_USERS, '');
+            $newrowsCount = dbcount('(user_name)', DB_NEW_USERS, '');
             $nquery = "SELECT * FROM ".DB_NEW_USERS;
             $nresult = dbquery($nquery);
             $i = 999999;
@@ -223,7 +224,7 @@ class Members_Display extends Members_Admin {
         $page_nav = $rowCount > $limit ? makepagenav($rowstart, $limit, $rowCount, 5, FUSION_SELF.fusion_get_aidlink().'&amp;') : '';
         $interface = new static();
 
-        $list_sum = sprintf(self::$locale['ME_407'], implode(', ', array_map([$interface, 'list_uri'], $statuses)), $rows+$newrows, $rowCount+$newrowsCount);
+        $list_sum = sprintf(self::$locale['ME_407'], implode(', ', array_map([$interface, 'list_uri'], $statuses)), $rows + $newrows, $rowCount + $newrowsCount);
 
         if ($rows != '0') {
             while ($data = dbarray($result)) {
@@ -339,6 +340,7 @@ class Members_Display extends Members_Admin {
 
     /**
      * List member link
+     *
      * @param $value
      *
      * @return string
@@ -349,6 +351,7 @@ class Members_Display extends Members_Admin {
 
     /**
      * Listing formatter for user results
+     *
      * @param $user_id
      * @param $list
      * @param $selected_fields
