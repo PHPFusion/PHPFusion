@@ -20,3 +20,13 @@ $locale['email_suspend_subject'] = "Your account on [SITENAME] has been suspende
 $locale['email_suspend_message'] = "Hello [USER_NAME],<br/>
 Your account on [SITENAME] has been suspended by [ADMIN_USERNAME] until [DATE] (site time) because of the following reason:<br/>
 [REASON]<br/>If you want more information about this suspension, please, contact the site administrator at [SITENAME].<br/>Regards,<br/>[SITEUSERNAME]";
+$locale['email_resend_subject'] = "Resend Activation Email - [SITENAME]";
+$locale['email_resend_message'] = "Hello [USER_NAME],<br />
+You received this email because you did not log in to our site - [SITENAME].<br />
+If you do not sign in to our site within 1 day, your registration request will be canceled.<br />
+You have registered with the following information:<br />
+username: [USER_NAME]<br />
+You can activate the following link:<br />
+[ACTIVATION_LINK]<br />
+Regards,<br />
+[SITENAME]";

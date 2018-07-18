@@ -200,10 +200,11 @@ class Members_Display extends Members_Admin {
                     'user_id'      => $i,
                     'checkbox'     => '',
                     'user_name'    => $data['user_name']."<br />".getsuspension(2),
+                    'user_status'  => getsuspension(2),
                     'user_level'   => self::$locale['ME_562'],
                     'user_actions' => "<a href='".self::$status_uri['delete'].$data['user_name']."&amp;newuser=1'>".self::$locale['delete']."</a>",
-                    'user_email'   => $data['user_email'],
-                    'user_joined'  => showdate('longdate', $data['user_datestamp'])
+                    'user_email'   => $data['user_email']."<br /><a href='".self::$status_uri['resend'].$data['user_name']."' title='".self::$locale['u165']."'><i class='fa fa-envelope fa-lg m-r-10'></i></a>",
+                    'user_joined'  => showdate('longdate', $data['user_datestamp']),
                 ];
                 $i++;
             }

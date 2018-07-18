@@ -119,12 +119,14 @@ $locale['u153'] = "Activation email could not be sent.";
 $locale['u154'] = "Please [LINK]contact[/LINK] the Site Administrator.";
 $locale['u155'] = "Activate Account";
 $locale['u156'] = "Please type in current password to change email.";
+$locale['u157'] = "Resend Activation Email could not be sent.";
 // Success / Fail
 $locale['u160'] = "Registration complete";
 $locale['u161'] = "You can now log in.";
 $locale['u162'] = "An administrator will activate your account shortly.";
 $locale['u163'] = "Profile was successfully updated.";
 $locale['u164'] = "Update failed";
+$locale['u165'] = "Resend Activation Email.";
 
 //$locale['u165'] = "Registration failed";
 $locale['u167'] = "for the following reason(s):";

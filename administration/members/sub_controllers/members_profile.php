@@ -266,4 +266,34 @@ class Members_Profile extends Members_Admin {
         echo closeform();
         echo "</div>\n";
     }
+
+    public static function resend_email() {
+        if (isset($_GET['lookup']) && !isnum($_GET['lookup'])) {
+            $dbquery = dbquery("SELECT * FROM ".DB_NEW_USERS."
+                WHERE user_name=:username", [':username' => $_GET['lookup']]);
+            if (dbrows($dbquery)) {
+                require_once INCLUDES."sendmail_include.php";
+                self::$user_data = dbarray($dbquery);
+                $activationUrl = fusion_get_settings('siteurl')."register.php?email=".self::$user_data['user_email']."&code=".self::$user_data['user_code'];
+                $message = str_replace("USER_NAME", self::$user_data['user_name'], self::$locale['email_resend_message']);
+                $message = str_replace("[SITENAME]", self::$settings['sitename'], $message);
+                $message = str_replace("[ACTIVATION_LINK]", $activationUrl, $message);
+                $subject = str_replace("[SITENAME]", self::$settings['sitename'], self::$locale['email_resend_subject']);
+
+                if (!sendemail(self::$user_data['user_name'], self::$user_data['user_email'], self::$settings['siteusername'], self::$settings['siteemail'], $subject, $message)) {
+                    addNotice('warning', self::$locale['u157'], 'all');
+                }
+                if (\defender::safe()) {
+                    dbquery("UPDATE ".DB_NEW_USERS." SET user_datestamp = '".time()."' WHERE user_name=:user_name", [':user_name' => $_GET['lookup']]);
+                    addNotice('success', self::$locale['u165']);
+                    redirect(clean_request('', ['ref', 'lookup'], FALSE));
+                }
+
+            } else {
+                redirect(FUSION_SELF.fusion_get_aidlink());
+            }
+
+        }
+
+    }
 }
