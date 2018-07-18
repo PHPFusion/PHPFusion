@@ -256,13 +256,13 @@ class NewsAdmin extends NewsAdminModel {
 
             $extendedSettings = [
                 'preview'     => TRUE,
-                'html'        => TRUE,
-                'autosize'    => TRUE,
+                'type'        => 'tinymce',
+                'tinymce'     => 'advanced',
+                'height'      => '600px',
                 'placeholder' => self::$locale['news_0005'],
                 'form_name'   => 'news_form',
                 'path'        => [IMAGES, IMAGES_N, IMAGES_NC],
                 'wordcount'   => TRUE,
-                'rows'        => 36,
                 'file_filter' => explode(',', $news_settings['news_file_types']),
             ];
         }
@@ -293,7 +293,7 @@ class NewsAdmin extends NewsAdminModel {
                 'placeholder' => self::$locale['news_0200'],
             ]
         );
-        add_to_head("<style>.panel-txtarea {border:0; padding-bottom:0;} .tab-content > .tab > .form-group { margin:0; }</style>");
+        add_to_css(".panel-txtarea {border:0; padding-bottom:0;} .tab-content > .tab > .form-group { margin:0; }");
         echo "<ul class='nav nav-tabs m-b-15 clearfix'>\n";
         echo "<li class='active'><a data-toggle='tab' href='#snippet'>".self::$locale['news_0203']."</a></li>";
         echo "<li><a data-toggle='tab' href='#extended'>".self::$locale['news_0204']."</a></li>";
