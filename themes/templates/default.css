@@ -982,7 +982,7 @@ dl, dt, dd {
     white-space: nowrap;
 }
 
-.lastpost-avatar img {
+.lastpost-avatar > .avatar {
     width: 40px;
     margin-right: 4px;
 }
