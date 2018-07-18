@@ -199,7 +199,8 @@ class Members_Display extends Members_Admin {
                 $list[$data['user_name']] = [
                     'user_id'      => $i,
                     'checkbox'     => '',
-                    'user_name'    => $data['user_name']."<br />".getsuspension(2),
+                    'user_name'    => "<div class='clearfix'>\n<div class='pull-left m-r-10'>".display_avatar($data, '35px', '', FALSE, '')."</div>
+                        <div class='overflow-hide'>".$data['user_name']."<br/>".getsuspension(2)."</div></div>",
                     'user_status'  => getsuspension(2),
                     'user_level'   => self::$locale['ME_562'],
                     'user_actions' => "<a href='".self::$status_uri['delete'].$data['user_name']."&amp;newuser=1'>".self::$locale['delete']."</a>",
