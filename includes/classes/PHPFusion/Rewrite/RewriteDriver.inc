@@ -528,11 +528,7 @@ abstract class RewriteDriver {
                                                 for ($i = 0; $i < count($output_matches[0]); $i++) {
                                                     // @inspection for parsing error
                                                     $corresponding_value = (!empty($tag_values[$tagVal][$i]) ? $tag_values[$tagVal][$i] : "");
-
-                                                    if (isset($other_values[$key][$i])) {
-                                                        $other_values[$key][$i] = (!empty($corresponding_value) ? $value[$corresponding_value] : "");
-                                                    }
-
+                                                    $other_values[$key][$i] = (!empty($value[$corresponding_value]) ? $value[$corresponding_value] : "");
                                                     $loop_count++;
                                                 }
                                             }
