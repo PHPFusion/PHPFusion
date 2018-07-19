@@ -304,11 +304,13 @@ if (!empty($info['download_max_rows']) && ($info['download_max_rows'] > $dl_sett
     if (!empty($_GET['cat_id']) && isnum($_GET['cat_id'])) {
         $page_nav_link = INFUSIONS."downloads/downloads.php?cat_id=".$_GET['cat_id'].(!empty($_GET['type']) ? "&amp;type=".$_GET['type'] : '')."&amp;";
     } else if (!empty($_GET['author']) && isnum($_GET['author'])) {
+        $info['download_max_rows'] = dbcount("('download_id')", DB_DOWNLOADS, "download_user='".intval($_GET['author'])."' AND ".groupaccess('download_visibility'));
+        $_GET['rowstart'] = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $info['download_max_rows']) ? $_GET['rowstart'] : 0;
+
         $page_nav_link = INFUSIONS."downloads/downloads.php?author=".$_GET['author']."&amp;";
     }
 
-    $info['download_nav'] = makepagenav($_GET['rowstart'], $dl_settings['download_pagination'],
-        $info['download_max_rows'], 3, $page_nav_link);
+    $info['download_nav'] = makepagenav($_GET['rowstart'], $dl_settings['download_pagination'], $info['download_max_rows'], 3, $page_nav_link);
 }
 
 if (!empty($info['download_rows'])) {
