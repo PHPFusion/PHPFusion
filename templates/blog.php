@@ -201,21 +201,22 @@ if (!function_exists('display_blog_menu')) {
         echo "</ul>\n";
         closeside();
         openside('<i class="fa fa-calendar"></i> '.$locale['blog_1004']);
-        echo "<ul class='block'>\n";
+        echo "<ul id='blog-archive'>\n";
         if (!empty($info['blog_archive'])) {
-            $current_year = 0;
             foreach ($info['blog_archive'] as $year => $archive_data) {
-                if ($current_year !== $year) {
-                    echo "<li class='text-dark strong'>".$year."</li>\n";
-                }
-                if (!empty($archive_data)) {
-                    foreach ($archive_data as $month => $a_data) {
-                        echo "<li ".($a_data['active'] ? "class='active strong'" : '').">
-                        <a href='".$a_data['link']."'>".$a_data['title']."</a> <span class='badge m-l-10'>".$a_data['count']."</span>
-                        </li>\n";
-                    }
-                }
-                $current_year = $year;
+                $active = $year == date('Y') ? " text-dark" : '';
+                echo "<li>";
+                    $collaped_ = isset($_GET['archive']) && $_GET['archive'] == $year ? ' strong' : '';
+                    echo "<a class='".$active.$collaped_."' data-toggle='collapse' data-parent='#blog-archive' href='#blog-".$year."'>".$year."</a>";
+                    $collaped = isset($_GET['archive']) && $_GET['archive'] == $year ? 'in' : '';
+                    echo "<ul id='blog-".$year."' class='collapse m-l-15 ".$collaped."'>";
+                        if (!empty($archive_data)) {
+                            foreach ($archive_data as $month => $a_data) {
+                                echo "<li ".($a_data['active'] ? "class='active strong'" : '')."><a href='".$a_data['link']."'>".$a_data['title']."</a> <span class='badge m-l-10'>".$a_data['count']."</span></li>\n";
+                            }
+                        }
+                    echo "</ul>";
+                echo "</li>";
             }
         } else {
             echo "<li>".$locale['blog_3002']."</li>\n";
