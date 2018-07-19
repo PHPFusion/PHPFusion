@@ -17,10 +17,10 @@
 +--------------------------------------------------------*/
 require_once dirname(__FILE__).'../../../../maincore.php';
 
-if (file_exists(INFUSIONS.'rss_feeds_panel/locale/'.LANGUAGE.'.php')) {
-    $locale = fusion_get_locale('', INFUSIONS.'rss_feeds_panel/locale/'.LANGUAGE.'.php');
+if (file_exists(INFUSIONS."rss_feeds_panel/locale/".LANGUAGE."/rss.php")) {
+    $locale = fusion_get_locale('', INFUSIONS."rss_feeds_panel/locale/".LANGUAGE."/rss.php");
 } else {
-    $locale = fusion_get_locale('', INFUSIONS.'rss_feeds_panel/locale/English.php');
+    $locale = fusion_get_locale('', INFUSIONS."rss_feeds_panel/locale/English/rss.php");
 }
 
 $settings = fusion_get_settings();
