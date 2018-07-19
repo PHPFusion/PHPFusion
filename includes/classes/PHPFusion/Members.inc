@@ -102,10 +102,10 @@ class Members {
                     'placeholder'        => self::$locale['MEMB_005'],
                     'append_button'      => TRUE,
                     'append_type'        => "submit",
-                    "append_form_value"  => 'search',
-                    "append_value"       => "<i class='fa fa-search'></i> ".self::$locale['MEMB_006'],
-                    "append_button_name" => 'search',
-                    "width"              => "260px",
+                    'append_form_value'  => 'search',
+                    'append_value'       => "<i class='fa fa-search'></i> ".self::$locale['MEMB_006'],
+                    'append_button_name' => 'search',
+                    'width'              => "260px",
                     'class'              => 'no-border m-b-0'
                 ]
             );
@@ -125,11 +125,12 @@ class Members {
             );
             $search_form .= "</div>\n";
             $search_form .= "<div class='display-inline-block' style='vertical-align:top;'>\n";
-            $search_form .= form_select("sort_order", "", $_GET['sort_order'], [
-                "allowclear" => TRUE, 'inner_width' => "150px", "options" => [
+            $search_form .= form_select('sort_order', '', $_GET['sort_order'], [
+                'options'     => [
                     'ASC'  => self::$locale['MEMB_012'],
                     'DESC' => self::$locale['MEMB_013'],
-                ]
+                ],
+                'inner_width' => "150px"
             ]);
             $search_form .= "</div>\n";
             $search_form .= closeform();
