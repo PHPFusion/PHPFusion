@@ -121,7 +121,7 @@ if (db_exists(DB_PHOTOS)) {
                 $desc .= "<span class='small'><span class='alt'>".$locale['p405']."</span> ".showdate("%d.%m.%y", $data['photo_datestamp'])." | <span class='alt'>".$locale['p406']."</span> ".$data['photo_views']."</span>";
 
                 $search_result .= strtr(Search::render_search_item_image(), [
-                        '{%item_url%}'             => $image_link."&sref=search",
+                        '{%item_url%}'             => $image_link,
                         '{%item_target%}'          => '',
                         '{%item_image%}'           => $image,
                         '{%item_title%}'           => $data['photo_title']."</a>".$new." ".$locale['p404']." <a href='photogallery.php?album_id=".$data['album_id']."'>".$data['album_title'],

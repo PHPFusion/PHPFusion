@@ -101,7 +101,7 @@ if (infusion_exists('news')) {
                 $criteria .= $text_c2." ".($text_c2 == 1 ? $locale['520'] : $locale['521'])." ".$locale['n403']." ".$locale['n406']."</span>";
 
                 $search_result .= strtr(Search::render_search_item_list(), [
-                        '{%item_url%}'             => INFUSIONS."news/news.php?readmore=".$data['news_id']."&sref=search",
+                        '{%item_url%}'             => INFUSIONS."news/news.php?readmore=".$data['news_id'],
                         '{%item_target%}'          => '',
                         '{%item_image%}'           => News::get_NewsImage($data, TRUE, FALSE, '100'),
                         '{%item_title%}'           => $data['news_subject'],
