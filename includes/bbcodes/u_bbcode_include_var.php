@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: u_bbcode_include_var.php
-| Author: Wooya
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -18,6 +18,7 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
+
 $__BBCODE__[] = [
     "description" => $locale['bb_u_description'],
     "value"       => "u", "bbcode_start" => "[u]", "bbcode_end" => "[/u]",

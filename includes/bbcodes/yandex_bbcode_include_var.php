@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: yandex_bbcode_include_var.php
-| Author: Rizado (Chubatyj Vitalij)
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -18,6 +18,7 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
+
 $__BBCODE__[] = [
     "description" => $locale['bb_yandex_description'],
     "value"       => "yandex", "bbcode_start" => "[yandex]", "bbcode_end" => "[/yandex]",

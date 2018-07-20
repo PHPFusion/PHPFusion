@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: big_bbcode_include.php
-| Author: Wooya
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -18,4 +18,5 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
+
 $text = preg_replace('#\[big\](.*?)\[/big\]#si', '<span style=\'font-size:16px\'>\1</span>', $text);

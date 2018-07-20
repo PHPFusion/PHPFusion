@@ -5,8 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: flash_bbcode_include_var.php
-| Author: Wooya
-| Improoved by: jantom
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -19,6 +18,7 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
+
 $__BBCODE__[] = [
     "description" => $locale['bb_flash_description'],
     "value"       => "flash", "bbcode_start" => "[flash width=200 height=50]", "bbcode_end" => "[/flash]",

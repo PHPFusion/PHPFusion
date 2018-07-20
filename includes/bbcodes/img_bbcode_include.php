@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: img_bbcode_include.php
-| Author: Wooya
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -18,16 +18,12 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
+
 if (!function_exists("img_bbcode_callback")) {
     function img_bbcode_callback($matches) {
         if (substr($matches[3], -1, 1) != "/") {
             return "<span class='forum-img-wrapper'><img src='".$matches[1].str_replace(
-                    [
-                        "?",
-                        "&amp;",
-                        "&",
-                        "="
-                    ],
+                    ["?", "&amp;", "&", "="],
                     "",
                     $matches[3]).$matches[4]."' alt='".$matches[3].$matches[4]."' style='border:0px' class='img-responsive forum-img' /></span>";
         } else {
@@ -35,5 +31,6 @@ if (!function_exists("img_bbcode_callback")) {
         }
     }
 }
+
 $text = preg_replace_callback("#\[img\]((http|ftp|https|ftps)://|/)(.*?)(\.(jpg|jpeg|gif|png|JPG|JPEG|GIF|PNG))\[/img\]#si", "img_bbcode_callback",
     $text);

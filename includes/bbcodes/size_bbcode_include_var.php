@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: size_bbcode_include_var.php
-| Author: Wooya
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -18,18 +18,19 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
+
 $__BBCODE__[] = [
-    "description" => $locale['bb_size_description'],
-    "value"       => "size", "bbcode_start" => "", "bbcode_end" => "",
-    "usage"       => "[size=(12|16|20|24|28|32)]".$locale['bb_size_usage']."[/size]",
-    "onclick"     => "return overlay(this, 'bbcode_text_size_".$textarea_name."', 'rightbottom');", "onmouseover" => "", "onmouseout" => "", "includejscript" => "", "calljscript" => "",
-    "html_start"  => "<ul id='bbcode_text_size_".$textarea_name."' class='bbcode-popup dropdown-menu' style='display: none; width: 50px;' onclick=\"overlayclose('bbcode_text_size_".$textarea_name."');\">",
-    "html_middle" => "<li><input type='button' value='12 px' class='button btn btn-link btn-block btn-xs' onclick=\"addText('".$textarea_name."', '[size=12]', '[/size]', '".$inputform_name."');return false;\" /></li>
-                      <li><input type='button' value='16 px' class='button btn btn-link btn-block btn-xs' onclick=\"addText('".$textarea_name."', '[size=16]', '[/size]', '".$inputform_name."');return false;\" /></li>
-                      <li><input type='button' value='20 px' class='button btn btn-link btn-block btn-xs' onclick=\"addText('".$textarea_name."', '[size=20]', '[/size]', '".$inputform_name."');return false;\" /></li>
-                      <li><input type='button' value='24 px' class='button btn btn-link btn-block btn-xs' onclick=\"addText('".$textarea_name."', '[size=24]', '[/size]', '".$inputform_name."');return false;\" /></li>
-                      <li><input type='button' value='28 px' class='button btn btn-link btn-block btn-xs' onclick=\"addText('".$textarea_name."', '[size=28]', '[/size]', '".$inputform_name."');return false;\" /></li>
-                      <li><input type='button' value='32 px' class='button btn btn-link btn-block btn-xs' onclick=\"addText('".$textarea_name."', '[size=32]', '[/size]', '".$inputform_name."');return false;\" /></li>",
-    "html_end"    => "</ul>",
-    'dropdown'       => TRUE
+    "description"    => $locale['bb_size_description'],
+    "value"          => "size",
+    "usage"          => "[size=(12|16|20|24|28|32)]".$locale['bb_size_usage']."[/size]",
+    "onclick"        => "return false;",
+    "id"             => 'bbcode_text_size_'.$textarea_name,
+    "html_middle"    => "<input type='button' value='12 px' class='button btn btn-link btn-block btn-xs' onclick=\"addText('".$textarea_name."', '[size=12]', '[/size]', '".$inputform_name."');return false;\"/>
+                         <input type='button' value='16 px' class='button btn btn-link btn-block btn-xs' onclick=\"addText('".$textarea_name."', '[size=16]', '[/size]', '".$inputform_name."');return false;\"/>
+                         <input type='button' value='20 px' class='button btn btn-link btn-block btn-xs' onclick=\"addText('".$textarea_name."', '[size=20]', '[/size]', '".$inputform_name."');return false;\"/>
+                         <input type='button' value='24 px' class='button btn btn-link btn-block btn-xs' onclick=\"addText('".$textarea_name."', '[size=24]', '[/size]', '".$inputform_name."');return false;\"/>
+                         <input type='button' value='28 px' class='button btn btn-link btn-block btn-xs' onclick=\"addText('".$textarea_name."', '[size=28]', '[/size]', '".$inputform_name."');return false;\"/>
+                         <input type='button' value='32 px' class='button btn btn-link btn-block btn-xs' onclick=\"addText('".$textarea_name."', '[size=32]', '[/size]', '".$inputform_name."');return false;\"/>",
+    'dropdown'       => TRUE,
+    'dropdown_style' => 'min-width: 50px;'
 ];

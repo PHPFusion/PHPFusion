@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: yahoo_bbcode_include.php
-| Author: Wooya
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -18,6 +18,7 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
+
 $text = preg_replace('#\[yahoo\](.*?)\[/yahoo\]#si',
     '<strong>'.$locale['bb_yahoo'].':</strong> <a href=\'http://search.yahoo.com/search?ei=UTF-8&amp;fr=sfp&amp;p=\1\' target=\'_blank\'>\1</a>',
     $text);

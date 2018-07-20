@@ -73,7 +73,7 @@ function display_bbcodes($width, $textarea_name = "message", $inputform_name = "
             if (array_key_exists('bbcode_end', $bbdata) && $bbdata['bbcode_end'] != "") {
                 $onclick = "addText('".$textarea_name."','".$bbdata['bbcode_start']."','".$bbdata['bbcode_end']."','".$inputform_name."');return false;";
             } else {
-                $onclick = "insertText('".$textarea_name."','".$bbdata['bbcode_start']."','".$inputform_name."');return false;";
+                $onclick = "insertText('".$textarea_name."','".(!empty($bbdata['bbcode_start']) ? $bbdata['bbcode_start'] : '')."','".$inputform_name."');return false;";
             }
         }
         if (array_key_exists('onmouseover', $bbdata) && $bbdata['onmouseover'] != "") {
@@ -95,14 +95,24 @@ function display_bbcodes($width, $textarea_name = "message", $inputform_name = "
         } else {
             $phpfunction = "";
         }
-        if (array_key_exists('dropdown', $bbdata) && $bbdata['dropdown'] != "") {
-            $dropdown = ' <span class="caret" style="margin-top: -30px;margin-left: -8px;"></span>';
-        } else {
-            $dropdown = "";
+
+        $dropdown = '';
+        if (array_key_exists('dropdown', $bbdata) && $bbdata['dropdown'] == TRUE) {
+            $dropdown = 'data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"';
+            $bbcodes .= '<div class="dropdown display-inline">';
         }
 
-        $bbcodes .= substr($bbdata['value'], 0, 1) != "!" ? "<div class='bbcode-img display-inline'><input ".$type." class='bbcode' onclick=\"".$onclick."\" ".$onmouseover." ".$onmouseout." title='".$bbdata['description']."' />".$dropdown."</div>\n" : "";
+        $id = '';
+        $bbdata['id'] = '';
+        if (array_key_exists('id', $bbdata) && $bbdata['id'] != "") {
+            $id = 'id="'.$bbdata['id'].'"';
+        }
 
+        $bbcodes .= substr($bbdata['value'], 0, 1) != "!" ? "<input ".$type." class='bbcode' ".$id." onclick=\"".$onclick."\" ".$onmouseover." ".$onmouseout." title='".$bbdata['description']."' ".$dropdown."/>\n" : "";
+
+        if (array_key_exists('dropdown', $bbdata) && $bbdata['dropdown'] == TRUE) {
+            $bbcodes .= "<div class='bbcode-popup dropdown-menu ".(!empty($bbdata['dropdown_class']) ? $bbdata['dropdown_class'] : '')."' ".(!empty($bbdata['dropdown_style']) ? 'style="'.$bbdata['dropdown_style'].'"' : '')." aria-labelledby='".$bbdata['id']."'>";
+        }
         if (array_key_exists('html_start', $bbdata) && $bbdata['html_start'] != "") {
             $bbcodes .= $bbdata['html_start']."\n";
         }
@@ -120,6 +130,10 @@ function display_bbcodes($width, $textarea_name = "message", $inputform_name = "
         }
         if (array_key_exists('html_end', $bbdata) && $bbdata['html_end'] != "") {
             $bbcodes .= $bbdata['html_end']."\n";
+        }
+        if (array_key_exists('dropdown', $bbdata) && $bbdata['dropdown'] == TRUE) {
+            $bbcodes .= '</div>';
+            $bbcodes .= '</div>';
         }
     }
     unset ($__BBCODE__);

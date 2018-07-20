@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: search_bbcode_include_var.php
-| Author: Robert Gaudyn {Wooya}
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -22,7 +22,7 @@ if (!defined("IN_FUSION")) {
 if (!function_exists("generate_search_opts")) {
     function generate_search_opts($textarea_name, $inputform_name) {
         $locale = fusion_get_locale('', LOCALE.LOCALESET.'search.php');
-        $generated = "<li><input type='button' value='".$locale['407']."' class='button btn btn-link btn-block btn-xs' onclick=\"addText('".$textarea_name."', '[search=all]', '[/search]', '".$inputform_name."');return false;\" /></li>";
+        $generated = "<input type='button' value='".$locale['407']."' class='button btn btn-link btn-block btn-xs' onclick=\"addText('".$textarea_name."', '[search=all]', '[/search]', '".$inputform_name."');return false;\"/>";
         if ($handle = opendir(BASEDIR."includes/search")) {
             while (FALSE !== ($file = readdir($handle))) {
                 if (preg_match("/_include.php/i", $file)) {
@@ -36,7 +36,7 @@ if (!function_exists("generate_search_opts")) {
                     }
 
                     if (isset($locale[$name])) {
-                        $generated .= "<li><input type='button' value='".$locale[$name]."' class='button btn btn-link btn-block btn-xs' onclick=\"addText('".$textarea_name."', '[search=".$search_name[1]."]', '[/search]', '".$inputform_name."');return false;\" /></li>";
+                        $generated .= "<input type='button' value='".$locale[$name]."' class='button btn btn-link btn-block btn-xs' onclick=\"addText('".$textarea_name."', '[search=".$search_name[1]."]', '[/search]', '".$inputform_name."');return false;\"/>";
                     }
                 }
             }
@@ -51,10 +51,9 @@ $__BBCODE__[] = [
     'description'    => $locale['bb_search_description'],
     'value'          => "search", 'bbcode_start' => "[search=".$locale['bb_search_where']."]", 'bbcode_end' => "[/search]",
     'usage'          => "[search=".$locale['bb_search_where']."]".$locale['bb_search_usage']."[/search]",
-    'onclick'        => "return overlay(this, 'bbcode_search_".$textarea_name."', 'rightbottom');", 'onmouseover' => "", 'onmouseout' => "",
-    'html_start'     => "<ul id='bbcode_search_".$textarea_name."' class='bbcode-popup dropdown-menu' style='display: none; max-width: 150px;' onclick=\"overlayclose('bbcode_search_".$textarea_name."');\">",
-    'includejscript' => "", 'calljscript' => "",
+    'onclick'        => "return false;",
+    'id'             => 'bbcode_search_'.$textarea_name,
     'phpfunction'    => "echo generate_search_opts('".$textarea_name."', '".$inputform_name."');",
-    'html_middle'    => "", 'html_end' => "</ul>",
-    'dropdown'       => TRUE
+    'dropdown'       => TRUE,
+    'dropdown_style' => 'min-width: 150px;'
 ];

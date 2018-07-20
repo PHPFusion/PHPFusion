@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: olist_bbcode_include.php
-| Author: Wooya
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -32,6 +32,7 @@ for ($i = 0; $i < $count; $i++) {
     $listtext .= "</ol>";
     $text = str_replace($match[0][$i], $listtext, $text);
 }
+
 unset($listitems);
 unset($listtext);
 unset($match);

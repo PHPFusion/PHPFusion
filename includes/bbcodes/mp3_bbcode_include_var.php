@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: mp3_bbcode_include_var.php
-| Author: Wooya
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -18,6 +18,7 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
+
 $__BBCODE__[] = [
     "description" => $locale['bb_mp3_description'],
     "value"       => "mp3", "bbcode_start" => "[mp3]", "bbcode_end" => "[/mp3]",

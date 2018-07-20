@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: color_bbcode_include_var.php
-| Author: Wooya
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -18,14 +18,16 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
+
 $__BBCODE__[] = [
     "description"    => $locale['bb_color_description'],
     "value"          => "color", "bbcode_start" => "[color=#000000]", "bbcode_end" => "[/color]",
     "usage"          => "[color=#".$locale['bb_color_hex']."]".$locale['bb_color_usage']."[/color]",
-    "onclick"        => "return overlay(this, 'bbcode_color_map_".$textarea_name."', 'rightbottom');", "onmouseover" => "", "onmouseout" => "",
-    "html_start"     => "<div id='bbcode_color_map_".$textarea_name."' class='tbl1 bbcode-popup' style='display:none;border:1px solid black;position:absolute;width:182px;height:149px' onclick=\"overlayclose('bbcode_color_map_".$textarea_name."');\">",
+    "onclick"        => "return false",
+    'id'             => 'bbcode_color_map_'.$textarea_name,
+    "html_start"     => "<div id='bbcode_color_map_".$textarea_name."' class='tbl1'>",
     "includejscript" => "color_bbcode_include_js.js",
-    "calljscript"    => "ColorMap('".$textarea_name."', '".$inputform_name."');", "phpfunction" => "",
-    "html_middle"    => "", "html_end" => "</div>",
+    "calljscript"    => "ColorMap('".$textarea_name."', '".$inputform_name."');",
+    "html_end"       => "</div>",
     'dropdown'       => TRUE
 ];

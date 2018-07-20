@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: small2_bbcode_include.php
-| Author: Wooya
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -18,4 +18,5 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
+
 $text = preg_replace('#\[small2\](.*?)\[/small2\]#si', '<span class=\'small2\'>\1</span>', $text);

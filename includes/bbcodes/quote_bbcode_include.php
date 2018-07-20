@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: quote_bbcode_include.php
-| Author: JoiNNN
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -18,6 +18,7 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
+
 $before = "<div class='quote extended'><p class='citation'>";
 $endbefore = "</p><blockquote>";
 $after = "</blockquote></div>";
