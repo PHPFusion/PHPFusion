@@ -1571,6 +1571,16 @@ tr:hover > td .tbl_actions {
     width: 100%;
 }
 
+.avatar.img-rounded > svg {
+    -webkit-border-radius: 6px;
+    border-radius: 6px;
+}
+
+.avatar.img-cirlce > svg {
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+}
+
 html[dir="rtl"] body {
     direction: rtl;
 }
