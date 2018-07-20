@@ -21,8 +21,8 @@ if (!defined("IN_FUSION")) {
 
 // Locales
 if (!defined("FAQ_LOCALE")) {
-    if (file_exists(INFUSIONS."faq/locale/".LANGUAGE."/faq.php")) {
-        define("FAQ_LOCALE", INFUSIONS."faq/locale/".LANGUAGE."/faq.php");
+    if (file_exists(INFUSIONS."faq/locale/".LOCALESET."faq.php")) {
+        define("FAQ_LOCALE", INFUSIONS."faq/locale/".LOCALESET."faq.php");
     } else {
         define("FAQ_LOCALE", INFUSIONS."faq/locale/English/faq.php");
     }
