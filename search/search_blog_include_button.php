@@ -36,7 +36,7 @@ if (db_exists(DB_BLOG)) {
         ]
     ];
     $radio_button += [
-        'blog' => form_checkbox('stype', fusion_get_locale('b400', LOCALE.LOCALESET."search/blog.php"), Search_Engine::get_param('stype'),
+        'blog' => form_checkbox('stype', fusion_get_locale('b400', INFUSIONS."blog/locale/".LOCALESET."search/blog.php"), Search_Engine::get_param('stype'),
             [
                 'type'          => 'radio',
                 'value'         => 'blog',

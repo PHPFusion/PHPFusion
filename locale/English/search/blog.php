@@ -1,4 +1,5 @@
 <?php
+$locale['blog.php'] = "Blog";
 $locale['b400'] = "Blog";
 $locale['b401'] = "Blog item";
 $locale['b402'] = "Blog items";
