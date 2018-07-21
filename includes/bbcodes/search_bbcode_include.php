@@ -27,7 +27,7 @@ if (!function_exists("search_on")) {
             return fusion_get_locale('407', LOCALE.LOCALESET."search.php");
         } else {
             $name = '';
-            $locale = fusion_get_locale('', LOCALE.LOCALESET."/search/$where.php");
+            $locale = fusion_get_locale('', LOCALE.LOCALESET."/search/".$where.".php");
             foreach ($locale as $key => $value) {
                 if (preg_match("/400/", $key)) {
                     $name = $key;

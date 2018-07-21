@@ -30,29 +30,55 @@ $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/settings.php');
  * @return array
  */
 function get_default_search_opts() {
-    global $locale;
+    $locale = fusion_get_locale();
+
     static $search_opts = [];
-    static $filename_locale = [];
+
     if (empty($search_opts)) {
         $search_opts += [
             'all' => $locale['419a'],
         ];
-        // Place converter to translate the names of the SDK files
-        include LOCALE.LOCALESET."search/converter.php";
-        $search_dir = INCLUDES."search/";
-        $dir = LOCALE.LOCALESET."search/";
-        $search_files = makefilelist($search_dir, TRUE, '.|..|.DS_Store|index.php');
-        $search_files = array_flip($search_files);
-        $search_locale_files = makefilelist($dir, TRUE, '.|..|.DS_Store|index.php');
-        if (!empty($search_locale_files)) {
-            foreach ($search_locale_files as $file_to_check) {
-                $search_api_file = 'search_'.str_replace('.php', '_include.php', $file_to_check);
-                $search_btn_file = 'search_'.str_replace('.php', '_include_button.php', $file_to_check);
-                if (isset($search_files[$search_api_file]) && isset($search_files[$search_btn_file]) && isset($filename_locale[$file_to_check])) {
-                    $search_opts[$file_to_check] = ucwords($filename_locale[$file_to_check]);
+
+        if ($handle = opendir(INCLUDES."search/")) {
+            while (FALSE !== ($file = readdir($handle))) {
+                if (preg_match("/_include.php/i", $file)) {
+                    $name = '';
+                    $search_name = explode("_", $file);
+                    $locale += fusion_get_locale('', LOCALE.LOCALESET."search/".$search_name[1].".php");
+                    foreach ($locale as $key => $value) {
+                        if (preg_match("/400/i", $key)) {
+                            $name = $key;
+                        }
+                    }
+
+                    if (isset($locale[$name])) {
+                        $file = str_replace(['search_', '_include.php', '_include_button.php'], '', $file);
+                        $search_opts[$file] = $locale[$name];
+                    }
+                }
+            }
+            closedir($handle);
+        }
+
+        $infusions = makefilelist(INFUSIONS, ".|..|index.php", TRUE, "folders");
+        if (!empty($infusions)) {
+            foreach ($infusions as $infusions_to_check) {
+                if (is_dir(INFUSIONS.$infusions_to_check.'/search/')) {
+                    $inf_files = makefilelist(INFUSIONS.$infusions_to_check.'/search/', ".|..|index.php", TRUE, "files");
+
+                    if (!empty($inf_files)) {
+                        foreach ($inf_files as $file) {
+                            if (preg_match("/_include.php/i", $file)) {
+                                $file = str_replace(['search_', '_include.php', '_include_button.php'], '', $file);
+                                $locale += fusion_get_locale('', INFUSIONS.$infusions_to_check.'/locale/'.LOCALESET."search/".$file.".php");
+                                $search_opts[$file] = $locale[$file.'.php'];
+                            }
+                        }
+                    }
                 }
             }
         }
+
     }
 
     return (array)$search_opts;
