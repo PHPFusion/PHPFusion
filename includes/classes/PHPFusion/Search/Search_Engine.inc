@@ -379,15 +379,38 @@ class Search_Engine extends Search_Model {
          * Run the drivers via include.. but this method need to change to simplify the kiss concept.
          */
         if (self::get_param('stype') == "all") {
-            $dh = opendir(INCLUDES."search");
-            while (FALSE !== ($entry = readdir($dh))) {
-                if ($entry != "." && $entry != ".." && preg_match("/include.php/i", $entry)) {
-                    self::__Load($entry);
+            $search_deffiles = [];
+            $search_includefiles = makefilelist(INCLUDES.'search/', '.|..|index.php|location.json.php|users.json.php|.DS_Store', TRUE, 'files');
+            $search_infusionfiles = makefilelist(INFUSIONS, '.|..|index.php', TRUE, 'folders');
+            if (!empty($search_infusionfiles)) {
+                foreach($search_infusionfiles as $files_to_check) {
+                    if (is_dir(INFUSIONS.$files_to_check.'/search/')) {
+                        $search_checkfiles = makefilelist(INFUSIONS.$files_to_check.'/search/', ".|..|index.php", TRUE, "files");
+                        $search_deffiles = array_merge($search_deffiles, $search_checkfiles);
+                    }
                 }
             }
-            closedir($dh);
+            $search_files = array_merge($search_includefiles, $search_deffiles);
+
+            foreach ($search_files as $key => $file_to_check) {
+                if (preg_match("/include.php/i", $file_to_check)) {
+                    $file_name = str_replace('_include.php', '', $file_to_check);
+                    $file_name = str_replace('search_', '', $file_name);
+
+                    if (file_exists(INCLUDES."search/".$file_to_check)) {
+                        self::__Load(INCLUDES."search/".$file_to_check);
+                    } else if (file_exists(INFUSIONS.$file_name.'/search/'.$file_to_check)) {
+                        self::__Load(INFUSIONS.$file_name.'/search/'.$file_to_check);
+                    }
+                }
+            }
+
         } else {
-            self::__Load("search_".self::get_param('stype')."_include.php");
+            if (file_exists(INCLUDES."search/search_".self::get_param('stype')."_include.php")) {
+                self::__Load(INCLUDES."search/search_".self::get_param('stype')."_include.php");
+            } else if (file_exists(INFUSIONS.self::get_param('stype')."/search/search_".self::get_param('stype')."_include.php")){
+                self::__Load(INFUSIONS.self::get_param('stype')."/search/search_".self::get_param('stype')."_include.php");
+            }
         }
 
         // Show how many disqualified search texts
@@ -422,7 +445,7 @@ class Search_Engine extends Search_Model {
         } else {
             echo strtr(Search::render_search_count(), [
                 '{%search_count%}' => self::$items_count,
-                '{%result_text%}'  => ((self::$site_search_count > 100 || parent::search_globalarray("")) ? "<br/><strong>".sprintf($locale['530'], self::$site_search_count)."</strong>" : $locale['500'])
+                '{%result_text%}'  => ((self::$site_search_count > 100 || parent::search_globalarray("")) ? "<br/><strong>".sprintf($locale['530'], self::$site_search_count)."</strong>" : (empty(self::$site_search_count) ? $locale['500'] : ''))
             ]);
         }
 
@@ -467,9 +490,6 @@ class Search_Engine extends Search_Model {
      * @param $path
      */
     protected static function __Load($path) {
-        $file = INCLUDES.'search/'.$path;
-        if (file_exists($file)) {
-            include($file);
-        }
+        include_once($path);
     }
 }

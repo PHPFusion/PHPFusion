@@ -149,7 +149,11 @@ abstract class Search_Model {
         if (!empty(self::$available_modules)) {
             foreach (self::$available_modules as $module_name) {
                 if ($module_name !== 'all') {
-                    include(INCLUDES."search/search_".$module_name."_include_button.php");
+                    if (file_exists(INCLUDES."search/search_".$module_name."_include_button.php")) {
+                        include_once(INCLUDES."search/search_".$module_name."_include_button.php");
+                    } else if (file_exists(INFUSIONS.$module_name."/search/search_".$module_name."_include_button.php")) {
+                        include_once(INFUSIONS.$module_name."/search/search_".$module_name."_include_button.php");
+                    }
                 }
             }
         }
@@ -165,12 +169,22 @@ abstract class Search_Model {
     protected function cache_modules() {
         if (empty(self::$available_modules)) {
             self::$available_modules = ['0' => 'all'];
-            $search_dir = INCLUDES."search/";
-            $search_files = makefilelist($search_dir, '.|..|index.php|location.json.php|users.json.php|.DS_Store', TRUE, 'files');
-            $search_files = array_flip($search_files);
+            $search_deffiles = [];
+            $search_includedir = INCLUDES."search/";
+            $search_includefiles = makefilelist($search_includedir, '.|..|index.php|location.json.php|users.json.php|.DS_Store', TRUE, 'files');
+            $search_infusionfiles = makefilelist(INFUSIONS, ".|..|index.php", TRUE, "folders");
+            if (!empty($search_infusionfiles)) {
+                foreach($search_infusionfiles as $files_to_check) {
+                    if (is_dir(INFUSIONS.$files_to_check.'/search/')) {
+                        $search_checkfiles = makefilelist(INFUSIONS.$files_to_check.'/search/', ".|..|index.php", TRUE, "files");
+                        $search_deffiles = array_merge($search_deffiles, $search_checkfiles);
+                    }
+                }
+            }
+            $search_files = array_merge($search_includefiles, $search_deffiles);
             foreach ($search_files as $key => $file_to_check) {
-                if (preg_match("/include_button.php/i", $key)) {
-                    $file_name = str_replace('_include_button.php', '', $key);
+                if (preg_match("/include_button.php/i", $file_to_check)) {
+                    $file_name = str_replace('_include_button.php', '', $file_to_check);
                     $file_name = str_replace('search_', '', $file_name);
                     self::$available_modules[] = $file_name;
                 }
