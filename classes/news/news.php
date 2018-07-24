@@ -299,7 +299,7 @@ abstract class News extends NewsServer {
         }
 
         if ($link === TRUE && $data['news_extended']) {
-            return "<a class='img-link' href='".INFUSIONS.'/news/news.php?readmore='.$data['news_id']."'>\n
+            return "<a class='img-link' href='".INFUSIONS.'news/news.php?readmore='.$data['news_id']."'>\n
             <img class='img-responsive' src='$imageRaw' alt='".$data['news_subject']."' />\n
             </a>\n";
         }
