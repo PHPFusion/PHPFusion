@@ -16,3 +16,10 @@
 *.woff binary
 *.woff2 binary
 *.swf binary
+
+.github export-ignore
+test export-ignore
+.gitattributes export-ignore
+.gitignore export-ignore
+.gitmodules export-ignore
+README.markdown export-ignore
