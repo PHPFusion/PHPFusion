@@ -3271,10 +3271,6 @@ tbody.collapse.in {
 }
 
 .dropdown-menu {
-    top: -10px;
-    left: inherit;
-    right: -10px;
-    font-size: 13px;
     -webkit-border-radius: 0;
     -moz-border-radius: 0;
     border-radius: 0;
