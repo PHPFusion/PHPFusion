@@ -182,7 +182,7 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
         closeside();
         echo "</div>";
         echo "</div>";
-        echo form_button('cancel', $this->locale['cancel'], $this->locale['cancel'], ['class' => 'btn-default', 'icon' => 'fa fa-fw fa-trash']);
+        echo form_button('cancel', $this->locale['cancel'], $this->locale['cancel'], ['class' => 'btn-default', 'icon' => 'fa fa-fw fa-close']);
         echo form_button('save_cat', $this->locale['save'], $this->locale['save'], ['class' => 'btn-success m-l-10', 'icon' => 'fa fa-fw fa-hdd-o']);
         echo form_button('save_cat_and_close', $this->locale['save_and_close'], $this->locale['save_and_close'], ['class' => 'btn-primary m-l-10', 'icon' => 'fa fa-fw fa-floppy-o']);
         echo closeform();
@@ -461,7 +461,7 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
                 ?>
             <?php endforeach; ?>
         <?php else: ?>
-            <tr><td colspan="6" class="text-center"><?php echo $this->locale['WLS_0162']; ?></td></tr>
+            <tr><td colspan="7" class="text-center"><?php echo $this->locale['WLS_0162']; ?></td></tr>
         <?php endif; ?>
 
         <?php if (!$id) : ?>
