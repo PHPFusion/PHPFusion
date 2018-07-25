@@ -158,50 +158,53 @@ function display_html($formname, $textarea, $html = TRUE, $colors = FALSE, $imag
         $res .= "<li>\n<a value='H6' class='pointer' onclick=\"addText('".$textarea."', '&lt;h6&gt;', '&lt;/h6&gt;', '".$formname."');\"><span class='strong' style='font-size:9px; font-family: Georgia, \"Times New Roman\", Times, serif !important;'>Heading 6</span></a>\n</li>\n";
         $res .= "</ul>\n";
         $res .= "</div>\n";
-        $options = [];
 
-        if ($images && $folder) {
-            if (is_array($folder)) {
-                foreach ($folder as $dir) {
-                    if (file_exists($dir)) {
-                        $file_list = makefilelist($dir, '.|..|index.php', TRUE, 'files', 'js|psd|rar|zip|7s|_DS_STORE|doc|docx|docs|md|php');
+        if (iADMIN) {
+            $options = [];
+
+            if ($images && $folder) {
+                if (is_array($folder)) {
+                    foreach ($folder as $dir) {
+                        if (file_exists($dir)) {
+                            $file_list = makefilelist($dir, '.|..|index.php', TRUE, 'files', 'js|psd|rar|zip|7s|_DS_STORE|doc|docx|docs|md|php');
+                            if (!empty($file_list)) {
+                                foreach ($file_list as $file) {
+                                    $options[str_replace('../', '', $dir).$file] = $file;
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    if (file_exists($folder)) {
+                        $file_list = makefilelist($folder, '.|..|index.php', TRUE, 'files', 'js|psd|rar|zip|7s|_DS_STORE|doc|docx|docs|md|php');
                         if (!empty($file_list)) {
                             foreach ($file_list as $file) {
-                                $options[str_replace('../', '', $dir).$file] = $file;
+                                $options[str_replace('../', '', $folder).$file] = $file;
                             }
                         }
                     }
                 }
-            } else {
-                if (file_exists($folder)) {
-                    $file_list = makefilelist($folder, '.|..|index.php', TRUE, 'files', 'js|psd|rar|zip|7s|_DS_STORE|doc|docx|docs|md|php');
-                    if (!empty($file_list)) {
-                        foreach ($file_list as $file) {
-                            $options[str_replace('../', '', $folder).$file] = $file;
-                        }
-                    }
-                }
+
+                $res .= form_select($textarea.'-insertimage', '', '',
+                    [
+                        'options'     => $options,
+                        'placeholder' => $locale['html_011'],
+                        'allowclear'  => TRUE,
+                        'width'       => '200px',
+                        'class'       => 'm-0'
+
+                    ]
+                );
+
+                add_to_jquery("
+                    $('#$textarea-insertimage').bind('change', function(e){
+                        insertText('$textarea', '<img src=\"".fusion_get_settings('siteurl')."'+$(this).val()+'\" alt=\"\" class=\"img-responsive\"/>', '$formname');
+                        $(this).select2('val', '');
+                    });
+            ");
             }
 
-            $res .= form_select($textarea.'-insertimage', '', '',
-                [
-                    'options'     => $options,
-                    'placeholder' => $locale['html_011'],
-                    'allowclear'  => TRUE,
-                    'width'       => '200px',
-                    'class'       => 'm-0'
-
-                ]
-            );
-            add_to_jquery("
-            $('#$textarea-insertimage').bind('change', function(e){
-                insertText('$textarea', '<img src=\"".fusion_get_settings('siteurl')."'+$(this).val()+'\" alt=\"\" class=\"img-responsive\"/>', '$formname');
-                $(this).select2('val', '');
-            });
-            ");
         }
-
-
     }
 
     return $res;
