@@ -48,8 +48,7 @@ function getcolorname($id) {
  */
 function display_html($formname, $textarea, $html = TRUE, $colors = FALSE, $images = FALSE, $folder = "") {
 
-    $locale = fusion_get_locale("", LOCALE.LOCALESET."colors.php");
-    $locale += fusion_get_locale("", LOCALE.LOCALESET."admin/html_buttons.php");
+    $locale = fusion_get_locale("", [LOCALE.LOCALESET."colors.php", LOCALE.LOCALESET."admin/html_buttons.php"]);
 
     $res = "";
     if ($html) {
