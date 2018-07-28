@@ -201,9 +201,9 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
     switch ($options['type']) {
         case "number":
             $input_type = "number";
-            $min = ((!empty($options['number_min']) || $options['number_min'] === "0") && isnum($options['number_min']) ? "min='".$options['number_min']."' " : '');
-            $max = ((!empty($options['number_max']) || $options['number_max'] === "0") && isnum($options['number_max']) ? "max='".$options['number_max']."' " : '');
-            $step = "step='".str_replace(",", ".", $options['number_step'])."' ";
+            $min = ((!empty($options['number_min']) || $options['number_min'] === "0") && isnum($options['number_min']) ? " min='".$options['number_min']."'" : '');
+            $max = ((!empty($options['number_max']) || $options['number_max'] === "0") && isnum($options['number_max']) ? " max='".$options['number_max']."'" : '');
+            $step = " step='".str_replace(",", ".", $options['number_step'])."'";
             break;
         case "text":
             $input_type = "text";
@@ -215,7 +215,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
             $input_type = "text";
     }
 
-    $html .= "<input type='".$input_type."' data-type='".$input_type."' ".(!empty($options_data) ? implode(' ', $options_data) : '')." ".$min.$max.$step."class='form-control textbox ".($options['inner_class'] ? " ".$options['inner_class']." " : '')."' ".($options['inner_width'] ? "style='width:".$options['inner_width'].";'" : '')." ".($options['max_length'] ? "maxlength='".$options['max_length']."'" : '')." name='".$input_name."' id='".$options['input_id']."' value='".$input_value."'".($options['placeholder'] ? " placeholder='".$options['placeholder']."' " : '')."".($options['autocomplete_off'] ? " autocomplete='off'" : '')." ".($options['deactivate'] ? 'readonly' : '').">";
+    $html .= "<input type='".$input_type."' data-type='".$input_type."' ".(!empty($options_data) ? implode(' ', $options_data) : '').$min.$max.$step." class='form-control textbox ".($options['inner_class'] ? " ".$options['inner_class']." " : '')."' ".($options['inner_width'] ? "style='width:".$options['inner_width'].";'" : '')." ".($options['max_length'] ? "maxlength='".$options['max_length']."'" : '')." name='".$input_name."' id='".$options['input_id']."' value='".$input_value."'".($options['placeholder'] ? " placeholder='".$options['placeholder']."'" : '').($options['autocomplete_off'] ? " autocomplete='off'" : '').($options['deactivate'] ? ' readonly' : '').">";
 
     $html .= $options['password_strength'] == TRUE ? '<div class="pwstrength_viewport_progress"></div>' : '';
 
