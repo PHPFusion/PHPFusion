@@ -81,7 +81,7 @@ if (defined('DB_ARTICLES')) {
             'norecord'   => $locale['home_0051'],
             'blockTitle' => $locale['home_0001'],
         ],
-        'infSettings'         => get_settings("article"),
+        'infSettings'         => get_settings("articles"),
         'categoryLinkPattern' => INFUSIONS."articles/articles.php?cat_id={cat_id}",
         'contentLinkPattern'  => INFUSIONS."articles/articles.php?article_id={id}",
     ];
