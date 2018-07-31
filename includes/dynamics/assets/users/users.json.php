@@ -39,7 +39,7 @@ if (dbrows($result)) {
     while ($udata = dbarray($result)) {
         $user_id = $udata['user_id'];
         $user_text = $udata['user_name'];
-        $user_avatar = ($udata['user_avatar'] && file_exists(IMAGES."avatars/".$udata['user_avatar'])) ? $udata['user_avatar'] : "noavatar.jpg";
+        $user_avatar = ($udata['user_avatar'] && file_exists(IMAGES."avatars/".$udata['user_avatar'])) ? $udata['user_avatar'] : "no-avatar.jpg";
         $user_name = $udata['user_name'];
         $user_level = getuserlevel($udata['user_level']);
         $user_opts[] = ['id' => "$user_id", 'text' => "$user_name", 'avatar' => "$user_avatar", "level" => "$user_level"];
