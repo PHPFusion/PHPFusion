@@ -194,7 +194,9 @@ class SiteLinks {
             'searchbar_btn_class'  => 'btn-primary',
             'caret_icon'           => 'caret',
             'link_position'        => [2, 3],
+            'html_pre_content'     => '',
             'html_content'         => '',
+            'html_post_content'    => ''
         ];
 
         $options += $default_options;
@@ -315,7 +317,7 @@ class SiteLinks {
      * @param bool|FALSE $link_window
      * @param string     $link_class
      */
-    public static function addMenuLink($link_id = 0, $link_name, $link_cat = 0, $link_url = '', $link_icon = '', $link_active = FALSE, $link_title = FALSE, $link_disabled = FALSE, $link_window = FALSE, $link_class = '') {
+    public static function addMenuLink($link_id, $link_name, $link_cat = 0, $link_url = '', $link_icon = '', $link_active = FALSE, $link_title = FALSE, $link_disabled = FALSE, $link_window = FALSE, $link_class = '') {
         self::$primary_cache_data[self::$id][$link_cat][$link_id] = [
             'link_id'       => $link_id,
             'link_name'     => $link_name,
@@ -344,7 +346,7 @@ class SiteLinks {
      * @param bool|FALSE $link_window
      * @param string     $link_class
      */
-    public static function addOptionalMenuLink($link_id = 0, $link_name, $link_cat = 0, $link_url = '', $link_icon = '', $link_active = FALSE, $link_title = FALSE, $link_disabled = FALSE, $link_window = FALSE, $link_class = '') {
+    public static function addOptionalMenuLink($link_id, $link_name, $link_cat = 0, $link_url = '', $link_icon = '', $link_active = FALSE, $link_title = FALSE, $link_disabled = FALSE, $link_window = FALSE, $link_class = '') {
         self::$optional_cache_data[self::$id][$link_cat][$link_id] = [
             'link_id'       => $link_id,
             'link_name'     => $link_name,
@@ -413,6 +415,7 @@ class SiteLinks {
     public function showSubLinks($id = 0) {
         $locale = self::getMenuParam('locale');
         $res = '';
+
         if (empty($id)) {
             self::setLinks();
             $res = "<div id='".self::getMenuParam('id')."' class='navbar ".self::getMenuParam('navbar_class')."' role='navigation'>\n";
@@ -446,17 +449,19 @@ class SiteLinks {
             if (self::getMenuParam('nav_class')) {
                 $class = " class='".self::getMenuParam('nav_class')."'";
             }
+
+            $res .= self::getMenuParam('html_pre_content');
+
             $res .= "<ul$class>\n";
             $res .= "<!--Menu Item Start-->\n";
-        }
-        // Show primary links
-        $res .= $this->showMenuLinks($id, self::getMenuParam('callback_data'));
-        $res .= "<!--Menu Item End-->\n";
-        $res .= "</ul>\n";
 
-        $res .= self::getMenuParam('html_content');
+            // Show primary links
+            $res .= $this->showMenuLinks($id, self::getMenuParam('callback_data'));
+            $res .= "<!--Menu Item End-->\n";
+            $res .= "</ul>\n";
 
-        if (empty($id)) {
+            $res .= self::getMenuParam('html_content');
+
             if (self::getMenuParam('language_switcher') == TRUE || self::getMenuParam('searchbar') == TRUE || !empty(self::getMenuParam('additional_data'))) {
                 $class = (fusion_get_settings("bootstrap") ? "class='nav navbar-nav secondary navbar-right'" : "id='second-menu' class='secondary sm sm-simple'");
                 if (self::getMenuParam('additional_nav_class')) {
@@ -515,6 +520,9 @@ class SiteLinks {
                 }
                 $res .= "</ul>\n";
             }
+
+            $res .= self::getMenuParam('html_post_content');
+
             $res .= (self::getMenuParam('responsive')) ? "</div>\n" : "";
             $res .= self::getMenuParam('container_fluid') ? "</div>\n" : "";
             $res .= self::getMenuParam('container') ? "</div>\n" : "";
