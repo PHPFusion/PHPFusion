@@ -29,19 +29,19 @@ if (!function_exists('display_home')) {
                 vertical-align: baseline;
                 display: block;
             }
-            
+
             .item {
                 padding: 0;
                 height: inherit;
             }
-            
+
             .item .thumb {
                 float: left;
                 height: 120px;
                 overflow: hidden;
                 margin-right: 10px;
             }
-            
+
             .item .thumb img {
                 vertical-align: middle;
                 object-fit: contain;
@@ -53,7 +53,7 @@ if (!function_exists('display_home')) {
                 transform: scale(1.5);
                 margin-top: 10px;
             }
-            
+
             @media (min-width: 900px) {
                 .item .thumb {
                     float: inherit;
@@ -74,7 +74,7 @@ if (!function_exists('display_home')) {
                     padding: 3px 0 10px;
                     font-size: 12px;
                 }
-            }          
+            }
         ');
 
         foreach ($info as $db_id => $content) {

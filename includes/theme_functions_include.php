@@ -36,7 +36,8 @@ function showrendertime($queries = TRUE) {
     $mysql_queries_count = $db_connection::getGlobalQueryCount();
     if (fusion_get_settings('rendertime_enabled') == 1 || (fusion_get_settings('rendertime_enabled') == 2 && iADMIN)) {
         $res = showBenchmark();
-        $res .= ($queries ? " | ".ucfirst($locale['global_173']).": $mysql_queries_count" : '');
+        $res .= " | ";
+        $res .= ($queries ? ucfirst($locale['global_173']).": ".$mysql_queries_count." | " : '');
 
         return $res;
     } else {
@@ -135,7 +136,7 @@ function showMemoryUsage() {
     $memory_allocated = parsebytesize(memory_get_peak_usage(TRUE));
     $memory_used = parsebytesize(memory_get_peak_usage(FALSE));
 
-    return " | ".$locale['global_174'].": ".$memory_used."/".$memory_allocated;
+    return $locale['global_174'].": ".$memory_used."/".$memory_allocated;
 }
 
 function showcopyright($class = "", $nobreak = FALSE) {
@@ -781,7 +782,7 @@ if (!function_exists('display_avatar')) {
                 $font_color = get_brightness($color) > 130 ? '000' : 'fff';
                 $first_char = substr($userdata['user_name'], 0, 1);
                 $first_char = strtoupper($first_char);
-                $img = '<div class="display-inline-block va avatar img-responsive '.$img_class.'" style="width:'.$size.';max-height:'.$size.';"><svg version="1.1" viewBox="0 0 20 20"><rect fill="#'.$color.'" stroke-width="0" y="0" x="0" height="100%" width="100%"/><text fill="#'.$font_color.'" x="50%" y="50%" text-anchor="middle" alignment-baseline="central" dy="-0.05em">'.$first_char.'</text></svg></div>';
+                $img = '<div class="display-inline-block va avatar '.$img_class.'" style="width:'.$size.';max-height:'.$size.';"><svg version="1.1" viewBox="0 0 20 20"><rect fill="#'.$color.'" stroke-width="0" y="0" x="0" height="100%" width="100%"/><text fill="#'.$font_color.'" x="50%" y="50%" text-anchor="middle" alignment-baseline="central" dy="-0.05em">'.$first_char.'</text></svg></div>';
             }
         }
 
