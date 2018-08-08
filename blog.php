@@ -323,16 +323,16 @@ if (!empty($_GET['readmore'])) {
             $sql_sum = sprintf($pattern, 'SUM');
 
             $sql = "SELECT b.*, bu.user_id, bu.user_name, bu.user_status, bu.user_avatar , bu.user_level, bu.user_joined,
-			    ($sql_sum) AS sum_rating,
-			    ($sql_count) AS count_votes,
-			    (SELECT COUNT(bc.comment_id) FROM ".DB_COMMENTS." AS bc WHERE bc.comment_item_id = b.blog_id AND bc.comment_type = 'B' AND bc.comment_hidden = '0') AS count_comment,
-			    MAX(b.blog_datestamp) AS last_updated
-			    FROM ".DB_BLOG." AS b
-			    INNER JOIN ".DB_USERS." AS bu ON b.blog_name=bu.user_id
-			    ".(multilang_table('BL') ? "WHERE blog_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('blog_visibility')."
-			    AND (blog_start=0 || blog_start<=".TIME.") AND (blog_end=0 || blog_end>=".TIME.") AND blog_draft=0 AND blog_name=:author_id
-			    GROUP BY blog_id
-			    ORDER BY blog_sticky DESC, ".$filter_condition." LIMIT :rowstart, :limit
+                ($sql_sum) AS sum_rating,
+                ($sql_count) AS count_votes,
+                (SELECT COUNT(bc.comment_id) FROM ".DB_COMMENTS." AS bc WHERE bc.comment_item_id = b.blog_id AND bc.comment_type = 'B' AND bc.comment_hidden = '0') AS count_comment,
+                MAX(b.blog_datestamp) AS last_updated
+                FROM ".DB_BLOG." AS b
+                INNER JOIN ".DB_USERS." AS bu ON b.blog_name=bu.user_id
+                ".(multilang_table('BL') ? "WHERE blog_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('blog_visibility')."
+                AND (blog_start=0 || blog_start<=".TIME.") AND (blog_end=0 || blog_end>=".TIME.") AND blog_draft=0 AND blog_name=:author_id
+                GROUP BY blog_id
+                ORDER BY blog_sticky DESC, ".$filter_condition." LIMIT :rowstart, :limit
             ";
 
             $param = [
@@ -516,13 +516,14 @@ if (!empty($_GET['readmore'])) {
             // refetch category per item and parse as string
             if (!empty($data['blog_cat'])) {
                 $blog_cat = str_replace(".", ",", $data['blog_cat']);
-                $result2 = dbquery("SELECT blog_cat_id, blog_cat_name from ".DB_BLOG_CATS." WHERE blog_cat_id in ($blog_cat)");
+                $result2 = dbquery("SELECT blog_cat_id, blog_cat_name, blog_cat_image from ".DB_BLOG_CATS." WHERE blog_cat_id in ($blog_cat)");
                 $rows2 = dbrows($result2);
                 if ($rows2 > 0) {
                     $i = 1;
                     while ($catData = dbarray($result2)) {
                         $cdata['blog_category_link'] .= "<a href='".INFUSIONS."blog/blog.php?cat_id=".$catData['blog_cat_id']."'>".$catData['blog_cat_name']."</a>";
                         $cdata['blog_category_link'] .= $i == $rows2 ? "" : ", ";
+                        $cdata['blog_cat_image'] = $catData['blog_cat_image'];
                         $i++;
                     }
                 }
