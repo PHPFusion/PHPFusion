@@ -1,20 +1,21 @@
 //! moment.js locale configuration
-//! locale : euskara (eu)
-//! author : Eneko Illarramendi : https://github.com/eillarra
 
-(function (global, factory) {
-   typeof exports === 'object' && typeof module !== 'undefined' ? factory(require('../moment')) :
-   typeof define === 'function' && define.amd ? define(['moment'], factory) :
+;(function (global, factory) {
+   typeof exports === 'object' && typeof module !== 'undefined'
+       && typeof require === 'function' ? factory(require('../moment')) :
+   typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
-}(this, function (moment) { 'use strict';
+}(this, (function (moment) { 'use strict';
 
 
     var eu = moment.defineLocale('eu', {
         months : 'urtarrila_otsaila_martxoa_apirila_maiatza_ekaina_uztaila_abuztua_iraila_urria_azaroa_abendua'.split('_'),
         monthsShort : 'urt._ots._mar._api._mai._eka._uzt._abu._ira._urr._aza._abe.'.split('_'),
+        monthsParseExact : true,
         weekdays : 'igandea_astelehena_asteartea_asteazkena_osteguna_ostirala_larunbata'.split('_'),
         weekdaysShort : 'ig._al._ar._az._og._ol._lr.'.split('_'),
         weekdaysMin : 'ig_al_ar_az_og_ol_lr'.split('_'),
+        weekdaysParseExact : true,
         longDateFormat : {
             LT : 'HH:mm',
             LTS : 'HH:mm:ss',
@@ -39,6 +40,7 @@
             future : '%s barru',
             past : 'duela %s',
             s : 'segundo batzuk',
+            ss : '%d segundo',
             m : 'minutu bat',
             mm : '%d minutu',
             h : 'ordu bat',
@@ -50,7 +52,7 @@
             y : 'urte bat',
             yy : '%d urte'
         },
-        ordinalParse: /\d{1,2}\./,
+        dayOfMonthOrdinalParse: /\d{1,2}\./,
         ordinal : '%d.',
         week : {
             dow : 1, // Monday is the first day of the week.
@@ -60,4 +62,4 @@
 
     return eu;
 
-}));
+})));

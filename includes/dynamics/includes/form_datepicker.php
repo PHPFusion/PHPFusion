@@ -97,7 +97,6 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
         add_to_footer("<script src='".DYNAMICS."assets/datepicker/locale/tooltip/".$lang.".js'></script>");
         add_to_footer("<script src='".DYNAMICS."assets/datepicker/js/bootstrap-datetimepicker.min.js'></script>");
         add_to_footer("<script src='".DYNAMICS."assets/datepicker/locale/".$locale['datepicker'].".js'></script>");
-
     }
 
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
