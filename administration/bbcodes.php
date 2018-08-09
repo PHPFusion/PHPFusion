@@ -202,22 +202,26 @@ function bbcode_form() {
                 }
             }
 
-            echo "<tr>\n";
             if (file_exists(LOCALE.LOCALESET."bbcodes/".$data['bbcode_name'].".php")) {
                 $locale = fusion_get_locale('', LOCALE.LOCALESET."bbcodes/".$data['bbcode_name'].".php");
             } else if (file_exists(LOCALE."English/bbcodes/".$data['bbcode_name'].".php")) {
                 $locale = fusion_get_locale('', LOCALE."English/bbcodes/".$data['bbcode_name'].".php");
             }
-            include INCLUDES."bbcodes/".$data['bbcode_name']."_bbcode_include_var.php";
-            echo "<td>".ucwords($data['bbcode_name'])."</td>\n";
-            echo "<td class='text-center'>".$bbcode_image."</td>\n";
-            echo "<td>".$__BBCODE__[0]['description']."</td>\n";
-            echo "<td>".$__BBCODE__[0]['usage']."</td>\n";
-            unset ($__BBCODE__);
-            echo "<td class='text-center'>".$data['bbcode_order']."</td>\n";
-            echo "<td class='text-center'>".$up_down."</td>\n";
-            echo "<td class='text-center'><a href='".FUSION_SELF.$aidlink."&amp;disable=".$data['bbcode_id']."'>".$locale['BBCA_410']."</a></td>\n";
-            echo "</tr>\n";
+
+            if (file_exists(INCLUDES."bbcodes/".$data['bbcode_name']."_bbcode_include_var.php")) {
+                include INCLUDES."bbcodes/".$data['bbcode_name']."_bbcode_include_var.php";
+
+                echo "<tr>\n";
+                echo "<td>".ucwords($data['bbcode_name'])."</td>\n";
+                echo "<td class='text-center'>".$bbcode_image."</td>\n";
+                echo "<td>".$__BBCODE__[0]['description']."</td>\n";
+                echo "<td>".$__BBCODE__[0]['usage']."</td>\n";
+                unset ($__BBCODE__);
+                echo "<td class='text-center'>".$data['bbcode_order']."</td>\n";
+                echo "<td class='text-center'>".$up_down."</td>\n";
+                echo "<td class='text-center'><a href='".FUSION_SELF.$aidlink."&amp;disable=".$data['bbcode_id']."'>".$locale['BBCA_410']."</a></td>\n";
+                echo "</tr>\n";
+            }
         }
         echo "</tbody>\n</table>\n";
         echo "</div>\n";
