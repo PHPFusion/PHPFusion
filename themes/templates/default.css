@@ -1576,7 +1576,7 @@ tr:hover > td .tbl_actions {
     border-radius: 6px;
 }
 
-.avatar.img-cirlce > svg {
+.avatar.img-circle > svg {
     -webkit-border-radius: 50%;
     border-radius: 50%;
 }
