@@ -85,6 +85,7 @@ main {
     }
 }
 
+.top-menu .navbar-nav > li > a > i,
 .top-menu .navbar-nav > li > a > svg {
     font-size: 30px;
 }
@@ -130,7 +131,8 @@ main {
     border-color: inherit !important;
 }
 
-.navbar svg {
+.navbar svg,
+.navbar i {
     margin-right: 0;
 }
 
@@ -138,7 +140,7 @@ main {
     padding: 14.5px 10px !important;
 }
 
-.top-menu .languages-switcher .fa,
+.top-menu .languages-switcher i,
 .top-menu .languages-switcher svg {
     margin-right: 5px;
 }
@@ -390,7 +392,7 @@ main {
     margin-top: 75px;
 }
 
-.sidebar .search-box .fa,
+.sidebar .search-box i,
 .sidebar .search-box svg {
     position: absolute;
     top: 86px;
@@ -402,13 +404,13 @@ main {
     transition: all 0.5s ease-in-out;
 }
 
-.sidebar .search-box .fa.focus,
+.sidebar .search-box i.focus,
 .sidebar .search-box svg.focus {
     left: 95%;
 }
 
 @media (min-width: 768px) {
-    .sidebar .search-box .fa.focus,
+    .sidebar .search-box i.focus,
     .sidebar .search-box svg.focus {
         left: 230px;
     }
@@ -542,7 +544,7 @@ main {
     padding: 13px 10px;
 }
 
-.sidebar .admin-vertical-link > li > a > .fa,
+.sidebar .admin-vertical-link > li > a > i,
 .sidebar .admin-vertical-link > li > a > svg {
     font-size: 20px;
     color: #a9a7a7;
@@ -574,7 +576,7 @@ main {
     background: #1b324c;
 }
 
-.sidebar .admin-vertical-link .admin-submenu li > a > .fa,
+.sidebar .admin-vertical-link .admin-submenu li > a > i,
 .sidebar .admin-vertical-link .admin-submenu li > a > svg {
     font-size: 22px;
     margin: 2px 10px 2px 15px;
@@ -711,12 +713,12 @@ main {
     padding: 8px 21px;
 }
 
-.sidebar-sm .sidebar .search-box .fa,
+.sidebar-sm .sidebar .search-box i,
 .sidebar-sm .sidebar .search-box svg {
     top: 28px;
 }
 
-.sidebar-sm .sidebar .search-box .fa.focus,
+.sidebar-sm .sidebar .search-box i.focus,
 .sidebar-sm .sidebar .search-box svg.focus {
     left: 205px !important;
 }
@@ -783,9 +785,9 @@ main {
     opacity: 0;
 }
 
-.sidebar-sm .sidebar .admin-vertical-link > li > a > .fa,
-.sidebar-sm .sidebar .admin-vertical-link > li.active > a:hover > .fa,
-.sidebar-sm .sidebar .admin-vertical-link > li.active > a:focus > .fa,
+.sidebar-sm .sidebar .admin-vertical-link > li > a > i,
+.sidebar-sm .sidebar .admin-vertical-link > li.active > a:hover > i,
+.sidebar-sm .sidebar .admin-vertical-link > li.active > a:focus > i,
 .sidebar-sm .sidebar .admin-vertical-link > li > a > svg,
 .sidebar-sm .sidebar .admin-vertical-link > li.active > a:hover > svg,
 .sidebar-sm .sidebar .admin-vertical-link > li.active > a:focus > svg {
@@ -794,8 +796,8 @@ main {
     margin-left: 7px;
 }
 
-.sidebar-sm .sidebar .admin-vertical-link > li > a:hover > .fa,
-.sidebar-sm .sidebar .admin-vertical-link > li > a:focus > .fa,
+.sidebar-sm .sidebar .admin-vertical-link > li > a:hover > i,
+.sidebar-sm .sidebar .admin-vertical-link > li > a:focus > i,
 .sidebar-sm .sidebar .admin-vertical-link > li > a:hover > svg,
 .sidebar-sm .sidebar .admin-vertical-link > li > a:focus > svg {
     margin-left: 4px;
@@ -869,7 +871,7 @@ main {
     transition: all .3s ease-in;
 }
 
-.cogs-animation .fa,
+.cogs-animation i,
 .cogs-animation svg {
     display: inline-block;
     width: 1em;
@@ -886,7 +888,7 @@ main {
     margin: 3px;
 }
 
-.cogs-animation .fa:nth-child(2),
+.cogs-animation i:nth-child(2),
 .cogs-animation svg:nth-child(2) {
     font-size: 1.5em;
     top: 0.4em;
@@ -895,7 +897,7 @@ main {
     animation-direction: reverse;
 }
 
-.cogs-animation .fa:nth-child(3),
+.cogs-animation i:nth-child(3),
 .cogs-animation svg:nth-child(3) {
     font-size: .75em;
     top: 0.2em;
@@ -5307,12 +5309,13 @@ html[dir="rtl"] .top-menu {
     }
 }
 
+html[dir="rtl"] .navbar i,
 html[dir="rtl"] .navbar svg {
     margin-right: inherit !important;
     margin-left: 0;
 }
 
-html[dir="rtl"] .top-menu .languages-switcher .fa,
+html[dir="rtl"] .top-menu .languages-switcher i,
 html[dir="rtl"] .top-menu .languages-switcher svg {
     margin-right: inherit !important;
     margin-left: 5px;
@@ -5364,20 +5367,20 @@ html[dir="rtl"] .sidebar .header .version {
     left: 15px;
 }
 
-html[dir="rtl"] .sidebar .search-box .fa,
+html[dir="rtl"] .sidebar .search-box i,
 html[dir="rtl"] .sidebar .search-box svg {
     left: inherit !important;
     right: 15px;
 }
 
-html[dir="rtl"] .sidebar .search-box .fa.focus,
+html[dir="rtl"] .sidebar .search-box i.focus,
 html[dir="rtl"] .sidebar .search-box svg.focus {
     left: inherit !important;
     right: 95%;
 }
 
 @media (min-width: 768px) {
-    html[dir="rtl"] .sidebar .search-box .fa.focus,
+    html[dir="rtl"] .sidebar .search-box i.focus,
     html[dir="rtl"] .sidebar .search-box svg.focus {
         left: inherit !important;
         right: 230px;
@@ -5432,7 +5435,7 @@ html[dir="rtl"] .sidebar .admin-vertical-link > li.active > a {
     border-right: 3px solid #0085d6;
 }
 
-html[dir="rtl"] .sidebar .admin-vertical-link > li > a > .fa,
+html[dir="rtl"] .sidebar .admin-vertical-link > li > a > i,
 html[dir="rtl"] .sidebar .admin-vertical-link > li > a > svg {
     margin-right: inherit !important;
     margin-left: 7px;
@@ -5508,9 +5511,9 @@ html[dir="rtl"] .sidebar-sm .sidebar .admin-vertical-link > li > a.collapsed > .
     right: 70px;
 }
 
-html[dir="rtl"] .sidebar-sm .sidebar .admin-vertical-link > li > a > .fa,
-html[dir="rtl"] .sidebar-sm .sidebar .admin-vertical-link > li.active > a:hover > .fa,
-html[dir="rtl"] .sidebar-sm .sidebar .admin-vertical-link > li.active > a:focus > .fa,
+html[dir="rtl"] .sidebar-sm .sidebar .admin-vertical-link > li > a > i,
+html[dir="rtl"] .sidebar-sm .sidebar .admin-vertical-link > li.active > a:hover > i,
+html[dir="rtl"] .sidebar-sm .sidebar .admin-vertical-link > li.active > a:focus > i,
 html[dir="rtl"] .sidebar-sm .sidebar .admin-vertical-link > li > a > svg,
 html[dir="rtl"] .sidebar-sm .sidebar .admin-vertical-link > li.active > a:hover > svg,
 html[dir="rtl"] .sidebar-sm .sidebar .admin-vertical-link > li.active > a:focus > svg {
@@ -5518,8 +5521,8 @@ html[dir="rtl"] .sidebar-sm .sidebar .admin-vertical-link > li.active > a:focus 
     margin-right: 7px;
 }
 
-html[dir="rtl"] .sidebar-sm .sidebar .admin-vertical-link > li > a:hover > .fa,
-html[dir="rtl"] .sidebar-sm .sidebar .admin-vertical-link > li > a:focus > .fa,
+html[dir="rtl"] .sidebar-sm .sidebar .admin-vertical-link > li > a:hover > i,
+html[dir="rtl"] .sidebar-sm .sidebar .admin-vertical-link > li > a:focus > i,
 html[dir="rtl"] .sidebar-sm .sidebar .admin-vertical-link > li > a:hover > svg,
 html[dir="rtl"] .sidebar-sm .sidebar .admin-vertical-link > li > a:focus > svg {
     margin-left: inherit !important;
@@ -5550,19 +5553,19 @@ html[dir="rtl"] .btn-theme-settings:focus {
     left: 0;
 }
 
-html[dir="rtl"] .cogs-animation .fa,
+html[dir="rtl"] .cogs-animation i,
 html[dir="rtl"] .cogs-animation svg {
     left: inherit !important;
     right: 0;
 }
 
-html[dir="rtl"] .cogs-animation .fa:nth-child(2),
+html[dir="rtl"] .cogs-animation i:nth-child(2),
 html[dir="rtl"] .cogs-animation svg:nth-child(2) {
     left: inherit !important;
     right: 0.25em;
 }
 
-html[dir="rtl"] .cogs-animation .fa:nth-child(3),
+html[dir="rtl"] .cogs-animation i:nth-child(3),
 html[dir="rtl"] .cogs-animation svg:nth-child(3) {
     left: inherit !important;
     right: 1.7em;
