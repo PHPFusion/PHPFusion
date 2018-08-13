@@ -55,8 +55,7 @@ if (!function_exists("display_maintenance")) {
         echo "</div>\n";
         echo "<div class='text-center'>\n";
         echo showcopyright();
-        echo showcounter();
-        echo showMemoryUsage();
+        echo '<div>'.showcounter().'</div>';
         echo "</div>\n";
         echo "</section>\n";
     }
