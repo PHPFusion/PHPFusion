@@ -450,16 +450,19 @@ main {
 .sidebar .search-box .form-control::-moz-placeholder {
     color: #2baaff;
     font-size: 14px;
+    padding-top: 5px;
 }
 
 .sidebar .search-box .form-control:-ms-input-placeholder {
     color: #2baaff;
     font-size: 14px;
+    padding-top: 5px;
 }
 
 .sidebar .search-box .form-control::-webkit-input-placeholder {
     color: #2baaff;
     font-size: 14px;
+    padding-top: 5px;
 }
 
 @media (min-width: 768px) {
