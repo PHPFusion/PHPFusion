@@ -60,7 +60,6 @@ a:hover, a:focus {
 }
 
 #devlpr label:not(.label-success and .label-default) {
-    display: block;
     text-align: left;
     color: #7f8fa3;
     -webkit-transition: height .5s;
