@@ -133,7 +133,7 @@ function get_table_rows($table_name, $localeset = 'English') {
             ],
             [
                 'settings_name'  => 'theme',
-                'settings_value' => 'FusionTheme'
+                'settings_value' => 'Magazine'
             ],
             [
                 'settings_name'  => 'admin_theme',
@@ -788,7 +788,7 @@ function get_table_rows($table_name, $localeset = 'English') {
         ]
     ];
     // if we're installing
-    $table_settings['settings_theme'] = [
+    /*$table_settings['settings_theme'] = [
         'insert' => [
             [
                 'settings_name'  => 'theme_pack',
@@ -801,7 +801,7 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'settings_theme' => 'FusionTheme'
             ]
         ]
-    ];
+    ];*/
     $table_settings['messages_options'] = [
         'insert' => [
             [
