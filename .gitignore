@@ -11,4 +11,3 @@ config-copy.php
 /includes/header_includes.php
 /includes/footer_includes.php
 /.github/
-.DS_Store
