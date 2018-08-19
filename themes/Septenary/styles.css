@@ -497,7 +497,8 @@ nav {
     border: 1px solid rgb(255, 255, 255);
 }
 
-.navbar-toggle > .entypo {
+.navbar-toggle > i,
+.navbar-toggle > svg {
     font-size: 35px;
     color: #FFF;
     line-height: 35px;
@@ -681,7 +682,8 @@ nav {
     padding: 10px;
 }
 
-.user-info-bar a .entypo {
+.user-info-bar a > i,
+.user-info-bar a > svg {
     font-size: 30px !important;
     margin-left: -5px;
     color: rgba(255, 255, 255, 1);

@@ -679,10 +679,6 @@ Grids
     text-align: center;
 }
 
-.thumb .entypo {
-    opacity: 0.5;
-}
-
 .pdisabled {
     background-color: rgb(252, 248, 227) !important;
     border-color: rgb(250, 235, 204) !important;
@@ -749,11 +745,6 @@ ul:not(.navbar-nav) > li a:not(.btn) {
 /* all tabs must have class */
 ul > li.active > a {
     /* background: #F6F6F6; */
-}
-
-/* entypo icon */
-a .entypo, a .entypo-social {
-    text-decoration: none !important;
 }
 
 .icon-xs {
@@ -847,105 +838,6 @@ a .entypo, a .entypo-social {
 .select2-input {
     color: #999 !important;
     border: none !important;
-}
-
-.select2-search-choice-close {
-    width: 12px !important;
-}
-
-/** Fusion CSS navigational menu */
-.main-nav {
-}
-
-.sub-nav {
-}
-
-.profile-link {
-}
-
-/* BS collapse mobile menu */
-#mp {
-    margin: 0;
-    padding: 0 !important; /* standardize the padding */
-    z-index: 300;
-    position: absolute;
-    width: 100%;
-    -webkit-box-sizing: content-box !important;
-    -moz-box-sizing: content-box !important;
-    box-sizing: content-box !important;
-    overflow: visible;
-}
-
-.mobile-panel {
-    padding: 0;
-    width: 100%;
-}
-
-.mobile-pane {
-    margin: 0 -15px !important;
-    background: rgba(255, 255, 255, 1);
-    padding: 0;
-}
-
-.mobile-grid {
-    padding: 3px;
-}
-
-.mobile-grid > .btn-menu {
-    padding: 5px;
-    -webkit-border-radius: 10px;
-    -moz-border-radius: 10px;
-    border-radius: 10px;
-}
-
-.mobile-pane .entypo {
-    font-size: 40px;
-    line-height: 0;
-    display: inline-block;
-}
-
-.mobile-header {
-    color: #000;
-    font-weight: bold;
-    padding: 5px 20px;
-    display: inline-block;
-    width: 100%;
-    border-bottom: 1px solid #CCC;
-}
-
-.mobile-btn-close {
-    font-size: 14px;
-    background: transparent;
-    position: absolute;
-    outline: none !important;
-    font-size: 14px;
-    color: rgb(51, 153, 255);
-    -webkit-transition: 0.3s ease-in-out;
-    -o-transition: 0.3s ease-in-out;
-    -moz-transition: 0.3s ease-in-out;
-    transition: 0.3s ease-in-out;
-}
-
-.mobile-btn-close:hover, .mobile-btn-close:focus {
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
-    box-shadow: none;
-    outline: none !important;
-    color: #DDD;
-}
-
-.mobile-header-text {
-    padding-top: 7px;
-}
-
-.mobile-text {
-    white-space: normal;
-    font-size: 16px;
-    font-size: 1rem;
-}
-
-.mobile-body {
-    padding: 15px;
 }
 
 .tbl {
