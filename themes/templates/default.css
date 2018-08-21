@@ -182,6 +182,10 @@ Grids
     content: normal;
 }
 
+.row.equal-height > [class*=col-] > * {
+    width: 100%;
+}
+
 /** Need to used inside a block type div and height width specify **/
 .center-y {
     position: relative;
