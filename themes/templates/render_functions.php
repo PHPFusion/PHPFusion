@@ -78,15 +78,18 @@ if (!function_exists("render_breadcrumbs")) {
 if (!function_exists('render_favicons')) {
     function render_favicons($folder = '') {
         $folder = ($folder == '' ? IMAGES.'favicons/' : $folder);
-        $html = "";
-        /* Src: http://realfavicongenerator.net/favicon_result?file_id=p1avd9jap61od55nq1l2e1e2q7q76#.WAbP6I995D8 */
+        $html = '';
+        // Generator - https://realfavicongenerator.net/
         if (is_dir($folder)) {
-            $html .= "<link rel='apple-touch-icon' sizes='144x144' href='".$folder."apple-touch-icon.png'>\n";
-            $html .= "<link rel='icon' type='image/png' href='".$folder."favicon-32x32.png' sizes='32x32'>\n";
-            $html .= "<link rel='icon' type='image/png' href='".$folder."favicon-16x16.png' sizes='16x16'>\n";
-            $html .= "<link rel='manifest' href='".$folder."manifest.json'>\n";
-            $html .= "<link rel='mask-icon' href='".$folder."safari-pinned-tab.svg' color='#ccc'>\n";
-            $html .= "<meta name='theme-color' content='#ffffff'>\n";
+            $html .= '<link rel="apple-touch-icon" sizes="144x144" href="'.$folder.'apple-touch-icon.png">';
+            $html .= '<link rel="icon" type="image/png" sizes="32x32" href="'.$folder.'favicon-32x32.png">';
+            $html .= '<link rel="icon" type="image/png" sizes="16x16" href="'.$folder.'favicon-16x16.png">';
+            $html .= '<link rel="manifest" href="'.$folder.'site.webmanifest">';
+            $html .= '<link rel="mask-icon" href="'.$folder.'safari-pinned-tab.svg" color="#262626">';
+            $html .= '<link rel="shortcut icon" href="'.$folder.'favicon.ico">';
+            $html .= '<meta name="msapplication-TileColor" content="#262626">';
+            $html .= '<meta name="msapplication-config" content="'.$folder.'browserconfig.xml">';
+            $html .= '<meta name="theme-color" content="#ffffff">';
         }
 
         return $html;
