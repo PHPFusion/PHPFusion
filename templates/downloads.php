@@ -61,10 +61,11 @@ if (!function_exists('render_downloads')) {
             echo "<div class='overflow-hide'><h4 class='m-t-5 m-b-0 strong'>".$locale['download_1007']."</h4>\n ".$locale['download_1020'].": ".$data['download_filesize']." </div>\n";
             echo "</div><div class='col-xs-7 col-sm-7 col-md-7 col-lg-7'>\n";
             echo "<div class='pull-left m-b-20'>\n";
-            if (!$data['download_allow_ratings']) {
-                echo $data['download_post_author'];
-            } else {
-                echo "<label class='strong'>".$locale['download_1008'].":</label><br/>\n";
+
+            echo $data['download_post_author'];
+
+            if ($data['download_allow_ratings'] && fusion_get_settings('ratings_enabled') == 1) {
+                echo "<br/><label class='strong m-t-5'>".$locale['download_1008'].":</label>\n";
                 echo "<a id='rateJump'>".$locale['download_3003']."</a>\n";
                 add_to_jquery("	$('#rateJump').bind('click', function() { $('html,body').animate({scrollTop: $('#rate').offset().top}, 'slow');	});	");
             }
@@ -133,15 +134,25 @@ if (!function_exists('render_downloads')) {
 
                     if ($dl_settings['download_stats']) {
                         echo "<div class='m-t-10'><i class='fa fa-download fa-fw'></i>".$data['download_count']."</div>\n";
-                        echo "<div><i class='fa fa-comments-o fa-fw'></i>".$data['download_comments']."</div>\n";
-                        echo "<div><i class='fa fa-star-o fa-fw'></i>".$data['download_sum_rating']."</div>\n";
+
+                        if ($data['download_allow_comments'] && fusion_get_settings('comments_enabled') == 1) {
+                            echo "<div><i class='fa fa-comments-o fa-fw'></i>".$data['download_comments']."</div>\n";
+                        }
+
+                        if ($data['download_allow_ratings'] && fusion_get_settings('ratings_enabled') == 1) {
+                            echo "<div><i class='fa fa-star-o fa-fw'></i>".$data['download_sum_rating']."</div>\n";
+                        }
                     }
 
                     echo "<a class='btn btn-sm btn-primary m-t-10 ".(empty($data['download_file_link']) ? 'disabled' : '')."' target='_blank' href='".$data['download_file_link']."'><i class='fa fa-download fa-fw'></i> ".$locale['download_1007']."</a>\n";
                     echo "</div>\n";
-                    echo "<div class='pull-left m-r-10'>\n";
-                    echo $data['download_image'];
-                    echo "</div>\n";
+
+                    if (!empty($data['download_image'])) {
+                        echo "<div class='pull-left m-r-10'>\n";
+                        echo $data['download_image'];
+                        echo "</div>\n";
+                    }
+
                     echo "<div class='overflow-hide'>\n";
                     echo "<div class='overflow-hide'>\n";
                     echo "<h4 class='m-0 display-inline-block'><a class='text-dark' href='".$data['download_link']."' title='".$download_title."'>".trimlink($data['download_title'], 100)."</a></h4>";

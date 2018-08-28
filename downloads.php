@@ -75,17 +75,25 @@ $info = [
     'download_title'        => $locale['download_1001'],
     'download_language'     => LANGUAGE,
     'download_categories'   => get_downloadCat(),
-    'allowed_filters'       => [
-        'download' => $locale['download_2003'],
-        'recent'   => $locale['download_2002'],
-        'comments' => $locale['download_2001'],
-        'ratings'  => $locale['download_2004'],
-    ],
     'download_last_updated' => 0,
     'download_max_rows'     => 0,
     'download_rows'         => 0,
-    'download_nav'          => '',
+    'download_nav'          => ''
 ];
+
+$info['allowed_filters'] = [
+    'download' => $locale['download_2003'],
+    'recent'   => $locale['download_2002']
+];
+
+if (fusion_get_settings('comments_enabled') == 1) {
+    $info['allowed_filters']['comments'] = $locale['download_2001'];
+}
+
+if (fusion_get_settings('ratings_enabled') == 1) {
+    $info['allowed_filters']['ratings'] = $locale['download_2004'];
+}
+
 /* Filter Construct */
 $filter = array_keys($info['allowed_filters']);
 $_GET['type'] = isset($_GET['type']) && in_array($_GET['type'],
