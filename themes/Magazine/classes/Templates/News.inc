@@ -199,11 +199,12 @@ class News extends Core {
                     echo '<span class="m-l-10"><i class="fa fa-user"></i> '.profile_link($data['user_id'], $data['user_name'], $data['user_status']).'</span>';
                     echo '<span class="m-l-10"><i class="fa fa-calendar"></i> '.showdate('newsdate', $data['news_datestamp']).'</span>';
                     echo '<span class="m-l-10"><i class="fa fa-eye"></i> '.number_format($data['news_reads']).'</span>';
-                    if (!empty($data['news_display_comments'])) {
+
+                    if ($data['news_allow_comments'] && fusion_get_settings('comments_enabled') == 1) {
                         echo '<span class="m-l-10"><i class="fa fa-comments-o"></i> '.$data['news_display_comments'].'</span>';
                     }
 
-                    if (!empty($data['news_display_ratings'])) {
+                    if ($data['news_allow_ratings'] && fusion_get_settings('ratings_enabled') == 1) {
                         echo '<span class="m-l-10">'.$data['news_display_ratings'].'</span>';
                     }
                 echo '</div>';

@@ -127,8 +127,14 @@ class Gallery {
         $html .= "<strong>".$locale['456']."</strong> ".$info['photo_byte'];
         $html .= "</div><div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n";
         $html .= "<strong>".$locale['457']."</strong> ".number_format($info['photo_views'])."<br/>\n";
-        $html .= "<strong>".$locale['437']."</strong> ".$info['photo_ratings']."<br/>\n";
-        $html .= "<strong>".$locale['436']."</strong> ".$info['photo_comment']."<br/>\n";
+
+        if ($info['photo_allow_ratings'] && fusion_get_settings('ratings_enabled') == 1) {
+            $html .= "<strong>".$locale['437']."</strong> ".$info['photo_ratings']."<br/>\n";
+        }
+
+        if ($info['photo_allow_comments'] && fusion_get_settings('comments_enabled') == 1) {
+            $html .= "<strong>".$locale['436']."</strong> ".$info['photo_comment']."<br/>\n";
+        }
         $html .= "</div>\n</div>\n";
         $html .= "</div>\n</div>\n";
         $html .= "<!--sub_photo-->";
@@ -185,10 +191,10 @@ class Gallery {
         }
 
         $html .= "<span class='m-r-5'><i class='fa fa-eye fa-fw'></i>".$info['photo_views']."</span>\n";
-        if (isset($info['photo_comments'])) {
+        if ($info['photo_allow_comments'] && fusion_get_settings('comments_enabled') == 1) {
             $html .= "<span class='m-r-5'><i class='fa fa-comment-o fa-fw'></i><a href='".$info['photo_comments']['link']."'>".$info['photo_comments']['name']."</a>\n</span>\n";
         }
-        if (isset($info['photo_ratings']['name'])) {
+        if ($info['photo_allow_ratings'] && fusion_get_settings('ratings_enabled') == 1) {
             $html .= "<span><i class='fa fa-star-o fa-fw'></i><a href='".$info['photo_ratings']['link']."'>".$info['photo_ratings']['name']."</a>\n</span>\n";
         }
         $html .= "<br/><small><span>".timer($info['photo_datestamp'])."</span></small>\n<br/>\n";

@@ -165,7 +165,7 @@ class Blog extends Core {
                 }
                 echo '</div>';
 
-                echo !empty($info['blog_nav']) ? '<div class="text-center">'.$info['blog_nav'].'</div>' : '';
+                echo !empty($info['blog_nav']) ? '<div class="text-center m-t-10">'.$info['blog_nav'].'</div>' : '';
             } else {
                 echo '<div class="text-center">'.$locale['blog_3000'].'</div>';
             }

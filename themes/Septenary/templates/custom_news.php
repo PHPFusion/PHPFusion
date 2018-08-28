@@ -73,12 +73,12 @@ if (!function_exists('render_main_news')) {
                                href='<?php echo INFUSIONS."news/news.php?readmore=".$news_item['news_id'] ?>'>
                                 <h4 class='text-white m-t-10'><?php echo $news_item['news_subject'] ?></h4>
                             </a>
-                            <?php if ($news_item['news_allow_comments']) : ?>
+                            <?php if ($news_item['news_allow_comments'] && fusion_get_settings('comments_enabled') == 1) : ?>
                                 <span class='m-r-10'><?php echo display_comments($news_item['news_comments'],
                                         INFUSIONS."news/news.php?readmore=".$news_item['news_id']."#comments"); ?></span>
                             <?php endif; ?>
 
-                            <?php if ($news_item['news_allow_ratings']) : ?>
+                            <?php if ($news_item['news_allow_ratings'] && fusion_get_settings('ratings_enabled') == 1) : ?>
                                 <span class='m-r-10'><?php echo display_ratings($news_item['news_sum_rating'],
                                         $news_item['news_count_votes'],
                                         INFUSIONS."news/news.php?readmore=".$news_item['news_id']."#postrating"); ?></span>
@@ -256,7 +256,7 @@ if (!function_exists('render_news')) {
         ?>
         <!--news_prepost_<?php echo $info['news_id'] ?>-->
         <article class="news-article">
-            <div class="news-img-info" style="height: <?php echo $news_settings['news_thumb_h'] ?>px;">
+            <div class="news-img-info" style="max-height: 400px;">
                 <?php echo $info['news_image']; ?>
                 <div class="news-box-overlay">
                     <a title="<?php echo $info['news_subject'] ?>" href="<?php echo $info['news_image_url'] ?>"
@@ -285,11 +285,11 @@ if (!function_exists('render_news')) {
                     <span class="news-date m-r-10">
                         <i class="fa fa-calendar fa-fw"></i> <?php echo showdate("newsdate", $info['news_date']) ?>
                     </span>
-                    <?php if (fusion_get_settings('comments_enabled') && $info['news_display_comments']) : ?>
+                    <?php if (fusion_get_settings('comments_enabled') && $info['news_allow_comments']) : ?>
                         <span class="news-comments"><i
                                     class="fa fa-comment-o"></i> <?php echo $info['news_display_comments'] ?></span>
                     <?php endif; ?>
-                    <?php if (fusion_get_settings('ratings_enabled') && $info['news_display_ratings']) : ?>
+                    <?php if (fusion_get_settings('ratings_enabled') && $info['news_allow_ratings']) : ?>
                         <span class="news-ratings"><i
                                     class="fa fa-star-o fa-fw"></i> <?php echo $info['news_display_ratings'] ?></span>
                     <?php endif; ?>
