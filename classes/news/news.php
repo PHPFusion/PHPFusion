@@ -77,10 +77,17 @@ abstract class News extends NewsServer {
      */
     protected static function get_NewsFilter() {
         $array['allowed_filters'] = [
-            'recent'  => self::$locale['news_0011'],
-            'comment' => self::$locale['news_0012'],
-            'rating'  => self::$locale['news_0013']
+            'recent'  => self::$locale['news_0011']
         ];
+
+        if (fusion_get_settings('comments_enabled') == 1) {
+            $array['allowed_filters']['comment'] = self::$locale['news_0012'];
+        }
+
+        if (fusion_get_settings('ratings_enabled') == 1) {
+            $array['allowed_filters']['rating'] = self::$locale['news_0013'];
+        }
+
         foreach ($array['allowed_filters'] as $type => $filter_name) {
             $filter_link = INFUSIONS."news/news.php?".(isset($_GET['cat_id']) ? "cat_id=".$_GET['cat_id']."&amp;" : '')."type=".$type;
             $array['news_filter'][$filter_link] = $filter_name;
