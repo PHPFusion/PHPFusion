@@ -68,10 +68,17 @@ abstract class Articles extends ArticlesServer {
      */
     private function get_ArticleFilters() {
         $array['allowed_filters'] = [
-            'recent'  => self::$locale['article_0030'],
-            'comment' => self::$locale['article_0031'],
-            'rating'  => self::$locale['article_0032']
+            'recent'  => self::$locale['article_0030']
         ];
+
+        if (fusion_get_settings('comments_enabled') == 1) {
+            $array['allowed_filters']['comment'] = self::$locale['article_0031'];
+        }
+
+        if (fusion_get_settings('ratings_enabled') == 1) {
+            $array['allowed_filters']['rating'] = self::$locale['article_0032'];
+        }
+
         foreach ($array['allowed_filters'] as $type => $filter_name) {
             $filter_link = INFUSIONS."articles/articles.php?".(isset($_GET['cat_id']) ? "cat_id=".$_GET['cat_id']."&amp;" : "")."type=".$type;
             $array['article_filter'][$filter_link] = $filter_name;
