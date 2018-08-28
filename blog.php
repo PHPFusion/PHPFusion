@@ -473,11 +473,6 @@ if (!empty($_GET['readmore'])) {
         }
     }
 
-    // End Queries Type : $result and $info['blog_rows']
-    if (($info['blog_max_rows'] > $blog_settings['blog_pagination']) && (!isset($_GET['readmore']) || !isnum($_GET['readmore']))) {
-        $info['blog_nav'] = makepagenav($_GET['rowstart'], $blog_settings['blog_pagination'], $info['blog_max_rows'], 3);
-    }
-
     if (!empty($info['blog_rows'])) {
         while ($data = dbarray($result)) {
             // remove category image binding on item. each item is capable of housing hundreds of category.
@@ -535,7 +530,22 @@ if (!empty($_GET['readmore'])) {
     }
 }
 
-// Archive Menu -- fix active selector
+if (!empty($info['blog_max_rows']) && ($info['blog_max_rows'] > $blog_settings['blog_pagination']) && !isset($_GET['readmore'])) {
+    $page_nav_link = (!empty($_GET['type']) ? INFUSIONS."blog/blog.php?type=".$_GET['type']."&amp;" : '');
+
+    if (!empty($_GET['cat_id']) && isnum($_GET['cat_id'])) {
+        $page_nav_link = INFUSIONS."blog/blog.php?cat_id=".$_GET['cat_id'].(!empty($_GET['type']) ? "&amp;type=".$_GET['type'] : '')."&amp;";
+    } else if (!empty($_GET['author']) && isnum($_GET['author'])) {
+        $info['blog_max_rows'] = dbcount("('blog_id')", DB_BLOG, "blog_name='".intval($_GET['author'])."' AND ".groupaccess('blog_visibility'));
+        $_GET['rowstart'] = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $info['blog_max_rows']) ? $_GET['rowstart'] : 0;
+
+        $page_nav_link = INFUSIONS."blog/blog.php?author=".$_GET['author']."&amp;";
+    }
+
+    $info['blog_nav'] = makepagenav($_GET['rowstart'], $blog_settings['blog_pagination'], $info['blog_max_rows'], 3, $page_nav_link);
+}
+
+// Archive Menu
 $sql = "SELECT YEAR(from_unixtime(blog_datestamp)) as blog_year, MONTH(from_unixtime(blog_datestamp)) AS blog_month, count(blog_id) AS blog_count
         FROM ".DB_BLOG." ".(multilang_table("BL") ? "WHERE blog_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('blog_visibility')." AND (blog_start=0 || blog_start<=".TIME.") AND (blog_end=0 || blog_end>=".TIME.") AND blog_draft=0 GROUP BY blog_year, blog_month ORDER BY blog_datestamp DESC";
 $archive_result = dbquery($sql);
