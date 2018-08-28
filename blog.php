@@ -65,16 +65,24 @@ $info = [
     'blog_language'         => LANGUAGE,
     'blog_categories'       => get_blogCatsData(),
     'blog_categories_index' => get_blogCatsIndex(),
-    'allowed_filters'       => [
-        'recent'  => $locale['blog_2001'],
-        'comment' => $locale['blog_2002'],
-        'rating'  => $locale['blog_2003']
-    ],
     'blog_last_updated'     => 0,
     'blog_max_rows'         => 0,
     'blog_rows'             => 0,
-    'blog_nav'              => '',
+    'blog_nav'              => ''
 ];
+
+$info['allowed_filters'] = [
+    'recent'  => $locale['blog_2001']
+];
+
+if (fusion_get_settings('comments_enabled') == 1) {
+    $info['allowed_filters']['comment'] = $locale['blog_2002'];
+}
+
+if (fusion_get_settings('ratings_enabled') == 1) {
+    $info['allowed_filters']['rating'] = $locale['blog_2003'];
+}
+
 $info['blog_categories'][0][0] = [
     'blog_cat_id'       => 0,
     'blog_cat_parent'   => 0,
