@@ -115,13 +115,13 @@ class Requirements extends Install_Core {
                 'severability' => -5
             ];
         }
-        if (version_compare($phpversion, '5.5.21') < 0) {
+        if (version_compare($phpversion, '5.6.8') < 0) {
             $requirements['php']['title'] = 'PHP';
             $requirements['php']['description'] = self::$locale['setup_0113'];
             $requirements['php']['severability'] = -10;
         }
 
-        // Suggest to update to at least 5.5.21 or 5.6.5 for disabling multiple statements.
+        // Suggest to update to at least 5.6.8 or 7 for disabling multiple statements.
         // $requirements['php_extensions'] output
         $missing_extensions = [];
         $required_extensions = [
