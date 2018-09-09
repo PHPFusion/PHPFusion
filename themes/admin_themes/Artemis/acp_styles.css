@@ -2324,8 +2324,8 @@ input[type=radio]:checked:before {
     height: 10px;
     outline: none;
     position: absolute;
-    left: 2px;
-    top: 2px;
+    top: 6px;
+    margin-left: -5px;
 }
 
 /* Forms */
