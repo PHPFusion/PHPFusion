@@ -394,21 +394,27 @@ class Search_Engine extends Search_Model {
 
             foreach ($search_files as $key => $file_to_check) {
                 if (preg_match("/include.php/i", $file_to_check)) {
-                    $file_name = str_replace('_include.php', '', $file_to_check);
-                    $file_name = str_replace('search_', '', $file_name);
-
                     if (file_exists(INCLUDES."search/".$file_to_check)) {
                         self::__Load(INCLUDES."search/".$file_to_check);
-                    } else if (file_exists(INFUSIONS.$file_name.'/search/'.$file_to_check)) {
-                        self::__Load(INFUSIONS.$file_name.'/search/'.$file_to_check);
+                    }
+
+                    foreach ($search_infusionfiles as $inf_files_to_check) {
+                        if (file_exists(INFUSIONS.$inf_files_to_check.'/search/'.$file_to_check)) {
+                            self::__Load(INFUSIONS.$inf_files_to_check.'/search/'.$file_to_check);
+                        }
                     }
                 }
             }
         } else {
             if (file_exists(INCLUDES."search/search_".self::get_param('stype')."_include.php")) {
                 self::__Load(INCLUDES."search/search_".self::get_param('stype')."_include.php");
-            } else if (file_exists(INFUSIONS.self::get_param('stype')."/search/search_".self::get_param('stype')."_include.php")) {
-                self::__Load(INFUSIONS.self::get_param('stype')."/search/search_".self::get_param('stype')."_include.php");
+            }
+
+            $search_infusionfiles = makefilelist(INFUSIONS, '.|..|index.php', TRUE, 'folders');
+            foreach ($search_infusionfiles as $inf_files_to_check) {
+                if (file_exists(INFUSIONS.$inf_files_to_check.'/search/search_'.self::get_param('stype').'_include.php')) {
+                    self::__Load(INFUSIONS.$inf_files_to_check.'/search/search_'.self::get_param('stype').'_include.php');
+                }
             }
         }
 
