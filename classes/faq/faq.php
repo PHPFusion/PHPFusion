@@ -53,6 +53,8 @@ abstract class Faq extends FaqServer {
             'faq_get'        => 0
         ];
 
+        !dbcount("(faq_cat_id)", DB_FAQ_CATS, "faq_cat_id='".$category."'") ? $category = 0 : '';
+
         $info = array_merge($info, self::get_FaqData($category));
 
         if (!empty($_GET['cat_id']) && isnum($_GET['cat_id']) && isset($info['faq_categories'][$_GET['cat_id']])) {
