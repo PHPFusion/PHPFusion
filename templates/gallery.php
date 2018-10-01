@@ -114,7 +114,6 @@ if (!function_exists('render_photo_album')) {
         echo "<!--sub_album_info-->";
         $counter = 0;
         function render_photo_items(array $info = []) {
-            $gallery_settings = get_settings('gallery');
             $locale = fusion_get_locale();
             echo "<div class='panel panel-default'>\n";
             echo "<div class='panel-image-wrapper' title='".$locale['450']."'>\n";
@@ -124,10 +123,11 @@ if (!function_exists('render_photo_album')) {
             echo "<div class='panel-footer'>\n";
             echo '<div class="clearfix text-center">';
             echo "<span class='m-r-5'><i class='fa fa-eye fa-fw'></i> ".$info['photo_views']."</span>\n";
-            if (isset($info['photo_comments'])) {
+            if ($info['photo_allow_comments'] && fusion_get_settings('comments_enabled') == 1) {
                 echo "<span class='m-r-5'><i class='fa fa-comment-o fa-fw'></i> <a href='".$info['photo_comments']['link']."'>".$info['photo_comments']['name']."</a>\n</span>\n";
             }
-            if (isset($info['photo_ratings'])) {
+
+            if ($info['photo_allow_ratings'] && fusion_get_settings('ratings_enabled') == 1) {
                 echo "<span><i class='fa fa-star-o fa-fw'></i> <a href='".$info['photo_ratings']['link']."'>".$info['photo_ratings']['name']."</a>\n</span>\n";
             }
             echo '</div>';
@@ -201,8 +201,14 @@ if (!function_exists('render_photo')) {
         echo "<strong>".$locale['456']."</strong> ".$info['photo_byte'];
         echo "</div><div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n";
         echo "<strong>".$locale['457']."</strong> ".number_format($info['photo_views'])."<br/>\n";
-        echo "<strong>".$locale['437']."</strong> ".$info['photo_ratings']."<br/>\n";
-        echo "<strong>".$locale['436']."</strong> ".$info['photo_comment']."<br/>\n";
+
+        if ($info['photo_allow_ratings'] && fusion_get_settings('ratings_enabled') == 1) {
+            echo "<strong>".$locale['437']."</strong> ".$info['photo_ratings']."<br/>\n";
+        }
+
+        if ($info['photo_allow_comments'] && fusion_get_settings('comments_enabled') == 1) {
+            echo "<strong>".$locale['436']."</strong> ".$info['photo_comment']."<br/>\n";
+        }
         echo "</div>\n</div>\n";
         echo "</div>\n</div>\n";
         echo "<!--sub_photo-->";
