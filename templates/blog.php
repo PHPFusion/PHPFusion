@@ -136,10 +136,15 @@ if (!function_exists('display_blog_index')) {
                             <div class='col-xs-12 col-sm-3'>
                                 <div class='pull-left m-r-5'>".$data['blog_user_avatar']."</div>
                                 <div class='overflow-hide'>
-                                    ".$data['blog_user_link']." <br/>
-                                    <span class='m-r-10 text-lighter'><i class='fa fa-comment-o fa-fw'></i> ".$data['blog_comments']."</span><br/>
-                                    <span class='m-r-10 text-lighter'><i class='fa fa-star-o fa-fw'></i> ".$data['blog_count_votes']."</span><br/>
-                                    <span class='m-r-10 text-lighter'><i class='fa fa-eye fa-fw'></i> ".$data['blog_reads']."</span><br/>
+                                    ".$data['blog_user_link']." <br/>";
+                                    if ($data['blog_allow_comments'] && fusion_get_settings('comments_enabled') == 1) {
+                                        echo "<span class='m-r-10 text-lighter'><i class='fa fa-comment-o fa-fw'></i> ".$data['blog_comments']."</span><br/>";
+                                    }
+
+                                    if ($data['blog_allow_ratings'] && fusion_get_settings('ratings_enabled') == 1) {
+                                        echo "<span class='m-r-10 text-lighter'><i class='fa fa-star-o fa-fw'></i> ".$data['blog_count_votes']."</span><br/>";
+                                    }
+                                    echo "<span class='m-r-10 text-lighter'><i class='fa fa-eye fa-fw'></i> ".$data['blog_reads']."</span><br/>
                                 </div>
                             </div>
                             <div class='col-xs-12 col-sm-9'>

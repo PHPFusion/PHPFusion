@@ -65,16 +65,24 @@ $info = [
     'blog_language'         => LANGUAGE,
     'blog_categories'       => get_blogCatsData(),
     'blog_categories_index' => get_blogCatsIndex(),
-    'allowed_filters'       => [
-        'recent'  => $locale['blog_2001'],
-        'comment' => $locale['blog_2002'],
-        'rating'  => $locale['blog_2003']
-    ],
     'blog_last_updated'     => 0,
     'blog_max_rows'         => 0,
     'blog_rows'             => 0,
-    'blog_nav'              => '',
+    'blog_nav'              => ''
 ];
+
+$info['allowed_filters'] = [
+    'recent'  => $locale['blog_2001']
+];
+
+if (fusion_get_settings('comments_enabled') == 1) {
+    $info['allowed_filters']['comment'] = $locale['blog_2002'];
+}
+
+if (fusion_get_settings('ratings_enabled') == 1) {
+    $info['allowed_filters']['rating'] = $locale['blog_2003'];
+}
+
 $info['blog_categories'][0][0] = [
     'blog_cat_id'       => 0,
     'blog_cat_parent'   => 0,
@@ -323,16 +331,16 @@ if (!empty($_GET['readmore'])) {
             $sql_sum = sprintf($pattern, 'SUM');
 
             $sql = "SELECT b.*, bu.user_id, bu.user_name, bu.user_status, bu.user_avatar , bu.user_level, bu.user_joined,
-			    ($sql_sum) AS sum_rating,
-			    ($sql_count) AS count_votes,
-			    (SELECT COUNT(bc.comment_id) FROM ".DB_COMMENTS." AS bc WHERE bc.comment_item_id = b.blog_id AND bc.comment_type = 'B' AND bc.comment_hidden = '0') AS count_comment,
-			    MAX(b.blog_datestamp) AS last_updated
-			    FROM ".DB_BLOG." AS b
-			    INNER JOIN ".DB_USERS." AS bu ON b.blog_name=bu.user_id
-			    ".(multilang_table('BL') ? "WHERE blog_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('blog_visibility')."
-			    AND (blog_start=0 || blog_start<=".TIME.") AND (blog_end=0 || blog_end>=".TIME.") AND blog_draft=0 AND blog_name=:author_id
-			    GROUP BY blog_id
-			    ORDER BY blog_sticky DESC, ".$filter_condition." LIMIT :rowstart, :limit
+                ($sql_sum) AS sum_rating,
+                ($sql_count) AS count_votes,
+                (SELECT COUNT(bc.comment_id) FROM ".DB_COMMENTS." AS bc WHERE bc.comment_item_id = b.blog_id AND bc.comment_type = 'B' AND bc.comment_hidden = '0') AS count_comment,
+                MAX(b.blog_datestamp) AS last_updated
+                FROM ".DB_BLOG." AS b
+                INNER JOIN ".DB_USERS." AS bu ON b.blog_name=bu.user_id
+                ".(multilang_table('BL') ? "WHERE blog_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('blog_visibility')."
+                AND (blog_start=0 || blog_start<=".TIME.") AND (blog_end=0 || blog_end>=".TIME.") AND blog_draft=0 AND blog_name=:author_id
+                GROUP BY blog_id
+                ORDER BY blog_sticky DESC, ".$filter_condition." LIMIT :rowstart, :limit
             ";
 
             $param = [
@@ -473,11 +481,6 @@ if (!empty($_GET['readmore'])) {
         }
     }
 
-    // End Queries Type : $result and $info['blog_rows']
-    if (($info['blog_max_rows'] > $blog_settings['blog_pagination']) && (!isset($_GET['readmore']) || !isnum($_GET['readmore']))) {
-        $info['blog_nav'] = makepagenav($_GET['rowstart'], $blog_settings['blog_pagination'], $info['blog_max_rows'], 3);
-    }
-
     if (!empty($info['blog_rows'])) {
         while ($data = dbarray($result)) {
             // remove category image binding on item. each item is capable of housing hundreds of category.
@@ -516,13 +519,14 @@ if (!empty($_GET['readmore'])) {
             // refetch category per item and parse as string
             if (!empty($data['blog_cat'])) {
                 $blog_cat = str_replace(".", ",", $data['blog_cat']);
-                $result2 = dbquery("SELECT blog_cat_id, blog_cat_name from ".DB_BLOG_CATS." WHERE blog_cat_id in ($blog_cat)");
+                $result2 = dbquery("SELECT blog_cat_id, blog_cat_name, blog_cat_image from ".DB_BLOG_CATS." WHERE blog_cat_id in ($blog_cat)");
                 $rows2 = dbrows($result2);
                 if ($rows2 > 0) {
                     $i = 1;
                     while ($catData = dbarray($result2)) {
                         $cdata['blog_category_link'] .= "<a href='".INFUSIONS."blog/blog.php?cat_id=".$catData['blog_cat_id']."'>".$catData['blog_cat_name']."</a>";
                         $cdata['blog_category_link'] .= $i == $rows2 ? "" : ", ";
+                        $cdata['blog_cat_image'] = $catData['blog_cat_image'];
                         $i++;
                     }
                 }
@@ -534,7 +538,22 @@ if (!empty($_GET['readmore'])) {
     }
 }
 
-// Archive Menu -- fix active selector
+if (!empty($info['blog_max_rows']) && ($info['blog_max_rows'] > $blog_settings['blog_pagination']) && !isset($_GET['readmore'])) {
+    $page_nav_link = (!empty($_GET['type']) ? INFUSIONS."blog/blog.php?type=".$_GET['type']."&amp;" : '');
+
+    if (!empty($_GET['cat_id']) && isnum($_GET['cat_id'])) {
+        $page_nav_link = INFUSIONS."blog/blog.php?cat_id=".$_GET['cat_id'].(!empty($_GET['type']) ? "&amp;type=".$_GET['type'] : '')."&amp;";
+    } else if (!empty($_GET['author']) && isnum($_GET['author'])) {
+        $info['blog_max_rows'] = dbcount("('blog_id')", DB_BLOG, "blog_name='".intval($_GET['author'])."' AND ".groupaccess('blog_visibility'));
+        $_GET['rowstart'] = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $info['blog_max_rows']) ? $_GET['rowstart'] : 0;
+
+        $page_nav_link = INFUSIONS."blog/blog.php?author=".$_GET['author']."&amp;";
+    }
+
+    $info['blog_nav'] = makepagenav($_GET['rowstart'], $blog_settings['blog_pagination'], $info['blog_max_rows'], 3, $page_nav_link);
+}
+
+// Archive Menu
 $sql = "SELECT YEAR(from_unixtime(blog_datestamp)) as blog_year, MONTH(from_unixtime(blog_datestamp)) AS blog_month, count(blog_id) AS blog_count
         FROM ".DB_BLOG." ".(multilang_table("BL") ? "WHERE blog_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('blog_visibility')." AND (blog_start=0 || blog_start<=".TIME.") AND (blog_end=0 || blog_end>=".TIME.") AND blog_draft=0 GROUP BY blog_year, blog_month ORDER BY blog_datestamp DESC";
 $archive_result = dbquery($sql);
