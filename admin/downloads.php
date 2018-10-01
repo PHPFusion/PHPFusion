@@ -108,7 +108,7 @@ if (isset($_POST['save_download'])) {
         if (empty($upload['error'])) {
             $data['download_file'] = !empty($upload['target_file']) ? $upload['target_file'] : $upload['name'];
             if (isset($_POST['calc_upload'])) {
-                $data['download_filesize'] = parsebytesize($upload['size']);
+                $data['download_filesize'] = parsebytesize($_FILES['download_file']['size']);
             }
         }
     } else if (!empty($_POST['download_url']) && empty($data['download_file'])) {

@@ -75,17 +75,25 @@ $info = [
     'download_title'        => $locale['download_1001'],
     'download_language'     => LANGUAGE,
     'download_categories'   => get_downloadCat(),
-    'allowed_filters'       => [
-        'download' => $locale['download_2003'],
-        'recent'   => $locale['download_2002'],
-        'comments' => $locale['download_2001'],
-        'ratings'  => $locale['download_2004'],
-    ],
     'download_last_updated' => 0,
     'download_max_rows'     => 0,
     'download_rows'         => 0,
-    'download_nav'          => '',
+    'download_nav'          => ''
 ];
+
+$info['allowed_filters'] = [
+    'download' => $locale['download_2003'],
+    'recent'   => $locale['download_2002']
+];
+
+if (fusion_get_settings('comments_enabled') == 1) {
+    $info['allowed_filters']['comments'] = $locale['download_2001'];
+}
+
+if (fusion_get_settings('ratings_enabled') == 1) {
+    $info['allowed_filters']['ratings'] = $locale['download_2004'];
+}
+
 /* Filter Construct */
 $filter = array_keys($info['allowed_filters']);
 $_GET['type'] = isset($_GET['type']) && in_array($_GET['type'],
@@ -120,14 +128,13 @@ switch ($_GET['type']) {
 
 if (isset($_GET['download_id'])) {
     if (validate_download($_GET['download_id'])) {
-
         $pattern = "SELECT %s(dr.rating_vote) FROM ".DB_RATINGS." AS dr WHERE dr.rating_item_id = d.download_id AND dr.rating_type = 'B'";
         $sql_count = sprintf($pattern, 'COUNT');
         $sql_sum = sprintf($pattern, 'SUM');
         $result = dbquery("SELECT d.*, dc.*, du.user_id, du.user_name, du.user_status, du.user_avatar, du.user_level, du.user_joined,
-			($sql_sum) AS sum_rating,
-			($sql_count) AS count_votes,
-			(SELECT COUNT(dcc.comment_id) FROM ".DB_COMMENTS." AS dcc WHERE dcc.comment_item_id = d.download_id AND dcc.comment_type = 'D' AND dcc.comment_hidden = '0') AS count_comment,
+            ($sql_sum) AS sum_rating,
+            ($sql_count) AS count_votes,
+            (SELECT COUNT(dcc.comment_id) FROM ".DB_COMMENTS." AS dcc WHERE dcc.comment_item_id = d.download_id AND dcc.comment_type = 'D' AND dcc.comment_hidden = '0') AS count_comment,
             d.download_datestamp AS last_updated
             FROM ".DB_DOWNLOADS." AS d
             INNER JOIN ".DB_DOWNLOAD_CATS." AS dc ON d.download_cat = dc.download_cat_id
@@ -299,8 +306,8 @@ if (isset($_GET['download_id'])) {
 }
 
 if (!empty($info['download_max_rows']) && ($info['download_max_rows'] > $dl_settings['download_pagination']) && !isset($_GET['download_id'])) {
+    $page_nav_link = (!empty($_GET['type']) ? INFUSIONS."downloads/downloads.php?type=".$_GET['type']."&amp;" : '');
 
-    $page_nav_link = (!empty($_GET['type']) ? "?type=".$_GET['type']."&amp;" : '');
     if (!empty($_GET['cat_id']) && isnum($_GET['cat_id'])) {
         $page_nav_link = INFUSIONS."downloads/downloads.php?cat_id=".$_GET['cat_id'].(!empty($_GET['type']) ? "&amp;type=".$_GET['type'] : '')."&amp;";
     } else if (!empty($_GET['author']) && isnum($_GET['author'])) {

@@ -39,6 +39,7 @@ $pattern = [
     "submit-%stype%/files/submitted-and-thank-you"                             => "submit.php?stype=%stype%&amp;submitted=d",
     "downloads/author/%author_id%/%author_name%"                               => "infusions/downloads/downloads.php?author=%author_id%",
     "downloads/filter/%filter_type%"                                           => "infusions/downloads/downloads.php?type=%filter_type%",
+    "downloads/filter/%filter_type%/rowstart/%rowstart%"                       => "infusions/downloads/downloads.php?type=%filter_type%&amp;rowstart=%rowstart%",
     "downloads/filter/%filter_type%/category/%download_cat_id%"                => "infusions/downloads/downloads.php?cat_id=%download_cat_id%&amp;type=%filter_type%",
     "downloads/category/%download_cat_id%/%download_cat_name%"                 => "infusions/downloads/downloads.php?cat_id=%download_cat_id%",
     "downloads/category/%download_cat_id%/file/%download_id%/%download_title%" => "infusions/downloads/downloads.php?cat_id=%download_cat_id%&amp;file_id=%download_id%",
