@@ -32,22 +32,6 @@ if (!function_exists('display_main_news')) {
         add_to_head("<link href='".INFUSIONS."news/templates/html/news.css' rel='stylesheet'/>\n");
         add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/jquery.cookie.js'></script>");
 
-        /*
-         * Disabling this cookie to stop consume memory to ensure speedy view.
-        $cookie_expiry = time() + 7 * 24 * 3600;
-        if (empty($_COOKIE['fusion_news_view'])) {
-            setcookie("fusion_news_view", 1, $cookie_expiry);
-        } else if (isset($_GET['switchview']) && isnum($_GET['switchview'])) {
-            setcookie("fusion_news_view", intval($_GET['switchview'] == 2 ? 2 : 1), $cookie_expiry);
-            redirect(INFUSIONS.'news/news.php');
-        }
-        $active = isset($_COOKIE['fusion_news_view']) && isnum($_COOKIE['fusion_news_view']) && $_COOKIE['fusion_news_view'] == 2 ? 2 : 1;
-        echo "<div class='btn-group pull-right display-inline-block m-l-10'>\n";
-        echo "<a class='btn btn-default snv".($active == 1 ? ' active ' : '')."' href='".INFUSIONS."news/news.php?switchview=1'><i class='fa fa-th-large'></i> ".$locale['news_0014']."</a>";
-        echo "<a class='btn btn-default snv".($active == 2 ? ' active ' : '')."' href='".INFUSIONS."news/news.php?switchview=2'><i class='fa fa-bars'></i> ".$locale['news_0015']."</a>";
-        echo "</div>\n";
-        */
-
         $tpl = \PHPFusion\Template::getInstance('news');
         $tpl->set_template(__DIR__.'/html/news.html');
         $tpl->set_locale(fusion_get_locale());
@@ -96,7 +80,7 @@ if (!function_exists('display_main_news')) {
                     if (function_exists('render_news')) {
 
                         ob_start();
-                        echo render_news($news['news_subject'], $news['news_news'], $news);
+                        render_news($news['news_subject'], $news['news_news'], $news);
                         $ni_html .= ob_get_clean();
 
                     } else {
@@ -145,6 +129,7 @@ if (!function_exists('display_main_news')) {
 
         // Use Navbar
         $i = 1;
+        $sec_nav = [];
         foreach ($info['news_filter'] as $link => $title) {
             $sec_nav[0]['fltr_'.$i] = [
                 'link_id'     => 'fltr_'.$i,
@@ -154,6 +139,9 @@ if (!function_exists('display_main_news')) {
             ];
             $i++;
         }
+
+        $nav = [];
+
         if (!empty($info['news_categories'])) {
             $nav[0]['link_all'] = [
                 'link_id'     => 'link_all',
@@ -244,8 +232,6 @@ if (!function_exists('render_news_item')) {
         echo $data['news_pagenav'];
 
         if (!empty($data['news_gallery'])) {
-            $thumb_height = \PHPFusion\News\News::get_news_settings('news_thumb_h');
-            $thumb_width = \PHPFusion\News\News::get_news_settings('news_thumb_w');
             echo '<hr/>';
             openside(fusion_get_locale('news_0019')) ?>
             <div class='post-gallery overflow-hide m-b-20'>
@@ -263,8 +249,15 @@ if (!function_exists('render_news_item')) {
                 $data['user_status'])."</span>\n";
         echo "<span class='news-action m-l-10'><i class='fa fa-calendar'></i> ".showdate("newsdate", $data['news_datestamp'])."</span>\n";
         echo "<span class='news-action m-l-10'><i class='fa fa-eye'></i> <span class='text-dark'>".number_format($data['news_reads'])."</span>\n</span>";
-        echo '<i class="fa fa-comments-o m-l-10"></i> '.$data['news_display_comments'];
-        echo $data['news_display_ratings'];
+
+        if ($data['news_allow_comments'] && fusion_get_settings('comments_enabled') == 1) {
+            echo '<i class="fa fa-comments-o m-l-10"></i> '.$data['news_display_comments'];
+        }
+
+        if ($data['news_allow_ratings'] && fusion_get_settings('ratings_enabled') == 1) {
+            echo $data['news_display_ratings'];
+        }
+
         echo "<i class='fa fa-print m-l-10'></i> <a title='".$locale['news_0002']."' href='".BASEDIR."print.php?type=N&amp;item_id=".$data['news_id']."' target='_blank'>".$locale['print']."</a>";
         echo "</div>";
         echo "<!--news_sub_readmore-->";
