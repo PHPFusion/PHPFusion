@@ -40,6 +40,7 @@ $pattern = [
     "submit-%stype%/articles"                                                          => "submit.php?stype=%stype%",
     "submit-%stype%/articles/submitted-and-thank-you"                                  => "submit.php?stype=%stype%&amp;submitted=a",
     "articles/filter/%filter_type%"                                                    => "infusions/articles/articles.php?type=%filter_type%",
+    "articles/filter/%filter_type%/rowstart/%rowstart%"                                => "infusions/articles/articles.php?type=%filter_type%&amp;rowstart=%rowstart%",
     "articles/filter/%filter_type%/category/%article_cat_id%"                          => "infusions/articles/articles.php?cat_id=%article_cat_id%&amp;type=%filter_type%",
     "articles/comments-reply-%comment_cat%/%article_id%/%article_title%"               => "infusions/articles/articles.php?article_id=%article_id%&amp;comment_reply=%comment_cat%",
     "articles/comments-reply-%comment_cat%/%article_id%/%article_title%#c%comment_id%" => "infusions/articles/articles.php?article_id=%article_id%&amp;comment_reply=%comment_cat%#c%comment_id%",
