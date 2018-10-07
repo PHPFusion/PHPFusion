@@ -83,12 +83,6 @@ if (function_exists("get_head_tags")) {
 
 echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery.min.js'></script>\n";
 echo "<script type='text/javascript' src='".INCLUDES."jscripts/jscript.js'></script>\n";
-
-// Output lines added with add_to_css()
-if (!empty($fusion_css_tags)) {
-    $minifier = new \PHPFusion\Minify\CSS($fusion_css_tags);
-    echo "<style type='text/css'>".$minifier->minify()."</style>\n";
-}
 echo "</head>\n";
 
 /**

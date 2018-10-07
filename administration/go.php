@@ -41,6 +41,8 @@ if (isset($_GET['id']) && isnum($_GET['id'])) {
     }
 }
 
+ob_start();
+
 echo '<!DOCTYPE html>';
 echo '<html dir="'.fusion_get_locale('text-direction').'">';
 echo '<head>';
@@ -52,12 +54,6 @@ if (!defined('NO_DEFAULT_CSS')) {
 }
 echo '<meta http-equiv="refresh" content="2; url='.$urlprefix.$url.'" />';
 echo render_favicons(defined('THEME_ICON') ? THEME_ICON : IMAGES.'favicons/');
-echo \PHPFusion\OutputHandler::$pageHeadTags;
-$fusion_css_tags = \PHPFusion\OutputHandler::$cssTags;
-if (!empty($fusion_css_tags)) {
-    $minifier = new \PHPFusion\Minify\CSS($fusion_css_tags);
-    echo "<style type='text/css'>".$minifier->minify()."</style>\n";
-}
 echo '</head>';
 echo '<body>';
 echo '<div class="align-center" style="margin-top: 15%;">';
@@ -75,6 +71,12 @@ if (!empty($fusion_jquery_tags)) {
 echo '</body>';
 echo '</html>';
 
+$output = ob_get_contents();
 if (ob_get_length() !== FALSE) {
+    ob_end_clean();
+}
+$output = handle_output($output);
+echo $output;
+if ((ob_get_length() > 0)) {
     ob_end_flush();
 }

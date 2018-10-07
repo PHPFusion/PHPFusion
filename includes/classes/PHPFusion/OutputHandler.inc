@@ -201,6 +201,11 @@ class OutputHandler {
             $output = preg_replace("#</head>#", self::$pageHeadTags."</head>", $output, 1);
         }
 
+        if (!empty(self::$cssTags)) {
+            $minifier = new Minify\CSS(self::$cssTags);
+            $output = preg_replace("#</head>#", "<style>".$minifier->minify()."</style></head>", $output, 1);
+        }
+
         if (self::$pageTitle != $settings['sitename']) {
             $output = preg_replace("#<title>.*</title>#i",
                 "<title>".self::$pageTitle.(self::$pageTitle ? fusion_get_locale('global_200') : '').$settings['sitename']."</title>",

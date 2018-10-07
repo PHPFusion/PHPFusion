@@ -29,6 +29,8 @@ $locale = fusion_get_locale();
 
 $info = [];
 
+ob_start();
+
 if (!iMEMBER) {
     switch (fusion_get_settings('login_method')) {
         case "2" :
@@ -118,12 +120,6 @@ echo "<link href='".THEME."styles.css' rel='stylesheet' type='text/css' media='s
 echo render_favicons(defined('THEME_ICON') ? THEME_ICON : IMAGES.'favicons/');
 
 echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery.js'></script>\n";
-echo \PHPFusion\OutputHandler::$pageHeadTags;
-$fusion_css_tags = \PHPFusion\OutputHandler::$cssTags;
-if (!empty($fusion_css_tags)) {
-    $minifier = new \PHPFusion\Minify\CSS($fusion_css_tags);
-    echo "<style type='text/css'>".$minifier->minify()."</style>\n";
-}
 echo "</head>\n";
 
 display_maintenance($info);
@@ -140,3 +136,13 @@ if (fusion_get_settings('bootstrap') || defined('BOOTSTRAP')) {
 }
 echo "</body>\n";
 echo "</html>";
+
+$output = ob_get_contents();
+if (ob_get_length() !== FALSE) {
+    ob_end_clean();
+}
+$output = handle_output($output);
+echo $output;
+if ((ob_get_length() > 0)) {
+    ob_end_flush();
+}

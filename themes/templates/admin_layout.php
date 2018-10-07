@@ -72,12 +72,6 @@ echo render_favicons(defined('THEME_ICON') ? THEME_ICON : IMAGES.'favicons/');
 if (function_exists("get_head_tags")) {
     echo get_head_tags();
 }
-
-// Output lines added with add_to_css()
-if (!empty($fusion_css_tags)) {
-    $minifier = new \PHPFusion\Minify\CSS($fusion_css_tags);
-    echo "<style type='text/css'>".$minifier->minify()."</style>\n";
-}
 echo "</head>";
 
 /**
