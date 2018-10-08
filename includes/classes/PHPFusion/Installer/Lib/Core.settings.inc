@@ -787,33 +787,6 @@ function get_table_rows($table_name, $localeset = 'English') {
             ]
         ]
     ];
-    // if we're installing
-    /*$table_settings['settings_theme'] = [
-        'insert' => [
-            [
-                'settings_name'  => 'theme_pack',
-                'settings_value' => 'Nebula',
-                'settings_theme' => 'FusionTheme'
-            ],
-            [
-                'settings_name'  => 'FusionTheme',
-                'settings_value' => 1,
-                'settings_theme' => 'FusionTheme'
-            ]
-        ]
-    ];*/
-    $table_settings['messages_options'] = [
-        'insert' => [
-            [
-                'user_id'         => 0,
-                'pm_email_notify' => 0,
-                'pm_save_sent'    => 1,
-                'pm_inbox'        => 20,
-                'pm_savebox'      => 20,
-                'pm_sentbox'      => 20
-            ]
-        ]
-    ];
     $table_settings['bbcodes'] = [
         'insert' => [
             [

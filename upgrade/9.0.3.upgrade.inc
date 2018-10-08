@@ -73,3 +73,5 @@ if (db_exists(DB_PREFIX.'sessions')) {
 }
 
 dbquery("ALTER TABLE ".DB_USERS." ADD FULLTEXT(`user_name`)");
+
+$inf_droptable[] = DB_PREFIX.'messages_options';
