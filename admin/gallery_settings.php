@@ -266,37 +266,27 @@ echo form_button('delete_watermarks', $locale['gallery_0211'], $locale['gallery_
 echo closeform();
         echo '</div>';
 add_to_jquery("
-        $('#photo_watermark').bind('change', function(){
-        var vals = $(this).select2().val();
-        if (vals == 1) {
-            $('#photo_watermark_save').select2('enable');
-            $('#delete_watermarks').removeAttr('disabled');
-            $('#photo_watermark_image').removeAttr('disabled');
-            $('#photo_watermark_text').select2('enable');
-            $('#photo_watermark_text_color1').colorpicker('enable');
-            $('#photo_watermark_text_color2').colorpicker('enable');
-            $('#photo_watermark_text_color3').colorpicker('enable');
-        } else {
-            $('#photo_watermark_save').select2('disable');
-            $('#delete_watermarks').attr('disabled', 'disabled');
-            $('#photo_watermark_image').attr('disabled', 'disabled');
-            $('#photo_watermark_text').select2('disable');
-            $('#photo_watermark_text_color1').colorpicker('disable');
-            $('#photo_watermark_text_color2').colorpicker('disable');
-            $('#photo_watermark_text_color3').colorpicker('disable');
-        }
-        });
-    ");
-function calculate_byte($download_max_b) {
-    $calc_opts = fusion_get_locale('1020');
-    foreach ($calc_opts as $byte => $val) {
-        if ($download_max_b / $byte <= 999) {
-            return $byte;
-        }
+    $('#photo_watermark').bind('change', function(){
+    var vals = $(this).select2().val();
+    if (vals == 1) {
+        $('#photo_watermark_save').select2('enable');
+        $('#delete_watermarks').removeAttr('disabled');
+        $('#photo_watermark_image').removeAttr('disabled');
+        $('#photo_watermark_text').select2('enable');
+        $('#photo_watermark_text_color1').colorpicker('enable');
+        $('#photo_watermark_text_color2').colorpicker('enable');
+        $('#photo_watermark_text_color3').colorpicker('enable');
+    } else {
+        $('#photo_watermark_save').select2('disable');
+        $('#delete_watermarks').attr('disabled', 'disabled');
+        $('#photo_watermark_image').attr('disabled', 'disabled');
+        $('#photo_watermark_text').select2('disable');
+        $('#photo_watermark_text_color1').colorpicker('disable');
+        $('#photo_watermark_text_color2').colorpicker('disable');
+        $('#photo_watermark_text_color3').colorpicker('disable');
     }
-
-    return 1000000;
-}
+    });
+");
 
 function color_mapper($field, $value) {
     global $gll_settings;
