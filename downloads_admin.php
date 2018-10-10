@@ -207,14 +207,3 @@ function download_listing() {
     }
     echo "</ul>\n";
 }
-
-function calculate_byte($download_max_b) {
-    $calc_opts = fusion_get_locale('1020', LOCALE.LOCALESET."admin/settings.php");
-    foreach ($calc_opts as $byte => $val) {
-        if ($download_max_b / $byte <= 999) {
-            return $byte;
-        }
-    }
-
-    return 1000000;
-}
