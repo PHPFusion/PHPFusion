@@ -366,7 +366,7 @@ class ForumAdminSettings extends ForumAdminInterface {
                 <?php
                 openside(self::$locale['forum_142']);
                 $calc_opts = self::$locale['1020'];
-                $calc_c = self::calculate_byte($forum_settings['forum_attachmax']);
+                $calc_c = calculate_byte($forum_settings['forum_attachmax']);
                 $calc_b = $forum_settings['forum_attachmax'] / $calc_c;
                 require_once INCLUDES."mimetypes_include.php";
                 $mime = mimeTypes();
@@ -469,22 +469,5 @@ class ForumAdminSettings extends ForumAdminInterface {
         </div>
         <?php
         echo closeform();
-    }
-
-    /**
-     * Calculate byte
-     *
-     * @param $download_max_b
-     *
-     * @return int|string
-     */
-    protected static function calculate_byte($download_max_b) {
-        $calc_opts = self::$locale['1020'];
-        foreach ($calc_opts as $byte => $val) {
-            if ($download_max_b / $byte <= 999) {
-                return $byte;
-            }
-        }
-        return 1000000;
     }
 }
