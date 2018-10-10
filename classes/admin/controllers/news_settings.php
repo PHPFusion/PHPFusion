@@ -75,7 +75,7 @@ class NewsSettingsAdmin extends NewsAdminModel {
         $cat_opts = ['0' => $locale['959'], '1' => $locale['news_0301']];
         $thumb_opts = ['0' => $locale['955'], '1' => $locale['956']];
         $calc_opts = $locale['1020'];
-        $calc_c = $this->calculate_byte($news_settings['news_photo_max_b']);
+        $calc_c = calculate_byte($news_settings['news_photo_max_b']);
         $calc_b = $news_settings['news_photo_max_b'] / $calc_c;
 
         echo "<div class='m-t-20'>";

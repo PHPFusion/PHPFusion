@@ -90,24 +90,6 @@ class NewsAdminModel extends NewsServer {
     }
 
     /**
-     * Returns nearest data unit
-     *
-     * @param $total_bit
-     *
-     * @return int
-     */
-    protected function calculate_byte($total_bit) {
-        $calc_opts = fusion_get_locale('1020');
-        foreach ($calc_opts as $byte => $val) {
-            if ($total_bit / $byte <= 999) {
-                return (int)$byte;
-            }
-        }
-
-        return 1000000;
-    }
-
-    /**
      * Function to progressively return closest full image_path
      *
      * @param $news_image
