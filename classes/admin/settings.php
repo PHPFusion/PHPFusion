@@ -470,5 +470,4 @@ class ForumAdminSettings extends ForumAdminInterface {
         <?php
         echo closeform();
     }
-
 }
