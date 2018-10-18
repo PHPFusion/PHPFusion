@@ -73,8 +73,4 @@ $locale['gateway_065'] = "Proceed";
 
 $locale['gateway_066'] = "Your answer is incorrect!";
 $locale['gateway_067'] = "Try Again!";
-$locale['gateway_068'] = "";
-$locale['gateway_069'] = "";
-
-
-
+$locale['gateway_068'] = "Please try again later!";

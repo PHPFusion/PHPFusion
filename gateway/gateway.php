@@ -4,6 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
+| Filename: gateway.php
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -21,8 +22,8 @@ if (!defined("IN_FUSION")) {
 /*
 Experimental Anti Bot Gateway that combine multiple methods to prevent auto bots.
 */
-require_once BASEDIR."gateway/constants_include.php";
-require_once BASEDIR."gateway/functions_include.php";
+require_once "constants_include.php";
+require_once "functions_include.php";
 
 // Terminate and ban all excessive access atempts.
 antiflood_countaccess();
@@ -32,97 +33,98 @@ $multiplier = "0";
 $reply_method = "";
 
 // Don´t run twice
-if (!isset($_POST['gateway_submit']) && !isset($_POST['Register']) && $_SESSION["validated"] !== "True") {
+if (!isset($_POST['gateway_submit']) && !isset($_POST['Register']) && isset($_SESSION["validated"]) && $_SESSION['validated'] !== 'True') {
 
-	$_SESSION["validated"] = "False";
-	
-	// Get some numbers up
-	$a = rand(10, 20);
-	$b = rand(1, 10);
-	
-	if ($a > 15) { 
-		$antibot = intval($a+$b);
-		$multiplier = "+";
-		$reply_method = $locale['gateway_062'];
-		$a = convertNumberToWord($a);
-		$antibot = convertNumberToWord($antibot);
-		$antibot = preg_replace('/\s+/', '', $antibot);
-		$_SESSION["antibot"] = strtolower($antibot);
-	} else {
-		$antibot = intval($a-$b);
-		$multiplier = "-";
-		$reply_method = $locale['gateway_063'];
-		$_SESSION["antibot"] = intval($antibot);
-		$b = convertNumberToWord($b);
-	}
-		
-	$a = str_rot47($a);
-	$b = str_rot47($b);
+    $_SESSION['validated'] = 'False';
 
-	echo '<script type="text/javascript">
+    // Get some numbers up
+    $a = rand(10, 20);
+    $b = rand(1, 10);
 
-			var first = $a;
-			var second = $b;
+    if ($a > 15) {
+        $antibot = intval($a + $b);
+        $multiplier = "+";
+        $reply_method = $locale['gateway_062'];
+        $a = convertNumberToWord($a);
+        $antibot = convertNumberToWord($antibot);
+        $antibot = preg_replace('/\s+/', '', $antibot);
+        $_SESSION["antibot"] = strtolower($antibot);
+    } else {
+        $antibot = intval($a - $b);
+        $multiplier = "-";
+        $reply_method = $locale['gateway_063'];
+        $_SESSION["antibot"] = intval($antibot);
+        $b = convertNumberToWord($b);
+    }
 
-			function decode(x){
-			 var s="";
-			 for(var i=0;i<x.length;i++){
-			  var j=x.charCodeAt(i);
-			  if((j>=33)&&(j<=126)){
-			   s+=String.fromCharCode(33+((j+14)%94));
-			  } else {
-			   s+=String.fromCharCode(j);
-			  }
-			 }
-			 return s;
-			};
-	</script> ';
+    $a = str_rot47($a);
+    $b = str_rot47($b);
 
-	echo "<noscript>".$locale['gateway_052']."</noscript>";
-	
-	// Just add fields to random
-	$honeypot_array = array($locale['gateway_053'], $locale['gateway_054'], $locale['gateway_055'], $locale['gateway_056'], $locale['gateway_057'], $locale['gateway_058'], $locale['gateway_059']);
-	shuffle($honeypot_array); 
-	$_SESSION["honeypot"] = $honeypot_array[3];
+    echo "<noscript>".$locale['gateway_052']."</noscript>";
 
-	echo openform('Fusion_Gateway', 'post', 'register.php', array("class" => "m-t-20"));
+    // Just add fields to random
+    $honeypot_array = [$locale['gateway_053'], $locale['gateway_054'], $locale['gateway_055'], $locale['gateway_056'], $locale['gateway_057'], $locale['gateway_058'], $locale['gateway_059']];
+    shuffle($honeypot_array);
+    $_SESSION["honeypot"] = $honeypot_array[3];
 
-	// Try this and we see, Rot47 Encryption etc..
-	echo '<script type="text/javascript">
-		document.write("<h3>'.$locale['gateway_060'].' " + decode("'.$a.'") + " '.$multiplier.' " + decode("'.$b.'") + " '.$locale['gateway_061'].' '.$reply_method.'</h3>");
-	</script>';
-	
-	echo form_text('gateway_answer', "", "", array(
-		'error_text' => $locale['gateway_064'],
-		'required' => 1
-	));
-	echo form_hidden($honeypot_array[3], "", "");
-	echo form_button('gateway_submit', $locale['gateway_065'], $locale['gateway_065'], array('class' => 'btn-primary m-t-10'));
-	echo closeform();
-} 
+    opentable('<span id="formtitle"></span>');
 
+    echo openform('Fusion_Gateway', 'post', 'register.php', ['class' => 'm-t-20']);
+
+    // Try this and we see, Rot47 Encryption etc..
+    echo '<script type="text/javascript">
+        function decode(x) {
+            let s = "";
+            
+            for (let i = 0; i < x.length; i++) {
+                let j = x.charCodeAt(i);
+                if ((j >= 33) && (j <= 126)) {
+                    s += String.fromCharCode(33 + ((j + 14) % 94));
+                } else {
+                    s += String.fromCharCode(j);
+                }
+            }
+            
+            return s;
+        }
+        
+        $("#formtitle").append("'.$locale['gateway_060'].' " + decode("'.$a.'") + " '.$multiplier.' " + decode("'.$b.'") + " '.$locale['gateway_061'].' '.$reply_method.'");
+    </script>';
+
+    echo form_text('gateway_answer', "", "", [
+        'error_text' => $locale['gateway_064'],
+        'required'   => 1
+    ]);
+    echo form_hidden($honeypot_array[3], "", "");
+    echo form_button('gateway_submit', $locale['gateway_065'], $locale['gateway_065'], ['class' => 'btn-primary m-t-10']);
+    echo closeform();
+    closetable();
+} else if (!isset($_SESSION["validated"])) {
+    echo '<div class="well text-center"><h3 class="m-0">'.$locale['gateway_068'].'</h3></div>';
+}
 
 if (isset($_POST['gateway_answer'])) {
+    $honeypot = '';
 
-	if (isset($_SESSION["honeypot"])) {
-		$honeypot = $_SESSION["honeypot"];
-	}
-	
-// if the honeypot is empty, run rest of the verify script	
-	if (isset($_POST["$honeypot"]) && $_POST["$honeypot"] == "") {
-	
-		$antibot = stripinput(strtolower($_POST["gateway_answer"]));
-		
-		if (isset($_SESSION["antibot"])) {
-			if ($_SESSION["antibot"] == $antibot){
-				$_SESSION["validated"] = "True";
-			} else {
-				echo "<div class='well text-center'><h3>".$locale['gateway_066']."</h3></div>";
-				echo "<input type='button' value='".$locale['gateway_067']."' class='text-center btn btn-info spacer-xs' onclick=\"location='".BASEDIR."register.php'\">";
-				$_SESSION["validated"] = "False";
-			}
-		} else {
-			$_SESSION["validated"] = "False";
-		}
-	}
+    if (isset($_SESSION["honeypot"])) {
+        $honeypot = $_SESSION["honeypot"];
+    }
+
+    // if the honeypot is empty, run rest of the verify script
+    if (isset($_POST["$honeypot"]) && $_POST["$honeypot"] == "") {
+
+        $antibot = stripinput(strtolower($_POST["gateway_answer"]));
+
+        if (isset($_SESSION["antibot"])) {
+            if ($_SESSION["antibot"] == $antibot) {
+                $_SESSION["validated"] = "True";
+            } else {
+                echo "<div class='well text-center'><h3 class='m-0'>".$locale['gateway_066']."</h3></div>";
+                echo "<input type='button' value='".$locale['gateway_067']."' class='text-center btn btn-info spacer-xs' onclick=\"location='".BASEDIR."register.php'\">";
+                $_SESSION["validated"] = "False";
+            }
+        } else {
+            $_SESSION["validated"] = "False";
+        }
+    }
 }

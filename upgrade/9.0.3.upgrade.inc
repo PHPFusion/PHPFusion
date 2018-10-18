@@ -33,6 +33,7 @@ $insert_settings_tbl = [
     'database_sessions' => 1,
     'domain_server'     => '',
     'form_tokens'       => 5,
+    'gateway'           => 1,
 ];
 
 foreach ($insert_settings_tbl as $key => $value) {

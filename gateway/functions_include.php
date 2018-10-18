@@ -4,6 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
+| Filename: functions_include.php
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -18,65 +19,63 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-	include LOCALE.LOCALESET."gateway.php";
-	
-function convertNumberToWord($num = false) {
-	global $locale;
-    $num = str_replace(array(',', ' '), '' , trim($num));
-    if(! $num) {
-        return false;
+include LOCALE.LOCALESET."gateway.php";
+
+function convertNumberToWord($num = FALSE) {
+    global $locale;
+    $num = str_replace([',', ' '], '', trim($num));
+    if (!$num) {
+        return FALSE;
     }
-    $num = (int) $num;
-    $words = array();
-    $list1 = array('', $locale['gateway_001'], $locale['gateway_002'], $locale['gateway_003'], $locale['gateway_004'], $locale['gateway_005'], $locale['gateway_006'], $locale['gateway_007'], $locale['gateway_008'], $locale['gateway_009'], $locale['gateway_010'], 
-				   $locale['gateway_011'], $locale['gateway_012'], $locale['gateway_013'], $locale['gateway_014'], $locale['gateway_015'], $locale['gateway_016'], $locale['gateway_017'], $locale['gateway_018'], $locale['gateway_019']);
-    $list2 = array('', $locale['gateway_020'], $locale['gateway_021'], $locale['gateway_022'], $locale['gateway_023'], $locale['gateway_024'], $locale['gateway_025'], $locale['gateway_026'], $locale['gateway_027'], $locale['gateway_028'], $locale['gateway_029']);
-    $list3 = array('', $locale['gateway_030'], $locale['gateway_031'], $locale['gateway_032'], $locale['gateway_033'], $locale['gateway_034'], $locale['gateway_035'], $locale['gateway_036'], $locale['gateway_037'],
-				   $locale['gateway_038'], $locale['gateway_039'], $locale['gateway_040'], $locale['gateway_041'], $locale['gateway_042'], $locale['gateway_043'], $locale['gateway_044'],
-				   $locale['gateway_045'], $locale['gateway_046'], $locale['gateway_047'], $locale['gateway_048'], $locale['gateway_049'], $locale['gateway_050']);
+    $num = (int)$num;
+    $words = [];
+    $list1 = ['', $locale['gateway_001'], $locale['gateway_002'], $locale['gateway_003'], $locale['gateway_004'], $locale['gateway_005'], $locale['gateway_006'], $locale['gateway_007'], $locale['gateway_008'], $locale['gateway_009'], $locale['gateway_010'],
+              $locale['gateway_011'], $locale['gateway_012'], $locale['gateway_013'], $locale['gateway_014'], $locale['gateway_015'], $locale['gateway_016'], $locale['gateway_017'], $locale['gateway_018'], $locale['gateway_019']];
+    $list2 = ['', $locale['gateway_020'], $locale['gateway_021'], $locale['gateway_022'], $locale['gateway_023'], $locale['gateway_024'], $locale['gateway_025'], $locale['gateway_026'], $locale['gateway_027'], $locale['gateway_028'], $locale['gateway_029']];
+    $list3 = ['', $locale['gateway_030'], $locale['gateway_031'], $locale['gateway_032'], $locale['gateway_033'], $locale['gateway_034'], $locale['gateway_035'], $locale['gateway_036'], $locale['gateway_037'],
+              $locale['gateway_038'], $locale['gateway_039'], $locale['gateway_040'], $locale['gateway_041'], $locale['gateway_042'], $locale['gateway_043'], $locale['gateway_044'],
+              $locale['gateway_045'], $locale['gateway_046'], $locale['gateway_047'], $locale['gateway_048'], $locale['gateway_049'], $locale['gateway_050']];
     $num_length = strlen($num);
-    $levels = (int) (($num_length + 2) / 3);
+    $levels = (int)(($num_length + 2) / 3);
     $max_length = $levels * 3;
-    $num = substr('00' . $num, -$max_length);
+    $num = substr('00'.$num, -$max_length);
     $num_levels = str_split($num, 3);
+
     for ($i = 0; $i < count($num_levels); $i++) {
         $levels--;
-        $hundreds = (int) ($num_levels[$i] / 100);
-        $hundreds = ($hundreds ? ' ' . $list1[$hundreds] .  $locale['gateway_051'] . ' ' : '');
-        $tens = (int) ($num_levels[$i] % 100);
+        $hundreds = (int)($num_levels[$i] / 100);
+        $hundreds = ($hundreds ? ' '.$list1[$hundreds].$locale['gateway_051'].' ' : '');
+        $tens = (int)($num_levels[$i] % 100);
         $singles = '';
-        if ( $tens < 20 ) {
-            $tens = ($tens ? ' ' . $list1[$tens] . ' ' : '' );
+        if ($tens < 20) {
+            $tens = ($tens ? ' '.$list1[$tens].' ' : '');
         } else {
             $tens = (int)($tens / 10);
-            $tens = ' ' . $list2[$tens] . ' ';
-            $singles = (int) ($num_levels[$i] % 10);
-            $singles = ' ' . $list1[$singles] . ' ';
+            $tens = ' '.$list2[$tens].' ';
+            $singles = (int)($num_levels[$i] % 10);
+            $singles = ' '.$list1[$singles].' ';
         }
-        $words[] = $hundreds . $tens . $singles . ( ( $levels && ( int ) ( $num_levels[$i] ) ) ? ' ' . $list3[$levels] . ' ' : '' );
-    } //end for loop
-    $commas = count($words);
-    if ($commas > 1) {
-        $commas = $commas - 1;
+        $words[] = $hundreds.$tens.$singles.(($levels && ( int )($num_levels[$i])) ? ' '.$list3[$levels].' ' : '');
     }
+
     return implode(' ', $words);
 }
 
 if (!function_exists('str_rot47')) {
-  function str_rot47($str) {
-    return strtr($str, 
-      '!"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~', 
-      'PQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~!"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNO'
-    );
-  }
+    function str_rot47($str) {
+        return strtr($str,
+            '!"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~',
+            'PQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~!"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNO'
+        );
+    }
 }
 
 if (file_exists(CONTROL_LOCK_FILE)) {
-    if (time()-filemtime(CONTROL_LOCK_FILE) > CONTROL_BAN_TIME) {
+    if (time() - filemtime(CONTROL_LOCK_FILE) > CONTROL_BAN_TIME) {
         // this user has complete his punishment
         unlink(CONTROL_LOCK_FILE);
     } else {
-		redirect("error.php?code=401");
+        redirect("error.php?code=401");
         touch(CONTROL_LOCK_FILE);
         die;
     }
@@ -84,7 +83,7 @@ if (file_exists(CONTROL_LOCK_FILE)) {
 
 function antiflood_countaccess() {
     // counting requests and last access time
-    $control = Array();
+    $control = [];
 
     if (file_exists(CONTROL_DB)) {
         $fh = fopen(CONTROL_DB, "r");
@@ -93,7 +92,7 @@ function antiflood_countaccess() {
     }
 
     if (isset($control[USER_IP])) {
-        if (time()-$control[USER_IP]["t"] < CONTROL_REQ_TIMEOUT) {
+        if (time() - $control[USER_IP]["t"] < CONTROL_REQ_TIMEOUT) {
             $control[USER_IP]["c"]++;
         } else {
             $control[USER_IP]["c"] = 1;
@@ -109,7 +108,7 @@ function antiflood_countaccess() {
         fwrite($fh, USER_IP);
         fclose($fh);
     }
-	
+
     // write updated control table
     $fh = fopen(CONTROL_DB, "w");
     fwrite($fh, serialize($control));

@@ -46,6 +46,7 @@ $settings_data = [
     'user_name_ban'       => $settings['user_name_ban'],
     'database_sessions'   => $settings['database_sessions'],
     'form_tokens'         => $settings['form_tokens'],
+    'gateway'             => $settings['gateway']
 ];
 
 if (isset($_POST['clear_cache'])) {
@@ -76,7 +77,8 @@ if (isset($_POST['savesettings'])) {
         'bad_word_replace'    => form_sanitizer($_POST['bad_word_replace'], '', 'bad_word_replace'),
         'user_name_ban'       => form_sanitizer($_POST['user_name_ban'], '', 'user_name_ban'),
         'database_sessions'   => form_sanitizer($_POST['database_sessions'], '', 'database_sessions'),
-        'form_tokens'         => form_sanitizer($_POST['form_tokens'], '', 'form_tokens')
+        'form_tokens'         => form_sanitizer($_POST['form_tokens'], '', 'form_tokens'),
+        'gateway'             => form_sanitizer($_POST['gateway'], 0, 'gateway')
     ];
 
     // Validate extra fields
@@ -109,6 +111,8 @@ if (isset($_POST['savesettings'])) {
 
     redirect(FUSION_REQUEST);
 }
+
+$yes_no_array = ['1' => $locale['yes'], '0' => $locale['no']];
 
 opentable($locale['683']);
 echo "<div class='well'>".$locale['security_description']."</div>\n";
@@ -217,6 +221,15 @@ echo form_select('recaptcha_type', $locale['grecaptcha_0103'], $settings['recapt
 echo "</div>\n</div>\n";
 echo "</div>\n";
 closeside();
+
+openside('');
+echo form_select('gateway', $locale['security_010'], $settings['gateway'], [
+    'options'     => $yes_no_array,
+    'width'       => '100%',
+    'inner_width' => '100%'
+]);
+closeside();
+
 openside('');
 $flood_opts = ['1' => $locale['on'], '0' => $locale['off']];
 echo form_text('flood_interval', $locale['660'], $settings['flood_interval'], [
@@ -231,7 +244,6 @@ echo form_select('flood_autoban', $locale['680'], $settings['flood_autoban'], [
 ]);
 closeside();
 openside('');
-$yes_no_array = ['1' => $locale['yes'], '0' => $locale['no']];
 echo form_select('bad_words_enabled', $locale['659'], $settings['bad_words_enabled'], [
     'options'     => $yes_no_array,
     'inner_width' => '100%',

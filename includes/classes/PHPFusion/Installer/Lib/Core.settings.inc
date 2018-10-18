@@ -56,7 +56,7 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'settings_value' => 0
             ],
             [
-                'settings_name' => 'domain_server',
+                'settings_name'  => 'domain_server',
                 'settings_value' => '',
             ],
             [
@@ -510,6 +510,10 @@ function get_table_rows($table_name, $localeset = 'English') {
             [
                 'settings_name'  => 'form_tokens',
                 'settings_value' => 5
+            ],
+            [
+                'settings_name'  => 'gateway',
+                'settings_value' => 1
             ]
         ]
     ];
