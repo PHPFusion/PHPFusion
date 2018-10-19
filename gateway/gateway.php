@@ -32,6 +32,10 @@ antiflood_countaccess();
 $multiplier = "0";
 $reply_method = "";
 
+if (empty($_SESSION["validated"])) {
+    $_SESSION['validated'] = 'False';
+}
+
 // Don´t run twice
 if (!isset($_POST['gateway_submit']) && !isset($_POST['Register']) && isset($_SESSION["validated"]) && $_SESSION['validated'] !== 'True') {
 
@@ -75,7 +79,7 @@ if (!isset($_POST['gateway_submit']) && !isset($_POST['Register']) && isset($_SE
     echo '<script type="text/javascript">
         function decode(x) {
             let s = "";
-            
+
             for (let i = 0; i < x.length; i++) {
                 let j = x.charCodeAt(i);
                 if ((j >= 33) && (j <= 126)) {
@@ -84,10 +88,10 @@ if (!isset($_POST['gateway_submit']) && !isset($_POST['Register']) && isset($_SE
                     s += String.fromCharCode(j);
                 }
             }
-            
+
             return s;
         }
-        
+
         $("#formtitle").append("'.$locale['gateway_060'].' " + decode("'.$a.'") + " '.$multiplier.' " + decode("'.$b.'") + " '.$locale['gateway_061'].' '.$reply_method.'");
     </script>';
 
