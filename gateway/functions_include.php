@@ -19,10 +19,11 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-include LOCALE.LOCALESET."gateway.php";
+$locale = fusion_get_locale('', LOCALE.LOCALESET.'gateway.php');
 
 function convertNumberToWord($num = FALSE) {
     global $locale;
+
     $num = str_replace([',', ' '], '', trim($num));
     if (!$num) {
         return FALSE;

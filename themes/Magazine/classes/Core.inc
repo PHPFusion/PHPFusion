@@ -22,15 +22,13 @@ class Core {
         'left'          => TRUE,
         'right'         => TRUE,
         'right_content' => '',
-        'container'     => TRUE
+        'container'     => TRUE,
+        'notices'       => TRUE
     ];
 
     protected static function GetParam($name = NULL) {
         if (isset(self::$options[$name])) {
             return self::$options[$name];
-        } else {
-            print_p($name);
-            debug_print_backtrace();
         }
 
         return NULL;
