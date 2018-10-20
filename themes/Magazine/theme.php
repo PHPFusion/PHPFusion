@@ -78,6 +78,10 @@ function display_lostpassword($content) {
     Magazine\Templates\Login::Lostpassword($content);
 }
 
+function display_gateway($info) {
+    Magazine\Templates\Login::FusionGateway($info);
+}
+
 function display_main_news($info) {
     Magazine\Templates\News::display_main_news($info);
 }

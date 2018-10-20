@@ -33,6 +33,7 @@ $insert_settings_tbl = [
     'database_sessions' => 1,
     'domain_server'     => '',
     'form_tokens'       => 5,
+    'gateway'           => 1,
 ];
 
 foreach ($insert_settings_tbl as $key => $value) {
@@ -73,3 +74,5 @@ if (db_exists(DB_PREFIX.'sessions')) {
 }
 
 dbquery("ALTER TABLE ".DB_USERS." ADD FULLTEXT(`user_name`)");
+
+$inf_droptable[] = DB_PREFIX.'messages_options';

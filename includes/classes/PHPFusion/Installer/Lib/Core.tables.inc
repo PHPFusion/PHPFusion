@@ -563,34 +563,6 @@ function get_core_tables($localeset) {
             'length' => 1,
         ] //message_folder TINYINT(1) UNSIGNED NOT NULL DEFAULT  '0',
     ];
-    $table_package['messages_options'] = [
-        'user_id'         => [
-            'type'     => 'MEDIUMINT',
-            'length'   => 8,
-            'key'      => 1, // PRIMARY KEY (user_id)
-            'unsigned' => TRUE
-        ], //user_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-        'pm_email_notify' => [
-            'type'   => 'SMALLINT', //@note:changed
-            'length' => 1,
-        ], //pm_email_notify tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
-        'pm_save_sent'    => [
-            'type'   => 'SMALLINT',
-            'length' => 100,
-        ], //pm_save_sent tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
-        'pm_inbox'        => [
-            'type'   => 'SMALLINT',
-            'length' => 5,
-        ], //pm_inbox SMALLINT(5) UNSIGNED DEFAULT '0' NOT NULL, @note:changed
-        'pm_savebox'      => [
-            'type'   => 'SMALLINT',
-            'length' => 5,
-        ], // pm_savebox SMALLINT(5) UNSIGNED DEFAULT '0' NOT NULL, @note: changed
-        'pm_sentbox'      => [
-            'type'   => 'SMALLINT',
-            'length' => 5,
-        ] //pm_sentbox SMALLINT(5) UNSIGNED DEFAULT '0' NOT NULL,
-    ];
     $table_package['new_users'] = [
         'user_code'      => [
             'type'   => 'VARCHAR',

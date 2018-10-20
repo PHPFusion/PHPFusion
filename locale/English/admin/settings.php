@@ -181,7 +181,6 @@ $locale['913'] = "Base Comments per Page";
 $locale['955'] = "Original";
 $locale['956'] = "Square";
 
-// Removed Recaptcha
 $locale['698'] = "SMTP Authentication?";
 $locale['699'] = "Login method";
 $locale['699b'] = "Both";
@@ -324,3 +323,4 @@ $locale['security_006'] = "Clear System Session Cache";
 $locale['security_007'] = "All system sessions has been cleared successfully";
 $locale['security_008'] = "Form Tokens";
 $locale['security_009'] = "Number of issued tokens for each form";
+$locale['security_010'] = "Fusion GateWay";

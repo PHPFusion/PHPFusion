@@ -94,7 +94,7 @@ class Token extends \defender {
                 $token_ring = $_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']];
                 $html = openmodal('debug_modal', 'Debug Token');
                 $html .= alert("<strong>The Form ID Submitted is '".stripinput($_POST['form_id'])."' having the following tokens: </strong><ul class='block'><li>".implode("</li><li>", $token_ring)."</li></ul>\n", ['class' => 'alert-danger']);
-                $html .= alert("Token posted now is ".stripinput($_POST['fusion_token']).($tokens_consumed ? " and has been consumed" : ''), ['class' => 'alert-warning']);
+                $html .= alert("Token posted now is ".stripinput($_POST['fusion_token']).(!empty($tokens_consumed) ? " and has been consumed" : ''), ['class' => 'alert-warning']);
                 $html .= modalfooter("<a class='btn btn-default' href='".FUSION_REQUEST."'>Click to Reload Page</a>");
                 $html .= closemodal();
                 add_to_footer($html);
@@ -165,6 +165,7 @@ class Token extends \defender {
      * @return string
      */
     public static function generate_token($form_id = 'phpfusion', $max_tokens = 5, $file = '') {
+        $form_id = !empty($form_id) ? $form_id : 'phpfusion';
         // resets remote file every callback
         $remote_file = ($file ? $file : '');
         \defender::getInstance()->set_RemoteFile($remote_file);
@@ -187,9 +188,8 @@ class Token extends \defender {
             }
         } else {
             $page_url = self::pageHash($file);
-            $token_ring = $_SESSION['csrf_tokens'][$page_url][$form_id];
-            $ring = array_rand($token_ring, 1);
-            $token = $token_ring[$ring];
+            $ring = array_rand($_SESSION['csrf_tokens'][$page_url][$form_id], 1);
+            $token = $_SESSION['csrf_tokens'][$page_url][$form_id][$ring];
         }
 
         // Debugging section
