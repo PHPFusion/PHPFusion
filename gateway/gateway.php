@@ -55,6 +55,7 @@ if (!isset($_POST['gateway_submit']) && !isset($_POST['Register']) && isset($_SE
         $reply_method = $locale['gateway_062'];
         $a = convertNumberToWord($a);
         $antibot = convertNumberToWord($antibot);
+        $antibot = preg_replace('/\s+/', '', $antibot);
         $_SESSION["antibot"] = strtolower($antibot);
     } else {
         $antibot = intval($a - $b);
