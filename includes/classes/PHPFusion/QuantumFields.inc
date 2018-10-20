@@ -2117,7 +2117,7 @@ class QuantumFields extends \SqlHandler {
                 1024    => $this->locale['fields_0491'],
                 1048576 => $this->locale['fields_0492']
             ];
-            $calc_c = $this->calculate_byte($this->field_data['field_config']['field_max_b']);
+            $calc_c = calculate_byte($this->field_data['field_config']['field_max_b']);
             $calc_b = $this->field_data['field_config']['field_max_b'] / $calc_c;
             $file_upload_type = [
                 'file'  => $this->locale['fields_0456'],
@@ -2271,24 +2271,6 @@ class QuantumFields extends \SqlHandler {
         echo form_button('save_field', $this->locale['fields_0488'], 'save', ['class' => 'btn-sm btn-primary']);
         echo closeform();
         echo "</div>\n";
-    }
-
-    /*
-     * Calculation of Byte
-     */
-    private function calculate_byte($max_b) {
-        $calc_opts = [
-            1       => $this->locale['fields_0490'],
-            1024    => $this->locale['fields_0491'],
-            1048576 => $this->locale['fields_0492']
-        ];
-        foreach ($calc_opts as $byte => $val) {
-            if ($max_b / $byte <= 999) {
-                return $byte;
-            }
-        }
-
-        return 1048576;
     }
 
     /**

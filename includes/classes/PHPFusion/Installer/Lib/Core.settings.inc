@@ -56,7 +56,7 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'settings_value' => 0
             ],
             [
-                'settings_name' => 'domain_server',
+                'settings_name'  => 'domain_server',
                 'settings_value' => '',
             ],
             [
@@ -510,6 +510,10 @@ function get_table_rows($table_name, $localeset = 'English') {
             [
                 'settings_name'  => 'form_tokens',
                 'settings_value' => 5
+            ],
+            [
+                'settings_name'  => 'gateway',
+                'settings_value' => 1
             ]
         ]
     ];
@@ -784,33 +788,6 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'admin_title'  => $locale['setup_3051'],
                 'admin_link'   => 'settings_languages.php',
                 'admin_page'   => 4
-            ]
-        ]
-    ];
-    // if we're installing
-    /*$table_settings['settings_theme'] = [
-        'insert' => [
-            [
-                'settings_name'  => 'theme_pack',
-                'settings_value' => 'Nebula',
-                'settings_theme' => 'FusionTheme'
-            ],
-            [
-                'settings_name'  => 'FusionTheme',
-                'settings_value' => 1,
-                'settings_theme' => 'FusionTheme'
-            ]
-        ]
-    ];*/
-    $table_settings['messages_options'] = [
-        'insert' => [
-            [
-                'user_id'         => 0,
-                'pm_email_notify' => 0,
-                'pm_save_sent'    => 1,
-                'pm_inbox'        => 20,
-                'pm_savebox'      => 20,
-                'pm_sentbox'      => 20
             ]
         ]
     ];

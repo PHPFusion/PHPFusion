@@ -39,6 +39,7 @@ $update_settings_tbl = [
     'form_tokens'       => 5,
     'user_name_ban'     => '',
     'domain_server'     => '',
+    'gateway'           => 1,
 ];
 
 foreach ($update_settings_tbl as $key => $value) {

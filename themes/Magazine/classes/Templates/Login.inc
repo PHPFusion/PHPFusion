@@ -33,10 +33,13 @@ class Login extends Core {
         Panels::getInstance(TRUE)->hide_panel('U_CENTER');
         Panels::getInstance(TRUE)->hide_panel('L_CENTER');
         Panels::getInstance(TRUE)->hide_panel('BL_CENTER');
+        self::SetParam('notices', FALSE);
 
         echo '<div class="panel panel-default" style="max-width: 500px; margin: 30px auto;">';
             echo '<div class="panel-heading" style="background: #fff;">';
                 echo '<h3 class="panel-title"><strong>'.$locale['global_100'].'</strong></h3>';
+
+                echo renderNotices(getNotices(['all', FUSION_SELF]));
 
                 if (!iMEMBER) {
                     echo '<div class="pull-right" style="margin-top: -20px;">'.$info['forgot_password_link'].'</div>';
@@ -108,6 +111,7 @@ class Login extends Core {
         Panels::getInstance(TRUE)->hide_panel('U_CENTER');
         Panels::getInstance(TRUE)->hide_panel('L_CENTER');
         Panels::getInstance(TRUE)->hide_panel('BL_CENTER');
+        self::SetParam('notices', FALSE);
 
         echo '<div class="panel panel-default" style="max-width: 650px; margin: 30px auto;">';
             echo '<div class="panel-heading" style="background: #fff;">';
@@ -115,6 +119,9 @@ class Login extends Core {
             echo '</div>';
 
             echo '<div class="panel-body">';
+
+                echo renderNotices(getNotices(['all', FUSION_SELF]));
+
                 $open = '';
                 $close = '';
                 $tab_title = [];
@@ -173,6 +180,7 @@ class Login extends Core {
         Panels::getInstance(TRUE)->hide_panel('U_CENTER');
         Panels::getInstance(TRUE)->hide_panel('L_CENTER');
         Panels::getInstance(TRUE)->hide_panel('BL_CENTER');
+        self::SetParam('notices', FALSE);
 
         echo '<div class="panel panel-default" style="max-width: 500px; margin: 30px auto;">';
             echo '<div class="panel-heading" style="background: #fff;">';
@@ -180,8 +188,42 @@ class Login extends Core {
             echo '</div>';
 
             echo '<div class="panel-body">';
+                echo renderNotices(getNotices(['all', FUSION_SELF]));
                 echo $content;
             echo '</div>';
+        echo '</div>';
+    }
+
+    public static function FusionGateway($info) {
+        global $locale;
+
+        Panels::getInstance(TRUE)->hide_panel('RIGHT');
+        Panels::getInstance(TRUE)->hide_panel('LEFT');
+        Panels::getInstance(TRUE)->hide_panel('AU_CENTER');
+        Panels::getInstance(TRUE)->hide_panel('U_CENTER');
+        Panels::getInstance(TRUE)->hide_panel('L_CENTER');
+        Panels::getInstance(TRUE)->hide_panel('BL_CENTER');
+
+        echo '<div style="max-width: 500px; margin: 30px auto;">';
+        if ($info['showform'] == TRUE) {
+            opentable($locale['gateway_069']);
+            echo $info['openform'];
+            echo $info['hiddeninput'];
+            echo '<h3>'.$info['antispam_qusetion'].'</h3>';
+            echo $info['textinput'];
+            echo $info['button'];
+            echo $info['closeform'];
+            closetable();
+        } else if (!isset($_SESSION["validated"])) {
+            echo '<div class="well text-center"><h3 class="m-0">'.$locale['gateway_068'].'</h3></div>';
+        }
+
+        if (isset($info['incorrect_answer']) && $info['incorrect_answer'] == TRUE) {
+            opentable($locale['gateway_069']);
+            echo '<div class="well text-center"><h3 class="m-0">'.$locale['gateway_066'].'</h3></div>';
+            echo '<input type="button" value="'.$locale['gateway_067'].'" class="text-center btn btn-info spacer-xs" onclick="location=\''.BASEDIR.'register.php\'"/>';
+            closetable();
+        }
         echo '</div>';
     }
 }
