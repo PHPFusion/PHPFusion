@@ -45,8 +45,8 @@ if (empty($_SESSION["validated"])) {
 if (!isset($_POST['gateway_submit']) && !isset($_POST['Register']) && isset($_SESSION["validated"]) && $_SESSION['validated'] !== 'True') {
     $_SESSION['validated'] = 'False';
 
-    // Get some numbers up
-    $a = rand(10, 20);
+    // Get some numbers up. Always keep an odd number to void 10-10 etc.
+    $a = rand(11, 20);
     $b = rand(1, 10);
 
     if ($a > 15) {
