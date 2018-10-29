@@ -34,6 +34,7 @@ $insert_settings_tbl = [
     'domain_server'     => '',
     'form_tokens'       => 5,
     'gateway'           => 1,
+    'devmode'           => 0,
 ];
 
 foreach ($insert_settings_tbl as $key => $value) {

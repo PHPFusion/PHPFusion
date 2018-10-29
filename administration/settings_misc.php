@@ -43,6 +43,7 @@ $settings_misc = [
     'index_url_bbcode'       => $settings['index_url_bbcode'],
     'index_url_userweb'      => $settings['index_url_userweb'],
     'create_og_tags'         => $settings['create_og_tags'],
+    'devmode'                => $settings['devmode'],
 ];
 
 if (isset($_POST['savesettings'])) {
@@ -65,7 +66,8 @@ if (isset($_POST['savesettings'])) {
         'comments_sorting'       => form_sanitizer($_POST['comments_sorting'], 'DESC', 'comments_sorting'),
         'index_url_bbcode'       => form_sanitizer($_POST['index_url_bbcode'], '0', 'index_url_bbcode'),
         'index_url_userweb'      => form_sanitizer($_POST['index_url_userweb'], '0', 'index_url_userweb'),
-        'create_og_tags'         => form_sanitizer($_POST['create_og_tags'], '0', 'create_og_tags')
+        'create_og_tags'         => form_sanitizer($_POST['create_og_tags'], '0', 'create_og_tags'),
+        'devmode'                => form_sanitizer($_POST['devmode'], '0', 'devmode'),
     ];
 
     if (\defender::safe()) {
@@ -190,6 +192,14 @@ echo form_select('index_url_userweb', $locale['1032'], $settings_misc['index_url
     'width'   => '100%'
 ]);
 closeside();
+
+openside('');
+echo form_select('devmode', $locale['609'], $settings_misc['devmode'], [
+    'options' => $choice_arr,
+    'width'   => '100%'
+]);
+closeside();
+
 echo "</div>\n</div>";
 echo form_button('savesettings', $locale['750'], $locale['750'], ['class' => 'btn-success']);
 echo closeform();

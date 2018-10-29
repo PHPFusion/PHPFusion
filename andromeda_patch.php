@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: csrf_andromeda_patch.php
+| Filename: andromeda_patch.php
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -20,7 +20,7 @@ require_once THEMES.'templates/header.php';
 
 $settings = fusion_get_settings();
 
-echo "<h1>Andromeda Security Settings Upgrade Patch 1.00</h1>\n";
+echo "<h1>Andromeda Upgrade Patch 1.02</h1>\n";
 $changed = FALSE;
 
 if (!db_exists(DB_SESSIONS)) {
@@ -34,23 +34,24 @@ if (!db_exists(DB_SESSIONS)) {
     $changed = TRUE;
 }
 
-$update_settings_tbl = [
+$insert_settings_tbl = [
     'database_sessions' => 0,
     'form_tokens'       => 5,
     'user_name_ban'     => '',
     'domain_server'     => '',
     'gateway'           => 1,
+    'devmode'           => 0,
 ];
 
-foreach ($update_settings_tbl as $key => $value) {
-    if (isset($settings[$key])) {
-        $inf_updatedbrow[] = DB_SETTINGS." SET settings_value='$value' WHERE settings_name='$key'";
+foreach ($insert_settings_tbl as $key => $value) {
+    if (!isset($settings[$key])) {
+        dbquery("INSERT INTO ".DB_SETTINGS." (settings_name, settings_value) VALUES ('$key', '$value')");
         $changed = TRUE;
     }
 }
 
 if ($changed === TRUE) {
-    addNotice("success", "You have successfully upgraded to Andromeda's New Sessions Management Patch 1.0");
+    addNotice("success", "You have successfully upgraded to latest Andromeda Patch 1.02");
 }
 
 require_once THEMES.'templates/footer.php';
