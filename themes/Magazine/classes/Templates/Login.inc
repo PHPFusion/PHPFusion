@@ -82,7 +82,7 @@ class Login extends Core {
             }
 
             echo $info['open_form'];
-            echo form_text('user_name', '', isset($_POST['user_name']) ? $_POST['user_name'] : '', ['placeholder' => $placeholder]);
+            echo form_text('user_name', '', isset($_POST['user_name']) ? form_sanitizer($_POST['user_name'], '', 'user_name') : '', ['placeholder' => $placeholder]);
             echo form_text('user_pass', '', '', ['placeholder' => $locale['global_102'], 'type' => 'password']);
             echo form_checkbox('remember_me', $locale['global_103'], '', ['reverse_label' => TRUE]);
             echo $info['login_button'];
