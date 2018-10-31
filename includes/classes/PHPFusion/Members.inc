@@ -96,7 +96,7 @@ class Members {
 
             $search_form = openform('searchform', 'get', BASEDIR."members.php?");
             $search_form .= "<div class='display-inline-block pull-left m-r-10' style='width:300px;'>\n";
-            $search_form .= form_text('search_text', '', $_GET['search_text'],
+            $search_form .= form_text('search_text', '', form_sanitizer($_GET['search_text'], '', 'search_text'),
                 [
                     'inline'             => TRUE,
                     'placeholder'        => self::$locale['MEMB_005'],
