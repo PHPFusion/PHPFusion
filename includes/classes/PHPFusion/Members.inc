@@ -205,7 +205,7 @@ class Members {
             }
 
 
-            $info['no_result'] = self::$locale['MEMB_018'].(isset($_GET['search_text']) ? $_GET['search_text'] : $_GET['sortby']);
+            $info['no_result'] = self::$locale['MEMB_018'].(isset($_GET['search_text']) ? form_sanitizer($_GET['search_text'], '', 'search_text') : $_GET['sortby']);
 
             $info += $this->default_info;
             render_members($info);
