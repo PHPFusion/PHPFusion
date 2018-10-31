@@ -146,7 +146,7 @@ class UserFields extends QuantumFields {
 
         if ($_GET['section'] == 1) {
 
-            $user_name = isset($_POST['user_name']) ? $_POST['user_name'] : $this->userData['user_name'];
+            $user_name = isset($_POST['user_name']) ? form_sanitizer($_POST['user_name'], '', 'user_name') : $this->userData['user_name'];
             $user_email = isset($_POST['user_email']) ? $_POST['user_email'] : $this->userData['user_email'];
             $user_hide_email = isset($_POST['user_hide_email']) ? $_POST['user_hide_email'] : $this->userData['user_hide_email'];
             $this->info['user_name'] = form_para($locale['u129'], 'account', 'profile_category_name');
