@@ -73,7 +73,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         'inner_class'        => '',
         'inline'             => FALSE,
         'min_length'         => 1,
-        'max_length'         => 200,
+        'max_length'         => 0,
         'number_min'         => 0,
         'number_max'         => 0,
         'number_step'        => 1,
@@ -156,16 +156,65 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         }
     }
 
-    if ($options['password_strength'] == TRUE) {
-        $locale = fusion_get_locale("password_strength");
-        $path = DYNAMICS."assets/password/lang/$locale.js";
-        if (file_exists($path)) {
-            $path = DYNAMICS."assets/password/lang/$locale.js";
-        } else {
-            $path = DYNAMICS."assets/password/lang/en.js";
-        }
+    $min = '';
+    $max = '';
+    $step = '';
+    switch ($options['type']) {
+        case "number":
+            $input_type = "number";
+            $min = ((!empty($options['number_min']) || $options['number_min'] === "0") && isnum($options['number_min']) ? "min='".$options['number_min']."' " : '');
+            $max = ((!empty($options['number_max']) || $options['number_max'] === "0") && isnum($options['number_max']) ? "max='".$options['number_max']."' " : '');
+            $step = "step='".str_replace(",", ".", $options['number_step'])."' ";
+            break;
+        case "text":
+            $input_type = "text";
+            break;
+        case "password":
+            $input_type = "password";
+            static $password_toggle = '';
+            if (!$password_toggle) {
+                $password_toggle = true;
+                $pwd_locale = fusion_get_locale("password_strength");
+                $path = DYNAMICS."assets/password/lang/$pwd_locale.js";
+                if (file_exists($path)) {
+                    $path = DYNAMICS."assets/password/lang/$pwd_locale.js";
+                } else {
+                    $path = DYNAMICS."assets/password/lang/en.js";
+                }
+                PHPFusion\OutputHandler::addToFooter("<script type='text/javascript' src='$path'></script>");
+                PHPFusion\OutputHandler::addToFooter("<script type='text/javascript' src='".DYNAMICS."assets/password/pwtoggle.js'></script>");
+            }
+            // Incompatible with password meter strength due to jquery appending layout.
+            // @todo: Fix pwstrength.js
+            if ($options['password_strength'] == FALSE) {
+                $options['append_button'] = TRUE;
+                $options['append_type'] = "button";
+                $options['append_form_value'] = 'show';
+                $options['append_class'] = 'btn-default';
+                $options['append_value'] = $locale['show'];
+                $options['append_button_name'] = $options['input_id'].'_pwdToggle';
+                $options['append_button_id'] = $options['input_id'].'_pwdToggle';
+                add_to_jquery("
+                    $('#".$options['input_id']."_pwdToggle').bind('click', function(e) {
+                        togglePasswordInput('".$options['input_id']."_pwdToggle', '".$options['input_id']."');
+                    });
+                    ");
+            }
+            break;
+        default:
+            $input_type = "text";
+    }
 
-        PHPFusion\OutputHandler::addToFooter("<script type='text/javascript' src='$path'></script>");
+    // Fixes HTML DOM type number that does not respect max_length prop.
+    $max_length = '';
+    if ($options['max_length'] && isnum($options['max_length'])) {
+        $max_length = ' maxlength="'.$options['max_length'].'"';
+        if ($input_type == 'number') {
+            $max_length .= ' oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"';
+        }
+    }
+
+    if ($options['password_strength'] == TRUE) {
         PHPFusion\OutputHandler::addToFooter("<script type='text/javascript' src='".DYNAMICS."assets/password/pwstrength.js'></script>");
         PHPFusion\OutputHandler::addToHead('<script type="text/javascript">'.jsminify('
             jQuery(document).ready(function() {
@@ -195,27 +244,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         $html .= "<span class='input-group-addon' id='".$options['prepend_id']."'>".$options['prepend_value']."</span>\n";
     }
 
-    $min = '';
-    $max = '';
-    $step = '';
-    switch ($options['type']) {
-        case "number":
-            $input_type = "number";
-            $min = ((!empty($options['number_min']) || $options['number_min'] === "0") && isnum($options['number_min']) ? " min='".$options['number_min']."'" : '');
-            $max = ((!empty($options['number_max']) || $options['number_max'] === "0") && isnum($options['number_max']) ? " max='".$options['number_max']."'" : '');
-            $step = " step='".str_replace(",", ".", $options['number_step'])."'";
-            break;
-        case "text":
-            $input_type = "text";
-            break;
-        case "password":
-            $input_type = "password";
-            break;
-        default:
-            $input_type = "text";
-    }
-
-    $html .= "<input type='".$input_type."' data-type='".$input_type."' ".(!empty($options_data) ? implode(' ', $options_data) : '').$min.$max.$step." class='form-control textbox ".($options['inner_class'] ? " ".$options['inner_class']." " : '')."' ".($options['inner_width'] ? "style='width:".$options['inner_width'].";'" : '')." ".($options['max_length'] ? "maxlength='".$options['max_length']."'" : '')." name='".$input_name."' id='".$options['input_id']."' value='".$input_value."'".($options['placeholder'] ? " placeholder='".$options['placeholder']."'" : '').($options['autocomplete_off'] ? " autocomplete='off'" : '').($options['deactivate'] ? ' readonly' : '').">";
+    $html .= "<input type='".$input_type."' data-type='".$input_type."' ".(!empty($options_data) ? implode(' ', $options_data) : '')." ".$min.$max.$step."class='form-control textbox ".($options['inner_class'] ? " ".$options['inner_class']." " : '')."' ".($options['inner_width'] ? "style='width:".$options['inner_width'].";'" : '').$max_length." name='".$input_name."' id='".$options['input_id']."' value='".$input_value."'".($options['placeholder'] ? " placeholder='".$options['placeholder']."' " : '')."".($options['autocomplete_off'] ? " autocomplete='off'" : '')." ".($options['deactivate'] ? 'readonly' : '').">";
 
     $html .= $options['password_strength'] == TRUE ? '<div class="pwstrength_viewport_progress"></div>' : '';
 
