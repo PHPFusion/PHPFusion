@@ -35,3 +35,4 @@ $locale['461'] = "Photo|Photos";
 $locale['463'] = "Publisher|Publishers";
 $locale['464'] = "Date Added:";
 $locale['465'] = "Gallery";
+$locale['gallery_submit'] = "%s Photos";
