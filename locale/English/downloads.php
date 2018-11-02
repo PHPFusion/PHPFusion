@@ -27,3 +27,4 @@ $locale['download_3000'] = "No Downloads has been added yet";
 $locale['download_3001'] = "No Category";
 $locale['download_3002'] = "No Publisher";
 $locale['download_3003'] = "View and rate this download";
+$locale['download_submit'] = "%s Downloads";
