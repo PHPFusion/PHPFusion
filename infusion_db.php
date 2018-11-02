@@ -50,7 +50,7 @@ if ($inf_settings['faq_allow_submission']) {
         'link'          => INFUSIONS."faq/faq_submit.php",
         'submit_link'   => "submit.php?stype=q",
         'submit_locale' => fusion_get_locale('FQ', LOCALE.LOCALESET."admin/main.php"),
-        'title'         => fusion_get_locale('submit_0006', LOCALE.LOCALESET."submissions.php"),
+        'title'         => fusion_get_locale('faq_submit', FAQ_LOCALE),
         'admin_link'    => INFUSIONS."faq/faq_admin.php".fusion_get_aidlink()."&amp;section=submissions&amp;submit_id=%s"
     ]);
 }
