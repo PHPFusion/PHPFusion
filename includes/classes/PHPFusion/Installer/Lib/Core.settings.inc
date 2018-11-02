@@ -1195,18 +1195,6 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'link_language'   => $localeset,
             ],
             [
-                'link_name'       => $locale['setup_3315'],
-                'link_cat'        => '0',
-                'link_icon'       => '',
-                'link_url'        => 'submissions.php',
-                'link_visibility' => '-101',
-                'link_position'   => '1',
-                'link_status'     => '1',
-                'link_window'     => '0',
-                'link_order'      => '10',
-                'link_language'   => $localeset,
-            ],
-            [
                 'link_name'       => '---',
                 'link_cat'        => '0',
                 'link_icon'       => '',
