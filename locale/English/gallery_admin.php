@@ -118,3 +118,4 @@ $locale['photo_0025'] = "Purge All Photos";
 $locale['photo_0026'] = "[STRONG]WARNING:[/STRONG] Purge actions will [STRONG]permanently remove all photos[/STRONG] in this album. Are you sure?";
 $locale['photo_0027'] = "Confirm Purge";
 $locale['photo_0028'] = "Cancel";
+$locale['gallery_submit'] = "%s Photos";
