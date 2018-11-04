@@ -73,7 +73,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         'inner_class'        => '',
         'inline'             => FALSE,
         'min_length'         => 1,
-        'max_length'         => 0,
+        'max_length'         => 200,
         'number_min'         => 0,
         'number_max'         => 0,
         'number_step'        => 1,
