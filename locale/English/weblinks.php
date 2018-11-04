@@ -13,4 +13,3 @@ $locale['web_0041'] = "List view";
 // Messages
 $locale['web_0060'] = "No Web Link Categories defined.";
 $locale['web_0062'] = "There are no Web Link in this Category.";
-$locale['weblink_submit'] = "%s Weblinks";
