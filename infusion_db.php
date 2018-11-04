@@ -62,7 +62,7 @@ if ($inf_settings['blog_allow_submission']) {
         'link'          => INFUSIONS."blog/blog_submit.php",
         'submit_link'   => "submit.php?stype=b",
         'submit_locale' => fusion_get_locale('BLOG', LOCALE.LOCALESET."admin/main.php"),
-        'title'         => fusion_get_locale('submit_0005', LOCALE.LOCALESET."submissions.php"),
+        'title'         => fusion_get_locale('blog_submit', BLOG_ADMIN_LOCALE),
         'admin_link'    => INFUSIONS."blog/blog_admin.php".fusion_get_aidlink()."&amp;section=submissions&amp;submit_id=%s"
     ]);
 }
