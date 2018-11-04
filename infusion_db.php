@@ -60,7 +60,7 @@ if ($inf_settings['download_allow_submission']) {
         'link'          => INFUSIONS."downloads/download_submit.php",
         'submit_link'   => "submit.php?stype=d",
         'submit_locale' => fusion_get_locale('D', LOCALE.LOCALESET."admin/main.php"),
-        'title'         => fusion_get_locale('download_submit', DOWNLOAD_LOCALE),
+        'title'         => fusion_get_locale('download_submit', DOWNLOAD_ADMIN_LOCALE),
         'admin_link'    => INFUSIONS."downloads/downloads_admin.php".fusion_get_aidlink()."&amp;section=submissions&amp;submit_id=%s"
     ]);
 }

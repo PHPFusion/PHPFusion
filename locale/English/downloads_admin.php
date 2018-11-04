@@ -119,3 +119,4 @@ $locale['download_0309'] = "Save Category";
 $locale['download_0350'] = "Delete this Downloads category?";
 $locale['download_0351'] = "Please enter a category name.";
 $locale['download_0352'] = "This category already exists.";
+$locale['download_submit'] = "%s Downloads";
