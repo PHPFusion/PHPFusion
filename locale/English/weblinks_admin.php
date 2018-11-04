@@ -82,3 +82,4 @@ Administrator. [SITENAME] reserves the right to amend or edit any submission. We
 Unsuitable submissions will be deleted.";
 $locale['WLS_0922'] = "Sorry, we currently do not accept any Web Link submissions on this site.";
 $locale['WLS_0923'] = "You cannot submit a Web Link, because there are no Categories defined.";
+$locale['weblink_submit'] = "%s Weblinks";

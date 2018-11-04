@@ -59,7 +59,7 @@ if ($inf_settings['links_allow_submission']) {
         'link'          => INFUSIONS."weblinks/weblink_submit.php",
         'submit_link'   => "submit.php?stype=l",
         'submit_locale' => fusion_get_locale('271', LOCALE.LOCALESET."admin/main.php"),
-        'title'         => fusion_get_locale('submit_0004', LOCALE.LOCALESET."submissions.php"),
+        'title'         => fusion_get_locale('weblink_submit', WEBLINK_ADMIN_LOCALE),
         'admin_link'    => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink()."&amp;section=submissions&amp;submit_id=%s"
     ]);
 }
