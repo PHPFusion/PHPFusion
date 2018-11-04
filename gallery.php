@@ -75,11 +75,11 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
         add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/colorbox/colorbox.css' type='text/css' media='screen' />");
         add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/colorbox/jquery.colorbox.js'></script>");
 
-        set_title($locale['465']);
+        set_title($locale['gallery_465']);
         add_to_title($locale['global_201'].$data['photo_title']);
         \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
             'link'  => INFUSIONS."gallery/gallery.php",
-            'title' => $locale['465']
+            'title' => $locale['gallery_465']
         ]);
         \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
             'link'  => INFUSIONS."gallery/gallery.php?album_id=".$data['album_id'],
@@ -145,25 +145,25 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
             if (isset($prev) && isset($first)) {
                 $info['nav']['first'] = [
                     'link' => INFUSIONS."gallery/gallery.php?photo_id=".$first['photo_id'],
-                    'name' => $locale['459']
+                    'name' => $locale['gallery_459']
                 ];
             }
             if (isset($prev)) {
                 $info['nav']['prev'] = [
                     'link' => INFUSIONS."gallery/gallery.php?photo_id=".$prev['photo_id'],
-                    'name' => $locale['451']
+                    'name' => $locale['gallery_451']
                 ];
             }
             if (isset($next)) {
                 $info['nav']['next'] = [
                     'link' => INFUSIONS."gallery/gallery.php?photo_id=".$next['photo_id'],
-                    'name' => $locale['452']
+                    'name' => $locale['gallery_452']
                 ];
             }
             if (isset($next) && isset($last)) {
                 $info['nav']['last'] = [
                     'link' => INFUSIONS."gallery/gallery.php?photo_id=".$last['photo_id'],
-                    'name' => $locale['460']
+                    'name' => $locale['gallery_460']
                 ];
             }
         }
@@ -188,7 +188,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
         if (dbrows($result) > 0) {
             $info = dbarray($result);
 
-            set_title($locale['465']);
+            set_title($locale['gallery_465']);
             add_to_title($locale['global_201'].$info['album_title']);
 
             \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
@@ -219,8 +219,8 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
                     LEFT JOIN ".DB_USERS." AS pu ON p.photo_user = pu.user_id
                     WHERE album_id=:albumid
                     ORDER BY photo_datestamp DESC LIMIT 1", [':albumid'  => intval($_GET['album_id'])]));
-                $info['album_stats'] = $locale['422']." ".$info['max_rows']."<br />\n";
-                $info['album_stats'] .= $locale['423']." ".profile_link($latest_update['user_id'], $latest_update['user_name'], $latest_update['user_status'])." ".$locale['424']." ".showdate("longdate", $latest_update['photo_datestamp'])."\n";
+                $info['album_stats'] = $locale['gallery_422']." ".$info['max_rows']."<br />\n";
+                $info['album_stats'] .= $locale['gallery_423']." ".profile_link($latest_update['user_id'], $latest_update['user_name'], $latest_update['user_status'])." ".$locale['gallery_424']." ".showdate("longdate", $latest_update['photo_datestamp'])."\n";
                 $pattern = "SELECT %s(pr.rating_vote) FROM ".DB_RATINGS." AS pr WHERE pr.rating_item_id = p.photo_id AND pr.rating_type = 'P'";
                 $sql_count = sprintf($pattern, 'COUNT');
                 $sql_sum = sprintf($pattern, 'SUM');
@@ -338,7 +338,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
                 $data['image'] = displayAlbumImage($data['album_image'], $data['album_thumb1'], $data['album_thumb2'],
                     INFUSIONS."gallery/gallery.php?album_id=".$data['album_id']);
                 //}
-                $data['title'] = $data['album_title'] ? $data['album_title'] : $locale['402'];
+                $data['title'] = $data['album_title'] ? $data['album_title'] : $locale['gallery_402'];
                 $data['description'] = $data['album_description'] ? nl2br(parse_textarea($data['album_description'])) : '';
                 $_photo = dbquery("SELECT pp.photo_user, u.user_id, u.user_name, u.user_status, u.user_avatar
                     FROM ".DB_PHOTOS." AS pp
@@ -368,7 +368,7 @@ function photo_thumbnail($data) {
     echo "<!--photogallery_album_photo_".$data['photo_id']."-->";
     echo "<a href='".INFUSIONS."gallery/gallery.php?photo_id=".$data['photo_id']."' class='photogallery_album_photo_link'>\n";
     $thumb_img = ($data['photo_thumb1'] && file_exists(IMAGES_G.$data['photo_thumb1'])) ? IMAGES_G.$data['photo_thumb1'] : DOWNLOADS."images/no_image.jpg";
-    $title = ($data['album_thumb1'] && file_exists(IMAGES_G.$data['album_thumb1'])) ? $data['album_thumb1'] : $locale['402'];
+    $title = ($data['album_thumb1'] && file_exists(IMAGES_G.$data['album_thumb1'])) ? $data['album_thumb1'] : $locale['gallery_402'];
     echo "<img class='photogallery_album_photo img-responsive' style='min-width: 100%;' src='".$thumb_img."' title='$title' alt='$title' />\n";
     echo "</a>\n";
     echo "</div>\n<div class='panel-body photogallery_album_photo_info'>\n";
@@ -376,17 +376,17 @@ function photo_thumbnail($data) {
     echo "</div>\n<div class='panel-body photogallery_album_photo_info' style='border-top:1px solid #ddd'>\n";
     echo "<!--photogallery_album_photo_info-->\n";
     echo "<span class='display-inline-block'>\n";
-    echo($data['photo_allow_ratings'] ? $locale['437'].($data['count_votes'] > 0 ? str_repeat("<i class='fa fa-star'></i>", ceil($data['sum_rating'] / $data['count_votes'])) : $locale['438'])."<br />\n" : "");
+    echo($data['photo_allow_ratings'] ? $locale['gallery_437'].($data['count_votes'] > 0 ? str_repeat("<i class='fa fa-star'></i>", ceil($data['sum_rating'] / $data['count_votes'])) : $locale['gallery_438'])."<br />\n" : "");
     echo "</span>\n<br/>\n";
     echo "</div>\n<div class='panel-body photogallery_album_photo_info' style='border-top:1px solid #ddd'>\n";
-    echo "<span> ".$locale['434'].profile_link($data['user_id'], $data['user_name'], $data['user_status'])." </span>";
+    echo "<span> ".$locale['gallery_434'].profile_link($data['user_id'], $data['user_name'], $data['user_status'])." </span>";
     echo "</div>\n<div class='panel-body photogallery_album_photo_info' style='border-top:1px solid #ddd'>\n";
-    echo "<span class='m-r-10'><abbr title='".$locale['403'].showdate("shortdate", $data['photo_datestamp'])."'><i title='".$locale['403'].showdate("shortdate", $data['photo_datestamp'])."' class='fa fa-calendar text-lighter'></i></abbr></span>";
+    echo "<span class='m-r-10'><abbr title='".$locale['gallery_403'].showdate("shortdate", $data['photo_datestamp'])."'><i title='".$locale['gallery_403'].showdate("shortdate", $data['photo_datestamp'])."' class='fa fa-calendar text-lighter'></i></abbr></span>";
     $photo_comments = dbcount("(comment_id)", DB_COMMENTS, "comment_type='P' AND comment_item_id='".$data['photo_id']."'");
-    $comments_text = ($data['photo_allow_comments'] ? ($photo_comments == 1 ? $locale['436b'] : $locale['436']).$photo_comments : "");
+    $comments_text = ($data['photo_allow_comments'] ? ($photo_comments == 1 ? $locale['gallery_436b'] : $locale['gallery_436']).$photo_comments : "");
     echo "<span class='m-r-10'><abbr title='".$comments_text."'><i class='fa fa-comment text-lighter'></i></abbr> $photo_comments</abbr></span>";
-    echo "<span class='m-r-10'><abbr title='".$locale['434'].$data['user_name']."'><i class='fa fa-user text-lighter'></i></span>";
-    echo "<span><abbr title='".$locale['435'].$data['photo_views']."'><i class='fa fa-eye text-lighter'></i></abbr> ".$data['photo_views']."</span>";
+    echo "<span class='m-r-10'><abbr title='".$locale['gallery_434'].$data['user_name']."'><i class='fa fa-user text-lighter'></i></span>";
+    echo "<span><abbr title='".$locale['gallery_435'].$data['photo_views']."'><i class='fa fa-eye text-lighter'></i></abbr> ".$data['photo_views']."</span>";
     echo "</div></div>\n";
 }
 
