@@ -131,3 +131,4 @@ $locale['956'] = "Square";
 $locale['959'] = "Uploaded Photo";
 $locale['960'] = "Category Image";
 $locale['961'] = "Allowed file types:";
+$locale['blog_submit'] = "%s Blog";
