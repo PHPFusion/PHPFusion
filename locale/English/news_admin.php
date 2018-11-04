@@ -135,4 +135,4 @@ $locale['956'] = "Square";
 $locale['957'] = "Image on Front-page";
 $locale['958'] = "Image on Read-more";
 $locale['959'] = "Uploaded Photo";
-
+$locale['news_submit'] = "%s News";
