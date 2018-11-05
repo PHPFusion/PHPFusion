@@ -68,7 +68,7 @@ echo "<div class='well m-t-10'>".$locale['download_description']."</div>";
 echo openform('settingsform', 'post', FUSION_REQUEST);
 echo "<div class='row'>\n<div class='col-xs-12 col-sm-8'>\n";
 openside("");
-echo form_text('download_pagination', $locale['939'], $dl_settings['download_pagination'], [
+echo form_text('download_pagination', $locale['download_939'], $dl_settings['download_pagination'], [
     'max_length'  => 4,
     'type'        => 'number',
     'inline'      => TRUE,
@@ -78,7 +78,7 @@ echo form_text('download_pagination', $locale['939'], $dl_settings['download_pag
 closeside();
 openside('');
 echo "<div class='display-block overflow-hide'>
-    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='photo_w'>".$locale['934']."</label>
+    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='photo_w'>".$locale['download_934']."</label>
     <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
     ".form_text('download_screen_max_w', '', $dl_settings['download_screen_max_w'], [
         'class'      => 'pull-left',
@@ -93,10 +93,10 @@ echo "<div class='display-block overflow-hide'>
         'type'       => 'number',
         'width'      => '150px'
     ])."
-        <small class='mid-opacity text-uppercase pull-left m-t-10 m-l-5'>(".$locale['604'].")</small>
+        <small class='mid-opacity text-uppercase pull-left m-t-10 m-l-5'>(".$locale['download_604'].")</small>
     </div>\n</div>";
 echo "<div class='display-block overflow-hide'>
-    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='photo_w'>".$locale['937']."</label>
+    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='photo_w'>".$locale['download_937']."</label>
     <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
     ".form_text('download_thumb_max_w', '', $dl_settings['download_thumb_max_w'], [
         'class'      => 'pull-left',
@@ -111,12 +111,12 @@ echo "<div class='display-block overflow-hide'>
         'type'       => 'number',
         'width'      => '150px'
     ])."
-        <small class='mid-opacity text-uppercase pull-left m-t-10 m-l-5'>(".$locale['604'].")</small>
+        <small class='mid-opacity text-uppercase pull-left m-t-10 m-l-5'>(".$locale['download_604'].")</small>
     </div>
 </div>";
 
 echo "<div class='display-block overflow-hide'>
-    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='calc_b'>".$locale['930']."</label>
+    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='calc_b'>".$locale['download_930']."</label>
     <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
     ".form_text('calc_b', '', $calc_b, [
         'required'   => TRUE,
@@ -139,7 +139,7 @@ echo "<div class='display-block overflow-hide'>
 ";
 
 echo "<div class='display-block overflow-hide'>
-    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='calc_bb'>".$locale['936']."</label>
+    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='calc_bb'>".$locale['download_936']."</label>
     <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
     ".form_text('calc_bb', '', $calc_bb, [
         'required'   => TRUE,
@@ -169,11 +169,11 @@ closeside();
 
 echo "</div><div class='col-xs-12 col-sm-4'>\n";
 openside('');
-echo form_select('download_screenshot', $locale['938'], $dl_settings['download_screenshot'], ['options' => $choice_opts]);
-echo form_select('download_stats', $locale['940'], $dl_settings['download_stats'], ['options' => $choice_opts]);
+echo form_select('download_screenshot', $locale['download_938'], $dl_settings['download_screenshot'], ['options' => $choice_opts]);
+echo form_select('download_stats', $locale['download_940'], $dl_settings['download_stats'], ['options' => $choice_opts]);
 closeside();
 openside();
-echo form_select('download_types[]', $locale['932'], $dl_settings['download_types'], [
+echo form_select('download_types[]', $locale['download_932'], $dl_settings['download_types'], [
     'options'     => $mime_opts,
     'input_id'    => 'dltype',
     'error_text'  => $locale['error_type'],
