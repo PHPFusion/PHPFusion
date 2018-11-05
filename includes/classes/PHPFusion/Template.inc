@@ -35,6 +35,9 @@ class Template {
     private $tag = [];
     private static $key = '';
     private static $locale_list = [];
+    private $raw_block = [];
+    private $raw_tag = [];
+    private static $block_count = [];
 
     private function __construct() {
     }
@@ -59,6 +62,35 @@ class Template {
     public static function set_key($key) {
         self::$key = $key;
     }
+
+    /**
+     * Set all files to be used in a template.
+     * There is a caveat that file names cannot be same or else it will be overridden
+     * @param array $folder_arr
+     */
+    public function set_file(array $folder_arr = []) {
+        if (!empty($folder_arr)) {
+            foreach($folder_arr as $folder_path) {
+                if (is_dir($folder_path)) {
+                    $files = makefilelist($folder_path, '.|..|._DS_Store');
+                    $folder = makefilelist($folder_path, '.|..|._DS_Store', TRUE, 'folders');
+                    if (!empty($files)) {
+                        foreach($files as $filename) {
+                            $this->set_tag($filename, $folder_path.$filename);
+                        }
+                    }
+                    if (!empty($folder)) {
+                        $folderdir = [];
+                        foreach($folder as $foldername) {
+                            $folderdir[] = $folder_path.$foldername.'/';
+                        }
+                        $this->set_file($folderdir);
+                    }
+                }
+            }
+        }
+    }
+
 
     /**
      * @return array
@@ -114,11 +146,51 @@ class Template {
      */
     public function set_block($block_id, array $value = []) {
         $filtered_value = [];
-
         foreach ($value as $tag => $val) {
             $filtered_value['{%'.$tag.'%}'] = $val;
         }
         $this->block[$block_id][] = $filtered_value;
+        $this->raw_block[$block_id][] = $value;
+    }
+
+    /**
+     * Fetches an entire block of tags
+     *
+     * Every time this function is used with a block_id specified, it will traverse to the second count to mimic the set_block.
+     *
+     * @param null $block_id
+     * @param null $html_tag
+     *
+     * @return array|mixed|null
+     */
+
+    public function fetch_block($block_id = NULL, $html_tag = NULL) {
+
+        if ($block_id) {
+            self::$block_count[$block_id] = 0;
+            $block_count = self::$block_count[$block_id];
+            self::$block_count[$block_id]++;
+        }
+
+        if ($block_id != NULL) {
+            // block id is not null.
+            if (isset($this->raw_block[$block_id][$block_count])) {
+                if ($html_tag != NULL) {
+                    if (isset($this->raw_block[$block_id][$block_count][$html_tag])) {
+                        return $this->raw_block[$block_id][$block_count][$html_tag];
+                    }
+                    return NULL;
+                } else {
+                    if (isset($this->raw_block[$block_id][$block_count])) {
+                        return $this->raw_block[$block_id][$block_count];
+                    }
+                    return NULL;
+                }
+            }
+        } else {
+            return $this->raw_block;
+        }
+
     }
 
     /**
@@ -129,9 +201,22 @@ class Template {
      */
     public function set_tag($html_tag, $value) {
         $this->tag['{%'.$html_tag.'%}'] = $value;
+        $this->raw_tag[$html_tag] = $value;
     }
 
     /**
+     * Fetches a tag
+     * @param null $html_tag
+     *
+     * @return array|mixed|null
+     */
+    public function fetch_tag($html_tag = NULL) {
+        return $html_tag === NULL ? $this->raw_tag : (isset($this->raw_tag[$html_tag]) ? $this->raw_tag[$html_tag] : NULL);
+    }
+
+    /**
+     * Locale Replacement with Template Macro
+     * Macro Pattern - {[locale_keys]}
      * Recursively parse array into an array
      *
      * @param $array
