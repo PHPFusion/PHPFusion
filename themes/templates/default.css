@@ -855,6 +855,10 @@ ul > li.active > a {
     border: none !important;
 }
 
+.select2-offscreen {
+    display: none;
+}
+
 .tbl {
     display: table-cell !important;
 }

@@ -64,7 +64,8 @@ $inf_newtable[] = DB_SHOUTBOX." (
 $enabled_languages = makefilelist(LOCALE, ".|..", TRUE, "folders");
 if (!empty($enabled_languages)) {
     foreach ($enabled_languages as $language) {
-        $locale = fusion_get_locale('', LOCALE.$language."/setup.php");
+        include LOCALE.$language."/setup.php";
+
         $mlt_deldbrow[$language][] = DB_SHOUTBOX." WHERE shout_language='".$language."'";
     }
 }

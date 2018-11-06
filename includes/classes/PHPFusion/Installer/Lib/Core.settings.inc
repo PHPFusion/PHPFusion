@@ -18,8 +18,9 @@
 
 // the enabled languages in step 1. take it out. put it behind.
 function get_table_rows($table_name, $localeset = 'English') {
+    $locale = fusion_get_locale();
 
-    $locale = fusion_get_locale('', BASEDIR."locale/".$localeset."/setup.php");
+    include BASEDIR."locale/".$localeset."/setup.php";
 
     $siteurl = rtrim(dirname(getCurrentURL()), '/').'/';
     $siteurl = str_replace('install/', '', $siteurl);

@@ -45,6 +45,8 @@ class InstallerAdminSetup extends Install_Core {
         } else {
             return NULL;
         }
+
+        return NULL;
     }
 
     private function _transfer() {
@@ -153,21 +155,21 @@ class InstallerAdminSetup extends Install_Core {
 
     private function validate_UserData() {
         return [
-            'user_name'           => stripinput(filter_input(INPUT_POST, 'user_name'), '', 'user_name'),
-            'user_email'          => stripinput(filter_input(INPUT_POST, 'user_email'), '', 'user_email'),
+            'user_name'           => stripinput(filter_input(INPUT_POST, 'user_name')),
+            'user_email'          => stripinput(filter_input(INPUT_POST, 'user_email')),
             'user_algo'           => self::INSTALLER_ALGO,
             'user_salt'           => '',
             'user_password'       => '',
             'user_admin_algo'     => self::INSTALLER_ALGO,
             'user_admin_salt'     => '',
             'user_admin_password' => '',
-            'password1'           => stripinput(filter_input(INPUT_POST, 'password1'), '', 'password1'),
-            'password2'           => stripinput(filter_input(INPUT_POST, 'password2'), '', 'password2'),
-            'admin_password1'     => stripinput(filter_input(INPUT_POST, 'admin_password1'), '', 'admin_password1'),
-            'admin_password2'     => stripinput(filter_input(INPUT_POST, 'admin_password2'), '', 'admin_password2'),
+            'password1'           => stripinput(filter_input(INPUT_POST, 'password1')),
+            'password2'           => stripinput(filter_input(INPUT_POST, 'password2')),
+            'admin_password1'     => stripinput(filter_input(INPUT_POST, 'admin_password1')),
+            'admin_password2'     => stripinput(filter_input(INPUT_POST, 'admin_password2')),
             'user_rights'         => self::USER_RIGHTS_SA,
             'user_hide_email'     => 1,
-            'user_timezone'       => stripinput(filter_input(INPUT_POST, 'user_timezone'), '', 'user_timezone'),
+            'user_timezone'       => stripinput(filter_input(INPUT_POST, 'user_timezone')),
             'user_joined'         => TIME,
             'user_lastvisit'      => TIME,
             'user_ip'             => USER_IP,
@@ -406,15 +408,16 @@ class InstallerAdminSetup extends Install_Core {
                             // Update all UF Cat Fields
                             $ufc_result = dbquery("SELECT field_cat_id, field_cat_name FROM ".DB_PREFIX."user_field_cats");
                             if (dbrows($result) && is_array($langDiff) && count($langDiff)) {
-                                $locale_keys = array_flip(self::$locale);
+                                $locale_keys = array_flip(self::$siteData['enabled_languages']);
                                 while ($ufc_data = dbarray($ufc_result)) {
                                     $category_name[self::$localeset] = $ufc_data['field_cat_name'];
                                     // get current locale key
                                     if (isset($locale_keys[$ufc_data['field_cat_name']])) {
                                         $lang_key = $locale_keys[$ufc_data['field_cat_name']];
                                         foreach ($langDiff as $language) {
-                                            $language_file = fusion_get_locale('', LOCALE.$language.'/setup.php');
-                                            $category_name[$language] = $language_file[$lang_key]; // bind language = translations value
+                                            $locale = [];
+                                            include LOCALE.$language.'/setup.php';
+                                            $category_name[$language] = $locale[$lang_key]; // bind language = translations value
                                         }
                                     }
                                     if (!empty($category_name)) {
@@ -443,11 +446,11 @@ class InstallerAdminSetup extends Install_Core {
 
     private function validate_SiteData() {
         $array = [
-            'sitename'          => stripinput($_POST['sitename'], '', 'sitename'),
-            'siteemail'         => stripinput($_POST['siteemail'], '', 'siteemail'),
-            'enabled_languages' => stripinput((isset($_POST['enabled_languages']) ? $_POST['enabled_languages'] : ''), '', 'enabled_languages'),
-            'siteusername'      => stripinput(filter_input(INPUT_POST, 'siteusername'), '', 'siteusername'),
-            'default_timezone'  => stripinput(filter_input(INPUT_POST, 'default_timezone'), '', 'default_timezone')
+            'sitename'          => stripinput($_POST['sitename']),
+            'siteemail'         => stripinput($_POST['siteemail']),
+            'enabled_languages' => stripinput((isset($_POST['enabled_languages']) ? $_POST['enabled_languages'] : '')),
+            'siteusername'      => stripinput(filter_input(INPUT_POST, 'siteusername')),
+            'default_timezone'  => stripinput(filter_input(INPUT_POST, 'default_timezone'))
         ];
 
         return $array;

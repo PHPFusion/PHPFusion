@@ -74,7 +74,8 @@ $enabled_languages = makefilelist(LOCALE, ".|..", TRUE, "folders");
 // Create a link for all installed languages
 if (!empty($enabled_languages)) {
     foreach ($enabled_languages as $language) {
-        $locale = fusion_get_locale("", LOCALE.$language."/setup.php");
+        include LOCALE.$language."/setup.php";
+
         $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3022']."', 'infusions/".$inf_folder."/polls_archive.php', '0', '1', '0', '2', '1', '".$language."')";
 
         // drop deprecated language records
