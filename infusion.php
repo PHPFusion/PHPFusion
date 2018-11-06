@@ -305,8 +305,8 @@ if (function_exists("fusion_get_enabled_languages")) {
 // Create a link for all installed languages
 if (!empty($enabled_languages)) {
     foreach ($enabled_languages as $language) {
-
-        $locale = fusion_get_locale("", [LOCALE.$language."/setup.php", FORUM.'locale/'.$language.'/forum_tags.php']);
+        include LOCALE.$language."/setup.php";
+        include FORUM.'locale/'.$language.'/forum_tags.php';
 
         $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3304']."', 'infusions/forum/index.php', '0', '2', '0', '5', '1', '".$language."')";
         $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_cat, link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('{last_id}', '".$locale['setup_3324']."', 'infusions/forum/newthread.php', ".USER_LEVEL_MEMBER.", '2', '0', '1', '1', '".$language."')";
