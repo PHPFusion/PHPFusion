@@ -65,7 +65,7 @@ function fusion_get_currency($iso = NULL, $description = TRUE) {
             "GRD" => "EUR",
             "IEP" => "EUR",
             "ITL" => "EUR",
-			"KZT" => "EUR",
+            "KZT" => "EUR",
             "LTL" => "EUR",
             "LUF" => "EUR",
             "LVL" => "EUR",
@@ -73,7 +73,7 @@ function fusion_get_currency($iso = NULL, $description = TRUE) {
             "MTL" => "EUR",
             "NLG" => "EUR",
             "PTE" => "EUR",
-			"RUB" => "EUR",
+            "RUB" => "EUR",
             "SIT" => "EUR",
             "SKK" => "EUR",
             "SML" => "EUR",
@@ -587,7 +587,7 @@ function parse_textarea($text, $smileys = TRUE, $bbcode = TRUE, $decode = TRUE, 
     $text = $bbcode == TRUE ? parseubb($text) : $text;
     $text = fusion_parse_user($text);
     $text = $add_line_breaks ? nl2br($text) : $text;
-    //$text = descript($text);
+    $text = descript($text);
 
     return (string)$text;
 }
