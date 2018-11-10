@@ -67,11 +67,12 @@ class Infusion_Core {
                 }
                 if (!dbcount("(admin_id)", DB_ADMIN, "admin_rights='".$adminpanel['rights']."'")) {
                     $adminpanel += [
-                        'rights' => '',
-                        'title'  => '',
-                        'panel'  => '',
+                        'rights'   => '',
+                        'title'    => '',
+                        'panel'    => '',
+                        'language' => LANGUAGE
                     ];
-                    $insert_sql = "INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('".$adminpanel['rights']."', '".$link_prefix.$inf_admin_image."', '".$adminpanel['title']."', '".$link_prefix.$adminpanel['panel']."', '".$item_page."')";
+                    $insert_sql = "INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('".$adminpanel['rights']."', '".$link_prefix.$inf_admin_image."', '".$adminpanel['title']."', '".$link_prefix.$adminpanel['panel']."', '".$item_page."', '".$adminpanel['language']."')";
                     $result = dbquery($insert_sql);
                     if (dbrows($result)) {
                         $result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level <=:admin AND ".in_group('user_rights', 'I'), [':admin' => USER_LEVEL_ADMIN]);

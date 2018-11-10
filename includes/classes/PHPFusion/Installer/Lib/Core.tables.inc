@@ -51,6 +51,11 @@ function get_core_tables($localeset) {
             'default'  => 1,
             'unsigned' => TRUE,
         ], //admin_page TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
+        'admin_language'   => [
+            'type'     => 'VARCHAR',
+            'length'   => 50,
+            'default'  => $localeset,
+        ], //admin_language VARCHAR(50) NOT NULL DEFAULT '".$localeset."',
     ];
     $table_package['mlt_tables'] = [
         'mlt_rights' => [
