@@ -375,8 +375,26 @@ class InstallerAdminSetup extends Install_Core {
                         $langDiff = array_diff(self::$siteData['enabled_languages'], $installed_languages);
                         if (!empty($langDiff)) {
                             foreach ($langDiff as $language) {
-
                                 $sql_inserts = $batch_core::batch_insert_rows('site_links', $language);
+                                if ($result = dbquery($sql_inserts)) {
+                                    continue;
+                                }
+                            }
+                        }
+                        unset($installed_languages);
+
+                        $result = dbquery("SELECT admin_language FROM ".DB_PREFIX."admin GROUP BY admin_language ASC");
+                        $installed_languages = [];
+                        if (dbrows($result) > 0) {
+                            while ($data = dbarray($result)) {
+                                $installed_languages[] = $data['admin_language'];
+                            }
+                        }
+
+                        $langDiff = array_diff(self::$siteData['enabled_languages'], $installed_languages);
+                        if (!empty($langDiff)) {
+                            foreach ($langDiff as $language) {
+                                $sql_inserts = $batch_core::batch_insert_rows('admin', $language);
                                 if ($result = dbquery($sql_inserts)) {
                                     continue;
                                 }

@@ -50,6 +50,11 @@ foreach ($insert_settings_tbl as $key => $value) {
     }
 }
 
+if (!column_exists(DB_ADMIN, 'admin_language', FALSE)) {
+    dbquery("INSERT INTO ".DB_ADMIN." ADD admin_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."' AFTER admin_page");
+    $changed = TRUE;
+}
+
 if ($changed === TRUE) {
     addNotice("success", "You have successfully upgraded to latest Andromeda Patch 1.02");
 }

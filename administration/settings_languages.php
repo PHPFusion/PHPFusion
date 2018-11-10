@@ -127,7 +127,16 @@ if (isset($_POST['savesettings'])) {
                      * Home Site Links
                      */
 
-                    dbquery("INSERT INTO ".DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['setup_3300']."', 'index.php', '0', '2', '0', '1', '".$language."')");
+                    $home_links = [
+                        ['link_name' => $locale['setup_3300'], 'link_cat' => '0', 'link_url' => 'index.php', 'link_visibility' => '0', 'link_position' => '2', 'link_order' => '1', 'link_language' => $language],
+                        ['link_name' => $locale['setup_3305'], 'link_cat' => '0', 'link_url' => 'contact.php', 'link_visibility' => '0', 'link_position' => '3', 'link_order' => '8', 'link_language' => $language],
+                        ['link_name' => $locale['setup_3309'], 'link_cat' => '0', 'link_url' => 'search.php', 'link_visibility' => '0', 'link_position' => '1', 'link_order' => '10', 'link_language' => $language],
+                        ['link_name' => '---', 'link_cat' => '0', 'link_url' => '---', 'link_visibility' => '-101', 'link_position' => '1', 'link_order' => '11', 'link_language' => $language]
+                    ];
+
+                    foreach ($home_links as $link) {
+                        dbquery("INSERT INTO ".DB_SITE_LINKS." (link_name, link_cat, link_url, link_visibility, link_position, link_status, link_window, link_order, link_language) VALUES ('".$link['link_name']."', '".$link['link_cat']."', '".$link['link_url']."', '".$link['link_visibility']."', '".$link['link_position']."', 1, 0, '".$link['link_order']."', '".$link['link_language']."')");
+                    }
 
                     /**
                      * Admin Links

@@ -58,13 +58,16 @@ class Infusion_Core {
                 if (!empty($adminpanel['rights'])) {
                     dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_rights='".$adminpanel['rights']."'");
                 }
+
                 $link_prefix = (defined('ADMIN_PANEL') ? '' : '../').INFUSIONS.$inf['folder'].'/';
                 $inf_admin_image = ($adminpanel['image'] ?: "infusion_panel.png");
+
                 if (empty($adminpanel['page'])) {
                     $item_page = 5;
                 } else {
                     $item_page = isnum($adminpanel['page']) ? $adminpanel['page'] : 5;
                 }
+
                 if (!dbcount("(admin_id)", DB_ADMIN, "admin_rights='".$adminpanel['rights']."'")) {
                     $adminpanel += [
                         'rights'   => '',
@@ -72,12 +75,17 @@ class Infusion_Core {
                         'panel'    => '',
                         'language' => LANGUAGE
                     ];
+
                     $insert_sql = "INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('".$adminpanel['rights']."', '".$link_prefix.$inf_admin_image."', '".$adminpanel['title']."', '".$link_prefix.$adminpanel['panel']."', '".$item_page."', '".$adminpanel['language']."')";
                     $result = dbquery($insert_sql);
                     if (dbrows($result)) {
                         $result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level <=:admin AND ".in_group('user_rights', 'I'), [':admin' => USER_LEVEL_ADMIN]);
                         while ($data = dbarray($result)) {
-                            dbquery("UPDATE ".DB_USERS." SET user_rights='".$data['user_rights'].".".$adminpanel['rights']."' WHERE user_id='".$data['user_id']."'");
+                            $user_rights = explode('.', $data['user_rights']);
+
+                            if (!in_array($adminpanel['rights'], $user_rights)) {
+                                dbquery("UPDATE ".DB_USERS." SET user_rights='".$data['user_rights'].".".$adminpanel['rights']."' WHERE user_id='".$data['user_id']."'");
+                            }
                         }
                     }
                 } else {
