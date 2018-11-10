@@ -215,7 +215,7 @@ if (isset($_POST['savesettings'])) {
                     /**
                      * This will loop x amount of times of installed infusion.
                      */
-
+                    $mlt_adminpanel = [];
                     $mlt_insertdbrow = [];
                     $mlt_deldbrow = [];
 
@@ -235,6 +235,21 @@ if (isset($_POST['savesettings'])) {
                                     }
                                 }
                                 unset($mlt_insertdbrow[$language]);
+                            }
+
+                            if (isset($mlt_adminpanel[$language])) {
+                                foreach ($mlt_adminpanel[$language] as $adminpanel) {
+                                    $link_prefix = (defined('ADMIN_PANEL') ? '' : '../').INFUSIONS.$cdata['inf_folder'].'/';
+                                    $inf_admin_image = ($adminpanel['image'] ?: "infusion_panel.png");
+
+                                    if (empty($adminpanel['page'])) {
+                                        $item_page = 5;
+                                    } else {
+                                        $item_page = isnum($adminpanel['page']) ? $adminpanel['page'] : 5;
+                                    }
+
+                                    dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('".$adminpanel['rights']."', '".$link_prefix.$inf_admin_image."', '".$adminpanel['title']."', '".$link_prefix.$adminpanel['panel']."', '".$item_page."', '".$adminpanel['language']."')");
+                                }
                             }
                         }
                     }

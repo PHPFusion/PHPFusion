@@ -20,7 +20,7 @@ if (!defined("IN_FUSION")) {
 }
 
 if (!defined('LOGIN_LOCALESET')) {
-    define('LOGIN_LOCALESET', INFUSIONS.'login/locale/'.LANGUAGE.'/');
+    define('LOGIN_LOCALESET', INFUSIONS.'login/locale/'.LOCALESET);
 }
 
 if (!defined('DB_LOGIN')) {

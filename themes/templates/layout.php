@@ -104,7 +104,7 @@ if (!defined("THEME_BODY")) {
 }
 
 if (iADMIN) {
-    if (iSUPERADMIN && file_exists(BASEDIR.'install.php') && $settings['devmode'] == 0) {
+    if (iSUPERADMIN && file_exists(BASEDIR.'install.php') && $settings['devmode'] == 0 && !defined("DEVMODE")) {
         addNotice('danger', $locale['global_198'], 'all');
     }
 
