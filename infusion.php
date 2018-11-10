@@ -31,12 +31,6 @@ $inf_weburl = "https://www.php-fusion.co.uk";
 $inf_folder = "weblinks";
 $inf_image = "weblink.svg";
 
-// Multilanguage table for Administration
-$inf_mlt[] = [
-    "title"  => $locale['weblinks']['title'],
-    "rights" => "WL"
-];
-
 // Create tables
 $inf_newtable[] = DB_WEBLINKS." (
     weblink_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -65,7 +59,7 @@ $inf_newtable[] = DB_WEBLINK_CATS." (
     PRIMARY KEY (weblink_cat_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
-// Settings
+// Insert settings
 $settings = [
     'links_per_page'          => 15,
     'links_extended_required' => 1,
@@ -76,41 +70,55 @@ foreach ($settings as $name => $value) {
     $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('".$name."', '".$value."', '".$inf_folder."')";
 }
 
-// Position these links under Content Administration
-$inf_adminpanel[] = [
-    "image"  => $inf_image,
-    "page"   => 1,
-    "rights" => "W",
-    "title"  => $locale['setup_3029'],
-    "panel"  => "weblinks_admin.php"
+// Multilanguage table
+$inf_mlt[] = [
+    "title"  => $locale['weblinks']['title'],
+    "rights" => "WL"
 ];
 
-// always find and loop ALL languages
+// Multilanguage links
 $enabled_languages = makefilelist(LOCALE, ".|..", TRUE, "folders");
-// Create a link for all installed languages
 if (!empty($enabled_languages)) {
     foreach ($enabled_languages as $language) {
         include LOCALE.$language."/setup.php";
 
-        // add new language records
+        $mlt_adminpanel[$language][] = [
+            "rights"   => "W",
+            "image"    => $inf_image,
+            "title"    => $locale['setup_3029'],
+            "panel"    => "weblinks_admin.php",
+            "page"     => 1,
+            'language' => $language
+        ];
+
+        // Add
         $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3307']."', 'infusions/".$inf_folder."/weblinks.php', '0', '2', '0', '2', '1', '".$language."')";
         $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3310']."', 'submit.php?stype=l', ".USER_LEVEL_MEMBER.", '1', '0', '26', '1', '".$language."')";
 
-        // drop deprecated language records
+        // Delete
         $mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='infusions/".$inf_folder."/weblinks.php' AND link_language='".$language."'";
         $mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=l' AND link_language='".$language."'";
         $mlt_deldbrow[$language][] = DB_WEBLINKS." WHERE weblink_language='".$language."'";
         $mlt_deldbrow[$language][] = DB_WEBLINK_CATS." WHERE weblink_cat_language='".$language."'";
+        $mlt_deldbrow[$language][] = DB_ADMIN." WHERE admin_rights='W' AND admin_language='".$language."'";
     }
 } else {
+    $inf_adminpanel[] = [
+        "rights"   => "W",
+        "image"    => $inf_image,
+        "title"    => $locale['setup_3029'],
+        "panel"    => "weblinks_admin.php",
+        "page"     => 1,
+        'language' => LANGUAGE
+    ];
+
     $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES('".$locale['setup_3307']."', 'infusions/".$inf_folder."/weblinks.php', '0', '2', '0', '2', '1', '".LANGUAGE."')";
     $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES('".$locale['setup_3310']."', 'submit.php?stype=l', ".USER_LEVEL_MEMBER.", '1', '0', '26', '1', '".LANGUAGE."')";
 }
 
-// Defuse cleaning
+// Uninstallation
 $inf_droptable[] = DB_WEBLINKS;
 $inf_droptable[] = DB_WEBLINK_CATS;
-
 $inf_deldbrow[] = DB_SUBMISSIONS." WHERE submit_type='l'";
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_rights='W'";
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_rights='WC'";
