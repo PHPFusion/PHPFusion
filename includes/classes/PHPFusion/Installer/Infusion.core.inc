@@ -58,25 +58,34 @@ class Infusion_Core {
                 if (!empty($adminpanel['rights'])) {
                     dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_rights='".$adminpanel['rights']."'");
                 }
+
                 $link_prefix = (defined('ADMIN_PANEL') ? '' : '../').INFUSIONS.$inf['folder'].'/';
                 $inf_admin_image = ($adminpanel['image'] ?: "infusion_panel.png");
+
                 if (empty($adminpanel['page'])) {
                     $item_page = 5;
                 } else {
                     $item_page = isnum($adminpanel['page']) ? $adminpanel['page'] : 5;
                 }
+
                 if (!dbcount("(admin_id)", DB_ADMIN, "admin_rights='".$adminpanel['rights']."'")) {
                     $adminpanel += [
-                        'rights' => '',
-                        'title'  => '',
-                        'panel'  => '',
+                        'rights'   => '',
+                        'title'    => '',
+                        'panel'    => '',
+                        'language' => LANGUAGE
                     ];
-                    $insert_sql = "INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('".$adminpanel['rights']."', '".$link_prefix.$inf_admin_image."', '".$adminpanel['title']."', '".$link_prefix.$adminpanel['panel']."', '".$item_page."')";
+
+                    $insert_sql = "INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('".$adminpanel['rights']."', '".$link_prefix.$inf_admin_image."', '".$adminpanel['title']."', '".$link_prefix.$adminpanel['panel']."', '".$item_page."', '".$adminpanel['language']."')";
                     $result = dbquery($insert_sql);
                     if (dbrows($result)) {
                         $result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level <=:admin AND ".in_group('user_rights', 'I'), [':admin' => USER_LEVEL_ADMIN]);
                         while ($data = dbarray($result)) {
-                            dbquery("UPDATE ".DB_USERS." SET user_rights='".$data['user_rights'].".".$adminpanel['rights']."' WHERE user_id='".$data['user_id']."'");
+                            $user_rights = explode('.', $data['user_rights']);
+
+                            if (!in_array($adminpanel['rights'], $user_rights)) {
+                                dbquery("UPDATE ".DB_USERS." SET user_rights='".$data['user_rights'].".".$adminpanel['rights']."' WHERE user_id='".$data['user_id']."'");
+                            }
                         }
                     }
                 } else {
@@ -201,6 +210,7 @@ class Infusion_Core {
         $inf_deldbrow = [];
         $inf_sitelink = [];
         $inf_adminpanel = [];
+        $mlt_adminpanel = [];
         $inf_mlt = [];
         $mlt_insertdbrow = [];
         $mlt_deldbrow = [];
@@ -241,6 +251,7 @@ class Infusion_Core {
                 'deldbrow'        => $inf_deldbrow,
                 'sitelink'        => $inf_sitelink,
                 'adminpanel'      => $inf_adminpanel,
+                'mlt_adminpanel'  => $mlt_adminpanel,
                 'mlt'             => $inf_mlt,
                 'mlt_insertdbrow' => $mlt_insertdbrow,
                 'mlt_deldbrow'    => $mlt_deldbrow,
@@ -253,11 +264,7 @@ class Infusion_Core {
              * 1 - Nothing to upgrade
              * 0 - Infusions not found.
              */
-            $infusion['status'] = dbrows($result)
-                ? (version_compare($infusion['version'], dbresult($result, 0), ">")
-                    ? 2
-                    : 1)
-                : 0;
+            $infusion['status'] = dbrows($result) ? (version_compare($infusion['version'], dbresult($result, 0), ">") ? 2 : 1) : 0;
         }
 
         return $infusion;
@@ -287,6 +294,7 @@ class Infusion_Core {
         $inf_updatedbrow = [];
         $inf_sitelink = [];
         $inf_adminpanel = [];
+        $mlt_adminpanel = [];
         $inf_mlt = [];
         $mlt_insertdbrow = [];
         $inf_insertdbrow = [];
@@ -324,6 +332,7 @@ class Infusion_Core {
                 'newcol'          => $inf_newcol,
                 'sitelink'        => $inf_sitelink,
                 'adminpanel'      => $inf_adminpanel,
+                'mlt_adminpanel'      => $mlt_adminpanel,
                 'mlt'             => $inf_mlt,
                 'insertdbrow'     => $inf_insertdbrow,
                 'updatedbrow'     => $inf_updatedbrow,
@@ -337,11 +346,7 @@ class Infusion_Core {
 
             $folder = str_replace(INFUSIONS, '', $folder);
             $result = dbquery("SELECT inf_version FROM ".DB_INFUSIONS." WHERE inf_folder=:inf_folder", [':inf_folder' => $folder]);
-            $infusion['status'] = dbrows($result)
-                ? (version_compare($infusion['version'], dbresult($result, 0), ">=")
-                    ? 2
-                    : 1)
-                : 0;
+            $infusion['status'] = dbrows($result) ? (version_compare($infusion['version'], dbresult($result, 0), ">=") ? 2 : 1) : 0;
         }
 
         return $infusion;
@@ -558,6 +563,50 @@ class Infusion_Core {
                             $result = dbquery("INSERT INTO ".$insertdbrow);
                             $last_id = dblastid();
                         }
+                        if (!$result) {
+                            $error = TRUE;
+                        }
+                    }
+                }
+            }
+        }
+
+        return $error;
+    }
+
+    /**
+     * Method: Register Multilang Admin Pages
+     *
+     * @param $inf
+     *
+     * @return bool
+     */
+    protected function mlt_adminpanel_infuse($inf) {
+        $error = FALSE;
+        if ($inf['mlt_adminpanel'] && is_array($inf['mlt_adminpanel'])) {
+            foreach (fusion_get_enabled_languages() as $current_language => $language_translations) {
+                if (isset($inf['mlt_adminpanel'][$current_language])) {
+                    foreach ($inf['mlt_adminpanel'][$current_language] as $adminpanel) {
+                        $link_prefix = (defined('ADMIN_PANEL') ? '' : '../').INFUSIONS.$inf['folder'].'/';
+                        $inf_admin_image = ($adminpanel['image'] ?: "infusion_panel.png");
+
+                        if (empty($adminpanel['page'])) {
+                            $item_page = 5;
+                        } else {
+                            $item_page = isnum($adminpanel['page']) ? $adminpanel['page'] : 5;
+                        }
+
+                        $result = dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('".$adminpanel['rights']."', '".$link_prefix.$inf_admin_image."', '".$adminpanel['title']."', '".$link_prefix.$adminpanel['panel']."', '".$item_page."', '".$adminpanel['language']."')");
+
+                        $result2 = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level <=:admin AND ".in_group('user_rights', 'I'), [':admin' => USER_LEVEL_ADMIN]);
+                        while ($data = dbarray($result2)) {
+                            $user_rights = explode('.', $data['user_rights']);
+
+                            if (!in_array($adminpanel['rights'], $user_rights)) {
+                                dbquery("UPDATE ".DB_USERS." SET user_rights='".$data['user_rights'].".".$adminpanel['rights']."' WHERE user_id='".$data['user_id']."'");
+                            }
+                        }
+
                         if (!$result) {
                             $error = TRUE;
                         }

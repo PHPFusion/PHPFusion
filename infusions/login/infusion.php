@@ -31,20 +31,13 @@ $inf_weburl = "https://www.php-fusion.co.uk";
 $inf_folder = "login";
 $inf_image = "login.svg";
 
-$inf_adminpanel[] = [
-    "image"  => $inf_image,
-    "page"   => 3,
-    "rights" => "L1",
-    "title"  => $locale['login_002'],
-    "panel"  => "login_admin.php"
-];
-
 /**
  * Login ID     incremental
  * Login Type   2FA (2 factor authentication) / LGA (Login Authentication)
  * Login Name   Title of Driver
  */
 
+// Create tables
 $inf_newtable[] = DB_LOGIN." (
     login_name VARCHAR(100) NOT NULL DEFAULT '0',
     login_type VARCHAR(10) NOT NULL DEFAULT '0',
@@ -63,5 +56,35 @@ $inf_newtable[] = DB_LOGIN_EMAILS." (
     KEY email_user (email_user)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
+// Multilanguage links
+$enabled_languages = makefilelist(LOCALE, ".|..", TRUE, "folders");
+if (!empty($enabled_languages)) {
+    foreach ($enabled_languages as $language) {
+        include INFUSIONS.'login/locale/'.$language.'/login.php';
+
+        $mlt_adminpanel[$language][] = [
+            "rights"   => "L1",
+            "image"    => $inf_image,
+            "title"    => $locale['login_002'],
+            "panel"    => "login_admin.php",
+            "page"     => 3,
+            'language' => $language
+        ];
+
+        // Delete
+        $mlt_deldbrow[$language][] = DB_ADMIN." WHERE admin_rights='L1' AND admin_language='".$language."'";
+    }
+} else {
+    $inf_adminpanel[] = [
+        "rights"   => "L1",
+        "image"    => $inf_image,
+        "title"    => $locale['login_002'],
+        "panel"    => "login_admin.php",
+        "page"     => 3,
+        'language' => LANGUAGE
+    ];
+}
+
+// Uninstallation
 $inf_droptable[] = DB_LOGIN;
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_rights='L1'";

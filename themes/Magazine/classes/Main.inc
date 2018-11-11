@@ -165,6 +165,7 @@ class Main extends Core {
         $locale = fusion_get_locale('', MG_LOCALE);
         $settings = fusion_get_settings();
         $userdata = fusion_get_userdata();
+        $languages = fusion_get_enabled_languages();
 
         if (iMEMBER) {
             $name = $locale['MG_001'].$userdata['user_name'];
@@ -174,6 +175,25 @@ class Main extends Core {
 
         ob_start();
         echo '<ul class="nav navbar-nav navbar-right secondary m-r-0">';
+            if (count($languages) > 1) {
+                echo '<li class="dropdown language-switcher">';
+                    echo '<a href="#" class="dropdown-toggle pointer" data-toggle="dropdown" title="'.LANGUAGE.'">';
+                        echo '<i class="fa fa-globe"></i> ';
+                        echo '<img src="'.BASEDIR.'locale/'.LANGUAGE.'/'.LANGUAGE.'-s.png" alt="'.translate_lang_names(LANGUAGE).'"/>';
+                        echo '<span class="caret"></span>';
+                    echo '</a>';
+
+                    echo '<ul class="dropdown-menu">';
+                        foreach ($languages as $language_folder => $language_name) {
+                            echo '<li><a class="display-block" href="'.clean_request('lang='.$language_folder, ['lang'], FALSE).'">';
+                                echo '<img class="m-r-5" src="'.BASEDIR.'locale/'.$language_folder.'/'.$language_folder.'-s.png" alt="'.$language_folder.'"/> ';
+                                echo $language_name;
+                            echo '</a></li>';
+                        }
+                    echo '</ul>';
+                echo '</li>';
+            }
+
             echo '<li id="user-info" class="dropdown">';
                 echo '<a href="#" id="user-menu" class="dropdown-toggle" data-toggle="dropdown">'.$name.' <span class="caret"></span></a>';
 

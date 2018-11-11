@@ -466,7 +466,7 @@ class PrivateMessages {
         if (isset($_GET['msg_read'])) {
             // this is the read menu.
             $html = openform('actionform', 'post', FUSION_REQUEST);
-            $html .= form_hidden('selectedPM', '', $_GET['msg_read']);
+            $html .= form_hidden('selectedPM', '', intval($_GET['msg_read']));
             $html .= "<div class='btn-group display-inline-block m-r-10'>\n";
             if ($_GET['folder'] == "archive") {
                 $html .= form_button('unarchive_pm', $this->locale['413'], 'unarchive_pm', ['icon' => 'fa fa-unlock']);

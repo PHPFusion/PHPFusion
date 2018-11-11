@@ -70,21 +70,10 @@ class Login extends Core {
             echo '<a href="'.BASEDIR.$settings['opening_page'].'">'.$locale['home'].'</a>';
             echo '</div>';
         } else {
-            switch ($settings['login_method']) {
-                case 2:
-                    $placeholder = $locale['global_101c'];
-                    break;
-                case 1:
-                    $placeholder = $locale['global_101b'];
-                    break;
-                default:
-                    $placeholder = $locale['global_101a'];
-            }
-
             echo $info['open_form'];
-            echo form_text('user_name', '', isset($_POST['user_name']) ? $_POST['user_name'] : '', ['placeholder' => $placeholder]);
-            echo form_text('user_pass', '', '', ['placeholder' => $locale['global_102'], 'type' => 'password']);
-            echo form_checkbox('remember_me', $locale['global_103'], '', ['reverse_label' => TRUE]);
+            echo $info['user_name'];
+            echo $info['user_pass'];
+            echo $info['remember_me'];
             echo $info['login_button'];
             echo '<div class="display-block text-center m-t-10">'.$info['registration_link'].'</div>';
             echo $info['close_form'];

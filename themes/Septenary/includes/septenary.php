@@ -102,7 +102,7 @@ class SeptenaryTheme extends SeptenaryComponents {
      * Adds Theme Javascript and Meta header
      */
     private function setHeader() {
-        if (FUSION_SELF !== "maintenance.php" && FUSION_SELF !== "go.php") {
+        if (FUSION_SELF !== "maintenance.php") {
             add_to_head("
             <!--[if lt IE 8]>
             <div style=' clear: both; text-align:center; position: relative;'>

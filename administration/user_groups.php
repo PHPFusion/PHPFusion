@@ -93,6 +93,7 @@ class UserGroups {
             default:
                 break;
         }
+
         \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'user_groups.php'.fusion_get_aidlink(), "title" => self::$locale['GRP_420']]);
     }
 
@@ -278,7 +279,6 @@ class UserGroups {
                 }
                 break;
             default:
-                \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, "title" => $master_tab_title['title'][0]]);
                 $view = $this->group_list();
                 break;
         }

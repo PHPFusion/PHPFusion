@@ -47,5 +47,6 @@ $pattern = [
     "website-members"                                                       => "members.php",
     "create/ref=%time%"                                                     => "register.php?ref=%time%",
     "contact"                                                               => "contact.php",
-    "registration"                                                          => "register.php"
+    "registration"                                                          => "register.php",
+    "lost-password"                                                         => "lostpassword.php"
 ];

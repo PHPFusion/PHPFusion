@@ -34,6 +34,7 @@ $insert_settings_tbl = [
     'domain_server'     => '',
     'form_tokens'       => 5,
     'gateway'           => 1,
+    'devmode'           => 0,
 ];
 
 foreach ($insert_settings_tbl as $key => $value) {
@@ -76,3 +77,7 @@ if (db_exists(DB_PREFIX.'sessions')) {
 dbquery("ALTER TABLE ".DB_USERS." ADD FULLTEXT(`user_name`)");
 
 $inf_droptable[] = DB_PREFIX.'messages_options';
+
+if (!column_exists(DB_ADMIN, 'admin_language', FALSE)) {
+    $inf_altertable[] = DB_ADMIN." ADD admin_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."' AFTER admin_page";
+}

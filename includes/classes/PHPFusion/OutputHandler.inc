@@ -202,8 +202,14 @@ class OutputHandler {
         }
 
         if (!empty(self::$cssTags)) {
-            $minifier = new Minify\CSS(self::$cssTags);
-            $output = preg_replace("#</head>#", "<style>".$minifier->minify()."</style></head>", $output, 1);
+            if ($settings['devmode'] == 0) {
+                $minifier = new Minify\CSS(self::$cssTags);
+                $css = $minifier->minify();
+            } else {
+                $css = self::$cssTags;
+            }
+
+            $output = preg_replace("#</head>#", "<style>".$css."</style></head>", $output, 1);
         }
 
         if (self::$pageTitle != $settings['sitename']) {

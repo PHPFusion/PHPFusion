@@ -10,3 +10,5 @@ locale['normal'] = 'Normal';
 locale['medium'] = 'Medium';
 locale['strong'] = 'Strong';
 locale['very-strong'] = 'Very Strong';
+locale['show'] = 'Show';
+locale['hide'] = 'Hide';
