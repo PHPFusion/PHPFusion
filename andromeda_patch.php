@@ -28,7 +28,7 @@ if (!db_exists(DB_SESSIONS)) {
     dbquery("CREATE TABLE `".DB_SESSIONS."` (
     session_id VARCHAR(32) NOT NULL DEFAULT '',
     session_start INT(10) NOT NULL DEFAULT '0',
-    session_data TEXT NOT NULL,    
+    session_data TEXT NOT NULL,
     PRIMARY KEY (session_id)
     ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
     $changed = TRUE;
@@ -51,7 +51,7 @@ foreach ($insert_settings_tbl as $key => $value) {
 }
 
 if (!column_exists(DB_ADMIN, 'admin_language', FALSE)) {
-    dbquery("INSERT INTO ".DB_ADMIN." ADD admin_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."' AFTER admin_page");
+    dbquery("ALTER TABLE ".DB_ADMIN." ADD admin_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."' AFTER admin_page");
     $changed = TRUE;
 }
 
