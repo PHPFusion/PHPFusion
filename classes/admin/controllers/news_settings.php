@@ -71,9 +71,9 @@ class NewsSettingsAdmin extends NewsAdminModel {
                 addNotice('danger', $locale['901']);
             }
         }
-        $opts = ['0' => $locale['news_0201'], '1' => $locale['953']];
-        $cat_opts = ['0' => $locale['959'], '1' => $locale['news_0301']];
-        $thumb_opts = ['0' => $locale['955'], '1' => $locale['956']];
+        $opts = ['0' => $locale['news_0201'], '1' => $locale['news_953']];
+        $cat_opts = ['0' => $locale['news_959'], '1' => $locale['news_0301']];
+        $thumb_opts = ['0' => $locale['news_955'], '1' => $locale['news_956']];
         $calc_opts = $locale['1020'];
         $calc_c = calculate_byte($news_settings['news_photo_max_b']);
         $calc_b = $news_settings['news_photo_max_b'] / $calc_c;
@@ -121,7 +121,7 @@ class NewsSettingsAdmin extends NewsAdminModel {
         echo "<h4 class='m-0'>".$locale['news_0709']."</h4><i>".$locale['news_0710']."</i>\n<br/><br/>";
         echo "</div><div class='col-xs-12 col-sm-9'>\n";
         echo "<div class='display-block overflow-hide'>
-        <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3' for='news_thumb_w'>".$locale['601']."</label>
+        <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3' for='news_thumb_w'>".$locale['news_601']."</label>
         <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
         ".form_text('news_thumb_w', '', $news_settings['news_thumb_w'], [
                 'class'         => 'pull-left m-r-10',
@@ -138,11 +138,11 @@ class NewsSettingsAdmin extends NewsAdminModel {
                 'width'         => '150px',
                 'prepend'       => TRUE,
                 'prepend_value' => $locale['news_0706']
-            ])."            
+            ])."
             </div>
         </div>";
         echo "<div class='display-block overflow-hide'>
-        <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3' for='news_photo_w'>".$locale['602']."</label>
+        <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3' for='news_photo_w'>".$locale['news_602']."</label>
         <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
         ".form_text('news_photo_w', '', $news_settings['news_photo_w'], [
                 'class'         => 'pull-left m-r-10',
@@ -163,7 +163,7 @@ class NewsSettingsAdmin extends NewsAdminModel {
             </div>
         </div>";
         echo "<div class='display-block overflow-hide'>
-            <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3' for='blog_thumb_w'>".$locale['603']."</label>
+            <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3' for='blog_thumb_w'>".$locale['news_603']."</label>
             <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
             ".form_text('news_photo_max_w', '', $news_settings['news_photo_max_w'], [
                 'class'         => 'pull-left m-r-10',
@@ -180,11 +180,11 @@ class NewsSettingsAdmin extends NewsAdminModel {
                 'width'         => '150px',
                 'prepend'       => TRUE,
                 'prepend_value' => $locale['news_0706']
-            ])."            
+            ])."
             </div>
         </div>";
         echo "<div class='display-block overflow-hide'>
-        <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3' for='calc_b'>".$locale['605']."</label>
+        <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3' for='calc_b'>".$locale['news_605']."</label>
         <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
         ".form_text('calc_b', '', $calc_b, [
                 'required'   => TRUE,
@@ -210,10 +210,10 @@ class NewsSettingsAdmin extends NewsAdminModel {
         echo "</div>\n<div class='col-xs-9 col-xs-offset-3 col-sm-9 col-sm-offset-3 col-md-4 col-md-offset-0 col-lg-4'>\n";
 
         echo openside('');
-        echo form_select('news_image_link', $locale['951'], $news_settings['news_image_link'], ['options' => $opts, 'width' => '100%', 'inner_width' => '100%']);
-        echo form_select('news_image_frontpage', $locale['957'], $news_settings['news_image_frontpage'], ['options' => $cat_opts, 'width' => '100%', 'inner_width' => '100%']);
-        echo form_select('news_image_readmore', $locale['958'], $news_settings['news_image_readmore'], ['options' => $cat_opts, 'width' => '100%', 'inner_width' => '100%']);
-        echo form_select('news_thumb_ratio', $locale['954'], $news_settings['news_thumb_ratio'], ['options' => $thumb_opts, 'width' => '100%', 'inner_width' => '100%']);
+        echo form_select('news_image_link', $locale['news_951'], $news_settings['news_image_link'], ['options' => $opts, 'width' => '100%', 'inner_width' => '100%']);
+        echo form_select('news_image_frontpage', $locale['news_957'], $news_settings['news_image_frontpage'], ['options' => $cat_opts, 'width' => '100%', 'inner_width' => '100%']);
+        echo form_select('news_image_readmore', $locale['news_958'], $news_settings['news_image_readmore'], ['options' => $cat_opts, 'width' => '100%', 'inner_width' => '100%']);
+        echo form_select('news_thumb_ratio', $locale['news_954'], $news_settings['news_thumb_ratio'], ['options' => $thumb_opts, 'width' => '100%', 'inner_width' => '100%']);
 
         $mime = mimeTypes();
         $mime_opts = [];
