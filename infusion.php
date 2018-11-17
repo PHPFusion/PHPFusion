@@ -107,12 +107,12 @@ if (!empty($enabled_languages)) {
         include LOCALE.$language."/setup.php";
 
         $mlt_adminpanel[$language][] = [
-            "rights"   => "BLOG",
-            "image"    => $inf_image,
-            "title"    => $locale['setup_3055'],
-            "panel"    => "blog_admin.php",
-            "page"     => 1,
-            'language' => LANGUAGE
+            'rights'   => "BLOG",
+            'image'    => $inf_image,
+            'title'    => $locale['setup_3055'],
+            'panel'    => "blog_admin.php",
+            'page'     => 1,
+            'language' => $language
         ];
 
         // Add
