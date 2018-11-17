@@ -1,15 +1,15 @@
 <?php
-$locale['604'] = "Width x Height";
-$locale['930'] = "Maximum size uploads:";
-$locale['931'] = "Maximum file size in bytes";
-$locale['932'] = "Allowed file types:";
-$locale['933'] = "Separate each type with a comma";
-$locale['934'] = "Maximum screenshot size:";
-$locale['936'] = "Maximum screenshot file size (bytes):";
-$locale['937'] = "Maximum screenshot thumb size:";
-$locale['938'] = "Enable screenshots?";
-$locale['939'] = "Downloads items per page";
-$locale['940'] = "Enable stats?";
+$locale['download_604'] = "Width x Height";
+$locale['download_930'] = "Maximum size uploads:";
+$locale['download_931'] = "Maximum file size in bytes";
+$locale['download_932'] = "Allowed file types:";
+$locale['download_933'] = "Separate each type with a comma";
+$locale['download_934'] = "Maximum screenshot size:";
+$locale['download_936'] = "Maximum screenshot file size (bytes):";
+$locale['download_937'] = "Maximum screenshot thumb size:";
+$locale['download_938'] = "Enable screenshots?";
+$locale['download_939'] = "Downloads items per page";
+$locale['download_940'] = "Enable stats?";
 $locale['download_0000'] = "Current Downloads";
 $locale['download_0001'] = "Downloads";
 $locale['download_0002'] = "Add Downloads";
