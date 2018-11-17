@@ -46,7 +46,8 @@ class Admins {
      * @var array
      */
     public $admin_page_icons = [
-        'CP'   => "<i class='admin-ico fa fa-fw fa-leaf'></i>", // custom page
+        'C'    => "<i class='admin-ico fa fa-fw fa-comments'></i>", // Comments
+        'CP'   => "<i class='admin-ico fa fa-fw fa-leaf'></i>", // Custom page
         'IM'   => "<i class='admin-ico fa fa-fw fa-picture-o'></i>", // Images
         'PM'   => "<i class='admin-ico fa fa-fw fa-envelope-o'></i>", // private message
         'APWR' => "<i class='admin-ico fa fa-fw fa-medkit'></i>", // Admin Password Reset
