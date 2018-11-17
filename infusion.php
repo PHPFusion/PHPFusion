@@ -20,6 +20,7 @@ if (!defined("IN_FUSION")) {
 }
 
 $locale = fusion_get_locale("", LOCALE.LOCALESET."setup.php");
+
 // Infusion general information
 $inf_title = $locale['photos']['title'];
 $inf_description = $locale['photos']['description'];
@@ -29,12 +30,6 @@ $inf_email = "info@php-fusion.co.uk";
 $inf_weburl = "https://www.php-fusion.co.uk";
 $inf_folder = "gallery";
 $inf_image = "gallery.svg";
-
-// Multilanguage table for Administration
-$inf_mlt[] = [
-    "title"  => $locale['setup_3308'],
-    "rights" => "PG"
-];
 
 // Create tables
 $inf_newtable[] = DB_PHOTO_ALBUMS." (
@@ -75,16 +70,7 @@ $inf_newtable[] = DB_PHOTOS." (
     KEY photo_datestamp (photo_datestamp)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
-// Position these links under Content Administration
-$inf_adminpanel[] = [
-    "image"  => $inf_image,
-    "page"   => 1,
-    "rights" => "PH",
-    "title"  => $locale['setup_3308'],
-    "panel"  => "gallery_admin.php"
-];
-
-// Gallery settings
+// Insert settings
 $settings = [
     'thumb_w'                     => 200,
     'thumb_h'                     => 200,
@@ -110,25 +96,52 @@ foreach ($settings as $name => $value) {
     $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('".$name."', '".$value."', '".$inf_folder."')";
 }
 
-// always find and loop ALL languages
+// Multilanguage table
+$inf_mlt[] = [
+    "title"  => $locale['setup_3308'],
+    "rights" => "PG"
+];
+
+// Multilanguage links
 $enabled_languages = makefilelist(LOCALE, ".|..", TRUE, "folders");
-// Create a link for all installed languages
 if (!empty($enabled_languages)) {
     foreach ($enabled_languages as $language) {
-        $locale = fusion_get_locale('', LOCALE.$language."/setup.php");
+        include LOCALE.$language."/setup.php";
+
+        $mlt_adminpanel[$language][] = [
+            "rights"   => "PH",
+            "image"    => $inf_image,
+            "title"    => $locale['setup_3308'],
+            "panel"    => "gallery_admin.php",
+            "page"     => 1,
+            'language' => $language
+        ];
+
+        // Add
         $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3308']."', 'infusions/".$inf_folder."/gallery.php', '0', '2', '0', '2', '1', '".$language."')";
         $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3313']."', 'submit.php?stype=p', ".USER_LEVEL_MEMBER.", '1', '0', '24', '1', '".$language."')";
 
+        // Delete
         $mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='infusions/".$inf_folder."/gallery.php' AND link_language='".$language."'";
         $mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=p' AND link_language='".$language."'";
-        $mlt_deldbrow[$language][] = DB_PHOTO_ALBUMS." WHERE album_language='".$language."'"; // bug again, will not be able to delete photos tied to it.
+        $mlt_deldbrow[$language][] = DB_PHOTO_ALBUMS." WHERE album_language='".$language."'";
+        $mlt_deldbrow[$language][] = DB_ADMIN." WHERE admin_rights='PH' AND admin_language='".$language."'";
     }
 } else {
+    $inf_adminpanel[] = [
+        "rights"   => "PH",
+        "image"    => $inf_image,
+        "title"    => $locale['setup_3308'],
+        "panel"    => "gallery_admin.php",
+        "page"     => 1,
+        'language' => LANGUAGE
+    ];
+
     $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES('".$locale['setup_3308']."', 'infusions/".$inf_folder."/gallery.php', '0', '2', '0', '2', '1', '".LANGUAGE."')";
     $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3313']."', 'submit.php?stype=p', ".USER_LEVEL_MEMBER.", '1', '0', '24', '1', '".LANGUAGE."')";
 }
 
-// Defuse cleaning
+// Uninstallation
 $inf_droptable[] = DB_PHOTO_ALBUMS;
 $inf_droptable[] = DB_PHOTOS;
 $inf_deldbrow[] = DB_COMMENTS." WHERE comment_type='P'";
