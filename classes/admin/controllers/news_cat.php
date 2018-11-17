@@ -305,9 +305,13 @@ class NewsCategoryAdmin extends NewsAdminModel {
                 "input" => form_sanitizer($_POST['news_cat_language'], "", "news_cat_language"), "operator" => "="
             ];
         }
+        if (multilang_table("NS")) {
+            $sql_condition = "news_cat_language='".LANGUAGE."'";
+        }
         if (!empty($search_string)) {
             foreach ($search_string as $key => $values) {
-                $sql_condition .= " AND `$key` ".$values['operator'].($values['operator'] == "LIKE" ? "'%" : "'").$values['input'].($values['operator'] == "LIKE" ? "%'" : "'");
+                if ($sql_condition) $sql_condition .= " AND ";
+                $sql_condition .= "`$key` ".$values['operator'].($values['operator'] == "LIKE" ? "'%" : "'").$values['input'].($values['operator'] == "LIKE" ? "%'" : "'");
             }
         }
         $result = dbquery_tree_full(DB_NEWS_CATS, "news_cat_id", "news_cat_parent", "",
@@ -320,8 +324,7 @@ class NewsCategoryAdmin extends NewsAdminModel {
                             LEFT JOIN ".DB_NEWS." n1 ON n1.news_id=nc.news_cat_id AND n1.news_draft='0' AND (n1.news_start='0'|| n1.news_start<=NOW()) AND (n1.news_end='0'|| n1.news_end>=NOW())
                             LEFT JOIN ".DB_NEWS." n2 ON n2.news_id=nc.news_cat_id AND n2.news_draft='1'
                             LEFT JOIN ".DB_NEWS." n3 ON n2.news_id=nc.news_cat_id AND n3.news_sticky='1' AND (n3.news_start='0'|| n3.news_start<=NOW()) AND (n3.news_end='0'|| n3.news_end>=NOW())
-                            WHERE ".(multilang_table("NS") ? "news_cat_language='".LANGUAGE."'" : "")."
-                            $sql_condition
+                            ".($sql_condition ? " WHERE ".$sql_condition : "")."
                             GROUP BY news_cat_id
                             ORDER BY news_cat_parent ASC, news_cat_id ASC LIMIT ".intval($_GET['rowstart']).", 20"
         );
