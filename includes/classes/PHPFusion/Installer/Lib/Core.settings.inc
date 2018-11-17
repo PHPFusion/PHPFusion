@@ -591,10 +591,10 @@ function get_table_rows($table_name, $localeset = 'English') {
             ],
             [
                 'admin_rights'   => 'C',
-                'admin_image'    => '',
+                'admin_image'    => 'comments.png',
                 'admin_title'    => $locale['setup_3006'],
-                'admin_link'     => 'reserved',
-                'admin_page'     => 2,
+                'admin_link'     => 'comments.php',
+                'admin_page'     => 1,
                 'admin_language' => $localeset
             ],
             [

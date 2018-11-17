@@ -148,7 +148,7 @@ if (isset($_POST['savesettings'])) {
                         ['admin_rights' => 'SB', 'admin_image' => 'banner.png', 'admin_title' => $locale['setup_3003'], 'admin_link' => 'banners.php', 'admin_page' => 3, 'admin_language' => $language],
                         ['admin_rights' => 'BB', 'admin_image' => 'bbcodes.png', 'admin_title' => $locale['setup_3004'], 'admin_link' => 'bbcodes.php', 'admin_page' => 3, 'admin_language' => $language],
                         ['admin_rights' => 'B', 'admin_image' => 'blacklist.png', 'admin_title' => $locale['setup_3005'], 'admin_link' => 'blacklist.php', 'admin_page' => 2, 'admin_language' => $language],
-                        ['admin_rights' => 'C', 'admin_image' => '', 'admin_title' => $locale['setup_3006'], 'admin_link' => 'reserved', 'admin_page' => 2, 'admin_language' => $language],
+                        ['admin_rights' => 'C', 'admin_image' => 'comments.png', 'admin_title' => $locale['setup_3006'], 'admin_link' => 'comments.php', 'admin_page' => 1, 'admin_language' => $language],
                         ['admin_rights' => 'CP', 'admin_image' => 'c-pages.png', 'admin_title' => $locale['setup_3007'], 'admin_link' => 'custom_pages.php', 'admin_page' => 1, 'admin_language' => $language],
                         ['admin_rights' => 'DB', 'admin_image' => 'db_backup.png', 'admin_title' => $locale['setup_3008'], 'admin_link' => 'db_backup.php', 'admin_page' => 3, 'admin_language' => $language],
                         ['admin_rights' => 'ERRO', 'admin_image' => 'errors.png', 'admin_title' => $locale['setup_3048'], 'admin_link' => 'errors.php', 'admin_page' => 3, 'admin_language' => $language],

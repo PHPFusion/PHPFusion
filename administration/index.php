@@ -24,69 +24,108 @@ $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/main.php');
 if (!isset($_GET['pagenum']) || !isnum($_GET['pagenum'])) {
     $_GET['pagenum'] = 1;
 }
-/**
- * $admin_sections are generated from navigation.php
- * $admin_pages are generated from navigation.php
- */
+
+$settings = fusion_get_settings();
+
 $admin_images = TRUE;
 
+$members_count = dbarray(dbquery("SELECT
+    (SELECT COUNT(user_id) FROM ".DB_USERS." WHERE user_status<='1' OR user_status='3' OR user_status='5') AS members_registered,
+    (SELECT COUNT(user_id) FROM ".DB_USERS." WHERE user_status='2') AS members_unactivated,
+    (SELECT COUNT(user_id) FROM ".DB_USERS." WHERE user_status='4') AS members_security_ban,
+    (SELECT COUNT(user_id) FROM ".DB_USERS." WHERE user_status='5') AS members_canceled
+"));
+
 // Members stats
-$members_registered = dbcount("(user_id)", DB_USERS, "user_status<='1' OR user_status='3' OR user_status='5'");
-$members_unactivated = dbcount("(user_id)", DB_USERS, "user_status='2'");
-$members_security_ban = dbcount("(user_id)", DB_USERS, "user_status='4'");
-$members_canceled = dbcount("(user_id)", DB_USERS, "user_status='5'");
-$members['registered'] = dbcount("(user_id)", DB_USERS, "user_status<='1' OR user_status='3' OR user_status='5'");
-$members['unactivated'] = dbcount("(user_id)", DB_USERS, "user_status='2'");
-$members['security_ban'] = dbcount("(user_id)", DB_USERS, "user_status='4'");
-$members['cancelled'] = dbcount("(user_id)", DB_USERS, "user_status='5'");
-if (fusion_get_settings("enable_deactivation") == "1") {
-    $time_overdue = time() - (86400 * fusion_get_settings("deactivation_period"));
+$members['registered'] = $members_count['members_registered'];
+$members['unactivated'] = $members_count['members_unactivated'];
+$members['security_ban'] = $members_count['members_security_ban'];
+$members['cancelled'] = $members_count['members_canceled'];
+
+if ($settings['enable_deactivation'] == "1") {
+    $time_overdue = time() - (86400 * $settings['deactivation_period']);
     $members['inactive'] = dbcount("(user_id)", DB_USERS, "user_lastvisit<'$time_overdue' AND user_actiontime='0' AND user_joined<'$time_overdue' AND user_status='0'");
 }
 
-// Get Core Infusion´s stats
+// Get Core Infusion's stats
 if (infusion_exists('forum')) {
-    $forum = [
-        'count'  => 0,
-        'thread' => 0,
-        'post'   => 0,
-        'users'  => 0
-    ];
-    $forum['count'] = dbcount("(forum_id)", DB_PREFIX.'forums');
-    $forum['thread'] = dbcount("(thread_id)", DB_PREFIX.'forum_threads');
-    $forum['post'] = dbcount("(post_id)", DB_PREFIX.'forum_posts');
-    $forum['users'] = dbcount("(user_id)", DB_USERS, "user_posts > '0'");
+    $forum = [];
+    $f_count = dbarray(dbquery("SELECT
+        (SELECT COUNT(forum_id) FROM ".DB_PREFIX."forums) AS forums,
+        (SELECT COUNT(thread_id) FROM ".DB_PREFIX."forum_threads) AS threads,
+        (SELECT COUNT(post_id) FROM ".DB_PREFIX."forum_posts) AS posts,
+        (SELECT COUNT(user_id) FROM ".DB_USERS." WHERE user_posts > '0') AS user_posts
+    "));
+    $forum['count'] = $f_count['forums'];
+    $forum['thread'] = $f_count['threads'];
+    $forum['post'] = $f_count['posts'];
+    $forum['users'] = $f_count['user_posts'];
 }
-
 if (infusion_exists('downloads')) {
-    $download['download'] = dbcount("(download_id)", DB_PREFIX.'downloads');
-    $download['comment'] = dbcount("(comment_id)", DB_COMMENTS, "comment_type='d'");
-    $download['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='d'");
+    $download = [];
+    $d_count = dbarray(dbquery("SELECT
+        (SELECT COUNT(download_id) FROM ".DB_PREFIX."downloads) AS items,
+        (SELECT COUNT(comment_id) FROM ".DB_COMMENTS." WHERE comment_type='D') AS comments,
+        (SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='d') AS submissions
+    "));
+    $download['download'] = $d_count['items'];
+    $download['comment'] = $d_count['comments'];
+    $download['submit'] = $d_count['submissions'];
 }
 if (infusion_exists('articles')) {
-    $articles['article'] = dbcount("(article_id)", DB_PREFIX.'articles');
-    $articles['comment'] = dbcount("(comment_id)", DB_COMMENTS, "comment_type='A'");
-    $articles['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='a'");
+    $articles = [];
+    $a_count = dbarray(dbquery("SELECT
+        (SELECT COUNT(article_id) FROM ".DB_PREFIX."articles) AS items,
+        (SELECT COUNT(comment_id) FROM ".DB_COMMENTS." WHERE comment_type='A') AS comments,
+        (SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='a') AS submissions
+    "));
+    $articles['article'] = $a_count['items'];
+    $articles['comment'] = $a_count['comments'];
+    $articles['submit'] = $a_count['submissions'];
 }
 if (infusion_exists('weblinks')) {
-    $weblinks['weblink'] = dbcount("(weblink_id)", DB_PREFIX.'weblinks');
-    $weblinks['comment'] = dbcount("(comment_id)", DB_COMMENTS, "comment_type='L'");
-    $weblinks['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='l'");
+    $weblinks = [];
+    $w_count = dbarray(dbquery("SELECT
+        (SELECT COUNT(weblink_id) FROM ".DB_PREFIX."weblinks) AS items,
+        (SELECT COUNT(comment_id) FROM ".DB_COMMENTS." WHERE comment_type='L') AS comments,
+        (SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='l') AS submissions
+    "));
+    $weblinks['weblink'] = $w_count['items'];
+    $weblinks['comment'] = $w_count['comments'];
+    $weblinks['submit'] = $w_count['submissions'];
 }
 if (infusion_exists('news')) {
-    $news['news'] = dbcount("(news_id)", DB_PREFIX.'news');
-    $news['comment'] = dbcount("(comment_id)", DB_COMMENTS, "comment_type='n'");
-    $news['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='n'");
+    $news = [];
+    $n_count = dbarray(dbquery("SELECT
+        (SELECT COUNT(news_id) FROM ".DB_PREFIX."news) AS items,
+        (SELECT COUNT(comment_id) FROM ".DB_COMMENTS." WHERE comment_type='N') AS comments,
+        (SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='n') AS submissions
+    "));
+    $news['news'] = $n_count['items'];
+    $news['comment'] = $n_count['comments'];
+    $news['submit'] = $n_count['submissions'];
 }
 if (infusion_exists('blog')) {
-    $blog['blog'] = dbcount("(blog_id)", DB_PREFIX.'blog');
-    $blog['comment'] = dbcount("(comment_id)", DB_COMMENTS, "comment_type='b'");
-    $blog['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='b'");
+    $blog = [];
+    $b_count = dbarray(dbquery("SELECT
+        (SELECT COUNT(blog_id) FROM ".DB_PREFIX."blog) AS items,
+        (SELECT COUNT(comment_id) FROM ".DB_COMMENTS." WHERE comment_type='B') AS comments,
+        (SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='b') AS submissions
+    "));
+    $blog['blog'] = $b_count['items'];
+    $blog['comment'] = $b_count['comments'];
+    $blog['submit'] = $b_count['submissions'];
 }
 if (infusion_exists('gallery')) {
-    $photos['photo'] = dbcount("(photo_id)", DB_PREFIX.'photos');
-    $photos['comment'] = dbcount("(comment_id)", DB_COMMENTS, "comment_type='P'");
-    $photos['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='p'");
+    $photos = [];
+    $p_count = dbarray(dbquery("SELECT
+        (SELECT COUNT(photo_id) FROM ".DB_PREFIX."photos) AS items,
+        (SELECT COUNT(comment_id) FROM ".DB_COMMENTS." WHERE comment_type='P') AS comments,
+        (SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='p') AS submissions
+    "));
+    $photos['photo'] = $p_count['items'];
+    $photos['comment'] = $p_count['comments'];
+    $photos['submit'] = $p_count['submissions'];
 }
 $comments_type = [
     'C'  => $locale['272a'],
@@ -104,8 +143,8 @@ $submit_data = [];
 $submit_data += \PHPFusion\Admins::getInstance()->getSubmitData();
 
 $link_type = [
-    'C'  => fusion_get_settings("siteurl")."viewpage.php?page_id=%s",
-    'UP' => fusion_get_settings("siteurl")."profile.php?lookup=%s"
+    'C'  => $settings['siteurl']."viewpage.php?page_id=%s",
+    'UP' => $settings['siteurl']."profile.php?lookup=%s"
 ];
 $link_type += \PHPFusion\Admins::getInstance()->getLinkType();
 

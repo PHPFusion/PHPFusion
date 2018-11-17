@@ -51,7 +51,7 @@ if (dbrows($result)) {
                 echo "<th><strong>".$locale['global_045']."</strong></th>\n";
                 echo "<th><strong>".$locale['global_046']."</strong></th>\n";
                 echo "<th><strong>".$locale['global_047']."</strong></th>\n";
-            echo "</thead></tr>";
+            echo "</tr></thead>";
             echo "<tbody>";
                 while ($data = dbarray($result)) {
                     echo "<tr>";

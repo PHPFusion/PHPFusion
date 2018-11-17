@@ -175,7 +175,6 @@ function showprivacypolicy() {
  * Creates an alert bar
  *
  * @param        $title
- * @param string $text
  * @param array  $options
  *
  * @return string

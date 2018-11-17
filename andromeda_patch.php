@@ -59,4 +59,6 @@ if ($changed === TRUE) {
     addNotice("success", "You have successfully upgraded to latest Andromeda Patch 1.02");
 }
 
+dbquery("UPDATE ".DB_ADMIN." SET admin_image='comments.png', admin_link='comments.php', admin_page='1' WHERE admin_rights='C'");
+
 require_once THEMES.'templates/footer.php';
