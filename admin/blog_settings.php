@@ -47,9 +47,9 @@ if (isset($_POST['savesettings'])) {
         addNotice('danger', $locale['901']);
     }
 }
-$opts = ['0' => $locale['952'], '1' => $locale['953']];
-$cat_opts = ['0' => $locale['959'], '1' => $locale['960']];
-$thumb_opts = ['0' => $locale['955'], '1' => $locale['956']];
+$opts = ['0' => $locale['blog_952'], '1' => $locale['blog_953']];
+$cat_opts = ['0' => $locale['blog_959'], '1' => $locale['blog_960']];
+$thumb_opts = ['0' => $locale['blog_955'], '1' => $locale['blog_956']];
 $calc_opts = $locale['1020'];
 $calc_c = calculate_byte($blog_settings['blog_photo_max_b']);
 $calc_b = $blog_settings['blog_photo_max_b'] / $calc_c;
@@ -66,7 +66,7 @@ echo form_text('blog_pagination', $locale['669b'], $blog_settings['blog_paginati
 ]);
 
 echo "<div class='display-block overflow-hide'>
-    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='blog_thumb_w'>".$locale['601']."</label>
+    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='blog_thumb_w'>".$locale['blog_601']."</label>
     <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
         ".form_text('blog_thumb_w', '', $blog_settings['blog_thumb_w'], [
         'class' => 'pull-left', 'max_length' => 4, 'type' => 'number', 'width' => '150px'
@@ -80,7 +80,7 @@ echo "<div class='display-block overflow-hide'>
 </div>";
 
 echo "<div class='display-block overflow-hide'>
-    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='blog_photo_w'>".$locale['602']."</label>
+    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='blog_photo_w'>".$locale['blog_602']."</label>
     <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
         ".form_text('blog_photo_w', '', $blog_settings['blog_photo_w'], [
         'class' => 'pull-left', 'max_length' => 4, 'type' => 'number', 'width' => '150px'
@@ -89,12 +89,12 @@ echo "<div class='display-block overflow-hide'>
         ".form_text('blog_photo_h', '', $blog_settings['blog_photo_h'], [
         'class' => 'pull-left', 'max_length' => 4, 'type' => 'number', 'width' => '150px'
     ])."
-        <small class='mid-opacity text-uppercase pull-left m-t-10 m-l-5'>(".$locale['604'].")</small>
+        <small class='mid-opacity text-uppercase pull-left m-t-10 m-l-5'>(".$locale['blog_604'].")</small>
     </div>
 </div>";
 
 echo "<div class='display-block overflow-hide'>
-    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='blog_photo_max_w'>".$locale['603']."</label>
+    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='blog_photo_max_w'>".$locale['blog_603']."</label>
     <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
         ".form_text('blog_photo_max_w', '', $blog_settings['blog_photo_max_w'], [
         'class' => 'pull-left', 'max_length' => 4, 'type' => 'number', 'width' => '150px'
@@ -108,7 +108,7 @@ echo "<div class='display-block overflow-hide'>
 </div>";
 
 echo "<div class='display-block overflow-hide'>
-    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='calc_b'>".$locale['605']."</label>
+    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='calc_b'>".$locale['blog_605']."</label>
     <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
         ".form_text('calc_b', '', $calc_b, [
         'required' => TRUE, 'type' => 'number', 'error_text' => $locale['error_rate'], 'width' => '100px', 'max_length' => 4,
@@ -133,8 +133,8 @@ closeside();
 echo "</div>\n";
 echo "<div class='col-xs-12 col-sm-4'>\n";
 openside('');
-echo form_select('blog_image_link', $locale['951'], $blog_settings['blog_image_link'], ["options" => $opts, "width" => "100%"]);
-echo form_select('blog_thumb_ratio', $locale['954'], $blog_settings['blog_thumb_ratio'], ["options" => $thumb_opts, "width" => "100%"]);
+echo form_select('blog_image_link', $locale['blog_951'], $blog_settings['blog_image_link'], ["options" => $opts, "width" => "100%"]);
+echo form_select('blog_thumb_ratio', $locale['blog_954'], $blog_settings['blog_thumb_ratio'], ["options" => $thumb_opts, "width" => "100%"]);
 require_once INCLUDES."mimetypes_include.php";
 $mime = mimeTypes();
 $mime_opts = [];
@@ -143,7 +143,7 @@ foreach ($mime as $m => $Mime) {
     $mime_opts[$ext] = $ext;
 }
 sort($mime_opts);
-echo form_select('blog_file_types', $locale['961'], $blog_settings['blog_file_types'],
+echo form_select('blog_file_types', $locale['blog_961'], $blog_settings['blog_file_types'],
     [
         'options'     => $mime_opts,
         'error_text'  => $locale['error_type'],
