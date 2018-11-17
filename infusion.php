@@ -31,12 +31,6 @@ $inf_weburl = "https://www.php-fusion.co.uk";
 $inf_folder = "faq";
 $inf_image = "faq.svg";
 
-// Multilanguage table for Administration
-$inf_mlt[] = [
-    "title"  => $locale['setup_3011'],
-    "rights" => "FQ"
-];
-
 // Create tables
 $inf_newtable[] = DB_FAQS." (
     faq_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -62,38 +56,56 @@ $inf_newtable[] = DB_FAQ_CATS." (
     PRIMARY KEY(faq_cat_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
-// Position these links under Content Administration
-$inf_adminpanel[] = [
-    "image"  => $inf_image,
-    "page"   => 1,
-    "rights" => "FQ",
-    "title"  => $locale['setup_3011'],
-    "panel"  => "faq_admin.php",
-];
-
-// Insert Settings
+// Insert settings
 $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('faq_allow_submission', '1', '".$inf_folder."')";
 
+// Multilanguage table
+$inf_mlt[] = [
+    "title"  => $locale['setup_3011'],
+    "rights" => "FQ"
+];
+
+// Multilanguage links
 $enabled_languages = makefilelist(LOCALE, ".|..", TRUE, "folders");
-// Create a link for all installed languages
 if (!empty($enabled_languages)) {
     foreach ($enabled_languages as $language) {
-        $locale = fusion_get_locale('', LOCALE.$language."/setup.php");
+        include LOCALE.$language."/setup.php";
+
+        $mlt_adminpanel[$language][] = [
+            "rights"   => "FQ",
+            "image"    => $inf_image,
+            "title"    => $locale['setup_3011'],
+            "panel"    => "faq_admin.php",
+            "page"     => 1,
+            'language' => $language
+        ];
+
+        // Add
         $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3303']."', 'infusions/".$inf_folder."/faq.php', '0', '2', '0', '2', '1', '".$language."')";
         $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3327']."', 'submit.php?stype=q', ".USER_LEVEL_MEMBER.", '1', '0', '23', '1', '".$language."')";
 
-        // drop deprecated language records
+        // Delete
         $mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='infusions/".$inf_folder."/faq.php' AND link_language='".$language."'";
         $mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=q' AND link_language='".$language."'";
         $mlt_deldbrow[$language][] = DB_FAQ_CATS." WHERE faq_cat_language='".$language."'";
         $mlt_deldbrow[$language][] = DB_FAQS." WHERE faq_language='".$language."'";
+        $mlt_deldbrow[$language][] = DB_ADMIN." WHERE admin_rights='FQ' AND admin_language='".$language."'";
     }
 } else {
+    $inf_adminpanel[] = [
+        "rights"   => "FQ",
+        "image"    => $inf_image,
+        "title"    => $locale['setup_3011'],
+        "panel"    => "faq_admin.php",
+        "page"     => 1,
+        'language' => LANGUAGE
+    ];
+
     $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES('".$locale['setup_3303']."', 'infusions/".$inf_folder."/faq.php', '0', '2', '0', '2', '1', '".LANGUAGE."')";
     $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3327']."', 'submit.php?stype=q', ".USER_LEVEL_MEMBER.", '1', '0', '23', '1', '".LANGUAGE."')";
 }
 
-// Defuse cleaning
+// Uninstallation
 $inf_droptable[] = DB_FAQ_CATS;
 $inf_droptable[] = DB_FAQS;
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_rights='FQ'";
