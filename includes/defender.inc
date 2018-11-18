@@ -484,7 +484,7 @@ class defender {
     /**
      * Encrypts a string securely with a private key
      *
-     * @param        $string        The text to encrypt
+     * @param string $string The text to encrypt
      * @param string $private_key For better security use \defender::get_encrypt_key to generate your private key
      *
      * Does not support array encrypt.

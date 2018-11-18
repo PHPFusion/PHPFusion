@@ -18,6 +18,7 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
+
 /**
  * Send Email via PHPMailer Class
  *
@@ -37,17 +38,21 @@ if (!function_exists('sendemail')) {
     function sendemail($toname, $toemail, $fromname, $fromemail, $subject, $message, $type = "html", $cc = "", $bcc = "") {
         $settings = fusion_get_settings();
         $locale = fusion_get_locale();
-        require_once CLASSES."PHPMailer/PHPMailerAutoload.php";
-        $mail = new PHPMailer();
+
+        require CLASSES.'PHPMailer/PHPMailer.php';
+        require CLASSES.'PHPMailer/SMTP.php';
+
+        $mail = new PHPMailer\PHPMailer\PHPMailer();
+
         if (file_exists(CLASSES."PHPMailer/language/phpmailer.lang-".$locale['phpmailer'].".php")) {
-            $mail->SetLanguage($locale['phpmailer'], CLASSES."PHPMailer/language/");
+            $mail->setLanguage($locale['phpmailer'], CLASSES."PHPMailer/language/");
         } else {
-            $mail->SetLanguage("en", CLASSES."PHPMailer/language/");
+            $mail->setLanguage("en", CLASSES."PHPMailer/language/");
         }
         if (!$settings['smtp_host']) {
-            $mail->IsMAIL();
+            $mail->isMAIL();
         } else {
-            $mail->IsSMTP();
+            $mail->isSMTP();
             $mail->Host = $settings['smtp_host'];
             $mail->Port = $settings['smtp_port'];
             $mail->SMTPAuth = $settings['smtp_auth'] ? TRUE : FALSE;
@@ -57,36 +62,36 @@ if (!function_exists('sendemail')) {
         $mail->CharSet = $locale['charset'];
         $mail->From = $fromemail;
         $mail->FromName = $fromname;
-        $mail->AddAddress($toemail, $toname);
-        $mail->AddReplyTo($fromemail, $fromname);
+        $mail->addAddress($toemail, $toname);
+        $mail->addReplyTo($fromemail, $fromname);
         if ($cc) {
             $cc = explode(", ", $cc);
             foreach ($cc as $ccaddress) {
-                $mail->AddCC($ccaddress);
+                $mail->addCC($ccaddress);
             }
         }
         if ($bcc) {
             $bcc = explode(", ", $bcc);
             foreach ($bcc as $bccaddress) {
-                $mail->AddBCC($bccaddress);
+                $mail->addBCC($bccaddress);
             }
         }
         if ($type == "plain") {
-            $mail->IsHTML(FALSE);
+            $mail->isHTML(FALSE);
         } else {
-            $mail->IsHTML(TRUE);
+            $mail->isHTML(TRUE);
         }
         $mail->Subject = $subject;
         $mail->Body = $message;
-        if (!$mail->Send()) {
+        if (!$mail->send()) {
             $mail->ErrorInfo;
-            $mail->ClearAllRecipients();
-            $mail->ClearReplyTos();
+            $mail->clearAllRecipients();
+            $mail->clearReplyTos();
 
             return FALSE;
         } else {
-            $mail->ClearAllRecipients();
-            $mail->ClearReplyTos();
+            $mail->clearAllRecipients();
+            $mail->clearReplyTos();
 
             return TRUE;
         }
@@ -108,7 +113,7 @@ if (!function_exists('sendemail')) {
  * @return bool
  */
 if (!function_exists('sendemail_template')) {
-    function sendemail_template($template_key, $subject, $message, $user, $receiver, $thread_url = "", $toemail, $sender = "", $fromemail = "") {
+    function sendemail_template($template_key, $subject, $message, $user, $receiver, $thread_url, $toemail, $sender = "", $fromemail = "") {
 
         $settings = fusion_get_settings();
 

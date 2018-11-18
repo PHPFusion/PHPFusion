@@ -107,7 +107,7 @@ if (!function_exists('display_inbox')) {
                                     'class'    => 'm-b-0'
                                 ]),
                                 'class'          => (empty($message['message_read']) ? " class='strong'" : ''),
-                                'avatar'         => display_avatar($user, '50px', '', TRUE, ''),
+                                'avatar'         => display_avatar($user, '20px', '', TRUE, 'img-rounded'),
                                 'profile_link'   => profile_link($user['user_id'], $user['user_name'], $user['user_status']),
                                 'message_link'   => $message['message']['link'],
                                 'message_title'  => $message['message']['name'],
