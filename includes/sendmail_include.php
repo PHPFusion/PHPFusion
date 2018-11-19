@@ -40,6 +40,7 @@ if (!function_exists('sendemail')) {
         $locale = fusion_get_locale();
 
         require CLASSES.'PHPMailer/PHPMailer.php';
+        require CLASSES.'PHPMailer/Exception.php';
         require CLASSES.'PHPMailer/SMTP.php';
 
         $mail = new PHPMailer\PHPMailer\PHPMailer();
