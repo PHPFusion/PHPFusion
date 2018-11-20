@@ -49,6 +49,8 @@ if (iMEMBER) {
     );
 }
 
+\PHPFusion\Admins::getInstance()->setAdmin();
+
 ob_start();
 
 @list($title) = dbarraynum(dbquery("SELECT admin_title FROM ".DB_ADMIN." WHERE admin_link=:base_url", [':base_url' => FUSION_SELF]));
