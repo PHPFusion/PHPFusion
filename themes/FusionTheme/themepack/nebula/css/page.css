@@ -38,6 +38,7 @@
 #home_carousel .carousel-caption {
     padding-top: 300px !important;
 }
+
 #home_carousel .carousel-caption h3 {
     margin-bottom: 30px;
     text-transform: uppercase;
@@ -68,24 +69,25 @@
 }
 
 #support {
-    background: url(../../../../templates/global/default_home/images/bg04.jpg) fixed bottom;
+    background: url(../templates/images/bg04.jpg) fixed bottom;
     background-size: cover;
     height: 600px;
 }
 
 #home_parallax {
-    background: url(../../../../templates/global/default_home/images/bg02.jpg) fixed;
+    background: url(../templates/images/bg02.jpg) fixed;
     background-size: cover;
     height: 750px;
 }
 
 #home_parallax::before {
     position: absolute;
-    background: url(../../../../templates/global/default_home/images/developer.png) center bottom no-repeat;
+    background: url(../templates/images/developer.png) center bottom no-repeat;
     height: 750px;
     width: 100%;
     margin: auto;
 }
+
 .row.home_feature {
 }
 
@@ -139,7 +141,7 @@
 }
 
 #showcase:after {
-    background: #F1F3F2 url(../../../../templates/global/default_home/images/theme9.jpg) center top no-repeat;
+    background: #F1F3F2 url(../templates/images/theme9.jpg) center top no-repeat;
     display: block;
     width: 100%;
     position: absolute;
@@ -152,6 +154,7 @@
 #home_feature {
     background: #fff;
 }
+
 #home_parallax p, #home_feature p, #showcase p {
     font: 23px/40px 'Ubuntu', Helvetica, Arial, sans-serif;
     font-weight: 300;

@@ -17,18 +17,13 @@
 +--------------------------------------------------------*/
 namespace Material;
 
-/**
- * Class Dashboard
- * @package Material
- */
 class Dashboard {
     private static function RenderDashboard() {
-        global $members, $forum, $download, $news, $articles, $weblinks, $photos, $global_comments,
-            $global_ratings, $global_submissions, $link_type, $submit_data,
-            $comments_type, $infusions_count, $global_infusions;
+        global $members, $forum, $download, $news, $articles, $weblinks, $photos, $global_comments, $global_ratings, $global_submissions, $link_type, $submit_data, $comments_type, $infusions_count, $global_infusions;
 
         $locale = fusion_get_locale();
         $aidlink = fusion_get_aidlink();
+        $settings = fusion_get_settings();
 
         opentable($locale['250']);
             $mobile  = 12;
@@ -173,16 +168,12 @@ class Dashboard {
                                 echo '<h4 class="m-t-0">'.number_format($weblinks['weblink']).'</h4>';
                             echo '</div>';
                             echo '<div class="pull-left display-inline-block m-r-15">';
-                                echo '<span class="text-smaller">'.$locale['257'].'</span><br/>';
-                                echo '<h4 class="m-t-0">'.number_format($weblinks['comment']).'</h4>';
-                            echo '</div>';
-                            echo '<div class="pull-left display-inline-block m-r-15">';
                                 echo '<span class="text-smaller">'.$locale['254'].'</span><br/>';
                                 echo '<h4 class="m-t-0">'.number_format($weblinks['submit']).'</h4>';
                             echo '</div>';
                         echo '</div>';
                         closeside();
-                    echo "</div>";
+                    echo '</div>';
                 }
 
                 if (infusion_exists('gallery')) {
@@ -211,7 +202,7 @@ class Dashboard {
 
             echo '<div class="row">';
                 echo '<div class="col-xs-12 col-sm-9 col-md-9 col-lg-9">';
-                    if (fusion_get_settings('comments_enabled') == 1) {
+                    if ($settings['comments_enabled'] == 1) {
                         echo '<div id="comments">';
                             openside('<strong class="text-uppercase">'.$locale['277'].'</strong><span class="pull-right badge">'.number_format($global_comments['rows']).'</span>');
                                 if (count($global_comments['data']) > 0) {
@@ -243,7 +234,7 @@ class Dashboard {
                         echo '</div>'; // #comments
                     }
 
-                    if (fusion_get_settings('ratings_enabled') == 1) {
+                    if ($settings['ratings_enabled'] == 1) {
                         echo '<div id="ratings">';
                             openside('<strong class="text-uppercase">'.$locale['278'].'</strong><span class="pull-right badge">'.number_format($global_ratings['rows']).'</span>');
                                 if (count($global_ratings['data']) > 0) {

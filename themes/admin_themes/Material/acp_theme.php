@@ -19,8 +19,16 @@ if (!defined('IN_FUSION')) {
     die('Access Denied');
 }
 
-define('MATERIAL', THEMES.'admin_themes/Material/');
-require_once MATERIAL.'acp_autoloader.php';
+if (!defined('MDT_LOCALE')) {
+    if (file_exists(THEMES.'admin_themes/Material/locale/'.LANGUAGE.'.php')) {
+        define('MDT_LOCALE', THEMES.'admin_themes/Material/locale/'.LANGUAGE.'.php');
+    } else {
+        define('MDT_LOCALE', THEMES.'admin_themes/Material/locale/English.php');
+    }
+}
+
+define('MDT', THEMES.'admin_themes/Material/');
+require_once MDT.'acp_autoloader.php';
 
 define('BOOTSTRAP', TRUE);
 define('FONTAWESOME', TRUE);
@@ -47,19 +55,26 @@ function render_admin_dashboard() {
 }
 
 function openside($title = FALSE, $class = NULL) {
-    Material\Components::OpenSide($title, $class);
+    echo '<div class="panel panel-default openside '.$class.'">';
+    echo $title ? '<div class="panel-heading">'.$title.'</div>' : '';
+    echo '<div class="panel-body">';
 }
 
-function closeside($title = FALSE) {
-    Material\Components::CloseSide($title);
+function closeside($footer = FALSE) {
+    echo '</div>';
+    echo $footer ? '<div class="panel-footer">'.$footer.'</div>' : '';
+    echo '</div>';
 }
 
 function opentable($title, $class = NULL) {
-    Material\Components::OpenTable($title, $class);
+    echo '<div class="panel opentable '.$class.'">';
+    echo $title ? '<header><h3>'.$title.'</h3></header>' : '';
+    echo '<div class="panel-body">';
 }
 
 function closetable() {
-    Material\Components::CloseTable();
+    echo '</div>';
+    echo '</div>';
 }
 
 \PHPFusion\OutputHandler::addHandler(function ($output = '') {

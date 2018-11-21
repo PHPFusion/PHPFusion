@@ -20,7 +20,7 @@ if (!defined('IN_FUSION')) {
 }
 
 spl_autoload_register(function ($class_name) {
-    $path = MATERIAL.'classes/'.str_replace(['\\', 'Material'], ['/', ''], $class_name).'.inc';
+    $path = MDT.'classes/'.str_replace(['\\', 'Material'], ['/', ''], $class_name).'.inc';
 
     if (file_exists($path)) {
         require_once $path;

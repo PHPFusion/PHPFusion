@@ -17,16 +17,12 @@
 +--------------------------------------------------------*/
 namespace Material;
 
-/**
- * Class Login
- * @package Material
- */
-class Login extends Components {
+class Login {
     public function __construct() {
-        $locale   = fusion_get_locale();
+        $locale = fusion_get_locale('', MDT_LOCALE);
         $userdata = fusion_get_userdata();
 
-        add_to_head('<style type="text/css">body{background: #2c3e50 !important;}</style>');
+        add_to_css('body {background-color: #2c3e50 !important;}');
         add_to_jquery('$("#admin_password").focus();');
 
         echo '<div class="login-container">';
@@ -52,13 +48,13 @@ class Login extends Components {
 
                 $form_action = FUSION_SELF.fusion_get_aidlink() == ADMIN.'index.php'.fusion_get_aidlink() ? FUSION_SELF.fusion_get_aidlink().'&amp;pagenum=0' : FUSION_REQUEST;
                 echo openform('admin-login-form', 'post', $form_action);
-                    echo form_text('admin_password', '', '', array('type' => 'password', 'callback_check' => 'check_admin_pass', 'placeholder' => $locale['281'], 'error_text' => $locale['global_182'], 'autocomplete_off' => TRUE, 'required' => TRUE));
-                    echo form_button('admin_login', $locale['login'], $locale['login'], array('class' => 'btn-primary btn-block'));
+                    echo form_text('admin_password', '', '', ['type' => 'password', 'callback_check' => 'check_admin_pass', 'placeholder' => $locale['281'], 'error_text' => $locale['global_182'], 'autocomplete_off' => TRUE, 'required' => TRUE]);
+                    echo form_button('admin_login', $locale['login'], $locale['login'], ['class' => 'btn-primary btn-block']);
                 echo closeform();
             echo '</div>';
 
             echo '<div class="copyright clearfix m-t-10 text-left">';
-                echo 'Material Admin Theme &copy; '.date('Y').' '.$this->SetLocale('013').' <a href="https://github.com/RobiNN1" target="_blank">RobiNN</a>.<br/>';
+                echo 'Material Admin Theme &copy; '.date('Y').' '.$locale['material_013'].' <a href="https://github.com/RobiNN1" target="_blank">RobiNN</a>.<br/>';
                 echo showcopyright();
             echo '</div>';
         echo'</div>';

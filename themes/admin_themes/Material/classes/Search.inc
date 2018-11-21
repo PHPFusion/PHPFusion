@@ -19,10 +19,6 @@ namespace Material;
 
 use PHPFusion\Admins;
 
-/**
- * Class Search
- * @package Material
- */
 class Search {
     private $result = [
         'data'   => [],

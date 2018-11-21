@@ -173,10 +173,6 @@ class adminDashboard extends resource {
                                 echo "<h4 class='m-t-0'>".number_format($weblinks['weblink'])."</h4>\n";
                             echo "</div>\n";
                             echo "<div class='pull-left display-inline-block m-r-10'>\n";
-                                echo "<span class='text-smaller'>".$locale['257']."</span>\n<br/>\n";
-                                echo "<h4 class='m-t-0'>".number_format($weblinks['comment'])."</h4>\n";
-                            echo "</div>\n";
-                            echo "<div class='pull-left display-inline-block m-r-10'>\n";
                                 echo "<span class='text-smaller'>".$locale['254']."</span>\n<br/>\n";
                                 echo "<h4 class='m-t-0'>".number_format($weblinks['submit'])."</h4>\n";
                             echo "</div>\n";

@@ -834,6 +834,7 @@ nav ul > li.open > a {
 }
 
 .admin-vertical-link > li > .adl-link {
+    display: block;
     font-weight: 600;
     font-size: 105%;
     color: rgb(48, 81, 132);

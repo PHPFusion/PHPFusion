@@ -87,11 +87,9 @@ if (infusion_exists('weblinks')) {
     $weblinks = [];
     $w_count = dbarray(dbquery("SELECT
         (SELECT COUNT(weblink_id) FROM ".DB_PREFIX."weblinks) AS items,
-        (SELECT COUNT(comment_id) FROM ".DB_COMMENTS." WHERE comment_type='L') AS comments,
         (SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='l') AS submissions
     "));
     $weblinks['weblink'] = $w_count['items'];
-    $weblinks['comment'] = $w_count['comments'];
     $weblinks['submit'] = $w_count['submissions'];
 }
 if (infusion_exists('news')) {

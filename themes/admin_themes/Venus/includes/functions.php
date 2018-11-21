@@ -57,9 +57,8 @@ function render_admin_dashboard() {
 }
 
 function render_dashboard() {
-    global $members, $forum, $download, $news, $articles, $weblinks, $photos, $global_comments,
-        $global_ratings, $global_submissions, $link_type, $submit_data,
-        $comments_type, $infusions_count, $global_infusions;
+    global $members, $forum, $download, $news, $articles, $weblinks, $photos, $global_comments, $global_ratings, $global_submissions, $link_type, $submit_data, $comments_type, $infusions_count, $global_infusions;
+
     $locale = fusion_get_locale();
     $aidlink = fusion_get_aidlink();
 
@@ -70,12 +69,12 @@ function render_dashboard() {
 
     opentable($locale['250']);
 
-        $panels = array(
-            'registered'   => array('link' => '', 'title' => 251),
-            'cancelled'    => array('link' => 'status=5', 'title' => 263),
-            'unactivated'  => array('link' => 'status=2', 'title' => 252),
-            'security_ban' => array('link' => 'status=4', 'title' => 253)
-        );
+        $panels = [
+            'registered'   => ['link' => '', 'title' => 251],
+            'cancelled'    => ['link' => 'status=5', 'title' => 263],
+            'unactivated'  => ['link' => 'status=2', 'title' => 252],
+            'security_ban' => ['link' => 'status=4', 'title' => 253]
+        ];
 
         echo "<!--Start Members-->\n";
         echo "<div class='row' id='members'>\n";
@@ -204,10 +203,6 @@ function render_dashboard() {
                             echo "<h4 class='m-t-0'>".number_format($weblinks['weblink'])."</h4>\n";
                         echo "</div>\n";
                         echo "<div class='pull-left display-inline-block m-r-10'>\n";
-                            echo "<span class='text-smaller'>".$locale['257']."</span>\n<br/>\n";
-                            echo "<h4 class='m-t-0'>".number_format($weblinks['comment'])."</h4>\n";
-                        echo "</div>\n";
-                        echo "<div class='pull-left display-inline-block m-r-10'>\n";
                             echo "<span class='text-smaller'>".$locale['254']."</span>\n<br/>\n";
                             echo "<h4 class='m-t-0'>".number_format($weblinks['submit'])."</h4>\n";
                         echo "</div>\n";
@@ -241,24 +236,6 @@ function render_dashboard() {
         echo "</div>\n";
 
         echo "<div class='row'>\n";
-            echo "<div class='col-xs-12 co-sm-6 col-md-6 col-lg-3'>\n";
-                openside("<strong class='text-smaller text-uppercase'>".$locale['283']."</strong><span class='pull-right badge'>".number_format((int)$infusions_count)."</span>");
-                $content = '';
-                if ($infusions_count > 0) {
-                    echo "<div class='comment_content'>\n";
-                    if (!empty($global_infusions)) {
-                        foreach ($global_infusions as $inf_id => $inf_data) {
-                            echo "<span class='badge m-b-10 m-r-5'>".$inf_data['inf_title']."</span>\n";
-                        }
-                    }
-                    echo "</div>\n";
-                    $content = checkrights("I") ? "<div class='text-right text-uppercase'>\n<a class='text-smaller' href='".ADMIN."infusions.php".$aidlink."'>".$locale['285']."</a> <i class='fa fa-angle-right'></i></div>\n" : '';
-                } else {
-                    echo "<div class='text-center'>".$locale['284']."</div>\n";
-                }
-                closeside($content);
-            echo "</div>\n";
-
             echo "<div class='col-xs-12 co-sm-6 col-md-6 col-lg-3'>\n";
                 openside("<strong class='text-smaller text-uppercase'>".$locale['277']."</strong><span class='pull-right badge'>".number_format($global_comments['rows'])."</span>");
                 if (count($global_comments['data']) > 0) {
@@ -342,6 +319,24 @@ function render_dashboard() {
                     echo "<div class='text-center'>".$global_submissions['nodata']."</div>\n";
                 }
                 closeside();
+            echo "</div>\n";
+
+            echo "<div class='col-xs-12 co-sm-6 col-md-6 col-lg-3'>\n";
+                openside("<strong class='text-smaller text-uppercase'>".$locale['283']."</strong><span class='pull-right badge'>".number_format((int)$infusions_count)."</span>");
+                $content = '';
+                if ($infusions_count > 0) {
+                    echo "<div class='comment_content'>\n";
+                    if (!empty($global_infusions)) {
+                        foreach ($global_infusions as $inf_id => $inf_data) {
+                            echo "<span class='badge m-b-10 m-r-5'>".$inf_data['inf_title']."</span>\n";
+                        }
+                    }
+                    echo "</div>\n";
+                    $content = checkrights("I") ? "<div class='text-right text-uppercase'>\n<a class='text-smaller' href='".ADMIN."infusions.php".$aidlink."'>".$locale['285']."</a> <i class='fa fa-angle-right'></i></div>\n" : '';
+                } else {
+                    echo "<div class='text-center'>".$locale['284']."</div>\n";
+                }
+                closeside($content);
             echo "</div>\n";
         echo "</div>\n"; // .row
     closetable();

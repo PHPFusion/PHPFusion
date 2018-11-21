@@ -166,13 +166,14 @@ function render_admin_panel() {
 
     // Render the content
     echo CONTENT;
+    echo "<hr />\n";
     echo "</div>\n"; // #acp-content
 
     // Footer section
-    echo "<footer class='display-inline-block m-t-20 m-b-20'>\n";
+    echo "<footer class='display-inline-block m-t-20'>\n";
 
     // Copyright
-    echo "Old_School Admin &copy; ".date("Y")." created by <a href='https://www.php-fusion.co.uk'><strong>PHP-Fusion Inc.</strong></a>\n";
+    echo "Old_School Admin &copy; ".date("Y")." Created by <a href='https://www.php-fusion.co.uk'><strong>PHP-Fusion Inc.</strong></a>\n";
     echo showcopyright();
 
     // Render time
@@ -182,7 +183,7 @@ function render_admin_panel() {
         echo showrendertime();
         echo showMemoryUsage();
     }
-    echo "<hr />\n";
+
     echo showFooterErrors();
     echo "</footer>\n";
     echo "</div>\n"; // .acp-main

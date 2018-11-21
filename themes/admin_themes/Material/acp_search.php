@@ -16,8 +16,8 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once '../../../maincore.php';
-define('MATERIAL', THEMES.'admin_themes/Material/');
-require_once MATERIAL.'acp_autoloader.php';
+define('MDT', THEMES.'admin_themes/Material/');
+require_once MDT.'acp_autoloader.php';
 
 new Material\Search();
 exit();

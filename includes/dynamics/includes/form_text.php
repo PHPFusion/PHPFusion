@@ -87,8 +87,8 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         'append_size'        => '',
         'append_class'       => 'btn-default',
         'append_type'        => 'submit',
-        'prepend_id' => "p-".$id."-prepend",
-        'append_id' => "p-".$id."-append",
+        'prepend_id'         => "p-".$id."-prepend",
+        'append_id'          => "p-".$id."-append",
         'prepend_button'     => '',
         'prepend_value'      => '',
         'prepend_form_value' => '',
@@ -173,7 +173,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
             $input_type = "password";
             static $password_toggle = '';
             if (!$password_toggle) {
-                $password_toggle = true;
+                $password_toggle = TRUE;
                 $pwd_locale = fusion_get_locale("password_strength");
                 $path = DYNAMICS."assets/password/lang/$pwd_locale.js";
                 if (file_exists($path)) {

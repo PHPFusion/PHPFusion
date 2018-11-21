@@ -40,6 +40,7 @@
     -moz-box-shadow: 0 -1px 10px 2px rgba(0, 0, 0, 0.33);
     box-shadow: 0 -1px 10px 2px rgba(0, 0, 0, 0.33);
     margin-top: 20px;
+    margin-bottom: 20px;
     -webkit-border-radius: 0 0 5px 5px;
     -moz-border-radius: 0 0 5px 5px;
     border-radius: 0 0 5px 5px;
@@ -646,10 +647,6 @@ legend {
     padding: 0;
 }
 
-#admin-panel {
-    margin-right: -1px;
-}
-
 #acp-header {
     margin-top: 15px;
     margin-bottom: 5px;
@@ -706,7 +703,6 @@ legend {
 #acp-main,
 #acp-left {
     min-height: 750px;
-    padding-bottom: 50px;
 }
 
 #acp-main {
