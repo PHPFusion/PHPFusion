@@ -151,11 +151,11 @@ class NewsAdmin extends NewsAdminModel {
                         dbquery("UPDATE ".DB_NEWS." SET news_sticky='0' WHERE news_sticky='1'");
                     }
                     if (dbcount("('news_id')", DB_NEWS, "news_id='".$this->news_data['news_id']."'")) {
-                        dbquery_insert(DB_NEWS, $this->news_data, 'update', ['keep_session'=>TRUE]);
+                        dbquery_insert(DB_NEWS, $this->news_data, 'update', ['keep_session' => TRUE]);
                         addNotice('success', self::$locale['news_0101']);
                     } else {
                         $this->data['news_name'] = fusion_get_userdata('user_id');
-                        $this->news_data['news_id'] = dbquery_insert(DB_NEWS, $this->news_data, 'save', ['keep_session'=>TRUE]);
+                        $this->news_data['news_id'] = dbquery_insert(DB_NEWS, $this->news_data, 'save', ['keep_session' => TRUE]);
                         // update the last uploaded image to the news.
                         $photo_result = dbquery("SELECT news_image_id FROM ".DB_NEWS_IMAGES." WHERE news_id=0 ORDER BY news_image_datestamp DESC LIMIT 1");
                         if (dbrows($photo_result)) {
@@ -233,11 +233,11 @@ class NewsAdmin extends NewsAdminModel {
             'placeholder' => self::$locale['news_0203a'],
             'form_name'   => 'news_form',
             'wordcount'   => TRUE,
-            'rows'        => '30',
+            'rows'        => '20',
             'file_filter' => explode(',', $news_settings['news_file_types']),
         ];
         $extendedSettings = [
-            'height'      => '600px',
+            'rows'        => '20',
             'placeholder' => '',
             'file_filter' => explode(',', $news_settings['news_file_types']),
             'path'        => [IMAGES, IMAGES_N, IMAGES_NC]
@@ -247,7 +247,7 @@ class NewsAdmin extends NewsAdminModel {
         if (fusion_get_settings('tinymce_enabled')) {
             $snippetSettings = [
                 'required'    => TRUE,
-                'height'      => '200px',
+                'rows'        => '20',
                 'type'        => 'tinymce',
                 'tinymce'     => 'advanced',
                 'file_filter' => explode(',', $news_settings['news_file_types']),
@@ -258,7 +258,7 @@ class NewsAdmin extends NewsAdminModel {
                 'preview'     => TRUE,
                 'type'        => 'tinymce',
                 'tinymce'     => 'advanced',
-                'height'      => '600px',
+                'rows'        => '20',
                 'placeholder' => self::$locale['news_0005'],
                 'form_name'   => 'news_form',
                 'path'        => [IMAGES, IMAGES_N, IMAGES_NC],
