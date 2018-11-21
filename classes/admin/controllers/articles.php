@@ -149,23 +149,23 @@ class ArticlesAdmin extends ArticlesAdminModel {
                 'required'    => TRUE,
                 'preview'     => TRUE,
                 'type'        => 'bbcode',
-                'autosize'    => TRUE,
                 'placeholder' => $this->locale['article_0254'],
                 'error_text'  => $this->locale['article_0271'],
                 'form_name'   => 'articleform',
                 'wordcount'   => TRUE,
-                'path'        => []
+                'path'        => [],
+                'rows'        => '20'
             ];
             $articleExtendedSettings = [
                 'required'    => ($this->articleSettings['article_extended_required'] ? TRUE : FALSE),
                 'preview'     => TRUE,
                 'html'        => TRUE,
-                'autosize'    => TRUE,
                 'placeholder' => $this->locale['article_0253'],
                 'error_text'  => $this->locale['article_0272'],
                 'form_name'   => 'articleform',
                 'wordcount'   => TRUE,
-                'path'        => [IMAGES, IMAGES_A]
+                'path'        => [IMAGES, IMAGES_A],
+                'rows'        => '20'
             ];
         } else {
             $articleSnippetSettings = [
@@ -173,14 +173,16 @@ class ArticlesAdmin extends ArticlesAdminModel {
                 'type'       => 'tinymce',
                 'tinymce'    => 'advanced',
                 'error_text' => $this->locale['article_0271'],
-                'path'       => [IMAGES, IMAGES_A]
+                'path'       => [IMAGES, IMAGES_A],
+                'rows'       => '20',
             ];
             $articleExtendedSettings = [
                 'required'   => ($this->articleSettings['article_extended_required'] ? TRUE : FALSE),
                 'type'       => 'tinymce',
                 'tinymce'    => 'advanced',
                 'error_text' => $this->locale['article_0272'],
-                'path'       => [IMAGES, IMAGES_A]
+                'path'       => [IMAGES, IMAGES_A],
+                'rows'       => '20',
             ];
         }
 
