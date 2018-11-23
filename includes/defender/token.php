@@ -51,6 +51,8 @@ class Token extends \defender {
     private static $debug = FALSE;
 
     public function __construct() {
+        parent::__construct();
+
         $locale = fusion_get_locale();
         $error = FALSE;
         // Validate the Token When POST is not Empty Automatically
@@ -74,15 +76,17 @@ class Token extends \defender {
             }
 
             $tokens_consumed = '';
-            if (!empty($_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']])) {
-                $token_rings = $_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']];
-                if (!empty($token_rings)) {
-                    foreach ($token_rings as $key => $token_storage) {
-                        if ($token_storage == $_POST['fusion_token']) {
-                            $tokens_consumed = $_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']][$key];
-                            // addNotice('warning', "Token $tokens_consumed has been consumed", 'all');
-                            unset($tokens_consumed);
-                            break;
+            if (isset($_POST['form_id'])) {
+                if (!empty($_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']])) {
+                    $token_rings = $_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']];
+                    if (!empty($token_rings)) {
+                        foreach ($token_rings as $key => $token_storage) {
+                            if ($token_storage == $_POST['fusion_token']) {
+                                $tokens_consumed = $_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']][$key];
+                                // addNotice('warning', "Token $tokens_consumed has been consumed", 'all');
+                                unset($tokens_consumed);
+                                break;
+                            }
                         }
                     }
                 }
@@ -91,13 +95,15 @@ class Token extends \defender {
             if (self::$debug) {
                 require_once INCLUDES."theme_functions_include.php";
                 define('STOP_REDIRECT', TRUE);
-                $token_ring = $_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']];
-                $html = openmodal('debug_modal', 'Debug Token');
-                $html .= alert("<strong>The Form ID Submitted is '".stripinput($_POST['form_id'])."' having the following tokens: </strong><ul class='block'><li>".implode("</li><li>", $token_ring)."</li></ul>\n", ['class' => 'alert-danger']);
-                $html .= alert("Token posted now is ".stripinput($_POST['fusion_token']).(!empty($tokens_consumed) ? " and has been consumed" : ''), ['class' => 'alert-warning']);
-                $html .= modalfooter("<a class='btn btn-default' href='".FUSION_REQUEST."'>Click to Reload Page</a>");
-                $html .= closemodal();
-                add_to_footer($html);
+                if (isset($_POST['form_id'])) {
+                    $token_ring = $_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']];
+                    $html = openmodal('debug_modal', 'Debug Token');
+                    $html .= alert("<strong>The Form ID Submitted is '".stripinput($_POST['form_id'])."' having the following tokens: </strong><ul class='block'><li>".implode("</li><li>", $token_ring)."</li></ul>\n", ['class' => 'alert-danger']);
+                    $html .= alert("Token posted now is ".stripinput($_POST['fusion_token']).(!empty($tokens_consumed) ? " and has been consumed" : ''), ['class' => 'alert-warning']);
+                    $html .= modalfooter("<a class='btn btn-default' href='".FUSION_REQUEST."'>Click to Reload Page</a>");
+                    $html .= closemodal();
+                    add_to_footer($html);
+                }
             }
         }
 
@@ -114,6 +120,7 @@ class Token extends \defender {
     /**
      * Plain Token Validation - executed at maincore.php through sniff_token() only.
      * Makes thorough checks of a posted token, and the token alone. It does not unset token.
+     *
      * @return bool
      */
     private static function verify_token() {
@@ -140,7 +147,7 @@ class Token extends \defender {
                 // check if the hash is valid
             } else if ($hash !== hash_hmac($algo, $user_id.$token_time.stripinput($_POST['form_id']).SECRET_KEY, $salt)) {
                 $error = $locale['token_error_7'];
-            } elseif ((TIME - $token_time) < fusion_get_settings('flood_interval') && !iADMIN) {
+            } else if ((TIME - $token_time) < fusion_get_settings('flood_interval') && !iADMIN) {
                 // check if a post wasn't made too fast. Set $post_time to 0 for instant. Go for System Settings later.
                 $error = $locale['token_error_6'];
             }
@@ -158,6 +165,7 @@ class Token extends \defender {
 
     /**
      * Generates a unique token
+     *
      * @param string $form_id
      * @param int    $max_tokens
      * @param string $file
@@ -187,11 +195,12 @@ class Token extends \defender {
                 array_shift($_SESSION['csrf_tokens'][self::pageHash($file)][$form_id]);
             }
         } else {
-            $page_url = self::pageHash($file);
-            $ring = array_rand($_SESSION['csrf_tokens'][$page_url][$form_id], 1);
-            $token = $_SESSION['csrf_tokens'][$page_url][$form_id][$ring];
-        }
 
+            $token_ring = $_SESSION['csrf_tokens'][self::pageHash($file)][$form_id];
+            $ring = array_rand($token_ring, 1);
+            $token = $token_ring[$ring];
+        }
+        //print_P($_SESSION['csrf_tokens']);
         // Debugging section
         if (self::$debug) {
             if (!self::safe()) {
@@ -206,6 +215,6 @@ class Token extends \defender {
             }
         }
 
-        return (string) $token;
+        return (string)$token;
     }
 }
