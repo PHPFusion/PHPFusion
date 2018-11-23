@@ -45,7 +45,7 @@ class defender {
     ];
     private static $input_error_text = [];
 
-    private function __construct() {
+    public function __construct() {
     }
 
     /**
