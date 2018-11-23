@@ -4,27 +4,3 @@
 .social-icons > img {
     max-width: 25px;
 }
-.nav.nav-tabs > li:first-child {
-    margin-left:20px;
-}
-.nav.nav-tabs > li > a {
-    font-size:13px;
-    padding: 5px 10px;
-    border-radius: 0;
-    color:#333;
-}
-.nav.nav-tabs > li > a:hover,
-.nav.nav-tabs > li > a:focus {
-    text-decoration: underline;
-}
-.profile-pages > li > a {
-    padding: 5px 10px;
-    display: block;
-    color: #444;
-    border-top: 1px solid #DFDFDF;
-}
-.profile-pages > li > a:hover,
-.profile-pages > li > a:focus {
-    background-color: rgba(0, 0, 0, 0.05);
-    text-decoration: none;
-}

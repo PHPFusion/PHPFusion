@@ -16,39 +16,26 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 namespace PHPFusion;
-
-use PHPFusion\UserFields\Account_Profile;
-use PHPFusion\UserFields\Public_Profile;
 
 require_once THEMES."templates/global/profile.php";
 
-/**
- * Class UserFields
- *
- * @package PHPFusion
- */
-class UserFields extends UserFieldsQuantum {
+class UserFields extends QuantumFields {
 
-    public $display_terms = 0;
-    public $display_validation = 0;
-    public $errors = [];
-    public $form_action = FUSION_REQUEST; // changed in API 1.02
-    public $form_name = "userfieldsform";
-    public $post_name;
-    public $post_value;
-    public $inline_field = TRUE;
-    public $is_admin_panel = TRUE;
-
-    public $show_admin_options = FALSE;
-    public $show_admin_password = TRUE;
-    public $show_avatar_input = TRUE;
-
-    public $base_request = FALSE; // new in API 1.02 - turn fusion_self to fusion_request - 3rd party pages. Turn this on if you have more than one $_GET pagination str.
-    public $skip_password = FALSE;
+    public $displayTerms = 0;
+    public $displayValidation = 0;
+    public $errorsArray = [];
+    public $formaction = FUSION_REQUEST; // changed in API 1.02
+    public $formname = "userfieldsform";
+    public $postName;
+    public $postValue;
+    public $showAdminOptions = FALSE;
+    public $showAdminPass = TRUE;
+    public $showAvatarInput = TRUE;
+    public $baseRequest = FALSE; // new in API 1.02 - turn fusion_self to fusion_request - 3rd party pages. Turn this on if you have more than one $_GET pagination str.
+    public $skipCurrentPass = FALSE;
     public $registration = FALSE;
-    public $user_data = [
+    public $userData = [
         "user_id"             => '',
         "user_name"           => '',
         "user_password"       => '',
@@ -57,8 +44,7 @@ class UserFields extends UserFieldsQuantum {
         'user_hide_email'     => 0,
         "user_language"       => LANGUAGE,
         'user_timezone'       => 'Europe/London',
-        'user_reputation'     => 0,
-        'user_joined' => TIME,
+        'user_reputation'     => 0
     ];
     /* Quantum Fields Extensions */
     public $system_title = '';
@@ -72,9 +58,9 @@ class UserFields extends UserFieldsQuantum {
     public $method;
     public $paginate = TRUE;
     public $admin_mode = FALSE;
-    public $user_name_change = FALSE;
+    private $_userNameChange = TRUE;
 
-    protected $info = [
+    private $info = [
         'terms'               => '',
         'validate'            => '',
         'user_avatar'         => '',
@@ -83,19 +69,9 @@ class UserFields extends UserFieldsQuantum {
 
     public $options = [];
     private $default_options = [
-        'btn_post_class' => 'btn-primary spacer-sm',
-        'btn_class'      => 'btn btn-primary',
+        'btn_post_class' => 'btn-default spacer-sm',
+        'btn_class'      => 'btn btn-default',
     ];
-
-    private static $instance = NULL;
-
-    public static function get_instance() {
-        if (empty(self::$instance)) {
-            self::$instance = new static();
-        }
-
-        return (object)self::$instance;
-    }
 
     /**
      * Check whether a user field is available/installed
@@ -116,136 +92,180 @@ class UserFields extends UserFieldsQuantum {
         return in_array($field_name, $list) ? TRUE : FALSE;
     }
 
-    /**
-     * Get user field cats.
-     *
-     * @param int $id
-     *
-     * @return array|null
-     */
-    public static function get_user_field_cats($id = 0) {
+    /* Page Navigation with UF Cats */
 
-        static $section = array();
-        $aid = isset($_GET['aid']) ? fusion_get_aidlink() : '';
+    public function setUserNameChange($value) {
+        $this->_userNameChange = $value;
+    }
 
-        if (empty($section)) {
-            $result = dbquery("SELECT * FROM ".DB_USER_FIELD_CATS." WHERE field_parent=:field_parent ORDER BY field_cat_order ASC", [':field_parent' => 0]);
-            if (dbrows($result)) {
-                $i = 0;
-                while ($data = dbarray($result)) {
-                    if (isset($_GET['lookup'])) {
-                        $link = clean_request($aid.'&section='.$data['field_cat_id'].'&lookup='.$_GET['lookup'], ['section'], FALSE);
-                    } else {
-                        $link = clean_request($aid.'&section='.$data['field_cat_id'], ['section'], FALSE);
-                    }
-                    $section[$data['field_cat_id']] = [
-                        'id'     => $data['field_cat_id'],
-                        'active' => (isset($_GET['section']) && $_GET['section'] == $data['field_cat_id']) ? 1 : (!isset($_GET['section']) && $i == 0 ? 1 : 0),
-                        'link'   => $link,
-                        'name'   => ucwords(UserFieldsQuantum::parse_label($data['field_cat_name'])),
-                        'icon'   => $data['field_cat_class']
-                    ];
-                    $i++;
-                }
+    private function getProfileSections() {
+        $result = dbquery("SELECT * FROM ".DB_USER_FIELD_CATS." WHERE field_parent=:field_parent ORDER BY field_cat_order ASC", [':field_parent' => 0]);
+        $section = [];
+        if (dbrows($result) > 0) {
+            $aid = isset($_GET['aid']) ? fusion_get_aidlink() : '';
+            $i = 0;
+            while ($data = dbarray($result)) {
+                $section[$data['field_cat_id']] = [
+                    "id"     => $data['field_cat_id'],
+                    'active' => (isset($_GET['section']) && $_GET['section'] == $data['field_cat_id']) ? 1 : (!isset($_GET['section']) && $i == 0 ? 1 : 0),
+                    'link'   => clean_request($aid.'section='.$data['field_cat_id'].'&lookup='.$this->userData['user_id'], ['section'], FALSE),
+                    'name'   => ucwords(self::parse_label($data['field_cat_name'])),
+                    'icon'   => $data['field_cat_class']
+                ];
+                $i++;
             }
         }
 
-        return empty($id) ? (array)$section : (isset($section[$id]) ? (array)$section[$id] : NULL);
+        return (array)$section;
     }
 
     /**
-     * @param string $key
+     * Display Input Fields
      *
-     * @return array|null
+     * @param array $input
      */
-    private function get_settings_sections($key = '') {
-        $aid = isset($_GET['aid']) ? fusion_get_aidlink() : '';
-        $section['acc_settings'] = [
-            'id' => 'acc_settings',
-            'active' => (isset($_GET['section']) && $_GET['section'] == 'acc_settings' ? 1 : (!isset($_GET['section']) ? 1 : 0) ),
-            'link' => clean_request($aid.'section=acc_settings&lookup='.$this->user_data['user_id'], ['section'], FALSE),
-            'name' => 'Account Settings',
-        ];
-        $section['preferences'] = [
-            'id' => 'preferences',
-            'active' => (isset($_GET['section']) && $_GET['section'] == 'preferences' ? 1 : 0),
-            'link' => clean_request($aid.'section=preferences&lookup='.$this->user_data['user_id'], ['section'], FALSE),
-            'name' => 'Preferences',
-        ];
-        /*$section['security'] = [
-            'id' => 'security',
-            'active' => (isset($_GET['section']) && $_GET['section'] == 'security' ? 1 : 0),
-            'link' => clean_request($aid.'section=security&lookup='.$this->user_data['user_id'], ['section'], FALSE),
-            'name' => 'Security',
-        ];*/
-
-        return empty($key) ? (array)$section : (isset($section[$key]) ? (array)$section[$key] : NULL);
-    }
-
-    private static $pages = [];
-    protected static $additional_pages = [];
-
-    /**
-     * Custom add files into the edit profile page.
-     * @param $key
-     * @param $title
-     * @param $file
-     */
-    public function add_pages($key, $title, $file) {
-        self::$additional_pages[$key] = [
-            'title' => $title,
-            'file' => is_file($file) ? $file : ''
-        ];
-    }
-
-    public static function get_pages() {
-        if (empty(self::$pages)) {
-            self::$pages = [
-                'pu_profile' => ['title'=>'Public Profile'], // Public Profile
-                'se_profile' => ['title'=>'Settings'], // Private Profile
-            ];
-        }
-
-        return self::$pages = array_merge(self::$pages, self::$additional_pages);
-    }
-
-    public static function get_current_page() {
-        $all_pages = self::get_pages();
-        return isset($_GET['ref']) && isset($all_pages[$_GET['ref']]) ? $_GET['ref'] : 'pu_profile';
-    }
-
-    /**
-     * Returns all fields array
-     * @return array
-     */
-    public function get_input_info() {
+    public function display_profile_input(array $input = []) {
         $this->method = 'input';
         $locale = fusion_get_locale();
-        $settings = fusion_get_settings();
-        // user id
-        $user_id = isset($_GET['lookup']) && isnum($_GET['lookup']) ? $_GET['lookup'] : fusion_get_userdata('user_id');
-
-        if ($this->registration) $user_id = 0;
-
         $this->info = [
-            'section'              => self::get_user_field_cats(),
-            'pages'                => $this->get_pages(),
-            'user_id'              => form_hidden('user_id', '', $user_id),
-            'name'                 => $this->user_data['user_name'],
-            'user_name'            => '',
-            'joined_date'          => showdate('longdate', $this->user_data['user_joined']),
-            'email'                => $this->user_data['user_email'],
-            'user_password'        => '',
-            'user_admin_password'  => '',
-            'user_email'           => '',
-            'user_hide_email'      => '',
-            'user_avatar'          => '',
-            'user_reputation'      => '',
-            'validate'             => '',
-            'terms'                => '',
-            'user_close_message'   => '',
-            'custom_page'          => FALSE,
-            'user_password_verify' => (iADMIN && checkrights("M")) ? "" : form_text('user_password_verify', $locale['u135a'], '',
+            'section'             => $this->getProfileSections(),
+            'user_id'             => form_hidden('user_id', '', isset($_GET['lookup']) && isnum($_GET['lookup']) ? $_GET['lookup'] : 0),
+            'user_name'           => '',
+            'user_password'       => '',
+            'user_admin_password' => '',
+            'user_email'          => '',
+            'user_hide_email'     => '',
+            'user_avatar'         => '',
+            'user_reputation'     => '',
+            'validate'            => '',
+            'terms'               => ''
+        ];
+
+        $_GET['section'] = isset($_GET['section']) && isset($this->info['section'][$_GET['section']]) ? $_GET['section'] : 1;
+        $this->options += $this->default_options;
+
+        if ($_GET['section'] == 1) {
+
+            $user_name = isset($_POST['user_name']) ? form_sanitizer($_POST['user_name'], '', 'user_name') : $this->userData['user_name'];
+            $user_email = isset($_POST['user_email']) ? $_POST['user_email'] : $this->userData['user_email'];
+            $user_hide_email = isset($_POST['user_hide_email']) ? $_POST['user_hide_email'] : $this->userData['user_hide_email'];
+            $this->info['user_name'] = form_para($locale['u129'], 'account', 'profile_category_name');
+            $user_reputation = '';
+            if (infusion_exists('forum')) {
+                $user_reputation = isset($_POST['user_reputation']) ? $_POST['user_reputation'] : $this->userData['user_reputation'];
+            }
+
+            if (iADMIN || $this->_userNameChange) {
+                $this->info['user_name'] .= form_text('user_name', $locale['u127'], $user_name, [
+                    'max_length' => 30,
+                    'required'   => 1,
+                    'error_text' => $locale['u122'],
+                    'inline'     => TRUE
+                ]);
+            }
+
+            $this->info['user_password'] = form_para($locale['u132'], 'password', 'profile_category_name');
+
+            if ($this->registration || $this->admin_mode) {
+                $this->info['user_password'] .= form_text('user_password1', $locale['u134a'], '', [
+                        'type'              => 'password',
+                        'autocomplete_off'  => 1,
+                        'inline'            => TRUE,
+                        'max_length'        => 64,
+                        'error_text'        => $locale['u134'].$locale['u143a'],
+                        'required'          => $this->admin_mode ? FALSE : TRUE,
+                        'password_strength' => TRUE
+                    ]
+                );
+                $this->info['user_password'] .= form_text('user_password2', $locale['u134b'], '', [
+                        'type'             => 'password',
+                        'autocomplete_off' => 1,
+                        'inline'           => TRUE,
+                        'max_length'       => 64,
+                        'error_text'       => $locale['u133'],
+                        'required'         => $this->admin_mode ? FALSE : TRUE
+                    ]
+                );
+            } else {
+                $this->info['user_password'] .= form_hidden('user_id', '', isset($this->userData['user_id']) && isnum($this->userData['user_id']) ? $this->userData['user_id'] : 0, ['input_id' => 'userid']);
+                $this->info['user_password'] .= form_text('user_password', $locale['u135a'], '', [
+                        'type'             => 'password',
+                        'autocomplete_off' => 1,
+                        'inline'           => TRUE,
+                        'max_length'       => 64,
+                        'error_text'       => $locale['u133']
+                    ]
+                );
+                $this->info['user_password'] .= form_text('user_password1', $locale['u135b'], '', [
+                        'type'              => 'password',
+                        'autocomplete_off'  => 1,
+                        'inline'            => TRUE,
+                        'max_length'        => 64,
+                        'error_text'        => $locale['u133'],
+                        'password_strength' => TRUE
+                    ]
+                );
+                $this->info['user_password'] .= form_text('user_password2', $locale['u135c'], '', [
+                        'class'            => 'm-b-0',
+                        'type'             => 'password',
+                        'autocomplete_off' => 1,
+                        'inline'           => TRUE,
+                        'max_length'       => 64,
+                        'error_text'       => $locale['u133']
+                    ]
+                );
+                $this->info['user_password'] .= form_hidden('user_hash', '', $this->userData['user_password'], ['input_id' => 'userhash']);
+            }
+            $this->info['user_password'] .= "<div class='col-xs-12 col-sm-9 col-sm-offset-3 col-md-offset-3 col-lg-offset-3'><span class='text-smaller'>".$locale['u147']."</span></div><br/>";
+
+            // Admin Password - not available for everyone except edit profile.
+            if (!$this->registration && iADMIN && !defined('ADMIN_PANEL')) {
+                $this->info['user_admin_password'] = form_para($locale['u131'], 'adm_password', 'profile_category_name');
+                if ($this->userData['user_admin_password']) {
+                    // This is for changing password
+                    $this->info['user_admin_password'] .= form_text('user_admin_password', $locale['u144a'], '', [
+                            'type'             => 'password',
+                            'autocomplete_off' => 1,
+                            'inline'           => TRUE,
+                            'max_length'       => 64,
+                            'error_text'       => $locale['u136']
+                        ]
+                    );
+                    $this->info['user_admin_password'] .= form_text('user_admin_password1', $locale['u144'], '', [
+                            'type'             => 'password',
+                            'autocomplete_off' => 1,
+                            'inline'           => TRUE,
+                            'max_length'       => 64,
+                            'error_text'       => $locale['u136']
+                        ]
+                    );
+                } else {
+                    // This is just setting new password off blank records
+                    $this->info['user_admin_password'] .= form_text('user_admin_password', $locale['u144'], '', [
+                            'type'             => 'password',
+                            'autocomplete_off' => 1,
+                            'inline'           => TRUE,
+                            'max_length'       => 64,
+                            'error_text'       => $locale['u136']
+                        ]
+                    );
+                }
+
+                $this->info['user_admin_password'] .= form_text('user_admin_password2', $locale['u145'], '', [
+                        'class'            => 'm-b-0',
+                        'type'             => 'password',
+                        'autocomplete_off' => 1,
+                        'inline'           => TRUE,
+                        'max_length'       => 64,
+                        'error_text'       => $locale['u136']
+                    ]
+                );
+                $this->info['user_admin_password'] .= "<div class='col-xs-12 col-sm-9 col-sm-offset-3 col-md-offset-3 col-lg-offset-3'><span class='text-smaller'>".$locale['u147']."</span></div>\n";
+            }
+
+            // User Password Verification
+            $this->info['user_password_verify'] = (iADMIN && checkrights("M")) ? "" : form_text('user_password_verify',
+                $locale['u135a'], '',
                 [
                     'type'             => 'password',
                     'autocomplete_off' => 1,
@@ -253,201 +273,240 @@ class UserFields extends UserFieldsQuantum {
                     'max_length'       => 64,
                     'error_text'       => $locale['u133']
                 ]
-            )
-        ];
+            );
 
-        $this->info['current_page'] = self::get_current_page();
-        $this->options += $this->default_options;
+            // Avatar Field
+            if (!$this->registration) {
 
-        if ($this->registration) {
-            // registration
-            // bound in page 1 only.
-            $_GET['section'] = 1;
-            $class = new Public_Profile();
-            $class->user_data = $this->user_data;
-            $class->post_name = $this->post_name;
-            $class->options = $this->options;
-            $class->user_name_change = TRUE;
-            $class->registration = $this->registration;
-            $class->is_admin_panel = $this->is_admin_panel;
-            $class->display_validation = $this->display_validation;
-            $class->display_terms = $this->display_terms;
-            $class->plugin_folder = $this->plugin_folder;
-            $class->plugin_locale_folder = $this->plugin_locale_folder;
-            $class->inline_field = $this->inline_field;
-            $this->info = array_merge($this->info, $class->get_info());
-
-            $class = new Account_Profile();
-            $class->user_data = $this->user_data;
-            $class->options = $this->options;
-            $class->is_admin_panel = $this->is_admin_panel;
-            $class->registration = $this->registration;
-            $class->post_name = $this->post_name;
-            $class->plugin_folder = $this->plugin_folder;
-            $class->user_name_change = TRUE;
-            $class->inline_field = $this->inline_field;
-            $this->info = array_merge($this->info, $class->get_info());
-
-        } else {
-            // Edit Profile
-
-            // edit profile in administration
-            if ($this->is_admin_panel === TRUE) {
-
-                $_GET['section'] = 1;
-
-                $class = new Public_Profile();
-                $class->user_data = $this->user_data;
-                $class->post_name = $this->post_name;
-                $class->options = $this->options;
-                $class->user_name_change = $this->user_name_change;
-                $class->registration = $this->registration;
-                $class->display_validation = $this->display_validation;
-                $class->display_terms = $this->display_terms;
-                $class->plugin_folder = $this->plugin_folder;
-                $class->plugin_locale_folder = $this->plugin_locale_folder;
-                $class->inline_field = $this->inline_field;
-                $class->is_admin_panel = TRUE;
-                $this->info = array_merge($this->info, $class->get_info());
-
-                $class = new Account_Profile();
-                $class->user_data = $this->user_data;
-                $class->options = $this->options;
-                $class->registration = $this->registration;
-                $class->post_name = $this->post_name;
-                $class->user_name_change = $this->user_name_change;
-                $class->show_admin_password = $this->show_admin_password;
-                $class->inline_field = $this->inline_field;
-                $class->is_admin_panel = TRUE;
-                $this->info = array_merge($this->info, $class->get_info());
-
-            } else {
-
-                // Notice to tell that there are email pending for verification.
-                if ($settings['email_verification']) {
-                    $result = dbquery("SELECT user_email FROM ".DB_EMAIL_VERIFY." WHERE user_id=:selfid", [
-                        ':selfid' => fusion_get_userdata('user_id')
-                    ]);
-                    if (dbrows($result)) {
-                        $data = dbarray($result);
-                        addNotice('success', sprintf($locale['u200'], $data['user_email'])."\n<br />\n".$locale['u201']);
-                    }
+                if (isset($this->userData['user_avatar']) && $this->userData['user_avatar'] != "") {
+                    $this->info['user_avatar'] = "
+                    <div class='row'>\n
+                    <div class='col-xs-12 col-sm-3'><strong>".$locale['u185']."</strong></div>
+                    <div class='col-xs-12 col-sm-9'>
+                        <div class='p-l-10'>
+                        <label for='user_avatar_upload'>".display_avatar($this->userData, '150px', '', FALSE, 'img-thumbnail')."</label>\n<br />\n".form_checkbox("delAvatar", $locale['u187'], '', ['reverse_label' => TRUE])."
+                        </div>
+                    </div></div>
+                    ";
+                } else {
+                    $this->info['user_avatar'] = form_fileinput('user_avatar', $locale['u185'], '', [
+                            'upload_path'     => IMAGES."avatars/",
+                            'input_id'        => 'user_avatar_upload',
+                            'type'            => 'image',
+                            'max_byte'        => fusion_get_settings('avatar_filesize'),
+                            'max_height'      => fusion_get_settings('avatar_width'),
+                            'max_width'       => fusion_get_settings('avatar_height'),
+                            'inline'          => TRUE,
+                            'thumbnail'       => 0,
+                            'width'           => '100%',
+                            "delete_original" => FALSE,
+                            'class'           => 'm-t-10 m-b-0',
+                            "error_text"      => $locale['u180'],
+                            "template"        => "modern",
+                            'ext_tip'         => sprintf($locale['u184'], parsebytesize(fusion_get_settings('avatar_filesize')), fusion_get_settings('avatar_width'), fusion_get_settings('avatar_height'))
+                        ]
+                    );
                 }
-
-                switch ($this->info['current_page']) {
-                    default:
-                        // Custom page content
-                        if (isset($this->info['pages'][$this->info['current_page']]['file'])) {
-                            $this->info['custom_page'] = TRUE;
-                            $this->info['title'] = $this->info['pages'][$this->info['current_page']]['title'];
-                            $this->info['page_content'] = 'There are no page content yet.';
-
-                            $user_fields = '';
-                            $user_fields_meta = '';
-                            $user_fields_section = [];
-                            $user_fields_title = '';
-                            if (is_file($this->info['pages'][$this->info['current_page']]['file'])) {
-                                include $this->info['pages'][$this->info['current_page']]['file'];
-                            }
-                            $section = NULL;
-                            if (!empty($user_fields_section)) {
-                                $section = isset($_GET['section']) ? $_GET['section'] : $user_fields_section['id'][0];
-                            }
-                            // Custom title
-                            if ($user_fields) {
-                                if ($user_fields_title) {
-                                    $this->info['title'] = $user_fields_title;
-                                }
-                                if ($user_fields_meta) {
-                                    add_to_meta('keywords', $user_fields_meta);
-                                }
-                                // Custom content
-                                if (!empty($user_fields_section)) {
-                                    $this->info['section'] = $user_fields_section;
-                                }
-                                $this->info['page_content'] = $user_fields;
-                            }
-                            add_to_title($locale['global_201'].$this->info['title']);
-                            break;
-                        }
-                    case 'pu_profile':
-                        $this->info['section'] = $this->get_user_field_cats();
-                        $section = isset($_GET['section']) && isset($this->info['section'][$_GET['section']]) ? $_GET['section'] : 1;
-                        $field_cats = $this->get_user_field_cats($section);
-                        if (isset($field_cats['name'])) {
-                            $this->info['title'] = $field_cats['name'];
-                        }
-
-                        $class = new Public_Profile();
-                        $class->user_data = $this->user_data;
-                        $class->post_name = $this->post_name;
-                        $class->options = $this->options;
-                        $class->registration = $this->registration;
-                        $class->display_validation = $this->display_validation;
-                        $class->display_terms = $this->display_terms;
-                        $class->plugin_folder = $this->plugin_folder;
-                        $class->plugin_locale_folder = $this->plugin_locale_folder;
-                        $class->inline_field = $this->inline_field;
-                        $this->info['user_hash'] = form_hidden('user_hash', '', $this->user_data['user_password']);
-                        $this->info = array_merge($this->info, $class->get_info());
-
-                        break;
-
-                    case 'se_profile':
-
-                        $this->info['section'] = $this->get_settings_sections();
-                        $section = isset($_GET['section']) && isset($this->info['section'][$_GET['section']]) ? $_GET['section'] : 'acc_settings';
-                        $field_cats = $this->get_settings_sections($section);
-                        if (isset($field_cats['name'])) {
-                            $this->info['title'] = $field_cats['name'];
-                        }
-
-                        $class = new Account_Profile();
-                        $class->user_data = $this->user_data;
-                        $class->options = $this->options;
-                        $class->registration = $this->registration;
-                        $class->post_name = $this->post_name;
-                        $class->user_name_change = $this->user_name_change;
-                        $class->inline_field = $this->inline_field;
-                        $this->info = array_merge($this->info, $class->get_info());
-                        break;
-                }
-
             }
+
+            $this->info['user_email'] = form_text('user_email', $locale['u128'], $user_email, [
+                    'type'       => 'email',
+                    "required"   => TRUE,
+                    'inline'     => TRUE,
+                    'max_length' => '100',
+                    'error_text' => $locale['u126']
+                ]
+            );
+
+            $this->info['user_hide_email'] = form_checkbox('user_hide_email', $locale['u051'], $user_hide_email,
+                [
+                    'inline'         => TRUE,
+                    'inline_options' => TRUE,
+                    'type'           => 'radio',
+                    'options'        => [
+                        1 => $locale['u052'],
+                        0 => $locale['u053'],
+                    ],
+                ]
+            );
+
+            if (iSUPERADMIN && infusion_exists('forum')) {
+                $this->info['user_reputation'] = form_text('user_reputation', $locale['u210'], $user_reputation, [
+                        'type'   => 'number',
+                        'inline' => TRUE
+                    ]
+                );
+            }
+
+            if ($this->displayValidation == 1 && !defined('ADMIN_PANEL')) {
+                $this->info['validate'] = $this->renderValidation();
+            }
+            if ($this->displayTerms == 1) {
+                $this->info['terms'] = $this->renderTerms();
+            }
+        } else {
+            if (empty($this->userData['user_hash'])) {
+                $this->userData['user_hash'] = $this->userData['user_password'];
+            }
+            // requires password
+            $this->info['user_password'] = form_hidden('user_id', '', isset($this->userData['user_id']) && isnum($this->userData['user_id']) ? $this->userData['user_id'] : 0);
+            $this->info['user_password'] .= form_hidden('user_hash', '', $this->userData['user_hash']);
         }
 
         $this->info += [
             'register'  => $this->registration,
-            'current_section' => ($this->paginate && !$this->registration) ? $section : '',
-            'openform'  => openform($this->form_name, 'post', FUSION_REQUEST, [ 'enctype' => ($this->show_avatar_input ? TRUE : FALSE) ]),
+            'pages'     => ($this->paginate && !$this->registration) ? $_GET['section'] : '',
+            'openform'  => openform($this->formname, 'post', FUSION_REQUEST, [
+                'enctype' => $this->showAvatarInput ? TRUE : FALSE,
+            ]),
             'closeform' => closeform(),
             'button'    => $this->renderButton(),
         ];
 
-        return (array)$this->info;
+        $this->info = $this->info + $this->get_user_fields();
+
+        /*
+         * Template
+         */
+        $user_fields = '';
+        if (!empty($this->info['user_field'])) {
+            foreach ($this->info['user_field'] as $catID => $fieldData) {
+                if (!empty($fieldData['title'])) {
+                    $user_fields .= $fieldData['title'];
+                }
+                if (!empty($fieldData['fields'])) {
+                    foreach ($fieldData['fields'] as $_id => $_fields) {
+                        $user_fields .= $_fields;
+                    }
+                }
+            }
+        }
+
+        if (isset($this->info['section']) && count($this->info['section']) > 1) {
+            $tab_title = [];
+            foreach ($this->info['section'] as $section) {
+                $tab_title['title'][$section['id']] = $section['name'];
+                $tab_title['id'][$section['id']] = $section['id'];
+                $tab_title['icon'][$section['id']] = $section['icon'];
+            }
+            $this->info['tab_info'] = $tab_title;
+        }
+
+        /*
+         * Template Output
+         */
+        ob_start();
+        $this->registration ? display_register_form($this->info) : display_profile_form($this->info);
+        echo strtr(ob_get_clean(), [
+                '{%tab_header%}'                => isset($tab_title) ? opentab($tab_title, $_GET['section'], 'user-profile-form', TRUE) : '',
+                '{%open_form%}'                 => $this->info['openform'],
+                '{%user_id%}'                   => $this->info['user_id'],
+                '{%user_name_field%}'           => $this->info['user_name'],
+                '{%user_email_field%}'          => $this->info['user_email'],
+                '{%user_hide_email_field%}'     => $this->info['user_hide_email'],
+                '{%user_avatar_field%}'         => $this->info['user_avatar'],
+                '{%user_reputation_field%}'     => $this->info['user_reputation'],
+                '{%user_password_field%}'       => $this->info['user_password'],
+                '{%user_admin_password_field%}' => $this->info['user_admin_password'],
+                '{%custom_fields%}'             => $user_fields,
+                '{%captcha_fields%}'            => $this->info['validate'],
+                '{%eula%}'                      => $this->info['terms'],
+                '{%post_button%}'               => $this->info['button'],
+                '{%close_form%}'                => $this->info['closeform'],
+                '{%tab_footer%}'                => isset($tab_title) ? closetab() : '',
+                '{%opentable%}'                 => fusion_get_function('opentable', ''),
+                '{%closetable%}'                => fusion_get_function('closetable')
+            ]
+        );
     }
 
     /**
-     * Display Input Fields
+     * Display Captcha
      *
-     * @param array $input
-     *
-     * Template IDs     Registration    core_user_registration_form
-     *                  Edit Profile    core_edit_profile_form
-     *
-     * @return string|void
+     * @todo: remove locale.
+     * @return string
      */
-    public function display_input(array $input = []) {
-        $this->info = $this->get_input_info();
-        return ($this->registration ? display_register_form($this->info) : display_profile_form($this->info));
+    private function renderValidation() {
+        $locale = fusion_get_locale();
+        $_CAPTCHA_HIDE_INPUT = FALSE;
+        $html = "<hr>\n";
+        $html .= "<div class='form-group m-t-20'>\n";
+        $html .= "<label for='captcha_code' class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0'>\n".$locale['u190']." <span class='required'>*</span></label>\n";
+        $html .= "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>";
+        include INCLUDES."captchas/".fusion_get_settings("captcha")."/captcha_display.php";
+        $html .= display_captcha([
+            'captcha_id' => 'captcha_userfields',
+            'input_id'   => 'captcha_code_userfields',
+            'image_id'   => 'captcha_image_userfields'
+        ]);
+        if (!$_CAPTCHA_HIDE_INPUT) {
+            $html .= form_text('captcha_code', '', '', [
+                'inline'           => 1,
+                'required'         => 1,
+                'autocomplete_off' => 1,
+                'width'            => '200px',
+                'class'            => 'm-t-15',
+                'placeholder'      => $locale['u191']
+            ]);
+        }
+        $html .= "</div>\n";
+        $html .= "</div>\n";
+
+        return (string)$html;
     }
 
+    /**
+     * Display Terms of Agreement Field
+     *
+     * @todo: remove locale.
+     * @return string
+     */
+    private function renderTerms() {
+        $locale = fusion_get_locale();
+        $agreement = strtr($locale['u193'], [
+                '[LINK]'  => "<a href='".BASEDIR."print.php?type=T' id='license_agreement'><strong>",
+                '[/LINK]' => "</strong></a>"
+            ]
+        );
+
+        $modal = openmodal('license_agreement', $locale['u192'], ['button_id' => 'license_agreement']);
+        $modal .= parse_textarea(fusion_get_settings('license_agreement'));
+        $modal_content = '<p class="pull-left">'.$locale['u193a'].' '.ucfirst(showdate('shortdate', fusion_get_settings('license_lastupdate'))).'</p>';
+        $modal_content .= '<button type="button" id="agree" class="btn btn-success" data-dismiss="modal">'.$locale['u193b'].'</button>';
+        $modal .= modalfooter($modal_content, TRUE);
+        $modal .= closemodal();
+        add_to_footer($modal);
+        add_to_jquery('
+            $("#agree").on("click", function() {
+                $("#register").attr("disabled", false).removeClass("disabled");
+                $("#agreement").attr("checked", true);
+            });
+        ');
+
+        $html = "<div class='form-group clearfix'>";
+        $html .= "<label class='control-label col-xs-12 col-sm-3 p-l-0'>".$locale['u192']."</label>";
+        $html .= "<div class='col-xs-12 col-sm-9'>\n";
+        $html .= form_checkbox('agreement', $agreement, '', ["required" => TRUE, "reverse_label" => TRUE]);
+        $html .= "</div>\n</div>\n";
+        add_to_head("<script type='text/javascript'>$(function() {
+        $('#agreement').bind('click', function() {
+            var regBtn = $('#register');
+            if ($(this).is(':checked')) {
+                regBtn.attr('disabled', false).removeClass('disabled');
+            } else {
+                regBtn.attr('disabled', true).addClass('disabled');
+            }
+        });
+        });</script>");
+
+        return $html;
+    }
 
     private function renderButton() {
-        $disabled = $this->display_terms ? TRUE : FALSE;
+        $disabled = $this->displayTerms == 1 ? TRUE : FALSE;
         $this->options += $this->default_options;
-        $html = (!$this->skip_password) ? form_hidden('user_hash', '', $this->user_data['user_password']) : '';
-        $html .= form_button($this->post_name, $this->post_value, $this->post_value,
+        $html = (!$this->skipCurrentPass) ? form_hidden('user_hash', '', $this->userData['user_password']) : '';
+        $html .= form_button($this->postName, $this->postValue, $this->postValue,
             [
                 "deactivate" => $disabled,
                 "class"      => $this->options['btn_post_class']
@@ -456,12 +515,109 @@ class UserFields extends UserFieldsQuantum {
         return (string)$html;
     }
 
+    /**
+     * Fetch User Fields Array to templates
+     * Toggle with class string method - input or display
+     * output to array
+     */
+    private function get_user_fields() {
+        $fields = [];
+        $category = [];
+        $item = [];
+
+        $this->callback_data = $this->userData;
+
+        switch ($this->method) {
+            case 'input':
+                $this->info['user_field'][0]['fields']['user_id'] = form_hidden('user_id', '', $this->callback_data['user_id']);
+                if ($this->registration == FALSE) {
+                    if (isset($this->info['user_field'][0]['fields']['user_name'])) {
+                        $this->info['user_field'][0]['fields']['user_name'] = form_hidden('user_name', '', $this->callback_data['user_name']);
+                    }
+                }
+                break;
+            case 'display':
+                $this->info['user_field'] = [];
+        }
+
+        $index_page_id = isset($_GET['section']) && isnum($_GET['section']) && isset($this->getProfileSections()[$_GET['section']]) ? intval($_GET['section']) : 1;
+
+        $registration_cond = ($this->registration == TRUE ? ' AND field.field_registration=:field_register' : '');
+        $registration_bind = ($this->registration == TRUE ? [':field_register' => 1] : []);
+
+        $query = "SELECT field.*, cat.field_cat_id, cat.field_cat_name, cat.field_parent, root.field_cat_id as page_id, root.field_cat_name as page_name, root.field_cat_db, root.field_cat_index
+                  FROM ".DB_USER_FIELDS." field
+                  INNER JOIN ".DB_USER_FIELD_CATS." cat ON (cat.field_cat_id = field.field_cat)
+                  INNER JOIN ".DB_USER_FIELD_CATS." root on (cat.field_parent = root.field_cat_id)
+                  WHERE (cat.field_cat_id=:index00 OR root.field_cat_id=:index01) $registration_cond
+                  ORDER BY root.field_cat_order, cat.field_cat_order, field.field_order
+                  ";
+        $bind = [
+            ':index00' => $index_page_id,
+            ':index01' => $index_page_id,
+        ];
+        $bind = $bind + $registration_bind;
+        $result = dbquery($query, $bind);
+        $rows = dbrows($result);
+        if ($rows != '0') {
+            while ($data = dbarray($result)) {
+                if ($data['field_cat_id']) {
+                    $category[$data['field_parent']][$data['field_cat_id']] = self::parse_label($data['field_cat_name']);
+                }
+                if ($data['field_cat']) {
+                    $item[$data['field_cat']][] = $data;
+                }
+            }
+            if (isset($category[$index_page_id])) {
+                foreach ($category[$index_page_id] as $cat_id => $cat) {
+                    if ($this->registration || $this->method == 'input') {
+                        if (isset($item[$cat_id])) {
+                            $fields['user_field'][$cat_id]['title'] = $cat;
+                            foreach ($item[$cat_id] as $field_id => $field) {
+                                $options = [
+                                    'show_title' => TRUE,
+                                    'inline'     => TRUE,
+                                    'required'   => (bool)$field['field_required']
+                                ];
+                                if ($field['field_type'] == 'file') {
+                                    $options += [
+                                        'plugin_folder'        => $this->plugin_folder,
+                                        'plugin_locale_folder' => $this->plugin_locale_folder
+                                    ];
+                                }
+                                $field_output = $this->display_fields($field, $this->callback_data, $this->method, $options);
+                                $fields['user_field'][$cat_id]['fields'][$field['field_id']] = $field_output;
+                                $fields['extended_field'][$field['field_name']] = $field_output; // for the gets
+                            }
+                        }
+                    } else {
+                        // Display User Fields
+                        if (isset($item[$cat_id])) {
+                            $fields['user_field'][$cat_id]['title'] = $cat;
+                            foreach ($item[$cat_id] as $field_id => $field) {
+                                // Outputs array
+                                $field_output = $this->display_fields($field, $this->callback_data, $this->method);
+                                //$fields['user_field'][$cat_id]['fields'][$field['field_id']] = $field_output; // relational to the category
+                                $fields['extended_field'][$field['field_name']] = $field_output; // for the gets
+                                if (!empty($field_output)) {
+                                    $fields['user_field'][$cat_id]['fields'][$field['field_id']] = array_merge($field, $field_output);
+                                }
+                                //$fields['user_field'][$cat_id]['fields'][$field['field_id']] = array_merge($field, $fields['user_field'][$cat_id]['fields'][$field['field_id']]);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return (array)$fields;
+    }
+
     /***
      * Fetch profile output data
      * - Display Profile (View)
      */
     public function display_profile_output() {
-
         $locale = fusion_get_locale();
         $aidlink = fusion_get_aidlink();
 
@@ -470,24 +626,24 @@ class UserFields extends UserFieldsQuantum {
             if ((isset($_POST['add_to_group'])) && (isset($_POST['user_group']) && isnum($_POST['user_group']))) {
                 $lookup = stripinput($_GET['lookup']);
                 $user_group = stripinput($_POST['user_group']);
-                if (!preg_match("(^\.{$user_group}$|\.{$user_group}\.|\.{$user_group}$)", $this->user_data['user_groups'])) {
+                if (!preg_match("(^\.{$user_group}$|\.{$user_group}\.|\.{$user_group}$)", $this->userData['user_groups'])) {
                     $userdata = [
-                        'user_groups' => $this->user_data['user_groups'].".".$user_group,
+                        'user_groups' => $this->userData['user_groups'].".".$user_group,
                         'user_id'     => $lookup
                     ];
                     dbquery_insert(DB_USERS, $userdata, 'update');
                 }
                 if (defined('ADMIN_PANEL') && isset($_GET['step']) && $_GET['step'] == "view") {
-                    redirect(ADMIN."members.php".fusion_get_aidlink()."&amp;step=view&amp;user_id=".$this->user_data['user_id']);
+                    redirect(ADMIN."members.php".fusion_get_aidlink()."&amp;step=view&amp;user_id=".$this->userData['user_id']);
                 } else {
                     redirect(BASEDIR."profile.php?lookup=".$lookup);
                 }
             }
         }
 
-        $this->info['section'] = $this->get_user_field_cats();
-        $this->info['user_id'] = $this->user_data['user_id'];
-        $this->info['user_name'] = $this->user_data['user_name'];
+        $this->info['section'] = $this->getProfileSections();
+        $this->info['user_id'] = $this->userData['user_id'];
+        $this->info['user_name'] = $this->userData['user_name'];
 
         $current_section = [['id' => 1]];
         if (!empty($this->info['section'])) {
@@ -495,76 +651,76 @@ class UserFields extends UserFieldsQuantum {
         }
         $_GET['section'] = isset($_GET['section']) && isset($this->info['section'][$_GET['section']]) ? $_GET['section'] : $current_section['id'];
 
-        if (empty($this->user_data['user_avatar']) && !file_exists(IMAGES."avatars/".$this->user_data['user_avatar'])) {
-            $this->user_data['user_avatar'] = get_image('noavatar');
+        if (empty($this->userData['user_avatar']) && !file_exists(IMAGES."avatars/".$this->userData['user_avatar'])) {
+            $this->userData['user_avatar'] = get_image('noavatar');
         }
 
         $this->info['core_field']['profile_user_avatar'] = [
             'title'  => $locale['u186'],
-            'value'  => $this->user_data['user_avatar'],
-            'status' => $this->user_data['user_status']
+            'value'  => $this->userData['user_avatar'],
+            'status' => $this->userData['user_status']
         ];
 
         // user name
         $this->info['core_field']['profile_user_name'] = [
             'title' => $locale['u068'],
-            'value' => $this->user_data['user_name']
+            'value' => $this->userData['user_name']
         ];
 
         // user level
         $this->info['core_field']['profile_user_level'] = [
             'title' => $locale['u063'],
-            'value' => getgroupname($this->user_data['user_level'])
+            'value' => getgroupname($this->userData['user_level'])
         ];
 
         // user email
-        if (iADMIN || $this->user_data['user_hide_email'] == 0) {
+        if (iADMIN || $this->userData['user_hide_email'] == 0) {
             $this->info['core_field']['profile_user_email'] = [
                 'title' => $locale['u064'],
-                'value' => hide_email($this->user_data['user_email'], fusion_get_locale("UM061a"))
+                'value' => hide_email($this->userData['user_email'], fusion_get_locale("UM061a"))
             ];
         }
 
         // user joined
         $this->info['core_field']['profile_user_joined'] = [
             'title' => $locale['u066'],
-            'value' => showdate("longdate", $this->user_data['user_joined'])
+            'value' => showdate("longdate", $this->userData['user_joined'])
         ];
 
         // Last seen
         $this->info['core_field']['profile_user_visit'] = [
             'title' => $locale['u067'],
-            'value' => $this->user_data['user_lastvisit'] ? showdate("longdate", $this->user_data['user_lastvisit']) : $locale['u042']
+            'value' => $this->userData['user_lastvisit'] ? showdate("longdate", $this->userData['user_lastvisit']) : $locale['u042']
         ];
 
         // user status
-        if (iADMIN && $this->user_data['user_status'] > 0) {
+        if (iADMIN && $this->userData['user_status'] > 0) {
             $this->info['core_field']['profile_user_status'] = [
                 'title' => $locale['u055'],
-                'value' => getuserstatus($this->user_data['user_status'])
+                'value' => getuserstatus($this->userData['user_status'])
             ];
 
-            if ($this->user_data['user_status'] == 3) {
+            if ($this->userData['user_status'] == 3) {
                 $this->info['core_field']['profile_user_reason'] = [
                     'title' => $locale['u056'],
-                    'value' => $this->user_data['suspend_reason']
+                    'value' => $this->userData['suspend_reason']
                 ];
             }
         }
 
         // IP
         //$this->info['core_field']['profile_user_ip'] = [];
-        if (iADMIN && checkrights('M')) {
+        if (iADMIN && checkrights("M")) {
             $this->info['core_field']['profile_user_ip'] = [
                 'title' => $locale['u049'],
-                'value' => $this->user_data['user_ip']
+                'value' => $this->userData['user_ip']
             ];
         }
 
         // Groups - need translating.
         $this->info['core_field']['profile_user_group']['title'] = $locale['u057'];
         $this->info['core_field']['profile_user_group']['value'] = '';
-        $user_groups = strpos($this->user_data['user_groups'], ".") == 0 ? substr($this->user_data['user_groups'], 1) : $this->user_data['user_groups'];
+        $user_groups = strpos($this->userData['user_groups'], ".") == 0 ? substr($this->userData['user_groups'], 1) : $this->userData['user_groups'];
         $user_groups = explode(".", $user_groups);
         $user_groups = array_filter($user_groups);
         $group_info = [];
@@ -580,39 +736,41 @@ class UserFields extends UserFieldsQuantum {
             $this->info['core_field']['profile_user_group']['value'] = $group_info; // is array
         }
 
-        if (iMEMBER && fusion_get_userdata('user_id') != $this->user_data['user_id']) {
+        $this->info = $this->info + $this->get_user_fields();
+
+        if (iMEMBER && fusion_get_userdata('user_id') != $this->userData['user_id']) {
 
             $this->info['buttons'] = [
                 'user_pm_title' => $locale['u043'],
-                'user_pm_link'  => BASEDIR."messages.php?msg_send=".$this->user_data['user_id']
+                'user_pm_link'  => BASEDIR."messages.php?msg_send=".$this->userData['user_id']
             ];
 
-            if (checkrights('M') && fusion_get_userdata('user_level') <= USER_LEVEL_ADMIN && $this->user_data['user_id'] != '1') {
+            if (checkrights('M') && fusion_get_userdata('user_level') <= USER_LEVEL_ADMIN && $this->userData['user_id'] != '1') {
                 $groups_cache = cache_groups();
                 $user_groups_opts = [];
                 $this->info['user_admin'] = [
                     'user_edit_title'     => $locale['u069'],
-                    'user_edit_link'      => ADMIN."members.php".$aidlink."&amp;ref=edit&amp;lookup=".$this->user_data['user_id'],
-                    'user_ban_title'      => $this->user_data['user_status'] == 1 ? $locale['u074'] : $locale['u070'],
-                    'user_ban_link'       => ADMIN."members.php".$aidlink."&amp;action=".($this->user_data['user_status'] == 1 ? 2 : 1)."&amp;lookup=".$this->user_data['user_id'],
+                    'user_edit_link'      => ADMIN."members.php".$aidlink."&amp;ref=edit&amp;lookup=".$this->userData['user_id'],
+                    'user_ban_title'      => $this->userData['user_status'] == 1 ? $locale['u074'] : $locale['u070'],
+                    'user_ban_link'       => ADMIN."members.php".$aidlink."&amp;action=".($this->userData['user_status'] == 1 ? 2 : 1)."&amp;lookup=".$this->userData['user_id'],
                     'user_suspend_title'  => $locale['u071'],
-                    'user_suspend_link'   => ADMIN."members.php".$aidlink."&amp;action=3&amp;lookup=".$this->user_data['user_id'],
+                    'user_suspend_link'   => ADMIN."members.php".$aidlink."&amp;action=3&amp;lookup=".$this->userData['user_id'],
                     'user_delete_title'   => $locale['u072'],
-                    'user_delete_link'    => ADMIN."members.php".$aidlink."&amp;ref=delete&amp;lookup=".$this->user_data['user_id'],
+                    'user_delete_link'    => ADMIN."members.php".$aidlink."&amp;ref=delete&amp;lookup=".$this->userData['user_id'],
                     'user_delete_onclick' => "onclick=\"return confirm('".$locale['u072']."');\"",
                     'user_susp_title'     => $locale['u054'],
-                    'user_susp_link'      => ADMIN."members.php".$aidlink."&amp;ref=log&amp;lookup=".$this->user_data['user_id']
+                    'user_susp_link'      => ADMIN."members.php".$aidlink."&amp;ref=log&amp;lookup=".$this->userData['user_id']
                 ];
                 if (count($groups_cache) > 0) {
                     foreach ($groups_cache as $group) {
-                        if (!preg_match("(^{$group['group_id']}|\.{$group['group_id']}\.|\.{$group['group_id']}$)", $this->user_data['user_groups'])) {
+                        if (!preg_match("(^{$group['group_id']}|\.{$group['group_id']}\.|\.{$group['group_id']}$)", $this->userData['user_groups'])) {
                             $user_groups_opts[$group['group_id']] = $group['group_name'];
                         }
                     }
                     if (iADMIN && checkrights("UG") && !empty($user_groups_opts)) {
-                        $submit_link = BASEDIR."profile.php?lookup=".$this->user_data['user_id'];
+                        $submit_link = BASEDIR."profile.php?lookup=".$this->userData['user_id'];
                         if (defined('ADMIN_PANEL') && isset($_GET['step']) && $_GET['step'] == "view") {
-                            $submit_link = ADMIN."members.php".$aidlink."&amp;step=view&amp;user_id=".$this->user_data['user_id']."&amp;lookup=".$this->user_data['user_id'];
+                            $submit_link = ADMIN."members.php".$aidlink."&amp;step=view&amp;user_id=".$this->userData['user_id']."&amp;lookup=".$this->userData['user_id'];
                         }
                         $this->info['group_admin']['ug_openform'] = openform("admin_grp_form", "post", $submit_link);
                         $this->info['group_admin']['ug_closeform'] = closeform();
@@ -623,22 +781,6 @@ class UserFields extends UserFieldsQuantum {
                 }
             }
         }
-
-        // Now, we need to list the user profile profile.
-        $class = new Public_Profile();
-        $class->user_data = $this->user_data;
-        $class->post_name = $this->post_name;
-        $class->options = $this->options;
-        $class->registration = $this->registration;
-        $class->display_validation = $this->display_validation;
-        $class->display_terms = $this->display_terms;
-        $class->plugin_folder = $this->plugin_folder;
-        $class->plugin_locale_folder = $this->plugin_locale_folder;
-        $class->inline_field = $this->inline_field;
-        $class->method = $this->method;
-        $output_info = $class->get_output_info();
-
-        $this->info = array_merge($this->info, $output_info);
 
         // Display Template
         echo display_user_profile($this->info);
@@ -657,8 +799,9 @@ class UserFields extends UserFieldsQuantum {
             $html .= "<td>".(!empty($list[$user_id][$column]) ? $list[$user_id][$column] : "-")."</td>\n";
         }
 
-        return (string)$html;
+        return $html;
     }
+
 
     /**
      * Get User Data of the current page.
@@ -670,7 +813,7 @@ class UserFields extends UserFieldsQuantum {
     public function getUserData($key = NULL) {
         static $userData = [];
         if (empty($userData)) {
-            $userData = $this->user_data;
+            $userData = $this->userData;
         }
 
         return $key === NULL ? $userData : (isset($userData[$key]) ? $userData[$key] : NULL);
