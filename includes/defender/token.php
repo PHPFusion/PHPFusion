@@ -74,15 +74,17 @@ class Token extends \defender {
             }
 
             $tokens_consumed = '';
-            if (!empty($_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']])) {
-                $token_rings = $_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']];
-                if (!empty($token_rings)) {
-                    foreach ($token_rings as $key => $token_storage) {
-                        if ($token_storage == $_POST['fusion_token']) {
-                            $tokens_consumed = $_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']][$key];
-                            // addNotice('warning', "Token $tokens_consumed has been consumed", 'all');
-                            unset($tokens_consumed);
-                            break;
+            if (isset($_POST['form_id'])) {
+                if (!empty($_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']])) {
+                    $token_rings = $_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']];
+                    if (!empty($token_rings)) {
+                        foreach ($token_rings as $key => $token_storage) {
+                            if ($token_storage == $_POST['fusion_token']) {
+                                $tokens_consumed = $_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']][$key];
+                                // addNotice('warning', "Token $tokens_consumed has been consumed", 'all');
+                                unset($tokens_consumed);
+                                break;
+                            }
                         }
                     }
                 }
@@ -91,13 +93,15 @@ class Token extends \defender {
             if (self::$debug) {
                 require_once INCLUDES."theme_functions_include.php";
                 define('STOP_REDIRECT', TRUE);
-                $token_ring = $_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']];
-                $html = openmodal('debug_modal', 'Debug Token');
-                $html .= alert("<strong>The Form ID Submitted is '".stripinput($_POST['form_id'])."' having the following tokens: </strong><ul class='block'><li>".implode("</li><li>", $token_ring)."</li></ul>\n", ['class' => 'alert-danger']);
-                $html .= alert("Token posted now is ".stripinput($_POST['fusion_token']).(!empty($tokens_consumed) ? " and has been consumed" : ''), ['class' => 'alert-warning']);
-                $html .= modalfooter("<a class='btn btn-default' href='".FUSION_REQUEST."'>Click to Reload Page</a>");
-                $html .= closemodal();
-                add_to_footer($html);
+                if (isset($_POST['form_id'])) {
+                    $token_ring = $_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']];
+                    $html = openmodal('debug_modal', 'Debug Token');
+                    $html .= alert("<strong>The Form ID Submitted is '".stripinput($_POST['form_id'])."' having the following tokens: </strong><ul class='block'><li>".implode("</li><li>", $token_ring)."</li></ul>\n", ['class' => 'alert-danger']);
+                    $html .= alert("Token posted now is ".stripinput($_POST['fusion_token']).($tokens_consumed ? " and has been consumed" : ''), ['class' => 'alert-warning']);
+                    $html .= modalfooter("<a class='btn btn-default' href='".FUSION_REQUEST."'>Click to Reload Page</a>");
+                    $html .= closemodal();
+                    add_to_footer($html);
+                }
             }
         }
 
@@ -187,11 +191,12 @@ class Token extends \defender {
                 array_shift($_SESSION['csrf_tokens'][self::pageHash($file)][$form_id]);
             }
         } else {
-            $page_url = self::pageHash($file);
-            $ring = array_rand($_SESSION['csrf_tokens'][$page_url][$form_id], 1);
-            $token = $_SESSION['csrf_tokens'][$page_url][$form_id][$ring];
-        }
 
+            $token_ring = $_SESSION['csrf_tokens'][self::pageHash($file)][$form_id];
+            $ring = array_rand($token_ring, 1);
+            $token = $token_ring[$ring];
+        }
+        //print_P($_SESSION['csrf_tokens']);
         // Debugging section
         if (self::$debug) {
             if (!self::safe()) {
