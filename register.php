@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once __DIR__.'/maincore.php';
+require_once dirname(__FILE__).'/maincore.php';
 require_once THEMES."templates/header.php";
 $locale = fusion_get_locale("", LOCALE.LOCALESET."user_fields.php");
 require_once THEMES."templates/global/profile.php";
@@ -69,34 +69,33 @@ if ((isset($_SESSION["validated"]) && $_SESSION["validated"] == "True") || fusio
             redirect(fusion_get_settings('opening_page'));
         }
 
+    } else if (isset($_POST['register'])) {
+        $userInput = new PHPFusion\UserFieldsInput();
+        $userInput->validation = $settings['display_validation'];
+        $userInput->emailVerification = $settings['email_verification'];
+        $userInput->adminActivation = $settings['admin_activation'];
+        $userInput->skipCurrentPass = TRUE;
+        $userInput->registration = TRUE;
+        $insert = $userInput->saveInsert();
+
+        if ($insert && \defender::safe()) {
+            redirect(fusion_get_settings('opening_page'));
+        }
+        unset($userInput);
     }
 
     if (!isset($_GET['email']) && !isset($_GET['code'])) {
-
-        $userInput = new PHPFusion\UserFieldsInput();
-        $userInput->validation = $settings['display_validation'];
-        $userInput->email_verification = $settings['email_verification'];
-        $userInput->admin_activation = $settings['admin_activation'];
-        $userInput->hide_user_email = TRUE; // make settings for this.
-        $userInput->skip_password = TRUE;
-        $userInput->registration = TRUE;
-        $userInput->post_name = 'register';
-        $userInput->redirect_uri = BASEDIR.$settings['opening_page'];
-        $userInput->saveInsert();
-
         $userFields = new PHPFusion\UserFields();
-        $userFields->post_name = "register";
-        $userFields->post_value = $locale['u101'];
-        $userFields->display_validation = $settings['display_validation'];
-        $userFields->display_terms = $settings['enable_terms'];
+        $userFields->postName = "register";
+        $userFields->postValue = $locale['u101'];
+        $userFields->displayValidation = $settings['display_validation'];
+        $userFields->displayTerms = $settings['enable_terms'];
         $userFields->plugin_folder = [INCLUDES."user_fields/", INFUSIONS];
         $userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
-        $userFields->show_admin_password = FALSE;
-        $userFields->skip_password = TRUE;
+        $userFields->showAdminPass = FALSE;
+        $userFields->skipCurrentPass = TRUE;
         $userFields->registration = TRUE;
-        $userFields->is_admin_panel = FALSE;
-        $userFields->inline_field = FALSE;
-        echo $userFields->display_input();
+        $userFields->display_profile_input();
     }
 }
 
