@@ -387,7 +387,7 @@ class UserFieldsInput {
      * Handle User Name Input and Validation
      */
     private function update_user_name() {
-        if ($this->userNameChange) {
+        if ($this->user_name_change) {
             $new_username = $this->validate_user_name();
             if (\defender::safe()) {
                 dbquery("UPDATE `".DB_USERS."` SET `user_name`=:u_name WHERE `user_id`=:uid", [
