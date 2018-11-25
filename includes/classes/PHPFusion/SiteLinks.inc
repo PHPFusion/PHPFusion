@@ -215,7 +215,7 @@ class SiteLinks {
             }
 
             if (empty($options['grouping'])) {
-                $options['grouping'] = $settings['link_grouping'];
+                $options['grouping'] = $settings['links_grouping'];
             }
 
             if (empty($options['callback_data'])) {
@@ -498,7 +498,7 @@ class SiteLinks {
                             "append_form_value"  => $locale['search'],
                             "append_value"       => "<i class='".$options['search_icon']."'></i> ".$locale['search'],
                             "append_button_name" => "search",
-                            "append_class"       => $options['search_btn_class'],
+                            "append_class"       => $options['searchbar_btn_class'],
                             'class'              => 'm-0',
                         ]
                     ).closeform()
