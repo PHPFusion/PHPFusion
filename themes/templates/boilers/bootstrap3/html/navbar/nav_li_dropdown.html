@@ -1,7 +1,5 @@
 {nav_li_dropdown.{
-<li class="dropdown">
-    <a href="{%link%}" data-toggle="dropdown" title="{%title%}">{%content%}<span class="{%caret_class%}"></span></a>
-    <ul class="dropdown-menu{%dropdown_menu_class%}" role="menu">
-        {%item%}
-    </ul>
-</li>}}
+<li {%li_class%}><a href="{%link%}"{%link_target%} {%link_class%} data-toggle="dropdown" {%submenu%} {%tab_index%}>{%content%}<span class="{%caret_class%}"></span></a><ul id="{%dropdown_menu_id%}" class="dropdown-menu{%dropdown_menu_class%}" role="menu">{%first_item_link%}{%item%}</ul></li>
+}}
+
+

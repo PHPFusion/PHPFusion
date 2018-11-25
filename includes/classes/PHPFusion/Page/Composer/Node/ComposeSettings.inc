@@ -40,7 +40,7 @@ class ComposeSettings extends PageAdmin {
                     <div class="panel-body">
                         <?php
 
-                        $has_link = (!empty(self::$data['page_link_cat']) && SiteLinks::verify_sitelinks(self::$data['page_link_cat'])) ? TRUE : FALSE;
+                        $has_link = (!empty(self::$data['page_link_cat']) && SiteLinks::verify_SiteLinks(self::$data['page_link_cat'])) ? TRUE : FALSE;
 
                         if ($has_link === FALSE and !isset($_GET['add_sl'])) : ?>
                             <div class="well text-center">
