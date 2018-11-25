@@ -130,16 +130,16 @@ class Members_Profile extends Members_Admin {
     public static function display_user_profile() {
         $settings = fusion_get_settings();
         $userFields = new UserFields();
-        $userFields->postName = "register";
-        $userFields->postValue = self::$locale['u101'];
-        $userFields->displayValidation = $settings['display_validation'];
-        $userFields->displayTerms = $settings['enable_terms'];
+        $userFields->post_name = "register";
+        $userFields->post_value = self::$locale['u101'];
+        $userFields->display_validation = $settings['display_validation'];
+        $userFields->display_terms = $settings['enable_terms'];
         $userFields->plugin_folder = [INCLUDES."user_fields/", INFUSIONS];
         $userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
-        $userFields->showAdminPass = FALSE;
-        $userFields->skipCurrentPass = TRUE;
+        $userFields->show_admin_password = FALSE;
+        $userFields->skip_password = TRUE;
         $userFields->registration = FALSE;
-        $userFields->userData = self::$user_data;
+        $userFields->user_data = self::$user_data;
         $userFields->method = 'display';
         $userFields->display_profile_output();
     }
