@@ -120,17 +120,26 @@ class MemberPoll {
     public function _selectPoll() {
         $result = dbquery("SELECT poll_id, poll_title, poll_opt, poll_started, poll_ended, poll_visibility
             FROM ".DB_POLLS."
-            WHERE ".groupaccess('poll_visibility')."
-            ORDER BY poll_started DESC
+            WHERE poll_id=COALESCE(
+                (
+                    SELECT poll_id
+                    FROM ".DB_POLLS."
+                    WHERE ".groupaccess('poll_visibility')." AND poll_started < ".time()." AND (poll_ended=0 OR poll_ended > ".time().")
+                    ORDER BY poll_started DESC
+                    LIMIT 1
+                ),
+                (
+                    SELECT poll_id
+                    FROM ".DB_POLLS."
+                    WHERE ".groupaccess('poll_visibility')." AND poll_started < ".time()."
+                    ORDER BY poll_started DESC
+                    LIMIT 1
+                )
+            )
         ");
 
         if (dbrows($result)) {
-            $pdata = [];
-            while ($data = dbarray($result)) {
-                $pdata[] = $data;
-            }
-
-            return $pdata;
+            return dbarray($result);
         } else {
             return NULL;
         }
@@ -455,83 +464,70 @@ class MemberPoll {
     public function DisplayPoll() {
         $data = [];
 
-        if ($this->_selectPoll()) {
-            foreach ($this->_selectPoll() as $id => $dat) {
-                $poll_opt = unserialize($dat['poll_opt']);
-                $data[$id] = [
-                    'poll_id'         => $dat['poll_id'],
-                    'poll_started'    => $dat['poll_started'],
-                    'poll_ended'      => $dat['poll_ended'],
-                    'poll_visibility' => $dat['poll_visibility'],
-                ];
-
-                for ($i = 0; $i < count($poll_opt); $i++) {
-                    $data[$id]['poll_title'] = unserialize($dat['poll_title']);
-                    $data[$id]['poll_option'][$i] = !empty($poll_opt[$i][LANGUAGE]) ? $poll_opt[$i][LANGUAGE] : "";
-                }
-            }
+        $res = $this->_selectPoll();
+        if (!$res) {
+            return;
         }
 
-        $info['vote'] = dbcount("(poll_id)", DB_POLLS, groupaccess('poll_visibility'));
-        $info_f = [];
-        $info_t = [];
+        $poll_title = unserialize($res['poll_title']);
+        $poll_opt = unserialize($res['poll_opt']);
+        $data = [
+            'poll_id'         => $res['poll_id'],
+            'poll_title'      => !empty($poll_title[LANGUAGE]) ? $poll_title[LANGUAGE] : "",
+            'poll_started'    => $res['poll_started'],
+            'poll_ended'      => $res['poll_ended'],
+            'poll_visibility' => $res['poll_visibility'],
+        ];
+
+        for ($i = 0; $i < count($poll_opt); $i++) {
+            $data['poll_option'][$i] = !empty($poll_opt[$i][LANGUAGE]) ? $poll_opt[$i][LANGUAGE] : "";
+        }
+
         $render = [];
 
         if (!empty($data)) {
-            $i = 0;
-            $ii = 0;
-            foreach ($data as $key => $dat) {
-                $data_user = checkgroup($dat['poll_visibility']) && !empty($dat['poll_title'][LANGUAGE]) ? $this->_selectVote(fusion_get_userdata((iMEMBER ? 'user_id' : 'user_ip')), $dat['poll_id']) : TRUE;
+            $data_user = checkgroup($data['poll_visibility']) && !empty($data['poll_title']) && ($data['poll_ended'] == 0 || $data['poll_ended'] > time()) ? $this->_selectVote(fusion_get_userdata((iMEMBER ? 'user_id' : 'user_ip')), $data['poll_id']) : TRUE;
 
-                if ($data_user == FALSE) {
-                    if ($i == 0) {
-                        $info_f['poll_table'][$key]['max_vote'] = $this->_countVote("poll_id='".$dat['poll_id']."'");
-                        $info_f['poll_table'][$key]['poll_title'] = $dat['poll_title'][LANGUAGE];
+            if ($data_user == FALSE) {
+                $render['poll_table'][0]['max_vote'] = $this->_countVote("poll_id='".$data['poll_id']."'");
+                $render['poll_table'][0]['poll_title'] = $data['poll_title'];
 
-                        $form_action = clean_request();
+                $form_action = clean_request();
 
-                        $info_f['poll_table'][$key]['poll_option'][] = openform('voteform', 'post', $form_action, ['enctype' => TRUE]);
-                        $info_f['poll_table'][$key]['poll_option'][] = form_hidden('poll_id', '', $dat['poll_id']);
+                $render['poll_table'][0]['poll_option'][] = openform('voteform', 'post', $form_action, ['enctype' => TRUE]);
+                $render['poll_table'][0]['poll_option'][] = form_hidden('poll_id', '', $data['poll_id']);
 
-                        foreach ($dat['poll_option'] as $im1 => $data1) {
-                            $info_f['poll_table'][$key]['poll_option'][] = form_checkbox('check', $data1, '-1', ['reverse_label' => TRUE, 'type' => 'radio', 'value' => $im1, 'input_id' => 'check-'.$im1]);
-                        }
-
-                        $info_f['poll_table'][$key]['poll_foot'][] = form_button("cast_vote", self::$locale['POLL_020'], self::$locale['POLL_020'], ['class' => 'btn-primary']);
-                        $info_f['poll_table'][$key]['poll_foot'][] = closeform();
-                        $i++;
-                    }
-                } else {
-                    if ($ii == 0) {
-                        if (!empty($dat['poll_title'][LANGUAGE]) && $dat['poll_started'] < time()) {
-                            $info_t['poll_table'][$key]['max_vote'] = $this->_countVote("poll_id='".$dat['poll_id']."'");
-                            $info_t['poll_table'][$key]['poll_title'] = $dat['poll_title'][LANGUAGE];
-
-                            foreach ($dat['poll_option'] as $im1 => $data1) {
-                                $num_votes = $this->_countVote("vote_opt='".$im1."' AND poll_id='".$dat['poll_id']."'");
-                                $opt_votes = ($num_votes ? number_format(($num_votes / $info_t['poll_table'][$key]['max_vote']) * 100, 0) : number_format(0 * 100, 0));
-                                $info_t['poll_table'][$key]['poll_option'][] = progress_bar($opt_votes, $data1, FALSE, FALSE, FALSE, TRUE, FALSE);
-                                $info_t['poll_table'][$key]['poll_option'][] = $opt_votes."% [".format_word($num_votes, self::$locale['POLL_040'])."]";
-                            }
-
-                            $info_t['poll_table'][$key]['poll_foot'][] = self::$locale['POLL_060']." ".$info_t['poll_table'][$key]['max_vote'];
-                            $info_t['poll_table'][$key]['poll_foot'][] = self::$locale['POLL_048']." ".showdate("shortdate", $dat['poll_started']);
-
-                            if ($dat['poll_started'] < time() && (!empty($dat['poll_ended']) && ($dat['poll_ended'] < time()))) {
-                                $info_t['poll_table'][$key]['poll_foot'][] = self::$locale['POLL_049'].": ".showdate("shortdate", $dat['poll_ended']);
-                            }
-
-                            $ii++;
-                        }
-                    }
+                foreach ($data['poll_option'] as $im1 => $data1) {
+                    $render['poll_table'][0]['poll_option'][] = form_checkbox('check', $data1, '-1', ['reverse_label' => TRUE, 'type' => 'radio', 'value' => $im1, 'input_id' => 'check-'.$im1]);
                 }
 
-                $render = empty($info_f) ? $info_t : $info_f;
-                $render['poll_tablename'] = self::$locale['POLL_001'];
+                $render['poll_table'][0]['poll_foot'][] = form_button("cast_vote", self::$locale['POLL_020'], self::$locale['POLL_020'], ['class' => 'btn-primary']);
+                $render['poll_table'][0]['poll_foot'][] = closeform();
+            } else {
+                if (!empty($data['poll_title']) && $data['poll_started'] < time()) {
+                    $render['poll_table'][0]['max_vote'] = $this->_countVote("poll_id='".$data['poll_id']."'");
+                    $render['poll_table'][0]['poll_title'] = $data['poll_title'];
 
-                if ($info['vote'] > 1) {
-                    $render['poll_arch'] = "<a class='btn btn-default btn-sm' href='".INFUSIONS."member_poll_panel/polls_archive.php'>".self::$locale['POLL_063']."</a>";
+                    foreach ($data['poll_option'] as $im1 => $data1) {
+                        $num_votes = $this->_countVote("vote_opt='".$im1."' AND poll_id='".$data['poll_id']."'");
+                        $opt_votes = ($num_votes ? number_format(($num_votes / $render['poll_table'][0]['max_vote']) * 100, 0) : number_format(0 * 100, 0));
+                        $render['poll_table'][0]['poll_option'][] = progress_bar($opt_votes, $data1, FALSE, FALSE, FALSE, TRUE, FALSE);
+                        $render['poll_table'][0]['poll_option'][] = $opt_votes."% [".format_word($num_votes, self::$locale['POLL_040'])."]";
+                    }
+
+                    $render['poll_table'][0]['poll_foot'][] = self::$locale['POLL_060']." ".$render['poll_table'][0]['max_vote'];
+                    $render['poll_table'][0]['poll_foot'][] = self::$locale['POLL_048']." ".showdate("shortdate", $data['poll_started']);
+
+                    if ($data['poll_started'] < time() && (!empty($data['poll_ended']) && ($data['poll_ended'] < time()))) {
+                        $render['poll_table'][0]['poll_foot'][] = self::$locale['POLL_049'].": ".showdate("shortdate", $data['poll_ended']);
+                    }
                 }
+            }
+
+            $render['poll_tablename'] = self::$locale['POLL_001'];
+
+            if (dbcount("(poll_id)", DB_POLLS, groupaccess('poll_visibility')) > 1) {
+                $render['poll_arch'] = "<a class='btn btn-default btn-sm' href='".INFUSIONS."member_poll_panel/polls_archive.php'>".self::$locale['POLL_063']."</a>";
             }
 
             render_poll($render);
