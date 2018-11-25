@@ -168,8 +168,7 @@ class AdminPanel {
 
         OutputHandler::addToJQuery('$("#search_box").bind("keyup", function () {
             var data = {
-                "pagestring": $(this).val(),
-                "url": "'.$_SERVER['REQUEST_URI'].'"
+                "pagestring": $(this).val()
             };
             $.ajax({
                 url: "'.MDT.'acp_search.php'.fusion_get_aidlink().'",
