@@ -170,6 +170,37 @@ function showprivacypolicy() {
 
     return $html;
 }
+// Get the widget settings for the theme settings table
+if (!function_exists('get_theme_settings')) {
+    function get_theme_settings($theme_folder) {
+        $settings_arr = [];
+        $set_result = dbquery("SELECT settings_name, settings_value FROM ".DB_SETTINGS_THEME." WHERE settings_theme=:themeset", [':themeset' => $theme_folder]);
+        if (dbrows($set_result)) {
+            while ($set_data = dbarray($set_result)) {
+                $settings_arr[$set_data['settings_name']] = $set_data['settings_value'];
+            }
+
+            return $settings_arr;
+        } else {
+            return FALSE;
+        }
+    }
+}
+/**
+ * Java script that transform html table sortable
+ *
+ * @param $table_id - table ID
+ *
+ * @return string
+ */
+function fusion_sort_table($table_id) {
+    add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/tablesorter/jquery.tablesorter.min.js'></script>\n");
+    add_to_jquery("
+    $('#".$table_id."').tablesorter();
+    ");
+
+    return "tablesorter";
+}
 
 /**
  * Creates an alert bar
@@ -196,57 +227,62 @@ if (!function_exists("alert")) {
     }
 }
 
-// Get the widget settings for the theme settings table
-if (!function_exists('get_theme_settings')) {
-    function get_theme_settings($theme_folder) {
-        $settings_arr = [];
-        $set_result = dbquery("SELECT settings_name, settings_value FROM ".DB_SETTINGS_THEME." WHERE settings_theme=:themeset", [':themeset' => $theme_folder]);
-        if (dbrows($set_result)) {
-            while ($set_data = dbarray($set_result)) {
-                $settings_arr[$set_data['settings_name']] = $set_data['settings_value'];
-            }
-
-            return $settings_arr;
-        } else {
-            return FALSE;
-        }
-    }
-}
-
-/**
- * Java script that transform html table sortable
- *
- * @param $table_id - table ID
- *
- * @return string
- */
-function fusion_sort_table($table_id) {
-    add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/tablesorter/jquery.tablesorter.min.js'></script>\n");
-    add_to_jquery("
-    $('#".$table_id."').tablesorter();
-    ");
-
-    return "tablesorter";
-}
-
 if (!function_exists("label")) {
+    /**
+     * Function to make label
+     *
+     * @param       $label
+     * @param array $options
+     *
+     * @return string
+     */
     function label($label, array $options = []) {
-        $options += [
-            "class" => !empty($array['class']) ? $array['class'] : "",
-            "icon"  => !empty($array['icon']) ? "<i class='".$array['icon']."'></i> " : "",
+        $default_options = [
+            "class" => "",
+            "icon"  => "",
         ];
+        $options += $default_options;
+        if (!empty($options['icon'])) {
+            $options['icon'] = '<i class="'.$options['icon'].'"></i>';
+        }
+        $label_template = THEMES.'templates/boilers/bootstrap3/html/label.html';
+        $label_tpl = \PHPFusion\Template::getInstance('label');
+        $label_tpl->set_template($label_template);
+        $label_tpl->set_tag('class', " ".$options['class']);
+        $label_tpl->set_tag('label', $label);
+        $label_tpl->set_tag('icon', $options['icon']);
 
-        return "<span class='label ".$options['class']."'>".$options['icon'].$label."</span>\n";
+        return (string)$label_tpl->get_output();
     }
 }
 if (!function_exists("badge")) {
+    /**
+     * Function to make badge.
+     *
+     * @param       $label
+     * @param array $options
+     * class
+     * icon
+     *
+     * @return string
+     */
     function badge($label, array $options = []) {
-        $options += [
-            "class" => !empty($array['class']) ? $array['class'] : "",
-            "icon"  => !empty($array['icon']) ? "<i class='".$array['icon']."'></i> " : "",
+        $default_options = [
+            "class" => "",
+            "icon"  => "",
         ];
+        $options += $default_options;
+        if (!empty($options['icon'])) {
+            $options['icon'] = '<i class="'.$options['icon'].'"></i>';
+        }
+        $badge_template = THEMES.'templates/boilers/bootstrap3/html/badge.html';
+        $badge = \PHPFusion\Template::getInstance('badge');
+        $badge->set_template($badge_template);
+        $badge->set_tag('class', " ".$options['class']);
+        $badge->set_tag('label', $label);
+        $badge->set_tag('icon', $options['icon']);
 
-        return "<span class='badge ".$options['class']."'>".$options['icon'].$label."</span>\n";
+        return (string)$badge->get_output();
     }
 }
 if (!function_exists("openmodal") && !function_exists("closemodal") && !function_exists("modalfooter")) {
@@ -261,23 +297,23 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
     /**
      * Generate modal
      *
-     * @param       $id - unique CSS id
+     * @param       $id    - unique CSS id
      * @param       $title - modal title
      * @param array $options
      *
      * @return string
      */
     function openmodal($id, $title, $options = []) {
-        $locale = fusion_get_locale();
-        $options += [
-            'class'        => !empty($options['class']) ?: 'modal-lg',
-            'button_id'    => '',
-            'button_class' => '',
-            'static'       => FALSE,
-            'hidden'       => FALSE,  // force a modal to be hidden at default, you will need a jquery trigger $('#your_modal_id').modal('show'); manually
+        $default_options = [
+            "class"        => "",
+            "button_id"    => "",
+            "button_class" => "btn-default",
+            "static"       => FALSE,
+            "hidden"       => FALSE,
         ];
 
-        $modal_trigger = '';
+        $options += $default_options;
+        $modal_trigger = "";
         if (!empty($options['button_id']) || !empty($options['button_class'])) {
             $modal_trigger = !empty($options['button_id']) ? "#".$options['button_id'] : ".".$options['button_class'];
         }
@@ -289,23 +325,31 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
         } else if ($modal_trigger && empty($options['static'])) {
             OutputHandler::addToJQuery("$('".$modal_trigger."').bind('click', function(e){ $('#".$id."-Modal').modal('show'); e.preventDefault(); });");
         } else {
-            if (!$options['hidden']) {
+            if (empty($options['hidden'])) {
                 OutputHandler::addToJQuery("$('#".$id."-Modal').modal('show');");
             }
         }
-        $html = '';
-        $html .= "<div class='modal' id='$id-Modal' tabindex='-1' role='dialog' aria-labelledby='$id-ModalLabel' aria-hidden='true'>\n";
-        $html .= "<div class='modal-dialog ".$options['class']."' role='document'>\n";
-        $html .= "<div class='modal-content'>\n";
-        if ($title) {
-            $html .= "<div class='modal-header'>";
-            $html .= ($options['static'] ? '' : "<button type='button' class='btn pull-right btn-default' data-dismiss='modal'><i class='fa fa-times'></i> ".$locale['close']."</button>\n");
-            $html .= "<div class='modal-title' id='$id-title'>$title</div>\n";
-            $html .= "</div>\n";
+        $modal_template = THEMES.'templates/boilers/bootstrap3/html/modal.html';
+        $modal = \PHPFusion\Template::getInstance('modal');
+        $modal->set_locale(['close'=>fusion_get_locale('close')]);
+        $modal->set_template($modal_template);
+        $modal->set_block("modal_open", [
+            'modal_id'    => $id,
+            'modal_class' => " ".$options['class']
+        ]);
+        if (!empty($title) || $options['static'] === FALSE) {
+            $modal->set_block("modal_open_header");
+            $modal->set_block("modal_close_header");
+            if (!empty($title)) {
+                $modal->set_block("modal_header", ["title"=>$title]);
+            }
+            if ($options['static'] === FALSE) {
+                $modal->set_block("modal_dismiss");
+            }
         }
-        $html .= "<div class='modal-body'>\n";
+        $modal->set_block("modal_openbody");
 
-        return $html;
+        return (string)$modal->get_output();
     }
 
     /**
@@ -316,14 +360,22 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
      *
      * @return string
      */
-    function modalfooter($content, $dismiss = FALSE) {
-        $html = "</div>\n<div class='modal-footer'>\n";
-        $html .= $content;
-        if ($dismiss) {
-            $html .= "<button type='button' class='btn btn-default pull-right' data-dismiss='modal'>".fusion_get_locale('close')."</button>";
-        }
+    function modalfooter($content = "", $dismiss = FALSE) {
+        $modal_template = THEMES.'templates/boilers/bootstrap3/html/modal.html';
+        $modal = \PHPFusion\Template::getInstance('modal');
+        $modal->set_template($modal_template);
+        $modal->set_block("modal_closebody");
+        $modal->set_block("modal_footer", [
+            "content" => $content,
+            "dismiss" => ($dismiss === TRUE ? form_button("dismiss-f", fusion_get_locale("close"), fusion_get_locale("close"), [
+                "data"  => [
+                    "dismiss" => "modal",
+                ],
+                "class" => "btn-default pull-right",
+            ]) : "")
+        ]);
 
-        return $html;
+        return (string)$modal->get_output();
     }
 
     /**
@@ -332,7 +384,12 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
      * @return string
      */
     function closemodal() {
-        return "</div>\n</div>\n</div>\n</div>\n";
+        $modal_template = THEMES.'templates/boilers/bootstrap3/html/modal.html';
+        $modal = \PHPFusion\Template::getInstance('modal');
+        $modal->set_template($modal_template);
+        $modal->set_block("modal_close");
+
+        return (string)$modal->get_output();
     }
 }
 
