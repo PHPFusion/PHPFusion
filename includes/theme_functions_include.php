@@ -202,31 +202,34 @@ function fusion_sort_table($table_id) {
     return "tablesorter";
 }
 
+
 /**
  * Creates an alert bar
  *
  * @param        $title
+ * @param string $text
  * @param array  $options
  *
  * @return string
  */
 if (!function_exists("alert")) {
     function alert($title, array $options = []) {
+        $default_alert_tpl = THEMES.'templates/boilers/boostrap3/html/alert.html';
+        add_to_jquery("$('div.alert a').addClass('alert-link');");
+        $alert_tpl = \PHPFusion\Template::getInstance('alert');
+        $alert_tpl->set_template($default_alert_tpl);
         $options += [
             "class"   => !empty($options['class']) ? $options['class'] : 'alert-danger',
             "dismiss" => !empty($options['dismiss']) && $options['dismiss'] == TRUE ? TRUE : FALSE
         ];
-        if ($options['dismiss'] == TRUE) {
-            $html = "<div class='alert alert-dismissable ".$options['class']."'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>$title</div>";
-        } else {
-            $html = "<div class='alert ".$options['class']."'>$title</div>";
-        }
-        add_to_jquery("$('div.alert a').addClass('alert-link');");
+        $alert_tpl->set_block($options['dismiss'] === TRUE ? "dismissable_alert" : "alert", [
+            'class'   => $options['class'],
+            'content' => $title,
+        ]);
 
-        return $html;
+        return (string)$alert_tpl->get_output();
     }
 }
-
 if (!function_exists("label")) {
     /**
      * Function to make label
