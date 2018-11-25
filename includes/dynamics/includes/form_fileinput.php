@@ -35,49 +35,57 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
     $template_choices = ['classic', 'modern', 'thumbnail'];
 
     $default_options = [
-        'input_id'          => $input_name,
-        'upload_path'       => IMAGES,
-        'required'          => FALSE,
-        'safemode'          => FALSE,
-        'deactivate'        => FALSE,
-        'preview_off'       => FALSE,
-        'type'              => 'image', //// ['image', 'html', 'text', 'video', 'audio', 'flash', 'object']
-        'width'             => '100%',
-        'label'             => $locale['browse'],
-        'inline'            => TRUE,
-        'class'             => "",
-        'tip'               => "",
-        'ext_tip'           => "",
-        'error_text'        => $locale['error_input_file'],
-        'btn_class'         => 'btn-default',
-        'icon'              => 'fa fa-upload',
-        'jsonurl'           => FALSE,
-        'dropzone'          => FALSE,
-        'valid_ext'         => '.jpg,.png,.PNG,.JPG,.JPEG,.gif,.GIF,.bmp,.BMP',
-        'thumbnail'         => FALSE,
-        'thumbnail_w'       => 300,
-        'thumbnail_h'       => 300,
-        'thumbnail_folder'  => "",
-        'thumbnail_ratio'   => 0,
-        'thumbnail_suffix'  => '_t1',
-        'thumbnail2'        => FALSE,
-        'thumbnail2_w'      => 600,
-        'thumbnail2_h'      => 400,
-        'thumbnail2_suffix' => '_t2',
-        'thumbnail2_ratio'  => 0,
-        'delete_original'   => FALSE,
-        'max_width'         => 1800,
-        'max_height'        => 1600,
-        'max_byte'          => 1500000,
-        'max_count'         => 1,
-        'multiple'          => FALSE,
-        'template'          => 'classic',
-        'media'             => FALSE,
-        'placeholder'       => '',
-        'form_id'           => '',
-        'hide_upload'       => TRUE,
-        'hide_remove'       => FALSE,
-        'replace_upload'    => FALSE, // makes upload unique (i.e. overwrite instead of creating new)
+        'input_id'             => $input_name,
+        'upload_path'          => IMAGES,
+        'required'             => FALSE,
+        'safemode'             => FALSE,
+        'deactivate'           => FALSE,
+        'preview_off'          => FALSE,
+        'type'                 => 'image', //// ['image', 'html', 'text', 'video', 'audio', 'flash', 'object']
+        'width'                => '100%',
+        'label'                => $locale['browse'],
+        'inline'               => TRUE,
+        'class'                => "",
+        'tip'                  => "",
+        'ext_tip'              => "",
+        'error_text'           => $locale['error_input_file'],
+        'btn_class'            => 'btn-default',
+        'icon'                 => 'fa fa-upload',
+        'jsonurl'              => FALSE,
+        'dropzone'             => FALSE,
+        'valid_ext'            => '.jpg,.png,.PNG,.JPG,.JPEG,.gif,.GIF,.bmp,.BMP',
+        'thumbnail'            => FALSE,
+        'thumbnail_w'          => 300,
+        'thumbnail_h'          => 300,
+        'thumbnail_folder'     => "",
+        'thumbnail_ratio'      => 0,
+        'thumbnail_suffix'     => '_t1',
+        'thumbnail2'           => FALSE,
+        'thumbnail2_w'         => 600,
+        'thumbnail2_h'         => 400,
+        'thumbnail2_suffix'    => '_t2',
+        'thumbnail2_ratio'     => 0,
+        'delete_original'      => FALSE,
+        'max_width'            => 1800,
+        'max_height'           => 1600,
+        'max_byte'             => 1500000,
+        'max_count'            => 1,
+        'multiple'             => FALSE,
+        'template'             => 'classic',
+        'media'                => FALSE,
+        'placeholder'          => '',
+        'form_id'              => '',
+        'hide_upload'          => TRUE,
+        'hide_remove'          => FALSE,
+        'replace_upload'       => FALSE, // makes upload unique (i.e. overwrite instead of creating new)
+        // When croppie is used the main image will crop and the thumbnail will still be used on the same scale as usual.
+        "croppie"              => FALSE,
+        "croppie_resize"       => FALSE,
+        "croppie_zoom"         => FALSE,
+        "croppie_width"  => 200, // 200px default
+        "croppie_height" => 200,
+        "croppie_box_width"       => 300, // 300 px default
+        "croppie_box_height"      => 300,
     ];
 
     $options += $default_options;
@@ -164,6 +172,108 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
     </label>\n" : '';
     $html .= ($options['inline']) ? "<div class='col-xs-12 ".($label ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12")."'>\n" : "";
     $html .= "<input type='file' ".($format ? "accept='".$format."'" : '')." name='".$input_name."' id='".$options['input_id']."' style='width:".$options['width']."' ".($options['deactivate'] ? 'readonly' : '')." ".($options['multiple'] ? "multiple='1'" : '')." />\n";
+
+    // Croppie does not support multiple uploads (use case)
+    if ($options['croppie'] === TRUE && $options['multiple'] === FALSE) {
+        if (!defined("CROPPIE_JS")) {
+            add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/croppie/croppie.css'/>");
+            add_to_footer("<script src='".INCLUDES."jquery/croppie/exif.js'></script>");
+            add_to_footer("<script src='".INCLUDES."jquery/croppie/croppie.js'></script>");
+            define("CROPPIE_JS", true);
+        }
+        $html .= "<div id='".$options['input_id']."-croppie'></div>\n";
+
+        $html .= form_button("reset_upload_".$options['input_id'], "Change File", $options['input_id'], ['type'=>'button']);
+        $html .= form_hidden($options['input_id']."-crop-base64", "Crop Result", "");
+
+        //$html .= "<div id='".$options['input_id']."-croppie-result'></div>\n";
+        //$html .= form_button("upload_result_".$options['input_id'], "Confirm Selection", $options['input_id'], ['type'=>'button']);
+
+        add_to_jquery("
+        function runCroppie() {     
+            var uploadCrop = $('#".$options['input_id']."-croppie').croppie({
+                viewport: {
+                    width: ".$options['croppie_width'].",
+                    height: ".$options['croppie_height'].",
+                },
+                boundary: { 
+                    width: ".$options['croppie_box_width'].", 
+                    height: ".$options['croppie_box_height']." 
+                },
+                enableResize: ".($options['croppie_resize'] ? 'true' : 'false').",
+                enableZoom: ".($options['croppie_zoom'] ? 'true' : 'false').",
+                enableExif: true
+            }).hide();            
+            // hide the file change button by default
+            $('#reset_upload_".$options['input_id']."').hide();
+            // event for reading file            				
+		    function readFile(input) {
+ 			    if (input.files && input.files[0]) {
+                    var reader = new FileReader();	            
+                    reader.onload = function (e) {
+                        $('#".$options['input_id']."-croppie').addClass('ready');
+                        uploadCrop.croppie('bind', {
+                            url: e.target.result
+                        }).then(function(){
+                            console.log('jQuery bind complete');	            			            		
+                        });	            		            	
+                    }	            
+                    reader.readAsDataURL(input.files[0]);
+                    $('#".$options['input_id']."-field .file-input').hide();
+                    uploadCrop.show();
+                    $('#reset_upload_".$options['input_id']."').show();                    	            
+	            } else {
+		            swal(\"Sorry - you're browser doesn't support the FileReader API\");
+		        }
+		    }
+		    $('#reset_upload_".$options['input_id']."').bind('click', function(ev) {
+		        $(this).hide();
+		        uploadCrop.hide();
+		        $('#".$options['input_id']."').fileinput('clear');
+		        $('#".$options['input_id']."-field .file-input').show();		        
+		    });
+		
+            $('#".$options['input_id']."').on('change', function (e) { 
+                readFile(this);
+                
+            });		
+            uploadCrop.on('update.croppie', function(ev, imgProp) {		    
+                uploadCrop.croppie('result', {
+                    type: 'base64',
+                    size: 'viewport',
+                    resultSize: {
+                        width: ".$options['croppie_width'].",
+                        height: ".$options['croppie_height'].",
+                    }
+                }).then(function (resp) {
+                    // uncomment to debug                        
+                    //console.log(resp);
+                    //$('#".$options['input_id']."-croppie-result').html('<img src=\"'+ resp +'\"/>');
+                    $('#".$options['input_id']."-crop-base64').val(resp);                                        
+                });
+            });
+            
+            // This one is show preview - can be deleted
+            $('#upload_result_".$options['input_id']."').on('click', function (ev) {
+                // generate thumbnail.
+                uploadCrop.croppie('result', {
+                    type: 'base64',
+                    size: 'viewport',
+                    resultSize: {
+                        width: ".$options['croppie_width'].",
+                        height: ".$options['croppie_height'].",
+                    }
+                }).then(function (resp) {
+                    console.log(resp);
+                    $('#".$options['input_id']."-croppie-result').html('<img src=\"'+ resp +'\"/>');
+                    $('#".$options['input_id']."-crop-base64').val(resp);                                        
+                });
+            });		
+	    }   	
+	 runCroppie();
+    ");
+    }
+
     $html .= $options['ext_tip'] ? "<span class='tip'><i>".$options['ext_tip']."</i></span><br/>" : "";
     $html .= (\defender::inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : '';
 
@@ -209,7 +319,9 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
         $html .= "</div>\n";
         $html .= "</div>\n";
     }
+
     $html .= ($options['inline']) ? "</div>\n" : "";
+
     $html .= "</div>\n";
 
     \defender::getInstance()->add_field_session(
@@ -241,13 +353,19 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
             'multiple'          => $options['multiple'],
             'valid_ext'         => $options['valid_ext'],
             'replace_upload'    => $options['replace_upload'],
+            "croppie"           => $options['croppie'],
+            "croppie_resize"    => $options['croppie_resize'],
+            "croppie_width"  => $options['croppie_width'], // 200px default
+            "croppie_height" => $options['croppie_height'],
         ]
     );
 
     $extra_data_js = "";
+    $ajax_status = "";
+
     if ($options['form_id'] && $options['jsonurl']) {
         $extra_data_js = "
-        uploadExtraData: function() {
+        uploadExtraData: function(e) {            
             var inputs = $('#".$options['form_id']." :input');
             var obj = $.map(inputs, function(x, y) {
                 return {
@@ -258,6 +376,41 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
             return obj;
         },
         ";
+
+        /*
+         * Ajax Responses for Debugging
+         * In Development.
+         */
+        $ajax_status = "
+        $('#".$options['input_id']."').on('fileuploaderror', function(event, data, previewId, index) {
+            var form = data.form,             
+            files = data.files, 
+            extra = data.extra, 
+            response = data.response, 
+            reader = data.reader;
+            alert('Error');
+            console.log(response);
+            console.log(reader);
+            console.log(files);
+            
+            
+        });        
+        $('#".$options['input_id']."').on('fileuploadsuccess', function(event, data, previewId, index) {
+            var form = data.form, 
+            files = data.files, 
+            extra = data.extra, 
+            response = data.response, 
+            reader = data.reader;
+            alert('Success');
+            console.log(response);
+            console.log(extra);
+            console.log(reader);
+            console.log(files);
+            
+            //alert (extra.bdInteli + \" \" +  response.uploaded);
+        });
+        ";
+
     }
     if ($options['media']) {
         \defender::getInstance()->add_field_session(
@@ -288,13 +441,14 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
                 removeClass : 'btn ".$options['btn_class']." button',
                 browseLabel: '".$browseLabel."',
                 browseIcon: '<i class=\"".$options['icon']." m-r-10\"></i>',
-                ".($options['jsonurl'] ? "uploadUrl : '".$options['jsonurl']."'," : '')."
+                ".($options['jsonurl'] ? "uploadUrl : '".$options['jsonurl']."'" : '')."
                 ".($options['hide_upload'] ? 'showUpload: false,' : '')."
                 ".($options['hide_remove'] ? 'showRemove: false,' : '')."
                 dropZoneEnabled: ".($options['dropzone'] ? "true" : "false").",
                 $extra_data_js
                 ".$lang."
             });
+            $ajax_status
             ");
             break;
         case "modern":
@@ -320,7 +474,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
                 ".($options['hide_remove'] ? 'showRemove: false,' : '')."
                 $extra_data_js
                 layoutTemplates: {
-                    main2: '<div class=\"btn-photo-upload btn-link\">'+' {browse}'+' </div></span></div> {preview}',
+                    main2: '<div class=\"btn-photo-upload\">'+' {browse}'+' </div></span></div> {preview}',
                 },
                 ".$lang."
             });

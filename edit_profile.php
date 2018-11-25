@@ -42,7 +42,6 @@ $userInput->verifyNewEmail = TRUE;
 $userInput->user_data = fusion_get_userdata();
 $userInput->saveUpdate();
 
-
-$userFields->display_input();
+echo $userFields->display_input();
 
 require_once THEMES."templates/footer.php";

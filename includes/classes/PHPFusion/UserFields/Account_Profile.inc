@@ -115,7 +115,6 @@ class Account_Profile extends UserFieldsQuantum {
             'error_text'       => $this->locale['u133'],
             'required'         => $this->admin_mode ? FALSE : TRUE
         ]);
-
         $info['user_password'] .= "<div class='clearfix text-right'>".form_button('gen_user_passwd', "Generate Password", "", [
                 'type'  => 'button',
                 'class' => "btn-default spacer-sm m-b-0",
@@ -257,7 +256,7 @@ class Account_Profile extends UserFieldsQuantum {
                             'size'          => 16,
                             'character-set' => "a-z,A-Z,0-9,#",
                         ]
-                    ]);
+                    ])."</div>\n";
                 $info['user_email_openform'] = openform('useremail_frm', 'post', FUSION_REQUEST);
                 $info['user_email_closeform'] = closeform();
                 $info['update_email_button'] = form_button($this->post_name.'_email', 'Update Email', $this->post_name.'_email', ['class' => $this->options['btn_post_class']]);

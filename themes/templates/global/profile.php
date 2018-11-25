@@ -169,8 +169,7 @@ if (!function_exists('display_profile_form')) {
                             'title'       => "Password",
                             'description' => "",
                             'content'     => $info['user_password_openform']."<div class='row'>\n<div class='col-xs-12 col-sm-7'>\n
-                            ".$info['user_password'].$info['user_admin_password']."
-                            </div>\n<div class='col-xs-12 col-sm-5'>\n
+                            ".$info['user_password'].$info['user_admin_password']."</div>\n<div class='col-xs-12 col-sm-5'>\n
                             ".$info['user_password_notice']."
                             </div>\n</div>\n",
                             'post_button' => $info['update_password_button'].$info['user_password_closeform'],
@@ -221,7 +220,6 @@ if (!function_exists('display_profile_form')) {
                             'post_button' => $info['user_close_button'].$info['user_close_closeform'],
                         ]);
                         break;
-
                     case 'preferences':
                         $tpl->set_tag('openform', $info['openform']);
                         $tpl->set_tag('closeform', $info['closeform']);
