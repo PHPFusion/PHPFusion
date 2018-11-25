@@ -48,7 +48,7 @@ function showrendertime($queries = TRUE) {
 /**
  * Developer tools only (Translations not Required)
  *
- * @param bool   $show_sql_performance - true to pop up SQL analysis modal
+ * @param bool   $show_sql_performance  - true to pop up SQL analysis modal
  * @param string $performance_threshold - results that is slower than this will be highlighted
  *
  * @return string
@@ -170,6 +170,7 @@ function showprivacypolicy() {
 
     return $html;
 }
+
 // Get the widget settings for the theme settings table
 if (!function_exists('get_theme_settings')) {
     function get_theme_settings($theme_folder) {
@@ -184,318 +185,6 @@ if (!function_exists('get_theme_settings')) {
         } else {
             return FALSE;
         }
-    }
-}
-/**
- * Java script that transform html table sortable
- *
- * @param $table_id - table ID
- *
- * @return string
- */
-function fusion_sort_table($table_id) {
-    add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/tablesorter/jquery.tablesorter.min.js'></script>\n");
-    add_to_jquery("
-    $('#".$table_id."').tablesorter();
-    ");
-
-    return "tablesorter";
-}
-
-
-/**
- * Creates an alert bar
- *
- * @param        $title
- * @param string $text
- * @param array  $options
- *
- * @return string
- */
-if (!function_exists("alert")) {
-    function alert($title, array $options = []) {
-        $default_alert_tpl = THEMES.'templates/boilers/boostrap3/html/alert.html';
-        add_to_jquery("$('div.alert a').addClass('alert-link');");
-        $alert_tpl = \PHPFusion\Template::getInstance('alert');
-        $alert_tpl->set_template($default_alert_tpl);
-        $options += [
-            "class"   => !empty($options['class']) ? $options['class'] : 'alert-danger',
-            "dismiss" => !empty($options['dismiss']) && $options['dismiss'] == TRUE ? TRUE : FALSE
-        ];
-        $alert_tpl->set_block($options['dismiss'] === TRUE ? "dismissable_alert" : "alert", [
-            'class'   => $options['class'],
-            'content' => $title,
-        ]);
-
-        return (string)$alert_tpl->get_output();
-    }
-}
-if (!function_exists("label")) {
-    /**
-     * Function to make label
-     *
-     * @param       $label
-     * @param array $options
-     *
-     * @return string
-     */
-    function label($label, array $options = []) {
-        $default_options = [
-            "class" => "",
-            "icon"  => "",
-        ];
-        $options += $default_options;
-        if (!empty($options['icon'])) {
-            $options['icon'] = '<i class="'.$options['icon'].'"></i>';
-        }
-        $label_template = THEMES.'templates/boilers/bootstrap3/html/label.html';
-        $label_tpl = \PHPFusion\Template::getInstance('label');
-        $label_tpl->set_template($label_template);
-        $label_tpl->set_tag('class', " ".$options['class']);
-        $label_tpl->set_tag('label', $label);
-        $label_tpl->set_tag('icon', $options['icon']);
-
-        return (string)$label_tpl->get_output();
-    }
-}
-if (!function_exists("badge")) {
-    /**
-     * Function to make badge.
-     *
-     * @param       $label
-     * @param array $options
-     * class
-     * icon
-     *
-     * @return string
-     */
-    function badge($label, array $options = []) {
-        $default_options = [
-            "class" => "",
-            "icon"  => "",
-        ];
-        $options += $default_options;
-        if (!empty($options['icon'])) {
-            $options['icon'] = '<i class="'.$options['icon'].'"></i>';
-        }
-        $badge_template = THEMES.'templates/boilers/bootstrap3/html/badge.html';
-        $badge = \PHPFusion\Template::getInstance('badge');
-        $badge->set_template($badge_template);
-        $badge->set_tag('class', " ".$options['class']);
-        $badge->set_tag('label', $label);
-        $badge->set_tag('icon', $options['icon']);
-
-        return (string)$badge->get_output();
-    }
-}
-if (!function_exists("openmodal") && !function_exists("closemodal") && !function_exists("modalfooter")) {
-
-    /**
-     * To get the best results for Modal z-index overlay, try :
-     * ob_start();
-     * ... insert and echo ...
-     * add_to_footer(ob_get_contents()).ob_end_clean();
-     */
-
-    /**
-     * Generate modal
-     *
-     * @param       $id    - unique CSS id
-     * @param       $title - modal title
-     * @param array $options
-     *
-     * @return string
-     */
-    function openmodal($id, $title, $options = []) {
-        $default_options = [
-            "class"        => "",
-            "button_id"    => "",
-            "button_class" => "btn-default",
-            "static"       => FALSE,
-            "hidden"       => FALSE,
-        ];
-
-        $options += $default_options;
-        $modal_trigger = "";
-        if (!empty($options['button_id']) || !empty($options['button_class'])) {
-            $modal_trigger = !empty($options['button_id']) ? "#".$options['button_id'] : ".".$options['button_class'];
-        }
-
-        if ($options['static'] && !empty($modal_trigger)) {
-            OutputHandler::addToJQuery("$('".$modal_trigger."').bind('click', function(e){ $('#".$id."-Modal').modal({backdrop: 'static', keyboard: false}).modal('show'); e.preventDefault(); });");
-        } else if ($options['static'] && empty($options['button_id'])) {
-            OutputHandler::addToJQuery("$('#".$id."-Modal').modal({	backdrop: 'static',	keyboard: false }).modal('show');");
-        } else if ($modal_trigger && empty($options['static'])) {
-            OutputHandler::addToJQuery("$('".$modal_trigger."').bind('click', function(e){ $('#".$id."-Modal').modal('show'); e.preventDefault(); });");
-        } else {
-            if (empty($options['hidden'])) {
-                OutputHandler::addToJQuery("$('#".$id."-Modal').modal('show');");
-            }
-        }
-        $modal_template = THEMES.'templates/boilers/bootstrap3/html/modal.html';
-        $modal = \PHPFusion\Template::getInstance('modal');
-        $modal->set_locale(['close'=>fusion_get_locale('close')]);
-        $modal->set_template($modal_template);
-        $modal->set_block("modal_open", [
-            'modal_id'    => $id,
-            'modal_class' => " ".$options['class']
-        ]);
-        if (!empty($title) || $options['static'] === FALSE) {
-            $modal->set_block("modal_open_header");
-            $modal->set_block("modal_close_header");
-            if (!empty($title)) {
-                $modal->set_block("modal_header", ["title"=>$title]);
-            }
-            if ($options['static'] === FALSE) {
-                $modal->set_block("modal_dismiss");
-            }
-        }
-        $modal->set_block("modal_openbody");
-
-        return (string)$modal->get_output();
-    }
-
-    /**
-     * Adds a modal footer in between openmodal and closemodal.
-     *
-     * @param            $content
-     * @param bool|FALSE $dismiss
-     *
-     * @return string
-     */
-    function modalfooter($content = "", $dismiss = FALSE) {
-        $modal_template = THEMES.'templates/boilers/bootstrap3/html/modal.html';
-        $modal = \PHPFusion\Template::getInstance('modal');
-        $modal->set_template($modal_template);
-        $modal->set_block("modal_closebody");
-        $modal->set_block("modal_footer", [
-            "content" => $content,
-            "dismiss" => ($dismiss === TRUE ? form_button("dismiss-f", fusion_get_locale("close"), fusion_get_locale("close"), [
-                "data"  => [
-                    "dismiss" => "modal",
-                ],
-                "class" => "btn-default pull-right",
-            ]) : "")
-        ]);
-
-        return (string)$modal->get_output();
-    }
-
-    /**
-     * Close the modal
-     *
-     * @return string
-     */
-    function closemodal() {
-        $modal_template = THEMES.'templates/boilers/bootstrap3/html/modal.html';
-        $modal = \PHPFusion\Template::getInstance('modal');
-        $modal->set_template($modal_template);
-        $modal->set_block("modal_close");
-
-        return (string)$modal->get_output();
-    }
-}
-
-if (!function_exists("progress_bar")) {
-    /**
-     * Render a progress bar
-     *
-     * @param        $num - str or array
-     * @param bool   $title - str or array
-     * @param bool   $class
-     * @param bool   $height
-     * @param bool   $reverse
-     * @param bool   $as_percent
-     * @param bool   $disabled
-     * @param bool   $hide_info
-     * @param string $class_
-     *
-     * @return string
-     */
-    function progress_bar($num, $title = FALSE, $class = FALSE, $height = FALSE, $reverse = FALSE, $as_percent = TRUE, $disabled = FALSE, $hide_info = FALSE, $class_ = 'm-b-10') {
-        $height = ($height) ? $height : '20px';
-        if (!function_exists('bar_color')) {
-            function bar_color($num, $reverse) {
-                $auto_class = $reverse ? "progress-bar-success" : "progress-bar-danger";
-                if ($num > 71) {
-                    $auto_class = ($reverse) ? 'progress-bar-danger' : 'progress-bar-success';
-                } else if ($num > 55) {
-                    $auto_class = ($reverse) ? 'progress-bar-warning' : 'progress-bar-info';
-                } else if ($num > 25) {
-                    $auto_class = ($reverse) ? 'progress-bar-info' : 'progress-bar-warning';
-                } else if ($num < 25) {
-                    $auto_class = ($reverse) ? 'progress-bar-success' : 'progress-bar-danger';
-                }
-
-                return $auto_class;
-            }
-        }
-        $_barcolor = ['progress-bar-success', 'progress-bar-info', 'progress-bar-warning', 'progress-bar-danger'];
-        $_barcolor_reverse = [
-            'progress-bar-success',
-            'progress-bar-info',
-            'progress-bar-warning',
-            'progress-bar-danger'
-        ];
-        $html = '';
-        if (is_array($num)) {
-            $i = 0;
-            $chtml = "";
-            $cTitle = "";
-            $cNum = "";
-            foreach ($num as $value) {
-
-                $int = intval($num);
-
-                if ($disabled == TRUE) {
-                    $value = "&#x221e;";
-                } else {
-                    $value = $value > 0 ? $value.' ' : '0 ';
-                    $value .= $as_percent ? '%' : '';
-                }
-
-                $c2Title = "";
-
-                if (is_array($title)) {
-                    $c2Title = $title[$i];
-                } else {
-                    $cTitle = $title;
-                }
-
-                $auto_class = ($reverse) ? $_barcolor_reverse[$i] : $_barcolor[$i];
-                $classes = (is_array($class)) ? $class[$i] : $auto_class;
-
-                $cNum .= "<div class='progress display-inline-block m-0' style='width:20px; height: 10px; '>\n";
-                $cNum .= "<span class='progress-bar ".$classes."' style='width:100%'></span></div>\n";
-                $cNum .= "<div class='display-inline-block m-r-5'>".$c2Title." ".$value."</div>\n";
-                $chtml .= "<div title='".$title."' class='progress-bar ".$classes."' role='progressbar' aria-valuenow='$value' aria-valuemin='0' aria-valuemax='100' style='width: $int%'>\n";
-                $chtml .= "</div>\n";
-                $i++;
-            }
-            $html .= ($hide_info == FALSE ? "<div class='text-right m-b-10'><span class='pull-left'>$cTitle</span><span class='clearfix'>$cNum </span></div>\n" : "");
-            $html .= "<div class='progress ".$class_."' style='height: ".$height."'>\n";
-            $html .= $chtml;
-            $html .= "</div>\n";
-            $html .= "</div>\n";
-        } else {
-            $int = intval($num);
-            if ($disabled == TRUE) {
-                $num = "&#x221e;";
-            } else {
-                $num = $num > 0 ? $num.' ' : '0 ';
-                $num .= $as_percent ? '%' : '';
-            }
-
-            $auto_class = bar_color($int, $reverse);
-            $class = (!$class) ? $auto_class : $class;
-
-            $html .= ($hide_info === FALSE ? "<div class='text-right m-b-10'><span class='pull-left'>$title</span><span class='clearfix'>$num</span></div>\n" : "");
-            $html .= "<div class='progress ".$class_."' style='height: ".$height."'>\n";
-            $html .= "<div class='progress-bar ".$class."' role='progressbar' aria-valuenow='$num' aria-valuemin='0' aria-valuemax='100' style='width: $int%'>\n";
-            $html .= "</div></div>\n";
-        }
-
-        return $html;
     }
 }
 
@@ -574,6 +263,340 @@ if (!function_exists("check_panel_status")) {
         }
     }
 }
+/**
+ * Java script that transform html table sortable
+ *
+ * @param $table_id - table ID
+ *
+ * @return string
+ */
+function fusion_sort_table($table_id) {
+    add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/tablesorter/jquery.tablesorter.min.js'></script>\n");
+    add_to_jquery("
+    $('#".$table_id."').tablesorter();
+    ");
+
+    return "tablesorter";
+}
+
+if (!function_exists("alert")) {
+    /**
+     * Creates an alert bar
+     *
+     * @param        $title
+     * @param array  $options
+     *
+     * @return string
+     */
+    function alert($title, array $options = []) {
+        add_to_jquery("$('div.alert a').addClass('alert-link');");
+        $alert_tpl = \PHPFusion\Template::getInstance('alert');
+        $default_alert_tpl = THEMES.'templates/boilers/bootstrap3/html/alert.html';
+        $alert_tpl->set_template($default_alert_tpl);
+        $default_options = [
+            "class" => "alert-danger",
+            "dismiss" => FALSE,
+        ];
+        $options += $default_options;
+        $block_name = $options['dismiss'] === TRUE ? "dismissable_alert" : "alert";
+        $alert_tpl->set_block($block_name, [
+            'class'   => $options['class'],
+            'content' => $title,
+        ]);
+        return (string)$alert_tpl->get_output();
+    }
+}
+
+if (!function_exists("label")) {
+    /**
+     * Function to make label
+     *
+     * @param       $label
+     * @param array $options
+     *
+     * @return string
+     */
+    function label($label, array $options = []) {
+        $default_options = [
+            "class" => "",
+            "icon"  => "",
+        ];
+        $options += $default_options;
+        if (!empty($options['icon'])) {
+            $options['icon'] = '<i class="'.$options['icon'].'"></i>';
+        }
+        $label_template = THEMES.'templates/boilers/bootstrap3/html/label.html';
+        $label_tpl = \PHPFusion\Template::getInstance('label');
+        $label_tpl->set_template($label_template);
+        $label_tpl->set_tag('class', " ".$options['class']);
+        $label_tpl->set_tag('label', $label);
+        $label_tpl->set_tag('icon', $options['icon']);
+
+        return (string)$label_tpl->get_output();
+    }
+}
+
+if (!function_exists("badge")) {
+    /**
+     * Function to make badge.
+     *
+     * @param       $label
+     * @param array $options
+     * class
+     * icon
+     *
+     * @return string
+     */
+    function badge($label, array $options = []) {
+        $default_options = [
+            "class" => "",
+            "icon"  => "",
+        ];
+        $options += $default_options;
+        if (!empty($options['icon'])) {
+            $options['icon'] = '<i class="'.$options['icon'].'"></i>';
+        }
+        $badge_template = THEMES.'templates/boilers/bootstrap3/html/badge.html';
+        $badge = \PHPFusion\Template::getInstance('badge');
+        $badge->set_template($badge_template);
+        $badge->set_tag('class', " ".$options['class']);
+        $badge->set_tag('label', $label);
+        $badge->set_tag('icon', $options['icon']);
+
+        return (string)$badge->get_output();
+    }
+}
+
+if (!function_exists("openmodal") && !function_exists("closemodal") && !function_exists("modalfooter")) {
+
+    /**
+     * To get the best results for Modal z-index overlay, try :
+     * ob_start();
+     * ... insert and echo ...
+     * add_to_footer(ob_get_contents()).ob_end_clean();
+     */
+
+    /**
+     * Generate modal
+     *
+     * @param       $id    - unique CSS id
+     * @param       $title - modal title
+     * @param array $options
+     *
+     * @return string
+     */
+    function openmodal($id, $title, $options = []) {
+        $default_options = [
+            "class"        => "",
+            "button_id"    => "",
+            "button_class" => "btn-default",
+            "static"       => FALSE,
+            "hidden"       => FALSE,
+        ];
+
+        $options += $default_options;
+        $modal_trigger = "";
+        if (!empty($options['button_id']) || !empty($options['button_class'])) {
+            $modal_trigger = !empty($options['button_id']) ? "#".$options['button_id'] : ".".$options['button_class'];
+        }
+
+        if ($options['static'] && !empty($modal_trigger)) {
+            OutputHandler::addToJQuery("$('".$modal_trigger."').bind('click', function(e){ $('#".$id."-Modal').modal({backdrop: 'static', keyboard: false}).modal('show'); e.preventDefault(); });");
+        } else if ($options['static'] && empty($options['button_id'])) {
+            OutputHandler::addToJQuery("$('#".$id."-Modal').modal({	backdrop: 'static',	keyboard: false }).modal('show');");
+        } else if ($modal_trigger && empty($options['static'])) {
+            OutputHandler::addToJQuery("$('".$modal_trigger."').bind('click', function(e){ $('#".$id."-Modal').modal('show'); e.preventDefault(); });");
+        } else {
+            if (empty($options['hidden'])) {
+                OutputHandler::addToJQuery("$('#".$id."-Modal').modal('show');");
+            }
+        }
+        $modal_template = THEMES.'templates/boilers/bootstrap3/html/modal.html';
+        $modal = \PHPFusion\Template::getInstance('modal');
+        $modal->set_locale(['close' => fusion_get_locale('close')]);
+        $modal->set_template($modal_template);
+        $modal->set_block("modal_open", [
+            'modal_id'    => $id,
+            'modal_class' => " ".$options['class']
+        ]);
+        if (!empty($title) || $options['static'] === FALSE) {
+            $modal->set_block("modal_open_header");
+            $modal->set_block("modal_close_header");
+            if (!empty($title)) {
+                $modal->set_block("modal_header", ["title" => $title]);
+            }
+            if ($options['static'] === FALSE) {
+                $modal->set_block("modal_dismiss");
+            }
+        }
+        $modal->set_block("modal_openbody");
+
+        return (string)$modal->get_output();
+    }
+
+    /**
+     * Adds a modal footer in between openmodal and closemodal.
+     *
+     * @param            $content
+     * @param bool|FALSE $dismiss
+     *
+     * @return string
+     */
+    function modalfooter($content = "", $dismiss = FALSE) {
+        $modal_template = THEMES.'templates/boilers/bootstrap3/html/modal.html';
+        $modal = \PHPFusion\Template::getInstance('modal');
+        $modal->set_template($modal_template);
+        $modal->set_block("modal_closebody");
+        $modal->set_block("modal_footer", [
+            "content" => $content,
+            "dismiss" => ($dismiss === TRUE ? form_button("dismiss-f", fusion_get_locale("close"), fusion_get_locale("close"), [
+                "data"  => [
+                    "dismiss" => "modal",
+                ],
+                "class" => "btn-default pull-right",
+            ]) : "")
+        ]);
+
+        return (string)$modal->get_output();
+    }
+
+    /**
+     * Close the modal
+     *
+     * @return string
+     */
+    function closemodal() {
+        $modal_template = THEMES.'templates/boilers/bootstrap3/html/modal.html';
+        $modal = \PHPFusion\Template::getInstance('modal');
+        $modal->set_template($modal_template);
+        $modal->set_block("modal_close");
+
+        return (string)$modal->get_output();
+    }
+}
+
+if (!function_exists("progress_bar")) {
+    /**
+     * @param       $num        Max of 100
+     * @param bool  $title      Label for the progress bar
+     * @param array $options
+     *                          class           additional class for the progress bar
+     *                          height          the height of the progress bar in px
+     *                          reverse         set to true to have the color counting reversed
+     *                          disable         set to true to have the progress bar disabled status
+     *                          hide_info       set to true to hide the information in the progress bar rendering
+     *                          progress_class  have it your custom progress bar class with your own custom class
+     *
+     * @return string
+     */
+    function progress_bar($num, $title = FALSE, array $options = array()) {
+        $default_options = [
+            "class"          => "",
+            "height"         => "",
+            "reverse"        => FALSE,
+            "disabled"       => FALSE,
+            "hide_info"      => FALSE,
+            "progress_class" => "",
+        ];
+
+        $options += $default_options;
+        $r = [
+            1 => 4,
+            2 => 3,
+            3 => 2,
+            4 => 1,
+        ];
+
+        $master_tpl = \PHPFusion\Template::getInstance('progress_chart');
+        $master_tpl->set_text("
+        {pbar.{
+            {%content%}
+        }}
+        ");
+
+        if (is_array($num)) {
+            foreach ($num as $i => $cnum) {
+                $ctitle = (is_array($title) ? $title[$i] : $title);
+
+                $tpl = \PHPFusion\Template::getInstance('progress_bar');
+                $progressbar_template = THEMES.'templates/boilers/bootstrap3/html/progress.html';
+                $tpl->set_template($progressbar_template);
+                $int = intval($cnum);
+                if ($options['disabled'] == TRUE) {
+                    $cnum = "&#x221e;";
+                } else {
+                    $cnum = $cnum > 0 ? $cnum : 0;
+                }
+                if ($options['hide_info'] === FALSE) {
+                    $tpl->set_block("progress_info", [
+                        "title" => $ctitle,
+                        "num"   => $cnum,
+                    ]);
+                }
+                $block_name = ($options['progress_class'] ? "progress_custom" : "");
+                if (empty($block_name)) {
+                    // Automatic class selection
+                    // calculate 100 to the max of 4 options
+                    $progress_calc = floor($cnum / 25);
+                    if ($options['reverse'] === TRUE) {
+                        $progress_calc = $r[$progress_calc];
+                    }
+                    $block_name = "progress_".$progress_calc;
+                }
+                $tpl->set_block($block_name, [
+                    "class"          => ($options['class'] ? " ".$options['class'] : ""),
+                    "progress_class" => $options['progress_class'],
+                    "height"         => ($options['height'] ? ' style="height: '.$options['height'].'"' : ""),
+                    "title"          => $ctitle,
+                    "num"            => $cnum,
+                    "int"            => "$int%"
+                ]);
+
+                $master_tpl->set_block("pbar", ["content" => $tpl->get_output()]);
+            }
+
+        } else {
+            $tpl = \PHPFusion\Template::getInstance('progress_bar');
+            $progressbar_template = THEMES.'templates/boilers/bootstrap3/html/progress.html';
+            $tpl->set_template($progressbar_template);
+            $int = intval($num);
+            if ($options['disabled'] == TRUE) {
+                $num = "&#x221e;";
+            } else {
+                $num = $num > 0 ? $num : 0;
+            }
+            if ($options['hide_info'] === FALSE) {
+                $tpl->set_block("progress_info", [
+                    "title" => $title,
+                    "num"   => $num,
+                ]);
+            }
+            $block_name = ($options['progress_class'] ? "progress_custom" : "");
+            if (empty($block_name)) {
+                // Automatic class selection
+                // calculate 100 to the max of 4 options
+                $progress_calc = floor($num / 25);
+                if ($options['reverse'] === TRUE) {
+                    $progress_calc = $r[$progress_calc];
+                }
+                $block_name = "progress_".$progress_calc;
+            }
+            $tpl->set_block($block_name, [
+                "class"          => ($options['class'] ? " ".$options['class'] : ""),
+                "progress_class" => $options['progress_class'],
+                "height"         => ($options['height'] ? ' style="height: '.$options['height'].'"' : ""),
+                "title"          => $title,
+                "num"            => $num,
+                "int"            => "$int%"
+            ]);
+
+            $master_tpl->set_block("pbar", ["content" => $tpl->get_output()]);
+        }
+
+        return (string)$master_tpl->get_output();
+
+    }
+}
 
 if (!function_exists("showbanners")) {
     /*
@@ -604,11 +627,10 @@ if (!function_exists("showlogo")) {
 }
 
 if (!function_exists("showsublinks")) {
-
     /**
      * Displays Site Links Navigation Bar
      *
-     * @param string $sep - Custom seperator text
+     * @param string $sep   - Custom seperator text
      * @param string $class - Class
      * @param array  $options
      *
@@ -623,6 +645,7 @@ if (!function_exists("showsublinks")) {
             'seperator'    => $sep,
             'navbar_class' => $class,
         ];
+
         return \PHPFusion\SiteLinks::setSubLinks($options)->showSubLinks();
     }
 
@@ -630,7 +653,6 @@ if (!function_exists("showsublinks")) {
 
 if (!function_exists("showsubdate")) {
     function showsubdate() {
-
         return ucwords(showdate(fusion_get_settings('subheaderdate'), time()));
     }
 }
@@ -784,28 +806,29 @@ if (!function_exists('closesidex')) {
         closeside();
     }
 }
+
 if (!function_exists('tablebreak')) {
     function tablebreak() {
         return TRUE;
     }
 }
 
-/**
- * @param array  $userdata
- *                          Indexes:
- *                          - user_id
- *                          - user_name
- *                          - user_avatar
- *                          - user_status
- * @param string $size A valid size for CSS max-width and max-height.
- * @param string $class Classes for the link
- * @param bool   $link FALSE if you want to display the avatar without link. TRUE by default.
- * @param string $img_class Classes for the image
- * @param string $custom_avatar Custom default avatar
- *
- * @return string
- */
 if (!function_exists('display_avatar')) {
+    /**
+     * @param array  $userdata
+     *                              Indexes:
+     *                              - user_id
+     *                              - user_name
+     *                              - user_avatar
+     *                              - user_status
+     * @param string $size          A valid size for CSS max-width and max-height.
+     * @param string $class         Classes for the link
+     * @param bool   $link          FALSE if you want to display the avatar without link. TRUE by default.
+     * @param string $img_class     Classes for the image
+     * @param string $custom_avatar Custom default avatar
+     *
+     * @return string
+     */
     function display_avatar(array $userdata, $size, $class = '', $link = TRUE, $img_class = '', $custom_avatar = '') {
         if (empty($userdata)) {
             $userdata = [];
@@ -885,18 +908,18 @@ if (!function_exists('colorbox')) {
     }
 }
 
-/**
- * Thumbnail function
- *
- * @param      $src
- * @param      $size
- * @param bool $url
- * @param bool $colorbox
- * @param bool $responsive
- *
- * @return string
- */
 if (!function_exists("thumbnail")) {
+    /**
+     * Thumbnail function
+     *
+     * @param      $src
+     * @param      $size
+     * @param bool $url
+     * @param bool $colorbox
+     * @param bool $responsive
+     *
+     * @return string
+     */
     function thumbnail($src, $size, $url = FALSE, $colorbox = FALSE, $responsive = TRUE, $class = "m-2") {
         $_offset_w = 0;
         $_offset_h = 0;
@@ -980,6 +1003,7 @@ if (!function_exists("timer")) {
                 $answer = round($calc);
                 //	$string = ($answer > 1) ? $timer_b[$arr] : $unit;
                 $string = \PHPFusion\Locale::format_word($answer, $unit, ['add_count' => FALSE]);
+
                 return "<abbr class='atooltip' data-toggle='tooltip' data-placement='top' title='".showdate('longdate', $updated)."'>".$answer." ".$string." ".$locale['ago']."</abbr>";
             }
         }
@@ -1064,6 +1088,7 @@ if (!function_exists("opencollapse")
         $html .= "</div>\n";
         $html .= "</div>\n";
         $html .= "<div ".collapse_footer_link($grouping_id, $unique_id, $active).">\n"; // body.
+
         return $html;
     }
 
@@ -1109,7 +1134,6 @@ if (!function_exists("tab_active")
         private $tab_info = [];
         private $link_mode = FALSE;
 
-
         public static function tab_active($array, $default_active, $getname = FALSE) {
             if (!empty($getname)) {
                 $section = isset($_GET[$getname]) && $_GET[$getname] ? $_GET[$getname] : $default_active;
@@ -1126,6 +1150,7 @@ if (!function_exists("tab_active")
                 }
             } else {
                 $id = $array['id'][$default_active];
+
                 return $id;;
             }
         }
@@ -1217,6 +1242,7 @@ if (!function_exists("tab_active")
                 $status = ($link_active_arrkey == $id ? " in active" : '');
 
             }
+
             return "<div class='tab-pane fade".$status."' id='".$id."'>\n";
         }
 
@@ -1253,9 +1279,9 @@ if (!function_exists("tab_active")
     /**
      * Current Tab Active Selector
      *
-     * @param      $array - multidimension array consisting of keys 'title', 'id', 'icon'
+     * @param      $array          - multidimension array consisting of keys 'title', 'id', 'icon'
      * @param      $default_active - 0 if link_mode is false, $_GET if link_mode is true
-     * @param bool $getname - set getname and turn tabs into link that listens to getname
+     * @param bool $getname        - set getname and turn tabs into link that listens to getname
      *
      * @return string
      * @todo: options base
@@ -1267,14 +1293,14 @@ if (!function_exists("tab_active")
     /**
      * Render Tab Links
      *
-     * @param array      $tab_title entire array consisting of ['title'], ['id'], ['icon']
-     * @param string     $link_active_arrkey tab_active() function or the $_GET request to match the $tab_title['id']
-     * @param string     $id unique ID
-     * @param bool|FALSE $link default false for jquery, true for php (will reload page)
-     * @param bool|FALSE $class the class for the nav
-     * @param string     $getname the get request
-     * @param array      $cleanup_GET the request key that needs to be deleted
-     * @param bool|FALSE $remember set to true to automatically remember tab using cookie.
+     * @param array      $tab_title             entire array consisting of ['title'], ['id'], ['icon']
+     * @param string     $link_active_arrkey    tab_active() function or the $_GET request to match the $tab_title['id']
+     * @param string     $id                    unique ID
+     * @param bool|FALSE $link                  default false for jquery, true for php (will reload page)
+     * @param bool|FALSE $class                 the class for the nav
+     * @param string     $getname               the get request
+     * @param array      $cleanup_GET           the request key that needs to be deleted
+     * @param bool|FALSE $remember              set to true to automatically remember tab using cookie.
      *                                          Example:
      *                                          $tab_title['title'][] = "Tab 1";
      *                                          $tab_title['id'][] = "tab1";
@@ -1305,7 +1331,7 @@ if (!function_exists("tab_active")
      * @param string $tab_title deprecated, however this function is replaceable, and the params are accessible.
      * @param        $tab_id
      * @param bool   $link_active_arrkey
-     * @param bool   $link deprecated, however this function is replaceable, and the params are accessible.
+     * @param bool   $link      deprecated, however this function is replaceable, and the params are accessible.
      * @param bool   $key
      *
      * @return mixed

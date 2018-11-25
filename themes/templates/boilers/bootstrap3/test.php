@@ -55,8 +55,43 @@ echo '<h3>The codes</h3>
 <div class="list-group-item m-b-50">
 echo label(\'Label\', array("icon"=>"fas fa-users m-r-10", "class"=>"label-primary");<br/> 
 </div>';
-echo "</div>\n";
-echo "</div>\n";
+
+
+echo '<h1 class="text-light">Progress Bar</h1>
+<h3 class="text-light">Provide up-to-date feedback on the progress of a workflow or action with simple yet flexible progress bars.</h3>
+<h4>There are two methods of using the progress bar. For multiple values, use array as the number, and array as the title</h4>';
+echo '<div class="list-group-item">';
+echo "<div class='spacer-md'>".progress_bar([33,57, 82, 98.5], ['Some label', 'Some label 2', 'Some label 3', 'Some label 4'])."</div>";
+echo '</div>';
+echo '<h3>The codes</h3>
+<div class="list-group-item m-b-50">
+echo progress_bar( [33,57, 82, 98.5] , [\'Some label\', \'Some label 2\', \'Some label 3\', \'Some label 4\'] );<br/> 
+</div>';
+
+echo '<div class="list-group-item">';
+echo "<div class='spacer-md'>".progress_bar(80, "Single Progress Bar")."</div>";
+echo '</div>';
+echo '<h3>The codes</h3>
+<div class="list-group-item m-b-50">
+echo progress_bar(70, \'Some label\');<br/> 
+</div>';
+
+echo '<h1 class="text-light">Alert Bar</h1>
+<h3 class="text-light">Provide contextual feedback messages for typical user actions with the handful of available and flexible alert messages.</h3>';
+echo '<div class="list-group-item">';
+echo "<div class='spacer-md'>".alert("This is an alert message", ['class'=>'alert-success'])."</div>";
+echo '</div>';
+echo '<h3>The codes</h3>
+<div class="list-group-item m-b-50">
+echo alert("This is an alert message", [\'class\'=>\'alert-success\']);<br/> 
+</div>';
+
+echo '<div>These functions are still under translations to support multiple boilers</div>';
+echo '<h1 class="text-light">Collapse / Accordion</h1>';
+echo '<h1 class="text-light">Navigation Tabs</h1>';
+echo '<h1 class="text-light">Paginations</h1>';
+echo '<h1 class="text-light">Dropdowns</h1>';
+echo '<h1 class="text-light">Dynamic Components - Input Fields, Selects, Checkboxes, Radios, etc.</h1>';
 
 echo "</div>\n</div>\n";
 
