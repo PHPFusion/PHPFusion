@@ -27,15 +27,15 @@ class Main extends Core {
         add_to_head('<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,400italic"/>');
 
         $menu_options = [
-            'id'               => 'main-menu',
-            'nav_class'        => 'nav navbar-nav navbar-right primary',
-            'container_fluid'  => TRUE,
-            'show_header'      => TRUE,
-            'show_banner'      => TRUE,
-            'custom_banner'    => '<img src="'.BASEDIR.$settings['sitebanner'].'" alt="'.$settings['sitename'].'" class="img-responsive"/>',
-            'grouping'         => TRUE,
-            'links_per_page'   => 10,
-            'html_pre_content' => $this->UserMenu()
+            'id'                => 'main-menu',
+            'nav_class_primary' => 'navbar-right',
+            'container_fluid'   => TRUE,
+            'show_header'       => TRUE,
+            'show_banner'       => TRUE,
+            'custom_banner'     => '<img src="'.BASEDIR.$settings['sitebanner'].'" alt="'.$settings['sitename'].'" class="img-responsive"/>',
+            'grouping'          => TRUE,
+            'links_per_page'    => 10,
+            'html_pre_content'  => $this->UserMenu()
         ];
 
         echo SiteLinks::setSubLinks($menu_options)->showSubLinks();
@@ -237,7 +237,7 @@ class Main extends Core {
             echo closeform();
             echo '</li>';
             echo '<li>'.str_replace(['[LINK]', '[/LINK]'], ['<a href="'.BASEDIR.'lostpassword.php">', '</a>'], $locale['global_106']).'</li>';
-            if ($settings['enable_registration']) echo '<li><a href="'.BASEDIR.'register.php">'.$locale['register'].'</a></li>';
+            echo $settings['enable_registration'] ? '<li><a href="'.BASEDIR.'register.php">'.$locale['register'].'</a></li>' : '';
             echo '</ul>';
         }
         echo '</li>';

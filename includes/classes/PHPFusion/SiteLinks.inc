@@ -202,6 +202,10 @@ class SiteLinks {
             'custom_banner'        => '',
             'affix_top'            => '',                   // Adds affix from top offset
             'affix_bottom'         => '',                   // Adds affix from bottom offset
+            'html_pre_content'     => '',
+            'html_post_content'    => '',
+            'nav_class_primary'    => '',
+            'nav_class_secondary'  => '',
         ];
 
         $options += $default_options;
@@ -244,7 +248,7 @@ class SiteLinks {
             self::$instances[$options['id']]->menu_options = $options;
         }
 
-        return (object)self::$instances[$options['id']];
+        return self::$instances[$options['id']];
     }
 
     /**
@@ -322,7 +326,7 @@ class SiteLinks {
      * @param bool|FALSE $link_window
      * @param string     $link_class
      */
-    public static function addMenuLink($link_id = 0, $link_name, $link_cat = 0, $link_url = '', $link_icon = '', $link_active = FALSE, $link_title = FALSE, $link_disabled = FALSE, $link_window = FALSE, $link_class = '') {
+    public static function addMenuLink($link_id = 0, $link_name = '', $link_cat = 0, $link_url = '', $link_icon = '', $link_active = FALSE, $link_title = FALSE, $link_disabled = FALSE, $link_window = FALSE, $link_class = '') {
         self::$primary_cache_data[self::$id][$link_cat][$link_id] = [
             'link_id'       => $link_id,
             'link_name'     => $link_name,
@@ -351,7 +355,7 @@ class SiteLinks {
      * @param bool|FALSE $link_window
      * @param string     $link_class
      */
-    public static function addOptionalMenuLink($link_id = 0, $link_name, $link_cat = 0, $link_url = '', $link_icon = '', $link_active = FALSE, $link_title = FALSE, $link_disabled = FALSE, $link_window = FALSE, $link_class = '') {
+    public static function addOptionalMenuLink($link_id = 0, $link_name = '', $link_cat = 0, $link_url = '', $link_icon = '', $link_active = FALSE, $link_title = FALSE, $link_disabled = FALSE, $link_window = FALSE, $link_class = '') {
         self::$optional_cache_data[self::$id][$link_cat][$link_id] = [
             'link_id'       => $link_id,
             'link_name'     => $link_name,
@@ -423,8 +427,10 @@ class SiteLinks {
         $html = '';
         if ($options['affix_top'] && isnum($options['affix_top']) or $options['affix_bottom'] && isnum($options['affix_bottom'])) {
             $html = " data-spy='affix'";
-            if ($options['affix_top']) $html .= " data-offset-top='".$options['affix_top']."'";
-            if ($options['affix_bottom']) $html .= " data-offset-bottom='".$options['affix_bottom']."'";
+            if ($options['affix_top'])
+                $html .= " data-offset-top='".$options['affix_top']."'";
+            if ($options['affix_bottom'])
+                $html .= " data-offset-bottom='".$options['affix_bottom']."'";
         }
 
         return (string)$html;
@@ -434,6 +440,7 @@ class SiteLinks {
         $options = self::getMenuParam();
         $settings = fusion_get_settings();
         $locale = $options['locale'];
+
         if (empty($id)) {
             $id = self::MenuDefaultID;
             self::setLinks();
@@ -521,17 +528,19 @@ class SiteLinks {
         $primary_links = $this->showMenuLinks(0, $options['callback_data']);
         $secondary_links = $this->showMenuLinks(0, $options['additional_data']);
 
-        $tpl = Template::getInstance($id);
+        $tpl = Template::getInstance(self::getMenuParam('id'));
 
-        $tpl->set_tag('navbar_id', $id);
+        $tpl->set_tag('navbar_id', self::getMenuParam('id'));
         $tpl->set_tag('navbar_class', $options['navbar_class']);
+        $tpl->set_tag('nav_class_primary', $options['nav_class_primary']);
+        $tpl->set_tag('nav_class_secondary', $options['nav_class_secondary']);
         $tpl->set_tag('affix', self::getaffix());
 
         if ($options['container'] || $options['container_fluid']) {
             if ($options['container']) {
                 $tpl->set_block('open_container', ['class' => 'container']);
                 $tpl->set_block('close_container', ['class' => 'container']);
-            } elseif ($options['container_fluid']) {
+            } else if ($options['container_fluid']) {
                 $tpl->set_block('open_container', ['class' => 'container-fluid']);
                 $tpl->set_block('close_container', ['class' => 'container-fluid']);
             }
@@ -551,12 +560,15 @@ class SiteLinks {
         }
 
         $tpl->set_tag('html_content', $options['html_content']);
+        $tpl->set_tag('html_pre_content', $options['html_pre_content']);
+        $tpl->set_tag('html_post_content', $options['html_post_content']);
         $tpl->set_tag('menu_item', $primary_links);
         if (!empty($language_dropdown) || !empty($searchbar_dropdown) || !empty($secondary_links)) {
             $tpl->set_block('menu_alt', ['menu_alt_item' => $secondary_links.$language_dropdown.$searchbar_dropdown]);
         }
 
         $tpl->set_template($bootstrap3_nav);
+        $tpl->set_locale(fusion_get_locale());
 
         return $tpl->get_output();
 
@@ -642,9 +654,12 @@ class SiteLinks {
                 if ($link_data['link_disabled']) {
                     $li_class[] = "disabled";
                 } else {
-                    if (!empty($options['item_class'])) $li_class[] = $options['item_class'];
-                    if (empty($link_data['link_url'])) $li_class[] = "no-link";
-                    if ($link_data['link_title'] == TRUE) $li_class[] = "dropdown-header";
+                    if (!empty($options['item_class']))
+                        $li_class[] = $options['item_class'];
+                    if (empty($link_data['link_url']))
+                        $li_class[] = "no-link";
+                    if ($link_data['link_title'] == TRUE)
+                        $li_class[] = "dropdown-header";
                 }
 
                 /*
@@ -652,6 +667,8 @@ class SiteLinks {
                  * Taking into account that current start page does not match
                  */
                 $secondary_active = FALSE;
+                $template_settings = [];
+
                 // Active Helper Function
                 // If developer does not set it as true/false deliberately, only then system takes into account to calculate.
                 // The default values for link_active is blank, not false or true.
