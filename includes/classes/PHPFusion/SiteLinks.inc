@@ -49,6 +49,22 @@ class SiteLinks {
     private static $instances = [];
     private static $primary_cache_data = [];
     private static $optional_cache_data = [];
+    private static $link_instances = [];
+    private static $current_url = "";
+
+    /**
+     * @param string $id
+     *
+     * @return static
+     */
+    public static function getInstance($id = self::MenuDefaultID) {
+        self::$id = $id;
+        if (isset(self::$instances[$id])) {
+            return self::$instances[$id];
+        } else {
+            return self::$instances[$id] = new static();
+        }
+    }
 
     /**
      * Get Site Links Position Options
@@ -189,6 +205,9 @@ class SiteLinks {
             'grouping'             => '',
             'show_banner'          => FALSE,
             'show_header'          => FALSE,
+            'header_content'       => '',
+            'custom_banner'        => '',
+            'custom_banner_link'   => '',
             'language_switcher'    => FALSE,
             'searchbar'            => FALSE,
             'search_icon'          => 'fa fa-search',
@@ -198,14 +217,8 @@ class SiteLinks {
             'additional_data'      => '',
             'link_position'        => [2, 3],
             'html_content'         => '',
-            'header_content'       => '',
-            'custom_banner'        => '',
             'affix_top'            => '',                   // Adds affix from top offset
             'affix_bottom'         => '',                   // Adds affix from bottom offset
-            'html_pre_content'     => '',
-            'html_post_content'    => '',
-            'nav_class_primary'    => '',
-            'nav_class_secondary'  => '',
         ];
 
         $options += $default_options;
@@ -219,7 +232,7 @@ class SiteLinks {
             }
 
             if (empty($options['grouping'])) {
-                $options['grouping'] = $settings['links_grouping'];
+                $options['grouping'] = $settings['link_grouping'];
             }
 
             if (empty($options['callback_data'])) {
@@ -248,7 +261,7 @@ class SiteLinks {
             self::$instances[$options['id']]->menu_options = $options;
         }
 
-        return self::$instances[$options['id']];
+        return (object)self::$instances[$options['id']];
     }
 
     /**
@@ -299,20 +312,6 @@ class SiteLinks {
     }
 
     /**
-     * @param string $id
-     *
-     * @return static
-     */
-    public static function getInstance($id = self::MenuDefaultID) {
-        self::$id = $id;
-        if (isset(self::$instances[$id])) {
-            return self::$instances[$id];
-        } else {
-            return self::$instances[$id] = new static();
-        }
-    }
-
-    /**
      * Add a link to primary menu
      *
      * @param int        $link_id
@@ -326,7 +325,7 @@ class SiteLinks {
      * @param bool|FALSE $link_window
      * @param string     $link_class
      */
-    public static function addMenuLink($link_id = 0, $link_name = '', $link_cat = 0, $link_url = '', $link_icon = '', $link_active = FALSE, $link_title = FALSE, $link_disabled = FALSE, $link_window = FALSE, $link_class = '') {
+    public static function addMenuLink($link_id = 0, $link_name, $link_cat = 0, $link_url = '', $link_icon = '', $link_active = FALSE, $link_title = FALSE, $link_disabled = FALSE, $link_window = FALSE, $link_class = '') {
         self::$primary_cache_data[self::$id][$link_cat][$link_id] = [
             'link_id'       => $link_id,
             'link_name'     => $link_name,
@@ -355,7 +354,7 @@ class SiteLinks {
      * @param bool|FALSE $link_window
      * @param string     $link_class
      */
-    public static function addOptionalMenuLink($link_id = 0, $link_name = '', $link_cat = 0, $link_url = '', $link_icon = '', $link_active = FALSE, $link_title = FALSE, $link_disabled = FALSE, $link_window = FALSE, $link_class = '') {
+    public static function addOptionalMenuLink($link_id = 0, $link_name, $link_cat = 0, $link_url = '', $link_icon = '', $link_active = FALSE, $link_title = FALSE, $link_disabled = FALSE, $link_window = FALSE, $link_class = '') {
         self::$optional_cache_data[self::$id][$link_cat][$link_id] = [
             'link_id'       => $link_id,
             'link_name'     => $link_name,
@@ -427,22 +426,19 @@ class SiteLinks {
         $html = '';
         if ($options['affix_top'] && isnum($options['affix_top']) or $options['affix_bottom'] && isnum($options['affix_bottom'])) {
             $html = " data-spy='affix'";
-            if ($options['affix_top'])
-                $html .= " data-offset-top='".$options['affix_top']."'";
-            if ($options['affix_bottom'])
-                $html .= " data-offset-bottom='".$options['affix_bottom']."'";
+            if ($options['affix_top']) $html .= " data-offset-top='".$options['affix_top']."'";
+            if ($options['affix_bottom']) $html .= " data-offset-bottom='".$options['affix_bottom']."'";
         }
 
         return (string)$html;
     }
 
-    public function showSubLinks($id = 0) {
+    public function showSubLinks() {
         $options = self::getMenuParam();
         $settings = fusion_get_settings();
         $locale = $options['locale'];
-
-        if (empty($id)) {
-            $id = self::MenuDefaultID;
+        if (empty($options['id'])) {
+            $options['id'] = self::MenuDefaultID;
             self::setLinks();
         }
 
@@ -452,7 +448,6 @@ class SiteLinks {
         $bootstrap3_nav = THEMES.'templates/boilers/bootstrap3/html/navbar/navbar.html';
 
         // Secondary menu
-
         $language_dropdown = '';
         if ($options['language_switcher'] === TRUE) {
             if (count(fusion_get_enabled_languages()) > 1) {
@@ -478,6 +473,7 @@ class SiteLinks {
                         'caret_class'         => $options['caret_icon'],
                         'dropdown_menu_class' => ' dropdown-menu-right',
                         'item'                => $language_items,
+                        'first_item_link'     => '',
                     ];
                     $language_li_dropdown_tpl->set_block('nav_li_dropdown', $ss);
                     $language_li_dropdown_tpl->set_template($bootstrap3_nav_li_dropdown);
@@ -505,7 +501,7 @@ class SiteLinks {
                             "append_form_value"  => $locale['search'],
                             "append_value"       => "<i class='".$options['search_icon']."'></i> ".$locale['search'],
                             "append_button_name" => "search",
-                            "append_class"       => $options['searchbar_btn_class'],
+                            "append_class"       => $options['search_btn_class'],
                             'class'              => 'm-0',
                         ]
                     ).closeform()
@@ -528,19 +524,17 @@ class SiteLinks {
         $primary_links = $this->showMenuLinks(0, $options['callback_data']);
         $secondary_links = $this->showMenuLinks(0, $options['additional_data']);
 
-        $tpl = Template::getInstance(self::getMenuParam('id'));
+        $tpl = Template::getInstance($options['id']);
 
-        $tpl->set_tag('navbar_id', self::getMenuParam('id'));
+        $tpl->set_tag('navbar_id', $options['id']);
         $tpl->set_tag('navbar_class', $options['navbar_class']);
-        $tpl->set_tag('nav_class_primary', $options['nav_class_primary']);
-        $tpl->set_tag('nav_class_secondary', $options['nav_class_secondary']);
         $tpl->set_tag('affix', self::getaffix());
 
         if ($options['container'] || $options['container_fluid']) {
             if ($options['container']) {
                 $tpl->set_block('open_container', ['class' => 'container']);
                 $tpl->set_block('close_container', ['class' => 'container']);
-            } else if ($options['container_fluid']) {
+            } elseif ($options['container_fluid']) {
                 $tpl->set_block('open_container', ['class' => 'container-fluid']);
                 $tpl->set_block('close_container', ['class' => 'container-fluid']);
             }
@@ -549,9 +543,9 @@ class SiteLinks {
         if ($options['show_header']) {
             $banner = ($options['show_banner'] ? ($options['custom_banner'] ? $options['custom_banner'] : $settings['sitebanner']) : '');
             $header_settings = [
-                'id'              => $id.'_menu',
+                'id'              => $options['id'].'_menu',
                 'header_content'  => $options['header_content'],
-                'banner_link'     => BASEDIR.$settings['opening_page'],
+                'banner_link'     => $options['custom_banner_link'] ?: BASEDIR.$settings['opening_page'],
                 'banner'          => $banner,
                 'banner_position' => $settings['logoposition_xs']." ".$settings['logoposition_sm']." ".$settings['logoposition_md']." ".$settings['logoposition_lg'],
             ];
@@ -560,15 +554,12 @@ class SiteLinks {
         }
 
         $tpl->set_tag('html_content', $options['html_content']);
-        $tpl->set_tag('html_pre_content', $options['html_pre_content']);
-        $tpl->set_tag('html_post_content', $options['html_post_content']);
         $tpl->set_tag('menu_item', $primary_links);
         if (!empty($language_dropdown) || !empty($searchbar_dropdown) || !empty($secondary_links)) {
             $tpl->set_block('menu_alt', ['menu_alt_item' => $secondary_links.$language_dropdown.$searchbar_dropdown]);
         }
 
         $tpl->set_template($bootstrap3_nav);
-        $tpl->set_locale(fusion_get_locale());
 
         return $tpl->get_output();
 
@@ -604,8 +595,6 @@ class SiteLinks {
         return $linkRef;
     }
 
-    private static $link_instances = [];
-
     private function getLinkInstance() {
         if (empty(self::$link_instances)) {
             $linkInstance = BreadCrumbs::getInstance();
@@ -615,6 +604,149 @@ class SiteLinks {
         }
 
         return self::$link_instances;
+    }
+
+    /**
+     * Get current URL of the page
+     *
+     * @return string
+     */
+    private function get_currentURL() {
+        if (empty(self::$current_url)) {
+            $current_url = ltrim(htmlspecialchars_decode($_SERVER['REQUEST_URI']), '/');
+            $site_path = fusion_get_settings('site_path');
+            if ($site_path != '/') {
+                $current_url = str_replace($site_path, "", $current_url);
+            }
+            if (stristr($current_url, "index.php")) {
+                $current_url = str_replace("index.php", "", $current_url);
+            }
+            if (defined('IN_PERMALINK')) {
+                $current_url = Router::getRouterInstance()->getFilePath();
+            }
+            self::$current_url = $current_url;
+        }
+
+        return (string)self::$current_url;
+    }
+
+    private function checkLinkActive($link_id, $link_url, $data) {
+
+        $current_url = $this->get_currentURL();
+
+        if (!empty($link_url) && $link_url != '#') {
+            if (defined('IN_PERMALINK')) {
+                if (Router::getRouterInstance()->getFilePath() == $link_url) {
+                    return TRUE;
+                }
+            } else {
+                // format the link
+                $data_link_url = str_replace("index.php", "", $link_url);
+                if ($data_link_url == $current_url) {
+                    return TRUE;
+                }
+            }
+            // Find the link_active by comparing with the current page request
+            if (!empty($_GET)) {
+                // check which is active.
+                $link_ref = explode("?", $link_url);
+                if (isset($link_ref[1])) {
+                    $l = array();
+                    $r = explode('&', htmlspecialchars_decode($link_ref[1]));
+                    foreach ($r as $ur) {
+                        $u = explode('=', $ur);
+                        $l[$u[0]] = isset($u[1]) ? $u[1] : "";
+                    }
+                    if (empty(array_diff_assoc($l, $_GET))) {
+                        return TRUE;
+                    }
+                }
+            }
+        }
+
+        if (self::getMenuParam("start_page") !== $link_url) {
+            // Find the link_active by checking child active. (Parent must also be active)
+            $child_links = $this->get_SubLinks_URL($data, $link_id);
+
+            if (!empty($child_links)) {
+                foreach ($child_links as $child_link_url) {
+                    if ($child_link_url != '#') {
+                        $data_link_url = str_replace("index.php", "", $child_link_url);
+                        if ($data_link_url == $current_url) {
+                            return TRUE;
+                        }
+                        // Find the link_active by comparing with the current page request
+                        if (!empty($_GET)) {
+                            // check which is active.
+                            $link_ref = explode("?", $child_link_url);
+                            if (isset($link_ref[1])) {
+                                $l = array();
+                                $r = explode('&', htmlspecialchars_decode($link_ref[1]));
+                                foreach ($r as $ur) {
+                                    $u = explode('=', $ur);
+                                    $l[$u[0]] = isset($u[1]) ? $u[1] : "";
+                                }
+                                if (empty(array_diff_assoc($l, $_GET))) {
+                                    return TRUE;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // This is a bad method, we need to kill it.
+            // The breadcrumbs series of arrays - stable
+            /*$reference = $this->getLinkInstance();
+            if (!empty($reference)) {
+                $uri = parse_url(htmlspecialchars_decode($link_data['link_url']));
+                $uriQuery = [];
+                if (!empty($uri['query'])) {
+                    parse_str($uri['query'], $uriQuery);
+                }
+                foreach ($reference as $refData) {
+                    if (stristr($refData['link'], '../')) {
+                        $refData['link'] = str_replace(str_repeat('../', substr_count($refData['link'], '../')), '', $refData['link']);
+                    }
+                    if (!empty($refData['link']) && $link_data['link_url'] !== "index.php") {
+                        //If child link is part of the current page breadcrumb then parent is active
+                        if (!empty($refData['link'])) {
+                            if (isset($linkRefURI[$refData['link']])) {
+                                $secondary_active = TRUE;
+                                break;
+                            }
+                        }
+                        // If parts of link url forms the breadcrumbs' link
+                        if (!empty($link_data['link_url']) && stristr($refData['link'], $link_data['link_url'])) {
+                            $secondary_active = TRUE;
+                            break;
+                        }
+                        // If both links has the same uri requests string.
+                        if (!empty($link_data['link_url']) && stristr($link_data['link_url'], '?')) {
+                            $ref_uri = parse_url(htmlspecialchars_decode($refData['link']));
+                            if (!empty($uri['query']) && !empty($ref_uri['query'])) {
+                                parse_str($ref_uri['query'], $ref_uriQuery);
+                                if (count($ref_uriQuery) == count($uriQuery)) {
+                                    $diff = array_diff_assoc($uriQuery, $ref_uriQuery);
+                                    $diff_2 = array_diff_assoc($ref_uriQuery, $uriQuery);
+                                    if ($diff == $diff_2) {
+                                        $secondary_active = TRUE;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ($secondary_active) {
+                        break;
+                    }
+                }
+            }*/
+
+        }
+
+        return FALSE;
+
     }
 
     /*
@@ -644,6 +776,7 @@ class SiteLinks {
                 "link_disabled" => FALSE, // true to disable link
                 "link_window"   => FALSE,
             ];
+
             foreach ($data[$id] as $link_id => $link_data) {
                 $tpl = Template::getInstance('link_item');
 
@@ -654,106 +787,17 @@ class SiteLinks {
                 if ($link_data['link_disabled']) {
                     $li_class[] = "disabled";
                 } else {
-                    if (!empty($options['item_class']))
-                        $li_class[] = $options['item_class'];
-                    if (empty($link_data['link_url']))
-                        $li_class[] = "no-link";
-                    if ($link_data['link_title'] == TRUE)
-                        $li_class[] = "dropdown-header";
+                    if (!empty($options['item_class'])) $li_class[] = $options['item_class'];
+                    if (empty($link_data['link_url'])) $li_class[] = "no-link";
+                    if ($link_data['link_title'] == TRUE) $li_class[] = "dropdown-header";
                 }
 
                 /*
                  * Attempt to calculate a relative link
                  * Taking into account that current start page does not match
                  */
-                $secondary_active = FALSE;
-                $template_settings = [];
-
-                // Active Helper Function
-                // If developer does not set it as true/false deliberately, only then system takes into account to calculate.
-                // The default values for link_active is blank, not false or true.
-                // It is therefore encouraged to set true or false when adding links for best efficiency.
-                if (!is_bool($link_data['link_active'])) {
-                    // If the current link_url does not contain request parameters, this link should be active
-                    if (!stristr($link_data['link_url'], "?")) {
-                        if (defined('IN_PERMALINK')) {
-                            if (Router::getRouterInstance()->getFilePath() == $link_data['link_url']) {
-                                $secondary_active = TRUE;
-                            }
-                        } else {
-                            // format the link
-                            $data_link_url = $link_data['link_url'];
-                            if (stristr($link_data['link_url'], "index.php")) {
-                                $data_link_url = str_replace("index.php", "", $data_link_url);
-                            }
-                            $url = parse_url(htmlspecialchars_decode($_SERVER['REQUEST_URI']));
-                            $current_url = str_replace(fusion_get_settings('site_path'), "", $url['path']);
-                            if (stristr($url['path'], "index.php")) {
-                                $current_url = str_replace("index.php", "", $current_url);
-                            }
-                            if ($data_link_url == $current_url) {
-                                $secondary_active = TRUE;
-                            }
-                        }
-                    }
-
-                    // not the first link
-                    if (self::getMenuParam('start_page') !== $link_data['link_url']) {
-                        // All Sublinks will be compared to - stable
-                        $linkRef = $this->get_SubLinks_URL($data, $link_data['link_id']);
-                        $linkRefURI = [];
-                        if (!empty($linkRef)) {
-                            $linkRefURI = array_flip($linkRef);
-                        }
-
-                        // The breadcrumbs series of arrays - stable
-                        $reference = $this->getLinkInstance();
-                        if (!empty($reference)) {
-
-                            $uri = parse_url(htmlspecialchars_decode($link_data['link_url']));
-                            $uriQuery = [];
-                            if (!empty($uri['query'])) {
-                                parse_str($uri['query'], $uriQuery);
-                            }
-                            foreach ($reference as $refData) {
-                                if (stristr($refData['link'], '../')) {
-                                    $refData['link'] = str_replace(str_repeat('../', substr_count($refData['link'], '../')), '', $refData['link']);
-                                }
-                                if (!empty($refData['link']) && $link_data['link_url'] !== "index.php") {
-                                    //If child link is part of the current page breadcrumb then parent is active
-                                    if (!empty($refData['link'])) {
-                                        if (isset($linkRefURI[$refData['link']])) {
-                                            $secondary_active = TRUE;
-                                            break;
-                                        }
-                                    }
-                                    // If parts of link url forms the breadcrumbs' link
-                                    if (!empty($link_data['link_url']) && stristr($refData['link'], $link_data['link_url'])) {
-                                        $secondary_active = TRUE;
-                                        break;
-                                    }
-                                    // If both links has the same uri requests string.
-                                    if (!empty($link_data['link_url']) && stristr($link_data['link_url'], '?')) {
-                                        $ref_uri = parse_url(htmlspecialchars_decode($refData['link']));
-                                        if (!empty($uri['query']) && !empty($ref_uri['query'])) {
-                                            parse_str($ref_uri['query'], $ref_uriQuery);
-                                            if (count($ref_uriQuery) == count($uriQuery)) {
-                                                $diff = array_diff_assoc($uriQuery, $ref_uriQuery);
-                                                $diff_2 = array_diff_assoc($ref_uriQuery, $uriQuery);
-                                                if ($diff == $diff_2) {
-                                                    $secondary_active = TRUE;
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                                if ($secondary_active) {
-                                    break;
-                                }
-                            }
-                        }
-                    }
+                if ($link_data['link_active'] == FALSE) {
+                    $link_data['link_active'] = $this->checkLinkActive($link_data['link_id'], $link_data['link_url'], $data);
                 }
 
                 if ($link_data['link_name'] != "---" && $link_data['link_name'] != "===") {
@@ -761,21 +805,8 @@ class SiteLinks {
                     if ($i == 0 && $id > 0) {
                         $li_class[] = "first-link";
                     }
-                    $link_is_active = $link_data['link_active'];
-                    if ($secondary_active) {
-                        $link_is_active = TRUE;
-                    } else if (strtr(FUSION_REQUEST, [fusion_get_settings('site_path') => '', '&amp;' => '&']) == str_replace('../', '', $link_data['link_url'])) {
-                        $link_is_active = TRUE;
-                    } else if ($options['start_page'] == $link_data['link_url']) {
-                        $link_is_active = TRUE;
-                    } else if ($settings['site_path'].$options['start_page'] == $link_data['link_url']) {
-                        $link_is_active = TRUE;
-                    } else if (($options['start_page'] == $settings['opening_page'] && $i == 0 && $id === 0)) {
-                        $link_is_active = TRUE;
-                    } else if ($link_data['link_url'] === '#') {
-                        $link_is_active = FALSE;
-                    }
-                    if ($link_is_active) {
+
+                    if ($link_data['link_active'] === TRUE) {
                         $li_class[] = "current-link active";
                     }
 
@@ -801,6 +832,7 @@ class SiteLinks {
                         $l_1 .= (empty($id) && $has_child ? "data-submenu " : "");
 
                         $li_class[] = (!empty($id) ? "dropdown-submenu" : "dropdown");
+
                         $li_class = array_filter($li_class);
 
                         $li_content = $link_data['link_icon'] ? "<i class='".$link_data['link_icon']."'></i>" : "";
@@ -834,6 +866,7 @@ class SiteLinks {
 
                     } else {
 
+                        $li_class = (!empty($li_class)) ? " class='".implode(" ", $li_class)."'" : "";
                         $link_class = (!empty($link_data['link_class']) ? " class='".$link_data['link_class']."'" : '');
                         $li_content = $link_data['link_icon'] ? "<i class='".$link_data['link_icon']."'></i>" : "";
                         $li_content .= $link_data['link_name'];
@@ -848,6 +881,7 @@ class SiteLinks {
                             $template_path = $bootstrap3_nav_li_link;
                             $template_obj = 'nav_li_link';
                             $template_settings = [
+                                'li_class'   => $li_class,
                                 'link_class' => $link_class,
                                 'link'       => $itemlink,
                                 'title'      => $li_content,
