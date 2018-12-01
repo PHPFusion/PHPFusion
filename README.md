@@ -18,7 +18,10 @@ To sync to this database and not to conflict with your work, please do the follo
   ````
   $ git fetch origin Andromeda-9.0.3:Andromeda-9.0.3  
   ````
-  
+ 
+#### Testing supported by
+
+<a href="https://www.browserstack.com/" target="_blank"><img width="180px" src="https://www.php-fusion.co.uk/images/logos/Browserstack-logo.svg" alt="BrowserStack"/></a>
   
 Development Discord
 ---
@@ -34,10 +37,6 @@ The latest repository contains all the previous commits done by all the core dev
 - Removed 9.1 branch
 - Protected 7.03 branch from branch removal
 - Submodules added to /infusions (Transition is in progress)
-
-#### Testing supported by
-
-<a href="https://www.browserstack.com/" target="_blank"><img width="180px" src="https://www.php-fusion.co.uk/images/logos/Browserstack-logo.svg" alt="BrowserStack"/></a>
 
 New Changes: About Submodules and Git Management of Core Infusions (CI)
 ===
