@@ -35,6 +35,10 @@ The latest repository contains all the previous commits done by all the core dev
 - Protected 7.03 branch from branch removal
 - Submodules added to /infusions (Transition is in progress)
 
+#### Testing supported by
+
+<a href="https://www.browserstack.com/" target="_blank"><img width="180px" src="https://www.php-fusion.co.uk/images/logos/Browserstack-logo.svg" alt="BrowserStack"/></a>
+
 New Changes: About Submodules and Git Management of Core Infusions (CI)
 ===
 As of latest update on code management, the core team will have our <a href='https://github.com/php-fusion/PHP-Fusion/tree/Andromeda-9.0.3/infusions'>Latest Core Infusions</a> to see them as a submodules. Submodules are alias that are being linked from each CI repositories now being for example,
