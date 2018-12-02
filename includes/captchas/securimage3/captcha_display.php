@@ -20,8 +20,9 @@
 if (!function_exists('display_captcha')) {
     function display_captcha($options = []) {
         $default_options = [
-            'show_text_input' => FALSE,
-            'input_name'      => 'captcha_code'
+            'show_text_input'   => FALSE,
+            'input_name'        => 'captcha_code',
+            'show_audio_button' => FALSE
         ];
 
         $options += $default_options;
