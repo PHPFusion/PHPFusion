@@ -219,6 +219,10 @@ class SiteLinks {
             'html_content'         => '',
             'affix_top'            => '',                   // Adds affix from top offset
             'affix_bottom'         => '',                   // Adds affix from bottom offset
+            'html_pre_content'     => '',
+            'html_post_content'    => '',
+            'nav_class_primary'    => '',
+            'nav_class_secondary'  => '',
         ];
 
         $options += $default_options;
@@ -529,6 +533,8 @@ class SiteLinks {
         $tpl->set_tag('navbar_id', $options['id']);
         $tpl->set_tag('navbar_class', $options['navbar_class']);
         $tpl->set_tag('affix', self::getaffix());
+        $tpl->set_tag('nav_class_primary', $options['nav_class_primary']);
+        $tpl->set_tag('nav_class_secondary', $options['nav_class_secondary']);
 
         if ($options['container'] || $options['container_fluid']) {
             if ($options['container']) {
@@ -554,12 +560,15 @@ class SiteLinks {
         }
 
         $tpl->set_tag('html_content', $options['html_content']);
+        $tpl->set_tag('html_pre_content', $options['html_pre_content']);
+        $tpl->set_tag('html_post_content', $options['html_post_content']);
         $tpl->set_tag('menu_item', $primary_links);
         if (!empty($language_dropdown) || !empty($searchbar_dropdown) || !empty($secondary_links)) {
             $tpl->set_block('menu_alt', ['menu_alt_item' => $secondary_links.$language_dropdown.$searchbar_dropdown]);
         }
 
         $tpl->set_template($bootstrap3_nav);
+        $tpl->set_locale(fusion_get_locale());
 
         return $tpl->get_output();
 
