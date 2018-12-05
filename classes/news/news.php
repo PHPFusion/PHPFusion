@@ -440,7 +440,7 @@ abstract class News extends NewsServer {
                 'news_sum_rating'       => $news_sum_rating,
                 'news_count_votes'      => $news_count_votes,
                 "news_allow_comments"   => $data['news_allow_comments'],
-                "news_display_comments" => $data['news_allow_comments'] ? display_comments($data['news_count_votes'], INFUSIONS."news/news.php?readmore=".$data['news_id']."#comments", '', 1) : '',
+                "news_display_comments" => $data['news_allow_comments'] ? display_comments($data['count_comment'], INFUSIONS."news/news.php?readmore=".$data['news_id']."#comments", '', 1) : '',
                 "news_allow_ratings"    => $data['news_allow_ratings'],
                 "news_display_ratings"  => $data['news_allow_ratings'] ? display_ratings($news_sum_rating, $news_count_votes, INFUSIONS."news/news.php?readmore=".$data['news_id']."#postrating", '', 1) : '',
                 'news_pagenav'          => $news_pagenav,
