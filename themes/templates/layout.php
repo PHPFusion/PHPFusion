@@ -64,11 +64,11 @@ if (!defined('FONTAWESOME-V4')) {
 }
 
 if (!defined('NO_DEFAULT_CSS')) {
-    echo "<link href='".THEMES."templates/default.min.css' rel='stylesheet' type='text/css' media='screen'/>\n";
+    echo "<link href='".THEMES."templates/default.min.css?v=".filemtime(THEMES.'templates/default.min.css')."' rel='stylesheet' type='text/css' media='screen'/>\n";
 }
 
 $theme_css = file_exists(THEME.'styles.min.css') ? THEME.'styles.min.css' : THEME.'styles.css';
-echo "<link href='".$theme_css."' rel='stylesheet' type='text/css' media='screen'/>\n";
+echo "<link href='".$theme_css."?v=".filemtime($theme_css)."' rel='stylesheet' type='text/css' media='screen'/>\n";
 
 if ($settings['bootstrap'] == TRUE || defined('BOOTSTRAP')) {
     $user_theme = fusion_get_userdata('user_theme');

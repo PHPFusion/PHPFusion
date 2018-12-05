@@ -58,12 +58,12 @@ if (!defined('FONTAWESOME-V4')) {
 
 // Default CSS styling which applies to all themes but can be overriden
 if (!defined('NO_DEFAULT_CSS')) {
-    echo "<link href='".THEMES."templates/default.min.css' rel='stylesheet' type='text/css' media='screen'/>\n";
+    echo "<link href='".THEMES."templates/default.min.css?v=".filemtime(THEMES.'templates/default.min.css')."' rel='stylesheet' type='text/css' media='screen'/>\n";
 }
 
 // Admin Panel Theme CSS
 $admin_theme_css = file_exists(THEMES.'admin_themes/'.$settings['admin_theme'].'/acp_styles.min.css') ? THEMES.'admin_themes/'.$settings['admin_theme'].'/acp_styles.min.css' : THEMES.'admin_themes/'.$settings['admin_theme'].'/acp_styles.css';
-echo "<link href='".$admin_theme_css."' rel='stylesheet' type='text/css' media='screen'/>\n";
+echo "<link href='".$admin_theme_css."?v=".filemtime($admin_theme_css)."' rel='stylesheet' type='text/css' media='screen'/>\n";
 
 echo render_favicons(defined('THEME_ICON') ? THEME_ICON : IMAGES.'favicons/');
 
