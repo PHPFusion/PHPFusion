@@ -3866,10 +3866,14 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 
 .nav-tabs {
     border-bottom: 2px solid #ddd;
+    overflow-x: auto;
+    overflow-y: hidden;
+    display: -webkit-box;
+    display: -moz-box;
 }
 
 .nav-tabs > li {
-    float: left;
+    float: none;
     margin-bottom: -1px;
 }
 
