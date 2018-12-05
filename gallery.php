@@ -169,7 +169,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
         }
 
         $data['photo_show_comments'] = get_photo_comments($data);
-        $data['photo_show_ratings'] = ''; //get_photo_ratings($data);
+        $data['photo_show_ratings'] = get_photo_ratings($data);
 
         $info += $data;
         render_photo($info);
@@ -218,7 +218,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
                     FROM ".DB_PHOTOS." AS p
                     LEFT JOIN ".DB_USERS." AS pu ON p.photo_user = pu.user_id
                     WHERE album_id=:albumid
-                    ORDER BY photo_datestamp DESC LIMIT 1", [':albumid'  => intval($_GET['album_id'])]));
+                    ORDER BY photo_datestamp DESC LIMIT 1", [':albumid' => intval($_GET['album_id'])]));
                 $info['album_stats'] = $locale['gallery_422']." ".$info['max_rows']."<br />\n";
                 $info['album_stats'] .= $locale['gallery_423']." ".profile_link($latest_update['user_id'], $latest_update['user_name'], $latest_update['user_status'])." ".$locale['gallery_424']." ".showdate("longdate", $latest_update['photo_datestamp'])."\n";
                 $pattern = "SELECT %s(pr.rating_vote) FROM ".DB_RATINGS." AS pr WHERE pr.rating_item_id = p.photo_id AND pr.rating_type = 'P'";
@@ -466,7 +466,7 @@ function get_photo_comments($data) {
     $html = "";
     if (fusion_get_settings('comments_enabled') && $data['photo_allow_comments']) {
         ob_start();
-        showcomments("P", DB_PHOTOS, "photo_id", $data['photo_id'], BASEDIR."infusions/gallery/gallery.php?photo_id=".$data['photo_id'], $data['photo_allow_ratings']);
+        showcomments("P", DB_PHOTOS, "photo_id", $data['photo_id'], BASEDIR."infusions/gallery/gallery.php?photo_id=".$data['photo_id']);
         $html = ob_get_contents();
         ob_end_clean();
     }
