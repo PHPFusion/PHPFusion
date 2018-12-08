@@ -173,20 +173,19 @@ openside('');
 echo form_hidden('download_id', '', $data['download_id']);
 echo form_hidden('download_user', '', $data['download_user']);
 echo form_hidden('download_datestamp', '', $data['download_datestamp']);
-echo form_text('download_title', $locale['download_0200'], $data['download_title'],
-    [
-        'required'   => TRUE,
-        "inline"     => TRUE,
-        'error_text' => $locale['download_0110']
-    ]);
-echo form_textarea('download_description_short', $locale['download_0202'], $data['download_description_short'],
-    [
-        'required'   => TRUE,
-        "inline"     => TRUE,
-        'error_text' => $locale['download_0112'],
-        'maxlength'  => '255',
-        'autosize'   => fusion_get_settings("tinymce_enabled") ? FALSE : TRUE,
-    ]);
+echo form_text('download_title', $locale['download_0200'], $data['download_title'], [
+    'required'   => TRUE,
+    "inline"     => TRUE,
+    'error_text' => $locale['download_0110']
+]);
+echo form_textarea('download_description_short', $locale['download_0202'], $data['download_description_short'], [
+    'required'   => TRUE,
+    'error_text' => $locale['download_0112'],
+    'maxlength'  => '255',
+    'autosize'   => fusion_get_settings("tinymce_enabled") ? FALSE : TRUE,
+    'type'       => 'bbcode',
+    'form_name'  => 'inputform'
+]);
 if ($dl_settings['download_screenshot']) {
     if (!empty($data['download_image']) && !empty($data['download_image_thumb'])) {
         echo "<div class='clearfix list-group-item m-b-20'>\n";
@@ -222,17 +221,15 @@ if ($dl_settings['download_screenshot']) {
         echo form_fileinput('download_image', $locale['download_0220'], '', $file_options); // all file types.
     }
 }
-echo form_select('download_keywords', $locale['download_0203'], $data['download_keywords'],
-    [
-        "placeholder" => $locale['download_0203a'],
-        'max_length'  => 320,
-        "inline"      => TRUE,
-        'width'       => '100%',
-        'inner_width' => '100%',
-        'tags'        => 1,
-        'multiple'    => 1
-    ]
-);
+echo form_select('download_keywords', $locale['download_0203'], $data['download_keywords'], [
+    "placeholder" => $locale['download_0203a'],
+    'max_length'  => 320,
+    "inline"      => TRUE,
+    'width'       => '100%',
+    'inner_width' => '100%',
+    'tags'        => 1,
+    'multiple'    => 1
+]);
 closeside();
 
 /* Download file input */
@@ -300,6 +297,7 @@ echo form_textarea('download_description', $locale['download_0202a'], $data['dow
     "preview"     => fusion_get_settings("tinymce_enabled") ? FALSE : TRUE,
     "placeholder" => $locale['download_0201'],
     'height'      => '300px',
+    'path'        => IMAGES_D
 ]);
 echo "</div>\n<div class='col-xs-12 col-sm-4'>\n";
 openside();
