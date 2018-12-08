@@ -3874,63 +3874,35 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 
 .nav-tabs > li {
     float: none;
-    margin-bottom: -1px;
 }
 
 .nav-tabs > li > a {
     margin-right: 2px;
     line-height: 1.846;
-    border: none !important;
+    border-top: none;
+    border-left: none;
+    border-right: none;
     color: #666;
 }
 
 .nav-tabs > li > a:hover,
 .nav-tabs > li > a:focus {
-    border-color: #eeeeee #eeeeee #ddd;
+    border-bottom: 2px solid #2196F3;
     background-color: transparent;
-}
-
-.nav-tabs > li > a:after {
-    content: '';
-    background: #2196F3;
-    height: 2px;
-    position: absolute;
-    width: 100%;
-    left: 0px;
-    bottom: -1px;
-    -webkit-transition: all 250ms ease 0s;
-    -o-transition: all 250ms ease 0s;
-    -moz-transition: all 250ms ease 0s;
-    transition: all 250ms ease 0s;
-    -webkit-transform: scale(0);
-    -moz-transform: scale(0);
-    -ms-transform: scale(0);
-    -o-transform: scale(0);
-    transform: scale(0);
 }
 
 .nav-tabs > li.active > a,
 .nav-tabs > li.active > a:hover,
 .nav-tabs > li.active > a:focus {
     color: #666;
-    background-color: transparent;
-    border: 1px solid transparent;
-    border-bottom-color: transparent;
-    cursor: default;
+    border: 0px solid transparent;
+    border-bottom: 2px solid #2196F3;
 }
 
 .nav-tabs > li.active > a,
 .nav-tabs > li a:hover {
     color: #2196F3;
-}
-
-.nav-tabs > li.active > a:after,
-.nav-tabs > li a:hover:after {
-    -webkit-transform: scale(1);
-    -moz-transform: scale(1);
-    -ms-transform: scale(1);
-    -o-transform: scale(1);
-    transform: scale(1);
+    border-bottom: 2px solid #2196F3;
 }
 
 .nav-tabs.nav-justified {
