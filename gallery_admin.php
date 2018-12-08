@@ -303,7 +303,7 @@ function gallery_album_listing() {
         // Photo Album header
         echo "<div class='clearfix'>\n";
         echo "<h2><strong>\n".$locale['gallery_0022']."</strong></h2>\n";
-        echo "<div class='pull-right text-right col-xs-6 col-sm-6'>".sprintf($locale['gallery_0018'], $rows, $albumRows)."</div>\n";
+        echo "<div class='pull-right text-right hidden-xs'>".sprintf($locale['gallery_0018'], $rows, $albumRows)."</div>\n";
         echo "<span class='m-r-15'>".sprintf($locale['gallery_0023'], $albumRows, $photoRows, timer($update['last_updated']))."</span>";
         if ($albumRows > $rows) {
             echo "<div class='display-inline-block m-b-10'>\n";
