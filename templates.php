@@ -259,6 +259,8 @@ if (!function_exists('forum_viewforum')) {
                     } else {
                         $ctpl->set_block('no_item', ['message' => $locale['forum_0019']]);
                     }
+
+                    $tpl->set_block('view', ['content' => $ctpl->get_output()]);
                     break;
                 case 'people':
                     $user_tpl = \PHPFusion\Template::getInstance('viewforum_users');
