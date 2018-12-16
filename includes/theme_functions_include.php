@@ -48,7 +48,7 @@ function showrendertime($queries = TRUE) {
 /**
  * Developer tools only (Translations not Required)
  *
- * @param bool   $show_sql_performance - true to pop up SQL analysis modal
+ * @param bool   $show_sql_performance  - true to pop up SQL analysis modal
  * @param string $performance_threshold - results that is slower than this will be highlighted
  *
  * @return string
@@ -261,7 +261,7 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
     /**
      * Generate modal
      *
-     * @param       $id - unique CSS id
+     * @param       $id    - unique CSS id
      * @param       $title - modal title
      * @param array $options
      *
@@ -340,7 +340,7 @@ if (!function_exists("progress_bar")) {
     /**
      * Render a progress bar
      *
-     * @param        $num - str or array
+     * @param        $num   - str or array
      * @param bool   $title - str or array
      * @param bool   $class
      * @param bool   $height
@@ -548,7 +548,7 @@ if (!function_exists("showsublinks")) {
     /**
      * Displays Site Links Navigation Bar
      *
-     * @param string $sep - Custom seperator text
+     * @param string $sep   - Custom seperator text
      * @param string $class - Class
      * @param array  $options
      *
@@ -732,15 +732,15 @@ if (!function_exists('tablebreak')) {
 
 /**
  * @param array  $userdata
- *                          Indexes:
- *                          - user_id
- *                          - user_name
- *                          - user_avatar
- *                          - user_status
- * @param string $size A valid size for CSS max-width and max-height.
- * @param string $class Classes for the link
- * @param bool   $link FALSE if you want to display the avatar without link. TRUE by default.
- * @param string $img_class Classes for the image
+ *                              Indexes:
+ *                              - user_id
+ *                              - user_name
+ *                              - user_avatar
+ *                              - user_status
+ * @param string $size          A valid size for CSS max-width and max-height.
+ * @param string $class         Classes for the link
+ * @param bool   $link          FALSE if you want to display the avatar without link. TRUE by default.
+ * @param string $img_class     Classes for the image
  * @param string $custom_avatar Custom default avatar
  *
  * @return string
@@ -781,7 +781,7 @@ if (!function_exists('display_avatar')) {
                 $font_color = get_brightness($color) > 130 ? '000' : 'fff';
                 $first_char = substr($userdata['user_name'], 0, 1);
                 $first_char = strtoupper($first_char);
-                $img = '<div class="display-inline-block va avatar '.$img_class.'" style="width:'.$size.';max-height:'.$size.';"><svg version="1.1" viewBox="0 0 20 20"><rect fill="#'.$color.'" stroke-width="0" y="0" x="0" height="100%" width="100%"/><text fill="#'.$font_color.'" x="50%" y="50%" text-anchor="middle" alignment-baseline="central" dy="-0.05em">'.$first_char.'</text></svg></div>';
+                $img = '<div class="display-inline-block va avatar '.$img_class.'" style="width:'.$size.';max-height:'.$size.';"><svg viewBox="0 0 20 20" preserveAspectRatio="xMinYMin meet"><rect fill="#'.$color.'" stroke-width="0" y="0" x="0" width="'.$size.'" height="'.$size.'"/><text fill="#'.$font_color.'" x="50%" y="50%" text-anchor="middle" dy="0.3em">'.$first_char.'</text></svg></div>';
             }
         }
 
@@ -789,11 +789,32 @@ if (!function_exists('display_avatar')) {
     }
 }
 
-function stringToColorCode($str) {
-    $code = dechex(crc32($str));
-    $code = substr($code, 0, 6);
 
-    return $code;
+function stringToColorCode($text) {
+    $min_brightness = 50; // integer between 0 and 100
+    $spec = 3; // integer between 2-10, determines how unique each color will be
+
+    $hash = sha1(md5(sha1($text)));
+    $colors = [];
+    for ($i = 0; $i < 3; $i++) {
+        $colors[$i] = max([round(((hexdec(substr($hash, $spec * $i, $spec))) / hexdec(str_pad('', $spec, 'F'))) * 255), $min_brightness]);
+    }
+
+    if ($min_brightness > 0) {
+        while (array_sum($colors) / 3 < $min_brightness) {
+            for ($i = 0; $i < 3; $i++) {
+                $colors[$i] += 10;
+            }
+        }
+    }
+
+    $output = '';
+
+    for ($i = 0; $i < 3; $i++) {
+        $output .= str_pad(dechex($colors[$i]), 2, 0, STR_PAD_LEFT);
+    }
+
+    return $output;
 }
 
 function get_brightness($hex) {
@@ -1193,9 +1214,9 @@ if (!function_exists("tab_active")
     /**
      * Current Tab Active Selector
      *
-     * @param      $array - multidimension array consisting of keys 'title', 'id', 'icon'
+     * @param      $array          - multidimension array consisting of keys 'title', 'id', 'icon'
      * @param      $default_active - 0 if link_mode is false, $_GET if link_mode is true
-     * @param bool $getname - set getname and turn tabs into link that listens to getname
+     * @param bool $getname        - set getname and turn tabs into link that listens to getname
      *
      * @return string
      * @todo: options base
@@ -1207,14 +1228,14 @@ if (!function_exists("tab_active")
     /**
      * Render Tab Links
      *
-     * @param array      $tab_title entire array consisting of ['title'], ['id'], ['icon']
-     * @param string     $link_active_arrkey tab_active() function or the $_GET request to match the $tab_title['id']
-     * @param string     $id unique ID
-     * @param bool|FALSE $link default false for jquery, true for php (will reload page)
-     * @param bool|FALSE $class the class for the nav
-     * @param string     $getname the get request
-     * @param array      $cleanup_GET the request key that needs to be deleted
-     * @param bool|FALSE $remember set to true to automatically remember tab using cookie.
+     * @param array      $tab_title             entire array consisting of ['title'], ['id'], ['icon']
+     * @param string     $link_active_arrkey    tab_active() function or the $_GET request to match the $tab_title['id']
+     * @param string     $id                    unique ID
+     * @param bool|FALSE $link                  default false for jquery, true for php (will reload page)
+     * @param bool|FALSE $class                 the class for the nav
+     * @param string     $getname               the get request
+     * @param array      $cleanup_GET           the request key that needs to be deleted
+     * @param bool|FALSE $remember              set to true to automatically remember tab using cookie.
      *                                          Example:
      *                                          $tab_title['title'][] = "Tab 1";
      *                                          $tab_title['id'][] = "tab1";
@@ -1245,7 +1266,7 @@ if (!function_exists("tab_active")
      * @param string $tab_title deprecated, however this function is replaceable, and the params are accessible.
      * @param        $tab_id
      * @param bool   $link_active_arrkey
-     * @param bool   $link deprecated, however this function is replaceable, and the params are accessible.
+     * @param bool   $link      deprecated, however this function is replaceable, and the params are accessible.
      * @param bool   $key
      *
      * @return mixed
