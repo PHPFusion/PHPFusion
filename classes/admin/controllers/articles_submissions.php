@@ -331,12 +331,12 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
             'input-id' => 'preview_submission-'.$unique_id
         ]);
         echo form_button('publish_submission', $this->locale['article_0352'], $this->locale['article_0352'], [
-            'class'    => 'btn-success btn-sm',
+            'class'    => 'btn-success btn-sm m-l-5',
             'icon'     => 'fa fa-hdd-o',
             'input-id' => 'publish_submission-'.$unique_id
         ]);
         echo form_button('delete_submission', $this->locale['delete'], $this->locale['delete'], [
-            'class'    => 'btn-danger btn-sm',
+            'class'    => 'btn-danger btn-sm m-l-5',
             'icon'     => 'fa fa-trash',
             'input-id' => 'delete_submission-'.$unique_id
         ]);

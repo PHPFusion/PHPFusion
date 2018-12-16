@@ -360,9 +360,9 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
                 <!-- Actions -->
                 <div class="pull-right">
                     <a class="btn btn-success btn-sm" href="<?php echo clean_request("ref=article_cat_form", ["ref"], FALSE); ?>"><i class="fa fa-fw fa-plus"></i> <?php echo $this->locale['article_0005']; ?></a>
-                    <button class="hidden-xs btn btn-default btn-sm" onclick="run_admin('publish', '#table_action', '#article_table');"><i class="fa fa-fw fa-check"></i> <?php echo $this->locale['publish']; ?></button>
-                    <button class="hidden-xs btn btn-default btn-sm" onclick="run_admin('unpublish', '#table_action', '#article_table');"><i class="fa fa-fw fa-ban"></i> <?php echo $this->locale['unpublish']; ?></button>
-                    <button class="hidden-xs btn btn-danger btn-sm" onclick="run_admin('delete', '#table_action', '#article_table');"><i class="fa fa-fw fa-trash-o"></i> <?php echo $this->locale['delete']; ?></button>
+                    <button class="hidden-xs m-l-5 btn btn-default btn-sm" onclick="run_admin('publish', '#table_action', '#article_table');"><i class="fa fa-fw fa-check"></i> <?php echo $this->locale['publish']; ?></button>
+                    <button class="hidden-xs m-l-5 btn btn-default btn-sm" onclick="run_admin('unpublish', '#table_action', '#article_table');"><i class="fa fa-fw fa-ban"></i> <?php echo $this->locale['unpublish']; ?></button>
+                    <button class="hidden-xs m-l-5 btn btn-danger btn-sm" onclick="run_admin('delete', '#table_action', '#article_table');"><i class="fa fa-fw fa-trash-o"></i> <?php echo $this->locale['delete']; ?></button>
                 </div>
 
                 <!-- Search -->
@@ -378,8 +378,7 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
                 </div>
 
                 <div class="display-inline-block hidden-xs">
-                    <a class="btn btn-sm m-r-5 <?php echo(!$filter_empty ? "btn-info" : "btn-default"); ?>"
-                       id="toggle_options" href="#">
+                    <a class="btn btn-sm m-r-5 <?php echo(!$filter_empty ? "btn-info" : "btn-default"); ?>" id="toggle_options" href="#">
                         <?php echo $this->locale['article_0121']; ?>
                         <span id="filter_caret" class="fa <?php echo(!$filter_empty ? "fa-caret-up" : "fa-caret-down"); ?>"></span>
                     </a>

@@ -474,11 +474,11 @@ class ArticlesAdmin extends ArticlesAdminModel {
             <div class="clearfix">
                 <div class="pull-right">
                     <?php if ($article_cats) { ?>
-                        <a class="btn btn-sm btn-success" href="<?php echo clean_request("ref=article_form", ["ref"], FALSE); ?>"><i class="fa fa-fw fa-plus"></i> <?php echo $this->locale['article_0002']; ?></a>
+                        <a class="btn btn-sm btn-success" href="<?php echo clean_request("ref=article_form", ["ref"], FALSE); ?>"><i class="fa fa-plus"></i> <?php echo $this->locale['article_0002']; ?></a>
                     <?php } ?>
-                    <button type="button" class="hidden-xs btn btn-sm btn-default" onclick="run_admin('publish', '#table_action', '#article_table');"><i class="fa fa-fw fa-check"></i> <?php echo $this->locale['publish']; ?></button>
-                    <button type="button" class="hidden-xs btn btn-sm btn-default" onclick="run_admin('unpublish', '#table_action', '#article_table');"><i class="fa fa-fw fa-ban"></i> <?php echo $this->locale['unpublish']; ?></button>
-                    <button type="button" class="hidden-xs btn btn-sm btn-danger" onclick="run_admin('delete', '#table_action', '#article_table');"><i class="fa fa-fw fa-trash-o"></i> <?php echo $this->locale['delete']; ?></button>
+                    <button type="button" class="hidden-xs m-l-5 btn btn-sm btn-default" onclick="run_admin('publish', '#table_action', '#article_table');"><i class="fa fa-check"></i> <?php echo $this->locale['publish']; ?></button>
+                    <button type="button" class="hidden-xs m-l-5 btn btn-sm btn-default" onclick="run_admin('unpublish', '#table_action', '#article_table');"><i class="fa fa-ban"></i> <?php echo $this->locale['unpublish']; ?></button>
+                    <button type="button" class="hidden-xs m-l-5 btn btn-sm btn-danger" onclick="run_admin('delete', '#table_action', '#article_table');"><i class="fa fa-trash-o"></i> <?php echo $this->locale['delete']; ?></button>
                 </div>
 
                 <div class="display-inline-block pull-left m-r-10">
