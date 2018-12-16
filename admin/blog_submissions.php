@@ -336,8 +336,8 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 ];
             }
             echo form_textarea('blog_extended', $locale['blog_0426'], $callback_data['blog_extended'], $extendedSettings);
-            echo form_button('preview', $locale['blog_0141'], $locale['blog_0141'], ['class' => 'btn-default m-r-10', 'icon' => 'fa fa-eye']);
-            echo form_button('publish', $locale['blog_0134'], $locale['blog_0134'], ['class' => 'btn-success m-r-10', 'icon' => 'fa fa-hdd-o']);
+            echo form_button('preview', $locale['blog_0141'], $locale['blog_0141'], ['class' => 'btn-default m-r-5', 'icon' => 'fa fa-eye']);
+            echo form_button('publish', $locale['blog_0134'], $locale['blog_0134'], ['class' => 'btn-success m-r-5', 'icon' => 'fa fa-hdd-o']);
             echo form_button('delete', $locale['blog_0135'], $locale['blog_0135'], ['class' => 'btn-danger', 'icon' => 'fa fa-trash']);
             echo closeform();
         }

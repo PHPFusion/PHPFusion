@@ -339,6 +339,6 @@ echo "<label><input type='checkbox' name='blog_allow_ratings' value='yes' ".($da
 closeside();
 echo "</div>\n</div>\n";
 echo form_button('save', $locale['blog_0437'], $locale['blog_0437'], ['class' => 'btn-success', 'icon' => 'fa fa-hdd-o']);
-echo form_button('preview', $locale['blog_0141'], $locale['blog_0141'], ['class' => 'btn-primary', 'icon' => 'fa fa-eye']);
+echo form_button('preview', $locale['blog_0141'], $locale['blog_0141'], ['class' => 'm-l-5 btn-primary', 'icon' => 'fa fa-eye']);
 echo closeform();
 echo "</div>\n";
