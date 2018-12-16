@@ -331,8 +331,8 @@ class FaqAdmin extends FaqAdminModel {
         ?>
         <div class="m-t-20">
             <?php echo form_button("cancel", $this->locale['cancel'], $this->locale['cancel'], ["class" => "btn-default btn-sm", "icon" => "fa fa-times", "input-id" => "cancel-".$unique_id.""]); ?>
-            <?php echo form_button("save", $this->locale['save'], $this->locale['save'], ["class" => "btn-success btn-sm", "icon" => "fa fa-hdd-o", "input-id" => "save-".$unique_id.""]); ?>
-            <?php echo form_button("save_and_close", $this->locale['save_and_close'], $this->locale['save_and_close'], ["class" => "btn-primary btn-sm", "icon" => "fa fa-floppy-o", "input-id" => "save_and_close-".$unique_id.""]); ?>
+            <?php echo form_button("save", $this->locale['save'], $this->locale['save'], ["class" => "btn-success btn-sm m-l-5", "icon" => "fa fa-hdd-o", "input-id" => "save-".$unique_id.""]); ?>
+            <?php echo form_button("save_and_close", $this->locale['save_and_close'], $this->locale['save_and_close'], ["class" => "btn-primary btn-sm m-l-5", "icon" => "fa fa-floppy-o", "input-id" => "save_and_close-".$unique_id.""]); ?>
         </div>
         <?php if ($breaker) { ?>
             <hr/><?php } ?>
@@ -485,10 +485,10 @@ class FaqAdmin extends FaqAdminModel {
         if ($result) {
             echo "<a class='btn btn-success btn-sm' href='".clean_request('ref=faq_form', ['ref'], FALSE)."'><i class='fa fa-plus'></i> ".$this->locale['faq_0003']."</a>\n";
         }
-        echo "<a class='btn btn-primary btn-sm' href='".clean_request('ref=faq_cat_form', ['ref'], FALSE)."'><i class='fa fa-plus'></i> ".$this->locale['faq_0119']."</a>
-            <a class='btn btn-default btn-sm hidden-xs' onclick=\"run_admin('publish', '#table_action', '#faq_table');\"><i class='fa fa-check'></i>".$this->locale['publish']."</a>
-            <a class='btn btn-default btn-sm hidden-xs' onclick=\"run_admin('unpublish', '#table_action', '#faq_table');\"><i class='fa fa-ban'></i>".$this->locale['unpublish']."</a>
-            <a class='btn btn-danger btn-sm hidden-xs' onclick=\"run_admin('delete', '#table_action', '#faq_table');\"><i class='fa fa-trash-o'></i>".$this->locale['delete']."</a>
+        echo "<a class='m-l-5 btn btn-primary btn-sm' href='".clean_request('ref=faq_cat_form', ['ref'], FALSE)."'><i class='fa fa-plus'></i> ".$this->locale['faq_0119']."</a>
+            <a class='m-l-5 btn btn-default btn-sm hidden-xs' onclick=\"run_admin('publish', '#table_action', '#faq_table');\"><i class='fa fa-check'></i>".$this->locale['publish']."</a>
+            <a class='m-l-5 btn btn-default btn-sm hidden-xs' onclick=\"run_admin('unpublish', '#table_action', '#faq_table');\"><i class='fa fa-ban'></i>".$this->locale['unpublish']."</a>
+            <a class='m-l-5 btn btn-danger btn-sm hidden-xs' onclick=\"run_admin('delete', '#table_action', '#faq_table');\"><i class='fa fa-trash-o'></i>".$this->locale['delete']."</a>
         </div><div class='display-inline-block pull-left m-r-10'>
         ".form_text('faq_answer', '', $filter_values['faq_answer'], [
                 'placeholder'       => $this->locale['faq_0120'],
