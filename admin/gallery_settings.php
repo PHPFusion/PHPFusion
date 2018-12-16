@@ -261,7 +261,7 @@ closeside();
 echo "</div>\n</div>\n";
 echo form_button('savesettings', $locale['gallery_0216'], $locale['gallery_0216'], ['class' => 'btn-success', 'icon' => 'fa fa-hdd-o']);
 echo form_button('delete_watermarks', $locale['gallery_0211'], $locale['gallery_0211'], [
-    'deactivate' => !$gll_settings['photo_watermark'] ? 1 : 0, 'class' => 'btn-danger', 'icon' => 'fa fa-trash'
+    'deactivate' => !$gll_settings['photo_watermark'] ? 1 : 0, 'class' => 'm-l-5 btn-danger', 'icon' => 'fa fa-trash'
 ]);
 echo closeform();
         echo '</div>';
