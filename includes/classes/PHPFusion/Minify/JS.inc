@@ -4,9 +4,9 @@
  *
  * Please report bugs on https://github.com/matthiasmullie/minify/issues
  *
- * @author Matthias Mullie <minify@mullie.eu>
+ * @author    Matthias Mullie <minify@mullie.eu>
  * @copyright Copyright (c) 2012, Matthias Mullie. All rights reserved
- * @license MIT License
+ * @license   MIT License
  */
 namespace PHPFusion\Minify;
 
@@ -15,11 +15,11 @@ namespace PHPFusion\Minify;
  *
  * Please report bugs on https://github.com/matthiasmullie/minify/issues
  *
- * @package Minify
- * @author Matthias Mullie <minify@mullie.eu>
- * @author Tijs Verkoyen <minify@verkoyen.eu>
+ * @package   Minify
+ * @author    Matthias Mullie <minify@mullie.eu>
+ * @author    Tijs Verkoyen <minify@verkoyen.eu>
  * @copyright Copyright (c) 2012, Matthias Mullie. All rights reserved
- * @license MIT License
+ * @license   MIT License
  */
 class JS extends Minify {
     /**
@@ -122,6 +122,8 @@ class JS extends Minify {
      * {@inheritdoc}
      */
     public function __construct() {
+        parent::__construct();
+
         call_user_func_array(['parent', '__construct'], func_get_args());
 
         $dataDir = CLASSES.'PHPFusion/Minify/data/js/';
@@ -191,11 +193,21 @@ class JS extends Minify {
      * Strip comments from source code.
      */
     protected function stripComments() {
+        // PHP only supports $this inside anonymous functions since 5.4
+        $minifier = $this;
+        $callback = function ($match) use ($minifier) {
+            $count = count($minifier->extracted);
+            $placeholder = '/*'.$count.'*/';
+            $minifier->extracted[$placeholder] = $match[0];
+
+            return $placeholder;
+        };
+        // multi-line comments
+        $this->registerPattern('/\n?\/\*(!|.*?@license|.*?@preserve).*?\*\/\n?/s', $callback);
+        $this->registerPattern('/\/\*.*?\*\//s', '');
+
         // single-line comments
         $this->registerPattern('/\/\/.*$/m', '');
-
-        // multi-line comments
-        $this->registerPattern('/\/\*.*?\*\//s', '');
     }
 
     /**
@@ -233,7 +245,7 @@ class JS extends Minify {
         // closing the regex)
         // then also ignore bare `/` inside `[]`, where they don't need to be
         // escaped: anything inside `[]` can be ignored safely
-        $pattern = '\\/(?:[^\\[\\/\\\\\n\r]+|(?:\\\\.)+|(?:\\[(?:[^\\]\\\\\n\r]+|(?:\\\\.)+)+\\])+)++\\/[gimuy]*';
+        $pattern = '\\/(?!\*)(?:[^\\[\\/\\\\\n\r]++|(?:\\\\.)++|(?:\\[(?:[^\\]\\\\\n\r]++|(?:\\\\.)++)++\\])++)++\\/[gimuy]*';
 
         // a regular expression can only be followed by a few operators or some
         // of the RegExp methods (a `\` followed by a variable or value is
@@ -329,7 +341,9 @@ class JS extends Minify {
             [
                 '/('.implode('|', $operatorsBefore).')\s+/',
                 '/\s+('.implode('|', $operatorsAfter).')/',
-            ], '\\1', $content
+            ],
+            '\\1',
+            $content
         );
 
         // make sure + and - can't be mistaken for, or joined into ++ and --
@@ -337,7 +351,9 @@ class JS extends Minify {
             [
                 '/(?<![\+\-])\s*([\+\-])(?![\+\-])/',
                 '/(?<![\+\-])([\+\-])\s*(?![\+\-])/',
-            ], '\\1', $content
+            ],
+            '\\1',
+            $content
         );
 
         // collapse whitespace around reserved words into single space
