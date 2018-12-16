@@ -98,12 +98,10 @@ function showratings($rating_type, $rating_item_id, $rating_link) {
             echo "<div id='ratings' class='rating_container'>\n";
 
             foreach ($rating_votes as $key => $num) {
-
                 $num = intval($num);
-
                 $percentage = $rating_sum == 0 ? 0 : round((($num / $rating_sum) * 100), 1);
 
-                echo progress_bar($percentage, $locale[$key]." ($num)", FALSE, '10px', FALSE, TRUE);
+                echo progress_bar($percentage, $locale[$key]." ($num)", ['height' => '10px']);
 
             }
             echo "</div>\n";

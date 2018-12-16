@@ -46,33 +46,15 @@ if (iMEMBER) {
     if (!iSUPERADMIN) {
         $inbox_cfg = user_pm_settings($userdata['user_id'], "user_inbox");
         $inbox_percent = $inbox_cfg > 1 ? number_format(($inbox_count / $inbox_cfg) * 99, 0) : number_format(0 * 99, 0);
-        $pm_progress = progress_bar($inbox_percent, $locale['UM098'],
-            FALSE, // class
-            FALSE,  // height
-            TRUE,  // reverse
-            TRUE,  // as percent
-            ($inbox_cfg == 0 ? TRUE : FALSE)
-        );
+        $pm_progress = progress_bar($inbox_percent, $locale['UM098'], ['reverse' => TRUE, 'disabled' => ($inbox_cfg == 0 ? TRUE : FALSE)]);
 
         $outbox_cfg = user_pm_settings($userdata['user_id'], "user_outbox");
         $outbox_percent = $outbox_cfg > 1 ? number_format(($outbox_count / $outbox_cfg) * 99, 0) : number_format(0 * 99, 0);
-        $pm_progress .= progress_bar($outbox_percent, $locale['UM099'],
-            FALSE, // class
-            FALSE,  // height
-            TRUE,  // reverse
-            TRUE,  // as percent
-            ($inbox_cfg == 0 ? TRUE : FALSE)
-        );
+        $pm_progress .= progress_bar($outbox_percent, $locale['UM099'], ['reverse' => TRUE, 'disabled' => ($inbox_cfg == 0 ? TRUE : FALSE)]);
 
         $archive_cfg = user_pm_settings($userdata['user_id'], "user_archive");
         $archive_percent = $archive_cfg > 1 ? number_format(($archive_count / $archive_cfg) * 99, 0) : number_format(0 * 99, 0);
-        $pm_progress .= progress_bar($archive_percent, $locale['UM100'],
-            FALSE, // class
-            FALSE,  // height
-            TRUE,  // reverse
-            TRUE,  // as percent
-            ($inbox_cfg == 0 ? TRUE : FALSE)
-        );
+        $pm_progress .= progress_bar($archive_percent, $locale['UM100'], ['reverse' => TRUE, 'disabled' => ($inbox_cfg == 0 ? TRUE : FALSE)]);
     }
 
     $submissions_link_arr = [];

@@ -338,20 +338,31 @@ if (!function_exists("progress_bar")) {
     /**
      * Render a progress bar
      *
-     * @param        $num   - str or array
-     * @param bool   $title - str or array
-     * @param bool   $class
-     * @param bool   $height
-     * @param bool   $reverse
-     * @param bool   $as_percent
-     * @param bool   $disabled
-     * @param bool   $hide_info
-     * @param string $class_
+     * @param int   $num        Max of 100
+     * @param bool  $title      Label for the progress bar
+     * @param array $options
+     *                          class           additional class for the progress bar
+     *                          height          the height of the progress bar in px
+     *                          reverse         set to true to have the color counting reversed
+     *                          disable         set to true to have the progress bar disabled status
+     *                          hide_info       set to true to hide the information in the progress bar rendering
+     *                          progress_class  have it your custom progress bar class with your own custom class
      *
      * @return string
      */
-    function progress_bar($num, $title = FALSE, $class = FALSE, $height = FALSE, $reverse = FALSE, $as_percent = TRUE, $disabled = FALSE, $hide_info = FALSE, $class_ = 'm-b-10') {
-        $height = ($height) ? $height : '20px';
+    function progress_bar($num, $title = FALSE, array $options = []) {
+        $default_options = [
+            'class'          => '',
+            'height'         => '',
+            'reverse'        => FALSE,
+            'as_percent'     => TRUE,
+            'disabled'       => FALSE,
+            'hide_info'      => FALSE,
+            'progress_class' => ''
+        ];
+        $options += $default_options;
+
+        $height = ($options['height']) ? $options['height'] : '20px';
         if (!function_exists('bar_color')) {
             function bar_color($num, $reverse) {
                 $auto_class = $reverse ? "progress-bar-success" : "progress-bar-danger";
@@ -385,11 +396,11 @@ if (!function_exists("progress_bar")) {
 
                 $int = intval($num);
 
-                if ($disabled == TRUE) {
+                if ($options['disabled'] == TRUE) {
                     $value = "&#x221e;";
                 } else {
                     $value = $value > 0 ? $value.' ' : '0 ';
-                    $value .= $as_percent ? '%' : '';
+                    $value .= $options['as_percent'] ? '%' : '';
                 }
 
                 $c2Title = "";
@@ -400,8 +411,8 @@ if (!function_exists("progress_bar")) {
                     $cTitle = $title;
                 }
 
-                $auto_class = ($reverse) ? $_barcolor_reverse[$i] : $_barcolor[$i];
-                $classes = (is_array($class)) ? $class[$i] : $auto_class;
+                $auto_class = ($options['reverse']) ? $_barcolor_reverse[$i] : $_barcolor[$i];
+                $classes = (is_array($options['class'])) ? $options['class'][$i] : $auto_class;
 
                 $cNum .= "<div class='progress display-inline-block m-0' style='width:20px; height: 10px; '>\n";
                 $cNum .= "<span class='progress-bar ".$classes."' style='width:100%'></span></div>\n";
@@ -410,25 +421,25 @@ if (!function_exists("progress_bar")) {
                 $chtml .= "</div>\n";
                 $i++;
             }
-            $html .= ($hide_info == FALSE ? "<div class='text-right m-b-10'><span class='pull-left'>$cTitle</span><span class='clearfix'>$cNum </span></div>\n" : "");
-            $html .= "<div class='progress ".$class_."' style='height: ".$height."'>\n";
+            $html .= ($options['hide_info'] == FALSE ? "<div class='text-right m-b-10'><span class='pull-left'>$cTitle</span><span class='clearfix'>$cNum </span></div>\n" : "");
+            $html .= "<div class='progress ".$options['progress_class']."' style='height: ".$height."'>\n";
             $html .= $chtml;
             $html .= "</div>\n";
             $html .= "</div>\n";
         } else {
             $int = intval($num);
-            if ($disabled == TRUE) {
+            if ($options['disabled'] == TRUE) {
                 $num = "&#x221e;";
             } else {
                 $num = $num > 0 ? $num.' ' : '0 ';
-                $num .= $as_percent ? '%' : '';
+                $num .= $options['as_percent'] ? '%' : '';
             }
 
-            $auto_class = bar_color($int, $reverse);
-            $class = (!$class) ? $auto_class : $class;
+            $auto_class = bar_color($int, $options['reverse']);
+            $class = (!$options['class']) ? $auto_class : $options['class'];
 
-            $html .= ($hide_info === FALSE ? "<div class='text-right m-b-10'><span class='pull-left'>$title</span><span class='clearfix'>$num</span></div>\n" : "");
-            $html .= "<div class='progress ".$class_."' style='height: ".$height."'>\n";
+            $html .= ($options['hide_info'] === FALSE ? "<div class='text-right m-b-10'><span class='pull-left'>$title</span><span class='clearfix'>$num</span></div>\n" : "");
+            $html .= "<div class='progress ".$options['progress_class']."' style='height: ".$height."'>\n";
             $html .= "<div class='progress-bar ".$class."' role='progressbar' aria-valuenow='$num' aria-valuemin='0' aria-valuemax='100' style='width: $int%'>\n";
             $html .= "</div></div>\n";
         }
