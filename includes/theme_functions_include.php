@@ -221,10 +221,8 @@ if (!function_exists('get_theme_settings')) {
  * @return string
  */
 function fusion_sort_table($table_id) {
-    add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/tablesorter/jquery.tablesorter.min.js'></script>\n");
-    add_to_jquery("
-    $('#".$table_id."').tablesorter();
-    ");
+    add_to_footer("<script type='text/javascript' src='".INCLUDES."jquery/tablesorter/jquery.tablesorter.min.js'></script>\n");
+    add_to_jquery("$('#".$table_id."').tablesorter();");
 
     return "tablesorter";
 }
