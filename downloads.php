@@ -195,7 +195,7 @@ if (isset($_GET['download_id'])) {
             $data['download_link'] = "<a class='text-dark' href='".INFUSIONS."downloads/downloads.php?cat_id=".$data['download_cat_id']."&download_id=".$data['download_id']."'>".$data['download_title']."</a>";
 
             $data['download_show_comments'] = \PHPFusion\Downloads\Functions::get_download_comments($data);
-            $data['download_show_ratings'] = ''; //\PHPFusion\Downloads\Functions::get_download_ratings($data);
+            $data['download_show_ratings'] = \PHPFusion\Downloads\Functions::get_download_ratings($data);
 
             $info['download_item'] = $data;
 

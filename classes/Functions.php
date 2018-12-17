@@ -193,7 +193,7 @@ class Functions {
         $html = "";
         if (fusion_get_settings('comments_enabled') && $data['download_allow_comments']) {
             ob_start();
-            showcomments("D", DB_DOWNLOADS, "download_id", $data['download_id'], INFUSIONS."downloads/downloads.php?cat_id=".$data['download_cat']."&amp;download_id=".$data['download_id'], $data['download_allow_ratings']);
+            showcomments("D", DB_DOWNLOADS, "download_id", $data['download_id'], INFUSIONS."downloads/downloads.php?cat_id=".$data['download_cat']."&amp;download_id=".$data['download_id']);
             $html = ob_get_contents();
             ob_end_clean();
         }

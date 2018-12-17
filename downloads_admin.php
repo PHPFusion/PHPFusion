@@ -136,7 +136,7 @@ function download_listing() {
 
     $rows = dbrows($result);
     echo "<div class='clearfix m-t-10'>\n";
-    echo "<span class='pull-right m-t-10'>".sprintf($locale['download_0005'], $rows, $total_rows)."</span>\n";
+    echo "<span class='pull-right m-t-10 hidden-xs'>".sprintf($locale['download_0005'], $rows, $total_rows)."</span>\n";
 
     if (!empty($catOpts) > 0 && $total_rows > 0) {
         echo "<div class='dropdown pull-left m-r-10'>\n";
@@ -195,7 +195,7 @@ function download_listing() {
             echo "<div class='m-t-5'>\n";
             echo "<a class='m-r-10' target='_blank' href='$download_url'>".$locale['download_0226']."</a>\n";
             echo "<a class='m-r-10' href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;section=download_form&amp;download_id=".$data2['download_id']."'>".$locale['edit']."</a>\n";
-            echo "<a  class='m-r-10' href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;section=download_form&amp;download_id=".$data2['download_id']."' onclick=\"return confirm('".$locale['download_0255']."');\">".$locale['delete']."</a>\n";
+            echo "<a class='m-r-10' href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;section=download_form&amp;download_id=".$data2['download_id']."' onclick=\"return confirm('".$locale['download_0255']."');\">".$locale['delete']."</a>\n";
             echo "</div>\n";
             echo "</div>\n";
             echo "</li>\n";
@@ -206,4 +206,8 @@ function download_listing() {
         echo "</li>\n";
     }
     echo "</ul>\n";
+
+    if ($total_rows > $rows) {
+        echo makepagenav($rowstart, $limit, $total_rows, $limit, clean_request("", ["aid", "section"], TRUE)."&amp;");
+    }
 }

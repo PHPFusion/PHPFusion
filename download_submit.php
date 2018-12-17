@@ -144,16 +144,24 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
                 'multiple'    => 1
             ]);
 
-            $textArea_opts = [
+            $textArea_opts_short = [
                 "required"   => TRUE,
-                "type"       => fusion_get_settings("tinymce_enabled") ? "tinymce" : "bbcode",
-                "tinymce"    => fusion_get_settings("tinymce_enabled") && iADMIN ? "advanced" : "simple",
+                "type"       => 'bbcode',
                 "autosize"   => TRUE,
                 "error_text" => $locale['download_0112'],
                 "form_name"  => "submit_form",
             ];
+            $textArea_opts = [
+                "required"   => TRUE,
+                "type"       => fusion_get_settings("tinymce_enabled") ? "tinymce" : "html",
+                "tinymce"    => fusion_get_settings("tinymce_enabled") && iADMIN ? "advanced" : "simple",
+                "autosize"   => TRUE,
+                "error_text" => $locale['download_0112'],
+                "form_name"  => "submit_form",
+                'path'       => IMAGES_D
+            ];
 
-            echo form_textarea('download_description_short', $locale['download_0202'], $criteriaArray['download_description_short'], $textArea_opts);
+            echo form_textarea('download_description_short', $locale['download_0202'], $criteriaArray['download_description_short'], $textArea_opts_short);
 
             $textArea_opts['required'] = $dl_settings['download_extended_required'] ? TRUE : FALSE;
             $textArea_opts['error_text'] = $locale['download_0201'];

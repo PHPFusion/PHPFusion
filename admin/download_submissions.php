@@ -147,7 +147,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 echo openform("publish_download", "post", FUSION_REQUEST);
                 echo "<div class='well clearfix m-t-15'>\n";
                 echo "<div class='pull-left'>\n";
-                echo display_avatar($callback_data, "30px", "", FALSE, "img-rounded m-t-5 m-r-5");
+                echo display_avatar($data, "30px", "", FALSE, "img-rounded m-t-5 m-r-5");
                 echo "</div>\n";
                 echo "<div class='overflow-hide'>\n";
                 echo $locale['download_0056'].profile_link($data['user_id'], $data['user_name'], $data['user_status'])."<br/>\n";
@@ -178,6 +178,8 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                     'error_text' => $locale['download_0112'],
                     'maxlength'  => '255',
                     'autosize'   => fusion_get_settings("tinymce_enabled") ? FALSE : TRUE,
+                    'type'       => 'bbcode',
+                    "form_name"  => "publish_download"
                 ]);
                 closeside();
                 echo "<div class='well'>\n";
@@ -185,11 +187,12 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 echo "</div>\n";
                 echo form_textarea('download_description', $locale['download_0202a'], $callback_data['download_description'], [
                     "no_resize"   => fusion_get_settings("tinymce_enabled") ? FALSE : TRUE,
-                    "form_name"   => "inputform",
+                    "form_name"   => "publish_download",
                     "html"        => fusion_get_settings("tinymce_enabled") ? FALSE : TRUE,
                     "autosize"    => fusion_get_settings("tinymce_enabled") ? FALSE : TRUE,
                     "preview"     => fusion_get_settings("tinymce_enabled") ? FALSE : TRUE,
-                    "placeholder" => $locale['download_0201']
+                    "placeholder" => $locale['download_0201'],
+                    'path'        => IMAGES_D
                 ]);
                 echo "</div>\n<div class='col-xs-12 col-sm-4'>\n";
                 // start package
@@ -277,13 +280,13 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
     if ($rows > 0) {
         echo "<div class='well m-t-15'>".sprintf($locale['download_0051'], format_word($rows, $locale['fmt_submission']))."</div>\n";
         echo "<div class='table-responsive'><table class='table table-striped'>\n";
-        echo "<tr>\n";
+        echo "<thead><tr>\n";
         echo "<th>".$locale['download_0055']."</th>\n";
         echo "<th>".$locale['download_0053']."</th>\n";
         echo "<th>".$locale['download_0054']."</th>\n";
         echo "<th>".$locale['download_0052']."</th>\n";
         echo "</tr>\n";
-        echo "<tbody>\n";
+        echo "<tbody></thead>\n";
         while ($callback_data = dbarray($result)) {
             $submit_criteria = unserialize($callback_data['submit_criteria']);
             echo "<tr>\n";
