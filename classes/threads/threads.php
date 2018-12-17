@@ -812,13 +812,12 @@ class ForumThreads extends ForumServer {
             }
 
             add_to_jquery("
-            $('.reason_button').bind('click', function(e) {
+            $('.reason_button').on('click', function(e) {
                 var reason_div = $(this).data('target');
-                console.log(reason_div);
-                if ( $('#'+reason_div).is(':visible') ) {
-                     $('#'+reason_div).slideUp();
+                if ($('#'+reason_div).is(':visible')) {
+                     $('#'+reason_div).show();
                 } else {
-                     $('#'+reason_div).slideDown();
+                     $('#'+reason_div).hide();
                 }
             });
             ");
