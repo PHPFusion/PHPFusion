@@ -315,29 +315,27 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
 
                 <!-- Actions -->
                 <div class="pull-right">
-                    <a class="btn btn-success btn-sm m-r-10" href="<?php echo clean_request("ref=weblink_cat_form", ["ref"], FALSE); ?>"><i class="fa fa-fw fa-plus"></i> <?php echo $this->locale['WLS_0005']; ?></a>
-                    <a class="btn btn-default btn-sm m-r-10" onclick="run_admin('publish', 'table_action', 'weblink_table');"><i class="fa fa-fw fa-check"></i> <?php echo $this->locale['publish']; ?></a>
-                    <a class="btn btn-default btn-sm m-r-10" onclick="run_admin('unpublish', 'table_action', 'weblink_table');"><i class="fa fa-fw fa-ban"></i> <?php echo $this->locale['unpublish']; ?></a>
-                    <a class="btn btn-danger btn-sm m-r-10" onclick="run_admin('delete', 'table_action', 'weblink_table');"><i class="fa fa-fw fa-trash-o"></i> <?php echo $this->locale['delete']; ?></a>
+                    <a class="btn btn-success btn-sm" href="<?php echo clean_request("ref=weblink_cat_form", ["ref"], FALSE); ?>"><i class="fa fa-fw fa-plus"></i> <?php echo $this->locale['WLS_0005']; ?></a>
+                    <button type="button" class="hidden-xs btn btn-default btn-sm m-l-5" onclick="run_admin('publish', 'table_action', 'weblink_table');"><i class="fa fa-fw fa-check"></i> <?php echo $this->locale['publish']; ?></button>
+                    <button type="button" class="hidden-xs btn btn-default btn-sm m-l-5" onclick="run_admin('unpublish', 'table_action', 'weblink_table');"><i class="fa fa-fw fa-ban"></i> <?php echo $this->locale['unpublish']; ?></button>
+                    <button type="button" class="hidden-xs btn btn-danger btn-sm m-l-5" onclick="run_admin('delete', 'table_action', 'weblink_table');"><i class="fa fa-fw fa-trash-o"></i> <?php echo $this->locale['delete']; ?></button>
                 </div>
 
                 <!-- Search -->
-                <div class="display-inline-block pull-left m-r-10" style="width: 300px;">
+                <div class="display-inline-block pull-left m-r-10">
                     <?php echo form_text('weblink_cat_name', '', $filter_values['weblink_cat_name'], [
                         'placeholder'       => $this->locale['WLS_0100'],
                         'append_button'     => TRUE,
                         'append_value'      => "<i class='fa fa-fw fa-search'></i>",
                         'append_form_value' => 'search_weblink',
-                        'width'             => '250px',
+                        'width'             => '200px',
                         'group_size'        => 'sm'
                     ]); ?>
                 </div>
-                <div class="display-inline-block">
-                    <a class="btn btn-sm m-r-10 <?php echo(!$filter_empty ? "btn-info" : "btn-default"); ?>"
-                       id="toggle_options" href="#">
+                <div class="display-inline-block hidden-xs">
+                    <a class="btn btn-sm m-r-10 <?php echo(!$filter_empty ? "btn-info" : "btn-default"); ?>" id="toggle_options" href="#">
                         <?php echo $this->locale['WLS_0121']; ?>
-                        <span id="filter_caret"
-                              class="fa <?php echo(!$filter_empty ? "fa-caret-up" : "fa-caret-down"); ?>"></span>
+                        <span id="filter_caret" class="fa <?php echo(!$filter_empty ? "fa-caret-up" : "fa-caret-down"); ?>"></span>
                     </a>
                     <?php echo form_button('weblink_clear', $this->locale['WLS_0122'], 'clear', ['class' => 'btn-default btn-sm']); ?>
                 </div>
@@ -417,7 +415,7 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
             <div class="table-responsive"><table class="table table-hover">
             <thead>
             <tr>
-                <th></th>
+                <th class="hidden-xs"></th>
                 <th><?php echo $this->locale['WLS_0100'] ?></th>
                 <th><?php echo $this->locale['WLS_0151'] ?></th>
                 <th><?php echo $this->locale['WLS_0102'] ?></th>
@@ -435,7 +433,7 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
                 $delete_link = clean_request("section=weblinks_category&ref=weblink_cat_form&action=delete&cat_id=".$cat_id, ['section', 'ref', 'action', 'cat_id'], FALSE);
                 ?>
                 <tr data-id="<?php echo $cat_id; ?>" id="cat<?php echo $cat_id; ?>">
-                    <td><?php echo form_checkbox("weblink_cat_id[]", "", "", ["value" => $cat_id, "input_id" => "checkbox".$cat_id, "class" => "m-0"]);
+                    <td class="hidden-xs"><?php echo form_checkbox("weblink_cat_id[]", "", "", ["value" => $cat_id, "input_id" => "checkbox".$cat_id, "class" => "m-0"]);
                         add_to_jquery('$("#checkbox'.$cat_id.'").click(function() {
                         if ($(this).prop("checked")) {
                             $("#cat'.$cat_id.'").addClass("active");

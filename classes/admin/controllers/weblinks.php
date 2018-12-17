@@ -391,26 +391,26 @@ class WeblinksAdmin extends WeblinksAdminModel {
             <div class="clearfix">
                 <div class="pull-right">
                     <?php if ($weblink_cats) { ?>
-                        <a class="btn btn-success btn-sm m-r-10" href="<?php echo clean_request("ref=weblinkform", ["ref"], FALSE); ?>"><i class="fa fa-fw fa-plus"></i> <?php echo $this->locale['WLS_0002']; ?></a>
+                        <a class="btn btn-success btn-sm" href="<?php echo clean_request("ref=weblinkform", ["ref"], FALSE); ?>"><i class="fa fa-fw fa-plus"></i> <?php echo $this->locale['WLS_0002']; ?></a>
                     <?php } ?>
-                    <a class="btn btn-default btn-sm m-r-10" onclick="run_admin('verify', 'table_action', 'weblink_table');"><i class="fa fa-fw fa-globe"></i> <?php echo $this->locale['WLS_0261']; ?></a>
-                    <a class="btn btn-default btn-sm m-r-10" onclick="run_admin('publish', 'table_action', 'weblink_table');"><i class="fa fa-fw fa-check"></i> <?php echo $this->locale['publish']; ?></a>
-                    <a class="btn btn-default btn-sm m-r-10" onclick="run_admin('unpublish', 'table_action', 'weblink_table');"><i class="fa fa-fw fa-ban"></i> <?php echo $this->locale['unpublish']; ?></a>
-                    <a class="btn btn-danger btn-sm m-r-10" onclick="run_admin('delete', 'table_action', 'weblink_table');"><i class="fa fa-fw fa-trash-o"></i> <?php echo $this->locale['delete']; ?></a>
+                    <button type="button" class="hidden-xs btn btn-default btn-sm m-l-5" onclick="run_admin('verify', 'table_action', 'weblink_table');"><i class="fa fa-fw fa-globe"></i> <?php echo $this->locale['WLS_0261']; ?></button>
+                    <button type="button" class="hidden-xs btn btn-default btn-sm m-l-5" onclick="run_admin('publish', 'table_action', 'weblink_table');"><i class="fa fa-fw fa-check"></i> <?php echo $this->locale['publish']; ?></button>
+                    <button type="button" class="hidden-xs btn btn-default btn-sm m-l-5" onclick="run_admin('unpublish', 'table_action', 'weblink_table');"><i class="fa fa-fw fa-ban"></i> <?php echo $this->locale['unpublish']; ?></button>
+                    <button type="button" class="hidden-xs btn btn-danger btn-sm m-l-5" onclick="run_admin('delete', 'table_action', 'weblink_table');"><i class="fa fa-fw fa-trash-o"></i> <?php echo $this->locale['delete']; ?></button>
                 </div>
 
-                <div class="display-inline-block pull-left m-r-10" style="width: 300px;">
+                <div class="display-inline-block pull-left m-r-10">
                     <?php echo form_text('weblink_name', '', $filter_values['weblink_name'], [
                         'placeholder'       => $this->locale['WLS_0120'],
                         'append_button'     => TRUE,
                         'append_value'      => "<i class='fa fa-search'></i>",
                         'append_form_value' => "search_weblink",
-                        'width'             => '250px',
+                        'width'             => '180px',
                         'group_size'        => "sm"
                     ]); ?>
                 </div>
 
-                <div class="display-inline-block" style="vertical-align: top;">
+                <div class="display-inline-block hidden-xs" style="vertical-align: top;">
                     <a class="btn btn-sm m-r-10 <?php echo($filter_empty ? "btn-default" : "btn-info"); ?>"
                        id="toggle_options" href="#">
                         <?php echo $this->locale['WLS_0121']; ?>
@@ -497,7 +497,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
             <table id="links-table" class="table table-striped">
                 <thead>
                 <tr>
-                    <th></th>
+                    <th class="hidden-xs"></th>
                     <th class="strong"><?php echo $this->locale['WLS_0100'] ?></th>
                     <th class="strong"><?php echo $this->locale['WLS_0101'] ?></th>
                     <th class="strong"><?php echo $this->locale['WLS_0102'] ?></th>
@@ -515,23 +515,15 @@ class WeblinksAdmin extends WeblinksAdminModel {
                         $delete_link = clean_request("section=weblinks&ref=weblinkform&action=delete&weblink_id=".$data['weblink_id'], ["section", "ref", "action", "weblink_id"], FALSE);
                         ?>
                         <tr id="link-<?php echo $data['weblink_id']; ?>" data-id="<?php echo $data['weblink_id']; ?>">
-                            <td><?php echo form_checkbox("weblink_id[]", "", "", ["value" => $data['weblink_id'], "class" => "m-0", 'input_id' => 'link-id-'.$data['weblink_id']]) ?></td>
+                            <td class="hidden-xs"><?php echo form_checkbox("weblink_id[]", "", "", ["value" => $data['weblink_id'], "class" => "m-0", 'input_id' => 'link-id-'.$data['weblink_id']]) ?></td>
                             <td><span class="text-dark"><?php echo $data['weblink_name']; ?></span></td>
-                            <td>
-                                <a class="text-dark" href="<?php echo $cat_edit_link ?>">
-                                    <?php echo $data['weblink_cat_name']; ?>
-                                </a>
-                            </td>
-                            <td>
-                                <span class="badge"><?php echo $data['weblink_status'] ? $this->locale['yes'] : $this->locale['no']; ?></span>
-                            </td>
+                            <td><a class="text-dark" href="<?php echo $cat_edit_link ?>"><?php echo $data['weblink_cat_name']; ?></a></td>
+                            <td><span class="badge"><?php echo $data['weblink_status'] ? $this->locale['yes'] : $this->locale['no']; ?></span></td>
                             <td><span class="badge"><?php echo getgroupname($data['weblink_visibility']); ?></span></td>
                             <td><?php echo $data['weblink_language'] ?></td>
                             <td>
-                                <a href="<?php echo $edit_link; ?>"
-                                   title="<?php echo $this->locale['edit']; ?>"><?php echo $this->locale['edit']; ?></a>&nbsp;|&nbsp;
-                                <a href="<?php echo $delete_link; ?>" title="<?php echo $this->locale['delete']; ?>"
-                                   onclick="return confirm('<?php echo $this->locale['WLS_0111']; ?>')"><?php echo $this->locale['delete']; ?></a>
+                                <a href="<?php echo $edit_link; ?>" title="<?php echo $this->locale['edit']; ?>"><?php echo $this->locale['edit']; ?></a>&nbsp;|&nbsp;
+                                <a href="<?php echo $delete_link; ?>" title="<?php echo $this->locale['delete']; ?>" onclick="return confirm('<?php echo $this->locale['WLS_0111']; ?>')"><?php echo $this->locale['delete']; ?></a>
                             </td>
                         </tr>
                         <?php
@@ -560,10 +552,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
                         ");
                         ?></th>
                 <?php else: ?>
-                    <tr>
-                        <td colspan="7"
-                            class="text-center"><?php echo($weblink_cats ? ($filter_empty ? $this->locale['WLS_0112'] : $this->locale['WLS_0113']) : $this->locale['WLS_0114']); ?></td>
-                    </tr>
+                    <tr><td colspan="7" class="text-center"><?php echo($weblink_cats ? ($filter_empty ? $this->locale['WLS_0112'] : $this->locale['WLS_0113']) : $this->locale['WLS_0114']); ?></td></tr>
                 <?php endif; ?>
                 </tbody>
             </table>
