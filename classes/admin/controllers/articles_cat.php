@@ -176,7 +176,8 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
                         'inline'     => FALSE,
                         'preview'    => TRUE,
                         'form_name'  => 'catform',
-                        'error_text' => $this->locale['article_0322']
+                        'error_text' => $this->locale['article_0322'],
+                        'path'       => IMAGES_A
                     ]);
                     ?>
                 </div>
@@ -213,9 +214,9 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
                 </div>
             </div>
             <?php
-            echo form_button('cancel', $this->locale['cancel'], $this->locale['cancel'], ['class' => 'btn-default', 'icon' => 'fa fa-fw fa-times']);
-            echo form_button('save_cat', $this->locale['save'], $this->locale['save'], ['class' => 'btn-success m-l-10', 'icon' => 'fa fa-fw fa-hdd-o']);
-            echo form_button('save_cat_and_close', $this->locale['save_and_close'], $this->locale['save_and_close'], ['class' => 'btn-primary m-l-10', 'icon' => 'fa fa-fw fa-floppy-o']);
+            echo form_button('cancel', $this->locale['cancel'], $this->locale['cancel'], ['class' => 'btn-sm btn-default', 'icon' => 'fa fa-times']);
+            echo form_button('save_cat', $this->locale['save'], $this->locale['save'], ['class' => 'btn-sm btn-success', 'icon' => 'fa fa-hdd-o']);
+            echo form_button('save_cat_and_close', $this->locale['save_and_close'], $this->locale['save_and_close'], ['class' => 'btn-sm btn-primary', 'icon' => 'fa fa-floppy-o']);
             echo closeform();
             ?>
         </div>
@@ -239,8 +240,6 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
                 foreach ($input as $article_cat_id) {
                     // check input table
                     if (dbcount("('article_cat_id')", DB_ARTICLE_CATS, "article_cat_id=:articlecat", [':articlecat' => intval($article_cat_id)]) && \defender::safe()) {
-
-
                         switch ($_POST['table_action']) {
                             case "publish":
                                 dbquery("UPDATE ".DB_ARTICLE_CATS." SET article_cat_status=:catstatus WHERE article_cat_id=:catid", [':catstatus' => '1', ':catid' => intval($article_cat_id)]);
@@ -360,34 +359,28 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
 
                 <!-- Actions -->
                 <div class="pull-right">
-                    <a class="btn btn-success btn-sm m-r-10"
-                       href="<?php echo clean_request("ref=article_cat_form", ["ref"], FALSE); ?>"><i
-                                class="fa fa-fw fa-plus"></i> <?php echo $this->locale['article_0005']; ?></a>
-                    <a class="btn btn-default btn-sm m-r-10" onclick="run_admin('publish');"><i
-                                class="fa fa-fw fa-check"></i> <?php echo $this->locale['publish']; ?></a>
-                    <a class="btn btn-default btn-sm m-r-10" onclick="run_admin('unpublish');"><i
-                                class="fa fa-fw fa-ban"></i> <?php echo $this->locale['unpublish']; ?></a>
-                    <a class="btn btn-danger btn-sm m-r-10" onclick="run_admin('delete');"><i
-                                class="fa fa-fw fa-trash-o"></i> <?php echo $this->locale['delete']; ?></a>
+                    <a class="btn btn-success btn-sm" href="<?php echo clean_request("ref=article_cat_form", ["ref"], FALSE); ?>"><i class="fa fa-fw fa-plus"></i> <?php echo $this->locale['article_0005']; ?></a>
+                    <button class="hidden-xs m-l-5 btn btn-default btn-sm" onclick="run_admin('publish', '#table_action', '#article_table');"><i class="fa fa-fw fa-check"></i> <?php echo $this->locale['publish']; ?></button>
+                    <button class="hidden-xs m-l-5 btn btn-default btn-sm" onclick="run_admin('unpublish', '#table_action', '#article_table');"><i class="fa fa-fw fa-ban"></i> <?php echo $this->locale['unpublish']; ?></button>
+                    <button class="hidden-xs m-l-5 btn btn-danger btn-sm" onclick="run_admin('delete', '#table_action', '#article_table');"><i class="fa fa-fw fa-trash-o"></i> <?php echo $this->locale['delete']; ?></button>
                 </div>
 
                 <!-- Search -->
-                <div class="display-inline-block pull-left m-r-10" style="width: 300px;">
+                <div class="display-inline-block pull-left m-r-10">
                     <?php echo form_text('article_cat_name', '', $filter_values['article_cat_name'], [
                         'placeholder'       => $this->locale['article_0150'],
                         'append_button'     => TRUE,
                         'append_value'      => "<i class='fa fa-fw fa-search'></i>",
                         'append_form_value' => 'search_article',
-                        'width'             => '250px',
+                        'width'             => '160px',
                         'group_size'        => 'sm'
                     ]); ?>
                 </div>
-                <div class="display-inline-block">
-                    <a class="btn btn-sm m-r-15 <?php echo(!$filter_empty ? "btn-info" : "btn-default"); ?>"
-                       id="toggle_options" href="#">
+
+                <div class="display-inline-block hidden-xs">
+                    <a class="btn btn-sm m-r-5 <?php echo(!$filter_empty ? "btn-info" : "btn-default"); ?>" id="toggle_options" href="#">
                         <?php echo $this->locale['article_0121']; ?>
-                        <span id="filter_caret"
-                              class="fa <?php echo(!$filter_empty ? "fa-caret-up" : "fa-caret-down"); ?>"></span>
+                        <span id="filter_caret" class="fa <?php echo(!$filter_empty ? "fa-caret-up" : "fa-caret-down"); ?>"></span>
                     </a>
                     <?php echo form_button('article_clear', $this->locale['article_0122'], 'clear', ['class' => 'btn-default btn-sm']); ?>
                 </div>
@@ -429,16 +422,6 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
         $this->display_article_category($result);
         echo closeform();
 
-        // Footer
-        add_to_footer("
-            <script>
-                function run_admin(action) {
-                    $('#table_action').val(action);
-                    $('#article_table').submit();
-                }
-            </script>
-        ");
-
         // Toogle Options
         add_to_jquery("
             // Toogle Options
@@ -477,7 +460,7 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
             <div class="table-responsive"><table class="table table-hover">
             <thead>
             <tr>
-                <th></th>
+                <th class="hidden-xs"></th>
                 <th class="col-xs-4"><?php echo $this->locale['article_0150'] ?></th>
                 <th><?php echo $this->locale['article_0001'] ?></th>
                 <th><?php echo $this->locale['article_0152'] ?></th>
@@ -495,7 +478,7 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
                 $delete_link = clean_request("section=article_category&ref=article_cat_form&action=delete&cat_id=".$cat_id, ["section", "ref", "action", "cat_id"], FALSE);
                 ?>
                 <tr data-id="<?php echo $cat_id; ?>" id="cat<?php echo $cat_id; ?>">
-                    <td><?php echo form_checkbox('article_cat_id[]', '', '', ['value' => $cat_id, 'input_id' => 'checkbox'.$cat_id, 'class' => 'm-b-0']);
+                    <td class="hidden-xs"><?php echo form_checkbox('article_cat_id[]', '', '', ['value' => $cat_id, 'input_id' => 'checkbox'.$cat_id, 'class' => 'm-b-0']);
                         add_to_jquery('$("#checkbox'.$cat_id.'").click(function() {
                         if ($(this).prop("checked")) {
                             $("#cat'.$cat_id.'").addClass("active");
@@ -504,22 +487,14 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
                         }
                     });');
                         ?></td>
-                    <td>
-                        <span class="text-dark"><?php echo str_repeat("&nbsp;&nbsp;", $level)." ".$cdata['article_cat_name']; ?></span>
-                    </td>
-                    <td>
-                        <span class="badge"><?php echo format_word($cdata['article_count'], $this->locale['fmt_article']); ?></span>
-                    </td>
-                    <td>
-                        <span class="badge"><?php echo($cdata['article_cat_status'] == 1 ? $this->locale['publish'] : $this->locale['unpublish']); ?></span>
-                    </td>
+                    <td><span class="text-dark"><?php echo str_repeat("&nbsp;&nbsp;", $level)." ".$cdata['article_cat_name']; ?></span></td>
+                    <td><span class="badge"><?php echo format_word($cdata['article_count'], $this->locale['fmt_article']); ?></span></td>
+                    <td><span class="badge"><?php echo($cdata['article_cat_status'] == 1 ? $this->locale['publish'] : $this->locale['unpublish']); ?></span></td>
                     <td><span class="badge"><?php echo getgroupname($cdata['article_cat_visibility']); ?></span></td>
                     <td><?php echo translate_lang_names($cdata['article_cat_language']) ?></td>
                     <td>
-                        <a href="<?php echo $edit_link; ?>"
-                           title="<?php echo $this->locale['edit']; ?>"><?php echo $this->locale['edit']; ?></a>&nbsp;|&nbsp;
-                        <a href="<?php echo $delete_link; ?>" title="<?php echo $this->locale['delete']; ?>"
-                           onclick="return confirm('<?php echo $this->locale['article_0161']; ?>')"><?php echo $this->locale['delete']; ?></a>
+                        <a href="<?php echo $edit_link; ?>" title="<?php echo $this->locale['edit']; ?>"><?php echo $this->locale['edit']; ?></a>&nbsp;|&nbsp;
+                        <a href="<?php echo $delete_link; ?>" title="<?php echo $this->locale['delete']; ?>" onclick="return confirm('<?php echo $this->locale['article_0161']; ?>')"><?php echo $this->locale['delete']; ?></a>
                     </td>
                 </tr>
                 <?php
@@ -529,11 +504,7 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
                 ?>
             <?php endforeach; ?>
         <?php else: ?>
-            <tr>
-                <td colspan="7" class="text-center">
-                    <?php echo $this->locale['article_0162']; ?>
-                </td>
-            </tr>
+            <tr><td colspan="7" class="text-center"><?php echo $this->locale['article_0162']; ?></td></tr>
         <?php endif; ?>
 
         <?php if (!$id) : ?>

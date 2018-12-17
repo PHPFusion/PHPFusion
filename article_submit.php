@@ -112,12 +112,13 @@ if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_status='1' AND ".g
                 $articleSnippetSettings = [
                     'required'    => TRUE,
                     'preview'     => TRUE,
-                    'html'        => TRUE,
+                    'type'        => 'bbcode',
                     'autosize'    => TRUE,
                     'placeholder' => $locale['article_0254'],
                     'error_text'  => $locale['article_0271'],
                     'form_name'   => 'submissionform',
-                    'wordcount'   => TRUE
+                    'wordcount'   => TRUE,
+                    'path'        => IMAGES_A
                 ];
                 $articleExtendedSettings = [
                     'required'    => ($articleSettings['article_extended_required'] ? TRUE : FALSE),
@@ -127,20 +128,23 @@ if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_status='1' AND ".g
                     'placeholder' => $locale['article_0253'],
                     'error_text'  => $locale['article_0272'],
                     'form_name'   => 'submissionform',
-                    'wordcount'   => TRUE
+                    'wordcount'   => TRUE,
+                    'path'        => IMAGES_A
                 ];
             } else {
                 $articleSnippetSettings = [
                     'required'   => TRUE,
-                    'type'       => 'tinymce',
+                    'type'        => 'bbcode',
                     'tinymce'    => 'advanced',
-                    'error_text' => $locale['article_0271']
+                    'error_text' => $locale['article_0271'],
+                    'path'       => IMAGES_A
                 ];
                 $articleExtendedSettings = [
                     'required'   => ($articleSettings['article_extended_required'] ? TRUE : FALSE),
                     'type'       => 'tinymce',
                     'tinymce'    => 'advanced',
-                    'error_text' => $locale['article_0272']
+                    'error_text' => $locale['article_0272'],
+                    'path'       => IMAGES_A
                 ];
             }
 

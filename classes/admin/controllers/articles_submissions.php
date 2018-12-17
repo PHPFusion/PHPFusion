@@ -152,12 +152,13 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
             $articleSnippetSettings = [
                 'required'    => TRUE,
                 'preview'     => TRUE,
-                'html'        => TRUE,
+                'type'        => 'bbcode',
                 'autosize'    => TRUE,
                 'placeholder' => $this->locale['article_0254'],
                 'error_text'  => $this->locale['article_0271'],
                 'form_name'   => 'articleform',
-                'wordcount'  => TRUE
+                'wordcount'   => TRUE,
+                'path'        => IMAGES_A
             ];
             $articleExtendedSettings = [
                 'required'    => ($this->articleSettings['article_extended_required'] ? TRUE : FALSE),
@@ -167,20 +168,23 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
                 'placeholder' => $this->locale['article_0253'],
                 'error_text'  => $this->locale['article_0272'],
                 'form_name'   => 'articleform',
-                'wordcount'   => TRUE
+                'wordcount'   => TRUE,
+                'path'        => IMAGES_A
             ];
         } else {
             $articleSnippetSettings = [
                 'required'   => TRUE,
-                'type'       => 'tinymce',
+                'type'       => 'bbcode',
                 'tinymce'    => 'advanced',
-                'error_text' => $this->locale['article_0271']
+                'error_text' => $this->locale['article_0271'],
+                'path'       => IMAGES_A
             ];
             $articleExtendedSettings = [
                 'required'   => ($this->articleSettings['article_extended_required'] ? TRUE : FALSE),
                 'type'       => 'tinymce',
                 'tinymce'    => 'advanced',
-                'error_text' => $this->locale['article_0272']
+                'error_text' => $this->locale['article_0272'],
+                'path'       => IMAGES_A
             ];
         }
 
@@ -319,22 +323,21 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
      * Display Buttons for Form
      *
      * @param      $unique_id
-     * @param bool $breaker
      */
     private function displayFormButtons($unique_id) {
         echo form_button('preview_submission', $this->locale['preview'], $this->locale['preview'], [
-            'class'    => 'btn-default m-r-10',
-            'icon'     => 'fa fa-fw fa-eye',
+            'class'    => 'btn-default btn-sm',
+            'icon'     => 'fa fa-eye',
             'input-id' => 'preview_submission-'.$unique_id
         ]);
         echo form_button('publish_submission', $this->locale['article_0352'], $this->locale['article_0352'], [
-            'class'    => 'btn-success m-r-10',
-            'icon'     => 'fa fa-fw fa-hdd-o',
+            'class'    => 'btn-success btn-sm m-l-5',
+            'icon'     => 'fa fa-hdd-o',
             'input-id' => 'publish_submission-'.$unique_id
         ]);
         echo form_button('delete_submission', $this->locale['delete'], $this->locale['delete'], [
-            'class'    => 'btn-danger m-r-10',
-            'icon'     => 'fa fa-fw fa-trash',
+            'class'    => 'btn-danger btn-sm m-l-5',
+            'icon'     => 'fa fa-trash',
             'input-id' => 'delete_submission-'.$unique_id
         ]);
     }
@@ -393,9 +396,7 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
                     <?php
                     endwhile;
                 else: ?>
-                    <tr>
-                        <td colspan="5" class="text-center"><?php echo $this->locale['article_0063']; ?></td>
-                    </tr>
+                    <tr><td colspan="5" class="text-center"><?php echo $this->locale['article_0063']; ?></td></tr>
                 <?php endif; ?>
                 </tbody>
             </table>
