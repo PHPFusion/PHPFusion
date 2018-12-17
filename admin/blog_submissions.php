@@ -316,7 +316,8 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 "html"        => TRUE,
                 "autosize"    => TRUE,
                 "placeholder" => $locale['blog_0425a'],
-                "form_name"   => "inputform"
+                "form_name"   => "inputform",
+                'path'        => IMAGES_B
             ];
             if (fusion_get_settings("tinymce_enabled")) {
                 $snippetSettings = ["required" => TRUE];
@@ -330,12 +331,13 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                     "html"        => TRUE,
                     "autosize"    => TRUE,
                     "placeholder" => $locale['blog_0426b'],
-                    "form_name"   => "inputform"
+                    "form_name"   => "inputform",
+                    'path'        => IMAGES_B
                 ];
             }
             echo form_textarea('blog_extended', $locale['blog_0426'], $callback_data['blog_extended'], $extendedSettings);
-            echo form_button('preview', $locale['blog_0141'], $locale['blog_0141'], ['class' => 'btn-default m-r-10', 'icon' => 'fa fa-eye']);
-            echo form_button('publish', $locale['blog_0134'], $locale['blog_0134'], ['class' => 'btn-success m-r-10', 'icon' => 'fa fa-hdd-o']);
+            echo form_button('preview', $locale['blog_0141'], $locale['blog_0141'], ['class' => 'btn-default m-r-5', 'icon' => 'fa fa-eye']);
+            echo form_button('publish', $locale['blog_0134'], $locale['blog_0134'], ['class' => 'btn-success m-r-5', 'icon' => 'fa fa-hdd-o']);
             echo form_button('delete', $locale['blog_0135'], $locale['blog_0135'], ['class' => 'btn-danger', 'icon' => 'fa fa-trash']);
             echo closeform();
         }
@@ -351,23 +353,25 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
     if ($rows > 0) {
         echo "<div class='well'>".sprintf($locale['blog_0137'], format_word($rows, $locale['fmt_submission']))."</div>\n";
         echo "<div class='table-responsive'><table class='table table-striped'>\n";
-        echo "<tr>\n";
+        echo "<thead><tr>\n";
         echo "<th>".$locale['blog_0144']."</th>\n";
+        echo "<th>".$locale['blog_0136']."</th>\n";
         echo "<th>".$locale['blog_0142']."</th>\n";
         echo "<th>".$locale['blog_0143']."</th>\n";
-        echo "<th>".$locale['blog_0136']."</th>\n";
-        echo "</tr>\n";
+        echo "<th>".$locale['global_057']."</th>\n";
+        echo "</tr></thead>\n";
         echo "<tbody>\n";
         while ($data = dbarray($result)) {
             $submit_criteria = unserialize($data['submit_criteria']);
             echo "<tr>\n";
             echo "<td>".$data['submit_id']."</td>\n";
+            echo "<td>".$submit_criteria['blog_subject']."</td>\n";
             echo "<td>".display_avatar($data, '20px', '', TRUE, 'img-rounded m-r-5').profile_link($data['user_id'], $data['user_name'], $data['user_status'])."</td>\n";
             echo "<td>".timer($data['submit_datestamp'])."</td>\n";
-            echo "<td><a href='".clean_request("submit_id=".$data['submit_id'], [
+            echo "<td><a class='btn btn-sm btn-default' href='".clean_request("submit_id=".$data['submit_id'], [
                     "section",
                     "aid"
-                ], TRUE)."'>".$submit_criteria['blog_subject']."</a></td>\n";
+                ], TRUE)."'><i class='fa fa-eye'></i> ".$locale['blog_0131']."</a></td>\n";
             echo "</tr>\n";
         }
         echo "</tbody>\n";

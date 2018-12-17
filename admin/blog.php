@@ -239,7 +239,7 @@ $snippetSettings = [
     'autosize'    => TRUE,
     'placeholder' => $locale['blog_0425a'],
     'form_name'   => 'inputform',
-    'path'        => [IMAGES, IMAGES_B, IMAGES_BC]
+    'path'        => IMAGES_B
 ];
 if (fusion_get_settings('tinymce_enabled')) {
     $snippetSettings = ['required' => TRUE, 'type' => 'tinymce', 'tinymce' => 'advanced'];
@@ -254,10 +254,10 @@ if (!fusion_get_settings('tinymce_enabled')) {
         'autosize'    => TRUE,
         'placeholder' => $locale['blog_0426b'],
         'form_name'   => 'inputform',
-        'path'        => [IMAGES, IMAGES_B, IMAGES_BC]
+        'path'        => IMAGES_B
     ];
 } else {
-    $extendedSettings = ['type' => 'tinymce', 'tinymce' => 'advanced', 'path' => [IMAGES, IMAGES_B, IMAGES_BC]];
+    $extendedSettings = ['type' => 'tinymce', 'tinymce' => 'advanced', 'path' => IMAGES_B];
 }
 echo form_textarea('blog_extended', $locale['blog_0426'], $data['blog_extended'], $extendedSettings);
 echo "<div class='row'>\n";
@@ -339,6 +339,6 @@ echo "<label><input type='checkbox' name='blog_allow_ratings' value='yes' ".($da
 closeside();
 echo "</div>\n</div>\n";
 echo form_button('save', $locale['blog_0437'], $locale['blog_0437'], ['class' => 'btn-success', 'icon' => 'fa fa-hdd-o']);
-echo form_button('preview', $locale['blog_0141'], $locale['blog_0141'], ['class' => 'btn-primary', 'icon' => 'fa fa-eye']);
+echo form_button('preview', $locale['blog_0141'], $locale['blog_0141'], ['class' => 'm-l-5 btn-primary', 'icon' => 'fa fa-eye']);
 echo closeform();
 echo "</div>\n";

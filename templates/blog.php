@@ -336,6 +336,7 @@ if (!function_exists('display_blog_submit')) {
                     "tinymce"   => fusion_get_settings("tinymce_enabled") && iADMIN ? "advanced" : "simple",
                     "autosize"  => TRUE,
                     "form_name" => "submit_form",
+                    'path'      => IMAGES_B
                 ];
 
                 echo form_textarea('blog_blog', $locale['blog_0425'], $criteriaArray['blog_blog'], $textArea_opts);

@@ -163,7 +163,7 @@ function blog_listing() {
 
     $rows = dbrows($result);
     echo "<div class='clearfix m-t-10'>\n";
-    echo "<span class='pull-right m-t-10'>".sprintf($locale['blog_0408'], $rows, $total_rows)."</span>\n";
+    echo "<span class='pull-right m-t-10 hidden-xs'>".sprintf($locale['blog_0408'], $rows, $total_rows)."</span>\n";
 
     if (!empty($catOpts) > 0 && $total_rows > 0) {
         echo "<div class='pull-left m-t-5 m-r-10'>".$locale['blog_0458']."</div>\n";
