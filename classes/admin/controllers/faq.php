@@ -252,7 +252,6 @@ class FaqAdmin extends FaqAdminModel {
                         'reverse_label' => TRUE
                     ]);
                 }
-                self::display_faqButtons('formend', FALSE);
                 closeside();
                 ?>
 
@@ -331,9 +330,9 @@ class FaqAdmin extends FaqAdminModel {
     private function display_faqButtons($unique_id, $breaker = TRUE) {
         ?>
         <div class="m-t-20">
-            <?php echo form_button("cancel", $this->locale['cancel'], $this->locale['cancel'], ["class" => "btn-default", "icon" => "fa fa-fw fa-times", "input-id" => "cancel-".$unique_id.""]); ?>
-            <?php echo form_button("save", $this->locale['save'], $this->locale['save'], ["class" => "btn-success", "icon" => "fa fa-fw fa-hdd-o", "input-id" => "save-".$unique_id.""]); ?>
-            <?php echo form_button("save_and_close", $this->locale['save_and_close'], $this->locale['save_and_close'], ["class" => "btn-primary", "icon" => "fa fa-fw fa-floppy-o", "input-id" => "save_and_close-".$unique_id.""]); ?>
+            <?php echo form_button("cancel", $this->locale['cancel'], $this->locale['cancel'], ["class" => "btn-default btn-sm", "icon" => "fa fa-times", "input-id" => "cancel-".$unique_id.""]); ?>
+            <?php echo form_button("save", $this->locale['save'], $this->locale['save'], ["class" => "btn-success btn-sm m-l-5", "icon" => "fa fa-hdd-o", "input-id" => "save-".$unique_id.""]); ?>
+            <?php echo form_button("save_and_close", $this->locale['save_and_close'], $this->locale['save_and_close'], ["class" => "btn-primary btn-sm m-l-5", "icon" => "fa fa-floppy-o", "input-id" => "save_and_close-".$unique_id.""]); ?>
         </div>
         <?php if ($breaker) { ?>
             <hr/><?php } ?>
@@ -484,25 +483,23 @@ class FaqAdmin extends FaqAdminModel {
         echo "<div class='clearfix'>\n";
         echo "<div class='pull-right'>\n";
         if ($result) {
-            echo "<a class='btn btn-success btn-sm m-r-10' href='".clean_request('ref=faq_form', ['ref'], FALSE)."'>
-                        <i class='fa fa-fw fa-plus'></i>".$this->locale['faq_0003']."</a>\n";
+            echo "<a class='btn btn-success btn-sm' href='".clean_request('ref=faq_form', ['ref'], FALSE)."'><i class='fa fa-plus'></i> ".$this->locale['faq_0003']."</a>\n";
         }
-        echo "<a class='btn btn-primary btn-sm m-r-10' href='".clean_request('ref=faq_cat_form', ['ref'], FALSE)."'><i class='fa fa-plus fa-fw'></i> ".$this->locale['faq_0119']."</a>
-            <a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('publish', '#table_action', '#faq_table');\"><i class='fa fa-fw fa-check'></i>".$this->locale['publish']."</a>
-            <a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('unpublish', '#table_action', '#faq_table');\"><i class='fa fa-fw fa-ban'></i>".$this->locale['unpublish']."</a>
-            <a class='btn btn-danger btn-sm m-r-10' onclick=\"run_admin('delete', '#table_action', '#faq_table');\"><i class='fa fa-fw fa-trash-o'></i>".$this->locale['delete']."</a>
-        </div><div class='display-inline-block pull-left m-r-10' style='width: 300px;'>
+        echo "<a class='m-l-5 btn btn-primary btn-sm' href='".clean_request('ref=faq_cat_form', ['ref'], FALSE)."'><i class='fa fa-plus'></i> ".$this->locale['faq_0119']."</a>
+            <a class='m-l-5 btn btn-default btn-sm hidden-xs' onclick=\"run_admin('publish', '#table_action', '#faq_table');\"><i class='fa fa-check'></i>".$this->locale['publish']."</a>
+            <a class='m-l-5 btn btn-default btn-sm hidden-xs' onclick=\"run_admin('unpublish', '#table_action', '#faq_table');\"><i class='fa fa-ban'></i>".$this->locale['unpublish']."</a>
+            <a class='m-l-5 btn btn-danger btn-sm hidden-xs' onclick=\"run_admin('delete', '#table_action', '#faq_table');\"><i class='fa fa-trash-o'></i>".$this->locale['delete']."</a>
+        </div><div class='display-inline-block pull-left m-r-10'>
         ".form_text('faq_answer', '', $filter_values['faq_answer'], [
                 'placeholder'       => $this->locale['faq_0120'],
                 'append_button'     => TRUE,
                 'append_value'      => '<i class=\'fa fa-search\'></i>',
                 'append_form_value' => 'search_faq',
-                'width'             => '250px',
-                'inner_width'       => '250px',
+                'width'             => '160px',
                 'group_size'        => 'sm'
             ])."
         </div>
-        <div class='display-inline-block va'>
+        <div class='display-inline-block va hidden-xs'>
             <a class='btn btn-sm m-r-15 ".($filter_empty ? 'btn-default' : 'btn-info')."' id='toggle_options' href='#'>".$this->locale['faq_0120']."
                 <span id='filter_caret' class='fa fa-fw ".($filter_empty ? 'fa-caret-down' : 'fa-caret-up')."'></span>
             </a>
@@ -572,8 +569,8 @@ class FaqAdmin extends FaqAdminModel {
             echo "<div class='col-xs-12 col-sm-6'>\n";
             echo form_select('faq_cat_id', $this->locale['faq_0009'], '', ['inline' => TRUE, 'options' => $cat_options, 'class' => 'm-b-0']);
             echo "</div>\n<div class='col-xs-12 col-sm-6'>\n";
-            echo form_button('edit_faq_cat', $this->locale['edit'], $this->locale['edit']);
-            echo form_button('delete_faq_cat', $this->locale['delete'], $this->locale['delete'], ['class' => 'btn-danger']);
+            echo form_button('edit_faq_cat', $this->locale['edit'], $this->locale['edit'], ['class' => 'btn-default btn-sm']);
+            echo form_button('delete_faq_cat', $this->locale['delete'], $this->locale['delete'], ['class' => 'btn-danger btn-sm']);
             echo "</div>\n";
             echo "</div>\n";
             echo "</div>\n";
@@ -581,7 +578,8 @@ class FaqAdmin extends FaqAdminModel {
 
         echo "<div class='table-responsive'><table class='table table-hover table-striped'>
             <thead>
-            <tr><th></th>
+            <tr>
+            <th class='hidden-xs'></th>
             <th>".$this->locale['faq_0100']."</td>
             <th>".$this->locale['faq_0102']."</th>
             <th>".$this->locale['faq_0252']."</th>
@@ -598,7 +596,7 @@ class FaqAdmin extends FaqAdminModel {
                 $delete_link = clean_request("section=faq&ref=faq_form&action=delete&faq_id=".$cdata['faq_id'], $_trash, FALSE);
                 $cat_edit_link = clean_request('section=faq&ref=faq_cat_form&action=edit&cat_id='.$cdata['faq_cat_id'], $_trash, FALSE);
                 echo "<tr data-id='".$cdata['faq_cat_id']."'>
-                        <td>".form_checkbox("faq_id[]", "", "", ["value" => $cdata['faq_id'], "class" => "m-0"])."</td>
+                        <td class='hidden-xs'>".form_checkbox("faq_id[]", "", "", ["value" => $cdata['faq_id'], "class" => "m-0"])."</td>
                         <td><a href='$edit_link'>".$cdata['faq_question']."</a></td>
                         <td>".($cdata['faq_status'] ? $this->locale['no'] : $this->locale['yes'])."</td>
                         <td>".($cdata['faq_cat_id'] ? "<a href='$cat_edit_link'>" : "").$cdata['faq_cat_name'].($cdata['faq_cat_id'] ? "</a>" : "")."</td>
