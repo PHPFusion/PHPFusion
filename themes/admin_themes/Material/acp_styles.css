@@ -5096,23 +5096,6 @@ html:not(.ie9) .mCS-minimal-dark.mCSB_scrollTools_onDrag .mCSB_dragger .mCSB_dra
     background: rgba(0, 0, 0, 0.4);
 }
 
-#backtotop {
-    opacity: 0;
-    margin-bottom: -100px;
-    -webkit-transition: all ease-in .3s;
-    -o-transition: all ease-in .3s;
-    -moz-transition: all ease-in .3s;
-    transition: all ease-in .3s;
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-}
-
-#backtotop.visible {
-    opacity: 1;
-    margin-bottom: 0;
-}
-
 .colorpicker.dropdown-menu {
     right: inherit;
 }
@@ -5998,11 +5981,6 @@ html[dir="rtl"] .btn-toggle.on:after {
 html[dir="rtl"] .mCSB_inside > .mCSB_container {
     margin-right: inherit !important;
     margin-left: 0;
-}
-
-html[dir="rtl"] #backtotop {
-    right: inherit !important;
-    left: 20px;
 }
 
 html[dir="rtl"] .colorpicker.dropdown-menu {
