@@ -165,7 +165,7 @@ class ForumAdminSettings extends ForumAdminInterface {
                 'threads_per_page'          => form_sanitizer($_POST['threads_per_page'], 20, 'threads_per_page'),
                 'posts_per_page'            => form_sanitizer($_POST['posts_per_page'], 20, 'posts_per_page'),
                 'thread_notify'             => form_sanitizer($_POST['thread_notify'], 0, 'thread_notify'),
-                'forum_ranks'               => form_sanitizer($_POST['forum_ranks'], 1, 'forum_ranks'),
+                'forum_ranks'               => form_sanitizer($_POST['forum_ranks'], 0, 'forum_ranks'),
                 'forum_rank_style'          => form_sanitizer($_POST['forum_rank_style'], 0, 'forum_rank_style'),
                 'popular_threads_timeframe' => form_sanitizer($_POST['popular_threads_timeframe'], 604800, 'popular_threads_timeframe'),
                 'forum_last_posts_reply'    => form_sanitizer($_POST['forum_last_posts_reply'], 0, 'forum_last_posts_reply'),
