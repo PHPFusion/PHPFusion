@@ -151,11 +151,11 @@ class NewsAdmin extends NewsAdminModel {
                         dbquery("UPDATE ".DB_NEWS." SET news_sticky='0' WHERE news_sticky='1'");
                     }
                     if (dbcount("('news_id')", DB_NEWS, "news_id='".$this->news_data['news_id']."'")) {
-                        dbquery_insert(DB_NEWS, $this->news_data, 'update', ['keep_session'=>TRUE]);
+                        dbquery_insert(DB_NEWS, $this->news_data, 'update', ['keep_session' => TRUE]);
                         addNotice('success', self::$locale['news_0101']);
                     } else {
                         $this->data['news_name'] = fusion_get_userdata('user_id');
-                        $this->news_data['news_id'] = dbquery_insert(DB_NEWS, $this->news_data, 'save', ['keep_session'=>TRUE]);
+                        $this->news_data['news_id'] = dbquery_insert(DB_NEWS, $this->news_data, 'save', ['keep_session' => TRUE]);
                         // update the last uploaded image to the news.
                         $photo_result = dbquery("SELECT news_image_id FROM ".DB_NEWS_IMAGES." WHERE news_id=0 ORDER BY news_image_datestamp DESC LIMIT 1");
                         if (dbrows($photo_result)) {
@@ -228,40 +228,40 @@ class NewsAdmin extends NewsAdminModel {
             'required'    => TRUE,
             'preview'     => TRUE,
             'html'        => TRUE,
-            'path'        => [IMAGES, IMAGES_N, IMAGES_NC],
+            'path'        => IMAGES_N,
             'autosize'    => TRUE,
             'placeholder' => self::$locale['news_0203a'],
             'form_name'   => 'news_form',
             'wordcount'   => TRUE,
-            'rows'        => '30',
+            'rows'        => '20',
             'file_filter' => explode(',', $news_settings['news_file_types']),
         ];
         $extendedSettings = [
-            'height'      => '600px',
+            'rows'        => '20',
             'placeholder' => '',
             'file_filter' => explode(',', $news_settings['news_file_types']),
-            'path'        => [IMAGES, IMAGES_N, IMAGES_NC]
+            'path'        => IMAGES_N
         ];
         $extendedSettings += $snippetSettings;
 
         if (fusion_get_settings('tinymce_enabled')) {
             $snippetSettings = [
                 'required'    => TRUE,
-                'height'      => '200px',
+                'rows'        => '20',
                 'type'        => 'tinymce',
                 'tinymce'     => 'advanced',
                 'file_filter' => explode(',', $news_settings['news_file_types']),
-                'path'        => [IMAGES, IMAGES_N, IMAGES_NC]
+                'path'        => IMAGES_N
             ];
 
             $extendedSettings = [
                 'preview'     => TRUE,
                 'type'        => 'tinymce',
                 'tinymce'     => 'advanced',
-                'height'      => '600px',
+                'rows'        => '20',
                 'placeholder' => self::$locale['news_0005'],
                 'form_name'   => 'news_form',
-                'path'        => [IMAGES, IMAGES_N, IMAGES_NC],
+                'path'        => IMAGES_N,
                 'wordcount'   => TRUE,
                 'file_filter' => explode(',', $news_settings['news_file_types']),
             ];
@@ -859,16 +859,16 @@ class NewsAdmin extends NewsAdminModel {
         <div class="m-t-15">
             <?php
             echo openform("news_filter", "post", FUSION_REQUEST);
-            echo "<div class='row clearfix'>\n";
-            echo "<div class='col-xs-12 col-sm-12 col-md-8 pull-right text-right'>\n";
-            echo "<a class='btn btn-success m-r-10' href='".clean_request("ref=news_form", ["ref"], FALSE)."'><i class='fa fa-plus fa-fw'></i> ".self::$locale['news_0002']."</a>";
-            echo "<a class='btn btn-default m-r-10' onclick=\"run_admin('publish', '#table_action', '#news_table');\"><i class='fa fa-check fa-fw'></i> ".self::$locale['publish']."</a>";
-            echo "<a class='btn btn-default m-r-10' onclick=\"run_admin('unpublish', '#table_action', '#news_table');\"><i class='fa fa-ban fa-fw'></i> ".self::$locale['unpublish']."</a>";
-            echo "<a class='btn btn-default m-r-10' onclick=\"run_admin('sticky', '#table_action', '#news_table');\"><i class='fa fa-sticky-note fa-fw'></i> ".self::$locale['sticky']."</a>";
-            echo "<a class='btn btn-default m-r-10' onclick=\"run_admin('unsticky', '#table_action', '#news_table');\"><i class='fa fa-sticky-note-o fa-fw'></i> ".self::$locale['unsticky']."</a>";
-            echo "<a class='btn btn-danger m-r-10' onclick=\"run_admin('delete', '#table_action', '#news_table');\"><i class='fa fa-trash-o fa-fw'></i> ".self::$locale['delete']."</a>";
-            echo "</div>\n";
+            echo "<div class='clearfix'>\n";
 
+            echo "<div class='pull-right'>\n";
+            echo "<a class='btn btn-sm m-l-5 btn-success' href='".clean_request("ref=news_form", ["ref"], FALSE)."'><i class='fa fa-plus fa-fw'></i> ".self::$locale['news_0002']."</a>";
+            echo "<button type='button' class='hidden-xs btn btn-sm m-l-5 btn-default' onclick=\"run_admin('publish', '#table_action', '#news_table');\"><i class='fa fa-check fa-fw'></i> ".self::$locale['publish']."</button>";
+            echo "<button type='button' class='hidden-xs btn btn-sm m-l-5 btn-default' onclick=\"run_admin('unpublish', '#table_action', '#news_table');\"><i class='fa fa-ban fa-fw'></i> ".self::$locale['unpublish']."</button>";
+            echo "<button type='button' class='hidden-xs btn btn-sm m-l-5 btn-default' onclick=\"run_admin('sticky', '#table_action', '#news_table');\"><i class='fa fa-sticky-note fa-fw'></i> ".self::$locale['sticky']."</button>";
+            echo "<button type='button' class='hidden-xs btn btn-sm m-l-5 btn-default' onclick=\"run_admin('unsticky', '#table_action', '#news_table');\"><i class='fa fa-sticky-note-o fa-fw'></i> ".self::$locale['unsticky']."</button>";
+            echo "<button type='button' class='hidden-xs btn btn-sm m-l-5 btn-danger' onclick=\"run_admin('delete', '#table_action', '#news_table');\"><i class='fa fa-trash-o fa-fw'></i> ".self::$locale['delete']."</button>";
+            echo "</div>\n";
             $filter_values = [
                 "news_text"       => !empty($_POST['news_text']) ? form_sanitizer($_POST['news_text'], "", "news_text") : "",
                 "news_status"     => !empty($_POST['news_status']) ? form_sanitizer($_POST['news_status'], "", "news_status") : "",
@@ -877,7 +877,6 @@ class NewsAdmin extends NewsAdminModel {
                 "news_language"   => !empty($_POST['news_language']) ? form_sanitizer($_POST['news_language'], "", "news_language") : "",
                 "news_author"     => !empty($_POST['news_author']) ? form_sanitizer($_POST['news_author'], "", "news_author") : "",
             ];
-
             $filter_empty = TRUE;
             foreach ($filter_values as $val) {
                 if ($val) {
@@ -885,22 +884,22 @@ class NewsAdmin extends NewsAdminModel {
                     break;
                 }
             }
-            echo "<div class='col-xs-12 col-sm-12 col-md-4'>\n";
+            echo "<div class='pull-left'>\n";
             echo form_text('news_text', '', $filter_values['news_text'], [
                 'placeholder'       => self::$locale['news_0200'],
                 'append_button'     => TRUE,
-                'append_value'      => "<i class='fa fa-search'></i> ".self::$locale['search'],
+                'append_value'      => "<i class='fa fa-search'></i>",
                 'append_form_value' => 'search_news',
-                'inner_width'       => '250px',
+                'width'             => '170px',
+                'group_size'        => 'sm'
             ]);
             echo "</div>\n";
             echo "</div>\n";
-            echo "<div class='row m-b-20'>\n";
-            echo "<div class='col-xs-6 vt'>\n";
+
+            echo "<div class='display-inline-block hidden-xs vt'>\n";
             echo "<a class='btn btn-sm ".($filter_empty == FALSE ? "btn-info" : " btn-default'")."' id='toggle_options' href='#'>".self::$locale['news_0242']."
             <span id='filter_caret' class='fa ".($filter_empty == FALSE ? "fa-caret-up" : "fa-caret-down")."'></span></a>\n";
             echo form_button("news_clear", self::$locale['news_0243'], "clear", ['class' => 'btn-default btn-sm']);
-            echo "</div>\n";
             echo "</div>\n";
             add_to_jquery("
             $('#toggle_options').bind('click', function(e) {
@@ -921,8 +920,7 @@ class NewsAdmin extends NewsAdminModel {
             });
             ");
             unset($filter_values['news_text']);
-
-            echo "<div id='news_filter_options'".($filter_empty == FALSE ? "" : " style='display:none;'").">\n";
+            echo "<div class='m-t-10' id='news_filter_options'".($filter_empty == FALSE ? "" : " style='display:none;'").">\n";
             echo "<div class='display-inline-block'>\n";
             echo form_select("news_status", "", $filter_values['news_status'], [
                 "allowclear" => TRUE, "placeholder" => "- ".self::$locale['news_0244']." -", "options" => [
@@ -932,7 +930,6 @@ class NewsAdmin extends NewsAdminModel {
                 ]
             ]);
             echo "</div>\n";
-
             echo "<div class='display-inline-block'>\n";
             echo form_select("news_visibility", "", $filter_values['news_visibility'], [
                 "allowclear" => TRUE, "placeholder" => "- ".self::$locale['news_0246']." -", "options" => fusion_get_groups()
@@ -982,6 +979,13 @@ class NewsAdmin extends NewsAdminModel {
         <?php echo form_hidden("table_action", "", ""); ?>
 
         <div class="display-block">
+            <?php if ($max_rows > $news_rows) : ?>
+                <div class="display-inline-block pull-right">
+                    <?php
+                    echo makepagenav($rowstart, $limit, $max_rows, 3, FUSION_SELF.fusion_get_aidlink()."&news_display=$limit&amp;")
+                    ?>
+                </div>
+            <?php endif; ?>
             <div class="display-inline-block m-l-10">
                 <?php echo form_select('news_display', self::$locale['show'], $limit,
                     [
@@ -998,30 +1002,23 @@ class NewsAdmin extends NewsAdminModel {
                     ]
                 ); ?>
             </div>
-            <?php if ($max_rows > $news_rows) : ?>
-                <div class="display-inline-block pull-right">
-                    <?php
-                    echo makepagenav($rowstart, $limit, $max_rows, 3, FUSION_SELF.fusion_get_aidlink()."&news_display=$limit&amp;")
-                    ?>
-                </div>
-            <?php endif; ?>
         </div>
 
         <div class="table-responsive">
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <td></td>
-                    <td class="strong"><?php echo self::$locale['news_0200'] ?></td>
-                    <td class="strong min"><?php echo self::$locale['news_0201'] ?></td>
-                    <td class="strong min"><?php echo self::$locale['news_0209'] ?></td>
-                    <td class="strong min"><?php echo self::$locale['sticky'] ?></td>
-                    <td class="strong min"><?php echo self::$locale['draft'] ?></td>
-                    <td class="strong"><?php echo self::$locale['global_073'] ?></td>
-                    <td class="strong"><?php echo self::$locale['news_0009'] ?></td>
-                    <td class="strong"><?php echo self::$locale['news_0142'] ?></td>
-                    <td class="strong"><?php echo self::$locale['actions'] ?></td>
-                    <td class="strong min">ID</td>
+                    <th class="hidden-xs"></th>
+                    <th class="strong"><?php echo self::$locale['news_0200'] ?></th>
+                    <th class="strong min"><?php echo self::$locale['news_0201'] ?></th>
+                    <th class="strong min"><?php echo self::$locale['news_0209'] ?></th>
+                    <th class="strong min"><?php echo self::$locale['sticky'] ?></th>
+                    <th class="strong min"><?php echo self::$locale['draft'] ?></th>
+                    <th class="strong"><?php echo self::$locale['global_073'] ?></th>
+                    <th class="strong"><?php echo self::$locale['news_0009'] ?></th>
+                    <th class="strong"><?php echo self::$locale['news_0142'] ?></th>
+                    <th class="strong"><?php echo self::$locale['actions'] ?></th>
+                    <th class="strong min">ID</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -1033,37 +1030,18 @@ class NewsAdmin extends NewsAdminModel {
                         $cat_edit_link = FUSION_SELF.fusion_get_aidlink()."&amp;action=edit&amp;ref=news_category&amp;cat_id=".$data['news_cat_id'];
                         ?>
                         <tr>
-                            <td><?php echo form_checkbox("news_id[]", "", "", ["value" => $data['news_id'], "class" => 'm-0']) ?></td>
-                            <td>
-                                <a class="text-dark" href="<?php echo $edit_link ?>">
-                                    <?php echo $data['news_subject'] ?>
-                                </a>
-                            </td>
-                            <td>
-                                <a class="text-dark" href="<?php echo $cat_edit_link ?>">
-                                    <?php echo $data['news_cat_name'] ?>
-                                </a>
-                            </td>
-                            <td>
-                                <?php echo getgroupname($data['news_visibility']) ?>
-                            </td>
-                            <td>
-                                <span class="badge"><?php echo $data['news_sticky'] ? self::$locale['yes'] : self::$locale['no'] ?></span>
-                            </td>
-                            <td>
-                                <span class="badge"><?php echo $data['news_draft'] ? self::$locale['yes'] : self::$locale['no'] ?></span>
-                            </td>
+                            <td class="hidden-xs"><?php echo form_checkbox("news_id[]", "", "", ["value" => $data['news_id'], "class" => 'm-0']) ?></td>
+                            <td><a class="text-dark" href="<?php echo $edit_link ?>"><?php echo $data['news_subject'] ?></a></td>
+                            <td><a class="text-dark" href="<?php echo $cat_edit_link ?>"><?php echo $data['news_cat_name'] ?></a></td>
+                            <td><?php echo getgroupname($data['news_visibility']) ?></td>
+                            <td><span class="badge"><?php echo $data['news_sticky'] ? self::$locale['yes'] : self::$locale['no'] ?></span></td>
+                            <td><span class="badge"><?php echo $data['news_draft'] ? self::$locale['yes'] : self::$locale['no'] ?></span></td>
                             <td><?php echo format_word(isset($comment_rows[$data['news_id']]) ? $comment_rows[$data['news_id']] : 0, self::$locale['fmt_comment']) ?></td>
                             <td><?php echo format_word(isset($image_rows[$data['news_id']]) ? $image_rows[$data['news_id']] : 0, self::$locale['fmt_photo']) ?></td>
-                            <td>
-                                <div class="overflow-hide"><?php echo profile_link($data['user_id'], $data['user_name'],
-                                        $data['user_status']) ?></div>
-                            </td>
+                            <td><div class="overflow-hide"><?php echo profile_link($data['user_id'], $data['user_name'], $data['user_status']) ?></div></td>
                             <td>
                                 <a href="<?php echo $edit_link ?>"><?php echo self::$locale['edit'] ?></a> &middot;
-                                <a href="<?php echo FUSION_SELF.fusion_get_aidlink()."&amp;action=delete&amp;news_id=".$data['news_id'] ?>"
-                                   onclick="return confirm('<?php echo self::$locale['news_0281']; ?>')">
-                                    <?php echo self::$locale['delete'] ?>
+                                <a href="<?php echo FUSION_SELF.fusion_get_aidlink()."&amp;action=delete&amp;news_id=".$data['news_id'] ?>" onclick="return confirm('<?php echo self::$locale['news_0281']; ?>')"><?php echo self::$locale['delete'] ?>
                                 </a>
                             </td>
                             <td><?php echo $data['news_id'] ?></td>
@@ -1071,14 +1049,19 @@ class NewsAdmin extends NewsAdminModel {
                     <?php
                     endwhile;
                 else: ?>
-                    <tr>
-                        <td colspan="11" class="text-center"><strong><?php echo self::$locale['news_0109'] ?></strong>
-                        </td>
-                    </tr>
+                    <tr><td colspan="11" class="text-center"><strong><?php echo self::$locale['news_0109'] ?></strong></td></tr>
                 <?php endif; ?>
                 </tbody>
             </table>
         </div>
+
+        <?php if ($max_rows > $news_rows) : ?>
+            <div class="display-inline-block">
+                <?php
+                echo makepagenav($rowstart, $limit, $max_rows, 3, FUSION_SELF.fusion_get_aidlink()."&news_display=$limit&amp;")
+                ?>
+            </div>
+        <?php endif; ?>
         <?php
         closeform();
     }

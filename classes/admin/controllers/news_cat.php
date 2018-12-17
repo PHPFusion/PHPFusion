@@ -335,12 +335,12 @@ class NewsCategoryAdmin extends NewsAdminModel {
             echo "<div class='clearfix'>\n";
 
             echo "<div class='pull-right'>\n";
-            echo "<a class='btn btn-success m-r-10' href='".clean_request("ref=news_cat_form", ["ref"], FALSE)."'><i class='fa fa-plus fa-fw'></i> ".self::$locale['news_0022']."</a>";
-            echo "<a class='btn btn-default m-r-10' onclick=\"run_admin('publish', '#table_action', '#news_table');\"><i class='fa fa-check fa-fw'></i> ".self::$locale['publish']."</a>";
-            echo "<a class='btn btn-default m-r-10' onclick=\"run_admin('unpublish', '#table_action', '#news_table');\"><i class='fa fa-ban fa-fw'></i> ".self::$locale['unpublish']."</a>";
-            echo "<a class='btn btn-default m-r-10' onclick=\"run_admin('sticky', '#table_action', '#news_table');\"><i class='fa fa-sticky-note fa-fw'></i> ".self::$locale['sticky']."</a>";
-            echo "<a class='btn btn-default m-r-10' onclick=\"run_admin('unsticky', '#table_action', '#news_table');\"><i class='fa fa-sticky-note-o fa-fw'></i> ".self::$locale['unsticky']."</a>";
-            echo "<a class='btn btn-danger m-r-10' onclick=\"run_admin('delete', '#table_action', '#news_table');\"><i class='fa fa-trash-o fa-fw'></i> ".self::$locale['delete']."</a>";
+            echo "<a class='btn btn-success btn-sm' href='".clean_request("ref=news_cat_form", ["ref"], FALSE)."'><i class='fa fa-plus'></i> ".self::$locale['news_0022']."</a>";
+            echo "<button type='button' class='hidden-xs btn m-l-5 btn-default btn-sm' onclick=\"run_admin('publish', '#table_action', '#news_table');\"><i class='fa fa-check'></i> ".self::$locale['publish']."</button>";
+            echo "<button type='button' class='hidden-xs btn m-l-5 btn-default btn-sm' onclick=\"run_admin('unpublish', '#table_action', '#news_table');\"><i class='fa fa-ban'></i> ".self::$locale['unpublish']."</button>";
+            echo "<button type='button' class='hidden-xs btn m-l-5 btn-default btn-sm' onclick=\"run_admin('sticky', '#table_action', '#news_table');\"><i class='fa fa-sticky-note'></i> ".self::$locale['sticky']."</button>";
+            echo "<button type='button' class='hidden-xs btn m-l-5 btn-default btn-sm' onclick=\"run_admin('unsticky', '#table_action', '#news_table');\"><i class='fa fa-sticky-note-o'></i> ".self::$locale['unsticky']."</button>";
+            echo "<button type='button' class='hidden-xs btn m-l-5 btn-danger btn-sm' onclick=\"run_admin('delete', '#table_action', '#news_table');\"><i class='fa fa-trash-o'></i> ".self::$locale['delete']."</button>";
             echo "</div>\n";
 
             $filter_values = [
@@ -361,14 +361,15 @@ class NewsCategoryAdmin extends NewsAdminModel {
                 "append_button"     => TRUE,
                 "append_value"      => "<i class='fa fa-search'></i> ".self::$locale['search'],
                 "append_form_value" => "search_news",
-                "inner_width"       => "250px",
+                "width"             => "170px",
+                'group_size'        => 'sm'
             ]);
             echo "</div>\n";
-            echo "<div class='display-inline-block'>";
-            echo "<a class='btn".($filter_empty == FALSE ? " btn-info" : " btn-default'")."' id='toggle_options' href='#'>\n";
+            echo "<div class='display-inline-block hidden-xs'>";
+            echo "<a class='btn btn-sm".($filter_empty == FALSE ? " btn-info" : " btn-default'")."' id='toggle_options' href='#'>\n";
             echo self::$locale['news_0242']." <span id='filter_caret' class='fa ".($filter_empty == FALSE ? "fa-caret-up" : "fa-caret-down")."'></span>\n";
             echo "</a>\n";
-            echo form_button("news_clear", self::$locale['news_0243'], "clear", ['class' => 'btn-default']);
+            echo form_button("news_clear", self::$locale['news_0243'], "clear", ['class' => 'btn-default btn-sm']);
             echo "</div>\n";
 
             echo "</div>\n";
@@ -439,7 +440,7 @@ class NewsCategoryAdmin extends NewsAdminModel {
             <div class="table-responsive"><table class="table table-hover">
             <thead>
             <tr>
-                <th></th>
+                <th class="hidden-xs"></th>
                 <th><?php echo self::$locale['actions'] ?></th>
                 <th class="col-xs-3"><?php echo self::$locale['news_0300'] ?></th>
                 <th><?php echo self::$locale['news_0253'] ?></th>
@@ -458,7 +459,7 @@ class NewsCategoryAdmin extends NewsAdminModel {
                 $delete_link = clean_request("section=news_category&ref=news_cat_form&action=delete&cat_id=".$cat_id, ["section", "ref", "action", "cat_id"], FALSE);
                 ?>
                 <tr id="cat<?php echo $cat_id; ?>">
-                    <td><?php echo form_checkbox("news_cat_id[]", "", "", ["value" => $cat_id, "input_id" => "checkbox".$cat_id, "class" => "m-b-0"]);
+                    <td class="hidden-xs"><?php echo form_checkbox("news_cat_id[]", "", "", ["value" => $cat_id, "input_id" => "checkbox".$cat_id, "class" => "m-b-0"]);
                         add_to_jquery('$("#checkbox'.$cat_id.'").click(function() {
                         if ($(this).prop("checked")) {
                             $("#cat'.$cat_id.'").addClass("active");
@@ -469,45 +470,21 @@ class NewsCategoryAdmin extends NewsAdminModel {
                         ?></td>
                     <td>
                         <div class="btn-group m-0">
-                            <a class="btn btn-xs btn-default" href="<?php echo $edit_link ?>">
-                                <?php echo self::$locale['edit'] ?>
-                            </a>
-                            <a class="btn btn-xs btn-default"
-                               href="<?php echo $delete_link ?>"
-                               onclick="return confirm('<?php echo self::$locale['news_0282']; ?>')">
-                                <?php echo self::$locale['delete'] ?>
-                            </a>
+                            <a class="btn btn-xs btn-default" href="<?php echo $edit_link ?>"><?php echo self::$locale['edit'] ?></a>
+                            <a class="btn btn-xs btn-default" href="<?php echo $delete_link ?>" onclick="return confirm('<?php echo self::$locale['news_0282']; ?>')"><?php echo self::$locale['delete'] ?></a>
                         </div>
                     </td>
-                    <td>
-                        <a class="text-dark" href="<?php echo $edit_link ?>"><img style="width:25px"
-                                                                                  class="display-inline-block m-r-15"
-                                                                                  src="<?php echo get_image("nc_".$cdata['news_cat_name']) ?>"
-                                                                                  alt="<?php echo $cdata['news_cat_name'] ?>"/><?php echo $cdata['news_cat_name'] ?>
-                        </a>
-                    </td>
+                    <td><a class="text-dark" href="<?php echo $edit_link ?>"><img style="width:25px" class="display-inline-block m-r-15" src="<?php echo get_image("nc_".$cdata['news_cat_name']) ?>" alt="<?php echo $cdata['news_cat_name'] ?>"/><?php echo $cdata['news_cat_name'] ?></a></td>
                     <td>
                         <span class="badge"><?php echo sprintf(self::$locale['news_0254'], $cdata['news_published']) ?></span>
-                        <span class="label label-default m-r-10"><i
-                                    class="fa fa-star fa-fw"></i> <?php echo $cdata['news_draft'] ?></span>
-                        <span class="label label-warning"><i
-                                    class="fa fa-sticky-note-o fa-fw"></i> <?php echo $cdata['news_sticky'] ?></span>
+                        <span class="label label-default m-r-10"><i class="fa fa-star fa-fw"></i> <?php echo $cdata['news_draft'] ?></span>
+                        <span class="label label-warning"><i class="fa fa-sticky-note-o fa-fw"></i> <?php echo $cdata['news_sticky'] ?></span>
                     </td>
-                    <td>
-                        <span class="badge"><?php echo $cdata['news_cat_draft'] ? self::$locale['yes'] : self::$locale['no'] ?></span>
-                    </td>
-                    <td>
-                        <span class="badge"><?php echo $cdata['news_cat_sticky'] ? self::$locale['yes'] : self::$locale['no'] ?></span>
-                    </td>
-                    <td>
-                        <span class="badge"><?php echo getgroupname($cdata['news_cat_visibility']) ?></span>
-                    </td>
-                    <td>
-                        <?php echo $cdata['news_cat_language'] ?>
-                    </td>
-                    <td>
-                        <?php echo $cdata['news_cat_id'] ?>
-                    </td>
+                    <td><span class="badge"><?php echo $cdata['news_cat_draft'] ? self::$locale['yes'] : self::$locale['no'] ?></span></td>
+                    <td><span class="badge"><?php echo $cdata['news_cat_sticky'] ? self::$locale['yes'] : self::$locale['no'] ?></span></td>
+                    <td><span class="badge"><?php echo getgroupname($cdata['news_cat_visibility']) ?></span></td>
+                    <td><?php echo $cdata['news_cat_language'] ?></td>
+                    <td><?php echo $cdata['news_cat_id'] ?></td>
                 </tr>
                 <?php
                 if (isset($data[$cdata['news_cat_id']])) {
@@ -516,11 +493,7 @@ class NewsCategoryAdmin extends NewsAdminModel {
                 ?>
             <?php endforeach; ?>
         <?php else: ?>
-            <tr>
-                <td colspan="10" class="text-center">
-                    <?php echo self::$locale['news_0303'] ?>
-                </td>
-            </tr>
+            <tr><td colspan="10" class="text-center"><?php echo self::$locale['news_0303'] ?></td></tr>
         <?php endif; ?>
 
         <?php if (!$id) : ?>
