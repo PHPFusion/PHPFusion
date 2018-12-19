@@ -26,8 +26,10 @@ add_to_jquery("$('.defuse').bind('click', function() {return confirm('".$locale[
 
 if (($folder = filter_input(INPUT_POST, 'infuse'))) {
     \PHPFusion\Installer\Infusion_Core::getInstance()->infuse($folder);
+    redirect(FUSION_REQUEST);
 } else if ($folder = filter_input(INPUT_POST, 'defuse')) {
     \PHPFusion\Installer\Infusion_Core::getInstance()->defuse($folder);
+    redirect(FUSION_REQUEST);
 }
 
 opentable($locale['400']);
