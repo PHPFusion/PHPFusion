@@ -379,10 +379,10 @@ class ThreadTags extends ForumServer {
                 if (isset($this->tag_info['tags'][$tag_id])) {
                     $tag_data = $this->tag_info['tags'][$tag_id];
                     $html .= "<div class='tag_info m-r-10'>";
-                    $html .= ($tag_data['tag_status']) ? "<a href='".$tag_data['tag_link']."'>\n" : "";
+                    $html .= !empty($tag_data['tag_status']) ? "<a href='".$tag_data['tag_link']."'>\n" : "";
                     $html .= "<i class='fa fa-square fa-lg fa-fw' style='color:".$tag_data['tag_color']."'></i> ";
                     $html .= $tag_data['tag_title'];
-                    $html .= ($tag_data['tag_status']) ? "</a>\n" : "";
+                    $html .= !empty($tag_data['tag_status']) ? "</a>\n" : "";
                     $html .= "</div>\n";
                 }
             }
@@ -390,5 +390,4 @@ class ThreadTags extends ForumServer {
 
         return (string)$html;
     }
-
 }
