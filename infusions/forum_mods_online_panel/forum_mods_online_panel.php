@@ -28,7 +28,7 @@ $locale = fusion_get_locale("", $locale_path);
 
 include_once INFUSIONS."forum_mods_online_panel/templates.php";
 
-if (infusion_exists('forum')) {
+if (defined('FORUM_EXIST')) {
     $moderator_groups = [];
     $mod_group = [];
     $group_sql = "";

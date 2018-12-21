@@ -463,7 +463,7 @@ class Admins {
      * @param $options - array(infusion_name, link, submit_link, submit_locale, title,admin_link)
      */
     public function setSubmitData($type, array $options = []) {
-        infusion_exists($options['infusion_name']) ? $this->submit_data[$type] = $options : NULL;
+        defined(strtoupper($options['infusion_name']).'_EXIST') ? $this->submit_data[$type] = $options : NULL;
     }
 
     public function getSubmitData($type = NULL) {
@@ -506,7 +506,7 @@ class Admins {
      * @param $options - array(image_folder => TRUE or FALSE)
      */
     public function setFolderPermissions($type, array $options = []) {
-        infusion_exists($type) ? $this->folder_permissions[$type] = $options : NULL;
+        defined(strtoupper($type).'_EXIST') ? $this->folder_permissions[$type] = $options : NULL;
     }
 
     /**

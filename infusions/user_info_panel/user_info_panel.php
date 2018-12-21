@@ -39,7 +39,7 @@ if (iMEMBER) {
     $outbox_count = (int)$messages_count['outbox_count'];
     $archive_count = (int)$messages_count['archive_count'];
     $msg_count = (int)$messages_count['unread_count'];
-    $forum_exists = infusion_exists('forum');
+    $forum_exists = defined('FORUM_EXIST');
     $forum_settings = get_settings('forum');
 
     $pm_progress = '';

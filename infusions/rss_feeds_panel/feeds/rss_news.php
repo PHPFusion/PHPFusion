@@ -27,7 +27,7 @@ $settings = fusion_get_settings();
 
 require_once INFUSIONS.'rss_feeds_panel/RSS.php';
 
-if (db_exists(DB_NEWS)) {
+if (defined('NEWS_EXIST')) {
     $result = dbquery("SELECT *
         FROM ".DB_NEWS."
         WHERE ".groupaccess('news_visibility').(multilang_table('NS') ? " AND news_language='".LANGUAGE."'" : '')."

@@ -280,6 +280,13 @@ if ($userdata['user_level'] == USER_LEVEL_SUPER_ADMIN && isset($_GET['themes']) 
 }
 set_theme(empty($userdata['user_theme']) ? fusion_get_settings("theme") : $userdata['user_theme']);
 
+$result = dbquery("SELECT inf_folder FROM ".DB_INFUSIONS);
+if (dbrows($result)) {
+    while ($data = dbarray($result)) {
+        define(strtoupper($data['inf_folder']).'_EXIST', TRUE);
+    }
+}
+
 /**
  * Reduction of 0.04 seconds in performance.
  * We can use manually include the configuration if needed.

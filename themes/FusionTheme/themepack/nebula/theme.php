@@ -42,7 +42,7 @@ define("THEME_BULLET", "<i class='fa fa-list'></i>");
  * this is the ONLY way to insert a calculated menu... Like:
  *
  * Idea Example:
- * if (db_exists(DB_NEWS)) {
+ * if (defined('NEWS_EXIST')) {
  *      $news_megamenu = "<div class='row'>....</div>\n";
  *      \PHPFusion\SiteLinks::addOptionalMenuLink(6, $news_megamenu, 'find-news-id', '', '');
  * }
