@@ -17,9 +17,10 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/../../maincore.php';
 
-if (!db_exists(DB_BLOG)) {
+if (!defined('BLOG_EXIST')) {
     redirect(BASEDIR."error.php?code=404");
 }
+
 $settings = fusion_get_settings();
 $locale = fusion_get_locale('', BLOG_LOCALE);
 
