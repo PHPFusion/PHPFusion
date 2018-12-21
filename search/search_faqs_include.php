@@ -23,7 +23,7 @@ use PHPFusion\Search;
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
-if (db_exists(DB_FAQS)) {
+if (defined('FAQ_EXIST')) {
 
     if (Search_Engine::get_param('stype') == 'faqs' || Search_Engine::get_param('stype') == 'all') {
         $locale = fusion_get_locale('', INFUSIONS."faq/locale/".LOCALESET."search/faqs.php");
