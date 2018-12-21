@@ -23,7 +23,7 @@ use PHPFusion\Search;
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
-if (db_exists(DB_DOWNLOADS)) {
+if (defined('DOWNLOADS_EXIST')) {
     $formatted_result = '';
     $settings = fusion_get_settings();
     $locale = fusion_get_locale('', INFUSIONS."downloads/locale/".LOCALESET."search/downloads.php");

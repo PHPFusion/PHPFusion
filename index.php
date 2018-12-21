@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once file_exists('maincore.php') ? 'maincore.php' : __DIR__."/../../maincore.php";
-if (!db_exists(DB_DOWNLOADS)) {
+if (!defined('DOWNLOADS_EXIST')) {
     redirect(BASEDIR."error.php?code=404");
 }
 
@@ -26,7 +26,7 @@ $result = dbquery("SELECT download_file FROM ".DB_DOWNLOADS." WHERE ".groupacces
 if (dbrows($result) > 0) {
     $data = dbarray($result);
     require_once INCLUDES."class.httpdownload.php";
-    $object = new httpdownload;
+    $object = new PHPFusion\httpdownload;
     $object->set_byfile(DOWNLOADS."/files/".$data['download_file']);
     $object->use_resume = TRUE;
     $object->download();

@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/../../maincore.php';
 
-if (!infusion_exists('downloads')) {
+if (!defined('DOWNLOADS_EXIST')) {
     redirect(BASEDIR."error.php?code=404");
 }
 
