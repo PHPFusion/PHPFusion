@@ -3,10 +3,6 @@
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
-|
-| Guildsquare
-| Copyright (C) 2014 - 2014 Guildsquare
-| http://www.guildsquare.com/
 +--------------------------------------------------------+
 | Project File: Location ajax parsing
 | Filename: location.json.php
