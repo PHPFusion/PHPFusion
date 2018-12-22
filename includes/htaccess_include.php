@@ -37,7 +37,8 @@ function write_htaccess() {
     $htc .= "Options -Indexes".PHP_EOL.PHP_EOL;
 
     $htc .= "# Force utf-8 charset".PHP_EOL;
-    $htc .= "AddDefaultCharset utf-8".PHP_EOL.PHP_EOL;
+    $htc .= "AddDefaultCharset UTF-8".PHP_EOL;
+    $htc .= 'AddCharset UTF-8 .html .css .js .svg .woff .woff2'.PHP_EOL.PHP_EOL;
 
     $htc .= "# Security".PHP_EOL;
     $htc .= "ServerSignature Off".PHP_EOL.PHP_EOL;
@@ -63,13 +64,11 @@ function write_htaccess() {
     $htc .= "# Cache images for 7 days to soften network load".PHP_EOL;
     $htc .= "<IfModule mod_headers.c>".PHP_EOL;
     $htc .= '    <filesMatch "\\.(ico|pdf|flv|jpg|jpeg|png|gif|swf|ttf|otf|woff|woff2|eot|svg)$">'.PHP_EOL;
+    $htc .= '        Header append Vary: Accept-Encoding'.PHP_EOL;
     $htc .= '        Header set Cache-Control "max-age=2592000, public"'.PHP_EOL;
     $htc .= "    </FilesMatch>".PHP_EOL;
-    $htc .= '    <filesMatch "\\.(css)$">'.PHP_EOL;
+    $htc .= '    <filesMatch "\\.(css|js)$">'.PHP_EOL;
     $htc .= '        Header set Cache-Control "max-age=604800, public"'.PHP_EOL;
-    $htc .= "    </FilesMatch>".PHP_EOL;
-    $htc .= '    <filesMatch "\\.(js)$">'.PHP_EOL;
-    $htc .= '        Header set Cache-Control "max-age=216000, private"'.PHP_EOL;
     $htc .= "    </FilesMatch>".PHP_EOL;
     $htc .= '    <filesMatch "\\.(html|htm|php)$">'.PHP_EOL;
     $htc .= '        Header set Cache-Control "max-age=1, private, must-revalidate"'.PHP_EOL;
@@ -78,7 +77,7 @@ function write_htaccess() {
 
     $htc .= '# Compress text files'.PHP_EOL;
     $htc .= '<ifModule mod_deflate.c>'.PHP_EOL;
-    $htc .= '    <filesMatch "\.(css|js|x?html?|php)$">'.PHP_EOL;
+    $htc .= '    <filesMatch "\.(svg|css|js|x?html?|php)$">'.PHP_EOL;
     $htc .= '        SetOutputFilter DEFLATE'.PHP_EOL;
     $htc .= '    </filesMatch>'.PHP_EOL;
     $htc .= '</ifModule>'.PHP_EOL.PHP_EOL;

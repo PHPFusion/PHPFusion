@@ -40,6 +40,7 @@ if (defined('DB_NEWS')) {
         ns.news_datestamp as datestamp, us.user_id, us.user_name,
         us.user_status, nc.news_cat_id as cat_id, nc.news_cat_name as cat_name,
         ni.news_image as image,
+        ni.news_image_t1 as image_thumb,
         nc.news_cat_image as cat_image,
         count(c1.comment_id) as comment_count,
         count(r1.rating_id) as rating_count
@@ -94,6 +95,7 @@ if (defined('DB_BLOG')) {
         bl.blog_datestamp as datestamp, us.user_id, us.user_name,
         us.user_status, bc.blog_cat_id as cat_id, bc.blog_cat_name as cat_name,
         bl.blog_image as image,
+        bl.blog_image_t1 as image_thumb,
         bc.blog_cat_image as cat_image,
         count(c1.comment_id) as comment_count,
         count(r1.rating_id) as rating_count
@@ -125,6 +127,7 @@ if (defined('DB_DOWNLOADS')) {
         dl.download_datestamp as datestamp, dc.download_cat_id as cat_id, dc.download_cat_name as cat_name,
         us.user_id, us.user_name, us.user_status,
         dl.download_image as image,
+        dl.download_image_thumb as image_thumb,
         count(c1.comment_id) as comment_count,
         count(r1.rating_id) as rating_count
         FROM ".DB_DOWNLOADS." dl
@@ -201,7 +204,9 @@ foreach ($configs as $table => $config) {
                 } else {
                     // go for image if available
                     if ($row['image'] || $row['cat_image']) {
-                        if ($row['image'] && file_exists(INFUSIONS."news/images/".$row['image'])) {
+                        if ($row['image_thumb'] && file_exists(INFUSIONS."news/images/thumbs/".$row['image_thumb'])) {
+                            $data[$count]['image'] = INFUSIONS."news/images/thumbs/".$row['image_thumb'];
+                        } else if ($row['image'] && file_exists(INFUSIONS."news/images/".$row['image'])) {
                             $data[$count]['image'] = INFUSIONS."news/images/".$row['image'];
                         } else if ($row['cat_image']) {
                             $data[$count]['image'] = INFUSIONS."news/news_cats/".$row['cat_image'];
@@ -215,7 +220,9 @@ foreach ($configs as $table => $config) {
                 break;
             case DB_BLOG:
                 if ($row['image'] || $row['cat_image']) {
-                    if ($row['image'] && file_exists(INFUSIONS."blog/images/".$row['image'])) {
+                    if ($row['image_thumb'] && file_exists(INFUSIONS."blog/images/thumbs/".$row['image_thumb'])) {
+                        $data[$count]['image_thumb'] = INFUSIONS."blog/images/thumbs/".$row['image_thumb'];
+                    } else if ($row['image'] && file_exists(INFUSIONS."blog/images/".$row['image'])) {
                         $data[$count]['image'] = INFUSIONS."blog/images/".$row['image'];
                     } else if ($row['cat_image']) {
                         $data[$count]['image'] = INFUSIONS."blog/blog_cats/".$row['cat_image'];
@@ -228,7 +235,9 @@ foreach ($configs as $table => $config) {
                 break;
             case DB_DOWNLOADS:
                 if ($config['infSettings']['download_screenshot']) {
-                    if ($row['image'] && file_exists(INFUSIONS."downloads/images/".$row['image'])) {
+                    if ($row['image_thumb'] && file_exists(INFUSIONS."downloads/images/".$row['image_thumb'])) {
+                        $data[$count]['image'] = INFUSIONS."downloads/images/".$row['image_thumb'];
+                    } else if ($row['image'] && file_exists(INFUSIONS."downloads/images/".$row['image'])) {
                         $data[$count]['image'] = INFUSIONS."downloads/images/".$row['image'];
                     } else {
                         $data[$count]['image'] = get_image('imagenotfound');
