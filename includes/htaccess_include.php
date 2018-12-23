@@ -75,9 +75,9 @@ function write_htaccess() {
     $htc .= "    </FilesMatch>".PHP_EOL;
     $htc .= "</IfModule>".PHP_EOL.PHP_EOL;
 
-    $htc .= '# Compress text files'.PHP_EOL;
+    $htc .= '# Compress files'.PHP_EOL;
     $htc .= '<ifModule mod_deflate.c>'.PHP_EOL;
-    $htc .= '    <filesMatch "\.(svg|css|js|x?html?|php)$">'.PHP_EOL;
+    $htc .= '    <filesMatch "\.(jpg|jpeg|png|gif|svg|css|js|x?html?|php)$">'.PHP_EOL;
     $htc .= '        SetOutputFilter DEFLATE'.PHP_EOL;
     $htc .= '    </filesMatch>'.PHP_EOL;
     $htc .= '</ifModule>'.PHP_EOL.PHP_EOL;
