@@ -38,17 +38,27 @@ function opensetup() {
 	echo "<link rel='stylesheet' href='themes/templates/setup_styles.css' type='text/css' />\n";
 	echo "<meta http-equiv='X-UA-Compatible' content='IE=edge'>\n";
 	echo "<meta name='viewport' content='width=device-width, initial-scale=1.0' />\n";
+	echo "<script type='text/javascript' src='includes/jquery/jquery.min.js'></script>\n";
 	echo "<script type='text/javascript' src='includes/bootstrap/bootstrap.min.js'></script>\n";
 	echo "<link href='themes/templates/default.css' rel='stylesheet' />\n";
 	echo "<link href='includes/bootstrap/bootstrap.min.css' rel='stylesheet' />\n";
-	echo "<link href='includes/font/entypo/entypo.css' rel='stylesheet' />";
+	echo "<link href='includes/fonts/entypo/entypo.css' rel='stylesheet' />";
+	echo '<link rel="apple-touch-icon" sizes="180x180" href="images/favicons/apple-touch-icon.png">';
+	echo '<link rel="icon" type="image/png" sizes="32x32" href="images/favicons/favicon-32x32.png">';
+	echo '<link rel="icon" type="image/png" sizes="16x16" href="images/favicons/favicon-16x16.png">';
+	echo '<link rel="manifest" href="images/favicons/site.webmanifest">';
+	echo '<link rel="mask-icon" href="images/favicons/safari-pinned-tab.svg" color="#262626">';
+	echo '<link rel="shortcut icon" href="images/favicons/favicon.ico">';
+	echo '<meta name="msapplication-TileColor" content="#262626">';
+	echo '<meta name="msapplication-config" content="images/favicons/browserconfig.xml">';
+	echo '<meta name="theme-color" content="#ffffff">';
 	echo "</head>\n<body>\n";
 	echo "<aside class='block-container'>\n";
 	echo "<form name='setupform' method='post' action='setup.php'>\n";
 	echo "<div class='block'>\n";
 	echo "<div class='block-content'>\n";
 	echo "<h6><strong>".$locale['title']."</strong></h6>\n";
-	echo "<img class='pf-logo' src='images/php-fusion-icon.png' class='position-absolute'/>";
+	echo "<img class='pf-logo position-absolute' src='images/php-fusion-icon.png' alt='Logo'/>";
 	echo "<p class='text-right mid-opacity'>Version ".$locale['os_version']."</p>";
 	echo "<div class='row'>\n";
 	echo "<div class='col-xs-4 col-sm-4 col-md-4 col-lg-4'>\n";
@@ -61,7 +71,7 @@ function opensetup() {
 		} else {
 			$active = isset($_POST['step']) && $_POST['step'] == $arr ? 1 : 0;
 		}
-		echo "<div class='list-group-item ".($active ? 'active' : '')."' style='border:0px;'>".$value."</div>\n";
+		echo "<div class='list-group-item ".($active ? 'active text-dark' : '')."' style='border:0px;'>".$value."</div>\n";
 	}
 	echo "</div>\n";
 	echo "</div>\n";
@@ -267,9 +277,9 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 	$secret_key_salt = "".createRandomToken()."";
 
 	if ($db_host != "" && $db_user != "" && $db_name != "" && $db_prefix != "" && $db_driver != "") {
-		
+
 		$db_connect = dbconnect($db_host, $db_user, $db_pass, $db_name);
-		
+
 		if ($db_connect) {
 			// if ($db_select) {
 				if (dbrows(dbquery("SHOW TABLES LIKE '".str_replace("_", "\_", $db_prefix)."%'")) == "0") {
@@ -717,7 +727,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							if (!$result) {
 								$fail = TRUE;
 							}
-							
+
 							$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."blog");
 							$result = dbquery("CREATE TABLE ".$db_prefix."blog (
 							blog_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -747,7 +757,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							if (!$result) {
 								$fail = TRUE;
 							}
-							
+
 							$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."blog_cats");
 							$result = dbquery("CREATE TABLE ".$db_prefix."blog_cats (
 							blog_cat_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -759,7 +769,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							if (!$result) {
 								$fail = TRUE;
 							}
-							
+
 							$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."new_users");
 							$result = dbquery("CREATE TABLE ".$db_prefix."new_users (
 							user_code VARCHAR(40) NOT NULL,
@@ -769,7 +779,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							user_info TEXT NOT NULL,
 							KEY user_datestamp (user_datestamp)
 							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci;");
-							
+
 							$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."email_verify");
 							$result = dbquery("CREATE TABLE ".$db_prefix."email_verify (
 							user_id MEDIUMINT(8) NOT NULL,
@@ -781,7 +791,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							if (!$result) {
 								$fail = TRUE;
 							}
-							
+
 							$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."ratings");
 							$result = dbquery("CREATE TABLE ".$db_prefix."ratings (
 							rating_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -807,7 +817,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							if (!$result) {
 								$fail = TRUE;
 							}
-							
+
 							for ($i = 0; $i < sizeof($_POST['enabled_languages']); $i++) {
 								$selected_langs .= $_POST['enabled_languages'][$i].".";
 							}
@@ -890,7 +900,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							if (!$result) {
 								$fail = TRUE;
 							}
-							
+
 							$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."photos");
 							$result = dbquery("CREATE TABLE ".$db_prefix."photos (
 							photo_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -913,7 +923,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							if (!$result) {
 								$fail = TRUE;
 							}
-							
+
 							$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."poll_votes");
 							$result = dbquery("CREATE TABLE ".$db_prefix."poll_votes (
 							vote_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -925,7 +935,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							if (!$result) {
 								$fail = TRUE;
 							}
-							
+
 							$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."polls");
 							$result = dbquery("CREATE TABLE ".$db_prefix."polls (
 							poll_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -948,7 +958,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							if (!$result) {
 								$fail = TRUE;
 							}
-							
+
 							$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."posts");
 							$result = dbquery("CREATE TABLE ".$db_prefix."posts (
 							forum_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
@@ -973,7 +983,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							if (!$result) {
 								$fail = TRUE;
 							}
-							
+
 							$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."settings");
 							$result = dbquery("CREATE TABLE ".$db_prefix."settings (
 							settings_name VARCHAR(200) NOT NULL DEFAULT '',
@@ -983,7 +993,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							if (!$result) {
 								$fail = TRUE;
 							}
-							
+
 							$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."settings_inf");
 							$result = dbquery("CREATE TABLE ".$db_prefix."settings_inf (
 							settings_name VARCHAR(200) NOT NULL DEFAULT '',
@@ -994,7 +1004,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							if (!$result) {
 								$fail = TRUE;
 							}
-							
+
 							$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."site_links");
 							$result = dbquery("CREATE TABLE ".$db_prefix."site_links (
 							link_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -1010,7 +1020,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							if (!$result) {
 								$fail = TRUE;
 							}
-							
+
 							$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."smileys");
 							$result = dbquery("CREATE TABLE ".$db_prefix."smileys (
 							smiley_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -1022,7 +1032,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							if (!$result) {
 								$fail = TRUE;
 							}
-							
+
 							$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."submissions");
 							$result = dbquery("CREATE TABLE ".$db_prefix."submissions (
 							submit_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -1035,7 +1045,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							if (!$result) {
 								$fail = TRUE;
 							}
-							
+
 							$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."suspends");
 							$result = dbquery("CREATE TABLE ".$db_prefix."suspends (
 							suspend_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -1056,7 +1066,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							if (!$result) {
 								$fail = TRUE;
 							}
-							
+
 							$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."threads");
 							$result = dbquery("CREATE TABLE ".$db_prefix."threads (
 							forum_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
@@ -1080,7 +1090,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							if (!$result) {
 								$fail = TRUE;
 							}
-							
+
 							$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."thread_notify");
 							$result = dbquery("CREATE TABLE ".$db_prefix."thread_notify (
 							thread_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
@@ -1092,7 +1102,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							if (!$result) {
 								$fail = TRUE;
 							}
-							
+
 							$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."user_field_cats");
 							$result = dbquery("CREATE TABLE ".$db_prefix."user_field_cats (
 							field_cat_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT ,
@@ -1107,7 +1117,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							if (!$result) {
 								$fail = TRUE;
 							}
-							
+
 							$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."user_fields");
 							$result = dbquery("CREATE TABLE ".$db_prefix."user_fields (
 							field_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -1123,7 +1133,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							if (!$result) {
 								$fail = TRUE;
 							}
-							
+
 							$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."user_groups");
 							$result = dbquery("CREATE TABLE ".$db_prefix."user_groups (
 							group_id TINYINT(3) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -1134,7 +1144,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							if (!$result) {
 								$fail = TRUE;
 							}
-							
+
 							$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."user_log");
 							$result = dbquery("CREATE TABLE ".$db_prefix."user_log (
 							userlog_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -1150,7 +1160,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							if (!$result) {
 								$fail = TRUE;
 							}
-							
+
 							$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."users");
 							$result = dbquery("CREATE TABLE ".$db_prefix."users (
 							user_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -1194,7 +1204,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							if (!$result) {
 								$fail = TRUE;
 							}
-							
+
 							$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."weblink_cats");
 							$result = dbquery("CREATE TABLE ".$db_prefix."weblink_cats (
 							weblink_cat_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -1208,7 +1218,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							if (!$result) {
 								$fail = TRUE;
 							}
-							
+
 							$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."weblinks");
 							$result = dbquery("CREATE TABLE ".$db_prefix."weblinks (
 							weblink_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -1225,7 +1235,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							if (!$result) {
 								$fail = TRUE;
 							}
-							
+
 							$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."email_templates");
 							$result = dbquery("CREATE TABLE ".$db_prefix."email_templates (
 							template_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -1243,7 +1253,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							if (!$result) {
 								$fail = TRUE;
 							}
-							
+
 							if (!$fail) {
 								echo "<br />\n<i class='entypo check'></i> ".$locale['040']."<br /><br />\n<i class='entypo check'></i> ";
 								echo $locale['041']."<br /><br />\n<i class='entypo check'></i> ";
@@ -1752,7 +1762,7 @@ if (isset($_POST['step']) && $_POST['step'] == "6") {
 				$result = dbquery("INSERT INTO ".$db_prefix."news_cats (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['194']."', 'themes.gif', '".$enabled_languages[$i]."')");
 				$result = dbquery("INSERT INTO ".$db_prefix."news_cats (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['195']."', 'windows.gif', '".$enabled_languages[$i]."')");
 			}
-			
+
 			$enabled_languages = explode('.', $settings['enabled_languages']);
 			for ($i = 0; $i < sizeof($enabled_languages); $i++) {
 				include "locale/".$enabled_languages[$i]."/setup.php";
@@ -1773,7 +1783,7 @@ if (isset($_POST['step']) && $_POST['step'] == "6") {
 				$result = dbquery("INSERT INTO ".$db_prefix."blog_cats (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['194']."', 'themes.gif', '".$enabled_languages[$i]."')");
 				$result = dbquery("INSERT INTO ".$db_prefix."blog_cats (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['195']."', 'windows.gif', '".$enabled_languages[$i]."')");
 			}
-			
+
 			for ($i = 0; $i < sizeof($enabled_languages); $i++) {
 				include "locale/".$enabled_languages[$i]."/setup.php";
 				$result = dbquery("INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['130']."', 'index.php', '0', '2', '0', '1', '".$enabled_languages[$i]."')");
@@ -1796,27 +1806,27 @@ if (isset($_POST['step']) && $_POST['step'] == "6") {
 				$result = dbquery("INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['144']."', 'submit.php?stype=d', '101', '1', '0', '18', '".$enabled_languages[$i]."')");
 				$result = dbquery("INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['145']."', 'submit.php?stype=b', '101', '1', '0', '19', '".$enabled_languages[$i]."')");
 			}
-			
+
 			for ($i = 0; $i < sizeof($enabled_languages); $i++) {
 				include "locale/".$enabled_languages[$i]."/setup.php";
-				$result = dbquery("INSERT INTO ".$db_prefix."email_templates (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'PM', 'html', '0', '".$locale['T101']."', '".$locale['T102']."', '".$locale['T103']."', '".$username."', '".$email."', '".$enabled_languages[$i]."')");
-				$result = dbquery("INSERT INTO ".$db_prefix."email_templates (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'POST', 'html', '0', '".$locale['T201']."', '".$locale['T202']."', '".$locale['T203']."', '".$username."', '".$email."', '".$enabled_languages[$i]."')");
-				$result = dbquery("INSERT INTO ".$db_prefix."email_templates (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'CONTACT', 'html', '0', '".$locale['T301']."', '".$locale['T302']."', '".$locale['T303']."', '".$username."', '".$email."', '".$enabled_languages[$i]."')");
+				$result = dbquery("INSERT INTO ".$db_prefix."email_templates (template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('PM', 'html', '0', '".$locale['T101']."', '".$locale['T102']."', '".$locale['T103']."', '".$username."', '".$email."', '".$enabled_languages[$i]."')");
+				$result = dbquery("INSERT INTO ".$db_prefix."email_templates (template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('POST', 'html', '0', '".$locale['T201']."', '".$locale['T202']."', '".$locale['T203']."', '".$username."', '".$email."', '".$enabled_languages[$i]."')");
+				$result = dbquery("INSERT INTO ".$db_prefix."email_templates (template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('CONTACT', 'html', '0', '".$locale['T301']."', '".$locale['T302']."', '".$locale['T303']."', '".$username."', '".$email."', '".$enabled_languages[$i]."')");
 			}
-			
+
 			for ($i = 0; $i < sizeof($enabled_languages); $i++) {
 				include "locale/".$enabled_languages[$i]."/setup.php";
-				$result = dbquery("INSERT INTO ".$db_prefix."forum_ranks VALUES ('', '".$locale['200']."', 'rank_super_admin.png', 0, '1', 103, '".$enabled_languages[$i]."')");
-				$result = dbquery("INSERT INTO ".$db_prefix."forum_ranks VALUES ('', '".$locale['201']."', 'rank_admin.png', 0, '1', 102, '".$enabled_languages[$i]."')");
-				$result = dbquery("INSERT INTO ".$db_prefix."forum_ranks VALUES ('', '".$locale['202']."', 'rank_mod.png', 0, '1', 104, '".$enabled_languages[$i]."')");
-				$result = dbquery("INSERT INTO ".$db_prefix."forum_ranks VALUES ('', '".$locale['203']."', 'rank0.png', 0, '0', 101, '".$enabled_languages[$i]."')");
-				$result = dbquery("INSERT INTO ".$db_prefix."forum_ranks VALUES ('', '".$locale['204']."', 'rank1.png', 10, '0', 101, '".$enabled_languages[$i]."')");
-				$result = dbquery("INSERT INTO ".$db_prefix."forum_ranks VALUES ('', '".$locale['205']."', 'rank2.png', 50, '0', 101, '".$enabled_languages[$i]."')");
-				$result = dbquery("INSERT INTO ".$db_prefix."forum_ranks VALUES ('', '".$locale['206']."', 'rank3.png', 200, '0', 101, '".$enabled_languages[$i]."')");
-				$result = dbquery("INSERT INTO ".$db_prefix."forum_ranks VALUES ('', '".$locale['207']."', 'rank4.png', 500, '0', 101, '".$enabled_languages[$i]."')");
-				$result = dbquery("INSERT INTO ".$db_prefix."forum_ranks VALUES ('', '".$locale['208']."', 'rank5.png', 1000, '0', 101, '".$enabled_languages[$i]."')");
+				$result = dbquery("INSERT INTO ".$db_prefix."forum_ranks (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['200']."', 'rank_super_admin.png', 0, '1', 103, '".$enabled_languages[$i]."')");
+				$result = dbquery("INSERT INTO ".$db_prefix."forum_ranks (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['201']."', 'rank_admin.png', 0, '1', 102, '".$enabled_languages[$i]."')");
+				$result = dbquery("INSERT INTO ".$db_prefix."forum_ranks (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['202']."', 'rank_mod.png', 0, '1', 104, '".$enabled_languages[$i]."')");
+				$result = dbquery("INSERT INTO ".$db_prefix."forum_ranks (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['203']."', 'rank0.png', 0, '0', 101, '".$enabled_languages[$i]."')");
+				$result = dbquery("INSERT INTO ".$db_prefix."forum_ranks (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['204']."', 'rank1.png', 10, '0', 101, '".$enabled_languages[$i]."')");
+				$result = dbquery("INSERT INTO ".$db_prefix."forum_ranks (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['205']."', 'rank2.png', 50, '0', 101, '".$enabled_languages[$i]."')");
+				$result = dbquery("INSERT INTO ".$db_prefix."forum_ranks (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['206']."', 'rank3.png', 200, '0', 101, '".$enabled_languages[$i]."')");
+				$result = dbquery("INSERT INTO ".$db_prefix."forum_ranks (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['207']."', 'rank4.png', 500, '0', 101, '".$enabled_languages[$i]."')");
+				$result = dbquery("INSERT INTO ".$db_prefix."forum_ranks (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['208']."', 'rank5.png', 1000, '0', 101, '".$enabled_languages[$i]."')");
 			}
-			
+
 	// enable default error handler
 	// create .htaccess for it
 $htc = "";
@@ -1839,7 +1849,7 @@ $htc .= "ErrorDocument 500 ".$settings['siteurl']."error.php?code=500\r\n";
 $temp = fopen(".htaccess", "w");
 if (fwrite($temp, $htc)) {
 	fclose($temp);
-}						
+}
 		}
 		if (isset($_POST['localeset']) && file_exists("locale/".$_POST['localeset']) && is_dir("locale/".$_POST['localeset'])) {
 			include "locale/".$_POST['localeset']."/setup.php";
@@ -1946,4 +1956,3 @@ function strleft($s1, $s2) {
 }
 
 //if (isset($db_connect) && $db_connect != false) { mysql_close($db_connect); }
-?>

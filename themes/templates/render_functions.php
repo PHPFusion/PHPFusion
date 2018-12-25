@@ -77,7 +77,7 @@ if (!function_exists('render_favicons')) {
             $html .= '<link rel="apple-touch-icon" sizes="180x180" href="'.$folder.'apple-touch-icon.png">';
             $html .= '<link rel="icon" type="image/png" sizes="32x32" href="'.$folder.'favicon-32x32.png">';
             $html .= '<link rel="icon" type="image/png" sizes="16x16" href="'.$folder.'favicon-16x16.png">';
-            $html .= '<link rel="manifest" href="'.$folder.'manifest.json">';
+            $html .= '<link rel="manifest" href="'.$folder.'site.webmanifest">';
             $html .= '<link rel="mask-icon" href="'.$folder.'safari-pinned-tab.svg" color="#262626">';
             $html .= '<link rel="shortcut icon" href="'.$folder.'favicon.ico">';
             $html .= '<meta name="msapplication-TileColor" content="#262626">';
@@ -106,4 +106,4 @@ if (!function_exists('render_blog')) {
 		echo "</tr>\n</table>\n";
 
 	}
-} 
+}

@@ -39,13 +39,7 @@ function dbquery($query, $print = FALSE) {
 		if ($print == 1) var_dump($query);
 		return $result;
 	} catch (PDOException $e) {
-		trigger_error($e->getMessage(), E_USER_ERROR);
-		if ($print == 1) var_dump($query);
-		echo "<div style='text-align:center; padding:40px;'>\n";
-		echo "<div style='width:50%; margin:15px auto;' class='tbl'>\n";
-		echo "<div class='tbl-border' style='padding:15px; text-align:left;'>\n";
-		echo "<pre style='white-space:pre-wrap !important;'>".$e."</pre>";
-		echo "</div></div></div><br />";
+        trigger_error("Query Error: ".$query."<br/>Stack Trace: ".$e->getTraceAsString()."<br/>Error Nature: ".$e->getMessage(), E_USER_NOTICE);
 		return FALSE;
 	}
 }
