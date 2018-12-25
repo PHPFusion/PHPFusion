@@ -127,14 +127,14 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 	echo "<td width='1%' class='tbl' style='white-space:nowrap'>".$locale['421']."</td>\n";
 	echo "<td class='tbl'><input type='text' name='cat_description' value='".$cat_description."' class='textbox' style='width:250px;' /></td>\n";
 	echo "</tr>\n";
-		if (multilang_table("WL")) { 
+		if (multilang_table("WL")) {
 	echo "<tr><td class='tbl'>".$locale['global_ML100']."</td>\n";
 	$opts = get_available_languages_list($selected_language = "$cat_language");
 	echo "<td class='tbl'>
-	<select name='cat_language' class='textbox' style='width:200px;'>".$opts."</select></td>\n"; 
-	echo "</tr>\n"; 
+	<select name='cat_language' class='textbox' style='width:200px;'>".$opts."</select></td>\n";
+	echo "</tr>\n";
 	} else {
-	echo "<input type='hidden' name='cat_language' value='".$cat_language."' />\n";	
+	echo "<input type='hidden' name='cat_language' value='".$cat_language."' />\n";
 	}
 	echo "<tr><td width='1%' class='tbl' style='white-space:nowrap'>".$locale['422']."</td>\n";
 	echo "<td class='tbl'><select name='cat_sort_by' class='textbox'>\n";
@@ -183,4 +183,3 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 }
 
 require_once THEMES."templates/footer.php";
-?>

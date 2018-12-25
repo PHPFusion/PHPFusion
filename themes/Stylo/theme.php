@@ -98,17 +98,17 @@ function render_comments($c_data, $c_info){
 	global $locale, $settings;
 
 	if (!empty($c_data)){
-		echo "<div class='comments floatfix'>\n";	
+		echo "<div class='comments floatfix'>\n";
 	    echo "<div style='margin-bottom: 15px;' class='floatfix'>\n";
 		$c_makepagenav = '';
     if ($c_info['c_makepagenav'] !== false) { echo $c_makepagenav = "<div class='flleft'>".$c_info['c_makepagenav']."</div>\n"; }
 	if ($c_info['admin_link'] !== false) { echo "<div class='flright'>".$c_info['admin_link']."</div>\n"; }
 		echo "</div>\n";
-		
+
 		echo "<div class='comment-main'>\n";
 	foreach($c_data as $data) {
 			$comm_count = "<a href='".FUSION_REQUEST."#c".$data['comment_id']."' id='c".$data['comment_id']."' name='c".$data['comment_id']."'>#".$data['i']."</a>";
-	if ($settings['comments_avatar'] == "1") { 
+	if ($settings['comments_avatar'] == "1") {
 	    echo "<div class='comment-avatar-wrap'>".$data['user_avatar']."</div>\n";
 	}
         echo "<div class='comment'>\n";
@@ -121,7 +121,7 @@ function render_comments($c_data, $c_info){
 		echo "</div>\n";
 	}
 		echo "</div>\n";
-		
+
 		echo $c_makepagenav;
 		echo "</div>\n";
 
@@ -246,5 +246,3 @@ function closeside() {
 	echo "</div>\n";
 
 }
-
-?>

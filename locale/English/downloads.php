@@ -45,4 +45,3 @@ $locale['460'] = "Search Downloads:";
 $locale['461'] = "Search";
 $locale['462'] = "Category:";
 $locale['463'] = "Order by:";
-?>

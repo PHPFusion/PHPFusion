@@ -19,7 +19,7 @@ class Switcher{
 	var $props;
 	var $selected;
 	var $separator;
-	
+
 	function __construct($mode, $dir, $ext, $default, $class="", $separator=" ", $auto=true, $args=""){
 		$this->args = $args;
 		$this->buttons = array();
@@ -37,7 +37,7 @@ class Switcher{
 		$this->props = array();
 		$this->selected = "";
 		$this->separator = $separator;
-		
+
 		if($auto){
 			$this->props = $this->getProps();
 			$this->selected = $this->getSelected();
@@ -46,18 +46,18 @@ class Switcher{
 			}
 		}
 	}
-	
+
 	function disable(){
 		$this->enabled = false;
 		$this->selected = $this->default;
 	}
-	
+
 	function getProps(){
 		$mode = $this->mode;
 		if($mode == "select"){
 			$dir = $this->dir;
 			$ext = $this->ext;
-			
+
 			$dirHandle = opendir($dir);
 			$props = array();
 			if($dirHandle){
@@ -72,7 +72,7 @@ class Switcher{
 		}
 		return $props;
 	}
-	
+
 	function getSelected(){
 		$args = $this->args;
 		$cookie = $this->cookie;
@@ -117,7 +117,7 @@ class Switcher{
 			return $value;
 		}
 	}
-	
+
 	function writeSelected(){
 		if($this->selected == $this->default){
 			setcookie("theme_".$this->name, $this->selected, time()-3600*24*14, "/");
@@ -125,23 +125,23 @@ class Switcher{
 			setcookie("theme_".$this->name, $this->selected, time()+3600*24*14, "/");
 		}
 	}
-	
+
 	function getButtons(){
 		$props = $this->props;
 		$dir = $this->dir;
 		$ext = $this->ext;
 		$class = $this->class;
 		$buttons = array();
-		
+
 		foreach($props as $prop){
 			if($prop != $this->selected){
 				$buttons[] = "<input type='image' name='$prop' src='$dir/$prop.$ext' class='$class' alt='$prop' />";
 			}
 		}
-		
+
 		return $buttons;
 	}
-	
+
 	function makeForm($class=""){
 		$separator = $this->separator;
 		if($this->enabled){
@@ -149,10 +149,8 @@ class Switcher{
 			return "<form id='theme_".$this->name."' class='$class' method='post' action='".FUSION_REQUEST."'>\n<div>\n<input type='hidden' name='change_".$this->name."' value='1'/>\n".implode($separator."\n", $this->buttons)."</div>\n</form>";
 		}
 	}
-	
+
 	function makeHeadTag(){
 		return "<link rel='stylesheet' href='".$this->dir."/".$this->selected.".css' type='text/css' />\n";
 	}
 }
-
-?>

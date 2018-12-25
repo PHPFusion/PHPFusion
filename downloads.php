@@ -370,4 +370,3 @@ if (isset($_GET['download_id']) && isnum($_GET['download_id'])) {
 echo $dl_stats;
 
 require_once THEMES."templates/footer.php";
-?>

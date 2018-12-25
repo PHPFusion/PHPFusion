@@ -164,14 +164,14 @@ if (!isset($_GET['t']) || $_GET['t'] != "faq") {
 	echo "<td width='130' class='tbl'>".$locale['421']."</td>\n";
 	echo "<td class='tbl'><input type='text' name='faq_cat_description' value='".$faq_cat_description."' class='textbox' style='width:250px;' /></td>\n";
 	echo "</tr>\n";
-	if (multilang_table("FQ")) { 
+	if (multilang_table("FQ")) {
 	echo "<tr><td class='tbl'>".$locale['global_ML100']."</td>\n";
 	$opts = get_available_languages_list($selected_language = "$cat_language");
 	echo "<td class='tbl'>
-	<select name='cat_language' class='textbox' style='width:200px;'>".$opts."</select></td>\n"; 
-	echo "</tr>\n"; 
+	<select name='cat_language' class='textbox' style='width:200px;'>".$opts."</select></td>\n";
+	echo "</tr>\n";
 	} else {
-	echo "<input type='hidden' name='cat_language' value='".$cat_language."' />\n";	
+	echo "<input type='hidden' name='cat_language' value='".$cat_language."' />\n";
 	}
 	echo "<tr><td align='center' colspan='2' class='tbl'><input type='submit' name='save_cat' value='".$locale['422']."' class='button' /></td>\n";
 	echo "</tr>\n</table>\n</form>\n";
@@ -253,4 +253,3 @@ if (dbrows($result) != 0) {
 closetable();
 
 require_once THEMES."templates/footer.php";
-?>

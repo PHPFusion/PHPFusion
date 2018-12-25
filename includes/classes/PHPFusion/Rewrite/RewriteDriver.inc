@@ -666,7 +666,7 @@ abstract class RewriteDriver {
      */
     protected static function cleanURL($string, $delimiter = "-") {
 	    global $settings;
-		
+
         if ($settings['normalize_seo'] == "1") {
             $string = self::normalize($string);
             if (function_exists('iconv')) {

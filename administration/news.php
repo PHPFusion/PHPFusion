@@ -25,15 +25,15 @@ include LOCALE.LOCALESET."admin/news.php";
 if ($settings['tinymce_enabled']) {
 	echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";
 	?>
-	<script> 
-$(function() {   
+	<script>
+$(function() {
   tinyMCE.init({selector: '#tinymce', plugins: 'link image',
-                  toolbar: "link | image", file_browser_callback: RoxyFileBrowser}); 
+                  toolbar: "link | image", file_browser_callback: RoxyFileBrowser});
 });
 function RoxyFileBrowser(field_name, url, type, win) {
   var roxyFileman = '../fileman/index.php';
-  if (roxyFileman.indexOf("?") < 0) {     
-    roxyFileman += "?type=" + type;   
+  if (roxyFileman.indexOf("?") < 0) {
+    roxyFileman += "?type=" + type;
   }
   else {
     roxyFileman += "&type=" + type;
@@ -45,18 +45,18 @@ function RoxyFileBrowser(field_name, url, type, win) {
   tinyMCE.activeEditor.windowManager.open({
      file: roxyFileman,
      title: 'Roxy Fileman',
-     width: 850, 
+     width: 850,
      height: 650,
      resizable: "yes",
      plugins: "media",
      inline: "yes",
-     close_previous: "no"  
+     close_previous: "no"
   }, {     window: win,     input: field_name    });
-  return false; 
+  return false;
 }
 </script>
 <?php
-	
+
 } else {
 	require_once INCLUDES."html_buttons_include.php";
 }
@@ -239,7 +239,7 @@ if (isset($_POST['save'])) {
 		$news_sticky = isset($_POST['news_sticky']) ? " checked='checked'" : "";
 		$news_comments = isset($_POST['news_comments']) ? " checked='checked'" : "";
 		$news_ratings = isset($_POST['news_ratings']) ? " checked='checked'" : "";
-		
+
 		opentable($news_subject);
 		echo "$bodypreview\n";
 		closetable();
@@ -336,15 +336,15 @@ if (isset($_POST['save'])) {
 	echo "<td width='80%' class='tbl'><select name='news_cat' class='textbox'>\n";
 	echo "<option value='0'>".$locale['424']."</option>\n".$news_cat_opts."</select></td>\n";
 	echo "</tr>\n";
-	if (multilang_table("NS")) { 
+	if (multilang_table("NS")) {
 	echo "<tr><td class='tbl'>".$locale['global_ML100']."</td>\n";
 	$opts = get_available_languages_list($selected_language = "$news_language");
 	echo "<td class='tbl'>
 	<select name='news_language' class='textbox' style='width:200px;'>
-	<option value=''>".$locale['global_ML101']."</option>\n	".$opts."</select></td>\n"; 
-	echo "</tr>\n"; 
+	<option value=''>".$locale['global_ML101']."</option>\n	".$opts."</select></td>\n";
+	echo "</tr>\n";
 	} else {
-	echo "<input type='hidden' name='news_language' value='".$news_language."' />\n";	
+	echo "<input type='hidden' name='news_language' value='".$news_language."' />\n";
 	}
 	echo "<tr><td class='tbl' valign='top'>".$locale['439'].":</td>\n<td class='tbl' valign='top'>";
 	if ($news_image != "" && $news_image_t1 != "") {
@@ -454,4 +454,3 @@ if (isset($_POST['save'])) {
 }
 
 require_once THEMES."templates/footer.php";
-?>

@@ -543,7 +543,7 @@ if ($_GET['stype'] == "l") {
 			echo "<input type='submit' name='submit_download' value='".$locale['695']."' class='button' />\n</td>\n";
 			echo "</tr>\n</table>\n</form>\n";
 			$jquery_upload_js  = '<script type="text/javascript">';
-			$jquery_upload_js .=  "/*<![CDATA[*/";			
+			$jquery_upload_js .=  "/*<![CDATA[*/";
 			$jquery_upload_js .=  "jQuery(document).ready(function(){";
 			$jquery_upload_js .=    "jQuery('#shortdesc_display').show();";
 			$jquery_upload_js .=    "jQuery('#calc_upload').click(function(){";
@@ -556,14 +556,14 @@ if ($_GET['stype'] == "l") {
 			$jquery_upload_js .=        "jQuery('#calc_upload').removeAttr('checked');";
 			$jquery_upload_js .=      "}";
 			$jquery_upload_js .=    "});";
-			$jquery_upload_js .=  "});";			
+			$jquery_upload_js .=  "});";
 			$jquery_upload_js .=  "function shortdesc_counter(textarea, counterID, maxLen){";
 			$jquery_upload_js .=    "cnt = document.getElementById(counterID);";
 			$jquery_upload_js .=    "if(textarea.value.length >= maxLen){";
 			$jquery_upload_js .=      "textarea.value = textarea.value.substring(0,maxLen);";
 			$jquery_upload_js .=    "}";
 			$jquery_upload_js .=    "cnt.innerHTML = maxLen - textarea.value.length;";
-			$jquery_upload_js .=  "}";			
+			$jquery_upload_js .=  "}";
 			$jquery_upload_js .=  "/*]]>*/";
 			$jquery_upload_js .= "</script>";
 			add_to_footer($jquery_upload_js);
@@ -623,4 +623,3 @@ add_to_footer($submit_js);
 unset($submit_js);
 
 require_once THEMES."templates/footer.php";
-?>

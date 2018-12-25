@@ -108,7 +108,7 @@ if (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
 } elseif (!isset($_GET['cat_id']) || !isnum($_GET['cat_id'])) {
 	opentable($locale['400']);
 	echo "<!--pre_article_idx-->\n";
-	
+
 	$result = dbquery(
 		"SELECT ac.article_cat_id, ac.article_cat_name, ac.article_cat_description, COUNT(a.article_cat) AS article_count FROM ".DB_ARTICLES." a
 		LEFT JOIN ".DB_ARTICLE_CATS." ac ON a.article_cat=ac.article_cat_id
@@ -116,7 +116,7 @@ if (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
 		GROUP BY ac.article_cat_id
 		ORDER BY ac.article_cat_name"
 	);
-		
+
 	$rows = dbrows($result);
 	if ($rows) {
 		$counter = 0; $columns = 2;
@@ -176,4 +176,3 @@ if (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
 }
 
 require_once THEMES."templates/footer.php";
-?>

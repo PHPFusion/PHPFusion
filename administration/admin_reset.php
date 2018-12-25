@@ -57,7 +57,7 @@ if (isset($_POST['reset_admins']) && isset($_POST['reset_message']) && isset($_P
 		while ($data = dbarray($result)) {
 			$loginPassIsReset = false;
 			$adminPassIsReset = false;
-			
+
 			$adminPass = new PasswordAuth();
 
 			$newLoginPass = "";
@@ -78,7 +78,7 @@ if (isset($_POST['reset_admins']) && isset($_POST['reset_message']) && isset($_P
 					array($data['user_name'], $newLoginPass, $newAdminPass, $userdata['user_name'], $reset_message),
 					$locale['409']
 				);
-				
+
 				$loginPassIsReset = ($loginPass->isValidNewPassword() === 0 ? true : false);
 			} else {
 				$message = str_replace(
@@ -86,13 +86,13 @@ if (isset($_POST['reset_admins']) && isset($_POST['reset_message']) && isset($_P
 					array($data['user_name'], $newAdminPass, $userdata['user_name'], $reset_message),
 					$locale['408']
 				);
-				
-				$loginPassIsReset = true; 
+
+				$loginPassIsReset = true;
 			}
-			if ($loginPassIsReset && $adminPassIsReset && 
-					sendemail($data['user_name'], $data['user_email'], $userdata['user_name'], 
-								$userdata['user_email'], $locale['407'].$settings['sitename'], 
-								$message)) 
+			if ($loginPassIsReset && $adminPassIsReset &&
+					sendemail($data['user_name'], $data['user_email'], $userdata['user_name'],
+								$userdata['user_email'], $locale['407'].$settings['sitename'],
+								$message))
 			{
 				$result2 = dbquery(
 					"UPDATE ".DB_USERS." SET
@@ -228,4 +228,3 @@ echo "</table>\n";
 closetable();
 
 require_once THEMES."templates/footer.php";
-?>

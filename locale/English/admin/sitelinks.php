@@ -38,4 +38,3 @@ $locale['460'] = "Delete this site link?";
 // Error
 $locale['461'] = "Please enter a Link Name";
 $locale['462'] = "Please enter a Link URL";
-?>

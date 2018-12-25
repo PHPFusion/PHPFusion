@@ -112,4 +112,3 @@ function get_avg_luminance($filename, $num_samples=10) {
 add_to_jquery("
 $('.atooltip').tooltip();
 ");
-?>

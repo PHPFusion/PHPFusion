@@ -108,4 +108,3 @@ function dbconnect($db_host, $db_user, $db_pass, $db_name) {
 		die("<strong>Unable to select MySQL database</strong><br />".mysql_errno()." : ".mysql_error());
 	}
   }
-?>

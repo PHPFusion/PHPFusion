@@ -18,4 +18,3 @@
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 $text = preg_replace('#\[allegro\](.*?)\[/allegro\]#si', '<strong>'.$locale['bb_allegro'].':</strong> <a href=\'http://allegro.pl/search.php?string=\1\' target=\'_blank\'>\1</a>', $text);
-?>

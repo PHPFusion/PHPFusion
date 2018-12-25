@@ -70,7 +70,7 @@ $locale['473'] = "User Groups";
 $locale['480'] = "Add Member";
 $locale['481'] = "The member account has been created.";
 $locale['482'] = "The member account could not be created.";
-// Suspension Log 
+// Suspension Log
 $locale['510s'] = "Suspension Log for ";
 $locale['511s'] = "There are no recorded suspensions for this member in the suspension log.";
 $locale['512s'] = "Previous suspensions of ";
@@ -147,4 +147,3 @@ $locale['618'] = "It is strongly recommended to change deactivation action to an
 $locale['619'] = "You can do so here.";
 $locale['620'] = "anonymize";
 $locale['621'] = "Automatic deactivation of inactive users.";
-?>

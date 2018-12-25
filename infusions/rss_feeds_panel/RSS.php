@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-use \PHPFusion\Rewrite\Permalinks;
+// use \PHPFusion\Rewrite\Permalinks;
 
 class RSS {
     private $max_items = 50000;
@@ -33,7 +33,7 @@ class RSS {
         $this->feed_url = $feed_url;
         $this->title = $title;
         $this->description = $description;
-		
+
         //if (fusion_get_settings('site_seo') == 1 && !defined('IN_PERMALINK')) {
         //    Permalinks::getPermalinkInstance()->handle_url_routing('');
         // }

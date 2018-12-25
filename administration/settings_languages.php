@@ -501,4 +501,3 @@ echo "<input type='submit' name='savesettings' value='".$locale['750']."' class=
 echo "</td>\n</tr>\n</tbody>\n</table>\n</form>\n";
 closetable();
 require_once THEMES."templates/footer.php";
-?>

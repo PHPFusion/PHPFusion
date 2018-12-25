@@ -80,4 +80,3 @@ $locale['609'] = "Posts Deleted: ";
 $locale['610'] = "Attachments Deleted: ";
 $locale['611'] = "Threads Deleted: ";
 $locale['612'] = "Pruned threads, posts and attachmenst will be lost. Do you really want to prune this forum?";
-?>

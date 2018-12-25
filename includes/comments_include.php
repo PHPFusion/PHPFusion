@@ -207,5 +207,3 @@ function showcomments($ctype, $cdb, $ccol, $cid, $clink) {
 		closetable();
 	}
 }
-
-?>

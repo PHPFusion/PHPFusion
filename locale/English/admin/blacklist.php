@@ -39,4 +39,3 @@ $locale['481'] = "The specified IPv6 address contains a shortcut (::) therefore 
 $locale['482'] = "Which version would you use?";
 $locale['483'] = "Save";
 */
-?>

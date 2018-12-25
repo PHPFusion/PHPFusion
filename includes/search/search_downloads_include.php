@@ -52,7 +52,7 @@ if ($_REQUEST['stype'] == "downloads" || $_REQUEST['stype'] == "all") {
 			$items_count .= THEME_BULLET."&nbsp;<a href='".FUSION_SELF."?stype=downloads&amp;stext=".$_REQUEST['stext']."&amp;".$composevars."'>".$rows." ".($rows == 1 ? $locale['d401'] : $locale['d402'])." ".$locale['522']."</a><br />\n";
 		} else {
 			$items_count .= THEME_BULLET."&nbsp;".$rows." ".($rows == 1 ? $locale['d401'] : $locale['d402'])." ".$locale['522']."<br />\n";
-		}	
+		}
 		$datestamp=(time()-$_REQUEST['datelimit']);
 		$result = dbquery("SELECT td.*,tdc.* FROM ".DB_DOWNLOADS." td
 			INNER JOIN ".DB_DOWNLOAD_CATS." tdc ON td.download_cat=tdc.download_cat_id

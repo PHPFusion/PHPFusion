@@ -125,4 +125,3 @@ function sendemail_template($template_key, $subject, $message, $user, $receiver,
 		return false;
 	}
 }
-?>

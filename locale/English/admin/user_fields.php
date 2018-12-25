@@ -38,4 +38,3 @@ $locale['452'] = "Options";
 $locale['453'] = "Statistics";
 // Enable / Edit User Field Part #2
 $locale['480'] = "Registration";
-?>

@@ -32,21 +32,21 @@ define("THEME_BULLET", "<span class='bullet'>&middot;</span>");
 require_once INCLUDES."theme_functions_include.php";
 
 function render_page($license = false) {
-	
+
 	global $settings, $main_style, $locale, $mysql_queries_time;
 
 	//Header
 	echo "<table cellpadding='0' cellspacing='0' width='100%'>\n<tr>\n";
 	echo "<td class='full-header'>\n".showbanners()."</td>\n";
 	echo "</tr>\n</table>\n";
-	
+
 	echo "<table cellpadding='0' cellspacing='0' width='100%'>\n<tr>\n";
 	echo "<td class='sub-header-left'></td>\n";
 	echo "<td class='sub-header'>".showsublinks(" ".THEME_BULLET." ", "white")."</td>\n";
 	echo "<td align='right' class='sub-header'>".showsubdate()."</td>\n";
 	echo "<td class='sub-header-right'></td>\n";
 	echo "</tr>\n</table>\n";
-	
+
 	if ($main_style == "") {
 	$colspan = "";
 	} elseif ($main_style == "side-both") {
@@ -54,7 +54,7 @@ function render_page($license = false) {
 	} else {
 	$colspan = "colspan='2'";
 	}
-	
+
 	//Content
 	echo "<table cellpadding='0' cellspacing='0' width='100%' class='$main_style'>\n";
 	echo "AU_CENTER." ? "<tr><td class='main-bg' ".$colspan." valign='top'>".AU_CENTER."</td>\n</tr>\n<tr>\n" : "<tr>\n";
@@ -63,7 +63,7 @@ function render_page($license = false) {
 	if (RIGHT) { echo "<td class='side-border-right' valign='top'>".RIGHT."</td>"; }
 	echo "BL_CENTER." ? "</tr>\n<tr><td class='main-bg' ".$colspan." valign='top'>".BL_CENTER."</td>\n</tr>\n<tr>\n" : "";
 	echo "</tr>\n</table>\n";
-	
+
 	//Footer
 	echo "<table cellpadding='0' cellspacing='0' width='100%'>\n<tr>\n";
 	echo "<td class='sub-header-left'></td>\n";
@@ -76,7 +76,7 @@ function render_page($license = false) {
 	if (!$license) { echo "<br /><br />\n".showcopyright(); }
 	echo "</td>\n";
 	echo "</tr>\n</table>\n";
-	
+
 	/*foreach ($mysql_queries_time as $query) {
 		echo $query[0]." QUERY: ".$query[1]."<br />";
 	}*/
@@ -90,8 +90,8 @@ function render_comments($c_data, $c_info){
 	if (!empty($c_data)){
 		echo "<div class='comments floatfix'>\n";
 			$c_makepagenav = '';
-			if ($c_info['c_makepagenav'] !== FALSE) { 
-			echo $c_makepagenav = "<div style='text-align:center;margin-bottom:5px;'>".$c_info['c_makepagenav']."</div>\n"; 
+			if ($c_info['c_makepagenav'] !== FALSE) {
+			echo $c_makepagenav = "<div style='text-align:center;margin-bottom:5px;'>".$c_info['c_makepagenav']."</div>\n";
 		}
 			foreach($c_data as $data) {
 	        $comm_count = "<a href='".FUSION_REQUEST."#c".$data['comment_id']."' id='c".$data['comment_id']."' name='c".$data['comment_id']."'>#".$data['i']."</a>";
@@ -111,7 +111,7 @@ function render_comments($c_data, $c_info){
 	} else {
 		echo $locale['c101']."\n";
 	}
-	closetable();   
+	closetable();
 }
 
 function render_news($subject, $news, $info) {
@@ -133,7 +133,7 @@ function render_news($subject, $news, $info) {
 }
 
 function render_article($subject, $article, $info) {
-	
+
 	echo "<table width='100%' cellpadding='0' cellspacing='0'>\n<tr>\n";
 	echo "<td class='capmain-left'></td>\n";
 	echo "<td class='capmain'>".$subject."</td>\n";
@@ -172,7 +172,7 @@ function closetable() {
 function openside($title, $collapse = false, $state = "on") {
 
 	global $panel_collapse; $panel_collapse = $collapse;
-	
+
 	echo "<table cellpadding='0' cellspacing='0' width='100%'>\n<tr>\n";
 	echo "<td class='scapmain-left'></td>\n";
 	echo "<td class='scapmain'>".$title."</td>\n";
@@ -183,17 +183,16 @@ function openside($title, $collapse = false, $state = "on") {
 	echo "<td class='scapmain-right'></td>\n";
 	echo "</tr>\n</table>\n";
 	echo "<table cellpadding='0' cellspacing='0' width='100%' class='spacer'>\n<tr>\n";
-	echo "<td class='side-body'>\n";	
+	echo "<td class='side-body'>\n";
 	if ($collapse == true) { echo panelstate($state, $boxname); }
 
 }
 
 function closeside() {
-	
+
 	global $panel_collapse;
 
-	if ($panel_collapse == true) { echo "</div>\n"; }	
+	if ($panel_collapse == true) { echo "</div>\n"; }
 	echo "</td>\n</tr>\n</table>\n";
 
 }
-?>

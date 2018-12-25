@@ -33,4 +33,3 @@ $locale['462'] = "Author";
 $locale['463'] = "Posted";
 $locale['464'] = "No matches found, please try again.";
 $locale['465'] = "Please specify at least one word to search for.";
-?>

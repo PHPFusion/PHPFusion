@@ -104,14 +104,14 @@ echo "<table cellpadding='0' cellspacing='0' width='400' class='center'>\n<tr>\n
 echo "<td width='130' class='tbl'>".$locale['430']."</td>\n";
 echo "<td class='tbl'><input type='text' name='cat_name' value='".$cat_name."' class='textbox' style='width:200px;' /></td>\n";
 echo "</tr>\n";
-	if (multilang_table("NS")) { 
+	if (multilang_table("NS")) {
 	echo "<tr><td class='tbl'>".$locale['global_ML100']."</td>\n";
 	$opts = get_available_languages_list($selected_language = "$cat_language");
 	echo "<td class='tbl'>
-	<select name='cat_language' class='textbox' style='width:200px;'>".$opts."</select></td>\n"; 
-	echo "</tr>\n"; 
+	<select name='cat_language' class='textbox' style='width:200px;'>".$opts."</select></td>\n";
+	echo "</tr>\n";
 	} else {
-	echo "<input type='hidden' name='cat_language' value='".$cat_language."' />\n";	
+	echo "<input type='hidden' name='cat_language' value='".$cat_language."' />\n";
 	}
 echo "<tr><td width='130' class='tbl'>".$locale['431']."</td>\n";
 echo "<td class='tbl'><select name='cat_image' class='textbox' style='width:200px;'>\n".$image_list."</select></td>\n";

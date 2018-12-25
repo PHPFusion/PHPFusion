@@ -49,7 +49,7 @@ include_once INCLUDES."bbcode_include.php";
 			echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
 		}
 	}
-		
+
 if (!isset($_GET['page']) || $_GET['page'] != "settings") {
 
 	if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['shout_id']) && isnum($_GET['shout_id']))) {

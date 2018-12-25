@@ -50,7 +50,7 @@ if (isset($_POST['save_banners'])) {
         $error = 1;
     }
     redirect(FUSION_SELF.$aidlink."&error=".$error, TRUE);
-	
+
 } else {
 
 	if (isset($_POST['preview_banners'])) {

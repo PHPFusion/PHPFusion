@@ -16,7 +16,7 @@
 | \ ~-l  `\   `\  \  \ ~\  \   `. .-~   < 		   |
 |  \   ~-. "-.  `  \  ^._ ^. "-.  /  \   |                 |
 |.--~-._  ~-  `  _  ~-_.-"-." ._ /._ ." ./		   |
-| >--.  ~-.   ._  ~>-"    "\   7   7   ]                   | 
+| >--.  ~-.   ._  ~>-"    "\   7   7   ]                   |
 |^.___~"--._    ~-{  .-~ .  `\ Y . /    |		   |
 | <__ ~"-.  ~       /_/   \   \I  Y   : |		   |
 |   ^-.__           ~(_/   \   >._:   | l______		   |
@@ -57,10 +57,10 @@ define("THEME_BULLET", "<span class='bullet'>&middot;</span>");
 define("THEME_WIDTH", "1024px;");
 
 function render_page($license = false) {
-	global $settings, $main_style, $locale; 
-		
+	global $settings, $main_style, $locale;
+
 	add_handler("theme_output");
-	
+
 	echo "<script type='text/javascript' src='https://connect.facebook.net/en_US/all.js#xfbml=1'></script>\n";
 	echo "<script type='text/javascript' src='https://platform.twitter.com/widgets.js'></script>\n";
 	add_to_head("<script type='text/javascript' src='https://apis.google.com/js/plusone.js'>{ lang: 'en-GB' } </script>");
@@ -82,7 +82,7 @@ if (HSDESCRIPTION) {
 	echo "<br /><h2>".$settings['sitename']."</h2>
 	<span>".$settings['description']."</span></div>";
 	}
-	
+
 
 echo "<div class='clear'></div>";
 
@@ -122,7 +122,7 @@ echo "</ul></div></div><div class='clear'></div>";
 	if (RIGHT) { echo "<td class='side-border-right' valign='top'>".RIGHT."</td>"; }
 	echo "BL_CENTER." ? "</tr>\n<tr><td class='main-bg' ".$colspan." valign='top'>".BL_CENTER."</td>\n</tr>\n<tr>\n" : "";
 	echo "</tr>\n</table>\n";
-	
+
 //Footer
 	echo "<table cellpadding='0' cellspacing='0' width='100%' class='main-footer'>\n<tr>\n";
 	echo "<td align='left' width='20%' style='padding:10px;'>&nbsp;Theme by <a href='http://www.venue.nu' target='_blank' title='Venue'>Domi</a> 2013</td>\n";
@@ -131,7 +131,7 @@ echo "</ul></div></div><div class='clear'></div>";
 	echo "</tr>";
     if ($settings['rendertime_enabled'] == 1 || ($settings['rendertime_enabled'] == 2 && iADMIN)) {
 	echo "<tr><td align='center' colspan='3' width='100%' style='padding:10px;'><center>".showrendertime()."</center></td></tr>\n";
-	}	
+	}
 	echo "</table></div>\n";
 
 echo "<a href='#' class='scrollup'>Scroll</a>";
@@ -202,7 +202,7 @@ closetable();
 
 function render_article($subject, $article, $info) {
 global $settings;
-	
+
 	opentable($subject);
 	echo "<table width='100%' cellpadding='0' cellspacing='0'>\n<tr>\n";
 	echo "<td class='main-body middle-border'>".($info['article_breaks'] == "y" ? nl2br($article) : $article)."</td>\n";
@@ -211,7 +211,7 @@ global $settings;
 	echo "<div style='float:left;margin-top:2px;'>";
 	echo articleopts($info," &middot; ").itemoptions("A",$info['article_id']);
 	echo " &middot; </div>";
-		
+
 if (SHAREING) {
 //Share Buttons
 echo "<div style='float:left;margin-top:3px;'>";
@@ -263,8 +263,8 @@ echo "<div class='clear'></div>";
 echo "</td>\n</tr>\n</table>\n";
 closetable();
 }
-	
-	
+
+
 
 
 function opentable($title) {
@@ -303,7 +303,7 @@ echo "
 		$boxname = str_replace(" ", "", $title);
 		echo "<div style='float:right;padding:5px;'>".panelbutton($state, $boxname)."</div>\n";
 	}
-	  	
+
 	echo "</div>
       <div class='global-box-line'></div>
       <div class='global-box-bottom'>
@@ -313,13 +313,11 @@ echo "
 
 function closeside() {
 	global $panel_collapse;
-	if ($panel_collapse == true) { echo "</div>\n"; }	
-	
+	if ($panel_collapse == true) { echo "</div>\n"; }
+
 echo "  </div>
       </div>
     </div>
   </div>
 </div>\n";
 }
-
-?>

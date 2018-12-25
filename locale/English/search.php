@@ -45,4 +45,3 @@ $locale['521'] = "matches";
 $locale['522'] = "found matching search criteria";
 //more than 100 results
 $locale['530'] = "Please be more precise in your query. Your query returns %s results. We are displaying just 100 top results";
-?>

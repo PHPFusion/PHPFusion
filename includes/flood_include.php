@@ -18,9 +18,9 @@
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 function flood_control($field, $table, $where) {
-	
+
 	global $userdata, $settings, $locale;
-	
+
 	$flood = false;
 
 	if (!iSUPERADMIN && !iADMIN && (!defined("iMOD") || !iMOD)) {
@@ -34,7 +34,7 @@ function flood_control($field, $table, $where) {
 					if (iMEMBER && $settings['flood_autoban'] == "1") {
 						require_once INCLUDES."sendmail_include.php";
 						require_once INCLUDES."suspend_include.php";
-						
+
 						$result = dbquery("UPDATE ".DB_USERS." SET user_status='4', user_actiontime='0' WHERE user_id='".$userdata['user_id']."'");
 						suspend_log($userdata['user_id'], 4, $locale['global_440'], true);
 						$message = str_replace("[USER_NAME]", $userdata['user_name'], $locale['global_442']);
@@ -45,7 +45,6 @@ function flood_control($field, $table, $where) {
 				}
 			}
 		}
-	}	
+	}
 	return $flood;
 }
-?>

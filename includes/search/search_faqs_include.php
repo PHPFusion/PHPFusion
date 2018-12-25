@@ -43,7 +43,7 @@ if ($_REQUEST['stype'] == "faqs" || $_REQUEST['stype'] == "all") {
 		if (!$settings['site_seo']) {
 			$items_count .= THEME_BULLET."&nbsp;<a href='".FUSION_SELF."?stype=faqs&amp;stext=".$_REQUEST['stext']."&amp;".$composevars."'>".$rows." ".($rows == 1 ? $locale['fq401'] : $locale['fq402'])." ".$locale['522']."</a><br />\n";
 		} else {
-			$items_count .= THEME_BULLET."&nbsp;".$rows." ".($rows == 1 ? $locale['fq401'] : $locale['fq402'])." ".$locale['522']."<br />\n";			
+			$items_count .= THEME_BULLET."&nbsp;".$rows." ".($rows == 1 ? $locale['fq401'] : $locale['fq402'])." ".$locale['522']."<br />\n";
 		}
 		while ($data = dbarray($result)) {
 			$search_result = "";

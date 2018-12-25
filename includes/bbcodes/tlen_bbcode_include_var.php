@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-$__BBCODE__[] = 
+$__BBCODE__[] =
 array(
 "description"		=>	$locale["bb_tlen_description"],
 "value"			=>	"tlen",
@@ -25,4 +25,3 @@ array(
 "bbcode_end"		=>	"[/tlen]",
 "usage"			=>	"[tlen]".$locale["bb_tlen_usage"]."[/tlen]"
 );
-?>

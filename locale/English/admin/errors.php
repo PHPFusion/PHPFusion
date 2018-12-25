@@ -23,4 +23,3 @@ $locale['450'] = "New";
 $locale['451'] = "Solved";
 $locale['452'] = "Ignored";
 $locale['453'] = "Apply";
-?>

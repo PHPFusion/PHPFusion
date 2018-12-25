@@ -14,4 +14,3 @@ $locale['431'] = "Delete";
 $locale['432'] = "User IP:";
 $locale['433'] = "Delete this comment?";
 $locale['434'] = "There are no comments for this item.";
-?>

@@ -377,4 +377,3 @@ if (isset($_POST['savechanges'])) {
 	echo "</td>\n</tr>\n</table>\n</form>\n";
 	closetable();
 }
-?>

@@ -121,7 +121,7 @@ if (isset($_GET['action']) && $_GET['action'] == "refresh") {
 		$formaction = FUSION_SELF.$aidlink;
 		opentable($locale['400']);
 	}
-	
+
 	echo "<form name='layoutform' method='post' action='".$formaction."'>\n";
 	echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'><tbody>\n<tr>\n";
 	echo "<td class='tbl' width='1%' style='white-space:nowrap'><label for='cat_name'>".$locale['420'].":</label> <span class='required'>*</span></td>\n";
@@ -198,4 +198,3 @@ if (isset($_GET['action']) && $_GET['action'] == "refresh") {
 }
 
 require_once THEMES."templates/footer.php";
-?>

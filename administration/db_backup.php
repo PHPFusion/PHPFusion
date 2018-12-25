@@ -259,7 +259,7 @@ if (isset($_POST['btn_do_restore'])) {
 		}
 		$table_opt_list .= ">".$row[0]."</option>\n";
 	}
-	
+
 	opentable($locale['450']);
 	echo "<script type='text/javascript'>\n<!--\n";
 	echo "function backupSelectCore(){for(i=0;i<document.backupform.elements['db_tables[]'].length;i++){document.backupform.elements['db_tables[]'].options[i].selected=(document.backupform.elements['db_tables[]'].options[i].text).match(/^$db_prefix/);}}\n";
@@ -381,4 +381,3 @@ function gzcompressfile($source, $level = false) {
 }
 
 require_once THEMES."templates/footer.php";
-?>

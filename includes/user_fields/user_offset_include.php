@@ -20,8 +20,8 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 // Display user field input
 if ($profile_method == "input") {
 	$user_offset = isset($user_data['user_offset']) ? $user_data['user_offset'] : "0.0";
-	if ($this->isError()) { 
-		$user_offset = isset($_POST['user_offset']) && is_numeric($_POST['user_offset']) ? $_POST['user_offset'] : $user_offset; 
+	if ($this->isError()) {
+		$user_offset = isset($_POST['user_offset']) && is_numeric($_POST['user_offset']) ? $_POST['user_offset'] : $user_offset;
 	}
 
 	echo "<tr>\n";
@@ -71,7 +71,6 @@ if ($profile_method == "input") {
 		// Set update or insert user data
 		$this->_setDBValue("user_offset", $_POST['user_offset']);
 	} else {
-		$this->_setError("user_offset", $locale['uf_offset_error'], true);	
+		$this->_setError("user_offset", $locale['uf_offset_error'], true);
 	}
 }
-?>

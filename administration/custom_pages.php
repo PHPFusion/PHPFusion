@@ -78,10 +78,10 @@ if (isset($_POST['save'])) {
 				) VALUES (
 					'".$page_title."', '".$page_access."', '".$page_content."', '".$comments."', '".$ratings."', '".$page_language."'
 				)"
-			); 
-			
+			);
+
 			$page_id = db_lastid();
-									
+
 			if (isset($_POST['add_link'])) {
 				$data = dbarray(dbquery("SELECT link_order FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ?  "WHERE link_language='".LANGUAGE."'" : "")." ORDER BY link_order DESC LIMIT 1"));
 				$link_order = $data['link_order'] + 1;
@@ -182,27 +182,27 @@ if (isset($_POST['save'])) {
 	echo "<form name='inputform' method='post' action='".FUSION_SELF.$aidlink."' onsubmit='return ValidateForm(this);'>\n";
 	echo "<div class='panel panel-default box-shadow' style='border:none;'>";
 	echo "<div class='panel-body text-center'>";
-	
+
 	if ($settings['tinymce_enabled']) {
 		echo "<div class='col-xs-3 col-sm-3 col-md-3 col-lg-3'>".$locale['460']." <input type='button' id='tinymce_switch' name='tinymce_switch' value='".(!isset($_COOKIE['custom_pages_tinymce']) || $_COOKIE['custom_pages_tinymce'] == 0 ? $locale['461'] : $locale['462'])."' class='button' style='width:75px;' onclick=\"SetTinyMCE(".(!isset($_COOKIE['custom_pages_tinymce']) || $_COOKIE['custom_pages_tinymce'] == 0 ? 1 : 0).");\"/></div>\n";
 	}
 	echo "<div class='col-xs-3 col-sm-3 col-md-3 col-lg-3'>".$locale['422']." <input type='text' name='page_title' value='".$page_title."' class='textbox' style='width:200px;' autocomplete='off' /></div>\n";
 	echo "<div class='col-xs-3 col-sm-3 col-md-3 col-lg-3'>&nbsp;".$locale['423']."<select name='page_access' class='textbox' style='width:150px;'>\n".$access_opts."</select></div>\n";
-	if (multilang_table("CP")) { 
+	if (multilang_table("CP")) {
 	echo "<div class='col-xs-3 col-sm-3 col-md-3 col-lg-3'>".$locale['global_ML100']."";
 	$opts = get_available_languages_list($selected_language = "$page_language");
-	echo "<select name='page_language' class='textbox' style='width:100px;'>".$opts."</select>\n"; 
+	echo "<select name='page_language' class='textbox' style='width:100px;'>".$opts."</select>\n";
 	} else {
-	echo "<input type='hidden' name='page_language' value='".$page_language."' />\n";	
+	echo "<input type='hidden' name='page_language' value='".$page_language."' />\n";
 	}
 	echo "</div>\n";
 
 	echo "</div>\n";
 	echo "</div>\n";
-	
+
 	echo "<div class='panel panel-default box-shadow' style='border:none;'>";
 	echo "<div class='panel-body'>";
-	
+
 	echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12 pull-left'>".$locale['424']." <br />";
 	echo "<textarea name='page_content' rows='20' class='textbox col-xs-12 col-sm-12 col-md-12 col-lg-12' style='width:100%'>".$page_content."</textarea></div>\n";
 
@@ -217,7 +217,7 @@ if (isset($_POST['save'])) {
 	}
 	echo "</div>\n";
 	echo "</div>\n";
-	
+
 	echo "<div class='panel panel-default box-shadow' style='border:none;'>";
 	echo "<div class='panel-body text-center'>";
 
@@ -226,7 +226,7 @@ if (isset($_POST['save'])) {
 		echo "<label><input type='checkbox' name='add_link' value='1'".$addlink." />  ".$locale['426']."</label><br />\n";
 	}
 	echo "</div>\n";
-	
+
 	echo "<div class='col-xs-4 col-sm-4 col-md-4 col-lg-4'>\n";
 	echo "<label><input type='checkbox' name='page_comments' value='1'".$comments." /> ".$locale['427']."</label>";
 	echo "</div>\n";
@@ -237,13 +237,13 @@ if (isset($_POST['save'])) {
 	}
 	echo "<label><input type='checkbox' name='page_ratings' value='1'".$ratings." /> ".$locale['428']."</label>\n";
 	echo "</div>\n";
-	
+
 	echo "<div class='col-xs-4 col-sm-4 col-md-4 col-lg-4'>\n";
 	if ($settings['ratings_enabled'] == "0") {
 		echo "<span style='color:red;font-weight:bold;margin-left:3px;'>*</span>";
 	}
 	echo "</div>\n";
-	
+
 	echo "<div class='col-xs-4 col-sm-4 col-md-4 col-lg-4 pull-left'>\n";
 	if ($settings['comments_enabled'] == "0" || $settings['ratings_enabled'] == "0") {
 		$sys = "";
@@ -258,7 +258,7 @@ if (isset($_POST['save'])) {
 		echo "<span style='color:red;font-weight:bold;margin-right:5px;'>*</span>".sprintf($locale['454'], $sys);
 	}
 	echo "</div>\n";
-		
+
 	echo "</div>\n";
 	echo "</div>\n";
 
@@ -291,4 +291,3 @@ if (isset($_POST['save'])) {
 }
 
 require_once THEMES."templates/footer.php";
-?>

@@ -106,7 +106,7 @@ if ($settings['enable_deactivation'] == "1") {
 	$blog['blog'] = $b_count['items'];
 	$blog['comment'] = $b_count['comments'];
 	$blog['submit'] = $b_count['submissions'];
-	
+
     $photos = [];
     $p_count = dbarray(dbquery("SELECT
         (SELECT COUNT(photo_id) FROM ".DB_PREFIX."photos) AS items,

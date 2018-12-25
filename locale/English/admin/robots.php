@@ -13,4 +13,3 @@ $locale['420'] = "Edit your robots.txt file";
 $locale['421'] = "You can find more information and help about the robots.txt here.";
 $locale['422'] = "Save";
 $locale['423'] = "Set back to default";
-?>

@@ -18,7 +18,7 @@
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 include LOCALE.LOCALESET."search/forums.php";
-	
+
 if ($_REQUEST['stype'] == "forums" || $_REQUEST['stype']=="all") {
 	if ($_REQUEST['sort'] == "datestamp") {
 		$sortby = "post_datestamp";
@@ -57,7 +57,7 @@ if ($_REQUEST['stype'] == "forums" || $_REQUEST['stype']=="all") {
 		} else {
 			$items_count .= THEME_BULLET."&nbsp;".$rows." ".($rows == 1 ? $locale['f402'] : $locale['f403'])." ".$locale['522']."<br  />\n";
 		}
-		
+
 		$result = dbquery(
 			"SELECT tp.forum_id, tp.thread_id, tp.post_id, tp.post_message, tp.post_datestamp, tt.thread_subject,
 			tt.thread_sticky, tf.forum_access, tu.user_id, tu.user_name, tu.user_status FROM ".DB_POSTS." tp
@@ -67,7 +67,7 @@ if ($_REQUEST['stype'] == "forums" || $_REQUEST['stype']=="all") {
 			WHERE ".groupaccess('forum_access').($_REQUEST['forum_id'] != 0 ? " AND tf.forum_id=".$_REQUEST['forum_id'] : "")."
 			AND ".$fieldsvar.($_REQUEST['datelimit'] != 0 ? " AND post_datestamp>=".(time() - $_REQUEST['datelimit']) : "")."
 			ORDER BY ".$sortby." ".($_REQUEST['order'] == 1 ? "ASC" : "DESC").($_REQUEST['stype'] != "all"?" LIMIT ".$_REQUEST['rowstart'].",10" : "")
-		);		
+		);
 		while ($data = dbarray($result)) {
 			$search_result = "";
 			$text_all = search_striphtmlbbcodes(iADMIN ? $data['post_message'] : preg_replace("#\[hide\](.*)\[/hide\]#si", "", $data['post_message']));
@@ -88,4 +88,3 @@ if ($_REQUEST['stype'] == "forums" || $_REQUEST['stype']=="all") {
 
 	$navigation_result = search_navigation($rows);
 }
-?>

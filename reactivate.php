@@ -62,4 +62,3 @@ if (isset($_GET['user_id']) && isnum($_GET['user_id']) && isset($_GET['code']) &
 }
 
 require_once THEMES."templates/footer.php";
-?>

@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
-$__BBCODE__[] = 
+$__BBCODE__[] =
 array(
 "description"		=>	$locale['bb_autolink_description'],
 "value"				=>	"!autolink",
@@ -24,4 +24,3 @@ array(
 "bbcode_end"		=>	"",
 "usage"				=>	$locale['bb_autolink_usage']
 );
-?>

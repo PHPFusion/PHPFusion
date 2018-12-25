@@ -101,7 +101,7 @@ class Router extends RewriteDriver {
      */
     public function rewritePage() {
 	    global $settings;
-		
+
         // Import the required Handlers
         $this->loadSQLDrivers();
         // Include the Rewrites

@@ -271,7 +271,7 @@ if (isset($_POST['cancel'])) {
 					if ($thread['thread_postcount'] > 0) {
 		   			dbquery("DELETE FROM ".DB_POSTS." WHERE thread_id='".$thread['thread_id']."'");
 					}
-					// Delete polls in threads and their associated poll options and votes cast by other users in threads started by deleted user 
+					// Delete polls in threads and their associated poll options and votes cast by other users in threads started by deleted user
 					if ($thread['thread_poll'] == 1) {
 						dbquery("DELETE FROM ".DB_FORUM_POLLS." WHERE thread_id='".$thread['thread_id']."'");
 						dbquery("DELETE FROM ".DB_FORUM_POLL_OPTIONS." WHERE thread_id='".$thread['thread_id']."'");
@@ -304,7 +304,7 @@ if (isset($_POST['cancel'])) {
 			echo "</form>";
 		closetable();
 	}
-	
+
 // Ban User
 } elseif (isset($_GET['action']) && $_GET['action'] == 1 && $user_id  && (!$isAdmin || iSUPERADMIN)) {
 	require_once LOCALE.LOCALESET."admin/members_email.php";
@@ -645,4 +645,3 @@ if (isset($_POST['cancel'])) {
 }
 
 require_once THEMES."templates/footer.php";
-?>

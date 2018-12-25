@@ -48,4 +48,3 @@ if ((isset($_GET['thread_id']) && isnum($_GET['thread_id'])) && (isset($_GET['po
 		}
 	}
 }
-?>

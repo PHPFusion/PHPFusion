@@ -40,4 +40,3 @@ $locale['462'] = "Remove all users";
 $locale['463'] = "There are no users in this group.";
 // Error Messages
 $locale['464'] = "Please enter a Group name";
-?>

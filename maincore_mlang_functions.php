@@ -70,7 +70,7 @@ function get_available_languages_list($selected_language = "") {
 	return $res;
 }
 
-// Create a selection list of possible languages in array 
+// Create a selection list of possible languages in array
 function get_available_languages_array($language_list = "") {
 	global $enabled_languages;
 	$res = "";
@@ -94,7 +94,7 @@ if (isset($_GET['lang']) && isset($_GET['lang']) != "" && preg_match("/^[\w-0-9a
 	} else {
 		$result = dbquery("INSERT INTO ".DB_LANGUAGE_SESSIONS." (user_ip, user_language, user_datestamp) VALUES ('".USER_IP."', '".$lang."', '".time()."');");
 	}
-	
+
 	// Sanitize guest sessions
 		$result = dbquery("DELETE FROM ".DB_LANGUAGE_SESSIONS." WHERE user_datestamp<'".(time()-(86400 * 60))."'");
 	}
@@ -107,7 +107,7 @@ if (isset($_GET['lang']) && isset($_GET['lang']) != "" && preg_match("/^[\w-0-9a
 		} elseif (stristr(FUSION_QUERY, '&')) {
 			$this_redir = str_replace("&lang=".$lang, "", FUSION_QUERY);
 		}
-		
+
 		if($this_redir != "") $this_redir = "?".$this_redir;
 	} else {
 		$this_redir = "";
@@ -118,32 +118,32 @@ if (isset($_GET['lang']) && isset($_GET['lang']) != "" && preg_match("/^[\w-0-9a
 // Language switcher function
 function lang_switcher() {
 	global $settings, $enabled_languages;
-	
+
 		if (preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
-			$this_link = FUSION_REQUEST."&amp;lang="; 	   
+			$this_link = FUSION_REQUEST."&amp;lang=";
 			} else {
 			if (stristr(FUSION_REQUEST, '?')) {
-			$this_link = FUSION_REQUEST."&amp;lang=";		
+			$this_link = FUSION_REQUEST."&amp;lang=";
 			} else {
-			$this_link = FUSION_REQUEST."?lang=";		
+			$this_link = FUSION_REQUEST."?lang=";
 			}
 		}
-		
+
 	if (sizeof($enabled_languages)>1) {
-		
+
 		// Load the language translation functions
 		include_once INCLUDES."translate_include.php";
 
 		if ($handle = opendir(LOCALE)) {
 			/* This is the correct way to loop over the directory. */
-			while (false !== ($file = readdir($handle))) { 
+			while (false !== ($file = readdir($handle))) {
 			  if ($file != "." && $file != ".." && $file != "/" && $file != "index.php") {
 				 if (in_array($file, $enabled_languages)) {
 					$img_files[]=$file;
 				 }
 			  }
 			}
-			closedir($handle); 
+			closedir($handle);
 		}
 		$row = 0;
 		if (sizeof($img_files)>1) {
@@ -160,9 +160,9 @@ function lang_switcher() {
 				 echo "<a class='side' href='".$this_link."".$img_files[$i]."'><img src='".LOCALE.$img_files[$i]."/".$img_files[$i].".png' alt='' title='".$lang_text."' style='border: none'></a>\n ";
 			  }
 			}
-		  }	
-		} 
-}	
+		  }
+		}
+}
 
 // Main language detection procedure
 if (iMEMBER) {
@@ -170,7 +170,7 @@ if (iMEMBER) {
 	$rows = dbrows($result);
 		if ($rows != 0) {
 		   $data = dbarray($result);
-		   define("LANGUAGE",$data['user_language']);    
+		   define("LANGUAGE",$data['user_language']);
 		   define("LOCALESET",$data['user_language']."/");
 		}
 } else {
@@ -178,9 +178,9 @@ if (iMEMBER) {
 	$rows = dbrows($result);
 	if ($rows != 0) {
 	   $data = dbarray($result);
-	   define("LANGUAGE",$data['user_language']);    
+	   define("LANGUAGE",$data['user_language']);
 	   define("LOCALESET",$data['user_language']."/");
-	}	
+	}
 }
 
 function fusion_get_enabled_languages() {

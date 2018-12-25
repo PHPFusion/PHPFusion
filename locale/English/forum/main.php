@@ -145,4 +145,3 @@ $locale['error-MP000'] = "Move posts - error";
 $locale['error-MP001'] = "New thread doesn't exist.";
 $locale['error-MP002'] = "Posts which you're marked to move don't exists or someone else already moved them.";
 $locale['error-MP003'] = "No posts to move.";
-?>

@@ -209,4 +209,3 @@ closetable();
 echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], 20, $rows, 3, BASEDIR."infusions/shoutbox_panel/shoutbox_archive.php?")."\n</div>\n";
 
 require_once THEMES."templates/footer.php";
-?>

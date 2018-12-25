@@ -27,7 +27,7 @@ $_errorHandler = array();
 // PHP-Fusion Error Handler
 function setError($error_level, $error_message, $error_file, $error_line, $error_context) {
 	global $userdata, $_errorHandler, $settings;
-	
+
 	$showError = true;
 
 	$result = dbquery(
@@ -91,4 +91,3 @@ function getErrorLevel($level, $desc = false) {
 		return $locale['err_100'];
 	}
 }
-?>

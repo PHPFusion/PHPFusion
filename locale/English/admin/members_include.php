@@ -35,4 +35,3 @@ $locale['susp112'] = "IP: ";
 $locale['susp113'] = "Lifted";
 $locale['susp114'] = "Suspension Log";
 $locale['susp115'] = "Members";
-?>

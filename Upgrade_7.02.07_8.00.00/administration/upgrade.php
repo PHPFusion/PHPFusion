@@ -175,8 +175,8 @@ if (str_replace(".", "", $settings['version']) < "80000") {
 				$content .= "<input type='submit' name='upgrade_database' value='Upgrade Database' class='button btn btn-primary pull-right'><br /><br />\n";
 				$content .= "</div>\n";
 				if (!$disabled && isset($_POST['upgrade_database'])) {
-					
-					
+
+
 		// Force the database to UTF-8 because we'll convert to it
 				dbquery("SET NAMES 'utf8'");
 		 // If you have a large database this might be hard to run.
@@ -187,9 +187,9 @@ if (str_replace(".", "", $settings['version']) < "80000") {
 					$result2 = dbquery("SHOW COLUMNS FROM ".$table);
 					// We must change all data like find/replace in columns of broken chars, this may differ for each locales, please complete this list if you know what´s missing.
 						while($column = dbarray($result2)) {
-							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field']." ,'Ã¥','Å')"); 
-							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field']." ,'Ã¤','Ä')"); 
-							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field']." ,'Ã¶','Ö')"); 
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field']." ,'Ã¥','Å')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field']." ,'Ã¤','Ä')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field']." ,'Ã¶','Ö')");
 							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'ð', 'ğ')");
 							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'ý', 'ı')");
 							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'þ', 'ş')");
@@ -201,9 +201,9 @@ if (str_replace(".", "", $settings['version']) < "80000") {
 							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'â€','\"')");
 							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'Ã‡','Ç')");
 							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'Ãƒ','Ã')");
-							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'Ã¥','Å')"); 
-							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'Ã¤','Ä')"); 
-							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'Ã¶','Ö')"); 
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'Ã¥','Å')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'Ã¤','Ä')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'Ã¶','Ö')");
 							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'Ã ','À')");
 							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'Ãº','ú')");
 							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'â€¢','-')");
@@ -342,7 +342,7 @@ if (str_replace(".", "", $settings['version']) < "80000") {
 					}
 				  }
 				}
-				
+
 				// Create guests language session tables
 				$result = dbquery("CREATE TABLE ".DB_PREFIX."language_sessions (
 				user_ip VARCHAR(20) NOT NULL DEFAULT '0.0.0.0',
@@ -365,7 +365,7 @@ if (str_replace(".", "", $settings['version']) < "80000") {
 				$result = dbquery("ALTER TABLE ".DB_SITE_LINKS." ADD link_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."' AFTER link_order");
 				$result = dbquery("ALTER TABLE ".DB_USERS." ADD user_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."'");
 				$result = dbquery("ALTER TABLE ".DB_WEBLINK_CATS." ADD weblink_cat_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."' AFTER weblink_cat_access");
-				
+
 				// Blog settings
 				$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('blog_image_readmore', '0')");
 				$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('blog_image_frontpage', '0')");
@@ -379,13 +379,13 @@ if (str_replace(".", "", $settings['version']) < "80000") {
 				$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('blog_photo_max_h', '4600')");
 				$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('blog_photo_max_b', '9990000')");
 				$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('blogperpage', '12')");
-				
+
 				// Enabled languages array
 				$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('enabled_languages', '".$settings['locale']."')");
-				
+
 				// Language settings admin section
 				$result = dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('LANG', 'languages.png', '".$locale['129c']."', 'settings_languages.php', '4')");
-				
+
 				// Update admin rights
 				if ($result) {
 					$result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level='103'");
@@ -393,7 +393,7 @@ if (str_replace(".", "", $settings['version']) < "80000") {
 						$result2 = dbquery("UPDATE ".DB_USERS." SET user_rights='".$data['user_rights'].".LANG' WHERE user_id='".$data['user_id']."'");
 					}
 				}
-				
+
 				// Create multilang tables
 				$result = dbquery("CREATE TABLE ".DB_PREFIX."mlt_tables (
 				mlt_rights CHAR(4) NOT NULL DEFAULT '',
@@ -401,7 +401,7 @@ if (str_replace(".", "", $settings['version']) < "80000") {
 				mlt_status VARCHAR(50) NOT NULL DEFAULT '',
 				PRIMARY KEY (mlt_rights)
 				) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
-				
+
 				// Add Multilang table rights and status
 				$result = dbquery("INSERT INTO ".DB_PREFIX."mlt_tables (mlt_rights, mlt_title, mlt_status) VALUES ('AR', '".$locale['MLT001']."', '1')");
 				$result = dbquery("INSERT INTO ".DB_PREFIX."mlt_tables (mlt_rights, mlt_title, mlt_status) VALUES ('CP', '".$locale['MLT002']."', '1')");
@@ -417,7 +417,7 @@ if (str_replace(".", "", $settings['version']) < "80000") {
 				$result = dbquery("INSERT INTO ".DB_PREFIX."mlt_tables (mlt_rights, mlt_title, mlt_status) VALUES ('WL', '".$locale['MLT010']."', '1')");
 				$result = dbquery("INSERT INTO ".DB_PREFIX."mlt_tables (mlt_rights, mlt_title, mlt_status) VALUES ('SL', '".$locale['MLT011']."', '1')");
 				$result = dbquery("INSERT INTO ".DB_PREFIX."mlt_tables (mlt_rights, mlt_title, mlt_status) VALUES ('PN', '".$locale['MLT012']."', '1')");
-				
+
 				// RSS Panel
 				$result = dbquery("INSERT INTO ".DB_PREFIX."panels (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list) VALUES ('".$locale['168']."', 'rss_feeds_panel', '', '1', '2', 'file', '0', '0', '1', '')");
 
@@ -428,7 +428,7 @@ if (str_replace(".", "", $settings['version']) < "80000") {
 				$result = dbquery("INSERT INTO ".DB_PREFIX."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('BLC', 'blog_cats.png', '".$locale['130a']."', 'blog_cats.php', '1')");
 				$result = dbquery("INSERT INTO ".DB_PREFIX."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('BLOG', 'blog.png', '".$locale['130b']."', 'blog.php', '1')");
 				$result = dbquery("INSERT INTO ".DB_PREFIX."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('S13', 'settings_blog.png', '".$locale['130b']."', 'settings_blog.php', '4')");
-				
+
 				// Blog link
 				$result = dbquery("INSERT INTO ".DB_PREFIX."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['130b']."', 'blog.php', '0', '2', '0', '3', '".$settings['locale']."')");
 				// Admin rights
@@ -438,7 +438,7 @@ if (str_replace(".", "", $settings['version']) < "80000") {
 						$result2 = dbquery("UPDATE ".DB_USERS." SET user_rights='".$data['user_rights'].".BLOG.BLC.S13' WHERE user_id='".$data['user_id']."'");
 					}
 				}
-		
+
 							$result = dbquery("DROP TABLE IF EXISTS ".DB_PREFIX."blog");
 							$result = dbquery("CREATE TABLE ".DB_PREFIX."blog (
 							blog_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -468,7 +468,7 @@ if (str_replace(".", "", $settings['version']) < "80000") {
 							if (!$result) {
 								$fail = TRUE;
 							}
-							
+
 							$result = dbquery("DROP TABLE IF EXISTS ".DB_PREFIX."blog_cats");
 							$result = dbquery("CREATE TABLE ".DB_PREFIX."blog_cats (
 							blog_cat_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -480,7 +480,7 @@ if (str_replace(".", "", $settings['version']) < "80000") {
 							if (!$result) {
 								$fail = TRUE;
 							}
-							
+
 				// Populate Blog categoires
 				$result = dbquery("INSERT INTO ".DB_PREFIX."blog_cats (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['180']."', 'bugs.gif', '".$settings['locale']."')");
 				$result = dbquery("INSERT INTO ".DB_PREFIX."blog_cats (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['181']."', 'downloads.gif', '".$settings['locale']."')");
@@ -498,10 +498,10 @@ if (str_replace(".", "", $settings['version']) < "80000") {
 				$result = dbquery("INSERT INTO ".DB_PREFIX."blog_cats (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['193']."', 'software.gif', '".$settings['locale']."')");
 				$result = dbquery("INSERT INTO ".DB_PREFIX."blog_cats (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['194']."', 'themes.gif', '".$settings['locale']."')");
 				$result = dbquery("INSERT INTO ".DB_PREFIX."blog_cats (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['195']."', 'windows.gif', '".$settings['locale']."')");
-							
+
 				// Email templates admin section
 				$result = dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('MAIL', 'email.png', '".$locale['T001']."', 'email.php', '1')");
-				
+
 				// Admin rights
 				if ($result) {
 					$result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level='103'");
@@ -527,7 +527,7 @@ if (str_replace(".", "", $settings['version']) < "80000") {
 					$result = dbquery("INSERT INTO ".DB_PREFIX."email_templates (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'POST', 'html', '0', '".$locale['T201']."', '".$locale['T202']."', '".$locale['T203']."', '".$settings['siteusername']."', '".$settings['siteemail']."', '".$settings['locale']."')");
 					$result = dbquery("INSERT INTO ".DB_PREFIX."email_templates (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'CONTACT', 'html', '0', '".$locale['T301']."', '".$locale['T302']."', '".$locale['T303']."', '".$settings['siteusername']."', '".$settings['siteemail']."', '".$settings['locale']."')");
 				}
-								
+
 				// SEO tables.
 				$result = dbquery("CREATE TABLE ".DB_PREFIX."permalinks_alias (
 									alias_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -551,10 +551,10 @@ if (str_replace(".", "", $settings['version']) < "80000") {
 									rewrite_name VARCHAR(50) NOT NULL DEFAULT '',
 									PRIMARY KEY (rewrite_id)
 									) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
-									
+
 				// create admin page for permalinks
 				$result = dbquery("INSERT INTO ".DB_PREFIX."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('PL', 'permalinks.png', '".$locale['129d']."', 'permalinks.php', '3')");
-				
+
 				// upgrade admin rights for permalink admin
 				if ($result) {
 					$result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level='103'");
@@ -570,13 +570,13 @@ if (str_replace(".", "", $settings['version']) < "80000") {
 
 				// Add file manager to admin
 				$result = dbquery("INSERT INTO ".DB_PREFIX."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('FM', 'file_manager.png', '".$locale['130d']."', 'file_manager.php', '1')");
-				
+
 				// Add theme settings to admin
 				$result = dbquery("INSERT INTO ".DB_PREFIX."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('S14', 'settings_theme.png', '".$locale['129f']."', 'settings_theme.php', '4')");
-				
+
 				// Add migration tool to admin
 				$result = dbquery("INSERT INTO ".DB_PREFIX."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('MI', 'migration.png', '".$locale['129e']."', 'migrate.php', '2')");
-				
+
 				// Update admin rights for migration tool, file manager & theme settings.
 				if ($result) {
 					$result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level='103'");
@@ -584,7 +584,7 @@ if (str_replace(".", "", $settings['version']) < "80000") {
 						$result2 = dbquery("UPDATE ".DB_USERS." SET user_rights='".$data['user_rights'].".S14.MI.FM' WHERE user_id='".$data['user_id']."'");
 					}
 				}
-				
+
 				//Forum's items per page
 				$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('posts_per_page', '20')");
 				$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('threads_per_page', '20')");
@@ -595,34 +595,34 @@ if (str_replace(".", "", $settings['version']) < "80000") {
 				// site settings panel exclusions for the new positons
 				$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('exclude_aupper', '')");
 				$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('exclude_blower', '')");
-								
-				// Bootstrap, on by default even tho often defined in theme level. 
+
+				// Bootstrap, on by default even tho often defined in theme level.
 				$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('bootstrap', '1')");
 
 				// Entypo, off by default defined on theme level
 				$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('entypo', '0')");
-				
+
 				// Entypo, off by default defined on theme level
 				$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('fontawesome', '0')");
-				
+
 				// Admin Theme
 				$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('admin_theme', 'Venus')");
 
 				// Set a new default theme for display
 				$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='Atom-X8' WHERE settings_name='theme'");
-				
+
 				// User sig issue
 				$result = dbquery("ALTER TABLE ".DB_PREFIX."users CHANGE user_sig user_sig VARCHAR(255) NOT NULL DEFAULT ''");
-				
+
 				// Login method feature
 				$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('login_method', '0')");
-				
+
 				// Mime check option for upload files
 				$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('mime_check', '0')");
-				
+
 				// Gateway check for registration
 				$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('gateway', '1')");
-				
+
 				// Update admin icons
 				$new_icon_array = array(
 				"APWR" => "admin_pass.png",
@@ -676,11 +676,11 @@ if (str_replace(".", "", $settings['version']) < "80000") {
 				"S8" => "settings_news.png",
 				"S5" => "photoalbums.png",
 				);
-			
+
 				foreach($new_icon_array as $admin_rights => $icon_file) {
 					dbquery("UPDATE ".DB_ADMIN." SET admin_image='".$icon_file."' WHERE admin_rights='".$admin_rights."'");
 				}
-					
+
 				// Update user field cats
 				$result = dbquery("ALTER TABLE ".DB_PREFIX."user_field_cats ADD field_cat_db VARCHAR(100) NOT NULL AFTER field_cat_name");
 				$result = dbquery("ALTER TABLE ".DB_PREFIX."user_field_cats ADD field_cat_index VARCHAR(200) NOT NULL AFTER field_cat_db");
@@ -689,7 +689,7 @@ if (str_replace(".", "", $settings['version']) < "80000") {
 
 				//Set the new version
 				dbquery("UPDATE ".DB_SETTINGS." SET settings_value='8.00.00' WHERE settings_name='version'");
-						
+
 				redirect(FUSION_SELF.$aidlink."&amp;upgrade_ok");
 			}
 			break;

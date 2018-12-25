@@ -39,4 +39,3 @@ $locale['450'] = "Delete this User Fields Category?";
 // Error message
 $locale['450a'] = 'Please enter a category anme.';
 $locale['450b'] = 'If you use another database other than the default users table, please fill in both the Database table name and its UserId Column.';
-?>

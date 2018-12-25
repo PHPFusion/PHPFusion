@@ -93,4 +93,3 @@ if (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
 closetable();
 
 require_once THEMES."templates/footer.php";
-?>

@@ -32,25 +32,25 @@ if ((isset($_SESSION["validated"]) && $_SESSION["validated"] == "True") || $sett
 	$errors = array();
 
 	if (isset($_GET['email']) && isset($_GET['code'])) {
-		
+
 		if (!preg_check("/^[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,4}$/i", $_GET['email'])) {
 			redirect("register.php?error=activate");
 		}
-		
+
 		if (!preg_check("/^[0-9a-z]{40}$/", $_GET['code'])) { redirect("register.php?error=activate"); }
-		
+
 		$result = dbquery(
 			"SELECT user_info FROM ".DB_NEW_USERS."
 			WHERE user_code='".$_GET['code']."' AND user_email='".$_GET['email']."'
 			LIMIT 1"
 		);
-		
+
 		if (dbrows($result)>0) {
 			add_to_title($locale['global_200'].$locale['u155']);
-			
+
 			$data = dbarray($result);
 			$user_info = unserialize(base64_decode(($data['user_info'])));
-		
+
 			$result = dbquery("INSERT INTO ".DB_USERS." (".$user_info['user_field_fields'].") VALUES (".$user_info['user_field_inputs'].")");
 			$result = dbquery("DELETE FROM ".DB_NEW_USERS." WHERE user_code='".$_GET['code']."' LIMIT 1");
 

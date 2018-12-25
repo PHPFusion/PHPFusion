@@ -35,7 +35,7 @@ if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
 
 if (isset($_POST['savesettings'])) {
 	$error = 0;
-	
+
 	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['tinymce_enabled']) ? $_POST['tinymce_enabled'] : "0")."' WHERE settings_name='tinymce_enabled'");
 	if (!$result) { $error = 1; }
 	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['smtp_host'])."' WHERE settings_name='smtp_host'");
@@ -67,7 +67,7 @@ if (isset($_POST['savesettings'])) {
 	if (!$result) { $error = 1; }
 	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['comments_avatar']) ? $_POST['comments_avatar'] : "0")."' WHERE settings_name='comments_avatar'");
 	if (!$result) { $error = 1; }
-	
+
 	redirect(FUSION_SELF.$aidlink."&error=".$error);
 }
 
@@ -156,4 +156,3 @@ echo "</tr>\n</table>\n</form>\n";
 closetable();
 
 require_once THEMES."templates/footer.php";
-?>

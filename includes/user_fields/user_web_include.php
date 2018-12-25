@@ -54,4 +54,3 @@ if ($profile_method == "input") {
 		$this->_setError("user_web", $locale['uf_web_error'], true);
 	}
 }
-?>

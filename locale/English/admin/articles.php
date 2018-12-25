@@ -34,4 +34,3 @@ $locale['456'] = "%s are disabled for all items.<br />This setting will only tak
 $locale['457'] = "Comments";
 $locale['458'] = "Ratings";
 $locale['459'] = $locale['457']." and ".$locale['458'];
-?>

@@ -24,7 +24,7 @@ if ($profile_method == "input") {
 	} else {
 		$user_birthdate = "0-0-0";
 	}
-	
+
 	$user_birthdate = explode("-", $user_birthdate);
 	$user_year = number_format($user_birthdate['0'], 0, ".", "");
 	$user_month = number_format($user_birthdate['1'], 0, ".", "");
@@ -43,10 +43,10 @@ if ($profile_method == "input") {
 	echo "</select>\n</td>\n";
 	echo "</tr>\n";
 
-	if ($required) { 
-		$this->setRequiredJavaScript("user_day", $locale['uf_birthdate_error']); 
-		$this->setRequiredJavaScript("user_month", $locale['uf_birthdate_error']); 
-		$this->setRequiredJavaScript("user_year", $locale['uf_birthdate_error']); 
+	if ($required) {
+		$this->setRequiredJavaScript("user_day", $locale['uf_birthdate_error']);
+		$this->setRequiredJavaScript("user_month", $locale['uf_birthdate_error']);
+		$this->setRequiredJavaScript("user_year", $locale['uf_birthdate_error']);
 	}
 
 // Display in profile
@@ -74,12 +74,11 @@ if ($profile_method == "input") {
 	if (isset($_POST['user_day'])&& isnum($_POST['user_day']) && $_POST['user_day'] != 0 ) {
 		$user_day = $_POST['user_day'];
 	}
-	
+
 	if (($user_month != 0 && $user_day != 0 && $user_year != 0)  || $this->_isNotRequired("user_birthdate")) {
 		// Set update or insert user data
 		$this->_setDBValue("user_birthdate", $user_year."-".$user_month."-".$user_day);
 	} else {
-		$this->_setError("user_birthdate", $locale['uf_birthdate_error'], true);	
+		$this->_setError("user_birthdate", $locale['uf_birthdate_error'], true);
 	}
 }
-?>

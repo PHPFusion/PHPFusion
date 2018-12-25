@@ -27,7 +27,7 @@ function theme_output($output) {
 		"@><img src='quote' alt='(.*?)' style='border:0px;vertical-align:middle' />@si",
 		"@><img src='forum_edit' alt='(.*?)' style='border:0px;vertical-align:middle' />@si"
 		);
-	
+
 	$replace = array(
 		' class="button"><span>$1</span>',
 		' class="button"><span>$1</span>',
@@ -45,9 +45,9 @@ function navigation() {
 	$result = dbquery(
 		"SELECT link_name, link_url, link_window, link_visibility FROM ".DB_SITE_LINKS."
 		 ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_position='3' OR link_position='2' ".(multilang_table("SL") ? "AND link_language='".LANGUAGE."'" : "")." ORDER BY link_order");
-		 
+
 	$link = array();
-	
+
 	while ($data = dbarray($result)) {
 		$link[] = $data;
 	}
@@ -62,6 +62,3 @@ foreach($link as $data) {
 		}
 	}
 }
-
-
-?>

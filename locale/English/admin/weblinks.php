@@ -57,4 +57,3 @@ $locale['539'] = "Click here";
 $locale['540'] = " to go to Web Link Categories";
 // Delete Web Link
 $locale['550'] = "Delete this web link?";
-?>

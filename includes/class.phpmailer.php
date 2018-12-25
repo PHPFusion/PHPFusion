@@ -1643,7 +1643,7 @@ class PHPMailer {
         if (version_compare(PHP_VERSION, '5.3.0', '<')) {
           set_magic_quotes_runtime(0);
         } else {
-		  ini_set('magic_quotes_runtime', 0); 
+		  ini_set('magic_quotes_runtime', 0);
 		}
 	  }
       $file_buffer  = file_get_contents($path);
@@ -1652,7 +1652,7 @@ class PHPMailer {
         if (version_compare(PHP_VERSION, '5.3.0', '<')) {
           set_magic_quotes_runtime($magic_quotes);
         } else {
-		  ini_set('magic_quotes_runtime', $magic_quotes); 
+		  ini_set('magic_quotes_runtime', $magic_quotes);
 	    }
 	  }
       return $file_buffer;
@@ -1900,7 +1900,7 @@ class PHPMailer {
    * @access public
    * @return string
    */
-   
+
   //ge�ndert 27.04.16 9:55 Uhr
   #public function EncodeQ($str, $position = 'text') {
     // There should not be any EOL in the string
@@ -2569,5 +2569,3 @@ class phpmailerException extends Exception {
     return $errorMsg;
   }
 }
-?>
-

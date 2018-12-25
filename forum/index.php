@@ -158,4 +158,3 @@ echo "</form>\n</td>\n</tr>\n</table><!--sub_forum_idx-->\n";
 closetable();
 
 require_once THEMES."templates/footer.php";
-?>

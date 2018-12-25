@@ -218,4 +218,3 @@ if(!function_exists("mysql_affected_rows")) {
         return db_affrows();
 	}
 }
-

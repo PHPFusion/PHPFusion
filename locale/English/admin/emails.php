@@ -50,4 +50,3 @@ $locale['470'] = "Subject cannot be empty!";
 $locale['471'] = "Message cannot be empty!";
 $locale['472'] = "Sender name cannot be empty!";
 $locale['473'] = "Sender email cannot be empty!";
-?>

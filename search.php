@@ -23,14 +23,14 @@ add_to_title($locale['global_202']);
 
 if (!isset($_REQUEST['rowstart']) || !isnum($_REQUEST['rowstart'])) { $_REQUEST['rowstart'] = 0; }
 
-if (isset($_REQUEST['stext'])) { 
+if (isset($_REQUEST['stext'])) {
 	if (is_array($_REQUEST['stext'])) {
 		redirect(FUSION_SELF);
 	} else {
-		$_REQUEST['stext'] = urlencode(stripinput($_REQUEST['stext'])); 
+		$_REQUEST['stext'] = urlencode(stripinput($_REQUEST['stext']));
 	}
 } else {
-	$_REQUEST['stext'] = ""; 
+	$_REQUEST['stext'] = "";
 }
 
 if (isset($_REQUEST['method'])) { $_REQUEST['method'] = ($_REQUEST['method']=="OR" || $_REQUEST['method']=="AND") ? $_REQUEST['method'] : "OR"; }
@@ -192,7 +192,7 @@ function search_stringscount($text) {
 	$count = 0; $c_swords = count($swords); //sizeof($swords)
 	for ($i = 0; $i < $c_swords; $i++) {
 		$count += substr_count(strtolower($text), strtolower($swords[$i]));
-	}  
+	}
 	return $count;
 }
 
@@ -264,7 +264,7 @@ if ($_REQUEST['stext'] != "" && strlen($_REQUEST['stext']) >= 3) {
 
 	$c_swords = count($swords);
 	if ($c_swords == 0) { redirect(FUSION_SELF); } //sizeof($swords)
-	$higlight = ""; $i = 1; 
+	$higlight = ""; $i = 1;
 	foreach ($swords as $hlight) {
 		$higlight .= "'".$hlight."'";
 		$higlight .= ($i < $c_swords ? "," : "");
@@ -335,4 +335,3 @@ if ($_REQUEST['stext'] != "" && strlen($_REQUEST['stext']) >= 3) {
 }
 
 require_once THEMES."templates/footer.php";
-?>

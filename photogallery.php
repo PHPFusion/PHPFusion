@@ -252,4 +252,3 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])){
 }
 
 require_once THEMES."templates/footer.php";
-?>

@@ -166,7 +166,7 @@ if (dbrows($result)) {
     }
     echo "</table>\n";
 } else {
-    echo "<center>".$locale['112']."</center>\n";
+    echo "<div style='text-align:center;'>".$locale['112']."</div>\n";
 }
 
 if ($rows > 20) echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], 20,$rows, 3, FUSION_SELF.$getString."&amp;")."\n</div>\n";
@@ -187,4 +187,3 @@ echo "</form>\n";
 closetable();
 
 require_once THEMES."templates/footer.php";
-?>

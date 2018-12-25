@@ -36,7 +36,7 @@ while ($file = readdir($temp)) {
 	}
 }
 closedir($temp);
-	
+
 // news -------------------
 $temp = opendir(IMAGES_N);
 while ($file = readdir($temp)) {
@@ -45,7 +45,7 @@ while ($file = readdir($temp)) {
 	}
 }
 closedir($temp);
-	
+
 // news cats -------------------
 $temp = opendir(IMAGES_NC);
 while ($file = readdir($temp)) {
@@ -64,7 +64,7 @@ while ($file = readdir($temp)) {
 	}
 }
 closedir($temp);
-	
+
 // blog cats -------------------
 $temp = opendir(IMAGES_BC);
 while ($file = readdir($temp)) {
@@ -120,4 +120,3 @@ if (isset($image_files)) {
 	fwrite($fp, $indhold);
 	fclose($fp);
 }
-?>

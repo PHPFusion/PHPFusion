@@ -18,4 +18,3 @@
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 $text = preg_replace('#\[alt\](.*?)\[/alt\]#si', '<span class=\'alt\'>\1</span>', $text);
-?>

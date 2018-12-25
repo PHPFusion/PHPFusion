@@ -103,4 +103,3 @@ function image_exists($dir, $image) {
 	}
 	return $image;
 }
-?>

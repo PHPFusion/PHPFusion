@@ -43,7 +43,6 @@ if ($profile_method == "input") {
 		// Set update or insert user data
 		$this->_setDBValue("user_sig", stripinput(trim($_POST['user_sig'])));
 	} else {
-		$this->_setError("user_sig", $locale['uf_sig_error'], true);	
+		$this->_setError("user_sig", $locale['uf_sig_error'], true);
 	}
 }
-?>

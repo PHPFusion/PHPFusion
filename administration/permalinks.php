@@ -53,7 +53,7 @@ if (isset($_GET['toggle_engine'])) {
 		require_once(INCLUDES.'htaccess_include.php');
 		write_htaccess();
 	}
-	redirect(FUSION_SELF.$aidlink."&error=".$error);	
+	redirect(FUSION_SELF.$aidlink."&error=".$error);
 }
 
 if (isset($_GET['toggle_normalize'])) {
@@ -65,7 +65,7 @@ if (isset($_GET['toggle_normalize'])) {
 		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='0' WHERE settings_name='normalize_seo'");
 	}
 	if (!$result) { $error = 1; }
-	redirect(FUSION_SELF.$aidlink."&error=".$error);	
+	redirect(FUSION_SELF.$aidlink."&error=".$error);
 }
 
 if (isset($_GET['toggle_debug'])) {
@@ -77,7 +77,7 @@ if (isset($_GET['toggle_debug'])) {
 		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='0' WHERE settings_name='debug_seo'");
 	}
 	if (!$result) { $error = 1; }
-	redirect(FUSION_SELF.$aidlink."&error=".$error);	
+	redirect(FUSION_SELF.$aidlink."&error=".$error);
 }
 
 if (isset($_GET['reinstall'])) {
@@ -158,7 +158,7 @@ if (isset($_GET['edit']) && file_exists(INCLUDES."rewrites/".stripinput($_GET['e
 		$result = dbquery("SELECT p.* FROM ".DB_PERMALINK_REWRITE." r INNER JOIN ".DB_PERMALINK_METHOD." p ON r.rewrite_id=p.pattern_type WHERE r.rewrite_name='".$rewrite_name."'");
 		if (dbrows($result)) {
 			opentable(sprintf($locale['405'], $permalink_name));
-			
+
 			echo "<form name='editpatterns' method='post' action='".FUSION_SELF.$aidlink."'>\n";
 			echo "<table cellpadding='0' cellspacing='1' width='100%' class='table table-responsive tbl-border center'>\n";
 			if (isset($permalink_tags_desc) && is_array($permalink_tags_desc)) {
@@ -223,9 +223,9 @@ if (isset($_GET['edit']) && file_exists(INCLUDES."rewrites/".stripinput($_GET['e
 		if (!$result) {
 			$error = 1;
 		}
-	
+
 		$last_insert_id = db_lastid();
-		
+
 		if (isset($pattern) && is_array($pattern)) {
 			foreach ($pattern as $source => $target) {
 				$result = dbquery("INSERT INTO ".DB_PERMALINK_METHOD." (pattern_type, pattern_source, pattern_target, pattern_cat) VALUES ('".$last_insert_id."', '".$source."', '".$target."', 'normal')");
@@ -293,19 +293,19 @@ echo "<table cellpadding='0' width='100%' class='table table-responsive tbl-bord
 	echo "<td class='tbl2' style='white-space:nowrap'><strong>".$locale['403']."</strong></td>\n";
 	echo "<td width='1%' class='tbl2' style='white-space:nowrap'><strong>".$locale['404']."</strong></td>\n";
 	echo "</tr>\n";
-	
+
 	echo "<tr>\n";
 	echo "<td class='tbl1' style='white-space:nowrap'>".$locale['432']."</td>\n";
 	echo "<td class='tbl1' style='white-space:nowrap'>".$locale['433']."</td>\n";
 	echo "<td class='tbl1' style='white-space:nowrap'><a href='".FUSION_SELF.$aidlink."&amp;toggle_engine&amp;".($settings['site_seo'] == "1" ? $locale['404b'] : $locale['404a'])."'>".($settings['site_seo'] == "1" ? $locale['404b'] : $locale['404a'])."</a></td>\n";
 	echo "</tr>\n";
-	
+
 	echo "<tr>\n";
 	echo "<td class='tbl1' style='white-space:nowrap'>".$locale['434']."</td>\n";
 	echo "<td class='tbl1' style='white-space:nowrap'>".$locale['435']."</td>\n";
 	echo "<td class='tbl1' style='white-space:nowrap'><a href='".FUSION_SELF.$aidlink."&amp;toggle_normalize&amp;".($settings['normalize_seo'] == "1" ? $locale['404b'] : $locale['404a'])."'>".($settings['normalize_seo'] == "1" ? $locale['404b'] : $locale['404a'])."</a></td>\n";
 	echo "</tr>\n";
-	
+
 	echo "<tr>\n";
 	echo "<td class='tbl1' style='white-space:nowrap'>".$locale['436']."</td>\n";
 	echo "<td class='tbl1' style='white-space:nowrap'>".$locale['437']."</td>\n";
@@ -370,4 +370,3 @@ if (count($available_rewrites) != count($enabled_rewrites)) {
 echo "</tbody>\n</table>\n";
 closetable();
 require_once THEMES."templates/footer.php";
-?>

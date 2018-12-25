@@ -64,4 +64,3 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 }
 
 echo "</body>\n</html>\n";
-?>

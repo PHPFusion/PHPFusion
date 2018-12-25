@@ -17,4 +17,3 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 $text = preg_replace('#\[center\](.*?)\[/center\]#si', '<div style=\'text-align:center\'>\1</div>', $text);
-?>

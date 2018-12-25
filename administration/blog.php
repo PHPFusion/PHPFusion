@@ -206,7 +206,7 @@ if (isset($_POST['save'])) {
 		$blog_sticky = isset($_POST['blog_sticky']) ? " checked='checked'" : "";
 		$blog_comments = isset($_POST['blog_comments']) ? " checked='checked'" : "";
 		$blog_ratings = isset($_POST['blog_ratings']) ? " checked='checked'" : "";
-		
+
 		opentable($blog_subject);
 		echo "$bodypreview\n";
 		closetable();
@@ -303,15 +303,15 @@ if (isset($_POST['save'])) {
 	echo "<td width='80%' class='tbl'><select name='blog_cat' class='textbox'>\n";
 	echo "<option value='0'>".$locale['424']."</option>\n".$blog_cat_opts."</select></td>\n";
 	echo "</tr>\n";
-	if (multilang_table("NS")) { 
+	if (multilang_table("NS")) {
 	echo "<tr><td class='tbl'>".$locale['global_ML100']."</td>\n";
 	$opts = get_available_languages_list($selected_language = "$blog_language");
 	echo "<td class='tbl'>
 	<select name='blog_language' class='textbox' style='width:200px;'>
-	<option value=''>".$locale['global_ML101']."</option>\n	".$opts."</select></td>\n"; 
-	echo "</tr>\n"; 
+	<option value=''>".$locale['global_ML101']."</option>\n	".$opts."</select></td>\n";
+	echo "</tr>\n";
 	} else {
-	echo "<input type='hidden' name='blog_language' value='".$blog_language."' />\n";	
+	echo "<input type='hidden' name='blog_language' value='".$blog_language."' />\n";
 	}
 	echo "<tr><td class='tbl' valign='top'>".$locale['439'].":</td>\n<td class='tbl' valign='top'>";
 	if ($blog_image != "" && $blog_image_t1 != "") {
@@ -421,4 +421,3 @@ if (isset($_POST['save'])) {
 }
 
 require_once THEMES."templates/footer.php";
-?>

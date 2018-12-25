@@ -16,7 +16,7 @@
 | \ ~-l  `\   `\  \  \ ~\  \   `. .-~   < 		   |
 |  \   ~-. "-.  `  \  ^._ ^. "-.  /  \   |                 |
 |.--~-._  ~-  `  _  ~-_.-"-." ._ /._ ." ./		   |
-| >--.  ~-.   ._  ~>-"    "\   7   7   ]                   | 
+| >--.  ~-.   ._  ~>-"    "\   7   7   ]                   |
 |^.___~"--._    ~-{  .-~ .  `\ Y . /    |		   |
 | <__ ~"-.  ~       /_/   \   \I  Y   : |		   |
 |   ^-.__           ~(_/   \   >._:   | l______		   |
@@ -122,10 +122,10 @@ function render_page($license = false) {
 	echo "<br /><h4>".$settings['sitename']."</h4>
 	<span class='dtext1'>".$settings['description']."</span></div>";
 	}
-   
+
 	echo "</td>\n</tr>\n</table>\n";
 	echo "<div class='clear'></div>";
-	
+
 	//Search bar (Courtesy iTheme II)
 	$locale['search'] = str_replace($locale['global_200'], "", $locale['global_202']);
 	echo "<form action='".BASEDIR."search.php' id='searchform' method='get'><input type='text' class='textbox' onblur='if (this.value == \"\") {this.value = \"".$locale['search']."...\";}' onfocus='if (this.value == \"".$locale['search']."...\") {this.value = \"\";}' id='stext' name='stext' value='".$locale['search']."...' /></form>\n";
@@ -142,7 +142,7 @@ function render_page($license = false) {
 	} else {
 		$colspan = "colspan='2'";
 	}
-	
+
 	//Content
 	echo "<table cellpadding='0' cellspacing='0' width='".THEME_WIDTH."' class='$main_style'>\n";
 	echo "AU_CENTER." ? "<tr><td class='main-bg' ".$colspan." valign='top'>".AU_CENTER."</td>\n</tr>\n<tr>\n" : "<tr>\n";
@@ -151,7 +151,7 @@ function render_page($license = false) {
 	if (RIGHT) { echo "<td class='side-border-right' valign='top'>".RIGHT."</td>"; }
 	echo "BL_CENTER." ? "</tr>\n<tr><td class='main-bg' ".$colspan." valign='top'>".BL_CENTER."</td>\n</tr>\n<tr>\n" : "";
 	echo "</tr>\n</table>\n";
-	
+
 	//Footer
 	echo "<table cellpadding='0' cellspacing='0' width='100%' class='main-footer'>\n<tr>\n";
 	echo "<td align='left' valign='top' width='20%'>&nbsp;Arise Theme by <a href='http://www.venue.nu' target='_blank' title='Venue'>Domi</a> 2011</td>\n";
@@ -176,8 +176,8 @@ function render_comments($c_data, $c_info){
 	if (!empty($c_data)){
 		echo "<div class='comments floatfix'>\n";
 			$c_makepagenav = '';
-			if ($c_info['c_makepagenav'] !== FALSE) { 
-			echo $c_makepagenav = "<div style='text-align:center;margin-bottom:5px;'>".$c_info['c_makepagenav']."</div>\n"; 
+			if ($c_info['c_makepagenav'] !== FALSE) {
+			echo $c_makepagenav = "<div style='text-align:center;margin-bottom:5px;'>".$c_info['c_makepagenav']."</div>\n";
 		}
 			foreach($c_data as $data) {
 		        $comm_count = "<a href='".PERMALINK_CURRENT_PATH."#c".$data['comment_id']."' id='c".$data['comment_id']."' name='c".$data['comment_id']."'>#".$data['i']."</a>";
@@ -203,7 +203,7 @@ function render_comments($c_data, $c_info){
 }
 
 
-	
+
 
 function render_news($subject, $news, $info) {
 global $settings;
@@ -227,7 +227,7 @@ global $settings;
 
 function render_article($subject, $article, $info) {
 global $settings;
-	
+
 	echo "<table width='100%' cellpadding='0' cellspacing='0'>\n<tr>\n";
 	echo "<td class='box box-caption'>".$subject."</td>\n";
 	echo "</tr>\n</table>\n";
@@ -274,14 +274,13 @@ function openside($title, $collapse = false, $state = "on") {
 	}
 	echo "</tr>\n</table>\n";
 	echo "<table cellpadding='0' cellspacing='0' width='100%'>\n<tr>\n";
-	echo "<td class='side-body'>\n";	
+	echo "<td class='side-body'>\n";
 	if ($collapse == true) { echo panelstate($state, $boxname); }
 }
 
 function closeside() {
 	global $panel_collapse;
-	if ($panel_collapse == true) { echo "</div>\n"; }	
+	if ($panel_collapse == true) { echo "</div>\n"; }
 	echo "</td>\n</tr>\n</table>";
 	echo "<div class='box-footer'></div>\n";
 }
-?>

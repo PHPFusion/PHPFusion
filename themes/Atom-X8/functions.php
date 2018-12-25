@@ -62,10 +62,10 @@ function theme_output($output) {
 		"@<div class='quote'><a (.*?)>(.*?)</a>(<br />)?@si",									//Quote
 		"@<img src='".THEME."forum/stickythread.png'(.*?)/>@si",								//Sticky thread tag
 		"@src='".THEME."forum/folderlock.png'(.*?)<td width='100%' class='(.*?)'>(.*?)<a@si",	//Locked thread tag
-		"@<span class='small' style='font-weight:bold'>\[".$locale['global_051']."\]</span>@si",//Poll thread text 
+		"@<span class='small' style='font-weight:bold'>\[".$locale['global_051']."\]</span>@si",//Poll thread text
 		"@<hr />\n<span class='small'>(.*?)</span>@si"											//Edit note in forums
 	);
-	
+
 	$replace = array(
 		' class="button big"><img alt="$1" class="reply-button icon" src="'.THEME.'images/blank.gif" />$1',
 		' class="button big"><img alt="$1" class="newthread-button icon" src="'.THEME.'images/blank.gif" />$1',
@@ -127,7 +127,7 @@ function horizontalnav() {
 	 );
 
     $result = dbquery("SELECT * FROM ".DB_SITE_LINKS." WHERE ".groupaccess('link_visibility')." ".(multilang_table("SL") ? "AND link_language='".LANGUAGE."' AND" : "AND")." link_position='3' OR link_position='2' ".(multilang_table("SL") ? "AND link_language='".LANGUAGE."'" : "")."  ORDER BY link_order ASC");
-	 
+
 	$html .= "<ul class='nav navbar-nav text-left' >\n";
 	if (dbrows($result)>0) {
 		$i = 0;
@@ -140,13 +140,13 @@ function horizontalnav() {
 			if ($data['link_url'] != "---" && checkgroup($data['link_visibility'])) {
 
 			$li_class = preg_match("/^".preg_quote(START_PAGE, '/')."/i", $data['link_url']) ? "current_page_item" : "";
-				
+
 			}
-			if (strstr($data['link_name'], "%submenu%") && SUBNAV) { 
+			if (strstr($data['link_name'], "%submenu%") && SUBNAV) {
 				$html .= "<li class='$li_class dropdown' >\n<a href='".$data['link_url']."' class='dropdown-toggle' data-toggle='dropdown'><span>".parseubb(str_replace("%submenu% ", "",$data['link_name']), "b|i|u|color")."</span> <b class='caret'></b></a>\n<ul class='dropdown-menu' role='menu' aria-labelledby='".$data['link_name']."' >\n";
 			} elseif (strstr($data['link_name'], "%endmenu% ") && SUBNAV) {
 				$html .= "<li class='$li_class'><a href='".$data['link_url']."' $link_target><span>".parseubb(str_replace("%endmenu% ", "",$data['link_name']), "b|i|u|color")."</span></a></li>\n</ul>\n</li>\n";
-			} elseif (strstr($data['link_name'], "%ssmenu%") && SUBNAV) { 
+			} elseif (strstr($data['link_name'], "%ssmenu%") && SUBNAV) {
 				$html .= "<li class='$li_class'><a href='".$data['link_url']."' class='dropdown-toggle' data-toggle='dropdown' ><span >".parseubb(str_replace("%ssmenu% ", "",$data['link_name']), "b|i|u|color")."</span> <b class='caret'></b></a>\n<ul class='dropdown-menu sub-menu' >\n";
 			} elseif (strstr($data['link_name'], "%endssmenu% ") && SUBNAV) {
 				$html .= "<li class='$li_class' ><a href='".$data['link_url']."' $link_target><span>".parseubb(str_replace("%endssmenu% ", "",$data['link_name']), "b|i|u|color")."</span></a>\n</li>\n</ul>\n</li>\n";
@@ -186,7 +186,7 @@ function user_login() {
 
 		//Search bar (Courtesy iTheme II)
 	$locale['search'] = str_replace($locale['global_200'], "", $locale['global_202']);
-	
+
 	$html .= "<li id='user-info' class='dropdown' >\n";
 	$html .= "<button type='button' class='btn btn-primary btn-sm dropdown-toggle' data-toggle='dropdown' style='margin-top: 8px;' >$name <span class='caret'></span></button>";
 	if (iMEMBER) {
@@ -229,16 +229,16 @@ function user_login() {
 	}
 	add_to_footer("<script type='text/javascript'>$('.dropdown-menu input, .dropdown-menu label').click(function(e) {e.stopPropagation();});</script>");
 	$html .= "</ul>";
-	
+
 	$html .= "<div style='margin-top:7px;' class='pull-right m-r-15'>
 	<form action='".BASEDIR."search.php' id='searchform' method='get'>
 	<input type='text' class='textbox' onblur='if (this.value == \"\") {this.value = \"".$locale['search']."...\";}' onfocus='if (this.value == \"".$locale['search']."...\") {this.value = \"\";}' id='stext' name='stext' value='".$locale['search']."...' />
 	</form></div>";
 	return $html;
-	
-	
 
-	
+
+
+
 }
 
 // Atom X Counter
@@ -778,9 +778,7 @@ function user_info_bar($data)
 			<ul class='nav user-stats-bar'>
 			<li class='dropdown'><a class='icon dropdown-toggle' data-toggle='dropdown' href='#'><i class='entypo mail'></i> ".(($message_count) ? "<span class='label label-danger' style='font-size:11px; padding:0px 10px; color:#fff;'>$message_count</span>" : '')." <b class='caret'></b>\n</a>";
 			$html .= "<ul class='dropdown-menu' style='width:280px; padding-top:0px;'>\n";
-			$html .= "<li style='padding-bottom:0px; background: url(".$settings['siteurl']."themes/Atom-X2/images/pm_header.jpg); height:45px; padding-left:60px; padding-top:15px; color:#fff'><strong><a href='".BASEDIR."messages.php' style='color:#fff; line-height:5px; margin-bottom:0px;'>".$locale['global_121']."</a></strong>\n";
-
-			
+			$html .= "<li style='padding-bottom:0px; background: url(".THEME."images/pm_header.jpg); height:45px; padding-left:60px; padding-top:15px; color:#fff'><strong><a href='".BASEDIR."messages.php' style='color:#fff; line-height:5px; margin-bottom:0px;'>".$locale['global_121']."</a></strong>\n";
 
 			$html .= "</li>\n";
 			$get_latest_mail = dbquery("SELECT * FROM ".DB_MESSAGES." WHERE message_to='".$userdata['user_id']."' AND message_read='0' ORDER BY message_datestamp DESC LIMIT 0,5");

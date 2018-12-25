@@ -128,4 +128,3 @@ if (file_exists(BASEDIR."robots.txt")) {
 closetable();
 
 require_once THEMES."templates/footer.php";
-?>

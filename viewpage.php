@@ -58,4 +58,3 @@ if (dbrows($cp_result) && checkgroup($cp_data['page_access'])) {
 }
 
 require_once THEMES."templates/footer.php";
-?>

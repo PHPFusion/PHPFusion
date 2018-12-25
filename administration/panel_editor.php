@@ -61,7 +61,7 @@ if (isset($_POST['save'])) {
 		} else {
 		$panel_display = isset($_POST['panel_display']) ? "1" : "0";
 	}
-	
+
 	if (isset($_GET['panel_id']) && isnum($_GET['panel_id'])) {
 		if ($panel_name) {
 			$data = dbarray(dbquery("SELECT panel_name FROM ".DB_PANELS." WHERE panel_id='".$_GET['panel_id']."'"));
@@ -125,7 +125,7 @@ if (isset($_POST['save'])) {
 				)"
 			);
 		}
-		
+
 		opentable($locale['483']);
 		echo "<div style='text-align:center'><br />\n";
 		if ($error) {
@@ -261,7 +261,7 @@ if (isset($_POST['save'])) {
 	echo "<label><input type='radio' name='panel_restriction' value='1'".$exclude_check." /> ".$locale['464']."</label><br />\n";
 	echo "<label><input type='radio' name='panel_restriction' value='0'".$include_check." /> ".$locale['465']."</label><br />\n";
 	echo "</td>\n</tr>\n";
-	
+
 	if (!check_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "")) {
 		echo "<tr>\n<td class='tbl'>".$locale['456']."</td>\n";
 		echo "<td colspan='2' class='tbl'><input type='password' name='admin_password' value='".(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "")."' class='textbox' style='width:150px;' autocomplete='off' /></td>\n";
@@ -270,7 +270,7 @@ if (isset($_POST['save'])) {
 	echo "<tr>\n<td class='tbl'>".$locale['458']."</td>\n";
 	echo "<td colspan='2' class='tbl'><select name='panel_access' class='textbox' style='width:150px;'>\n".$access_opts."</select></td>\n";
 	echo "</tr>\n";
-	
+
 	echo "<tr>\n";
 	echo "<td class='tbl'>".$locale['466']."</td>";
 	echo "<td colspan='2' class='tbl'>";
@@ -288,7 +288,7 @@ if (isset($_POST['save'])) {
 	   if ($i%4==0 && $i!=0) echo "<br  />";
    }
 echo "</td></tr>";
-	
+
 	echo "<tr><td align='center' colspan='3' class='tbl'>\n";
 	echo "<div id='panelopts'".$panelopts."><br /><input type='checkbox' id='panel_display' name='panel_display' value='1'".$panelon." /> ".$locale['459']."</div>\n";
 	echo "<br />\n";
@@ -304,4 +304,3 @@ echo "</td></tr>";
 }
 
 require_once THEMES."templates/footer.php";
-?>

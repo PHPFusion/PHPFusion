@@ -25,4 +25,3 @@ $user_field_desc = $locale['uf_offset_desc'];
 $user_field_dbname = "user_offset";
 $user_field_group = 3;
 $user_field_dbinfo = "";
-?>

@@ -43,7 +43,7 @@ if ($user_name == "" || $user_email == "") {
 	} else {
 		$error .= $locale['452']."<br />\n";
 	}
-	
+
 	if (preg_check("/^[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,4}$/i", $user_email)) {
 		if ($user_email != $user_data['user_email']) {
 			$result = dbquery("SELECT user_email FROM ".DB_USERS." WHERE user_email='".$user_email."'");
@@ -64,7 +64,7 @@ if ($user_new_password != "") {
 			if (!preg_match("/^[0-9A-Z@]{6,20}$/i", $user_new_password)) {
 				$error .= $locale['457']."<br />\n";
 			}
-		} else {			
+		} else {
 			$error .= $locale['458']."<br />\n";
 		}
 	}
@@ -98,19 +98,19 @@ if ($error == "") {
 			$set_avatar = "";
 		}
 	}
-	
+
 	if (isset($_POST['del_avatar'])) {
 		@unlink(IMAGES."avatars/".$user_data['user_avatar']);
 		$set_avatar = ", user_avatar=''";
 	}
-	
+
 	$result = dbquery(
 		"SELECT * FROM ".DB_USER_FIELDS." tuf
 		INNER JOIN ".DB_USER_FIELD_CATS." tufc ON tuf.field_cat = tufc.field_cat_id
 		ORDER BY field_cat_order, field_order"
 	);
 	if (dbrows($result)) {
-		$profile_method = "validate_update"; 
+		$profile_method = "validate_update";
 		while($data = dbarray($result)) {
 			if (file_exists(LOCALE.LOCALESET."user_fields/".$data['field_name'].".php")) {
 				include LOCALE.LOCALESET."user_fields/".$data['field_name'].".php";
@@ -124,4 +124,3 @@ if ($error == "") {
 	if ($user_new_password) { $new_pass = " user_password='".md5(md5($user_new_password))."', "; } else { $new_pass = " "; }
 	$result = dbquery("UPDATE ".DB_USERS." SET user_name='$user_name',".$new_pass."user_email='$user_email', user_hide_email='$user_hide_email'".($set_avatar ? $set_avatar : "").$db_values." WHERE user_id='".$user_data['user_id']."'");
 }
-?>

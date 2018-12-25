@@ -257,4 +257,3 @@ for ($i = 0; $i < count($panel_list); $i++) {
 echo "<div style='margin:5px;'></div>\n";
 closetable();
 require_once THEMES."templates/footer.php";
-?>

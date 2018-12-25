@@ -26,5 +26,3 @@ $locale['438'] = "Save Poll";
 $locale['439'] = "Undefined";
 $locale['439a'] = "Please enter a poll title";
 $locale['439b'] = "You need to enter at least 1 poll option";
-
-?>

@@ -39,7 +39,7 @@ if (!isset($_GET['cat_id']) || !isnum($_GET['cat_id'])) {
 	$result = dbquery("SELECT weblink_cat_id, weblink_cat_name, weblink_cat_description FROM ".DB_WEBLINK_CATS." ".(multilang_table("WL") ?  "WHERE weblink_cat_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('weblink_cat_access')." ORDER BY weblink_cat_name");
 	$rows = dbrows($result);
 	if ($rows != 0) {
-		$counter = 0; $columns = 2; 
+		$counter = 0; $columns = 2;
 		echo "<table cellpadding='0' cellspacing='0' width='100%'>\n<tr>\n";
 		while ($data = dbarray($result)) {
 			if ($counter != 0 && ($counter % $columns == 0)) { echo "</tr>\n<tr>\n"; }
@@ -93,4 +93,3 @@ if (!isset($_GET['cat_id']) || !isnum($_GET['cat_id'])) {
 }
 
 require_once THEMES."templates/footer.php";
-?>

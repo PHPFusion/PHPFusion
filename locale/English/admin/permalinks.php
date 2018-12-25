@@ -31,7 +31,7 @@ $locale['425'] = "Permalinks for %s are already enabled.";
 $locale['426'] = "Disabled Permalinks for %s successfully.";
 // Other
 $locale['427'] = "No Permalinks are enabled.";
-// Settings 
+// Settings
 $locale['430'] = "SEO Settings";
 $locale['431'] = "Setting";
 $locale['432'] = "SEO Engine";
@@ -40,5 +40,3 @@ $locale['434'] = "Normalize";
 $locale['435'] = "Toggle to strip URLs from all special characters";
 $locale['436'] = "Debug SEO";
 $locale['437'] = "Toggle to start SEO Engine Debugger";
-
-?>

@@ -72,4 +72,3 @@ $inf_mlt[1] = array(
 	"title" => $locale['SB_title'],
 	"rights" => "SB"
 );
-?>

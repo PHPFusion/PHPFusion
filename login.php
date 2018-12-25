@@ -108,7 +108,7 @@ if (iMEMBER) {
 		}
 		echo "</div>\n";
 	}
-	
+
 	switch ($settings['login_method']) {
 		case 2 :
 			$placeholder = $locale['global_101c'];
@@ -119,7 +119,7 @@ if (iMEMBER) {
 		default:
 			$placeholder = $locale['global_101a'];
 	}
-	
+
 	echo "<div style='text-align:center'><br />\n";
 	echo "<form name='loginpageform' method='post' action='".BASEDIR.$action_url."'>\n";
 	echo $placeholder."<br />\n<input type='text' name='user_name' class='textbox' style='width:100px' /><br />\n";
@@ -136,4 +136,3 @@ if (iMEMBER) {
 closetable();
 
 require_once THEMES."templates/footer.php";
-?>

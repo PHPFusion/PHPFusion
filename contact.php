@@ -111,4 +111,3 @@ if (isset($_POST['sendmessage'])) {
 }
 
 require_once THEMES."templates/footer.php";
-?>

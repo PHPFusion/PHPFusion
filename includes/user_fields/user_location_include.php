@@ -29,7 +29,7 @@ if ($profile_method == "input") {
 	echo "</td>\n</tr>\n";
 
 	if ($required) { $this->setRequiredJavaScript("user_location", $locale['uf_location_error']); }
-	
+
 // Display in profile
 } elseif ($profile_method == "display") {
 	if ($user_data['user_location']) {
@@ -46,7 +46,6 @@ if ($profile_method == "input") {
 		// Set update or insert user data
 		$this->_setDBValue("user_location", stripinput(trim($_POST['user_location'])));
 	} else {
-		$this->_setError("user_location", $locale['uf_location_error'], true);	
+		$this->_setError("user_location", $locale['uf_location_error'], true);
 	}
 }
-?>

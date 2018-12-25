@@ -15,4 +15,3 @@ Your account at ".$settings['sitename']." has been re-activated. We hope to see 
 Regards,\n\n
 ".$settings['siteusername'];
 $locale['506'] = "Reactivated by user.";
-?>

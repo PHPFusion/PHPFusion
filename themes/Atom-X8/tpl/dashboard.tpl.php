@@ -307,5 +307,3 @@
         $html .= "</div>\n</div>\n";
         return $html;
     }
-
-?>

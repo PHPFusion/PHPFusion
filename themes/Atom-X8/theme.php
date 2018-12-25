@@ -61,7 +61,7 @@ function cache_users() {
 
 function render_page($license = false) {
 	global $settings, $main_style, $locale, $userdata;
-	
+
 	cache_users();
 	add_to_head("<script src='".THEME."pace.min.js'></script>");
 	add_to_head("<link href='".THEME."pace-theme-minimal.css' rel='stylesheet' />");
@@ -125,10 +125,7 @@ echo "</div></section>\n";
 echo "<section class='p-0'><div class='container'>\n";
 echo "<footer id='footer' class='m-b-50' role='footer'>\n";
 echo "<div class='row'>\n<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n";
-echo "Atom-X8 for PHP-Fusion Version 8 - ".date('Y')." All rights reserved <br />
-<a href='".BASEDIR."legal/privacy.php'>Privacy Policy</a> ·
-<a href='".BASEDIR."legal/tos.php'>Terms of Service</a> ·
-<a href='".BASEDIR."legal/coc.php'>Code of Conduct</a> \n";
+echo "Atom-X8 for PHP-Fusion Version 8 - ".date('Y')." All rights reserved";
 
 
 echo "</div><div class='col-xs-12 col-sm-6 col-md-6 col-lg-6 text-right'>".license()."
@@ -173,7 +170,7 @@ opentable($subject);
 	//Reads
 	if ($info['news_ext'] == "y" || ($info['news_allow_comments'] && $settings['comments_enabled'] == "1")) {
 	echo "<li class='reads'>\n";
-		echo $info['news_reads'].$locale['global_074']; 
+		echo $info['news_reads'].$locale['global_074'];
 	echo "</li>\n";}
 	//Comments
 	if ($info['news_allow_comments'] && $settings['comments_enabled'] == "1") { echo "<li class='comments'><a ".(isset($_GET['readmore']) ? "class='scroll'" : "")." href='".BASEDIR."news.php?readmore=".$info['news_id']."#comments'>".$info['news_comments']."".($info['news_comments'] == 1 ? $locale['global_073b'] : $locale['global_073'])."</a></li>\n"; }
@@ -204,7 +201,7 @@ opentable($subject);
 	//Reads
 	if ($info['blog_ext'] == "y" || ($info['blog_allow_comments'] && $settings['comments_enabled'] == "1")) {
 	echo "<li class='reads'>\n";
-		echo $info['blog_reads'].$locale['global_074']; 
+		echo $info['blog_reads'].$locale['global_074'];
 	echo "</li>\n";}
 	//Comments
 	if ($info['blog_allow_comments'] && $settings['comments_enabled'] == "1") { echo "<li class='comments'><a ".(isset($_GET['readmore']) ? "class='scroll'" : "")." href='".BASEDIR."blog.php?readmore=".$info['blog_id']."#comments'>".$info['blog_comments']."".($info['blog_comments'] == 1 ? $locale['global_073b'] : $locale['global_073'])."</a></li>\n"; }
@@ -252,8 +249,8 @@ function render_comments($c_data, $c_info){
 		if (!empty($c_data)){
 			echo "<div class='user-comments floatfix'>\n";
  			$c_makepagenav = '';
- 			if ($c_info['c_makepagenav'] !== FALSE) { 
-				echo $c_makepagenav = "<div style='text-align:center;margin-bottom:5px;'>".$c_info['c_makepagenav']."</div>\n"; 
+ 			if ($c_info['c_makepagenav'] !== FALSE) {
+				echo $c_makepagenav = "<div style='text-align:center;margin-bottom:5px;'>".$c_info['c_makepagenav']."</div>\n";
 			}
  			foreach($c_data as $data) {
 				echo "<div id='c".$data['comment_id']."' class='comment'>\n";
@@ -264,7 +261,7 @@ function render_comments($c_data, $c_info){
 					if ($settings['comments_avatar'] == "1") { echo "<div class='pointer'><span></span></div>\n"; }
 					//Options
 					echo "<div class='comment-info'>";
-					if ($data['edit_dell'] !== FALSE) { 
+					if ($data['edit_dell'] !== FALSE) {
 						echo "<div class='actions flright'>".$data['edit_dell']."\n</div>\n";
 					}
 					//Info
@@ -276,11 +273,11 @@ function render_comments($c_data, $c_info){
 			}
 
 			echo $c_makepagenav;
-			
+
 			echo "</div>\n";
 		} else {
 			echo "<div class='nocomments-message spacer'>".$locale['c101']."</div>\n";
-		} 
+		}
 }
 
 function openside($title=false, $collapse = false, $state = "on") {

@@ -49,8 +49,7 @@ if ($profile_method == "input") {
 				if ($input_theme != $this->userData['user_theme']) $this->_themeChanged = true;
 			}
 		} else {
-			$this->_setError("user_theme", $locale['uf_theme_error'], true);	
+			$this->_setError("user_theme", $locale['uf_theme_error'], true);
 		}
 	}
 }
-?>

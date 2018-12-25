@@ -23,7 +23,7 @@ if (iMEMBER) {
 	} else {
 		openside($locale['UM096'].$userdata['user_name']);
 }
-	
+
 $inbox_count = dbcount("(message_id)", DB_MESSAGES, "message_to='".$userdata['user_id']."' AND message_folder='0'");
 $outbox_count = dbcount("(message_id)", DB_MESSAGES, "message_to='".$userdata['user_id']."' AND message_folder='1'");
 $archive_count = dbcount("(message_id)", DB_MESSAGES, "message_to='".$userdata['user_id']."' AND message_folder='2'");
@@ -129,7 +129,7 @@ if (preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
 		default:
 			$placeholder = $locale['global_101a'];
 	}
-	
+
 	echo "<div style='text-align:center; m-t-10;'>\n";
 	echo "<form name='loginform' method='post' action='".$action_url."'>\n";
 	echo $placeholder."<br />\n<input type='text' name='user_name' class='textbox' style='width:100px' /><br />\n";
@@ -137,7 +137,7 @@ if (preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
 	echo "<label><input type='checkbox' name='remember_me' value='y' title='".$locale['global_103']."' style='vertical-align:middle;' /></label>\n";
 	echo "<input type='submit' name='login' value='".$locale['global_104']."' class='button' /><br />\n";
 	echo "</form>\n<br />\n";
-		
+
 	if ($settings['enable_registration']) {
 		echo $locale['global_105']."<br /><br />\n";
 	}
@@ -145,4 +145,3 @@ if (preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
 closeside();
 	}
 }
-?>

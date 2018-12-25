@@ -40,4 +40,3 @@ $text = preg_replace_callback('
 \[\/mail\]
 ~ix'
 , 'replace_mail', $text);
-?>

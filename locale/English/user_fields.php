@@ -152,5 +152,3 @@ Note: you have to be logged in to proceed.\n
 Regards,
 ".$settings['siteusername']."
 ".$settings['sitename'];
-
-?>

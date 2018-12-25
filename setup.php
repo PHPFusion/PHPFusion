@@ -306,7 +306,6 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 						$config .= "define(\"COOKIE_PREFIX\", \"".$cookie_prefix."\");\n";
 						$config .= "define(\"SECRET_KEY\", \"".$secret_key."\");\n";
 						$config .= "define(\"SECRET_KEY_SALT\", \"".$secret_key_salt."\");\n";
-						$config .= "?>";
 						$temp = fopen("config.php", "w");
 						if (fwrite($temp, $config)) {
 							fclose($temp);

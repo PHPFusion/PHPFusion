@@ -91,4 +91,3 @@ if (dbrows($result)) {
 closetable();
 
 require_once THEMES."templates/footer.php";
-?>

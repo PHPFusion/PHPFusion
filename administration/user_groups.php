@@ -285,4 +285,3 @@ echo "/* ]]>*/\n";
 echo "</script>\n";
 
 require_once THEMES."templates/footer.php";
-?>

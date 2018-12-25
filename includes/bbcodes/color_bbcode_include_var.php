@@ -25,4 +25,3 @@ $__BBCODE__[] = array("description" => $locale['bb_color_description'], "value" 
 					  "includejscript" => "color_bbcode_include_js.js",
 					  "calljscript" => "ColorMap('".$textarea_name."', '".$inputform_name."');", "phpfunction" => "",
 					  "html_middle" => "", "html_end" => "</div>",);
-?>

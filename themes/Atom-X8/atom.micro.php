@@ -20,7 +20,7 @@
 // Atom Render Engine
 function atom_micro($iLeft, $iRight) {
 	global $settings, $userdata;
-	
+
 		// This is the PHP-Fusion 8 & < standard render
 		function phpfusion_default_render() {
 			$_left = 0; $_right = 0;
@@ -45,7 +45,7 @@ function atom_micro($iLeft, $iRight) {
 											"<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>".U_CENTER.CONTENT.L_CENTER."\n";
 			} else {
 				$html .= ($_right == '1') ? "<div class='col-xs-12 col-sm-8 col-md-8 col-lg-8'>".U_CENTER.CONTENT.L_CENTER."\n</div>
-											 <div class='col-xs-12 col-sm-2 col-md-2 col-lg-2'>".RIGHT." " : 
+											 <div class='col-xs-12 col-sm-2 col-md-2 col-lg-2'>".RIGHT." " :
 											 "<div class='col-xs-12 col-sm-10 col-md-10 col-lg-10'>".U_CENTER.CONTENT.L_CENTER."\n";
 			}
 			$html .= "</div>\n";
@@ -59,7 +59,7 @@ function atom_micro($iLeft, $iRight) {
 	$right_width = 3; // Configure the right width here. (no more than 12)
 
 	// Load ready to use templates
-	
+
 	$atom_templates = array(
 		'profile' => array(
 		'file'=> TEMPLATE."profile.tpl.php",

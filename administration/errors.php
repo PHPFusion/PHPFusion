@@ -233,15 +233,14 @@ if (isset($_GET['error_id']) && isnum($_GET['error_id'])) {
 // Show the "Apply"-button only when javascript is disabled"
 echo "<script language='JavaScript' type='text/javascript'>\n";
 echo "/* <![CDATA[ */\n";
-echo "jQuery(document).ready(function() {
-	jQuery('.change_status').hide();
+echo "$(document).ready(function() {
+	$('.change_status').hide();
 
-	jQuery('a[href=#top]').click(function(){
-		jQuery('html, body').animate({scrollTop:0}, 'slow');
+	$('a[href=#top]').click(function(){
+		$('html, body').animate({scrollTop:0}, 'slow');
 		return false;
 	});
 });";
 echo "/* ]]>*/\n";
 echo "</script>\n";
 require_once THEMES."templates/footer.php";
-?>

@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-$__BBCODE__[] = 
+$__BBCODE__[] =
 array(
 "description"		=>	$locale['bb_alt_description'],
 "value"			=>	"alt",
@@ -25,4 +25,3 @@ array(
 "bbcode_end"		=>	"[/alt]",
 "usage"			=>	"[alt]".$locale['bb_alt_usage']."[/alt]"
 );
-?>

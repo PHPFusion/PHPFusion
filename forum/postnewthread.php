@@ -263,4 +263,3 @@ if (isset($_POST['postnewthread'])) {
 	closetable();
 	echo "<!--sub_postnewthread-->";
 }
-?>

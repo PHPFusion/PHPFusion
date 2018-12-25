@@ -116,7 +116,7 @@ if (!isset($_GET['readmore']) || !isnum($_GET['readmore'])) {
 		} elseif ($data['blog_cat_image']) {
 			$blog_cat_image = "<a href='blog_cats.php?cat_id=".$data['blog_cat']."'><img src='".get_image("bc_".$data['blog_cat_name'])."' alt='".$data['blog_cat_name']."' class='img-responsive blog-category' /></a>";
 		}
-		$blog_blog = preg_split("/<!?--\s*pagebreak\s*-->/i", $data['blog_breaks'] == "y" ? nl2br(stripslashes($data['blog_extended'] ? $data['blog_extended'] : $data['blog_blog'])) : stripslashes($data['blog_extended'] ? $data['blog_extended'] : $data['blog_blog']));    
+		$blog_blog = preg_split("/<!?--\s*pagebreak\s*-->/i", $data['blog_breaks'] == "y" ? nl2br(stripslashes($data['blog_extended'] ? $data['blog_extended'] : $data['blog_blog'])) : stripslashes($data['blog_extended'] ? $data['blog_extended'] : $data['blog_blog']));
 		$pagecount = count($blog_blog);
 		$blog_info = array(
 			"blog_id" => $data['blog_id'],
@@ -136,9 +136,9 @@ if (!isset($_GET['readmore']) || !isnum($_GET['readmore'])) {
 		);
 		add_to_title($locale['global_201'].$blog_subject);
 		echo "<!--blog_pre_readmore-->";
-		
+
 		render_blog($blog_subject, $blog_blog[$_GET['rowstart']], $blog_info);
-			
+
 		echo "<!--blog_sub_readmore-->";
 		if ($pagecount > 1) {
 			echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], 1, $pagecount, 3, BASEDIR."blog.php?readmore=".$_GET['readmore']."&amp;")."\n</div>\n";

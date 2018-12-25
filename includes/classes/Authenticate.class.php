@@ -37,7 +37,7 @@ class Authenticate {
 		global $locale, $settings;
 
 		$inputUserName = preg_replace(array("/\=/","/\#/","/\sOR\s/"), "", stripinput($inputUserName));
-		
+
 		$where = "user_name";
 		switch ($settings['login_method']) {
 			case 1:
@@ -148,7 +148,7 @@ class Authenticate {
 		}
 
 	}
-	
+
 	 public static function expireAdminCookie() {
         self::_setCookie(COOKIE_ADMIN, '', time() - 1209600, COOKIE_PATH, COOKIE_DOMAIN, FALSE, TRUE);
     }
@@ -275,7 +275,7 @@ class Authenticate {
 			} else {
 				$update_threads = true;
 				$lastvisit = $userdata['user_lastvisit'];
-			}         
+			}
 			if ($update_threads) { dbquery("UPDATE ".DB_USERS." SET user_threads='' WHERE user_id='".$userdata['user_id']."'"); }
 		} else {
 			if ($cookie_exists) {
@@ -290,7 +290,7 @@ class Authenticate {
 			}
 		}
 		if ($set_cookie) {
-			Authenticate::_setCookie(COOKIE_LASTVISIT, $lastvisit, time() + 3600, COOKIE_PATH, COOKIE_DOMAIN, false, true);      
+			Authenticate::_setCookie(COOKIE_LASTVISIT, $lastvisit, time() + 3600, COOKIE_PATH, COOKIE_DOMAIN, false, true);
 		}
 		return $lastvisit;
 	}
@@ -366,4 +366,3 @@ class Authenticate {
 		}
 	}
 }
-?>

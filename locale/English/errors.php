@@ -15,4 +15,3 @@ $locale['E_ALL'] = "Defines all messages except E_STRICT";
 $locale['E_STRICT'] = "";
 $locale['err_100'] = "N/A";
 $locale['err_101'] = "<strong>WARNING:</strong> An error occurred while parsing the page. Please see PHP-Fusion's <a href='[ERROR_LOG_URL]' class='alt'>error log</a> for more details.";
-?>

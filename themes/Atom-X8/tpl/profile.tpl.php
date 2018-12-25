@@ -461,7 +461,3 @@ function user_groups_page() {
 	}
 	return $html;
 }
-
-
-
-?>

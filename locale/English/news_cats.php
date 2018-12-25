@@ -7,4 +7,3 @@ $locale['404'] = "There are no news items in this category.";
 $locale['405'] = "More";
 $locale['406'] = "Show All Categories";
 $locale['407'] = "No News Categories defined";
-?>

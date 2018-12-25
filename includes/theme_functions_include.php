@@ -133,7 +133,7 @@ function check_panel_status($side) {
 	} elseif ($side == "upper") {
 		if ($settings['exclude_upper'] != "") {
 			$exclude_list = explode("\r\n", $settings['exclude_upper']);
-		 } 
+		 }
 		} elseif ($side == "aupper") {
 		if ($settings['exclude_aupper'] != "") {
 			$exclude_list = explode("\r\n", $settings['exclude_aupper']);
@@ -531,4 +531,3 @@ function closesidex() {
 function tablebreak() {
 	return true;
 }
-?>

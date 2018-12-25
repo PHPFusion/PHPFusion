@@ -493,7 +493,7 @@ if (!isset($_GET['msg_send']) && !isset($_GET['msg_read']) && $_GET['folder'] !=
 			if ($data['user_id'] != $userdata['user_id']) {
 				$sel = ($_GET['msg_send'] == $data['user_id'] ? " selected='selected'" : "");
 				$user_list .= "<option value='".$data['user_id']."'$sel>".$data['user_name']."</option>\n";
-				
+
 			}
 		}
 		*/
@@ -572,4 +572,3 @@ if (!isset($_GET['msg_send']) && !isset($_GET['msg_read']) && $_GET['folder'] !=
 	redirect(FUSION_SELF);
 }
 require_once THEMES."templates/footer.php";
-?>

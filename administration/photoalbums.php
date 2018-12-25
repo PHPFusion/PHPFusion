@@ -237,14 +237,14 @@ if (function_exists('gd_info')) {
 		echo "<td class='tbl'>".$locale['440']."</td>\n";
 		echo "<td class='tbl'><input type='text' name='album_title' value='".$album_title."' maxlength='100' class='textbox' style='width:330px;' /></td>\n";
 		echo "</tr>\n";
-		if (multilang_table("PG")) { 
+		if (multilang_table("PG")) {
 			echo "<tr><td class='tbl'>".$locale['global_ML100']."</td>\n";
 			$opts = get_available_languages_list($selected_language = "$album_language");
 			echo "<td class='tbl'>
-			<select name='album_language' class='textbox' style='width:200px;'>".$opts."</select></td>\n"; 
-			echo "</tr>\n"; 
+			<select name='album_language' class='textbox' style='width:200px;'>".$opts."</select></td>\n";
+			echo "</tr>\n";
 		} else {
-			echo "<input type='hidden' name='album_language' value='".$album_language."' />\n";	
+			echo "<input type='hidden' name='album_language' value='".$album_language."' />\n";
 		}
 		echo "<tr>\n";
 		echo "<td valign='top' class='tbl'>".$locale['441']."</td>\n";
@@ -337,4 +337,3 @@ if (function_exists('gd_info')) {
 }
 
 require_once THEMES."templates/footer.php";
-?>

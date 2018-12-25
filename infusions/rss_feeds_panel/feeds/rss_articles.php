@@ -30,7 +30,7 @@ if (db_exists(DB_ARTICLES) && db_exists(DB_ARTICLE_CATS)) {
 	INNER JOIN ".DB_ARTICLE_CATS." tac ON ta.article_cat=tac.article_cat_id
 	".(multilang_table("AR")?" WHERE article_cat_language='".LANGUAGE."'":"")."
 	ORDER BY article_datestamp DESC LIMIT 0,10");
-	
+
     header('Content-Type: application/rss+xml; charset='.$locale['charset']);
 
     $rss = new RSS('articles', $settings['sitename'].' - '.$locale['rss_articles'].(multilang_table('AR') ? $locale['rss_in'].LANGUAGE : ''));

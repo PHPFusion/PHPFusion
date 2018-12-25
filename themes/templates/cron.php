@@ -50,7 +50,7 @@ if ($settings['cronjob_day'] < (time()-86400)) {
 			$new_time = $settings['cronjob_day'];
 		}
 	}
-	
+
 	$usr_deactivate = dbcount("(user_id)", DB_USERS, "user_actiontime < '".time()."' AND user_actiontime!='0' AND user_status='7'");
 
 	if ($usr_deactivate) {

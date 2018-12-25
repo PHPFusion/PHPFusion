@@ -46,7 +46,7 @@ if ($_REQUEST['stype'] == "blog" || $_REQUEST['stype'] == "all") {
 		if (!$settings['site_seo']) {
 			$items_count .= THEME_BULLET."&nbsp;<a href='".FUSION_SELF."?stype=blog&amp;stext=".$_REQUEST['stext']."&amp;".$composevars."'>".$rows." ".($rows == 1 ? $locale['n401'] : $locale['n402'])." ".$locale['522']."</a><br />\n";
 		} else {
-			$items_count .= THEME_BULLET."&nbsp;".$rows." ".($rows == 1 ? $locale['n401'] : $locale['n402'])." ".$locale['522']."<br />\n";	
+			$items_count .= THEME_BULLET."&nbsp;".$rows." ".($rows == 1 ? $locale['n401'] : $locale['n402'])." ".$locale['522']."<br />\n";
 		}
 		$result = dbquery("SELECT tn.*, tu.user_id, tu.user_name, tu.user_status FROM ".DB_BLOG." tn
 			LEFT JOIN ".DB_USERS." tu ON tn.blog_name=tu.user_id
@@ -76,4 +76,3 @@ if ($_REQUEST['stype'] == "blog" || $_REQUEST['stype'] == "all") {
 	}
 	$navigation_result = search_navigation($rows);
 }
-?>

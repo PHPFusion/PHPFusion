@@ -59,7 +59,7 @@ if ($rows) {
 	echo "<td class='tbl2' style='text-align:center;white-space:nowrap'><strong>".$locale['global_050']."</strong></td>\n";
 	echo "<td class='tbl2' style='text-align:center;white-space:nowrap'><strong>".$locale['global_047']."</strong></td>\n";
 	echo "<td class='tbl2' style='text-align:center;white-space:nowrap'><strong>".$locale['global_046']."</strong></td>\n";
-	echo "<td class='tbl2' style='text-align:center;white-space:nowrap'><strong>".$locale['global_057']."</strong></td>\n";	
+	echo "<td class='tbl2' style='text-align:center;white-space:nowrap'><strong>".$locale['global_057']."</strong></td>\n";
 	echo "</tr>\n";
 	$i = 0;
 	while ($data = dbarray($result)) {
@@ -82,4 +82,3 @@ if ($rows) {
 }
 
 require_once THEMES."templates/footer.php";
-?>

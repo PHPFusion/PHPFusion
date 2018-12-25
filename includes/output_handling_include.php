@@ -25,13 +25,13 @@ $fusion_jquery_tags = "";
 
 function set_title($title=""){
 	global $fusion_page_title;
-	
+
 	$fusion_page_title = $title;
 }
 
 function add_to_title($addition=""){
 	global $fusion_page_title;
-	
+
 	$fusion_page_title .= $addition;
 }
 
@@ -49,7 +49,7 @@ function add_to_meta($name, $addition=""){
 
 function add_to_head($tag=""){
 	global $fusion_page_head_tags;
-	
+
 	if(!stristr($fusion_page_head_tags, $tag)){
 		$fusion_page_head_tags .= $tag."\n";
 	}
@@ -57,7 +57,7 @@ function add_to_head($tag=""){
 
 function add_to_footer($tag=""){
 	global $fusion_page_footer_tags;
-	
+
 	if(!stristr($fusion_page_footer_tags, $tag)){
 		$fusion_page_footer_tags .= $tag."\n";
 	}
@@ -65,7 +65,7 @@ function add_to_footer($tag=""){
 
 function push_jquery() {
 	global $fusion_jquery_tags;
-	if(count($fusion_jquery_tags)>0 && is_array($fusion_jquery_tags)){
+    if(is_array($fusion_jquery_tags)){
 		$jquery_output = open_jquery();
 		foreach ($fusion_jquery_tags as $arr=>$v) {
 			$jquery_output .= $v;
@@ -76,13 +76,11 @@ function push_jquery() {
 }
 
 function open_jquery() {
-	return "<script type='text/javascript'>\n
-	$(function() {";
+	return "<script type='text/javascript'>$(function() {";
 }
 
 function close_jquery() {
-	return "});
-	</script>";
+	return "});</script>";
 }
 
 function add_to_jquery($tag=''){
@@ -93,7 +91,7 @@ function add_to_jquery($tag=''){
 
 function replace_in_output($target, $replace, $modifiers=""){
 	global $fusion_page_replacements;
-	
+
 	$fusion_page_replacements .= "\$output = preg_replace('^$target^$modifiers', '$replace', \$output);";
 }
 
@@ -127,7 +125,7 @@ function handle_output($output){
 	if(!empty($fusion_output_handlers)){
 		eval($fusion_output_handlers);
 	}
-	
+
 	return $output;
 }
 

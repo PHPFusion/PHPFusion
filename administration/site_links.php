@@ -143,14 +143,14 @@ echo "<td class='tbl'><label for='link_name'>".$locale['420']."</label></td>\n";
 echo "<td class='tbl'>\n";
 echo "<input type='text' name='link_name' value='".$link_name."' maxlength='100' class='textbox' style='width:240px;' />\n";
 echo "</td>\n</tr>\n";
-if (multilang_table("SL")) { 
+if (multilang_table("SL")) {
 	echo "<tr><td class='tbl'>".$locale['global_ML100']."</td>\n";
 	$opts = get_available_languages_list($selected_language = "$link_language");
 	echo "<td class='tbl'>
-	<select name='link_language' class='textbox' style='width:200px;'>".$opts."</select></td>\n"; 
-	echo "</tr>\n"; 
+	<select name='link_language' class='textbox' style='width:200px;'>".$opts."</select></td>\n";
+	echo "</tr>\n";
 } else {
-	echo "<input type='hidden' name='link_language' value='".$link_language."' />\n";	
+	echo "<input type='hidden' name='link_language' value='".$link_language."' />\n";
 }
 echo "<tr>\n";
 echo "<td class='tbl'></td>\n<td class='tbl'>";
@@ -222,4 +222,3 @@ if (dbrows($result)) {
 closetable();
 
 require_once THEMES."templates/footer.php";
-?>

@@ -21,7 +21,7 @@ if (preg_match('/forum/i', $_SERVER['PHP_SELF'])) {
 	//define('PANELS_OFF', 'TRUE');
 	 define('PANEL_RIGHT_OFF', 'TRUE');
 	//define('PANEL_LEFT_OFF', 'TRUE');
-	
+
 	// Options Costumize opentable
 	function opentable($title=false, $title_desc=false)	{
 		echo "<div class='panel-atom panel-default m-b-15'>\n";
@@ -30,14 +30,14 @@ if (preg_match('/forum/i', $_SERVER['PHP_SELF'])) {
 	}
 
 } elseif (preg_match('/profile/i', $_SERVER['PHP_SELF'])) {
-	
+
 	// Options Costumize opentable
 	function opentable($title=false, $title_desc=false)	{
 		echo "<div class='panel-atom panel-default'>\n";
 		echo ($title) ? "<div class='panel-heading'><b>$title</b>".($title_desc ? "<br/>$title_desc" : "")."</div>\n" : '';
 		echo "<div class='panel-body'>\n";
 	}
-	
+
 } else {
 	// For all other pages not defined, use default.
 	function opentable($title=false, $title_desc=false)	{

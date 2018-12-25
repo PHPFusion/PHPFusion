@@ -34,4 +34,3 @@ if (dbrows($result)) {
 	echo "<div style='text-align:center'>".$locale['global_033']."</div>\n";
 }
 closeside();
-?>

@@ -1020,5 +1020,4 @@ function mimeTypes() {
      'zmm' => 'application/vnd.handheld-entertainment+xml'
    );
 
-
 }

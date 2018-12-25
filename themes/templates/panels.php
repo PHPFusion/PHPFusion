@@ -63,8 +63,8 @@ $checkpath = array();
 
 if(!function_exists('wildcard_match')) {
 	function wildcard_match($source,$pattern) {
-		$pattern = preg_quote($pattern,'/');        
-		$pattern = str_replace( '\*' , '.*', $pattern);   
+		$pattern = preg_quote($pattern,'/');
+		$pattern = str_replace( '\*' , '.*', $pattern);
 		return preg_match( '/^' . $pattern . '$/i' , $source );
 	}
 }
@@ -75,19 +75,19 @@ foreach ($p_name as $p_key => $p_side) {
 		if (!defined("ADMIN_PANEL")) {
 			if (check_panel_status($p_side['side'])) {
 				foreach ($panels_cache[$p_key+1] as $p_data) {
-					
+
                     $url_arr = explode("\r\n", $p_data['panel_url_list']);
 					$url = array();
-					
-					$source = "/".PERMALINK_CURRENT_PATH;					
+
+					$source = "/".PERMALINK_CURRENT_PATH;
 
 					foreach($url_arr as $url_list) {
-						$url[] = $url_list; 
+						$url[] = $url_list;
 						if (wildcard_match($source,$url_list)) {
 						$url[] = $source;
 						}
 					}
-					
+
 					if ($p_data['panel_url_list'] == ""
 						|| ($p_data['panel_restriction'] == 1 && (!in_array("/".PERMALINK_CURRENT_PATH, $url) && !in_array("/".PERMALINK_CURRENT_PATH, $url)))
 						|| ($p_data['panel_restriction'] == 0 && (in_array("/".PERMALINK_CURRENT_PATH, $url)  || in_array("/".PERMALINK_CURRENT_PATH, $url))))
@@ -109,7 +109,7 @@ foreach ($p_name as $p_key => $p_side) {
 					unset($p_langs);
 				}
 			}
-		} 
+		}
 		define($p_side['name'], ($p_side['name'] === 'U_CENTER' ? $admin_mess : '').ob_get_contents());
 		ob_end_clean();
 	} else {

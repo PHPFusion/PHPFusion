@@ -30,4 +30,3 @@ echo "<a href='#' onclick=\"document.getElementById('captcha').src = '".INCLUDES
 echo "<img src='".INCLUDES."captchas/securimage/images/refresh.gif' alt='' align='bottom' class='tbl-border' /></a>\n";
 
 echo "</div>\n";
-?>

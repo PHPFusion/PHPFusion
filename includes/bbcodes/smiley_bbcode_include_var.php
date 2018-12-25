@@ -25,4 +25,3 @@ $__BBCODE__[] = array("description" => $locale['bb_smiley_description'], "value"
 					  "includejscript" => "", "calljscript" => "",
 					  "phpfunction" => "echo displaysmileys('$textarea_name', '$inputform_name');", "html_middle" => "",
 					  "html_end" => "</div>");
-?>

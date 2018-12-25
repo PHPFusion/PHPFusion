@@ -238,13 +238,13 @@ if (isset($_POST['save_cat'])) {
 			echo "</td>\n";
 		}
 		echo "</tr>\n";
-		if (multilang_table("FO")) { 
+		if (multilang_table("FO")) {
 			echo "<tr><td class='tbl' colspan='2'>".$locale['global_ML100']." <br />\n";
 			$opts = get_available_languages_list($selected_language = "$forum_language");
-			echo "<select name='forum_language' class='textbox' style='width:200px;'>".$opts."</select></td>\n"; 
-			echo "</tr>\n"; 
+			echo "<select name='forum_language' class='textbox' style='width:200px;'>".$opts."</select></td>\n";
+			echo "</tr>\n";
 		} else {
-			echo "<input type='hidden' name='forum_language' value='".$forum_language."' />\n";	
+			echo "<input type='hidden' name='forum_language' value='".$forum_language."' />\n";
 		}
 		echo "<tr>\n<td class='tbl' colspan='2'>".$locale['420b']."<br />\n";
 		echo "<textarea name='cat_description' cols='70' rows='4' class='textbox' style='width:98%'>".$cat_description."</textarea>\n";
@@ -282,13 +282,13 @@ if (isset($_POST['save_cat'])) {
 			echo "<td colspan='2' class='tbl'>".$locale['520']."<br />\n";
 			echo "<input type='text' name='forum_name' value='".$forum_name."' class='textbox' style='width:285px;' /></td>\n";
 			echo "</tr>\n";
-			if (multilang_table("FO")) { 
+			if (multilang_table("FO")) {
 				echo "<tr><td class='tbl' colspan='2'>".$locale['global_ML100']." <br />\n";
 				$opts = get_available_languages_list($selected_language = "$forum_language");
-				echo "<select name='forum_language' class='textbox' style='width:200px;'>".$opts."</select></td>\n"; 
-				echo "</tr>\n"; 
+				echo "<select name='forum_language' class='textbox' style='width:200px;'>".$opts."</select></td>\n";
+				echo "</tr>\n";
 			} else {
-				echo "<input type='hidden' name='forum_language' value='".$forum_language."' />\n";	
+				echo "<input type='hidden' name='forum_language' value='".$forum_language."' />\n";
 			}
 			echo "<tr>\n";
 			echo "<td colspan='2' class='tbl'>".$locale['521']."<br />\n";
@@ -337,7 +337,7 @@ if (isset($_POST['save_cat'])) {
 				echo "<option value='1'>".$locale['542']."</option>\n";
 				echo "<option value='0' ".($forum_merge == 0 ? "selected='selected'" : "").">".$locale['543']."</option>\n";
 				echo "</select>\n</td>\n";
-				echo "</tr>\n"; 
+				echo "</tr>\n";
 				if (!isset($_GET['action']) || $_GET['action'] != "edit") {
 					echo "<tr>\n<td align='center' colspan='2' class='tbl'>\n";
 					echo "<input type='submit' name='save_forum' value='".$locale['532']."' class='button' /></td>\n";
@@ -473,4 +473,3 @@ if (isset($_POST['save_cat'])) {
 }
 
 require_once THEMES."templates/footer.php";
-?>

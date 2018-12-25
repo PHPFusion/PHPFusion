@@ -1,10 +1,10 @@
 <?php
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-/* Readme 
+/* Readme
 The base to the menu used here are courtesy of http://themify.me/themes/itheme2
 Submenu features are inspired from Bifrost (Designed by Johan Wilson).
-To add a dropdown link in header, add or edit existing link and add %submenu% before the Link Name and select sub-header only. 
+To add a dropdown link in header, add or edit existing link and add %submenu% before the Link Name and select sub-header only.
 All links after this will appear in this dropdown menu. To end just add %endmenu% in the last Link Name in the list.
 You also need to change (define("SUBNAV", false);) to (define("SUBNAV", true);)
 To turn off shareing bars in news and articles change define("SHAREING", true); to define("SHAREING", false);
@@ -49,6 +49,3 @@ $res = "<ul class='clearfix' id='main-nav'><li$lifirstclass><a href='".BASEDIR."
 	$res .= "</ul>\n";
 	return $res;
 }
-
-
-?>

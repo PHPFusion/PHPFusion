@@ -32,9 +32,9 @@ $qcount = $qcount+preg_match_all('#'.$exta.'#si', $text, $matches);
 $qcount = $qcount+preg_match_all('#'.$extb.'#si', $text, $matches);
 for ($i = 0; $i < $qcount; $i++) {
 	//Replace default quotes
-	$text = preg_replace('#\[quote\](.*?)\[/quote\]#si', $before.$locale['bb_quote'].$endbefore.'$1'.$after, $text); //replace default quote //HTML 
+	$text = preg_replace('#\[quote\](.*?)\[/quote\]#si', $before.$locale['bb_quote'].$endbefore.'$1'.$after, $text); //replace default quote //HTML
 	//Replace extended quotes
-	$text = preg_replace('#'.$exta.'(.*?)\[/quote\]#si', $before.'<a class=\'quote-link\' rel=\'$2\' href=\'viewthread.php?pid=$2\' target=\'_blank\'>$1 '.$locale['bb_wrote'].': <span class=\'goto-post-arrow\'>&uarr;</span></a>'.$endbefore.'$3'.$after, $text); //replace quote with valid name and post //HTML 
+	$text = preg_replace('#'.$exta.'(.*?)\[/quote\]#si', $before.'<a class=\'quote-link\' rel=\'$2\' href=\'viewthread.php?pid=$2\' target=\'_blank\'>$1 '.$locale['bb_wrote'].': <span class=\'goto-post-arrow\'>&uarr;</span></a>'.$endbefore.'$3'.$after, $text); //replace quote with valid name and post //HTML
 	$text = preg_replace('#'.$extb.'(.*?)\[/quote\]#si', $before.'$1'.$endbefore.'$2'.$after, $text); //replace quote with valid name and no post //HTML
 }
 if (function_exists('add_to_footer')) {
@@ -104,4 +104,3 @@ jQuery('.quote-link').click(function(e) {
 });/* ]]> */
 </script>");
 }
-?>

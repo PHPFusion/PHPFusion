@@ -313,4 +313,3 @@ if (count($available_fields) != count($enabled_fields)) {
 echo "</table>\n";
 closetable();
 require_once THEMES."templates/footer.php";
-?>

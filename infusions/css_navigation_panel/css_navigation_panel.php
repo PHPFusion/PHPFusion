@@ -1,4 +1,4 @@
-<?php	
+<?php
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
@@ -61,4 +61,3 @@ if (dbrows($result)) {
 	echo $locale['global_002'];
 }
 closeside();
-?>

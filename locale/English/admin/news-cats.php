@@ -22,4 +22,3 @@ $locale['450'] = "Delete this news category?";
 // Error Messages
 $locale['460'] = "Please enter a category name.";
 $locale['461'] = "This category already exists.";
-?>

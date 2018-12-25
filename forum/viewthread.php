@@ -534,4 +534,3 @@ $viewthread_js .= "</script>";
 add_to_footer($viewthread_js);
 
 require_once THEMES."templates/footer.php";
-?>

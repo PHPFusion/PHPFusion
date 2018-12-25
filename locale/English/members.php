@@ -9,4 +9,3 @@ $locale['406'] = "Not registered to any group";
 $locale['407'] = "Access to all groups";
 $locale['408'] = "Search for member:";
 $locale['409'] = "Search";
-?>

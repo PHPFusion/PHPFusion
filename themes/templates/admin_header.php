@@ -19,9 +19,9 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 define("ADMIN_PANEL", TRUE);
 
 // Check if Maintenance is Enabled
-if ($settings['maintenance'] == "1" && ((iADMIN && $settings['maintenance_level'] == "1" 
+if ($settings['maintenance'] == "1" && ((iADMIN && $settings['maintenance_level'] == "1"
 	&& $userdata['user_id'] != "1") || ($settings['maintenance_level'] > $userdata['user_level'])
-)) { 
+)) {
 	redirect(BASEDIR."maintenance.php");
  }
 

@@ -113,4 +113,3 @@ if ((!isset($_POST['prune_forum'])) && (isset($_GET['action']) && $_GET['action'
 		closetable();
 	}
 }
-?>

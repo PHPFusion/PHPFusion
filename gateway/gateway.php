@@ -37,12 +37,12 @@ $reply_method = "";
 if (!isset($_POST['gateway_submit']) && !isset($_POST['Register']) && $_SESSION["validated"] !== "True") {
 
 	$_SESSION["validated"] = "False";
-	
+
 	// Get some numbers up
 	$a = rand(11, 20);
 	$b = rand(1, 11);
-	
-	if ($a > 15) { 
+
+	if ($a > 15) {
 		$antibot = intval($a+$b);
 		$multiplier = "+";
 		$reply_method = $locale['gateway_062'];
@@ -57,7 +57,7 @@ if (!isset($_POST['gateway_submit']) && !isset($_POST['Register']) && $_SESSION[
 		$_SESSION["antibot"] = intval($antibot);
 		$b = convertNumberToWord($b);
 	}
-		
+
 	$a = str_rot47($a);
 	$b = str_rot47($b);
 
@@ -80,11 +80,11 @@ if (!isset($_POST['gateway_submit']) && !isset($_POST['Register']) && $_SESSION[
 			};
 	</script>';
 	echo "<noscript>".$locale['gateway_052']."</noscript>";
-	
+
 	// Just add fields to random
 	$honeypot_array = array();
 	$honeypot_array = array($locale['gateway_053'], $locale['gateway_054'], $locale['gateway_055'], $locale['gateway_056'], $locale['gateway_057'], $locale['gateway_058'], $locale['gateway_059']);
-	shuffle($honeypot_array); 
+	shuffle($honeypot_array);
 	$_SESSION["honeypot"] = $honeypot_array[3];
 
 	opentable($locale['gateway_069']);
@@ -102,18 +102,18 @@ if (!isset($_POST['gateway_submit']) && !isset($_POST['Register']) && $_SESSION[
 	echo "</table>";
 	echo '</form>';
 	closetable();
-} 
+}
 
 if (isset($_POST['gateway_answer'])) {
 
 	if (isset($_SESSION["honeypot"])) {
 		$honeypot = $_SESSION["honeypot"];
 	}
-	
-// if the honeypot is empty, run rest of the verify script	
+
+// if the honeypot is empty, run rest of the verify script
 	if (isset($_POST["$honeypot"]) && $_POST["$honeypot"] == "") {
 		$antibot = stripinput(strtolower($_POST["gateway_answer"]));
-		
+
 		if (isset($_SESSION["antibot"])) {
 			if ($_SESSION["antibot"] == $antibot){
 				$_SESSION["validated"] = "True";

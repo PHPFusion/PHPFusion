@@ -23,7 +23,7 @@ function display_bbcodes($width, $textarea_name = "message", $inputform_name = "
 	if (!$bbcode_cache) { cache_bbcode(); }
 	if ($selected) { $sel_bbcodes = explode("|", $selected); }
 	$__BBCODE__ = array(); $bbcodes = "";
-	
+
 	if (is_array($bbcode_cache) && count($bbcode_cache)) {
 		foreach ($bbcode_cache as $bbcode) {
 			if ($selected && in_array($bbcode, $sel_bbcodes)) {
@@ -41,7 +41,7 @@ function display_bbcodes($width, $textarea_name = "message", $inputform_name = "
         }
 				include (INCLUDES."bbcodes/".$bbcode."_bbcode_include_var.php");
 			}
-		}	
+		}
 	}
 
 	if (sizeof($__BBCODE__) != 0) {
@@ -55,7 +55,7 @@ function display_bbcodes($width, $textarea_name = "message", $inputform_name = "
 			} else {
 				$type = "type='button' value='".$bbdata['value']."'";
 			}
-         	
+
 			if (array_key_exists('onclick', $bbdata) && $bbdata['onclick'] != "") {
 				$onclick = $bbdata['onclick'];
 			} else {
@@ -65,7 +65,7 @@ function display_bbcodes($width, $textarea_name = "message", $inputform_name = "
 					$onclick = "insertText('".$textarea_name."','".$bbdata['bbcode_start']."','".$inputform_name."');return false;";
 				}
 			}
-           
+
 			if (array_key_exists('onmouseover', $bbdata) && $bbdata['onmouseover'] != "") {
 				$onmouseover = "onMouseOver=\"".$bbdata['onmouseover']."\"";
 			} else {
@@ -77,17 +77,17 @@ function display_bbcodes($width, $textarea_name = "message", $inputform_name = "
 			} else {
 				$onmouseout = "";
 			}
-           
+
 			if (array_key_exists('phpfunction', $bbdata) && $bbdata['phpfunction'] != "") {
 				$php = $bbdata['phpfunction'].(substr($bbdata['phpfunction'], -1, 1) != ";" ? ";" : "");
-				ob_start(); 
+				ob_start();
 				eval($php);
 				$phpfunction = ob_get_contents();
 				ob_end_clean();
 			} else {
 				$phpfunction = "";
 			}
-			
+
 			$bbcodes .= substr($bbdata['value'], 0, 1) != "!" ? "<input ".$type." class='bbcode' onclick=\"".$onclick."\" ".$onmouseover." ".$onmouseout." title='".$bbdata['description']."' />\n":"";
 			if (array_key_exists('html_start', $bbdata) && $bbdata['html_start'] != "") { $bbcodes .= $bbdata['html_start']."\n"; }
 			if (array_key_exists('includejscript', $bbdata) && $bbdata['includejscript'] != "") { $bbcodes .= "<script type='text/javascript' src='".INCLUDES."bbcodes/".$bbdata['includejscript']."'></script>\n"; }
@@ -125,4 +125,3 @@ function strip_bbcodes($text) {
 	}
 	return $text;
 }
-?>

@@ -111,7 +111,7 @@ function format_word_Russian($count, $words, $add_count = 1) {
     $a      = $fcount % 10;
     $b      = floor($fcount / 10);
 
-    $form = 2; 
+    $form = 2;
 
     if ($b != 1) {
         if ($a == 1) {
@@ -134,7 +134,7 @@ function format_word_Ukrainian($count, $words, $add_count = 1) {
     $a      = $fcount % 10;
     $b      = floor($fcount / 10);
 
-    $form = 2; 
+    $form = 2;
 
     if ($b != 1) {
         if ($a == 1) {

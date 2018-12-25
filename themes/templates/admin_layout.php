@@ -85,7 +85,7 @@ echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery.min.js'></sc
 echo "<script type='text/javascript' src='".INCLUDES."jscripts/jscript.js'></script>\n";
 
 if ($settings['tinymce_enabled'] == 1) {
-		
+
 	echo "<style type='text/css'>.mceIframeContainer iframe{width:100%!important;background-color: #00000;}</style>\n";
 	echo "<script language='javascript' type='text/javascript' src='".INCLUDES."jscripts/tiny_mce/tinymce.min.js'></script>\n
 	<script type='text/javascript'>
@@ -114,7 +114,7 @@ if ($settings['tinymce_enabled'] == 1) {
 			remove_script_host : false,
 			document_base_url : '".$settings['siteurl']."',
 			content_css: [
-				'".(file_exists(THEME."editor.css") ? 
+				'".(file_exists(THEME."editor.css") ?
 					$settings['siteurl']."themes/".$settings['theme']."/editor.css":
 					$settings['siteurl']."themes/".$settings['theme']."/styles.css"
 				   )."',
@@ -137,7 +137,7 @@ if ($settings['tinymce_enabled'] == 1) {
 			],
 			toolbar: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
 			content_css: [
-				'".(file_exists(THEME."editor.css") ? 
+				'".(file_exists(THEME."editor.css") ?
 					$settings['siteurl']."themes/".$settings['theme']."/editor.css":
 					$settings['siteurl']."themes/".$settings['theme']."/styles.css"
 				   )."',

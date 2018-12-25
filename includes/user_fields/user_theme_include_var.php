@@ -25,4 +25,3 @@ $user_field_desc = $locale['uf_theme_desc'];
 $user_field_dbname = "user_theme";
 $user_field_group = 3;
 $user_field_dbinfo = "";
-?>

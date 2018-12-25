@@ -44,4 +44,3 @@ $locale['470'] = "Refresh Album and Photo Ordering";
 $locale['471'] = "No Photo Albums defined.";
 // Delete Album
 $locale['500'] = "Delete this Album?";
-?>

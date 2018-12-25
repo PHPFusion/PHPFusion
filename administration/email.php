@@ -194,14 +194,14 @@ if (isset($_GET['template_id']) && isnum($_GET['template_id']) || isset($_POST['
 	}
 	echo "</td>\n";
 	echo "</tr>\n";
-	if (multilang_table("ET")) { 
+	if (multilang_table("ET")) {
 	echo "<tr><td class='tbl'>".$locale['global_ML100']."</td>\n";
 	$opts = get_available_languages_list($selected_language = "$template_language");
 	echo "<td class='tbl'>
-	<select name='template_language' class='textbox' style='width:200px;'>".$opts."</select></td>\n"; 
-	echo "</tr>\n"; 
+	<select name='template_language' class='textbox' style='width:200px;'>".$opts."</select></td>\n";
+	echo "</tr>\n";
 	} else {
-	echo "<input type='hidden' name='tem plate_language' value='".$template_language."' />\n";	
+	echo "<input type='hidden' name='tem plate_language' value='".$template_language."' />\n";
 	}
 	echo "<tr>\n";
 	echo "<td class='tbl1' style='width:15%;vertical-align:top;'>".$locale['434']."</td>\n";
@@ -329,4 +329,3 @@ echo "/* ]]>*/\n";
 echo "</script>\n";
 
 require_once THEMES."templates/footer.php";
-?>

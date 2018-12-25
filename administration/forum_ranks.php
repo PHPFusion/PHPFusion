@@ -107,14 +107,14 @@ if ($settings['forum_ranks']) {
 	$image_files = makefilelist(IMAGES."ranks", ".|..|index.php|.svn|.DS_Store", true);
 	echo makefileopts($image_files, $rank_image)."</select></td>\n";
 	echo "</tr>\n";
-	if (multilang_table("FR")) { 
+	if (multilang_table("FR")) {
 	echo "<tr><td class='tbl'>".$locale['global_ML100']."</td>\n";
 	$opts = get_available_languages_list($selected_language = "$rank_language");
 	echo "<td class='tbl'>
-	<select name='rank_language' class='textbox' style='width:200px;'>".$opts."</select></td>\n"; 
-	echo "</tr>\n"; 
+	<select name='rank_language' class='textbox' style='width:200px;'>".$opts."</select></td>\n";
+	echo "</tr>\n";
 	} else {
-	echo "<input type='hidden' name='rank_language' value='".$rank_language."' />\n";	
+	echo "<input type='hidden' name='rank_language' value='".$rank_language."' />\n";
 	}
 	echo "<tr>\n";
 	echo "<td class='tbl'>".$locale['429']."</td>\n";
@@ -216,4 +216,3 @@ jQuery(function(){
 </script>";
 
 require_once THEMES."templates/footer.php";
-?>

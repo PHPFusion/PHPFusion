@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-$__BBCODE__[] = 
+$__BBCODE__[] =
 array(
 "description"		=>	$locale["bb_movie_description"],
 "value"			=>	"movie",
@@ -34,4 +34,3 @@ array(
 'html_middle'		=>	"<input type='button' value='YouTube Video' class='button' style='width:100px' onclick=\"addText('".$textarea_name."', '[movie=youtube]', '[/movie]', '".$inputform_name."');return false;\" /><br /><input type='button' value='Google Video' class='button' style='width:100px' onclick=\"addText('".$textarea_name."', '[movie=google]', '[/movie]', '".$inputform_name."');return false;\" />",
 'html_end'		=>	"</div>"
 );
-?>

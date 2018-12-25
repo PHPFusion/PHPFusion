@@ -97,4 +97,3 @@ if (dbrows($result)) {
 	}
 	closetable();
 }
-?>

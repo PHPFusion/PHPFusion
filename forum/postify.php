@@ -170,4 +170,3 @@ if (($_GET['post'] == "on" || $_GET['post'] == "off") && $settings['thread_notif
 }
 
 require_once THEMES."templates/footer.php";
-?>

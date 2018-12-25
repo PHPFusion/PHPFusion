@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
 }
 
 	include LOCALE.LOCALESET."gateway.php";
-	
+
 function convertNumberToWord($num = false) {
 	global $locale;
     $num = str_replace(array(',', ' '), '' , trim($num));
@@ -28,7 +28,7 @@ function convertNumberToWord($num = false) {
     }
     $num = (int) $num;
     $words = array();
-    $list1 = array('', $locale['gateway_001'], $locale['gateway_002'], $locale['gateway_003'], $locale['gateway_004'], $locale['gateway_005'], $locale['gateway_006'], $locale['gateway_007'], $locale['gateway_008'], $locale['gateway_009'], $locale['gateway_010'], 
+    $list1 = array('', $locale['gateway_001'], $locale['gateway_002'], $locale['gateway_003'], $locale['gateway_004'], $locale['gateway_005'], $locale['gateway_006'], $locale['gateway_007'], $locale['gateway_008'], $locale['gateway_009'], $locale['gateway_010'],
 				   $locale['gateway_011'], $locale['gateway_012'], $locale['gateway_013'], $locale['gateway_014'], $locale['gateway_015'], $locale['gateway_016'], $locale['gateway_017'], $locale['gateway_018'], $locale['gateway_019']);
     $list2 = array('', $locale['gateway_020'], $locale['gateway_021'], $locale['gateway_022'], $locale['gateway_023'], $locale['gateway_024'], $locale['gateway_025'], $locale['gateway_026'], $locale['gateway_027'], $locale['gateway_028'], $locale['gateway_029']);
     $list3 = array('', $locale['gateway_030'], $locale['gateway_031'], $locale['gateway_032'], $locale['gateway_033'], $locale['gateway_034'], $locale['gateway_035'], $locale['gateway_036'], $locale['gateway_037'],
@@ -64,8 +64,8 @@ function convertNumberToWord($num = false) {
 
 if (!function_exists('str_rot47')) {
   function str_rot47($str) {
-    return strtr($str, 
-      '!"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~', 
+    return strtr($str,
+      '!"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~',
       'PQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~!"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNO'
     );
   }
@@ -109,7 +109,7 @@ function antiflood_countaccess() {
         fwrite($fh, USER_IP);
         fclose($fh);
     }
-	
+
     // write updated control table
     $fh = fopen(CONTROL_DB, "w");
     fwrite($fh, serialize($control));

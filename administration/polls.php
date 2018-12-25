@@ -135,7 +135,7 @@ if (isset($_POST['save'])) {
 	$i = 0; $opt = 1;
 	$poll_title = isset($poll_title) ? $poll_title : "";
 	$poll_language = isset($poll_language) ? $poll_language : LANGUAGE;
-	
+
 	$opt_count = isset($opt_count) ? $opt_count : 2;
 	if (isset($poll_id)) $poll_ended = isset($poll_ended) ? $poll_ended : 0;
 	opentable((isset($_GET['poll_id']) ? $locale['401'] : $locale['400']));
@@ -144,17 +144,17 @@ if (isset($_POST['save'])) {
 	echo "<td width='80' class='tbl'>".$locale['431']."</td>\n";
 	echo "<td class='tbl'><input type='text' name='poll_title' value='".$poll_title."' class='textbox' style='width:200px' /></td>\n";
 	echo "</tr>\n";
-	
-	if (multilang_table("PO")) { 
+
+	if (multilang_table("PO")) {
 	echo "<tr><td class='tbl'>".$locale['global_ML100']."</td>\n";
 	$opts = get_available_languages_list($selected_language = "$poll_language");
 	echo "<td class='tbl'>
-	<select name='poll_language' class='textbox' style='width:200px;'>".$opts."</select></td>\n"; 
-	echo "</tr>\n"; 
+	<select name='poll_language' class='textbox' style='width:200px;'>".$opts."</select></td>\n";
+	echo "</tr>\n";
 	} else {
-	echo "<input type='hidden' name='poll_language' value='".$poll_language."' />\n";	
+	echo "<input type='hidden' name='poll_language' value='".$poll_language."' />\n";
 	}
-	
+
 	while ($i != $opt_count) {
 		$poll_opt = isset($poll_option[$i]) ? $poll_option[$i] : "";
 		echo "<tr>\n<td width='80' class='tbl'>".$locale['432']."$opt</td>\n";
@@ -181,4 +181,3 @@ if (isset($_POST['save'])) {
 }
 
 require_once THEMES."templates/footer.php";
-?>

@@ -429,7 +429,7 @@ class UserFieldsInput {
 
 	private function _setUserAvatar() {
 		global $locale, $settings;
-		
+
 		if (isset($_POST['delAvatar'])) {
 			if ($this->userData['user_avatar'] != "" && file_exists(IMAGES."avatars/".$this->userData['user_avatar']) &&
 				is_file(IMAGES."avatars/".$this->userData['user_avatar']) ) {
@@ -647,4 +647,3 @@ class UserFieldsInput {
         	if ($sql != "") { $result = dbquery($sql); }
 	}
 }
-?>

@@ -29,7 +29,7 @@ define("CONTROL_REQ_TIMEOUT", 1);
 // seconds to punish the user who has exceeded in doing requests
 define("CONTROL_BAN_TIME", 120*120);
 
-// writable directory to keep script data 
+// writable directory to keep script data
 define("SCRIPT_TMP_DIR", SCRIPT_ROOT."/flood");
 
 define("CONTROL_DB", SCRIPT_TMP_DIR."/ctrl");

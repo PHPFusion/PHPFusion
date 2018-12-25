@@ -66,4 +66,3 @@ if (ob_get_length() !== FALSE){
 }
 
 dbclose();
-?>

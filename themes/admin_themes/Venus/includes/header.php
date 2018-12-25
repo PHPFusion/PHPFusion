@@ -24,9 +24,13 @@ echo "<nav>\n";
 echo "<ul class='venus-toggler'>\n";
 echo "<li><a id='toggle-canvas' style='border-left:none;'><i class='entypo code'></i></a></li>\n";
 echo "</ul>\n";
-echo admin_nav(); 	// Can also use in other implementations based on the admin class, echo \PHPFusion\Admins::getInstance()->horizontal_admin_nav(TRUE); 
+echo admin_nav(); 	// Can also use in other implementations based on the admin class, echo \PHPFusion\Admins::getInstance()->horizontal_admin_nav(TRUE);
+
+add_to_footer("<script src='".THEMES."admin_themes/Venus/includes/jquery.slimscroll.min.js'></script>");
+add_to_footer("<script src='".INCLUDES."jquery/jquery.cookie.js'></script>");
 
 add_to_jquery("
+$('#adl').slimScroll({height: null});
 $('#toggle-canvas').bind('click', function(e) {
 	$('#acp-left').toggleClass('in');
 	setTimeout(function() {
@@ -71,4 +75,3 @@ echo "</li>\n";
 echo "</ul>\n";
 echo "</nav>\n";
 echo "</section>\n";
-?>

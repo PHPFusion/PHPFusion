@@ -113,7 +113,7 @@ if (!isset($_GET['readmore']) || !isnum($_GET['readmore'])) {
 		} elseif ($data['news_cat_image']) {
 			$news_cat_image = "<a href='".BASEDIR."news_cats.php?cat_id=".$data['news_cat']."'><img src='".get_image("nc_".$data['news_cat_name'])."' alt='".$data['news_cat_name']."' class='img-responsive news-category' /></a>";
 		}
-		$news_news = preg_split("/<!?--\s*pagebreak\s*-->/i", $data['news_breaks'] == "y" ? nl2br(stripslashes($data['news_extended'] ? $data['news_extended'] : $data['news_news'])) : stripslashes($data['news_extended'] ? $data['news_extended'] : $data['news_news']));    
+		$news_news = preg_split("/<!?--\s*pagebreak\s*-->/i", $data['news_breaks'] == "y" ? nl2br(stripslashes($data['news_extended'] ? $data['news_extended'] : $data['news_news'])) : stripslashes($data['news_extended'] ? $data['news_extended'] : $data['news_news']));
 		$pagecount = count($news_news);
 		$news_info = array(
 			"news_id" => $data['news_id'],
@@ -146,4 +146,3 @@ if (!isset($_GET['readmore']) || !isnum($_GET['readmore'])) {
 }
 
 require_once THEMES."templates/footer.php";
-?>

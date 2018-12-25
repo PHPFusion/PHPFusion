@@ -22,7 +22,7 @@ include LOCALE.LOCALESET."ratings.php";
 function showratings($rating_type, $rating_item_id, $rating_link) {
 
 	global $settings, $locale, $userdata;
-	
+
 	if ($settings['ratings_enabled'] == "1") {
 		if (iMEMBER) {
 			$d_rating = dbarray(dbquery("SELECT rating_vote,rating_datestamp FROM ".DB_RATINGS." WHERE rating_item_id='".$rating_item_id."' AND rating_type='".$rating_type."' AND rating_user='".$userdata['user_id']."'"));
@@ -37,7 +37,7 @@ function showratings($rating_type, $rating_item_id, $rating_link) {
 			}
 		}
 		$ratings = array(5 => $locale['r120'], 4 => $locale['r121'], 3 => $locale['r122'], 2 => $locale['r123'], 1 => $locale['r124']);
-	
+
 		opentable($locale['r100']);
 		if (!iMEMBER) {
 			echo "<div style='text-align:center'>".$locale['r104']."</div>\n";
@@ -88,4 +88,3 @@ function showratings($rating_type, $rating_item_id, $rating_link) {
 		closetable();
 	}
 }
-?>

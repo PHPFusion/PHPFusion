@@ -49,4 +49,3 @@ if ($profile_method == "input") {
 		$this->_setError("user_yahoo", $locale['uf_yahoo_error'], true);
 	}
 }
-?>

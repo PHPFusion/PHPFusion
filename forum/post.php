@@ -118,4 +118,3 @@ if ((isset($_GET['action']) && $_GET['action'] == "newthread") && ($fdata['forum
 }
 
 require_once THEMES."templates/footer.php";
-?>

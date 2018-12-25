@@ -25,19 +25,19 @@ include LOCALE.LOCALESET."admin/infusions.php";
 
 add_breadcrumb(array('link' => ADMIN.'infusions.php'.$aidlink, 'title' => $locale['400']));
 
-$inf_title = ""; 
-$inf_description = ""; 
-$inf_version = ""; 
-$inf_developer = ""; 
-$inf_email = ""; 
+$inf_title = "";
+$inf_description = "";
+$inf_version = "";
+$inf_developer = "";
+$inf_email = "";
 $inf_weburl = "";
-$inf_folder = ""; 
+$inf_folder = "";
 
-$inf_newtable = array(); 
-$inf_insertdbrow = array(); 
-$inf_droptable = array(); 
+$inf_newtable = array();
+$inf_insertdbrow = array();
+$inf_droptable = array();
 $inf_altertable = array();
-$inf_deldbrow = array(); 
+$inf_deldbrow = array();
 $inf_sitelink = array();
 
 if (!isset($_POST['infuse']) && !isset($_POST['infusion']) && !isset($_POST['defuse'])) {

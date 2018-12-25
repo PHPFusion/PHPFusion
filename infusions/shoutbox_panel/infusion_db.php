@@ -20,4 +20,3 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 if (!defined("DB_SHOUTBOX")) {
 	define("DB_SHOUTBOX", DB_PREFIX."shoutbox");
 }
-?>

@@ -302,5 +302,3 @@ function download_file($file) {
 	$object->download();
 	exit;
 }
-
-?>
