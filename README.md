@@ -27,5 +27,5 @@ See readme for instructions
 Explanation of Coding styles
 
 ```
-Procedural at all times if possible, never walk away from the KISS Principle.
+Procedural at all times if possible, never walk away from the KISS Principle. Any codes that are more complex that excusable will be reverted.
 ```
