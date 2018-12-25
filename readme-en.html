@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PHP-Fusion Readme</title>
+    <meta charset='utf-8'>
+
+    <style type='text/css'>
+        body {
+            background: rgb(238, 238, 238); /* Old browsers */
+            background: -moz-radial-gradient(center, ellipse cover, rgba(238, 238, 238, 1) 0%, rgba(204, 204, 204, 1) 100%); /* FF3.6-15 */
+            background: -webkit-radial-gradient(center, ellipse cover, rgba(238, 238, 238, 1) 0%, rgba(204, 204, 204, 1) 100%); /* Chrome10-25,Safari5.1-6 */
+            background: radial-gradient(ellipse at center, rgba(238, 238, 238, 1) 0%, rgba(204, 204, 204, 1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#eeeeee', endColorstr='#cccccc', GradientType=1); /* IE6-9 fallback on horizontal gradient */
+        }
+
+        a {
+            color: #003D71;
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: #027AC6;
+            text-decoration: underline;
+        }
+
+        strong {
+            color: #1585B9 !important;
+            letter-spacing: 0.0px;
+            font-size: 11px;
+        }
+
+        .tbl1 {
+            font-family: Verdana, Arial, Helvetica, sans-serif;
+            font-size: 12px;
+            letter-spacing: 0.8px;
+            color: #000;
+            border: 1px #000 solid;
+            padding: 4px;
+            margin-bottom: 5px;
+        }
+
+        .tbl2 {
+            font-family: Verdana, Arial, Helvetica, sans-serif;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 4px;
+            border: 1px #000 solid;
+            margin-bottom: 5px;
+            text-align: center;
+            background: rgb(212, 228, 239); /* Old browsers */
+            background: -moz-radial-gradient(center, ellipse cover, rgba(212, 228, 239, 1) 0%, rgba(134, 174, 204, 1) 100%); /* FF3.6-15 */
+            background: -webkit-radial-gradient(center, ellipse cover, rgba(212, 228, 239, 1) 0%, rgba(134, 174, 204, 1) 100%); /* Chrome10-25,Safari5.1-6 */
+            background: radial-gradient(ellipse at center, rgba(212, 228, 239, 1) 0%, rgba(134, 174, 204, 1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#d4e4ef', endColorstr='#86aecc', GradientType=1); /* IE6-9 fallback on horizontal gradient */
+        }
+
+        .warning {
+            background-color: #C00;
+            border: 1px #ddd solid;
+        }
+
+        .wrapper {
+            overflow: hidden;
+            margin-bottom: 7px;
+        }
+
+        .item {
+            font-size: 11px;
+            float: left;
+            width: 31%;
+            min-height: 25px;
+            margin: 7px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div style='text-align:left;width:700px;margin: 0 auto;'>
+
+    <div align='center' class='tbl1'><img
+            src='data:image/png;base64,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'
+            alt='PHP-Fusion' title='PHP-Fusion'><br/>
+        Copyright &copy; PHP-Fusion Inc<br/>
+        <strong>Version:</strong> 8.0 - <strong>Released:</strong> 2018/12/25
+    </div>
+
+    <div class='tbl2'>INTRODUCTION - PHP-Fusion 8</div>
+    <div class='tbl1'><p align="justify">
+        PHP-Fusion is an all in one integrated and scalable platform that will fit any purpose when it comes to website productions, whether you are
+        creating Business sites, Community portals or Personal sites.<br/>
+        Founded as an open source project under the GNU AGPL v3, PHP-Fusion is licensed to be open and free to use.<br/> <br/>
+
+        Derivative codes must be shared unless we grant you a license to waive the AGPL agreement.<br/>
+        This is what we believe gives the best possible protection for both PHP-Fusion and all the Developers that creates Addons for PHP-Fusion.<br/><br/>
+
+        Feel free to post any questions or report any problems in our forums over at <a href="https://www.php-fusion.co.uk/" title="PHP-Fusion Main"
+                                                                                        target="_blank">PHP-Fusion Main</a>.<br/>
+        For License questions you can visit our <a href="https://www.php-fusion.co.uk/license/index.php" title="PHP-Fusion Licenses" target="_blank">License
+        section</a>.</p>
+
+        <p>This software package is free software: you can redistribute it and/or modify it under the terms
+            of the GNU Affero General Public License (AGPL) as published by the Free Software Foundation,
+            either version 3 of the License, or (at your option) any later version.
+
+        <p>This software package is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+            without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+            See the Affero General Public License for more details.
+
+        <p>You should have received a copy of the GNU Affero General Public License along with this software package. If not, see <a
+                href='http://www.fsf.org/licensing/licenses/agpl-3.0.html'>www.fsf.org</a>.
+
+        <hr/>
+        <p><strong>Warning</strong><br/>
+            You are breaking international law if you remove our footer copyright notice without a valid license:</p>
+        <hr/>
+        <p>Powered by <a href='https://www.php-fusion.co.uk'>PHP-Fusion</a> copyright &copy; PHP-Fusion Inc.<br/>
+            Released as free software without warranties under <a href='http://www.fsf.org/licensing/licenses/agpl-3.0.html' target='_blank'>GNU
+                Affero GPL</a> v3.</p>
+        <hr/>
+        <p>For copyright removal options please refer to our license information page at
+            <a href='https://www.php-fusion.co.uk/license' target='_blank'>www.php-fusion.co.uk</a>.</p>
+    </div>
+
+    <div class='tbl2'>Some Key Features</div>
+    <div class='tbl1'>
+
+
+        <div class='wrapper'>
+
+            <div class='item'><strong style='padding-bottom:5px;'>SEO Engine </strong><br/>
+                A Modular system that allows you to change and add to the output of how you want your SEO URLs.
+            </div>
+            <div class='item'><strong style='padding-bottom:5px;'>Custom Themes Engine</strong><br/>Both for admin area and front.
+			</div>
+            <div class='item'><strong style='padding-bottom:5px;'>Notification email templating</strong><br/>Enabled for contact, forum notifications
+                and PM emails.
+            </div>
+
+        </div>
+
+        <div class='wrapper'>
+            <div class='item'><strong style='padding-bottom:5px;'>Multilingual Core Capabilities</strong><br/>Instanced format with
+                exclusion,inclusion options.
+            </div>
+            <div class='item'><strong style='padding-bottom:5px;'>UTF-8</strong><br/>UTF-8 are standard for both for databases and charsets.</div>
+			<div class='item'><strong style='padding-bottom:5px;'>User Fields</strong><br/>Custom User Fields are easy with 8.</div>
+        </div>
+
+        <div class='wrapper'>
+            <div class='item'><strong style='padding-bottom:5px;'>Portable &amp; Multisite</strong><br/>You can have gathered landing pages with multisite
+                functions.
+            </div>
+            <div class='item'><strong style='padding-bottom:5px;'>BBCodes</strong><br/>A BBCode system that is modular and flexible.</div>
+            <div class='item'><strong style='padding-bottom:5px;'>Smileys</strong><br/>A Smiley system that is modular and flexible.</div>
+        </div>
+
+    </div>
+    <div class='tbl2'>The Core Includes</div>
+    <div class='tbl1'>PHP-Fusion includes the most common features you would expect to see in a CMS.
+        <hr/>
+        <div class='wrapper'>
+            <div class='item'><strong style='padding-bottom:5px;'>Private Messaging</strong><br/>A complete message system between users.</div>
+            <div class='item'><strong style='padding-bottom:5px;'>Photo Gallery</strong><br/>A complete Photogallery system for photo handling.</div>
+            <div class='item'><strong style='padding-bottom:5px;'>Custom Pages</strong><br/>A database driven content section for your convenience.
+            </div>
+        </div>
+
+        <div class='wrapper'>
+            <div class='item'><strong style='padding-bottom:5px;'>FaQ System</strong><br/>Fast and simple Frequently Asked Questions system.</div>
+            <div class='item'><strong style='padding-bottom:5px;'>Vote Polls</strong><br/>A neat little panel with your pools for the users.</div>
+            <div class='item'><strong style='padding-bottom:5px;'>Web Links</strong><br/>Web links directory for your collection.</div>
+        </div>
+
+        <div class='wrapper'>
+            <div class='item'><strong style='padding-bottom:5px;'>Forums</strong><br/>A complete Forum system with tons of features.</div>
+            <div class='item'><strong style='padding-bottom:5px;'>Forum Polls</strong><br/>A Poll system for the Forums.</div>
+            <div class='item'><strong style='padding-bottom:5px;'>Forum Ranking</strong><br/>A Rank system for the Forums.</div>
+        </div>
+
+        <div class='wrapper'>
+            <div class='item'><strong style='padding-bottom:5px;'>Downloads</strong><br/>A complete Download system.</div>
+            <div class='item'><strong style='padding-bottom:5px;'>Articles</strong><br/>A simple system for content publishing.</div>
+            <div class='item'><strong style='padding-bottom:5px;'>Welcome Message</strong><br/>A panel with customized welcome messages.</div>
+        </div>
+
+        <div class='wrapper'>
+            <div class='item'><strong style='padding-bottom:5px;'>Blog</strong><br/>A complete Blog system with Archive Panels.</div>
+            <div class='item'><strong style='padding-bottom:5px;'>News</strong><br/>A complete News system for News publishing.</div>
+            <div class='item'><strong style='padding-bottom:5px;'>Shoutbox</strong><br/>Send messages on a front panel.</div>
+        </div>
+
+        <div class='wrapper'>
+            <div class='item'><strong style='padding-bottom:5px;'>RSS Feeds Panel</strong><br/>A complete RSS feeds system for
+                Blog, News, Forum, Downloads and Articles.
+            </div>
+            <div class='item'><strong style='padding-bottom:5px;'>Latest Comments Panel</strong><br/>A listing of latest comments made to various
+                content on site.
+            </div>
+            <div class='item'><strong style='padding-bottom:5px;'>Online Users Panel</strong><br/>Displaying users online.</div>
+        </div>
+        <hr/>
+        Features such as User, Administrators, User Groups managing and so forth are all available. <br/>
+        Some key features such as Private Messages and Custom Pages are automatically installed.<br/>
+        The rest of the above are only installed by your choice, we have however made it available with Core.<br/>
+        For more detailed Documentation please visit <a href="https://www.php-fusion.co.uk/" target="_blank">PHP-Fusion Main</a>
+
+    </div>
+
+    <div class='tbl2'>GENERAL INSTALLATION AND GUIDELINES FOR MANUAL INSTALLATION</div>
+    <div class='tbl1'>Requirements for this version
+        <p>- PHP 5.6.39 or higher<br/>
+           - MySQL 5.1 or higher<br/>
+           - Apache 2.2 or higher<br/>
+           - Nginx 1.0 or higher
+           - mod_rewrite or equivalent for SEO to work
+        </p>
+        <hr/>
+
+        <p>You have to create a MySQL database. You can do this via your web-hosting control panel or phpMyAdmin.
+            Make sure you have your MySQL access details at hand including the hostname, user name, password and database
+            name as you will need to specify these during setup.</p>
+        <hr/>
+        <p><strong>1.</strong> Upload the contents of the files folder to your web server.</p>
+
+        <p><strong>2.</strong> Unless you run PHP-Fusion on a local server, in most cases you
+            will need to CHMOD the following files and folders to 777:</p>
+
+        <ul style='list-style-type:disc'>
+            <li>administration/db_backups/</li>
+            <li>images/</li>
+            <li>images/imagelist.js</li>
+            <li>images/avatars/</li>
+            <li>robots.txt</li>
+        </ul>
+
+        <p>
+            <strong>Infusions shipped with the Core requires the following folders to be CHMODed to 777</strong>
+        </p>
+
+        <ul style='list-style-type:disc'>
+            <li>/images/blog/images/</li>
+            <li>/images/blog/images/thumbs/</li>
+            <li>/images/blog/blog_cats/</li>
+            <li>/downloads/</li>
+            <li>/downloads/images/</li>
+            <li>/downloads/submissions/</li>
+            <li>/downloads/submissions/images/</li>
+            <li>/forum/attachments/</li>
+            <li>/images/news/images/</li>
+            <li>/images/news/images/thumbs/</li>
+            <li>/images/news/news_cats/</li>
+            <li>/images/photoalbum/</li>
+			<li>/images/photoalbum/submissions/</li>
+        </ul>
+
+        <p><strong>Note</strong>: <br/>Some hosts does not allow CHMOD 777, in that case you can use CHMOD 755 if CHMOD 777 fails.</p>
+
+        <p><strong>3.</strong> Go to your website where install should start automatically. If not, you
+            should run the installer manually by entering your full site url followed by
+            /install/index.php Example: http://www.yourdomain.com/setup.php.</p>
+
+        <p><strong>4.</strong> Complete the setup process by following all on-screen prompts.</p>
+
+    </div>
+
+    <br/>
+
+    <div class='tbl2'>LOCAL INSTALLATION</div>
+    <div class='tbl1'>To install and work with a local copy of PHP-Fusion you can download a copy of <a href='https://www.apachefriends.org'
+                                                                                                        target='_blank'>XAMPP</a> for your given
+        environment ( Windows, Linux or Mac ).
+    </div>
+    <br/>
+
+    <div class='tbl2'>UPGRADE FROM V7.02.07</div>
+
+    <div class='tbl1'><p>Before anything we strongly recommend that you backup your
+        files and your database. <br/> PHP-Fusion 8 is a large update from PHP-Fusion 7.02.07.</p>
+        <hr/>
+
+        <p>Make sure that your hosting environment meets the requirements for this version: <br/>
+            - PHP 5.6.39 or higher<br/>
+            - MySQL 5.1 or higher</p>
+        <hr/>
+        <p>This upgrade procedure can be very demanding depending on how much content your have. <br/>
+ 		  If this procedure timeout or crash you need to manually disable the UTF-8 conversion script or if you can, raise the time of allowed PHP and SQL execution.<br /> 
+		 You disable the UTF-8 char conversion function by opening /administration/upgrade.php, line 135 change disabled = FALSE to disabled = TRUE.
+        </p>
+        <hr/>
+        <p>PHP-Fusion 8.0 is compatible with version 7.02.07, <br/> 
+            There have been a massive amount of alterations and additions to the Core systems, meaning that some Addons Mods, Infusions, Panels and Themes may need some alterations to work as intended with the system.</p>
+        <hr/>
+        <p><strong>The upgrade will be in two steps</strong> <br/> <br/> You need to follow these instructions precisely.</p>
+
+        <p><strong>Step 1</strong></p>
+
+        <ul style='list-style-type:none'>
+
+            <li><strong>1</strong> &middot; You must first upload all PHP-Fusion 8 files in the Upgrade_7.02.07_8.00.00. Replace all files when requested.</li>
+            <br/>
+
+            <li><strong>2</strong> &middot;
+				If your site is in English, 
+                Navigate to your site's www.site.com and enter your Administration panel <br />
+                Go to System Admin > Upgrade and follow the instructions.
+				<br />
+				If you upgrade from another language, make sure that you first translate the files in Upgrade_7.02.07_8.00.00/locale and replace the news ones in your v7 installation folders. <br />
+				When that is completed, Go to System Admin > Upgrade and follow the instructions.
+                
+            </li>
+            <br/></ul>
+
+        <p><strong>Step 3</strong></p>
+        <ul style='list-style-type:none'>
+			Once the database have been upgraded, copy all files and replace existing.
+            </li>
+        </ul>
+
+        <p align='center'>Your site should now be fully upgraded and ready to run PHP-Fusion 8.</p>
+		<hr/>
+		<div style='clear:both;'></div>
+        <hr/>
+        <p>If you have any questions please feel free to ask for help in our <a href='https://www.php-fusion.co.uk' target='_blank'>Support Forums</a>.
+        </p>
+    </div>
+
+    <div class='tbl2'>SECURITY TIPS</div>
+
+    <div class='tbl1'>
+        <ul style='list-style-type:disc'>
+            <li>Ensure config.php is not writable (should be CHMODed to 644).</li>
+            <li>Always ensure your FTP and MySQL passwords are different.</li>
+            <li>Never allow forum,download attachments such as php, html, exe, or any type of text file.</li>
+            <li>Only use Addons that have been tested and approved as safe from our Marketplace.</li>
+			<li>Update your PHP-Fusion version when a new is released.</li>
+        </ul>
+    </div>
+
+    <div class='tbl2'>SUPPORT</div>
+
+    <div class='tbl1'>If you have any questions or problems regarding PHP-Fusion, please visit
+        the PHP-Fusion Main site at <a href='https://www.php-fusion.co.uk' target='_blank'>www.php-fusion.co.uk</a>
+        and post a message on our support forums. We have a very helpful community.<br/>
+        <hr/>
+        Addons: PHP-Fusion's features can be expanded by adding Infusions, these are plugins which are extremely
+        easy to install. You can find a variety of useful Infusions in our
+        <a href='https://www.php-fusion.co.uk/infusions/marketplace/' target='_blank'>AddonDB</a>.<br/>
+        <hr/>
+        If you are not satisfied with PHP-Fusion's bundled themes or if you simply want a more uniqe look
+        to your site you can find a large variety of high quality themes also in our
+        <a href='https://www.php-fusion.co.uk/infusions/marketplace/?view=dir' target='_blank'>Themes category</a>.<br/>
+        <hr/>
+        PHP-Fusion also have a number of official translations. <br/>
+        You can find our translations at PHP-Fusion Main in the <a href='https://www.php-fusion.co.uk/downloads.php?cat_id=29' target='_blank'>Language
+            Packs</a> section. While not every translation is up to date, it will get you welll on the way.
+        <br/>
+    </div>
+
+    <div class='tbl2'>Vulnerabilities</div>
+    <div class='tbl1'>If you find any security issues please mail these to management@php-fusion.co.uk.<br/>
+    </div>
+
+    <div class='tbl2'>Additional Documentation</div>
+    <div class='tbl1'>For more documentation please visit <a href="https://www.php-fusion.co.uk/" target="_blank">PHP-Fusion Main</a> and click on the
+        various Documentation sections from the documentation menu that suit your needs.<br/>
+    </div>
+
+    <div class='tbl2'>ACKNOWLEDGEMENTS</div>
+    <div class='tbl1'>
+
+        <div style='float:left;width:26%;padding-left:150px;min-height:25px;margin:7px;'>
+            <strong>Project Manager</strong><br/>Joakim Falk {Falk} <br/>falk@php-fusion.co.uk
+        </div>
+        <div style='float:left;width:46%;min-height:25px;margin:7px;'><strong>Lead Developer</strong><br/>
+            Frederick MC Chan {Chan} <br/>chan@php-fusion.co.uk
+        </div>
+        <div style='clear:both;'></div>
+        <hr/>
+        <p><strong>A special thank you goes in no particular order to, </strong><br/><br/>
+			RobiNN - Solid Core Senior Developer.<br/>
+            karrak - Solid Core Senior Developer.<br/>
+            Ankur - Initial design SEO Engine.<br/>
+			Robert Gaudyn {Wooya} - Inspired Multilingal features, Initial Panels Admin handler design, RSS Panel, Panel positioning ideas, info panel base layout.<br/>
+            Marcus G - Initial design email template system.<br/>
+            janmol {Jan.M} - Beta testing and error reporting. (RiP)<br/>
+            helmuth - Beta testing and error reporting.<br/>
+            Kvido - Beta testing and error reporting.<br/>
+            Alex L - Beta testing and error reporting.<br/>
+			Wanabo - Multiple fixes provided.<br/>
+            SuNflOw - Multiple fixes provided.<br/>
+            Dennis Vorpahl {Webmeteor} - Multiple fixes provided.<br/>
+            dialektika - Multiple fixes provided.<br/>
+            Jugolo - Multiple fixes provided.<br/>
+            Dahlgren - Multiple fixes provided.<br/>
+            WuChEn - Multiple fixes provided.<br/>
+            Talocha - Multiple fixes provided.<br/>
+            Brendan Scarvell - XSS issues with live examples provided.<br/>
+            Routh - Help with upgrade script testing, Multiple fixes provided.<br/>
+            MiChAeLoKGB - BBCode Fixes provided.<br/>
+            Keddy - Multiple fixes provided.<br/>
+            ctokepa - Multiple spelling issues adjusted.<br/>
+			ferdi - Logo.<br/>
+            <br/>
+            A special thank you to all who have helped with locale translations.<br/>
+            It is very hard to list everyone that contributes in one way or another, esp to locales. <br/>
+            Some do full translations while others do some minor adjustments either by forums or directly by github.<br/>
+            Remember to give your self credits in the global.php as the inital locale author.<br/>
+    </div>
+</div>
+</body>
+</html>
