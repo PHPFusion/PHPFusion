@@ -1,6 +1,6 @@
 # PHP-Fusion 8
 
-A updated PHP-Fusion 7 that has many features PHP-Fusion 8 has to offer.
+An updated PHP-Fusion 7 that has many features PHP-Fusion 8 has to offer.
 
 ## Getting Started
 
