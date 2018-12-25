@@ -1,7 +1,7 @@
-<?php
+﻿<?php
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
+| Copyright (C) 2002 - 2011 Nick Jones
 | http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: setuser.php
@@ -15,9 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "maincore.php";
+require_once __DIR__."/maincore.php";
 
 redirect($settings['opening_page']);
 
-mysql_close($db_connect);
-?>
+dbclose();

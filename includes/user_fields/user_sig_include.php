@@ -27,7 +27,7 @@ if ($profile_method == "input") {
 	echo "<tr>\n";
 	echo "<td valign='top' class='tbl".$this->getErrorClass("user_sig")."'><label for='user_sig'>".$locale['uf_sig'].$required."</label></td>\n";
 	echo "<td class='tbl".$this->getErrorClass("user_sig")."'>";
-	echo "<textarea id='user_sig' name='user_sig' cols='60' rows='5' class='textbox form-control' style='width:295px'>".$user_sig."</textarea><br />\n";
+	echo "<textarea id='user_sig' name='user_sig' cols='60' rows='5' class='textbox' style='width:295px'>".$user_sig."</textarea><br />\n";
 	echo display_bbcodes("300px", "user_sig", "inputform", "smiley|b|i|u||center|small|url|mail|img|color");
 	echo "</td>\n</tr>\n";
 

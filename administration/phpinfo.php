@@ -16,7 +16,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../maincore.php";
+require_once __DIR__.'/../maincore.php';
 
 if (!checkrights("PI") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) { redirect("../index.php"); }
 
@@ -39,11 +39,7 @@ if ($_GET['page']==1) {
 	$phpinfo .= "<tr>\n<td class='tbl1' style='width:20%'>".$locale['403']."</td><td class='tbl1' style='text-align:right'>".$_SERVER['SERVER_SOFTWARE']."</td></tr>\n";
 	$phpinfo .= "<tr>\n<td class='tbl2' style='width:20%'>".$locale['404']."</td><td class='tbl2' style='text-align:right'>".phpversion()."</td></tr>\n";
 	$phpinfo .= "<tr>\n<td class='tbl1' style='width:20%'>".$locale['405']."</td><td class='tbl1' style='text-align:right'>".php_sapi_name()."</td></tr>\n";
-if ($pdo_enabled == "1") {
-	$phpinfo .= "<tr>\n<td class='tbl2' style='width:20%'>".$locale['406']."</td><td class='tbl2' style='text-align:right'>".$pdo->getAttribute(constant("PDO::ATTR_SERVER_VERSION"))."</td></tr>\n";
-	} else {
-	$phpinfo .= "<tr>\n<td class='tbl2' style='width:20%'>".$locale['406']."</td><td class='tbl2' style='text-align:right'>".mysql_get_server_info()."</td></tr>\n";
-	}
+	$phpinfo .= "<tr>\n<td class='tbl2' style='width:20%'>".$locale['406']."</td><td class='tbl2' style='text-align:right'>".db_server_info()."</td></tr>\n";
 	$phpinfo .= "<tr>\n<td class='tbl1' style='width:20%'>".$locale['407']."</td><td class='tbl1' style='text-align:right'>".$settings['version']."</td></tr>\n";
 	$phpinfo .= "<tr>\n<td class='tbl2' style='width:20%'>".$locale['408']."</td><td class='tbl2' style='text-align:right'>".DB_PREFIX."</td></tr>\n";
 	$phpinfo .= "<tr>\n<td class='tbl1' style='width:20%'>".$locale['409']."</td><td class='tbl1' style='text-align:right'>".COOKIE_PREFIX."</td></tr>\n";

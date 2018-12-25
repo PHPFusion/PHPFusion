@@ -16,14 +16,14 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../maincore.php";
+require_once __DIR__."/../maincore.php";
 require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."forum/options.php";
 
-if (!isset($_GET['thread_id']) || !isnum($_GET['thread_id'])) { redirect("index.php"); }
+if (!isset($_GET['thread_id']) || !isnum($_GET['thread_id'])) { redirect(BASEDIR."forum/index.php"); }
 
 if (iMEMBER) {
-	if (!isset($_GET['forum_id']) || !isnum($_GET['forum_id'])) { redirect("index.php"); }
+	if (!isset($_GET['forum_id']) || !isnum($_GET['forum_id'])) { redirect(BASEDIR."forum/index.php"); }
 		$result = dbquery(
 			"SELECT f.forum_access, f.forum_moderators, t.thread_id FROM ".DB_THREADS." t
 			INNER JOIN ".DB_FORUMS." f ON t.forum_id=f.forum_id
@@ -31,7 +31,7 @@ if (iMEMBER) {
 		);
 		if (dbrows($result)) {
 			$data = dbarray($result);
-			if (!checkgroup($data['forum_access'])) { redirect("index.php"); }
+			if (!checkgroup($data['forum_access'])) { redirect(BASEDIR."forum/index.php"); }
 			if (iSUPERADMIN) { define("iMOD", true); }
 			if (!defined("iMOD") && $data['forum_moderators']) {
 			$mod_groups = explode(".", $data['forum_moderators']);
@@ -41,17 +41,17 @@ if (iMEMBER) {
 		}
 		if (!defined("iMOD")) { define("iMOD", false); }
 	} else {
-		redirect("index.php");
+		redirect(BASEDIR."forum/index.php");
 	}
 } else {
 	define("iMOD", false);
 }
 
-if (!iMOD) { redirect("index.php"); }
+if (!iMOD) { redirect(BASEDIR."forum/index.php"); }
 
 if (isset($_POST['step']) && $_POST['step'] != "") { $_GET['step'] = $_POST['step']; }
 
-if (isset($_POST['canceldelete'])) { redirect("viewthread.php?forum_id=".$_GET['forum_id']."&thread_id=".$_GET['thread_id']); }
+if (isset($_POST['canceldelete'])) { redirect(BASEDIR."forum/viewthread.php?forum_id=".$_GET['forum_id']."&thread_id=".$_GET['thread_id']); }
 
 if (isset($_GET['step']) && $_GET['step'] == "renew") {
 	$result = dbquery(
@@ -67,17 +67,17 @@ if (isset($_GET['step']) && $_GET['step'] == "renew") {
 		$result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".time()."', forum_lastuser='".$data['post_author']."' WHERE forum_id='".$_GET['forum_id']."'");
 		opentable($locale['458']);
 		echo "<div style='text-align:center'><br />\n".$locale['459']."<br /><br />\n";
-		echo "<a href='viewforum.php?forum_id=".$_GET['forum_id']."'>".$locale['402']."</a><br /><br />\n";
-		echo "<a href='index.php'>".$locale['403']."</a><br /><br /></div>\n";
+		echo "<a href='".BASEDIR."forum/viewforum.php?forum_id=".$_GET['forum_id']."'>".$locale['402']."</a><br /><br />\n";
+		echo "<a href='".BASEDIR."forum/index.php'>".$locale['403']."</a><br /><br /></div>\n";
 		closetable();
 	} else {
-		redirect("index.php");
+		redirect(BASEDIR."forum/index.php");
 	}
 } elseif (isset($_GET['step']) && $_GET['step'] == "delete") {
 	opentable($locale['400']);
 	echo "<div style='text-align:center'><br />\n";
 	if (!isset($_POST['deletethread'])) {
-		echo "<form name='delform' method='post' action='".FUSION_SELF."?step=delete&amp;forum_id=".$_GET['forum_id']."&amp;thread_id=".$_GET['thread_id']."'>\n";
+		echo "<form name='delform' method='post' action='".BASEDIR."forum/options.php?step=delete&amp;forum_id=".$_GET['forum_id']."&amp;thread_id=".$_GET['thread_id']."'>\n";
 		echo $locale['404']."<br /><br />\n";
 		echo "<input type='submit' name='deletethread' value='".$locale['405']."' class='button' style='width:75px'>\n";
 		echo "<input type='submit' name='canceldelete' value='".$locale['406']."' class='button' style='width:75px'><br /><br />\n";
@@ -94,15 +94,19 @@ if (isset($_GET['step']) && $_GET['step'] == "renew") {
 
 		$threads_count = dbcount("(forum_id)", DB_THREADS, "forum_id='".$_GET['forum_id']."'") - 1;
 		$result = dbquery("DELETE FROM ".DB_POSTS." WHERE thread_id='".$_GET['thread_id']."'");
-		$del_posts = mysql_affected_rows();
+
+		$del_posts = db_affrows();
+
 		$result = dbquery("DELETE FROM ".DB_THREADS." WHERE thread_id='".$_GET['thread_id']."'");
 		$result = dbquery("DELETE FROM ".DB_THREAD_NOTIFY." WHERE thread_id='".$_GET['thread_id']."'");
 		$result = dbquery("SELECT attach_name FROM ".DB_FORUM_ATTACHMENTS." WHERE thread_id='".$_GET['thread_id']."'");
+
 		if (dbrows($result) != 0) {
 			while ($attach = dbarray($result)) {
 				@unlink(FORUM."attachments/".$attach['attach_name']);
 			}
 		}
+
 		$result = dbquery("DELETE FROM ".DB_FORUM_ATTACHMENTS." WHERE thread_id='".$_GET['thread_id']."'");
 
 		if ($threads_count > 0) {
@@ -121,8 +125,8 @@ if (isset($_GET['step']) && $_GET['step'] == "renew") {
 			$result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='0', forum_postcount=0, forum_threadcount=0, forum_lastuser='0' WHERE forum_id='".$_GET['forum_id']."'");
 		}
 		echo $locale['401']."<br /><br />\n";
-		echo "<a href='viewforum.php?forum_id=".$_GET['forum_id']."'>".$locale['402']."</a><br /><br />\n";
-		echo "<a href='index.php'>".$locale['403']."</a><br /><br />\n";
+		echo "<a href='".BASEDIR."forum/viewforum.php?forum_id=".$_GET['forum_id']."'>".$locale['402']."</a><br /><br />\n";
+		echo "<a href='".BASEDIR."forum/index.php'>".$locale['403']."</a><br /><br />\n";
 	}
 	echo "</div>\n";
 	closetable();
@@ -130,38 +134,38 @@ if (isset($_GET['step']) && $_GET['step'] == "renew") {
 	$result = dbquery("UPDATE ".DB_THREADS." SET thread_locked='1' WHERE thread_id='".$_GET['thread_id']."' AND thread_hidden='0'");
 	opentable($locale['410']);
 	echo "<div style='text-align:center'><br />\n".$locale['411']."<br /><br />\n";
-	echo "<a href='viewforum.php?forum_id=".$_GET['forum_id']."'>".$locale['402']."</a><br /><br />\n";
-	echo "<a href='index.php'>".$locale['403']."</a><br /><br />\n</div>\n";
+	echo "<a href='".BASEDIR."forum/viewforum.php?forum_id=".$_GET['forum_id']."'>".$locale['402']."</a><br /><br />\n";
+	echo "<a href='".BASEDIR."forum/index.php'>".$locale['403']."</a><br /><br />\n</div>\n";
 	closetable();
 } elseif (isset($_GET['step']) && $_GET['step'] == "unlock") {
 	$result = dbquery("UPDATE ".DB_THREADS." SET thread_locked='0' WHERE thread_id='".$_GET['thread_id']."' AND thread_hidden='0'");
 	opentable($locale['420']);
 	echo "<div style='text-align:center'><br />\n".$locale['421']."<br /><br />\n";
-	echo "<a href='viewforum.php?forum_id=".$_GET['forum_id']."'>".$locale['402']."</a><br /><br />\n";
-	echo "<a href='index.php'>".$locale['403']."</a><br /><br />\n</div>\n";
+	echo "<a href='".BASEDIR."forum/viewforum.php?forum_id=".$_GET['forum_id']."'>".$locale['402']."</a><br /><br />\n";
+	echo "<a href='".BASEDIR."forum/index.php'>".$locale['403']."</a><br /><br />\n</div>\n";
 	closetable();
 } elseif (isset($_GET['step']) && $_GET['step'] == "sticky") {
 	$result = dbquery("UPDATE ".DB_THREADS." SET thread_sticky='1' WHERE thread_id='".$_GET['thread_id']."' AND thread_hidden='0'");
 	opentable($locale['430']);
 	echo "<div style='text-align:center'><br />\n".$locale['431']."<br /><br />\n";
-	echo "<a href='viewforum.php?forum_id=".$_GET['forum_id']."'>".$locale['402']."</a><br /><br />\n";
-	echo "<a href='index.php'>".$locale['403']."</a><br /><br />\n</div>\n";
+	echo "<a href='".BASEDIR."forum/viewforum.php?forum_id=".$_GET['forum_id']."'>".$locale['402']."</a><br /><br />\n";
+	echo "<a href='".BASEDIR."forum/index.php'>".$locale['403']."</a><br /><br />\n</div>\n";
 	closetable();
 } elseif (isset($_GET['step']) && $_GET['step'] == "nonsticky") {
 	$result = dbquery("UPDATE ".DB_THREADS." SET thread_sticky='0' WHERE thread_id='".$_GET['thread_id']."' AND thread_hidden='0'");
 	opentable($locale['440']);
 	echo "<div style='text-align:center'><br />".$locale['441']."<br /><br />\n";
-	echo "<a href='viewforum.php?forum_id=".$_GET['forum_id']."'>".$locale['402']."</a><br /><br />\n";
-	echo "<a href='index.php'>".$locale['403']."</a><br /><br /></div>\n";
+	echo "<a href='".BASEDIR."forum/viewforum.php?forum_id=".$_GET['forum_id']."'>".$locale['402']."</a><br /><br />\n";
+	echo "<a href='".BASEDIR."forum/index.php'>".$locale['403']."</a><br /><br /></div>\n";
 	closetable();
 } elseif (isset($_GET['step']) && $_GET['step'] == "move") {
 	opentable($locale['450']);
 	if (isset($_POST['move_thread'])) {
 		//die(var_dump($_POST));
-		if (!isset($_POST['new_forum_id']) || !isnum($_POST['new_forum_id'])) { redirect("index.php"); }
+		if (!isset($_POST['new_forum_id']) || !isnum($_POST['new_forum_id'])) { redirect(BASEDIR."forum/index.php"); }
 
-		if (!dbcount("(forum_id)", DB_FORUMS, "forum_id='".$_POST['new_forum_id']."' AND ".groupaccess('forum_access'))) { redirect("../index.php"); }
-		if (!dbcount("(thread_id)", DB_THREADS, "thread_id='".$_GET['thread_id']."' AND thread_hidden='0'")) { redirect("../index.php"); }
+		if (!dbcount("(forum_id)", DB_FORUMS, "forum_id='".$_POST['new_forum_id']."' AND ".groupaccess('forum_access'))) { redirect(BASEDIR."forum/index.php"); }
+		if (!dbcount("(thread_id)", DB_THREADS, "thread_id='".$_GET['thread_id']."' AND thread_hidden='0'")) { redirect(BASEDIR."forum/index.php"); }
 
 		$result = dbquery("UPDATE ".DB_THREADS." SET forum_id='".$_POST['new_forum_id']."' WHERE thread_id='".$_GET['thread_id']."'");
 		$result = dbquery("UPDATE ".DB_POSTS." SET forum_id='".$_POST['new_forum_id']."' WHERE thread_id='".$_GET['thread_id']."'");
@@ -185,7 +189,7 @@ if (isset($_GET['step']) && $_GET['step'] == "renew") {
 		}
 
 		echo "<div style='text-align:center'><br />\n".$locale['452']."<br /><br />\n";
-		echo "<a href='index.php'>".$locale['403']."</a><br /><br />\n</div>\n";
+		echo "<a href='".BASEDIR."forum/index.php'>".$locale['403']."</a><br /><br />\n</div>\n";
 	} else {
 		$move_list = ""; $sel = "";
 		$result = dbquery("SELECT forum_id, forum_name FROM ".DB_FORUMS." WHERE forum_cat='0' ORDER BY forum_order");
@@ -202,7 +206,7 @@ if (isset($_GET['step']) && $_GET['step'] == "renew") {
 				}
 			}
 		}
-		echo "<form name='moveform' method='post' action='".FUSION_SELF."?step=move&forum_id=".$_GET['forum_id']."&amp;thread_id=".$_GET['thread_id']."'>\n";
+		echo "<form name='moveform' method='post' action='".BASEDIR."forum/options.php?step=move&forum_id=".$_GET['forum_id']."&amp;thread_id=".$_GET['thread_id']."'>\n";
 		echo "<table cellpadding='0' cellspacing='0' width='100%' class='tbl-border'>\n<tr>\n";
 		echo "<td class='tbl2' width='150'>".$locale['451']."</td>\n";
 		echo "<td class='tbl1'><select name='new_forum_id' class='textbox' style='width:250px;'>\n".$move_list."</select></td>\n";
@@ -212,7 +216,7 @@ if (isset($_GET['step']) && $_GET['step'] == "renew") {
 	}
 	closetable();
 } else {
-	redirect("index.php");
+	redirect(BASEDIR."forum/index.php");
 }
 
 require_once THEMES."templates/footer.php";

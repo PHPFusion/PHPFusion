@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "maincore.php";
+require_once __DIR__."/maincore.php";
 require_once THEMES."templates/header.php";
 require_once CLASSES."UserFields.class.php";
 require_once CLASSES."UserFieldsInput.class.php";
@@ -57,13 +57,12 @@ if ($settings['email_verification'] == "1") {
 		echo "<div class='tbl2' style='text-align:center; width:500px; margin: 5px auto 10px auto;'>".sprintf($locale['u200'], $data['user_email'])."\n<br />\n".$locale['u201']."\n</div>\n";
 	}
 }
-    
+echo "<div style='text-align:center; margin-bottom: 10px;'>".$locale['u100']."</div>";
 $userFields 						= new UserFields();
 $userFields->postName 				= "update_profile";
 $userFields->postValue 				= $locale['u105'];
 $userFields->userData 				= $userdata;
 $userFields->errorsArray 			= $errors;
-    $userFields->showAvatarInput    = true;
 $userFields->setUserNameChange($settings['userNameChange']);
 $userFields->displayInput();
 closetable();

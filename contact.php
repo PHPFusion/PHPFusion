@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "maincore.php";
+require_once __DIR__."/maincore.php";
 require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."contact.php";
 
@@ -80,7 +80,7 @@ if (isset($_POST['sendmessage'])) {
 } else {
 	opentable($locale['400']);
 	echo $locale['401']."<br /><br />\n";
-	echo "<form name='userform' method='post' action='".FUSION_SELF."'>\n";
+	echo "<form name='userform' method='post' action='".BASEDIR."contact.php'>\n";
 	echo "<table cellpadding='0' cellspacing='0' class='center'>\n<tr>\n";
 	echo "<td width='100' class='tbl'>".$locale['402']."</td>\n";
 	echo "<td class='tbl'><input type='text' name='mailname' maxlength='50' class='textbox' style='width: 200px;' /></td>\n";

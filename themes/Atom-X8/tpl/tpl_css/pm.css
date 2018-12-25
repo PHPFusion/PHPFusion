@@ -1,0 +1,39 @@
+#atom-pm-subnav {
+    height: 100px;
+    line-height: 46px;
+    border: none;
+    color: #999;
+    font-size: 12px;
+    background: #333;
+    background: -moz-linear-gradient(top,#272727 0%,#555555 100%);
+    background: -webkit-gradient(linear,left bottom,left top,color-stop(0%,#272727),color-stop(100%,#555555));
+    background: -webkit-linear-gradient(bottom,#272727 0%,#555555 100%);
+    background: -o-linear-gradient(top,#272727 0%,#555555 100%);
+    background: -ms-linear-gradient(top,#272727 0%,#555555 100%);
+    background: linear-gradient(to top,#272727 0%,#555555 100%);
+    padding: 10px 40px;
+}
+#atom-pm-subnav > nav {
+    margin-bottom: 0px !important;
+}
+#atom-pm-subnav .navbar-nav {
+    margin-top:15px;
+}
+#atom-pm-subnav .navbar-nav > li > a {
+    color:#fff !important;
+    text-shadow: none !important;
+    border-radius: 4px 4px 4px 4px;
+    border: 1px solid transparent;
+    padding: 6px 10px !important;
+    background: none;
+    margin-right: 10px;
+    font-size:12px;
+}
+
+#atom-pm-subnav .navbar-nav > li > a:hover, #atom-pm-subnav .navbar-nav > li > a:focus {
+    color:#fff;
+    text-shadow: none !important;
+    background: #000;
+    margin-right: 10px;
+
+}

@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "maincore.php";
+require_once __DIR__."/maincore.php";
 require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."weblinks.php";
 
@@ -29,7 +29,7 @@ if (isset($_GET['weblink_id']) && isnum($_GET['weblink_id'])) {
 			redirect($data['weblink_url']);
 		}
 	}
-	if ($res == 0) { redirect(FUSION_SELF); }
+	if ($res == 0) { redirect(BASEDIR."weblinks.php"); }
 }
 
 add_to_title($locale['global_200'].$locale['400']);
@@ -44,7 +44,7 @@ if (!isset($_GET['cat_id']) || !isnum($_GET['cat_id'])) {
 		while ($data = dbarray($result)) {
 			if ($counter != 0 && ($counter % $columns == 0)) { echo "</tr>\n<tr>\n"; }
 			$num = dbcount("(weblink_cat)", DB_WEBLINKS, "weblink_cat='".$data['weblink_cat_id']."'");
-			echo "<td valign='top' width='50%' class='tbl'><a href='".FUSION_SELF."?cat_id=".$data['weblink_cat_id']."'>".$data['weblink_cat_name']."</a> <span class='small2'>($num)</span>";
+			echo "<td valign='top' width='50%' class='tbl'><a href='".BASEDIR."weblinks.php?cat_id=".$data['weblink_cat_id']."'>".$data['weblink_cat_name']."</a> <span class='small2'>($num)</span>";
 			if ($data['weblink_cat_description'] != "") { echo "<br />\n<span class='small'>".$data['weblink_cat_description']."</span>"; }
 			echo "</td>\n";
 			$counter++;
@@ -75,21 +75,21 @@ if (!isset($_GET['cat_id']) || !isnum($_GET['cat_id'])) {
 						$new = "";
 					}
 					echo "<table width='100%' cellpadding='0' cellspacing='1' class='tbl-border'>\n";
-					echo "<tr>\n<td colspan='2' class='tbl2'><a href='".FUSION_SELF."?cat_id=".$_GET['cat_id']."&amp;weblink_id=".$data['weblink_id']."' target='_blank'>".$data['weblink_name']."</a>$new</td>\n</tr>\n";
+					echo "<tr>\n<td colspan='2' class='tbl2'><a href='".BASEDIR."weblinks.php?weblink_id=".$data['weblink_id']."' target='_blank'>".$data['weblink_name']."</a>$new</td>\n</tr>\n";
 					if ($data['weblink_description'] != "") echo "<tr>\n<td colspan='2' class='tbl1'>".nl2br(stripslashes($data['weblink_description']))."</td>\n</tr>\n";
 					echo "<tr>\n<td width='30%' class='tbl2'><strong>".$locale['411']."</strong> ".showdate("shortdate", $data['weblink_datestamp'])."</td>\n";
 					echo "<td width='70%' class='tbl1'><strong>".$locale['412']."</strong> ".$data['weblink_count']."</td>\n</tr>\n</table>\n";
 					if ($i != $numrows) { echo "<div align='center'><img src='".get_image("blank")."' alt='' height='15' width='1' /></div>\n"; $i++; }
 				}
 				closetable();
-				if ($rows > $settings['links_per_page']) { echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], $settings['links_per_page'], $rows, 3, FUSION_SELF."?cat_id=".$_GET['cat_id']."&amp;")."\n</div>\n"; }
+				if ($rows > $settings['links_per_page']) { echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], $settings['links_per_page'], $rows, 3, BASEDIR."weblinks.php?cat_id=".$_GET['cat_id']."&amp;")."\n</div>\n"; }
 			} else {
 				echo $locale['431']."\n";
 				closetable();
 			}
 		}
 	}
-	if ($res == 0) { redirect(FUSION_SELF); }
+	if ($res == 0) { redirect(BASEDIR."weblinks.php"); }
 }
 
 require_once THEMES."templates/footer.php";

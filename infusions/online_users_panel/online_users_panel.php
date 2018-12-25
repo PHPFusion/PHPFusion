@@ -45,7 +45,7 @@ echo THEME_BULLET." ".$locale['global_011'].": ".$guests."<br /><br />\n";
 echo THEME_BULLET." ".$locale['global_012'].": ".count($members)."<br />\n";
 if (count($members)) {
 	$i = 1;
-	while (list($key, $member) = each($members)) {
+	foreach($members as $member) {
 		echo "<span class='side'>".profile_link($member[0], $member[1], $member[2])."</span>";
 		if ($i != count($members)) { echo ",\n"; } else { echo "<br />\n"; }
 		$i++;

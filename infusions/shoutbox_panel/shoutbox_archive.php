@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../../maincore.php";
+require_once __DIR__.'/../../maincore.php';
 require_once THEMES."templates/header.php";
 
 include_once INFUSIONS."shoutbox_panel/infusion_db.php";
@@ -50,7 +50,7 @@ if (iMEMBER && (isset($_GET['action']) && $_GET['action'] == "delete") && (isset
 	if ((iADMIN && checkrights("S")) || (iMEMBER && dbcount("(shout_id)", DB_SHOUTBOX, "shout_id='".$_GET['shout_id']."' AND shout_name='".$userdata['user_id']."' AND shout_hidden='0'"))) {
 		$result = dbquery("DELETE FROM ".DB_SHOUTBOX." ".(multilang_table("SB") ?  "WHERE shout_language='".LANGUAGE."' AND" : "WHERE")." shout_id='".$_GET['shout_id']."'".(iADMIN ? "" : " AND shout_name='".$userdata['user_id']."'"));
 	}
-	redirect(FUSION_SELF);
+	redirect(BASEDIR."infusions/shoutbox_panel/shoutbox_archive.php");
 }
 
 function sbawrap($text) {
@@ -121,13 +121,13 @@ if (iMEMBER || $shout_settings['guest_shouts'] == "1") {
 					$result = dbquery("UPDATE ".DB_SHOUTBOX." SET shout_message='$archive_shout_message' WHERE shout_id='".$_GET['shout_id']."'".(iADMIN ? "" : " AND shout_name='".$userdata['user_id']."'"));
 				}
 			}
-			redirect(FUSION_SELF);
+			redirect(BASEDIR."infusions/shoutbox_panel/shoutbox_archive.php");
 		} elseif ($archive_shout_name && $archive_shout_message) {
 			require_once INCLUDES."flood_include.php";
 			if (!flood_control("shout_datestamp", DB_SHOUTBOX, "shout_ip='".USER_IP."'")) {
 				$result = dbquery("INSERT INTO ".DB_SHOUTBOX." (shout_name, shout_message, shout_datestamp, shout_ip, shout_ip_type, shout_hidden".(multilang_table("SB")?", shout_language)":")")." VALUES ('$archive_shout_name', '$archive_shout_message', '".time()."', '".USER_IP."', '".USER_IP_TYPE."', '0'".(multilang_table("SB")?", '".LANGUAGE."')":")"));
 				}
-			redirect(FUSION_SELF);
+			redirect(BASEDIR."infusions/shoutbox_panel/shoutbox_archive.php");
 		}
 	}
 	if (iMEMBER && (isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['shout_id']) && isnum($_GET['shout_id']))) {
@@ -145,15 +145,15 @@ if (iMEMBER || $shout_settings['guest_shouts'] == "1") {
 				} else {
 					$edit_url = "";
 				}
-				$archive_shout_link = FUSION_SELF.$edit_url;
+				$archive_shout_link = BASEDIR."infusions/shoutbox_panel/shoutbox_archive.php".$edit_url;
 				$archive_shout_message = $esdata['shout_message'];
 			}
 		} else {
-			$archive_shout_link = FUSION_SELF;
+			$archive_shout_link = BASEDIR."infusions/shoutbox_panel/shoutbox_archive.php";
 			$archive_shout_message = "";
 		}
 	} else {
-		$archive_shout_link = FUSION_SELF;
+		$archive_shout_link = BASEDIR."infusions/shoutbox_panel/shoutbox_archive.php";
 		$archive_shout_message = "";
 	}
 	echo "<form name='archive_form' method='post' action='".$archive_shout_link."'>\n";
@@ -190,8 +190,8 @@ if ($rows != 0) {
 	while ($data = dbarray($result)) {
 		echo "<div class='tbl2'>\n";
 		if ((iADMIN && checkrights("S")) || (iMEMBER && $data['shout_name'] == $userdata['user_id'] && isset($data['user_name']))) {
-			echo "<div style='float:right'>\n<a href='".FUSION_SELF."?action=edit&amp;shout_id=".$data['shout_id']."'>".$locale['SB_edit']."</a> |\n";
-			echo "<a href='".FUSION_SELF."?action=delete&amp;shout_id=".$data['shout_id']."'>".$locale['SB_delete']."</a>\n</div>\n";
+			echo "<div style='float:right'>\n<a href='".BASEDIR."infusions/shoutbox_panel/shoutbox_archive.php?action=edit&amp;shout_id=".$data['shout_id']."'>".$locale['SB_edit']."</a> |\n";
+			echo "<a href='".BASEDIR."infusions/shoutbox_panel/shoutbox_archive.php?action=delete&amp;shout_id=".$data['shout_id']."'>".$locale['SB_delete']."</a>\n</div>\n";
 		}
 		if ($data['user_name']) {
 			echo "<span class='comment-name'><span class='slink'>".profile_link($data['user_id'], $data['user_name'], $data['user_status'])."</span>\n</span>\n";
@@ -206,7 +206,7 @@ if ($rows != 0) {
 }
 closetable();
 
-echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], 20, $rows, 3, FUSION_SELF."?")."\n</div>\n";
+echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], 20, $rows, 3, BASEDIR."infusions/shoutbox_panel/shoutbox_archive.php?")."\n</div>\n";
 
 require_once THEMES."templates/footer.php";
 ?>

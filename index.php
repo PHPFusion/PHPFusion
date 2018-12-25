@@ -15,12 +15,54 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "maincore.php";
+require_once __DIR__."/maincore.php";
 
-if (empty($settings['opening_page']) || $settings['opening_page'] == "index.php" || $settings['opening_page'] == "/") {
-	redirect("news.php");
+if ($settings['site_seo'] && !isset($_GET['aid'])) {
+    define("IN_PERMALINK", TRUE);
+    $router = PHPFusion\Rewrite\Router::getRouterInstance();
+    $router->rewritePage();
+    $filepath = $router->getFilePath();
+    if (empty($filepath) && filter_var(PERMALINK_CURRENT_PATH, FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED)) {
+        redirect(PERMALINK_CURRENT_PATH);
+    } else {
+        if (isset($_GET['lang']) && valid_language($_GET['lang'])) {
+            $lang = stripinput($_GET['lang']);
+            set_language($lang);
+            $redirectPath = clean_request("", ["lang"], FALSE);
+            redirect($redirectPath);
+        } else {
+            if (isset($_GET['logout']) && $_GET['logout'] == "yes") {
+                $userdata = Authenticate::logOut();
+                redirect(BASEDIR.$settings['opening_page']);
+            } else {
+                if (!empty($filepath)) {
+                    if ($filepath == "index.php") {
+                        redirect(BASEDIR.$settings['opening_page']);
+                    } else {
+                        require_once $filepath;
+                    }
+                } else {
+                    if ($_SERVER['REQUEST_URI'] == $settings['site_path'].$settings['opening_page']
+                        or $_SERVER['REQUEST_URI'] == $settings['site_path']."index.php"
+                        or $_SERVER['REQUEST_URI'] == $settings['site_path']
+                    ) {
+                        redirect(BASEDIR.$settings['opening_page']);
+                    } else {
+                        $router->setPathtofile("error.php");
+                        $params = [
+                            "code" => "404",
+                        ];
+                        $router->setGetParameters($params);
+                        $router->setservervars();
+                        $router->setquerystring();
+                        require_once BASEDIR."error.php";
+                    }
+                }
+            }
+        }
+    }
 } else {
-	redirect($settings['opening_page']);
+    redirect(BASEDIR.$settings['opening_page']);
 }
 
-?>
+dbclose();

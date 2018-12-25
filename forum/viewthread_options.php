@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-if (!defined("iMOD") || !iMOD) { redirect("index.php"); }
+if (!defined("iMOD") || !iMOD) { redirect(BASEDIR."forum/index.php"); }
 
 if (isset($_POST['delete_posts']) && isset($_POST['delete_post']) && is_array($_POST['delete_post']) && count($_POST['delete_post'])) {
 	$del_posts = ""; $i = 0; $post_count = 0;
@@ -62,7 +62,7 @@ if (isset($_POST['delete_posts']) && isset($_POST['delete_post']) && is_array($_
 		$forum_lastpost = "forum_lastpost='0', forum_lastuser='0'";
 	}
 	$result = dbquery("UPDATE ".DB_FORUMS." SET ".$forum_lastpost.(!$thread_count ? ", forum_threadcount=forum_threadcount-1," : ",")." forum_postcount=forum_postcount-".$post_count." WHERE forum_id = '".$fdata['forum_id']."'");
-	if (!$thread_count) { redirect("viewforum.php?forum_id=".$fdata['forum_id']); }
+	if (!$thread_count) { redirect(BASEDIR."forum/viewforum.php?forum_id=".$fdata['forum_id']); }
 } elseif (isset($_POST['move_posts']) && isset($_POST['delete_post']) && is_array($_POST['delete_post']) && count($_POST['delete_post'])) {
 	$move_posts = ""; $array_post = array(); $f_post = false; $dell_f_post = false; $f_post_blo = false;
 	$first_post = dbarray(dbquery("SELECT post_id FROM ".DB_POSTS." WHERE thread_id='".$fdata['thread_id']."' ORDER BY post_datestamp ASC LIMIT 1"));
@@ -95,7 +95,7 @@ if (isset($_POST['delete_posts']) && isset($_POST['delete_post']) && is_array($_
 				}
 				if ($dell_f_post && count($array_post) == 1) {
 					echo "<br /><strong>".$locale['607']."</strong><br /><br />\n";
-					echo "<a href='".FORUM."viewthread.php?thread_id=".$pdata['thread_id']."&amp;rowstart=".$_GET['rowstart']."'>".$locale['609']."</a>";
+					echo "<a href='".BASEDIR."forum/viewthread.php?thread_id=".$pdata['thread_id']."&amp;rowstart=".$_GET['rowstart']."'>".$locale['609']."</a>";
 					$f_post_blo = true;
 				}	
 				echo "</div></div>\n";
@@ -125,7 +125,7 @@ if (isset($_POST['delete_posts']) && isset($_POST['delete_post']) && is_array($_
 						$forum_list .= "<option value='".$fl_data['forum_id']."'$sel>".$fl_data['forum_name']."</option>\n";
 					}
 					$forum_list .= "</optgroup>\n";
-					echo "<form name='modopts' method='post' action='".FUSION_SELF."?thread_id=".$fdata['thread_id']."&amp;rowstart=".$_GET['rowstart']."'>\n"; 
+					echo "<form name='modopts' method='post' action='".BASEDIR."forum/viewthread.php?thread_id=".$fdata['thread_id']."&amp;rowstart=".$_GET['rowstart']."'>\n"; 
 					echo "<table cellpadding='0' cellspacing='0' width='100%' align='center'>\n<tr>\n";
 					echo "<td style='padding-top:5px' align='center'>".$locale['601']."\n";
 					echo "<select name='new_forum_id' class='textbox'>\n$forum_list</select>\n";
@@ -135,7 +135,7 @@ if (isset($_POST['delete_posts']) && isset($_POST['delete_post']) && is_array($_
 				} else {
 					echo "<div id='close-message'><div class='admin-message'><br />\n";
 					echo "<strong>".$locale['610']."</strong><br /><br />\n";
-					echo "<a href='".FORUM."viewthread.php?thread_id=".$pdata['thread_id']."&amp;rowstart=".$_GET['rowstart']."'>".$locale['609']."</a><br /><br />\n";
+					echo "<a href='".BASEDIR."forum/viewthread.php?thread_id=".$pdata['thread_id']."&amp;rowstart=".$_GET['rowstart']."'>".$locale['609']."</a><br /><br />\n";
 					echo "</div></div>";
 				}
 			} elseif (isset($_POST['new_forum_id']) && isnum($_POST['new_forum_id']) && !isset($_POST['new_thread_id']) &&  !$f_post_blo) {
@@ -151,7 +151,7 @@ if (isset($_POST['delete_posts']) && isset($_POST['delete_post']) && is_array($_
 							$sel = ($tl_data['thread_id'] == $fdata['thread_id'] ? " selected='selected'" : "");
 							$forum_list .= "<option value='".$tl_data['thread_id']."'$sel>".$tl_data['thread_subject']."</option>\n";
 						}
-						echo "<form name='modopts' method='post' action='".FUSION_SELF."?thread_id=".$_GET['thread_id']."&amp;rowstart=".$_GET['rowstart']."&amp;sv'>\n"; 
+						echo "<form name='modopts' method='post' action='".BASEDIR."forum/viewthread.php?thread_id=".$_GET['thread_id']."&amp;rowstart=".$_GET['rowstart']."&amp;sv'>\n"; 
 						echo "<table cellpadding='0' cellspacing='0' width='100%' align='center'>\n<tr>\n";
 						echo "<td style='padding-top:5px' align='center'>".$locale['603']."\n";
 						echo "<input type='hidden' name='new_forum_id' value='".$_POST['new_forum_id']."' />\n";
@@ -162,13 +162,13 @@ if (isset($_POST['delete_posts']) && isset($_POST['delete_post']) && is_array($_
 						echo "</tr></table></form>";
 					} else { 
 						echo "<div id='close-message'><div class='admin-message'>".$locale['608']."<br /><br />\n";
-						echo "<a href='".FORUM."viewthread.php?thread_id=".$pdata['thread_id']."'>".$locale['609']."</a>\n";
+						echo "<a href='".BASEDIR."forum/viewthread.php?thread_id=".$pdata['thread_id']."'>".$locale['609']."</a>\n";
 						echo "</div></div><br />\n";
 					}
 			} elseif (isset($_GET['sv']) && isset($_POST['new_forum_id']) && isnum($_POST['new_forum_id']) && isset($_POST['new_thread_id']) && isnum($_POST['new_thread_id'])) {
 				$move_posts_add = "";
 				if (!dbcount("(thread_id)", DB_THREADS, "thread_id='".$_POST['new_thread_id']."' AND forum_id='".$_POST['new_forum_id']."'")) {
-					redirect(FORUM."viewthread.php?thread_id=".$fdata['thread_id']."&amp;rowstart=".$_GET['rowstart']."&amp;error=1");
+					redirect(BASEDIR."forum/viewthread.php?thread_id=".$fdata['thread_id']."&amp;rowstart=".$_GET['rowstart']."&amp;error=1");
 				}
 				foreach ($array_post as $move_post_id) {
 					if (isnum($move_post_id)) {
@@ -214,22 +214,22 @@ if (isset($_POST['delete_posts']) && isset($_POST['delete_post']) && is_array($_
 							$result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".$old_thread['post_datestamp']."', forum_postcount=forum_postcount-".$num_posts.", forum_lastuser='".$old_thread['post_author']."' WHERE forum_id='".$pdata['forum_id']."'");
 						}
 						$pid = count($array_post)-1;
-						redirect(FORUM."viewthread.php?thread_id=".$_POST['new_thread_id']."&amp;pid=".$array_post[$pid]."#post_".$array_post[$pid]);
+						redirect(BASEDIR."forum/viewthread.php?thread_id=".$_POST['new_thread_id']."&amp;pid=".$array_post[$pid]."#post_".$array_post[$pid]);
 					} else { 
-						redirect(FORUM."viewthread.php?thread_id=".$fdata['thread_id']."&amp;rowstart=".$_GET['rowstart']."&amp;error=2");
+						redirect(BASEDIR."forum/viewthread.php?thread_id=".$fdata['thread_id']."&amp;rowstart=".$_GET['rowstart']."&amp;error=2");
 					}
 				} else { 
-					redirect(FORUM."viewthread.php?thread_id=".$fdata['thread_id']."&amp;rowstart=".$_GET['rowstart']."&amp;error=3");
+					redirect(BASEDIR."forum/viewthread.php?thread_id=".$fdata['thread_id']."&amp;rowstart=".$_GET['rowstart']."&amp;error=3");
 				}
 			} else { 
-				redirect(FORUM."index.php");	
+				redirect(BASEDIR."forum/index.php");	
 				closetable();
 			}
 		} else { 
-			redirect(FORUM."viewthread.php?thread_id=".$fdata['thread_id']."&amp;rowstart=".$_GET['rowstart']."&amp;error=2");
+			redirect(BASEDIR."forum/viewthread.php?thread_id=".$fdata['thread_id']."&amp;rowstart=".$_GET['rowstart']."&amp;error=2");
 		}
 	} else { 
-		redirect(FORUM."viewthread.php?thread_id=".$fdata['thread_id']."&amp;rowstart=".$_GET['rowstart']."&amp;error=3");
+		redirect(BASEDIR."forum/viewthread.php?thread_id=".$fdata['thread_id']."&amp;rowstart=".$_GET['rowstart']."&amp;error=3");
 	}
 	closetable();
 	require_once THEMES."templates/footer.php";
@@ -247,7 +247,7 @@ if (isset($_POST['delete_posts']) && isset($_POST['delete_post']) && is_array($_
 	if ($message != "") {
 		opentable($locale['error-MP000']);
 		echo "<div id='close-message'><div class='admin-message'>".$message."<br /><br />\n";
-		echo "<a href='".FORUM."viewthread.php?thread_id=".$fdata['thread_id']."&amp;rowstart=".$_GET['rowstart']."'>".$locale['609']."</a><br />";
+		echo "<a href='".BASEDIR."forum/viewthread.php?thread_id=".$fdata['thread_id']."&amp;rowstart=".$_GET['rowstart']."'>".$locale['609']."</a><br />";
 		echo "</div></div>\n";
 		closetable();
 		require_once THEMES."templates/footer.php";

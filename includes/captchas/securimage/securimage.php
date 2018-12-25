@@ -61,6 +61,8 @@
 
 */
 
+require_once __DIR__."/../../../maincore.php";
+
 define('SI_IMAGE_JPEG', 1);
 define('SI_IMAGE_PNG',  2);
 define('SI_IMAGE_GIF',  3);
@@ -264,9 +266,13 @@ class Securimage {
     } else { //ttf font
       if($this->use_transparent_text == true) {
         $alpha = intval($this->text_transparency_percentage / 100 * 127);
-        $font_color = imagecolorallocatealpha($this->im, hexdec(substr($this->text_color, 1, 2)), hexdec(substr($this->text_color, 3, 2)), hexdec(substr($this->text_color, 5, 2)), $alpha);
+        //$font_color = imagecolorallocatealpha($this->im, hexdec(substr($this->text_color, 1, 2)), hexdec(substr($this->text_color, 3, 2)), hexdec(substr($this->text_color, 5, 2)), $alpha);
+		// changed for random colors:
+		$font_color = imagecolorallocatealpha($this->im, mt_rand(20,170), mt_rand(20,170), mt_rand(20,170), $alpha);
       } else {
-        $font_color = imagecolorallocate($this->im, hexdec(substr($this->text_color, 1, 2)), hexdec(substr($this->text_color, 3, 2)), hexdec(substr($this->text_color, 5, 2)));
+        //$font_color = imagecolorallocate($this->im, hexdec(substr($this->text_color, 1, 2)), hexdec(substr($this->text_color, 3, 2)), hexdec(substr($this->text_color, 5, 2)));
+		// changed for random colors:
+		$font_color = imagecolorallocate($this->im, mt_rand(20,170), mt_rand(20,170), mt_rand(20,170));
       }
 
       $x = $this->text_x_start;
@@ -284,9 +290,13 @@ class Securimage {
           $g = substr($colors[$idx], 3, 2);
           $b = substr($colors[$idx], 5, 2);
           if($this->use_transparent_text == true) {
-            $font_color = imagecolorallocatealpha($this->im, "0x$r", "0x$g", "0x$b", $alpha);
+            //$font_color = imagecolorallocatealpha($this->im, "0x$r", "0x$g", "0x$b", $alpha);
+			// changed for random colors:
+			$font_color = imagecolorallocatealpha($this->im, mt_rand(20,170), mt_rand(20,170), mt_rand(20,170), $alpha);
           } else {
-            $font_color = imagecolorallocate($this->im, "0x$r", "0x$g", "0x$b");
+            //$font_color = imagecolorallocate($this->im, "0x$r", "0x$g", "0x$b");
+			// changed for random colors:
+			$font_color = imagecolorallocate($this->im, mt_rand(20,170), mt_rand(20,170), mt_rand(20,170));
           }
         }
         @imagettftext($this->im, $this->font_size, $angle, $x, $y, $font_color, $this->ttf_file, $this->code{$i});
@@ -394,8 +404,8 @@ class Securimage {
 
   function saveData()
   {
-		$result = mysql_query("DELETE FROM ".DB_CAPTCHA." WHERE captcha_ip='".$_SERVER['REMOTE_ADDR']."'");
-		$result = mysql_query("INSERT INTO ".DB_CAPTCHA." (captcha_datestamp, captcha_ip, captcha_string) VALUES('".time()."', '".$_SERVER['REMOTE_ADDR']."', '".strtolower($this->code)."')");
+		$result = dbquery("DELETE FROM ".DB_CAPTCHA." WHERE captcha_ip='".$_SERVER['REMOTE_ADDR']."'");
+		$result = dbquery("INSERT INTO ".DB_CAPTCHA." (captcha_datestamp, captcha_ip, captcha_string) VALUES('".time()."', '".$_SERVER['REMOTE_ADDR']."', '".strtolower($this->code)."')");
   }
 
   function validate()
@@ -415,9 +425,9 @@ class Securimage {
 
   function getCode()
   {
-		$result = mysql_query("SELECT * FROM ".DB_CAPTCHA." WHERE captcha_ip='".$_SERVER['REMOTE_ADDR']."'");
-		if (mysql_num_rows($result)) {
-			$data = mysql_fetch_assoc($result);
+		$result = dbquery("SELECT * FROM ".DB_CAPTCHA." WHERE captcha_ip='".$_SERVER['REMOTE_ADDR']."'");
+		if (dbrows($result)) {
+			$data = dbarray($result);
 			return $data['captcha_string'];
 		} else {
 			return "";

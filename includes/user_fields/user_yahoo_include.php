@@ -25,7 +25,7 @@ if ($profile_method == "input") {
 	echo "<tr>\n";
 	echo "<td class='tbl".$this->getErrorClass("user_yahoo")."'><label for='user_yahoo'>".$locale['uf_yahoo'].$required."</label></td>\n";
 	echo "<td class='tbl".$this->getErrorClass("user_yahoo")."'>";
-	echo "<input type='text' id='user_yahoo' name='user_yahoo' value='".$user_yahoo."' maxlength='100' class='textbox form-control' style='width:200px;' />";
+	echo "<input type='text' id='user_yahoo' name='user_yahoo' value='".$user_yahoo."' maxlength='100' class='textbox' style='width:200px;' />";
 	echo "</td>\n</tr>\n";
 
 	if ($required) { $this->setRequiredJavaScript("user_yahoo", $locale['uf_yahoo_error']); }

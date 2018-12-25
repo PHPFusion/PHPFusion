@@ -1,5 +1,31 @@
 <?php
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) 2002 - 2011 PHP-Fusion International
+| http://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: theme.php
+| Author: PHP-Fusion Development Team
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
+
+// Uncomment to enable/disable styles
+// Disable Load Default CCS
+define('NO_DEFAULT_CSS', TRUE);
+
+// Disable Load Global CCS
+define('NO_GLOBAL_CSS', TRUE);
+
+// Enable Fontawesome
+// define('FONTAWESOME', TRUE);
 
 define("THEME_BULLET", "<span class='bullet'>&middot;</span>");
 
@@ -89,7 +115,6 @@ function render_comments($c_data, $c_info){
 }
 
 function render_news($subject, $news, $info) {
-
 	echo "<table cellpadding='0' cellspacing='0' width='100%'>\n<tr>\n";
 	echo "<td class='capmain-left'></td>\n";
 	echo "<td class='capmain'>".$subject."</td>\n";

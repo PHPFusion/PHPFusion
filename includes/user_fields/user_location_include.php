@@ -25,7 +25,7 @@ if ($profile_method == "input") {
 	echo "<tr>\n";
 	echo "<td class='tbl".$this->getErrorClass("user_location")."'><label for='user_location'>".$locale['uf_location'].$required."</label></td>\n";
 	echo "<td class='tbl".$this->getErrorClass("user_location")."'>";
-	echo "<input type='text' id='user_location' name='user_location' value='".$user_location."' maxlength='50' class='textbox form-control' style='width:200px;' />";
+	echo "<input type='text' id='user_location' name='user_location' value='".$user_location."' maxlength='50' class='textbox' style='width:200px;' />";
 	echo "</td>\n</tr>\n";
 
 	if ($required) { $this->setRequiredJavaScript("user_location", $locale['uf_location_error']); }

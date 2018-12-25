@@ -1,0 +1,9 @@
+a:hover.side {
+	color: #1487c9;
+	text-decoration: underline;
+}
+
+::selection { color: #fff; background: #1487c9; }
+::-moz-selection { color: #fff; background: #1487c9; }
+div.highlightBlue::selection { color: #fff; background: #1487c9; }
+div.highlightBlue::-moz-selection { color: #fff; background: #1487c9; }

@@ -20,7 +20,7 @@ class Switcher{
 	var $selected;
 	var $separator;
 	
-	function Switcher($mode, $dir, $ext, $default, $class="", $separator=" ", $auto=true, $args=""){
+	function __construct($mode, $dir, $ext, $default, $class="", $separator=" ", $auto=true, $args=""){
 		$this->args = $args;
 		$this->buttons = array();
 		$this->changed = false;

@@ -23,6 +23,7 @@ $locale['419'] = "You have no Private Messages";
 $locale['420'] = "Send Private Message";
 $locale['421'] = "To";
 $locale['422'] = "Message";
+$locale['422a'] = "Original Message";
 $locale['423'] = "BB Code";
 $locale['424'] = "Smileys";
 $locale['425'] = "Options";
@@ -70,7 +71,7 @@ $locale['482'] = "Wrong Member ID";
 $locale['483'] = "For Members only";
 $locale['484'] = "Your Private Messaging facility has been withdrawn due to misuse.";
 $locale['485'] = "Please select at least one message";
-$locale['486'] = "You must complete all fields: Subject and Message";
+$locale['486'] = "You must complete all fields: To, Subject and Message";
 $locale['487'] = "Flooding! Please wait %s seconds before you write the next message.";
 
 // Tooltips

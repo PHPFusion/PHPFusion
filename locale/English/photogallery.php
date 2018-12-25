@@ -6,14 +6,12 @@ $locale['403'] = "Date: ";
 $locale['404'] = "Created by: ";
 $locale['405'] = "Photos: ";
 $locale['406'] = "No Photos Albums defined.";
-
 $locale['420'] = "Album Information";
 $locale['421'] = "Album: ";
 $locale['422'] = "Number of photos: ";
 $locale['423'] = "Latest photo added by ";
 $locale['424'] = " on ";
 $locale['425'] = "No photos have been added to this album";
-
 $locale['430'] = "View Album";
 $locale['431'] = "Click to view";
 $locale['432'] = "No thumbnail";
@@ -24,7 +22,6 @@ $locale['436'] = "Comments: ";
 $locale['436b'] = "Comment: ";
 $locale['437'] = "Rating: ";
 $locale['438'] = "None";
-
 $locale['450'] = "View Photo";
 $locale['451'] = "Previous Photo";
 $locale['452'] = "Next Photo";

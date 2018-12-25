@@ -20,6 +20,7 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 if (iMEMBER && isset($_POST['cast_vote']) && 
 	(isset($_POST['poll_id']) && isnum($_POST['poll_id'])) && 
 		(isset($_POST['voteoption']) && isnum($_POST['voteoption']))) { 
+			
 		$result = dbquery("SELECT v.vote_user, v.vote_id, p.poll_opt_0, p.poll_opt_1, p.poll_opt_2, p.poll_opt_3, p.poll_opt_4, p.poll_opt_5, p.poll_opt_6, p.poll_opt_7, p.poll_opt_8, p.poll_opt_9, p.poll_started, p.poll_ended
 		FROM ".DB_POLLS." p 
 		LEFT JOIN ".DB_POLL_VOTES." v ON p.poll_id = v.poll_id
@@ -37,7 +38,7 @@ if (iMEMBER && isset($_POST['cast_vote']) &&
 			$result = dbquery("INSERT INTO ".DB_POLL_VOTES." (vote_user, vote_opt, poll_id) VALUES ('".$userdata['user_id']."', '".$_POST['voteoption']."', '".$_POST['poll_id']."')");
 		}
 	}
-	redirect(FUSION_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : ""));
+	redirect(FORM_REQUEST);
 }
 
 openside($locale['global_130']);
@@ -56,7 +57,7 @@ if (dbrows($result)) {
 			$poll .= "<label><input type='radio' name='voteoption' value='$i' /> $poll_option[$i]</label><br /><br />\n";
 			$i++;
 		}
-		echo "<form name='voteform' method='post' action='".FUSION_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : "")."'>\n";
+		echo "<form name='voteform' method='post' action='".FORM_REQUEST."'>\n";
 		echo "<strong>".$poll_title."</strong><br /><br />\n".$poll;
 		echo "<div style='text-align:center'><input type='hidden' name='poll_id' value='".$data['poll_id']."' />\n";
 		echo "<input type='submit' name='cast_vote' value='".$locale['global_131']."' class='button' />";

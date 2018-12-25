@@ -77,7 +77,7 @@ class LostPassword extends PasswordAuth {
 
 	public function renderInputForm () {
 		global $locale;
-		$this->_html .= "<div style='text-align:center'>\n<form name='passwordform' method='post' action='".FUSION_SELF."'>\n";
+		$this->_html .= "<div style='text-align:center'>\n<form name='passwordform' method='post' action='".BASEDIR."lostpassword.php'>\n";
 		$this->_html .= $locale['407']."<br /><br />\n";
 		$this->_html .= "<input type='text' name='email' class='textbox' maxlength='100' style='width:200px;' /><br /><br />\n";
 		$this->_html .= "<input type='submit' name='send_password' value='".$locale['408']."' class='button' />\n";

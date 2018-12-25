@@ -148,6 +148,10 @@ class Authenticate {
 		}
 
 	}
+	
+	 public static function expireAdminCookie() {
+        self::_setCookie(COOKIE_ADMIN, '', time() - 1209600, COOKIE_PATH, COOKIE_DOMAIN, FALSE, TRUE);
+    }
 
 	// Validate authenticated user
 	public static function validateAuthUser($userCookie = true) {

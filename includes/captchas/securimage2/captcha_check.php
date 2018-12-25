@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: captcha_check.php
 | Author: Hans Kristian Flaatten
@@ -19,7 +19,7 @@ require_once "securimage.php";
 
 // From register.php
 $securimage = new Securimage();
-if (isset($_POST['captcha_code']) && $securimage->check($_POST['captcha_code']) == true) {
-	$_CAPTCHA_IS_VALID = true;
+if (isset($_POST['captcha_code']) && $securimage->check($_POST['captcha_code']) == TRUE) {
+	$_CAPTCHA_IS_VALID = TRUE;
 }
-?>
+

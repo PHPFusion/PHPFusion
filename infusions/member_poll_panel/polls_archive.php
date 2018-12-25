@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../../maincore.php";
+require_once __DIR__.'/../../maincore.php';
 require_once THEMES."templates/header.php";
 
 add_to_title($locale['global_200'].$locale['global_138']);
@@ -28,7 +28,7 @@ if (dbrows($result)) {
 	}
 	opentable($locale['global_138']);
 	echo "<div style='text-align:center'>\n";
-	echo "<form name='pollsform' method='post' action='".FUSION_SELF."'>\n";
+	echo "<form name='pollsform' method='post' action='".FORM_REQUEST."'>\n";
 	echo $locale['global_139']."<br />\n";
 	echo "<select name='viewpoll_id' class='textbox'>\n".$view_list."</select>\n";
 	echo "<input type='submit' name='view' value='".$locale['global_140']."' class='button' />\n";

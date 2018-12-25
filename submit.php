@@ -16,14 +16,14 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "maincore.php";
+require_once __DIR__."/maincore.php";
 require_once THEMES."templates/header.php";
 include_once INCLUDES."bbcode_include.php";
 include LOCALE.LOCALESET."submit.php";
 
-if (!iMEMBER) { redirect("index.php"); }
+if (!iMEMBER) { redirect(BASEDIR."index.php"); }
 
-if (!isset($_GET['stype']) || !preg_check("/^[a-z]$/", $_GET['stype'])) { redirect("index.php"); }
+if (!isset($_GET['stype']) || !preg_check("/^[a-z]$/", $_GET['stype'])) { redirect(BASEDIR."index.php"); }
 
 $submit_info = array();
 
@@ -46,13 +46,13 @@ if ($_GET['stype'] == "l") {
 		$opts = "";
 		add_to_title($locale['global_200'].$locale['400']);
 		opentable($locale['400']);
-		$result = dbquery("SELECT weblink_cat_id, weblink_cat_name FROM ".DB_WEBLINK_CATS." WHERE ".groupaccess("weblink_cat_access")." ORDER BY weblink_cat_name");
+		$result = dbquery("SELECT weblink_cat_id, weblink_cat_name FROM ".DB_WEBLINK_CATS." ".(multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess("weblink_cat_access")." ORDER BY weblink_cat_name");
 		if (dbrows($result)) {
 			while ($data = dbarray($result)) {
 				$opts .= "<option value='".$data['weblink_cat_id']."'>".$data['weblink_cat_name']."</option>\n";
 			}
 			echo "<div class='submission-guidelines'>".$locale['420']."</div>\n";
-			echo "<form name='submit_form' method='post' action='".FUSION_SELF."?stype=l' onsubmit='return validateLink(this);'>\n";
+			echo "<form name='submit_form' method='post' action='".BASEDIR."submit.php?stype=l' onsubmit='return validateLink(this);'>\n";
 			echo "<table cellpadding='0' cellspacing='0' class='center'>\n";
 			echo "<tr>\n<td class='tbl'>".$locale['421']."</td>\n";
 			echo "<td class='tbl'><select name='link_category' class='textbox'>\n$opts</select></td>\n";
@@ -107,7 +107,7 @@ if ($_GET['stype'] == "l") {
 			$news_body = "";
 		}
 		$cat_list = ""; $sel = "";
-		$result2 = dbquery("SELECT news_cat_id, news_cat_name FROM ".DB_NEWS_CATS." ORDER BY news_cat_name");
+		$result2 = dbquery("SELECT news_cat_id, news_cat_name, news_cat_language FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."'" : "")." ORDER BY news_cat_name");
 		if (dbrows($result2)) {
 			while ($data2 = dbarray($result2)) {
 				if (isset($_POST['preview_news'])) { $sel = ($news_cat == $data2['news_cat_id'] ? " selected" : ""); }
@@ -117,7 +117,7 @@ if ($_GET['stype'] == "l") {
 		add_to_title($locale['global_200'].$locale['450']);
 		opentable($locale['450']);
 		echo "<div class='submission-guidelines'>".$locale['470']."</div>\n";
-		echo "<form name='submit_form' method='post' action='".FUSION_SELF."?stype=n' onsubmit='return validateNews(this);'>\n";
+		echo "<form name='submit_form' method='post' action='".BASEDIR."submit.php?stype=n' onsubmit='return validateNews(this);'>\n";
 		echo "<table cellpadding='0' cellspacing='0' class='center'>\n<tr>\n";
 		echo "<td class='tbl'>".$locale['471']."<span style='color:#ff0000'>*</span></td>\n";
 		echo "<td class='tbl'><input type='text' name='news_subject' value='$news_subject' maxlength='64' class='textbox' style='width:300px;' /></td>\n";
@@ -142,6 +142,77 @@ if ($_GET['stype'] == "l") {
 		echo "<td align='center' colspan='2' class='tbl'><br /><br />\n";
 		echo "<input type='submit' name='preview_news' value='".$locale['474']."' class='button' />\n";
 		echo "<input type='submit' name='submit_news' value='".$locale['475']."' class='button' />\n</td>\n";
+		echo "</tr>\n</table>\n</form>\n";
+		closetable();
+	}
+} elseif ($_GET['stype'] == "b") {
+	if (isset($_POST['submit_blog'])) {
+		if ($_POST['blog_subject'] != "" && $_POST['blog_body'] != "") {
+			$submit_info['blog_subject'] = stripinput($_POST['blog_subject']);
+			$submit_info['blog_cat'] = isnum($_POST['blog_cat']) ? $_POST['blog_cat'] : "0";
+			$submit_info['blog_snippet'] = nl2br(parseubb(stripinput($_POST['blog_snippet'])));
+			$submit_info['blog_body'] = nl2br(parseubb(stripinput($_POST['blog_body'])));
+			$result = dbquery("INSERT INTO ".DB_SUBMISSIONS." (submit_type, submit_user, submit_datestamp, submit_criteria) VALUES('b', '".$userdata['user_id']."', '".time()."', '".addslashes(serialize($submit_info))."')");
+			add_to_title($locale['global_200'].$locale['450b']);
+			opentable($locale['450b']);
+			echo "<div style='text-align:center'><br />\n".$locale['460b']."<br /><br />\n";
+			echo "<a href='submit.php?stype=n'>".$locale['461b']."</a><br /><br />\n";
+			echo "<a href='index.php'>".$locale['412']."</a><br /><br />\n</div>\n";
+			closetable();
+		}
+	} else {
+		if (isset($_POST['preview_blog'])) {
+			$blog_subject = stripinput($_POST['blog_subject']);
+			$blog_cat = isnum($_POST['blog_cat']) ? $_POST['blog_cat'] : "0";
+			$blog_snippet = stripinput($_POST['blog_snippet']);
+			$blog_body = stripinput($_POST['blog_body']);
+			opentable($blog_subject);
+			echo $locale['478b']." ".nl2br(parseubb($blog_snippet))."<br /><br />";
+			echo $locale['472b']." ".nl2br(parseubb($blog_body));
+			closetable();
+		}
+		if (!isset($_POST['preview_blog'])) {
+			$blog_subject = "";
+			$blog_cat = "0";
+			$blog_snippet = "";
+			$blog_body = "";
+		}
+		$cat_list = ""; $sel = "";
+		$result2 = dbquery("SELECT blog_cat_id, blog_cat_name, blog_cat_language FROM ".DB_PREFIX."blog_cats ".(multilang_table("BL") ? "WHERE blog_cat_language='".LANGUAGE."'" : "")." ORDER BY blog_cat_name");
+		if (dbrows($result2)) {
+			while ($data2 = dbarray($result2)) {
+				if (isset($_POST['preview_blog'])) { $sel = ($blog_cat == $data2['blog_cat_id'] ? " selected" : ""); }
+				$cat_list .= "<option value='".$data2['blog_cat_id']."'".$sel.">".$data2['blog_cat_name']."</option>\n";
+			}
+		}
+		add_to_title($locale['global_200'].$locale['450b']);
+		opentable($locale['450b']);
+		echo "<div class='submission-guidelines'>".$locale['470b']."</div>\n";
+		echo "<form name='submit_form' method='post' action='".BASEDIR."submit.php?stype=b' onsubmit='return validateBlog(this);'>\n";
+		echo "<table cellpadding='0' cellspacing='0' class='center'>\n<tr>\n";
+		echo "<td class='tbl'>".$locale['471b']."<span style='color:#ff0000'>*</span></td>\n";
+		echo "<td class='tbl'><input type='text' name='blog_subject' value='$blog_subject' maxlength='64' class='textbox' style='width:300px;' /></td>\n";
+		echo "</tr>\n<tr>\n";
+		echo "<td width='100' class='tbl'>".$locale['476b']."</td>\n";
+		echo "<td width='80%' class='tbl'><select name='blog_cat' class='textbox'>\n<option value='0'>".$locale['477b']."</option>\n".$cat_list."</select></td>\n";
+		echo "</tr>\n<tr>\n";
+		echo "<td valign='top' class='tbl'>".$locale['478b']."</td>\n";
+		echo "<td class='tbl'><textarea name='blog_snippet' cols='60' rows='8' class='textbox dummy_classname' style='width:300px;'>$blog_snippet</textarea></td>\n";
+		echo "</tr>\n";
+		echo "<tr>\n<td class='tbl'></td>\n<td class='tbl'>\n";
+		echo display_bbcodes("100%", "blog_snippet", "submit_form", "b|i|u|center|small|url|mail|img|color");
+		echo "</td>\n</tr>\n";
+		echo "<tr>\n";
+		echo "<td valign='top' class='tbl'>".$locale['472b']."<span style='color:#ff0000'>*</span></td>\n";
+		echo "<td class='tbl'><textarea name='blog_body' cols='60' rows='8' class='textbox dummy_classname' style='width:300px;'>$blog_body</textarea></td>\n";
+		echo "</tr>\n";
+		echo "<tr>\n<td class='tbl'></td>\n<td class='tbl'>\n";
+		echo display_bbcodes("100%", "blog_body", "submit_form", "b|i|u|center|small|url|mail|img|color");
+		echo "</td>\n</tr>\n";
+		echo "<tr>\n";
+		echo "<td align='center' colspan='2' class='tbl'><br /><br />\n";
+		echo "<input type='submit' name='preview_blog' value='".$locale['474b']."' class='button' />\n";
+		echo "<input type='submit' name='submit_blog' value='".$locale['475b']."' class='button' />\n</td>\n";
 		echo "</tr>\n</table>\n</form>\n";
 		closetable();
 	}
@@ -180,14 +251,14 @@ if ($_GET['stype'] == "l") {
 		$cat_list = ""; $sel = "";
 		add_to_title($locale['global_200'].$locale['500']);
 		opentable($locale['500']);
-		$result = dbquery("SELECT article_cat_id, article_cat_name FROM ".DB_ARTICLE_CATS." WHERE ".groupaccess("article_cat_access")." ORDER BY article_cat_name");
+		$result = dbquery("SELECT article_cat_id, article_cat_name FROM ".DB_ARTICLE_CATS." ".(multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess("article_cat_access")." ORDER BY article_cat_name");
 		if (dbrows($result)) {
 			while ($data = dbarray($result)) {
 				if (isset($_POST['preview_article'])) { $sel = $article_cat == $data['article_cat_id'] ? " selected" : ""; }
 				$cat_list .= "<option value='".$data['article_cat_id']."'".$sel.">".$data['article_cat_name']."</option>\n";
 			}
 			echo "<div class='submission-guidelines'>".$locale['520']."</div>\n";
-			echo "<form name='submit_form' method='post' action='".FUSION_SELF."?stype=a' onsubmit='return validateArticle(this);'>\n";
+			echo "<form name='submit_form' method='post' action='".BASEDIR."submit.php?stype=a' onsubmit='return validateArticle(this);'>\n";
 			echo "<table cellpadding='0' cellspacing='0' class='center'>\n<tr>\n";
 			echo "<td width='100' class='tbl'>".$locale['521']."</td>\n";
 			echo "<td class='tbl'><select name='article_cat' class='textbox'>\n$cat_list</select></td>\n";
@@ -273,11 +344,11 @@ if ($_GET['stype'] == "l") {
 		$opts = "";
 		add_to_title($locale['global_200'].$locale['570']);
 		opentable($locale['570']);
-		$result = dbquery("SELECT album_id, album_title FROM ".DB_PHOTO_ALBUMS." WHERE ".groupaccess("album_access")." ORDER BY album_title");
+		$result = dbquery("SELECT album_id, album_title FROM ".DB_PHOTO_ALBUMS." ".(multilang_table("PG") ? "WHERE album_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess("album_access")." ORDER BY album_title");
 		if (dbrows($result)) {
 			while ($data = dbarray($result)) $opts .= "<option value='".$data['album_id']."'>".$data['album_title']."</option>\n";
 			echo "<div class='submission-guidelines'>".$locale['620']."</div>\n";
-			echo "<form name='submit_form' method='post' action='".FUSION_SELF."?stype=p' enctype='multipart/form-data' onsubmit='return validatePhoto(this);'>\n";
+			echo "<form name='submit_form' method='post' action='".BASEDIR."submit.php?stype=p' enctype='multipart/form-data' onsubmit='return validatePhoto(this);'>\n";
 			echo "<table cellpadding='0' cellspacing='0' class='center'>\n<tr>\n";
 			echo "<td class='tbl'>".$locale['621']."<span style='color:#ff0000'>*</span></td>\n";
 			echo "<td class='tbl'><input type='text' name='photo_title' maxlength='100' class='textbox' style='width:250px;' /></td>\n";
@@ -410,11 +481,11 @@ if ($_GET['stype'] == "l") {
 		$opts = "";
 		add_to_title($locale['global_200'].$locale['650']);
 		opentable($locale['650']);
-		$result = dbquery("SELECT download_cat_id, download_cat_name FROM ".DB_DOWNLOAD_CATS." WHERE ".groupaccess("download_cat_access")." ORDER BY download_cat_name");
+		$result = dbquery("SELECT download_cat_id, download_cat_name FROM ".DB_DOWNLOAD_CATS." ".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess("download_cat_access")." ORDER BY download_cat_name");
 		if (dbrows($result)) {
 			while ($data = dbarray($result)) $opts .= "<option value='".$data['download_cat_id']."'>".$data['download_cat_name']."</option>\n";
 			echo "<div class='submission-guidelines'>".$locale['680']."</div>\n";
-			echo "<form name='submit_form' method='post' action='".FUSION_SELF."?stype=d' enctype='multipart/form-data' onsubmit='return validateDownload(this);'>\n";
+			echo "<form name='submit_form' method='post' action='".BASEDIR."submit.php?stype=d' enctype='multipart/form-data' onsubmit='return validateDownload(this);'>\n";
 			echo "<table cellpadding='0' cellspacing='0' class='center' style='width:500px;'>\n<tr>\n";
 			echo "<td class='tbl1' style='width:80px;'>".$locale['681']."<span style='color:#ff0000'>*</span></td>\n";
 			echo "<td class='tbl1'><input type='text' name='download_title' class='textbox' style='width:380px;' /></td>\n";
@@ -503,7 +574,7 @@ if ($_GET['stype'] == "l") {
 		closetable();
 	}
 } else {
-	redirect("index.php");
+	redirect(BASEDIR."index.php");
 }
 
 $submit_js  = '<script type="text/javascript">';
@@ -517,6 +588,12 @@ $submit_js .=  "}";
 /************ news ******/
 $submit_js .=  "function validateNews(frm){";
 $submit_js .=    'if(frm.news_subject.value=="" || frm.news_body.value==""){';
+$submit_js .=      'alert("'.$locale['550'].'"); return false;';
+$submit_js .=    "}";
+$submit_js .=  "}";
+/************ blog ******/
+$submit_js .=  "function validateBlog(frm){";
+$submit_js .=    'if(frm.blog_subject.value=="" || frm.blog_body.value==""){';
 $submit_js .=      'alert("'.$locale['550'].'"); return false;';
 $submit_js .=    "}";
 $submit_js .=  "}";

@@ -25,7 +25,7 @@ if ($profile_method == "input") {
 	echo "<tr>\n";
 	echo "<td class='tbl".$this->getErrorClass("user_icq")."'><label for='user_icq'>".$locale['uf_icq'].$required."</label></td>\n";
 	echo "<td class='tbl".$this->getErrorClass("user_icq")."'>";
-	echo "<input type='text' id='user_icq' name='user_icq' value='".$user_icq."' maxlength='16' class='textbox form-control' style='width:200px;' />";
+	echo "<input type='text' id='user_icq' name='user_icq' value='".$user_icq."' maxlength='16' class='textbox' style='width:200px;' />";
 	echo "</td>\n</tr>\n";
 	
 	if ($required) { $this->setRequiredJavaScript("user_icq", $locale['uf_icq_error']); }

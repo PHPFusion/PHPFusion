@@ -11,7 +11,6 @@ $locale['407'] = "PHP-Fusion version";
 $locale['408'] = "Database prefix";
 $locale['409'] = "Cookie prefix";
 $locale['410'] = "Webbrowser and OS";
-
 //PHP settings
 $locale['420'] = "PHP settings";
 $locale['421'] = "Yes";
@@ -24,12 +23,10 @@ $locale['428'] = "Display errors";
 $locale['429'] = "Disabled functions";
 $locale['430'] = "n/a";
 $locale['431'] = "version";
-
 //Write permission
 $locale['440'] = "Folder Permissions";
 $locale['441'] = "Writeable";
 $locale['442'] = "Not writeable";
-
 //PHPinfo
 $locale['450'] = "Details";
 $locale['451'] = "Unable to get data. Check if phpinfo() function is switched off?";

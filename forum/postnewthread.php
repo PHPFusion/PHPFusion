@@ -52,9 +52,9 @@ if (isset($_POST['previewpost']) || isset($_POST['add_poll_option'])) {
 			$previewmessage = parseubb($previewmessage);
 			$previewmessage = nl2br($previewmessage);
 		}
-		//$is_mod = iMOD && iUSER < "102" ? true : false;
+
 		opentable($locale['400']);
-		echo "<div class='tbl2 forum_breadcrumbs' style='margin-bottom:5px'><a href='index.php'>".$settings['sitename']."</a> &raquo; ".$caption."</div>\n";
+		echo "<div class='tbl2 forum_breadcrumbs' style='margin-bottom:5px'><a href='".BASEDIR."index.php'>".$settings['sitename']."</a> &raquo; ".$caption."</div>\n";
 
 		if ($fdata['forum_poll'] && checkgroup($fdata['forum_poll'])) {
 			if ((isset($poll_title) && $poll_title) && (isset($poll_opts) && is_array($poll_opts))) {
@@ -110,18 +110,10 @@ if (isset($_POST['postnewthread'])) {
 			require_once INCLUDES."flood_include.php";
 			if (!flood_control("post_datestamp", DB_POSTS, "post_author='".$userdata['user_id']."'")) {
 				$result = dbquery("INSERT INTO ".DB_THREADS." (forum_id, thread_subject, thread_author, thread_views, thread_lastpost, thread_lastpostid, thread_lastuser, thread_postcount, thread_poll, thread_sticky, thread_locked) VALUES('".$_GET['forum_id']."', '$subject', '".$userdata['user_id']."', '0', '".time()."', '0', '".$userdata['user_id']."', '1', '".$thread_poll."', '".$sticky_thread."', '".$lock_thread."')");
-					if ($pdo_enabled == "1") { 
-							$thread_id = $pdo->lastInsertId();
-						} else {
-							$thread_id = mysql_insert_id();
-					}
+				$thread_id = db_lastid();
 				$result = dbquery("INSERT INTO ".DB_POSTS." (forum_id, thread_id, post_message, post_showsig, post_smileys, post_author, post_datestamp, post_ip, post_ip_type, post_edituser, post_edittime, post_editreason) VALUES ('".$_GET['forum_id']."', '".$thread_id."', '".$message."', '".$sig."', '".$smileys."', '".$userdata['user_id']."', '".time()."', '".USER_IP."', '".USER_IP_TYPE."', '0', '0', '')");
-					if ($pdo_enabled == "1") { 
-							$post_id = $pdo->lastInsertId();
-						} else {
-							$post_id = mysql_insert_id();
-					}
-				 $result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".time()."', forum_postcount=forum_postcount+1, forum_threadcount=forum_threadcount+1, forum_lastuser='".$userdata['user_id']."' WHERE forum_id='".$_GET['forum_id']."'");
+				$post_id = db_lastid();
+				$result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".time()."', forum_postcount=forum_postcount+1, forum_threadcount=forum_threadcount+1, forum_lastuser='".$userdata['user_id']."' WHERE forum_id='".$_GET['forum_id']."'");
 				$result = dbquery("UPDATE ".DB_THREADS." SET thread_lastpostid='".$post_id."' WHERE thread_id='".$thread_id."'");
 				$result = dbquery("UPDATE ".DB_USERS." SET user_posts=user_posts+1 WHERE user_id='".$userdata['user_id']."'");
 				if ($settings['thread_notify'] && isset($_POST['notify_me'])) { $result = dbquery("INSERT INTO ".DB_THREAD_NOTIFY." (thread_id, notify_datestamp, notify_user, notify_status) VALUES('".$thread_id."', '".time()."', '".$userdata['user_id']."', '1')"); }
@@ -130,11 +122,7 @@ if (isset($_POST['postnewthread'])) {
 					$poll_title = trim(stripinput(censorwords($_POST['poll_title'])));
 					if ($poll_title && (isset($poll_opts) && is_array($poll_opts))) {
 						$result = dbquery("INSERT INTO ".DB_FORUM_POLLS." (thread_id, forum_poll_title, forum_poll_start, forum_poll_length, forum_poll_votes) VALUES('".$thread_id."', '".$poll_title."', '".time()."', '0', '0')");
-						if ($pdo_enabled == "1") { 
-							$forum_poll_id = $pdo->lastInsertId();
-						} else {
-							$forum_poll_id = mysql_insert_id();
-						}
+						$forum_poll_id = db_lastid();
 						$i = 1;
 						foreach ($poll_opts as $poll_option) {
 							$result = dbquery("INSERT INTO ".DB_FORUM_POLL_OPTIONS." (thread_id, forum_poll_option_id, forum_poll_option_text, forum_poll_option_votes) VALUES('".$thread_id."', '".$i."', '".$poll_option."', '0')");
@@ -173,7 +161,7 @@ if (isset($_POST['postnewthread'])) {
 					}
 				}
 			} else {
-					redirect("viewforum.php?forum_id=".$_GET['forum_id']);
+					redirect(BASEDIR."forum/viewforum.php?forum_id=".$_GET['forum_id']);
 			}
 		} else {
 			$error = 3;
@@ -182,9 +170,9 @@ if (isset($_POST['postnewthread'])) {
 		$error = 4;
 	}
 	if ($error > 2) {
-		redirect("postify.php?post=new&error=$error&forum_id=".$_GET['forum_id']);
+		redirect(BASEDIR."forum/postify.php?post=new&error=$error&forum_id=".$_GET['forum_id']);
 	} else {
-		redirect("postify.php?post=new&error=$error&forum_id=".$_GET['forum_id']."&thread_id=".$thread_id."");
+		redirect(BASEDIR."forum/postify.php?post=new&error=$error&forum_id=".$_GET['forum_id']."&thread_id=".$thread_id."");
 	}
 } else {
 	if (!isset($_POST['previewpost']) && !isset($_POST['add_poll_option'])) {
@@ -201,9 +189,9 @@ if (isset($_POST['postnewthread'])) {
 	add_to_title($locale['global_201'].$locale['401']);
 	echo "<!--pre_postnewthread-->";
 	opentable($locale['401']);
-	if (!isset($_POST['previewpost'])) { echo "<div class='tbl2 forum_breadcrumbs' style='margin-bottom:5px'><a href='index.php'>".$settings['sitename']."</a> &raquo; ".$caption."</div>\n"; }
+	if (!isset($_POST['previewpost'])) { echo "<div class='tbl2 forum_breadcrumbs' style='margin-bottom:5px'><a href='".BASEDIR."index.php'>".$settings['sitename']."</a> &raquo; ".$caption."</div>\n"; }
 
-	echo "<form id='inputform' method='post' action='".FUSION_SELF."?action=newthread&amp;forum_id=".$_GET['forum_id']."' enctype='multipart/form-data'>\n";
+	echo "<form id='inputform' method='post' action='".BASEDIR."forum/post.php?action=newthread&amp;forum_id=".$_GET['forum_id']."' enctype='multipart/form-data'>\n";
 	echo "<table cellpadding='0' cellspacing='1' width='100%' class='tbl-border'>\n<tr>\n";
 	echo "<td width='145' class='tbl2'>".$locale['460']."</td>\n";
 	echo "<td class='tbl1'><input type='text' name='subject' value='".$subject."' class='textbox' maxlength='255' style='width: 250px' /></td>\n";

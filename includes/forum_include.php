@@ -30,7 +30,7 @@ $imagetypes = array(
 );
 
 function attach_exists($file) {
-	$dir = FORUM."attachments/";
+	$dir = BASEDIR."forum/attachments/";
 	$i = 1;
 	$file_name = substr($file, 0, strrpos($file, "."));
 	$file_ext = strrchr($file, ".");
@@ -164,7 +164,7 @@ if (isset($_GET['getfile']) && isnum($_GET['getfile'])) {
 			$object->use_resume = true;
 			$object->download();
 		} else {
-			redirect("index.php");
+			redirect(BASEDIR."forum/index.php");
 		}
 	}
 	exit;

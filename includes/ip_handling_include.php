@@ -33,8 +33,8 @@ function uncompressIPv6($ip, $count=7) {
 if (strpos(FUSION_IP, ".")) {
 	if (strpos(FUSION_IP, ":") === FALSE) {
 		// IPv4
-		if (!defined('USER_IP_TYPE')) { define("USER_IP_TYPE", 4); }
-		if (!defined('USER_IP')) { define("USER_IP", FUSION_IP); }
+		define("USER_IP_TYPE", 4);
+		define("USER_IP", FUSION_IP);
 		$check_value = "blacklist_ip_type='4' AND blacklist_ip REGEXP '^";
 		$check_value .= str_replace(".", "(\.", USER_IP, $i);
 		$check_value .= str_repeat(")?", $i);

@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: search_bbcode_include.php
 | Author: Robert Gaudyn (Wooya)
@@ -17,24 +17,29 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-include LOCALE.LOCALESET."bbcodes/search.php";
-
-if (!function_exists("search_on")) {
-	function search_on($where) {
+if (!function_exists('replace_searchparams')) {	
+	function replace_searchparams($m) {
 		global $settings;
-		if ($where == "all") {
-			include LOCALE.LOCALESET."search.php";
-			return $locale['407'];
-		} else {
-			include LOCALE.LOCALESET."search/".$where.".php";
-			foreach ($locale as $key => $value) {
-				if (preg_match("/400/", $key)) $name = $key;
+		// first convert searchstring to eliminate all unwanted chars
+		$search_string = htmlspecialchars_decode($m['content'],ENT_QUOTES);
+		$search_string = preg_replace('#\s+#' , ' ' , preg_replace("/[^.:a-zA-ZäüöÄÜÖß0-9-ß]/"," ",$search_string));
+		
+		if(strlen(trim($search_string))!=0) {
+			include LOCALE.LOCALESET."bbcodes/search.php";
+			$search_type = (!empty($m['search']) ? $m['search'] : "all");
+			if(IsSet($m['search']) && $m['search']!="members" && $m['search']!="downloads" && $m['search']!="weblinks" && $m['search']!="photos" && $m['search']!="forums"  && $m['search']!="custompages" && $m['search']!="faqs" && $m['search']!="articles" && $m['search']!="news") {
+				$search_type = "all";
 			}
-			return $locale[$name];
+			else {
+				$search_type = $m['search'];
+			}
+			$searcharea_locale = "bb_search_".$search_type;
+		
+			$content = "<strong>".$locale['bb_search_prefix']." <a href='".BASEDIR."search.php?stype=".$m['search']."&amp;method=AND&amp;stext=".urlencode($search_string)."' target='_blank'>".$m['content']."</a></strong> ".$locale['bb_search_suffix']." ".$settings['sitename']." (".$locale[$searcharea_locale].")\n";
+			return $content;
 		}
+		else { return NULL; }
 	}
 }
-
-$text = preg_replace('#\[search\](.*?)([\r\n]*)\[/search\]#si', '<strong>'.$locale['bb_search_prefix'].' <a href=\''.BASEDIR.'search.php?stext='.preg_replace('/<[^<>]+>/i', '', '\1\2').'&amp;method=AND&amp;stype=all&forum_id=0&datelimit=0&fields=2&sort=datestamp&order=0&chars=50\' title=\''.preg_replace('/<[^<>]+>/i', '', '\1\2').'\'>\1\2</a></strong>', $text);
-$text = preg_replace('#\[search=(.*?)\](.*?)([\r\n]*)\[/search\]#sie', "'<strong>".$locale['bb_search_prefix']." <a href=\'".BASEDIR."search.php?stext='.preg_replace('/<[^<>]+>/i', '', '\\2\\3').'&amp;method=AND&amp;stype=\\1&forum_id=0&datelimit=0&fields=2&sort=datestamp&order=0&chars=50\' title=\''.preg_replace('/<[^<>]+>/i', '', '\\2\\3').'\'>\\2\\3</a> ".$locale['bb_search_suffix']." '.search_on('\\1').'</strong>'", $text);
+$text = preg_replace_callback('#\[search(=(?P<search>(.*?)))?\](?P<content>.*?)\[/search\]#i', 'replace_searchparams', $text);
 ?>

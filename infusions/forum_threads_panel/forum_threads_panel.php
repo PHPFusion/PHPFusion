@@ -45,6 +45,7 @@ $timeframe = ($settings['popular_threads_timeframe'] != 0 ? "thread_lastpost >= 
 list($min_posts) = dbarraynum(dbquery("SELECT thread_postcount FROM ".DB_THREADS.($timeframe ? " WHERE ".$timeframe : "")." ORDER BY thread_postcount DESC LIMIT 4,1"));
 $timeframe = ($timeframe ? " AND tt.".$timeframe : "");
 
+
 $result = dbquery(
 	"SELECT	f.forum_id, f.forum_cat, f.forum_name, f.forum_description, f.forum_moderators, f.forum_lastpost, f.forum_postcount,
 	f.forum_threadcount, f.forum_lastuser, f.forum_access, f2.forum_name AS forum_cat_name, f2.forum_description AS forum_cat_description,
@@ -52,8 +53,8 @@ $result = dbquery(
 	FROM ".DB_FORUMS." f
 	LEFT JOIN ".DB_FORUMS." f2 ON f.forum_cat = f2.forum_id
 	LEFT JOIN ".DB_THREADS." t ON f.forum_id = t.forum_id AND f.forum_lastpost=t.thread_lastpost
-	".(multilang_table("FO") ? "WHERE f2.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('f.forum_access')." AND t.thread_postcount >= '".$min_posts."'".$timeframe." AND f.forum_cat!='0' AND t.thread_hidden='0' 
-	GROUP BY thread_id ORDER BY t.thread_lastpost LIMIT ".$settings['numofthreads'].""
+	".(multilang_table("FO") ? "WHERE f2.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('f.forum_access')." AND f.forum_cat!='0' AND t.thread_hidden='0' 
+	GROUP BY thread_id  ORDER BY t.thread_postcount DESC, t.thread_lastpost DESC LIMIT ".$settings['numofthreads'].""
 );
 
 if (dbrows($result) != 0) {

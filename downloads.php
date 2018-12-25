@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "maincore.php";
+require_once __DIR__."/maincore.php";
 require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."downloads.php";
 
@@ -68,7 +68,7 @@ if (dbrows($result) != 0) {
 	while ($data = dbarray($result)) {
 		$download_title = $data['download_title'];
 		$dl_stats .= "<span class='small'>".$locale['441'];
-		$dl_stats .= " <a href='".FUSION_SELF."?download_id=".$data['download_id']."' title='".$download_title."' class='side'>".trimlink($data['download_title'], 100)."</a>";
+		$dl_stats .= " <a href='".BASEDIR."downloads.php?download_id=".$data['download_id']."' title='".$download_title."' class='side'>".trimlink($data['download_title'], 100)."</a>";
 		$dl_stats .= " [ ".$data['download_count']." ]</span><br />";
 	}
 }
@@ -84,7 +84,7 @@ if (dbrows($result) != 0) {
 	while ($data = dbarray($result)) {
 		$download_title = $data['download_title'];
 		$dl_stats .= "<span class='small'>".$locale['442'];
-		$dl_stats .= " <a href='".FUSION_SELF."?download_id=".$data['download_id']."' title='".$download_title."' class='side'>".trimlink($data['download_title'], 100)."</a>";
+		$dl_stats .= " <a href='".BASEDIR."downloads.php?download_id=".$data['download_id']."' title='".$download_title."' class='side'>".trimlink($data['download_title'], 100)."</a>";
 		$dl_stats .= " [ ".$data['download_count']." ]</span><br />";
 	}
 }
@@ -125,7 +125,7 @@ if (!isset($_GET['download_id']) || !isnum($_GET['download_id'])) {
 			$filter = ""; $order_by = ""; $sort = ""; // Can be removed
 		}
 
-		echo "<form name='filter_form' method='get' action='".FUSION_SELF."'>\n";
+		echo "<form name='filter_form' method='get' action='".BASEDIR."downloads.php'>\n";
 		echo "<table class='tbl' cellpadding='1' cellspacing='0' style='width:100%;'>\n";
 		echo "<tr>\n";
 		echo "<td class='tbl1' style='width:40%; text-align:left;'>".$locale['450']."</td>\n";
@@ -231,7 +231,7 @@ if (!isset($_GET['download_id']) || !isnum($_GET['download_id'])) {
 						$comments_count = dbcount("(comment_id)", DB_COMMENTS, "comment_type='D' AND comment_item_id='".$data['download_id']."'");
 						echo "<tr>\n";
 						echo "<td class='tbl2' style='width:1%;'>".$new."</td>\n";
-						echo "<td class='tbl1' style='text-align:left;'><a href='".FUSION_SELF."?cat_id=".$cat_data['download_cat_id']."&amp;download_id=".$data['download_id']."'>".$data['download_title']."</a></td>\n";
+						echo "<td class='tbl1' style='text-align:left;'><a href='".BASEDIR."downloads.php?cat_id=".$cat_data['download_cat_id']."&amp;download_id=".$data['download_id']."'>".$data['download_title']."</a></td>\n";
 						echo "<td class='tbl2' style='text-align:center;'>".showdate("shortdate", $data['download_datestamp'])."</td>\n";
 						echo "<td class='tbl2' style='text-align:center;'>".profile_link($data['user_id'], $data['user_name'], $data['user_status'])."</td>\n";
 						echo "<td class='tbl2' style='text-align:center;'>".($data['download_version'] ?  $data['download_version'] : "--")."</td>\n";
@@ -250,7 +250,7 @@ if (!isset($_GET['download_id']) || !isnum($_GET['download_id'])) {
 						echo "</td>\n</tr>\n";
 					}
 					if ($rows > $settings['downloads_per_page']) {
-						echo "<tr>\n<td colspan='8' class='tbl2' style='text-align:center;'>\n".makepagenav($_GET['rowstart'.$cat_data['download_cat_id']], $settings['downloads_per_page'], $rows, 3, FUSION_SELF."?cat_id=".$cat_data['download_cat_id'].$getString."&amp;", "rowstart".$cat_data['download_cat_id'])."\n</td></tr>\n"; }
+						echo "<tr>\n<td colspan='8' class='tbl2' style='text-align:center;'>\n".makepagenav($_GET['rowstart'.$cat_data['download_cat_id']], $settings['downloads_per_page'], $rows, 3, BASEDIR."downloads.php?cat_id=".$cat_data['download_cat_id'].$getString."&amp;", "rowstart".$cat_data['download_cat_id'])."\n</td></tr>\n"; }
 				} else {
 					echo "<tr>\n<td class='tbl1' colspan='8' style='text-align:center'>".$locale['431']."</td></tr>\n";
 					echo "<!--sub_download_cat-->";
@@ -287,12 +287,12 @@ if (isset($_GET['download_id']) && isnum($_GET['download_id'])) {
 			".(multilang_table("DL") ?  "WHERE download_cat_language='".LANGUAGE."' AND" : "WHERE")." download_id='".$_GET['download_id']."'");
 	if (dbrows($result)) {
 		$data = dbarray($result);
-		if (!checkgroup($data['download_cat_access'])) { redirect(FUSION_SELF);}
+		if (!checkgroup($data['download_cat_access'])) { redirect(BASEDIR."downloads.php");}
 		opentable($locale['400'].": ".$data['download_title']);
 		echo "<!--pre_download_details-->\n";
 		echo "<div class='tbl-border' style='margin-bottom:10px; padding:3px;'>\n";
 		echo "<div class='forum-caption' style='text-align:left;'>\n";
-		echo "<a href='".FUSION_SELF."'>".$locale['417']."</a> &gt; <a href='".FUSION_SELF."?cat_id=".$data['download_cat']."'>".$data['download_cat_name']."</a> &gt; <strong>".$data['download_title']."</strong>";
+		echo "<a href='".BASEDIR."downloads.php'>".$locale['417']."</a> &gt; <a href='".BASEDIR."downloads.php?cat_id=".$data['download_cat']."'>".$data['download_cat_name']."</a> &gt; <strong>".$data['download_title']."</strong>";
 		echo "</div>\n</div>\n";
 
 		echo "<table width='100%' cellpadding='0' cellspacing='1' class='tbl-border center'>\n";
@@ -350,7 +350,7 @@ if (isset($_GET['download_id']) && isnum($_GET['download_id'])) {
 		echo "<tr>\n";
 		echo "<td class='tbl1' colspan='2' style='text-align:center;'><hr />\n";
 		echo "<strong>".$locale['416'].":</strong><br />\n";
-		echo "<a href='".FUSION_SELF."?cat_id=".$data['download_cat']."&amp;file_id=".$data['download_id']."' target='_blank'>".get_image("download", $locale['416'], "border:none;", $locale['416'])."</a>\n";
+		echo "<a href='".BASEDIR."downloads.php?cat_id=".$data['download_cat']."&amp;file_id=".$data['download_id']."' target='_blank'>".get_image("download", $locale['416'], "border:none;", $locale['416'])."</a>\n";
 		if ($data['download_filesize'] != "") {
 			echo "<br />(".$data['download_filesize'].")\n";
 		}
@@ -362,8 +362,8 @@ if (isset($_GET['download_id']) && isnum($_GET['download_id'])) {
 		echo "<!--pre_download_comments-->\n";
 		include INCLUDES."comments_include.php";
 		include INCLUDES."ratings_include.php";
-		if ($data['download_allow_comments']) { showcomments("D", DB_DOWNLOADS, "download_id", $_GET['download_id'], FUSION_SELF."?cat_id=".$data['download_cat']."&amp;download_id=".$_GET['download_id']); }
-		if ($data['download_allow_ratings']) { showratings("D", $_GET['download_id'], FUSION_SELF."?cat_id=".$data['download_cat']."&amp;download_id=".$_GET['download_id']); }
+		if ($data['download_allow_comments']) { showcomments("D", DB_DOWNLOADS, "download_id", $_GET['download_id'], BASEDIR."downloads.php?cat_id=".$data['download_cat']."&amp;download_id=".$_GET['download_id']); }
+		if ($data['download_allow_ratings']) { showratings("D", $_GET['download_id'], BASEDIR."downloads.php?cat_id=".$data['download_cat']."&amp;download_id=".$_GET['download_id']); }
 	}
 }
 

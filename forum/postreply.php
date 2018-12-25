@@ -33,7 +33,7 @@ if (isset($_POST['previewreply'])) {
 	}
 	$is_mod = iMOD && iUSER < "102" ? true : false;
 	opentable($locale['402']);
-	echo "<div class='tbl2 forum_breadcrumbs' style='margin-bottom:5px'><span class='small'><a href='index.php'>".$settings['sitename']."</a> &raquo; ".$caption."</span></div>\n";
+	echo "<div class='tbl2 forum_breadcrumbs' style='margin-bottom:5px'><span class='small'><a href='".BASEDIR."forum/index.php'>".$settings['sitename']."</a> &raquo; ".$caption."</span></div>\n";
 
 	echo "<table cellpadding='0' cellspacing='1' width='100%' class='tbl-border'>\n<tr>\n";
 	echo "<td colspan='2' class='tbl2'><strong>".$tdata['thread_subject']."</strong></td>\n</tr>\n";
@@ -77,11 +77,7 @@ if (isset($_POST['postreply'])) {
 					$postCount = "";
 				} else {
 					$result = dbquery("INSERT INTO ".DB_POSTS." (forum_id, thread_id, post_message, post_showsig, post_smileys, post_author, post_datestamp, post_ip, post_ip_type, post_edituser, post_edittime, post_editreason) VALUES ('".$_GET['forum_id']."', '".$_GET['thread_id']."', '$message', '$sig', '$smileys', '".$userdata['user_id']."', '".time()."', '".USER_IP."', '".USER_IP_TYPE."', '0', '0', '')");
-						if ($pdo_enabled == "1") { 
-							$post_id = $pdo->lastInsertId();
-						} else {
-							$post_id = mysql_insert_id();
-						}
+					$post_id = db_lastid();
 					$result = dbquery("UPDATE ".DB_USERS." SET user_posts=user_posts+1 WHERE user_id='".$userdata['user_id']."'");
 					$threadCount = "thread_postcount=thread_postcount+1,";
 					$postCount = "forum_postcount=forum_postcount+1,";
@@ -124,7 +120,7 @@ if (isset($_POST['postreply'])) {
 					}
 				}
 			} else {
-					redirect("viewforum.php?forum_id=".$_GET['forum_id']);
+					redirect(BASEDIR."forum/viewforum.php?forum_id=".$_GET['forum_id']);
 			}
 		} else {
 			$error = 3;
@@ -133,9 +129,9 @@ if (isset($_POST['postreply'])) {
 		$error = 4;
 	}
 	if ($error > 2) {
-		redirect("postify.php?post=reply&error=$error&forum_id=".$_GET['forum_id']."&thread_id=".$_GET['thread_id']);
+		redirect(BASEDIR."forum/postify.php?post=reply&error=$error&forum_id=".$_GET['forum_id']."&thread_id=".$_GET['thread_id']);
 	} else {
-		redirect("postify.php?post=reply&error=$error&forum_id=".$_GET['forum_id']."&thread_id=".$_GET['thread_id']."&post_id=$post_id");
+		redirect(BASEDIR."forum/postify.php?post=reply&error=$error&forum_id=".$_GET['forum_id']."&thread_id=".$_GET['thread_id']."&post_id=$post_id");
 	}
 } else {
 	if (!isset($_POST['previewreply'])) {
@@ -164,9 +160,9 @@ if (isset($_POST['postreply'])) {
 	add_to_title($locale['global_201'].$locale['403']);
 	echo "<!--pre_postreply-->";
 	opentable($locale['403']);
-	if (!isset($_POST['previewreply'])) echo "<div class='tbl2 forum_breadcrumbs' style='margin-bottom:5px'><a href='index.php'>".$settings['sitename']."</a> &raquo; ".$caption."</div>\n";
+	if (!isset($_POST['previewreply'])) echo "<div class='tbl2 forum_breadcrumbs' style='margin-bottom:5px'><a href='".BASEDIR."forum/index.php'>".$settings['sitename']."</a> &raquo; ".$caption."</div>\n";
 
-	echo "<form name='inputform' method='post' action='".FUSION_SELF."?action=reply&amp;forum_id=".$_GET['forum_id']."&amp;thread_id=".$_GET['thread_id']."' enctype='multipart/form-data'>\n";
+	echo "<form name='inputform' id='inputform' method='post' action='".BASEDIR."forum/post.php?action=reply&amp;forum_id=".$_GET['forum_id']."&amp;thread_id=".$_GET['thread_id']."' enctype='multipart/form-data'>\n";
 	echo "<table cellpadding='0' cellspacing='1' width='100%' class='tbl-border'>\n<tr>\n";
 	echo "<td valign='top' width='145' class='tbl2'>".$locale['461']."</td>\n";
 	echo "<td class='tbl1'><textarea name='message' cols='60' rows='15' class='textbox' style='width:98%'>$message</textarea></td>\n";
@@ -202,7 +198,9 @@ if (isset($_POST['postreply'])) {
 		echo "</tr>\n";
 	}
 	echo "<tr>\n<td align='center' colspan='2' class='tbl1'>\n";
-	echo "<input type='submit' name='previewreply' value='".$locale['402']."' class='button' />\n";
+	if (!$settings['site_seo']) {
+		echo "<input type='submit' name='previewreply' value='".$locale['402']."' class='button' />\n";
+	}
 	echo "<input type='submit' name='postreply' value='".$locale['404']."' class='button' />\n";
 	echo "</td>\n</tr>\n</table>\n</form>\n";
 	closetable();

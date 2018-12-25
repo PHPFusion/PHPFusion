@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: system_images.php
 | Author: Max "Matonor" Toball
@@ -18,6 +18,7 @@
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 cache_smileys();
+
 $smiley_images = array();
 if (is_array($smiley_cache) && count($smiley_cache)) {
 	foreach ($smiley_cache as $smiley) {
@@ -31,90 +32,124 @@ while ($data = dbarray($result)) {
 	$nc_images["nc_".$data['news_cat_name']] = file_exists(IMAGES_NC.$data['news_cat_image']) ? IMAGES_NC.$data['news_cat_image'] : IMAGES."imagenotfound.jpg";
 }
 
+$result = dbquery("SELECT blog_cat_image, blog_cat_name FROM ".DB_BLOG_CATS);
+$bc_images = array();
+while ($data = dbarray($result)) {
+	$bc_images["bc_".$data['blog_cat_name']] = file_exists(IMAGES_BC.$data['blog_cat_image']) ? IMAGES_BC.$data['blog_cat_image'] : IMAGES."imagenotfound.jpg";
+}
+
 $result = dbquery("SELECT admin_title, admin_image FROM ".DB_ADMIN);
 $ac_images = array();
 while ($data = dbarray($result)) {
-	$ac_images["ac_".$data['admin_title']] = file_exists(ADMIN."images/".$data['admin_image']) ? ADMIN."images/".$data['admin_image'] : (file_exists($data['admin_image']) ? $data['admin_image'] : ADMIN."images/infusion_panel.gif");
+	$ac_images["ac_".$data['admin_title']] = file_exists(ADMIN."images/".$data['admin_image']) ? ADMIN."images/".$data['admin_image'] : (file_exists($data['admin_image']) ? $data['admin_image'] : ADMIN."images/notfound.png");
 }
+
+/*
+	The system images that are set by default for THEME and must be included are as follows.
+	theme/images folder
+	-	blank.gif
+	-	down.gif
+	-	left.gif
+	-	panel_on.gif
+	-	panel_off.gif
+	-	right.gif
+	-	pollbar.gif
+	-	up.gif
+	theme/forum/ folder
+	- 	folder.gif
+	-	folderlock.gif
+	-	foldernew.gif
+	-	edit.gif
+	-	image_attach.png
+	-	newthread.gif
+	-	pm.gif
+	-	pollbar.gif
+	- 	profile.gif
+	-	quote.gif
+	-	reply.gif
+	-	stickythread.gif
+	-	web.gif
+*/
+// Flaws: Not having images in the theme will break the site. Even the files format are different. Developers have no options for CSS buttons.
+// If we change this now, it will break all the themes on main site repository. Only solution is to address this in a new version to force deprecate old themes.
 
 $fusion_images = array(
 	//A
-	"arrow" 		=> IMAGES."arrow.png",
-	"attach"        => FORUM."images/attach.png",
+	"arrow" => IMAGES."arrow.png",
+	"attach" => FORUM."images/attach.png",
 	//B
-	"blank" 		=> THEME."images/blank.gif",
+	"blank" => THEME."images/blank.gif",
 	//C
-	"calendar" 		=> IMAGES."dl_calendar.png",
+	"calendar" => IMAGES."dl_calendar.png",
 	//D
-	"down" 			=> THEME."images/down.gif",
-	"download"		=> IMAGES."dl_download.png",
-	"downloads"		=> IMAGES."dl_downloads1.png",
+	"down" => THEME."images/down.gif",
+	"download"	=> IMAGES."dl_download.png",
+	"downloads"	=> IMAGES."dl_downloads1.png",
 	//E
-	"edit" 			=> IMAGES."edit.png",
+	"edit" => IMAGES."edit.png",
 	//F
-	"folder" 		=> THEME."forum/folder.gif",
-	"folderlock" 	=> THEME."forum/folderlock.gif",
-	"foldernew" 	=> THEME."forum/foldernew.gif",
-	"forum_edit" 	=> THEME."forum/edit.gif",
+	"folder" => THEME."forum/folder.gif",
+	"folderlock" => THEME."forum/folderlock.gif",
+	"foldernew" => THEME."forum/foldernew.gif",
+	"forum_edit" => THEME."forum/edit.gif",
 	//G
-	"go_first" 		=> IMAGES."go_first.png",
-	"go_last" 		=> IMAGES."go_last.png",
-	"go_next" 		=> IMAGES."go_next.png",
-	"go_previous" 	=> IMAGES."go_previous.png",
+	"go_first" => IMAGES."go_first.png",
+	"go_last" => IMAGES."go_last.png",
+	"go_next" => IMAGES."go_next.png",
+	"go_previous" => IMAGES."go_previous.png",
 	//H
-	"homepage" 		=> IMAGES."dl_homepage.png",
-	"hot"           => FORUM."images/hot.png",
+	"homepage" => IMAGES."dl_homepage.png",
+	"hot" => FORUM."images/hot.png",
 	//I
-	"info" 			=> IMAGES."dl_info.png",
+	"info" => IMAGES."dl_info.png",
 	"imagenotfound" => IMAGES."imagenotfound.jpg",
-	"image_attach"  => FORUM."images/image_attach.png",
+	"image_attach" => FORUM."images/image_attach.png",
 	//J
 	//K
 	//L
-	"left" 			=> THEME."images/left.gif",
-	"lastpost"		=> FORUM."images/lastpost.png",
+	"left" => THEME."images/left.gif",
+	"lastpost"	=> FORUM."images/lastpost.png",
 	"lastpostnew"	=> FORUM."images/lastpostnew.png",
 	//M
 	//N
-	"newthread" 	=> THEME."forum/newthread.gif",
-	"no" 			=> IMAGES."no.png",
-	"noavatar50" 	=> "noavatar50.png",
-	"noavatar100" 	=> "noavatar100.png",
-	"noavatar150" 	=> "noavatar150.png",
+	"newthread" => THEME."forum/newthread.gif",
+	"no" => IMAGES."no.png",
+	"noavatar50" => "noavatar50.png", // will infusion get this??
+	"noavatar100" => "noavatar100.png",
+	"noavatar150" => "noavatar150.png",
 	//O
 	//P
-	"panel_on" 		=> THEME."images/panel_on.gif",
-	"panel_off" 	=> THEME."images/panel_off.gif",
-	"pm" 			=> THEME."forum/pm.gif",
+	"panel_on" => THEME."images/panel_on.gif",
+	"panel_off" => THEME."images/panel_off.gif",
+	"pm" => THEME."forum/pm.gif",
 	"poll_posticon" => FORUM."images/poll_posticon.gif",
-	"pollbar" 		=> THEME."images/pollbar.gif",
-	"printer" 		=> IMAGES."printer.png",
+	"pollbar" => THEME."images/pollbar.gif",
+	"printer" => IMAGES."printer.png",
 	//Q
-	"quote" 		=> THEME."forum/quote.gif",
+	"quote" => THEME."forum/quote.gif",
 	//R
-	"reply" 		=> THEME."forum/reply.gif",
-	"right" 		=> THEME."images/right.gif",
+	"reply" => THEME."forum/reply.gif",
+	"right" => THEME."images/right.gif",
 	//S
-	"save"			=> IMAGES."php-save.png",
+	"save"	=> IMAGES."php-save.png",
 	"screenshot"	=> IMAGES."dl_screenshot.png",
-	"star" 			=> IMAGES."star.png",
+	"star" => IMAGES."star.png",
 	"statistics"	=> IMAGES."dl_stats.png",
-	"stickythread" 	=> THEME."forum/stickythread.gif",
+	"stickythread" => THEME."forum/stickythread.gif",
 	//T
-	"tick" 			=> IMAGES."tick.png",
+	"tick" => IMAGES."tick.png",
 	//U
-	"up" 			=> THEME."images/up.gif",
+	"up" => THEME."images/up.gif",
 	//V
 	//W
-	"web" 			=> THEME."forum/web.gif",
+	"web" => THEME."forum/web.gif",
 	//X
 	//Y
-	"yes" 			=> IMAGES."yes.png"
+	"yes" => IMAGES."yes.png"
 	//Z
 );
 
-$fusion_images = array_merge($ac_images, $fusion_images, $nc_images, $smiley_images);
-
+$fusion_images = array_merge($ac_images, $fusion_images, $nc_images, $bc_images, $smiley_images);
 function get_image($image, $alt = "", $style = "", $title = "", $atts = "") {
 	global $fusion_images;
 	if (isset($fusion_images[$image])) {
@@ -142,4 +177,3 @@ function redirect_img_dir($source, $target) {
 	}
 	$fusion_images = $new_images;
 }
-?>

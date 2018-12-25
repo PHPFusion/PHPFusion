@@ -38,7 +38,7 @@ while ($data2 = dbarray($result)) {
 		$current_cat = $data2['forum_cat_name'];
 		$forum_list .= "<optgroup label='".trimlink($data2['forum_cat_name'],20)."'>\n";
 	}
-	$sel = ($data2['forum_id'] == $_GET['forum_id'] ? " selected='selected'" : "");
+	$sel = ($data2['forum_id'] == $_REQUEST['forum_id'] ? " selected='selected'" : "");
 	$forum_list .= "<option value='".$data2['forum_id']."'$sel>".trimlink($data2['forum_name'],20)."</option>\n";
 }
 if ($rows2) { $forum_list .= "</optgroup>\n"; }
@@ -49,6 +49,6 @@ $form_elements['forums']['disabled'] = array();
 $form_elements['forums']['display'] = array();
 $form_elements['forums']['nodisplay'] = array();
 
-$radio_button['forums'] = "<label><input type='radio' name='stype' value='forums'".($_GET['stype'] == "forums" ? " checked='checked'" : "")." onclick=\"display(this.value)\" /> ".$locale['f400']."</label> ".$forum_list;
+$radio_button['forums'] = "<label><input type='radio' name='stype' value='forums'".($_REQUEST['stype'] == "forums" ? " checked='checked'" : "")." onclick=\"display(this.value)\" /> ".$locale['f400']."</label> ".$forum_list;
 
 ?>

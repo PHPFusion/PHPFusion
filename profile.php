@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "maincore.php";
+require_once __DIR__."/maincore.php";
 require_once THEMES."templates/header.php";
 require_once CLASSES."UserFields.class.php";
 include LOCALE.LOCALESET."user_fields.php";
@@ -44,7 +44,7 @@ if (isset($_GET['lookup']) && isnum($_GET['lookup'])) {
 			if (!preg_match("(^\.{$_POST['user_group']}$|\.{$_POST['user_group']}\.|\.{$_POST['user_group']}$)", $user_data['user_groups'])) {
 				$result = dbquery("UPDATE ".DB_USERS." SET user_groups='".$user_data['user_groups'].".".$_POST['user_group']."' WHERE user_id='".$_GET['lookup']."'");
 			}
-			redirect(FUSION_SELF."?lookup=".$user_data['user_id']);
+			redirect(BASEDIR."profile.php?lookup=".$user_data['user_id']);
 		}
 	}
 

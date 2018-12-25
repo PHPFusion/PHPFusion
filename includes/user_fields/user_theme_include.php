@@ -23,7 +23,7 @@ if ($profile_method == "input") {
 		$user_theme = isset($user_data['user_theme']) ? $user_data['user_theme'] : "";
 		if ($this->isError()) { $user_theme = isset($_POST['user_theme']) ? stripinput($_POST['user_theme']) : $user_theme; }
 
-		$theme_files = makefilelist(THEMES, ".|..|templates|.svn", true, "folders");
+		$theme_files = makefilelist(THEMES, ".|..|templates|.svn|admin_themes", TRUE, "folders");
 		array_unshift($theme_files, "Default");
 		echo "<tr>\n";
 		echo "<td class='tbl".$this->getErrorClass("user_theme")."'><label for='user_theme_input'>".$locale['uf_theme'].$required."</label></td>\n";

@@ -2,10 +2,13 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: captcha_display.php
-| Author: Hans Kristian Flaatten
+| Author: Krelli (systemweb.de)
+| ------------------------------------------------------
+| This integrates the NEW reCAPTCHA Google API v2 into
+| PHP-Fusion 7 using the built-in PHP-Fusion captcha system
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,31 +18,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
-
-require_once "recaptchalib.php";
-
-$lang = array("en", "nl", "fr", "de", "pt", "ru", "es", "tr");
-$recaptchaLocale = "";
-if (!isset($locale['recaptcha']) || !in_array($locale['recaptcha'], $lang)) {
-	if (isset($locale['recaptcha'])&& isset($locale['recaptcha_l10n'])) {
-		$recaptchaLocale = "\n\t"."custom_translations : {".$locale['recaptcha_l10n']."}, ";
-	} elseif (!isset($locale['recaptcha'])) {
-		$locale['recaptcha'] = "en";
-	}
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
 }
-
-add_to_head("<script type=\"text/javascript\">
-/*<![CDATA[*/
-var RecaptchaOptions = { ".$recaptchaLocale."
-   lang : '".$locale['recaptcha']."',
-   theme : '".$settings['recaptcha_theme']."'
-};
-/*]]>*/
-</script>");
-
-// Hid extra input
-$_CAPTCHA_HIDE_INPUT = true;
-
-echo recaptcha_get_html($settings['recaptcha_public']);
-?>
+$_CAPTCHA_HIDE_INPUT = TRUE;
+add_to_head("<script type='text/javascript' src='https://www.google.com/recaptcha/api.js?hl=".$locale['xml_lang']."' async defer></script>");
+echo "<div class='g-recaptcha' data-type='".(IsSet($settings['recaptcha_type']) ? $settings['recaptcha_type'] : 'text')."' data-theme='".($settings['recaptcha_theme']=='dark' ? 'dark' : 'light')."' data-sitekey='".$settings['recaptcha_public']."'></div>\n";

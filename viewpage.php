@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "maincore.php";
+require_once __DIR__."/maincore.php";
 require_once THEMES."templates/header.php";
 require_once INCLUDES."comments_include.php";
 require_once INCLUDES."ratings_include.php";
@@ -49,12 +49,12 @@ if (dbrows($cp_result)) {
 }
 closetable();
 if (isset($pagecount) && $pagecount > 1) {
-    echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], 1, $pagecount, 3, FUSION_SELF."?page_id=".$_GET['page_id']."&amp;")."\n</div>\n";
+    echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], 1, $pagecount, 3, BASEDIR."viewpage.php?page_id=".$_GET['page_id']."&amp;")."\n</div>\n";
 }
 echo "<!--custompages-after-content-->\n";
 if (dbrows($cp_result) && checkgroup($cp_data['page_access'])) {
-	if ($cp_data['page_allow_comments']) { showcomments("C", DB_CUSTOM_PAGES, "page_id", $_GET['page_id'],FUSION_SELF."?page_id=".$_GET['page_id']); }
-	if ($cp_data['page_allow_ratings']) { showratings("C", $_GET['page_id'], FUSION_SELF."?page_id=".$_GET['page_id']); }
+	if ($cp_data['page_allow_comments']) { showcomments("C", DB_CUSTOM_PAGES, "page_id", $_GET['page_id'],BASEDIR."viewpage.php?page_id=".$_GET['page_id']); }
+	if ($cp_data['page_allow_ratings']) { showratings("C", $_GET['page_id'], BASEDIR."viewpage.php?page_id=".$_GET['page_id']); }
 }
 
 require_once THEMES."templates/footer.php";

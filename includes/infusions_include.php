@@ -18,6 +18,31 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
+if (!function_exists('infusion_exists')) {
+    /**
+     * Check whether an infusion is installed or not from the infusions table
+     *
+     * @param $infusion_folder
+     *
+     * @return bool
+     */
+    function infusion_exists($infusion_folder) {
+        // get the whole thing is faster maybe
+        static $infusions_installed = array();
+        if (empty($infusions_installed)) {
+            $result = dbquery("SELECT inf_folder FROM ".DB_INFUSIONS);
+            if (dbrows($result)) {
+                while ($data = dbarray($result)) {
+                    $infusions_installed[$data['inf_folder']] = TRUE;
+                }
+            }
+        }
+
+        return (boolean)(isset($infusions_installed[$infusion_folder])) ? TRUE : FALSE;
+
+    }
+}
+
 // Creates an unique filename if file already exists
 function filename_exists($dir, $file) {
 	$i = 1;

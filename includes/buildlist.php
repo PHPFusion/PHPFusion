@@ -55,6 +55,25 @@ while ($file = readdir($temp)) {
 }
 closedir($temp);
 
+
+// blog -------------------
+$temp = opendir(IMAGES_B);
+while ($file = readdir($temp)) {
+	if (!in_array($file, array(".", "..", "/", "index.php")) && !is_dir(IMAGES_B.$file)) {
+		$image_files[] = "['".$locale['424'].": ".$file."','".$settings['siteurl']."images/blog/".$file."'], ";
+	}
+}
+closedir($temp);
+	
+// blog cats -------------------
+$temp = opendir(IMAGES_BC);
+while ($file = readdir($temp)) {
+	if (!in_array($file, array(".", "..", "/", "index.php")) && !is_dir(IMAGES_BC.$file)) {
+		$image_files[] = "['".$locale['427'].": ".$file."','".$settings['siteurl']."images/blog_cats/".$file."'], ";
+	}
+}
+closedir($temp);
+
 // photoalbum -------------------
 $result = dbquery("
 	SELECT ".DB_PHOTO_ALBUMS.".album_title, ".DB_PHOTOS.".photo_id

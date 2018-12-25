@@ -26,8 +26,8 @@ $_errorHandler = array();
 
 // PHP-Fusion Error Handler
 function setError($error_level, $error_message, $error_file, $error_line, $error_context) {
-	global $pdo, $pdo_enabled, $userdata, $_errorHandler, $settings;
-
+	global $userdata, $_errorHandler, $settings;
+	
 	$showError = true;
 
 	$result = dbquery(
@@ -49,11 +49,7 @@ function setError($error_level, $error_message, $error_file, $error_line, $error
 			)"
 		);
 
-			if ($pdo_enabled == "1") { 
-			$errorId = $pdo->lastInsertId();
-			} else {
-			$errorId = mysql_insert_id();
-			}
+		$errorId = db_lastid();
 
 			} else {
 		$data = dbarray($result);

@@ -19,8 +19,8 @@ $locale['460'] = "Thank you for submitting your News";
 $locale['461'] = "Submit another News item";
 // Submit News Form
 $locale['470'] = "Use the following form to submit News. Your submission will be reviewed by an
-Administrator. ".$settings['sitename']." reserves the right to amend or edit any submission. News
-should be applicable to the content of this site. Unsuitable submissions will be deleted.";
+Administrator. ".$settings['sitename']." reserves the right to amend or edit any submission. Your News submission should be applicable to the content of this site. 
+Unsuitable submissions will be deleted.";
 $locale['471'] = "Subject:";
 $locale['472'] = "News:";
 $locale['473'] = " Enable Automatic Line-Breaks";
@@ -29,6 +29,23 @@ $locale['475'] = "Submit News";
 $locale['476'] = "Category:";
 $locale['477'] = "- None -";
 $locale['478'] = "News Snippet:";
+// Submit Blog
+$locale['450b'] = "Submit Blog";
+// Submit Blog Success
+$locale['460b'] = "Thank you for submitting your Blog";
+$locale['461b'] = "Submit another Blog item";
+// Submit Blog Form
+$locale['470b'] = "Use the following form to submit Blog. Your submission will be reviewed by an
+Administrator. ".$settings['sitename']." reserves the right to amend or edit any submission. Your Blog submission should be applicable to the content of this site. 
+Unsuitable submissions will be deleted.";
+$locale['471b'] = "Subject:";
+$locale['472b'] = "Blog:";
+$locale['473b'] = " Enable Automatic Line-Breaks";
+$locale['474b'] = "Preview Blog";
+$locale['475b'] = "Submit Blog";
+$locale['476b'] = "Category:";
+$locale['477b'] = "- None -";
+$locale['478b'] = "Blog Snippet:";
 // Submit Article
 $locale['500'] = "Submit Article";
 // Submit Article Success

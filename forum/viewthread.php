@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../maincore.php";
+require_once __DIR__."/../maincore.php";
 require_once INCLUDES."forum_include.php";
 require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."forum/main.php";
@@ -28,11 +28,12 @@ if (!isset($_GET['thread_id']) && isset($_GET['pid']) && isnum($_GET['pid'])) {
 	$result = dbquery("SELECT thread_id FROM ".DB_POSTS." WHERE post_id='".$_GET['pid']."' LIMIT 1");
 	if (dbrows($result)) {
 		$data = dbarray($result);
-		redirect("viewthread.php?thread_id=".$data['thread_id']."&amp;pid=".$_GET['pid']."#post_".$_GET['pid']);
+		redirect(BASEDIR."forum/viewthread.php?thread_id=".$data['thread_id']."&amp;pid=".$_GET['pid']."#post_".$_GET['pid']);
 	}
 }
 
-if (!isset($_GET['thread_id']) || !isnum($_GET['thread_id'])) { redirect("index.php"); }
+if (!isset($_GET['thread_id']) || !isnum($_GET['thread_id'])) { redirect(BASEDIR."forum/index.php"); }
+
 
 $result = dbquery(
 	"SELECT t.*, f.*, f2.forum_name AS forum_cat_name
@@ -43,9 +44,9 @@ $result = dbquery(
 );
 if (dbrows($result)) {
 	$fdata = dbarray($result);
-	if (!checkgroup($fdata['forum_access']) || !$fdata['forum_cat'] || $fdata['thread_hidden'] == "1") { redirect("index.php"); }
+	if (!checkgroup($fdata['forum_access']) || !$fdata['forum_cat'] || $fdata['thread_hidden'] == "1") { redirect(BASEDIR."forum/index.php"); }
 } else {
-	redirect("index.php");
+	redirect(BASEDIR."forum/index.php");
 }
 
 if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) { $_GET['rowstart'] = 0; }
@@ -105,7 +106,7 @@ if (!defined("iMOD") && iMEMBER && $fdata['forum_moderators']) {
 if (!defined("iMOD")) { define("iMOD", false); }
 
 if (iMOD && (((isset($_POST['delete_posts']) || isset($_POST['move_posts'])) && isset($_POST['delete_post'])) || isset($_GET['error']))) {
-	require_once FORUM."viewthread_options.php";
+	require_once BASEDIR."forum/viewthread_options.php";
 }
 
 // polls
@@ -143,7 +144,7 @@ if ($poll_there && $can_vote && !$had_voted && isset($_POST['cast_vote']) && (is
 	$result = dbquery("UPDATE ".DB_FORUM_POLL_OPTIONS." SET forum_poll_option_votes=forum_poll_option_votes+1 WHERE thread_id='".$_GET['thread_id']."' AND forum_poll_option_id='".$_POST['poll_option']."'");
 	$result = dbquery("UPDATE ".DB_FORUM_POLLS." SET forum_poll_votes=forum_poll_votes+1 WHERE thread_id='".$_GET['thread_id']."'");
 	$result = dbquery("INSERT INTO ".DB_FORUM_POLL_VOTERS." (thread_id, forum_vote_user_id, forum_vote_user_ip, forum_vote_user_ip_type) VALUES ('".$_GET['thread_id']."', '".$userdata['user_id']."', '".USER_IP."', '".USER_IP_TYPE."')");
-	redirect(FUSION_SELF."?thread_id=".$_GET['thread_id']);
+	redirect(BASEDIR."forum/viewthread.php?thread_id=".$_GET['thread_id']);
 }
 
 // user fields
@@ -165,8 +166,8 @@ if (iMEMBER) {
 opentable($locale['500']);
 
 // breadcrumbs
-$caption = $fdata['forum_cat_name']." &raquo; <a href='viewforum.php?forum_id=".$fdata['forum_id']."'>".$fdata['forum_name']."</a>";
-echo "<!--pre_forum_thread--><div class='tbl2 forum_breadcrumbs' style='margin:0px 0px 4px 0px'><a href='index.php' id='top'>".$settings['sitename']."</a> &raquo; ".$caption."</div>\n";
+$caption = $fdata['forum_cat_name']." &raquo; <a href='".BASEDIR."forum/viewforum.php?forum_id=".$fdata['forum_id']."'>".$fdata['forum_name']."</a>";
+echo "<!--pre_forum_thread--><div class='tbl2 forum_breadcrumbs' style='margin:0px 0px 4px 0px'><a href='".BASEDIR."forum/index.php' id='top'>".$settings['sitename']."</a> &raquo; ".$caption."</div>\n";
 
 // thread
 list($rows, $last_post) = dbarraynum(dbquery(
@@ -174,15 +175,15 @@ list($rows, $last_post) = dbarraynum(dbquery(
 
 if (($rows > $posts_per_page) || ($can_post || $can_reply)) {
 	echo "<table cellspacing='0' cellpadding='0' width='100%'>\n<tr>\n";
-	if ($rows > $posts_per_page) { echo "<td style='padding:4px 0px 4px 0px'>".makepagenav($_GET['rowstart'],$posts_per_page,$rows,3,FUSION_SELF."?thread_id=".$_GET['thread_id']."&amp;")."</td>\n"; }
+	if ($rows > $posts_per_page) { echo "<td style='padding:4px 0px 4px 0px'>".makepagenav($_GET['rowstart'],$posts_per_page,$rows,3, BASEDIR."forum/viewthread.php?thread_id=".$_GET['thread_id']."&amp;")."</td>\n"; }
 	if (iMEMBER && $can_post) {
 		echo "<td align='right' style='padding:0px 0px 4px 0px'>\n<!--pre_forum_buttons-->\n";
 		if ($can_post) {
-			echo "<a href='post.php?action=newthread&amp;forum_id=".$fdata['forum_id']."'>";
+			echo "<a href='".BASEDIR."forum/post.php?action=newthread&amp;forum_id=".$fdata['forum_id']."'>";
 			echo "<img src='".get_image("newthread")."' alt='".$locale['566']."' style='border:0px' /></a>\n";
 		}
 		if (!$fdata['thread_locked'] && $can_reply) {
-			echo "<a href='post.php?action=reply&amp;forum_id=".$fdata['forum_id']."&amp;thread_id=".$_GET['thread_id']."'>";
+			echo "<a href='".BASEDIR."forum/post.php?action=reply&amp;forum_id=".$fdata['forum_id']."&amp;thread_id=".$_GET['thread_id']."'>";
 			echo "<img src='".get_image("reply")."' alt='".$locale['565']."' style='border:0px' /></a>\n";
 		}
 		echo "</td>\n";
@@ -196,7 +197,7 @@ if ($rows != 0) {
 	/* poll */
 	if ($poll_on_first_page_only && $poll_there && $poll_data) {
 		$i = 1;
-		if ($can_vote) { echo "<form name='voteform' method='post' action='".FUSION_SELF."?forum_id=".$fdata['forum_id']."&amp;thread_id=".$_GET['thread_id']."'>\n"; }
+		if ($can_vote) { echo "<form name='voteform' method='post' action='".BASEDIR."forum/viewthread.php?forum_id=".$fdata['forum_id']."&amp;thread_id=".$_GET['thread_id']."'>\n"; }
 		echo "<table cellpadding='0' cellspacing='1' width='100%' class='tbl-border' style='margin-bottom:5px'>\n<tr>\n";
 		echo "<td align='center' class='tbl2'><strong>".$pdata['forum_poll_title']."</strong></td>\n</tr>\n<tr>\n<td class='tbl1'>\n";
 		echo "<table align='center' cellpadding='0' cellspacing='0'>\n";
@@ -233,7 +234,7 @@ if ($rows != 0) {
 		WHERE p.thread_id='".$_GET['thread_id']."' AND post_hidden='0'
 		ORDER BY post_datestamp LIMIT ".$_GET['rowstart'].",$posts_per_page"
 	);
-	if (iMOD) { echo "<form name='mod_form' method='post' action='".FUSION_SELF."?thread_id=".$_GET['thread_id']."&amp;rowstart=".$_GET['rowstart']."'>\n"; }
+	if (iMOD) { echo "<form name='mod_form' method='post' action='".BASEDIR."forum/viewthread.php?thread_id=".$_GET['thread_id']."&amp;rowstart=".$_GET['rowstart']."'>\n"; }
 	echo "<table cellpadding='0' cellspacing='1' width='100%' class='tbl-border forum_thread_table'>\n";
 	$numrows = dbrows($result); $current_row = 1; $colorbox_rel = array(); $edit_reason = false;
 	while ($data = dbarray($result)) {
@@ -244,22 +245,22 @@ if ($rows != 0) {
 			if (iMEMBER && $settings['thread_notify']) {
 				if (dbcount("(thread_id)", DB_THREAD_NOTIFY, "thread_id='".$_GET['thread_id']."' AND notify_user='".$userdata['user_id']."'")) {
 					$result2 = dbquery("UPDATE ".DB_THREAD_NOTIFY." SET notify_datestamp='".time()."', notify_status='1' WHERE thread_id='".$_GET['thread_id']."' AND notify_user='".$userdata['user_id']."'");
-					echo "<a href='postify.php?post=off&amp;forum_id=".$fdata['forum_id']."&amp;thread_id=".$_GET['thread_id']."'>".$locale['515']."</a>";
+					echo "<a href='".BASEDIR."forum/postify.php?post=off&amp;forum_id=".$fdata['forum_id']."&amp;thread_id=".$_GET['thread_id']."'>".$locale['515']."</a>";
 				} else {
-					echo "<a href='postify.php?post=on&amp;forum_id=".$fdata['forum_id']."&amp;thread_id=".$_GET['thread_id']."'>".$locale['516']."</a>";
+					echo "<a href='".BASEDIR."forum/postify.php?post=on&amp;forum_id=".$fdata['forum_id']."&amp;thread_id=".$_GET['thread_id']."'>".$locale['516']."</a>";
 				}
 			}
 			echo "&nbsp;<a href='".BASEDIR."print.php?type=F&amp;thread=".$_GET['thread_id']."&amp;rowstart=".$_GET['rowstart']."'><img src='".get_image("printer")."' alt='".$locale['519']."' title='".$locale['519']."' style='border:0;vertical-align:middle' /></a></div>\n";
 			add_to_title($locale['global_201'].$fdata['thread_subject']);
-			echo "<div style='position:absolute' class='forum_thread_title'><!--forum_thread_title--><strong>".$fdata['thread_subject']."</strong></div>\n</td>\n</tr>\n";
+			echo "<div class='forum_thread_title'><!--forum_thread_title--><strong>".$fdata['thread_subject']."</strong></div>\n</td>\n</tr>\n";
 		}
 		echo "<!--forum_thread_prepost_".$current_row."-->\n";
 		if ($current_row > 1) { echo "<tr>\n<td colspan='2' class='tbl1 forum_thread_post_space' style='height:10px'></td>\n</tr>\n"; }
 		echo "<tr>\n<td class='tbl2 forum_thread_user_name' style='width:140px'><!--forum_thread_user_name-->".profile_link($data['user_id'], $data['user_name'], $data['user_status'])."</td>\n";
 		echo "<td class='tbl2 forum_thread_post_date'>\n";
 		echo "<div style='float:right' class='small'>";
-		echo "<a href='#top'><img src='".get_image("up")."' alt='".$locale['541']."' title='".$locale['542']."' style='border:0;vertical-align:middle' /></a>\n";
-		echo "&nbsp;<a href='#post_".$data['post_id']."' name='post_".$data['post_id']."' id='post_".$data['post_id']."'>#".($current_row+$_GET['rowstart'])."</a>";
+		echo "<a href='".BASEDIR."forum/viewthread.php?forum_id=".$_GET['thread_id']."&amp;thread_id=".$_GET['thread_id']."#top'><img src='".get_image("up")."' alt='".$locale['541']."' title='".$locale['542']."' style='border:0;vertical-align:middle' /></a>\n";
+		echo "&nbsp;<a href='".BASEDIR."forum/viewthread.php?forum_id=".$_GET['thread_id']."&amp;thread_id=".$_GET['thread_id']."#post_".$data['post_id']."' name='post_".$data['post_id']."' id='post_".$data['post_id']."'>#".($current_row+$_GET['rowstart'])."</a>";
 		echo "&nbsp;<a href='".BASEDIR."print.php?type=F&amp;thread=".$_GET['thread_id']."&amp;post=".$data['post_id']."&amp;nr=".($current_row+$_GET['rowstart'])."'><img src='".get_image("printer")."' alt='".$locale['519a']."' title='".$locale['519a']."' style='border:0;vertical-align:middle' /></a></div>\n";
 		echo "<div class='small'>".$locale['505'].showdate("forumdate", $data['post_datestamp'])."</div>\n";
 		echo "</td>\n";
@@ -305,7 +306,7 @@ if ($rows != 0) {
 						$i_images++;
 					} else {
 						if($i_files > 0) $a_files .= "<br />\n";
-						$a_files .= "<a href='".FUSION_SELF."?thread_id=".$_GET['thread_id']."&amp;getfile=".$a_data['attach_id']."'>".$a_data['attach_name']."</a>&nbsp;";
+						$a_files .= "<a href='".BASEDIR."forum/viewthread.php?thread_id=".$_GET['thread_id']."&amp;getfile=".$a_data['attach_id']."'>".$a_data['attach_name']."</a>&nbsp;";
 						$a_files .= "[<span class='small'>".parsebytesize(filesize(FORUM."attachments/".$a_data['attach_name']))." / ".$a_data['attach_count'].$locale['507a']."</span>]\n";
 						$i_files++;
 					}
@@ -353,17 +354,18 @@ if ($rows != 0) {
 		echo "</div>\n<div style='float:right' class='small'>\n";
 		if (iMEMBER && ($can_post || $can_reply)) {
 			if (!$fdata['thread_locked']) {
-				echo "<a href='post.php?action=reply&amp;forum_id=".$data['forum_id']."&amp;thread_id=".$data['thread_id']."&amp;post_id=".$data['post_id']."&amp;quote=".$data['post_id']."'><img src='".get_image("quote")."' alt='".$locale['569']."' style='border:0px;vertical-align:middle' /></a>\n";
+				echo "<a href='".BASEDIR."forum/post.php?action=reply&amp;forum_id=".$data['forum_id']."&amp;thread_id=".$data['thread_id']."&amp;post_id=".$data['post_id']."&amp;quote=".$data['post_id']."'><img src='".get_image("quote")."' alt='".$locale['569']."' style='border:0px;vertical-align:middle' /></a>\n";
 				if (iMOD || (($lock_edit && $last_post['post_id'] == $data['post_id'] || !$lock_edit)) && ($userdata['user_id'] == $data['post_author']) && ($settings['forum_edit_timelimit'] <= 0 || time() - $settings['forum_edit_timelimit']*60 < $data['post_datestamp'])) {
-					echo "<a href='post.php?action=edit&amp;forum_id=".$data['forum_id']."&amp;thread_id=".$data['thread_id']."&amp;post_id=".$data['post_id']."'><img src='".get_image("forum_edit")."' alt='".$locale['568']."' style='border:0px;vertical-align:middle' /></a>\n";
+					echo "<a href='".BASEDIR."forum/post.php?action=edit&amp;forum_id=".$data['forum_id']."&amp;thread_id=".$data['thread_id']."&amp;post_id=".$data['post_id']."'><img src='".get_image("forum_edit")."' alt='".$locale['568']."' style='border:0px;vertical-align:middle' /></a>\n";
 				}
 			} elseif (iMOD) {
-				echo "<a href='post.php?action=edit&amp;forum_id=".$data['forum_id']."&amp;thread_id=".$data['thread_id']."&amp;post_id=".$data['post_id']."'><img src='".get_image("forum_edit")."' alt='".$locale['568']."' style='border:0px;vertical-align:middle' /></a>\n";
+				echo "<a href='".BASEDIR."forum/post.php?action=edit&amp;forum_id=".$data['forum_id']."&amp;thread_id=".$data['thread_id']."&amp;post_id=".$data['post_id']."'><img src='".get_image("forum_edit")."' alt='".$locale['568']."' style='border:0px;vertical-align:middle' /></a>\n";
 			}
 		}
 		echo "</div>\n</td>\n</tr>\n";
 		$current_row++;
 	}
+
 	/** javascript **/
 	// highlight jQuery plugin
 	if (isset($_GET['highlight'])) {
@@ -398,9 +400,7 @@ if ($rows != 0) {
 		$edit_reason_js .=    "});";
 	}
 }
-
 echo "</table><!--sub_forum_thread_table-->\n";
-
 if (iMOD) {
 	echo "<table cellspacing='0' cellpadding='0' width='100%'>\n<tr>\n<td style='padding-top:5px'>";
 	echo "<a href='#' onclick=\"javascript:setChecked('mod_form','delete_post[]',1);return false;\">".$locale['460']."</a> ::\n";
@@ -411,7 +411,7 @@ if (iMOD) {
 
 if ($rows > $posts_per_page) {
 	echo "<div align='center' style='padding-top:5px'>\n";
-	echo makepagenav($_GET['rowstart'],$posts_per_page,$rows,3,FUSION_SELF."?thread_id=".$_GET['thread_id'].(isset($_GET['highlight']) ? "&amp;highlight=".urlencode($_GET['highlight']):"")."&amp;")."\n";
+	echo makepagenav($_GET['rowstart'],$posts_per_page,$rows,3,BASEDIR."forum/viewthread.php?thread_id=".$_GET['thread_id'].(isset($_GET['highlight']) ? "&amp;highlight=".urlencode($_GET['highlight']):"")."&amp;")."\n";
 	echo "</div>\n";
 }
 
@@ -434,7 +434,7 @@ while ($data = dbarray($result)) {
 }
 $forum_list .= "</optgroup>\n";
 if (iMOD) {
-	echo "<form name='modopts' method='post' action='options.php?forum_id=".$fdata['forum_id']."&amp;thread_id=".$_GET['thread_id']."'>\n";
+	echo "<form name='modopts' method='post' action='".BASEDIR."forum/options.php?forum_id=".$fdata['forum_id']."&amp;thread_id=".$_GET['thread_id']."'>\n";
 }
 echo "<table cellpadding='0' cellspacing='0' width='100%'>\n<tr>\n";
 echo "<td style='padding-top:5px'>".$locale['540']."<br />\n";
@@ -459,11 +459,11 @@ if ($can_post || $can_reply) {
 	echo "<table cellpadding='0' cellspacing='0' width='100%'>\n<tr>\n";
 	echo "<td align='right' style='padding-top:10px'>\n<!--post_forum_buttons-->\n";
 	if ($can_post) {
-		echo "<a href='post.php?action=newthread&amp;forum_id=".$fdata['forum_id']."'>";
+		echo "<a href='".BASEDIR."forum/post.php?action=newthread&amp;forum_id=".$fdata['forum_id']."'>";
 		echo "<img src='".get_image("newthread")."' alt='".$locale['566']."' style='border:0px' /></a>\n";
 	}
 	if (!$fdata['thread_locked'] && $can_reply) {
-		echo "<a href='post.php?action=reply&amp;forum_id=".$fdata['forum_id']."&amp;thread_id=".$_GET['thread_id']."'>";
+		echo "<a href='".BASEDIR."forum/post.php?action=reply&amp;forum_id=".$fdata['forum_id']."&amp;thread_id=".$_GET['thread_id']."'>";
 		echo "<img src='".get_image("reply")."' alt='".$locale['565']."' style='border:0px' /></a>\n";
 	}
 	echo "</td>\n</tr>\n</table>\n";
@@ -473,7 +473,7 @@ closetable();
 if ($can_reply && !$fdata['thread_locked']) {
 	require_once INCLUDES."bbcode_include.php";
 	opentable($locale['512']);
-	echo "<form name='inputform' method='post' action='".FORUM."post.php?action=reply&amp;forum_id=".$fdata['forum_id']."&amp;thread_id=".$_GET['thread_id']."'>\n";
+	echo "<form name='inputform' method='post' action='".BASEDIR."forum/post.php?action=reply&amp;forum_id=".$fdata['forum_id']."&amp;thread_id=".$_GET['thread_id']."'>\n";
 	echo "<table cellpadding='0' cellspacing='1' class='tbl-border center'>\n<tr>\n";
 	echo "<td align='center' class='tbl1'><textarea name='message' cols='70' rows='7' class='textbox' style='width:98%'></textarea><br />\n";
 	echo display_bbcodes("360px", "message")."</td>\n";
@@ -493,7 +493,9 @@ if ($can_reply && !$fdata['thread_locked']) {
 	echo "</td>\n";
 	echo "</tr>\n<tr>\n";
 	echo "<td align='center' class='tbl1'>\n";
-	echo "<input type='submit' name='previewreply' value='".$locale['514a']."' class='button' />&nbsp;\n";
+	if (!$settings['site_seo']) {
+		echo "<input type='submit' name='previewreply' value='".$locale['514a']."' class='button' />&nbsp;\n";
+	}
 	echo "<input type='submit' name='postreply' value='".$locale['514']."' class='button' />\n";
 	echo "</td>\n";
 	echo "</tr>\n</table>\n</form><!--sub_forum_thread-->\n";
@@ -514,7 +516,7 @@ $viewthread_js .= "});";
 $viewthread_js .= "});";
 // below functions could be made more unobtrusive thanks to jQuery, giving a more accessible cms
 $viewthread_js .= "function jumpforum(forum_id){";
-$viewthread_js .=    "document.location.href='".FORUM."viewforum.php?forum_id='+forum_id;";
+$viewthread_js .=    "document.location.href='".BASEDIR."forum/viewforum.php?forum_id='+forum_id;";
 $viewthread_js .= "}";
 if (iMOD) { // only moderators need this javascript
 	$viewthread_js .= "function setChecked(frmName,chkName,val){";
@@ -528,7 +530,8 @@ if (iMOD) { // only moderators need this javascript
 	$viewthread_js .= "}"; }
 $viewthread_js .= "/*]]>*/";
 $viewthread_js .= "</script>";
-add_to_footer($viewthread_js); //unset($viewthread_js);
+
+add_to_footer($viewthread_js);
 
 require_once THEMES."templates/footer.php";
 ?>

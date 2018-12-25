@@ -15,13 +15,13 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../maincore.php";
+require_once __DIR__."/../maincore.php";
 require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."forum/post.php";
 
 add_to_title($locale['global_204']);
 
-if (!isset($_GET['forum_id']) || !isnum($_GET['forum_id'])) { redirect("index.php"); }
+if (!isset($_GET['forum_id']) || !isnum($_GET['forum_id'])) { redirect(BASEDIR."forum/index.php"); }
 
 if (!isset($_GET['error']) || !isnum($_GET['error']) || $_GET['error'] == 0 || $_GET['error'] > 6) { $_GET['error'] = 0; $errorb = ""; }
 elseif ($_GET['error'] == 1) { $errorb = $locale['440a']; }
@@ -33,11 +33,11 @@ elseif ($_GET['error'] == 6) { $errorb = sprintf($locale['455'], $settings['foru
 
 $valid_get = array("on", "off", "new", "reply", "edit");
 
-if (!iMEMBER || !in_array($_GET['post'], $valid_get)) { redirect("index.php"); }
+if (!iMEMBER || !in_array($_GET['post'], $valid_get)) { redirect(BASEDIR."forum/index.php"); }
 
 if (($_GET['post'] == "on" || $_GET['post'] == "off") && $settings['thread_notify']) {
 	$output = false;
-	if (!isset($_GET['thread_id']) || !isnum($_GET['thread_id'])) { redirect("index.php"); }
+	if (!isset($_GET['thread_id']) || !isnum($_GET['thread_id'])) { redirect(BASEDIR."forum/index.php"); }
 	$result = dbquery(
 		"SELECT tt.*, tf.forum_access FROM ".DB_THREADS." tt
 		INNER JOIN ".DB_FORUMS." tf ON tt.forum_id=tf.forum_id
@@ -46,7 +46,7 @@ if (($_GET['post'] == "on" || $_GET['post'] == "off") && $settings['thread_notif
 	if (dbrows($result)) {
 		$data = dbarray($result);
 		if (checkgroup($data['forum_access'])) {
-			add_to_head("<meta http-equiv='refresh' content='2; url=viewthread.php?forum_id=".$_GET['forum_id']."&amp;thread_id=".$_GET['thread_id']."' />\n");
+			add_to_head("<meta http-equiv='refresh' content='2; url=".BASEDIR."forum/viewthread.php?forum_id=".$_GET['forum_id']."&amp;thread_id=".$_GET['thread_id']."' />\n");
 			$output = true;
 			opentable($locale['451']);
 			echo "<div style='text-align:center'><br />\n";
@@ -57,13 +57,13 @@ if (($_GET['post'] == "on" || $_GET['post'] == "off") && $settings['thread_notif
 				$result = dbquery("DELETE FROM ".DB_THREAD_NOTIFY." WHERE thread_id='".$_GET['thread_id']."' AND notify_user='".$userdata['user_id']."'");
 				echo $locale['453']."<br /><br />\n";
 			}
-			echo "<a href='viewthread.php?forum_id=".$_GET['forum_id']."&amp;thread_id=".$_GET['thread_id']."'>".$locale['447']."</a> ::\n";
-			echo "<a href='viewforum.php?forum_id=".$_GET['forum_id']."'>".$locale['448']."</a> ::\n";
-			echo "<a href='index.php'>".$locale['449']."</a><br /><br />\n</div>\n";
+			echo "<a href='".BASEDIR."forum/viewthread.php?forum_id=".$_GET['forum_id']."&amp;thread_id=".$_GET['thread_id']."'>".$locale['447']."</a> ::\n";
+			echo "<a href='".BASEDIR."forum/viewforum.php?forum_id=".$_GET['forum_id']."'>".$locale['448']."</a> ::\n";
+			echo "<a href='".BASEDIR."forum/index.php'>".$locale['449']."</a><br /><br />\n</div>\n";
 			closetable();
 		}
 	}
-	if (!$output) redirect("index.php");
+	if (!$output) redirect(BASEDIR."forum/index.php");
 } elseif ($_GET['post'] == "new") {
 	add_to_title($locale['global_201'].$locale['401']);
 	opentable($locale['401']);
@@ -74,15 +74,15 @@ if (($_GET['post'] == "on" || $_GET['post'] == "off") && $settings['thread_notif
 		echo $locale['442']."<br /><br />\n";
 	}
 	if ($_GET['error'] < 3) {
-		if (!isset($_GET['thread_id']) || !isnum($_GET['thread_id'])) { redirect("index.php"); }
-		echo "<a href='viewthread.php?thread_id=".$_GET['thread_id']."'>".$locale['447']."</a> ::\n";
-		add_to_head("<meta http-equiv='refresh' content='2; url=viewthread.php?thread_id=".$_GET['thread_id']."' />\n");
+		if (!isset($_GET['thread_id']) || !isnum($_GET['thread_id'])) { redirect(BASEDIR."forum/index.php"); }
+		echo "<a href='".BASEDIR."forum/viewthread.php?thread_id=".$_GET['thread_id']."'>".$locale['447']."</a> ::\n";
+		add_to_head("<meta http-equiv='refresh' content='2; url=".BASEDIR."forum/viewthread.php?thread_id=".$_GET['thread_id']."' />\n");
 	}
-	echo "<a href='viewforum.php?forum_id=".$_GET['forum_id']."'>".$locale['448']."</a> ::\n";
-	echo "<a href='index.php'>".$locale['449']."</a><br /><br /></div>\n";
+	echo "<a href='".BASEDIR."forum/viewforum.php?forum_id=".$_GET['forum_id']."'>".$locale['448']."</a> ::\n";
+	echo "<a href='".BASEDIR."forum/index.php'>".$locale['449']."</a><br /><br /></div>\n";
 	closetable();
 } elseif ($_GET['post'] == "reply") {
-	if (!isset($_GET['thread_id']) || !isnum($_GET['thread_id'])) { redirect("index.php"); }
+	if (!isset($_GET['thread_id']) || !isnum($_GET['thread_id'])) { redirect(BASEDIR."forum/index.php"); }
 	add_to_title($locale['global_201'].$locale['403']);
 	opentable($locale['403']);
 	echo "<div style='text-align:center'><br />\n";
@@ -92,8 +92,8 @@ if (($_GET['post'] == "on" || $_GET['post'] == "off") && $settings['thread_notif
 		echo $locale['443']."<br /><br />\n";
 	}
 	if ($_GET['error'] < "2") {
-		if (!isset($_GET['post_id']) || !isnum($_GET['post_id'])) { redirect("index.php"); }
-		add_to_head("<meta http-equiv='refresh' content='2; url=viewthread.php?thread_id=".$_GET['thread_id']."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id']."' />\n");
+		if (!isset($_GET['post_id']) || !isnum($_GET['post_id'])) { redirect(BASEDIR."forum/index.php"); }
+		add_to_head("<meta http-equiv='refresh' content='2; url=".BASEDIR."forum/viewthread.php?thread_id=".$_GET['thread_id']."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id']."' />\n");
 		if ($settings['thread_notify']) {
 			$result = dbquery(
 				"SELECT tn.*, tu.user_id, tu.user_name, tu.user_email, tu.user_level, tu.user_groups
@@ -142,20 +142,20 @@ if (($_GET['post'] == "on" || $_GET['post'] == "off") && $settings['thread_notif
 				$result = dbquery("UPDATE ".DB_THREAD_NOTIFY." SET notify_status='0' WHERE thread_id='".$_GET['thread_id']."' AND notify_user!='".$userdata['user_id']."'");
 			}
 		}
-		echo "<a href='viewthread.php?thread_id=".$_GET['thread_id']."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id']."'>".$locale['447']."</a> ::\n";
+		echo "<a href='".BASEDIR."forum/viewthread.php?thread_id=".$_GET['thread_id']."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id']."'>".$locale['447']."</a> ::\n";
 	} else {
-		if (!isset($_GET['thread_id']) || !isnum($_GET['thread_id'])) { redirect("index.php"); }
+		if (!isset($_GET['thread_id']) || !isnum($_GET['thread_id'])) { redirect(BASEDIR."forum/index.php"); }
 		$data = dbarray(dbquery("SELECT post_id FROM ".DB_POSTS." WHERE thread_id='".$_GET['thread_id']."' ORDER BY post_id DESC"));
-		add_to_head("<meta http-equiv='refresh' content='4; url=viewthread.php?thread_id=".$_GET['thread_id']."&amp;pid=".$data['post_id']."#post_".$data['post_id']."' />\n");
-		echo "<a href='viewthread.php?thread_id=".$_GET['thread_id']."&amp;pid=".$data['post_id']."#post_".$data['post_id']."'>".$locale['447']."</a> ::\n";
+		add_to_head("<meta http-equiv='refresh' content='4; url=".BASEDIR."forum/viewthread.php?thread_id=".$_GET['thread_id']."&amp;pid=".$data['post_id']."#post_".$data['post_id']."' />\n");
+		echo "<a href='".BASEDIR."forum/viewthread.php?thread_id=".$_GET['thread_id']."&amp;pid=".$data['post_id']."#post_".$data['post_id']."'>".$locale['447']."</a> ::\n";
 	}
-	echo "<a href='viewforum.php?forum_id=".$_GET['forum_id']."'>".$locale['448']."</a> ::\n";
-	echo "<a href='index.php'>".$locale['449']."</a><br /><br />\n</div>\n";
+	echo "<a href='".BASEDIR."forum/viewforum.php?forum_id=".$_GET['forum_id']."'>".$locale['448']."</a> ::\n";
+	echo "<a href='".BASEDIR."forum/index.php'>".$locale['449']."</a><br /><br />\n</div>\n";
 	closetable();
 } elseif ($_GET['post'] == "edit") {
-	if (!isset($_GET['thread_id']) || !isnum($_GET['thread_id'])) { redirect("index.php"); }
+	if (!isset($_GET['thread_id']) || !isnum($_GET['thread_id'])) { redirect(BASEDIR."forum/index.php"); }
 	add_to_title($locale['global_201'].$locale['409']);
-	add_to_head("<meta http-equiv='refresh' content='2; url=viewthread.php?thread_id=".$_GET['thread_id']."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id']."' />\n");
+	add_to_head("<meta http-equiv='refresh' content='2; url=".BASEDIR."forum/viewthread.php?thread_id=".$_GET['thread_id']."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id']."' />\n");
 	opentable($locale['409']);
 	echo "<div style='text-align:center'><br />\n";
 	if ($errorb) {
@@ -163,9 +163,9 @@ if (($_GET['post'] == "on" || $_GET['post'] == "off") && $settings['thread_notif
 	} else {
 		echo $locale['446']."<br /><br />\n";
 	}
-	echo "<a href='viewthread.php?thread_id=".$_GET['thread_id']."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id']."'>".$locale['447']."</a> ::\n";
-	echo "<a href='viewforum.php?forum_id=".$_GET['forum_id']."'>".$locale['448']."</a> ::\n";
-	echo "<a href='index.php'>".$locale['449']."</a><br /><br />\n</div>\n";
+	echo "<a href='".BASEDIR."forum/viewthread.php?thread_id=".$_GET['thread_id']."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id']."'>".$locale['447']."</a> ::\n";
+	echo "<a href='".BASEDIR."forum/viewforum.php?forum_id=".$_GET['forum_id']."'>".$locale['448']."</a> ::\n";
+	echo "<a href='".BASEDIR."forum/index.php'>".$locale['449']."</a><br /><br />\n</div>\n";
 	closetable();
 }
 

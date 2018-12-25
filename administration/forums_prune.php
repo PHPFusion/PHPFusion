@@ -60,7 +60,7 @@ if ((!isset($_POST['prune_forum'])) && (isset($_GET['action']) && $_GET['action'
 			}
 		}
 		$result = dbquery("DELETE FROM ".DB_POSTS." WHERE forum_id='".$_GET['forum_id']."' AND post_datestamp < '".$prune_time."'");
-		echo $locale['609'].mysql_affected_rows()."<br />";
+		echo $locale['609'].db_affrows()."<br />";
 		echo $locale['610'].$delattach."<br />";
 		$result = dbquery("SELECT thread_id,thread_lastpost FROM ".DB_THREADS." WHERE  forum_id='".$_GET['forum_id']."' AND thread_lastpost < '".$prune_time."'");
 		if (dbrows($result)) {
@@ -76,7 +76,7 @@ if ((!isset($_POST['prune_forum'])) && (isset($_GET['action']) && $_GET['action'
 		} else {
 			$result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='0', forum_lastuser='0' WHERE forum_id='".$_GET['forum_id']."'");
 		}
-		echo $locale['611'].mysql_affected_rows()."\n</div>";
+		echo $locale['611'].db_affrows()."\n</div>";
 
 		$result = dbquery(
 			"SELECT COUNT(post_id) AS postcount, thread_id FROM ".DB_POSTS."

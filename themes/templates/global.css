@@ -1,31 +1,52 @@
-/**
- * In order to keep compatibility with older themes
- * without making any modification to these themes
- * we add global CSS rules to this file
- */
-a img {
-	border: 0
-}
-dl, dt, dd {
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-}
-.forum_cat_name h3,
-.forum_name h3 {
-	font-size: 12px;
+/* RESET */
+html, body, address, blockquote, div, dl, form, h1, h2, h3, h4, h5, h6, ol, p, pre, table, ul,
+dd, dt, li, tbody, td, tfoot, th, thead, tr, button, del, ins, map, object,
+a, abbr, acronym, b, bdo, big, br, cite, code, dfn, em, i, img, kbd, q, samp, small, span,
+strong, sub, sup, tt, var, legend, fieldset {
 	margin: 0;
+	padding: 0;
 }
-.forum_name h3 {
-	display: inline;
-	font-weight: normal;
+
+ul {
+    list-style:none;
 }
-.forum-icon,
-.forum-stats,
-.forum-lastpost {
-	white-space: nowrap;
+
+.floatfix {
+	overflow:hidden;
 }
-.lastpost-avatar img {
-	width: 40px;
-	margin-right: 4px;
+
+* html .floatfix {
+	width:100%;
 }
+
+.clearfix {
+	display:block;
+}
+
+.clearfix:after, li:after {
+visibility: hidden;
+display: block;
+font-size: 0;
+content: " ";
+clear: both;
+height: 0;
+}
+* html .clearfix, * html 
+{
+zoom: 1;
+} /* IE6 */
+*:first-child+html .clearfix, *:first-child+html  
+{
+zoom: 1;
+} /* IE7 */
+
+.center, *[align="center"] {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.center-block {
+    display: table;
+    margin: 0 auto;
+}
+

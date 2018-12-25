@@ -15,44 +15,44 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "maincore.php";
+require_once __DIR__."/maincore.php";
 require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."search.php";
 
 add_to_title($locale['global_202']);
 
-if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) { $_GET['rowstart'] = 0; }
+if (!isset($_REQUEST['rowstart']) || !isnum($_REQUEST['rowstart'])) { $_REQUEST['rowstart'] = 0; }
 
-if (isset($_GET['stext'])) { 
-	if (is_array($_GET['stext'])) {
+if (isset($_REQUEST['stext'])) { 
+	if (is_array($_REQUEST['stext'])) {
 		redirect(FUSION_SELF);
 	} else {
-		$_GET['stext'] = urlencode(stripinput($_GET['stext'])); 
+		$_REQUEST['stext'] = urlencode(stripinput($_REQUEST['stext'])); 
 	}
 } else {
-	$_GET['stext'] = ""; 
+	$_REQUEST['stext'] = ""; 
 }
 
-if (isset($_GET['method'])) { $_GET['method'] = ($_GET['method']=="OR" || $_GET['method']=="AND") ? $_GET['method'] : "OR"; }
-else { $_GET['method'] = "OR"; }
+if (isset($_REQUEST['method'])) { $_REQUEST['method'] = ($_REQUEST['method']=="OR" || $_REQUEST['method']=="AND") ? $_REQUEST['method'] : "OR"; }
+else { $_REQUEST['method'] = "OR"; }
 
-if (isset($_GET['datelimit'])) { $_GET['datelimit'] = isnum($_GET['datelimit']) ? $_GET['datelimit'] : 0; }
-else { $_GET['datelimit'] = 0; }
+if (isset($_REQUEST['datelimit'])) { $_REQUEST['datelimit'] = isnum($_REQUEST['datelimit']) ? $_REQUEST['datelimit'] : 0; }
+else { $_REQUEST['datelimit'] = 0; }
 
-if (isset($_GET['fields'])) { $_GET['fields'] = isnum($_GET['fields']) ? $_GET['fields'] : 2; }
-else { $_GET['fields'] = 2; }
+if (isset($_REQUEST['fields'])) { $_REQUEST['fields'] = isnum($_REQUEST['fields']) ? $_REQUEST['fields'] : 2; }
+else { $_REQUEST['fields'] = 2; }
 
-if (isset($_GET['sort'])) { $_GET['sort'] = in_array($_GET['sort'], array("datestamp", "subject", "author")) ? $_GET['sort'] : "datestamp"; }
-else { $_GET['sort'] = "datestamp"; }
+if (isset($_REQUEST['sort'])) { $_REQUEST['sort'] = in_array($_REQUEST['sort'], array("datestamp", "subject", "author")) ? $_REQUEST['sort'] : "datestamp"; }
+else { $_REQUEST['sort'] = "datestamp"; }
 
-if (isset($_GET['order'])) { $_GET['order'] = isnum($_GET['order']) ? $_GET['order'] : 0; }
-else { $_GET['order'] = 0; }
+if (isset($_REQUEST['order'])) { $_REQUEST['order'] = isnum($_REQUEST['order']) ? $_REQUEST['order'] : 0; }
+else { $_REQUEST['order'] = 0; }
 
-if (isset($_GET['chars'])) { $_GET['chars'] = isnum($_GET['chars']) ? ($_GET['chars'] > 200 ? 200 : $_GET['chars']) : 50; }
-else { $_GET['chars'] = 50; }
+if (isset($_REQUEST['chars'])) { $_REQUEST['chars'] = isnum($_REQUEST['chars']) ? ($_REQUEST['chars'] > 200 ? 200 : $_REQUEST['chars']) : 50; }
+else { $_REQUEST['chars'] = 50; }
 
-if (isset($_GET['forum_id'])) { $_GET['forum_id'] = isnum($_GET['forum_id']) ? $_GET['forum_id'] : 0; }
-else { $_GET['forum_id'] = 0; }
+if (isset($_REQUEST['forum_id'])) { $_REQUEST['forum_id'] = isnum($_REQUEST['forum_id']) ? $_REQUEST['forum_id'] : 0; }
+else { $_REQUEST['forum_id'] = 0; }
 
 $radio_button = array();
 $form_elements = array();
@@ -66,8 +66,8 @@ while (false !== ($entry = readdir($dh))) {
 closedir($dh);
 $available[] = "all";
 
-if (isset($_GET['stype'])) { $_GET['stype'] = in_array($_GET['stype'], $available) ? $_GET['stype'] : "all"; }
-if (!isset($_GET['stype'])) { $_GET['stype'] = $settings['default_search']; }
+if (isset($_REQUEST['stype'])) { $_REQUEST['stype'] = in_array($_REQUEST['stype'], $available) ? $_REQUEST['stype'] : "all"; }
+if (!isset($_REQUEST['stype'])) { $_REQUEST['stype'] = $settings['default_search']; }
 
 $c_available = count($available);
 for ($i = 0; $i < $c_available - 1; $i++) {
@@ -110,16 +110,16 @@ $search_js .= "document.getElementById('chars').disabled = false;\n";
 $search_js .= "break;\n}\n}\n/*]]>*/\n</script>";
 add_to_footer($search_js);
 
-echo "<form id='searchform' name='searchform' method='get' action='".FUSION_SELF."'>\n";
+echo "<form id='searchform' name='searchform' method='POST' action='".BASEDIR."search.php'>\n";
 echo "<table width='100%' cellpadding='0' cellspacing='1' class='tbl-border'>\n<tr>\n";
 echo "<td class='tbl2' colspan='2'><strong>".$locale['401']."</strong></td>\n";
 echo "</tr>\n<tr>\n";
 echo "<td class='tbl1' style='width:50%;'>\n";
-echo "<input type='text' name='stext' value='".urldecode($_GET['stext'])."' class='textbox' style='width:200px' />\n";
+echo "<input type='text' name='stext' value='".urldecode($_REQUEST['stext'])."' class='textbox' style='width:200px' />\n";
 echo "<input type='submit' name='search' value='".$locale['402']."' class='button' />\n</td>\n";
 echo "<td class='tbl1' align='left' style='width:50%;'>\n";
-echo "<label><input type='radio' name='method' value='OR'".($_GET['method'] == "OR" ? " checked='checked'" : "")." /> ".$locale['403']."</label><br />\n";
-echo "<label><input type='radio' name='method' value='AND'".($_GET['method'] == "AND" ? " checked='checked'" : "")." /> ".$locale['404']."</label></td>\n";
+echo "<label><input type='radio' name='method' value='OR'".($_REQUEST['method'] == "OR" ? " checked='checked'" : "")." /> ".$locale['403']."</label><br />\n";
+echo "<label><input type='radio' name='method' value='AND'".($_REQUEST['method'] == "AND" ? " checked='checked'" : "")." /> ".$locale['404']."</label></td>\n";
 echo "</tr>\n<tr>\n";
 echo "<td class='tbl2'><strong>".$locale['405']."</strong></td>\n";
 echo "<td class='tbl2'><strong>".$locale['406']."</strong></td>\n";
@@ -130,43 +130,43 @@ foreach ($radio_button as $key => $value) {
 	echo "<tr>\n<td>".$value."</td>\n</tr>\n";
 }
 echo "<tr>\n";
-echo "<td><label><input type='radio' name='stype' value='all'".($_GET['stype'] == "all" ? " checked='checked'" : "")." onclick=\"display(this.value)\" /> ".$locale['407']."</label></td>\n";
+echo "<td><label><input type='radio' name='stype' value='all'".($_REQUEST['stype'] == "all" ? " checked='checked'" : "")." onclick=\"display(this.value)\" /> ".$locale['407']."</label></td>\n";
 echo "</tr>\n</table>\n</td>\n";
 echo "<td align='left' valign='top'>\n";
 echo "<table cellpadding='0' cellspacing='0' width='100%'>\n<tr>\n";
 echo "<td class='tbl1'>".$locale['420']."</td>\n";
-echo "<td class='tbl1'><select id='datelimit' name='datelimit' class='textbox'".($_GET['stype']!="all"?(in_array("datelimit", $form_elements[$_GET['stype']]['disabled'])?" disabled='disabled'":""):"").">\n";
-echo "<option value='0'".($_GET['datelimit']==0?" selected='selected'":"").">".$locale['421']."</option>\n";
-echo "<option value='86400'".($_GET['datelimit']==86400?" selected='selected'":"").">".$locale['422']."</option>\n";
-echo "<option value='604800'".($_GET['datelimit']==604800?" selected='selected'":"").">".$locale['423']."</option>\n";
-echo "<option value='1209600'".($_GET['datelimit']==1209600?" selected='selected'":"").">".$locale['424']."</option>\n";
-echo "<option value='2419200'".($_GET['datelimit']==2419200?" selected='selected'":"").">".$locale['425']."</option>\n";
-echo "<option value='7257600'".($_GET['datelimit']==7257600?" selected='selected'":"").">".$locale['426']."</option>\n";
-echo "<option value='14515200'".($_GET['datelimit']==14515200?" selected='selected'":"").">".$locale['427']."</option>\n";
+echo "<td class='tbl1'><select id='datelimit' name='datelimit' class='textbox'".($_REQUEST['stype']!="all"?(in_array("datelimit", $form_elements[$_REQUEST['stype']]['disabled'])?" disabled='disabled'":""):"").">\n";
+echo "<option value='0'".($_REQUEST['datelimit']==0?" selected='selected'":"").">".$locale['421']."</option>\n";
+echo "<option value='86400'".($_REQUEST['datelimit']==86400?" selected='selected'":"").">".$locale['422']."</option>\n";
+echo "<option value='604800'".($_REQUEST['datelimit']==604800?" selected='selected'":"").">".$locale['423']."</option>\n";
+echo "<option value='1209600'".($_REQUEST['datelimit']==1209600?" selected='selected'":"").">".$locale['424']."</option>\n";
+echo "<option value='2419200'".($_REQUEST['datelimit']==2419200?" selected='selected'":"").">".$locale['425']."</option>\n";
+echo "<option value='7257600'".($_REQUEST['datelimit']==7257600?" selected='selected'":"").">".$locale['426']."</option>\n";
+echo "<option value='14515200'".($_REQUEST['datelimit']==14515200?" selected='selected'":"").">".$locale['427']."</option>\n";
 echo "</select></td>\n";
 echo "</tr>\n<tr>\n";
 echo "<td class='tbl1'>&nbsp;</td>\n";
-echo "<td class='tbl1'><label><input type='radio' id='fields1' name='fields' value='2'".($_GET['fields']==2?" checked='checked'":"").($_GET['stype']!="all"?(in_array("fields1", $form_elements[$_GET['stype']]['disabled'])?" disabled='disabled'":""):"")." /> ".$locale['430']."</label><br />\n";
-echo "<label><input type='radio' id='fields2' name='fields' value='1'".($_GET['fields']==1?" checked='checked'":"").($_GET['stype']!="all"?(in_array("fields2", $form_elements[$_GET['stype']]['disabled'])?" disabled='disabled'":""):"")." /> ".$locale['431']."</label><br />\n";
-echo "<label><input type='radio' id='fields3' name='fields' value='0'".($_GET['fields']==0?" checked='checked'":"").($_GET['stype']!="all"?(in_array("fields3", $form_elements[$_GET['stype']]['disabled'])?" disabled='disabled'":""):"")." /> ".$locale['432']."</label></td>\n";
+echo "<td class='tbl1'><label><input type='radio' id='fields1' name='fields' value='2'".($_REQUEST['fields']==2?" checked='checked'":"").($_REQUEST['stype']!="all"?(in_array("fields1", $form_elements[$_REQUEST['stype']]['disabled'])?" disabled='disabled'":""):"")." /> ".$locale['430']."</label><br />\n";
+echo "<label><input type='radio' id='fields2' name='fields' value='1'".($_REQUEST['fields']==1?" checked='checked'":"").($_REQUEST['stype']!="all"?(in_array("fields2", $form_elements[$_REQUEST['stype']]['disabled'])?" disabled='disabled'":""):"")." /> ".$locale['431']."</label><br />\n";
+echo "<label><input type='radio' id='fields3' name='fields' value='0'".($_REQUEST['fields']==0?" checked='checked'":"").($_REQUEST['stype']!="all"?(in_array("fields3", $form_elements[$_REQUEST['stype']]['disabled'])?" disabled='disabled'":""):"")." /> ".$locale['432']."</label></td>\n";
 echo "</tr>\n<tr>\n";
 echo "<td class='tbl1'>".$locale['440']."&nbsp;</td>\n";
-echo "<td class='tbl1'><select id='sort' name='sort' class='textbox'".($_GET['stype']!="all"?(in_array("sort", $form_elements[$_GET['stype']]['disabled'])?" disabled='disabled'":""):"").">\n";
-echo "<option value='datestamp'".($_GET['sort']=="datestamp"?" selected='selected'":"").">".$locale['441']."</option>\n";
-echo "<option value='subject'".($_GET['sort']=="subject"?" selected='selected'":"").">".$locale['442']."</option>\n";
-echo "<option value='author'".($_GET['sort']=="author"?" selected='selected'":"").">".$locale['443']."</option>\n";
+echo "<td class='tbl1'><select id='sort' name='sort' class='textbox'".($_REQUEST['stype']!="all"?(in_array("sort", $form_elements[$_REQUEST['stype']]['disabled'])?" disabled='disabled'":""):"").">\n";
+echo "<option value='datestamp'".($_REQUEST['sort']=="datestamp"?" selected='selected'":"").">".$locale['441']."</option>\n";
+echo "<option value='subject'".($_REQUEST['sort']=="subject"?" selected='selected'":"").">".$locale['442']."</option>\n";
+echo "<option value='author'".($_REQUEST['sort']=="author"?" selected='selected'":"").">".$locale['443']."</option>\n";
 echo "</select></td>\n";
 echo "</tr>\n<tr>\n";
 echo "<td class='tbl1'>&nbsp;</td>\n";
-echo "<td class='tbl1'><label><input type='radio' id='order1' name='order' value='0'".($_GET['order']==0?" checked='checked'":"").($_GET['stype']!="all"?(in_array("order1", $form_elements[$_GET['stype']]['disabled'])?" disabled='disabled'":""):"")." /> ".$locale['450']."</label><br />\n";
-echo "<label><input type='radio' id='order2' name='order' value='1'".($_GET['order']==1?" checked='checked'":"").($_GET['stype']!="all"?(in_array("order2", $form_elements[$_GET['stype']]['disabled'])?" disabled='disabled'":""):"")." /> ".$locale['451']."</label><br /></td>\n";
+echo "<td class='tbl1'><label><input type='radio' id='order1' name='order' value='0'".($_REQUEST['order']==0?" checked='checked'":"").($_REQUEST['stype']!="all"?(in_array("order1", $form_elements[$_REQUEST['stype']]['disabled'])?" disabled='disabled'":""):"")." /> ".$locale['450']."</label><br />\n";
+echo "<label><input type='radio' id='order2' name='order' value='1'".($_REQUEST['order']==1?" checked='checked'":"").($_REQUEST['stype']!="all"?(in_array("order2", $form_elements[$_REQUEST['stype']]['disabled'])?" disabled='disabled'":""):"")." /> ".$locale['451']."</label><br /></td>\n";
 echo "</tr>\n<tr>\n";
 echo "<td class='tbl1'>".$locale['460']."</td>\n";
-echo "<td class='tbl1'><select id='chars' name='chars' class='textbox'".($_GET['stype']!="all"?(in_array("chars", $form_elements[$_GET['stype']]['disabled'])?" disabled='disabled'":""):"").">\n";
-echo "<option value='50'".($_GET['chars']==50?" selected='selected'":"").">50</option>\n";
-echo "<option value='100'".($_GET['chars']==100?" selected='selected'":"").">100</option>\n";
-echo "<option value='150'".($_GET['chars']==150?" selected='selected'":"").">150</option>\n";
-echo "<option value='200'".($_GET['chars']==200?" selected='selected'":"").">200</option>\n";
+echo "<td class='tbl1'><select id='chars' name='chars' class='textbox'".($_REQUEST['stype']!="all"?(in_array("chars", $form_elements[$_REQUEST['stype']]['disabled'])?" disabled='disabled'":""):"").">\n";
+echo "<option value='50'".($_REQUEST['chars']==50?" selected='selected'":"").">50</option>\n";
+echo "<option value='100'".($_REQUEST['chars']==100?" selected='selected'":"").">100</option>\n";
+echo "<option value='150'".($_REQUEST['chars']==150?" selected='selected'":"").">150</option>\n";
+echo "<option value='200'".($_REQUEST['chars']==200?" selected='selected'":"").">200</option>\n";
 echo "</select> ".$locale['461']."</td>\n";
 echo "</tr>\n</table>\n";
 echo "</td>\n</tr>\n</table>\n</form>\n";
@@ -179,8 +179,8 @@ function search_striphtmlbbcodes($text) {
 }
 
 function search_textfrag($text) {
-	if ($_GET['chars'] != 0) {
-		$text = nl2br(stripslashes(substr($text, 0, $_GET['chars'])."..."));
+	if ($_REQUEST['chars'] != 0) {
+		$text = nl2br(stripslashes(substr($text, 0, $_REQUEST['chars'])."..."));
 	} else {
 		$text = nl2br(stripslashes($text));
 	}
@@ -200,7 +200,7 @@ function search_querylike($field) {
 	global $swords;
 	$querylike = ""; $c_swords = count($swords); //sizeof($swords)
 	for ($i = 0; $i < $c_swords; $i++) {
-		$querylike .= $field." LIKE '%".$swords[$i]."%'".($i < $c_swords - 1 ? " ".$_GET['method']." " : "");
+		$querylike .= $field." LIKE '%".$swords[$i]."%'".($i < $c_swords - 1 ? " ".$_REQUEST['method']." " : "");
 	}
 	return $querylike;
 }
@@ -230,11 +230,11 @@ function search_globalarray($search_result) {
 function search_navigation($rows) {
 	global $site_search_count, $composevars;
 	$site_search_count += $rows;
-	$navigation_result = "<div align='center' style='margin-top:5px;'>\n".makePageNav($_GET['rowstart'], 10, ($site_search_count > 100 || search_globalarray("") ? 100 : $site_search_count), 3, FUSION_SELF."?stype=".$_GET['stype']."&amp;stext=".urlencode($_GET['stext'])."&amp;".$composevars)."\n</div>\n";
+	$navigation_result = "<div align='center' style='margin-top:5px;'>\n".makePageNav($_REQUEST['rowstart'], 20, ($site_search_count > 100 || search_globalarray("") ? 100 : $site_search_count), 3, BASEDIR."search.php?stype=".$_REQUEST['stype']."&amp;stext=".urlencode($_REQUEST['stext'])."&amp;".$composevars)."\n</div>\n";
 	return $navigation_result;
 }
 
-$composevars = "method=".$_GET['method']."&amp;datelimit=".$_GET['datelimit']."&amp;fields=".$_GET['fields']."&amp;sort=".$_GET['sort']."&amp;order=".$_GET['order']."&amp;chars=".$_GET['chars']."&amp;forum_id=".$_GET['forum_id']."&amp;";
+$composevars = "method=".$_REQUEST['method']."&amp;datelimit=".$_REQUEST['datelimit']."&amp;fields=".$_REQUEST['fields']."&amp;sort=".$_REQUEST['sort']."&amp;order=".$_REQUEST['order']."&amp;chars=".$_REQUEST['chars']."&amp;forum_id=".$_REQUEST['forum_id']."&amp;";
 
 $memory_limit = str_replace("m", "", strtolower(ini_get("memory_limit"))) * 1024 * 1024;
 $memory_limit = !isnum($memory_limit) ? 8 * 1024 * 1024 : $memory_limit < 8 * 1024 * 1024 ? 8 * 1024 * 1024 : $memory_limit;
@@ -245,11 +245,11 @@ $search_result_array = array();
 $navigation_result = "";
 $items_count = "";
 
-$_GET['stext'] = urldecode($_GET['stext']);
-if ($_GET['stext'] != "" && strlen($_GET['stext']) >= 3) {
+$_REQUEST['stext'] = urldecode($_REQUEST['stext']);
+if ($_REQUEST['stext'] != "" && strlen($_REQUEST['stext']) >= 3) {
 	add_to_title($locale['global_201'].$locale['408']);
 	opentable($locale['408']);
-	$fswords = explode(" ", $_GET['stext']);
+	$fswords = explode(" ", $_REQUEST['stext']);
 	$swords = array();
 	$iwords = array();
 	$c_fswords = count($fswords); //sizeof($fswords)
@@ -281,7 +281,7 @@ if ($_GET['stext'] != "" && strlen($_GET['stext']) >= 3) {
 	$highlight_js .= "</script>";
 	add_to_footer($highlight_js);
 
-	if ($_GET['stype'] == "all") {
+	if ($_REQUEST['stype'] == "all") {
 		$dh = opendir(INCLUDES."search");
 		while (false !== ($entry=readdir($dh))) {
 			if ($entry != "." && $entry != ".." && preg_match("/include.php/i", $entry)) {
@@ -290,7 +290,7 @@ if ($_GET['stext'] != "" && strlen($_GET['stext']) >= 3) {
 		}
 		closedir($dh);
 	} else {
-		include INCLUDES."search/search_".$_GET['stype']."_include.php";
+		include INCLUDES."search/search_".$_REQUEST['stype']."_include.php";
 	}
 
 	$c_iwords = count($iwords);
@@ -302,18 +302,18 @@ if ($_GET['stext'] != "" && strlen($_GET['stext']) >= 3) {
 		echo "<div style='text-align:center;font-weight:bold'>".sprintf($locale['502'], $txt)."</div><br />";
 	}
 
-	if ($_GET['stype'] == "all") {
+	if ($_REQUEST['stype'] == "all") {
 		$navigation_result = search_navigation(0);
-		echo "<div class='quote'>".$items_count."<hr />".THEME_BULLET."&nbsp;<strong>".(($site_search_count>100 || search_globalarray(""))?sprintf($locale['530'], $site_search_count):$site_search_count." ".$locale['510'])."</strong></div><hr />";
+		echo "<div class='quote'>".$items_count." <hr />".THEME_BULLET."&nbsp;<strong>".(($site_search_count>100 || search_globalarray(""))?sprintf($locale['530'], $site_search_count):$site_search_count." ".$locale['510'])."</strong></div><hr />";
 	} else {
 		echo $items_count."<hr />";
 		echo (($site_search_count>100 || search_globalarray("")) ? "<strong>".sprintf($locale['530'], $site_search_count)."</strong><hr />" : "");
 	}
 
 	$c_search_result_array = count($search_result_array);
-	if ($_GET['stype'] == "all") {
-		$from = $_GET['rowstart'];
-		$to = ($c_search_result_array - ($_GET['rowstart'] + 10)) <= 0 ? $c_search_result_array : $_GET['rowstart'] + 10;
+	if ($_REQUEST['stype'] == "all") {
+		$from = $_REQUEST['rowstart'];
+		$to = ($c_search_result_array - ($_REQUEST['rowstart'] + 10)) <= 0 ? $c_search_result_array : $_REQUEST['rowstart'] + 10;
 	} else {
 		$from = 0;
 		$to = $c_search_result_array < 10 ? $c_search_result_array : 10;
@@ -327,7 +327,7 @@ if ($_GET['stext'] != "" && strlen($_GET['stext']) >= 3) {
 	echo $navigation_result;
 	closetable();
 
-} elseif (isset($_GET['stext'])) {
+} elseif (isset($_REQUEST['stext'])) {
 	add_to_title($locale['global_201'].$locale['408']);
 	opentable($locale['408']);
 	echo $locale['501'];

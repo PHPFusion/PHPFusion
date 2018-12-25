@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "maincore.php";
+require_once __DIR__."/maincore.php";
 require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."news_cats.php";
 
@@ -43,7 +43,7 @@ if (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
 			while ($data2 = dbarray($result2)) {
 				echo THEME_BULLET." <a href='news.php?readmore=".$data2['news_id']."'>".$data2['news_subject']."</a><br />\n";
 			}
-			echo "</td>\n</tr>\n<tr>\n<td colspan='2' class='tbl1' style='text-align:center'>".THEME_BULLET." <a href='".FUSION_SELF."'>".$locale['406']."</a>";
+			echo "</td>\n</tr>\n<tr>\n<td colspan='2' class='tbl1' style='text-align:center'>".THEME_BULLET." <a href='".BASEDIR."news_cats.php'>".$locale['406']."</a>";
 			echo "</td>\n</tr>\n</table><!--sub_news_cat-->\n";
 		}
 	}
@@ -63,7 +63,7 @@ if (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
 				while ($data2 = dbarray($result2)) {
 					echo THEME_BULLET." <a href='news.php?readmore=".$data2['news_id']."'>".$data2['news_subject']."</a><br />\n";
 				}
-				if ($rows > 10) { echo "<div style='text-align:right'>".THEME_BULLET." <a href='".FUSION_SELF."?cat_id=".$data['news_cat_id']."'>".$locale['405']."</a></div>\n"; }
+				if ($rows > 10) { echo "<div style='text-align:right'>".THEME_BULLET." <a href='".BASEDIR."news_cats.php?cat_id=".$data['news_cat_id']."'>".$locale['405']."</a></div>\n"; }
 			} else {
 				echo THEME_BULLET." ".$locale['404']."\n";
 			}
@@ -81,7 +81,7 @@ if (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
 			echo THEME_BULLET." <a href='news.php?readmore=".$data['news_id']."'>".$data['news_subject']."</a><br />\n";
 		}
 		$res = 1;
-		if ($nrows > 10) { echo "<div style='text-align:right'>".THEME_BULLET." <a href='".FUSION_SELF."?cat_id=0'>".$locale['405']."</a></div>\n"; }
+		if ($nrows > 10) { echo "<div style='text-align:right'>".THEME_BULLET." <a href='".BASEDIR."news_cats.php?cat_id=0'>".$locale['405']."</a></div>\n"; }
 		echo "</td>\n</tr>\n";
 	}
 	if ($res == 1) {

@@ -16,7 +16,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../maincore.php";
+require_once __DIR__.'/../maincore.php';
 
 if (!checkrights("P") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) { redirect("../index.php"); }
 if (!isset($_GET['panel_side']) || !isNum($_GET['panel_side']) || $_GET['panel_side'] > 6) {
@@ -215,7 +215,7 @@ if (isset($_POST['save'])) {
 		opentable($locale['451']);
 	}
 	$user_groups = getusergroups(); $access_opts = "";
-	while(list($key, $user_group) = each($user_groups)){
+	foreach($user_groups as $user_group) {
 		$sel = (isset($panel_access) && $panel_access == $user_group['0'] ? " selected='selected'" : "");
 		$access_opts .= "<option value='".$user_group['0']."'$sel>".$user_group['1']."</option>\n";
 	}
@@ -254,7 +254,7 @@ if (isset($_POST['save'])) {
 	}
 	echo "<tr>\n";
 	echo "<td valign='top' class='tbl'>".$locale['462']."<br />\n";
-	echo "<span class='small2'><em>".$locale['463']."<br />/news.php<br />/forum/index.php</em></span>";
+	echo "<span class='small2'><em>".$locale['463']."<br />/news*<br />/news.php<br />/forum/index.php</em></span>";
 	echo "</td>\n<td width='200' valign='top' class='tbl'>";
 	echo "<textarea name='panel_url_list' cols='50' rows='5' class='textbox' style='width:300px;'>".$panel_url_list."</textarea>";
 	echo "</td>\n<td valign='top' class='tbl'>";
@@ -290,7 +290,7 @@ if (isset($_POST['save'])) {
 echo "</td></tr>";
 	
 	echo "<tr><td align='center' colspan='3' class='tbl'>\n";
-	echo "<div id='panelopts'".$panelopts."><input type='checkbox' id='panel_display' name='panel_display' value='1'".$panelon." /> ".$locale['459']."</div>\n";
+	echo "<div id='panelopts'".$panelopts."><br /><input type='checkbox' id='panel_display' name='panel_display' value='1'".$panelon." /> ".$locale['459']."</div>\n";
 	echo "<br />\n";
 	if (isset($_GET['panel_id']) && isnum($_GET['panel_id'])) {
 		if ($panel_type == "php") {

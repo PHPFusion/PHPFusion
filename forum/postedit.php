@@ -80,7 +80,7 @@ if (isset($_POST['previewchanges']) || isset($_POST['delete_poll']) || isset($_P
 		$udata = dbarray(dbquery("SELECT user_id, user_name, user_status, user_avatar, user_level, user_posts, user_joined FROM ".DB_USERS." WHERE user_id='".$pdata['post_author']."'"));
 		add_to_title($locale['global_201'].$locale['405']);
 		opentable($locale['405']);
-		echo "<div class='tbl2 forum_breadcrumbs' style='margin-bottom:5px'><a href='index.php'>".$settings['sitename']."</a> &raquo; ".$caption."</div>\n";
+		echo "<div class='tbl2 forum_breadcrumbs' style='margin-bottom:5px'><a href='".BASEDIR."forum/index.php'>".$settings['sitename']."</a> &raquo; ".$caption."</div>\n";
 
 		if ($fdata['forum_poll'] && checkgroup($fdata['forum_poll'])) {
 			if ($tdata['thread_poll'] == 1 && ($pdata['post_author'] == $tdata['thread_author']) && ($userdata['user_id'] == $tdata['thread_author'] || iSUPERADMIN || iMOD)) {
@@ -159,9 +159,9 @@ if (isset($_POST['savechanges'])) {
 			add_to_title($locale['global_201'].$locale['407']);
 			opentable($locale['407']);
 			echo "<div style='text-align:center'><br />\n".$locale['445']."<br /><br />\n";
-			if ($posts > 0) { echo "<a href='viewthread.php?thread_id=".$_GET['thread_id']."'>".$locale['447']."</a> ::\n"; }
-			echo "<a href='viewforum.php?forum_id=".$_GET['forum_id']."'>".$locale['448']."</a> ::\n";
-			echo "<a href='index.php'>".$locale['449']."</a><br /><br />\n</div>\n";
+			if ($posts > 0) { echo "<a href='".BASEDIR."forum/viewthread.php?thread_id=".$_GET['thread_id']."'>".$locale['447']."</a> ::\n"; }
+			echo "<a href='".BASEDIR."forum/viewforum.php?forum_id=".$_GET['forum_id']."'>".$locale['448']."</a> ::\n";
+			echo "<a href='".BASEDIR."forum/index.php'>".$locale['449']."</a><br /><br />\n</div>\n";
 			closetable();
 		}
 	} else {
@@ -260,7 +260,7 @@ if (isset($_POST['savechanges'])) {
 		} else {
 			$error = 4;
 		}
-		redirect("postify.php?post=edit&error=$error&forum_id=".$_GET['forum_id']."&thread_id=".$_GET['thread_id']."&post_id=".$_GET['post_id']);
+		redirect(BASEDIR."forum/postify.php?post=edit&error=$error&forum_id=".$_GET['forum_id']."&thread_id=".$_GET['thread_id']."&post_id=".$_GET['post_id']);
 	}
 } else {
 	if (!isset($_POST['previewchanges']) && !isset($_POST['update_poll_title']) && !isset($_POST['update_poll_option']) && !isset($_POST['delete_poll_option']) && !isset($_POST['add_poll_option'])) {
@@ -284,9 +284,9 @@ if (isset($_POST['savechanges'])) {
 		}
 	}
 	opentable($locale['408']);
-	if (!isset($_POST['previewchanges'])) echo "<div class='tbl2 forum_breadcrumbs' style='margin-bottom:5px'><a href='index.php'>".$settings['sitename']."</a> &raquo; ".$caption."</div>\n";
+	if (!isset($_POST['previewchanges'])) echo "<div class='tbl2 forum_breadcrumbs' style='margin-bottom:5px'><a href='".BASEDIR."forum/index.php'>".$settings['sitename']."</a> &raquo; ".$caption."</div>\n";
 
-	echo "<form name='inputform' method='post' action='".FUSION_SELF."?action=edit&amp;forum_id=".$_GET['forum_id']."&amp;thread_id=".$_GET['thread_id']."&amp;post_id=".$_GET['post_id']."' enctype='multipart/form-data'>\n";
+	echo "<form name='inputform' method='post' action='".BASEDIR."forum/post.php?action=edit&amp;forum_id=".$_GET['forum_id']."&amp;thread_id=".$_GET['thread_id']."&amp;post_id=".$_GET['post_id']."' enctype='multipart/form-data'>\n";
 	echo "<table cellpadding='0' cellspacing='1' width='100%' class='tbl-border'>\n<tr>\n";
 	if ($pdata['first_post'] == $_GET['post_id']) {
 		echo "<td width='145' class='tbl2'>".$locale['460']."</td>\n";

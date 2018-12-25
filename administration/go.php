@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../maincore.php";
+require_once __DIR__.'/../maincore.php';
 if (!checkrights("SU") || !iADMIN) { redirect("../index.php"); }
 
 include THEME."theme.php";
@@ -65,5 +65,5 @@ if (ob_get_length() !== FALSE){
 	ob_end_flush();
 }
 
-mysql_close($db_connect);
+dbclose();
 ?>
