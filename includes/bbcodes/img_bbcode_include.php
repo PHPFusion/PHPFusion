@@ -1,7 +1,7 @@
 <?php
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
-| Copyright © 2002 - 2007 Nick Jones
+| Copyright ï¿½ 2002 - 2007 Nick Jones
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: img_bbcode_include.php

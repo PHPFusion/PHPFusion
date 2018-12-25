@@ -3,7 +3,7 @@ $locale['SB_desc'] = "Shoutbox (Official AddOn)";
 $locale['SB_admin1'] = "Shoutbox Admin";
 
 // Shoutbox
-$locale['SB_title'] = "Skriklåda - Test";
+$locale['SB_title'] = "Skriklï¿½da - Test";
 $locale['SB_name'] = "Name:";
 $locale['SB_message'] = "Message:";
 $locale['SB_shout'] = "Shout";

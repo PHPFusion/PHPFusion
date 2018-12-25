@@ -47,7 +47,7 @@
 "E_CreateDirInvalidPath":"A mappa letrehozasa nem lehetseges - az utvonal nem talalhato",
 "E_CannotDeleteDir":"Hiba a mappa torlese kozben",
 "E_DeleteDirInvalidPath":"A mappa torlese nem lehetseges - az utvonal nem talalhato",
-"E_DeletåFile":"Hiba a fajl torlese kozben",
+"E_Deletï¿½File":"Hiba a fajl torlese kozben",
 "E_DeleteFileInvalidPath":"A fajl torlese nem lehetseges - az utvonal nem talalhato",
 "E_DeleteNonEmpty":"Nem torolheto - a mappa nem ures",
 "E_CannotMoveDirToChild":"A mappa nem mozgathato onmagaba",

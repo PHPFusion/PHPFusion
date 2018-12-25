@@ -72,7 +72,7 @@ if (isset($_POST['savesettings'])) {
 			$settings[$data['settings_name']] = $data['settings_value'];
 		}
 		if (($settings['enabled_languages'] != $_POST['old_enabled_languages']) && !$error) {
-			//Give the Administration new locale based on site´s main locale settings
+			//Give the Administration new locale based on siteï¿½s main locale settings
 			$enabled_languages = explode('.', $settings['enabled_languages']);
 			$old_enabled_languages = explode('.', $old_enabled_languages);
 			//Remove language from guest user settings
@@ -190,7 +190,7 @@ if (isset($_POST['savesettings'])) {
 			}
 		}
 		if (($localeset != $old_localeset) && !$error) {
-			//If the system base language changes, replace Admin´s locale
+			//If the system base language changes, replace Adminï¿½s locale
 			include LOCALE.$localeset."/admin/main.php";
 			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['201']."' WHERE admin_link='administrators.php'");
 			if (!$result) {
