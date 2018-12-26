@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: upgrade.php
-| Author: Nick Jones (Digitanium)
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -16,24 +16,23 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
-
-if (!checkrights("U") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) { redirect("../index.php"); }
+if (!checkrights("U") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {redirect("../index.php");}
 
 require_once THEMES."templates/admin_header.php";
 
 if (file_exists(LOCALE.LOCALESET."admin/upgrade.php")) {
-	include LOCALE.LOCALESET."admin/upgrade.php";
+    include LOCALE.LOCALESET."admin/upgrade.php";
 } else {
-	include LOCALE."English/admin/upgrade.php";
+    include LOCALE."English/admin/upgrade.php";
 }
 
 opentable($locale['400']);
 echo "<div style='text-align:center'><br />\n";
 
 if (str_replace(".", "", $settings['version']) < "80000") {
-	echo "Your PHP-Fusion install reports a version of ".$settings['version']." , there should be an upgrade\n";
+    echo "Your PHP-Fusion install reports a version of ".$settings['version']." , there should be an upgrade\n";
 } else {
-	echo "<br />".$locale['401']."<br /><br />\n";
+    echo "<br />".$locale['401']."<br /><br />\n";
 }
 echo "</div>\n";
 closetable();

@@ -2,10 +2,10 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: settings_ipp.php
-| Author: Hans Kristian Flaatten (Starefossen)
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -16,46 +16,59 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
-
-if (!checkRights("S10") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) { redirect("../index.php"); }
+if (!checkRights("S10") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {redirect("../index.php");}
 
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
 
 if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
-	if ($_GET['error'] == 0) {
-		$message = $locale['900'];
-	} elseif ($_GET['error'] == 1) {
-		$message = $locale['901'];
-	}
-	if (isset($message)) {
-		echo "<div id='close-message'><div class='admin-message'>".$message."</div></div>\n";
-	}
+    if ($_GET['error'] == 0) {
+        $message = $locale['900'];
+    } else if ($_GET['error'] == 1) {
+        $message = $locale['901'];
+    }
+    if (isset($message)) {
+        echo "<div id='close-message'><div class='admin-message'>".$message."</div></div>\n";
+    }
 }
 
 if (isset($_POST['savesettings'])) {
-	$error = 0;
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['newsperpage']) && $_POST['newsperpage'] > 0 ? $_POST['newsperpage'] : "11")."' WHERE settings_name='newsperpage'");
-	if (!$result) { $error = 1; }
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['articles_per_page']) && $_POST['articles_per_page'] > 0 ? $_POST['articles_per_page'] : "15")."' WHERE settings_name='articles_per_page'");
-	if (!$result) { $error = 1; }
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['downloads_per_page']) && $_POST['downloads_per_page'] > 0 ? $_POST['downloads_per_page'] : "15")."' WHERE settings_name='downloads_per_page'");
-	if (!$result) { $error = 1; }
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['links_per_page']) && $_POST['links_per_page'] > 0 ? $_POST['links_per_page'] : "15")."' WHERE settings_name='links_per_page'");
-	if (!$result) { $error = 1; }
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['comments_per_page']) && $_POST['comments_per_page'] > 0 ? $_POST['comments_per_page'] : "10")."' WHERE settings_name='comments_per_page'");
-	if (!$result) { $error = 1; }
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['threads_per_page']) && $_POST['threads_per_page'] > 0 ? $_POST['threads_per_page'] : "20")."' WHERE settings_name='threads_per_page'");
-	if (!$result) { $error = 1; }
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['posts_per_page']) && $_POST['posts_per_page'] > 0 ? $_POST['posts_per_page'] : "20")."' WHERE settings_name='posts_per_page'");
-	if (!$result) { $error = 1; }
-	redirect(FUSION_SELF.$aidlink."&error=".$error);
+    $error = 0;
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['newsperpage']) && $_POST['newsperpage'] > 0 ? $_POST['newsperpage'] : "11")."' WHERE settings_name='newsperpage'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['articles_per_page']) && $_POST['articles_per_page'] > 0 ? $_POST['articles_per_page'] : "15")."' WHERE settings_name='articles_per_page'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['downloads_per_page']) && $_POST['downloads_per_page'] > 0 ? $_POST['downloads_per_page'] : "15")."' WHERE settings_name='downloads_per_page'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['links_per_page']) && $_POST['links_per_page'] > 0 ? $_POST['links_per_page'] : "15")."' WHERE settings_name='links_per_page'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['comments_per_page']) && $_POST['comments_per_page'] > 0 ? $_POST['comments_per_page'] : "10")."' WHERE settings_name='comments_per_page'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['threads_per_page']) && $_POST['threads_per_page'] > 0 ? $_POST['threads_per_page'] : "20")."' WHERE settings_name='threads_per_page'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['posts_per_page']) && $_POST['posts_per_page'] > 0 ? $_POST['posts_per_page'] : "20")."' WHERE settings_name='posts_per_page'");
+    if (!$result) {
+        $error = 1;
+    }
+    redirect(FUSION_SELF.$aidlink."&error=".$error);
 }
 
-$settings2 = array();
+$settings2 = [];
 $result = dbquery("SELECT * FROM ".DB_SETTINGS);
 while ($data = dbarray($result)) {
-	$settings2[$data['settings_name']] = $data['settings_value'];
+    $settings2[$data['settings_name']] = $data['settings_value'];
 }
 
 opentable($locale['400']);

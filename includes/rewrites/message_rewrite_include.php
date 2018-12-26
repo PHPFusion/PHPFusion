@@ -15,19 +15,21 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
-$regex = array(
-	"%msg_send%" => "([0-9]+)",
-	"%msg_read%" => "([0-9]+)",
-	"%msg_id%" => "([0-9]+)",
-	"%folder%" => "([a-zA-Z0-9-_]+)"
-);
+$regex = [
+    "%msg_send%" => "([0-9]+)",
+    "%msg_read%" => "([0-9]+)",
+    "%msg_id%"   => "([0-9]+)",
+    "%folder%"   => "([a-zA-Z0-9-_]+)"
+];
 
-$pattern = array(
-	"message" => "messages.php",
-	"message/%msg_send%/send" => "messages.php?msg_send=%msg_send%",
-	"message/%msg_send%/reply" => "messages.php?folder=%folder%&amp;msg_send=%msg_send%&amp;msg_id=%msg_id%",
-	"message/%folder%" => "messages.php?folder=%folder%",
-	"message/%folder%/%msg_read%" => "messages.php?folder=%folder%&amp;msg_read=%msg_read%",
-);
+$pattern = [
+    "message"                     => "messages.php",
+    "message/%msg_send%/send"     => "messages.php?msg_send=%msg_send%",
+    "message/%msg_send%/reply"    => "messages.php?folder=%folder%&amp;msg_send=%msg_send%&amp;msg_id=%msg_id%",
+    "message/%folder%"            => "messages.php?folder=%folder%",
+    "message/%folder%/%msg_read%" => "messages.php?folder=%folder%&amp;msg_read=%msg_read%",
+];

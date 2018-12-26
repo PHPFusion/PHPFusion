@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: user_offset_include.php
 | Author: Maarten Kossen (mistermartin75)
@@ -15,19 +15,21 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 // Display user field input
 if ($profile_method == "input") {
-	$user_offset = isset($user_data['user_offset']) ? $user_data['user_offset'] : "0.0";
-	if ($this->isError()) {
-		$user_offset = isset($_POST['user_offset']) && is_numeric($_POST['user_offset']) ? $_POST['user_offset'] : $user_offset;
-	}
+    $user_offset = isset($user_data['user_offset']) ? $user_data['user_offset'] : "0.0";
+    if ($this->isError()) {
+        $user_offset = isset($_POST['user_offset']) && is_numeric($_POST['user_offset']) ? $_POST['user_offset'] : $user_offset;
+    }
 
-	echo "<tr>\n";
-	echo "<td class='tbl".$this->getErrorClass("user_offset")."'><label for='user_offset_input'>".$locale['uf_offset'].$required."</label></td>\n";
-	echo "<td class='tbl".$this->getErrorClass("user_offset")."'><select id='user_offset_input' name='user_offset' class='textbox' style='width:200px;'>\n";
-	echo "<option value='-12.0'".($user_offset == "-12.0" ? " selected='selected'" : "").">".$locale['offset_n1200']."</option>\n";
+    echo "<tr>\n";
+    echo "<td class='tbl".$this->getErrorClass("user_offset")."'><label for='user_offset_input'>".$locale['uf_offset'].$required."</label></td>\n";
+    echo "<td class='tbl".$this->getErrorClass("user_offset")."'><select id='user_offset_input' name='user_offset' class='textbox' style='width:200px;'>\n";
+    echo "<option value='-12.0'".($user_offset == "-12.0" ? " selected='selected'" : "").">".$locale['offset_n1200']."</option>\n";
     echo "<option value='-11.0'".($user_offset == "-11.0" ? " selected='selected'" : "").">".$locale['offset_n1100']."</option>\n";
     echo "<option value='-10.0'".($user_offset == "-10.0" ? " selected='selected'" : "").">".$locale['offset_n1000']."</option>\n";
     echo "<option value='-9.0'".($user_offset == "-9.0" ? " selected='selected'" : "").">".$locale['offset_n0900']."</option>\n";
@@ -58,19 +60,19 @@ if ($profile_method == "input") {
     echo "<option value='10.0'".($user_offset == "10.0" ? " selected='selected'" : "").">".$locale['offset_p1000']."</option>\n";
     echo "<option value='11.0'".($user_offset == "11.0" ? " selected='selected'" : "").">".$locale['offset_p1100']."</option>\n";
     echo "<option value='12.0'".($user_offset == "12.0" ? " selected='selected'" : "").">".$locale['offset_p1200']."</option>\n";
-	echo "</select></td>\n";
-	echo "</tr>\n";
+    echo "</select></td>\n";
+    echo "</tr>\n";
 
-// Display in profile
-} elseif ($profile_method == "display") {
+    // Display in profile
+} else if ($profile_method == "display") {
 
-// Insert and update
-} elseif ($profile_method == "validate_insert"  || $profile_method == "validate_update") {
-	// Get input data
-	if (isset($_POST['user_offset']) && is_numeric($_POST['user_offset'])) {
-		// Set update or insert user data
-		$this->_setDBValue("user_offset", $_POST['user_offset']);
-	} else {
-		$this->_setError("user_offset", $locale['uf_offset_error'], true);
-	}
+    // Insert and update
+} else if ($profile_method == "validate_insert" || $profile_method == "validate_update") {
+    // Get input data
+    if (isset($_POST['user_offset']) && is_numeric($_POST['user_offset'])) {
+        // Set update or insert user data
+        $this->_setDBValue("user_offset", $_POST['user_offset']);
+    } else {
+        $this->_setError("user_offset", $locale['uf_offset_error'], TRUE);
+    }
 }

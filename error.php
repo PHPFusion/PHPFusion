@@ -21,22 +21,25 @@ require_once THEMES."templates/header.php";
 
 /**
  * Dir Replacements
+ *
  * @param string $output
+ *
  * @return mixed
  */
-function replaceDir($output="") {
-	$findHTMLTags = "/(href|src)='((?!(htt|ft)p(s)?:\\/\\/)[^\\']*)/i";
-	if (!function_exists("replaceHTMLTags")) {
-		function replaceHTMLTags($m) {
-			$pathInfo = pathinfo($_SERVER['REQUEST_URI']);
-			$pathDepth =  (substr($_SERVER['REQUEST_URI'], -1) == "/" ? substr_count($pathInfo['dirname'], "/") : substr_count($pathInfo['dirname'], "/")-1);
-            $actualDepth = $pathDepth > 0 ? str_repeat("../", $pathDepth): "";
-			$replace = $m[1]."='./".($actualDepth).$m[2];
-			return $replace;
-		}
-	}
-	return preg_replace_callback("$findHTMLTags", "replaceHTMLTags", $output);
+function replaceDir($output = "") {
+    $findHTMLTags = "/(href|src)='((?!(htt|ft)p(s)?:\\/\\/)[^\\']*)/i";
+    if (!function_exists("replaceHTMLTags")) {
+        function replaceHTMLTags($m) {
+            $pathInfo = pathinfo($_SERVER['REQUEST_URI']);
+            $pathDepth = (substr($_SERVER['REQUEST_URI'], -1) == "/" ? substr_count($pathInfo['dirname'], "/") : substr_count($pathInfo['dirname'], "/") - 1);
+            $actualDepth = $pathDepth > 0 ? str_repeat("../", $pathDepth) : "";
+            $replace = $m[1]."='./".($actualDepth).$m[2];
+            return $replace;
+        }
+    }
+    return preg_replace_callback("$findHTMLTags", "replaceHTMLTags", $output);
 }
+
 add_handler("replaceDir");
 
 include LOCALE.LOCALESET."error.php";
@@ -45,7 +48,7 @@ $text = $locale['errunk'];
 $img = "unknown.png";
 
 if (isset($_GET['code'])) {
-    switch($_GET['code']) {
+    switch ($_GET['code']) {
         case 401:
             header("HTTP/1.1 401 Unauthorized");
             $text = $locale['err401'];

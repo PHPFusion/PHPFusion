@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: acp_theme.php
-| Author: PHP-Fusion Inc.
+| Author: PHP-Fusion Inc
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -48,6 +48,6 @@ if (iADMIN && $userdata['user_admin_password']) {
 			redirect(FUSION_SELF.$aidlink."&amp;pagenum=0");
 		}
 	}
-} 
+}
 
 \PHPFusion\Admins::getInstance()->setAdminBreadcrumbs();

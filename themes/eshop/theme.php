@@ -2,7 +2,7 @@
 /*---------------------------------------------------------+
 | PHP-Fusion Content Management System                     |
 | Copyright (C) 2002 - 2010 Nick Jones                     |
-| http://www.php-fusion.co.uk/                             |
+| https://www.php-fusion.co.uk/                             |
 +----------------------------------------------------------+
 | Shop Theme Copyright (C) 2013 Joakim Falk (Domi)         |
 +----------------------------------------------------------+
@@ -94,7 +94,7 @@ $('.scrollup').fadeIn();
 } else {
 $('.scrollup').fadeOut();
 }
-}); 
+});
 $('.scrollup').click(function(){
 $('html, body').animate({ scrollTop: 0 }, 600);
 return false;
@@ -156,8 +156,8 @@ echo "<div style='float:left;margin-left:15px;'>";
 echo "<div id='FbCont".$info['news_id']."'>
 <script type='text/javascript'>
 <!--//--><![CDATA[//><!--
-var fb = document.createElement('fb:like'); 
-fb.setAttribute('href','".$settings['siteurl']."news.php?readmore=".$info['news_id']."'); 
+var fb = document.createElement('fb:like');
+fb.setAttribute('href','".$settings['siteurl']."news.php?readmore=".$info['news_id']."');
 fb.setAttribute('layout','button_count');
 fb.setAttribute('show_faces','true');
 fb.setAttribute('width','1');
@@ -184,12 +184,12 @@ echo "</div>";
 
 //Google+
 echo "<div style='float:left;;margin-left:1px;'>";
-echo "<div class='g-plusone' id='gplusone".$info['news_id']."'></div> 
-<script type='text/javascript'> 
-var Validplus=document.getElementById('gplusone".$info['news_id']."'); 
-Validplus.setAttribute('data-size','medium'); 
-Validplus.setAttribute('data-count','true'); 
-Validplus.setAttribute('data-href','".$settings['siteurl']."news.php?readmore=".$info['news_id']."'); 
+echo "<div class='g-plusone' id='gplusone".$info['news_id']."'></div>
+<script type='text/javascript'>
+var Validplus=document.getElementById('gplusone".$info['news_id']."');
+Validplus.setAttribute('data-size','medium');
+Validplus.setAttribute('data-count','true');
+Validplus.setAttribute('data-href','".$settings['siteurl']."news.php?readmore=".$info['news_id']."');
 </script>";
 echo "</div>";
 //End share buttons
@@ -220,8 +220,8 @@ echo "<div style='float:left;margin-left:15px;'>";
 echo "<div id='FbCont".$info['article_id']."'>
 <script type='text/javascript'>
 <!--//--><![CDATA[//><!--
-var fb = document.createElement('fb:like'); 
-fb.setAttribute('href','".$settings['siteurl']."articles.php?article_id=".$info['article_id']."'); 
+var fb = document.createElement('fb:like');
+fb.setAttribute('href','".$settings['siteurl']."articles.php?article_id=".$info['article_id']."');
 fb.setAttribute('layout','button_count');
 fb.setAttribute('show_faces','true');
 fb.setAttribute('width','1');
@@ -248,12 +248,12 @@ echo "</div>";
 
 //Google+
 echo "<div style='float:left;margin-left:1px;'>";
-echo "<div class='g-plusone' id='gplusone".$info['article_id']."'></div> 
-<script type='text/javascript'> 
-var Validplus=document.getElementById('gplusone".$info['article_id']."'); 
-Validplus.setAttribute('data-size','medium'); 
-Validplus.setAttribute('data-count','true'); 
-Validplus.setAttribute('data-href','".$settings['siteurl']."articles.php?article_id=".$info['article_id']."'); 
+echo "<div class='g-plusone' id='gplusone".$info['article_id']."'></div>
+<script type='text/javascript'>
+var Validplus=document.getElementById('gplusone".$info['article_id']."');
+Validplus.setAttribute('data-size','medium');
+Validplus.setAttribute('data-count','true');
+Validplus.setAttribute('data-href','".$settings['siteurl']."articles.php?article_id=".$info['article_id']."');
 </script>";
 echo "</div>";
 //End share buttons

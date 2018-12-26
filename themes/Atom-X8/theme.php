@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) 2002 - 2011 PHP-Fusion International
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: theme.php
 | Author: Hien (Frederick MC Chan)
@@ -73,7 +73,7 @@ function render_page($license = false) {
 	$(document).ready(function() {
 		prettyPrint();
 
-		$(".downloadolay").colorbox({iframe:true,height:"100%",width:"100%",maxWidth:"560px",maxHeight:"170px",scrolling:false,overlayClose:false,transition:"elastic"});			
+		$(".downloadolay").colorbox({iframe:true,height:"100%",width:"100%",maxWidth:"560px",maxHeight:"170px",scrolling:false,overlayClose:false,transition:"elastic"});
 
 		$(".newsoverlay").colorbox({
 			transition: "elasic",

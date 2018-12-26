@@ -2,7 +2,7 @@
 /*---------------------------------------------------------+
 | PHP-Fusion Content Management System                     |
 | Copyright (C) 2002 - 2010 Nick Jones                     |
-| http://www.php-fusion.co.uk/                             |
+| https://www.php-fusion.co.uk/                             |
 +----------------------------------------------------------+
 | Arise Theme Copyright (C) 2011 Joakim Falk (Falk)        |
 +----------------------------------------------------------+

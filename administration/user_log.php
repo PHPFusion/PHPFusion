@@ -2,10 +2,10 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: user_log.php
-| Author: gh0st2k
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -16,13 +16,14 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
-
-if (!checkrights("UL") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) { redirect("../index.php"); }
+if (!checkrights("UL") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {redirect("../index.php");}
 
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/user_log.php";
 
-if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) { $_GET['rowstart'] = 0; }
+if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) {
+    $_GET['rowstart'] = 0;
+}
 
 // Start $_GET Vars
 // Set default values
@@ -35,54 +36,54 @@ $expr = "DESC";
 $user = "";
 $userField = "";
 
-$orderbyArray = array($locale['102'] =>"userlog_timestamp", $locale['103'] => "user_name", $locale['104'] =>"userlog_field" );
-$exprArray = array("DESC", "ASC");
+$orderbyArray = [$locale['102'] => "userlog_timestamp", $locale['103'] => "user_name", $locale['104'] => "userlog_field"];
+$exprArray = ["DESC", "ASC"];
 
 if (isset($_GET) && !empty($_GET)) {
-	if (isset($_GET['orderby']) && in_array($_GET['orderby'], $orderbyArray)) {
-		$orderby = $_GET['orderby'];
-		$dbOrder = "ORDER BY ".$_GET['orderby'];
-		if (isset($_GET['expr']) && in_array($_GET['expr'], $exprArray)) {
-			$expr = $_GET['expr'];
-			$dbOrder .= " ".$_GET['expr'];
-		}
-	}
+    if (isset($_GET['orderby']) && in_array($_GET['orderby'], $orderbyArray)) {
+        $orderby = $_GET['orderby'];
+        $dbOrder = "ORDER BY ".$_GET['orderby'];
+        if (isset($_GET['expr']) && in_array($_GET['expr'], $exprArray)) {
+            $expr = $_GET['expr'];
+            $dbOrder .= " ".$_GET['expr'];
+        }
+    }
 
-	if (isset($_GET['user'])) {
-		if (isnum($_GET['user'])) {
-			$user = $_GET['user'];
-			$dbWhere = "userlog_user_id='".$_GET['user']."'";
-		} elseif ($_GET['user'] != "") {
-			$user = trim(stripinput($_GET['user']));
-			$dbWhere = "user_name LIKE '".$user."%'";
-		}
-	}
+    if (isset($_GET['user'])) {
+        if (isnum($_GET['user'])) {
+            $user = $_GET['user'];
+            $dbWhere = "userlog_user_id='".$_GET['user']."'";
+        } else if ($_GET['user'] != "") {
+            $user = trim(stripinput($_GET['user']));
+            $dbWhere = "user_name LIKE '".$user."%'";
+        }
+    }
 
-	if (isset($_GET['userField']) && $_GET['userField'] != "---" && $_GET['userField'] != "") {
-		$userField = trim(stripinput($_GET['userField']));
-		$dbWhere .= ($dbWhere != "" ? " AND userlog_field='".$userField."'" : "userlog_field='".$userField."'");
-	}
-	$dbWhereCount = $dbWhere;
-	$dbWhere = ($dbWhere != "" ? "WHERE ".$dbWhere : "");
-	// build get string
-	$getString .= "&amp;orderby=".$orderby."&amp;expr=".$expr."&amp;user=".$user."&amp;userField=".$userField;
+    if (isset($_GET['userField']) && $_GET['userField'] != "---" && $_GET['userField'] != "") {
+        $userField = trim(stripinput($_GET['userField']));
+        $dbWhere .= ($dbWhere != "" ? " AND userlog_field='".$userField."'" : "userlog_field='".$userField."'");
+    }
+    $dbWhereCount = $dbWhere;
+    $dbWhere = ($dbWhere != "" ? "WHERE ".$dbWhere : "");
+    // build get string
+    $getString .= "&amp;orderby=".$orderby."&amp;expr=".$expr."&amp;user=".$user."&amp;userField=".$userField;
 }
 // End $_GET Vars
 
 
 if (isset($_POST['delete']) && isnum($_POST['delete'])) {
-    $time = time()- $_POST['delete']*24*60*60;
+    $time = time() - $_POST['delete'] * 24 * 60 * 60;
     $result = dbquery("DELETE FROM ".DB_USER_LOG." WHERE userlog_timestamp<".$time);
-	echo "<div id='close-message'><div class='admin-message'>".sprintf($locale['118'], $_POST['delete'])."</div></div>\n";
+    echo "<div id='close-message'><div class='admin-message'>".sprintf($locale['118'], $_POST['delete'])."</div></div>\n";
 }
 
 if (isset($_GET['delete']) && isnum($_GET['delete'])) {
-	$result = dbquery("DELETE FROM ".DB_USER_LOG." WHERE userlog_id='".$_GET['delete']."'");
-	echo "<div id='close-message'><div class='admin-message'>".$locale['119']."</div></div>\n";
+    $result = dbquery("DELETE FROM ".DB_USER_LOG." WHERE userlog_id='".$_GET['delete']."'");
+    echo "<div id='close-message'><div class='admin-message'>".$locale['119']."</div></div>\n";
 }
 
-function orderbyOptions ($select) {
-	global $orderbyArray;
+function orderbyOptions($select) {
+    global $orderbyArray;
     $options = "";
     foreach ($orderbyArray AS $key => $value) {
         $sel = ($select == $value ? "selected='selected'" : "");
@@ -91,27 +92,27 @@ function orderbyOptions ($select) {
     return $options;
 }
 
-function exprOptions ($select) {
-	global $exprArray;
-	$options = "";
-	foreach ($exprArray AS $value) {
-		$sel = ($select == $value ? "selected='selected'" : "");
+function exprOptions($select) {
+    global $exprArray;
+    $options = "";
+    foreach ($exprArray AS $value) {
+        $sel = ($select == $value ? "selected='selected'" : "");
         $options .= "<option ".$sel.">".$value."</option>\n";
-	}
-	return $options;
+    }
+    return $options;
 }
 
 function userFieldOptions($select) {
-	$options = "<option>---</option>\n";
-	$options .= "<option ".($select == "user_name" ? "selected='selected'" : "").">user_name</option>\n";
-	$options .= "<option ".($select == "user_email" ? "selected='selected'" : "").">user_email</option>\n";
-	$result = dbquery("SELECT field_name FROM ".DB_USER_FIELDS." WHERE field_log='1'");
-	if (dbrows($result)) {
-		while ($data = dbarray($result)) {
-			$options .= "<option ".($select == $data['field_name'] ? "selected='selected'" : "").">".$data['field_name']."</option>\n";
-		}
-	}
-	return $options;
+    $options = "<option>---</option>\n";
+    $options .= "<option ".($select == "user_name" ? "selected='selected'" : "").">user_name</option>\n";
+    $options .= "<option ".($select == "user_email" ? "selected='selected'" : "").">user_email</option>\n";
+    $result = dbquery("SELECT field_name FROM ".DB_USER_FIELDS." WHERE field_log='1'");
+    if (dbrows($result)) {
+        while ($data = dbarray($result)) {
+            $options .= "<option ".($select == $data['field_name'] ? "selected='selected'" : "").">".$data['field_name']."</option>\n";
+        }
+    }
+    return $options;
 }
 
 opentable($locale['100']);
@@ -149,7 +150,7 @@ if (dbrows($result)) {
     echo "<td class='tbl2' style='white-space:nowrap; width:140px;'>".$locale['104']."</td>\n";
     echo "<td class='tbl2' style='white-space:nowrap; width:160px;'>".$locale['105']."</td>\n";
     echo "<td class='tbl2' style='white-space:nowrap; width:160px;'>".$locale['106']."</td>\n";
-	echo "<td class='tbl2' style='white-space:nowrap; width:160px;'>".$locale['117']."</td>\n";
+    echo "<td class='tbl2' style='white-space:nowrap; width:160px;'>".$locale['117']."</td>\n";
     echo "</tr>\n";
     $i = 1;
     while ($data = dbarray($result)) {
@@ -160,7 +161,7 @@ if (dbrows($result)) {
         echo "<td class='".$class."'>".$data['userlog_field']."</td>\n";
         echo "<td class='".$class."'>".trimlink($data['userlog_value_old'], 100)."</td>\n";
         echo "<td class='".$class."'>".trimlink($data['userlog_value_new'], 100)."</td>\n";
-		echo "<td class='".$class."'><a href='".FUSION_SELF.$getString."&amp;delete=".$data['userlog_id']."'>".$locale['116']."</a></td>\n";
+        echo "<td class='".$class."'><a href='".FUSION_SELF.$getString."&amp;delete=".$data['userlog_id']."'>".$locale['116']."</a></td>\n";
         echo "</tr>\n";
         $i++;
     }
@@ -169,7 +170,8 @@ if (dbrows($result)) {
     echo "<div style='text-align:center;'>".$locale['112']."</div>\n";
 }
 
-if ($rows > 20) echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], 20,$rows, 3, FUSION_SELF.$getString."&amp;")."\n</div>\n";
+if ($rows > 20)
+    echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], 20, $rows, 3, FUSION_SELF.$getString."&amp;")."\n</div>\n";
 
 echo "<br />";
 echo "<form action='".FUSION_SELF.$aidlink."' method='post'>\n";

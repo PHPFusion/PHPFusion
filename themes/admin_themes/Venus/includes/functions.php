@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: functions.php
-| Author: PHP-Fusion Inc.
+| Author: PHP-Fusion Inc
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -36,276 +36,276 @@ function render_dashboard() {
     $desktop = '3';
 
     // comments, ratings, submission types
-    $comments_type = array(
-        'N' => $locale['269'],
-        'D' => $locale['268'],
-        'P' => $locale['272'],
-        'A' => $locale['270'],
-        'B' => $locale['269b'],
-        'C' => $locale['272a'],
+    $comments_type = [
+        'N'  => $locale['269'],
+        'D'  => $locale['268'],
+        'P'  => $locale['272'],
+        'A'  => $locale['270'],
+        'B'  => $locale['269b'],
+        'C'  => $locale['272a'],
         'PH' => $locale['261'],
-    );
+    ];
 
-    $submit_type = array(
+    $submit_type = [
         'n' => $locale['269'],
         'd' => $locale['268'],
         'p' => $locale['272'],
         'a' => $locale['270'],
         'l' => $locale['271'],
         'b' => $locale['269b'],
-    );
+    ];
 
-    $link_type = array(
-        'N' => $settings['siteurl']."news.php?readmore=%s",
-        'D' => $settings['siteurl']."downloads.php?download_id=%s",
-        'P' => $settings['siteurl']."photogallery.php?photo_id=%s",
-        'A' => $settings['siteurl']."articles.php?article_id=%s",
-        'B' => $settings['siteurl']."blog.php?readmore=%s",
-        'C' => $settings['siteurl']."viewpage.php?page_id=%s",
+    $link_type = [
+        'N'  => $settings['siteurl']."news.php?readmore=%s",
+        'D'  => $settings['siteurl']."downloads.php?download_id=%s",
+        'P'  => $settings['siteurl']."photogallery.php?photo_id=%s",
+        'A'  => $settings['siteurl']."articles.php?article_id=%s",
+        'B'  => $settings['siteurl']."blog.php?readmore=%s",
+        'C'  => $settings['siteurl']."viewpage.php?page_id=%s",
         'PH' => $settings['siteurl']."photogallery.php?photo_id=%s",
-    );
+    ];
 
     opentable($locale['250']);
 
-        $panels = [
-            'registered'   => ['link' => '', 'title' => 251],
-            'cancelled'    => ['link' => 'status=5', 'title' => 263],
-            'unactivated'  => ['link' => 'status=2', 'title' => 252],
-            'security_ban' => ['link' => 'status=4', 'title' => 253]
-        ];
+    $panels = [
+        'registered'   => ['link' => '', 'title' => 251],
+        'cancelled'    => ['link' => 'status=5', 'title' => 263],
+        'unactivated'  => ['link' => 'status=2', 'title' => 252],
+        'security_ban' => ['link' => 'status=4', 'title' => 253]
+    ];
 
-        echo "<!--Start Members-->\n";
-        echo "<div class='row' id='members'>\n";
-            foreach ($panels as $panel => $block) {
-                $block['link'] = empty($block['link']) ? $block['link'] : '&amp;'.$block['link'];
-                echo "<div class='col-xs-$mobile col-sm-$tablet col-md-$laptop col-lg-$desktop'>\n";
-                openside();
-                    echo "<img class='pull-left m-r-10 dashboard-icon' src='".get_image('ac_Members')."' alt='".$locale['M']."'/>\n";
-                    echo "<h4 class='text-right m-t-0 m-b-0'>".number_format($members[$panel])."</h4>\n";
-                    echo "<span class='m-t-10 text-uppercase text-lighter text-smaller pull-right'><strong>".$locale[$block['title']]."</strong></span>\n";
-                    $content_ = "<div class='text-right text-uppercase'>\n";
-                    $content_ .= "<a class='text-smaller' href='".ADMIN."members.php".$aidlink.$block['link']."'>".$locale['255']." <i class='entypo right-open-mini'></i></a>\n";
-                    $content_ .= "</div>\n";
-                closeside(checkrights('M') ? $content_ : '');
-                echo "</div>\n";
-            }
-        echo "</div>\n";
-        echo "<!--End Members-->\n";
-
-        $desktop = '4';
-
-        echo "<div class='row' id='overview'>\n";
+    echo "<!--Start Members-->\n";
+    echo "<div class='row' id='members'>\n";
+    foreach ($panels as $panel => $block) {
+        $block['link'] = empty($block['link']) ? $block['link'] : '&amp;'.$block['link'];
         echo "<div class='col-xs-$mobile col-sm-$tablet col-md-$laptop col-lg-$desktop'>\n";
-
-                openside("", "well");
-                    echo "<strong class='text-smaller text-uppercase'>".$locale['265']." ".$locale['258']."</strong>\n";
-                    echo "<div class='clearfix m-t-10'>\n";
-                        echo "<img class='img-responsive pull-right dashboard-icon' src='".get_image("ac_Forums")."'/>\n";
-                        echo "<div class='pull-left display-inline-block m-r-10'>\n";
-                            echo "<span class='text-smaller'>".$locale['265']."</span>\n<br/>\n";
-                            echo "<h4 class='m-t-0'>".number_format($forum['count'])."</h4>\n";
-                        echo "</div>\n";
-                        echo "<div class='pull-left display-inline-block m-r-10'>\n";
-                            echo "<span class='text-smaller'>".$locale['256']."</span>\n<br/>\n";
-                            echo "<h4 class='m-t-0'>".number_format($forum['thread'])."</h4>\n";
-                        echo "</div>\n";
-                        echo "<div class='pull-left display-inline-block m-r-10'>\n";
-                            echo "<span class='text-smaller'>".$locale['259']."</span>\n<br/>\n";
-                            echo "<h4 class='m-t-0'>".number_format($forum['post'])."</h4>\n";
-                        echo "</div>\n";
-                        echo "<div class='pull-left display-inline-block m-r-10'>\n";
-                            echo "<span class='text-smaller'>".$locale['260']."</span>\n<br/>\n";
-                            echo "<h4 class='m-t-0'>".($forum['users'])."</h4>\n";
-                        echo "</div>\n";
-                    echo "</div>\n";
-                closeside();
-                echo "</div>\n";
-
-                echo "<div class='col-xs-$mobile col-sm-$tablet col-md-$laptop col-lg-$desktop'>\n";
-                openside("", "well");
-                    echo "<strong class='text-smaller text-uppercase'>".$locale['269']." ".$locale['258']."</strong>\n";
-                    echo "<div class='clearfix m-t-10'>\n";
-                        echo "<img class='img-responsive pull-right dashboard-icon' src='".get_image("ac_News")."'/>\n";
-                        echo "<div class='pull-left display-inline-block m-r-10'>\n";
-                            echo "<span class='text-smaller'>".$locale['269']."</span>\n<br/>\n";
-                            echo "<h4 class='m-t-0'>".number_format($news['news'])."</h4>\n";
-                        echo "</div>\n";
-                        echo "<div class='pull-left display-inline-block m-r-10'>\n";
-                            echo "<span class='text-smaller'>".$locale['257']."</span>\n<br/>\n";
-                            echo "<h4 class='m-t-0'>".number_format($news['comment'])."</h4>\n";
-                        echo "</div>\n";
-                        echo "<div class='pull-left display-inline-block m-r-10'>\n";
-                            echo "<span class='text-smaller'>".$locale['254']."</span>\n<br/>\n";
-                            echo "<h4 class='m-t-0'>".number_format($news['submit'])."</h4>\n";
-                        echo "</div>\n";
-                    echo "</div>\n";
-                closeside();
-                echo "</div>\n";
-
-               echo "<div class='col-xs-$mobile col-sm-$tablet col-md-$laptop col-lg-$desktop'>\n";
-                openside("", "well");
-                    echo "<strong class='text-smaller text-uppercase'>".$locale['BLOG']." ".$locale['258']."</strong>\n";
-                    echo "<div class='clearfix m-t-10'>\n";
-                        echo "<img class='img-responsive pull-right dashboard-icon' src='".get_image("ac_Blog")."'/>\n";
-                        echo "<div class='pull-left display-inline-block m-r-10'>\n";
-                            echo "<span class='text-smaller'>".$locale['269b']."</span>\n<br/>\n";
-                            echo "<h4 class='m-t-0'>".number_format($blog['blog'])."</h4>\n";
-                        echo "</div>\n";
-                        echo "<div class='pull-left display-inline-block m-r-10'>\n";
-                            echo "<span class='text-smaller'>".$locale['257']."</span>\n<br/>\n";
-                            echo "<h4 class='m-t-0'>".number_format($blog['comment'])."</h4>\n";
-                        echo "</div>\n";
-                        echo "<div class='pull-left display-inline-block m-r-10'>\n";
-                            echo "<span class='text-smaller'>".$locale['254']."</span>\n<br/>\n";
-                            echo "<h4 class='m-t-0'>".number_format($blog['submit'])."</h4>\n";
-                        echo "</div>\n";
-                    echo "</div>\n";
-                closeside();
-                echo "</div>\n";
-
-            $desktop = '3';
-
-                 echo "<div class='col-xs-$mobile col-sm-$tablet col-md-$laptop col-lg-$desktop'>\n";
-                openside("", "well");
-                    echo "<strong class='text-smaller text-uppercase'>".$locale['268']." ".$locale['258']."</strong>\n";
-                    echo "<div class='clearfix m-t-10'>\n";
-                        echo "<img class='img-responsive pull-right dashboard-icon' src='".get_image("ac_Downloads")."'/>\n";
-                        echo "<div class='pull-left display-inline-block m-r-10'>\n";
-                            echo "<span class='text-smaller'>".$locale['268']."</span>\n<br/>\n";
-                            echo "<h4 class='m-t-0'>".number_format($download['download'])."</h4>\n";
-                        echo "</div>\n";
-                        echo "<div class='pull-left display-inline-block m-r-10'>\n";
-                            echo "<span class='text-smaller'>".$locale['257']."</span>\n<br/>\n";
-                            echo "<h4 class='m-t-0'>".number_format($download['comment'])."</h4>\n";
-                        echo "</div>\n";
-                        echo "<div class='pull-left display-inline-block m-r-10'>\n";
-                            echo "<span class='text-smaller'>".$locale['254']."</span>\n<br/>\n";
-                            echo "<h4 class='m-t-0'>".number_format($download['submit'])."</h4>\n";
-                        echo "</div>\n";
-                    echo "</div>\n";
-                closeside();
-                echo "</div>\n";
-
-                echo "<div class='col-xs-$mobile col-sm-$tablet col-md-$laptop col-lg-$desktop'>\n";
-                openside("", "well");
-                    echo "<strong class='text-smaller text-uppercase'>".$locale['270']." ".$locale['258']."</strong>\n";
-                    echo "<div class='clearfix m-t-10'>\n";
-                        echo "<img class='img-responsive pull-right dashboard-icon' src='".get_image("ac_Articles")."'/>\n";
-                        echo "<div class='pull-left display-inline-block m-r-10'>\n";
-                            echo "<span class='text-smaller'>".$locale['270']."</span>\n<br/>\n";
-                            echo "<h4 class='m-t-0'>".number_format($articles['article'])."</h4>\n";
-                        echo "</div>\n";
-                        echo "<div class='pull-left display-inline-block m-r-10'>\n";
-                            echo "<span class='text-smaller'>".$locale['257']."</span>\n<br/>\n";
-                            echo "<h4 class='m-t-0'>".number_format($articles['comment'])."</h4>\n";
-                        echo "</div>\n";
-                        echo "<div class='pull-left display-inline-block m-r-10'>\n";
-                            echo "<span class='text-smaller'>".$locale['254']."</span>\n<br/>\n";
-                            echo "<h4 class='m-t-0'>".number_format($articles['submit'])."</h4>\n";
-                        echo "</div>\n";
-                    echo "</div>\n";
-                closeside();
-                echo "</div>\n";
-
-
-                echo "<div class='col-xs-$mobile col-sm-$tablet col-md-$laptop col-lg-$desktop'>\n";
-                 openside("", "well");
-                    echo "<strong class='text-smaller text-uppercase'>".$locale['271']." ".$locale['258']."</strong>\n";
-                    echo "<div class='clearfix m-t-10'>\n";
-                        echo "<img class='img-responsive pull-right dashboard-icon' src='".get_image("ac_Web Links")."'/>\n";
-                        echo "<div class='pull-left display-inline-block m-r-10'>\n";
-                            echo "<span class='text-smaller'>".$locale['271']."</span>\n<br/>\n";
-                            echo "<h4 class='m-t-0'>".number_format($weblinks['weblink'])."</h4>\n";
-                        echo "</div>\n";
-                        echo "<div class='pull-left display-inline-block m-r-10'>\n";
-                            echo "<span class='text-smaller'>".$locale['254']."</span>\n<br/>\n";
-                            echo "<h4 class='m-t-0'>".number_format($weblinks['submit'])."</h4>\n";
-                        echo "</div>\n";
-                    echo "</div>\n";
-                closeside();
-                echo "</div>";
-
-                echo "<div class='col-xs-$mobile col-sm-$tablet col-md-$laptop col-lg-$desktop'>\n";
-                openside("", "well");
-                    echo "<strong class='text-smaller text-uppercase'>".$locale['272']." ".$locale['258']."</strong>\n";
-                    echo "<div class='clearfix m-t-10'>\n";
-                        echo "<img class='img-responsive pull-right dashboard-icon' src='".get_image("ac_Photo Albums")."'/>\n";
-                        echo "<div class='pull-left display-inline-block m-r-10'>\n";
-                            echo "<span class='text-smaller'>".$locale['261']."</span>\n<br/>\n";
-                            echo "<h4 class='m-t-0'>".number_format($photos['photo'])."</h4>\n";
-                        echo "</div>\n";
-                        echo "<div class='pull-left display-inline-block m-r-10'>\n";
-                            echo "<span class='text-smaller'>".$locale['257']."</span>\n<br/>\n";
-                            echo "<h4 class='m-t-0'>".number_format($photos['comment'])."</h4>\n";
-                        echo "</div>\n";
-                        echo "<div class='pull-left display-inline-block m-r-10'>\n";
-                            echo "<span class='text-smaller'>".$locale['254']."</span>\n<br/>\n";
-                            echo "<h4 class='m-t-0'>".number_format($photos['submit'])."</h4>\n";
-                        echo "</div>\n";
-                    echo "</div>\n";
-                closeside();
-                echo "</div>\n";
-
+        openside();
+        echo "<img class='pull-left m-r-10 dashboard-icon' src='".get_image('ac_Members')."' alt='".$locale['M']."'/>\n";
+        echo "<h4 class='text-right m-t-0 m-b-0'>".number_format($members[$panel])."</h4>\n";
+        echo "<span class='m-t-10 text-uppercase text-lighter text-smaller pull-right'><strong>".$locale[$block['title']]."</strong></span>\n";
+        $content_ = "<div class='text-right text-uppercase'>\n";
+        $content_ .= "<a class='text-smaller' href='".ADMIN."members.php".$aidlink.$block['link']."'>".$locale['255']." <i class='entypo right-open-mini'></i></a>\n";
+        $content_ .= "</div>\n";
+        closeside(checkrights('M') ? $content_ : '');
         echo "</div>\n";
+    }
+    echo "</div>\n";
+    echo "<!--End Members-->\n";
 
-        echo "<div class='row'>\n";
-            echo "<div class='col-xs-12 co-sm-6 col-md-6 col-lg-3'>\n";
-                openside("<strong class='text-smaller text-uppercase'>".$locale['277']."</strong><span class='pull-right badge'>".number_format($global_comments['rows'])."</span>");
-                if (count($global_comments['data']) > 0) {
-                    foreach ($global_comments['data'] as $i => $comment_data) {
-                        echo "<!--Start Comment Item-->\n";
-                        echo "<div data-id='$i' class='comment_content clearfix p-t-10 p-b-10' ".($i > 0 ? "style='border-top:1px solid #ddd;'" : '')." >\n";
-                        echo "<div class='pull-left display-inline-block' style='margin-top:5px; margin-bottom:10px;'>".display_avatar($comment_data, "27px", "", FALSE, "img-rounded m-r-5")."</div>\n";
-                        echo "<div id='comment_action-$i' class='btn-group pull-right' style='position:absolute; right: 30px; margin-top:25px;'>\n
+    $desktop = '4';
+
+    echo "<div class='row' id='overview'>\n";
+    echo "<div class='col-xs-$mobile col-sm-$tablet col-md-$laptop col-lg-$desktop'>\n";
+
+    openside("", "well");
+    echo "<strong class='text-smaller text-uppercase'>".$locale['265']." ".$locale['258']."</strong>\n";
+    echo "<div class='clearfix m-t-10'>\n";
+    echo "<img class='img-responsive pull-right dashboard-icon' src='".get_image("ac_Forums")."'/>\n";
+    echo "<div class='pull-left display-inline-block m-r-10'>\n";
+    echo "<span class='text-smaller'>".$locale['265']."</span>\n<br/>\n";
+    echo "<h4 class='m-t-0'>".number_format($forum['count'])."</h4>\n";
+    echo "</div>\n";
+    echo "<div class='pull-left display-inline-block m-r-10'>\n";
+    echo "<span class='text-smaller'>".$locale['256']."</span>\n<br/>\n";
+    echo "<h4 class='m-t-0'>".number_format($forum['thread'])."</h4>\n";
+    echo "</div>\n";
+    echo "<div class='pull-left display-inline-block m-r-10'>\n";
+    echo "<span class='text-smaller'>".$locale['259']."</span>\n<br/>\n";
+    echo "<h4 class='m-t-0'>".number_format($forum['post'])."</h4>\n";
+    echo "</div>\n";
+    echo "<div class='pull-left display-inline-block m-r-10'>\n";
+    echo "<span class='text-smaller'>".$locale['260']."</span>\n<br/>\n";
+    echo "<h4 class='m-t-0'>".($forum['users'])."</h4>\n";
+    echo "</div>\n";
+    echo "</div>\n";
+    closeside();
+    echo "</div>\n";
+
+    echo "<div class='col-xs-$mobile col-sm-$tablet col-md-$laptop col-lg-$desktop'>\n";
+    openside("", "well");
+    echo "<strong class='text-smaller text-uppercase'>".$locale['269']." ".$locale['258']."</strong>\n";
+    echo "<div class='clearfix m-t-10'>\n";
+    echo "<img class='img-responsive pull-right dashboard-icon' src='".get_image("ac_News")."'/>\n";
+    echo "<div class='pull-left display-inline-block m-r-10'>\n";
+    echo "<span class='text-smaller'>".$locale['269']."</span>\n<br/>\n";
+    echo "<h4 class='m-t-0'>".number_format($news['news'])."</h4>\n";
+    echo "</div>\n";
+    echo "<div class='pull-left display-inline-block m-r-10'>\n";
+    echo "<span class='text-smaller'>".$locale['257']."</span>\n<br/>\n";
+    echo "<h4 class='m-t-0'>".number_format($news['comment'])."</h4>\n";
+    echo "</div>\n";
+    echo "<div class='pull-left display-inline-block m-r-10'>\n";
+    echo "<span class='text-smaller'>".$locale['254']."</span>\n<br/>\n";
+    echo "<h4 class='m-t-0'>".number_format($news['submit'])."</h4>\n";
+    echo "</div>\n";
+    echo "</div>\n";
+    closeside();
+    echo "</div>\n";
+
+    echo "<div class='col-xs-$mobile col-sm-$tablet col-md-$laptop col-lg-$desktop'>\n";
+    openside("", "well");
+    echo "<strong class='text-smaller text-uppercase'>".$locale['BLOG']." ".$locale['258']."</strong>\n";
+    echo "<div class='clearfix m-t-10'>\n";
+    echo "<img class='img-responsive pull-right dashboard-icon' src='".get_image("ac_Blog")."'/>\n";
+    echo "<div class='pull-left display-inline-block m-r-10'>\n";
+    echo "<span class='text-smaller'>".$locale['269b']."</span>\n<br/>\n";
+    echo "<h4 class='m-t-0'>".number_format($blog['blog'])."</h4>\n";
+    echo "</div>\n";
+    echo "<div class='pull-left display-inline-block m-r-10'>\n";
+    echo "<span class='text-smaller'>".$locale['257']."</span>\n<br/>\n";
+    echo "<h4 class='m-t-0'>".number_format($blog['comment'])."</h4>\n";
+    echo "</div>\n";
+    echo "<div class='pull-left display-inline-block m-r-10'>\n";
+    echo "<span class='text-smaller'>".$locale['254']."</span>\n<br/>\n";
+    echo "<h4 class='m-t-0'>".number_format($blog['submit'])."</h4>\n";
+    echo "</div>\n";
+    echo "</div>\n";
+    closeside();
+    echo "</div>\n";
+
+    $desktop = '3';
+
+    echo "<div class='col-xs-$mobile col-sm-$tablet col-md-$laptop col-lg-$desktop'>\n";
+    openside("", "well");
+    echo "<strong class='text-smaller text-uppercase'>".$locale['268']." ".$locale['258']."</strong>\n";
+    echo "<div class='clearfix m-t-10'>\n";
+    echo "<img class='img-responsive pull-right dashboard-icon' src='".get_image("ac_Downloads")."'/>\n";
+    echo "<div class='pull-left display-inline-block m-r-10'>\n";
+    echo "<span class='text-smaller'>".$locale['268']."</span>\n<br/>\n";
+    echo "<h4 class='m-t-0'>".number_format($download['download'])."</h4>\n";
+    echo "</div>\n";
+    echo "<div class='pull-left display-inline-block m-r-10'>\n";
+    echo "<span class='text-smaller'>".$locale['257']."</span>\n<br/>\n";
+    echo "<h4 class='m-t-0'>".number_format($download['comment'])."</h4>\n";
+    echo "</div>\n";
+    echo "<div class='pull-left display-inline-block m-r-10'>\n";
+    echo "<span class='text-smaller'>".$locale['254']."</span>\n<br/>\n";
+    echo "<h4 class='m-t-0'>".number_format($download['submit'])."</h4>\n";
+    echo "</div>\n";
+    echo "</div>\n";
+    closeside();
+    echo "</div>\n";
+
+    echo "<div class='col-xs-$mobile col-sm-$tablet col-md-$laptop col-lg-$desktop'>\n";
+    openside("", "well");
+    echo "<strong class='text-smaller text-uppercase'>".$locale['270']." ".$locale['258']."</strong>\n";
+    echo "<div class='clearfix m-t-10'>\n";
+    echo "<img class='img-responsive pull-right dashboard-icon' src='".get_image("ac_Articles")."'/>\n";
+    echo "<div class='pull-left display-inline-block m-r-10'>\n";
+    echo "<span class='text-smaller'>".$locale['270']."</span>\n<br/>\n";
+    echo "<h4 class='m-t-0'>".number_format($articles['article'])."</h4>\n";
+    echo "</div>\n";
+    echo "<div class='pull-left display-inline-block m-r-10'>\n";
+    echo "<span class='text-smaller'>".$locale['257']."</span>\n<br/>\n";
+    echo "<h4 class='m-t-0'>".number_format($articles['comment'])."</h4>\n";
+    echo "</div>\n";
+    echo "<div class='pull-left display-inline-block m-r-10'>\n";
+    echo "<span class='text-smaller'>".$locale['254']."</span>\n<br/>\n";
+    echo "<h4 class='m-t-0'>".number_format($articles['submit'])."</h4>\n";
+    echo "</div>\n";
+    echo "</div>\n";
+    closeside();
+    echo "</div>\n";
+
+
+    echo "<div class='col-xs-$mobile col-sm-$tablet col-md-$laptop col-lg-$desktop'>\n";
+    openside("", "well");
+    echo "<strong class='text-smaller text-uppercase'>".$locale['271']." ".$locale['258']."</strong>\n";
+    echo "<div class='clearfix m-t-10'>\n";
+    echo "<img class='img-responsive pull-right dashboard-icon' src='".get_image("ac_Web Links")."'/>\n";
+    echo "<div class='pull-left display-inline-block m-r-10'>\n";
+    echo "<span class='text-smaller'>".$locale['271']."</span>\n<br/>\n";
+    echo "<h4 class='m-t-0'>".number_format($weblinks['weblink'])."</h4>\n";
+    echo "</div>\n";
+    echo "<div class='pull-left display-inline-block m-r-10'>\n";
+    echo "<span class='text-smaller'>".$locale['254']."</span>\n<br/>\n";
+    echo "<h4 class='m-t-0'>".number_format($weblinks['submit'])."</h4>\n";
+    echo "</div>\n";
+    echo "</div>\n";
+    closeside();
+    echo "</div>";
+
+    echo "<div class='col-xs-$mobile col-sm-$tablet col-md-$laptop col-lg-$desktop'>\n";
+    openside("", "well");
+    echo "<strong class='text-smaller text-uppercase'>".$locale['272']." ".$locale['258']."</strong>\n";
+    echo "<div class='clearfix m-t-10'>\n";
+    echo "<img class='img-responsive pull-right dashboard-icon' src='".get_image("ac_Photo Albums")."'/>\n";
+    echo "<div class='pull-left display-inline-block m-r-10'>\n";
+    echo "<span class='text-smaller'>".$locale['261']."</span>\n<br/>\n";
+    echo "<h4 class='m-t-0'>".number_format($photos['photo'])."</h4>\n";
+    echo "</div>\n";
+    echo "<div class='pull-left display-inline-block m-r-10'>\n";
+    echo "<span class='text-smaller'>".$locale['257']."</span>\n<br/>\n";
+    echo "<h4 class='m-t-0'>".number_format($photos['comment'])."</h4>\n";
+    echo "</div>\n";
+    echo "<div class='pull-left display-inline-block m-r-10'>\n";
+    echo "<span class='text-smaller'>".$locale['254']."</span>\n<br/>\n";
+    echo "<h4 class='m-t-0'>".number_format($photos['submit'])."</h4>\n";
+    echo "</div>\n";
+    echo "</div>\n";
+    closeside();
+    echo "</div>\n";
+
+    echo "</div>\n";
+
+    echo "<div class='row'>\n";
+    echo "<div class='col-xs-12 co-sm-6 col-md-6 col-lg-3'>\n";
+    openside("<strong class='text-smaller text-uppercase'>".$locale['277']."</strong><span class='pull-right badge'>".number_format($global_comments['rows'])."</span>");
+    if (count($global_comments['data']) > 0) {
+        foreach ($global_comments['data'] as $i => $comment_data) {
+            echo "<!--Start Comment Item-->\n";
+            echo "<div data-id='$i' class='comment_content clearfix p-t-10 p-b-10' ".($i > 0 ? "style='border-top:1px solid #ddd;'" : '')." >\n";
+            echo "<div class='pull-left display-inline-block' style='margin-top:5px; margin-bottom:10px;'>".display_avatar($comment_data, "27px", "", FALSE, "img-rounded m-r-5")."</div>\n";
+            echo "<div id='comment_action-$i' class='btn-group pull-right' style='position:absolute; right: 30px; margin-top:25px;'>\n
                             <a class='btn btn-xs btn-default' title='".$locale['274']."' href='".ADMIN."comments.php".$aidlink."&amp;ctype=".$comment_data['comment_type']."&amp;comment_item_id=".$comment_data['comment_item_id']."'><i class='entypo eye'></i></a>
                             <a class='btn btn-xs btn-default' title='".$locale['275']."' href='".ADMIN."comments.php".$aidlink."&amp;action=edit&amp;comment_id=".$comment_data['comment_id']."&amp;ctype=".$comment_data['comment_type']."&amp;comment_item_id=".$comment_data['comment_item_id']."'><i class='entypo pencil'></i></a>
                             <a class='btn btn-xs btn-default' title='".$locale['276']."' href='".ADMIN."comments.php".$aidlink."&amp;action=delete&amp;comment_id=".$comment_data['comment_id']."&amp;ctype=".$comment_data['comment_type']."&amp;comment_item_id=".$comment_data['comment_item_id']."'><i class='entypo trash'></i></a></div>\n";
-                        echo "<strong>".(!empty($comment_data['user_id']) ? profile_link($comment_data['user_id'], $comment_data['user_name'], $comment_data['user_status']) : $comment_data['comment_name'])." </strong>\n";
-                        echo "<span class='text-lighter'>".$locale['273']."</span> <a href='".sprintf($link_type[$comment_data['comment_type']], $comment_data['comment_item_id'])."'><strong>".$comments_type[$comment_data['comment_type']]."</strong></a>";
-                        echo "<br/>\n".timer($comment_data['comment_datestamp'])."<br/>\n";
-                        echo "<span class='text-smaller text-lighter'>".trimlink(parseubb($comment_data['comment_message']), 70)."</span>\n";
-                        echo "</div>\n";
-                        echo "<!--End Comment Item-->\n";
-                    }
-                    if (isset($global_comments['comments_nav'])) {
-                        echo "<div class='clearfix'>\n";
-                        echo "<span class='pull-right text-smaller'>".$global_comments['comments_nav']."</span>";
-                        echo "</div>\n";
-                    }
-                } else {
-                    echo "<div class='text-center'>".$global_comments['nodata']."</div>\n";
-                }
-                closeside();
+            echo "<strong>".(!empty($comment_data['user_id']) ? profile_link($comment_data['user_id'], $comment_data['user_name'], $comment_data['user_status']) : $comment_data['comment_name'])." </strong>\n";
+            echo "<span class='text-lighter'>".$locale['273']."</span> <a href='".sprintf($link_type[$comment_data['comment_type']], $comment_data['comment_item_id'])."'><strong>".$comments_type[$comment_data['comment_type']]."</strong></a>";
+            echo "<br/>\n".timer($comment_data['comment_datestamp'])."<br/>\n";
+            echo "<span class='text-smaller text-lighter'>".trimlink(parseubb($comment_data['comment_message']), 70)."</span>\n";
             echo "</div>\n";
-
-            echo "<div class='col-xs-12 co-sm-6 col-md-6 col-lg-3'>\n";
-                openside("<strong class='text-smaller text-uppercase'>".$locale['278']."</strong><span class='pull-right badge'>".number_format($global_ratings['rows'])."</span>");
-                if (count($global_ratings['data']) > 0) {
-                    foreach ($global_ratings['data'] as $i => $ratings_data) {
-                        echo "<!--Start Rating Item-->\n";
-                        echo "<div class='comment_content clearfix p-t-10 p-b-10' ".($i > 0 ? "style='border-top:1px solid #ddd;'" : '')." >\n";
-                        echo "<div class='pull-left display-inline-block' style='margin-top:5px; margin-bottom:10px;'>".display_avatar($ratings_data, "25px", "", FALSE, "img-rounded m-r-5")."</div>\n";
-                        echo "<strong>".profile_link($ratings_data['user_id'], $ratings_data['user_name'], $ratings_data['user_status'])." </strong>\n";
-                        echo "<span class='text-lighter'>".$locale['273a']." </span>\n";
-                        echo "<a href='".sprintf($link_type[$ratings_data['rating_type']], $ratings_data['rating_item_id'])."'><strong>".$comments_type[$ratings_data['rating_type']]."</strong></a>";
-                        echo "<span class='text-lighter m-l-10'>".str_repeat("<i class='entypo star'></i>", $ratings_data['rating_vote'])."</span>\n<br/>";
-                        echo timer($ratings_data['rating_datestamp'])."<br/>\n";
-                        echo "</div>\n";
-                        echo "<!--End Rating Item-->\n";
-                    }
-                    if (isset($global_ratings['ratings_nav'])) {
-                        echo "<div class='clearfix'>\n";
-                            echo "<span class='pull-right text-smaller'>".$global_ratings['ratings_nav']."</span>";
-                        echo "</div>\n";
-                    }
-                } else {
-                    echo "<div class='text-center'>".$global_ratings['nodata']."</div>\n";
-                }
-                closeside();
+            echo "<!--End Comment Item-->\n";
+        }
+        if (isset($global_comments['comments_nav'])) {
+            echo "<div class='clearfix'>\n";
+            echo "<span class='pull-right text-smaller'>".$global_comments['comments_nav']."</span>";
             echo "</div>\n";
+        }
+    } else {
+        echo "<div class='text-center'>".$global_comments['nodata']."</div>\n";
+    }
+    closeside();
+    echo "</div>\n";
 
-            echo "<div class='col-xs-12 co-sm-6 col-md-6 col-lg-3'>\n";
-                openside("<strong class='text-smaller text-uppercase'>".$locale['279']."</strong><span class='pull-right badge'>".number_format($global_submissions['rows'])."</span>");
+    echo "<div class='col-xs-12 co-sm-6 col-md-6 col-lg-3'>\n";
+    openside("<strong class='text-smaller text-uppercase'>".$locale['278']."</strong><span class='pull-right badge'>".number_format($global_ratings['rows'])."</span>");
+    if (count($global_ratings['data']) > 0) {
+        foreach ($global_ratings['data'] as $i => $ratings_data) {
+            echo "<!--Start Rating Item-->\n";
+            echo "<div class='comment_content clearfix p-t-10 p-b-10' ".($i > 0 ? "style='border-top:1px solid #ddd;'" : '')." >\n";
+            echo "<div class='pull-left display-inline-block' style='margin-top:5px; margin-bottom:10px;'>".display_avatar($ratings_data, "25px", "", FALSE, "img-rounded m-r-5")."</div>\n";
+            echo "<strong>".profile_link($ratings_data['user_id'], $ratings_data['user_name'], $ratings_data['user_status'])." </strong>\n";
+            echo "<span class='text-lighter'>".$locale['273a']." </span>\n";
+            echo "<a href='".sprintf($link_type[$ratings_data['rating_type']], $ratings_data['rating_item_id'])."'><strong>".$comments_type[$ratings_data['rating_type']]."</strong></a>";
+            echo "<span class='text-lighter m-l-10'>".str_repeat("<i class='entypo star'></i>", $ratings_data['rating_vote'])."</span>\n<br/>";
+            echo timer($ratings_data['rating_datestamp'])."<br/>\n";
+            echo "</div>\n";
+            echo "<!--End Rating Item-->\n";
+        }
+        if (isset($global_ratings['ratings_nav'])) {
+            echo "<div class='clearfix'>\n";
+            echo "<span class='pull-right text-smaller'>".$global_ratings['ratings_nav']."</span>";
+            echo "</div>\n";
+        }
+    } else {
+        echo "<div class='text-center'>".$global_ratings['nodata']."</div>\n";
+    }
+    closeside();
+    echo "</div>\n";
+
+    echo "<div class='col-xs-12 co-sm-6 col-md-6 col-lg-3'>\n";
+    openside("<strong class='text-smaller text-uppercase'>".$locale['279']."</strong><span class='pull-right badge'>".number_format($global_submissions['rows'])."</span>");
     if (count($global_submissions['data']) > 0) {
         foreach ($global_submissions['data'] as $i => $submit_data) {
             echo "<!--Start Submissions Item-->\n";
@@ -328,27 +328,27 @@ function render_dashboard() {
     } else {
         echo "<div class='text-center'>".$global_submissions['nodata']."</div>\n";
     }
-                closeside();
-            echo "</div>\n";
+    closeside();
+    echo "</div>\n";
 
-            echo "<div class='col-xs-12 co-sm-6 col-md-6 col-lg-3'>\n";
-                openside("<strong class='text-smaller text-uppercase'>".$locale['283']."</strong><span class='pull-right badge'>".number_format((int)$infusions_count)."</span>");
-                $content = '';
-                if ($infusions_count > 0) {
-                    echo "<div class='comment_content'>\n";
-                    if (!empty($global_infusions)) {
-                        foreach ($global_infusions as $inf_id => $inf_data) {
-                            echo "<span class='badge m-b-10 m-r-5'>".$inf_data['inf_title']."</span>\n";
-                        }
-                    }
-                    echo "</div>\n";
-                    $content = checkrights("I") ? "<div class='text-right text-uppercase'>\n<a class='text-smaller' href='".ADMIN."infusions.php".$aidlink."'>".$locale['285']."</a> <i class='entypo right-open-mini'></i></div>\n" : '';
-                } else {
-                    echo "<div class='text-center'>".$locale['284']."</div>\n";
-                }
-                closeside($content);
-            echo "</div>\n";
-        echo "</div>\n"; // .row
+    echo "<div class='col-xs-12 co-sm-6 col-md-6 col-lg-3'>\n";
+    openside("<strong class='text-smaller text-uppercase'>".$locale['283']."</strong><span class='pull-right badge'>".number_format((int)$infusions_count)."</span>");
+    $content = '';
+    if ($infusions_count > 0) {
+        echo "<div class='comment_content'>\n";
+        if (!empty($global_infusions)) {
+            foreach ($global_infusions as $inf_id => $inf_data) {
+                echo "<span class='badge m-b-10 m-r-5'>".$inf_data['inf_title']."</span>\n";
+            }
+        }
+        echo "</div>\n";
+        $content = checkrights("I") ? "<div class='text-right text-uppercase'>\n<a class='text-smaller' href='".ADMIN."infusions.php".$aidlink."'>".$locale['285']."</a> <i class='entypo right-open-mini'></i></div>\n" : '';
+    } else {
+        echo "<div class='text-center'>".$locale['284']."</div>\n";
+    }
+    closeside($content);
+    echo "</div>\n";
+    echo "</div>\n"; // .row
     closetable();
 }
 
@@ -364,7 +364,7 @@ function render_admin_icons() {
             echo "<div class='icon-wrapper col-xs-6 col-sm-3 col-md-2 col-lg-2' style='height: 135px;'>\n";
             if ($admin_images) {
                 echo "<div class='icon-container'>\n";
-                echo "<a href='".$data['admin_link'].$aidlink."'><img src='".(file_exists(ADMIN."images/".$data['admin_image']) ? ADMIN."images/".$data['admin_image'] :  ADMIN."images/notfound.png")."' alt='".$data['admin_title']."'/>\n</a>\n";
+                echo "<a href='".$data['admin_link'].$aidlink."'><img src='".(file_exists(ADMIN."images/".$data['admin_image']) ? ADMIN."images/".$data['admin_image'] : ADMIN."images/notfound.png")."' alt='".$data['admin_title']."'/>\n</a>\n";
 
                 echo "<div class='overflow-hide'>\n";
                 echo "<a class='icon-title' href='".$data['admin_link'].$aidlink."'>".$data['admin_title']."</a>\n";
@@ -381,16 +381,16 @@ function render_admin_icons() {
 }
 
 
-function admin_nav($style=false) {
+function admin_nav($style = FALSE) {
     global $aidlink, $locale, $pages;
-    $admin_icon = array(
+    $admin_icon = [
         '0' => 'entypo gauge',
         '1' => 'entypo docs',
         '2' => 'entypo user',
         '3' => 'entypo drive',
         '4' => 'entypo cog',
         '5' => 'entypo magnet'
-    );
+    ];
 
     if (!$style) {
         // horizontal navigation with dropdown menu.
@@ -414,11 +414,11 @@ function admin_nav($style=false) {
             } else {
                 $html .= "<a class='adl-link ".($active ? '' : 'collapsed')."' data-parent='#adl' data-toggle='collapse' href='#adl-$i'><i class='".$admin_icon[$i]."'></i> ".$locale['ac0'.$i]." ".($i > 0 ? "<span class='adl-drop pull-right'></span>" : '')."</a>\n";
                 $html .= "<div id='adl-$i' class='collapse ".($active ? 'in' : '')."'>\n";
-                if (dbrows($result)>0) {
+                if (dbrows($result) > 0) {
                     $html .= "<ul class='admin-submenu'>\n";
                     while ($data = dbarray($result)) {
                         $secondary_active = FUSION_SELF == $data['admin_link'] ? 'active' : '';
-                        $html .= checkrights($data['admin_rights']) ? "<li ".($secondary_active ? "class='active'" : '')."><a href='".ADMIN.$data['admin_link'].$aidlink."'> <img style='max-width:30px;' class='pull-right m-l-10' src='".(file_exists(ADMIN."images/".$data['admin_image']) ? ADMIN."images/".$data['admin_image'] :  ADMIN."images/notfound.png")."'/><div style='margin-top: 7px;'> ".$data['admin_title']."</div></a></li>\n" : '';
+                        $html .= checkrights($data['admin_rights']) ? "<li ".($secondary_active ? "class='active'" : '')."><a href='".ADMIN.$data['admin_link'].$aidlink."'> <img style='max-width:30px;' class='pull-right m-l-10' src='".(file_exists(ADMIN."images/".$data['admin_image']) ? ADMIN."images/".$data['admin_image'] : ADMIN."images/notfound.png")."'/><div style='margin-top: 7px;'> ".$data['admin_title']."</div></a></li>\n" : '';
                     }
                     $html .= "</ul>\n";
                 }
@@ -436,6 +436,7 @@ function openside($title = FALSE, $class = FALSE) {
     echo ($title) ? "<div class='panel-heading'>$title</div>\n" : '';
     echo "<div class='panel-body'>\n";
 }
+
 function closeside($title = FALSE) {
     echo "</div>\n";
     echo ($title) ? "<div class='panel-footer'>$title</div>\n" : '';
@@ -452,19 +453,19 @@ function closetable() {
 }
 
 function admin_active() {
-    $pages = array(1 => FALSE, 2 => FALSE, 3 => FALSE, 4 => FALSE, 5 => FALSE);
+    $pages = [1 => FALSE, 2 => FALSE, 3 => FALSE, 4 => FALSE, 5 => FALSE];
     $index_link = FALSE;
 
     $result = dbquery("SELECT admin_title, admin_page, admin_rights, admin_link FROM ".DB_ADMIN." ORDER BY admin_page DESC, admin_title ASC");
     $rows = dbrows($result);
-    $admin_url = array();
+    $admin_url = [];
     while ($data = dbarray($result)) {
         if ($data['admin_link'] != "reserved" && checkrights($data['admin_rights'])) {
-        $admin_pages[$data['admin_page']][$data['admin_title']] = $data['admin_link'];
+            $admin_pages[$data['admin_page']][$data['admin_title']] = $data['admin_link'];
         }
     }
 
-    foreach($admin_pages as $key =>$data) {
+    foreach ($admin_pages as $key => $data) {
         if (in_array(FUSION_SELF, $data)) {
             return $key;
         }
@@ -492,18 +493,18 @@ function render_admin_login() {
     $form_action = FUSION_SELF.$aidlink == ADMIN."index.php".$aidlink ? FUSION_SELF.$aidlink."&amp;pagenum=0" : FUSION_SELF."?".FUSION_QUERY;
     echo "<form name='admin-login-form' method='post' action='".$form_action."'>\n";
     openside('');
-        echo "<div class='m-t-10 clearfix row'>\n";
-        echo "<div class='col-xs-3 col-sm-3 col-md-3 col-lg-3'>\n";
-        echo "<div class='pull-right'>\n";
-        echo display_avatar($userdata, '90px');
-        echo "</div>\n";
-        echo "</div>\n<div class='col-xs-9 col-sm-9 col-md-8 col-lg-7'>\n";
-        echo "<h5><strong>".$locale['welcome'].", ".(ucwords($userdata['user_name']))."</strong><br/>".getuserlevel($userdata['user_level'])."</h5>";
-        echo "<div class='clearfix'>\n";
-        echo "".$locale['281']." : <input type='password' class='textbox' value='' name='admin_password' />\n";
-        echo "</div>\n";
-        echo "</div>\n";
-        echo "</div>\n";
+    echo "<div class='m-t-10 clearfix row'>\n";
+    echo "<div class='col-xs-3 col-sm-3 col-md-3 col-lg-3'>\n";
+    echo "<div class='pull-right'>\n";
+    echo display_avatar($userdata, '90px');
+    echo "</div>\n";
+    echo "</div>\n<div class='col-xs-9 col-sm-9 col-md-8 col-lg-7'>\n";
+    echo "<h5><strong>".$locale['welcome'].", ".(ucwords($userdata['user_name']))."</strong><br/>".getuserlevel($userdata['user_level'])."</h5>";
+    echo "<div class='clearfix'>\n";
+    echo "".$locale['281']." : <input type='password' class='textbox' value='' name='admin_password' />\n";
+    echo "</div>\n";
+    echo "</div>\n";
+    echo "</div>\n";
     closeside();
     echo "<input type='submit' class='btn-primary btn-block' value='".$locale['login']."' name='admin_login' />";
 

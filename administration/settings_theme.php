@@ -16,44 +16,49 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
-if (!checkrights("S3") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) { redirect("../index.php"); }
+if (!checkrights("S3") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {redirect("../index.php");}
+
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
 
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'settings_theme.php'.fusion_get_aidlink(), 'title' => $locale['theme_settings']]);
 
 if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
-	if ($_GET['error'] == 0) {
-		$message = $locale['900'];
-	} elseif ($_GET['error'] == 1) {
-		$message = $locale['901'];
-	}
+    if ($_GET['error'] == 0) {
+        $message = $locale['900'];
+    } else if ($_GET['error'] == 1) {
+        $message = $locale['901'];
+    }
 
-	if (isset($message)) {
-		echo "<div id='close-message'><div class='admin-message alert alert-info p-10'> ".$message." </div></div>\n";
-	}
+    if (isset($message)) {
+        echo "<div id='close-message'><div class='admin-message alert alert-info p-10'> ".$message." </div></div>\n";
+    }
 }
 
 // Saving settings
 if (isset($_POST['savesettings'])) {
 
-    $settings_theme = array(
-      "admin_theme" =>   stripinput($_POST['admin_theme'], "", "admin_theme"),
-      "theme" => stripinput($_POST['theme'], "", "theme"),
-      "bootstrap" => stripinput($_POST['bootstrap'], 0, "bootstrap"),
-      "entypo" => stripinput($_POST['entypo'], 0, "entypo"),
-      "fontawesome" => stripinput($_POST['fontawesome'], 0, "fontawesome"),
-    );
+    $settings_theme = [
+        "admin_theme" => stripinput($_POST['admin_theme'], "", "admin_theme"),
+        "theme"       => stripinput($_POST['theme'], "", "theme"),
+        "bootstrap"   => stripinput($_POST['bootstrap'], 0, "bootstrap"),
+        "entypo"      => stripinput($_POST['entypo'], 0, "entypo"),
+        "fontawesome" => stripinput($_POST['fontawesome'], 0, "fontawesome"),
+    ];
 
-	$error = "0";
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme['admin_theme']."' WHERE settings_name='admin_theme'");
-	if ($result) dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme['theme']."' WHERE settings_name='theme'");
-	if ($result) dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme['bootstrap']."' WHERE settings_name='bootstrap'");
-	if ($result) dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme['entypo']."' WHERE settings_name='entypo'");
-	if ($result) dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme['fontawesome']."' WHERE settings_name='fontawesome'");
-	if ($result) {
-		redirect(FUSION_SELF.$aidlink."&amp;error=0");
-	}
+    $error = "0";
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme['admin_theme']."' WHERE settings_name='admin_theme'");
+    if ($result)
+        dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme['theme']."' WHERE settings_name='theme'");
+    if ($result)
+        dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme['bootstrap']."' WHERE settings_name='bootstrap'");
+    if ($result)
+        dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme['entypo']."' WHERE settings_name='entypo'");
+    if ($result)
+        dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme['fontawesome']."' WHERE settings_name='fontawesome'");
+    if ($result) {
+        redirect(FUSION_SELF.$aidlink."&amp;error=0");
+    }
 
 }
 $theme_files = makefilelist(THEMES, ".|..|templates|admin_themes", TRUE, "folders");
@@ -84,9 +89,9 @@ echo "</select></td>\n";
 echo "</tr><tr>\n";
 echo "<td width='35%' class='tbl'>".$locale['418'];
 if ($userdata['user_theme'] == "Default") {
-  if ($settings['theme'] != str_replace(THEMES, "", substr(THEME, 0, strlen(THEME)-1))) {
-  	echo "<div id='close-message'><div class='admin-message'>".$locale['global_302']."</div></div>\n";
-  }
+    if ($settings['theme'] != str_replace(THEMES, "", substr(THEME, 0, strlen(THEME) - 1))) {
+        echo "<div id='close-message'><div class='admin-message'>".$locale['global_302']."</div></div>\n";
+    }
 }
 echo "</td>\n";
 echo "<td width='65%' class='tbl'><select name='theme' class='textbox'>\n";

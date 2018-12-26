@@ -20,20 +20,20 @@ if (!defined("IN_FUSION")) {
 }
 
 function write_htaccess() {
-	global $settings;
+    global $settings;
 
-	$seo_settings = array();
-	$result = dbquery("SELECT settings_name, settings_value FROM ".DB_SETTINGS." WHERE settings_name='site_seo'");
-	while ($data = dbarray($result)) {
-		$seo_settings[$data['settings_name']] = $data['settings_value'];
-	}
+    $seo_settings = [];
+    $result = dbquery("SELECT settings_name, settings_value FROM ".DB_SETTINGS." WHERE settings_name='site_seo'");
+    while ($data = dbarray($result)) {
+        $seo_settings[$data['settings_name']] = $data['settings_value'];
+    }
 
     $site_path = $settings['site_path'];
     if (empty($site_path)) {
         $site_path = '/';
     }
 
-	if (!file_exists(BASEDIR.'.htaccess')) {
+    if (!file_exists(BASEDIR.'.htaccess')) {
         if (file_exists(BASEDIR."_htaccess") && function_exists("rename")) {
             @rename(BASEDIR."_htaccess", ".htaccess");
         } else {
@@ -132,5 +132,5 @@ function write_htaccess() {
 
     write_file(BASEDIR.".htaccess", $htc);
 
-	unset($seo_settings);
+    unset($seo_settings);
 }

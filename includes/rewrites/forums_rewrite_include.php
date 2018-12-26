@@ -19,8 +19,8 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
- 
-$regex = array(
+
+$regex = [
     // Always the last key, they cannot stack together due to \W. Will crash
     "%forum_name%"   => "([0-9a-zA-Z._()\W]+)",
     "%cat_id%"       => "([0-9]+)",
@@ -39,83 +39,83 @@ $regex = array(
     "%time%"         => "([0-9a-zA-Z]+)",
     "%type%"         => "([a-zA-Z]+)",
     "%print_type%"   => "(F)",
-	"%post_id%" 	 => "([0-9]+)",
-	"%quote_id%" 	 => "([0-9]+)",
-	"%forum_id%" 	 => "([0-9]+)",
-	"%thread_id%" 	 => "([0-9]+)",
-	"%hash_stop%" 	 => "\#(?=\s*|)",
-);
+    "%post_id%"      => "([0-9]+)",
+    "%quote_id%"     => "([0-9]+)",
+    "%forum_id%"     => "([0-9]+)",
+    "%thread_id%"    => "([0-9]+)",
+    "%hash_stop%"    => "\#(?=\s*|)",
+];
 
-$pattern = array();
+$pattern = [];
 
 // Forum Browse
-$pattern += array(
-    "forum"                                			  			=> "forum/index.php",
-	"forum/browse/%forum_id%/%forum_name%"			  			=> "forum/index.php?cat=%cat_id%",
-	"forum/browse/%forum_id%/%forum_name%"   			   	    => "forum/viewforum.php?forum_id=%forum_id%",
-	"forum/browse/%forum_id%/page/%rowstart%/view/%forum_name%" => "forum/viewforum.php?forum_id=%forum_id%&amp;rowstart=%rowstart%",
-);
+$pattern += [
+    "forum"                                                     => "forum/index.php",
+    "forum/browse/%forum_id%/%forum_name%"                      => "forum/index.php?cat=%cat_id%",
+    "forum/browse/%forum_id%/%forum_name%"                      => "forum/viewforum.php?forum_id=%forum_id%",
+    "forum/browse/%forum_id%/page/%rowstart%/view/%forum_name%" => "forum/viewforum.php?forum_id=%forum_id%&amp;rowstart=%rowstart%",
+];
 
-$pattern += array(
-    "forum/%forum_id%/%forum_name%/create-new-thread"  								=> "forum/post.php?action=%action%&amp;forum_id=%forum_id%",
-	);
+$pattern += [
+    "forum/%forum_id%/%forum_name%/create-new-thread" => "forum/post.php?action=%action%&amp;forum_id=%forum_id%",
+];
 
 // Thread Views
-$pattern += array(
-	"forum/thread/view/%thread_id%/%thread_name%"                                   => "forum/viewthread.php?thread_id=%thread_id%",
+$pattern += [
+    "forum/thread/view/%thread_id%/%thread_name%"                                   => "forum/viewthread.php?thread_id=%thread_id%",
     "forum/thread/view/%thread_id%/%thread_name%-row-%rowstart%"                    => "forum/viewthread.php?thread_id=%thread_id%&amp;rowstart=%rowstart%",
     "forum/thread/view/%forum_id%/%thread_id%/%thread_name%-row-%rowstart%"         => "forum/viewthread.php?forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;rowstart=%rowstart%",
-    "forum/thread/view/%forum_id%/%thread_id%/%thread_name%#post_%post_id%" 		=> "forum/viewthread.php?forum_id=%forum_id%&amp;thread_id=%thread_id%#post_%post_id%",
-    "forum/thread/view/%forum_id%/%thread_id%/%thread_name%#top" 					=> "forum/viewthread.php?forum_id=%forum_id%&amp;thread_id=%thread_id%#top",
+    "forum/thread/view/%forum_id%/%thread_id%/%thread_name%#post_%post_id%"         => "forum/viewthread.php?forum_id=%forum_id%&amp;thread_id=%thread_id%#post_%post_id%",
+    "forum/thread/view/%forum_id%/%thread_id%/%thread_name%#top"                    => "forum/viewthread.php?forum_id=%forum_id%&amp;thread_id=%thread_id%#top",
     "forum/thread/confirm-move/%forum_id%/%thread_id%/%thread_name%-row-%rowstart%" => "forum/viewthread.php?forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;rowstart=%rowstart%&amp;sv",
     "forum/thread/view-%pid%/%thread_id%/%thread_name%"                             => "forum/viewthread.php?thread_id=%thread_id%&amp;pid=%pid%",
     "forum/thread/view-%pid%/%thread_id%/%thread_name%#post_%post_id%"              => "forum/viewthread.php?thread_id=%thread_id%&amp;pid=%pid%#post_%post_id%",
-	"forum/thread/view/%thread_id%/%thread_name%"					                => "forum/viewthread.php?thread_id=%thread_id%",
-);
+    "forum/thread/view/%thread_id%/%thread_name%"                                   => "forum/viewthread.php?thread_id=%thread_id%",
+];
 
 
 // Actions
-$pattern += array(
-	"forum/%forum_id%/%action%/post_%post_id%/thread_%thread_id%/%thread_name%"     	=> "forum/viewthread.php?action=%action%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%",
-    "forum/%forum_id%/%action%/%quote_id%/%post_id%/%thread_id%/%thread_name%"      	=> "forum/viewthread.php?action=%action%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%&amp;quote=%quote_id%",
-    "forum/%forum_id%/%action%/%thread_id%/%thread_name%"                           	=> "forum/viewthread.php?action=%action%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%",
-    "forum/thread/%track_status%/%forum_id%/%thread_id%/%thread_name%"  				=> "forum/postify.php?post=%track_status%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%",
-    "print/F/%nr%/%post_id%/%thread_id%/%thread_name%"	                			=> "print.php?type=F&amp;item_id=%thread_id%&amp;post=%post_id%&amp;nr=%nr%",
-    "print/F/%rowstart%/%thread_id%/%thread_name%"                      			=> "print.php?type=F&amp;item_id=%thread_id%&amp;rowstart=%rowstart%",
-);
+$pattern += [
+    "forum/%forum_id%/%action%/post_%post_id%/thread_%thread_id%/%thread_name%" => "forum/viewthread.php?action=%action%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%",
+    "forum/%forum_id%/%action%/%quote_id%/%post_id%/%thread_id%/%thread_name%"  => "forum/viewthread.php?action=%action%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%&amp;quote=%quote_id%",
+    "forum/%forum_id%/%action%/%thread_id%/%thread_name%"                       => "forum/viewthread.php?action=%action%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%",
+    "forum/thread/%track_status%/%forum_id%/%thread_id%/%thread_name%"          => "forum/postify.php?post=%track_status%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%",
+    "print/F/%nr%/%post_id%/%thread_id%/%thread_name%"                          => "print.php?type=F&amp;item_id=%thread_id%&amp;post=%post_id%&amp;nr=%nr%",
+    "print/F/%rowstart%/%thread_id%/%thread_name%"                              => "print.php?type=F&amp;item_id=%thread_id%&amp;rowstart=%rowstart%",
+];
 
 // Forum Threads List Panel
-$pattern += array(
+$pattern += [
     "forum/my-threads"                                              => "infusions/forum_threads_list_panel/my_threads.php",
     "forum/my-post"                                                 => "infusions/forum_threads_list_panel/my_posts.php",
     "forum/my-post-rows-%rowstart%"                                 => "infusions/forum_threads_list_panel/my_posts.php?rowstart=%rowstart%",
     "forum/new-post"                                                => "infusions/forum_threads_list_panel/new_posts.php",
     "forum/tracked-threads"                                         => "infusions/forum_threads_list_panel/my_tracked_threads.php",
     "forum/tracked-threads/%thread_id%/stop-tracking-%thread_name%" => "infusions/forum_threads_list_panel/tracked_threads.php?delete=%thread_id%",
-);
+];
 
-$pattern_tables["%forum_id%"] = array(
+$pattern_tables["%forum_id%"] = [
     "table"       => DB_FORUMS,
     "primary_key" => "forum_id",
-    "id"          => array("%forum_id%" => "forum_id"),
-    "columns"     => array("%forum_name%" => "forum_name",
-    ),
-);
+    "id"          => ["%forum_id%" => "forum_id"],
+    "columns"     => ["%forum_name%" => "forum_name",
+    ],
+];
 
-$pattern_tables["%thread_id%"] = array(
+$pattern_tables["%thread_id%"] = [
     "table"       => DB_THREADS,
     "primary_key" => "thread_id",
-    "id"          => array("%thread_id%" => "thread_id"),
-    "columns"     => array(
+    "id"          => ["%thread_id%" => "thread_id"],
+    "columns"     => [
         "%thread_name%" => "thread_subject",
-    )
-);
+    ]
+];
 
-$pattern_tables["%post_id%"] = array(
+$pattern_tables["%post_id%"] = [
     "table"       => DB_POSTS,
     "primary_key" => "post_id",
-    "id"          => array("%post_id%" => "post_id"),
-    "columns"     => array("%post_message%" => "post_message",
-    )
-);
+    "id"          => ["%post_id%" => "post_id"],
+    "columns"     => ["%post_message%" => "post_message",
+    ]
+];
 

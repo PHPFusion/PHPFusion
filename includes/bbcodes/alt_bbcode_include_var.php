@@ -1,8 +1,8 @@
 <?php
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
-| Copyright (C) 2002 - 2011 Nick Jones
-| http://www.php-fusion.co.uk/
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: alt_bbcode_include_var.php
 | Author: Wooya
@@ -15,13 +15,14 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
-$__BBCODE__[] =
-array(
-"description"		=>	$locale['bb_alt_description'],
-"value"			=>	"alt",
-"bbcode_start"		=>	"[alt]",
-"bbcode_end"		=>	"[/alt]",
-"usage"			=>	"[alt]".$locale['bb_alt_usage']."[/alt]"
-);
+$__BBCODE__[] = [
+    "description"  => $locale['bb_alt_description'],
+    "value"        => "alt",
+    "bbcode_start" => "[alt]",
+    "bbcode_end"   => "[/alt]",
+    "usage"        => "[alt]".$locale['bb_alt_usage']."[/alt]"
+];

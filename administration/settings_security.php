@@ -2,10 +2,10 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: settings_security.php
-| Author: Paul Beuk (muscapaul)
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -16,81 +16,107 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
-
-if (!checkrights("S9") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) { redirect("../index.php"); }
+if (!checkrights("S9") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {redirect("../index.php");}
 
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
 
-
-$available_captchas = array();
+$available_captchas = [];
 if ($temp = opendir(INCLUDES."captchas/")) {
-	while (false !== ($file = readdir($temp))) {
-		if ($file != "." && $file != ".." && is_dir(INCLUDES."captchas/".$file)) {
-			$available_captchas[] = $file;
-		}
-	}
+    while (FALSE !== ($file = readdir($temp))) {
+        if ($file != "." && $file != ".." && is_dir(INCLUDES."captchas/".$file)) {
+            $available_captchas[] = $file;
+        }
+    }
 }
 sort($available_captchas);
 
 function captcha_options($captchas, $select) {
-	$options = "";
-	foreach ($captchas AS $captcha) {
-		$selected = ($captcha == $select ? "selected='selected'" : "");
-		$options .= "<option ".$selected.">".$captcha."</option>\n";
-	}
-	return $options;
+    $options = "";
+    foreach ($captchas AS $captcha) {
+        $selected = ($captcha == $select ? "selected='selected'" : "");
+        $options .= "<option ".$selected.">".$captcha."</option>\n";
+    }
+    return $options;
 }
 
 if (isset($_POST['savesettings'])) {
-	$error = 0;
+    $error = 0;
 
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['mime_check']) ? $_POST['mime_check'] : "0")."' WHERE settings_name='mime_check'");
-	if (!$result) { $error = 1; }
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['gateway']) ? $_POST['gateway'] : "1")."' WHERE settings_name='gateway'");
-	if (!$result) { $error = 1; }
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['flood_interval']) ? $_POST['flood_interval'] : "15")."' WHERE settings_name='flood_interval'");
-	if (!$result) { $error = 1; }
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['flood_autoban']) ? $_POST['flood_autoban'] : "1")."' WHERE settings_name='flood_autoban'");
-	if (!$result) { $error = 1; }
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['maintenance_level']) ? $_POST['maintenance_level'] : "102")."' WHERE settings_name='maintenance_level'");
-	if (!$result) { $error = 1; }
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['maintenance']) ? $_POST['maintenance'] : "0")."' WHERE settings_name='maintenance'");
-	if (!$result) { $error = 1; }
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".addslash(descript($_POST['maintenance_message']))."' WHERE settings_name='maintenance_message'");
-	if (!$result) { $error = 1; }
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['bad_words_enabled']) ? $_POST['bad_words_enabled'] : "0")."' WHERE settings_name='bad_words_enabled'");
-	if (!$result) { $error = 1; }
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".addslash($_POST['bad_words'])."' WHERE settings_name='bad_words'");
-	if (!$result) { $error = 1; }
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['bad_word_replace'])."' WHERE settings_name='bad_word_replace'");
-	if (!$result) { $error = 1; }
-	if ($_POST['captcha'] == "recaptcha" && ($_POST['recaptcha_public'] == "" || $_POST['recaptcha_private'] == "")) {
-		$error = 2;
-	} else {
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['captcha'])."' WHERE settings_name='captcha'");
-		if (!$result) { $error = 1; }
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['recaptcha_public'])."' WHERE settings_name='recaptcha_public'");
-		if (!$result) { $error = 1; }
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['recaptcha_private'])."' WHERE settings_name='recaptcha_private'");
-		if (!$result) { $error = 1; }
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['recaptcha_theme'])."' WHERE settings_name='recaptcha_theme'");
-		if (!$result) { $error = 1; }
-	}
-	redirect(FUSION_SELF.$aidlink."&error=".$error);
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['mime_check']) ? $_POST['mime_check'] : "0")."' WHERE settings_name='mime_check'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['gateway']) ? $_POST['gateway'] : "1")."' WHERE settings_name='gateway'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['flood_interval']) ? $_POST['flood_interval'] : "15")."' WHERE settings_name='flood_interval'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['flood_autoban']) ? $_POST['flood_autoban'] : "1")."' WHERE settings_name='flood_autoban'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['maintenance_level']) ? $_POST['maintenance_level'] : "102")."' WHERE settings_name='maintenance_level'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['maintenance']) ? $_POST['maintenance'] : "0")."' WHERE settings_name='maintenance'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".addslash(descript($_POST['maintenance_message']))."' WHERE settings_name='maintenance_message'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['bad_words_enabled']) ? $_POST['bad_words_enabled'] : "0")."' WHERE settings_name='bad_words_enabled'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".addslash($_POST['bad_words'])."' WHERE settings_name='bad_words'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['bad_word_replace'])."' WHERE settings_name='bad_word_replace'");
+    if (!$result) {
+        $error = 1;
+    }
+    if ($_POST['captcha'] == "recaptcha" && ($_POST['recaptcha_public'] == "" || $_POST['recaptcha_private'] == "")) {
+        $error = 2;
+    } else {
+        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['captcha'])."' WHERE settings_name='captcha'");
+        if (!$result) {
+            $error = 1;
+        }
+        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['recaptcha_public'])."' WHERE settings_name='recaptcha_public'");
+        if (!$result) {
+            $error = 1;
+        }
+        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['recaptcha_private'])."' WHERE settings_name='recaptcha_private'");
+        if (!$result) {
+            $error = 1;
+        }
+        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['recaptcha_theme'])."' WHERE settings_name='recaptcha_theme'");
+        if (!$result) {
+            $error = 1;
+        }
+    }
+    redirect(FUSION_SELF.$aidlink."&error=".$error);
 }
 
 if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
-	if ($_GET['error'] == 0) {
-		$message = $locale['900'];
-	} elseif ($_GET['error'] == 1) {
-		$message = $locale['901'];
-	} elseif ($_GET['error'] == 2) {
-		$message = $locale['696'];
-	}
-	if (isset($message)) {
-		echo "<div id='close-message'><div class='admin-message'>".$message."</div></div>\n";
-	}
+    if ($_GET['error'] == 0) {
+        $message = $locale['900'];
+    } else if ($_GET['error'] == 1) {
+        $message = $locale['901'];
+    } else if ($_GET['error'] == 2) {
+        $message = $locale['696'];
+    }
+    if (isset($message)) {
+        echo "<div id='close-message'><div class='admin-message'>".$message."</div></div>\n";
+    }
 }
 
 opentable($locale['683']);
@@ -185,7 +211,7 @@ echo "<script language='JavaScript' type='text/javascript'>\n";
 echo "/* <![CDATA[ */\n";
 echo "jQuery(document).ready(function() {";
 if ($settings['captcha'] != "recaptcha") {
-	echo "jQuery('.recaptcha_keys').hide();";
+    echo "jQuery('.recaptcha_keys').hide();";
 }
 echo "jQuery('#captcha').change(function(){
 if(this.value == 'recaptcha')

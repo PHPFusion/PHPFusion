@@ -17,10 +17,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
-
-if (!checkrights("MI") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
-	redirect("../index.php");
-}
+if (!checkrights("MI") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {redirect("../index.php");}
 
 require_once THEMES."templates/admin_header.php";
 if (isset($_POST['user_primary']) && !isnum($_POST['user_primary'])) {
@@ -140,13 +137,13 @@ function user_posts_migrate_console() {
     echo "<tbody>\n";
     echo "<tr>\n";
     echo "<td>\n";
-	echo form_user_select('user_primary', '', isset($_POST['user_primary']) && isnum($_POST['user_primary'] ?: ''), array('placeholder' => $locale['127'], 'width' => "250px;"));
+    echo form_user_select('user_primary', '', isset($_POST['user_primary']) && isnum($_POST['user_primary'] ?: ''), ['placeholder' => $locale['127'], 'width' => "250px;"]);
     echo "</td>\n";
     echo "<td>\n";
-	echo form_user_select('user_migrate', '', isset($_POST['user_migrate']) && isnum($_POST['user_migrate'] ?: ''), array('placeholder' => $locale['128'], 'width' => "250px;"));
+    echo form_user_select('user_migrate', '', isset($_POST['user_migrate']) && isnum($_POST['user_migrate'] ?: ''), ['placeholder' => $locale['128'], 'width' => "250px;"]);
     echo "</td>\n";
     echo "<td>\n";
-	echo "<input type='submit' name='savesettings' value='".$locale['129']."' class='button' /></td>\n";
+    echo "<input type='submit' name='savesettings' value='".$locale['129']."' class='button' /></td>\n";
     echo "</td>\n";
     echo "</tr>\n";
     echo "<tr>\n";
@@ -233,7 +230,7 @@ function user_rights_migrate($user_primary_id, $user_temp_id) {
                         echo "<div class='well text-center'>".count($old_user_rights)." ".$locale['154']." <strong>".$locale['155']."</strong> ".$locale['156']." ".$data['user_name']." ".$locale['151']." ".$cdata['user_name'].".</div>\n";
                     }
                 } else {
-                    $rights_dump = array();
+                    $rights_dump = [];
                     foreach ($old_user_rights as $arr => $value) {
                         if (!in_array($value, $new_user_rights)) {
                             $rights_dump[] = $value;
@@ -261,7 +258,7 @@ function user_rights_migrate($user_primary_id, $user_temp_id) {
                         echo "<div class='well text-center'>".count($old_user_groups)." ".$locale['154']." <strong>".$locale['158']."</strong> ".$locale['156']." ".$data['user_name']." ".$locale['151']." ".$cdata['user_name'].".</div>\n";
                     }
                 } else {
-                    $group_dump = array();
+                    $group_dump = [];
                     foreach ($old_user_groups as $arr => $value) {
                         if (!in_array($value, $new_user_groups)) {
                             $group_dump[] = $value;

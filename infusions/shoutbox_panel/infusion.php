@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: infusion.php
 | Author: Marcus Gottschalk (MarcusG)
@@ -15,17 +15,19 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 include INFUSIONS."shoutbox_panel/infusion_db.php";
 
 // Check if locale file is available matching the current site locale setting.
 if (file_exists(INFUSIONS."shoutbox_panel/locale/".$settings['locale'].".php")) {
-	// Load the locale file matching the current site locale setting.
-	include INFUSIONS."shoutbox_panel/locale/".$settings['locale'].".php";
+    // Load the locale file matching the current site locale setting.
+    include INFUSIONS."shoutbox_panel/locale/".$settings['locale'].".php";
 } else {
-	// Load the infusion's default locale file.
-	include INFUSIONS."shoutbox_panel/locale/English.php";
+    // Load the infusion's default locale file.
+    include INFUSIONS."shoutbox_panel/locale/English.php";
 }
 
 // Infusion general information
@@ -61,14 +63,14 @@ $inf_droptable[1] = DB_SHOUTBOX;
 $inf_deldbrow[1] = DB_PANELS." WHERE panel_filename='".$inf_folder."'";
 $inf_deldbrow[2] = DB_SETTINGS_INF." WHERE settings_inf='".$inf_folder."'";
 
-$inf_adminpanel[1] = array(
-	"title" => $locale['SB_admin1'],
-	"image" => "../../infusions/shoutbox_panel/shouts.svg",
-	"panel" => "shoutbox_admin.php",
-	"rights" => "S"
-);
+$inf_adminpanel[1] = [
+    "title"  => $locale['SB_admin1'],
+    "image"  => "../../infusions/shoutbox_panel/shouts.svg",
+    "panel"  => "shoutbox_admin.php",
+    "rights" => "S"
+];
 
-$inf_mlt[1] = array(
-	"title" => $locale['SB_title'],
-	"rights" => "SB"
-);
+$inf_mlt[1] = [
+    "title"  => $locale['SB_title'],
+    "rights" => "SB"
+];

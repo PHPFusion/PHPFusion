@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: output_handling_include.php
 | Author: Max Toball (Matonor)
@@ -18,115 +18,115 @@
 $fusion_page_replacements = "";
 $fusion_output_handlers = "";
 $fusion_page_title = $settings['sitename'];
-$fusion_page_meta = array("description" => $settings['description'], "keywords" => $settings['keywords']);
+$fusion_page_meta = ["description" => $settings['description'], "keywords" => $settings['keywords']];
 $fusion_page_head_tags = "";
 $fusion_page_footer_tags = "";
 $fusion_jquery_tags = "";
 
-function set_title($title=""){
-	global $fusion_page_title;
+function set_title($title = "") {
+    global $fusion_page_title;
 
-	$fusion_page_title = $title;
+    $fusion_page_title = $title;
 }
 
-function add_to_title($addition=""){
-	global $fusion_page_title;
+function add_to_title($addition = "") {
+    global $fusion_page_title;
 
-	$fusion_page_title .= $addition;
+    $fusion_page_title .= $addition;
 }
 
-function set_meta($name, $content=""){
-	global $fusion_page_meta;
-	$fusion_page_meta[$name] = $content;
+function set_meta($name, $content = "") {
+    global $fusion_page_meta;
+    $fusion_page_meta[$name] = $content;
 }
 
-function add_to_meta($name, $addition=""){
-	global $fusion_page_meta;
-	if(isset($fusion_page_meta[$name])){
-		$fusion_page_meta[$name] .= $addition;
-	}
+function add_to_meta($name, $addition = "") {
+    global $fusion_page_meta;
+    if (isset($fusion_page_meta[$name])) {
+        $fusion_page_meta[$name] .= $addition;
+    }
 }
 
-function add_to_head($tag=""){
-	global $fusion_page_head_tags;
+function add_to_head($tag = "") {
+    global $fusion_page_head_tags;
 
-	if(!stristr($fusion_page_head_tags, $tag)){
-		$fusion_page_head_tags .= $tag."\n";
-	}
+    if (!stristr($fusion_page_head_tags, $tag)) {
+        $fusion_page_head_tags .= $tag."\n";
+    }
 }
 
-function add_to_footer($tag=""){
-	global $fusion_page_footer_tags;
+function add_to_footer($tag = "") {
+    global $fusion_page_footer_tags;
 
-	if(!stristr($fusion_page_footer_tags, $tag)){
-		$fusion_page_footer_tags .= $tag."\n";
-	}
+    if (!stristr($fusion_page_footer_tags, $tag)) {
+        $fusion_page_footer_tags .= $tag."\n";
+    }
 }
 
 function push_jquery() {
-	global $fusion_jquery_tags;
-    if(is_array($fusion_jquery_tags)){
-		$jquery_output = open_jquery();
-		foreach ($fusion_jquery_tags as $arr=>$v) {
-			$jquery_output .= $v;
-		}
-		$jquery_output .= close_jquery();
-	} else { $jquery_output = ""; }
-	return $jquery_output;
+    global $fusion_jquery_tags;
+    if (is_array($fusion_jquery_tags)) {
+        $jquery_output = open_jquery();
+        foreach ($fusion_jquery_tags as $arr => $v) {
+            $jquery_output .= $v;
+        }
+        $jquery_output .= close_jquery();
+    } else {
+        $jquery_output = "";
+    }
+    return $jquery_output;
 }
 
 function open_jquery() {
-	return "<script type='text/javascript'>$(function() {";
+    return "<script type='text/javascript'>$(function() {";
 }
 
 function close_jquery() {
-	return "});</script>";
+    return "});</script>";
 }
 
-function add_to_jquery($tag=''){
-	global $fusion_jquery_tags;
-	$fusion_jquery_tags = array();
-	$fusion_jquery_tags = array($tag);
+function add_to_jquery($tag = '') {
+    global $fusion_jquery_tags;
+    $fusion_jquery_tags = [];
+    $fusion_jquery_tags = [$tag];
 }
 
-function replace_in_output($target, $replace, $modifiers=""){
-	global $fusion_page_replacements;
+function replace_in_output($target, $replace, $modifiers = "") {
+    global $fusion_page_replacements;
 
-	$fusion_page_replacements .= "\$output = preg_replace('^$target^$modifiers', '$replace', \$output);";
+    $fusion_page_replacements .= "\$output = preg_replace('^$target^$modifiers', '$replace', \$output);";
 }
 
-function add_handler($name){
-	global $fusion_output_handlers;
-	if(!empty($name)){
-		$fusion_output_handlers .= "\$output = $name(\$output);";
-	}
+function add_handler($name) {
+    global $fusion_output_handlers;
+    if (!empty($name)) {
+        $fusion_output_handlers .= "\$output = $name(\$output);";
+    }
 }
 
-function handle_output($output){
-	global $fusion_page_head_tags ,$fusion_page_footer_tags, $fusion_page_title, $fusion_page_meta, $fusion_page_replacements, $fusion_output_handlers, $settings;
+function handle_output($output) {
+    global $fusion_page_head_tags, $fusion_page_footer_tags, $fusion_page_title, $fusion_page_meta, $fusion_page_replacements, $fusion_output_handlers, $settings;
 
-	if(!empty($fusion_page_footer_tags)){
-		$output = preg_replace("#</body>#", $fusion_page_footer_tags."</body>", $output, 1);
-	}
-	if(!empty($fusion_page_head_tags)){
-		$output = preg_replace("#</head>#", $fusion_page_head_tags."</head>", $output, 1);
-	}
-	if($fusion_page_title != $settings['sitename']){
-		$output = preg_replace("#<title>.*</title>#i", "<title>".$fusion_page_title."</title>", $output, 1);
-	}
-	if(!empty($fusion_page_meta)){
-		foreach($fusion_page_meta as $name => $content){
-			$output = preg_replace("#<meta (http-equiv|name)='$name' content='.*' />#i", "<meta \\1='".$name."' content='".$content."' />", $output, 1);
-		}
-	}
-	if(!empty($fusion_page_replacements)){
-		eval($fusion_page_replacements);
-	}
-	if(!empty($fusion_output_handlers)){
-		eval($fusion_output_handlers);
-	}
+    if (!empty($fusion_page_footer_tags)) {
+        $output = preg_replace("#</body>#", $fusion_page_footer_tags."</body>", $output, 1);
+    }
+    if (!empty($fusion_page_head_tags)) {
+        $output = preg_replace("#</head>#", $fusion_page_head_tags."</head>", $output, 1);
+    }
+    if ($fusion_page_title != $settings['sitename']) {
+        $output = preg_replace("#<title>.*</title>#i", "<title>".$fusion_page_title."</title>", $output, 1);
+    }
+    if (!empty($fusion_page_meta)) {
+        foreach ($fusion_page_meta as $name => $content) {
+            $output = preg_replace("#<meta (http-equiv|name)='$name' content='.*' />#i", "<meta \\1='".$name."' content='".$content."' />", $output, 1);
+        }
+    }
+    if (!empty($fusion_page_replacements)) {
+        eval($fusion_page_replacements);
+    }
+    if (!empty($fusion_output_handlers)) {
+        eval($fusion_output_handlers);
+    }
 
-	return $output;
+    return $output;
 }
-
-?>

@@ -2,10 +2,10 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: settings_news.php
-| Author: Starefossen
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -16,54 +16,75 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
-
-if (!checkRights("S8") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) { redirect("../index.php"); }
+if (!checkRights("S8") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {redirect("../index.php");}
 
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
 
 if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
-	if ($_GET['error'] == 0) {
-		$message = $locale['900'];
-	} elseif ($_GET['error'] == 1) {
-		$message = $locale['901'];
-	}
-	if (isset($message)) {
-		echo "<div id='close-message'><div class='admin-message'>".$message."</div></div>\n";
-	}
+    if ($_GET['error'] == 0) {
+        $message = $locale['900'];
+    } else if ($_GET['error'] == 1) {
+        $message = $locale['901'];
+    }
+    if (isset($message)) {
+        echo "<div id='close-message'><div class='admin-message'>".$message."</div></div>\n";
+    }
 }
 
 if (isset($_POST['savesettings'])) {
-	$error = 0;
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['news_image_link']) ? $_POST['news_image_link'] : "0")."' WHERE settings_name='news_image_link'");
-	if (!$result) { $error = 1; }
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['news_image_frontpage']) ? $_POST['news_image_frontpage'] : "0")."' WHERE settings_name='news_image_frontpage'");
-	if (!$result) { $error = 1; }
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['news_image_readmore']) ? $_POST['news_image_readmore'] : "0")."' WHERE settings_name='news_image_readmore'");
-	if (!$result) { $error = 1; }
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['news_thumb_ratio']) ? $_POST['news_thumb_ratio'] : "0")."' WHERE settings_name='news_thumb_ratio'");
-	if (!$result) { $error = 1; }
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['news_thumb_w']) ? $_POST['news_thumb_w'] : "100")."' WHERE settings_name='news_thumb_w'");
-	if (!$result) { $error = 1; }
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['news_thumb_h']) ? $_POST['news_thumb_h'] : "100")."' WHERE settings_name='news_thumb_h'");
-	if (!$result) { $error = 1; }
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['news_photo_w']) ? $_POST['news_photo_w'] : "400")."' WHERE settings_name='news_photo_w'");
-	if (!$result) { $error = 1; }
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['news_photo_h']) ? $_POST['news_photo_h'] : "300")."' WHERE settings_name='news_photo_h'");
-	if (!$result) { $error = 1; }
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['news_photo_max_w']) ? $_POST['news_photo_max_w'] : "1800")."' WHERE settings_name='news_photo_max_w'");
-	if (!$result) { $error = 1; }
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['news_photo_max_h']) ? $_POST['news_photo_max_h'] : "1600")."' WHERE settings_name='news_photo_max_h'");
-	if (!$result) { $error = 1; }
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['news_photo_max_b']) ? $_POST['news_photo_max_b'] : "150000")."' WHERE settings_name='news_photo_max_b'");
-	if (!$result) { $error = 1; }
-	redirect(FUSION_SELF.$aidlink."&error=".$error);
+    $error = 0;
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['news_image_link']) ? $_POST['news_image_link'] : "0")."' WHERE settings_name='news_image_link'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['news_image_frontpage']) ? $_POST['news_image_frontpage'] : "0")."' WHERE settings_name='news_image_frontpage'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['news_image_readmore']) ? $_POST['news_image_readmore'] : "0")."' WHERE settings_name='news_image_readmore'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['news_thumb_ratio']) ? $_POST['news_thumb_ratio'] : "0")."' WHERE settings_name='news_thumb_ratio'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['news_thumb_w']) ? $_POST['news_thumb_w'] : "100")."' WHERE settings_name='news_thumb_w'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['news_thumb_h']) ? $_POST['news_thumb_h'] : "100")."' WHERE settings_name='news_thumb_h'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['news_photo_w']) ? $_POST['news_photo_w'] : "400")."' WHERE settings_name='news_photo_w'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['news_photo_h']) ? $_POST['news_photo_h'] : "300")."' WHERE settings_name='news_photo_h'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['news_photo_max_w']) ? $_POST['news_photo_max_w'] : "1800")."' WHERE settings_name='news_photo_max_w'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['news_photo_max_h']) ? $_POST['news_photo_max_h'] : "1600")."' WHERE settings_name='news_photo_max_h'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['news_photo_max_b']) ? $_POST['news_photo_max_b'] : "150000")."' WHERE settings_name='news_photo_max_b'");
+    if (!$result) {
+        $error = 1;
+    }
+    redirect(FUSION_SELF.$aidlink."&error=".$error);
 }
 
-$settings2 = array();
+$settings2 = [];
 $result = dbquery("SELECT * FROM ".DB_SETTINGS);
 while ($data = dbarray($result)) {
-	$settings2[$data['settings_name']] = $data['settings_value'];
+    $settings2[$data['settings_name']] = $data['settings_value'];
 }
 
 opentable($locale['400']);

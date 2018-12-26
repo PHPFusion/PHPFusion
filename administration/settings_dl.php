@@ -2,10 +2,10 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: settings_dl.php
-| Author: Hans Kristian Flaatten (Starefossen)
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -16,55 +16,70 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
-
-if (!checkrights("S11") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) { redirect("../index.php"); }
+if (!checkrights("S11") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {redirect("../index.php");}
 
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
 
 if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
-	if ($_GET['error'] == 0) {
-		$message = $locale['900'];
-	} elseif ($_GET['error'] == 1) {
-		$message = $locale['901'];
-	} elseif ($_GET['error'] == 2) {
-		$message = $locale['global_182'];
-	}
-	if (isset($message)) {
-		echo "<div id='close-message'><div class='admin-message'>".$message."</div></div>\n";
-	}
+    if ($_GET['error'] == 0) {
+        $message = $locale['900'];
+    } else if ($_GET['error'] == 1) {
+        $message = $locale['901'];
+    } else if ($_GET['error'] == 2) {
+        $message = $locale['global_182'];
+    }
+    if (isset($message)) {
+        echo "<div id='close-message'><div class='admin-message'>".$message."</div></div>\n";
+    }
 }
 
 if (isset($_POST['savesettings'])) {
-	$error = 0;
-	if (check_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "")) {
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['download_max_b']) ? $_POST['download_max_b'] : "150000")."' WHERE settings_name='download_max_b'");
-		if (!$result) { $error = 1; }
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['download_types'])."' WHERE settings_name='download_types'");
-		if (!$result) { $error = 1; }
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['download_screen_max_w']) ? $_POST['download_screen_max_w'] : "0")."' WHERE settings_name='download_screen_max_w'");
-		if (!$result) { $error = 1; }
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['download_screen_max_h']) ? $_POST['download_screen_max_h'] : "0")."' WHERE settings_name='download_screen_max_h'");
-		if (!$result) { $error = 1; }
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['download_screen_max_b']) ? $_POST['download_screen_max_b'] : "0")."' WHERE settings_name='download_screen_max_b'");
-		if (!$result) { $error = 1; }
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['download_thumb_max_h']) ? $_POST['download_thumb_max_h'] : "100")."' WHERE settings_name='download_thumb_max_h'");
-		if (!$result) { $error = 1; }
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['download_thumb_max_w']) ? $_POST['download_thumb_max_w'] : "100")."' WHERE settings_name='download_thumb_max_w'");
-		if (!$result) { $error = 1; }
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".($_POST['download_screenshot'] == 0 || $_POST['download_screenshot'] == 1 ? $_POST['download_screenshot'] : "0")."' WHERE settings_name='download_screenshot'");
-		if (!$result) { $error = 1; }
-		set_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "");
-		redirect(FUSION_SELF.$aidlink."&error=".$error, true);
-	} else {
-		redirect(FUSION_SELF.$aidlink."&error=2");
-	}
+    $error = 0;
+    if (check_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "")) {
+        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['download_max_b']) ? $_POST['download_max_b'] : "150000")."' WHERE settings_name='download_max_b'");
+        if (!$result) {
+            $error = 1;
+        }
+        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['download_types'])."' WHERE settings_name='download_types'");
+        if (!$result) {
+            $error = 1;
+        }
+        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['download_screen_max_w']) ? $_POST['download_screen_max_w'] : "0")."' WHERE settings_name='download_screen_max_w'");
+        if (!$result) {
+            $error = 1;
+        }
+        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['download_screen_max_h']) ? $_POST['download_screen_max_h'] : "0")."' WHERE settings_name='download_screen_max_h'");
+        if (!$result) {
+            $error = 1;
+        }
+        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['download_screen_max_b']) ? $_POST['download_screen_max_b'] : "0")."' WHERE settings_name='download_screen_max_b'");
+        if (!$result) {
+            $error = 1;
+        }
+        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['download_thumb_max_h']) ? $_POST['download_thumb_max_h'] : "100")."' WHERE settings_name='download_thumb_max_h'");
+        if (!$result) {
+            $error = 1;
+        }
+        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['download_thumb_max_w']) ? $_POST['download_thumb_max_w'] : "100")."' WHERE settings_name='download_thumb_max_w'");
+        if (!$result) {
+            $error = 1;
+        }
+        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".($_POST['download_screenshot'] == 0 || $_POST['download_screenshot'] == 1 ? $_POST['download_screenshot'] : "0")."' WHERE settings_name='download_screenshot'");
+        if (!$result) {
+            $error = 1;
+        }
+        set_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "");
+        redirect(FUSION_SELF.$aidlink."&error=".$error, TRUE);
+    } else {
+        redirect(FUSION_SELF.$aidlink."&error=2");
+    }
 }
 
-$settings2 = array();
+$settings2 = [];
 $result = dbquery("SELECT * FROM ".DB_SETTINGS);
 while ($data = dbarray($result)) {
-	$settings2[$data['settings_name']] = $data['settings_value'];
+    $settings2[$data['settings_name']] = $data['settings_value'];
 }
 
 opentable($locale['400']);
@@ -94,9 +109,9 @@ echo "<option value='0' ".(!$settings['download_screenshot'] ? "selected='select
 echo "</select></td>\n";
 echo "</tr>\n<tr>\n";
 if (!check_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "")) {
-	echo "<td class='tbl'>".$locale['853']."</td>\n";
-	echo "<td class='tbl'><input type='password' name='admin_password' value='".(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "")."' class='textbox' style='width:150px;' autocomplete='off' /></td>\n";
-	echo "</tr>\n<tr>\n";
+    echo "<td class='tbl'>".$locale['853']."</td>\n";
+    echo "<td class='tbl'><input type='password' name='admin_password' value='".(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "")."' class='textbox' style='width:150px;' autocomplete='off' /></td>\n";
+    echo "</tr>\n<tr>\n";
 }
 echo "<td align='center' colspan='2' class='tbl'><br />\n";
 echo "<input type='submit' name='savesettings' value='".$locale['750']."' class='button' /></td>\n";

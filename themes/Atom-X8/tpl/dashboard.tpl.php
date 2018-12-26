@@ -2,7 +2,7 @@
     /*-------------------------------------------------------+
     | PHP-Fusion Content Management System
     | Copyright (C) PHP-Fusion Inc
-    | http://www.php-fusion.co.uk/
+    | https://www.php-fusion.co.uk/
     +--------------------------------------------------------+
     | Filename: dashboard.tpl.php
     | Author: Hien (Frederick MC Chan)

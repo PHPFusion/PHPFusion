@@ -20,23 +20,23 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-$regex = array(
-    "%user_id%" => "([0-9]+)",
-    "%section%" => "([0-9]+)",
+$regex = [
+    "%user_id%"   => "([0-9]+)",
+    "%section%"   => "([0-9]+)",
     "%user_name%" => "([0-9a-zA-Z._\W]+)",
-);
+];
 
-$pattern = array(
+$pattern = [
     "profile/section-%section%/%user_id%/%user_name%" => "profile.php?lookup=%user_id%&amp;section=%section%",
-    "profile/%user_id%/%user_name%" => "profile.php?lookup=%user_id%",
+    "profile/%user_id%/%user_name%"                   => "profile.php?lookup=%user_id%",
 
-);
+];
 
-$pattern_tables["%user_id%"] = array(
-    "table" => DB_USERS,
+$pattern_tables["%user_id%"] = [
+    "table"       => DB_USERS,
     "primary_key" => "user_id",
-    "id" => array("%user_id%" => "user_id"),
-    "columns" => array(
+    "id"          => ["%user_id%" => "user_id"],
+    "columns"     => [
         "%user_name%" => "user_name",
-    )
-);
+    ]
+];

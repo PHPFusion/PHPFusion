@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: multisite_include.php
 | Author: Nick Jones (Digitanium)
@@ -57,6 +57,7 @@ define("DB_PHOTOS", DB_PREFIX."photos");
 define("DB_POLL_VOTES", DB_PREFIX."poll_votes");
 define("DB_POLLS", DB_PREFIX."polls");
 define("DB_POSTS", DB_PREFIX."posts");
+define("DB_FORUM_POSTS", DB_POSTS);
 define("DB_RATINGS", DB_PREFIX."ratings");
 define("DB_SETTINGS", DB_PREFIX."settings");
 define("DB_SETTINGS_INF", DB_PREFIX."settings_inf");

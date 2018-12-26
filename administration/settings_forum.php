@@ -2,10 +2,10 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: settings_forum.php
-| Author: Nick Jones (Digitanium)
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -16,75 +16,100 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
-
-if (!checkrights("S3") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) { redirect("../index.php"); }
+if (!checkrights("S3") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {redirect("../index.php");}
 
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
 
 if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
-	if ($_GET['error'] == 0) {
-		$message = $locale['900'];
-	} elseif ($_GET['error'] == 1) {
-		$message = $locale['901'];
-	} elseif ($_GET['error'] == 2) {
-		$message = $locale['global_182'];
-	}
-	if (isset($message)) {
-		echo "<div id='close-message'><div class='admin-message'>".$message."</div></div>\n";
-	}
+    if ($_GET['error'] == 0) {
+        $message = $locale['900'];
+    } else if ($_GET['error'] == 1) {
+        $message = $locale['901'];
+    } else if ($_GET['error'] == 2) {
+        $message = $locale['global_182'];
+    }
+    if (isset($message)) {
+        echo "<div id='close-message'><div class='admin-message'>".$message."</div></div>\n";
+    }
 }
 
 if (isset($_GET['action']) && $_GET['action'] == "count_posts") {
-	$result = dbquery("SELECT post_author, COUNT(post_id) as num_posts FROM ".DB_POSTS." GROUP BY post_author");
-	if (dbrows($result)) {
-		while ($data = dbarray($result)) {
-			$result2 = dbquery("UPDATE ".DB_USERS." SET user_posts='".$data['num_posts']."' WHERE user_id='".$data['post_author']."'");
-		}
-	}
+    $result = dbquery("SELECT post_author, COUNT(post_id) as num_posts FROM ".DB_POSTS." GROUP BY post_author");
+    if (dbrows($result)) {
+        while ($data = dbarray($result)) {
+            $result2 = dbquery("UPDATE ".DB_USERS." SET user_posts='".$data['num_posts']."' WHERE user_id='".$data['post_author']."'");
+        }
+    }
 }
 
 if (isset($_POST['savesettings'])) {
-	$error = 0;
-	if (check_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "")) {
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['numofthreads']) ? $_POST['numofthreads'] : "5")."' WHERE settings_name='numofthreads'");
-		if (!$result) { $error = 1; }
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['forum_ips']) ? $_POST['forum_ips'] : "103")."' WHERE settings_name='forum_ips'");
-		if (!$result) { $error = 1; }
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['attachmax']) ? $_POST['attachmax'] : "150000")."' WHERE settings_name='attachmax'");
-		if (!$result) { $error = 1; }
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['attachmax_count']) ? $_POST['attachmax_count'] : "5")."' WHERE settings_name='attachmax_count'");
-		if (!$result) { $error = 1; }
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['attachtypes'])."' WHERE settings_name='attachtypes'");
-		if (!$result) { $error = 1; }
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['thread_notify']) ? $_POST['thread_notify'] : "0")."' WHERE settings_name='thread_notify'");
-		if (!$result) { $error = 1; }
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['forum_ranks']) ? $_POST['forum_ranks'] : "0")."' WHERE settings_name='forum_ranks'");
-		if (!$result) { $error = 1; }
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['forum_edit_lock']) ? $_POST['forum_edit_lock'] : "0")."' WHERE settings_name='forum_edit_lock'");
-		if (!$result) { $error = 1; }
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['forum_edit_timelimit']) ? $_POST['forum_edit_timelimit'] : "0")."' WHERE settings_name='forum_edit_timelimit'");
-		if (!$result) { $error = 1; }
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['popular_threads_timeframe']) ? $_POST['popular_threads_timeframe'] : 604800)."' WHERE settings_name='popular_threads_timeframe'");
-		if (!$result) { $error = 1; }
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['forum_last_posts_reply']) ? $_POST['forum_last_posts_reply'] : "0")."' WHERE settings_name='forum_last_posts_reply'");
-		if (!$result) { $error = 1; }
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['forum_last_post_avatar']) ? $_POST['forum_last_post_avatar'] : "0")."' WHERE settings_name='forum_last_post_avatar'");
-		if (!$result) { $error = 1; }
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['forum_editpost_to_lastpost']) ? $_POST['forum_editpost_to_lastpost'] : "0")."' WHERE settings_name='forum_editpost_to_lastpost'");
-		if (!$result) { $error = 1; }
+    $error = 0;
+    if (check_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "")) {
+        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['numofthreads']) ? $_POST['numofthreads'] : "5")."' WHERE settings_name='numofthreads'");
+        if (!$result) {
+            $error = 1;
+        }
+        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['forum_ips']) ? $_POST['forum_ips'] : "103")."' WHERE settings_name='forum_ips'");
+        if (!$result) {
+            $error = 1;
+        }
+        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['attachmax']) ? $_POST['attachmax'] : "150000")."' WHERE settings_name='attachmax'");
+        if (!$result) {
+            $error = 1;
+        }
+        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['attachmax_count']) ? $_POST['attachmax_count'] : "5")."' WHERE settings_name='attachmax_count'");
+        if (!$result) {
+            $error = 1;
+        }
+        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['attachtypes'])."' WHERE settings_name='attachtypes'");
+        if (!$result) {
+            $error = 1;
+        }
+        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['thread_notify']) ? $_POST['thread_notify'] : "0")."' WHERE settings_name='thread_notify'");
+        if (!$result) {
+            $error = 1;
+        }
+        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['forum_ranks']) ? $_POST['forum_ranks'] : "0")."' WHERE settings_name='forum_ranks'");
+        if (!$result) {
+            $error = 1;
+        }
+        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['forum_edit_lock']) ? $_POST['forum_edit_lock'] : "0")."' WHERE settings_name='forum_edit_lock'");
+        if (!$result) {
+            $error = 1;
+        }
+        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['forum_edit_timelimit']) ? $_POST['forum_edit_timelimit'] : "0")."' WHERE settings_name='forum_edit_timelimit'");
+        if (!$result) {
+            $error = 1;
+        }
+        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['popular_threads_timeframe']) ? $_POST['popular_threads_timeframe'] : 604800)."' WHERE settings_name='popular_threads_timeframe'");
+        if (!$result) {
+            $error = 1;
+        }
+        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['forum_last_posts_reply']) ? $_POST['forum_last_posts_reply'] : "0")."' WHERE settings_name='forum_last_posts_reply'");
+        if (!$result) {
+            $error = 1;
+        }
+        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['forum_last_post_avatar']) ? $_POST['forum_last_post_avatar'] : "0")."' WHERE settings_name='forum_last_post_avatar'");
+        if (!$result) {
+            $error = 1;
+        }
+        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['forum_editpost_to_lastpost']) ? $_POST['forum_editpost_to_lastpost'] : "0")."' WHERE settings_name='forum_editpost_to_lastpost'");
+        if (!$result) {
+            $error = 1;
+        }
 
-		set_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "");
-		redirect(FUSION_SELF.$aidlink."&error=".$error, true);
-	} else {
-		redirect(FUSION_SELF.$aidlink."&error=2");
-	}
+        set_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "");
+        redirect(FUSION_SELF.$aidlink."&error=".$error, TRUE);
+    } else {
+        redirect(FUSION_SELF.$aidlink."&error=2");
+    }
 }
 
-$settings2 = array();
+$settings2 = [];
 $result = dbquery("SELECT * FROM ".DB_SETTINGS);
 while ($data = dbarray($result)) {
-	$settings2[$data['settings_name']] = $data['settings_value'];
+    $settings2[$data['settings_name']] = $data['settings_value'];
 }
 
 opentable($locale['400']);
@@ -110,7 +135,7 @@ echo "</tr>\n<tr>\n";
 echo "<td width='50%' class='tbl'>".$locale['534']."<br /><span class='small2'>".$locale['535']."</span></td>\n";
 echo "<td width='50%' class='tbl'><select name='attachmax_count' class='textbox'>";
 for ($i = 1; $i <= 10; $i++) {
-	echo "<option value='".$i."'".($settings2['attachmax_count'] == $i ? " selected='selected'" : "").">".$i."</option>";
+    echo "<option value='".$i."'".($settings2['attachmax_count'] == $i ? " selected='selected'" : "").">".$i."</option>";
 }
 echo "</select></td>\n";
 echo "</tr>\n<tr>\n";
@@ -164,15 +189,15 @@ echo "<td width='50%' class='tbl'>".$locale['531']."</td>";
 echo "<td width='50%' class='tbl'><select name='forum_last_posts_reply' class='textbox'>\n";
 echo "<option value='0'".($settings2['forum_last_posts_reply'] == "0" ? " selected='selected'" : "").">".$locale['519']."</option>";
 echo "<option value='1'".($settings2['forum_last_posts_reply'] == "1" ? " selected='selected'" : "").">".$locale['533']."</option>";
-for ($i = 2; $i<=20; $i++) {
-	echo "<option value='".$i."'".($settings2['forum_last_posts_reply'] == $i ? " selected='selected'" : "").">".sprintf($locale['532'], $i)."</option>";
+for ($i = 2; $i <= 20; $i++) {
+    echo "<option value='".$i."'".($settings2['forum_last_posts_reply'] == $i ? " selected='selected'" : "").">".sprintf($locale['532'], $i)."</option>";
 }
 echo "</select></td>\n";
 echo "</tr>\n<tr>\n";
 if (!check_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "")) {
-	echo "<td class='tbl'>".$locale['853']."</td>\n";
-	echo "<td class='tbl'><input type='password' name='admin_password' value='".(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "")."' class='textbox' style='width:150px;' autocomplete='off' /></td>\n";
-	echo "</tr>\n<tr>\n";
+    echo "<td class='tbl'>".$locale['853']."</td>\n";
+    echo "<td class='tbl'><input type='password' name='admin_password' value='".(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "")."' class='textbox' style='width:150px;' autocomplete='off' /></td>\n";
+    echo "</tr>\n<tr>\n";
 }
 echo "<td align='center' colspan='2' class='tbl'><br /><a href='".FUSION_SELF.$aidlink."&amp;action=count_posts'>".$locale['523']."</a>".(isset($_GET['action']) && $_GET['action'] == "count_posts" ? " ".$locale['524'] : "")."</td>\n";
 echo "</tr>\n<tr>\n";

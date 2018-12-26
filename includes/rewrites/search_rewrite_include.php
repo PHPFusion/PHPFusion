@@ -29,9 +29,9 @@ $regex = [
 ];
 
 $pattern = [
-    "search"                                                                         => "search.php",
-    "search?stext=%stext%"                                                                 => "search.php?stext=%stext%",
-	"search?stext=%stext%/%stype%"                                                         => "search.php?stext=%stext%&amp;stype=%stype%",
-	"search?stext=%stext%/%stype%/%sort%"                                                  => "search.php?stext=%stext%&amp;stype=%stype%&amp;sort=%sort%",
+    "search"                                                                                                            => "search.php",
+    "search?stext=%stext%"                                                                                              => "search.php?stext=%stext%",
+    "search?stext=%stext%/%stype%"                                                                                      => "search.php?stext=%stext%&amp;stype=%stype%",
+    "search?stext=%stext%/%stype%/%sort%"                                                                               => "search.php?stext=%stext%&amp;stype=%stype%&amp;sort=%sort%",
     "search?stext=%stext%?search=Search/%method%/%forum_id%/%stype%/%datelimit%/fields=%fields%/%sort%/%order%/%chars%" => "search.php?stext=%stext%&amp;search=Search&amp;method=%method%&amp;forum_id=%forum_id%&amp;stype=%stype%&amp;datelimit=%datelimit%&amp;fields=%fields%&amp;sort=%sort%&amp;order=%order%&amp;chars=%chars%",
-	];
+];

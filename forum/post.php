@@ -2,10 +2,10 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: post.php
-| Author: Nick Jones (Digitanium)
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -24,97 +24,113 @@ add_to_title($locale['global_204']);
 require_once INCLUDES."forum_include.php";
 require_once INCLUDES."bbcode_include.php";
 
-if (!iMEMBER || !isset($_GET['forum_id']) || !isnum($_GET['forum_id'])) { redirect(BASEDIR."forum/index.php"); }
+if (!iMEMBER || !isset($_GET['forum_id']) || !isnum($_GET['forum_id'])) {
+    redirect(BASEDIR."forum/index.php");
+}
 
 if ($settings['forum_edit_lock'] == 1) {
-	$lock_edit = true;
+    $lock_edit = TRUE;
 } else {
-	$lock_edit = false;
+    $lock_edit = FALSE;
 }
 
 $result = dbquery(
-	"SELECT f.*, f2.forum_name AS forum_cat_name
+    "SELECT f.*, f2.forum_name AS forum_cat_name
 	FROM ".DB_FORUMS." f
 	LEFT JOIN ".DB_FORUMS." f2 ON f.forum_cat=f2.forum_id
 	WHERE f.forum_id='".$_GET['forum_id']."' LIMIT 1"
 );
 
 if (dbrows($result)) {
-	$fdata = dbarray($result);
-	if (!checkgroup($fdata['forum_access']) || !$fdata['forum_cat']) { redirect(BASEDIR."forum/index.php"); }
+    $fdata = dbarray($result);
+    if (!checkgroup($fdata['forum_access']) || !$fdata['forum_cat']) {
+        redirect(BASEDIR."forum/index.php");
+    }
 } else {
-	redirect(BASEDIR."forum/index.php");
+    redirect(BASEDIR."forum/index.php");
 }
 
-if (iSUPERADMIN) { define("iMOD", true); }
+if (iSUPERADMIN) {
+    define("iMOD", TRUE);
+}
 
 if (!defined("iMOD") && iMEMBER && $fdata['forum_moderators']) {
-	$mod_groups = explode(".", $fdata['forum_moderators']);
-	foreach ($mod_groups as $mod_group) {
-		if (!defined("iMOD") && checkgroup($mod_group)) { define("iMOD", true); }
-	}
+    $mod_groups = explode(".", $fdata['forum_moderators']);
+    foreach ($mod_groups as $mod_group) {
+        if (!defined("iMOD") && checkgroup($mod_group)) {
+            define("iMOD", TRUE);
+        }
+    }
 }
 
-if (!defined("iMOD")) { define("iMOD", false); }
+if (!defined("iMOD")) {
+    define("iMOD", FALSE);
+}
 
 $caption = $fdata['forum_cat_name']." &raquo; <a href='".BASEDIR."forum/viewforum.php?forum_id=".$fdata['forum_id']."'>".$fdata['forum_name']."</a>";
 
 if ((isset($_GET['action']) && $_GET['action'] == "newthread") && ($fdata['forum_post'] != 0 && checkgroup($fdata['forum_post']))) {
-	include BASEDIR."forum/postnewthread.php";
-} elseif ((isset($_GET['action']) && $_GET['action'] == "reply") && ($fdata['forum_reply'] != 0 && checkgroup($fdata['forum_reply']))) {
-	if (!isset($_GET['thread_id']) || !isnum($_GET['thread_id'])) {
-		redirect(BASEDIR."forum/index.php");
-	}
+    include BASEDIR."forum/postnewthread.php";
+} else if ((isset($_GET['action']) && $_GET['action'] == "reply") && ($fdata['forum_reply'] != 0 && checkgroup($fdata['forum_reply']))) {
+    if (!isset($_GET['thread_id']) || !isnum($_GET['thread_id'])) {
+        redirect(BASEDIR."forum/index.php");
+    }
 
-	$result = dbquery("SELECT * FROM ".DB_THREADS." WHERE thread_id='".$_GET['thread_id']."' AND forum_id='".$fdata['forum_id']."' AND thread_hidden='0'");
+    $result = dbquery("SELECT * FROM ".DB_THREADS." WHERE thread_id='".$_GET['thread_id']."' AND forum_id='".$fdata['forum_id']."' AND thread_hidden='0'");
 
-	if (dbrows($result)) {
-		$tdata = dbarray($result);
-	} else {
-		redirect(BASEDIR."forum/index.php");
-	}
+    if (dbrows($result)) {
+        $tdata = dbarray($result);
+    } else {
+        redirect(BASEDIR."forum/index.php");
+    }
 
-	$caption .= " &raquo; ".$tdata['thread_subject'];
+    $caption .= " &raquo; ".$tdata['thread_subject'];
 
-	if (!$tdata['thread_locked']) {
-		include BASEDIR."forum/postreply.php";
-	} else {
-		redirect(BASEDIR."forum/index.php");
-	}
-} elseif (isset($_GET['action']) && $_GET['action'] == "edit" && isset($_GET['thread_id']) && isnum($_GET['thread_id']) && isset($_GET['post_id']) && isnum($_GET['post_id'])) {
-	$result = dbquery("SELECT * FROM ".DB_THREADS." WHERE thread_id='".$_GET['thread_id']."' AND forum_id='".$fdata['forum_id']."' AND thread_hidden='0'");
+    if (!$tdata['thread_locked']) {
+        include BASEDIR."forum/postreply.php";
+    } else {
+        redirect(BASEDIR."forum/index.php");
+    }
+} else if (isset($_GET['action']) && $_GET['action'] == "edit" && isset($_GET['thread_id']) && isnum($_GET['thread_id']) && isset($_GET['post_id']) && isnum($_GET['post_id'])) {
+    $result = dbquery("SELECT * FROM ".DB_THREADS." WHERE thread_id='".$_GET['thread_id']."' AND forum_id='".$fdata['forum_id']."' AND thread_hidden='0'");
 
-	if (dbrows($result)) {
-		$tdata = dbarray($result);
-	} else {
-		redirect(BASEDIR."forum/index.php");
-	}
+    if (dbrows($result)) {
+        $tdata = dbarray($result);
+    } else {
+        redirect(BASEDIR."forum/index.php");
+    }
 
-	$result = dbquery("SELECT tp.*, tt.thread_subject, MIN(tp2.post_id) AS first_post FROM ".DB_POSTS." tp
+    $result = dbquery("SELECT tp.*, tt.thread_subject, MIN(tp2.post_id) AS first_post FROM ".DB_POSTS." tp
 	INNER JOIN ".DB_THREADS." tt on tp.thread_id=tt.thread_id
 	INNER JOIN ".DB_POSTS." tp2 on tp.thread_id=tp2.thread_id
 	WHERE tp.post_id='".$_GET['post_id']."' AND tp.thread_id='".$tdata['thread_id']."' AND tp.forum_id='".$fdata['forum_id']."' GROUP BY tp2.post_id");
 
-	if (dbrows($result)) {
-		$pdata = dbarray($result);
-		$last_post = dbarray(dbquery("SELECT post_id FROM ".DB_POSTS." WHERE thread_id='".$_GET['thread_id']."' AND forum_id='".$_GET['forum_id']."' AND post_hidden='0' ORDER BY post_datestamp DESC LIMIT 1"));
-	} else {
-		redirect(BASEDIR."forum/index.php");
-	}
+    if (dbrows($result)) {
+        $pdata = dbarray($result);
+        $last_post = dbarray(dbquery("SELECT post_id FROM ".DB_POSTS." WHERE thread_id='".$_GET['thread_id']."' AND forum_id='".$_GET['forum_id']."' AND post_hidden='0' ORDER BY post_datestamp DESC LIMIT 1"));
+    } else {
+        redirect(BASEDIR."forum/index.php");
+    }
 
-	if ($userdata['user_id'] != $pdata['post_author'] && !iMOD && !iSUPERADMIN) { redirect(BASEDIR."forum/index.php"); }
+    if ($userdata['user_id'] != $pdata['post_author'] && !iMOD && !iSUPERADMIN) {
+        redirect(BASEDIR."forum/index.php");
+    }
 
-	if ($pdata['post_locked'] && !iMOD) { redirect(BASEDIR."forum/postify.php?post=edit&error=5&forum_id=".$_GET['forum_id']."&thread_id=".$_GET['thread_id']."&post_id=".$_GET['post_id']); }
-	if (!iMOD && ($settings['forum_edit_timelimit'] > 0 && time() - $settings['forum_edit_timelimit']*60 > $pdata['post_datestamp'])) { redirect(BASEDIR."forum/postify.php?post=edit&error=6&forum_id=".$_GET['forum_id']."&thread_id=".$_GET['thread_id']."&post_id=".$_GET['post_id']); }
-	if (!$tdata['thread_locked'] && (($lock_edit && $last_post['post_id'] == $pdata['post_id'] && $userdata['user_id'] == $pdata['post_author']) || (!$lock_edit && $userdata['user_id'] == $pdata['post_author'])) ) {
-		include BASEDIR."forum/postedit.php";
-	} elseif (iMOD) {
-		include BASEDIR."forum/postedit.php";
-	} else {
-		redirect(BASEDIR."forum/index.php");
-	}
+    if ($pdata['post_locked'] && !iMOD) {
+        redirect(BASEDIR."forum/postify.php?post=edit&error=5&forum_id=".$_GET['forum_id']."&thread_id=".$_GET['thread_id']."&post_id=".$_GET['post_id']);
+    }
+    if (!iMOD && ($settings['forum_edit_timelimit'] > 0 && time() - $settings['forum_edit_timelimit'] * 60 > $pdata['post_datestamp'])) {
+        redirect(BASEDIR."forum/postify.php?post=edit&error=6&forum_id=".$_GET['forum_id']."&thread_id=".$_GET['thread_id']."&post_id=".$_GET['post_id']);
+    }
+    if (!$tdata['thread_locked'] && (($lock_edit && $last_post['post_id'] == $pdata['post_id'] && $userdata['user_id'] == $pdata['post_author']) || (!$lock_edit && $userdata['user_id'] == $pdata['post_author']))) {
+        include BASEDIR."forum/postedit.php";
+    } else if (iMOD) {
+        include BASEDIR."forum/postedit.php";
+    } else {
+        redirect(BASEDIR."forum/index.php");
+    }
 } else {
-	redirect(BASEDIR."forum/index.php");
+    redirect(BASEDIR."forum/index.php");
 }
 
 require_once THEMES."templates/footer.php";

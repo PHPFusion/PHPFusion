@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: profile.tpl.php
 | Author: Hien (Frederick MC Chan)
@@ -107,9 +107,9 @@ function user_profile_page() {
 		$html .= "<section id='mainbody m-t-20'>\n";
 		$html .= '<script type="text/javascript">
 			$(function () {
-				if(window.location.hash){ 
-				$("a[href="+window.location.hash+"]").click(); 
-			} 
+				if(window.location.hash){
+				$("a[href="+window.location.hash+"]").click();
+			}
 		});
 		</script>';
 
@@ -285,9 +285,9 @@ function user_profile_page() {
 				var text = $(this).text();
 				$('#extra-info').slideDown(400);
 				if (text == 'Show More Information') {
-					$(this).text('Hide Information'); 
-				} else { 
-					$(this).text('Show More Information'); 
+					$(this).text('Hide Information');
+				} else {
+					$(this).text('Show More Information');
 				}
 			});
 			</script>

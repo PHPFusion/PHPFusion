@@ -20,7 +20,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-$regex = array(
+$regex = [
     "%download_id%"       => "([0-9]+)",
     "%cat_id%"            => "([0-9]+)",
     "%author_id%"         => "([0-9]+)",
@@ -31,11 +31,11 @@ $regex = array(
     "%download_cat_name%" => "([0-9a-zA-Z._\W]+)",
     "%stype%"             => "(d)",
     "%filter_type%"       => "([0-9a-zA-Z]+)"
-);
+];
 
-$pattern = array(
-    "submit/%stype%/files"                                     => "submit.php?stype=%stype%",
-    "submit/%stype%/files/submitted-and-thank-you"             => "submit.php?stype=%stype%&amp;submitted=d",
+$pattern = [
+    "submit/%stype%/files"                                    => "submit.php?stype=%stype%",
+    "submit/%stype%/files/submitted-and-thank-you"            => "submit.php?stype=%stype%&amp;submitted=d",
     "download/author/%author_id%/%author_name%"               => "downloads.php?author=%author_id%",
     "download/filter/%filter_type%"                           => "downloads.php?type=%filter_type%",
     "download/filter/{%download_cat_id%}/%filter_type%"       => "downloads.php?cat_id=%download_cat_id%&amp;type=%filter_type%",
@@ -44,31 +44,31 @@ $pattern = array(
     "download/file/%download_id%/%download_title%"            => "downloads.php?cat_id=%cat_id%&amp;file_id=%download_id%",
     "download/category/%download_cat_id%/%download_cat_name%" => "downloads.php?cat_id=%download_cat_id%",
     "download"                                                => "downloads.php",
-);
+];
 
-$pattern_tables["%download_id%"] = array(
+$pattern_tables["%download_id%"] = [
     "table"       => DB_DOWNLOADS,
     "primary_key" => "download_id",
-    "id"          => array("%download_id%" => "download_id"),
-    "columns"     => array(
+    "id"          => ["%download_id%" => "download_id"],
+    "columns"     => [
         "%download_title%" => "download_title",
-    )
-);
+    ]
+];
 
-$pattern_tables["%download_cat_id%"] = array(
+$pattern_tables["%download_cat_id%"] = [
     "table"       => DB_DOWNLOAD_CATS,
     "primary_key" => "download_cat_id",
-    "id"          => array("%download_cat_id%" => "download_cat_id"),
-    "columns"     => array(
+    "id"          => ["%download_cat_id%" => "download_cat_id"],
+    "columns"     => [
         "%download_cat_name%" => "download_cat_name",
-    )
-);
+    ]
+];
 
-$pattern_tables["%author_id%"] = array(
+$pattern_tables["%author_id%"] = [
     "table"       => DB_USERS,
     "primary_key" => "user_id",
-    "id"          => array("%author_id%" => "user_id"),
-    "columns"     => array(
+    "id"          => ["%author_id%" => "user_id"],
+    "columns"     => [
         "%author_name%" => "user_name",
-    )
-);
+    ]
+];

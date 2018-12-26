@@ -1,8 +1,8 @@
 <?php
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
-| Copyright (C) 2002 - 2011 Nick Jones
-| http://www.php-fusion.co.uk/
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: UserFields.class.php
 | Author: Hans Kristian Flaatten (Starefossen)
@@ -33,6 +33,7 @@ class UserFields {
     public $skipCurrentPass = FALSE;
     public $registration = FALSE;
     public $userData = ["user_name", "user_password", "user_admin_password", "user_email"];
+    public $formaction = FUSION_REQUEST;
 
     private $html = "";
     private $js = "";
@@ -46,15 +47,15 @@ class UserFields {
         global $locale;
 
         if (preg_match('/register.php/i', $_SERVER['PHP_SELF']) || preg_match('/registration/i', $_SERVER['REQUEST_URI'])) {
-            $formaction = BASEDIR."register.php";
+            $this->formaction = BASEDIR."register.php";
         } else if (preg_match('/edit_profile.php/i', $_SERVER['PHP_SELF']) || preg_match('/edit-profile/i', $_SERVER['REQUEST_URI'])) {
-            $formaction = BASEDIR."edit_profile.php";
+            $this->formaction = BASEDIR."edit_profile.php";
         }
 
         $this->method = "input";
 
         $enctype = $this->showAvatarInput ? " enctype='multipart/form-data'" : "";
-        $this->html .= "<form name='".$this->formname."' method='post' action='".(defined('ADMIN_PANEL') ? '' : $formaction)."' ".$enctype." onsubmit='return ValidateForm(this)'>\n";
+        $this->html .= "<form name='".$this->formname."' method='post' action='".(defined('ADMIN_PANEL') ? '' : $this->formaction)."' ".$enctype." onsubmit='return ValidateForm(this)'>\n";
         $this->html .= "<table cellpadding='0' cellspacing='0' class='center edit-profile'>\n";
 
         $this->renderBasicInputFields();
@@ -108,7 +109,7 @@ class UserFields {
     }
 
     public function displayOutput() {
-        global $locale, $userdata;
+        global $userdata;
 
         $this->method = "display";
 
@@ -347,7 +348,7 @@ class UserFields {
         $this->html .= "<a href='".ADMIN."members.php".$aidlink."&amp;action=3&amp;user_id=".$this->userData['user_id']."'>".$locale['u071']."</a> ::\n";
         $this->html .= "<a href='".ADMIN."members.php".$aidlink."&amp;step=delete&amp;status=0&amp;user_id=".$this->userData['user_id']."' onclick=\"return confirm('".$locale['u073']."');\">".$locale['u072']."</a>\n";
         $this->html .= "</td>\n";
-        if (count($groups_cache) > 0) {
+        if (is_array($groups_cache) && count($groups_cache) > 0) {
             foreach ($groups_cache as $group) {
                 if (!preg_match("(^{$group['group_id']}|\.{$group['group_id']}\.|\.{$group['group_id']}$)", $this->userData['user_groups'])) {
                     $user_groups_opts .= "<option value='".$group['group_id']."'>".$group['group_name']."</option>\n";
@@ -384,10 +385,8 @@ class UserFields {
     }
 
     private function renderFields() {
-        global $settings, $locale, $userdata;
-
-        $user_data = $this->userData;
-        $profile_method = $this->method;
+        //$user_data = $this->userData;
+        // = $this->method;
         $fields = [];
         $cats = [];
         $obActiva = FALSE;
@@ -493,5 +492,3 @@ class UserFields {
         $this->javaScriptRequired .= "		}\n";
     }
 }
-
-?>

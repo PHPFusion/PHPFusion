@@ -2,10 +2,10 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: settings_main.php
-| Author: Nick Jones (Digitanium)
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -16,106 +16,153 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
-if (!checkrights("S1") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) { redirect("../index.php"); }
+if (!checkrights("S1") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {redirect("../index.php");}
 
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
 
 if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
-	if ($_GET['error'] == 0) {
-		$message = $locale['900'];
-	} elseif ($_GET['error'] == 1) {
-		$message = $locale['901'];
-	} elseif ($_GET['error'] == 2) {
-		$message = $locale['902'];
-	}
-	if (isset($message)) {
-		echo "<div id='close-message'><div class='admin-message'>".$message."</div></div>\n";
-	}
+    if ($_GET['error'] == 0) {
+        $message = $locale['900'];
+    } else if ($_GET['error'] == 1) {
+        $message = $locale['901'];
+    } else if ($_GET['error'] == 2) {
+        $message = $locale['902'];
+    }
+    if (isset($message)) {
+        echo "<div id='close-message'><div class='admin-message'>".$message."</div></div>\n";
+    }
 }
 
 if (isset($_POST['savesettings'])) {
-	$error = 0;
-	$siteintro = descript(stripslash($_POST['intro']));
-	$sitefooter = descript(stripslash($_POST['footer']));
-	$site_host = ""; $site_path = "/"; $site_protocol = "http"; $site_port = "";
+    $error = 0;
+    $siteintro = descript(stripslash($_POST['intro']));
+    $sitefooter = descript(stripslash($_POST['footer']));
+    $site_host = "";
+    $site_path = "/";
+    $site_protocol = "http";
+    $site_port = "";
 
-	if (in_array($_POST['site_protocol'], array("http", "https"))) {
-		$site_protocol = $_POST['site_protocol'];
-	}
+    if (in_array($_POST['site_protocol'], ["http", "https"])) {
+        $site_protocol = $_POST['site_protocol'];
+    }
 
-	if ($_POST['site_host'] && $_POST['site_host'] != "/") {
-		$site_host = stripinput($_POST['site_host']);
-		if (strpos($site_host, "/") !== false) {
-			$site_host = explode("/", $site_host, 2);
-			if ($site_host[1] != "") {
-				$site_path = "/".$site_host[1];
-			}
-			$site_host = $site_host[0];
-		}
-	} else {
-		redirect(FUSION_SELF.$aidlink."&error=2");
-	}
+    if ($_POST['site_host'] && $_POST['site_host'] != "/") {
+        $site_host = stripinput($_POST['site_host']);
+        if (strpos($site_host, "/") !== FALSE) {
+            $site_host = explode("/", $site_host, 2);
+            if ($site_host[1] != "") {
+                $site_path = "/".$site_host[1];
+            }
+            $site_host = $site_host[0];
+        }
+    } else {
+        redirect(FUSION_SELF.$aidlink."&error=2");
+    }
 
-	if (($_POST['site_path'] && $_POST['site_path'] != "/") || $site_path != "/") {
-		if ($site_path == "/") { $site_path = stripinput($_POST['site_path']); }
-		$site_path = (substr($site_path, 0, 1) != "/" ? "/" : "").$site_path.(strrchr($site_path,"/") != "/" ? "/" : "");
-	}
+    if (($_POST['site_path'] && $_POST['site_path'] != "/") || $site_path != "/") {
+        if ($site_path == "/") {
+            $site_path = stripinput($_POST['site_path']);
+        }
+        $site_path = (substr($site_path, 0, 1) != "/" ? "/" : "").$site_path.(strrchr($site_path, "/") != "/" ? "/" : "");
+    }
 
-	if ((isnum($_POST['site_port']) || $_POST['site_port'] == "") && !in_array($_POST['site_port'], array(0, 80, 443))) {
-		$site_port = $_POST['site_port'];
-	}
+    if ((isnum($_POST['site_port']) || $_POST['site_port'] == "") && !in_array($_POST['site_port'], [0, 80, 443])) {
+        $site_port = $_POST['site_port'];
+    }
 
-	$siteurl = $site_protocol."://".$site_host.($site_port ? ":".$site_port : "").$site_path;
+    $siteurl = $site_protocol."://".$site_host.($site_port ? ":".$site_port : "").$site_path;
 
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['sitename'])."' WHERE settings_name='sitename'");
-	if (!$result) { $error = 1; }
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['sitebanner'])."' WHERE settings_name='sitebanner'");
-	if (!$result) { $error = 1; }
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['siteemail'])."' WHERE settings_name='siteemail'");
-	if (!$result) { $error = 1; }
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['username'])."' WHERE settings_name='siteusername'");
-	if (!$result) { $error = 1; }
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$site_protocol."' WHERE settings_name='site_protocol'");
-	if (!$result) { $error = 1; }
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$site_host."' WHERE settings_name='site_host'");
-	if (!$result) { $error = 1; }
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$site_path."' WHERE settings_name='site_path'");
-	if (!$result) { $error = 1; }
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$site_port."' WHERE settings_name='site_port'");
-	if (!$result) { $error = 1; }
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$siteurl."' WHERE settings_name='siteurl'");
-	if (!$result) { $error = 1; }
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".addslashes(addslashes($siteintro))."' WHERE settings_name='siteintro'");
-	if (!$result) { $error = 1; }
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['description'])."' WHERE settings_name='description'");
-	if (!$result) { $error = 1; }
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['keywords'])."' WHERE settings_name='keywords'");
-	if (!$result) { $error = 1; }
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".addslashes(addslashes($sitefooter))."' WHERE settings_name='footer'");
-	if (!$result) { $error = 1; }
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['opening_page'])."' WHERE settings_name='opening_page'");
-	if (!$result) { $error = 1; }
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['default_search'])."' WHERE settings_name='default_search'");
-	if (!$result) { $error = 1; }
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['exclude_left'])."' WHERE settings_name='exclude_left'");
-	if (!$result) { $error = 1; }
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['exclude_upper'])."' WHERE settings_name='exclude_upper'");
-	if (!$result) { $error = 1; }
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['exclude_aupper'])."' WHERE settings_name='exclude_aupper'");
-	if (!$result) { $error = 1; }
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['exclude_lower'])."' WHERE settings_name='exclude_lower'");
-	if (!$result) { $error = 1; }
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['exclude_blower'])."' WHERE settings_name='exclude_blower'");
-	if (!$result) { $error = 1; }
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['exclude_right'])."' WHERE settings_name='exclude_right'");
-	if (!$result) { $error = 1; }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['sitename'])."' WHERE settings_name='sitename'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['sitebanner'])."' WHERE settings_name='sitebanner'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['siteemail'])."' WHERE settings_name='siteemail'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['username'])."' WHERE settings_name='siteusername'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$site_protocol."' WHERE settings_name='site_protocol'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$site_host."' WHERE settings_name='site_host'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$site_path."' WHERE settings_name='site_path'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$site_port."' WHERE settings_name='site_port'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$siteurl."' WHERE settings_name='siteurl'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".addslashes(addslashes($siteintro))."' WHERE settings_name='siteintro'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['description'])."' WHERE settings_name='description'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['keywords'])."' WHERE settings_name='keywords'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".addslashes(addslashes($sitefooter))."' WHERE settings_name='footer'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['opening_page'])."' WHERE settings_name='opening_page'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['default_search'])."' WHERE settings_name='default_search'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['exclude_left'])."' WHERE settings_name='exclude_left'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['exclude_upper'])."' WHERE settings_name='exclude_upper'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['exclude_aupper'])."' WHERE settings_name='exclude_aupper'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['exclude_lower'])."' WHERE settings_name='exclude_lower'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['exclude_blower'])."' WHERE settings_name='exclude_blower'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['exclude_right'])."' WHERE settings_name='exclude_right'");
+    if (!$result) {
+        $error = 1;
+    }
 }
 
-$settings2 = array();
+$settings2 = [];
 $result = dbquery("SELECT * FROM ".DB_SETTINGS);
 while ($data = dbarray($result)) {
-	$settings2[$data['settings_name']] = $data['settings_value'];
+    $settings2[$data['settings_name']] = $data['settings_value'];
 }
 
 ob_start();
@@ -207,20 +254,21 @@ $cache = ob_get_contents();
 unset($locale);
 $default_search = "";
 $dh = opendir(LOCALE.LOCALESET."search");
-while (false !== ($entry = readdir($dh))) {
-	if (substr($entry, 0, 1) != "." && $entry != "index.php") {
-		echo "ENTRY: $entry<br />";
-		include LOCALE.LOCALESET."search/".$entry;
-		foreach ($locale as $key => $value) {
-			if (preg_match("/400/", $key)) {
-				$entry = str_replace(".php", "", $entry);
-				$default_search .= "<option value='".$entry."'".($settings2['default_search'] == $entry ? " selected='selected'" : "").">".$value."</option>\n";
-			}
-		}
-		unset($locale);
-	}
+while (FALSE !== ($entry = readdir($dh))) {
+    if (substr($entry, 0, 1) != "." && $entry != "index.php") {
+        echo "ENTRY: $entry<br />";
+        include LOCALE.LOCALESET."search/".$entry;
+        foreach ($locale as $key => $value) {
+            if (preg_match("/400/", $key)) {
+                $entry = str_replace(".php", "", $entry);
+                $default_search .= "<option value='".$entry."'".($settings2['default_search'] == $entry ? " selected='selected'" : "").">".$value."</option>\n";
+            }
+        }
+        unset($locale);
+    }
 }
-closedir($dh); unset($locale);
+closedir($dh);
+unset($locale);
 include LOCALE.LOCALESET."search.php";
 $default_search .= "<option value='all'".($settings2['default_search'] == 'all' ? " selected='selected'" : "").">".$locale['407']."</option>\n";
 $cache = str_replace("[DEFAULT_SEARCH]", $default_search, $cache);
