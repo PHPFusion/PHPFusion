@@ -1187,7 +1187,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							user_actiontime INT(10) UNSIGNED NOT NULL DEFAULT '0',
 							user_theme VARCHAR(100) NOT NULL DEFAULT 'Default',
 							user_location VARCHAR(50) NOT NULL DEFAULT '',
-							user_birthdate DATE NOT NULL DEFAULT '0000-00-00',
+							user_birthdate DATE NOT NULL DEFAULT '1900-01-01',
 							user_skype VARCHAR(100) NOT NULL DEFAULT '',
 							user_aim VARCHAR(16) NOT NULL DEFAULT '',
 							user_icq VARCHAR(15) NOT NULL DEFAULT '',
@@ -1366,7 +1366,7 @@ if (isset($_POST['step']) && $_POST['step'] == "5") {
 	echo "</table>\n";
 	echo "</td>\n</tr>\n<tr>\n<td class='tbl2' style='text-align:center'>\n";
 	echo "<input type='hidden' name='localeset' value='".stripinput($_POST['localeset'])."' />\n";
-	echo "<input type='hidden' name='enabled_languages' value='".$_POST['enabled_languages']."' />\n";
+	echo "<input type='hidden' name='enabled_languages' value='".(isset($_POST['enabled_languages']) ? $_POST['enabled_languages'] : 'English')."' />\n";
 	echo "<input type='hidden' name='step' value='6' />\n";
 	renderButton();
 }
