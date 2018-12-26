@@ -199,6 +199,10 @@ class Token extends \defender {
                 $token_ring = $_SESSION['csrf_tokens'][self::pageHash($file)][$form_id];
                 $ring = array_rand($token_ring, 1);
                 $token = $token_ring[$ring];
+            } else {
+                $token_ring = $_SESSION['csrf_tokens'][self::pageHash($file)]['phpfusion'];
+                $ring = array_rand($token_ring, 1);
+                $token = $token_ring[$ring];
             }
         }
         //print_P($_SESSION['csrf_tokens']);
