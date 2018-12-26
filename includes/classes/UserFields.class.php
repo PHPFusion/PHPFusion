@@ -109,7 +109,7 @@ class UserFields {
     }
 
     public function displayOutput() {
-        global $userdata;
+        global $locale, $userdata;
 
         $this->method = "display";
 
@@ -385,8 +385,10 @@ class UserFields {
     }
 
     private function renderFields() {
-        //$user_data = $this->userData;
-        // = $this->method;
+        global $settings, $locale, $userdata;
+
+        $user_data = $this->userData;
+        $profile_method = $this->method;
         $fields = [];
         $cats = [];
         $obActiva = FALSE;
