@@ -43,7 +43,7 @@ if (defined('NEWS_EXIST')) {
             $rss->AddItem($data['news_subject'], $settings['siteurl'].'infusions/news/news.php?readmore='.$data['news_id'], $data['news_news']);
         }
     } else {
-        $rss->AddItem($settings['sitename'].' - '.$locale['rss_articles'], $settings['siteurl'], $locale['rss_news']);
+        $rss->AddItem($settings['sitename'].' - '.$locale['rss_news'], $settings['siteurl'], $locale['rss_news']);
     }
 
     $rss->Write();
