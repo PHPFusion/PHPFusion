@@ -48,7 +48,7 @@ if (defined('FORUM_EXIST')) {
             $rss->AddItem($data['thread_subject'].' ['.$data['forum_name'].']', $settings['siteurl'].'infusions/forum/viewthread.php?forum_id='.$data['forum_id'].'&thread_id='.$data['thread_id'], $data['post_message']);
         }
     } else {
-        $rss->AddItem($settings['sitename'].' - '.$locale['rss_articles'], $settings['siteurl'], $locale['rss_nodata']);
+        $rss->AddItem($settings['sitename'].' - '.$locale['rss_forums'], $settings['siteurl'], $locale['rss_nodata']);
     }
 
     $rss->Write();
