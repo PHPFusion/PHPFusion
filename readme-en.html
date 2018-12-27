@@ -97,7 +97,7 @@
 
         Feel free to post any questions or report any problems in our forums over at <a href="https://www.php-fusion.co.uk/" title="PHP-Fusion Main"
                                                                                         target="_blank">PHP-Fusion Main</a>.<br />
-        For License questions you can visit our <a href="https://www.php-fusion.co.uk/license/index.php" title="PHP-Fusion Licenses" target="_blank">License
+        For License questions you can visit our <a href="https://www.php-fusion.co.uk/licensing/licensing.php" title="PHP-Fusion Licenses" target="_blank">License
         section</a>.</p>
 
         <p>This software package is free software: you can redistribute it and/or modify it under the terms
@@ -120,7 +120,7 @@
                 Affero GPL</a> v3.</p>
         <hr />
         <p>For copyright removal options please refer to our license information page at
-            <a href='https://www.php-fusion.co.uk/license' target='_blank'>www.php-fusion.co.uk</a>.</p>
+            <a href='https://www.php-fusion.co.uk/licensing/licensing.php' target='_blank'>www.php-fusion.co.uk</a>.</p>
     </div>
 
     <div class='tbl2'>Some Key Features</div>
@@ -273,8 +273,7 @@
     <br />
 
     <div class='tbl2'>LOCAL INSTALLATION</div>
-    <div class='tbl1'>To install and work with a local copy of PHP-Fusion you can download a copy of <a href='https://www.apachefriends.org'
-                                                                                                        target='_blank'>XAMPP</a> for your given
+    <div class='tbl1'>To install and work with a local copy of PHP-Fusion you can download a copy of  <a href='https://laragon.org' target='_blank'>Laragon</a> or <a href='https://www.apachefriends.org' target='_blank'>XAMPP</a> for your given
         environment ( Windows, Linux or Mac ).
     </div>
     <br />
@@ -282,7 +281,7 @@
     <div class='tbl2'>UPGRADE FROM V7.02.07</div>
 
     <div class='tbl1'><p>Before anything we strongly recommend that you backup your
-        files and your database. <br /> PHP-Fusion 8 is a large update from PHP-Fusion 7.02.07.</p>
+        files and your database. <br /> PHP-Fusion 8 is a major update from PHP-Fusion 7.02.07.</p>
         <hr />
 
         <p>Make sure that your hosting environment meets the requirements for this version: <br />
@@ -326,7 +325,8 @@
         <li><strong>Step 4</strong> &middot;
         <ul style='list-style-type:none'>
 		Convert all your locales and addon files to UTF-8 without BOM.<br />
-		Make sure that you also update your locales global.php and change charset from iso to utf8 ( $locale['charset'] = "utf8" ).
+		Make sure that you also update your locales global.php and change charset from iso to utf8 ( $locale['charset'] = "utf8" ).<br />
+		Notepad++ Can convert files if you do not find a good batch tool for this.
 		            </li>
         </ul>
 
@@ -334,10 +334,10 @@
         <ul style='list-style-type:none'>
 		If you do not run the site in English.<br />
 		Syncronize you languages locale with the English set of locales before you start using the site to void errors.<br />
-		You simply check the English locale folder and compare to yours for missing files and changes. <br />
-		( Notepad++ have compare native for example. Download latest. <br />
-		Open 1 English file and then your matching locale in window 2 press CTRL+ALT+C,repeat for each file )<br />
-		We also have a compare tool in the PHP-Fusion locales forums > <a href='https://www.php-fusion.co.uk/infusions/forum/viewthread.php?thread_id=34432'>Compare Tool</a>.
+		You can simply open the English locale folder and compare to yours for missing files and changes. <br />
+		We can recommend Notepad++ that have a compare files tool for example. <br />
+		Open 1 English file and then your matching locale in window 2 press CTRL+ALT+C,repeat for each file. <br />
+		We also have a compare tool available in the PHP-Fusion locales forums > <a href='https://www.php-fusion.co.uk/infusions/forum/viewthread.php?thread_id=34432'>Compare Tool</a>.
 			</li>
         </ul>
 		<hr />
@@ -394,9 +394,9 @@
     <div class='tbl1'>
 
         <div style='float:left;width:26%;padding-left:150px;min-height:25px;margin:7px;'>
-            <strong>Project Manager</strong><br />Joakim Falk {Falk} <br />falk@php-fusion.co.uk
+            <strong>Project Manager - CEO</strong><br />Joakim Falk {Falk} <br />falk@php-fusion.co.uk
         </div>
-        <div style='float:left;width:46%;min-height:25px;margin:7px;'><strong>Lead Developer</strong><br />
+        <div style='float:left;width:46%;min-height:25px;margin:7px;'><strong>Lead Developer - COO</strong><br />
             Frederick MC Chan {Chan} <br />chan@php-fusion.co.uk
         </div>
         <div style='clear:both;'></div>
@@ -420,7 +420,7 @@
             WuChEn - Multiple fixes provided.<br />
             Talocha - Multiple fixes provided.<br />
             Brendan Scarvell - XSS issues with live examples provided.<br />
-            Routh - Help with upgrade script testing, Multiple fixes provided.<br />
+            JoiNNN - Multiple fixes provided.<br />
             MiChAeLoKGB - BBCode Fixes provided.<br />
             Keddy - Multiple fixes provided.<br />
             ctokepa - Multiple spelling issues adjusted.<br />
@@ -431,6 +431,7 @@
             Some do full translations while others do some minor adjustments either by forums or directly by github.<br />
             Remember to give your self credits in the global.php as the inital locale author.<br />
     </div>
+	Copyright © PHP-Fusion Inc - All rights reserved
 </div>
 </body>
 </html>
