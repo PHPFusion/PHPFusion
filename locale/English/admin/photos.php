@@ -3,19 +3,19 @@
 $locale['400'] = "Add Photo";
 $locale['401'] = "Edit Photo";
 $locale['402'] = "Current Photos";
-$locale['403'] = "Serious Photoalbum Error";
+$locale['403'] = "Serious Photo album Error";
 // Album messages
 $locale['410'] = "Photo(s) added";
 $locale['411'] = "Photo updated";
 $locale['412'] = "Photo thumbnail deleted";
 $locale['413'] = "Photo deleted";
-$locale['414'] = "The following error has occured:";
+$locale['414'] = "The following error has occurred:";
 $locale['415'] = "Invalid image filename.";
 $locale['416'] = "Image must be less than %s.";
 $locale['417'] = "Image must be a GIF, JPEG or PNG file.";
 $locale['418'] = "Image must be no bigger than %uw x %uh pixels.";
 $locale['419'] = "Photo(s) moved.";
-$locale['420'] = "No GD library detected. Photoalbums will not work without GD library. Contact your hosting provider for further information.";
+$locale['420'] = "No GD library detected. Photo albums will not work without GD library. Contact your hosting provider for further information.";
 $locale['421'] = "Image can not be empty.";
 $locale['422'] = "Selected folder is not writable. Change it to CHMOD 777.";
 // Photos form

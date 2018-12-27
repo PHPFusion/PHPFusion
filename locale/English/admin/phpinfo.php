@@ -25,8 +25,8 @@ $locale['430'] = "n/a";
 $locale['431'] = "version";
 //Write permission
 $locale['440'] = "Folder Permissions";
-$locale['441'] = "Writeable";
-$locale['442'] = "Not writeable";
+$locale['441'] = "Writable";
+$locale['442'] = "Not writable";
 //PHPinfo
 $locale['450'] = "Details";
 $locale['451'] = "Unable to get data. Check if phpinfo() function is switched off?";

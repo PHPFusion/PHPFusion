@@ -31,9 +31,9 @@ You are about to delete user <strong>%s</strong> !<br />
 The following content <u>posted by this user</u> on this site will be deleted if you proceed:<br />
 - Articles<br />
 - News<br />
-- Forum threads. Note that posts made by other users in these threads will also be deleted, along with the poll votes and attachemets existent in this threads.<br />
+- Forum threads. Note that posts made by other users in these threads will also be deleted, along with the poll votes and attachments existent in this threads.<br />
 - Forum posts<br />
-- Forum attachements<br />
+- Forum attachments<br />
 - Comments<br />
 - Private messages sent or received by this user<br />
 - Poll votes<br />
@@ -136,7 +136,7 @@ $locale['604'] = "Reason:";
 $locale['610'] = "<strong>%d user(s)</strong> have not logged in for <strong>%d day(s)</strong> and have been marked as inactive. 
 By deactivating these users they will have <strong>%d day(s)</strong> before they are %s.";
 $locale['611'] = "Please note that some users may have submitted content to your site such as forum posts, comments, photos etc.
-these will be deleted when deactivated users are beeing deleted.";
+these will be deleted when deactivated users are being deleted.";
 $locale['612'] = "user";
 $locale['613'] = "users";
 $locale['614'] = "Deactivate";

@@ -10,13 +10,13 @@ $locale['410'] = "Album added";
 $locale['411'] = "Album updated";
 $locale['412'] = "Album thumbnail deleted";
 $locale['413'] = "Album deleted";
-$locale['414'] = "The following error has occured:";
+$locale['414'] = "The following error has occurred:";
 $locale['415'] = "Invalid image filename.";
 $locale['416'] = "Image must be less than %s.";
 $locale['417'] = "Image must be a GIF, JPEG or PNG file.";
 $locale['418'] = "Image must be no bigger than %uw x %uh pixels.";
 $locale['419'] = "Album cannot be deleted. Your password is incorrect.";
-$locale['420'] = "No GD library detected. Photoalbums will not work without GD library. Contact your host provider for further information.";
+$locale['420'] = "No GD library detected. Photo albums will not work without GD library. Contact your host provider for further information.";
 // Album confirmation
 $locale['430'] = "Delete album confirmation";
 $locale['431'] = "The Album you are trying delete contains one or more photos.<br />\n"."In order to delete this album, please enter your admin password:";

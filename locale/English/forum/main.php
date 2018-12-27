@@ -25,7 +25,7 @@ $locale['460'] = "Check All";
 $locale['461'] = "Uncheck All";
 $locale['462'] = "Delete threads";
 $locale['463'] = "Delete selected threads?";
-// Forum Guide/Privelages
+// Forum Guide/Privileges
 $locale['470'] = "Open Thread with new posts since last visit";
 $locale['471'] = "20 posts or more";
 $locale['472'] = "Open Thread with no new posts since last visit.";
@@ -92,7 +92,7 @@ $locale['532a'] = "All";
 $locale['532b'] = "Discussions";
 $locale['532c'] = "Attachments";
 $locale['532d'] = "Polls";
-$locale['533'] = "Sortby";
+$locale['533'] = "Sort by";
 $locale['533a'] = "Date - last update";
 $locale['533b'] = "Date - started post";
 $locale['533c'] = "Replies";

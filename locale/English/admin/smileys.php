@@ -10,7 +10,7 @@ $locale['412'] = "Smiley deleted";
 $locale['413'] = "Unable to update smiley";
 $locale['414'] = "Unable to add smiley";
 $locale['415'] = "The smiley code is in use.";
-$locale['416'] = "Do you realy want to delete this smiley?";
+$locale['416'] = "Do you really want to delete this smiley?";
 // Smiley form
 $locale['420'] = "Smiley Code:";
 $locale['421'] = "Smiley Image:";

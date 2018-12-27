@@ -7,7 +7,7 @@ $locale['402'] = "Current Downloads";
 $locale['410'] = "Download added";
 $locale['411'] = "Download updated";
 $locale['412'] = "Download deleted";
-$locale['413'] = "The following error has occured:";
+$locale['413'] = "The following error has occurred:";
 $locale['414'] = "Invalid filename.";
 $locale['415'] = "File must be less than %s.";
 $locale['415a'] = "Image must be less than %s.";
@@ -47,7 +47,7 @@ $locale['441'] = "Options";
 $locale['442'] = "Edit";
 $locale['443'] = "Delete";
 // No Downloads/Download Categories Defined
-$locale['450'] = "No Downloads have been addded to this Category";
+$locale['450'] = "No Downloads have been added to this Category";
 $locale['451'] = "There are no Download Categories defined";
 $locale['452'] = "You must define at least one category before you can add any Downloads";
 $locale['453'] = "Click here";
