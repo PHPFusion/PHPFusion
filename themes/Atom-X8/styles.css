@@ -27,7 +27,7 @@ body {
 }
 
 #topnav {
-    background: url('assets/bg/top/topbg.png') #f6f6f6 center top no-repeat;
+    background: url('images/topbg.png') #f6f6f6 center top no-repeat;
     display: block;
     min-height: 70px;
 }
@@ -143,8 +143,6 @@ li.current_page_item > a {
 /* Navbar Tweaks */
 #user-info > ul.login-menu {
     width: 200px;
-    top: 55px;
-    left: 37px;
 }
 
 #user-info > ul.login-menu > li > form[name='loginform'] {
@@ -1257,7 +1255,6 @@ code, pre {
 }
 
 #footer {
-    border-top: 1px solid #fff;
     background: #444;
     width: 100%;
     color: #999
