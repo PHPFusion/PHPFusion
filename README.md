@@ -1,25 +1,26 @@
 # PHP-Fusion 8
 
-An updated PHP-Fusion 7 that has many features PHP-Fusion 8 has to offer.
+An updated PHP-Fusion 7 that has some of the features PHP-Fusion 9 has to offer.
 
 ## Getting Started
 
-See the readme.
+See the readme if anything is unclear.
 
-### Prerequisites
-
-What things you need to install the software and how to install them
+### Requirements
 
 ```
-PHP, MySQL
+- PHP 5.6.39 or higher
+- MySQL 5.1 or higher
+- Apache 2.2 or higher
+- Nginx 1.0 or higher - mod_rewrite or equivalent for SEO to work
 ```
 
 ### Installing
 
-A step by step series of examples that tell you how to get a development env running
+To install and work with a local copy of PHP-Fusion you can download a copy of Laragon or XAMPP.
 
 ```
-See readme for instructions
+See readme for better instructions
 ```
 
 ### Coding style
@@ -27,6 +28,7 @@ See readme for instructions
 Explanation of Coding styles
 
 ```
-Procedural at all times if possible, never walk away from the KISS Principle. 
+Procedural at all times, never walk away from the KISS principle. 
 Any codes that are more complex that excusable will be reverted.
+The goal is to make PHP-Fusion 8 a pure procedural version.
 ```
