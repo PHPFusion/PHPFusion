@@ -34,10 +34,10 @@ $locale['033'] = "Database Password:";
 $locale['034'] = "Database Name:";
 $locale['035'] = "Table Prefix:";
 $locale['036'] = "Cookie Prefix:";
-$locale['037'] = "Enable PDO or MySqli";
+$locale['037'] = "Enable PDO or MySQLi";
 $locale['038'] = "PDO seems to not be available";
 $locale['039'] = "PDO";
-$locale['039b'] = "MySqli";
+$locale['039b'] = "MySQLi";
 $locale['039c'] = "Select languages to use:";
 
 // Step 4 - Database Setup
