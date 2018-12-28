@@ -22,11 +22,11 @@ if (!defined("IN_FUSION")) {
 function translate_lang_names($language) {
     //https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
     $translated_langs = [
-        "Chinese_Traditional" => "中文-繁体",
         "Chinese_Simplified"  => "中文-简体",
+        "Chinese_Traditional" => "中文-繁体",
         "Czech"               => "Čeština",
         "Danish"              => "Dansk",
-        "Dutch"               => "Dutch",
+        "Dutch"               => "Nederlands",
         "English"             => "English",
         "French"              => "Francais",
         "German"              => "Deutsch",
@@ -34,15 +34,19 @@ function translate_lang_names($language) {
         "Italian"             => "Italiano",
         "Lithuanian"          => "Lietuvių",
         "Malay"               => "Melayu",
+        "Norwegian"           => "Norsk",
         "Persian"             => "Persian",
         "Polish"              => "Polski",
+        "Qazaq"               => "Qazaq",
+        "Romanian"            => "Rom&#226;n&#259;",
         "Russian"             => "Русский",
+        "Slovak"              => "Slovenčina",
         "Spanish"             => "Español",
         "Swedish"             => "Svenska",
-        "Turkish"             => "Türkiye",
+        "Turkish"             => "Türkçe",
         "Ukrainian"           => "Українська",
-        "Norwegian"           => "Norsk"
     ];
+
     if (isset($translated_langs[$language])) {
         return $translated_langs[$language];
     }
@@ -51,21 +55,26 @@ function translate_lang_names($language) {
 
 function translate_country_names($country) {
     $translated_countries = [
-        "China"          => "中国",
-        "Czech republic" => "Česko",
-        "Denmark"        => "Danmark",
-        "Finland"        => "Suomi",
-        "Hungary"        => "Magyarország",
-        "Hong Kong"      => "香港",
-        "Norway"         => "Norge",
-        "Poland"         => "Polska",
-        "Italy"          => "Italia",
-        "Germany"        => "Deutchland",
-        "Russia"         => "Россия",
-        "Taiwan"         => "台湾",
-        "Ukraine"        => "Україна",
-        "Sweden"         => "Sverige"
+        "China"           => "中国",
+        "Czech Republic"  => "Česko",
+        "Denmark"         => "Danmark",
+        "Finland"         => "Suomi",
+        "Germany"         => "Deutschland",
+        "Hong Kong"       => "香港",
+        "Hungary"         => "Magyarország",
+        "Italy"           => "Italia",
+        "Norway"          => "Norge",
+        "Poland"          => "Polska",
+        "Qazaqstan"       => "Казахстан",
+        "Romania"         => "Rom&#226;nia",
+        "Russia"          => "Россия",
+        "Slovakia"        => "Slovensko",
+        "Sweden"          => "Sverige",
+        "Taiwan"          => "台湾",
+        "The Netherlands" => "Nederland",
+        "Ukraine"         => "Україна",
     ];
+
     if ($translated_countries[$country] != '') {
         return $translated_countries[$country];
     } else {
@@ -74,81 +83,41 @@ function translate_country_names($country) {
 }
 
 function format_word($count, $words, $add_count = 1) {
-    $lang_func_name = "format_word_".LANGUAGE;
-    if (function_exists($lang_func_name)) {
-        $result = $lang_func_name($count, $words, $add_count);
-    } else {
-        $words_array = explode("|", $words);
-        $result = $words_array[0];
-        if ($add_count) {
-            $result = "<span class='fusion_count'>$count</span> <span class='fusion_word'>".$result."</span>";
-        }
-    }
-    return $result;
-}
-
-function format_word_Danish($count, $words, $add_count = 1) {
-    $form = $count == 1 ? 0 : 1;
-    $words_array = explode("|", $words);
-    $result = $words_array[$form];
-    if ($add_count) {
-        $result = "<span class='fusion_count'>$count</span><span class='fusion_word'>".$result."</span>";
-    }
-    return $result;
-}
-
-function format_word_English($count, $words, $add_count = 1) {
-    $form = $count == 1 ? 0 : 1;
-    $words_array = explode("|", $words);
-    $result = $words_array[$form];
-    if ($add_count) {
-        $result = "<span class='fusion_count'>$count</span> <span class='fusion_word'>".$result."</span>";
-    }
-    return $result;
-}
-
-function format_word_Russian($count, $words, $add_count = 1) {
-    $fcount = $count % 100;
-    $a = $fcount % 10;
-    $b = floor($fcount / 10);
-
-    $form = 2;
-
-    if ($b != 1) {
-        if ($a == 1) {
-            $form = 0;
-        } else if ($a >= 2 && $a <= 4) {
-            $form = 1;
-        }
+    switch (LANGUAGE) {
+        case 'English':
+        case 'Danish':
+        case 'German':
+        case 'Romanian':
+            $form = $count == 1 ? 0 : 1;
+            $words_array = explode("|", $words);
+            $result = $words_array[$form];
+            break;
+        case 'Czech':
+        case 'Slovak':
+        case 'Russian':
+        case 'Ukranian':
+            $fcount = $count % 100;
+            $a = $fcount % 10;
+            $b = floor($fcount / 10);
+            $form = 2;
+            if ($b != 1) {
+                if ($a == 1) {
+                    $form = 0;
+                } else if ($a >= 2 && $a <= 4) {
+                    $form = 1;
+                }
+            }
+            $words_array = explode("|", $words);
+            $result = $words_array[$form];
+            break;
+        default: // never plural language - i.e. chinese is here
+            $words_array = explode("|", $words);
+            $result = $words_array[0];
     }
 
-    $words_array = explode("|", $words);
-    $result = $words_array[$form];
     if ($add_count) {
         $result = "<span class='fusion_count'>$count</span> <span class='fusion_word'>".$result."</span>";
     }
-    return $result;
-}
 
-function format_word_Ukrainian($count, $words, $add_count = 1) {
-    $fcount = $count % 100;
-    $a = $fcount % 10;
-    $b = floor($fcount / 10);
-
-    $form = 2;
-
-    if ($b != 1) {
-        if ($a == 1) {
-            $form = 0;
-        } else if ($a >= 2 && $a <= 4) {
-            $form = 1;
-        }
-    }
-
-    $words_array = explode("|", $words);
-    $result = $words_array[$form];
-    if ($add_count) {
-        $result = "<span class='fusion_count'>$count</span> <span class='fusion_word'>".$result."</span>";
-    }
     return $result;
 }

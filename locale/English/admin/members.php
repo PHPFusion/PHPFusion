@@ -38,7 +38,7 @@ The following content <u>posted by this user</u> on this site will be deleted if
 - Private messages sent or received by this user<br />
 - Poll votes<br />
 - Ratings given<br />
-Unless this is a spammer for eg. we recommend you to Ban, Suspend, Cancel or Anomymize this user.<br />
+Unless this is a spammer for eg. we recommend you to Ban, Suspend, Cancel or Anonymize this user.<br />
 <br />
 Are you sure you want to delete this user?<br />";
 $locale['426'] = "Yes";
@@ -133,7 +133,7 @@ $locale['602'] = "Unban";
 $locale['603'] = "unbanning";
 $locale['604'] = "Reason:";
 // Deactivation System
-$locale['610'] = "<strong>%d user(s)</strong> have not logged in for <strong>%d day(s)</strong> and have been marked as inactive. 
+$locale['610'] = "<strong>%d user(s)</strong> have not logged in for <strong>%d day(s)</strong> and have been marked as inactive.
 By deactivating these users they will have <strong>%d day(s)</strong> before they are %s.";
 $locale['611'] = "Please note that some users may have submitted content to your site such as forum posts, comments, photos etc.
 these will be deleted when deactivated users are being deleted.";

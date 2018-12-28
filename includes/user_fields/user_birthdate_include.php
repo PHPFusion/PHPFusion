@@ -21,7 +21,7 @@ if (!defined("IN_FUSION")) {
 
 // Display user field input
 if ($profile_method == "input") {
-    if (isset($user_data['user_birthdate']) && $user_data['user_birthdate'] != "0000-00-00") {
+    if (isset($user_data['user_birthdate']) && $user_data['user_birthdate'] != "1900-01-01") {
         $user_birthdate = $user_data['user_birthdate'];
     } else {
         $user_birthdate = "0-0-0";
@@ -59,7 +59,7 @@ if ($profile_method == "input") {
 
     // Display in profile
 } else if ($profile_method == "display") {
-    if ($user_data['user_birthdate'] != "0000-00-00") {
+    if ($user_data['user_birthdate'] != "1900-01-01") {
         echo "<tr>\n";
         echo "<td class='tbl1'>".$locale['uf_birthdate']."</td>\n";
         echo "<td align='right' class='tbl1'>";

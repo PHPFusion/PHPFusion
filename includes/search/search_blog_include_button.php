@@ -23,4 +23,4 @@ $form_elements['blog']['enabled'] = ["datelimit", "fields1", "fields2", "fields3
 $form_elements['blog']['disabled'] = [];
 $form_elements['blog']['display'] = [];
 $form_elements['blog']['nodisplay'] = [];
-$radio_button['blog'] = "<label><input type='radio' name='stype' value='blog'".($_REQUEST['stype'] == "blog" ? " checked='checked'" : "")." onclick=\"display(this.value)\" /> ".$locale['n400']."</label>";
+$radio_button['blog'] = "<label><input type='radio' name='stype' value='blog'".($_REQUEST['stype'] == "blog" ? " checked='checked'" : "")." onclick=\"display(this.value)\" /> ".$locale['b400']."</label>";

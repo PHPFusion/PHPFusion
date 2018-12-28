@@ -1682,7 +1682,7 @@ if (isset($_POST['step']) && $_POST['step'] == "6") {
                 '".$username."', 'sha256', '".$userSalt."', '".$userPassword."', 'sha256', '".$adminSalt."', '".$adminPassword."',
                 '".$email."', '1', '0', '',  '0', '', '".time()."', '0', '0.0.0.0',
                 'A.AC.AD.APWR.B.BB.C.CP.DB.DC.D.ERRO.FQ.F.FR.IM.I.IP.M.MAIL.N.NC.P.PH.PI.PL.PO.ROB.SL.S1.S2.S3.S4.S5.S6.S7.S8.S9.S10.S11.S12.S13.S14.SB.SM.SU.UF.UFC.UG.UL.U.W.WC.BLOG.BLC.MAIL.LANG.MI.FM',
-                '', '103', '0', 'Default', '', '1901-01-01', '', '',  '', '', ''
+                '', '103', '0', 'Default', '', '1900-01-01', '', '',  '', '', ''
             )");
             $result = dbquery("INSERT INTO ".$db_prefix."messages_options (user_id, pm_email_notify, pm_save_sent, pm_inbox, pm_savebox, pm_sentbox) VALUES ('0', '0', '1', '20', '20', '20')");
             $result = dbquery("INSERT INTO ".$db_prefix."bbcodes (bbcode_name, bbcode_order) VALUES ('smiley', '1')");

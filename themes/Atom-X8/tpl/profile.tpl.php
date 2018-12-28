@@ -246,7 +246,7 @@ function user_profile_page() {
                             $value = "<a href='".$field_value['value']."' target='_blank' >".$field_value['value']."</a>\n";
                         }
                     } else if ($field_value['field_name'] == 'user_birthdate') {
-                        if ($field_value['value'] !== '0000-00-00') {
+                        if ($field_value['value'] !== '1900-01-01') {
                             $bday = explode("-", $field_value['value']);
                             $value = "".$bday['2']."-".$bday['1']."-".$bday['0']."";
                         }

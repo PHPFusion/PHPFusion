@@ -46,9 +46,9 @@ if ($_REQUEST['stype'] == "blog" || $_REQUEST['stype'] == "all") {
     }
     if ($rows != 0) {
         if (!$settings['site_seo']) {
-            $items_count .= THEME_BULLET."&nbsp;<a href='".FUSION_SELF."?stype=blog&amp;stext=".$_REQUEST['stext']."&amp;".$composevars."'>".$rows." ".($rows == 1 ? $locale['n401'] : $locale['n402'])." ".$locale['522']."</a><br />\n";
+            $items_count .= THEME_BULLET."&nbsp;<a href='".FUSION_SELF."?stype=blog&amp;stext=".$_REQUEST['stext']."&amp;".$composevars."'>".$rows." ".($rows == 1 ? $locale['b401'] : $locale['b402'])." ".$locale['522']."</a><br />\n";
         } else {
-            $items_count .= THEME_BULLET."&nbsp;".$rows." ".($rows == 1 ? $locale['n401'] : $locale['n402'])." ".$locale['522']."<br />\n";
+            $items_count .= THEME_BULLET."&nbsp;".$rows." ".($rows == 1 ? $locale['b401'] : $locale['b402'])." ".$locale['522']."<br />\n";
         }
         $result = dbquery("SELECT tn.*, tu.user_id, tu.user_name, tu.user_status FROM ".DB_BLOG." tn
 			LEFT JOIN ".DB_USERS." tu ON tn.blog_name=tu.user_id
@@ -68,13 +68,13 @@ if ($_REQUEST['stype'] == "blog" || $_REQUEST['stype'] == "all") {
             $search_result .= "<div class='quote' style='width:auto;height:auto;overflow:auto'>".$text_frag."</div><br />";
             $search_result .= "<span class='small2'>".$locale['global_070'].profile_link($data['user_id'], $data['user_name'], $data['user_status'])."\n";
             $search_result .= $locale['global_071'].showdate("longdate", $data['blog_datestamp'])."</span><br />\n";
-            $search_result .= "<span class='small'>".$subj_c." ".($subj_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['n403']." ".$locale['n404'].", ";
-            $search_result .= $text_c." ".($text_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['n403']." ".$locale['n405'].", ";
-            $search_result .= $text_c2." ".($text_c2 == 1 ? $locale['520'] : $locale['521'])." ".$locale['n403']." ".$locale['n406']."</span><br /><br />\n";
+            $search_result .= "<span class='small'>".$subj_c." ".($subj_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['b403']." ".$locale['b404'].", ";
+            $search_result .= $text_c." ".($text_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['b403']." ".$locale['b405'].", ";
+            $search_result .= $text_c2." ".($text_c2 == 1 ? $locale['520'] : $locale['521'])." ".$locale['b403']." ".$locale['b406']."</span><br /><br />\n";
             search_globalarray($search_result);
         }
     } else {
-        $items_count .= THEME_BULLET."&nbsp;0 ".$locale['n402']." ".$locale['522']."<br />\n";
+        $items_count .= THEME_BULLET."&nbsp;0 ".$locale['b402']." ".$locale['522']."<br />\n";
     }
     $navigation_result = search_navigation($rows);
 }

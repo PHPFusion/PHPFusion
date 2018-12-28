@@ -268,7 +268,7 @@ $locale['global_195'] = "This account has not been activated.";
 $locale['global_196'] = "Invalid username or password.";
 $locale['global_197'] = "Please wait while we transfer you...<br /><br />
 [ <a href='index.php'>Or click here if you do not wish to wait</a> ]";
-$locale['global_198'] = "WARNING: INSTALLER DETECTED, PLEASE DELETE THE INSTALL.PHP FILE IMMEDIATELY.";
+$locale['global_198'] = "WARNING: INSTALLER DETECTED, PLEASE DELETE THE SETUP.PHP FILE IMMEDIATELY.";
 $locale['global_199'] = "<strong>Warning:</strong> admin password not set, click <a href='".BASEDIR."edit_profile.php'>Edit Profile</a> to set it.";
 //Titles
 $locale['global_200'] = " - ";
