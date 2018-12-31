@@ -221,7 +221,7 @@ foreach ($configs as $table => $config) {
             case DB_BLOG:
                 if ($row['image'] || $row['cat_image']) {
                     if ($row['image_thumb'] && file_exists(INFUSIONS."blog/images/thumbs/".$row['image_thumb'])) {
-                        $data[$count]['image_thumb'] = INFUSIONS."blog/images/thumbs/".$row['image_thumb'];
+                        $data[$count]['image'] = INFUSIONS."blog/images/thumbs/".$row['image_thumb'];
                     } else if ($row['image'] && file_exists(INFUSIONS."blog/images/".$row['image'])) {
                         $data[$count]['image'] = INFUSIONS."blog/images/".$row['image'];
                     } else if ($row['cat_image']) {
