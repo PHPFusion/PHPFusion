@@ -76,7 +76,7 @@ if (file_exists(CONTROL_LOCK_FILE)) {
         // this user has complete his punishment
         unlink(CONTROL_LOCK_FILE);
     } else {
-        redirect("error.php?code=401");
+        redirect(BASEDIR."error.php?code=401");
         touch(CONTROL_LOCK_FILE);
         die;
     }
