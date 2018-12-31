@@ -45,8 +45,8 @@ if ((isset($_SESSION["validated"]) && $_SESSION["validated"] == "True") || $sett
 
         $result = dbquery(
             "SELECT user_info FROM ".DB_NEW_USERS."
-			WHERE user_code='".$_GET['code']."' AND user_email='".$_GET['email']."'
-			LIMIT 1"
+            WHERE user_code='".$_GET['code']."' AND user_email='".$_GET['email']."'
+            LIMIT 1"
         );
 
         if (dbrows($result) > 0) {

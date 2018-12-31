@@ -77,7 +77,7 @@ if (isset($_POST['error_status']) && isnum($_POST['error_status'])
 ) {
     $result = dbquery(
         "UPDATE ".DB_ERRORS." SET error_status='".$_POST['error_status']."'
-		WHERE error_id='".$_POST['error_id']."'"
+        WHERE error_id='".$_POST['error_id']."'"
     );
 }
 
@@ -94,7 +94,7 @@ if ($rows != 0) {
     $i = 0;
     $result = dbquery(
         "SELECT * FROM ".DB_ERRORS." ORDER BY error_timestamp DESC
-		LIMIT ".$_GET['rowstart'].",20"
+        LIMIT ".$_GET['rowstart'].",20"
     );
     echo "<a name='top'></a>\n<table cellpadding='0' cellspacing='1' class='tbl-border center' style='width:90%;'>\n";
     echo "<tr>\n";
@@ -159,7 +159,7 @@ if (isset($_GET['error_id']) && isnum($_GET['error_id'])) {
         $line_start = 1;
     }
     if (isset($data['error_line']) && isnum($data['error_line'])) {
-        if (($data['error_line'] + 10) <= count($thisFileContent)) {
+        if (is_array($thisFileContent) && ($data['error_line'] + 10) <= count($thisFileContent)) {
             $line_end = $data['error_line'] + 10;
         } else {
             $line_end = count($thisFileContent);
@@ -243,12 +243,12 @@ if (isset($_GET['error_id']) && isnum($_GET['error_id'])) {
 echo "<script language='JavaScript' type='text/javascript'>\n";
 echo "/* <![CDATA[ */\n";
 echo "$(document).ready(function() {
-	$('.change_status').hide();
+    $('.change_status').hide();
 
-	$('a[href=#top]').click(function(){
-		$('html, body').animate({scrollTop:0}, 'slow');
-		return false;
-	});
+    $('a[href=#top]').click(function(){
+        $('html, body').animate({scrollTop:0}, 'slow');
+        return false;
+    });
 });";
 echo "/* ]]>*/\n";
 echo "</script>\n";

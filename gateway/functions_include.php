@@ -19,10 +19,11 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-include LOCALE.LOCALESET."gateway.php";
+require_once LOCALE.LOCALESET.'gateway.php';
 
 function convertNumberToWord($num = FALSE) {
     global $locale;
+
     $num = str_replace([',', ' '], '', trim($num));
     if (!$num) {
         return FALSE;
@@ -40,6 +41,7 @@ function convertNumberToWord($num = FALSE) {
     $max_length = $levels * 3;
     $num = substr('00'.$num, -$max_length);
     $num_levels = str_split($num, 3);
+
     for ($i = 0; $i < count($num_levels); $i++) {
         $levels--;
         $hundreds = (int)($num_levels[$i] / 100);
@@ -55,11 +57,8 @@ function convertNumberToWord($num = FALSE) {
             $singles = ' '.$list1[$singles].' ';
         }
         $words[] = $hundreds.$tens.$singles.(($levels && ( int )($num_levels[$i])) ? ' '.$list3[$levels].' ' : '');
-    } //end for loop
-    $commas = count($words);
-    if ($commas > 1) {
-        $commas = $commas - 1;
     }
+
     return implode(' ', $words);
 }
 

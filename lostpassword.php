@@ -23,12 +23,12 @@ include LOCALE.LOCALESET."lostpassword.php";
 if (iMEMBER)
     redirect("index.php");
 
-function __autoload($class) {
+spl_autoload_register(function ($class) {
     require CLASSES.$class.".class.php";
     if (!class_exists($class)) {
         die("Class not found");
     }
-}
+});
 
 add_to_title($locale['global_200'].$locale['400']);
 opentable($locale['400']);

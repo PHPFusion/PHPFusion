@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: constants_include.php
+| Filename: captcha_check.php
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -15,24 +15,14 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
+require_once 'securimage.php';
+
+$securimage = new Securimage();
+
+if (isset($_POST['captcha_code'])) {
+    $captcha_code = stripinput($_POST['captcha_code']);
+
+    if ($securimage->check(form_sanitizer($captcha_code)) == TRUE) {
+        $_CAPTCHA_IS_VALID = TRUE;
+    }
 }
-
-define("SCRIPT_ROOT", dirname(__FILE__));
-
-// number of allowed page requests for the user
-define("CONTROL_MAX_REQUESTS", 2);
-
-// time interval to start counting page requests (seconds)
-define("CONTROL_REQ_TIMEOUT", 1);
-
-// seconds to punish the user who has exceeded in doing requests
-define("CONTROL_BAN_TIME", 120 * 120);
-
-// writable directory to keep script data
-define("SCRIPT_TMP_DIR", SCRIPT_ROOT."/flood");
-
-define("CONTROL_DB", SCRIPT_TMP_DIR."/ctrl");
-define("CONTROL_LOCK_DIR", SCRIPT_TMP_DIR."/lock");
-define("CONTROL_LOCK_FILE", CONTROL_LOCK_DIR."/".md5(USER_IP));
