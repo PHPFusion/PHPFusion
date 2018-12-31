@@ -25,6 +25,8 @@ if (iMEMBER || !$settings['enable_registration']) {
     redirect("index.php");
 }
 
+$settings['gateway'] = 0;
+
 // Load the Gateway
 if ($settings['gateway'] == 1) {
     require_once BASEDIR."gateway/gateway.php";
