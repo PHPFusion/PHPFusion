@@ -117,12 +117,12 @@ class Console_Core extends Install_Core {
         $html .= "<script type='text/javascript' src='".INCLUDES."jquery/jquery.min.js'></script>\n";
         $html .= "<script type='text/javascript' src='".INCLUDES."bootstrap/js/bootstrap.min.js'></script>\n";
         $html .= "<link href='".DYNAMICS."assets/select2/select2.min.css' rel='stylesheet' />\n";
-        $html .= "<link href='".THEMES."templates/default.min.css' rel='stylesheet' />\n";
+        $html .= "<link href='".THEMES."templates/default.min.css?v=".filemtime(THEMES.'templates/default.min.css')."' rel='stylesheet' />\n";
         $html .= "<link href='".INCLUDES."bootstrap/css/bootstrap.min.css' rel='stylesheet' />\n";
         if (self::$locale['setup_0012a'] == 'rtl') {
             $html .= "<link href='".INCLUDES."bootstrap/css/bootstrap-rtl.min.css' rel='stylesheet' media='screen' />";
         }
-        $html .= "<link href='".THEMES."templates/install.css' rel='stylesheet'/>\n";
+        $html .= "<link href='".THEMES."templates/install.css?v=".filemtime(THEMES.'templates/install.css')."' rel='stylesheet'/>\n";
         $html .= "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-5/css/all.min.css' type='text/css'/>\n";
         $html .= "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-5/css/v4-shims.min.css' type='text/css'/>\n";
         $html .= OutputHandler::$pageHeadTags;
