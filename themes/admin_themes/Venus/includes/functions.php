@@ -162,6 +162,8 @@ function render_dashboard() {
     echo "</div>\n";
     closeside();
     echo "</div>\n";
+    echo "</div>";
+    echo "<div class='row'>";
 
     $desktop = '3';
 

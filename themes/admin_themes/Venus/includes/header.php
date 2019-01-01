@@ -32,31 +32,31 @@ add_to_footer("<script src='".INCLUDES."jquery/jquery.cookie.js'></script>");
 add_to_jquery("
 $('#adl').slimScroll({height: null});
 $('#toggle-canvas').bind('click', function(e) {
-	$('#acp-left').toggleClass('in');
-	setTimeout(function() {
-		$('#acp-main').toggleClass('in');
-		$('#admin-panel').toggleClass('in');
-	}, 30);
-	panel_state = $('#acp-left').hasClass('in');
-	if (panel_state) {
-		$.cookie('Venus', '1', {expires: 7});
-	} else {
-		$.cookie('Venus', '0', {expires: 7});
-	 }
+    $('#acp-left').toggleClass('in');
+    setTimeout(function() {
+        $('#acp-main').toggleClass('in');
+        $('#admin-panel').toggleClass('in');
+    }, 30);
+    panel_state = $('#acp-left').hasClass('in');
+    if (panel_state) {
+        $.cookie('Venus', '1', {expires: 7});
+    } else {
+        $.cookie('Venus', '0', {expires: 7});
+     }
 });
 ");
 
 echo "<ul class='hidden-xs pull-right m-r-15'>\n";
 $languages = fusion_get_enabled_languages();
 if (sizeof($enabled_languages) > 1) {
-	echo "<li class='dropdown'>";
-		echo "<a class='dropdown-toggle pointer' data-toggle='dropdown' title='".$locale['282']."'><i class='entypo flag'></i> <span class='hidden-xs hidden-sm hidden-md'>".translate_lang_names(LANGUAGE)."</span><span class='caret'></span></a>\n";
-		echo "<ul class='dropdown-menu'>\n";
-		foreach ($languages as $language_folder => $language_name) {
-			echo "<li><a class='display-block' href='".clean_request("lang=".$language_folder, array("lang"), FALSE)."'><img class='m-r-5' src='".BASEDIR."locale/$language_folder/$language_folder-s.png'> $language_name</a></li>\n";
-		}
-		echo "</ul>\n";
-	echo "</li>\n";
+    echo "<li class='dropdown'>";
+        echo "<a class='dropdown-toggle pointer' data-toggle='dropdown' title='".$locale['282']."'><i class='entypo flag'></i> <span class='hidden-xs hidden-sm hidden-md'>".translate_lang_names(LANGUAGE)."</span><span class='caret'></span></a>\n";
+        echo "<ul class='dropdown-menu'>\n";
+        foreach ($languages as $language_folder => $language_name) {
+            echo "<li><a class='display-block' href='".clean_request("lang=".$language_folder, array("lang"), FALSE)."'><img class='m-r-5' src='".BASEDIR."locale/$language_folder/$language_folder-s.png'> $language_name</a></li>\n";
+        }
+        echo "</ul>\n";
+    echo "</li>\n";
 }
 
 
