@@ -83,6 +83,7 @@ class Search_Engine extends Search_Model {
     }
 
     protected function __construct() {
+        parent::__construct();
         self::$locale = fusion_get_locale('', LOCALE.LOCALESET.'search.php');
     }
 

@@ -1369,8 +1369,8 @@ function infinite_scroll($scroll_url, $rowstart = 0, $total_count, $getname = 'r
  * Hierarchy Page Breadcrumbs
  * This function generates breadcrumbs on all your category needs on $_GET['rownav'] as your cat_id
  *
- * @param        $tree_index    dbquery_tree(DB_NEWS_CATS, "news_cat_id", "news_cat_parent") / tree_index(dbquery_tree_full(DB_NEWS_CATS, "news_cat_id", "news_cat_parent"))
- * @param        $tree_full     dbquery_tree_full(DB_NEWS_CATS, "news_cat_id", "news_cat_parent")
+ * @param array  $tree_index    dbquery_tree(DB_NEWS_CATS, "news_cat_id", "news_cat_parent") / tree_index(dbquery_tree_full(DB_NEWS_CATS, "news_cat_id", "news_cat_parent"))
+ * @param array  $tree_full     dbquery_tree_full(DB_NEWS_CATS, "news_cat_id", "news_cat_parent")
  * @param        $id_col "news_cat_id",
  * @param        $title_col "news_cat_name",
  * @param string $getname cat_id for $_GET['cat_id']

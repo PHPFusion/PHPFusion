@@ -377,7 +377,6 @@ class Upload extends \Defender\Validation {
                     self::$inputConfig['thumbnail2_h'], // thumb2 height
                     FALSE,
                     explode(',', self::$inputConfig['valid_ext']),
-                    "", // query
                     self::$inputConfig['replace_upload']
                 );
 

@@ -790,7 +790,7 @@ if (!function_exists('display_avatar')) {
                 $font_color = get_brightness($color) > 130 ? '000' : 'fff';
                 $first_char = substr($userdata['user_name'], 0, 1);
                 $first_char = strtoupper($first_char);
-                $size_int = (int) filter_var($size, FILTER_SANITIZE_NUMBER_INT);
+                $size_int = (int)filter_var($size, FILTER_SANITIZE_NUMBER_INT);
                 $img = '<div class="display-inline-block va avatar '.$img_class.'" style="width:'.$size.';max-height:'.$size.';"><svg viewBox="0 0 '.$size_int.' '.$size_int.'" preserveAspectRatio="xMidYMid meet"><rect fill="#'.$color.'" stroke-width="0" y="0" x="0" width="'.$size.'" height="'.$size.'"/><text class="m-t-5" font-size="'.($size_int - 5).'" fill="#'.$font_color.'" x="50%" y="50%" text-anchor="middle" dy="0.325em">'.$first_char.'</text></svg></div>';
             }
         }
@@ -859,11 +859,12 @@ if (!function_exists('colorbox')) {
 /**
  * Thumbnail function
  *
- * @param      $src
- * @param      $size
- * @param bool $url
- * @param bool $colorbox
- * @param bool $responsive
+ * @param        $src
+ * @param        $size
+ * @param bool   $url
+ * @param bool   $colorbox
+ * @param bool   $responsive
+ * @param string $class
  *
  * @return string
  */
