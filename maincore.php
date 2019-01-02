@@ -80,7 +80,7 @@ if (!isset($db_name)) {
 require_once INCLUDES."multisite_include.php";
 
 // Database driver selection
-if ($pdo_enabled = 0) {
+if ($db_driver == "mysqli") {
     require_once DB_HANDLERS."mysqli_functions_include.php";
 } else {
     require_once DB_HANDLERS."pdo_functions_include.php";

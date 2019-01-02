@@ -177,7 +177,7 @@ if (isset($_POST['step']) && $_POST['step'] == "3") {
     $db_user = (isset($_POST['db_user']) ? stripinput(trim($_POST['db_user'])) : "");
     $db_user = (isset($_POST['db_user']) ? stripinput(trim($_POST['db_user'])) : "");
     $db_name = (isset($_POST['db_name']) ? stripinput(trim($_POST['db_name'])) : "");
-    $pdo_enabled = (isset($_POST['db_driver']) ? stripinput(trim($_POST['db_driver'])) : "0");
+    $db_driver = (isset($_POST['db_driver']) ? stripinput(trim($_POST['db_driver'])) : "mysqli");
     $db_prefix = (isset($_POST['db_prefix']) ? stripinput(trim($_POST['db_prefix'])) : $db_prefix);
     $db_error = (isset($_POST['db_error']) && isnum($_POST['db_error']) ? $_POST['db_error'] : "0");
     $field_class = ["", "", "", "", ""];
@@ -218,8 +218,8 @@ if (isset($_POST['step']) && $_POST['step'] == "3") {
     echo "<tr>\n<td class='tbl1' style='text-align:left'>".$locale['037']."</td>\n";
     echo "<td class='tbl1'>\n";
     echo "<select name='db_driver' class='form-control input-sm textbox' style='width:200px'>\n";
-    echo "<option value='1' selected='selected'>".$locale['039']."</option>\n";
-    echo "<option value='0'>".$locale['039b']."</option>\n";
+    echo "<option value='pdo' selected='selected'>".$locale['039']."</option>\n";
+    echo "<option value='mysqli'>".$locale['039b']."</option>\n";
     echo "</select>\n";
     echo "</td>\n</tr>\n";
     echo "<tr><td class='tbl1'>".$locale['039c']."</td>\n";
@@ -246,7 +246,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
     $db_user = (isset($_POST['db_user']) ? stripinput(trim($_POST['db_user'])) : "");
     $db_pass = (isset($_POST['db_pass']) ? stripinput(trim($_POST['db_pass'])) : "");
     $db_name = (isset($_POST['db_name']) ? stripinput(trim($_POST['db_name'])) : "");
-    $pdo_enabled = (isset($_POST['db_driver']) ? stripinput(trim($_POST['db_driver'])) : "");
+    $db_driver = (isset($_POST['db_driver']) ? stripinput(trim($_POST['db_driver'])) : "");
     $db_prefix = (isset($_POST['db_prefix']) ? stripinput(trim($_POST['db_prefix'])) : "");
     $cookie_prefix = (isset($_POST['cookie_prefix']) ? stripinput(trim($_POST['cookie_prefix'])) : "fusion_");
     if ($db_prefix != "") {
@@ -276,7 +276,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
     $secret_key = "".createRandomToken()."";
     $secret_key_salt = "".createRandomToken()."";
 
-    if ($db_host != "" && $db_user != "" && $db_name != "" && $db_prefix != "" && $pdo_enabled != "") {
+    if ($db_host != "" && $db_user != "" && $db_name != "" && $db_prefix != "" && $db_driver != "") {
 
         $db_connect = dbconnect($db_host, $db_user, $db_pass, $db_name);
 
@@ -301,7 +301,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
                     $config .= "\$db_pass = '".$db_pass."';\n";
                     $config .= "\$db_name = '".$db_name."';\n";
                     $config .= "\$db_prefix = '".$db_prefix."';\n";
-                    $config .= "\$pdo_enabled = '".$pdo_enabled."';\n";
+                    $config .= "\$db_driver = '".$db_driver."';\n";
                     $config .= "define(\"DB_PREFIX\", \"".$db_prefix."\");\n";
                     $config .= "define(\"COOKIE_PREFIX\", \"".$cookie_prefix."\");\n";
                     $config .= "define(\"SECRET_KEY\", \"".$secret_key."\");\n";
