@@ -16,7 +16,9 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
-if (!iADMIN || $userdata['user_rights'] == "" || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {redirect("../index.php");}
+if (!iADMIN || $userdata['user_rights'] == "" || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
+    redirect("../index.php");
+}
 
 require_once THEMES."templates/admin_header.php";
 
@@ -46,74 +48,88 @@ if ($settings['enable_deactivation'] == "1") {
 
 // Get Core Infusion's stats
 $forum = [];
-$f_count = dbarray(dbquery("SELECT
+if (db_exists(DB_FORUMS)) {
+    $f_count = dbarray(dbquery("SELECT
         (SELECT COUNT(forum_id) FROM ".DB_PREFIX."forums) AS forums,
         (SELECT COUNT(thread_id) FROM ".DB_PREFIX."threads) AS threads,
         (SELECT COUNT(post_id) FROM ".DB_PREFIX."posts) AS posts,
         (SELECT COUNT(user_id) FROM ".DB_USERS." WHERE user_posts > '0') AS user_posts
     "));
-$forum['count'] = $f_count['forums'];
-$forum['thread'] = $f_count['threads'];
-$forum['post'] = $f_count['posts'];
-$forum['users'] = $f_count['user_posts'];
+    $forum['count'] = $f_count['forums'];
+    $forum['thread'] = $f_count['threads'];
+    $forum['post'] = $f_count['posts'];
+    $forum['users'] = $f_count['user_posts'];
+}
 
 $download = [];
-$d_count = dbarray(dbquery("SELECT
+if (db_exists(DB_DOWNLOADS)) {
+    $d_count = dbarray(dbquery("SELECT
         (SELECT COUNT(download_id) FROM ".DB_PREFIX."downloads) AS items,
         (SELECT COUNT(comment_id) FROM ".DB_COMMENTS." WHERE comment_type='D') AS comments,
         (SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='d') AS submissions
     "));
-$download['download'] = $d_count['items'];
-$download['comment'] = $d_count['comments'];
-$download['submit'] = $d_count['submissions'];
+    $download['download'] = $d_count['items'];
+    $download['comment'] = $d_count['comments'];
+    $download['submit'] = $d_count['submissions'];
+}
 
 $articles = [];
-$a_count = dbarray(dbquery("SELECT
+if (db_exists(DB_ARTICLES)) {
+    $a_count = dbarray(dbquery("SELECT
         (SELECT COUNT(article_id) FROM ".DB_PREFIX."articles) AS items,
         (SELECT COUNT(comment_id) FROM ".DB_COMMENTS." WHERE comment_type='A') AS comments,
         (SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='a') AS submissions
     "));
-$articles['article'] = $a_count['items'];
-$articles['comment'] = $a_count['comments'];
-$articles['submit'] = $a_count['submissions'];
+    $articles['article'] = $a_count['items'];
+    $articles['comment'] = $a_count['comments'];
+    $articles['submit'] = $a_count['submissions'];
+}
 
 $weblinks = [];
-$w_count = dbarray(dbquery("SELECT
+if (db_exists(DB_WEBLINKS)) {
+    $w_count = dbarray(dbquery("SELECT
         (SELECT COUNT(weblink_id) FROM ".DB_PREFIX."weblinks) AS items,
         (SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='l') AS submissions
     "));
-$weblinks['weblink'] = $w_count['items'];
-$weblinks['submit'] = $w_count['submissions'];
+    $weblinks['weblink'] = $w_count['items'];
+    $weblinks['submit'] = $w_count['submissions'];
+}
 
 $news = [];
-$n_count = dbarray(dbquery("SELECT
+if (db_exists(DB_NEWS)) {
+    $n_count = dbarray(dbquery("SELECT
         (SELECT COUNT(news_id) FROM ".DB_PREFIX."news) AS items,
         (SELECT COUNT(comment_id) FROM ".DB_COMMENTS." WHERE comment_type='N') AS comments,
         (SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='n') AS submissions
     "));
-$news['news'] = $n_count['items'];
-$news['comment'] = $n_count['comments'];
-$news['submit'] = $n_count['submissions'];
+    $news['news'] = $n_count['items'];
+    $news['comment'] = $n_count['comments'];
+    $news['submit'] = $n_count['submissions'];
+}
 
 $blog = [];
-$b_count = dbarray(dbquery("SELECT
-		(SELECT COUNT(blog_id) FROM ".DB_PREFIX."blog) AS items,
-		(SELECT COUNT(comment_id) FROM ".DB_COMMENTS." WHERE comment_type='B') AS comments,
-		(SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='b') AS submissions
-	"));
-$blog['blog'] = $b_count['items'];
-$blog['comment'] = $b_count['comments'];
-$blog['submit'] = $b_count['submissions'];
+if (db_exists(DB_BLOG)) {
+    $b_count = dbarray(dbquery("SELECT
+        (SELECT COUNT(blog_id) FROM ".DB_PREFIX."blog) AS items,
+        (SELECT COUNT(comment_id) FROM ".DB_COMMENTS." WHERE comment_type='B') AS comments,
+        (SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='b') AS submissions
+    "));
+    $blog['blog'] = $b_count['items'];
+    $blog['comment'] = $b_count['comments'];
+    $blog['submit'] = $b_count['submissions'];
+}
 
 $photos = [];
-$p_count = dbarray(dbquery("SELECT
+if (db_exists(DB_PHOTOS)) {
+    $p_count = dbarray(dbquery("SELECT
         (SELECT COUNT(photo_id) FROM ".DB_PREFIX."photos) AS items,
         (SELECT COUNT(comment_id) FROM ".DB_COMMENTS." WHERE comment_type='P') AS comments,
         (SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='p') AS submissions
     "));
-$photos['photo'] = $p_count['items'];
-$photos['comment'] = $p_count['comments'];
-$photos['submit'] = $p_count['submissions'];
+    $photos['photo'] = $p_count['items'];
+    $photos['comment'] = $p_count['comments'];
+    $photos['submit'] = $p_count['submissions'];
+}
 
 $comments_type = [
     'C'  => $locale['272a'],

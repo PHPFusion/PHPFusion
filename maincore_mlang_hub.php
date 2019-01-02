@@ -25,37 +25,45 @@ if (!preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
     // Articles
     if (preg_match('/articles.php/i', $_SERVER['PHP_SELF']) || preg_match('|/articles/([0-9]+)/|', $_SERVER['REQUEST_URI'], $matches) && multilang_table("AR")) {
         if (isset($_GET['article_id']) && isnum($_GET['article_id']) || !empty($matches) && $matches['1'] > 0) {
-            $data = dbarray(dbquery("SELECT ac.article_cat_id,ac.article_cat_language, a.article_id
+            if (db_exists(DB_ARTICLES)) {
+                $data = dbarray(dbquery("SELECT ac.article_cat_id,ac.article_cat_language, a.article_id
                                      FROM ".DB_ARTICLE_CATS." ac
                                      LEFT JOIN ".DB_ARTICLES." a ON ac.article_cat_id = a.article_cat
                                      WHERE a.article_id='".(isset($_GET['article_id']) ? $_GET['article_id'] : $matches['1'])."'
                                      GROUP BY a.article_id"));
-            if ($data['article_cat_language']." != ".LANGUAGE) {
-                set_language($data['article_cat_language']);
+                if ($data['article_cat_language']." != ".LANGUAGE) {
+                    set_language($data['article_cat_language']);
+                }
             }
         }
     } // Article Cats
     else if (preg_match('/articles.php/i', $_SERVER['PHP_SELF']) || preg_match('|/articles/category/([0-9]+)/|', $_SERVER['REQUEST_URI'], $matches) && multilang_table("AR")) {
         if (isset($_GET['cat_id']) && isnum($_GET['cat_id']) || !empty($matches) && $matches['1'] > 0) {
-            $data = dbarray(dbquery("SELECT article_cat_language FROM ".DB_ARTICLE_CATS." WHERE article_cat_id='".(isset($_GET['cat_id']) ? $_GET['cat_id'] : $matches['1'])."'"));
-            if ($data['article_cat_language']." != ".LANGUAGE) {
-                set_language($data['article_cat_language']);
+            if (db_exists(DB_ARTICLE_CATS)) {
+                $data = dbarray(dbquery("SELECT article_cat_language FROM ".DB_ARTICLE_CATS." WHERE article_cat_id='".(isset($_GET['cat_id']) ? $_GET['cat_id'] : $matches['1'])."'"));
+                if ($data['article_cat_language']." != ".LANGUAGE) {
+                    set_language($data['article_cat_language']);
+                }
             }
         }
     } // Blog
     else if (preg_match('/blog.php/i', $_SERVER['PHP_SELF']) || preg_match('|/blogs/([0-9]+)/|', $_SERVER['REQUEST_URI'], $matches) && multilang_table("BL")) {
         if (isset($_GET['readmore']) && isnum($_GET['readmore']) || !empty($matches) && $matches['1'] > 0) {
-            $data = dbarray(dbquery("SELECT blog_language FROM ".DB_BLOG." WHERE blog_id='".(isset($_GET['readmore']) ? $_GET['readmore'] : $matches['1'])."'"));
-            if ($data['blog_language']." != ".LANGUAGE) {
-                set_language($data['blog_language']);
+            if (db_exists(DB_BLOG)) {
+                $data = dbarray(dbquery("SELECT blog_language FROM ".DB_BLOG." WHERE blog_id='".(isset($_GET['readmore']) ? $_GET['readmore'] : $matches['1'])."'"));
+                if ($data['blog_language']." != ".LANGUAGE) {
+                    set_language($data['blog_language']);
+                }
             }
         }
     } // Blog Cats
     else if (preg_match('/blog.php/i', $_SERVER['PHP_SELF']) || preg_match('|/blogs/category/([0-9]+)/|', $_SERVER['REQUEST_URI'], $matches) && multilang_table("BL")) {
         if (isset($_GET['cat_id']) && isnum($_GET['cat_id']) || !empty($matches) && $matches['1'] > 0) {
-            $data = dbarray(dbquery("SELECT blog_cat_language FROM ".DB_BLOG_CATS." WHERE blog_cat_id='".(isset($_GET['cat_id']) ? $_GET['cat_id'] : $matches['1'])."'"));
-            if ($data['blog_cat_language']." != ".LANGUAGE) {
-                set_language($data['blog_cat_language']);
+            if (db_exists(DB_BLOG_CATS)) {
+                $data = dbarray(dbquery("SELECT blog_cat_language FROM ".DB_BLOG_CATS." WHERE blog_cat_id='".(isset($_GET['cat_id']) ? $_GET['cat_id'] : $matches['1'])."'"));
+                if ($data['blog_cat_language']." != ".LANGUAGE) {
+                    set_language($data['blog_cat_language']);
+                }
             }
         }
     } // Custom Pages
@@ -70,49 +78,59 @@ if (!preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
     } // Downloads
     else if (preg_match('/downloads.php/i', $_SERVER['PHP_SELF']) || preg_match('|/downloads/([0-9]+)/|', $_SERVER['REQUEST_URI'], $matches) && multilang_table("DL")) {
         if (isset($_GET['download_id']) && isnum($_GET['download_id']) || !empty($matches) && $matches['1'] > 0) {
-            $data = dbarray(dbquery("SELECT dlc.download_cat_id,dlc.download_cat_language, dl.download_id
+            if (db_exists(DB_DOWNLOADS)) {
+                $data = dbarray(dbquery("SELECT dlc.download_cat_id,dlc.download_cat_language, dl.download_id
                                     FROM ".DB_DOWNLOAD_CATS." dlc
                                     LEFT JOIN ".DB_DOWNLOADS." dl ON dlc.download_cat_id = dl.download_cat
                                     WHERE dl.download_id='".(isset($_GET['download_id']) ? $_GET['download_id'] : $matches['1'])."'
                                     GROUP BY dl.download_id"));
-            if ($data['download_cat_language']." != ".LANGUAGE) {
-                set_language($data['download_cat_language']);
+                if ($data['download_cat_language']." != ".LANGUAGE) {
+                    set_language($data['download_cat_language']);
+                }
             }
         }
     } // Download Cats
     else if (preg_match('/downloads.php/i', $_SERVER['PHP_SELF']) || preg_match('|/downloads/category/([0-9]+)/|', $_SERVER['REQUEST_URI'], $matches) && multilang_table("DL")) {
         if (isset($_GET['cat_id']) && isnum($_GET['cat_id']) || !empty($matches) && $matches['1'] > 0) {
-            $data = dbarray(dbquery("SELECT download_cat_language FROM ".DB_DOWNLOAD_CATS." WHERE download_cat_id='".(isset($_GET['cat_id']) ? $_GET['cat_id'] : $matches['1'])."'"));
-            if ($data['download_cat_language']." != ".LANGUAGE) {
-                set_language($data['download_cat_language']);
+            if (db_exists(DB_DOWNLOAD_CATS)) {
+                $data = dbarray(dbquery("SELECT download_cat_language FROM ".DB_DOWNLOAD_CATS." WHERE download_cat_id='".(isset($_GET['cat_id']) ? $_GET['cat_id'] : $matches['1'])."'"));
+                if ($data['download_cat_language']." != ".LANGUAGE) {
+                    set_language($data['download_cat_language']);
+                }
             }
         }
     } // News
     else if (preg_match('/news.php/i', $_SERVER['PHP_SELF']) || preg_match('|/news/([0-9]+)/|', $_SERVER['REQUEST_URI'], $matches) && multilang_table("NS")) {
         if (isset($_GET['readmore']) && isnum($_GET['readmore']) || !empty($matches) && $matches['1'] > 0) {
-            $data = dbarray(dbquery("SELECT news_language FROM ".DB_NEWS." WHERE news_id='".(isset($_GET['readmore']) ? $_GET['readmore'] : $matches['1'])."'"));
-            if ($data['news_language']." != ".LANGUAGE) {
-                set_language($data['news_language']);
+            if (db_exists(DB_NEWS)) {
+                $data = dbarray(dbquery("SELECT news_language FROM ".DB_NEWS." WHERE news_id='".(isset($_GET['readmore']) ? $_GET['readmore'] : $matches['1'])."'"));
+                if ($data['news_language']." != ".LANGUAGE) {
+                    set_language($data['news_language']);
+                }
             }
         }
     } // News Cats
     else if (preg_match('/news.php/i', $_SERVER['PHP_SELF']) || preg_match('|/news/category/([0-9]+)/|', $_SERVER['REQUEST_URI'], $matches) && multilang_table("NS")) {
         if (isset($_GET['cat_id']) && isnum($_GET['cat_id']) || !empty($matches) && $matches['1'] > 0) {
-            $data = dbarray(dbquery("SELECT news_cat_language FROM ".DB_NEWS_CATS." WHERE news_cat_id='".(isset($_GET['cat_id']) ? $_GET['cat_id'] : $matches['1'])."'"));
-            if ($data['news_cat_language']." != ".LANGUAGE) {
-                set_language($data['news_cat_language']);
+            if (db_exists(DB_NEWS_CATS)) {
+                $data = dbarray(dbquery("SELECT news_cat_language FROM ".DB_NEWS_CATS." WHERE news_cat_id='".(isset($_GET['cat_id']) ? $_GET['cat_id'] : $matches['1'])."'"));
+                if ($data['news_cat_language']." != ".LANGUAGE) {
+                    set_language($data['news_cat_language']);
+                }
             }
         }
     } // FaQ´s
     else if (preg_match('/faq.php/i', $_SERVER['PHP_SELF']) || preg_match('|/faq/category/([0-9]+)/|', $_SERVER['REQUEST_URI'], $matches) && multilang_table("FQ")) {
         if (isset($_GET['cat_id']) && isnum($_GET['cat_id']) || !empty($matches) && $matches['1'] > 0) {
-            $data = dbarray(dbquery("SELECT fqc.faq_cat_id, fqc.faq_cat_language, fq.faq_cat_id
+            if (db_exists(DB_FAQS)) {
+                $data = dbarray(dbquery("SELECT fqc.faq_cat_id, fqc.faq_cat_language, fq.faq_cat_id
                                     FROM ".DB_FAQ_CATS." fqc
                                     LEFT JOIN ".DB_FAQS." fq ON fqc.faq_cat_id = fq.faq_cat_id
                                     WHERE fq.faq_cat_id='".(isset($_GET['cat_id']) ? $_GET['cat_id'] : $matches['1'])."'
                                     GROUP BY fq.faq_cat_id"));
-            if ($data['faq_cat_language']." != ".LANGUAGE) {
-                set_language($data['faq_cat_language']);
+                if ($data['faq_cat_language']." != ".LANGUAGE) {
+                    set_language($data['faq_cat_language']);
+                }
             }
         }
     } // Forum threads
@@ -148,17 +166,21 @@ if (!preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
     } // Photo Albums
     else if (preg_match('/photogallery.php/i', $_SERVER['PHP_SELF']) || preg_match('|/gallery/([0-9]+)/|', $_SERVER['REQUEST_URI'], $matches) && multilang_table("PG")) {
         if (isset($_GET['album_id']) && isnum($_GET['album_id']) || !empty($matches) && $matches['1'] > 0) {
-            $data = dbarray(dbquery("SELECT album_language FROM ".DB_PHOTO_ALBUMS." WHERE album_id='".(isset($_GET['album_id']) ? $_GET['album_id'] : $matches['1'])."'"));
-            if ($data['album_language']." != ".LANGUAGE) {
-                set_language($data['album_language']);
+            if (db_exists(DB_PHOTOS)) {
+                $data = dbarray(dbquery("SELECT album_language FROM ".DB_PHOTO_ALBUMS." WHERE album_id='".(isset($_GET['album_id']) ? $_GET['album_id'] : $matches['1'])."'"));
+                if ($data['album_language']." != ".LANGUAGE) {
+                    set_language($data['album_language']);
+                }
             }
         }
     } // Weblinks
     else if (preg_match('/weblinks.php/i', $_SERVER['PHP_SELF']) || preg_match('|/weblinks/([0-9]+)/|', $_SERVER['REQUEST_URI'], $matches) && multilang_table("WL")) {
         if (isset($_GET['cat_id']) && isnum($_GET['cat_id']) || !empty($matches) && $matches['1'] > 0) {
-            $data = dbarray(dbquery("SELECT weblink_cat_language FROM ".DB_WEBLINK_CATS." WHERE weblink_cat_id='".(isset($_GET['cat_id']) ? $_GET['cat_id'] : $matches['1'])."'"));
-            if ($data['weblink_cat_language']." != ".LANGUAGE) {
-                set_language($data['weblink_cat_language']);
+            if (db_exists(DB_WEBLINKS)) {
+                $data = dbarray(dbquery("SELECT weblink_cat_language FROM ".DB_WEBLINK_CATS." WHERE weblink_cat_id='".(isset($_GET['cat_id']) ? $_GET['cat_id'] : $matches['1'])."'"));
+                if ($data['weblink_cat_language']." != ".LANGUAGE) {
+                    set_language($data['weblink_cat_language']);
+                }
             }
         }
     }

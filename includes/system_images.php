@@ -28,16 +28,20 @@ if (is_array($smiley_cache) && count($smiley_cache)) {
     }
 }
 
-$result = dbquery("SELECT news_cat_image, news_cat_name FROM ".DB_NEWS_CATS);
-$nc_images = [];
-while ($data = dbarray($result)) {
-    $nc_images["nc_".$data['news_cat_name']] = file_exists(IMAGES_NC.$data['news_cat_image']) ? IMAGES_NC.$data['news_cat_image'] : IMAGES."imagenotfound.jpg";
+if (db_exists(DB_NEWS_CATS)) {
+    $result = dbquery("SELECT news_cat_image, news_cat_name FROM ".DB_NEWS_CATS);
+    $nc_images = [];
+    while ($data = dbarray($result)) {
+        $nc_images["nc_".$data['news_cat_name']] = file_exists(IMAGES_NC.$data['news_cat_image']) ? IMAGES_NC.$data['news_cat_image'] : IMAGES."imagenotfound.jpg";
+    }
 }
 
-$result = dbquery("SELECT blog_cat_image, blog_cat_name FROM ".DB_BLOG_CATS);
-$bc_images = [];
-while ($data = dbarray($result)) {
-    $bc_images["bc_".$data['blog_cat_name']] = file_exists(IMAGES_BC.$data['blog_cat_image']) ? IMAGES_BC.$data['blog_cat_image'] : IMAGES."imagenotfound.jpg";
+if (db_exists(DB_BLOG_CATS)) {
+    $result = dbquery("SELECT blog_cat_image, blog_cat_name FROM ".DB_BLOG_CATS);
+    $bc_images = [];
+    while ($data = dbarray($result)) {
+        $bc_images["bc_".$data['blog_cat_name']] = file_exists(IMAGES_BC.$data['blog_cat_image']) ? IMAGES_BC.$data['blog_cat_image'] : IMAGES."imagenotfound.jpg";
+    }
 }
 
 $result = dbquery("SELECT admin_title, admin_image FROM ".DB_ADMIN);
@@ -47,30 +51,30 @@ while ($data = dbarray($result)) {
 }
 
 /*
-	The system images that are set by default for THEME and must be included are as follows.
-	theme/images folder
-	-	blank.gif
-	-	down.gif
-	-	left.gif
-	-	panel_on.gif
-	-	panel_off.gif
-	-	right.gif
-	-	pollbar.gif
-	-	up.gif
-	theme/forum/ folder
-	- 	folder.gif
-	-	folderlock.gif
-	-	foldernew.gif
-	-	edit.gif
-	-	image_attach.png
-	-	newthread.gif
-	-	pm.gif
-	-	pollbar.gif
-	- 	profile.gif
-	-	quote.gif
-	-	reply.gif
-	-	stickythread.gif
-	-	web.gif
+    The system images that are set by default for THEME and must be included are as follows.
+    theme/images folder
+        blank.gif
+        down.gif
+        left.gif
+        panel_on.gif
+        panel_off.gif
+        right.gif
+        pollbar.gif
+        up.gif
+    theme/forum/ folder
+    - 	folder.gif
+        folderlock.gif
+        foldernew.gif
+        edit.gif
+        image_attach.png
+        newthread.gif
+        pm.gif
+        pollbar.gif
+    - 	profile.gif
+        quote.gif
+        reply.gif
+        stickythread.gif
+        web.gif
 */
 // Flaws: Not having images in the theme will break the site. Even the files format are different. Developers have no options for CSS buttons.
 // If we change this now, it will break all the themes on main site repository. Only solution is to address this in a new version to force deprecate old themes.
