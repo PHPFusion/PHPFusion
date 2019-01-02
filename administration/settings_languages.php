@@ -190,197 +190,73 @@ if (isset($_POST['savesettings'])) {
                 }
             }
         }
+
+        if (!empty($settings['enabled_languages'])) {
+            for ($i = 0; $i < sizeof($enabled_languages); $i++) {
+                //If the system base language changes, replace Admin's locale
+                include LOCALE.$enabled_languages[$i]."/admin/main.php";
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('AD', 'admins.png', '".$locale['080']."', 'administrators.php', '2', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('APWR', 'admin_pass.png', '".$locale['128']."', 'admin_reset.php', '2', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('AC', 'article_cats.png', '".$locale['081']."', 'article_cats.php', '1', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('A', 'articles.png', '".$locale['082']."', 'articles.php', '1', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('SB', 'banners.png', '".$locale['083']."', 'banners.php', '3', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('BB', 'bbcodes.png', '".$locale['084']."', 'bbcodes.php', '3', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('B', 'blacklist.png', '".$locale['085']."', 'blacklist.php', '2', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('C', '', '".$locale['086']."', 'reserved', '2', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('CP', 'c-pages.png', '".$locale['087']."', 'custom_pages.php', '1', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('DB', 'db_backup.png', '".$locale['088']."', 'db_backup.php', '3', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('DC', 'dl_cats.png', '".$locale['089']."', 'download_cats.php', '1', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('D', 'dl.png', '".$locale['090']."', 'downloads.php', '1', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('ERRO', 'errors.png', '".$locale['129']."', 'errors.php', '3', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('FQ', 'faq.png', '".$locale['091']."', 'faq.php', '1', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('F', 'forums.png', '".$locale['092']."', 'forums.php', '1', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('IM', 'images.png', '".$locale['093']."', 'images.php', '1', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('FM', 'file_manager.png', '".$locale['130d']."', 'file_manager.php', '1', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('I', 'infusions.png', '".$locale['094']."', 'infusions.php', '3', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('IP', '', '".$locale['095']."', 'reserved', '3', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('M', 'members.png', '".$locale['096']."', 'members.php', '2', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('NC', 'news_cats.png', '".$locale['097']."', 'news_cats.php', '1', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('N', 'news.png', '".$locale['098']."', 'news.php', '1', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('BLC', 'blog_cats.png', '".$locale['130a']."', 'blog_cats.php', '1', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('BLOG', 'blog.png', '".$locale['130b']."', 'blog.php', '1', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('S13', 'settings_blog.png', '".$locale['130c']."', 'settings_blog.php', '4', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('P', 'panels.png', '".$locale['099']."', 'panels.php', '3', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('PH', 'photoalbums.png', '".$locale['100']."', 'photoalbums.php', '1', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('PI', 'phpinfo.png', '".$locale['101']."', 'phpinfo.php', '3', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('PO', 'polls.png', '".$locale['102']."', 'polls.php', '1', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('SL', 'site_links.png', '".$locale['104']."', 'site_links.php', '3', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('SM', 'smileys.png', '".$locale['105']."', 'smileys.php', '3', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('SU', 'submissions.png', '".$locale['106']."', 'submissions.php', '2', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('PL', 'permalinks.png', '".$locale['129d']."', 'permalinks.php', '3', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('U', 'upgrade.png', '".$locale['107']."', 'upgrade.php', '3', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('UG', 'user_groups.png', '".$locale['108']."', 'user_groups.php', '2', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('WC', 'wl_cats.png', '".$locale['109']."', 'weblink_cats.php', '1', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('W', 'wl.png', '".$locale['110']."', 'weblinks.php', '1', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('S1', 'settings.png', '".$locale['111']."', 'settings_main.php', '4', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('S2', 'settings_time.png', '".$locale['112']."', 'settings_time.php', '4', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('S3', 'settings_forum.png', '".$locale['113']."', 'settings_forum.php', '4', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('S4', 'registration.png', '".$locale['114']."', 'settings_registration.php', '4', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('S5', 'photoalbums.png', '".$locale['115']."', 'settings_photo.php', '4', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('S6', 'settings_misc.png', '".$locale['116']."', 'settings_misc.php', '4', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('S7', 'settings_pm.png', '".$locale['117']."', 'settings_messages.php', '4', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('S8', 'settings_news.png', '".$locale['121']."', 'settings_news.php', '4', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('S9', 'settings_users.png', '".$locale['122']."', 'settings_users.php', '4', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('S10', 'settings_ipp.png', '".$locale['124']."', 'settings_ipp.php', '4', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('S11', 'settings_dl.png', '".$locale['123']."', 'settings_dl.php', '4', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('S12', 'security.png', '".$locale['125']."', 'settings_security.php', '4', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('UF', 'user_fields.png', '".$locale['118']."', 'user_fields.php', '2', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('FR', 'forum_ranks.png', '".$locale['119']."', 'forum_ranks.php', '2', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('UFC', 'user_fields_cats.png', '".$locale['120']."', 'user_field_cats.php', '2', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('UL', 'user_log.png', '".$locale['129a']."', 'user_log.php', '2', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('ROB', 'robots.png', '".$locale['129b']."', 'robots.php', '3', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('MAIL', 'email.png', '".$locale['T001']."', 'email.php', '3', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('LANG', 'languages.png', '".$locale['129c']."', 'settings_languages.php', '4', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('MI', 'migration.png', '".$locale['129e']."', 'migrate.php', '2', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('S14', 'settings_theme.png', '".$locale['129f']."', 'settings_theme.php', '4', '".$enabled_languages[$i]."')");
+            }
+        }
+
         if (($localeset != $old_localeset) && !$error) {
-            //If the system base language changes, replace Admin�s locale
-            include LOCALE.$localeset."/admin/main.php";
-            $result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['201']."' WHERE admin_link='administrators.php'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['248']."' WHERE admin_link='admin_reset.php'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['202']."' WHERE admin_link='article_cats.php'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['203']."' WHERE admin_link='articles.php'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['236']."' WHERE admin_link='bbcodes.php'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['204']."' WHERE admin_link='blacklist.php'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['245']."' WHERE admin_link='banners.php'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['206']."' WHERE admin_link='custom_pages.php'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['249']."' WHERE admin_link='errors.php'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['207']."' WHERE admin_link='db_backup.php'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['208']."' WHERE admin_link='download_cats.php'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['209']."' WHERE admin_link='downloads.php'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['210']."' WHERE admin_link='faq.php'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['211']."' WHERE admin_link='forums.php'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['212']."' WHERE admin_link='images.php'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['213']."' WHERE admin_link='infusions.php'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['215']."' WHERE admin_link='members.php'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['216']."' WHERE admin_link='news.php'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['235']."' WHERE admin_link='news_cats.php'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['217']."' WHERE admin_link='panels.php'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['218']."' WHERE admin_link='photoalbums.php'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['219']."' WHERE admin_link='phpinfo.php'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['220']."' WHERE admin_link='polls.php'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['222']."' WHERE admin_link='site_links.php'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['223']."' WHERE admin_link='submissions.php'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['224']."' WHERE admin_link='upgrade.php'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['225']."' WHERE admin_link='user_groups.php'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['226']."' WHERE admin_link='weblink_cats.php'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['227']."' WHERE admin_link='weblinks.php'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['228']."' WHERE admin_link='settings_main.php'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['229']."' WHERE admin_link='settings_time.php'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['230']."' WHERE admin_link='settings_forum.php'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['231']."' WHERE admin_link='settings_registration.php'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['232']."' WHERE admin_link='settings_photo.php'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['233']."' WHERE admin_link='settings_misc.php'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['234']."' WHERE admin_link='settings_messages.php'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['237']."' WHERE admin_link='smileys.php'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['238']."' WHERE admin_link='user_fields.php'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['239']."' WHERE admin_link='forum_ranks.php'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['240']."' WHERE admin_link='user_field_cats.php'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['241']."' WHERE admin_link='settings_news.php'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['243']."' WHERE admin_link='settings_dl.php'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['244']."' WHERE admin_link='settings_ipp.php'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['246']."' WHERE admin_link='settings_security.php'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['247']."' WHERE admin_link='settings_users.php'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['266']."' WHERE admin_link='user_log.php'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['267']."' WHERE admin_link='robots.php'");
-            if (!$result) {
-                $error = 1;
-            }
             include LOCALE.$localeset."/setup.php";
             //update default News cats with the set language
             $result = dbquery("UPDATE ".DB_NEWS_CATS." SET news_cat_name='".$locale['180']."' WHERE news_cat_language='".$old_localeset."' AND news_cat_image='bugs.gif'");

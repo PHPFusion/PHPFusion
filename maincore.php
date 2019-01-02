@@ -80,14 +80,14 @@ if (!isset($db_name)) {
 require_once INCLUDES."multisite_include.php";
 
 // Database driver selection
-if ($db_driver == "mysqli") {
+if ($pdo_enabled = 0) {
     require_once DB_HANDLERS."mysqli_functions_include.php";
 } else {
     require_once DB_HANDLERS."pdo_functions_include.php";
 }
 
 // Establish mySQL database connection
-$link = @dbconnect($db_host, $db_user, $db_pass, $db_name, $db_port);
+$link = @dbconnect($db_host, $db_user, $db_pass, $db_name, 3306);
 unset($db_host, $db_user, $db_pass, $db_port);
 
 // Fetch the settings from the database

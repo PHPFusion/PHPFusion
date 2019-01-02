@@ -15,7 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 define("THEME_BULLET", "<img src='".THEME."images/bullet.gif' class='bullet' alt='&raquo;' border='0' />");
 define('BOOTSTRAP', TRUE);
@@ -40,14 +42,14 @@ require_once THEMES."admin_themes/Venus/includes/functions.php";
 
 // Post password check
 if (iADMIN && $userdata['user_admin_password']) {
-	if (isset($_POST['admin_password'])) {
-		$login_error = $locale['global_182'];
-		$admin_password = stripinput($_POST['admin_password']);
-		if (!defined("FUSION_NULL")) {
-			set_admin_pass($admin_password);
-			redirect(FUSION_SELF.$aidlink."&amp;pagenum=0");
-		}
-	}
+    if (isset($_POST['admin_password'])) {
+        $login_error = $locale['global_182'];
+        $admin_password = stripinput($_POST['admin_password']);
+        if (!defined("FUSION_NULL")) {
+            set_admin_pass($admin_password);
+            redirect(FUSION_SELF.$aidlink."&amp;pagenum=0");
+        }
+    }
 }
 
 \PHPFusion\Admins::getInstance()->setAdminBreadcrumbs();

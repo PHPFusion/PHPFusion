@@ -421,14 +421,20 @@ function admin_nav($style = FALSE) {
     } else {
         $html = "<ul id='adl' class='admin-vertical-link'>\n";
         for ($i = 0; $i < 6; $i++) {
-            $result = dbquery("SELECT * FROM ".DB_ADMIN." WHERE admin_page='".$i."' AND admin_link !='reserved' ORDER BY admin_title ASC");
+            $result = dbquery("SELECT * FROM ".DB_ADMIN." WHERE admin_page='".$i."' AND admin_language='".LANGUAGE."' AND admin_link !='reserved' ORDER BY admin_title ASC");
             $active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && admin_active() == $i) ? 1 : 0;
 
             $html .= "<li class='".($active ? 'active panel' : 'panel')."' >\n";
             if ($i == 0) {
                 $html .= "<a class='adl-link' href='".ADMIN."index.php".$aidlink."&amp;pagenum=0'><i class='".$admin_icon[$i]."'></i> ".$locale['ac0'.$i]." ".($i > 0 ? "<span class='adl-drop pull-right'></span>" : '')."</a>\n";
             } else {
-                $html .= "<a class='adl-link ".($active ? '' : 'collapsed')."' data-parent='#adl' data-toggle='collapse' href='#adl-$i'><i class='".$admin_icon[$i]."'></i> ".$locale['ac0'.$i]." ".($i > 0 ? "<span class='adl-drop pull-right'></span>" : '')."</a>\n";
+                add_to_jquery('
+                    $("[data-toggle=collapse]").click(function () {
+                        $(this).find(".adl-drop .entypo").toggleClass("chevron-left chevron-down");
+                    });
+                ');
+
+                $html .= "<a class='adl-link ".($active ? '' : 'collapsed')."' data-parent='#adl' data-toggle='collapse' href='#adl-$i'><i class='".$admin_icon[$i]."'></i> ".$locale['ac0'.$i]." ".($i > 0 ? "<span class='adl-drop pull-right'><i class='entypo chevron-".($active ? "left" : "down")."'></i></span>" : '')."</a>\n";
                 $html .= "<div id='adl-$i' class='collapse ".($active ? 'in' : '')."'>\n";
                 if (dbrows($result) > 0) {
                     $html .= "<ul class='admin-submenu'>\n";

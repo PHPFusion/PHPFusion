@@ -683,6 +683,8 @@ if (str_replace(".", "", $settings['version']) < "80000") {
                         dbquery("UPDATE ".DB_ADMIN." SET admin_image='".$icon_file."' WHERE admin_rights='".$admin_rights."'");
                     }
 
+                    $result = dbquery("ALTER TABLE ".DB_ADMIN." ADD admin_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."' AFTER admin_page");
+
                     // Update user field cats
                     $result = dbquery("ALTER TABLE ".DB_PREFIX."user_field_cats ADD field_cat_db VARCHAR(100) NOT NULL AFTER field_cat_name");
                     $result = dbquery("ALTER TABLE ".DB_PREFIX."user_field_cats ADD field_cat_index VARCHAR(200) NOT NULL AFTER field_cat_db");

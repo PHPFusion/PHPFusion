@@ -320,7 +320,7 @@ class Admins {
     public function getAdminPages() {
         self::$admin_pages = array_filter(self::$admin_pages);
         if (empty(self::$admin_pages)) {
-            $result = dbquery("SELECT admin_title, admin_page, admin_rights, admin_link FROM ".DB_ADMIN." ORDER BY admin_page DESC, admin_id ASC, admin_title ASC");
+            $result = dbquery("SELECT admin_title, admin_page, admin_rights, admin_link FROM ".DB_ADMIN." WHERE admin_language='".LANGUAGE."' ORDER BY admin_page DESC, admin_id ASC, admin_title ASC");
             $rows = dbrows($result);
             if ($rows) {
                 while ($data = dbarray($result)) {
@@ -544,13 +544,7 @@ class Admins {
             if (!empty($admin_pages[$i]) && is_array($admin_pages[$i])) {
                 add_to_jquery('
                     $("[data-toggle=collapse]").click(function () {
-                        $(this).find(".adl-drop i").toggleClass("fa-angle-left fa-angle-down"); // for v4
-
-                        if ($(this).find(".adl-drop svg").attr("data-icon") == "angle-down") {
-                            $(this).find(".adl-drop svg").attr("data-icon", "angle-left");
-                        } else {
-                            $(this).find(".adl-drop svg").attr("data-icon", "angle-down");
-                        };
+                        $(this).find(".adl-drop i").toggleClass("fa-angle-left fa-angle-down");
                     });
                 ');
 

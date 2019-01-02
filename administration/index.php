@@ -239,7 +239,7 @@ if ($global_submissions['rows'] > 10) {
 // Icon Grid
 if (isset($_GET['pagenum']) && isnum($_GET['pagenum'])) {
 
-    $result = dbquery("SELECT * FROM ".DB_ADMIN." WHERE admin_page='".$_GET['pagenum']."' ORDER BY admin_title");
+    $result = dbquery("SELECT * FROM ".DB_ADMIN." WHERE admin_page='".$_GET['pagenum']."' AND admin_language='".LANGUAGE."' ORDER BY admin_title");
     $admin_icons['rows'] = dbrows($result);
     $admin_icons['data'] = [];
     if (dbrows($result)) {
