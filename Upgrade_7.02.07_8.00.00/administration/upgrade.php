@@ -692,7 +692,10 @@ if (str_replace(".", "", $settings['version']) < "80000") {
                     $result = dbquery("ALTER TABLE ".DB_PREFIX."user_field_cats ADD field_cat_class VARCHAR(50) NOT NULL AFTER field_cat_index");
                     $result = dbquery("ALTER TABLE ".DB_PREFIX."user_field_cats ADD field_cat_page SMALLINT(1) NOT NULL AFTER field_cat_class");
 
-                    //Set the new version
+					// Set a fail safe opening page
+					dbquery("UPDATE ".DB_SETTINGS." SET settings_value='news.php' WHERE settings_name='opening_page'");
+					
+                    // Set the new version
                     dbquery("UPDATE ".DB_SETTINGS." SET settings_value='8.00.00' WHERE settings_name='version'");
 
                     redirect(FUSION_SELF.$aidlink."&amp;upgrade_ok");
