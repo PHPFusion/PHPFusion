@@ -172,13 +172,13 @@ if (str_replace(".", "", $settings['version']) < "80000") {
                 If this procedure timeout or crash you need to manually disable the UTF-8 conversion script or if you can, raise the time of allowed PHP and SQL execution.<br /> 
                 You disable the UTF-8 char conversion function by opening /administration/upgrade.php, line 135 change disabled = FALSE to disabled = TRUE</p>\n";
                 $content .= "<div class='alert alert-warning'></i>We strongly recommend that you make a <a target='_blank' href='db_backup.php".$aidlink."'>Database Backup</a> before proceeding!</div>\n";
-                $disabled = FALSE; // true to disable.
-                $content .= "<input type='hidden' name='stage' value='".($disabled ? 5 : 4)."'>\n";
+                $disabled = false; // true to disable the auto UTF-8 conversion.
+                $content .= "<input type='hidden' name='stage' value='4'>\n";
                 $content .= "<input type='submit' name='upgrade_database' value='Upgrade Database' class='button btn btn-primary pull-right'><br /><br />\n";
                 $content .= "</div>\n";
-                if (!$disabled && isset($_POST['upgrade_database'])) {
+                if (isset($_POST['upgrade_database'])) {
 
-
+				if(!$disabled) {
                     // Force the database to UTF-8 because we'll convert to it
                     dbquery("SET NAMES 'utf8'");
                     // If you have a large database this might be hard to run.
@@ -344,6 +344,7 @@ if (str_replace(".", "", $settings['version']) < "80000") {
                             }
                         }
                     }
+				} // disabled
 
                     // Create guests language session tables
                     $result = dbquery("CREATE TABLE ".DB_PREFIX."language_sessions (
