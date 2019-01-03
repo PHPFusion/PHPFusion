@@ -15,42 +15,67 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 require_once CLASSES."PHPFusion/BreadCrumbs.inc";
 
 use PHPFusion\BreadCrumbs;
 
+/**
+ * Load any function
+ *
+ * @param $function
+ *
+ * @return mixed|string
+ */
+function fusion_get_function($function) {
+    $function_args = func_get_args();
+    if (count($function_args) > 1) {
+        unset($function_args[0]);
+    }
+    // Attempt to check if this function prints anything
+    ob_start();
+    $func = call_user_func_array($function, $function_args);
+    $content = ob_get_clean();
+    // If it does not print return the function results
+    if (empty($content)) {
+        return $func;
+    }
+    return $content;
+}
+
 // Render comments template
 if (!function_exists("render_comments")) {
-	function render_comments($c_data, $c_info) {
-		global $locale;
-		opentable($locale['c100']);
-		if (!empty($c_data)) {
-			echo "<div class='comments floatfix'>\n";
-			$c_makepagenav = '';
-			if ($c_info['c_makepagenav'] !== FALSE) {
-				echo $c_makepagenav = "<div style='text-align:center;margin-bottom:5px;'>".$c_info['c_makepagenav']."</div>\n";
-			}
-			foreach ($c_data as $data) {
-				echo "<div class='tbl2'>\n";
-				if ($data['edit_dell'] !== FALSE) {
-					echo "<div style='float:right' class='comment_actions'>".$data['edit_dell']."\n</div>\n";
-				}
-				echo "<a href='".PERMALINK_CURRENT_PATH."#c".$data['comment_id']."' id='c".$data['comment_id']."' name='c".$data['comment_id']."'>#".$data['i']."</a> |\n";
-				echo "<span class='comment-name'>".$data['comment_name']."</span>\n";
-				echo "<span class='small'>".$data['comment_datestamp']."</span>\n";
-				echo "</div>\n<div class='tbl1 comment_message'>".$data['comment_message']."</div>\n";
-			}
-			echo $c_makepagenav;
-			if ($c_info['admin_link'] !== FALSE) {
-				echo "<div style='float:right' class='comment_admin'>".$c_info['admin_link']."</div>\n";
-			}
-			echo "</div>\n";
-		} else {
-			echo $locale['c101']."\n";
-		}
-		closetable();
-	}
+    function render_comments($c_data, $c_info) {
+        global $locale;
+        opentable($locale['c100']);
+        if (!empty($c_data)) {
+            echo "<div class='comments floatfix'>\n";
+            $c_makepagenav = '';
+            if ($c_info['c_makepagenav'] !== FALSE) {
+                echo $c_makepagenav = "<div style='text-align:center;margin-bottom:5px;'>".$c_info['c_makepagenav']."</div>\n";
+            }
+            foreach ($c_data as $data) {
+                echo "<div class='tbl2'>\n";
+                if ($data['edit_dell'] !== FALSE) {
+                    echo "<div style='float:right' class='comment_actions'>".$data['edit_dell']."\n</div>\n";
+                }
+                echo "<a href='".PERMALINK_CURRENT_PATH."#c".$data['comment_id']."' id='c".$data['comment_id']."' name='c".$data['comment_id']."'>#".$data['i']."</a> |\n";
+                echo "<span class='comment-name'>".$data['comment_name']."</span>\n";
+                echo "<span class='small'>".$data['comment_datestamp']."</span>\n";
+                echo "</div>\n<div class='tbl1 comment_message'>".$data['comment_message']."</div>\n";
+            }
+            echo $c_makepagenav;
+            if ($c_info['admin_link'] !== FALSE) {
+                echo "<div style='float:right' class='comment_admin'>".$c_info['admin_link']."</div>\n";
+            }
+            echo "</div>\n";
+        } else {
+            echo $locale['c101']."\n";
+        }
+        closetable();
+    }
 }
 
 // Render breadcrumbs template
@@ -89,30 +114,30 @@ if (!function_exists('render_favicons')) {
 }
 
 if (!function_exists('render_blog')) {
-	function render_blog($subject, $blog, $info) {
-		echo "<table cellpadding='0' cellspacing='0' width='100%'>\n<tr>\n";
-		echo "<td class='capmain-left'></td>\n";
-		echo "<td class='capmain'>".$subject."</td>\n";
-		echo "<td class='capmain-right'></td>\n";
-		echo "</tr>\n</table>\n";
-		echo "<table width='100%' cellpadding='0' cellspacing='0' class='spacer'>\n<tr>\n";
-		echo "<td class='main-body middle-border'>".$info['cat_image'].$blog."</td>\n";
-		echo "</tr>\n<tr>\n";
-		echo "<td align='center' class='blog-footer middle-border'>\n";
-		echo blogposter($info," &middot;").blogcat($info," &middot;").blogopts($info,"&middot;").itemoptions("B",$info['blog_id']);
-		echo "</td>\n";
-		echo "</tr><tr>\n";
-		echo "<td style='height:5px;background-color:#f6a504;'></td>\n";
-		echo "</tr>\n</table>\n";
+    function render_blog($subject, $blog, $info) {
+        echo "<table cellpadding='0' cellspacing='0' width='100%'>\n<tr>\n";
+        echo "<td class='capmain-left'></td>\n";
+        echo "<td class='capmain'>".$subject."</td>\n";
+        echo "<td class='capmain-right'></td>\n";
+        echo "</tr>\n</table>\n";
+        echo "<table width='100%' cellpadding='0' cellspacing='0' class='spacer'>\n<tr>\n";
+        echo "<td class='main-body middle-border'>".$info['cat_image'].$blog."</td>\n";
+        echo "</tr>\n<tr>\n";
+        echo "<td align='center' class='blog-footer middle-border'>\n";
+        echo blogposter($info, " &middot;").blogcat($info, " &middot;").blogopts($info, "&middot;").itemoptions("B", $info['blog_id']);
+        echo "</td>\n";
+        echo "</tr><tr>\n";
+        echo "<td style='height:5px;background-color:#f6a504;'></td>\n";
+        echo "</tr>\n</table>\n";
 
-	}
+    }
 }
 
 if (!function_exists('render_user_tags')) {
     /**
      * The callback function for fusion_parse_user()
      *
-     * @param string $m The message
+     * @param string $m       The message
      * @param string $tooltip The tooltip string
      *
      * @return string
