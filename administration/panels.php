@@ -53,6 +53,8 @@ add_to_head("<script type='text/javascript'>
                 if (pdata === 2) { var psidetext = '".$locale['421']."'; }
                 if (pdata === 3) { var psidetext = '".$locale['425']."'; }
                 if (pdata === 4) { var psidetext = '".$locale['422']."'; }
+				if (pdata === 5) { var psidetext = '".$locale['426']."'; }
+				if (pdata === 6) { var psidetext = '".$locale['427']."'; }
             ul.find('.pside').each(function() {
                 $(this).text(psidetext);
             });
@@ -61,6 +63,45 @@ add_to_head("<script type='text/javascript'>
     });
     });
     </script>");
+	
+if (isset($_GET['action']) && $_GET['action'] == "refresh") {
+	$i = 1;
+	$result = dbquery("SELECT panel_id FROM ".DB_PANELS." WHERE panel_side='1' ORDER BY panel_order");
+	while ($data = dbarray($result)) {
+		$result2 = dbquery("UPDATE ".DB_PANELS." SET panel_order='$i' WHERE panel_id='".$data['panel_id']."'");
+		$i++;
+	}
+	$i = 1;
+	$result = dbquery("SELECT panel_id FROM ".DB_PANELS." WHERE panel_side='2' ORDER BY panel_order");
+	while ($data = dbarray($result)) {
+		$result2 = dbquery("UPDATE ".DB_PANELS." SET panel_order='$i' WHERE panel_id='".$data['panel_id']."'");
+		$i++;
+	}
+	$i = 1;
+	$result = dbquery("SELECT panel_id FROM ".DB_PANELS." WHERE panel_side='3' ORDER BY panel_order");
+	while ($data = dbarray($result)) {
+		$result2 = dbquery("UPDATE ".DB_PANELS." SET panel_order='$i' WHERE panel_id='".$data['panel_id']."'");
+		$i++;
+	}
+	$i = 1;
+	$result = dbquery("SELECT panel_id FROM ".DB_PANELS." WHERE panel_side='4' ORDER BY panel_order");
+	while ($data = dbarray($result)) {
+		$result2 = dbquery("UPDATE ".DB_PANELS." SET panel_order='$i' WHERE panel_id='".$data['panel_id']."'");
+		$i++;
+	}
+	$result = dbquery("SELECT panel_id FROM ".DB_PANELS." WHERE panel_side='5' ORDER BY panel_order");
+	while ($data = dbarray($result)) {
+		$result2 = dbquery("UPDATE ".DB_PANELS." SET panel_order='$i' WHERE panel_id='".$data['panel_id']."'");
+		$i++;
+	}
+	$result = dbquery("SELECT panel_id FROM ".DB_PANELS." WHERE panel_side='6' ORDER BY panel_order");
+	while ($data = dbarray($result)) {
+		$result2 = dbquery("UPDATE ".DB_PANELS." SET panel_order='$i' WHERE panel_id='".$data['panel_id']."'");
+		$i++;
+	}
+	echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$locale['488']."</div></div>\n";
+}
+	
 if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['panel_id']) && isnum($_GET['panel_id']))) {
     $data = dbarray(dbquery("SELECT panel_side, panel_order FROM ".DB_PANELS." WHERE panel_id='".$_GET['panel_id']."'"));
     $result = dbquery("DELETE FROM ".DB_PANELS." WHERE panel_id='".$_GET['panel_id']."'");
@@ -259,5 +300,10 @@ for ($i = 0; $i < count($panel_list); $i++) {
     $k++;
 }
 echo "<div style='margin:5px;'></div>\n";
+
 closetable();
+
+echo "<div style='text-align:center;margin-top:5px'>[ <a href='panel_editor.php".$aidlink."'>".$locale['438']."</a> ]\n";
+echo "[ <a href='".FUSION_SELF.$aidlink."&amp;action=refresh'>".$locale['439']."</a> ]</div>\n";
+
 require_once THEMES."templates/footer.php";

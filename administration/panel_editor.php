@@ -286,6 +286,17 @@ if (isset($_POST['save'])) {
         echo "<td colspan='2' class='tbl'><input type='password' name='admin_password' value='".(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "")."' class='textbox' style='width:150px;' autocomplete='off' /></td>\n";
         echo "</tr>\n";
     }
+	if (!isset($_GET['panel_id']) || !isnum($_GET['panel_id'])) {
+		echo "<tr>\n<td class='tbl'>".$locale['457']."</td>\n";
+		echo "<td class='tbl'><select name='panel_side' class='textbox' style='width:150px;' onchange=\"showopts(this.options[this.selectedIndex].value);\">\n";
+		echo "<option value='1'".($panel_side == "1" ? " selected='selected'" : "").">".$locale['420']."</option>\n";
+		echo "<option value='2'".($panel_side == "2" ? " selected='selected'" : "").">".$locale['421']."</option>\n";
+		echo "<option value='3'".($panel_side == "3" ? " selected='selected'" : "").">".$locale['425']."</option>\n";
+		echo "<option value='4'".($panel_side == "4" ? " selected='selected'" : "").">".$locale['422']."</option>\n";
+		echo "<option value='4'".($panel_side == "5" ? " selected='selected'" : "").">".$locale['426']."</option>\n";
+		echo "<option value='4'".($panel_side == "6" ? " selected='selected'" : "").">".$locale['427']."</option>\n";
+		echo "</select></td>\n</tr>\n";
+	}
     echo "<tr>\n<td class='tbl'>".$locale['458']."</td>\n";
     echo "<td colspan='2' class='tbl'><select name='panel_access' class='textbox' style='width:150px;'>\n".$access_opts."</select></td>\n";
     echo "</tr>\n";
@@ -322,5 +333,18 @@ if (isset($_POST['save'])) {
     echo "</tr>\n</table>\n</form>\n";
     closetable();
 }
+
+echo "<script type='text/javascript'>
+	function showopts(panelside) {
+		var panelopts = document.getElementById('panelopts');
+		var paneldisplay = document.getElementById('panel_display');
+		if (panelside == 1 || panelside == 4) {
+			panelopts.style.display = 'none';
+			paneldisplay.checked = false;
+		} else {
+			panelopts.style.display = 'block';
+		}
+	}
+</script>\n";
 
 require_once THEMES."templates/footer.php";
