@@ -695,9 +695,12 @@ if (str_replace(".", "", $settings['version']) < "80000") {
 					// Set a fail safe opening page
 					dbquery("UPDATE ".DB_SETTINGS." SET settings_value='news.php' WHERE settings_name='opening_page'");
 
-					// make sure all current panels are listed.
+					// Make sure all current panels are listed
 					dbquery("UPDATE ".DB_PANELS." SET panel_languages ='".$settings['locale']."'");
-				
+
+					// Make sure all current custom pages are listed
+					dbquery("UPDATE ".DB_CUSTOM_PAGES." SET page_language ='".$settings['locale']."'");
+					
                     // Set the new version
                     dbquery("UPDATE ".DB_SETTINGS." SET settings_value='8.00.00' WHERE settings_name='version'");
 
