@@ -383,24 +383,27 @@
                 If you upgrade from another language, make sure that you first translate the files in Upgrade_7.02.07_8.00.00/locale and replace the news ones in your v7 installation folders.<br/>
                 When that is completed, Go to System Admin > Upgrade and follow the instructions.
             </li>
-            <li><strong>Step 3</strong> &middot;
-                Once the database have been upgraded, copy all files and replace existing.
-            </li>
-            <li><strong>Step 4</strong> &middot;
-                Convert all your locales and addon files to UTF-8 without BOM.<br/>
-                Make sure that you also update your locales global.php and change charset from iso to utf8 ( $locale['charset'] = "utf8" ).<br/>
-                Notepad++ Can convert files if you do not find a good batch tool for this.
-            </li>
-            <li><strong>Step 5</strong> &middot;
-                If you do not run the site in English.<br/>
-                Synchronize you languages locale with the English set of locales before you start using the site to void errors.<br/>
-                You can simply open the English locale folder and compare to yours for missing files and changes.<br/>
-                We can recommend Notepad++ that have a compare files tool for example.<br/>
-                Open 1 English file and then your matching locale in window 2 press CTRL+ALT+C,repeat for each file.<br/>
-                We also have a compare tool available in the PHP-Fusion locales forums >
-                <a href='https://www.php-fusion.co.uk/infusions/forum/viewthread.php?thread_id=34432'>Compare Tool</a>.
-            </li>
         </ul>
+        <p>
+            <strong>Step 3</strong><br/>
+            Once the database have been upgraded, copy all files and replace existing.
+        </p>
+        <p>
+            <strong>Step 4</strong><br/>
+            Convert all your locales and addon files to UTF-8 without BOM.<br/>
+            Make sure that you also update your locales global.php and change charset from iso to utf8 ( $locale['charset'] = "utf8" ).<br/>
+            Notepad++ Can convert files if you do not find a good batch tool for this.
+        </p>
+        <p>
+            <strong>Step 5</strong><br/>
+            If you do not run the site in English.<br/>
+            Synchronize you languages locale with the English set of locales before you start using the site to void errors.<br/>
+            You can simply open the English locale folder and compare to yours for missing files and changes.<br/>
+            We can recommend Notepad++ that have a compare files tool for example.<br/>
+            Open 1 English file and then your matching locale in window 2 press CTRL+ALT+C,repeat for each file.<br/>
+            We also have a compare tool available in the PHP-Fusion locales forums >
+            <a href='https://www.php-fusion.co.uk/infusions/forum/viewthread.php?thread_id=34432'>Compare Tool</a>.
+        </p>
         <hr/>
         <p style="text-align: center;">Your site should now be fully upgraded and ready to run PHP-Fusion 8.</p>
         <hr/>
