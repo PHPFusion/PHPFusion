@@ -35,8 +35,8 @@ The latest repository contains all the previous commits done by all the core dev
 - 9.01 is beta 1
 - 9.02 is beta 2
 - Removed 9.1 branch
-- Protected 7.03 branch from branch removal
-- Submodules added to /infusions (Transition is in progress)
+- Protected 7.02.07 branch from branch removal
+- Submodules added to /infusions
 
 New Changes: About Submodules and Git Management of Core Infusions (CI)
 ===
@@ -101,10 +101,3 @@ The number prefix behind each branch naming will be determined at MT's discretio
 Infusions, Locale and Themes
 ---
 We will be adding codes to new repositories, in which only master branch shall apply. If you need versioning to the packages here, please do it on your own personal account and submit the master and latest version to these repository.
-
-
-
-
-
-
-  

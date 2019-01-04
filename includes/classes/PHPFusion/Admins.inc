@@ -546,13 +546,7 @@ class Admins {
             if (!empty($admin_pages[$i]) && is_array($admin_pages[$i])) {
                 add_to_jquery('
                     $("[data-toggle=collapse]").click(function () {
-                        $(this).find(".adl-drop i").toggleClass("fa-angle-left fa-angle-down"); // for v4
-
-                        if ($(this).find(".adl-drop svg").attr("data-icon") == "angle-down") {
-                            $(this).find(".adl-drop svg").attr("data-icon", "angle-left");
-                        } else {
-                            $(this).find(".adl-drop svg").attr("data-icon", "angle-down");
-                        };
+                        $(this).find(".adl-drop i").toggleClass("fa-angle-left fa-angle-down");
                     });
                 ');
 
