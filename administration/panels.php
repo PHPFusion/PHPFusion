@@ -170,10 +170,6 @@ function display_header($side) {
     return $panel_header;
 }
 
-function display_footer() {
-    echo "</div>\n";
-}
-
 function show_panels() {
     global $locale, $aidlink, $data, $k;
     $row_color = ($k % 2 == 0 ? "tbl1" : "tbl2");
@@ -299,11 +295,10 @@ for ($i = 0; $i < count($panel_list); $i++) {
     echo "<div style='clear:both;'></div>\n";
     $k++;
 }
-echo "<div style='margin:5px;'></div>\n";
-
+echo "</div>\n";
 closetable();
 
-echo "<div style='text-align:center;margin-top:5px'>[ <a href='panel_editor.php".$aidlink."'>".$locale['438']."</a> ]\n";
+echo "<div style='text-align:center;padding:15px'>[ <a href='panel_editor.php".$aidlink."'>".$locale['438']."</a> ]\n";
 echo "[ <a href='".FUSION_SELF.$aidlink."&amp;action=refresh'>".$locale['439']."</a> ]</div>\n";
 
 require_once THEMES."templates/footer.php";
