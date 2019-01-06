@@ -557,6 +557,12 @@ class WeblinksAdmin extends WeblinksAdminModel {
                 </tbody>
             </table>
         </div>
+
+        <?php if ($max_rows > $weblink_rows) : ?>
+            <div class="display-inline-block">
+                <?php echo makepagenav($rowstart, $limit, $max_rows, 3, FUSION_SELF.fusion_get_aidlink()."&weblink_display=$limit&amp;") ?>
+            </div>
+        <?php endif; ?>
         <?php
         closeform();
 
