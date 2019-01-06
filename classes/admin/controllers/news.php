@@ -237,6 +237,7 @@ class NewsAdmin extends NewsAdminModel {
             'file_filter' => explode(',', $news_settings['news_file_types']),
         ];
         $extendedSettings = [
+            'required'    => $news_settings['news_extended_required'] ? TRUE : FALSE,
             'rows'        => '20',
             'placeholder' => '',
             'file_filter' => explode(',', $news_settings['news_file_types']),
@@ -255,6 +256,7 @@ class NewsAdmin extends NewsAdminModel {
             ];
 
             $extendedSettings = [
+                'required'    => $news_settings['news_extended_required'] ? TRUE : FALSE,
                 'preview'     => TRUE,
                 'type'        => 'tinymce',
                 'tinymce'     => 'advanced',

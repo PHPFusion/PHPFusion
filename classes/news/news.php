@@ -283,21 +283,25 @@ abstract class News extends NewsServer {
         $imageOptimized = IMAGES_N."news_default.jpg";
         $imageRaw = '';
 
-        if (!empty($data['news_cat_image'])) {
-            $imageOptimized = get_image("nc_".$data['news_cat_name']);
-            $imageRaw = $imageOptimized;
-        }
-
-        if (!self::get_news_settings('news_image_frontpage')) {
-            if ($data['news_image'] && file_exists(IMAGES_N.$data['news_image'])) {
-                $imageOptimized = IMAGES_N.$data['news_image'];
+        if (self::get_news_settings('news_image_frontpage')) {
+            if ($data['news_cat_image']) {
+                $imageOptimized = get_image("nc_".$data['news_cat_name']);
                 $imageRaw = $imageOptimized;
             }
-            if (!empty($data['news_image_t2']) && file_exists(IMAGES_N_T.$data['news_image_t2'])) {
-                $imageOptimized = IMAGES_N_T.$data['news_image_t2'];
-            }
-            if (!empty($data['news_image_t1']) && file_exists(IMAGES_N_T.$data['news_image_t1'])) {
-                $imageOptimized = IMAGES_N_T.$data['news_image_t1'];
+        } else {
+            if ($data['news_image'] || $data['news_cat_image']) {
+                if (!empty($data['news_image_t1']) && file_exists(IMAGES_N_T.$data['news_image_t1'])) {
+                    $imageOptimized = IMAGES_N_T.$data['news_image_t1'];
+                } else if (!empty($data['news_image_t2']) && file_exists(IMAGES_N_T.$data['news_image_t2'])) {
+                    $imageOptimized = IMAGES_N_T.$data['news_image_t2'];
+                } else if ($data['news_image'] && file_exists(IMAGES_N.$data['news_image'])) {
+                    $imageOptimized = IMAGES_N.$data['news_image'];
+                    $imageRaw = $imageOptimized;
+                } else {
+                    $imageRaw = get_image('imagenotfound');
+                }
+            } else {
+                $imageRaw = get_image('imagenotfound');
             }
         }
 

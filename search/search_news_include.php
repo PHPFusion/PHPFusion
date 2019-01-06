@@ -25,7 +25,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-if (infusion_exists('news')) {
+if (defined('NEWS_EXIST')) {
 
     if (Search_Engine::get_param('stype') == 'news' || Search_Engine::get_param('stype') == 'all') {
         $formatted_result = '';
