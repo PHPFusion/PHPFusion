@@ -41,7 +41,6 @@ if (!defined('DB_FAQ_CATS')) {
 }
 
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("FQ", "<i class='admin-ico fa fa-fw fa-life-buoy'></i>");
-\PHPFusion\Admins::getInstance()->setCommentType("FQ", fusion_get_locale("FQ", LOCALE.LOCALESET."admin/main.php"));
 
 $inf_settings = get_settings('faq');
 if ($inf_settings['faq_allow_submission']) {
