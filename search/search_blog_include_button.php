@@ -21,7 +21,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-if (db_exists(DB_BLOG)) {
+if (defined('BLOG_EXIST')) {
     $form_elements = &$form_elements;
     $radio_button = &$radio_button;
     $form_elements += [

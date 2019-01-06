@@ -24,7 +24,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-if (db_exists(DB_BLOG)) {
+if (defined('BLOG_EXIST')) {
     $locale = fusion_get_locale('', INFUSIONS."blog/locale/".LOCALESET."search/blog.php");
     $formatted_result = '';
     $item_count = "0 ".$locale['b402']." ".$locale['522']."<br />\n";
