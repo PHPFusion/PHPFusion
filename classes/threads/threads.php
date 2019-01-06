@@ -1214,15 +1214,19 @@ class ForumThreads extends ForumServer {
                     $e_user = fusion_get_user($pdata['post_edituser']);
                     $edit_user = [];
 
-                    if ($e_user) {
+                    $edit_reason = "<div class='edit_reason small'>".$locale['forum_0164']." ";
+                    if (!empty($e_user)) {
                         $edit_user = [
                             'edit_userid'     => $e_user['user_id'],
                             'edit_username'   => $e_user['user_name'],
                             'edit_userstatus' => $e_user['user_status'],
                         ];
                         $pdata += $edit_user;
+                        $edit_reason .= profile_link($edit_user['edit_userid'], $edit_user['edit_username'], $edit_user['edit_userstatus']);
+                    } else {
+                        $edit_reason .= $locale['user_na'];
                     }
-                    $edit_reason = "<div class='edit_reason small'>".$locale['forum_0164']." ".profile_link($edit_user['edit_userid'], $edit_user['edit_username'], $edit_user['edit_userstatus'])." ".$locale['forum_0167']." ".showdate("forumdate", $pdata['post_edittime']).", ".timer($pdata['post_edittime']);
+                    $edit_reason .=" ".$locale['forum_0167']." ".showdate("forumdate", $pdata['post_edittime']).", ".timer($pdata['post_edittime']);
                     if ($pdata['post_editreason'] && iMEMBER) {
                         $edit_reason .= " - <a id='reason_pid_".$pdata['post_id']."' rel='".$pdata['post_id']."' class='reason_button pointer' data-target='reason_div_pid_".$pdata['post_id']."'>";
                         $edit_reason .= "<strong>".$locale['forum_0165']."</strong>";

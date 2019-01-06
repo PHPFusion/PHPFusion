@@ -23,7 +23,7 @@ use PHPFusion\Search;
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
-if (db_exists(DB_FORUMS)) {
+if (defined('FORUM_EXIST')) {
 
     if (Search_Engine::get_param('stype') == 'forums' || Search_Engine::get_param('stype') == 'all') {
 
