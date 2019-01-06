@@ -66,7 +66,7 @@ if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_status='1' AND ".g
             ];
 
             // Save
-            if (defender::safe() && isset($_POST['submit_article'])) {
+            if (\defender::safe() && isset($_POST['submit_article'])) {
                 $inputArray = [
                     'submit_type'      => "a",
                     'submit_user'      => fusion_get_userdata('user_id'),
@@ -79,7 +79,7 @@ if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_status='1' AND ".g
             }
 
             // Display
-            if (defender::safe() && isset($_POST['preview_article'])) {
+            if (\defender::safe() && isset($_POST['preview_article'])) {
                 $footer = openmodal("article_preview", "<i class='fa fa-eye fa-lg m-r-10'></i> ".$locale['preview'].": ".$criteriaArray['article_subject']);
                 $footer .= nl2br(parse_textarea($article_snippet));
                 if ($criteriaArray['article_article']) {
@@ -103,7 +103,7 @@ if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_status='1' AND ".g
 
             // Display Preview and Form
         } else {
-            echo '<div class="alert alert-info m-b-20 submission-guidelines">';
+            echo '<div class="well spacer-xs">';
             echo '<p>'.str_replace("[SITENAME]", fusion_get_settings("sitename"), $locale['article_0920']).'</p>';
             echo '</div>';
 
@@ -192,8 +192,8 @@ if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_status='1' AND ".g
             }
 
             echo "<div class='m-t-20'>";
-            echo form_button('submit_article', $locale['article_0900'], $locale['article_0900'], ['class' => 'btn-success m-r-10', 'icon' => 'fa fa-fw fa-hdd-o']);
-            echo form_button('preview_article', $locale['preview'], $locale['preview'], ['class' => 'btn-primary m-r-10', 'icon' => 'fa fa-fw fa-eye']);
+            echo form_button('submit_article', $locale['article_0900'], $locale['article_0900'], ['class' => 'btn-success m-r-10', 'icon' => 'fa fa-hdd-o']);
+            echo form_button('preview_article', $locale['preview'], $locale['preview'], ['class' => 'btn-primary', 'icon' => 'fa fa-eye']);
             echo "</div>";
 
             echo closeform();

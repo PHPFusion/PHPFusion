@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/../../maincore.php';
 
-if (!infusion_exists('articles')) {
+if (!defined('ARTICLES_EXIST')) {
     redirect(BASEDIR."error.php?code=404");
 }
 

@@ -24,7 +24,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-if (db_exists(DB_ARTICLES)) {
+if (defined('ARTICLES_EXIST')) {
 
     if (Search_Engine::get_param('stype') == 'articles' || Search_Engine::get_param('stype') == 'all') {
 
