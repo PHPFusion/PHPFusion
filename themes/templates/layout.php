@@ -45,7 +45,7 @@ if ($settings['bootstrap'] || defined('BOOTSTRAP')) {
 
 // Global CSS, Resets etc.
 if (!defined('NO_GLOBAL_CSS')) {
-	echo "<link rel='stylesheet' href='".THEMES."templates/global.css' type='text/css' media='screen' />\n";
+    echo "<link rel='stylesheet' href='".THEMES."templates/global.css' type='text/css' media='screen' />\n";
 }
 
 if (!defined('NO_DEFAULT_CSS')) {
@@ -53,7 +53,7 @@ if (!defined('NO_DEFAULT_CSS')) {
 }
 
 if ($settings['entypo'] || defined('ENTYPO')) {
-	echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo.css' type='text/css' />\n";
+    echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo.css' type='text/css' />\n";
 }
 
 // Font Awesome 4
@@ -116,9 +116,8 @@ $fusion_jquery_tags = "$('[data-submenu]').submenupicker();";
 // Fix select2 on modal - http://stackoverflow.com/questions/13649459/twitter-bootstrap-multiple-modal-error/15856139#15856139
 $fusion_jquery_tags .= "$.fn.modal.Constructor.prototype.enforceFocus = function () {};";
 
-// Output lines added with add_to_jquery()
 if (!empty($fusion_jquery_tags)) {
-    push_jquery();
+    echo "<script type='text/javascript'>$(function(){".$fusion_jquery_tags."});</script>\n";
 }
 
 // Uncomment to guide your theme development

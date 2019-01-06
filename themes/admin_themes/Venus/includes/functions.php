@@ -410,6 +410,11 @@ function admin_nav($style = FALSE) {
 
     if (!$style) {
         // horizontal navigation with dropdown menu.
+        add_to_jquery('
+            $("[data-toggle=collapse]").click(function () {
+                $(this).find(".adl-drop .entypo").toggleClass("chevron-left chevron-down");
+            });
+        ');
 
         $html = "<ul class='admin-horizontal-link'>\n";
         for ($i = 0; $i < 6; $i++) {
@@ -428,12 +433,6 @@ function admin_nav($style = FALSE) {
             if ($i == 0) {
                 $html .= "<a class='adl-link' href='".ADMIN."index.php".$aidlink."&amp;pagenum=0'><i class='".$admin_icon[$i]."'></i> ".$locale['ac0'.$i]." ".($i > 0 ? "<span class='adl-drop pull-right'></span>" : '')."</a>\n";
             } else {
-                add_to_jquery('
-                    $("[data-toggle=collapse]").click(function () {
-                        $(this).find(".adl-drop .entypo").toggleClass("chevron-left chevron-down");
-                    });
-                ');
-
                 $html .= "<a class='adl-link ".($active ? '' : 'collapsed')."' data-parent='#adl' data-toggle='collapse' href='#adl-$i'><i class='".$admin_icon[$i]."'></i> ".$locale['ac0'.$i]." ".($i > 0 ? "<span class='adl-drop pull-right'><i class='entypo chevron-".($active ? "left" : "down")."'></i></span>" : '')."</a>\n";
                 $html .= "<div id='adl-$i' class='collapse ".($active ? 'in' : '')."'>\n";
                 if (dbrows($result) > 0) {
@@ -528,7 +527,7 @@ function render_admin_login() {
     echo "</div>\n";
     echo "</div>\n";
     closeside();
-    echo "<input type='submit' class='btn-primary btn-block' value='".$locale['login']."' name='admin_login' />";
+    echo "<input type='submit' class='btn btn-primary btn-block' value='".$locale['login']."' name='admin_login' />";
 
     echo "</form></div>\n</div>\n"; // .col-*, .row
     echo "</div>\n"; // .block-content

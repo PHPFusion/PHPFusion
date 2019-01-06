@@ -168,8 +168,8 @@ if (str_replace(".", "", $settings['version']) < "80000") {
                 }
             case 4:
                 $content .= "<div class='panel panel-default display-inline-block' style='margin-top:10px; padding: 8px; text-align:left;'>\n";
-                $content .= "<p class='p-15'>Several changes will be made to the database. <br /> 
-                If this procedure timeout or crash you need to manually disable the UTF-8 conversion script or if you can, raise the time of allowed PHP and SQL execution.<br /> 
+                $content .= "<p class='p-15'>Several changes will be made to the database. <br />
+                If this procedure timeout or crash you need to manually disable the UTF-8 conversion script or if you can, raise the time of allowed PHP and SQL execution.<br />
                 You disable the UTF-8 char conversion function by opening /administration/upgrade.php, line 135 change disabled = FALSE to disabled = TRUE</p>\n";
                 $content .= "<div class='alert alert-warning'></i>We strongly recommend that you make a <a target='_blank' href='db_backup.php".$aidlink."'>Database Backup</a> before proceeding!</div>\n";
                 $disabled = false; // true to disable the auto UTF-8 conversion.
@@ -350,7 +350,7 @@ if (str_replace(".", "", $settings['version']) < "80000") {
                     $result = dbquery("CREATE TABLE ".DB_PREFIX."language_sessions (
                 user_ip VARCHAR(20) NOT NULL DEFAULT '0.0.0.0',
                 user_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."',
-                user_datestamp INT(10) NOT NULL default '0'   
+                user_datestamp INT(10) NOT NULL default '0'
                 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci;");
 
                     // Add language tables to infusions and main content
@@ -521,7 +521,7 @@ if (str_replace(".", "", $settings['version']) < "80000") {
                     template_subject TEXT NOT NULL,
                     template_content TEXT NOT NULL,
                     template_sender_name VARCHAR(30) NOT NULL,
-                    template_sender_email VARCHAR(100) NOT NULL,			
+                    template_sender_email VARCHAR(100) NOT NULL,
                     template_language VARCHAR(50) NOT NULL,
                     PRIMARY KEY (template_id)
                 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
@@ -698,7 +698,7 @@ if (str_replace(".", "", $settings['version']) < "80000") {
 
 					// Make sure all current custom pages are listed
 					dbquery("UPDATE ".DB_CUSTOM_PAGES." SET page_language ='".$settings['locale']."'");
-					
+
                     // Set the new version
                     dbquery("UPDATE ".DB_SETTINGS." SET settings_value='8.00.00' WHERE settings_name='version'");
 

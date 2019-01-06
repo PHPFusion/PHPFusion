@@ -129,6 +129,3 @@ if (isset($_POST['gateway_answer'])) {
         }
     }
 }
-
-
-print_p($_SESSION);

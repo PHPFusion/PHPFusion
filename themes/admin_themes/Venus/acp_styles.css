@@ -14,21 +14,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-html, body {
-    background: rgb(215, 220, 224);
-    background: -moz-radial-gradient(center, ellipse cover, rgba(215, 220, 224, 1) 0%, rgba(111, 129, 143, 1) 100%);
-    background: -webkit-gradient(radial, center center, 0, center center, 100%, color-stop(0%, rgba(215, 220, 224, 1)), color-stop(100%, rgba(111, 129, 143, 1)));
-    background: -webkit-radial-gradient(center, ellipse cover, rgba(215, 220, 224, 1) 0%, rgba(111, 129, 143, 1) 100%);
-    background: -o-radial-gradient(center, ellipse cover, rgba(215, 220, 224, 1) 0%, rgba(111, 129, 143, 1) 100%);
-    background: -ms-radial-gradient(center, ellipse cover, rgba(215, 220, 224, 1) 0%, rgba(111, 129, 143, 1) 100%);
-    background: -webkit-radial-gradient(center ellipse, rgba(215, 220, 224, 1) 0%, rgba(111, 129, 143, 1) 100%);
-    background: -o-radial-gradient(center ellipse, rgba(215, 220, 224, 1) 0%, rgba(111, 129, 143, 1) 100%);
-    background: -webkit-radial-gradient(center, ellipse, rgba(215, 220, 224, 1) 0%, rgba(111, 129, 143, 1) 100%);
-    background: -moz-radial-gradient(center, ellipse, rgba(215, 220, 224, 1) 0%, rgba(111, 129, 143, 1) 100%);
-    background: -o-radial-gradient(center, ellipse, rgba(215, 220, 224, 1) 0%, rgba(111, 129, 143, 1) 100%);
-    background: radial-gradient(ellipse at center, rgba(215, 220, 224, 1) 0%, rgba(111, 129, 143, 1) 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#d7dce0', endColorstr='#6f818f', GradientType=1);
-    background-position: 0 -80%;
+body {
     min-height: 100%;
     overflow-x: hidden;
     height: 100vh;
@@ -36,10 +22,9 @@ html, body {
     padding: 0;
     border: 0 none;
     outline: 0 none;
-    font-size: 100%;
     vertical-align: baseline;
     z-index: 1;
-    font: 15px/18px 'Helvetica Neue', Arial !important;
+    font: 15px/18px 'Helvetica Neue', Arial;
 }
 
 /* Globals */
@@ -164,7 +149,7 @@ html, body {
         padding: 11px;
         overflow: hidden;
         border-right: 1px solid rgb(170, 183, 205);
-        height: 56px;
+        height: 55px;
     }
 
     .brand-text {
@@ -203,7 +188,7 @@ html, body {
     width: 100%;
     z-index: 3001;
     top: 0px;
-    position: absolute;
+    position: fixed;
 }
 
 #acp-left {
@@ -213,8 +198,8 @@ html, body {
     transition: left 0.20s ease-in;
     border-right: 1px solid rgb(170, 183, 205);
     z-index: 3000;
-    min-height: 1124px;
-    width: 251px;
+    width: 250px !important;
+    height: 100vh;
 }
 
 #acp-left.affix {
@@ -521,4 +506,90 @@ footer {
     -moz-transform: rotate(-45deg);
     -o-transform: rotate(-45deg);
     transform: rotate(-45deg);
+}
+
+.textbox {
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    margin: 2px 0;
+}
+
+.textbox:focus {
+    border-color: #66afe9;
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
+}
+
+textarea.textbox {
+    height: auto;
+}
+
+.button {
+    display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.button,
+.btn-primary {
+    color: #fff;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    background-color: #006dcc;
+    *background-color: #04c;
+    background-image: -moz-linear-gradient(top, #08c, #04c);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#08c), to(#04c));
+    background-image: -webkit-linear-gradient(top, #08c, #04c);
+    background-image: -o-linear-gradient(top, #08c, #04c);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#08c), to(#04c));
+    background-image: linear-gradient(to bottom, #08c, #04c);
+    background-repeat: repeat-x;
+    border-color: #04c #04c #002a80;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+}
+
+.button,
+.btn-primary:hover,
+.button,
+.btn-primary:focus,
+.button,
+.btn-primary:active,
+.button,
+.btn-primary.active,
+.button,
+.btn-primary.disabled,
+.button,
+.btn-primary[disabled] {
+    color: #fff;
+    background-color: #04c;
+    *background-color: #003bb3;
 }

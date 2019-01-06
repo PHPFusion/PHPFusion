@@ -30,7 +30,7 @@ add_to_footer("<script src='".THEMES."admin_themes/Venus/includes/jquery.slimscr
 add_to_footer("<script src='".INCLUDES."jquery/jquery.cookie.js'></script>");
 
 add_to_jquery("
-$('#adl').slimScroll({height: null});
+$('#acp-left').slimScroll({height: null});
 $('#toggle-canvas').bind('click', function(e) {
     $('#acp-left').toggleClass('in');
     setTimeout(function() {
@@ -67,7 +67,7 @@ echo "<li class='dropdown'><a class='dropdown-toggle' data-toggle='dropdown'>".$
 echo "<ul class='dropdown-menu' role='menu'>\n";
 echo "<li style='width:100%;'><a class='display-block' style='width:100%' href='".BASEDIR."edit_profile.php'>".$locale['edit']." ".$locale['profile']."</a></li>\n";
 echo "<li style='width:100%;'><a class='display-block' style='width:100%' href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'>".$locale['view']." ".$locale['profile']."</a></li>\n";
-echo "<li class='divider' class='display-block' style='width:100%'>\n</li>\n";
+echo "<li class='divider display-block' style='width:100%'>\n</li>\n";
 echo "<li><a class='display-block' href='".FUSION_SELF."?admin_logout'>".$locale['admin-logout']."</a></li>\n";
 echo "<li style='width:100%;'><a class='display-block' style='width:100%' href='".BASEDIR."index.php?logout=yes'>".$locale['logout']."</a></li>\n";
 echo "</ul>\n";

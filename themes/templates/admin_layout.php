@@ -38,7 +38,7 @@ if ($settings['bootstrap'] || defined('BOOTSTRAP')) {
 
 // Global CSS, Resets etc.
 if (!defined('NO_GLOBAL_CSS')) {
-	echo "<link rel='stylesheet' href='".THEMES."templates/global.css' type='text/css' media='screen' />\n";
+    echo "<link rel='stylesheet' href='".THEMES."templates/global.css' type='text/css' media='screen' />\n";
 }
 
 // Default CSS styling which applies to all themes but can be overriden
@@ -47,13 +47,13 @@ if (!defined('NO_DEFAULT_CSS')) {
 }
 
 // Site Theme CSS
-if (!defined('NO_THEME_CSS')) {
-	echo "<link rel='stylesheet' href='".THEME."styles.css' type='text/css' media='screen' />\n";
-}
+/*if (!defined('NO_THEME_CSS')) {
+    echo "<link rel='stylesheet' href='".THEME."styles.css' type='text/css' media='screen' />\n";
+}*/
 
 // Entypo
 if ($settings['entypo'] || defined('ENTYPO')) {
-	echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo.css' type='text/css' />\n";
+    echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo.css' type='text/css' />\n";
 }
 
 // Font Awesome 4
@@ -86,99 +86,99 @@ echo "<script type='text/javascript' src='".INCLUDES."jscripts/jscript.js'></scr
 
 if ($settings['tinymce_enabled'] == 1) {
 
-	echo "<style type='text/css'>.mceIframeContainer iframe{width:100%!important;background-color: #00000;}</style>\n";
-	echo "<script language='javascript' type='text/javascript' src='".INCLUDES."jscripts/tiny_mce/tinymce.min.js'></script>\n
-	<script type='text/javascript'>
-	
-	function advanced() {
-		tinymce.init({
-			selector: 'textarea',
-			resize: 'both',
-			height: 300,
-			theme: 'modern',
-			branding: false,
-			language:'".$locale['tinymce']."',
-			plugins: [
-				'advlist autolink lists link image charmap print preview hr anchor pagebreak',
-				'searchreplace wordcount visualblocks visualchars code fullscreen',
-				'insertdatetime media nonbreaking save table contextmenu directionality',
-				'emoticons template paste textcolor colorpicker textpattern imagetools codesample toc help importcss'
-			],
-			toolbar1: 'undo redo | styleselect formatselect fontselect fontsizeselect removeformat',
-			toolbar2: 'cut copy paste | bold underline italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent',
-			toolbar3: 'link unlink anchor | hr | image media | forecolor backcolor charmap emoticons | codesample | code | preview fullpage | fullscreen',
-			menubar: 'edit insert view format table',
-			file_browser_callback: RoxyFileBrowser,
-			image_advtab: true,
-			relative_urls : false,
-			remove_script_host : false,
-			document_base_url : '".$settings['siteurl']."',
-			content_css: [
-				'".(file_exists(THEME."editor.css") ?
-					$settings['siteurl']."themes/".$settings['theme']."/editor.css":
-					$settings['siteurl']."themes/".$settings['theme']."/styles.css"
-				   )."',
-			],
-			content_style: 'body.mceDefBody {background:#".(IsSet($settings['tinymce_bgcolor']) ? $settings['tinymce_bgcolor'] : "FFFFFF").";}',
-			body_class: 'mceDefBody'
-		});
-	}
+    echo "<style type='text/css'>.mceIframeContainer iframe{width:100%!important;background-color: #00000;}</style>\n";
+    echo "<script language='javascript' type='text/javascript' src='".INCLUDES."jscripts/tiny_mce/tinymce.min.js'></script>\n
+    <script type='text/javascript'>
 
-	function simple() {
-		tinymce.init({
-			selector: 'textarea',
-			height: 200,
-			menubar: false,
-			branding: false,
-			plugins: [
-				'advlist autolink lists link image charmap print preview anchor',
-				'searchreplace visualblocks code fullscreen',
-				'insertdatetime media table contextmenu paste code'
-			],
-			toolbar: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
-			content_css: [
-				'".(file_exists(THEME."editor.css") ?
-					$settings['siteurl']."themes/".$settings['theme']."/editor.css":
-					$settings['siteurl']."themes/".$settings['theme']."/styles.css"
-				   )."',
-			],
-			content_style: 'body.mceDefBody {background:#".(IsSet($settings['tinymce_bgcolor']) ? $settings['tinymce_bgcolor'] : "FFFFFF").";}',
-			body_class: 'mceDefBody'
-		});
-	}
+    function advanced() {
+        tinymce.init({
+            selector: 'textarea',
+            resize: 'both',
+            height: 300,
+            theme: 'modern',
+            branding: false,
+            language:'".$locale['tinymce']."',
+            plugins: [
+                'advlist autolink lists link image charmap print preview hr anchor pagebreak',
+                'searchreplace wordcount visualblocks visualchars code fullscreen',
+                'insertdatetime media nonbreaking save table contextmenu directionality',
+                'emoticons template paste textcolor colorpicker textpattern imagetools codesample toc help importcss'
+            ],
+            toolbar1: 'undo redo | styleselect formatselect fontselect fontsizeselect removeformat',
+            toolbar2: 'cut copy paste | bold underline italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent',
+            toolbar3: 'link unlink anchor | hr | image media | forecolor backcolor charmap emoticons | codesample | code | preview fullpage | fullscreen',
+            menubar: 'edit insert view format table',
+            file_browser_callback: RoxyFileBrowser,
+            image_advtab: true,
+            relative_urls : false,
+            remove_script_host : false,
+            document_base_url : '".$settings['siteurl']."',
+            content_css: [
+                '".(file_exists(THEME."editor.css") ?
+            $settings['siteurl']."themes/".$settings['theme']."/editor.css" :
+            $settings['siteurl']."themes/".$settings['theme']."/styles.css"
+        )."',
+            ],
+            content_style: 'body.mceDefBody {background:#".(IsSet($settings['tinymce_bgcolor']) ? $settings['tinymce_bgcolor'] : "FFFFFF").";}',
+            body_class: 'mceDefBody'
+        });
+    }
 
-	function toggleEditor(id) {
-		if (!tinyMCE.get(id))
-			tinyMCE.execCommand('mceAddControl', false, id);
-		else
-			tinyMCE.execCommand('mceRemoveControl', false, id);
-	}
+    function simple() {
+        tinymce.init({
+            selector: 'textarea',
+            height: 200,
+            menubar: false,
+            branding: false,
+            plugins: [
+                'advlist autolink lists link image charmap print preview anchor',
+                'searchreplace visualblocks code fullscreen',
+                'insertdatetime media table contextmenu paste code'
+            ],
+            toolbar: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+            content_css: [
+                '".(file_exists(THEME."editor.css") ?
+            $settings['siteurl']."themes/".$settings['theme']."/editor.css" :
+            $settings['siteurl']."themes/".$settings['theme']."/styles.css"
+        )."',
+            ],
+            content_style: 'body.mceDefBody {background:#".(IsSet($settings['tinymce_bgcolor']) ? $settings['tinymce_bgcolor'] : "FFFFFF").";}',
+            body_class: 'mceDefBody'
+        });
+    }
 
-	function RoxyFileBrowser(field_name, url, type, win) {
-	  var roxyFileman = '".INCLUDES."filemanager_mce/index.php';
-	  if (roxyFileman.indexOf(\"?\") < 0) {     
-		roxyFileman += \"?type=\" + type;   
-	  }
-	  else {
-		roxyFileman += \"&type=\" + type;
-	  }
-	  roxyFileman += '&input=' + field_name + '&value=' + win.document.getElementById(field_name).value;
-	  if(tinyMCE.activeEditor.settings.language){
-		roxyFileman += '&langCode=' + tinyMCE.activeEditor.settings.language;
-	  }
-	  tinyMCE.activeEditor.windowManager.open({
-		 file: roxyFileman,
-		 title: 'File Manager',
-		 width: 850, 
-		 height: 550,
-		 resizable: \"yes\",
-		 plugins: \"media\",
-		 inline: \"yes\",
-		 close_previous: \"no\"  
-	  }, {     window: win,     input: field_name    });
-	  return false; 
-	}
-	</script>\n";
+    function toggleEditor(id) {
+        if (!tinyMCE.get(id))
+            tinyMCE.execCommand('mceAddControl', false, id);
+        else
+            tinyMCE.execCommand('mceRemoveControl', false, id);
+    }
+
+    function RoxyFileBrowser(field_name, url, type, win) {
+      var roxyFileman = '".INCLUDES."filemanager_mce/index.php';
+      if (roxyFileman.indexOf(\"?\") < 0) {
+        roxyFileman += \"?type=\" + type;
+      }
+      else {
+        roxyFileman += \"&type=\" + type;
+      }
+      roxyFileman += '&input=' + field_name + '&value=' + win.document.getElementById(field_name).value;
+      if(tinyMCE.activeEditor.settings.language){
+        roxyFileman += '&langCode=' + tinyMCE.activeEditor.settings.language;
+      }
+      tinyMCE.activeEditor.windowManager.open({
+         file: roxyFileman,
+         title: 'File Manager',
+         width: 850,
+         height: 550,
+         resizable: \"yes\",
+         plugins: \"media\",
+         inline: \"yes\",
+         close_previous: \"no\"
+      }, {     window: win,     input: field_name    });
+      return false;
+    }
+    </script>\n";
 }
 echo "</head>";
 
@@ -196,7 +196,7 @@ if (!defined("THEME_BODY")) {
 
 // Check login, skip infusions.
 if (!check_admin_pass('') && !stristr($_SERVER['PHP_SELF'], $settings['site_path']."infusions")) {
-		if (empty($userdata['user_admin_password'])) {
+    if (empty($userdata['user_admin_password'])) {
         redirect(BASEDIR."edit_profile.php");
     } else {
         render_admin_login();
@@ -217,8 +217,11 @@ echo "<script type='text/javascript' src='".INCLUDES."jquery/holder/holder.min.j
 echo $fusion_page_footer_tags;
 
 // Output lines added with add_to_jquery()
+// Fix select2 on modal - http://stackoverflow.com/questions/13649459/twitter-bootstrap-multiple-modal-error/15856139#15856139
+$fusion_jquery_tags .= "$.fn.modal.Constructor.prototype.enforceFocus = function () {};";
+
 if (!empty($fusion_jquery_tags)) {
-	echo push_jquery(); // output jquery.
+    echo "<script type='text/javascript'>$(function(){".$fusion_jquery_tags."});</script>\n";
 }
 
 // Uncomment to guide your theme development

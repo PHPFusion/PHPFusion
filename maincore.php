@@ -278,6 +278,10 @@ if (!isset($_COOKIE[COOKIE_PREFIX.'visited'])) {
 }
 $lastvisited = Authenticate::setLastVisitCookie();
 
+require_once CLASSES."PHPFusion/OutputHandler.inc";
+$fusion_page_head_tags = &\PHPFusion\OutputHandler::$pageHeadTags;
+$fusion_page_footer_tags = &\PHPFusion\OutputHandler::$pageFooterTags;
+$fusion_jquery_tags = &\PHPFusion\OutputHandler::$jqueryTags;
 
 // Set theme
 set_theme($userdata['user_theme']);
