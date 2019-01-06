@@ -60,7 +60,7 @@ function render_page($license = false) {
 	echo "<div class='sub-header clearfix floatfix'>".showsublinks("","")."</div>\n";
 
 	// Content
-		echo "<div class='upper'>".AU_CENTER."</div>\n";
+	echo "<div class='upper'>".AU_CENTER."</div>\n";
 	echo "<div class='main-bg'>\n";
 	if (LEFT) { echo "<div id='side-left'>".LEFT."</div>\n"; }
 	if (RIGHT) { echo "<div id='side-right'>".RIGHT."</div>\n"; }

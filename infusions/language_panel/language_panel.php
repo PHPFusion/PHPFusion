@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: language_panel.php
-| Author: Frederick MC Chan (Chan)
+| Author: PHP-Fusion Development Team
 | Author: Joakim Falk (Falk)
 +--------------------------------------------------------+
 | This program is released as free software under the

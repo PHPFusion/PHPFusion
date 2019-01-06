@@ -1,7 +1,7 @@
 <?php
 /*---------------------------------------------------------+
 | PHP-Fusion Content Management System                     |
-| Copyright (C) 2002 - 2010 Nick Jones                     |
+| Copyright (C) PHP-Fusion Inc                     |
 | https://www.php-fusion.co.uk/                             |
 +----------------------------------------------------------+
 | Shop Theme Copyright (C) 2013 Joakim Falk (Domi)         |

@@ -6,7 +6,6 @@
 +--------------------------------------------------------+
 | Filename: panels.php
 | Author: PHP-Fusion Development Team
-| Author: Joakim Falk (Domi)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or

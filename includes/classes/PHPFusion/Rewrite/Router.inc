@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: Router.inc
-| Author: Frederick MC Chan (Chan)
+| Author: PHP-Fusion Development Team
 | Co-Author: Ankur Thakur
 | Co-Author: Takács Ákos (Rimelek)
 +--------------------------------------------------------+

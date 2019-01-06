@@ -1,0 +1,39 @@
+#mainheader,
+#side-border-left,
+#side-border-right {
+	position: relative;
+}
+.top-snow {
+	background: url(../images/winter.png) no-repeat left 6px,
+				url(../images/winter.png) no-repeat 50% -39px,
+				url(../images/winter.png) no-repeat right -77px;
+	display: block;
+	height: 39px;
+	left: -2px;
+	position: absolute;
+	bottom: -16px;
+	width: 100%;
+}
+
+#side-border-left:before,
+#side-border-right:before,
+#side-border-left:after,
+#side-border-right:after {
+	background: url(../images/winter.png) no-repeat left bottom;
+	bottom: -38px;
+	content: " ";
+	display: block;
+	height: 45px;
+	left: 32px;
+	position: absolute;
+	width: 124px;
+	z-index: 1;
+}
+#side-border-left:after,
+#side-border-right:after {
+	background-position: 40% -48px;
+	top: -14px;
+	left: 22px;
+	height: 22px;
+	width: 151px;
+}

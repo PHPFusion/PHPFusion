@@ -421,7 +421,7 @@ function admin_nav($style = FALSE) {
     } else {
         $html = "<ul id='adl' class='admin-vertical-link'>\n";
         for ($i = 0; $i < 6; $i++) {
-            $result = dbquery("SELECT * FROM ".DB_ADMIN." WHERE admin_page='".$i."' AND admin_language='".LANGUAGE."' AND admin_link !='reserved' ORDER BY admin_title ASC");
+            $result = dbquery("SELECT * FROM ".DB_ADMIN." WHERE admin_page='".$i."' AND admin_link !='reserved' ORDER BY admin_title ASC");
             $active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && admin_active() == $i) ? 1 : 0;
 
             $html .= "<li class='".($active ? 'active panel' : 'panel')."' >\n";

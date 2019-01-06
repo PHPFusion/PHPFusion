@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: submit.php
-| Author: Nick Jones (Digitanium)
+| Author: PHP-Fusion Development Team
 | Co-Author: Daywalker
 +--------------------------------------------------------+
 | This program is released as free software under the
