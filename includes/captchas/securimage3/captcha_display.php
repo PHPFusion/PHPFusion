@@ -19,5 +19,9 @@
 require_once 'securimage.php';
 
 echo '<div class="clearfix m-b-15">';
-echo Securimage::getCaptchaHtml($options);
+echo Securimage::getCaptchaHtml([
+    'show_text_input'   => FALSE,
+    'input_name'        => 'captcha_code',
+    'show_audio_button' => FALSE
+]);
 echo '</div>';
