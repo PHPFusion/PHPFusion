@@ -25,12 +25,14 @@ if (!defined("IN_FUSION")) {
 /**
  * Send a database query
  *
+ * @param string $query SQL
+ *
+ * @param bool   $print
+ *
+ * @return \PDOStatement or FALSE on error
  * @global int   $mysql_queries_count
  * @global array $mysql_queries_time
  *
- * @param string $query SQL
- *
- * @return \PDOStatement or FALSE on error
  */
 function dbquery($query, $print = FALSE) {
     global $mysql_queries_count, $mysql_queries_time;
@@ -46,7 +48,7 @@ function dbquery($query, $print = FALSE) {
         return $result;
     } catch (PDOException $e) {
         trigger_error("Query Error: ".$query."<br/>Stack Trace: ".$e->getTraceAsString()."<br/>Error Nature: ".$e->getMessage(), E_USER_NOTICE);
-        return FALSE;
+        return NULL;
     }
 }
 
@@ -101,8 +103,11 @@ function dbresult($statement, $row) {
  * @return int
  */
 function dbrows($statement) {
-    $result = $statement->rowCount();
-    return $result;
+    if ($statement !== FALSE) {
+        return $statement->rowCount();
+    }
+
+    return NULL;
 }
 
 /**
@@ -138,7 +143,7 @@ function dbarraynum($statement) {
  * @param string  $db_user
  * @param string  $db_pass
  * @param string  $db_name
- * @param boolean $halt_on_error If it is TRUE, the script will halt in case of error
+ * @param int     $db_port
  */
 function dbconnect($db_host, $db_user, $db_pass, $db_name, $db_port = 3306) {
     $db_connect = TRUE;
@@ -200,8 +205,12 @@ function dbnew_result($res, $row, $field = 0) {
 
 function db_affrows() {
     global $pdo;
-    /** @var PDO $pdo */
-    return $pdo->rowCount();
+
+    if ($pdo !== FALSE) {
+        return $pdo->rowCount();
+    }
+
+    return NULL;
 }
 
 // new added functions
@@ -223,7 +232,6 @@ function db_fetch_row($result) {
 }
 
 function db_use_result($result) {
-    global $pdo;
     $query = dbconnection()->prepare($result);
     $query->execute();
     return TRUE;
@@ -247,13 +255,13 @@ if (!function_exists("mysql_free_result")) {
 if (!function_exists("mysql_escape_string")) {
     function mysql_escape_string($query) {
         global $pdo;
-        return $pdo->quote($unescaped_string);
+        return $pdo->quote($query);
     }
 }
 if (!function_exists("mysql_real_escape_string")) {
     function mysql_real_escape_string($query) {
         global $pdo;
-        return $pdo->quote($unescaped_string);
+        return $pdo->quote($query);
     }
 }
 if (!function_exists("mysql_query")) {

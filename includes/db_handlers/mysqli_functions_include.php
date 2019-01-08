@@ -45,7 +45,7 @@ function dbquery($query) {
     if (!$result = $db_connect->query($query)) {
         if ($db_connect->error)
             echo "Error: ".$db_connect->error."
-		";
+        ";
         return FALSE;
     } else {
         $query_time = substr((START_TIME - $query_time), 0, 7);
@@ -64,7 +64,7 @@ function dbcount($field, $table, $conditions = "") {
     if (!$result = $db_connect->query("SELECT Count".$field." FROM ".$table.$cond)) {
         if ($db_connect->error)
             echo "Error: ".$db_connect->error."
-		";
+        ";
         return FALSE;
     } else {
         $query_time = substr((get_microtime() - $query_time), 0, 7);
@@ -82,7 +82,7 @@ function dbresult($query, $row) {
     if (!$result = dbnew_result($query, $row)) {
         if ($db_connect->error)
             echo "Error: ".$db_connect->error."
-		";
+        ";
         return FALSE;
     } else {
         $query_time = substr((START_TIME - $query_time), 0, 7);
@@ -97,10 +97,10 @@ function dbrows($result) {
 
 function dbarray($query) {
     global $db_connect;
-    if (!$result = $query->fetch_assoc()) {
+    if (!$result = mysqli_fetch_assoc($query)) {
         if ($db_connect->error)
             echo "Error: ".$db_connect->error."
-		";
+        ";
         return FALSE;
     } else {
         return $result;
@@ -112,7 +112,7 @@ function dbarraynum($query) {
     if (!$result = $query->fetch_row()) {
         if ($db_connect->error)
             echo "Error: ".$db_connect->error."
-		";
+        ";
         return FALSE;
     } else {
         return $result;
@@ -129,11 +129,19 @@ function dbconnect($db_host, $db_user, $db_pass, $db_name, $db_port = 3306) {
     // Check connection
     if ($db_connect->connect_error) {
         die("Unable to establish connection to MySQL
-		".$db_connect->connect_error);
+        ".$db_connect->connect_error);
     } else {
         mysqli_set_charset($db_connect, 'utf8');
         dbquery("SET NAMES 'utf8'");
     }
+}
+
+function dbconnection(\mysqli $mysqli = NULL) {
+    static $_mysqli = NULL;
+    if (!empty($mysqli) and $mysqli instanceof \mysqli) {
+        $_mysqli = $mysqli;
+    }
+    return $_mysqli;
 }
 
 function dbclose() {
