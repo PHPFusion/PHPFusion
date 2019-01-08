@@ -225,18 +225,6 @@ include BASEDIR."maincore_mlang_functions.php";
 $language_opts = fusion_get_enabled_languages();
 $enabled_languages = array_keys($language_opts);
 
-// If language change is initiated and if the selected language is valid
-if (isset($_GET['lang']) && valid_language($_GET['lang'])) {
-    $lang = stripinput($_GET['lang']);
-    set_language($lang);
-    //    $redirectPath = clean_request("", array("lang"), FALSE);
-    //    redirect($redirectPath);
-} else {
-    if (is_array($enabled_languages) && count($enabled_languages) > 1) {
-        require __DIR__.'/maincore_mlang_hub.php';
-    }
-}
-
 // Main language detection procedure
 if (iMEMBER && valid_language($userdata['user_language'])) {
     $current_lang = $userdata['user_language'];
@@ -253,8 +241,21 @@ if (iMEMBER && valid_language($userdata['user_language'])) {
 if (!defined("LANGUAGE")) {
     define("LANGUAGE", $current_lang);
 }
+
 if (!defined("LOCALESET")) {
     define("LOCALESET", $current_lang."/");
+}
+
+// If language change is initiated and if the selected language is valid
+if (isset($_GET['lang']) && valid_language($_GET['lang'])) {
+    $lang = stripinput($_GET['lang']);
+    set_language($lang);
+    //    $redirectPath = clean_request("", array("lang"), FALSE);
+    //    redirect($redirectPath);
+} else {
+    if (is_array($enabled_languages) && count($enabled_languages) > 1) {
+        require __DIR__.'/maincore_mlang_hub.php';
+    }
 }
 
 // IP address functions
