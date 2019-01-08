@@ -79,7 +79,7 @@ if (iMEMBER) {
 
     $info = [
             'forum_exists'         => $forum_exists,
-            'show_reputation'      => $forum_settings['forum_show_reputation'] ? 1 : 0,
+            'show_reputation'      => !empty($forum_settings['forum_show_reputation']) && $forum_settings['forum_show_reputation'] ? 1 : 0,
             'user_avatar'          => display_avatar($userdata, '90px', '', FALSE, ''),
             'user_name'            => profile_link($userdata['user_id'], $userdata['user_name'], $userdata['user_status']),
             'user_level'           => $userdata['user_level'],
