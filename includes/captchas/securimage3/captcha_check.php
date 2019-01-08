@@ -22,7 +22,7 @@ $securimage = new Securimage();
 if (isset($_POST['captcha_code'])) {
     $captcha_code = stripinput($_POST['captcha_code']);
 
-    if ($securimage->check(form_sanitizer($captcha_code)) == TRUE) {
+    if ($securimage->check($captcha_code) == TRUE) {
         $_CAPTCHA_IS_VALID = TRUE;
     }
 }
