@@ -67,6 +67,15 @@ function horizontalnav() {
 
     $html = "";
     $html .= "<div class='navbar-atom m-t-15'>";
+    $html .= "<div class='navbar-header'>\n";
+    $html .= "<button type='button' class='navbar-toggle' data-toggle='collapse' data-target='#navbar-atom'>
+              <span class='sr-only'>Toggle Navigation</span>
+              <span class='icon-bar'></span>
+              <span class='icon-bar'></span>
+              <span class='icon-bar'></span>
+            </button>";
+    $html .= "</div>\n";
+
     $html .= "<div id='navbar-atom' class='navbar-collapse collapse'>\n";
 
     $result = dbquery(
