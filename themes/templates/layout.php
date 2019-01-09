@@ -112,9 +112,9 @@ echo "<script type='text/javascript' src='".INCLUDES."jquery/holder/holder.min.j
 echo $fusion_page_footer_tags;
 
 // Output lines added with add_to_jquery()
-$fusion_jquery_tags = "$('[data-submenu]').submenupicker();";
+//$fusion_jquery_tags = "$('[data-submenu]').submenupicker();";
 // Fix select2 on modal - http://stackoverflow.com/questions/13649459/twitter-bootstrap-multiple-modal-error/15856139#15856139
-$fusion_jquery_tags .= "$.fn.modal.Constructor.prototype.enforceFocus = function () {};";
+//$fusion_jquery_tags .= "$.fn.modal.Constructor.prototype.enforceFocus = function () {};";
 
 if (!empty($fusion_jquery_tags)) {
     echo "<script type='text/javascript'>$(function(){".$fusion_jquery_tags."});</script>\n";

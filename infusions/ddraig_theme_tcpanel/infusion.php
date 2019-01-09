@@ -15,12 +15,14 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 if (file_exists(INFUSIONS."ddraig_theme_tcpanel/locale/".$settings['locale'].".php")) {
-	include INFUSIONS."ddraig_theme_tcpanel/locale/".$settings['locale'].".php";
+    include INFUSIONS."ddraig_theme_tcpanel/locale/".$settings['locale'].".php";
 } else {
-	include INFUSIONS."ddraig_theme_tcpanel/locale/English.php";
+    include INFUSIONS."ddraig_theme_tcpanel/locale/English.php";
 }
 
 include INFUSIONS."ddraig_theme_tcpanel/infusion_db.php";
@@ -60,12 +62,11 @@ winter_mode
 '0'
 )";
 
-$inf_adminpanel[1] = array(
-	"title" => "Ddraig Theme Control Panel",
-	"image" => "ddraigtcp.png",
-	"panel" => "ddraig_tcpanel_admin.php",
-	"rights" => "DDCP"
-);
+$inf_adminpanel[1] = [
+    "title"  => "Ddraig Theme Control Panel",
+    "image"  => "ddraigtcp.png",
+    "panel"  => "ddraig_tcpanel_admin.php",
+    "rights" => "DDCP"
+];
 
 $inf_droptable[1] = DB_DDRAIGTCP;
-?>

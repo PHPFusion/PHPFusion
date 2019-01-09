@@ -2,7 +2,7 @@
  * Smooth scroll to top script with
  * stop on mouse clicks or mousewheel
  * Author: JoiNNN
- * 
+ *
  * Uses: jQuery mousewheel plugin
  */
 
@@ -32,11 +32,13 @@ jQuery(document).ready(function() {
 	//if hash found in url scroll to coresponding anchor
 	var hash = window.location.hash;
 	var target_offset = $(hash).offset();
-	var clean = $("a[href=" + hash + "]").hasClass("clean");
-	if (target_offset && !clean) {
-		var target_top = target_offset.top;
-		//scroll
-		$("html, body").animate({scrollTop:target_top}, 500);
+	if (hash.length > 0) {
+		var clean = $("a[href=" + hash + "]").hasClass("clean");
+		if (target_offset && !clean) {
+			var target_top = target_offset.top;
+			//scroll
+			$("html, body").animate({scrollTop: target_top}, 500);
+		}
 	}
 	//stop scrolling if mousewheel or clicks are hit
 	$(document).bind("mousewheel mousedown", function(ev) {

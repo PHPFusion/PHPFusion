@@ -14,8 +14,10 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
-if (!defined("DB_DDRAIGTCP")) { 
-	define("DB_DDRAIGTCP", DB_PREFIX."ddraig_tcp");
+if (!defined("DB_DDRAIGTCP")) {
+    define("DB_DDRAIGTCP", DB_PREFIX."ddraig_tcp");
 }
