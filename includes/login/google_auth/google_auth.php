@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: login/user_fields/google_auth/google_auth.php
+| Filename: login/google_auth/google_auth.php
 | Author: PHP-Fusion Development Team
 | Co-Author: Michael Kliewe
 +--------------------------------------------------------+

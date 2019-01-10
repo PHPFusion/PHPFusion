@@ -117,7 +117,7 @@ class Blog extends Core {
 
                 echo '<div class="row equal-height">';
                 foreach ($info['blog_item'] as $blog_id => $data) {
-                    echo '<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">';
+                    echo '<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 m-b-20">';
                         echo '<div class="post-item">';
                             if (!empty($data['blog_lowRes_image_path']) || !empty($data['blog_cat_image'])) {
                                 if ($data['blog_lowRes_image_path'] && file_exists($data['blog_lowRes_image_path'])) {

@@ -220,6 +220,12 @@ class Panels {
         }
     }
 
+    public function wildcard_match($source, $pattern) {
+        $pattern = preg_quote($pattern, '/');
+        $pattern = str_replace('\*', '.*', $pattern);
+        return preg_match('/^'.$pattern.'$/i', $source);
+    }
+
     /**
      * Cache and generate Panel Constants
      */
@@ -260,20 +266,25 @@ class Panels {
 
                             $url_arr = explode("\r\n", $p_data['panel_url_list']);
                             $url = [];
+                            $source = "/".PERMALINK_CURRENT_PATH;
+
                             foreach ($url_arr as $url_list) {
                                 $url[] = $url_list; //strpos($urldata, '/', 0) ? $urldata : '/'.
+                                if ($this->wildcard_match($source, $url_list)) {
+                                    $url[] = $source;
+                                }
                             }
 
                             switch ($p_data['panel_restriction']) {
                                 case 1:
                                     //  Exclude on current url only
                                     //  url_list is set, and panel_restriction set to 1 (Exclude) and current page does not match url_list.
-                                    if (!empty($p_data['panel_url_list']) && !in_array($site['path'], $url)) {
+                                    if (!empty($p_data['panel_url_list']) && !in_array(PERMALINK_CURRENT_PATH, $url)) {
                                         $show_panel = TRUE;
                                     }
                                     break;
                                 case 2: // Display on home page only
-                                    if (!empty($p_data['panel_url_list']) && $site['path'] == fusion_get_settings('opening_page')) {
+                                    if (!empty($p_data['panel_url_list']) && PERMALINK_CURRENT_PATH == fusion_get_settings('opening_page')) {
                                         $show_panel = TRUE;
                                     }
                                     break;
@@ -285,7 +296,7 @@ class Panels {
                                     break;
                                 default: // Include on defined url only
                                     //  url_list is set, and panel_restriction set to 0 (Include) and current page matches url_list.
-                                    if (!empty($p_data['panel_url_list']) && in_array($site['path'], $url)) {
+                                    if (!empty($p_data['panel_url_list']) && in_array(PERMALINK_CURRENT_PATH, $url)) {
                                         $show_panel = TRUE;
                                     }
                                     break;

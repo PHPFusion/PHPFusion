@@ -249,10 +249,11 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
         }
 
         add_to_jquery("
+            moment.updateLocale('".$locale['datepicker']."', {
+                week: {dow: ".$options['week_start']."}
+            });
             $('#$input_id-field .input-group.date').datetimepicker({
-                locale: moment.locale('".$locale['datepicker']."', {
-                week: { dow: ".$options['week_start']." }
-            }),
+            locale: '".$locale['datepicker']."',
             showTodayButton: true,
             showClear: true,
             showClose: true,

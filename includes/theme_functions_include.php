@@ -47,9 +47,10 @@ function showrendertime($queries = TRUE) {
 
 /**
  * Developer tools only (Translations not Required)
- * @param bool   $show_sql_performance      Turn on or off
- * @param string $performance_threshold     The query time
- * @param bool   $filter_results            Show only those with problems
+ *
+ * @param bool   $show_sql_performance  Turn on or off
+ * @param string $performance_threshold The query time
+ * @param bool   $filter_results        Show only those with problems
  *
  * @return string
  */
@@ -190,6 +191,7 @@ if (!function_exists('get_theme_settings')) {
     }
 }
 
+
 if (!function_exists("check_panel_status")) {
     function check_panel_status($side) {
         $settings = fusion_get_settings();
@@ -265,6 +267,7 @@ if (!function_exists("check_panel_status")) {
         }
     }
 }
+
 /**
  * Java script that transform html table sortable
  *
@@ -294,7 +297,7 @@ if (!function_exists("alert")) {
         $default_alert_tpl = THEMES.'templates/boilers/bootstrap3/html/alert.html';
         $alert_tpl->set_template($default_alert_tpl);
         $default_options = [
-            "class" => "alert-danger",
+            "class"   => "alert-danger",
             "dismiss" => FALSE,
         ];
         $options += $default_options;
@@ -479,7 +482,7 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
 
 if (!function_exists("progress_bar")) {
     /**
-     * @param       $num        Max of 100
+     * @param int   $num        Max of 100
      * @param bool  $title      Label for the progress bar
      * @param array $options
      *                          class           additional class for the progress bar
@@ -491,7 +494,7 @@ if (!function_exists("progress_bar")) {
      *
      * @return string
      */
-    function progress_bar($num, $title = FALSE, array $options = array()) {
+    function progress_bar($num, $title = FALSE, array $options = []) {
         $default_options = [
             "class"          => "",
             "height"         => "",
@@ -542,7 +545,7 @@ if (!function_exists("progress_bar")) {
                     // calculate 100 to the max of 4 options
                     $progress_calc = floor($cnum / 25);
                     if ($options['reverse'] === TRUE) {
-                        $progress_calc = $r[$progress_calc];
+                        $progress_calc = $r["$progress_calc"];
                     }
                     $block_name = "progress_".$progress_calc;
                 }
@@ -580,7 +583,7 @@ if (!function_exists("progress_bar")) {
                 // calculate 100 to the max of 4 options
                 $progress_calc = floor($num / 25);
                 if ($options['reverse'] === TRUE) {
-                    $progress_calc = $r[$progress_calc];
+                    $progress_calc = $r["$progress_calc"];
                 }
                 $block_name = "progress_".$progress_calc;
             }
@@ -867,7 +870,8 @@ if (!function_exists('display_avatar')) {
                 $font_color = get_brightness($color) > 130 ? '000' : 'fff';
                 $first_char = substr($userdata['user_name'], 0, 1);
                 $first_char = strtoupper($first_char);
-                $img = '<div class="display-inline-block va avatar '.$img_class.'" style="width:'.$size.';max-height:'.$size.';"><svg version="1.1" viewBox="0 0 20 20"><rect fill="#'.$color.'" stroke-width="0" y="0" x="0" height="100%" width="100%"/><text fill="#'.$font_color.'" x="50%" y="50%" text-anchor="middle" alignment-baseline="central" dy="-0.05em">'.$first_char.'</text></svg></div>';
+                $size_int = (int)filter_var($size, FILTER_SANITIZE_NUMBER_INT);
+                $img = '<div class="display-inline-block va avatar '.$img_class.'" style="width:'.$size.';max-height:'.$size.';"><svg viewBox="0 0 '.$size_int.' '.$size_int.'" preserveAspectRatio="xMidYMid meet"><rect fill="#'.$color.'" stroke-width="0" y="0" x="0" width="'.$size.'" height="'.$size.'"/><text class="m-t-5" font-size="'.($size_int - 5).'" fill="#'.$font_color.'" x="50%" y="50%" text-anchor="middle" dy="0.325em">'.$first_char.'</text></svg></div>';
             }
         }
 
@@ -875,13 +879,12 @@ if (!function_exists('display_avatar')) {
     }
 }
 
-
 function stringToColorCode($text) {
     $min_brightness = 50; // integer between 0 and 100
     $spec = 3; // integer between 2-10, determines how unique each color will be
-
     $hash = sha1(md5(sha1($text)));
     $colors = [];
+
     for ($i = 0; $i < 3; $i++) {
         $colors[$i] = max([round(((hexdec(substr($hash, $spec * $i, $spec))) / hexdec(str_pad('', $spec, 'F'))) * 255), $min_brightness]);
     }
@@ -895,7 +898,6 @@ function stringToColorCode($text) {
     }
 
     $output = '';
-
     for ($i = 0; $i < 3; $i++) {
         $output .= str_pad(dechex($colors[$i]), 2, 0, STR_PAD_LEFT);
     }
@@ -936,11 +938,12 @@ if (!function_exists("thumbnail")) {
     /**
      * Thumbnail function
      *
-     * @param      $src
-     * @param      $size
-     * @param bool $url
-     * @param bool $colorbox
-     * @param bool $responsive
+     * @param        $src
+     * @param        $size
+     * @param bool   $url
+     * @param bool   $colorbox
+     * @param bool   $responsive
+     * @param string $class
      *
      * @return string
      */

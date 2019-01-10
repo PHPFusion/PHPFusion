@@ -26,7 +26,6 @@ use PHPFusion\Database\DatabaseFactory;
  * @package PHPFusion
  */
 class Errors {
-    private $code_name = 'Andromeda';
     private static $instances = [];
     private static $locale = [];
     public $no_notice = 0;
@@ -105,10 +104,10 @@ class Errors {
     /**
      * Custom error handler for PHP processor
      *
-     * @param $error_level - Severity
+     * @param $error_level   - Severity
      * @param $error_message - $e->message
-     * @param $error_file - The file in question, run a debug_backtrace()[2] in the file
-     * @param $error_line - The line in question, run a debug_backtrace()[2] in the file
+     * @param $error_file    - The file in question, run a debug_backtrace()[2] in the file
+     * @param $error_line    - The line in question, run a debug_backtrace()[2] in the file
      */
     public function setError($error_level, $error_message, $error_file, $error_line) {
         $userdata = fusion_get_userdata();
@@ -320,9 +319,11 @@ class Errors {
      * @return string
      */
     private function getErrorLogs() {
-
         $aidlink = fusion_get_aidlink();
         $locale = self::$locale;
+
+        add_to_footer('<script src="'.INCLUDES.'jscripts/clipboard.min.js"></script>');
+        add_to_jquery('new ClipboardJS(".copy-error");');
 
         // Use clean request for absolute escape from SEO converging form path
         $html = openform('error_logform', 'post', clean_request('', [], FALSE));
@@ -354,7 +355,7 @@ class Errors {
                     $html .= "<strong>".$locale['ERROR_415']." ".$data['error_line']."</strong><br/>\n";
                     $html .= "<small>".timer($data['error_timestamp'])."</small>\n";
                     $html .= "</td>\n";
-                    $html .= "<td>".$this->getSources($data['error_file'], $data['error_line'], $data['error_id'])."</td>\n";
+                    $html .= "<td>".$this->getSources($data['error_id'])."</td>\n";
                     $html .= "<td id='ecmd_".$data['error_id']."' style='white-space:nowrap;'>\n";
                     $html .= "<a data-id='".$data['error_id']."' data-type='0' class='btn ".($data['error_status'] == 0 ? 'active' : '')." e_status_0 button btn-default move_error_log'>".$locale['ERROR_450']."</a>\n";
                     $html .= "<a data-id='".$data['error_id']."' data-type='1' class='btn ".($data['error_status'] == 1 ? 'active' : '')." e_status_1 button btn-default move_error_log'>".$locale['ERROR_451']."</a>\n";
@@ -369,6 +370,13 @@ class Errors {
                     $html .= "<div class='alert alert-info'>\n";
                     $html .= strtr($data['error_message'], ['#' => '<br/>#'])."</div>\n";
                     $html .= "</td></tr>\n";
+
+                    $html .= '<textarea style="width:.1px;height:.1px;" id="error-'.$data['error_id'].'">';
+                    $html .= 'File: '.$link_title.PHP_EOL;
+                    $html .= 'Page: '.$data['error_page'].PHP_EOL;
+                    $html .= 'Line: '.$data['error_line'].PHP_EOL;
+                    $html .= 'Error message: '.strtr($data['error_message'], ['#' => '<br/>#']);
+                    $html .= '</textarea>';
                 }
             }
 
@@ -382,7 +390,7 @@ class Errors {
                     $html .= "<strong>".$locale['ERROR_415']." ".$data['error_line']."</strong><br/>\n";
                     $html .= "<small>".timer($data['error_timestamp'])."</small>\n";
                     $html .= "</td>\n";
-                    $html .= "<td>".$this->getSources($data['error_file'], $data['error_line'], $data['error_id'])."</td>\n";
+                    $html .= "<td>".$this->getSources($data['error_id'])."</td>\n";
                     $html .= "<td id='ecmd_".$data['error_id']."' style='white-space:nowrap;'>\n";
                     $html .= "<a data-id='".$data['error_id']."' data-type='0' class='btn ".($data['error_status'] == 0 ? 'active' : '')." e_status_0 button btn-default move_error_log'>".$locale['ERROR_450']."</a>\n";
                     $html .= "<a data-id='".$data['error_id']."' data-type='1' class='btn ".($data['error_status'] == 1 ? 'active' : '')." e_status_1 button btn-default move_error_log'>".$locale['ERROR_451']."</a>\n";
@@ -396,6 +404,13 @@ class Errors {
                     $html .= "<div class='alert alert-info'>\n";
                     $html .= strtr($data['error_message'], ['#' => '<br/>#'])."</div>\n";
                     $html .= "</td></tr>\n";
+
+                    $html .= '<textarea style="width:.1px;height:.1px;" id="error-'.$data['error_id'].'">';
+                    $html .= 'File: '.$link_title.PHP_EOL;
+                    $html .= 'Page: '.$data['error_page'].PHP_EOL;
+                    $html .= 'Line: '.$data['error_line'].PHP_EOL;
+                    $html .= 'Error message: '.strtr($data['error_message'], ['#' => '<br/>#']);
+                    $html .= '</textarea>';
                 }
             }
 
@@ -439,19 +454,16 @@ class Errors {
         return $return;
     }
 
-    private function getSources($file, $line_number, $error_id) {
+    private function getSources($error_id) {
         $aidlink = fusion_get_aidlink();
-        $settings = fusion_get_settings();
         $link = ADMIN."errors.php$aidlink&amp;rowstart=".$this->rowstart."&amp;error_id=".$error_id."#file";
-        $repository_address = "https://github.com/php-fusion/PHP-Fusion/tree/";
-        $version = $settings['version'];
-        $file_path = substr(str_replace('\\', '/', $file), strlen(FUSION_ROOT_DIR));
 
-        return "
-        <div class='btn-group'>\n
-        <a class='btn btn-default' href='$link' target='new_window'><i class='fa fa-eye m-0'></i></a>\n
-        <a class='btn btn-default' href='".$repository_address.$this->code_name.'-'.$version."/".$file_path."#L".$line_number."' target='new_window'><i class='fa fa-git m-0'></i></a>\n
-        </div>\n";
+        $html = "<div class='btn-group'>\n";
+        $html .= "<a class='btn btn-default' href='$link' target='new_window'><i class='fa fa-eye m-0'></i></a>\n";
+        $html .= "<button class='btn btn-default copy-error' data-clipboard-target='#error-".$error_id."'><i class='fa fa-copy m-0'></i></button>\n";
+        $html .= "</div>\n";
+
+        return $html;
     }
 
     private static function get_errorTypes($type) {

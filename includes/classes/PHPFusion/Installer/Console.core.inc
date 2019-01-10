@@ -41,47 +41,53 @@ class Console_Core extends Install_Core {
             '3' => self::$locale['setup_0103'],
             '4' => self::$locale['setup_0104'],
             '5' => self::$locale['setup_0106'],
-            '6' => self::$locale['setup_0105'],
+            '6' => self::$locale['setup_0105']
         ];
-        $html = "<div class='block-container center-x'>\n";
-        $html .= openform('setupform', 'post', FUSION_SELF."?localeset=".LANGUAGE);
-        $html .= "<div class='block'>\n";
-        $html .= "<div class='block-content'>\n";
-        $html .= "<h6><strong>".(isset($_GET['upgrade']) ? self::$locale['setup_0020'] : self::$locale['setup_0000'])."</strong></h6>\n";
-        $html .= "<img class='pf-logo position-absolute' alt='PHP-Fusion' src='".IMAGES."php-fusion-icon.png'/>";
-        $html .= "<p class='text-right'>".self::$locale['setup_0010'].self::BUILD_VERSION."</p>";
-        $html .= "<div class='row'>\n";
-        $html .= "<div class='col-xs-12 col-sm-12 col-md-4 col-lg-3'>\n";
-        $html .= "<h2 class='m-b-20 m-t-0 p-l-15'>".(isset($_GET['upgrade']) ? self::$locale['setup_0020'] : self::$locale['setup_0000'])."</h2>\n";
-        $html .= "<div class='list-group'>\n";
+
+        $html = '<div class="block-container center-x">';
+        $html .= openform('setupform', 'post', FUSION_SELF.'?localeset='.LANGUAGE);
+        $html .= '<div class="block">';
+        $html .= '<div class="row equal-height m-0">';
+        $html .= '<div class="col-xs-12 col-sm-3 left-side p-0"><div>';
+        $html .= '<img class="logo img-responsive" src="'.IMAGES.'php-fusion-icon.png" alt="PHP-Fusion"/>';
+        $html .= '<h3 class="text-center m-t-0">PHP-Fusion CMS</h3>';
+
+        $html .= '<ul class="menu list-style-none m-t-15">';
         foreach ($steps as $key => $value) {
             if ($key !== 4) {
                 $active = intval(INSTALLATION_STEP) === $key;
-                $html .= "<div class='list-group-item ".($active ? 'active xs sm' : '')."' style='border:none;'>".(isset(self::$locale['setup_stepx']) ? sprintf(self::$locale['setup_stepx'], $key, $value) : $value)."</div>\n";
+                $html .= '<li'.($active ? ' class="active"' : '').'>'.(isset(self::$locale['setup_stepx']) ? sprintf(self::$locale['setup_stepx'], $key, $value) : $value).'</li>';
             }
         }
-        $html .= "</div>\n";
-        $html .= "</div>\n";
-        $html .= "<div class='col-xs-12 col-sm-12 col-md-8 col-lg-9'>\n";
+        $html .= '</ul>';
+        $html .= '<div class="text-center build-version">'.self::$locale['setup_0010'].self::BUILD_VERSION.'</div>';
+        $html .= '</div></div>'; // .left-side
+
+        $html .= '<div class="col-xs-12 col-sm-9 content p-0"><div>';
+        $html .= '<div class="block-content clearfix">';
         $html .= $content;
+
         if (self::$localeset) {
             $html .= form_hidden('localeset', self::$localeset);
         }
+
+        $html .= '</div>';
+
         if (self::$step) {
+            $html .= '<div class="buttons m-t-20">';
             foreach (self::$step as $button_prop) {
-                $default_class['class'] = "btn-primary";
+                $default_class['class'] = 'btn-primary';
                 $button_prop += $default_class;
-                $html .= form_button($button_prop['name'], $button_prop['label'], $button_prop['value'],
-                    [
-                        'class' => $button_prop['class'],
-                    ]);
+                $html .= form_button($button_prop['name'], $button_prop['label'], $button_prop['value'], ['class' => $button_prop['class']]);
             }
+            $html .= '</div>';
         }
-        $html .= "</div>\n</div>\n"; // end col-8 & row
-        $html .= "</div>\n"; // end block-content
-        $html .= "</div>\n"; // end block
+
+        $html .= '</div></div>'; // .content
+        $html .= '</div>'; // .row
+        $html .= '</div>'; // .block
         $html .= closeform();
-        $html .= "</div>\n";
+        $html .= '</div>'; // .block-container
 
         return $html;
     }
@@ -95,40 +101,38 @@ class Console_Core extends Install_Core {
         $html = "<!DOCTYPE html>\n";
         $html .= "<html lang='".self::$locale['setup_0011']."' dir='".self::$locale['setup_0012a']."'>\n";
         $html .= "<head>\n";
-        $html .= "<title>".self::$locale['setup_0000']."</title>\n";
+        $html .= "<title>".(isset($_GET['upgrade']) ? self::$locale['setup_0020'] : self::$locale['setup_0000'])."</title>\n";
         $html .= "<meta charset='".self::$locale['setup_0012']."' />";
-        $html .= "<link rel='apple-touch-icon' sizes='57x57' href='".IMAGES."favicons/apple-touch-icon-57x57.png'/>\n";
-        $html .= "<link rel='apple-touch-icon' sizes='114x114' href='".IMAGES."favicons/apple-touch-icon-114x114.png'/>\n";
-        $html .= "<link rel='apple-touch-icon' sizes='72x72' href='".IMAGES."favicons/apple-touch-icon-72x72.png'/>\n";
-        $html .= "<link rel='apple-touch-icon' sizes='144x144' href='".IMAGES."favicons/apple-touch-icon-144x144.png'/>\n";
-        $html .= "<link rel='apple-touch-icon' sizes='60x60' href='".IMAGES."favicons/apple-touch-icon-60x60.png'/>\n";
-        $html .= "<link rel='apple-touch-icon' sizes='120x120' href='".IMAGES."favicons/apple-touch-icon-120x120.png'/>\n";
-        $html .= "<link rel='apple-touch-icon' sizes='76x76' href='".IMAGES."favicons/apple-touch-icon-76x76.png'/>\n";
-        $html .= "<link rel='shortcut icon' href='".IMAGES."favicons/favicon.ico'/>\n";
-        $html .= "<link rel='icon' type='image/png' href='".IMAGES."favicons/favicon-16x16.png' sizes='16x16'/>\n";
-        $html .= "<link rel='icon' type='image/png' href='".IMAGES."favicons/favicon-32x32.png' sizes='32x32'/>\n";
-        $html .= "<meta name='msapplication-TileColor' content='#2d7793'/>\n";
-        $html .= "<meta name='msapplication-TileImage' content='".IMAGES."favicons/mstile-144x144.png'/>\n";
+        $html .= "<link rel='apple-touch-icon' sizes='144x144' href='".IMAGES."favicons/apple-touch-icon.png'/>";
+        $html .= "<link rel='icon' type='image/png' sizes='32x32' href='".IMAGES."favicons/favicon-32x32.png'>";
+        $html .= "<link rel='icon' type='image/png' sizes='16x16' href='".IMAGES."favicons/favicon-16x16.png'/>";
+        $html .= "<link rel='manifest' href='".IMAGES."favicons/site.webmanifest'/>";
+        $html .= "<link rel='mask-icon' href='".IMAGES."favicons/safari-pinned-tab.svg' color='#262626'/>";
+        $html .= "<link rel='shortcut icon' href='".IMAGES."favicons/favicon.ico'/>";
+        $html .= "<meta name='msapplication-TileColor' content='#262626'/>";
+        $html .= "<meta name='msapplication-config' content='".IMAGES."favicons/browserconfig.xml'/>";
+        $html .= "<meta name='theme-color' content='#ffffff'/>";
         $html .= "<meta http-equiv='X-UA-Compatible' content='IE=edge'>\n";
         $html .= "<meta name='viewport' content='width=device-width, initial-scale=1.0' />\n";
         $html .= "<script type='text/javascript' src='".INCLUDES."jquery/jquery.min.js'></script>\n";
-        $html .= "<script type='text/javascript' src='".INCLUDES."bootstrap/bootstrap.min.js'></script>\n";
+        $html .= "<script type='text/javascript' src='".INCLUDES."bootstrap/js/bootstrap.min.js'></script>\n";
         $html .= "<link href='".DYNAMICS."assets/select2/select2.min.css' rel='stylesheet' />\n";
-        $html .= "<link href='".THEMES."templates/default.min.css' rel='stylesheet' />\n";
-        $html .= "<link href='".INCLUDES."bootstrap/bootstrap.min.css' rel='stylesheet' />\n";
+        $html .= "<link href='".THEMES."templates/default.min.css?v=".filemtime(THEMES.'templates/default.min.css')."' rel='stylesheet' />\n";
+        $html .= "<link href='".INCLUDES."bootstrap/css/bootstrap.min.css' rel='stylesheet' />\n";
         if (self::$locale['setup_0012a'] == 'rtl') {
-            $html .= "<link href='".INCLUDES."bootstrap/bootstrap-rtl.min.css' rel='stylesheet' media='screen' />";
+            $html .= "<link href='".INCLUDES."bootstrap/css/bootstrap-rtl.min.css' rel='stylesheet' media='screen' />";
         }
-        $html .= "<link href='".THEMES."templates/install.css' rel='stylesheet'/>\n";
-        $html .= "<link href='".INCLUDES."fonts/font-awesome/css/font-awesome.min.css' rel='stylesheet' />";
+        $html .= "<link href='".THEMES."templates/install.css?v=".filemtime(THEMES.'templates/install.css')."' rel='stylesheet'/>\n";
+        $html .= "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-5/css/all.min.css' type='text/css'/>\n";
+        $html .= "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-5/css/v4-shims.min.css' type='text/css'/>\n";
         $html .= OutputHandler::$pageHeadTags;
-        $html .= "</head>\n<body".(!isset($_GET['upgrade']) ? " class='install'" : '').">\n";
+        $html .= "</head>\n<body".(isset($_GET['upgrade']) ? " class='upgrade'" : '').">\n";
         $html .= "{%content%}";
         $fusion_jquery_tags = OutputHandler::$jqueryTags;
         if (!empty($fusion_jquery_tags)) {
             $html .= "<script type=\"text/javascript\">$(function() {
-            var container = $('.block-container');
-            var diff_height = container.height() - $('body').height();
+            let container = $('.block-container');
+            let diff_height = container.height() - $('body').height();
             if (diff_height > 1) {
             container.css({ 'margin-top' : diff_height+'px', 'margin-bottom' : diff_height/2+'px' });
             }

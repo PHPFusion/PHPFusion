@@ -29,7 +29,7 @@ function getsuspension($type, $action = FALSE) {
 
 function suspend_log($user_id, $type, $reason = "", $system = FALSE, $time = TRUE) {
     $userdata = fusion_get_userdata();
-    $result = dbquery("INSERT INTO ".DB_SUSPENDS." (
+    dbquery("INSERT INTO ".DB_SUSPENDS." (
             suspended_user,
             suspending_admin,
             suspend_ip,
@@ -49,31 +49,29 @@ function suspend_log($user_id, $type, $reason = "", $system = FALSE, $time = TRU
 }
 
 function unsuspend_log($user_id, $type, $reason = "", $system = FALSE) {
-
     $userdata = fusion_get_userdata();
-    // Pre v7.01 check
-    $result = dbquery("SELECT suspend_id FROM ".DB_SUSPENDS."
-        WHERE suspended_user='$user_id' AND suspend_type='$type' AND reinstate_date='0'
-        LIMIT 1");
+
+    $result = dbquery("SELECT suspend_id FROM ".DB_SUSPENDS." WHERE suspended_user='$user_id' AND suspend_type='$type' AND reinstate_date='0' LIMIT 1");
     if (!dbrows($result)) {
         suspend_log($user_id, $type, "", TRUE, FALSE);
     }
-    $result = dbquery("UPDATE ".DB_SUSPENDS." SET
-            reinstating_admin='".(!$system ? $userdata['user_id'] : 0)."',
-            reinstate_reason='$reason',
-            reinstate_date='".time()."',
-            reinstate_ip='".(!$system ? USER_IP : 0)."',
-            reinstate_ip_type='".(!$system ? USER_IP_TYPE : 0)."'
-        WHERE
-            suspended_user='$user_id' AND suspend_type='$type' AND reinstate_date='0'");
+
+    dbquery("UPDATE ".DB_SUSPENDS." SET
+        reinstating_admin='".(!$system ? $userdata['user_id'] : 0)."',
+        reinstate_reason='$reason',
+        reinstate_date='".time()."',
+        reinstate_ip='".(!$system ? USER_IP : 0)."',
+        reinstate_ip_type='".(!$system ? USER_IP_TYPE : 0)."'
+        WHERE suspended_user='$user_id' AND suspend_type='$type' AND reinstate_date='0'
+    ");
 }
 
 function display_suspend_log($user_id, $type = "all", $rowstart = 0, $limit = 0) {
-
     $locale = fusion_get_locale("", LOCALE.LOCALESET."admin/members_include.php");
 
     $db_type = ($type != "all" && isnum($type) ? " AND suspend_type='$type'" : "");
     $rows = dbcount("(suspend_id)", DB_SUSPENDS, "suspended_user='$user_id'$db_type");
+
     $result = dbquery("SELECT sp.suspend_id, sp.suspend_ip, sp.suspend_ip_type, sp.suspend_date, sp.suspend_reason,
         sp.suspend_type, sp.reinstate_date, sp.reinstate_reason, sp.reinstate_ip, sp.reinstate_ip_type,
         a.user_name AS admin_name, b.user_name AS admin_name_b
@@ -84,12 +82,14 @@ function display_suspend_log($user_id, $type = "all", $rowstart = 0, $limit = 0)
         ORDER BY suspend_date DESC".($limit > 0 ? " LIMIT $limit" : ""));
     $rows = dbrows($result);
     $udata = dbarray(dbquery("SELECT user_name FROM ".DB_USERS." WHERE user_id='$user_id' LIMIT 1"));
+
     if ($type == "all") {
         opentable(sprintf($locale['susp100'], $udata['user_name']));
         member_nav(member_url("view", $user_id)."|".$udata['user_name'], member_url("log", $user_id)."|".$locale['susp114']);
     } else {
         opentable(sprintf($locale['susp100b'], getsuspension($type, TRUE), $udata['user_name']));
     }
+
     if ($rows) {
         echo "<table class='table table-responsive table-striped table-hover'>\n<tr>\n";
         if ($type == "all") {

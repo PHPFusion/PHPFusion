@@ -80,10 +80,10 @@ echo "<meta name='image' content='".fusion_get_settings('siteurl').fusion_get_se
 if (fusion_get_settings('bootstrap') == TRUE || defined('BOOTSTRAP')) {
     echo "<meta http-equiv='X-UA-Compatible' content='IE=edge' />\n";
     echo "<meta name='viewport' content='width=device-width, initial-scale=1.0' />\n";
-    echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/bootstrap.min.css' type='text/css' />\n";
-    echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/bootstrap-submenu.min.css' type='text/css' />\n";
+    echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/css/bootstrap.min.css' type='text/css' />\n";
+    echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/css/bootstrap-submenu.min.css' type='text/css' />\n";
     if (fusion_get_locale('text-direction') == 'rtl') {
-        echo "<link href='".INCLUDES."bootstrap/bootstrap-rtl.min.css' rel='stylesheet' media='screen' />";
+        echo "<link href='".INCLUDES."bootstrap/css/bootstrap-rtl.min.css' rel='stylesheet' media='screen' />";
     }
     $user_theme = fusion_get_userdata('user_theme');
     $theme_name = $user_theme !== 'Default' ? $user_theme : fusion_get_settings('theme');
@@ -132,7 +132,7 @@ if (!empty($fusion_jquery_tags)) {
 }
 
 if (fusion_get_settings('bootstrap') || defined('BOOTSTRAP')) {
-    echo "<script type='text/javascript' src='".INCLUDES."bootstrap/bootstrap.min.js'></script>\n";
+    echo "<script type='text/javascript' src='".INCLUDES."bootstrap/js/bootstrap.min.js'></script>\n";
 }
 echo "</body>\n";
 echo "</html>";

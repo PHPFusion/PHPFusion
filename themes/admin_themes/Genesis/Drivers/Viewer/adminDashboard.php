@@ -1,7 +1,7 @@
 <?php
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
-| Copyright (C) 2002 - 2013 Nick Jones
+| Copyright (C) PHP-Fusion Inc
 | http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: adminDashboard.php
@@ -68,7 +68,7 @@ class adminDashboard extends resource {
             echo "<div class='display-inline-block'>\n$content</div>";
             echo "<div class='pull-right m-r-10'><i title='".$locale['269']."' class='fas fa-comment m-r-10 text-lighter'></i>".number_format($news['news'])."</div>
             <div class='pull-right m-r-10'><i title='".$locale['257']."' class='fas fa-comment m-r-10 text-lighter'></i>".number_format($news['comment'])."</div>
-            <div class='pull-right m-r-10'><i title='".$locale['254']."' class='fas fa-users m-r-10 text-lighter'></i>".number_format($news['submit'])."</div>                        
+            <div class='pull-right m-r-10'><i title='".$locale['254']."' class='fas fa-users m-r-10 text-lighter'></i>".number_format($news['submit'])."</div>
             </li>\n";
         }
         if (infusion_exists('articles')) {
@@ -96,7 +96,7 @@ class adminDashboard extends resource {
         if (infusion_exists('forum')) {
             $content = "<div>".$locale['F']."</div>";
             $content .= 'There are no forum posts';
-            $result = dbquery("SELECT p.post_id, p.thread_id, t.thread_subject, p.post_datestamp FROM ".DB_FORUM_POSTS." p 
+            $result = dbquery("SELECT p.post_id, p.thread_id, t.thread_subject, p.post_datestamp FROM ".DB_FORUM_POSTS." p
             INNER JOIN ".DB_FORUM_THREADS." t ON t.thread_id = p.thread_id
             ORDER BY post_datestamp DESC LIMIT 1");
 
@@ -105,7 +105,7 @@ class adminDashboard extends resource {
                 $content = "<div>".$locale['F']."</div>
                 <div class='pull-left text-lighter m-r-10'>".showdate('%b%d, %R %p', $data['post_datestamp'])."</div>
                 <div class='overflow-hide'>
-                <a href='".INFUSIONS."forum/viewthread.php?thread_id=".$data['thread_id']."&amp;pid=".$data['post_id']."'>".$data['thread_subject']."</a>                
+                <a href='".INFUSIONS."forum/viewthread.php?thread_id=".$data['thread_id']."&amp;pid=".$data['post_id']."'>".$data['thread_subject']."</a>
                 </div>
                 ";
             }
@@ -154,7 +154,7 @@ class adminDashboard extends resource {
             }
             echo "<li class='clearfix m-t-10'>\n";
             echo "<div class='pull-left m-r-10 admin-icon weblinks'><img alt='".$locale['271']." ".$locale['258']."' src='".get_image("ac_W")."'/>\n</div>";
-            echo "<div class='pull-right'>".number_format($weblinks['weblink'])." ".$locale['271']."</a></div>\n             
+            echo "<div class='pull-right'>".number_format($weblinks['weblink'])." ".$locale['271']."</a></div>\n
             <div class='pull-right m-r-10'><i title='".$locale['254']."' class='fas fa-thumbtack m-r-10 text-lighter'></i>".number_format($weblinks['submit'])."</div>\n";
             echo $content;
             echo "</li>\n";
@@ -169,14 +169,14 @@ class adminDashboard extends resource {
                 $content = "<div>".$locale['PH']."</div>
                 <div class='pull-left text-lighter m-r-10'>".showdate('%b%d, %R %p', $data['weblink_datestamp'])."</div>
                 <div class='overflow-hide'>
-                <a href='".INFUSIONS."gallery/gallery_admin.php$aidlink'>".number_format($photos['photo'])." ".$locale['261']."</a>               
+                <a href='".INFUSIONS."gallery/gallery_admin.php$aidlink'>".number_format($photos['photo'])." ".$locale['261']."</a>
                 </div>
                 ";
             }
             echo "<li class='clearfix m-t-10'>\n";
             echo "<div class='pull-left m-r-10 admin-icon gallery'><img alt='".$locale['272']." ".$locale['258']."' src='".get_image("ac_PH")."'/>\n</div>";
             echo "<div class='pull-right'>".number_format($photos['photo'])." ".$locale['261']."</a></div>\n
-            <div class='pull-right m-r-10'><i title='".$locale['257']."' class='fas fa-comment m-r-10 text-lighter'></i>".number_format($photos['comment'])."</div> 
+            <div class='pull-right m-r-10'><i title='".$locale['257']."' class='fas fa-comment m-r-10 text-lighter'></i>".number_format($photos['comment'])."</div>
             <div class='pull-right m-r-10'><i title='".$locale['254']."' class='fas fa-thumbtack m-r-10  text-lighter'></i>".number_format($photos['submit'])."</div>\n";
             echo $content;
             echo "</li>\n";

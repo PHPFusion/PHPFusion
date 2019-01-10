@@ -19,16 +19,16 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-if (file_exists(INFUSIONS."forum_mods_online_panel/locale/".LANGUAGE.".php")) {
-    $locale_path = INFUSIONS."forum_mods_online_panel/locale/".LANGUAGE.".php";
-} else {
-    $locale_path = INFUSIONS."forum_mods_online_panel/locale/English.php";
-}
-$locale = fusion_get_locale("", $locale_path);
+if (defined('FORUM_EXIST')) {
+    if (file_exists(INFUSIONS."forum_mods_online_panel/locale/".LANGUAGE.".php")) {
+        $locale_path = INFUSIONS."forum_mods_online_panel/locale/".LANGUAGE.".php";
+    } else {
+        $locale_path = INFUSIONS."forum_mods_online_panel/locale/English.php";
+    }
+    $locale = fusion_get_locale("", $locale_path);
 
-include_once INFUSIONS."forum_mods_online_panel/templates.php";
+    include_once INFUSIONS."forum_mods_online_panel/templates.php";
 
-if (infusion_exists('forum')) {
     $moderator_groups = [];
     $mod_group = [];
     $group_sql = "";

@@ -415,11 +415,6 @@ label small {
     font-weight: normal;
 }
 
-.form-group label,
-.form-group > div {
-    padding: 0
-}
-
 /* General table properties */
 
 table {
@@ -1021,6 +1016,14 @@ footer {
 
 .nav-tabs {
     margin-bottom: 0 !important;
+}
+
+.checkbox,
+.radio {
+    position: relative;
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 html[dir="rtl"] .pf-logo {

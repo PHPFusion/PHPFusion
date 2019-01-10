@@ -105,7 +105,7 @@ function form_select($input_name, $label = "", $input_value, array $options = []
         'no_root'              => FALSE,
         'show_current'         => FALSE,
         'db_cache'             => TRUE,
-        'data' => []
+        'data'                 => []
     ];
 
     $options += $default_options;
@@ -274,9 +274,9 @@ function form_select($input_name, $label = "", $input_value, array $options = []
 
                 // where options is more than one value, pass to data attributes.
                 $data_attributes = '';
-                if (count($value)>1) {
+                if (count($value) > 1) {
                     $data_options = [];
-                    foreach($value as $datakey => $dataval) {
+                    foreach ($value as $datakey => $dataval) {
                         $data_options[] = "data-$datakey='$dataval'";
                     }
                     $data_attributes = " ".implode(' ', $data_options)." ";
@@ -527,33 +527,33 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
     $locale = fusion_get_locale();
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
     $default_options = [
-        'required'       => FALSE,
-        'regex'          => '',
-        'input_id'       => $input_name,
-        'placeholder'    => $locale['sel_user'],
-        'deactivate'     => FALSE,
-        'safemode'       => FALSE,
-        'allowclear'     => FALSE,
-        'multiple'       => FALSE,
-        'inner_width'    => '250px',
-        'width'          => '100%',
-        'keyflip'        => FALSE,
-        'tags'           => FALSE,
-        'jsonmode'       => FALSE,
-        'chainable'      => FALSE,
-        'max_select'     => 1,
-        'error_text'     => '',
-        'class'          => '',
-        'stacked'              => '',
-        'inline'         => FALSE,
-        'tip'            => '',
-        'ext_tip'        => '',
-        'delimiter'      => ',',
-        'callback_check' => '',
-        'file'           => '',
-        'allow_self'     => FALSE,
+        'required'          => FALSE,
+        'regex'             => '',
+        'input_id'          => $input_name,
+        'placeholder'       => $locale['sel_user'],
+        'deactivate'        => FALSE,
+        'safemode'          => FALSE,
+        'allowclear'        => FALSE,
+        'multiple'          => FALSE,
+        'inner_width'       => '250px',
+        'width'             => '100%',
+        'keyflip'           => FALSE,
+        'tags'              => FALSE,
+        'jsonmode'          => FALSE,
+        'chainable'         => FALSE,
+        'max_select'        => 1,
+        'error_text'        => '',
+        'class'             => '',
+        'stacked'           => '',
+        'inline'            => FALSE,
+        'tip'               => '',
+        'ext_tip'           => '',
+        'delimiter'         => ',',
+        'callback_check'    => '',
+        'file'              => '',
+        'allow_self'        => FALSE,
         'callback_function' => '',
-        'image_path' => IMAGES."avatars/",
+        'image_path'        => IMAGES."avatars/",
     ];
 
     $options += $default_options;
@@ -677,16 +677,16 @@ function user_search($user_id) {
  * @param string $label
  * @param bool   $input_value
  * @param array  $options
- * @param        $db - your db
+ * @param        $db       - your db
  * @param        $name_col - the option text to show
- * @param        $id_col - unique id
- * @param        $cat_col - parent id
+ * @param        $id_col   - unique id
+ * @param        $cat_col  - parent id
  *                         ## The rest of the Params are used by the function itself -- no need to handle ##
- * @param bool   $self_id - not required
- * @param bool   $id - not required
- * @param bool   $level - not required
- * @param bool   $index - not required
- * @param bool   $data - not required
+ * @param bool   $self_id  - not required
+ * @param bool   $id       - not required
+ * @param bool   $level    - not required
+ * @param bool   $index    - not required
+ * @param bool   $data     - not required
  *
  * @return string
  */

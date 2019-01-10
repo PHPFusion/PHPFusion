@@ -121,6 +121,7 @@ class Token extends \defender {
     /**
      * Plain Token Validation - executed at maincore.php through sniff_token() only.
      * Makes thorough checks of a posted token, and the token alone. It does not unset token.
+     *
      * @return bool
      */
     private static function verify_token() {
@@ -165,6 +166,7 @@ class Token extends \defender {
 
     /**
      * Generates a unique token
+     *
      * @param string $form_id
      * @param int    $max_tokens
      * @param string $file
@@ -177,14 +179,14 @@ class Token extends \defender {
         \defender::getInstance()->set_RemoteFile($remote_file);
         $userdata = fusion_get_userdata();
         $user_id = (iMEMBER ? $userdata['user_id'] : 0);
-            $secret_key = defined('SECRET_KEY') ? SECRET_KEY : 'secret_key';
-            $secret_key_salt = defined('SECRET_KEY_SALT') ? SECRET_KEY_SALT : 'secret_salt';
-            $token_time = TIME;
-            $algo = fusion_get_settings('password_algorithm') ? fusion_get_settings('password_algorithm') : 'sha256';
-            $key = $user_id.$token_time.$form_id.$secret_key;
-            $salt = md5(isset($userdata['user_salt']) ? $userdata['user_salt'].$secret_key_salt : $secret_key_salt);
-            // generate a new token
-            $token = $user_id.'.'.$token_time.'.'.hash_hmac($algo, $key, $salt);
+        $secret_key = defined('SECRET_KEY') ? SECRET_KEY : 'secret_key';
+        $secret_key_salt = defined('SECRET_KEY_SALT') ? SECRET_KEY_SALT : 'secret_salt';
+        $token_time = TIME;
+        $algo = fusion_get_settings('password_algorithm') ? fusion_get_settings('password_algorithm') : 'sha256';
+        $key = $user_id.$token_time.$form_id.$secret_key;
+        $salt = md5(isset($userdata['user_salt']) ? $userdata['user_salt'].$secret_key_salt : $secret_key_salt);
+        // generate a new token
+        $token = $user_id.'.'.$token_time.'.'.hash_hmac($algo, $key, $salt);
 
         if (\defender::safe()) {
             // Store into session
@@ -196,11 +198,11 @@ class Token extends \defender {
         } else {
             $token_ring = $_SESSION['csrf_tokens'][self::pageHash($file)][$form_id];
             if (!empty($token_ring)) {
-            $ring = array_rand($token_ring, 1);
-            $token = $token_ring[$ring];
+                $ring = array_rand($token_ring, 1);
+                $token = $token_ring[$ring];
             } else {
                 $_SESSION['csrf_tokens'][self::pageHash($file)][$form_id][] = $token;
-        }
+            }
         }
 
         //print_P($_SESSION['csrf_tokens']);
@@ -218,6 +220,6 @@ class Token extends \defender {
             }
         }
 
-        return (string) $token;
+        return (string)$token;
     }
 }
