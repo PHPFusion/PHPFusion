@@ -98,7 +98,6 @@ class Members_Admin {
             'edit'                  => $base_url.'&amp;ref=edit&amp;lookup=',
             'delete'                => $base_url.'&amp;ref=delete&amp;lookup=',
             'inactive'              => $base_url.'&amp;ref=inactive',
-            'resend'                => $base_url.'&amp;ref=resend&amp;lookup=',
         ];
 
         self::$user_id = (isset($_GET['lookup']) && dbcount('(user_id)', DB_USERS, 'user_id=:user_id', [':user_id' => isnum($_GET['lookup']) ? $_GET['lookup'] : 0]) ? $_GET['lookup'] : 0);
@@ -244,7 +243,7 @@ class Members_Admin {
                         $title = sprintf(self::$locale['ME_452'], self::$user_data['user_name']);
                         BreadCrumbs::getInstance()->addBreadCrumb(['link' => self::$status_uri['view'].$_GET['lookup'], 'title' => $title]);
                         opentable($title);
-                        Members_Profile::edit_user_profile();
+                        Members_Profile::edit_user_form();
                         closetable();
                     } else {
                         redirect(FUSION_SELF.fusion_get_aidlink());
@@ -264,13 +263,6 @@ class Members_Admin {
                         opentable(sprintf(self::$locale['ME_453'], self::$user_data['user_name']));
                         Members_Profile::delete_user();
                         closetable();
-                    } else {
-                        redirect(FUSION_SELF.fusion_get_aidlink());
-                    }
-                    break;
-                case 'resend':
-                    if (!empty($_GET['lookup']) && !isnum($_GET['lookup'])) {
-                        Members_Profile::resend_email();
                     } else {
                         redirect(FUSION_SELF.fusion_get_aidlink());
                     }

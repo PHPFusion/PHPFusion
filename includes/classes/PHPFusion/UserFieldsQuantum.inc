@@ -1255,7 +1255,7 @@ class UserFieldsQuantum extends \SqlHandler {
         if (!empty($this->modules)) {
             if (isset($_GET['install'])) {
                 if ($_GET['ref'] == 'public') {
-                    $modal = openmodal('modadd', "<h4 class='m-0'>Add User Fields Module</h4>", ['static'=>TRUE]);
+                    $modal = openmodal('modadd', "<h4 class='m-0'>Add User Fields Module</h4>");
                     $modal .= $this->display_module_form();
                     $modal .= closemodal();
                     add_to_footer($modal);
@@ -2471,9 +2471,8 @@ class UserFieldsQuantum extends \SqlHandler {
         if ($type == 'dynamics') {
             $field_attr = $this->dynamics_fieldinfo($data['field_type'], $data['field_default']);
         } else if ($type == 'module') {
-            $field_attr = $this->user_field_dbinfo;
+            $field_attr = $this->modules[$data['field_name']]['user_field_dbinfo'];
         }
-
         // Field order check
         $max_order = dbresult(dbquery("SELECT MAX(field_order) FROM ".DB_USER_FIELDS." WHERE field_cat=:cid", [':cid' => $data['field_cat']]), 0) + 1;
         if (!$data['field_order'] || $data['field_order'] > $max_order) {
@@ -2751,6 +2750,7 @@ class UserFieldsQuantum extends \SqlHandler {
                     if (!$this->field_data['field_order']) {
                         $this->field_data['field_order'] = dbresult(dbquery("SELECT MAX(field_order) FROM ".DB_USER_FIELDS." WHERE field_cat=:cat_id", [':cat_id' => $this->field_data['field_cat']]), 0) + 1;
                     }
+
                     $this->create_fields($this->field_data, 'module');
                 }
             }

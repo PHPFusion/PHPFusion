@@ -24,9 +24,10 @@ $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/main.php');
 if (!isset($_GET['pagenum']) || !isnum($_GET['pagenum'])) {
     $_GET['pagenum'] = 1;
 }
-
-$settings = fusion_get_settings();
-
+/**
+ * $admin_sections are generated from navigation.php
+ * $admin_pages are generated from navigation.php
+ */
 $admin_images = TRUE;
 
 $members_count = dbarray(dbquery("SELECT

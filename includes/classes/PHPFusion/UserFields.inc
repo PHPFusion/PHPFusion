@@ -494,7 +494,6 @@ class UserFields extends UserFieldsQuantum {
             $current_section = current($this->info['section']);
         }
         $_GET['section'] = isset($_GET['section']) && isset($this->info['section'][$_GET['section']]) ? $_GET['section'] : $current_section['id'];
-
         if (empty($this->user_data['user_avatar']) && !file_exists(IMAGES."avatars/".$this->user_data['user_avatar'])) {
             $this->user_data['user_avatar'] = get_image('noavatar');
         }

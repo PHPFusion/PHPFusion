@@ -42,6 +42,7 @@ class Infusion_Core {
             foreach ($inf_folder as $folder) {
                 $inf_include = INFUSIONS.$folder."/infusion_db.php";
                 if (file_exists($inf_include)) {
+                    /** @noinspection PhpIncludeInspection */
                     include $inf_include;
                 }
             }
@@ -205,6 +206,7 @@ class Infusion_Core {
         $inf_image = "";
         $inf_newtable = [];
         $inf_insertdbrow = [];
+        $inf_updatedbrow = [];
         $inf_droptable = [];
         $inf_altertable = [];
         $inf_deldbrow = [];
@@ -246,6 +248,7 @@ class Infusion_Core {
                 'newcol'          => $inf_newcol,
                 'dropcol'         => $inf_dropcol,
                 'insertdbrow'     => $inf_insertdbrow,
+                'updatedbrow'    => $inf_updatedbrow,
                 'droptable'       => $inf_droptable,
                 'altertable'      => $inf_altertable,
                 'deldbrow'        => $inf_deldbrow,
