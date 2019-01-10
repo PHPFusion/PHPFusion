@@ -24,3 +24,4 @@ require_once FORUM_CLASS."autoloader.php";
 require_once INCLUDES.'infusions_include.php';
 PHPFusion\Forums\Admin\ForumAdminInterface::view()->display_forum_admin();
 require_once THEMES."templates/footer.php";
+

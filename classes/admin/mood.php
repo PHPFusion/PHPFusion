@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Forums\Admin;
 
-use PHPFusion\QuantumFields;
+use PHPFusion\UserFieldsQuantum;
 
 class ForumAdminMood extends ForumAdminInterface {
     /**
@@ -106,10 +106,10 @@ class ForumAdminMood extends ForumAdminInterface {
         echo openform("mood_form", "POST", $form_action).
             form_hidden('mood_id', '', $this->data['mood_id']).
 
-            QuantumFields::quantum_multilocale_fields('mood_name', self::$locale['forum_094'], $this->data['mood_name'],
+            UserFieldsQuantum::quantum_multilocale_fields('mood_name', self::$locale['forum_094'], $this->data['mood_name'],
                 ['required' => TRUE, 'inline' => TRUE, 'placeholder' => self::$locale['forum_096']]).
 
-            QuantumFields::quantum_multilocale_fields('mood_description', self::$locale['forum_095'], $this->data['mood_description'],
+            UserFieldsQuantum::quantum_multilocale_fields('mood_description', self::$locale['forum_095'], $this->data['mood_description'],
                 ['required' => TRUE, 'inline' => TRUE, 'placeholder' => self::$locale['forum_097'], 'ext_tip' => self::$locale['forum_098']]).
 
             form_text('mood_icon', self::$locale['forum_099'], $this->data['mood_icon'],
@@ -181,7 +181,7 @@ class ForumAdminMood extends ForumAdminInterface {
 
         $mood_query = "SELECT fm.*, count(pn.post_id) AS 'mood_count'
             FROM ".DB_FORUM_MOODS." fm
-            LEFT JOIN ".DB_POST_NOTIFY." pn ON pn.notify_mood_id=fm.mood_id
+            LEFT JOIN ".DB_FORUM_POST_NOTIFY." pn ON pn.notify_mood_id=fm.mood_id
             GROUP BY mood_id
             ORDER BY mood_id ASC
             LIMIT ".$_GET['rowstart'].", 16";
@@ -215,12 +215,12 @@ class ForumAdminMood extends ForumAdminInterface {
                         <tr>
                             <td>
                                 <a href="<?php echo $edit_link ?>">
-                                    <?php echo QuantumFields::parse_label($data['mood_name']) ?>
+                                    <?php echo UserFieldsQuantum::parse_label($data['mood_name']) ?>
                                 </a>
                             </td>
                             <td><?php echo sprintf(self::$locale['forum_113'],
                                     ucfirst(fusion_get_userdata("user_name")),
-                                    QuantumFields::parse_label($data['mood_description'])) ?>
+                                    UserFieldsQuantum::parse_label($data['mood_description'])) ?>
                             </td>
                             <td>
                                 <?php if (!empty($data['mood_icon'])) : ?>

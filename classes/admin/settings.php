@@ -18,7 +18,7 @@
 namespace PHPFusion\Forums\Admin;
 
 use PHPFusion\Locale;
-use PHPFusion\QuantumFields;
+use PHPFusion\UserFieldsQuantum;
 
 /**
  * Class ForumAdminSettings

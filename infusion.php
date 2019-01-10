@@ -21,18 +21,34 @@ if (!defined("IN_FUSION")) {
 
 $locale = fusion_get_locale('', [
     LOCALE.LOCALESET."setup.php",
+    INFUSIONS."forum/locale/".LOCALESET."forum.php",
     INFUSIONS."forum/locale/".LOCALESET."/forum_tags.php"
 ]);
 
 // Infusion general information
 $inf_title = $locale['forums']['title'];
 $inf_description = $locale['forums']['description'];
-$inf_version = '2.0';
+$inf_version = '3.0';
 $inf_developer = 'PHP Fusion Development Team';
 $inf_email = 'info@php-fusion.co.uk';
 $inf_weburl = 'https://www.php-fusion.co.uk';
 $inf_folder = 'forum';
 $inf_image = 'forums.svg';
+
+// Multilanguage table for Administration
+$inf_mlt[] = [
+    'title'  => $locale['forums']['title'],
+    'rights' => 'FO'
+];
+$inf_mlt[] = [
+    'title'  => $locale['setup_3038'],
+    'rights' => 'FR'
+];
+
+// Moderator Discussions
+\PHPFusion\Admins::getInstance()->setAdminPageIcons("FR", "<i class='admin-ico fas fa-comment-alt fa-fw'></i>");
+\PHPFusion\Admins::getInstance()->setCommentType("FR", $locale['forum_0667']);
+\PHPFusion\Admins::getInstance()->setLinkType("FR", fusion_get_settings("siteurl")."infusions/forum/index.php?ref=news/news.php?readmore=moderator&amp;id=%s");
 
 // Create tables
 $inf_newtable[] = DB_FORUM_ATTACHMENTS." (
@@ -43,7 +59,9 @@ $inf_newtable[] = DB_FORUM_ATTACHMENTS." (
     attach_mime VARCHAR(20) NOT NULL DEFAULT '',
     attach_size INT(20) UNSIGNED NOT NULL DEFAULT '0',
     attach_count INT(10) UNSIGNED NOT NULL DEFAULT '0',
-    PRIMARY KEY (attach_id)
+    PRIMARY KEY (attach_id),
+    KEY thread_id (thread_id),
+    KEY post_id (post_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 $inf_newtable[] = DB_FORUM_VOTES." (
@@ -54,7 +72,10 @@ $inf_newtable[] = DB_FORUM_VOTES." (
     vote_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
     vote_points DECIMAL(3,0) NOT NULL DEFAULT '0',
     vote_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
-    PRIMARY KEY (vote_id)
+    PRIMARY KEY (vote_id),
+    KEY forum_id (forum_id),
+    KEY thread_id (thread_id),
+    KEY post_id (post_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 $inf_newtable[] = DB_FORUM_RANKS." (
@@ -81,7 +102,8 @@ $inf_newtable[] = DB_FORUM_POLL_VOTERS." (
     forum_vote_user_id MEDIUMINT(8) UNSIGNED NOT NULL,
     forum_vote_user_ip VARCHAR(45) NOT NULL,
     forum_vote_user_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
-    KEY thread_id (thread_id,forum_vote_user_id)
+    KEY thread_id (thread_id),
+    KEY forum_vote_user_id (forum_vote_user_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 $inf_newtable[] = DB_FORUM_POLLS." (
@@ -128,6 +150,7 @@ $inf_newtable[] = DB_FORUMS." (
     forum_meta TEXT NOT NULL,
     forum_alias VARCHAR(50) NOT NULL DEFAULT '',
     PRIMARY KEY (forum_id),
+    KEY forum_cat (forum_cat),
     KEY forum_order (forum_order),
     KEY forum_lastpostid (forum_lastpostid),
     KEY forum_postcount (forum_postcount),
@@ -180,9 +203,11 @@ $inf_newtable[] = DB_FORUM_THREADS." (
     thread_locked TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
     thread_hidden TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
     PRIMARY KEY (thread_id),
+    KEY forum_id (forum_id),
     KEY thread_postcount (thread_postcount),
     KEY thread_lastpost (thread_lastpost),
-    KEY thread_views (thread_views)
+    KEY thread_views (thread_views),
+    FULLTEXT (thread_subject)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 $inf_newtable[] = DB_FORUM_THREAD_NOTIFY." (
@@ -201,6 +226,19 @@ $inf_newtable[] = DB_FORUM_TAGS." (
     tag_status SMALLINT(1) NOT NULL DEFAULT '0',
     tag_language VARCHAR(100) NOT NULL DEFAULT '',
     PRIMARY KEY (tag_id)
+) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+
+$inf_newtable[] = DB_FORUM_REPORTS." (
+    report_id MEDIUMINT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+    report_post_id MEDIUMINT(11) UNSIGNED NOT NULL DEFAULT '0',
+    report_user MEDIUMINT(11) UNSIGNED NOT NULL DEFAULT '0',
+    report_comment TEXT NOT NULL,
+    report_mod_comment TEXT NOT NULL,
+    report_status SMALLINT(1) NOT NULL DEFAULT '0',    
+    report_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',    
+    report_updated INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    report_archive TEXT NOT NULL,    
+    PRIMARY KEY (report_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 $inf_newtable[] = DB_FORUM_USER_REP." (
@@ -228,7 +266,7 @@ $inf_newtable[] = DB_FORUM_MOODS." (
     PRIMARY KEY (mood_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
-$inf_newtable[] = DB_POST_NOTIFY." (
+$inf_newtable[] = DB_FORUM_POST_NOTIFY." (
     post_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
     notify_mood_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
     notify_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
@@ -241,8 +279,16 @@ $inf_newtable[] = DB_POST_NOTIFY." (
 if (!column_exists('users', 'user_reputation')) {
     $inf_altertable[] = $db_prefix."users ADD user_reputation INT(10) UNSIGNED NOT NULL AFTER user_status";
 }
+// Admin links
+$inf_adminpanel[] = [
+    "image"  => $inf_image,
+    "page"   => 1,
+    "rights" => "F",
+    "title"  => $locale['setup_3012'],
+    "panel"  => "admin/forums.php"
+];
 
-// Insert settings
+// Insert Forum Settings
 $settings = [
     'forum_ips'                  => USER_LEVEL_SUPER_ADMIN,
     'forum_attachmax'            => 1048576,
@@ -274,7 +320,7 @@ foreach ($settings as $name => $value) {
     $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('".$name."', '".$value."', '".$inf_folder."')";
 }
 
-// Insert panels
+// Insert Forum Panels
 $inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction, panel_languages) VALUES ('".$locale['setup_3402']."', 'forum_threads_panel', '', '1', '4', 'file', '0', '1', '1', '', '3', '".fusion_get_settings('enabled_languages')."')";
 $inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction, panel_languages) VALUES ('".$locale['setup_3405']."', 'forum_threads_list_panel', '', '2', '1', 'file', '0', '1', '1', '".fusion_get_settings('opening_page')."', '2', '".fusion_get_settings('enabled_languages')."')";
 
@@ -375,7 +421,7 @@ $inf_droptable[] = DB_FORUM_VOTES;
 $inf_droptable[] = DB_FORUM_RANKS;
 $inf_droptable[] = DB_FORUM_TAGS;
 $inf_droptable[] = DB_FORUM_MOODS;
-$inf_droptable[] = DB_POST_NOTIFY;
+$inf_droptable[] = DB_FORUM_POST_NOTIFY;
 $inf_droptable[] = DB_FORUM_USER_REP;
 
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_rights='F'";

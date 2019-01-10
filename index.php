@@ -21,12 +21,11 @@ if (!defined('FORUM_EXIST')) {
 }
 require_once THEMES."templates/header.php";
 require_once INCLUDES."infusions_include.php";
-require_once INFUSIONS.'forum/infusion_db.php';
-require_once FORUM_CLASS."autoloader.php";
 require_once INFUSIONS."forum/forum_include.php";
-include INFUSIONS."forum/templates.php";
-// Base theme is 0.06s TOP
+require_once INFUSIONS."forum/templates.php";
+
 \PHPFusion\Locale::setLocale(FORUM_LOCALE);
-$info = \PHPFusion\Forums\ForumServer::forum()->getForumInfo();
-render_forum($info);
+echo render_forum(\PHPFusion\Infusions\Forum\Classes\Forum_Server::forum()->getForumInfo());
+
+//showBenchmark(TRUE); //0.374
 require_once THEMES."templates/footer.php";

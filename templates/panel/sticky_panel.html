@@ -1,0 +1,16 @@
+<div class="list-group sticky-panel">
+    <div class="list-group-item"><h4 class="m-0">Sticky Discussions</h4></div>
+    {thread_block.{
+    <div class="list-group-item body">
+        <div class="pull-left m-r-10">{%avatar%}</div>
+        <div class="overflow-hide">
+            <div class="pull-right chat-bubble" data-toggle="tooltip" data-placement="top"
+                 title="{%post_count%} reply(s)">{%post_count%}
+            </div>
+            <div><a class="forum-link" href="{%thread_link%}">{%thread_subject%}</a><br/>by {%profile_link%} &middot;
+                {%date%}
+            </div>
+        </div>
+    </div>
+    }}
+</div>

@@ -26,51 +26,43 @@ if (isset($_GET['delete_track']) && isnum($_GET['delete_track']) && dbcount("(th
     redirect(FORUM.'index.php?section=tracked');
 }
 
-$time_sql = '';
-if (!empty($_POST['filter_date'])) {
-    $time_filter = form_sanitizer($_POST['filter_date'], '', 'filter_date');
-    $time_filter = (TIME - ($time_filter * 24 * 3600));
-    $time_sql = "t.thread_lastpost < '$time_filter' AND ";
-}
-$opts = [
-    '0'   => $locale['forum_p999'],
-    '1'   => $locale['forum_p001'],
-    '7'   => $locale['forum_p007'],
-    '14'  => $locale['forum_p014'],
-    '30'  => $locale['forum_p030'],
-    '90'  => $locale['forum_p090'],
-    '180' => $locale['forum_p180'],
-    '365' => $locale['forum_3015']
-];
-$this->forum_info['threads_time_filter'] = openform('filter_form', 'post', INFUSIONS."forum/index.php?section=tracked").
-    form_select('filter_date', $locale['forum_0009'], (isset($_POST['filter_date']) && $_POST['filter_date'] ? $_POST['filter_date'] : 0), [
-        'options' => $opts,
-        'width'   => '300px',
-        'class'   => 'pull-left m-r-10',
-        'stacked' => form_button('go', $locale['go'], $locale['go'], ['class' => 'btn-default']),
-    ]).closeform();
+$this->forum_info['title'] = $locale['global_056'];
+$this->forum_info['description'] = "The threads that you are currently tracking.";
+$this->forum_info['link'] = FORUM;
+$this->forum_info['filter'] = \PHPFusion\Infusions\Forum\Classes\Forum_Server::filter()->get_FilterInfo();
 
-$threads = \PHPFusion\Forums\ForumServer::thread(FALSE)->get_forum_thread(0,
+$filter = \PHPFusion\Infusions\Forum\Classes\Forum_Server::filter()->get_filterSQL();
+
+$base_condition = "tn.notify_user='".$userdata['user_id']."' AND t.thread_hidden='0' AND ".groupaccess('tf.forum_access');
+
+$threads = \PHPFusion\Infusions\Forum\Classes\Forum_Server::thread(FALSE)->get_forum_thread(0,
     [
         'count_query' => "SELECT tn.thread_id
         FROM ".DB_FORUM_THREAD_NOTIFY." tn
         INNER JOIN ".DB_FORUM_THREADS." t ON tn.thread_id = t.thread_id
         INNER JOIN ".DB_FORUMS." tf ON t.forum_id = tf.forum_id
-        WHERE ".$time_sql." tn.notify_user='".$userdata['user_id']."' AND ".groupaccess('forum_access')." AND t.thread_hidden='0'
-        ",
-        'query'       => "SELECT tf.forum_id, tf.forum_name, tf.forum_access, tf.forum_type, tf.forum_mods,
+        ".$filter['join']."
+        WHERE $base_condition ".$filter['condition']." GROUP BY t.thread_id",
+
+        'query' => "SELECT
         tn.thread_id, tn.notify_datestamp, tn.notify_user, tn.thread_id 'track_button',
         ttc.forum_id AS forum_cat_id, ttc.forum_name AS forum_cat_name,
-        t.thread_subject, t.forum_id, t.thread_lastpost, t.thread_lastpostid, t.thread_lastuser, t.thread_postcount, t.thread_views, t.thread_locked,
-        t.thread_author, t.thread_poll, t.thread_sticky
+        t.*, tf.* ".$filter['select']."
         FROM ".DB_FORUM_THREAD_NOTIFY." tn
         INNER JOIN ".DB_FORUM_THREADS." t ON tn.thread_id = t.thread_id
         INNER JOIN ".DB_FORUMS." tf ON t.forum_id = tf.forum_id
         LEFT JOIN ".DB_FORUMS." ttc ON ttc.forum_id = tf.forum_cat
-        WHERE tn.notify_user='".$userdata['user_id']."' AND t.thread_hidden='0' AND $time_sql ".groupaccess('tf.forum_access')."
+        ".$filter['join']."
+        WHERE $base_condition ".$filter['condition']."  
         GROUP BY tn.thread_id
-        ORDER BY tn.notify_datestamp DESC"
+        ".$filter['order'],
+
+        "debug" => FALSE,
+    ] + $filter + [
+        'custom_condition' => ($base_condition ? "AND $base_condition" : ""),
+        'custom_join'      => "INNER JOIN ".DB_FORUM_THREAD_NOTIFY." tn ON tn.thread_id=t.thread_id"
     ]
 );
 
 $this->forum_info = array_merge_recursive($this->forum_info, $threads);
+//showBenchmark(TRUE, '1', TRUE);

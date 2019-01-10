@@ -20,7 +20,7 @@ if (!defined("IN_FUSION")) {
 }
 
 function attach_exists($file) {
-    return \PHPFusion\Forums\Functions::attach_exists($file);
+    return \PHPFusion\Forums\forumfunctions::attach_exists($file);
 }
 
 function forum_rank_cache() {
@@ -32,11 +32,11 @@ function show_forum_rank($posts, $level, $groups) {
 }
 
 function display_image($file) {
-    PHPFusion\Forums\Functions::display_image($file);
+    PHPFusion\Forums\forumfunctions::display_image($file);
 }
 
 function display_image_attach($file, $width = 50, $height = 50, $rel = "") {
-    return PHPFusion\Forums\Functions::display_image_attach($file, $width, $height, $rel);
+    return PHPFusion\Forums\forumfunctions::display_image_attach($file, $width, $height, $rel);
 }
 
 function define_forum_mods($info) {
