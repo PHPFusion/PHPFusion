@@ -47,13 +47,13 @@ function showrendertime($queries = TRUE) {
 
 /**
  * Developer tools only (Translations not Required)
- *
- * @param bool   $show_sql_performance  - true to pop up SQL analysis modal
- * @param string $performance_threshold - results that is slower than this will be highlighted
+ * @param bool   $show_sql_performance      Turn on or off
+ * @param string $performance_threshold     The query time
+ * @param bool   $filter_results            Show only those with problems
  *
  * @return string
  */
-function showBenchmark($show_sql_performance = FALSE, $performance_threshold = '0.01') {
+function showBenchmark($show_sql_performance = FALSE, $performance_threshold = '0.01', $filter_results = FALSE) {
     $locale = fusion_get_locale();
     if ($show_sql_performance) {
         $query_log = DatabaseFactory::getConnection('default')->getQueryLog();
@@ -65,48 +65,50 @@ function showBenchmark($show_sql_performance = FALSE, $performance_threshold = '
             foreach ($query_log as $connectionID => $sql) {
                 $current_time = $sql[0];
                 $highlighted = $current_time > $performance_threshold ? TRUE : FALSE;
-                $modal_body .= "<div class='spacer-xs m-10".($highlighted ? " alert alert-warning" : "")."'>\n";
-                $modal_body .= "<h5><strong>SQL run#$i : ".($highlighted ? "<span class='text-danger'>".$sql[0]."</span>" : "<span class='text-success'>".$sql[0]."</span>")." seconds</strong></h5>\n\r";
-                $modal_body .= "[code]".$sql[1].($sql[2] ? " [Parameters -- ".implode(',', $sql[2])." ]" : '')."[/code]\n\r";
-                $modal_body .= "<div>\n";
-                $end_sql = end($sql[3]);
-                $modal_body .= "<kbd>".$end_sql['file']."</kbd><span class='badge pull-right'>Line #".$end_sql['line'].", ".$end_sql['function']."</span> - <a href='#' data-toggle='collapse' data-target='#trace_$connectionID'>Toggle Backtrace</a>\n";
-                if (is_array($sql[3])) {
-                    $modal_body .= "<div id='trace_$connectionID' class='alert alert-info collapse spacer-sm'>";
-                    foreach ($sql[3] as $id => $debug_backtrace) {
-                        $modal_body .= "<kbd>Stack Trace #$id - ".$debug_backtrace['file']." @ Line ".$debug_backtrace['line']."</kbd><br/>";
-                        if (!empty($debug_backtrace['args'][0])) {
-                            $debug_line = $debug_backtrace['args'][0];
-                            if (is_array($debug_backtrace['args'][0])) {
-                                $debug_line = "";
-                                foreach ($debug_backtrace['args'][0] as $line) {
-                                    if (!is_array($line)) {
-                                        $debug_line .= "<br/>".$line;
+                if ($filter_results === FALSE || $filter_results === TRUE AND $highlighted === TRUE) {
+                    $modal_body .= "<div class='spacer-xs m-10".($highlighted ? " alert alert-warning" : "")."'>\n";
+                    $modal_body .= "<h5><strong>SQL run#$i : ".($highlighted ? "<span class='text-danger'>".$sql[0]."</span>" : "<span class='text-success'>".$sql[0]."</span>")." seconds</strong></h5>\n\r";
+                    $modal_body .= "[code]".$sql[1].($sql[2] ? " [Parameters -- ".implode(',', $sql[2])." ]" : '')."[/code]\n\r";
+                    $modal_body .= "<div>\n";
+                    $end_sql = end($sql[3]);
+                    $modal_body .= "<kbd>".$end_sql['file']."</kbd><span class='badge pull-right'>Line #".$end_sql['line'].", ".$end_sql['function']."</span> - <a href='#' data-toggle='collapse' data-target='#trace_$connectionID'>Toggle Backtrace</a>\n";
+                    if (is_array($sql[3])) {
+                        $modal_body .= "<div id='trace_$connectionID' class='alert alert-info collapse spacer-sm'>";
+                        foreach ($sql[3] as $id => $debug_backtrace) {
+                            $modal_body .= "<kbd>Stack Trace #$id - ".$debug_backtrace['file']." @ Line ".$debug_backtrace['line']."</kbd><br/>";
+                            if (!empty($debug_backtrace['args'][0])) {
+                                $debug_line = $debug_backtrace['args'][0];
+                                if (is_array($debug_backtrace['args'][0])) {
+                                    $debug_line = "";
+                                    foreach ($debug_backtrace['args'][0] as $line) {
+                                        if (!is_array($line)) {
+                                            $debug_line .= "<br/>".$line;
+                                        }
                                     }
                                 }
+
+                                $debug_param = "";
+                                if (!empty($debug_backtrace['args'][1])) {
+                                    if (is_array($debug_backtrace['args'][1])) {
+                                        $debug_param .= "<br/>array(";
+                                        foreach ($debug_backtrace['args'][1] as $key => $value) {
+                                            $debug_param .= "<br/><span class='m-l-15'>[$key] => $value,</span>";
+                                        }
+                                        $debug_param .= "<br/>);";
+                                    } else {
+                                        $debug_param .= $debug_backtrace['args'][1];
+                                    }
+                                }
+                                $modal_body .= "Statement::: <code>$debug_line</code><br/>Parameters::: <code>".($debug_param ?: "--")."</code><br/>";
                             }
 
-                            $debug_param = "";
-                            if (!empty($debug_backtrace['args'][1])) {
-                                if (is_array($debug_backtrace['args'][1])) {
-                                    $debug_param .= "<br/>array(";
-                                    foreach ($debug_backtrace['args'][1] as $key => $value) {
-                                        $debug_param .= "<br/><span class='m-l-15'>[$key] => $value,</span>";
-                                    }
-                                    $debug_param .= "<br/>);";
-                                } else {
-                                    $debug_param .= $debug_backtrace['args'][1];
-                                }
-                            }
-                            $modal_body .= "Statement::: <code>$debug_line</code><br/>Parameters::: <code>".($debug_param ?: "--")."</code><br/>";
                         }
-
+                        $modal_body .= "</div>\n";
                     }
                     $modal_body .= "</div>\n";
+                    $modal_body .= "</div>\n";
+                    $i++;
                 }
-                $modal_body .= "</div>\n";
-                $modal_body .= "</div>\n";
-                $i++;
                 $time = $current_time + $time;
             }
         }
@@ -171,31 +173,6 @@ function showprivacypolicy() {
     return $html;
 }
 
-/**
- * Creates an alert bar
- *
- * @param        $title
- * @param array  $options
- *
- * @return string
- */
-if (!function_exists("alert")) {
-    function alert($title, array $options = []) {
-        $options += [
-            "class"   => !empty($options['class']) ? $options['class'] : 'alert-danger',
-            "dismiss" => !empty($options['dismiss']) && $options['dismiss'] == TRUE ? TRUE : FALSE
-        ];
-        if ($options['dismiss'] == TRUE) {
-            $html = "<div class='alert alert-dismissable ".$options['class']."'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>$title</div>";
-        } else {
-            $html = "<div class='alert ".$options['class']."'>$title</div>";
-        }
-        add_to_jquery("$('div.alert a').addClass('alert-link');");
-
-        return $html;
-    }
-}
-
 // Get the widget settings for the theme settings table
 if (!function_exists('get_theme_settings')) {
     function get_theme_settings($theme_folder) {
@@ -210,241 +187,6 @@ if (!function_exists('get_theme_settings')) {
         } else {
             return FALSE;
         }
-    }
-}
-
-/**
- * Java script that transform html table sortable
- *
- * @param $table_id - table ID
- *
- * @return string
- */
-function fusion_sort_table($table_id) {
-    add_to_footer("<script type='text/javascript' src='".INCLUDES."jquery/tablesorter/jquery.tablesorter.min.js'></script>\n");
-    add_to_jquery("$('#".$table_id."').tablesorter();");
-
-    return "tablesorter";
-}
-
-if (!function_exists("label")) {
-    function label($label, array $options = []) {
-        $options += [
-            "class" => !empty($array['class']) ? $array['class'] : "",
-            "icon"  => !empty($array['icon']) ? "<i class='".$array['icon']."'></i> " : "",
-        ];
-
-        return "<span class='label ".$options['class']."'>".$options['icon'].$label."</span>\n";
-    }
-}
-if (!function_exists("badge")) {
-    function badge($label, array $options = []) {
-        $options += [
-            "class" => !empty($array['class']) ? $array['class'] : "",
-            "icon"  => !empty($array['icon']) ? "<i class='".$array['icon']."'></i> " : "",
-        ];
-
-        return "<span class='badge ".$options['class']."'>".$options['icon'].$label."</span>\n";
-    }
-}
-if (!function_exists("openmodal") && !function_exists("closemodal") && !function_exists("modalfooter")) {
-
-    /**
-     * To get the best results for Modal z-index overlay, try :
-     * ob_start();
-     * ... insert and echo ...
-     * add_to_footer(ob_get_contents()).ob_end_clean();
-     */
-
-    /**
-     * Generate modal
-     *
-     * @param       $id    - unique CSS id
-     * @param       $title - modal title
-     * @param array $options
-     *
-     * @return string
-     */
-    function openmodal($id, $title, $options = []) {
-        $locale = fusion_get_locale();
-        $options += [
-            'class'        => !empty($options['class']) ?: 'modal-lg',
-            'button_id'    => '',
-            'button_class' => '',
-            'static'       => FALSE,
-            'hidden'       => FALSE,  // force a modal to be hidden at default, you will need a jquery trigger $('#your_modal_id').modal('show'); manually
-        ];
-
-        $modal_trigger = '';
-        if (!empty($options['button_id']) || !empty($options['button_class'])) {
-            $modal_trigger = !empty($options['button_id']) ? "#".$options['button_id'] : ".".$options['button_class'];
-        }
-
-        if ($options['static'] && !empty($modal_trigger)) {
-            OutputHandler::addToJQuery("$('".$modal_trigger."').bind('click', function(e){ $('#".$id."-Modal').modal({backdrop: 'static', keyboard: false}).modal('show'); e.preventDefault(); });");
-        } else if ($options['static'] && empty($options['button_id'])) {
-            OutputHandler::addToJQuery("$('#".$id."-Modal').modal({	backdrop: 'static',	keyboard: false }).modal('show');");
-        } else if ($modal_trigger && empty($options['static'])) {
-            OutputHandler::addToJQuery("$('".$modal_trigger."').bind('click', function(e){ $('#".$id."-Modal').modal('show'); e.preventDefault(); });");
-        } else {
-            if (!$options['hidden']) {
-                OutputHandler::addToJQuery("$('#".$id."-Modal').modal('show');");
-            }
-        }
-        $html = '';
-        $html .= "<div class='modal' id='$id-Modal' tabindex='-1' role='dialog' aria-labelledby='$id-ModalLabel' aria-hidden='true'>\n";
-        $html .= "<div class='modal-dialog ".$options['class']."' role='document'>\n";
-        $html .= "<div class='modal-content'>\n";
-        if ($title) {
-            $html .= "<div class='modal-header'>";
-            $html .= ($options['static'] ? '' : "<button type='button' class='btn pull-right btn-default' data-dismiss='modal'><i class='fa fa-times'></i> ".$locale['close']."</button>\n");
-            $html .= "<div class='modal-title' id='$id-title'>$title</div>\n";
-            $html .= "</div>\n";
-        }
-        $html .= "<div class='modal-body'>\n";
-
-        return $html;
-    }
-
-    /**
-     * Adds a modal footer in between openmodal and closemodal.
-     *
-     * @param            $content
-     * @param bool|FALSE $dismiss
-     *
-     * @return string
-     */
-    function modalfooter($content, $dismiss = FALSE) {
-        $html = "</div>\n<div class='modal-footer'>\n";
-        $html .= $content;
-        if ($dismiss) {
-            $html .= "<button type='button' class='btn btn-default pull-right' data-dismiss='modal'>".fusion_get_locale('close')."</button>";
-        }
-
-        return $html;
-    }
-
-    /**
-     * Close the modal
-     *
-     * @return string
-     */
-    function closemodal() {
-        return "</div>\n</div>\n</div>\n</div>\n";
-    }
-}
-
-if (!function_exists("progress_bar")) {
-    /**
-     * Render a progress bar
-     *
-     * @param int   $num        Max of 100
-     * @param bool  $title      Label for the progress bar
-     * @param array $options
-     *                          class           additional class for the progress bar
-     *                          height          the height of the progress bar in px
-     *                          reverse         set to true to have the color counting reversed
-     *                          disable         set to true to have the progress bar disabled status
-     *                          hide_info       set to true to hide the information in the progress bar rendering
-     *                          progress_class  have it your custom progress bar class with your own custom class
-     *
-     * @return string
-     */
-    function progress_bar($num, $title = FALSE, array $options = []) {
-        $default_options = [
-            'class'          => '',
-            'height'         => '',
-            'reverse'        => FALSE,
-            'as_percent'     => TRUE,
-            'disabled'       => FALSE,
-            'hide_info'      => FALSE,
-            'progress_class' => ''
-        ];
-        $options += $default_options;
-
-        $height = ($options['height']) ? $options['height'] : '20px';
-        if (!function_exists('bar_color')) {
-            function bar_color($num, $reverse) {
-                $auto_class = $reverse ? "progress-bar-success" : "progress-bar-danger";
-                if ($num > 71) {
-                    $auto_class = ($reverse) ? 'progress-bar-danger' : 'progress-bar-success';
-                } else if ($num > 55) {
-                    $auto_class = ($reverse) ? 'progress-bar-warning' : 'progress-bar-info';
-                } else if ($num > 25) {
-                    $auto_class = ($reverse) ? 'progress-bar-info' : 'progress-bar-warning';
-                } else if ($num < 25) {
-                    $auto_class = ($reverse) ? 'progress-bar-success' : 'progress-bar-danger';
-                }
-
-                return $auto_class;
-            }
-        }
-        $_barcolor = ['progress-bar-success', 'progress-bar-info', 'progress-bar-warning', 'progress-bar-danger'];
-        $_barcolor_reverse = [
-            'progress-bar-success',
-            'progress-bar-info',
-            'progress-bar-warning',
-            'progress-bar-danger'
-        ];
-        $html = '';
-        if (is_array($num)) {
-            $i = 0;
-            $chtml = "";
-            $cTitle = "";
-            $cNum = "";
-            foreach ($num as $value) {
-
-                $int = intval($num);
-
-                if ($options['disabled'] == TRUE) {
-                    $value = "&#x221e;";
-                } else {
-                    $value = $value > 0 ? $value.' ' : '0 ';
-                    $value .= $options['as_percent'] ? '%' : '';
-                }
-
-                $c2Title = "";
-
-                if (is_array($title)) {
-                    $c2Title = $title[$i];
-                } else {
-                    $cTitle = $title;
-                }
-
-                $auto_class = ($options['reverse']) ? $_barcolor_reverse[$i] : $_barcolor[$i];
-                $classes = (is_array($options['class'])) ? $options['class'][$i] : $auto_class;
-
-                $cNum .= "<div class='progress display-inline-block m-0' style='width:20px; height: 10px; '>\n";
-                $cNum .= "<span class='progress-bar ".$classes."' style='width:100%'></span></div>\n";
-                $cNum .= "<div class='display-inline-block m-r-5'>".$c2Title." ".$value."</div>\n";
-                $chtml .= "<div title='".$title."' class='progress-bar ".$classes."' role='progressbar' aria-valuenow='$value' aria-valuemin='0' aria-valuemax='100' style='width: $int%'>\n";
-                $chtml .= "</div>\n";
-                $i++;
-            }
-            $html .= ($options['hide_info'] == FALSE ? "<div class='text-right m-b-10'><span class='pull-left'>$cTitle</span><span class='clearfix'>$cNum </span></div>\n" : "");
-            $html .= "<div class='progress ".$options['progress_class']."' style='height: ".$height."'>\n";
-            $html .= $chtml;
-            $html .= "</div>\n";
-            $html .= "</div>\n";
-        } else {
-            $int = intval($num);
-            if ($options['disabled'] == TRUE) {
-                $num = "&#x221e;";
-            } else {
-                $num = $num > 0 ? $num.' ' : '0 ';
-                $num .= $options['as_percent'] ? '%' : '';
-            }
-
-            $auto_class = bar_color($int, $options['reverse']);
-            $class = (!$options['class']) ? $auto_class : $options['class'];
-
-            $html .= ($options['hide_info'] === FALSE ? "<div class='text-right m-b-10'><span class='pull-left'>$title</span><span class='clearfix'>$num</span></div>\n" : "");
-            $html .= "<div class='progress ".$options['progress_class']."' style='height: ".$height."'>\n";
-            $html .= "<div class='progress-bar ".$class."' role='progressbar' aria-valuenow='$num' aria-valuemin='0' aria-valuemax='100' style='width: $int%'>\n";
-            $html .= "</div></div>\n";
-        }
-
-        return $html;
     }
 }
 
@@ -523,6 +265,343 @@ if (!function_exists("check_panel_status")) {
         }
     }
 }
+/**
+ * Java script that transform html table sortable
+ *
+ * @param $table_id - table ID
+ *
+ * @return string
+ */
+function fusion_sort_table($table_id) {
+    add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/tablesorter/jquery.tablesorter.min.js'></script>\n");
+    add_to_jquery("
+    $('#".$table_id."').tablesorter();
+    ");
+
+    return "tablesorter";
+}
+
+if (!function_exists("alert")) {
+    /**
+     * Creates an alert bar
+     *
+     * @param        $title
+     * @param array  $options
+     *
+     * @return string
+     */
+    function alert($title, array $options = []) {
+        add_to_jquery("$('div.alert a').addClass('alert-link');");
+        $alert_tpl = \PHPFusion\Template::getInstance('alert');
+        $default_alert_tpl = THEMES.'templates/boilers/bootstrap3/html/alert.html';
+        $alert_tpl->set_template($default_alert_tpl);
+        $default_options = [
+            "class" => "alert-danger",
+            "dismiss" => FALSE,
+        ];
+        $options += $default_options;
+        $block_name = $options['dismiss'] === TRUE ? "dismissable_alert" : "alert";
+        $alert_tpl->set_block($block_name, [
+            'class'   => $options['class'],
+            'content' => $title,
+        ]);
+        return (string)$alert_tpl->get_output();
+    }
+}
+
+if (!function_exists("label")) {
+    /**
+     * Function to make label
+     *
+     * @param       $label
+     * @param array $options
+     *
+     * @return string
+     */
+    function label($label, array $options = []) {
+        $default_options = [
+            "class" => "",
+            "icon"  => "",
+        ];
+        $options += $default_options;
+        if (!empty($options['icon'])) {
+            $options['icon'] = '<i class="'.$options['icon'].'"></i>';
+        }
+        $label_template = THEMES.'templates/boilers/bootstrap3/html/label.html';
+        $label_tpl = \PHPFusion\Template::getInstance('label');
+        $label_tpl->set_template($label_template);
+        $label_tpl->set_tag('class', " ".$options['class']);
+        $label_tpl->set_tag('label', $label);
+        $label_tpl->set_tag('icon', $options['icon']);
+
+        return (string)$label_tpl->get_output();
+    }
+}
+
+if (!function_exists("badge")) {
+    /**
+     * Function to make badge.
+     *
+     * @param       $label
+     * @param array $options
+     * class
+     * icon
+     *
+     * @return string
+     */
+    function badge($label, array $options = []) {
+        $default_options = [
+            "class" => "",
+            "icon"  => "",
+        ];
+        $options += $default_options;
+        if (!empty($options['icon'])) {
+            $options['icon'] = '<i class="'.$options['icon'].'"></i>';
+        }
+        $badge_template = THEMES.'templates/boilers/bootstrap3/html/badge.html';
+        $badge = \PHPFusion\Template::getInstance('badge');
+        $badge->set_template($badge_template);
+        $badge->set_tag('class', " ".$options['class']);
+        $badge->set_tag('label', $label);
+        $badge->set_tag('icon', $options['icon']);
+
+        return (string)$badge->get_output();
+    }
+}
+
+if (!function_exists("openmodal") && !function_exists("closemodal") && !function_exists("modalfooter")) {
+
+    /**
+     * To get the best results for Modal z-index overlay, try :
+     * ob_start();
+     * ... insert and echo ...
+     * add_to_footer(ob_get_contents()).ob_end_clean();
+     */
+
+    /**
+     * Generate modal
+     *
+     * @param       $id    - unique CSS id
+     * @param       $title - modal title
+     * @param array $options
+     *
+     * @return string
+     */
+    function openmodal($id, $title, $options = []) {
+        $default_options = [
+            "class"        => "",
+            "button_id"    => "",
+            "button_class" => "",
+            "static"       => FALSE,
+            "hidden"       => FALSE,
+        ];
+
+        $options += $default_options;
+
+        $modal_trigger = "";
+        if (!empty($options['button_id']) || !empty($options['button_class'])) {
+            $modal_trigger = !empty($options['button_id']) ? "#".$options['button_id'] : ".".$options['button_class'];
+        }
+
+        if ($options['static'] && !empty($modal_trigger)) {
+            OutputHandler::addToJQuery("$('".$modal_trigger."').bind('click', function(e){ $('#".$id."-Modal').modal({backdrop: 'static', keyboard: false}).modal('show'); e.preventDefault(); });");
+        } else if ($options['static'] && empty($options['button_id'])) {
+            OutputHandler::addToJQuery("$('#".$id."-Modal').modal({	backdrop: 'static',	keyboard: false }).modal('show');");
+        } else if ($modal_trigger && empty($options['static'])) {
+            OutputHandler::addToJQuery("$('".$modal_trigger."').bind('click', function(e){ $('#".$id."-Modal').modal('show'); e.preventDefault(); });");
+        } else {
+            if (empty($options['hidden'])) {
+                OutputHandler::addToJQuery("$('#".$id."-Modal').modal('show');");
+            }
+        }
+        $modal_template = THEMES.'templates/boilers/bootstrap3/html/modal.html';
+        $modal = \PHPFusion\Template::getInstance('modal');
+        $modal->set_locale(['close' => fusion_get_locale('close')]);
+        $modal->set_template($modal_template);
+        $modal->set_block("modal_open", [
+            'modal_id'    => $id,
+            'modal_class' => " ".$options['class']
+        ]);
+        if (!empty($title) || $options['static'] === FALSE) {
+            $modal->set_block("modal_open_header");
+            $modal->set_block("modal_close_header");
+            if (!empty($title)) {
+                $modal->set_block("modal_header", ["title" => $title]);
+            }
+            if ($options['static'] === FALSE) {
+                $modal->set_block("modal_dismiss");
+            }
+        }
+        $modal->set_block("modal_openbody");
+
+        return (string)$modal->get_output();
+    }
+
+    /**
+     * Adds a modal footer in between openmodal and closemodal.
+     *
+     * @param            $content
+     * @param bool|FALSE $dismiss
+     *
+     * @return string
+     */
+    function modalfooter($content = "", $dismiss = FALSE) {
+        $locale = fusion_get_locale();
+        $modal_template = THEMES.'templates/boilers/bootstrap3/html/modal.html';
+        $modal = \PHPFusion\Template::getInstance('modal');
+        $modal->set_template($modal_template);
+        $modal->set_block("modal_closebody");
+        $modal->set_block("modal_footer", [
+            "content" => $content,
+            "dismiss" => ($dismiss == TRUE ? form_button("dismiss-f", $locale['close'], $locale['close'], [
+                "data"  => [
+                    "dismiss" => "modal",
+                ],
+                "class" => "btn-default pull-right",
+            ]) : "")
+        ]);
+
+        return (string)$modal->get_output();
+    }
+
+    /**
+     * Close the modal
+     *
+     * @return string
+     */
+    function closemodal() {
+        $modal_template = THEMES.'templates/boilers/bootstrap3/html/modal.html';
+        $modal = \PHPFusion\Template::getInstance('modal');
+        $modal->set_template($modal_template);
+        $modal->set_block("modal_close");
+
+        return (string)$modal->get_output();
+    }
+}
+
+if (!function_exists("progress_bar")) {
+    /**
+     * @param       $num        Max of 100
+     * @param bool  $title      Label for the progress bar
+     * @param array $options
+     *                          class           additional class for the progress bar
+     *                          height          the height of the progress bar in px
+     *                          reverse         set to true to have the color counting reversed
+     *                          disable         set to true to have the progress bar disabled status
+     *                          hide_info       set to true to hide the information in the progress bar rendering
+     *                          progress_class  have it your custom progress bar class with your own custom class
+     *
+     * @return string
+     */
+    function progress_bar($num, $title = FALSE, array $options = array()) {
+        $default_options = [
+            "class"          => "",
+            "height"         => "",
+            "reverse"        => FALSE,
+            "disabled"       => FALSE,
+            "hide_info"      => FALSE,
+            "hide_marker"    => FALSE,
+            "progress_class" => "",
+        ];
+
+        $options += $default_options;
+        $r = [
+            1 => 4,
+            2 => 3,
+            3 => 2,
+            4 => 1,
+        ];
+
+        $master_tpl = \PHPFusion\Template::getInstance('progress_chart');
+        $master_tpl->set_text("
+        {pbar.{
+            {%content%}
+        }}
+        ");
+
+        if (is_array($num)) {
+            foreach ($num as $i => $cnum) {
+                $ctitle = (is_array($title) ? $title[$i] : $title);
+
+                $tpl = \PHPFusion\Template::getInstance('progress_bar');
+                $progressbar_template = THEMES.'templates/boilers/bootstrap3/html/progress.html';
+                $tpl->set_template($progressbar_template);
+                $int = intval($cnum);
+                if ($options['disabled'] == TRUE) {
+                    $cnum = "&#x221e;";
+                } else {
+                    $cnum = $cnum > 0 ? $cnum : 0;
+                }
+                if ($options['hide_info'] === FALSE) {
+                    $tpl->set_block("progress_info", [
+                        "title" => $ctitle,
+                        "num"   => $cnum."%",
+                    ]);
+                }
+                $block_name = ($options['progress_class'] ? "progress_custom" : "");
+                if (empty($block_name)) {
+                    // Automatic class selection
+                    // calculate 100 to the max of 4 options
+                    $progress_calc = floor($cnum / 25);
+                    if ($options['reverse'] === TRUE) {
+                        $progress_calc = $r[$progress_calc];
+                    }
+                    $block_name = "progress_".$progress_calc;
+                }
+                $tpl->set_block($block_name, [
+                    "class"          => ($options['class'] ? " ".$options['class'] : ""),
+                    "progress_class" => $options['progress_class'],
+                    "height"         => ($options['height'] ? ' style="height: '.$options['height'].'"' : ""),
+                    "title"          => $ctitle,
+                    "num"            => ($options['hide_marker'] === FALSE ? $cnum."%" : ""),
+                    "int"            => "$int%"
+                ]);
+
+                $master_tpl->set_block("pbar", ["content" => $tpl->get_output()]);
+            }
+
+        } else {
+            $tpl = \PHPFusion\Template::getInstance('progress_bar');
+            $progressbar_template = THEMES.'templates/boilers/bootstrap3/html/progress.html';
+            $tpl->set_template($progressbar_template);
+            $int = intval($num);
+            if ($options['disabled'] == TRUE) {
+                $num = "&#x221e;";
+            } else {
+                $num = $num > 0 ? $num : 0;
+            }
+            if ($options['hide_info'] === FALSE) {
+                $tpl->set_block("progress_info", [
+                    "title" => $title,
+                    "num"   => $num."%",
+                ]);
+            }
+            $block_name = ($options['progress_class'] ? "progress_custom" : "");
+            if (empty($block_name)) {
+                // Automatic class selection
+                // calculate 100 to the max of 4 options
+                $progress_calc = floor($num / 25);
+                if ($options['reverse'] === TRUE) {
+                    $progress_calc = $r[$progress_calc];
+                }
+                $block_name = "progress_".$progress_calc;
+            }
+            $tpl->set_block($block_name, [
+                "class"          => ($options['class'] ? " ".$options['class'] : ""),
+                "progress_class" => $options['progress_class'],
+                "height"         => ($options['height'] ? ' style="height: '.$options['height'].'"' : ""),
+                "title"          => $title,
+                "num"            => ($options['hide_marker'] === FALSE ? $num."%" : ""),
+                "int"            => "$int%"
+            ]);
+
+            $master_tpl->set_block("pbar", ["content" => $tpl->get_output()]);
+        }
+
+        return (string)$master_tpl->get_output();
+
+    }
+}
 
 if (!function_exists("showbanners")) {
     /*
@@ -553,7 +632,6 @@ if (!function_exists("showlogo")) {
 }
 
 if (!function_exists("showsublinks")) {
-
     /**
      * Displays Site Links Navigation Bar
      *
@@ -572,6 +650,7 @@ if (!function_exists("showsublinks")) {
             'seperator'    => $sep,
             'navbar_class' => $class,
         ];
+
         return \PHPFusion\SiteLinks::setSubLinks($options)->showSubLinks();
     }
 
@@ -579,7 +658,6 @@ if (!function_exists("showsublinks")) {
 
 if (!function_exists("showsubdate")) {
     function showsubdate() {
-
         return ucwords(showdate(fusion_get_settings('subheaderdate'), time()));
     }
 }
@@ -733,28 +811,29 @@ if (!function_exists('closesidex')) {
         closeside();
     }
 }
+
 if (!function_exists('tablebreak')) {
     function tablebreak() {
         return TRUE;
     }
 }
 
-/**
- * @param array  $userdata
- *                              Indexes:
- *                              - user_id
- *                              - user_name
- *                              - user_avatar
- *                              - user_status
- * @param string $size          A valid size for CSS max-width and max-height.
- * @param string $class         Classes for the link
- * @param bool   $link          FALSE if you want to display the avatar without link. TRUE by default.
- * @param string $img_class     Classes for the image
- * @param string $custom_avatar Custom default avatar
- *
- * @return string
- */
 if (!function_exists('display_avatar')) {
+    /**
+     * @param array  $userdata
+     *                              Indexes:
+     *                              - user_id
+     *                              - user_name
+     *                              - user_avatar
+     *                              - user_status
+     * @param string $size          A valid size for CSS max-width and max-height.
+     * @param string $class         Classes for the link
+     * @param bool   $link          FALSE if you want to display the avatar without link. TRUE by default.
+     * @param string $img_class     Classes for the image
+     * @param string $custom_avatar Custom default avatar
+     *
+     * @return string
+     */
     function display_avatar(array $userdata, $size, $class = '', $link = TRUE, $img_class = '', $custom_avatar = '') {
         if (empty($userdata)) {
             $userdata = [];
@@ -790,8 +869,7 @@ if (!function_exists('display_avatar')) {
                 $font_color = get_brightness($color) > 130 ? '000' : 'fff';
                 $first_char = substr($userdata['user_name'], 0, 1);
                 $first_char = strtoupper($first_char);
-                $size_int = (int)filter_var($size, FILTER_SANITIZE_NUMBER_INT);
-                $img = '<div class="display-inline-block va avatar '.$img_class.'" style="width:'.$size.';max-height:'.$size.';"><svg viewBox="0 0 '.$size_int.' '.$size_int.'" preserveAspectRatio="xMidYMid meet"><rect fill="#'.$color.'" stroke-width="0" y="0" x="0" width="'.$size.'" height="'.$size.'"/><text class="m-t-5" font-size="'.($size_int - 5).'" fill="#'.$font_color.'" x="50%" y="50%" text-anchor="middle" dy="0.325em">'.$first_char.'</text></svg></div>';
+                $img = '<div class="display-inline-block va avatar '.$img_class.'" style="width:'.$size.';max-height:'.$size.';"><svg version="1.1" viewBox="0 0 20 20"><rect fill="#'.$color.'" stroke-width="0" y="0" x="0" height="100%" width="100%"/><text fill="#'.$font_color.'" x="50%" y="50%" text-anchor="middle" alignment-baseline="central" dy="-0.05em">'.$first_char.'</text></svg></div>';
             }
         }
 
@@ -799,32 +877,11 @@ if (!function_exists('display_avatar')) {
     }
 }
 
+function stringToColorCode($str) {
+    $code = dechex(crc32($str));
+    $code = substr($code, 0, 6);
 
-function stringToColorCode($text) {
-    $min_brightness = 50; // integer between 0 and 100
-    $spec = 3; // integer between 2-10, determines how unique each color will be
-
-    $hash = sha1(md5(sha1($text)));
-    $colors = [];
-    for ($i = 0; $i < 3; $i++) {
-        $colors[$i] = max([round(((hexdec(substr($hash, $spec * $i, $spec))) / hexdec(str_pad('', $spec, 'F'))) * 255), $min_brightness]);
-    }
-
-    if ($min_brightness > 0) {
-        while (array_sum($colors) / 3 < $min_brightness) {
-            for ($i = 0; $i < 3; $i++) {
-                $colors[$i] += 10;
-            }
-        }
-    }
-
-    $output = '';
-
-    for ($i = 0; $i < 3; $i++) {
-        $output .= str_pad(dechex($colors[$i]), 2, 0, STR_PAD_LEFT);
-    }
-
-    return $output;
+    return $code;
 }
 
 function get_brightness($hex) {
@@ -856,19 +913,18 @@ if (!function_exists('colorbox')) {
     }
 }
 
-/**
- * Thumbnail function
- *
- * @param        $src
- * @param        $size
- * @param bool   $url
- * @param bool   $colorbox
- * @param bool   $responsive
- * @param string $class
- *
- * @return string
- */
 if (!function_exists("thumbnail")) {
+    /**
+     * Thumbnail function
+     *
+     * @param      $src
+     * @param      $size
+     * @param bool $url
+     * @param bool $colorbox
+     * @param bool $responsive
+     *
+     * @return string
+     */
     function thumbnail($src, $size, $url = FALSE, $colorbox = FALSE, $responsive = TRUE, $class = "m-2") {
         $_offset_w = 0;
         $_offset_h = 0;
@@ -952,6 +1008,7 @@ if (!function_exists("timer")) {
                 $answer = round($calc);
                 //	$string = ($answer > 1) ? $timer_b[$arr] : $unit;
                 $string = \PHPFusion\Locale::format_word($answer, $unit, ['add_count' => FALSE]);
+
                 return "<abbr class='atooltip' data-toggle='tooltip' data-placement='top' title='".showdate('longdate', $updated)."'>".$answer." ".$string." ".$locale['ago']."</abbr>";
             }
         }
@@ -1036,6 +1093,7 @@ if (!function_exists("opencollapse")
         $html .= "</div>\n";
         $html .= "</div>\n";
         $html .= "<div ".collapse_footer_link($grouping_id, $unique_id, $active).">\n"; // body.
+
         return $html;
     }
 
@@ -1081,7 +1139,6 @@ if (!function_exists("tab_active")
         private $tab_info = [];
         private $link_mode = FALSE;
 
-
         public static function tab_active($array, $default_active, $getname = FALSE) {
             if (!empty($getname)) {
                 $section = isset($_GET[$getname]) && $_GET[$getname] ? $_GET[$getname] : $default_active;
@@ -1098,6 +1155,7 @@ if (!function_exists("tab_active")
                 }
             } else {
                 $id = $array['id'][$default_active];
+
                 return $id;;
             }
         }
@@ -1189,6 +1247,7 @@ if (!function_exists("tab_active")
                 $status = ($link_active_arrkey == $id ? " in active" : '');
 
             }
+
             return "<div class='tab-pane fade".$status."' id='".$id."'>\n";
         }
 
