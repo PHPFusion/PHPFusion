@@ -1,4 +1,3 @@
-PHP-Fusion Babylon 
+PHP-Fusion Babylon (Version 9.2)
 ---
-This is the development of PHP-Fusion Version 9.0.4, code name Babylon.
-
+This is the development of PHP-Fusion Babylon.
