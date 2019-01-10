@@ -66,7 +66,7 @@ class adminDashboard extends resource {
 
             $desktop = '4';
             echo "<div class='row'>\n";
-                if (infusion_exists('forum')) {
+                if (defined('FORUM_EXIST')) {
                     echo "<div class='col-xs-$mobile col-sm-$tablet col-md-$laptop col-lg-$desktop'>\n";
                     openside("", "well");
                         echo "<strong class='text-smaller text-uppercase'>".$locale['265']." ".$locale['258']."</strong>\n";
@@ -93,7 +93,7 @@ class adminDashboard extends resource {
                     echo "</div>\n";
                 }
 
-                if (infusion_exists('downloads')) {
+                if (defined('DOWNLOADS_EXIST')) {
                     echo "<div class='col-xs-$mobile col-sm-$tablet col-md-$laptop col-lg-$desktop'>\n";
                     openside("", "well");
                         echo "<strong class='text-smaller text-uppercase'>".$locale['268']." ".$locale['258']."</strong>\n";
@@ -116,7 +116,7 @@ class adminDashboard extends resource {
                     echo "</div>\n";
                 }
 
-                if (infusion_exists('news')) {
+                if (defined('NEWS_EXIST')) {
                     echo "<div class='col-xs-$mobile col-sm-$tablet col-md-$laptop col-lg-$desktop'>\n";
                     openside("", "well");
                         echo "<strong class='text-smaller text-uppercase'>".$locale['269']." ".$locale['258']."</strong>\n";
@@ -139,7 +139,7 @@ class adminDashboard extends resource {
                     echo "</div>\n";
                 }
 
-                if (infusion_exists('articles')) {
+                if (defined('ARTICLES_EXIST')) {
                     echo "<div class='col-xs-$mobile col-sm-$tablet col-md-$laptop col-lg-$desktop'>\n";
                     openside("", "well");
                         echo "<strong class='text-smaller text-uppercase'>".$locale['270']." ".$locale['258']."</strong>\n";
@@ -162,7 +162,7 @@ class adminDashboard extends resource {
                     echo "</div>\n";
                 }
 
-                if (infusion_exists('weblinks')) {
+                if (defined('WEBLINKS_EXIST')) {
                     echo "<div class='col-xs-$mobile col-sm-$tablet col-md-$laptop col-lg-$desktop'>\n";
                      openside("", "well");
                         echo "<strong class='text-smaller text-uppercase'>".$locale['271']." ".$locale['258']."</strong>\n";
@@ -181,7 +181,7 @@ class adminDashboard extends resource {
                     echo "</div>";
                 }
 
-                if (infusion_exists('gallery')) {
+                if (defined('GALLERY_EXIST')) {
                     echo "<div class='col-xs-$mobile col-sm-$tablet col-md-$laptop col-lg-$desktop'>\n";
                     openside("", "well");
                         echo "<strong class='text-smaller text-uppercase'>".$locale['272']." ".$locale['258']."</strong>\n";

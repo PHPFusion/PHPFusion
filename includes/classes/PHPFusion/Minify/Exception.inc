@@ -4,7 +4,7 @@
  *
  * @deprecated Use Exceptions\BasicException instead
  *
- * @author Matthias Mullie <minify@mullie.eu>
+ * @author     Matthias Mullie <minify@mullie.eu>
  */
 namespace PHPFusion\Minify;
 
@@ -13,8 +13,8 @@ namespace PHPFusion\Minify;
  *
  * @deprecated Use Exceptions\BasicException instead
  *
- * @package Minify
- * @author Matthias Mullie <minify@mullie.eu>
+ * @package    Minify
+ * @author     Matthias Mullie <minify@mullie.eu>
  */
 abstract class Exception extends \Exception {
 }

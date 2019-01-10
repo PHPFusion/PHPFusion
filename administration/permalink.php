@@ -50,6 +50,7 @@ $settings_seo = [
 $available_rewrites = [];
 $enabled_rewrites = [];
 $rewrite_registers = [];
+$permalink_name = '';
 
 // Fetch Core Drivers
 $file_regex = "/_rewrite_include\.php$/i";
@@ -398,7 +399,7 @@ switch ($_GET['section']) {
                         include $rewrite_registers[$rewrite_name]['driver_path'];
                         include $rewrite_registers[$rewrite_name]['info_path'];
 
-                        $name = (!empty($permalink_name) ? $permalink_name : ucfirst($available_rewrites));
+                        $name = (!empty($permalink_name) ? $permalink_name : ucfirst($rewrite_name));
                         $version = (!empty($permalink_version) ? $permalink_version : "1.00");
                         $author = (!empty($permalink_author) ? $permalink_author : "PHP-Fusion Core Developers Team");
                         $description = (!empty($permalink_desc) ? $permalink_desc : sprintf($locale['PL_429'], $permalink_name) );

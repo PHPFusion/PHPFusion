@@ -115,13 +115,13 @@ class Requirements extends Install_Core {
                 'severability' => -5
             ];
         }
-        if (version_compare($phpversion, '5.6.8') < 0) {
+        if (version_compare($phpversion, '5.6.39') < 0) {
             $requirements['php']['title'] = 'PHP';
             $requirements['php']['description'] = self::$locale['setup_0113'];
             $requirements['php']['severability'] = -10;
         }
 
-        // Suggest to update to at least 5.6.8 or 7 for disabling multiple statements.
+        // Suggest to update to at least 5.6.39 or 7 for disabling multiple statements.
         // $requirements['php_extensions'] output
         $missing_extensions = [];
         $required_extensions = [
@@ -230,11 +230,12 @@ class Requirements extends Install_Core {
         // Check system core files and folders
         // $requirements['files_check']
         $check_arr = [
-            "administration/db_backups" => FALSE,
-            "images"                    => FALSE,
-            "images/imagelist.js"       => FALSE,
-            "images/avatars"            => FALSE,
-            "robots.txt"                => FALSE,
+            'administration/db_backups/' => TRUE,
+            'images/'                    => TRUE,
+            'images/imagelist.js'        => TRUE,
+            'images/avatars/'            => TRUE,
+            'images/smiley/'             => TRUE,
+            'robots.txt'                 => TRUE
         ];
         // $key is filename
         // $value - boolean false

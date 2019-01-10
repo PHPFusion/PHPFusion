@@ -314,7 +314,7 @@ class AdminPasswordResetAdministration {
                 echo "<td>".$reset_passwords."</td>\n";
                 echo "<td>".$sucess." ".self::$locale['apw_422']." ".($sucess + $failed)."</td>\n";
                 echo "<td>".($info['reset_reason'] ? $info['reset_reason'] : self::$locale['apw_423'])."</td>\n";
-                echo "<td><a id='confirm' class='btn btn-danger btn-sm' href='".FUSION_SELF.fusion_get_aidlink()."&amp;section=adminreset_list&amp;action=delete&amp;reset_id=".$info['reset_id']."' onclick=\"return confirm('".self::$locale['apw_428']."');\">".self::$locale['delete']."<i class='fa fa-trash m-l-10'></i></a></td>\n";
+                echo "<td><a id='confirm' class='btn btn-danger btn-sm' href='".FUSION_SELF.fusion_get_aidlink()."&amp;section=adminreset_list&amp;action=delete&amp;reset_id=".$info['reset_id']."' onclick=\"return confirm('".self::$locale['apw_428']."');\"><i class='fa fa-trash'></i> ".self::$locale['delete']."</a></td>\n";
                 echo "</tr>\n";
                 add_to_jquery('$("#reset-id-'.$info['reset_id'].'").click(function() {
                     if ($(this).prop("checked")) {
@@ -329,7 +329,7 @@ class AdminPasswordResetAdministration {
             echo "</table>\n</div>";
             echo "<div class='clearfix display-block'>\n";
             echo "<div class='display-inline-block pull-left m-r-20'>".form_checkbox('check_all', self::$locale['apw_430'], '', ['class' => 'm-b-0', 'reverse_label' => TRUE])."</div>";
-            echo "<div class='display-inline-block'><a class='btn btn-danger btn-sm' onclick=\"run_admin('delete');\"><i class='fa fa-fw fa-trash-o'></i> ".self::$locale['delete']."</a></div>";
+            echo "<div class='display-inline-block'><a class='btn btn-danger btn-sm' onclick=\"run_admin('delete');\"><i class='fa fa-trash-o'></i> ".self::$locale['delete']."</a></div>";
             echo "</div>\n";
             echo closeform();
             add_to_jquery("

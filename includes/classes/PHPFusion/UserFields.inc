@@ -24,11 +24,6 @@ use PHPFusion\UserFields\Public_Profile;
 
 require_once THEMES."templates/global/profile.php";
 
-/**
- * Class UserFields
- *
- * @package PHPFusion
- */
 class UserFields extends UserFieldsQuantum {
 
     public $display_terms = 0;
@@ -172,12 +167,12 @@ class UserFields extends UserFieldsQuantum {
             'link' => clean_request($aid.'section=preferences&lookup='.$this->user_data['user_id'], ['section'], FALSE),
             'name' => 'Preferences',
         ];
-        /*$section['security'] = [
+        $section['security'] = [
             'id' => 'security',
             'active' => (isset($_GET['section']) && $_GET['section'] == 'security' ? 1 : 0),
             'link' => clean_request($aid.'section=security&lookup='.$this->user_data['user_id'], ['section'], FALSE),
             'name' => 'Security',
-        ];*/
+        ];
 
         return empty($key) ? (array)$section : (isset($section[$key]) ? (array)$section[$key] : NULL);
     }
@@ -408,6 +403,7 @@ class UserFields extends UserFieldsQuantum {
                         $class->registration = $this->registration;
                         $class->post_name = $this->post_name;
                         $class->user_name_change = $this->user_name_change;
+                        $class->show_admin_password = (iADMIN ? TRUE : FALSE);
                         $class->inline_field = $this->inline_field;
                         $this->info = array_merge($this->info, $class->get_info());
                         break;
@@ -553,8 +549,7 @@ class UserFields extends UserFieldsQuantum {
         }
 
         // IP
-        //$this->info['core_field']['profile_user_ip'] = [];
-        if (iADMIN && checkrights('M')) {
+         if (iADMIN && checkrights('M')) {
             $this->info['core_field']['profile_user_ip'] = [
                 'title' => $locale['u049'],
                 'value' => $this->user_data['user_ip']

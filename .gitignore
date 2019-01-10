@@ -12,4 +12,4 @@ config-copy.php
 /includes/footer_includes.php
 /.github/
 .DS_Store
-gateway/flood/ctrl
+gateway/flood/

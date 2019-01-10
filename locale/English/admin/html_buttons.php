@@ -20,6 +20,7 @@ $locale['html_016'] = "Page break";
 $locale['html_017'] = "Font Color";
 $locale['html_018'] = "Paragraph";
 $locale['html_019'] = "Headings";
+$locale['html_020'] = "Line Break";
 
 $locale['texts'] = "Text";
 $locale['preview'] = "Preview";

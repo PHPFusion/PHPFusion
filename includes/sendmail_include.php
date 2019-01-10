@@ -39,9 +39,9 @@ if (!function_exists('sendemail')) {
         $settings = fusion_get_settings();
         $locale = fusion_get_locale();
 
-        require CLASSES.'PHPMailer/PHPMailer.php';
-        require CLASSES.'PHPMailer/Exception.php';
-        require CLASSES.'PHPMailer/SMTP.php';
+        require_once CLASSES.'PHPMailer/PHPMailer.php';
+        require_once CLASSES.'PHPMailer/Exception.php';
+        require_once CLASSES.'PHPMailer/SMTP.php';
 
         $mail = new PHPMailer\PHPMailer\PHPMailer();
 

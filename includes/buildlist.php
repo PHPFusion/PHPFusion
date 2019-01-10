@@ -52,11 +52,11 @@ while ($file = readdir($temp)) {
 }
 closedir($temp);
 // photoalbum -------------------
-if (infusion_exists('gallery')) {
+if (defined('GALLERY_EXIST')) {
     $result = dbquery("
-	SELECT ".DB_PHOTO_ALBUMS.".album_title, ".DB_PHOTOS.".photo_id
-	FROM ".DB_PHOTO_ALBUMS.", ".DB_PHOTOS."
-	WHERE ".DB_PHOTO_ALBUMS.".album_id = ".DB_PHOTOS.".album_id 
+    SELECT ".DB_PHOTO_ALBUMS.".album_title, ".DB_PHOTOS.".photo_id
+    FROM ".DB_PHOTO_ALBUMS.", ".DB_PHOTOS."
+    WHERE ".DB_PHOTO_ALBUMS.".album_id = ".DB_PHOTOS.".album_id
 ");
     $album = [];
     while ($data = dbarray($result)) {
