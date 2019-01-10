@@ -70,6 +70,7 @@ header .navbar-default {
 
 header .navbar-default .navbar-collapse {
     background: #fff;
+    -webkit-border-radius: 0;
     border-radius: 0;
     color: #444;
     padding: 15px 15px 12px 15px;
@@ -187,6 +188,7 @@ header .navbar-default .navbar-nav > li > .dropdown-menu {
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
     background: #23262D;
+    -webkit-border-radius: 0;
     border-radius: 0;
     top: 66px;
     -webkit-box-shadow: none;
@@ -544,6 +546,7 @@ Buttons
     max-width: 100%;
     display: block;
     font-size: 13px;
+    -webkit-border-radius: 0;
     border-radius: 0;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
@@ -689,6 +692,7 @@ Alert
     margin: 0;
     font-weight: 600;
     z-index: 1;
+    -webkit-border-radius: 0;
     border-radius: 0;
     position: relative;
     border: 0;
@@ -743,6 +747,7 @@ Login
 
 .login-bg {
     background-image: url(assets/images/loginBG.jpg);
+    -webkit-background-size: cover;
     background-size: cover;
     text-align: center;
     display: block;
@@ -828,6 +833,7 @@ News
     left: 50%;
     width: 100px;
     height: 100px;
+    -webkit-border-radius: 50%;
     border-radius: 50%;
     font-size: 45px;
     line-height: 100px;
@@ -990,6 +996,7 @@ Articles
 
 .article_search_header #search-article-btn {
     margin-left: -9px;
+    -webkit-border-radius: 0 6px 6px 0;
     border-radius: 0 6px 6px 0;
     padding: 0px 22px;
     height: 46px;
@@ -1158,6 +1165,7 @@ Editor Navs
     background-image: -o-linear-gradient(#fcfcfc, #eee);
     background-image: linear-gradient(#fcfcfc, #eee);
     border: 1px solid #d5d5d5;
+    -webkit-border-radius: 3px;
     border-radius: 3px;
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -1269,6 +1277,7 @@ Cellphones
     #top {
         margin-top: 15px;
         margin-right: 30px;
+        -webkit-border-radius: 50%;
         border-radius: 50%;
         background: #fff;
         padding: 1% 2.8% 3.5%;
@@ -1420,6 +1429,7 @@ html[dir="rtl"] .article_search_header #stype-field {
 html[dir="rtl"] .article_search_header #search-article-btn {
     margin-left: inherit !important;
     margin-right: -9px;
+    -webkit-border-radius: 6px 0 0 6px;
     border-radius: 6px 0 0 6px;
 }
 html[dir="rtl"] .comments-form-header {

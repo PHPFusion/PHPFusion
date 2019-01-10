@@ -926,23 +926,25 @@ table {
 }
 
 /* Table Sorter */
-table.tablesorter thead tr .header {
-    background-image: url(../../includes/jquery/tablesorter/bg.gif);
-    background-repeat: no-repeat;
-    background-position: center right;
-    cursor: pointer;
+.tablesorter-default .header,
+.tablesorter-default .tablesorter-header {
+    background: url(data:image/gif;base64,R0lGODlhFQAJAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAkAAAIXjI+AywnaYnhUMoqt3gZXPmVg94yJVQAAOw==) no-repeat center right;
+}
+
+.tablesorter-default thead .headerSortUp,
+.tablesorter-default thead .tablesorter-headerAsc,
+.tablesorter-default thead .tablesorter-headerSortUp {
+    background: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjI8Bya2wnINUMopZAQA7) no-repeat center right;
+}
+
+.tablesorter-default thead .headerSortDown,
+.tablesorter-default thead .tablesorter-headerDesc,
+.tablesorter-default thead .tablesorter-headerSortDown {
+    background: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7) no-repeat center right;
 }
 
 th.min, td.min {
     width: 1%;
-}
-
-table.tablesorter thead tr .headerSortUp {
-    background-image: url(../../includes/jquery/tablesorter/asc.gif);;
-}
-
-table.tablesorter thead tr .headerSortDown {
-    background-image: url(../../includes/jquery/tablesorter/desc.gif);
 }
 
 .image-wrap {

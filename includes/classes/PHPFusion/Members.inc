@@ -106,7 +106,8 @@ class Members {
                     'append_value'       => "<i class='fa fa-search'></i> ".self::$locale['MEMB_006'],
                     'append_button_name' => 'search',
                     'width'              => "260px",
-                    'class'              => 'no-border m-b-0'
+                    'class'              => 'no-border m-b-0',
+                    'group_size'         => 'sm'
                 ]
             );
             $search_form .= "</div>\n";

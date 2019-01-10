@@ -20,7 +20,6 @@ namespace PHPFusion;
 
 require_once THEMES."templates/global/profile.php";
 
-<<<<<<< HEAD
 class UserFields extends QuantumFields {
 
     public $displayTerms = 0;
@@ -35,31 +34,6 @@ class UserFields extends QuantumFields {
     public $showAvatarInput = TRUE;
     public $baseRequest = FALSE; // new in API 1.02 - turn fusion_self to fusion_request - 3rd party pages. Turn this on if you have more than one $_GET pagination str.
     public $skipCurrentPass = FALSE;
-=======
-/**
- * Class UserFields
- *
- * @package PHPFusion
- */
-class UserFields extends UserFieldsQuantum {
-
-    public $display_terms = 0;
-    public $display_validation = 0;
-    public $errors = [];
-    public $form_action = FUSION_REQUEST; // changed in API 1.02
-    public $form_name = "userfieldsform";
-    public $post_name;
-    public $post_value;
-    public $inline_field = TRUE;
-    public $is_admin_panel = TRUE;
-
-    public $show_admin_options = FALSE;
-    public $show_admin_password = TRUE;
-    public $show_avatar_input = TRUE;
-
-    public $base_request = FALSE; // new in API 1.02 - turn fusion_self to fusion_request - 3rd party pages. Turn this on if you have more than one $_GET pagination str.
-    public $skip_password = FALSE;
->>>>>>> parent of bb68a122c... Merge branch 'Andromeda-9.0.3' into Babylon-9.0.4
     public $registration = FALSE;
     public $userData = [
         "user_id"             => '',
@@ -150,7 +124,6 @@ class UserFields extends UserFieldsQuantum {
      *
      * @param array $input
      */
-<<<<<<< HEAD
     public function display_profile_input(array $input = []) {
         $this->method = 'input';
         $locale = fusion_get_locale();
@@ -167,28 +140,6 @@ class UserFields extends UserFieldsQuantum {
             'validate'            => '',
             'terms'               => ''
         ];
-=======
-    private function get_settings_sections($key = '') {
-        $aid = isset($_GET['aid']) ? fusion_get_aidlink() : '';
-        $section['acc_settings'] = [
-            'id' => 'acc_settings',
-            'active' => (isset($_GET['section']) && $_GET['section'] == 'acc_settings' ? 1 : (!isset($_GET['section']) ? 1 : 0) ),
-            'link' => clean_request($aid.'section=acc_settings&lookup='.$this->user_data['user_id'], ['section'], FALSE),
-            'name' => 'Account Settings',
-        ];
-        $section['preferences'] = [
-            'id' => 'preferences',
-            'active' => (isset($_GET['section']) && $_GET['section'] == 'preferences' ? 1 : 0),
-            'link' => clean_request($aid.'section=preferences&lookup='.$this->user_data['user_id'], ['section'], FALSE),
-            'name' => 'Preferences',
-        ];
-        /*$section['security'] = [
-            'id' => 'security',
-            'active' => (isset($_GET['section']) && $_GET['section'] == 'security' ? 1 : 0),
-            'link' => clean_request($aid.'section=security&lookup='.$this->user_data['user_id'], ['section'], FALSE),
-            'name' => 'Security',
-        ];*/
->>>>>>> parent of bb68a122c... Merge branch 'Andromeda-9.0.3' into Babylon-9.0.4
 
         $_GET['section'] = isset($_GET['section']) && isset($this->info['section'][$_GET['section']]) ? $_GET['section'] : 1;
         $this->options += $this->default_options;
@@ -367,7 +318,6 @@ class UserFields extends UserFieldsQuantum {
                 ]
             );
 
-<<<<<<< HEAD
             $this->info['user_hide_email'] = form_checkbox('user_hide_email', $locale['u051'], $user_hide_email,
                 [
                     'inline'         => TRUE,
@@ -387,18 +337,6 @@ class UserFields extends UserFieldsQuantum {
                     ]
                 );
             }
-=======
-                        $class = new Account_Profile();
-                        $class->user_data = $this->user_data;
-                        $class->options = $this->options;
-                        $class->registration = $this->registration;
-                        $class->post_name = $this->post_name;
-                        $class->user_name_change = $this->user_name_change;
-                        $class->inline_field = $this->inline_field;
-                        $this->info = array_merge($this->info, $class->get_info());
-                        break;
-                }
->>>>>>> parent of bb68a122c... Merge branch 'Andromeda-9.0.3' into Babylon-9.0.4
 
             if ($this->displayValidation == 1 && !defined('ADMIN_PANEL')) {
                 $this->info['validate'] = $this->renderValidation();
@@ -772,11 +710,7 @@ class UserFields extends UserFieldsQuantum {
 
         // IP
         //$this->info['core_field']['profile_user_ip'] = [];
-<<<<<<< HEAD
         if (iADMIN && checkrights("M")) {
-=======
-        if (iADMIN && checkrights('M')) {
->>>>>>> parent of bb68a122c... Merge branch 'Andromeda-9.0.3' into Babylon-9.0.4
             $this->info['core_field']['profile_user_ip'] = [
                 'title' => $locale['u049'],
                 'value' => $this->userData['user_ip']

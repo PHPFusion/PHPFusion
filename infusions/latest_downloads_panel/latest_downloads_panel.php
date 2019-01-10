@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-if (infusion_exists('downloads')) {
+if (defined('DOWNLOADS_EXIST')) {
     include_once INFUSIONS."latest_downloads_panel/templates.php";
 
     $result = dbquery("SELECT d.download_id, d.download_title, u.user_id, u.user_name, u.user_status, u.user_avatar

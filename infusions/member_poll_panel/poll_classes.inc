@@ -254,7 +254,7 @@ class MemberPoll {
                     }
                     $num_votes = dbcount("(vote_opt)", DB_POLL_VOTES, "vote_opt='".$keys."' AND poll_id='".$data['poll_id']."'");
                     $opt_votes = ($num_votes ? number_format(($num_votes / $db_info) * 100, 0) : number_format(0 * 100, 0));
-                    echo progress_bar($opt_votes, $text, FALSE, FALSE, FALSE, TRUE, FALSE);
+                    echo progress_bar($opt_votes, $text);
                     echo "<p><strong>".$opt_votes."% [".(format_word($num_votes, self::$locale['POLL_040']))."]</strong></p>\n";
                 }
                 echo "<p><strong>".self::$locale['POLL_060'].' '.$db_info."</strong></p>\n";
@@ -462,8 +462,6 @@ class MemberPoll {
     }
 
     public function DisplayPoll() {
-        $data = [];
-
         $res = $this->_selectPoll();
         if (!$res) {
             return;
@@ -511,7 +509,7 @@ class MemberPoll {
                     foreach ($data['poll_option'] as $im1 => $data1) {
                         $num_votes = $this->_countVote("vote_opt='".$im1."' AND poll_id='".$data['poll_id']."'");
                         $opt_votes = ($num_votes ? number_format(($num_votes / $render['poll_table'][0]['max_vote']) * 100, 0) : number_format(0 * 100, 0));
-                        $render['poll_table'][0]['poll_option'][] = progress_bar($opt_votes, $data1, FALSE, FALSE, FALSE, TRUE, FALSE);
+                        $render['poll_table'][0]['poll_option'][] = progress_bar($opt_votes, $data1);
                         $render['poll_table'][0]['poll_option'][] = $opt_votes."% [".format_word($num_votes, self::$locale['POLL_040'])."]";
                     }
 
@@ -566,7 +564,7 @@ class MemberPoll {
                     }
                     $num_votes = dbcount("(vote_opt)", DB_POLL_VOTES, "vote_opt='".$keys."' AND poll_id='".$data['poll_id']."'");
                     $opt_votes = ($num_votes ? number_format(($num_votes / $db_info) * 100, 0) : number_format(0 * 100, 0));
-                    echo progress_bar($opt_votes, $text, FALSE, FALSE, FALSE, TRUE, FALSE);
+                    echo progress_bar($opt_votes, $text);
                     echo "<p><strong>".$opt_votes."% [".format_word($num_votes, self::$locale['POLL_040'])."]</strong></p>\n";
                 }
                 echo "</div>\n";

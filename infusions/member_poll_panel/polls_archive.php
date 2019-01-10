@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../../maincore.php';
-if (!db_exists(DB_POLLS) && !db_exists(DB_POLL_VOTES)) {
+if (!defined('MEMBER_POLL_PANEL_EXIST')) {
     redirect(BASEDIR.'error.php?code=404');
 }
 
