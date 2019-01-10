@@ -430,8 +430,10 @@ class SiteLinks {
         $html = '';
         if ($options['affix_top'] && isnum($options['affix_top']) or $options['affix_bottom'] && isnum($options['affix_bottom'])) {
             $html = " data-spy='affix'";
-            if ($options['affix_top']) $html .= " data-offset-top='".$options['affix_top']."'";
-            if ($options['affix_bottom']) $html .= " data-offset-bottom='".$options['affix_bottom']."'";
+            if ($options['affix_top'])
+                $html .= " data-offset-top='".$options['affix_top']."'";
+            if ($options['affix_bottom'])
+                $html .= " data-offset-bottom='".$options['affix_bottom']."'";
         }
 
         return (string)$html;
@@ -540,7 +542,7 @@ class SiteLinks {
             if ($options['container']) {
                 $tpl->set_block('open_container', ['class' => 'container']);
                 $tpl->set_block('close_container', ['class' => 'container']);
-            } elseif ($options['container_fluid']) {
+            } else if ($options['container_fluid']) {
                 $tpl->set_block('open_container', ['class' => 'container-fluid']);
                 $tpl->set_block('close_container', ['class' => 'container-fluid']);
             }
@@ -660,7 +662,7 @@ class SiteLinks {
                 // check which is active.
                 $link_ref = explode("?", $link_url);
                 if (isset($link_ref[1])) {
-                    $l = array();
+                    $l = [];
                     $r = explode('&', htmlspecialchars_decode($link_ref[1]));
                     foreach ($r as $ur) {
                         $u = explode('=', $ur);
@@ -689,7 +691,7 @@ class SiteLinks {
                             // check which is active.
                             $link_ref = explode("?", $child_link_url);
                             if (isset($link_ref[1])) {
-                                $l = array();
+                                $l = [];
                                 $r = explode('&', htmlspecialchars_decode($link_ref[1]));
                                 foreach ($r as $ur) {
                                     $u = explode('=', $ur);
@@ -741,17 +743,21 @@ class SiteLinks {
             foreach ($data[$id] as $link_id => $link_data) {
                 $tpl = Template::getInstance('link_item');
 
-                $li_class= [];
+                $li_class = [];
                 $link_data += $default_link_data;
                 $link_data['link_name'] = $settings['link_bbcode'] ? parsesmileys(parseubb($link_data['link_name'])) : $link_data['link_name'];
                 // Calculate link class
                 if ($link_data['link_disabled']) {
                     $li_class[] = "disabled";
                 } else {
-                    if (!empty($link_data['link_li_class'])) $li_class[] = $link_data['link_li_class'];
-                    if (!empty($options['item_class'])) $li_class[] = $options['item_class'];
-                    if (empty($link_data['link_url'])) $li_class[] = "no-link";
-                    if ($link_data['link_title'] == TRUE) $li_class[] = "dropdown-header";
+                    if (!empty($link_data['link_li_class']))
+                        $li_class[] = $link_data['link_li_class'];
+                    if (!empty($options['item_class']))
+                        $li_class[] = $options['item_class'];
+                    if (empty($link_data['link_url']))
+                        $li_class[] = "no-link";
+                    if ($link_data['link_title'] == TRUE)
+                        $li_class[] = "dropdown-header";
                 }
 
                 /*
@@ -803,7 +809,7 @@ class SiteLinks {
                         $first_item_link = '';
                         if (!empty($link_data['link_url']) and $link_data['link_url'] !== "#") {
                             $first_item_link .= "<li".(!$itemlink ? " class='no-link'" : '').">\n".self::getMenuParam('seperator');
-                            $first_item_link .= ($itemlink ? "<a ".$itemlink." ".$link_target.">\n" : '');
+                            $first_item_link .= ($itemlink ? "<a href='".$itemlink."' ".$link_target.">\n" : '');
                             $first_item_link .= (!empty($link_data['link_icon']) ? "<i class='".$link_data['link_icon']." m-r-5'></i>\n" : "");
                             $first_item_link .= $link_data['link_name'];
                             $first_item_link .= ($itemlink ? "\n</a>\n" : '');
