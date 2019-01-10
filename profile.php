@@ -52,7 +52,7 @@ if (isset($_GET['lookup']) && isnum($_GET['lookup'])) {
         }
     }
     $userFields = new PHPFusion\UserFields();
-    $userFields->user_data = $user_data;
+    $userFields->userData = $user_data;
     $userFields->showAdminOptions = TRUE;
     $userFields->method = 'display';
     $userFields->plugin_folder = [INCLUDES."user_fields/", INFUSIONS];

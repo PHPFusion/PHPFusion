@@ -198,29 +198,27 @@ class Upload extends \Defender\Validation {
      */
     protected function verify_image_upload() {
 
-        $target_folder = self::$inputConfig['path'];
-        $target_width = self::$inputConfig['max_width'];
-        $target_height = self::$inputConfig['max_height'];
-        $max_size = self::$inputConfig['max_byte'];
-        $delete_original = self::$inputConfig['delete_original'];
-        $thumb1 = self::$inputConfig['thumbnail'];
-        $thumb2 = self::$inputConfig['thumbnail2'];
-        $thumb1_ratio = self::$inputConfig['thumbnail_ratio']; // or 0 if error
-        $thumb1_folder = self::$inputConfig['path'].self::$inputConfig['thumbnail_folder']."/";
-        $thumb1_suffix = self::$inputConfig['thumbnail_suffix'];
-        $thumb1_width = self::$inputConfig['thumbnail_w'];
-        $thumb1_height = self::$inputConfig['thumbnail_h'];
-        $thumb2_ratio = self::$inputConfig['thumbnail2_ratio']; // or 0 if error
-        $thumb2_folder = self::$inputConfig['path'].self::$inputConfig['thumbnail_folder']."/";
-        $thumb2_suffix =  self::$inputConfig['thumbnail2_suffix'];
-        $thumb2_width = self::$inputConfig['thumbnail2_w'];
-        $thumb2_height = self::$inputConfig['thumbnail2_h'];
-        $allowed_extensions = self::$inputConfig['valid_ext'] ?: ['.jpg', '.jpeg', '.png', '.png', '.svg', '.gif', '.bmp'];
-        $replace_upload = self::$inputConfig['replace_upload'];
-        $query = "";
-
         if (self::$inputConfig['multiple']) {
-            // Multiple
+
+            $target_folder = self::$inputConfig['path'];
+            $target_width = self::$inputConfig['max_width'];
+            $target_height = self::$inputConfig['max_height'];
+            $max_size = self::$inputConfig['max_byte'];
+            $delete_original = self::$inputConfig['delete_original'];
+            $thumb1 = self::$inputConfig['thumbnail'];
+            $thumb2 = self::$inputConfig['thumbnail2'];
+            $thumb1_ratio = self::$inputConfig['thumbnail_ratio'];
+            $thumb1_folder = self::$inputConfig['path'].self::$inputConfig['thumbnail_folder']."/";
+            $thumb1_suffix = self::$inputConfig['thumbnail_suffix'];
+            $thumb1_width = self::$inputConfig['thumbnail_w'];
+            $thumb1_height = self::$inputConfig['thumbnail_h'];
+            $thumb2_ratio = self::$inputConfig['thumbnail2_ratio'];
+            $thumb2_folder = self::$inputConfig['path'].self::$inputConfig['thumbnail_folder']."/";
+            $thumb2_suffix = self::$inputConfig['thumbnail2_suffix'];
+            $thumb2_width = self::$inputConfig['thumbnail2_w'];
+            $thumb2_height = self::$inputConfig['thumbnail2_h'];
+            $query = '';
+
             if (!empty($_FILES[self::$inputConfig['input_name']]['name']) && is_uploaded_file($_FILES[self::$inputConfig['input_name']]['tmp_name'][0]) && \defender::safe()) {
                 $result = [];
                 for ($i = 0; $i <= count($_FILES[self::$inputConfig['input_name']]['name']) - 1; $i++) {
@@ -254,24 +252,15 @@ class Upload extends \Defender\Validation {
                             "thumb2_name"   => "",
                             "error"         => 0,
                         ];
-                        $filetype = FALSE;
                         if ($image_ext == ".gif") {
                             $filetype = 1;
                         } else if ($image_ext == ".jpg") {
                             $filetype = 2;
                         } else if ($image_ext == ".png") {
                             $filetype = 3;
-                        } else if ($image_ext == '.svg') {
-                            $xml = file_get_contents($image['tmp_name'][$i]);
-                            $xmlget = simplexml_load_string($xml);
-                            $xmlattributes = $xmlget->attributes();
-                            $image_res = array(
-                                0 => (string) $xmlattributes->width,
-                                1 => (string) $xmlattributes->height
-                            );
-                            $filetype = 1;
+                        } else {
+                            $filetype = FALSE;
                         }
-
                         if ($image['size'][$i] > $max_size) {
                             // Invalid file size
                             $image_info['error'] = 1;
@@ -364,208 +353,32 @@ class Upload extends \Defender\Validation {
             }
         } else {
 
-            $source_image = self::$inputConfig['input_name'];
-            $target_name =  $_FILES[self::$inputConfig['input_name']]['name'];
-            $croppie = self::$inputConfig['croppie'];
-
-            if ($croppie) {
-                $upload['error'] = 5;
-                $base64_image = form_sanitizer($_POST[self::$inputConfig['id']."-crop-base64"], "", self::$inputConfig['id']."-crop-base64");
-                $base64_image = str_replace('data:image/png;base64,', '', $base64_image);
-                $base64_image = str_replace(' ', '+', $base64_image);
-                $base64_image = base64_decode($base64_image);
-
-                $image_name = uniqid().'_'.TIME.'.png';
-                $file = $target_folder.$image_name;
-                $write_image = file_put_contents($file, $base64_image);
-
-                if ($write_image) {
-                    $image_size = 0;
-                    list($width, $height, $type, $attr) = getimagesize($file);
-                    $upload = [
-                        'image'         => TRUE,
-                        "target_folder" => $target_folder,
-                        "valid_ext"     => $allowed_extensions,
-                        "max_size"      => $max_size,
-                        'image_name'    => $image_name,
-                        'image_ext'     => '.png',
-                        'image_size'    => $image_size,
-                        'image_width'   => $width,
-                        'image_height'  => $height,
-                        'thumb1'        => FALSE,
-                        'thumb1_name'   => '',
-                        'thumb2'        => FALSE,
-                        'thumb2_name'   => '',
-                        'error'         => 0,
-                        'query'         => $query,
-                    ];
-
-                    if ($query && !dbquery($query)) {
-                        // Invalid query string
-                        $upload['error'] = 4;
-                        unlink($file);
-                    }
-
-                    return $upload;
-                }
-
-                // If fail.
-                \defender::stop();
-                $this->set_error_notice($upload['error']);
-                return $upload; // return $upload['error'] only
-
-            }
-
-
             if (!empty($_FILES[self::$inputConfig['input_name']]['name']) && is_uploaded_file($_FILES[self::$inputConfig['input_name']]['tmp_name']) && \defender::safe()) {
 
-                if (strlen($target_folder) > 0 && substr($target_folder, -1) !== '/') {
-                    $target_folder .= '/';
-                }
-
-                if (is_uploaded_file($_FILES[$source_image]['tmp_name'])) {
-
-                    $image = $_FILES[$source_image];
-                    if ($target_name != "" && !preg_match("/[^a-zA-Z0-9_-]/", $target_name)) {
-                        $image_name = $target_name;
-                    } else {
-                        $image_name = stripfilename(substr($image['name'], 0, strrpos($image['name'], ".")));
-                    }
-                    $image_ext = strtolower(strrchr($image['name'], "."));
-                    switch ($image_ext) {
-                        case '.gif':
-                            $filetype = 1;
-                            break;
-                        case '.jpg':
-                            $filetype = 2;
-                            break;
-                        case '.png':
-                            $filetype = 3;
-                            break;
-                        default:
-                            $filetype = FALSE;
-                    }
-
-                    // need to run file_exist. @ supress will not work anymore.
-                    if ($image['size']) {
-
-                        $image_res = @getimagesize($image['tmp_name']);
-
-                        $upload = [
-                            'image'         => FALSE,
-                            "target_folder" => $target_folder,
-                            "valid_ext"     => $allowed_extensions,
-                            "max_size"      => $max_size,
-                            'image_name'    => $image_name.$image_ext,
-                            'image_ext'     => $image_ext,
-                            'image_size'    => $image['size'],
-                            'image_width'   => $image_res[0],
-                            'image_height'  => $image_res[1],
-                            'thumb1'        => FALSE,
-                            'thumb1_name'   => '',
-                            'thumb2'        => FALSE,
-                            'thumb2_name'   => '',
-                            'error'         => 0,
-                            'query'         => $query,
-                        ];
-
-                        if ($image['size'] > $max_size) {
-                            // Invalid file size
-                            $upload['error'] = 1;
-                        } else if (!verify_image($image['tmp_name'])) {
-                            // Failed payload scan
-                            $upload['error'] = 2;
-                        } else if (fusion_get_settings('mime_check') && \Defender\ImageValidation::mime_check($image['tmp_name'], $image_ext, $allowed_extensions) === FALSE) {
-                            // Failed extension checks
-                            $upload['error'] = 5;
-                        } else if ($image_res[0] > $target_width || $image_res[1] > $target_height) {
-                            // Invalid image resolution
-                            $upload['error'] = 3;
-                        } else {
-
-                            $upload['error'] = 0;
-
-                            if (!file_exists($target_folder)) {
-                                mkdir($target_folder, 0755);
-                            }
-                            $image_name_full = ($replace_upload ? $image_name.$image_ext : filename_exists($target_folder, $image_name.$image_ext));
-                            $image_name = substr($image_name_full, 0, strrpos($image_name_full, "."));
-                            $upload['image_name'] = $image_name_full;
-                            $upload['image'] = TRUE;
-
-                            move_uploaded_file($image['tmp_name'], $target_folder.$image_name_full);
-                            if (function_exists("chmod")) {
-                                chmod($target_folder.$image_name_full, 0755);
-                            }
-
-                            if ($query && !dbquery($query)) {
-                                // Invalid query string
-                                $upload['error'] = 4;
-                                unlink($target_folder.$image_name_full);
-
-                            } else if ($thumb1 || $thumb2) {
-
-                                require_once INCLUDES."photo_functions_include.php";
-                                $noThumb = FALSE;
-                                if ($thumb1) {
-                                    if ($image_res[0] <= $thumb1_width && $image_res[1] <= $thumb1_height) {
-                                        $noThumb = TRUE;
-                                        $upload['thumb1_name'] = $upload['image_name'];
-                                        $upload['thumb1'] = FALSE;
-                                    } else {
-                                        if (!file_exists($thumb1_folder)) {
-                                            mkdir($thumb1_folder, 0755, TRUE);
-                                        }
-                                        $image_name_t1 = filename_exists($thumb1_folder, $image_name.$thumb1_suffix.$image_ext);
-                                        $upload['thumb1_name'] = $image_name_t1;
-                                        $upload['thumb1'] = TRUE;
-                                        if ($thumb1_ratio == 0) {
-                                            createthumbnail($filetype, $target_folder.$image_name_full, $thumb1_folder.$image_name_t1, $thumb1_width,
-                                                $thumb1_height);
-                                        } else {
-                                            createsquarethumbnail($filetype, $target_folder.$image_name_full, $thumb1_folder.$image_name_t1, $thumb1_width);
-                                        }
-                                    }
-                                }
-
-                                if ($thumb2) {
-                                    if ($image_res[0] < $thumb2_width && $image_res[1] < $thumb2_height) {
-                                        $noThumb = TRUE;
-                                        $upload['thumb2_name'] = $upload['image_name'];
-                                        $upload['thumb2'] = FALSE;
-                                    } else {
-                                        if (!file_exists($thumb2_folder)) {
-                                            mkdir($thumb2_folder, 0755, TRUE);
-                                        }
-                                        $image_name_t2 = ($replace_upload ? $image_name.$thumb2_suffix.$image_ext : filename_exists($thumb2_folder, $image_name.$thumb2_suffix.$image_ext));
-                                        $upload['thumb2_name'] = $image_name_t2;
-                                        $upload['thumb2'] = TRUE;
-                                        if ($thumb2_ratio == 0) {
-                                            createthumbnail($filetype, $target_folder.$image_name_full, $thumb2_folder.$image_name_t2, $thumb2_width,
-                                                $thumb2_height);
-                                        } else {
-                                            createsquarethumbnail($filetype, $target_folder.$image_name_full, $thumb2_folder.$image_name_t2, $thumb2_width);
-                                        }
-                                    }
-                                }
-
-                                if ($delete_original && !$noThumb) {
-                                    if (file_exists($target_folder.$image_name_full)) {
-                                        unlink($target_folder.$image_name_full);
-                                    }
-                                    $upload['image'] = FALSE;
-                                }
-                            }
-                        }
-
-                    } else {
-                        // The image is invalid
-                        $upload['error'] = 2;
-                    }
-                } else {
-                    // Image not uploaded
-                    $upload['error'] = 5;
-                }
+                $upload = upload_image(
+                    self::$inputConfig['input_name'], // src image
+                    $_FILES[self::$inputConfig['input_name']]['name'], // target name
+                    self::$inputConfig['path'], // target folder
+                    self::$inputConfig['max_width'], // target width
+                    self::$inputConfig['max_height'], // target height
+                    self::$inputConfig['max_byte'], // max size
+                    self::$inputConfig['delete_original'], // delete original
+                    self::$inputConfig['thumbnail'], // thumb1 enable
+                    self::$inputConfig['thumbnail2'], // thumb2 enable
+                    1, //thumb ratio
+                    self::$inputConfig['path'].self::$inputConfig['thumbnail_folder']."/", // thumb folder
+                    self::$inputConfig['thumbnail_suffix'], //thumb suffix
+                    self::$inputConfig['thumbnail_w'], //thumb width
+                    self::$inputConfig['thumbnail_h'], // thumb h eight
+                    0, // thumb 2 ratio
+                    self::$inputConfig['path'].self::$inputConfig['thumbnail_folder']."/", //thumb2 folder
+                    self::$inputConfig['thumbnail2_suffix'], // thumb2 suffix
+                    self::$inputConfig['thumbnail2_w'], // thumb2 width
+                    self::$inputConfig['thumbnail2_h'], // thumb2 height
+                    FALSE,
+                    explode(',', self::$inputConfig['valid_ext']),
+                    self::$inputConfig['replace_upload']
+                );
 
                 if ($upload['error'] != 0) {
                     \defender::stop();
