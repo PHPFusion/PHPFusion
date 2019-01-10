@@ -21,14 +21,22 @@
 spl_autoload_register(function ($className) {
     $baseDir = __DIR__.'/classes/';
     $path = str_replace('\\', DIRECTORY_SEPARATOR, $className);
-    $fullPath = $baseDir.$path.'.inc';
-    if (is_file($fullPath)) {
-        require_once $fullPath;
+    $fullPath_INC = $baseDir.$path.'.inc';
+    $fullPath_PHP = $baseDir.$path.'.php';
+
+    if (is_file($fullPath_INC)) {
+        require_once $fullPath_INC;
+    } elseif (is_file($fullPath_PHP)) {
+        require_once $fullPath_PHP;
     }
+
     $baseDir = __DIR__.'/';
     $fullPath = $baseDir.$path.'.inc';
+    $fullPath2 = $baseDir.$path.'.php';
     if (is_file($fullPath)) {
         require_once $fullPath;
+    } elseif (is_file($fullPath2)) {
+        require_once $fullPath2;
     }
 });
 
@@ -65,7 +73,6 @@ spl_autoload_register(function ($className) {
 });
 
 // Load infusions autoloader.
-// @todo 9.04 --
 // @todo: Rename all infusions namespace with "PHPFusion\Infusions\{Infusion_name};
 // @todo: then remove all infusions autoloader and complete check the file structure.
 spl_autoload_register(function ($className) {

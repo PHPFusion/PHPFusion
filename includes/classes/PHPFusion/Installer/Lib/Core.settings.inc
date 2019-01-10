@@ -138,7 +138,7 @@ function get_table_rows($table_name, $localeset = 'English') {
             ],
             [
                 'settings_name'  => 'admin_theme',
-                'settings_value' => 'Artemis'
+                'settings_value' => 'Genesis'
             ],
             [
                 'settings_name'  => 'default_search',
@@ -195,6 +195,10 @@ function get_table_rows($table_name, $localeset = 'English') {
             [
                 'settings_name'  => 'link_bbcode',
                 'settings_value' => '0',
+            ],
+            [
+                'settings_name' => 'link_grouping',
+                'settings_value' => 8,
             ],
             [
                 'settings_name'  => 'forumdate',
