@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../../maincore.php';
-if (!defined('FORUM_EXIST')) {
+if (!db_exists(DB_FORUMS)) {
     redirect(BASEDIR."error.php?code=404");
 }
 

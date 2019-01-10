@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/../../maincore.php';
 
-if (!defined('SHOUTBOX_PANEL_EXIST')) {
+if (!db_exists(DB_SHOUTBOX)) {
     redirect(BASEDIR.'error.php?code=404');
 }
 

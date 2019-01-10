@@ -196,6 +196,7 @@ class OutputHandler {
     public static function handleOutput($output) {
 
         $settings = fusion_get_settings();
+        $locale = fusion_get_locale();
 
         if (!empty(self::$pageHeadTags)) {
             $output = preg_replace("#</head>#", self::$pageHeadTags."</head>", $output, 1);
@@ -214,7 +215,7 @@ class OutputHandler {
 
         if (self::$pageTitle != $settings['sitename']) {
             $output = preg_replace("#<title>.*</title>#i",
-                "<title>".self::$pageTitle.(self::$pageTitle ? fusion_get_locale('global_200') : '').$settings['sitename']."</title>",
+                "<title>".self::$pageTitle.(self::$pageTitle ? $locale['global_200'] : '').$settings['sitename']."</title>",
                 $output, 1);
         }
 

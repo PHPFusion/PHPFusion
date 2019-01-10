@@ -3588,7 +3588,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 }
 
 #main-menu .navbar-brand > img {
-    height: 75px;
+    height: 70px;
 }
 
 #main-menu .navbar-toggle {
@@ -5065,9 +5065,7 @@ button.close {
     -o-transition: -o-transform 0.3s ease-out;
     transition: -webkit-transform 0.3s ease-out;
     -moz-transition: transform 0.3s ease-out, -moz-transform 0.3s ease-out;
-    -o-transition: transform 0.3s ease-out;
     transition: transform 0.3s ease-out;
-    transition: transform 0.3s ease-out, -webkit-transform 0.3s ease-out;
     transition: transform 0.3s ease-out, -webkit-transform 0.3s ease-out, -moz-transform 0.3s ease-out, -o-transform 0.3s ease-out;
 }
 

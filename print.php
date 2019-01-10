@@ -64,7 +64,7 @@ $item_id = isset($_GET['item_id']) && isnum($_GET['item_id']) ? $_GET['item_id']
 if (isset($_GET['type'])) {
     switch ($_GET['type']) {
         case "A":
-            if (!defined('ARTICLES_EXIST')) {
+            if (!infusion_exists('articles')) {
                 redirect(BASEDIR."error.php?code=404");
             }
             $result = dbquery("SELECT ta.article_subject, ta.article_article, ta.article_breaks, ta.article_datestamp, tu.user_id, tu.user_name, tu.user_status
@@ -91,7 +91,7 @@ if (isset($_GET['type'])) {
             }
             break;
         case "B":
-            if (!defined('BLOG_EXIST')) {
+            if (!infusion_exists('blog')) {
                 redirect(BASEDIR."error.php?code=404");
             }
             $result = dbquery("SELECT tn.blog_subject, tn.blog_blog, tn.blog_extended, tn.blog_breaks, tn.blog_datestamp, tn.blog_visibility, tu.user_id, tu.user_name, tu.user_status
@@ -129,7 +129,7 @@ if (isset($_GET['type'])) {
             }
             break;
         case "FQ":
-            if (!defined('FAQ_EXIST')) {
+            if (!infusion_exists('faq')) {
                 redirect(BASEDIR."error.php?code=404");
             }
             $result = dbquery("SELECT ta.faq_question, ta.faq_answer, ta.faq_breaks, ta.faq_datestamp, tu.user_id, tu.user_name, tu.user_status
@@ -155,7 +155,7 @@ if (isset($_GET['type'])) {
             }
             break;
         case "F":
-            if (!defined('FORUM_EXIST')) {
+            if (!infusion_exists('forum')) {
                 redirect(BASEDIR."error.php?code=404");
             }
             if ((isset($_GET['post']) && isnum($_GET['post'])) && (isset($_GET['nr']) && isnum($_GET['nr']))) {
@@ -234,7 +234,7 @@ if (isset($_GET['type'])) {
             }
             break;
         case "N":
-            if (!defined('NEWS_EXIST')) {
+            if (!infusion_exists('news')) {
                 redirect(BASEDIR."error.php?code=404");
             }
             $result = dbquery("SELECT tn.news_subject, tn.news_news, tn.news_extended, tn.news_breaks, tn.news_datestamp, tn.news_visibility,

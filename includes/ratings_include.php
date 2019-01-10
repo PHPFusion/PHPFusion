@@ -71,26 +71,20 @@ function showratings($rating_type, $rating_item_id, $rating_link) {
         } else {
             echo "<div class='display-block'>\n";
             echo openform('postrating', 'post', $rating_link, ['notice' => 0, 'class' => 'm-b-20 text-center']);
-            echo form_select('rating', $locale['r106'], '', [
-                'options'              => $ratings,
-                'inner_width'          => '200px',
-                'width'                => '200px',
-                'allowclear'           => TRUE,
-                'display_search_count' => -1
-            ]);
+            echo form_select('rating', $locale['r106'], '', ['options' => $ratings, 'inner_width' => '200px', 'width' => '200px']);
             echo form_button('post_rating', $locale['r103'], $locale['r103'], ['class' => 'btn-primary btn-block']);
             echo closeform();
             echo "</div>\n";
         }
         $rating_votes = dbarray(dbquery("
-            SELECT
-            SUM(IF(rating_vote='5', 1, 0)) as r120,
-            SUM(IF(rating_vote='4', 1, 0)) as r121,
-            SUM(IF(rating_vote='3', 1, 0)) as r122,
-            SUM(IF(rating_vote='2', 1, 0)) as r123,
-            SUM(IF(rating_vote='1', 1, 0)) as r124
-            FROM ".DB_RATINGS." WHERE rating_type='".$rating_type."' and rating_item_id='".intval($rating_item_id)."'
-        "));
+		SELECT
+		SUM(IF(rating_vote='5', 1, 0)) as r120,
+		SUM(IF(rating_vote='4', 1, 0)) as r121,
+		SUM(IF(rating_vote='3', 1, 0)) as r122,
+		SUM(IF(rating_vote='2', 1, 0)) as r123,
+		SUM(IF(rating_vote='1', 1, 0)) as r124
+		FROM ".DB_RATINGS." WHERE rating_type='".$rating_type."' and rating_item_id='".intval($rating_item_id)."'
+		"));
         if (!empty($rating_votes)) {
 
             $rating_sum = dbcount("(rating_id)", DB_RATINGS, "rating_type='".$rating_type."' AND rating_item_id='".intval($rating_item_id)."'");
@@ -98,10 +92,12 @@ function showratings($rating_type, $rating_item_id, $rating_link) {
             echo "<div id='ratings' class='rating_container'>\n";
 
             foreach ($rating_votes as $key => $num) {
+
                 $num = intval($num);
+
                 $percentage = $rating_sum == 0 ? 0 : round((($num / $rating_sum) * 100), 1);
 
-                echo progress_bar($percentage, $locale[$key]." ($num)", ['height' => '10px']);
+                echo progress_bar($percentage, $locale[$key]." ($num)", FALSE, '10px', FALSE, TRUE);
 
             }
             echo "</div>\n";

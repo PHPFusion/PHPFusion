@@ -73,8 +73,8 @@ class ImagesAdministration {
         require_once INCLUDES."infusions_include.php";
 
         $settings_inf = [
-            'blog' => defined('BLOG_EXIST') ? get_settings('blog') : '',
-            'news' => defined('NEWS_EXIST') ? get_settings('news') : '',
+            'blog' => db_exists(DB_BLOG) ? get_settings("blog") : '',
+            'news' => db_exists(DB_NEWS) ? get_settings("news") : '',
         ];
 
         self::$locale = fusion_get_locale("", LOCALE.LOCALESET."admin/image_uploads.php");
@@ -97,13 +97,13 @@ class ImagesAdministration {
             "imagesa"  => [
                 'locale'  => self::$locale['423'],
                 'link'    => IMAGES_A,
-                'count'   => defined('ARTICLES_EXIST'),
+                'count'   => db_exists(DB_ARTICLES),
                 'fileinp' => $maxed_out_settings,
             ],
             "imagesn"  => [
                 'locale'  => self::$locale['424'],
                 'link'    => IMAGES_N,
-                'count'   => defined('NEWS_EXIST'),
+                'count'   => db_exists(DB_NEWS),
                 'fileinp' => [
                     'max_width'  => !empty($settings_inf['news']) ? $settings_inf['news']['news_photo_max_w'] : 0,
                     'max_height' => !empty($settings_inf['news']) ? $settings_inf['news']['news_photo_max_h'] : 0,
@@ -113,7 +113,7 @@ class ImagesAdministration {
             "imagesnc" => [
                 'locale'  => self::$locale['427'],
                 'link'    => IMAGES_NC,
-                'count'   => defined('NEWS_EXIST'),
+                'count'   => db_exists(DB_NEWS),
                 'fileinp' => [
                     'max_width'  => !empty($settings_inf['news']) ? $settings_inf['news']['news_photo_max_w'] : 0,
                     'max_height' => !empty($settings_inf['news']) ? $settings_inf['news']['news_photo_max_h'] : 0,
@@ -123,7 +123,7 @@ class ImagesAdministration {
             "imagesb"  => [
                 'locale'  => self::$locale['428'],
                 'link'    => IMAGES_B,
-                'count'   => defined('BLOG_EXIST'),
+                'count'   => db_exists(DB_BLOG),
                 'fileinp' => [
                     'max_width'  => !empty($settings_inf['blog']) ? $settings_inf['blog']['blog_photo_max_w'] : 0,
                     'max_height' => !empty($settings_inf['blog']) ? $settings_inf['blog']['blog_photo_max_h'] : 0,
@@ -133,7 +133,7 @@ class ImagesAdministration {
             "imagesbc" => [
                 'locale'  => self::$locale['429'],
                 'link'    => IMAGES_BC,
-                'count'   => defined('BLOG_EXIST'),
+                'count'   => db_exists(DB_BLOG),
                 'fileinp' => [
                     'max_width'  => !empty($settings_inf['blog']) ? $settings_inf['blog']['blog_photo_max_w'] : 0,
                     'max_height' => !empty($settings_inf['blog']) ? $settings_inf['blog']['blog_photo_max_h'] : 0,

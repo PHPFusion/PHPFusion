@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+$version = '9.2.0';
 function get_core_tables($localeset) {
     /*
      * Modeled for compositing table sql comparison for upgrade/reinstall/and install friendly
@@ -568,6 +569,34 @@ function get_core_tables($localeset) {
             'length' => 1,
         ] //message_folder TINYINT(1) UNSIGNED NOT NULL DEFAULT  '0',
     ];
+    $table_package['messages_options'] = [
+        'user_id'         => [
+            'type'     => 'MEDIUMINT',
+            'length'   => 8,
+            'key'      => 1, // PRIMARY KEY (user_id)
+            'unsigned' => TRUE
+        ], //user_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+        'pm_email_notify' => [
+            'type'   => 'SMALLINT', //@note:changed
+            'length' => 1,
+        ], //pm_email_notify tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
+        'pm_save_sent'    => [
+            'type'   => 'SMALLINT',
+            'length' => 100,
+        ], //pm_save_sent tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
+        'pm_inbox'        => [
+            'type'   => 'SMALLINT',
+            'length' => 5,
+        ], //pm_inbox SMALLINT(5) UNSIGNED DEFAULT '0' NOT NULL, @note:changed
+        'pm_savebox'      => [
+            'type'   => 'SMALLINT',
+            'length' => 5,
+        ], // pm_savebox SMALLINT(5) UNSIGNED DEFAULT '0' NOT NULL, @note: changed
+        'pm_sentbox'      => [
+            'type'   => 'SMALLINT',
+            'length' => 5,
+        ] //pm_sentbox SMALLINT(5) UNSIGNED DEFAULT '0' NOT NULL,
+    ];
     $table_package['new_users'] = [
         'user_code'      => [
             'type'   => 'VARCHAR',
@@ -655,6 +684,29 @@ function get_core_tables($localeset) {
             'type'   => 'VARCHAR',
             'length' => 50,
         ] //template_language VARCHAR(50) NOT NULL,
+    ];
+    $table_package['login_connectors'] = [
+        'login_name'     => [
+            'type'           => 'VARCHAR',
+            'length'         => 100,
+            'auto_increment' => FALSE,
+            'key'            => 1,
+            'default'        => '0',
+            'unsigned'       => FALSE,
+        ],
+        'login_type'     => [
+            'type'    => 'VARCHAR',
+            'length'  => 10,
+            'default' => '0'
+        ],
+        'login_status'   => [
+            'type'    => 'TINYINT',
+            'length'  => 1,
+            'default' => '0'
+        ],
+        'login_settings' => [
+            'type' => 'TEXT'
+        ]
     ];
     $table_package['ratings'] = [
         'rating_id'        => [

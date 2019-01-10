@@ -39,14 +39,14 @@ class Login extends Core {
             echo '<div class="panel-heading" style="background: #fff;">';
                 echo '<h3 class="panel-title"><strong>'.$locale['global_100'].'</strong></h3>';
 
+                echo renderNotices(getNotices(['all', FUSION_SELF]));
+
                 if (!iMEMBER) {
                     echo '<div class="pull-right" style="margin-top: -20px;">'.$info['forgot_password_link'].'</div>';
                 }
             echo '</div>';
 
         echo '<div class="panel-body">';
-
-        echo renderNotices(getNotices(['all', FUSION_SELF]));
 
         if (iMEMBER) {
             $msg_count = dbcount("(message_id)", DB_MESSAGES, "message_to='".$userdata['user_id']."' AND message_read='0' AND message_folder='0'");

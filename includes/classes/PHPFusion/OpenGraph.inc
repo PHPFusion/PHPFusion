@@ -79,6 +79,11 @@ class OpenGraph {
         OpenGraph::setValues($info);
     }
 
+    public static function setCustom($values) {
+        OpenGraph::setValues($values);
+    }
+
+
     public static function ogDefault() {
         OpenGraph::setValues();
     }

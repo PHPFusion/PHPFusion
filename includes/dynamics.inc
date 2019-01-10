@@ -32,7 +32,7 @@ class Dynamics {
 
     public static function getInstance() {
         if (self::$instance === NULL) {
-            self::$instance = new static();
+            self::$instance = new Static();
             self::$instance->__load_dynamic_components();
         }
 
