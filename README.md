@@ -34,7 +34,7 @@ What's new on this repository management?
 The latest repository contains all the previous commits done by all the core developers.
 - 9.01 is beta 1
 - 9.02 is beta 2
-- Removed 9.1 branch
+- Restored 9.1 branch as the correct branch. 9.0.3 will be removed.
 - Protected 7.02.07 branch from branch removal
 - Submodules added to /infusions
 
