@@ -2,7 +2,6 @@ PHP-Fusion Andromeda
 ---
 This is the development of PHP-Fusion Version 9.0.3, code name Andromeda.
 
-<<<<<<< HEAD
 Welcome to the PHP-Fusion Official Repository
 ====
 The latest branch is Andromeda-9.0.3. It contains all the previous commits done by all the core developers up to date. 
