@@ -18,21 +18,22 @@
 require_once dirname(__FILE__).'/maincore.php';
 require_once THEMES."templates/header.php";
 $locale = fusion_get_locale("", LOCALE.LOCALESET."user_fields.php");
+$settings = fusion_get_settings();
 require_once THEMES."templates/global/profile.php";
 add_to_title($locale['global_107']);
 add_to_meta("keywords", $locale['global_107']);
 $_GET['profiles'] = 1;
 
-if (iMEMBER or fusion_get_settings('enable_registration') == 0) {
+if (iMEMBER || $settings['enable_registration'] == 0) {
     redirect(BASEDIR.'index.php');
 }
 
-if (fusion_get_settings('gateway') == 1) {
+if ($settings['gateway'] == 1) {
     // Load the Gateway
     require_once BASEDIR."gateway/gateway.php";
 }
 
-if ((isset($_SESSION["validated"]) && $_SESSION["validated"] == "True") || fusion_get_settings('gateway') == 0) {
+if ((isset($_SESSION["validated"]) && $_SESSION["validated"] == "True") || $settings['gateway'] == 0) {
     $errors = [];
 
     if (isset($_GET['email']) && isset($_GET['code'])) {
@@ -58,15 +59,15 @@ if ((isset($_SESSION["validated"]) && $_SESSION["validated"] == "True") || fusio
 
             $result = dbquery("DELETE FROM ".DB_NEW_USERS." WHERE user_code=:code LIMIT 1", [':code' => $_GET['code']]);
 
-            if (fusion_get_settings('admin_activation') == 1) {
+            if ($settings['admin_activation'] == 1) {
                 addNotice("success", $locale['u171']." - ".$locale['u162'], 'all');
             } else {
                 addNotice("success", $locale['u171']." - ".$locale['u161'], 'all');
             }
-            redirect(fusion_get_settings('opening_page'));
+            redirect($settings['opening_page']);
 
         } else {
-            redirect(fusion_get_settings('opening_page'));
+            redirect($settings['opening_page']);
         }
 
     } else if (isset($_POST['register'])) {
@@ -79,7 +80,7 @@ if ((isset($_SESSION["validated"]) && $_SESSION["validated"] == "True") || fusio
         $insert = $userInput->saveInsert();
 
         if ($insert && \defender::safe()) {
-            redirect(fusion_get_settings('opening_page'));
+            redirect($settings['opening_page']);
         }
         unset($userInput);
     }

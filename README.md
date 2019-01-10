@@ -1,4 +1,4 @@
-PHP-Fusion Andromeda 
+PHP-Fusion Andromeda
 ---
 **Note: The Andromeda-9.0.3 branch will be removed soon. Please switch and checkout to origin/Andromeda branch.**
 
@@ -6,52 +6,52 @@ This is the development of PHP-Fusion Version 9.03.XX, code name Andromeda.
 
 Welcome to the PHP-Fusion Official Repository
 ====
-The latest branch is Andromeda. It contains all the previous commits done by all the core developers up to date. 
+The latest branch is Andromeda. It contains all the previous commits done by all the core developers up to date.
 
 
 To sync to this database and not to conflict with your work, please do the following before doing anything:
-  
+
   1. Save all your current local work to a temporary folder.
-  2. Run the git as 
+  2. Run the git as
   ````
   $ git fetch origin
-  $ git checkout -b Andromeda-9.0.3 origin/Andromeda-9.0.3
+  $ git checkout -b Andromeda origin/Andromeda
   ````
-  or if above fails: 
+  or if above fails:
   ````
-  $ git fetch origin Andromeda-9.0.3:Andromeda-9.0.3  
+  $ git fetch origin Andromeda:Andromeda
   ````
- 
+
 #### Testing supported by
 
 <a href="https://www.browserstack.com/" target="_blank"><img width="180px" src="https://www.php-fusion.co.uk/images/logos/Browserstack-logo.svg" alt="BrowserStack"/></a>
-  
+
 Development Discord
 ---
 PHP-Fusion Official Developer Discord Channel - https://discord.gg/CGSYU8r
 
-Those who are active on PHP-Fusion Development is encouraged to join. 
-  
+Those who are active on PHP-Fusion Development is encouraged to join.
+
 What's new on this repository management?
 ---
 The latest repository contains all the previous commits done by all the core developers.
 - 9.01 is beta 1
 - 9.02 is beta 2
-- Restored 9.1 branch as the correct branch. 9.0.3 will be removed.
+- Removed 9.1 branch
 - Protected 7.02.07 branch from branch removal
 - Submodules added to /infusions
 
 New Changes: About Submodules and Git Management of Core Infusions (CI)
 ===
-As of latest update on code management, the core team will have our <a href='https://github.com/php-fusion/PHP-Fusion/tree/Andromeda-9.0.3/infusions'>Latest Core Infusions</a> to see them as a submodules. Submodules are alias that are being linked from each CI repositories now being for example,
-ci-Forum, ci-News, ci-Blog, ci-Weblinks, ci-Faq, ci-Downloads, ci-Gallery, etc. 
- 
-PHP-Fusion 9 will now release with just "Custom Page, Navigation, Users Management, SEF Management, and Server Management", essentially a bare bone system. 
+As of latest update on code management, the core team will have our <a href='https://github.com/php-fusion/PHP-Fusion/tree/Andromeda/infusions'>Latest Core Infusions</a> to see them as a submodules. Submodules are alias that are being linked from each CI repositories now being for example,
+ci-Forum, ci-News, ci-Blog, ci-Weblinks, ci-Faq, ci-Downloads, ci-Gallery, etc.
+
+PHP-Fusion 9 will now release with just "Custom Page, Navigation, Users Management, SEF Management, and Server Management", essentially a bare bone system.
 The core developers will in turn provide a download customizer to bundle your download package in the future.
 
-Each CI will be enhanced through its own review and issue progress independent of PHP-Fusion CMS.  
+Each CI will be enhanced through its own review and issue progress independent of PHP-Fusion CMS.
 
-Each CI package will have better reviews to each versions instead of collectively just being tied to PHP-Fusion Version as a whole. 
+Each CI package will have better reviews to each versions instead of collectively just being tied to PHP-Fusion Version as a whole.
 
 Independent CI repositories serves as a better code and project tracker for the better quality of Infusions, and each of their progress will not hinder PHP-Fusion releases. As a guideline to everyone, always use the 'master' branch for CI repository for they are the most stable to use.
 
@@ -76,11 +76,11 @@ C:\php-fusion\infusions\forum> git checkout 2.0
 ````
 Updating (using the CI's own VCS root):
 ````git
-C:\php-fusion\infusions\forum> git submodule update 
+C:\php-fusion\infusions\forum> git submodule update
 ````
 Pulling a CI changes (using the CI's own VCS root):
 ````git
-C:\php-fusion\infusions\forum> git pull 
+C:\php-fusion\infusions\forum> git pull
 ````
 
 New Core Team Project Colloboration
@@ -88,7 +88,7 @@ New Core Team Project Colloboration
 The project colloboration is now available at https://github.com/orgs/php-fusion/projects/1
 All issues are tied to the project for team colloboration, with assigned tasks based on volunteering effort or best person which has been closest tied to such issue. The Kanban cards are useful for fast turnover and clear monitoring of all task that blocks the project from being completed and we will work based on fixing that identified blockage.
 
-All Core Developers are given Admin Access for Read and Write. So feel free to add any critical issues that is critical to address for the completion of the project. 
+All Core Developers are given Admin Access for Read and Write. So feel free to add any critical issues that is critical to address for the completion of the project.
 
 We will be preparing Andromeda for public launch as soon as the Kanban Cards are done.
 

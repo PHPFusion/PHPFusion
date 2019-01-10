@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: 9.0.3.upgrade.inc
+| Filename: 9.03.upgrade.inc
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -19,7 +19,7 @@ $settings = fusion_get_settings();
 
 $update_settings_tbl = [
     'entypo'  => 0,
-    'version' => '9.0.3',
+    'version' => '9.03',
 ];
 
 foreach ($update_settings_tbl as $key => $value) {
@@ -35,6 +35,7 @@ $insert_settings_tbl = [
     'form_tokens'       => 5,
     'gateway'           => 1,
     'devmode'           => 0,
+    'link_grouping'     => 8
 ];
 
 foreach ($insert_settings_tbl as $key => $value) {

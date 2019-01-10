@@ -109,6 +109,7 @@ class Token extends \defender {
 
         if ($error) {
             self::$tokenIsValid = FALSE;
+            //echo $error;
             self::stop();
             if (self::$debug === TRUE) {
                 addNotice('danger', $_SERVER['PHP_SELF']);
@@ -173,21 +174,21 @@ class Token extends \defender {
      * @return string
      */
     public static function generate_token($form_id = 'phpfusion', $max_tokens = 5, $file = '') {
-        // $form_id = !isset($form_id) ? $form_id : 'phpfusion';
         // resets remote file every callback
         $remote_file = ($file ? $file : '');
         \defender::getInstance()->set_RemoteFile($remote_file);
         $userdata = fusion_get_userdata();
         $user_id = (iMEMBER ? $userdata['user_id'] : 0);
+        $secret_key = defined('SECRET_KEY') ? SECRET_KEY : 'secret_key';
+        $secret_key_salt = defined('SECRET_KEY_SALT') ? SECRET_KEY_SALT : 'secret_salt';
+        $token_time = TIME;
+        $algo = fusion_get_settings('password_algorithm') ? fusion_get_settings('password_algorithm') : 'sha256';
+        $key = $user_id.$token_time.$form_id.$secret_key;
+        $salt = md5(isset($userdata['user_salt']) ? $userdata['user_salt'].$secret_key_salt : $secret_key_salt);
+        // generate a new token
+        $token = $user_id.'.'.$token_time.'.'.hash_hmac($algo, $key, $salt);
+
         if (\defender::safe()) {
-            $secret_key = defined('SECRET_KEY') ? SECRET_KEY : 'secret_key';
-            $secret_key_salt = defined('SECRET_KEY_SALT') ? SECRET_KEY_SALT : 'secret_salt';
-            $token_time = TIME;
-            $algo = fusion_get_settings('password_algorithm') ? fusion_get_settings('password_algorithm') : 'sha256';
-            $key = $user_id.$token_time.$form_id.$secret_key;
-            $salt = md5(isset($userdata['user_salt']) ? $userdata['user_salt'].$secret_key_salt : $secret_key_salt);
-            // generate a new token
-            $token = $user_id.'.'.$token_time.'.'.hash_hmac($algo, $key, $salt);
             // Store into session
             $_SESSION['csrf_tokens'][self::pageHash($file)][$form_id][] = $token;
             // Round robin consume token
@@ -195,16 +196,15 @@ class Token extends \defender {
                 array_shift($_SESSION['csrf_tokens'][self::pageHash($file)][$form_id]);
             }
         } else {
-            if (isset($_SESSION['csrf_tokens'][self::pageHash($file)][$form_id])) {
-                $token_ring = $_SESSION['csrf_tokens'][self::pageHash($file)][$form_id];
+            $token_ring = $_SESSION['csrf_tokens'][self::pageHash($file)][$form_id];
+            if (!empty($token_ring)) {
                 $ring = array_rand($token_ring, 1);
                 $token = $token_ring[$ring];
             } else {
-                $token_ring = $_SESSION['csrf_tokens'][self::pageHash($file)]['phpfusion'];
-                $ring = array_rand($token_ring, 1);
-                $token = $token_ring[$ring];
+                $_SESSION['csrf_tokens'][self::pageHash($file)][$form_id][] = $token;
             }
         }
+
         //print_P($_SESSION['csrf_tokens']);
         // Debugging section
         if (self::$debug) {
