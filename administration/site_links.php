@@ -62,7 +62,7 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
                     \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => $this->form_action, 'title' => $this->locale['SL_0011']]);
                     break;
                 case 'delete':
-                    $result = self::delete_SiteLinks($_GET['link_id']);
+                    $result = self::delete_sitelinks($_GET['link_id']);
                     if ($result) {
                         addNotice("success", $this->locale['SL_0017']);
                         redirect(FUSION_SELF.$this->aidlink);
@@ -140,7 +140,7 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
 
         $title = $this->locale['SL_0001'];
         if (isset($_GET['ref']) && $_GET['ref'] == "link_form") {
-            $title = isset($_GET['link_id']) && $this->verify_SiteLinks($_GET['link_id']) ? $this->locale['SL_0011'] : $this->locale['SL_0010'];
+            $title = isset($_GET['link_id']) && $this->verify_sitelinks($_GET['link_id']) ? $this->locale['SL_0011'] : $this->locale['SL_0010'];
         }
 
         $master_title['title'][] = $title;
@@ -474,7 +474,7 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
 
                     foreach ($input as $link_id) {
                         // check input table
-                        if (self::verify_SiteLinks($link_id) && \defender::safe()) {
+                        if (self::verify_sitelinks($link_id) && \defender::safe()) {
                             switch ($_POST['table_action']) {
                                 case "publish":
                                     dbquery("UPDATE ".DB_SITE_LINKS." SET link_status='1' WHERE link_id='".intval($link_id)."'");

@@ -47,13 +47,13 @@ function showrendertime($queries = TRUE) {
 
 /**
  * Developer tools only (Translations not Required)
- *
- * @param bool   $show_sql_performance  - true to pop up SQL analysis modal
- * @param string $performance_threshold - results that is slower than this will be highlighted
+ * @param bool   $show_sql_performance      Turn on or off
+ * @param string $performance_threshold     The query time
+ * @param bool   $filter_results            Show only those with problems
  *
  * @return string
  */
-function showBenchmark($show_sql_performance = FALSE, $performance_threshold = '0.01') {
+function showBenchmark($show_sql_performance = FALSE, $performance_threshold = '0.01', $filter_results = FALSE) {
     $locale = fusion_get_locale();
     if ($show_sql_performance) {
         $query_log = DatabaseFactory::getConnection('default')->getQueryLog();
@@ -65,48 +65,50 @@ function showBenchmark($show_sql_performance = FALSE, $performance_threshold = '
             foreach ($query_log as $connectionID => $sql) {
                 $current_time = $sql[0];
                 $highlighted = $current_time > $performance_threshold ? TRUE : FALSE;
-                $modal_body .= "<div class='spacer-xs m-10".($highlighted ? " alert alert-warning" : "")."'>\n";
-                $modal_body .= "<h5><strong>SQL run#$i : ".($highlighted ? "<span class='text-danger'>".$sql[0]."</span>" : "<span class='text-success'>".$sql[0]."</span>")." seconds</strong></h5>\n\r";
-                $modal_body .= "[code]".$sql[1].($sql[2] ? " [Parameters -- ".implode(',', $sql[2])." ]" : '')."[/code]\n\r";
-                $modal_body .= "<div>\n";
-                $end_sql = end($sql[3]);
-                $modal_body .= "<kbd>".$end_sql['file']."</kbd><span class='badge pull-right'>Line #".$end_sql['line'].", ".$end_sql['function']."</span> - <a href='#' data-toggle='collapse' data-target='#trace_$connectionID'>Toggle Backtrace</a>\n";
-                if (is_array($sql[3])) {
-                    $modal_body .= "<div id='trace_$connectionID' class='alert alert-info collapse spacer-sm'>";
-                    foreach ($sql[3] as $id => $debug_backtrace) {
-                        $modal_body .= "<kbd>Stack Trace #$id - ".$debug_backtrace['file']." @ Line ".$debug_backtrace['line']."</kbd><br/>";
-                        if (!empty($debug_backtrace['args'][0])) {
-                            $debug_line = $debug_backtrace['args'][0];
-                            if (is_array($debug_backtrace['args'][0])) {
-                                $debug_line = "";
-                                foreach ($debug_backtrace['args'][0] as $line) {
-                                    if (!is_array($line)) {
-                                        $debug_line .= "<br/>".$line;
+                if ($filter_results === FALSE || $filter_results === TRUE AND $highlighted === TRUE) {
+                    $modal_body .= "<div class='spacer-xs m-10".($highlighted ? " alert alert-warning" : "")."'>\n";
+                    $modal_body .= "<h5><strong>SQL run#$i : ".($highlighted ? "<span class='text-danger'>".$sql[0]."</span>" : "<span class='text-success'>".$sql[0]."</span>")." seconds</strong></h5>\n\r";
+                    $modal_body .= "[code]".$sql[1].($sql[2] ? " [Parameters -- ".implode(',', $sql[2])." ]" : '')."[/code]\n\r";
+                    $modal_body .= "<div>\n";
+                    $end_sql = end($sql[3]);
+                    $modal_body .= "<kbd>".$end_sql['file']."</kbd><span class='badge pull-right'>Line #".$end_sql['line'].", ".$end_sql['function']."</span> - <a href='#' data-toggle='collapse' data-target='#trace_$connectionID'>Toggle Backtrace</a>\n";
+                    if (is_array($sql[3])) {
+                        $modal_body .= "<div id='trace_$connectionID' class='alert alert-info collapse spacer-sm'>";
+                        foreach ($sql[3] as $id => $debug_backtrace) {
+                            $modal_body .= "<kbd>Stack Trace #$id - ".$debug_backtrace['file']." @ Line ".$debug_backtrace['line']."</kbd><br/>";
+                            if (!empty($debug_backtrace['args'][0])) {
+                                $debug_line = $debug_backtrace['args'][0];
+                                if (is_array($debug_backtrace['args'][0])) {
+                                    $debug_line = "";
+                                    foreach ($debug_backtrace['args'][0] as $line) {
+                                        if (!is_array($line)) {
+                                            $debug_line .= "<br/>".$line;
+                                        }
                                     }
                                 }
+
+                                $debug_param = "";
+                                if (!empty($debug_backtrace['args'][1])) {
+                                    if (is_array($debug_backtrace['args'][1])) {
+                                        $debug_param .= "<br/>array(";
+                                        foreach ($debug_backtrace['args'][1] as $key => $value) {
+                                            $debug_param .= "<br/><span class='m-l-15'>[$key] => $value,</span>";
+                                        }
+                                        $debug_param .= "<br/>);";
+                                    } else {
+                                        $debug_param .= $debug_backtrace['args'][1];
+                                    }
+                                }
+                                $modal_body .= "Statement::: <code>$debug_line</code><br/>Parameters::: <code>".($debug_param ?: "--")."</code><br/>";
                             }
 
-                            $debug_param = "";
-                            if (!empty($debug_backtrace['args'][1])) {
-                                if (is_array($debug_backtrace['args'][1])) {
-                                    $debug_param .= "<br/>array(";
-                                    foreach ($debug_backtrace['args'][1] as $key => $value) {
-                                        $debug_param .= "<br/><span class='m-l-15'>[$key] => $value,</span>";
-                                    }
-                                    $debug_param .= "<br/>);";
-                                } else {
-                                    $debug_param .= $debug_backtrace['args'][1];
-                                }
-                            }
-                            $modal_body .= "Statement::: <code>$debug_line</code><br/>Parameters::: <code>".($debug_param ?: "--")."</code><br/>";
                         }
-
+                        $modal_body .= "</div>\n";
                     }
                     $modal_body .= "</div>\n";
+                    $modal_body .= "</div>\n";
+                    $i++;
                 }
-                $modal_body .= "</div>\n";
-                $modal_body .= "</div>\n";
-                $i++;
                 $time = $current_time + $time;
             }
         }
@@ -271,10 +273,8 @@ if (!function_exists("check_panel_status")) {
  * @return string
  */
 function fusion_sort_table($table_id) {
-    add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/tablesorter/jquery.tablesorter.min.js'></script>\n");
-    add_to_jquery("
-    $('#".$table_id."').tablesorter();
-    ");
+    add_to_footer("<script type='text/javascript' src='".INCLUDES."jquery/tablesorter/jquery.tablesorter.min.js'></script>\n");
+    add_to_jquery("$('#".$table_id."').tablesorter();");
 
     return "tablesorter";
 }
@@ -389,12 +389,13 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
         $default_options = [
             "class"        => "",
             "button_id"    => "",
-            "button_class" => "btn-default",
+            "button_class" => "",
             "static"       => FALSE,
             "hidden"       => FALSE,
         ];
 
         $options += $default_options;
+
         $modal_trigger = "";
         if (!empty($options['button_id']) || !empty($options['button_class'])) {
             $modal_trigger = !empty($options['button_id']) ? "#".$options['button_id'] : ".".$options['button_class'];
@@ -443,13 +444,14 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
      * @return string
      */
     function modalfooter($content = "", $dismiss = FALSE) {
+        $locale = fusion_get_locale();
         $modal_template = THEMES.'templates/boilers/bootstrap3/html/modal.html';
         $modal = \PHPFusion\Template::getInstance('modal');
         $modal->set_template($modal_template);
         $modal->set_block("modal_closebody");
         $modal->set_block("modal_footer", [
             "content" => $content,
-            "dismiss" => ($dismiss === TRUE ? form_button("dismiss-f", fusion_get_locale("close"), fusion_get_locale("close"), [
+            "dismiss" => ($dismiss == TRUE ? form_button("dismiss-f", $locale['close'], $locale['close'], [
                 "data"  => [
                     "dismiss" => "modal",
                 ],
@@ -496,6 +498,7 @@ if (!function_exists("progress_bar")) {
             "reverse"        => FALSE,
             "disabled"       => FALSE,
             "hide_info"      => FALSE,
+            "hide_marker"    => FALSE,
             "progress_class" => "",
         ];
 
@@ -530,7 +533,7 @@ if (!function_exists("progress_bar")) {
                 if ($options['hide_info'] === FALSE) {
                     $tpl->set_block("progress_info", [
                         "title" => $ctitle,
-                        "num"   => $cnum,
+                        "num"   => $cnum."%",
                     ]);
                 }
                 $block_name = ($options['progress_class'] ? "progress_custom" : "");
@@ -548,7 +551,7 @@ if (!function_exists("progress_bar")) {
                     "progress_class" => $options['progress_class'],
                     "height"         => ($options['height'] ? ' style="height: '.$options['height'].'"' : ""),
                     "title"          => $ctitle,
-                    "num"            => $cnum,
+                    "num"            => ($options['hide_marker'] === FALSE ? $cnum."%" : ""),
                     "int"            => "$int%"
                 ]);
 
@@ -568,7 +571,7 @@ if (!function_exists("progress_bar")) {
             if ($options['hide_info'] === FALSE) {
                 $tpl->set_block("progress_info", [
                     "title" => $title,
-                    "num"   => $num,
+                    "num"   => $num."%",
                 ]);
             }
             $block_name = ($options['progress_class'] ? "progress_custom" : "");
@@ -586,7 +589,7 @@ if (!function_exists("progress_bar")) {
                 "progress_class" => $options['progress_class'],
                 "height"         => ($options['height'] ? ' style="height: '.$options['height'].'"' : ""),
                 "title"          => $title,
-                "num"            => $num,
+                "num"            => ($options['hide_marker'] === FALSE ? $num."%" : ""),
                 "int"            => "$int%"
             ]);
 
@@ -872,11 +875,32 @@ if (!function_exists('display_avatar')) {
     }
 }
 
-function stringToColorCode($str) {
-    $code = dechex(crc32($str));
-    $code = substr($code, 0, 6);
 
-    return $code;
+function stringToColorCode($text) {
+    $min_brightness = 50; // integer between 0 and 100
+    $spec = 3; // integer between 2-10, determines how unique each color will be
+
+    $hash = sha1(md5(sha1($text)));
+    $colors = [];
+    for ($i = 0; $i < 3; $i++) {
+        $colors[$i] = max([round(((hexdec(substr($hash, $spec * $i, $spec))) / hexdec(str_pad('', $spec, 'F'))) * 255), $min_brightness]);
+    }
+
+    if ($min_brightness > 0) {
+        while (array_sum($colors) / 3 < $min_brightness) {
+            for ($i = 0; $i < 3; $i++) {
+                $colors[$i] += 10;
+            }
+        }
+    }
+
+    $output = '';
+
+    for ($i = 0; $i < 3; $i++) {
+        $output .= str_pad(dechex($colors[$i]), 2, 0, STR_PAD_LEFT);
+    }
+
+    return $output;
 }
 
 function get_brightness($hex) {
@@ -1003,7 +1027,6 @@ if (!function_exists("timer")) {
                 $answer = round($calc);
                 //	$string = ($answer > 1) ? $timer_b[$arr] : $unit;
                 $string = \PHPFusion\Locale::format_word($answer, $unit, ['add_count' => FALSE]);
-
                 return "<abbr class='atooltip' data-toggle='tooltip' data-placement='top' title='".showdate('longdate', $updated)."'>".$answer." ".$string." ".$locale['ago']."</abbr>";
             }
         }
@@ -1088,7 +1111,6 @@ if (!function_exists("opencollapse")
         $html .= "</div>\n";
         $html .= "</div>\n";
         $html .= "<div ".collapse_footer_link($grouping_id, $unique_id, $active).">\n"; // body.
-
         return $html;
     }
 
@@ -1134,6 +1156,7 @@ if (!function_exists("tab_active")
         private $tab_info = [];
         private $link_mode = FALSE;
 
+
         public static function tab_active($array, $default_active, $getname = FALSE) {
             if (!empty($getname)) {
                 $section = isset($_GET[$getname]) && $_GET[$getname] ? $_GET[$getname] : $default_active;
@@ -1150,7 +1173,6 @@ if (!function_exists("tab_active")
                 }
             } else {
                 $id = $array['id'][$default_active];
-
                 return $id;;
             }
         }
@@ -1242,7 +1264,6 @@ if (!function_exists("tab_active")
                 $status = ($link_active_arrkey == $id ? " in active" : '');
 
             }
-
             return "<div class='tab-pane fade".$status."' id='".$id."'>\n";
         }
 
