@@ -118,69 +118,69 @@ function user_posts_migrate_console() {
 
     $chkbox = [
         'user_level' => [
-            'value'  => !empty($_POST['user_level']) ? $_POST['user_level'] : 0,
-            'text'   => $locale['MIG_150'],
-            'active' => TRUE
+            'value' => !empty($_POST['user_level']) ? $_POST['user_level'] : 0,
+            'text'  => $locale['MIG_150'],
+            'activ' => TRUE
         ],
         'messages'   => [
-            'value'  => !empty($_POST['messages']) ? $_POST['messages'] : 0,
-            'text'   => $locale['MIG_151'],
-            'active' => TRUE
+            'value' => !empty($_POST['messages']) ? $_POST['messages'] : 0,
+            'text'  => $locale['MIG_151'],
+            'activ' => TRUE
         ],
         'comments'   => [
-            'value'  => !empty($_POST['comments']) ? $_POST['comments'] : 0,
-            'text'   => $locale['MIG_152'],
-            'active' => TRUE
+            'value' => !empty($_POST['comments']) ? $_POST['comments'] : 0,
+            'text'  => $locale['MIG_152'],
+            'activ' => TRUE
         ],
         'ratings'    => [
-            'value'  => !empty($_POST['ratings']) ? $_POST['ratings'] : 0,
-            'text'   => $locale['MIG_153'],
-            'active' => TRUE
+            'value' => !empty($_POST['ratings']) ? $_POST['ratings'] : 0,
+            'text'  => $locale['MIG_153'],
+            'activ' => TRUE
         ],
         'forum'      => [
-            'value'  => !empty($_POST['forum']) ? $_POST['forum'] : 0,
-            'text'   => $locale['MIG_154'],
-            'active' => defined('FORUM_EXIST') ? TRUE : FALSE
+            'value' => !empty($_POST['forum']) ? $_POST['forum'] : 0,
+            'text'  => $locale['MIG_154'],
+            'activ' => db_exists(DB_FORUMS) ? TRUE : FALSE
         ],
         'articles'   => [
-            'value'  => !empty($_POST['articles']) ? $_POST['articles'] : 0,
-            'text'   => $locale['MIG_155'],
-            'active' => defined('ARTICLES_EXIST') ? TRUE : FALSE
+            'value' => !empty($_POST['articles']) ? $_POST['articles'] : 0,
+            'text'  => $locale['MIG_155'],
+            'activ' => db_exists(DB_ARTICLES) ? TRUE : FALSE
         ],
         'faq'        => [
-            'value'  => !empty($_POST['faq']) ? $_POST['faq'] : 0,
-            'text'   => $locale['MIG_156'],
-            'active' => defined('FAQ_EXIST') ? TRUE : FALSE
+            'value' => !empty($_POST['faq']) ? $_POST['faq'] : 0,
+            'text'  => $locale['MIG_156'],
+            'activ' => db_exists(DB_FAQS) ? TRUE : FALSE
         ],
         'polls'      => [
-            'value'  => !empty($_POST['polls']) ? $_POST['polls'] : 0,
-            'text'   => $locale['MIG_157'],
-            'active' => defined('MEMBER_POLL_PANEL_EXIST') ? TRUE : FALSE
+            'value' => !empty($_POST['polls']) ? $_POST['polls'] : 0,
+            'text'  => $locale['MIG_157'],
+            'activ' => db_exists(DB_POLLS) ? TRUE : FALSE
         ],
         'news'       => [
-            'value'  => !empty($_POST['news']) ? $_POST['news'] : 0,
-            'text'   => $locale['MIG_158'],
-            'active' => defined('NEWS_EXIST') ? TRUE : FALSE
+            'value' => !empty($_POST['news']) ? $_POST['news'] : 0,
+            'text'  => $locale['MIG_158'],
+            'activ' => db_exists(DB_NEWS) ? TRUE : FALSE
         ],
         'blog'       => [
-            'value'  => !empty($_POST['blog']) ? $_POST['blog'] : 0,
-            'text'   => $locale['MIG_159'],
-            'active' => defined('BLOG_EXIST') ? TRUE : FALSE
+            'value' => !empty($_POST['blog']) ? $_POST['blog'] : 0,
+            'text'  => $locale['MIG_159'],
+            'activ' => db_exists(DB_BLOG) ? TRUE : FALSE
         ],
         'downloads'  => [
-            'value'  => !empty($_POST['downloads']) ? $_POST['downloads'] : 0,
-            'text'   => $locale['MIG_160'],
-            'active' => defined('DOWNLOADS_EXIST') ? TRUE : FALSE
+            'value' => !empty($_POST['downloads']) ? $_POST['downloads'] : 0,
+            'text'  => $locale['MIG_160'],
+            'activ' => db_exists(DB_DOWNLOADS) ? TRUE : FALSE
         ],
         'photos'     => [
-            'value'  => !empty($_POST['photos']) ? $_POST['photos'] : 0,
-            'text'   => $locale['MIG_161'],
-            'active' => defined('GALLERY_EXIST') ? TRUE : FALSE
+            'value' => !empty($_POST['photos']) ? $_POST['photos'] : 0,
+            'text'  => $locale['MIG_161'],
+            'activ' => db_exists(DB_PHOTOS) ? TRUE : FALSE
         ],
         'shoutbox'   => [
-            'value'  => !empty($_POST['shoutbox']) ? $_POST['shoutbox'] : 0,
-            'text'   => $locale['MIG_162'],
-            'active' => defined('SHOUTBOX_PANEL_EXIST') ? TRUE : FALSE
+            'value' => !empty($_POST['shoutbox']) ? $_POST['shoutbox'] : 0,
+            'text'  => $locale['MIG_162'],
+            'activ' => db_exists(DB_SHOUTBOX) ? TRUE : FALSE
         ],
     ];
 
@@ -204,7 +204,7 @@ function user_posts_migrate_console() {
     echo "<div class='col-xs-12 col-sm-4'><h4 class='m-0'>".$locale['MIG_139']."</h4><i>".$locale['MIG_140']."</i></div>\n";
     echo "<div class='col-xs-12 col-sm-8'>\n";
     foreach ($chkbox as $key => $chkboxinfo) {
-        if (!empty($chkboxinfo['active'])) {
+        if (!empty($chkboxinfo['activ'])) {
             echo "<div class='display-block overflow-hide'>";
             echo form_checkbox($key, $chkboxinfo['text'], $chkboxinfo['value'], [
                 'type'          => 'checkbox',

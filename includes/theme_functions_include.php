@@ -266,6 +266,7 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
      * @return string
      */
     function openmodal($id, $title, $options = []) {
+<<<<<<< HEAD
         $locale = fusion_get_locale();
         $options += [
             'class'        => !empty($options['class']) ?: 'modal-lg',
@@ -276,6 +277,18 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
         ];
 
         $modal_trigger = '';
+=======
+        $default_options = [
+            "class"        => "",
+            "button_id"    => "",
+            "button_class" => "btn-default",
+            "static"       => FALSE,
+            "hidden"       => FALSE,
+        ];
+
+        $options += $default_options;
+        $modal_trigger = "";
+>>>>>>> parent of bb68a122c... Merge branch 'Andromeda-9.0.3' into Babylon-9.0.4
         if (!empty($options['button_id']) || !empty($options['button_class'])) {
             $modal_trigger = !empty($options['button_id']) ? "#".$options['button_id'] : ".".$options['button_class'];
         }
@@ -314,6 +327,7 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
      *
      * @return string
      */
+<<<<<<< HEAD
     function modalfooter($content, $dismiss = FALSE) {
         $html = "</div>\n<div class='modal-footer'>\n";
         $html .= $content;
@@ -322,6 +336,24 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
         }
 
         return $html;
+=======
+    function modalfooter($content = "", $dismiss = FALSE) {
+        $modal_template = THEMES.'templates/boilers/bootstrap3/html/modal.html';
+        $modal = \PHPFusion\Template::getInstance('modal');
+        $modal->set_template($modal_template);
+        $modal->set_block("modal_closebody");
+        $modal->set_block("modal_footer", [
+            "content" => $content,
+            "dismiss" => ($dismiss === TRUE ? form_button("dismiss-f", fusion_get_locale("close"), fusion_get_locale("close"), [
+                "data"  => [
+                    "dismiss" => "modal",
+                ],
+                "class" => "btn-default pull-right",
+            ]) : "")
+        ]);
+
+        return (string)$modal->get_output();
+>>>>>>> parent of bb68a122c... Merge branch 'Andromeda-9.0.3' into Babylon-9.0.4
     }
 
     /**
@@ -352,6 +384,7 @@ if (!function_exists("progress_bar")) {
      */
     function progress_bar($num, $title = FALSE, array $options = []) {
         $default_options = [
+<<<<<<< HEAD
             'class'          => '',
             'height'         => '',
             'reverse'        => FALSE,
@@ -359,6 +392,14 @@ if (!function_exists("progress_bar")) {
             'disabled'       => FALSE,
             'hide_info'      => FALSE,
             'progress_class' => ''
+=======
+            "class"          => "",
+            "height"         => "",
+            "reverse"        => FALSE,
+            "disabled"       => FALSE,
+            "hide_info"      => FALSE,
+            "progress_class" => "",
+>>>>>>> parent of bb68a122c... Merge branch 'Andromeda-9.0.3' into Babylon-9.0.4
         ];
         $options += $default_options;
 
@@ -402,6 +443,7 @@ if (!function_exists("progress_bar")) {
                     $value = $value > 0 ? $value.' ' : '0 ';
                     $value .= $options['as_percent'] ? '%' : '';
                 }
+<<<<<<< HEAD
 
                 $c2Title = "";
 
@@ -410,6 +452,35 @@ if (!function_exists("progress_bar")) {
                 } else {
                     $cTitle = $title;
                 }
+=======
+                if ($options['hide_info'] === FALSE) {
+                    $tpl->set_block("progress_info", [
+                        "title" => $ctitle,
+                        "num"   => $cnum,
+                    ]);
+                }
+                $block_name = ($options['progress_class'] ? "progress_custom" : "");
+                if (empty($block_name)) {
+                    // Automatic class selection
+                    // calculate 100 to the max of 4 options
+                    $progress_calc = floor($cnum / 25);
+                    if ($options['reverse'] === TRUE) {
+                        $progress_calc = $r[$progress_calc];
+                    }
+                    $block_name = "progress_".$progress_calc;
+                }
+                $tpl->set_block($block_name, [
+                    "class"          => ($options['class'] ? " ".$options['class'] : ""),
+                    "progress_class" => $options['progress_class'],
+                    "height"         => ($options['height'] ? ' style="height: '.$options['height'].'"' : ""),
+                    "title"          => $ctitle,
+                    "num"            => $cnum,
+                    "int"            => "$int%"
+                ]);
+
+                $master_tpl->set_block("pbar", ["content" => $tpl->get_output()]);
+            }
+>>>>>>> parent of bb68a122c... Merge branch 'Andromeda-9.0.3' into Babylon-9.0.4
 
                 $auto_class = ($options['reverse']) ? $_barcolor_reverse[$i] : $_barcolor[$i];
                 $classes = (is_array($options['class'])) ? $options['class'][$i] : $auto_class;
@@ -460,9 +531,17 @@ if (!function_exists("check_panel_status")) {
             if (defined("LEFT_OFF")) {
                 $exclude_list = FUSION_SELF;
             }
+<<<<<<< HEAD
         } else if ($side == "upper") {
             if ($settings['exclude_upper'] != "") {
                 $exclude_list = explode("\r\n", $settings['exclude_upper']);
+=======
+            if ($options['hide_info'] === FALSE) {
+                $tpl->set_block("progress_info", [
+                    "title" => $title,
+                    "num"   => $num,
+                ]);
+>>>>>>> parent of bb68a122c... Merge branch 'Andromeda-9.0.3' into Babylon-9.0.4
             }
         } else if ($side == "aupper") {
             if ($settings['exclude_aupper'] != "") {
@@ -496,6 +575,19 @@ if (!function_exists("check_panel_status")) {
             if ($settings['exclude_user4'] != "") {
                 $exclude_list = explode("\r\n", $settings['exclude_user4']);
             }
+<<<<<<< HEAD
+=======
+            $tpl->set_block($block_name, [
+                "class"          => ($options['class'] ? " ".$options['class'] : ""),
+                "progress_class" => $options['progress_class'],
+                "height"         => ($options['height'] ? ' style="height: '.$options['height'].'"' : ""),
+                "title"          => $title,
+                "num"            => $num,
+                "int"            => "$int%"
+            ]);
+
+            $master_tpl->set_block("pbar", ["content" => $tpl->get_output()]);
+>>>>>>> parent of bb68a122c... Merge branch 'Andromeda-9.0.3' into Babylon-9.0.4
         }
 
         if (is_array($exclude_list)) {

@@ -24,10 +24,9 @@ class InstallerPermissions extends Install_Core {
 
     public function __view() {
 
-        $content = "<h4 class='title'>".self::$locale['setup_1106']."</h4>\n";
-        $content .= "<hr/>\n";
+        $content = "<div class='m-b-20'><h4>".self::$locale['setup_1106']."</h4></div>\n";
 
-        $content .= "<div class='table-responsive'><table class='table  table-hover'>\n";
+        $content .= "<table class='table table-responsive table-hover'>\n";
         $system_health = 10;
         $system_requirements = Requirements::get_system_requirements();
         foreach ($system_requirements as $test) {
@@ -65,7 +64,7 @@ class InstallerPermissions extends Install_Core {
             $content .= "</td>\n";
             $content .= "</tr>\n";
         }
-        $content .= "</table></div>\n<br />";
+        $content .= "</table>\n<br />\n<br />\n";
         // can proceed
         if ($system_health > 6) {
             self::$step = [

@@ -122,7 +122,6 @@
     -ms-transform: translateX(-50%);
     transform: translateX(-50%);
     left: 50%;
-    -webkit-border-radius: 6px 6px 0 0;
     border-radius: 6px 6px 0 0;
 }
 
@@ -135,7 +134,6 @@
     font-size: 22px;
     line-height: 32px;
     display: block;
-    -webkit-border-radius: 4px 4px 0 0;
     border-radius: 4px 4px 0 0;
     background-color: #B8B8B8;
     background-image: -moz-linear-gradient(top, #E4E4E4, #B8B8B8);

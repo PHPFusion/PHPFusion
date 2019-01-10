@@ -37,11 +37,11 @@ if (fusion_get_enabled_languages() > 1) {
 if ($settings['bootstrap'] || defined('BOOTSTRAP')) {
     echo "<meta http-equiv='X-UA-Compatible' content='IE=edge'/>\n";
     echo "<meta name='viewport' content='width=device-width, initial-scale=1.0'/>\n";
-    echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/css/bootstrap.min.css' type='text/css'/>\n";
-    echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/css/bootstrap-submenu.min.css' type='text/css'/>\n";
+    echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/bootstrap.min.css' type='text/css'/>\n";
+    echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/bootstrap-submenu.min.css' type='text/css'/>\n";
 
     if ($locale['text-direction'] == 'rtl') {
-        echo "<link href='".INCLUDES."bootstrap/css/bootstrap-rtl.min.css' rel='stylesheet' media='screen'/>\n";
+        echo "<link href='".INCLUDES."bootstrap/bootstrap-rtl.min.css' rel='stylesheet' media='screen'/>\n";
     }
 }
 
@@ -64,11 +64,11 @@ if (!defined('FONTAWESOME-V4')) {
 }
 
 if (!defined('NO_DEFAULT_CSS')) {
-    echo "<link href='".THEMES."templates/default.min.css?v=".filemtime(THEMES.'templates/default.min.css')."' rel='stylesheet' type='text/css' media='screen'/>\n";
+    echo "<link href='".THEMES."templates/default.min.css' rel='stylesheet' type='text/css' media='screen'/>\n";
 }
 
 $theme_css = file_exists(THEME.'styles.min.css') ? THEME.'styles.min.css' : THEME.'styles.css';
-echo "<link href='".$theme_css."?v=".filemtime($theme_css)."' rel='stylesheet' type='text/css' media='screen'/>\n";
+echo "<link href='".$theme_css."' rel='stylesheet' type='text/css' media='screen'/>\n";
 
 if ($settings['bootstrap'] == TRUE || defined('BOOTSTRAP')) {
     $user_theme = fusion_get_userdata('user_theme');
@@ -88,7 +88,7 @@ if (function_exists("get_head_tags")) {
 }
 
 echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery.min.js'></script>\n";
-echo "<script type='text/javascript' src='".INCLUDES."jscripts/jscript.min.js'></script>\n";
+echo "<script type='text/javascript' src='".INCLUDES."jscripts/jscript.js'></script>\n";
 echo "</head>\n";
 
 /**
@@ -123,8 +123,8 @@ if (function_exists("render_page")) {
 
 // Load Bootstrap javascript
 if ($settings['bootstrap'] || defined('BOOTSTRAP')) {
-    echo "<script type='text/javascript' src='".INCLUDES."bootstrap/js/bootstrap.min.js'></script>\n";
-    echo "<script type='text/javascript' src='".INCLUDES."bootstrap/js/bootstrap-submenu.min.js'></script>\n";
+    echo "<script type='text/javascript' src='".INCLUDES."bootstrap/bootstrap.min.js'></script>\n";
+    echo "<script type='text/javascript' src='".INCLUDES."bootstrap/bootstrap-submenu.min.js'></script>\n";
 }
 
 echo "<script type='text/javascript' src='".INCLUDES."jquery/admin-scripts.js'></script>\n";

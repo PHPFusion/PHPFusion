@@ -15,14 +15,12 @@
 
 #support {
     background: url(images/bg04.jpg) fixed bottom;
-    -webkit-background-size: cover;
     background-size: cover;
     height: 600px;
 }
 
 #home_parallax {
     background: url(images/bg02.jpg) fixed;
-    -webkit-background-size: cover;
     background-size: cover;
     height: 750px;
 }

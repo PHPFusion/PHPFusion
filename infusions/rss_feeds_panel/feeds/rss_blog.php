@@ -27,7 +27,7 @@ $settings = fusion_get_settings();
 
 require_once INFUSIONS.'rss_feeds_panel/RSS.php';
 
-if (defined('BLOG_EXIST')) {
+if (db_exists(DB_BLOG)) {
     $result = dbquery("SELECT * FROM ".DB_BLOG."
         WHERE ".groupaccess('blog_visibility').(multilang_table('BL') ? " AND blog_language='".LANGUAGE."'" : '')."
         ORDER BY blog_datestamp DESC LIMIT 0,10

@@ -19,8 +19,8 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-/**
- * Experimental Anti Bot Gateway that combine multiple methods to prevent auto bots.
+/*
+Experimental Anti Bot Gateway that combine multiple methods to prevent auto bots.
 */
 require_once "constants_include.php";
 require_once "functions_include.php";

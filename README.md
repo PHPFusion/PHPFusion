@@ -2,6 +2,7 @@ PHP-Fusion Andromeda
 ---
 This is the development of PHP-Fusion Version 9.0.3, code name Andromeda.
 
+<<<<<<< HEAD
 Welcome to the PHP-Fusion Official Repository
 ====
 The latest branch is Andromeda-9.0.3. It contains all the previous commits done by all the core developers up to date. 
@@ -101,3 +102,5 @@ The number prefix behind each branch naming will be determined at MT's discretio
 Infusions, Locale and Themes
 ---
 We will be adding codes to new repositories, in which only master branch shall apply. If you need versioning to the packages here, please do it on your own personal account and submit the master and latest version to these repository.
+=======
+>>>>>>> parent of bb68a122c... Merge branch 'Andromeda-9.0.3' into Babylon-9.0.4

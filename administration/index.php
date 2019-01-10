@@ -48,7 +48,7 @@ if ($settings['enable_deactivation'] == "1") {
 }
 
 // Get Core Infusion's stats
-if (defined('FORUM_EXIST')) {
+if (infusion_exists('forum')) {
     $forum = [];
     $f_count = dbarray(dbquery("SELECT
         (SELECT COUNT(forum_id) FROM ".DB_PREFIX."forums) AS forums,
@@ -61,7 +61,7 @@ if (defined('FORUM_EXIST')) {
     $forum['post'] = $f_count['posts'];
     $forum['users'] = $f_count['user_posts'];
 }
-if (defined('DOWNLOADS_EXIST')) {
+if (infusion_exists('downloads')) {
     $download = [];
     $d_count = dbarray(dbquery("SELECT
         (SELECT COUNT(download_id) FROM ".DB_PREFIX."downloads) AS items,
@@ -72,7 +72,7 @@ if (defined('DOWNLOADS_EXIST')) {
     $download['comment'] = $d_count['comments'];
     $download['submit'] = $d_count['submissions'];
 }
-if (defined('ARTICLES_EXIST')) {
+if (infusion_exists('articles')) {
     $articles = [];
     $a_count = dbarray(dbquery("SELECT
         (SELECT COUNT(article_id) FROM ".DB_PREFIX."articles) AS items,
@@ -83,7 +83,7 @@ if (defined('ARTICLES_EXIST')) {
     $articles['comment'] = $a_count['comments'];
     $articles['submit'] = $a_count['submissions'];
 }
-if (defined('WEBLINKS_EXIST')) {
+if (infusion_exists('weblinks')) {
     $weblinks = [];
     $w_count = dbarray(dbquery("SELECT
         (SELECT COUNT(weblink_id) FROM ".DB_PREFIX."weblinks) AS items,
@@ -92,7 +92,7 @@ if (defined('WEBLINKS_EXIST')) {
     $weblinks['weblink'] = $w_count['items'];
     $weblinks['submit'] = $w_count['submissions'];
 }
-if (defined('NEWS_EXIST')) {
+if (infusion_exists('news')) {
     $news = [];
     $n_count = dbarray(dbquery("SELECT
         (SELECT COUNT(news_id) FROM ".DB_PREFIX."news) AS items,
@@ -103,7 +103,7 @@ if (defined('NEWS_EXIST')) {
     $news['comment'] = $n_count['comments'];
     $news['submit'] = $n_count['submissions'];
 }
-if (defined('BLOG_EXIST')) {
+if (infusion_exists('blog')) {
     $blog = [];
     $b_count = dbarray(dbquery("SELECT
         (SELECT COUNT(blog_id) FROM ".DB_PREFIX."blog) AS items,
@@ -114,7 +114,7 @@ if (defined('BLOG_EXIST')) {
     $blog['comment'] = $b_count['comments'];
     $blog['submit'] = $b_count['submissions'];
 }
-if (defined('GALLERY_EXIST')) {
+if (infusion_exists('gallery')) {
     $photos = [];
     $p_count = dbarray(dbquery("SELECT
         (SELECT COUNT(photo_id) FROM ".DB_PREFIX."photos) AS items,

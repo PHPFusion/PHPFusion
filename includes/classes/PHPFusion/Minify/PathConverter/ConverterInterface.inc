@@ -7,9 +7,9 @@ namespace PHPFusion\Minify\PathConverter;
  *
  * Please report bugs on https://github.com/matthiasmullie/path-converter/issues
  *
- * @author    Matthias Mullie <pathconverter@mullie.eu>
+ * @author Matthias Mullie <pathconverter@mullie.eu>
  * @copyright Copyright (c) 2015, Matthias Mullie. All rights reserved
- * @license   MIT License
+ * @license MIT License
  */
 interface ConverterInterface {
     /**

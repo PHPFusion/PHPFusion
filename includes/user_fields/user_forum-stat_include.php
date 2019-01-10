@@ -24,7 +24,7 @@ if ($profile_method == "input") {
     $user_fields = '';
     if (defined('ADMIN_PANEL')) { // To show in admin panel only.
         $user_fields .= "<div class='row'>\n<div class='col-xs-12 col-sm-3 strong'>".$locale['uf_forum-stat']."</div>\n<div class='col-xs-12 col-sm-9'>\n";
-        if (defined('FORUM_EXIST')) {
+        if (infusion_exists('forum')) {
             $user_fields .= "--";
         } else {
             $user_fields .= "<div class='alert alert-warning'><i class='fa fa-exclamation-triangle m-r-10'></i> ".$locale['uf_forum-stat_na']."</div>\n";
@@ -32,7 +32,7 @@ if ($profile_method == "input") {
         $user_fields .= "</div>\n</div>\n<br/>";
     }
 } else if ($profile_method == "display") {
-    if (defined('FORUM_EXIST')) {
+    if (infusion_exists('forum')) {
         $user_fields = [
             'title' => $locale['uf_forum-stat'],
             'value' => number_format(dbcount("(forum_id)", DB_FORUM_POSTS, "post_author='".intval($_GET['lookup'])."'"))

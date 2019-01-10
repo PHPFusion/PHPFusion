@@ -117,8 +117,7 @@ class InstallerAdminSetup extends Install_Core {
 
             self::$userData = dbarray($result);
 
-            $content .= "<h4 class='title'>".self::$locale['setup_1500']."</h4><p>".self::$locale['setup_1501']."</p\n";
-            $content .= "<hr/>\n";
+            $content .= "<div class='m-b-20'><h4>".self::$locale['setup_1500']."</h4> ".self::$locale['setup_1501']."</div>\n";
             $content .= form_hidden('transfer', '', '1');
             $content .= form_text('user_name', self::$locale['setup_1504'], self::$userData['user_name'],
                 [
@@ -193,9 +192,8 @@ class InstallerAdminSetup extends Install_Core {
         $this->update();
 
         // Should have a db connection now
-        $content = "<h4 class='title'>".self::$locale['setup_1212']."</h4><p>".self::$locale['setup_1213']."</p>\n";
+        $content = "<div class='m-b-20'>\n<h4>".self::$locale['setup_1212']."</h4>\n".self::$locale['setup_1213']."</div>\n";
         $content .= "<hr/>\n";
-
         $content .= renderNotices(getNotices());
 
         $content .= form_text('sitename', self::$locale['setup_1214'], self::$siteData['sitename'],
@@ -225,10 +223,8 @@ class InstallerAdminSetup extends Install_Core {
         }
         unset($timezones);
         $content .= form_select('default_timezone', self::$locale['setup_1511'], self::$siteData['default_timezone'], ['options' => $timezoneArray, 'required' => TRUE, 'inline' => TRUE]);
-
-        $content .= "<h4 class='title'>".self::$locale['setup_1500']."</h4><p>".self::$locale['setup_1501']."</p>\n";
         $content .= "<hr />\n";
-
+        $content .= "<div class='m-b-20'><h4>".self::$locale['setup_1500']."</h4> ".self::$locale['setup_1501']."</div>\n";
         $content .= form_text('user_name', self::$locale['setup_1504'], self::$userData['user_name'],
             [
                 'required'       => TRUE,
@@ -248,10 +244,7 @@ class InstallerAdminSetup extends Install_Core {
             ['required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password', 'error_text' => '']);
         $content .= form_text('user_email', self::$locale['setup_1509'], self::$userData['user_email'],
             ['required' => TRUE, 'inline' => TRUE, 'type' => 'email', 'error_text' => self::$locale['setup_5020']]);
-
-        $content .= "<h4 class='title'>".self::$locale['setup_1512']."</h4><p>".self::$locale['setup_1001']."</p>\n";
-        $content .= "<hr />\n";
-
+        $content .= "<div class='m-b-20'>\n<h4>".self::$locale['setup_1512']."</h4>\n".self::$locale['setup_1001']."</div>\n";
         $checkbox_options = [];
         foreach (self::$locale_files as $languageKey => $languageName) {
             $localeFlagPath = BASEDIR."locale/".$languageKey."/$languageKey-s.png";
@@ -266,6 +259,7 @@ class InstallerAdminSetup extends Install_Core {
                 'deactivate_key' => self::$localeset,
                 'delimiter'      => '.' // Refer to L1051, L1060 and fusion_get_enabled_languages(); it's '.'
             ]);
+        $content .= "<hr />\n";
 
         self::$step = [
             1 => [

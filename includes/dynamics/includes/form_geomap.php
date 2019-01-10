@@ -284,7 +284,7 @@ function form_location($input_name, $label = '', $input_value = FALSE, array $op
 
         $html .= "<input ".($options['required'] ? "class='req'" : '')." type='hidden' name='$input_name' id='".$options['input_id']."' data-placeholder='".$options['placeholder']."' style='width: ".($options['width'] ? $options['width'] : $default_options['width'])."' ".($options['deactivate'] ? 'disabled' : '')." />";
 
-        $path = $options['file'] ? $options['file'] : DYNAMICS."assets/location/location.json.php";
+        $path = $options['file'] ? $options['file'] : INCLUDES."search/location.json.php";
         if (!empty($input_value)) {
             // json mode.
             $encoded = $options['file'] ? $options['file'] : location_search($input_value);

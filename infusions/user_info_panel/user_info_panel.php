@@ -39,22 +39,40 @@ if (iMEMBER) {
     $outbox_count = (int)$messages_count['outbox_count'];
     $archive_count = (int)$messages_count['archive_count'];
     $msg_count = (int)$messages_count['unread_count'];
-    $forum_exists = defined('FORUM_EXIST');
+    $forum_exists = infusion_exists('forum');
     $forum_settings = get_settings('forum');
 
     $pm_progress = '';
     if (!iSUPERADMIN) {
         $inbox_cfg = user_pm_settings($userdata['user_id'], "user_inbox");
         $inbox_percent = $inbox_cfg > 1 ? number_format(($inbox_count / $inbox_cfg) * 99, 0) : number_format(0 * 99, 0);
-        $pm_progress = progress_bar($inbox_percent, $locale['UM098'], ['reverse' => TRUE, 'disabled' => ($inbox_cfg == 0 ? TRUE : FALSE)]);
+        $pm_progress = progress_bar($inbox_percent, $locale['UM098'],
+            FALSE, // class
+            FALSE,  // height
+            TRUE,  // reverse
+            TRUE,  // as percent
+            ($inbox_cfg == 0 ? TRUE : FALSE)
+        );
 
         $outbox_cfg = user_pm_settings($userdata['user_id'], "user_outbox");
         $outbox_percent = $outbox_cfg > 1 ? number_format(($outbox_count / $outbox_cfg) * 99, 0) : number_format(0 * 99, 0);
-        $pm_progress .= progress_bar($outbox_percent, $locale['UM099'], ['reverse' => TRUE, 'disabled' => ($inbox_cfg == 0 ? TRUE : FALSE)]);
+        $pm_progress .= progress_bar($outbox_percent, $locale['UM099'],
+            FALSE, // class
+            FALSE,  // height
+            TRUE,  // reverse
+            TRUE,  // as percent
+            ($inbox_cfg == 0 ? TRUE : FALSE)
+        );
 
         $archive_cfg = user_pm_settings($userdata['user_id'], "user_archive");
         $archive_percent = $archive_cfg > 1 ? number_format(($archive_count / $archive_cfg) * 99, 0) : number_format(0 * 99, 0);
-        $pm_progress .= progress_bar($archive_percent, $locale['UM100'], ['reverse' => TRUE, 'disabled' => ($inbox_cfg == 0 ? TRUE : FALSE)]);
+        $pm_progress .= progress_bar($archive_percent, $locale['UM100'],
+            FALSE, // class
+            FALSE,  // height
+            TRUE,  // reverse
+            TRUE,  // as percent
+            ($inbox_cfg == 0 ? TRUE : FALSE)
+        );
     }
 
     $submissions_link_arr = [];
@@ -79,7 +97,7 @@ if (iMEMBER) {
 
     $info = [
             'forum_exists'         => $forum_exists,
-            'show_reputation'      => !empty($forum_settings['forum_show_reputation']) && $forum_settings['forum_show_reputation'] ? 1 : 0,
+            'show_reputation'      => $forum_settings['forum_show_reputation'] ? 1 : 0,
             'user_avatar'          => display_avatar($userdata, '90px', '', FALSE, ''),
             'user_name'            => profile_link($userdata['user_id'], $userdata['user_name'], $userdata['user_status']),
             'user_level'           => $userdata['user_level'],

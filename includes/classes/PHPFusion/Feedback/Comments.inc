@@ -329,7 +329,7 @@ class Comments {
                             $ratings .= "<span class='text-lighter m-l-5 m-r-5'>(".($c_info['ratings_count'][$i] ?: 0).")</span>";
                             $ratings .= "</div>\n<div class='display-inline-block m-l-5' style='width:50%;'>\n";
                             $progress_num = $c_info['ratings_count'][$i] == 0 ? 0 : round((($c_info['ratings_count'][$i] / $c_info['ratings_count']['total']) * 100), 1);
-                            $ratings .= progress_bar($progress_num, '', ['height' => '10px', 'hide_info' => TRUE, 'progress_class' => 'm-0']);
+                            $ratings .= progress_bar($progress_num, '', FALSE, '10px', FALSE, TRUE, FALSE, TRUE, 'm-0');
                             $ratings .= "</div>\n";
                             $ratings .= '</div>';
                         }

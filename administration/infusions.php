@@ -26,10 +26,8 @@ add_to_jquery("$('.defuse').bind('click', function() {return confirm('".$locale[
 
 if (($folder = filter_input(INPUT_POST, 'infuse'))) {
     \PHPFusion\Installer\Infusion_Core::getInstance()->infuse($folder);
-    redirect(FUSION_REQUEST);
 } else if ($folder = filter_input(INPUT_POST, 'defuse')) {
     \PHPFusion\Installer\Infusion_Core::getInstance()->defuse($folder);
-    redirect(FUSION_REQUEST);
 }
 
 opentable($locale['400']);
@@ -46,7 +44,7 @@ foreach ($temp as $folders) {
     }
 }
 
-//if (!isset($_POST['infuse']) && !isset($_POST['infusion']) && !isset($_GET['defuse'])) {
+if (!isset($_POST['infuse']) && !isset($_POST['infusion']) && !isset($_GET['defuse'])) {
     $content = "";
     if ($infs) {
         $content .= "<div class='list-group'>\n";
@@ -76,7 +74,7 @@ foreach ($temp as $folders) {
             }
             $content .= "</div>\n";
             $content .= "<div class='col-xs-6 col-sm-6 col-md-5 col-lg-4'>\n";
-            $content .= "<div class='pull-left m-r-10'><img style='width:48px;' alt='".$inf['name']."' src='".$inf['image']."'/></div>\n";
+            $content .= "<div class='pull-left m-r-10'><img style='width:48px;' src='".$inf['image']."' title='".$inf['name']."'/></div>\n";
             $content .= "<div class='overflow-hide'><strong>".$inf['title']."</strong><br/>".$inf['description']."</div>\n</div>\n";
             $content .= "<div class='col-xs-2 col-sm-2 col-md-2'><h5 class='m-0'>".($inf['status'] > 0 ? "<span class='label label-success'>".$locale['415']."</span>" : "<span class='label label-default'>".$locale['414']."</span>")."</h5></div>\n";
             $content .= "<div class='hidden-xs hidden-sm col-md-2 col-lg-1'>".($inf['version'] ? $inf['version'] : '')."</div>\n";
@@ -90,6 +88,6 @@ foreach ($temp as $folders) {
 
     $content .= "</div>\n";
     echo $content;
-//}
+}
 closetable();
 require_once THEMES."templates/footer.php";
