@@ -236,7 +236,7 @@ class SiteLinks {
             }
 
             if (empty($options['grouping'])) {
-                $options['grouping'] = $settings['link_grouping'];
+                $options['grouping'] = $settings['links_grouping'];
             }
 
             if (empty($options['callback_data'])) {
