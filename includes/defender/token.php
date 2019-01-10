@@ -173,7 +173,7 @@ class Token extends \defender {
      * @return string
      */
     public static function generate_token($form_id = 'phpfusion', $max_tokens = 5, $file = '') {
-        // $form_id = !isset($form_id) ? $form_id : 'phpfusion';
+        $form_id = !empty($form_id) ? $form_id : 'phpfusion';
         // resets remote file every callback
         $remote_file = ($file ? $file : '');
         \defender::getInstance()->set_RemoteFile($remote_file);
@@ -195,15 +195,10 @@ class Token extends \defender {
                 array_shift($_SESSION['csrf_tokens'][self::pageHash($file)][$form_id]);
             }
         } else {
-            if (isset($_SESSION['csrf_tokens'][self::pageHash($file)][$form_id])) {
-                $token_ring = $_SESSION['csrf_tokens'][self::pageHash($file)][$form_id];
-                $ring = array_rand($token_ring, 1);
-                $token = $token_ring[$ring];
-            } else {
-                $token_ring = $_SESSION['csrf_tokens'][self::pageHash($file)]['phpfusion'];
-                $ring = array_rand($token_ring, 1);
-                $token = $token_ring[$ring];
-            }
+
+            $token_ring = $_SESSION['csrf_tokens'][self::pageHash($file)][$form_id];
+            $ring = array_rand($token_ring, 1);
+            $token = $token_ring[$ring];
         }
         //print_P($_SESSION['csrf_tokens']);
         // Debugging section

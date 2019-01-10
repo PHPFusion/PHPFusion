@@ -30,10 +30,10 @@ echo "<meta name='googlebot' content='noarchive'/>";
 if ($settings['bootstrap'] || defined('BOOTSTRAP')) {
     echo "<meta http-equiv='X-UA-Compatible' content='IE=edge'/>\n";
     echo "<meta name='viewport' content='width=device-width, initial-scale=1.0'/>\n";
-    echo "<link href='".INCLUDES."bootstrap/css/bootstrap.min.css' rel='stylesheet' media='screen'/>";
+    echo "<link href='".INCLUDES."bootstrap/bootstrap.min.css' rel='stylesheet' media='screen'/>";
 
     if ($locale['text-direction'] == 'rtl') {
-        echo "<link href='".INCLUDES."bootstrap/css/bootstrap-rtl.min.css' rel='stylesheet' media='screen'/>";
+        echo "<link href='".INCLUDES."bootstrap/bootstrap-rtl.min.css' rel='stylesheet' media='screen'/>";
     }
 }
 
@@ -58,12 +58,12 @@ if (!defined('FONTAWESOME-V4')) {
 
 // Default CSS styling which applies to all themes but can be overriden
 if (!defined('NO_DEFAULT_CSS')) {
-    echo "<link href='".THEMES."templates/default.min.css?v=".filemtime(THEMES.'templates/default.min.css')."' rel='stylesheet' type='text/css' media='screen'/>\n";
+    echo "<link href='".THEMES."templates/default.min.css' rel='stylesheet' type='text/css' media='screen'/>\n";
 }
 
 // Admin Panel Theme CSS
 $admin_theme_css = file_exists(THEMES.'admin_themes/'.$settings['admin_theme'].'/acp_styles.min.css') ? THEMES.'admin_themes/'.$settings['admin_theme'].'/acp_styles.min.css' : THEMES.'admin_themes/'.$settings['admin_theme'].'/acp_styles.css';
-echo "<link href='".$admin_theme_css."?v=".filemtime($admin_theme_css)."' rel='stylesheet' type='text/css' media='screen'/>\n";
+echo "<link href='".$admin_theme_css."' rel='stylesheet' type='text/css' media='screen'/>\n";
 
 echo render_favicons(defined('THEME_ICON') ? THEME_ICON : IMAGES.'favicons/');
 
@@ -72,7 +72,7 @@ if (function_exists("get_head_tags")) {
 }
 
 echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery.min.js'></script>\n";
-echo "<script type='text/javascript' src='".INCLUDES."jscripts/jscript.min.js'></script>\n";
+echo "<script type='text/javascript' src='".INCLUDES."jscripts/jscript.js'></script>\n";
 echo "</head>";
 
 /**
@@ -100,7 +100,7 @@ if (!check_admin_pass('')) {
 
 // Load Bootstrap javascript
 if ($settings['bootstrap'] || defined('BOOTSTRAP')) {
-    echo "<script type='text/javascript' src='".INCLUDES."bootstrap/js/bootstrap.min.js'></script>\n";
+    echo "<script type='text/javascript' src='".INCLUDES."bootstrap/bootstrap.min.js'></script>\n";
 }
 
 echo "<script type='text/javascript' src='".INCLUDES."jquery/admin-scripts.js'></script>\n";

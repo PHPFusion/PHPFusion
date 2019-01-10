@@ -27,7 +27,7 @@ $settings = fusion_get_settings();
 
 require_once INFUSIONS.'rss_feeds_panel/RSS.php';
 
-if (defined('FORUM_EXIST')) {
+if (db_exists(DB_FORUM_POSTS) && db_exists(DB_FORUMS)) {
     $result = dbquery("SELECT f.forum_id, f.forum_name, f.forum_lastpost, f.forum_postcount,
         f.forum_threadcount, f.forum_lastuser, f.forum_access,
         t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_subject, t.thread_postcount, t.thread_views, t.thread_lastuser, t.thread_poll,
@@ -48,7 +48,7 @@ if (defined('FORUM_EXIST')) {
             $rss->AddItem($data['thread_subject'].' ['.$data['forum_name'].']', $settings['siteurl'].'infusions/forum/viewthread.php?forum_id='.$data['forum_id'].'&thread_id='.$data['thread_id'], $data['post_message']);
         }
     } else {
-        $rss->AddItem($settings['sitename'].' - '.$locale['rss_forums'], $settings['siteurl'], $locale['rss_nodata']);
+        $rss->AddItem($settings['sitename'].' - '.$locale['rss_articles'], $settings['siteurl'], $locale['rss_nodata']);
     }
 
     $rss->Write();

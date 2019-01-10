@@ -23,4 +23,5 @@ test export-ignore
 .gitattributes export-ignore
 .gitignore export-ignore
 .gitmodules export-ignore
+LICENSE export-ignore
 README.md export-ignore

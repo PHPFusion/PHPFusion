@@ -493,7 +493,7 @@ class Batch_Core extends Install_Core {
 
                             $filename = rtrim($upgrade_file, 'upgrade.inc');
 
-                            if (version_compare($filename, fusion_get_settings('version'), ">")) {
+                            if (version_compare($filename, fusion_get_settings('version'), ">=")) {
                                 /*
                                  * Use Infusions Core to load upgrade statements
                                  */

@@ -66,23 +66,22 @@ class Template {
     /**
      * Set all files to be used in a template.
      * There is a caveat that file names cannot be same or else it will be overridden
-     *
      * @param array $folder_arr
      */
     public function set_file(array $folder_arr = []) {
         if (!empty($folder_arr)) {
-            foreach ($folder_arr as $folder_path) {
+            foreach($folder_arr as $folder_path) {
                 if (is_dir($folder_path)) {
                     $files = makefilelist($folder_path, '.|..|._DS_Store');
                     $folder = makefilelist($folder_path, '.|..|._DS_Store', TRUE, 'folders');
                     if (!empty($files)) {
-                        foreach ($files as $filename) {
+                        foreach($files as $filename) {
                             $this->set_tag($filename, $folder_path.$filename);
                         }
                     }
                     if (!empty($folder)) {
                         $folderdir = [];
-                        foreach ($folder as $foldername) {
+                        foreach($folder as $foldername) {
                             $folderdir[] = $folder_path.$foldername.'/';
                         }
                         $this->set_file($folderdir);
@@ -109,7 +108,7 @@ class Template {
     /**
      * Define the instance to read a specific HTML file
      *
-     * @param string $template_file_path Template File Source
+     * @param string $template_file_path     Template File Source
      */
     public function set_template($template_file_path) {
         if (isset(self::$registered_templates[self::$key])) {
@@ -143,7 +142,7 @@ class Template {
      * This function adds a subitem for every set_block used
      *
      * @param string $block_id The name of the unique block id
-     * @param array  $value    The replacements sets
+     * @param array  $value The replacements sets
      */
     public function set_block($block_id, array $value = []) {
         $filtered_value = [];
@@ -166,7 +165,6 @@ class Template {
      */
 
     public function fetch_block($block_id = NULL, $html_tag = NULL) {
-        $block_count = '';
 
         if ($block_id) {
             self::$block_count[$block_id] = 0;
@@ -193,14 +191,13 @@ class Template {
             return $this->raw_block;
         }
 
-        return NULL;
     }
 
     /**
      * Sets a tag to string conversion
      *
      * @param string $html_tag {%tag%} in html file is 'tag'
-     * @param string $value    the value of the string
+     * @param string $value the value of the string
      */
     public function set_tag($html_tag, $value) {
         $this->tag['{%'.$html_tag.'%}'] = $value;
@@ -209,7 +206,6 @@ class Template {
 
     /**
      * Fetches a tag
-     *
      * @param null $html_tag
      *
      * @return array|mixed|null

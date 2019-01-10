@@ -1,5 +1,5 @@
 /*!
- * bootstrap-fileinput v4.5.1
+ * bootstrap-fileinput v4.4.9
  * http://plugins.krajee.com/file-input
  *
  * Author: Kartik Visweswaran
@@ -336,10 +336,7 @@
         uniqId: function () {
             return Math.round(new Date().getTime()) + '_' + Math.round(Math.random() * 100);
         },
-        htmlEncode: function (str, undefVal) {
-            if (str === undefined) {
-                return undefVal || null;
-            }
+        htmlEncode: function (str) {
             return str.replace(/&/g, '&amp;')
                 .replace(/</g, '&lt;')
                 .replace(/>/g, '&gt;')
@@ -578,13 +575,13 @@
             if (self.isDisabled) {
                 $el.attr('disabled', true);
             }
-            self.isClickable = self.browseOnZoneClick && self.showPreview &&
-                (self.dropZoneEnabled || !$h.isEmpty(self.defaultPreviewContent));
             self.isAjaxUpload = $h.hasFileUploadSupport() && !$h.isEmpty(self.uploadUrl);
             self.dropZoneEnabled = $h.hasDragDropSupport() && self.dropZoneEnabled;
             if (!self.isAjaxUpload) {
                 self.dropZoneEnabled = self.dropZoneEnabled && $h.canAssignFilesToInput();
             }
+            self.isClickable = self.browseOnZoneClick && self.showPreview &&
+                (self.dropZoneEnabled || !$h.isEmpty(self.defaultPreviewContent));
             self.slug = typeof options.slugCallback === "function" ? options.slugCallback : self._slugDefault;
             self.mainTemplate = self.showCaption ? self._getLayoutTemplate('main1') : self._getLayoutTemplate('main2');
             self.captionTemplate = self._getLayoutTemplate('caption');
@@ -3159,9 +3156,10 @@
             return exifObj;
         },
         _validateImageOrientation: function ($img, file, previewId, caption, ftype, fsize, iData) {
-            var self = this, exifObj, value;
-            exifObj = $img.length && self.autoOrientImage ? self._getExifObj(iData) : null;
-            value = exifObj ? exifObj["0th"][piexif.ImageIFD.Orientation] : null; // jshint ignore:line
+            var self = this, exifObj = self._getExifObj(iData), value = null;
+            if ($img.length && self.autoOrientImage && exifObj) {
+                value = exifObj["0th"][piexif.ImageIFD.Orientation]; // jshint ignore:line
+            }
             if (!value) {
                 self._validateImage(previewId, caption, ftype, fsize, iData, exifObj);
                 return;
@@ -3312,18 +3310,11 @@
             }
         },
         _initClickable: function () {
-            var self = this, $zone, $tmpZone;
+            var self = this, $zone;
             if (!self.isClickable) {
                 return;
             }
-            $zone = self.$dropZone;
-            if (!self.isAjaxUpload) {
-                $tmpZone = self.$preview.find('.file-default-preview');
-                if ($tmpZone.length) {
-                    $zone = $tmpZone;
-                }
-            }
-
+            $zone = self.isAjaxUpload ? self.$dropZone : self.$preview.find('.file-default-preview');
             $h.addCss($zone, 'clickable');
             $zone.attr('tabindex', -1);
             self._handler($zone, 'click', function (e) {
@@ -3555,7 +3546,8 @@
         },
         _browse: function (e) {
             var self = this;
-            if (e && e.isDefaultPrevented() || !self._raise('filebrowse')) {
+            self._raise('filebrowse');
+            if (e && e.isDefaultPrevented()) {
                 return;
             }
             if (self.isError && !self.isAjaxUpload) {
@@ -3824,7 +3816,7 @@
                     return;
                 }
                 if (caption.length === 0) {
-                    msg = self.msgInvalidFileName.replace('{name}', $h.htmlEncode(file.name, '[unknown]'));
+                    msg = self.msgInvalidFileName.replace('{name}', $h.htmlEncode(file.name));
                     throwError(msg, file, previewId, i);
                     return;
                 }
@@ -4277,7 +4269,7 @@
         showUploadedThumbs: true,
         browseOnZoneClick: false,
         autoReplace: false,
-        autoOrientImage: false, // if `true` applicable for JPEG images only
+        autoOrientImage: true, // for JPEG images based on EXIF orientation tag
         required: false,
         rtl: false,
         hideThumbnailContent: false,
@@ -4469,7 +4461,7 @@
             close: 'Close detailed preview'
         },
         usePdfRenderer: function () {
-            return !!navigator.userAgent.match(/(iPod|iPhone|iPad|Android)/i);
+            return !!navigator.userAgent.match(/(iPod|iPhone|iPad)/);
         },
         pdfRendererUrl: '',
         pdfRendererTemplate: '<iframe class="kv-preview-data file-preview-pdf" src="{renderer}?file={data}" {style}></iframe>'

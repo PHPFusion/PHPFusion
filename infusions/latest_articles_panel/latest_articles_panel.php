@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-if (defined('ARTICLES_EXIST')) {
+if (infusion_exists('articles')) {
     include_once INFUSIONS."latest_articles_panel/templates.php";
 
     $result = dbquery("SELECT a.article_id, a.article_subject, u.user_id, u.user_name, u.user_status, u.user_avatar

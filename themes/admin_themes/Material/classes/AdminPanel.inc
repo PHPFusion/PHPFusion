@@ -31,7 +31,6 @@ class AdminPanel {
         OutputHandler::addToFooter('<script src="'.MDT.'assets/js/scripts.min.js"></script>');
         OutputHandler::addToHead('<link rel="stylesheet" href="'.MDT.'assets/mCustomScrollbar/jquery.mCustomScrollbar.min.css"/>');
         OutputHandler::addToFooter('<script src="'.MDT.'assets/mCustomScrollbar/jquery.mCustomScrollbar.min.js"></script>');
-        OutputHandler::addToHead('<script src="'.MDT.'assets/js/jquery.mousewheel.min.js"></script>');
         OutputHandler::addToJquery('$(".sidebar, .sidebar-sm .admin-submenu, .sidebar-sm .search-box, .messages-box").mCustomScrollbar({theme: "minimal-dark", axis: "y", scrollInertia: 550, mouseWheel: {enable: !0, axis: "y", preventDefault: !0}});');
 
         echo '<main class="clearfix">';
@@ -78,6 +77,7 @@ class AdminPanel {
             }
         echo '</main>';
 
+        echo '<div id="backtotop"><div class="btn btn-primary"><i class="fa fa-chevron-up"></i></div></div>';
         echo '<div class="overlay"></div>';
     }
 

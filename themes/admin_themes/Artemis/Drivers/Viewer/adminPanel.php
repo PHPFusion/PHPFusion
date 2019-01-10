@@ -175,7 +175,7 @@ class adminPanel extends resource {
         </ul>
         <?php
         add_to_footer("<script type='text/javascript' src='".INCLUDES."jquery/jquery.cookie.js'></script>");
-        add_to_footer("<script type='text/javascript' src='".THEMES."admin_themes/Artemis/Drivers/js/leftMenu.min.js'></script>");
+        add_to_footer("<script type='text/javascript' src='".THEMES."admin_themes/Artemis/Drivers/js/leftMenu.js'></script>");
     }
 
     /**
