@@ -232,8 +232,14 @@ class Install_Core extends Infusion_Core {
         }
     }
 
+    /**
+     * @param $config_path
+     *
+     * @return array
+     */
     public static function fusion_get_config($config_path) {
         if (empty(self::$config) && is_file($config_path) && filesize($config_path) > 0) {
+            /** @noinspection PhpIncludeInspection */
             include $config_path;
             $default_path = [];
             if (isset($db_host)) {

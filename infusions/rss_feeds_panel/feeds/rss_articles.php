@@ -27,7 +27,7 @@ $settings = fusion_get_settings();
 
 require_once INFUSIONS.'rss_feeds_panel/RSS.php';
 
-if (defined('ARTICLES_EXIST')) {
+if (db_exists(DB_ARTICLES) && db_exists(DB_ARTICLE_CATS)) {
     $result = dbquery("SELECT ta.*,tac.* FROM ".DB_ARTICLES." ta
         INNER JOIN ".DB_ARTICLE_CATS." tac ON ta.article_cat=tac.article_cat_id
         WHERE ".groupaccess('article_visibility').(multilang_table('AR') ? " AND article_cat_language='".LANGUAGE."'" : '')."

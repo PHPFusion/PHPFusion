@@ -81,5 +81,5 @@ $inf_droptable[] = DB_PREFIX.'messages_options';
 if (!column_exists(DB_ADMIN, 'admin_language', FALSE)) {
     $inf_altertable[] = DB_ADMIN." ADD admin_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."' AFTER admin_page";
 }
-
-dbquery("UPDATE ".DB_ADMIN." SET admin_image='comments.png', admin_link='comments.php', admin_page='1' WHERE admin_rights='C'");
+$inf_updatedbrow[] = DB_SETTINGS." SET settings_value='Genesis' WHERE settings_name='admin_theme'";
+$inf_updatedbrow[] = DB_ADMIN." SET admin_image='comments.png', admin_link='comments.php', admin_page='1' WHERE admin_rights='C'";

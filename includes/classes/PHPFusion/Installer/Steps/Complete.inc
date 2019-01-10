@@ -22,7 +22,7 @@ use PHPFusion\Installer\Install_Core;
 class InstallerComplete extends Install_Core {
 
     public function __view() {
-        $content = "<h4 class='title'>".self::$locale['setup_1600']."</h4><p>".self::$locale['setup_1601']."</p>\n";
+        $content = "<div class='m-b-20'><h4>".self::$locale['setup_1600']."</h4> ".self::$locale['setup_1601']."</div>\n";
         $content .= "<div class='well'>".self::$locale['setup_1602']."</div>\n";
         $content .= "<div class='m-b-20'><h4>".self::$locale['setup_1603']."</h4></div>\n";
         $content .= "<hr />\n";

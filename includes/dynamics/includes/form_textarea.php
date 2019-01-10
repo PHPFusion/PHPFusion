@@ -458,7 +458,7 @@ function openeditortab($tab_title, $link_active_arrkey, $id, $link = FALSE, $cla
             } else {
                 $html .= ($link_active_arrkey == "".$tab_id) ? "<li class='active m-r-10'>\n" : "<li  class='m-r-10'>\n";
             }
-            $html .= "<a class='btn btn-default btn-sm m-l-10 pointer' ".(!$link_mode ? "id='tab-".$tab_id."' data-toggle='tab' data-target='#".$tab_id."'" : "href='$link_url'").">\n".($icon ? "<i class='".$icon."'></i>" : '')." ".$v_title." </a>\n";
+            $html .= "<a class='btn btn-default btn-xs m-l-10 pointer' ".(!$link_mode ? "id='tab-".$tab_id."' data-toggle='tab' data-target='#".$tab_id."'" : "href='$link_url'").">\n".($icon ? "<i class='".$icon."'></i>" : '')." ".$v_title." </a>\n";
             $html .= "</li>\n";
         }
     }

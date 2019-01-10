@@ -24,7 +24,7 @@ class News {
     public function __construct() {
         echo "<h4>".fusion_get_locale('NEWS_001', THEME.'locale/'.LANGUAGE.'.php')."</h4>";
 
-        if (defined('NEWS_EXIST')) :
+        if (db_exists(DB_PREFIX."news")) :
             // Latest News
             require_once INFUSIONS."news/infusion_db.php";
             require_once NEWS_CLASS."autoloader.php";

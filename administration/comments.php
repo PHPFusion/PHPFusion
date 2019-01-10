@@ -34,7 +34,7 @@ class CommentsAdministration {
         $this->locale = fusion_get_locale("", LOCALE.LOCALESET."admin/comments.php");
         $_GET['action'] = isset($_GET['action']) ? $_GET['action'] : '';
         $this->commentType = \PHPFusion\Admins::getInstance()->getCommentType();
-        $_GET['ctype'] = isset($_GET['ctype']) ? $_GET['ctype'] : key($this->commentType);
+        $_GET['ctype'] = isset($_GET['ctype']) ? $_GET['ctype'] : '';
 
         if (isset($_GET['action'])) {
             switch ($_GET['action']) {
@@ -251,10 +251,11 @@ class CommentsAdministration {
                     echo "</div>\n";
                 }
                 echo '</div>';
-                echo $info['page_nav'];
-            } else {
-                echo $info['no_data'];
             }
+
+            echo $info['page_nav'];
+
+            echo !empty($info['no_data']) ? $info['no_data'] : '';
         }
     }
 

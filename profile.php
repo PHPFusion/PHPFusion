@@ -32,17 +32,15 @@ if (isset($_GET['lookup']) && isnum($_GET['lookup'])) {
     $result = dbquery("SELECT u.*, s.suspend_reason
         FROM ".DB_USERS." u
         LEFT JOIN ".DB_SUSPENDS." s ON u.user_id=s.suspended_user
-        WHERE user_id='".$_GET['lookup']."'".$user_status."
+        WHERE user_id=:uid".$user_status."
         ORDER BY suspend_date DESC
-        LIMIT 1");
+        LIMIT 1", [':uid' => intval($_GET['lookup'])]);
     if (dbrows($result)) {
         $user_data = dbarray($result);
     } else {
-        redirect("index.php");
+        redirect(BASEDIR."index.php");
     }
-
     set_title($locale['u103'].$locale['global_201'].$user_data['user_name']);
-
     if (iADMIN && checkrights("UG") && $_GET['lookup'] != $user_data['user_id']) {
         if ((isset($_POST['add_to_group'])) && (isset($_POST['user_group']) && isnum($_POST['user_group']))) {
             if (!preg_match("(^\.{$_POST['user_group']}$|\.{$_POST['user_group']}\.|\.{$_POST['user_group']}$)", $user_data['user_groups'])) {
@@ -52,11 +50,9 @@ if (isset($_GET['lookup']) && isnum($_GET['lookup'])) {
         }
     }
     $userFields = new PHPFusion\UserFields();
-    $userFields->userData = $user_data;
-    $userFields->showAdminOptions = TRUE;
+    $userFields->user_data = $user_data;
+    $userFields->show_admin_options = TRUE;
     $userFields->method = 'display';
-    $userFields->plugin_folder = [INCLUDES."user_fields/", INFUSIONS];
-    $userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
     $userFields->display_profile_output();
 
     PHPFusion\OpenGraph::ogUserProfile($_GET['lookup']);
@@ -67,7 +63,6 @@ if (isset($_GET['lookup']) && isnum($_GET['lookup'])) {
      */
     \PHPFusion\UserGroups::getInstance()->setGroup($_GET['group_id'])->showGroup();
 } else {
-
     redirect(BASEDIR."index.php");
 }
 require_once THEMES."templates/footer.php";

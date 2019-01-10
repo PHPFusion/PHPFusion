@@ -25,7 +25,7 @@ class SqlHandler {
      * @param $new_column_name
      * @param $field_attributes
      */
-    protected static function add_column($table_name, $new_column_name, $field_attributes) {
+    public static function add_column($table_name, $new_column_name, $field_attributes) {
         if (!empty($field_attributes)) {
             $result = dbquery("ALTER TABLE ".$table_name." ADD ".$new_column_name." ".$field_attributes); // create the new one.
             if (!$result) {
@@ -41,7 +41,7 @@ class SqlHandler {
      * @param $table_name
      * @param $old_column_name
      */
-    protected static function drop_column($table_name, $old_column_name) {
+    public static function drop_column($table_name, $old_column_name) {
         $result = dbquery("ALTER TABLE ".$table_name." DROP ".$old_column_name);
         if (!$result) {
             \defender::stop();
@@ -57,7 +57,7 @@ class SqlHandler {
      *
      * @return bool|mixed|null|PDOStatement|resource
      */
-    protected static function build_table($new_table, $primary_column) {
+    public static function build_table($new_table, $primary_column) {
         $new_table = !stristr($new_table, DB_PREFIX) ? DB_PREFIX.$new_table : $new_table;
         $result = NULL;
         if (!db_exists($new_table)) {
@@ -78,7 +78,7 @@ class SqlHandler {
      * @param $old_table
      * @param $new_table
      */
-    protected static function transfer_table($old_table, $new_table) {
+    public static function transfer_table($old_table, $new_table) {
 
         $old_table = !stristr($old_table, DB_PREFIX) ? DB_PREFIX.$old_table : $old_table;
         $new_table = !stristr($old_table, DB_PREFIX) ? DB_PREFIX.$new_table : $new_table;
@@ -105,7 +105,7 @@ class SqlHandler {
      *
      * @param $old_table
      */
-    protected static function drop_table($old_table) {
+    public static function drop_table($old_table) {
 
         $old_table = !stristr($old_table, DB_PREFIX) ? DB_PREFIX.$old_table : $old_table;
         $result = dbquery("DROP TABLE IF EXISTS ".$old_table);
@@ -129,7 +129,7 @@ class SqlHandler {
      *
      * @return bool|mixed|PDOStatement|resource
      */
-    protected static function rename_column($table_name, $old_column_name, $new_column_name, $field_attributes) {
+    public static function rename_column($table_name, $old_column_name, $new_column_name, $field_attributes) {
         $result = dbquery("ALTER TABLE ".$table_name." CHANGE ".$old_column_name." ".$new_column_name." ".$field_attributes."");
         if (!$result) {
             \defender::stop();
@@ -144,7 +144,7 @@ class SqlHandler {
      * @param $new_table
      * @param $column_name
      */
-    protected static function move_column($old_table, $new_table, $column_name) {
+    public static function move_column($old_table, $new_table, $column_name) {
 
         $result = dbquery("SHOW COLUMNS FROM ".$old_table);
         $data = [];
@@ -253,6 +253,26 @@ function tree_index($data) {
 }
 
 /**
+ * Reduce the results of a hierarchy tree array to a non multidimensional single output value while preserving keys
+ * @param $result       results from dbquery_tree_full() or dbquery_tree()
+ * @param $id_col       the id_col
+ *
+ * @return array
+ */
+function reduce_tree($result, $id_col) {
+    $arrays = flatten_array($result);
+    $list = [];
+    foreach ($arrays as $value) {
+        if (isset($value[$id_col])) {
+            $list[$value[$id_col]] = $value;
+        } else {
+            $list[$value] = $value;
+        }
+    }
+    return $list;
+}
+
+/**
  * Get Tree Root ID of a Child from dbquery_tree() result
  *
  * @param array $index
@@ -276,16 +296,16 @@ function get_root(array $index, $child_id) {
  * Get Tree Root ID of a child via SQL
  * Alternative function to get a root of a specific item when dbtree is not available
  *
- * @param $db
- * @param $id_col
- * @param $cat_col
- * @param $parent_id
+ * @param $db               The table name relative to the search
+ * @param $id_col           The unique id column name of $db
+ * @param $cat_col          The category id column name of $db
+ * @param $current_id       The current id of the item relative to the ancestor root
  *
  * @return int
  */
-function get_hkey($db, $id_col, $cat_col, $parent_id) {
+function get_hkey($db, $id_col, $cat_col, $current_id) {
     $hkey = &$hkey;
-    $result = dbquery("SELECT $id_col, $cat_col FROM ".$db." WHERE $id_col = '$parent_id' LIMIT 1");
+    $result = dbquery("SELECT $id_col, $cat_col FROM ".$db." WHERE $id_col =:pid LIMIT 1", [':pid' => intval($current_id)]);
     if (dbrows($result) > 0) {
         $data = dbarray($result);
         if ($data[$cat_col] > 0) {
@@ -295,7 +315,7 @@ function get_hkey($db, $id_col, $cat_col, $parent_id) {
         }
     } else {
         // predict current row.
-        $rows = dbarray(dbquery("SELECT MAX($id_col) as row FROM ".$db.""));
+        $rows = dbarray(dbquery("SELECT MAX($id_col) as row FROM ".$db));
         $rows = $rows['row'];
         $hkey = $rows + 1;
     }
@@ -483,7 +503,7 @@ function dbtree($db, $id_col, $cat_col, $cat_value = FALSE, $filter = FALSE) {
 function dbtree_index($db = FALSE, $id_col, $cat_col, $cat_value = FALSE) {
     $refs = [];
     $list = [];
-    $result = dbquery("SELECT * FROM ".$db."");
+    $result = dbquery("SELECT * FROM ".$db);
     $col_names = fieldgenerator($db);
     $i = 1;
     while ($data = dbarray($result)) {

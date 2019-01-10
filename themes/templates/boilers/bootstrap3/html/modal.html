@@ -1,0 +1,29 @@
+{modal_open.{
+<div id="{%modal_id%}-Modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="{%modal_id%}-ModalLabel">
+    <div class="modal-dialog {%modal_class%}" role="document">
+        <div class="modal-content">
+            }}
+            {modal_open_header.{
+            <div class="modal-header">
+                }}
+                {modal_dismiss.{<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>}}
+                {modal_header.{<h4 class="modal-title">{%title%}</h4>}}
+            {modal_close_header.{</div>
+            }}
+            {modal_openbody.{
+            <div class="modal-body">
+            }}
+            {modal_closebody.{
+            </div>
+            }}
+            {modal_footer.{
+            <div class="modal-footer">
+                {%content%}
+                <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Close</button>
+            }}
+            {modal_close.{
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+}}

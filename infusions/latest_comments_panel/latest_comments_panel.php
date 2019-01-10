@@ -28,7 +28,6 @@ $result = dbquery("SELECT c.comment_id, c.comment_item_id, c.comment_type, c.com
     LEFT JOIN ".DB_USERS." u ON u.user_id = c.comment_name
     WHERE c.comment_hidden='0'
     ORDER BY c.comment_datestamp DESC
-    LIMIT ".$displayComments."
 ");
 
 $info = [];
@@ -37,7 +36,13 @@ $info['title'] = $locale['global_025'];
 $info['theme_bullet'] = THEME_BULLET;
 
 if (dbrows($result)) {
+    $i = 0;
+
     while ($data = dbarray($result)) {
+        if ($i == $displayComments) {
+            break;
+        }
+
         switch ($data['comment_type']) {
             case 'A':
                 $result_a = dbquery("SELECT ar.article_subject
@@ -60,7 +65,7 @@ if (dbrows($result)) {
                         'c_url' => INFUSIONS.'articles/articles.php?article_id='.$data['comment_item_id'].$comment_start.'#c'.$data['comment_id']
                     ];
                 }
-                continue 2;
+                continue;
             case 'B':
                 $result_b = dbquery("SELECT d.blog_subject
                     FROM ".DB_BLOG." AS d
@@ -81,7 +86,7 @@ if (dbrows($result)) {
                         'c_url' => INFUSIONS.'blog/blog.php?readmore='.$data['comment_item_id'].$comment_start.'#c'.$data['comment_id']
                     ];
                 }
-                continue 2;
+                continue;
             case 'N':
                 $result_n = dbquery("SELECT ns.news_subject
                     FROM ".DB_NEWS." AS ns
@@ -104,7 +109,7 @@ if (dbrows($result)) {
                         'c_url' => INFUSIONS.'news/news.php?readmore='.$data['comment_item_id'].$comment_start.'#c'.$data['comment_id']
                     ];
                 }
-                continue 2;
+                continue;
             case 'P':
                 $result_p = dbquery("SELECT p.photo_title
                     FROM ".DB_PHOTOS." AS p
@@ -125,7 +130,7 @@ if (dbrows($result)) {
                         'c_url' => INFUSIONS.'gallery/gallery.php?photo_id='.$data['comment_item_id'].$comment_start.'#c'.$data['comment_id']
                     ];
                 }
-                continue 2;
+                continue;
             case 'D':
                 $result_d = dbquery("SELECT d.download_title
                     FROM ".DB_DOWNLOADS." AS d
@@ -148,6 +153,8 @@ if (dbrows($result)) {
                 }
                 break;
         }
+
+        $i++;
     }
 } else {
     $info['no_rows'] = $locale['global_026'];

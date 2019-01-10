@@ -29,34 +29,99 @@ use PHPFusion\UserFieldsInput;
  */
 class Members_Profile extends Members_Admin {
 
+    private static $info;
+
     /*
      * Displays new user form
      */
     public static function display_new_user_form() {
-        if (isset($_POST['add_new_user'])) {
-            $userInput = new UserFieldsInput();
-            $userInput->validation = FALSE;
-            $userInput->emailVerification = FALSE;
-            $userInput->adminActivation = FALSE;
-            $userInput->registration = TRUE;
-            $userInput->skipCurrentPass = TRUE;
-            $userInput->saveInsert();
-            unset($userInput);
-            if (\defender::safe()) {
-                redirect(FUSION_SELF.fusion_get_aidlink());
-            }
-        }
+
         $userFields = new UserFields();
-        $userFields->postName = "add_new_user";
-        $userFields->postValue = self::$locale['ME_450'];
-        $userFields->displayValidation = fusion_get_settings("display_validation");
+        $userFields->post_name = "add_new_user";
+        $userFields->post_value = self::$locale['ME_450'];
+        $userFields->display_validation = FALSE;
         $userFields->plugin_folder = [INCLUDES."user_fields/", INFUSIONS];
         $userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
-        $userFields->showAdminPass = FALSE;
-        $userFields->skipCurrentPass = TRUE;
+        $userFields->show_admin_password = FALSE;
+        $userFields->skip_password = TRUE;
         $userFields->registration = TRUE;
         $userFields->method = 'input';
-        $userFields->display_profile_input();
+        $userFields->inline_field = FALSE;
+
+        $userInput = new UserFieldsInput();
+        $userInput->validation = FALSE;
+        $userInput->email_verification = FALSE;
+        $userInput->admin_activation = FALSE;
+        $userInput->registration = TRUE;
+        $userInput->skip_password = TRUE;
+        $userInput->post_name = 'add_new_user';
+        $userInput->redirect_uri = ADMIN.'members.php'.fusion_get_aidlink();
+        $userInput->saveInsert();
+
+        self::$info = $userFields->get_input_info();
+
+        self::display_register_form();
+    }
+
+    public static function display_register_form() {
+        echo self::$info['openform'];
+        echo "<div class='row'>\n<div class='col-xs-12 col-sm-12 col-md-12 col-lg-10'>\n";
+
+        if (self::$info['user_password_notice']) {
+            echo "<div class='alert alert-warning'>".self::$info['user_password_notice']."</div>\n";
+        }
+        if (isset(self::$info['user_admin_password_notice'])) {
+            echo "<div class='alert alert-danger'>".self::$info['user_admin_password_notice']."</div>\n";
+        }
+        echo "<div class='spacer-sm'>\n";
+        if (self::$info['user_avatar']) {
+            echo self::$info['user_avatar'];
+        }
+        echo self::$info['user_name'];
+        echo self::$info['user_email'];
+        echo self::$info['user_password'];
+        if (self::$info['user_admin_password']) {
+            echo self::$info['user_admin_password'];
+        }
+        if (self::$info['user_reputation']) {
+            echo self::$info['user_reputation'];
+        }
+        $opentab = '';
+        $closetab = '';
+        if (!empty(self::$info['section'])) {
+            $tab = new \FusionTabs();
+            $tab->set_remember(TRUE);
+
+            foreach(self::$info['section'] as $tab_id => $tabdata) {
+                $tabpages['title'][$tab_id] = $tabdata['name'];
+                $tabpages['id'][$tab_id] = $tabdata['id'];
+            }
+            reset(self::$info['section']);
+            $default_active = key(self::$info['section']);
+            $tab_active = $tab::tab_active($tabpages, $default_active);
+            $tab_content = '';
+            foreach(self::$info['section'] as $tab_id => $tabdata) {
+                $user_field = '';
+                if (isset(self::$info['user_field'][$tab_id])) {
+                    foreach (self::$info['user_field'][$tab_id] as $cat_id => $field_prop) {
+                        $user_field .= "<h4>\n".$field_prop['title']."</h4>";
+                        $user_field .= implode('', $field_prop['fields']);
+                    }
+                }
+                $tab_content .= $tab->opentabbody($tabdata['id'], $tab_active).$user_field.$tab->closetabbody();
+            }
+
+            $opentab = $tab->opentab($tabpages, $tab_active, 'admin_registration', FALSE, 'nav-tabs nav-stacked');
+            $closetab = $tab->closetab();
+        }
+        echo $opentab.$tab_content.$closetab;
+        echo self::$info['button'];
+        echo "</div>\n";
+
+        echo "</div>\n<div class='col-xs-12 col-sm-3'>\n";
+        echo "</div>\n</div>\n";
+
+        echo self::$info['closeform'];
     }
 
     /*
@@ -65,49 +130,61 @@ class Members_Profile extends Members_Admin {
     public static function display_user_profile() {
         $settings = fusion_get_settings();
         $userFields = new UserFields();
-        $userFields->postName = "register";
-        $userFields->postValue = self::$locale['u101'];
-        $userFields->displayValidation = $settings['display_validation'];
-        $userFields->displayTerms = $settings['enable_terms'];
+        $userFields->post_name = "register";
+        $userFields->post_value = self::$locale['u101'];
+        $userFields->display_validation = $settings['display_validation'];
+        $userFields->display_terms = $settings['enable_terms'];
         $userFields->plugin_folder = [INCLUDES."user_fields/", INFUSIONS];
         $userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
-        $userFields->showAdminPass = FALSE;
-        $userFields->skipCurrentPass = TRUE;
+        $userFields->show_admin_password = FALSE;
+        $userFields->skip_password = TRUE;
         $userFields->registration = FALSE;
-        $userFields->userData = self::$user_data;
+        $userFields->user_data = self::$user_data;
         $userFields->method = 'display';
         $userFields->display_profile_output();
     }
 
-    public static function edit_user_profile() {
-        if (isset($_POST['savechanges'])) {
+    /**
+     * Edit User Profile in Administration
+     */
+    public static function edit_user_form() {
+
+        if (isset($_GET['lookup']) && isnum($_GET['lookup'])) {
+
+            $user = fusion_get_user($_GET['lookup']);
+            $userFields = new \UserFields();
+            $userFields->post_name = 'update_user';
+            $userFields->post_value = self::$locale['ME_437'];
+            $userFields->display_validation = FALSE;
+            $userFields->is_admin_panel = TRUE;
+            $userFields->display_terms = FALSE;
+            $userFields->plugin_folder = [INCLUDES."user_fields/", INFUSIONS];
+            $userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
+            $userFields->show_admin_password = ($user['user_level'] <= USER_LEVEL_ADMIN ? TRUE : FALSE);
+            $userFields->skip_password = TRUE;
+            $userFields->method = 'input';
+            $userFields->user_data = $user;
+
             $userInput = new \UserFieldsInput();
-            $userInput->userData = self::$user_data; // full user data
-            $userInput->adminActivation = 0;
+            $userInput->admin_activation = FALSE;
             $userInput->registration = FALSE;
-            $userInput->emailVerification = 0;
-            $userInput->isAdminPanel = TRUE;
-            $userInput->skipCurrentPass = TRUE;
+            $userInput->email_verification = FALSE;
+            $userInput->is_admin_panel = TRUE;
+            $userInput->skip_password = TRUE;
+            $userInput->user_data = $user;
+
+            $userInput->post_name = 'update_user';
             $userInput->saveUpdate();
-            self::$user_data = $userInput->getData(); // data overridden on error.
-            unset($userInput);
-            if (\defender::safe()) {
-                redirect(FUSION_SELF.fusion_get_aidlink());
-            }
+
+            self::$info = $userFields->get_input_info();
+            self::display_register_form();
+        } else {
+
+            addNotice('danger', "There are no user by found by the user id");
+            redirect( clean_request('', ['ref', 'lookup'], FALSE) );
         }
-        $userFields = new UserFields();
-        $userFields->postName = 'savechanges';
-        $userFields->postValue = self::$locale['ME_437'];
-        $userFields->displayValidation = 0;
-        $userFields->displayTerms = FALSE;
-        $userFields->plugin_folder = [INCLUDES."user_fields/", INFUSIONS];
-        $userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
-        $userFields->showAdminPass = FALSE;
-        $userFields->skipCurrentPass = TRUE;
-        $userFields->userData = self::$user_data;
-        $userFields->method = 'input';
-        $userFields->admin_mode = TRUE;
-        $userFields->display_profile_input();
+
+
     }
 
     public static function delete_user() {
@@ -132,7 +209,7 @@ class Members_Profile extends Members_Admin {
                 /**
                  * @todo: Need to store user content reference column in a table for each infusions
                  */
-                if (defined('GALLERY_EXIST')) {
+                if (infusion_exists('gallery')) {
                     // Delete photos
                     $result = dbquery("SELECT album_id, photo_filename, photo_thumb1, photo_thumb2 FROM ".DB_PHOTOS." WHERE photo_user=:photo_user", [':photo_user' => $user_id]);
                     if (dbrows($result)) {
@@ -152,16 +229,16 @@ class Members_Profile extends Members_Admin {
                 dbquery("DELETE FROM ".DB_SUSPENDS." WHERE suspended_user=:suspended_user", [':suspended_user' => $user_id]);
                 dbquery("DELETE FROM ".DB_MESSAGES." WHERE message_to=:message_to OR message_from=:message_from", [':message_to' => $user_id, ':message_from' => $user_id]);
 
-                if (defined('ARTICLES_EXIST')) {
+                if (db_exists(DB_ARTICLES)) {
                     dbquery("DELETE FROM ".DB_ARTICLES." WHERE article_name=:article_name", [':article_name' => $user_id]);
                 }
-                if (defined('NEWS_EXIST')) {
+                if (db_exists(DB_NEWS)) {
                     dbquery("DELETE FROM ".DB_NEWS." WHERE news_name=:news_name", [':news_name' => $user_id]);
                 }
-                if (defined('MEMBER_POLL_PANEL_EXIST')) {
+                if (db_exists(DB_POLL_VOTES)) {
                     dbquery("DELETE FROM ".DB_POLL_VOTES." WHERE vote_user=:vote_user", [':vote_user' => $user_id]);
                 }
-                if (defined('FORUM_EXIST')) {
+                if (db_exists(DB_FORUMS)) {
                     dbquery("DELETE FROM ".DB_FORUM_THREADS." WHERE thread_author=:thread_author", [':thread_author' => $user_id]);
                     dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE post_author=:post_author", [':post_author' => $user_id]);
                     dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE notify_user=:notify_user", [':notify_user' => $user_id]);
@@ -265,36 +342,5 @@ class Members_Profile extends Members_Admin {
         echo "</div>\n";
         echo closeform();
         echo "</div>\n";
-    }
-
-    public static function resend_email() {
-        if (isset($_GET['lookup']) && !isnum($_GET['lookup'])) {
-            $dbquery = dbquery("SELECT * FROM ".DB_NEW_USERS."
-                WHERE user_name=:username", [':username' => $_GET['lookup']]);
-            if (dbrows($dbquery)) {
-                require_once INCLUDES."sendmail_include.php";
-                self::$user_data = dbarray($dbquery);
-                $activationUrl = fusion_get_settings('siteurl')."register.php?email=".self::$user_data['user_email']."&code=".self::$user_data['user_code'];
-                $message = str_replace("[USER_NAME]", self::$user_data['user_name'], self::$locale['email_resend_message']);
-                $message = str_replace("[SITENAME]", self::$settings['sitename'], $message);
-                $message = str_replace("[ACTIVATION_LINK]", $activationUrl, $message);
-                $subject = str_replace("[SITENAME]", self::$settings['sitename'], self::$locale['email_resend_subject']);
-
-                if (!sendemail(self::$user_data['user_name'], self::$user_data['user_email'], self::$settings['siteusername'], self::$settings['siteemail'], $subject, $message)) {
-                    addNotice('warning', self::$locale['u153'], 'all');
-                }
-
-                if (\defender::safe()) {
-                    dbquery("UPDATE ".DB_NEW_USERS." SET user_datestamp = '".time()."' WHERE user_name=:user_name", [':user_name' => $_GET['lookup']]);
-                    addNotice('success', self::$locale['u165']);
-                    redirect(clean_request('', ['ref', 'lookup'], FALSE));
-                }
-
-            } else {
-                redirect(FUSION_SELF.fusion_get_aidlink());
-            }
-
-        }
-
     }
 }

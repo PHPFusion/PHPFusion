@@ -35,7 +35,7 @@ if (fusion_get_settings("cronjob_day") < (TIME - 86400)) {
     $new_time = TIME;
     $user_datestamp = [':user_datestamp' => TIME - 86400];
     $notify_datestamp = [':notify_datestamp' => TIME - 1209600];
-    if (defined('FORUM_EXIST')) {
+    if (infusion_exists('forum')) {
         dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE notify_datestamp <:notify_datestamp", $notify_datestamp);
     }
 
@@ -106,16 +106,13 @@ if (fusion_get_settings("cronjob_day") < (TIME - 86400)) {
                 dbquery("DELETE FROM ".DB_RATINGS." WHERE rating_user=:user_id", [':user_id' => $data['user_id']]);
                 dbquery("DELETE FROM ".DB_SUSPENDS." WHERE suspended_user=:user_id", [':user_id' => $data['user_id']]);
 
-                if (defined('ARTICLES_EXIST')) {
+                if (infusion_exists('articles'))
                     dbquery("DELETE FROM ".DB_ARTICLES." WHERE article_name=:user_id", [':user_id' => $data['user_id']]);
-                }
-                if (defined('NEWS_EXIST')) {
+                if (infusion_exists('news'))
                     dbquery("DELETE FROM ".DB_NEWS." WHERE news_name=:user_id", [':user_id' => $data['user_id']]);
-                }
-                if (defined('MEMBER_POLL_PANEL_EXIST')) {
+                if (infusion_exists('member_poll_panel'))
                     dbquery("DELETE FROM ".DB_POLL_VOTES." WHERE vote_user=:user_id", [':user_id' => $data['user_id']]);
-                }
-                if (defined('FORUM_EXIST')) {
+                if (infusion_exists('forum')) {
                     dbquery("DELETE FROM ".DB_FORUM_THREADS." WHERE thread_author=:user_id", [':user_id' => $data['user_id']]);
                     dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE post_author=:user_id", [':user_id' => $data['user_id']]);
                     dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE notify_user=:user_id", [':user_id' => $data['user_id']]);
