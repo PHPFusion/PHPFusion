@@ -16,8 +16,8 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../../maincore.php';
-require_once THEMES."templates/header.php";
+require_once THEMES.'templates/header.php';
 require_once FAQ_CLASS."autoloader.php";
 require_once INFUSIONS."faq/templates.php";
 PHPFusion\FAQ\FaqServer::FaqSubmit()->displayFaq();
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';
