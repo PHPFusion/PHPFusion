@@ -55,7 +55,7 @@ class BannersAdministration {
 
     private function set_bannerdb() {
         if (isset($_POST['upload_banner'])) {
-            if (\defender::safe()) {
+            if (\defender::getInstance()->safe()) {
                 if (!empty($_FILES['banner_image']) && is_uploaded_file($_FILES['banner_image']['tmp_name'])) {
                     $upload = form_sanitizer($_FILES['banner_image'], '', 'banner_image');
                     if ($upload['error'] == 0) {
