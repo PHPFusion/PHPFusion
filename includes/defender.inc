@@ -558,6 +558,6 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $is_multiLan
     return defender::getInstance()->form_sanitizer($value, $default, $input_name, $is_multiLang);
 }
 
-require(dirname(__FILE__).'/defender/validation.php');
-require(dirname(__FILE__).'/defender/token.php');
-require(dirname(__FILE__).'/defender/mimecheck.php');
+require(__DIR__.'/defender/validation.php');
+require(__DIR__.'/defender/token.php');
+require(__DIR__.'/defender/mimecheck.php');

@@ -422,5 +422,5 @@ class Upload extends \Defender\Validation {
     }
 }
 
-require_once(dirname(__FILE__).'/../../mimetypes_include.php');
-require_once(dirname(__FILE__).'/../../infusions_include.php');
+require_once(__DIR__.'/../../mimetypes_include.php');
+require_once(__DIR__.'/../../infusions_include.php');

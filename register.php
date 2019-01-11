@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once dirname(__FILE__).'/maincore.php';
+require_once __DIR__.'/maincore.php';
 require_once THEMES."templates/header.php";
 $locale = fusion_get_locale("", LOCALE.LOCALESET."user_fields.php");
 $settings = fusion_get_settings();

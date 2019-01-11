@@ -11,7 +11,7 @@ namespace PHPFusion\Atom;
 
 // Register autoloader for non-composer installations
 if (!class_exists('Less_Parser')) {
-    require_once dirname(__FILE__).'/lib/Less/Autoloader.php';
+    require_once __DIR__.'/lib/Less/Autoloader.php';
     \Less_Autoloader::register();
 }
 

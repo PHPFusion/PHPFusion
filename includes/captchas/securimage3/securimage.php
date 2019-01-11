@@ -1045,7 +1045,7 @@ class Securimage {
      *
      */
     public function __construct($options = []) {
-        $this->securimage_path = dirname(__FILE__);
+        $this->securimage_path = __DIR__;
 
         if (!is_array($options)) {
             trigger_error(
@@ -1063,8 +1063,8 @@ class Securimage {
         // check for and load settings from custom config file
         $config_file = NULL;
 
-        if (file_exists(dirname(__FILE__).'/config.inc.php')) {
-            $config_file = dirname(__FILE__).'/config.inc.php';
+        if (file_exists(__DIR__.'/config.inc.php')) {
+            $config_file = __DIR__.'/config.inc.php';
         }
         if (isset($options['config_file']) && file_exists($options['config_file'])) {
             $config_file = $options['config_file'];
@@ -1176,7 +1176,7 @@ class Securimage {
      * @return string The path to the securimage base directory
      */
     public static function getPath() {
-        return dirname(__FILE__);
+        return __DIR__;
     }
 
     /**
@@ -1356,7 +1356,7 @@ class Securimage {
         if (!isset($options['securimage_path'])) {
             /*$docroot = (isset($_SERVER['DOCUMENT_ROOT'])) ? $_SERVER['DOCUMENT_ROOT'] : substr($_SERVER['SCRIPT_FILENAME'], 0, -strlen($_SERVER['SCRIPT_NAME']));
             $docroot = realpath($docroot);
-            $sipath = dirname(__FILE__);
+            $sipath = __DIR__;
             $securimage_path = str_replace($docroot, '', $sipath);*/
 
             $securimage_path = INCLUDES.'captchas/securimage3';
@@ -1615,7 +1615,7 @@ class Securimage {
         try {
             if (!($audio = $this->getAudioData())) {
                 // if previously generated audio not found for current captcha
-                require_once dirname(__FILE__).'/WavFile.php';
+                require_once __DIR__.'/WavFile.php';
                 $audio = $this->getAudibleCode();
 
                 if (strtolower($format) == 'mp3') {
@@ -3520,7 +3520,7 @@ class Securimage {
      * @return string The binary audio contents
      */
     protected function audioError() {
-        return @file_get_contents(dirname(__FILE__).'/audio/en/error.wav');
+        return @file_get_contents(__DIR__.'/audio/en/error.wav');
     }
 
     /**

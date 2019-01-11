@@ -1,5 +1,5 @@
 <?php
-require_once dirname(__FILE__).'/../maincore.php';
+require_once __DIR__.'/../maincore.php';
 require_once THEMES.'templates/header.php';
 
 echo showBenchmark(FALSE);

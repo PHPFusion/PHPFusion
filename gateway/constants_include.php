@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-define("SCRIPT_ROOT", dirname(__FILE__));
+define("SCRIPT_ROOT", __DIR__);
 
 // number of allowed page requests for the user
 define("CONTROL_MAX_REQUESTS", 2);

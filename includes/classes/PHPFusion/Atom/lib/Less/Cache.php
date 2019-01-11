@@ -1,6 +1,6 @@
 <?php
 
-require_once(dirname(__FILE__).'/Version.php');
+require_once(__DIR__.'/Version.php');
 
 /**
  * Utility for handling the generation and caching of css files
@@ -193,7 +193,7 @@ class Less_Cache {
 
 
         // get less.php if it exists
-        $file = dirname(__FILE__).'/Less.php';
+        $file = __DIR__.'/Less.php';
         if (file_exists($file) && !class_exists('Less_Parser')) {
             require_once($file);
         }
