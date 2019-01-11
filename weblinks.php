@@ -19,8 +19,8 @@ require_once __DIR__.'/../../maincore.php';
 if (!defined('WEBLINKS_EXIST')) {
     redirect(BASEDIR."error.php?code=404");
 }
-require_once THEMES."templates/header.php";
+require_once THEMES.'templates/header.php';
 require_once WEBLINKS_CLASS."autoloader.php";
 require_once INFUSIONS."weblinks/templates.php";
 PHPFusion\Weblinks\WeblinksServer::Weblinks()->display_weblink();
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';
