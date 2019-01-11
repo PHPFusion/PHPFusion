@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/../../maincore.php';
 pageAccess('D');
-require_once THEMES."templates/admin_header.php";
+require_once THEMES.'templates/admin_header.php';
 
 use PHPFusion\BreadCrumbs;
 
@@ -92,7 +92,7 @@ switch ($_GET['section']) {
 }
 echo closetab();
 closetable();
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';
 
 /* Download Listing */
 function download_listing() {
