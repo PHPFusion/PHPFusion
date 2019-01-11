@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/../../maincore.php';
 pageAccess('BLOG');
-require_once THEMES."templates/admin_header.php";
+require_once THEMES.'templates/admin_header.php';
 
 $locale = fusion_get_locale('', [
     LOCALE.LOCALESET."admin/settings.php",
@@ -116,7 +116,7 @@ switch ($_GET['section']) {
 }
 echo closetab();
 closetable();
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';
 
 /**
  * Blog Listing HTML
