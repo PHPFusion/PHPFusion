@@ -19,8 +19,8 @@ require_once __DIR__."/../../../maincore.php";
 if (!defined('FORUM_EXIST')) {
     redirect(BASEDIR."error.php?code=404");
 }
-require_once THEMES."templates/admin_header.php";
+require_once THEMES.'templates/admin_header.php';
 require_once FORUM_CLASS."autoloader.php";
 require_once INCLUDES.'infusions_include.php';
 PHPFusion\Forums\Admin\ForumAdminInterface::view()->display_forum_admin();
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';

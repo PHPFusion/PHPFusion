@@ -20,9 +20,9 @@ if (!defined('FORUM_EXIST')) {
     redirect(BASEDIR."error.php?code=404");
 }
 require_once FORUM_CLASS."autoloader.php";
-require_once THEMES."templates/header.php";
+require_once THEMES.'templates/header.php';
 require_once INFUSIONS."forum/classes/mods.php";
 require_once INCLUDES."infusions_include.php";
 require_once INFUSIONS."forum/templates.php";
 \PHPFusion\Forums\ForumServer::postify()->do_postify();
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';
