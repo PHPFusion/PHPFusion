@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/../../maincore.php';
 pageAccess("PH");
-require_once THEMES."templates/admin_header.php";
+require_once THEMES.'templates/admin_header.php';
 $aidlink = fusion_get_aidlink();
 $locale = fusion_get_locale('', [GALLERY_ADMIN_LOCALE, LOCALE.LOCALESET."admin/settings.php"]);
 require_once INCLUDES."photo_functions_include.php";
@@ -159,7 +159,7 @@ switch ($_GET['section']) {
 }
 echo closetab();
 closetable();
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';
 /**
  * Gallery Photo Listing UI
  *
