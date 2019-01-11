@@ -371,7 +371,7 @@ class Errors {
                     $html .= strtr($data['error_message'], ['#' => '<br/>#'])."</div>\n";
                     $html .= "</td></tr>\n";
 
-                    $html .= '<textarea style="width:.1px;height:.1px;" id="error-'.$data['error_id'].'">';
+                    $html .= '<textarea style="width:.1px;height:.1px;border:0;padding:0;" id="error-'.$data['error_id'].'">';
                     $html .= 'File: '.$link_title.PHP_EOL;
                     $html .= 'Page: '.$data['error_page'].PHP_EOL;
                     $html .= 'Line: '.$data['error_line'].PHP_EOL;
@@ -405,7 +405,7 @@ class Errors {
                     $html .= strtr($data['error_message'], ['#' => '<br/>#'])."</div>\n";
                     $html .= "</td></tr>\n";
 
-                    $html .= '<textarea style="width:.1px;height:.1px;" id="error-'.$data['error_id'].'">';
+                    $html .= '<textarea style="width:.1px;height:.1px;border:0;padding:0;" id="error-'.$data['error_id'].'">';
                     $html .= 'File: '.$link_title.PHP_EOL;
                     $html .= 'Page: '.$data['error_page'].PHP_EOL;
                     $html .= 'Line: '.$data['error_line'].PHP_EOL;
