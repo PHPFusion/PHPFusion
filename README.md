@@ -4,6 +4,8 @@ PHP-Fusion Andromeda
 
 This is the development of PHP-Fusion Version 9.03.XX, code name Andromeda.
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/3702a8fcb1214628bc7c721340d775d8)](https://www.codacy.com/app/FrederickChan/PHP-Fusion?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=php-fusion/PHP-Fusion&amp;utm_campaign=Badge_Grade)
+
 Welcome to the PHP-Fusion Official Repository
 ====
 The latest branch is Andromeda. It contains all the previous commits done by all the core developers up to date.
