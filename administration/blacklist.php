@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
 pageAccess('B');
-require_once THEMES."templates/admin_header.php";
+require_once THEMES.'templates/admin_header.php';
 
 use \PHPFusion\BreadCrumbs;
 
@@ -298,4 +298,4 @@ class BlacklistAdministration {
 }
 
 BlacklistAdministration::getInstance()->display_admin();
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';

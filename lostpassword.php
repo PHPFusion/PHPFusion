@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/maincore.php';
-require_once THEMES."templates/header.php";
+require_once THEMES.'templates/header.php';
 $locale = fusion_get_locale("", LOCALE.LOCALESET."lostpassword.php");
 require_once INCLUDES."sendmail_include.php";
 if (iMEMBER) {
@@ -53,4 +53,4 @@ if (!function_exists("display_lostpassword")) {
 
 display_lostpassword($content);
 
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';

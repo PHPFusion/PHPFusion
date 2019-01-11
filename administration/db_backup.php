@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
 pageAccess('DB');
-require_once THEMES."templates/admin_header.php";
+require_once THEMES.'templates/admin_header.php';
 
 use PHPFusion\Database\DatabaseFactory;
 
@@ -518,4 +518,4 @@ class DbBackupAdministration {
 $backup_admin = new DbBackupAdministration();
 $backup_admin->__display();
 
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';

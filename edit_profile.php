@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "maincore.php";
-require_once THEMES."templates/header.php";
+require_once THEMES.'templates/header.php';
 $locale = fusion_get_locale("", LOCALE.LOCALESET."user_fields.php");
 include THEMES."templates/global/profile.php";
 
@@ -62,4 +62,4 @@ $userFields->setUserNameChange(fusion_get_settings("userNameChange"));
 $userFields->registration = FALSE;
 $userFields->method = 'input';
 $userFields = $userFields->display_profile_input($info);
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';

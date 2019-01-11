@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
-require_once THEMES."templates/admin_header.php";
+require_once THEMES.'templates/admin_header.php';
 
 use \PHPFusion\BreadCrumbs;
 
@@ -301,4 +301,4 @@ class CommentsAdministration {
 
 CommentsAdministration::getInstance()->display_administration_form();
 
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';

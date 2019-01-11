@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
-require_once THEMES."templates/admin_header.php";
+require_once THEMES.'templates/admin_header.php';
 $user_field = new PHPFusion\QuantumFields();
 $user_field->setLocale(fusion_get_locale('', LOCALE.LOCALESET."admin/fields.php"));
 $user_field->setSystemTitle($user_field->setLocale(fusion_get_locale('202')));
@@ -27,4 +27,4 @@ $user_field->setMethod('input');
 $user_field->setPluginFolder([INCLUDES."user_fields/", INFUSIONS]);
 $user_field->setPluginLocaleFolder(LOCALE.LOCALESET."user_fields/");
 $user_field->displayQuantumAdmin();
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';

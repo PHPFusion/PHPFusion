@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/maincore.php';
-require_once THEMES."templates/header.php";
+require_once THEMES.'templates/header.php';
 $locale = fusion_get_locale("", LOCALE.LOCALESET."user_fields.php");
 $settings = fusion_get_settings();
 require_once THEMES."templates/global/profile.php";
@@ -100,4 +100,4 @@ if ((isset($_SESSION["validated"]) && $_SESSION["validated"] == "True") || $sett
     }
 }
 
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';

@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
-require_once THEMES."templates/admin_header.php";
+require_once THEMES.'templates/admin_header.php';
 pageAccess('MI');
 
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/migrate.php');
@@ -336,4 +336,4 @@ function user_rights_migrate($user_primary_id, $user_temp_id) {
     }
 }
 
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';

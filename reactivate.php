@@ -17,7 +17,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/maincore.php';
-require_once THEMES."templates/header.php";
+require_once THEMES.'templates/header.php';
 require_once INCLUDES."suspend_include.php";
 $locale = fusion_get_locale('', LOCALE.LOCALESET."reactivate.php");
 
@@ -84,4 +84,4 @@ if (isset($_GET['user_id']) && isnum($_GET['user_id']) && isset($_GET['code']) &
     redirect(BASEDIR."index.php");
 }
 
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';

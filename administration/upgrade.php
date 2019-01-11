@@ -18,7 +18,7 @@
 require_once __DIR__.'/../maincore.php';
 pageAccess("U");
 
-require_once THEMES."templates/admin_header.php";
+require_once THEMES.'templates/admin_header.php';
 
 $settings = fusion_get_settings();
 
@@ -31,4 +31,4 @@ opentable($locale['U_0000']);
 echo '<div class="well text-center">'.$locale['U_0001'].'</div>';
 
 closetable();
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';

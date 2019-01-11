@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
-require_once THEMES."templates/admin_header.php";
+require_once THEMES.'templates/admin_header.php';
 pageAccess('I');
 $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/infusions.php");
 $settings = fusion_get_settings();
@@ -92,4 +92,4 @@ foreach ($temp as $folders) {
     echo $content;
 //}
 closetable();
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';

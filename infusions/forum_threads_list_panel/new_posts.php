@@ -24,7 +24,7 @@ if (!iMEMBER) {
     redirect(BASEDIR."index.php");
 }
 
-require_once THEMES."templates/header.php";
+require_once THEMES.'templates/header.php';
 
 $lastvisited = defined('LASTVISITED') ? LASTVISITED : TIME;
 
@@ -79,4 +79,4 @@ closetable();
 if ($threads > 20) {
     echo "<div class='text-center'>".makepagenav($_GET['rowstart'], 20, $threads, 3, FUSION_SELF."?")."</div>\n";
 }
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';

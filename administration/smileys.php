@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
 pageAccess('SM');
-require_once THEMES."templates/admin_header.php";
+require_once THEMES.'templates/admin_header.php';
 
 class SmileysAdministration {
     private static $locale = [];
@@ -337,4 +337,4 @@ class SmileysAdministration {
 $smileys = SmileysAdministration::getInstance();
 $smileys->display_admin();
 
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';

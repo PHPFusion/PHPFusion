@@ -17,11 +17,11 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
 pageAccess('ERRO');
-require_once THEMES."templates/admin_header.php";
+require_once THEMES.'templates/admin_header.php';
 
 $error = \PHPFusion\Errors::getInstance();
 if (method_exists($error, "display_administration")) {
     $error->display_administration();
 }
 
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';

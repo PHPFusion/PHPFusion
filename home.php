@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/maincore.php';
-require_once THEMES."templates/header.php";
+require_once THEMES.'templates/header.php';
 
 $locale = fusion_get_locale('');
 add_to_title($locale['home']);
@@ -27,4 +27,4 @@ if (file_exists(INFUSIONS.'home_panel/home_panel.php')) {
     require_once INFUSIONS.'home_panel/home_panel.php';
 }
 
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';

@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/maincore.php';
-require_once THEMES."templates/header.php";
+require_once THEMES.'templates/header.php';
 require_once THEMES."templates/global/contact.php";
 
 $settings = fusion_get_settings();
@@ -114,4 +114,4 @@ echo openform('contactform', 'post', FORM_REQUEST);
 echo render_contact_form($info);
 echo closeform();
 
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';

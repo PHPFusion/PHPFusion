@@ -24,7 +24,7 @@ if (!iMEMBER) {
     redirect(BASEDIR."index.php");
 }
 
-require_once THEMES."templates/header.php";
+require_once THEMES.'templates/header.php';
 $locale = fusion_get_locale();
 $userdata = fusion_get_userdata();
 
@@ -72,4 +72,4 @@ if ($rows) {
 }
 closetable();
 
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';

@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/maincore.php';
-require_once THEMES."templates/header.php";
+require_once THEMES.'templates/header.php';
 require_once THEMES."templates/global/login.php";
 $locale = fusion_get_locale();
 add_to_title($locale['global_200'].$locale['global_100']);
@@ -113,4 +113,4 @@ if (!iMEMBER) {
     ];
 }
 display_loginform($info);
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';
