@@ -409,7 +409,7 @@ abstract class Articles extends ArticlesServer {
             if (isset($index[get_parent($index, $id)])) {
 
                 $_name = dbarray(dbquery("SELECT article_cat_id, article_cat_name, article_cat_parent
-                FROM ".DB_ARTICLE_CATS.(multilang_table("AR") ? " WHERE  article_cat_language='".LANGUAGE."' AND " : "WHERE ")."
+                FROM ".DB_ARTICLE_CATS.(multilang_table("AR") ? " WHERE article_cat_language='".LANGUAGE."' AND " : " WHERE ")."
                 article_cat_id=:id AND article_cat_status=:status AND ".groupaccess("article_cat_visibility")." ",
                         [
                             ':id'     => $id,
