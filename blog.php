@@ -465,7 +465,7 @@ if (!empty($_GET['readmore'])) {
 
             $sql = strtr($condition, [
                 '{FILTER_JOIN}'         => $filter_join,
-                '{MULTILANG_CONDITION}' => (multilang_table('BL') ? "blog_language='".LANGUAGE."' AND " : "WHERE "),
+                '{MULTILANG_CONDITION}' => (multilang_table('BL') ? "blog_language='".LANGUAGE."' AND " : ""),
                 '{VISIBILITY}'          => groupaccess('blog_visibility'),
                 '{ARCHIVE_CONDITION}'   => $archiveSql,
                 '{FILTER_CONDITION}'    => $filter_condition,
