@@ -134,7 +134,7 @@ if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_status='1' AND ".g
             } else {
                 $articleSnippetSettings = [
                     'required'   => TRUE,
-                    'type'        => 'bbcode',
+                    'type'       => 'bbcode',
                     'tinymce'    => 'advanced',
                     'error_text' => $locale['article_0271'],
                     'path'       => IMAGES_A
@@ -151,7 +151,7 @@ if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_status='1' AND ".g
             echo openform('submissionform', 'post', BASEDIR.'submit.php?stype=a');
 
             echo form_text('article_subject', $locale['article_0100'], $criteriaArray['article_subject'], [
-                'inline'      => TRUE,
+                'inline'     => TRUE,
                 'required'   => TRUE,
                 'max_lenght' => 200,
                 'error_text' => $locale['article_0270']
