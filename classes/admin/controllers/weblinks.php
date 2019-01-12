@@ -39,7 +39,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
         $this->locale = fusion_get_locale("", WEBLINK_ADMIN_LOCALE);
         $this->weblinksSettings = self::get_weblink_settings();
 
-        if (isset($_GET['ref']) && $_GET['ref'] == "weblinkform") {
+        if (isset($_GET['ref']) && $_GET['ref'] == "weblinks_form") {
             $this->display_weblinks_form();
         } else {
             $this->display_weblinks_listing();
@@ -101,6 +101,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
                 // Update
                 if (dbcount("('weblink_id')", DB_WEBLINKS, "weblink_id=:weblinkid", [':weblinkid' => $this->weblink_data['weblink_id']])) {
                     $this->weblink_data['weblink_datestamp'] = isset($_POST['update_datestamp']) ? time() : $this->weblink_data['weblink_datestamp'];
+                    $this->weblink_data['weblink_count'] = isset($_POST['update_weblinkcount']) ? '0' : $this->weblink_data['weblink_count'];
                     dbquery_insert(DB_WEBLINKS, $this->weblink_data, 'update');
                     addNotice('success', $this->locale['WLS_0031']);
                     // Create
@@ -133,7 +134,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
                 'autosize'    => TRUE,
                 'placeholder' => $this->locale['WLS_0255'],
                 'error_text'  => $this->locale['WLS_0270'],
-                'form_name'   => "weblinkform",
+                'form_name'   => "weblinks_form",
                 "wordcount"   => TRUE
             ];
         } else {
@@ -145,7 +146,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
         }
 
         // Start Form
-        echo openform('weblinkform', 'post', $this->form_action);
+        echo openform('weblinks_form', 'post', $this->form_action);
         echo form_hidden('weblink_id', '', $this->weblink_data['weblink_id']);
         ?>
 
@@ -204,6 +205,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
 
                 if (!empty($_GET['action']) && $_GET['action'] == 'edit') {
                     echo form_checkbox('update_datestamp', $this->locale['WLS_0259'], '');
+                    echo form_checkbox('update_weblinkcount', $this->locale['WLS_0262'], '');
                 }
 
                 closeside();
@@ -391,7 +393,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
             <div class="clearfix">
                 <div class="pull-right">
                     <?php if ($weblink_cats) { ?>
-                        <a class="btn btn-success btn-sm" href="<?php echo clean_request("ref=weblinkform", ["ref"], FALSE); ?>"><i class="fa fa-fw fa-plus"></i> <?php echo $this->locale['WLS_0002']; ?></a>
+                        <a class="btn btn-success btn-sm" href="<?php echo clean_request("ref=weblinks_form", ["ref"], FALSE); ?>"><i class="fa fa-fw fa-plus"></i> <?php echo $this->locale['WLS_0002']; ?></a>
                     <?php } ?>
                     <button type="button" class="hidden-xs btn btn-default btn-sm m-l-5" onclick="run_admin('verify', 'table_action', 'weblink_table');"><i class="fa fa-fw fa-globe"></i> <?php echo $this->locale['WLS_0261']; ?></button>
                     <button type="button" class="hidden-xs btn btn-default btn-sm m-l-5" onclick="run_admin('publish', 'table_action', 'weblink_table');"><i class="fa fa-fw fa-check"></i> <?php echo $this->locale['publish']; ?></button>
@@ -499,6 +501,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
                 <tr>
                     <th class="hidden-xs"></th>
                     <th class="strong"><?php echo $this->locale['WLS_0100'] ?></th>
+                    <th class="strong"><?php echo $this->locale['WLS_0105'] ?></th>
                     <th class="strong"><?php echo $this->locale['WLS_0101'] ?></th>
                     <th class="strong"><?php echo $this->locale['WLS_0102'] ?></th>
                     <th class="strong"><?php echo $this->locale['WLS_0103'] ?></th>
@@ -511,12 +514,13 @@ class WeblinksAdmin extends WeblinksAdminModel {
                     while ($data = dbarray($result2)) : ?>
                         <?php
                         $cat_edit_link = clean_request("section=weblinks_category&ref=weblink_cat_form&action=edit&cat_id=".$data['weblink_cat_id'], ["section", "ref", "action", "cat_id"], FALSE);
-                        $edit_link = clean_request("section=weblinks&ref=weblinkform&action=edit&weblink_id=".$data['weblink_id'], ["section", "ref", "action", "weblink_id"], FALSE);
-                        $delete_link = clean_request("section=weblinks&ref=weblinkform&action=delete&weblink_id=".$data['weblink_id'], ["section", "ref", "action", "weblink_id"], FALSE);
+                        $edit_link = clean_request("section=weblinks&ref=weblinks_form&action=edit&weblink_id=".$data['weblink_id'], ["section", "ref", "action", "weblink_id"], FALSE);
+                        $delete_link = clean_request("section=weblinks&ref=weblinks_form&action=delete&weblink_id=".$data['weblink_id'], ["section", "ref", "action", "weblink_id"], FALSE);
                         ?>
                         <tr id="link-<?php echo $data['weblink_id']; ?>" data-id="<?php echo $data['weblink_id']; ?>">
                             <td class="hidden-xs"><?php echo form_checkbox("weblink_id[]", "", "", ["value" => $data['weblink_id'], "class" => "m-0", 'input_id' => 'link-id-'.$data['weblink_id']]) ?></td>
                             <td><span class="text-dark"><?php echo $data['weblink_name']; ?></span></td>
+                            <td><?php echo $data['weblink_count']; ?></a></td>
                             <td><a class="text-dark" href="<?php echo $cat_edit_link ?>"><?php echo $data['weblink_cat_name']; ?></a></td>
                             <td><span class="badge"><?php echo $data['weblink_status'] ? $this->locale['yes'] : $this->locale['no']; ?></span></td>
                             <td><span class="badge"><?php echo getgroupname($data['weblink_visibility']); ?></span></td>
@@ -536,7 +540,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
                     });');
                     endwhile;
                     ?>
-                    <th colspan='7'><?php
+                    <th colspan='8'><?php
                         echo form_checkbox('check_all', $this->locale['WLS_0206'], '', ['class' => 'm-b-0', 'reverse_label' => TRUE]);
 
                         add_to_jquery("
