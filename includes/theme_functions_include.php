@@ -886,9 +886,9 @@ if (!function_exists("thumbnail")) {
             } // get surplus and negative by half.
         }
         $html = "<div style='max-height:".$size."; max-width:".$size."' class='display-inline-block image-wrap thumb text-center overflow-hide ".$class."'>\n";
-        $html .= $url || $colorbox ? "<a ".($colorbox && $src ? "class='colorbox'" : '')."  ".($url ? "href='".$url."'" : '')." >" : '';
+        $html .= $url || $colorbox ? "<a ".($colorbox && $src ? "class='colorbox' " : '').($url ? "href='".$url."'" : '')." >" : '';
         if ($src && file_exists($src) && !is_dir($src) || stristr($src, "?")) {
-            $html .= "<img ".($responsive ? "class='img-responsive'" : '')." src='$src'/ ".(!$responsive && ($_offset_w || $_offset_h) ? "style='margin-left: -".$_offset_w."px; margin-top: -".$_offset_h."px' " : '')." alt='thumbnail'/>\n";
+            $html .= "<img ".($responsive ? "class='img-responsive' " : '')."src='$src'".(!$responsive && ($_offset_w || $_offset_h) ? " style='margin-left: -".$_offset_w."px; margin-top: -".$_offset_h."px' " : '')." alt='thumbnail'/>\n";
         } else {
             $size = str_replace('px', '', $size);
             $html .= "<img src='holder.js/".$size."x".$size."/text:' alt='thumbnail'/>\n";
