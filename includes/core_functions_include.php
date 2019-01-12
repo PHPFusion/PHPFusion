@@ -195,7 +195,7 @@ function redirect($location, $delay = FALSE, $script = FALSE) {
             $ref = "<meta http-equiv='refresh' content='$delay; url=".$location."' />";
             add_to_head($ref);
         } else {
-            if ($script == FALSE) {
+            if ($script == FALSE && !headers_sent()) {
                 header("Location: ".str_replace("&amp;", "&", $location));
                 exit;
             } else {
