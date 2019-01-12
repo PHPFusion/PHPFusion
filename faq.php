@@ -17,10 +17,10 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/../../maincore.php';
 if (!defined('FAQ_EXIST')) {
-    redirect(BASEDIR."error.php?code=404");
+    redirect(BASEDIR.'error.php?code=404');
 }
 require_once THEMES.'templates/header.php';
-require_once FAQ_CLASS."autoloader.php";
-require_once INFUSIONS."faq/templates.php";
+require_once FAQ_CLASS.'autoloader.php';
+require_once INFUSIONS.'faq/templates.php';
 \PHPFusion\FAQ\FaqServer::Faq()->display_faq();
 require_once THEMES.'templates/footer.php';

@@ -275,7 +275,7 @@ class FaqAdmin extends FaqAdminModel {
                 'faq_cat_id'          => form_sanitizer($_POST['faq_cat_id'], '', 'faq_cat_id'),
                 'faq_cat_name'        => form_sanitizer($_POST['faq_cat_name'], '', 'faq_cat_name'),
                 'faq_cat_description' => form_sanitizer($_POST['faq_cat_description'], '', 'faq_cat_description'),
-                'faq_cat_language'    => form_sanitizer($_POST['faq_cat_language'], '', 'faq_cat_language'),
+                'faq_cat_language'    => form_sanitizer($_POST['faq_cat_language'], LANGUAGE, 'faq_cat_language'),
             ];
 
             if (\defender::safe()) {
@@ -464,10 +464,10 @@ class FaqAdmin extends FaqAdminModel {
         $filter_values = [
             'faq_question'   => !empty($_POST['faq_question']) ? form_sanitizer($_POST['faq_question'], '', 'faq_question') : '',
             'faq_answer'     => !empty($_POST['faq_answer']) ? form_sanitizer($_POST['faq_answer'], '', 'faq_answer') : '',
-            'faq_status'     => !empty($_POST['faq_status']) ? form_sanitizer($_POST['faq_status'], '', 'faq_status') : '',
-            'faq_cat_id'     => !empty($_POST['faq_cat_id']) ? form_sanitizer($_POST['faq_cat_id'], '', 'faq_cat_id') : '',
-            'faq_visibility' => !empty($_POST['faq_visibility']) ? form_sanitizer($_POST['faq_visibility'], '', 'faq_visibility') : '',
-            'faq_language'   => !empty($_POST['faq_language']) ? form_sanitizer($_POST['faq_language'], '', 'faq_language') : '',
+            'faq_status'     => !empty($_POST['faq_status']) ? form_sanitizer($_POST['faq_status'], 0, 'faq_status') : '',
+            'faq_cat_id'     => !empty($_POST['faq_cat_id']) ? form_sanitizer($_POST['faq_cat_id'], 0, 'faq_cat_id') : '',
+            'faq_visibility' => !empty($_POST['faq_visibility']) ? form_sanitizer($_POST['faq_visibility'], 0, 'faq_visibility') : '',
+            'faq_language'   => !empty($_POST['faq_language']) ? form_sanitizer($_POST['faq_language'], LANGUAGE, 'faq_language') : '',
             'faq_name'       => !empty($_POST['faq_name']) ? form_sanitizer($_POST['faq_name'], '', 'faq_name') : '',
         ];
 

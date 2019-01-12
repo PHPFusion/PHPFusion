@@ -37,6 +37,7 @@ class FaqAdminView extends FaqAdminModel {
 
         // Handle Breadcrumbs and Titles
         $faqTitle = $this->locale['faq_0000'];
+        $faqicon = 'fa fa-question-circle';
         BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $faqTitle]);
 
         if ($submissions = dbcount('(submit_id)', DB_SUBMISSIONS, "submit_type='q'")) {
@@ -59,10 +60,12 @@ class FaqAdminView extends FaqAdminModel {
                     switch ($_GET['ref']) {
                         case 'faq_form':
                             $faqTitle = (!empty($_GET['faq_id']) && isset($_GET['action']) && $_GET['action'] == 'edit' ? $this->locale['faq_0004'] : $this->locale['faq_0003']);
+                            $faqicon = (!empty($_GET['faq_id']) && isset($_GET['action']) && $_GET['action'] == 'edit' ? 'fa fa-pencil m-r-5' : 'fa fa-plus m-r-5');
                             BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $faqTitle]);
                             break;
                         case 'faq_cat_form':
-                            $faqTitle = (!empty($_GET['faq_cat_id']) && isset($_GET['action']) && $_GET['action'] == 'edit' ? $this->locale['faq_0008'] : $this->locale['faq_0007']);
+                            $faqTitle = (!empty($_GET['cat_id']) && isset($_GET['action']) && $_GET['action'] == 'edit' ? $this->locale['faq_0008'] : $this->locale['faq_0007']);
+                            $faqicon = (!empty($_GET['cat_id']) && isset($_GET['action']) && $_GET['action'] == 'edit' ? 'fa fa-pencil m-r-5' : 'fa fa-plus m-r-5');
                             BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $faqTitle]);
                             break;
                     }
@@ -79,7 +82,7 @@ class FaqAdminView extends FaqAdminModel {
 
         $tab['title'][] = $faqTitle;
         $tab['id'][] = 'faq';
-        $tab['icon'][] = 'fa fa-question-circle';
+        $tab['icon'][] = $faqicon;
 
         $tab['title'][] = $this->locale['faq_0005'];
         $tab['id'][] = 'submissions';
