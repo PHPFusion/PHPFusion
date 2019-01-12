@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-if (!defined('BLOG_EXIST')) {
+if (defined('BLOG_EXIST')) {
     $locale = fusion_get_locale('', BLOG_LOCALE);
 
     openside($locale['blog_1004']);
