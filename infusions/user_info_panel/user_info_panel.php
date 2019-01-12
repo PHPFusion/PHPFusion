@@ -41,23 +41,26 @@ if (iMEMBER) {
     $msg_count = dbcount("(message_id)", DB_MESSAGES, "message_to='".$userdata['user_id']."' AND message_read='0' AND message_folder='0'");
     echo ($msg_count) ? "<li><a href='".BASEDIR."messages.php?folder=inbox' title='".sprintf($locale['UM085'], $msg_count).($msg_count == 1 ? $locale['UM086'] : $locale['UM087'])."' ><i class='entypo icomment'></i><label style='position:absolute; margin-left:-20px;' class='pointer label label-danger'>$msg_count</label></a>\n</li>\n" : "";
     echo "</ul>\n";
-    $result = dbquery("SELECT * FROM ".DB_PREFIX."messages_options WHERE user_id='0'");
-    $data = dbarray($result);
 
-    $inbox_cfg = ($data['pm_inbox'] != 0 ? $data['pm_inbox'] : 1);
-    $inbox_percent = number_format(($inbox_count / $inbox_cfg) * 99, 0);
+    if (!iSUPERADMIN) {
+        $result = dbquery("SELECT * FROM ".DB_PREFIX."messages_options WHERE user_id='".$userdata['user_id']."'");
+        $data = dbarray($result);
 
-    echo "<div style='width:99%;margin-bottom:5px' class='tbl-border'><a href='".BASEDIR."messages.php?folder=inbox' title='".$locale['UM098']." ".$inbox_percent."% ".$locale['UM098']."'><img src='".THEME."images/pollbar.gif' alt='".$inbox_percent."%' height='12' width='".$inbox_percent."%' class='poll'></a></div>";
+        $inbox_cfg = ($data['pm_inbox'] != 0 ? $data['pm_inbox'] : 1);
+        $inbox_percent = number_format(($inbox_count / $inbox_cfg) * 99, 0);
 
-    $outbox_cfg = ($data['pm_sentbox'] != 0 ? $data['pm_sentbox'] : 1);
-    $outbox_percent = number_format(($outbox_count / $outbox_cfg) * 99, 0);
+        echo "<div style='width:99%;margin-bottom:5px' class='tbl-border'><a href='".BASEDIR."messages.php?folder=inbox' title='".$locale['UM098']." ".$inbox_percent."% ".$locale['UM098']."'><img src='".THEME."images/pollbar.gif' alt='".$inbox_percent."%' height='12' width='".$inbox_percent."%' class='poll'></a></div>";
 
-    echo "<div style='width:99%;margin-bottom:5px' class='tbl-border'><a href='".BASEDIR."messages.php?folder=outbox' title='".$locale['UM099']." ".$outbox_percent."% ".$locale['UM099']."'><img src='".THEME."images/pollbar.gif' alt='".$outbox_percent."%' height='12' width='".$outbox_percent."%' class='poll'></a></div>";
+        $outbox_cfg = ($data['pm_sentbox'] != 0 ? $data['pm_sentbox'] : 1);
+        $outbox_percent = number_format(($outbox_count / $outbox_cfg) * 99, 0);
 
-    $archive_cfg = ($data['pm_savebox'] != 0 ? $data['pm_savebox'] : 1);
-    $archive_percent = number_format(($archive_count / $archive_cfg) * 99, 0);
+        echo "<div style='width:99%;margin-bottom:5px' class='tbl-border'><a href='".BASEDIR."messages.php?folder=outbox' title='".$locale['UM099']." ".$outbox_percent."% ".$locale['UM099']."'><img src='".THEME."images/pollbar.gif' alt='".$outbox_percent."%' height='12' width='".$outbox_percent."%' class='poll'></a></div>";
 
-    echo "<div style='width:99%;margin-bottom:5px' class='tbl-border'><a href='".BASEDIR."messages.php?folder=archive' title='".$locale['UM100']." ".$archive_percent."% ".$locale['UM100']."'><img src='".THEME."images/pollbar.gif' alt='".$archive_percent."%' height='12' width='".$archive_percent."%' class='poll'></a></div>";
+        $archive_cfg = ($data['pm_savebox'] != 0 ? $data['pm_savebox'] : 1);
+        $archive_percent = number_format(($archive_count / $archive_cfg) * 99, 0);
+
+        echo "<div style='width:99%;margin-bottom:5px' class='tbl-border'><a href='".BASEDIR."messages.php?folder=archive' title='".$locale['UM100']." ".$archive_percent."% ".$locale['UM100']."'><img src='".THEME."images/pollbar.gif' alt='".$archive_percent."%' height='12' width='".$archive_percent."%' class='poll'></a></div>";
+    }
 
     $msg_count = dbcount("(message_id)", DB_MESSAGES, "message_to='".$userdata['user_id']."' AND message_read='0' AND message_folder='0'");
     if ($msg_count) {
