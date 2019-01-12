@@ -53,7 +53,7 @@ class Batch_Core extends Install_Core {
                     ";
     const TERMINATE_PROGRESS = "$('.progress-bar').addClass('progress-bar-warning').";
 
-    const FUSION_TABLE_COLLATION = "ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+    const FUSION_TABLE_COLLATION = "ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
 
     const CREATE_TABLE_STATEMENT = "CREATE TABLE {%table%} ({%table_attr%}) {%collation%}";
 
