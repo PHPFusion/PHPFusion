@@ -39,7 +39,9 @@ class WeblinksAdminView extends WeblinksAdminModel {
 
         // Handle Breadcrumbs and Titles
         $weblinkTitle = $this->locale['WLS_0001'];
+        $weblinkicon = "fa fa-file-text m-r-5";
         $weblinkCatTitle = $this->locale['WLS_0004'];
+        $weblinkCaticon = 'fa fa-folder m-r-5';
         BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink(), 'title' => $weblinkTitle]);
 
         if (!empty($_GET['section'])) {
@@ -47,6 +49,7 @@ class WeblinksAdminView extends WeblinksAdminModel {
                 case "weblinks":
                     if (isset($_GET['ref']) && $_GET['ref'] == "weblinks_form") {
                         $weblinkTitle = (empty($_GET['weblink_id']) ? $this->locale['WLS_0002'] : $this->locale['WLS_0003']);
+                        $weblinkicon = (empty($_GET['weblink_id']) ? "fa fa-file-text m-r-5" : "fa fa-pencil m-r-5");
                         BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $weblinkTitle]);
                     }
                     break;
@@ -54,6 +57,7 @@ class WeblinksAdminView extends WeblinksAdminModel {
                     BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink()."&amp;section=weblinks_category", 'title' => $weblinkCatTitle]);
                     if (isset($_GET['ref']) && $_GET['ref'] == "weblink_cat_form") {
                         $weblinkCatTitle = (empty($_GET['cat_id']) ? $this->locale['WLS_0005'] : $this->locale['WLS_0006']);
+                        $weblinkCaticon = (empty($_GET['cat_id']) ? 'fa fa-folder m-r-5' : "fa fa-pencil m-r-5");
                         BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $weblinkCatTitle]);
                     }
                     break;
@@ -66,6 +70,10 @@ class WeblinksAdminView extends WeblinksAdminModel {
                 default:
             }
         }
+        if ($submissions = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='l'")) {
+            addNotice("info", sprintf($this->locale['WLS_0063'], format_word($submissions, $this->locale['fmt_submission'])));
+        }
+
 
         // Handle Tabs
         if (!empty($_GET['ref']) || isset($_GET['submit_id'])) {
@@ -75,11 +83,11 @@ class WeblinksAdminView extends WeblinksAdminModel {
         }
         $master_title['title'][] = $weblinkTitle;
         $master_title['id'][] = "weblinks";
-        $master_title['icon'][] = "fa fa-fw fa-file-text";
+        $master_title['icon'][] = $weblinkicon;
         $master_title['title'][] = $weblinkCatTitle;
         $master_title['id'][] = "weblinks_category";
-        $master_title['icon'][] = "fa fa-fw fa-folder";
-        $master_title['title'][] = $this->locale['WLS_0007']."&nbsp;<span class='badge'>".dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='l'")."</span>";
+        $master_title['icon'][] = $weblinkCaticon;
+        $master_title['title'][] = $this->locale['WLS_0007'];
         $master_title['id'][] = "submissions";
         $master_title['icon'][] = "fa fa-fw fa-inbox";
         $master_title['title'][] = $this->locale['WLS_0008'];
