@@ -17,8 +17,6 @@
 +--------------------------------------------------------*/
 namespace PHPFusion;
 
-use PHPFusion\Infusions\Login\Login;
-
 $settings = fusion_get_settings();
 if (!empty($settings['domain_server'])) {
     // convert to arr
@@ -92,17 +90,9 @@ class Authenticate {
                         WHERE user_id='".$user['user_id']."'");
                 }
                 if ($user['user_status'] == 0 && $user['user_actiontime'] == 0) {
-                    // Implement new login class
-                    $login = NULL;
-                    if (file_exists(INFUSIONS.'login/login.php')) {
-                        $login = new Login();
-                    }
-                    $authenticate_methods = (method_exists($login, 'authenticate') ? $login->authenticate($user) : '');
-                    if (empty($authenticate_methods)) {
-                        Authenticate::setUserCookie($user['user_id'], $user['user_salt'], $user['user_algo'], $remember, TRUE);
-                        Authenticate::_setUserTheme($user);
-                        $this->_userData = $user;
-                    }
+                    Authenticate::setUserCookie($user['user_id'], $user['user_salt'], $user['user_algo'], $remember, true);
+                    Authenticate::_setUserTheme($user);
+                    $this->_userData = $user;
                 } else {
                     require_once INCLUDES."suspend_include.php";
                     require_once INCLUDES."sendmail_include.php";
