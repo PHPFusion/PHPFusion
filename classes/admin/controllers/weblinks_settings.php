@@ -53,10 +53,9 @@ class WeblinksSettingsAdmin extends WeblinksAdminModel {
                 }
                 addNotice('success', $this->locale['900']);
                 redirect(FUSION_REQUEST);
-            } else {
-                addNotice('danger', $this->locale['901']);
-                $weblink_settings = $inputArray;
             }
+            addNotice('danger', $this->locale['901']);
+            $weblink_settings = $inputArray;
         }
 
         echo openform('settingsform', 'post', FUSION_REQUEST);

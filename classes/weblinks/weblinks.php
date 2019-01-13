@@ -287,11 +287,11 @@ abstract class Weblinks extends WeblinksServer {
             if (iADMIN && checkrights("W")) {
                 $adminActions = [
                     "edit"   => [
-                        "link"  => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink()."&amp;action=edit&amp;ref=weblinkform&amp;weblink_id=".$data['weblink_id'],
+                        "link"  => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink()."&amp;action=edit&amp;ref=weblinks_form&amp;weblink_id=".$data['weblink_id'],
                         "title" => self::$locale['edit']
                     ],
                     "delete" => [
-                        "link"  => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink()."&amp;action=delete&amp;ref=weblinkform&amp;weblink_id=".$data['weblink_id'],
+                        "link"  => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink()."&amp;action=delete&amp;ref=weblinks_form&amp;weblink_id=".$data['weblink_id'],
                         "title" => self::$locale['delete']
                     ]
                 ];
@@ -375,9 +375,8 @@ abstract class Weblinks extends WeblinksServer {
         if (checkgroup($data['weblink_visibility'])) {
             dbquery("UPDATE ".DB_WEBLINKS." SET weblink_count=weblink_count+1 WHERE weblink_id=:weblinkId", [':weblinkId' => $weblink_id]);
             redirect($data['weblink_url']);
-        } else {
-            redirect(clean_request('', ['weblink_id'], FALSE));
         }
+        redirect(clean_request('', ['weblink_id'], FALSE));
     }
 
     private function weblink_cat_navbar() {

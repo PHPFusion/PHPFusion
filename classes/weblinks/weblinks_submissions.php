@@ -105,18 +105,21 @@ class WeblinksSubmissions extends WeblinksServer {
                     'weblink_cat'         => form_select_tree('weblink_cat', $this->locale['WLS_0101'], $criteriaArray['weblink_cat'],
                         [
                             'no_root'     => TRUE,
+                            'inline'      => TRUE,
                             'placeholder' => $this->locale['choose'],
                             'query'       => (multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."'" : "")
                         ], DB_WEBLINK_CATS, 'weblink_cat_name', 'weblink_cat_id', 'weblink_cat_parent'),
                     'weblink_name'        => form_text('weblink_name', $this->locale['WLS_0201'], $criteriaArray['weblink_name'],
                         [
                             'required'    => TRUE,
+                            'inline'      => TRUE,
                             'placeholder' => $this->locale['WLS_0201'],
                             'error_text'  => $this->locale['WLS_0252']
                         ]),
                     'weblink_url'         => form_text('weblink_url', $this->locale['WLS_0253'], $criteriaArray['weblink_url'],
                         [
                             'required'    => TRUE,
+                            'inline'      => TRUE,
                             'type'        => "url",
                             'placeholder' => "http://"
                         ]),
@@ -143,10 +146,9 @@ class WeblinksSubmissions extends WeblinksServer {
                 return (array)$info;
             }
 
-        } else {
-            $info['no_submissions'] = $this->locale['WLS_0923'];
-            $info += $this->info;
-            return (array)$info;
         }
+        $info['no_submissions'] = $this->locale['WLS_0923'];
+        $info += $this->info;
+        return (array)$info;
     }
 }
