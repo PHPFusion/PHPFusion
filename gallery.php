@@ -19,7 +19,7 @@ require_once __DIR__.'/../../maincore.php';
 if (!defined('GALLERY_EXIST')) {
     redirect(BASEDIR."error.php?code=404");
 }
-require_once THEMES."templates/header.php";
+require_once THEMES.'templates/header.php';
 $locale = fusion_get_locale('', GALLERY_LOCALE);
 include INFUSIONS."gallery/templates/gallery.php";
 require_once INCLUDES."infusions_include.php";
@@ -390,7 +390,7 @@ function photo_thumbnail($data) {
     echo "</div></div>\n";
 }
 
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';
 
 /**
  * Displays the Album Image
