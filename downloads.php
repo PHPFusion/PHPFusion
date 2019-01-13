@@ -21,7 +21,7 @@ if (!defined('DOWNLOADS_EXIST')) {
     redirect(BASEDIR."error.php?code=404");
 }
 
-require_once THEMES."templates/header.php";
+require_once THEMES.'templates/header.php';
 require_once INCLUDES."infusions_include.php";
 
 $locale = fusion_get_locale("", DOWNLOAD_LOCALE);
@@ -347,7 +347,7 @@ if (dbrows($author_result)) {
 }
 
 render_downloads($info);
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';
 
 /**
  * Returns Downloads Category Hierarchy Tree Data
