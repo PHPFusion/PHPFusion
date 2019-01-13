@@ -19,7 +19,7 @@ require_once __DIR__.'/../../maincore.php';
 if (!defined('FORUM_EXIST')) {
     redirect(BASEDIR."error.php?code=404");
 }
-require_once THEMES."templates/header.php";
+require_once THEMES.'templates/header.php';
 require_once INCLUDES."infusions_include.php";
 require_once FORUM_CLASS."autoloader.php";
 require_once INFUSIONS."forum/forum_include.php";
@@ -27,4 +27,4 @@ require_once INFUSIONS."forum/forum_include.php";
 include INFUSIONS."forum/templates.php";
 $thread = new \PHPFusion\Forums\Threads\ViewThread();
 $thread->display_thread();
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';

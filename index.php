@@ -19,7 +19,7 @@ require_once __DIR__.'/../../maincore.php';
 if (!defined('FORUM_EXIST')) {
     redirect(BASEDIR."error.php?code=404");
 }
-require_once THEMES."templates/header.php";
+require_once THEMES.'templates/header.php';
 require_once INCLUDES."infusions_include.php";
 require_once INFUSIONS.'forum/infusion_db.php';
 require_once FORUM_CLASS."autoloader.php";
@@ -29,4 +29,4 @@ include INFUSIONS."forum/templates.php";
 \PHPFusion\Locale::setLocale(FORUM_LOCALE);
 $info = \PHPFusion\Forums\ForumServer::forum()->getForumInfo();
 render_forum($info);
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';
