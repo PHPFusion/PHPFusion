@@ -290,7 +290,7 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
             echo "</thead>\n";
             echo "<tbody>\n";
 
-            foreach ($data as $key => $info) {
+            foreach ($data as $info) {
                 $submitData = \defender::decode($info['submit_criteria']);
                 $submitUser = $this->locale['user_na'];
                 if ($info['user_name']) {

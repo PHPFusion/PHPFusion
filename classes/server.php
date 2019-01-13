@@ -27,6 +27,14 @@ class FaqServer {
 
     public function __construct() {
         self::$faq_settings = get_settings("faq");
+        self::globinf();
+    }
+
+    public function globinf() {
+
+        $this->save = (string)filter_input(INPUT_POST, 'savesettings', FILTER_DEFAULT);
+        $this->faq_allow_submission = filter_input(INPUT_POST, 'faq_allow_submission', FILTER_DEFAULT);
+        $this->catid = filter_input(INPUT_GET, 'cat_id', FILTER_VALIDATE_INT);
     }
 
     public static function Faq() {
