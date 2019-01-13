@@ -146,10 +146,9 @@ class WeblinksSubmissions extends WeblinksServer {
                 return (array)$info;
             }
 
-        } else {
-            $info['no_submissions'] = $this->locale['WLS_0923'];
-            $info += $this->info;
-            return (array)$info;
         }
+        $info['no_submissions'] = $this->locale['WLS_0923'];
+        $info += $this->info;
+        return (array)$info;
     }
 }

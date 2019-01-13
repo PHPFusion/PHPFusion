@@ -87,14 +87,14 @@ if (!function_exists('display_weblinks_item')) {
         $html->set_block('pagenav', ['pagenav' => $info['pagenav']]);
         $html->set_block('pagenav2', ['pagenav' => $info['pagenav']]);
 
-        $i = 0;
+        $wdi = 0;
         foreach ($info['weblink_filter'] as $view_keys => $page_link) {
             $html->set_block('filter_item', [
-                'active' => ((!isset($_GET['type']) && (!$i)) || (isset($_GET['type']) && $_GET['type'] === $view_keys) ? "text-dark strong" : ''),
+                'active' => ((!isset($_GET['type']) && (!$wdi)) || (isset($_GET['type']) && $_GET['type'] === $view_keys) ? "text-dark strong" : ''),
                 'link'   => $page_link['link'],
                 'title'  => $page_link['name']
             ]);
-            $i++;
+            $wdi++;
         }
 
         foreach ($info['navbar'] as $view_keys => $navbar_link) {

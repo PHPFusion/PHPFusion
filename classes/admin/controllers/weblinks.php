@@ -598,12 +598,12 @@ class WeblinksAdmin extends WeblinksAdminModel {
             SELECT * FROM ".DB_WEBLINKS." WHERE ".($id != 0 ? "weblink_id=".$id." AND " : "")."weblink_status='1'
         ");
         if (dbrows($result) > 0) {
-            $i = 0;
+            $wli = 0;
             while ($cdata = dbarray($result)) {
                 dbquery("UPDATE ".DB_WEBLINKS." SET weblink_status='0' WHERE weblink_id='".intval($cdata['weblink_id'])."'");
-                $i++;
+                $wli++;
             }
-            addNotice('success', sprintf($this->locale['WLS_0115'], $i));
+            addNotice('success', sprintf($this->locale['WLS_0115'], $wli));
             if ($i > 0) {
                 addNotice('success', $this->locale['WLS_0116']);
             }

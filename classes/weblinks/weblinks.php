@@ -375,9 +375,8 @@ abstract class Weblinks extends WeblinksServer {
         if (checkgroup($data['weblink_visibility'])) {
             dbquery("UPDATE ".DB_WEBLINKS." SET weblink_count=weblink_count+1 WHERE weblink_id=:weblinkId", [':weblinkId' => $weblink_id]);
             redirect($data['weblink_url']);
-        } else {
-            redirect(clean_request('', ['weblink_id'], FALSE));
         }
+        redirect(clean_request('', ['weblink_id'], FALSE));
     }
 
     private function weblink_cat_navbar() {

@@ -231,10 +231,9 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
                     }
                 }
                 redirect(FUSION_REQUEST);
-            } else {
-                addNotice('warning', $this->locale['WLS_0048']);
-                redirect(FUSION_REQUEST);
             }
+            addNotice('warning', $this->locale['WLS_0048']);
+            redirect(FUSION_REQUEST);
         }
 
         // Clear
