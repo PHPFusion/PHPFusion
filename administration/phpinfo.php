@@ -131,7 +131,7 @@ function folderpermission() {
     ];
 
     $infusions = \PHPFusion\Admins::getInstance()->getFolderPermissions();
-    foreach ($infusions as $key => $value) {
+    foreach ($infusions as $value) {
         $folders += $value;
     }
 

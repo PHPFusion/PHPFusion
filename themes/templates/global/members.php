@@ -55,11 +55,11 @@ if (!function_exists('render_members')) {
 
             if (!empty($info['member'])) {
 
-                foreach ($info['member'] as $user_id => $members) {
+                foreach ($info['member'] as $members) {
 
                     $groups = "";
                     if (!empty($members['groups'])) {
-                        foreach ($members['groups'] as $group_id => $groupData) {
+                        foreach ($members['groups'] as $groupData) {
                             if (!empty($groupData)) {
                                 $groups .= "<a class='btn btn-default btn-sm' href='".$groupData['link']."'>".$groupData['title']."</a>\n";
                             }

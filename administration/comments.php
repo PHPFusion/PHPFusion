@@ -238,7 +238,7 @@ class CommentsAdministration {
 
             if (!empty($info['data'])) {
                 echo '<div class="list-group">';
-                foreach ($info['data'] as $key => $coment) {
+                foreach ($info['data'] as $coment) {
                     echo "<div class='list-group-item'>\n";
                     echo "<div class='btn-group pull-right'>\n";
                     echo "<a class='btn btn-xs btn-default' href='".$coment['edit_link']."'>".$this->locale['edit']."</a>\n";

@@ -1033,7 +1033,7 @@ function getusergroups() {
  */
 function getgroupname($group_id, $return_desc = FALSE, $return_icon = FALSE) {
 
-    foreach (getusergroups() as $key => $group) {
+    foreach (getusergroups() as $group) {
 
         if ($group_id == $group[0]) {
             return ($return_desc ? ($group[2] ?: '-') : (!empty($group[3]) && $return_icon ? "<i class='".$group[3]."'></i> " : "").$group[1]);

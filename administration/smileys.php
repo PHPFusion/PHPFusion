@@ -266,7 +266,7 @@ class SmileysAdministration {
         $temp = IMAGES."smiley/";
         $smiley_files = makefilelist($temp, '.|..|.DS_Store|index.php', TRUE, "files");
         //$smiley_files = $smiley_files;
-        foreach ($smiley_files as $key => $smiley_check) {
+        foreach ($smiley_files as $smiley_check) {
 
             if (!in_array($smiley_check, $smiley)) {
                 $smiley_list[] = $smiley_check;
