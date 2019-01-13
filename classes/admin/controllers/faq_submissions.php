@@ -282,15 +282,15 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
             echo "<div class='table-responsive m-t-10'><table class='table table-striped'>\n";
             echo "<thead>\n";
             echo "<tr>\n";
-            echo "<td class='strong'>".$this->locale['faq_0200']."</td>\n";
-            echo "<td class='strong col-xs-5'>".$this->locale['faq_0100']."</td>\n";
-            echo "<td class='strong'>".$this->locale['faq_0202']."</td>\n";
-            echo "<td class='strong'>".$this->locale['faq_0203']."</td>\n";
+            echo "<th class='strong'>".$this->locale['faq_0200']."</th>\n";
+            echo "<th class='strong col-xs-5'>".$this->locale['faq_0100']."</th>\n";
+            echo "<th class='strong'>".$this->locale['faq_0202']."</th>\n";
+            echo "<th class='strong'>".$this->locale['faq_0203']."</th>\n";
             echo "</tr>\n";
             echo "</thead>\n";
             echo "<tbody>\n";
 
-            foreach ($data as $key => $info) {
+            foreach ($data as $info) {
                 $submitData = \defender::decode($info['submit_criteria']);
                 $submitUser = $this->locale['user_na'];
                 if ($info['user_name']) {

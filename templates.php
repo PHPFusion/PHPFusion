@@ -29,7 +29,7 @@ if (!function_exists('display_main_faq')) {
         $html->set_tag('cat_locale', $info['cat_locale']);
 
         if (!empty($info['faq_categories'])) {
-            foreach ($info['faq_categories'] as $cat_id => $cat_data) {
+            foreach ($info['faq_categories'] as $cat_data) {
                 if ($cat_data['faq_count'] > 0) {
                     $html->set_block('categories', [
                         'faq_cat_id'          => $cat_data['faq_cat_id'],
@@ -58,7 +58,7 @@ if (!function_exists('render_faq_item')) {
 
         if (!empty($info['faq_items'])) {
             add_to_jquery('$(".top").on("click",function(e){e.preventDefault();$("html, body").animate({scrollTop:0},100);});');
-            foreach ($info['faq_items'] as $id => $faq_data) {
+            foreach ($info['faq_items'] as $faq_data) {
                 $html->set_block('faq', [
                     'faq_id'       => $faq_data['faq_id'],
                     'faq_question' => $faq_data['faq_question'],

@@ -55,12 +55,12 @@ abstract class Faq extends FaqServer {
 
         $info = array_merge($info, self::get_FaqData($category));
 
-        if (!empty($_GET['cat_id']) && isnum($_GET['cat_id']) && isset($info['faq_categories'][$_GET['cat_id']])) {
+        if ($this->catid && isset($info['faq_categories'][$this->catid])) {
             set_title(SiteLinks::get_current_SiteLinks(INFUSIONS.'faq/faq.php', 'link_name'));
-            add_to_title(self::$locale['global_201'].$info['faq_categories'][$_GET['cat_id']]['faq_cat_name']);
+            add_to_title(self::$locale['global_201'].$info['faq_categories'][$this->catid]['faq_cat_name']);
             BreadCrumbs::getInstance()->addBreadCrumb([
-                'link'  => INFUSIONS.'faq/faq.php?cat_id='.$_GET['cat_id'],
-                'title' => $info['faq_categories'][$_GET['cat_id']]['faq_cat_name']
+                'link'  => INFUSIONS.'faq/faq.php?cat_id='.$this->catid,
+                'title' => $info['faq_categories'][$this->catid]['faq_cat_name']
             ]);
         }
 
