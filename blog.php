@@ -24,7 +24,7 @@ if (!defined('BLOG_EXIST')) {
 $settings = fusion_get_settings();
 $locale = fusion_get_locale('', BLOG_LOCALE);
 
-require_once THEMES."templates/header.php";
+require_once THEMES.'templates/header.php';
 require_once INCLUDES."infusions_include.php";
 require_once INFUSIONS."blog/classes/Functions.php";
 require_once INFUSIONS."blog/classes/OpenGraphBlogs.php";
@@ -591,7 +591,7 @@ if (dbrows($author_result)) {
 
 render_main_blog($info);
 
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';
 
 /**
  * Returns Blog Category Hierarchy Tree Data
