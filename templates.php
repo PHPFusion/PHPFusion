@@ -37,8 +37,8 @@ if (!function_exists('display_main_weblinks')) {
         if (!empty($info['weblink_categories'])) {
             foreach ($info['weblink_categories'][0] as $cat_id => $cat_data) {
                 if ($cat_id != 0 && $info['weblink_categories'] != 0) {
-                    foreach ($info['weblink_categories'] as $sub_cats_id => $sub_cats) {
-                        foreach ($sub_cats as $sub_cat_id => $sub_cat_data) {
+                    foreach ($info['weblink_categories'] as $sub_cats) {
+                        foreach ($sub_cats as $sub_cat_data) {
                             if (!empty($sub_cat_data['parent']) && $sub_cat_data['parent'] == $cat_id) {
                                 $html2->set_block('sub_categories', [
                                     'link'        => $sub_cat_data['link'],
@@ -106,7 +106,7 @@ if (!function_exists('display_weblinks_item')) {
         $html->set_tag('weblinks_span', $info['span']);
 
         if (!empty($info['weblink_items'])) {
-            foreach ($info['weblink_items'] as $id => $web_data) {
+            foreach ($info['weblink_items'] as $web_data) {
                 $html->set_block('weblink', [
                     'weblink_id'          => $web_data['weblink_id'],
                     'weblink_link'        => $web_data['weblinks_url'],
