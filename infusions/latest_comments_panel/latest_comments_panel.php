@@ -19,10 +19,10 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-include_once INFUSIONS."latest_comments_panel/templates.php";
+include_once INFUSIONS.'latest_comments_panel/templates.php';
 $displayComments = 10;
 $comments_per_page = fusion_get_settings('comments_per_page');
-$comments_sorting_asc = fusion_get_settings('comments_sorting') == 'ASC';
+$comments_sorting_asc = fusion_get_settings('comments_sorting');
 
 $result = dbquery(
     'SELECT c.comment_id, c.comment_item_id, c.comment_type, c.comment_message, u.user_id, u.user_name, u.user_status, u.user_avatar
@@ -43,26 +43,27 @@ function latest_comments_get_item_title($type, $item_id) {
     $key = $type.$item_id;
 
     if (!isset($cache[$key])) {
-        switch ( $type ) {
+        switch ($type) {
             case 'A':
                 $query = 'SELECT ar.article_subject as title
                 FROM '.DB_ARTICLES.' AS ar
                 WHERE ar.article_id=:id AND ar.article_draft=0
                 AND '.groupaccess('ar.article_visibility').'
                 '.(multilang_table('AR') ? 'AND ar.article_language="'.LANGUAGE.'"' : '');
-            break;
+                break;
             case 'B':
-                $query = 'SELECT d.blog_subject as title
-                FROM '.DB_BLOG.' AS d
-                WHERE d.blog_id=:id AND '.groupaccess('d.blog_visibility').'
-                '.(multilang_table('BL') ? 'AND d.blog_language="'.LANGUAGE.'"' : '');
-            break;
+                $query = 'SELECT b.blog_subject as title
+                FROM '.DB_BLOG.' AS b
+                WHERE b.blog_id=:id AND '.groupaccess('b.blog_visibility').'
+                '.(multilang_table('BL') ? 'AND b.blog_language="'.LANGUAGE.'"' : '');
+                break;
             case 'D':
                 $query = 'SELECT d.download_title as title
                 FROM '.DB_DOWNLOADS.' AS d
+                INNER JOIN '.DB_DOWNLOAD_CATS.' AS c ON c.download_cat_id=d.download_cat
                 WHERE d.download_id=:id AND '.groupaccess('d.download_visibility').'
                 '.(multilang_table('DL') ? 'AND c.download_cat_language="'.LANGUAGE.'"' : '');
-            break;
+                break;
             case 'N':
                 $query = 'SELECT ns.news_subject as title
                 FROM '.DB_NEWS.' AS ns
@@ -70,21 +71,21 @@ function latest_comments_get_item_title($type, $item_id) {
                 AND (ns.news_end=0 OR ns.news_end>="'.TIME.'") AND ns.news_draft=0
                 AND '.groupaccess('ns.news_visibility').'
                 '.(multilang_table('NS') ? 'AND ns.news_language="'.LANGUAGE.'"' : '');
-            break;
+                break;
             case 'P':
                 $query = 'SELECT p.photo_title as title
                 FROM '.DB_PHOTOS.' AS p
                 INNER JOIN '.DB_PHOTO_ALBUMS.' AS a ON p.album_id=a.album_id
                 WHERE p.photo_id=:id AND '.groupaccess('a.album_access').'
                 '.(multilang_table('PG') ? 'AND a.album_language="'.LANGUAGE.'"' : '');
-            break;
+                break;
             default:
-                $cache[$key] = false;
-                return false;
+                $cache[$key] = FALSE;
+                return FALSE;
         }
 
-        $result = dbquery($query, [ ':id' => $item_id ]);
-        $cache[$key] = dbrows($result) ? dbarray($result)['title'] : false;
+        $result = dbquery($query, [':id' => $item_id]);
+        $cache[$key] = dbrows($result) ? dbarray($result)['title'] : FALSE;
     }
 
     return $cache[$key];
@@ -95,11 +96,7 @@ function latest_comments_get_comment_start($type, $item_id, $comment_id) {
     $key = $type.$item_id;
 
     if (!isset($cache[$key])) {
-        $cache[$key] = dbcount(
-            '(comment_id)',
-            DB_COMMENTS,
-            'comment_item_id="'.$item_id.'" AND comment_type="'.$type.'" AND comment_id<'.$comment_id
-        );
+        $cache[$key] = dbcount('(comment_id)', DB_COMMENTS, 'comment_item_id="'.$item_id.'" AND comment_type="'.$type.'" AND comment_id<'.$comment_id);
     }
 
     return $cache[$key]--;
@@ -108,7 +105,7 @@ function latest_comments_get_comment_start($type, $item_id, $comment_id) {
 if (dbrows($result)) {
     while ($data = dbarray($result)) {
         $item_title = latest_comments_get_item_title($data['comment_type'], $data['comment_item_id']);
-        if ( !$item_title ) {
+        if (!$item_title) {
             continue;
         }
 
@@ -138,6 +135,7 @@ if (dbrows($result)) {
             default:
                 continue 2;
         }
+        
         $info['item'][] = [
             'data'  => $data,
             'url'   => $url,
