@@ -131,8 +131,8 @@ function dbconnect($db_host, $db_user, $db_pass, $db_name, $db_port = 3306) {
         die("Unable to establish connection to MySQL
         ".$db_connect->connect_error);
     } else {
-        mysqli_set_charset($db_connect, 'utf8');
-        dbquery("SET NAMES 'utf8'");
+        mysqli_set_charset($db_connect, 'utf8mb4');
+        dbquery("SET NAMES 'utf8mb4'");
     }
 }
 
