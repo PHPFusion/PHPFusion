@@ -103,10 +103,9 @@ function dbresult($statement, $row) {
  * @return int
  */
 function dbrows($statement) {
-    if ($statement !== FALSE) {
+    if ($statement !== FALSE && $statement !==NULL) {
         return $statement->rowCount();
     }
-
     return NULL;
 }
 
