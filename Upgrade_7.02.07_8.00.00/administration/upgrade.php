@@ -179,13 +179,13 @@ if (str_replace(".", "", $settings['version']) < "80000") {
                 if (isset($_POST['upgrade_database'])) {
 
 				if(!$disabled) {
-                    // Force the database to UTF-8 because we'll convert to it
-                    dbquery("SET NAMES 'utf8'");
+                    // Force the database to UTF-8MB4 because we'll convert to it
+                    dbquery("SET NAMES 'utf8mb4'");
                     // If you have a large database this might be hard to run.
                     $result = dbquery("SHOW TABLES");
                     while ($row = dbarray($result)) {
                         foreach ($row as $key => $table) {
-                            dbquery("ALTER TABLE ".$table." CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci");
+                            dbquery("ALTER TABLE ".$table." CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
                             $result2 = dbquery("SHOW COLUMNS FROM ".$table);
                             // We must change all data like find/replace in columns of broken chars, this may differ for each locales, please complete this list if you know what´s missing.
                             while ($column = dbarray($result2)) {
@@ -351,7 +351,7 @@ if (str_replace(".", "", $settings['version']) < "80000") {
                 user_ip VARCHAR(20) NOT NULL DEFAULT '0.0.0.0',
                 user_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."',
                 user_datestamp INT(10) NOT NULL default '0'
-                ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci;");
+                ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;");
 
                     // Add language tables to infusions and main content
                     $result = dbquery("ALTER TABLE ".DB_ARTICLE_CATS." ADD article_cat_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."' AFTER article_cat_access");
@@ -403,7 +403,7 @@ if (str_replace(".", "", $settings['version']) < "80000") {
                 mlt_title VARCHAR(50) NOT NULL DEFAULT '',
                 mlt_status VARCHAR(50) NOT NULL DEFAULT '',
                 PRIMARY KEY (mlt_rights)
-                ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
+                ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
 
                     // Add Multilang table rights and status
                     $result = dbquery("INSERT INTO ".DB_PREFIX."mlt_tables (mlt_rights, mlt_title, mlt_status) VALUES ('AR', '".$locale['MLT001']."', '1')");
@@ -467,7 +467,7 @@ if (str_replace(".", "", $settings['version']) < "80000") {
                             PRIMARY KEY (blog_id),
                             KEY blog_datestamp (blog_datestamp),
                             KEY blog_reads (blog_reads)
-                            ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci;");
+                            ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;");
                     if (!$result) {
                         $fail = TRUE;
                     }
@@ -479,7 +479,7 @@ if (str_replace(".", "", $settings['version']) < "80000") {
                             blog_cat_image VARCHAR(100) NOT NULL DEFAULT '',
                             blog_cat_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."',
                             PRIMARY KEY (blog_cat_id)
-                            ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci;");
+                            ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;");
                     if (!$result) {
                         $fail = TRUE;
                     }
@@ -524,7 +524,7 @@ if (str_replace(".", "", $settings['version']) < "80000") {
                     template_sender_email VARCHAR(100) NOT NULL,
                     template_language VARCHAR(50) NOT NULL,
                     PRIMARY KEY (template_id)
-                ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
+                ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
                     if ($result) {
                         $result = dbquery("INSERT INTO ".DB_PREFIX."email_templates (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'PM', 'html', '0', '".$locale['T101']."', '".$locale['T102']."', '".$locale['T103']."', '".$settings['siteusername']."', '".$settings['siteemail']."', '".$settings['locale']."')");
                         $result = dbquery("INSERT INTO ".DB_PREFIX."email_templates (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'POST', 'html', '0', '".$locale['T201']."', '".$locale['T202']."', '".$locale['T203']."', '".$settings['siteusername']."', '".$settings['siteemail']."', '".$settings['locale']."')");
@@ -540,7 +540,7 @@ if (str_replace(".", "", $settings['version']) < "80000") {
                                     alias_item_id INT(10) UNSIGNED NOT NULL DEFAULT '0',
                                     PRIMARY KEY (alias_id),
                                     KEY alias_id (alias_id)
-                                    ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
+                                    ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
                     $result = dbquery("CREATE TABLE ".DB_PREFIX."permalinks_method (
                                     pattern_id INT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
                                     pattern_type INT(5) UNSIGNED NOT NULL,
@@ -548,12 +548,12 @@ if (str_replace(".", "", $settings['version']) < "80000") {
                                     pattern_target VARCHAR(200) NOT NULL DEFAULT '',
                                     pattern_cat VARCHAR(10) NOT NULL DEFAULT '',
                                     PRIMARY KEY (pattern_id)
-                                    ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
+                                    ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
                     $result = dbquery("CREATE TABLE ".DB_PREFIX."permalinks_rewrites (
                                     rewrite_id INT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
                                     rewrite_name VARCHAR(50) NOT NULL DEFAULT '',
                                     PRIMARY KEY (rewrite_id)
-                                    ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
+                                    ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
 
                     // create admin page for permalinks
                     $result = dbquery("INSERT INTO ".DB_PREFIX."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('PL', 'permalinks.png', '".$locale['129d']."', 'permalinks.php', '3')");
