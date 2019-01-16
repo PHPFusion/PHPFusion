@@ -52,7 +52,7 @@ shout_hidden TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
 shout_language VARCHAR(50) NOT NULL DEFAULT '',
 PRIMARY KEY (shout_id),
 KEY shout_datestamp (shout_datestamp)
-) ENGINE=MyISAM;";
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
 
 $inf_insertdbrow[1] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status) VALUES('".$locale['SB_title']."', 'shoutbox_panel', '', '4', '3', 'file', '0', '0', '1')";
 $inf_insertdbrow[2] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('visible_shouts', '5', '".$inf_folder."')";
