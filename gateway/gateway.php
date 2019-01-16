@@ -98,7 +98,6 @@ if (!isset($_POST['gateway_submit']) && !isset($_POST['Register']) && isset($_SE
     echo '</td></tr>';
     echo '<input type="hidden" name="'.$honeypot_array[3].'" />';
     echo "<tr><td width='1%' class='tbl2' style='text-align:center;white-space:nowrap'><strong><input type='text' style='text-align:center; width:300px;' id='gateway_answer' name='gateway_answer' placeholder='".$locale['gateway_064']."...' class='textbox' /></td></tr>";
-    echo form_hidden($honeypot_array[3], "", "");
     echo '<tr><td width="1%" class="tbl1" style="text-align:center;white-space:nowrap"><input type="submit" name="gateway_submit" value="'.$locale['gateway_065'].'" class="'.($settings["bootstrap"] || defined("BOOTSTRAP") ? "button btn-primary m-t-10" : "button").'" />';
     echo "</table>";
     echo '</form>';
