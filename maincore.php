@@ -104,6 +104,8 @@ if (dbrows($result)) {
 // Settings dependent functions
 date_default_timezone_set($settings['default_timezone']);
 
+header('X-Powered-By: PHP-Fusion'.(isset($settings['version']) ? ' '.$settings['version'] : ''));
+
 //ob_start("ob_gzhandler"); //Uncomment this line and comment the one below to enable output compression.
 ob_start();
 
