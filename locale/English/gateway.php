@@ -71,7 +71,7 @@ $locale['gateway_063'] = "Numbers";
 $locale['gateway_064'] = "You must answer the question";
 $locale['gateway_065'] = "Proceed";
 
-$locale['gateway_066'] = "Your answer is incorrect!";
+$locale['gateway_066'] = "Your answer is incorrect! <br /> Please write all answers in one line. Example : twentysix or nineteen";
 $locale['gateway_067'] = "Try Again!";
 $locale['gateway_068'] = "Please try again later!";
 $locale['gateway_069'] = "Fusion GateWay";
