@@ -58,8 +58,8 @@ function convertNumberToWord($num = FALSE) {
         }
         $words[] = $hundreds.$tens.$singles.(($levels && ( int )($num_levels[$i])) ? ' '.$list3[$levels].' ' : '');
     }
-
-    return implode(' ', $words);
+    $words = str_replace(' ', '', $words);
+    return implode($words);
 }
 
 if (!function_exists('str_rot47')) {

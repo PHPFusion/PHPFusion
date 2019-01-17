@@ -111,7 +111,8 @@ if (isset($_POST['gateway_answer'])) {
         $honeypot = $_SESSION["honeypot"];
     }
 
-    // if the honeypot is empty, run rest of the verify script
+    $_SESSION["validated"] = "False";
+	
     if (isset($_POST["$honeypot"]) && $_POST["$honeypot"] == "") {
         $antibot = stripinput(strtolower($_POST["gateway_answer"]));
 
@@ -121,10 +122,7 @@ if (isset($_POST['gateway_answer'])) {
             } else {
                 echo "<div class='well text-center'><h3>".$locale['gateway_066']."</h3></div>";
                 echo "<input type='button' value='".$locale['gateway_067']."' class='".($settings['bootstrap'] || defined('BOOTSTRAP') ? 'text-center btn btn-info spacer-xs' : 'button')."' onclick=\"location='".BASEDIR."register.php'\">";
-                $_SESSION["validated"] = "False";
             }
-        } else {
-            $_SESSION["validated"] = "False";
-        }
+        } 
     }
 }
