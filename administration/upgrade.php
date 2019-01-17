@@ -29,7 +29,7 @@ if (file_exists(LOCALE.LOCALESET."admin/upgrade.php")) {
 opentable($locale['400']);
 echo "<div style='text-align:center'><br />\n";
 
-if (str_replace(".", "", $settings['version']) < "80000") {
+if (str_replace(".", "", $settings['version']) < "80019") {
     echo "Your PHP-Fusion install reports a version of ".$settings['version']." , there should be an upgrade\n";
 } else {
     echo "<br />".$locale['401']."<br /><br />\n";
