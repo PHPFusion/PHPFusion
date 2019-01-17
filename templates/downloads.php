@@ -76,7 +76,9 @@ if (!function_exists('render_downloads')) {
 
             if ($dl_settings['download_screenshot'] && $data['download_image']) {
                 echo "<div class='pull-left m-l-0 m-10'>\n";
+                echo '<a href="'.DOWNLOADS."images/".$data['download_image'].'" target="_blank">';
                 echo thumbnail(DOWNLOADS."images/".$data['download_image'], '120px');
+                echo '</a>';
                 echo "<p class='mid-opacity strong m-t-0'>".$locale['download_1009']."</h4>\n";
                 echo "</div>\n";
             }
