@@ -49,7 +49,7 @@ opentable($locale['400']);
 
 echo "<div style='text-align:center' class='text-center' ><br />\n";
 
-if (str_replace(".", "", $settings['version']) < "80000") {
+if (str_replace(".", "", $settings['version']) < "80019") {
     echo "<form name='upgradeform' method='post' action='".FUSION_SELF.$aidlink."'>\n";
     $content = "";
     if ($settings['maintenance'] == 0) {
@@ -344,10 +344,23 @@ if (str_replace(".", "", $settings['version']) < "80000") {
                             }
                         }
                     }
-				} // disabled
+					// disabled char conversion, but we still need to convert the database.
+				} else { 
+				
+					dbquery("SET NAMES 'utf8mb4'");
+					dbquery("ALTER DATABASE ".$db_name." CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;");
 
-                    // Create guests language session tables
-                    $result = dbquery("CREATE TABLE ".DB_PREFIX."language_sessions (
+					$result = dbquery("SHOW TABLES");
+
+					while ($table = dbarraynum($result)) {
+						if (preg_match("/^".DB_PREFIX."/i", $table[0])) {
+							dbquery("ALTER TABLE ".$table[0]." CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+						}
+					}
+				}
+
+                // Create guests language session tables
+                $result = dbquery("CREATE TABLE ".DB_PREFIX."language_sessions (
                 user_ip VARCHAR(20) NOT NULL DEFAULT '0.0.0.0',
                 user_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."',
                 user_datestamp INT(10) NOT NULL default '0'
@@ -700,7 +713,7 @@ if (str_replace(".", "", $settings['version']) < "80000") {
 					dbquery("UPDATE ".DB_CUSTOM_PAGES." SET page_language ='".$settings['locale']."'");
 
                     // Set the new version
-                    dbquery("UPDATE ".DB_SETTINGS." SET settings_value='8.00.00' WHERE settings_name='version'");
+                    dbquery("UPDATE ".DB_SETTINGS." SET settings_value='8.00.19' WHERE settings_name='version'");
 
                     redirect(FUSION_SELF.$aidlink."&amp;upgrade_ok");
                 }
