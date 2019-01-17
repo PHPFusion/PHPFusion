@@ -34,7 +34,7 @@ $navigation .= "<td class='".($_GET['page'] == 4 ? "tbl1" : "tbl2")."' style='wi
 $navigation .= "</tr></table>\n";
 //General info
 if ($_GET['page'] == 1) {
-    $phpinfo = "<table cellpadding='0' cellspacing='1' class='tbl-border tab' style='width:100%;' id='folders'>\n";
+    $phpinfo = "<table cellpadding='0' cellspacing='1' class='table tbl-border tab' style='width:100%;' id='folders'>\n";
     $phpinfo .= "<tr>\n<td class='tbl2' style='width:20%'>".$locale['402']."</td><td class='tbl2' style='text-align:right'>".php_uname()."</td></tr>\n";
     $phpinfo .= "<tr>\n<td class='tbl1' style='width:20%'>".$locale['403']."</td><td class='tbl1' style='text-align:right'>".$_SERVER['SERVER_SOFTWARE']."</td></tr>\n";
     $phpinfo .= "<tr>\n<td class='tbl2' style='width:20%'>".$locale['404']."</td><td class='tbl2' style='text-align:right'>".phpversion()."</td></tr>\n";
@@ -55,7 +55,7 @@ if ($_GET['page'] == 1) {
         } else {
             $gd_ver = '';
         }
-        $phpinfo = "<table cellpadding='0' cellspacing='1' class='tbl-border tab' style='width:100%;' id='folders'>\n";
+        $phpinfo = "<table cellpadding='0' cellspacing='1' class='table tbl-border tab' style='width:100%;' id='folders'>\n";
         $phpinfo .= "<tr>\n<td class='tbl2' style='width:50%'>".$locale['423']."</td><td class='tbl2' style='text-align:right'>".(ini_get('safe_mode') ? $locale['421'] : $locale['422'])."</td></tr>\n";
         $phpinfo .= "<tr>\n<td class='tbl1' style='width:50%'>".$locale['424']."</td><td class='tbl1' style='text-align:right'>".(ini_get('register_globals') ? $locale['421'] : $locale['422'])."</td></tr>\n";
         $phpinfo .= "<tr>\n<td class='tbl2' style='width:50%'>".$locale['425']." GD (".$locale['431'].")</td><td class='tbl2' style='text-align:right'>".(extension_loaded('gd') ? $locale['421']." (".$gd_ver[0].")" : $locale['422'])."</td></tr>\n";
@@ -103,7 +103,7 @@ if ($_GET['page'] == 1) {
                 $status .= " (".substr(sprintf('%o', fileperms(BASEDIR.$folder)), -4).")</td></tr>\n";
                 $i++;
             }
-            $phpinfo = "<table cellpadding='0' cellspacing='1' class='tbl-border tab' style='width:100%;' id='folders'>\n";
+            $phpinfo = "<table cellpadding='0' cellspacing='1' class='table tbl-border tab' style='width:100%;' id='folders'>\n";
             $phpinfo .= $status;
             $phpinfo .= "</table>\n";
         } else
@@ -120,7 +120,7 @@ if ($_GET['page'] == 1) {
                     $phpinfo = preg_replace('%<h2><a name="(.*)">(.*)</a></h2>%', "<h4 class='phpinfo forum-caption'>$2</h4>", $phpinfo);
                     $phpinfo = preg_replace('%<h2>(.*)</h2>%', "<div class='forum-caption'>$1</div>", $phpinfo);
                     $phpinfo = preg_replace('%<th colspan="2">(.*)</th>%', "<th colspan='2'><h5>$1</h5></th>", $phpinfo);
-                    $phpinfo = str_replace('<table border="0" cellpadding="3" width="600"', "<table class='tbl-border phpinfo_cont' style='width:100%;'", $phpinfo);
+                    $phpinfo = str_replace('<table border="0" cellpadding="3" width="600"', "<table class='table tbl-border phpinfo_cont' style='width:100%;'", $phpinfo);
                     $phpinfo = str_replace("<h3 class='tbl2'></h3>", '', $phpinfo);
                     $phpinfo = str_replace('class="h"', "class='tbl2 center'", $phpinfo);
                     $phpinfo = str_replace('class="e"', "class='tbl2'", $phpinfo);

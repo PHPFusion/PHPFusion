@@ -104,10 +104,13 @@ if (iMEMBER || $shout_settings['guest_shouts'] == "1") {
             if (isnum($shout_name)) {
                 $shout_name = "";
             }
-            include_once INCLUDES."captchas/securimage/securimage.php";
-            $securimage = new Securimage();
-            if (!isset($_POST['sb_captcha_code']) || $securimage->check($_POST['sb_captcha_code']) == FALSE) {
-                redirect($link);
+
+            if (!iADMIN) {
+                $_CAPTCHA_IS_VALID = FALSE;
+                include INCLUDES."captchas/".$settings['captcha']."/captcha_check.php";
+                if ($_CAPTCHA_IS_VALID == FALSE) {
+                    redirect($link);
+                }
             }
         }
         $shout_message = str_replace("\n", " ", $_POST['shout_message']);
@@ -167,11 +170,12 @@ if (iMEMBER || $shout_settings['guest_shouts'] == "1") {
     echo display_bbcodes("150px;", "shout_message", "shout_form", "smiley|b|u|url|color")."\n";
     if (iGUEST) {
         echo $locale['SB_validation_code']."<br />\n";
-        echo "<img id='sb_captcha' src='".INCLUDES."captchas/securimage/securimage_show.php' alt='' /><br />\n";
-        echo "<a href='".INCLUDES."captchas/securimage/securimage_play.php'><img src='".INCLUDES."captchas/securimage/images/audio_icon.gif' alt='' class='tbl-border' style='margin-bottom:1px' /></a>\n";
-        echo "<a href='#' onclick=\"document.getElementById('sb_captcha').src = '".INCLUDES."captchas/securimage/securimage_show.php?sid=' + Math.random(); return false\"><img src='".INCLUDES."captchas/securimage/images/refresh.gif' alt='' class='tbl-border' /></a><br />\n";
-        echo $locale['SB_enter_validation_code']."<br />\n<input type='text' name='sb_captcha_code' class='textbox' style='width:100px' /><br />\n";
+        include INCLUDES."captchas/".$settings['captcha']."/captcha_display.php";
+        if (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_HIDE_INPUT)) {
+            echo "<input type='text' id='captcha_code' name='captcha_code' class='textbox' autocomplete='off' style='width:100px' />";
+        }
     }
+
     echo "<br /><input type='submit' name='post_shout' value='".$locale['SB_shout']."' class='button' />\n";
     echo "</form>\n<br />\n";
 } else {

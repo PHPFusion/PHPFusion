@@ -167,7 +167,7 @@ echo "<label><input type='radio' name='link_position' value='3'".$pos3_check." /
 echo "<label><input type='checkbox' name='link_window' value='1'".$window_check." /> ".$locale['428']."</label></td>\n";
 echo "</tr>\n<tr>\n";
 echo "<td align='center' colspan='2' class='tbl'>\n";
-echo "<input type='submit' name='savelink' value='".$locale['429']."' class='bt-primary' /></td>\n";
+echo "<input type='submit' name='savelink' value='".$locale['429']."' class='btn btn-primary' /></td>\n";
 echo "</td>\n</tr>\n</table></form>\n";
 closetable();
 

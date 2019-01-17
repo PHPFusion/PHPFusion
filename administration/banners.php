@@ -73,7 +73,7 @@ if (isset($_POST['save_banners'])) {
 
     echo "<form name='settingsform' method='post' action='".FUSION_REQUEST."'>\n";
     echo "<textarea name='sitebanner1' cols='50' rows='5' class='textbox' style='width:450px'>".phpentities($sitebanner1)."</textarea>\n";
-    echo "<div class='list-group-item'><input type='button' value='<?php?>' class='button' style='width:60px;' onclick=\"addText('sitebanner1', '<?php\\n', '\\n?>', 'settingsform');\" />\n";
+    echo "<div class='list-group-item'><input type='button' value='<?php?>' class='button' onclick=\"addText('sitebanner1', '<?php\\n', '\\n?>', 'settingsform');\" />\n";
     echo display_html("settingsform", "sitebanner1", TRUE)."\n";
     echo "</div>";
     echo "</div>";
@@ -88,12 +88,12 @@ if (isset($_POST['save_banners'])) {
     }
 
     echo "<textarea name='sitebanner2' cols='50' rows='5' class='textbox' style='width:450px'>".phpentities($sitebanner2)."</textarea>\n";
-    echo "<div class='list-group-item  m-b-10'><input type='button' value='<?php?>' class='button' style='width:60px;' onclick=\"addText('sitebanner2', '<?php\\n', '\\n?>', 'settingsform');\" />\n";
+    echo "<div class='list-group-item  m-b-10'><input type='button' value='<?php?>' class='button' onclick=\"addText('sitebanner2', '<?php\\n', '\\n?>', 'settingsform');\" />\n";
     echo display_html("settingsform", "sitebanner2", TRUE)."\n";
     echo "</div>\n";
 
-    echo "<div class='list-group-item'><input type='submit' name='save_banners' value='".$locale['854']."' class='btn-success m-r-10' />\n";
-    echo "<input type='submit' name='preview_banners' value='".$locale['855']."' class='btn-success m-r-10' />\n";
+    echo "<div class='list-group-item'><input type='submit' name='save_banners' value='".$locale['854']."' class='btn btn-success m-r-10' />\n";
+    echo "<input type='submit' name='preview_banners' value='".$locale['855']."' class='btn btn-success m-r-10' />\n";
 
     echo "</div>\n";
     echo "</div>\n";

@@ -145,12 +145,12 @@ if (!isset($_POST['infuse']) && !isset($_POST['infusion']) && !isset($_POST['def
                 echo "<input type='hidden' name='infusion' value='".$item['inf_folder']."' />\n";
                 if ($item['inf_status'] > 0) {
                     if ($item['inf_status'] > 1) {
-                        echo "<input type='submit' name='infuse' value='".$locale['401']."' class='btn-info m-t-5' />\n";
+                        echo "<input type='submit' name='infuse' value='".$locale['401']."' class='btn btn-info m-t-5' />\n";
                     } else {
-                        echo "<input type='submit' name='defuse' value='".$locale['411']."' class='btn-info m-t-5' onclick='return Defuse();' />\n";
+                        echo "<input type='submit' name='defuse' value='".$locale['411']."' class='btn btn-info m-t-5' onclick='return Defuse();' />\n";
                     }
                 } else {
-                    echo "<input type='submit' name='infuse' value='".$locale['401']."' class='btn-primary m-t-5' />\n";
+                    echo "<input type='submit' name='infuse' value='".$locale['401']."' class='btn btn-primary m-t-5' />\n";
 
                 }
                 echo "</div>\n";
