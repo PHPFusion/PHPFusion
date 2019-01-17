@@ -39,18 +39,22 @@ if (isset($_POST['sendmessage'])) {
     if ($message == "") {
         $error .= " <span class='alt'>".$locale['423']."</span><br />\n";
     }
-    $_CAPTCHA_IS_VALID = FALSE;
-    include INCLUDES."captchas/".$settings['captcha']."/captcha_check.php";
-    if ($_CAPTCHA_IS_VALID == FALSE) {
-        $error .= " <span class='alt'>".$locale['424']."</span><br />\n";
+
+    if (!iADMIN) {
+        $_CAPTCHA_IS_VALID = FALSE;
+        include INCLUDES."captchas/".$settings['captcha']."/captcha_check.php";
+        if ($_CAPTCHA_IS_VALID == FALSE) {
+            $error .= " <span class='alt'>".$locale['424']."</span><br />\n";
+        }
     }
+
     if (!$error) {
         require_once INCLUDES."sendmail_include.php";
         $template_result = dbquery("
-			SELECT template_key, template_active, template_sender_name, template_sender_email
-			FROM ".DB_EMAIL_TEMPLATES."
-			WHERE template_key='CONTACT'
-			LIMIT 1");
+            SELECT template_key, template_active, template_sender_name, template_sender_email
+            FROM ".DB_EMAIL_TEMPLATES."
+            WHERE template_key='CONTACT'
+            LIMIT 1");
         if (dbrows($template_result)) {
             $template_data = dbarray($template_result);
             if ($template_data['template_active'] == "1") {
@@ -93,17 +97,23 @@ if (isset($_POST['sendmessage'])) {
     echo "</tr>\n<tr>\n";
     echo "<td width='100' class='tbl'>".$locale['405']."</td>\n";
     echo "<td class='tbl'><textarea name='message' rows='10' class='textbox' cols='50'></textarea></td>\n";
-    echo "</tr>\n<tr>\n";
-    echo "<td width='100' class='tbl'>".$locale['407']."</td>\n";
-    echo "<td class='tbl'>";
-    include INCLUDES."captchas/".$settings['captcha']."/captcha_display.php";
-    if (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_HIDE_INPUT)) {
-        echo "</td>\n</tr>\n<tr>";
-        echo "<td class='tbl'><label for='captcha_code'>".$locale['408']."</label></td>\n";
+    echo "</tr>";
+
+    if (!iADMIN) {
+        echo "<tr>\n";
+        echo "<td width='100' class='tbl'>".$locale['407']."</td>\n";
         echo "<td class='tbl'>";
-        echo "<input type='text' id='captcha_code' name='captcha_code' class='textbox' autocomplete='off' style='width:100px' />";
+        include INCLUDES."captchas/".$settings['captcha']."/captcha_display.php";
+        if (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_HIDE_INPUT)) {
+            echo "</td>\n</tr>\n<tr>";
+            echo "<td class='tbl'><label for='captcha_code'>".$locale['408']."</label></td>\n";
+            echo "<td class='tbl'>";
+            echo "<input type='text' id='captcha_code' name='captcha_code' class='textbox' autocomplete='off' style='width:100px' />";
+        }
+        echo "</td>\n</tr>";
     }
-    echo "</td>\n</tr>\n<tr>\n";
+
+    echo "<tr>\n";
     echo "<td align='center' colspan='2' class='tbl'>\n";
     echo "<input type='submit' name='sendmessage' value='".$locale['406']."' class='button' /></td>\n";
     echo "</tr>\n</table>\n</form>\n";

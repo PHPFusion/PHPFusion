@@ -2,13 +2,12 @@
     list-style: none;
     min-height: 20px;
     height: auto !important;
-    height: 20px;
 }
 
 #site-links li {
     display: block;
-    margin: 30;
-    padding: 10;
+    margin: 30px;
+    padding: 10px;
 }
 
 #site-links li img.handle {

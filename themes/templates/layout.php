@@ -45,11 +45,11 @@ if ($settings['bootstrap'] || defined('BOOTSTRAP')) {
 
 // Global CSS, Resets etc.
 if (!defined('NO_GLOBAL_CSS')) {
-    echo "<link rel='stylesheet' href='".THEMES."templates/global.css' type='text/css' media='screen' />\n";
+    echo "<link rel='stylesheet' href='".THEMES."templates/global.css?v=".filemtime(THEMES.'templates/global.css')."' type='text/css' media='screen' />\n";
 }
 
 if (!defined('NO_DEFAULT_CSS')) {
-    echo "<link href='".THEMES."templates/default.css' rel='stylesheet' type='text/css' media='screen'/>\n";
+    echo "<link href='".THEMES."templates/default.css?v=".filemtime(THEMES.'templates/default.css')."' rel='stylesheet' type='text/css' media='screen'/>\n";
 }
 
 if ($settings['entypo'] || defined('ENTYPO')) {
@@ -71,7 +71,7 @@ if (!defined('FONTAWESOME-V4')) {
 }
 
 $theme_css = file_exists(THEME.'styles.min.css') ? THEME.'styles.min.css' : THEME.'styles.css';
-echo "<link href='".$theme_css."' rel='stylesheet' type='text/css' media='screen'/>\n";
+echo "<link href='".$theme_css."?v=".filemtime($theme_css)."' rel='stylesheet' type='text/css' media='screen'/>\n";
 
 echo render_favicons(defined('THEME_ICON') ? THEME_ICON : IMAGES.'favicons/');
 

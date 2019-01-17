@@ -355,7 +355,7 @@ function redirect($location, $delay = FALSE, $script = FALSE) {
             $ref = "<meta http-equiv='refresh' content='$delay; url=".$location."' />";
             add_to_head($ref);
         } else {
-            if ($script == FALSE || headers_sent()) {
+            if ($script == FALSE || !headers_sent()) {
                 header("Location: ".str_replace("&amp;", "&", $location));
                 exit;
             } else {
@@ -798,6 +798,8 @@ function getuserlevel($userlevel) {
     } else if ($userlevel == 103) {
         return $locale['user3'];
     }
+
+    return NULL;
 }
 
 // Display the user's status
@@ -822,6 +824,8 @@ function getuserstatus($userstatus) {
     } else if ($userstatus == 8) {
         return $locale['status8'];
     }
+
+    return NULL;
 }
 
 // Check if Administrator has correct rights assigned
@@ -1193,7 +1197,7 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
         session_start();
     }
 
-    $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
+    // $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
     $default_options = [
         'required'       => FALSE,
         'regex'          => '',

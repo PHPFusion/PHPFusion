@@ -15,16 +15,18 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 require_once INCLUDES."footer_includes.php";
 require_once THEMES."templates/panels.php";
 
 // Error handling site front
 if (!defined('ADMIN_PANEL')) {
-	if (iADMIN && checkrights("ERRO") && count($_errorHandler) > 0) {
-		echo "<div class='admin-message'>".str_replace("[ERROR_LOG_URL]", ADMIN."errors.php".$aidlink, $locale['err_101'])."</div>\n";
-	}
+    if (iADMIN && checkrights("ERRO") && count($_errorHandler) > 0) {
+        echo "<div class='admin-message'>".str_replace("[ERROR_LOG_URL]", ADMIN."errors.php".$aidlink, $locale['err_101'])."</div>\n";
+    }
 }
 
 define("CONTENT", ob_get_clean());

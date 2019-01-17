@@ -1,37 +1,37 @@
 a {
-	color: #6f9228;
-	text-decoration: none;
+    color: #6f9228;
+    text-decoration: none;
 }
 
 a:hover {
-	color: #6f9228;
-	text-decoration: underline;
+    color: #6f9228;
+    text-decoration: underline;
 }
 
 a:hover.side {
-	color: #6f9228;
-	text-decoration: underline;
+    color: #6f9228;
+    text-decoration: underline;
 }
 
 .button:focus, .button:hover {
-	background-position: 0 -281px;
-	background-color: #D84743;
-	border-color: #6f9228;
+    background-position: 0 -281px;
+    background-color: #D84743;
+    border-color: #6f9228;
 }
 
 .button:active, .button.active {
-	background-position: 0 -321px;
-	background-color: #A5211E;
-	border-color: #6f9228;
+    background-position: 0 -321px;
+    background-color: #A5211E;
+    border-color: #6f9228;
 }
 
 .sub-header {
-	border-bottom: 2px solid #6f9228;
+    border-bottom: 2px solid #6f9228;
 }
 
 .sub-header ul li.current-link a {
-	background-color: #6f9228;
-	background-image: -webkit-gradient(linear,50% 0,50% 100%,color-stop(0%,#83ae2c),color-stop(100%,#6f9228));
+    background-color: #6f9228;
+    background-image: -webkit-gradient(linear,50% 0,50% 100%,color-stop(0%,#83ae2c),color-stop(100%,#6f9228));
     background-image: -webkit-linear-gradient(#83ae2c,#6f9228);
     background-image: -moz-linear-gradient(#83ae2c,#6f9228);
     background-image: -o-linear-gradient(#83ae2c,#6f9228);
@@ -39,12 +39,12 @@ a:hover.side {
 }
 
 .sub-footer-top {
-	background-color: #6f9228;
+    background-color: #6f9228;
 }
 
 .scapmain {
-	background-color: #6f9228;
-	background-image: -webkit-gradient(linear,50% 0,50% 100%,color-stop(0%,#83ae2c),color-stop(100%,#6f9228));
+    background-color: #6f9228;
+    background-image: -webkit-gradient(linear,50% 0,50% 100%,color-stop(0%,#83ae2c),color-stop(100%,#6f9228));
     background-image: -webkit-linear-gradient(#83ae2c,#6f9228);
     background-image: -moz-linear-gradient(#83ae2c,#6f9228);
     background-image: -o-linear-gradient(#83ae2c,#6f9228);
@@ -52,8 +52,8 @@ a:hover.side {
 }
 
 .capmain {
-	background-color: #6f9228;
-	background-image: -webkit-gradient(linear,50% 0,50% 100%,color-stop(0%,#83ae2c),color-stop(100%,#6f9228));
+    background-color: #6f9228;
+    background-image: -webkit-gradient(linear,50% 0,50% 100%,color-stop(0%,#83ae2c),color-stop(100%,#6f9228));
     background-image: -webkit-linear-gradient(#83ae2c,#6f9228);
     background-image: -moz-linear-gradient(#83ae2c,#6f9228);
     background-image: -o-linear-gradient(#83ae2c,#6f9228);
@@ -70,5 +70,5 @@ div.highlightBlue::-moz-selection { color: #fff; background: #6f9228; }
 .news_info ul li.comments { background: url(../images/icons/comments.png) 0 -24px no-repeat; }
 
 #navigation li.current-link a {
-	background-color: #6f9228;
+    background-color: #6f9228;
 }

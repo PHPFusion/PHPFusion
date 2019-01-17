@@ -27,7 +27,6 @@ if (file_exists(LOCALE.LOCALESET."admin/upgrade.php")) {
     include LOCALE."English/admin/upgrade.php";
 }
 
-
 opentable($locale['400']);
 
 echo "<div style='text-align:center' class='text-center' ><br />\n";
@@ -36,38 +35,47 @@ opentable($locale['400']);
 echo "<div style='text-align:center'><br />\n";
 
 if (isset($_GET['upgrade_ok'])) {
-	echo "<div class='alert alert-success'>".$locale['502']."</div>\n";
+    echo "<div class='alert alert-success'>".$locale['502']."</div>\n";
 }
-	
+
 echo "<form name='upgradeform' method='post' action='".FUSION_SELF.$aidlink."'>\n";
 if (str_replace(".", "", $settings['version']) < "80019") {
-	if (!isset($_POST['stage'])) {
-		echo "<div class='well'>\n";
-		echo sprintf($locale['500'], $locale['504'])."<br />\n".$locale['501']."\n";
-		echo "</div>\n";
-		echo "<input type='hidden' name='stage' value='2'>\n";
-		echo "<input type='submit' name='upgrade' value='".$locale['400']."' class='button'><br /><br />\n";
-	} elseif (isset($_POST['upgrade']) && isset($_POST['stage']) && $_POST['stage'] == 2) {
+    if (!isset($_POST['stage'])) {
+        echo "<div class='well'>\n";
+        echo sprintf($locale['500'], $locale['504'])."<br />\n".$locale['501']."\n";
+        echo "</div>\n";
+        echo "<input type='hidden' name='stage' value='2'>\n";
+        echo "<input type='submit' name='upgrade' value='".$locale['400']."' class='button'><br /><br />\n";
+    } else if (isset($_POST['upgrade']) && isset($_POST['stage']) && $_POST['stage'] == 2) {
 
-		// Convert the Database to utf8mb4
-		dbquery("SET NAMES 'utf8mb4'");
-		dbquery("ALTER DATABASE ".$db_name." CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;");
+        // Convert the Database to utf8mb4
+        $result = dbquery("SELECT @@character_set_database as charset, @@collation_database as collation;");
 
-		$result = dbquery("SHOW TABLES");
+        while ($db = dbarray($result)) {
+            if ($db['charset'] == 'utf8') {
+                dbquery("SET NAMES 'utf8mb4'");
+            }
 
-		while ($table = dbarraynum($result)) {
-			if (preg_match("/^".DB_PREFIX."/i", $table[0])) {
-				dbquery("ALTER TABLE ".$table[0]." CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
-			}
-		}
-	
-	// Set a new version
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='8.00.19' WHERE settings_name='version'");
-		redirect(FUSION_SELF.$aidlink."&amp;upgrade_ok");
-	}
-	
+            if ($db['collation'] == 'utf8_general_ci') {
+                dbquery("ALTER DATABASE ".$db_name." CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+            }
+        }
+
+        $result = dbquery("SHOW TABLES");
+
+        while ($table = dbarraynum($result)) {
+            if (preg_match("/^".DB_PREFIX."/i", $table[0])) {
+                dbquery("ALTER TABLE ".$table[0]." CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+            }
+        }
+
+        // Set a new version
+        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='8.00.19' WHERE settings_name='version'");
+        redirect(FUSION_SELF.$aidlink."&amp;upgrade_ok");
+    }
+
 } else {
-	echo $locale['401']."<br /><br />\n";
+    echo $locale['401']."<br /><br />\n";
 }
 
 echo "</form>\n</div>\n";

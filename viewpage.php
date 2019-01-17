@@ -43,7 +43,7 @@ if (dbrows($cp_result)) {
         $pagecount = count($custompage);
         echo $custompage[$_GET['rowstart']];
     } else {
-        echo "<div class='admin-message' style='text-align:center'><br /><img style='border:0px; vertical-align:middle;' src ='".BASEDIR."images/warn.png' alt=''/><br /> ".$locale['400']."<br /><a href='index.php' onclick='javascript:history.back();return false;'>".$locale['403']."</a>\n<br /><br /></div>\n";
+        echo "<div class='admin-message' style='text-align:center'><br /><img style='border:0; vertical-align:middle;' src ='".BASEDIR."images/warn.png' alt=''/><br /> ".$locale['400']."<br /><a href='index.php' onclick='history.back();return false;'>".$locale['403']."</a>\n<br /><br /></div>\n";
     }
 } else {
     add_to_title($locale['global_200'].$locale['401']);

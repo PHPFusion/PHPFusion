@@ -126,7 +126,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
         echo "<a target='_blank' href='".$photo_file."' class='photogallery_photo_link' title='".(!empty($data['photo_title']) ? $data['photo_title'] : $data['photo_filename'])."'><!--photogallery_photo_".$_GET['photo_id']."-->";
         echo "<img src='".(isset($photo_thumb) && !empty($photo_thumb) ? $photo_thumb : $photo_file)."' alt='".(!empty($data['photo_title']) ? $data['photo_title'] : $data['photo_filename'])."' style='border:0px' class='photogallery_photo' /></a>\n";
         echo "</div>\n";
-        echo "<div align='center' style='margin:5px 0px 5px 0px' class='photogallery_photo_desc'><!--photogallery_photo_desc-->\n";
+        echo "<div align='center' style='margin:5px 0 5px 0' class='photogallery_photo_desc'><!--photogallery_photo_desc-->\n";
         if ($data['photo_description']) {
             echo nl2br(parseubb($data['photo_description'], "b|i|u|center|small|url|mail|img|quote"))."<br /><br />\n";
         }

@@ -328,8 +328,8 @@ if (!isset($_GET['msg_send']) && !isset($_GET['msg_read']) && $_GET['folder'] !=
         }
         echo "</table>\n";
         echo "<table cellpadding='0' cellspacing='0' width='100%'>\n";
-        echo "<tr>\n<td class='tbl'><a href='#' onclick=\"javascript:setChecked('pm_form','check_mark[]',1);return false;\">".$locale['410']."</a> |\n";
-        echo "<a href='#' onclick=\"javascript:setChecked('pm_form','check_mark[]',0);return false;\">".$locale['411']."</a></td>\n";
+        echo "<tr>\n<td class='tbl'><a href='#' onclick=\"setChecked('pm_form','check_mark[]',1);return false;\">".$locale['410']."</a> |\n";
+        echo "<a href='#' onclick=\"setChecked('pm_form','check_mark[]',0);return false;\">".$locale['411']."</a></td>\n";
         echo "<td align='right' class='tbl'>".$locale['409']."\n";
         if ($_GET['folder'] == "inbox") {
             echo "<input type='submit' name='save_msg' value='".$locale['412']."' class='button' />\n";

@@ -15,15 +15,17 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 define("ADMIN_PANEL", TRUE);
 
 // Check if Maintenance is Enabled
 if ($settings['maintenance'] == "1" && ((iADMIN && $settings['maintenance_level'] == "1"
-	&& $userdata['user_id'] != "1") || ($settings['maintenance_level'] > $userdata['user_level'])
-)) {
-	redirect(BASEDIR."maintenance.php");
- }
+            && $userdata['user_id'] != "1") || ($settings['maintenance_level'] > $userdata['user_level'])
+    )) {
+    redirect(BASEDIR."maintenance.php");
+}
 
 require_once CLASSES."PHPFusion/Admins.inc";
 require_once INCLUDES."output_handling_include.php";
@@ -38,7 +40,7 @@ if (preg_match("/^([a-z0-9_-]){2,50}$/i", $settings['admin_theme']) && file_exis
 }
 
 if (iMEMBER) {
-	$result = dbquery("UPDATE ".DB_USERS." SET user_lastvisit='".time()."', user_ip='".USER_IP."', user_ip_type='".USER_IP_TYPE."' WHERE user_id='".$userdata['user_id']."'");
+    $result = dbquery("UPDATE ".DB_USERS." SET user_lastvisit='".time()."', user_ip='".USER_IP."', user_ip_type='".USER_IP_TYPE."' WHERE user_id='".$userdata['user_id']."'");
 }
 
 \PHPFusion\Admins::getInstance()->setAdmin();

@@ -38,12 +38,12 @@ if ($settings['bootstrap'] || defined('BOOTSTRAP')) {
 
 // Global CSS, Resets etc.
 if (!defined('NO_GLOBAL_CSS')) {
-    echo "<link rel='stylesheet' href='".THEMES."templates/global.css' type='text/css' media='screen' />\n";
+    echo "<link rel='stylesheet' href='".THEMES."templates/global.css?v=".filemtime(THEMES.'templates/global.css')."' type='text/css' media='screen' />\n";
 }
 
 // Default CSS styling which applies to all themes but can be overriden
 if (!defined('NO_DEFAULT_CSS')) {
-    echo "<link rel='stylesheet' href='".THEMES."templates/default.css' type='text/css' media='screen' />\n";
+    echo "<link href='".THEMES."templates/default.css?v=".filemtime(THEMES.'templates/default.css')."' rel='stylesheet' type='text/css' media='screen'/>\n";
 }
 
 // Site Theme CSS
@@ -73,7 +73,7 @@ if (!defined('FONTAWESOME-V4')) {
 
 // Admin Panel Theme CSS
 $admin_theme_css = file_exists(THEMES.'admin_themes/'.$settings['admin_theme'].'/acp_styles.min.css') ? THEMES.'admin_themes/'.$settings['admin_theme'].'/acp_styles.min.css' : THEMES.'admin_themes/'.$settings['admin_theme'].'/acp_styles.css';
-echo "<link href='".$admin_theme_css."' rel='stylesheet' type='text/css' media='screen'/>\n";
+echo "<link href='".$admin_theme_css."?v=".filemtime($admin_theme_css)."' rel='stylesheet' type='text/css' media='screen'/>\n";
 
 echo render_favicons(defined('THEME_ICON') ? THEME_ICON : IMAGES.'favicons/');
 
@@ -85,8 +85,7 @@ echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery.min.js'></sc
 echo "<script type='text/javascript' src='".INCLUDES."jscripts/jscript.js'></script>\n";
 
 if ($settings['tinymce_enabled'] == 1) {
-
-    echo "<style type='text/css'>.mceIframeContainer iframe{width:100%!important;background-color: #00000;}</style>\n";
+    echo "<style type='text/css'>.mceIframeContainer iframe{width:100%!important;background-color: #000;}</style>\n";
     echo "<script language='javascript' type='text/javascript' src='".INCLUDES."jscripts/tiny_mce/tinymce.min.js'></script>\n
     <script type='text/javascript'>
 
@@ -176,7 +175,6 @@ if ($settings['tinymce_enabled'] == 1) {
          inline: \"yes\",
          close_previous: \"no\"
       }, {     window: win,     input: field_name    });
-      return false;
     }
     </script>\n";
 }

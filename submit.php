@@ -523,7 +523,7 @@ if ($_GET['stype'] == "l") {
                 case 8 :
                     echo sprintf($locale['673a'], ".gif .jpg .png");
                     break;
-                case 8 :
+                case 9 :
                     echo sprintf($locale['672b'], $settings['download_screen_max_w']." x ".$settings['download_screen_max_h']);
                     break;
                 case 10:
