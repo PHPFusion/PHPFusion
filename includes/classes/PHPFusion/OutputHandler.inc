@@ -90,7 +90,8 @@ class OutputHandler {
      * @param string $addition
      */
     public static function addToMeta($name, $addition = "") {
-        $settings = \fusion_get_settings();
+        global $settings;
+		
         if (empty(self::$pageMeta)) {
             self::$pageMeta = [
                 'description' => $settings['description'],
@@ -179,7 +180,7 @@ class OutputHandler {
      */
     public static function handleOutput($output) {
 
-        $settings = fusion_get_settings();
+        global $settings;
 
         if (!empty(self::$pageHeadTags)) {
             $output = preg_replace("#</head>#", self::$pageHeadTags."</head>", $output, 1);
