@@ -1531,7 +1531,7 @@ if (isset($_POST['step']) && $_POST['step'] == "6") {
             $result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('newsperpage', '11')");
             $result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('flood_interval', '15')");
             $result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('counter', '0')");
-            $result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('version', '8.00.00')");
+            $result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('version', '8.00.19')");
             $result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('maintenance', '0')");
             $result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('maintenance_message', '')");
             $result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('download_max_b', '512000')");
@@ -1544,9 +1544,9 @@ if (isset($_POST['step']) && $_POST['step'] == "6") {
             $result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('threads_per_page', '20')");
             $result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('comments_sorting', 'ASC')");
             $result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('comments_avatar', '1')");
-            $result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('avatar_width', '100')");
-            $result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('avatar_height', '100')");
-            $result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('avatar_filesize', '50000')");
+            $result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('avatar_width', '250')");
+            $result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('avatar_height', '250')");
+            $result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('avatar_filesize', '950000')");
             $result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('avatar_ratio', '0')");
             $result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('cronjob_day', '".time()."')");
             $result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('cronjob_hour', '".time()."')");
@@ -1792,8 +1792,8 @@ if (isset($_POST['step']) && $_POST['step'] == "6") {
                 $result = dbquery("INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['133']."', 'faq.php', '0', '1', '0', '4', '".$enabled_languages[$i]."')");
                 $result = dbquery("INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['134']."', 'forum/index.php', '0', '2', '0', '5', '".$enabled_languages[$i]."')");
                 $result = dbquery("INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['130b']."', 'blog.php', '0', '2', '0', '6', '".$enabled_languages[$i]."')");
-                $result = dbquery("INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['136']."', 'news_cats.php', '0', '2', '0', '7', '".$enabled_languages[$i]."')");
-                $result = dbquery("INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['130a']."', 'blog_cats.php', '0', '2', '0', '8', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['136']."', 'news_cats.php', '0', '1', '0', '7', '".$enabled_languages[$i]."')");
+                $result = dbquery("INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['130a']."', 'blog_cats.php', '0', '1', '0', '8', '".$enabled_languages[$i]."')");
                 $result = dbquery("INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['137']."', 'weblinks.php', '0', '2', '0', '9', '".$enabled_languages[$i]."')");
                 $result = dbquery("INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['135']."', 'contact.php', '0', '1', '0', '10', '".$enabled_languages[$i]."')");
                 $result = dbquery("INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['138']."', 'photogallery.php', '0', '1', '0', '11', '".$enabled_languages[$i]."')");
@@ -1826,11 +1826,8 @@ if (isset($_POST['step']) && $_POST['step'] == "6") {
                 $result = dbquery("INSERT INTO ".$db_prefix."forum_ranks (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['207']."', 'rank4.png', 500, '0', 101, '".$enabled_languages[$i]."')");
                 $result = dbquery("INSERT INTO ".$db_prefix."forum_ranks (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['208']."', 'rank5.png', 1000, '0', 101, '".$enabled_languages[$i]."')");
             }
-
-            // enable default error handler
-            // create .htaccess for it
-            $htc = "";
-            if (!file_exists(".htaccess")) {
+			
+			if (!file_exists(".htaccess")) {
                 if (file_exists("_htaccess") && function_exists("rename")) {
                     @rename("_htaccess", ".htaccess");
                 } else {
@@ -1839,13 +1836,67 @@ if (isset($_POST['step']) && $_POST['step'] == "6") {
                     fclose($handle);
                 }
             }
-
-            //  Wipe out all .htaccess rewrite rules and add error handler only
-            $htc = "ErrorDocument 400 ".$settings['site_path']."error.php?code=400\r\n";
-            $htc .= "ErrorDocument 401 ".$settings['site_path']."error.php?code=401\r\n";
-            $htc .= "ErrorDocument 403 ".$settings['site_path']."error.php?code=403\r\n";
-            $htc .= "ErrorDocument 404 ".$settings['site_path']."error.php?code=404\r\n";
-            $htc .= "ErrorDocument 500 ".$settings['site_path']."error.php?code=500\r\n";
+			
+			// Default .htaccess values
+			$htc = "";
+			$htc = "# Disable directory listing".PHP_EOL;
+			$htc .= "Options -Indexes".PHP_EOL.PHP_EOL;
+			$htc .= "# Force utf-8 charset".PHP_EOL;
+			$htc .= "AddDefaultCharset UTF-8".PHP_EOL;
+			$htc .= 'AddCharset UTF-8 .html .css .js .svg .woff .woff2'.PHP_EOL.PHP_EOL;
+			$htc .= "# Security".PHP_EOL;
+			$htc .= "ServerSignature Off".PHP_EOL.PHP_EOL;
+			$htc .= "# Secure .htaccess file".PHP_EOL;
+			$htc .= "<Files .htaccess>".PHP_EOL;
+			$htc .= "    order allow,deny".PHP_EOL;
+			$htc .= "    deny from all".PHP_EOL;
+			$htc .= "</Files>".PHP_EOL.PHP_EOL;
+			$htc .= "# Secure .inc files".PHP_EOL;
+			$htc .= "<Files *.inc>".PHP_EOL;
+			$htc .= "    Order allow,deny".PHP_EOL;
+			$htc .= "    deny from all".PHP_EOL;
+			$htc .= "</Files>".PHP_EOL.PHP_EOL;
+			$htc .= "# Protect config.php".PHP_EOL;
+			$htc .= "<Files config.php>".PHP_EOL;
+			$htc .= "    order allow,deny".PHP_EOL;
+			$htc .= "    deny from all".PHP_EOL;
+			$htc .= "</Files>".PHP_EOL.PHP_EOL;
+			$htc .= "# Cache images for 7 days to soften network load".PHP_EOL;
+			$htc .= "<IfModule mod_headers.c>".PHP_EOL;
+			$htc .= '    <filesMatch "\\.(ico|pdf|flv|jpg|jpeg|png|gif|swf|ttf|otf|woff|woff2|eot|svg)$">'.PHP_EOL;
+			$htc .= '        Header append Vary: Accept-Encoding'.PHP_EOL;
+			$htc .= '        Header set Cache-Control "max-age=2592000, public"'.PHP_EOL;
+			$htc .= "    </FilesMatch>".PHP_EOL;
+			$htc .= '    <filesMatch "\\.(css|js)$">'.PHP_EOL;
+			$htc .= '        Header set Cache-Control "max-age=604800, public"'.PHP_EOL;
+			$htc .= "    </FilesMatch>".PHP_EOL;
+			$htc .= '    <filesMatch "\\.(html|htm|php)$">'.PHP_EOL;
+			$htc .= '        Header set Cache-Control "max-age=1, private, must-revalidate"'.PHP_EOL;
+			$htc .= "    </FilesMatch>".PHP_EOL;
+			$htc .= "</IfModule>".PHP_EOL.PHP_EOL;
+			$htc .= '# Compress files'.PHP_EOL;
+			$htc .= '<ifModule mod_deflate.c>'.PHP_EOL;
+			$htc .= '    <filesMatch "\.(jpg|jpeg|png|gif|svg|css|js|x?html?|php)$">'.PHP_EOL;
+			$htc .= '        SetOutputFilter DEFLATE'.PHP_EOL;
+			$htc .= '    </filesMatch>'.PHP_EOL;
+			$htc .= '</ifModule>'.PHP_EOL.PHP_EOL;
+			$htc .= "# Block Nasty Bots".PHP_EOL;
+			$htc .= "<IfModule mod_setenvifno.c>".PHP_EOL;
+			$htc .= "    SetEnvIfNoCase ^User-Agent$ .*(craftbot|download|extract|stripper|sucker|ninja|clshttp|webspider|leacher|collector|grabber|webpictures) HTTP_SAFE_BADBOT".PHP_EOL;
+			$htc .= "    SetEnvIfNoCase ^User-Agent$ .*(libwww-perl|aesop_com_spiderman) HTTP_SAFE_BADBOT".PHP_EOL;
+			$htc .= "    SetEnvIfNoCase ^User-Agent$ .*(almaden|Anarchie|ASPSeek|attach|autoemailspider|BackWeb|Bandit|BatchFTP|BlackWidow|Bot|mailto:craftbot@yahoo.com|Buddy|bumblebee|CherryPicker|ChinaClaw|CICC|Collector|Copier|Crescent|Custo|DA|DIIbot|DISCo|DISCo\ Pump|Download\ Demon|Download\ Wonder|Downloader|Drip|DSurf15a|eCatch|EasyDL/2.99|EirGrabber|EmailCollector|EmailSiphon|EmailWolf|Express\ WebPictures|ExtractorPro|EyeNetIE|FileHound|FlashGet|GetRight|GetSmart|GetWeb!|gigabaz|Go\!Zilla|Go!Zilla|Go-Ahead-Got-It|gotit|Grabber|GrabNet|Grafula|grub-client|HMView|HTTrack|httpdown|ia_archiver|Image\ Stripper|Image\ Sucker|Indy*Library|InterGET|InternetLinkagent|Internet\ Ninja|InternetSeer.com|Iria|JBH*agent|JetCar|JOC\ Web\ Spider|JustView|larbin|LeechFTP|LexiBot|lftp|Link*Sleuth|likse|Link|LinkWalker|Mag-Net|Magnet|Mass\ Downloader|Memo|Microsoft.URL|MIDown\ tool|Mirror|Mister\ PiX|Mozilla.*Indy|Mozilla.*NEWT|Mozilla*MSIECrawler|MS\ FrontPage*|MSFrontPage|MSIECrawler|MSProxy|Navroad|NearSite|NetAnts|NetMechanic|NetSpider|Net\ Vampire|NetZIP|NICErsPRO|Ninja|Octopus|Offline\ Explorer|Offline\ Navigator|Openfind|PageGrabber|Papa\ Foto|pavuk|pcBrowser|Ping|PingALink|Pockey|psbot|Pump|QRVA|RealDownload|Reaper|Recorder|ReGet|Scooter|Seeker|Siphon|sitecheck.internetseer.com|SiteSnagger|SlySearch|SmartDownload|Snake|SpaceBison|sproose|Stripper|Sucker|SuperBot|SuperHTTP|Surfbot|Szukacz|tAkeOut|Teleport\ Pro|URLSpiderPro|Vacuum|VoidEYE|Web\ Image\ Collector|Web\ Sucker|WebAuto|[Ww]eb[Bb]andit|webcollage|WebCopier|Web\ Downloader|WebEMailExtrac.*|WebFetch|WebGo\ IS|WebHook|WebLeacher|WebMiner|WebMirror|WebReaper|WebSauger|Website|Website\ eXtractor|Website\ Quester|Webster|WebStripper|ebWhacker|WebZIP|Wget|Whacker|Widow|WWWOFFLE|x-Tractor|Xaldon\ WebSpider|Xenu|Zeus.*Webster|Zeus) HTTP_SAFE_BADBOT".PHP_EOL;
+			$htc .= "    Deny from env=HTTP_SAFE_BADBOT".PHP_EOL;
+			$htc .= "</IfModule>".PHP_EOL.PHP_EOL;
+			// This force image to not be able to be used as other matter
+			$htc .= "<FilesMatch \"(?i).jpe?g$\">".PHP_EOL;
+			$htc .= "    ForceType image/jpeg".PHP_EOL;
+			$htc .= "</FilesMatch>".PHP_EOL;
+			$htc .= "<FilesMatch \"(?i).gif$\">".PHP_EOL;
+			$htc .= "    ForceType image/gif".PHP_EOL;
+			$htc .= "</FilesMatch>".PHP_EOL;
+			$htc .= "<FilesMatch \"(?i).png$\">".PHP_EOL;
+			$htc .= "    ForceType image/png".PHP_EOL;
+			$htc .= "</FilesMatch>".PHP_EOL.PHP_EOL;
             $temp = fopen(".htaccess", "w");
             if (fwrite($temp, $htc)) {
                 fclose($temp);
