@@ -24,7 +24,7 @@ if ($profile_method == "input") {
     if (isset($user_data['user_birthdate']) && $user_data['user_birthdate'] != "1900-01-01") {
         $user_birthdate = $user_data['user_birthdate'];
     } else {
-        $user_birthdate = "0-0-0";
+        $user_birthdate = "1900-01-01";
     }
 
     $user_birthdate = explode("-", $user_birthdate);
