@@ -76,6 +76,7 @@ function opensetup() {
     echo "</div>\n";
     echo "</div>\n";
     echo "<div class='col-xs-8 col-sm-8 col-md-8 col-lg-8'>\n";
+	echo "<table class='table table-responsive center'>\n";
 }
 
 function renderButton($finish = FALSE) {
@@ -96,6 +97,7 @@ function renderButton($finish = FALSE) {
 function closesetup() {
     echo "</form>\n";
     echo "</aside>\n";
+	echo "</table>\n";
     echo "</body>\n</html>\n";
 }
 
@@ -103,11 +105,13 @@ opensetup();
 // Step 1
 if (!isset($_POST['step']) || $_POST['step'] == "" || $_POST['step'] == "1") {
     $locale_list = makefileopts($locale_files, $_POST['localeset']);
-    echo $locale['010']."<br /><br />";
-    echo "<select name='localeset' class='input-sm form-control' style='margin-top:5px'>\n";
-    echo $locale_list."</select><br /><br />\n";
-    echo $locale['011']."\n";
-    echo "</td>\n</tr>\n<tr>\n<td class='tbl2' style='text-align:center'>\n";
+    echo "<tr><td class='tbl' >".$locale['010']."</td></tr>";
+    echo "<tr><td class='tbl' ><select name='localeset' class='input-sm form-control' style='margin-top:5px'>\n";
+    echo $locale_list."</select></td>\n</tr>\n";
+    echo "<tr><td class='tbl' >".$locale['011']."</td>\n</tr>\n";
+	echo "<tr><td class='tbl' >".$locale['012']."</td>\n</tr>\n";
+	echo "<tr><td class='tbl' >".$locale['013']." <input type='checkbox' required name='checkbox' value='check' id='agree' /></td>\n</tr>\n";
+    echo "<tr>\n<td class='tbl' style='text-align:center'>\n";
     echo "<input type='hidden' name='step' value='2' />\n";
     renderButton();
 }
