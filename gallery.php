@@ -227,7 +227,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
                 $result = dbquery("SELECT p.*, pu.user_id, pu.user_name, pu.user_status, pu.user_avatar,
                     ($sql_sum) AS sum_rating,
                     ($sql_count) AS count_votes,
-                    (SELECT COUNT(pc.comment_id) FROM ".DB_COMMENTS." AS pc WHERE pc.comment_item_id = p.album_id AND pc.comment_type = 'P' AND pc.comment_hidden = '0') AS count_comment
+                    (SELECT COUNT(pc.comment_id) FROM ".DB_COMMENTS." AS pc WHERE pc.comment_item_id = p.photo_id AND pc.comment_type = 'P' AND pc.comment_hidden = '0') AS count_comment
                     FROM ".DB_PHOTOS." AS p
                     LEFT JOIN ".DB_USERS." AS pu ON p.photo_user=pu.user_id
                     WHERE album_id='".intval($_GET['album_id'])."'
