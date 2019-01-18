@@ -98,17 +98,6 @@ function closesetup() {
     echo "</form>\n";
     echo "</aside>\n";
 	echo "</table>\n";
-	echo '<script type="text/javascript">
-		$("[name=next]").attr("disabled", true);
-		$("#agree").on("click", function() {
-			if ($(this).is(":checked")) {
-				$("[name=next]").attr("disabled", false);
-			} else {
-			$("[name=next]").attr("disabled", true);
-			}
-		});
-		';
-	echo "</script>\n";
     echo "</body>\n</html>\n";
 }
 
@@ -125,6 +114,19 @@ if (!isset($_POST['step']) || $_POST['step'] == "" || $_POST['step'] == "1") {
     echo "<tr>\n<td class='tbl' style='text-align:center'>\n";
     echo "<input type='hidden' name='step' value='2' />\n";
     renderButton();
+	
+	echo '<script type="text/javascript">
+		$("[name=next]").attr("disabled", true);
+		$("#agree").on("click", function() {
+			if ($(this).is(":checked")) {
+				$("[name=next]").attr("disabled", false);
+			} else {
+			$("[name=next]").attr("disabled", true);
+			}
+		});
+		';
+	echo "</script>\n";
+
 }
 // Step 2
 if (isset($_POST['step']) && $_POST['step'] == "2") {
