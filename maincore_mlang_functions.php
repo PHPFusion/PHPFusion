@@ -5,6 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: maincore_mlang_functions.php
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -188,8 +189,8 @@ if (iMEMBER) {
 }
 
 function fusion_get_enabled_languages() {
-    $settings = fusion_get_settings();
-    static $enabled_languages = NULL;
+    global $settings;
+    $enabled_languages = NULL;
 
     // Load the language translation functions
     include_once INCLUDES."translate_include.php";
