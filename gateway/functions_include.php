@@ -21,6 +21,10 @@ if (!defined("IN_FUSION")) {
 
 require_once LOCALE.LOCALESET.'gateway.php';
 
+if (session_status() == PHP_SESSION_NONE) {
+    @session_start();
+}
+
 function convertNumberToWord($num = FALSE) {
     global $locale;
 
