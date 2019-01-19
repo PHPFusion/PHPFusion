@@ -15,9 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once dirname(__FILE__).'/maincore.php';
-require_once THEMES."templates/header.php";
-require_once THEMES."templates/global/contact.php";
+require_once __DIR__.'/maincore.php';
+require_once THEMES.'templates/header.php';
+require_once THEMES.'templates/global/contact.php';
 
 $settings = fusion_get_settings();
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'contact.php');
@@ -94,8 +94,6 @@ $site_email = hide_email(fusion_get_settings('siteemail'));
 $info['message'] = str_replace(["[PM_LINK]", "[SITE_EMAIL]"], ["<a href='messages.php?msg_send=1'>".$locale['global_121']."</a>", $site_email], $locale['CT_401']);
 $info['input'] = $input;
 
-$info['captcha_code'] = '';
-
 if (iGUEST) {
     include INCLUDES.'captchas/'.$settings['captcha'].'/captcha_display.php';
     $captcha_settings = [
@@ -114,4 +112,4 @@ echo openform('contactform', 'post', FORM_REQUEST);
 echo render_contact_form($info);
 echo closeform();
 
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';
