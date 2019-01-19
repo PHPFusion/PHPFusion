@@ -26,13 +26,14 @@ class Main extends Core {
         add_to_head('<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,400italic"/>');
 
         $menu_options = [
-            'id'               => 'main-menu',
-            'nav_class'        => 'nav navbar-nav navbar-right primary',
-            'container_fluid'  => TRUE,
-            'show_header'      => '<a class="navbar-brand" href="'.BASEDIR.$settings['opening_page'].'"><img src="'.BASEDIR.$settings['sitebanner'].'" alt="'.$settings['sitename'].'" class="img-responsive"/></a>',
-            'grouping'         => TRUE,
-            'links_per_page'   => 10,
-            'html_pre_content' => $this->UserMenu()
+            'id'                => 'main-menu',
+            'nav_class_primary' => 'nav navbar-nav navbar-right primary',
+            'container_fluid'   => TRUE,
+            'header_content'    => '<a class="navbar-brand" href="'.BASEDIR.$settings['opening_page'].'"><img src="'.BASEDIR.$settings['sitebanner'].'" alt="'.$settings['sitename'].'" class="img-responsive"/></a>',
+            'grouping'          => TRUE,
+            'links_per_page'    => 10,
+            'html_pre_content'  => $this->UserMenu(),
+            'show_header'       => TRUE
         ];
 
         echo SiteLinks::setSubLinks($menu_options)->showSubLinks();

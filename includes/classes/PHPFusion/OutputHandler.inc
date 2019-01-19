@@ -194,9 +194,8 @@ class OutputHandler {
      * @return string
      */
     public static function handleOutput($output) {
-
-        $settings = fusion_get_settings();
         $locale = fusion_get_locale();
+        $settings = fusion_get_settings();
 
         if (!empty(self::$pageHeadTags)) {
             $output = preg_replace("#</head>#", self::$pageHeadTags."</head>", $output, 1);

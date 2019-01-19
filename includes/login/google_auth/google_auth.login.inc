@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: login/user_fields/user_gauth_include_var.php
+| Filename: login/google_auth/google_auth.login.inc
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -38,6 +38,5 @@ $user_field_dbinfo = "VARCHAR(20) NOT NULL DEFAULT ''";
 $user_field_default = '';
 $user_field_options = '';
 $user_field_error = '';
-
 
 require_once __DIR__.'/google_auth.php';

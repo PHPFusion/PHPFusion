@@ -286,6 +286,7 @@ if (dbrows($result)) {
         define(strtoupper($data['inf_folder']).'_EXIST', TRUE);
     }
 }
+
 /**
  * Reduction of 0.04 seconds in performance.
  * We can use manually include the configuration if needed.

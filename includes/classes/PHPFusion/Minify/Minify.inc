@@ -4,9 +4,9 @@
  *
  * Please report bugs on https://github.com/matthiasmullie/minify/issues
  *
- * @author Matthias Mullie <minify@mullie.eu>
+ * @author    Matthias Mullie <minify@mullie.eu>
  * @copyright Copyright (c) 2012, Matthias Mullie. All rights reserved
- * @license MIT License
+ * @license   MIT License
  */
 namespace PHPFusion\Minify;
 
@@ -18,10 +18,10 @@ use PHPFusion\Minify\Cache\CacheItemInterface;
  *
  * Please report bugs on https://github.com/matthiasmullie/minify/issues
  *
- * @package Minify
- * @author Matthias Mullie <minify@mullie.eu>
+ * @package   Minify
+ * @author    Matthias Mullie <minify@mullie.eu>
  * @copyright Copyright (c) 2012, Matthias Mullie. All rights reserved
- * @license MIT License
+ * @license   MIT License
  */
 abstract class Minify {
     /**
@@ -182,7 +182,7 @@ abstract class Minify {
      * Save to file.
      *
      * @param string $content The minified data
-     * @param string $path The path to save the minified data to
+     * @param string $path    The path to save the minified data to
      *
      * @throws IOException
      */
@@ -197,7 +197,7 @@ abstract class Minify {
     /**
      * Register a pattern to execute against the source content.
      *
-     * @param string          $pattern PCRE pattern
+     * @param string          $pattern     PCRE pattern
      * @param string|callable $replacement Replacement value for matched pattern
      */
     protected function registerPattern($pattern, $replacement = '') {
@@ -231,7 +231,7 @@ abstract class Minify {
 
                 // we can safely ignore patterns for positions we've unset earlier,
                 // because we know these won't show up anymore
-                if (!isset($positions[$i])) {
+                if (array_key_exists($i, $positions) == FALSE) {
                     continue;
                 }
 
@@ -301,9 +301,9 @@ abstract class Minify {
      * This function will be called plenty of times, where $content will always
      * move up 1 character.
      *
-     * @param string          $pattern Pattern to match
+     * @param string          $pattern     Pattern to match
      * @param string|callable $replacement Replacement value
-     * @param string          $content Content to match pattern against
+     * @param string          $content     Content to match pattern against
      *
      * @return string
      */
@@ -431,7 +431,7 @@ abstract class Minify {
      *
      * @param resource $handler The resource to write to
      * @param string   $content The content to write
-     * @param string   $path The path to the file (for exception printing only)
+     * @param string   $path    The path to the file (for exception printing only)
      *
      * @throws IOException
      */

@@ -50,7 +50,7 @@ echo "<a class='text-underline' href='https://www.php-fusion.co.uk/infusions/mar
 echo "</div>\n";
 
 echo "<div class='text-right spacer-xs'>\n";
-echo format_word(count($infs), "infusion|infusions");
+echo format_word(count($infs), $locale['fmt_infusion']);
 echo "</div>\n";
 
 if (!isset($_POST['infuse']) && !isset($_POST['infusion']) && !isset($_GET['defuse'])) {

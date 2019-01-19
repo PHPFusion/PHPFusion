@@ -1,7 +1,7 @@
 <?php
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
-| Copyright (C) 2002 - 2013 Nick Jones
+| Copyright (C) PHP-Fusion Inc
 | http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: adminPanel.php
@@ -120,7 +120,7 @@ class adminPanel extends resource {
                 type: 'json',
                 data: sendData,
                 success: function(e) {
-                    $('.app_page_list').hide();   
+                    $('.app_page_list').hide();
                     $('#main_content').addClass('open');
                     $('ul#app_search_result').html(e).show();
                 },
@@ -129,8 +129,8 @@ class adminPanel extends resource {
                 }
             });
         });
-        
-         
+
+
         ");
 
     }

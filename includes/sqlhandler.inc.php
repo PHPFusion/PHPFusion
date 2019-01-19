@@ -180,10 +180,10 @@ class SqlHandler {
  * Hierarchy ID to Category Output
  * Returns cat-id relationships
  *
- * @param        $db - Table Name
- * @param        $id_col - ID column
- * @param        $cat_col - Category Column
- * @param bool   $filter - Conditions
+ * @param        $db            - Table Name
+ * @param        $id_col        - ID column
+ * @param        $cat_col       - Category Column
+ * @param bool   $filter        - Conditions
  * @param string $query_replace - Replace the entire query
  *
  * @return array
@@ -211,7 +211,7 @@ function dbquery_tree($db, $id_col, $cat_col, $filter = FALSE, $query_replace = 
  * @param      $db
  * @param      $id_col
  * @param      $cat_col
- * @param bool $filter - replace conditional structure
+ * @param bool $filter        - replace conditional structure
  * @param      $query_replace - replace the entire query structure
  *
  * @return array
@@ -254,6 +254,7 @@ function tree_index($data) {
 
 /**
  * Reduce the results of a hierarchy tree array to a non multidimensional single output value while preserving keys
+ *
  * @param $result       results from dbquery_tree_full() or dbquery_tree()
  * @param $id_col       the id_col
  *
@@ -726,18 +727,11 @@ function fieldgenerator($db) {
  * @param array  $inputdata
  * @param string $mode save|update|delete
  * @param array  $options
- *    <ul>
- *        <li><strong>debug (boolean)</strong>:
- *            If TRUE, do nothing, just show the SQL. FALSE by default</li>
- *        <li><strong>primary_key (string|string[])</strong>:
- *            Names of primary key columns. If it is empty,
- *            columns will detected automatically.</li>
- *        <li><strong>no_unique (boolean)</strong>:
- *            If TRUE, primary key columns will be not removed
- *            from $inputdata. FALSE by default.</li>
- *        <li><strong>keep_session (boolean)</strong>:
- *            If TRUE, defender will not unset field sessions.</li>
- *    </ul>
+ *                     Options:
+ *                     bool debug If TRUE, do nothing, just show the SQL. FALSE by default
+ *                     string primary_key Names of primary key columns. If it is empty, columns will detected automatically.
+ *                     bool no_unique If TRUE, primary key columns will be not removed from $inputdata. FALSE by default.
+ *                     bool keep_session If TRUE, defender will not unset field sessions.
  *
  * @return int|FALSE
  *    If an error happens, it returns FALSE.
@@ -931,7 +925,7 @@ function getcategory($cat) {
  * @staticvar boolean[] $tables
  *
  * @param string $table The name of the table with or without prefix
- *    Pass TRUE if you want to update the cached state of the table.
+ *                      Pass TRUE if you want to update the cached state of the table.
  *
  * @return boolean
  */

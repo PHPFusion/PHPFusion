@@ -105,6 +105,8 @@ class Admins {
     private $submit_data = [];
     private $folder_permissions = [];
 
+    private static $public_pages = [];
+
     public function __construct() {
         self::$locale = self::getAdminLocale();
     }
@@ -316,7 +318,6 @@ class Admins {
         }
     }
 
-    private static $public_pages = [];
     /**
      * @return array
      */
@@ -356,9 +357,9 @@ class Admins {
     }
 
     /**
-     * @param $page - 0-5 is core section pages. 6 and above are free to use.
+     * @param $page          - 0-5 is core section pages. 6 and above are free to use.
      * @param $section_title - Section title
-     * @param $icons - Section Icons
+     * @param $icons         - Section Icons
      */
     public function addAdminSection($page, $section_title, $icons) {
         $this->admin_sections[$page] = $section_title;
@@ -396,7 +397,6 @@ class Admins {
     public function _isActive() {
         $active_key = 0;
         self::$admin_pages = $this->getAdminPages();
-        //print_p(self::$admin_pages, 1);
         if (empty($active_key) && !empty(self::$admin_pages)) {
             foreach (self::$admin_pages as $key => $data) {
                 $link = [];
@@ -452,7 +452,7 @@ class Admins {
     }
 
     /**
-     * @param $type - submissions prefix
+     * @param $type  - submissions prefix
      * @param $title - title
      */
     public function setSubmitType($type, $title) {
@@ -460,11 +460,11 @@ class Admins {
     }
 
     /**
-     * @param $type - submissions prefix
+     * @param $type    - submissions prefix
      * @param $options - array(infusion_name, link, submit_link, submit_locale, title,admin_link)
      */
     public function setSubmitData($type, array $options = []) {
-        infusion_exists($options['infusion_name']) ? $this->submit_data[$type] = $options : NULL;
+        defined(strtoupper($options['infusion_name']).'_EXIST') ? $this->submit_data[$type] = $options : NULL;
     }
 
     public function getSubmitData($type = NULL) {
@@ -488,7 +488,7 @@ class Admins {
     }
 
     /**
-     * @param $type - comment prefix
+     * @param $type  - comment prefix
      * @param $title - title
      */
     public function setCommentType($type, $title) {
@@ -496,20 +496,18 @@ class Admins {
     }
 
     /**
-     * @param null $type - infusion_name
-     *
-     * @return array
+     * @param $type - infusion_name
      */
     public function getFolderPermissions($type = NULL) {
         return ($type !== NULL ? (isset($this->folder_permissions[$type]) ? $this->folder_permissions[$type] : NULL) : $this->folder_permissions);
     }
 
     /**
-     * @param $type - infusion_name
+     * @param $type    - infusion_name
      * @param $options - array(image_folder => TRUE or FALSE)
      */
     public function setFolderPermissions($type, array $options = []) {
-        infusion_exists($type) ? $this->folder_permissions[$type] = $options : NULL;
+        defined(strtoupper($type).'_EXIST') ? $this->folder_permissions[$type] = $options : NULL;
     }
 
     /**
@@ -538,6 +536,8 @@ class Admins {
         $admin_sections = self::getAdminSections();
         $admin_pages = self::getAdminPages();
 
+        add_to_jquery('$("[data-toggle=collapse]").click(function () {$(this).find(".adl-drop i").toggleClass("fa-angle-left fa-angle-down");});');
+
         $html = "<ul id='adl' class='admin-vertical-link'>\n";
 
         foreach ($admin_sections as $i => $section_name) {
@@ -547,18 +547,6 @@ class Admins {
             $html .= "<li class='".($active ? 'active panel' : 'panel')."' >\n";
 
             if (!empty($admin_pages[$i]) && is_array($admin_pages[$i])) {
-                add_to_jquery('
-                    $("[data-toggle=collapse]").click(function () {
-                        $(this).find(".adl-drop i").toggleClass("fa-angle-left fa-angle-down"); // for v4
-
-                        if ($(this).find(".adl-drop svg").attr("data-icon") == "angle-down") {
-                            $(this).find(".adl-drop svg").attr("data-icon", "angle-left");
-                        } else {
-                            $(this).find(".adl-drop svg").attr("data-icon", "angle-down");
-                        };
-                    });
-                ');
-
                 $html .= "<a class='adl-link ".($active ? '' : 'collapsed')."' data-parent='#adl' data-toggle='collapse' href='#adl-$i'>".$this->get_admin_section_icons($i)." <span class='adl-section-name'>".$section_name.($i > 4 ? " <span class='badge'>".count($admin_pages[$i])."</span>" : "")."</span> ".($i > 0 ? "<span class='adl-drop pull-right'><i class='fa fa-angle-".($active ? "left" : "down")."'></i></span>" : '')."</a>\n";
                 $html .= "<div id='adl-$i' class='collapse ".($active ? 'in' : '')."'>\n";
                 $html .= "<ul class='admin-submenu'>\n";
@@ -659,22 +647,21 @@ class Admins {
     }
 
     /**
-     * @param $page     Use number to add child to sub-section and admin_rights to sub-pages
-     * @param $title
-     * @param $rights
-     * @param $link
+     * @param string $page Use number to add child to sub-section and admin_rights to sub-pages
+     * @param string $title
+     * @param string $rights
+     * @param string $link
      */
     public function addAdminPage($page, $title, $rights, $link) {
-        self::$public_pages[$page][$rights] = array(
-            "admin_title" => $title,
-            "admin_page" => $page,
+        self::$public_pages[$page][$rights] = [
+            "admin_title"  => $title,
+            "admin_page"   => $page,
             "admin_rights" => $rights,
-            "admin_link" => $link,
-        );
+            "admin_link"   => $link
+        ];
     }
 
     public function getPublicPages() {
         return self::$public_pages;
     }
-
 }

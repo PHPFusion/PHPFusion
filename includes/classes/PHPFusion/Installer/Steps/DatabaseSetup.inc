@@ -51,7 +51,9 @@ class InstallerDbSetup extends Install_Core {
             self::$connection = $_SESSION['db_config_connection'];
         }
 
-        $content = "<div class='m-b-20'><h4>".self::$locale['setup_1200']."</h4> ".self::$locale['setup_1201']."</div>\n";
+        $content = "<h4 class='title'>".self::$locale['setup_1200']."</h4><p>".self::$locale['setup_1201']."</p>\n";
+        $content .= "<hr/>\n";
+
         $content .= renderNotices(getNotices());
         $content .= form_text('db_host', self::$locale['setup_1202'], self::$connection['db_host'],
             [
@@ -79,7 +81,7 @@ class InstallerDbSetup extends Install_Core {
                 'placeholder'      => self::$locale['setup_1222'],
                 'autocomplete_off' => isset($_GET['upgrade']) ? FALSE : TRUE,
             ]);
-        $content .= "<div class='m-b-20'>\n<h4>".self::$locale['setup_1092']."</h4>\n</div>\n";
+        $content .= "<h4 class='title'>".self::$locale['setup_1092']."</h4>";
         $content .= form_text('db_prefix', self::$locale['setup_1206'], self::$connection['db_prefix'],
             [
                 'inline'      => TRUE,
