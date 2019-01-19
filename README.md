@@ -1,5 +1,5 @@
 This is the development of PHP-Fusion Babylon.
-=======
+====
 This is the development of PHP-Fusion Version 9.04.XX, code name Babylon.
 
 Welcome to the PHP-Fusion Official Repository
@@ -29,15 +29,6 @@ PHP-Fusion Official Developer Discord Channel - https://discord.gg/CGSYU8r
 
 Those who are active on PHP-Fusion Development is encouraged to join. 
   
-What's new on this repository management?
----
-The latest repository contains all the previous commits done by all the core developers.
-- 9.01 is beta 1
-- 9.02 is beta 2
-- Restored 9.1 branch as the correct branch. 9.0.3 will be removed.
-- Protected 7.02.07 branch from branch removal
-- Submodules added to /infusions
-
 New Changes: About Submodules and Git Management of Core Infusions (CI)
 ===
 As of latest update on code management, the core team will have our <a href='https://github.com/php-fusion/PHP-Fusion/tree/Andromeda-9.0.3/infusions'>Latest Core Infusions</a> to see them as a submodules. Submodules are alias that are being linked from each CI repositories now being for example,
