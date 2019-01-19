@@ -56,10 +56,11 @@ function convertNumberToWord($num = FALSE) {
             $singles = (int)($num_levels[$i] % 10);
             $singles = ' '.$list1[$singles].' ';
         }
-        $words[] = $hundreds.$tens.$singles.(($levels && ( int )($num_levels[$i])) ? ' '.$list3[$levels].' ' : '');
+        $words[] = $hundreds.$tens.$singles.(($levels && (int)($num_levels[$i])) ? ' '.$list3[$levels].' ' : '');
     }
 
-    return implode(' ', $words);
+    $words = str_replace(' ', '', $words);
+    return implode($words);
 }
 
 if (!function_exists('str_rot47')) {

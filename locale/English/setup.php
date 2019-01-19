@@ -5,7 +5,7 @@ $locale['setup_0003'] = "The installer guide will guide you through the steps re
 $locale['setup_0005'] = " I have read and agreed to the PHP-Fusion <a href='https://www.php-fusion.co.uk/licensing/licensing.php' target='_blank'>Terms and Conditions of Use</a>";
 $locale['setup_0006'] = "PHP-Fusion 9 requires at least PHP 5.6.39. See the <a href='https://www.php-fusion.co.uk/infusions/wiki/documentation.php?page=215'>system requirements</a> page for more information.";
 $locale['setup_0007'] = "Systems with OPCache installed must have <a href=\"http://php.net/manual/en/opcache.configuration.php#ini.opcache.save-comments\">opcache.save_comments</a> enabled.";
-$locale['setup_5000'] = "In order to use PHP-Fusion, you need to check and agree to the terms of PHP-Fusion</a>.";
+$locale['setup_5000'] = "In order to use PHP-Fusion, you need to check and agree to the terms of PHP-Fusion.";
 $locale['setup_0010'] = "Current Build Version - ";
 $locale['setup_0011'] = "en";
 $locale['setup_0012'] = "utf-8";
@@ -290,17 +290,17 @@ $locale['setup_3660'] = "Site Information";
 $locale['setup_3661'] = "Discussions regarding the management of this website";
 
 // Stage 6 - User Fields
-require_once(dirname(__FILE__)."/user_fields/user_aim.php");
-require_once(dirname(__FILE__)."/user_fields/user_birthdate.php");
-require_once(dirname(__FILE__)."/user_fields/user_icq.php");
-require_once(dirname(__FILE__)."/user_fields/user_location.php");
-require_once(dirname(__FILE__)."/user_fields/user_sig.php");
-require_once(dirname(__FILE__)."/user_fields/user_skype.php");
-require_once(dirname(__FILE__)."/user_fields/user_theme.php");
-require_once(dirname(__FILE__)."/user_fields/user_web.php");
-require_once(dirname(__FILE__)."/user_fields/user_yahoo.php");
-require_once(dirname(__FILE__)."/user_fields/user_timezone.php");
-require_once(dirname(__FILE__)."/user_fields/user_blacklist.php");
+require_once __DIR__."/user_fields/user_aim.php";
+require_once __DIR__."/user_fields/user_birthdate.php";
+require_once __DIR__."/user_fields/user_icq.php";
+require_once __DIR__."/user_fields/user_location.php";
+require_once __DIR__."/user_fields/user_sig.php";
+require_once __DIR__."/user_fields/user_skype.php";
+require_once __DIR__."/user_fields/user_theme.php";
+require_once __DIR__."/user_fields/user_web.php";
+require_once __DIR__."/user_fields/user_yahoo.php";
+require_once __DIR__."/user_fields/user_timezone.php";
+require_once __DIR__."/user_fields/user_blacklist.php";
 
 // Welcome message
 $locale['setup_3650'] = "Welcome to your site";

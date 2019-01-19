@@ -77,7 +77,7 @@ if (!function_exists('display_home')) {
             }
         ');
 
-        foreach ($info as $db_id => $content) {
+        foreach ($info as $content) {
             $colwidth = $content['colwidth'];
             opentable($content['blockTitle']);
             if ($colwidth) {

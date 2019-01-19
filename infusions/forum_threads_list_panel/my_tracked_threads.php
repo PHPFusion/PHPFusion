@@ -27,7 +27,7 @@ if (!iMEMBER) {
 $locale = fusion_get_locale();
 $userdata = fusion_get_userdata();
 
-require_once THEMES."templates/header.php";
+require_once THEMES.'templates/header.php';
 
 if (isset($_GET['delete']) && isnum($_GET['delete']) && dbcount("(thread_id)", DB_FORUM_THREAD_NOTIFY,
                                                                 "thread_id='".$_GET['delete']."' AND notify_user='".$userdata['user_id']."'")
@@ -90,4 +90,4 @@ if ($rows) {
 }
 closetable();
 
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';

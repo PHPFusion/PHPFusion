@@ -1,6 +1,6 @@
 <?php
 
-require_once(dirname(__FILE__).'/Cache.php');
+require_once(__DIR__.'/Cache.php');
 
 /**
  * Class for parsing and compiling less files into css

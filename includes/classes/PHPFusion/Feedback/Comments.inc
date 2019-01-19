@@ -1203,4 +1203,4 @@ class Comments {
 
 }
 
-require_once(dirname(__FILE__).'/Comments.view.php');
+require_once(__DIR__.'/Comments.view.php');

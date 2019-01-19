@@ -97,10 +97,10 @@ abstract class Validation {
 
 }
 
-require_once(dirname(__FILE__).'/validation/checkbox.php');
-require_once(dirname(__FILE__).'/validation/date.php');
-require_once(dirname(__FILE__).'/validation/number.php');
-require_once(dirname(__FILE__).'/validation/text.php');
-require_once(dirname(__FILE__).'/validation/upload.php');
-require_once(dirname(__FILE__).'/validation/uri.php');
-require_once(dirname(__FILE__).'/validation/user.php');
+require_once(__DIR__.'/validation/checkbox.php');
+require_once(__DIR__.'/validation/date.php');
+require_once(__DIR__.'/validation/number.php');
+require_once(__DIR__.'/validation/text.php');
+require_once(__DIR__.'/validation/upload.php');
+require_once(__DIR__.'/validation/uri.php');
+require_once(__DIR__.'/validation/user.php');

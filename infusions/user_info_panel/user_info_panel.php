@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-require_once dirname(__FILE__).'/templates/default.php';
+require_once __DIR__.'/templates/default.php';
 $userdata = fusion_get_userdata();
 $aidlink = fusion_get_aidlink();
 $locale = fusion_get_locale();

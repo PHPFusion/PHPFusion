@@ -27,13 +27,13 @@ if (defined('FORUM_EXIST')) {
     $locale = fusion_get_locale("", FORUM_LOCALE);
 
     $result = dbquery("SELECT f.forum_id, f.forum_access, t.thread_id, t.thread_subject
-    FROM ".DB_FORUMS." f
-    LEFT JOIN ".DB_FORUM_THREADS." t ON f.forum_id = t.forum_id
-    ".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('f.forum_access')." AND f.forum_type!='1' AND f.forum_type!='3' AND t.thread_hidden='0'
-    GROUP BY t.thread_id
-    ORDER BY t.thread_lastpost DESC
-    LIMIT 0,".$inf_settings['numofthreads']."
-");
+        FROM ".DB_FORUMS." f
+        LEFT JOIN ".DB_FORUM_THREADS." t ON f.forum_id = t.forum_id
+        ".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('f.forum_access')." AND f.forum_type!='1' AND f.forum_type!='3' AND t.thread_hidden='0'
+        GROUP BY t.thread_id
+        ORDER BY t.thread_lastpost DESC
+        LIMIT 0,".$inf_settings['numofthreads']."
+    ");
 
     $info = [];
 
