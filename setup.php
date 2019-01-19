@@ -76,7 +76,7 @@ function opensetup() {
     echo "</div>\n";
     echo "</div>\n";
     echo "<div class='col-xs-8 col-sm-8 col-md-8 col-lg-8'>\n";
-	echo "<table class='table table-responsive center'>\n";
+    echo "<table class='table table-responsive center'>\n";
 }
 
 function renderButton($finish = FALSE) {
@@ -97,7 +97,7 @@ function renderButton($finish = FALSE) {
 function closesetup() {
     echo "</form>\n";
     echo "</aside>\n";
-	echo "</table>\n";
+    echo "</table>\n";
     echo "</body>\n</html>\n";
 }
 
@@ -109,24 +109,22 @@ if (!isset($_POST['step']) || $_POST['step'] == "" || $_POST['step'] == "1") {
     echo "<tr><td class='tbl' ><select name='localeset' class='input-sm form-control' style='margin-top:5px'>\n";
     echo $locale_list."</select></td>\n</tr>\n";
     echo "<tr><td class='tbl' >".$locale['011']."</td>\n</tr>\n";
-	echo "<tr><td class='tbl' >".$locale['012']."</td>\n</tr>\n";
-	echo "<tr><td class='tbl' >".$locale['013']." <input type='checkbox' required name='checkbox' value='check' id='agree' /></td>\n</tr>\n";
+    echo "<tr><td class='tbl' >".$locale['012']."</td>\n</tr>\n";
+    echo "<tr><td class='tbl' >".$locale['013']." <input type='checkbox' required name='checkbox' value='check' id='agree' /></td>\n</tr>\n";
     echo "<tr>\n<td class='tbl' style='text-align:center'>\n";
     echo "<input type='hidden' name='step' value='2' />\n";
     renderButton();
-	
-	echo '<script type="text/javascript">
-		$("[name=next]").attr("disabled", true);
-		$("#agree").on("click", function() {
-			if ($(this).is(":checked")) {
-				$("[name=next]").attr("disabled", false);
-			} else {
-			$("[name=next]").attr("disabled", true);
-			}
-		});
-		';
-	echo "</script>\n";
 
+    echo '<script type="text/javascript">
+        $("[name=next]").attr("disabled", true);
+        $("#agree").on("click", function() {
+            if ($(this).is(":checked")) {
+                $("[name=next]").attr("disabled", false);
+            } else {
+            $("[name=next]").attr("disabled", true);
+            }
+        });
+    </script>';
 }
 // Step 2
 if (isset($_POST['step']) && $_POST['step'] == "2") {
@@ -138,14 +136,16 @@ if (isset($_POST['step']) && $_POST['step'] == "2") {
             fclose($handle);
         }
     }
-    $check_arr = ["administration/db_backups"    => FALSE, "forum/attachments" => FALSE, "downloads" => FALSE,
-                  "downloads/images"             => FALSE, "downloads/submissions/" => FALSE,
-                  "downloads/submissions/images" => FALSE, "ftp_upload" => FALSE, "images" => FALSE,
-                  "images/imagelist.js"          => FALSE, "images/articles" => FALSE, "images/avatars" => FALSE,
-                  "images/news"                  => FALSE, "images/news/thumbs" => FALSE, "images/news_cats" => FALSE,
-                  "images/blog"                  => FALSE, "images/blog/thumbs" => FALSE, "images/blog_cats" => FALSE,
-                  "images/photoalbum"            => FALSE, "images/photoalbum/submissions" => FALSE, "config.php" => FALSE,
-                  "robots.txt"                   => FALSE];
+    $check_arr = [
+        "administration/db_backups"    => FALSE, "forum/attachments" => FALSE, "downloads" => FALSE,
+        "downloads/images"             => FALSE, "downloads/submissions/" => FALSE,
+        "downloads/submissions/images" => FALSE, "ftp_upload" => FALSE, "images" => FALSE,
+        "images/imagelist.js"          => FALSE, "images/articles" => FALSE, "images/avatars" => FALSE,
+        "images/news"                  => FALSE, "images/news/thumbs" => FALSE, "images/news_cats" => FALSE,
+        "images/blog"                  => FALSE, "images/blog/thumbs" => FALSE, "images/blog_cats" => FALSE,
+        "images/photoalbum"            => FALSE, "images/photoalbum/submissions" => FALSE, "config.php" => FALSE,
+        "robots.txt"                   => FALSE
+    ];
     $write_check = TRUE;
     $check_display = "";
     foreach ($check_arr as $key => $value) {
@@ -1843,8 +1843,8 @@ if (isset($_POST['step']) && $_POST['step'] == "6") {
                 $result = dbquery("INSERT INTO ".$db_prefix."forum_ranks (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['207']."', 'rank4.png', 500, '0', 101, '".$enabled_languages[$i]."')");
                 $result = dbquery("INSERT INTO ".$db_prefix."forum_ranks (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['208']."', 'rank5.png', 1000, '0', 101, '".$enabled_languages[$i]."')");
             }
-			
-			if (!file_exists(".htaccess")) {
+
+            if (!file_exists(".htaccess")) {
                 if (file_exists("_htaccess") && function_exists("rename")) {
                     @rename("_htaccess", ".htaccess");
                 } else {
@@ -1853,67 +1853,67 @@ if (isset($_POST['step']) && $_POST['step'] == "6") {
                     fclose($handle);
                 }
             }
-			
-			// Default .htaccess values
-			$htc = "";
-			$htc = "# Disable directory listing".PHP_EOL;
-			$htc .= "Options -Indexes".PHP_EOL.PHP_EOL;
-			$htc .= "# Force utf-8 charset".PHP_EOL;
-			$htc .= "AddDefaultCharset UTF-8".PHP_EOL;
-			$htc .= 'AddCharset UTF-8 .html .css .js .svg .woff .woff2'.PHP_EOL.PHP_EOL;
-			$htc .= "# Security".PHP_EOL;
-			$htc .= "ServerSignature Off".PHP_EOL.PHP_EOL;
-			$htc .= "# Secure .htaccess file".PHP_EOL;
-			$htc .= "<Files .htaccess>".PHP_EOL;
-			$htc .= "    order allow,deny".PHP_EOL;
-			$htc .= "    deny from all".PHP_EOL;
-			$htc .= "</Files>".PHP_EOL.PHP_EOL;
-			$htc .= "# Secure .inc files".PHP_EOL;
-			$htc .= "<Files *.inc>".PHP_EOL;
-			$htc .= "    Order allow,deny".PHP_EOL;
-			$htc .= "    deny from all".PHP_EOL;
-			$htc .= "</Files>".PHP_EOL.PHP_EOL;
-			$htc .= "# Protect config.php".PHP_EOL;
-			$htc .= "<Files config.php>".PHP_EOL;
-			$htc .= "    order allow,deny".PHP_EOL;
-			$htc .= "    deny from all".PHP_EOL;
-			$htc .= "</Files>".PHP_EOL.PHP_EOL;
-			$htc .= "# Cache images for 7 days to soften network load".PHP_EOL;
-			$htc .= "<IfModule mod_headers.c>".PHP_EOL;
-			$htc .= '    <filesMatch "\\.(ico|pdf|flv|jpg|jpeg|png|gif|swf|ttf|otf|woff|woff2|eot|svg)$">'.PHP_EOL;
-			$htc .= '        Header append Vary: Accept-Encoding'.PHP_EOL;
-			$htc .= '        Header set Cache-Control "max-age=2592000, public"'.PHP_EOL;
-			$htc .= "    </FilesMatch>".PHP_EOL;
-			$htc .= '    <filesMatch "\\.(css|js)$">'.PHP_EOL;
-			$htc .= '        Header set Cache-Control "max-age=604800, public"'.PHP_EOL;
-			$htc .= "    </FilesMatch>".PHP_EOL;
-			$htc .= '    <filesMatch "\\.(html|htm|php)$">'.PHP_EOL;
-			$htc .= '        Header set Cache-Control "max-age=1, private, must-revalidate"'.PHP_EOL;
-			$htc .= "    </FilesMatch>".PHP_EOL;
-			$htc .= "</IfModule>".PHP_EOL.PHP_EOL;
-			$htc .= '# Compress files'.PHP_EOL;
-			$htc .= '<ifModule mod_deflate.c>'.PHP_EOL;
-			$htc .= '    <filesMatch "\.(jpg|jpeg|png|gif|svg|css|js|x?html?|php)$">'.PHP_EOL;
-			$htc .= '        SetOutputFilter DEFLATE'.PHP_EOL;
-			$htc .= '    </filesMatch>'.PHP_EOL;
-			$htc .= '</ifModule>'.PHP_EOL.PHP_EOL;
-			$htc .= "# Block Nasty Bots".PHP_EOL;
-			$htc .= "<IfModule mod_setenvifno.c>".PHP_EOL;
-			$htc .= "    SetEnvIfNoCase ^User-Agent$ .*(craftbot|download|extract|stripper|sucker|ninja|clshttp|webspider|leacher|collector|grabber|webpictures) HTTP_SAFE_BADBOT".PHP_EOL;
-			$htc .= "    SetEnvIfNoCase ^User-Agent$ .*(libwww-perl|aesop_com_spiderman) HTTP_SAFE_BADBOT".PHP_EOL;
-			$htc .= "    SetEnvIfNoCase ^User-Agent$ .*(almaden|Anarchie|ASPSeek|attach|autoemailspider|BackWeb|Bandit|BatchFTP|BlackWidow|Bot|mailto:craftbot@yahoo.com|Buddy|bumblebee|CherryPicker|ChinaClaw|CICC|Collector|Copier|Crescent|Custo|DA|DIIbot|DISCo|DISCo\ Pump|Download\ Demon|Download\ Wonder|Downloader|Drip|DSurf15a|eCatch|EasyDL/2.99|EirGrabber|EmailCollector|EmailSiphon|EmailWolf|Express\ WebPictures|ExtractorPro|EyeNetIE|FileHound|FlashGet|GetRight|GetSmart|GetWeb!|gigabaz|Go\!Zilla|Go!Zilla|Go-Ahead-Got-It|gotit|Grabber|GrabNet|Grafula|grub-client|HMView|HTTrack|httpdown|ia_archiver|Image\ Stripper|Image\ Sucker|Indy*Library|InterGET|InternetLinkagent|Internet\ Ninja|InternetSeer.com|Iria|JBH*agent|JetCar|JOC\ Web\ Spider|JustView|larbin|LeechFTP|LexiBot|lftp|Link*Sleuth|likse|Link|LinkWalker|Mag-Net|Magnet|Mass\ Downloader|Memo|Microsoft.URL|MIDown\ tool|Mirror|Mister\ PiX|Mozilla.*Indy|Mozilla.*NEWT|Mozilla*MSIECrawler|MS\ FrontPage*|MSFrontPage|MSIECrawler|MSProxy|Navroad|NearSite|NetAnts|NetMechanic|NetSpider|Net\ Vampire|NetZIP|NICErsPRO|Ninja|Octopus|Offline\ Explorer|Offline\ Navigator|Openfind|PageGrabber|Papa\ Foto|pavuk|pcBrowser|Ping|PingALink|Pockey|psbot|Pump|QRVA|RealDownload|Reaper|Recorder|ReGet|Scooter|Seeker|Siphon|sitecheck.internetseer.com|SiteSnagger|SlySearch|SmartDownload|Snake|SpaceBison|sproose|Stripper|Sucker|SuperBot|SuperHTTP|Surfbot|Szukacz|tAkeOut|Teleport\ Pro|URLSpiderPro|Vacuum|VoidEYE|Web\ Image\ Collector|Web\ Sucker|WebAuto|[Ww]eb[Bb]andit|webcollage|WebCopier|Web\ Downloader|WebEMailExtrac.*|WebFetch|WebGo\ IS|WebHook|WebLeacher|WebMiner|WebMirror|WebReaper|WebSauger|Website|Website\ eXtractor|Website\ Quester|Webster|WebStripper|ebWhacker|WebZIP|Wget|Whacker|Widow|WWWOFFLE|x-Tractor|Xaldon\ WebSpider|Xenu|Zeus.*Webster|Zeus) HTTP_SAFE_BADBOT".PHP_EOL;
-			$htc .= "    Deny from env=HTTP_SAFE_BADBOT".PHP_EOL;
-			$htc .= "</IfModule>".PHP_EOL.PHP_EOL;
-			// This force image to not be able to be used as other matter
-			$htc .= "<FilesMatch \"(?i).jpe?g$\">".PHP_EOL;
-			$htc .= "    ForceType image/jpeg".PHP_EOL;
-			$htc .= "</FilesMatch>".PHP_EOL;
-			$htc .= "<FilesMatch \"(?i).gif$\">".PHP_EOL;
-			$htc .= "    ForceType image/gif".PHP_EOL;
-			$htc .= "</FilesMatch>".PHP_EOL;
-			$htc .= "<FilesMatch \"(?i).png$\">".PHP_EOL;
-			$htc .= "    ForceType image/png".PHP_EOL;
-			$htc .= "</FilesMatch>".PHP_EOL.PHP_EOL;
+
+            // Default .htaccess values
+            $htc = "";
+            $htc = "# Disable directory listing".PHP_EOL;
+            $htc .= "Options -Indexes".PHP_EOL.PHP_EOL;
+            $htc .= "# Force utf-8 charset".PHP_EOL;
+            $htc .= "AddDefaultCharset UTF-8".PHP_EOL;
+            $htc .= 'AddCharset UTF-8 .html .css .js .svg .woff .woff2'.PHP_EOL.PHP_EOL;
+            $htc .= "# Security".PHP_EOL;
+            $htc .= "ServerSignature Off".PHP_EOL.PHP_EOL;
+            $htc .= "# Secure .htaccess file".PHP_EOL;
+            $htc .= "<Files .htaccess>".PHP_EOL;
+            $htc .= "    order allow,deny".PHP_EOL;
+            $htc .= "    deny from all".PHP_EOL;
+            $htc .= "</Files>".PHP_EOL.PHP_EOL;
+            $htc .= "# Secure .inc files".PHP_EOL;
+            $htc .= "<Files *.inc>".PHP_EOL;
+            $htc .= "    Order allow,deny".PHP_EOL;
+            $htc .= "    deny from all".PHP_EOL;
+            $htc .= "</Files>".PHP_EOL.PHP_EOL;
+            $htc .= "# Protect config.php".PHP_EOL;
+            $htc .= "<Files config.php>".PHP_EOL;
+            $htc .= "    order allow,deny".PHP_EOL;
+            $htc .= "    deny from all".PHP_EOL;
+            $htc .= "</Files>".PHP_EOL.PHP_EOL;
+            $htc .= "# Cache images for 7 days to soften network load".PHP_EOL;
+            $htc .= "<IfModule mod_headers.c>".PHP_EOL;
+            $htc .= '    <filesMatch "\\.(ico|pdf|flv|jpg|jpeg|png|gif|swf|ttf|otf|woff|woff2|eot|svg)$">'.PHP_EOL;
+            $htc .= '        Header append Vary: Accept-Encoding'.PHP_EOL;
+            $htc .= '        Header set Cache-Control "max-age=2592000, public"'.PHP_EOL;
+            $htc .= "    </FilesMatch>".PHP_EOL;
+            $htc .= '    <filesMatch "\\.(css|js)$">'.PHP_EOL;
+            $htc .= '        Header set Cache-Control "max-age=604800, public"'.PHP_EOL;
+            $htc .= "    </FilesMatch>".PHP_EOL;
+            $htc .= '    <filesMatch "\\.(html|htm|php)$">'.PHP_EOL;
+            $htc .= '        Header set Cache-Control "max-age=1, private, must-revalidate"'.PHP_EOL;
+            $htc .= "    </FilesMatch>".PHP_EOL;
+            $htc .= "</IfModule>".PHP_EOL.PHP_EOL;
+            $htc .= '# Compress files'.PHP_EOL;
+            $htc .= '<ifModule mod_deflate.c>'.PHP_EOL;
+            $htc .= '    <filesMatch "\.(jpg|jpeg|png|gif|svg|css|js|x?html?|php)$">'.PHP_EOL;
+            $htc .= '        SetOutputFilter DEFLATE'.PHP_EOL;
+            $htc .= '    </filesMatch>'.PHP_EOL;
+            $htc .= '</ifModule>'.PHP_EOL.PHP_EOL;
+            $htc .= "# Block Nasty Bots".PHP_EOL;
+            $htc .= "<IfModule mod_setenvifno.c>".PHP_EOL;
+            $htc .= "    SetEnvIfNoCase ^User-Agent$ .*(craftbot|download|extract|stripper|sucker|ninja|clshttp|webspider|leacher|collector|grabber|webpictures) HTTP_SAFE_BADBOT".PHP_EOL;
+            $htc .= "    SetEnvIfNoCase ^User-Agent$ .*(libwww-perl|aesop_com_spiderman) HTTP_SAFE_BADBOT".PHP_EOL;
+            $htc .= "    SetEnvIfNoCase ^User-Agent$ .*(almaden|Anarchie|ASPSeek|attach|autoemailspider|BackWeb|Bandit|BatchFTP|BlackWidow|Bot|mailto:craftbot@yahoo.com|Buddy|bumblebee|CherryPicker|ChinaClaw|CICC|Collector|Copier|Crescent|Custo|DA|DIIbot|DISCo|DISCo\ Pump|Download\ Demon|Download\ Wonder|Downloader|Drip|DSurf15a|eCatch|EasyDL/2.99|EirGrabber|EmailCollector|EmailSiphon|EmailWolf|Express\ WebPictures|ExtractorPro|EyeNetIE|FileHound|FlashGet|GetRight|GetSmart|GetWeb!|gigabaz|Go\!Zilla|Go!Zilla|Go-Ahead-Got-It|gotit|Grabber|GrabNet|Grafula|grub-client|HMView|HTTrack|httpdown|ia_archiver|Image\ Stripper|Image\ Sucker|Indy*Library|InterGET|InternetLinkagent|Internet\ Ninja|InternetSeer.com|Iria|JBH*agent|JetCar|JOC\ Web\ Spider|JustView|larbin|LeechFTP|LexiBot|lftp|Link*Sleuth|likse|Link|LinkWalker|Mag-Net|Magnet|Mass\ Downloader|Memo|Microsoft.URL|MIDown\ tool|Mirror|Mister\ PiX|Mozilla.*Indy|Mozilla.*NEWT|Mozilla*MSIECrawler|MS\ FrontPage*|MSFrontPage|MSIECrawler|MSProxy|Navroad|NearSite|NetAnts|NetMechanic|NetSpider|Net\ Vampire|NetZIP|NICErsPRO|Ninja|Octopus|Offline\ Explorer|Offline\ Navigator|Openfind|PageGrabber|Papa\ Foto|pavuk|pcBrowser|Ping|PingALink|Pockey|psbot|Pump|QRVA|RealDownload|Reaper|Recorder|ReGet|Scooter|Seeker|Siphon|sitecheck.internetseer.com|SiteSnagger|SlySearch|SmartDownload|Snake|SpaceBison|sproose|Stripper|Sucker|SuperBot|SuperHTTP|Surfbot|Szukacz|tAkeOut|Teleport\ Pro|URLSpiderPro|Vacuum|VoidEYE|Web\ Image\ Collector|Web\ Sucker|WebAuto|[Ww]eb[Bb]andit|webcollage|WebCopier|Web\ Downloader|WebEMailExtrac.*|WebFetch|WebGo\ IS|WebHook|WebLeacher|WebMiner|WebMirror|WebReaper|WebSauger|Website|Website\ eXtractor|Website\ Quester|Webster|WebStripper|ebWhacker|WebZIP|Wget|Whacker|Widow|WWWOFFLE|x-Tractor|Xaldon\ WebSpider|Xenu|Zeus.*Webster|Zeus) HTTP_SAFE_BADBOT".PHP_EOL;
+            $htc .= "    Deny from env=HTTP_SAFE_BADBOT".PHP_EOL;
+            $htc .= "</IfModule>".PHP_EOL.PHP_EOL;
+            // This force image to not be able to be used as other matter
+            $htc .= "<FilesMatch \"(?i).jpe?g$\">".PHP_EOL;
+            $htc .= "    ForceType image/jpeg".PHP_EOL;
+            $htc .= "</FilesMatch>".PHP_EOL;
+            $htc .= "<FilesMatch \"(?i).gif$\">".PHP_EOL;
+            $htc .= "    ForceType image/gif".PHP_EOL;
+            $htc .= "</FilesMatch>".PHP_EOL;
+            $htc .= "<FilesMatch \"(?i).png$\">".PHP_EOL;
+            $htc .= "    ForceType image/png".PHP_EOL;
+            $htc .= "</FilesMatch>".PHP_EOL.PHP_EOL;
             $temp = fopen(".htaccess", "w");
             if (fwrite($temp, $htc)) {
                 fclose($temp);
