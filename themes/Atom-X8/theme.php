@@ -115,16 +115,17 @@ function render_page($license = FALSE) {
 
     echo "</div></section>\n";
 
-    echo "<section class='p-0'><div class='container'>\n";
-    echo "<footer id='footer' class='m-b-50'>\n";
-    echo "<div class='row'>\n<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n";
-    echo "Atom-X8 for PHP-Fusion Version 8 - ".date('Y')." All rights reserved";
-
-
-    echo "</div><div class='col-xs-12 col-sm-6 col-md-6 col-lg-6 text-right'>".license()."
-".(($settings['rendertime_enabled'] == 1) || ($settings['rendertime_enabled'] == 2 && iADMIN) ? showrendertime()." - ".showMemoryUsage() : '')."
-".showcounter()."
-</div>\n";
+	echo "<section class='p-0'><div class='container'>\n";
+	echo "<footer id='footer' class='m-b-50'>\n";
+	echo "<div class='row'>\n<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6 text-left'>\n";
+	echo "Atom-X8 for PHP-Fusion Version 8 - ".date('Y')." All rights reserved <br />\n";
+	echo "".stripslashes($settings['footer'])."\n";
+	echo "</div>\n";
+	
+	echo "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6 text-right'>".license()."
+	".(($settings['rendertime_enabled'] == 1) || ($settings['rendertime_enabled'] == 2 && iADMIN) ? showrendertime()." - ".showMemoryUsage() : '')."
+	".showcounter()."
+	</div>\n";
 
     echo "</footer>\n";
     echo "</div></section>\n";
