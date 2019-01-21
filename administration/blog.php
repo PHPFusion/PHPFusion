@@ -38,7 +38,7 @@ if (isset($_GET['error']) && isnum($_GET['error'])) {
         $message = sprintf($locale['416'], $settings['blog_photo_max_w'], $settings['blog_photo_max_h']);
     }
     if ($message) {
-        echo "<div id='close-message'><div class='admin-message'>".$message."</div></div>\n";
+		echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
     }
 }
 if (isset($_GET['status'])) {
@@ -50,7 +50,7 @@ if (isset($_GET['status'])) {
         $message = $locale['412'];
     }
     if ($message) {
-        echo "<div id='close-message'><div class='admin-message'>".$message."</div></div>\n";
+        echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
     }
 }
 

@@ -68,7 +68,7 @@ if (function_exists('gd_info')) {
             $message = $locale['419'];
         }
         if ($message) {
-            echo "<div id='close-message'><div class='admin-message'>".$message."</div></div>\n";
+            echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
         }
     }
 

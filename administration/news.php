@@ -23,41 +23,6 @@ include LOCALE.LOCALESET."admin/news.php";
 
 if ($settings['tinymce_enabled']) {
     echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";
-    ?>
-    <script>
-        $(function () {
-            tinyMCE.init({
-                selector: '#tinymce', plugins: 'link image',
-                toolbar: "link | image", file_browser_callback: RoxyFileBrowser
-            });
-        });
-
-        function RoxyFileBrowser(field_name, url, type, win) {
-            var roxyFileman = '../fileman/index.php';
-            if (roxyFileman.indexOf("?") < 0) {
-                roxyFileman += "?type=" + type;
-            } else {
-                roxyFileman += "&type=" + type;
-            }
-            roxyFileman += '&input=' + field_name + '&value=' + win.document.getElementById(field_name).value;
-            if (tinyMCE.activeEditor.settings.language) {
-                roxyFileman += '&langCode=' + tinyMCE.activeEditor.settings.language;
-            }
-            tinyMCE.activeEditor.windowManager.open({
-                file: roxyFileman,
-                title: 'Roxy Fileman',
-                width: 850,
-                height: 650,
-                resizable: "yes",
-                plugins: "media",
-                inline: "yes",
-                close_previous: "no"
-            }, {window: win, input: field_name});
-            return false;
-        }
-    </script>
-    <?php
-
 } else {
     require_once INCLUDES."html_buttons_include.php";
 }
@@ -73,7 +38,7 @@ if (isset($_GET['error']) && isnum($_GET['error'])) {
         $message = sprintf($locale['416'], $settings['news_photo_max_w'], $settings['news_photo_max_h']);
     }
     if ($message) {
-        echo "<div id='close-message'><div class='admin-message'>".$message."</div></div>\n";
+		echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
     }
 }
 if (isset($_GET['status'])) {
@@ -85,7 +50,7 @@ if (isset($_GET['status'])) {
         $message = $locale['412'];
     }
     if ($message) {
-        echo "<div id='close-message'><div class='admin-message'>".$message."</div></div>\n";
+		echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
     }
 }
 
