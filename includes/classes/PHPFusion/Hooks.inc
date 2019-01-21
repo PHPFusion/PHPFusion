@@ -1,0 +1,179 @@
+<?php
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: Hooks.inc
+| Author: PHP-Fusion Development Team
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
+namespace PHPFusion;
+
+/**
+ * Class Hooks
+ * Core class for storing, removing and run hook functions.
+ *
+ * @package PHPFusion
+ */
+final class Hooks {
+
+    private $hooks = [];
+    private static $instances = NULL;
+
+    /**
+     * Get an instance by key
+     *
+     * @param string $key
+     *
+     * @return static
+     */
+    public static function get_instances($key = 'default') {
+        if (!isset(self::$instances[$key])) {
+            self::$instances[$key] = new static();
+        }
+
+        return self::$instances[$key];
+    }
+
+    /**
+     * Register a hook into the $instance
+     *
+     * @param $filter_name
+     * @param $function
+     * @param $que
+     * @param $accepted_args
+     *
+     * @return bool
+     */
+    public function add_hook($filter_name, $function, $que, $accepted_args) {
+        $hooks = array(
+            'function' => $function,
+            'accepted_args' => $accepted_args,
+            'que' => $que,
+        );
+        $this->hooks[$que][$filter_name][] = $hooks;
+        if (count($this->hooks) > 1 ) {
+            ksort( $this->hooks, SORT_NUMERIC );
+        }
+        return TRUE;
+    }
+
+    /**
+     * Returns the hook by $filter_name and $function
+     * @param        $filter_name
+     * @param string $function
+     *
+     * @return array
+     */
+    public function get_hook($filter_name, $function = '') {
+        if (!empty($this->hooks)) {
+            foreach($this->hooks as $hooks) {
+                if (isset($hooks[$filter_name])) {
+                    if ($function == 'invalid_notices') {
+                        return array();
+                    }
+                    if (!empty($function)) {
+                        return (array) ($hooks[$filter_name]['function'] == $function ?  $hooks[$filter_name]['function'] : array());
+                    } else {
+                        return (array) $hooks[$filter_name];
+                    }
+                }
+            }
+        }
+        return array();
+    }
+
+    /**
+     * Remove a specified hook from the $instance
+     *
+     * @param $filter_name
+     * @param $function
+     * @param $que
+     *
+     * @return bool
+     */
+    public function remove_hook($filter_name, $function, $que) {
+        if (isset($this->hooks[$que][$filter_name])) {
+            foreach($this->hooks[$que][$filter_name] as $key => $hooks) {
+                if ($hooks['function'] == $function) {
+                    unset($this->hooks[$que][$filter_name][$key]);
+                    if (empty($this->hooks[$que][$filter_name])) unset($this->hooks[$que][$filter_name]);
+                    return TRUE;
+                }
+            }
+        }
+        return FALSE;
+    }
+
+    /**
+     * Remove all hooks from the $instance
+     *
+     * @param bool $que
+     */
+    public function remove_all_hook($que = FALSE) {
+        if ($que === false) {
+            $this->hooks = [];
+        } elseif (isset($this->hooks[$que])) {
+            unset($this->hooks[$que]);
+        }
+    }
+
+    private $output = array();
+
+    /**
+     * Run the hooks by $filter_name and $args parameters
+     * @param $filter_name
+     * @param $args
+     *
+     * @return array
+     */
+    public function apply_hook($filter_name, $args) {
+        $current_hook = $this->get_hook($filter_name, $args);
+        if (!empty($current_hook)) {
+            foreach($current_hook as $hook) {
+                // prevent the current hook from being called twice, executed or not, else crash
+                $this->remove_hook($filter_name, $hook['function'], $hook['que']);
+                if (function_exists($hook['function'])) {
+                    $output = $hook['function']($args);
+                    if (!empty($output)) {
+                        $this->output[$filter_name][] = $output;
+                    }
+                }
+            }
+
+            if (!empty($this->get_hook($filter_name, $args))) $this->apply_hook($filter_name, $args);
+        }
+    }
+
+    public function filter_hook($filter_name, $args = '') {
+        $this->apply_hook($filter_name, $args);
+        if (!empty($this->output[$filter_name])) {
+            if (is_array($this->output[$filter_name])) {
+                return $this->output[$filter_name];
+            }
+        }
+        return array();
+    }
+
+
+    public function apply_all_hook() {
+        if (!empty($this->hooks)) {
+            foreach($this->hooks as $que => $funcs_) {
+                if (!empty($funcs_['function']) && function_exists($funcs_['function'])) {
+                    call_user_func_array($funcs_['function'], $funcs_['accepted_args']);
+                    array_shift($this->hooks[$que]);
+                }
+            }
+        }
+    }
+
+}
+
