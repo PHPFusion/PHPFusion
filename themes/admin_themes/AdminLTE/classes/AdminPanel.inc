@@ -263,13 +263,17 @@ class AdminPanel {
 
 
     private function MainFooter() {
+        global $aidlink, $_errorHandler;
+
         $locale = fusion_get_locale('', ALTE_LOCALE);
 
         echo '<footer class="main-footer">';
-            //echo showFooterErrors();
+            if (iADMIN && checkrights('ERRO') && count($_errorHandler) > 0) {
+                echo '<div>'.str_replace('[ERROR_LOG_URL]', ADMIN.'errors.php'.$aidlink, $locale['err_101']).'</div>';
+            }
 
             if (fusion_get_settings('rendertime_enabled')) {
-                echo showrendertime().showMemoryUsage().'<br />';
+                echo showrendertime().' '.showMemoryUsage().'<br />';
             }
 
             echo '<strong>';

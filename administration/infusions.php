@@ -122,10 +122,8 @@ if (!isset($_POST['infuse']) && !isset($_POST['infusion']) && !isset($_POST['def
     closedir($temp);
     sort($inf);
     opentable($locale['400']);
-    echo "<div>\n";
 
     if ($inf) {
-
         echo "<div class='list-group'>\n";
         if ($inf) {
             echo "<div class='list-group-item hidden-xs'>\n";
@@ -169,14 +167,16 @@ if (!isset($_POST['infuse']) && !isset($_POST['infusion']) && !isset($_POST['def
                 echo "</form>\n";
             }
         }
+        echo "</div>\n";
     } else {
-        echo "<br /><p class='text-center'>".$locale['417']."</p>\n";
+        echo "<div class='text-center'>".$locale['417']."</div>\n";
     }
-    echo "</div>\n</div>\n";
-    closetable();
+
     echo "<div class='well text-center m-t-10'>\n";
     echo "<a class='btn btn-block btn-primary' href='https://www.php-fusion.co.uk/infusions/marketplace' title='".$locale['422']."' target='_blank'>".$locale['422']."</a>\n";
     echo "</div>\n";
+
+    closetable();
 }
 
 if (isset($_POST['infuse']) && isset($_POST['infusion'])) {

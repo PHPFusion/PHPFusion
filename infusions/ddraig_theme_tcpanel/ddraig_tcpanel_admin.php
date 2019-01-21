@@ -95,7 +95,7 @@ if (isset($_POST['save_settings'])) {
         $err_mess = $locale['maxwidth_low'];
         //If all is good, update settings
     } else {
-        $result = dbquery("UPDATE ".DB_DDRAIGTCP." SET 
+        $result = dbquery("UPDATE ".DB_DDRAIGTCP." SET
                         theme_maxwidth			= '$theme_maxwidth',
                         theme_minwidth			= '$theme_minwidth',
                         theme_maxwidth_admin	= '$theme_maxwidth_admin',
@@ -155,7 +155,7 @@ function render_input($val = "", $type = "", $values = "", $maxlen = "2", $defau
 ////////////////////////
 opentable($locale['tcp_title']);
 echo "<form name='save_settings' method='post' action='".FUSION_SELF.$aidlink."'>
-            <table class='settings center' width='100%' cellspacing='0'> 
+            <table class='settings center' width='100%' cellspacing='0'>
             <tbody>
             <tr><th class='tbl2 forum-caption' colspan='4'><h3>".$locale['g_sets']."</h3></th></tr>";
 
@@ -210,7 +210,7 @@ echo "<tr>
         </td>
         <td class='inputs'>
         ".render_input('home_icon', 'select', $select_opt)."
-        </td>				
+        </td>
       </tr>";
 echo "<tr><td colspan='2'><hr /></td></tr>";
 
@@ -221,7 +221,7 @@ echo "<tr>
         </td>
         <td class='inputs'>
         ".render_input('winter_mode', 'select', $select_opt)."
-        </td>				
+        </td>
       </tr>";
 echo "<tr><td colspan='2'><hr /></td></tr>";
 
@@ -246,7 +246,7 @@ jQuery(document).ready(function() {
         var color = $('option[selected=selected]', this).attr('style');
         $(this).attr('style', color);
     });
-    
+
     $('input[type=checkbox]').click(function() {
     if (this.checked) {
         $(this).next('input').removeAttr('disabled');

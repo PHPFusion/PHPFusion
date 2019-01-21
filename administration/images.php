@@ -23,7 +23,7 @@ include LOCALE.LOCALESET."admin/image_uploads.php";
 
 if (isset($_GET['action']) && $_GET['action'] = "update")
     include INCLUDES."buildlist.php";
-$folders = ["images" => IMAGES, "imagesa" => IMAGES_A, "imagesn" => IMAGES_N, "imagesnc" => IMAGES_NC, "imagesb" => IMAGES_B, "imagesbc" => IMAGES_BC];
+    $folders = ["images" => IMAGES, "imagesa" => IMAGES_A, "imagesn" => IMAGES_N, "imagesnc" => IMAGES_NC, "imagesb" => IMAGES_B, "imagesbc" => IMAGES_BC];
 if (isset($_GET['ifolder']) && ctype_alnum($_GET['ifolder']) == 1 && isset($folders[$_GET['ifolder']])) {
     $_GET['ifolder'] = stripinput($_GET['ifolder']);
     $afolder = $folders[$_GET['ifolder']];
@@ -64,7 +64,6 @@ if (isset($_GET['del']) && in_array($_GET['del'], $image_list)) {
 } else {
     opentable($locale['420']);
     add_breadcrumb(['link' => ADMIN."images.php".$aidlink, 'title' => $locale['420']]);
-    opentable($locale['420']);
     echo "<form name='uploadform' method='post' action='".FUSION_SELF.$aidlink."&amp;ifolder=".$_GET['ifolder']."' enctype='multipart/form-data'>\n";
     echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tr>\n";
     echo "<td width='80' class='tbl'>".$locale['421']."</td>\n";
@@ -74,7 +73,7 @@ if (isset($_GET['del']) && in_array($_GET['del'], $image_list)) {
     echo "<input type='submit' name='uploadimage' value='".$locale['420']."' class='button' /></td>\n";
     echo "</tr>\n</table>\n</form>\n";
     closetable();
-    echo "<hr>\n";
+
     if (isset($_GET['view']) && in_array($_GET['view'], $image_list)) {
         opentable($locale['440']);
         echo "<div style='text-align:center'><br />\n";

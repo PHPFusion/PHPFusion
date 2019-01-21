@@ -35,7 +35,7 @@ define('BOOTSTRAP', TRUE);
 define('FONTAWESOME', TRUE);
 define('ENTYPO', TRUE);
 
-if (!check_admin_pass('')) {
+if (!check_admin_pass('') && !stristr($_SERVER['PHP_SELF'], $settings['site_path'].'infusions')) {
     define('THEME_BODY', '<body class="hold-transition lockscreen">');
 } else {
     define('THEME_BODY', '<body class="hold-transition skin-blue sidebar-mini">');
