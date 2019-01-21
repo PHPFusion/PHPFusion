@@ -26,7 +26,6 @@ use PHPFusion\Database\DatabaseFactory;
  * @package PHPFusion
  */
 class Errors {
-    private $code_name = 'Babylon';
     private static $instances = [];
     private static $locale = [];
     public $no_notice = 0;

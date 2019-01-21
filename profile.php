@@ -15,8 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once dirname(__FILE__).'/maincore.php';
-require_once THEMES."templates/header.php";
+require_once __DIR__.'/maincore.php';
+require_once THEMES.'templates/header.php';
 $locale = fusion_get_locale('', LOCALE.LOCALESET."user_fields.php");
 $settings = fusion_get_settings();
 if (isset($_GET['lookup']) && isnum($_GET['lookup'])) {
@@ -65,4 +65,4 @@ if (isset($_GET['lookup']) && isnum($_GET['lookup'])) {
 } else {
     redirect(BASEDIR."index.php");
 }
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';

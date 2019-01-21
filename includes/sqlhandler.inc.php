@@ -349,7 +349,7 @@ function get_parent(array $index, $child_id) {
  * @return array
  */
 function get_parent_array(array $data, $child_id) {
-    foreach ($data as $key => $value) {
+    foreach ($data as $value) {
         if (isset($value[$child_id])) {
             return (array)$value[$child_id];
         }
@@ -508,7 +508,7 @@ function dbtree_index($db = FALSE, $id_col, $cat_col, $cat_value = FALSE) {
     $col_names = fieldgenerator($db);
     $i = 1;
     while ($data = dbarray($result)) {
-        foreach ($col_names as $arr => $v) {
+        foreach ($col_names as $v) {
             if ($v == $id_col) {
                 $thisref = &$refs[$data[$id_col]];
             }

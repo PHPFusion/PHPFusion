@@ -33,7 +33,7 @@
  *
  */
 
-require_once dirname(__FILE__).'/securimage.php';
+require_once __DIR__.'/securimage.php';
 
 // if using database, adjust these options as necessary and change $img = new Securimage(); to $img = new Securimage($options);
 // see test.mysql.php or test.sqlite.php for examples

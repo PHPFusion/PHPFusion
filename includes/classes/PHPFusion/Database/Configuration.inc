@@ -39,7 +39,7 @@ class Configuration {
                 'database' => '',
                 'user'     => '',
                 'password' => '',
-                'charset'  => 'utf8',
+                'charset'  => 'utf8mb4',
                 'driver'   => DatabaseFactory::getDefaultDriver(),
                 'debug'    => FALSE
             ];

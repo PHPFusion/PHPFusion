@@ -26,4 +26,12 @@ if (!defined('DB_POLLS')) {
     define("DB_POLLS", DB_PREFIX."polls");
 }
 
+if (!defined("POLLS_LOCALE")) {
+    if (file_exists(INFUSIONS."member_poll_panel/locale/".LOCALESET."polls.php")) {
+    	define("POLLS_LOCALE", INFUSIONS."member_poll_panel/locale/".LOCALESET."polls.php");
+    } else {
+    	define("POLLS_LOCALE", INFUSIONS."member_poll_panel/locale/English/polls.php");
+    }
+}
+
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("PO", "<i class='admin-ico fa fa-fw fa-bar-chart'></i>");

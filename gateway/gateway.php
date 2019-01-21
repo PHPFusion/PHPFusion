@@ -21,7 +21,7 @@ if (!defined("IN_FUSION")) {
 
 /**
  * Experimental Anti Bot Gateway that combine multiple methods to prevent auto bots.
-*/
+ */
 require_once "constants_include.php";
 require_once "functions_include.php";
 
@@ -112,7 +112,8 @@ if (isset($_POST['gateway_answer'])) {
         $honeypot = $_SESSION["honeypot"];
     }
 
-    // if the honeypot is empty, run rest of the verify script
+    $_SESSION["validated"] = "False";
+
     if (isset($_POST["$honeypot"]) && $_POST["$honeypot"] == "") {
         $antibot = stripinput(strtolower($_POST["gateway_answer"]));
 
@@ -121,10 +122,7 @@ if (isset($_POST['gateway_answer'])) {
                 $_SESSION["validated"] = "True";
             } else {
                 $info['incorrect_answer'] = TRUE;
-                $_SESSION["validated"] = "False";
             }
-        } else {
-            $_SESSION["validated"] = "False";
         }
     }
 }

@@ -429,10 +429,10 @@ class Install_Core extends Infusion_Core {
  * Debug the steps in each here
  * @Dependencies on Install.core.inc
  */
-require(dirname(__FILE__).'/Requirements.core.inc');
-require(dirname(__FILE__).'/Steps/Introduction.inc');
-require(dirname(__FILE__).'/Steps/Permissions.inc');
-require(dirname(__FILE__).'/Steps/DatabaseSetup.inc');
-require(dirname(__FILE__).'/Steps/AdminSetup.inc');
-require(dirname(__FILE__).'/Steps/InfusionsSetup.inc');
-require(dirname(__FILE__).'/Steps/Complete.inc');
+require(__DIR__.'/Requirements.core.inc');
+require(__DIR__.'/Steps/Introduction.inc');
+require(__DIR__.'/Steps/Permissions.inc');
+require(__DIR__.'/Steps/DatabaseSetup.inc');
+require(__DIR__.'/Steps/AdminSetup.inc');
+require(__DIR__.'/Steps/InfusionsSetup.inc');
+require(__DIR__.'/Steps/Complete.inc');

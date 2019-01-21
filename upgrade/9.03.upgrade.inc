@@ -84,3 +84,10 @@ if (!column_exists(DB_ADMIN, 'admin_language', FALSE)) {
 }
 
 dbquery("UPDATE ".DB_ADMIN." SET admin_image='comments.png', admin_link='comments.php', admin_page='1' WHERE admin_rights='C'");
+
+$result = dbquery("SHOW TABLES");
+while ($table = dbarraynum($result)) {
+    if (preg_match("/^".DB_PREFIX."/i", $table[0])) {
+        dbquery("ALTER TABLE ".$table[0]." CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+    }
+}

@@ -15,8 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "maincore.php";
-require_once THEMES."templates/header.php";
+require_once __DIR__.'/maincore.php';
+require_once THEMES.'templates/header.php';
 $locale = fusion_get_locale("", LOCALE.LOCALESET."user_fields.php");
 include THEMES."templates/global/profile.php";
 $settings = fusion_get_settings();
@@ -45,4 +45,4 @@ $userInput->saveUpdate();
 
 echo $userFields->display_input();
 
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';

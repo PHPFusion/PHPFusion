@@ -42,7 +42,6 @@ class Infusion_Core {
             foreach ($inf_folder as $folder) {
                 $inf_include = INFUSIONS.$folder."/infusion_db.php";
                 if (file_exists($inf_include)) {
-                    /** @noinspection PhpIncludeInspection */
                     include $inf_include;
                 }
             }
@@ -248,7 +247,7 @@ class Infusion_Core {
                 'newcol'          => $inf_newcol,
                 'dropcol'         => $inf_dropcol,
                 'insertdbrow'     => $inf_insertdbrow,
-                'updatedbrow'    => $inf_updatedbrow,
+                'updatedbrow'     => $inf_updatedbrow,
                 'droptable'       => $inf_droptable,
                 'altertable'      => $inf_altertable,
                 'deldbrow'        => $inf_deldbrow,
@@ -335,7 +334,7 @@ class Infusion_Core {
                 'newcol'          => $inf_newcol,
                 'sitelink'        => $inf_sitelink,
                 'adminpanel'      => $inf_adminpanel,
-                'mlt_adminpanel'      => $mlt_adminpanel,
+                'mlt_adminpanel'  => $mlt_adminpanel,
                 'mlt'             => $inf_mlt,
                 'insertdbrow'     => $inf_insertdbrow,
                 'updatedbrow'     => $inf_updatedbrow,
@@ -701,7 +700,13 @@ class Infusion_Core {
             foreach ($inf['newtable'] as $newtable) {
                 $table_name = fusion_first_words($newtable, 1, '');
                 if (!db_exists($table_name)) {
-                    $result = dbquery("CREATE TABLE ".$newtable);
+                    if (strpos($newtable, 'CHARSET=UTF8 COLLATE=utf8_unicode_ci') == TRUE) {
+                        $db_collation = '';
+                        $newtable = str_replace('CHARSET=UTF8 COLLATE=utf8_unicode_ci', 'CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci', $newtable);
+                    } else {
+                        $db_collation = ' ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;';
+                    }
+                    $result = dbquery("CREATE TABLE ".$newtable.$db_collation);
                     if (!$result) {
                         $error = TRUE;
                     }

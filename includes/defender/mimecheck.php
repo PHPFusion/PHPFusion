@@ -133,4 +133,4 @@ class ImageValidation {
     }
 }
 
-require_once(dirname(__FILE__).'/../mimetypes_include.php');
+require_once(__DIR__.'/../mimetypes_include.php');

@@ -167,7 +167,7 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
         if ($options['include_filtered_dates'] == TRUE) {
             $dateFilter[0] = "enabledDates: ";
         }
-        foreach ($options['filtered_dates'] as $key => $value) {
+        foreach ($options['filtered_dates'] as $value) {
             $date_filtered[] = date("m/d/Y", $value);
         }
         $dateFilter[1] = (string)"['".implode("','", $date_filtered)."']";

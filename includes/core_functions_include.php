@@ -195,7 +195,7 @@ function redirect($location, $delay = FALSE, $script = FALSE) {
             $ref = "<meta http-equiv='refresh' content='$delay; url=".$location."' />";
             add_to_head($ref);
         } else {
-            if ($script == FALSE) {
+            if ($script == FALSE && !headers_sent()) {
                 header("Location: ".str_replace("&amp;", "&", $location));
                 exit;
             } else {
@@ -1033,7 +1033,7 @@ function getusergroups() {
  */
 function getgroupname($group_id, $return_desc = FALSE, $return_icon = FALSE) {
 
-    foreach (getusergroups() as $key => $group) {
+    foreach (getusergroups() as $group) {
 
         if ($group_id == $group[0]) {
             return ($return_desc ? ($group[2] ?: '-') : (!empty($group[3]) && $return_icon ? "<i class='".$group[3]."'></i> " : "").$group[1]);

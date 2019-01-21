@@ -32,7 +32,7 @@ if (!function_exists('render_poll')) {
                     'content' => $info['poll_arch']
                 ]);
             }
-            foreach ($info['poll_table'] as $key => $poll) {
+            foreach ($info['poll_table'] as $poll) {
                 if (!empty($poll['poll_option'])) {
                     $poll['poll_option'] = implode('', $poll['poll_option']);
                 }

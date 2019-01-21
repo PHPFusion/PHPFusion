@@ -516,4 +516,4 @@ $locale['fmt_category'] = "category|categories";
 $locale['fmt_review'] = "review|reviews";
 $locale['fmt_infusion'] = "infusion|infusions";
 // include Defender locales
-include __DIR__."/defender.php";
+include_once __DIR__."/defender.php";
