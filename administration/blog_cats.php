@@ -71,7 +71,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
         $openTable = $locale['401'];
     }
 } else if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
-    $result = dbquery("SELECT blog_cat_id, blog_cat_name, blog_cat_image, blog_cat_language FROM ".DB_BLOG_CATS." ".(multilang_table("NS") ? "WHERE blog_cat_language='".LANGUAGE."' AND" : "WHERE")." blog_cat_id='".$_GET['cat_id']."'");
+    $result = dbquery("SELECT blog_cat_id, blog_cat_name, blog_cat_image, blog_cat_language FROM ".DB_BLOG_CATS." ".(multilang_table("BL") ? "WHERE blog_cat_language='".LANGUAGE."' AND" : "WHERE")." blog_cat_id='".$_GET['cat_id']."'");
     if (dbrows($result)) {
         $data = dbarray($result);
         $cat_name = $data['blog_cat_name'];
