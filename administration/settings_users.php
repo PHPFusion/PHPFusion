@@ -107,7 +107,7 @@ echo "<td width='60%' class='tbl'>".$locale['1003']."<br /><span class='small2'>
 echo "<td width='40%' class='tbl'><input type='text' name='deactivation_period' value='".$settings['deactivation_period']."' maxlength='3' class='textbox' style='width:50px;' /></td>\n";
 echo "</tr>\n<tr>\n";
 echo "<td width='70%' class='tbl'>".$locale['1005']."<br /><span class='small2'>(".$locale['1006'].")</span></td>\n";
-echo "<td width='40%' class='tbl'><input type='text' name='deactivation_response' value='".$settings['deactivation_response']."' maxlength='3' class='textbox' style='width:30px;' /></td>\n";
+echo "<td width='40%' class='tbl'><input type='text' name='deactivation_response' value='".$settings['deactivation_response']."' maxlength='3' class='textbox' style='width:70px;' /></td>\n";
 echo "</tr>\n<tr>\n";
 echo "<td width='70%' class='tbl'>".$locale['1011']."</td>\n";
 echo "<td class='tbl' width='30%'><select name='deactivation_action' class='textbox'>\n";

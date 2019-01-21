@@ -87,6 +87,7 @@
 .m-l-15 { margin-left: 15px; }
 .m-l-20 { margin-left: 20px; }
 .m-r-0 { margin-right: 0 !important; }
+.m-r-5 { margin-right: 5px; }
 .m-r-10 { margin-right: 10px; }
 .m-r-15 { margin-right: 15px; }
 .m-r-20 { margin-right: 20px; }
@@ -709,4 +710,14 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
     box-shadow: none !important;
     padding: 0 !important;
     float: none !important;
+}
+
+.avatar.img-rounded > svg {
+    -webkit-border-radius: 6px;
+    border-radius: 6px;
+}
+
+.avatar.img-circle > svg {
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
 }

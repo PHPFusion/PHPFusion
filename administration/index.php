@@ -43,37 +43,44 @@ if (fusion_get_settings("enable_deactivation") == "1") {
 	$members['inactive'] = dbcount("(user_id)", DB_USERS, "user_lastvisit<'$time_overdue' AND user_actiontime='0' AND user_joined<'$time_overdue' AND user_status='0'");
 }
 // Get Core Infusion´s stats
+$forum = [];
 if (db_exists(DB_FORUMS)) {
 	$forum['count'] = dbcount("('forum_id')", DB_FORUMS);
 	$forum['thread'] = dbcount("('post_id')", DB_THREADS);
 	$forum['post'] = dbcount("('post_id')", DB_POSTS);
 	$forum['users'] = dbcount("('user_id')", DB_USERS, "user_posts > '0'");
 }
+$download = [];
 if (db_exists(DB_DOWNLOADS)) {
 	$download['download'] = dbcount("('download_id')", DB_DOWNLOADS);
 	$download['comment'] = dbcount("('comment_id')", DB_COMMENTS, "comment_type='d'");
 	$download['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='d'");
 }
+$articles = [];
 if (db_exists(DB_ARTICLES)) {
 	$articles['article'] = dbcount("('article_id')", DB_ARTICLES);
 	$articles['comment'] = dbcount("('comment_id')", DB_COMMENTS, "comment_type='A'");
 	$articles['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='a'");
 }
+$weblinks = [];
 if (db_exists(DB_WEBLINKS)) {
 	$weblinks['weblink'] = dbcount("('weblink_id')", DB_WEBLINKS);
 	$weblinks['comment'] = dbcount("('comment_id')", DB_COMMENTS, "comment_type='L'");
 	$weblinks['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='l'");
 }
+$news = [];
 if (db_exists(DB_NEWS)) {
 	$news['news'] = dbcount("('news_id')", DB_NEWS);
 	$news['comment'] = dbcount("('comment_id')", DB_COMMENTS, "comment_type='n'");
 	$news['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='n'");
 }
+$blog = [];
 if (db_exists(DB_BLOG)) {
 	$blog['blog'] = dbcount("('blog_id')", DB_BLOG);
 	$blog['comment'] = dbcount("('comment_id')", DB_COMMENTS, "comment_type='b'");
 	$blog['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='b'");
 }
+$photos = [];
 if (db_exists(DB_PHOTOS)) {
 	$photos['photo'] = dbcount("('photo_id')", DB_PHOTOS);
 	$photos['comment'] = dbcount("('comment_id')", DB_COMMENTS, "comment_type='P'");

@@ -490,16 +490,6 @@ function days_current_month() {
     return $month == 2 ? ($year % 4 ? 28 : ($year % 100 ? 29 : ($year % 400 ? 28 : 29))) : (($month - 1) % 7 % 2 ? 30 : 31);
 }
 
-function display_avatar($userdata, $size, $class = FALSE) {
-    $class = ($class) ? "class='$class'" : '';
-    if (array_key_exists('user_avatar', $userdata) && $userdata['user_avatar'] && file_exists(IMAGES."avatars/".$userdata['user_avatar'])) {
-        return "<a $class href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'><img class='img-responsive img-rounded' style='display:inline; max-width:$size; max-height:$size;' src='".IMAGES."avatars/".$userdata['user_avatar']."'></a>\n";
-    } else {
-        $userdata['user_id'] = array_key_exists('user_id', $userdata) && $userdata['user_id'] ? $userdata['user_id'] : 1;
-        return "<a $class href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'><img class='img-responsive img-rounded m-r-10' style='display:inline; max-width:$size; max-height:$size;' src='".IMAGES."avatars/noavatar50.png'></a>\n";
-    }
-}
-
 // Simplified Tabs - Without Hierarchy
 function tab_active($tab_title, $num) { // tab title is array.
     if (isset($_GET['section']) && $_GET['section']) {
