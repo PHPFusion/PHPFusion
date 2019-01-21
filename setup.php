@@ -252,7 +252,7 @@ if (isset($_POST['step']) && $_POST['step'] == "3") {
     echo "<tr>\n<td class='tbl1' style='text-align:left'>".$locale['036']."</td>\n";
     echo "<td class='tbl1'><input type='text' value='".$cookie_prefix."' name='cookie_prefix' class='form-control input-sm textbox' style='width:200px' /></td>\n</tr>\n";
     echo "</table>\n";
-    echo "</td>\n</tr>\n<tr>\n<td class='tbl2' style='text-align:center'>\n";
+    echo "</td>\n</tr>\n<tr>\n<td class='tbl' style='text-align:center'>\n";
     echo "<input type='hidden' name='localeset' value='".stripinput($_POST['localeset'])."' />\n";
     echo "<input type='hidden' name='step' value='4' />\n";
     renderButton();
@@ -1333,7 +1333,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
         $success = FALSE;
         $db_error = 7;
     }
-    echo "</td>\n</tr>\n<tr>\n<td class='tbl2' style='text-align:center'>\n";
+    echo "</td>\n</tr>\n<tr>\n<td class='tbl' style='text-align:center'>\n";
     echo "<input type='hidden' name='localeset' value='".stripinput($_POST['localeset'])."' />\n";
     echo "<input type='hidden' name='enabled_languages' value='".$selected_langs."' />\n";
     if ($success) {
@@ -1381,7 +1381,7 @@ if (isset($_POST['step']) && $_POST['step'] == "5") {
     echo "<tr>\n<td class='tbl1'>".$locale['066']."</td>\n";
     echo "<td class='tbl1' style='text-align:right'><input type='text' name='email' value='".$email."' maxlength='100' class='form-control input-sm textbox".$field_class[5]."' style='width:200px' /></td></tr>\n";
     echo "</table>\n";
-    echo "</td>\n</tr>\n<tr>\n<td class='tbl2' style='text-align:center'>\n";
+    echo "</td>\n</tr>\n<tr>\n<td class='tbl' style='text-align:center'>\n";
     echo "<input type='hidden' name='localeset' value='".stripinput($_POST['localeset'])."' />\n";
     echo "<input type='hidden' name='enabled_languages' value='".(isset($_POST['enabled_languages']) ? $_POST['enabled_languages'] : 'English')."' />\n";
     echo "<input type='hidden' name='step' value='6' />\n";
@@ -1929,13 +1929,13 @@ if (isset($_POST['step']) && $_POST['step'] == "6") {
             @chmod("config.php", 0644);
         }
         echo "<br />\n".$locale['240']."<br /><br />\n";
-        echo "</td>\n</tr>\n<tr>\n<td class='tbl2' style='text-align:center'>\n";
+        echo "</td>\n</tr>\n<tr>\n<td class='tbl' style='text-align:center'>\n";
         echo "<input type='hidden' name='localeset' value='".stripinput($_POST['localeset'])."' />\n";
         echo "<input type='hidden' name='step' value='7' />\n";
         renderButton(1);
     } else if ($rows == 0) {
         echo "<br />\n".$locale['077']."<br /><br />\n".$error;
-        echo "</td>\n</tr>\n<tr>\n<td class='tbl2' style='text-align:center'>\n";
+        echo "</td>\n</tr>\n<tr>\n<td class='tbl' style='text-align:center'>\n";
         echo "<input type='hidden' name='localeset' value='".stripinput($_POST['localeset'])."' />\n";
         echo "<input type='hidden' name='error_pass' value='".$error_pass."' />\n";
         echo "<input type='hidden' name='error_name' value='".$error_name."' />\n";
