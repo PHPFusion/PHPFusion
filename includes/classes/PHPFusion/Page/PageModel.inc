@@ -170,13 +170,13 @@ class PageModel {
      * Load page composer data
      */
     protected static function load_ComposerData() {
-        $query = "SELECT rows.*, col.page_id, col.page_content_id, col.page_content_type, col.page_content, col.page_content_order, col.page_widget, col.page_options
-        FROM ".DB_CUSTOM_PAGES_GRID." rows
-        LEFT JOIN ".DB_CUSTOM_PAGES_CONTENT." col USING(page_grid_id)
-        WHERE rows.page_id=".self::$data['page_id']."
-        ORDER BY rows.page_grid_order ASC, col.page_content_order ASC
+        $query = "SELECT crows.*, col.*
+        FROM `".DB_CUSTOM_PAGES_GRID."` crows
+        LEFT JOIN `".DB_CUSTOM_PAGES_CONTENT."` col ON col.page_grid_id = crows.page_grid_id
+        WHERE crows.page_id=:pid
+        ORDER BY crows.page_grid_order ASC, col.page_content_order ASC
         ";
-        $result = dbquery($query);
+        $result = dbquery($query, [':pid'=>intval(self::$data['page_id'])]);
         if (dbrows($result) > 0) {
             while ($data = dbarray($result)) {
                 self::$gridData[$data['page_grid_id']] = [
