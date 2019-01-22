@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 include __DIR__.'/locale/'.LANGUAGE.'.php';
-$icon = "<img src='".IMAGES."user_fields/social/github.svg' title='GitHub' alt='GitHub'/>";
+$icon = "<img src='".INCLUDES."user_fields/public/user_github/images/github.svg' title='GitHub' alt='GitHub'/>";
 // Display user field input
 if ($profile_method == "input") {
     $options = [

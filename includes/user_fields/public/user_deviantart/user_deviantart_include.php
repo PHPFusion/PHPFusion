@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 include __DIR__.'/locale/'.LANGUAGE.'.php';
-$icon = "<img src='".IMAGES."user_fields/social/deviantart.svg' title='DeviantArt' alt='DeviantArt'/>";
+$icon = "<img src='".INCLUDES."user_fields/public/user_deviantart/images/deviantart.svg' title='DeviantArt' alt='DeviantArt'/>";
 // Display user field input
 if ($profile_method == "input") {
     $options = [

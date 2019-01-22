@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 include __DIR__.'/locale/'.LANGUAGE.'.php';
-$icon = "<img src='".IMAGES."user_fields/social/yahoo.svg' title='Yahoo' alt='Yahoo'/>";
+$icon = "<img src='".INCLUDES."user_fields/public/user_yahoo/images/yahoo.svg' title='Yahoo' alt='Yahoo'/>";
 // Display user field input
 if ($profile_method == "input") {
     $options = [

@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 include __DIR__.'/locale/'.LANGUAGE.'.php';
-$icon = "<img src='".IMAGES."user_fields/social/vk.svg' title='VK' alt='VK'/>";
+$icon = "<img src='".INCLUDES."user_fields/public/user_vk/images/vk.svg' title='VK' alt='VK'/>";
 // Display user field input
 if ($profile_method == "input") {
     $user_fields = form_text('user_vk', $locale['uf_vk'], $field_value, [

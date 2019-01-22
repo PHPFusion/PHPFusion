@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 include __DIR__.'/locale/'.LANGUAGE.'.php';
-$icon = "<img src='".IMAGES."user_fields/social/behance.svg' title='Behance' alt='Behance'/>";
+$icon = "<img src='".INCLUDES."user_fields/public/user_behance/images/behance.svg' title='Behance' alt='Behance'/>";
 // Display user field input
 if ($profile_method == "input") {
     $options = [

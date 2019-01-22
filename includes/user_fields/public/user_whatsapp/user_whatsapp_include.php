@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 include __DIR__.'/locale/'.LANGUAGE.'.php';
-$icon = "<img src='".IMAGES."user_fields/social/whatsapp.svg' title='Whatsapp' alt='Whatsapp'/>";
+$icon = "<img src='".INCLUDES."user_fields/public/user_whatsapp/images/whatsapp.svg' title='Whatsapp' alt='Whatsapp'/>";
 // Display user field input
 if ($profile_method == "input") {
     $options = [

@@ -1251,8 +1251,8 @@ class UserFieldsQuantum extends \SqlHandler {
         }
 
         // modules
-        $html .= "<div class='row'>\n";
         if (!empty($this->modules)) {
+            $html .= "<div class='row equal-height'>\n";
             if (isset($_GET['install'])) {
                 if ($_GET['ref'] == 'public') {
                     $modal = openmodal('modadd', "<h4 class='m-0'>Add User Fields Module</h4>");
@@ -1292,23 +1292,23 @@ class UserFieldsQuantum extends \SqlHandler {
                 $button = "<a class='btn btn-default' href='".clean_request("install=".$module_name, ['install', 'uninstall'], FALSE)."'>Install</a>";
 
                 if (!in_array($module_name, array_keys($this->available_field_info))) {
-                    $button = "<a class='btn btn-default' href='".clean_request("uninstall=".$module_name, ['install', 'uninstall'], FALSE)."'>Uninstall</a>";
+                    $button = "<a class='btn btn-danger' href='".clean_request("uninstall=".$module_name, ['install', 'uninstall'], FALSE)."'>Uninstall</a>";
                 }
-                $html .= "<div class='col-xs-12 col-sm-3'>\n";
+                $html .= "<div class='col-xs-12 col-sm-3'><div>\n";
                 $html .= "<div class='panel panel-default'><div class='panel-body'>
-                        <div class='pull-left m-r-10'></div>
                         <div class='pull-right'>$button</div>
-                        <div class='overflow-hide'><h4>".$module_data['user_field_name']."</h4><div class='spacer-sm'>".$module_data['user_field_desc']."</div>By <i>".$module_data['user_field_author']."</i></div>
+                        <h4>".$module_data['user_field_name']."</h4>
+                        <div class='overflow-hide'><div class='spacer-sm'>".$module_data['user_field_desc']."</div>By <i>".$module_data['user_field_author']."</i></div>
                         </div><div class='panel-footer'>
                         <small>Release Version: ".$module_data['user_field_version']."</small>
                         </div>\n</div>\n";
-                $html .= "</div>\n";
+                $html .= "</div></div>\n";
 
             }
+            $html .= "</div>\n";
         } else {
-            $html .= "<div class='col-xs-12'>There are no user fields available</div>\n";
+            $html .= "<div>There are no user fields available</div>\n";
         }
-        $html .= "</div>\n";
 
         return $html;
     }

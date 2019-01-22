@@ -20,7 +20,7 @@ if (!defined("IN_FUSION")) {
 }
 include __DIR__.'/locale/'.LANGUAGE.'.php';
 // Display user field input
-$icon = "<img src='".IMAGES."user_fields/social/skype.svg' title='Skype' alt='Skype'/>";
+$icon = "<img src='".INCLUDES."user_fields/public/user_skype/images/skype.svg' title='Skype' alt='Skype'/>";
 if ($profile_method == 'input') {
     $options = [
             'inline'           => TRUE,

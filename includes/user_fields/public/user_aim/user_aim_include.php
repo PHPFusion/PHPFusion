@@ -20,7 +20,7 @@ if (!defined("IN_FUSION")) {
 }
 include __DIR__.'/locale/'.LANGUAGE.'.php';
 
-$icon = "<img src='".IMAGES."user_fields/social/aim.svg' title='Aim' alt='Aim'/>";
+$icon = "<img src='".INCLUDES."user_fields/public/user_aim/images/aim.svg' title='Aim' alt='Aim'/>";
 // Display user field input
 if ($profile_method == "input") {
     $options = [

@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 include __DIR__.'/locale/'.LANGUAGE.'.php';
-$icon = "<img src='".IMAGES."user_fields/social/discord.svg' title='Discord' alt='Discord'/>";
+$icon = "<img src='".INCLUDES."user_fields/public/user_discord/images/discord.svg' title='Discord' alt='Discord'/>";
 // Display user field input
 if ($profile_method == "input") {
     $options = [

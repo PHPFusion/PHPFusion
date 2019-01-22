@@ -33,38 +33,38 @@ $input_type = 'form_checkbox'; // form_select or form_checkbox (up to you)
  */
 
 // Definitions
-$locale['uf_kep'] = [
+$locale['uf_img'] = [
     '0' => '', // Text
     '1' => ['fa fa-user-secret', 'fa fa-mars', 'fa fa-venus', 'fa fa-user-secret'], // Icon
     '2' => ['unspecified', 'male', 'female', 'unspecified'],  // Image + text
     '3' => ['unspecified', 'male', 'female', 'unspecified']  // Image
 ];
-$locale['uf_gender_sz'] = [
+$locale['uf_gender_title'] = [
     0 => $locale['uf_gender_00'],
     1 => $locale['uf_gender_01'],
     2 => $locale['uf_gender_02'],
     3 => $locale['uf_gender_03'],
 ];
 
-for ($i = 0; $i < count($locale['uf_gender_sz']); $i++) {
+for ($i = 0; $i < count($locale['uf_gender_title']); $i++) {
     switch ($gen_set) {
         case 3:
-            $value = "<img src='".IMAGES."user_fields/gender/".$locale['uf_kep'][$gen_set][$i].".png' style='width: 16px;' alt='".$locale['uf_gender_sz'][$i]."' title='".$locale['uf_gender_sz'][$i]."'/>";
+            $value = "<img src='".INCLUDES."user_fields/public/user_gender/images/".$locale['uf_img'][$gen_set][$i].".png' style='width: 16px;' alt='".$locale['uf_gender_title'][$i]."' title='".$locale['uf_gender_title'][$i]."'/>";
             break;
         case 1:
-            $value = "<i class='".$locale['uf_kep'][$gen_set][$i]." fa-fw fa-lg m-r-10'></i>".$locale['uf_gender_sz'][$i];
+            $value = "<i class='".$locale['uf_img'][$gen_set][$i]." fa-fw fa-lg m-r-10'></i>".$locale['uf_gender_title'][$i];
             break;
         case 2:
-            $value = "<img src='".IMAGES."user_fields/gender/".$locale['uf_kep'][$gen_set][$i].".png' style='width: 16px;' alt='".$locale['uf_gender_sz'][$i]."' title='".$locale['uf_gender_sz'][$i]."'/> ".$locale['uf_gender_sz'][$i];
+            $value = "<img src='".INCLUDES."user_fields/public/user_gender/images/".$locale['uf_img'][$gen_set][$i].".png' style='width: 16px;' alt='".$locale['uf_gender_title'][$i]."' title='".$locale['uf_gender_title'][$i]."'/> ".$locale['uf_gender_title'][$i];
             break;
         default:
-            $value = $locale['uf_gender_sz'][$i];
+            $value = $locale['uf_gender_title'][$i];
     }
-    $locale['uf_gender_szkep'][] = $value;
+    $locale['uf_gender_title_img'][] = $value;
 }
 
 if (!$with_secret) {
-    unset($locale['uf_gender_szkep'][count($locale['uf_gender_szkep']) - 1]);
+    unset($locale['uf_gender_title_img'][count($locale['uf_gender_title_img']) - 1]);
 }
 
 if ($profile_method == "input") {
@@ -72,7 +72,7 @@ if ($profile_method == "input") {
             'type'       => 'radio',
             'inline'     => TRUE,
             'error_text' => $locale['uf_gender_error'],
-            'options'    => $locale['uf_gender_szkep'],
+            'options'    => $locale['uf_gender_title_img'],
         ] + $options;
 
     $user_fields = $input_type('user_gender', $locale['uf_gender'], $field_value, $options);
@@ -82,7 +82,7 @@ if ($profile_method == "input") {
     if ($field_value) {
         $user_fields = [
             'title' => $locale['uf_gender'],
-            'value' => $locale['uf_gender_szkep'][$field_value]
+            'value' => $locale['uf_gender_title_img'][$field_value]
         ];
     }
 

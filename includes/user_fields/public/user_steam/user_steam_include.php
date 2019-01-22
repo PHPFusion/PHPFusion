@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 include __DIR__.'/locale/'.LANGUAGE.'.php';
-$icon = "<img src='".IMAGES."user_fields/social/steam.svg' title='Steam' alt='Steam'/>";
+$icon = "<img src='".INCLUDES."user_fields/public/user_steam/images/steam.svg' title='Steam' alt='Steam'/>";
 // Display user field input
 if ($profile_method == "input") {
 

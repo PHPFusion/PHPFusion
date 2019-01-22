@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 include __DIR__.'/locale/'.LANGUAGE.'.php';
-$icon = "<img src='".IMAGES."user_fields/social/vimeo.svg' title='Vimeo' alt='Vimeo'/>";
+$icon = "<img src='".INCLUDES."user_fields/public/user_vimeo/images/vimeo.svg' title='Vimeo' alt='Vimeo'/>";
 // Display user field input
 if ($profile_method == "input") {
     $options = [

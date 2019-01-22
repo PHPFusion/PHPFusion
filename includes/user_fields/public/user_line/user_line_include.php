@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 include __DIR__.'/locale/'.LANGUAGE.'.php';
-$icon = "<img src='".IMAGES."user_fields/social/line.svg' title='Line' alt='Line'/>";
+$icon = "<img src='".INCLUDES."user_fields/public/user_line/images/line.svg' title='Line' alt='Line'/>";
 // Display user field input
 if ($profile_method == "input") {
     $options = [

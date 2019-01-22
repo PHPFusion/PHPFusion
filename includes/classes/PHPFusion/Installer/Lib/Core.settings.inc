@@ -197,10 +197,6 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'settings_value' => '0',
             ],
             [
-                'settings_name' => 'link_grouping',
-                'settings_value' => 8,
-            ],
-            [
                 'settings_name'  => 'forumdate',
                 'settings_value' => $locale['setup_3702'],
             ],

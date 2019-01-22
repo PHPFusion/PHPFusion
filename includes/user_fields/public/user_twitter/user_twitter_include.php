@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 include __DIR__.'/locale/'.LANGUAGE.'.php';
-$icon = "<img src='".IMAGES."user_fields/social/twitter.svg' title='Twitter' alt='Twitter'/>";
+$icon = "<img src='".INCLUDES."user_fields/public/user_twitter/images/twitter.svg' title='Twitter' alt='Twitter'/>";
 // Display user field input
 if ($profile_method == "input") {
     $options = [
