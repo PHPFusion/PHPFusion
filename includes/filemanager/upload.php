@@ -1,132 +1,189 @@
 <?php
-include('config/config.php');
-if($_SESSION["verify"] != "RESPONSIVEfilemanager") die('forbiden');
-include('include/utils.php');
 
-
-$storeFolder = $_POST['path'];
-$storeFolderThumb = $_POST['path_thumb'];
-
-$path_pos=strpos($storeFolder,$current_path);
-$thumb_pos=strpos($_POST['path_thumb'],$thumbs_base_path);
-if($path_pos!==0 
-    || $thumb_pos !==0
-    || strpos($storeFolderThumb,'../',strlen($thumbs_base_path))!==FALSE
-    || strpos($storeFolderThumb,'./',strlen($thumbs_base_path))!==FALSE
-    || strpos($storeFolder,'../',strlen($current_path))!==FALSE
-    || strpos($storeFolder,'./',strlen($current_path))!==FALSE )
-    die('wrong path');
-
-
-$path=$storeFolder;
-$cycle=true;
-$max_cycles=50;
-$i=0;
-while($cycle && $i<$max_cycles){
-    $i++;
-    if($path==$current_path)  $cycle=false;
-    if(file_exists($path."config.php")){
-	require_once($path."config.php");
-	$cycle=false;
+try {
+    if (!isset($config)) {
+        $config = include 'config/config.php';
     }
-    $path=fix_dirname($path).'/';
-}
 
+    include 'include/utils.php';
 
-if (!empty($_FILES)) {
-    $info=pathinfo($_FILES['file']['name']);
-    if(in_array(fix_strtolower($info['extension']), $ext)){
-	$tempFile = $_FILES['file']['tmp_name'];   
-	  
-	$targetPath = $storeFolder;
-	$targetPathThumb = $storeFolderThumb;
-	$_FILES['file']['name'] = fix_filename($_FILES['file']['name'],$transliteration);
-	 
-	if(file_exists($targetPath.$_FILES['file']['name'])){
-	    $i = 1;
-	    $info=pathinfo($_FILES['file']['name']);
-	    while(file_exists($targetPath.$info['filename']."_".$i.".".$info['extension'])) {
-		    $i++;
-	    }
-	    $_FILES['file']['name']=$info['filename']."_".$i.".".$info['extension'];
-	}
-	$targetFile =  $targetPath. $_FILES['file']['name']; 
-	$targetFileThumb =  $targetPathThumb. $_FILES['file']['name'];
-	
-	if(in_array(fix_strtolower($info['extension']),$ext_img)) $is_img=true;
-	else $is_img=false;
-	
-	
-	move_uploaded_file($tempFile,$targetFile);
-	chmod($targetFile, 0755);
-	
-	if($is_img){
-	    $memory_error=false;
-	    if(!create_img_gd($targetFile, $targetFileThumb, 122, 91)){
-		$memory_error=false;
-	    }else{
-		if(!new_thumbnails_creation($targetPath,$targetFile,$_FILES['file']['name'],$current_path,$relative_image_creation,$relative_path_from_current_pos,$relative_image_creation_name_to_prepend,$relative_image_creation_name_to_append,$relative_image_creation_width,$relative_image_creation_height,$fixed_image_creation,$fixed_path_from_filemanager,$fixed_image_creation_name_to_prepend,$fixed_image_creation_to_append,$fixed_image_creation_width,$fixed_image_creation_height)){
-		    $memory_error=false;
-		}else{		    
-		    $imginfo =getimagesize($targetFile);
-		    $srcWidth = $imginfo[0];
-		    $srcHeight = $imginfo[1];
-		    
-		    if($image_resizing){
-			if($image_resizing_width==0){
-			    if($image_resizing_height==0){
-				$image_resizing_width=$srcWidth;
-				$image_resizing_height =$srcHeight;
-			    }else{
-				$image_resizing_width=$image_resizing_height*$srcWidth/$srcHeight;
-			}
-			}elseif($image_resizing_height==0){
-			    $image_resizing_height =$image_resizing_width*$srcHeight/$srcWidth;
-			}
-			$srcWidth=$image_resizing_width;
-			$srcHeight=$image_resizing_height;
-			create_img_gd($targetFile, $targetFile, $image_resizing_width, $image_resizing_height);
-		    }
-		    //max resizing limit control
-		    $resize=false;
-		    if($image_max_width!=0 && $srcWidth >$image_max_width){
-			$resize=true;
-			$srcHeight=$image_max_width*$srcHeight/$srcWidth;
-			$srcWidth=$image_max_width;
-		    }
-		    if($image_max_height!=0 && $srcHeight >$image_max_height){
-			$resize=true;
-			$srcWidth =$image_max_height*$srcWidth/$srcHeight;
-			$srcHeight =$image_max_height;
-		    }
-		    if($resize)
-			create_img_gd($targetFile, $targetFile, $srcWidth, $srcHeight);
-		}
-	    }		
-	    if($memory_error){
-		//error
-		unlink($targetFile);
-		header('HTTP/1.1 406 Not enought Memory',true,406);
-		exit();
-	    }
-	}
-    }else{
-	header('HTTP/1.1 406 file not permitted',true,406);
-	exit();
+    if ($_SESSION['RF']["verify"] != "RESPONSIVEfilemanager") {
+        response(trans('forbiden') . AddErrorLocation(), 403)->send();
+        exit;
     }
-}else{
-    header('HTTP/1.1 405 Bad Request', true, 405);
-    exit();
-}
-if(isset($_POST['submit'])){
-    $query = http_build_query(array(
-        'type'      => $_POST['type'],
-        'lang'      => $_POST['lang'],
-        'popup'     => $_POST['popup'],
-        'field_id'  => $_POST['field_id'],
-        'fldr'      => $_POST['fldr'],
-    ));
-    header("location: dialog.php?" . $query);
-}
 
-?>      
+    include 'include/mime_type_lib.php';
+
+    $ftp = ftp_con($config);
+
+    if ($ftp) {
+        $source_base = $config['ftp_base_folder'] . $config['upload_dir'];
+        $thumb_base = $config['ftp_base_folder'] . $config['ftp_thumbs_dir'];
+    } else {
+        $source_base = $config['current_path'];
+        $thumb_base = $config['thumbs_base_path'];
+    }
+
+    if (isset($_POST["fldr"])) {
+        $_POST['fldr'] = str_replace('undefined', '', $_POST['fldr']);
+        $storeFolder = $source_base . $_POST["fldr"];
+        $storeFolderThumb = $thumb_base . $_POST["fldr"];
+    } else {
+        return;
+    }
+
+    $fldr = rawurldecode(trim(strip_tags($_POST['fldr']), "/") . "/");
+
+    if (!checkRelativePath($fldr)) {
+        response(trans('wrong path').AddErrorLocation())->send();
+        exit;
+    }
+
+    $path = $storeFolder;
+    $cycle = true;
+    $max_cycles = 50;
+    $i = 0;
+    //GET config
+    while ($cycle && $i < $max_cycles) {
+        $i++;
+        if ($path == $config['current_path']) {
+            $cycle = false;
+        }
+        if (file_exists($path . "config.php")) {
+            $configTemp = include $path . 'config.php';
+            $config = array_merge($config, $configTemp);
+            //TODO switch to array
+            $cycle = false;
+        }
+        $path = fix_dirname($path) . '/';
+    }
+
+    require('UploadHandler.php');
+    $messages = null;
+    if (trans("Upload_error_messages") !== "Upload_error_messages") {
+        $messages = trans("Upload_error_messages");
+    }
+
+    // make sure the length is limited to avoid DOS attacks
+    if (isset($_POST['url']) && strlen($_POST['url']) < 2000) {
+        $url = $_POST['url'];
+        $urlPattern = '/^(https?:\/\/)?([\da-z\.-]+\.[a-z\.]{2,6}|[\d\.]+)([\/?=&#]{1}[\da-z\.-]+)*[\/\?]?$/i';
+
+        if (preg_match($urlPattern, $url)) {
+            $temp = tempnam('/tmp', 'RF');
+
+            $ch = curl_init($url);
+            $fp = fopen($temp, 'wb');
+            curl_setopt($ch, CURLOPT_FILE, $fp);
+            curl_setopt($ch, CURLOPT_HEADER, 0);
+            curl_exec($ch);
+            if (curl_errno($ch)) {
+                curl_close($ch);
+                throw new Exception('Invalid URL');
+            }
+            curl_close($ch);
+            fclose($fp);
+
+            $_FILES['files'] = array(
+                'name' => array(basename($_POST['url'])),
+                'tmp_name' => array($temp),
+                'size' => array(filesize($temp)),
+                'type' => null
+            );
+        } else {
+            throw new Exception('Is not a valid URL.');
+        }
+    }
+
+
+    if ($config['mime_extension_rename']) {
+        $info = pathinfo($_FILES['files']['name'][0]);
+        $mime_type = $_FILES['files']['type'][0];
+        if (function_exists('mime_content_type')) {
+            $mime_type = mime_content_type($_FILES['files']['tmp_name'][0]);
+        } elseif (function_exists('finfo_open')) {
+            $finfo = finfo_open(FILEINFO_MIME_TYPE);
+            $mime_type = finfo_file($finfo, $_FILES['files']['tmp_name'][0]);
+        } else {
+            $mime_type = get_file_mime_type($_FILES['files']['tmp_name'][0]);
+        }
+        $extension = get_extension_from_mime($mime_type);
+
+        if ($extension == 'so' || $extension == '' || $mime_type == "text/troff") {
+            $extension = $info['extension'];
+        }
+        $filename = $info['filename'] . "." . $extension;
+    } else {
+        $filename = $_FILES['files']['name'][0];
+    }
+    $_FILES['files']['name'][0] = fix_filename($filename, $config);
+
+
+
+    // LowerCase
+    if ($config['lower_case']) {
+        $_FILES['files']['name'][0] = fix_strtolower($_FILES['files']['name'][0]);
+    }
+    if (!checkresultingsize($_FILES['files']['size'][0])) {
+    	if ( !isset($upload_handler->response['files'][0]) ) {
+            // Avoid " Warning: Creating default object from empty value ... "
+            $upload_handler->response['files'][0] = new stdClass();
+        }
+        $upload_handler->response['files'][0]->error = sprintf(trans('max_size_reached'), $config['MaxSizeTotal']) . AddErrorLocation();
+        echo json_encode($upload_handler->response);
+        exit();
+    }
+
+    $uploadConfig = array(
+        'config' => $config,
+        'storeFolder' => $storeFolder,
+        'storeFolderThumb' => $storeFolderThumb,
+        'ftp' => $ftp,
+        'upload_dir' => dirname($_SERVER['SCRIPT_FILENAME']) . '/' . $storeFolder,
+        'upload_url' => $config['base_url'] . $config['upload_dir'] . $_POST['fldr'],
+        'mkdir_mode' => $config['folderPermission'],
+        'max_file_size' => $config['MaxSizeUpload'] * 1024 * 1024,
+        'correct_image_extensions' => true,
+        'print_response' => false
+    );
+    if (!$config['ext_blacklist']) {
+        $uploadConfig['accept_file_types'] = '/\.(' . implode('|', $config['ext']) . ')$/i';
+        if($config['files_without_extension']){
+        	$uploadConfig['accept_file_types'] = '/((\.(' . implode('|', $config['ext']) . ')$)|(^[^.]+$))$/i';
+        }
+    } else {
+        $uploadConfig['accept_file_types'] = '/\.(?!' . implode('|', $config['ext_blacklist']) . '$)/i';
+        if($config['files_without_extension']){
+        	$uploadConfig['accept_file_types'] = '/((\.(?!' . implode('|', $config['ext_blacklist']) . '$))|(^[^.]+$))/i';
+        }
+    }
+
+    if ($ftp) {
+        if (!is_dir($config['ftp_temp_folder'])) {
+            mkdir($config['ftp_temp_folder'], $config['folderPermission'], true);
+        }
+        if (!is_dir($config['ftp_temp_folder'] . "thumbs")) {
+            mkdir($config['ftp_temp_folder'] . "thumbs", $config['folderPermission'], true);
+        }
+        $uploadConfig['upload_dir'] = $config['ftp_temp_folder'];
+    }
+
+    $upload_handler = new UploadHandler($uploadConfig, true, $messages);
+} catch (Exception $e) {
+    $return = array();
+    if ($_FILES['files']) {
+        foreach ($_FILES['files']['name'] as $i => $name) {
+            $return[] = array(
+                'name' => $name,
+                'error' => $e->getMessage(),
+                'size' => $_FILES['files']['size'][$i],
+                'type' => $_FILES['files']['type'][$i]
+            );
+        }
+
+        echo json_encode(array("files" => $return));
+        return;
+    }
+
+    echo json_encode(array("error" =>$e->getMessage()));
+}

@@ -86,7 +86,7 @@ echo "<script type='text/javascript' src='".INCLUDES."jscripts/jscript.js'></scr
 
 if ($settings['tinymce_enabled'] == 1) {
     echo "<style type='text/css'>.mceIframeContainer iframe{width:100%!important;background-color: #000;}</style>\n";
-    echo "<script language='javascript' type='text/javascript' src='".INCLUDES."jscripts/tiny_mce/tinymce.min.js'></script>\n
+    echo "<script language='javascript' type='text/javascript' src='".INCLUDES."jscripts/tinymce/tinymce.min.js'></script>\n
     <script type='text/javascript'>
 
     function advanced() {
@@ -105,21 +105,19 @@ if ($settings['tinymce_enabled'] == 1) {
             ],
             toolbar1: 'undo redo | styleselect formatselect fontselect fontsizeselect removeformat',
             toolbar2: 'cut copy paste | bold underline italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent',
-            toolbar3: 'link unlink anchor | hr | image media | forecolor backcolor charmap emoticons | codesample | code | preview fullpage | fullscreen',
+            toolbar3: 'link unlink anchor | hr | responsivefilemanager | image media | forecolor backcolor charmap emoticons | codesample | code | preview fullpage | fullscreen',
             menubar: 'edit insert view format table',
-            file_browser_callback: RoxyFileBrowser,
             image_advtab: true,
             relative_urls : false,
             remove_script_host : false,
             document_base_url : '".$settings['siteurl']."',
             content_css: [
-                '".(file_exists(THEME."editor.css") ?
-            $settings['siteurl']."themes/".$settings['theme']."/editor.css" :
-            $settings['siteurl']."themes/".$settings['theme']."/styles.css"
-        )."',
+                '".(file_exists(THEME."editor.css") ? $settings['siteurl']."themes/".$settings['theme']."/editor.css" : $settings['siteurl']."themes/".$settings['theme']."/styles.css")."',
             ],
             content_style: 'body.mceDefBody {background:#".(IsSet($settings['tinymce_bgcolor']) ? $settings['tinymce_bgcolor'] : "FFFFFF").";}',
-            body_class: 'mceDefBody'
+            body_class: 'mceDefBody',
+            external_filemanager_path: '".$settings['siteurl']."includes/filemanager/',
+            external_plugins: { 'filemanager' : '".$settings['siteurl']."includes/filemanager/plugin.min.js'}
         });
     }
 
@@ -136,10 +134,7 @@ if ($settings['tinymce_enabled'] == 1) {
             ],
             toolbar: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
             content_css: [
-                '".(file_exists(THEME."editor.css") ?
-            $settings['siteurl']."themes/".$settings['theme']."/editor.css" :
-            $settings['siteurl']."themes/".$settings['theme']."/styles.css"
-        )."',
+                '".(file_exists(THEME."editor.css") ? $settings['siteurl']."themes/".$settings['theme']."/editor.css" : $settings['siteurl']."themes/".$settings['theme']."/styles.css")."',
             ],
             content_style: 'body.mceDefBody {background:#".(IsSet($settings['tinymce_bgcolor']) ? $settings['tinymce_bgcolor'] : "FFFFFF").";}',
             body_class: 'mceDefBody'
@@ -151,30 +146,6 @@ if ($settings['tinymce_enabled'] == 1) {
             tinyMCE.execCommand('mceAddControl', false, id);
         else
             tinyMCE.execCommand('mceRemoveControl', false, id);
-    }
-
-    function RoxyFileBrowser(field_name, url, type, win) {
-      var roxyFileman = '".INCLUDES."filemanager_mce/index.php';
-      if (roxyFileman.indexOf(\"?\") < 0) {
-        roxyFileman += \"?type=\" + type;
-      }
-      else {
-        roxyFileman += \"&type=\" + type;
-      }
-      roxyFileman += '&input=' + field_name + '&value=' + win.document.getElementById(field_name).value;
-      if(tinyMCE.activeEditor.settings.language){
-        roxyFileman += '&langCode=' + tinyMCE.activeEditor.settings.language;
-      }
-      tinyMCE.activeEditor.windowManager.open({
-         file: roxyFileman,
-         title: 'File Manager',
-         width: 850,
-         height: 550,
-         resizable: \"yes\",
-         plugins: \"media\",
-         inline: \"yes\",
-         close_previous: \"no\"
-      }, {     window: win,     input: field_name    });
     }
     </script>\n";
 }
