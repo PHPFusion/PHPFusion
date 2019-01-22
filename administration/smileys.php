@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
 pageAccess('SM');
-require_once THEMES."templates/admin_header.php";
+require_once THEMES.'templates/admin_header.php';
 
 class SmileysAdministration {
     private static $locale = [];
@@ -266,7 +266,7 @@ class SmileysAdministration {
         $temp = IMAGES."smiley/";
         $smiley_files = makefilelist($temp, '.|..|.DS_Store|index.php', TRUE, "files");
         //$smiley_files = $smiley_files;
-        foreach ($smiley_files as $key => $smiley_check) {
+        foreach ($smiley_files as $smiley_check) {
 
             if (!in_array($smiley_check, $smiley)) {
                 $smiley_list[] = $smiley_check;
@@ -337,4 +337,4 @@ class SmileysAdministration {
 $smileys = SmileysAdministration::getInstance();
 $smileys->display_admin();
 
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';

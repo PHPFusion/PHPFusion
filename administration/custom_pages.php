@@ -17,6 +17,6 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
 pageAccess("CP");
-require_once THEMES."templates/admin_header.php";
+require_once THEMES.'templates/admin_header.php';
 PHPFusion\Page\PageAdmin::getComposerAdminInstance()->display_page();
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';

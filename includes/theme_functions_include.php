@@ -1085,6 +1085,8 @@ if (!function_exists("countdown")) {
         if (!isset($answer)) {
             return "<abbr class='atooltip' data-toggle='tooltip' data-placement='top' title='".showdate('newsdate', time())."'>".$locale['now']."</abbr>";
         }
+
+        return NULL;
     }
 }
 
@@ -1178,6 +1180,8 @@ if (!function_exists("tab_active")
                 $id = $array['id'][$default_active];
                 return $id;;
             }
+
+            return NULL;
         }
 
         public function set_remember($value) {

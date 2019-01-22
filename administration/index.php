@@ -19,7 +19,7 @@ require_once __DIR__.'/../maincore.php';
 if (!iADMIN || fusion_get_userdata('user_rights') == "" || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
     redirect("../index.php");
 }
-require_once THEMES."templates/admin_header.php";
+require_once THEMES.'templates/admin_header.php';
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/main.php');
 if (!isset($_GET['pagenum']) || !isnum($_GET['pagenum'])) {
     $_GET['pagenum'] = 1;
@@ -253,4 +253,4 @@ if (isset($_GET['pagenum']) && isnum($_GET['pagenum'])) {
 }
 
 render_admin_dashboard();
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';

@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
 pageAccess('S1');
-require_once THEMES."templates/admin_header.php";
+require_once THEMES.'templates/admin_header.php';
 
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/settings.php');
 
@@ -401,4 +401,4 @@ add_to_jquery("
     });
 ");*/
 
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';

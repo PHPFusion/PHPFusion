@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
 pageAccess('S9');
-require_once THEMES."templates/admin_header.php";
+require_once THEMES.'templates/admin_header.php';
 $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/settings.php");
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'settings_user.php'.fusion_get_aidlink(), 'title' => $locale['user_settings']]);
 
@@ -161,4 +161,4 @@ echo "</div>\n</div>\n";
 echo form_button('savesettings', $locale['750'], $locale['750'], ['class' => 'btn-success']);
 echo closeform();
 closetable();
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';

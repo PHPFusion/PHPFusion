@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
-require_once THEMES."templates/admin_header.php";
+require_once THEMES.'templates/admin_header.php';
 
 use \PHPFusion\BreadCrumbs;
 
@@ -238,7 +238,7 @@ class CommentsAdministration {
 
             if (!empty($info['data'])) {
                 echo '<div class="list-group">';
-                foreach ($info['data'] as $key => $coment) {
+                foreach ($info['data'] as $coment) {
                     echo "<div class='list-group-item'>\n";
                     echo "<div class='btn-group pull-right'>\n";
                     echo "<a class='btn btn-xs btn-default' href='".$coment['edit_link']."'>".$this->locale['edit']."</a>\n";
@@ -301,4 +301,4 @@ class CommentsAdministration {
 
 CommentsAdministration::getInstance()->display_administration_form();
 
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';

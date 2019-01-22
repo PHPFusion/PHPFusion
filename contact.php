@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/maincore.php';
 require_once THEMES.'templates/header.php';
-require_once THEMES.'templates/global/contact.php';
+require_once THEMES."templates/global/contact.php";
 
 $settings = fusion_get_settings();
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'contact.php');

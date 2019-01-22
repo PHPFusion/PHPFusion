@@ -68,12 +68,12 @@ if (!function_exists("display_registerform")) {
             }
 
             if (!empty($info['user_field'])) {
-                foreach ($info['user_field'] as $field => $fieldData) {
+                foreach ($info['user_field'] as $fieldData) {
                     if (!empty($fieldData['title'])) {
                         echo $fieldData['title'];
                     }
                     if (!empty($fieldData['fields']) && is_array($fieldData['fields'])) {
-                        foreach ($fieldData['fields'] as $cField => $cFieldData) {
+                        foreach ($fieldData['fields'] as $cFieldData) {
                             if (!empty($cFieldData)) {
                                 echo $cFieldData;
                             }

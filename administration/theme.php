@@ -18,7 +18,7 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
 pageAccess('TS');
-require_once THEMES."templates/admin_header.php";
+require_once THEMES.'templates/admin_header.php';
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/theme.php');
 $theme_admin = new \PHPFusion\Atom\Admin();
 
@@ -51,4 +51,4 @@ switch ($_GET['action']) {
         break;
 }
 closetable();
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';

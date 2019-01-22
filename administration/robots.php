@@ -18,7 +18,7 @@
 require_once __DIR__.'/../maincore.php';
 pageAccess('ROB');
 
-require_once THEMES."templates/admin_header.php";
+require_once THEMES.'templates/admin_header.php';
 $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/robots.php");
 
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'robots.php'.fusion_get_aidlink(), 'title' => $locale['ROBOT_400']]);
@@ -93,4 +93,4 @@ echo closeform();
 closetable();
 add_to_jquery("$('#set_default').bind('click', function() { return confirm('".$locale['ROBOT_410']."'); });");
 
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';

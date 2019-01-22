@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
 pageAccess('APWR');
-require_once THEMES."templates/admin_header.php";
+require_once THEMES.'templates/admin_header.php';
 
 class AdminPasswordResetAdministration {
     private static $locale = [];
@@ -371,4 +371,4 @@ class AdminPasswordResetAdministration {
 
 $admres = new AdminPasswordResetAdministration();
 $admres->display_admin();
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';

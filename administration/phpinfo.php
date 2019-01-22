@@ -20,7 +20,7 @@ pageAccess('PI');
 
 use PHPFusion\BreadCrumbs;
 
-require_once THEMES."templates/admin_header.php";
+require_once THEMES.'templates/admin_header.php';
 $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/phpinfo.php");
 $aidlink = fusion_get_aidlink();
 BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'phpinfo.php'.fusion_get_aidlink(), 'title' => $locale['400']]);
@@ -131,7 +131,7 @@ function folderpermission() {
     ];
 
     $infusions = \PHPFusion\Admins::getInstance()->getFolderPermissions();
-    foreach ($infusions as $key => $value) {
+    foreach ($infusions as $value) {
         $folders += $value;
     }
 
@@ -178,4 +178,4 @@ function details() {
     echo $phpinfo;
 }
 
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';

@@ -49,7 +49,7 @@ class MainFrame extends Core {
                 if (isset($_POST['install_default_homepage'])) {
                     $val = stripinput($_POST['install_default_homepage']);
                     if ($val == 'yes') {
-                        require_once dirname(__FILE__).'/../../themefactory/lib/installer/home.inc';
+                        require_once __DIR__.'/../../themefactory/lib/installer/home.inc';
                         new HomeInstall();
                     }
                     $row = [

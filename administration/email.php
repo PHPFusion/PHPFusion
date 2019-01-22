@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
 pageAccess('MAIL');
-require_once THEMES."templates/admin_header.php";
+require_once THEMES.'templates/admin_header.php';
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/emails.php');
 require_once INCLUDES."html_buttons_include.php";
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'email.php'.fusion_get_aidlink(), 'title' => $locale['MAIL_000']]);
@@ -309,4 +309,4 @@ add_to_jquery("
                 allowClear:true}).val('');
         });
     ");
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';

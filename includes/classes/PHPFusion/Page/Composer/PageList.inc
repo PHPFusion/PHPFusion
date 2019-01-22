@@ -271,9 +271,7 @@ class PageList extends PageAdmin {
             echo "<th class='col-xs-4'>".self::$locale['page_0101']."</th>\n";
             echo "<th>".$locale['page_0102']."</th>\n";
             echo "<th>".$locale['page_0103']."</th>\n";
-            //echo "<th>".$locale['page_0104']."</th>\n";
-            //echo "<th>".$locale['page_0105']."</th>\n";
-            echo "<th>".$locale['page_0305']."</th>\n";
+            echo "<th>".$locale['status']."</th>\n";
             echo "<th>".$locale['page_0118']."</th>\n";
             echo "<th>".$locale['page_0106']."</th>\n";
             echo "</tr>\n";
@@ -287,7 +285,7 @@ class PageList extends PageAdmin {
                     $pageLanguage .= "<span class='badge'>".translate_lang_names($languages)."</span>\n";
                 }
                 //$pageParent = $pageData['page_cat'] == 0 ? self::$locale['page_0106'] : "<a href='".clean_request('pref='.$pageData['page_cat'], ['pref'], FALSE)."'>".$pageData['page_cat_title']."</a>\n";
-                $pageStatus = $pageData['page_status'] == 1 ? self::$locale['publish'] : self::$locale['unpublish'];
+                $pageStatus = $pageData['page_status'] == 1 ? self::$locale['published'] : self::$locale['unpublished'];
                 $edit_link = FUSION_SELF.$aidlink."&amp;section=compose_frm&amp;action=edit&amp;cpid=".$pageData['page_id'];
                 // Disable until later releases
                 //$pageLink = clean_request('pref='.$pageData['page_id'], array('pref'), FALSE);
@@ -298,13 +296,10 @@ class PageList extends PageAdmin {
                 echo "<td><a href='$edit_link'>".$pageData['page_title']."</a></td>\n";
                 echo "<td>".getgroupname($pageData['page_access'])."</td>\n";
                 echo "<td>".$pageLanguage."</td>\n";
-                //echo "<td>$pageParent</td>\n";
-                //echo "<td>".$pageData['page_sub_count']."</td>\n";
-                echo "<td>$pageStatus</td>\n";
-                echo "<td>";
-                echo "<a target='_new' href='".BASEDIR."viewpage.php?page_id=".$pageData['page_id']."'>".$locale['preview']."</a> &middot;
-                <a href='$edit_link'>".$locale['edit']."</a> &middot;
-                <a class='delete' href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;cpid=".$pageData['page_id']."' onclick=\"return confirm('".$locale['page_0413']."');\">".$locale['delete']."</a>";
+                echo "<td>$pageStatus</td><td>\n";
+                if ($pageData['page_status'] == 1) { echo "<a target='_new' href='".BASEDIR."viewpage.php?page_id=".$pageData['page_id']."'>".$locale['preview']."</a> &middot;\n"; }
+                echo "<a href='$edit_link'>".$locale['edit']."</a> &middot;\n";
+                echo "<a class='delete' href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;cpid=".$pageData['page_id']."' onclick=\"return confirm('".$locale['page_0413']."');\">".$locale['delete']."</a>\n";
                 echo "</td>";
                 echo "<td>".$pageData['page_id']."</td>\n";
                 echo "</tr>\n";

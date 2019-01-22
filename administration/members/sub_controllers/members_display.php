@@ -20,8 +20,8 @@ namespace Administration\Members\Sub_Controllers;
 
 use Administration\Members\Members_Admin;
 use Administration\Members\Members_View;
-use PHPFusion\UserFieldsQuantum;
 use PHPFusion\Template;
+use PHPFusion\UserFieldsQuantum;
 
 /**
  * Class Members_Display
@@ -32,6 +32,7 @@ class Members_Display extends Members_Admin {
 
     /**
      * List members
+     *
      * @return string
      */
     public static function render_listing() {
@@ -332,17 +333,8 @@ class Members_Display extends Members_Admin {
     }
 
     /**
-     * List member link
-     * @param $value
-     *
-     * @return string
-     */
-    protected function list_uri($value) {
-        return "<a href='".self::$status_uri[$value]."'><strong>".getsuspension($value)."</strong></a>\n";
-    }
-
-    /**
      * Listing formatter for user results
+     *
      * @param $user_id
      * @param $list
      * @param $selected_fields
@@ -373,6 +365,17 @@ class Members_Display extends Members_Admin {
         $html .= "</tr>\n";
 
         return $html;
+    }
+
+    /**
+     * List member link
+     *
+     * @param $value
+     *
+     * @return string
+     */
+    protected function list_uri($value) {
+        return "<a href='".self::$status_uri[$value]."'><strong>".getsuspension($value)."</strong></a>\n";
     }
 
 }

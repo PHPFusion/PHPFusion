@@ -16,9 +16,8 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/maincore.php';
-require_once THEMES."templates/header.php";
-require_once THEMES."templates/global/profile.php";
-require_once __DIR__."/gateway/index.php";
+require_once THEMES.'templates/header.php';
+require_once THEMES.'templates/global/profile.php';
 
 $locale = fusion_get_locale("", LOCALE.LOCALESET."user_fields.php");
 add_to_title($locale['global_107']);
@@ -84,4 +83,4 @@ if (isset($_GET['email']) && isset($_GET['code'])) {
     }
 }
 
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';

@@ -88,11 +88,13 @@ class Members_Profile extends Members_Admin {
         }
         $opentab = '';
         $closetab = '';
+        $tabpages = [];
+        $tab_content = '';
         if (!empty(self::$info['section'])) {
             $tab = new \FusionTabs();
             $tab->set_remember(TRUE);
 
-            foreach(self::$info['section'] as $tab_id => $tabdata) {
+            foreach (self::$info['section'] as $tab_id => $tabdata) {
                 $tabpages['title'][$tab_id] = $tabdata['name'];
                 $tabpages['id'][$tab_id] = $tabdata['id'];
             }
@@ -100,7 +102,7 @@ class Members_Profile extends Members_Admin {
             $default_active = key(self::$info['section']);
             $tab_active = $tab::tab_active($tabpages, $default_active);
             $tab_content = '';
-            foreach(self::$info['section'] as $tab_id => $tabdata) {
+            foreach (self::$info['section'] as $tab_id => $tabdata) {
                 $user_field = '';
                 if (isset(self::$info['user_field'][$tab_id])) {
                     foreach (self::$info['user_field'][$tab_id] as $cat_id => $field_prop) {
@@ -181,7 +183,7 @@ class Members_Profile extends Members_Admin {
         } else {
 
             addNotice('danger', "There are no user by found by the user id");
-            redirect( clean_request('', ['ref', 'lookup'], FALSE) );
+            redirect(clean_request('', ['ref', 'lookup'], FALSE));
         }
 
 
@@ -209,7 +211,7 @@ class Members_Profile extends Members_Admin {
                 /**
                  * @todo: Need to store user content reference column in a table for each infusions
                  */
-                if (infusion_exists('gallery')) {
+                if (defined('GALLERY_EXIST')) {
                     // Delete photos
                     $result = dbquery("SELECT album_id, photo_filename, photo_thumb1, photo_thumb2 FROM ".DB_PHOTOS." WHERE photo_user=:photo_user", [':photo_user' => $user_id]);
                     if (dbrows($result)) {
@@ -229,16 +231,16 @@ class Members_Profile extends Members_Admin {
                 dbquery("DELETE FROM ".DB_SUSPENDS." WHERE suspended_user=:suspended_user", [':suspended_user' => $user_id]);
                 dbquery("DELETE FROM ".DB_MESSAGES." WHERE message_to=:message_to OR message_from=:message_from", [':message_to' => $user_id, ':message_from' => $user_id]);
 
-                if (db_exists(DB_ARTICLES)) {
+                if (defined('ARTICLES_EXIST')) {
                     dbquery("DELETE FROM ".DB_ARTICLES." WHERE article_name=:article_name", [':article_name' => $user_id]);
                 }
-                if (db_exists(DB_NEWS)) {
+                if (defined('NEWS_EXIST')) {
                     dbquery("DELETE FROM ".DB_NEWS." WHERE news_name=:news_name", [':news_name' => $user_id]);
                 }
-                if (db_exists(DB_POLL_VOTES)) {
+                if (defined('MEMBER_POLL_PANEL_EXIST')) {
                     dbquery("DELETE FROM ".DB_POLL_VOTES." WHERE vote_user=:vote_user", [':vote_user' => $user_id]);
                 }
-                if (db_exists(DB_FORUMS)) {
+                if (defined('FORUM_EXIST')) {
                     dbquery("DELETE FROM ".DB_FORUM_THREADS." WHERE thread_author=:thread_author", [':thread_author' => $user_id]);
                     dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE post_author=:post_author", [':post_author' => $user_id]);
                     dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE notify_user=:notify_user", [':notify_user' => $user_id]);

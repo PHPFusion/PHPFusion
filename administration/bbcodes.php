@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
 pageAccess('BB');
-require_once THEMES."templates/admin_header.php";
+require_once THEMES.'templates/admin_header.php';
 $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/bbcodes.php");
 
 use \PHPFusion\BreadCrumbs;
@@ -281,4 +281,4 @@ function bbcode_form() {
 
 }
 
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';

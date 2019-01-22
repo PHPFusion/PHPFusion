@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
 pageAccess('AD');
-require_once THEMES."templates/admin_header.php";
+require_once THEMES.'templates/admin_header.php';
 $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/admins.php");
 
 PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
@@ -314,4 +314,4 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
     closetable();
 }
 
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';

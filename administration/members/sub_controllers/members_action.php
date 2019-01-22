@@ -314,5 +314,5 @@ class Members_Action extends Members_Admin {
 
 }
 
-require_once(dirname(__FILE__).'/../../../includes/sendmail_include.php');
-require_once(dirname(__FILE__).'/../../../includes/suspend_include.php');
+require_once(__DIR__.'/../../../includes/sendmail_include.php');
+require_once(__DIR__.'/../../../includes/suspend_include.php');

@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
 pageAccess("LANG");
-require_once THEMES."templates/admin_header.php";
+require_once THEMES.'templates/admin_header.php';
 $locale = fusion_get_locale('', [LOCALE.LOCALESET.'admin/settings.php', LOCALE.LOCALESET.'setup.php']);
 
 // Just follow the display of the current admin language.
@@ -368,7 +368,7 @@ echo "</div>\n";
 echo form_button('savesettings', $locale['750'], $locale['750'], ['class' => 'btn-primary']);
 echo closeform();
 closetable();
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';
 
 
 /**

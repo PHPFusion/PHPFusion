@@ -16,11 +16,9 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
-require_once THEMES."templates/admin_header.php";
-new Settings_Registration();
+require_once THEMES.'templates/admin_header.php';
 
 class Settings_Registration {
-
     private $locale = [];
     private $settings = [];
     private $login = NULL;
@@ -47,83 +45,6 @@ class Settings_Registration {
         } else {
             $this->display_general_settings();
         }
-    }
-
-    private function display_general_settings() {
-
-        $settings = [
-            'login_method'        => $this->settings['login_method'],
-            'license_agreement'   => $this->settings['license_agreement'],
-            'enable_registration' => $this->settings['enable_registration'],
-            'email_verification'  => $this->settings['email_verification'],
-            'admin_activation'    => $this->settings['admin_activation'],
-            'display_validation'  => $this->settings['display_validation'],
-            'enable_terms'        => $this->settings['enable_terms'],
-            'license_lastupdate'  => $this->settings['license_lastupdate'],
-            'force_register'      => 0,
-        ];
-
-        if (isset($_POST['savesettings'])) {
-
-            $inputData = [
-                'login_method'        => form_sanitizer($_POST['login_method'], '0', 'login_method'),
-                'license_agreement'   => addslash(preg_replace('(^<p>\s</p>$)', '', $_POST['license_agreement'])),
-                'enable_registration' => form_sanitizer($_POST['enable_registration'], '0', 'enable_registration'),
-                'email_verification'  => (isset($_POST['email_verification']) ? 1 : 0),
-                'admin_activation'    => (isset($_POST['admin_activation']) ? 1 : 0),
-                'display_validation'  => (isset($_POST['display_validation']) ? 1 : 0),
-                'enable_terms'        => form_sanitizer($_POST['enable_terms'], '0', 'enable_terms'),
-                'license_lastupdate'  => (addslash($_POST['license_agreement']) != fusion_get_settings('license_agreement') ? time() : fusion_get_settings('license_lastupdate'))
-            ];
-
-            if (\defender::safe()) {
-                foreach ($inputData as $this->settings_name => $this->settings_value) {
-                    $data = [
-                        'settings_name'  => $this->settings_name,
-                        'settings_value' => $this->settings_value
-                    ];
-                    dbquery_insert(DB_SETTINGS, $data, 'update', ['primary_key' => 'settings_name']);
-                }
-                addNotice('success', $this->locale['900']);
-                redirect(FUSION_REQUEST);
-            }
-        }
-
-        opentable("General and Policy Settings");
-        echo openform('settingsform', 'post', FUSION_REQUEST);;
-        echo "<p>".$this->locale['register_description']."</p>\n<hr/>";
-        echo "<div class='row'>\n<div class='col-xs-12 col-sm-3'>\n";
-        echo "<h4 class='m-0'>".$this->locale['register_settings']."</h4>";
-        echo "</div>\n<div class='col-xs-12 col-sm-9'>\n";
-        echo form_checkbox('enable_registration', $this->locale['551'], $settings['enable_registration'], ['reverse_label' => TRUE]);
-        echo form_checkbox('email_verification', $this->locale['552'], $settings['email_verification'], ['reverse_label' => TRUE]);
-        echo form_checkbox('admin_activation', $this->locale['557'], $settings['admin_activation'], ['reverse_label' => TRUE]);
-        echo form_checkbox('display_validation', $this->locale['553'], $settings['display_validation'], ['reverse_label' => TRUE]);
-        echo "</div>\n</div>\n";
-        echo "<hr/>\n";
-        echo "<div class='row'>\n";
-        echo "<div class='col-xs-12 col-sm-3'>\n";
-        echo "<h4 class='m-0'>Login Behaviors</h4>";
-        echo "</div>\n<div class='col-xs-12 col-sm-9'>\n";
-        $opts = ['0' => $this->locale['global_101'], '1' => $this->locale['699e'], '2' => $this->locale['699b']];
-        echo form_select('login_method', $this->locale['699'], $settings['login_method'], ['options' => $opts]);
-        echo "</div>\n</div>\n";
-        echo "<hr/>\n";
-
-        echo form_select('enable_terms', $this->locale['558'], $settings['enable_terms'], ['options' => [
-            0 => $this->locale['disable'],
-            1 => $this->locale['enable'],
-        ]]);
-        echo form_textarea('license_agreement', $this->locale['559'], $settings['license_agreement'], [
-            'form_name' => 'settingsform',
-            'input_id'  => 'enable_license_agreement',
-            'autosize'  => !fusion_get_settings('tinymce_enabled') ? FALSE : TRUE,
-            'type'      => (fusion_get_settings('tinymce_enabled') ? 'tinymce' : 'html')
-        ]);
-
-        echo form_button('savesettings', $this->locale['750'], $this->locale['750'], ['class' => 'btn-success']);
-        echo closeform();
-        closetable();
     }
 
     private function display_login_settings() {
@@ -280,6 +201,85 @@ class Settings_Registration {
         return $html;
     }
 
+    private function display_general_settings() {
+
+        $settings = [
+            'login_method'        => $this->settings['login_method'],
+            'license_agreement'   => $this->settings['license_agreement'],
+            'enable_registration' => $this->settings['enable_registration'],
+            'email_verification'  => $this->settings['email_verification'],
+            'admin_activation'    => $this->settings['admin_activation'],
+            'display_validation'  => $this->settings['display_validation'],
+            'enable_terms'        => $this->settings['enable_terms'],
+            'license_lastupdate'  => $this->settings['license_lastupdate'],
+            'force_register'      => 0,
+        ];
+
+        if (isset($_POST['savesettings'])) {
+
+            $inputData = [
+                'login_method'        => form_sanitizer($_POST['login_method'], '0', 'login_method'),
+                'license_agreement'   => addslash(preg_replace('(^<p>\s</p>$)', '', $_POST['license_agreement'])),
+                'enable_registration' => form_sanitizer($_POST['enable_registration'], '0', 'enable_registration'),
+                'email_verification'  => (isset($_POST['email_verification']) ? 1 : 0),
+                'admin_activation'    => (isset($_POST['admin_activation']) ? 1 : 0),
+                'display_validation'  => (isset($_POST['display_validation']) ? 1 : 0),
+                'enable_terms'        => form_sanitizer($_POST['enable_terms'], '0', 'enable_terms'),
+                'license_lastupdate'  => (addslash($_POST['license_agreement']) != fusion_get_settings('license_agreement') ? time() : fusion_get_settings('license_lastupdate'))
+            ];
+
+            if (\defender::safe()) {
+                foreach ($inputData as $settings_name => $settings_value) {
+                    $data = [
+                        'settings_name'  => $settings_name,
+                        'settings_value' => $settings_value
+                    ];
+                    dbquery_insert(DB_SETTINGS, $data, 'update', ['primary_key' => 'settings_name']);
+                }
+                addNotice('success', $this->locale['900']);
+                redirect(FUSION_REQUEST);
+            }
+        }
+
+        opentable("General and Policy Settings");
+        echo openform('settingsform', 'post', FUSION_REQUEST);;
+        echo "<p>".$this->locale['register_description']."</p>\n<hr/>";
+        echo "<div class='row'>\n<div class='col-xs-12 col-sm-3'>\n";
+        echo "<h4 class='m-0'>".$this->locale['register_settings']."</h4>";
+        echo "</div>\n<div class='col-xs-12 col-sm-9'>\n";
+        echo form_checkbox('enable_registration', $this->locale['551'], $settings['enable_registration'], ['reverse_label' => TRUE]);
+        echo form_checkbox('email_verification', $this->locale['552'], $settings['email_verification'], ['reverse_label' => TRUE]);
+        echo form_checkbox('admin_activation', $this->locale['557'], $settings['admin_activation'], ['reverse_label' => TRUE]);
+        echo form_checkbox('display_validation', $this->locale['553'], $settings['display_validation'], ['reverse_label' => TRUE]);
+        echo "</div>\n</div>\n";
+        echo "<hr/>\n";
+        echo "<div class='row'>\n";
+        echo "<div class='col-xs-12 col-sm-3'>\n";
+        echo "<h4 class='m-0'>Login Behaviors</h4>";
+        echo "</div>\n<div class='col-xs-12 col-sm-9'>\n";
+        $opts = ['0' => $this->locale['global_101'], '1' => $this->locale['699e'], '2' => $this->locale['699b']];
+        echo form_select('login_method', $this->locale['699'], $settings['login_method'], ['options' => $opts]);
+        echo "</div>\n</div>\n";
+        echo "<hr/>\n";
+
+        echo form_select('enable_terms', $this->locale['558'], $settings['enable_terms'], ['options' => [
+            0 => $this->locale['disable'],
+            1 => $this->locale['enable'],
+        ]]);
+        echo form_textarea('license_agreement', $this->locale['559'], $settings['license_agreement'], [
+            'form_name' => 'settingsform',
+            'input_id'  => 'enable_license_agreement',
+            'autosize'  => !fusion_get_settings('tinymce_enabled') ? FALSE : TRUE,
+            'type'      => (fusion_get_settings('tinymce_enabled') ? 'tinymce' : 'html')
+        ]);
+
+        echo form_button('savesettings', $this->locale['750'], $this->locale['750'], ['class' => 'btn-success']);
+        echo closeform();
+        closetable();
+    }
+
 }
 
-require_once THEMES."templates/footer.php";
+new Settings_Registration();
+
+require_once THEMES.'templates/footer.php';

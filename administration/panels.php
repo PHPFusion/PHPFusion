@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
 pageAccess("P");
-require_once THEMES."templates/admin_header.php";
+require_once THEMES.'templates/admin_header.php';
 
 class PanelsAdministration {
     /**
@@ -732,4 +732,4 @@ class PanelsAdministration {
 $panel = new PanelsAdministration();
 $panel->display_admin();
 
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';

@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
-require_once THEMES."templates/admin_header.php";
+require_once THEMES.'templates/admin_header.php';
 pageAccess('I');
 $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/infusions.php");
 $settings = fusion_get_settings();
@@ -26,8 +26,10 @@ add_to_jquery("$('.defuse').bind('click', function() {return confirm('".$locale[
 
 if (($folder = filter_input(INPUT_POST, 'infuse'))) {
     \PHPFusion\Installer\Infusion_Core::getInstance()->infuse($folder);
+    redirect(FUSION_REQUEST);
 } else if ($folder = filter_input(INPUT_POST, 'defuse')) {
     \PHPFusion\Installer\Infusion_Core::getInstance()->defuse($folder);
+    redirect(FUSION_REQUEST);
 }
 
 opentable($locale['400']);
@@ -82,11 +84,9 @@ if (!isset($_POST['infuse']) && !isset($_POST['infusion']) && !isset($_GET['defu
              ".($inf['url'] ? "</a>" : "")."
              ".($inf['email'] ? "|<a class='m-l-5' href='mailto:".$inf['email']."'>".$locale['409']."</a>" : '');
 
-
-
             $content .= "<tr class='$row_class'><td>\n";
             $content .= "</td>\n<td class='col-lg-4'>\n";
-            $content .= "<div class='pull-left m-r-20'><img style='width:48px;' src='".$inf['image']."' title='".$inf['name']."'/></div>\n";
+            $content .= "<div class='pull-left m-r-20'><img style='width:48px;' alt='".$inf['name']."' src='".$inf['image']."'/></div>\n";
             $content .= "<div class='overflow-hide'>\n";
             $content .= ($inf['status'] > 0 ? "<strong>" : "").$inf['title'].($inf['status'] > 0 ? "</strong>" : "")."<br/>";
             $content .= openform('infuseform', 'post', FUSION_SELF.fusion_get_aidlink());
@@ -109,4 +109,4 @@ if (!isset($_POST['infuse']) && !isset($_POST['infusion']) && !isset($_GET['defu
     echo $content;
 }
 closetable();
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';

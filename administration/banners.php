@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
-require_once THEMES."templates/admin_header.php";
+require_once THEMES.'templates/admin_header.php';
 pageAccess('SB');
 
 class BannersAdministration {
@@ -187,4 +187,4 @@ class BannersAdministration {
 
 BannersAdministration::getInstance()->display_admin();
 
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';
