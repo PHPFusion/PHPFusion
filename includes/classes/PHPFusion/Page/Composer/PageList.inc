@@ -271,9 +271,7 @@ class PageList extends PageAdmin {
             echo "<th class='col-xs-4'>".self::$locale['page_0101']."</th>\n";
             echo "<th>".$locale['page_0102']."</th>\n";
             echo "<th>".$locale['page_0103']."</th>\n";
-            //echo "<th>".$locale['page_0104']."</th>\n";
-            //echo "<th>".$locale['page_0105']."</th>\n";
-            echo "<th>".$locale['page_0305']."</th>\n";
+            echo "<th>".$locale['status']."</th>\n";
             echo "<th>".$locale['page_0118']."</th>\n";
             echo "<th>".$locale['page_0106']."</th>\n";
             echo "</tr>\n";
