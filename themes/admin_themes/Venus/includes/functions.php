@@ -101,7 +101,7 @@ function render_dashboard() {
         openside("", "well");
         echo "<strong class='text-smaller text-uppercase'>".$locale['265']." ".$locale['258']."</strong>\n";
         echo "<div class='clearfix m-t-10'>\n";
-        echo "<img class='img-responsive pull-right dashboard-icon' src='".get_image("ac_Forums")."'/>\n";
+        echo "<img class='img-responsive pull-right dashboard-icon' src='".get_image("ac_F")."'/>\n";
         echo "<div class='pull-left display-inline-block m-r-10'>\n";
         echo "<span class='text-smaller'>".$locale['265']."</span>\n<br/>\n";
         echo "<h4 class='m-t-0'>".number_format($forum['count'])."</h4>\n";
@@ -128,7 +128,7 @@ function render_dashboard() {
         openside("", "well");
         echo "<strong class='text-smaller text-uppercase'>".$locale['269']." ".$locale['258']."</strong>\n";
         echo "<div class='clearfix m-t-10'>\n";
-        echo "<img class='img-responsive pull-right dashboard-icon' src='".get_image("ac_News")."'/>\n";
+        echo "<img class='img-responsive pull-right dashboard-icon' src='".get_image("ac_N")."'/>\n";
         echo "<div class='pull-left display-inline-block m-r-10'>\n";
         echo "<span class='text-smaller'>".$locale['269']."</span>\n<br/>\n";
         echo "<h4 class='m-t-0'>".number_format($news['news'])."</h4>\n";
@@ -151,7 +151,7 @@ function render_dashboard() {
         openside("", "well");
         echo "<strong class='text-smaller text-uppercase'>".$locale['BLOG']." ".$locale['258']."</strong>\n";
         echo "<div class='clearfix m-t-10'>\n";
-        echo "<img class='img-responsive pull-right dashboard-icon' src='".get_image("ac_Blog")."'/>\n";
+        echo "<img class='img-responsive pull-right dashboard-icon' src='".get_image("ac_BLOG")."'/>\n";
         echo "<div class='pull-left display-inline-block m-r-10'>\n";
         echo "<span class='text-smaller'>".$locale['269b']."</span>\n<br/>\n";
         echo "<h4 class='m-t-0'>".number_format($blog['blog'])."</h4>\n";
@@ -179,7 +179,7 @@ function render_dashboard() {
         openside("", "well");
         echo "<strong class='text-smaller text-uppercase'>".$locale['268']." ".$locale['258']."</strong>\n";
         echo "<div class='clearfix m-t-10'>\n";
-        echo "<img class='img-responsive pull-right dashboard-icon' src='".get_image("ac_Downloads")."'/>\n";
+        echo "<img class='img-responsive pull-right dashboard-icon' src='".get_image("ac_D")."'/>\n";
         echo "<div class='pull-left display-inline-block m-r-10'>\n";
         echo "<span class='text-smaller'>".$locale['268']."</span>\n<br/>\n";
         echo "<h4 class='m-t-0'>".number_format($download['download'])."</h4>\n";
@@ -202,7 +202,7 @@ function render_dashboard() {
         openside("", "well");
         echo "<strong class='text-smaller text-uppercase'>".$locale['270']." ".$locale['258']."</strong>\n";
         echo "<div class='clearfix m-t-10'>\n";
-        echo "<img class='img-responsive pull-right dashboard-icon' src='".get_image("ac_Articles")."'/>\n";
+        echo "<img class='img-responsive pull-right dashboard-icon' src='".get_image("ac_A")."'/>\n";
         echo "<div class='pull-left display-inline-block m-r-10'>\n";
         echo "<span class='text-smaller'>".$locale['270']."</span>\n<br/>\n";
         echo "<h4 class='m-t-0'>".number_format($articles['article'])."</h4>\n";
@@ -225,7 +225,7 @@ function render_dashboard() {
         openside("", "well");
         echo "<strong class='text-smaller text-uppercase'>".$locale['271']." ".$locale['258']."</strong>\n";
         echo "<div class='clearfix m-t-10'>\n";
-        echo "<img class='img-responsive pull-right dashboard-icon' src='".get_image("ac_Web Links")."'/>\n";
+        echo "<img class='img-responsive pull-right dashboard-icon' src='".get_image("ac_W")."'/>\n";
         echo "<div class='pull-left display-inline-block m-r-10'>\n";
         echo "<span class='text-smaller'>".$locale['271']."</span>\n<br/>\n";
         echo "<h4 class='m-t-0'>".number_format($weblinks['weblink'])."</h4>\n";
@@ -244,7 +244,7 @@ function render_dashboard() {
         openside("", "well");
         echo "<strong class='text-smaller text-uppercase'>".$locale['272']." ".$locale['258']."</strong>\n";
         echo "<div class='clearfix m-t-10'>\n";
-        echo "<img class='img-responsive pull-right dashboard-icon' src='".get_image("ac_Photo Albums")."'/>\n";
+        echo "<img class='img-responsive pull-right dashboard-icon' src='".get_image("ac_P")."'/>\n";
         echo "<div class='pull-left display-inline-block m-r-10'>\n";
         echo "<span class='text-smaller'>".$locale['261']."</span>\n<br/>\n";
         echo "<h4 class='m-t-0'>".number_format($photos['photo'])."</h4>\n";
