@@ -287,7 +287,7 @@ class PageList extends PageAdmin {
                     $pageLanguage .= "<span class='badge'>".translate_lang_names($languages)."</span>\n";
                 }
                 //$pageParent = $pageData['page_cat'] == 0 ? self::$locale['page_0106'] : "<a href='".clean_request('pref='.$pageData['page_cat'], ['pref'], FALSE)."'>".$pageData['page_cat_title']."</a>\n";
-                $pageStatus = $pageData['page_status'] == 1 ? self::$locale['publish'] : self::$locale['unpublish'];
+                $pageStatus = $pageData['page_status'] == 1 ? self::$locale['published'] : self::$locale['unpublished'];
                 $edit_link = FUSION_SELF.$aidlink."&amp;section=compose_frm&amp;action=edit&amp;cpid=".$pageData['page_id'];
                 // Disable until later releases
                 //$pageLink = clean_request('pref='.$pageData['page_id'], array('pref'), FALSE);
