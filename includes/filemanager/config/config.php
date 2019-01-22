@@ -413,7 +413,7 @@ $config = [
     // Hidden files and folders
     //**********************
     // set the names of any folders you want hidden (eg "hidden_folder1", "hidden_folder2" ) Remember all folders with these names will be hidden (you can set any exceptions in config.php files on folders)
-    'hidden_folders'                          => [],
+    'hidden_folders'                          => ['thumbs'],
     // set the names of any files you want hidden. Remember these names will be hidden in all folders (eg "this_document.pdf", "that_image.jpg" )
     'hidden_files'                            => ['config.php'],
 
