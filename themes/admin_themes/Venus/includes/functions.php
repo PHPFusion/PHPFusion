@@ -80,7 +80,7 @@ function render_dashboard() {
         $block['link'] = empty($block['link']) ? $block['link'] : '&amp;'.$block['link'];
         echo "<div class='col-xs-$mobile col-sm-$tablet col-md-$laptop col-lg-$desktop'>\n";
         openside();
-        echo "<img class='pull-left m-r-10 dashboard-icon' src='".get_image('ac_Members')."' alt='".$locale['M']."'/>\n";
+        echo "<img class='pull-left m-r-10 dashboard-icon' src='".get_image('ac_M')."' alt='".$locale['M']."'/>\n";
         echo "<h4 class='text-right m-t-0 m-b-0'>".number_format($members[$panel])."</h4>\n";
         echo "<span class='m-t-10 text-uppercase text-lighter text-smaller pull-right'><strong>".$locale[$block['title']]."</strong></span>\n";
         $content_ = "<div class='text-right text-uppercase'>\n";
