@@ -594,13 +594,13 @@ class PanelsAdministration {
             'inline'   => FALSE,
             'required' => TRUE
         ]);
-		echo "<div class='text-smaller'>".self::$locale['463']." <br />
-		/home.php <br />
-		/infusions/news* <br />
-		/infusions/news/news.php <br />
-		/infusions/forum* <br />
-		/infusions/forum/index.php <br />
-		</div>\n";
+        echo "<div class='text-smaller'>".self::$locale['463']." <br />
+        /home.php <br />
+        /infusions/news* <br />
+        /infusions/news/news.php <br />
+        /infusions/forum* <br />
+        /infusions/forum/index.php <br />
+        </div>\n";
         echo "</div>\n";
         echo form_hidden('panel_display', '', $this->data['panel_display']);
         closeside();

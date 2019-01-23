@@ -220,12 +220,6 @@ class Panels {
         }
     }
 
-    public function wildcard_match($source, $pattern) {
-        $pattern = preg_quote($pattern, '/');
-        $pattern = str_replace('\*', '.*', $pattern);
-        return preg_match('/^'.$pattern.'$/i', $source);
-    }
-
     /**
      * Cache and generate Panel Constants
      */
@@ -260,22 +254,21 @@ class Panels {
                 if (!defined("ADMIN_PANEL")) {
 
                     if (self::check_panel_status($p_side['side']) && !isset(self::$panel_excluded[$p_key + 1])) {
-						
+
                         foreach (self::$panels_cache[$p_key + 1] as $p_data) {
 
                             $show_panel = FALSE;
-							$url_arr = [];
-							$url_arr = explode("\r\n", $p_data['panel_url_list']);
-							$url = [];
-		
-							$source = "/".PERMALINK_CURRENT_PATH;
+                            $url_arr = explode("\r\n", $p_data['panel_url_list']);
+                            $url = [];
 
-							foreach ($url_arr as $url_list) {
-								$url[] = $url_list;
-								if ($this->wildcard_match($source, $url_list)) {
-									$url[] = $source;
-								}
-							}
+                            $source = "/".PERMALINK_CURRENT_PATH;
+
+                            foreach ($url_arr as $url_list) {
+                                $url[] = $url_list;
+                                if ($this->wildcard_match($source, $url_list)) {
+                                    $url[] = $source;
+                                }
+                            }
 
                             switch ($p_data['panel_restriction']) {
                                 case 1:
@@ -441,5 +434,11 @@ class Panels {
         } else {
             return TRUE;
         }
+    }
+
+    public function wildcard_match($source, $pattern) {
+        $pattern = preg_quote($pattern, '/');
+        $pattern = str_replace('\*', '.*', $pattern);
+        return preg_match('/^'.$pattern.'$/i', $source);
     }
 }
