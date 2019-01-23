@@ -3035,17 +3035,6 @@ table.text-center th {
     text-align: right;
 }
 
-.tbl1 {
-    word-break: break-all;
-}
-
-.tbl1 > div > a {
-    display: block;
-    padding: 7.76px 0;
-    margin: -8px;
-    border-left: 1px solid #ddd;
-}
-
 .tbl2 {
     background-color: #f8f8f8;
 }

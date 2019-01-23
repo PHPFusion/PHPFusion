@@ -16,7 +16,9 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
-if (!checkrights("SL") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {redirect("../index.php");}
+if (!checkrights("SL") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
+    redirect("../index.php");
+}
 
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/sitelinks.php";
@@ -144,7 +146,7 @@ if (multilang_table("SL")) {
     echo "<tr><td class='tbl'>".$locale['global_ML100']."</td>\n";
     $opts = get_available_languages_list($selected_language = "$link_language");
     echo "<td class='tbl'>
-	<select name='link_language' class='textbox' style='width:200px;'>".$opts."</select></td>\n";
+    <select name='link_language' class='textbox' style='width:200px;'>".$opts."</select></td>\n";
     echo "</tr>\n";
 } else {
     echo "<input type='hidden' name='link_language' value='".$link_language."' />\n";
