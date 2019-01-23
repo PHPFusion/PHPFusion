@@ -150,98 +150,97 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         switch ($options['tinymce']) {
             case 'advanced':
                 add_to_jquery("
-                tinymce.init({
-                selector: '#".$options['input_id']."',
-                inline: ".($options['inline_editing'] == TRUE ? "true" : "false").",
-                theme: '".$options['tinymce_theme']."',
-                skin: '".(defined('TINYMCE_SKIN') ? TINYMCE_SKIN : $options['tinymce_skin'])."',
-                ".(defined('TINYMCE_SKIN_PATH') ? "skin_url: '".TINYMCE_SKIN_PATH."', " : '')."
-                browser_spellcheck: ".$options['tinymce_spellcheck'].",
-                entity_encoding: 'raw',
-                language:'".$locale['tinymce']."',
-                directionality : '".$locale['text-direction']."',
-                ".($options['tinymce_forced_root'] ? "forced_root_block: ''," : '')."
-                width: '100%',
-                height: 300,
-                plugins: [
-                    'advlist autolink ".($options['autosize'] ? " autoresize " : "")." link image lists charmap print preview hr anchor pagebreak spellchecker',
-                    'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
-                    'save table contextmenu directionality template paste textcolor ".($options['inline_editing'] ? " save " : "")."'
-                ],
-                image_list: $tinymce_list,
-                content_css: '".$options['tinymce_css']."',
-                toolbar1: '".($options['inline_editing'] ? " save " : "")." insertfile undo redo | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | newdocument fullscreen preview cut copy paste pastetext spellchecker searchreplace code',
-                toolbar2: 'styleselect formatselect removeformat | fontselect fontsizeselect bold italic underline strikethrough subscript superscript blockquote | forecolor backcolor',
-                toolbar3: 'hr pagebreak insertdatetime | link unlink anchor | image media | table charmap visualchars visualblocks emoticons',
-                image_advtab: true,
-                style_formats: [
-                    {title: 'Bold text', inline: 'b'},
-                    {title: 'Red text', inline: 'span', styles: {color: '#ff0000'}},
-                    {title: 'Red header', block: 'h1', styles: {color: '#ff0000'}},
-                    {title: 'Example 1', inline: 'span', classes: 'example1'},
-                    {title: 'Example 2', inline: 'span', classes: 'example2'},
-                    {title: 'Table styles'},
-                    {title: 'Table row 1', selector: 'tr', classes: 'tablerow1'}
-                ],
-                setup: function(ed) {
-                    // add tabkey listener
-                    ed.on('keydown', function(event) {
-                        if (event.keyCode == 9) { // tab pressed
-                            if (event.shiftKey) { ed.execCommand('Outdent'); } else { ed.execCommand('Indent'); }
-                            event.preventDefault();
-                            return false;
-                        }
+                    tinymce.init({
+                    selector: '#".$options['input_id']."',
+                    inline: ".($options['inline_editing'] == TRUE ? "true" : "false").",
+                    theme: '".$options['tinymce_theme']."',
+                    skin: '".(defined('TINYMCE_SKIN') ? TINYMCE_SKIN : $options['tinymce_skin'])."',
+                    ".(defined('TINYMCE_SKIN_PATH') ? "skin_url: '".TINYMCE_SKIN_PATH."', " : '')."
+                    browser_spellcheck: ".$options['tinymce_spellcheck'].",
+                    entity_encoding: 'raw',
+                    language:'".$locale['tinymce']."',
+                    directionality : '".$locale['text-direction']."',
+                    ".($options['tinymce_forced_root'] ? "forced_root_block: ''," : '')."
+                    width: '100%',
+                    height: 300,
+                    plugins: [
+                        'advlist autolink ".($options['autosize'] ? " autoresize " : "")." link image lists charmap print preview hr anchor pagebreak spellchecker',
+                        'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
+                        'save table contextmenu directionality template paste textcolor ".($options['inline_editing'] ? " save " : "")."'
+                    ],
+                    image_list: $tinymce_list,
+                    content_css: '".$options['tinymce_css']."',
+                    toolbar1: '".($options['inline_editing'] ? " save " : "")." insertfile undo redo | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | newdocument fullscreen preview cut copy paste pastetext spellchecker searchreplace code',
+                    toolbar2: 'styleselect formatselect removeformat | fontselect fontsizeselect bold italic underline strikethrough subscript superscript blockquote | forecolor backcolor',
+                    toolbar3: 'hr pagebreak insertdatetime | link unlink anchor | image media | table charmap visualchars visualblocks emoticons',
+                    image_advtab: true,
+                    style_formats: [
+                        {title: 'Bold text', inline: 'b'},
+                        {title: 'Red text', inline: 'span', styles: {color: '#ff0000'}},
+                        {title: 'Red header', block: 'h1', styles: {color: '#ff0000'}},
+                        {title: 'Example 1', inline: 'span', classes: 'example1'},
+                        {title: 'Example 2', inline: 'span', classes: 'example2'},
+                        {title: 'Table styles'},
+                        {title: 'Table row 1', selector: 'tr', classes: 'tablerow1'}
+                    ],
+                    setup: function(ed) {
+                        // add tabkey listener
+                        ed.on('keydown', function(event) {
+                            if (event.keyCode == 9) { // tab pressed
+                                if (event.shiftKey) { ed.execCommand('Outdent'); } else { ed.execCommand('Indent'); }
+                                event.preventDefault();
+                                return false;
+                            }
+                        });
+                        // auto smileys parsing
+                        ".$tinymce_smiley_vars."
+                    }
                     });
-                    // auto smileys parsing
-                    ".$tinymce_smiley_vars."
-                }
-                });
                 ");
                 break;
             case 'simple':
                 add_to_jquery("
-                tinymce.init({
-                selector: '#".$options['input_id']."',
-                inline: ".($options['inline_editing'] == TRUE ? "true" : "false").",
-                theme: '".$options['tinymce_theme']."',
-                skin: '".(defined('TINYMCE_SKIN') ? TINYMCE_SKIN : $options['tinymce_skin'])."',
-                ".(defined('TINYMCE_SKIN_PATH') ? "skin_url: '".TINYMCE_SKIN_PATH."', " : '')."
-                browser_spellcheck: ".$options['tinymce_spellcheck'].",
-                entity_encoding: 'raw',
-                menubar: false,
-                statusbar: false,
-                content_css: '".$options['tinymce_css']."',
-                image_list: $tinymce_list,
-                plugins: [
-                    'advlist autolink ".($options['autosize'] ? " autoresize " : "")." link image lists charmap print preview hr anchor pagebreak spellchecker',
-                    'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
-                    'contextmenu directionality template paste".($options['bbcode'] ? " bbcode " : "").($options['autosize'] ? " autoresize " : "").($options['inline_editing'] ? " save " : "")."'
-                ],
-                width: '100%',
-                height: 100,
-                image_advtab: true,
-                toolbar1: 'undo redo | bold italic underline | emoticons | visualblocks | bullist numlist blockquote | hr ".($options['tinymce_image'] ? " image " : "")." media | fullscreen ".($options['inline_editing'] ? " save " : "")." | code',
-                language: '".$locale['tinymce']."',
-                directionality : '".$locale['text-direction']."',
-                ".($options['tinymce_forced_root'] ? "forced_root_block: ''," : '')."
-                object_resizing: ".($options['autosize'] ? "false" : "true").",
-                resize: ".($options['autosize'] ? "false" : "true").",
-                relative_urls: false,
-                setup: function(ed) {
-                    // add tabkey listener
-                    ed.on('keydown', function(event) {
-                        if (event.keyCode == 9) { // tab pressed
-                            if (event.shiftKey) { ed.execCommand('Outdent'); } else { ed.execCommand('Indent'); }
-                            event.preventDefault();
-                            return false;
-                        }
+                    tinymce.init({
+                    selector: '#".$options['input_id']."',
+                    inline: ".($options['inline_editing'] == TRUE ? "true" : "false").",
+                    theme: '".$options['tinymce_theme']."',
+                    skin: '".(defined('TINYMCE_SKIN') ? TINYMCE_SKIN : $options['tinymce_skin'])."',
+                    ".(defined('TINYMCE_SKIN_PATH') ? "skin_url: '".TINYMCE_SKIN_PATH."', " : '')."
+                    browser_spellcheck: ".$options['tinymce_spellcheck'].",
+                    entity_encoding: 'raw',
+                    menubar: false,
+                    statusbar: false,
+                    content_css: '".$options['tinymce_css']."',
+                    image_list: $tinymce_list,
+                    plugins: [
+                        'advlist autolink ".($options['autosize'] ? " autoresize " : "")." link image lists charmap print preview hr anchor pagebreak spellchecker',
+                        'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
+                        'contextmenu directionality template paste".($options['bbcode'] ? " bbcode " : "").($options['autosize'] ? " autoresize " : "").($options['inline_editing'] ? " save " : "")."'
+                    ],
+                    width: '100%',
+                    height: 100,
+                    image_advtab: true,
+                    toolbar1: 'undo redo | bold italic underline | emoticons | visualblocks | bullist numlist blockquote | hr ".($options['tinymce_image'] ? " image " : "")." media | fullscreen ".($options['inline_editing'] ? " save " : "")." | code',
+                    language: '".$locale['tinymce']."',
+                    directionality : '".$locale['text-direction']."',
+                    ".($options['tinymce_forced_root'] ? "forced_root_block: ''," : '')."
+                    object_resizing: ".($options['autosize'] ? "false" : "true").",
+                    resize: ".($options['autosize'] ? "false" : "true").",
+                    relative_urls: false,
+                    setup: function(ed) {
+                        // add tabkey listener
+                        ed.on('keydown', function(event) {
+                            if (event.keyCode == 9) { // tab pressed
+                                if (event.shiftKey) { ed.execCommand('Outdent'); } else { ed.execCommand('Indent'); }
+                                event.preventDefault();
+                                return false;
+                            }
+                        });
+                        // auto smileys parsing
+                        ".$tinymce_smiley_vars."
+                    }
                     });
-                    // auto smileys parsing
-                    ".$tinymce_smiley_vars."
-                }
-                });
-        ");
-                add_to_jquery("
+
                 $('#inject').bind('click', function () {
                     tinyMCE.activeEditor.execCommand(\"mceInsertContent\", true, '[b]I am injecting in stuff..[/b]');
                     });
@@ -249,31 +248,31 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                 break;
             case 'default':
                 add_to_jquery("
-                tinymce.init({
-                selector: '#".$options['input_id']."',
-                inline: ".($options['inline_editing'] == TRUE ? "true" : "false").",
-                content_css: '".$options['tinymce_css']."',
-                theme: '".$options['tinymce_theme']."',
-                skin: '".(defined('TINYMCE_SKIN') ? TINYMCE_SKIN : $options['tinymce_skin'])."',
-                ".(defined('TINYMCE_SKIN_PATH') ? "skin_url: '".TINYMCE_SKIN_PATH."', " : '')."
-                browser_spellcheck: ".$options['tinymce_spellcheck'].",
-                entity_encoding: 'raw',
-                language:'".$locale['tinymce']."',
-                directionality : '".$locale['text-direction']."',
-                ".($options['tinymce_forced_root'] ? "forced_root_block: ''," : '')."
-                setup: function(ed) {
-                    // add tabkey listener
-                    ed.on('keydown', function(event) {
-                        if (event.keyCode == 9) { // tab pressed
-                            if (event.shiftKey) { ed.execCommand('Outdent'); } else { ed.execCommand('Indent'); }
-                            event.preventDefault();
-                            return false;
-                        }
+                    tinymce.init({
+                    selector: '#".$options['input_id']."',
+                    inline: ".($options['inline_editing'] == TRUE ? "true" : "false").",
+                    content_css: '".$options['tinymce_css']."',
+                    theme: '".$options['tinymce_theme']."',
+                    skin: '".(defined('TINYMCE_SKIN') ? TINYMCE_SKIN : $options['tinymce_skin'])."',
+                    ".(defined('TINYMCE_SKIN_PATH') ? "skin_url: '".TINYMCE_SKIN_PATH."', " : '')."
+                    browser_spellcheck: ".$options['tinymce_spellcheck'].",
+                    entity_encoding: 'raw',
+                    language:'".$locale['tinymce']."',
+                    directionality : '".$locale['text-direction']."',
+                    ".($options['tinymce_forced_root'] ? "forced_root_block: ''," : '')."
+                    setup: function(ed) {
+                        // add tabkey listener
+                        ed.on('keydown', function(event) {
+                            if (event.keyCode == 9) { // tab pressed
+                                if (event.shiftKey) { ed.execCommand('Outdent'); } else { ed.execCommand('Indent'); }
+                                event.preventDefault();
+                                return false;
+                            }
+                        });
+                        // auto smileys parsing
+                        ".$tinymce_smiley_vars."
+                    }
                     });
-                    // auto smileys parsing
-                    ".$tinymce_smiley_vars."
-                }
-                });
                 ");
                 break;
         }
@@ -286,8 +285,12 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         }
 
         if ($options['autosize'] || defined('AUTOSIZE')) {
-            add_to_footer("<script type='text/javascript' src='".DYNAMICS."assets/autosize/autosize.min.js'></script>");
-            add_to_jquery("autosize($('#".$options['input_id']."'));");
+            add_to_jquery("
+                $('#".$options['input_id']."').on('keyup',function(){
+                    $(this).css('height','auto');
+                    $(this).height(this.scrollHeight);
+                });
+            ");
         }
     }
 
