@@ -546,7 +546,7 @@ class Admins {
 
             $html .= "<li class='".($active ? 'active panel' : 'panel')."' >\n";
 
-            if (!empty($admin_pages[$i]) && is_array($admin_pages[$i])) {
+            if (!empty($admin_pages[$i])) {
                 $html .= "<a class='adl-link ".($active ? '' : 'collapsed')."' data-parent='#adl' data-toggle='collapse' href='#adl-$i'>".$this->get_admin_section_icons($i)." <span class='adl-section-name'>".$section_name.($i > 4 ? " <span class='badge'>".count($admin_pages[$i])."</span>" : "")."</span> ".($i > 0 ? "<span class='adl-drop pull-right'><i class='fa fa-angle-".($active ? "left" : "down")."'></i></span>" : '')."</a>\n";
                 $html .= "<div id='adl-$i' class='collapse ".($active ? 'in' : '')."'>\n";
                 $html .= "<ul class='admin-submenu'>\n";
@@ -559,10 +559,29 @@ class Admins {
                     }
 
                     $secondary_active = $data['admin_link'] == $this->_currentPage() ? "class='active'" : '';
-
                     $icons = ($image_icon === TRUE) ? "<img class='admin-image' src='".get_image("ac_".$data['admin_rights'])."' alt='$title'/>" : $this->get_admin_icons($data['admin_rights']);
 
-                    $html .= checkrights($data['admin_rights']) ? "<li $secondary_active><a href='".ADMIN.$data['admin_link'].$aidlink."'>".$icons." <span class='adl-submenu-title'>".$title."</span></a></li>\n" : "";
+                    if (!empty($admin_pages[$data['admin_rights']])) {
+                        if (checkrights($data['admin_rights'])) {
+                            $html .= "<li $secondary_active id='adl-sub' class='sub_pages'>";
+                            $html .= "<a class='adl-link' data-parent='#adl-sub' data-toggle='collapse' href='#adl-sub-$i'>".$icons." <span class='adl-submenu-title'>".$title."</span> <span class='adl-drop pull-right'><i class='fa fa-angle-down'></i></span></a>";
+                            $html .= "<div id='adl-sub-$i' class='collapse'>\n";
+                            $html .= "<ul class='admin-subpages'>";
+
+                            foreach ($admin_pages[$data['admin_rights']] as $sub_key => $sub_page) {
+                                $subpage_active = $sub_page['admin_link'] == $this->_currentPage() ? "class='active'" : '';
+                                $html .= "<li $subpage_active><a href='".$sub_page['admin_link']."'><span class='adl-submenu-title'>".$sub_page['admin_title']."</span></a></li>";
+
+                            }
+
+                            $html .= "</ul>\n";
+                            $html .= "</div>\n";
+                            $html .= "</li>";
+                        }
+                    } else {
+                        $html .= checkrights($data['admin_rights']) ? "<li $secondary_active><a href='".ADMIN.$data['admin_link'].$aidlink."'>".$icons." <span class='adl-submenu-title'>".$title."</span></a></li>\n" : "";
+                    }
+
                 }
 
                 $html .= "</ul>\n";
