@@ -64,7 +64,7 @@ if (!empty($rewrite_files)) {
             $driver_file = INCLUDES."rewrites/".$rewrite_name."_rewrite_include.php";
             $info_file = INCLUDES."rewrites/".$rewrite_name."_rewrite_info.php";
             $locale_file = LOCALE.LOCALESET."permalinks/".$rewrite_name.".php";
-            $rewrite_registers[$rewrite_name] = array();
+            $rewrite_registers[$rewrite_name] = [];
             $rewrite_registers[$rewrite_name]['driver_path'] = $driver_file;
             if (file_exists($info_file)) {
                 $rewrite_registers[$rewrite_name]['info_path'] = $info_file;
@@ -84,7 +84,7 @@ if (!empty($rewrite_files)) {
 // Check Addons Drivers
 $inf_list = makefilelist(INFUSIONS, ".|..|index.php", TRUE, "folders");
 if (!empty($inf_list)) {
-    foreach($inf_list as $infusions_to_check) {
+    foreach ($inf_list as $infusions_to_check) {
         if (is_dir(INFUSIONS.$infusions_to_check.'/permalinks/')) {
             $rewrite_files = makefilelist(INFUSIONS.$infusions_to_check.'/permalinks/', ".|..|index.php", TRUE, "files");
             if (!empty($rewrite_files)) {
@@ -95,7 +95,7 @@ if (!empty($inf_list)) {
                         $driver_file = INFUSIONS.$infusions_to_check."/permalinks/".$rewrite_name."_rewrite_include.php";
                         $info_file = INFUSIONS.$infusions_to_check."/permalinks/".$rewrite_name."_rewrite_info.php";
                         $locale_file = INFUSIONS.$infusions_to_check."/locale/".LANGUAGE."/permalinks/".$rewrite_name.".php";
-                        $rewrite_registers[$rewrite_name] = array();
+                        $rewrite_registers[$rewrite_name] = [];
                         $rewrite_registers[$rewrite_name]['driver_path'] = $driver_file;
                         if (file_exists($info_file)) {
                             $rewrite_registers[$rewrite_name]['info_path'] = $info_file;
@@ -200,7 +200,7 @@ if (isset($_GET['enable']) && !empty($rewrite_registers[$_GET['enable']])) {
         addNotice('warning', sprintf($locale['PL_425'], $permalink_name));
     }
     redirect(clean_request('', ['enable', 'section'], FALSE));
-} elseif (isset($_GET['disable'])) {
+} else if (isset($_GET['disable'])) {
     $rewrite_name = stripinput($_GET['disable']);
 
     // Delete Data
@@ -219,7 +219,7 @@ if (isset($_GET['enable']) && !empty($rewrite_registers[$_GET['enable']])) {
 
     addNotice('success', sprintf($locale['PL_426'], $permalink_name));
     redirect(clean_request('', ['disable', 'section'], FALSE));
-} elseif (isset($_GET['reinstall']) && !empty($rewrite_registers[$_GET['reinstall']])) {
+} else if (isset($_GET['reinstall']) && !empty($rewrite_registers[$_GET['reinstall']])) {
     /**
      * Delete Data (Copied from Disable)
      */
@@ -392,7 +392,7 @@ switch ($_GET['section']) {
                 echo "<th><strong>".$locale['PL_403']."</strong></th>\n";
                 echo "</tr>\n</thead>";
                 echo "<tbody>\n";
-                foreach($available_rewrites as $rewrite_name) {
+                foreach ($available_rewrites as $rewrite_name) {
                     if (!empty($rewrite_registers[$rewrite_name])) {
                         // include file paths
                         $locale = fusion_get_locale("", $rewrite_registers[$rewrite_name]['locale_path']);
@@ -402,7 +402,7 @@ switch ($_GET['section']) {
                         $name = (!empty($permalink_name) ? $permalink_name : ucfirst($rewrite_name));
                         $version = (!empty($permalink_version) ? $permalink_version : "1.00");
                         $author = (!empty($permalink_author) ? $permalink_author : "PHP-Fusion Core Developers Team");
-                        $description = (!empty($permalink_desc) ? $permalink_desc : sprintf($locale['PL_429'], $permalink_name) );
+                        $description = (!empty($permalink_desc) ? $permalink_desc : sprintf($locale['PL_429'], $permalink_name));
                         $row_class = "";
                         $link = "<a href='".FUSION_SELF.$aidlink."&amp;enable=".$rewrite_name."'>".$locale['PL_404a']."</a>\n";
                         if (in_array($rewrite_name, $enabled_rewrites)) {

@@ -220,12 +220,6 @@ class Panels {
         }
     }
 
-    public function wildcard_match($source, $pattern) {
-        $pattern = preg_quote($pattern, '/');
-        $pattern = str_replace('\*', '.*', $pattern);
-        return preg_match('/^'.$pattern.'$/i', $source);
-    }
-
     /**
      * Cache and generate Panel Constants
      */
@@ -237,6 +231,7 @@ class Panels {
 
         $settings = fusion_get_settings();
         $locale = fusion_get_locale();
+
 
         if ($settings['site_seo'] == 1 && defined('IN_PERMALINK') && !isset($_GET['aid'])) {
             $params = http_build_query(Router::getRouterInstance()->get_FileParams());
@@ -263,13 +258,13 @@ class Panels {
                         foreach (self::$panels_cache[$p_key + 1] as $p_data) {
 
                             $show_panel = FALSE;
-
                             $url_arr = explode("\r\n", $p_data['panel_url_list']);
                             $url = [];
+
                             $source = "/".PERMALINK_CURRENT_PATH;
 
                             foreach ($url_arr as $url_list) {
-                                $url[] = $url_list; //strpos($urldata, '/', 0) ? $urldata : '/'.
+                                $url[] = $url_list;
                                 if ($this->wildcard_match($source, $url_list)) {
                                     $url[] = $source;
                                 }
@@ -296,7 +291,7 @@ class Panels {
                                     break;
                                 default: // Include on defined url only
                                     //  url_list is set, and panel_restriction set to 0 (Include) and current page matches url_list.
-                                    if (!empty($p_data['panel_url_list']) && in_array(PERMALINK_CURRENT_PATH, $url)) {
+                                    if (!empty($p_data['panel_url_list']) && in_array("/".PERMALINK_CURRENT_PATH, $url)) {
                                         $show_panel = TRUE;
                                     }
                                     break;
@@ -439,5 +434,11 @@ class Panels {
         } else {
             return TRUE;
         }
+    }
+
+    public function wildcard_match($source, $pattern) {
+        $pattern = preg_quote($pattern, '/');
+        $pattern = str_replace('\*', '.*', $pattern);
+        return preg_match('/^'.$pattern.'$/i', $source);
     }
 }

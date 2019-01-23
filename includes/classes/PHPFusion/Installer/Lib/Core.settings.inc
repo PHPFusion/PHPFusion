@@ -709,7 +709,7 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'admin_rights'   => 'U',
                 'admin_image'    => 'upgrade.png',
                 'admin_title'    => $locale['setup_3026'],
-                'admin_link'     => 'upgrade.php',
+                'admin_link'     => 'reserved',
                 'admin_page'     => 3,
                 'admin_language' => $localeset
             ],

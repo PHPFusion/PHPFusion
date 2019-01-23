@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: 9.03.upgrade.inc
+| Filename: 9.03.00.upgrade.inc
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -19,7 +19,7 @@ $settings = fusion_get_settings();
 
 $update_settings_tbl = [
     'entypo'  => 0,
-    'version' => '9.03',
+    'version' => '9.03.00',
 ];
 
 foreach ($update_settings_tbl as $key => $value) {
@@ -84,6 +84,7 @@ if (!column_exists(DB_ADMIN, 'admin_language', FALSE)) {
 }
 
 dbquery("UPDATE ".DB_ADMIN." SET admin_image='comments.png', admin_link='comments.php', admin_page='1' WHERE admin_rights='C'");
+dbquery("UPDATE ".DB_ADMIN." SET admin_link='reserved' WHERE admin_rights='U'");
 
 $result = dbquery("SHOW TABLES");
 while ($table = dbarraynum($result)) {

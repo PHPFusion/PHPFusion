@@ -590,16 +590,17 @@ class PanelsAdministration {
             'inline'  => TRUE
         ]);
         echo "<div id='panel_url_list-grp'>\n";
-        echo "<div class='text-smaller'></div>\n";
-        echo form_select('panel_url_list', self::$locale['462'], $this->data['panel_url_list'], [
-            'options'     => self::get_panel_url_list(),
-            'inline'      => TRUE,
-            'tags'        => TRUE,
-            'delimiter'   => "\r\n",
-            'multiple'    => TRUE,
-            'width'       => '100%',
-            'inner_width' => '100%'
+        echo form_textarea('panel_url_list', self::$locale['462'], $this->data['panel_url_list'], [
+            'inline'   => FALSE,
+            'required' => TRUE
         ]);
+        echo "<div class='text-smaller'>".self::$locale['463']." <br />
+        /home.php <br />
+        /infusions/news* <br />
+        /infusions/news/news.php <br />
+        /infusions/forum* <br />
+        /infusions/forum/index.php <br />
+        </div>\n";
         echo "</div>\n";
         echo form_hidden('panel_display', '', $this->data['panel_display']);
         closeside();
@@ -694,21 +695,6 @@ class PanelsAdministration {
             1 => self::$locale['464'],
             0 => self::$locale['465'],
         ];
-    }
-
-    /**
-     * Return page urls array
-     *
-     * @return array
-     */
-    static function get_panel_url_list() {
-        $list = [];
-        $file_list = makefilelist(BASEDIR, ".|..|.htaccess|.DS_Store|config.php|config.temp.php|.gitignore|LICENSE|README.md|robots.txt|reactivate.php|rewrite.php|maintenance.php|maincore.php|lostpassword.php|index.php|error.php");
-        foreach ($file_list as $files) {
-            $list[] = $files;
-        }
-
-        return $list;
     }
 
     /**

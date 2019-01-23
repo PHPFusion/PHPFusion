@@ -664,20 +664,20 @@ function get_core_tables($localeset) {
             'key'            => 1,
             'default'        => '0',
             'unsigned'       => FALSE,
-        ],
+        ], //login_name VARCHAR(100) NOT NULL DEFAULT '0',
         'login_type'     => [
             'type'    => 'VARCHAR',
             'length'  => 10,
             'default' => '0'
-        ],
+        ], //login_type VARCHAR(10) NOT NULL DEFAULT '0',
         'login_status'   => [
             'type'    => 'TINYINT',
             'length'  => 1,
             'default' => '0'
-        ],
+        ], //login_status TINYINT(1) NOT NULL DEFAULT 0,
         'login_settings' => [
             'type' => 'TEXT'
-        ]
+        ] //login_settings text NOT NULL,
     ];
     $table_package['ratings'] = [
         'rating_id'        => [
