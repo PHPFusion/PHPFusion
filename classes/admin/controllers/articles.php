@@ -76,6 +76,21 @@ class ArticlesAdmin extends ArticlesAdminModel {
         self::articleContent_form();
     }
 
+    private function execute_ArticlesDelete() {
+        if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['article_id']) && isnum($_GET['article_id'])) {
+            $article_id = intval($_GET['article_id']);
+
+            if (dbcount("(article_id)", DB_ARTICLES, "article_id=:articleid", [':articleid' => $article_id])) {
+                dbquery("DELETE FROM ".DB_COMMENTS." WHERE comment_item_id=:commentid AND comment_type=:commenttype", [':commentid' => $article_id, ':commenttype' => 'A']);
+                dbquery("DELETE FROM ".DB_RATINGS." WHERE rating_item_id=:ratingid AND rating_type=:ratingtype", [':ratingid' => $article_id, ':ratingtype' => 'A']);
+                dbquery("DELETE FROM ".DB_ARTICLES." WHERE article_id=:articleid", [':articleid' => $article_id]);
+                addNotice('success', $this->locale['article_0032']);
+            }
+
+            redirect(clean_request('', ['ref', 'action', 'cat_id'], FALSE));
+        }
+    }
+
     /**
      * Create or Update a Article
      */
@@ -154,7 +169,8 @@ class ArticlesAdmin extends ArticlesAdminModel {
                 'form_name'   => 'articleform',
                 'wordcount'   => TRUE,
                 'path'        => IMAGES_A,
-                'rows'        => '20'
+                'rows'        => '20',
+                'autosize'    => TRUE
             ];
             $articleExtendedSettings = [
                 'required'    => ($this->articleSettings['article_extended_required'] ? TRUE : FALSE),
@@ -165,7 +181,8 @@ class ArticlesAdmin extends ArticlesAdminModel {
                 'form_name'   => 'articleform',
                 'wordcount'   => TRUE,
                 'path'        => IMAGES_A,
-                'rows'        => '20'
+                'rows'        => '20',
+                'autosize'    => TRUE
             ];
         } else {
             $articleSnippetSettings = [
@@ -323,6 +340,8 @@ class ArticlesAdmin extends ArticlesAdminModel {
         ]);
     }
 
+    // Articles Delete Function
+
     /**
      * Displays Articles Listing
      */
@@ -474,11 +493,15 @@ class ArticlesAdmin extends ArticlesAdminModel {
             <div class="clearfix">
                 <div class="pull-right">
                     <?php if ($article_cats) { ?>
-                        <a class="btn btn-sm btn-success" href="<?php echo clean_request("ref=article_form", ["ref"], FALSE); ?>"><i class="fa fa-plus"></i> <?php echo $this->locale['article_0002']; ?></a>
+                        <a class="btn btn-sm btn-success" href="<?php echo clean_request("ref=article_form", ["ref"], FALSE); ?>"><i class="fa fa-plus"></i> <?php echo $this->locale['article_0002']; ?>
+                        </a>
                     <?php } ?>
-                    <button type="button" class="hidden-xs m-l-5 btn btn-sm btn-default" onclick="run_admin('publish', '#table_action', '#article_table');"><i class="fa fa-check"></i> <?php echo $this->locale['publish']; ?></button>
-                    <button type="button" class="hidden-xs m-l-5 btn btn-sm btn-default" onclick="run_admin('unpublish', '#table_action', '#article_table');"><i class="fa fa-ban"></i> <?php echo $this->locale['unpublish']; ?></button>
-                    <button type="button" class="hidden-xs m-l-5 btn btn-sm btn-danger" onclick="run_admin('delete', '#table_action', '#article_table');"><i class="fa fa-trash-o"></i> <?php echo $this->locale['delete']; ?></button>
+                    <button type="button" class="hidden-xs m-l-5 btn btn-sm btn-default" onclick="run_admin('publish', '#table_action', '#article_table');">
+                        <i class="fa fa-check"></i> <?php echo $this->locale['publish']; ?></button>
+                    <button type="button" class="hidden-xs m-l-5 btn btn-sm btn-default" onclick="run_admin('unpublish', '#table_action', '#article_table');">
+                        <i class="fa fa-ban"></i> <?php echo $this->locale['unpublish']; ?></button>
+                    <button type="button" class="hidden-xs m-l-5 btn btn-sm btn-danger" onclick="run_admin('delete', '#table_action', '#article_table');">
+                        <i class="fa fa-trash-o"></i> <?php echo $this->locale['delete']; ?></button>
                 </div>
 
                 <div class="display-inline-block pull-left m-r-10">
@@ -603,8 +626,12 @@ class ArticlesAdmin extends ArticlesAdminModel {
                         <tr data-id="<?php echo $data['article_id']; ?>">
                             <td class="hidden-xs"><?php echo form_checkbox('article_id[]', '', '', ['value' => $data['article_id'], 'class' => 'm-0']) ?></td>
                             <td><span class="text-dark"><?php echo $data['article_subject']; ?></span></td>
-                            <td><a class="text-dark" href="<?php echo $cat_edit_link ?>"><?php echo $data['article_cat_name']; ?></a></td>
-                            <td><span class="badge"><?php echo $data['article_draft'] ? $this->locale['yes'] : $this->locale['no']; ?></span></td>
+                            <td>
+                                <a class="text-dark" href="<?php echo $cat_edit_link ?>"><?php echo $data['article_cat_name']; ?></a>
+                            </td>
+                            <td>
+                                <span class="badge"><?php echo $data['article_draft'] ? $this->locale['yes'] : $this->locale['no']; ?></span>
+                            </td>
                             <td><?php echo($data['article_allow_comments'] ? format_word($data['comments_count'], $this->locale['fmt_comment']) : $this->locale['disable']); ?></td>
                             <td><?php echo($data['article_allow_ratings'] ? format_word($data['ratings_count'], $this->locale['fmt_rating']) : $this->locale['disable']); ?></td>
                             <td>
@@ -621,7 +648,9 @@ class ArticlesAdmin extends ArticlesAdminModel {
                     <?php
                     endwhile;
                 else: ?>
-                    <tr><td colspan="10" class="text-center"><?php echo($article_cats ? ($filter_empty ? $this->locale['article_0112'] : $this->locale['article_0113']) : $this->locale['article_0114']); ?></td></tr>
+                    <tr>
+                        <td colspan="10" class="text-center"><?php echo($article_cats ? ($filter_empty ? $this->locale['article_0112'] : $this->locale['article_0113']) : $this->locale['article_0114']); ?></td>
+                    </tr>
                 <?php endif; ?>
                 </tbody>
             </table>
@@ -665,21 +694,5 @@ class ArticlesAdmin extends ArticlesAdminModel {
                 $(this).closest('form').submit();
             });
         ");
-    }
-
-    // Articles Delete Function
-    private function execute_ArticlesDelete() {
-        if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['article_id']) && isnum($_GET['article_id'])) {
-            $article_id = intval($_GET['article_id']);
-
-            if (dbcount("(article_id)", DB_ARTICLES, "article_id=:articleid", [':articleid' => $article_id])) {
-                dbquery("DELETE FROM ".DB_COMMENTS." WHERE comment_item_id=:commentid AND comment_type=:commenttype", [':commentid' => $article_id, ':commenttype' => 'A']);
-                dbquery("DELETE FROM ".DB_RATINGS." WHERE rating_item_id=:ratingid AND rating_type=:ratingtype", [':ratingid' => $article_id, ':ratingtype' => 'A']);
-                dbquery("DELETE FROM ".DB_ARTICLES." WHERE article_id=:articleid", [':articleid' => $article_id]);
-                addNotice('success', $this->locale['article_0032']);
-            }
-
-            redirect(clean_request('', ['ref', 'action', 'cat_id'], FALSE));
-        }
     }
 }
