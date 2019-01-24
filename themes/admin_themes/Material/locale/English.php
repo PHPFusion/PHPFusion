@@ -28,9 +28,3 @@ $locale['material_010'] = 'Read';
 $locale['material_011'] = 'New Message';
 $locale['material_012'] = 'There are no messages';
 $locale['material_013'] = 'Created by';
-// Result Messages
-$locale['material_100'] = 'Failed system validation';
-$locale['material_101'] = 'Failed system security measures';
-$locale['material_102'] = 'Pages failed to load';
-$locale['material_103'] = 'Search string is too short';
-$locale['material_104'] = 'There are no results found';

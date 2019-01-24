@@ -154,7 +154,6 @@ class AdminPanel {
             echo '</div>';
 
             echo '<div class="sidebar-menu">';
-                echo '<div id="searchBox" data-action="search-box" style="display: none;"><a href="#"><i class="fa fa-search"></i></a></div>';
                 echo '<div class="search-box">';
                     echo '<i class="fa fa-search input-search-icon"></i>';
                     echo '<input type="text" id="search_box" name="search_box" class="form-control" placeholder="'.$locale['material_001'].'"/>';
@@ -166,7 +165,7 @@ class AdminPanel {
             echo '</div>';
         echo '</aside>';
 
-        OutputHandler::addToJQuery('search_ajax("'.MDT.'acp_search.php'.fusion_get_aidlink().'");');
+        OutputHandler::addToJQuery('search_ajax("'.ADMIN.'includes/acp_search.php'.fusion_get_aidlink().'");');
     }
 
     public function ThemeSettings() {

@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: Material/classes/Search.inc
+| Filename: AdminSearch.inc
 | Author: RobiNN
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -15,21 +15,32 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-namespace Material;
+namespace PHPFusion;
 
-use PHPFusion\Admins;
-
-class Search {
+/**
+ * Class AdminSearch
+ *
+ * @package PHPFusion
+ */
+class AdminSearch {
+    /**
+     * @var array
+     */
     private $result = [
         'data'   => [],
         'count'  => 0,
         'status' => ''
     ];
 
-    public function __construct() {
-        $locale = fusion_get_locale('', MDT_LOCALE);
+    /**
+     * Return results in json
+     *
+     * @return false|string|null
+     */
+    public function Result() {
+        $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/main.php');
 
-        if ($this->AuthorizeAid()) {
+        if ($this->authorizeAid()) {
             if (\defender::safe()) {
                 $result = [];
                 $search_string = (string)filter_input(INPUT_GET, 'pagestring');
@@ -62,10 +73,10 @@ class Search {
                     }
                 }
 
-                $result['status'] = !empty($this->result['status']) ? $locale['material_'.$this->result['status']] : '';
+                $result['status'] = !empty($this->result['status']) ? $locale['search_msg_'.$this->result['status']] : '';
 
                 if (!empty($this->result)) {
-                    $this->SetResult($this->result);
+                    $this->setResult($this->result);
 
                     if (!empty($this->result['data'])) {
                         foreach ($this->result['data'] as $data) {
@@ -99,26 +110,33 @@ class Search {
                     }
                 }
 
-                header('Content-Type: application/json');
-
-                echo json_encode($result);
+                return json_encode($result);
             } else {
                 $this->result['status'] = 101;
             }
         } else {
             $this->result['status'] = 100;
         }
+
+        return NULL;
     }
 
-    private function AuthorizeAid() {
-        if (isset($_GET['aid']) && iAUTH == $_GET['aid']) {
+    /**
+     * Check aidlink
+     *
+     * @return bool
+     */
+    private function authorizeAid() {
+        $aid = (string)filter_input(INPUT_GET, 'aid');
+
+        if (isset($aid) && iAUTH == $aid) {
             return TRUE;
         }
 
         return FALSE;
     }
 
-    private function SetResult($result) {
+    private function setResult($result) {
         $this->result = $result;
     }
 }
