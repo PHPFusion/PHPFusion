@@ -558,19 +558,18 @@ class Admins {
                         $title = isset(self::$locale[$data['admin_rights']]) ? self::$locale[$data['admin_rights']] : $title;
                     }
 
-                    $secondary_active = $data['admin_link'] == $this->_currentPage() ? "class='active'" : '';
+                    $secondary_active = $data['admin_link'] == $this->_currentPage() ? TRUE : FALSE;
                     $icons = ($image_icon === TRUE) ? "<img class='admin-image' src='".get_image("ac_".$data['admin_rights'])."' alt='$title'/>" : $this->get_admin_icons($data['admin_rights']);
 
                     if (!empty($admin_pages[$data['admin_rights']])) {
                         if (checkrights($data['admin_rights'])) {
-                            $html .= "<li $secondary_active id='adl-sub' class='sub_pages'>";
-                            $html .= "<a class='adl-link' data-parent='#adl-sub' data-toggle='collapse' href='#adl-sub-$i'>".$icons." <span class='adl-submenu-title'>".$title."</span> <span class='adl-drop pull-right'><i class='fa fa-angle-down'></i></span></a>";
-                            $html .= "<div id='adl-sub-$i' class='collapse'>\n";
+                            $html .= "<li".($secondary_active ? " class='active'" : '')."id='adl-sub' class='sub_pages'>";
+                            $html .= "<a class='adl-link' data-parent='#adl-sub' data-toggle='collapse' href='#adl-sub-$i'>".$icons." <span class='adl-submenu-title'>".$title."</span> <span class='adl-drop pull-right'><i class='fa fa-angle-".($secondary_active ? 'left' : 'down')."'></i></span></a>";
+                            $html .= "<div id='adl-sub-$i' class='collapse".($secondary_active ? ' in' : '')."'>\n";
                             $html .= "<ul class='admin-subpages'>";
 
                             foreach ($admin_pages[$data['admin_rights']] as $sub_key => $sub_page) {
-                                $subpage_active = $sub_page['admin_link'] == $this->_currentPage() ? "class='active'" : '';
-                                $html .= "<li $subpage_active><a href='".$sub_page['admin_link']."'><span class='adl-submenu-title'>".$sub_page['admin_title']."</span></a></li>";
+                                $html .= "<li><a href='".$sub_page['admin_link']."'><span class='adl-submenu-title'>".$sub_page['admin_title']."</span></a></li>";
 
                             }
 
