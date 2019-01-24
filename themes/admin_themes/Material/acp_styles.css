@@ -590,6 +590,10 @@ main {
     margin-right: 10px;
 }
 
+.sidebar .admin-vertical-link .admin-subpages li > a {
+    margin-left: 30px;
+}
+
 .sidebar-toggled .sidebar {
     width: 100%;
 }

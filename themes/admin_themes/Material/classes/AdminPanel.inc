@@ -166,37 +166,7 @@ class AdminPanel {
             echo '</div>';
         echo '</aside>';
 
-        OutputHandler::addToJQuery('$("#search_box").bind("keyup", function () {
-            var data = {
-                "pagestring": $(this).val()
-            };
-            $.ajax({
-                url: "'.MDT.'acp_search.php'.fusion_get_aidlink().'",
-                method: "get",
-                data: $.param(data),
-                beforeSend: function () {
-                    $("#ajax-loader").show();
-                },
-                success: function (e) {
-                    if ($("#search_box").val() == "") {
-                        $("#adl").show();
-                        $("#search_result").html(e).hide();
-                        $("#search_result li").html(e).hide();
-                    } else {
-                        if ($("body").hasClass("sidebar-sm")) {
-                            $("#adl").show();
-                        } else {
-                            $("#adl").hide();
-                        }
-
-                        $("#search_result").html(e).show();
-                    }
-                },
-                complete: function () {
-                    $("#ajax-loader").hide();
-                }
-            });
-        });');
+        OutputHandler::addToJQuery('search_ajax("'.MDT.'acp_search.php'.fusion_get_aidlink().'");');
     }
 
     public function ThemeSettings() {

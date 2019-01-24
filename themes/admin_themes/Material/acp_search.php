@@ -17,6 +17,15 @@
 +--------------------------------------------------------*/
 require_once '../../../maincore.php';
 define('MDT', THEMES.'admin_themes/Material/');
+
+if (!defined('MDT_LOCALE')) {
+    if (file_exists(THEMES.'admin_themes/Material/locale/'.LANGUAGE.'.php')) {
+        define('MDT_LOCALE', THEMES.'admin_themes/Material/locale/'.LANGUAGE.'.php');
+    } else {
+        define('MDT_LOCALE', THEMES.'admin_themes/Material/locale/English.php');
+    }
+}
+
 require_once MDT.'acp_autoloader.php';
 
 new Material\Search();

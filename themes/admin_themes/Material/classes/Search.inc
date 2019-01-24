@@ -27,19 +27,81 @@ class Search {
     ];
 
     public function __construct() {
+        $locale = fusion_get_locale('', MDT_LOCALE);
+
         if ($this->AuthorizeAid()) {
             if (\defender::safe()) {
-                $this->SearchPages();
-                $message = !empty($this->result['status']) ? $this->SetLocale($this->result['status']) : '';
+                $result = [];
+                $search_string = (string)filter_input(INPUT_GET, 'pagestring');
 
-                if (!empty($message)) {
-                    echo '<li><span>'.$message.'</span></li>';
+                if (isset($search_string)) {
+                    $available_pages = Admins::getInstance()->getAdminPages();
+
+                    if (strlen($search_string) >= 2) {
+                        $pages = flatten_array($available_pages);
+                        $result_rows = 0;
+
+                        if (!empty($pages)) {
+                            foreach ($pages as $page) {
+                                if (stristr($page['admin_title'], $search_string) == TRUE || stristr($page['admin_link'], $search_string) == TRUE) {
+                                    $this->result['data'][] = $page;
+                                    $result_rows++;
+                                }
+                            }
+                        } else {
+                            $this->result['status'] = 102;
+                        }
+
+                        if ($result_rows > 0) {
+                            $this->result['count'] = $result_rows;
+                        } else {
+                            $this->result['status'] = 104;
+                        }
+                    } else {
+                        $this->result['status'] = 103;
+                    }
                 }
+
+                $result['status'] = !empty($this->result['status']) ? $locale['material_'.$this->result['status']] : '';
 
                 if (!empty($this->result)) {
                     $this->SetResult($this->result);
-                    $this->DisplayResult();
+
+                    if (!empty($this->result['data'])) {
+                        foreach ($this->result['data'] as $data) {
+                            if (stristr($data['admin_link'], '/infusions/')) {
+                                $link = fusion_get_settings('siteurl').'infusions/'.$data['admin_link'];
+                            } else {
+                                $link = fusion_get_settings('siteurl').'administration/'.$data['admin_link'];
+                            }
+
+                            $link = $link.fusion_get_aidlink();
+
+                            $title = $data['admin_title'];
+
+                            if ($data['admin_page'] !== 5) {
+                                $title = isset($locale[$data['admin_rights']]) ? $locale[$data['admin_rights']] : $title;
+                            }
+
+                            $icon = strtr(get_image('ac_'.$data['admin_rights']), [
+                                INFUSIONS => fusion_get_settings('siteurl').'infusions/',
+                                ADMIN     => fusion_get_settings('siteurl').'administration/'
+                            ]);
+
+                            if (checkrights($data['admin_rights'])) {
+                                $result[] = [
+                                    'title' => $title,
+                                    'link'  => $link,
+                                    'icon'  => $icon
+                                ];
+                            }
+                        }
+                    }
                 }
+
+                header('Content-Type: application/json');
+
+                echo json_encode($result);
             } else {
                 $this->result['status'] = 101;
             }
@@ -56,81 +118,7 @@ class Search {
         return FALSE;
     }
 
-    private function SearchPages() {
-        if (isset($_GET['pagestring'])) {
-            $available_pages = Admins::getInstance()->getAdminPages();
-            $search_string = $_GET['pagestring'];
-
-            if (strlen($search_string) >= 2) {
-                $pages = flatten_array($available_pages);
-                $result_rows = 0;
-
-                if (!empty($pages)) {
-                    foreach ($pages as $page) {
-                        if (stristr($page['admin_title'], $search_string) == TRUE || stristr($page['admin_link'], $search_string) == TRUE) {
-                            $this->result['data'][] = $page;
-                            $result_rows++;
-                        }
-                    }
-                } else {
-                    $this->result['status'] = 102;
-                }
-
-                if ($result_rows > 0) {
-                    $this->result['count'] = $result_rows;
-                } else {
-                    $this->result['status'] = 104;
-                }
-            } else {
-                $this->result['status'] = 103;
-            }
-        }
-    }
-
     private function SetResult($result) {
         $this->result = $result;
-    }
-
-    private function DisplayResult() {
-        $locale = fusion_get_locale();
-
-        if (!empty($this->result['data'])) {
-            foreach ($this->result['data'] as $data) {
-                if (stristr($data['admin_link'], '/infusions/')) {
-                    $link = fusion_get_settings('siteurl').'infusions/'.$data['admin_link'];
-                } else {
-                    $link = fusion_get_settings('siteurl').'administration/'.$data['admin_link'];
-                }
-
-                $link = $link.fusion_get_aidlink();
-
-                $title = $data['admin_title'];
-
-                if ($data['admin_page'] !== 5) {
-                    $title = isset($locale[$data['admin_rights']]) ? $locale[$data['admin_rights']] : $title;
-                }
-
-                $icon = strtr(get_image('ac_'.$data['admin_rights']), [
-                    INFUSIONS => fusion_get_settings('siteurl').'infusions/',
-                    ADMIN     => fusion_get_settings('siteurl').'administration/'
-                ]);
-
-                if (checkrights($data['admin_rights'])) {
-                    echo '<li><a href="'.$link.'"><img src="'.$icon.'" alt="'.$title.'" class="admin-image"/>'.$title.'</a></li>';
-                }
-            }
-        }
-    }
-
-    private function SetLocale($lc = NULL) {
-        $locale = [];
-
-        if (file_exists(MDT.'locale/'.LANGUAGE.'.php')) {
-            include MDT.'locale/'.LANGUAGE.'.php';
-        } else {
-            include MDT.'locale/English.php';
-        }
-
-        return $locale['material_'.$lc];
     }
 }
