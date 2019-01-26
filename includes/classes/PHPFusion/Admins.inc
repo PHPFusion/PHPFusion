@@ -541,18 +541,15 @@ class Admins {
         $html = "<ul id='adl' class='admin-vertical-link'>\n";
 
         foreach ($admin_sections as $i => $section_name) {
-
             $active = ((isset($_GET['pagenum']) && $_GET['pagenum'] == $i) || (!isset($_GET['pagenum']) && $this->_isActive() == $i)) ? TRUE : FALSE;
 
             $html .= "<li class='".($active ? 'active panel' : 'panel')."' >\n";
 
             if (!empty($admin_pages[$i])) {
                 $html .= "<a class='adl-link ".($active ? '' : 'collapsed')."' data-parent='#adl' data-toggle='collapse' href='#adl-$i'>".$this->get_admin_section_icons($i)." <span class='adl-section-name'>".$section_name.($i > 4 ? " <span class='badge'>".count($admin_pages[$i])."</span>" : "")."</span> ".($i > 0 ? "<span class='adl-drop pull-right'><i class='fa fa-angle-".($active ? "left" : "down")."'></i></span>" : '')."</a>\n";
-                $html .= "<div id='adl-$i' class='collapse ".($active ? 'in' : '')."'>\n";
-                $html .= "<ul class='admin-submenu'>\n";
+                $html .= "<ul id='adl-$i' class='admin-submenu collapse ".($active ? 'in' : '')."'>\n";
 
                 foreach ($admin_pages[$i] as $key => $data) {
-
                     $title = $data['admin_title'];
                     if ($data['admin_page'] !== 5) {
                         $title = isset(self::$locale[$data['admin_rights']]) ? self::$locale[$data['admin_rights']] : $title;
@@ -564,29 +561,25 @@ class Admins {
                     if (!empty($admin_pages[$data['admin_rights']])) {
                         if (checkrights($data['admin_rights'])) {
                             $html .= "<li".($secondary_active ? " class='active'" : '')."id='adl-sub' class='sub_pages'>";
-                            $html .= "<a class='adl-link' data-parent='#adl-sub' data-toggle='collapse' href='#adl-sub-$i'>".$icons." <span class='adl-submenu-title'>".$title."</span> <span class='adl-drop pull-right'><i class='fa fa-angle-".($secondary_active ? 'left' : 'down')."'></i></span></a>";
-                            $html .= "<div id='adl-sub-$i' class='collapse".($secondary_active ? ' in' : '')."'>\n";
-                            $html .= "<ul class='admin-subpages'>";
+                            $html .= "<a class='adl-link' data-parent='#adl-sub' data-toggle='collapse' href='#adl-sub-$key'>".$icons." <span class='adl-submenu-title'>".$title."</span> <span class='adl-drop pull-right'><i class='fa fa-angle-".($secondary_active ? 'left' : 'down')."'></i></span></a>";
+                            $html .= "<ul id='adl-sub-$key' class='admin-subpages collapse".($secondary_active ? ' in' : '')."'>";
 
                             foreach ($admin_pages[$data['admin_rights']] as $sub_key => $sub_page) {
                                 $html .= "<li><a href='".$sub_page['admin_link']."'><span class='adl-submenu-title'>".$sub_page['admin_title']."</span></a></li>";
-
                             }
 
                             $html .= "</ul>\n";
-                            $html .= "</div>\n";
                             $html .= "</li>";
                         }
                     } else {
-                        $html .= checkrights($data['admin_rights']) ? "<li $secondary_active><a href='".ADMIN.$data['admin_link'].$aidlink."'>".$icons." <span class='adl-submenu-title'>".$title."</span></a></li>\n" : "";
+                        $html .= checkrights($data['admin_rights']) ? "<li".($secondary_active ? " class='active'" : '')."><a href='".ADMIN.$data['admin_link'].$aidlink."'>".$icons." <span class='adl-submenu-title'>".$title."</span></a></li>\n" : "";
                     }
 
                 }
 
                 $html .= "</ul>\n";
-                $html .= "</div>\n";
             } else {
-                $html .= "<a class='adl-link' href='".ADMIN."index.php".$aidlink."&amp;pagenum=0'>".$this->get_admin_section_icons($i)." <span class='adl-section-name'>".$section_name."</span> ".($i > 0 ? "<span class='adl-drop pull-right'></span>" : '')."</a>\n";
+                $html .= "<a class='adl-link' href='".ADMIN."index.php".$aidlink."&amp;pagenum=0'>".$this->get_admin_section_icons($i)." <span class='adl-section-name'>".$section_name."</span></a>\n";
             }
             $html .= "</li>\n";
         }
