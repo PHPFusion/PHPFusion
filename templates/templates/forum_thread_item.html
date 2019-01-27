@@ -1,0 +1,39 @@
+<!--thread item-->
+{threads.{
+<div id="thread_{%thread_id%}" class="thread-row">
+    <div class="row">
+        <div class="col-xs-10 col-sm-9 col-md-5">
+            <div class="pull-left m-r-15">
+                {%author_avatar%}
+            </div>
+            <div class="overflow-hide">
+                <h4 class="m-0">{%thread_icons%}<a class="strong forum-title" href="{%thread_link_url%}">{%thread_link_title%}</a>
+                </h4>
+                <small>{[by]} {%author_profile_link%} &middot; {%thread_time%}</small>
+                <div class="container-image spacer-sm">{%thread_attachments%}</div>
+            </div>
+        </div>
+        <div class="col-md-2 hidden-sm hidden-xs stats stats-votes">
+            {%thread_user_avatars%}
+        </div>
+        <div class="col-md-2 hidden-sm hidden-xs stats stats-votes">
+            <small>
+                <span class="m-r-10">{%thread_votecount_word%}</span>
+                <span class="m-r-10">{%thread_postcount_word%}</span>
+                <span class="m-r-10">{%thread_views_word%}</span>
+            </small>
+        </div>
+        <div class="col-md-3 col-sm-3 teaser hidden-xs">
+            <div class="pull-right">{%thread_buttons%}</div>
+            <small>{%last_avatar_sm%} {%last_profile_link%} {%last_activity_time%}</small>
+            <br/>
+            <small class="line-compressed">{%last_post_message%}</small>
+        </div>
+    </div>
+</div>
+}}
+{no_item.{
+<div class="p-15">
+    <strong>{[forum_0269]}</strong>
+</div>
+}}
