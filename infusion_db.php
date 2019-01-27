@@ -47,6 +47,8 @@ if (!defined("DB_DOWNLOAD_CATS")) {
 if (!defined("DB_DOWNLOADS")) {
     define("DB_DOWNLOADS", DB_PREFIX."downloads");
 }
+
+// Admin Settings
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("D", "<i class='admin-ico fa fa-fw fa-cloud-download'></i>");
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("DC", "<i class='admin-ico fa fa-fw fa-cloud-download'></i>");
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("S11", "<i class='admin-ico fa fa-fw fa-cloud-download'></i>");
@@ -54,7 +56,7 @@ if (!defined("DB_DOWNLOADS")) {
 \PHPFusion\Admins::getInstance()->setLinkType('D', fusion_get_settings("siteurl")."infusions/downloads/downloads.php?download_id=%s");
 
 $inf_settings = get_settings('downloads');
-if ($inf_settings['download_allow_submission']) {
+if (!empty($inf_settings['download_allow_submission']) && $inf_settings['download_allow_submission']) {
     \PHPFusion\Admins::getInstance()->setSubmitData('d', [
         'infusion_name' => 'downloads',
         'link'          => INFUSIONS."downloads/download_submit.php",
