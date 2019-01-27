@@ -1,71 +1,39 @@
-<div class="forum">
-    <div class="forum-header">
-        <div class="row">
-            <div class="col-md-2 col-sm-6 col-xs-12">
-                <a class="header-title" href="{%baselink%}">{[forum_0000]}</a>
-            </div>
-            <div class="col-md-9 col-sm-6 col-xs-12">
-                {%forum_navs%}
-            </div>
-        </div>
-    </div>
-    <nav class="navbar navbar-default forum-navbar">
-        <div class="container-fluid">
-            <ul class="nav navbar-nav">
-                {navbar_item.{
-                <li {%active%}><a href="{%link%}">{%title%}</a></li>
-                }}
-            </ul>
-        </div>
-    </nav>
-    <div class="forum-body p-15">
-        {%breadcrumb%}
-        <div class="row clearfix">
-            <div class="col-xs-12">
-                <h3>{%title%} Participants</h3>
-                <p>{%description%}</p>
-                <hr/>
-                {rules.{
-                <div class="clearfix">{%forum_rules%}</div>
-                }}
-                {pagenav.{
-                <div class="text-right">{%pagenav%}</div>
-                }}
-                <div class="row">
-                    {users_list.{
-                    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-                        <div class="list-group-item">
-                            <div class="text-center">
-                                {%avatar%}
-                                <h4>{%profile_link%}</h4>
-                                <small>{%activity_date%}</small>
-                                <hr/>
-                                <a class="btn btn-block btn-primary" href="{%thread_link%}"
-                                   title="{%thread_title%} on {%activity_date%}">Find Content</a>
-                            </div>
-                        </div>
-                    </div>
-                    }}
-                    {no_items.{
-                    <div class="col-xs-12 text-center strong">
-                        {[forum_0019]}
-                    </div>
-                    }}
+<div class='list-group-item'>
+    {pagenav.{
+    <div class='text-right'>{%pagenav%}</div>
+    <hr/>
+    }}
+    <div class="table-responsive"><table class='table table-striped clear'>
+        <thead>
+        <tr>
+            <th class='col-xs-2'>
+                <small><strong>{%person_title%}</strong></small>
+            </th>
+            <th>
+                <small><strong>{%latest_thread_title%}</strong></small>
+            </th>
+            <th>
+                <small><strong>{%activity_title%}</strong></small>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        {users_list.{
+        <tr>
+            <td class='no-break'>
+                <div class='clearfix'>
+                    <div class='pull-left m-r-10'>{%avatar%}</div>
+                    {%profile_link%}
                 </div>
-                <div class="clearfix spacer-xs">
-                    <small>
-                        <span>{%can_access%}</span><br/>
-                        <span>{%can_post%}</span><br/>
-                        <span>{%can_create_poll%}</span><br/>
-                        <span>{%can_upload_attach%}</span><br/>
-                        <span>{%can_download_attach%}</span><br/>
-                    </small>
-                </div>
-                {moderator_list.{
-                <hr/>
-                <div class="clearfix"><strong>{%mod_title%}</strong> {%moderators%}</div>
-                }}
-            </div>
-        </div>
-    </div>
+            </td>
+            <td>
+                <span class='text-smaller'>{%thread_link%}</span>
+            </td>
+            <td class='no-break'>
+                <span class='text-smaller'>{%activity_date%}</span>
+            </td>
+        </tr>
+        }}
+        </tbody>
+    </table></div>
 </div>

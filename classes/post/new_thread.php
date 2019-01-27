@@ -15,13 +15,12 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
-namespace PHPFusion\Infusions\Forum\Classes\Post;
+namespace PHPFusion\Forums\Post;
 
 use PHPFusion\BreadCrumbs;
-use PHPFusion\Infusions\Forum\Classes\Forum_Server;
+use PHPFusion\Forums\ForumServer;
 
-class New_Thread extends Forum_Server {
+class NewThread extends ForumServer {
 
     /**
      * Set user permission based on current forum configuration
@@ -34,21 +33,20 @@ class New_Thread extends Forum_Server {
 
     public function __construct() {
         self::$locale = fusion_get_locale('', [FORUM_LOCALE, FORUM_TAGS_LOCALE]);
-        require_once INFUSIONS."forum/forum_include.php";
-        require_once INCLUDES."infusions_include.php";
-        require_once INFUSIONS."forum/templates.php";
     }
 
     /**
      * New thread
      */
     public function set_newThreadInfo() {
-        $userdata = fusion_get_userdata();
-        $forum_settings = parent::get_forum_settings();
 
+        $userdata = fusion_get_userdata();
+        $forum_settings = self::get_forum_settings();
+
+        // @todo: Reduce lines and optimize further
         if (iMEMBER) {
             // New thread directly to a specified forum
-            if (!empty($_GET['forum_id']) && isnum($_GET['forum_id']) && parent::verify_forum($_GET['forum_id'])) {
+            if (!empty($_GET['forum_id']) && isnum($_GET['forum_id']) && ForumServer::verify_forum($_GET['forum_id'])) {
 
                 add_to_title(self::$locale['forum_0000'].self::$locale['global_201'].self::$locale['forum_0057']);
                 add_to_meta("description", self::$locale['forum_0000']);
@@ -63,9 +61,6 @@ class New_Thread extends Forum_Server {
 
                 if ($forum_data['forum_type'] == 1 or $forum_data['forum_lock']) {
                     redirect(INFUSIONS.'forum/index.php');
-                }
-                if (isset($_POST['cancel'])) {
-                    redirect(INFUSIONS.'forum/index.php?viewforum&amp;forum_id='.$forum_data['forum_id']);
                 }
 
                 $forum_data['lock_edit'] = $forum_settings['forum_edit_lock'];
@@ -155,13 +150,13 @@ class New_Thread extends Forum_Server {
                             'description' => self::$locale['forum_0630'],
                             'field'       => $poll_field
                         ];
+                        $poll_form = form_checkbox("add_poll", self::$locale['forum_0366'], isset($_POST['add_poll']) ? TRUE : FALSE, ['reverse_label' => TRUE]);
                         $poll_form .= "<div id='poll_form' class='poll-form' style='display:none;'>\n";
-                        $poll_form .= "<div class='clearfix'>\n";
+                        $poll_form .= "<div class='well clearfix'>\n";
                         $poll_form .= "<!--pre_form-->\n";
                         $poll_form .= $info['field']['poll_field'];
                         $poll_form .= "</div>\n";
                         $poll_form .= "</div>\n";
-                        $poll_form .= form_checkbox("add_poll", self::$locale['forum_0366'], isset($_POST['add_poll']) ? TRUE : FALSE, ['class' => 'm-0', 'reverse_label' => TRUE]);
                     }
 
                     $thread_data = [
@@ -325,23 +320,11 @@ class New_Thread extends Forum_Server {
                     $this->info = [
                         'title'             => self::$locale['forum_0057'],
                         'description'       => '',
-                        'openform'          => openform('input_form', 'post', clean_request('forum_id='.$post_data['forum_id'], ['forum_id'], FALSE),
-                                ['enctype' => self::getPermission("can_upload_attach")]).form_hidden("preview_src_file", "", INCLUDES."dynamics/assets/preview/preview.ajax.php"),
+                        'openform'          => openform('input_form', 'post', clean_request('forum_id='.$post_data['forum_id'], ['forum_id'], FALSE), ['enctype' => self::getPermission("can_upload_attach")]),
                         'closeform'         => closeform(),
-                        "preview_box"       => "<div id='preview_box'></div>",
                         'forum_id_field'    => '',
                         'thread_id_field'   => '',
-                        "forum_field"       => form_select_tree("forum_id", "", $thread_data['forum_id'],
-                            [
-                                "required"    => TRUE,
-                                "width"       => "100%",
-                                "inner_width" => "100%",
-                                "no_root"     => TRUE,
-                                //"disable_opts" => $disabled_opts,
-                                "placeholder" => self::$locale['forum_0395'],
-                                "query"       => (multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."'" : ''),
-                            ],
-                            DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat'),
+                        "forum_field"       => "",
                         'subject_field'     => form_text('thread_subject', self::$locale['forum_0051'], $thread_data['thread_subject'],
                             [
                                 'required'    => 1,
@@ -349,26 +332,23 @@ class New_Thread extends Forum_Server {
                                 'error_text'  => '',
                                 'class'       => 'm-t-20 m-b-20'
                             ]),
-                        'tags_field'        => form_select('thread_tags[]', "", $thread_data['thread_tags'],
+                        'tags_field'        => form_select('thread_tags[]', self::$locale['forum_tag_0100'], $thread_data['thread_tags'],
                             [
                                 'options'     => parent::tag()->get_TagOpts(TRUE),
                                 'inner_width' => '100%',
                                 'multiple'    => TRUE,
                                 'delimiter'   => '.',
-                                'placeholder' => self::$locale['forum_tag_0100'],
                                 'max_select'  => 3, // to do settings on this
                             ]),
-                        "message_field"     => form_textarea("post_message", "", $post_data['post_message'], [
-                            "required"    => TRUE,
-                            "autosize"    => TRUE,
-                            "height"      => "200px",
-                            "no_resize"   => TRUE,
-                            "preview"     => FALSE,
-                            "form_name"   => "input_form",
-                            "type"        => "bbcode",
-                            "height"      => "300px",
-                            "placeholder" => self::$locale['forum_0601'],
-                        ]),
+                        'message_field'     => form_textarea('post_message', self::$locale['forum_0601'], $post_data['post_message'],
+                            [
+                                'required'   => 1,
+                                'error_text' => '',
+                                'preview'    => 1,
+                                'form_name'  => 'input_form',
+                                'bbcode'     => 1,
+                                'height'     => '500px'
+                            ]),
                         'attachment_field'  => self::getPermission("can_upload_attach") ?
                             form_fileinput('file_attachments[]',
                                 self::$locale['forum_0557'],
@@ -388,16 +368,15 @@ class New_Thread extends Forum_Server {
                             )." <div class='m-b-20'>\n<small>
                             ".sprintf(self::$locale['forum_0559'], parsebytesize($forum_settings['forum_attachmax']), str_replace('|', ', ', $forum_settings['forum_attachtypes']), $forum_settings['forum_attachmax_count'])."</small>\n</div>\n" : '',
                         'poll_form'         => $poll_form,
-                        'smileys_field'     => form_checkbox('post_smileys', self::$locale['forum_0169'], $post_data['post_smileys'], ['type' => 'button', 'ext_tip' => self::$locale['forum_0622'], "class" => "m-b-10"]),
-                        //                        'signature_field'   => (array_key_exists("user_sig", $userdata) && $userdata['user_sig']) ? form_checkbox('post_showsig', self::$locale['forum_0170'], $post_data['post_showsig'], ['class' => 'm-b-0', 'reverse_label' => TRUE]) : '',
-                        "signature_field"   => (array_key_exists("user_sig", $userdata) && $userdata['user_sig']) ? form_checkbox('post_showsig', self::$locale['forum_0264'], $post_data['post_showsig'], ["type" => "button", "ext_tip" => self::$locale['forum_0170'], "class" => "m-b-10"]) : '',
-                        'sticky_field'      => (iMOD || iSUPERADMIN) ? form_checkbox('thread_sticky', self::$locale['forum_0262'], $thread_data['thread_sticky'], ['type' => 'button', 'ext_tip' => self::$locale['forum_0620'], "class" => "m-b-10"]) : '',
-                        'lock_field'        => (iMOD || iSUPERADMIN) ? form_checkbox('thread_locked', self::$locale['forum_0621'], $thread_data['thread_locked'], ['type' => 'button', 'button_class' => 'btn-warning', "class" => "m-b-10"]) : '',
+                        'smileys_field'     => form_checkbox('post_smileys', self::$locale['forum_0622'], $post_data['post_smileys'], ['class' => 'm-b-0', 'reverse_label' => TRUE]),
+                        'signature_field'   => (array_key_exists("user_sig", $userdata) && $userdata['user_sig']) ? form_checkbox('post_showsig', self::$locale['forum_0170'], $post_data['post_showsig'], ['class' => 'm-b-0', 'reverse_label' => TRUE]) : '',
+                        'sticky_field'      => (iMOD || iSUPERADMIN) ? form_checkbox('thread_sticky', self::$locale['forum_0620'], $thread_data['thread_sticky'], ['class' => 'm-b-0', 'reverse_label' => TRUE]) : '',
+                        'lock_field'        => (iMOD || iSUPERADMIN) ? form_checkbox('thread_locked', self::$locale['forum_0621'], $thread_data['thread_locked'], ['class' => 'm-b-0', 'reverse_label' => TRUE]) : '',
                         'edit_reason_field' => '',
                         'delete_field'      => '',
                         'hide_edit_field'   => '',
                         'post_locked_field' => '',
-                        'notify_field'      => $forum_settings['thread_notify'] ? form_checkbox('notify_me', self::$locale['forum_0175'], $post_data['notify_me'], ['ext_tip' => self::$locale['forum_0171'], 'type' => 'button', "class" => "m-b-10"]) : '',
+                        'notify_field'      => $forum_settings['thread_notify'] ? form_checkbox('notify_me', self::$locale['forum_0171'], $post_data['notify_me'], ['class' => 'm-b-0', 'reverse_label' => TRUE]) : '',
                         'post_buttons'      => form_button('post_newthread', self::$locale['forum_0057'], self::$locale['forum_0057'], ['class' => 'btn-primary ']).form_button('cancel', self::$locale['cancel'], self::$locale['cancel'], ['class' => 'btn-default  m-l-10']),
                         'last_posts_reply'  => '',
                     ];
@@ -418,7 +397,7 @@ class New_Thread extends Forum_Server {
                     ");
 
                 } else {
-                    redirect(FORUM."index.php");
+                    redirect(FORUM.'index.php');
                 }
 
             } else {
@@ -434,12 +413,11 @@ class New_Thread extends Forum_Server {
                 if (!dbcount("(forum_id)", DB_FORUMS, "forum_language ='".LANGUAGE."'")) {
                     redirect(FORUM.'index.php');
                 }
-                if (isset($_GET['forum_id']) && !isnum($_GET['forum_id'])) {
+				if (isset($_GET['forum_id']) && !isnum($_GET['forum_id'])) {
                     redirect(FORUM.'index.php');
-                }
+				}
 
                 BreadCrumbs::getInstance()->addBreadCrumb(["link" => FORUM."newthread.php?forum_id=0", "title" => self::$locale['forum_0057']]);
-
                 $thread_data = [
                     'forum_id'          => isset($_POST['forum_id']) ? form_sanitizer($_POST['forum_id'], 0, "forum_id") : 0,
                     'thread_id'         => 0,
@@ -483,18 +461,17 @@ class New_Thread extends Forum_Server {
 
                     if (!flood_control('post_datestamp', DB_FORUM_POSTS, "post_author='".$userdata['user_id']."'")) {
 
-                        if (Forum_Server::verify_forum($thread_data['forum_id'])) {
+                        if (ForumServer::verify_forum($thread_data['forum_id'])) {
 
                             $forum_data = dbarray(dbquery("SELECT f.*, f2.forum_name AS forum_cat_name
                             FROM ".DB_FORUMS." f
                             LEFT JOIN ".DB_FORUMS." f2 ON f.forum_cat=f2.forum_id
-                            WHERE f.forum_id=:fid
-                            AND ".groupaccess('f.forum_access'), [
-                                ":fid" => intval($thread_data['forum_id'])
-                            ]));
+                            WHERE f.forum_id=:forum_id
+                            AND ".groupaccess('f.forum_access')."
+                            ", [':forum_id' => intval($thread_data['forum_id'])]));
 
                             if ($forum_data['forum_type'] == 1) {
-                                redirect(FORUM."index.php");
+                                redirect(INFUSIONS.'forum/index.php');
                             }
 
                             // Use the new permission settings
@@ -546,6 +523,7 @@ class New_Thread extends Forum_Server {
                                 $list_of_forums = get_all_parent(dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat'), $post_data['forum_id']);
                                 if (!empty($list_of_forums)) {
                                     foreach ($list_of_forums as $forum_id) {
+
                                         list($forum_postcount, $forum_threadcount) = dbarraynum(
                                             dbquery("SELECT forum_postcount, forum_threadcount FROM ".DB_FORUMS." WHERE forum_id='".$forum_id."'")
                                         );
@@ -631,77 +609,70 @@ class New_Thread extends Forum_Server {
                 //Disable all parents
                 $disabled_opts = [];
                 $disable_query = "SELECT forum_id FROM ".DB_FORUMS." WHERE forum_type=1 ".(multilang_table("FO") ? "AND forum_language='".LANGUAGE."'" : '');
-                $disable_query = dbquery($disable_query);
+                $disable_query = dbquery(" $disable_query ");
                 if (dbrows($disable_query) > 0) {
                     while ($d_forum = dbarray($disable_query)) {
-                        $disabled_opts[] = $d_forum['forum_id'];
+                        $disabled_opts = $d_forum['forum_id'];
                     }
                 }
-                // Have 3 types of forum configurations
+
                 $this->info = [
-                    "title"             => self::$locale['forum_0057'],
-                    "description"       => "",
-                    "openform"          => openform("input_form", "post", FORUM."newthread.php").form_hidden("preview_src_file", "", INCLUDES."dynamics/assets/preview/preview.ajax.php"),
-                    "closeform"         => closeform(),
-                    "forum_id_field"    => "",
-                    "thread_id_field"   => "",
-                    "preview_box"       => "<div id='preview_box'></div>",
+                    'title'             => self::$locale['forum_0057'],
+                    'description'       => '',
+                    'openform'          => openform('input_form', 'post', FORUM.'newthread.php', ['enctype' => FALSE]),
+                    'closeform'         => closeform(),
+                    'forum_id_field'    => '',
+                    'thread_id_field'   => '',
                     // need to disable all parents
-                    "forum_field"       => form_select_tree("forum_id", "", $thread_data['forum_id'],
+                    'forum_field'       => form_select_tree('forum_id', self::$locale['forum_0395'], $thread_data['forum_id'],
                         [
-                            "required"     => TRUE,
-                            "width"        => "100%",
-                            "inner_width"  => "100%",
-                            "no_root"      => TRUE,
-                            "disable_opts" => $disabled_opts,
-                            "placeholder"  => self::$locale['forum_0395'],
-                            "query"        => (multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."'" : ''),
+                            'required'     => TRUE,
+                            'width'        => '320px',
+                            'no_root'      => TRUE,
+                            'disable_opts' => $disabled_opts,
+                            'query'        => (multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."'" : ''),
                         ],
                         DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat'),
-                    "subject_field"     => form_text("thread_subject", "", $thread_data['thread_subject'], [
-                        "required"    => 1,
-                        "placeholder" => self::$locale['forum_0051'],
+                    'subject_field'     => form_text('thread_subject', self::$locale['forum_0051'], $thread_data['thread_subject'], [
+                        'required'    => 1,
+                        'placeholder' => self::$locale['forum_2001'],
+                        'error_text'  => '',
+                        'class'       => 'm-t-20 m-b-20'
                     ]),
-                    "tags_field"        => form_select("thread_tags[]", "", $thread_data['thread_tags'],
+                    'tags_field'        => form_select('thread_tags[]', self::$locale['forum_tag_0100'], $thread_data['thread_tags'],
                         [
-                            "options"     => parent::tag()->get_TagOpts(TRUE),
-                            "placeholder" => self::$locale['forum_tag_0100'],
-                            "inner_width" => "100%",
-                            "multiple"    => TRUE,
-                            "delimiter"   => ".",
-                            "max_select"  => 3, // to do settings on this
+                            'options'     => parent::tag()->get_TagOpts(),
+                            'inner_width' => '100%',
+                            'multiple'    => TRUE,
+                            'delimiter'   => '.',
+                            'max_select'  => 3, // to do settings on this
                         ]),
-                    "message_field"     => form_textarea("post_message", "", $post_data['post_message'], [
-                        "required"    => TRUE,
-                        "autosize"    => TRUE,
-                        "height"      => "200px",
-                        "no_resize"   => TRUE,
-                        "preview"     => FALSE,
-                        "form_name"   => "input_form",
-                        "type"        => "bbcode",
-                        "height"      => "300px",
-                        "placeholder" => self::$locale['forum_0601'],
+                    'message_field'     => form_textarea('post_message', self::$locale['forum_0601'], $post_data['post_message'], [
+                        'required'  => 1,
+                        'autosize'  => 1,
+                        'no_resize' => 1,
+                        'preview'   => 1,
+                        'form_name' => 'input_form',
+                        'bbcode'    => 1,
+                        'height'    => '300px'
                     ]),
-                    "attachment_field"  => "",
-                    "poll_form"         => "",
-                    "smileys_field"     => form_checkbox('post_smileys', self::$locale['forum_0169'], $post_data['post_smileys'], ['type' => "button", "ext_tip" => self::$locale['forum_0622']]),
-                    "signature_field"   => (array_key_exists("user_sig", $userdata) && $userdata['user_sig']) ? form_checkbox('post_showsig', self::$locale['forum_0264'], $post_data['post_showsig'], ["type" => "button", "ext_tip" => self::$locale['forum_0170']]) : '',
-                    "sticky_field"      => (iSUPERADMIN) ? form_checkbox('thread_sticky', self::$locale['forum_0262'], $thread_data['thread_sticky'], ["type" => "button", "ext_tip" => self::$locale['forum_0620']]) : '',
-                    "lock_field"        => (iSUPERADMIN) ? form_checkbox('thread_locked', self::$locale['forum_0263'], $thread_data['thread_locked'], ["type" => "button", "ext_tip" => self::$locale['forum_0263']]) : '',
-                    "edit_reason_field" => "",
-                    "delete_field"      => "",
-                    "hide_edit_field"   => "",
-                    "post_locked_field" => "",
-                    "notify_field"      => $forum_settings['thread_notify'] ? form_checkbox('notify_me', self::$locale['forum_0175'], $post_data['notify_me'], ["type" => "button", "ext_tip" => self::$locale['forum_0171']]) : '',
-                    "post_buttons"      => form_button('post_newthread', self::$locale['forum_0057'], self::$locale['forum_0057'], ['class' => 'btn-primary m-r-5']).form_button('cancel', self::$locale['cancel'], self::$locale['cancel'], ['class' => 'btn-default']),
-                    "last_posts_reply"  => "",
+                    'attachment_field'  => "",
+                    'poll_form'         => "",
+                    'smileys_field'     => form_checkbox('post_smileys', self::$locale['forum_0622'], $post_data['post_smileys'], ['class' => 'm-b-0', 'reverse_label' => TRUE]),
+                    'signature_field'   => (array_key_exists("user_sig", $userdata) && $userdata['user_sig']) ? form_checkbox('post_showsig', self::$locale['forum_0170'], $post_data['post_showsig'], ['class' => 'm-b-0', 'reverse_label' => TRUE]) : '',
+                    'sticky_field'      => (iSUPERADMIN) ? form_checkbox('thread_sticky', self::$locale['forum_0620'], $thread_data['thread_sticky'], ['class' => 'm-b-0', 'reverse_label' => TRUE]) : '',
+                    'lock_field'        => (iSUPERADMIN) ? form_checkbox('thread_locked', self::$locale['forum_0621'], $thread_data['thread_locked'], ['class' => 'm-b-0', 'reverse_label' => TRUE]) : '',
+                    'edit_reason_field' => '',
+                    'delete_field'      => '',
+                    'hide_edit_field'   => '',
+                    'post_locked_field' => '',
+                    'notify_field'      => $forum_settings['thread_notify'] ? form_checkbox('notify_me', self::$locale['forum_0171'], $post_data['notify_me'], ['class' => 'm-b-0', 'reverse_label' => TRUE]) : '',
+                    'post_buttons'      => form_button('post_newthread', self::$locale['forum_0057'], self::$locale['forum_0057'], ['class' => 'btn-primary']).form_button('cancel', self::$locale['cancel'], self::$locale['cancel'], ['class' => 'btn-default m-l-10']),
+                    'last_posts_reply'  => '',
                 ];
             }
-
-            //add_to_footer("<script src='".FORUM."templates/ajax/post_preview.js'></script>");
-
         } else {
-            redirect(FORUM."index.php");
+            redirect(INFUSIONS.'forum/index.php');
         }
     }
 
