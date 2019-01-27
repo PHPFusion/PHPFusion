@@ -82,6 +82,7 @@ if (db_exists(DB_EMAIL_TEMPLATES)) {
 if (db_exists(DB_SETTINGS)) {
     $update_settings_tbl = [
         'theme'              => 'FusionTheme',
+        'admin_theme'        => 'Artemis',
         'rendertime_enabled' => '0',
         'timeoffset'         => 'Europe/London',
         'serveroffset'       => 'Europe/London',
@@ -182,18 +183,20 @@ if (db_exists(DB_LANGUAGE_TABLES)) {
 if (db_exists(DB_ADMIN)) {
     // Remove the deprecated administration links
     $del_table = [
-        'S5'  => 'settings_photo.php',
-        'S3'  => 'settings_forum.php',
-        'UFC' => 'user_field_cats.php',
-        'S11' => 'settings_dl.php',
-        'S10' => 'settings_ipp.php',
-        'SU'  => 'submissions.php'
+        'S5'   => 'settings_photo.php',
+        'S3'   => 'settings_forum.php',
+        'UFC'  => 'user_field_cats.php',
+        'S11'  => 'settings_dl.php',
+        'S10'  => 'settings_ipp.php',
+        'SU'   => 'submissions.php',
+        'BLOG' => 'blog.php',
+        'BLC'  => 'blog_cats.php',
+        'S13'  => 'settings_blog.php',
+        'FM'   => 'file_manager.php'
     ];
 
     foreach ($del_table as $key => $del_link) {
-        // change to
         dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_link='".$del_link."'");
-        //$inf_deldbrow[] = DB_ADMIN." WHERE admin_link='".$del_link."'";
     }
 
     // Add new core administration links
@@ -287,7 +290,6 @@ if (db_exists(DB_PREFIX.'panels')) {
     $inf_updatedbrow[] = DB_PANELS." SET panel_display='1', panel_restriction='3', panel_status='1' WHERE panel_filename='forum_threads_list_panel'";
     $inf_updatedbrow[] = DB_PANELS." SET panel_display='1', panel_restriction='3', panel_status='1' WHERE panel_filename='member_poll_panel'";
     $inf_updatedbrow[] = DB_PANELS." SET panel_languages='".$settings['locale']."'";
-
 }
 
 if (db_exists(DB_USER_FIELD_CATS)) {
@@ -306,6 +308,10 @@ if (db_exists(DB_USER_FIELD_CATS)) {
         ]);
 
         $inf_insertdbrow[] = $ufc_sql;
+
+        if (column_exists(DB_USER_FIELD_CATS, 'field_cat_page', FALSE)) {
+            $inf_altertable[] = DB_USER_FIELD_CATS." DROP field_cat_page";
+        }
     }
 }
 

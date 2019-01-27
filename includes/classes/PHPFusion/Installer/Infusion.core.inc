@@ -48,6 +48,20 @@ class Infusion_Core {
         }
     }
 
+    /**
+     * Method : Get Instance
+     *
+     * @return null|static
+     */
+    public static function getInstance() {
+        if (self::$instance === NULL) {
+            self::$instance = new static();
+        }
+        self::$locale = fusion_get_locale('', LOCALE.LOCALESET."admin/infusions.php");
+
+        return self::$instance;
+    }
+
     protected static function adminpanel_infuse($inf) {
         $error = FALSE;
 
@@ -181,9 +195,12 @@ class Infusion_Core {
                 }
             }
         }
+
         if (\defender::safe()) {
             redirect(FUSION_REQUEST);
         }
+
+        return NULL;
     }
 
     /**
@@ -352,20 +369,6 @@ class Infusion_Core {
         }
 
         return $infusion;
-    }
-
-    /**
-     * Method : Get Instance
-     *
-     * @return null|static
-     */
-    public static function getInstance() {
-        if (self::$instance === NULL) {
-            self::$instance = new static();
-        }
-        self::$locale = fusion_get_locale('', LOCALE.LOCALESET."admin/infusions.php");
-
-        return self::$instance;
     }
 
     /**
@@ -700,7 +703,10 @@ class Infusion_Core {
             foreach ($inf['newtable'] as $newtable) {
                 $table_name = fusion_first_words($newtable, 1, '');
                 if (!db_exists($table_name)) {
-                    if (strpos($newtable, 'CHARSET=UTF8 COLLATE=utf8_unicode_ci') == TRUE) {
+                    if (strpos($newtable, 'ENGINE=MyISAM;') == TRUE) {
+                        $db_collation = '';
+                        $newtable = str_replace('ENGINE=MyISAM;', 'ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;', $newtable);
+                    } else if (strpos($newtable, 'CHARSET=UTF8 COLLATE=utf8_unicode_ci') == TRUE) {
                         $db_collation = '';
                         $newtable = str_replace('CHARSET=UTF8 COLLATE=utf8_unicode_ci', 'CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci', $newtable);
                     } else {

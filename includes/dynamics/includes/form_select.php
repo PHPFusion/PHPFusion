@@ -645,7 +645,7 @@ function user_search($user_id) {
     $encoded = json_encode([]);
     if (isnum($user_id)) {
         $user_id = stripinput($user_id);
-        $result = dbquery("SELECT user_id, user_name, user_avatar, user_level FROM ".DB_USERS." WHERE ".useraccess('user_id')." AND user_status=:status AND user_id=:id", [':status' => 0, ':id' => $user_id]);
+        $result = dbquery("SELECT user_id, user_name, user_avatar, user_level FROM ".DB_USERS." WHERE user_status=:status AND user_id=:id", [':status' => 0, ':id' => $user_id]);
         if (dbrows($result) > 0) {
             while ($udata = dbarray($result)) {
                 $user_id = $udata['user_id'];

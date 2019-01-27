@@ -31,11 +31,11 @@ function openform($form_name, $method, $action_url, array $options = []) {
 
     $method = (strtolower($method) == 'post') ? 'post' : 'get';
     $default_options = [
-        'form_id'    => !empty($options['form_id']) ? $options['form_id'] : $form_name,
-        'class'      => !empty($options['class']) ? $options['class'] : '',
-        'enctype'    => !empty($options['enctype']) && $options['enctype'] == TRUE ? TRUE : FALSE,
-        'max_tokens' => !empty($options['max_tokens']) && isnum($options['max_tokens']) ? $options['max_tokens'] : fusion_get_settings('form_tokens'),
-        'remote_url' => !empty($options['remote_url']) ? $options['remote_url'] : '',
+        'form_id'    => $form_name,
+        'class'      => '',
+        'enctype'    => FALSE,
+        'max_tokens' => fusion_get_settings('form_tokens'),
+        'remote_url' => '',
         'inline'     => FALSE,
         'on_submit'  => '',
     ];
@@ -47,7 +47,7 @@ function openform($form_name, $method, $action_url, array $options = []) {
         $class .= $options['class'];
     }
     //$action_prefix = fusion_get_settings("site_seo") == 1 && !defined("ADMIN_PANEL") ? FUSION_ROOT : "";
-    $html = "<form name='".$form_name."' id='".$options['form_id']."' method='".$method."' action='".$action_url."' class='".($options['inline'] ? "form-inline " : '').($class ? $class : 'm-0')."'".($options['enctype'] ? " enctype='multipart/form-data'" : '')." ".($options['on_submit'] ? "onSubmit='".$options['on_submit']."'" : '').">\n";
+    $html = "<form name='".$form_name."' id='".$options['form_id']."' method='".$method."' action='".$action_url."' class='".($options['inline'] ? "form-inline " : '').($class ? $class : 'm-0')."'".($options['enctype'] ? " enctype='multipart/form-data'" : '').($options['on_submit'] ? " onSubmit='".$options['on_submit']."'" : '').">\n";
     if ($method == 'post') {
         $token = \Defender\Token::generate_token($options['form_id'], $options['max_tokens'], $options['remote_url']);
         $html .= "<input type='hidden' name='fusion_token' value='".$token."' />\n";

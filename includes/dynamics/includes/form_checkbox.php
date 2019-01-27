@@ -59,7 +59,7 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
 
     $error_class = "";
     if (\defender::inputHasError($input_name)) {
-        $error_class = "has-error ";
+        $error_class = " has-error";
         if (!empty($options['error_text'])) {
             $new_error_text = \defender::getErrorText($input_name);
             if (!empty($new_error_text)) {
@@ -92,7 +92,7 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
         }
 
     } else {
-        $switch_class = $options['toggle'] ? "is-bootstrap-switch" : "";
+        $switch_class = $options['toggle'] ? "is-bootstrap-switch " : "";
         $on_label = $options['toggle_text'][1];
         $off_label = $options['toggle_text'][0];
         if ($options['keyflip']) {
@@ -109,21 +109,21 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
                 $checkbox .= form_hidden($input_name, '', $key);
             }
             $checkbox .= "<div class='".($options['type'] == 'radio' ? 'radio' : 'checkbox').($options['inline_options'] ? ' display-inline-block m-r-5' : '')."'>\n";
-            $checkbox .= "<label class='control-label m-r-10' for='".$options['input_id']."-$key' ".($options['inner_width'] ? "style='width: ".$options['inner_width']."'" : '').">";
+            $checkbox .= "<label class='control-label m-r-10' for='".$options['input_id']."-$key'".($options['inner_width'] ? " style='width: ".$options['inner_width']."'" : '').">";
             $checkbox .= "<input id='".$options['input_id']."-$key' name='$input_name' value='$key' type='".$options['type']."'
-            ".($options['deactivate'] || $options['deactivate_key'] === $key ? 'disabled' : '')." ".($options['onclick'] ? 'onclick="'.$options['onclick'].'"' : '')." ".($input_value[$key] == TRUE || $default_checked && $key == FALSE ? 'checked' : '')." /> \n";
+            ".($options['deactivate'] || $options['deactivate_key'] === $key ? 'disabled' : '').($options['onclick'] ? ' onclick="'.$options['onclick'].'"' : '').($input_value[$key] == TRUE || $default_checked && $key == FALSE ? ' checked' : '')." />\n";
             $checkbox .= $value;
             $checkbox .= "</label>\n";
             $checkbox .= "</div>\n";
         }
     } else {
-        $checkbox .= "<div class='pull-left m-r-10'>\n<input id='".$options['input_id']."' ".($options['toggle'] ? "data-on-text='".$on_label."' data-off-text='".$off_label."'" : "")." style='margin: 0;vertical-align: middle' name='$input_name' value='".$options['value']."' type='".$options['type']."' ".($options['deactivate'] ? 'disabled' : '')." ".($options['onclick'] ? 'onclick="'.$options['onclick'].'"' : '')." ".($input_value == $options['value'] ? 'checked' : '')." />\n</div>\n";
+        $checkbox .= "<div class='pull-left m-r-10'>\n<input id='".$options['input_id']."'".($options['toggle'] ? " data-on-text='".$on_label."' data-off-text='".$off_label."'" : "")." style='margin: 0; vertical-align: middle' name='$input_name' value='".$options['value']."' type='".$options['type']."'".($options['deactivate'] ? ' disabled' : '').($options['onclick'] ? ' onclick="'.$options['onclick'].'"' : '').($input_value == $options['value'] ? ' checked' : '')." />\n</div>\n";
     }
 
-    $html = "<div id='".$options['input_id']."-field' class='$switch_class form-group clearfix ".($options['inline'] ? 'display-block overflow-hide ' : '').$error_class.$options['class']."'>\n";
-    $html .= (!empty($label)) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-12 col-md-3 col-lg-3" : '')."' data-checked='".(!empty($input_value) ? "1" : "0")."'  for='".$options['input_id']."' ".($options['inner_width'] ? "style='width: ".$options['inner_width']."'" : '').">\n" : "";
+    $html = "<div id='".$options['input_id']."-field' class='".($switch_class ? $switch_class : '')."form-group clearfix".($options['inline'] ? ' display-block overflow-hide' : '').($error_class ? $error_class : '').($options['class'] ? ' '.$options['class'] : '')."'>\n";
+    $html .= (!empty($label)) ? "<label class='control-label".($options['inline'] ? " col-xs-12 col-sm-12 col-md-3 col-lg-3" : '')."' data-checked='".(!empty($input_value) ? "1" : "0")."' for='".$options['input_id']."'".($options['inner_width'] ? " style='width: ".$options['inner_width']."'" : '').">\n" : "";
     $html .= ($options['reverse_label'] == TRUE) ? $checkbox : "";
-    $html .= (!empty($label)) ? "<div class='overflow-hide'>\n".$label.($options['required'] == 1 ? "<span class='required'>&nbsp;*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle text-lighter' title='".$options['tip']."'></i>" : '')."</div>\n</label>\n" : "";
+    $html .= (!empty($label)) ? "<div class='overflow-hide'>\n".$label.($options['required'] ? "<span class='required'>&nbsp;*</span>" : '').($options['tip'] ? " <i class='pointer fa fa-question-circle text-lighter' title='".$options['tip']."'></i>" : '')."</div>\n</label>\n" : "";
     $html .= ($options['reverse_label'] == FALSE) ? $checkbox : "";
     $html .= $options['ext_tip'] ? "<br/>\n<span class='tip'><i>".$options['ext_tip']."</i></span>" : "";
     $html .= \defender::inputHasError($input_name) ? "<span class='m-l-10'></span>" : "";
