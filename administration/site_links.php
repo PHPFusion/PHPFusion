@@ -505,7 +505,7 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
         }
 
 
-        $sql_condition = "";
+        $sql_condition = multilang_table('SL') ? 'link_language="'.LANGUAGE.'"' : '';
         $search_string = [];
 
         if (isset($_POST['p-submit-link_name'])) {
@@ -529,7 +529,8 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
 
         if (!empty($search_string)) {
             foreach ($search_string as $key => $values) {
-                $sql_condition .= " AND `$key` ".$values['operator'].($values['operator'] == "LIKE" ? "'%" : "'").$values['input'].($values['operator'] == "LIKE" ? "%'" : "'");
+                if ($sql_condition) $sql_condition .= ' AND ';
+                $sql_condition .= "`$key` ".$values['operator'].($values['operator'] == "LIKE" ? "'%" : "'").$values['input'].($values['operator'] == "LIKE" ? "%'" : "'");
             }
         }
 
@@ -539,8 +540,7 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
             $limit = (!empty($_POST['link_display']) ? $_POST['link_display'] : $_GET['link_display']);
         }
 
-        $max_condition = (!empty($sql_condition) ? ltrim($sql_condition, " AND ") : "");
-        $max_rows = dbcount("(link_id)", DB_SITE_LINKS, (multilang_table("SL") ? "link_language='".LANGUAGE."' AND $max_condition" : ''));
+        $max_rows = dbcount("(link_id)", DB_SITE_LINKS, $sql_condition);
 
         $rowstart = 0;
         if (!isset($_POST['news_display'])) {
@@ -548,7 +548,7 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
         }
 
         $query = "SELECT * FROM ".DB_SITE_LINKS."
-        ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."'" : "WHERE")." $sql_condition
+        WHERE $sql_condition
         ORDER BY link_order LIMIT $rowstart, $limit";
 
         $result = dbquery($query);
