@@ -109,6 +109,7 @@ if (!db_exists($db_prefix."forum_post_notify")) {
     ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
     dbquery("CREATE TABLE ".$table_query);
 }
+
 /*
  * Modify Forum Table
  */
@@ -207,7 +208,7 @@ if (dbrows($result)) {
 
 // Update the forums with lastpost information
 $select = dbquery("SELECT forum_id, forum_mods FROM ".$db_prefix."forums ORDER BY forum_id ASC");
-if (dbrows($select)) {
+if (dbrows($select) > 0) {
     while ($data = dbarray($select)) {
         $select2 = dbquery("SELECT * FROM ".$db_prefix."forum_threads WHERE forum_id='".$data['forum_id']."' ORDER BY thread_lastpost DESC LIMIT 1");
         if (dbrows($select2)) {
