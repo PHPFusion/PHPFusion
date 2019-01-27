@@ -104,7 +104,7 @@ foreach ($check_array as $key => $value) {
 }
 
 if (file_exists(IMAGES."articles/")) {
-	include_once BASEDIR.'upgrade/upgrade_functions_include.php';
+    include_once BASEDIR.'upgrade/upgrade_functions_include.php';
     $attachment_files = makefilelist(IMAGES."articles/", ".|..|index.php", TRUE);
     foreach ($attachment_files as $file) {
         rename(IMAGES."articles/".$file, INFUSIONS."articles/images/".$file);
