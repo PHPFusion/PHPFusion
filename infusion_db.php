@@ -52,7 +52,7 @@ if (!defined("GALLERY_ADMIN_LOCALE")) {
     }
 }
 
-//  Administration & Dashboard
+// Admin Settings
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("PH", "<i class='admin-ico fa fa-fw fa-camera-retro'></i>");
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("S5", "<i class='admin-ico fa fa-fw fa-camera-retro'></i>");
 \PHPFusion\Admins::getInstance()->setCommentType('P', fusion_get_locale('272', LOCALE.LOCALESET."admin/main.php"));
@@ -61,7 +61,7 @@ if (!defined("GALLERY_ADMIN_LOCALE")) {
 \PHPFusion\Admins::getInstance()->setLinkType('PH', fusion_get_settings("siteurl")."infusions/gallery/gallery.php?photo_id=%s");
 
 $inf_settings = get_settings('gallery');
-if ($inf_settings['gallery_allow_submission']) {
+if (!empty($inf_settings['gallery_allow_submission']) && $inf_settings['gallery_allow_submission']) {
     \PHPFusion\Admins::getInstance()->setSubmitData('p', [
         'infusion_name' => 'gallery',
         'link'          => INFUSIONS."gallery/photo_submit.php",
