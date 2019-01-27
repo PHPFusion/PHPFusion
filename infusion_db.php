@@ -49,6 +49,8 @@ if (!defined("DB_BLOG")) {
 if (!defined("DB_BLOG_CATS")) {
     define("DB_BLOG_CATS", DB_PREFIX."blog_cats");
 }
+
+// Admin Settings
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("BLOG", "<i class='admin-ico fa fa-fw fa-graduation-cap'></i>");
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("BLC", "<i class='admin-ico fa fa-fw fa-graduation-cap'></i>");
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("S13", "<i class='admin-ico fa fa-fw fa-graduation-cap'></i>");
@@ -56,7 +58,7 @@ if (!defined("DB_BLOG_CATS")) {
 \PHPFusion\Admins::getInstance()->setLinkType('B', fusion_get_settings("siteurl")."infusions/blog/blog.php?readmore=%s");
 
 $inf_settings = get_settings('blog');
-if ($inf_settings['blog_allow_submission']) {
+if (!empty($inf_settings['blog_allow_submission']) && $inf_settings['blog_allow_submission']) {
     \PHPFusion\Admins::getInstance()->setSubmitData('b', [
         'infusion_name' => 'blog',
         'link'          => INFUSIONS."blog/blog_submit.php",
