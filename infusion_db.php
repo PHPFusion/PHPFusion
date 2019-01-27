@@ -48,12 +48,13 @@ if (!defined("DB_WEBLINK_CATS")) {
 if (!defined("DB_WEBLINKS")) {
     define("DB_WEBLINKS", DB_PREFIX."weblinks");
 }
+
 // Admin Settings
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("W", "<i class='admin-ico fa fa-fw fa-link'></i>");
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("WC", "<i class='admin-ico fa fa-fw fa-link'></i>");
 
 $inf_settings = get_settings('weblinks');
-if ($inf_settings['links_allow_submission']) {
+if (!empty($inf_settings['links_allow_submission']) && $inf_settings['links_allow_submission']) {
     \PHPFusion\Admins::getInstance()->setSubmitData('l', [
         'infusion_name' => 'weblinks',
         'link'          => INFUSIONS."weblinks/weblink_submit.php",
