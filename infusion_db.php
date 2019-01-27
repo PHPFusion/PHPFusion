@@ -58,6 +58,7 @@ if (!defined("NEWS_CLASS")) {
     define("NEWS_CLASS", INFUSIONS."news/classes/");
 }
 
+// Admin Settings
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("N", "<i class='admin-ico fa fa-fw fa-newspaper-o'></i>");
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("NC", "<i class='admin-ico fa fa-fw fa-newspaper-o'></i>");
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("S8", "<i class='admin-ico fa fa-fw fa-newspaper-o'></i>");
@@ -65,7 +66,7 @@ if (!defined("NEWS_CLASS")) {
 \PHPFusion\Admins::getInstance()->setLinkType('N', fusion_get_settings("siteurl")."infusions/news/news.php?readmore=%s");
 
 $inf_settings = get_settings('news');
-if ($inf_settings['news_allow_submission']) {
+if (!empty($inf_settings['news_allow_submission']) && $inf_settings['news_allow_submission']) {
     \PHPFusion\Admins::getInstance()->setSubmitData('n', [
         'infusion_name' => 'news',
         'link'          => INFUSIONS."news/news_submit.php",
