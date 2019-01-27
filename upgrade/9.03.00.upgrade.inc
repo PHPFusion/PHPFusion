@@ -18,8 +18,9 @@
 $settings = fusion_get_settings();
 
 $update_settings_tbl = [
-    'entypo'  => 0,
-    'version' => '9.03.00',
+    'fontawesome' => 1,
+    'theme'       => 'Magazine',
+    'version'     => '9.03.00',
 ];
 
 foreach ($update_settings_tbl as $key => $value) {
