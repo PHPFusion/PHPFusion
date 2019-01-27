@@ -94,11 +94,11 @@ if (str_replace(".", "", $settings['version']) < "80019") {
 
                     $content .= "<div class='panel panel-default display-inline-block' style='margin-top:10px; padding: 8px; text-align:left;'>\n";
                     $content .= "Before we can continue you need to edit your <strong>config.php</strong>, insert the following 3 lines right after the line COOKIE_PREFIX : <br />\n";
-                    $content .= "<code class='panel panel-default display-inline-block' style='margin-top:10px; padding: 8px; text-align:left;'>\n";
-                    $content .= "\$db_driver = \"pdo\"; <br />\n";
-                    $content .= "define(\"SECRET_KEY\", \"".$secret_key."\"); <br />\n";
-                    $content .= "define(\"SECRET_KEY_SALT\", \"".$secret_key_salt."\"); <br />\n";
-                    $content .= "</code><br />";
+                    $content .= "<pre style='margin-top:10px; padding: 8px; text-align:left;'>\n";
+                    $content .= "\$db_driver = \"pdo\";\n";
+                    $content .= "define(\"SECRET_KEY\", \"".$secret_key."\");\n";
+                    $content .= "define(\"SECRET_KEY_SALT\", \"".$secret_key_salt."\");\n";
+                    $content .= "</pre><br />";
                     $content .= "When you have inserted the above lines to your <strong>config.php</strong>, please push Next<br /><br />\n";
                     $content .= "<strong>Warning</strong> : If you push Next without copying the above lines in grey to your <strong>config.php</strong> you will need to copy them again. <br /> For each failed refresh a new set will be created for you until your config have been updated as instructed.<br /><br />\n";
                     $content .= "<input type='hidden' name='stage' value='2'>\n";

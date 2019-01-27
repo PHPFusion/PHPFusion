@@ -130,7 +130,7 @@ echo "<option value='1'".($settings['login_method'] == "1" ? " selected='selecte
 echo "<option value='2'".($settings['login_method'] == "2" ? " selected='selected'" : "").">".$locale['699b']."</option>\n";
 echo "</select></td>\n";
 echo "</tr>\n<tr>\n";
-echo "<td width='50%' class='tbl'>".$locale['699f']."</td>\n";
+echo "<td width='50%' class='tbl'>".$locale['699g']."</td>\n";
 echo "<td width='50%' class='tbl'><select name='mime_check' class='textbox'>\n";
 echo "<option value='1'".($settings['mime_check'] == "1" ? " selected='selected'" : "").">".$locale['518']."</option>\n";
 echo "<option value='0'".($settings['mime_check'] == "0" ? " selected='selected'" : "").">".$locale['519']."</option>\n";
