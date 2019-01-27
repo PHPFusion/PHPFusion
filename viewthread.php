@@ -17,10 +17,10 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/../../maincore.php';
 if (!defined('FORUM_EXIST')) {
-    redirect(BASEDIR."error.php?code=404");
+    redirect(BASEDIR.'error.php?code=404');
 }
 
 $thread = new \PHPFusion\Infusions\Forum\Classes\Threads\View_Thread();
 echo $thread->display_thread();
 
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';
