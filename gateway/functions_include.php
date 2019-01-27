@@ -45,22 +45,31 @@ function convertNumberToWord($num = FALSE) {
     for ($i = 0; $i < count($num_levels); $i++) {
         $levels--;
         $hundreds = (int)($num_levels[$i] / 100);
-        $hundreds = ($hundreds ? ' '.$list1[$hundreds].$locale['gateway_051'].' ' : '');
+        if ( $hundreds ) {
+            $words[] = $list1[$hundreds].$locale['gateway_051'];
+        }
         $tens = (int)($num_levels[$i] % 100);
         $singles = '';
         if ($tens < 20) {
-            $tens = ($tens ? ' '.$list1[$tens].' ' : '');
+            if ( $tens ) {
+                $words[] = $list1[$tens];
+            }
         } else {
             $tens = (int)($tens / 10);
-            $tens = ' '.$list2[$tens].' ';
+            if ( $tens ) {
+                $words[] = $list2[$tens];
+            }
             $singles = (int)($num_levels[$i] % 10);
-            $singles = ' '.$list1[$singles].' ';
+            if( $singles ) {
+                $words[] = $list1[$singles];
+            }
         }
-        $words[] = $hundreds.$tens.$singles.(($levels && (int)($num_levels[$i])) ? ' '.$list3[$levels].' ' : '');
+        if ( $levels && (int)($num_levels[$i]) ) {
+            $words[] = $list3[$levels];
+        }
     }
 
-    $words = str_replace(' ', '', $words);
-    return implode($words);
+    return implode(' ', $words);
 }
 
 if (!function_exists('str_rot47')) {
