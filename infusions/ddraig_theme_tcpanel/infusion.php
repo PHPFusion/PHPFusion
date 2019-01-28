@@ -19,8 +19,8 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-if (file_exists(INFUSIONS."ddraig_theme_tcpanel/locale/".$settings['locale'].".php")) {
-    include INFUSIONS."ddraig_theme_tcpanel/locale/".$settings['locale'].".php";
+if (file_exists(INFUSIONS."ddraig_theme_tcpanel/locale/".LANGUAGE.".php")) {
+    include INFUSIONS."ddraig_theme_tcpanel/locale/".LANGUAGE.".php";
 } else {
     include INFUSIONS."ddraig_theme_tcpanel/locale/English.php";
 }
