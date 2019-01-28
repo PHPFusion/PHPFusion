@@ -265,7 +265,7 @@ function user_info_bar($data) {
             $message_count = ($message_count > 0) ? $message_count : '0';
             $html .= "<div class='user-fields hidden-xs hidden-sm hidden-md' style='margin:0px'>
             <ul class='nav user-stats-bar'>
-            <li class='dropdown'><a class='icon dropdown-toggle' data-toggle='dropdown' href='#'><i class='entypo mail'></i> ".(($message_count) ? "<span class='label label-danger' style='font-size:11px; padding:0px 10px; color:#fff;'>$message_count</span>" : '')." <b class='caret'></b>\n</a>";
+            <li class='dropdown'><a class='icon dropdown-toggle' data-toggle='dropdown' href='#'><i class='entypo mail'></i> ".(($message_count) ? "<span class='label label-danger' style='font-size: 11px;color: #fff;position: absolute;top: 5px;right: 18px;'>$message_count</span>" : '')." <b class='caret'></b>\n</a>";
             $html .= "<ul class='dropdown-menu' style='width:280px; padding-top:0px;'>\n";
             $html .= "<li style='padding-bottom:0px; background: url(".THEME."images/pm_header.jpg); height:45px; padding-left:60px; padding-top:15px; color:#fff'><strong><a href='".BASEDIR."messages.php' style='color:#fff; line-height:5px; margin-bottom:0px;'>".$locale['global_121']."</a></strong>\n";
 

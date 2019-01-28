@@ -1254,7 +1254,7 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
         $encoded = json_encode([]);
     }
 
-    add_to_footer("<script type='text/javascript'>
+    add_to_jquery("
         function avatar(item) {
             if(!item.id) {return item.text;}
             var avatar = item.avatar;
@@ -1282,13 +1282,11 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
         formatResult: avatar,
         ".$allowclear."
         })".(!empty($encoded) ? ".select2('data', $encoded );" : '')."
-         </script>");
+         ");
 
-    if (!defined("SELECT2")) {
-        define("SELECT2", TRUE);
-        add_to_head("<link href='".INCLUDES."jscripts/select2/select2.css' rel='stylesheet' />");
-        add_to_footer("<script src='".INCLUDES."jscripts/select2/select2.min.js'></script>");
-    }
+    add_to_head("<link href='".INCLUDES."jscripts/select2/select2.css' rel='stylesheet' />");
+    add_to_footer("<script src='".INCLUDES."jscripts/select2/select2.min.js'></script>");
+
     return $html;
 }
 
