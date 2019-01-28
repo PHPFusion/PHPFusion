@@ -121,3 +121,9 @@ $locale['290'] = "There is an autosave of this post that is more recent than the
 $locale['291'] = "View the autosave";
 $locale['292'] = "Saved Revisions";
 $locale['293'] = "Fill to Autosave";
+
+$locale['search_msg_100'] = 'Failed system validation';
+$locale['search_msg_101'] = 'Failed system security measures';
+$locale['search_msg_102'] = 'Pages failed to load';
+$locale['search_msg_103'] = 'Search string is too short';
+$locale['search_msg_104'] = 'There are no results found';

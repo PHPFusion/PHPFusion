@@ -28,9 +28,3 @@ $locale['ALT_010'] = 'Small Sidebar';
 $locale['ALT_011'] = 'Skins';
 $locale['ALT_012'] = 'Dark';
 $locale['ALT_013'] = 'Light';
-// Result Messages
-$locale['ALT_100'] = 'Failed system validation';
-$locale['ALT_101'] = 'Failed system security measures';
-$locale['ALT_102'] = 'Pages failed to load';
-$locale['ALT_103'] = 'Search string is too short';
-$locale['ALT_104'] = 'There are no results found';
