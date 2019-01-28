@@ -164,9 +164,6 @@ class AdminPanel {
                     echo '</div>';
                 echo '</li>';
                 echo '<li class="user-footer">';
-                    echo '<div class="pull-left">';
-                        echo '<a href="'.FUSION_REQUEST.'&amp;logout" class="btn btn-default btn-flat">'.$locale['admin-logout'].'</a>';
-                    echo '</div>';
                     echo '<div class="pull-right">';
                         echo '<a href="'.BASEDIR.'index.php?logout=yes" class="btn btn-default btn-flat">'.$locale['logout'].'</a>';
                     echo '</div>';

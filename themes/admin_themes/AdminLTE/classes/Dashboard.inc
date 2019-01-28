@@ -19,14 +19,37 @@ namespace AdminLTE;
 
 class Dashboard {
     private static function RenderDashboard() {
-        global $members, $forum, $download, $news, $articles, $weblinks, $photos, $global_comments,
-               $global_ratings, $global_submissions, $link_type, $submit_data,
-               $submit_type, $submit_link, // for 9.0
-               $comments_type, $infusions_count, $global_infusions;
+        global $locale, $members, $forum, $download, $news, $articles, $weblinks, $photos, $global_comments, $global_ratings, $global_submissions, $link_type, $submit_data, $submit_type, $comments_type, $infusions_count, $global_infusions, $aidlink, $settings;
 
-        $locale = fusion_get_locale();
-        $aidlink = fusion_get_aidlink();
-        $settings = fusion_get_settings();
+        // comments, ratings, submission types
+        $comments_type = [
+            'N'  => $locale['269'],
+            'D'  => $locale['268'],
+            'P'  => $locale['272'],
+            'A'  => $locale['270'],
+            'B'  => $locale['269b'],
+            'C'  => $locale['272a'],
+            'PH' => $locale['261'],
+        ];
+
+        $submit_type = [
+            'n' => $locale['269'],
+            'd' => $locale['268'],
+            'p' => $locale['272'],
+            'a' => $locale['270'],
+            'l' => $locale['271'],
+            'b' => $locale['269b'],
+        ];
+
+        $link_type = [
+            'N'  => $settings['siteurl']."news.php?readmore=%s",
+            'D'  => $settings['siteurl']."downloads.php?download_id=%s",
+            'P'  => $settings['siteurl']."photogallery.php?photo_id=%s",
+            'A'  => $settings['siteurl']."articles.php?article_id=%s",
+            'B'  => $settings['siteurl']."blog.php?readmore=%s",
+            'C'  => $settings['siteurl']."viewpage.php?page_id=%s",
+            'PH' => $settings['siteurl']."photogallery.php?photo_id=%s",
+        ];
 
         opentable($locale['250'], '', FALSE);
             $mobile  = 12;
@@ -67,8 +90,7 @@ class Dashboard {
             $desktop = 4;
 
             echo '<div class="row">';
-                $forum_ = function_exists('infusion_exists') ? infusion_exists('forum') : db_exists(DB_PREFIX.'forums');
-                if ($forum_) {
+                if (db_exists(DB_FORUMS)) {
                     echo '<div class="col-xs-'.$mobile.' col-sm-'.$tablet.' col-md-'.$laptop.' col-lg-'.$desktop.' block">';
                         echo '<div class="info-box">';
                             echo '<span class="info-box-icon bg-light-blue"><i class="fa fa-comments"></i></span>';
@@ -96,8 +118,7 @@ class Dashboard {
                     echo '</div>';
                 }
 
-                $downloads_ = function_exists('infusion_exists') ? infusion_exists('downloads') : db_exists(DB_PREFIX.'downloads');
-                if ($downloads_) {
+                if (db_exists(DB_DOWNLOADS)) {
                     echo '<div class="col-xs-'.$mobile.' col-sm-'.$tablet.' col-md-'.$laptop.' col-lg-'.$desktop.' block">';
                         echo '<div class="info-box">';
                             echo '<span class="info-box-icon bg-light-blue"><i class="fa fa-cloud-download"></i></span>';
@@ -120,8 +141,7 @@ class Dashboard {
                     echo '</div>';
                 }
 
-                $news_ = function_exists('infusion_exists') ? infusion_exists('news') : db_exists(DB_PREFIX.'news');
-                if ($news_) {
+                if (db_exists(DB_NEWS)) {
                     echo '<div class="col-xs-'.$mobile.' col-sm-'.$tablet.' col-md-'.$laptop.' col-lg-'.$desktop.' block">';
                         echo '<div class="info-box">';
                             echo '<span class="info-box-icon bg-light-blue"><i class="fa fa-newspaper-o"></i></span>';
@@ -144,8 +164,7 @@ class Dashboard {
                     echo '</div>';
                 }
 
-                $articles_ = function_exists('infusion_exists') ? infusion_exists('articles') : db_exists(DB_PREFIX.'articles');
-                if ($articles_) {
+                if (db_exists(DB_ARTICLES)) {
                     echo '<div class="col-xs-'.$mobile.' col-sm-'.$tablet.' col-md-'.$laptop.' col-lg-'.$desktop.' block">';
                         echo '<div class="info-box">';
                             echo '<span class="info-box-icon bg-light-blue"><i class="fa fa-book"></i></span>';
@@ -168,8 +187,7 @@ class Dashboard {
                     echo '</div>';
                 }
 
-                $weblinks_ = function_exists('infusion_exists') ? infusion_exists('weblinks') : db_exists(DB_PREFIX.'weblinks');
-                if ($weblinks_) {
+                if (db_exists(DB_WEBLINKS)) {
                     echo '<div class="col-xs-'.$mobile.' col-sm-'.$tablet.' col-md-'.$laptop.' col-lg-'.$desktop.' block">';
                         echo '<div class="info-box">';
                             echo '<span class="info-box-icon bg-light-blue"><i class="fa fa-link"></i></span>';
@@ -188,8 +206,7 @@ class Dashboard {
                     echo '</div>';
                 }
 
-                $gallery_ = function_exists('infusion_exists') ? infusion_exists('gallery') : db_exists(DB_PREFIX.'photos');
-                if ($gallery_) {
+                if (db_exists(DB_PHOTOS)) {
                     echo '<div class="col-xs-'.$mobile.' col-sm-'.$tablet.' col-md-'.$laptop.' col-lg-'.$desktop.' block">';
                         echo '<div class="info-box">';
                             echo '<span class="info-box-icon bg-light-blue"><i class="fa fa-camera-retro"></i></span>';
@@ -230,8 +247,7 @@ class Dashboard {
                                             echo '<strong>'.(!empty($comment_data['user_id']) ? profile_link($comment_data['user_id'], $comment_data['user_name'], $comment_data['user_status']) : $comment_data['comment_name']).' </strong>';
                                             echo $locale['273'].' <a href="'.sprintf($link_type[$comment_data['comment_type']], $comment_data['comment_item_id']).'"><strong>'.$comments_type[$comment_data['comment_type']].'</strong></a> ';
                                             echo timer($comment_data['comment_datestamp']).'<br/>';
-                                            $comment = trimlink(strip_tags(parse_textarea($comment_data['comment_message'], FALSE, TRUE)), 130);
-                                            echo '<span class="text-smaller">'.parse_textarea($comment, TRUE, FALSE).'</span>';
+                                            echo '<span class="text-smaller">'.trimlink(parseubb($comment_data['comment_message']), 70).'</span>';
                                         echo '</div>';
                                     }
 
@@ -276,33 +292,18 @@ class Dashboard {
                     echo '<div id="submissions">';
                         openside('<i class="fa fa-cloud-upload"></i> <strong class="text-uppercase">'.$locale['279'].'</strong><span class="pull-right badge bg-blue">'.number_format($global_submissions['rows']).'</span>');
                             if (count($global_submissions['data']) > 0) {
-                                if (!empty($submit_data)) {
-                                    foreach ($global_submissions['data'] as $i => $submit_date) {
-                                        $review_link = sprintf($submit_data[$submit_date['submit_type']]['admin_link'], $submit_date['submit_id']);
+                                foreach ($global_submissions['data'] as $i => $submit_date) {
+                                    $review_link = sprintf($submit_data[$submit_date['submit_type']]['admin_link'], $submit_date['submit_id']);
 
-                                        echo '<div data-id="'.$i.'" class="clearfix p-b-10'.($i > 0 ? ' p-t-10' : '').'"'.($i > 0 ? ' style="border-top: 1px solid #ddd;"' : '').'>';
-                                            echo '<div class="pull-left display-inline-block m-t-5 m-b-0">'.display_avatar($submit_date, '25px', '', FALSE, 'img-circle m-r-5').'</div>';
-                                            echo '<strong>'.profile_link($submit_date['user_id'], $submit_date['user_name'], $submit_date['user_status']).' </strong>';
-                                            echo $locale['273b'].' <strong>'.$submit_data[$submit_date['submit_type']]['submit_locale'].'</strong> ';
-                                            echo timer($submit_date['submit_datestamp']);
-                                            if (!empty($review_link)) {
-                                                echo '<a class="btn btn-sm btn-default m-l-10 pull-right" href="'.$review_link.'">'.$locale['286'].'</a>';
-                                            }
-                                        echo '</div>';
-                                    }
-                                } else { // for 9.0
-                                    foreach ($global_submissions['data'] as $i => $submit_data) {
-                                        $review_link = sprintf($submit_link[$submit_data['submit_type']], $submit_data['submit_id']);
-                                        echo '<div data-id="'.$i.'" class="clearfix p-b-10'.($i > 0 ? ' p-t-10' : '').'"'.($i > 0 ? ' style="border-top: 1px solid #ddd;"' : '').'>';
-                                            echo '<div class="pull-left display-inline-block m-t-0 m-b-0">'.display_avatar($submit_data, '25px', '', FALSE, 'img-rounded m-r-5').'</div>';
-                                            echo '<strong>'.profile_link($submit_data['user_id'], $submit_data['user_name'], $submit_data['user_status']).' </strong>';
-                                            echo $locale['273b'].' <strong>'.$submit_type[$submit_data['submit_type']].'</strong> ';
-                                            echo timer($submit_data['submit_datestamp']);
-                                            if (!empty($review_link)) {
-                                                echo '<a class="btn btn-sm btn-default m-l-10 pull-right" href="'.$review_link.'">'.$locale['286'].'</a>';
-                                            }
-                                        echo '</div>';
-                                    }
+                                    echo '<div data-id="'.$i.'" class="clearfix p-b-10'.($i > 0 ? ' p-t-10' : '').'"'.($i > 0 ? ' style="border-top: 1px solid #ddd;"' : '').'>';
+                                        echo '<div class="pull-left display-inline-block m-t-5 m-b-0">'.display_avatar($submit_date, '25px', '', FALSE, 'img-circle m-r-5').'</div>';
+                                        echo '<strong>'.profile_link($submit_date['user_id'], $submit_date['user_name'], $submit_date['user_status']).' </strong>';
+                                        echo $locale['273b'].' <strong>'.$submit_data[$submit_date['submit_type']]['submit_locale'].'</strong> ';
+                                        echo timer($submit_date['submit_datestamp']);
+                                        if (!empty($review_link)) {
+                                            echo '<a class="btn btn-sm btn-default m-l-10 pull-right" href="'.$review_link.'">'.$locale['286'].'</a>';
+                                        }
+                                    echo '</div>';
                                 }
 
                                 if (isset($global_submissions['submissions_nav'])) {
@@ -344,10 +345,8 @@ class Dashboard {
     }
 
     private static function AdminIcons() {
-        global $admin_icons, $admin_images;
+        global $admin_icons, $admin_images, $locale, $aidlink;
 
-        $locale = fusion_get_locale();
-        $aidlink = fusion_get_aidlink();
         $admin_title = str_replace('[SITENAME]', fusion_get_settings('sitename'), $locale['200']);
 
         opentable($admin_title);
@@ -357,7 +356,7 @@ class Dashboard {
                     echo '<div class="icon-wrapper col-xs-6 col-sm-2 col-md-2 col-lg-2">';
                     if ($admin_images) {
                         echo '<a class="btn btn-app" href="'.$data['admin_link'].$aidlink.'">';
-                            echo '<img class="display-block" src="'.get_image('ac_'.$data['admin_rights']).'" alt="'.$data['admin_title'].'"/>';
+                            echo '<img class="display-block" src="'.(file_exists(ADMIN.'images/'.$data['admin_image']) ? ADMIN.'images/'.$data['admin_image'] : ADMIN.'images/notfound.png').'" alt="'.$data['admin_title'].'"/>';
                             echo '<span>'.$data['admin_title'].'</span>';
                         echo '</a>';
                     } else {
