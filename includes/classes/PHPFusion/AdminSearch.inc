@@ -129,7 +129,7 @@ class AdminSearch {
     private function authorizeAid() {
         $aid = (string)filter_input(INPUT_GET, 'aid');
 
-        if (isset($aid) && iAUTH == $aid) {
+        if (defined('iAUTH') && isset($aid) && iAUTH == $aid) {
             return TRUE;
         }
 
