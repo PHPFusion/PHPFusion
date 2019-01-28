@@ -107,29 +107,31 @@ class adminPanel extends resource {
             menuToggle('".self::$locale['admin_collapse']."');            
         });
         $('#search_app').bind('keyup', function(e) {
-            var data = {
-                'appString' : $(this).val(),
-                'mode' : 'html',
-                'url' : '".$_SERVER['REQUEST_URI']."',
-            };
-            var sendData = $.param(data);
             $.ajax({
-                url: '".THEMES."admin_themes/Artemis/acp_request.php".$this->get_aidlink()."',
-                dataType: 'html',
-                method : 'get',
-                type: 'json',
-                data: sendData,
+                url: '".ADMIN."includes/acp_search.php".fusion_get_aidlink()."',
+                method: 'get',
+                data: $.param({'pagestring': $(this).val()}),
+                dataType: 'json',
                 success: function(e) {
                     $('.app_page_list').hide();
-                    $('ul#app_search_result').html(e).show();
-                },
-                error : function(e) {
-                    console.log('fail');
+                    var result = '';
+
+                        if (!e.status) {
+                            $.each(e, function (i, data) {
+                                if (data) {
+                                    result += '<li><a href=\"' + data.link + '\"><div class=\"app_icon\"><img class=\"img-responsive\" alt=\"' + data.title + '\" src=\"' + data.icon + '\"/></div><div class=\"apps m-l-10\"><h4>' + data.title + '</h4></div></a></li>';
+                                }
+                            });
+                        } else {
+                            result = '<li class=\"app_search_error\"><span>' + e.status + '</span></li>';
+                        }
+
+
+                    $('ul#app_search_result').html(result).show();
                 }
             });
         });
         ");
-
     }
 
     /**
