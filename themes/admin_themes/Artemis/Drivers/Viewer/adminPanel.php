@@ -160,15 +160,13 @@ class adminPanel extends resource {
                 } else if (!$is_menu_action) {
                     $href_src = "href=\"".ADMIN.$aidlink."&amp;pagenum=$i\"";
                 }
+
+                $acpState = isset($_COOKIE['acpState']) && $_COOKIE['acpState'] == 0 ? ' style="display:none;"' : '';
                 ?>
                 <li <?php echo($active ? " class=\"active\"" : "") ?>>
                     <a class="pointer admin-menu-item<?php echo $is_menu_action ? " menu-action " : "" ?>"
                        title="<?php echo $section_name ?>" <?php echo $href_src ?>>
-                        <?php echo Admins::getInstance()->get_admin_section_icons($i)." <span class=\"m-l-10\">$section_name</span> ".($i > 0 ? "<span class='fa fa-caret-right'></span>" : '') ?>
-                    </a>
-                    <a class="pointer admin-menu-icon<?php echo $is_menu_action ? " menu-action " : "" ?>"
-                       title="<?php echo $section_name ?>" <?php echo $href_src ?>>
-                        <?php echo Admins::getInstance()->get_admin_section_icons($i) ?>
+                        <?php echo Admins::getInstance()->get_admin_section_icons($i)." <span class=\"m-l-10 section_name\" $acpState>$section_name</span> ".($i > 0 ? "<span class='caret-icon fa fa-caret-right' $acpState></span>" : '') ?>
                     </a>
                 </li>
             <?php

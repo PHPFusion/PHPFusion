@@ -13,15 +13,15 @@ var menu_li = $('#devlpr .menu li');
 function menuToggle(locale) {
     if (menu_wrap.hasClass('collapsed')) {
         // close menu
-        $('.admin-menu-icon').show();
-        $('.admin-menu-item').hide();
+        $('.admin-menu-item .section_name').hide();
+        $('.admin-menu-item .caret-icon').hide();
         menu_header.html('<h4 class=\"php-fusion text-white text-center\"></h4>');
         $('.menu-action').html('<i class=\"fa fa-chevron-circle-right hidden-xs\"></i>');
         Cookies.set('acpState', 0);
     } else {
         // open menu
-        $('.admin-menu-icon').hide();
-        $('.admin-menu-item').show();
+        $('.admin-menu-item .section_name').show();
+        $('.admin-menu-item .caret-icon').show();
         menu_header.html('<h2>Artemis</h2>');
         $('.menu-action').html('<i class=\"fa fa-chevron-circle-left hidden-xs\"></i> <span class=\"m-l-10\">' + locale + '</span>');
         Cookies.set('acpState', 1);
