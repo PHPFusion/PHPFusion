@@ -92,7 +92,7 @@ function getErrorLevel($level, $desc = FALSE) {
     ];
 
     if (isset($errorLevels[$level])) {
-        return $errorLevels[0].($desc ? " - ".$errorLevels[1] : "");
+        return $errorLevels[0].(!empty($desc) ? " - ".$errorLevels[$level] : "");
     } else {
         return $locale['err_100'];
     }
