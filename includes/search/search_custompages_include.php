@@ -55,7 +55,7 @@ if (Search_Engine::get_param('stype') == 'custompages' || Search_Engine::get_par
     if (!empty(Search_Engine::get_param('search_param'))) {
 
         $query = "SELECT * FROM ".DB_CUSTOM_PAGES
-            .(multilang_table('CP') ? " WHERE page_language='".LANGUAGE."' AND " : "WHERE ").
+            .(multilang_table('CP') ? " WHERE page_language='".LANGUAGE."' AND " : " WHERE ").
             groupaccess('page_access')." AND ".Search_Engine::search_conditions('custom_page');
 
         $result = dbquery($query, Search_Engine::get_param('search_param'));
