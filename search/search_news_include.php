@@ -70,10 +70,11 @@ if (defined('NEWS_EXIST')) {
             require_once INFUSIONS.'news/classes/autoloader.php';
             $item_count = "<a href='".BASEDIR."search.php?stype=news&amp;stext=".Search_Engine::get_param('stext')."&amp;".Search_Engine::get_param('composevars')."'>".$rows." ".($rows == 1 ? $locale['n401'] : $locale['n402'])." ".$locale['522']."</a><br />\n";
 
-            $result = dbquery("SELECT tn.*, tu.user_id, tu.user_name, tu.user_status,
+            $result = dbquery("SELECT tn.*, nc.*, tu.user_id, tu.user_name, tu.user_status,
                 ni.news_image, ni.news_image_t1, ni.news_image_t2
                 FROM ".DB_NEWS." tn
                 LEFT JOIN ".DB_USERS." tu ON tn.news_name=tu.user_id
+                LEFT JOIN ".DB_NEWS_CATS." nc ON tn.news_cat=nc.news_cat_id
                 LEFT JOIN ".DB_NEWS_IMAGES." ni ON ni.news_id=tn.news_id AND tn.news_image_front_default=ni.news_image_id
                 ".(multilang_table("NS") ? "WHERE tn.news_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('news_visibility')."
                 AND (news_start='0'||news_start<=NOW())
