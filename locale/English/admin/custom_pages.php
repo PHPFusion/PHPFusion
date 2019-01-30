@@ -92,3 +92,4 @@ $locale['page_0412'] = "Invalid Column";
 $locale['page_0413'] = "Delete this custom page?"; // 450
 $locale['page_0440'] = "There are no custom page defined";
 $locale['page_0441'] = "Content";
+$locale['page_0442'] = "You must choose at least one Page";

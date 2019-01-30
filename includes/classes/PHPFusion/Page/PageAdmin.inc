@@ -17,9 +17,9 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Page;
 
+use PHPFusion\BreadCrumbs;
 use PHPFusion\Page\Composer\PageComposer;
 use PHPFusion\Page\Composer\PageList;
-use PHPFusion\BreadCrumbs;
 
 /**
  * Class PageAdmin
