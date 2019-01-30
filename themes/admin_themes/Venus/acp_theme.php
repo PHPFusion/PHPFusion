@@ -39,17 +39,3 @@ define('ENTYPO', TRUE);
 
 require_once INCLUDES."theme_functions_include.php";
 require_once THEMES."admin_themes/Venus/includes/functions.php";
-
-// Post password check
-if (iADMIN && $userdata['user_admin_password']) {
-    if (isset($_POST['admin_password'])) {
-        $login_error = $locale['global_182'];
-        $admin_password = stripinput($_POST['admin_password']);
-        if (!defined("FUSION_NULL")) {
-            set_admin_pass($admin_password);
-            redirect(FUSION_SELF.$aidlink."&amp;pagenum=0");
-        }
-    }
-}
-
-\PHPFusion\Admins::getInstance()->setAdminBreadcrumbs();

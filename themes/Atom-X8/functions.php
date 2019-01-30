@@ -47,14 +47,6 @@ set_image("pm", THEME."forum/pm.gif");
 set_image("quote", THEME."forum/quote.gif");
 set_image("forum_edit", THEME."forum/edit.gif");
 
-function trim_text($word, $limit) {
-    if (strlen($word) > $limit) {
-        $word = substr($word, 0, $limit);
-        $word = substr($word, 0, strrpos($word, ' ')).'...';
-    }
-    return $word;
-}
-
 // Atom X Navigation
 function horizontalnav() {
     global $settings, $userdata, $locale, $aidlink, $menu_item;

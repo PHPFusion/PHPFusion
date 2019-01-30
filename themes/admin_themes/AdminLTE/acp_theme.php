@@ -41,8 +41,6 @@ if (!check_admin_pass('') && !stristr($_SERVER['PHP_SELF'], $settings['site_path
     define('THEME_BODY', '<body class="hold-transition skin-blue sidebar-mini">');
 }
 
-\PHPFusion\Admins::getInstance()->setAdminBreadcrumbs();
-
 function render_admin_panel() {
     new AdminLTE\AdminPanel();
 }
@@ -80,15 +78,3 @@ function closetable($bg = TRUE) {
 
     return preg_replace("/<meta name='theme-color' content='#ffffff'>/i", '<meta name="theme-color" content="#'.$color.'"/>', $output);
 });
-
-// Post password check
-if (iADMIN && $userdata['user_admin_password']) {
-    if (isset($_POST['admin_password'])) {
-        $login_error = $locale['global_182'];
-        $admin_password = stripinput($_POST['admin_password']);
-        if (!defined("FUSION_NULL")) {
-            set_admin_pass($admin_password);
-            redirect(FUSION_SELF.$aidlink."&amp;pagenum=0");
-        }
-    }
-}

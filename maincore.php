@@ -1184,15 +1184,6 @@ function fusion_get_userdata($key = NULL) {
     return $key === NULL ? $userdata : (isset($userdata[$key]) ? $userdata[$key] : NULL);
 }
 
-function db_exists($table) {
-    if (strpos($table, DB_PREFIX) === FALSE) {
-        $table = DB_PREFIX.$table;
-    }
-    $query = dbquery("SHOW TABLES LIKE '$table'");
-
-    return boolval(dbrows($query));
-}
-
 function form_user_select($input_name, $label = "", $input_value = FALSE, array $options = []) {
     global $locale;
     if (!session_status() == PHP_SESSION_ACTIVE) {
@@ -1348,6 +1339,30 @@ function form_hidden($input_name, $label = "", $input_value = "", array $options
     return $html;
 }
 
+/**
+ * Pure trim function
+ *
+ * @param string $str
+ * @param bool   $length
+ *
+ * @return string
+ */
+function trim_text($str, $length = FALSE) {
+    $length = (isset($length) && (!empty($length))) ? stripinput($length) : "300";
+    $startfrom = $length;
+    for ($i = $startfrom; $i <= strlen($str); $i++) {
+        $spacetest = substr("$str", $i, 1);
+        if ($spacetest == " ") {
+            $spaceok = substr("$str", 0, $i);
+
+            return ($spaceok."...");
+            break;
+        }
+    }
+
+    return ($str);
+}
+
 // Check for installed infusion
 function infusion_exists($infusion_folder) {
     static $infusions_installed = [];
@@ -1360,6 +1375,63 @@ function infusion_exists($infusion_folder) {
         }
     }
     return (boolean)(isset($infusions_installed[$infusion_folder])) ? TRUE : FALSE;
+}
+
+function db_exists($table) {
+    if (strpos($table, DB_PREFIX) === FALSE) {
+        $table = DB_PREFIX.$table;
+    }
+    $query = dbquery("SHOW TABLES LIKE '$table'");
+
+    return boolval(dbrows($query));
+}
+
+/**
+ * MYSQL Show Columns Shorthand
+ * Returns available columns in a table
+ *
+ * @param $db
+ *
+ * @return array
+ */
+function fieldgenerator($db) {
+    static $col_names = [];
+
+    if (empty($col_names[$db])) {
+        $cresult = dbquery("SHOW COLUMNS FROM $db");
+        $col_names = [];
+        while ($cdata = dbarray($cresult)) {
+            $col_names[$db][] = $cdata['Field'];
+        }
+    }
+
+    return (array)$col_names[$db];
+}
+
+/**
+ * Determine whether column exists in a table
+ *
+ * @param           $table
+ * @param           $column
+ * @param bool|TRUE $add_prefix
+ *
+ * @return bool
+ */
+function column_exists($table, $column, $add_prefix = TRUE) {
+
+    static $table_config = [];
+
+    if ($add_prefix === TRUE) {
+        if (strpos($table, DB_PREFIX) === FALSE) {
+            $table = DB_PREFIX.$table;
+        }
+    }
+
+    if (empty($table_config[$table])) {
+        $table_config[$table] = array_flip(fieldgenerator($table));
+    }
+
+    return (isset($table_config[$table][$column]) ? TRUE : FALSE);
 }
 
 include INCLUDES."system_images.php";
