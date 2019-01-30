@@ -152,6 +152,9 @@
     -o-transition: all .2s ease-in-out;
     transition: all .2s ease-in-out;
     margin: 0 auto;
+    -webkit-transform: scale(1.27);
+    -ms-transform: scale(1.27);
+    transform: scale(1.27);
 }
 
 .news-item.lg .featured-image img {
@@ -201,17 +204,12 @@
     display: block;
     background: #fff;
     padding: 0 7% 15px;
-    -webkit-transition: all 0.5s ease-in-out;
-    -moz-transition: all 0.5s ease-in-out;
-    -o-transition: all 0.5s ease-in-out;
     -webkit-transition: all 0.5s ease;
     -o-transition: all 0.5s ease;
     transition: all 0.5s ease;
     word-wrap: break-word;
     -webkit-hyphens: auto;
-    -moz-hyphens: auto;
     -ms-hyphens: auto;
-    -o-hyphens: auto;
     hyphens: auto;
 }
 
@@ -249,22 +247,12 @@
 }
 
 .news-item .news-news {
-    height: 90px;
     position: relative;
     margin-top: -24px;
     margin-bottom: 13px;
     font-size: 12px;
     visibility: hidden;
     opacity: 0;
-    filter: alpha(opacity=0);
-    -webkit-transition: all 0.5s ease;
-    -moz-transition: all 0.5s ease;
-    -o-transition: all 0.5s ease;
-    transition: all 0.5s ease;
-}
-
-.news-item .btn-default {
-    display: inline-block;
     filter: alpha(opacity=0);
     -webkit-transition: all 0.5s ease;
     -moz-transition: all 0.5s ease;
@@ -306,6 +294,14 @@
     margin-right: 0;
 }
 
+.news-item .btn-default {
+    visibility: hidden;
+    -webkit-transition: all .2s ease-in-out;
+    -moz-transition: all .2s ease-in-out;
+    -o-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+}
+
 .news-item:hover .news-body {
     bottom: 45px !important;
 }
@@ -315,7 +311,6 @@
     visibility: visible;
     opacity: 1;
     filter: alpha(opacity=100);
-    display: block;
 }
 
 /* Standard Stock News */
@@ -325,7 +320,7 @@
     display: block;
     width: 100%;
     padding: 15px;
-    background: none repeat scroll 0% 0% rgba(0, 0, 0, 0.6);
+    background: none repeat scroll 0 0 rgba(0, 0, 0, 0.6);
     margin-top: -100%;
     color: #FFF !important;
     text-decoration: none !important;
