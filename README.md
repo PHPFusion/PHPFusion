@@ -1,6 +1,5 @@
 PHP-Fusion Andromeda
 ---
-**Note: The Andromeda-9.0.3 branch will be removed soon. Please switch and checkout to origin/Andromeda branch.**
 
 This is the development of PHP-Fusion Version 9.03.XX, code name Andromeda.
 
