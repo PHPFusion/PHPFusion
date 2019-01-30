@@ -300,7 +300,7 @@ class ImagesAdministration {
                         }
                         if (\defender::safe()) {
                             addNotice('success', self::$locale['420']);
-                            //redirect(clean_request("", ["section"], FALSE));
+                            redirect(clean_request("", ["section"], FALSE));
                         }
                     }
                 }
