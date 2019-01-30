@@ -190,9 +190,6 @@ class News extends Core {
 
                     OutputHandler::addToHead('<script src="https://platform.twitter.com/widgets.js" async defer></script>');
                     echo '<div class="m-r-5 display-inline"><a href="https://twitter.com/share" class="twitter-share-button" data-show-count="false">Tweet</a></div>';
-
-                    OutputHandler::addToHead('<script src="https://apis.google.com/js/platform.js" async defer></script>');
-                    echo '<div class="g-plus" data-action="share" data-annotation="none"></div><script type="text/javascript">gapi.plus.go();</script>';
                 echo '</div>';
 
                 echo '<div class="well text-center m-t-10 m-b-0">';
