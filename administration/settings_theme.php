@@ -23,32 +23,23 @@ $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/settings.php');
 
 $settings = fusion_get_settings();
 
-$settings_theme = [
-    'admin_theme' => $settings['admin_theme'],
-    'theme'       => $settings['theme'],
-    'bootstrap'   => $settings['bootstrap'],
-    'entypo'      => $settings['entypo'],
-    'fontawesome' => $settings['fontawesome'],
-];
-
 if (isset($_POST['savesettings'])) {
-
-    $settings_theme = [
-        'admin_theme' => form_sanitizer($_POST['admin_theme'], $settings_theme['admin_theme'], 'admin_theme'),
-        'theme'       => form_sanitizer($_POST['theme'], $settings_theme['theme'], 'theme'),
+    $inputData = [
+        'admin_theme' => form_sanitizer($_POST['admin_theme'], $settings['admin_theme'], 'admin_theme'),
+        'theme'       => form_sanitizer($_POST['theme'], $settings['theme'], 'theme'),
         'bootstrap'   => form_sanitizer($_POST['bootstrap'], '0', 'bootstrap'),
         'entypo'      => form_sanitizer($_POST['entypo'], '0', 'entypo'),
         'fontawesome' => form_sanitizer($_POST['fontawesome'], '0', 'fontawesome'),
     ];
 
     if (\defender::safe()) {
-        foreach ($settings_theme as $settings_key => $settings_value) {
-            $data = [
-                'settings_name'  => $settings_key,
-                'settings_value' => $settings_value
-            ];
-            dbquery_insert(DB_SETTINGS, $data, 'update', ['primary_key' => 'settings_name']);
+        foreach ($inputData as $settings_name => $settings_value) {
+            dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:settings_value WHERE settings_name=:settings_name", [
+                ':settings_value' => $settings_value,
+                ':settings_name'  => $settings_name
+            ]);
         }
+
         addNotice('success', $locale['900']);
         redirect(FUSION_REQUEST);
     }
@@ -70,7 +61,7 @@ foreach ($theme_files as $file) {
     $opts[$file] = $file;
 }
 
-echo form_select('theme', $locale['418'], $settings_theme['theme'], [
+echo form_select('theme', $locale['418'], $settings['theme'], [
     'options'        => $opts,
     'callback_check' => 'theme_exists',
     'inline'         => TRUE,
@@ -82,7 +73,7 @@ $opts = [];
 foreach ($admin_theme_files as $file) {
     $opts[$file] = $file;
 }
-echo form_select('admin_theme', $locale['418a'], $settings_theme['admin_theme'], [
+echo form_select('admin_theme', $locale['418a'], $settings['admin_theme'], [
     'options'    => $opts,
     'inline'     => TRUE,
     'error_text' => $locale['error_value'],
@@ -93,15 +84,15 @@ $choice_opts = [
     0 => $locale['disable'],
     1 => $locale['enable']
 ];
-echo form_select('bootstrap', $locale['437'], $settings_theme['bootstrap'], [
+echo form_select('bootstrap', $locale['437'], $settings['bootstrap'], [
     'options' => $choice_opts,
     'inline'  => TRUE
 ]);
-echo form_select('entypo', $locale['441'], $settings_theme['entypo'], [
+echo form_select('entypo', $locale['441'], $settings['entypo'], [
     'options' => $choice_opts,
     'inline'  => TRUE
 ]);
-echo form_select('fontawesome', $locale['442'], $settings_theme['fontawesome'], [
+echo form_select('fontawesome', $locale['442'], $settings['fontawesome'], [
     'options' => $choice_opts,
     'inline'  => TRUE
 ]);

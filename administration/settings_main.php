@@ -21,8 +21,7 @@ require_once THEMES.'templates/admin_header.php';
 
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/settings.php');
 
-\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link'  => ADMIN.'settings_main.php'.fusion_get_aidlink(),
-                                                      'title' => $locale['main_settings']]);
+\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'settings_main.php'.fusion_get_aidlink(), 'title' => $locale['main_settings']]);
 /**
  * Get the default search options
  * with file exists validation of the PHP-Fusion Search SDK files.
@@ -110,43 +109,9 @@ function validate_site_port($value) {
 
 $settings = fusion_get_settings();
 
-// These are the default settings and the only settings we expect to be posted
-$settings_main = [
-    'siteintro'       => $settings['siteintro'],
-    'sitename'        => $settings['sitename'],
-    'sitebanner'      => $settings['sitebanner'],
-    'siteemail'       => $settings['siteemail'],
-    'siteusername'    => $settings['siteusername'],
-    'footer'          => $settings['footer'],
-    'site_protocol'   => $settings['site_protocol'],
-    'site_host'       => $settings['site_host'],
-    'site_path'       => $settings['site_path'],
-    'site_port'       => $settings['site_port'],
-    'description'     => $settings['description'],
-    'keywords'        => $settings['keywords'],
-    'opening_page'    => $settings['opening_page'],
-    'default_search'  => $settings['default_search'],
-    'exclude_left'    => $settings['exclude_left'],
-    'exclude_upper'   => $settings['exclude_upper'],
-    'exclude_aupper'  => $settings['exclude_aupper'],
-    'exclude_lower'   => $settings['exclude_lower'],
-    'exclude_blower'  => $settings['exclude_blower'],
-    'exclude_right'   => $settings['exclude_right'],
-    'exclude_user1'   => $settings['exclude_user1'],
-    'exclude_user2'   => $settings['exclude_user2'],
-    'exclude_user3'   => $settings['exclude_user3'],
-    'exclude_user4'   => $settings['exclude_user4'],
-    'logoposition_xs' => $settings['logoposition_xs'],
-    'logoposition_sm' => $settings['logoposition_sm'],
-    'logoposition_md' => $settings['logoposition_md'],
-    'logoposition_lg' => $settings['logoposition_lg'],
-    'domain_server'   => $settings['domain_server'],
-];
-
 // Saving settings
 if (isset($_POST['savesettings'])) {
-
-    $settings_main = [
+    $inputData = [
         'siteintro'       => descript(addslashes($_POST['siteintro'])),
         'sitename'        => form_sanitizer($_POST['sitename'], '', 'sitename'),
         'sitebanner'      => form_sanitizer($_POST['sitebanner'], '', 'sitebanner'),
@@ -177,26 +142,29 @@ if (isset($_POST['savesettings'])) {
         'logoposition_lg' => form_sanitizer($_POST['logoposition_lg'], '', 'logoposition_lg'),
         'domain_server'   => form_sanitizer($_POST['domain_server'], '', 'domain_server')
     ];
-    if (strpos($settings_main['site_host'], "/") !== FALSE) {
-        $settings_main['site_host'] = explode("/", $settings_main['site_host'], 2);
-        if ($settings_main['site_host'][1] != "") {
-            $_POST['site_path'] = "/".$settings_main['site_host'][1];
+
+    if (strpos($inputData['site_host'], "/") !== FALSE) {
+        $inputData['site_host'] = explode("/", $inputData['site_host'], 2);
+        if ($inputData['site_host'][1] != "") {
+            $_POST['site_path'] = "/".$inputData['site_host'][1];
         }
-        $settings_main['site_host'] = $settings_main['site_host'][0];
+        $inputData['site_host'] = $inputData['site_host'][0];
     }
 
-    $settings_main['siteurl'] = $settings_main['site_protocol']."://".$settings_main['site_host'].($settings_main['site_port'] ? ":".$settings_main['site_port'] : "").$settings_main['site_path'];
+    $inputData['siteurl'] = $inputData['site_protocol']."://".$inputData['site_host'].($inputData['site_port'] ? ":".$inputData['site_port'] : "").$inputData['site_path'];
 
-    if (!empty($settings['domain_server'])) {
-        $settings_main['domain_server'] = str_replace(PHP_EOL, '|', $settings['domain_server']);
+    if (!empty($inputData['domain_server'])) {
+        $inputData['domain_server'] = str_replace(PHP_EOL, '|', $inputData['domain_server']);
     }
 
     if (\defender::safe()) {
-        foreach ($settings_main as $settings_key => $settings_value) {
-            $query = "UPDATE `".DB_SETTINGS."` SET `settings_value`=:settings_value WHERE `settings_name`=:settings_key";
-            $parameters = [':settings_key' => $settings_key, ':settings_value' => $settings_value];
-            dbquery($query, $parameters);
+        foreach ($inputData as $settings_name => $settings_value) {
+            dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:settings_value WHERE settings_name=:settings_name", [
+                ':settings_value' => $settings_value,
+                ':settings_name'  => $settings_name
+            ]);
         }
+
         addNotice("success", $locale['900']);
         redirect(FUSION_REQUEST);
     }
@@ -207,35 +175,35 @@ echo "<div class='well'>".$locale['main_description']."</div>";
 echo openform('settingsform', 'post', FUSION_REQUEST);
 echo "<div class='row'><div class='col-xs-12 col-sm-12 col-md-6'>\n";
 echo fusion_get_function('openside', '');
-echo form_text('sitename', $locale['402'], $settings_main['sitename'], [
+echo form_text('sitename', $locale['402'], $settings['sitename'], [
     'inline'     => FALSE,
     'max_length' => 255,
     'required'   => TRUE,
     'error_text' => $locale['error_value']
 ]);
-echo form_text('siteemail', $locale['405'], $settings_main['siteemail'], [
+echo form_text('siteemail', $locale['405'], $settings['siteemail'], [
     'inline'     => FALSE,
     'required'   => TRUE,
     'max_length' => 128,
     'type'       => 'email'
 ]);
-echo form_text('siteusername', $locale['406'], $settings_main['siteusername'], [
+echo form_text('siteusername', $locale['406'], $settings['siteusername'], [
     'required'   => TRUE,
     'inline'     => FALSE,
     'max_length' => 32,
     'error_text' => $locale['error_value']
 ]);
-echo form_text('opening_page', $locale['413'], $settings_main['opening_page'], [
+echo form_text('opening_page', $locale['413'], $settings['opening_page'], [
     'required'   => TRUE,
     'max_length' => 100,
     'error_text' => $locale['error_value']
 ]);
-echo form_textarea('siteintro', $locale['407'], stripslashes($settings_main['siteintro']), [
+echo form_textarea('siteintro', $locale['407'], stripslashes($settings['siteintro']), [
     'type'     => 'tinymce',
     'tinymce'  => 'simple',
     'autosize' => TRUE
 ]);
-echo form_textarea('footer', $locale['412'], stripslashes($settings_main['footer']), [
+echo form_textarea('footer', $locale['412'], stripslashes($settings['footer']), [
     'autosize' => TRUE,
     'type'     => 'tinymce',
     'tinymce'  => 'simple'
@@ -243,7 +211,7 @@ echo form_textarea('footer', $locale['412'], stripslashes($settings_main['footer
 echo fusion_get_function('closeside', '');
 
 echo fusion_get_function('openside', '');
-echo form_text('sitebanner', $locale['404'], $settings_main['sitebanner'], [
+echo form_text('sitebanner', $locale['404'], $settings['sitebanner'], [
     'inline'     => TRUE,
     'required'   => TRUE,
     'error_text' => $locale['error_value']]);
@@ -254,7 +222,7 @@ $options_xs = [
     'logo-xs-right'  => $locale['404right']
 ];
 
-echo form_select('logoposition_xs', $locale['404XS'], $settings_main['logoposition_xs'], [
+echo form_select('logoposition_xs', $locale['404XS'], $settings['logoposition_xs'], [
     'inline'  => TRUE,
     'options' => $options_xs
 ]);
@@ -265,7 +233,7 @@ $options_sm = [
     'logo-sm-right'  => $locale['404right']
 ];
 
-echo form_select('logoposition_sm', $locale['404SM'], $settings_main['logoposition_sm'], [
+echo form_select('logoposition_sm', $locale['404SM'], $settings['logoposition_sm'], [
     'inline'  => TRUE,
     'options' => $options_sm
 ]);
@@ -276,7 +244,7 @@ $options_md = [
     'logo-md-right'  => $locale['404right']
 ];
 
-echo form_select('logoposition_md', $locale['404MD'], $settings_main['logoposition_md'], [
+echo form_select('logoposition_md', $locale['404MD'], $settings['logoposition_md'], [
     'inline'  => TRUE,
     'options' => $options_md
 ]);
@@ -287,16 +255,16 @@ $options_lg = [
     'logo-lg-right'  => $locale['404right']
 ];
 
-echo form_select('logoposition_lg', $locale['404LG'], $settings_main['logoposition_lg'], [
+echo form_select('logoposition_lg', $locale['404LG'], $settings['logoposition_lg'], [
     'inline'  => TRUE,
     'options' => $options_lg
 ]);
 echo fusion_get_function('closeside', '');
 
 echo fusion_get_function('openside', '');
-echo form_textarea('description', $locale['409'], $settings_main['description'], ['autosize' => TRUE]);
-echo form_textarea('keywords', $locale['410'], $settings_main['keywords'], ['autosize' => TRUE, 'ext_tip' => $locale['411']]);
-echo form_select('default_search', $locale['419'], $settings_main['default_search'], [
+echo form_textarea('description', $locale['409'], $settings['description'], ['autosize' => TRUE]);
+echo form_textarea('keywords', $locale['410'], $settings['keywords'], ['autosize' => TRUE, 'ext_tip' => $locale['411']]);
+echo form_select('default_search', $locale['419'], $settings['default_search'], [
     'options'        => get_default_search_opts(),
     'callback_check' => 'validate_default_search'
 ]);
@@ -310,13 +278,13 @@ echo "<div class='col-xs-12 col-sm-3'>\n";
 echo "<strong>".$locale['401a']."</strong><br/><i>".$locale['401b']."</i>";
 echo "<div class='spacer-xs'>\n";
 echo "<i class='fa fa-external-link m-r-10'></i>";
-echo "<span id='display_protocol'>".$settings_main['site_protocol']."</span>://";
-echo "<span id='display_host'>".$settings_main['site_host']."</span>";
-echo "<span id='display_port'>".($settings_main['site_port'] ? ":".$settings_main['site_port'] : "")."</span>";
-echo "<span id='display_path'>".$settings_main['site_path']."</span>";
+echo "<span id='display_protocol'>".$settings['site_protocol']."</span>://";
+echo "<span id='display_host'>".$settings['site_host']."</span>";
+echo "<span id='display_port'>".($settings['site_port'] ? ":".$settings['site_port'] : "")."</span>";
+echo "<span id='display_path'>".$settings['site_path']."</span>";
 echo "</div>\n";
 echo "</div>\n<div class='col-xs-12 col-sm-9'>\n";
-echo form_select('site_protocol', $locale['426'], $settings_main['site_protocol'], [
+echo form_select('site_protocol', $locale['426'], $settings['site_protocol'], [
     'inline'     => TRUE,
     'regex'      => 'http(s)?',
     'error_text' => $locale['error_value'],
@@ -326,19 +294,19 @@ echo form_select('site_protocol', $locale['426'], $settings_main['site_protocol'
         'invalid_protocol' => $locale['445']
     ]
 ]);
-echo form_text('site_host', $locale['427'], $settings_main['site_host'], [
+echo form_text('site_host', $locale['427'], $settings['site_host'], [
     'required'   => TRUE,
     'inline'     => TRUE,
     'max_length' => 255,
     'error_text' => $locale['error_value']
 ]);
-echo form_text('site_path', $locale['429'], $settings_main['site_path'], [
+echo form_text('site_path', $locale['429'], $settings['site_path'], [
     'required'   => TRUE,
     'inline'     => TRUE,
     'regex'      => '\/([a-z0-9-_]+\/)*?',
     'max_length' => 255
 ]);
-echo form_text('site_port', $locale['430'], $settings_main['site_port'], [
+echo form_text('site_port', $locale['430'], $settings['site_port'], [
     'inline'         => TRUE,
     'required'       => FALSE,
     'placeholder'    => 80,
@@ -355,23 +323,23 @@ echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-3'>\n";
 echo "<strong>".$locale['444']."</strong><br/><i>".nl2br($locale['444a'])."</i>";
 echo "</div>\n<div class='col-xs-12 col-sm-9'>\n";
-$domain_server = str_replace('|', PHP_EOL, $settings_main['domain_server']);
+$domain_server = str_replace('|', PHP_EOL, $settings['domain_server']);
 echo form_textarea('domain_server', $locale['444b'], $domain_server, ['autosize' => TRUE, 'placeholder' => "example1.com\nexample2.com\n"]);
 echo "</div>\n</div>\n";
 echo fusion_get_function('closeside', '');
 
 echo fusion_get_function('openside', '');
 echo "<div class='alert alert-info'>".$locale['424']."</div>";
-echo form_textarea('exclude_left', $locale['420'], $settings_main['exclude_left'], ['autosize' => TRUE]);
-echo form_textarea('exclude_upper', $locale['421'], $settings_main['exclude_upper'], ['autosize' => TRUE]);
-echo form_textarea('exclude_aupper', $locale['435'], $settings_main['exclude_aupper'], ['autosize' => TRUE]);
-echo form_textarea('exclude_lower', $locale['422'], $settings_main['exclude_lower'], ['autosize' => TRUE]);
-echo form_textarea('exclude_blower', $locale['436'], $settings_main['exclude_blower'], ['autosize' => TRUE]);
-echo form_textarea('exclude_right', $locale['423'], $settings_main['exclude_right'], ['autosize' => TRUE]);
-echo form_textarea('exclude_user1', $locale['443a'], $settings_main['exclude_user1'], ['autosize' => TRUE]);
-echo form_textarea('exclude_user2', $locale['443b'], $settings_main['exclude_user2'], ['autosize' => TRUE]);
-echo form_textarea('exclude_user3', $locale['443c'], $settings_main['exclude_user3'], ['autosize' => TRUE]);
-echo form_textarea('exclude_user4', $locale['443d'], $settings_main['exclude_user4'], ['autosize' => TRUE]);
+echo form_textarea('exclude_left', $locale['420'], $settings['exclude_left'], ['autosize' => TRUE]);
+echo form_textarea('exclude_upper', $locale['421'], $settings['exclude_upper'], ['autosize' => TRUE]);
+echo form_textarea('exclude_aupper', $locale['435'], $settings['exclude_aupper'], ['autosize' => TRUE]);
+echo form_textarea('exclude_lower', $locale['422'], $settings['exclude_lower'], ['autosize' => TRUE]);
+echo form_textarea('exclude_blower', $locale['436'], $settings['exclude_blower'], ['autosize' => TRUE]);
+echo form_textarea('exclude_right', $locale['423'], $settings['exclude_right'], ['autosize' => TRUE]);
+echo form_textarea('exclude_user1', $locale['443a'], $settings['exclude_user1'], ['autosize' => TRUE]);
+echo form_textarea('exclude_user2', $locale['443b'], $settings['exclude_user2'], ['autosize' => TRUE]);
+echo form_textarea('exclude_user3', $locale['443c'], $settings['exclude_user3'], ['autosize' => TRUE]);
+echo form_textarea('exclude_user4', $locale['443d'], $settings['exclude_user4'], ['autosize' => TRUE]);
 echo fusion_get_function('closeside', '');
 echo "</div>\n</div>\n";
 echo form_button('savesettings', $locale['750'], $locale['750'], ['class' => 'btn-primary']);

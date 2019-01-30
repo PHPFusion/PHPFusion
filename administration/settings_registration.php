@@ -23,19 +23,7 @@ $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/settings.php");
 
 $settings = fusion_get_settings();
 
-$settings2 = [
-    'login_method'        => $settings['login_method'],
-    'license_agreement'   => $settings['license_agreement'],
-    'enable_registration' => $settings['enable_registration'],
-    'email_verification'  => $settings['email_verification'],
-    'admin_activation'    => $settings['admin_activation'],
-    'display_validation'  => $settings['display_validation'],
-    'enable_terms'        => $settings['enable_terms'],
-    'license_lastupdate'  => $settings['license_lastupdate'],
-];
-
 if (isset($_POST['savesettings'])) {
-
     $inputData = [
         'login_method'        => form_sanitizer($_POST['login_method'], '0', 'login_method'),
         'license_agreement'   => addslash(preg_replace('(^<p>\s</p>$)', '', $_POST['license_agreement'])),
@@ -49,12 +37,12 @@ if (isset($_POST['savesettings'])) {
 
     if (\defender::safe()) {
         foreach ($inputData as $settings_name => $settings_value) {
-            $data = [
-                'settings_name'  => $settings_name,
-                'settings_value' => $settings_value
-            ];
-            dbquery_insert(DB_SETTINGS, $data, 'update', ['primary_key' => 'settings_name']);
+            dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:settings_value WHERE settings_name=:settings_name", [
+                ':settings_value' => $settings_value,
+                ':settings_name'  => $settings_name
+            ]);
         }
+
         addNotice('success', $locale['900']);
         redirect(FUSION_REQUEST);
     }
@@ -67,8 +55,8 @@ echo "<div class='well'>".$locale['register_description']."</div>\n";
 echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-8'>\n";
 openside('');
-echo form_select('enable_terms', $locale['558'], $settings2['enable_terms'], ['options' => $opts]);
-echo form_textarea('license_agreement', $locale['559'], $settings2['license_agreement'], [
+echo form_select('enable_terms', $locale['558'], $settings['enable_terms'], ['options' => $opts]);
+echo form_textarea('license_agreement', $locale['559'], $settings['license_agreement'], [
     'form_name' => 'settingsform',
     'input_id'  => 'enable_license_agreement',
     'autosize'  => !fusion_get_settings('tinymce_enabled') ? FALSE : TRUE,
@@ -77,12 +65,12 @@ echo form_textarea('license_agreement', $locale['559'], $settings2['license_agre
 closeside();
 echo "</div><div class='col-xs-12 col-sm-4'>\n";
 openside('');
-echo form_select('enable_registration', $locale['551'], $settings2['enable_registration'], ['options' => $opts]);
-echo form_select('email_verification', $locale['552'], $settings2['email_verification'], ['options' => $opts]);
-echo form_select('admin_activation', $locale['557'], $settings2['admin_activation'], ['options' => $opts]);
-echo form_select('display_validation', $locale['553'], $settings2['display_validation'], ['options' => $opts]);
+echo form_select('enable_registration', $locale['551'], $settings['enable_registration'], ['options' => $opts]);
+echo form_select('email_verification', $locale['552'], $settings['email_verification'], ['options' => $opts]);
+echo form_select('admin_activation', $locale['557'], $settings['admin_activation'], ['options' => $opts]);
+echo form_select('display_validation', $locale['553'], $settings['display_validation'], ['options' => $opts]);
 $opts = ['0' => $locale['global_101'], '1' => $locale['699e'], '2' => $locale['699b']];
-echo form_select('login_method', $locale['699'], $settings2['login_method'], ['options' => $opts]);
+echo form_select('login_method', $locale['699'], $settings['login_method'], ['options' => $opts]);
 
 closeside();
 echo "</div>\n</div>\n";

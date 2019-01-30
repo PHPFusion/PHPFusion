@@ -23,20 +23,8 @@ $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/settings.php');
 
 $settings = fusion_get_settings();
 
-$settings_main = [
-    'shortdate'        => $settings['shortdate'],
-    'longdate'         => $settings['longdate'],
-    'forumdate'        => $settings['forumdate'],
-    'newsdate'         => $settings['newsdate'],
-    'subheaderdate'    => $settings['subheaderdate'],
-    'timeoffset'       => $settings['timeoffset'],
-    'serveroffset'     => $settings['serveroffset'],
-    'default_timezone' => $settings['default_timezone'],
-    'week_start'       => $settings['week_start'],
-];
-
 if (isset($_POST['savesettings'])) {
-    $settings_main = [
+    $inputData = [
         'shortdate'        => form_sanitizer($_POST['shortdate'], '', 'shortdate'),
         'longdate'         => form_sanitizer($_POST['longdate'], '', 'longdate'),
         'forumdate'        => form_sanitizer($_POST['forumdate'], '', 'forumdate'),
@@ -49,13 +37,13 @@ if (isset($_POST['savesettings'])) {
     ];
 
     if (\defender::safe()) {
-        foreach ($settings_main as $settings_key => $settings_value) {
-            $data = [
-                'settings_name'  => $settings_key,
-                'settings_value' => $settings_value
-            ];
-            dbquery_insert(DB_SETTINGS, $data, 'update', ['primary_key' => 'settings_name']);
+        foreach ($inputData as $settings_name => $settings_value) {
+            dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:settings_value WHERE settings_name=:settings_name", [
+                ':settings_value' => $settings_value,
+                ':settings_name'  => $settings_name
+            ]);
         }
+
         addNotice("success", $locale['900']);
         redirect(FUSION_REQUEST);
     }
@@ -90,16 +78,16 @@ echo "<div class='panel-body text-left'><strong>".$locale['458']." (".$locale['4
 echo "</div>\n";
 
 echo "<div class='col-xs-12 col-sm-12 col-md-8'>\n";
-echo "<div class='panel-body text-left'>".showdate($settings_main['longdate'], TIME, ['tz_override' => $settings_main['serveroffset']])."</div>\n";
+echo "<div class='panel-body text-left'>".showdate($settings['longdate'], TIME, ['tz_override' => $settings['serveroffset']])."</div>\n";
 echo "<div class='panel-body text-left'>";
 if (column_exists('users', 'user_timezone')) {
-    echo showdate($settings_main['longdate'], TIME, ['tz_override' => fusion_get_userdata('user_timezone')]);
+    echo showdate($settings['longdate'], TIME, ['tz_override' => fusion_get_userdata('user_timezone')]);
 } else {
     echo $locale['na'];
 }
 echo "</div>\n";
-echo "<div class='panel-body text-left'>".showdate($settings_main['longdate'], TIME, ['tz_override' => $settings_main['timeoffset']])."</div>\n";
-echo "<div class='panel-body text-left'>".showdate($settings_main['longdate'], TIME, ['tz_override' => $settings_main['default_timezone']])."</div>\n";
+echo "<div class='panel-body text-left'>".showdate($settings['longdate'], TIME, ['tz_override' => $settings['timeoffset']])."</div>\n";
+echo "<div class='panel-body text-left'>".showdate($settings['longdate'], TIME, ['tz_override' => $settings['default_timezone']])."</div>\n";
 echo "</div>\n";
 echo "</div>\n";
 
@@ -107,23 +95,23 @@ echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-12 col-md-6'>\n";
 
 openside('');
-echo form_select('shortdate', $locale['451'], $settings_main['shortdate'], [
+echo form_select('shortdate', $locale['451'], $settings['shortdate'], [
     'options'     => $date_opts,
     'placeholder' => $locale['455']
 ]);
-echo form_select('longdate', $locale['452'], $settings_main['longdate'], [
+echo form_select('longdate', $locale['452'], $settings['longdate'], [
     'options'     => $date_opts,
     'placeholder' => $locale['455']
 ]);
-echo form_select('forumdate', $locale['453'], $settings_main['forumdate'], [
+echo form_select('forumdate', $locale['453'], $settings['forumdate'], [
     'options'     => $date_opts,
     'placeholder' => $locale['455']
 ]);
-echo form_select('newsdate', $locale['457'], $settings_main['newsdate'], [
+echo form_select('newsdate', $locale['457'], $settings['newsdate'], [
     'options'     => $date_opts,
     'placeholder' => $locale['455']
 ]);
-echo form_select('subheaderdate', $locale['454'], $settings_main['subheaderdate'], [
+echo form_select('subheaderdate', $locale['454'], $settings['subheaderdate'], [
     'options'     => $date_opts,
     'placeholder' => $locale['455']
 ]);
@@ -131,14 +119,14 @@ closeside();
 echo "</div>\n";
 echo "<div class='col-xs-12 col-sm-12 col-md-6'>\n";
 openside('');
-echo form_select('serveroffset', $locale['463'], $settings_main['serveroffset'], ['options' => $timezoneArray]);
-echo form_select('timeoffset', $locale['456'], $settings_main['timeoffset'], ['options' => $timezoneArray]);
-echo form_select('default_timezone', $locale['464'], $settings_main['default_timezone'], ['options' => $timezoneArray]);
+echo form_select('serveroffset', $locale['463'], $settings['serveroffset'], ['options' => $timezoneArray]);
+echo form_select('timeoffset', $locale['456'], $settings['timeoffset'], ['options' => $timezoneArray]);
+echo form_select('default_timezone', $locale['464'], $settings['default_timezone'], ['options' => $timezoneArray]);
 closeside();
 echo "</div>\n";
 echo "<div class='col-xs-12 col-sm-12 col-md-6'>\n";
 openside('');
-echo form_select('week_start', $locale['465'], $settings_main['week_start'], ['options' => $weekdayslist]);
+echo form_select('week_start', $locale['465'], $settings['week_start'], ['options' => $weekdayslist]);
 closeside();
 echo "</div>\n</div>\n";
 echo form_button('savesettings', $locale['750'], $locale['750'], ['class' => 'btn-success']);
