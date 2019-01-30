@@ -50,6 +50,7 @@ if (iMEMBER) {
 }
 
 \PHPFusion\Admins::getInstance()->setAdmin();
+\PHPFusion\Admins::getInstance()->setAdminBreadcrumbs();
 
 ob_start();
 

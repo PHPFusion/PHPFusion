@@ -20,7 +20,6 @@ if (!defined("IN_FUSION")) {
 }
 
 require_once THEMES."admin_themes/Old_School/includes/functions.php";
-\PHPFusion\Admins::getInstance()->setAdminBreadcrumbs();
 
 define('BOOTSTRAP', TRUE);
 define('FONTAWESOME', TRUE);

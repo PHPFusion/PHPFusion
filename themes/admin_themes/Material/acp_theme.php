@@ -40,8 +40,6 @@ if (isset($_COOKIE['sidebar-toggled']) || isset($_COOKIE['sidebar-sm'])) {
     define('THEME_BODY', '<body class="'.$toggled.$sm.'">');
 }
 
-\PHPFusion\Admins::getInstance()->setAdminBreadcrumbs();
-
 function render_admin_panel() {
     new Material\AdminPanel();
 }

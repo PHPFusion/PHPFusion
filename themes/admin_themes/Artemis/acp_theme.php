@@ -20,8 +20,6 @@ require_once THEMES."admin_themes/Artemis/autoloader.php";
 define('BOOTSTRAP', TRUE);
 define('FONTAWESOME', TRUE);
 
-\PHPFusion\Admins::getInstance()->setAdminBreadcrumbs();
-
 function opentable($title, $class = FALSE) {
     \Artemis\Viewer\adminPanel::opentable($title, $class);
 }
