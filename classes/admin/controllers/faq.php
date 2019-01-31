@@ -22,6 +22,12 @@ class FaqAdmin extends FaqAdminModel {
     private $locale = [];
     private $faq_data = [];
     private $form_action = FUSION_REQUEST;
+    private $cat_data = [
+        'faq_cat_id'          => 0,
+        'faq_cat_name'        => '',
+        'faq_cat_description' => '',
+        'faq_cat_language'    => LANGUAGE,
+    ];
 
     public static function getInstance() {
         if (self::$instance == NULL) {
@@ -53,221 +59,6 @@ class FaqAdmin extends FaqAdminModel {
         }
 
     }
-
-    /**
-     * Displays Faq Form
-     */
-    private function display_faq_form() {
-        // Delete
-        self::execute_Delete();
-
-        // Update
-        self::execute_Update();
-
-        /**
-         * Global vars
-         */
-        if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_POST['faq_id']) && isnum($_POST['faq_id'])) || (isset($_GET['faq_id']) && isnum($_GET['faq_id']))) {
-            $id = (!empty($_POST['faq_id']) ? $_POST['faq_id'] : $_GET['faq_id']);
-            $criteria = [
-                'criteria' => "ac.*, u.user_id, u.user_name, u.user_status, u.user_avatar",
-                'join'     => "LEFT JOIN ".DB_USERS." AS u ON u.user_id=ac.faq_name",
-                'where'    => "ac.faq_id='$id'".(multilang_table("FQ") ? " AND ac.faq_language='".LANGUAGE."'" : ""),
-
-            ];
-            $result = self::FaqData($criteria);
-            if (dbrows($result) > 0) {
-                $this->faq_data = dbarray($result);
-            } else {
-                redirect(FUSION_SELF.fusion_get_aidlink());
-            }
-        } else {
-            $this->faq_data = $this->default_data;
-            $this->faq_data['faq_breaks'] = (fusion_get_settings('tinymce_enabled') ? 'n' : 'y');
-        }
-        self::faqContent_form();
-    }
-
-    private static function FaqData(array $filters = []) {
-
-        $result = dbquery("SELECT ".(!empty($filters['criteria']) ? $filters['criteria'] : "")."
-            FROM ".DB_FAQS." ac
-            ".(!empty($filters['join']) ? $filters['join'] : "")."
-            WHERE ".(!empty($filters['where']) ? $filters['where'] : "").
-            (!empty($filters['sql_condition']) ? $filters['sql_condition'] : "")."
-            GROUP BY ac.faq_id
-            ORDER BY ac.faq_cat_id ASC, ac.faq_id ASC
-            ".(!empty($filters['limit']) ? $filters['limit'] : "")."
-        ");
-
-        return $result;
-    }
-
-    /**
-     * Create or Update
-     */
-    private function execute_Update() {
-        if ((isset($_POST['save'])) or (isset($_POST['save_and_close']))) {
-
-            // Check posted Informations
-            $faq_answer = '';
-            if ($_POST['faq_answer']) {
-                $faq_answer = fusion_get_settings("allow_php_exe") ? htmlspecialchars($_POST['faq_answer']) : stripslashes($_POST['faq_answer']);
-            }
-
-            $this->faq_data = [
-                'faq_id'         => form_sanitizer($_POST['faq_id'], 0, 'faq_id'),
-                'faq_question'   => form_sanitizer($_POST['faq_question'], '', 'faq_question'),
-                'faq_cat_id'     => isset($_POST['faq_cat_id']) ? form_sanitizer($_POST['faq_cat_id'], 0, 'faq_cat_id') : 0,
-                'faq_answer'     => form_sanitizer($faq_answer, '', 'faq_answer'),
-                'faq_datestamp'  => form_sanitizer($_POST['faq_datestamp'], '', 'faq_datestamp'),
-                'faq_visibility' => form_sanitizer($_POST['faq_visibility'], 0, 'faq_visibility'),
-                'faq_status'     => isset($_POST['faq_status']) ? '1' : '0',
-                'faq_language'   => form_sanitizer($_POST['faq_language'], LANGUAGE, 'faq_language'),
-            ];
-
-            // Line Breaks
-            if (fusion_get_settings('tinymce_enabled') != 1) {
-                $this->faq_data['faq_breaks'] = isset($_POST['faq_breaks']) ? "y" : "n";
-            } else {
-                $this->faq_data['faq_breaks'] = "n";
-            }
-
-            // Handle
-            if (\defender::safe()) {
-                // Update
-                if (dbcount("(faq_id)", DB_FAQS, "faq_id='".$this->faq_data['faq_id']."'")) {
-                    $this->faq_data['faq_datestamp'] = isset($_POST['update_datestamp']) ? time() : $this->faq_data['faq_datestamp'];
-                    dbquery_insert(DB_FAQS, $this->faq_data, 'update');
-                    addNotice('success', $this->locale['faq_0031']);
-
-                    // Create
-                } else {
-                    $this->faq_data['faq_name'] = fusion_get_userdata('user_id');
-                    $this->faq_data['article_id'] = dbquery_insert(DB_FAQS, $this->faq_data, 'save');
-                    addNotice('success', $this->locale['faq_0030']);
-                }
-
-                // Redirect
-                if (isset($_POST['save_and_close'])) {
-                    redirect(clean_request('', ['ref', 'action', 'faq_id'], FALSE));
-                } else {
-                    redirect(FUSION_REQUEST);
-                }
-            }
-        }
-    }
-
-    /**
-     * Display Form
-     */
-    private function faqContent_form() {
-        // Textarea Settings
-        if (!fusion_get_settings("tinymce_enabled")) {
-            $faqExtendedSettings = [
-                'required'    => TRUE,
-                'preview'     => TRUE,
-                'html'        => TRUE,
-                'autosize'    => TRUE,
-                'placeholder' => $this->locale['faq_0253'],
-                'error_text'  => $this->locale['faq_0271'],
-                'form_name'   => 'faqform',
-                'wordcount'   => TRUE
-            ];
-        } else {
-            $faqExtendedSettings = [
-                'required'   => TRUE,
-                'type'       => 'tinymce',
-                'tinymce'    => 'advanced',
-                'error_text' => $this->locale['faq_0271']
-            ];
-        }
-
-        // Start Form
-        echo openform('faqform', 'post', $this->form_action, ['class' => 'spacer-sm']);
-        echo form_hidden('faq_id', '', $this->faq_data['faq_id']);
-        ?>
-
-        <!-- Display Form -->
-        <div class='row'>
-            <!-- Display Left Column -->
-            <div class='col-xs-12 col-sm-12 col-md-7 col-lg-8'>
-                <?php
-                echo form_text('faq_question', $this->locale['faq_0100'], $this->faq_data['faq_question'], [
-                    'required'   => TRUE,
-                    'max_length' => 200,
-                    'error_text' => $this->locale['faq_0271']
-                ]);
-                echo form_textarea('faq_answer', $this->locale['faq_0251'], $this->faq_data['faq_answer'], $faqExtendedSettings);
-                ?>
-            </div>
-            <!-- Display Right Column -->
-            <div class='col-xs-12 col-sm-12 col-md-5 col-lg-4'>
-                <?php
-                openside($this->locale['faq_0259']);
-                $options = [];
-                $faq_result = dbquery("SELECT faq_cat_id, faq_cat_name FROM ".DB_FAQ_CATS." ORDER BY faq_cat_name ASC");
-                if (dbrows($faq_result)) {
-                    $options[0] = $this->locale['faq_0010'];
-                    while ($faq_data = dbarray($faq_result)) {
-                        $options[$faq_data['faq_cat_id']] = $faq_data['faq_cat_name'];
-                    }
-                }
-                echo form_select('faq_cat_id', $this->locale['faq_0252'], $this->faq_data['faq_cat_id'], [
-                    'inner_width' => '100%',
-                    'inline'      => TRUE,
-                    'options'     => $options,
-                ]);
-                echo form_select('faq_visibility', $this->locale['faq_0106'], $this->faq_data['faq_visibility'], [
-                    'options'     => fusion_get_groups(),
-                    'placeholder' => $this->locale['choose'],
-                    'inner_width' => '100%',
-                    'inline'      => TRUE,
-                ]);
-                if (multilang_table('FQ')) {
-                    echo form_select("faq_language", $this->locale['language'], $this->faq_data['faq_language'], [
-                        'options'     => fusion_get_enabled_languages(),
-                        'placeholder' => $this->locale['choose'],
-                        'inner_width' => '100%',
-                        'inline'      => TRUE,
-                    ]);
-                } else {
-                    echo form_hidden('faq_language', '', $this->faq_data['faq_language']);
-                }
-                echo form_hidden('faq_datestamp', '', $this->faq_data['faq_datestamp']);
-                if (!empty($_GET['action']) && $_GET['action'] == 'edit') {
-                    echo form_checkbox('update_datestamp', $this->locale['faq_0257'], '');
-                }
-                closeside();
-                openside($this->locale['faq_0258']);
-                echo form_checkbox('faq_status', $this->locale['faq_0255'], $this->faq_data['faq_status'], [
-                    'class'         => 'm-b-5',
-                    'reverse_label' => TRUE
-                ]);
-
-                if (fusion_get_settings("tinymce_enabled") != 1) {
-                    echo form_checkbox('faq_breaks', $this->locale['faq_0256'], $this->faq_data['faq_breaks'], [
-                        'value'         => 'y',
-                        'class'         => 'm-b-5',
-                        'reverse_label' => TRUE
-                    ]);
-                }
-                closeside();
-                ?>
-
-            </div>
-        </div>
-        <?php
-        self::display_faqButtons('formend', FALSE);
-        echo closeform();
-    }
-
-    private $cat_data = [
-        'faq_cat_id'          => 0,
-        'faq_cat_name'        => '',
-        'faq_cat_description' => '',
-        'faq_cat_language'    => LANGUAGE,
-    ];
 
     private function display_faq_category_form() {
         if (isset($_POST['save_cat'])) {
@@ -322,6 +113,229 @@ class FaqAdmin extends FaqAdminModel {
     }
 
     /**
+     * Displays Faq Form
+     */
+    private function display_faq_form() {
+        // Delete
+        self::execute_Delete();
+
+        // Update
+        self::execute_Update();
+
+        /**
+         * Global vars
+         */
+        if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_POST['faq_id']) && isnum($_POST['faq_id'])) || (isset($_GET['faq_id']) && isnum($_GET['faq_id']))) {
+            $id = (!empty($_POST['faq_id']) ? $_POST['faq_id'] : $_GET['faq_id']);
+            $criteria = [
+                'criteria' => "ac.*, u.user_id, u.user_name, u.user_status, u.user_avatar",
+                'join'     => "LEFT JOIN ".DB_USERS." AS u ON u.user_id=ac.faq_name",
+                'where'    => "ac.faq_id='$id'".(multilang_table("FQ") ? " AND ac.faq_language='".LANGUAGE."'" : ""),
+
+            ];
+            $result = self::FaqData($criteria);
+            if (dbrows($result) > 0) {
+                $this->faq_data = dbarray($result);
+            } else {
+                redirect(FUSION_SELF.fusion_get_aidlink());
+            }
+        } else {
+            $this->faq_data = $this->default_data;
+            $this->faq_data['faq_breaks'] = (fusion_get_settings('tinymce_enabled') ? 'n' : 'y');
+        }
+        self::faqContent_form();
+    }
+
+    private function execute_Delete() {
+        if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['faq_id']) && isnum($_GET['faq_id'])) {
+            $faq_id = intval($_GET['faq_id']);
+            if (dbcount("(faq_id)", DB_FAQS, "faq_id=:faqid", [':faqid' => $faq_id]) && !dbcount("(faq_id)", DB_FAQS, "faq_cat_id=:faqcatid", [':faqcatid' => $faq_id])) {
+                dbquery("DELETE FROM  ".DB_FAQS." WHERE faq_id=:faqid", [':faqid' => intval($faq_id)]);
+                addNotice('success', $this->locale['faq_0032']);
+            } else {
+                addNotice('warning', $this->locale['faq_0035']);
+                addNotice('warning', $this->locale['faq_0036']);
+            }
+            redirect(clean_request('', ['ref', 'action', 'cat_id'], FALSE));
+        }
+    }
+
+    /**
+     * Create or Update
+     */
+    private function execute_Update() {
+        if ((isset($_POST['save'])) or (isset($_POST['save_and_close']))) {
+
+            // Check posted Informations
+            $faq_answer = '';
+            if ($_POST['faq_answer']) {
+                $faq_answer = fusion_get_settings("allow_php_exe") ? htmlspecialchars($_POST['faq_answer']) : stripslashes($_POST['faq_answer']);
+            }
+
+            $this->faq_data = [
+                'faq_id'         => form_sanitizer($_POST['faq_id'], 0, 'faq_id'),
+                'faq_question'   => form_sanitizer($_POST['faq_question'], '', 'faq_question'),
+                'faq_cat_id'     => form_sanitizer($_POST['faq_cat_id'], 0, 'faq_cat_id'),
+                'faq_answer'     => form_sanitizer($faq_answer, '', 'faq_answer'),
+                'faq_datestamp'  => form_sanitizer($_POST['faq_datestamp'], '', 'faq_datestamp'),
+                'faq_visibility' => form_sanitizer($_POST['faq_visibility'], 0, 'faq_visibility'),
+                'faq_status'     => isset($_POST['faq_status']) ? '1' : '0',
+                'faq_language'   => form_sanitizer($_POST['faq_language'], LANGUAGE, 'faq_language'),
+            ];
+
+            // Line Breaks
+            if (fusion_get_settings('tinymce_enabled') != 1) {
+                $this->faq_data['faq_breaks'] = isset($_POST['faq_breaks']) ? "y" : "n";
+            } else {
+                $this->faq_data['faq_breaks'] = "n";
+            }
+
+            // Handle
+            if (\defender::safe()) {
+                // Update
+                if (dbcount("(faq_id)", DB_FAQS, "faq_id='".$this->faq_data['faq_id']."'")) {
+                    $this->faq_data['faq_datestamp'] = isset($_POST['update_datestamp']) ? time() : $this->faq_data['faq_datestamp'];
+                    dbquery_insert(DB_FAQS, $this->faq_data, 'update');
+                    addNotice('success', $this->locale['faq_0031']);
+
+                    // Create
+                } else {
+                    $this->faq_data['faq_name'] = fusion_get_userdata('user_id');
+                    $this->faq_data['article_id'] = dbquery_insert(DB_FAQS, $this->faq_data, 'save');
+                    addNotice('success', $this->locale['faq_0030']);
+                }
+
+                // Redirect
+                if (isset($_POST['save_and_close'])) {
+                    redirect(clean_request('', ['ref', 'action', 'faq_id'], FALSE));
+                } else {
+                    redirect(FUSION_REQUEST);
+                }
+            }
+        }
+    }
+
+    private static function FaqData(array $filters = []) {
+
+        $result = dbquery("SELECT ".(!empty($filters['criteria']) ? $filters['criteria'] : "")."
+            FROM ".DB_FAQS." ac
+            ".(!empty($filters['join']) ? $filters['join'] : "")."
+            WHERE ".(!empty($filters['where']) ? $filters['where'] : "").
+            (!empty($filters['sql_condition']) ? $filters['sql_condition'] : "")."
+            GROUP BY ac.faq_id
+            ORDER BY ac.faq_cat_id ASC, ac.faq_id ASC
+            ".(!empty($filters['limit']) ? $filters['limit'] : "")."
+        ");
+
+        return $result;
+    }
+
+    /**
+     * Display Form
+     */
+    private function faqContent_form() {
+        // Textarea Settings
+        if (!fusion_get_settings("tinymce_enabled")) {
+            $faqExtendedSettings = [
+                'required'    => TRUE,
+                'preview'     => TRUE,
+                'html'        => TRUE,
+                'autosize'    => TRUE,
+                'placeholder' => $this->locale['faq_0253'],
+                'error_text'  => $this->locale['faq_0271'],
+                'form_name'   => 'faqform',
+                'wordcount'   => TRUE
+            ];
+        } else {
+            $faqExtendedSettings = [
+                'required'   => TRUE,
+                'type'       => 'tinymce',
+                'tinymce'    => 'advanced',
+                'error_text' => $this->locale['faq_0271']
+            ];
+        }
+
+        // Start Form
+        echo openform('faqform', 'post', $this->form_action, ['class' => 'spacer-sm']);
+        echo form_hidden('faq_id', '', $this->faq_data['faq_id']);
+        ?>
+
+        <!-- Display Form -->
+        <div class='row'>
+            <!-- Display Left Column -->
+            <div class='col-xs-12 col-sm-12 col-md-7 col-lg-8'>
+                <?php
+                echo form_text('faq_question', $this->locale['faq_0100'], $this->faq_data['faq_question'], [
+                    'required'   => TRUE,
+                    'max_length' => 200,
+                    'error_text' => $this->locale['faq_0271']
+                ]);
+                echo form_textarea('faq_answer', $this->locale['faq_0251'], $this->faq_data['faq_answer'], $faqExtendedSettings);
+                ?>
+            </div>
+            <!-- Display Right Column -->
+            <div class='col-xs-12 col-sm-12 col-md-5 col-lg-4'>
+                <?php
+                openside($this->locale['faq_0259']);
+                $options = [];
+                $faq_result = dbquery("SELECT faq_cat_id, faq_cat_name FROM ".DB_FAQ_CATS." ORDER BY faq_cat_name ASC");
+                if (dbrows($faq_result)) {
+                    while ($faq_data = dbarray($faq_result)) {
+                        $options[$faq_data['faq_cat_id']] = $faq_data['faq_cat_name'];
+                    }
+                }
+                echo form_select('faq_cat_id', $this->locale['faq_0252'], $this->faq_data['faq_cat_id'], [
+                    'inner_width' => '100%',
+                    'inline'      => TRUE,
+                    'options'     => $options,
+                    'required'    => TRUE
+                ]);
+
+                echo form_select('faq_visibility', $this->locale['faq_0106'], $this->faq_data['faq_visibility'], [
+                    'options'     => fusion_get_groups(),
+                    'placeholder' => $this->locale['choose'],
+                    'inner_width' => '100%',
+                    'inline'      => TRUE,
+                ]);
+                if (multilang_table('FQ')) {
+                    echo form_select("faq_language", $this->locale['language'], $this->faq_data['faq_language'], [
+                        'options'     => fusion_get_enabled_languages(),
+                        'placeholder' => $this->locale['choose'],
+                        'inner_width' => '100%',
+                        'inline'      => TRUE,
+                    ]);
+                } else {
+                    echo form_hidden('faq_language', '', $this->faq_data['faq_language']);
+                }
+                echo form_hidden('faq_datestamp', '', $this->faq_data['faq_datestamp']);
+                if (!empty($_GET['action']) && $_GET['action'] == 'edit') {
+                    echo form_checkbox('update_datestamp', $this->locale['faq_0257'], '');
+                }
+                closeside();
+                openside($this->locale['faq_0258']);
+                echo form_checkbox('faq_status', $this->locale['faq_0255'], $this->faq_data['faq_status'], [
+                    'class'         => 'm-b-5',
+                    'reverse_label' => TRUE
+                ]);
+
+                if (fusion_get_settings("tinymce_enabled") != 1) {
+                    echo form_checkbox('faq_breaks', $this->locale['faq_0256'], $this->faq_data['faq_breaks'], [
+                        'value'         => 'y',
+                        'class'         => 'm-b-5',
+                        'reverse_label' => TRUE
+                    ]);
+                }
+                closeside();
+                ?>
+
+            </div>
+        </div>
+        <?php
+        self::display_faqButtons('formend', FALSE);
+        echo closeform();
+    }
+
+    /**
      * Generate sets of push buttons for Content form
      *
      * @param      $unique_id
@@ -338,6 +352,8 @@ class FaqAdmin extends FaqAdminModel {
             <hr/><?php } ?>
         <?php
     }
+
+    // Delete Function
 
     /**
      * Displays Listing
@@ -478,11 +494,13 @@ class FaqAdmin extends FaqAdminModel {
             }
         }
 
+        $faq_cats = dbcount("(faq_cat_id)", DB_FAQ_CATS);
+
         echo "<div class='m-t-15'>\n";
         echo openform('faq_filter', 'post', FUSION_REQUEST);
         echo "<div class='clearfix'>\n";
         echo "<div class='pull-right'>\n";
-        if ($result) {
+        if ($faq_cats) {
             echo "<a class='btn btn-success btn-sm' href='".clean_request('ref=faq_form', ['ref'], FALSE)."'><i class='fa fa-plus'></i> ".$this->locale['faq_0003']."</a>\n";
         }
         echo "<a class='m-l-5 btn btn-primary btn-sm' href='".clean_request('ref=faq_cat_form', ['ref'], FALSE)."'><i class='fa fa-plus'></i> ".$this->locale['faq_0119']."</a>
@@ -612,12 +630,7 @@ class FaqAdmin extends FaqAdminModel {
                         </td></tr>\n";
             }
         } else {
-            echo "<tr>
-                    <td colspan='8' class='text-center'>
-                        ".$this->locale['faq_0112']."
-                    </td>
-                </tr>
-                ";
+            echo "<tr><td colspan='8' class='text-center'>".($faq_cats ? $this->locale['faq_0112'] : $this->locale['faq_0114'])."</td></tr>";
         }
         echo "</tbody>\n</table>\n</div>";
         echo "<div class='display-inline-block'>\n
@@ -653,21 +666,6 @@ class FaqAdmin extends FaqAdminModel {
             });
         ");
 
-    }
-
-    // Delete Function
-    private function execute_Delete() {
-        if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['faq_id']) && isnum($_GET['faq_id'])) {
-            $faq_id = intval($_GET['faq_id']);
-            if (dbcount("(faq_id)", DB_FAQS, "faq_id=:faqid", [':faqid' => $faq_id]) && !dbcount("(faq_id)", DB_FAQS, "faq_cat_id=:faqcatid", [':faqcatid' => $faq_id])) {
-                dbquery("DELETE FROM  ".DB_FAQS." WHERE faq_id=:faqid", [':faqid' => intval($faq_id)]);
-                addNotice('success', $this->locale['faq_0032']);
-            } else {
-                addNotice('warning', $this->locale['faq_0035']);
-                addNotice('warning', $this->locale['faq_0036']);
-            }
-            redirect(clean_request('', ['ref', 'action', 'cat_id'], FALSE));
-        }
     }
 
 }
