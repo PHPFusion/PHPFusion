@@ -93,6 +93,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
                 'weblink_visibility'  => form_sanitizer($_POST['weblink_visibility'], 0, 'weblink_visibility'),
                 'weblink_status'      => isset($_POST['weblink_status']) ? $_POST['weblink_status'] : '0',
                 'weblink_language'    => form_sanitizer($_POST['weblink_language'], LANGUAGE, 'weblink_language'),
+                'weblink_count'       => form_sanitizer($_POST['weblink_count'], 0, 'weblink_count'),
             ];
 
             // Handle
@@ -522,7 +523,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
                             <td><span class="text-dark"><?php echo $data['weblink_name']; ?></span></td>
                             <td><?php echo $data['weblink_count']; ?></a></td>
                             <td><a class="text-dark" href="<?php echo $cat_edit_link ?>"><?php echo $data['weblink_cat_name']; ?></a></td>
-                            <td><span class="badge"><?php echo $data['weblink_status'] ? $this->locale['yes'] : $this->locale['no']; ?></span></td>
+                            <td><?php echo $data['weblink_status'] ? $this->locale['published'] : $this->locale['unpublished']; ?></td>
                             <td><span class="badge"><?php echo getgroupname($data['weblink_visibility']); ?></span></td>
                             <td><?php echo $data['weblink_language'] ?></td>
                             <td>
@@ -604,7 +605,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
                 $wli++;
             }
             addNotice('success', sprintf($this->locale['WLS_0115'], $wli));
-            if ($i > 0) {
+            if ($wli > 0) {
                 addNotice('success', $this->locale['WLS_0116']);
             }
         }

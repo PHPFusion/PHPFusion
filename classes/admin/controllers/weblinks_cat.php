@@ -176,7 +176,7 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
 
         echo form_select('weblink_cat_status', $this->locale['WLS_0102'], $data['weblink_cat_status'], [
             'inner_width' => '100%',
-            'options'     => [1 => $this->locale['publish'], 0 => $this->locale['unpublish']],
+            'options'     => [1 => $this->locale['published'], 0 => $this->locale['unpublished']],
             'placeholder' => $this->locale['choose'],
         ]);
         closeside();
@@ -246,33 +246,31 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
         $search_string = [];
         if (isset($_POST['p-submit-weblink_cat_name'])) {
             $search_string['weblink_cat_name'] = [
-                'input' => form_sanitizer($_POST['weblink_cat_name'], '', 'weblink_cat_name'), 'operator' => "LIKE"
+                'input' => form_sanitizer($_POST['weblink_cat_name'], '', 'weblink_cat_name'), 'operator' => "LIKE", 'option' => "AND"
             ];
         }
 
         if (!empty($_POST['weblink_cat_status']) && isnum($_POST['weblink_cat_status'])) {
             $search_string['weblink_cat_status'] = [
-                'input' => form_sanitizer($_POST['weblink_cat_status'], '', 'weblink_cat_status') - 1, 'operator' => "="
+                'input' => form_sanitizer($_POST['weblink_cat_status'], '', 'weblink_cat_status') - 1,  'operator' => "=", 'option' => "AND"
             ];
         }
 
         if (!empty($_POST['weblink_cat_visibility'])) {
             $search_string['weblink_cat_visibility'] = [
-                'input' => form_sanitizer($_POST['weblink_cat_visibility'], '', 'weblink_cat_visibility'), 'operator' => "="
+                'input' => form_sanitizer($_POST['weblink_cat_visibility'], '', 'weblink_cat_visibility'), 'operator' => "=", 'option' => "AND"
             ];
         }
 
         if (!empty($_POST['weblink_cat_language'])) {
             $search_string['weblink_cat_language'] = [
-                'input' => form_sanitizer($_POST['weblink_cat_language'], '', 'weblink_cat_language'), 'operator' => "="
+                'input' => form_sanitizer($_POST['weblink_cat_language'], '', 'weblink_cat_language'), 'operator' => "=", 'option' => "AND"
             ];
         }
 
         if (!empty($search_string)) {
             foreach ($search_string as $key => $values) {
-                if ($sql_condition)
-                    $sql_condition .= " AND ";
-                $sql_condition .= "`$key` ".$values['operator'].($values['operator'] == "LIKE" ? "'%" : "'").$values['input'].($values['operator'] == "LIKE" ? "%'" : "'");
+                $sql_condition .= " ".$values['option']." `$key` ".$values['operator'].($values['operator'] == "LIKE" ? "'%" : "'").$values['input'].($values['operator'] == "LIKE" ? "%'" : "'");
             }
         }
 
@@ -443,7 +441,7 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
                         ?></td>
                     <td><?php echo str_repeat("--", $level)." ".$cdata['weblink_cat_name']; ?></span></td>
                     <td><span class="badge"><?php echo format_word($cdata['weblink_count'], $this->locale['fmt_weblink']); ?></span></td>
-                    <td><span class="badge"><?php echo($cdata['weblink_cat_status'] == 0 ? $this->locale['unpublish'] : $this->locale['publish']); ?></span></td>
+                    <td><span class="badge"><?php echo($cdata['weblink_cat_status'] == 0 ? $this->locale['unpublished'] : $this->locale['published']); ?></span></td>
                     <td><span class="badge"><?php echo getgroupname($cdata['weblink_cat_visibility']); ?></span></td>
                     <td><?php echo translate_lang_names($cdata['weblink_cat_language']) ?></td>
                     <td>
