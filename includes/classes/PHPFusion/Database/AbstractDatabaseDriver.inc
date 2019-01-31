@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: AbstractDatabaseDriver.inc
-| Author: Takács Ákos (Rimelek)
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -53,18 +53,18 @@ abstract class AbstractDatabaseDriver {
     /**
      * Connect to the database
      *
-     * @param string $host Server domain or IP followed by an optional port definition
+     * @param string $host    Server domain or IP followed by an optional port definition
      * @param string $user
-     * @param string $pass Password
-     * @param string $db The name of the database
+     * @param string $pass    Password
+     * @param string $db      The name of the database
      * @param array  $options Currently only one option exists: charset
      *
-     * @throws SelectionException When the selection of the database was unsuccessful
-     * @throws ConnectionException When the connection could not be established
+     * @throws Exception\SelectionException When the selection of the database was unsuccessful
+     * @throws Exception\ConnectionException When the connection could not be established
      */
     public function __construct($host, $user, $pass, $db, array $options = []) {
         $options += [
-            'charset'      => 'utf8',
+            'charset'      => 'utf8mb4',
             'connectionid' => ''
         ];
         $this->connectionid = $options['connectionid'];
@@ -74,14 +74,14 @@ abstract class AbstractDatabaseDriver {
     /**
      * Connect to the database
      *
-     * @param string $host Server domain or IP followed by an optional port definition
+     * @param string $host    Server domain or IP followed by an optional port definition
      * @param string $user
-     * @param string $pass Password
-     * @param string $db The name of the database
+     * @param string $pass    Password
+     * @param string $db      The name of the database
      * @param array  $options Currently only one option exists: charset
      *
-     * @throws SelectionException When the selection of the database was unsuccessful
-     * @throws ConnectionException When the connection could not be established
+     * @throws Exception\SelectionException When the selection of the database was unsuccessful
+     * @throws Exception\ConnectionException When the connection could not be established
      */
     abstract protected function connect($host, $user, $pass, $db, array $options = []);
 
@@ -332,8 +332,8 @@ abstract class AbstractDatabaseDriver {
     /**
      * Count the number of rows in a table filtered by conditions
      *
-     * @param string $field Parenthesized field name
-     * @param string $table Table name
+     * @param string $field      Parenthesized field name
+     * @param string $table      Table name
      * @param string $conditions conditions after "where"
      * @param array  $parameters
      *
@@ -393,5 +393,4 @@ abstract class AbstractDatabaseDriver {
      * @return string
      */
     abstract public function getServerVersion();
-
 }

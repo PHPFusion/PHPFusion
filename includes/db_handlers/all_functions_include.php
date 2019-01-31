@@ -179,16 +179,18 @@ function dbarraynum($result) {
  * @param string  $db_user
  * @param string  $db_pass
  * @param string  $db_name
+ * @param int     $db_port
  * @param boolean $halt_on_error If it is TRUE, the script will halt in case of error
  *
  * @return array
  */
-function dbconnect($db_host, $db_user, $db_pass, $db_name, $halt_on_error = FALSE) {
+function dbconnect($db_host, $db_user, $db_pass, $db_name, $db_port = 3306, $halt_on_error = FALSE) {
     $connection_success = TRUE;
     $dbselection_success = TRUE;
     try {
         DatabaseFactory::connect($db_host, $db_user, $db_pass, $db_name, [
-            'debug' => DatabaseFactory::isDebug('default')
+            'debug' => DatabaseFactory::isDebug('default'),
+            'port'  => $db_port
         ]);
     } catch (\Exception $e) {
         $connection_success = $e instanceof SelectionException;

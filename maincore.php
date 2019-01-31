@@ -37,7 +37,7 @@ if (stripget($_GET)) {
 }
 
 // Establish mySQL database connection
-dbconnect($db_host, $db_user, $db_pass, $db_name);
+dbconnect($db_host, $db_user, $db_pass, $db_name, !empty($db_port) ? $db_port : 3306);
 // Fetch the settings from the database
 $settings = fusion_get_settings();
 
@@ -56,7 +56,7 @@ session_name(COOKIE_PREFIX.'session');
 // Start DB session.
 if (!empty($settings['database_sessions'])) {
     // Establish secondary mySQL database connection for session caches
-    $handler = \PHPFusion\Sessions::getInstance(COOKIE_PREFIX.'session')->setConfig($db_host, $db_user, $db_pass, $db_name);
+    $handler = \PHPFusion\Sessions::getInstance(COOKIE_PREFIX.'session')->setConfig($db_host, $db_user, $db_pass, $db_name, !empty($db_port) ? $db_port : 3306);
     session_set_save_handler(
         [$handler, '_open'],
         [$handler, '_close'],
