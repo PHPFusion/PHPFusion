@@ -353,8 +353,6 @@ class FaqAdmin extends FaqAdminModel {
         <?php
     }
 
-    // Delete Function
-
     /**
      * Displays Listing
      */
