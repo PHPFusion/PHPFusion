@@ -87,7 +87,7 @@ if ($db_driver == "mysqli") {
 }
 
 // Establish mySQL database connection
-$link = @dbconnect($db_host, $db_user, $db_pass, $db_name, 3306);
+$link = @dbconnect($db_host, $db_user, $db_pass, $db_name, !empty($db_port) ? $db_port : 3306);
 unset($db_host, $db_user, $db_pass, $db_port);
 
 // Fetch the settings from the database
