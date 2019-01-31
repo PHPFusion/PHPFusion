@@ -19,19 +19,84 @@ namespace PHPFusion\FAQ;
 
 class FaqSubmissionsAdmin extends FaqAdminModel {
     private static $instance = NULL;
-    private $locale = [];
-    private $inputArray = [];
     private static $defArray = [
         'faq_breaks'     => 'y',
         'faq_visibility' => 0,
         'faq_status'     => 1,
     ];
+    private $locale = [];
+    private $inputArray = [];
 
     public static function getInstance() {
         if (self::$instance == NULL) {
             self::$instance = new static();
         }
         return self::$instance;
+    }
+
+    /**
+     * Display Admin Area
+     */
+    public function displayFaqAdmin() {
+        pageAccess("FQ");
+
+        $this->locale = self::get_faqAdminLocale();
+        // Handle a Submission
+        if (isset($_GET['submit_id']) && isNum($_GET['submit_id']) && dbcount("(submit_id)", DB_SUBMISSIONS, "submit_id=:submitid AND submit_type=:submittype", [':submitid' => $_GET['submit_id'], ':submittype' => 'q'])) {
+            $criteria = [
+                'criteria'  => ", u.user_id, u.user_name, u.user_status, u.user_avatar",
+                'join'      => "LEFT JOIN ".DB_USERS." AS u ON u.user_id=s.submit_user",
+                'where'     => 's.submit_type=:submit_type AND s.submit_id=:submit_id',
+                'wheredata' => [
+                    ':submit_id'   => $_GET['submit_id'],
+                    ':submit_type' => 'q'
+                ]
+            ];
+            $data = self::submitData($criteria);
+            $data[0] += self::$defArray;
+            $data[0] += \defender::decode($data[0]['submit_criteria']);
+            $this->inputArray = $data[0];
+            // Delete, Publish, Preview
+
+            self::handleDeleteSubmission();
+            self::handlePostSubmission();
+
+            // Display Form with Buttons
+            self::displayForm();
+
+            // Display List
+        } else {
+            self::displaySubmissionList();
+        }
+    }
+
+    private static function submitData(array $filters = []) {
+        $query = "SELECT s.*".(!empty($filters['criteria']) ? $filters['criteria'] : "")."
+                FROM ".DB_SUBMISSIONS." s
+                ".(!empty($filters['join']) ? $filters['join'] : "")."
+                WHERE ".(!empty($filters['where']) ? $filters['where'] : "")."
+                ORDER BY s.submit_datestamp DESC
+                ";
+
+        $result = dbquery($query, $filters['wheredata']);
+
+        $info = [];
+
+        if (dbrows($result) > 0) {
+            while ($data = dbarray($result)) {
+                $info[] = $data;
+            }
+            return $info;
+        }
+        return FALSE;
+    }
+
+    private function handleDeleteSubmission() {
+        if (isset($_POST['delete_submission'])) {
+            dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id=:submitid AND submit_type=:submittype", [':submitid' => $_GET['submit_id'], ':submittype' => 'q']);
+            addNotice('success', $this->locale['faq_0062']);
+            redirect(clean_request('', ['submit_id'], FALSE));
+        }
     }
 
     private function handlePostSubmission() {
@@ -241,27 +306,6 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
         <?php
     }
 
-    private static function submitData(array $filters = []) {
-        $query = "SELECT s.*".(!empty($filters['criteria']) ? $filters['criteria'] : "")."
-                FROM ".DB_SUBMISSIONS." s
-                ".(!empty($filters['join']) ? $filters['join'] : "")."
-                WHERE ".(!empty($filters['where']) ? $filters['where'] : "")."
-                ORDER BY s.submit_datestamp DESC
-                ";
-
-        $result = dbquery($query, $filters['wheredata']);
-
-        $info = [];
-
-        if (dbrows($result) > 0) {
-            while ($data = dbarray($result)) {
-                $info[] = $data;
-            }
-            return $info;
-        }
-        return FALSE;
-    }
-
     /**
      * Display List with Submissions
      */
@@ -314,49 +358,5 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
             echo "<div class='well text-center m-t-20'>".$this->locale['faq_0063']."</div>\n";
         }
 
-    }
-
-    /**
-     * Display Admin Area
-     */
-    public function displayFaqAdmin() {
-        pageAccess("FQ");
-
-        $this->locale = self::get_faqAdminLocale();
-        // Handle a Submission
-        if (isset($_GET['submit_id']) && isNum($_GET['submit_id']) && dbcount("(submit_id)", DB_SUBMISSIONS, "submit_id=:submitid AND submit_type=:submittype", [':submitid' => $_GET['submit_id'], ':submittype' => 'q'])) {
-            $criteria = [
-                'criteria'  => ", u.user_id, u.user_name, u.user_status, u.user_avatar",
-                'join'      => "LEFT JOIN ".DB_USERS." AS u ON u.user_id=s.submit_user",
-                'where'     => 's.submit_type=:submit_type AND s.submit_id=:submit_id',
-                'wheredata' => [
-                    ':submit_id'   => $_GET['submit_id'],
-                    ':submit_type' => 'q'
-                ]
-            ];
-            $data = self::submitData($criteria);
-            $data[0] += self::$defArray;
-            $data[0] += \defender::decode($data[0]['submit_criteria']);
-            $this->inputArray = $data[0];
-            // Delete, Publish, Preview
-
-            self::handleDeleteSubmission();
-            self::handlePostSubmission();
-
-            // Display Form with Buttons
-            self::displayForm();
-
-            // Display List
-        } else {
-            self::displaySubmissionList();
-        }
-    }
-
-    private function handleDeleteSubmission() {
-        if (isset($_POST['delete_submission'])) {
-            dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id=:submitid AND submit_type=:submittype", [':submitid' => $_GET['submit_id'], ':submittype' => 'q']);
-            addNotice('success', $this->locale['faq_0062']);
-            redirect(clean_request('', ['submit_id'], FALSE));
-        }
     }
 }

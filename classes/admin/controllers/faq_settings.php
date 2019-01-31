@@ -34,7 +34,7 @@ class FaqSettingsAdmin extends FaqAdminModel {
         $this->locale = self::get_faqAdminLocale();
         // Save
         if (!empty($this->save)) {
-        	$this->SaveFaqAdmin();
+            $this->SaveFaqAdmin();
         }
         $this->FaqAdminForm();
     }

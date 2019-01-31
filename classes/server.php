@@ -18,12 +18,15 @@
 namespace PHPFusion\FAQ;
 
 class FaqServer {
-    private static $faq_instance = NULL;
-    private static $faq_submit_instance = NULL;
-    private static $faq_admin_instance = NULL;
     protected static $faq_settings = [
         'faq_allow_submission' => 0
     ];
+    private static $faq_instance = NULL;
+    private static $faq_submit_instance = NULL;
+    private static $faq_admin_instance = NULL;
+    public $save;
+    public $faq_allow_submission;
+    public $catid;
 
     public function __construct() {
         self::$faq_settings = get_settings("faq");

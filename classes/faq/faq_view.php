@@ -36,9 +36,8 @@ class FaqView extends Faq {
             } else {
                 redirect(INFUSIONS."faq/faq.php");
             }
-        }// else {
-            return display_main_faq($this->set_FaqInfo());
-        //}
-    }
+        }
 
+        return display_main_faq($this->set_FaqInfo());
+    }
 }
