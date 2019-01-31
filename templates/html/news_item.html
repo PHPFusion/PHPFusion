@@ -4,9 +4,8 @@
         <ul class="block m-b-20">
             <li class="list-group-item">
                 <figure class="featured-image">
-                    <div class="position-absolute image-block"></div>
                     <a href="{%news_image_src%}">
-                        <img src="{%news_image_optimized%}">
+                        <img class="img-responsive" src="{%news_image_optimized%}">
                     </a>
                 </figure>
                 <div class="clearfix"></div>
@@ -39,13 +38,12 @@
 
 {news_item_lg.{
 <div class="col-xs-12 col-sm-6 col-md-4 col-lg-6">
-    <section id="{%news_anchor%}" class="news-item lg">
-        <ul class="block m-b-20">
+    <section id="news-{%news_id%}" class="news-item lg">
+        <ul class="list-group block m-b-20">
             <li class="list-group-item">
                 <figure class="featured-image">
-                    <div class="position-absolute image-block"></div>
                     <a href="{%news_image_src%}">
-                        <img src="{%news_image_src%}">
+                        <img class="img-responsive" src="{%news_image_src%}">
                     </a>
                 </figure>
                 <div class="clearfix"></div>
