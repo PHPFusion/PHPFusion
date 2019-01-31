@@ -18,9 +18,9 @@
 namespace PHPFusion\FAQ;
 
 class FaqSubmissions extends FaqServer {
+    private static $instance = NULL;
     public $info = [];
     private $locale = [];
-    private static $instance = NULL;
 
     public static function getInstance() {
         if (self::$instance == NULL) {

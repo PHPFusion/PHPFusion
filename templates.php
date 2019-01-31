@@ -30,15 +30,15 @@ if (!function_exists('display_main_faq')) {
 
         if (!empty($info['faq_categories'])) {
             foreach ($info['faq_categories'] as $cat_data) {
-                if ($cat_data['faq_count'] > 0) {
-                    $html->set_block('categories', [
-                        'faq_cat_id'          => $cat_data['faq_cat_id'],
-                        'faq_cat_link'        => $cat_data['faq_cat_link'],
-                        'faq_cat_name'        => $cat_data['faq_cat_name'],
-                        'faq_cat_description' => $cat_data['faq_cat_description']
-                    ]);
-                }
+                $html->set_block('categories', [
+                    'faq_cat_id'          => $cat_data['faq_cat_id'],
+                    'faq_cat_link'        => $cat_data['faq_cat_link'],
+                    'faq_cat_name'        => $cat_data['faq_cat_name'],
+                    'faq_cat_description' => $cat_data['faq_cat_description']
+                ]);
             }
+        } else {
+            $html->set_block('no_item', ['message' => fusion_get_locale('faq_0112a')]);
         }
 
         echo $html->get_output();

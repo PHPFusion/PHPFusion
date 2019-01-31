@@ -34,6 +34,7 @@ $locale['faq_0106'] = "Visibility";
 $locale['faq_0107'] = "Actions";
 $locale['faq_0111'] = "Delete this FAQ?";
 $locale['faq_0112'] = "There are no FAQ defined.";
+$locale['faq_0112a'] = "There are no FAQ Categories defined.";
 $locale['faq_0113'] = "There are no FAQ, which match with the Search Options.";
 $locale['faq_0114'] = "Before you can create a FAQ, you must create a FAQ Category.";
 $locale['faq_0115'] = "Category Name";

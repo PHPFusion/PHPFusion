@@ -81,16 +81,8 @@ abstract class Faq extends FaqServer {
             'faq_items'      => [],
             'cat_locale'     => self::$locale['faq_0001'],
             'cat_top'        => self::$locale['faq_0002'],
-            'faq_get_name'   => self::$locale['faq_0001'],
-            'faq_categories' => [
-                0 => [
-                    'faq_cat_id'          => 0,
-                    'faq_cat_name'        => self::$locale['faq_0010'],
-                    'faq_cat_link'        => INFUSIONS."faq/faq.php?cat_id=0",
-                    'faq_cat_description' => '',
-                    'faq_count'           => 0
-                ]
-            ],
+            'faq_get_name'   => '',
+            'faq_categories' => [],
         ];
 
         $c_result = dbquery("SELECT fc.*, count(fq.faq_id) 'faq_count'
@@ -105,6 +97,12 @@ abstract class Faq extends FaqServer {
             while ($c_data = dbarray($c_result)) {
                 $info['faq_categories'][$c_data['faq_cat_id']] = $c_data;
                 $info['faq_categories'][$c_data['faq_cat_id']]['faq_cat_link'] = INFUSIONS."faq/faq.php?cat_id=".$c_data['faq_cat_id'];
+
+                $info['faq_get'] = $cat;
+
+                if (!empty($info['faq_categories'][$info['faq_get']]['faq_cat_name'])) {
+                    $info['faq_get_name'] = $info['faq_categories'][$info['faq_get']]['faq_cat_name'];
+                }
             }
         }
 
@@ -130,9 +128,6 @@ abstract class Faq extends FaqServer {
                 $info['faq_items'][$data['faq_id']]['delete']['link'] = (iADMIN && checkrights("FQ")) ? INFUSIONS."faq/faq_admin.php".fusion_get_aidlink()."&amp;section=faq&amp;ref=faq_form&amp;action=delete&amp;faq_id=".$data['faq_id'] : '';
             }
         }
-        // Get Categories
-        $info['faq_get'] = $cat;
-        $info['faq_get_name'] = $info['faq_categories'][$info['faq_get']]['faq_cat_name'];
 
         return (array)$info;
     }
