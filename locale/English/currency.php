@@ -1,5 +1,5 @@
 <?php
-$locale['currency'] = [
+$locale['currency'] = array(
     "AED" => "Emerati Dirham",
     "AFN" => "Afghanistan Afghani",
     "ALL" => "Albanian Lek",
@@ -164,10 +164,10 @@ $locale['currency'] = [
     "ZAR" => "South African Rand",
     "ZMK" => "Zambian Kwacha",
     "ZWD" => "Zimbabwe Dollar",
-    "NA"  => "Not Available"
-];
+    "NA" => "Not Available",
+);
 
-$locale['currency_symbol'] = [
+$locale['currency_symbol'] = array(
     'AED' => '&#1583;.&#1573;', // ?
     'AFN' => '&#65;&#102;',
     'ALL' => '&#76;&#101;&#107;',
@@ -326,5 +326,5 @@ $locale['currency_symbol'] = [
     'YER' => '&#65020;',
     'ZAR' => '&#82;',
     'ZMK' => '&#90;&#75;', // ?
-    'ZWL' => '&#90;&#36;'
-];
+    'ZWL' => '&#90;&#36;',
+);

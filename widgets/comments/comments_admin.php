@@ -15,7 +15,6 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 /**
  * Class commentsWidgetAdmin
  */
@@ -48,9 +47,7 @@ class commentsWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine im
     }
 
     public function display_form_input() {
-        $lang = file_exists(WIDGETS."comments/locale/".LANGUAGE.".php") ? WIDGETS."comments/locale/".LANGUAGE.".php" : WIDGETS."comments/locale/English.php";
-        $widget_locale = fusion_get_locale('', $lang);
-
+        $widget_locale = fusion_get_locale('', WIDGETS."comments/locale/".LANGUAGE.".php");
         self::$colData['page_content'] = 'comments';
         self::$colData['page_content_id'] = 0;
         $colId = dbquery_insert(DB_CUSTOM_PAGES_CONTENT, self::$colData, 'save');

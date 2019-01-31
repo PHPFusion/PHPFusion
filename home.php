@@ -5,7 +5,9 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: home.php
-| Author: PHP-Fusion Development Team
+| Author: Chubatyj Vitalij (Rizado)
+| Co-Author: Takács Ákos (Rimelek)
+| Co-Author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,18 +17,10 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once dirname(__FILE__).'/maincore.php';
+require_once "maincore.php";
 require_once THEMES."templates/header.php";
-$locale = fusion_get_locale();
+$locale = fusion_get_locale('', LOCALE.LOCALESET.'homepage.php');
 add_to_title($locale['home']);
-\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['title' => $locale['home'], 'link' => BASEDIR.'home.php']);
-if (function_exists('display_home')) {
-    display_home(array());
-} else {
-    if (file_exists(INFUSIONS.'home_panel/home_panel.php')) {
-        require_once INFUSIONS.'home_panel/home_panel.php';
-    }
-    display_home(array());
-}
-
+add_breadcrumb(array("title" => $locale['home'], "link" => BASEDIR."home.php"));
+require_once INFUSIONS.'home_panel/home_panel.php';
 require_once THEMES."templates/footer.php";

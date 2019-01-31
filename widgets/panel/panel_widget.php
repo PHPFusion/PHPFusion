@@ -16,9 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 // Path Definitions
-$lang = file_exists(WIDGETS."panel/locale/".LANGUAGE.".php") ? WIDGETS."panel/locale/".LANGUAGE.".php" : WIDGETS."panel/locale/English.php";
-$widget_locale = fusion_get_locale('', $lang);
-
+$widget_locale = fusion_get_locale('', WIDGETS."/panel/locale/".LANGUAGE.".php");
 $widget_title = $widget_locale['PW_0100'];
 $widget_icon = 'panel.svg';
 $widget_description = $widget_locale['PW_0101'];

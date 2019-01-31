@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: profile.php
-| Author: PHP-Fusion Development Team
+| Author: Hans Kristian Flaatten {Starefossen}
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,9 +15,10 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once dirname(__FILE__).'/maincore.php';
+require_once "maincore.php";
 require_once THEMES."templates/header.php";
-$locale = fusion_get_locale('', LOCALE.LOCALESET."user_fields.php");
+include LOCALE.LOCALESET."user_fields.php";
+
 $settings = fusion_get_settings();
 if (isset($_GET['lookup']) && isnum($_GET['lookup'])) {
     require_once THEMES."templates/global/profile.php";
@@ -28,13 +29,13 @@ if (isset($_GET['lookup']) && isnum($_GET['lookup'])) {
     if (iADMIN) {
         $user_status = "";
     }
-    $user_data = [];
+    $user_data = array();
     $result = dbquery("SELECT u.*, s.suspend_reason
-        FROM ".DB_USERS." u
-        LEFT JOIN ".DB_SUSPENDS." s ON u.user_id=s.suspended_user
-        WHERE user_id='".$_GET['lookup']."'".$user_status."
-        ORDER BY suspend_date DESC
-        LIMIT 1");
+		FROM ".DB_USERS." u
+		LEFT JOIN ".DB_SUSPENDS." s ON u.user_id=s.suspended_user
+		WHERE user_id='".$_GET['lookup']."'".$user_status."
+		ORDER BY suspend_date DESC
+		LIMIT 1");
     if (dbrows($result)) {
         $user_data = dbarray($result);
     } else {
@@ -55,19 +56,22 @@ if (isset($_GET['lookup']) && isnum($_GET['lookup'])) {
     $userFields->userData = $user_data;
     $userFields->showAdminOptions = TRUE;
     $userFields->method = 'display';
-    $userFields->plugin_folder = [INCLUDES."user_fields/", INFUSIONS];
+    $userFields->plugin_folder = INCLUDES."user_fields/";
     $userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
     $userFields->display_profile_output();
 
-    PHPFusion\OpenGraph::ogUserProfile($_GET['lookup']);
+	PHPFusion\OpenGraph::ogUserProfile($_GET['lookup']);
 
-} else if (isset($_GET['group_id']) && isnum($_GET['group_id'])) {
+} elseif (isset($_GET['group_id']) && isnum($_GET['group_id'])) {
+
     /*
      * Show group
      */
     \PHPFusion\UserGroups::getInstance()->setGroup($_GET['group_id'])->showGroup();
+
 } else {
 
     redirect(BASEDIR."index.php");
+
 }
 require_once THEMES."templates/footer.php";

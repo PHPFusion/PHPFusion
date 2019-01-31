@@ -18,4 +18,3 @@ $locale['UL_016'] = "Delete entries older than:";
 $locale['UL_017'] = "Days";
 $locale['UL_018'] = "Ascending";
 $locale['UL_019'] = "Descending";
-$locale['UL_020'] = "Select All";

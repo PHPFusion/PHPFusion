@@ -15,14 +15,14 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once __DIR__.'/../maincore.php';
+require_once "../maincore.php";
 pageAccess("U");
 
 require_once THEMES."templates/admin_header.php";
 
 $settings = fusion_get_settings();
 
-$locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/upgrade.php');
+include LOCALE.LOCALESET."admin/upgrade.php";
 
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'upgrade.php'.fusion_get_aidlink(), 'title' => $locale['U_0000']]);
 

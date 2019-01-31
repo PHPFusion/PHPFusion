@@ -15,7 +15,10 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once dirname(__FILE__).'/maincore.php';
+require_once "maincore.php";
 require_once THEMES."templates/header.php";
-echo PHPFusion\Page\PageView::getInstance()->View();
+PHPFusion\Page\PageView::getInstance(TRUE)->display_Page();
+if (isset($_GET['page_id'])) {
+    PHPFusion\OpenGraph::ogCustomPage($_GET['page_id']);
+}
 require_once THEMES."templates/footer.php";
