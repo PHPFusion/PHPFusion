@@ -1155,17 +1155,17 @@ if (!function_exists('render_post_item')) {
                     'title' => $locale['forum_0662']
                 ]);
                 $html->set_block('li_edit_user', [
-                    'link_url'   => ADMIN."members.php".$aidlink."&amp;step=edit&amp;user_id=".$data['user_id'],
+                    'link_url'   => ADMIN."members.php".$aidlink."&amp;ref=edit&amp;lookup=".$data['user_id'],
                     'link_title' => $locale['forum_0663'],
                     'title'      => $locale['forum_0663'],
                 ]);
                 $html->set_block('li_ban_user', [
-                    'link_url'   => ADMIN."members.php".$aidlink."&amp;user_id=".$data['user_id']."&amp;action=1",
+                    'link_url'   => ADMIN."members.php".$aidlink."&amp;lookup=".$data['user_id']."&amp;action=1",
                     'link_title' => $locale['forum_0664'],
                     'title'      => $locale['forum_0664'],
                 ]);
                 $html->set_block('li_delete_user', [
-                    'link_url'   => ADMIN."members.php".$aidlink."&amp;step=delete&amp;status=0&amp;user_id=".$data['user_id'],
+                    'link_url'   => ADMIN."members.php".$aidlink."&amp;ref=delete&amp;lookup=".$data['user_id'],
                     'link_title' => $locale['forum_0665'],
                     'title'      => $locale['forum_0665'],
                 ]);
