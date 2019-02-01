@@ -61,8 +61,6 @@ class SeptenaryComponents {
         global $panel_collapse;
 
         $boxname = str_replace(" ", "", $title);
-        $boxname .= $boxname."-".str_shuffle(mt_rand(0, 30).time());
-
         $panel_collapse = $collapse;
 
         echo "<div class='heading'>\n";

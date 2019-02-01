@@ -16,36 +16,26 @@
  +--------------------------------------------------------*/
 /**
  * Flipbox
- * Need documentation
- * @param b
- * by: CrappoMan (simonpatterson@dsl.pipex.com)
+ *
+ * @param boxname
  */
-function flipBox(b) {
-    var a;
-    if (document.images["b_" + b].src.indexOf("_on") == -1) {
-        a = document.images["b_" + b].src.replace("_off", "_on");
-        document.getElementById("box_" + b).style.display = "none";
-        if (document.getElementById("box_" + b + "_diff")) {
-            document.getElementById("box_" + b + "_diff").style.display = "block"
+function flipBox(boxname) {
+    if (document.images["b_" + boxname].src.indexOf("_on") === -1) {
+        var a = document.images["b_" + boxname].src.replace("_off", "_on");
+        document.getElementById("box_" + boxname).style.display = "none";
+        if (document.getElementById("box_" + boxname + "_diff")) {
+            document.getElementById("box_" + boxname + "_diff").style.display = "block"
         }
-        document.images["b_" + b].src = a;
-        disply = "none";
-        now = new Date();
-        now.setTime(now.getTime() + 1000 * 60 * 60 * 24 * 365);
-        expire = (now.toGMTString());
-        document.cookie = "fusion_box_" + b + "=" + escape(disply) + "; expires=" + expire
+        document.images["b_" + boxname].src = a;
+        document.cookie = "fusion_box_" + boxname + "= none";
     } else {
-        a = document.images["b_" + b].src.replace("_on", "_off");
-        document.getElementById("box_" + b).style.display = ""; //removed 'block'
-        if (document.getElementById("box_" + b + "_diff")) {
-            document.getElementById("box_" + b + "_diff").style.display = "none"
+        var a = document.images["b_" + boxname].src.replace("_on", "_off");
+        document.getElementById("box_" + boxname).style.display = ""; //removed 'block'
+        if (document.getElementById("box_" + boxname + "_diff")) {
+            document.getElementById("box_" + boxname + "_diff").style.display = "none"
         }
-        document.images["b_" + b].src = a;
-        disply = "block";
-        now = new Date();
-        now.setTime(now.getTime() + 1000 * 60 * 60 * 24 * 365);
-        expire = (now.toGMTString());
-        document.cookie = "fusion_box_" + b + "=" + escape(disply) + "; expires=" + expire
+        document.images["b_" + boxname].src = a;
+        document.cookie = "fusion_box_" + boxname + "= block";
     }
 }
 
@@ -65,7 +55,7 @@ $.fn.trim_text = function () {
 
         return $(this).text(newtext);
     });
-}
+};
 
 /**
  * Tool to scroll the window to a designated ID
@@ -101,74 +91,64 @@ function decodeEntities(encodedString) {
 }
 
 /**
- * Need documentation
- * @param f
- * @param i
- * @param a
- * @param e
- * @returns {boolean}
+ * addText
+ *
+ * @param textarea
+ * @param text1
+ * @param text2
+ * @param formname
  */
-function addText(f, i, a, e) {
-    if (e == undefined) {
-        e = "inputform"
-    }
-    if (f == undefined) {
-        f = "message"
-    }
-    element = document.forms[e].elements[f];
+function addText(textarea, text1, text2, formname) {
+    textarea = textarea === undefined ? "message" : textarea;
+    formname = formname === undefined ? "inputform" : formname;
+
+    var element = document.forms[formname].elements[textarea];
+
     element.focus();
     if (document.selection) {
         var c = document.selection.createRange();
-        var h = c.text.length;
-        c.text = i + c.text + a;
-        return false
+        c.text = text1 + c.text + text2;
+        return false;
     } else {
         if (element.setSelectionRange) {
             var b = element.selectionStart,
                 g = element.selectionEnd;
-            var d = element.scrollTop;
-            element.value = element.value.substring(0, b) + i + element.value.substring(b, g) + a + element.value.substring(g);
-            element.setSelectionRange(b + i.length, g + i.length);
-            element.scrollTop = d;
-            element.focus()
+            element.value = element.value.substring(0, b) + text1 + element.value.substring(b, g) + text2 + element.value.substring(g);
+            element.setSelectionRange(b + text1.length, g + text1.length);
+            element.focus();
         } else {
-            var d = element.scrollTop;
-            element.value += i + a;
-            element.scrollTop = d;
-            element.focus()
+            element.value += text1 + text2;
+            element.focus();
         }
     }
 }
 
 /**
- * Need documentation
- * @param f
- * @param h
- * @param e
+ * insertText
+ *
+ * @param textarea
+ * @param text
+ * @param formname
  */
-function insertText(f, h, e) {
-    if (e == undefined) {
-        e = "inputform"
-    }
-    if (document.forms[e].elements[f].createTextRange) {
-        document.forms[e].elements[f].focus();
-        document.selection.createRange().duplicate().text = h
+function insertText(textarea, text, formname) {
+    textarea = textarea === undefined ? "message" : textarea;
+    formname = formname === undefined ? "inputform" : formname;
+
+    var element = document.forms[formname].elements[textarea];
+
+    element.focus();
+    if (document.selection) {
+        var c = document.selection.createRange();
+        c.text = text;
+        return false;
     } else {
-        if ((typeof document.forms[e].elements[f].selectionStart) != "undefined") {
-            var a = document.forms[e].elements[f];
-            var g = a.selectionEnd;
-            var d = a.value.length;
-            var c = a.value.substring(0, g);
-            var i = a.value.substring(g, d);
-            var b = a.scrollTop;
-            a.value = c + h + i;
-            a.selectionStart = c.length + h.length;
-            a.selectionEnd = c.length + h.length;
-            a.scrollTop = b;
-            a.focus()
+        if (element.setSelectionRange) {
+            var b = element.selectionStart;
+            element.value = element.value.substring(0, b) + text;
+            element.focus();
         } else {
-            document.forms[e].elements[f].value += h;
-            document.forms[e].elements[f].focus()
+            element.value += text;
+            element.focus();
         }
     }
 }
@@ -178,7 +158,7 @@ function insertText(f, h, e) {
  * @param a
  */
 function show_hide(a) {
-    document.getElementById(a).style.display = document.getElementById(a).style.display == "none" ? "block" : "none"
+    document.getElementById(a).style.display = document.getElementById(a).style.display === "none" ? "block" : "none"
 }
 
 /*
@@ -200,14 +180,15 @@ function getStyle(c, b) {
     } else {
         var a = c
     }
-    if (a.currentStyle) {
-        var d = a.currentStyle[b]
+    if (a.getComputedStyle()) {
+        var d = a.getComputedStyle()[b];
     } else {
         if (window.getComputedStyle) {
             var d = document.defaultView.getComputedStyle(a, null).getPropertyValue(b)
         }
     }
-    return d
+
+    return d;
 }
 
 /***********************************************
@@ -216,11 +197,11 @@ function getStyle(c, b) {
  * Visit http://www.dynamicdrive.com/ for full source code
  ***********************************************/
 function getposOffset(a, d) {
-    var c = (d == "left") ? a.offsetLeft : a.offsetTop;
+    var c = (d === "left") ? a.offsetLeft : a.offsetTop;
     var b = a.offsetParent;
     while (b != null) {
-        if (getStyle(b, "position") != "relative") {
-            c = (d == "left") ? c + b.offsetLeft : c + b.offsetTop
+        if (getStyle(b, "position") !== "relative") {
+            c = (d === "left") ? c + b.offsetLeft : c + b.offsetTop
         }
         b = b.offsetParent
     }
@@ -237,7 +218,7 @@ function getposOffset(a, d) {
 function overlay(e, d, a) {
     if (document.getElementById) {
         var c = document.getElementById(d);
-        c.style.display = (c.style.display != "block") ? "block" : "none";
+        c.style.display = (c.style.display !== "block") ? "block" : "none";
         var b = getposOffset(e, "left") + ((typeof a != "undefined" && a.indexOf("right") != -1) ? -(c.offsetWidth - e.offsetWidth) : 0);
         var f = getposOffset(e, "top") + ((typeof a != "undefined" && a.indexOf("bottom") != -1) ? e.offsetHeight : 0);
         c.style.left = b + "px";
@@ -315,7 +296,7 @@ function resize_forum_imgs() {
     }
     for (var c = 0; c < document.images.length; c++) {
         var b = document.images[c];
-        if (b.className != "forum-img") {
+        if (b.className !== "forum-img") {
             continue
         }
         var j = b.height;
@@ -336,12 +317,12 @@ function resize_forum_imgs() {
         }
         var h = b.parentNode;
         var g = h.parentNode;
-        if (h.className != "forum-img-wrapper") {
+        if (h.className !== "forum-img-wrapper") {
             continue
         }
         if (d) {
             h.style.display = "inline";
-            if (g.tagName != "A") {
+            if (g.tagName !== "A") {
                 h.onclick = new Function("OpenWindow('" + b.src + "', " + (a + 40) + ", " + (j + 40) + ", true)");
                 h.onmouseover = "this.style.cursor='pointer'"
             }
@@ -369,7 +350,7 @@ function setChecked(frmName, chkName, val) {
     dml = document.forms[frmName];
     len = dml.elements.length;
     for (i = 0; i < len; i++) {
-        if (dml.elements[i].name == chkName) {
+        if (dml.elements[i].name === chkName) {
             dml.elements[i].checked = val;
         }
     }

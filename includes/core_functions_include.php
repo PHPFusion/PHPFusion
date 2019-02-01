@@ -36,7 +36,7 @@ function get_microtime() {
  * Get currency symbol by using a 3-letter ISO 4217 currency code
  * Note that if INTL pecl package is not installed, signs will degrade to ISO4217 code itself
  *
- * @param      $iso = 3-letter ISO 4217
+ * @param      $iso         = 3-letter ISO 4217
  * @param bool $description - set to false for just symbol
  *
  * @return null
@@ -181,8 +181,8 @@ function check_admin_pass($password) {
  * Redirect browser using header or script function
  *
  * @param            $location - Desintation URL
- * @param bool|FALSE $delay - meta refresh delay
- * @param bool|FALSE $script - true if you want to redirect via javascript
+ * @param bool|FALSE $delay    - meta refresh delay
+ * @param bool|FALSE $script   - true if you want to redirect via javascript
  *
  * @define STOP_REDIRECT to prevent redirection
  */
@@ -343,7 +343,7 @@ function trimlink($text, $length) {
  * Trim a text to a number of words
  *
  * @param string $text
- * @param int    $limit The number of words
+ * @param int    $limit  The number of words
  * @param string $suffix If $text is longer than $limit, $suffix will be appended.
  *                       Tip: You can pass an html link to the full content.
  *
@@ -413,9 +413,9 @@ function preg_check($expression, $value) {
 /**
  * Generate a clean Request URI
  *
- * @param string    $request_addition - 'page=1&amp;ref=2' or array('page' => 1, 'ref' => 2)
- * @param array     $filter_array - array('aid','page', ref')
- * @param bool|TRUE $keep_filtered - true to keep filter, false to remove filter from FUSION_REQUEST
+ * @param string    $request_addition    - 'page=1&amp;ref=2' or array('page' => 1, 'ref' => 2)
+ * @param array     $filter_array        - array('aid','page', ref')
+ * @param bool|TRUE $keep_filtered       - true to keep filter, false to remove filter from FUSION_REQUEST
  *                                       If remove is true, to remove everything and keep $requests_array and $request
  *                                       addition. If remove is false, to keep everything else except $requests_array
  *
@@ -500,7 +500,7 @@ function parsesmileys($message) {
  * Show smiley icons in comments, forum and other post pages
  *
  * @param string $textarea The name of the textarea
- * @param string $form The name of the form
+ * @param string $form     The name of the form
  *
  * @return string
  */
@@ -521,7 +521,7 @@ function displaysmileys($textarea, $form = "inputform") {
  * Tag a user by simply just posting his name like @Chan and if found, returns a tooltip.
  *
  * @param $user_name (@Chan)
- * @param $tooltip ("<div class='clearfix'>".($userdata['user_lastvisit']-120 < TIME ? 'Onlin' : 'Offline')."</div>";)
+ * @param $tooltip   ("<div class='clearfix'>".($userdata['user_lastvisit']-120 < TIME ? 'Onlin' : 'Offline')."</div>";)
  *
  * @return mixed
  */
@@ -643,7 +643,7 @@ function parseubb($text, $selected = "") {
  * Create a "mailto" link for the email address
  *
  * @param string $email
- * @param string $title The text of the link
+ * @param string $title   The text of the link
  * @param string $subject The subject of the message
  *
  * @return string
@@ -720,7 +720,7 @@ function formatcode($text) {
 /**
  * Highlights given words in subject
  *
- * @param array  $word The highlighted word
+ * @param array  $word    The highlighted word
  * @param string $subject The source text
  *
  * @return string
@@ -1149,9 +1149,9 @@ function user_blacklisted($user_id) {
  * Create a list of files or folders and store them in an array
  *
  * @param string  $folder
- * @param string  $filter - The names of the filtered folder separated by "|", FALSE to use default filter
- * @param boolean $sort - FALSE if you don't want to sort the result. TRUE by default
- * @param string  $type - possible values: 'files' to list files, 'folders' to list folders
+ * @param string  $filter     - The names of the filtered folder separated by "|", FALSE to use default filter
+ * @param boolean $sort       - FALSE if you don't want to sort the result. TRUE by default
+ * @param string  $type       - possible values: 'files' to list files, 'folders' to list folders
  * @param string  $ext_filter - file extensions separated by "|". Only when $type is 'files'
  *
  * @return array
@@ -1228,14 +1228,14 @@ function makefileopts(array $files, $selected = "") {
  *
  * @global array  $locale
  *
- * @param int     $start The number of the first listed item - $_GET['rowstart']
- * @param int     $count The number of displayed items - LIMIT on sql
- * @param int     $total The number of all items - a dbcount of total
- * @param int     $range The number of links before and after the current page
- * @param string  $link The base url before the appended part
- * @param string  $getname the variable name in the query string which stores
+ * @param int     $start      The number of the first listed item - $_GET['rowstart']
+ * @param int     $count      The number of displayed items - LIMIT on sql
+ * @param int     $total      The number of all items - a dbcount of total
+ * @param int     $range      The number of links before and after the current page
+ * @param string  $link       The base url before the appended part
+ * @param string  $getname    the variable name in the query string which stores
  *                            the number of the current page
- * @param boolean $button Displays as button
+ * @param boolean $button     Displays as button
  *
  * @return boolean|string FALSE if $count is invalid
  */
@@ -1323,15 +1323,15 @@ function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = 
 }
 
 /**
- * @param string $scroll_url The ajax script that loads the content
- * @param int    $rowstart Current rowstart - $_GET['rowstart']
- * @param int    $total_count The total rows - dbrows($result);
- * @param string $getname Default is 'rowstart'
+ * @param string $scroll_url            The ajax script that loads the content
+ * @param int    $rowstart              Current rowstart - $_GET['rowstart']
+ * @param int    $total_count           The total rows - dbrows($result);
+ * @param string $getname               Default is 'rowstart'
  * @param string $additional_http_query '&section=some_section'
  *
  * @return string
  */
-function infinite_scroll($scroll_url, $rowstart = 0, $total_count, $getname = 'rowstart', $additional_http_query = '') {
+function infinite_scroll($scroll_url, $rowstart = 0, $total_count = 0, $getname = 'rowstart', $additional_http_query = '') {
     $locale = fusion_get_locale();
 
     add_to_jquery("
@@ -1369,12 +1369,12 @@ function infinite_scroll($scroll_url, $rowstart = 0, $total_count, $getname = 'r
  * Hierarchy Page Breadcrumbs
  * This function generates breadcrumbs on all your category needs on $_GET['rownav'] as your cat_id
  *
- * @param array  $tree_index    dbquery_tree(DB_NEWS_CATS, "news_cat_id", "news_cat_parent") / tree_index(dbquery_tree_full(DB_NEWS_CATS, "news_cat_id", "news_cat_parent"))
- * @param array  $tree_full     dbquery_tree_full(DB_NEWS_CATS, "news_cat_id", "news_cat_parent")
- * @param        $id_col "news_cat_id",
- * @param        $title_col "news_cat_name",
- * @param string $getname cat_id for $_GET['cat_id']
- * @param string $key key for breadcrumb instance
+ * @param array  $tree_index dbquery_tree(DB_NEWS_CATS, "news_cat_id", "news_cat_parent") / tree_index(dbquery_tree_full(DB_NEWS_CATS, "news_cat_id", "news_cat_parent"))
+ * @param array  $tree_full  dbquery_tree_full(DB_NEWS_CATS, "news_cat_id", "news_cat_parent")
+ * @param        $id_col     "news_cat_id",
+ * @param        $title_col  "news_cat_name",
+ * @param string $getname    cat_id for $_GET['cat_id']
+ * @param string $key        key for breadcrumb instance
  */
 function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $getname = "rownav", $key = 'default') {
 
@@ -1435,7 +1435,7 @@ function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $ge
  * @global string[] $userdata
  *
  * @param string    $format shortdate, longdate, forumdate, newsdate or date pattern for the strftime
- * @param int       $val unix timestamp
+ * @param int       $val    unix timestamp
  * @param array     $options
  *
  * @return string
@@ -1485,9 +1485,9 @@ function showdate($format, $val, $options = []) {
  *
  * @global array  $locale
  *
- * @param int     $size The number of bytes
+ * @param int     $size   The number of bytes
  * @param int     $digits Precision
- * @param boolean $dir TRUE if it is the size of a directory
+ * @param boolean $dir    TRUE if it is the size of a directory
  *
  * @return string
  */
@@ -1605,7 +1605,7 @@ function fusion_get_settings($key = NULL) {
  * Get Locale
  * Fetch a given locale key
  *
- * @param string $key - The key of one setting
+ * @param string $key          - The key of one setting
  * @param string $include_file - The full path of the file which to be included, can be either string or array
  *
  * @return null
@@ -1662,7 +1662,7 @@ function fusion_get_userdata($key = NULL) {
  * Get any users data
  *
  * @param      $user_id - the user id
- * @param null $key - the keys of your user id
+ * @param null $key     - the keys of your user id
  *
  * @return mixed
  */

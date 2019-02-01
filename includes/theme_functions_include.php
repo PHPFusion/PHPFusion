@@ -703,7 +703,7 @@ if (!function_exists("panelbutton")) {
             }
         }
 
-        return "<img src='".get_image("panel_".($state == "on" ? "off" : "on"))."' id='b_".$bname."' class='panelbutton' alt='' onclick=\"javascript:flipBox('".$bname."')\" />";
+        return "<img src='".get_image("panel_".($state == "on" ? "off" : "on"))."' id='b_".$bname."' class='panelbutton pointer' alt='panelstate' onclick=\"flipBox('".$bname."')\" />";
     }
 }
 

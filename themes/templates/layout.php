@@ -88,7 +88,7 @@ if (function_exists("get_head_tags")) {
 }
 
 echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery.min.js'></script>\n";
-echo "<script type='text/javascript' src='".INCLUDES."jscripts/jscript.min.js'></script>\n";
+echo "<script type='text/javascript' src='".INCLUDES."jscripts/jscript.min.js?v=".filemtime(INCLUDES.'jscripts/jscript.min.js')."'></script>\n";
 echo "</head>\n";
 
 /**
