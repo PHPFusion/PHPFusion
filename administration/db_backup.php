@@ -164,7 +164,7 @@ class DbBackupAdministration {
     }
 
     private function restore_form() {
-        global $pdo_enabled;
+        global $db_driver, $pdo_enabled;
 
         if (isset($_POST['btn_do_restore'])) {
 
@@ -191,7 +191,7 @@ class DbBackupAdministration {
                             $tbl = $tmp[1];
                             if (in_array($tbl, $_POST['list_tbl'])) {
                                 $result = preg_replace("/^CREATE TABLE `$inf_tblpre(.*?)`/im", "CREATE TABLE `$restore_tblpre\\1`", $result);
-                                if ($pdo_enabled == "1") {
+                                if ((!empty($db_driver) && $db_driver === 'pdo' || !empty($pdo_enabled) && $pdo_enabled === 1)) {
                                     dbquery($result);
                                 }/* else {
                                     mysql_unbuffered_query($result);
@@ -206,7 +206,7 @@ class DbBackupAdministration {
                             $ins = $tmp[1];
                             if (in_array($ins, $_POST['list_ins'])) {
                                 $result = preg_replace("/INSERT INTO `$inf_tblpre(.*?)`/i", "INSERT INTO `$restore_tblpre\\1`", $result);
-                                if ($pdo_enabled == "1") {
+                                if ((!empty($db_driver) && $db_driver === 'pdo' || !empty($pdo_enabled) && $pdo_enabled === 1)) {
                                     dbquery($result);
                                 }/* else {
                                     mysql_unbuffered_query($result);
