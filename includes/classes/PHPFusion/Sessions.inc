@@ -33,15 +33,11 @@ use PHPFusion\Database\DatabaseFactory;
 class Sessions {
 
     private static $_sess = NULL;
-    private $_sess_db = NULL;
     private static $db_info = [];
     private static $_sess_key = 'sessions';
+    private $_sess_db = NULL;
 
-    /**
-     * Methods to fetch the ID from the session.
-     */
-    public function getId() {
-        return session_id();
+    private function __construct() {
     }
 
     /**
@@ -62,53 +58,33 @@ class Sessions {
     }
 
     /**
+     * Methods to fetch the ID from the session.
+     */
+    public function getId() {
+        return session_id();
+    }
+
+    /**
      * Set db configuration values
      *
      * @param $db_host
      * @param $db_user
      * @param $db_pass
      * @param $db_name
+     * @param $db_port
      *
      * @return $this
      */
-    public function setConfig($db_host, $db_user, $db_pass, $db_name) {
+    public function setConfig($db_host, $db_user, $db_pass, $db_name, $db_port = 3306) {
         self::$db_info = [
             'db_host' => $db_host,
             'db_user' => $db_user,
             'db_pass' => $db_pass,
-            'db_name' => $db_name
+            'db_name' => $db_name,
+            'db_port' => $db_port,
         ];
 
         return $this;
-    }
-
-    /**
-     * @param bool $halt_on_error
-     *
-     * @return array
-     */
-    private function connection($halt_on_error = FALSE) {
-        $connection_success = TRUE;
-        $dbselection_success = TRUE;
-        try {
-            DatabaseFactory::connect(self::$db_info['db_host'], self::$db_info['db_user'], self::$db_info['db_pass'], self::$db_info['db_name'], [
-                'debug'        => DatabaseFactory::isDebug(self::$_sess_key),
-                'connectionid' => self::$_sess_key,
-            ]);
-        } catch (\Exception $e) {
-            $connection_success = $e instanceof SelectionException;
-            $dbselection_success = FALSE;
-            if ($halt_on_error and !$connection_success) {
-                die("<strong>Unable to establish connection to MySQL</strong><br />".$e->getCode()." : ".$e->getMessage());
-            } else if ($halt_on_error) {
-                die("<strong>Unable to select MySQL database</strong><br />".$e->getCode()." : ".$e->getMessage());
-            }
-        }
-
-        return [
-            'connection_success'  => $connection_success,
-            'dbselection_success' => $dbselection_success
-        ];
     }
 
     /**
@@ -126,6 +102,36 @@ class Sessions {
         }
 
         return FALSE;
+    }
+
+    /**
+     * @param bool $halt_on_error
+     *
+     * @return array
+     */
+    private function connection($halt_on_error = FALSE) {
+        $connection_success = TRUE;
+        $dbselection_success = TRUE;
+        try {
+            DatabaseFactory::connect(self::$db_info['db_host'], self::$db_info['db_user'], self::$db_info['db_pass'], self::$db_info['db_name'], [
+                'debug'        => DatabaseFactory::isDebug(self::$_sess_key),
+                'connectionid' => self::$_sess_key,
+                'port'         => self::$db_info['db_port']
+            ]);
+        } catch (\Exception $e) {
+            $connection_success = $e instanceof Database\Exception\SelectionException;
+            $dbselection_success = FALSE;
+            if ($halt_on_error and !$connection_success) {
+                die("<strong>Unable to establish connection to MySQL</strong><br />".$e->getCode()." : ".$e->getMessage());
+            } else if ($halt_on_error) {
+                die("<strong>Unable to select MySQL database</strong><br />".$e->getCode()." : ".$e->getMessage());
+            }
+        }
+
+        return [
+            'connection_success'  => $connection_success,
+            'dbselection_success' => $dbselection_success
+        ];
     }
 
     public function _close() {
@@ -259,19 +265,13 @@ class Sessions {
             $.ajax({
             url: '".fusion_get_settings('site_path')."$path',
             type: 'post',
-            success: function (data) {
+            success: function () {
                 timedRefresh(ttl);
             }
             });
         }
         UpdateCache();
         </script>";
-    }
-
-    private function __construct() {
-    }
-
-    private function __wakeup() {
     }
 
     private function __clone() {

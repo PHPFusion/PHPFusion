@@ -24,8 +24,6 @@ require_once THEMES."admin_themes/Venus/includes/functions.php";
 define('BOOTSTRAP', TRUE);
 define('FONTAWESOME', TRUE);
 
-\PHPFusion\Admins::getInstance()->setAdminBreadcrumbs();
-
 function render_admin_login() {
     $locale = fusion_get_locale();
     $aidlink = fusion_get_aidlink();

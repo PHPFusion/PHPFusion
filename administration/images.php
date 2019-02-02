@@ -41,15 +41,18 @@ class ImagesAdministration {
     private static function get_server_limits($val) {
         $val = trim($val);
         $last = strtolower($val[strlen($val) - 1]);
+        $kb = 1024;
+        $mb = 1024 * $kb;
+        $gb = 1024 * $mb;
         switch ($last) {
             case 'g':
-                $val = (int)$val * 1024;
+                $val = (int)$val * $gb;
                 break;
             case 'm':
-                $val = (int)$val * 1024;
+                $val = (int)$val * $mb;
                 break;
             case 'k':
-                $val = (int)$val * 1024;
+                $val = (int)$val * $kb;
                 break;
         }
 

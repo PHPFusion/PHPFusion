@@ -23,23 +23,8 @@ $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/settings.php");
 
 $settings = fusion_get_settings();
 
-$settings2 = [
-    'enable_deactivation'   => $settings['enable_deactivation'],
-    'deactivation_period'   => $settings['deactivation_period'],
-    'deactivation_response' => $settings['deactivation_response'],
-    'deactivation_action'   => $settings['deactivation_action'],
-    'hide_userprofiles'     => $settings['hide_userprofiles'],
-    'avatar_filesize'       => $settings['avatar_filesize'],
-    'avatar_width'          => $settings['avatar_width'],
-    'avatar_height'         => $settings['avatar_height'],
-    'avatar_ratio'          => $settings['avatar_ratio'],
-    'userNameChange'        => $settings['userNameChange'],
-    'userthemes'            => $settings['userthemes'],
-    'multiple_logins'       => $settings['multiple_logins']
-];
-
 if (isset($_POST['savesettings'])) {
-    $settings2 = [
+    $inputData = [
         'enable_deactivation'   => form_sanitizer($_POST['enable_deactivation'], '0', 'enable_deactivation'),
         'deactivation_period'   => form_sanitizer($_POST['deactivation_period'], '365', 'deactivation_period'),
         'deactivation_response' => form_sanitizer($_POST['deactivation_response'], '14', 'deactivation_response'),
@@ -56,16 +41,17 @@ if (isset($_POST['savesettings'])) {
     ];
 
     if (\defender::safe()) {
-        foreach ($settings2 as $settings_key => $settings_value) {
-            $data = [
-                'settings_name'  => $settings_key,
-                'settings_value' => $settings_value
-            ];
-            dbquery_insert(DB_SETTINGS, $data, 'update', ['primary_key' => 'settings_name']);
+        foreach ($inputData as $settings_name => $settings_value) {
+            dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:settings_value WHERE settings_name=:settings_name", [
+                ':settings_value' => $settings_value,
+                ':settings_name'  => $settings_name
+            ]);
         }
+
         if ($_POST['enable_deactivation'] == '0') {
             $result = dbquery("UPDATE ".DB_USERS." SET user_status='0' WHERE user_status='5'");
         }
+
         addNotice('success', $locale['900']);
         redirect(FUSION_REQUEST);
     }
@@ -77,15 +63,15 @@ echo openform('settingsform', 'post', FUSION_REQUEST);
 echo "<div class='row'>\n<div class='col-xs-12 col-sm-8'>\n";
 openside('');
 $choice_opts = ['0' => $locale['no'], '1' => $locale['yes']];
-echo form_select('enable_deactivation', $locale['1002'], $settings2['enable_deactivation'], ['options' => $choice_opts]);
-echo form_text('deactivation_period', $locale['1003'], $settings2['deactivation_period'], [
+echo form_select('enable_deactivation', $locale['1002'], $settings['enable_deactivation'], ['options' => $choice_opts]);
+echo form_text('deactivation_period', $locale['1003'], $settings['deactivation_period'], [
     'max_length'  => 3,
     'inner_width' => '150px',
     'type'        => 'number',
     'ext_tip'     => $locale['1004']
 ]);
 
-echo form_text('deactivation_response', $locale['1005'], $settings2['deactivation_response'], [
+echo form_text('deactivation_response', $locale['1005'], $settings['deactivation_response'], [
     'max_length'  => 3,
     'inner_width' => '150px',
     'type'        => 'number',
@@ -93,13 +79,13 @@ echo form_text('deactivation_response', $locale['1005'], $settings2['deactivatio
 ]);
 
 $action_opts = ['0' => $locale['1012'], '1' => $locale['1013']];
-echo form_select('deactivation_action', $locale['1011'], $settings2['deactivation_action'], ['options' => $action_opts]);
+echo form_select('deactivation_action', $locale['1011'], $settings['deactivation_action'], ['options' => $action_opts]);
 closeside();
 openside('');
 echo "<div class='display-block overflow-hide'>
     <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3' for='photo_max_w'>".$locale['1008']."</label>
     <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
-    ".form_text('avatar_width', '', $settings2['avatar_width'], [
+    ".form_text('avatar_width', '', $settings['avatar_width'], [
         'class'         => 'pull-left m-r-10',
         'max_length'    => 4,
         'type'          => 'number',
@@ -107,7 +93,7 @@ echo "<div class='display-block overflow-hide'>
         'prepend_value' => $locale['1015'],
         'width'         => '170px'
     ])."
-    ".form_text('avatar_height', '', $settings2['avatar_height'], [
+    ".form_text('avatar_height', '', $settings['avatar_height'], [
         'class'         => 'pull-left',
         'max_length'    => 4,
         'type'          => 'number',
@@ -117,8 +103,8 @@ echo "<div class='display-block overflow-hide'>
     ])."
     </div>
 </div>";
-$calc_c = calculate_byte($settings2['avatar_filesize']);
-$calc_b = $settings2['avatar_filesize'] / $calc_c;
+$calc_c = calculate_byte($settings['avatar_filesize']);
+$calc_b = $settings['avatar_filesize'] / $calc_c;
 
 echo "<div class='display-block overflow-hide'>
     <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3' for='calc_b'>".$locale['605']."</label>
@@ -141,7 +127,7 @@ echo "<div class='display-block overflow-hide'>
 </div>
 ";
 $ratio_opts = ['0' => $locale['955'], '1' => $locale['956']];
-echo form_select('avatar_ratio', $locale['1001'], $settings2['avatar_ratio'], [
+echo form_select('avatar_ratio', $locale['1001'], $settings['avatar_ratio'], [
     'options' => $ratio_opts,
     'inline'  => TRUE,
     'width'   => '100%'
@@ -150,12 +136,12 @@ closeside();
 echo "</div>\n";
 echo "<div class='col-xs-12 col-sm-4'>\n";
 openside('');
-echo form_select('hide_userprofiles', $locale['673'], $settings2['hide_userprofiles'], ['options' => $choice_opts]);
+echo form_select('hide_userprofiles', $locale['673'], $settings['hide_userprofiles'], ['options' => $choice_opts]);
 closeside();
 openside('');
-echo form_select('userNameChange', $locale['691'], $settings2['userNameChange'], ['options' => $choice_opts]);
-echo form_select('userthemes', $locale['668'], $settings2['userthemes'], ['options' => $choice_opts]);
-echo form_select('multiple_logins', $locale['1014'], $settings2['multiple_logins'], ['options' => $choice_opts, 'ext_tip' => $locale['1014a']]);
+echo form_select('userNameChange', $locale['691'], $settings['userNameChange'], ['options' => $choice_opts]);
+echo form_select('userthemes', $locale['668'], $settings['userthemes'], ['options' => $choice_opts]);
+echo form_select('multiple_logins', $locale['1014'], $settings['multiple_logins'], ['options' => $choice_opts, 'ext_tip' => $locale['1014a']]);
 closeside();
 echo "</div>\n</div>\n";
 echo form_button('savesettings', $locale['750'], $locale['750'], ['class' => 'btn-success']);

@@ -23,17 +23,8 @@ $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/settings.php');
 
 $settings = fusion_get_settings();
 
-$pm_settings = [
-    'pm_inbox_limit'   => $settings['pm_inbox_limit'],
-    'pm_outbox_limit'  => $settings['pm_outbox_limit'],
-    'pm_archive_limit' => $settings['pm_archive_limit'],
-    'pm_email_notify'  => $settings['pm_email_notify'],
-    'pm_save_sent'     => $settings['pm_save_sent'],
-];
-
 if (isset($_POST['save_settings'])) {
-
-    $pm_settings = [
+    $inputData = [
         'pm_inbox_limit'   => form_sanitizer($_POST['pm_inbox_limit'], '20', 'pm_inbox_limit'),
         'pm_outbox_limit'  => form_sanitizer($_POST['pm_outbox_limit'], '20', 'pm_outbox_limit'),
         'pm_archive_limit' => form_sanitizer($_POST['pm_archive_limit'], '20', 'pm_archive_limit'),
@@ -42,12 +33,13 @@ if (isset($_POST['save_settings'])) {
     ];
 
     if (\defender::safe()) {
-        foreach ($pm_settings as $settings_name => $settings_value) {
-            dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:val WHERE settings_name=:name", [
-                ':name' => $settings_name,
-                ':val'  => $settings_value
+        foreach ($inputData as $settings_name => $settings_value) {
+            dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:settings_value WHERE settings_name=:settings_name", [
+                ':settings_value' => $settings_value,
+                ':settings_name'  => $settings_name
             ]);
         }
+
         addNotice('success', $locale['900']);
         redirect(FUSION_REQUEST);
     }
@@ -64,20 +56,20 @@ echo "<div class='well'>".$locale['message_description']."</div>\n";
 echo openform('settingsform', 'post', FUSION_REQUEST);
 echo "<div class='row'>\n<div class='col-xs-12 col-sm-6'>\n";
 openside();
-echo form_text('pm_inbox_limit', $locale['701'], $pm_settings['pm_inbox_limit'], [
+echo form_text('pm_inbox_limit', $locale['701'], $settings['pm_inbox_limit'], [
     'type'        => 'number',
     'max_length'  => 2,
     'ext_tip'     => $locale['704'],
     'inner_width' => '100px',
     'inline'      => TRUE
 ]);
-echo form_text('pm_outbox_limit', $locale['702'], $pm_settings['pm_outbox_limit'], [
+echo form_text('pm_outbox_limit', $locale['702'], $settings['pm_outbox_limit'], [
     'type'        => 'number',
     'max_length'  => 2,
     'inner_width' => '100px',
     'inline'      => TRUE
 ]);
-echo form_text('pm_archive_limit', $locale['703'], $pm_settings['pm_archive_limit'], [
+echo form_text('pm_archive_limit', $locale['703'], $settings['pm_archive_limit'], [
     'type'        => 'number',
     'max_length'  => 2,
     'inner_width' => '100px',
@@ -87,11 +79,11 @@ closeside();
 
 echo "</div>\n<div class='col-xs-12 col-sm-6'>\n";
 openside();
-echo form_select('pm_email_notify', $locale['709'], $pm_settings['pm_email_notify'], [
+echo form_select('pm_email_notify', $locale['709'], $settings['pm_email_notify'], [
     'options' => ['1' => $locale['no'], '2' => $locale['yes']],
     'width'   => '100%'
 ]);
-echo form_select('pm_save_sent', $locale['710'], $pm_settings['pm_save_sent'], [
+echo form_select('pm_save_sent', $locale['710'], $settings['pm_save_sent'], [
     'options' => ['1' => $locale['no'], '2' => $locale['yes']],
     'width'   => '100%'
 ]);

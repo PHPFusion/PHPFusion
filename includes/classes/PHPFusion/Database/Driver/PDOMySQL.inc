@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: PDOMySQL.inc
-| Author: Takács Ákos (Rimelek)
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -21,7 +21,6 @@ use PDO;
 use PDOException;
 use PDOStatement;
 use PHPFusion\Database\AbstractDatabaseDriver;
-use PHPFusion\Database\Exception\ConnectionException;
 use PHPFusion\Database\Exception\SelectionException;
 
 class PDOMySQL extends AbstractDatabaseDriver {
@@ -57,7 +56,7 @@ class PDOMySQL extends AbstractDatabaseDriver {
      * @param string $query SQL
      * @param array  $parameters
      *
-     * @return PDOStatement or FALSE on error
+     * @return PDOStatement|bool on error
      */
     public function _query($query, array $parameters = []) {
         try {
@@ -77,8 +76,8 @@ class PDOMySQL extends AbstractDatabaseDriver {
     /**
      * Count the number of rows in a table filtered by conditions
      *
-     * @param string $field Parenthesized field name
-     * @param string $table Table name
+     * @param string $field      Parenthesized field name
+     * @param string $table      Table name
      * @param string $conditions conditions after "where"
      * @param array  $parameters
      *
@@ -109,6 +108,8 @@ class PDOMySQL extends AbstractDatabaseDriver {
             //returns false when an error occurs
             return $statement->fetchColumn();
         }
+
+        return NULL;
     }
 
     /**
@@ -122,6 +123,8 @@ class PDOMySQL extends AbstractDatabaseDriver {
         if ($statement !== FALSE) {
             return $statement->rowCount();
         }
+
+        return NULL;
     }
 
     /**
@@ -135,6 +138,8 @@ class PDOMySQL extends AbstractDatabaseDriver {
         if ($statement !== FALSE) {
             return $statement->columnCount();
         }
+
+        return NULL;
     }
 
     /**
@@ -149,6 +154,8 @@ class PDOMySQL extends AbstractDatabaseDriver {
             $statement->setFetchMode(PDO::FETCH_ASSOC);
             return $statement->fetch();
         }
+
+        return NULL;
     }
 
     /**
@@ -164,6 +171,8 @@ class PDOMySQL extends AbstractDatabaseDriver {
 
             return $statement->fetch();
         }
+
+        return NULL;
     }
 
     /**
@@ -203,7 +212,7 @@ class PDOMySQL extends AbstractDatabaseDriver {
      * @param string $host Server domain or IP followed by an optional port definition
      * @param string $user
      * @param string $pass Password
-     * @param string $db The name of the database
+     * @param string $db   The name of the database
      * @param array  $options
      *
      * @throws \ErrorException  When the connection could not be established
@@ -212,9 +221,11 @@ class PDOMySQL extends AbstractDatabaseDriver {
         if ($this->connection === NULL) {
             $options += [
                 'charset' => 'utf8',
+                'port'    => 3306
             ];
+
             try {
-                $pdo = $this->connection = new PDO("mysql:host=".$host.";dbname=".$db.";charset=".$options['charset'], $user, $pass,
+                $pdo = $this->connection = new PDO("mysql:host=".$host.";dbname=".$db.";port=".$options['port'].";charset=".$options['charset'], $user, $pass,
                     [
                         /*
                          * Inserted to solve the issue of the ignored charset in the connection string.

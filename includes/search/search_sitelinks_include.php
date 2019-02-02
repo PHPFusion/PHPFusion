@@ -55,7 +55,7 @@ if (Search_Engine::get_param('stype') == 'sitelinks' || Search_Engine::get_param
 
     if (!empty(Search_Engine::get_param('search_param'))) {
 
-        $query = "SELECT * FROM ".DB_SITE_LINKS.(multilang_table('SL') ? " WHERE link_language='".LANGUAGE."' AND " : "WHERE ")
+        $query = "SELECT * FROM ".DB_SITE_LINKS.(multilang_table('SL') ? " WHERE link_language='".LANGUAGE."' AND " : " WHERE ")
             .groupaccess('link_visibility')." AND link_url !='' AND link_name != '---' AND link_name != '===' AND link_status = '1' AND ".Search_Engine::search_conditions('sitelinks');
 
         $param = Search_Engine::get_param('search_param');

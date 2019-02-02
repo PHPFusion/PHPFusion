@@ -63,7 +63,7 @@ $locale['setup_0144'] = "Database Diagnostics Completed";
 // Step 1
 $locale['setup_1000'] = "Please select your language";
 $locale['setup_1001'] = "Download more locales from <a href='https://www.php-fusion.co.uk/php_fusion_9_downloads.php' target='_blank'><strong>PHP-Fusion Official Support Site</strong></a>";
-$locale['setup_1002'] = "Welcome to PHP-Fusion 9.0 Recovery Mode.";
+$locale['setup_1002'] = "Welcome to PHP-Fusion 9 Recovery Mode.";
 $locale['setup_1003'] = "We have detected that there is an existing system installed. Please choose any of the following to proceed.";
 $locale['setup_1004'] = "Clean Installation";
 $locale['setup_1005'] = "You can uninstall and clean your database and start a clean installation again.";
@@ -90,6 +90,8 @@ $locale['setup_1106'] = "Server and File Structure Requirements Diagnostics";
 $locale['setup_1200'] = "Database Settings and Server Paths";
 $locale['setup_1201'] = "Please enter your MySQL database access settings.";
 $locale['setup_1202'] = "Database Hostname:";
+$locale['setup_1202a'] = "Database Port:";
+$locale['setup_1202b'] = "Leave empty if you do not use another port";
 $locale['setup_1203'] = "Database Username:";
 $locale['setup_1204'] = "Database Password:";
 $locale['setup_1205'] = "Database Name:";

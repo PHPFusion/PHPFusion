@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: MySQLi.inc
-| Author: Takács Ákos (Rimelek)
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -23,7 +23,7 @@ use PHPFusion\Database\Exception\SelectionException;
 
 class MySQLi extends AbstractDatabaseDriver {
     /**
-     * @var resource|NULL
+     * @var \mysqli|NULL
      */
     private $connection = NULL;
 
@@ -46,8 +46,8 @@ class MySQLi extends AbstractDatabaseDriver {
     /**
      * Count the number of rows in a table filtered by conditions
      *
-     * @param string $field Parenthesized field name
-     * @param string $table Table name
+     * @param string $field      Parenthesized field name
+     * @param string $table      Table name
      * @param string $conditions conditions after "where"
      * @param array  $parameters
      *
@@ -116,7 +116,7 @@ class MySQLi extends AbstractDatabaseDriver {
      *
      * @param mixed $result The result of a query
      *
-     * @return array Associative array
+     * @return array|bool Associative array
      */
     public function fetchAssoc($result) {
         $row = mysqli_fetch_assoc($result);
@@ -129,7 +129,7 @@ class MySQLi extends AbstractDatabaseDriver {
      *
      * @param mixed $result The result of a query
      *
-     * @return array Numeric array
+     * @return array|bool Numeric array
      */
     public function fetchRow($result) {
         $row = mysqli_fetch_row($result);
@@ -158,10 +158,10 @@ class MySQLi extends AbstractDatabaseDriver {
     /**
      * Connect to the database
      *
-     * @param string $host Server domain or IP followed by an optional port definition
+     * @param string $host    Server domain or IP followed by an optional port definition
      * @param string $user
-     * @param string $pass Password
-     * @param string $db The name of the database
+     * @param string $pass    Password
+     * @param string $db      The name of the database
      * @param array  $options Currently only one option exists: charset
      *
      * @throws SelectionException When the selection of the database was unsuccessful
@@ -170,12 +170,13 @@ class MySQLi extends AbstractDatabaseDriver {
     protected function connect($host, $user, $pass, $db, array $options = []) {
         if ($this->connection === NULL) {
             $options += [
-                'charset' => 'utf8',
+                'charset' => 'utf8mb4',
                 'port'    => 3306
             ];
+
             $this->connection = mysqli_connect($host, $user, $pass, $db, $options['port']);
             if (!$this->connection) {
-                throw new ConnectionException(mysqli_error(), mysqli_errno());
+                throw new ConnectionException(mysqli_error($this->connection), mysqli_errno($this->connection));
             }
             mysqli_set_charset($this->connection, $options['charset']);
             if (!@mysqli_select_db($this->connection, "$db")) {
@@ -183,7 +184,6 @@ class MySQLi extends AbstractDatabaseDriver {
             }
         }
     }
-
 
     /**
      * Send a database query

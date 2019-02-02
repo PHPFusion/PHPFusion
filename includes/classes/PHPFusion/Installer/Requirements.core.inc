@@ -296,10 +296,10 @@ class Requirements extends Install_Core {
                 'elapsed'     => microtime(TRUE) - $microtime
             ];
 
-            DatabaseFactory::setDefaultDriver(intval(isset(self::$connection['pdo_enabled']) && self::$connection['pdo_enabled']) === 1 ? DatabaseFactory::DRIVER_PDO_MYSQL : DatabaseFactory::DRIVER_MYSQLi);
+            DatabaseFactory::setDefaultDriver(isset(self::$connection['db_driver']) && self::$connection['db_driver'] === 'pdo' ? DatabaseFactory::DRIVER_PDO_MYSQL : DatabaseFactory::DRIVER_MYSQLi);
 
             // There will be a connection issue present.
-            $connection_info = $connection = dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'], self::$connection['db_name'], FALSE);
+            $connection_info = $connection = dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'], self::$connection['db_name'], !empty(self::$connection['db_port']) ? self::$connection['db_port'] : 3306);
             $db_connect = $connection_info['connection_success'];
             $db_select = $connection_info['dbselection_success'];
             if ($db_connect) {
@@ -437,11 +437,14 @@ function write_config(array $system = []) {
     $config = "<?php\n";
     $config .= "// database settings\n";
     $config .= "\$db_host = '".$system['db_host']."';\n";
+    if ($system['db_port'] !== 3306) {
+        $config .= "\$db_port = '".$system['db_port']."';\n";
+    }
     $config .= "\$db_user = '".$system['db_user']."';\n";
     $config .= "\$db_pass = '".$system['db_pass']."';\n";
     $config .= "\$db_name = '".$system['db_name']."';\n";
     $config .= "\$db_prefix = '".$system['db_prefix']."';\n";
-    $config .= "\$pdo_enabled = ".intval($system['pdo_enabled']).";\n";
+    $config .= "\$db_driver = '".$system['db_driver']."';\n";
     $config .= "define(\"DB_PREFIX\", \"".$system['db_prefix']."\");\n";
     $config .= "define(\"COOKIE_PREFIX\", \"".$system['cookie_prefix']."\");\n";
     $config .= "define(\"SECRET_KEY\", \"".$system['secret_key']."\");\n";

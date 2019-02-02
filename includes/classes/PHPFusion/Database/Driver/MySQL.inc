@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: MySQL.inc
-| Author: Takács Ákos (Rimelek)
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -46,8 +46,8 @@ class MySQL extends AbstractDatabaseDriver {
     /**
      * Count the number of rows in a table filtered by conditions
      *
-     * @param string $field Parenthesized field name
-     * @param string $table Table name
+     * @param string $field      Parenthesized field name
+     * @param string $table      Table name
      * @param string $conditions conditions after "where"
      * @param array  $parameters
      *
@@ -102,7 +102,7 @@ class MySQL extends AbstractDatabaseDriver {
      *
      * @param mixed $result The result of a query
      *
-     * @return array Associative array
+     * @return array|bool Associative array
      */
     public function fetchAssoc($result) {
         $row = @mysql_fetch_assoc($result);
@@ -115,7 +115,7 @@ class MySQL extends AbstractDatabaseDriver {
      *
      * @param mixed $result The result of a query
      *
-     * @return array Numeric array
+     * @return array|bool Numeric array
      */
     public function fetchRow($result) {
         $row = @mysql_fetch_row($result);
@@ -144,10 +144,10 @@ class MySQL extends AbstractDatabaseDriver {
     /**
      * Connect to the database
      *
-     * @param string $host Server domain or IP followed by an optional port definition
+     * @param string $host    Server domain or IP followed by an optional port definition
      * @param string $user
-     * @param string $pass Password
-     * @param string $db The name of the database
+     * @param string $pass    Password
+     * @param string $db      The name of the database
      * @param array  $options Currently only one option exists: charset
      *
      * @throws SelectionException When the selection of the database was unsuccessful
@@ -155,11 +155,12 @@ class MySQL extends AbstractDatabaseDriver {
      */
     protected function connect($host, $user, $pass, $db, array $options = []) {
         $options += [
-            'charset' => 'utf8',
+            'charset' => 'utf8mb4',
+            'port'    => 3306
         ];
         $this->connection = @mysql_connect($host, $user, $pass);
         if (!$this->connection) {
-            throw new ConnectionException(mysql_error(), mysql_errno());
+            throw new ConnectionException(mysql_error($this->connection), mysql_errno($this->connection));
         }
         mysql_set_charset($options['charset'], $this->connection);
 

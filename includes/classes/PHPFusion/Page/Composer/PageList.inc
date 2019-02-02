@@ -25,9 +25,43 @@ class PageList extends PageAdmin {
      * List custom page administration table
      */
     public static function displayContent() {
-
         $aidlink = fusion_get_aidlink();
         $locale = self::$locale;
+
+        // Run functions
+        $allowed_actions = array_flip(['publish', 'unpublish', 'delete']);
+
+        // Table Actions
+        if (isset($_POST['table_action']) && isset($allowed_actions[$_POST['table_action']])) {
+
+            $input = (isset($_POST['cp'])) ? explode(",", form_sanitizer($_POST['cp'], '', 'cp')) : '';
+            if (!empty($input)) {
+                foreach ($input as $page_id) {
+                    // check input table
+                    if (dbcount("('page_id')", DB_CUSTOM_PAGES, "page_id=:pageid", [':pageid' => intval($page_id)]) && \defender::safe()) {
+                        switch ($_POST['table_action']) {
+                            case "publish":
+                                dbquery("UPDATE ".DB_CUSTOM_PAGES." SET page_status=:status WHERE page_id=:pageid", [':status' => '1', ':pageid' => intval($page_id)]);
+                                break;
+                            case "unpublish":
+                                dbquery("UPDATE ".DB_CUSTOM_PAGES." SET page_status=:status WHERE page_id=:pageid", [':status' => '0', ':pageid' => intval($page_id)]);
+                                break;
+                            case "delete":
+                                dbquery("DELETE FROM ".DB_CUSTOM_PAGES." WHERE page_id=:pageid", [':pageid' => intval($page_id)]);
+                                dbquery("DELETE FROM ".DB_CUSTOM_PAGES_CONTENT." WHERE page_id=:pageid", [':pageid' => intval($page_id)]);
+                                dbquery("DELETE FROM ".DB_CUSTOM_PAGES_GRID." WHERE page_id=:pageid", [':pageid' => intval($page_id)]);
+                                break;
+                            default:
+                                redirect(FUSION_REQUEST);
+                        }
+                    }
+                }
+                addNotice('success', self::$locale['page_0402']);
+                redirect(FUSION_REQUEST);
+            }
+            addNotice('warning', self::$locale['page_0442']);
+            redirect(FUSION_REQUEST);
+        }
 
         if (isset($_POST['page_clear'])) {
             redirect(FUSION_SELF.fusion_get_aidlink());
@@ -133,9 +167,9 @@ class PageList extends PageAdmin {
 
             echo "<div class='pull-right'>\n";
             echo "<a class='btn btn-success btn-sm m-r-10' href='".clean_request("section=compose_frm", ["section"], FALSE)."'><i class='fa fa-plus fa-fw'></i> ".self::$locale['page_0200']."</a>";
-            echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('publish', '#table_action', '#cp_table');\"><i class='fa fa-check fa-fw'></i> ".self::$locale['publish']." </a>";
-            echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('unpublish', '#table_action', '#cp_table');\"><i class='fa fa-ban fa-fw'></i> ".self::$locale['unpublish']."</a>";
-            echo "<a class='btn btn-danger btn-sm m-r-10' onclick=\"run_admin('delete', '#table_action', '#cp_table');\"><i class='fa fa-trash-o fa-fw'></i> ".self::$locale['delete']."</a>";
+            echo "<button type='button' class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('publish', '#table_action', '#cp_table');\"><i class='fa fa-check fa-fw'></i> ".self::$locale['publish']." </button>";
+            echo "<button type='button' class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('unpublish', '#table_action', '#cp_table');\"><i class='fa fa-ban fa-fw'></i> ".self::$locale['unpublish']."</button>";
+            echo "<button type='button' class='btn btn-danger btn-sm m-r-10' onclick=\"run_admin('delete', '#table_action', '#cp_table');\"><i class='fa fa-trash-o fa-fw'></i> ".self::$locale['delete']."</button>";
             echo "</div>\n";
 
             $filter_values = [
@@ -255,8 +289,6 @@ class PageList extends PageAdmin {
                 $('#delete').bind('click', function() { confirm('".self::$locale['page_0413']."'); });
             ");
 
-            echo "<div class='m-t-20 table-responsive'>\n";
-
             if ($max_pages > $rowCount) {
                 $page_uri = clean_request('', ['aid'], TRUE);
                 echo "<div class='pull-right'>\n";
@@ -264,6 +296,9 @@ class PageList extends PageAdmin {
                 echo "</div>\n";
             }
 
+            echo openform('cp_table', 'post', FUSION_REQUEST);
+            echo form_hidden('table_action', '', '');
+            echo "<div class='m-t-20 table-responsive'>\n";
             echo "<table id='cp_table_list' class='table".(!empty($data) ? " table-striped " : " ")."table-hover ".fusion_sort_table('cp_table_list')."'>\n";
             echo "<thead>\n";
             echo "<tr>\n";
@@ -307,6 +342,8 @@ class PageList extends PageAdmin {
 
             echo "</tbody>\n";
             echo "</table>\n";
+            echo "</div>";
+            echo closeform();
 
             if ($max_pages > $rowCount) {
                 $page_uri = clean_request('', ['aid'], TRUE);
@@ -315,7 +352,6 @@ class PageList extends PageAdmin {
                 echo "</div>\n";
             }
 
-            echo "</div>";
         } else {
             echo "<div class='well text-center m-t-20'>\n".$locale['page_0440']."</div>";
         }

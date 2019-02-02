@@ -85,6 +85,7 @@ function general() {
     $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['404']."</td><td class='text-right'>".phpversion()."</td></tr>\n";
     $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['405']."</td><td class='text-right'>".php_sapi_name()."</td></tr>\n";
     $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['406']."</td><td class='text-right'>".dbconnection()->getServerVersion()."</td></tr>\n";
+    $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['406a']."</td><td class='text-right'>".str_replace('\\PHPFusion\\Database\Driver\\', '', \PHPFusion\Database\DatabaseFactory::getDriverClass())."</td></tr>\n";
     $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['407']."</td><td class='text-right'>".$settings['version']."</td></tr>\n";
     $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['408']."</td><td class='text-right'>".DB_PREFIX."</td></tr>\n";
     $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['409']."</td><td class='text-right'>".COOKIE_PREFIX."</td></tr>\n";

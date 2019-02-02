@@ -61,6 +61,7 @@ class Install_Core extends Infusion_Core {
 
     protected static $connection = [
         'db_host'         => '',
+        'db_port'         => '',
         'db_user'         => NULL,
         'db_pass'         => NULL,
         'db_name'         => NULL,
@@ -68,7 +69,7 @@ class Install_Core extends Infusion_Core {
         'cookie_prefix'   => NULL,
         'secret_key_salt' => NULL,
         'secret_key'      => NULL,
-        'pdo_enabled'     => NULL
+        'db_driver'       => NULL
     ];
 
     protected static $siteData = [
@@ -200,13 +201,51 @@ class Install_Core extends Infusion_Core {
         }
     }
 
+    private static function detect_upgrade() {
+
+        // Read the config_temp.php
+        self::set_empty_prefix();
+
+        if (self::$connection = self::fusion_get_config(BASEDIR.'config_temp.php')) {
+
+            if (empty(self::$connection['db_driver'])) {
+                self::$connection['db_driver'] = FALSE;
+            }
+
+            require_once(INCLUDES.'multisite_include.php');
+
+            $validation = Requirements::get_system_validation();
+
+            $version = fusion_get_settings('version');
+
+            if (!empty($version)) {
+                if (isset($validation[3])) {
+                    if (version_compare(self::BUILD_VERSION, $version, ">")) {
+                        $_GET['upgrade'] = TRUE;
+                        if (!defined('COOKIE_PREFIX') && !empty(self::$connection['COOKIE_PREFIX'])) {
+                            define('COOKIE_PREFIX', self::$connection['COOKIE_PREFIX']);
+                        }
+                        if (!defined('DB_PREFIX') && !empty(self::$connection['DB_PREFIX'])) {
+                            define('DB_PREFIX', self::$connection['DB_PREFIX']);
+                        }
+                        //self::set_empty_prefix();
+                        return TRUE;
+                    }
+                }
+            }
+        }
+
+        return FALSE;
+    }
+
     protected static function set_empty_prefix() {
         $default_init = [
-            'db_host'       => '',
-            'db_name'       => '',
-            'db_user'       => '',
-            'db_pass'       => '',
-            'db_prefix'     => ''
+            'db_host'   => '',
+            'db_port'   => '',
+            'db_name'   => '',
+            'db_user'   => '',
+            'db_pass'   => '',
+            'db_prefix' => ''
         ];
 
         if (file_exists(BASEDIR.'config_temp.php') && filesize(BASEDIR.'config_temp.php') > 0) { // config_temp might be blank
@@ -232,18 +271,15 @@ class Install_Core extends Infusion_Core {
         }
     }
 
-    /**
-     * @param $config_path
-     *
-     * @return array
-     */
     public static function fusion_get_config($config_path) {
         if (empty(self::$config) && is_file($config_path) && filesize($config_path) > 0) {
-            /** @noinspection PhpIncludeInspection */
             include $config_path;
             $default_path = [];
             if (isset($db_host)) {
                 $default_path['db_host'] = $db_host;
+            }
+            if (isset($db_port)) {
+                $default_path['db_port'] = $db_port;
             }
             if (isset($db_user)) {
                 $default_path['db_user'] = $db_user;
@@ -257,8 +293,8 @@ class Install_Core extends Infusion_Core {
             if (isset($db_prefix)) {
                 $default_path['db_prefix'] = $db_prefix;
             }
-            if (isset($pdo_enabled)) {
-                $default_path['pdo_enabled'] = $pdo_enabled;
+            if (isset($db_driver)) {
+                $default_path['db_driver'] = $db_driver;
             }
             if (defined('DB_PREFIX')) {
                 $default_path['DB_PREFIX'] = DB_PREFIX;
@@ -288,43 +324,6 @@ class Install_Core extends Infusion_Core {
         }
 
         return $prefix;
-    }
-
-    private static function detect_upgrade() {
-
-        // Read the config_temp.php
-        self::set_empty_prefix();
-
-        if (self::$connection = self::fusion_get_config(BASEDIR.'config_temp.php')) {
-
-            if (empty(self::$connection['pdo_enabled'])) {
-                self::$connection['pdo_enabled'] = FALSE;
-            }
-
-            require_once(INCLUDES.'multisite_include.php');
-
-            $validation = Requirements::get_system_validation();
-
-            $version = fusion_get_settings('version');
-
-            if (!empty($version)) {
-                if (isset($validation[3])) {
-                    if (version_compare(self::BUILD_VERSION, $version, ">")) {
-                        $_GET['upgrade'] = TRUE;
-                        if (!defined('COOKIE_PREFIX') && !empty(self::$connection['COOKIE_PREFIX'])) {
-                            define('COOKIE_PREFIX', self::$connection['COOKIE_PREFIX']);
-                        }
-                        if (!defined('DB_PREFIX') && !empty(self::$connection['DB_PREFIX'])) {
-                            define('DB_PREFIX', self::$connection['DB_PREFIX']);
-                        }
-                        //self::set_empty_prefix();
-                        return TRUE;
-                    }
-                }
-            }
-        }
-
-        return FALSE;
     }
 
     public function install_phpfusion() {
@@ -403,9 +402,6 @@ class Install_Core extends Infusion_Core {
         return self::$document;
     }
 
-    private function __clone() {
-    }
-
     /**
      * Installer system checks
      * Redirect to step 1 if the database has been intentionally dropped during the installation.
@@ -421,6 +417,9 @@ class Install_Core extends Infusion_Core {
             }
         }
         return FALSE;
+    }
+
+    private function __clone() {
     }
 
 }

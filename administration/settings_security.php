@@ -31,26 +31,9 @@ if ($temp = opendir(INCLUDES."captchas/")) {
 }
 
 $settings = fusion_get_settings();
-$settings_data = [
-    'captcha'             => $settings['captcha'],
-    'privacy_policy'      => $settings['privacy_policy'],
-    'allow_php_exe'       => $settings['allow_php_exe'],
-    'flood_interval'      => $settings['flood_interval'],
-    'flood_autoban'       => $settings['flood_autoban'],
-    'maintenance_level'   => $settings['maintenance_level'],
-    'maintenance'         => $settings['maintenance'],
-    'maintenance_message' => $settings['maintenance_message'],
-    'bad_words_enabled'   => $settings['bad_words_enabled'],
-    'bad_words'           => $settings['bad_words'],
-    'bad_word_replace'    => $settings['bad_word_replace'],
-    'user_name_ban'       => $settings['user_name_ban'],
-    'database_sessions'   => $settings['database_sessions'],
-    'form_tokens'         => $settings['form_tokens'],
-    'gateway'             => $settings['gateway']
-];
 
 if (isset($_POST['clear_cache'])) {
-    if ($settings_data['database_sessions']) {
+    if ($settings['database_sessions']) {
         $session = \PHPFusion\Sessions::getInstance(COOKIE_PREFIX.'session');
         $session->_purge();
     } else {
@@ -63,7 +46,7 @@ if (isset($_POST['clear_cache'])) {
 
 if (isset($_POST['savesettings'])) {
     // Save settings after validation
-    $settings_data = [
+    $inputData = [
         'captcha'             => form_sanitizer($_POST['captcha'], '', 'captcha'),
         'privacy_policy'      => addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['privacy_policy'])),
         'allow_php_exe'       => form_sanitizer($_POST['allow_php_exe'], 0, 'allow_php_exe'),
@@ -82,9 +65,9 @@ if (isset($_POST['savesettings'])) {
     ];
 
     // Validate extra fields
-    if ($settings_data['captcha'] == "grecaptcha") {
+    if ($inputData['captcha'] == "grecaptcha") {
         // appends captcha settings
-        $settings_data += [
+        $inputData += [
             'recaptcha_public'  => form_sanitizer($_POST['recaptcha_public'], '', 'recaptcha_public'),
             'recaptcha_private' => form_sanitizer($_POST['recaptcha_private'], '', 'recaptcha_private'),
             'recaptcha_theme'   => form_sanitizer($_POST['recaptcha_theme'], '', 'recaptcha_theme'),
@@ -93,16 +76,14 @@ if (isset($_POST['savesettings'])) {
     }
 
     if (\defender::safe()) {
-        foreach ($settings_data as $settings_name => $settings_value) {
-            $query = "UPDATE ".DB_SETTINGS." SET `settings_value`=:settings_value WHERE `settings_name`=:settings_name";
-            $parameters = [
+        foreach ($inputData as $settings_name => $settings_value) {
+            dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:settings_value WHERE settings_name=:settings_name", [
                 ':settings_value' => $settings_value,
                 ':settings_name'  => $settings_name
-            ];
-            dbquery($query, $parameters);
+            ]);
         }
-        addNotice('success', $locale['900']);
 
+        addNotice('success', $locale['900']);
     } else {
         addNotice('danger', $locale['901']);
         addNotice('danger', $locale['696']);
