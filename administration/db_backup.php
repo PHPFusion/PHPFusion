@@ -24,8 +24,46 @@ use PHPFusion\Database\DatabaseFactory;
 class DbBackupAdministration {
     private $locale = [];
 
+    public function __display() {
+
+        if (!isset($_POST['btn_do_restore']) && (!isset($_GET['action']) || $_GET['action'] != "restore")) {
+            $backup_files = makefilelist(ADMIN."db_backups/", ".|..|index.php", TRUE);
+            if (is_array($backup_files)) {
+                foreach ($backup_files as $file) {
+                    @unlink(ADMIN."db_backups/".$file);
+                }
+            }
+        }
+
+        $this->execute_backup();
+        $this->locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/db-backup.php');
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'db_backup.php'.fusion_get_aidlink(), 'title' => $this->locale['450']]);
+
+        $tab['title'][] = $this->locale['450'];
+        $tab['id'][] = 'backup_db';
+
+        $tab['title'][] = $this->locale['480'];
+        $tab['id'][] = 'restore_db';
+
+        $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $tab['id']) ? $_GET['section'] : $tab['id'][0];
+        opentable($this->locale['450']);
+        echo opentab($tab, $_GET['section'], 'database_tab', TRUE, 'nav-tabs m-b-20', 'section', ['action', 'section']);
+        switch ($_GET['section']) {
+            case 'backup_db':
+                $this->backup_form();
+                break;
+            case 'restore_db':
+                $this->restore_form();
+                break;
+            default:
+                redirect(clean_request('', ['section'], FALSE));
+        }
+        echo closetab();
+        closetable();
+    }
+
     private function execute_backup() {
-        global $db_name, $db_prefix;
+        global $db_name, $db_prefix, $db_driver, $pdo_enabled;
         if (isset($_POST['btn_create_backup'])) {
             ini_set('max_execution_time', 0);
             set_time_limit(600);
@@ -64,8 +102,13 @@ class DbBackupAdministration {
 
                         $num_fields = $db->countColumns($result);
                         for ($i = 0; $i < $num_fields; $i++) {
-                            $column_meta = $result->getColumnMeta($i);
-                            $column_list .= (($column_list != "") ? ", " : "")."`".$column_meta['name']."`";
+                            if ((!empty($db_driver) && $db_driver === 'pdo' || !empty($pdo_enabled) && $pdo_enabled === 1)) {
+                                $column_meta = $result->getColumnMeta($i);
+                                $column_list .= (($column_list != "") ? ", " : "")."`".$column_meta['name']."`";
+                            } else {
+                                $column_meta = $result->fetch_field();
+                                $column_list .= (($column_list != "") ? ", " : "")."`".$column_meta->name."`";
+                            }
                             unset($column_meta);
                         }
                     }
@@ -125,47 +168,179 @@ class DbBackupAdministration {
         }
     }
 
-    public function __display() {
+    private function GetSqlFieldType($table, $i) {
+        $new_data = [];
 
-        if (!isset($_POST['btn_do_restore']) && (!isset($_GET['action']) || $_GET['action'] != "restore")) {
-            $backup_files = makefilelist(ADMIN."db_backups/", ".|..|index.php", TRUE);
-            if (is_array($backup_files)) {
-                foreach ($backup_files as $file) {
-                    @unlink(ADMIN."db_backups/".$file);
-                }
+        $result = dbquery("SHOW COLUMNS FROM ".$table);
+        while ($data = dbarray($result)) {
+            $new_data[] = $data;
+        }
+
+        return $new_data[$i]['Type'];
+    }
+
+    private function backup_form() {
+        global $db_name, $db_prefix;
+
+        $table_opt_list = "";
+        $result = dbquery("SHOW tables");
+        while ($row = dbarraynum($result)) {
+            $table_opt_list .= "<option value='".$row[0]."'";
+            if (preg_match("/^".DB_PREFIX."/i", $row[0])) {
+                $table_opt_list .= " selected='selected'";
+            }
+            $table_opt_list .= ">".$row[0]."</option>\n";
+        }
+
+        add_to_jquery("
+            function backupSelectCore(){for(i=0;i<document.backupform.elements['db_tables[]'].length;i++){document.backupform.elements['db_tables[]'].options[i].selected=(document.backupform.elements['db_tables[]'].options[i].text).match(/^$db_prefix/i);}}
+            function backupSelectAll(){for(i=0;i<document.backupform.elements['db_tables[]'].length;i++){document.backupform.elements['db_tables[]'].options[i].selected=true;}}
+            function backupSelectNone(){for(i=0;i<document.backupform.elements['db_tables[]'].length;i++){document.backupform.elements['db_tables[]'].options[i].selected=false;}}
+
+            $('#backupSelectCore').on('click', function (e) {e.preventDefault();backupSelectCore()});
+            $('#backupSelectAll').on('click', function (e) {e.preventDefault();backupSelectAll()});
+            $('#backupSelectNone').on('click', function (e) {e.preventDefault();backupSelectNone()});
+        ");
+
+        echo openform('backupform', 'post', FUSION_REQUEST);
+        echo "<div class='row'>";
+
+        echo '<div class="col-xs-12 col-sm-6">';
+        echo "<div class='table-responsive'><table cellspacing='0' cellpadding='0' class='table'>\n<tbody>\n<tr>\n";
+        echo "<td colspan='2' class='tbl2' align='left'><strong>".$this->locale['451']."</strong></td>\n";
+        echo "</tr>\n<tr>\n";
+        echo "<td class='tbl text-right'><strong>".$this->locale['414']."</strong></td>\n";
+        echo "<td class='tbl'>".$db_name."</td>\n";
+        echo "</tr>\n<tr>\n";
+        echo "<td class='tbl text-right'><strong>".$this->locale['415']."</strong></td>\n";
+        echo "<td class='tbl'>".$db_prefix."</td>\n";
+        echo "</tr>\n<tr>\n";
+        echo "<td class='tbl text-right'><strong>".$this->locale['452']."</strong></td>\n";
+        echo "<td class='tbl'>".parsebytesize($this->get_database_size(), 2, FALSE)." (".$this->get_table_count()." ".$this->locale['419'].")</td>\n";
+        echo "</tr>\n<tr>\n";
+        echo "<td class='tbl text-right'><strong>".$this->locale['453']."</strong></td>\n";
+        echo "<td class='tbl'>".parsebytesize($this->get_database_size($db_prefix), 2, FALSE)." (".$this->get_table_count($db_prefix)." ".$this->locale['419'].")</td>\n";
+        echo "</tr>\n<tr>\n";
+        echo "<td colspan='2' class='tbl2 text-left'><strong>".$this->locale['454']."</strong></td>\n";
+        echo "</tr>\n<tr>\n";
+        echo "<td class='tbl text-right'><label for='backup_filename'>".$this->locale['431']." <span class='required'>*</span>\n</td>\n";
+        echo "<td class='tbl'>\n";
+        echo form_text('backup_filename', '', "backup_".$this->stripsiteinput(fusion_get_settings('sitename'))."_".date('Y-m-d-Hi')."", [
+            'required'   => 1,
+            'error_text' => $this->locale['481b']
+        ]);
+        echo "</tr>\n<tr>\n";
+        echo "<td class='tbl text-right'><label for='backup_type'>".$this->locale['455']."</label></td>\n";
+        echo "<td class='tbl'>\n";
+        $opts = [];
+        if (function_exists("gzencode")) {
+            $opts['.gz'] = ".sql.gz ".$this->locale['456'];
+        }
+        $opts['.sql'] = ".sql";
+        echo form_select('backup_type', '', '', ['options' => $opts, 'placeholder' => $this->locale['choose']]);
+        echo "</td>\n</tr>\n<tr>\n";
+        echo "<td colspan='2' class='tbl text-center'><br /><span style='color:#ff0000'>*</span> ".$this->locale['461']."</td>\n";
+        echo "</tr>\n</tbody>\n</table>\n</div>";
+        echo '</div>';
+
+        echo '<div class="col-xs-12 col-sm-6">';
+        echo "<div class='table-responsive'><table border='0' cellpadding='0' cellspacing='0' class='table'>\n<tbody>\n<tr>\n";
+        echo "<td class='tbl2'><strong>".$this->locale['457']."</strong></td>\n";
+        echo "</tr>\n<tr>\n";
+        echo "<td class='tbl'>\n";
+        echo "<select name='db_tables[]' id='tablelist' size='20' style='width:100%' class='textbox' multiple='multiple'>".$table_opt_list."</select>\n";
+        echo "<div class='text-center m-t-10' style='text-align:center'><strong>".$this->locale['435']."</strong>\n";
+        echo "<div class='btn-group'>\n";
+        echo "<a class='btn btn-default' href='#' id='backupSelectCore'>".$this->locale['458']."</a>\n";
+        echo "<a class='btn btn-default' href='#' id='backupSelectAll'>".$this->locale['436']."</a>\n";
+        echo "<a class='btn btn-default' href='#' id='backupSelectNone'>".$this->locale['437']."</a>\n";
+        echo "</div>\n";
+        echo "</div>\n";
+        echo "</td>\n</tr>\n</tbody>\n</table>\n</div>";
+        echo '</div>';
+
+        echo "</div>"; // .row
+        echo form_button('btn_create_backup', $this->locale['459'], $this->locale['459'], ['class' => 'btn-primary m-t-10']);
+        echo closeform();
+    }
+
+    private function get_database_size($prefix = "") {
+        global $db_name;
+        $db_size = 0;
+        $result = dbquery("SHOW TABLE STATUS FROM `".$db_name."`");
+        while ($row = dbarray($result)) {
+            if (!isset($row['Type'])) {
+                $row['Type'] = "";
+            }
+            if (!isset($row['Engine'])) {
+                $row['Engine'] = "";
+            }
+            if ((preg_match('/^(MyISAM|ISAM|HEAP|InnoDB)$/i', $row['Type'])) || (preg_match('/^(MyISAM|ISAM|HEAP|InnoDB)$/i',
+                    $row['Engine'])) && (preg_match("/^".$prefix."/i",
+                    $row['Name']))
+            ) {
+                $db_size += $row['Data_length'] + $row['Index_length'];
             }
         }
 
-        $this->execute_backup();
-        $this->locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/db-backup.php');
-        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'db_backup.php'.fusion_get_aidlink(), 'title' => $this->locale['450']]);
-
-        $tab['title'][] = $this->locale['450'];
-        $tab['id'][] = 'backup_db';
-
-        $tab['title'][] = $this->locale['480'];
-        $tab['id'][] = 'restore_db';
-
-        $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $tab['id']) ? $_GET['section'] : $tab['id'][0];
-        opentable($this->locale['450']);
-        echo opentab($tab, $_GET['section'], 'database_tab', TRUE, 'nav-tabs m-b-20', 'section', ['action', 'section']);
-        switch ($_GET['section']) {
-            case 'backup_db':
-                $this->backup_form();
-                break;
-            case 'restore_db':
-                $this->restore_form();
-                break;
-            default:
-                redirect(clean_request('', ['section'], FALSE));
-        }
-        echo closetab();
-        closetable();
+        return $db_size;
     }
 
-    private function restore_form() {
-        global $db_driver, $pdo_enabled;
+    private function get_table_count($prefix = "") {
+        global $db_name;
+        $tbl_count = 0;
+        $result = dbquery("SHOW TABLE STATUS FROM `".$db_name."`");
+        while ($row = dbarray($result)) {
+            if (!isset($row['Type'])) {
+                $row['Type'] = "";
+            }
+            if (!isset($row['Engine'])) {
+                $row['Engine'] = "";
+            }
+            if ((preg_match('/^(MyISAM|ISAM|HEAP|InnoDB)$/i', $row['Type'])) || (preg_match('/^(MyISAM|ISAM|HEAP|InnoDB)$/i',
+                    $row['Engine'])) && (preg_match("/^".$prefix."/i",
+                    $row['Name']))
+            ) {
+                $tbl_count++;
+            }
+        }
 
+        return $tbl_count;
+    }
+
+    private function stripsiteinput($text) {
+        $search = ["&amp;", "&quot;", "&#39;", "&#92;", "&quot;", "&#39;", "&lt;", "&gt;", " "];
+        $replace = ["", "", "", "", "", "", "", "", ""];
+        $text = str_replace($search, $replace, $text);
+
+        return $text;
+    }
+
+    /*private function gzcompressfile($source, $level = FALSE) {
+        $dest = $source.".gz";
+        $mode = "wb".$level;
+        $error = FALSE;
+        if ($fp_out = gzopen($dest, $mode)) {
+            if ($fp_in = fopen($source, "rb")) {
+                while (!feof($fp_in)) {
+                    gzputs($fp_out, fread($fp_in, 1024 * 512));
+                }
+                fclose($fp_in);
+            } else {
+                $error = TRUE;
+            }
+            gzclose($fp_out);
+        } else {
+            $error = TRUE;
+        }
+        if ($error) {
+            return FALSE;
+        } else {
+            return $dest;
+        }
+    }*/
+
+    private function restore_form() {
         if (isset($_POST['btn_do_restore'])) {
 
             $result = gzfile(ADMIN."db_backups/".stripinput($_POST['backup_file']));
@@ -191,11 +366,8 @@ class DbBackupAdministration {
                             $tbl = $tmp[1];
                             if (in_array($tbl, $_POST['list_tbl'])) {
                                 $result = preg_replace("/^CREATE TABLE `$inf_tblpre(.*?)`/im", "CREATE TABLE `$restore_tblpre\\1`", $result);
-                                if ((!empty($db_driver) && $db_driver === 'pdo' || !empty($pdo_enabled) && $pdo_enabled === 1)) {
-                                    dbquery($result);
-                                }/* else {
-                                    mysql_unbuffered_query($result);
-                                }*/
+
+                                dbquery($result);
                             }
                         }
                     }
@@ -206,11 +378,9 @@ class DbBackupAdministration {
                             $ins = $tmp[1];
                             if (in_array($ins, $_POST['list_ins'])) {
                                 $result = preg_replace("/INSERT INTO `$inf_tblpre(.*?)`/i", "INSERT INTO `$restore_tblpre\\1`", $result);
-                                if ((!empty($db_driver) && $db_driver === 'pdo' || !empty($pdo_enabled) && $pdo_enabled === 1)) {
-                                    dbquery($result);
-                                }/* else {
-                                    mysql_unbuffered_query($result);
-                                }*/
+
+                                dbquery($result);
+
                             }
                         }
                     }
@@ -340,178 +510,6 @@ class DbBackupAdministration {
             echo form_button('restore', $this->locale['438'], $this->locale['438'], ['class' => 'btn-primary spacer-sm',]);
             echo closeform();
         }
-    }
-
-    private function backup_form() {
-        global $db_name, $db_prefix;
-
-        $table_opt_list = "";
-        $result = dbquery("SHOW tables");
-        while ($row = dbarraynum($result)) {
-            $table_opt_list .= "<option value='".$row[0]."'";
-            if (preg_match("/^".DB_PREFIX."/i", $row[0])) {
-                $table_opt_list .= " selected='selected'";
-            }
-            $table_opt_list .= ">".$row[0]."</option>\n";
-        }
-
-        add_to_jquery("
-            function backupSelectCore(){for(i=0;i<document.backupform.elements['db_tables[]'].length;i++){document.backupform.elements['db_tables[]'].options[i].selected=(document.backupform.elements['db_tables[]'].options[i].text).match(/^$db_prefix/i);}}
-            function backupSelectAll(){for(i=0;i<document.backupform.elements['db_tables[]'].length;i++){document.backupform.elements['db_tables[]'].options[i].selected=true;}}
-            function backupSelectNone(){for(i=0;i<document.backupform.elements['db_tables[]'].length;i++){document.backupform.elements['db_tables[]'].options[i].selected=false;}}
-
-            $('#backupSelectCore').on('click', function (e) {e.preventDefault();backupSelectCore()});
-            $('#backupSelectAll').on('click', function (e) {e.preventDefault();backupSelectAll()});
-            $('#backupSelectNone').on('click', function (e) {e.preventDefault();backupSelectNone()});
-        ");
-
-        echo openform('backupform', 'post', FUSION_REQUEST);
-        echo "<div class='row'>";
-
-        echo '<div class="col-xs-12 col-sm-6">';
-        echo "<div class='table-responsive'><table cellspacing='0' cellpadding='0' class='table'>\n<tbody>\n<tr>\n";
-        echo "<td colspan='2' class='tbl2' align='left'><strong>".$this->locale['451']."</strong></td>\n";
-        echo "</tr>\n<tr>\n";
-        echo "<td class='tbl text-right'><strong>".$this->locale['414']."</strong></td>\n";
-        echo "<td class='tbl'>".$db_name."</td>\n";
-        echo "</tr>\n<tr>\n";
-        echo "<td class='tbl text-right'><strong>".$this->locale['415']."</strong></td>\n";
-        echo "<td class='tbl'>".$db_prefix."</td>\n";
-        echo "</tr>\n<tr>\n";
-        echo "<td class='tbl text-right'><strong>".$this->locale['452']."</strong></td>\n";
-        echo "<td class='tbl'>".parsebytesize($this->get_database_size(), 2, FALSE)." (".$this->get_table_count()." ".$this->locale['419'].")</td>\n";
-        echo "</tr>\n<tr>\n";
-        echo "<td class='tbl text-right'><strong>".$this->locale['453']."</strong></td>\n";
-        echo "<td class='tbl'>".parsebytesize($this->get_database_size($db_prefix), 2, FALSE)." (".$this->get_table_count($db_prefix)." ".$this->locale['419'].")</td>\n";
-        echo "</tr>\n<tr>\n";
-        echo "<td colspan='2' class='tbl2 text-left'><strong>".$this->locale['454']."</strong></td>\n";
-        echo "</tr>\n<tr>\n";
-        echo "<td class='tbl text-right'><label for='backup_filename'>".$this->locale['431']." <span class='required'>*</span>\n</td>\n";
-        echo "<td class='tbl'>\n";
-        echo form_text('backup_filename', '', "backup_".$this->stripsiteinput(fusion_get_settings('sitename'))."_".date('Y-m-d-Hi')."", [
-            'required'   => 1,
-            'error_text' => $this->locale['481b']
-        ]);
-        echo "</tr>\n<tr>\n";
-        echo "<td class='tbl text-right'><label for='backup_type'>".$this->locale['455']."</label></td>\n";
-        echo "<td class='tbl'>\n";
-        $opts = [];
-        if (function_exists("gzencode")) {
-            $opts['.gz'] = ".sql.gz ".$this->locale['456'];
-        }
-        $opts['.sql'] = ".sql";
-        echo form_select('backup_type', '', '', ['options' => $opts, 'placeholder' => $this->locale['choose']]);
-        echo "</td>\n</tr>\n<tr>\n";
-        echo "<td colspan='2' class='tbl text-center'><br /><span style='color:#ff0000'>*</span> ".$this->locale['461']."</td>\n";
-        echo "</tr>\n</tbody>\n</table>\n</div>";
-        echo '</div>';
-
-        echo '<div class="col-xs-12 col-sm-6">';
-        echo "<div class='table-responsive'><table border='0' cellpadding='0' cellspacing='0' class='table'>\n<tbody>\n<tr>\n";
-        echo "<td class='tbl2'><strong>".$this->locale['457']."</strong></td>\n";
-        echo "</tr>\n<tr>\n";
-        echo "<td class='tbl'>\n";
-        echo "<select name='db_tables[]' id='tablelist' size='20' style='width:100%' class='textbox' multiple='multiple'>".$table_opt_list."</select>\n";
-        echo "<div class='text-center m-t-10' style='text-align:center'><strong>".$this->locale['435']."</strong>\n";
-        echo "<div class='btn-group'>\n";
-        echo "<a class='btn btn-default' href='#' id='backupSelectCore'>".$this->locale['458']."</a>\n";
-        echo "<a class='btn btn-default' href='#' id='backupSelectAll'>".$this->locale['436']."</a>\n";
-        echo "<a class='btn btn-default' href='#' id='backupSelectNone'>".$this->locale['437']."</a>\n";
-        echo "</div>\n";
-        echo "</div>\n";
-        echo "</td>\n</tr>\n</tbody>\n</table>\n</div>";
-        echo '</div>';
-
-        echo "</div>"; // .row
-        echo form_button('btn_create_backup', $this->locale['459'], $this->locale['459'], ['class' => 'btn-primary m-t-10']);
-        echo closeform();
-    }
-
-    private function stripsiteinput($text) {
-        $search = ["&amp;", "&quot;", "&#39;", "&#92;", "&quot;", "&#39;", "&lt;", "&gt;", " "];
-        $replace = ["", "", "", "", "", "", "", "", ""];
-        $text = str_replace($search, $replace, $text);
-
-        return $text;
-    }
-
-    private function get_database_size($prefix = "") {
-        global $db_name;
-        $db_size = 0;
-        $result = dbquery("SHOW TABLE STATUS FROM `".$db_name."`");
-        while ($row = dbarray($result)) {
-            if (!isset($row['Type'])) {
-                $row['Type'] = "";
-            }
-            if (!isset($row['Engine'])) {
-                $row['Engine'] = "";
-            }
-            if ((preg_match('/^(MyISAM|ISAM|HEAP|InnoDB)$/i', $row['Type'])) || (preg_match('/^(MyISAM|ISAM|HEAP|InnoDB)$/i',
-                    $row['Engine'])) && (preg_match("/^".$prefix."/i",
-                    $row['Name']))
-            ) {
-                $db_size += $row['Data_length'] + $row['Index_length'];
-            }
-        }
-
-        return $db_size;
-    }
-
-    private function get_table_count($prefix = "") {
-        global $db_name;
-        $tbl_count = 0;
-        $result = dbquery("SHOW TABLE STATUS FROM `".$db_name."`");
-        while ($row = dbarray($result)) {
-            if (!isset($row['Type'])) {
-                $row['Type'] = "";
-            }
-            if (!isset($row['Engine'])) {
-                $row['Engine'] = "";
-            }
-            if ((preg_match('/^(MyISAM|ISAM|HEAP|InnoDB)$/i', $row['Type'])) || (preg_match('/^(MyISAM|ISAM|HEAP|InnoDB)$/i',
-                    $row['Engine'])) && (preg_match("/^".$prefix."/i",
-                    $row['Name']))
-            ) {
-                $tbl_count++;
-            }
-        }
-
-        return $tbl_count;
-    }
-
-    /*private function gzcompressfile($source, $level = FALSE) {
-        $dest = $source.".gz";
-        $mode = "wb".$level;
-        $error = FALSE;
-        if ($fp_out = gzopen($dest, $mode)) {
-            if ($fp_in = fopen($source, "rb")) {
-                while (!feof($fp_in)) {
-                    gzputs($fp_out, fread($fp_in, 1024 * 512));
-                }
-                fclose($fp_in);
-            } else {
-                $error = TRUE;
-            }
-            gzclose($fp_out);
-        } else {
-            $error = TRUE;
-        }
-        if ($error) {
-            return FALSE;
-        } else {
-            return $dest;
-        }
-    }*/
-
-    private function GetSqlFieldType($table, $i) {
-        $new_data = [];
-
-        $result = dbquery("SHOW COLUMNS FROM ".$table);
-        while ($data = dbarray($result)) {
-            $new_data[] = $data;
-        }
-
-        return $new_data[$i]['Type'];
     }
 }
 
