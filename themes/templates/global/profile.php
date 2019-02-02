@@ -100,7 +100,7 @@ if (!function_exists('display_profile_form')) {
 
 /**
  * Profile display view
- * $info (array) - prepared responsive fields
+ * @param $info (array) - prepared responsive fields
  * To get information of the current raw userData
  * Uncomment and include the 3 lines at bottom inside render_userprofile()
  * global $userFields; // profile object at profile.php
