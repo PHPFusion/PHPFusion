@@ -23,31 +23,6 @@ if (file_exists(INFUSIONS."rss_feeds_panel/locale/".LANGUAGE."/rss.php")) {
 	include INFUSIONS."rss_feeds_panel/locale/English/rss.php";
 }
 
-add_to_head("
-<style type='text/css'>
-<!--
-.rss-button {
-    background: #FF9800;
-    padding: 1px 15px;
-    color: #fff!important;
-    -webkit-border-radius: 4px;
-    border-radius: 4px;
-    margin: 3px 0;
-    display: block;
-}
-.rss-button:hover,
-.rss-button:focus {
-    background: #F57C00;
-    color: #fff;
-    text-decoration: none;
-}
-.rss-button .fa {
-    padding-right: 5px;
-}
--->
-</style>
-");
-
 openside($locale['rss_title']);
 echo '<a href="'.INFUSIONS.'rss_feeds_panel/feeds/rss_articles.php" target="_blank" class="rss-button"><i class="entypo rss"></i> '.$locale['rss_articles'].'</a>';
 echo '<a href="'.INFUSIONS.'rss_feeds_panel/feeds/rss_blog.php" target="_blank" class="rss-button"><i class="entypo rss"></i> '.$locale['rss_blog'].'</a>';
