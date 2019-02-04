@@ -31,9 +31,8 @@ class Dashboard {
     }
 
     private function RenderDashboard() {
-        global $members, $forum, $download, $news, $articles, $weblinks, $photos, $global_comments,
-               $global_ratings, $global_submissions, $link_type, $submit_data,
-               $comments_type, $infusions_count, $global_infusions;
+        global $members, $forum, $download, $news, $articles, $weblinks, $photos,
+               $global_comments, $global_ratings, $global_submissions, $global_infusions, $link_type, $submit_data, $comments_type, $infusions_count;
 
         $locale = fusion_get_locale();
         $aidlink = fusion_get_aidlink();

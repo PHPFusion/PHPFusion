@@ -60,22 +60,21 @@ class Controller {
     }
 
     public function do_admin_dashboard() {
-
+        $html = '';
         if ($this->license_auth()) {
-
             resource::set_static_variables();
-
             new Viewer\adminDashboard();
 
-            if (isset($_GET['os']) or (isset($_GET['pagenum']) && $_GET['pagenum']) > 0) {
+            $pagenum = (int)filter_input(INPUT_GET, 'pagenum');
 
-                adminDashboard::do_admin_icons();
-
+            if ((isset($pagenum) && $pagenum) > 0) {
+                $html = adminDashboard::do_admin_icons();
             } else {
-                adminDashboard::do_dashboard();
+                $html = adminDashboard::do_dashboard();
             }
-
         }
+
+        echo $html;
     }
 
 }
