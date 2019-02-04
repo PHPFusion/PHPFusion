@@ -49,30 +49,38 @@ function render_admin_login() {
 }
 
 function render_admin_dashboard() {
-    Material\Dashboard::AdminDashboard();
+    new Material\Dashboard();
 }
 
 function openside($title = FALSE, $class = NULL) {
-    echo '<div class="panel panel-default openside '.$class.'">';
-    echo $title ? '<div class="panel-heading">'.$title.'</div>' : '';
-    echo '<div class="panel-body">';
+    $html = '<div class="panel panel-default openside '.$class.'">';
+    $html .= $title ? '<div class="panel-heading">'.$title.'</div>' : '';
+    $html .= '<div class="panel-body">';
+
+    echo $html;
 }
 
 function closeside($footer = FALSE) {
-    echo '</div>';
-    echo $footer ? '<div class="panel-footer">'.$footer.'</div>' : '';
-    echo '</div>';
+    $html = '</div>';
+    $html .= $footer ? '<div class="panel-footer">'.$footer.'</div>' : '';
+    $html .= '</div>';
+
+    echo $html;
 }
 
 function opentable($title, $class = NULL) {
-    echo '<div class="panel opentable '.$class.'">';
-    echo $title ? '<header><h3>'.$title.'</h3></header>' : '';
-    echo '<div class="panel-body">';
+    $html = '<div class="panel opentable '.$class.'">';
+    $html .= $title ? '<header><h3>'.$title.'</h3></header>' : '';
+    $html .= '<div class="panel-body">';
+
+    echo $html;
 }
 
 function closetable() {
-    echo '</div>';
-    echo '</div>';
+    $html = '</div>';
+    $html .= '</div>';
+
+    echo $html;
 }
 
 \PHPFusion\OutputHandler::addHandler(function ($output = '') {

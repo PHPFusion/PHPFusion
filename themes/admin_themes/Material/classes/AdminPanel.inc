@@ -34,51 +34,53 @@ class AdminPanel {
         OutputHandler::addToHead('<script src="'.MDT.'assets/js/jquery.mousewheel.min.js"></script>');
         OutputHandler::addToJquery('$(".sidebar, .sidebar-sm .admin-submenu, .sidebar-sm .search-box, .messages-box").mCustomScrollbar({theme: "minimal-dark", axis: "y", scrollInertia: 550, mouseWheel: {enable: !0, axis: "y", preventDefault: !0}});');
 
-        echo '<main class="clearfix">';
-            $this->TopMenu();
-            $this->Sidebar();
+        $html = '<main class="clearfix">';
+            $html .= $this->TopMenu();
+            $html .= $this->Sidebar();
 
-            echo '<div class="content">';
-                echo '<ul id="nav-sections" class="nav nav-tabs nav-justified hidden-lg" style="margin-bottom: 20px;">';
+            $html .= '<div class="content">';
+                $html .= '<ul id="nav-sections" class="nav nav-tabs nav-justified hidden-lg" style="margin-bottom: 20px;">';
                     $sections = Admins::getInstance()->getAdminSections();
                     if (!empty($sections)) {
                         $i = 0;
                         foreach ($sections as $section_name) {
                             $active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && Admins::getInstance()->_isActive() == $i) ? ' class="active"' : '';
-                            echo '<li'.$active.'><a href="'.ADMIN.'index.php'.fusion_get_aidlink().'&amp;pagenum='.$i.'"><span class="visible-xs">'.Admins::getInstance()->get_admin_section_icons($i).'</span><span class="hidden-xs">'.$section_name.'</span></a></li>';
+                            $html .= '<li'.$active.'><a href="'.ADMIN.'index.php'.fusion_get_aidlink().'&amp;pagenum='.$i.'"><span class="visible-xs">'.Admins::getInstance()->get_admin_section_icons($i).'</span><span class="hidden-xs">'.$section_name.'</span></a></li>';
                             $i++;
                         }
                     }
-                echo '</ul>';
+                $html .= '</ul>';
 
-                echo '<div class="hidden-xs">';
-                    echo render_breadcrumbs();
-                echo '</div>';
+                $html .= '<div class="hidden-xs">';
+                    $html .= render_breadcrumbs();
+                $html .= '</div>';
 
-                echo renderNotices(getNotices());
-                echo CONTENT;
+                $html .= renderNotices(getNotices());
+                $html .= CONTENT;
 
-                echo '<footer class="copyright">';
+                $html .= '<footer class="copyright">';
                     if (fusion_get_settings('rendertime_enabled')) {
-                        echo showrendertime().showMemoryUsage().'<br />';
+                        $html .= showrendertime().showMemoryUsage().'<br />';
                     }
 
-                    echo 'Material Admin Theme &copy; '.date('Y').' '.$locale['material_013'].' <a href="https://github.com/RobiNN1" target="_blank">RobiNN</a> | '.showcopyright('', TRUE);
-                echo '</footer>';
+                    $html .= 'Material Admin Theme &copy; '.date('Y').' '.$locale['material_013'].' <a href="https://github.com/RobiNN1" target="_blank">RobiNN</a> | '.showcopyright('', TRUE);
+                $html .= '</footer>';
 
                 $errors = showFooterErrors();
                 if ($errors) {
-                    echo '<div class="errors fixed">'.$errors.'</div>';
+                    $html .= '<div class="errors fixed">'.$errors.'</div>';
                 }
-            echo '</div>';
+            $html .= '</div>';
 
             if (!$this->IsMobile()) {
                 $this->MessagesBox();
                 $this->ThemeSettings();
             }
-        echo '</main>';
+        $html .= '</main>';
 
-        echo '<div class="overlay"></div>';
+        $html .= '<div class="overlay"></div>';
+
+        echo $html;
     }
 
     private function TopMenu() {
@@ -87,101 +89,105 @@ class AdminPanel {
         $settings = fusion_get_settings();
         $userdata = fusion_get_userdata();
 
-        echo '<div class="top-menu navbar fixed">';
-            echo '<div class="toggleicon" data-action="togglemenu"><span></span></div>';
-            echo '<div class="brand"><img src="'.IMAGES.'php-fusion-icon.png" alt="PHP Fusion 9"/> PHP Fusion 9</div>';
-            echo '<div class="pull-right hidden-sm hidden-md hidden-lg home-xs"><a title="'.$settings['sitename'].'" href="'.BASEDIR.'index.php"><i class="fa fa-home"></i></a></div>';
+        $html = '<div class="top-menu navbar fixed">';
+            $html .= '<div class="toggleicon" data-action="togglemenu"><span></span></div>';
+            $html .= '<div class="brand"><img src="'.IMAGES.'php-fusion-icon.png" alt="PHP Fusion 9"/> PHP Fusion 9</div>';
+            $html .= '<div class="pull-right hidden-sm hidden-md hidden-lg home-xs"><a title="'.$settings['sitename'].'" href="'.BASEDIR.'index.php"><i class="fa fa-home"></i></a></div>';
 
-            echo '<ul class="nav navbar-nav navbar-left hidden-xs hidden-sm hidden-md">';
+            $html .= '<ul class="nav navbar-nav navbar-left hidden-xs hidden-sm hidden-md">';
                 $sections = Admins::getInstance()->getAdminSections();
                 if (!empty($sections)) {
                     $i = 0;
 
                     foreach ($sections as $section_name) {
                         $active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && Admins::getInstance()->_isActive() == $i) ? ' class="active"' : '';
-                        echo '<li'.$active.'><a href="'.ADMIN.'index.php'.$aidlink.'&amp;pagenum='.$i.'" data-toggle="tooltip" data-placement="bottom" title="'.$section_name.'">'.Admins::getInstance()->get_admin_section_icons($i).'</a></li>';
+                        $html .= '<li'.$active.'><a href="'.ADMIN.'index.php'.$aidlink.'&amp;pagenum='.$i.'" data-toggle="tooltip" data-placement="bottom" title="'.$section_name.'">'.Admins::getInstance()->get_admin_section_icons($i).'</a></li>';
                         $i++;
                     }
                 }
 
-            echo '</ul>';
+            $html .= '</ul>';
 
-            echo '<ul class="nav navbar-nav navbar-right hidden-xs">';
+            $html .= '<ul class="nav navbar-nav navbar-right hidden-xs">';
                 $languages = fusion_get_enabled_languages();
                 if (count($languages) > 1) {
-                    echo '<li class="dropdown languages-switcher">';
-                        echo '<a class="dropdown-toggle pointer" data-toggle="dropdown" title="'.$locale['282'].'"><i class="fa fa-globe"></i><img class="current" src="'.BASEDIR.'locale/'.LANGUAGE.'/'.LANGUAGE.'.png" alt="'.translate_lang_names(LANGUAGE).'"/><span class="caret"></span></a>';
-                        echo '<ul class="dropdown-menu">';
+                    $html .= '<li class="dropdown languages-switcher">';
+                        $html .= '<a class="dropdown-toggle pointer" data-toggle="dropdown" title="'.$locale['282'].'"><i class="fa fa-globe"></i><img class="current" src="'.BASEDIR.'locale/'.LANGUAGE.'/'.LANGUAGE.'.png" alt="'.translate_lang_names(LANGUAGE).'"/><span class="caret"></span></a>';
+                        $html .= '<ul class="dropdown-menu">';
                             foreach ($languages as $language_folder => $language_name) {
-                                echo '<li><a class="display-block" href="'.clean_request('lang='.$language_folder, ['lang'], FALSE).'"><img class="m-r-5" src="'.BASEDIR.'locale/'.$language_folder.'/'.$language_folder.'-s.png" alt="'.$language_folder.'"/> '.$language_name.'</a></li>';
+                                $html .= '<li><a class="display-block" href="'.clean_request('lang='.$language_folder, ['lang'], FALSE).'"><img class="m-r-5" src="'.BASEDIR.'locale/'.$language_folder.'/'.$language_folder.'-s.png" alt="'.$language_folder.'"/> '.$language_name.'</a></li>';
                             }
-                        echo '</ul>';
-                    echo '</li>';
+                        $html .= '</ul>';
+                    $html .= '</li>';
                 }
 
-                echo '<li class="dropdown user-s">';
-                    echo '<a href="#" class="dropdown-toggle pointer" data-toggle="dropdown">'.display_avatar($userdata, '30px', '', FALSE, 'img-rounded').' <strong>'.$userdata['user_name'].'</strong><span class="caret"></span></a>';
-                    echo '<ul class="dropdown-menu" role="menu">';
-                        echo '<li><a href="'.BASEDIR.'edit_profile.php"><i class="fa fa-pencil fa-fw"></i> '.$locale['UM080'].'</a></li>';
-                        echo '<li><a href="'.BASEDIR.'profile.php?lookup='.$userdata['user_id'].'"><i class="fa fa-eye fa-fw"></i> '.$locale['view'].' '.$locale['profile'].'</a></li>';
-                        echo '<li class="divider"></li>';
-                        echo '<li><a href="'.FUSION_REQUEST.'&amp;logout"><i class="fa fa-sign-out fa-fw"></i> '.$locale['admin-logout'].'</a></li>';
-                        echo '<li><a href="'.BASEDIR.'index.php?logout=yes"><i class="fa fa-sign-out fa-fw"></i> <span class="text-danger">'.$locale['logout'].'</span></a></li>';
-                    echo '</ul>';
-                echo '</li>';
+                $html .= '<li class="dropdown user-s">';
+                    $html .= '<a href="#" class="dropdown-toggle pointer" data-toggle="dropdown">'.display_avatar($userdata, '30px', '', FALSE, 'img-rounded').' <strong>'.$userdata['user_name'].'</strong><span class="caret"></span></a>';
+                    $html .= '<ul class="dropdown-menu" role="menu">';
+                        $html .= '<li><a href="'.BASEDIR.'edit_profile.php"><i class="fa fa-pencil fa-fw"></i> '.$locale['UM080'].'</a></li>';
+                        $html .= '<li><a href="'.BASEDIR.'profile.php?lookup='.$userdata['user_id'].'"><i class="fa fa-eye fa-fw"></i> '.$locale['view'].' '.$locale['profile'].'</a></li>';
+                        $html .= '<li class="divider"></li>';
+                        $html .= '<li><a href="'.FUSION_REQUEST.'&amp;logout"><i class="fa fa-sign-out fa-fw"></i> '.$locale['admin-logout'].'</a></li>';
+                        $html .= '<li><a href="'.BASEDIR.'index.php?logout=yes"><i class="fa fa-sign-out fa-fw"></i> <span class="text-danger">'.$locale['logout'].'</span></a></li>';
+                    $html .= '</ul>';
+                $html .= '</li>';
 
                 $messages = $this->Messages();
                 $messages = !empty($messages) ? '<span class="label label-danger messages">'.count($messages).'</span>' : '';
 
                 if ($this->IsMobile()) {
-                    echo '<li><a title="'.$locale['message'].'" href="'.BASEDIR.'messages.php"><i class="fa fa-envelope-o"></i>'.$messages.'</a></li>';
+                    $html .= '<li><a title="'.$locale['message'].'" href="'.BASEDIR.'messages.php"><i class="fa fa-envelope-o"></i>'.$messages.'</a></li>';
                 } else {
-                    echo '<li><a title="'.$locale['message'].'" href="#" data-action="messages"><i class="fa fa-envelope-o"></i>'.$messages.'</a></li>';
+                    $html .= '<li><a title="'.$locale['message'].'" href="#" data-action="messages"><i class="fa fa-envelope-o"></i>'.$messages.'</a></li>';
                 }
 
-                echo '<li><a title="'.$settings['sitename'].'" href="'.BASEDIR.'index.php"><i class="fa fa-home"></i></a></li>';
-            echo '</ul>';
-        echo '</div>';
+                $html .= '<li><a title="'.$settings['sitename'].'" href="'.BASEDIR.'index.php"><i class="fa fa-home"></i></a></li>';
+            $html .= '</ul>';
+        $html .= '</div>';
+
+        return $html;
     }
 
     private function Sidebar() {
         $locale = fusion_get_locale('', MDT_LOCALE);
 
-        echo '<aside class="sidebar fixed">';
-            echo '<div class="header fixed hidden-xs hidden-sm hidden-md">';
-                echo '<div class="pf-logo"></div>';
-                echo '<div class="version">PHP Fusion 9</div>';
-            echo '</div>';
+        $html = '<aside class="sidebar fixed">';
+            $html .= '<div class="header fixed hidden-xs hidden-sm hidden-md">';
+                $html .= '<div class="pf-logo"></div>';
+                $html .= '<div class="version">PHP Fusion 9</div>';
+            $html .= '</div>';
 
-            echo '<div class="sidebar-menu">';
-                echo '<div class="search-box">';
-                    echo '<i class="fa fa-search input-search-icon"></i>';
-                    echo '<input type="text" id="search_box" name="search_box" class="form-control" placeholder="'.$locale['material_001'].'"/>';
-                    echo '<ul id="search_result" style="display: none;"></ul>';
-                    echo '<img id="ajax-loader" style="width: 30px; display: none;" class="img-responsive center-x m-t-10" alt="Ajax Loader" src="'.IMAGES.'loader.svg"/>';
-                echo '</div>';
+            $html .= '<div class="sidebar-menu">';
+                $html .= '<div class="search-box">';
+                    $html .= '<i class="fa fa-search input-search-icon"></i>';
+                    $html .= '<input type="text" id="search_box" name="search_box" class="form-control" placeholder="'.$locale['material_001'].'"/>';
+                    $html .= '<ul id="search_result" style="display: none;"></ul>';
+                    $html .= '<img id="ajax-loader" style="width: 30px; display: none;" class="img-responsive center-x m-t-10" alt="Ajax Loader" src="'.IMAGES.'loader.svg"/>';
+                $html .= '</div>';
 
-                echo Admins::getInstance()->vertical_admin_nav(TRUE);
-            echo '</div>';
-        echo '</aside>';
+                $html .= Admins::getInstance()->vertical_admin_nav(TRUE);
+            $html .= '</div>';
+        $html .= '</aside>';
 
         OutputHandler::addToJQuery('search_ajax("'.ADMIN.'includes/acp_search.php'.fusion_get_aidlink().'");');
+
+        return $html;
     }
 
     public function ThemeSettings() {
         $locale = fusion_get_locale('', MDT_LOCALE);
 
-        echo '<aside id="theme-settings" class="hidden-xs">';
-            echo '<a href="#" title="'.$locale['material_002'].'" data-action="theme-settings" class="btn-theme-settings cogs-animation">';
-                echo '<i class="fa fa-cog fa-spin"></i>';
-                echo '<i class="fa fa-cog fa-spin"></i>';
-                echo '<i class="fa fa-cog fa-spin"></i>';
-            echo '</a>';
+        $html = '<aside id="theme-settings" class="hidden-xs">';
+            $html .= '<a href="#" title="'.$locale['material_002'].'" data-action="theme-settings" class="btn-theme-settings cogs-animation">';
+                $html .= '<i class="fa fa-cog fa-spin"></i>';
+                $html .= '<i class="fa fa-cog fa-spin"></i>';
+                $html .= '<i class="fa fa-cog fa-spin"></i>';
+            $html .= '</a>';
 
-            echo '<div class="settings-box">';
-                echo '<h4>'.$locale['material_002'].'</h4>';
+            $html .= '<div class="settings-box">';
+                $html .= '<h4>'.$locale['material_002'].'</h4>';
 
-                echo '<ul class="settings-menu">';
+                $html .= '<ul class="settings-menu">';
                     $theme_settings = [
                         ['name' => 'hide-sidebar',      'title' => '003'],
                         ['name' => 'sidebar-sm',        'title' => '004'],
@@ -192,46 +198,50 @@ class AdminPanel {
                     ];
 
                     foreach ($theme_settings as $setting) {
-                        echo '<li><a href="#" data-action="'.$setting['name'].'" id="'.$setting['name'].'">'.$locale['material_'.$setting['title']].'<div class="btn-toggle pull-right '.(!empty($setting['toggle']) ? $setting['toggle'] : '').'"></div></a></li>';
+                        $html .= '<li><a href="#" data-action="'.$setting['name'].'" id="'.$setting['name'].'">'.$locale['material_'.$setting['title']].'<div class="btn-toggle pull-right '.(!empty($setting['toggle']) ? $setting['toggle'] : '').'"></div></a></li>';
                     }
-                echo '</ul>';
-            echo '</div>';
-        echo '</aside>';
+                $html .= '</ul>';
+            $html .= '</div>';
+        $html .= '</aside>';
+
+        return $html;
     }
 
     public function MessagesBox() {
         $locale = fusion_get_locale('', MDT_LOCALE);
 
-        echo '<aside class="messages-box hidden-xs">';
-            echo '<div class="button-group">';
-                echo '<a href="#" id="messages-box-close">'.fusion_get_locale('close').'</a>';
-                echo '<a href="'.BASEDIR.'messages.php?msg_send=new" class="new-message">'.$locale['material_011'].'</a>';
-            echo '</div>';
-            echo '<h3 class="title">'.$locale['material_009'].'</h3>';
+        $html = '<aside class="messages-box hidden-xs">';
+            $html .= '<div class="button-group">';
+                $html .= '<a href="#" id="messages-box-close">'.fusion_get_locale('close').'</a>';
+                $html .= '<a href="'.BASEDIR.'messages.php?msg_send=new" class="new-message">'.$locale['material_011'].'</a>';
+            $html .= '</div>';
+            $html .= '<h3 class="title">'.$locale['material_009'].'</h3>';
 
             $messages = $this->GetMessages();
             if (!empty($messages)) {
-                echo '<ul>';
+                $html .= '<ul>';
                     foreach ($messages as $message) {
-                        echo '<li>';
-                            echo '<div class="message-block">';
-                                echo display_avatar($message['user'], '40px', '', FALSE, 'avatar m-r-5');
-                                echo '<div class="block">';
-                                    echo '<span class="title">'.$message['user']['user_name'].' <small>'.$message['datestamp'].'</small></span>';
-                                    echo '<br /><small>'.trim_text($message['title'], 20).'</small>';
-                                    echo '<a href="'.BASEDIR.'messages.php?folder=inbox&amp;msg_read='.$message['link'].'" class="read-message">'.$locale['material_010'].'</a>';
-                                echo '</div>';
-                            echo '</div>';
-                        echo '</li>';
+                        $html .= '<li>';
+                            $html .= '<div class="message-block">';
+                                $html .= display_avatar($message['user'], '40px', '', FALSE, 'avatar m-r-5');
+                                $html .= '<div class="block">';
+                                    $html .= '<span class="title">'.$message['user']['user_name'].' <small>'.$message['datestamp'].'</small></span>';
+                                    $html .= '<br /><small>'.trim_text($message['title'], 20).'</small>';
+                                    $html .= '<a href="'.BASEDIR.'messages.php?folder=inbox&amp;msg_read='.$message['link'].'" class="read-message">'.$locale['material_010'].'</a>';
+                                $html .= '</div>';
+                            $html .= '</div>';
+                        $html .= '</li>';
                     }
-                echo '</ul>';
+                $html .= '</ul>';
             } else {
-                echo '<div class="no-messages">';
-                    echo '<i class="fa fa-envelope icon"></i><br />';
-                    echo $locale['material_012'];
-                echo '</div>';
+                $html .= '<div class="no-messages">';
+                    $html .= '<i class="fa fa-envelope icon"></i><br />';
+                    $html .= $locale['material_012'];
+                $html .= '</div>';
             }
-        echo '</aside>';
+        $html .= '</aside>';
+
+        return $html;
     }
 
     public function Messages() {
