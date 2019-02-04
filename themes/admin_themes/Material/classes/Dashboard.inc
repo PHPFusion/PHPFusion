@@ -19,7 +19,9 @@ namespace Material;
 
 class Dashboard {
     public function __construct() {
-        if (isset($_GET['os']) or (isset($_GET['pagenum']) && $_GET['pagenum']) > 0) {
+        $pagenum = (int)filter_input(INPUT_GET, 'pagenum');
+
+        if ((isset($pagenum) && $pagenum) > 0) {
             $html = $this->AdminIcons();
         } else {
             $html = $this->RenderDashboard();
@@ -73,142 +75,153 @@ class Dashboard {
             $desktop = 4;
 
             $html .= '<div class="row" id="overview">';
+                $modules = [];
+
                 if (defined('FORUM_EXIST')) {
-                    $html .= '<div class="col-xs-'.$mobile.' col-sm-'.$tablet.' col-md-'.$laptop.' col-lg-'.$desktop.' block">';
-                        $html .= fusion_get_function('openside', '');
-                        $html .= '<strong class="text-uppercase">'.$locale['265'].' '.$locale['258'].'</strong>';
-                        $html .= '<div class="clearfix m-t-10">';
-                            $html .= '<img class="img-responsive pull-right dashboard-icon" src="'.get_image('ac_F').'" alt="'.$locale['265'].'"/>';
-                            $html .= '<div class="pull-left display-inline-block m-r-15">';
-                                $html .= '<span class="text-smaller">'.$locale['265'].'</span><br/>';
-                                $html .= '<h4 class="m-t-0">'.number_format($forum['count']).'</h4>';
-                            $html .= '</div>';
-                            $html .= '<div class="pull-left display-inline-block m-r-15">';
-                                $html .= '<span class="text-smaller">'.$locale['256'].'</span><br/>';
-                                $html .= '<h4 class="m-t-0">'.number_format($forum['thread']).'</h4>';
-                            $html .= '</div>';
-                            $html .= '<div class="pull-left display-inline-block m-r-15">';
-                                $html .= '<span class="text-smaller">'.$locale['259'].'</span><br/>';
-                                $html .= '<h4 class="m-t-0">'.number_format($forum['post']).'</h4>';
-                            $html .= '</div>';
-                            $html .= '<div class="pull-left display-inline-block m-r-15">';
-                                $html .= '<span class="text-smaller">'.$locale['260'].'</span><br/>';
-                                $html .= '<h4 class="m-t-0">'.number_format($forum['users']).'</h4>';
-                            $html .= '</div>';
-                        $html .= '</div>';
-                        $html .= fusion_get_function('closeside', '');
-                    $html .= '</div>';
+                    $modules['forum'] = [
+                        'title' => $locale['265'],
+                        'image' => get_image('ac_F'),
+                        'stats' => [
+                            [
+                                'title' => $locale['265'],
+                                'count' => $forum['count']
+                            ],
+                            [
+                                'title' => $locale['256'],
+                                'count' => $forum['thread']
+                            ],
+                            [
+                                'title' => $locale['259'],
+                                'count' => $forum['post']
+                            ],
+                            [
+                                'title' => $locale['260'],
+                                'count' => $forum['users']
+                            ]
+                        ]
+                    ];
                 }
 
                 if (defined('DOWNLOADS_EXIST')) {
-                    $html .= '<div class="col-xs-'.$mobile.' col-sm-'.$tablet.' col-md-'.$laptop.' col-lg-'.$desktop.' block">';
-                        $html .= fusion_get_function('openside', '');
-                        $html .= '<strong class="text-uppercase">'.$locale['268'].' '.$locale['258'].'</strong>';
-                        $html .= '<div class="clearfix m-t-10">';
-                            $html .= '<img class="img-responsive pull-right dashboard-icon" src="'.get_image('ac_D').'" alt="'.$locale['268'].'"/>';
-                            $html .= '<div class="pull-left display-inline-block m-r-15">';
-                                $html .= '<span class="text-smaller">'.$locale['268'].'</span><br/>';
-                                $html .= '<h4 class="m-t-0">'.number_format($download['download']).'</h4>';
-                            $html .= '</div>';
-                            $html .= '<div class="pull-left display-inline-block m-r-15">';
-                                $html .= '<span class="text-smaller">'.$locale['257'].'</span><br/>';
-                                $html .= '<h4 class="m-t-0">'.number_format($download['comment']).'</h4>';
-                            $html .= '</div>';
-                            $html .= '<div class="pull-left display-inline-block m-r-15">';
-                                $html .= '<span class="text-smaller">'.$locale['254'].'</span><br/>';
-                                $html .= '<h4 class="m-t-0">'.number_format($download['submit']).'</h4>';
-                            $html .= '</div>';
-                        $html .= '</div>';
-                        $html .= fusion_get_function('closeside', '');
-                    $html .= '</div>';
+                    $modules['downloads'] = [
+                        'title' => $locale['268'],
+                        'image' => get_image('ac_D'),
+                        'stats' => [
+                            [
+                                'title' => $locale['268'],
+                                'count' => $download['download']
+                            ],
+                            [
+                                'title' => $locale['257'],
+                                'count' => $download['comment']
+                            ],
+                            [
+                                'title' => $locale['254'],
+                                'count' => $download['submit']
+                            ]
+                        ]
+                    ];
                 }
 
                 if (defined('NEWS_EXIST')) {
-                    $html .= '<div class="col-xs-'.$mobile.' col-sm-'.$tablet.' col-md-'.$laptop.' col-lg-'.$desktop.' block">';
-                        $html .= fusion_get_function('openside', '');
-                        $html .= '<strong class="text-uppercase">'.$locale['269'].' '.$locale['258'].'</strong>';
-                        $html .= '<div class="clearfix m-t-10">';
-                            $html .= '<img class="img-responsive pull-right dashboard-icon" src="'.get_image('ac_N').'" alt="'.$locale['269'].'"/>';
-                            $html .= '<div class="pull-left display-inline-block m-r-15">';
-                                $html .= '<span class="text-smaller">'.$locale['269'].'</span><br/>';
-                                $html .= '<h4 class="m-t-0">'.number_format($news['news']).'</h4>';
-                            $html .= '</div>';
-                            $html .= '<div class="pull-left display-inline-block m-r-15">';
-                                $html .= '<span class="text-smaller">'.$locale['257'].'</span><br/>';
-                                $html .= '<h4 class="m-t-0">'.number_format($news['comment']).'</h4>';
-                            $html .= '</div>';
-                            $html .= '<div class="pull-left display-inline-block m-r-15">';
-                                $html .= '<span class="text-smaller">'.$locale['254'].'</span><br/>';
-                                $html .= '<h4 class="m-t-0">'.number_format($news['submit']).'</h4>';
-                            $html .= '</div>';
-                        $html .= '</div>';
-                        $html .= fusion_get_function('closeside', '');
-                    $html .= '</div>';
+                    $modules['news'] = [
+                        'title' => $locale['269'],
+                        'image' => get_image('ac_N'),
+                        'stats' => [
+                            [
+                                'title' => $locale['269'],
+                                'count' => $news['news']
+                            ],
+                            [
+                                'title' => $locale['257'],
+                                'count' => $news['comment']
+                            ],
+                            [
+                                'title' => $locale['254'],
+                                'count' => $news['submit']
+                            ]
+                        ]
+                    ];
                 }
 
                 if (defined('ARTICLES_EXIST')) {
-                    $html .= '<div class="col-xs-'.$mobile.' col-sm-'.$tablet.' col-md-'.$laptop.' col-lg-'.$desktop.' block">';
-                        $html .= fusion_get_function('openside', '');
-                        $html .= '<strong class="text-uppercase">'.$locale['270'].' '.$locale['258'].'</strong>';
-                        $html .= '<div class="clearfix m-t-10">';
-                            $html .= '<img class="img-responsive pull-right dashboard-icon" src="'.get_image('ac_A').'" alt="'.$locale['270'].'"/>';
-                            $html .= '<div class="pull-left display-inline-block m-r-15">';
-                                $html .= '<span class="text-smaller">'.$locale['270'].'</span><br/>';
-                                $html .= '<h4 class="m-t-0">'.number_format($articles['article']).'</h4>';
-                            $html .= '</div>';
-                            $html .= '<div class="pull-left display-inline-block m-r-15">';
-                                $html .= '<span class="text-smaller">'.$locale['257'].'</span><br/>';
-                                $html .= '<h4 class="m-t-0">'.number_format($articles['comment']).'</h4>';
-                            $html .= '</div>';
-                            $html .= '<div class="pull-left display-inline-block m-r-15">';
-                                $html .= '<span class="text-smaller">'.$locale['254'].'</span><br/>';
-                                $html .= '<h4 class="m-t-0">'.number_format($articles['submit']).'</h4>';
-                            $html .= '</div>';
-                        $html .= '</div>';
-                        $html .= fusion_get_function('closeside', '');
-                    $html .= '</div>';
+                    $modules['articles'] = [
+                        'title' => $locale['270'],
+                        'image' => get_image('ac_A'),
+                        'stats' => [
+                            [
+                                'title' => $locale['270'],
+                                'count' => $articles['article']
+                            ],
+                            [
+                                'title' => $locale['257'],
+                                'count' => $articles['comment']
+                            ],
+                            [
+                                'title' => $locale['254'],
+                                'count' => $articles['submit']
+                            ]
+                        ]
+                    ];
                 }
 
                 if (defined('WEBLINKS_EXIST')) {
-                    $html .= '<div class="col-xs-'.$mobile.' col-sm-'.$tablet.' col-md-'.$laptop.' col-lg-'.$desktop.' block">';
-                        $html .= fusion_get_function('openside', '');
-                        $html .= '<strong class="text-uppercase">'.$locale['271'].' '.$locale['258'].'</strong>';
-                        $html .= '<div class="clearfix m-t-10">';
-                            $html .= '<img class="img-responsive pull-right dashboard-icon" src="'.get_image('ac_W').'" alt="'.$locale['271'].'"/>';
-                            $html .= '<div class="pull-left display-inline-block m-r-15">';
-                                $html .= '<span class="text-smaller">'.$locale['271'].'</span><br/>';
-                                $html .= '<h4 class="m-t-0">'.number_format($weblinks['weblink']).'</h4>';
-                            $html .= '</div>';
-                            $html .= '<div class="pull-left display-inline-block m-r-15">';
-                                $html .= '<span class="text-smaller">'.$locale['254'].'</span><br/>';
-                                $html .= '<h4 class="m-t-0">'.number_format($weblinks['submit']).'</h4>';
-                            $html .= '</div>';
-                        $html .= '</div>';
-                        $html .= fusion_get_function('closeside', '');
-                    $html .= '</div>';
+                    $modules['weblinks'] = [
+                        'title' => $locale['271'],
+                        'image' => get_image('ac_W'),
+                        'stats' => [
+                            [
+                                'title' => $locale['271'],
+                                'count' => $weblinks['weblink']
+                            ],
+                            [
+                                'title' => $locale['254'],
+                                'count' => $weblinks['submit']
+                            ]
+                        ]
+                    ];
                 }
 
                 if (defined('GALLERY_EXIST')) {
-                    $html .= '<div class="col-xs-'.$mobile.' col-sm-'.$tablet.' col-md-'.$laptop.' col-lg-'.$desktop.' block">';
-                        $html .= fusion_get_function('openside', '');
-                        $html .= '<strong class="text-uppercase">'.$locale['272'].' '.$locale['258'].'</strong>';
-                        $html .= '<div class="clearfix m-t-10">';
-                            $html .= '<img class="img-responsive pull-right dashboard-icon" src="'.get_image('ac_PH').'" alt="'.$locale['272'].'"/>';
-                            $html .= '<div class="pull-left display-inline-block m-r-15">';
-                                $html .= '<span class="text-smaller">'.$locale['261'].'</span><br/>';
-                                $html .= '<h4 class="m-t-0">'.number_format($photos['photo']).'</h4>';
+                    $modules['gallery'] = [
+                        'title' => $locale['272'],
+                        'image' => get_image('ac_PH'),
+                        'stats' => [
+                            [
+                                'title' => $locale['261'],
+                                'count' => $photos['photo']
+                            ],
+                            [
+                                'title' => $locale['257'],
+                                'count' => $photos['comment']
+                            ],
+                            [
+                                'title' => $locale['254'],
+                                'count' => $photos['submit']
+                            ]
+                        ]
+                    ];
+                }
+
+                if (!empty($modules)) {
+                    foreach ($modules as $name => $module) {
+                        $html .= '<div class="col-xs-'.$mobile.' col-sm-'.$tablet.' col-md-'.$laptop.' col-lg-'.$desktop.' block" id="module-'.$name.'">';
+                            $html .= fusion_get_function('openside', '');
+                            $html .= '<strong class="text-uppercase">'.$module['title'].' '.$locale['258'].'</strong>';
+                            $html .= '<div class="clearfix m-t-10">';
+                                $html .= '<img class="img-responsive pull-right dashboard-icon" src="'.$module['image'].'" alt="'.$module['title'].'"/>';
+                                if (!empty($module['stats'])) {
+                                    foreach ($module['stats'] as $stat) {
+                                        $html .= '<div class="pull-left display-inline-block m-r-15">';
+                                            $html .= '<span class="text-smaller">'.$stat['title'].'</span><br/>';
+                                            $html .= '<h4 class="m-t-0">'.number_format($stat['count']).'</h4>';
+                                        $html .= '</div>';
+                                    }
+                                }
                             $html .= '</div>';
-                            $html .= '<div class="pull-left display-inline-block m-r-15">';
-                                $html .= '<span class="text-smaller">'.$locale['257'].'</span><br/>';
-                                $html .= '<h4 class="m-t-0">'.number_format($photos['comment']).'</h4>';
-                            $html .= '</div>';
-                            $html .= '<div class="pull-left display-inline-block m-r-15">';
-                                $html .= '<span class="text-smaller">'.$locale['254'].'</span><br/>';
-                                $html .= '<h4 class="m-t-0">'.number_format($photos['submit']).'</h4>';
-                            $html .= '</div>';
+                            $html .= fusion_get_function('closeside', '');
                         $html .= '</div>';
-                        $html .= fusion_get_function('closeside', '');
-                    $html .= '</div>';
+                    }
                 }
             $html .= '</div>';
 
@@ -307,7 +320,7 @@ class Dashboard {
                             $content = '';
                             if ($infusions_count > 0) {
                                 if (!empty($global_infusions)) {
-                                    foreach ($global_infusions as $inf_id => $inf_data) {
+                                    foreach ($global_infusions as $inf_data) {
                                         $html .= '<span class="badge m-b-10 m-r-5">'.$inf_data['inf_title'].'</span>';
                                     }
                                 }
@@ -325,7 +338,7 @@ class Dashboard {
     }
 
     private function AdminIcons() {
-        global $admin_icons, $admin_images;
+        global $admin_icons;
 
         $locale = fusion_get_locale();
         $aidlink = fusion_get_aidlink();
@@ -336,16 +349,12 @@ class Dashboard {
         $html .= fusion_get_function('opentable', $admin_title);
             $html .= '<div class="row">';
             if (count($admin_icons['data']) > 0) {
-                foreach ($admin_icons['data'] as $i => $data) {
+                foreach ($admin_icons['data'] as $data) {
                     $html .= '<div class="icon-wrapper col-xs-6 col-sm-2 col-md-2 col-lg-2">';
-                    if ($admin_images) {
                         $html .= '<a class="btn-app" href="'.$data['admin_link'].$aidlink.'">';
                             $html .= '<img class="display-block" src="'.get_image('ac_'.$data['admin_rights']).'" alt="'.$data['admin_title'].'"/>';
                             $html .= '<span>'.$data['admin_title'].'</span>';
                         $html .= '</a>';
-                    } else {
-                        $html .= '<span class="small"><a href="'.$data['admin_link'].$aidlink.'">'.$data['admin_title'].'</a></span>';
-                    }
                     $html .= '</div>';
                 }
             }

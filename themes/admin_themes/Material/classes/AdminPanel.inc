@@ -22,17 +22,21 @@ use \PHPFusion\OutputHandler;
 
 class AdminPanel {
     private $messages = [];
+    private $pagenum;
 
     public function __construct() {
         $locale = fusion_get_locale('', MDT_LOCALE);
 
-        OutputHandler::addToHead('<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans"/>');
-        OutputHandler::addToFooter('<script src="'.INCLUDES.'jquery/jquery.cookie.js"></script>');
-        OutputHandler::addToFooter('<script src="'.MDT.'assets/js/scripts.min.js"></script>');
-        OutputHandler::addToHead('<link rel="stylesheet" href="'.MDT.'assets/mCustomScrollbar/jquery.mCustomScrollbar.min.css"/>');
-        OutputHandler::addToFooter('<script src="'.MDT.'assets/mCustomScrollbar/jquery.mCustomScrollbar.min.js"></script>');
-        OutputHandler::addToHead('<script src="'.MDT.'assets/js/jquery.mousewheel.min.js"></script>');
-        OutputHandler::addToJquery('$(".sidebar, .sidebar-sm .admin-submenu, .sidebar-sm .search-box, .messages-box").mCustomScrollbar({theme: "minimal-dark", axis: "y", scrollInertia: 550, mouseWheel: {enable: !0, axis: "y", preventDefault: !0}});');
+        $this->pagenum = (int)filter_input(INPUT_GET, 'pagenum');
+
+        $output_handler = new OutputHandler;
+        $output_handler->addToHead('<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans"/>');
+        $output_handler->addToFooter('<script src="'.INCLUDES.'jquery/jquery.cookie.js"></script>');
+        $output_handler->addToFooter('<script src="'.MDT.'assets/js/scripts.min.js"></script>');
+        $output_handler->addToHead('<link rel="stylesheet" href="'.MDT.'assets/mCustomScrollbar/jquery.mCustomScrollbar.min.css"/>');
+        $output_handler->addToFooter('<script src="'.MDT.'assets/mCustomScrollbar/jquery.mCustomScrollbar.min.js"></script>');
+        $output_handler->addToHead('<script src="'.MDT.'assets/js/jquery.mousewheel.min.js"></script>');
+        $output_handler->addToJquery('$(".sidebar, .sidebar-sm .admin-submenu, .sidebar-sm .search-box, .messages-box").mCustomScrollbar({theme: "minimal-dark", axis: "y", scrollInertia: 550, mouseWheel: {enable: !0, axis: "y", preventDefault: !0}});');
 
         $html = '<main class="clearfix">';
             $html .= $this->TopMenu();
@@ -44,8 +48,8 @@ class AdminPanel {
                     if (!empty($sections)) {
                         $i = 0;
                         foreach ($sections as $section_name) {
-                            $active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && Admins::getInstance()->_isActive() == $i) ? ' class="active"' : '';
-                            $html .= '<li'.$active.'><a href="'.ADMIN.'index.php'.fusion_get_aidlink().'&amp;pagenum='.$i.'"><span class="visible-xs">'.Admins::getInstance()->get_admin_section_icons($i).'</span><span class="hidden-xs">'.$section_name.'</span></a></li>';
+                            $active = ((isset($_GET['pagenum']) && $this->pagenum === $i) || (!$this->pagenum && Admins::getInstance()->_isActive() === $i)) ? TRUE : FALSE;
+                            $html .= '<li'.($active ? ' class="active"' : '').'><a href="'.ADMIN.'index.php'.fusion_get_aidlink().'&amp;pagenum='.$i.'"><span class="visible-xs">'.Admins::getInstance()->get_admin_section_icons($i).'</span><span class="hidden-xs">'.$section_name.'</span></a></li>';
                             $i++;
                         }
                     }
@@ -100,8 +104,8 @@ class AdminPanel {
                     $i = 0;
 
                     foreach ($sections as $section_name) {
-                        $active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && Admins::getInstance()->_isActive() == $i) ? ' class="active"' : '';
-                        $html .= '<li'.$active.'><a href="'.ADMIN.'index.php'.$aidlink.'&amp;pagenum='.$i.'" data-toggle="tooltip" data-placement="bottom" title="'.$section_name.'">'.Admins::getInstance()->get_admin_section_icons($i).'</a></li>';
+                        $active = ((isset($_GET['pagenum']) && $this->pagenum === $i) || (!$this->pagenum && Admins::getInstance()->_isActive() === $i)) ? TRUE : FALSE;
+                        $html .= '<li'.($active ? ' class="active"' : '').'><a href="'.ADMIN.'index.php'.$aidlink.'&amp;pagenum='.$i.'" data-toggle="tooltip" data-placement="bottom" title="'.$section_name.'">'.Admins::getInstance()->get_admin_section_icons($i).'</a></li>';
                         $i++;
                     }
                 }
@@ -169,7 +173,7 @@ class AdminPanel {
             $html .= '</div>';
         $html .= '</aside>';
 
-        OutputHandler::addToJQuery('search_ajax("'.ADMIN.'includes/acp_search.php'.fusion_get_aidlink().'");');
+        add_to_jquery('search_ajax("'.ADMIN.'includes/acp_search.php'.fusion_get_aidlink().'");');
 
         return $html;
     }
