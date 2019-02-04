@@ -175,7 +175,7 @@ function render_dashboard() {
     }
 
     if (!empty($modules)) {
-        foreach ($modules as $name => $module) {
+        foreach ($modules as $module) {
             $html .= '<div class="col-xs-'.$grid['mobile'].' col-sm-'.$grid['tablet'].' col-md-'.$grid['laptop'].' col-lg-'.$grid['desktop'].'">';
             $html .= fusion_get_function('openside', '');
             $html .= '<strong class="text-uppercase">'.$module['title'].' '.$locale['258'].'</strong>';

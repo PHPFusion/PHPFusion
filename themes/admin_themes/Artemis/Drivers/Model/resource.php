@@ -4,17 +4,17 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Artemis Interface
-| The Artemis Project - 2014 - 2016 (c)
-| Network Data Model Development
-| Filename: Artemis_ACP/acp_request.php
-| Author: Guidlsquare , enVision Sdn Bhd
-| Copyright patent 0517721 IPO
-| Author's all rights reserved.
+| Filename: resource.php
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
-| Released under PHP-Fusion EPAL
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
 +--------------------------------------------------------*/
-
 namespace Artemis\Model;
 
 use PHPFusion\Admins;
@@ -22,14 +22,10 @@ use PHPFusion\Admins;
 abstract class resource extends Admins {
 
     public static $page_title = "";
-
-    private static $user_drop = [];
-
-    private static $aidlink = "";
-
-    private static $userdata = [];
-
     protected static $locale = [];
+    private static $user_drop = [];
+    private static $aidlink = "";
+    private static $userdata = [];
 
     public function __construct() {
         parent::__construct();
@@ -77,6 +73,10 @@ abstract class resource extends Admins {
         ];
     }
 
+    public static function get_locale($key = NULL) {
+        return $key === NULL ? self::$locale : (isset(self::$locale[$key]) ? self::$locale[$key] : NULL);
+    }
+
     public static function add_css($file) {
         if (file_exists(THEMES."admin_themes/Artemis/css/".$file)) {
             add_to_head("<link rel='stylesheet' href='".THEMES."admin_themes/Artemis/css/".$file."' type='text/css' />");
@@ -110,10 +110,6 @@ abstract class resource extends Admins {
         }
 
         return $language_opts;
-    }
-
-    public static function get_locale($key = NULL) {
-        return $key === NULL ? self::$locale : (isset(self::$locale[$key]) ? self::$locale[$key] : NULL);
     }
 
     public static function set_static_variables() {

@@ -1,27 +1,23 @@
 <?php
-/*------------------------------------------------------
-| Artemis Administration Interface
-| The Artemis Project - 2014 - 2016 (c)
-| Theme Framework & Networking Data Model Development
-+-------------------------------------------------------
-| Closed Source Development
-|-------------------------------------------------------
-| Filename: Artemis Package
-| Author: Frederick MC Chan - PHP-Fusion Derivative
-| Author: Lee Boon Seng Eric - Joomla OS Derivative
-| InDesign: George Beh YC - CSS
-| For : Guildsquare LLC, enVision LLC
-+-------------------------------------------------------
-| Artemis Package - Single Domain Licence
-| Source code must be encrypted before uploaded to any
-| server.
-+-------------------------------------------------------
-| The Artemis Project - 2014 - 2016 (c)
-+-------------------------------------------------------*/
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: controller.php
+| Author: PHP-Fusion Development Team
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 namespace Artemis;
 
 use Artemis\Model\resource;
-use Artemis\Viewer\adminDashboard;
 
 class Controller {
 
@@ -63,14 +59,14 @@ class Controller {
         $html = '';
         if ($this->license_auth()) {
             resource::set_static_variables();
-            new Viewer\adminDashboard();
+            $dashboard = new Viewer\adminDashboard();
 
             $pagenum = (int)filter_input(INPUT_GET, 'pagenum');
 
             if ((isset($pagenum) && $pagenum) > 0) {
-                $html = adminDashboard::do_admin_icons();
+                $html = $dashboard->do_admin_icons();
             } else {
-                $html = adminDashboard::do_dashboard();
+                $html = $dashboard->do_dashboard();
             }
         }
 
