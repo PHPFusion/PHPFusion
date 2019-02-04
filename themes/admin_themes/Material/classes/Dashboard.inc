@@ -44,10 +44,10 @@ class Dashboard {
             $grid = ['mobile' => 12, 'tablet' => 6, 'laptop' => 3, 'desktop' => 3];
 
             $panels = [
-                'registered'   => ['link' => '', 'title' => 251],
-                'cancelled'    => ['link' => 'status=5', 'title' => 263],
-                'unactivated'  => ['link' => 'status=2', 'title' => 252],
-                'security_ban' => ['link' => 'status=4', 'title' => 253]
+                'registered'   => ['link' => '', 'title' => $locale['251']],
+                'cancelled'    => ['link' => 'status=5', 'title' => $locale['263']],
+                'unactivated'  => ['link' => 'status=2', 'title' => $locale['252']],
+                'security_ban' => ['link' => 'status=4', 'title' => $locale['253']]
             ];
 
             $html .= '<div class="members">';
@@ -58,7 +58,7 @@ class Dashboard {
                         $html .= fusion_get_function('openside', '', $panel);
                             $html .= '<img class="pull-left m-r-10 dashboard-icon" src="'.get_image('ac_M').'" alt="'.$locale['M'].'"/>';
                             $html .= '<h4 class="text-right m-t-0 m-b-0">'.number_format($members[$panel]).'</h4>';
-                            $html .= '<strong class="text-smaller pull-right" style="position: relative;z-index: 3;">'.$locale[$block['title']].'</strong>';
+                            $html .= '<strong class="text-smaller pull-right" style="position: relative;z-index: 3;">'.$block['title'].'</strong>';
 
                             $content  = '<div class="text-right text-uppercase">';
                             $content .= '<a href="'.ADMIN.'members.php'.$aidlink.$block['link'].'">'.$locale['255'].' <i class="fa fa-angle-right"></i></a>';
