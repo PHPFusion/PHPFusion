@@ -31,19 +31,17 @@ class Dashboard {
     }
 
     private function RenderDashboard() {
-        global $members, $forum, $download, $news, $articles, $weblinks, $photos, $global_comments, $global_ratings, $global_submissions, $link_type, $submit_data, $comments_type, $infusions_count, $global_infusions;
+        global $members, $forum, $download, $news, $articles, $weblinks, $photos, $global_comments,
+               $global_ratings, $global_submissions, $link_type, $submit_data,
+               $comments_type, $infusions_count, $global_infusions;
 
         $locale = fusion_get_locale();
         $aidlink = fusion_get_aidlink();
         $settings = fusion_get_settings();
 
         $html = '';
-
         $html .= fusion_get_function('opentable', $locale['250']);
-            $mobile  = 12;
-            $tablet  = 6;
-            $laptop  = 3;
-            $desktop = 3;
+            $grid = ['mobile' => 12, 'tablet' => 6, 'laptop' => 3, 'desktop' => 3];
 
             $panels = [
                 'registered'   => ['link' => '', 'title' => 251],
@@ -56,23 +54,22 @@ class Dashboard {
                 $html .= '<div class="row">';
                     foreach ($panels as $panel => $block) {
                         $block['link'] = empty($block['link']) ? $block['link'] : '&amp;'.$block['link'];
-                        $html .= '<div class="col-xs-'.$mobile.' col-sm-'.$tablet.' col-md-'.$laptop.' col-lg-'.$desktop.' block">';
+                        $html .= '<div class="col-xs-'.$grid['mobile'].' col-sm-'.$grid['tablet'].' col-md-'.$grid['laptop'].' col-lg-'.$grid['desktop'].' block">';
                         $html .= fusion_get_function('openside', '', $panel);
                             $html .= '<img class="pull-left m-r-10 dashboard-icon" src="'.get_image('ac_M').'" alt="'.$locale['M'].'"/>';
                             $html .= '<h4 class="text-right m-t-0 m-b-0">'.number_format($members[$panel]).'</h4>';
                             $html .= '<strong class="text-smaller pull-right" style="position: relative;z-index: 3;">'.$locale[$block['title']].'</strong>';
 
-                            $content_  = '<div class="text-right text-uppercase">';
-                            $content_ .= '<a href="'.ADMIN.'members.php'.$aidlink.$block['link'].'">'.$locale['255'].' <i class="fa fa-angle-right"></i></a>';
-                            $content_ .= '</div>';
-                        $html .= fusion_get_function('closeside', checkrights('M') ? $content_ : '');
+                            $content  = '<div class="text-right text-uppercase">';
+                            $content .= '<a href="'.ADMIN.'members.php'.$aidlink.$block['link'].'">'.$locale['255'].' <i class="fa fa-angle-right"></i></a>';
+                            $content .= '</div>';
+                        $html .= fusion_get_function('closeside', checkrights('M') ? $content : '');
                         $html .= '</div>';
                     }
                 $html .= '</div>';
             $html .= '</div>';
 
-            $laptop  = 6;
-            $desktop = 4;
+            $grid = ['mobile' => 12, 'tablet' => 6, 'laptop' => 6, 'desktop' => 4];
 
             $html .= '<div class="row" id="overview">';
                 $modules = [];
@@ -82,22 +79,10 @@ class Dashboard {
                         'title' => $locale['265'],
                         'image' => get_image('ac_F'),
                         'stats' => [
-                            [
-                                'title' => $locale['265'],
-                                'count' => $forum['count']
-                            ],
-                            [
-                                'title' => $locale['256'],
-                                'count' => $forum['thread']
-                            ],
-                            [
-                                'title' => $locale['259'],
-                                'count' => $forum['post']
-                            ],
-                            [
-                                'title' => $locale['260'],
-                                'count' => $forum['users']
-                            ]
+                            ['title' => $locale['265'], 'count' => $forum['count']],
+                            ['title' => $locale['256'], 'count' => $forum['thread']],
+                            ['title' => $locale['259'], 'count' => $forum['post']],
+                            ['title' => $locale['260'], 'count' => $forum['users']]
                         ]
                     ];
                 }
@@ -107,18 +92,9 @@ class Dashboard {
                         'title' => $locale['268'],
                         'image' => get_image('ac_D'),
                         'stats' => [
-                            [
-                                'title' => $locale['268'],
-                                'count' => $download['download']
-                            ],
-                            [
-                                'title' => $locale['257'],
-                                'count' => $download['comment']
-                            ],
-                            [
-                                'title' => $locale['254'],
-                                'count' => $download['submit']
-                            ]
+                            ['title' => $locale['268'], 'count' => $download['download']],
+                            ['title' => $locale['257'], 'count' => $download['comment']],
+                            ['title' => $locale['254'], 'count' => $download['submit']]
                         ]
                     ];
                 }
@@ -128,18 +104,9 @@ class Dashboard {
                         'title' => $locale['269'],
                         'image' => get_image('ac_N'),
                         'stats' => [
-                            [
-                                'title' => $locale['269'],
-                                'count' => $news['news']
-                            ],
-                            [
-                                'title' => $locale['257'],
-                                'count' => $news['comment']
-                            ],
-                            [
-                                'title' => $locale['254'],
-                                'count' => $news['submit']
-                            ]
+                            ['title' => $locale['269'], 'count' => $news['news']],
+                            ['title' => $locale['257'], 'count' => $news['comment']],
+                            ['title' => $locale['254'], 'count' => $news['submit']]
                         ]
                     ];
                 }
@@ -149,18 +116,9 @@ class Dashboard {
                         'title' => $locale['270'],
                         'image' => get_image('ac_A'),
                         'stats' => [
-                            [
-                                'title' => $locale['270'],
-                                'count' => $articles['article']
-                            ],
-                            [
-                                'title' => $locale['257'],
-                                'count' => $articles['comment']
-                            ],
-                            [
-                                'title' => $locale['254'],
-                                'count' => $articles['submit']
-                            ]
+                            ['title' => $locale['270'], 'count' => $articles['article']],
+                            ['title' => $locale['257'], 'count' => $articles['comment']],
+                            ['title' => $locale['254'], 'count' => $articles['submit']]
                         ]
                     ];
                 }
@@ -170,14 +128,8 @@ class Dashboard {
                         'title' => $locale['271'],
                         'image' => get_image('ac_W'),
                         'stats' => [
-                            [
-                                'title' => $locale['271'],
-                                'count' => $weblinks['weblink']
-                            ],
-                            [
-                                'title' => $locale['254'],
-                                'count' => $weblinks['submit']
-                            ]
+                            ['title' => $locale['271'], 'count' => $weblinks['weblink']],
+                            ['title' => $locale['254'], 'count' => $weblinks['submit']]
                         ]
                     ];
                 }
@@ -187,25 +139,16 @@ class Dashboard {
                         'title' => $locale['272'],
                         'image' => get_image('ac_PH'),
                         'stats' => [
-                            [
-                                'title' => $locale['261'],
-                                'count' => $photos['photo']
-                            ],
-                            [
-                                'title' => $locale['257'],
-                                'count' => $photos['comment']
-                            ],
-                            [
-                                'title' => $locale['254'],
-                                'count' => $photos['submit']
-                            ]
+                            ['title' => $locale['261'], 'count' => $photos['photo']],
+                            ['title' => $locale['257'], 'count' => $photos['comment']],
+                            ['title' => $locale['254'], 'count' => $photos['submit']]
                         ]
                     ];
                 }
 
                 if (!empty($modules)) {
                     foreach ($modules as $name => $module) {
-                        $html .= '<div class="col-xs-'.$mobile.' col-sm-'.$tablet.' col-md-'.$laptop.' col-lg-'.$desktop.' block" id="module-'.$name.'">';
+                        $html .= '<div class="col-xs-'.$grid['mobile'].' col-sm-'.$grid['tablet'].' col-md-'.$grid['laptop'].' col-lg-'.$grid['desktop'].'">';
                             $html .= fusion_get_function('openside', '');
                             $html .= '<strong class="text-uppercase">'.$module['title'].' '.$locale['258'].'</strong>';
                             $html .= '<div class="clearfix m-t-10">';
@@ -248,9 +191,7 @@ class Dashboard {
                                     }
 
                                     if (isset($global_comments['comments_nav'])) {
-                                        $html .= '<div class="clearfix">';
-                                            $html .= '<span class="pull-right text-smaller">'.$global_comments['comments_nav'].'</span>';
-                                        $html .= '</div>';
+                                        $html .= '<div class="clearfix"><span class="pull-right text-smaller">'.$global_comments['comments_nav'].'</span></div>';
                                     }
                                 } else {
                                     $html .= '<div class="text-center">'.$global_comments['nodata'].'</div>';
@@ -274,9 +215,7 @@ class Dashboard {
                                     }
 
                                     if (isset($global_ratings['ratings_nav'])) {
-                                        $html .= '<div class="clearfix">';
-                                            $html .= '<span class="pull-right text-smaller">'.$global_ratings['ratings_nav'].'</span>';
-                                        $html .= '</div>';
+                                        $html .= '<div class="clearfix"><span class="pull-right text-smaller">'.$global_ratings['ratings_nav'].'</span></div>';
                                     }
                                 } else {
                                     $html .= '<div class="text-center">'.$global_ratings['nodata'].'</div>';
@@ -303,9 +242,7 @@ class Dashboard {
                                 }
 
                                 if (isset($global_submissions['submissions_nav'])) {
-                                    $html .= '<div class="clearfix">';
-                                        $html .= '<span class="pull-right text-smaller">'.$global_submissions['submissions_nav'].'</span>';
-                                    $html .= '</div>';
+                                    $html .= '<div class="clearfix"><span class="pull-right text-smaller">'.$global_submissions['submissions_nav'].'</span></div>';
                                 }
                             } else {
                                 $html .= '<div class="text-center">'.$global_submissions['nodata'].'</div>';
