@@ -732,7 +732,7 @@ if (str_replace(".", "", $settings['version']) < "80019") {
                     dbquery("UPDATE ".DB_CUSTOM_PAGES." SET page_language ='".$settings['locale']."'");
 
                     // Set the new version
-                    dbquery("UPDATE ".DB_SETTINGS." SET settings_value='8.00.19' WHERE settings_name='version'");
+                    dbquery("UPDATE ".DB_SETTINGS." SET settings_value='8.00.20' WHERE settings_name='version'");
 
                     redirect(FUSION_SELF.$aidlink."&amp;upgrade_ok");
                 }
