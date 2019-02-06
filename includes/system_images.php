@@ -161,7 +161,7 @@ function get_image($image, $alt = "", $style = "", $title = "", $atts = "") {
     if (isset($fusion_images[$image])) {
         $url = $fusion_images[$image];
     } else {
-        $url = IMAGES."not_found.gif";
+        $url = ADMIN."images/notfound.png";
     }
     if (!$alt && !$style && !$title) {
         return $url;

@@ -244,7 +244,7 @@ function render_dashboard() {
         openside("", "well");
         echo "<strong class='text-smaller text-uppercase'>".$locale['272']." ".$locale['258']."</strong>\n";
         echo "<div class='clearfix m-t-10'>\n";
-        echo "<img class='img-responsive pull-right dashboard-icon' src='".get_image("ac_P")."'/>\n";
+        echo "<img class='img-responsive pull-right dashboard-icon' src='".get_image("ac_PH")."'/>\n";
         echo "<div class='pull-left display-inline-block m-r-10'>\n";
         echo "<span class='text-smaller'>".$locale['261']."</span>\n<br/>\n";
         echo "<h4 class='m-t-0'>".number_format($photos['photo'])."</h4>\n";
