@@ -231,12 +231,11 @@ if ($global_submissions['rows'] > 10) {
 }
 
 // Icon Grid
+$admin_icons = \PHPFusion\Admins::getInstance()->getAdminPages();
+
 if (isset($_GET['pagenum']) && isnum($_GET['pagenum'])) {
-    $result = dbquery("SELECT *
-        FROM ".DB_ADMIN."
-        WHERE admin_page=:adminpage AND admin_language=:language
-        ORDER BY admin_title
-    ", [':adminpage' => $_GET['pagenum'], ':language' => LANGUAGE]);
+    $result = dbquery("SELECT * FROM ".DB_ADMIN." WHERE admin_page=:adminpage AND admin_language=:language ORDER BY admin_page DESC, admin_id ASC, admin_title ASC",
+        [':adminpage' => $_GET['pagenum'], ':language' => LANGUAGE]);
     $admin_icons['rows'] = dbrows($result);
     $admin_icons['data'] = [];
     if (dbrows($result)) {
