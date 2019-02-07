@@ -229,8 +229,8 @@ class PageList extends PageAdmin {
             echo form_select("page_status", "", $filter_values['page_status'], [
                 "allowclear" => TRUE, "placeholder" => "- ".self::$locale['page_0109']." -", "options" => [
                     0 => self::$locale['page_0110'],
-                    1 => self::$locale['publish'],
-                    2 => self::$locale['unpublish'],
+                    1 => self::$locale['published'],
+                    2 => self::$locale['unpublished'],
                 ]
             ]);
             echo "</div>\n";
