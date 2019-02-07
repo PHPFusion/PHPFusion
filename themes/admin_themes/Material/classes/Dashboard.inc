@@ -278,11 +278,8 @@ class Dashboard {
 
         $locale = fusion_get_locale();
         $aidlink = fusion_get_aidlink();
-        $admin_title = str_replace('[SITENAME]', fusion_get_settings('sitename'), $locale['200']);
 
-        $html = '';
-
-        $html .= fusion_get_function('opentable', $admin_title);
+        $html = fusion_get_function('opentable', $locale['200a']);
             $html .= '<div class="row">';
             if (count($admin_icons['data']) > 0) {
                 foreach ($admin_icons['data'] as $data) {
