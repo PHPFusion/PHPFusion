@@ -117,7 +117,7 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
             $checkbox .= "</div>\n";
         }
     } else {
-        $checkbox .= "<div class='pull-left m-r-10'>\n<input id='".$options['input_id']."'".($options['toggle'] ? " data-on-text='".$on_label."' data-off-text='".$off_label."'" : "")." style='margin: 0; vertical-align: middle' name='$input_name' value='".$options['value']."' type='".$options['type']."'".($options['deactivate'] ? ' disabled' : '').($options['onclick'] ? ' onclick="'.$options['onclick'].'"' : '').($input_value == $options['value'] ? ' checked' : '')." />\n</div>\n";
+        $checkbox .= "<div class='text-center m-r-10'>\n<input id='".$options['input_id']."'".($options['toggle'] ? " data-on-text='".$on_label."' data-off-text='".$off_label."'" : "")." style='margin: 0; vertical-align: middle' name='$input_name' value='".$options['value']."' type='".$options['type']."'".($options['deactivate'] ? ' disabled' : '').($options['onclick'] ? ' onclick="'.$options['onclick'].'"' : '').($input_value == $options['value'] ? ' checked' : '')." />\n</div>\n";
     }
 
     $html = "<div id='".$options['input_id']."-field' class='".($switch_class ? $switch_class : '')."form-group clearfix".($options['inline'] ? ' display-block overflow-hide' : '').($error_class ? $error_class : '').($options['class'] ? ' '.$options['class'] : '')."'>\n";
