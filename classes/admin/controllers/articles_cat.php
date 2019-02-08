@@ -393,8 +393,8 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
                         'placeholder' => '- '.$this->locale['article_0123'].' -',
                         'options'     => [
                             0 => $this->locale['article_0124'],
-                            2 => $this->locale['unpublish'],
-                            1 => $this->locale['publish']
+                            2 => $this->locale['unpublished'],
+                            1 => $this->locale['published']
                         ]
                     ]); ?>
                 </div>
@@ -488,7 +488,7 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
                         ?></td>
                     <td><span class="text-dark"><?php echo str_repeat("&nbsp;&nbsp;", $level)." ".$cdata['article_cat_name']; ?></span></td>
                     <td><span class="badge"><?php echo format_word($cdata['article_count'], $this->locale['fmt_article']); ?></span></td>
-                    <td><span class="badge"><?php echo($cdata['article_cat_status'] == 1 ? $this->locale['publish'] : $this->locale['unpublish']); ?></span></td>
+                    <td><span class="badge"><?php echo($cdata['article_cat_status'] == 1 ? $this->locale['published'] : $this->locale['unpublished']); ?></span></td>
                     <td><span class="badge"><?php echo getgroupname($cdata['article_cat_visibility']); ?></span></td>
                     <td><?php echo translate_lang_names($cdata['article_cat_language']) ?></td>
                     <td>
