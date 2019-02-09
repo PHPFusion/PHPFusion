@@ -230,8 +230,8 @@ function fusion_sort_table($table_id) {
 if (!function_exists("label")) {
     function label($label, array $options = []) {
         $options += [
-            "class" => !empty($array['class']) ? $array['class'] : "",
-            "icon"  => !empty($array['icon']) ? "<i class='".$array['icon']."'></i> " : "",
+            "class" => !empty($array['class']) ? $array['class'] : '',
+            "icon"  => !empty($array['icon']) ? "<i class='".$array['icon']."'></i> " : '',
         ];
 
         return "<span class='label ".$options['class']."'>".$options['icon'].$label."</span>\n";
