@@ -20,14 +20,38 @@ namespace PHPFusion\Forums\Postify;
 use PHPFusion\BreadCrumbs;
 use PHPFusion\Forums\ForumServer;
 
+/**
+ * Class Forum_Postify
+ *
+ * @package PHPFusion\Forums\Postify
+ */
 class Forum_Postify extends ForumServer {
 
+	/**
+	 * @var array|null
+	 */
     protected static $locale = [];
+	/**
+	 * @var string
+	 */
     protected static $default_redirect_link = '';
+	/**
+	 * @var array
+	 */
     protected static $postify_uri = [];
+	/**
+	 * @var array|string|string[]
+	 */
     protected static $settings = [];
+	/**
+	 * @var
+	 */
     private $postify_action;
 
+	/**
+	 * Forum_Postify constructor.
+	 * @throws \Exception
+	 */
     public function __construct() {
         self::$locale = fusion_get_locale('', FORUM_LOCALE);
         self::$settings = fusion_get_settings();
@@ -48,6 +72,9 @@ class Forum_Postify extends ForumServer {
         BreadCrumbs::getInstance()->addBreadCrumb(['link' => FORUM.'index.php', 'title' => self::$locale['forum_0000']]);
     }
 
+	/**
+	 * @return mixed|string
+	 */
     protected function get_postify_error_message() {
         $_GET['error'] = (!empty($_GET['error']) && isnum($_GET['error']) && $_GET['error'] <= 6 ? $_GET['error'] : 0);
         if (!empty($_GET['error'])) {
@@ -99,6 +126,12 @@ class Forum_Postify extends ForumServer {
         return (array)$link;
     }
 
+	/**
+	 * @param $class_actions
+	 *
+	 * @return object
+	 * @throws \ReflectionException
+	 */
     private function load_postify($class_actions) {
         /*
          * Overrides
@@ -126,6 +159,9 @@ class Forum_Postify extends ForumServer {
         }
     }
 
+	/**
+	 * @throws \ReflectionException
+	 */
     public function do_postify() {
         if ($postify = $this->load_postify($_GET['post'])) {
             if (method_exists($postify, 'execute')) {
