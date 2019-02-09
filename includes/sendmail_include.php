@@ -22,63 +22,63 @@ if (!defined("IN_FUSION")) {
 function sendemail($toname, $toemail, $fromname, $fromemail, $subject, $message, $type = "plain", $cc = "", $bcc = "") {
     global $settings, $locale;
 
-    require_once INCLUDES."class.phpmailer.php";
+    require_once CLASSES.'PHPMailer/PHPMailer.php';
+    require_once CLASSES.'PHPMailer/Exception.php';
+    require_once CLASSES.'PHPMailer/SMTP.php';
 
-    $mail = new PHPMailer();
-    if (file_exists(INCLUDES."language/phpmailer.lang-".$locale['phpmailer'].".php")) {
-        $mail->SetLanguage($locale['phpmailer'], INCLUDES."language/");
+    $mail = new PHPMailer\PHPMailer\PHPMailer();
+
+    if (file_exists(CLASSES."PHPMailer/language/phpmailer.lang-".$locale['phpmailer'].".php")) {
+        $mail->setLanguage($locale['phpmailer'], CLASSES."PHPMailer/language/");
     } else {
-        $mail->SetLanguage("en", INCLUDES."language/");
+        $mail->setLanguage("en", CLASSES."PHPMailer/language/");
     }
-
     if (!$settings['smtp_host']) {
-        $mail->IsMAIL();
+        $mail->isMAIL();
     } else {
-        $mail->IsSMTP();
+        $mail->isSMTP();
         $mail->Host = $settings['smtp_host'];
         $mail->Port = $settings['smtp_port'];
         $mail->SMTPAuth = $settings['smtp_auth'] ? TRUE : FALSE;
         $mail->Username = $settings['smtp_username'];
         $mail->Password = $settings['smtp_password'];
     }
-
     $mail->CharSet = $locale['charset'];
     $mail->From = $fromemail;
     $mail->FromName = $fromname;
-    $mail->AddAddress($toemail, $toname);
-    $mail->AddReplyTo($fromemail, $fromname);
+    $mail->addAddress($toemail, $toname);
+    $mail->addReplyTo($fromemail, $fromname);
     if ($cc) {
         $cc = explode(", ", $cc);
         foreach ($cc as $ccaddress) {
-            $mail->AddCC($ccaddress);
+            $mail->addCC($ccaddress);
         }
     }
     if ($bcc) {
         $bcc = explode(", ", $bcc);
         foreach ($bcc as $bccaddress) {
-            $mail->AddBCC($bccaddress);
+            $mail->addBCC($bccaddress);
         }
     }
     if ($type == "plain") {
-        $mail->IsHTML(FALSE);
+        $mail->isHTML(FALSE);
     } else {
-        $mail->IsHTML(TRUE);
+        $mail->isHTML(TRUE);
     }
-
     $mail->Subject = $subject;
     $mail->Body = $message;
-
-    if (!$mail->Send()) {
+    if (!$mail->send()) {
         $mail->ErrorInfo;
-        $mail->ClearAllRecipients();
-        $mail->ClearReplyTos();
+        $mail->clearAllRecipients();
+        $mail->clearReplyTos();
+
         return FALSE;
     } else {
-        $mail->ClearAllRecipients();
-        $mail->ClearReplyTos();
+        $mail->clearAllRecipients();
+        $mail->clearReplyTos();
+
         return TRUE;
     }
-
 }
 
 function sendemail_template($template_key, $subject, $message, $user, $receiver, $thread_url = "", $toemail, $sender = "", $fromemail = "") {
