@@ -177,7 +177,7 @@ if ($global_submissions['rows'] > $settings['comments_per_page']) {
 }
 // Icon Grid
 if (isset($_GET['pagenum']) && isnum($_GET['pagenum'])) {
-	$result = dbquery("SELECT * FROM ".DB_ADMIN." WHERE admin_page='".$_GET['pagenum']."' ORDER BY admin_title");
+	$result = dbquery("SELECT * FROM ".DB_ADMIN." WHERE admin_page='".$_GET['pagenum']."' AND admin_link !='reserved' ORDER BY admin_page DESC, admin_id ASC, admin_title ASC");
 	$admin_icons['rows'] = dbrows($result);
 	$admin_icons['data'] = array();
 	if (dbrows($result)) {
