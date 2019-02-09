@@ -176,23 +176,23 @@ function show_panels() {
     $row_color = ($k % 2 == 0 ? "tbl1" : "tbl2");
     $type = $data['panel_type'] == "file" ? $locale['423'] : $locale['424'];
     echo "<li id='listItem_".$data['panel_id']."' class='pointer list-group-item ".$row_color.($data['panel_status'] == 0 ? " pdisabled" : "")."'>\n";
-    echo "<div class='handle'>\n";
+    echo "<div class='dropdown handle'>\n";
     echo "<img class='pull-left m-r-10' src='".IMAGES."arrow.png' alt='move'/>\n";
     echo "<a class='dropdown-toggle' data-toggle='dropdown'>\n";
     echo "<strong>".$data['panel_name']."</strong> <span class='caret'></span>\n\n";
     echo "</a>\n";
     echo "<ul class='dropdown-menu' id='panel-options'>\n";
-    echo "<li style='padding:3px 20px;'>\n<i class='entypo users m-t-5'></i> ".getgroupname($data['panel_access'])."</li>\n";
-    echo "<li style='padding:3px 20px;'>\n<i class='entypo folder m-t-5'></i> ".$type."</li>\n";
-    echo "<li style='padding:3px 20px;'>\n<i class='entypo arrow-combo m-t-5'></i> ".$data['panel_order']."</li>\n";
+    echo "<li class='m-l-10'>\n<i class='entypo users'></i> ".getgroupname($data['panel_access'])."</li>\n";
+    echo "<li class='m-l-10'>\n<i class='entypo folder'></i> ".$type."</li>\n";
+    echo "<li class='m-l-10'>\n<i class='entypo arrow-combo'></i> ".$data['panel_order']."</li>\n";
     echo "<li class='divider'></li>\n";
-    echo "<li>\n<a href='panel_editor.php".$aidlink."&amp;action=edit&amp;panel_id=".$data['panel_id']."&amp;panel_side=".$data['panel_side']."'><i class='entypo pencil m-t-5'></i> ".$locale['434']."</a>\n</li>\n";
+    echo "<li>\n<a href='panel_editor.php".$aidlink."&amp;action=edit&amp;panel_id=".$data['panel_id']."&amp;panel_side=".$data['panel_side']."'><i class='entypo pencil'></i> ".$locale['434']."</a>\n</li>\n";
     if ($data['panel_status'] == 0) {
-        echo "<li>\n<a href='".FUSION_SELF.$aidlink."&amp;action=setstatus&amp;status=1&amp;panel_id=".$data['panel_id']."'><i class='entypo check m-t-5'></i> ".$locale['435']."</a>\n</li>\n";
+        echo "<li>\n<a href='".FUSION_SELF.$aidlink."&amp;action=setstatus&amp;status=1&amp;panel_id=".$data['panel_id']."'><i class='entypo check'></i> ".$locale['435']."</a>\n</li>\n";
     } else {
-        echo "<li>\n<a href='".FUSION_SELF.$aidlink."&amp;action=setstatus&amp;status=0&amp;panel_id=".$data['panel_id']."'><i class='entypo cross m-t-5'></i> ".$locale['436']."</a>\n</li>\n";
+        echo "<li>\n<a href='".FUSION_SELF.$aidlink."&amp;action=setstatus&amp;status=0&amp;panel_id=".$data['panel_id']."'><i class='entypo cross'></i> ".$locale['436']."</a>\n</li>\n";
     }
-    echo "<li>\n<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;panel_id=".$data['panel_id']."&amp;panel_side=".$data['panel_side']."' onclick=\"return confirm('".$locale['440']."');\"><i class='entypo trash m-t-5'></i>  ".$locale['437']."</a>\n</li>\n";
+    echo "<li>\n<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;panel_id=".$data['panel_id']."&amp;panel_side=".$data['panel_side']."' onclick=\"return confirm('".$locale['440']."');\"><i class='entypo trash'></i> ".$locale['437']."</a>\n</li>\n";
     echo "</ul>\n";
     echo "</div>\n";
     echo "</li>\n";
