@@ -28,7 +28,7 @@ class Gallery {
     public static function render_gallery(array $info = []) {
         $locale = fusion_get_locale();
         $html = render_breadcrumbs();
-        $html .= fusion_get_function('opentable', $locale['400']);
+        $html .= fusion_get_function('opentable', $locale['gallery_400']);
         add_to_head("<link rel='stylesheet' href='".THEME."themepack/nebula/css/gallery.css' type='text/css' />");
         self::$gallery_settings = get_settings('gallery');
         if (!empty($info['page_nav'])) {
@@ -43,7 +43,7 @@ class Gallery {
             }
             $html .= "</div>\n";
         } else {
-            $html .= "<div class='well m-t-20 m-b-20 text-center'>".$locale['406']."</div>\n";
+            $html .= "<div class='well m-t-20 m-b-20 text-center'>".$locale['gallery_406']."</div>\n";
         }
         if (!empty($info['page_nav'])) {
             $html .= $info['page_nav'];
@@ -87,7 +87,7 @@ class Gallery {
             }
             $html .= "</div>\n";
         } else {
-            $html .= "<div class='well m-t-20 m-b-20 text-center'>".$locale['425']."</div>\n";
+            $html .= "<div class='well m-t-20 m-b-20 text-center'>".$locale['gallery_425']."</div>\n";
         }
         if (isset($info['page_nav'])) {
             $html .= $info['page_nav'];
@@ -98,7 +98,7 @@ class Gallery {
 
     public static function render_photo(array $info = []) {
         $locale = fusion_get_locale();
-        $html = opentable($locale['450']);
+        $html = opentable($locale['gallery_450']);
         $html .= render_breadcrumbs();
         self::$gallery_settings = get_settings('gallery');
         $html .= "<!--pre_photo-->";
@@ -121,19 +121,19 @@ class Gallery {
         $html .= "<div class='list-group-item m-b-20'>\n";
         $html .= "<div class='row'>\n";
         $html .= "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n";
-        $html .= "<strong>".$locale['434']."</strong> ".profile_link($info['user_id'], $info['user_name'], $info['user_status'])."<br/>\n";
-        $html .= "<strong>".$locale['403']."</strong> <abbr title='".showdate("shortdate", $info['photo_datestamp'])."'>".timer($info['photo_datestamp'])."</abbr><br/>";
-        $html .= "<strong>".$locale['454']."</strong> ".$info['photo_size'][0]." x ".$info['photo_size'][1]." ".$locale['455']."<br/>\n";
-        $html .= "<strong>".$locale['456']."</strong> ".$info['photo_byte'];
+        $html .= "<strong>".$locale['gallery_434']."</strong> ".profile_link($info['user_id'], $info['user_name'], $info['user_status'])."<br/>\n";
+        $html .= "<strong>".$locale['gallery_403']."</strong> <abbr title='".showdate("shortdate", $info['photo_datestamp'])."'>".timer($info['photo_datestamp'])."</abbr><br/>";
+        $html .= "<strong>".$locale['gallery_454']."</strong> ".$info['photo_size'][0]." x ".$info['photo_size'][1]." ".$locale['gallery_455']."<br/>\n";
+        $html .= "<strong>".$locale['gallery_456']."</strong> ".$info['photo_byte'];
         $html .= "</div><div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n";
-        $html .= "<strong>".$locale['457']."</strong> ".number_format($info['photo_views'])."<br/>\n";
+        $html .= "<strong>".$locale['gallery_457']."</strong> ".number_format($info['photo_views'])."<br/>\n";
 
         if ($info['photo_allow_ratings'] && fusion_get_settings('ratings_enabled') == 1) {
-            $html .= "<strong>".$locale['437']."</strong> ".$info['photo_ratings']."<br/>\n";
+            $html .= "<strong>".$locale['gallery_437']."</strong> ".$info['photo_ratings']."<br/>\n";
         }
 
         if ($info['photo_allow_comments'] && fusion_get_settings('comments_enabled') == 1) {
-            $html .= "<strong>".$locale['436']."</strong> ".$info['photo_comment']."<br/>\n";
+            $html .= "<strong>".$locale['gallery_436']."</strong> ".$info['photo_comment']."<br/>\n";
         }
         $html .= "</div>\n</div>\n";
         $html .= "</div>\n</div>\n";
@@ -162,9 +162,9 @@ class Gallery {
             $html .= "</ul>\n</div>\n";
         }
         $html .= "<div class='overflow-hide'>\n";
-        $html .= "<a class='album_link' title='".$locale['430']."' href='".$info['album_link']['link']."'>\n<h4 class='album_title'><strong>".trim_text($info['album_link']['name'], 18)."</strong></h4>\n</a>\n";
+        $html .= "<a class='album_link' title='".$locale['gallery_430']."' href='".$info['album_link']['link']."'>\n<h4 class='album_title'><strong>".trim_text($info['album_link']['name'], 18)."</strong></h4>\n</a>\n";
         $html .= "</div>\n";
-        $html .= "<span class='album_count m-r-10'>".format_word($info['photo_rows'], $locale['461'])."</span>";
+        $html .= "<span class='album_count m-r-10'>".format_word($info['photo_rows'], $locale['gallery_461'])."</span>";
         $html .= "<small>".timer($info['album_datestamp'])."</small>\n";
         $html .= "</div>\n";
         $html .= "</div>\n";
@@ -176,7 +176,7 @@ class Gallery {
         $locale = fusion_get_locale();
         $html = "<div class='panel panel-default'>\n";
         $html .= "<div class='panel-image-wrapper'>\n";
-        $html .= "<div class='author'><strong>".$locale['434']."</strong> ".profile_link($info['user_id'], $info['user_name'], $info['user_status'])."</div>\n";
+        $html .= "<div class='author'><strong>".$locale['gallery_434']."</strong> ".profile_link($info['user_id'], $info['user_name'], $info['user_status'])."</div>\n";
         $html .= "<div class='center-xy'>".$info['image']."</div>\n";
         $html .= "</div>\n";
         $html .= "<div class='panel-body clearfix'>\n";

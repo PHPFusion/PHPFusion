@@ -29,36 +29,34 @@ function render_admin_login() {
     $aidlink = fusion_get_aidlink();
     $userdata = fusion_get_userdata();
 
-    echo "<div id='wrapper'>\n";
-    echo "<div class='container' style='margin-top:100px;'>\n";
-    echo "<div class='block'>\n";
-        echo "<div class='block-content clearfix' style='font-size:13px;'>\n";
-        echo "<h6><strong>".$locale['280']."</strong></h6>\n";
-        echo "<img src='".IMAGES."php-fusion-icon.png' class='pf-logo position-absolute' alt='PHP-Fusion'/>";
-        echo "<p class='fusion-version text-right mid-opacity text-smaller'>".$locale['version'].fusion_get_settings('version')."</p>";
-        echo "<div class='row m-0'>\n<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>";
+    $html = "<div id='wrapper'>\n";
+    $html .= "<div class='container' style='margin-top:100px;'>\n";
+    $html .= "<div class='block'>\n";
+        $html .= "<div class='block-content clearfix' style='font-size:13px;'>\n";
+        $html .= "<h6><strong>".$locale['280']."</strong></h6>\n";
+        $html .= "<img src='".IMAGES."php-fusion-icon.png' class='pf-logo position-absolute' alt='PHP-Fusion'/>";
+        $html .= "<p class='fusion-version text-right mid-opacity text-smaller'>".$locale['version'].fusion_get_settings('version')."</p>";
+        $html .= "<div class='row m-0'>\n<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>";
 
-        $form_action = FUSION_SELF.$aidlink == ADMIN."index.php".$aidlink ? FUSION_SELF.$aidlink."&amp;pagenum=0" : FUSION_SELF."?".FUSION_QUERY;
         // Get all notices
-        $notices = getNotices();
-        echo renderNotices($notices);
+        $html .= renderNotices(getNotices());
+        $form_action = FUSION_SELF.$aidlink == ADMIN."index.php".$aidlink ? FUSION_SELF.$aidlink."&amp;pagenum=0" : FUSION_SELF."?".FUSION_QUERY;
+        $html .= openform('admin-login-form', 'post', $form_action);
 
-        echo openform('admin-login-form', 'post', $form_action);
-
-        openside('');
-        echo "<div class='m-t-10 clearfix row'>\n";
-        echo "<div class='col-xs-3 col-sm-3 col-md-3 col-lg-3'>\n";
-        echo "<div class='pull-right'>\n";
-        echo display_avatar($userdata, '90px');
-        echo "</div>\n";
-        echo "</div>\n<div class='col-xs-9 col-sm-9 col-md-8 col-lg-7'>\n";
-        echo "<div class='clearfix'>\n";
+        $html .= fusion_get_function('openside', '');
+        $html .= "<div class='m-t-10 clearfix row'>\n";
+        $html .= "<div class='col-xs-3 col-sm-3 col-md-3 col-lg-3'>\n";
+        $html .= "<div class='pull-right'>\n";
+        $html .= display_avatar($userdata, '90px');
+        $html .= "</div>\n";
+        $html .= "</div>\n<div class='col-xs-9 col-sm-9 col-md-8 col-lg-7'>\n";
+        $html .= "<div class='clearfix'>\n";
 
         add_to_head('<style>#admin_password-field .required {display:none}</style>');
 
-        echo "<h5><strong>".$locale['welcome'].", ".$userdata['user_name']."</strong><br/>".getuserlevel($userdata['user_level'])."</h5>";
+        $html .= "<h5><strong>".$locale['welcome'].", ".$userdata['user_name']."</strong><br/>".getuserlevel($userdata['user_level'])."</h5>";
 
-        echo form_text('admin_password', "", "", array(
+        $html .= form_text('admin_password', "", "", array(
             'callback_check' => 'check_admin_pass',
             'placeholder' => $locale['281'],
             'error_text' => $locale['global_182'],
@@ -67,20 +65,22 @@ function render_admin_login() {
             'required' => TRUE,
         ));
 
-        echo "</div>\n";
-        echo "</div>\n";
-        echo "</div>\n";
-        closeside();
+        $html .= "</div>\n";
+        $html .= "</div>\n";
+        $html .= "</div>\n";
+        $html .= fusion_get_function('closeside', '');
 
-        echo form_button('admin_login', $locale['login'], $locale['login'], array('class' => 'btn-primary btn-block'));
+        $html .= form_button('admin_login', $locale['login'], $locale['login'], array('class' => 'btn-primary btn-block'));
 
-        echo closeform();
+        $html .= closeform();
 
-        echo "</div>\n</div>\n"; // .col-*, .row
-        echo "</div>\n"; // .block-content
-    echo "</div>\n"; // .block
-    echo "<div class='copyright-note clearfix m-t-10'>".showcopyright()."</div>\n";
-    echo "</div></div>\n";
+        $html .= "</div>\n</div>\n"; // .col-*, .row
+        $html .= "</div>\n"; // .block-content
+    $html .= "</div>\n"; // .block
+    $html .= "<div class='copyright-note clearfix m-t-10'>".showcopyright()."</div>\n";
+    $html .= "</div></div>\n";
+
+    echo $html;
 }
 
 function render_admin_panel() {
@@ -89,105 +89,105 @@ function render_admin_panel() {
     $userdata = fusion_get_userdata();
     $languages = fusion_get_enabled_languages();
 
-    echo "<div id='wrapper'>\n";
-    echo "<div class='container'>\n";
-    echo "<div class='body-wrap'>\n";
-    echo "<div class='body-inner-wrap'>\n";
+    $html = "<div id='wrapper'>\n";
+    $html .= "<div class='container'>\n";
+    $html .= "<div class='body-wrap'>\n";
+    $html .= "<div class='body-inner-wrap'>\n";
 
     // Admin panel page
-    echo "<div id='admin-panel' class='clearfix in'>\n";
+    $html .= "<div id='admin-panel' class='clearfix in'>\n";
 
     // Top header section
-    echo "<section data-offset-top='0' data-offset-bottom='0'>\n";
-        echo '<nav id="acp-header" class="navbar navbar-default m-r-15 m-l-15">';
-            echo '<div class="container-fluid">';
-                echo '<div class="navbar-header">';
-                    echo '<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-menu" aria-expanded="false">';
-                        echo '<span class="sr-only">Toggle navigation</span>';
-                        echo '<span class="icon-bar"></span>';
-                        echo '<span class="icon-bar"></span>';
-                        echo '<span class="icon-bar"></span>';
-                    echo '</button>';
-                echo '</div>';
-                echo '<div class="collapse navbar-collapse" id="main-menu">';
-                    echo '<ul class="nav navbar-nav">';
+    $html .= "<section data-offset-top='0' data-offset-bottom='0'>\n";
+        $html .= '<nav id="acp-header" class="navbar navbar-default m-r-15 m-l-15">';
+            $html .= '<div class="container-fluid">';
+                $html .= '<div class="navbar-header">';
+                    $html .= '<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-menu" aria-expanded="false">';
+                        $html .= '<span class="sr-only">Toggle navigation</span>';
+                        $html .= '<span class="icon-bar"></span>';
+                        $html .= '<span class="icon-bar"></span>';
+                        $html .= '<span class="icon-bar"></span>';
+                    $html .= '</button>';
+                $html .= '</div>';
+                $html .= '<div class="collapse navbar-collapse" id="main-menu">';
+                    $html .= '<ul class="nav navbar-nav">';
                         $sections = \PHPFusion\Admins::getInstance()->getAdminSections();
                         if (!empty($sections)) {
                             $i = 0;
 
                             foreach ($sections as $section_name) {
                                 $active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && \PHPFusion\Admins::getInstance()->_isActive() == $i) ? ' class="active"' : '';
-                                echo '<li'.$active.'><a href="'.ADMIN.'index.php'.$aidlink.'&amp;pagenum='.$i.'">'.$section_name.'</a></li>';
+                                $html .= '<li'.$active.'><a href="'.ADMIN.'index.php'.$aidlink.'&amp;pagenum='.$i.'">'.$section_name.'</a></li>';
                                 $i++;
                             }
                         }
-                    echo '</ul>';
+                    $html .= '</ul>';
 
-                    echo '<ul class="nav navbar-nav navbar-right">';
-                        echo "<li class='dropdown'>\n";
-                            echo "<a class='dropdown-toggle pointer' data-toggle='dropdown'>".display_avatar($userdata, '18px', '', '', 'img-rounded')." ".$locale['logged']."<strong>".$userdata['user_name']."</strong> <span class='caret'></span>\n</a>\n";
-                            echo "<ul class='dropdown-menu' role='menu'>\n";
-                            echo "<li><a class='display-block' href='".BASEDIR."edit_profile.php'>".$locale['edit']." ".$locale['profile']."</a></li>\n";
-                            echo "<li><a class='display-block' href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'>".$locale['view']." ".$locale['profile']."</a></li>\n";
-                            echo "<li class='divider'> </li>\n";
-                            echo "<li><a class='display-block' href='".FUSION_REQUEST."&amp;logout'>".$locale['admin-logout']."</a></li>\n";
-                            echo "<li><a class='display-block' href='".BASEDIR."index.php?logout=yes'>".$locale['logout']."</a></li>\n";
-                            echo "</ul>\n";
-                            echo "</li>\n";
+                    $html .= '<ul class="nav navbar-nav navbar-right">';
+                        $html .= "<li class='dropdown'>\n";
+                            $html .= "<a class='dropdown-toggle pointer' data-toggle='dropdown'>".display_avatar($userdata, '18px', '', '', 'img-rounded')." ".$locale['logged']."<strong>".$userdata['user_name']."</strong> <span class='caret'></span>\n</a>\n";
+                            $html .= "<ul class='dropdown-menu' role='menu'>\n";
+                            $html .= "<li><a class='display-block' href='".BASEDIR."edit_profile.php'>".$locale['edit']." ".$locale['profile']."</a></li>\n";
+                            $html .= "<li><a class='display-block' href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'>".$locale['view']." ".$locale['profile']."</a></li>\n";
+                            $html .= "<li class='divider'> </li>\n";
+                            $html .= "<li><a class='display-block' href='".FUSION_REQUEST."&amp;logout'>".$locale['admin-logout']."</a></li>\n";
+                            $html .= "<li><a class='display-block' href='".BASEDIR."index.php?logout=yes'>".$locale['logout']."</a></li>\n";
+                            $html .= "</ul>\n";
+                            $html .= "</li>\n";
                             if (count($languages) > 1) {
-                                echo "<li class='dropdown'><a class='dropdown-toggle pointer' data-toggle='dropdown' title='".$locale['282']."'><i class='fa fa-globe fa-lg fa-fw'></i> ".translate_lang_names(LANGUAGE)."<span class='caret'></span></a>\n";
-                                echo "<ul class='dropdown-menu'>\n";
+                                $html .= "<li class='dropdown'><a class='dropdown-toggle pointer' data-toggle='dropdown' title='".$locale['282']."'><i class='fa fa-globe fa-lg fa-fw'></i> ".translate_lang_names(LANGUAGE)."<span class='caret'></span></a>\n";
+                                $html .= "<ul class='dropdown-menu'>\n";
                                 foreach ($languages as $language_folder => $language_name) {
-                                    echo "<li><a class='display-block' href='".clean_request("lang=".$language_folder, array("lang"),
-                                                                                             FALSE)."'><img class='m-r-5' src='".BASEDIR."locale/$language_folder/$language_folder-s.png'> $language_name</a></li>\n";
+                                    $html .= "<li><a class='display-block' href='".clean_request("lang=".$language_folder, array("lang"),FALSE)."'><img class='m-r-5' alt='$language_name' src='".BASEDIR."locale/$language_folder/$language_folder-s.png'> $language_name</a></li>\n";
                                 }
-                                echo "</ul>\n";
-                            echo "</li>\n";
+                                $html .= "</ul>\n";
+                            $html .= "</li>\n";
                         }
-                    echo '</ul>';
-                echo '</div>'; // .navbar-collapse
-            echo '</div>'; // .container-fluid
-        echo '</nav>';
-    echo "</section>\n";
+                    $html .= '</ul>';
+                $html .= '</div>'; // .navbar-collapse
+            $html .= '</div>'; // .container-fluid
+        $html .= '</nav>';
+    $html .= "</section>\n";
 
     // Content section
-    echo "<div class='content-wrapper display-block'>\n";
+    $html .= "<div class='content-wrapper display-block'>\n";
 
     // Main content wrapper
-    echo "<div id='acp-content' class='m-t-20 col-xs-12 col-sm-12 col-md-12 col-lg-12'>\n";
+    $html .= "<div id='acp-content' class='m-t-20 col-xs-12 col-sm-12 col-md-12 col-lg-12'>\n";
 
     // Render breadcrumbs
-    echo render_breadcrumbs();
+    $html .= render_breadcrumbs();
 
     // Get and render notices
-    $notices = getNotices();
-    echo renderNotices($notices);
+    $html .= renderNotices(getNotices());
 
     // Render the content
-    echo CONTENT;
-    echo "<hr />\n";
-    echo "</div>\n"; // #acp-content
+    $html .= CONTENT;
+    $html .= "<hr />\n";
+    $html .= "</div>\n"; // #acp-content
 
     // Footer section
-    echo "<footer class='display-inline-block m-t-20'>\n";
+    $html .= "<footer class='display-inline-block m-t-20'>\n";
 
     // Copyright
-    echo "Old_School Admin &copy; ".date("Y")." Created by <a href='https://www.php-fusion.co.uk'><strong>PHP-Fusion Inc.</strong></a>\n";
-    echo showcopyright();
+    $html .= "Old_School Admin &copy; ".date("Y")." Created by <a href='https://www.php-fusion.co.uk'><strong>PHP-Fusion Inc.</strong></a>\n";
+    $html .= showcopyright();
 
     // Render time
     if (fusion_get_settings('rendertime_enabled')) {
-        echo "<br /><br />";
+        $html .= "<br /><br />";
         // Make showing of queries and memory usage separate settings
-        echo showrendertime();
-        echo showMemoryUsage();
+        $html .= showrendertime();
+        $html .= showMemoryUsage();
     }
 
-    echo showFooterErrors();
-    echo "</footer>\n";
-    echo "</div>\n"; // .acp-main
-    echo "</div>\n"; // #admin-panel
+    $html .= showFooterErrors();
+    $html .= "</footer>\n";
+    $html .= "</div>\n"; // .acp-main
+    $html .= "</div>\n"; // #admin-panel
 
     // Wrappers
-    echo "</div></div></div></div>\n";
+    $html .= "</div></div></div></div>\n";
+
+    echo $html;
 }

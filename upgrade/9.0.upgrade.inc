@@ -24,7 +24,7 @@ $settings = fusion_get_settings();
  * Upgrade Database Collation
  * Force the database to UTF-8 because we'll convert to it
  */
-dbquery("SET NAMES 'utf8'");
+dbquery("SET NAMES utf8mb4");
 
 if (!dbcount("(user_id)", DB_USERS, "user_level < '-100'")) {
     $inf_updatedbrow[] = DB_USERS." SET user_level='-103' WHERE user_level='103'";

@@ -20,8 +20,6 @@ require_once THEMES."admin_themes/Genesis/autoloader.php";
 define('BOOTSTRAP', TRUE);
 define('FONTAWESOME', TRUE);
 
-\PHPFusion\Admins::getInstance()->setAdminBreadcrumbs();
-
 function opentable($title, $class = FALSE) {
     \Genesis\Viewer\adminPanel::opentable($title, $class);
 }

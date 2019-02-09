@@ -324,7 +324,7 @@ class Admins {
     public function getAdminPages() {
         self::$admin_pages = array_filter(self::$admin_pages);
         if (empty(self::$admin_pages)) {
-            $result = dbquery("SELECT admin_title, admin_page, admin_rights, admin_link FROM ".DB_ADMIN." WHERE admin_language='".LANGUAGE."' ORDER BY admin_page DESC, admin_id ASC, admin_title ASC");
+            $result = dbquery("SELECT * FROM ".DB_ADMIN." WHERE admin_language='".LANGUAGE."' ORDER BY admin_page DESC, admin_id ASC, admin_title ASC");
             $rows = dbrows($result);
             if ($rows) {
                 while ($data = dbarray($result)) {
@@ -488,23 +488,25 @@ class Admins {
     }
 
     /**
-     * @param $type  - comment prefix
-     * @param $title - title
+     * @param $type  comment prefix
+     * @param $title title
      */
     public function setCommentType($type, $title) {
         $this->comment_type[$type] = $title;
     }
 
-    /**
-     * @param $type - infusion_name
-     */
+	/**
+	 * @param null $type
+	 *
+	 * @return array|mixed|null
+	 */
     public function getFolderPermissions($type = NULL) {
         return ($type !== NULL ? (isset($this->folder_permissions[$type]) ? $this->folder_permissions[$type] : NULL) : $this->folder_permissions);
     }
 
     /**
-     * @param $type    - infusion_name
-     * @param $options - array(image_folder => TRUE or FALSE)
+     * @param $type    infusion_name
+     * @param $options array(image_folder => TRUE or FALSE)
      */
     public function setFolderPermissions($type, array $options = []) {
         defined(strtoupper($type).'_EXIST') ? $this->folder_permissions[$type] = $options : NULL;
@@ -545,7 +547,7 @@ class Admins {
 
             $html .= "<li class='".($active ? 'active panel' : 'panel')."' >\n";
 
-            if (!empty($admin_pages[$i])) {
+            if (!empty($admin_pages[$i]) && is_array($admin_pages[$i])) {
                 $html .= "<a class='adl-link ".($active ? '' : 'collapsed')."' data-parent='#adl' data-toggle='collapse' href='#adl-$i'>".$this->get_admin_section_icons($i)." <span class='adl-section-name'>".$section_name.($i > 4 ? " <span class='badge'>".count($admin_pages[$i])."</span>" : "")."</span> ".($i > 0 ? "<span class='adl-drop pull-right'><i class='fa fa-angle-".($active ? "left" : "down")."'></i></span>" : '')."</a>\n";
                 $html .= "<ul id='adl-$i' class='admin-submenu collapse ".($active ? 'in' : '')."'>\n";
 

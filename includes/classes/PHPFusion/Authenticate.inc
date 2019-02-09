@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: Authenticate.inc
-| Author: PHP-Fusion Development Team
+| Author: Hans Kristian Flaatten (Starefossen)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or

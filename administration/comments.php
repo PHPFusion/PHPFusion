@@ -227,7 +227,7 @@ class CommentsAdministration {
                 }
             }
         }
-        openside(\PHPFusion\Admins::getInstance()->getCommentType($_GET['ctype'])." ".$this->locale['401']);
+        openside();
         self::reder_commentAdmin($info);
         closeside();
     }
