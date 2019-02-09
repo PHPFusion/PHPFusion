@@ -210,7 +210,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
                 if ($rows > $settings['thumbs_per_page']) {
                     echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], $settings['thumbs_per_page'], $rows, 3, BASEDIR."photogallery.php?album_id=".$_GET['album_id']."&amp;")."\n</div>\n";
                 }
-                echo "<table cellpadding='0' cellspacing='1' width='100%'>\n<tr>\n";
+                echo "<div class='table-responsive'><table cellpadding='0' cellspacing='1' width='100%'>\n<tr>\n";
                 while ($data = dbarray($result)) {
                     if ($counter != 0 && ($counter % $settings['thumbs_per_row'] == 0)) {
                         echo "</tr>\n<tr>\n";
@@ -232,7 +232,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
                     echo "</td>\n";
                     $counter++;
                 }
-                echo "</tr>\n</table>\n";
+                echo "</tr>\n</table>\n</div>";
                 closetable();
             }
             if ($rows > $settings['thumbs_per_page']) {
