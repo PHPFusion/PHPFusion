@@ -267,10 +267,10 @@ function gallery_photo_listing() {
             }
             echo "</div>\n";
         } else {
-            redirect(FUSION_REQUEST);
+            redirect(INFUSIONS.'gallery/gallery_admin.php'.$aidlink);
         }
     } else {
-        redirect(FUSION_REQUEST);
+        redirect(INFUSIONS.'gallery/gallery_admin.php'.$aidlink);
     }
 }
 
