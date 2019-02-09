@@ -27,31 +27,32 @@ use PHPFusion\Forums\ForumServer;
  */
 class Forum_Postify extends ForumServer {
 
-	/**
-	 * @var array|null
-	 */
+    /**
+     * @var array|null
+     */
     protected static $locale = [];
-	/**
-	 * @var string
-	 */
+    /**
+     * @var string
+     */
     protected static $default_redirect_link = '';
-	/**
-	 * @var array
-	 */
+    /**
+     * @var array
+     */
     protected static $postify_uri = [];
-	/**
-	 * @var array|string|string[]
-	 */
+    /**
+     * @var array|string|string[]
+     */
     protected static $settings = [];
-	/**
-	 * @var
-	 */
+    /**
+     * @var
+     */
     private $postify_action;
 
-	/**
-	 * Forum_Postify constructor.
-	 * @throws \Exception
-	 */
+    /**
+     * Forum_Postify constructor.
+     *
+     * @throws \Exception
+     */
     public function __construct() {
         self::$locale = fusion_get_locale('', FORUM_LOCALE);
         self::$settings = fusion_get_settings();
@@ -72,9 +73,63 @@ class Forum_Postify extends ForumServer {
         BreadCrumbs::getInstance()->addBreadCrumb(['link' => FORUM.'index.php', 'title' => self::$locale['forum_0000']]);
     }
 
-	/**
-	 * @return mixed|string
-	 */
+    /**
+     * @throws \ReflectionException
+     */
+    public function do_postify() {
+        if ($postify = $this->load_postify($_GET['post'])) {
+            if (method_exists($postify, 'execute')) {
+                $postify->execute();
+            } else {
+                if (iMOD) {
+                    addNotice('danger', 'No action taken');
+                    redirect(self::$default_redirect_link);
+                }
+            }
+        } else {
+            if (iMOD) {
+                addNotice('danger', 'No action taken');
+                redirect(self::$default_redirect_link);
+            }
+        }
+    }
+
+    /**
+     * @param $class_actions
+     *
+     * @return object
+     * @throws \ReflectionException
+     */
+    private function load_postify($class_actions) {
+        /*
+         * Overrides
+         */
+        $implements = [
+            'on'       => 'track',
+            'off'      => 'track',
+            'voteup'   => 'vote',
+            'votedown' => 'vote'
+        ];
+        // Override the class action with the implemented method.
+        $class_actions = (isset($implements[$class_actions]) ? $implements[$class_actions] : $class_actions);
+        if (file_exists(FORUM_CLASS.'postify/'.$class_actions.'.php')) {
+            require_once(FORUM_CLASS.'postify/'.$class_actions.'.php');
+            $namespace_ = '\\PHPFusion\\Forums\\Postify\\';
+            $prefix_ = 'Postify_';
+            $obj = new \ReflectionClass($namespace_.$prefix_.$class_actions);
+            $this->postify_action[$class_actions] = $obj->newInstance();
+        }
+        // Need to execute the implement_method
+        if (is_object($this->postify_action[$class_actions])) {
+            return (object)$this->postify_action[$class_actions];
+        } else {
+            throw new \Exception('Invalid Action');
+        }
+    }
+
+    /**
+     * @return mixed|string
+     */
     protected function get_postify_error_message() {
         $_GET['error'] = (!empty($_GET['error']) && isnum($_GET['error']) && $_GET['error'] <= 6 ? $_GET['error'] : 0);
         if (!empty($_GET['error'])) {
@@ -104,6 +159,8 @@ class Forum_Postify extends ForumServer {
                     break;
             }
         }
+
+        return NULL;
     }
 
     /**
@@ -124,59 +181,5 @@ class Forum_Postify extends ForumServer {
         $link[] = ['url' => FORUM."index.php", 'title' => self::$locale['forum_0550']];
 
         return (array)$link;
-    }
-
-	/**
-	 * @param $class_actions
-	 *
-	 * @return object
-	 * @throws \ReflectionException
-	 */
-    private function load_postify($class_actions) {
-        /*
-         * Overrides
-         */
-        $implements = [
-            'on'       => 'track',
-            'off'      => 'track',
-            'voteup'   => 'vote',
-            'votedown' => 'vote'
-        ];
-        // Override the class action with the implemented method.
-        $class_actions = (isset($implements[$class_actions]) ? $implements[$class_actions] : $class_actions);
-        if (file_exists(FORUM_CLASS.'postify/'.$class_actions.'.php')) {
-            require_once(FORUM_CLASS.'postify/'.$class_actions.'.php');
-            $namespace_ = '\\PHPFusion\\Forums\\Postify\\';
-            $prefix_ = 'Postify_';
-            $obj = new \ReflectionClass($namespace_.$prefix_.$class_actions);
-            $this->postify_action[$class_actions] = $obj->newInstance();
-        }
-        // Need to execute the implement_method
-        if (is_object($this->postify_action[$class_actions])) {
-            return (object)$this->postify_action[$class_actions];
-        } else {
-            throw new \Exception('Invalid Action');
-        }
-    }
-
-	/**
-	 * @throws \ReflectionException
-	 */
-    public function do_postify() {
-        if ($postify = $this->load_postify($_GET['post'])) {
-            if (method_exists($postify, 'execute')) {
-                $postify->execute();
-            } else {
-                if (iMOD) {
-                    addNotice('danger', 'No action taken');
-                    redirect(self::$default_redirect_link);
-                }
-            }
-        } else {
-            if (iMOD) {
-                addNotice('danger', 'No action taken');
-                redirect(self::$default_redirect_link);
-            }
-        }
     }
 }
