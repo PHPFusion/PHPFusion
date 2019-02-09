@@ -19,10 +19,6 @@ namespace PHPFusion\Downloads;
 
 use PHPFusion\BreadCrumbs;
 
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
-
 class Functions {
     /**
      * Download Category Hierarchy Full Data
