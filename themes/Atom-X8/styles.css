@@ -1469,7 +1469,7 @@ input[type=submit]:active {
     width: 14px;
     height: 12px;
     position: relative;
-    top: 1px;
+    top: -2px;
     background-image: url(images/buttons_icons.png);
     background-repeat: no-repeat;
     margin: auto 7px auto auto;

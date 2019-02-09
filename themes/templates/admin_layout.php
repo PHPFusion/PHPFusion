@@ -82,7 +82,7 @@ if (function_exists("get_head_tags")) {
 }
 
 echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery.min.js'></script>\n";
-echo "<script type='text/javascript' src='".INCLUDES."jscripts/jscript.js'></script>\n";
+echo "<script type='text/javascript' src='".INCLUDES."jscripts/jscript.min.js'></script>\n";
 
 if ($settings['tinymce_enabled'] == 1) {
     echo "<style type='text/css'>.mceIframeContainer iframe{width:100%!important;background-color: #000;}</style>\n";
