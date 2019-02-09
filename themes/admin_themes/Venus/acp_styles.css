@@ -556,6 +556,11 @@ textarea.textbox {
     height: auto;
 }
 
+input[type="radio"],
+input[type="checkbox"] {
+    height: inherit;
+}
+
 .button {
     display: inline-block;
     padding: 6px 12px;

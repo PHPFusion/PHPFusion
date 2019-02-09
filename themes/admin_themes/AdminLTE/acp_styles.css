@@ -1681,6 +1681,11 @@ textarea.textbox {
     height: auto;
 }
 
+input[type="radio"],
+input[type="checkbox"] {
+    height: inherit;
+}
+
 .textbox,
 .form-control {
     -webkit-border-radius: 0;
