@@ -24,11 +24,6 @@ use PHPFusion\Installer\Requirements;
 class InstallerInfusions extends Install_Core {
 
     public function __view() {
-
-        if (!defined('IN_FUSION')) {
-            define('IN_FUSION', TRUE);
-        }
-
         self::$connection = self::fusion_get_config(BASEDIR.'config_temp.php');
 
         require_once(INCLUDES.'multisite_include.php');

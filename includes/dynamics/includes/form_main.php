@@ -29,43 +29,43 @@
  */
 function openform($form_name, $method, $action_url = FORM_REQUEST, array $options = []) {
 
-	$method = (strtolower($method) == 'post') ? 'post' : 'get';
-	$default_options = [
-		'form_id'    => $form_name,
-		'class'      => '',
-		'enctype'    => FALSE,
-		'max_tokens' => fusion_get_settings('form_tokens'),
-		'remote_url' => '',
-		'inline'     => FALSE,
-		'on_submit'  => '',
-		'token_time' => TIME,
-	];
+    $method = (strtolower($method) == 'post') ? 'post' : 'get';
+    $default_options = [
+        'form_id'    => $form_name,
+        'class'      => '',
+        'enctype'    => FALSE,
+        'max_tokens' => fusion_get_settings('form_tokens'),
+        'remote_url' => '',
+        'inline'     => FALSE,
+        'on_submit'  => '',
+        'token_time' => TIME,
+    ];
 
-	$options += $default_options;
+    $options += $default_options;
 
-	if (!$action_url) {
-		$action_url = FORM_REQUEST;
-	}
+    if (!$action_url) {
+        $action_url = FORM_REQUEST;
+    }
 
-	$class = $options['class'];
-	if (!\defender::safe()) {
-		$class .= " warning";
-	}
+    $class = $options['class'];
+    if (!\defender::safe()) {
+        $class .= " warning";
+    }
 
-	$html = "<form name='" . $form_name . "' id='" . $options['form_id'] . "' method='" . $method . "' action='" . $action_url . "' class='" . ($options['inline'] ? "form-inline " : '') . ($class ? $class : 'm-0') . "'" . ($options['enctype'] ? " enctype='multipart/form-data'" : '') . ($options['on_submit'] ? " onSubmit='" . $options['on_submit'] . "'" : '') . ">\n";
+    $html = "<form name='".$form_name."' id='".$options['form_id']."' method='".$method."' action='".$action_url."' class='".($options['inline'] ? "form-inline " : '').($class ? $class : 'm-0')."'".($options['enctype'] ? " enctype='multipart/form-data'" : '').($options['on_submit'] ? " onSubmit='".$options['on_submit']."'" : '').">\n";
 
-	if ($method == 'post') {
-		$token = \Defender\Token::generate_token($options['form_id'], $options['max_tokens'], $options['remote_url'], $options['token_time']);
-		$html .= "<input type='hidden' name='fusion_token' value='" . $token . "' />\n";
-		$html .= "<input type='hidden' name='form_id' value='" . $options['form_id'] . "' />\n";
-	}
+    if ($method == 'post') {
+        $token = \Defender\Token::generate_token($options['form_id'], $options['max_tokens'], $options['remote_url'], $options['token_time']);
+        $html .= "<input type='hidden' name='fusion_token' value='".$token."' />\n";
+        $html .= "<input type='hidden' name='form_id' value='".$options['form_id']."' />\n";
+    }
 
-	return (string)$html;
+    return (string)$html;
 }
 
 /**
  * @return string
  */
 function closeform() {
-	return (string)"</form>\n";
+    return (string)"</form>\n";
 }
