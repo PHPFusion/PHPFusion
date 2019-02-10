@@ -374,7 +374,7 @@ function get_table_rows($table_name, $localeset = 'English') {
             ],
             [
                 'settings_name'  => 'avatar_filesize',
-                'settings_value' => 153600
+                'settings_value' => 1048576
             ],
             [
                 'settings_name'  => 'avatar_ratio',
