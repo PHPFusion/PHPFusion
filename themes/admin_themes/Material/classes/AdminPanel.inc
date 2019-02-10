@@ -196,9 +196,7 @@ class AdminPanel {
                         ['name' => 'hide-sidebar',      'title' => '003'],
                         ['name' => 'sidebar-sm',        'title' => '004'],
                         ['name' => 'fixedmenu',         'title' => '005', 'toggle' => 'on'],
-                        ['name' => 'fixedsidebar',      'title' => '006', 'toggle' => 'on'],
-                        ['name' => 'fixedfootererrors', 'title' => '007', 'toggle' => 'on'],
-                        ['name' => 'fullscreen',        'title' => '008']
+                        ['name' => 'fixedsidebar',      'title' => '006', 'toggle' => 'on']
                     ];
 
                     foreach ($theme_settings as $setting) {
