@@ -1,0 +1,86 @@
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: Atom9/IgnitionPacks/StarCity/Templates/css/downloads.css
+| Author: Frederick MC Chan (Chan)
+| Author: RobiNN
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
+.atom-banner {
+    background-image: url("../../assets/images/bg_dl.png");
+}
+
+.downloads {
+    background: rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.downloads > .heading {
+    padding: 15px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.downloads > .footer {
+    padding: 15px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.downloads .download-item {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 20px;
+    height: 100%;
+}
+
+.downloads .download-item .body {
+    height: 173px;
+    padding: 15px;
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.downloads .download-item .footer {
+    padding: 5px;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+@media (max-width: 767px) {
+    .download-left {
+        padding: 0 !important;
+    }
+
+    .download-left .dl-desc {
+        padding: 15px;
+    }
+}
+
+.download-right .dl-desc {
+    padding: 15px 0 15px 15px;
+}
+
+.downloads .description {
+    padding: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.64);
+}
+
+.downloads .description .profile-link {
+    color: rgb(58, 214, 247);
+}
+
+.downloads .description .profile-link:hover,
+.downloads .description .profile-link:focus {
+    color: rgb(34, 130, 149);
+}
+
