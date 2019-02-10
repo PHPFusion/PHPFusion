@@ -37,8 +37,6 @@ $locale['blog_0415'] = "Image must be one of the following file types %s.";
 $locale['blog_0416'] = "Image must be no bigger than %s pixels.";
 $locale['blog_0417'] = "Unknown error";
 // Blog form
-$locale['blog_0420'] = "Edit";
-$locale['blog_0421'] = "Delete";
 $locale['blog_0422'] = "Blog Subject";
 $locale['blog_0423'] = "Category:";
 $locale['blog_0424'] = "Uncategorized";
