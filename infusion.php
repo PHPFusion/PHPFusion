@@ -245,7 +245,7 @@ if (!column_exists('users', 'user_reputation')) {
 // Insert settings
 $settings = [
     'forum_ips'                  => USER_LEVEL_SUPER_ADMIN,
-    'forum_attachmax'            => 1048576,
+    'forum_attachmax'            => 15728640,
     'forum_attachmax_count'      => 5,
     'forum_attachtypes'          => '.pdf,.gif,.jpg,.png,.zip,.rar,.tar,.bz2,.7z',
     'thread_notify'              => 1,

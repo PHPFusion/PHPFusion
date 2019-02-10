@@ -1093,7 +1093,7 @@ class ForumThreads extends ForumServer {
                         ) {
                             $pdata['post_edit'] = [
                                 'link'  => INFUSIONS."forum/viewthread.php?action=edit&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id'],
-                                'title' => $locale['forum_0265']
+                                'title' => $locale['edit']
                             ];
                         }
                         $pdata['post_reply'] = [
@@ -1103,7 +1103,7 @@ class ForumThreads extends ForumServer {
                     } else if (iMOD) {
                         $pdata['post_edit'] = [
                             'link'  => INFUSIONS."forum/viewthread.php?action=edit&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id'],
-                            'title' => $locale['forum_0265']
+                            'title' => $locale['edit']
                         ];
                     }
                 }
