@@ -2,10 +2,11 @@
 /**
  * English Locale
  *
- * @locale charset           ISO 639-1 - http://www.loc.gov/standards/iso639-2/php/code_list.php
- * @locale region            ISO-3166 (2 Alpha numeric) - https://www.iso.org/obp/ui/#search
- * @locale tinymce           refer to path includes/jscripts/tinymce/langs/{value}.js
- * @locale phpmailer         refer to path includes/classes/PHPMailer/language/phpmailer.lang-{value}.php
+ * @locale charset     ISO 639-1 - http://www.loc.gov/standards/iso639-2/php/code_list.php
+ * @locale region      ISO-3166 (2 Alpha numeric) - https://www.iso.org/obp/ui/#search
+ * @locale tinymce     refer to path includes/jscripts/tinymce/langs/{value}.js
+ * @locale phpmailer   refer to path includes/classes/PHPMailer/language/phpmailer.lang-{value}.php
+ * @locale filemanager refer to path includes/filemanager/lang/{value}.php
  * @package locale/English
  */
 
@@ -17,6 +18,7 @@ $locale['short_lang_name'] = "en";
 $locale['tinymce'] = "en";
 $locale['select2'] = "en";
 $locale['phpmailer'] = "en";
+$locale['filemanager'] = "en_EN";
 $locale['datepicker'] = "en-gb";
 $locale['datepicker_js'] = "M-DD-YYYY H:mm:ss";
 $locale['datepicker_php'] = "m-d-Y H:i:s";
