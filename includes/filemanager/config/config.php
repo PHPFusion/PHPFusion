@@ -1,7 +1,11 @@
 <?php
+require_once '../../maincore.php';
+$locale = fusion_get_locale();
+
 $version = "9.13.4";
-if (session_id() == '')
+if (session_id() == '') {
     session_start();
+}
 
 mb_internal_encoding('UTF-8');
 mb_http_output('UTF-8');
@@ -213,7 +217,7 @@ $config = [
     | default language file name
     |--------------------------------------------------------------------------
     */
-    'default_language'               => "en_EN",
+    'default_language'               => $locale['filemanager'],
 
     /*
     |--------------------------------------------------------------------------

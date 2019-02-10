@@ -8,6 +8,7 @@
  * @locale select2           refer to path includes/dynamics/select2/select2_locale_{value}.js
  * @locale phpmailer         refer to path includes/classes/PHPMailer/language/phpmailer.lang-{value}.php
  * @locale password_strength refer to path includes/dynamics/password/lang/{value}.js
+ * @locale filemanager       refer to path includes/filemanager/lang/{value}.php
  * @package locale/English
  */
 setlocale(LC_TIME, "en_GB.utf8"); // Linux Server (Windows may differ)
@@ -18,6 +19,7 @@ $locale['short_lang_name'] = "en";
 $locale['tinymce'] = "en";
 $locale['select2'] = "en";
 $locale['phpmailer'] = "en";
+$locale['filemanager'] = "en_EN";
 $locale['datepicker'] = "en-gb";
 $locale['datepicker_js'] = "M-DD-YYYY H:mm:ss";
 $locale['datepicker_php'] = "m-d-Y H:i:s";
