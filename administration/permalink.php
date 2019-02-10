@@ -409,7 +409,7 @@ switch ($_GET['section']) {
                             $row_class = " class='active'";
                             $link = "<a href='".FUSION_SELF.$aidlink."&amp;disable=".$rewrite_name."'>".$locale['PL_404b']."</a><span class='m-l-5 m-r-5'>&middot;</span>";
                             // edit
-                            $link .= "<a href='".FUSION_SELF.$aidlink."&amp;edit=".$rewrite_name."'>".$locale['PL_404c']."</a><span class='m-l-5 m-r-5'>&middot;</span>\n";
+                            $link .= "<a href='".FUSION_SELF.$aidlink."&amp;edit=".$rewrite_name."'>".$locale['edit']."</a><span class='m-l-5 m-r-5'>&middot;</span>\n";
                             // reinstall
                             $link .= "<a href='".FUSION_SELF.$aidlink."&amp;reinstall=".$rewrite_name."'>".$locale['PL_404d']."</a>\n";
                         }

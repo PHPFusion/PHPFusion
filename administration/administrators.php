@@ -303,7 +303,7 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
         echo "<td class='text-center'>\n";
         if ($can_edit && $data['user_id'] != "1") {
             echo "<a href='".FUSION_SELF.fusion_get_aidlink()."&amp;edit=".$data['user_id']."'>".$locale['edit']."</a> |\n";
-            echo "<a href='".FUSION_SELF.fusion_get_aidlink()."&amp;remove=".$data['user_id']."' onclick=\"return confirm('".$locale['460']."');\">".$locale['delete']."</a>\n";
+            echo "<a href='".FUSION_SELF.fusion_get_aidlink()."&amp;remove=".$data['user_id']."' onclick=\"return confirm('".$locale['ADM_460']."');\">".$locale['delete']."</a>\n";
         }
         echo "</td>\n";
         echo "</tr>\n";

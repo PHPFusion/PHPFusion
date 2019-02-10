@@ -14,8 +14,6 @@ $locale['409'] = "Cookie prefix";
 $locale['410'] = "Web-browser and OS";
 //PHP settings
 $locale['420'] = "PHP settings";
-$locale['421'] = "Yes";
-$locale['422'] = "No";
 $locale['423'] = "Safe-mode";
 $locale['424'] = "RegisterGlobals";
 $locale['425'] = "Support for";

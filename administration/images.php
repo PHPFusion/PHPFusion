@@ -269,7 +269,7 @@ class ImagesAdministration {
                 echo "<tr>\n<td>".$this->data['image_list'][$i]."</td>\n";
                 echo "<td class='text-right'>\n";
                 echo "<a href='".$edit_link."'>".self::$locale['461']."</a> -\n";
-                echo "<a href='".$delete_link."' onclick=\"return confirm('".self::$locale['470']."');\">".self::$locale['462']."</a></td>\n";
+                echo "<a href='".$delete_link."' onclick=\"return confirm('".self::$locale['470']."');\">".self::$locale['delete']."</a></td>\n";
                 echo "</tr>\n";
             }
             echo "</table>\n</div>";

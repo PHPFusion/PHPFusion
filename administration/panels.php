@@ -451,13 +451,13 @@ class PanelsAdministration {
                 $html .= "<li style='padding:3px 20px;'>\n<i class='fa fa-file-o m-r-10 m-t-5'></i><span class='badge'>".$type."</span></li>\n";
                 $html .= "<li style='padding:3px 20px;'>\n<i class='fa fa-arrows-v m-r-10'></i> ".$data['panel_order']."</li>\n";
                 $html .= "<li class='divider'></li>\n";
-                $html .= "<li>\n<a href='".FUSION_SELF.$aidlink."&amp;section=panelform&amp;action=edit&amp;panel_id=".$data['panel_id']."'><i class='fa fa-pencil m-r-10 m-t-5'></i>".self::$locale['434']."</a>\n</li>\n";
+                $html .= "<li>\n<a href='".FUSION_SELF.$aidlink."&amp;section=panelform&amp;action=edit&amp;panel_id=".$data['panel_id']."'><i class='fa fa-pencil m-r-10 m-t-5'></i>".self::$locale['edit']."</a>\n</li>\n";
                 if ($data['panel_status'] == 0) {
                     $html .= "<li>\n<a href='".FUSION_SELF.$aidlink."&amp;action=setstatus&amp;panel_status=1&amp;panel_id=".$data['panel_id']."'><i class='fa fa-check m-r-10 m-t-5'></i>".self::$locale['435']."</a>\n</li>\n";
                 } else {
                     $html .= "<li>\n<a href='".FUSION_SELF.$aidlink."&amp;action=setstatus&amp;panel_status=0&amp;panel_id=".$data['panel_id']."'><i class='fa fa-close m-r-10 m-t-5'></i>".self::$locale['436']."</a>\n</li>\n";
                 }
-                $html .= "<li>\n<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;panel_id=".$data['panel_id']."' onclick=\"return confirm('".self::$locale['440']."');\"><i class='fa fa-trash m-r-10 m-t-5'></i>".self::$locale['437']."</a>\n</li>\n";
+                $html .= "<li>\n<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;panel_id=".$data['panel_id']."' onclick=\"return confirm('".self::$locale['440']."');\"><i class='fa fa-trash m-r-10 m-t-5'></i>".self::$locale['delete']."</a>\n</li>\n";
                 $html .= "</ul>\n";
                 $html .= "</div>\n";
                 $html .= "</div>\n";

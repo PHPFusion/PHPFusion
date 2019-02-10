@@ -105,13 +105,13 @@ function phpsettings() {
         $gd_ver = '';
     }
     $phpinfo = "<div class='table-responsive'><table class='table table-hover table-striped' id='folders'>\n";
-    $phpinfo .= "<tr>\n<td style='width:50%'>".$locale['423']."</td><td class='text-right'>".(ini_get('safe_mode') ? $locale['421'] : $locale['422'])."</td></tr>\n";
-    $phpinfo .= "<tr>\n<td style='width:50%'>".$locale['424']."</td><td class='text-right'>".(ini_get('register_globals') ? $locale['421'] : $locale['422'])."</td></tr>\n";
-    $phpinfo .= "<tr>\n<td style='width:50%'>".$locale['425']." GD (".$locale['431'].")</td><td class='text-right'>".(extension_loaded('gd') ? $locale['421']." (".$gd_ver[0].")" : $locale['422'])."</td></tr>\n";
-    $phpinfo .= "<tr>\n<td style='width:50%'>".$locale['425']." zlib</td><td class='text-right'>".(extension_loaded('zlib') ? $locale['421'] : $locale['422'])."</td></tr>\n";
-    $phpinfo .= "<tr>\n<td style='width:50%'>".$locale['425']." Magic_quotes_gpc</td><td class='text-right'>".(ini_get('magic_quotes_gpc') ? $locale['421'] : $locale['422'])."</td></tr>\n";
-    $phpinfo .= "<tr>\n<td style='width:50%'>".$locale['426']."</td><td class='text-right'>".(ini_get('file_uploads') ? $locale['421']." (".ini_get('upload_max_filesize')."B)" : $locale['422'])."</td></tr>\n";
-    $phpinfo .= "<tr>\n<td style='width:50%'>".$locale['428']."</td><td class='text-right'>".(ini_get('display_errors') ? $locale['421'] : $locale['422'])."</td></tr>\n";
+    $phpinfo .= "<tr>\n<td style='width:50%'>".$locale['423']."</td><td class='text-right'>".(ini_get('safe_mode') ? $locale['yes'] : $locale['no'])."</td></tr>\n";
+    $phpinfo .= "<tr>\n<td style='width:50%'>".$locale['424']."</td><td class='text-right'>".(ini_get('register_globals') ? $locale['yes'] : $locale['no'])."</td></tr>\n";
+    $phpinfo .= "<tr>\n<td style='width:50%'>".$locale['425']." GD (".$locale['431'].")</td><td class='text-right'>".(extension_loaded('gd') ? $locale['yes']." (".$gd_ver[0].")" : $locale['no'])."</td></tr>\n";
+    $phpinfo .= "<tr>\n<td style='width:50%'>".$locale['425']." zlib</td><td class='text-right'>".(extension_loaded('zlib') ? $locale['yes'] : $locale['no'])."</td></tr>\n";
+    $phpinfo .= "<tr>\n<td style='width:50%'>".$locale['425']." Magic_quotes_gpc</td><td class='text-right'>".(ini_get('magic_quotes_gpc') ? $locale['yes'] : $locale['no'])."</td></tr>\n";
+    $phpinfo .= "<tr>\n<td style='width:50%'>".$locale['426']."</td><td class='text-right'>".(ini_get('file_uploads') ? $locale['yes']." (".ini_get('upload_max_filesize')."B)" : $locale['no'])."</td></tr>\n";
+    $phpinfo .= "<tr>\n<td style='width:50%'>".$locale['428']."</td><td class='text-right'>".(ini_get('display_errors') ? $locale['yes'] : $locale['no'])."</td></tr>\n";
     $phpinfo .= "<tr>\n<td style='width:50%'>".$locale['429']."</td><td class='text-right'>".(ini_get('disable_functions') ? str_replace(',', ', ', ini_get('disable_functions')) : $locale['430'])."</td></tr>\n";
     $phpinfo .= "</table>\n</div>";
     echo $phpinfo;
