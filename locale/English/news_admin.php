@@ -2,7 +2,6 @@
 $locale['news_0000'] = "Current News";
 $locale['news_0001'] = "News";
 $locale['news_0002'] = "Add News";
-$locale['news_0003'] = "Edit News";
 $locale['news_0004'] = "Settings";
 $locale['news_0005'] = "News Content";
 $locale['news_0006'] = "News Image Gallery";
