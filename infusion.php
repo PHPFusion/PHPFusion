@@ -74,7 +74,7 @@ $inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, pan
 
 // Insert settings
 $settings = [
-    'download_max_b'               => 512000,
+    'download_max_b'               => 15728640,
     'download_types'               => '.pdf,.gif,.jpg,.png,.zip,.rar,.tar,.bz2,.7z',
     'download_screen_max_b'        => 153600,
     'download_screen_max_w'        => 1024,
