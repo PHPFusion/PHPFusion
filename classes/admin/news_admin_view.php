@@ -55,7 +55,7 @@ class NewsAdminView extends NewsAdminModel {
             $news_title = $locale['news_0002'];
             $news_icon = 'fa fa-plus m-r-5';
             if (isset($_GET['news_id'])) {
-                $news_title = $locale['news_0003'];
+                $news_title = $locale['edit'];
                 $news_icon = 'fa fa-pencil m-r-5';
             }
         }

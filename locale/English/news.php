@@ -1,7 +1,6 @@
 <?php
 $locale['news_0001'] = "Continue Reading";
 $locale['news_0002'] = "Print";
-$locale['news_0003'] = "Edit";
 $locale['news_0004'] = "News";
 $locale['news_0005'] = "No News has been posted yet";
 $locale['news_0006'] = "Uncategorized";
