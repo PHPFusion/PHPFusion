@@ -124,7 +124,6 @@ $locale['forum_0261'] = "No New Posts";
 $locale['forum_0262'] = "Sticky Thread";
 $locale['forum_0263'] = "Locked Thread";
 
-$locale['forum_0265'] = "Edit";
 $locale['forum_0266'] = "Quote";
 $locale['forum_0267'] = "wrote";
 $locale['forum_0268'] = "User IP";
@@ -263,7 +262,6 @@ $locale['forum_0606'] = "Poll Option %s";
 $locale['forum_0607'] = "Poll added to the discussion thread.";
 $locale['forum_0608'] = "Add Poll Option";
 $locale['forum_0609'] = "Update";
-$locale['forum_0610'] = "Delete";
 $locale['forum_0611'] = "Edit Reason";
 $locale['forum_0612'] = "Poll edited";
 $locale['forum_0613'] = "Field marked with {REQUIRED} contains votes or is required. Otherwise, leave blank to remove poll options";
