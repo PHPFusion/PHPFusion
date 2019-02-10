@@ -77,8 +77,8 @@ class AdminPanel {
             $html .= '</div>';
 
             if (!$this->IsMobile()) {
-                $this->MessagesBox();
-                $this->ThemeSettings();
+                $html .= $this->MessagesBox();
+                $html .= $this->ThemeSettings();
             }
         $html .= '</main>';
 
