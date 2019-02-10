@@ -53,30 +53,29 @@ if (db_exists(DB_EMAIL_TEMPLATES)) {
             $inf_updatedbrow[] = DB_MESSAGES." SET message_user=message_to";
         }
     }
+}
 
-    // Remove dropped rights, these settings have been moved to tabs and follow the Infusions rights
-    $result = dbquery("SELECT user_id, user_rights, user_level FROM ".DB_USERS." WHERE user_rights !=''");
-    while ($data = dbarray($result)) {
-        $current_rights = explode('.', $data['user_rights']);
-        $isset_rights = array_flip($current_rights);
-        $remove_rights = ["AC", "DC", "NC", "WC", "S5", "S8", "S11", "S13", "SU"];
-        foreach ($remove_rights as $key => $remove) {
-            if (in_array($remove, $isset_rights) && isset($current_rights[$isset_rights[$remove]])) {
-                unset($current_rights[$isset_rights[$remove]]);
-            }
+// Remove dropped rights, these settings have been moved to tabs and follow the Infusions rights
+$result = dbquery("SELECT user_id, user_rights, user_level FROM ".DB_USERS." WHERE user_rights !=''");
+while ($data = dbarray($result)) {
+    $current_rights = explode('.', $data['user_rights']);
+    $isset_rights = array_flip($current_rights);
+    $remove_rights = ["AC", "DC", "NC", "WC", "S5", "S8", "S11", "S13", "SU"];
+    foreach ($remove_rights as $key => $remove) {
+        if (in_array($remove, $isset_rights) && isset($current_rights[$isset_rights[$remove]])) {
+            unset($current_rights[$isset_rights[$remove]]);
         }
-        if ($data['user_level'] === USER_LEVEL_SUPER_ADMIN || $data['user_level'] === '103') {
-            $new_rights = ['PL', 'MI', 'LANG', 'TS', 'MAIL'];
-            foreach ($new_rights as $key => $add) {
-                if (!in_array($add, $current_rights)) {
-                    $current_rights[] = $add;
-                }
-            }
-        }
-        $final_rights = implode('.', $current_rights);
-        $inf_updatedbrow[] = DB_USERS." SET user_rights='".$final_rights."', user_theme ='Default' WHERE user_id='".$data['user_id']."'";
     }
-
+    if ($data['user_level'] === USER_LEVEL_SUPER_ADMIN || $data['user_level'] === '103') {
+        $new_rights = ['PL', 'MI', 'LANG', 'TS', 'MAIL'];
+        foreach ($new_rights as $key => $add) {
+            if (!in_array($add, $current_rights)) {
+                $current_rights[] = $add;
+            }
+        }
+    }
+    $final_rights = implode('.', $current_rights);
+    $inf_updatedbrow[] = DB_USERS." SET user_rights='".$final_rights."', user_theme ='Default' WHERE user_id='".$data['user_id']."'";
 }
 
 if (db_exists(DB_SETTINGS)) {
@@ -192,7 +191,6 @@ if (db_exists(DB_ADMIN)) {
         'BLOG' => 'blog.php',
         'BLC'  => 'blog_cats.php',
         'S13'  => 'settings_blog.php',
-        'FM'   => 'file_manager.php'
     ];
 
     foreach ($del_table as $key => $del_link) {
@@ -417,4 +415,3 @@ if (db_exists(DB_INFUSIONS)) {
         }
     }
 }
-

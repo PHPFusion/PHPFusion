@@ -191,6 +191,7 @@ $locale['setup_3055'] = "Blog";
 $locale['setup_3056'] = "Theme Manager";
 $locale['setup_3057'] = "Migration Tool";
 $locale['setup_3058'] = "Theme Settings";
+$locale['setup_3059'] = "Fusion File Manager";
 // Multilanguage table rights
 $locale['setup_3200'] = "Articles";
 $locale['setup_3201'] = "Custom Pages";

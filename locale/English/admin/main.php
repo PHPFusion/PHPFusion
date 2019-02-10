@@ -68,6 +68,7 @@ $locale['ROB'] = "robots.txt";
 $locale['TS'] = "Theme Manager";
 $locale['S13'] = "Settings Blog";
 $locale['LANG'] = "Language Settings";
+$locale['FM'] = "Fusion File Manager";
 
 // Site Information
 $locale['250'] = "Dashboard - Site Overview";

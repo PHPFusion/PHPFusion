@@ -832,6 +832,14 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'admin_link'     => 'settings_languages.php',
                 'admin_page'     => 4,
                 'admin_language' => $localeset
+            ],
+            [
+                'admin_rights'   => 'FM',
+                'admin_image'    => 'file_manager.png',
+                'admin_title'    => $locale['setup_3059'],
+                'admin_link'     => 'file_manager.php',
+                'admin_page'     => 1,
+                'admin_language' => $localeset
             ]
         ]
     ];

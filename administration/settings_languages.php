@@ -177,7 +177,8 @@ if (isset($_POST['savesettings'])) {
                         ['admin_rights' => 'UL', 'admin_image' => 'user_log.png', 'admin_title' => $locale['setup_3049'], 'admin_link' => 'user_log.php', 'admin_page' => 2, 'admin_language' => $language],
                         ['admin_rights' => 'ROB', 'admin_image' => 'robots.png', 'admin_title' => $locale['setup_3050'], 'admin_link' => 'robots.php', 'admin_page' => 3, 'admin_language' => $language],
                         ['admin_rights' => 'MAIL', 'admin_image' => 'email.png', 'admin_title' => $locale['setup_3800'], 'admin_link' => 'email.php', 'admin_page' => 3, 'admin_language' => $language],
-                        ['admin_rights' => 'LANG', 'admin_image' => 'language.png', 'admin_title' => $locale['setup_3051'], 'admin_link' => 'settings_languages.php', 'admin_page' => 4, 'admin_language' => $language]
+                        ['admin_rights' => 'LANG', 'admin_image' => 'language.png', 'admin_title' => $locale['setup_3051'], 'admin_link' => 'settings_languages.php', 'admin_page' => 4, 'admin_language' => $language],
+                        ['admin_rights' => 'FM', 'admin_image' => 'file_manager.png', 'admin_title' => $locale['setup_3059'], 'admin_link' => 'file_manager.php', 'admin_page' => 1, 'admin_language' => $language]
                     ];
 
                     foreach ($admin_links as $link) {

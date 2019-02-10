@@ -83,6 +83,7 @@ class Admins {
         'S9'   => "<i class='admin-ico fa fa-fw fa-users'></i>", // User Management
         'S10'  => "<i class='admin-ico fa fa-fw fa-arrow-circle-up'></i>", // Items Per Page
         'S12'  => "<i class='admin-ico fa fa-fw fa-shield'></i>", // Security Settings
+        'FM'   => "<i class='admin-ico fa fa-fw fa-folder-open'></i>", // Fusion File Manager
     ];
     /**
      * @var array
