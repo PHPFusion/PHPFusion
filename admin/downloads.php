@@ -194,7 +194,7 @@ if ($dl_settings['download_screenshot']) {
         echo "</div>\n";
         echo "<div class='overflow-hide'>\n";
         echo "<span class='text-dark strong'>".$locale['download_0220']."</span>\n";
-        echo form_checkbox('del_image', $locale['download_0216'], '');
+        echo form_checkbox('del_image', $locale['delete'], '');
         echo form_hidden('download_image', '', $data['download_image']);
         echo form_hidden('download_image_thumb', '', $data['download_image_thumb']);
         echo "</div>\n</div>\n";
@@ -251,7 +251,7 @@ echo opentabbody($tab_title['title'][0], 'dlf', $tab_active);
 if (!empty($data['download_file'])) {
     echo "<div class='m-t-20 m-b-20'>\n";
     echo $locale['download_0214']." - <a href='".DOWNLOADS."files/".$data['download_file']."'>".DOWNLOADS."files/".$data['download_file']."</a>\n";
-    echo form_button('del_upload', $locale['download_0216'], $data['download_id'],
+    echo form_button('del_upload', $locale['delete'], $data['download_id'],
         ['class' => 'm-b-0 pull-right btn-danger', 'icon' => 'fa fa-trash fa-fw']);
     echo form_hidden('download_file', '', $data['download_file']);
     echo "</div>\n";
@@ -351,7 +351,7 @@ echo form_button('save_download', $locale['download_0212'], $locale['download_02
     'icon'  => 'fa fa-check-square-o'
 ]);
 if (isset($_GET['action']) && $_GET['action'] == "edit") {
-    echo "<button type='reset' name='reset' value='".$locale['download_0225']."' class='button btn btn-default' onclick=\"location.href='".FUSION_SELF.$aidlink."';\"/>".$locale['download_0225']."</button>";
+    echo "<button type='reset' name='reset' value='".$locale['cancel']."' class='button btn btn-default' onclick=\"location.href='".FUSION_SELF.$aidlink."';\"/>".$locale['cancel']."</button>";
 }
 echo "</div>\n";
 echo closeform();
