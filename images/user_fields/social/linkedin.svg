@@ -1,12 +1,1 @@
-<?xml version="1.0" encoding="utf-8"?>
-<svg version="1.1" id="linkedin" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 72 72" enable-background="new 0 0 72 72" xml:space="preserve">
-<path fill="#007BB6" d="M72,64c0,4.4-3.6,8-8,8H8c-4.4,0-8-3.6-8-8V8c0-4.4,3.6-8,8-8h56c4.4,0,8,3.6,8,8V64z"/>
-<g>
-	<path fill="#FFFFFF" d="M46.1,27c-3.2,0-6,3-7.9,5.6V27h-9v31.5h9v-18c0-2.5,2-4.5,4.5-4.5c2.5,0,4.5,2,4.5,4.5v18h9V38.3
-		C56.3,32,51.7,27,46.1,27z"/>
-	<path fill="#FFFFFF" d="M20.3,13.5c-2.5,0-4.5,2-4.5,4.5c0,2.5,2,4.5,4.5,4.5c2.5,0,4.5-2,4.5-4.5C24.8,15.5,22.7,13.5,20.3,13.5z"
-		/>
-	<rect x="15.8" y="27" fill="#FFFFFF" width="9" height="31.5"/>
-</g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72"><path fill="#007bb6" d="M72,64c0,4.4-3.6,8-8,8H8c-4.4,0-8-3.6-8-8V8c0-4.4,3.6-8,8-8h56c4.4,0,8,3.6,8,8V64z"/><path d="M46.1 27c-3.2 0-6 3-7.9 5.6V27h-9v31.5h9v-18a4.48 4.48 0 1 1 9 0v18h9V38.3C56.3 32 51.7 27 46.1 27zM20.3 13.5a4.48 4.48 0 0 0-4.5 4.5 4.48 4.48 0 0 0 4.5 4.5 4.48 4.48 0 0 0 4.5-4.5 4.55 4.55 0 0 0-4.5-4.5zM15.8 27h9v31.5h-9z" fill="#fff"/></svg>
