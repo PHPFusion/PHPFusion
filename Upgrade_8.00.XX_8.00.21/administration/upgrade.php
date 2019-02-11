@@ -39,7 +39,7 @@ if (isset($_GET['upgrade_ok'])) {
 }
 
 echo "<form name='upgradeform' method='post' action='".FUSION_SELF.$aidlink."'>\n";
-if (str_replace(".", "", $settings['version']) < "80019") {
+if (str_replace(".", "", $settings['version']) < "80021") {
     if (!isset($_POST['stage'])) {
         echo "<div class='well'>\n";
         echo sprintf($locale['500'], $locale['504'])."<br />\n".$locale['501']."\n";
