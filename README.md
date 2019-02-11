@@ -10,7 +10,7 @@ See the readme if anything is unclear.
 
 ```
 - PHP 5.6.39 or higher
-- MySQL 5.5.3 or higher
+- MySQL 5.6 or higher
 - Apache 2.2 or higher
 - Nginx 1.0 or higher - mod_rewrite or equivalent for SEO to work
 ```
