@@ -121,6 +121,27 @@ if (db_exists(DB_ADMIN)) {
     }
 }
 
+$result = dbquery("SELECT * FROM ".DB_SMILEYS);
+if (dbrows($result)) {
+    $arr_defaults = [
+        'smile.png' => 'smile.svg',
+        'wink.png'  => 'wink.svg',
+        'sad.png'   => 'sad.svg',
+        'frown.png' => 'frown.svg',
+        'shock.png' => 'shock.svg',
+        'pfft.png'  => 'pfft.svg',
+        'cool.png'  => 'cool.svg',
+        'grin.png'  => 'grin.svg',
+        'angry.png' => 'angry.svg',
+        'like.png'  => 'like.svg'
+    ];
+
+    while ($data = dbarray($result)) {
+        $data['smiley_image'] = strtr($data['smiley_image'], $arr_defaults);
+        dbquery_insert(DB_SMILEYS, $data, 'update', ['keep_session' => TRUE]);
+    }
+}
+
 $result = dbquery("SHOW TABLES");
 while ($table = dbarraynum($result)) {
     if (preg_match("/^".DB_PREFIX."/i", $table[0])) {

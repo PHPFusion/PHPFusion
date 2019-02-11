@@ -223,7 +223,7 @@ class SmileysAdministration {
             foreach ($all_smileys as $info) {
                 echo "<tr>\n";
                 echo "<td class='col-xs-2'>".$info['smiley_code']."</td>\n";
-                echo "<td class='col-xs-2'><img src='".IMAGES."smiley/".$info['smiley_image']."' alt='".$info['smiley_text']."' title='".$info['smiley_text']."' /></td>\n";
+                echo "<td class='col-xs-2'><img style='width:20px;height:20px;' src='".IMAGES."smiley/".$info['smiley_image']."' alt='".$info['smiley_text']."' title='".$info['smiley_text']."' /></td>\n";
                 echo "<td class='col-xs-2'>".$info['smiley_text']."</td>\n";
                 echo "<td class='col-xs-4'><a class='btn btn-default btn-sm' href='".FUSION_SELF.$aidlink."&amp;section=smiley_form&amp;action=edit&amp;smiley_id=".$info['smiley_id']."'>".self::$locale['edit']."<i class='fa fa-edit m-l-10'></i></a> \n";
                 echo "<a id='confirm' class='btn btn-default btn-sm' href='".FUSION_SELF.$aidlink."&amp;section=smiley_form&amp;action=delete&amp;smiley_id=".$info['smiley_id']."' onclick=\"return confirm('".self::$locale['SMLY_417']."');\">".self::$locale['SMLY_435']."<i class='fa fa-trash m-l-10'></i></a> \n";

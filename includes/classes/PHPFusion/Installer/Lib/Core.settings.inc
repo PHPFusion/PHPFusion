@@ -896,52 +896,52 @@ function get_table_rows($table_name, $localeset = 'English') {
         'insert' => [
             [
                 'smiley_code'  => ':)',
-                'smiley_image' => 'smile.png',
+                'smiley_image' => 'smile.svg',
                 'smiley_text'  => $locale['setup_3620']
             ],
             [
                 'smiley_code'  => ';)',
-                'smiley_image' => 'wink.png',
+                'smiley_image' => 'wink.svg',
                 'smiley_text'  => $locale['setup_3621']
             ],
             [
                 'smiley_code'  => ':(',
-                'smiley_image' => 'sad.png',
+                'smiley_image' => 'sad.svg',
                 'smiley_text'  => $locale['setup_3622']
             ],
             [
                 'smiley_code'  => ':|',
-                'smiley_image' => 'frown.png',
+                'smiley_image' => 'frown.svg',
                 'smiley_text'  => $locale['setup_3623']
             ],
             [
                 'smiley_code'  => ':o',
-                'smiley_image' => 'shock.png',
+                'smiley_image' => 'shock.svg',
                 'smiley_text'  => $locale['setup_3624']
             ],
             [
                 'smiley_code'  => ':P',
-                'smiley_image' => 'pfft.png',
+                'smiley_image' => 'pfft.svg',
                 'smiley_text'  => $locale['setup_3625']
             ],
             [
                 'smiley_code'  => 'B)',
-                'smiley_image' => 'cool.png',
+                'smiley_image' => 'cool.svg',
                 'smiley_text'  => $locale['setup_3626']
             ],
             [
                 'smiley_code'  => ':D',
-                'smiley_image' => 'grin.png',
+                'smiley_image' => 'grin.svg',
                 'smiley_text'  => $locale['setup_3627']
             ],
             [
                 'smiley_code'  => ':@',
-                'smiley_image' => 'angry.png',
+                'smiley_image' => 'angry.svg',
                 'smiley_text'  => $locale['setup_3628']
             ],
             [
                 'smiley_code'  => '(y)',
-                'smiley_image' => 'like.png',
+                'smiley_image' => 'like.svg',
                 'smiley_text'  => $locale['setup_3629']
             ]
         ]
