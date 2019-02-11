@@ -39,7 +39,7 @@ if (isset($_GET['upgrade_ok'])) {
 }
 
 echo "<form name='upgradeform' method='post' action='".FUSION_SELF.$aidlink."'>\n";
-if (str_replace(".", "", $settings['version']) < "80021") {
+if (str_replace(".", "", $settings['version']) < "80022") {
     if (!isset($_POST['stage'])) {
         echo "<div class='well'>\n";
         echo sprintf($locale['500'], $locale['504'])."<br />\n".$locale['501']."\n";
@@ -70,7 +70,7 @@ if (str_replace(".", "", $settings['version']) < "80021") {
         }
 
         // Set a new version
-        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='8.00.21' WHERE settings_name='version'");
+        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='8.00.22' WHERE settings_name='version'");
         redirect(FUSION_SELF.$aidlink."&amp;upgrade_ok");
     }
 

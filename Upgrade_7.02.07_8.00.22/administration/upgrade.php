@@ -49,7 +49,7 @@ opentable($locale['400']);
 
 echo "<div style='text-align:center' class='text-center' ><br />\n";
 
-if (str_replace(".", "", $settings['version']) < "80021") {
+if (str_replace(".", "", $settings['version']) < "80022") {
     echo "<form name='upgradeform' method='post' action='".FUSION_SELF.$aidlink."'>\n";
     $content = "";
     if ($settings['maintenance'] == 0) {
@@ -732,7 +732,7 @@ if (str_replace(".", "", $settings['version']) < "80021") {
                     dbquery("UPDATE ".DB_CUSTOM_PAGES." SET page_language ='".$settings['locale']."'");
 
                     // Set the new version
-                    dbquery("UPDATE ".DB_SETTINGS." SET settings_value='8.00.21' WHERE settings_name='version'");
+                    dbquery("UPDATE ".DB_SETTINGS." SET settings_value='8.00.22' WHERE settings_name='version'");
 
                     redirect(FUSION_SELF.$aidlink."&amp;upgrade_ok");
                 }
