@@ -35,10 +35,6 @@ class SearchEngine extends Core {
 
             modal_id.on("show.bs.modal", function () {$(this).stop(true, true).fadeIn(600);});
             modal_id.on("hide.bs.modal", function () {$(this).stop(true, true).fadeOut(400);});
-
-            $("#forums-field, #forum_id-field").css("display", "inline-block");
-            $("#forums-field label").addClass("m-r-5");
-            $("#forum_id-field").css({width: "auto", position: "absolute"});
         ');
 
         ob_start();

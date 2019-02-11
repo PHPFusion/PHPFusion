@@ -32,10 +32,6 @@ class SearchEngine extends Core {
                 $(".searchbox").slideToggle(600);
                 $(this).closest("li").toggleClass("active");
             });
-
-            $("#forums-field, #forum_id-field").css("display", "inline-block");
-            $("#forums-field label").addClass("m-r-5");
-            $("#forum_id-field").css({width: "auto", position: "absolute"});
         ');
 
         echo '<div class="searchbox" style="display: none;"><div class="jumbotron">';
