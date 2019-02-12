@@ -37,10 +37,6 @@ $info = [
     'incorrect_answer' => FALSE
 ];
 
-if (empty($_SESSION["validated"])) {
-    $_SESSION['validated'] = 'False';
-}
-
 // Don´t run twice
 if (!isset($_POST['gateway_submit']) && !isset($_POST['register']) && isset($_SESSION["validated"]) && $_SESSION['validated'] !== 'True') {
     $_SESSION['validated'] = 'False';
@@ -120,6 +116,7 @@ if (isset($_POST['gateway_answer'])) {
         if (isset($_SESSION["antibot"])) {
             if ($_SESSION["antibot"] == $antibot) {
                 $_SESSION["validated"] = "True";
+				redirect("register.php");
             } else {
                 $info['incorrect_answer'] = TRUE;
             }

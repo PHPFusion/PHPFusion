@@ -29,8 +29,13 @@ if (iMEMBER || $settings['enable_registration'] == 0) {
 }
 
 if ($settings['gateway'] == 1) {
-    // Load the Gateway
-    require_once BASEDIR."gateway/gateway.php";
+	if (empty($_SESSION["validated"])) {
+		$_SESSION['validated'] = 'False';
+	}
+	
+	if (isset($_SESSION["validated"]) && $_SESSION['validated'] !== 'True') {
+        require_once BASEDIR."gateway/gateway.php";
+	}
 }
 
 if ((isset($_SESSION["validated"]) && $_SESSION["validated"] == "True") || $settings['gateway'] == 0) {
