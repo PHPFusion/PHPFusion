@@ -42,7 +42,7 @@ if (empty($_SESSION["validated"])) {
 }
 
 // Don´t run twice
-if (!isset($_POST['gateway_submit']) && !isset($_POST['Register']) && isset($_SESSION["validated"]) && $_SESSION['validated'] !== 'True') {
+if (!isset($_POST['gateway_submit']) && !isset($_POST['register']) && isset($_SESSION["validated"]) && $_SESSION['validated'] !== 'True') {
     $_SESSION['validated'] = 'False';
 
     // Get some numbers up. Always keep an odd number to void 10-10 etc.
