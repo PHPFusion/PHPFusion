@@ -398,6 +398,25 @@ class Infusion_Core {
             }
         }
 
+        foreach (fusion_get_enabled_languages() as $current_language => $language_translations) {
+            if (isset($inf['mlt_adminpanel'][$current_language])) {
+                if ($inf['mlt_adminpanel'] && is_array($inf['mlt_adminpanel'])) {
+                    foreach ($inf['mlt_adminpanel'][$current_language] as $adminpanel) {
+                        dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_rights='".($adminpanel['rights'] ?: "IP")."' AND admin_link='".INFUSIONS.$inf['folder']."/".$adminpanel['panel']."' AND admin_page='5'");
+                        $result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level<=".USER_LEVEL_ADMIN);
+                        while ($data = dbarray($result)) {
+                            $user_rights = explode(".", $data['user_rights']);
+                            if (in_array($adminpanel['rights'], $user_rights)) {
+                                $key = array_search($adminpanel['rights'], $user_rights);
+                                unset($user_rights[$key]);
+                            }
+                            dbquery("UPDATE ".DB_USERS." SET user_rights='".implode(".", $user_rights)."' WHERE user_id='".$data['user_id']."'");
+                        }
+                    }
+                }
+            }
+        }
+
         if ($inf['mlt'] && is_array($inf['mlt'])) {
             foreach ($inf['mlt'] as $mlt) {
                 dbquery("DELETE FROM ".DB_LANGUAGE_TABLES." WHERE mlt_rights='".$mlt['rights']."'");
