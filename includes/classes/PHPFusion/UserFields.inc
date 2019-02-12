@@ -121,8 +121,9 @@ class UserFields extends QuantumFields {
 
     /**
      * Display Input Fields
-     *
      * @param array $input
+     *
+     * @throws \Exception
      */
     public function display_profile_input(array $input = []) {
         $this->method = 'input';
@@ -187,13 +188,16 @@ class UserFields extends QuantumFields {
                     ]
                 );
             } else {
+
                 $this->info['user_password'] .= form_hidden('user_id', '', isset($this->userData['user_id']) && isnum($this->userData['user_id']) ? $this->userData['user_id'] : 0, ['input_id' => 'userid']);
+
                 $this->info['user_password'] .= form_text('user_password', $locale['u135a'], '', [
                         'type'             => 'password',
                         'autocomplete_off' => 1,
                         'inline'           => TRUE,
                         'max_length'       => 64,
-                        'error_text'       => $locale['u133']
+                        'error_text'       => $locale['u133'],
+                        'stacked'          => "<div id='fusion_verify_password'></div>"
                     ]
                 );
                 $this->info['user_password'] .= form_text('user_password1', $locale['u135b'], '', [
@@ -260,20 +264,24 @@ class UserFields extends QuantumFields {
                         'error_text'       => $locale['u136']
                     ]
                 );
+
                 $this->info['user_admin_password'] .= "<div class='col-xs-12 col-sm-9 col-sm-offset-3 col-md-offset-3 col-lg-offset-3'><span class='text-smaller'>".$locale['u147']."</span></div>\n";
+
             }
 
-            // User Password Verification
-            $this->info['user_password_verify'] = (iADMIN && checkrights("M")) ? "" : form_text('user_password_verify',
+            // User Password Verification for Email Change
+            /*$this->info['user_password_verify'] = (iADMIN && checkrights("M")) ? "" : form_text('user_password_verify',
                 $locale['u135a'], '',
                 [
                     'type'             => 'password',
                     'autocomplete_off' => 1,
+                    'placeholder' => $locale['u100'],
                     'inline'           => TRUE,
                     'max_length'       => 64,
-                    'error_text'       => $locale['u133']
+                    'error_text'       => $locale['u133'],
+                    'class' => 'display-none'
                 ]
-            );
+            );*/
 
             // Avatar Field
             if (!$this->registration) {
@@ -309,12 +317,18 @@ class UserFields extends QuantumFields {
                 }
             }
 
+            $ext_tip = '';
+            if (!$this->registration) {
+                $ext_tip = (iADMIN && checkrights('M')) ? '' : $locale['u100'];
+            }
+
             $this->info['user_email'] = form_text('user_email', $locale['u128'], $user_email, [
                     'type'       => 'email',
                     "required"   => TRUE,
                     'inline'     => TRUE,
                     'max_length' => '100',
-                    'error_text' => $locale['u126']
+                    'error_text' => $locale['u126'],
+                    'ext_tip' => $ext_tip
                 ]
             );
 
@@ -403,6 +417,7 @@ class UserFields extends QuantumFields {
                 '{%user_id%}'                   => $this->info['user_id'],
                 '{%user_name_field%}'           => $this->info['user_name'],
                 '{%user_email_field%}'          => $this->info['user_email'],
+                //'{%user_password_verify%}'      => $this->info['user_password_verify'],
                 '{%user_hide_email_field%}'     => $this->info['user_hide_email'],
                 '{%user_avatar_field%}'         => $this->info['user_avatar'],
                 '{%user_reputation_field%}'     => $this->info['user_reputation'],
@@ -418,6 +433,18 @@ class UserFields extends QuantumFields {
                 '{%closetable%}'                => fusion_get_function('closetable')
             ]
         );
+        /*
+        add_to_jquery("
+        var current_email = $('#user_email').val();        
+        $('#user_email').on('input change propertyChange paste', function(e){
+            if (current_email !== $(this).val()) {
+                $('#user_password_verify-field').removeClass('display-none');
+            } else {
+            $('#user_password_verify-field').addClass('display-none');
+            }            
+        });
+        ");
+        */
     }
 
     /**

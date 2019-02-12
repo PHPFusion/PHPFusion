@@ -55,9 +55,9 @@ class UserFieldsInput {
     private $_themeChanged = FALSE;
 
     /**
-     * Model output
-     *
+     * Returns $user_data
      * @return array
+     * @throws \Exception
      */
     public function getData() {
         if (!empty($this->userData['user_password'])) {
@@ -492,7 +492,7 @@ class UserFieldsInput {
 
         if ($this->_userEmail != "" && $this->_userEmail != $this->userData['user_email']) {
             // override the requirements of password to change email address of a member in admin panel
-            if (defined('ADMIN_PANEL') && (iSUPERADMIN or (iADMIN && checkrights('M')))) {
+            if (defined('ADMIN_PANEL') && (iADMIN && checkrights('M'))) {
                 $this->_isValidCurrentPassword = TRUE; // changing an email in administration panel
             } else if (!$this->registration) {
                 $this->verify_password();
@@ -548,8 +548,9 @@ class UserFieldsInput {
      */
     private function verify_password() {
         $locale = fusion_get_locale();
+
         // Validation of password using user_password_verify field
-        $_userPassword = self::_getPasswordInput('user_password_verify');
+        $_userPassword = self::_getPasswordInput('user_password');
         if ($_userPassword) {
             /**
              * Validation of Password
@@ -564,13 +565,13 @@ class UserFieldsInput {
                 $this->_isValidCurrentPassword = 1;
             } else {
                 \defender::stop();
-                \defender::setInputError('user_password_verify');
-                \defender::setErrorText('user_password_verify', $locale['u149']);
+                \defender::setInputError('user_password');
+                \defender::setErrorText('user_password', $locale['u149']);
             }
         } else {
             \defender::stop();
-            \defender::setInputError('user_password_verify');
-            \defender::setErrorText('user_password_verify', $locale['u149']);
+            \defender::setInputError('user_password');
+            \defender::setErrorText('user_password', $locale['u149']);
         }
     }
 
