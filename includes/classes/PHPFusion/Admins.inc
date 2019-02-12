@@ -28,7 +28,8 @@ use Defender\Token;
 class Admins {
 
     private static $instance = NULL;
-
+    private static $admin_pages = [];
+    private static $locale = [];
     /**
      * @var array - default section icons
      */
@@ -89,7 +90,6 @@ class Admins {
      * @var array
      */
     private $admin_sections = [1 => FALSE, 2 => FALSE, 3 => FALSE, 4 => FALSE, 5 => FALSE];
-    private static $admin_pages = [];
     /**
      * @var array
      */
@@ -98,7 +98,6 @@ class Admins {
      *    Constructor class. No Params
      */
     private $current_page = '';
-    private static $locale = [];
     private $comment_type = [];
     private $submit_type = [];
     private $submit_link = [];
@@ -108,6 +107,14 @@ class Admins {
 
     public function __construct() {
         self::$locale = self::getAdminLocale();
+    }
+
+    public static function getAdminLocale() {
+        if (empty(self::$locale)) {
+            self::$locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/main.php');
+        }
+
+        return self::$locale;
     }
 
     /**
@@ -121,27 +128,6 @@ class Admins {
         }
 
         return self::$instance;
-    }
-
-    public function setCache($form_id, $form_type, $cache_time = 36000) {
-        // set one instance of cache
-        echo "<script>
-
-        </script>";
-    }
-
-    /**
-     * @param       $form_id
-     * @param       $form_type
-     * @param       $item_id
-     * @param array $field_names - format as (array('field_name' => 'Locale'));
-     *
-     * @return string
-     */
-    public function renderCache($form_id, $form_type, $item_id, array $field_names) {
-        $html = "";
-
-        return $html;
     }
 
     /**
@@ -327,9 +313,11 @@ class Admins {
             $rows = dbrows($result);
             if ($rows) {
                 while ($data = dbarray($result)) {
-                    if ($data['admin_link'] != "reserved" && checkrights($data['admin_rights'])) {
-                        $data['admin_title'] = preg_replace("/&(?!(#\d+|\w+);)/", "&amp;", $data['admin_title']);
-                        self::$admin_pages[$data['admin_page']][] = $data;
+                    if (file_exists(ADMIN.$data['admin_link']) || file_exists(INFUSIONS.$data['admin_link'])) {
+                        if (checkrights($data['admin_rights']) && $data['admin_link'] != "reserved") {
+                            $data['admin_title'] = preg_replace("/&(?!(#\d+|\w+);)/", "&amp;", $data['admin_title']);
+                            self::$admin_pages[$data['admin_page']][] = $data;
+                        }
                     }
                 }
             }
@@ -356,22 +344,14 @@ class Admins {
     }
 
     /**
-     * @param $page - 0-5 is core section pages. 6 and above are free to use.
+     * @param $page          - 0-5 is core section pages. 6 and above are free to use.
      * @param $section_title - Section title
-     * @param $icons - Section Icons
+     * @param $icons         - Section Icons
      */
     public function addAdminSection($page, $section_title, $icons) {
         $this->admin_sections[$page] = $section_title;
         $this->admin_section_icons[$page] = $icons;
         self::$admin_pages[$page] = [];
-    }
-
-    public static function getAdminLocale() {
-        if (empty(self::$locale)) {
-            self::$locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/main.php');
-        }
-
-        return self::$locale;
     }
 
     public function setAdminBreadcrumbs() {
@@ -452,23 +432,27 @@ class Admins {
     }
 
     /**
-     * @param $type - submissions prefix
+     * @param $type  - submissions prefix
      * @param $title - title
      */
     public function setSubmitType($type, $title) {
         $this->submit_type[$type] = $title;
     }
 
+    public function getSubmitData($type = NULL) {
+        return ($type !== NULL ? (isset($this->submit_data[$type]) ? $this->submit_data[$type] : NULL) : $this->submit_data);
+    }
+
     /**
-     * @param $type - submissions prefix
+     * @param $type    - submissions prefix
      * @param $options - array(infusion_name, link, submit_link, submit_locale, title,admin_link)
      */
     public function setSubmitData($type, array $options = []) {
         defined(strtoupper($options['infusion_name']).'_EXIST') ? $this->submit_data[$type] = $options : NULL;
     }
 
-    public function getSubmitData($type = NULL) {
-        return ($type !== NULL ? (isset($this->submit_data[$type]) ? $this->submit_data[$type] : NULL) : $this->submit_data);
+    public function getSubmitLink($type = NULL) {
+        return ($type !== NULL ? (isset($this->submit_link[$type]) ? $this->submit_link[$type] : NULL) : $this->submit_link);
     }
 
     /**
@@ -479,16 +463,12 @@ class Admins {
         $this->submit_link[$type] = $link;
     }
 
-    public function getSubmitLink($type = NULL) {
-        return ($type !== NULL ? (isset($this->submit_link[$type]) ? $this->submit_link[$type] : NULL) : $this->submit_link);
-    }
-
     public function getCommentType($type = NULL) {
         return ($type !== NULL ? (isset($this->comment_type[$type]) ? $this->comment_type[$type] : NULL) : $this->comment_type);
     }
 
     /**
-     * @param $type - comment prefix
+     * @param $type  - comment prefix
      * @param $title - title
      */
     public function setCommentType($type, $title) {
@@ -503,7 +483,7 @@ class Admins {
     }
 
     /**
-     * @param $type - infusion_name
+     * @param $type    - infusion_name
      * @param $options - array(image_folder => TRUE or FALSE)
      */
     public function setFolderPermissions($type, array $options = []) {

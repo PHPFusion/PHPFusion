@@ -155,7 +155,9 @@ if ($infusions_count > 0) {
         ORDER BY inf_id ASC
     ");
     while ($_inf = dbarray($inf_result)) {
-        $global_infusions[$_inf['inf_id']] = $_inf;
+        if (file_exists(INFUSIONS.$_inf['inf_folder'])) {
+            $global_infusions[$_inf['inf_id']] = $_inf;
+        }
     }
 }
 
@@ -238,12 +240,14 @@ if (isset($_GET['pagenum']) && isnum($_GET['pagenum'])) {
     $admin_icons['data'] = [];
     if (dbrows($result)) {
         while ($_idata = dbarray($result)) {
-            if (checkrights($_idata['admin_rights']) && $_idata['admin_link'] != "reserved") {
-                // Current locale file have the admin title definitions paired by admin_rights.
-                if ($_idata['admin_page'] !== 5) {
-                    $_idata['admin_title'] = isset($locale[$_idata['admin_rights']]) ? $locale[$_idata['admin_rights']] : $_idata['admin_title'];
+            if (file_exists(ADMIN.$_idata['admin_link']) || file_exists(INFUSIONS.$_idata['admin_link'])) {
+                if (checkrights($_idata['admin_rights']) && $_idata['admin_link'] != "reserved") {
+                    // Current locale file have the admin title definitions paired by admin_rights.
+                    if ($_idata['admin_page'] !== 5) {
+                        $_idata['admin_title'] = isset($locale[$_idata['admin_rights']]) ? $locale[$_idata['admin_rights']] : $_idata['admin_title'];
+                    }
+                    $admin_icons['data'][] = $_idata;
                 }
-                $admin_icons['data'][] = $_idata;
             }
         }
     }

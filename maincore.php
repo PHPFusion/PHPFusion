@@ -284,7 +284,9 @@ set_theme(empty($userdata['user_theme']) ? fusion_get_settings("theme") : $userd
 $result = dbquery("SELECT inf_folder FROM ".DB_INFUSIONS);
 if (dbrows($result)) {
     while ($data = dbarray($result)) {
-        define(strtoupper($data['inf_folder']).'_EXIST', TRUE);
+        if (file_exists(INFUSIONS.$data['inf_folder'])) {
+            define(strtoupper($data['inf_folder']).'_EXIST', TRUE);
+        }
     }
 }
 

@@ -28,48 +28,15 @@ if (!defined('ALTE_LOCALE')) {
 }
 
 define('ADMINLTE', THEMES.'admin_themes/AdminLTE/');
-require_once INCLUDES.'theme_functions_include.php';
 require_once ADMINLTE.'acp_autoloader.php';
 
 define('BOOTSTRAP', TRUE);
 define('FONTAWESOME', TRUE);
 
-define("IS_V9", (version_compare(fusion_get_settings('version'), '8.0', (strpos(fusion_get_settings('version'), '9.') === 0 ? '>' : '<'))) ? TRUE : FALSE);
-
-if (IS_V9) {
-    if (fusion_get_settings('version') != '9.0') {
-        // v9.03
-        if (!check_admin_pass('')) {
-            define('THEME_BODY', '<body class="hold-transition lockscreen">');
-        } else {
-            define('THEME_BODY', '<body class="hold-transition skin-blue sidebar-mini">');
-        }
-    } else {
-        // v9.0
-        if (!check_admin_pass('')) {
-            add_to_jquery('if (!$("body").hasClass("hold-transition") || !$("body").hasClass("lockscreen")) {$("body").addClass("hold-transition lockscreen");}');
-        } else {
-            add_to_jquery('if (!$("body").hasClass("hold-transition") || !$("body").hasClass("skin-blue")) {$("body").addClass("hold-transition skin-blue sidebar-mini");}');
-        }
-
-        \PHPFusion\Admins::getInstance()->setAdminBreadcrumbs();
-    }
+if (!check_admin_pass('')) {
+    define('THEME_BODY', '<body class="hold-transition lockscreen">');
 } else {
-    // v8
-    if (!check_admin_pass('') && !stristr($_SERVER['PHP_SELF'], $settings['site_path'].'infusions')) {
-        define('THEME_BODY', '<body class="hold-transition lockscreen">');
-    } else {
-        define('THEME_BODY', '<body class="hold-transition skin-blue sidebar-mini">');
-    }
-
-    \PHPFusion\OutputHandler::addHandler(function ($output = '') {
-        return strtr($output, [
-            'class=\'textbox' => 'class=\'textbox form-control m-t-5 m-b-5',
-            'class="textbox'  => 'class="textbox form-control m-t-5 m-b-5',
-            'class=\'button'  => 'class=\'button btn btn-default',
-            'class="button'   => 'class="button btn btn-default'
-        ]);
-    });
+    define('THEME_BODY', '<body class="hold-transition skin-blue sidebar-mini">');
 }
 
 function render_admin_panel() {

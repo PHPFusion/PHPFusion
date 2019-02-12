@@ -21,27 +21,8 @@ if (!defined('IN_FUSION')) {
 
 use \PHPFusion\Admins;
 
-require_once INCLUDES."theme_functions_include.php";
-
 define('BOOTSTRAP', TRUE);
 define('FONTAWESOME', TRUE);
-
-define("IS_V9", (version_compare(fusion_get_settings('version'), '8.0', (strpos(fusion_get_settings('version'), '9.') === 0 ? '>' : '<'))) ? TRUE : FALSE);
-
-if (!IS_V9) {
-    \PHPFusion\OutputHandler::addHandler(function ($output = '') {
-        return strtr($output, [
-            'class=\'textbox' => 'class=\'textbox form-control m-t-5 m-b-5',
-            'class="textbox'  => 'class="textbox form-control m-t-5 m-b-5',
-            'class=\'button'  => 'class=\'button btn btn-default',
-            'class="button'   => 'class="button btn btn-default'
-        ]);
-    });
-} else {
-    if (fusion_get_settings('version') === '9.0') {
-        \PHPFusion\Admins::getInstance()->setAdminBreadcrumbs();
-    }
-}
 
 function render_admin_panel() {
     $locale = fusion_get_locale();
@@ -111,49 +92,45 @@ function render_admin_panel() {
                             $html .= '</li>';
                         }
 
-                        if (class_exists('\PHPFusion\AdminSearch')) {
-                            $html .= '<li class="dropdown nav-search-dropdown">';
-                                $html .= '<div class="navbar-form m-t-10 m-b-0"><input class="form-control input-sm" type="text" id="search_pages" name="search_pages" placeholder="'.$locale['search'].'"/></div>';
-                                $html .= '<ul class="dropdown-menu m-l-15" id="search_result"></ul>';
-                            $html .= '</li>';
-                        }
+                        $html .= '<li class="dropdown nav-search-dropdown">';
+                            $html .= '<div class="navbar-form m-t-10 m-b-0"><input class="form-control input-sm" type="text" id="search_pages" name="search_pages" placeholder="'.$locale['search'].'"/></div>';
+                            $html .= '<ul class="dropdown-menu m-l-15" id="search_result"></ul>';
+                        $html .= '</li>';
                     $html .= '</ul>';
 
-                    if (class_exists('\PHPFusion\AdminSearch')) {
-                        add_to_jquery('
-                            search_ajax("'.ADMIN.'includes/acp_search.php'.$aidlink.'");
-                            function search_ajax(url) {
-                                $("#search_pages").bind("keyup", function () {
-                                    $.ajax({
-                                        url: url,
-                                        get: "GET",
-                                        data: $.param({"pagestring": $(this).val()}),
-                                        dataType: "json",
-                                        success: function (e) {
-                                            if ($("#search_pages").val() === "") {
-                                                $(".nav-search-dropdown").removeClass("open");
+                    add_to_jquery('
+                        search_ajax("'.ADMIN.'includes/acp_search.php'.$aidlink.'");
+                        function search_ajax(url) {
+                            $("#search_pages").bind("keyup", function () {
+                                $.ajax({
+                                    url: url,
+                                    get: "GET",
+                                    data: $.param({"pagestring": $(this).val()}),
+                                    dataType: "json",
+                                    success: function (e) {
+                                        if ($("#search_pages").val() === "") {
+                                            $(".nav-search-dropdown").removeClass("open");
+                                        } else {
+                                            var result = "";
+
+                                            if (!e.status) {
+                                                $.each(e, function (i, data) {
+                                                    if (data) {
+                                                        result += "<li><a href=\"" + data.link + "\"><img class=\"admin-image\" alt=\"" + data.title + "\" src=\"" + data.icon + "\"/> " + data.title + "</a></li>";
+                                                    }
+                                                });
                                             } else {
-                                                var result = "";
-
-                                                if (!e.status) {
-                                                    $.each(e, function (i, data) {
-                                                        if (data) {
-                                                            result += "<li><a href=\"" + data.link + "\"><img class=\"admin-image\" alt=\"" + data.title + "\" src=\"" + data.icon + "\"/> " + data.title + "</a></li>";
-                                                        }
-                                                    });
-                                                } else {
-                                                    result = "<li class=\"p-10\"><span>" + e.status + "</span></li>";
-                                                }
-
-                                                $("#search_result").html(result);
-                                                $(".nav-search-dropdown").addClass("open");
+                                                result = "<li class=\"p-10\"><span>" + e.status + "</span></li>";
                                             }
+
+                                            $("#search_result").html(result);
+                                            $(".nav-search-dropdown").addClass("open");
                                         }
-                                    });
+                                    }
                                 });
-                            }
-                        ');
-                    }
+                            });
+                        }
+                    ');
 
                     $html .= '<ul class="nav navbar-nav secondary navbar-right m-r-0">';
                         $languages = fusion_get_enabled_languages();
@@ -182,7 +159,7 @@ function render_admin_panel() {
                                 $html .= '<li><a href="'.BASEDIR.'edit_profile.php"><i class="fa fa-pencil fa-fw"></i> '.$locale['UM080'].'</a></li>';
                                 $html .= '<li><a href="'.BASEDIR.'profile.php?lookup='.$userdata['user_id'].'"><i class="fa fa-eye fa-fw"></i> '.$locale['view'].' '.$locale['profile'].'</a></li>';
                                 $html .= '<li class="divider"></li>';
-                                $html .= IS_V9 ? '<li><a href="'.FUSION_REQUEST.'&amp;logout"><i class="fa fa-sign-out fa-fw"></i> '.$locale['admin-logout'].'</a></li>' : '';
+                                $html .= '<li><a href="'.FUSION_REQUEST.'&amp;logout"><i class="fa fa-sign-out fa-fw"></i> '.$locale['admin-logout'].'</a></li>';
                                 $html .= '<li><a href="'.BASEDIR.'index.php?logout=yes"><i class="fa fa-sign-out fa-fw"></i> <span class="text-danger">'.$locale['logout'].'</span></a></li>';
                             $html .= '</ul>';
                         $html .= '</li>';
@@ -222,25 +199,13 @@ function render_admin_panel() {
         $html .= '</section>'; // #quicklaunch*/
 
         $html .= '<section id="content">';
-            if (function_exists('renderNotices') && function_exists('getNotices')) {
-                $html .= renderNotices(getNotices());
-            }
+            $html .= renderNotices(getNotices());
 
             $html .= CONTENT;
         $html .= '</section>'; // #content
 
         $html .= '<footer id="footer"><div class="container-fluid">';
-            if (function_exists('showFooterErrors')) {
-                $html .= showFooterErrors();
-            } else {
-                if (!IS_V9) {
-                    global $_errorHandler;
-
-                    if (iADMIN && checkrights('ERRO') && count($_errorHandler) > 0) {
-                        $html .= '<div>'.str_replace('[ERROR_LOG_URL]', ADMIN.'errors.php'.fusion_get_aidlink(), $locale['err_101']).'</div>';
-                    }
-                }
-            }
+            $html .= showFooterErrors();
 
             $html .= '<div class="row">';
                 $html .= '<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">';
@@ -364,7 +329,7 @@ function render_admin_dashboard() {
             $html .= '<div class="row" id="overview">';
                 $modules = [];
 
-                if (defined('FORUM_EXIST') || db_exists(DB_PREFIX.'forums')) {
+                if (defined('FORUM_EXIST')) {
                     $modules['forum'] = [
                         'title' => $locale['265'],
                         'image' => get_image('ac_F'),
@@ -377,7 +342,7 @@ function render_admin_dashboard() {
                     ];
                 }
 
-                if (defined('DOWNLOADS_EXIST') || db_exists(DB_PREFIX.'downloads')) {
+                if (defined('DOWNLOADS_EXIST')) {
                     $modules['downloads'] = [
                         'title' => $locale['268'],
                         'image' => get_image('ac_D'),
@@ -389,7 +354,7 @@ function render_admin_dashboard() {
                     ];
                 }
 
-                if (defined('NEWS_EXIST') || db_exists(DB_PREFIX.'news')) {
+                if (defined('NEWS_EXIST')) {
                     $modules['news'] = [
                         'title' => $locale['269'],
                         'image' => get_image('ac_N'),
@@ -401,7 +366,7 @@ function render_admin_dashboard() {
                     ];
                 }
 
-                if (defined('ARTICLES_EXIST') || db_exists(DB_PREFIX.'articles')) {
+                if (defined('ARTICLES_EXIST')) {
                     $modules['articles'] = [
                         'title' => $locale['270'],
                         'image' => get_image('ac_A'),
@@ -413,7 +378,7 @@ function render_admin_dashboard() {
                     ];
                 }
 
-                if (defined('WEBLINKS_EXIST') || db_exists(DB_PREFIX.'weblinks')) {
+                if (defined('WEBLINKS_EXIST')) {
                     $modules['weblinks'] = [
                         'title' => $locale['271'],
                         'image' => get_image('ac_W'),
@@ -424,7 +389,7 @@ function render_admin_dashboard() {
                     ];
                 }
 
-                if (defined('GALLERY_EXIST') || db_exists(DB_PREFIX.'photos')) {
+                if (defined('GALLERY_EXIST')) {
                     $modules['gallery'] = [
                         'title' => $locale['272'],
                         'image' => get_image('ac_PH'),
@@ -465,19 +430,21 @@ function render_admin_dashboard() {
                             $html .= fusion_get_function('openside', '<strong class="text-uppercase">'.$locale['277'].'</strong><span class="pull-right badge">'.number_format($global_comments['rows']).'</span>');
                                 if (count($global_comments['data']) > 0) {
                                     foreach ($global_comments['data'] as $i => $comment_data) {
-                                        $html .= '<div data-id="'.$i.'" class="clearfix p-b-10'.($i > 0 ? ' p-t-10' : '').'"'.($i > 0 ? ' style="border-top: 1px solid #ddd;"' : '').'>';
-                                            $html .= '<div id="comment_action-'.$i.'" class="btn-group btn-group-xs pull-right m-t-10">';
-                                                $html .= '<a class="btn btn-primary" title="'.$locale['274'].'" href="'.ADMIN.'comments.php'.$aidlink.'&amp;ctype='.$comment_data['comment_type'].'&amp;comment_item_id='.$comment_data['comment_item_id'].'"><i class="fa fa-eye"></i></a>';
-                                                $html .= '<a class="btn btn-warning" title="'.$locale['275'].'" href="'.ADMIN.'comments.php'.$aidlink.'&amp;action=edit&amp;comment_id='.$comment_data['comment_id'].'&amp;ctype='.$comment_data['comment_type'].'&amp;comment_item_id='.$comment_data['comment_item_id'].'"><i class="fa fa-pencil"></i></a>';
-                                                $html .= '<a class="btn btn-danger" title="'.$locale['276'].'" href="'.ADMIN.'comments.php'.$aidlink.'&amp;action=delete&amp;comment_id='.$comment_data['comment_id'].'&amp;ctype='.$comment_data['comment_type'].'&amp;comment_item_id='.$comment_data['comment_item_id'].'"><i class="fa fa-trash"></i></a>';
+                                        if (isset($comments_type[$comment_data['comment_type']]) && isset($link_type[$comment_data['comment_type']])) {
+                                            $html .= '<div data-id="'.$i.'" class="clearfix p-b-10'.($i > 0 ? ' p-t-10' : '').'"'.($i > 0 ? ' style="border-top: 1px solid #ddd;"' : '').'>';
+                                                $html .= '<div id="comment_action-'.$i.'" class="btn-group btn-group-xs pull-right m-t-10">';
+                                                    $html .= '<a class="btn btn-primary" title="'.$locale['274'].'" href="'.ADMIN.'comments.php'.$aidlink.'&amp;ctype='.$comment_data['comment_type'].'&amp;comment_item_id='.$comment_data['comment_item_id'].'"><i class="fa fa-eye"></i></a>';
+                                                    $html .= '<a class="btn btn-warning" title="'.$locale['275'].'" href="'.ADMIN.'comments.php'.$aidlink.'&amp;action=edit&amp;comment_id='.$comment_data['comment_id'].'&amp;ctype='.$comment_data['comment_type'].'&amp;comment_item_id='.$comment_data['comment_item_id'].'"><i class="fa fa-pencil"></i></a>';
+                                                    $html .= '<a class="btn btn-danger" title="'.$locale['276'].'" href="'.ADMIN.'comments.php'.$aidlink.'&amp;action=delete&amp;comment_id='.$comment_data['comment_id'].'&amp;ctype='.$comment_data['comment_type'].'&amp;comment_item_id='.$comment_data['comment_item_id'].'"><i class="fa fa-trash"></i></a>';
+                                                $html .= '</div>';
+                                                $html .= '<div class="pull-left display-inline-block m-t-5 m-b-0">'.display_avatar($comment_data, '25px', '', FALSE, 'img-rounded m-r-5').'</div>';
+                                                $html .= '<strong>'.(!empty($comment_data['user_id']) ? profile_link($comment_data['user_id'], $comment_data['user_name'], $comment_data['user_status']) : $comment_data['comment_name']).' </strong>';
+                                                $html .= $locale['273'].' <a href="'.sprintf($link_type[$comment_data['comment_type']], $comment_data['comment_item_id']).'"><strong>'.$comments_type[$comment_data['comment_type']].'</strong></a> ';
+                                                $html .= timer($comment_data['comment_datestamp']).'<br/>';
+                                                $comment = trimlink(strip_tags(parse_textarea($comment_data['comment_message'], FALSE, TRUE)), 130);
+                                                $html .= '<span class="text-smaller">'.parse_textarea($comment, TRUE, FALSE).'</span>';
                                             $html .= '</div>';
-                                            $html .= '<div class="pull-left display-inline-block m-t-5 m-b-0">'.display_avatar($comment_data, '25px', '', FALSE, 'img-rounded m-r-5').'</div>';
-                                            $html .= '<strong>'.(!empty($comment_data['user_id']) ? profile_link($comment_data['user_id'], $comment_data['user_name'], $comment_data['user_status']) : $comment_data['comment_name']).' </strong>';
-                                            $html .= $locale['273'].' <a href="'.sprintf($link_type[$comment_data['comment_type']], $comment_data['comment_item_id']).'"><strong>'.$comments_type[$comment_data['comment_type']].'</strong></a> ';
-                                            $html .= timer($comment_data['comment_datestamp']).'<br/>';
-                                            $comment = trimlink(strip_tags(parse_textarea($comment_data['comment_message'], FALSE, TRUE)), 130);
-                                            $html .= '<span class="text-smaller">'.parse_textarea($comment, TRUE, FALSE).'</span>';
-                                        $html .= '</div>';
+                                        }
                                     }
 
                                     if (isset($global_comments['comments_nav'])) {
@@ -495,13 +462,15 @@ function render_admin_dashboard() {
                             $html .= fusion_get_function('openside', '<strong class="text-uppercase">'.$locale['278'].'</strong><span class="pull-right badge">'.number_format($global_ratings['rows']).'</span>');
                                 if (count($global_ratings['data']) > 0) {
                                     foreach ($global_ratings['data'] as $i => $ratings_data) {
-                                        $html .= '<div data-id="'.$i.'" class="clearfix p-b-10'.($i > 0 ? ' p-t-10' : '').'"'.($i > 0 ? ' style="border-top: 1px solid #ddd;"' : '').'>';
-                                            $html .= '<div class="pull-left display-inline-block m-t-5 m-b-0">'.display_avatar($ratings_data, '25px', '', FALSE, 'img-rounded m-r-5').'</div>';
-                                            $html .= '<strong>'.profile_link($ratings_data['user_id'], $ratings_data['user_name'], $ratings_data['user_status']).' </strong>';
-                                            $html .= $locale['273a'].' <a href="'.sprintf($link_type[$ratings_data['rating_type']], $ratings_data['rating_item_id']).'"><strong>'.$comments_type[$ratings_data['rating_type']].'</strong></a> ';
-                                            $html .= timer($ratings_data['rating_datestamp']);
-                                            $html .= '<span class="text-warning m-l-10">'.str_repeat('<i class="fa fa-star fa-fw"></i>', $ratings_data['rating_vote']).'</span>';
-                                        $html .= '</div>';
+                                        if (isset($link_type[$ratings_data['rating_type']]) && isset($comments_type[$ratings_data['rating_type']])) {
+                                            $html .= '<div data-id="'.$i.'" class="clearfix p-b-10'.($i > 0 ? ' p-t-10' : '').'"'.($i > 0 ? ' style="border-top: 1px solid #ddd;"' : '').'>';
+                                                $html .= '<div class="pull-left display-inline-block m-t-5 m-b-0">'.display_avatar($ratings_data, '25px', '', FALSE, 'img-rounded m-r-5').'</div>';
+                                                $html .= '<strong>'.profile_link($ratings_data['user_id'], $ratings_data['user_name'], $ratings_data['user_status']).' </strong>';
+                                                $html .= $locale['273a'].' <a href="'.sprintf($link_type[$ratings_data['rating_type']], $ratings_data['rating_item_id']).'"><strong>'.$comments_type[$ratings_data['rating_type']].'</strong></a> ';
+                                                $html .= timer($ratings_data['rating_datestamp']);
+                                                $html .= '<span class="text-warning m-l-10">'.str_repeat('<i class="fa fa-star fa-fw"></i>', $ratings_data['rating_vote']).'</span>';
+                                            $html .= '</div>';
+                                        }
                                     }
 
                                     if (isset($global_ratings['ratings_nav'])) {
@@ -518,17 +487,19 @@ function render_admin_dashboard() {
                         $html .= fusion_get_function('openside', '<strong class="text-uppercase">'.$locale['279'].'</strong><span class="pull-right badge">'.number_format($global_submissions['rows']).'</span>');
                             if (count($global_submissions['data']) > 0) {
                                 foreach ($global_submissions['data'] as $i => $submit_date) {
-                                    $review_link = sprintf($submit_data[$submit_date['submit_type']]['admin_link'], $submit_date['submit_id']);
+                                    if (isset($submit_data[$submit_date['submit_type']])) {
+                                        $review_link = sprintf($submit_data[$submit_date['submit_type']]['admin_link'], $submit_date['submit_id']);
 
-                                    $html .= '<div data-id="'.$i.'" class="clearfix p-b-10'.($i > 0 ? ' p-t-10' : '').'"'.($i > 0 ? ' style="border-top: 1px solid #ddd;"' : '').'>';
-                                        $html .= '<div class="pull-left display-inline-block m-t-5 m-b-0">'.display_avatar($submit_date, '25px', '', FALSE, 'img-rounded m-r-5').'</div>';
-                                        $html .= '<strong>'.profile_link($submit_date['user_id'], $submit_date['user_name'], $submit_date['user_status']).' </strong>';
-                                        $html .= $locale['273b'].' <strong>'.$submit_data[$submit_date['submit_type']]['submit_locale'].'</strong> ';
-                                        $html .= timer($submit_date['submit_datestamp']);
-                                        if (!empty($review_link)) {
-                                            $html .= '<a class="btn btn-sm btn-default m-l-10 pull-right" href="'.$review_link.'">'.$locale['286'].'</a>';
-                                        }
-                                    $html .= '</div>';
+                                        $html .= '<div data-id="'.$i.'" class="clearfix p-b-10'.($i > 0 ? ' p-t-10' : '').'"'.($i > 0 ? ' style="border-top: 1px solid #ddd;"' : '').'>';
+                                            $html .= '<div class="pull-left display-inline-block m-t-5 m-b-0">'.display_avatar($submit_date, '25px', '', FALSE, 'img-rounded m-r-5').'</div>';
+                                            $html .= '<strong>'.profile_link($submit_date['user_id'], $submit_date['user_name'], $submit_date['user_status']).' </strong>';
+                                            $html .= $locale['273b'].' <strong>'.$submit_data[$submit_date['submit_type']]['submit_locale'].'</strong> ';
+                                            $html .= timer($submit_date['submit_datestamp']);
+                                            if (!empty($review_link)) {
+                                                $html .= '<a class="btn btn-sm btn-default m-l-10 pull-right" href="'.$review_link.'">'.$locale['286'].'</a>';
+                                            }
+                                        $html .= '</div>';
+                                    }
                                 }
 
                                 if (isset($global_submissions['submissions_nav'])) {
