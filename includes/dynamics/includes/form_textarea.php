@@ -45,7 +45,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         'deactivate'          => FALSE,
         'width'               => '',
         'inner_width'         => '100%',
-        'height'              => '80px',
+        'height'              => '200px',
         'class'               => '',
         'inner_class'         => '',
         'inline'              => FALSE,
