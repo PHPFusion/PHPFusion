@@ -198,7 +198,7 @@ class Login extends Core {
             opentable($locale['gateway_069']);
             echo $info['openform'];
             echo $info['hiddeninput'];
-            echo '<h3>'.$info['antispam_qusetion'].'</h3>';
+            echo '<h3>'.$info['gateway_question'].'</h3>';
             echo $info['textinput'];
             echo $info['button'];
             echo $info['closeform'];

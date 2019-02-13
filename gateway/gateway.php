@@ -86,12 +86,12 @@ if (!isset($_POST['gateway_submit']) && !isset($_POST['register'])) {
             return s;
         }
 
-        $("#antispam_qusetion").append("'.$locale['gateway_060'].' " + decode("'.$a.'") + " '.$multiplier.' " + decode("'.$b.'") + " '.$locale['gateway_061'].' '.$reply_method.'");
+        $("#gateway_question").append("'.$locale['gateway_060'].' " + decode("'.$a.'") + " '.$multiplier.' " + decode("'.$b.'") + " '.$locale['gateway_061'].' '.$reply_method.'");
     </script>');
 
     $info = [
         'showform'          => TRUE,
-        'antispam_qusetion' => '<span id="antispam_qusetion"></span>',
+        'gateway_question' => '<span id="gateway_question"></span>',
         'openform'          => openform('Fusion_Gateway', 'post', 'register.php', ['class' => 'm-t-20']),
         'closeform'         => closeform(),
         'hiddeninput'       => form_hidden($honeypot_array[3], "", ""),
@@ -131,7 +131,7 @@ if (!function_exists('display_gateway')) {
             opentable($locale['gateway_069']);
             echo $info['openform'];
             echo $info['hiddeninput'];
-            echo '<h3>'.$info['antispam_qusetion'].'</h3>';
+            echo '<h3>'.$info['gateway_question'].'</h3>';
             echo $info['textinput'];
             echo $info['button'];
             echo $info['closeform'];
