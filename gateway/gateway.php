@@ -115,7 +115,7 @@ if (isset($_POST['gateway_answer'])) {
         if (isset($_SESSION["antibot"])) {
             if ($_SESSION["antibot"] == $antibot) {
                 $_SESSION["validated"] = "True";
-				redirect("register.php");
+				redirect(BASEDIR."register.php");
             } else {
                 $info['incorrect_answer'] = TRUE;
             }
