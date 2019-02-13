@@ -285,12 +285,8 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         }
 
         if ($options['autosize'] || defined('AUTOSIZE')) {
-            add_to_jquery("
-                $('#".$options['input_id']."').on('keyup',function(){
-                    $(this).css('height','auto');
-                    $(this).height(this.scrollHeight);
-                });
-            ");
+            add_to_footer("<script src='".DYNAMICS."assets/autosize/autosize.min.js'></script>");
+            add_to_jquery("autosize($('#".$options['input_id']."'));");
         }
     }
 
