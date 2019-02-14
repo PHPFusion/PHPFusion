@@ -16,11 +16,11 @@ To sync to this database and not to conflict with your work, please do the follo
   2. Run the git as
   ````
   $ git fetch origin
-  $ git checkout -b Andromeda origin/Andromeda
+  $ git checkout -b Babylon origin/Babylon
   ````
   or if above fails:
   ````
-  $ git fetch origin Andromeda:Andromeda
+  $ git fetch origin Babylon:Babylon
   ````
 
 #### Testing supported by
