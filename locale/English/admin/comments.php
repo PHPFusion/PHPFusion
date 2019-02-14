@@ -9,7 +9,6 @@ $locale['411'] = "Comment deleted";
 $locale['420'] = "Disable smileys in this comment";
 $locale['421'] = "Save Comment";
 // Comments
-$locale['430'] = "Edit";
 $locale['431'] = "Delete & Ban";
 $locale['432'] = "User IP:";
 $locale['433'] = "Delete this comment?";

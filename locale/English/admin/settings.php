@@ -62,8 +62,8 @@ $locale['443b'] = "Exclude User 2 Panels";
 $locale['443c'] = "Exclude User 3 Panels";
 $locale['443d'] = "Exclude User 4 Panels";
 $locale['444'] = "Domain Servers";
-$locale['444a'] = "Configuration for multiple domains on a single site.<br/><br/>Separate and enter one domain each row.";
-$locale['444b'] = "Registered Domain Names";
+$locale['444a'] = "Configuration for multiple domains on a single site.<br/><br/> Separate each domain per row push (\"enter\")";
+$locale['444b'] = "Registered Domain Names <br /> <i>You must write current domain read under Site Host when you enable this feature</i>.";
 $locale['445'] = "Invalid (test purposes)";
 
 // Time & Date Settings

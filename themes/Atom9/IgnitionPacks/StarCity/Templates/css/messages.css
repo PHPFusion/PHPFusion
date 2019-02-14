@@ -1,0 +1,199 @@
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: Atom9/IgnitionPacks/StarCity/Templates/css/messages.css
+| Author: Frederick MC Chan (Chan)
+| Author: RobiNN
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
+.atom-banner {
+    background-image: url("../../assets/images/bg_mail.png");
+}
+
+.starmail {
+    background: rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.starmail .mail-top .mail-left,
+.starmail .mail-top .mail-right {
+    background: rgba(0, 0, 0, 0.45);
+    height: 100%;
+}
+
+.mail-top .mail-left {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.starmail .mail-body .mail-left,
+.starmail .mail-body .mail-right {
+    height: 100%;
+}
+
+.starmail .mail-menu {
+    background-color: rgba(0, 0, 0, 0.3);
+    margin-bottom: 0;
+    text-align: center;
+}
+
+.starmail .mail-menu > li {
+    display: inline-block;
+}
+
+.starmail .mail-menu > li > a {
+    display: block;
+    padding: 14px 15px;
+    position: relative;
+    color: #fff;
+    border: 1px solid transparent;
+}
+
+.starmail .mail-menu > li > a:hover,
+.starmail .mail-menu > li > a:focus {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.starmail .mail-menu > li > a > i,
+.starmail .mail-menu > li > a > svg {
+    font-size: 25px;
+    margin: 0;
+    color: rgba(255, 255, 255, 0.55);
+}
+
+.starmail .mail-menu > li.active > a i,
+.starmail .mail-menu > li.active > a svg {
+    color: rgb(58, 214, 247);
+}
+
+.starmail .mail-menu .badge {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.8);
+    top: 5px;
+    right: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.starmail .mail-top .mail-right {
+    padding: 12px 15px;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.45);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mail-form form {
+    padding: 50px;
+}
+
+.mail-options form {
+    padding: 50px 35%;
+}
+
+@media (min-width: 768px) {
+    .mail-left {
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .mail-top .col-sm-3,
+    .mail-body .col-sm-3 {
+        padding-right: 0;
+    }
+
+    .mail-top .col-sm-9,
+    .mail-body .col-sm-9 {
+        padding-left: 0;
+    }
+}
+
+.starmail .dropdown-menu {
+    background: rgba(0, 0, 0, 0.45);
+    -webkit-border-radius: 0;
+    border-radius: 0;
+}
+
+.starmail .dropdown-menu > li > a {
+    color: #fff !important;
+    border: 1px solid transparent;
+}
+
+.starmail .dropdown-menu > li > a:hover,
+.starmail .dropdown-menu > li > a:focus,
+.starmail .dropdown-menu > li.active > a {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.33);
+}
+
+.mail-list-title {
+    font-size: 17px;
+    padding: 5px;
+    display: inline-block;
+}
+
+.mail-list > li {
+    list-style: none;
+}
+
+.mail-list > li {
+    padding: 10px 15px;
+    border: 1px solid transparent;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mail-list > li:first-child {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mail-list > li:hover,
+.mail-list > li:focus,
+.mail-list > li.active {
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.mail-list > li.active:hover,
+.mail-list > li.active:focus {
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.mail-list > li.selected {
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    background-color: rgba(255, 255, 255, 0.4);
+}
+
+.mail-list > li.selected:hover,
+.mail-list > li.selected:focus {
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+.mail-list-title,
+.mail-list > li > a {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.no-messages {
+    background-color: rgba(81, 81, 81, 0.4);
+    border-color: rgba(66, 66, 66, 0.6);
+    padding: 20px;
+}
+
+.starmail .message-header {
+    padding: 10px 15px 15px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.starmail .message-detail {
+    padding: 40px 25px;
+    border-top: 1px solid rgba(255, 225, 255, 0.15);
+}

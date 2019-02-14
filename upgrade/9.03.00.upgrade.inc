@@ -78,14 +78,69 @@ if (db_exists(DB_PREFIX.'sessions')) {
 
 dbquery("ALTER TABLE ".DB_USERS." ADD FULLTEXT(`user_name`)");
 
-$inf_droptable[] = DB_PREFIX.'messages_options';
-
-if (!column_exists(DB_ADMIN, 'admin_language', FALSE)) {
-    $inf_altertable[] = DB_ADMIN." ADD admin_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."' AFTER admin_page";
+if (db_exists(DB_PREFIX.'messages_options')) {
+    $inf_droptable[] = DB_PREFIX.'messages_options';
 }
 
-dbquery("UPDATE ".DB_ADMIN." SET admin_image='comments.png', admin_link='comments.php', admin_page='1' WHERE admin_rights='C'");
-dbquery("UPDATE ".DB_ADMIN." SET admin_link='reserved' WHERE admin_rights='U'");
+$result = dbquery("SELECT user_id, user_rights, user_level FROM ".DB_USERS." WHERE user_rights !=''");
+while ($data = dbarray($result)) {
+    $current_rights = explode('.', $data['user_rights']);
+    $isset_rights = array_flip($current_rights);
+
+    if ($data['user_level'] === USER_LEVEL_SUPER_ADMIN || $data['user_level'] === '-103') {
+        $new_rights = ['FM'];
+        foreach ($new_rights as $key => $add) {
+            if (!in_array($add, $current_rights)) {
+                $current_rights[] = $add;
+            }
+        }
+    }
+
+    $final_rights = implode('.', $current_rights);
+    $inf_updatedbrow[] = DB_USERS." SET user_rights='".$final_rights."' WHERE user_id='".$data['user_id']."'";
+}
+
+if (db_exists(DB_ADMIN)) {
+    if (!column_exists(DB_ADMIN, 'admin_language', FALSE)) {
+        $inf_altertable[] = DB_ADMIN." ADD admin_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."' AFTER admin_page";
+    }
+
+    dbquery("UPDATE ".DB_ADMIN." SET admin_image='comments.png', admin_link='comments.php', admin_page='1' WHERE admin_rights='C'");
+    dbquery("UPDATE ".DB_ADMIN." SET admin_link='reserved' WHERE admin_rights='U'");
+
+    // Add new core administration links
+    $check_array = [
+        'FM' => DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('FM', 'file_manager.png', '".$locale['setup_3059']."', 'file_manager.php', '1')"
+    ];
+
+    foreach ($check_array as $key => $value) {
+        $count = dbcount("('admin_rights')", DB_ADMIN, "admin_rights='$key'");
+        if (empty($count)) {
+            $inf_insertdbrow[] = $value;
+        }
+    }
+}
+
+$result = dbquery("SELECT * FROM ".DB_SMILEYS);
+if (dbrows($result)) {
+    $arr_defaults = [
+        'smile.png' => 'smile.svg',
+        'wink.png'  => 'wink.svg',
+        'sad.png'   => 'sad.svg',
+        'frown.png' => 'frown.svg',
+        'shock.png' => 'shock.svg',
+        'pfft.png'  => 'pfft.svg',
+        'cool.png'  => 'cool.svg',
+        'grin.png'  => 'grin.svg',
+        'angry.png' => 'angry.svg',
+        'like.png'  => 'like.svg'
+    ];
+
+    while ($data = dbarray($result)) {
+        $data['smiley_image'] = strtr($data['smiley_image'], $arr_defaults);
+        dbquery_insert(DB_SMILEYS, $data, 'update', ['keep_session' => TRUE]);
+    }
+}
 
 $result = dbquery("SHOW TABLES");
 while ($table = dbarraynum($result)) {

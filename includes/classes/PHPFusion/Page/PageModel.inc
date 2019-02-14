@@ -170,13 +170,13 @@ class PageModel {
      * Load page composer data
      */
     protected static function load_ComposerData() {
-        $query = "SELECT crows.*, col.*
-        FROM `".DB_CUSTOM_PAGES_GRID."` crows
-        LEFT JOIN `".DB_CUSTOM_PAGES_CONTENT."` col ON col.page_grid_id = crows.page_grid_id
+        $query = "SELECT crows.*, col.page_id, col.page_content_id, col.page_content_type, col.page_content, col.page_content_order, col.page_widget, col.page_options
+        FROM ".DB_CUSTOM_PAGES_GRID." crows
+        LEFT JOIN ".DB_CUSTOM_PAGES_CONTENT." col USING(page_grid_id)
         WHERE crows.page_id=:pid
         ORDER BY crows.page_grid_order ASC, col.page_content_order ASC
         ";
-        $result = dbquery($query, [':pid'=>intval(self::$data['page_id'])]);
+        $result = dbquery($query, [':pid' => intval(self::$data['page_id'])]);
         if (dbrows($result) > 0) {
             while ($data = dbarray($result)) {
                 self::$gridData[$data['page_grid_id']] = [
@@ -186,7 +186,7 @@ class PageModel {
                     'page_grid_column_count' => $data['page_grid_column_count'],
                     'page_grid_html_id'      => $data['page_grid_html_id'],
                     'page_grid_class'        => $data['page_grid_class'],
-                    'page_grid_order'        => $data['page_grid_order']/**/
+                    'page_grid_order'        => $data['page_grid_order']
                 ];
                 if (!empty($data['page_content_id'])) {
                     self::$composerData[$data['page_grid_id']][$data['page_content_id']] = $data;

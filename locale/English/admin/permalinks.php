@@ -10,7 +10,6 @@ $locale['PL_403'] = "Description";
 $locale['PL_404'] = "Options";
 $locale['PL_404a'] = "Enable";
 $locale['PL_404b'] = "Disable";
-$locale['PL_404c'] = "Edit";
 $locale['PL_404d'] = "Reinstall";
 
 // Editing Permalinks

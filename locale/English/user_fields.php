@@ -28,10 +28,8 @@ $locale['u064'] = "Email";
 $locale['u066'] = "Date Joined";
 $locale['u067'] = "Last Visit";
 $locale['u068'] = "User Name";
-$locale['u069'] = "Edit";
 $locale['u070'] = "Ban";
 $locale['u071'] = "Suspend";
-$locale['u072'] = "Delete";
 $locale['u073'] = "Delete this user?";
 $locale['u074'] = "Unban";
 // Profile and register
@@ -141,7 +139,6 @@ $locale['u180'] = "There is an error uploading avatar image";
 $locale['u184'] = "Max. file size: %s / Max. size: %ux%u pixels";
 $locale['u185'] = "Avatar";
 $locale['u186'] = "Click Browse to upload an image";
-$locale['u187'] = "Delete";
 // Captcha and terms
 $locale['u190'] = "Validation Code";
 $locale['u191'] = "Enter Validation Code";

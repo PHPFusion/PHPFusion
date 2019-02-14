@@ -1,0 +1,164 @@
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: Atom9/IgnitionPacks/ModFusion/Templates/css/home.css
+| Author: Frederick MC Chan (Chan)
+| Author: RobiNN
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
+.home_item {
+    display: inline-block;
+    padding: 15px 10px;
+    margin-right: 0;
+    color: #fff;
+    background: transparent;
+    height: 300px;
+    overflow: hidden;
+}
+
+.home_item:after {
+    color: rgba(0, 0, 0, 0.25);
+    display: block;
+    position: absolute;
+    font-size: 380px;
+    line-height: 200px;
+    right: -80px;
+    top: 30px;
+    opacity: .2;
+}
+
+.home_item > .cat_img {
+    display: inline-block;
+    float: right;
+}
+
+.home_item .heading {
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.home_item .subheading {
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.home_item h4 {
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+
+.home_item span {
+    font-size: 13px;
+    font-weight: 400;
+}
+
+.home_item > .heading,
+.home_item > h4,
+.home_item > h4 a {
+    font-weight: 800;
+}
+
+.home_content h4 a {
+    font-family: "Lucida Sans", "Lucida Grande", Arial, Helvetica, sans-serif;
+    font-size: 2rem;
+    color: #fff;
+}
+
+.home_content h4 a:hover,
+.home_content h4 a:focus {
+    color: #d4d4d4;
+}
+
+.home_item > .footer {
+    bottom: 20px;
+    display: block;
+    width: 100%;
+    position: absolute;
+}
+
+.home_item > .footer > .btn-primary {
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 10px;
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+}
+
+.home_item > .footer > .btn-primary:hover,
+.home_item > .footer > .btn-primary:focus {
+    color: #fff;
+}
+
+.home_item.articles {
+    background: #130E38;
+}
+
+.home_item.articles:after {
+    content: "a";
+}
+
+.home_item.blogs {
+    background: #222;
+}
+
+.home_item.blogs:after {
+    content: "b";
+}
+
+.home_item.downloads {
+    background: #040505;
+}
+
+.home_item.downloads:after {
+    content: "d";
+}
+
+.home_item.news {
+    background: #ebecee;
+    color: #282828;
+}
+
+.home_item.news > .home_content > h4 a {
+    color: #282828;
+}
+
+.home_item.news > .home_content > h4 a:hover,
+.home_item.news > .home_content > h4 a:focus {
+    color: #0483d9;
+}
+
+.home_item.news:after {
+    content: "n";
+}
+
+.home_item.articles .subheading a,
+.home_item.blogs .subheading a,
+.home_item.downloads .subheading a {
+    color: #d0d0d0;
+}
+
+.home_item.articles .subheading a:hover,
+.home_item.articles .subheading a:focus,
+.home_item.blogs .subheading a:hover,
+.home_item.blogs .subheading a:focus,
+.home_item.downloads .subheading a:hover,
+.home_item.downloads .subheading a:focus {
+    color: rgb(53, 114, 176);
+}

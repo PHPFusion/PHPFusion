@@ -1,0 +1,51 @@
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: Atom9/IgnitionPacks/StarCity/Templates/css/login.css
+| Author: Frederick MC Chan (Chan)
+| Author: RobiNN
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
+.atom-banner {
+    background-image: url("../../assets/images/bg_login.png");
+}
+
+.form-block {
+    max-width: 700px;
+    margin: 30px auto;
+    background: rgba(0, 0, 0, 0.34);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.form-block .heading {
+    padding: 15px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 25px;
+}
+
+.form-block a {
+    color: rgb(58, 214, 247);
+}
+
+.form-block a:hover,
+.form-block a:focus {
+    color: rgb(34, 130, 149);
+}
+
+.form-block h4 {
+    color: #9c9c9c;
+}
+
+.form-block .control-label {
+    color: #878787;
+}

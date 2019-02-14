@@ -492,7 +492,7 @@ class DbBackupAdministration {
             echo "<td colspan='2' class='tbl text-center'>\n";
             echo "</tr>\n</tbody>\n</table>\n</div>";
             echo form_button('btn_do_restore', $this->locale['438'], $this->locale['438'], ['class' => 'btn-primary m-r-10']);
-            echo form_button('btn_cancel', $this->locale['439'], $this->locale['439'], ['class' => 'btn-default']);
+            echo form_button('btn_cancel', $this->locale['cancel'], $this->locale['cancel'], ['class' => 'btn-default']);
             echo closeform();
 
         } else {

@@ -45,7 +45,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         'deactivate'          => FALSE,
         'width'               => '',
         'inner_width'         => '100%',
-        'height'              => '80px',
+        'height'              => '200px',
         'class'               => '',
         'inner_class'         => '',
         'inline'              => FALSE,
@@ -81,7 +81,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 
         $options['tinymce'] = !empty($options['tinymce']) && in_array($options['tinymce'], [TRUE, 'simple', 'advanced']) ? $options['tinymce'] : "simple";
 
-        $default_tinymce_css = (defined("ADMIN_PANEL") && !empty(THEMES."admin_themes/".fusion_get_settings("admin_theme")."/tinymce.css") ? THEMES."admin_themes/".fusion_get_settings("admin_theme")."/tinymce.css" : THEMES."templates/tinymce.css");
+        $default_tinymce_css = (defined("ADMIN_PANEL") && file_exists(THEMES."admin_themes/".fusion_get_settings("admin_theme")."/tinymce.css") ? THEMES."admin_themes/".fusion_get_settings("admin_theme")."/tinymce.css" : THEMES."templates/tinymce.css");
 
         $options['tinymce_css'] = (!empty($options['tinymce_css']) && file_exists($options['tinymce_css']) ? $options['tinymce_css'] : $default_tinymce_css);
 
@@ -285,12 +285,8 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         }
 
         if ($options['autosize'] || defined('AUTOSIZE')) {
-            add_to_jquery("
-                $('#".$options['input_id']."').on('keyup',function(){
-                    $(this).css('height','auto');
-                    $(this).height(this.scrollHeight);
-                });
-            ");
+            add_to_footer("<script src='".DYNAMICS."assets/autosize/autosize.min.js'></script>");
+            add_to_jquery("autosize($('#".$options['input_id']."'));");
         }
     }
 
