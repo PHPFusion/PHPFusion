@@ -105,6 +105,8 @@ class Admins {
     private $submit_data = [];
     private $folder_permissions = [];
 
+    private static $public_pages = [];
+
     public function __construct() {
         self::$locale = self::getAdminLocale();
     }
@@ -321,6 +323,7 @@ class Admins {
                     }
                 }
             }
+            self::$amdin_pages = self::$admin_pages + self::$public_pages;
         }
 
         return self::$admin_pages;
@@ -354,6 +357,14 @@ class Admins {
         self::$admin_pages[$page] = [];
     }
 
+    public static function getAdminLocale() {
+        if (empty(self::$locale)) {
+            self::$locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/main.php');
+        }
+
+        return self::$locale;
+    }
+
     public function setAdminBreadcrumbs() {
         BreadCrumbs::getInstance()->addBreadCrumb([
             'link'  => ADMIN.'index.php'.fusion_get_aidlink().'&amp;pagenum=0',
@@ -366,7 +377,6 @@ class Admins {
                 'title' => self::$locale['ac0'.$acTab]
             ]);
         }
-
     }
 
     /**
@@ -468,23 +478,25 @@ class Admins {
     }
 
     /**
-     * @param $type  - comment prefix
-     * @param $title - title
+     * @param $type  comment prefix
+     * @param $title title
      */
     public function setCommentType($type, $title) {
         $this->comment_type[$type] = $title;
     }
 
-    /**
-     * @param $type - infusion_name
-     */
+	/**
+	 * @param null $type
+	 *
+	 * @return array|mixed|null
+	 */
     public function getFolderPermissions($type = NULL) {
         return ($type !== NULL ? (isset($this->folder_permissions[$type]) ? $this->folder_permissions[$type] : NULL) : $this->folder_permissions);
     }
 
     /**
-     * @param $type    - infusion_name
-     * @param $options - array(image_folder => TRUE or FALSE)
+     * @param $type    infusion_name
+     * @param $options array(image_folder => TRUE or FALSE)
      */
     public function setFolderPermissions($type, array $options = []) {
         defined(strtoupper($type).'_EXIST') ? $this->folder_permissions[$type] = $options : NULL;
@@ -530,7 +542,6 @@ class Admins {
                 $html .= "<ul id='adl-$i' class='admin-submenu collapse ".($active ? 'in' : '')."'>\n";
 
                 foreach ($admin_pages[$i] as $key => $data) {
-
                     $title = $data['admin_title'];
                     if ($data['admin_page'] !== 5) {
                         $title = isset(self::$locale[$data['admin_rights']]) ? self::$locale[$data['admin_rights']] : $title;
@@ -539,7 +550,23 @@ class Admins {
                     $secondary_active = $data['admin_link'] == $this->_currentPage() ? TRUE : FALSE;
                     $icons = ($image_icon === TRUE) ? "<img class='admin-image' src='".get_image("ac_".$data['admin_rights'])."' alt='$title'/>" : $this->get_admin_icons($data['admin_rights']);
 
-                    $html .= checkrights($data['admin_rights']) ? "<li".($secondary_active ? " class='active'" : '')."><a href='".ADMIN.$data['admin_link'].$aidlink."'>".$icons." <span class='adl-submenu-title'>".$title."</span></a></li>\n" : "";
+                    if (!empty($admin_pages[$data['admin_rights']])) {
+                        if (checkrights($data['admin_rights'])) {
+                            $html .= "<li".($secondary_active ? " class='active'" : '')."id='adl-sub' class='sub_pages'>";
+                            $html .= "<a class='adl-link' data-parent='#adl-sub' data-toggle='collapse' href='#adl-sub-$key'>".$icons." <span class='adl-submenu-title'>".$title."</span> <span class='adl-drop pull-right'><i class='fa fa-angle-".($secondary_active ? 'left' : 'down')."'></i></span></a>";
+                            $html .= "<ul id='adl-sub-$key' class='admin-subpages collapse".($secondary_active ? ' in' : '')."'>";
+
+                            foreach ($admin_pages[$data['admin_rights']] as $sub_key => $sub_page) {
+                                $html .= "<li><a href='".$sub_page['admin_link']."'><span class='adl-submenu-title'>".$sub_page['admin_title']."</span></a></li>";
+                            }
+
+                            $html .= "</ul>\n";
+                            $html .= "</li>";
+                        }
+                    } else {
+                        $html .= checkrights($data['admin_rights']) ? "<li".($secondary_active ? " class='active'" : '')."><a href='".ADMIN.$data['admin_link'].$aidlink."'>".$icons." <span class='adl-submenu-title'>".$title."</span></a></li>\n" : "";
+                    }
+
                 }
 
                 $html .= "</ul>\n";
@@ -620,5 +647,24 @@ class Admins {
         $html .= "</ul>\n";
 
         return $html;
+    }
+
+    /**
+     * @param string $page Use number to add child to sub-section and admin_rights to sub-pages
+     * @param string $title
+     * @param string $rights
+     * @param string $link
+     */
+    public function addAdminPage($page, $title, $rights, $link) {
+        self::$public_pages[$page][$rights] = [
+            "admin_title"  => $title,
+            "admin_page"   => $page,
+            "admin_rights" => $rights,
+            "admin_link"   => $link
+        ];
+    }
+
+    public function getPublicPages() {
+        return self::$public_pages;
     }
 }

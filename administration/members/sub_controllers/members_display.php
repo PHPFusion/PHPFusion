@@ -20,8 +20,8 @@ namespace Administration\Members\Sub_Controllers;
 
 use Administration\Members\Members_Admin;
 use Administration\Members\Members_View;
-use PHPFusion\QuantumFields;
 use PHPFusion\Template;
+use PHPFusion\UserFieldsQuantum;
 
 /**
  * Class Members_Display
@@ -145,7 +145,7 @@ class Members_Display extends Members_Admin {
         if (dbrows($result) > 0) {
             $data = dbarray($result);
             $name = $data['field_name'];
-            $title = (QuantumFields::is_serialized($data['field_title']) ? QuantumFields::parse_label($data['field_title']) : $data['field_title']);
+            $title = (UserFieldsQuantum::is_serialized($data['field_title']) ? UserFieldsQuantum::parse_label($data['field_title']) : $data['field_title']);
             $tLocale[$name] = $title;
             $extra_checkboxes[$name] = form_checkbox("display[".$name."]", $title, (isset($selected_fields[$name]) ? 1 : 0), ['input_id' => 'custom_'.$data['field_id'], 'reverse_label' => TRUE]);
         }
@@ -192,25 +192,19 @@ class Members_Display extends Members_Admin {
         $rowCount = dbcount('(user_id)', DB_USERS, ltrim($status_cond, 'WHERE ').$search_cond, $query_bind);
         $rowstart = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $rowCount ? intval($_GET['rowstart']) : 0;
         $limit = 16;
-        $newrows = 0;
-        $newrowsCount = 0;
         if (in_array(2, $selected_status)) {
-            $newrowsCount = dbcount('(user_name)', DB_NEW_USERS, '');
             $nquery = "SELECT * FROM ".DB_NEW_USERS;
             $nresult = dbquery($nquery);
             $i = 999999;
             while ($data = dbarray($nresult)) {
-                $newrows++;
                 $list[$data['user_name']] = [
                     'user_id'      => $i,
                     'checkbox'     => '',
-                    'user_name'    => "<div class='clearfix'>\n<div class='pull-left m-r-10'>".display_avatar($data, '35px', '', FALSE, '')."</div>
-                        <div class='overflow-hide'>".$data['user_name']."<br/>".getsuspension(2)."</div></div>",
-                    'user_status'  => getsuspension(2),
+                    'user_name'    => $data['user_name']."<br />".getsuspension(2),
                     'user_level'   => self::$locale['ME_562'],
                     'user_actions' => "<a href='".self::$status_uri['delete'].$data['user_name']."&amp;newuser=1'>".self::$locale['delete']."</a>",
-                    'user_email'   => $data['user_email']."<br /><a href='".self::$status_uri['resend'].$data['user_name']."' title='".self::$locale['u165']."'><i class='fa fa-envelope fa-lg m-r-10'></i></a>",
-                    'user_joined'  => showdate('longdate', $data['user_datestamp']),
+                    'user_email'   => $data['user_email'],
+                    'user_joined'  => showdate('longdate', $data['user_datestamp'])
                 ];
                 $i++;
             }
@@ -224,7 +218,7 @@ class Members_Display extends Members_Admin {
         $page_nav = $rowCount > $limit ? makepagenav($rowstart, $limit, $rowCount, 5, FUSION_SELF.fusion_get_aidlink().'&amp;') : '';
         $interface = new static();
 
-        $list_sum = sprintf(self::$locale['ME_407'], implode(', ', array_map([$interface, 'list_uri'], $statuses)), $rows + $newrows, $rowCount + $newrowsCount);
+        $list_sum = sprintf(self::$locale['ME_407'], implode(', ', array_map([$interface, 'list_uri'], $statuses)), $rows, $rowCount);
 
         if ($rows != '0') {
             while ($data = dbarray($result)) {
@@ -339,17 +333,6 @@ class Members_Display extends Members_Admin {
     }
 
     /**
-     * List member link
-     *
-     * @param $value
-     *
-     * @return string
-     */
-    protected function list_uri($value) {
-        return "<a href='".self::$status_uri[$value]."'><strong>".getsuspension($value)."</strong></a>\n";
-    }
-
-    /**
      * Listing formatter for user results
      *
      * @param $user_id
@@ -382,6 +365,17 @@ class Members_Display extends Members_Admin {
         $html .= "</tr>\n";
 
         return $html;
+    }
+
+    /**
+     * List member link
+     *
+     * @param $value
+     *
+     * @return string
+     */
+    protected function list_uri($value) {
+        return "<a href='".self::$status_uri[$value]."'><strong>".getsuspension($value)."</strong></a>\n";
     }
 
 }

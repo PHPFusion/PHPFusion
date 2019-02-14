@@ -32,7 +32,7 @@ if ($settings['gateway'] == 1) {
 	if (empty($_SESSION["validated"])) {
 		$_SESSION['validated'] = 'False';
 	}
-	
+
 	if (isset($_SESSION["validated"]) && $_SESSION['validated'] !== 'True') {
         require_once BASEDIR."gateway/gateway.php";
 	}
@@ -75,33 +75,31 @@ if ((isset($_SESSION["validated"]) && $_SESSION["validated"] == "True") || $sett
             redirect($settings['opening_page']);
         }
 
-    } else if (isset($_POST['register'])) {
+    } else {
         $userInput = new PHPFusion\UserFieldsInput();
         $userInput->validation = $settings['display_validation'];
-        $userInput->emailVerification = $settings['email_verification'];
-        $userInput->adminActivation = $settings['admin_activation'];
-        $userInput->skipCurrentPass = TRUE;
+        $userInput->email_verification = $settings['email_verification'];
+        $userInput->admin_activation = $settings['admin_activation'];
+        $userInput->hide_user_email = TRUE; // make settings for this.
+        $userInput->skip_password = TRUE;
         $userInput->registration = TRUE;
-        $insert = $userInput->saveInsert();
+        $userInput->post_name = 'register';
+        $userInput->redirect_uri = BASEDIR.$settings['opening_page'];
+        $userInput->saveInsert();
 
-        if ($insert && \defender::safe()) {
-            redirect($settings['opening_page']);
-        }
-        unset($userInput);
-    }
-
-    if (!isset($_GET['email']) && !isset($_GET['code'])) {
         $userFields = new PHPFusion\UserFields();
-        $userFields->postName = "register";
-        $userFields->postValue = $locale['u101'];
-        $userFields->displayValidation = $settings['display_validation'];
-        $userFields->displayTerms = $settings['enable_terms'];
+        $userFields->post_name = "register";
+        $userFields->post_value = $locale['u101'];
+        $userFields->display_validation = $settings['display_validation'];
+        $userFields->display_terms = $settings['enable_terms'];
         $userFields->plugin_folder = [INCLUDES."user_fields/", INFUSIONS];
         $userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
-        $userFields->showAdminPass = FALSE;
-        $userFields->skipCurrentPass = TRUE;
+        $userFields->show_admin_password = FALSE;
+        $userFields->skip_password = TRUE;
         $userFields->registration = TRUE;
-        $userFields->display_profile_input();
+        $userFields->is_admin_panel = FALSE;
+        $userFields->inline_field = FALSE;
+        echo $userFields->display_input();
     }
 }
 

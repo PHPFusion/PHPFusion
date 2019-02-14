@@ -50,11 +50,9 @@ if (isset($_GET['lookup']) && isnum($_GET['lookup'])) {
         }
     }
     $userFields = new PHPFusion\UserFields();
-    $userFields->userData = $user_data;
-    $userFields->showAdminOptions = TRUE;
+    $userFields->user_data = $user_data;
+    $userFields->show_admin_options = TRUE;
     $userFields->method = 'display';
-    $userFields->plugin_folder = [INCLUDES."user_fields/", INFUSIONS];
-    $userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
     $userFields->display_profile_output();
 
     PHPFusion\OpenGraph::ogUserProfile($_GET['lookup']);

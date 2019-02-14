@@ -887,7 +887,8 @@ nav ul > li.open > a {
     background-color: rgb(44, 62, 80);
 }
 
-.admin-vertical-link .admin-submenu > li > a {
+.admin-vertical-link .admin-submenu > li > a,
+.admin-vertical-link .admin-subpages > li > a {
     display: inline-block;
     width: 100%;
     font-weight: 400;
