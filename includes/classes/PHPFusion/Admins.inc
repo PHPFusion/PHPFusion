@@ -357,14 +357,6 @@ class Admins {
         self::$admin_pages[$page] = [];
     }
 
-    public static function getAdminLocale() {
-        if (empty(self::$locale)) {
-            self::$locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/main.php');
-        }
-
-        return self::$locale;
-    }
-
     public function setAdminBreadcrumbs() {
         BreadCrumbs::getInstance()->addBreadCrumb([
             'link'  => ADMIN.'index.php'.fusion_get_aidlink().'&amp;pagenum=0',
