@@ -1,7 +1,7 @@
 <?php
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
+| Copyright (C) 2002 - 2013 Nick Jones
 | http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: autoloader.php
@@ -19,13 +19,13 @@ require_once INCLUDES.'theme_functions_include.php';
 
 spl_autoload_register(function ($className) {
     $autoload_register_paths = [
-        "Genesis\\Viewer\\adminPanel"      => THEMES."admin_themes/Genesis/Drivers/Viewer/adminPanel.php",
-        "Genesis\\Viewer\\adminDashboard"  => THEMES."admin_themes/Genesis/Drivers/Viewer/adminDashboard.php",
-        "Genesis\\Viewer\\loginPanel"      => THEMES."admin_themes/Genesis/Drivers/Viewer/loginPanel.php",
-        "Genesis\\Viewer\\adminApps"       => THEMES."admin_themes/Genesis/Drivers/Viewer/adminApps.php",
-        "Genesis\\Model\\resource"         => THEMES."admin_themes/Genesis/Drivers/Model/resource.php",
-        "Genesis\\Controller"              => THEMES."admin_themes/Genesis/Drivers/controller.php",
-        "Genesis\\Subcontroller\\get_apps" => THEMES."admin_themes/Genesis/Drivers/Subcontroller/get_apps.php"
+        "Genesis\\Viewer\\adminPanel"      => THEMES."admin_themes/Genesis/drivers/viewer/adminPanel.php",
+        "Genesis\\Viewer\\adminDashboard"  => THEMES."admin_themes/Genesis/drivers/viewer/adminDashboard.php",
+        "Genesis\\Viewer\\loginPanel"      => THEMES."admin_themes/Genesis/drivers/viewer/loginPanel.php",
+        "Genesis\\Viewer\\adminApps"       => THEMES."admin_themes/Genesis/drivers/viewer/adminApps.php",
+        "Genesis\\Model\\resource"         => THEMES."admin_themes/Genesis/drivers/model/resource.php",
+        "Genesis\\Controller"              => THEMES."admin_themes/Genesis/drivers/controller.php",
+        "Genesis\\Subcontroller\\get_apps" => THEMES."admin_themes/Genesis/drivers/subcontroller/get_apps.php"
     ];
 
     if (isset($autoload_register_paths[$className])) {

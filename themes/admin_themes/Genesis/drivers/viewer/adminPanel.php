@@ -1,7 +1,7 @@
 <?php
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
+| Copyright (C) 2002 - 2013 Nick Jones
 | http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: adminPanel.php
@@ -120,7 +120,7 @@ class adminPanel extends resource {
                 type: 'json',
                 data: sendData,
                 success: function(e) {
-                    $('.app_page_list').hide();
+                    $('.app_page_list').hide();   
                     $('#main_content').addClass('open');
                     $('ul#app_search_result').html(e).show();
                 },
@@ -129,8 +129,8 @@ class adminPanel extends resource {
                 }
             });
         });
-
-
+        
+         
         ");
 
     }
@@ -139,14 +139,16 @@ class adminPanel extends resource {
      * Primary Sectional Menu
      */
     private function left_nav() {
+
         $aidlink = fusion_get_aidlink();
-        $locale = parent::get_locale();
 
         $sections = Admins::getInstance()->getAdminSections();
 
         $this->admin_section_icons[] = "<i class='fa fa-chevron-circle-left'></i>\n";
 
         $pages = Admins::getInstance()->getAdminPages();
+        //print_P($pages, 1);
+        //print_P($sections, 1);
         $section_count = count($sections);
         ?>
         <ul>
@@ -172,9 +174,10 @@ class adminPanel extends resource {
             endforeach;
             ?>
         </ul>
+
         <?php
         add_to_footer("<script type='text/javascript' src='".INCLUDES."jquery/jquery.cookie.js'></script>");
-        add_to_footer("<script type='text/javascript' src='".THEMES."admin_themes/Genesis/Drivers/js/leftMenu.js'></script>");
+        add_to_footer("<script type='text/javascript' src='".THEMES."admin_themes/Genesis/drivers/js/leftMenu.js'></script>");
     }
 
     /**
@@ -200,21 +203,23 @@ class adminPanel extends resource {
             if (!empty($pages[$i]) && is_array($pages[$i])) :
 
                 echo "<ul id=\"ap-$i\" class=\"app_page_list\" style=\"display:none;\">\n";
+
                 echo "<li><h4>$section_name</h4></li>\n";
 
                 foreach ($pages[$i] as $key => $data) :
 
-                    $secondary_active = $data['admin_link'] == $is_current_page ? "class='active'" : '';
-
-                    $title = $data['admin_title'];
-
-                    $link = ADMIN.$data['admin_link'].$aidlink;
-
-                    if ($data['admin_page'] !== 5) {
-                        $title = isset($locale[$data['admin_rights']]) ? $locale[$data['admin_rights']] : $title;
-                    }
-
                     if (checkrights($data['admin_rights'])) :
+
+                        $secondary_active = $data['admin_link'] == $is_current_page ? "class='active'" : '';
+
+                        $title = $data['admin_title'];
+
+                        $link = ADMIN.$data['admin_link'].$aidlink;
+
+                        if ($data['admin_page'] !== 5) {
+                            $title = isset($locale[$data['admin_rights']]) ? $locale[$data['admin_rights']] : $title;
+                        }
+
                         ?>
                         <li <?php echo $secondary_active ?>>
                             <a class="apps-lists" href="<?php echo $link ?>">
@@ -479,11 +484,17 @@ class adminPanel extends resource {
 
     private function display_admin_pages() {
         $aidlink = fusion_get_aidlink();
+
         $admin = Admins::getInstance();
+
         $sections = $admin->getAdminSections();
+
         $admin_pages = $admin->getAdminPages();
+
         $active_section = $admin->_isActive();
+
         $current_page = $admin->_currentPage();
+
         echo "<nav>";
         echo "<ul>\n";
         $active_rights = 0;
@@ -493,8 +504,9 @@ class adminPanel extends resource {
                     $active_rights = $admin_data['admin_rights'];
                 }
             }
+            //print_p($admin_pages[$active_rights], 1);
             if (isset($admin_pages[$active_rights])) {
-                //print_p($admin_pages[$active_rights]);
+
                 $sections = $admin_pages[$active_rights]; // this is just the root of subpage. dropdown array is not present.
                 //print_P($sections);
                 if (!empty($sections)) {

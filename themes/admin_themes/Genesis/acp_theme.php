@@ -1,7 +1,7 @@
 <?php
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
+| Copyright (C) 2002 - 2013 Nick Jones
 | http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: acp_theme.php
@@ -46,4 +46,21 @@ function render_admin_panel() {
 
 function render_admin_dashboard() {
     \Genesis\Controller::Instance(FALSE)->do_admin_dashboard();
+}
+
+/**
+ * Responsive Admin Form Grid. (Steam compatible)
+ * @param string $content
+ * @param string $side_content
+ * @param string $bottom_content
+ *
+ * @return string
+ */
+function render_admin_form($content, $side_content = '', $bottom_content = '') {
+    $tpl = \PHPFusion\Template::getInstance('admin_post');
+    $tpl->set_template(__DIR__.'/../../templates/global/admin/admin_forms.html');
+    $tpl->set_tag('content', $content);
+    if ($side_content) $tpl->set_block('admin_side', ['content' => $side_content]);
+    if ($bottom_content) $tpl->set_block('admin_bottom', ['content' => $bottom_content]);
+    echo $tpl->get_output();
 }
