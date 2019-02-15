@@ -189,7 +189,6 @@ function check_admin_pass($password) {
 
 function redirect($location, $delay = FALSE, $script = FALSE) {
     //define('STOP_REDIRECT', true);
-    //$location = fusion_get_settings('site_seo') && defined('IN_PERMALINK') ? FUSION_ROOT.$location : $location;
     if (!defined('STOP_REDIRECT')) {
         if (isnum($delay)) {
             $ref = "<meta http-equiv='refresh' content='$delay; url=".$location."' />";
@@ -718,6 +717,48 @@ function formatcode($text) {
 }
 
 /**
+ * Renamed function for PHP-Fusion 9 and above.
+ * @param $text
+ *
+ * @return string
+ */
+function format_code($text) {
+    return formatcode($text);
+}
+
+/**
+ * Formats a number in a numeric acronym, and rounding
+ * @param int    $value
+ * @param int    $decimals
+ * @param string $dec_point
+ * @param string $thousand_sep
+ * @param bool   $round
+ * @param bool   $acryonym
+ *
+ * @return string
+ */
+function format_num($value = 0, $decimals = 0, $dec_point = ".",  $thousand_sep = ",", $round = TRUE, $acryonym = TRUE) {
+    $array = [
+        13 => $acryonym ? "t" : "trillion",
+        10 => $acryonym ? "b" : "billion",
+        7 => $acryonym ? "m" : "million",
+        4 => $acryonym ? "k" : "thousand"
+    ];
+    if (is_numeric($value)) {
+        if ($round === TRUE) {
+            foreach ($array as $length => $rounding) {
+                if (strlen($value) >= $length) {
+                    return number_format(($value/ (pow(10, $length-1)) ), $decimals, $dec_point, $thousand_sep).$rounding;
+                }
+            }
+        }
+
+        return number_format($value, $decimals, $dec_point, $thousand_sep);
+    }
+    return $value;
+}
+
+/**
  * Highlights given words in subject
  *
  * @param array  $word    The highlighted word
@@ -1099,6 +1140,19 @@ function groupaccess($field) {
 }
 
 /**
+ * Getting the user access used when asking the database for data
+ *
+ * @param string $field The column name of the field
+ *
+ * @return string
+ */
+function useraccess($field) {
+    $blocked_uids = fusion_get_userdata('user_block');
+    $uids = ltrim(str_replace(".", ",", $blocked_uids), ",");
+    return (string)(!empty($blocked_uids) ? "$field NOT IN ($uids)" : '1=1');
+}
+
+/**
  * UF blacklist for SQL - same as groupaccess() but $field is the user_id column.
  *
  * @param string $field The name of the field
@@ -1156,18 +1210,16 @@ function user_blacklisted($user_id) {
  *
  * @return array
  */
-function makefilelist($folder, $filter = '', $sort = TRUE, $type = "files", $ext_filter = "") {
+function makefilelist($folder, $filter = '.|..|._DS_Store', $sort = TRUE, $type = "files", $ext_filter = "") {
     $res = [];
 
-    $default_filters = '.|..|.DS_Store';
-    if ($filter === FALSE) {
-        $filter = $default_filters;
+    if (!empty($filter)) {
+        $filter = explode("|", $filter);
+        if ($type == "files" && !empty($ext_filter)) {
+            $ext_filter = explode("|", strtolower($ext_filter));
+        }
     }
 
-    $filter = explode("|", $filter);
-    if ($type == "files" && !empty($ext_filter)) {
-        $ext_filter = explode("|", strtolower($ext_filter));
-    }
 
     if (file_exists($folder)) {
         $temp = opendir($folder);
@@ -1287,6 +1339,7 @@ function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = 
         }
     }
     $cur_page = ceil(($start + 1) / $count);
+
     $res = "";
     if ($idx_back >= 0) {
         if ($cur_page > ($range + 1)) {
@@ -1388,7 +1441,7 @@ function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $ge
                 $_name = get_parent_array($tree_full, $id);
                 $crumb = [
                     'link'  => isset($_name[$id_col]) ? clean_request($getname."=".$_name[$id_col], ["aid"], TRUE) : "",
-                    'title' => isset($_name[$title_col]) ? \PHPFusion\QuantumFields::parse_label($_name[$title_col]) : "",
+                    'title' => isset($_name[$title_col]) ? \PHPFusion\UserFieldsQuantum::parse_label($_name[$title_col]) : "",
                 ];
                 if (get_parent($tree_index, $id) == 0) {
                     return $crumb;
@@ -1602,6 +1655,27 @@ function fusion_get_settings($key = NULL) {
 }
 
 /**
+ * Cache all infusions and get their versions
+ * @param string $folder
+ *
+ * @return array|mixed|null
+ */
+function fusion_get_infusions($folder = NULL) {
+    static $infusions = [];
+    if (empty($infusions)) {
+        $result = dbquery("SELECT inf_folder, inf_version FROM ".DB_INFUSIONS);
+        if (dbrows($result)) {
+            while ($data = dbarray($result)) {
+                $infusions[$data['inf_folder']] = $data['inf_version'];
+                define(strtoupper($data['inf_folder']).'_EXIST', TRUE);
+            }
+        }
+    }
+
+    return $folder === NULL ? $infusions : (isset($infusions[$folder]) ? $infusions[$folder] : NULL);
+}
+
+/**
  * Get Locale
  * Fetch a given locale key
  *
@@ -1646,7 +1720,7 @@ function fusion_get_userdata($key = NULL) {
         $userdata = ["user_level" => 0, "user_rights" => "", "user_groups" => "", "user_theme" => 'Default'];
     }
     $userdata = $userdata + [
-            "user_id"     => 0,
+            "user_id"     => USER_IP,
             "user_name"   => fusion_get_locale("user_guest"),
             "user_status" => 1,
             "user_level"  => 0,
@@ -1667,13 +1741,9 @@ function fusion_get_userdata($key = NULL) {
  * @return mixed
  */
 function fusion_get_user($user_id, $key = NULL) {
-    global $performance_test;
-
     static $user = [];
     if (!isset($user[$user_id]) && isnum($user_id)) {
         $user[$user_id] = dbarray(dbquery("SELECT * FROM ".DB_USERS." WHERE user_id='".intval($user_id)."'"));
-        // check how many times this query is made with the same user.
-        $performance_test = $performance_test + 1;
     }
     if (!isset($user[$user_id])) {
         return NULL;
