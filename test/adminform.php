@@ -45,7 +45,7 @@ class Demo_Form implements \PHPFusion\AdminFormSDK {
      * @return int
      */
     public function save($data) {
-        dbquery_insert(DB_SSL, $data, 'update');
+        dbquery_insert(DB_NEWS, $data, 'update');
         return (int)dblastid();
     }
     /**
@@ -56,7 +56,7 @@ class Demo_Form implements \PHPFusion\AdminFormSDK {
      * @return int
      */
     public function update($data) {
-        return (int)dbquery_insert(DB_SSL, $data, 'save');
+        return (int)dbquery_insert(DB_NEWS, $data, 'save');
     }
 
     /**
@@ -64,6 +64,13 @@ class Demo_Form implements \PHPFusion\AdminFormSDK {
      * @return array
      */
     public function data() {
+
+        if (isset($_GET['edit']) && isnum($_GET['edit'])) {
+            $result = dbquery("SELECT * FROM ".DB_NEWS." WHERE news_id=:nid", [':nid'=>intval($_GET['edit'])]);
+            if (dbrows($result)) {
+                return dbarray($result);
+            }
+        }
         return array(
             'news_id' => 0,
             'news_subject' => '',
@@ -127,13 +134,13 @@ class Demo_Form implements \PHPFusion\AdminFormSDK {
      */
     public function custom($data) {
         return form_text('news_price', 'News Price (USD)', (!empty($data['news_price']) ? number_format($data['news_price'],2) : ''), [
-                'placeholder'=>'0.00',
-                'required'=>TRUE,
-                'inline'=>TRUE,
-                'inner_width'=>'300px',
-                'type'=>'number',
-                'number_step'=>'0.1'
-            ]);
+            'placeholder'=>'0.00',
+            'required'=>TRUE,
+            'inline'=>TRUE,
+            'inner_width'=>'300px',
+            'type'=>'number',
+            'number_step'=>'0.1'
+        ]);
         // you can keep adding all fields, but remember, to increment the property of the data() function of this class with your init data.
 
 
