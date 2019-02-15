@@ -114,7 +114,7 @@ if ($settings['site_protocol'] == 'https' && !isset($_SERVER['HTTPS'])) {
 define("FUSION_QUERY", isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : "");
 define("FUSION_SELF", basename($_SERVER['PHP_SELF']));
 define("FUSION_REQUEST", isset($_SERVER['REQUEST_URI']) && $_SERVER['REQUEST_URI'] != "" ? $_SERVER['REQUEST_URI'] : $_SERVER['SCRIPT_NAME']);
-
+define('FUSION_REFERER', isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : NULL);
 // Variables initializing
 $mysql_queries_count = 0;
 $mysql_queries_time = [];
@@ -258,16 +258,26 @@ if (!isset($_COOKIE[COOKIE_PREFIX.'visited'])) {
 }
 
 //$lastvisited = Authenticate::setLastVisitCookie();
+
 //define('LASTVISITED', Authenticate::setLastVisitCookie());
 
 // Set admin login procedures
 Authenticate::setAdminLogin();
 
 $fusion_dynamics = Dynamics::getInstance();
+
 $fusion_page_head_tags = &\PHPFusion\OutputHandler::$pageHeadTags;
+
 $fusion_page_footer_tags = &\PHPFusion\OutputHandler::$pageFooterTags;
+
 $fusion_jquery_tags = &\PHPFusion\OutputHandler::$jqueryTags;
+
 $fusion_css_tags = &\PHPFusion\OutputHandler::$cssTags;
+
+// Get installed infusions
+$fusion_infusions = fusion_get_infusions();
+
+$fusion_steam = new \PHPFusion\Steam('bootstrap3'); // use bootstrap 3
 
 // Set theme using $_GET as well.
 // Set theme
@@ -280,15 +290,6 @@ if ($userdata['user_level'] == USER_LEVEL_SUPER_ADMIN && isset($_GET['themes']) 
     redirect(clean_request("", ["themes"], FALSE));
 }
 set_theme(empty($userdata['user_theme']) ? fusion_get_settings("theme") : $userdata['user_theme']);
-
-$result = dbquery("SELECT inf_folder FROM ".DB_INFUSIONS);
-if (dbrows($result)) {
-    while ($data = dbarray($result)) {
-        if (file_exists(INFUSIONS.$data['inf_folder'])) {
-            define(strtoupper($data['inf_folder']).'_EXIST', TRUE);
-        }
-    }
-}
 
 /**
  * Reduction of 0.04 seconds in performance.
