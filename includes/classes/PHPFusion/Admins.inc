@@ -323,7 +323,7 @@ class Admins {
                     }
                 }
             }
-            self::$amdin_pages = self::$admin_pages + self::$public_pages;
+            self::$admin_pages = self::$admin_pages + self::$public_pages;
         }
 
         return (array)self::$admin_pages;
