@@ -293,7 +293,18 @@ $locale['setup_3660'] = "Site Information";
 $locale['setup_3661'] = "Discussions regarding the management of this website";
 
 // Stage 6 - User Fields
-require_once __DIR__."/user_fields/user_aim.php";
+require_once INCLUDES.'user_fields/public/user_aim/locale/'.LANGUAGE.'.php';
+require_once INCLUDES.'user_fields/public/user_icq/locale/'.LANGUAGE.'.php';
+require_once INCLUDES.'user_fields/public/user_location/locale/'.LANGUAGE.'.php';
+require_once INCLUDES.'user_fields/public/user_sig/locale/'.LANGUAGE.'.php';
+require_once INCLUDES.'user_fields/public/user_skype/locale/'.LANGUAGE.'.php';
+require_once INCLUDES.'user_fields/public/user_web/locale/'.LANGUAGE.'.php';
+require_once INCLUDES.'user_fields/public/user_yahoo/locale/'.LANGUAGE.'.php';
+require_once INCLUDES.'user_fields/public/user_timezone/locale/'.LANGUAGE.'.php';
+require_once INCLUDES.'user_fields/public/user_timezone/locale/'.LANGUAGE.'.php';
+require_once INCLUDES.'user_fields/preference/user_birthdate/locale/'.LANGUAGE.'.php';
+require_once INCLUDES.'user_fields/preference/user_theme/locale/'.LANGUAGE.'.php';
+/*require_once __DIR__."/user_fields/user_aim.php";
 require_once __DIR__."/user_fields/user_birthdate.php";
 require_once __DIR__."/user_fields/user_icq.php";
 require_once __DIR__."/user_fields/user_location.php";
@@ -304,7 +315,7 @@ require_once __DIR__."/user_fields/user_web.php";
 require_once __DIR__."/user_fields/user_yahoo.php";
 require_once __DIR__."/user_fields/user_timezone.php";
 require_once __DIR__."/user_fields/user_blacklist.php";
-
+*/
 // Welcome message
 $locale['setup_3650'] = "Welcome to your site";
 // Final message
