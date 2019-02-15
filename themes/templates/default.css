@@ -1466,3 +1466,36 @@ html[dir="rtl"] .center-xy {
     -o-transform: translate(50%, -50%);
     transform: translate(50%, -50%);
 }
+
+/**
+Global Administration template
+ */
+.admin-post {
+    display: block;
+}
+.admin-post .admin-post-body {
+    display: block;
+    position:relative;
+    margin-right:350px;
+    padding:0;
+}
+.admin-post #admin-post-content {
+    width: 100%;
+    float: left;
+}
+.admin-post #admin-post-side {
+    float: right;
+    margin-right: -300px; /* gutter of 20px diff */
+    width: 280px;
+}
+.admin-post #admin-post-bottom {
+    float:left;
+    width: 100%;
+}
+/* responsive media */
+@media only screen and (max-width: 850px) {
+    .admin-post #admin-post-side {
+        margin-right: 0;
+        width: 100%;
+    }
+}
