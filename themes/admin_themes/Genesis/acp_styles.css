@@ -1735,7 +1735,7 @@ Alerts
 }
 
 #devlpr .panel-default .panel-body {
-    padding: 1.4rem;
+    padding: 0.8rem;
 }
 
 #devlpr .panel-default .panel-collapse {
@@ -2657,8 +2657,11 @@ input[type=radio]:checked:before {
     background-color: #2B333E;
 }
 .copyright-wrapper {
-    min-height:50px;
     display: block;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    height: 30px;
 }
 .copyright {
     position: relative;
