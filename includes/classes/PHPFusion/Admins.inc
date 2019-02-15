@@ -311,7 +311,7 @@ class Admins {
     public function getAdminPages() {
         self::$admin_pages = array_filter(self::$admin_pages);
         if (empty(self::$admin_pages)) {
-            $result = dbquery("SELECT * FROM ".DB_ADMIN." WHERE admin_language='".LANGUAGE."' ORDER BY admin_page DESC, admin_id ASC, admin_title ASC");
+            $result = dbquery("SELECT admin_title, admin_page, admin_rights, admin_link FROM ".DB_ADMIN." WHERE admin_language='".LANGUAGE."' ORDER BY admin_page DESC, admin_id ASC, admin_title ASC");
             $rows = dbrows($result);
             if ($rows) {
                 while ($data = dbarray($result)) {
@@ -326,7 +326,7 @@ class Admins {
             self::$amdin_pages = self::$admin_pages + self::$public_pages;
         }
 
-        return self::$admin_pages;
+        return (array)self::$admin_pages;
     }
 
     /**
