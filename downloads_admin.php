@@ -140,7 +140,7 @@ function download_listing() {
 
     if (!empty($catOpts) > 0 && $total_rows > 0) {
         echo "<div class='dropdown pull-left m-r-10'>\n";
-        echo "<a class='btn btn-default btn-sm dropdown-toggle' data-target='#' href='#' style='width: 200px;' data-toggle='dropdown' aria-expanded='false'>\n";
+        echo "<a class='btn btn-default btn-sm dropdown-toggle' style='width: 200px;' data-toggle='dropdown' aria-expanded='false'>\n";
         if (isset($_GET['filter_cid']) && isset($catOpts[$_GET['filter_cid']])) {
             echo $catOpts[$_GET['filter_cid']];
         } else {
