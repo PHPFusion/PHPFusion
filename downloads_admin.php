@@ -132,7 +132,7 @@ function download_listing() {
     FROM ".DB_DOWNLOADS." d
     INNER JOIN ".DB_DOWNLOAD_CATS." dc on d.download_cat = dc.download_cat_id
     ".($filter ? "WHERE $filter " : "")."
-    ORDER BY dc.download_cat_sorting LIMIT $rowstart, $limit");
+    ORDER BY d.download_datestamp DESC LIMIT $rowstart, $limit");
 
     $rows = dbrows($result);
     echo "<div class='clearfix m-t-10'>\n";
