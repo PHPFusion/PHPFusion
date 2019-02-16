@@ -119,12 +119,12 @@ class SmileysAdministration {
         if (self::verify_smileys($id)) {
             $data = self::load_smileys($id);
             dbquery("DELETE FROM ".DB_SMILEYS." WHERE smiley_id=:smileyid", [':smileyid' => intval($id)]);
-            if (!empty(isset($_GET['inact']))) {
+            if (!empty(isset($_GET['inactive']))) {
                 if (!empty($data['smiley_image']) && file_exists(IMAGES."smiley/".$data['smiley_image'])) {
                     unlink(IMAGES."smiley/".$data['smiley_image']);
                 }
             }
-            addNotice('warning', (isset($_GET['inact']) ? self::$locale['SMLY_412'] : self::$locale['SMLY_413']));
+            addNotice('warning', (isset($_GET['inactive']) ? self::$locale['SMLY_412'] : self::$locale['SMLY_413']));
             redirect(clean_request('', ['section=smiley_list', 'aid'], TRUE));
         }
     }
@@ -226,8 +226,8 @@ class SmileysAdministration {
                 echo "<td class='col-xs-2'><img style='width:20px;height:20px;' src='".IMAGES."smiley/".$info['smiley_image']."' alt='".$info['smiley_text']."' title='".$info['smiley_text']."' /></td>\n";
                 echo "<td class='col-xs-2'>".$info['smiley_text']."</td>\n";
                 echo "<td class='col-xs-4'><a class='btn btn-default btn-sm' href='".FUSION_SELF.$aidlink."&amp;section=smiley_form&amp;action=edit&amp;smiley_id=".$info['smiley_id']."'>".self::$locale['edit']."<i class='fa fa-edit m-l-10'></i></a> \n";
-                echo "<a id='confirm' class='btn btn-default btn-sm' href='".FUSION_SELF.$aidlink."&amp;section=smiley_form&amp;action=delete&amp;smiley_id=".$info['smiley_id']."' onclick=\"return confirm('".self::$locale['SMLY_417']."');\">".self::$locale['SMLY_435']."<i class='fa fa-trash m-l-10'></i></a> \n";
-                echo "<a id='confirm' class='btn btn-default btn-sm' href='".FUSION_SELF.$aidlink."&amp;section=smiley_form&amp;action=delete&amp;inact=1&amp;smiley_id=".$info['smiley_id']."' onclick=\"return confirm('".self::$locale['SMLY_416']."');\">".self::$locale['delete']."<i class='fa fa-trash m-l-10'></i></a></td>\n</tr>\n";
+                echo "<a id='confirm' class='btn btn-default btn-sm' href='".FUSION_SELF.$aidlink."&amp;section=smiley_form&amp;action=delete&amp;smiley_id=".$info['smiley_id']."' onclick=\"return confirm('".self::$locale['SMLY_417']."');\">".self::$locale['SMLY_435']."<i class='fa fa-close m-l-10'></i></a> \n";
+                echo "<a id='confirm' class='btn btn-default btn-sm' href='".FUSION_SELF.$aidlink."&amp;section=smiley_form&amp;action=delete&amp;inactive=1&amp;smiley_id=".$info['smiley_id']."' onclick=\"return confirm('".self::$locale['SMLY_416']."');\">".self::$locale['delete']."<i class='fa fa-trash m-l-10'></i></a></td>\n</tr>\n";
             }
             echo "</table>\n</div>";
         } else {
@@ -241,9 +241,9 @@ class SmileysAdministration {
             echo "<div class='table-responsive'><table class='table table-hover table-striped'>\n";
             foreach ($smileys_list as $list) {
                 echo "<tr>\n";
-                echo "<td class='col-xs-2'><img src='".IMAGES."smiley/".$list."' alt='' title='' style='border:none;' /></td>\n";
+                echo "<td class='col-xs-2'><img style='width:20px;height:20px;' src='".IMAGES."smiley/".$list."' alt='' title='' style='border:none;' /></td>\n";
                 echo "<td class='col-xs-2'>".ucwords(str_replace(['.gif', '.png', '.jpg', '.svg'], '', $list))."</td>\n";
-                echo "<td class='col-xs-2'><a id='confirm' class='btn btn-default btn-sm' href='".FUSION_SELF.$aidlink."&amp;section=smiley_form&amp;smiley_text=".$list."'>".self::$locale['add']."<i class='fa fa-plus-square m-l-10'></i></a></td>\n";
+                echo "<td class='col-xs-2'><a id='confirm' class='btn btn-default btn-sm' href='".FUSION_SELF.$aidlink."&amp;section=smiley_form&amp;smiley_text=".$list."'>".self::$locale['add']."<i class='fa fa-plus m-l-10'></i></a></td>\n";
                 echo "</tr>\n";
             }
             echo "</table>\n</div>";
@@ -265,7 +265,6 @@ class SmileysAdministration {
 
         $temp = IMAGES."smiley/";
         $smiley_files = makefilelist($temp, '.|..|.DS_Store|index.php', TRUE, "files");
-        //$smiley_files = $smiley_files;
         foreach ($smiley_files as $smiley_check) {
 
             if (!in_array($smiley_check, $smiley)) {
@@ -286,14 +285,24 @@ class SmileysAdministration {
 
         echo form_hidden('smiley_id', '', $this->data['smiley_id']);
         $image_opts = [];
+        $image_opts_ = [];
         $image_files = makefilelist(IMAGES."smiley/", ".|..|index.php", TRUE);
+        $result = dbquery("SELECT smiley_image FROM ".DB_SMILEYS);
+        while ($data = dbarray($result)) {
+            $name = explode(".", $data['smiley_image']);
+            $image_opts_[$data['smiley_image']] = ucwords($name[0]);
+        }
+
         foreach ($image_files as $filename) {
             $name = explode(".", $filename);
             $image_opts[$filename] = ucwords($name[0]);
         }
+
+        $smileys_opts = array_diff($image_opts, $image_opts_);
+
         if ($this->data['smiley_image']) {
             echo form_select('smiley_image', self::$locale['SMLY_421'], $this->data['smiley_image'], [
-                'options'    => $image_opts,
+                'options'    => $smileys_opts,
                 'required'   => TRUE,
                 'inline'     => TRUE,
                 'error_text' => self::$locale['SMLY_438'],
@@ -320,16 +329,19 @@ class SmileysAdministration {
         ]);
         echo form_button('smiley_save', ($this->data['smiley_id'] ? self::$locale['SMLY_424'] : self::$locale['SMLY_423']), ($this->data['smiley_id'] ? self::$locale['SMLY_424'] : self::$locale['SMLY_423']), ['class' => 'btn-primary']);
         echo closeform();
-        add_to_jquery("
-        function showMeSmileys(item) {
-            return '<aside class=\"pull-left\" style=\"width:35px;\"><img style=\"height:15px;\" class=\"img-rounded\" alt=\"'+item.text+'\" src=\"".IMAGES."smiley/'+item.id+'\"/></aside> : ' + item.text;
-            }
-            $('#smiley_image').select2({
-            formatSelection: function(m) { return showMeSmileys(m); },
-            formatResult: function(m) { return showMeSmileys(m); },
-            escapeMarkup: function(m) { return m; },
-            });
-        ");
+
+        if (!empty($smileys_opts)) {
+            add_to_jquery("
+                function showMeSmileys(item) {
+                    return '<aside class=\"pull-left\" style=\"width:20px;height:20px;\"><img style=\"height:15px;\" class=\"img-rounded\" alt=\"'+item.text+'\" src=\"".IMAGES."smiley/'+item.id+'\"/></aside> - ' + item.text;
+                }
+                $('#smiley_image').select2({
+                formatSelection: function(m) { return showMeSmileys(m); },
+                formatResult: function(m) { return showMeSmileys(m); },
+                escapeMarkup: function(m) { return m; },
+                });
+            ");
+        }
         echo '</div>';
     }
 }

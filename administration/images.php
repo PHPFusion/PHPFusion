@@ -96,54 +96,69 @@ class ImagesAdministration {
                 'link'    => IMAGES,
                 'count'   => TRUE,
                 'fileinp' => $maxed_out_settings,
-            ],
-            "imagesa"  => [
-                'locale'  => self::$locale['423'],
-                'link'    => IMAGES_A,
-                'count'   => defined('ARTICLES_EXIST'),
-                'fileinp' => $maxed_out_settings,
-            ],
-            "imagesn"  => [
-                'locale'  => self::$locale['424'],
-                'link'    => IMAGES_N,
-                'count'   => defined('NEWS_EXIST'),
-                'fileinp' => [
-                    'max_width'  => !empty($settings_inf['news']) ? $settings_inf['news']['news_photo_max_w'] : 0,
-                    'max_height' => !empty($settings_inf['news']) ? $settings_inf['news']['news_photo_max_h'] : 0,
-                    'max_byte'   => !empty($settings_inf['news']) ? $settings_inf['news']['news_photo_max_b'] : 0,
-                ],
-            ],
-            "imagesnc" => [
-                'locale'  => self::$locale['427'],
-                'link'    => IMAGES_NC,
-                'count'   => defined('NEWS_EXIST'),
-                'fileinp' => [
-                    'max_width'  => !empty($settings_inf['news']) ? $settings_inf['news']['news_photo_max_w'] : 0,
-                    'max_height' => !empty($settings_inf['news']) ? $settings_inf['news']['news_photo_max_h'] : 0,
-                    'max_byte'   => !empty($settings_inf['news']) ? $settings_inf['news']['news_photo_max_b'] : 0,
-                ],
-            ],
-            "imagesb"  => [
-                'locale'  => self::$locale['428'],
-                'link'    => IMAGES_B,
-                'count'   => defined('BLOG_EXIST'),
-                'fileinp' => [
-                    'max_width'  => !empty($settings_inf['blog']) ? $settings_inf['blog']['blog_photo_max_w'] : 0,
-                    'max_height' => !empty($settings_inf['blog']) ? $settings_inf['blog']['blog_photo_max_h'] : 0,
-                    'max_byte'   => !empty($settings_inf['blog']) ? $settings_inf['blog']['blog_photo_max_b'] : 0,
-                ],
-            ],
-            "imagesbc" => [
-                'locale'  => self::$locale['429'],
-                'link'    => IMAGES_BC,
-                'count'   => defined('BLOG_EXIST'),
-                'fileinp' => [
-                    'max_width'  => !empty($settings_inf['blog']) ? $settings_inf['blog']['blog_photo_max_w'] : 0,
-                    'max_height' => !empty($settings_inf['blog']) ? $settings_inf['blog']['blog_photo_max_h'] : 0,
-                    'max_byte'   => !empty($settings_inf['blog']) ? $settings_inf['blog']['blog_photo_max_b'] : 0,
-                ],
-            ],
+            ]
         ];
+
+        if (defined('ARTICLES_EXIST')) {
+            $folders += [
+                "imagesa"  => [
+                    'locale'  => self::$locale['423'],
+                    'link'    => IMAGES_A,
+                    'count'   => defined('ARTICLES_EXIST'),
+                    'fileinp' => $maxed_out_settings,
+                ]
+            ];
+        }
+
+        if (defined('NEWS_EXIST')) {
+            $folders += [
+                "imagesn"  => [
+                    'locale'  => self::$locale['424'],
+                    'link'    => IMAGES_N,
+                    'count'   => defined('NEWS_EXIST'),
+                    'fileinp' => [
+                        'max_width'  => !empty($settings_inf['news']) ? $settings_inf['news']['news_photo_max_w'] : 0,
+                        'max_height' => !empty($settings_inf['news']) ? $settings_inf['news']['news_photo_max_h'] : 0,
+                        'max_byte'   => !empty($settings_inf['news']) ? $settings_inf['news']['news_photo_max_b'] : 0,
+                    ],
+                ],
+                "imagesnc" => [
+                    'locale'  => self::$locale['427'],
+                    'link'    => IMAGES_NC,
+                    'count'   => defined('NEWS_EXIST'),
+                    'fileinp' => [
+                        'max_width'  => !empty($settings_inf['news']) ? $settings_inf['news']['news_photo_max_w'] : 0,
+                        'max_height' => !empty($settings_inf['news']) ? $settings_inf['news']['news_photo_max_h'] : 0,
+                        'max_byte'   => !empty($settings_inf['news']) ? $settings_inf['news']['news_photo_max_b'] : 0,
+                    ],
+                ]
+            ];
+        }
+
+        if (defined('BLOG_EXIST')) {
+            $folders += [
+                "imagesb"  => [
+                    'locale'  => self::$locale['428'],
+                    'link'    => IMAGES_B,
+                    'count'   => defined('BLOG_EXIST'),
+                    'fileinp' => [
+                        'max_width'  => !empty($settings_inf['blog']) ? $settings_inf['blog']['blog_photo_max_w'] : 0,
+                        'max_height' => !empty($settings_inf['blog']) ? $settings_inf['blog']['blog_photo_max_h'] : 0,
+                        'max_byte'   => !empty($settings_inf['blog']) ? $settings_inf['blog']['blog_photo_max_b'] : 0,
+                    ],
+                ],
+                "imagesbc" => [
+                    'locale'  => self::$locale['429'],
+                    'link'    => IMAGES_BC,
+                    'count'   => defined('BLOG_EXIST'),
+                    'fileinp' => [
+                        'max_width'  => !empty($settings_inf['blog']) ? $settings_inf['blog']['blog_photo_max_w'] : 0,
+                        'max_height' => !empty($settings_inf['blog']) ? $settings_inf['blog']['blog_photo_max_h'] : 0,
+                        'max_byte'   => !empty($settings_inf['blog']) ? $settings_inf['blog']['blog_photo_max_b'] : 0,
+                    ],
+                ],
+            ];
+        }
 
         $this->data['folders'] = $folders;
 
