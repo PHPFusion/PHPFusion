@@ -28,16 +28,17 @@ if (isset($_POST['save_settings'])) {
         'pm_inbox_limit'   => form_sanitizer($_POST['pm_inbox_limit'], '20', 'pm_inbox_limit'),
         'pm_outbox_limit'  => form_sanitizer($_POST['pm_outbox_limit'], '20', 'pm_outbox_limit'),
         'pm_archive_limit' => form_sanitizer($_POST['pm_archive_limit'], '20', 'pm_archive_limit'),
-        'pm_email_notify'  => form_sanitizer($_POST['pm_email_notify'], '1', 'pm_email_notify'),
-        'pm_save_sent'     => form_sanitizer($_POST['pm_save_sent'], '1', 'pm_save_sent'),
+        'pm_email_notify'  => (isset($_POST['pm_email_notify']) ? form_sanitizer($_POST['pm_email_notify'], '1', 'pm_email_notify') : 0),
+        'pm_save_sent'     => (isset($_POST['pm_save_sent']) ? form_sanitizer($_POST['pm_save_sent'], '1', 'pm_save_sent') : 0)
     ];
 
     if (\defender::safe()) {
         foreach ($inputData as $settings_name => $settings_value) {
-            dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:settings_value WHERE settings_name=:settings_name", [
-                ':settings_value' => $settings_value,
-                ':settings_name'  => $settings_name
-            ]);
+            $data = [
+                'settings_name'  => $settings_name,
+                'settings_value' => $settings_value
+            ];
+            dbquery_insert(DB_SETTINGS, $data, 'update', ['primary_key' => 'settings_name']);
         }
 
         addNotice('success', $locale['900']);
@@ -52,10 +53,17 @@ if (isset($_POST['delete-messages'])) {
 }
 
 opentable($locale['message_settings']);
-echo "<div class='well'>".$locale['message_description']."</div>\n";
 echo openform('settingsform', 'post', FUSION_REQUEST);
-echo "<div class='row'>\n<div class='col-xs-12 col-sm-6'>\n";
-openside();
+echo "<p>".$locale['message_description']."</p>\n";
+echo "<hr/>\n";
+echo "<div class='row'>\n<div class='col-xs-12 col-sm-3'>\n";
+echo "<h4 class='m-0'>".$locale['message_settings']."</h4>";
+echo "</div>\n<div class='col-xs-12 col-sm-9'>\n";
+echo form_checkbox('pm_email_notify', $locale['709'], $settings['pm_email_notify'], ['reverse_label' => TRUE]);
+echo form_checkbox('pm_save_sent', $locale['710'], $settings['pm_save_sent'], ['reverse_label' => TRUE]);
+echo "</div>\n</div>\n";
+echo "<hr/>\n";
+
 echo form_text('pm_inbox_limit', $locale['701'], $settings['pm_inbox_limit'], [
     'type'        => 'number',
     'max_length'  => 2,
@@ -75,29 +83,17 @@ echo form_text('pm_archive_limit', $locale['703'], $settings['pm_archive_limit']
     'inner_width' => '100px',
     'inline'      => TRUE
 ]);
-closeside();
-
-echo "</div>\n<div class='col-xs-12 col-sm-6'>\n";
-openside();
-echo form_select('pm_email_notify', $locale['709'], $settings['pm_email_notify'], [
-    'options' => ['1' => $locale['no'], '2' => $locale['yes']],
-    'width'   => '100%'
-]);
-echo form_select('pm_save_sent', $locale['710'], $settings['pm_save_sent'], [
-    'options' => ['1' => $locale['no'], '2' => $locale['yes']],
-    'width'   => '100%'
-]);
-closeside();
+echo "<hr/>\n";
 
 // Danger zone
-echo "<div class='panel panel-danger'><div class='panel-body'>";
+echo "<div class='row'>\n<div class='col-xs-12 col-sm-3'>\n";
+echo "</div>\n<div class='col-xs-12 col-sm-9'>\n";
 openform('delete-pm', 'post', FUSION_REQUEST);
 fusion_confirm_exit();
 add_to_jquery("$('#delete-messages').bind('click', function() { return confirm('".$locale['713']."'); });");
 echo form_button('delete-messages', $locale['714'], $locale['714'], ['class' => 'btn-danger', 'icon' => 'fa fa-trash-o']);
-echo "</div></div>";
-
 echo "</div>\n</div>\n";
+
 echo form_button('save_settings', $locale['750'], $locale['750'], ['class' => 'btn-success']);
 echo closeform();
 closetable();

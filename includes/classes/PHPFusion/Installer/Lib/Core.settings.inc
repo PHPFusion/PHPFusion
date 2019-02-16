@@ -494,11 +494,11 @@ function get_table_rows($table_name, $localeset = 'English') {
             ],
             [
                 'settings_name'  => 'pm_email_notify',
-                'settings_value' => 2
+                'settings_value' => 1
             ],
             [
                 'settings_name'  => 'pm_save_sent',
-                'settings_value' => 2
+                'settings_value' => 1
             ],
             [
                 'settings_name'  => 'enabled_languages',
