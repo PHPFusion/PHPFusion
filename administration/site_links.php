@@ -580,13 +580,13 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
                 $filter_empty = FALSE;
             }
         }
-        echo "<div class='display-inline-block pull-left m-r-10' style='width:300px;'>\n";
+        echo "<div class='display-inline-block pull-left m-r-10'>\n";
         echo form_text("link_name", "", $filter_values['link_name'], [
             "placeholder"       => $this->locale['SL_0050'],
             "append_button"     => TRUE,
             "append_value"      => "<i class='fa fa-search'></i>",
             "append_form_value" => "search_link",
-            "inner_width"       => "250px",
+            "width"             => "200px",
             "group_size"        => "sm"
         ]);
         echo "</div>\n";
@@ -832,7 +832,7 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
             while ($data = dbarray($result)) {
 
                 $data['link_name'] = parsesmileys(parseubb($data['link_name']));
-                $link_status = $data['link_status'] ? $this->locale['publish'] : $this->locale['unpublish'];
+                $link_status = $data['link_status'] ? $this->locale['published'] : $this->locale['unpublished'];
                 $link_position = $this->locale['custom']." ID #".$data['link_position'];
                 if (isset($position_opts[$data['link_position']]) && $data['link_position'] < 4) {
                     $link_position = $position_opts[$data['link_position']];
