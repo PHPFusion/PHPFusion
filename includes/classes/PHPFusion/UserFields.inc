@@ -348,7 +348,7 @@ class UserFields extends UserFieldsQuantum {
                             if (is_file($this->info['pages'][$this->info['current_page']]['file'])) {
                                 include $this->info['pages'][$this->info['current_page']]['file'];
                             }
-                            $section = NULL;
+                            $section = 1;
                             if (!empty($user_fields_section)) {
                                 $section = isset($_GET['section']) ? $_GET['section'] : $user_fields_section['id'][0];
                             }
