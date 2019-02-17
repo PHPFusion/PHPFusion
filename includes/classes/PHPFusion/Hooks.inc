@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| Copyright (C) 2002 - 2013 Nick Jones
+| http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: Hooks.inc
-| Author: PHP-Fusion Development Team
+| Filename: hooks.inc
+| Author: Frederick Chan (Deviance)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -55,19 +55,21 @@ final class Hooks {
      */
     public function add_hook($filter_name, $function, $que, $accepted_args) {
         $hooks = array(
-            'function' => $function,
+            'function'      => $function,
             'accepted_args' => $accepted_args,
-            'que' => $que,
+            'que'           => $que,
         );
         $this->hooks[$que][$filter_name][] = $hooks;
-        if (count($this->hooks) > 1 ) {
-            ksort( $this->hooks, SORT_NUMERIC );
+        if (count($this->hooks) > 1) {
+            ksort($this->hooks, SORT_NUMERIC);
         }
+
         return TRUE;
     }
 
     /**
      * Returns the hook by $filter_name and $function
+     *
      * @param        $filter_name
      * @param string $function
      *
@@ -75,19 +77,23 @@ final class Hooks {
      */
     public function get_hook($filter_name, $function = '') {
         if (!empty($this->hooks)) {
-            foreach($this->hooks as $hooks) {
-                if (isset($hooks[$filter_name])) {
-                    if ($function == 'invalid_notices') {
-                        return array();
-                    }
-                    if (!empty($function)) {
-                        return (array) ($hooks[$filter_name]['function'] == $function ?  $hooks[$filter_name]['function'] : array());
-                    } else {
-                        return (array) $hooks[$filter_name];
+            array_filter($this->hooks);
+            foreach ($this->hooks as $hooks) {
+                if (!empty($hooks)) {
+                    if (isset($hooks[$filter_name])) {
+                        if ($function == 'invalid_notices') {
+                            return array();
+                        }
+                        if (!empty($function)) {
+                            return (array)($hooks[$filter_name]['function'] == $function ? $hooks[$filter_name]['function'] : array());
+                        } else {
+                            return (array)$hooks[$filter_name];
+                        }
                     }
                 }
             }
         }
+
         return array();
     }
 
@@ -102,14 +108,16 @@ final class Hooks {
      */
     public function remove_hook($filter_name, $function, $que) {
         if (isset($this->hooks[$que][$filter_name])) {
-            foreach($this->hooks[$que][$filter_name] as $key => $hooks) {
+            foreach ($this->hooks[$que][$filter_name] as $key => $hooks) {
                 if ($hooks['function'] == $function) {
                     unset($this->hooks[$que][$filter_name][$key]);
                     if (empty($this->hooks[$que][$filter_name])) unset($this->hooks[$que][$filter_name]);
+
                     return TRUE;
                 }
             }
         }
+
         return FALSE;
     }
 
@@ -119,61 +127,98 @@ final class Hooks {
      * @param bool $que
      */
     public function remove_all_hook($que = FALSE) {
+
         if ($que === false) {
             $this->hooks = [];
+
         } elseif (isset($this->hooks[$que])) {
             unset($this->hooks[$que]);
         }
+
     }
 
     private $output = array();
 
     /**
      * Run the hooks by $filter_name and $args parameters
-     * @param $filter_name
-     * @param $args
+     * There will be no output. If you need an output, use filter hook.
      *
-     * @return array
+     * @param $filter_name
+     *
      */
-    public function apply_hook($filter_name, $args) {
-        $current_hook = $this->get_hook($filter_name, $args);
+    public function apply_hook($filter_name) {
+
+        $function_args = func_get_args();
+
+        $current_hook = $this->get_hook($filter_name);
+
         if (!empty($current_hook)) {
-            foreach($current_hook as $hook) {
+
+            foreach ($current_hook as $hook) {
+
                 // prevent the current hook from being called twice, executed or not, else crash
                 $this->remove_hook($filter_name, $hook['function'], $hook['que']);
+
                 if (function_exists($hook['function'])) {
-                    $output = $hook['function']($args);
+
+                    $args = (!empty($hook['accepted_args']) ? $hook['accepted_args'] : NULL);
+
+                    if (count($function_args) > 1) {
+                        unset($function_args[0]);
+                        $args = $function_args;
+                    }
+
+                    $output = call_user_func_array($hook['function'], $args);
+
                     if (!empty($output)) {
+
                         $this->output[$filter_name][] = $output;
+
                     }
                 }
             }
 
-            if (!empty($this->get_hook($filter_name, $args))) $this->apply_hook($filter_name, $args);
+            if (!empty($this->get_hook($filter_name))) $this->apply_hook($filter_name, $function_args);
         }
     }
 
-    public function filter_hook($filter_name, $args = '') {
-        $this->apply_hook($filter_name, $args);
+    /**
+     * Run the hooks by $filter_name and $args parameters
+     *
+     * @param $filter_name
+     *
+     * @return array|mixed
+     */
+    public function filter_hook($filter_name) {
+
+        $function_args = func_get_args();
+
+        call_user_func_array([$this, 'apply_hook'], $function_args);
+
         if (!empty($this->output[$filter_name])) {
             if (is_array($this->output[$filter_name])) {
                 return $this->output[$filter_name];
             }
         }
+
         return array();
     }
 
-
     public function apply_all_hook() {
+
         if (!empty($this->hooks)) {
-            foreach($this->hooks as $que => $funcs_) {
+
+            foreach ($this->hooks as $que => $funcs_) {
+
                 if (!empty($funcs_['function']) && function_exists($funcs_['function'])) {
+
                     call_user_func_array($funcs_['function'], $funcs_['accepted_args']);
+
                     array_shift($this->hooks[$que]);
+
                 }
             }
         }
     }
 
 }
-
