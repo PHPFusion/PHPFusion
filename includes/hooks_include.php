@@ -15,17 +15,21 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 /**
- * @param     $name             The name of the hook, this is your identifier
- * @param     $function         The callback function to run when the filter runs
- * @param int $que              Optional, values 1-10, where 1 runs first and 10 runs last
- * @param int $accepted_args    Optional, the number of arguments the function will accept, Default is 1.
+ * Add a hook
+ *
+ * @param       $name           The name of the hook, this is your identifier
+ * @param       $function       The callback function to run when the filter runs
+ * @param int   $que            Optional, values 1-10, where 1 runs first and 10 runs last
+ * @param array $default_args   Optional, the default state of parameter during adding hook
+ * @param int   $accepted_args  Optional, the limitation of the hook parameters the hook can accept.
  *
  * @return bool
  */
-function fusion_add_hook($name, $function, $que = 10, $accepted_args = 1) {
+function fusion_add_hook($name, $function, $que = 10, $default_args = array(), $accepted_args = 1) {
     // once you need to add hook, we'll poll the instance.
-    return \PHPFusion\Hooks::get_instances($name)->add_hook($name, $function, $que, $accepted_args);
+    return \PHPFusion\Hooks::get_instances($name)->add_hook($name, $function, $que, $default_args, $accepted_args);
 }
 
 /**

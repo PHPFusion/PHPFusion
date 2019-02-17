@@ -26,7 +26,10 @@ namespace PHPFusion;
 final class Hooks {
 
     private $hooks = [];
+
     private static $instances = NULL;
+
+    private $output = array();
 
     /**
      * Get an instance by key
@@ -49,13 +52,15 @@ final class Hooks {
      * @param $filter_name
      * @param $function
      * @param $que
+     * @param $default_args
      * @param $accepted_args
      *
      * @return bool
      */
-    public function add_hook($filter_name, $function, $que, $accepted_args) {
+    public function add_hook($filter_name, $function, $que, $default_args, $accepted_args) {
         $hooks = array(
             'function'      => $function,
+            'default_args'  => $default_args,
             'accepted_args' => $accepted_args,
             'que'           => $que,
         );
@@ -137,14 +142,13 @@ final class Hooks {
 
     }
 
-    private $output = array();
 
     /**
      * Run the hooks by $filter_name and $args parameters
      * There will be no output. If you need an output, use filter hook.
-     *
      * @param $filter_name
      *
+     * @throws \Exception
      */
     public function apply_hook($filter_name) {
 
@@ -161,11 +165,19 @@ final class Hooks {
 
                 if (function_exists($hook['function'])) {
 
-                    $args = (!empty($hook['accepted_args']) ? $hook['accepted_args'] : NULL);
 
+                    $args = (!empty($hook['default_args']) ? $hook['default_args'] : array());
+
+                    //$args = array();
                     if (count($function_args) > 1) {
                         unset($function_args[0]);
                         $args = $function_args;
+                    }
+
+                    if ($hook['accepted_args']) {
+                        if (count($args) - 1 > $hook['accepted_args']) {
+                            throw new \Exception("Too many arguments during executing the $filter_name hook");
+                        }
                     }
 
                     $output = call_user_func_array($hook['function'], $args);
