@@ -165,17 +165,14 @@ final class Hooks {
 
                 if (function_exists($hook['function'])) {
 
-
                     $args = (!empty($hook['default_args']) ? $hook['default_args'] : array());
-
-                    //$args = array();
                     if (count($function_args) > 1) {
                         unset($function_args[0]);
                         $args = $function_args;
                     }
 
                     if ($hook['accepted_args']) {
-                        if (count($args) - 1 > $hook['accepted_args']) {
+                        if ($hook['accepted_args'] < (count($args) - 1 ) ) {
                             throw new \Exception("Too many arguments during executing the $filter_name hook");
                         }
                     }
