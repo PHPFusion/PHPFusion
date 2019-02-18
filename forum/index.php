@@ -78,7 +78,7 @@ if (dbrows($result) != 0) {
             echo "<td class='forum-caption forum_cat_name' colspan='2'><!--forum_cat_name-->";
             echo "<h3><a href='".BASEDIR."forum/index.php?cat=".$data['forum_cat']."'>".$data['forum_cat_name']."</a></h3>";
             if ($data['forum_cat_description']) {
-                echo "<span class='forum-cat-description small'>".nl2br(parseubb($data['forum_cat_description']))."</span>";
+                echo "<br /><span class='forum-cat-description small'>".nl2br(parseubb($data['forum_cat_description']))."</span>";
             }
             echo "</td>\n";
             echo "<td class='forum-caption' width='12%' style='white-space:nowrap'>".$locale['402']." / ".$locale['403']."</td>\n";
