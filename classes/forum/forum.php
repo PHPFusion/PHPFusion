@@ -46,10 +46,8 @@ class Forum extends ForumServer {
         $locale = fusion_get_locale();
 
         // security boot due to insufficient access level
-        if (isset($_GET['viewforum']) && (empty($_GET['forum_id']) OR !isnum($_GET['forum_id']))) {
-            if (!verify_forum($_GET['forum_id'])) {
-                redirect(INFUSIONS.'forum/index.php');
-            }
+        if (isset($_GET['viewforum']) && (empty($_GET['forum_id']) OR !isnum($_GET['forum_id']) || !verify_forum($_GET['forum_id']))) {
+            redirect(INFUSIONS.'forum/index.php');
         }
 
         if (stristr($_SERVER['PHP_SELF'], 'forum_id')) {
