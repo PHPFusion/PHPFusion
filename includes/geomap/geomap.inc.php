@@ -25,9 +25,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined('IN_FUSION') || exit;
 
 // Official Cut Off List : Bouvet Island, Christmas Island, Cocos-Keeling-Islands, French Metropolitan, French Guiana, French-Southern-Territories, Guadeloupe, Heard and Mc Donald Islands, Mayotte, "St. Helena","St. Pierre and Miquelon", Svalbard and Jan Mayen Islands,
 // Tokelau, United States Minor Outlying Islands, Western Sahara,

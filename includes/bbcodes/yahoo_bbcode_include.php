@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined('IN_FUSION') || exit;
 
 $text = preg_replace('#\[yahoo\](.*?)\[/yahoo\]#si',
     '<strong>'.$locale['bb_yahoo'].':</strong> <a href=\'http://search.yahoo.com/search?ei=UTF-8&amp;fr=sfp&amp;p=\1\' target=\'_blank\'>\1</a>',

@@ -16,9 +16,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined('IN_FUSION')) {
-    die('Access Denied');
-}
+defined('IN_FUSION') || exit;
 
 $theme_title = 'Atom9 - Ignition Pack';
 $theme_description = 'Atom Producer Engine for the PHP-Fusion Core 9 CMS.';

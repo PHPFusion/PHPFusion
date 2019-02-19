@@ -16,9 +16,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined('IN_FUSION')) {
-    die('Access Denied');
-}
+defined('IN_FUSION') || exit;
 
 $theme_title = 'iTheme2';
 $theme_description = 'Ported iTheme2 Theme for PHP Fusion 9.';

@@ -17,9 +17,7 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\BBCode\Autolink;
 
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined('IN_FUSION') || exit;
 
 if (!function_exists('PHPFusion\BBCode\Autolink\run')) {
     function bbcode_off($text, $part) {

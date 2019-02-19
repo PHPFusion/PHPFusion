@@ -17,10 +17,6 @@
 +--------------------------------------------------------*/
 namespace ThemePack\Nebula\Templates;
 
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
-
 class Gallery {
 
     private static $gallery_settings = [];

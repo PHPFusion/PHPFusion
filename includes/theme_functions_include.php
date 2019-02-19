@@ -19,9 +19,7 @@
 use PHPFusion\Database\DatabaseFactory;
 use PHPFusion\OutputHandler;
 
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined('IN_FUSION') || exit;
 
 /**
  * Show PHP-Fusion Performance

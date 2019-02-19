@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined('IN_FUSION') || exit;
 
 $icon = "<img src='".IMAGES."user_fields/social/line.svg' title='Line' alt='Line'/>";
 // Display user field input

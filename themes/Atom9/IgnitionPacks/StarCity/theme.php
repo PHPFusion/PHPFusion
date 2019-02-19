@@ -16,9 +16,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined('IN_FUSION')) {
-    die('Access Denied');
-}
+defined('IN_FUSION') || exit;
 
 function render_downloads($info) {
     Atom9Theme\IgnitionPacks\StarCity\Templates\Downloads::render_downloads($info);
