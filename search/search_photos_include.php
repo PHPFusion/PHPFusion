@@ -20,9 +20,8 @@ namespace PHPFusion\Search;
 use PHPFusion\ImageRepo;
 use PHPFusion\Search;
 
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined('IN_FUSION') || exit;
+
 if (defined('GALLERY_EXIST')) {
 
     if (Search_Engine::get_param('stype') == 'photos' || Search_Engine::get_param('stype') == 'all') {

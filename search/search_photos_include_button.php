@@ -17,9 +17,8 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Search;
 
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined('IN_FUSION') || exit;
+
 if (defined('GALLERY_EXIST')) {
     $form_elements = &$form_elements;
     $radio_button = &$radio_button;
