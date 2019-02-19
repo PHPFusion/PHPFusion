@@ -15,9 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined('IN_FUSION') || exit;
+
 require_once INFUSIONS.'blog/templates/blog.php';
 $blog_settings = get_settings("blog");
 $locale = fusion_get_locale('', BLOG_ADMIN_LOCALE);
