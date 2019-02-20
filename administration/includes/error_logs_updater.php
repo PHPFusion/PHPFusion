@@ -17,32 +17,35 @@
 +--------------------------------------------------------*/
 require_once "../../maincore.php";
 
-$aid = isset($_GET['aidlink']) ? explode('=', $_GET['aidlink']) : '';
+$aidlink = filter_input(INPUT_GET, 'aidlink', FILTER_DEFAULT)
+$aid = !empty($aidlink) ? explode('=', $aidlink) : '';
 
 if (!empty($aid)) {
     $aid = $aid[1];
 }
-$id = isset($_GET['error_id']) && isnum($_GET['error_id']) ? $_GET['error_id'] : 0;
+$error_id = filter_input(INPUT_GET, 'error_id', FILTER_VALIDATE_INT)
+$id = !empty($error_id) ? $error_id : 0;
 
-$type = isset($_GET['error_type']) && isnum($_GET['error_type']) ? $_GET['error_type'] : 0;
+$error_type = filter_input(INPUT_GET, 'error_type', FILTER_VALIDATE_INT)
+$type = !empty($error_type) ? $error_type : 0;
 
 if (checkrights("ERRO") && defined("iAUTH") && $aid == iAUTH && defender::safe()) {
 
     $this_response = ['fusion_error_id' => $id, 'from' => 0, 'status' => 'Not Updated'];
 
-    $result = dbquery("SELECT error_status	FROM ".DB_ERRORS." WHERE error_id='".intval($id)."'");
+    $result = dbquery("SELECT error_status	FROM ".DB_ERRORS." WHERE error_id=:errorid", [':errorid' => (int)$id]);
 
     if (dbrows($result) > 0) {
         $data = dbarray($result);
         if ($type == 999) {
             // Delete Error
-            $result = dbquery("DELETE FROM ".DB_ERRORS." WHERE error_id='".intval($id)."'");
+            $result = dbquery("DELETE FROM ".DB_ERRORS." WHERE error_id=:errorid", [':errorid' => (int)$id]);
             if ($result) {
                 $this_response = ['fusion_error_id' => $id, 'from' => $data['error_status'], 'to' => $type, 'status' => 'RMD'];
             }
         } else {
             // Update Error Status
-            $result = dbquery("UPDATE ".DB_ERRORS." SET error_status='".intval($type)."' WHERE error_id='".intval($id)."'");
+            $result = dbquery("UPDATE ".DB_ERRORS." SET error_status=:status WHERE error_id=:errorid", [':status' => (int)$type, ':errorid' => (int)$id]);
             if ($result) {
                 $this_response = ['fusion_error_id' => $id, 'from' => $data['error_status'], 'to' => $type, 'status' => 'OK'];
             }

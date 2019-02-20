@@ -17,17 +17,18 @@
 +--------------------------------------------------------*/
 require_once "../../maincore.php";
 
-$aid = isset($_GET['token']) ? explode('=', $_GET['token']) : '';
+$token = filter_input(INPUT_GET, 'token', FILTER_DEFAULT)
+$aid = !empty($token) ? explode('=', $token) : '';
 
 if (!empty($aid)) {
     $aid = $aid[1];
 }
 
-$q = isset($_GET['q']) && isnum($_GET['q']) ? $_GET['q'] : 0;
+$inputq = filter_input(INPUT_GET, 'q', FILTER_VALIDATE_INT)
+$q = !empty($inputq) ? $inputq : 0;
 
 if (checkrights("SL") && defined("iAUTH") && $aid == iAUTH) {
-    $sql = "SELECT * FROM ".DB_SITE_LINKS." WHERE link_id = '".intval($_GET['q'])."' ";
-    $result = dbquery($sql);
+    $result = dbquery("SELECT * FROM ".DB_SITE_LINKS." WHERE link_id = :linkid", [':linkid' => (int)$q]);
     if (dbrows($result) > 0) {
         $data = dbarray($result);
         // parse for custom navigational ID
