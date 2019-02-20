@@ -32,7 +32,15 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
     public function displayWeblinksAdmin() {
         pageAccess("W");
         $this->locale = self::get_WeblinkAdminLocale();
-        if (isset($_GET['ref']) && $_GET['ref'] == "weblink_cat_form") {
+
+        // Cancel Form
+        $cancel = filter_input(INPUT_GET, 'cancel', FILTER_DEFAULT);
+        if (!empty($cancel)) {
+            redirect(FUSION_SELF.fusion_get_aidlink()."&section=weblinks_category");
+        }
+
+        $ref = filter_input(INPUT_GET, 'ref');
+        if (!empty($ref) && $ref == "weblink_cat_form") {
             $this->display_weblinks_cat_form();
         } else {
             $this->display_weblinks_cat_listing();
@@ -43,11 +51,6 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
      * Displays weblink Category Form
      */
     private function display_weblinks_cat_form() {
-        // Cancel Form
-        if (isset($_POST['cancel'])) {
-            redirect(FUSION_SELF.fusion_get_aidlink()."&section=weblinks_category");
-        }
-
         // Empty
         $data = [
             'weblink_cat_id'          => 0,
@@ -60,21 +63,25 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
         ];
 
         // Save
-        if ((isset($_POST['save_cat'])) || (isset($_POST['save_cat_and_close']))) {
+        $save_cat = filter_input(INPUT_POST, 'save_cat', FILTER_DEFAULT) || filter_input(INPUT_POST, 'save_cat_and_close', FILTER_DEFAULT);
+        $action = filter_input(INPUT_GET, 'action', FILTER_DEFAULT);
+        $cat_id = filter_input(INPUT_GET, 'cat_id', FILTER_VALIDATE_INT);
+        if (!empty($save_cat)) {
             // Description
             $cat_desc = "";
-            if (isset($_POST['weblink_cat_description'])) {
-                $cat_desc = (fusion_get_settings("allow_php_exe") ? htmlspecialchars($_POST['weblink_cat_description']) : $_POST['weblink_cat_description']);
+            $weblink_cat_description = filter_input(INPUT_POST, 'weblink_cat_description', FILTER_DEFAULT);
+            if (!empty($weblink_cat_description)) {
+                $cat_desc = (fusion_get_settings("allow_php_exe") ? htmlspecialchars($weblink_cat_description) : $weblink_cat_description);
             }
             // Check Fields
             $inputArray = [
-                'weblink_cat_id'          => form_sanitizer($_POST['weblink_cat_id'], '', 'weblink_cat_id'),
-                'weblink_cat_name'        => form_sanitizer($_POST['weblink_cat_name'], '', 'weblink_cat_name'),
+                'weblink_cat_id'          => form_sanitizer(filter_input(INPUT_POST, 'weblink_cat_id', FILTER_DEFAULT), '', 'weblink_cat_id'),
+                'weblink_cat_name'        => form_sanitizer(filter_input(INPUT_POST, 'weblink_cat_name', FILTER_DEFAULT), '', 'weblink_cat_name'),
                 'weblink_cat_description' => form_sanitizer($cat_desc, '', 'weblink_cat_description'),
-                'weblink_cat_parent'      => form_sanitizer($_POST['weblink_cat_parent'], 0, 'weblink_cat_parent'),
-                'weblink_cat_visibility'  => form_sanitizer($_POST['weblink_cat_visibility'], 0, 'weblink_cat_visibility'),
-                'weblink_cat_status'      => form_sanitizer($_POST['weblink_cat_status'], 0, 'weblink_cat_status'),
-                'weblink_cat_language'    => form_sanitizer($_POST['weblink_cat_language'], LANGUAGE, 'weblink_cat_language')
+                'weblink_cat_parent'      => form_sanitizer(filter_input(INPUT_POST, 'weblink_cat_parent', FILTER_VALIDATE_INT), 0, 'weblink_cat_parent'),
+                'weblink_cat_visibility'  => form_sanitizer(filter_input(INPUT_POST, 'weblink_cat_visibility', FILTER_VALIDATE_INT), 0, 'weblink_cat_visibility'),
+                'weblink_cat_status'      => form_sanitizer(filter_input(INPUT_POST, 'weblink_cat_status', FILTER_VALIDATE_INT), 0, 'weblink_cat_status'),
+                'weblink_cat_language'    => form_sanitizer(filter_input(INPUT_POST, 'weblink_cat_language', FILTER_DEFAULT), LANGUAGE, 'weblink_cat_language')
             ];
             // Check Where Condition
             $categoryNameCheck = [
@@ -115,8 +122,8 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
             $data = $inputArray;
 
             // Edit
-        } else if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
-            $result = dbquery("SELECT * FROM ".DB_WEBLINK_CATS." ".(multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."' AND" : "WHERE")." weblink_cat_id='".$_GET['cat_id']."'");
+        } else if ((!empty($action) && $action == "edit") && $cat_id) {
+            $result = dbquery("SELECT * FROM ".DB_WEBLINK_CATS." ".(multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."' AND" : "WHERE")." weblink_cat_id='".(int)$cat_id."'");
             if (dbrows($result)) {
                 $data = dbarray($result);
             } else {
@@ -124,9 +131,9 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
             }
 
             // Delete
-        } else if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
-            if (!dbcount("(weblink_id)", DB_WEBLINKS, "weblink_cat='".$_GET['cat_id']."'") && !dbcount("(weblink_cat_id)", DB_WEBLINK_CATS, "weblink_cat_parent='".$_GET['cat_id']."'")) {
-                dbquery("DELETE FROM  ".DB_WEBLINK_CATS." WHERE weblink_cat_id='".$_GET['cat_id']."'");
+        } else if ((!empty($action) && $action == "delete") && $cat_id) {
+            if (!dbcount("(weblink_id)", DB_WEBLINKS, "weblink_cat = :catid", [':catid' => (int)$cat_id]) && !dbcount("(weblink_cat_id)", DB_WEBLINK_CATS, "weblink_cat_parent = :catparent", [':catparent' => (int)$cat_id])) {
+                dbquery("DELETE FROM  ".DB_WEBLINK_CATS." WHERE weblink_cat_id = :catid", [':catid' => (int)$cat_id]);
                 addNotice("success", $this->locale['WLS_0042']);
             } else {
                 addNotice("warning", $this->locale['WLS_0043']);
@@ -176,7 +183,7 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
 
         echo form_select('weblink_cat_status', $this->locale['WLS_0102'], $data['weblink_cat_status'], [
             'inner_width' => '100%',
-            'options'     => [1 => $this->locale['published'], 0 => $this->locale['unpublished']],
+            'options'     => [1 => $this->locale['publish'], 0 => $this->locale['unpublish']],
             'placeholder' => $this->locale['choose'],
         ]);
         closeside();
@@ -205,20 +212,20 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
                 foreach ($input as $weblink_cat_id) {
                     // check input table
                     if (dbcount("('weblink_cat_id')", DB_WEBLINK_CATS,
-                            "weblink_cat_id=:catid", [':catid' => intval($weblink_cat_id)]) && \defender::safe()
+                            "weblink_cat_id=:catid", [':catid' => (int)$weblink_cat_id]) && \defender::safe()
                     ) {
                         switch ($_POST['table_action']) {
                             case "publish":
-                                dbquery("UPDATE ".DB_WEBLINK_CATS." SET weblink_cat_status=:status WHERE weblink_cat_id=:catid", [':status' => '1', ':catid' => intval($weblink_cat_id)]);
+                                dbquery("UPDATE ".DB_WEBLINK_CATS." SET weblink_cat_status=:status WHERE weblink_cat_id=:catid", [':status' => '1', ':catid' => (int)$weblink_cat_id]);
                                 addNotice('success', $this->locale['WLS_0049']);
                                 break;
                             case "unpublish":
-                                dbquery("UPDATE ".DB_WEBLINK_CATS." SET weblink_cat_status=:status WHERE weblink_cat_id=:catid", [':status' => '0', ':catid' => intval($weblink_cat_id)]);
+                                dbquery("UPDATE ".DB_WEBLINK_CATS." SET weblink_cat_status=:status WHERE weblink_cat_id=:catid", [':status' => '0', ':catid' => (int)$weblink_cat_id]);
                                 addNotice('warning', $this->locale['WLS_0050']);
                                 break;
                             case "delete":
-                                if (!dbcount("(weblink_id)", DB_WEBLINKS, "weblink_cat=:catid", [':catid' => $weblink_cat_id]) && !dbcount("(weblink_cat_id)", DB_WEBLINK_CATS, "weblink_cat_parent=:catparent", [':catparent' => $weblink_cat_id])) {
-                                    dbquery("DELETE FROM  ".DB_WEBLINK_CATS." WHERE weblink_cat_id=:catid", [':catid' => $weblink_cat_id]);
+                                if (!dbcount("(weblink_id)", DB_WEBLINKS, "weblink_cat=:catid", [':catid' => (int)$weblink_cat_id]) && !dbcount("(weblink_cat_id)", DB_WEBLINK_CATS, "weblink_cat_parent=:catparent", [':catparent' => (int)$weblink_cat_id])) {
+                                    dbquery("DELETE FROM  ".DB_WEBLINK_CATS." WHERE weblink_cat_id=:catid", [':catid' => (int)$weblink_cat_id]);
                                     addNotice('warning', $this->locale['WLS_0042']);
                                 } else {
                                     addNotice('warning', $this->locale['WLS_0046']);
@@ -231,40 +238,47 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
                     }
                 }
                 redirect(FUSION_REQUEST);
+            } else {
+                addNotice('warning', $this->locale['WLS_0048']);
+                redirect(FUSION_REQUEST);
             }
-            addNotice('warning', $this->locale['WLS_0048']);
-            redirect(FUSION_REQUEST);
         }
 
         // Clear
-        if (isset($_POST['weblink_clear'])) {
+        $weblink_clear = filter_input(INPUT_POST, 'weblink_clear', FILTER_DEFAULT);
+        if (!empty($weblink_clear)) {
             redirect(FUSION_SELF.fusion_get_aidlink()."&amp;section=weblinks_category");
         }
 
         // Search
         $sql_condition = "";
         $search_string = [];
-        if (isset($_POST['p-submit-weblink_cat_name'])) {
+        $p_submit_weblink_cat_name = filter_input(INPUT_POST, 'p-submit-weblink_cat_name', FILTER_DEFAULT);
+        $weblink_cat_name = filter_input(INPUT_POST, 'weblink_cat_name', FILTER_DEFAULT);
+        if (!empty($p_submit_weblink_cat_name)) {
             $search_string['weblink_cat_name'] = [
-                'input' => form_sanitizer($_POST['weblink_cat_name'], '', 'weblink_cat_name'), 'operator' => "LIKE", 'option' => "AND"
+                'input' => form_sanitizer($weblink_cat_name, '', 'weblink_cat_name'), 'operator' => "LIKE", 'option' => "AND"
             ];
         }
 
-        if (!empty($_POST['weblink_cat_status']) && isnum($_POST['weblink_cat_status'])) {
+        $weblink_cat_status = filter_input(INPUT_POST, 'weblink_cat_status', FILTER_VALIDATE_INT);
+        if (!empty($weblink_cat_status)) {
             $search_string['weblink_cat_status'] = [
-                'input' => form_sanitizer($_POST['weblink_cat_status'], '', 'weblink_cat_status') - 1,  'operator' => "=", 'option' => "AND"
+                'input' => form_sanitizer($weblink_cat_status, '', 'weblink_cat_status') - 1, 'operator' => "="
             ];
         }
 
+        $weblink_cat_visibility = filter_input(INPUT_POST, 'weblink_cat_visibility', FILTER_DEFAULT);
         if (!empty($_POST['weblink_cat_visibility'])) {
             $search_string['weblink_cat_visibility'] = [
-                'input' => form_sanitizer($_POST['weblink_cat_visibility'], '', 'weblink_cat_visibility'), 'operator' => "=", 'option' => "AND"
+                'input' => form_sanitizer($weblink_cat_visibility, '', 'weblink_cat_visibility'), 'operator' => "="
             ];
         }
 
+        $weblink_cat_language = filter_input(INPUT_POST, 'weblink_cat_language', FILTER_DEFAULT);
         if (!empty($_POST['weblink_cat_language'])) {
             $search_string['weblink_cat_language'] = [
-                'input' => form_sanitizer($_POST['weblink_cat_language'], '', 'weblink_cat_language'), 'operator' => "=", 'option' => "AND"
+                'input' => form_sanitizer($weblink_cat_language, '', 'weblink_cat_language'), 'operator' => "="
             ];
         }
 
@@ -287,10 +301,10 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
 
         // Filters
         $filter_values = [
-            'weblink_cat_name'       => !empty($_POST['weblink_cat_name']) ? form_sanitizer($_POST['weblink_cat_name'], '', 'weblink_cat_name') : '',
-            'weblink_cat_status'     => !empty($_POST['weblink_cat_status']) ? form_sanitizer($_POST['weblink_cat_status'], '', 'weblink_cat_status') : '',
-            'weblink_cat_visibility' => !empty($_POST['weblink_cat_visibility']) ? form_sanitizer($_POST['weblink_cat_visibility'], '', 'weblink_cat_visibility') : '',
-            'weblink_cat_language'   => !empty($_POST['weblink_cat_language']) ? form_sanitizer($_POST['weblink_cat_language'], '', 'weblink_cat_language') : ''
+            'weblink_cat_name'       => !empty($weblink_cat_name) ? form_sanitizer($weblink_cat_name, '', 'weblink_cat_name') : '',
+            'weblink_cat_status'     => !empty($weblink_cat_status) ? form_sanitizer($weblink_cat_status, '', 'weblink_cat_status') : '',
+            'weblink_cat_visibility' => !empty($weblink_cat_visibility) ? form_sanitizer($weblink_cat_visibility, '', 'weblink_cat_visibility') : '',
+            'weblink_cat_language'   => !empty($weblink_cat_language) ? form_sanitizer($weblink_cat_language, '', 'weblink_cat_language') : ''
         ];
 
         $filter_empty = TRUE;
@@ -441,7 +455,7 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
                         ?></td>
                     <td><?php echo str_repeat("--", $level)." ".$cdata['weblink_cat_name']; ?></span></td>
                     <td><span class="badge"><?php echo format_word($cdata['weblink_count'], $this->locale['fmt_weblink']); ?></span></td>
-                    <td><span class="badge"><?php echo($cdata['weblink_cat_status'] == 0 ? $this->locale['unpublished'] : $this->locale['published']); ?></span></td>
+                    <td><span class="badge"><?php echo($cdata['weblink_cat_status'] == 0 ? $this->locale['unpublish'] : $this->locale['publish']); ?></span></td>
                     <td><span class="badge"><?php echo getgroupname($cdata['weblink_cat_visibility']); ?></span></td>
                     <td><?php echo translate_lang_names($cdata['weblink_cat_language']) ?></td>
                     <td>
