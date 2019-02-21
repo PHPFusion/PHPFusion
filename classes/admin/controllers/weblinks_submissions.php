@@ -23,6 +23,7 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
     private $locale = [];
     private $dataUser = [];
     private $weblinksettings = [];
+    private $submit_id = 0;
 
     public static function getInstance() {
         if (self::$instance == NULL) {
@@ -32,7 +33,7 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
     }
 
     /**
-     * Handle Preview and Publish of a Article Submission
+     * Handle Preview and Publish of a Weblink Submission
      */
     private function PostSubmission() {
 
