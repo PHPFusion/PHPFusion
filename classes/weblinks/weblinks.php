@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Weblinks;
 
-use \PHPFusion\BreadCrumbs;
+use PHPFusion\BreadCrumbs;
 
 /**
  * Class Weblinks
@@ -25,15 +25,19 @@ use \PHPFusion\BreadCrumbs;
  * @package PHPFusion\Weblinks
  */
 abstract class Weblinks extends WeblinksServer {
-
     private static $locale = [];
+    public $cat_id;
     private $allowed_filters = ['latest', 'oldest', 'opened'];
+    private $weblink_settings;
+    private $type;
+    private $rowstart;
 
     protected function __construct() {
         self::$locale = fusion_get_locale("", WEBLINK_LOCALE);
         $this->weblink_settings = self::get_weblink_settings();
         $this->type = filter_input(INPUT_GET, 'type', FILTER_DEFAULT);
         $this->rowstart = filter_input(INPUT_GET, 'rowstart', FILTER_VALIDATE_INT);
+        $this->cat_id = filter_input(INPUT_GET, 'cat_id', FILTER_VALIDATE_INT);
         $this->rowstart = !empty($this->rowstart) ? $this->rowstart : 0;
     }
 
@@ -112,6 +116,7 @@ abstract class Weblinks extends WeblinksServer {
 
         return (array)$info;
     }
+
     /**
      * Executes category information - $_GET['cat_id']
      *
@@ -120,15 +125,12 @@ abstract class Weblinks extends WeblinksServer {
      * @return array
      */
     public function set_WeblinkCatInfo($weblink_cat_id) {
-
         $linktype = (!empty($this->type) ? "&amp;type=".$this->type : '');
 
         $this->def_data['weblink_tablename'] = self::$locale['web_0000'];
         $this->def_data['weblink_filter'] += self::get_WeblinkFilters();
         $this->def_data['weblink_categories'] += self::get_WeblinkCategories();
         $this->def_data = array_merge($this->def_data, self::weblink_cat_navbar());
-
-        $max_weblink_rows = '';
 
         // Filtered by Category ID.
         $result = dbquery("SELECT *
@@ -178,6 +180,91 @@ abstract class Weblinks extends WeblinksServer {
 
         redirect(INFUSIONS."weblinks/weblinks.php");
 
+        return NULL;
+    }
+
+    private function weblink_cat_navbar() {
+        $cookie_expiry = time() + 7 * 24 * 3600;
+        $type = empty($this->type) ? $this->allowed_filters[0] : $this->type;
+        $switchview = filter_input(INPUT_GET, 'switchview', FILTER_VALIDATE_INT);
+
+        if (empty($_COOKIE['fusion_weblinks_view'])) {
+            setcookie("fusion_weblinks_view", 1, $cookie_expiry);
+        } else if (!empty($switchview) && isnum($switchview)) {
+            setcookie("fusion_weblinks_view", (int)$switchview, $cookie_expiry);
+            redirect(INFUSIONS."weblinks/weblinks.php?cat_id=".$this->cat_id."&amp;type=".$type);
+        }
+
+        $active = isset($_COOKIE['fusion_weblinks_view']) && isnum($_COOKIE['fusion_weblinks_view']) && $_COOKIE['fusion_weblinks_view'] == 2 ? 2 : 1;
+
+        $info['span'] = $active == 2 ? 12 : 4;
+        $titles = [
+            1 => [
+                'locale' => self::$locale['web_0040'],
+                'buton'  => 'fa-th-large'
+            ],
+            2 => [
+                'locale' => self::$locale['web_0041'],
+                'buton'  => 'fa-bars'
+            ]
+        ];
+
+        for ($coi = 1; $coi < 3; $coi++) {
+            $info['navbar'][$coi] = [
+                'links' => "<a class='btn btn-default snv".($active == $coi ? ' active' : '')."' href='".INFUSIONS."weblinks/weblinks.php?".(!empty($this->cat_id) ? "cat_id=".$this->cat_id."&amp;" : "").(!empty($this->type) ? (empty($this->cat_id) ? "&amp;" : '')."type=".$type."&amp;" : "")."switchview=".$coi."'><i class='fa ".$titles[$coi]['buton']." m-r-10'></i>".$titles[$coi]['locale']."</a>"
+            ];
+        }
+
+        return $info;
+    }
+
+    /**
+     * Weblinks Category Breadcrumbs Generator
+     *
+     * @param $weblink_cat_index
+     */
+    private function weblink_cat_breadcrumbs($weblink_cat_index) {
+
+        /* Make an infinity traverse */
+        function breadcrumb_arrays($index, $webid) {
+            $crumb = [];
+            if (isset($index[get_parent($index, $webid)])) {
+                $_name = dbarray(dbquery("SELECT weblink_cat_id, weblink_cat_name, weblink_cat_parent FROM ".DB_WEBLINK_CATS." WHERE weblink_cat_id='".$webid."' AND weblink_cat_status='1' AND ".groupaccess("weblink_cat_visibility").(multilang_table("WL") ? " AND weblink_cat_language='".LANGUAGE."'" : "").""));
+                $crumb = [
+                    "link"  => INFUSIONS."weblinks/weblinks.php?cat_id=".$_name['weblink_cat_id'],
+                    "title" => $_name['weblink_cat_name']
+                ];
+                if (isset($index[get_parent($index, $webid)])) {
+                    if (get_parent($index, $webid) == 0) {
+                        return $crumb;
+                    }
+                    $crumb_1 = breadcrumb_arrays($index, get_parent($index, $webid));
+                    $crumb = array_merge_recursive($crumb, $crumb_1); // convert so can comply to Fusion Tab API.
+                }
+            }
+
+            return $crumb;
+        }
+
+        // then we make a infinity recursive function to loop/break it out.
+        $crumb = breadcrumb_arrays($weblink_cat_index, $this->cat_id);
+        $title_count = !empty($crumb['title']) && is_array($crumb['title']) ? count($crumb['title']) > 1 : 0;
+        // then we sort in reverse.
+        if ($title_count) {
+            krsort($crumb['title']);
+            krsort($crumb['link']);
+        }
+        if ($title_count) {
+            foreach ($crumb['title'] as $wbi => $value) {
+                BreadCrumbs::getInstance()->addBreadCrumb(["link" => $crumb['link'][$wbi], "title" => $value]);
+                if ($wbi == count($crumb['title']) - 1) {
+                    add_to_title(self::$locale['global_201'].$value);
+                }
+            }
+        } else if (isset($crumb['title'])) {
+            add_to_title(self::$locale['global_201'].$crumb['title']);
+            BreadCrumbs::getInstance()->addBreadCrumb(["link" => $crumb['link'], "title" => $crumb['title']]);
+        }
     }
 
     protected function get_WeblinkQuery(array $filters = []) {
@@ -262,55 +349,6 @@ abstract class Weblinks extends WeblinksServer {
     }
 
     /**
-     * Weblinks Category Breadcrumbs Generator
-     *
-     * @param $weblink_cat_index
-     */
-    private function weblink_cat_breadcrumbs($weblink_cat_index) {
-
-        /* Make an infinity traverse */
-        function breadcrumb_arrays($index, $webid) {
-            $crumb = [];
-            if (isset($index[get_parent($index, $webid)])) {
-                $_name = dbarray(dbquery("SELECT weblink_cat_id, weblink_cat_name, weblink_cat_parent FROM ".DB_WEBLINK_CATS." WHERE weblink_cat_id='".$webid."' AND weblink_cat_status='1' AND ".groupaccess("weblink_cat_visibility").(multilang_table("WL") ? " AND weblink_cat_language='".LANGUAGE."'" : "").""));
-                $crumb = [
-                    "link"  => INFUSIONS."weblinks/weblinks.php?cat_id=".$_name['weblink_cat_id'],
-                    "title" => $_name['weblink_cat_name']
-                ];
-                if (isset($index[get_parent($index, $webid)])) {
-                    if (get_parent($index, $webid) == 0) {
-                        return $crumb;
-                    }
-                    $crumb_1 = breadcrumb_arrays($index, get_parent($index, $webid));
-                    $crumb = array_merge_recursive($crumb, $crumb_1); // convert so can comply to Fusion Tab API.
-                }
-            }
-
-            return $crumb;
-        }
-
-        // then we make a infinity recursive function to loop/break it out.
-        $crumb = breadcrumb_arrays($weblink_cat_index, $this->cat_id);
-        $title_count = !empty($crumb['title']) && is_array($crumb['title']) ? count($crumb['title']) > 1 : 0;
-        // then we sort in reverse.
-        if ($title_count) {
-            krsort($crumb['title']);
-            krsort($crumb['link']);
-        }
-        if ($title_count) {
-            foreach ($crumb['title'] as $wbi => $value) {
-                BreadCrumbs::getInstance()->addBreadCrumb(["link" => $crumb['link'][$wbi], "title" => $value]);
-                if ($wbi == count($crumb['title']) - 1) {
-                    add_to_title(self::$locale['global_201'].$value);
-                }
-            }
-        } else if (isset($crumb['title'])) {
-            add_to_title(self::$locale['global_201'].$crumb['title']);
-            BreadCrumbs::getInstance()->addBreadCrumb(["link" => $crumb['link'], "title" => $crumb['title']]);
-        }
-    }
-
-    /**
      * Executes single article item information - $_GET['readmore']
      *
      * @param $weblink_id
@@ -323,40 +361,5 @@ abstract class Weblinks extends WeblinksServer {
             redirect($data['weblink_url']);
         }
         redirect(clean_request('', ['weblink_id'], FALSE));
-    }
-
-    private function weblink_cat_navbar() {
-        $cookie_expiry = time() + 7 * 24 * 3600;
-        $type = empty($this->type) ? $this->allowed_filters[0] : $this->type;
-        $switchview = filter_input(INPUT_GET, 'switchview', FILTER_VALIDATE_INT);
-
-        if (empty($_COOKIE['fusion_weblinks_view'])) {
-            setcookie("fusion_weblinks_view", 1, $cookie_expiry);
-        } else if (!empty($switchview) && isnum($switchview)) {
-            setcookie("fusion_weblinks_view", (int)$switchview, $cookie_expiry);
-            redirect(INFUSIONS."weblinks/weblinks.php?cat_id=".$this->cat_id."&amp;type=".$type);
-        }
-
-        $active = isset($_COOKIE['fusion_weblinks_view']) && isnum($_COOKIE['fusion_weblinks_view']) && $_COOKIE['fusion_weblinks_view'] == 2 ? 2 : 1;
-
-        $info['span'] = $active == 2 ? 12 : 4;
-        $titles = [
-            1 => [
-                'locale' => self::$locale['web_0040'],
-                'buton'  => 'fa-th-large'
-            ],
-            2 => [
-                'locale' => self::$locale['web_0041'],
-                'buton'  => 'fa-bars'
-            ]
-        ];
-
-        for ($coi = 1; $coi < 3; $coi++) {
-            $info['navbar'][$coi] = [
-                'links' => "<a class='btn btn-default snv".($active == $coi ? ' active' : '')."' href='".INFUSIONS."weblinks/weblinks.php?".(!empty($this->cat_id) ? "cat_id=".$this->cat_id."&amp;" : "").(!empty($this->type) ? (empty($this->cat_id) ? "&amp;" : '')."type=".$type."&amp;" : "")."switchview=".$coi."'><i class='fa ".$titles[$coi]['buton']." m-r-10'></i>".$titles[$coi]['locale']."</a>"
-            ];
-        }
-
-        return $info;
     }
 }
