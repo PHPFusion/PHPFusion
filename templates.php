@@ -37,12 +37,12 @@ if (!function_exists('display_main_weblinks')) {
                 if ($cat_id != 0 && $info['weblink_categories'] != 0) {
                     foreach ($info['weblink_categories'] as $sub_cats) {
                         foreach ($sub_cats as $sub_cat_data) {
-                            if (!empty($sub_cat_data['parent']) && $sub_cat_data['parent'] == $cat_id) {
+                            if (!empty($sub_cat_data['weblink_cat_parent']) && $sub_cat_data['weblink_cat_parent'] == $cat_id) {
                                 $html2->set_block('sub_categories', [
-                                    'link'        => $sub_cat_data['link'],
-                                    'name'        => $sub_cat_data['name'],
-                                    'count'       => $sub_cat_data['count'],
-                                    'description' => $sub_cat_data['description']
+                                    'link'        => INFUSIONS."weblinks/weblinks.php?cat_id=".$sub_cat_data['weblink_cat_id'],
+                                    'name'        => $sub_cat_data['weblink_cat_name'],
+                                    'count'       => $sub_cat_data['weblink_count'],
+                                    'description' => parse_textarea($sub_cat_data['weblink_cat_description'], TRUE, TRUE, FALSE, '', TRUE)
                                 ]);
                             }
                         }
@@ -59,11 +59,11 @@ if (!function_exists('display_main_weblinks')) {
                 $sub_cats = $html2->get_output();
 
                 $html->set_block('categories', [
-                    'cat_id'          => $cat_data['cat_id'],
-                    'cat_link'        => $cat_data['link'],
-                    'cat_name'        => $cat_data['name'],
-                    'cat_count'       => $cat_data['count'],
-                    'cat_description' => $cat_data['description'],
+                    'cat_id'          => $cat_data['weblink_cat_id'],
+                    'cat_link'        => INFUSIONS."weblinks/weblinks.php?cat_id=".$cat_data['weblink_cat_id'],
+                    'cat_name'        => $cat_data['weblink_cat_name'],
+                    'cat_count'       => $cat_data['weblink_count'],
+                    'cat_description' => parse_textarea($cat_data['weblink_cat_description'], TRUE, TRUE, FALSE, '', TRUE),
                     'sub_categories'  => $sub_cats
                 ]);
             }
@@ -85,14 +85,12 @@ if (!function_exists('display_weblinks_item')) {
         $html->set_block('pagenav', ['pagenav' => $info['pagenav']]);
         $html->set_block('pagenav2', ['pagenav' => $info['pagenav']]);
 
-        $wdi = 0;
         foreach ($info['weblink_filter'] as $view_keys => $page_link) {
             $html->set_block('filter_item', [
-                'active' => ((!isset($_GET['type']) && (!$wdi)) || (isset($_GET['type']) && $_GET['type'] === $view_keys) ? "text-dark strong" : ''),
+                'active' => $page_link['active'],
                 'link'   => $page_link['link'],
                 'title'  => $page_link['name']
             ]);
-            $wdi++;
         }
 
         foreach ($info['navbar'] as $view_keys => $navbar_link) {

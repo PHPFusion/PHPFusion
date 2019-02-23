@@ -64,16 +64,17 @@ class WeblinksSubmissions extends WeblinksServer {
         if (dbcount("(weblink_cat_id)", DB_WEBLINK_CATS, (multilang_table("WL") ? "weblink_cat_language='".LANGUAGE."' AND " : "")."weblink_cat_status=1 AND ".groupaccess("weblink_cat_visibility")."")) {
 
             // Save
-            if (isset($_POST['submit_link'])) {
+            $submit_link = filter_input(INPUT_POST, 'submit_link', FILTER_DEFAULT);
+            if (!empty($submit_link)) {
 
-                $submit_info['weblink_description'] = nl2br(parseubb(stripinput($_POST['weblink_description'])));
+                $description = nl2br(parseubb(stripinput(filter_input(INPUT_POST, 'weblink_description', FILTER_DEFAULT))));
 
                 $criteriaArray = [
-                    'weblink_cat'         => form_sanitizer($_POST['weblink_cat'], 0, 'weblink_cat'),
-                    'weblink_name'        => form_sanitizer($_POST['weblink_name'], '', 'weblink_name'),
-                    'weblink_description' => form_sanitizer($submit_info['weblink_description'], '', 'weblink_description'),
-                    'weblink_url'         => form_sanitizer($_POST['weblink_url'], '', 'weblink_url'),
-                    'weblink_language'    => form_sanitizer($_POST['weblink_language'], LANGUAGE, 'weblink_language'),
+                    'weblink_cat'         => form_sanitizer(filter_input(INPUT_POST, 'weblink_cat', FILTER_VALIDATE_INT), 0, 'weblink_cat'),
+                    'weblink_name'        => form_sanitizer(filter_input(INPUT_POST, 'weblink_name', FILTER_DEFAULT), '', 'weblink_name'),
+                    'weblink_description' => form_sanitizer($description, '', 'weblink_description'),
+                    'weblink_url'         => form_sanitizer(filter_input(INPUT_POST, 'weblink_url', FILTER_DEFAULT), '', 'weblink_url'),
+                    'weblink_language'    => form_sanitizer(filter_input(INPUT_POST, 'weblink_language', FILTER_DEFAULT), LANGUAGE, 'weblink_language'),
                 ];
 
                 // Save
@@ -90,7 +91,8 @@ class WeblinksSubmissions extends WeblinksServer {
                 }
             }
 
-            if (isset($_GET['submitted']) && $_GET['submitted'] == "l") {
+            $submitted = filter_input(INPUT_GET, 'submitted', FILTER_DEFAULT);
+            if (!empty($submitted) && $submitted == "l") {
                 $info['confirm'] = [
                     'title'       => $this->locale['WLS_0911'],
                     'submit_link' => "<a href='".BASEDIR."submit.php?stype=l'>".$this->locale['WLS_0912']."</a>",
