@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: 9.04.00.upgrade.inc
+| Filename: 9.10.00.upgrade.inc
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -18,7 +18,7 @@
 $settings = fusion_get_settings();
 
 $update_settings_tbl = [
-    'version'         => '9.04.00',
+    'version'         => '9.10.00',
     'pm_email_notify' => $settings['pm_email_notify'] == 2 ? 1 : 0,
     'pm_save_sent'    => $settings['pm_save_sent'] == 2 ? 1 : 0
 ];
