@@ -23,13 +23,15 @@
 <tr>
     <td>
         <div class="pull-left">{%forum_icon%}</div>
-        <a title='{%forum_link_title%}' class='forum-subject' href='{%forum_link_url%}'>
-            <strong>
-                {%forum_link_title%}
-            </strong>
-        </a>
-        <div>{%forum_description%}</div>
-        <span class='forum-moderators'><small><strong>{%forum_moderators_title%}</strong> {%forum_moderators%}</small></span>
+        <div class="overflow-hide">
+            <a title='{%forum_link_title%}' class='forum-subject' href='{%forum_link_url%}'>
+                <strong>
+                    {%forum_link_title%}
+                </strong>
+            </a>
+            <div>{%forum_description%}</div>
+            <span class='forum-moderators'><small><strong>{%forum_moderators_title%}</strong> {%forum_moderators%}</small></span>
+        </div>
     </td>
     <td>
         {%forum_thread_count%}

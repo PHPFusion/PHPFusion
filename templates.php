@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined('IN_FUSION') || exit;
 
 /**
  * Forum Page Control Layout
@@ -180,8 +178,8 @@ if (!function_exists('render_forum_item')) {
             'forum_link_url'         => $data['forum_link']['link'],
             'forum_link_title'       => $data['forum_link']['title'],
             'forum_description'      => $data['forum_description'],
-            'forum_moderators_title' => $locale['forum_0007'],
-            'forum_moderators'       => !empty($data['forum_moderators']) ? $data['forum_moderators'] : ' ---',
+            'forum_moderators_title' => !empty($data['forum_moderators']) ? $locale['forum_0007'] : '',
+            'forum_moderators'       => !empty($data['forum_moderators']) ? $data['forum_moderators'] : '',
             'forum_thread_count'     => $data['forum_threadcount_word'],
             'forum_post_count'       => $data['forum_postcount_word'],
             'forum_lastpost'         => $l_html->get_output(),
