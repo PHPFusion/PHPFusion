@@ -19,9 +19,7 @@ namespace PHPFusion;
 
 use PHPFusion\Search\Search_Engine;
 
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined('IN_FUSION') || exit;
 
 if (defined('FORUM_EXIST')) {
     $form_elements = &$form_elements;

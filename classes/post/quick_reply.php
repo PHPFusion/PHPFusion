@@ -15,74 +15,37 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+namespace PHPFusion\Forums\Post;
 
-namespace PHPFusion\Infusions\Forum\Classes\Post;
+use PHPFusion\Forums\ForumServer;
 
-use PHPFusion\Infusions\Forum\Classes\Forum_Server;
+class QuickReply extends ForumServer {
 
-class Quick_Reply extends Forum_Server {
-
-    /**
-     * Forum Reply Text Box
-     *
-     * @param       $info
-     * @param array $options additional parameters to change behaviours
-     *
-     * @return string
-     */
-    public static function display_quickReply($info, array $options = array()) {
-
-        $default_options = [
-            "post_id"    => 0, // reply to post id
-            "quote"      => FALSE, // attach reply as quote
-            "remote_url" => FORUM."viewthread.php?thread_id=".$info['thread_id'],
-        ];
-
-        $options += $default_options;
-
+    public static function display_quickReply($info) {
         $locale = fusion_get_locale();
+        $user_sig = fusion_get_userdata('user_sig');
+        $notify_options = ForumServer::get_forum_settings('thread_notify');
+        require_once FORUM."templates.php";
 
-        $post_message = "";
-        $post_id = $options['post_id'];
-        $form_name = "thread_reply";
-        $textarea_id = "post_message";
-
-        if ($options['quote']) {
-            $result = dbquery("SELECT post_id, post_message FROM ".DB_FORUM_POSTS." WHERE post_id=:post_id", [':post_id' => intval($options['post_id'])]);
-            if (dbrows($result)) {
-                $quotedata = dbarray($result);
-                $post_id = $quotedata['post_id'];
-                $post_message = nl2br("[quote]".$quotedata['post_message']."[/quote]");
-                $form_name = "post_reply_".$post_id;
-                $textarea_id = "post_message_".$post_id;
-            }
+        $options_field = form_checkbox('post_smileys', $locale['forum_0169'], '', ['class' => 'm-b-0', 'reverse_label' => TRUE]);
+        if (!$user_sig) {
+            $options_field .= form_checkbox('post_showsig', $locale['forum_0170'], '1', ['class' => 'm-b-0', 'reverse_label' => TRUE]);
         }
-
-        // Buttons Checkbox
-        $options_field = form_checkbox('post_smileys', $locale['forum_0169'], '', ['class' => 'm-r-10', 'type' => 'button', 'ext_tip' => $locale['forum_0622']]);
-        if (!fusion_get_userdata('user_sig')) {
-            $options_field .= form_checkbox('post_showsig', $locale['forum_0264'], '1', ['class' => 'm-r-10', 'type' => 'button', 'ext_tip' => $locale['forum_0170']]);
+        if ($notify_options) {
+            $options_field .= form_checkbox('notify_me', $locale['forum_0171'], $info['user_tracked'], ['class' => 'm-b-0', 'reverse_label' => TRUE]);
         }
-        if (parent::get_forum_settings('thread_notify')) {
-            $options_field .= form_checkbox('notify_me', $locale['forum_0552'], $info['user_tracked'], ['class' => 'm-r-10', 'type' => 'button', 'ext_tip' => $locale['forum_0171']]);
-        }
-
-        $remote_param = $options['remote_url'] !== $default_options['remote_url'] ? ["remote_url" => $options['remote_url']] : [];
 
         $info += [
-            'openform'    => openform($form_name, 'post', $options['remote_url'], $remote_param).form_hidden('post_cat', '', $post_id),
+            'openform'    => openform('quick_reply_form', 'post', FORUM."viewthread.php?thread_id=".$info['thread_id'], ['class' => 'spacer-sm']),
             'description' => $locale['forum_0168'],
             'field'       => [
-                'message' => form_textarea("post_message", '', $post_message,
+                'message' => form_textarea('post_message', '', '',
                     [
-                        'input_id'    => $textarea_id,
                         'placeholder' => $locale['forum_0601']."...",
-                        'autosize'    => TRUE,
-                        'no_resize'   => TRUE,
                         'bbcode'      => TRUE,
                         'required'    => TRUE,
                         'preview'     => TRUE,
-                        'form_name'   => $form_name,
+                        'form_name'   => 'quick_reply_form',
                         'height'      => '250px'
                     ]),
                 'button'  => form_button('post_quick_reply', $locale['forum_0172'], $locale['forum_0172'], ['class' => 'btn-primary']),
@@ -90,11 +53,11 @@ class Quick_Reply extends Forum_Server {
             ]
         ];
 
-        $html = openform($form_name, 'post', $options['remote_url'], $remote_param).form_hidden('post_cat', '', $post_id);
+        $html = openform('quick_reply_form', 'post', FORUM."viewthread.php?thread_id=".$info['thread_id']);
         $html .= display_quick_reply($info);
         $html .= closeform();
 
-        return (string)$html;
+        return $html;
     }
 
 }

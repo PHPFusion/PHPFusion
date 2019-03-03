@@ -287,7 +287,7 @@ class ForumAdminRanks extends ForumAdminInterface {
                 $html .= "<tr>\n".
                     "<td '>".$data['rank_title']."</td>\n".
                     "<td>".($data['rank_apply'] == -104 ? self::$locale['forum_rank_425'] : getgroupname($data['rank_apply']))."</td>\n".
-                    "<td class='col-xs-2'>".ForumServer::display_rank($data['rank_posts'], $data['rank_apply'], $data['rank_apply'])."</td>\n".
+                    "<td class='col-xs-2'>".ForumServer::show_forum_rank($data['rank_posts'], $data['rank_apply'], $data['rank_apply'])."</td>\n".
                     "<td>";
 
                 if ($data['rank_type'] == 0) {

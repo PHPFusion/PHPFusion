@@ -18,7 +18,7 @@
 namespace PHPFusion\Forums\Admin;
 
 use PHPFusion\Locale;
-use PHPFusion\UserFieldsQuantum;
+use PHPFusion\QuantumFields;
 
 /**
  * Class ForumAdminSettings
@@ -241,7 +241,7 @@ class ForumAdminSettings extends ForumAdminInterface {
                     '31557600' => self::$locale['529'],
                     '0'        => self::$locale['530']
                 ];
-                $lastpost_opts = ['0' => self::$locale['519'], '1' => self::$locale['533']];
+                $lastpost_opts = ['0' => self::$locale['no'], '1' => self::$locale['533']];
                 for ($i = 2; $i <= 20; $i++) {
                     $array_opts[$i] = sprintf(self::$locale['532'], $i);
                 }

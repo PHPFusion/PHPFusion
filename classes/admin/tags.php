@@ -217,11 +217,11 @@ class ForumAdminTags extends ForumAdminInterface {
             function(e) { $(this).parent().find('.tag-action').hide(); }
             );
             ");
-            $html = "<div class='row m-t-20'>\n";
+            $html = "<div class='row m-t-20 equal-height'>\n";
 
             while ($data = dbarray($result)) {
 
-                $html .= "<div class='col-xs-12 col-sm-3'>\n";
+                $html .= "<div class='col-xs-12 col-sm-3 m-t-20'>\n";
                 $html .= "<div class='list-group-item tag-container'>\n";
                 $html .= "<div class='pull-left'>\n";
                 $html .= "<i class='fa fa-square fa-2x fa-fw m-r-10' style='color:".$data['tag_color']."'></i>\n";

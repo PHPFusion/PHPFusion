@@ -15,14 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
-if (!defined('FORUM_EXISTS')) {
-    if (get_settings('forum')) {
-        define('FORUM_EXISTS', true);
-    }
-}
+defined('IN_FUSION') || exit;
+
 if (!defined("LASTVISITED")) {
     define('LASTVISITED', Authenticate::setLastVisitCookie());
 }
@@ -118,16 +112,15 @@ if (!defined("SETTINGS_LOCALE")) {
 if (!defined("DB_FORUM_TAGS")) {
     define("DB_FORUM_TAGS", DB_PREFIX."forum_thread_tags");
 }
-if (!defined("DB_FORUM_REPORTS")) {
-    define("DB_FORUM_REPORTS", DB_PREFIX."forum_reports");
-}
+
 if (!defined("DB_FORUM_MOODS")) {
     define("DB_FORUM_MOODS", DB_PREFIX."forum_post_mood");
 }
 
-if (!defined("DB_FORUM_POST_NOTIFY")) {
-    define("DB_FORUM_POST_NOTIFY", DB_PREFIX."forum_post_notify");
+if (!defined("DB_POST_NOTIFY")) {
+    define("DB_POST_NOTIFY", DB_PREFIX."forum_post_notify");
 }
+
 
 if (!defined("FORUM_CLASS")) {
     define("FORUM_CLASS", INFUSIONS."forum/classes/");
