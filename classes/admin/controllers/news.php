@@ -834,7 +834,7 @@ class NewsAdmin extends NewsAdminModel {
         LEFT JOIN ".DB_NEWS_CATS." nc ON nc.news_cat_id=n.news_cat
         WHERE news_language=:language $sql_condition
         GROUP BY n.news_id
-        ORDER BY n.news_draft DESC, n.news_sticky DESC, n.news_datestamp DESC
+        ORDER BY n.news_datestamp DESC
         LIMIT $rowstart, $limit
         ";
         $sql_params[':language'] = LANGUAGE;
