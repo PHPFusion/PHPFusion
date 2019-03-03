@@ -18,10 +18,6 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'../../../../../maincore.php';
 
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
-
 $user_opts = [];
 
 $q = isset($_GET['q']) ? stripinput($_GET['q']) : '';

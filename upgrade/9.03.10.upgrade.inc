@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: language_bbcode_include.php
+| Filename: 9.03.10.upgrade.inc
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -15,17 +15,14 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-defined('IN_FUSION') || exit;
+$settings = fusion_get_settings();
 
-$language_opts = fusion_get_enabled_languages();
-$enabled_languages = array_keys($language_opts);
+$update_settings_tbl = [
+    'version' => '9.03.10'
+];
 
-foreach ($enabled_languages as $language) {
-
-    if (LANGUAGE == $language) {
-        $text = preg_replace('#\['.$language.'\](.*?)\[/'.$language.'\]#si', '\1', $text);
-    } else {
-        $text = preg_replace('#\['.$language.'\](.*?)\[/'.$language.'\]#si', '', $text);
+foreach ($update_settings_tbl as $key => $value) {
+    if (isset($settings[$key])) {
+        $inf_updatedbrow[] = DB_SETTINGS." SET settings_value='$value' WHERE settings_name='$key'";
     }
-
 }

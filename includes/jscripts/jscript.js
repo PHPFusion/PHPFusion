@@ -368,3 +368,9 @@ function onload_events() {
 }
 
 window.onload = onload_events;
+
+var BASEDIR = document.location.origin + site_path;
+var INFUSIONS = document.location.origin + "/infusions/";
+var INCLUDES = document.location.origin + "/includes/";
+var THEMES = document.location.origin + "/themes/";
+var CLASSES = document.location.origin + "/includes/classes/";

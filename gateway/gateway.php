@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined('IN_FUSION') || exit;
 
 /**
  * Experimental Anti Bot Gateway that combine multiple methods to prevent auto bots.
@@ -39,7 +37,7 @@ $info = [
 
 // Don´t run twice
 if (!isset($_POST['gateway_submit']) && !isset($_POST['register'])) {
-    
+
     // Get some numbers up. Always keep an odd number to void 10-10 etc.
     $a = rand(11, 20);
     $b = rand(1, 10);

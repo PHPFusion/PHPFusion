@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined('IN_FUSION') || exit;
 
 if (defined('FORUM_EXIST')) {
     include_once INCLUDES."infusions_include.php";
@@ -66,9 +64,18 @@ if (defined('FORUM_EXIST')) {
             } else {
                 $thread_poll = "";
             }
+
+            $thread_rowstart = '';
+            if (!empty($data['thread_postcount']) && !empty($inf_settings['posts_per_page'])) {
+                if ($data['thread_postcount'] > $inf_settings['posts_per_page']) {
+                    $thread_rowstart = $inf_settings['posts_per_page'] * floor($data['thread_postcount'] / $inf_settings['posts_per_page']);
+                    $thread_rowstart = "&amp;rowstart=".$thread_rowstart;
+                }
+            }
+
             echo "</td>\n";
             echo "<td>".$thread_poll."
-                        <a class='strong' href='".FORUM."viewthread.php?thread_id=".$data['thread_id']."&amp;pid=".$data['thread_lastpostid']."#post_".$data['thread_lastpostid']."' title='".$data['thread_subject']."'>".trimlink($data['thread_subject'], 30)."</a>
+                        <a class='strong' href='".FORUM."viewthread.php?thread_id=".$data['thread_id'].$thread_rowstart."&amp;pid=".$data['thread_lastpostid']."#post_".$data['thread_lastpostid']."' title='".$data['thread_subject']."'>".trimlink($data['thread_subject'], 45)."</a>
                         <br />\n ".$locale['in']." <a href='".FORUM."index.php?viewforum&forum_id=".$data['forum_id']."' title='".$data['forum_name']."'>".trimlink($data['forum_name'], 30)."</a></td>\n";
             echo "<td>".$data['thread_views']."</td>\n";
             echo "<td>".($data['thread_postcount'] - 1)."</td>\n";

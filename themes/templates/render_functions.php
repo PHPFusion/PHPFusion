@@ -18,9 +18,7 @@
 
 use PHPFusion\BreadCrumbs;
 
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined('IN_FUSION') || exit;
 
 /**
  * Load a HTML template

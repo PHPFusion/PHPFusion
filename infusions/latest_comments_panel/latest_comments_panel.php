@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined('IN_FUSION') || exit;
 
 include_once INFUSIONS.'latest_comments_panel/templates.php';
 $displayComments = 10;
@@ -135,7 +133,7 @@ if (dbrows($result)) {
             default:
                 continue 2;
         }
-        
+
         $info['item'][] = [
             'data'  => $data,
             'url'   => $url,

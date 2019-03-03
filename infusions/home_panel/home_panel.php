@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined('IN_FUSION') || exit;
 
 require_once INFUSIONS.'home_panel/templates/home_panel.php';
 require_once INCLUDES.'infusions_include.php';

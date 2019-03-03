@@ -15,9 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined('IN_FUSION') || exit;
+
 // Uncompress an IPv6 address
 if (!function_exists('uncompressIPv6')) {
     function uncompressIPv6($ip, $count = 7) {
