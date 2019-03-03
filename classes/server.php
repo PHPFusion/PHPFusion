@@ -23,6 +23,22 @@ class WeblinksServer {
     private static $weblink_submit_instance = NULL;
     private static $weblink_admin_instance = NULL;
 
+    protected $def_cat = [
+        'weblink_categories' => [],
+        'weblink_parent'     => '',
+        'weblink_tablename'  => '',
+        'weblink_filter'     => []
+    ];
+
+    protected $def_data = [
+        'weblink_categories' => [],
+        'weblink_parent'     => '',
+        'weblink_item_rows'  => 0,
+        'weblink_tablename'  => '',
+        'weblink_filter'     => [],
+        'weblink_items'      => []
+    ];
+
     public static function Weblinks() {
         if (self::$weblink_instance === NULL) {
             self::$weblink_instance = new WeblinksView();
