@@ -16,15 +16,24 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-namespace PHPFusion\Forums;
+namespace PHPFusion\Infusions\Forum\Classes;
 
 use PHPFusion\BreadCrumbs;
-use PHPFusion\Forums\Post\NewThread;
-use PHPFusion\Forums\Postify\Forum_Postify;
-use PHPFusion\Forums\Threads\Forum_Mood;
-use PHPFusion\Forums\Threads\ThreadFilter;
+use PHPFusion\Template;
+use PHPFusion\Infusions\Forum\Classes\Forum\Forum_Tags;
+use PHPFusion\Infusions\Forum\Classes\Post\New_Thread;
+use PHPFusion\Infusions\Forum\Classes\Threads\Forum_Mood;
+use PHPFusion\Infusions\Forum\Classes\Threads\Forum_ThreadFilter;
+use PHPFusion\Infusions\Forum\Classes\Threads\Forum_Threads;
+use PHPFusion\Infusions\Forum\Classes\Forum\Forum;
+use PHPFusion\Infusions\Forum\Classes\Post\NewThread;
 
-abstract class ForumServer {
+/**
+ * Class Forum_Server
+ *
+ * @package PHPFusion\Infusions\Forum\Classes
+ */
+abstract class Forum_Server {
 
     /**
      * Moderator object
@@ -89,8 +98,8 @@ abstract class ForumServer {
         'file'     => 'fa fa-file-zip-o fa-fw',
         'tracked'  => 'fa fa-bell-o fa-fw',
         'hot'      => 'fa fa-heartbeat fa-fw',
-        'sticky'   => 'fa fa-thumb-tack fa-fw',
-        'reads'    => 'fa fa-ticket fa-fw',
+        'sticky'   => 'fas fa-thumb-tack fa-fw',
+        'reads'    => 'fas fa-fire fa-fw',
     ];
     /**
      * Get records of cached forum ranks
@@ -119,21 +128,7 @@ abstract class ForumServer {
      * @param array $icons
      */
     public static function set_forumIcons(array $icons = []) {
-        self::$forum_icons = [
-            'forum'    => !empty($icons['main']) ? $icons['main'] : 'fa fa-folder fa-fw',
-            'thread'   => !empty($icons['thread']) ? $icons['thread'] : 'fa fa-chat-o fa-fw',
-            'link'     => !empty($icons['link']) ? $icons['link'] : 'fa fa-link fa-fw',
-            'question' => !empty($icons['question']) ? $icons['question'] : 'fa fa-mortar-board fa-fw',
-            'new'      => !empty($icons['new']) ? $icons['new'] : 'fa fa-lightbulb-o fa-fw',
-            'poll'     => !empty($icons['poll']) ? $icons['poll'] : 'fa fa-pie-chart fa-fw',
-            'lock'     => !empty($icons['lock']) ? $icons['lock'] : 'fa fa-lock fa-fw',
-            'image'    => !empty($icons['image']) ? $icons['image'] : 'fa fa-file-picture-o fa-fw',
-            'file'     => !empty($icons['file']) ? $icons['file'] : 'fa fa-file-zip-o fa-fw',
-            'tracked'  => !empty($icons['tracked']) ? $icons['tracked'] : 'fa fa-bell-o fa-fw',
-            'hot'      => !empty($icons['hot']) ? $icons['hot'] : 'fa fa-heartbeat fa-fw',
-            'sticky'   => !empty($icons['sticky']) ? $icons['sticky'] : 'fa fa-thumb-tack fa-fw',
-            'reads'    => !empty($icons['reads']) ? $icons['reads'] : 'fa fa-ticket fa-fw',
-        ];
+        self::$forum_icons = $icons + self::$forum_icons;
     }
 
     /**
@@ -217,7 +212,7 @@ abstract class ForumServer {
      *
      * @return string HTML source of forum rank images
      */
-    public static function show_forum_rank($posts, $level, $groups) {
+    public static function display_rank($posts, $level, $groups) {
 
         $forum_settings = self::get_forum_settings();
 
@@ -294,21 +289,23 @@ abstract class ForumServer {
             }
         }
 
-        // forum ranks must be the highest
-        $res = '';
+        $tpl = Template::getInstance('forum_ranks_label');
+
         foreach ($ranks as $rank) {
-            if ($image) {
-                if (isset($rank['rank_title']) && isset($rank['rank_image'])) {
-                    $res .= "<div class='rank_title'>".$rank['rank_title']."</div>\n<img src='".RANKS.$rank['rank_image']."' alt='' style='border:0' />";
-                }
-            } else {
-                if (isset($rank['rank_apply']) && isset($rank['rank_title'])) {
-                    $res .= "<label class='forum label ".(isset($forum_rank_css_class[$rank['rank_apply']]) ? $forum_rank_css_class[$rank['rank_apply']] : "label-default")." '><i class='".(isset($forum_rank_icon_class[$rank['rank_apply']]) ? $forum_rank_icon_class[$rank['rank_apply']] : "fa fa-user fa-fw")."'></i><div class='detail'>".$rank['rank_title']."</div>\n</label>\n";
-                }
-            }
+            $tpl->set_tag('rank_title', $rank['rank_title']);
+            $tpl->set_tag('rank_image', RANKS.$rank['rank_image']);
+            $tpl->set_tag('rank_class', (isset($forum_rank_css_class[$rank['rank_apply']]) ? $forum_rank_css_class[$rank['rank_apply']] : "label-default"));
+            $tpl->set_tag('css_icon', (isset($forum_rank_icon_class[$rank['rank_apply']]) ? $forum_rank_icon_class[$rank['rank_apply']] : "fa fa-user fa-fw"));
         }
 
-        return $res;
+        if ($image) {
+            $tpl->set_template(__DIR__."/../templates/forum_rank_image.html");
+        } else {
+            $tpl->set_template(__DIR__."/../templates/forum_rank.html");
+        }
+
+        return (string)$tpl->get_output();
+
     }
 
     /**
@@ -433,11 +430,11 @@ abstract class ForumServer {
     /**
      * Moderator Instance
      *
-     * @return null|Moderator
+     * @return \PHPFusion\Infusions\Forum\Classes\Forum_Moderator
      */
     protected function moderator() {
-        if (self::$moderator_instance === NULL) {
-            self::$moderator_instance = new Moderator();
+        if (empty(self::$moderator_instance)) {
+            self::$moderator_instance = new Forum_Moderator();
         }
 
         return self::$moderator_instance;
@@ -448,11 +445,11 @@ abstract class ForumServer {
      *
      * @param bool $set_info
      *
-     * @return null|ThreadFilter
+     * @return null|\PHPFusion\Infusions\Forum\Classes\Threads\Forum_ThreadFilter
      */
     public static function filter($set_info = TRUE) {
         if (self::$filter_instance === NULL) {
-            self::$filter_instance = new ThreadFilter();
+            self::$filter_instance = new Forum_ThreadFilter();
             if ($set_info == TRUE) {
                 self::$filter_instance->set_FilterInfo();
             }
@@ -466,7 +463,7 @@ abstract class ForumServer {
      *
      * @param bool $set_info
      *
-     * @return null|Forum
+     * @return null|\PHPFusion\Infusions\Forum\Classes\Forum\Forum
      */
     public static function forum($set_info = TRUE) {
         if (self::$forum_instance === NULL) {
@@ -485,11 +482,11 @@ abstract class ForumServer {
      * @param bool $set_info
      * @param bool $set_title
      *
-     * @return null|ThreadTags
+     * @return \PHPFusion\Infusions\Forum\Classes\Forum\Forum_Tags
      */
     public static function tag($set_info = TRUE, $set_title = FALSE) {
-        if (self::$tag_instance === NULL) {
-            self::$tag_instance = new ThreadTags();
+        if (empty(self::$tag_instance)) {
+            self::$tag_instance = new Forum_Tags();
             if ($set_info == TRUE) {
                 require_once INCLUDES."mimetypes_include.php";
                 self::$tag_instance->set_TagInfo($set_title);
@@ -504,11 +501,11 @@ abstract class ForumServer {
      *
      * @param bool $set_info
      *
-     * @return null|Threads\ForumThreads
+     * @return \PHPFusion\Infusions\Forum\Classes\Threads\Forum_Threads
      */
     public static function thread($set_info = TRUE) {
-        if (self::$thread_instance === NULL) {
-            self::$thread_instance = new Threads\ForumThreads();
+        if (empty(self::$thread_instance)) {
+            self::$thread_instance = new Forum_Threads();
             if ($set_info == TRUE) {
                 require_once INCLUDES."mimetypes_include.php";
                 self::$thread_instance->set_threadInfo();
@@ -523,11 +520,11 @@ abstract class ForumServer {
      *
      * @param bool $set_info
      *
-     * @return null|NewThread
+     * @return \PHPFusion\Infusions\Forum\Classes\Post\New_Thread
      */
     public static function new_thread($set_info = TRUE) {
-        if (self::$new_thread_instance === NULL) {
-            self::$new_thread_instance = new NewThread();
+        if (empty(self::$new_thread_instance)) {
+            self::$new_thread_instance = new New_Thread();
             if ($set_info == TRUE) {
                 self::$new_thread_instance->set_newThreadInfo();
             }
@@ -539,18 +536,22 @@ abstract class ForumServer {
     /**
      * Mood Instance
      *
-     * @return null|\PHPFusion\Forums\Threads\Forum_Mood
+     * @return \PHPFusion\Infusions\Forum\Classes\Threads\Forum_Mood
      */
     public static function mood() {
-        if (self::$forum_mood_instance === NULL) {
+        if (empty(self::$forum_mood_instance)) {
             self::$forum_mood_instance = new Forum_Mood();
         }
-
         return self::$forum_mood_instance;
     }
 
+    /**
+     * Load and do postify
+     * @return \PHPFusion\Infusions\Forum\Classes\Forum_Postify
+     * @throws \Exception
+     */
     public static function postify() {
-        if (self::$postify_instance === NULL) {
+        if (empty(self::$postify_instance)) {
             self::$postify_instance = new Forum_Postify();
         }
 
@@ -563,7 +564,7 @@ abstract class ForumServer {
      * @param array $forum_index - requires a dbquery_tree() output
      * @param int   $forum_id
      */
-    function forum_breadcrumbs(array $forum_index, $forum_id = 0) {
+    function add_forum_breadcrumbs(array $forum_index, $forum_id = 0) {
         $locale = fusion_get_locale('', FORUM_LOCALE);
 
         if (empty($forum_id)) {

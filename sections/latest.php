@@ -17,46 +17,32 @@
 +--------------------------------------------------------*/
 $userdata = fusion_get_userdata();
 $locale = fusion_get_locale();
-$time_sql = '';
-if (!empty($_POST['filter_date'])) {
-    $time_filter = form_sanitizer($_POST['filter_date'], '', 'filter_date');
-    $time_filter = (TIME - ($time_filter * 24 * 3600));
-    $time_sql = "t.thread_lastpost < '$time_filter' AND ";
-}
-$opts = [
-    '0'   => $locale['forum_p999'],
-    '1'   => $locale['forum_p001'],
-    '7'   => $locale['forum_p007'],
-    '14'  => $locale['forum_p014'],
-    '30'  => $locale['forum_p030'],
-    '90'  => $locale['forum_p090'],
-    '180' => $locale['forum_p180'],
-    '365' => $locale['forum_3015']
-];
-$this->forum_info['threads_time_filter'] = openform('filter_form', 'post', INFUSIONS."forum/index.php?section=latest").
-    form_select('filter_date', $locale['forum_0009'], (isset($_POST['filter_date']) && $_POST['filter_date'] ? $_POST['filter_date'] : 0), [
-        'options' => $opts,
-        'width'   => '300px',
-        'class'   => 'pull-left m-r-10',
-        'stacked' => form_button('go', $locale['go'], $locale['go'], ['class' => 'btn-default']),
-    ]).closeform();
+$this->forum_info['title'] = $locale['global_021'];
+$this->forum_info['description'] = "The latest threads in the community forum.";
+$this->forum_info['link'] = FORUM;
+$this->forum_info['filter'] = \PHPFusion\Infusions\Forum\Classes\Forum_Server::filter()->get_FilterInfo();
+$filter = \PHPFusion\Infusions\Forum\Classes\Forum_Server::filter()->get_filterSQL();
 
-// Select the latest threads - LATEST THREADS, meaning you need a thread that is the latest.
-$threads = \PHPFusion\Forums\ForumServer::thread(FALSE)->get_forum_thread(0,
+$threads = \PHPFusion\Infusions\Forum\Classes\Forum_Server::thread(FALSE)->get_forum_thread(0,
     [
         "count_query" => "SELECT t.thread_id
         FROM ".DB_FORUM_THREADS." t
         INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id
-        ".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND " : "WHERE ").$time_sql." t.thread_hidden='0' AND ".groupaccess('tf.forum_access')." GROUP BY t.thread_id",
+        ".$filter['join']."
+        ".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND " : "WHERE ")." t.thread_hidden=0 AND ".groupaccess('tf.forum_access')." ".$filter['condition']." GROUP BY t.thread_id",
 
-        "query" => "SELECT t.thread_id, t.thread_subject, t.thread_author, t.thread_lastuser, t.thread_lastpost, t.thread_lastpostid, t.thread_postcount, t.thread_locked, t.thread_sticky, t.thread_poll, t.thread_postcount, t.thread_views,
-        t.forum_id 'forum_id', tf.forum_name, tf.forum_access, tf.forum_type, tf.forum_cat
-        FROM ".DB_FORUMS." tf
-        INNER JOIN ".DB_FORUM_THREADS." t ON t.forum_id=tf.forum_id
-        ".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND " : "WHERE ").$time_sql." ".groupaccess('tf.forum_access')."
-        GROUP BY t.thread_id ORDER BY t.thread_lastpost DESC
-        "
-    ]
+        "query" => "SELECT 
+        t.*, tf.* ".$filter['select']."
+        FROM ".DB_FORUM_THREADS." t
+        INNER JOIN ".DB_FORUMS." tf ON tf.forum_id=t.forum_id
+        ".$filter['join']."      
+        ".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND " : "WHERE ")." ".groupaccess('tf.forum_access')." ".$filter['condition']."
+        GROUP BY t.thread_id ".$filter['order'],
+
+        "debug" => FALSE
+    ] + $filter
 );
+
 $this->forum_info = array_merge_recursive($this->forum_info, $threads);
-//showBenchmark(TRUE);
+
+//showBenchmark(TRUE, '1', TRUE);

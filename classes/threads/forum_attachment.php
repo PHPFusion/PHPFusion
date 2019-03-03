@@ -15,9 +15,10 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-namespace PHPFusion\Forums\Threads;
 
-class Attachment {
+namespace PHPFusion\Infusions\Forum\Classes\Threads;
+
+class Forum_Attachment {
 
     /**
      * Permissions for Attachments
@@ -55,10 +56,16 @@ class Attachment {
         return (isset(self::$permissions[$key])) ? self::$permissions[$key] : FALSE;
     }
 
+    /**
+     * Get ALL attachments on a thread
+     *
+     * @param array $thread_data
+     *
+     * @return array
+     */
     public static function get_attachments(array $thread_data) {
 
         $attachments = [];
-
         if (self::get_attachment_permissions("can_download_attach") == TRUE) {
             $a_result = dbquery("SELECT * FROM ".DB_FORUM_ATTACHMENTS." WHERE thread_id='".intval($thread_data['thread_id'])."' ORDER BY post_id ASC");
             if (dbrows($a_result) > 0) {

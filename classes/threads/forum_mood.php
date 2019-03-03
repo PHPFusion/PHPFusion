@@ -15,17 +15,18 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-namespace PHPFusion\Forums\Threads;
 
-use PHPFusion\Forums\ForumServer;
-use PHPFusion\QuantumFields;
+namespace PHPFusion\Infusions\Forum\Classes\Threads;
+
+use PHPFusion\Infusions\Forum\Classes\Forum_Server;
+use PHPFusion\UserFieldsQuantum;
 
 /**
  * Class ForumMood
  *
  * @package PHPFusion\Forums\Threads
  */
-class Forum_Mood extends ForumServer {
+class Forum_Mood extends Forum_Server {
 
     private static $mood_cache = [];
     public $info = [];
@@ -71,7 +72,7 @@ class Forum_Mood extends ForumServer {
                     $notify_data['post_id']) ? TRUE : FALSE;
 
                 if ($mood_exists === TRUE && $has_reacted === FALSE) {
-                    dbquery_insert(DB_POST_NOTIFY, $notify_data, 'save');
+                    dbquery_insert(DB_FORUM_POST_NOTIFY, $notify_data, 'save');
                     $response = TRUE;
                 }
             }
@@ -94,7 +95,7 @@ class Forum_Mood extends ForumServer {
                 $this->mood_exists($notify_data['notify_sender'], $notify_data['notify_mood_id'],
                     $notify_data['post_id'])
             ) {
-                dbquery("DELETE FROM ".DB_POST_NOTIFY." WHERE post_id=".$notify_data['post_id']."
+                dbquery("DELETE FROM ".DB_FORUM_POST_NOTIFY." WHERE post_id=".$notify_data['post_id']."
                 AND notify_mood_id=".$notify_data['notify_mood_id']."
                 AND notify_user=".$notify_data['notify_user']."
                 AND notify_sender=".$notify_data['notify_sender']);
@@ -106,7 +107,7 @@ class Forum_Mood extends ForumServer {
     }
 
     public static function mood_exists($sender_id, $mood_id, $post_id) {
-        return dbcount('(notify_user)', DB_POST_NOTIFY,
+        return dbcount('(notify_user)', DB_FORUM_POST_NOTIFY,
             "notify_sender='".$sender_id."'
                          AND notify_mood_id='".$mood_id."'
                          AND post_id='$post_id'");
@@ -125,7 +126,7 @@ class Forum_Mood extends ForumServer {
         $mood_cache = $this->cache_mood();
 
         // Get the types of buttons
-        $response_query = "SELECT pn.* FROM ".DB_POST_NOTIFY." pn WHERE post_id='".$this->post_id."' ORDER BY pn.notify_mood_id ASC, pn.post_id ASC";
+        $response_query = "SELECT pn.* FROM ".DB_FORUM_POST_NOTIFY." pn WHERE post_id='".$this->post_id."' ORDER BY pn.notify_mood_id ASC, pn.post_id ASC";
 
         $response_result = dbquery($response_query);
 
@@ -182,8 +183,8 @@ class Forum_Mood extends ForumServer {
             $cache_result = dbquery($cache_query);
             if (dbrows($cache_result) > 0) {
                 while ($data = dbarray($cache_result)) {
-                    $data['mood_name'] = QuantumFields::parse_label($data['mood_name']);
-                    $data['mood_description'] = QuantumFields::parse_label($data['mood_description']);
+                    $data['mood_name'] = UserFieldsQuantum::parse_label($data['mood_name']);
+                    $data['mood_description'] = UserFieldsQuantum::parse_label($data['mood_description']);
                     self::$mood_cache[$data['mood_id']] = $data;
                 }
             }
@@ -206,27 +207,33 @@ class Forum_Mood extends ForumServer {
         $my_id = fusion_get_userdata('user_id');
         if (!empty($mood_cache)) {
 
-            $html .= openform('mood_form-'.$this->post_id, 'post', FUSION_REQUEST."#post_".$this->post_id);
-
+            $html .= openform('mood_form-'.$this->post_id, 'post', FUSION_REQUEST."#post_".$this->post_id, ["class" => "display-inline-block"]);
             foreach ($mood_cache as $mood_id => $mood_data) {
                 //jQuery data model for ajax
                 $html .= form_hidden('post_author', '', $this->post_author);
                 $html .= form_hidden('post_id', '', $this->post_id);
-
                 if (!$this->mood_exists($my_id, $mood_id, $this->post_id)) {
                     // Post Button
-                    $html .=
-                        "<button name='post_mood' id='".$this->post_id."-$mood_id' class='btn btn-sm btn-default m-r-5' data-mood='$mood_id' data-post='$this->post_id' value='".$mood_id."'>".
-                        (!empty($mood_data['mood_icon']) ? "<i class='".$mood_data['mood_icon']."'></i>" : "").
-                        QuantumFields::parse_label($mood_data['mood_name']).
-                        "</button>";
+                    $html .= form_button("post_mood", UserFieldsQuantum::parse_label($mood_data['mood_name']), $mood_id, [
+                        "id"   => $this->post_id.'-'.$mood_id,
+                        "icon" => $mood_data['mood_icon'],
+                        "data" => [
+                            "mood" => $mood_id,
+                            "post" => $this->post_id,
+                        ]
+                    ]);
                 } else {
                     // Unpost Button
                     $html .=
-                        "<button name='unpost_mood' id='".$this->post_id."-$mood_id' class='btn btn-sm btn-default active m-r-5' data-mood='$mood_id' data-post='$this->post_id' value='".$mood_id."'>".
-                        (!empty($mood_data['mood_icon']) ? "<i class='".$mood_data['mood_icon']."'></i>" : "").
-                        QuantumFields::parse_label($mood_data['mood_name']).
-                        "</button>";
+                        form_button("unpost_mood", UserFieldsQuantum::parse_label($mood_data['mood_name']), $mood_id, [
+                            "id"    => $this->post_id.'-'.$mood_id,
+                            "icon"  => $mood_data['mood_icon'],
+                            "class" => "btn-default active",
+                            "data"  => [
+                                "mood" => $mood_id,
+                                "post" => $this->post_id,
+                            ]
+                        ]);
                 }
             }
             $html .= closeform();

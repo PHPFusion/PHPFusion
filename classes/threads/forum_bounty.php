@@ -15,16 +15,17 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-namespace PHPFusion\Forums\Threads;
 
-use PHPFusion\Forums\ForumServer;
+namespace PHPFusion\Infusions\Forum\Classes\Threads;
+
+use PHPFusion\Infusions\Forum\Classes\Forum_Server;
 
 /**
  * Class ForumMood
  *
  * @package PHPFusion\Forums\Threads
  */
-class Forum_Bounty extends ForumServer {
+class Forum_Bounty extends Forum_Server {
 
     /**
      * Permissions for Forum Poll
@@ -189,7 +190,7 @@ class Forum_Bounty extends ForumServer {
             if (self::$data['thread_bounty']) { // have a bounty
                 // find the highest post
                 $result = dbquery("
-                    SELECT v.post_id, p.post_author, u.user_id, u.user_name, u.user_status
+                    SELECT v.post_id, p.post_author, u.user_id, u.user_name, u.user_status 
                     FROM ".DB_FORUM_VOTES." v
                     INNER JOIN ".DB_FORUM_POSTS." p.post_id=v.post_id
                     INNER JOIN ".DB_USERS." u.user_id=p.post_author

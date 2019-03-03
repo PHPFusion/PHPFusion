@@ -16,7 +16,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-defined('IN_FUSION') || exit;
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 $permalink_name = $locale['pl_forums_title'];
 $permalink_desc = $locale['pl_forums_desc'];

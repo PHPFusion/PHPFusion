@@ -15,9 +15,10 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-namespace PHPFusion\Forums;
 
-class Functions {
+namespace PHPFusion\Infusions\Forum\Classes;
+
+class Forum_Functions {
 
 
     /**
@@ -83,7 +84,7 @@ class Functions {
      *
      * @return string
      */
-    public static function display_image_attach($file, $width = 50, $height = 50, $rel = "") {
+    public static function display_image_attach($file, $width = 200, $height = 200, $rel = "") {
         if (file_exists(INFUSIONS."forum/attachments/".$file)) {
             $size = @getimagesize(INFUSIONS."forum/attachments/".$file);
             if ($size [0] > $height || $size [1] > $width) {
@@ -101,7 +102,8 @@ class Functions {
                 $img_w = $size [0];
                 $img_h = $size [1];
             }
-            $res = "<a target='_blank' href='".INFUSIONS."forum/attachments/".$file."' rel='attach_".$rel."' title='".$file."'><img class='img-thumbnail' src='".INFUSIONS."forum/attachments/".$file."' alt='".$file."' style='border:none; width:".$img_w."px; height:".$img_h."px;' /></a>\n";
+            $res = "<a target='_blank' href='".INFUSIONS."forum/attachments/".$file."' rel='attach_".$rel."' title='".$file."'>
+            <img class='img-thumbnail' src='".INFUSIONS."forum/attachments/".$file."' alt='".$file."' style='width:".$img_w."px; height:".$img_h."px;' /></a>\n";
         } else {
             $res = fusion_get_locale('forum_0188');
         }

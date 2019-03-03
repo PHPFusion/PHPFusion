@@ -20,8 +20,9 @@ namespace PHPFusion\Search;
 use PHPFusion\ImageRepo;
 use PHPFusion\Search;
 
-defined('IN_FUSION') || exit;
-
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 if (defined('FORUM_EXIST')) {
 
     if (Search_Engine::get_param('stype') == 'forums' || Search_Engine::get_param('stype') == 'all') {
