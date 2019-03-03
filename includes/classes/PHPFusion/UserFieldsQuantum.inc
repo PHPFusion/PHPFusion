@@ -1125,7 +1125,7 @@ class UserFieldsQuantum extends \SqlHandler {
                 // Edit/Delete Category Administration
                 $html .= "<div class='clearfix'>\n";
                 $html .= "<div class='pull-right'>\n";
-                $html .= "<div class='btn-group m-b-10'>\n";
+                $html .= "<div class='btn-group m-b-10 m-t-10'>\n";
                 $html .= "<a class='btn btn-default' href='".FUSION_SELF.$aidlink."&amp;action=cat_edit&amp;cat_id=".$page_id."'>".$this->locale['fields_0308']."</a>";
                 $html .= "<a class='btn btn-danger' href='".FUSION_SELF.$aidlink."&amp;action=cat_delete&amp;cat_id=".$page_id."'>".$this->locale['fields_0313']."</a>";
                 $html .= "</div>\n";

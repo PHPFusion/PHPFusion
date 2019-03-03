@@ -30,6 +30,7 @@ class Admins {
     private static $instance = NULL;
     private static $admin_pages = [];
     private static $locale = [];
+    private static $public_pages = [];
     /**
      * @var array - default section icons
      */
@@ -104,8 +105,6 @@ class Admins {
     private $link_type = [];
     private $submit_data = [];
     private $folder_permissions = [];
-
-    private static $public_pages = [];
 
     public function __construct() {
         self::$locale = self::getAdminLocale();
@@ -323,10 +322,9 @@ class Admins {
                     }
                 }
             }
-            self::$admin_pages = self::$admin_pages + self::$public_pages;
         }
 
-        return (array)self::$admin_pages;
+        return self::$admin_pages + self::$public_pages;
     }
 
     /**
@@ -336,7 +334,7 @@ class Admins {
         $path = $_SERVER['PHP_SELF'];
         if (defined('START_PAGE')) {
             $path_info = pathinfo(START_PAGE);
-            if (stristr(FUSION_REQUEST, '/administration/')) {
+            if (stristr($_SERVER['REQUEST_URI'], '/administration/') && !stristr($_SERVER['REQUEST_URI'], "/infusions/")) {
                 $path = $path_info['filename'].'.php';
             } else {
                 $path = '../'.$path_info['dirname'].'/'.$path_info['filename'].'.php';
@@ -470,25 +468,25 @@ class Admins {
     }
 
     /**
-     * @param $type  comment prefix
-     * @param $title title
+     * @param string type  comment prefix
+     * @param string title title
      */
     public function setCommentType($type, $title) {
         $this->comment_type[$type] = $title;
     }
 
-	/**
-	 * @param null $type
-	 *
-	 * @return array|mixed|null
-	 */
+    /**
+     * @param null $type
+     *
+     * @return array|mixed|null
+     */
     public function getFolderPermissions($type = NULL) {
         return ($type !== NULL ? (isset($this->folder_permissions[$type]) ? $this->folder_permissions[$type] : NULL) : $this->folder_permissions);
     }
 
     /**
-     * @param $type    infusion_name
-     * @param $options array(image_folder => TRUE or FALSE)
+     * @param string $type    infusion_name
+     * @param array  $options array(image_folder => TRUE or FALSE)
      */
     public function setFolderPermissions($type, array $options = []) {
         defined(strtoupper($type).'_EXIST') ? $this->folder_permissions[$type] = $options : NULL;
@@ -563,7 +561,7 @@ class Admins {
 
                 $html .= "</ul>\n";
             } else {
-                $html .= "<a class='adl-link' href='".ADMIN."index.php".$aidlink."&amp;pagenum=0'>".$this->get_admin_section_icons($i)." <span class='adl-section-name'>".$section_name."</span> ".($i > 0 ? "<span class='adl-drop pull-right'></span>" : '')."</a>\n";
+                $html .= "<a class='adl-link' href='".ADMIN."index.php".$aidlink."&amp;pagenum=0'>".$this->get_admin_section_icons($i)." <span class='adl-section-name'>".$section_name."</span></a>\n";
             }
             $html .= "</li>\n";
         }
