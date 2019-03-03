@@ -20,9 +20,8 @@ namespace PHPFusion\Search;
 use PHPFusion\ImageRepo;
 use PHPFusion\Search;
 
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined('IN_FUSION') || exit;
+
 if (defined('DOWNLOADS_EXIST')) {
     $formatted_result = '';
     $settings = fusion_get_settings();

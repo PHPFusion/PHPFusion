@@ -132,7 +132,7 @@ function download_listing() {
     FROM ".DB_DOWNLOADS." d
     INNER JOIN ".DB_DOWNLOAD_CATS." dc on d.download_cat = dc.download_cat_id
     ".($filter ? "WHERE $filter " : "")."
-    ORDER BY dc.download_cat_sorting LIMIT $rowstart, $limit");
+    ORDER BY d.download_datestamp DESC LIMIT $rowstart, $limit");
 
     $rows = dbrows($result);
     echo "<div class='clearfix m-t-10'>\n";
@@ -140,7 +140,7 @@ function download_listing() {
 
     if (!empty($catOpts) > 0 && $total_rows > 0) {
         echo "<div class='dropdown pull-left m-r-10'>\n";
-        echo "<a class='btn btn-default btn-sm dropdown-toggle' data-target='#' href='#' style='width: 200px;' data-toggle='dropdown' aria-expanded='false'>\n";
+        echo "<a class='btn btn-default btn-sm dropdown-toggle' style='width: 200px;' data-toggle='dropdown' aria-expanded='false'>\n";
         if (isset($_GET['filter_cid']) && isset($catOpts[$_GET['filter_cid']])) {
             echo $catOpts[$_GET['filter_cid']];
         } else {
