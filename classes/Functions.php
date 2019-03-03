@@ -19,9 +19,7 @@ namespace PHPFusion\Blog;
 
 use PHPFusion\Feedback\Comments;
 
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined('IN_FUSION') || exit;
 
 /**
  * Functions for Blog System

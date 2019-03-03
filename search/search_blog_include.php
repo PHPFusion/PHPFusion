@@ -20,9 +20,7 @@ namespace PHPFusion\Search;
 use PHPFusion\ImageRepo;
 use PHPFusion\Search;
 
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined('IN_FUSION') || exit;
 
 if (defined('BLOG_EXIST')) {
     $locale = fusion_get_locale('', INFUSIONS."blog/locale/".LOCALESET."search/blog.php");
