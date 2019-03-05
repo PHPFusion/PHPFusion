@@ -46,29 +46,28 @@ echo "<style type='text/css'>
 </style>\n";
 echo "</head>\n<body>\n";
 if ((isset($_GET['type']) && $_GET['type'] == "A") && (isset($_GET['item_id']) && isnum($_GET['item_id']))) {
-    $result = dbquery("SELECT ta.article_subject, ta.article_article, ta.article_breaks, article_datestamp, ta.article_visibility,
-        tu.user_id, tu.user_name, tu.user_status
-        FROM ".DB_ARTICLES." ta
-        INNER JOIN ".DB_ARTICLE_CATS." tac ON ta.article_cat=tac.article_cat_id
-        LEFT JOIN ".DB_USERS." tu ON ta.article_name=tu.user_id
-        WHERE article_id='".$_GET['item_id']."' AND article_draft='0'");
-    $res = FALSE;
-    if (dbrows($result)) {
-        $data = dbarray($result);
-        if (checkgroup($data['article_visibility'])) {
-            $res = TRUE;
-            $article = str_replace("<--PAGEBREAK-->", "", stripslashes($data['article_article']));
-            if ($data['article_breaks'] == "y") {
-                $article = nl2br($article);
-            }
-            echo "<strong>".$data['article_subject']."</strong><br />\n";
-            echo "<span class='small'>".$locale['400'].profile_link($data['user_id'], $data['user_name'], $data['user_status']).$locale['401'].ucfirst(showdate("longdate", $data['article_datestamp']))."</span>\n";
-            echo "<hr />".$article."\n";
-        }
-    }
-    if (!$res) {
-        redirect("index.php");
-    }
+	$result = dbquery(
+		"SELECT ta.article_subject, ta.article_article, ta.article_breaks, article_datestamp, tac.article_cat_access,
+		tu.user_id, tu.user_name, tu.user_status
+		FROM ".DB_ARTICLES." ta
+		INNER JOIN ".DB_ARTICLE_CATS." tac ON ta.article_cat=tac.article_cat_id
+		LEFT JOIN ".DB_USERS." tu ON ta.article_name=tu.user_id
+		WHERE article_id='".$_GET['item_id']."' AND article_draft='0'");
+	$res = false;
+    if (dbrows($result) != 0) {
+		$data = dbarray($result);
+		if (checkgroup($data['article_cat_access'])) {
+			$res = true;
+			$article = str_replace("<--PAGEBREAK-->", "", stripslashes($data['article_article']));
+			if ($data['article_breaks'] == "y") { $article = nl2br($article); }
+			echo "<strong>".$data['article_subject']."</strong><br />\n";
+			echo "<span class='small'>".$locale['400'].profile_link($data['user_id'], $data['user_name'], $data['user_status']).$locale['401'].ucfirst(showdate("longdate", $data['article_datestamp']))."</span>\n";
+			echo "<hr />".$article."\n";
+		}
+	}
+	if (!$res) { 
+		redirect("index.php"); 
+	}
 } else if ((isset($_GET['type']) && $_GET['type'] == "N") && (isset($_GET['item_id']) && isnum($_GET['item_id']))) {
     $result = dbquery("SELECT tn.news_subject, tn.news_news, tn.news_extended, tn.news_breaks, tn.news_datestamp, tn.news_visibility,
         tu.user_id, tu.user_name, tu.user_status
