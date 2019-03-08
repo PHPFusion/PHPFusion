@@ -29,6 +29,17 @@ foreach ($update_settings_tbl as $key => $value) {
     }
 }
 
+$insert_settings_tbl = [
+    'error_logging_enabled' => 1,
+    'error_logging_method'  => 'database'
+];
+
+foreach ($insert_settings_tbl as $key => $value) {
+    if (!isset($settings[$key])) {
+        $inf_insertdbrow[] = DB_SETTINGS." (settings_name, settings_value) VALUES ('$key', '$value')";
+    }
+}
+
 if (db_exists(DB_PREFIX.'login_connectors')) {
     $inf_newtable[] = DB_LOGIN." (
         login_name VARCHAR(100) NOT NULL DEFAULT '0',

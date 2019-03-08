@@ -47,21 +47,23 @@ if (isset($_POST['clear_cache'])) {
 if (isset($_POST['savesettings'])) {
     // Save settings after validation
     $inputData = [
-        'captcha'             => form_sanitizer($_POST['captcha'], '', 'captcha'),
-        'privacy_policy'      => addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['privacy_policy'])),
-        'allow_php_exe'       => form_sanitizer($_POST['allow_php_exe'], 0, 'allow_php_exe'),
-        'flood_interval'      => form_sanitizer($_POST['flood_interval'], 15, 'flood_interval'),
-        'flood_autoban'       => form_sanitizer($_POST['flood_autoban'], 0, 'flood_autoban'),
-        'maintenance_level'   => form_sanitizer($_POST['maintenance_level'], 102, 'maintenance_level'),
-        'maintenance'         => form_sanitizer($_POST['maintenance'], 0, 'maintenance'),
-        'maintenance_message' => addslash(descript($_POST['maintenance_message'])),
-        'bad_words_enabled'   => form_sanitizer($_POST['bad_words_enabled'], 0, 'bad_words_enabled'),
-        'bad_words'           => stripinput($_POST['bad_words']),
-        'bad_word_replace'    => form_sanitizer($_POST['bad_word_replace'], '', 'bad_word_replace'),
-        'user_name_ban'       => form_sanitizer($_POST['user_name_ban'], '', 'user_name_ban'),
-        'database_sessions'   => form_sanitizer($_POST['database_sessions'], '', 'database_sessions'),
-        'form_tokens'         => form_sanitizer($_POST['form_tokens'], '', 'form_tokens'),
-        'gateway'             => form_sanitizer($_POST['gateway'], 0, 'gateway')
+        'captcha'               => form_sanitizer($_POST['captcha'], '', 'captcha'),
+        'privacy_policy'        => addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['privacy_policy'])),
+        'allow_php_exe'         => form_sanitizer($_POST['allow_php_exe'], 0, 'allow_php_exe'),
+        'flood_interval'        => form_sanitizer($_POST['flood_interval'], 15, 'flood_interval'),
+        'flood_autoban'         => form_sanitizer($_POST['flood_autoban'], 0, 'flood_autoban'),
+        'maintenance_level'     => form_sanitizer($_POST['maintenance_level'], 102, 'maintenance_level'),
+        'maintenance'           => form_sanitizer($_POST['maintenance'], 0, 'maintenance'),
+        'maintenance_message'   => addslash(descript($_POST['maintenance_message'])),
+        'bad_words_enabled'     => form_sanitizer($_POST['bad_words_enabled'], 0, 'bad_words_enabled'),
+        'bad_words'             => stripinput($_POST['bad_words']),
+        'bad_word_replace'      => form_sanitizer($_POST['bad_word_replace'], '', 'bad_word_replace'),
+        'user_name_ban'         => form_sanitizer($_POST['user_name_ban'], '', 'user_name_ban'),
+        'database_sessions'     => form_sanitizer($_POST['database_sessions'], '', 'database_sessions'),
+        'form_tokens'           => form_sanitizer($_POST['form_tokens'], '', 'form_tokens'),
+        'gateway'               => form_sanitizer($_POST['gateway'], 0, 'gateway'),
+        'error_logging_enabled' => form_sanitizer($_POST['error_logging_enabled'], 0, 'error_logging_enabled'),
+        'error_logging_method'  => form_sanitizer($_POST['error_logging_method'], '', 'error_logging_method'),
     ];
 
     // Validate extra fields
@@ -150,6 +152,23 @@ echo form_textarea('privacy_policy', $locale['820'], $settings['privacy_policy']
 ]);
 closeside();
 
+openside('');
+echo form_select('bad_words_enabled', $locale['659'], $settings['bad_words_enabled'], [
+    'options'     => $yes_no_array,
+    'inner_width' => '100 % ',
+    'width'       => '100 % '
+]);
+echo form_text('bad_word_replace', $locale['654'], $settings['bad_word_replace']);
+echo form_textarea('bad_words', $locale['651'], $settings['bad_words'], [
+    'placeholder' => $locale['652'],
+    'autosize'    => TRUE
+]);
+echo form_textarea('user_name_ban', $locale['649'], $settings['user_name_ban'], [
+    'placeholder' => $locale['411'],
+    'autosize'    => TRUE
+]);
+closeside();
+
 echo "</div><div class='col-xs-12 col-sm-4'>\n";
 openside('');
 echo form_select('captcha', $locale['693'], $settings['captcha'], [
@@ -225,19 +244,18 @@ echo form_select('flood_autoban', $locale['680'], $settings['flood_autoban'], [
 ]);
 closeside();
 openside('');
-echo form_select('bad_words_enabled', $locale['659'], $settings['bad_words_enabled'], [
+echo form_select('error_logging_enabled', $locale['security_011'], $settings['error_logging_enabled'], [
     'options'     => $yes_no_array,
-    'inner_width' => '100%',
-    'width'       => '100%'
+    'width'       => '100%',
+    'inner_width' => '100%'
 ]);
-echo form_text('bad_word_replace', $locale['654'], $settings['bad_word_replace']);
-echo form_textarea('bad_words', $locale['651'], $settings['bad_words'], [
-    'placeholder' => $locale['652'],
-    'autosize'    => TRUE
-]);
-echo form_textarea('user_name_ban', $locale['649'], $settings['user_name_ban'], [
-    'placeholder' => $locale['411'],
-    'autosize'    => TRUE
+echo form_select('error_logging_method', $locale['security_012'], $settings['error_logging_method'], [
+    'options'     => [
+        'file'     => $locale['security_013'],
+        'database' => $locale['security_014']
+    ],
+    'width'       => '100%',
+    'inner_width' => '100%'
 ]);
 closeside();
 openside("");

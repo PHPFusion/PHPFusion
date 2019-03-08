@@ -26,6 +26,23 @@ use PHPFusion\Database\DatabaseFactory;
  * @package PHPFusion
  */
 class Errors {
+    const E_ERROR = 1;
+    const E_WARNING = 2;
+    const E_PARSE = 4;
+    const E_NOTICE = 8;
+    const E_CORE_ERROR = 16;
+    const E_CORE_WARNING = 32;
+    const E_COMPILE_ERROR = 64;
+    const E_COMPILE_WARNING = 128;
+    const E_USER_ERROR = 256;
+    const E_USER_WARNING = 512;
+    const E_USER_NOTICE = 1024;
+    const E_ALL = 2047;
+
+    /*
+     * Severity when set Error Level
+     */
+    const E_STRICT = 2048;
     private static $instances = [];
     private static $locale = [];
     public $no_notice = 0;
@@ -39,33 +56,11 @@ class Errors {
     private $errors = [];
     private $new_errors = [];
 
-    /*
-     * Severity when set Error Level
-     */
-    const E_ERROR = 1;
-    const E_WARNING = 2;
-    const E_PARSE = 4;
-    const E_NOTICE = 8;
-    const E_CORE_ERROR = 16;
-    const E_CORE_WARNING = 32;
-    const E_COMPILE_ERROR = 64;
-    const E_COMPILE_WARNING = 128;
-    const E_USER_ERROR = 256;
-    const E_USER_WARNING = 512;
-    const E_USER_NOTICE = 1024;
-    const E_ALL = 2047;
-    const E_STRICT = 2048;
-
     public function __construct() {
-
         $this->error_status = filter_input(INPUT_POST, 'error_status', FILTER_VALIDATE_INT, ['min_range' => 0, 'max_range' => 2]);
-
         $this->posted_error_id = filter_input(INPUT_POST, 'error_id', FILTER_VALIDATE_INT);
-
         $this->delete_status = filter_input(INPUT_POST, 'delete_status', FILTER_VALIDATE_INT, ['min_range' => 0, 'max_range' => 2]);
-
         $this->rowstart = filter_input(INPUT_GET, 'rowstart', FILTER_VALIDATE_INT) ?: 0;
-
         $this->error_id = filter_input(INPUT_GET, 'error_id', FILTER_VALIDATE_INT);
 
         if (isnum($this->error_status) && $this->posted_error_id) {
@@ -193,7 +188,15 @@ class Errors {
         echo opentab($tab_title, $tab_active, 'error_tab');
         echo opentabbody($tab_title['title'][0], $tab_title['id'][0], $tab_active);
 
-        echo "<div class='m-t-20'>".$this->getErrorLogs()."</div>";
+        if (fusion_get_settings('error_logging_method') === 'database') {
+            echo "<div class='m-t-20'>".$this->getErrorLogs()."</div>";
+        } else {
+            if (file_exists(BASEDIR.'fusion_error_log.log')) {
+                echo '<textarea class="form-control m-t-20" rows="15" disabled>'.file_get_contents(BASEDIR.'fusion_error_log.log').'</textarea>';
+            } else {
+                echo "<div class='text-center well m-t-20'>".$locale['ERROR_418']."</div>\n";
+            }
+        }
 
         echo closetabbody();
 

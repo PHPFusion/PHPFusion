@@ -325,3 +325,7 @@ $locale['security_007'] = "All system sessions has been cleared successfully";
 $locale['security_008'] = "Form Tokens";
 $locale['security_009'] = "Number of issued tokens for each form";
 $locale['security_010'] = "Fusion GateWay";
+$locale['security_011'] = "Error logging";
+$locale['security_012'] = "Error logging method";
+$locale['security_013'] = "File";
+$locale['security_014'] = "Database";

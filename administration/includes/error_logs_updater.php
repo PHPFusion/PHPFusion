@@ -17,16 +17,16 @@
 +--------------------------------------------------------*/
 require_once "../../maincore.php";
 
-$aidlink = filter_input(INPUT_GET, 'aidlink', FILTER_DEFAULT)
+$aidlink = filter_input(INPUT_GET, 'aidlink', FILTER_DEFAULT);
 $aid = !empty($aidlink) ? explode('=', $aidlink) : '';
 
 if (!empty($aid)) {
     $aid = $aid[1];
 }
-$error_id = filter_input(INPUT_GET, 'error_id', FILTER_VALIDATE_INT)
+$error_id = filter_input(INPUT_GET, 'error_id', FILTER_VALIDATE_INT);
 $id = !empty($error_id) ? $error_id : 0;
 
-$error_type = filter_input(INPUT_GET, 'error_type', FILTER_VALIDATE_INT)
+$error_type = filter_input(INPUT_GET, 'error_type', FILTER_VALIDATE_INT);
 $type = !empty($error_type) ? $error_type : 0;
 
 if (checkrights("ERRO") && defined("iAUTH") && $aid == iAUTH && defender::safe()) {
