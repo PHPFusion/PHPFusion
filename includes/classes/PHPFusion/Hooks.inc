@@ -166,18 +166,22 @@ final class Hooks {
                 if (function_exists($hook['function'])) {
 
                     $args = (!empty($hook['default_args']) ? $hook['default_args'] : array());
+
+                    $_callback_args = FALSE;
+
                     if (count($function_args) > 1) {
                         unset($function_args[0]);
                         $args = $function_args;
+                        $_callback_args = TRUE;
                     }
 
                     if ($hook['accepted_args']) {
-                        if ($hook['accepted_args'] < (count($args) - 1 ) ) {
+                        if ($hook['accepted_args'] < (count($function_args) - 1 ) ) {
                             throw new \Exception("Too many arguments during executing the $filter_name hook");
                         }
                     }
 
-                    $output = call_user_func_array($hook['function'], $args);
+                    $output = $_callback_args === FALSE ? $hook['function']($args) : call_user_func_array($hook['function'], $args);
 
                     if (!empty($output)) {
 

@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-namespace PHPFusion;
+namespace PHPFusion\Interfaces;
 
 /**
  * Interface AdminFormSDK
@@ -29,22 +29,40 @@ interface AdminFormSDK {
     public function data();
 
     /**
+     * @param $data
+     *
      * @return mixed
-     *
-     *              Field names for meta.
-     *              status
-     *              visibility
-     *              startdate
-     *              enddate
-     *
-     *
      */
-    public function fields();
+    public function fields($data);
 
     public function custom($data);
 
+    /**
+     * Insert SQL
+     * @param $data
+     *
+     * @return id
+     */
     public function save($data);
 
+    /**
+     * Update SQL
+     * @param $data
+     *
+     * @return int
+     */
     public function update($data);
+
+    /**
+     * Delete SQL
+     * @param $data
+     *
+     * @return mixed
+     */
+    public function remove($data);
+
+    public function categories($data);
+
+    public function tags($data);
 
 }

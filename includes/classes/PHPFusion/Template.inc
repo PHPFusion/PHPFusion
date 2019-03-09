@@ -45,6 +45,10 @@ class Template {
     private function __clone() {
     }
 
+    public function get_template_path() {
+        return $this->template_path;
+    }
+
     /**
      * @param $key
      *
@@ -101,6 +105,7 @@ class Template {
     }
 
     private static $registered_templates = [];
+    private $template_path = '';
 
     public function register_template($template_file_path) {
         self::$registered_templates[self::$key] = $template_file_path;
@@ -116,7 +121,13 @@ class Template {
             $template_file_path = self::$registered_templates[self::$key];
         }
         ob_start();
-        @include $template_file_path;
+        $this->template_path = $template_file_path;
+        if (is_file($template_file_path)) {
+            @include $template_file_path;
+        } else {
+            print_p(ob_start().debug_print_backtrace().ob_get_clean(), 1);
+        }
+
         $this->template = ob_get_clean();
     }
 

@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: AdminForm.inc
-| Author: Frederick MC Chan
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -17,6 +17,11 @@
 +--------------------------------------------------------*/
 namespace PHPFusion;
 
+use Defender\Token;
+use PHPFusion\Form\CategoryMeta;
+use PHPFusion\Form\FormFactory;
+use PHPFusion\Interfaces\AdminFormSDK;
+
 /**
  * Class AdminForm
  *
@@ -24,23 +29,47 @@ namespace PHPFusion;
  */
 class AdminForm {
 
+    /**
+     * @var string
+     */
     private $main_content = '';
 
+    /**
+     * @var string
+     */
     private $side_content = '';
 
+    /**
+     * @var string
+     */
     private $bottom_content = '';
 
-    private $api = NULL;
+    /**
+     * @var null|AdminFormSDK
+     */
+    protected $api = NULL;
 
-    private $data = array();
+    /**
+     * @var null|FormFactory
+     */
+    private $factory = NULL;
 
-    public function __construct(object $api) {
+    /**
+     * AdminForm constructor.
+     *
+     * @param AdminFormSDK $api
+     *
+     * @throws \Exception
+     */
+    public function __construct(AdminFormSDK $api) {
 
         if ($api instanceof AdminFormSDK) {
 
             $this->api = $api;
 
-            $this->process_request();
+            $this->factory = new FormFactory($api);
+
+            $this->factory->process_request();
 
             $this->content();
 
@@ -48,125 +77,45 @@ class AdminForm {
 
             $this->side_content();
 
+            $this->prepare_js();
+
+            $this->factory->process_form_actions();
+
             $this->output();
 
         } else {
-            echo 'Your current object requires the implementation of the \PHPFusion\AdminFormSDK interface.';
+            echo 'Your current object requires the implementation of the \PHPFusion\Interfaces\AdminFormSDK interface.';
         }
     }
 
+    /**
+     *
+     */
     private function __clone() {
         die('Cloning of this class is prohibited');
     }
 
     /**
-     * @param       $field_name
-     * @param null  $key
-     * @param array $default_output
      *
-     * @return null
      */
-    private function field_prop($field_name, $key = NULL, $default_output = []) {
-        static $field;
-
-        $_fields = $this->api->fields();
-
-        if (empty($fields[$field_name])) {
-
-            $field[$field_name]['label'] = '';
-
-            $field[$field_name]['options'] = [
-                'placeholder' => '',
-                'required'    => TRUE,
-                'type'        => 'text'
-            ];
-
-            if (!empty($_fields[$field_name])) {
-
-                if (!empty($_fields[$field_name]['name'])) {
-                    $field[$field_name]['name'] = $_fields[$field_name]['name'];
-                }
-
-                if (!empty($_fields[$field_name]['label'])) {
-                    $field[$field_name]['label'] = $_fields[$field_name]['label'];
-                }
-
-                if (!empty($_fields[$field_name]['options'])) {
-                    $field[$field_name]['options'] = $_fields[$field_name]['options'];
-                }
-            }
-        }
-
-
-        return $key === NULL ? $field[$field_name] : (isset($field[$field_name][$key]) ? $field[$field_name][$key] : $default_output);
-
+    private function prepare_js() {
+        add_to_footer("<script src='".INCLUDES."jquery/form/admin-form.js'></script>");
+        //@todo: Add ajax callback for 'save' button.
+        //@todo: disable trash button for empty document.
     }
-
-    private function process_request() {
-
-        if (!empty($_POST)) {
-            foreach($_POST as $keys => $val) {
-                $data_keys = $this->field_prop($keys, 'name', '');
-                if (in_array($keys, ['form_id', 'fusion_token'])) {
-                    $this->data[$keys] = $val;
-                } else if ($data_keys) {
-                    if ($keys == 'startdate' || $keys == 'enddate') {
-                        $keys = 'af_startdate';
-                    }
-                    $this->data[$data_keys] = form_sanitizer($val, '', $keys);
-                } else if ($val) {
-                    $this->data[$keys] = form_sanitizer($val, '', $keys);
-                }
-            }
-
-        }
-
-    }
-
 
     /**
-     * Callback value of current field.
-     * @param $field_name
-     *
-     * @return null|string
      * @throws \Exception
      */
-    private function field_value($field_name) {
-
-        $_data = $this->api->data();
-
-        $_field = $this->api->fields();
-
-        if (isset($_field[$field_name]['name'])) {
-
-            $_callback_ref = $_field[$field_name]['name']; // ssl_id
-
-            if (isset($this->data[$_callback_ref])) {
-
-                return (string)$this->data[$_callback_ref];
-
-            }
-
-            if (isset($_data[$_callback_ref])) {
-
-                return (string)$_data[$_callback_ref];
-            }
-        }
-
-        return NULL;
-    }
-
-
-
     public function content() {
 
         $html = "<div class='block'>\n";
 
-        $html .= form_hidden('id', '', $this->field_value('id'), ['type'=>'number']);
+        $html .= form_hidden('id', '', $this->factory->field_value('id'), ['type' => 'number']);
 
-        $html .= form_text('title', $this->field_prop('title', 'label'), $this->field_value('title'), $this->field_prop('title', 'options', []));
+        $html .= form_text('title', $this->factory->field_prop('title', 'label'), $this->factory->field_value('title'), $this->factory->field_prop('title', 'options', []) + ['inner_class' => 'main']);
 
-        $html .= form_textarea('description', $this->field_prop('description', 'label'), $this->field_value('description'), $this->field_prop('description', 'options', []));
+        $html .= form_textarea('description', $this->factory->field_prop('description', 'label'), $this->factory->field_value('description'), $this->factory->field_prop('description', 'options', []) + ['inner_class' => 'main', 'height' => '500px']);
 
         $html .= "</div>\n";
 
@@ -174,44 +123,22 @@ class AdminForm {
 
     }
 
+    /**
+     *
+     */
     public function bottom_content() {
 
         $html = "<div class='block'>";
-
-        $html .= $this->render_panel([
-            'title' => '',
-            'description' => $this->api->custom( !empty($this->data) ? $this->data : $this->api->data() ) // I'm a genius.
-        ]);
-
+        $html .= $this->api->custom($this->factory->data);
         $html .= "</div>\n";
 
         $this->bottom_content = $html;
-
     }
 
+    /**
+     *
+     */
     private function output() {
-
-        if (!empty($_POST) && !empty($this->data)) {
-
-            $id_field = $this->field_prop('id', 'name', '');
-
-            if (!empty($id_field)) {
-
-                if (!empty($this->data[ $id_field ])) {
-
-                    $this->api->update($this->data);
-
-                } else {
-
-                    $this->api->save($this->data);
-
-                }
-
-            } else {
-                addNotice('danger', 'Error. Primary id field has to be defined.');
-            }
-
-        }
 
         $tpl = Template::getInstance('admin_post');
 
@@ -227,24 +154,29 @@ class AdminForm {
             $tpl->set_block('admin_bottom', ['content' => $this->bottom_content]);
         }
 
-
-        echo openform('inputform', 'post').$tpl->get_output().closeform();
+        echo openform($this->factory->form_properties['form_name'], 'post').$tpl->get_output().closeform();
 
     }
 
+    /**
+     * @throws \Exception
+     */
     private function side_content() {
 
-        $this->side_content .= $this->ui_meta();
+        $this->side_content .= $this->ui_meta().$this->ui_meta_categories().$this->ui_meta_tags();
 
     }
 
-
     // make it into a steam.
+
+    /**
+     * @return mixed
+     * @throws \Exception
+     */
     private function ui_meta() {
+        $html = '';
 
-        $_field = $this->api->fields();
-
-        $html = form_button('save_draft', 'Save Draft', 'save_draft', ['class' => 'btn-xs']);
+        $_field = $this->factory->field;
 
         if (!empty($_field['status'])) {
 
@@ -253,7 +185,17 @@ class AdminForm {
                 '2' => 'Pending Review',
                 '1' => 'Published',
             ];
-            $value = $this->field_value('status');
+
+            if (!empty($_field['status']['options']['options'])) {
+
+                $status_options = $_field['status']['options']['options'];
+
+            } else {
+
+                $html = form_button('save_draft', 'Save Draft', 'save_draft', ['class' => 'btn-xs']);
+            }
+
+            $value = $this->factory->field_value('status');
 
             $display_value = $value ? $status_options[$value] : $status_options[0];
 
@@ -282,10 +224,10 @@ class AdminForm {
                     form_button('cancel_status', 'Cancel', 'cancel_status', [
                         'data'  => ['container' => '#publish-status'],
                         'class' => 'btn-link cancel p-0',
-                        'type' => 'button'
+                        'type'  => 'button'
                     ])]);
 
-            $html .= form_hidden('status', '', $value, ['type'=>'number']);
+            $html .= form_hidden('status', '', $value, ['type' => 'number']);
 
             $html .= "</div>";
 
@@ -294,14 +236,21 @@ class AdminForm {
 
         if (!empty($_field['visibility'])) {
 
-            $value = $this->field_value('visibility');
+            $value = $this->factory->field_value('visibility');
 
             $visibility_options = [
                     USER_LEVEL_PASSWORD => 'Password Protected',
                     USER_LEVEL_PRIVATE  => 'Private',
                 ] + fusion_get_groups();
 
+            if (!empty($_field['visibility']['options']['options'])) {
+                $visibility_options = $_field['visibility']['options']['options'];
+            }
+
             $display_value = $visibility_options[0];
+            if (isset($visibility_options[$value])) {
+                $display_value = $visibility_options[$value];
+            }
 
             $html .= "<div class='meta-block m-b-5'>\n";
 
@@ -317,7 +266,7 @@ class AdminForm {
 
             $html .= "<div id='visibility-password' style='display: none;' >".form_text('af_password', '', '', ['type' => 'password', 'class' => 'form-group-sm', 'placeholder' => 'Enter password'])."</div>";
 
-            $html .= form_button('confirm_visibility', 'Confirm', 'confirm_visibility', [
+            $html .= form_button('confirm_visibility', 'OK', 'confirm_visibility', [
                     'class' => 'btn-xs ok',
                     'data'  => [
                         'display'   => '#visibility-display',
@@ -329,7 +278,7 @@ class AdminForm {
                 ]).form_button('cancel_visibility', 'Cancel', 'cancel_status', [
                     'data'  => ['container' => '#publish-visibility'],
                     'class' => 'btn-link btn-xs cancel',
-                    'type' => 'button'
+                    'type'  => 'button'
                 ]);
 
             $html .= form_hidden('visibility', '', $value);
@@ -342,7 +291,7 @@ class AdminForm {
 
         if (!empty($_field['startdate'])) {
 
-            $value = $this->field_value('startdate');
+            $value = $this->factory->field_value('startdate');
 
             $input_value = $value;
 
@@ -388,11 +337,11 @@ class AdminForm {
                     .form_button('cancel_startdate', 'Cancel', 'cancel_status', [
                             'class' => 'btn-link btn-xs cancel',
                             'data'  => ['container' => '#publish-startdate'],
-                            'type' => 'button'
+                            'type'  => 'button'
                         ] + $enddate_append_options)."</div>"
             ]);
 
-            $html .= form_hidden('startdate', '', $input_value, ['type'=>'timestamp']);
+            $html .= form_hidden('startdate', '', $input_value, ['type' => 'timestamp']);
 
             $html .= "</div>\n";
 
@@ -402,7 +351,7 @@ class AdminForm {
 
         if (!empty($_field['enddate'])) {
 
-            $value = $this->field_value('enddate');
+            $value = $this->factory->field_value('enddate');
 
             $input_value = $value;
 
@@ -448,11 +397,11 @@ class AdminForm {
                         .form_button('cancel_enddate', 'Cancel', 'cancel_status', [
                             'class' => 'btn-link btn-xs cancel',
                             'data'  => ['container' => '#publish-enddate'],
-                            'type' => 'button'
+                            'type'  => 'button'
                         ])."</div>"
                 ] + $startdate_append_options);
 
-            $html .= form_hidden('enddate', '', $input_value, ['type'=>'timestamp']);
+            $html .= form_hidden('enddate', '', $input_value, ['type' => 'timestamp']);
 
             $html .= "</div>\n";
 
@@ -460,129 +409,74 @@ class AdminForm {
 
         }
 
+        $fhtml = '';
 
-        add_to_jquery("
-        
-        $('.meta-block .cancel').bind('click', function (ev) {
-            var container;
-            if ( container = $(this).data('container') ) {
-                $(container).hide();                    
-            } else {
-                   alert('Container has to be defined.');            
-            }
-        });
-                        
-        $('.meta-block > .admin-form-edit-link').bind('click', function(ev) {
-        
-            ev.preventDefault();
-        
-            var target = $(this).data('target');
-        
-            if ( $(target).hasClass('on') ) {
-                $(target).slideUp();
-                $(target).removeClass('on');
-            } else {
-                $(target).slideDown();
-                $(target).addClass('on');
-            }
-        });
-        
-        $('.meta-block .ok').bind('click', function(ev) {
-        
-            var container, source_input, input_text, input_value, hidden_input;
-            
-            ev.preventDefault();
-            
-            if ( source_input = $(this).data('source') ) { // source input field
-            
-                var source_type = $(source_input).prop('type');
-                
-                console.log(source_type);
-                
-                if (source_type == 'select-one') {
-                    
-                    var input_text = $(source_input + ' option:selected').text(); // source input text for source input
-                    
-                    var input_value = $(source_input).val(); // source input value for source input
-                    
-                } else if (source_type == 'radio') {
-                    
-                    var input_text = $(source_input + ':checked').closest('label').text(); // source input text for source input                    
-                    
-                    var input_value = $(source_input + ':checked').val(); // source input value for source input
-                    
-                } else if ( source_type == 'text') {
-                    
-                    // @todo: If checked on PHP Time is the value, then the text value must be - Immediately
-                    
-                    var input_text = $(source_input).val(); // source input text for source input                    
-                    
-                    var input_value = $(source_input).val(); // source input value for source input                    
-                                     
-                }
-                
-                if ( post_display = $(this).data('display') ) { // the display value container
-                                    
-                    $(post_display).text( input_text );
-                    
-                } else {
-                    alert('Display container has to be defined.');
-                }
-            
-                if ( hidden_input = $(this).data('input') ) { // the hidden input we need to fill
-                    
-                    $(hidden_input).val( input_value );
-                                                
-                } else {
-                    alert('Input value field has to be defined.');
-                }
-                
-                if ( container = $(this).data('container') ) {  // the wrapper container
-                    
-                    $(container).hide();
-                    
-                } else {
-                    alert('Container has to be defined.');
-                }
-                                                
-            } else {
 
-                alert('Input value field has to be defined.');
+        if (!empty($this->factory->get_remove_prop('name')) &&  !empty($this->factory->data[$this->factory->field['id']['name']])) { // what is the primary column?
 
-            }
-                        
-        }); 
-        
-        $('input[name^=\"af_visibility\"]').bind('click', function(ev) {
-            if ( $(this).val() == ".USER_LEVEL_PASSWORD." ) {
-                $('#visibility-password').show();
-            } else {
-                $('#visibility-password').hide();
-            }
-        });
-        
-        ");
+            $fhtml = form_button($this->factory->get_remove_prop('name'),
+                $this->factory->get_remove_prop('label'),
+                $this->factory->get_remove_prop('value'),
+                $this->factory->get_remove_prop('options')
+            );
+        }
 
-        $fhtml = form_button('remove_entry', 'Move to Trash', 'remove_entry', ['class' => 'text-danger']);
+        $fhtml .= form_button($this->factory->get_save_prop('name'),
+            $this->factory->get_save_prop('label'),
+            $this->factory->get_save_prop('value'),
+            $this->factory->get_save_prop('options') ? $this->factory->get_save_prop('options') : []);
 
-        $fhtml .= form_button('save_entry', 'Save', 'publish', ['class' => 'btn-primary']);
+        $button[] = "#".$this->factory->get_save_prop('name');
+
+        if (!empty($this->factory->form_properties['back_link'])) {
+
+            $fhtml .= form_button($this->factory->get_save_close_prop('name'),
+                $this->factory->get_save_close_prop('label'),
+                $this->factory->get_save_close_prop('value'),
+                $this->factory->get_save_close_prop('options'));
+            $button[] = "#".$this->factory->get_save_close_prop('name');
+        }
 
         return $this->render_panel([
             'title'       => 'Publish Options',
             'description' => $html,
             'footer'      => $fhtml
         ]);
+
     }
 
-    function ui_categories() {
+    /**
+     * Category Meta
+     * @return mixed
+     * @throws \Exception
+     */
+    function ui_meta_categories() {
+        return (string)$this->render_panel([
+            'title'       => 'Categories',
+            'description' => CategoryMeta::getInstance($this->factory)->displayMeta()
+
+        ]);
     }
 
-    function ui_tags() {
+    /**
+     * @return mixed
+     */
+    function ui_meta_tags() {
+        return (string)$this->render_panel([
+            'title'       => 'Tags',
+            'description' => Form\TagsMeta::getInstance($this->factory)->displayMeta()
+        ]);
     }
 
+    /**
+     *
+     */
     function ui_image() {
     }
 
+    /**
+     *
+     */
     function ui_gallery() {
     }
 
