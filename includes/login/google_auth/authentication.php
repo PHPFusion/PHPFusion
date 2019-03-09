@@ -60,7 +60,7 @@ if (isset($_SESSION['secret_code'])) {
                     $_SESSION['auth_attempt'][USER_IP] = 3;
                 }
                 $gCode = form_sanitizer($_POST['g_code'], '', 'g_code');
-                if (\defender::safe()) {
+                if (\Defender::safe()) {
                     $checkResult = $google->verifyCode($secret, $gCode, 2);    // 2 = 2*30sec clock tolerance
                     if ($checkResult) {
                         // Authenticate the User

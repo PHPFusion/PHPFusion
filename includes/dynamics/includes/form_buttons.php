@@ -93,10 +93,10 @@ function form_btngroup($input_name, $label = "", $input_value, array $options = 
     $options += $default_options;
 
     $error_class = "";
-    if (\defender::inputHasError($input_name)) {
+    if (\Defender::inputHasError($input_name)) {
         $error_class = "has-error";
         if (!empty($options['error_text'])) {
-            $new_error_text = \defender::getErrorText($input_name);
+            $new_error_text = \Defender::getErrorText($input_name);
             if (!empty($new_error_text)) {
                 $options['error_text'] = $new_error_text;
             }
@@ -133,13 +133,13 @@ function form_btngroup($input_name, $label = "", $input_value, array $options = 
     $html .= "<input name='$input_name' type='hidden' id='".$options['input_id']."-text' value='$input_value' />\n";
 
     $html .= $options['ext_tip'] ? "<br/>\n<div class='m-t-10 tip'><i>".$options['ext_tip']."</i></div>" : "";
-    $html .= \defender::inputHasError($input_name) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
+    $html .= \Defender::inputHasError($input_name) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
     $html .= $options['inline'] ? "</div>\n" : '';
     $html .= "</div>\n";
 
     $input_name = ($options['multiple']) ? str_replace("[]", "", $input_name) : $input_name;
 
-    \defender::add_field_session([
+    \Defender::add_field_session([
         'input_name'     => $input_name,
         'title'          => trim($title, '[]'),
         'id'             => $options['input_id'],

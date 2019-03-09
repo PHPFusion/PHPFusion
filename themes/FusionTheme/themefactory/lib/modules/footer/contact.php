@@ -52,12 +52,12 @@ class Contact {
                 $_CAPTCHA_IS_VALID = FALSE;
                 include INCLUDES."captchas/".$settings['captcha']."/captcha_check.php"; // Dynamics need to develop Captcha. Before that, use method 2.
                 if ($_CAPTCHA_IS_VALID == FALSE) {
-                    \defender::stop();
+                    \Defender::stop();
                     addNotice('warning', $locale['424']);
                 }
             }
 
-            if (\defender::safe()) {
+            if (\Defender::safe()) {
                 die('contact form sent');
                 require_once INCLUDES."sendmail_include.php";
                 $template_result = dbquery("
@@ -71,14 +71,14 @@ class Contact {
                         if (!sendemail_template("CONTACT", $input['subject'], $input['message'], "", $template_data['template_sender_name'], "",
                             $template_data['template_sender_email'], $input['mailname'], $input['email'])
                         ) {
-                            \defender::stop();
+                            \Defender::stop();
                             addNotice('warning', $locale['425']);
                         }
                     } else {
                         if (!sendemail($settings['siteusername'], $settings['siteemail'], $input['mailname'], $input['email'], $input['subject'],
                             $input['message'])
                         ) {
-                            \defender::stop();
+                            \Defender::stop();
                             addNotice('warning', $locale['425']);
                         }
                     }
@@ -86,12 +86,12 @@ class Contact {
                     if (!sendemail($settings['siteusername'], $settings['siteemail'], $input['mailname'], $input['email'], $input['subject'],
                         $input['message'])
                     ) {
-                        \defender::stop();
+                        \Defender::stop();
                         addNotice('warning', $locale['425']);
                     }
                 }
 
-                if (\defender::safe()) {
+                if (\Defender::safe()) {
                     addNotice('warning', $locale['425']);
                     redirect(FORM_REQUEST);
                 }

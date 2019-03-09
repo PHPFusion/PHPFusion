@@ -202,7 +202,7 @@ class LoginAuth {
         $settings = [];
         $driver_settings = $this->get_driver_settings($title);
         if (!empty($driver_settings)) {
-            $settings = json_decode(\defender::decrypt_string($driver_settings, SECRET_KEY_SALT), TRUE);
+            $settings = json_decode(\Defender::decrypt_string($driver_settings, SECRET_KEY_SALT), TRUE);
         }
 
         return (array)$settings;
@@ -217,19 +217,19 @@ class LoginAuth {
      * @return bool
      */
     protected function update_driver_settings($title, $settings_array = []) {
-        if (\defender::safe() && !empty($settings_array) && !empty($title)) {
+        if (\Defender::safe() && !empty($settings_array) && !empty($title)) {
             // I will need a pair to encrypt
             /* $encoded = json_encode($settings_array);
             print_p($encoded);
-            $encrypted = \defender::encrypt_string($encoded, SECRET_KEY_SALT);
+            $encrypted = \Defender::encrypt_string($encoded, SECRET_KEY_SALT);
             print_p($encrypted);
-            $decrypted = \defender::decrypt_string($encrypted, SECRET_KEY_SALT);
+            $decrypted = \Defender::decrypt_string($encrypted, SECRET_KEY_SALT);
             print_p($decrypted);
             $readBack = json_decode($decrypted, true);
             print_p($readBack); */
             $driver = [
                 'login_name'     => $title,
-                'login_settings' => \defender::encrypt_string(json_encode($settings_array), SECRET_KEY_SALT)
+                'login_settings' => \Defender::encrypt_string(json_encode($settings_array), SECRET_KEY_SALT)
             ];
             dbquery_insert(DB_LOGIN, $driver, 'update');
             addNotice('success', fusion_get_locale('login_127'));

@@ -156,7 +156,7 @@ class Infusion_Core {
                                         }
                                         if ($error) {
                                             // Reports visually which method has error.
-                                            \defender::stop($callback_method);
+                                            \Defender::stop($callback_method);
                                             addNotice('danger', self::$locale['403']);
 
                                             return $error;
@@ -196,7 +196,7 @@ class Infusion_Core {
             }
         }
 
-        if (\defender::safe()) {
+        if (\Defender::safe()) {
             redirect(FUSION_REQUEST);
         }
 

@@ -48,7 +48,7 @@ function openform($form_name, $method, $action_url = FORM_REQUEST, array $option
     }
 
     $class = $options['class'];
-    if (!\defender::safe()) {
+    if (!\Defender::safe()) {
         $class .= " warning";
     }
 

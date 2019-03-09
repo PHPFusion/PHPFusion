@@ -4,8 +4,8 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: File/file.php
-| Author: Frederick MC Chan (Chan)
+| Filename: ajax_include.php
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -16,20 +16,23 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-class fileWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\Page\WidgetInterface {
+header("Cache-control: max-age=290304000, public");
 
-    public function display_widget($colData) {
-        $fileData = \Defender::unserialize($colData['page_content']);
+$tsstring = gmdate('D, d M Y H:i:s ', TIME) . 'GMT';
 
-        $url = str_replace(fusion_get_settings('siteurl'), '', $fileData['file_url']);
-        ob_start();
-        if (file_exists($url)) {
-            include $url;
-        } else {
-            echo "<div class='alert alert-warning'>".fusion_get_locale('f0105', WIDGETS.'file/locale/'.LANGUAGE.'.php')."</div>\n";
-        }
+$etag = LANGUAGE . TIME;
 
-        return ob_get_clean();
-    }
+$if_modified_since = isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? $_SERVER['HTTP_IF_MODIFIED_SINCE'] : false;
 
+$if_none_match = isset($_SERVER['HTTP_IF_NONE_MATCH']) ? $_SERVER['HTTP_IF_NONE_MATCH'] : false;
+
+if ((($if_none_match && $if_none_match == $etag) || (!$if_none_match)) &&
+    ($if_modified_since && $if_modified_since == $tsstring)) {
+    header('HTTP/1.1 304 Not Modified');
+    exit();
+} else {
+    header("Last-Modified: $tsstring");
+    header("ETag: \"{$etag}\"");
 }
+
+\Defender::safe() || exit;

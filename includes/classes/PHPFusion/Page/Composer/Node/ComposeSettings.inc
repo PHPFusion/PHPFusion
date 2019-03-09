@@ -106,7 +106,7 @@ class ComposeSettings extends PageAdmin {
                                     $data['link_order'] = dbresult(dbquery($max_order_query), 0) + 1;
                                 }
 
-                                if (\defender::safe()) {
+                                if (\Defender::safe()) {
 
                                     if (!empty($data['link_id'])) {
 

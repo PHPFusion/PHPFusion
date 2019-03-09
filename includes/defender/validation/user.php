@@ -25,14 +25,14 @@ class User extends \Defender\Validation {
     public static function verify_name() {
         $name = self::$inputName;
         if (self::$inputConfig['required'] && !$_POST[$name][0]) {
-            \defender::stop();
-            \defender::setInputError($name.'-firstname');
+            \Defender::stop();
+            \Defender::setInputError($name.'-firstname');
         }
         if (self::$inputConfig['required'] && !$_POST[$name][1]) {
-            \defender::stop();
-            \defender::setInputError($name.'-lastname');
+            \Defender::stop();
+            \Defender::setInputError($name.'-lastname');
         }
-        if (\defender::safe()) {
+        if (\Defender::safe()) {
             $return_value = Text::verify_text();
             return $return_value;
         }
@@ -41,27 +41,27 @@ class User extends \Defender\Validation {
     public static function verify_address() {
         $name = self::$inputName;
         if (self::$inputConfig['required'] && !$_POST[$name][0]) {
-            \defender::stop();
-            \defender::setInputError($name.'-street-1');
+            \Defender::stop();
+            \Defender::setInputError($name.'-street-1');
 
         }
         if (self::$inputConfig['required'] && !$_POST[$name][2]) {
-            \defender::stop();
-            \defender::setInputError($name.'-country');
+            \Defender::stop();
+            \Defender::setInputError($name.'-country');
         }
         if (self::$inputConfig['required'] && !$_POST[$name][3]) {
-            \defender::stop();
-            \defender::setInputError($name.'-region');
+            \Defender::stop();
+            \Defender::setInputError($name.'-region');
         }
         if (self::$inputConfig['required'] && !$_POST[$name][4]) {
-            \defender::stop();
-            \defender::setInputError($name.'-city');
+            \Defender::stop();
+            \Defender::setInputError($name.'-city');
         }
         if (self::$inputConfig['required'] && !$_POST[$name][5]) {
-            \defender::stop();
-            \defender::setInputError($name.'-postcode');
+            \Defender::stop();
+            \Defender::setInputError($name.'-postcode');
         }
-        if (\defender::safe()) {
+        if (\Defender::safe()) {
             $return_value = Text::verify_text();
             return $return_value;
         }
@@ -70,26 +70,26 @@ class User extends \Defender\Validation {
     public function verify_document() {
         $name = self::$inputName;
         if (self::$inputConfig['required'] && !$_POST[$name][0]) {
-            \defender::stop();
-            \defender::setInputError($name.'-doc-1');
+            \Defender::stop();
+            \Defender::setInputError($name.'-doc-1');
         }
         if (self::$inputConfig['required'] && !$_POST[$name][1]) {
-            \defender::stop();
-            \defender::setInputError($name.'-doc-2');
+            \Defender::stop();
+            \Defender::setInputError($name.'-doc-2');
         }
         if (self::$inputConfig['required'] && !$_POST[$name][2]) {
-            \defender::stop();
-            \defender::setInputError($name.'-doc-3');
+            \Defender::stop();
+            \Defender::setInputError($name.'-doc-3');
         }
         if (self::$inputConfig['required'] && !$_POST[$name][3]) {
-            \defender::stop();
-            \defender::setInputError($name.'-doc-4');
+            \Defender::stop();
+            \Defender::setInputError($name.'-doc-4');
         }
         if (self::$inputConfig['required'] && !$_POST[$name][4]) {
-            \defender::stop();
-            \defender::setInputError($name.'-doc-5');
+            \Defender::stop();
+            \Defender::setInputError($name.'-doc-5');
         }
-        if (\defender::safe()) {
+        if (\Defender::safe()) {
             $return_value = Text::verify_text();
             return $return_value;
         }

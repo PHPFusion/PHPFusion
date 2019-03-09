@@ -59,7 +59,7 @@ class ShoutBox {
                 break;
             case 'delete_select':
                 if (empty($_POST['rights'])) {
-                    \defender::stop();
+                    \Defender::stop();
                     addNotice('danger', self::$locale['SB_noentries']);
                     redirect(clean_request("", ["section=shoutbox", "aid"], TRUE));
                 }
@@ -101,7 +101,7 @@ class ShoutBox {
                 include INCLUDES."captchas/".fusion_get_settings('captcha')."/captcha_check.php";
                 $sb_name = form_sanitizer($_POST['shout_name'], '', 'shout_name');
                 if (!$_CAPTCHA_IS_VALID) {
-                    \defender::stop();
+                    \Defender::stop();
                     addNotice("danger", self::$locale['SB_warning_validation_code']);
                     redirect(clean_request("section=shoutbox", ["", "aid"], TRUE));
                 }
@@ -126,13 +126,13 @@ class ShoutBox {
 
             require_once INCLUDES."flood_include.php";
             if (!flood_control("shout_datestamp", DB_SHOUTBOX, "shout_name='".$this->data['shout_name']."'")) {
-                if (\defender::safe()) {
+                if (\Defender::safe()) {
                     dbquery_insert(DB_SHOUTBOX, $this->data, empty($this->data['shout_id']) ? "save" : "update");
                     addNotice("success", empty($this->data['shout_id']) ? self::$locale['SB_shout_added'] : self::$locale['SB_shout_updated']);
                 }
 
             } else {
-                \defender::stop();
+                \Defender::stop();
                 addNotice("danger", sprintf(self::$locale['SB_flood'], fusion_get_settings("flood_interval")));
             }
             defined('ADMIN_PANEL') ?
@@ -147,7 +147,7 @@ class ShoutBox {
                 'hidden_shouts'  => form_sanitizer($_POST['hidden_shouts'], 0, "hidden_shouts"),
             ];
 
-            if (\defender::safe()) {
+            if (\Defender::safe()) {
                 foreach ($inputArray as $settings_name => $settings_value) {
                     $inputSettings = [
                         "settings_name" => $settings_name, "settings_value" => $settings_value, "settings_inf" => "shoutbox_panel",

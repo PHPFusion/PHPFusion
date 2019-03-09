@@ -79,10 +79,10 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
 
     $options['input_id'] = trim(str_replace('[', '-', $options['input_id']), "]");
 
-    if (\defender::inputHasError($input_name)) {
+    if (\Defender::inputHasError($input_name)) {
         $error_class = "has-error ";
         if (!empty($options['error_text'])) {
-            $new_error_text = \defender::getErrorText($input_name);
+            $new_error_text = \Defender::getErrorText($input_name);
             if (!empty($new_error_text)) {
                 $options['error_text'] = $new_error_text;
             }
@@ -240,7 +240,7 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
         $html .= "</div>\n";
     }
 
-    \defender::add_field_session([
+    \Defender::add_field_session([
         'input_name' => str_replace("[]", "", $input_name),
         'title'      => trim($title, '[]'),
         'id'         => $options['input_id'],

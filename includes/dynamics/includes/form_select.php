@@ -337,10 +337,10 @@ function form_select($input_name, $label = "", $input_value, array $options = []
     $allowclear = ($options['placeholder'] && $options['multiple'] || $options['allowclear']) ? "allowClear:true," : '';
 
     $error_class = "";
-    if (\defender::inputHasError($input_name)) {
+    if (\Defender::inputHasError($input_name)) {
         $error_class = " has-error ";
         if (!empty($options['error_text'])) {
-            $new_error_text = \defender::getErrorText($input_name);
+            $new_error_text = \Defender::getErrorText($input_name);
             if (!empty($new_error_text)) {
                 $options['error_text'] = $new_error_text;
             }
@@ -426,8 +426,8 @@ function form_select($input_name, $label = "", $input_value, array $options = []
 
     $html .= $options['stacked'];
     $html .= $options['ext_tip'] ? "<br/>\n<div class='m-t-10 tip'><i>".$options['ext_tip']."</i></div>" : "";
-    $html .= \defender::inputHasError($input_name) && !$options['inline'] ? "<br/>" : "";
-    $html .= \defender::inputHasError($input_name) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
+    $html .= \Defender::inputHasError($input_name) && !$options['inline'] ? "<br/>" : "";
+    $html .= \Defender::inputHasError($input_name) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
     $html .= ($options['inline'] && $label) ? "</div>\n" : '';
     $html .= "</div>\n";
     if ($options['required']) {
@@ -435,7 +435,7 @@ function form_select($input_name, $label = "", $input_value, array $options = []
     }
     // Generate Defender Tag
     $input_name = ($options['multiple']) ? str_replace("[]", "", $input_name) : $input_name;
-    \defender::add_field_session([
+    \Defender::add_field_session([
         'input_name'     => $input_name,
         'title'          => trim($title, '[]'),
         'id'             => $options['input_id'],
@@ -562,9 +562,9 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
     $length = "minimumInputLength: 1,";
     $error_class = "";
 
-    if (defender::inputHasError($input_name)) {
+    if (Defender::inputHasError($input_name)) {
         $error_class = "has-error ";
-        $new_error_text = defender::getErrorText($input_name);
+        $new_error_text = Defender::getErrorText($input_name);
         if (!empty($new_error_text)) {
             $options['error_text'] = $new_error_text;
         }
@@ -581,8 +581,8 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
 
     $html .= $options['stacked'];
     $html .= $options['ext_tip'] ? "<br/>\n<div class='m-t-10 tip'><i>".$options['ext_tip']."</i></div>" : "";
-    $html .= \defender::inputHasError($input_name) && !$options['inline'] ? "<br/>" : "";
-    $html .= \defender::inputHasError($input_name) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
+    $html .= \Defender::inputHasError($input_name) && !$options['inline'] ? "<br/>" : "";
+    $html .= \Defender::inputHasError($input_name) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
 
     $html .= $options['inline'] ? "</div>\n" : '';
 
@@ -598,7 +598,7 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
     } else {
         $encoded = json_encode([]);
     }
-    defender::getInstance()->add_field_session([
+    Defender::getInstance()->add_field_session([
         'input_name' => $input_name,
         'title'      => $title,
         'id'         => $options['input_id'],
@@ -753,10 +753,10 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
         }
 
         $error_class = '';
-        if (\defender::inputHasError($input_name)) {
+        if (\Defender::inputHasError($input_name)) {
             $error_class = "has-error ";
             if (!empty($options['error_text'])) {
-                $new_error_text = \defender::getErrorText($input_name);
+                $new_error_text = \Defender::getErrorText($input_name);
                 if (!empty($new_error_text)) {
                     $options['error_text'] = $new_error_text;
                 }
@@ -827,14 +827,14 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
     if (!$level) {
         $html = &$html;
         $html .= "</select>\n";
-        $html .= (($options['required'] == 1 && \defender::inputHasError($input_name)) || \defender::inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
+        $html .= (($options['required'] == 1 && \Defender::inputHasError($input_name)) || \Defender::inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
         $html .= ($options['inline']) ? "</div>\n" : '';
         $html .= "</div>\n";
         if ($options['required']) {
             $html .= "<input class='req' id='dummy-".$options['input_id']."' type='hidden'>\n"; // for jscheck
         }
         $input_name = ($options['multiple']) ? str_replace("[]", "", $input_name) : $input_name;
-        \defender::add_field_session(
+        \Defender::add_field_session(
             [
                 'input_name'     => $input_name,
                 'title'          => trim($title, '[]'),

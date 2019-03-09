@@ -32,7 +32,7 @@ if (isset($_POST['savesettings'])) {
         'fontawesome' => form_sanitizer($_POST['fontawesome'], '0', 'fontawesome'),
     ];
 
-    if (\defender::safe()) {
+    if (\Defender::safe()) {
         foreach ($inputData as $settings_name => $settings_value) {
             dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:settings_value WHERE settings_name=:settings_name", [
                 ':settings_value' => $settings_value,

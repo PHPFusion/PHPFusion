@@ -89,7 +89,7 @@ class Facebook_Email_Auth extends \PHPFusion\LoginAuth {
                             // This one requires a database to mark as unverified.
                             include(INCLUDES.'sendmail_include.php');
                             $code = json_encode(['email_address' => $facebook_email, 'user_id' => $user_data['user_id'], 'datestamp' => TIME]);
-                            $code = \defender::encrypt_string($code, SECRET_KEY_SALT);
+                            $code = \Defender::encrypt_string($code, SECRET_KEY_SALT);
                             $link = BASEDIR.'login.php?sc=facebook&amp;code='.$code; // new API command.
                             $link = urlencode($link);
                             $subject = strtr($locale['uf_fb_connect_500'], ['{SITE_NAME}' => $settings['sitename']]);
@@ -183,7 +183,7 @@ class Facebook_Email_Auth extends \PHPFusion\LoginAuth {
                             // This one requires a database to mark as unverified.
                             include(INCLUDES.'sendmail_include.php');
                             $code = json_encode(['email_address' => $facebook_email, 'user_id' => $user_data['user_id'], 'datestamp' => TIME]);
-                            $code = \defender::encrypt_string($code, SECRET_KEY_SALT);
+                            $code = \Defender::encrypt_string($code, SECRET_KEY_SALT);
                             $link = BASEDIR.'login.php?sc=facebook&amp;code='.$code; // new API command.
                             $link = urlencode($link);
                             $subject = strtr($locale['uf_fb_connect_500'], ['{SITE_NAME}' => $settings['sitename']]);

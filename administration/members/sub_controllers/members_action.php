@@ -203,7 +203,7 @@ class Members_Action extends Members_Admin {
                     $duration = ($duration * 86400) + TIME;
                 }
 
-                if (\defender::safe()) {
+                if (\Defender::safe()) {
                     foreach ($this->users as $user_id => $u_data) {
 
                         dbquery("UPDATE ".DB_USERS." SET user_status=:user_status, user_actiontime=:action_time WHERE user_id=:user_id", [

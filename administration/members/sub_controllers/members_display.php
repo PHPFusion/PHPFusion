@@ -49,7 +49,7 @@ class Members_Display extends Members_Admin {
         if (isset($_POST['apply_filter'])) {
             // Display Cookie
             if (isset($_POST['display']) && is_array($_POST['display'])) {
-                $selected_display_keys = \defender::sanitize_array(array_keys($_POST['display']));
+                $selected_display_keys = \Defender::sanitize_array(array_keys($_POST['display']));
                 $cookie_selected = implode(',', $selected_display_keys);
                 setcookie($c_name, $cookie_selected, time() + (86400 * 30), "/");
             } else {
@@ -58,7 +58,7 @@ class Members_Display extends Members_Admin {
                 setcookie($c_name, $cookie_selected, time() + (86400 * 30), "/");
             }
             if (isset($_POST['user_status']) && is_array($_POST['user_status'])) {
-                $selected_display_keys = \defender::sanitize_array(array_keys($_POST['user_status']));
+                $selected_display_keys = \Defender::sanitize_array(array_keys($_POST['user_status']));
                 $status_cookie_selected = implode(',', $selected_display_keys);
                 setcookie($s_name, $status_cookie_selected, time() + (86400 * 30), "/");
             } else {

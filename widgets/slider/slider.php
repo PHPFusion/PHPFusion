@@ -28,7 +28,7 @@ class carouselWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\Pag
     public function display_widget($colData) {
         if (!empty($colData['page_content'])) {
 
-            self::$sliderData = \defender::unserialize($colData['page_content']);
+            self::$sliderData = \Defender::unserialize($colData['page_content']);
 
             $default_slider_options = [
                 'slider_id'         => '',
@@ -38,7 +38,7 @@ class carouselWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\Pag
                 'slider_interval'   => 0,
             ];
 
-            $slider_options = \defender::unserialize($colData['page_options']);
+            $slider_options = \Defender::unserialize($colData['page_options']);
             if (!empty($slider_options)) {
                 $slider_options += $default_slider_options;
             } else {

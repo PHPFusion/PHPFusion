@@ -56,7 +56,7 @@ class GoogleAuthenticator {
             $gCode = form_sanitizer($_POST['g_code'], '', 'g_code');
             $secret = form_sanitizer($_POST['secret'], '', 'secret');
             $checkResult = $google->verifyCode($secret, $gCode, 2);    // 2 = 2*30sec clock tolerance
-            if ($checkResult && \defender::safe()) {
+            if ($checkResult && \Defender::safe()) {
                 // successful paired
                 $user = [
                     'user_id'    => $user_data['user_id'],
@@ -77,7 +77,7 @@ class GoogleAuthenticator {
             $gCode = form_sanitizer($_POST['g_code'], '', 'g_code');
             $secret = $user_data[$field_name];
             $checkResult = $google->verifyCode($secret, $gCode, 2);    // 2 = 2*30sec clock tolerance
-            if ($checkResult && \defender::safe()) {
+            if ($checkResult && \Defender::safe()) {
                 // successful paired
                 $user = [
                     'user_id'    => $user_data['user_id'],

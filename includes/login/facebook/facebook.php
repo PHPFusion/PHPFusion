@@ -125,7 +125,7 @@ class Facebook extends \PHPFusion\LoginAuth {
     public function display_verification() {
         if (isset($_REQUEST['code'])) {
             $locale = fusion_get_locale('', LOGIN_LOCALESET.'user_fb_connect.php');
-            $code = \defender::decrypt_string($_REQUEST['code'], SECRET_KEY_SALT);
+            $code = \Defender::decrypt_string($_REQUEST['code'], SECRET_KEY_SALT);
             $token = json_decode($code, TRUE);
             $tpl = \PHPFusion\Template::getInstance('verify_facebook');
             $tpl->set_template(__DIR__.'/templates/connect_verify.html');

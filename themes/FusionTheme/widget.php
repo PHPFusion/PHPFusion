@@ -33,7 +33,7 @@ class FusionThemeAdmin {
             $inputArray = [
                 "theme_pack" => form_sanitizer($_POST['theme_pack'], "", "theme_pack"),
             ];
-            if (defender::safe()) {
+            if (Defender::safe()) {
                 foreach ($inputArray as $settings_name => $settings_value) {
                     $sqlArray = [
                         "settings_name"  => $settings_name,
@@ -43,7 +43,7 @@ class FusionThemeAdmin {
                     dbquery_insert(DB_SETTINGS_THEME, $sqlArray, "update", ["primary_key" => "settings_name"]);
                     addNotice("success", fusion_get_locale('WIDGET_001', THEME.'locale/'.LANGUAGE.'.php'));
                 }
-                if (defender::safe()) {
+                if (Defender::safe()) {
                     redirect(FUSION_REQUEST);
                 }
             }

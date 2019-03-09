@@ -1856,7 +1856,7 @@ class UserFieldsQuantum extends \SqlHandler {
                 $this->field_cat_data['field_cat_class'] = form_sanitizer($_POST['field_cat_class'], '', 'field_cat_class');
                 // Improvised to code jquery chained selector
                 if (!column_exists($this->field_cat_data['field_cat_db'], $this->field_cat_data['field_cat_index'])) {
-                    \defender::stop();
+                    \Defender::stop();
                     addNotice("danger", "Your table must be a valid table. Your column must be a column of a user id in that table.");
                 }
 
@@ -1882,7 +1882,7 @@ class UserFieldsQuantum extends \SqlHandler {
                 );
 
                 if (!$this->debug) {
-                    if (\defender::safe()) {
+                    if (\Defender::safe()) {
                         if (!empty($old_data['field_cat_db']) or $old_data['field_cat_db'] !== "users") {
 
                             if (!empty($old_data['field_cat_db']) && !empty($old_data['field_cat_index'])) {
@@ -1941,7 +1941,7 @@ class UserFieldsQuantum extends \SqlHandler {
                     'save'
                 );
 
-                if (!$this->debug && \defender::safe()) {
+                if (!$this->debug && \Defender::safe()) {
 
                     if (!empty($this->field_cat_data['field_cat_index']) &&
                         !empty($this->field_cat_data['field_cat_db']) &&
@@ -2158,7 +2158,7 @@ class UserFieldsQuantum extends \SqlHandler {
             if (dbrows($result) > 0) {
                 $this->field_data = dbarray($result);
                 if ($this->field_data['field_type'] == 'upload') {
-                    $this->field_data['field_config'] = \defender::decode($this->field_data['field_config']);
+                    $this->field_data['field_config'] = \Defender::decode($this->field_data['field_config']);
                     if ($this->debug) {
                         print_p($this->field_data);
                     }
@@ -2197,7 +2197,7 @@ class UserFieldsQuantum extends \SqlHandler {
                 $calc = isset($_POST['field_calc']) ? form_sanitizer($_POST['field_calc'], '', 'field_calc') : 1;
                 $this->field_data['field_upload_type'] = isset($_POST['field_upload_type']) ? form_sanitizer($_POST['field_upload_type'], '', 'field_upload_type') : '';
                 if (!in_array($this->field_data['field_upload_type'], ['file', 'image'])) {
-                    \defender::stop();
+                    \Defender::stop();
                     addNotice('danger', $this->locale['fields_0108']);
                 } else {
                     $this->field_data['field_config'] = [
@@ -2225,9 +2225,9 @@ class UserFieldsQuantum extends \SqlHandler {
                 $this->field_data['field_order'] = dbresult(dbquery("SELECT MAX(field_order) FROM ".DB_USER_FIELDS." WHERE field_cat=:cat_id", [':cat_id' => $this->field_data['field_cat']]), 0) + 1;
             }
 
-            if (\defender::safe()) {
+            if (\Defender::safe()) {
                 if (!empty($this->field_data['field_config'])) {
-                    $this->field_data['field_config'] = \defender::encode($this->field_data['field_config']);
+                    $this->field_data['field_config'] = \Defender::encode($this->field_data['field_config']);
                 }
                 $this->create_fields($this->field_data, 'dynamics'); // will redirect and refresh config
             }
@@ -2548,14 +2548,14 @@ class UserFieldsQuantum extends \SqlHandler {
                                 //self::add_column($new_table, $data['field_name'], $field_attr);
                                 self::move_column($old_table, $new_table, $data['field_name']);
                                 self::drop_column($old_table, $oldRows['field_name']);
-                                if (\defender::safe()) {
+                                if (\Defender::safe()) {
                                     // sort the fields. if 2, greater than 2 all +1 on the new category
                                     dbquery("UPDATE ".DB_USER_FIELDS." SET field_order=field_order+1 WHERE field_order >= '".$data['field_order']."' AND field_cat='".$data['field_cat']."'");
                                     // since change table. fix all which is greater than link order.
                                     dbquery("UPDATE ".DB_USER_FIELDS." SET field_order=field_order-1 WHERE field_order >= '".$oldRows['field_order']."' AND field_cat='".$oldRows['field_cat']."'");
                                 }
                             } else {
-                                \defender::stop();
+                                \Defender::stop();
                                 addNotice("danger", str_replace('[OLD_TABLE]', $old_table, $this->locale['fields_0667']).$new_table);
                             }
                         } else {
@@ -2571,7 +2571,7 @@ class UserFieldsQuantum extends \SqlHandler {
                             }
                         }
                     } else {
-                        if (\defender::safe()) {
+                        if (\Defender::safe()) {
                             dbquery("UPDATE ".DB_USER_FIELDS." SET field_order=field_order+1 WHERE field_order >= '".$data['field_order']."' AND field_cat='".$data['field_cat']."'");
                             if (dbcount("(field_id)", DB_USER_FIELDS)) {
                                 dbquery("UPDATE ".DB_USER_FIELDS." SET field_order=field_order-1 WHERE field_order >= '".$oldRows['field_order']."' AND field_cat='".$oldRows['field_cat']."'");
@@ -2596,12 +2596,12 @@ class UserFieldsQuantum extends \SqlHandler {
                                 print_p(str_replace(['[FIELD_NAME]', '[OLD_TABLE]', '[FIELD_NAME_]'], [$oldRows['field_name'], $old_table, $data['field_name']], $this->locale['fields_0669']).$field_attr);
                             }
                         } else {
-                            \defender::stop();
+                            \Defender::stop();
                             addNotice('danger', sprintf($this->locale['fields_0104'], "($new_table)"));
                         }
                     }
                     if (!$this->debug) {
-                        if (\defender::safe()) {
+                        if (\Defender::safe()) {
                             // make ordering of the same table.
                             if ($data['field_order'] > $oldRows['field_order']) {
                                 dbquery("UPDATE ".DB_USER_FIELDS." SET field_order=field_order-1 WHERE field_order > ".$oldRows['field_order']." AND field_order <= '".$data['field_order']."' AND field_cat='".$data['field_cat']."'");
@@ -2621,7 +2621,7 @@ class UserFieldsQuantum extends \SqlHandler {
                 }
 
                 if (!$this->debug) {
-                    if (\defender::safe()) {
+                    if (\Defender::safe()) {
                         dbquery_insert(DB_USER_FIELDS, $data, 'update');
                         addNotice('success', $this->locale['field_0203']);
                         redirect(FUSION_SELF.$aidlink);
@@ -2631,7 +2631,7 @@ class UserFieldsQuantum extends \SqlHandler {
                 }
 
             } else {
-                \defender::stop();
+                \Defender::stop();
                 addNotice('danger', $this->locale['fields_0105']);
             }
 
@@ -2650,12 +2650,12 @@ class UserFieldsQuantum extends \SqlHandler {
                     $cat_data = dbarray($cresult);
                     $new_table = $cat_data['field_cat_db'] ? DB_PREFIX.$cat_data['field_cat_db'] : DB_USERS;
                 } else {
-                    \defender::stop();
+                    \Defender::stop();
                     addNotice('danger', $this->locale['fields_0107']);
                 }
             }
 
-            if (\defender::safe()) {
+            if (\Defender::safe()) {
                 $field_arrays = fieldgenerator($new_table);
                 // Alter DB_USER_FIELDS table - add column.
                 // Checking for database registered users.
@@ -2665,11 +2665,11 @@ class UserFieldsQuantum extends \SqlHandler {
                         //print_p("ALTER TABLE ".$new_table." ADD ".$data['field_name']." ".$field_attr);
                     }
                 } else {
-                    \defender::stop();
+                    \Defender::stop();
                     addNotice('danger', $this->locale['fields_0106']);
                 }
                 // ordering
-                if (\defender::safe()) {
+                if (\Defender::safe()) {
                     dbquery("UPDATE ".DB_USER_FIELDS." SET field_order=field_order+1 WHERE field_order > '".$data['field_order']."' AND field_cat='".$data['field_cat']."'");
                     dbquery_insert(DB_USER_FIELDS, $data, 'save');
                     addNotice('success', $this->locale['field_0204']);
@@ -2912,7 +2912,7 @@ class UserFieldsQuantum extends \SqlHandler {
      * @param $primary_key
      */
     public function log_user_action($db, $primary_key) {
-        if (\defender::safe()) {
+        if (\Defender::safe()) {
             $output_fields = [];
             $field = flatten_array($this->fields);
             $output_fields[$db] = $this->callback_data;

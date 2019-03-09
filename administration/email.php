@@ -33,7 +33,7 @@ if (isset($_POST['save_template'])) {
         'template_sender_name'  => form_sanitizer($_POST['template_sender_name'], '', 'template_sender_name'),
         'template_sender_email' => form_sanitizer($_POST['template_sender_email'], '', 'template_sender_email'),
     ];
-    if (\defender::safe()) {
+    if (\Defender::safe()) {
         dbquery_insert(DB_EMAIL_TEMPLATES, $data, "update");
         addNotice('success', $locale['MAIL_001']);
         redirect(FUSION_SELF.fusion_get_aidlink()."&amp;template_id=".$data['template_id']);
@@ -49,7 +49,7 @@ if (isset($_POST['save_template'])) {
         'template_sender_name'  => form_sanitizer($_POST['template_sender_name'], '', 'template_sender_name'),
         'template_sender_email' => form_sanitizer($_POST['template_sender_email'], '', 'template_sender_email'),
     ];
-    if (\defender::safe()) {
+    if (\Defender::safe()) {
         require_once INCLUDES."sendmail_include.php";
         dbquery_insert(DB_EMAIL_TEMPLATES, $data, 'update');
         sendemail_template($data['template_key'], $locale['MAIL_002'], $locale['MAIL_003'], $locale['MAIL_004'], $locale['MAIL_005'], $locale['MAIL_006'],

@@ -524,7 +524,7 @@ class Tables {
                 foreach ($this->quick_fields as $table_col => $table_fields) {
                     $post_data[$table_col] = form_sanitizer($_POST[$table_col], '', $table_col);
                 }
-                if (\defender::safe()) {
+                if (\Defender::safe()) {
                     dbquery_insert($this->query['table'], $post_data, 'update', ['keep_session' => true]);
                 }
                 redirect(FUSION_REQUEST);

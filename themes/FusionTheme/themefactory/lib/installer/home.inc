@@ -170,8 +170,8 @@ class HomeInstall {
             'page_grid_id'       => $row_id[1],
             'page_content_id'    => 0,
             'page_content_type'  => self::$locale['homeSetup_0104'],
-            'page_content'       => \defender::serialize($slider_array),
-            'page_options'       => \defender::serialize($slider_options),
+            'page_content'       => \Defender::serialize($slider_array),
+            'page_options'       => \Defender::serialize($slider_options),
             'page_content_order' => 1,
             'page_widget'        => 'slider'
         ];
@@ -182,7 +182,7 @@ class HomeInstall {
             'page_grid_id'       => $row_id[3],
             'page_content_id'    => 0,
             'page_content_type'  => self::$locale['homeSetup_0107'],
-            'page_content'       => \defender::serialize(
+            'page_content'       => \Defender::serialize(
                 [
                     'block_title'       => self::$locale['homeSetup_0112'],
                     'block_description' => self::$locale['homeSetup_0113'],
@@ -203,7 +203,7 @@ class HomeInstall {
             'page_grid_id'       => $row_id[4],
             'page_content_id'    => 0,
             'page_content_type'  => self::$locale['homeSetup_0107'],
-            'page_content'       => \defender::serialize(
+            'page_content'       => \Defender::serialize(
                 [
                     'block_title'       => self::$locale['homeSetup_0114'],
                     'block_description' => self::$locale['homeSetup_0115'],
@@ -226,7 +226,7 @@ class HomeInstall {
             'page_grid_id'       => $row_id[5],
             'page_content_id'    => 0,
             'page_content_type'  => self::$locale['homeSetup_0107'],
-            'page_content'       => \defender::serialize(
+            'page_content'       => \Defender::serialize(
                 [
                     'block_title'       => self::$locale['homeSetup_0116'],
                     'block_description' => form_sanitizer($content),
@@ -247,7 +247,7 @@ class HomeInstall {
             'page_grid_id'       => $row_id[6],
             'page_content_id'    => 0,
             'page_content_type'  => self::$locale['homeSetup_0107'],
-            'page_content'       => \defender::serialize(
+            'page_content'       => \Defender::serialize(
                 [
                     'block_title'       => self::$locale['homeSetup_0119'],
                     'block_description' => self::$locale['homeSetup_0120'],

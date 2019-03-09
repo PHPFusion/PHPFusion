@@ -107,7 +107,7 @@ class PageComposer extends PageAdmin {
                         'page_access'       => self::$data['page_access'],
                     ];
 
-                    if (\defender::safe()) {
+                    if (\Defender::safe()) {
                         self::execute_PageSQL();
                         self::execute_PageRedirect();
                     }
@@ -140,7 +140,7 @@ class PageComposer extends PageAdmin {
                         self::$data['page_breaks'] = 'n';
                     }
 
-                    if (\defender::safe()) {
+                    if (\Defender::safe()) {
                         self::execute_PageSQL();
                         self::compose_DefaultPage();
                         self::execute_PageRedirect();
@@ -177,7 +177,7 @@ class PageComposer extends PageAdmin {
      */
     private static function compose_DefaultPage() {
 
-        if (!empty(self::$data['page_id']) && \defender::safe()) {
+        if (!empty(self::$data['page_id']) && \Defender::safe()) {
 
             if (!empty(self::$data['page_content_id']) && !empty(self::$data['page_grid_id'])) {
                 // update content

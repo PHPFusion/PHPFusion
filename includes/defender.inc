@@ -18,7 +18,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-class defender {
+class Defender {
     public static $input_errors = [];
     private static $debug = FALSE;
     private static $defender_instance = NULL;
@@ -236,7 +236,7 @@ class defender {
     /**
      * Fetches the latest error text of this input
      * Important! Ensure your applications do not refresh screen for this error to show.
-     * Usage \defender::safe(); for conditional redirect.
+     * Usage \Defender::safe(); for conditional redirect.
      *
      * @param $input_name
      *
@@ -485,7 +485,7 @@ class defender {
      * Encrypts a string securely with a private key
      *
      * @param string $string The text to encrypt
-     * @param string $private_key For better security use \defender::get_encrypt_key to generate your private key
+     * @param string $private_key For better security use \Defender::get_encrypt_key to generate your private key
      *
      * Does not support array encrypt.
      *
@@ -505,7 +505,7 @@ class defender {
      * Decrypts a string securely with a private key
      *
      * @param $string - The string to decrypt
-     * @param $private_key - For better security use \defender::get_encrypt_key to generate your private key
+     * @param $private_key - For better security use \Defender::get_encrypt_key to generate your private key
      *
      * @return null|string
      */
@@ -555,7 +555,7 @@ class defender {
  * @throws Exception
  */
 function form_sanitizer($value, $default = "", $input_name = FALSE, $is_multiLang = FALSE) {
-    return defender::getInstance()->form_sanitizer($value, $default, $input_name, $is_multiLang);
+    return Defender::getInstance()->form_sanitizer($value, $default, $input_name, $is_multiLang);
 }
 
 require(__DIR__.'/defender/validation.php');

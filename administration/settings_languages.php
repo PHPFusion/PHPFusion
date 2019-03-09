@@ -67,11 +67,11 @@ if (isset($_POST['savesettings'])) {
 
     // format both to .
     if (empty($inputData['enabled_languages'])) {
-        \defender::stop();
+        \Defender::stop();
         addNotice("danger", "You need to enable at least one language");
     }
 
-    if (defender::safe()) {
+    if (Defender::safe()) {
 
         $inArray_SQLCond = [
             "enabled_languages"     => str_replace(".", "','", $inputData['enabled_languages']),

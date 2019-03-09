@@ -187,10 +187,10 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
     $options['week_start'] = (int)$options['week_start'];
 
     $error_class = "";
-    if (\defender::inputHasError($input_name)) {
+    if (\Defender::inputHasError($input_name)) {
         $error_class = "has-error ";
         if (!empty($options['error_text'])) {
-            $new_error_text = \defender::getErrorText($input_name);
+            $new_error_text = \Defender::getErrorText($input_name);
             if (!empty($new_error_text)) {
                 $options['error_text'] = $new_error_text;
             }
@@ -206,12 +206,12 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
     $html .= "<input type='text' name='".$input_name."' id='".$input_id."' value='".$input_value."' class='form-control textbox' style='width:".($options['inner_width'] ? $options['inner_width'] : $default_options['inner_width']).";'".($options['placeholder'] ? " placeholder='".$options['placeholder']."'" : '')."/>\n";
     $html .= "<span class='input-group-addon ".($options['fieldicon_off'] ? 'display-none' : '')."'><i class='fa fa-calendar'></i></span>\n";
     $html .= "</div>\n";
-    $html .= ($options['required'] == 1 && \defender::inputHasError($input_name)) || \defender::inputHasError($input_name) ? "<div id='".$input_id."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
+    $html .= ($options['required'] == 1 && \Defender::inputHasError($input_name)) || \Defender::inputHasError($input_name) ? "<div id='".$input_id."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
     $html .= $options['stacked'];
     $html .= $options['inline'] ? "</div>\n" : "";
     $html .= "</div>\n";
 
-    \defender::add_field_session([
+    \Defender::add_field_session([
         'input_name'  => $input_name,
         'type'        => $options['type'],
         'title'       => $title,

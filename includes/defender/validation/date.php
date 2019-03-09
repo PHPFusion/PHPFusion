@@ -51,8 +51,8 @@ class Date extends \Defender\Validation {
                         break;
                 }
             } else {
-                \defender::stop();
-                \defender::setInputError(self::$inputName);
+                \Defender::stop();
+                \Defender::setInputError(self::$inputName);
                 addNotice('info', sprintf($locale['df_404'], self::$inputConfig['title']));
             }
         }

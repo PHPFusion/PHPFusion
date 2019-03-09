@@ -152,7 +152,7 @@ class Members_Admin {
                             redirect(FUSION_SELF.fusion_get_aidlink());
                         }
 
-                        if (isset($_POST['deactivate_users']) && \defender::safe()) {
+                        if (isset($_POST['deactivate_users']) && \Defender::safe()) {
                             require_once INCLUDES."sendmail_include.php";
                             $result = dbquery("SELECT user_id, user_name, user_email, user_password FROM ".DB_USERS."
                                         WHERE user_level>".USER_LEVEL_SUPER_ADMIN." AND user_lastvisit<'".self::$time_overdue."' AND user_actiontime='0' AND user_status='0'

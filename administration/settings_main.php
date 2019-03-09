@@ -157,7 +157,7 @@ if (isset($_POST['savesettings'])) {
         $inputData['domain_server'] = str_replace(PHP_EOL, '|', $inputData['domain_server']);
     }
 
-    if (\defender::safe()) {
+    if (\Defender::safe()) {
         foreach ($inputData as $settings_name => $settings_value) {
             dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:settings_value WHERE settings_name=:settings_name", [
                 ':settings_value' => $settings_value,

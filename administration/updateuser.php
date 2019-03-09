@@ -89,7 +89,7 @@ if ($error == "") {
                 } else if (!verify_image(IMAGES."avatars/".$avatarname)) {
                     @unlink(IMAGES."avatars/".$avatarname);
                     $set_avatar = "";
-                    \defender::stop();
+                    \Defender::stop();
                     addNotice('danger', fusion_get_locale('error_secure_file'));
                 }
             } else {

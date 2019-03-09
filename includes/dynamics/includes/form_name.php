@@ -48,7 +48,7 @@ function form_name($input_name, $label = "", $input_value = FALSE, array $option
         'stacked'      => '',
     ];
 
-    $error_class = \defender::inputHasError($input_name.'-firstname') || \defender::inputHasError($input_name.'-lastname') ? "has-error " : "";
+    $error_class = \Defender::inputHasError($input_name.'-firstname') || \Defender::inputHasError($input_name.'-lastname') ? "has-error " : "";
     $html = "<div id='".$options['input_id']."-field' class='form-group clearfix ".($options['inline'] ? 'display-block overflow-hide ' : '').$error_class.$options['class']."' >\n";
 
     if ($label) {
@@ -65,13 +65,13 @@ function form_name($input_name, $label = "", $input_value = FALSE, array $option
 
     $html .= "<input type='text' name='".$input_name."[]' class='form-control textbox' id='".$options['input_id']."-firstname' value='".$input_value['0']."' placeholder='".$locale['first_name']." ".($options['required'] ? '*' : '')."' ".($options['deactivate'] == "1" ? "readonly" : '')." />\n";
 
-    $html .= ($options['required'] == 1 && \defender::inputHasError($input_name[0])) || \defender::inputHasError($input_name[0]) ? "<div id='".$options['input_id']."-firstname-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
+    $html .= ($options['required'] == 1 && \Defender::inputHasError($input_name[0])) || \Defender::inputHasError($input_name[0]) ? "<div id='".$options['input_id']."-firstname-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
 
     $html .= "</div>\n";
 
     $html .= "<div class='col-xs-12 col-sm-4 col-md-4 col-lg-4 m-b-10'>\n";
     $html .= "<input type='text' name='".$input_name."[]' class='form-control textbox' id='".$options['input_id']."-lastname' value='".$input_value['1']."' placeholder='".$locale['last_name']." ".($options['required'] ? '*' : '')."' ".($options['deactivate'] == "1" ? "readonly" : '')." />\n";
-    $html .= ($options['required'] == 1 && \defender::inputHasError($input_name[1])) || \defender::inputHasError($input_name[1]) ? "<div id='".$options['input_id']."-lastname-help' class='label label-danger p-5 display-inline-block'>".$options['error_text_2']."</div>" : "";
+    $html .= ($options['required'] == 1 && \Defender::inputHasError($input_name[1])) || \Defender::inputHasError($input_name[1]) ? "<div id='".$options['input_id']."-lastname-help' class='label label-danger p-5 display-inline-block'>".$options['error_text_2']."</div>" : "";
     $html .= "</div>\n";
 
     $html .= $options['stacked'];
@@ -82,7 +82,7 @@ function form_name($input_name, $label = "", $input_value = FALSE, array $option
 
     $html .= "</div>\n";
 
-    \defender::getInstance()->add_field_session([
+    \Defender::getInstance()->add_field_session([
         'input_name'   => $input_name,
         'type'         => 'name',
         'title'        => $title,

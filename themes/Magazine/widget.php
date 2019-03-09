@@ -26,7 +26,7 @@ if (isset($_POST['save_settings'])) {
         'gplus_url'    => form_sanitizer($_POST['gplus_url'], '', 'gplus_url')
     ];
 
-    if (\defender::safe()) {
+    if (\Defender::safe()) {
         foreach ($settings as $settings_name => $settings_value) {
             $db = [
                 'settings_name'  => $settings_name,

@@ -228,7 +228,7 @@ class Settings_Registration {
                 'license_lastupdate'  => (addslash($_POST['license_agreement']) != fusion_get_settings('license_agreement') ? time() : fusion_get_settings('license_lastupdate'))
             ];
 
-            if (\defender::safe()) {
+            if (\Defender::safe()) {
                 foreach ($inputData as $settings_name => $settings_value) {
                     $data = [
                         'settings_name'  => $settings_name,

@@ -305,7 +305,7 @@ class Authenticate {
                                     }
                                     // Check if any error was set
                                     if ($error !== FALSE) {
-                                        \defender::stop();
+                                        \Defender::stop();
                                         addNotice("warning", $error);
 
                                         return FALSE;

@@ -68,10 +68,10 @@ class DbBackupAdministration {
             ini_set('max_execution_time', 0);
             set_time_limit(600);
             if (!check_admin_pass(isset($_POST['user_admin_password']) ? form_sanitizer($_POST['user_admin_password'], '', 'user_admin_password') : "")) {
-                defender::stop();
+                Defender::stop();
             }
             $db_tables = $_POST['db_tables'];
-            if (count($db_tables) && defender::safe()) {
+            if (count($db_tables) && Defender::safe()) {
                 $crlf = "\n";
                 ob_start();
                 @ob_implicit_flush(0);

@@ -32,7 +32,7 @@ if (isset($_POST['save_settings'])) {
         'pm_save_sent'     => (isset($_POST['pm_save_sent']) ? form_sanitizer($_POST['pm_save_sent'], '1', 'pm_save_sent') : 0)
     ];
 
-    if (\defender::safe()) {
+    if (\Defender::safe()) {
         foreach ($inputData as $settings_name => $settings_value) {
             $data = [
                 'settings_name'  => $settings_name,

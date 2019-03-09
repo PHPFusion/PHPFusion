@@ -29,7 +29,7 @@ class SqlHandler {
         if (!empty($field_attributes)) {
             $result = dbquery("ALTER TABLE ".$table_name." ADD ".$new_column_name." ".$field_attributes); // create the new one.
             if (!$result) {
-                \defender::stop();
+                \Defender::stop();
                 addNotice("danger", "Unable to add column ".$new_column_name." with attributes - ".$field_attributes);
             }
         }
@@ -44,7 +44,7 @@ class SqlHandler {
     public static function drop_column($table_name, $old_column_name) {
         $result = dbquery("ALTER TABLE ".$table_name." DROP ".$old_column_name);
         if (!$result) {
-            \defender::stop();
+            \Defender::stop();
             addNotice("danger", "Unable to drop column ".$old_column_name);
         }
     }
@@ -88,13 +88,13 @@ class SqlHandler {
             while ($data = dbarray($result)) {
                 if ($data['Key'] !== "PRI" && $i > 2) {
                     $result = dbquery("ALTER TABLE ".$new_table." ADD COLUMN ".$data['Field']." ".$data['Type']." ".($data['Null'] == "NO" ? "NOT NULL" : "NULL")." DEFAULT '".$data['Default']."'");
-                    if (!$result && \defender::safe()) {
+                    if (!$result && \Defender::safe()) {
                         dbquery("INSERT INTO ".$new_table." (".$data['Field'].") SELECT ".$data['Field']." FROM ".$old_table);
                     }
                 }
                 $i++;
             }
-            if (!\defender::safe()) {
+            if (!\Defender::safe()) {
                 addNotice("danger", "Unable to move all columns from ".$old_table." to " > $new_table);
             }
         }
@@ -110,9 +110,9 @@ class SqlHandler {
         $old_table = !stristr($old_table, DB_PREFIX) ? DB_PREFIX.$old_table : $old_table;
         $result = dbquery("DROP TABLE IF EXISTS ".$old_table);
         if (!$result) {
-            \defender::stop();
+            \Defender::stop();
         }
-        if (!\defender::safe()) {
+        if (!\Defender::safe()) {
             addNotice("danger", "Unable to drop ".$old_table);
         }
 
@@ -132,7 +132,7 @@ class SqlHandler {
     public static function rename_column($table_name, $old_column_name, $new_column_name, $field_attributes) {
         $result = dbquery("ALTER TABLE ".$table_name." CHANGE ".$old_column_name." ".$new_column_name." ".$field_attributes."");
         if (!$result) {
-            \defender::stop();
+            \Defender::stop();
             addNotice("danger", "Unable to alter ".$old_column_name." to ".$new_column_name);
         }
     }
@@ -158,15 +158,15 @@ class SqlHandler {
         if (!empty($data)) {
             $result = dbquery("ALTER TABLE ".$new_table." ADD COLUMN ".$data['Field']." ".$data['Type']." ".($data['Null'] == "NO" ? "NOT NULL" : "NULL")." DEFAULT '".$data['Default']."'");
             if (!$result) {
-                \defender::stop();
+                \Defender::stop();
             }
-            if ($result && \defender::safe()) {
+            if ($result && \Defender::safe()) {
                 dbquery("INSERT INTO ".$new_table." (".$data['Field'].") SELECT ".$data['Field']." FROM ".$old_table);
             }
-            if (!$result && \defender::safe()) {
-                \defender::stop();
+            if (!$result && \Defender::safe()) {
+                \Defender::stop();
             }
-            if (!\defender::safe()) {
+            if (!\Defender::safe()) {
                 addNotice("danger", "Cannot move ".$column_name);
             }
         }
@@ -747,7 +747,7 @@ function dbquery_insert($table, $inputdata, $mode, array $options = []) {
         'keep_session' => FALSE
     ];
 
-    if (!defender::safe()) {
+    if (!Defender::safe()) {
         if ($options['debug']) {
             print_p('Fusion Null Declared. Developer, check form tokens.');
         }
@@ -755,7 +755,7 @@ function dbquery_insert($table, $inputdata, $mode, array $options = []) {
         return FALSE;
     }
 
-    $defender = defender::getInstance();
+    $defender = Defender::getInstance();
 
     $cresult = dbquery("SHOW COLUMNS FROM $table");
     $columns = [];
@@ -824,7 +824,7 @@ function dbquery_insert($table, $inputdata, $mode, array $options = []) {
         $result = dbquery($sql);
         if (!$options['keep_session']) {
             //print_p('field session unset during '.$sql);
-            $defender::unset_field_session();
+            $Defender::unset_field_session();
         }
     }
     if ($result === FALSE) {
@@ -1002,7 +1002,7 @@ function dbquery_order($dbname, $current_order, $order_col, $current_id = 0, $id
                     return $result;
                 }
             } else {
-                \defender::stop();
+                \Defender::stop();
             }
             break;
         case 'update':
@@ -1034,7 +1034,7 @@ function dbquery_order($dbname, $current_order, $order_col, $current_id = 0, $id
                     }
                 }
             } else {
-                \defender::stop();
+                \Defender::stop();
             }
             break;
         case 'delete':
@@ -1050,11 +1050,11 @@ function dbquery_order($dbname, $current_order, $order_col, $current_id = 0, $id
                     return $result;
                 }
             } else {
-                \defender::stop();
+                \Defender::stop();
             }
             break;
         default:
-            \defender::stop();
+            \Defender::stop();
     }
 }
 

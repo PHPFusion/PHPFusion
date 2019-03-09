@@ -32,7 +32,7 @@ class BannersAdministration {
         switch ($_GET['action']) {
             case 'delete':
                 if (empty($_GET['banner_id'])) {
-                    \defender::stop();
+                    \Defender::stop();
                     addNotice('danger', self::$locale['BN_014']);
                     redirect(clean_request('', ['section=banners_list', 'aid'], TRUE));
                 }
@@ -55,7 +55,7 @@ class BannersAdministration {
 
     private function set_bannerdb() {
         if (isset($_POST['upload_banner'])) {
-            if (\defender::getInstance()->safe()) {
+            if (\Defender::getInstance()->safe()) {
                 if (!empty($_FILES['banner_image']) && is_uploaded_file($_FILES['banner_image']['tmp_name'])) {
                     $upload = form_sanitizer($_FILES['banner_image'], '', 'banner_image');
                     if ($upload['error'] == 0) {
@@ -75,7 +75,7 @@ class BannersAdministration {
                 'sitebanner2' => isset($_POST['sitebanner2']) ? descript(addslashes($_POST['sitebanner2'])) : self::$banner_settings['sitebanner2'],
             ];
 
-            if (\defender::safe()) {
+            if (\Defender::safe()) {
                 foreach ($settings_main as $settings_key => $settings_value) {
                     dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:value WHERE settings_name=:name", [':value' => $settings_value, ':name' => $settings_key]);
                     addNotice('success', self::$locale['BN_012']);
@@ -91,7 +91,7 @@ class BannersAdministration {
                 'sitebanner2' => isset($_GET['banner_id']) && $_GET['banner_id'] == 'sitebanner2' ? '' : self::$banner_settings['sitebanner2'],
             ];
 
-            if (\defender::safe()) {
+            if (\Defender::safe()) {
                 foreach ($settings_main as $settings_key => $settings_value) {
                     dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:value WHERE settings_name=:name", [':value' => $settings_value, ':name' => $settings_key]);
                 }

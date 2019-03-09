@@ -60,10 +60,10 @@ class InstallerAdminSetup extends Install_Core {
 
             if (self::$userData['password1'] == self::$userData['admin_password1']) {
                 addNotice('danger', self::$locale['setup_5016']);
-                \defender::stop();
+                \Defender::stop();
             }
 
-            if (\defender::safe()) {
+            if (\Defender::safe()) {
                 $user_auth = new \PasswordAuth(self::INSTALLER_ALGO);
                 $user_auth->inputNewPassword = self::$userData['password1'];
                 $user_auth->inputNewPassword2 = self::$userData['password2'];
@@ -74,11 +74,11 @@ class InstallerAdminSetup extends Install_Core {
                         break;
                     case 2:
                         addNotice('danger', self::$locale['setup_5012']);
-                        \defender::stop();
+                        \Defender::stop();
                         break;
                     case 3:
                         addNotice('danger', self::$locale['setup_5013']);
-                        \defender::stop();
+                        \Defender::stop();
                         break;
                 }
                 $admin_auth = new \PasswordAuth(self::INSTALLER_ALGO);
@@ -91,15 +91,15 @@ class InstallerAdminSetup extends Install_Core {
                         break;
                     case 2:
                         addNotice('danger', self::$locale['setup_5015']);
-                        \defender::stop();
+                        \Defender::stop();
                         break;
                     case 3:
                         addNotice('danger', self::$locale['setup_5017']);
-                        \defender::stop();
+                        \Defender::stop();
                         break;
                 }
 
-                if (\defender::safe()) {
+                if (\Defender::safe()) {
                     dbquery_insert(DB_PREFIX."users", self::$userData, 'update');
                     addNotice('success', self::$locale['setup_1217']);
 
@@ -295,11 +295,11 @@ class InstallerAdminSetup extends Install_Core {
             self::$userData = $this->validate_UserData();
 
             if (self::$userData['password1'] == self::$userData['admin_password1']) {
-                \defender::stop();
+                \Defender::stop();
                 addNotice('danger', self::$locale['setup_5016']);
             }
 
-            if (\defender::safe()) {
+            if (\Defender::safe()) {
 
                 $user_auth = new PasswordAuth(self::INSTALLER_ALGO);
 
@@ -312,14 +312,14 @@ class InstallerAdminSetup extends Install_Core {
                         self::$userData['user_salt'] = $user_auth->getNewSalt();
                         break;
                     case 2:
-                        \defender::stop();
-                        \defender::setInputError('password2');
+                        \Defender::stop();
+                        \Defender::setInputError('password2');
                         addNotice('danger', self::$locale['setup_5012']);
 
                         break;
                     case 3:
-                        \defender::stop();
-                        \defender::setInputError('password1');
+                        \Defender::stop();
+                        \Defender::setInputError('password1');
                         addNotice('danger', self::$locale['setup_5013']);
                         break;
                 }
@@ -333,18 +333,18 @@ class InstallerAdminSetup extends Install_Core {
                         self::$userData['user_admin_salt'] = $admin_auth->getNewSalt();
                         break;
                     case 2:
-                        \defender::stop();
-                        \defender::setInputError('admin_password2');
+                        \Defender::stop();
+                        \Defender::setInputError('admin_password2');
                         addNotice('danger', self::$locale['setup_5015']);
                         break;
                     case 3:
-                        \defender::stop();
-                        \defender::setInputError('admin_password1');
+                        \Defender::stop();
+                        \Defender::setInputError('admin_password1');
                         addNotice('danger', self::$locale['setup_5017']);
                         break;
                 }
 
-                if (\defender::safe()) {
+                if (\Defender::safe()) {
 
                     self::$userData['user_timezone'] = self::$siteData['default_timezone'];
                     $batch_core = Batch_Core::getInstance();
@@ -453,7 +453,7 @@ class InstallerAdminSetup extends Install_Core {
                         }
                     }
 
-                    if (\defender::safe()) {
+                    if (\Defender::safe()) {
                         require_once BASEDIR."config_temp.php";
                         require_once INCLUDES."multisite_include.php";
                         self::installer_step(self::STEP_INFUSIONS);

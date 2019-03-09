@@ -208,7 +208,7 @@ class PanelsAdministration {
             // panel name is unique
             $result = dbcount("(panel_id)", DB_PANELS, "panel_name='".$this->data['panel_name']."' AND panel_id !='".$this->data['panel_id']."'");
             if ($result) {
-                \defender::stop();
+                \Defender::stop();
                 addNotice('danger', self::$locale['471']);
             }
             $this->data['panel_filename'] = isset($_POST['panel_filename']) ? form_sanitizer($_POST['panel_filename'], '', 'panel_filename') : '';
@@ -251,11 +251,11 @@ class PanelsAdministration {
                         $this->data['panel_display'] = ($this->data['panel_side'] !== 1 && $this->data['panel_side'] !== 4) ? 1 : 0;
                     }
                 } else {
-                    \defender::stop();
+                    \Defender::stop();
                     addNotice('danger', self::$locale['475']);
                 }
             }
-            $panel_languages = isset($_POST['panel_languages']) ? \defender::sanitize_array($_POST['panel_languages']) : [];
+            $panel_languages = isset($_POST['panel_languages']) ? \Defender::sanitize_array($_POST['panel_languages']) : [];
             if (!empty($panel_languages)) {
                 $this->data['panel_languages'] = implode('.', $panel_languages);
             }
@@ -293,7 +293,7 @@ class PanelsAdministration {
                     $current_side = $panel_side;
                 }
             }
-            if (\defender::safe()) {
+            if (\Defender::safe()) {
                 redirect(FUSION_SELF.$aidlink."&amp;section=listpanel");
             }
         }
@@ -519,7 +519,7 @@ class PanelsAdministration {
 
         if (isset($_POST['panel_preview']) && $settings['allow_php_exe']) {
             $panel_title = form_sanitizer($_POST['panel_name'], "", "panel_name");
-            if (\defender::safe()) {
+            if (\Defender::safe()) {
                 ob_start();
                 echo openmodal("cp_preview", $panel_title);
                 if (fusion_get_settings("allow_php_exe")) {

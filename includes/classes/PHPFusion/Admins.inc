@@ -131,6 +131,27 @@ class Admins {
         return self::$instance;
     }
 
+    public function setCache($form_id, $form_type, $cache_time = 36000) {
+        // set one instance of cache
+        echo "<script>
+
+        </script>";
+    }
+
+    /**
+     * @param       $form_id
+     * @param       $form_type
+     * @param       $item_id
+     * @param array $field_names - format as (array('field_name' => 'Locale'));
+     *
+     * @return string
+     */
+    public function renderCache($form_id, $form_type, $item_id, array $field_names) {
+        $html = "";
+
+        return $html;
+    }
+
     /**
      * Cache the Current Field Inputs within Login session.
      *
@@ -290,16 +311,21 @@ class Admins {
 
     public function setAdmin() {
         if (!defined('IN_SETUP')) {
+
             self::$admin_pages = $this->getAdminPages();
+
             $this->admin_sections = array_filter(array_merge([
-                0 => self::$locale['ac00'],
-                1 => self::$locale['ac01'],
-                2 => self::$locale['ac02'],
-                3 => self::$locale['ac03'],
-                4 => self::$locale['ac04'],
-                5 => self::$locale['ac05'],
-            ], $this->admin_sections));
+                    0 => self::$locale['ac00'],
+                    1 => self::$locale['ac01'],
+                    2 => self::$locale['ac02'],
+                    3 => self::$locale['ac03'],
+                    4 => self::$locale['ac04'],
+                    5 => self::$locale['ac05'],
+                ], $this->admin_sections)
+            );
+
             $this->admin_sections = array_values($this->admin_sections);
+
             $this->current_page = $this->_currentPage();
         }
     }
@@ -322,9 +348,13 @@ class Admins {
                     }
                 }
             }
+
+            self::$admin_pages = self::$admin_pages + self::$public_pages;
         }
 
-        return self::$admin_pages + self::$public_pages;
+        return (array)self::$admin_pages;
+
+
     }
 
     /**
@@ -356,11 +386,14 @@ class Admins {
     }
 
     public function setAdminBreadcrumbs() {
+
         BreadCrumbs::getInstance()->addBreadCrumb([
             'link'  => ADMIN.'index.php'.fusion_get_aidlink().'&amp;pagenum=0',
             'title' => self::$locale['ac10']
         ]);
+
         $acTab = (isset($_GET['pagenum']) && isnum($_GET['pagenum'])) ? $_GET['pagenum'] : $this->_isActive();
+
         if ($acTab != 0 && $acTab <= 5) {
             BreadCrumbs::getInstance()->addBreadCrumb([
                 'link'  => ADMIN.fusion_get_aidlink()."&amp;pagenum=".$acTab,
@@ -514,6 +547,10 @@ class Admins {
      * @return string
      */
     public function vertical_admin_nav($image_icon = FALSE) {
+        return $this->VerticalAdminNav($image_icon);
+    }
+
+    public function VerticalAdminNav($image_icon = FALSE) {
         $aidlink = fusion_get_aidlink();
         $admin_sections = self::getAdminSections();
         $admin_pages = self::getAdminPages();
@@ -523,6 +560,7 @@ class Admins {
         $html = "<ul id='adl' class='admin-vertical-link'>\n";
 
         foreach ($admin_sections as $i => $section_name) {
+
             $active = ((isset($_GET['pagenum']) && $_GET['pagenum'] == $i) || (!isset($_GET['pagenum']) && $this->_isActive() == $i)) ? TRUE : FALSE;
 
             $html .= "<li class='".($active ? 'active panel' : 'panel')."' >\n";
@@ -532,6 +570,7 @@ class Admins {
                 $html .= "<ul id='adl-$i' class='admin-submenu collapse ".($active ? 'in' : '')."'>\n";
 
                 foreach ($admin_pages[$i] as $key => $data) {
+
                     $title = $data['admin_title'];
                     if ($data['admin_page'] !== 5) {
                         $title = isset(self::$locale[$data['admin_rights']]) ? self::$locale[$data['admin_rights']] : $title;
@@ -561,14 +600,14 @@ class Admins {
 
                 $html .= "</ul>\n";
             } else {
-                $html .= "<a class='adl-link' href='".ADMIN."index.php".$aidlink."&amp;pagenum=0'>".$this->get_admin_section_icons($i)." <span class='adl-section-name'>".$section_name."</span></a>\n";
+                $html .= "<a class='adl-link' href='".ADMIN."index.php".$aidlink."&amp;pagenum=0'>".$this->get_admin_section_icons($i)." <span class='adl-section-name'>".$section_name."</span> ".($i > 0 ? "<span class='adl-drop pull-right'></span>" : '')."</a>\n";
             }
             $html .= "</li>\n";
         }
 
         $html .= "</ul>\n";
 
-        return $html;
+        return (string)$html;
     }
 
     /**
@@ -584,6 +623,10 @@ class Admins {
      * @return string
      */
     public function get_admin_section_icons($page_number) {
+        return $this->getAdminSectionIcons($page_number);
+    }
+
+    public function getAdminSectionIcons($page_number) {
         if (!empty($this->admin_section_icons[$page_number]) && $this->admin_section_icons[$page_number]) {
             return $this->admin_section_icons[$page_number];
         }
@@ -608,15 +651,18 @@ class Admins {
      *
      * @param $admin_rights
      *
-     * @return bool
+     * @return string
      */
     public function get_admin_icons($admin_rights) {
-        // admin rights might not yield an icon & admin_icons override might not have the key.
-        if (isset($this->admin_page_icons[$admin_rights]) && $this->admin_page_icons[$admin_rights]) {
-            return $this->admin_page_icons[$admin_rights];
+        return $this->getAdminIcons($admin_rights);
+    }
+    public function getAdminIcons($admin_rights) {
+        if (!empty($this->admin_page_icons[$admin_rights])) {
+
+            return (string)$this->admin_page_icons[$admin_rights];
         }
 
-        return FALSE;
+        return '';
     }
 
     /**
@@ -627,6 +673,10 @@ class Admins {
      * @return string
      */
     public function horizontal_admin_nav($icon_only = FALSE) {
+        return $this->horizontalAdminNav($icon_only);
+    }
+
+    public function horizontalAdminNav($icon_only = FALSE) {
         $aidlink = fusion_get_aidlink();
         $html = "<ul class='admin-horizontal-link'>\n";
         foreach ($this->admin_sections as $i => $section_name) {
@@ -644,13 +694,15 @@ class Admins {
      * @param string $title
      * @param string $rights
      * @param string $link
+     * @param string $icon
      */
-    public function addAdminPage($page, $title, $rights, $link) {
+    public function addAdminPage($page, $title, $rights, $link, $icon = '') {
         self::$public_pages[$page][$rights] = [
             "admin_title"  => $title,
             "admin_page"   => $page,
             "admin_rights" => $rights,
-            "admin_link"   => $link
+            "admin_link"   => $link,
+            'admin_image' => $icon,
         ];
     }
 

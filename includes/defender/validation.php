@@ -82,12 +82,12 @@ abstract class Validation {
             if (is_callable([$object, $method])) {
                 return $object->$method();
             } else {
-                \defender::stop();
+                \Defender::stop();
                 $locale['type_unset'] = '%s: has no type set of %s'; // to be moved
                 addNotice('danger', sprintf($locale['type_unset'], self::$inputName, $method));
             }
         } else {
-            \defender::stop();
+            \Defender::stop();
             $locale['type_unset'] = '%s: has no validation file'; // to be moved
             addNotice('danger', sprintf($locale['type_unset'], self::$inputName));
         }

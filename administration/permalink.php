@@ -123,12 +123,12 @@ if (isset($_POST['cancel'])) {
 if (isset($_POST['savesettings'])) {
     foreach ($settings_seo as $key => $value) {
         $settings_seo[$key] = form_sanitizer($_POST[$key], 0, $key);
-        if (\defender::safe()) {
+        if (\Defender::safe()) {
             dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:value WHERE settings_name=:name", [':value' => $settings_seo[$key], ':name' => $key]);
         }
     }
 
-    if (\defender::safe()) {
+    if (\Defender::safe()) {
         require_once(INCLUDES.'htaccess_include.php');
         write_htaccess();
         addNotice('success', $locale['900']);
@@ -139,7 +139,7 @@ if (isset($_POST['savesettings'])) {
 if (isset($_POST['savepermalinks'])) {
     $error = 0;
 
-    if (\defender::safe()) {
+    if (\Defender::safe()) {
         if (isset($_POST['permalink']) && is_array($_POST['permalink'])) {
             $permalinks = stripinput($_POST['permalink']);
             foreach ($permalinks as $key => $value) {

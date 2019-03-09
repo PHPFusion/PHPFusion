@@ -61,7 +61,7 @@ function bbcode_list() {
         $test_message = form_sanitizer($_POST['test_message'], '', 'test_message');
         $smileys_checked = isset($_POST['test_smileys']) || preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si",
             $test_message) ? 1 : 0;
-        if (\defender::safe()) {
+        if (\Defender::safe()) {
             opentable($locale['BBCA_417']);
             echo "<div class='well'>\n";
             if (!$smileys_checked) {

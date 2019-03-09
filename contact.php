@@ -52,12 +52,12 @@ if (isset($_POST['sendmessage'])) {
         $_CAPTCHA_IS_VALID = FALSE;
         include INCLUDES."captchas/".$settings['captcha']."/captcha_check.php"; // Dynamics need to develop Captcha. Before that, use method 2.
         if (!$_CAPTCHA_IS_VALID) {
-            \defender::stop();
+            \Defender::stop();
             addNotice('warning', $locale['CT_424']);
         }
     }
 
-    if (\defender::safe()) {
+    if (\Defender::safe()) {
         require_once INCLUDES."sendmail_include.php";
 
         $template_result = dbquery("SELECT template_key, template_active, template_sender_name, template_sender_email FROM ".DB_EMAIL_TEMPLATES." WHERE template_key='CONTACT' LIMIT 1");
@@ -66,24 +66,24 @@ if (isset($_POST['sendmessage'])) {
             $template_data = dbarray($template_result);
             if ($template_data['template_active'] == "1") {
                 if (!sendemail_template("CONTACT", $input['subject'], $input['message'], "", $template_data['template_sender_name'], "", $template_data['template_sender_email'], $input['mailname'], $input['email'])) {
-                    \defender::stop();
+                    \Defender::stop();
                     addNotice('danger', $locale['CT_425']);
                 }
             } else {
                 if (!sendemail($settings['siteusername'], $settings['siteemail'], $input['mailname'], $input['email'], $input['subject'], $input['message'])) {
-                    \defender::stop();
+                    \Defender::stop();
                     addNotice('danger', $locale['CT_425']);
                 }
             }
 
         } else {
             if (!sendemail($settings['siteusername'], $settings['siteemail'], $input['mailname'], $input['email'], $input['subject'], $input['message'])) {
-                \defender::stop();
+                \Defender::stop();
                 addNotice('danger', $locale['CT_425']);
             }
         }
 
-        if (\defender::safe()) {
+        if (\Defender::safe()) {
             addNotice('success', $locale['CT_440']);
             redirect(BASEDIR.'contact.php');
         }

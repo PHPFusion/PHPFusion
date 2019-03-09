@@ -48,8 +48,8 @@ class blockWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine imple
             'block_margin'      => form_sanitizer($_POST['block_margin'], '', 'block_margin'),
             'block_padding'     => form_sanitizer($_POST['block_padding'], '', 'block_padding'),
         ];
-        if (\defender::safe()) {
-            return \defender::serialize(self::$widget_data);
+        if (\Defender::safe()) {
+            return \Defender::serialize(self::$widget_data);
         }
     }
 
@@ -70,7 +70,7 @@ class blockWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine imple
         ];
 
         if (!empty(self::$colData['page_content'])) {
-            self::$widget_data = \defender::unserialize(self::$colData['page_content']);
+            self::$widget_data = \Defender::unserialize(self::$colData['page_content']);
         }
 
         echo form_text('block_title', $widget_locale['BLKW_0200'], self::$widget_data['block_title'], ['inline' => TRUE]);

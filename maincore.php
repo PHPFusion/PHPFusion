@@ -176,7 +176,7 @@ define("START_PAGE", substr(preg_replace("#(&amp;|\?)(s_action=edit&amp;shout_id
  * Login / Logout / Revalidate
  */
 if (isset($_POST['login']) && isset($_POST['user_name']) && isset($_POST['user_pass'])) {
-    if (\defender::safe()) {
+    if (\Defender::safe()) {
         $auth = new Authenticate($_POST['user_name'], $_POST['user_pass'], (isset($_POST['remember_me']) ? TRUE : FALSE));
         $userdata = $auth->getUserData();
         unset($auth, $_POST['user_name'], $_POST['user_pass']);
@@ -233,7 +233,7 @@ include INCLUDES."ip_handling_include.php";
 // Error Handling
 require_once INCLUDES."error_handling_include.php";
 
-$defender = defender::getInstance();
+$defender = Defender::getInstance();
 
 if (!defined('FUSION_ALLOW_REMOTE')) {
     new \Defender\Token();

@@ -232,7 +232,7 @@ class PrivateMessages {
                                 if ($strict) {
                                     die($locale['700']);
                                 }
-                                \defender::stop();
+                                \Defender::stop();
                                 addNotice('danger', $locale['628']);
                             }
                         }
@@ -242,12 +242,12 @@ class PrivateMessages {
                         if ($strict) {
                             die($locale['701']);
                         }
-                        \defender::stop();
+                        \Defender::stop();
                         addNotice('danger', $locale['482']);
                     }
 
                 } else {
-                    \defender::stop();
+                    \Defender::stop();
                     if ($strict) {
                         die($locale['702']);
                     }
@@ -258,7 +258,7 @@ class PrivateMessages {
                 if ($strict) {
                     die($locale['703']);
                 }
-                \defender::stop();
+                \Defender::stop();
                 addNotice('danger', sprintf($locale['487'], fusion_get_settings('flood_interval')));
             }
 
@@ -276,7 +276,7 @@ class PrivateMessages {
                 }
 
             } else {
-                \defender::stop();
+                \Defender::stop();
                 addNotice('danger', $locale['492']);
             }
         }
@@ -779,7 +779,7 @@ class PrivateMessages {
                 $this->data['to'] = form_sanitizer($_POST['msg_send'], 0, 'msg_send');
             }
 
-            if (\defender::safe()) {
+            if (\Defender::safe()) {
                 if (iADMIN && isset($_POST['chk_sendtoall']) && $this->data['msg_group_send']) {
                     self::send_pm($this->data['msg_group_send'], $this->data['from'], $this->data['subject'], $this->data['message'], $this->data['smileys'], TRUE);
                 } else {

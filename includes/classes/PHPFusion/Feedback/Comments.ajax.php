@@ -30,7 +30,7 @@ if (isset($_GET['action']) && iMEMBER) {
                 ");
         if (dbrows($eresult)) {
             $edata = dbarray($eresult);
-            $edata['comment_options'] = \defender::unserialize($_POST['comment_options']);
+            $edata['comment_options'] = \Defender::unserialize($_POST['comment_options']);
             if ((iADMIN && checkrights("C"))
                 || ($edata['comment_name'] == fusion_get_userdata('user_id') && isset($edata['user_name']))
             ) {
@@ -47,7 +47,7 @@ if (isset($_GET['action']) && iMEMBER) {
                 WHERE comment_id='".intval($_POST['comment_id'])."' AND comment_hidden='0'");
         if (dbrows($eresult) > 0) {
             $edata = dbarray($eresult);
-            //$ajax_respond = \defender::unserialize($_POST['comment_options']);
+            //$ajax_respond = \Defender::unserialize($_POST['comment_options']);
             if ((iADMIN && checkrights("C"))
                 || ($edata['comment_name'] == fusion_get_userdata('user_id') && isset($edata['user_name']))
             ) {
@@ -60,7 +60,7 @@ if (isset($_GET['action']) && iMEMBER) {
                 }
                 dbquery("DELETE FROM ".DB_COMMENTS." WHERE comment_id='".$_POST['comment_id']."'".(iADMIN ? "" : "AND comment_name='".fusion_get_userdata('user_id')."'"));
                 // Refetch the query
-                $ajax_respond = \defender::unserialize($_POST['comment_options']);
+                $ajax_respond = \Defender::unserialize($_POST['comment_options']);
                 $ajax_respond['comment_custom_script'] = TRUE;
                 echo PHPFusion\Feedback\Comments::getInstance($ajax_respond, $ajax_respond['comment_key'])->showComments();
             }
@@ -69,7 +69,7 @@ if (isset($_GET['action']) && iMEMBER) {
     }
 
 } else {
-    $ajax_respond = \defender::unserialize($_POST['comment_options']);
+    $ajax_respond = \Defender::unserialize($_POST['comment_options']);
     $ajax_respond['comment_custom_script'] = TRUE;
     echo PHPFusion\Feedback\Comments::getInstance($ajax_respond, $ajax_respond['comment_key'])->showComments();
 }

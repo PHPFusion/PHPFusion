@@ -31,7 +31,7 @@ function showratings($rating_type, $rating_item_id, $rating_link) {
                 if (isnum($_POST['rating']) && $_POST['rating'] > 0 && $_POST['rating'] < 6 && !isset($d_rating['rating_vote'])) {
                     $result = dbquery("INSERT INTO ".DB_RATINGS." (rating_item_id, rating_type, rating_user, rating_vote, rating_datestamp, rating_ip, rating_ip_type) VALUES ('$rating_item_id', '$rating_type', '".$userdata['user_id']."', '".$_POST['rating']."', '".time()."', '".USER_IP."', '".USER_IP_TYPE."')");
                     if ($result) {
-                        defender::unset_field_session();
+                        Defender::unset_field_session();
                     }
                 }
                 redirect($rating_link);
@@ -39,7 +39,7 @@ function showratings($rating_type, $rating_item_id, $rating_link) {
                 // Unrate
                 $result = dbquery("DELETE FROM ".DB_RATINGS." WHERE rating_item_id='$rating_item_id' AND rating_type='$rating_type' AND rating_user='".$userdata['user_id']."'");
                 if ($result) {
-                    defender::unset_field_session();
+                    Defender::unset_field_session();
                 }
                 redirect($rating_link);
             }

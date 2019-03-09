@@ -46,7 +46,7 @@ class get_apps extends resource {
 
         if ($this->authorize_aid()) {
 
-            if (\defender::safe()) {
+            if (\Defender::safe()) {
 
                 $this->search_apps();
 

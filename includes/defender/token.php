@@ -201,7 +201,7 @@ class Token extends \defender {
     public static function generate_token($form_id = 'phpfusion', $max_tokens = 5, $file = '', $token_time = TIME) {
         // resets remote file every callback
         $remote_file = ($file ? $file : '');
-        \defender::getInstance()->set_RemoteFile($remote_file);
+        \Defender::getInstance()->set_RemoteFile($remote_file);
         $userdata = fusion_get_userdata();
         $user_id = (iMEMBER ? $userdata['user_id'] : 0);
         $secret_key = defined('SECRET_KEY') ? SECRET_KEY : 'secret_key';
@@ -212,7 +212,7 @@ class Token extends \defender {
         // generate a new token
         $token = $user_id.'.'.$token_time.'.'.hash_hmac($algo, $key, $salt);
 
-        if (\defender::safe()) {
+        if (\Defender::safe()) {
             // Store into session
             $_SESSION['csrf_tokens'][self::pageHash($file)][$form_id][] = $token;
             // Round robin consume token
