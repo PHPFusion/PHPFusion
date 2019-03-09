@@ -88,7 +88,7 @@ if (isset($_POST['save']) or isset($_POST['preview'])) {
         'blog_datestamp'      => form_sanitizer($_POST['blog_datestamp'], '', 'blog_datestamp'),
     ];
 
-    if (isset($_POST['preview']) && \defender::safe()) {
+    if (isset($_POST['preview']) && \Defender::safe()) {
         $modal = openmodal('blog_preview', $locale['blog_0141']." - ".$data['blog_subject']);
         $modal .= "<div class='m-b-20'>\n";
         $modal .= "";
@@ -134,7 +134,7 @@ if (isset($_POST['save']) or isset($_POST['preview'])) {
             $data['blog_image_t2'] = "";
         }
 
-        if (\defender::safe()) {
+        if (\Defender::safe()) {
             if (dbcount("('blog_id')", DB_BLOG, "blog_id='".$data['blog_id']."'")) {
                 dbquery_insert(DB_BLOG, $data, 'update');
                 addNotice('success', $locale['blog_0411']);
