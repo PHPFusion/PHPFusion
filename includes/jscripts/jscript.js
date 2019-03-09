@@ -14,6 +14,24 @@
  | copyright header is strictly prohibited without
  | written permission from the original author(s).
  +--------------------------------------------------------*/
+const BASEDIR = document.location.origin + SITE_PATH;
+const INFUSIONS = BASEDIR + "infusions/";
+const INCLUDES = BASEDIR + "includes/";
+const IMAGES = BASEDIR + "images/";
+const THEMES = BASEDIR + "themes/";
+const CLASSES = BASEDIR + "includes/classes/";
+// Define user levels
+const USER_LEVEL_SUPER_ADMIN = -103;
+const USER_LEVEL_ADMIN = -102;
+const USER_LEVEL_MEMBER = -101;
+const USER_LEVEL_PUBLIC = 0;
+// Decimal Level for Relationship Status
+const USER_LEVEL_PASSWORD = "-101.999";
+const USER_LEVEL_PRIVATE = "-101.998";
+const USER_LEVEL_FAMILY = "-101.3";
+const USER_LEVEL_FRIENDS = "-101.2";
+const USER_LEVEL_MUTUAL_FRIENDS = "-101.1";
+
 /**
  * Flipbox
  *
@@ -126,33 +144,29 @@ function addText(textarea, text1, text2, formname) {
 /**
  * insertText
  *
- * @param f
- * @param h
- * @param e
+ * @param textarea
+ * @param text
+ * @param formname
  */
-function insertText(f, h, e) {
-    if (e == undefined) {
-        e = "inputform"
-    }
-    if (document.forms[e].elements[f].createTextRange) {
-        document.forms[e].elements[f].focus();
-        document.selection.createRange().duplicate().text = h
+function insertText(textarea, text, formname) {
+    textarea = textarea === undefined ? "message" : textarea;
+    formname = formname === undefined ? "inputform" : formname;
+
+    var element = document.forms[formname].elements[textarea];
+
+    element.focus();
+    if (document.selection) {
+        var c = document.selection.createRange();
+        c.text = text;
+        return false;
     } else {
-        if ((typeof document.forms[e].elements[f].selectionStart) != "undefined") {
-            var a = document.forms[e].elements[f];
-            var g = a.selectionEnd;
-            var d = a.value.length;
-            var c = a.value.substring(0, g);
-            var i = a.value.substring(g, d);
-            var b = a.scrollTop;
-            a.value = c + h + i;
-            a.selectionStart = c.length + h.length;
-            a.selectionEnd = c.length + h.length;
-            a.scrollTop = b;
-            a.focus()
+        if (element.setSelectionRange) {
+            var b = element.selectionStart;
+            element.value = element.value.substring(0, b) + text;
+            element.focus();
         } else {
-            document.forms[e].elements[f].value += h;
-            document.forms[e].elements[f].focus()
+            element.value += text;
+            element.focus();
         }
     }
 }
@@ -364,13 +378,22 @@ function setChecked(frmName, chkName, val) {
  * Run time execution
  */
 function onload_events() {
-    resize_forum_imgs()
+    resize_forum_imgs();
+    var loader = $('.fusion-pre-loader');
+    if (loader.length) {
+        loader.fadeOut('slow');
+    }
 }
 
-window.onload = onload_events;
+String.prototype.rtrim = function (s) {
+    if (s == undefined)
+        s = '\\s';
+    return this.replace(new RegExp("[" + s + "]*$"), '');
+};
+String.prototype.ltrim = function (s) {
+    if (s == undefined)
+        s = '\\s';
+    return this.replace(new RegExp("^[" + s + "]*"), '');
+};
 
-var BASEDIR = document.location.origin + site_path;
-var INFUSIONS = document.location.origin + "/infusions/";
-var INCLUDES = document.location.origin + "/includes/";
-var THEMES = document.location.origin + "/themes/";
-var CLASSES = document.location.origin + "/includes/classes/";
+window.onload = onload_events;

@@ -76,7 +76,7 @@ class Main extends Core {
                     }
 
                     echo defined('U_CENTER') && U_CENTER ? U_CENTER : '';
-                    echo CONTENT;
+                    echo "<div class='overflow-hide'>".FUSION_PRELOADER.CONTENT."</div>";
                     echo defined('L_CENTER') && L_CENTER ? L_CENTER : '';
                     echo showbanners(2);
                 echo '</div>';

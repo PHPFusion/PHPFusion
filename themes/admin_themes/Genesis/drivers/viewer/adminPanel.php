@@ -466,10 +466,10 @@ class adminPanel extends resource {
             if (isset($admin_pages[$rights])) {
                 $toggle_class = " data-toggle='collapse' data-parent='#sub_menu' href='#c-app-$rights'";
                 $caret = "<b class='".($i > 1 ? "fas fa-caret-right" : "fas fa-caret-down")." pull-right m-t-5 m-l-10'></b>";
-
             }
+
             $html .= "<li".$class.">\n";
-            $html .= "<a".$toggle_class." href='".$arr['admin_link']."'>".$arr['admin_title']." ".$caret."</a>\n";
+            $html .= "<a".$toggle_class." href='".$arr['admin_link']."'>".$arr['admin_image'].$arr['admin_title']." ".$caret."</a>\n";
             if (isset($admin_pages[$rights])) {
                 $html = &$html;
                 $html .= "<!--dropdown--->\n";
@@ -480,6 +480,17 @@ class adminPanel extends resource {
         }
 
         return (string)$html;
+    }
+
+    private function display_admin_icon($rights) {
+        $image = get_image($rights);
+        if (!empty($image)) {
+            if (preg_check("/\<(i|span|b) class=(.*?)\><\/(i|span|b)>/im", $image)) {
+                return $image;
+            }
+            return "<img class='icon-xs display-inline m-r-5' src='$image'/>";
+        }
+        return '';
     }
 
     private function display_admin_pages() {

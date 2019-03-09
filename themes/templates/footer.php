@@ -15,9 +15,16 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-defined('IN_FUSION') || exit;
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
+
+if (isset($fusion_steam)) {
+    $fusion_steam->run();
+}
 
 require_once INCLUDES."footer_includes.php";
+
 \PHPFusion\Panels::getInstance()->getSitePanel();
 
 define("CONTENT", ob_get_clean()); //ob_start() called in header.php

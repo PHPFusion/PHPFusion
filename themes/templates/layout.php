@@ -15,10 +15,17 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-$locale= fusion_get_locale();
-$settings = fusion_get_settings();
-header("Content-Type: text/html; charset=".$locale['charset']);
 
+// Define CDN
+$_themes = THEMES;
+$_includes = INCLUDES;
+if (!empty('CDN')) {
+    $_themes = CDN.'themes/';
+    $_includes = CDN.'includes/';
+}
+$settings = fusion_get_settings();
+$locale = fusion_get_locale();
+header("Content-Type: text/html; charset=".$locale['charset']."");
 echo "<!DOCTYPE html>\n";
 echo "<html lang='".$locale['xml_lang']."' dir='".$locale['text-direction']."'".($settings['create_og_tags'] ? " prefix='og: http://ogp.me/ns#'" : "").">\n";
 echo "<head>\n";
@@ -35,49 +42,47 @@ if (fusion_get_enabled_languages() > 1) {
 
 // Load bootstrap stylesheets
 if ($settings['bootstrap'] || defined('BOOTSTRAP')) {
-    echo "<meta http-equiv='X-UA-Compatible' content='IE=edge'/>\n";
-    echo "<meta name='viewport' content='width=device-width, initial-scale=1.0'/>\n";
-    echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/css/bootstrap.min.css' type='text/css'/>\n";
-    echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/css/bootstrap-submenu.min.css' type='text/css'/>\n";
-
-    if ($locale['text-direction'] == 'rtl') {
-        echo "<link href='".INCLUDES."bootstrap/css/bootstrap-rtl.min.css' rel='stylesheet' media='screen'/>\n";
+    echo "<meta http-equiv='X-UA-Compatible' content='IE=edge' />\n";
+    echo "<meta name='viewport' content='width=device-width, initial-scale=1.0' />\n";
+    // this one can cache.
+    echo "<link href='".$_themes."templates/boilers/bootstrap3/bootstrap.min.css' rel='stylesheet' media='screen' />";
+    echo "<link rel='stylesheet' href='".$_themes."templates/boilers/bootstrap3/bootstrap-submenu.min.css' type='text/css' />\n";
+    if (fusion_get_locale('text-direction') == 'rtl') {
+        echo "<link href='".$_themes."templates/boilers/bootstrap3/bootstrap-rtl.min.css' rel='stylesheet' media='screen' />";
     }
 }
-
 if ($settings['entypo'] || defined('ENTYPO')) {
-    echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo.min.css' type='text/css'/>\n";
+    echo "<link rel='stylesheet' href='".$_includes."fonts/entypo/entypo.min.css' type='text/css' />\n";
 }
 
-// Font Awesome 4
-if (defined('FONTAWESOME-V4')) {
-    if ($settings['fontawesome'] || defined('FONTAWESOME')) {
-        echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome/css/font-awesome.min.css' type='text/css'/>\n";
-    }
-}
-// Font Awesome 5
-if (!defined('FONTAWESOME-V4')) {
-    if ($settings['fontawesome'] || defined('FONTAWESOME')) {
-        echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-5/css/all.min.css' type='text/css'/>\n";
-        echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-5/css/v4-shims.min.css' type='text/css'/>\n";
+if ($settings['fontawesome'] || defined('FONTAWESOME')) {
+    if (defined('FONTAWESOME-V4')) {
+        // Font Awesome 5
+        echo "<link rel='stylesheet' href='".$_includes."fonts/font-awesome/css/font-awesome.min.css' type='text/css' />\n";
+    } else {
+        // Font Awesome 5
+        echo "<link rel='stylesheet' href='".$_includes."fonts/font-awesome-5/css/all.min.css' type='text/css' />\n";
+        echo "<link rel='stylesheet' href='".$_includes."fonts/font-awesome-5/css/v4-shims.min.css' type='text/css' />\n";
     }
 }
 
 if (!defined('NO_DEFAULT_CSS')) {
-    echo "<link href='".THEMES."templates/default.min.css?v=".filemtime(THEMES.'templates/default.min.css')."' rel='stylesheet' type='text/css' media='screen'/>\n";
+    echo "<link href='".$_themes."templates/default.min.css' rel='stylesheet' type='text/css' media='screen' />\n";
 }
 
 $theme_css = file_exists(THEME.'styles.min.css') ? THEME.'styles.min.css' : THEME.'styles.css';
-echo "<link href='".$theme_css."?v=".filemtime($theme_css)."' rel='stylesheet' type='text/css' media='screen'/>\n";
+echo "<link href='".$theme_css."' rel='stylesheet' type='text/css' media='screen' />\n"; // And what is this?
 
-if ($settings['bootstrap'] == TRUE || defined('BOOTSTRAP')) {
+if ($settings['bootstrap'] || defined('BOOTSTRAP')) {
     $user_theme = fusion_get_userdata('user_theme');
-    $theme_name = $user_theme !== 'Default' ? $user_theme : $settings['theme'];
+
+    $theme_name = $user_theme !== 'Default' ? $user_theme : fusion_get_settings('theme');
+
     $theme_data = dbarray(dbquery("SELECT theme_file FROM ".DB_THEME." WHERE theme_name='".$theme_name."' AND theme_active='1'"));
 
     if (!empty($theme_data)) {
         $theme_css = THEMES.$theme_data['theme_file'];
-        echo "<link href='".$theme_css."' rel='stylesheet' type='text/css'/>\n";
+        echo "<link href='".$theme_css."' rel='stylesheet' type='text/css' />\n"; // What is this?
     }
 }
 
@@ -87,9 +92,11 @@ if (function_exists("get_head_tags")) {
     echo get_head_tags();
 }
 
-echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery.min.js'></script>\n";
-echo "<script>var site_path = '".$settings['site_path']."';</script>";
-echo "<script type='text/javascript' src='".INCLUDES."jscripts/jscript.min.js?v=".filemtime(INCLUDES.'jscripts/jscript.min.js')."'></script>\n";
+echo "<script type='text/javascript' src='".$_includes."jquery/jquery.min.js'></script>\n";
+echo "<script>const SITE_PATH = '".$settings['site_path']."';</script>";
+/* A javascript global for using the CDN inside scripts */
+echo "<script>const CDN = '".CDN."';</script>\n";
+echo "<script type='text/javascript' src='".$_includes."jscripts/jscript.min.js?v=".filemtime(INCLUDES.'jscripts/jscript.min.js')."'></script>\n";
 echo "</head>\n";
 
 /**
@@ -121,18 +128,10 @@ if (iADMIN) {
 if (function_exists("render_page")) {
     render_page(); // by here, header and footer already closed
 }
-
-// Load Bootstrap javascript
-if ($settings['bootstrap'] || defined('BOOTSTRAP')) {
-    echo "<script type='text/javascript' src='".INCLUDES."bootstrap/js/bootstrap.min.js'></script>\n";
-    echo "<script type='text/javascript' src='".INCLUDES."bootstrap/js/bootstrap-submenu.min.js'></script>\n";
-}
-
-echo "<script type='text/javascript' src='".INCLUDES."jquery/admin-scripts.js'></script>\n";
-echo "<script type='text/javascript' src='".INCLUDES."jquery/holder/holder.min.js'></script>\n";
-
 // Output lines added with add_to_footer()
 echo $fusion_page_footer_tags;
+
+echo "<script type='text/javascript' src='".$_includes."jquery/admin-scripts.js'></script>\n";
 
 // Output lines added with add_to_jquery()
 $jquery_tags = "$('[data-submenu]').submenupicker();";
@@ -153,8 +152,15 @@ if (!empty($fusion_jquery_tags)) {
     echo "<script type='text/javascript'>$(function(){".$js."});</script>\n";
 }
 
+// Load bootstrap javascript
+if ($settings['bootstrap'] || defined('BOOTSTRAP')) {
+    echo "<script type='text/javascript' src='".$_themes."templates/boilers/bootstrap3/bootstrap.min.js'></script>\n";
+    echo "<script type='text/javascript' src='".$_themes."templates/boilers/bootstrap3/bootstrap-submenu.min.js'></script>\n";
+}
+
 // Uncomment to guide your theme development
 //echo "<script src='".INCLUDES."jscripts/html-inspector.js'></script>\n<script> HTMLInspector.inspect() </script>\n";
+echo "<script type='text/javascript' src='".$_includes."jquery/holder/holder.min.js'></script>\n";
 echo "</body>\n";
 echo "</html>";
 

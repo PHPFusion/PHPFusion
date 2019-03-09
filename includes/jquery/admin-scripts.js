@@ -7,7 +7,6 @@ function closeDiv() {
         })
     })
 }
-
 window.setTimeout('closeDiv()', 5000);
 
 function run_admin(action, table_action, reset_table) {

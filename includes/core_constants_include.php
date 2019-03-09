@@ -26,17 +26,24 @@ define("INCLUDES", BASEDIR."includes/");
 define("LOCALE", BASEDIR."locale/");
 define("THEMES", BASEDIR."themes/");
 define("DB_HANDLERS", BASEDIR."includes/db_handlers/");
-define("FUSION_IP", $_SERVER['REMOTE_ADDR']);
+define("FUSION_IP", !empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR']);
 define("QUOTES_GPC", (ini_get('magic_quotes_gpc') ? TRUE : FALSE));
 define("USER_IP", $_SERVER['REMOTE_ADDR']);
 define("WIDGETS", BASEDIR."widgets/");
-
 // Define script start time
 define("START_TIME", microtime(TRUE));
 define("FUSION_ROOT_DIR", dirname(__DIR__).'/');
 define("TIME", time());
+define('FUSION_PRELOADER', '<div class="fusion-pre-loader"></div>');
 // Define user levels
 const USER_LEVEL_SUPER_ADMIN = -103;
 const USER_LEVEL_ADMIN = -102;
 const USER_LEVEL_MEMBER = -101;
 const USER_LEVEL_PUBLIC = 0;
+
+// Decimal Level for Relationship Status
+const USER_LEVEL_PASSWORD = "-101.999";
+const USER_LEVEL_PRIVATE = "-101.999";
+const USER_LEVEL_FAMILY = "-101.3";
+const USER_LEVEL_FRIENDS = "-101.2";
+const USER_LEVEL_MUTUAL_FRIENDS = "-101.1";

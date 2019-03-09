@@ -121,9 +121,15 @@ if (!defined('BASEDIR')) {
  * Include core files that is required in working order
  */
 require_once __DIR__.'/core_functions_include.php';
+/**
+ * Cache server development
+ * We can safeguard this by doing a .htaccess file on CORS.
+ */
+$cdn = fusion_get_settings('cache_server') ? 'https://static.cdn.php-fusion.co.uk/' : BASEDIR;
+define('CDN', $cdn);
+
 require_once __DIR__.'/core_constants_include.php';
 require_once __DIR__."/sqlhandler.inc.php";
 require_once __DIR__."/translate_include.php";
 require_once __DIR__."/output_handling_include.php";
 require_once __DIR__."/notify.inc";
-//require_once __DIR__.'/db_handlers/all_functions_include.php';
