@@ -1115,6 +1115,23 @@ function get_core_tables($localeset) {
             'default'  => '4'
         ], //reinstate_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
     ];
+    $table_package['tags'] = [
+        'tag_id'           => [
+            'type'           => 'MEDIUMINT',
+            'length'         => 8,
+            'auto_increment' => TRUE,
+            'key'            => 1, //PRIMARY KEY (field_id)
+            'unsigned'       => TRUE,
+        ],
+        'tag_title'        => [
+            'type' => 'VARCHAR',
+            'length' => 200,
+        ],
+        'tag_language'         => [
+            'type'   => 'VARCHAR',
+            'length' => 50,
+        ],
+    ];
     $table_package['user_field_cats'] = [
         'field_cat_id'    => [
             'type'           => 'MEDIUMINT',
