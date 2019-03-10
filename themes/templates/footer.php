@@ -21,6 +21,7 @@ if (!defined("IN_FUSION")) {
 
 if (isset($fusion_steam)) {
     $fusion_steam->run();
+    fusion_apply_hook('start_boiler');
 }
 
 require_once INCLUDES."footer_includes.php";

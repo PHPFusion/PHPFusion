@@ -40,24 +40,12 @@ if (fusion_get_enabled_languages() > 1) {
     echo "<link rel='alternate' hreflang='x-default' href='".$settings['siteurl']."'/>\n";
 }
 
-// Load bootstrap stylesheets
-if ($settings['bootstrap'] || defined('BOOTSTRAP')) {
-    echo "<meta http-equiv='X-UA-Compatible' content='IE=edge' />\n";
-    echo "<meta name='viewport' content='width=device-width, initial-scale=1.0' />\n";
-    // this one can cache.
-    echo "<link href='".$_themes."templates/boilers/bootstrap3/bootstrap.min.css' rel='stylesheet' media='screen' />";
-    echo "<link rel='stylesheet' href='".$_themes."templates/boilers/bootstrap3/bootstrap-submenu.min.css' type='text/css' />\n";
-    if (fusion_get_locale('text-direction') == 'rtl') {
-        echo "<link href='".$_themes."templates/boilers/bootstrap3/bootstrap-rtl.min.css' rel='stylesheet' media='screen' />";
-    }
-}
 if ($settings['entypo'] || defined('ENTYPO')) {
     echo "<link rel='stylesheet' href='".$_includes."fonts/entypo/entypo.min.css' type='text/css' />\n";
 }
-
+// Font Awesome 4
 if ($settings['fontawesome'] || defined('FONTAWESOME')) {
     if (defined('FONTAWESOME-V4')) {
-        // Font Awesome 5
         echo "<link rel='stylesheet' href='".$_includes."fonts/font-awesome/css/font-awesome.min.css' type='text/css' />\n";
     } else {
         // Font Awesome 5
@@ -70,20 +58,15 @@ if (!defined('NO_DEFAULT_CSS')) {
     echo "<link href='".$_themes."templates/default.min.css' rel='stylesheet' type='text/css' media='screen' />\n";
 }
 
-$theme_css = file_exists(THEME.'styles.min.css') ? THEME.'styles.min.css' : THEME.'styles.css';
-echo "<link href='".$theme_css."' rel='stylesheet' type='text/css' media='screen' />\n"; // And what is this?
+//$theme_css = file_exists(THEME.'styles.min.css') ? THEME.'styles.min.css' : THEME.'styles.css';
+//echo "<link href='".$theme_css."' rel='stylesheet' type='text/css' media='screen' />\n"; // And what is this?
 
-if ($settings['bootstrap'] || defined('BOOTSTRAP')) {
-    $user_theme = fusion_get_userdata('user_theme');
-
-    $theme_name = $user_theme !== 'Default' ? $user_theme : fusion_get_settings('theme');
-
-    $theme_data = dbarray(dbquery("SELECT theme_file FROM ".DB_THEME." WHERE theme_name='".$theme_name."' AND theme_active='1'"));
-
-    if (!empty($theme_data)) {
-        $theme_css = THEMES.$theme_data['theme_file'];
-        echo "<link href='".$theme_css."' rel='stylesheet' type='text/css' />\n"; // What is this?
-    }
+$user_theme = fusion_get_userdata('user_theme');
+$theme_name = $user_theme !== 'Default' ? $user_theme : fusion_get_settings('theme');
+$theme_data = dbarray(dbquery("SELECT theme_file FROM ".DB_THEME." WHERE theme_name='".$theme_name."' AND theme_active='1'"));
+if (!empty($theme_data)) {
+    $theme_css = THEMES.$theme_data['theme_file'];
+    echo "<link href='".$theme_css."' rel='stylesheet' type='text/css' />\n"; // What is this?
 }
 
 echo render_favicons(defined('THEME_ICON') ? THEME_ICON : IMAGES.'favicons/');
@@ -150,12 +133,6 @@ if (!empty($fusion_jquery_tags)) {
     }
 
     echo "<script type='text/javascript'>$(function(){".$js."});</script>\n";
-}
-
-// Load bootstrap javascript
-if ($settings['bootstrap'] || defined('BOOTSTRAP')) {
-    echo "<script type='text/javascript' src='".$_themes."templates/boilers/bootstrap3/bootstrap.min.js'></script>\n";
-    echo "<script type='text/javascript' src='".$_themes."templates/boilers/bootstrap3/bootstrap-submenu.min.js'></script>\n";
 }
 
 // Uncomment to guide your theme development
