@@ -19,11 +19,6 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-if (isset($fusion_steam)) {
-    $fusion_steam->run();
-    fusion_apply_hook('start_boiler');
-}
-
 require_once INCLUDES."footer_includes.php";
 
 \PHPFusion\Panels::getInstance()->getSitePanel();

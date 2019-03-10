@@ -58,15 +58,21 @@ if (!defined('NO_DEFAULT_CSS')) {
     echo "<link href='".$_themes."templates/default.min.css' rel='stylesheet' type='text/css' media='screen' />\n";
 }
 
-//$theme_css = file_exists(THEME.'styles.min.css') ? THEME.'styles.min.css' : THEME.'styles.css';
-//echo "<link href='".$theme_css."' rel='stylesheet' type='text/css' media='screen' />\n"; // And what is this?
+if (isset($fusion_steam)) {
+    $fusion_steam->run();
+    fusion_apply_hook('start_boiler');
+}
 
 $user_theme = fusion_get_userdata('user_theme');
 $theme_name = $user_theme !== 'Default' ? $user_theme : fusion_get_settings('theme');
 $theme_data = dbarray(dbquery("SELECT theme_file FROM ".DB_THEME." WHERE theme_name='".$theme_name."' AND theme_active='1'"));
 if (!empty($theme_data)) {
     $theme_css = THEMES.$theme_data['theme_file'];
-    echo "<link href='".$theme_css."' rel='stylesheet' type='text/css' />\n"; // What is this?
+    add_to_head("<link href='".$theme_css."' rel='stylesheet' type='text/css' />\n");
+} else {
+    // Version 7 Themes
+    $theme_css = file_exists(THEME.'styles.min.css') ? THEME.'styles.min.css' : THEME.'styles.css';
+    echo "<link href='".$theme_css."' rel='stylesheet' type='text/css' media='screen' />\n";
 }
 
 echo render_favicons(defined('THEME_ICON') ? THEME_ICON : IMAGES.'favicons/');
