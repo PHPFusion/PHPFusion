@@ -54,7 +54,7 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
             ];
             $data = self::submitData($criteria);
             $data[0] += self::$defArray;
-            $data[0] += \defender::decode($data[0]['submit_criteria']);
+            $data[0] += \Defender::decode($data[0]['submit_criteria']);
             $this->inputArray = $data[0];
             // Delete, Publish, Preview
 
@@ -125,7 +125,7 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
             }
 
             // Handle
-            if (\defender::safe()) {
+            if (\Defender::safe()) {
 
                 // Publish Submission
                 if (isset($_POST['publish_submission'])) {
@@ -335,7 +335,7 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
             echo "<tbody>\n";
 
             foreach ($data as $info) {
-                $submitData = \defender::decode($info['submit_criteria']);
+                $submitData = \Defender::decode($info['submit_criteria']);
                 $submitUser = $this->locale['user_na'];
                 if ($info['user_name']) {
                     $submitUser = display_avatar($info, '20px', '', TRUE, 'img-rounded m-r-5');

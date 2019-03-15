@@ -69,7 +69,7 @@ class FaqAdmin extends FaqAdminModel {
                 'faq_cat_language'    => form_sanitizer($_POST['faq_cat_language'], LANGUAGE, 'faq_cat_language'),
             ];
 
-            if (\defender::safe()) {
+            if (\Defender::safe()) {
                 if ($this->cat_data['faq_cat_id']) {
                     dbquery_insert(DB_FAQ_CATS, $this->cat_data, 'update');
                     addNotice('success', $this->locale['faq_0040']);
@@ -78,8 +78,8 @@ class FaqAdmin extends FaqAdminModel {
                         dbquery_insert(DB_FAQ_CATS, $this->cat_data, 'save');
                         addNotice('success', $this->locale['faq_0039']);
                     } else {
-                        \defender::stop();
-                        \defender::inputHasError('faq_cat_name');
+                        \Defender::stop();
+                        \Defender::inputHasError('faq_cat_name');
                         addNotice('warning', $this->locale['faq_0042']);
                     }
                 }
@@ -191,7 +191,7 @@ class FaqAdmin extends FaqAdminModel {
             }
 
             // Handle
-            if (\defender::safe()) {
+            if (\Defender::safe()) {
                 // Update
                 if (dbcount("(faq_id)", DB_FAQS, "faq_id='".$this->faq_data['faq_id']."'")) {
                     $this->faq_data['faq_datestamp'] = isset($_POST['update_datestamp']) ? time() : $this->faq_data['faq_datestamp'];
@@ -366,7 +366,7 @@ class FaqAdmin extends FaqAdminModel {
             if (!empty($input)) {
                 foreach ($input as $faq_id) {
                     // check input table
-                    if (dbcount("('faq_id')", DB_FAQS, "faq_id=:faqid", [':faqid' => intval($faq_id)]) && \defender::safe()) {
+                    if (dbcount("('faq_id')", DB_FAQS, "faq_id=:faqid", [':faqid' => intval($faq_id)]) && \Defender::safe()) {
                         switch ($_POST['table_action']) {
                             case 'publish':
                                 dbquery("UPDATE ".DB_FAQS." SET faq_status=:status WHERE faq_id=:faqid", ['status' => '1', ':faqid' => intval($faq_id)]);
