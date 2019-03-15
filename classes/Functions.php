@@ -119,7 +119,7 @@ class Functions {
      * @param $blog_id
      */
     public static function update_blogReads($blog_id) {
-        $session_id = \defender::set_sessionUserID();
+        $session_id = \Defender::set_sessionUserID();
         if (!isset($_SESSION['blog'][$blog_id][$session_id])) {
             $_SESSION['blog'][$blog_id][$session_id] = time();
             dbquery("UPDATE ".DB_BLOG." SET blog_reads=blog_reads+1 WHERE blog_id='".intval($blog_id)."'");
