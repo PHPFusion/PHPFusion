@@ -58,7 +58,7 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
         /**
          * Download File Section
          */
-        if (\defender::safe() && !empty($_FILES['download_file']['name']) && is_uploaded_file($_FILES['download_file']['tmp_name'])) {
+        if (\Defender::safe() && !empty($_FILES['download_file']['name']) && is_uploaded_file($_FILES['download_file']['tmp_name'])) {
 
             $upload = form_sanitizer($_FILES['download_file'], '', 'download_file');
             $criteriaArray['download_filesize'] = parsebytesize($_FILES['download_file']['size']);
@@ -70,7 +70,7 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
                 } else if (!empty($upload['target_file'])) {
                     $criteriaArray['download_file'] = $upload['target_file'];
                 } else {
-                    \defender::stop();
+                    \Defender::stop();
                     addNotice('warning', $locale['download_0113']);
                 }
             }
@@ -78,11 +78,11 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
         } else if (!empty($_POST['download_url']) && empty($data['download_file'])) {
             $criteriaArray['download_url'] = form_sanitizer($_POST['download_url'], '', 'download_url');
         } else if (empty($data['download_file']) && empty($data['download_url'])) {
-            \defender::stop();
+            \Defender::stop();
             addNotice('danger', $locale['download_0111']);
         }
         // Screenshot submissions
-        if (\defender::safe() && !empty($_FILES['download_image']['name']) && is_uploaded_file($_FILES['download_image']['tmp_name'])) {
+        if (\Defender::safe() && !empty($_FILES['download_image']['name']) && is_uploaded_file($_FILES['download_image']['tmp_name'])) {
             $upload = form_sanitizer($_FILES['download_image'], '', 'download_image');
             if (empty($upload['error'])) {
                 $criteriaArray['download_image'] = $upload['image_name'];
@@ -91,11 +91,11 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
             }
         } else {
             if ($dl_settings['download_screenshot_required']) {
-                \defender::stop();
-                \defender::setInputError("download_image");
+                \Defender::stop();
+                \Defender::setInputError("download_image");
             }
         }
-        if (defender::safe()) {
+        if (Defender::safe()) {
             $inputArray = [
                 'submit_type'      => 'd',
                 'submit_user'      => $userdata['user_id'],

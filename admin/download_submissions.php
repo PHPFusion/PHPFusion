@@ -48,7 +48,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 "download_keywords"          => form_sanitizer($_POST['download_keywords'], '', 'download_keywords'),
                 "download_datestamp"         => $callback_data['submit_datestamp'],
             ];
-            if (defender::safe()) {
+            if (Defender::safe()) {
                 // move files
                 if (!empty($callback_data['download_file']) && file_exists(DOWNLOADS."submissions/".$callback_data['download_file'])) {
                     $dest = DOWNLOADS."files/";
