@@ -55,7 +55,7 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
             ];
 
             // Handle
-            if (\defender::safe()) {
+            if (\Defender::safe()) {
 
                 // Publish Submission
                 $publish_submission = filter_input(INPUT_POST, 'publish_submission', FILTER_DEFAULT);
@@ -95,7 +95,7 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
 
         if (dbrows($result) > 0) {
             $data = dbarray($result);
-            $submit_criteria = \defender::decode($data['submit_criteria']);
+            $submit_criteria = \Defender::decode($data['submit_criteria']);
             $returnInformations = [
                 'weblink_user_name'   => $data['submit_user'],
                 'weblink_name'        => $submit_criteria['weblink_name'],
@@ -287,7 +287,7 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
                 <?php if (dbrows($result) > 0) :
                     while ($data = dbarray($result)) : ?>
                         <?php
-                        $submitData = \defender::decode($data['submit_criteria']);
+                        $submitData = \Defender::decode($data['submit_criteria']);
 
                         $submitUser = $this->locale['user_na'];
                         if ($data['user_name']) {

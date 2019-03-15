@@ -78,12 +78,12 @@ class WeblinksSubmissions extends WeblinksServer {
                 ];
 
                 // Save
-                if (\defender::safe()) {
+                if (\Defender::safe()) {
                     $inputArray = [
                         'submit_type'      => 'l',
                         'submit_user'      => fusion_get_userdata('user_id'),
                         'submit_datestamp' => TIME,
-                        'submit_criteria'  => \defender::encode($criteriaArray)
+                        'submit_criteria'  => \Defender::encode($criteriaArray)
                     ];
                     dbquery_insert(DB_SUBMISSIONS, $inputArray, 'save');
                     addNotice('success', $this->locale['WLS_0910']);

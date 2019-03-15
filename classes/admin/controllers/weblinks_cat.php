@@ -90,14 +90,14 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
             ];
 
             // Save
-            if (\defender::safe()) {
+            if (\Defender::safe()) {
                 // Update
                 if (dbcount("(weblink_cat_id)", DB_WEBLINK_CATS, "weblink_cat_id=:catid", [':catid' => $inputArray['weblink_cat_id']])) {
                     if (!dbcount("(weblink_cat_id)", DB_WEBLINK_CATS, $categoryNameCheck['when_updating'])) {
                         dbquery_insert(DB_WEBLINK_CATS, $inputArray, 'update');
                         addNotice('success', $this->locale['WLS_0041']);
                     } else {
-                        \defender::stop();
+                        \Defender::stop();
                         addNotice('danger', $this->locale['WLS_0321']);
                     }
                     // Insert
@@ -106,11 +106,11 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
                         $inputArray['weblink_cat_id'] = dbquery_insert(DB_WEBLINK_CATS, $inputArray, 'save');
                         addNotice('success', $this->locale['WLS_0040']);
                     } else {
-                        \defender::stop();
+                        \Defender::stop();
                         addNotice('danger', $this->locale['WLS_0321']);
                     }
                 }
-                if (\defender::safe()) {
+                if (\Defender::safe()) {
                     if (isset($_POST['save_cat_and_close'])) {
                         redirect(clean_request('', ['action', 'ref'], FALSE));
                     } else {
@@ -212,7 +212,7 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
                 foreach ($input as $weblink_cat_id) {
                     // check input table
                     if (dbcount("('weblink_cat_id')", DB_WEBLINK_CATS,
-                            "weblink_cat_id=:catid", [':catid' => (int)$weblink_cat_id]) && \defender::safe()
+                            "weblink_cat_id=:catid", [':catid' => (int)$weblink_cat_id]) && \Defender::safe()
                     ) {
                         switch ($_POST['table_action']) {
                             case "publish":
