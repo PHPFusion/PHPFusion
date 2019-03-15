@@ -17,11 +17,11 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Forums\Admin;
 
-use PHPFusion\Forums\ForumServer;
+use \PHPFusion\Infusions\Forum\Classes\Forum_Server;
 
 // This is being extended by viewer
 // A model file
-abstract class ForumAdminInterface extends ForumServer {
+abstract class ForumAdminInterface extends Forum_Server {
     public static $admin_instance = NULL;
     public static $admin_rank_instance = NULL;
     public static $admin_tag_instance = NULL;
@@ -144,7 +144,7 @@ abstract class ForumAdminInterface extends ForumServer {
                 $name_check = dbcount("('forum_name')", DB_FORUMS, "forum_name='".$forum_name."'");
             }
             if ($name_check) {
-                \defender::stop();
+                \Defender::stop();
                 addNotice('danger', self::$locale['forum_error_7']);
             } else {
                 return $forum_name;

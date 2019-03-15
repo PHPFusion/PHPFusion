@@ -168,7 +168,7 @@ class View_Thread extends Forum_Server {
                     // Check if this is the last post of the thread and update the thread with latest post in the entire thread result
                     $is_last_post = dbcount("(thread_id)", DB_FORUM_THREADS, "thread_id=:tid AND thread_lastpostid=:pid AND thread_lastuser=:aid", [":tid" => $thread_id, ":pid" => $post_id] + $result_arr);
                     if ($is_last_post) {
-                        $thread_last_result = dbquery("SELECT thread_id ':last_tid', post_id ':last_pid', post_author ':last_aid', post_datestamp ':last_time' 
+                        $thread_last_result = dbquery("SELECT thread_id ':last_tid', post_id ':last_pid', post_author ':last_aid', post_datestamp ':last_time'
                         FROM ".DB_FORUM_POSTS." WHERE thread_id=:tid AND post_hidden='0' ORDER BY post_datestamp DESC LIMIT 1", [":tid" => $thread_id]);
                         $last_thread_data = dbarray($thread_last_result);
                         dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost=:last_time, thread_lastpostid=:last_pid, thread_postcount=thread_postcount-1, thread_lastuser=:last_aid WHERE thread_id=:last_tid", $last_thread_data);
@@ -262,7 +262,7 @@ class View_Thread extends Forum_Server {
                     // If you merge, the datestamp on all forum, threads, post will not be updated.
                     $update_forum_lastpost = FALSE;
 
-                    if (\defender::safe()) {
+                    if (\Defender::safe()) {
                         // Prepare forum merging action
                         $last_post_author = dbarray(dbquery("
                         SELECT post_author FROM ".DB_FORUM_POSTS."
@@ -364,7 +364,7 @@ class View_Thread extends Forum_Server {
                             }
                         }
 
-                        if (\defender::safe()) {
+                        if (\Defender::safe()) {
                             redirect(FORUM."postify.php?post=reply&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;thread_id=".intval($post_data['thread_id'])."&amp;post_id=".intval($post_data['post_id']));
                         }
 
@@ -610,7 +610,7 @@ class View_Thread extends Forum_Server {
 
                             $thread_data['thread_sticky'] = isset($_POST['thread_sticky']) ? 1 : 0;
 
-                            if (\defender::safe()) {
+                            if (\Defender::safe()) {
 
                                 // If post delete is checked
                                 $this->delete_post($post_data['post_id'], $post_data['thread_id'], $post_data['forum_id'], $is_first_post);
@@ -660,7 +660,7 @@ class View_Thread extends Forum_Server {
                                     }
                                 }
 
-                                if (\defender::safe()) {
+                                if (\Defender::safe()) {
                                     redirect(FORUM."postify.php?post=edit&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;thread_id=".intval($post_data['thread_id'])."&amp;post_id=".intval($post_data['post_id']));
                                 }
                             }

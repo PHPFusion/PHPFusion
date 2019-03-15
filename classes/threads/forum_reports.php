@@ -60,7 +60,7 @@ class Forum_Reports {
                 if (isset($selected_comments[$report_reason])) {
                     $report_comment = $selected_comments[$report_reason];
                 } else {
-                    \defender::stop();
+                    \Defender::stop();
                     addNotice("danger", "Your report selection could not be determined. Please try again.");
                     redirect($exit_uri);
                 }
@@ -68,7 +68,7 @@ class Forum_Reports {
                 if (isset($_GET['rtid']) && isnum($_GET['rtid']) && $post_id = dbcount("(post_id)", DB_FORUM_POSTS, "post_id=:pid", [":pid" => intval($_GET['rtid'])])) {
                     // Redirect if user has reported on this earlier
                     if (dbcount("(report_id)", DB_FORUM_REPORTS, "report_user=:uid AND post_id=:rtid AND report_status=0", [':uid' => $userdata['user_id'], ":rtid" => intval($_GET['rtid'])])) {
-                        \defender::stop();
+                        \Defender::stop();
                         addNotice("danger", "There are open reports that you  made on this post earlier. Please wait for moderator to review the post.");
                         redirect($exit_uri);
                     }
@@ -80,7 +80,7 @@ class Forum_Reports {
                         "report_datestamp" => TIME,
                         "report_updated"   => TIME,
                     ];
-                    if (\defender::safe()) {
+                    if (\Defender::safe()) {
                         dbquery_insert(DB_FORUM_REPORTS, $rdata, "save");
                         addNotice("success", "Your feedback has been received. Thank you.");
                         redirect($exit_uri);
@@ -105,7 +105,7 @@ class Forum_Reports {
                     if (selected == '#repb-report_coll') {
                         value = 2;
                     }
-                    $('#report_type').val(value);           
+                    $('#report_type').val(value);
                 });
                 ");
                 // let us do a hidden input here, and see which tab is active.
@@ -133,8 +133,8 @@ class Forum_Reports {
                 ]);
                 $modal .= closecollapsebody();
                 $modal .= "</div>\n";
-                $modal .= modalfooter("<div class='display-inline-block pull-left'><small>Please read the 
-                <a class='strong' href='$policy_link'>PHP-Fusion Content Policy</a> and the 
+                $modal .= modalfooter("<div class='display-inline-block pull-left'><small>Please read the
+                <a class='strong' href='$policy_link'>PHP-Fusion Content Policy</a> and the
                 <a class='strong' href='$rules_link'>Forum Rules</a>.</small></div>
                 ".form_button("submit_report", "Submit Report", "submit_report", ["class" => "btn btn-primary"])."<a class='btn btn-default' href='".clean_request("", ["report", "rtid"], FALSE)."'>".$locale['close']."</a>",
                     FALSE);
@@ -238,7 +238,7 @@ class Forum_Reports {
                     "report_comment" => form_sanitizer($_POST['report_comment'], "", "report_comment"),
                     "report_actions" => form_sanitizer($_POST['report_actions'], "", "report_actions")
                 ];
-                if (\defender::safe()) {
+                if (\Defender::safe()) {
                     $first_postid = dbresult(dbquery("SELECT MIN(post_id) FROM ".DB_FORUM_POSTS." WHERE thread_id=:tid", [':tid' => $data['thread_id']]), 0);
                     switch ($rdata['report_actions']) {
                         // check whether it is a first post.
@@ -261,7 +261,7 @@ class Forum_Reports {
                                 ":status"  => 2,
                                 ":msg"     => $rdata['report_comment'],
                                 ":updated" => TIME,
-                                ":data"    => \defender::encode($data)
+                                ":data"    => \Defender::encode($data)
                             ]);
                             break;
                         case 2: // Delete Post and Ban Account
@@ -283,7 +283,7 @@ class Forum_Reports {
                                 ":status"  => 2,
                                 ":msg"     => $rdata['report_comment'],
                                 ":updated" => TIME,
-                                ":data"    => \defender::encode($data)
+                                ":data"    => \Defender::encode($data)
                             ]);
                             break;
                         case 3: // Rejected the report - nobody can report on this post again.
@@ -300,7 +300,7 @@ class Forum_Reports {
                                 ":status"  => 2,
                                 ":msg"     => $rdata['report_comment'],
                                 ":updated" => TIME,
-                                ":data"    => \defender::encode($data)
+                                ":data"    => \Defender::encode($data)
                             ]);
                     }
                     addNotice("success", "Post moderation has been completed successfully.");
@@ -314,7 +314,7 @@ class Forum_Reports {
             $post_message = $data['post_message'];
 
             if ($data['report_status'] > 0 && !empty($data['report_archive'])) {
-                $arc_data = \defender::decode($data['report_archive']);
+                $arc_data = \Defender::decode($data['report_archive']);
                 $post_message = $arc_data['post_message'];
                 $post_user = fusion_get_user($arc_data['post_author']);
             }

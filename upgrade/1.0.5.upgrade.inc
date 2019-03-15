@@ -20,7 +20,7 @@ $locale = fusion_get_locale("", [
     INFUSIONS."forum/locale/".LOCALESET."/forum_tags.php"
 ]);
 
-//$locale = \defender::sanitize_array($locale);
+//$locale = \Defender::sanitize_array($locale);
 
 // Infusion general information
 $inf_title = $locale['forums']['title'];

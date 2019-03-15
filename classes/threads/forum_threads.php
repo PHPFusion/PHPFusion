@@ -71,25 +71,25 @@ class Forum_Threads extends Forum_Server {
         $filter += $default_filter;
 
         // Get threads with filter conditions (XSS prevention)
-        $info['count_query'] = $filter['count_query'] ?: "        
+        $info['count_query'] = $filter['count_query'] ?: "
         SELECT t.thread_id ".$filter['select']."
         FROM ".DB_FORUMS." tf
         INNER JOIN ".DB_FORUM_THREADS." t ON tf.forum_id=t.forum_id
-        LEFT JOIN ".DB_FORUM_POLLS." p ON p.thread_id = t.thread_id        
+        LEFT JOIN ".DB_FORUM_POLLS." p ON p.thread_id = t.thread_id
         ##LEFT JOIN ".DB_FORUM_ATTACHMENTS." a ON a.thread_id = t.thread_id
         ##LEFT JOIN ".DB_FORUM_POSTS." p1 ON p1.thread_id=t.thread_id AND tf.forum_id=p1.forum_id
-        ##LEFT JOIN ".DB_FORUM_VOTES." v ON v.thread_id = t.thread_id AND p1.post_id = v.post_id        
+        ##LEFT JOIN ".DB_FORUM_VOTES." v ON v.thread_id = t.thread_id AND p1.post_id = v.post_id
         ".$filter['join']."
         WHERE ".($forum_id ? " tf.forum_id='".intval($forum_id)."' AND " : "")."t.thread_hidden='0' AND ".groupaccess('tf.forum_access').$filter['condition'].(multilang_table("FO") ? " AND tf.forum_language='".LANGUAGE."'" : '')." GROUP BY t.thread_id";
 
         $info['thread_query'] = $filter['query'] ?: "
-            SELECT t.*, tf.*, 
+            SELECT t.*, tf.*,
             IF (n.thread_id > 0, 1 , 0) 'user_tracked',
-            COUNT(pv.forum_vote_user_id) 'poll_voted'            
+            COUNT(pv.forum_vote_user_id) 'poll_voted'
             ".$filter['select']."
-            FROM ".DB_FORUM_THREADS." t            
+            FROM ".DB_FORUM_THREADS." t
             INNER JOIN ".DB_FORUMS." tf ON tf.forum_id=t.forum_id
-            LEFT JOIN ".DB_FORUM_POLL_VOTERS." pv ON pv.thread_id = t.thread_id AND pv.forum_vote_user_id='".$userdata['user_id']."' AND t.thread_poll=1            
+            LEFT JOIN ".DB_FORUM_POLL_VOTERS." pv ON pv.thread_id = t.thread_id AND pv.forum_vote_user_id='".$userdata['user_id']."' AND t.thread_poll=1
             LEFT JOIN ".DB_FORUM_THREAD_NOTIFY." n ON n.thread_id = t.thread_id AND n.notify_user = '".$userdata['user_id']."'
             ".$filter['join']."
             WHERE ".($forum_id ? "t.forum_id='".intval($forum_id)."' AND " : "")." t.thread_hidden='0' AND ".groupaccess('tf.forum_access').$filter['condition'].(multilang_table("FO") ? " AND tf.forum_language='".LANGUAGE."'" : '')."
@@ -149,7 +149,7 @@ class Forum_Threads extends Forum_Server {
                     $this->setThreadPermission(Forum_Moderator::check_forum_mods($threads['forum_mods']));
 
                     // Find First Post Message
-                    $first_post_query = "SELECT post_id, post_message, post_smileys, post_author, post_datestamp 
+                    $first_post_query = "SELECT post_id, post_message, post_smileys, post_author, post_datestamp
                     FROM ".DB_FORUM_POSTS." WHERE thread_id=:tid AND forum_id=:fid ORDER BY post_id ASC LIMIT 1";
                     $first_post_param = [':tid' => $threads['thread_id'], ':fid' => $threads['forum_id']];
                     $first_post_result = dbquery($first_post_query, $first_post_param);
@@ -350,7 +350,7 @@ class Forum_Threads extends Forum_Server {
         }
 
         // Count for Filters
-        $thread_sql = "SELECT t.thread_id FROM ".DB_FORUM_THREADS." t INNER JOIN ".DB_FORUMS." tf ON tf.forum_id=t.forum_id 
+        $thread_sql = "SELECT t.thread_id FROM ".DB_FORUM_THREADS." t INNER JOIN ".DB_FORUMS." tf ON tf.forum_id=t.forum_id
         ".$filter['join']." ".$filter['custom_join']." WHERE t.thread_hidden=0 ".$filter['custom_condition'].$filter['time_condition'];
 
         $thread_count = dbrows(dbquery($thread_sql));
@@ -364,11 +364,11 @@ class Forum_Threads extends Forum_Server {
                 GROUP BY a.thread_id";
         $attach_count = dbrows(dbquery($attach_sql));
 
-        $poll_sql = "SELECT t.thread_id 
+        $poll_sql = "SELECT t.thread_id
                 FROM ".DB_FORUM_THREADS." t
                 INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id
                 ".$filter['join']."
-                ".$filter['custom_join']."                
+                ".$filter['custom_join']."
                 WHERE t.thread_poll=1 AND t.thread_hidden=0 ".$filter['custom_condition'].$filter['time_condition']."
                 GROUP BY thread_id";
         $poll_count = dbrows(dbquery($poll_sql));
@@ -897,7 +897,7 @@ class Forum_Threads extends Forum_Server {
         $userdata = fusion_get_userdata();
 
         if (isset($_POST['post_quick_reply'])) {
-            if ($this->getThreadPermission("can_reply") && \defender::safe()) {
+            if ($this->getThreadPermission("can_reply") && \Defender::safe()) {
                 $this->thread_data = $this->thread_info['thread'];
                 require_once INCLUDES."flood_include.php";
                 if (!flood_control("post_datestamp", DB_FORUM_POSTS, "post_author='".$userdata['user_id']."'")) { // have notice
@@ -925,7 +925,7 @@ class Forum_Threads extends Forum_Server {
                         $post_data['post_cat'] = 0;
                     }
 
-                    if (\defender::safe()) { // post message is invalid or whatever is invalid
+                    if (\Defender::safe()) { // post message is invalid or whatever is invalid
 
                         $update_forum_lastpost = FALSE;
 
@@ -1298,8 +1298,8 @@ class Forum_Threads extends Forum_Server {
                 ];
                 if (dbrows(dbquery($replies_sql, $replies_param))) {
 
-                    $replies_sql = "SELECT post_id, post_datestamp, post_author 
-                    FROM ".DB_FORUM_POSTS." WHERE post_cat=:post_id AND thread_id=:thread_id AND forum_id=:forum_id 
+                    $replies_sql = "SELECT post_id, post_datestamp, post_author
+                    FROM ".DB_FORUM_POSTS." WHERE post_cat=:post_id AND thread_id=:thread_id AND forum_id=:forum_id
                     GROUP BY post_author ORDER BY post_datestamp DESC";
 
                     $reply_result = dbquery($replies_sql, $replies_param);

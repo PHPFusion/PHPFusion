@@ -199,7 +199,7 @@ class ForumAdminView extends ForumAdminInterface {
 
                 addnotice('success', self::$locale['forum_notice_10']);
 
-                if (\defender::safe()) {
+                if (\Defender::safe()) {
                     redirect(FUSION_SELF.$aidlink.$this->ext);
                 }
 
@@ -244,7 +244,7 @@ class ForumAdminView extends ForumAdminInterface {
                 }
                 if ($alias_check) {
 
-                    \defender::stop();
+                    \Defender::stop();
                     addNotice('warning', self::$locale['forum_error_6']);
 
                 }
@@ -272,7 +272,7 @@ class ForumAdminView extends ForumAdminInterface {
                 $this->data['forum_image'] = $type_opts[intval($_POST['forum_image_header'])].form_sanitizer($_POST['forum_image_url'], '', 'forum_image_url');
                 $upload = copy_file($this->data['forum_image'], FORUM."images/");
                 if ($upload['error'] == TRUE) {
-                    \defender::stop();
+                    \Defender::stop();
                     addNotice('danger', self::$locale['forum_error_9']);
 
                 } else {
@@ -300,7 +300,7 @@ class ForumAdminView extends ForumAdminInterface {
                         0) + 1;
             }
 
-            if (\defender::safe()) {
+            if (\Defender::safe()) {
 
                 if ($this->verify_forum($this->data['forum_id'])) {
 
@@ -452,7 +452,7 @@ class ForumAdminView extends ForumAdminInterface {
                             self::recalculate_post($action_data['forum_id']); // wipe
 
                         } else {
-                            \defender::stop();
+                            \Defender::stop();
                             addNotice('danger', self::$locale['forum_notice_na']);
                         }
 
@@ -464,11 +464,11 @@ class ForumAdminView extends ForumAdminInterface {
                                     $action_data['subforums_to_forum'])."'
                 ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_cat='".$action_data['forum_id']."'");
                         } else if (!$action_data['delete_forums']) {
-                            \defender::stop();
+                            \Defender::stop();
                             addNotice('danger', self::$locale['forum_notice_na']);
                         }
                     } else {
-                        \defender::stop();
+                        \Defender::stop();
                         addNotice('error', self::$locale['forum_notice_na']);
                     }
 
@@ -771,7 +771,7 @@ class ForumAdminView extends ForumAdminInterface {
                 $res = TRUE;
             }
         }
-        if ($res == TRUE or (isset($_POST['save_forum']) && !\defender::safe()) or
+        if ($res == TRUE or (isset($_POST['save_forum']) && !\Defender::safe()) or
             isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['forum_id']) && isnum($_GET['forum_id'])
         ) {
             $this->display_forum_form();

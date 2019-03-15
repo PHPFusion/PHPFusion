@@ -121,7 +121,7 @@ class New_Thread extends Forum_Server {
                                 $option_data[$i] = form_sanitizer($value, '', "poll_options[$i]");
                             }
 
-                            if (\defender::safe()) {
+                            if (\Defender::safe()) {
                                 $option_data = array_values(array_filter($option_data));
                                 array_unshift($option_data, NULL);
                                 unset($option_data[0]);
@@ -202,14 +202,14 @@ class New_Thread extends Forum_Server {
                     ];
 
                     // Execute post new thread
-                    if (isset($_POST['post_newthread']) && \defender::safe()) {
+                    if (isset($_POST['post_newthread']) && \Defender::safe()) {
 
                         require_once INCLUDES."flood_include.php";
 
                         // all data is sanitized here.
                         if (!flood_control("post_datestamp", DB_FORUM_POSTS, "post_author='".$userdata['user_id']."'")) {
 
-                            if (\defender::safe()) {
+                            if (\Defender::safe()) {
 
                                 // create a new thread.
                                 $last_thread_id = dbquery_insert(DB_FORUM_THREADS, $thread_data, 'save', [
@@ -316,7 +316,7 @@ class New_Thread extends Forum_Server {
                                     dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_poll='1' WHERE thread_id='".$pollData['thread_id']."'");
                                 }
                             }
-                            if (\defender::safe()) {
+                            if (\Defender::safe()) {
                                 redirect(INFUSIONS."forum/postify.php?post=new&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;thread_id=".intval($post_data['thread_id'].""));
                             }
                         }
@@ -477,7 +477,7 @@ class New_Thread extends Forum_Server {
                     'post_locked'     => 0,
                 ];
 
-                if (isset($_POST['post_newthread']) && \defender::safe()) {
+                if (isset($_POST['post_newthread']) && \Defender::safe()) {
 
                     require_once INCLUDES.'flood_include.php';
 
@@ -614,7 +614,7 @@ class New_Thread extends Forum_Server {
                                     }
                                 }
 
-                                if (\defender::safe()) {
+                                if (\Defender::safe()) {
                                     redirect(INFUSIONS."forum/postify.php?post=new&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;thread_id=".intval($post_data['thread_id'].""));
                                 }
 

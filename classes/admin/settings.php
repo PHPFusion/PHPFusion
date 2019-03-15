@@ -67,7 +67,7 @@ class ForumAdminSettings extends ForumAdminInterface {
 
         if (isset($_POST['save_forum_uf'])) {
             $current_uf = !empty($_POST['uf_field_enabled']) ? form_sanitizer($_POST['uf_field_enabled'], '', 'uf_field_enabled') : '';
-            if (\defender::safe()) {
+            if (\Defender::safe()) {
                 if ($_enabled === NULL) {
                     $result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_enabled_userfields', :current_uf, 'forum')", [':current_uf' => $current_uf]);
                 } else {
@@ -110,7 +110,7 @@ class ForumAdminSettings extends ForumAdminInterface {
                             <div class='col-xs-12 col-sm-2'>
                                 <h4>
                                     <strong>
-                                        <?php echo QuantumFields::parse_label($data['field_cat_name']) ?>
+                                        <?php echo UserFieldsQuantum::parse_label($data['field_cat_name']) ?>
                                     </strong>
                                 </h4>
                             </div>
@@ -131,7 +131,7 @@ class ForumAdminSettings extends ForumAdminInterface {
                                                 }
                                                 $current_field_title = (!empty($user_field_name) ? $user_field_name : self::$locale['na']);
                                             } else {
-                                                $current_field_title = QuantumFields::parse_label($cdata['field_title']);
+                                                $current_field_title = UserFieldsQuantum::parse_label($cdata['field_title']);
                                             }
                                             $checked = (isset($enabled_uf[$cdata['field_name']]) ? $cdata['field_name'] : '');
                                             echo form_checkbox('uf_field_enabled[]', $current_field_title, $checked, ['input_id' => 'uf_'.$cdata['field_id'], 'reverse_label' => TRUE, 'value' => $cdata['field_name'], 'class' => 'spacer-sm']);
@@ -176,7 +176,7 @@ class ForumAdminSettings extends ForumAdminInterface {
                 'points_to_downvote'        => form_sanitizer($_POST['points_to_downvote'], 100, 'points_to_downvote'),
                 'forum_show_reputation'     => form_sanitizer($_POST['forum_show_reputation'], 0, 'forum_show_reputation'),
             ];
-            if (\defender::safe()) {
+            if (\Defender::safe()) {
                 foreach ($inputArray as $settings_name => $settings_value) {
                     $inputSettings = [
                         "settings_name" => $settings_name, "settings_value" => $settings_value, "settings_inf" => "forum",
@@ -328,7 +328,7 @@ class ForumAdminSettings extends ForumAdminInterface {
                 'forum_last_post_avatar'     => form_sanitizer($_POST['forum_last_post_avatar'], 0, 'forum_last_post_avatar'),
                 'forum_editpost_to_lastpost' => form_sanitizer($_POST['forum_editpost_to_lastpost'], 0, 'forum_editpost_to_lastpost'),
             ];
-            if (\defender::safe()) {
+            if (\Defender::safe()) {
                 foreach ($inputArray as $settings_name => $settings_value) {
                     $inputSettings = [
                         "settings_name" => $settings_name, "settings_value" => $settings_value, "settings_inf" => "forum",

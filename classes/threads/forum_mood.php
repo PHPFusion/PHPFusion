@@ -64,7 +64,7 @@ class Forum_Mood extends Forum_Server {
                 'notify_status'    => 1,
             ];
 
-            if (\defender::safe()) {
+            if (\Defender::safe()) {
 
                 $mood_exists = dbcount('(mood_id)', DB_FORUM_MOODS, "mood_id='".$notify_data['notify_mood_id']."'") ? TRUE : FALSE;
 
@@ -88,7 +88,7 @@ class Forum_Mood extends Forum_Server {
             ];
 
             if (
-                \defender::safe() &&
+                \Defender::safe() &&
                 // Mood exist check
                 dbcount('(mood_id)', DB_FORUM_MOODS, "mood_id='".$notify_data['notify_mood_id']."'") &&
                 // Exists record check

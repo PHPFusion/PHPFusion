@@ -167,7 +167,7 @@ class ForumAdminTags extends ForumAdminInterface {
                 'tag_language'    => form_sanitizer($_POST['tag_language'], LANGUAGE, 'tag_language'),
             ];
 
-            if (\defender::safe()) {
+            if (\Defender::safe()) {
 
                 if (!empty($this->data['tag_id'])) {
                     /**

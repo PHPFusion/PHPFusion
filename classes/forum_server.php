@@ -26,7 +26,7 @@ use PHPFusion\Infusions\Forum\Classes\Threads\Forum_Mood;
 use PHPFusion\Infusions\Forum\Classes\Threads\Forum_ThreadFilter;
 use PHPFusion\Infusions\Forum\Classes\Threads\Forum_Threads;
 use PHPFusion\Infusions\Forum\Classes\Forum\Forum;
-use PHPFusion\Infusions\Forum\Classes\Post\NewThread;
+//use PHPFusion\Infusions\Forum\Classes\Post\NewThread;
 
 /**
  * Class Forum_Server

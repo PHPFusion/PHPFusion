@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Forums\Admin;
 
-use PHPFusion\Forums\ForumServer;
+use \PHPFusion\Infusions\Forum\Classes\Forum_Server;
 
 class ForumAdminRanks extends ForumAdminInterface {
     protected $data = [
@@ -207,7 +207,7 @@ class ForumAdminRanks extends ForumAdminInterface {
                 'rank_apply' => $this->data['rank_type'] == 2 ? $this->data['rank_apply_special'] : $this->data['rank_apply_normal']
             ];
 
-            if (\defender::safe()) {
+            if (\Defender::safe()) {
 
                 if (!empty($this->data['rank_id']) && !$this->check_duplicate_ranks()) {
                     /**
@@ -287,7 +287,7 @@ class ForumAdminRanks extends ForumAdminInterface {
                 $html .= "<tr>\n".
                     "<td '>".$data['rank_title']."</td>\n".
                     "<td>".($data['rank_apply'] == -104 ? self::$locale['forum_rank_425'] : getgroupname($data['rank_apply']))."</td>\n".
-                    "<td class='col-xs-2'>".ForumServer::display_rank($data['rank_posts'], $data['rank_apply'], $data['rank_apply'])."</td>\n".
+                    "<td class='col-xs-2'>".Forum_Server::display_rank($data['rank_posts'], $data['rank_apply'], $data['rank_apply'])."</td>\n".
                     "<td>";
 
                 if ($data['rank_type'] == 0) {
