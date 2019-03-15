@@ -121,7 +121,7 @@ echo "<link href='".THEME."styles.css' rel='stylesheet' type='text/css' media='s
 
 echo render_favicons(defined('THEME_ICON') ? THEME_ICON : IMAGES.'favicons/');
 
-echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery.js'></script>\n";
+echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery.min.js'></script>\n";
 echo "</head>\n";
 
 display_maintenance($info);
