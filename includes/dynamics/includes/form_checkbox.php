@@ -140,7 +140,7 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
                 off: {
                     icon: 'glyphicon glyphicon-unchecked fa-fw'
                 }
-            };           
+            };
         // Event Handlers
         button.on('click', function () {
             checkbox.prop('checked', !checkbox.is(':checked'));
@@ -204,7 +204,7 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
                 $checkbox .= "<label class='control-label m-r-10' for='".$options['input_id']."-$key'".($options['inner_width'] ? " style='width: ".$options['inner_width']."'" : '').">";
 
                 $checkbox .= "<input id='".$options['input_id']."-$key' name='$input_name' value='$key' type='".$options['type']."'
-                
+
                 ".($options['deactivate'] || $options['deactivate_key'] === $key ? 'disabled' : '').($options['onclick'] ? ' onclick="'.$options['onclick'].'"' : '').($input_value[$key] == TRUE || $default_checked && $key == FALSE ? ' checked' : '')." />\n";
 
                 $checkbox .= $value;

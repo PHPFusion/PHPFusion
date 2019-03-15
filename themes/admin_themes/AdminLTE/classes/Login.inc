@@ -36,7 +36,7 @@ class Login {
                     $html .= display_avatar($userdata, '70px', '', FALSE, 'img-circle');
                 $html .= '</div>';
 
-                if (class_exists('\defender')) {
+                if (class_exists('\Defender')) {
                     \Defender::getInstance()->add_field_session([
                         'input_name'     => 'admin_password',
                         'id'             => 'admin_password',
@@ -58,7 +58,7 @@ class Login {
                         $html .= '</div>';
                     $html .= '</div>';
 
-                    if (class_exists('\defender') && \Defender::inputHasError('admin_password')) {
+                    if (class_exists('\Defender') && \Defender::inputHasError('admin_password')) {
                         $html .= '<div class="label label-danger error-text">'.$locale['global_182'].'</div>';
                     }
                 $html .= closeform();

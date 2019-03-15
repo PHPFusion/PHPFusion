@@ -24,7 +24,7 @@ namespace Defender;
  *
  * @package Defender
  */
-class Token extends \defender {
+class Token extends \Defender {
 
     /**
      * The remote file must begin with site_path
