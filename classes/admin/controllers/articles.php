@@ -131,7 +131,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
             }
 
             // Handle
-            if (\defender::safe()) {
+            if (\Defender::safe()) {
                 // Update
                 if (dbcount("('article_id')", DB_ARTICLES, "article_id=:articleid", [':articleid' => $this->article_data['article_id']])) {
                     dbquery_insert(DB_ARTICLES, $this->article_data, 'update');
@@ -356,7 +356,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
             if (!empty($input)) {
                 foreach ($input as $article_id) {
                     // check input table
-                    if (dbcount("('article_id')", DB_ARTICLES, "article_id=:articleid", [':articleid' => intval($article_id)]) && \defender::safe()) {
+                    if (dbcount("('article_id')", DB_ARTICLES, "article_id=:articleid", [':articleid' => intval($article_id)]) && \Defender::safe()) {
 
                         switch ($_POST['table_action']) {
                             case "publish":

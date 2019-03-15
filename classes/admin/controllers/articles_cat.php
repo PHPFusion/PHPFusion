@@ -88,7 +88,7 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
             ];
 
             // Save
-            if (\defender::safe()) {
+            if (\Defender::safe()) {
 
                 // Update
                 if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_id=:articlecatid", [':articlecatid' => $inputArray['article_cat_id']])) {
@@ -238,7 +238,7 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
                 $input = ($input ? explode(",", $input) : []);
                 foreach ($input as $article_cat_id) {
                     // check input table
-                    if (dbcount("('article_cat_id')", DB_ARTICLE_CATS, "article_cat_id=:articlecat", [':articlecat' => intval($article_cat_id)]) && \defender::safe()) {
+                    if (dbcount("('article_cat_id')", DB_ARTICLE_CATS, "article_cat_id=:articlecat", [':articlecat' => intval($article_cat_id)]) && \Defender::safe()) {
                         switch ($_POST['table_action']) {
                             case "publish":
                                 dbquery("UPDATE ".DB_ARTICLE_CATS." SET article_cat_status=:catstatus WHERE article_cat_id=:catid", [':catstatus' => '1', ':catid' => intval($article_cat_id)]);
