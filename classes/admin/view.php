@@ -598,8 +598,9 @@ class ForumAdminView extends ForumAdminInterface {
                 }
 
                 // delete posts.
-                dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE forum_id='".$_GET['forum_id']."' AND post_datestamp < '".$prune_time."'");
-                echo self::$locale['609'].mysql_affected_rows()."<br />";
+                $query = "DELETE FROM ".DB_FORUM_POSTS." WHERE forum_id='".$_GET['forum_id']."' AND post_datestamp < '".$prune_time."'";
+                dbquery($query);
+                echo self::$locale['609'].dbrows($query)."<br />";
                 echo self::$locale['610'].$delattach."<br />";
 
                 // delete follows on threads
@@ -620,7 +621,7 @@ class ForumAdminView extends ForumAdminInterface {
                 } else {
                     dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='0', forum_lastuser='0' WHERE forum_id='".$_GET['forum_id']."'");
                 }
-                echo self::$locale['611'].mysql_affected_rows()."\n</div>";
+                echo self::$locale['611'].dbrows($result)."\n</div>";
 
                 // calculate and update postcount on each specific threads -  this is the remaining.
                 $result = dbquery("SELECT COUNT(post_id) AS postcount, thread_id FROM ".DB_FORUM_POSTS." WHERE forum_id='".$_GET['forum_id']."' GROUP BY thread_id");
