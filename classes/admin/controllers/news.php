@@ -93,7 +93,7 @@ class NewsAdmin extends NewsAdminModel {
                 $this->news_data['news_breaks'] = isset($_POST['news_breaks']) ? "y" : "n";
             }
 
-            if (\defender::safe()) {
+            if (\Defender::safe()) {
                 if ($this->news_data['news_id']) {
                     // update news gallery default if exist
                     if (!empty($_POST['news_image_full_default'])) {
@@ -549,7 +549,7 @@ class NewsAdmin extends NewsAdminModel {
                 if ($failed_upload) {
                     addNotice("warning", sprintf(self::$locale['news_0269'], $failed_upload));
                 }
-                if (\defender::safe()) {
+                if (\Defender::safe()) {
                     redirect(FUSION_REQUEST);
                 }
             }
@@ -712,7 +712,7 @@ class NewsAdmin extends NewsAdminModel {
             if (!empty($input)) {
                 foreach ($input as $news_id) {
                     // check input table
-                    if (dbcount("('news_id')", DB_NEWS, "news_id='".intval($news_id)."'") && \defender::safe()) {
+                    if (dbcount("('news_id')", DB_NEWS, "news_id='".intval($news_id)."'") && \Defender::safe()) {
 
                         switch ($_POST['table_action']) {
                             case "publish":
