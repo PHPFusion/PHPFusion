@@ -48,7 +48,7 @@ if (isset($_POST['save_album'])) {
                 ".(multilang_table("PG") ? "where album_language='".LANGUAGE."'" : "").""), 0) + 1;
     }
     // do delete image
-    if (\defender::safe()) {
+    if (\Defender::safe()) {
         if (!empty($_FILES['album_image']) && is_uploaded_file($_FILES['album_image']['tmp_name'])) {
             $upload = form_sanitizer($_FILES['album_image'], '', 'album_image');
             if (empty($upload['error'])) {
@@ -82,7 +82,7 @@ if (isset($_POST['save_album'])) {
             }
         }
     }
-    if (\defender::safe()) {
+    if (\Defender::safe()) {
         if (dbcount("(album_id)", DB_PHOTO_ALBUMS, "album_id=:albumid", [':albumid' => intval($data['album_id'])])) {
             // update album
             $result = dbquery_order(DB_PHOTO_ALBUMS, $data['album_order'], 'album_order', $data['album_id'], 'album_id', FALSE, FALSE, TRUE,

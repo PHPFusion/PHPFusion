@@ -41,7 +41,7 @@ if ($gll_settings['gallery_allow_submission']) {
             'photo_thumb1'      => '',
             'photo_thumb2'      => '',
         ];
-        if (\defender::safe()) {
+        if (\Defender::safe()) {
             if (!empty($_FILES['photo_image']) && is_uploaded_file($_FILES['photo_image']['tmp_name'])) {
                 $upload = form_sanitizer($_FILES['photo_image'], "", "photo_image");
                 if (isset($upload['error']) && !$upload['error']) {
@@ -50,18 +50,18 @@ if ($gll_settings['gallery_allow_submission']) {
                         $criteriaArray['photo_thumb1'] = $upload['thumb1_name'];
                         $criteriaArray['photo_thumb2'] = $upload['thumb2_name'];
                     } else {
-                        \defender::stop();
-                        \defender::setInputError("photo_image");
+                        \Defender::stop();
+                        \Defender::setInputError("photo_image");
                         addNotice("danger", $locale['photo_0014']);
                     }
                 }
             } else {
-                \defender::stop();
-                \defender::setInputError('photo_image');
+                \Defender::stop();
+                \Defender::setInputError('photo_image');
                 addNotice('danger', $locale['photo_0014']);
             }
         }
-        if (\defender::safe()) {
+        if (\Defender::safe()) {
             $inputArray = [
                 "submit_id"        => 0,
                 "submit_type"      => 'p',
