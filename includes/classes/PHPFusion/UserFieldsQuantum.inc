@@ -304,8 +304,8 @@ class UserFieldsQuantum extends \SqlHandler {
 
         $query = "
         SELECT field.*,
-        cat.field_cat_id, cat.field_cat_name, cat.field_parent, cat.field_cat_class, root.field_cat_id 'page_id', 
-        root.field_cat_name 'page_name', root.field_cat_db, root.field_cat_index 
+        cat.field_cat_id, cat.field_cat_name, cat.field_parent, cat.field_cat_class, root.field_cat_id 'page_id',
+        root.field_cat_name 'page_name', root.field_cat_db, root.field_cat_index
         FROM ".DB_USER_FIELDS." field
         LEFT JOIN ".DB_USER_FIELD_CATS." cat ON (cat.field_cat_id = field.field_cat)
         LEFT JOIN ".DB_USER_FIELD_CATS." root ON (root.field_cat_id = cat.field_parent)
@@ -499,7 +499,7 @@ class UserFieldsQuantum extends \SqlHandler {
                     }
                 }
                 if (!$this->debug) {
-                    $res = dbquery("SELECT field_id, field_order FROM ".DB_USER_FIELDS." WHERE field_cat=:parent_id ORDER BY field_order ASC", ['parent_id' => ($_GET['parent_id'])]);
+                    $res = dbquery("SELECT field_id, field_order FROM ".DB_USER_FIELDS." WHERE field_cat=:parent_id ORDER BY field_order ASC", [':parent_id' => ($_GET['parent_id'])]);
                     if (dbrows($res)) {
                         $i = 1;
                         while ($rows = dbarray($res)) {
@@ -872,7 +872,7 @@ class UserFieldsQuantum extends \SqlHandler {
 
     private function get_available_modules() {
         $this->locale = fusion_get_locale();
-        $result = dbquery("SELECT field_id, field_name, field_cat, field_required, field_log, field_registration, field_order, field_type,  
+        $result = dbquery("SELECT field_id, field_name, field_cat, field_required, field_log, field_registration, field_order, field_type,
                     field_cat_name
                     FROM ".DB_USER_FIELDS." tuf
                     LEFT JOIN ".DB_USER_FIELD_CATS." tufc ON (tuf.field_cat = tufc.field_cat_id)

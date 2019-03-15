@@ -56,7 +56,7 @@ function render_admin_panel() {
 
                             $html .= '<li class="'.($i > 0 ? 'dropdown' : '').($active ? ' active' : '').'">';
                             if (!empty($admin_pages[$i])) {
-                                $html .= '<a href="#" class="dropdown-toggle" data-toggle="dropdown">'.Admins::getInstance()->get_admin_section_icons($i).' '.$section_name.($i > 4 ? ' <span class="label label-primary">'.count($admin_pages[$i]).'</span>' : '').($i > 0 ? ' <span class="caret"></span>' : '').'</a>';
+                                $html .= '<a href="#" class="dropdown-toggle" data-toggle="dropdown">'.Admins::getInstance()->getAdminSectionIcons($i).' '.$section_name.($i > 4 ? ' <span class="label label-primary">'.count($admin_pages[$i]).'</span>' : '').($i > 0 ? ' <span class="caret"></span>' : '').'</a>';
                                 $html .= '<ul class="dropdown-menu">';
                                     $html .= '<li><a class="adl-link" href="'.ADMIN.'index.php'.$aidlink.'&amp;pagenum='.$i.'">'.$section_name.'</a></li>';
 
@@ -68,7 +68,7 @@ function render_admin_panel() {
                                         }
 
                                         $secondary_active = $data['admin_link'] == Admins::getInstance()->_currentPage() ? TRUE : FALSE;
-                                        $icons = Admins::getInstance()->get_admin_icons($data['admin_rights']);
+                                        $icons = Admins::getInstance()->getAdminIcons($data['admin_rights']);
 
                                         if (!empty($admin_pages[$data['admin_rights']])) {
                                             if (checkrights($data['admin_rights'])) {
@@ -84,7 +84,7 @@ function render_admin_panel() {
 
                                 $html .= '</ul>';
                             } else {
-                                $html .= '<a class="adl-link" href="'.ADMIN.'index.php'.$aidlink.'&amp;pagenum=0">'.Admins::getInstance()->get_admin_section_icons($i).' <span class="adl-section-name">'.$section_name.'</span></a>';
+                                $html .= '<a class="adl-link" href="'.ADMIN.'index.php'.$aidlink.'&amp;pagenum=0">'.Admins::getInstance()->getAdminSectionIcons($i).' <span class="adl-section-name">'.$section_name.'</span></a>';
                             }
 
                             $html .= '</li>';

@@ -144,29 +144,33 @@ function addText(textarea, text1, text2, formname) {
 /**
  * insertText
  *
- * @param textarea
- * @param text
- * @param formname
+ * @param f
+ * @param h
+ * @param e
  */
-function insertText(textarea, text, formname) {
-    textarea = textarea === undefined ? "message" : textarea;
-    formname = formname === undefined ? "inputform" : formname;
-
-    var element = document.forms[formname].elements[textarea];
-
-    element.focus();
-    if (document.selection) {
-        var c = document.selection.createRange();
-        c.text = text;
-        return false;
+function insertText(f, h, e) {
+    if (e == undefined) {
+        e = "inputform"
+    }
+    if (document.forms[e].elements[f].createTextRange) {
+        document.forms[e].elements[f].focus();
+        document.selection.createRange().duplicate().text = h
     } else {
-        if (element.setSelectionRange) {
-            var b = element.selectionStart;
-            element.value = element.value.substring(0, b) + text;
-            element.focus();
+        if ((typeof document.forms[e].elements[f].selectionStart) != "undefined") {
+            var a = document.forms[e].elements[f];
+            var g = a.selectionEnd;
+            var d = a.value.length;
+            var c = a.value.substring(0, g);
+            var i = a.value.substring(g, d);
+            var b = a.scrollTop;
+            a.value = c + h + i;
+            a.selectionStart = c.length + h.length;
+            a.selectionEnd = c.length + h.length;
+            a.scrollTop = b;
+            a.focus()
         } else {
-            element.value += text;
-            element.focus();
+            document.forms[e].elements[f].value += h;
+            document.forms[e].elements[f].focus()
         }
     }
 }

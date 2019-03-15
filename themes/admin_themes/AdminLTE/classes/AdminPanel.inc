@@ -73,7 +73,7 @@ class AdminPanel {
 
                         foreach ($sections as $section_name) {
                             $active = ((isset($_GET['pagenum']) && $this->pagenum === $i) || (!$this->pagenum && Admins::getInstance()->_isActive() === $i)) ? TRUE : FALSE;
-                            $html .= '<li'.($active ? ' class="active"' : '').'><a href="'.ADMIN.'index.php'.$aidlink.'&amp;pagenum='.$i.'" data-toggle="tooltip" data-placement="bottom" title="'.$section_name.'">'.Admins::getInstance()->get_admin_section_icons($i).'</a></li>';
+                            $html .= '<li'.($active ? ' class="active"' : '').'><a href="'.ADMIN.'index.php'.$aidlink.'&amp;pagenum='.$i.'" data-toggle="tooltip" data-placement="bottom" title="'.$section_name.'">'.Admins::getInstance()->getAdminSectionIcons($i).'</a></li>';
                             $i++;
                         }
                     }
@@ -279,7 +279,7 @@ class AdminPanel {
                 if (!empty($admin_pages[$i])) {
                     $html .= '<li class="treeview'.($active ? ' active' : '').'">';
                         $html .= '<a href="#">';
-                            $html .= Admins::getInstance()->get_admin_section_icons($i).' <span>'.$section_name.'</span>';
+                            $html .= Admins::getInstance()->getAdminSectionIcons($i).' <span>'.$section_name.'</span>';
                             $html .= '<span class="pull-right-container">';
                                 $html .= '<i class="fa fa-angle-left pull-right"></i>';
                                 $html .= ($i > 4 ? '<small class="label pull-right bg-blue">'.count($admin_pages[$i]).'</small>' : '');
@@ -317,7 +317,7 @@ class AdminPanel {
                     $html .= '</li>';
                 } else {
                     $html .= '<li'.($active ? ' class="active"' : '').'><a href="'.ADMIN.'index.php'.$aidlink.'&amp;pagenum=0">';
-                        $html .= Admins::getInstance()->get_admin_section_icons($i).' <span>'.$section_name.'</span>';
+                        $html .= Admins::getInstance()->getAdminSectionIcons($i).' <span>'.$section_name.'</span>';
                     $html .= '</a></li>';
                 }
             }

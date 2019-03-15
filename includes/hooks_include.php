@@ -19,15 +19,15 @@
 /**
  * Add a hook
  *
- * @param       $name           The name of the hook, this is your identifier
- * @param       $function       The callback function to run when the filter runs
- * @param int   $que            Optional, values 1-10, where 1 runs first and 10 runs last
- * @param array $default_args   Optional, the default state of parameter during adding hook
- * @param int   $accepted_args  Optional, the limitation of the hook parameters the hook can accept.
+ * @param string $name          The name of the hook, this is your identifier
+ * @param string $function      The callback function to run when the filter runs
+ * @param int    $que           Optional, values 1-10, where 1 runs first and 10 runs last
+ * @param array  $default_args  Optional, the default state of parameter during adding hook
+ * @param int    $accepted_args Optional, the limitation of the hook parameters the hook can accept.
  *
  * @return bool
  */
-function fusion_add_hook($name, $function, $que = 10, $default_args = array(), $accepted_args = 1) {
+function fusion_add_hook($name, $function, $que = 10, $default_args = [], $accepted_args = 1) {
     // once you need to add hook, we'll poll the instance.
     return \PHPFusion\Hooks::get_instances($name)->add_hook($name, $function, $que, $default_args, $accepted_args);
 }
@@ -35,8 +35,8 @@ function fusion_add_hook($name, $function, $que = 10, $default_args = array(), $
 /**
  * Checks if there is a hook by the $name and $function specified registered into the hook instance
  *
- * @param $name                 The name of the hook, this is your identifier
- * @param $function             The callback function to run when the filter runs
+ * @param string $name     The name of the hook, this is your identifier
+ * @param string $function The callback function to run when the filter runs
  *
  * @return bool
  */
@@ -50,9 +50,10 @@ function fusion_check_hook($name, $function) {
 
 /**
  * Remove hook
- * @param     $name             The name of the hook, this is your identifier
- * @param     $function          The callback function to run when the filter runs
- * @param int $que
+ *
+ * @param string $name     The name of the hook, this is your identifier
+ * @param string $function The callback function to run when the filter runs
+ * @param int    $que
  *
  * @return bool
  */
@@ -62,6 +63,7 @@ function fusion_remove_hook($name, $function, $que = 10) {
 
 /**
  * Run the hooks without any output
+ *
  * @param $name
  *
  * @return mixed
@@ -70,7 +72,7 @@ function fusion_apply_hook($name) {
 
     $function_args = func_get_args();
 
-    return call_user_func_array( [
+    return call_user_func_array([
         \PHPFusion\Hooks::get_instances($name),
         'apply_hook'
     ],
@@ -81,6 +83,7 @@ function fusion_apply_hook($name) {
 
 /**
  * This one will return output from running the hooks.
+ *
  * @param $name
  *
  * @return mixed
@@ -88,7 +91,7 @@ function fusion_apply_hook($name) {
 function fusion_filter_hook($name) {
     $function_args = func_get_args();
 
-    return call_user_func_array( [
+    return call_user_func_array([
         \PHPFusion\Hooks::get_instances($name),
         'filter_hook'
     ],

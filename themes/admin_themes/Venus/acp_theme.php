@@ -104,7 +104,7 @@ function render_admin_panel() {
                         </div>
                     </div>
                 </div>
-                 '.\PHPFusion\Admins::getInstance()->vertical_admin_nav().'
+                 '.\PHPFusion\Admins::getInstance()->verticalAdminNav().'
             </div>
         </div>
         <!---//left side panel-->
@@ -116,7 +116,7 @@ function render_admin_panel() {
                         <a id="toggle-canvas" class="pointer"><i class="fa fa-fw fa-bars"></i></a>
                     </li>
                 </ul>
-                <div class="hidden-md">'.\PHPFusion\Admins::getInstance()->horizontal_admin_nav(TRUE).'</div>
+                <div class="hidden-md">'.\PHPFusion\Admins::getInstance()->horizontalAdminNav(TRUE).'</div>
                 <ul class="top-right-menu pull-right m-r-15">
                     <li class="dropdown">
                         <a class="dropdown-toggle pointer" data-toggle="dropdown">

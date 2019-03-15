@@ -49,7 +49,7 @@ class AdminPanel {
                         $i = 0;
                         foreach ($sections as $section_name) {
                             $active = ((isset($_GET['pagenum']) && $this->pagenum === $i) || (!$this->pagenum && Admins::getInstance()->_isActive() === $i)) ? TRUE : FALSE;
-                            $html .= '<li'.($active ? ' class="active"' : '').'><a href="'.ADMIN.'index.php'.fusion_get_aidlink().'&amp;pagenum='.$i.'"><span class="visible-xs">'.Admins::getInstance()->get_admin_section_icons($i).'</span><span class="hidden-xs">'.$section_name.'</span></a></li>';
+                            $html .= '<li'.($active ? ' class="active"' : '').'><a href="'.ADMIN.'index.php'.fusion_get_aidlink().'&amp;pagenum='.$i.'"><span class="visible-xs">'.Admins::getInstance()->getAdminSectionIcons($i).'</span><span class="hidden-xs">'.$section_name.'</span></a></li>';
                             $i++;
                         }
                     }
@@ -105,7 +105,7 @@ class AdminPanel {
 
                     foreach ($sections as $section_name) {
                         $active = ((isset($_GET['pagenum']) && $this->pagenum === $i) || (!$this->pagenum && Admins::getInstance()->_isActive() === $i)) ? TRUE : FALSE;
-                        $html .= '<li'.($active ? ' class="active"' : '').'><a href="'.ADMIN.'index.php'.$aidlink.'&amp;pagenum='.$i.'" data-toggle="tooltip" data-placement="bottom" title="'.$section_name.'">'.Admins::getInstance()->get_admin_section_icons($i).'</a></li>';
+                        $html .= '<li'.($active ? ' class="active"' : '').'><a href="'.ADMIN.'index.php'.$aidlink.'&amp;pagenum='.$i.'" data-toggle="tooltip" data-placement="bottom" title="'.$section_name.'">'.Admins::getInstance()->getAdminSectionIcons($i).'</a></li>';
                         $i++;
                     }
                 }
@@ -169,7 +169,7 @@ class AdminPanel {
                     $html .= '<img id="ajax-loader" style="width: 30px; display: none;" class="img-responsive center-x m-t-10" alt="Ajax Loader" src="'.IMAGES.'loader.svg"/>';
                 $html .= '</div>';
 
-                $html .= Admins::getInstance()->vertical_admin_nav(TRUE);
+                $html .= Admins::getInstance()->verticalAdminNav(TRUE);
             $html .= '</div>';
         $html .= '</aside>';
 

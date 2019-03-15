@@ -15,6 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+$locale = fusion_get_locale();
+$settings = fusion_get_settings();
 
 // Define CDN
 $_themes = THEMES;
@@ -23,9 +25,9 @@ if (!empty('CDN')) {
     $_themes = CDN.'themes/';
     $_includes = CDN.'includes/';
 }
-$settings = fusion_get_settings();
-$locale = fusion_get_locale();
+
 header("Content-Type: text/html; charset=".$locale['charset']."");
+
 echo "<!DOCTYPE html>\n";
 echo "<html lang='".$locale['xml_lang']."' dir='".$locale['text-direction']."'".($settings['create_og_tags'] ? " prefix='og: http://ogp.me/ns#'" : "").">\n";
 echo "<head>\n";
@@ -40,29 +42,38 @@ if (fusion_get_enabled_languages() > 1) {
     echo "<link rel='alternate' hreflang='x-default' href='".$settings['siteurl']."'/>\n";
 }
 
-if ($settings['entypo'] || defined('ENTYPO')) {
-    echo "<link rel='stylesheet' href='".$_includes."fonts/entypo/entypo.min.css' type='text/css' />\n";
-}
-// Font Awesome 4
-if ($settings['fontawesome'] || defined('FONTAWESOME')) {
-    if (defined('FONTAWESOME-V4')) {
-        echo "<link rel='stylesheet' href='".$_includes."fonts/font-awesome/css/font-awesome.min.css' type='text/css' />\n";
-    } else {
-        // Font Awesome 5
-        echo "<link rel='stylesheet' href='".$_includes."fonts/font-awesome-5/css/all.min.css' type='text/css' />\n";
-        echo "<link rel='stylesheet' href='".$_includes."fonts/font-awesome-5/css/v4-shims.min.css' type='text/css' />\n";
-    }
-}
-
-if (!defined('NO_DEFAULT_CSS')) {
-    echo "<link href='".$_themes."templates/default.min.css' rel='stylesheet' type='text/css' media='screen' />\n";
-}
-
 if (isset($fusion_steam)) {
     $fusion_steam->run();
     fusion_apply_hook('start_boiler');
 }
 
+if ($settings['entypo'] || defined('ENTYPO')) {
+    echo "<link rel='stylesheet' href='".$_includes."fonts/entypo/entypo.min.css'/>\n";
+}
+
+if ($settings['fontawesome'] || defined('FONTAWESOME')) {
+    // Font Awesome 4
+    if (defined('FONTAWESOME-V4')) {
+        echo "<link rel='stylesheet' href='".$_includes."fonts/font-awesome/css/font-awesome.min.css'/>\n";
+    } else {
+        // Font Awesome 5
+        echo "<link rel='stylesheet' href='".$_includes."fonts/font-awesome-5/css/all.min.css'/>\n";
+        echo "<link rel='stylesheet' href='".$_includes."fonts/font-awesome-5/css/v4-shims.min.css'/>\n";
+    }
+}
+
+// Default CSS styling which applies to all themes but can be overriden
+if (!defined('NO_DEFAULT_CSS')) {
+    $dev_mode = TRUE;
+    $default_css_file = $dev_mode ? $_themes.'templates/default.css' : $_themes.'templates/default.min.css';
+    echo "<link rel='stylesheet' href='$default_css_file?v=".filemtime($default_css_file)."'/>\n";
+}
+
+// Theme CSS
+$theme_css = file_exists(THEME.'styles.min.css') ? THEME.'styles.min.css' : THEME.'styles.css';
+echo "<link rel='stylesheet' href='".$theme_css."?v=".filemtime($theme_css)."'/>\n";
+
+/* Atom Engine
 $user_theme = fusion_get_userdata('user_theme');
 $theme_name = $user_theme !== 'Default' ? $user_theme : fusion_get_settings('theme');
 $theme_data = dbarray(dbquery("SELECT theme_file FROM ".DB_THEME." WHERE theme_name='".$theme_name."' AND theme_active='1'"));
@@ -70,10 +81,9 @@ if (!empty($theme_data)) {
     $theme_css = THEMES.$theme_data['theme_file'];
     add_to_head("<link href='".$theme_css."' rel='stylesheet' type='text/css' />\n");
 } else {
-    // Version 7 Themes
     $theme_css = file_exists(THEME.'styles.min.css') ? THEME.'styles.min.css' : THEME.'styles.css';
     echo "<link href='".$theme_css."' rel='stylesheet' type='text/css' media='screen' />\n";
-}
+}*/
 
 echo render_favicons(defined('THEME_ICON') ? THEME_ICON : IMAGES.'favicons/');
 
@@ -82,10 +92,8 @@ if (function_exists("get_head_tags")) {
 }
 
 echo "<script type='text/javascript' src='".$_includes."jquery/jquery.min.js'></script>\n";
-echo "<script>const SITE_PATH = '".$settings['site_path']."';</script>";
-/* A javascript global for using the CDN inside scripts */
-echo "<script>const CDN = '".CDN."';</script>\n";
-echo "<script type='text/javascript' src='".$_includes."jscripts/jscript.min.js?v=".filemtime(INCLUDES.'jscripts/jscript.min.js')."'></script>\n";
+echo "<script>const SITE_PATH = '".$settings['site_path']."';const CDN = '".CDN."';</script>\n";
+echo "<script type='text/javascript' src='".$_includes."jscripts/jscript.min.js?v=".filemtime($_includes.'jscripts/jscript.min.js')."'></script>\n";
 echo "</head>\n";
 
 /**
@@ -93,7 +101,6 @@ echo "</head>\n";
  * replace <body> tags with your own theme definition body tags. Some body tags require additional params
  * for the theme purposes.
  */
-
 if (!defined("THEME_BODY")) {
     echo "<body>\n";
 } else {
@@ -117,33 +124,27 @@ if (iADMIN) {
 if (function_exists("render_page")) {
     render_page(); // by here, header and footer already closed
 }
+
 // Output lines added with add_to_footer()
 echo $fusion_page_footer_tags;
 
-echo "<script type='text/javascript' src='".$_includes."jquery/admin-scripts.js'></script>\n";
-
-// Output lines added with add_to_jquery()
-$jquery_tags = "$('[data-submenu]').submenupicker();";
-// Fix select2 on modal - http://stackoverflow.com/questions/13649459/twitter-bootstrap-multiple-modal-error/15856139#15856139
-$jquery_tags .= "$.fn.modal.Constructor.prototype.enforceFocus = function () {};";
+echo "<script src='".$_includes."jquery/admin-scripts.js'></script>\n";
+echo "<script src='".$_includes."jquery/holder/holder.min.js'></script>\n";
 
 // Output lines added with add_to_jquery()
 if (!empty($fusion_jquery_tags)) {
-    $jquery_tags .= $fusion_jquery_tags;
-
     if ($settings['devmode'] == 0) {
-        $minifier = new PHPFusion\Minify\JS($jquery_tags);
+        $minifier = new PHPFusion\Minify\JS($fusion_jquery_tags);
         $js = $minifier->minify();
     } else {
-        $js = $jquery_tags;
+        $js = $fusion_jquery_tags;
     }
 
-    echo "<script type='text/javascript'>$(function(){".$js."});</script>\n";
+    echo "<script>$(function(){".$js."});</script>\n";
 }
 
 // Uncomment to guide your theme development
-//echo "<script src='".INCLUDES."jscripts/html-inspector.js'></script>\n<script> HTMLInspector.inspect() </script>\n";
-echo "<script type='text/javascript' src='".$_includes."jquery/holder/holder.min.js'></script>\n";
+//echo "<script src='".INCLUDES."jscripts/html-inspector.js'></script><script>HTMLInspector.inspect()</script>\n";
 echo "</body>\n";
 echo "</html>";
 

@@ -311,7 +311,6 @@ class Admins {
 
     public function setAdmin() {
         if (!defined('IN_SETUP')) {
-
             self::$admin_pages = $this->getAdminPages();
 
             $this->admin_sections = array_filter(array_merge([
@@ -348,13 +347,9 @@ class Admins {
                     }
                 }
             }
-
-            self::$admin_pages = self::$admin_pages + self::$public_pages;
         }
 
-        return (array)self::$admin_pages;
-
-
+        return (array)self::$admin_pages + self::$public_pages;
     }
 
     /**
@@ -386,14 +381,12 @@ class Admins {
     }
 
     public function setAdminBreadcrumbs() {
-
         BreadCrumbs::getInstance()->addBreadCrumb([
             'link'  => ADMIN.'index.php'.fusion_get_aidlink().'&amp;pagenum=0',
             'title' => self::$locale['ac10']
         ]);
 
         $acTab = (isset($_GET['pagenum']) && isnum($_GET['pagenum'])) ? $_GET['pagenum'] : $this->_isActive();
-
         if ($acTab != 0 && $acTab <= 5) {
             BreadCrumbs::getInstance()->addBreadCrumb([
                 'link'  => ADMIN.fusion_get_aidlink()."&amp;pagenum=".$acTab,
@@ -547,10 +540,10 @@ class Admins {
      * @return string
      */
     public function vertical_admin_nav($image_icon = FALSE) {
-        return $this->VerticalAdminNav($image_icon);
+        return $this->verticalAdminNav($image_icon);
     }
 
-    public function VerticalAdminNav($image_icon = FALSE) {
+    public function verticalAdminNav($image_icon = FALSE) {
         $aidlink = fusion_get_aidlink();
         $admin_sections = self::getAdminSections();
         $admin_pages = self::getAdminPages();
@@ -560,24 +553,22 @@ class Admins {
         $html = "<ul id='adl' class='admin-vertical-link'>\n";
 
         foreach ($admin_sections as $i => $section_name) {
-
             $active = ((isset($_GET['pagenum']) && $_GET['pagenum'] == $i) || (!isset($_GET['pagenum']) && $this->_isActive() == $i)) ? TRUE : FALSE;
 
             $html .= "<li class='".($active ? 'active panel' : 'panel')."' >\n";
 
             if (!empty($admin_pages[$i]) && is_array($admin_pages[$i])) {
-                $html .= "<a class='adl-link ".($active ? '' : 'collapsed')."' data-parent='#adl' data-toggle='collapse' href='#adl-$i'>".$this->get_admin_section_icons($i)." <span class='adl-section-name'>".$section_name.($i > 4 ? " <span class='badge'>".count($admin_pages[$i])."</span>" : "")."</span> ".($i > 0 ? "<span class='adl-drop pull-right'><i class='fa fa-angle-".($active ? "left" : "down")."'></i></span>" : '')."</a>\n";
+                $html .= "<a class='adl-link ".($active ? '' : 'collapsed')."' data-parent='#adl' data-toggle='collapse' href='#adl-$i'>".$this->getAdminSectionIcons($i)." <span class='adl-section-name'>".$section_name.($i > 4 ? " <span class='badge'>".count($admin_pages[$i])."</span>" : "")."</span> ".($i > 0 ? "<span class='adl-drop pull-right'><i class='fa fa-angle-".($active ? "left" : "down")."'></i></span>" : '')."</a>\n";
                 $html .= "<ul id='adl-$i' class='admin-submenu collapse ".($active ? 'in' : '')."'>\n";
 
                 foreach ($admin_pages[$i] as $key => $data) {
-
                     $title = $data['admin_title'];
                     if ($data['admin_page'] !== 5) {
                         $title = isset(self::$locale[$data['admin_rights']]) ? self::$locale[$data['admin_rights']] : $title;
                     }
 
                     $secondary_active = $data['admin_link'] == $this->_currentPage() ? TRUE : FALSE;
-                    $icons = ($image_icon === TRUE) ? "<img class='admin-image' src='".get_image("ac_".$data['admin_rights'])."' alt='$title'/>" : $this->get_admin_icons($data['admin_rights']);
+                    $icons = ($image_icon === TRUE) ? "<img class='admin-image' src='".get_image("ac_".$data['admin_rights'])."' alt='$title'/>" : $this->getAdminIcons($data['admin_rights']);
 
                     if (!empty($admin_pages[$data['admin_rights']])) {
                         if (checkrights($data['admin_rights'])) {
@@ -600,7 +591,7 @@ class Admins {
 
                 $html .= "</ul>\n";
             } else {
-                $html .= "<a class='adl-link' href='".ADMIN."index.php".$aidlink."&amp;pagenum=0'>".$this->get_admin_section_icons($i)." <span class='adl-section-name'>".$section_name."</span> ".($i > 0 ? "<span class='adl-drop pull-right'></span>" : '')."</a>\n";
+                $html .= "<a class='adl-link' href='".ADMIN."index.php".$aidlink."&amp;pagenum=0'>".$this->getAdminSectionIcons($i)." <span class='adl-section-name'>".$section_name."</span></a>\n";
             }
             $html .= "</li>\n";
         }
@@ -656,6 +647,7 @@ class Admins {
     public function get_admin_icons($admin_rights) {
         return $this->getAdminIcons($admin_rights);
     }
+
     public function getAdminIcons($admin_rights) {
         if (!empty($this->admin_page_icons[$admin_rights])) {
 
@@ -682,7 +674,7 @@ class Admins {
         foreach ($this->admin_sections as $i => $section_name) {
             $active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && $this->_isActive() == $i) ? 1 : 0;
             $admin_text = $icon_only == FALSE ? " ".$section_name : "";
-            $html .= "<li ".($active ? "class='active'" : '')."><a title='".$section_name."' href='".ADMIN.$aidlink."&amp;pagenum=$i'>".$this->get_admin_section_icons($i).$admin_text."</a></li>\n";
+            $html .= "<li ".($active ? "class='active'" : '')."><a title='".$section_name."' href='".ADMIN.$aidlink."&amp;pagenum=$i'>".$this->getAdminSectionIcons($i).$admin_text."</a></li>\n";
         }
         $html .= "</ul>\n";
 
@@ -702,7 +694,7 @@ class Admins {
             "admin_page"   => $page,
             "admin_rights" => $rights,
             "admin_link"   => $link,
-            'admin_image' => $icon,
+            "admin_image"  => $icon
         ];
     }
 
