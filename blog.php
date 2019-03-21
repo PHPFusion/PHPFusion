@@ -142,7 +142,7 @@ switch ($_GET['type']) {
         $filter_condition = 'b.blog_datestamp DESC';
 }
 
-if (!empty($_GET['readmore'])) {
+if (isset($_GET['readmore'])) {
 
     if (validate_blog($_GET['readmore'])) {
 
