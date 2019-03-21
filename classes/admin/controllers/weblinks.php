@@ -62,7 +62,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
         /**
          * Global vars
          */
-        $weblink_id = filter_input(INPUT_POST, 'weblink_id', FILTER_VALIDATE_INT) || filter_input(INPUT_GET, 'weblink_id', FILTER_VALIDATE_INT);
+        $weblink_id = filter_input(INPUT_GET, 'weblink_id', FILTER_VALIDATE_INT);
         $action = filter_input(INPUT_GET, 'action', FILTER_DEFAULT);
         if ($action && ($action == "edit") && (!empty($weblink_id))) {
             $result = dbquery("SELECT * FROM ".DB_WEBLINKS." WHERE weblink_id = :weblinkid", [':weblinkid' => (int)$weblink_id]);
