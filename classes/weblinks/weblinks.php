@@ -186,7 +186,7 @@ abstract class Weblinks extends WeblinksServer {
     private function weblink_cat_navbar() {
         $cookie_expiry = time() + 7 * 24 * 3600;
         $type = empty($this->type) ? $this->allowed_filters[0] : $this->type;
-        $switchview = filter_input(INPUT_GET, 'switchview', FILTER_VALIDATE_INT);
+        $switchview = isset($_GET['switchview']) ? $_GET['switchview'] : 0;
 
         if (empty($_COOKIE['fusion_weblinks_view'])) {
             setcookie("fusion_weblinks_view", 1, $cookie_expiry);
