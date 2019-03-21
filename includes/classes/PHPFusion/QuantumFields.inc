@@ -484,7 +484,7 @@ class QuantumFields extends \SqlHandler {
                     }
                 }
                 if (!$this->debug) {
-                    $res = dbquery("SELECT field_id, field_order FROM ".$this->field_db." WHERE field_cat=:parent_id ORDER BY field_order ASC", ['parent_id' => ($_GET['parent_id'])]);
+                    $res = dbquery("SELECT field_id, field_order FROM ".$this->field_db." WHERE field_cat=:parent_id ORDER BY field_order ASC", [':parent_id' => ($_GET['parent_id'])]);
                     if (dbrows($res)) {
                         $i = 1;
                         while ($rows = dbarray($res)) {
