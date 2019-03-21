@@ -171,8 +171,8 @@ class Router extends RewriteDriver {
      */
     private function checkAlias() {
         // Check if there is any Alias matching the current URI
-        $query = "SELECT * FROM ".DB_PERMALINK_ALIAS." WHERE alias_url='".$this->requesturi."' LIMIT 1";
-        $result = dbquery($query);
+        $query = "SELECT * FROM ".DB_PERMALINK_ALIAS." WHERE alias_url=:url LIMIT 1";
+        $result = dbquery($query, [':url' => stripinput($this->requesturi)]);
         $this->queries[] = $query;
         if (dbrows($result)) {
             $aliasdata = dbarray($result);
@@ -358,8 +358,8 @@ class Router extends RewriteDriver {
                             // The Alias is Detected !
                             $alias = $matches[$alias_pos];
                             // Now search for this Alias in Database
-                            $query = "SELECT * FROM ".DB_PERMALINK_ALIAS." WHERE alias_url='".$alias."' LIMIT 1";
-                            $result = dbquery($query);
+                            $query = "SELECT * FROM ".DB_PERMALINK_ALIAS." WHERE alias_url=:url LIMIT 1";
+                            $result = dbquery($query, [':url' => $alias]);
                             $this->queries[] = $query;
                             if (dbrows($result)) {
                                 $aliasdata = dbarray($result);
