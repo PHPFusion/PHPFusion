@@ -65,7 +65,7 @@ if (!defined('NO_DEFAULT_CSS')) {
 
 // Admin Panel Theme CSS
 $admin_theme_css = file_exists(THEMES.'admin_themes/'.$settings['admin_theme'].'/acp_styles.min.css') ? THEMES.'admin_themes/'.$settings['admin_theme'].'/acp_styles.min.css' : THEMES.'admin_themes/'.$settings['admin_theme'].'/acp_styles.css';
-echo "<link href='".$admin_theme_css."' rel='stylesheet' type='text/css' media='screen' />\n";
+echo "<link rel='stylesheet' href='".$admin_theme_css."?v=".filemtime($admin_theme_css)."'/>\n";
 
 echo render_favicons(defined('THEME_ICON') ? THEME_ICON : IMAGES.'favicons/');
 
@@ -74,7 +74,7 @@ if (function_exists("get_head_tags")) {
 }
 
 echo "<script type='text/javascript' src='".$_includes."jquery/jquery.min.js'></script>\n";
-echo "<script type='text/javascript' src='".$_includes."jquery/jquery-migrate.min.js'></script>\n";
+//echo "<script type='text/javascript' src='".$_includes."jquery/jquery-migrate.min.js'></script>\n";
 echo "<script>const SITE_PATH = '".$settings['site_path']."';const CDN = '".CDN."';</script>\n";
 echo "<script type='text/javascript' src='".$_includes."jscripts/jscript.min.js?v=".filemtime($_includes.'jscripts/jscript.min.js')."'></script>\n";
 echo "</head>\n";
