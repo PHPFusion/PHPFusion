@@ -36,7 +36,7 @@ for ($i = 0; $i < $code_count; $i++) {
                 }
                 $i++;
                 return "<div class='code_bbcode'/><div class='tbl-border tbl2 tbl-code'><strong/>".$locale['bb_code_code']."</strong>".$code_save."</div>
-                    <div class='tbl-border tbl1' style='width:100%; white-space:nowrap;overflow:auto;'><pre class='prettyprint linenums' style='white-space:nowrap'>".formatcode($m['1'])."</pre></div></div>";
+                    <div class='tbl-border tbl1'><pre class='prettyprint linenums' style='white-space:pre-wrap;overflow:auto;'>".formatcode($m['1'])."</pre></div></div>";
             }, $text);
     } else {
         if (preg_match("/\/forum\//i", FUSION_REQUEST) && isset($data['post_id'])) {
@@ -44,6 +44,6 @@ for ($i = 0; $i < $code_count; $i++) {
         } else {
             $code_save = "";
         }
-        $text = preg_replace("#\[code\](.*?)\[/code\]#sie", "'<div class=\'code_bbcode\'><div class=\'tbl-border tbl2 tbl-code\'><strong/>".$locale['bb_code_code']."</strong>".$code_save."</div><div class=\'tbl-border tbl1\' style=\'width:100%;white-space:nowrap;overflow:auto\'><pre class=\'prettyprint linenums\' style=\'white-space:nowrap\'/>'.formatcode('\\1').'</pre></div></div>'", $text, 1);
+        $text = preg_replace("#\[code\](.*?)\[/code\]#sie", "'<div class=\'code_bbcode\'><div class=\'tbl-border tbl2 tbl-code\'><strong/>".$locale['bb_code_code']."</strong>".$code_save."</div><div class=\'tbl-border tbl1\'><pre class=\'prettyprint linenums\' style=\'white-space:pre-wrap;overflow:auto;\'/>'.formatcode('\\1').'</pre></div></div>'", $text, 1);
     }
 }
