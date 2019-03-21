@@ -37,7 +37,7 @@ class FaqServer {
 
         $this->save = (string)filter_input(INPUT_POST, 'savesettings', FILTER_DEFAULT);
         $this->faq_allow_submission = filter_input(INPUT_POST, 'faq_allow_submission', FILTER_DEFAULT);
-        $this->catid = filter_input(INPUT_GET, 'cat_id', FILTER_VALIDATE_INT);
+        $this->catid = isset($_GET['cat_id']) ? $_GET['cat_id'] : 0;
     }
 
     public static function Faq() {
