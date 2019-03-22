@@ -22,8 +22,7 @@ if (isset($_POST['save_settings'])) {
     $settings = [
         'github_url'   => form_sanitizer($_POST['github_url'], '', 'github_url'),
         'facebook_url' => form_sanitizer($_POST['facebook_url'], '', 'facebook_url'),
-        'twitter_url'  => form_sanitizer($_POST['twitter_url'], '', 'twitter_url'),
-        'gplus_url'    => form_sanitizer($_POST['gplus_url'], '', 'gplus_url')
+        'twitter_url'  => form_sanitizer($_POST['twitter_url'], '', 'twitter_url')
     ];
 
     if (\defender::safe()) {
@@ -47,7 +46,6 @@ openside('');
 echo form_text('github_url', $locale['MG_202'], $settings['github_url'], ['type' => 'url', 'inline' => TRUE]);
 echo form_text('facebook_url', $locale['MG_203'], $settings['facebook_url'], ['type' => 'url', 'inline' => TRUE]);
 echo form_text('twitter_url', $locale['MG_204'], $settings['twitter_url'], ['type' => 'url', 'inline' => TRUE]);
-echo form_text('gplus_url', $locale['MG_205'], $settings['gplus_url'], ['type' => 'url', 'inline' => TRUE]);
 closeside();
 
 echo form_button('save_settings', $locale['save_changes'], 'save', ['class' => 'btn-primary']);

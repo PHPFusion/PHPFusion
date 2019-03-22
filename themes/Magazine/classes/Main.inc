@@ -141,10 +141,6 @@ class Main extends Core {
                             if (!empty($theme_settings['twitter_url'])) {
                                 echo '<a href="'.$theme_settings['twitter_url'].'" target="_blank"><i class="fa fa-twitter"></i></a>';
                             }
-
-                            if (!empty($theme_settings['gplus_url'])) {
-                                echo '<a href="'.$theme_settings['gplus_url'].'" target="_blank"><i class="fa fa-google-plus"></i></a>';
-                            }
                         echo '</div>';
                     echo '</div>';
                 echo '</div>';

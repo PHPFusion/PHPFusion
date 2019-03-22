@@ -26,4 +26,3 @@ $locale['MG_201'] = 'Theme Settings has been updated.';
 $locale['MG_202'] = 'GitHub URL';
 $locale['MG_203'] = 'Facebook URL';
 $locale['MG_204'] = 'Twitter URL';
-$locale['MG_205'] = 'Google Plus URL';
