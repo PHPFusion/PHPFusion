@@ -76,7 +76,8 @@ class Main extends Core {
                     }
 
                     echo defined('U_CENTER') && U_CENTER ? U_CENTER : '';
-                    echo "<div class='overflow-hide'>".FUSION_PRELOADER.CONTENT."</div>";
+                    //echo '<div class="overflow-hide">'.FUSION_PRELOADER.CONTENT.'</div>';
+                    echo CONTENT;
                     echo defined('L_CENTER') && L_CENTER ? L_CENTER : '';
                     echo showbanners(2);
                 echo '</div>';
@@ -141,10 +142,6 @@ class Main extends Core {
 
                             if (!empty($theme_settings['twitter_url'])) {
                                 echo '<a href="'.$theme_settings['twitter_url'].'" target="_blank"><i class="fa fa-twitter"></i></a>';
-                            }
-
-                            if (!empty($theme_settings['gplus_url'])) {
-                                echo '<a href="'.$theme_settings['gplus_url'].'" target="_blank"><i class="fa fa-google-plus"></i></a>';
                             }
                         echo '</div>';
                     echo '</div>';

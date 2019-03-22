@@ -5774,6 +5774,7 @@ a.list-group-item-danger.active:focus {
 .popover {
     color: #555555;
 }
+
 .fusion-pre-loader {
-    position:absolute;
+    position: absolute;
 }

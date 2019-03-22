@@ -39,8 +39,7 @@ $theme_folder      = 'Magazine';
 $theme_insertdbrow[] = DB_SETTINGS_THEME." (settings_name, settings_value, settings_theme) VALUES
     ('github_url', '', '".$theme_folder."'),
     ('facebook_url', '', '".$theme_folder."'),
-    ('twitter_url', '', '".$theme_folder."'),
-    ('gplus_url', '', '".$theme_folder."')
+    ('twitter_url', '', '".$theme_folder."')
 ";
 
 $theme_deldbrow[] = DB_SETTINGS_THEME." WHERE settings_theme='".$theme_folder."'";
