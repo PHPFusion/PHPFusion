@@ -130,7 +130,6 @@ abstract class Weblinks extends WeblinksServer {
         $this->def_data['weblink_tablename'] = self::$locale['web_0000'];
         $this->def_data['weblink_filter'] += self::get_WeblinkFilters();
         $this->def_data['weblink_categories'] += self::get_WeblinkCategories();
-        $this->def_data = array_merge($this->def_data, self::weblink_cat_navbar());
 
         // Filtered by Category ID.
         $result = dbquery("SELECT *
@@ -181,41 +180,6 @@ abstract class Weblinks extends WeblinksServer {
         redirect(INFUSIONS."weblinks/weblinks.php");
 
         return NULL;
-    }
-
-    private function weblink_cat_navbar() {
-        $cookie_expiry = time() + 7 * 24 * 3600;
-        $type = empty($this->type) ? $this->allowed_filters[0] : $this->type;
-        $switchview = isset($_GET['switchview']) ? $_GET['switchview'] : 0;
-
-        if (empty($_COOKIE['fusion_weblinks_view'])) {
-            setcookie("fusion_weblinks_view", 1, $cookie_expiry);
-        } else if (!empty($switchview) && isnum($switchview)) {
-            setcookie("fusion_weblinks_view", (int)$switchview, $cookie_expiry);
-            redirect(INFUSIONS."weblinks/weblinks.php?cat_id=".$this->cat_id."&amp;type=".$type);
-        }
-
-        $active = isset($_COOKIE['fusion_weblinks_view']) && isnum($_COOKIE['fusion_weblinks_view']) && $_COOKIE['fusion_weblinks_view'] == 2 ? 2 : 1;
-
-        $info['span'] = $active == 2 ? 12 : 4;
-        $titles = [
-            1 => [
-                'locale' => self::$locale['web_0040'],
-                'buton'  => 'fa-th-large'
-            ],
-            2 => [
-                'locale' => self::$locale['web_0041'],
-                'buton'  => 'fa-bars'
-            ]
-        ];
-
-        for ($coi = 1; $coi < 3; $coi++) {
-            $info['navbar'][$coi] = [
-                'links' => "<a class='btn btn-default snv".($active == $coi ? ' active' : '')."' href='".INFUSIONS."weblinks/weblinks.php?".(!empty($this->cat_id) ? "cat_id=".$this->cat_id."&amp;" : "").(!empty($this->type) ? (empty($this->cat_id) ? "&amp;" : '')."type=".$type."&amp;" : "")."switchview=".$coi."'><i class='fa ".$titles[$coi]['buton']." m-r-10'></i>".$titles[$coi]['locale']."</a>"
-            ];
-        }
-
-        return $info;
     }
 
     /**
@@ -324,11 +288,11 @@ abstract class Weblinks extends WeblinksServer {
             if (iADMIN && checkrights("W")) {
                 $adminActions = [
                     'edit'   => [
-                        'link'  => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink()."&amp;action=edit&amp;ref=weblinks_form&amp;weblink_id=".$data['weblink_id'],
+                        'link'  => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink()."&amp;action=edit&amp;ref=weblinkform&amp;weblink_id=".$data['weblink_id'],
                         'title' => self::$locale['edit']
                     ],
                     'delete' => [
-                        'link'  => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink()."&amp;action=delete&amp;ref=weblinks_form&amp;weblink_id=".$data['weblink_id'],
+                        'link'  => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink()."&amp;action=delete&amp;ref=weblinkform&amp;weblink_id=".$data['weblink_id'],
                         'title' => self::$locale['delete']
                     ]
                 ];
