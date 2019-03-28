@@ -324,11 +324,11 @@ abstract class Weblinks extends WeblinksServer {
             if (iADMIN && checkrights("W")) {
                 $adminActions = [
                     'edit'   => [
-                        'link'  => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink()."&amp;action=edit&amp;ref=weblinks_form&amp;weblink_id=".$data['weblink_id'],
+                        'link'  => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink()."&amp;action=edit&amp;ref=weblinkform&amp;weblink_id=".$data['weblink_id'],
                         'title' => self::$locale['edit']
                     ],
                     'delete' => [
-                        'link'  => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink()."&amp;action=delete&amp;ref=weblinks_form&amp;weblink_id=".$data['weblink_id'],
+                        'link'  => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink()."&amp;action=delete&amp;ref=weblinkform&amp;weblink_id=".$data['weblink_id'],
                         'title' => self::$locale['delete']
                     ]
                 ];
