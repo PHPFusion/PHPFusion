@@ -167,7 +167,7 @@ class adminPanel extends resource {
                 <li <?php echo($active ? " class=\"active\"" : "") ?>>
                     <a class="pointer admin-menu-icon<?php echo $is_menu_action ? " menu-action " : "" ?>"
                        title="<?php echo $section_name ?>" <?php echo $href_src ?>>
-                        <?php echo Admins::getInstance()->get_admin_section_icons($i) ?>
+                        <?php echo Admins::getInstance()->getAdminSectionIcons($i) ?>
                     </a>
                 </li>
             <?php
