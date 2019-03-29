@@ -39,7 +39,7 @@ class Tables {
 
     private $echo = TRUE;
 
-    private $jsonRows = [];
+    private $clear_args = [];
 
     private $default_args = [
         'debug'                    => FALSE, // True to show the SQL query for the table.

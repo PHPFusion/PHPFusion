@@ -34,7 +34,7 @@ define("WIDGETS", BASEDIR."widgets/");
 define("START_TIME", microtime(TRUE));
 define("FUSION_ROOT_DIR", dirname(__DIR__).'/');
 define("TIME", time());
-define('FUSION_PRELOADER', '<div class="fusion-pre-loader"></div>');
+define('PRELOADER', '<div class="fusion-pre-loader"></div>');
 // Define user levels
 const USER_LEVEL_SUPER_ADMIN = -103;
 const USER_LEVEL_ADMIN = -102;

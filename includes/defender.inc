@@ -19,6 +19,7 @@
 +--------------------------------------------------------*/
 
 class Defender {
+
     public static $input_errors = [];
     private static $debug = FALSE;
     private static $defender_instance = NULL;
@@ -219,7 +220,7 @@ class Defender {
     /**
      * @return array
      */
-    public function getInputErrors() {
+    public static function getInputErrors() {
         return self::$input_errors;
     }
 

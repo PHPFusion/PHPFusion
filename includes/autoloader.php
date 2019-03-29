@@ -125,7 +125,8 @@ require_once __DIR__.'/core_functions_include.php';
  * Cache server development
  * We can safeguard this by doing a .htaccess file on CORS.
  */
-$cdn = fusion_get_settings('cache_server') ? 'https://static.cdn.php-fusion.co.uk/' : BASEDIR;
+$cdn = fusion_get_settings('cache_server') ? fusion_get_settings('cache_server') : BASEDIR;
+
 define('CDN', $cdn);
 
 require_once __DIR__.'/core_constants_include.php';

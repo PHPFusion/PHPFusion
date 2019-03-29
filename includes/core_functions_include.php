@@ -184,8 +184,7 @@ function check_admin_pass($password) {
  *
  * @define STOP_REDIRECT to prevent redirection
  */
-
-function redirect($location, $delay = FALSE, $script = FALSE) {
+function redirect($location, $delay = FALSE, $script = FALSE, $http_response_code = FALSE) {
     //define('STOP_REDIRECT', true);
     if (!defined('STOP_REDIRECT')) {
         if (isnum($delay)) {
@@ -193,7 +192,7 @@ function redirect($location, $delay = FALSE, $script = FALSE) {
             add_to_head($ref);
         } else {
             if ($script == FALSE && !headers_sent()) {
-                header("Location: ".str_replace("&amp;", "&", $location));
+                header("Location: ".str_replace("&amp;", "&", $location), TRUE, $http_response_code);
                 exit;
             } else {
                 echo "<script type='text/javascript'>document.location.href='".str_replace("&amp;", "&", $location)."'</script>\n";
@@ -754,6 +753,16 @@ function format_num($value = 0, $decimals = 0, $dec_point = ".",  $thousand_sep 
         return number_format($value, $decimals, $dec_point, $thousand_sep);
     }
     return $value;
+}
+
+/**
+ * Converts any formatted number back to float numbers in PHP
+ * @param $value
+ *
+ * @return float
+ */
+function format_float($value) {
+    return floatval(preg_replace('/[^\d.]/', '', $value));
 }
 
 /**
@@ -1609,6 +1618,7 @@ function profile_link($user_id, $user_name, $user_status, $class = "profile-link
  * @return string
  */
 function print_p($array, $modal = FALSE, $print = TRUE) {
+    //debug_print_backtrace();
     ob_start();
     echo htmlspecialchars(print_r($array, TRUE), ENT_QUOTES, 'utf-8');
     $debug = ob_get_clean();
@@ -1640,14 +1650,17 @@ function print_p($array, $modal = FALSE, $print = TRUE) {
  *                    if $key was given
  */
 function fusion_get_settings($key = NULL) {
-    // It is initialized only once because of 'static'
-    static $settings = [];
-    if (empty($settings) and defined('DB_SETTINGS') and dbconnection() && db_exists('settings')) {
-        $result = dbquery("SELECT * FROM ".DB_SETTINGS);
-        while ($data = dbarray($result)) {
-            $settings[$data['settings_name']] = $data['settings_value'];
-        }
-    }
+	// It is initialized only once because of 'static'
+	static $settings = [];
+	if (empty($settings) and defined('DB_SETTINGS') && defined('DB_PREFIX')) {
+		if (dbconnection() && db_exists('settings')) {
+			$result = dbquery("SELECT * FROM " . DB_SETTINGS);
+			while ($data = dbarray($result)) {
+				$settings[$data['settings_name']] = $data['settings_value'];
+			}
+		}
+	}
+
 
     return $key === NULL ? $settings : (isset($settings[$key]) ? $settings[$key] : NULL);
 }
@@ -1713,19 +1726,24 @@ function fusion_get_username($user_id) {
  * @return null
  */
 function fusion_get_userdata($key = NULL) {
-    global $userdata;
+    static $userdata = [];
+
     if (empty($userdata)) {
-        $userdata = ["user_level" => 0, "user_rights" => "", "user_groups" => "", "user_theme" => 'Default'];
+
+        $userdata = Authenticate::validateAuthUser();
+
+        if ($userdata === NULL) {
+            $userdata = [
+                "user_id"     => USER_IP,
+                "user_name"   => fusion_get_locale("user_guest"),
+                "user_status" => 1,
+                "user_level"  => 0,
+                "user_rights" => "",
+                "user_groups" => "",
+                "user_theme"  => fusion_get_settings("theme"),
+            ];
+        }
     }
-    $userdata = $userdata + [
-            "user_id"     => USER_IP,
-            "user_name"   => fusion_get_locale("user_guest"),
-            "user_status" => 1,
-            "user_level"  => 0,
-            "user_rights" => "",
-            "user_groups" => "",
-            "user_theme"  => fusion_get_settings("theme"),
-        ];
 
     return $key === NULL ? $userdata : (isset($userdata[$key]) ? $userdata[$key] : NULL);
 }
