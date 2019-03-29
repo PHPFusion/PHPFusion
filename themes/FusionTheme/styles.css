@@ -1,23 +1,22 @@
 /**
 Morphs Mobile Icons
 **/
-
+.canvas-toggle,
 .navbar-toggle {
     border: none;
-    background: transparent !important;
+}
+.canvas-toggle .icon-bar {
+    background-color: #888;
 }
 
-.navbar-toggle:hover {
-    background: transparent !important;
-}
-
+.canvas-toggle .icon-bar,
 .navbar-toggle .icon-bar {
     width: 22px;
     -webkit-transition: all 0.2s;
     -o-transition: all 0.2s;
     transition: all 0.2s;
 }
-
+.canvas-toggle .top-bar,
 .navbar-toggle .top-bar {
     -webkit-transform: rotate(45deg);
     -ms-transform: rotate(45deg);
@@ -26,11 +25,11 @@ Morphs Mobile Icons
     -ms-transform-origin: 10% 10%;
     transform-origin: 10% 10%;
 }
-
+.canvas-toggle .middle-bar,
 .navbar-toggle .middle-bar {
     opacity: 0;
 }
-
+.canvas-toggle .bottom-bar,
 .navbar-toggle .bottom-bar {
     -webkit-transform: rotate(-45deg);
     -ms-transform: rotate(-45deg);
@@ -39,21 +38,31 @@ Morphs Mobile Icons
     -ms-transform-origin: 10% 90%;
     transform-origin: 10% 90%;
 }
-
+.canvas-toggle.collapsed .top-bar,
 .navbar-toggle.collapsed .top-bar {
     -webkit-transform: rotate(0);
     -ms-transform: rotate(0);
     transform: rotate(0);
 }
-
+.canvas-toggle.collapsed .middle-bar,
 .navbar-toggle.collapsed .middle-bar {
     opacity: 1;
 }
-
+.canvas-toggle.collapsed .bottom-bar,
 .navbar-toggle.collapsed .bottom-bar {
     -webkit-transform: rotate(0);
     -ms-transform: rotate(0);
     transform: rotate(0);
+}
+.canvas-toggle .icon-bar {
+    background-color: #888;
+    display: block;
+    width: 22px;
+    height: 2px;
+    border-radius: 1px;
+}
+.canvas-toggle .icon-bar+.icon-bar {
+    margin-top: 4px;
 }
 
 .carousel-caption {
@@ -78,4 +87,7 @@ Morphs Mobile Icons
 .select2-result-selectable:hover > .select2-result-label {
     background: #3875D7;
     color: #fff !important;
+}
+.text-normal .control-label {
+    font-weight: 400 !important;
 }
