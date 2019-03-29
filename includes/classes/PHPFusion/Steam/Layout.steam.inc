@@ -8,6 +8,8 @@ class Layout {
 
     private $steam; // pass the steam here.
 
+    private $boiler = 'bootstrap3';
+
     /**
      * Blocks constructor.
      *
@@ -15,6 +17,15 @@ class Layout {
      */
     public function __construct(\PHPFusion\Steam $steam) {
         $this->steam = $steam;
+        include THEMES.'templates/boilers/'.$this->steam->get_boiler().'/grid.php';
+    }
+
+    public function getRowClass() {
+        return Grid::getRowClass();
+    }
+
+    public function getColumnClass($percent = 100) {
+        return Grid::getColumnClass($percent);
     }
 
     public function grid(array $options) {
@@ -52,6 +63,10 @@ class Layout {
 
         return (string)$this->steam->render($tpl);
 
+    }
+
+    public function getContainerClass() {
+        return Grid::getContainerClass();
     }
 
     public function get_bootstrap_class($grid) {

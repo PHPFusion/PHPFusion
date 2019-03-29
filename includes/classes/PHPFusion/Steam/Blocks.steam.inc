@@ -24,6 +24,7 @@ class Blocks {
             'meta' => '',
             'image_src' => '',
             'description' => '',
+            'footer' => ''
         );
 
         $options += $default;
@@ -41,6 +42,8 @@ class Blocks {
         if ($options['image_src']) $tpl->set_block('image_src', $options);
 
         if ($options['description']) $tpl->set_block('description', $options);
+
+        if ($options['footer']) $tpl->set_block('footer', $options);
 
         return $this->steam->render($tpl);
 

@@ -8,9 +8,12 @@ class Grid {
     /**
      * @return string
      */
-    public static function getRowClass() {
-        return "row";
-    }
+	public static function getRowClass() {
+		return "row";
+	}
+	public static function getContainerClass() {
+		return "container";
+	}
 
     /**
      * @param $percent - 1-100
