@@ -261,7 +261,7 @@ class Members_Action extends Members_Admin {
                     );
                 }
                 if (isset($this->action_map[$this->action]['action_time'])) {
-                    $form .= form_text('duration', self::$locale['ME_435'], '', ['type' => 'number', 'append' => TRUE, 'append_value' => self::$locale['ME_436'], 'required' => TRUE, 'inner_width' => '120px']);
+                    $form .= form_text('duration', self::$locale['ME_435'], '', ['type' => 'number', 'append' => TRUE, 'append_value' => self::$locale['ME_436'], 'required' => TRUE, 'width' => '150px']);
                 }
                 if (!empty($this->action_map[$this->action]['reason'])) {
                     $form .= form_textarea('reason', self::$locale['ME_433'], '', ['required' => TRUE, 'placeholder' => self::$locale['ME_434']]);
