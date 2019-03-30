@@ -119,9 +119,12 @@ class MySQLi extends AbstractDatabaseDriver {
      * @return array|bool Associative array
      */
     public function fetchAssoc($result) {
-        $row = mysqli_fetch_assoc($result);
+        if ($result) {
+            $row = mysqli_fetch_assoc($result);
+            return $row;
+        }
 
-        return $row ?: FALSE;
+        return FALSE;
     }
 
     /**

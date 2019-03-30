@@ -84,12 +84,11 @@ echo opentab($tab_title, $_GET['section'], "email-templates-tab", TRUE);
 echo opentabbody($tab_title['title'][$_GET['section']], $tab_title['id'][$_GET['section']], $_GET['section'], TRUE);
 $result = dbquery("SELECT * FROM ".DB_EMAIL_TEMPLATES." WHERE template_id=:templateid LIMIT 1", [':templateid' => $_GET['section']]);
 $html_text = "";
+$html_helper = "";
+$text_helper = "";
 
 if (dbrows($result)) {
     $data = dbarray($result);
-
-    $html_helper = "";
-    $text_helper = "";
 
     if ($data['template_active']) {
         if ($data['template_format'] == "html") {
