@@ -57,7 +57,7 @@ class UserFields extends UserFieldsQuantum {
         "user_language"       => LANGUAGE,
         'user_timezone'       => 'Europe/London',
         'user_reputation'     => 0,
-        'user_joined' => TIME,
+        'user_joined'         => TIME,
     ];
     /* Quantum Fields Extensions */
     public $system_title = '';
@@ -124,7 +124,7 @@ class UserFields extends UserFieldsQuantum {
      */
     public static function get_user_field_cats($id = 0) {
 
-        static $section = array();
+        static $section = [];
         $aid = isset($_GET['aid']) ? fusion_get_aidlink() : '';
 
         if (empty($section)) {
@@ -160,22 +160,22 @@ class UserFields extends UserFieldsQuantum {
     private function get_settings_sections($key = '') {
         $aid = isset($_GET['aid']) ? fusion_get_aidlink() : '';
         $section['acc_settings'] = [
-            'id' => 'acc_settings',
-            'active' => (isset($_GET['section']) && $_GET['section'] == 'acc_settings' ? 1 : (!isset($_GET['section']) ? 1 : 0) ),
-            'link' => clean_request($aid.'section=acc_settings&lookup='.$this->user_data['user_id'], ['section'], FALSE),
-            'name' => 'Account Settings',
+            'id'     => 'acc_settings',
+            'active' => (isset($_GET['section']) && $_GET['section'] == 'acc_settings' ? 1 : (!isset($_GET['section']) ? 1 : 0)),
+            'link'   => clean_request($aid.'section=acc_settings&lookup='.$this->user_data['user_id'], ['section'], FALSE),
+            'name'   => 'Account Settings',
         ];
         $section['preferences'] = [
-            'id' => 'preferences',
+            'id'     => 'preferences',
             'active' => (isset($_GET['section']) && $_GET['section'] == 'preferences' ? 1 : 0),
-            'link' => clean_request($aid.'section=preferences&lookup='.$this->user_data['user_id'], ['section'], FALSE),
-            'name' => 'Preferences',
+            'link'   => clean_request($aid.'section=preferences&lookup='.$this->user_data['user_id'], ['section'], FALSE),
+            'name'   => 'Preferences',
         ];
         $section['security'] = [
-            'id' => 'security',
+            'id'     => 'security',
             'active' => (isset($_GET['section']) && $_GET['section'] == 'security' ? 1 : 0),
-            'link' => clean_request($aid.'section=security&lookup='.$this->user_data['user_id'], ['section'], FALSE),
-            'name' => 'Security',
+            'link'   => clean_request($aid.'section=security&lookup='.$this->user_data['user_id'], ['section'], FALSE),
+            'name'   => 'Security',
         ];
 
         return empty($key) ? (array)$section : (isset($section[$key]) ? (array)$section[$key] : NULL);
@@ -186,6 +186,7 @@ class UserFields extends UserFieldsQuantum {
 
     /**
      * Custom add files into the edit profile page.
+     *
      * @param $key
      * @param $title
      * @param $file
@@ -193,15 +194,15 @@ class UserFields extends UserFieldsQuantum {
     public function add_pages($key, $title, $file) {
         self::$additional_pages[$key] = [
             'title' => $title,
-            'file' => is_file($file) ? $file : ''
+            'file'  => is_file($file) ? $file : ''
         ];
     }
 
     public static function get_pages() {
         if (empty(self::$pages)) {
             self::$pages = [
-                'pu_profile' => ['title'=>'Public Profile'], // Public Profile
-                'se_profile' => ['title'=>'Settings'], // Private Profile
+                'pu_profile' => ['title' => 'Public Profile'], // Public Profile
+                'se_profile' => ['title' => 'Settings'], // Private Profile
             ];
         }
 
@@ -215,6 +216,7 @@ class UserFields extends UserFieldsQuantum {
 
     /**
      * Returns all fields array
+     *
      * @return array
      */
     public function get_input_info() {
@@ -223,8 +225,10 @@ class UserFields extends UserFieldsQuantum {
         $settings = fusion_get_settings();
         // user id
         $user_id = isset($_GET['lookup']) && isnum($_GET['lookup']) ? $_GET['lookup'] : fusion_get_userdata('user_id');
+        $section = 1;
 
-        if ($this->registration) $user_id = 0;
+        if ($this->registration)
+            $user_id = 0;
 
         $this->info = [
             'section'              => self::get_user_field_cats(),
@@ -234,6 +238,7 @@ class UserFields extends UserFieldsQuantum {
             'user_name'            => '',
             'joined_date'          => showdate('longdate', $this->user_data['user_joined']),
             'email'                => $this->user_data['user_email'],
+            'user_hash'            => form_hidden('user_hash', '', $this->user_data['user_password']),
             'user_password'        => '',
             'user_admin_password'  => '',
             'user_email'           => '',
@@ -348,7 +353,6 @@ class UserFields extends UserFieldsQuantum {
                             if (is_file($this->info['pages'][$this->info['current_page']]['file'])) {
                                 include $this->info['pages'][$this->info['current_page']]['file'];
                             }
-                            $section = 1;
                             if (!empty($user_fields_section)) {
                                 $section = isset($_GET['section']) ? $_GET['section'] : $user_fields_section['id'][0];
                             }
@@ -387,7 +391,6 @@ class UserFields extends UserFieldsQuantum {
                         $class->plugin_folder = $this->plugin_folder;
                         $class->plugin_locale_folder = $this->plugin_locale_folder;
                         $class->inline_field = $this->inline_field;
-                        $this->info['user_hash'] = form_hidden('user_hash', '', $this->user_data['user_password']);
                         $this->info = array_merge($this->info, $class->get_info());
 
                         break;
@@ -416,12 +419,35 @@ class UserFields extends UserFieldsQuantum {
             }
         }
 
+        $user_fields = '';
+        if (!empty($this->info['user_field'])) {
+            foreach ($this->info['user_field'] as $catID => $fieldData) {
+                if (!empty($fieldData['title'])) {
+                    $user_fields .= $fieldData['title'];
+                }
+                if (!empty($fieldData['fields'])) {
+                    foreach ($fieldData['fields'] as $_id => $_fields) {
+                        $user_fields .= $_fields;
+                    }
+                }
+            }
+        }
+        if (isset($this->info['section']) && count($this->info['section']) > 1) {
+            $tab_title = [];
+            foreach ($this->info['section'] as $section) {
+                $tab_title['title'][$section['id']] = $section['name'];
+                $tab_title['id'][$section['id']] = $section['id'];
+                $tab_title['icon'][$section['id']] = $section['icon'];
+            }
+            $this->info['tab_info'] = $tab_title;
+        }
+
         $this->info += [
-            'register'  => $this->registration,
+            'register'        => $this->registration,
             'current_section' => ($this->paginate && !$this->registration) ? $section : '',
-            'openform'  => openform($this->form_name, 'post', FUSION_REQUEST, [ 'enctype' => ($this->show_avatar_input ? TRUE : FALSE) ]),
-            'closeform' => closeform(),
-            'button'    => $this->renderButton(),
+            'openform'        => openform($this->form_name, 'post', FUSION_REQUEST, ['enctype' => ($this->show_avatar_input ? TRUE : FALSE)]),
+            'closeform'       => closeform(),
+            'button'          => $this->renderButton(),
         ];
 
         return (array)$this->info;
@@ -552,7 +578,7 @@ class UserFields extends UserFieldsQuantum {
         }
 
         // IP
-         if (iADMIN && checkrights('M')) {
+        if (iADMIN && checkrights('M')) {
             $this->info['core_field']['profile_user_ip'] = [
                 'title' => $locale['u049'],
                 'value' => $this->user_data['user_ip']

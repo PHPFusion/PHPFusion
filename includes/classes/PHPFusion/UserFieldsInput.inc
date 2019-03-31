@@ -925,7 +925,7 @@ class UserFieldsInput {
                     redirect($redirect_uri);
                 }
             } else {
-                print_P($data);
+                //print_P($data);
                 addNotice("danger", "Update could not be completed due to invalid user hash");
             }
         }

@@ -65,18 +65,19 @@ if (!function_exists('display_profile_form')) {
      */
     function display_profile_form(array $info = []) {
         add_to_head("<link href='".THEMES."templates/global/css/profile.css' rel='stylesheet'/>");
-        ?>
+        $tpl = \PHPFusion\Template::getInstance('profile');
+        //print_P($info);
+        $tpl->set_text('
         <!--HTML-->
         {%opentable%}
         {%tab_header%}
         <!--editprofile_pre_idx-->
-        <div id='profile_form' class='row m-t-20'>
-            <div class='col-xs-12 col-sm-12'>
+        <div id=\'profile_form\' class=\'{[row]} m-t-20\'>
+            <div class=\'{[col(100)]}\'>
                 {%open_form%}
+                {%user_hash%}
                 {%user_id%}
                 {%user_name_field%}
-                {%user_email_field%}
-                {%user_hide_email_field%}
                 {%user_reputation_field%}
                 {%user_avatar_field%}
                 {%user_password_field%}
@@ -92,7 +93,30 @@ if (!function_exists('display_profile_form')) {
         {%tab_footer%}
         {%closetable%}
         <!--//HTML-->
-        <?php
+        ');
+        //print_p();
+        $tpl->set_tag('open_form', $info['openform']);
+        $tpl->set_tag('close_form', $info['closeform']);
+        $tpl->set_tag('tab_header', isset($tab_title) ? opentab($tab_title, $_GET['section'], 'user-profile-form', TRUE) : '');
+        $tpl->set_tag('tab_footer', isset($tab_title) ? closetab() : '');
+        $tpl->set_tag('opentable', fusion_get_function('opentable', ''));
+        $tpl->set_tag('closetable', fusion_get_function('closetable', ''));
+        $tpl->set_tag('user_id', $info['user_id']);
+        $tpl->set_tag('user_hash', $info['user_hash']);
+        $tpl->set_tag('user_name_field', $info['user_name']);
+        $tpl->set_tag('user_email_field', $info['user_email']);
+        $tpl->set_tag('user_hide_email_field', $info['user_hide_email']);
+        $tpl->set_tag('user_avatar_field', $info['user_avatar']);
+        $tpl->set_tag('user_reputation_field', $info['user_reputation']);
+        $tpl->set_tag('user_password_field', $info['user_password']);
+        $tpl->set_tag('user_admin_password_field', $info['user_admin_password']);
+        $tpl->set_tag('custom_fields', $info['user_fields']);
+        $tpl->set_tag('captcha_fields', $info['validate']);
+        $tpl->set_tag('eula', $info['terms']);
+        $tpl->set_tag('post_button', $info['button']);
+
+        echo (string)$tpl->get_output();
+
     }
 }
 

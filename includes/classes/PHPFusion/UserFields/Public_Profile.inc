@@ -2,8 +2,8 @@
 
 namespace PHPFusion\UserFields;
 
-use PHPFusion\UserFieldsQuantum;
 use PHPFusion\UserFields;
+use PHPFusion\UserFieldsQuantum;
 
 class Public_Profile extends UserFieldsQuantum {
 
@@ -26,23 +26,24 @@ class Public_Profile extends UserFieldsQuantum {
 
     public function get_info() {
         $settings = fusion_get_settings();
+        $info = [];
 
-            if (iADMIN || $this->user_name_change) {
-                $user_name = isset($_POST['user_name']) ? $_POST['user_name'] : $this->user_data['user_name'];
-                $info['user_name'] = form_text('user_name', $this->locale['u127'], $user_name, [
-                    'max_length' => 30,
-                    'required'   => 1,
-                    'error_text' => $this->locale['u122'],
-                    'inline'     => $this->inline_field
-                ]);
-            }
+        if (iADMIN || $this->user_name_change) {
+            $user_name = isset($_POST['user_name']) ? $_POST['user_name'] : $this->user_data['user_name'];
+            $info['user_name'] = form_text('user_name', $this->locale['u127'], $user_name, [
+                'max_length' => 30,
+                'required'   => 1,
+                'error_text' => $this->locale['u122'],
+                'inline'     => $this->inline_field
+            ]);
+        }
 
-            // Field exist only in edit profile
-            if ($this->registration === FALSE) {
+        // Field exist only in edit profile
+        if ($this->registration === FALSE) {
 
-                // Avatar Field
-                if (isset($this->user_data['user_avatar']) && $this->user_data['user_avatar'] != "") {
-                    $info['user_avatar'] = "
+            // Avatar Field
+            if (isset($this->user_data['user_avatar']) && $this->user_data['user_avatar'] != "") {
+                $info['user_avatar'] = "
                     <div class='row'>\n
                     <div class='col-xs-12 col-sm-3'>".$this->locale['u185']."</div>
                     <div class='col-xs-12 col-sm-9'>
@@ -51,7 +52,7 @@ class Public_Profile extends UserFieldsQuantum {
                         </div>
                     </div></div>
                     ";
-                    add_to_jquery("
+                add_to_jquery("
                     $('#delAvatar').bind('click', function(e) {
                         var checked= $(this).prop('checked');
                         if (checked) {
@@ -63,76 +64,77 @@ class Public_Profile extends UserFieldsQuantum {
                         }
                     });
                     ");
-                } else {
-                    $upload_settings = [
-                        'upload_path'    => IMAGES."avatars/",
-                        'input_id'       => 'user_avatar_upload',
-                        'valid_ext'      => ".jpg,.png,.gif,.svg",
-                        'type'           => 'image',
-                        'max_byte'       => $settings['avatar_filesize'],
-                        'max_height'     => $settings['avatar_width'],
-                        'max_width'      => $settings['avatar_height'],
-                        'inline'         => TRUE,
-                        'thumbnail'      => 0,
-                        'width'          => '100%',
-                        'class'          => 'm-t-10 m-b-0',
-                        "error_text"     => $this->locale['u180'],
-                        "template"       => "thumbnail",
-                        'croppie'        => TRUE,
-                        "croppie_resize" => TRUE,
-                        "croppie_zoom"   => TRUE,
-                        'ext_tip'        => sprintf($this->locale['u184'], parsebytesize($settings['avatar_filesize']), $settings['avatar_width'], $settings['avatar_height'])
-                    ];
-                    $info['user_avatar'] = form_fileinput('user_avatar', $this->locale['u185'], '', $upload_settings);
-                 }
-                // Real name change button
-                $info['name_change_button'] = form_button('update_name', 'Update Name', 'update_name', ['class' => $this->options['btn_post_class']]);
+            } else {
+                $upload_settings = [
+                    'upload_path'    => IMAGES."avatars/",
+                    'input_id'       => 'user_avatar_upload',
+                    'valid_ext'      => ".jpg,.png,.gif,.svg",
+                    'type'           => 'image',
+                    'max_byte'       => $settings['avatar_filesize'],
+                    'max_height'     => $settings['avatar_width'],
+                    'max_width'      => $settings['avatar_height'],
+                    'inline'         => TRUE,
+                    'thumbnail'      => 0,
+                    'width'          => '100%',
+                    'class'          => 'm-t-10 m-b-0',
+                    "error_text"     => $this->locale['u180'],
+                    "template"       => "thumbnail",
+                    'croppie'        => TRUE,
+                    "croppie_resize" => TRUE,
+                    "croppie_zoom"   => TRUE,
+                    'ext_tip'        => sprintf($this->locale['u184'], parsebytesize($settings['avatar_filesize']), $settings['avatar_width'], $settings['avatar_height'])
+                ];
+                $info['user_avatar'] = form_fileinput('user_avatar', $this->locale['u185'], '', $upload_settings);
+            }
+            // Real name change button
+            $info['name_change_button'] = form_button('update_name', 'Update Name', 'update_name', ['class' => $this->options['btn_post_class']]);
 
-                // User Reputation
-                if ($this->is_admin_panel === TRUE && infusion_exists('forum')) {
-                    $user_reputation = isset($_POST['user_reputation']) ? $_POST['user_reputation'] : $this->user_data['user_reputation'];
-                    $info['user_reputation'] = form_text('user_reputation', $this->locale['u210'], $user_reputation, [
-                            'type'   => 'number',
-                            'inline' => $this->inline_field
-                        ]
-                    );
-                }
+            // User Reputation
+            if ($this->is_admin_panel === TRUE && infusion_exists('forum')) {
+                $user_reputation = isset($_POST['user_reputation']) ? $_POST['user_reputation'] : $this->user_data['user_reputation'];
+                $info['user_reputation'] = form_text('user_reputation', $this->locale['u210'], $user_reputation, [
+                        'type'   => 'number',
+                        'inline' => $this->inline_field
+                    ]
+                );
+            }
 
-                // Quantum
-                $this->load_fields();
-                if ($this->is_admin_panel === TRUE) {
-                    // admin edit profile
-                    $info += $this->get_user_fields();
-                } else {
-                    $info['user_fields'] = '';
-                    foreach($this->fields as $cat_id => $field_rows) {
-                        $info['user_fields'] .= "<h4>".$this->get_section_title($cat_id)."</h4>";
-                        if (!empty($field_rows)) {
-                            foreach($field_rows as $fields) {
-                                $options = [
-                                    'show_title' => TRUE,
-                                    'inline'     => $this->inline_field,
-                                    'required'   => (bool)$fields['field_required']
+            // Quantum
+            $this->load_fields();
+            if ($this->is_admin_panel === TRUE) {
+                // admin edit profile
+                $info += $this->get_user_fields();
+            } else {
+                $info['user_fields'] = '';
+                foreach ($this->fields as $cat_id => $field_rows) {
+                    $info['user_fields'] .= "<h4>".$this->get_section_title($cat_id)."</h4>";
+                    if (!empty($field_rows)) {
+                        foreach ($field_rows as $fields) {
+                            $options = [
+                                'show_title' => TRUE,
+                                'inline'     => $this->inline_field,
+                                'required'   => (bool)$fields['field_required']
+                            ];
+                            if ($fields['field_type'] == 'file') {
+                                $options += [
+                                    'plugin_folder' => $this->plugin_folder,
                                 ];
-                                if ($fields['field_type'] == 'file') {
-                                    $options += [
-                                        'plugin_folder'        => $this->plugin_folder,
-                                    ];
-                                }
-                                $output = $this->display_fields($fields, $this->user_data, $this->method, $options);
-                                $info['user_fields'] .= $output;
                             }
+                            $output = $this->display_fields($fields, $this->user_data, $this->method, $options);
+                            $info['user_fields'] .= $output;
                         }
                     }
-                 }
-            } else {
-                $info += $this->get_user_fields();
-                if ($this->display_validation == 1 && $this->is_admin_panel === FALSE) {
-                    $info['validate'] = $this->renderValidation();
                 }
-
-                if ($this->display_terms == 1 && $this->is_admin_panel === FALSE) $info['terms'] = $this->renderTerms();
             }
+        } else {
+            $info += $this->get_user_fields();
+            if ($this->display_validation == 1 && $this->is_admin_panel === FALSE) {
+                $info['validate'] = $this->renderValidation();
+            }
+
+            if ($this->display_terms == 1 && $this->is_admin_panel === FALSE)
+                $info['terms'] = $this->renderTerms();
+        }
 
         return (array)$info;
     }
@@ -149,7 +151,7 @@ class Public_Profile extends UserFieldsQuantum {
         }
 
         if (!empty($section_titles)) {
-            foreach($section_titles as $cat) {
+            foreach ($section_titles as $cat) {
                 if ($cat['field_cat_id'] == $cat_id) {
                     return self::parse_label($cat['field_cat_name']);
                 }
