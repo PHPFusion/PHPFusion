@@ -227,32 +227,38 @@ class Requirements extends Install_Core {
             }
         }
 
+        $root = $_SERVER['DOCUMENT_ROOT'].substr($_SERVER['SCRIPT_NAME'], 0, strpos($_SERVER['SCRIPT_NAME'],basename($_SERVER['SCRIPT_NAME'])));
+
         // Check system core files and folders
         // $requirements['files_check']
         $check_arr = [
-            'administration/db_backups/' => TRUE,
-            'images/'                    => TRUE,
-            'images/imagelist.js'        => TRUE,
-            'images/avatars/'            => TRUE,
-            'images/smiley/'             => TRUE,
-            'robots.txt'                 => TRUE
+            $root                                => TRUE,
+            BASEDIR.'administration/db_backups/' => TRUE,
+            BASEDIR.'images/'                    => TRUE,
+            BASEDIR.'images/imagelist.js'        => TRUE,
+            BASEDIR.'images/avatars/'            => TRUE,
+            BASEDIR.'images/smiley/'             => TRUE,
+            BASEDIR.'robots.txt'                 => TRUE
         ];
         // $key is filename
         // $value - boolean false
+        $chmod = '';
         foreach ($check_arr as $key => $value) {
             // Override key values
-            $check_arr[$key] = (file_exists(BASEDIR.$key) && is_writable(BASEDIR.$key)) or (file_exists(BASEDIR.$key) && function_exists("chmod") && @chmod(BASEDIR.$key, 0777) && is_writable(BASEDIR.$key)) ? TRUE : FALSE;
+            $check_arr[$key] = (file_exists($key) && is_writable($key)) or (file_exists($key) && function_exists("chmod") && @chmod($key, 0777) || @chmod($key, 0755) && is_writable($key)) ? TRUE : FALSE;
             if (!$check_arr[$key]) {
                 $requirements['files_check']['sub'][$key] = self::$locale['setup_0136'];
                 $requirements['files_check']['severability'] = -10;
+                $chmod .= '<br/>'.$key.' - '.self::$locale['setup_0136'];
             } else {
                 $requirements['files_check']['sub'][$key] = self::$locale['setup_0137'];
             }
         }
+
         $requirements['files_check']['title'] = self::$locale['setup_0056'];
         $requirements['files_check']['description'] = self::$locale['setup_0134'];
         if (isset($requirements['files_check']['severability'])) {
-            $requirements['files_check']['description'] = self::$locale['setup_0135'];
+            $requirements['files_check']['description'] = self::$locale['setup_0135'].$chmod;
         }
 
         return (array)$requirements;
