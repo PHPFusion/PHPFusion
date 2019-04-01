@@ -80,8 +80,8 @@ if (!function_exists('display_user_info_panel')) {
                 $tpl->set_tag('login_name_input', $info['login_name_input']);
                 $tpl->set_tag('login_pass_input', $info['login_pass_input']);
                 $tpl->set_tag('login_remember_input', $info['login_remember_input']);
-                $tpl->set_tag('open_side', fusion_get_function('openside', $locale['global_100']));
-                $tpl->set_tag('close_side', fusion_get_function('closeside'));
+                $tpl->set_tag('openside', fusion_get_function('openside', $locale['global_100']));
+                $tpl->set_tag('closeside', fusion_get_function('closeside'));
                 $tpl->set_tag('login_submit', $info['login_submit']);
                 $tpl->set_tag('registration_link', $info['registration_link']);
                 $tpl->set_tag('lostpassword_link', $info['lostpassword_link']);
