@@ -111,9 +111,14 @@ class Account_Profile extends UserFieldsQuantum {
         return (array)$info;
     }
 
+    /**
+     * GET: acc_settings
+     * @return array
+     */
     private function account_settings() {
 
         $deactivate_user = $this->user_name_change ? FALSE : TRUE;
+
         if ($this->registration === TRUE) {
             $input_value = isset($_POST['user_name_reg']) ? $_POST['user_name_reg'] : '';
             $info['user_name'] = form_text('user_name_reg', 'User Name', $input_value, ['required' => TRUE, 'deactivate' => FALSE, 'inline' => $this->inline_field]);
@@ -122,8 +127,7 @@ class Account_Profile extends UserFieldsQuantum {
             $info['username_closeform'] = closeform();
             $info['user_name'] = form_text('user_name', 'User Name', $this->user_data['user_name'], ['required' => TRUE, 'deactivate' => $deactivate_user, 'inline' => $this->inline_field]);
             $info['update_user_name'] = form_button($this->post_name.'_username', "Update User Name", $this->post_name.'_username', ['class' => $this->options['btn_post_class'], 'deactivate' => $this->user_name_change ? FALSE : TRUE]);
-    
-        }
+            }
         $user_email = isset($_POST['user_email']) ? $_POST['user_email'] : $this->user_data['user_email'];
         $info['user_email'] = form_text('user_email', $this->locale['u128'], $user_email, [
                 'type'       => 'email',
@@ -175,7 +179,7 @@ class Account_Profile extends UserFieldsQuantum {
                 $('#'+field).focus();
             });
         ");
-    
+
         // only in personal edit profile
         if ($this->registration === FALSE && $this->is_admin_panel === FALSE) {
             $info['user_email_openform'] = openform('useremail_frm', 'post', FUSION_REQUEST);

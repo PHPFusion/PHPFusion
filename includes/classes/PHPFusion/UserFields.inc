@@ -21,8 +21,6 @@ namespace PHPFusion;
 use PHPFusion\UserFields\Account_Profile;
 use PHPFusion\UserFields\Public_Profile;
 
-require_once THEMES."templates/global/profile.php";
-
 /**
  * Class UserFields
  *
@@ -88,7 +86,7 @@ class UserFields extends UserFieldsQuantum {
 
     private static $instance = NULL;
 
-    public static function get_instance() {
+    public static function getInstance() {
         if (empty(self::$instance)) {
             self::$instance = new static();
         }
@@ -169,13 +167,13 @@ class UserFields extends UserFieldsQuantum {
             'id'     => 'preferences',
             'active' => (isset($_GET['section']) && $_GET['section'] == 'preferences' ? 1 : 0),
             'link'   => clean_request($aid.'section=preferences&lookup='.$this->user_data['user_id'], ['section'], FALSE),
-            'name'   => 'Preferences',
+            'name'   => 'Account Preferences',
         ];
         $section['security'] = [
             'id'     => 'security',
             'active' => (isset($_GET['section']) && $_GET['section'] == 'security' ? 1 : 0),
             'link'   => clean_request($aid.'section=security&lookup='.$this->user_data['user_id'], ['section'], FALSE),
-            'name'   => 'Security',
+            'name'   => 'Account Security',
         ];
 
         return empty($key) ? (array)$section : (isset($section[$key]) ? (array)$section[$key] : NULL);
@@ -218,6 +216,7 @@ class UserFields extends UserFieldsQuantum {
      * Returns all fields array
      *
      * @return array
+     * @throws \Exception
      */
     public function get_input_info() {
         $this->method = 'input';
@@ -225,12 +224,12 @@ class UserFields extends UserFieldsQuantum {
         $settings = fusion_get_settings();
         // user id
         $user_id = isset($_GET['lookup']) && isnum($_GET['lookup']) ? $_GET['lookup'] : fusion_get_userdata('user_id');
-        $section = 1;
-
+        $section = NULL;
         if ($this->registration)
             $user_id = 0;
 
         $this->info = [
+            'sitename'             => fusion_get_settings('sitename'),
             'section'              => self::get_user_field_cats(),
             'pages'                => $this->get_pages(),
             'user_id'              => form_hidden('user_id', '', $user_id),
@@ -238,7 +237,6 @@ class UserFields extends UserFieldsQuantum {
             'user_name'            => '',
             'joined_date'          => showdate('longdate', $this->user_data['user_joined']),
             'email'                => $this->user_data['user_email'],
-            'user_hash'            => form_hidden('user_hash', '', $this->user_data['user_password']),
             'user_password'        => '',
             'user_admin_password'  => '',
             'user_email'           => '',
@@ -261,11 +259,13 @@ class UserFields extends UserFieldsQuantum {
         ];
 
         $this->info['current_page'] = self::get_current_page();
+
         $this->options += $this->default_options;
 
         if ($this->registration) {
             // registration
             // bound in page 1 only.
+
             $_GET['section'] = 1;
             $class = new Public_Profile();
             $class->user_data = $this->user_data;
@@ -281,6 +281,7 @@ class UserFields extends UserFieldsQuantum {
             $class->inline_field = $this->inline_field;
             $this->info = array_merge($this->info, $class->get_info());
 
+            // Edit Profile Fields
             $class = new Account_Profile();
             $class->user_data = $this->user_data;
             $class->options = $this->options;
@@ -314,6 +315,7 @@ class UserFields extends UserFieldsQuantum {
                 $class->is_admin_panel = TRUE;
                 $this->info = array_merge($this->info, $class->get_info());
 
+                // Edit Profile Fields
                 $class = new Account_Profile();
                 $class->user_data = $this->user_data;
                 $class->options = $this->options;
@@ -338,6 +340,9 @@ class UserFields extends UserFieldsQuantum {
                     }
                 }
 
+                /**
+                 * Controller for Data Output
+                 */
                 switch ($this->info['current_page']) {
                     default:
                         // Custom page content
@@ -373,7 +378,9 @@ class UserFields extends UserFieldsQuantum {
                             add_to_title($locale['global_201'].$this->info['title']);
                             break;
                         }
-                    case 'pu_profile':
+
+                    case 'pu_profile': // edit_profile.php
+
                         $this->info['section'] = $this->get_user_field_cats();
                         $section = isset($_GET['section']) && isset($this->info['section'][$_GET['section']]) ? $_GET['section'] : 1;
                         $field_cats = $this->get_user_field_cats($section);
@@ -391,19 +398,17 @@ class UserFields extends UserFieldsQuantum {
                         $class->plugin_folder = $this->plugin_folder;
                         $class->plugin_locale_folder = $this->plugin_locale_folder;
                         $class->inline_field = $this->inline_field;
+                        $this->info['user_hash'] = form_hidden('user_hash', '', $this->user_data['user_password']);
                         $this->info = array_merge($this->info, $class->get_info());
+                        break; // Public Profile
 
-                        break;
-
-                    case 'se_profile':
-
+                    case 'se_profile': // Private Profil (security,preferences,acc_settings)
                         $this->info['section'] = $this->get_settings_sections();
                         $section = isset($_GET['section']) && isset($this->info['section'][$_GET['section']]) ? $_GET['section'] : 'acc_settings';
                         $field_cats = $this->get_settings_sections($section);
                         if (isset($field_cats['name'])) {
                             $this->info['title'] = $field_cats['name'];
                         }
-
                         $class = new Account_Profile();
                         $class->user_data = $this->user_data;
                         $class->options = $this->options;
@@ -415,31 +420,7 @@ class UserFields extends UserFieldsQuantum {
                         $this->info = array_merge($this->info, $class->get_info());
                         break;
                 }
-
             }
-        }
-
-        $user_fields = '';
-        if (!empty($this->info['user_field'])) {
-            foreach ($this->info['user_field'] as $catID => $fieldData) {
-                if (!empty($fieldData['title'])) {
-                    $user_fields .= $fieldData['title'];
-                }
-                if (!empty($fieldData['fields'])) {
-                    foreach ($fieldData['fields'] as $_id => $_fields) {
-                        $user_fields .= $_fields;
-                    }
-                }
-            }
-        }
-        if (isset($this->info['section']) && count($this->info['section']) > 1) {
-            $tab_title = [];
-            foreach ($this->info['section'] as $section) {
-                $tab_title['title'][$section['id']] = $section['name'];
-                $tab_title['id'][$section['id']] = $section['id'];
-                $tab_title['icon'][$section['id']] = $section['icon'];
-            }
-            $this->info['tab_info'] = $tab_title;
         }
 
         $this->info += [
@@ -450,6 +431,7 @@ class UserFields extends UserFieldsQuantum {
             'button'          => $this->renderButton(),
         ];
 
+
         return (array)$this->info;
     }
 
@@ -459,8 +441,9 @@ class UserFields extends UserFieldsQuantum {
      * @param array $input
      *
      * Template IDs     Registration    core_user_registration_form
-     *                  Edit Profile    core_edit_profile_form
+     *                  Edit Profile    user-profile-form
      *
+     * @throws \Exception
      * @return string|void
      */
     public function display_input(array $input = []) {
@@ -487,6 +470,8 @@ class UserFields extends UserFieldsQuantum {
      * - Display Profile (View)
      */
     public function display_profile_output() {
+
+        require_once THEMES."templates/global/profile.php";
 
         $locale = fusion_get_locale();
         $aidlink = fusion_get_aidlink();
@@ -612,27 +597,32 @@ class UserFields extends UserFieldsQuantum {
             ];
 
             if (checkrights('M') && fusion_get_userdata('user_level') <= USER_LEVEL_ADMIN && $this->user_data['user_id'] != '1') {
+
                 $groups_cache = cache_groups();
+
                 $user_groups_opts = [];
+
                 $this->info['user_admin'] = [
-                    'user_edit_title'     => $locale['edit'],
+                    'user_edit_title'     => $locale['u069'],
                     'user_edit_link'      => ADMIN."members.php".$aidlink."&amp;ref=edit&amp;lookup=".$this->user_data['user_id'],
                     'user_ban_title'      => $this->user_data['user_status'] == 1 ? $locale['u074'] : $locale['u070'],
                     'user_ban_link'       => ADMIN."members.php".$aidlink."&amp;action=".($this->user_data['user_status'] == 1 ? 2 : 1)."&amp;lookup=".$this->user_data['user_id'],
                     'user_suspend_title'  => $locale['u071'],
                     'user_suspend_link'   => ADMIN."members.php".$aidlink."&amp;action=3&amp;lookup=".$this->user_data['user_id'],
-                    'user_delete_title'   => $locale['delete'],
+                    'user_delete_title'   => $locale['u072'],
                     'user_delete_link'    => ADMIN."members.php".$aidlink."&amp;ref=delete&amp;lookup=".$this->user_data['user_id'],
-                    'user_delete_onclick' => "onclick=\"return confirm('".$locale['u073']."');\"",
+                    'user_delete_onclick' => "onclick=\"return confirm('".$locale['u072']."');\"",
                     'user_susp_title'     => $locale['u054'],
                     'user_susp_link'      => ADMIN."members.php".$aidlink."&amp;ref=log&amp;lookup=".$this->user_data['user_id']
                 ];
+
                 if (count($groups_cache) > 0) {
                     foreach ($groups_cache as $group) {
                         if (!preg_match("(^{$group['group_id']}|\.{$group['group_id']}\.|\.{$group['group_id']}$)", $this->user_data['user_groups'])) {
                             $user_groups_opts[$group['group_id']] = $group['group_name'];
                         }
                     }
+
                     if (iADMIN && checkrights("UG") && !empty($user_groups_opts)) {
                         $submit_link = BASEDIR."profile.php?lookup=".$this->user_data['user_id'];
                         if (defined('ADMIN_PANEL') && isset($_GET['step']) && $_GET['step'] == "view") {
@@ -644,23 +634,24 @@ class UserFields extends UserFieldsQuantum {
                         $this->info['group_admin']['ug_dropdown_input'] = form_select("user_group", '', "", ["options" => $user_groups_opts, "width" => "100%", "inner_width" => "100%", "inline" => FALSE, 'class' => 'm-0']);
                         $this->info['group_admin']['ug_button'] = form_button("add_to_group", $locale['u059'], $locale['u059']);
                     }
+
                 }
             }
         }
 
         // Now, we need to list the user profile profile.
-        $class = new Public_Profile();
-        $class->user_data = $this->user_data;
-        $class->post_name = $this->post_name;
-        $class->options = $this->options;
-        $class->registration = $this->registration;
-        $class->display_validation = $this->display_validation;
-        $class->display_terms = $this->display_terms;
-        $class->plugin_folder = $this->plugin_folder;
-        $class->plugin_locale_folder = $this->plugin_locale_folder;
-        $class->inline_field = $this->inline_field;
-        $class->method = $this->method;
-        $output_info = $class->get_output_info();
+        $public_profile = new Public_Profile();
+        $public_profile->user_data = $this->user_data;
+        $public_profile->post_name = $this->post_name;
+        $public_profile->options = $this->options;
+        $public_profile->registration = $this->registration;
+        $public_profile->display_validation = $this->display_validation;
+        $public_profile->display_terms = $this->display_terms;
+        $public_profile->plugin_folder = $this->plugin_folder;
+        $public_profile->plugin_locale_folder = $this->plugin_locale_folder;
+        $public_profile->inline_field = $this->inline_field;
+        $public_profile->method = $this->method;
+        $output_info = $public_profile->get_output_info();
 
         $this->info = array_merge($this->info, $output_info);
 

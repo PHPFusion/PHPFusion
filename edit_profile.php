@@ -22,7 +22,7 @@ include THEMES."templates/global/profile.php";
 $settings = fusion_get_settings();
 if (!iMEMBER) redirect("index.php");
 add_to_title($locale['global_200'].$locale['u102']);
-$userFields = \PHPFusion\UserFields::get_instance();
+$userFields = \PHPFusion\UserFields::getInstance();
 $userFields->post_name = "update_profile";
 $userFields->post_value = $locale['u105'];
 $userFields->user_data = fusion_get_userdata();
@@ -41,7 +41,6 @@ $userInput->user_name_change = $settings['userNameChange']; // accept or not use
 $userInput->verifyNewEmail = TRUE;
 $userInput->user_data = fusion_get_userdata();
 $userInput->saveUpdate();
-
 
 echo $userFields->display_input();
 

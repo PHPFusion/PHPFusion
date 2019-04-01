@@ -1,108 +1,88 @@
 <!--HTML-->
 {%opentable%}
 <!--editprofile_pre_idx-->
-<div id='profile_form' class='row m-t-20'>
-    <div class="col-xs-12 col-sm-2">
-        <ul class="block profile-pages">
-            {page_tab.{
-            <li><a href="{%link%}">{%title%}</a></li>
-            }}
-        </ul>
-    </div><div class='col-xs-12 col-sm-10'>
-        {%tab_header%}
-        <h4 class="strong spacer-sm">{%page_title%}</h4>
-        {%openform%}
-        {no_fields.{
-        <p>{[uf_108]}</p>
-        }}
-        {content.{
-            {%page_content%}
-        }}
-        {public_fields.{
-        <div class="list-group">
-            <div class="list-group-item">
-                {%user_avatar_field%}
-                {%custom_fields%}
-                {%captcha_field%}
-                {%hash_field%}
-                {%eula%}
-                {%post_button%}
-            </div>
+<div id='profile_form' class='m-t-20'>
+    {%tab_header%}
+    <h4 class="strong spacer-sm">{%page_title%}</h4>
+    {%openform%}
+    {no_fields.{
+    <p>{[uf_108]}</p>
+    }}
+    {content.{
+        {%page_content%}
+    }}
+    {public_fields.{
+    <div class="list-group">
+        <div class="list-group-item">
+            {%user_avatar_field%}
+            {%custom_fields%}
+            {%captcha_field%}
+            {%hash_field%}
+            {%eula%}
+            {%post_button%}
         </div>
-        }}
-        {settings_fields.{
-        <div class="row">
-            <div class="col-xs-12 col-sm-6">
-                <div class="list-group">
-                    <div class="list-group-item list-group-item-heading">About you</div>
-                    <div class="list-group-item">
-                        <div class="m-b-20">
-                            User Name<br/>
-                            {%user_name%}
-                        </div>
-                        <div class="m-b-20">
-                            Member since<br/>
-                            {%joined_date%}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xs-12 col-sm-6">
-                <div class="list-group">
-                    <!--<div class="list-group-item list-group-item-heading">Connected accounts</div>
-                    <div class="list-group-item">
-                        <div class="clearfix">
-                            <div class="pull-left m-r-10">
-                                <i class="fab fa-facebook"></i>
-                            </div>
-                            <div class="clearfix">
-                                Social Integration Coming Soon.
-                            </div>
-                        </div>
-                        <hr/>
-                    </div>-->
-
-                </div>
-            </div>
-        </div>
-        }}
-        {options_fields.{
-        <div class="list-group">
-            <div class="list-group-item list-group-item-heading">
-                {%title%}
-            </div>
-            <div class="list-group-item">
-                <small>{%description%}</small>
-                <div class="m-t-20">
-                    <div class="row">
-                        <div class="col-xs-12 col-sm-3" style="border-right:1px solid #ddd;">
-                            {%content_a%}
-                        </div>
-                        <div class="col-xs-12 col-sm-9">
-                            {%content_b%}
-                        </div>
-                    </div>
-                </div>
-                {%post_button%}
-            </div>
-        </div>
-        }}
-        {content_fields.{
-        <div class="list-group">
-            <div class="list-group-item list-group-item-heading">
-                {%title%}
-            </div>
-            <div class="list-group-item">
-                <small>{%description%}</small>
-                {%content%}
-                {%post_button%}
-            </div>
-        </div>
-        }}
-        {%button%}
-        {%closeform%}
-        {%tab_footer%}
     </div>
+    }}
+    {settings_fields.{
+    <div class="row">
+        <div class="col-xs-12 col-sm-6">
+            <div class="list-group">
+                <div class="list-group-item list-group-item-heading">About you</div>
+                <div class="list-group-item">
+                    <div class="m-b-20">
+                        User Name<br/>
+                        {%user_name%}
+                    </div>
+                    <div class="m-b-20">
+                        Member since<br/>
+                        {%joined_date%}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-6">
+            <div class="list-group">
+                {%social_connectors%}
+            </div>
+        </div>
+    </div>
+    }}
+    {options_fields.{
+    <div class="list-group">
+        <div class="list-group-item list-group-item-heading">
+            {%title%}
+        </div>
+        <div class="list-group-item">
+            <small>{%description%}</small>
+            <div class="m-t-20">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-3" style="border-right:1px solid #ddd;">
+                        {%content_a%}
+                    </div>
+                    <div class="col-xs-12 col-sm-9">
+                        {%content_b%}
+                    </div>
+                </div>
+            </div>
+            {%post_button%}
+        </div>
+    </div>
+    }}
+    {content_fields.{
+    <div class="list-group">
+        <div class="list-group-item list-group-item-heading">
+            {%title%}
+        </div>
+        <div class="list-group-item">
+            <small>{%description%}</small>
+            {%content%}
+            {%post_button%}
+        </div>
+    </div>
+    }}
+    {%button%}
+    {%closeform%}
+    {%tab_footer%}
 </div>
 <!--editprofile_sub_idx-->
 {%closetable%}

@@ -1618,7 +1618,7 @@ function profile_link($user_id, $user_name, $user_status, $class = "profile-link
  * @return string
  */
 function print_p($array, $modal = FALSE, $print = TRUE) {
-    debug_print_backtrace();
+    //debug_print_backtrace();
     ob_start();
     echo htmlspecialchars(print_r($array, TRUE), ENT_QUOTES, 'utf-8');
     $debug = ob_get_clean();
