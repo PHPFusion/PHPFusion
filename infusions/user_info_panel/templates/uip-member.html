@@ -1,0 +1,46 @@
+{%openside%}
+<!---member-->
+<div class='clearfix'>
+    <div class='uip_avatar text-center'>
+        <div class='pull-left m-r-10'>{%user_avatar%}</div>
+    </div>
+    <h4 class='uip_username'><strong>{%user_name%}</strong></h4>
+    <span>{%user_level%}</span><br/>
+    {user_reputation.{
+    <span>{%user_reputation_icon%}{%user_reputation%}</span>
+    }}
+</div>
+<div class='user_pm_notice'>{%user_pm_notice%}</div>
+<div class='user_pm_progressbar'>{%user_pm_progressbar%}</div>
+<!-- <div class='submissions m-t-10'>{%submit%}</div> -->
+<div id='navigation-user' class="m-t-10">
+    <strong>{[UM097]}</strong><br/>
+    <ul class='block'>
+        <li>
+            <a href='{%edit_profile_link%}'>{[UM080]} <i class='pull-right fa fa-user-circle-o fa-pull-right'></i></a>
+        </li>
+        <li>
+            <a href='{%edit_account_link%}'>{[UM101]} <i class='pull-right fa fa-user-circle-o fa-pull-right'></i></a>
+        </li>
+        <li><a href='{%user_pm_link%}'>{[UM081]} <i class='fa fa-envelope-o fa-pull-right'></i></a></li>
+        {user_forum.{
+        <li><a href='{%forum_track_link%}'>{[UM088]} <i class='fa fa-commenting-o fa-pull-right'></i></a></li>
+        }}
+        <li><a href='{%member_link%}'>{[UM082]} <i class='fa fa-users fa-pull-right'></i></a></li>
+        {user_acp.{
+        <li><a href='{%user_acp_link%}'>{[UM083]} <i class='fa fa-dashboard fa-pull-right'></i></a></li>
+        }}
+        <li>
+            <a data-toggle='collapse' data-parent='#navigation-user' href='#collapse'>{[UM089]} <i class='fa fa-cloud-upload pull-right'></i></a>
+            <ul id='collapse' class='panel-collapse collapse block m-l-10'>
+                {submit_modules.{
+                <li>
+                    <a class='side pl-l-15' href='{%module_link%}'>{%module_title%}</a>
+                </li>
+                }}
+            </ul>
+        </li>
+    </ul>
+</div>
+<div class='spacer-xs'><a class='btn btn-block btn-primary' href='{%logout_link%}'>{[UM084]}</a></div>
+{%closeside%}

@@ -244,6 +244,7 @@ $locale['UM101'] = "Switch Language";
 $locale['UM098'] = "PM Inbox :";
 $locale['UM099'] = "PM Outbox :";
 $locale['UM100'] = "PM Archive :";
+$locale['UM101'] = "Account Settings :";
 // Keywords and Meta
 $locale['tags'] = "Tags";
 // Captcha
