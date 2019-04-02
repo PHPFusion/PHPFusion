@@ -23,8 +23,8 @@ use PHPFusion\OutputHandler;
 /**
  * Current microtime as float to calculate script start/end time
  *
- * @deprecated since version 9.00, use microtime(TRUE) instead
  * @return float
+ * @deprecated since version 9.00, use microtime(TRUE) instead
  */
 function get_microtime() {
     return microtime(TRUE);
@@ -95,11 +95,11 @@ function fusion_get_currency($iso = NULL, $description = TRUE) {
 /**
  * Check if a given theme exists and is valid
  *
- * @global string[] $settings
- *
  * @param string    $theme
  *
  * @return boolean
+ * @global string[] $settings
+ *
  */
 function theme_exists($theme) {
     if ($theme == "Default") {
@@ -113,10 +113,11 @@ function theme_exists($theme) {
 /**
  * Set a valid theme
  *
- * @global string[] $settings
+ * @param string    $theme
+ *
  * @global array    $locale
  *
- * @param string    $theme
+ * @global string[] $settings
  */
 function set_theme($theme) {
     $locale = fusion_get_locale();
@@ -715,6 +716,7 @@ function formatcode($text) {
 
 /**
  * Renamed function for PHP-Fusion 9 and above.
+ *
  * @param $text
  *
  * @return string
@@ -725,6 +727,7 @@ function format_code($text) {
 
 /**
  * Formats a number in a numeric acronym, and rounding
+ *
  * @param int    $value
  * @param int    $decimals
  * @param string $dec_point
@@ -734,18 +737,18 @@ function format_code($text) {
  *
  * @return string
  */
-function format_num($value = 0, $decimals = 0, $dec_point = ".",  $thousand_sep = ",", $round = TRUE, $acryonym = TRUE) {
+function format_num($value = 0, $decimals = 0, $dec_point = ".", $thousand_sep = ",", $round = TRUE, $acryonym = TRUE) {
     $array = [
         13 => $acryonym ? "t" : "trillion",
         10 => $acryonym ? "b" : "billion",
-        7 => $acryonym ? "m" : "million",
-        4 => $acryonym ? "k" : "thousand"
+        7  => $acryonym ? "m" : "million",
+        4  => $acryonym ? "k" : "thousand"
     ];
     if (is_numeric($value)) {
         if ($round === TRUE) {
             foreach ($array as $length => $rounding) {
                 if (strlen($value) >= $length) {
-                    return number_format(($value/ (pow(10, $length-1)) ), $decimals, $dec_point, $thousand_sep).$rounding;
+                    return number_format(($value / (pow(10, $length - 1))), $decimals, $dec_point, $thousand_sep).$rounding;
                 }
             }
         }
@@ -757,6 +760,7 @@ function format_num($value = 0, $decimals = 0, $dec_point = ".",  $thousand_sep 
 
 /**
  * Converts any formatted number back to float numbers in PHP
+ *
  * @param $value
  *
  * @return float
@@ -894,11 +898,11 @@ function censorwords($text) {
 /**
  * Get a user level's name by the numeric code of level
  *
- * @global array $locale
- *
  * @param int    $userlevel
  *
  * @return string
+ * @global array $locale
+ *
  */
 function getuserlevel($userlevel) {
     $locale = fusion_get_locale();
@@ -914,11 +918,11 @@ function getuserlevel($userlevel) {
 /**
  * Get a user status by the numeric code of the status
  *
- * @global array $locale
- *
  * @param int    $userstatus
  *
  * @return string|NULL NULL if the status does not exist
+ * @global array $locale
+ *
  */
 function getuserstatus($userstatus) {
     $locale = fusion_get_locale();
@@ -1047,9 +1051,9 @@ function cache_groups() {
 /**
  * Compile access levels & user group array
  *
- * @global array $locale
  * @return array structure of elements: array($levelOrGroupid, $levelnameOrGroupname, $levelGroupDescription,
  *               $levelGroupIcon)
+ * @global array $locale
  */
 function getusergroups() {
     $locale = fusion_get_locale();
@@ -1071,13 +1075,13 @@ function getusergroups() {
 /**
  * Get the name of the access level or user group
  *
- * @global array  $locale
- *
  * @param int     $group_id
  * @param boolean $return_desc If TRUE, group_description will be returned instead of group_name
  * @param boolean $return_icon If TRUE, group_icon will be returned instead of group_icon group_name
  *
  * @return bool
+ * @global array  $locale
+ *
  */
 function getgroupname($group_id, $return_desc = FALSE, $return_icon = FALSE) {
 
@@ -1195,11 +1199,11 @@ function blacklist($field) {
 /**
  * check if user was blacklisted by a member
  *
- * @global string[] $userdata
- *
  * @param int       $user_id
  *
  * @return boolean
+ * @global string[] $userdata
+ *
  */
 function user_blacklisted($user_id) {
 
@@ -1285,8 +1289,6 @@ function makefileopts(array $files, $selected = "") {
 /**
  * Making Page Navigation
  *
- * @global array  $locale
- *
  * @param int     $start      The number of the first listed item - $_GET['rowstart']
  * @param int     $count      The number of displayed items - LIMIT on sql
  * @param int     $total      The number of all items - a dbcount of total
@@ -1297,6 +1299,8 @@ function makefileopts(array $files, $selected = "") {
  * @param boolean $button     Displays as button
  *
  * @return boolean|string FALSE if $count is invalid
+ * @global array  $locale
+ *
  */
 function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = "rowstart", $button = FALSE) {
 
@@ -1491,14 +1495,14 @@ function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $ge
 /**
  * Format the date & time accordingly
  *
- * @global string[] $settings
- * @global string[] $userdata
- *
  * @param string    $format shortdate, longdate, forumdate, newsdate or date pattern for the strftime
  * @param int       $val    unix timestamp
  * @param array     $options
  *
  * @return string
+ * @global string[] $settings
+ * @global string[] $userdata
+ *
  */
 function showdate($format, $val, $options = []) {
     $userdata = fusion_get_userdata();
@@ -1543,13 +1547,13 @@ function showdate($format, $val, $options = []) {
 /**
  * Translate bytes into kB, MB, GB or TB by CrappoMan, lelebart fix
  *
- * @global array  $locale
- *
  * @param int     $size   The number of bytes
  * @param int     $digits Precision
  * @param boolean $dir    TRUE if it is the size of a directory
  *
  * @return string
+ * @global array  $locale
+ *
  */
 function parsebytesize($size, $digits = 2, $dir = FALSE) {
     $locale = fusion_get_locale();
@@ -1650,16 +1654,16 @@ function print_p($array, $modal = FALSE, $print = TRUE) {
  *                    if $key was given
  */
 function fusion_get_settings($key = NULL) {
-	// It is initialized only once because of 'static'
-	static $settings = [];
-	if (empty($settings) and defined('DB_SETTINGS') && defined('DB_PREFIX')) {
-		if (dbconnection() && db_exists('settings')) {
-			$result = dbquery("SELECT * FROM " . DB_SETTINGS);
-			while ($data = dbarray($result)) {
-				$settings[$data['settings_name']] = $data['settings_value'];
-			}
-		}
-	}
+    // It is initialized only once because of 'static'
+    static $settings = [];
+    if (empty($settings) and defined('DB_SETTINGS') && defined('DB_PREFIX')) {
+        if (dbconnection() && db_exists('settings')) {
+            $result = dbquery("SELECT * FROM ".DB_SETTINGS);
+            while ($data = dbarray($result)) {
+                $settings[$data['settings_name']] = $data['settings_value'];
+            }
+        }
+    }
 
 
     return $key === NULL ? $settings : (isset($settings[$key]) ? $settings[$key] : NULL);
@@ -1667,6 +1671,7 @@ function fusion_get_settings($key = NULL) {
 
 /**
  * Cache all infusions and get their versions
+ *
  * @param string $folder
  *
  * @return array|mixed|null
@@ -1678,7 +1683,13 @@ function fusion_get_infusions($folder = NULL) {
         if (dbrows($result)) {
             while ($data = dbarray($result)) {
                 $infusions[$data['inf_folder']] = $data['inf_version'];
-                define(strtoupper($data['inf_folder']).'_EXIST', TRUE);
+                if (defined(strtoupper($data['inf_folder']).'_EXIST')) {
+                    define(strtoupper($data['inf_folder']).'_EXIST', TRUE);
+                }
+
+                if (defined(strtoupper($data['inf_folder']).'_EXISTS')) {
+                    define(strtoupper($data['inf_folder']).'_EXISTS', TRUE);
+                }
             }
         }
     }
@@ -1863,11 +1874,11 @@ function valid_language($lang, $file_check = FALSE) {
 /**
  * Create a selection list of possible languages in list
  *
- * @todo rename it from get_available_languages_list to a more proper name
- *
  * @param string $selected_language
  *
  * @return string
+ * @todo rename it from get_available_languages_list to a more proper name
+ *
  */
 function get_available_languages_list($selected_language = "") {
     $enabled_languages = fusion_get_enabled_languages();
