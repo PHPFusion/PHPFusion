@@ -17,11 +17,13 @@
 +--------------------------------------------------------*/
 namespace ThemeFactory;
 
+use PHPFusion\SiteLinks;
+
 class Core {
     /*
      * readme.md
      */
-    private static $options = [
+    protected static $options = [
         'header'                 => TRUE, // has header
         'header_content'         => '', // content in the header
         'header_container'       => TRUE,
@@ -86,7 +88,8 @@ class Core {
         'main_class'             => '',
         'right_is_affix'         => FALSE, // @todo: auto affix
         'right_pre_content'      => '', // right side top content
-        'right_post_content'     => '', // right side bottom content
+        'right_post_content'     => '', // right side bottom content,
+        'header_affix' => FALSE,
     ];
 
     private static $instance = NULL;
@@ -115,6 +118,85 @@ class Core {
                 }
             }
         }
+
+    }
+
+    public static function DisplayCopyrightPanel() {
+
+        $menu_config = [
+            "id"                => "footer_1",
+            "container"         => FALSE,
+            'navbar_class'      => 'nav-stacked text-sm',
+            'nav_class' => "block strong",
+            "language_switcher" => FALSE,
+            "searchbar"         => FALSE,
+            "caret_icon"        => "fa fa-angle-down",
+            "show_banner"       => FALSE,
+            "html_content"      => "",
+            "grouping"          => fusion_get_settings("links_grouping"),
+            "links_per_page"    => fusion_get_settings("links_per_page"),
+            "show_header"       => FALSE,
+            "link_position"     => 4,
+            'responsive' => FALSE,
+        ];
+        $menu_config2 = [
+            'id'                => 'footer_3',
+            'container'         => FALSE,
+            'navbar_class'      => 'nav-stacked text-sm',
+            'nav_class' => "block strong",
+            'language_switcher' => FALSE,
+            'searchbar'         => FALSE,
+            'caret_icon'        => 'fa fa-angle-down',
+            'show_banner'       => FALSE,
+            'html_content'      => "",
+            'grouping'          => fusion_get_settings('links_grouping'),
+            'links_per_page'    => fusion_get_settings('links_per_page'),
+            'show_header'       => FALSE,
+            'link_position'     => 5,
+            'responsive' => FALSE,
+        ];
+
+        $privacy_link = BASEDIR."legal/privacy.php";
+        $tos_link = BASEDIR."legal/tos.php";
+        $coc_link = BASEDIR."legal/coc.php";
+        $licensing_link = BASEDIR."licensing/licensing.php";
+        $chtml = "";
+        if (fusion_get_settings('rendertime_enabled') == '1' || fusion_get_settings('rendertime_enabled') == '2') :
+            $chtml .= showrendertime();
+            $chtml .= showMemoryUsage();
+        endif;
+        if (fusion_get_settings('visitorcounter_enabled')) :
+            $chtml .= "<br /> <small>".showcounter()."</small>";
+        endif;
+        $footer_errors = showFooterErrors();
+        if (!empty($footer_errors)) :
+            $chtml .= $footer_errors;
+        endif;
+
+        $html =
+        "<div class='panel panel-default'>\n<div class='panel-body'>
+            <div class='row'>
+                <div class='col-xs-6'>                                
+                ".SiteLinks::setSubLinks($menu_config)->showSubLinks()."                
+            </div>
+                <div class='col-xs-6'>
+                ".SiteLinks::setSubLinks($menu_config2)->showSubLinks()."                
+            </div>
+            </div>
+            <div class='text-center text-sm'>            
+            <a class='strong' href='$privacy_link'>Privacy Policy</a> &middot;
+            <a class='strong' href='$tos_link'>Terms of Service</a> &middot;
+            <a class='strong' href='$coc_link'>Code of Conduct</a> &middot;
+            <a class='strong' href='$licensing_link'>Licensing</a>
+            <br/>
+            Powered by PHP-Fusion Copyright © ".date('Y')." PHP-Fusion Inc. Published without warranties under <a href='https://www.php-fusion.co.uk/licensing/licensing.php?epal' target='blank' title='Enduser PHP-Fusion Addon License'>EPAL</a>            
+        </div>
+        </div>
+        ".($chtml ? "<div class='panel-footer text-sm'>$chtml</div>": "")."                 
+        </div>";
+
+
+        return $html;
     }
 
     protected static function set_body_span() {
@@ -158,12 +240,38 @@ class Core {
         return NULL;
     }
 
+	/**
+	 * @var string
+	 */
     public $cssPath = '';
+	/**
+	 * @var bool
+	 */
+    public $devMode = FALSE;
 
     public function get_themePack($themePack) {
-        $path = THEME."themepack/".strtolower($themePack)."/theme.php";
-        $this->cssPath = THEME."themepack/".strtolower($themePack)."/styles.css";
+
+    	$path = THEME."themepack/".strtolower($themePack)."/theme.php";
+
+        if ($this->devMode === TRUE && is_file(THEME.'themepack/'.strtolower($themePack).'/styles.dev.css')) {
+
+        	$this->cssPath = THEME.'themepack/'.strtolower($themePack).'/styles.dev.css';
+
+        } else {
+
+	        if (is_file(THEME."themepack/".strtolower($themePack)."/styles.min.css")) {
+
+		        $this->cssPath = THEME."themepack/".strtolower($themePack)."/styles.min.css";
+
+	        } else {
+
+		        $this->cssPath = THEME."themepack/".strtolower($themePack)."/styles.css";
+	        }
+
+        }
+
         add_to_head("<link rel='stylesheet' href='$this->cssPath' type='text/css'/>");
+
         require_once $path;
     }
 
@@ -171,6 +279,7 @@ class Core {
      * @param string $modules
      *
      * @return mixed
+     * @throws \ReflectionException
      */
     protected function get_Modules($modules = 'footer\\news') {
         if (!isset(self::$module_instance[$modules]) or self::$module_instance[$modules] === NULL) {
