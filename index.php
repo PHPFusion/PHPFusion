@@ -15,14 +15,17 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "maincore.php";
+require_once __DIR__.'/maincore.php';
 $settings = fusion_get_settings();
 
 if ($settings['site_seo'] && !isset($_GET['aid'])) {
+
     define("IN_PERMALINK", TRUE);
+
     $router = PHPFusion\Rewrite\Router::getRouterInstance();
     $router->rewritePage();
     $filepath = $router->getFilePath();
+
     if (empty($filepath) && filter_var(PERMALINK_CURRENT_PATH, FILTER_VALIDATE_URL)) {
         redirect(PERMALINK_CURRENT_PATH);
     } else {

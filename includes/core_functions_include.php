@@ -178,10 +178,10 @@ function check_admin_pass($password) {
 
 /**
  * Redirect browser using header or script function
- *
- * @param            $location - Desintation URL
- * @param bool|FALSE $delay    - meta refresh delay
- * @param bool|FALSE $script   - true if you want to redirect via javascript
+ * @param      $location
+ * @param bool $delay
+ * @param bool $script
+ * @param bool $http_response_code
  *
  * @define STOP_REDIRECT to prevent redirection
  */
