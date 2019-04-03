@@ -219,7 +219,8 @@ function form_select($input_name, $label = "", $input_value, array $options = []
              *      value   parent id
              */
             if (!function_exists('get_form_select_chain_index')) {
-                function get_form_select_chain_index($data, $options, $id = 0, $level = 0) {
+
+                function get_form_select_chain_index($data, $options) {
                     $list = [];
                     if (!empty($data)) {
                         $data = flatten_array($data);
@@ -645,11 +646,11 @@ function user_search($user_id) {
     $encoded = json_encode([]);
     if (isnum($user_id)) {
         $user_id = stripinput($user_id);
-        $result = dbquery("SELECT user_id, user_name, user_avatar, user_level FROM ".DB_USERS." WHERE user_status=:status AND user_id=:id", [':status' => 0, ':id' => $user_id]);
+        $result = dbquery("SELECT user_id, user_name, user_avatar, user_level FROM ".DB_USERS." WHERE ".useraccess('user_id')." AND user_status=:status AND user_id=:id", [':status' => 0, ':id' => $user_id]);
         if (dbrows($result) > 0) {
             while ($udata = dbarray($result)) {
                 $user_id = $udata['user_id'];
-                $user_avatar = ($udata['user_avatar']) ? $udata['user_avatar'] : "no-avatar.jpg";
+                $user_avatar = ($udata['user_avatar']) ? $udata['user_avatar'] : "noavatar50.png";
                 $user_name = $udata['user_name'];
                 $user_level = getuserlevel($udata['user_level']);
                 $user_opts[] = [
@@ -691,7 +692,6 @@ function user_search($user_id) {
  * @return string
  */
 function form_select_tree($input_name, $label = "", $input_value = FALSE, array $options = [], $db, $name_col, $id_col, $cat_col, $self_id = FALSE, $id = FALSE, $level = FALSE, $index = FALSE, $data = FALSE) {
-    $html = '';
     $locale = fusion_get_locale();
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
     $default_options = [

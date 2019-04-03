@@ -91,7 +91,7 @@ if (function_exists("get_head_tags")) {
     echo get_head_tags();
 }
 
-echo "<script type='text/javascript' src='".$_includes."jquery/jquery.min.js'></script>\n";
+echo "<script type='text/javascript' src='".$_includes."jquery/jquery.2.2.4.min.js'></script>\n";
 //echo "<script type='text/javascript' src='".$_includes."jquery/jquery-migrate.min.js'></script>\n";
 echo "<script>const SITE_PATH = '".$settings['site_path']."';const CDN = '".CDN."';</script>\n";
 echo "<script type='text/javascript' src='".$_includes."jscripts/jscript.min.js?v=".filemtime($_includes.'jscripts/jscript.min.js')."'></script>\n";
