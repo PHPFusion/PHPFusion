@@ -66,7 +66,8 @@ class Steam {
      * @return object
      */
     public function load($command) {
-        $command_name = lcfirst(strtolower($command));
+        $command_name = strtolower($command);
+        $command_name = ucfirst($command_name);
         require_once __DIR__.'/Steam/'.$command_name.'.steam.inc';
 
         return (object)new $command_name( $this );

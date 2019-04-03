@@ -342,7 +342,8 @@ class Template {
             preg_match_all($short_code_pattern, $this->template, $cache, PREG_SET_ORDER);
             if (!empty($cache)) {
                 //print_P($cache);
-                $layout = $fusion_steam->load('Layout');
+                $layout_class = $fusion_steam->load('Layout');
+
                 $shortcode_cache = [];
                 foreach ($cache as $preg_results) { // For each tag found
                     if (!empty($preg_results[0]) && !empty($preg_results[1])) {
@@ -353,11 +354,11 @@ class Template {
                                 break;
                             case 'container':
                             case 'container_class':
-                                $shortcode_cache[$preg_results[0]] = $layout->getContainerClass();
+                                $shortcode_cache[$preg_results[0]] = $layout_class->getContainerClass();
                                 break;
                             case 'row':
                             case 'row_class': // Grid row class values
-                                $shortcode_cache[$preg_results[0]] = $layout->getRowClass();
+                                $shortcode_cache[$preg_results[0]] = $layout_class->getRowClass();
                                 break;
                             case (stristr($preg_results[1], 'col') ? true : false):
                             case (stristr($preg_results[1], 'column') ? true : false):
@@ -365,7 +366,7 @@ class Template {
                                 if ((preg_match('/[-.\w]+[0-9]/', $preg_results[1]) ? true : false)): // column class - values must contain `column_class(100)`
                                     preg_match_all('/[-.\w]+[0-9]/', $preg_results[1], $percent);
                                     if (!empty($percent[0])) {
-                                        $shortcode_cache[$preg_results[0]] = $layout->getColumnClass($percent[0]);
+                                        $shortcode_cache[$preg_results[0]] = $layout_class->getColumnClass($percent[0]);
                                     }
                                 endif;
                                 break;

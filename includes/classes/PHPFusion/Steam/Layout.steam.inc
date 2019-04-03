@@ -21,11 +21,11 @@ class Layout {
     }
 
     public function getRowClass() {
-        return Grid::getRowClass();
+        return (string) Grid::getRowClass();
     }
 
     public function getColumnClass($percent = 100) {
-        return Grid::getColumnClass($percent);
+        return (string) Grid::getColumnClass($percent);
     }
 
     public function grid(array $options) {
