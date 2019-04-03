@@ -21,24 +21,13 @@ class Geomap {
 
     public static $country_list = [];
     public static $currency_list = [];
+    public static $calling_codes = [];
+    public static $states_by_country_list = [];
 
     static function get_Currency($currency_code = NULL) {
 
         $locale = fusion_get_locale("", LOCALE.LOCALESET.'currency.php');
-
-        if (empty(self::$currency_list)) {
-
-            foreach (self::getCountryResource() as $object) {
-                if ($object->name->common !== 'Antarctica') {
-                    if ($currency_code == $object->currency[0]) {
-                        break;
-                    }
-                    $currency_symbol = isset($locale['currency_symbol'][$object->currency[0]]) ? $locale['currency_symbol'][$object->currency[0]] : "$";
-                    self::$currency_list[$object->currency[0]] = $locale['currency'][$object->currency[0]]." (".$currency_symbol.")";
-                }
-            }
-        }
-
+        self::$currency_list = $locale['currency'];
         if ($currency_code !== NULL) {
             return isset(self::$currency_list[$currency_code]) ? self::$currency_list[$currency_code] : $locale['na'];
         } else {
@@ -53,6 +42,25 @@ class Geomap {
         $map_repo = file_get_contents(CLASSES."PHPFusion/Geomap/Countries.json");
 
         return json_decode($map_repo);
+    }
+
+    /**
+     * Fetches country calling codes
+     * @param null $country_code iso2
+     *
+     * @return array|null
+     */
+    static function get_CallingCodes($country_code = NULL) {
+        if (empty(self::$calling_codes)) {
+            $resource = json_decode(file_get_contents(CLASSES.'PHPFusion/Geomap/CallingCodes.min.json'));
+            foreach($resource as $object) {
+                self::$calling_codes[$object->code] = $object->callingCode;
+            }
+        }
+        if ($country_code !== NULL) {
+            return (isset(self::$calling_codes[$country_code])) ? self::$calling_codes[$country_code] : NULL;
+        }
+        return array_filter(self::$calling_codes);
     }
 
     /**
@@ -76,6 +84,81 @@ class Geomap {
         } else {
             return array_filter(self::$country_list);
         }
+    }
+
+    /**
+     * This returns a full hierarchy model
+     * For select options, use @link Geomap::getStatesOpts();
+     *
+     * @param null $country_code
+     * @param null $state_code
+     *
+     * @return array|null
+     */
+    static function get_States($country_code = NULL, $state_code = NULL) {
+        if (empty(self::$states_by_country_list)) {
+            $resource = json_decode(file_get_contents(CLASSES.'PHPFusion/Geomap/States.min.json'));
+            foreach ($resource as $iso2 => $states) {
+                if (!empty($states)) {
+                    foreach($states as $state_id => $state_name) {
+                        self::$states_by_country_list[$iso2][$state_name] = $state_name;
+                    }
+                }
+            }
+            ksort(self::$states_by_country_list);
+        }
+        if ($country_code !== NULL && $state_code !== NULL) {
+            return (isset(self::$states_by_country_list[$country_code][$state_code])) ? self::$states_by_country_list[$country_code][$state_code] : NULL;
+        } else {
+            return array_filter(self::$states_by_country_list);
+        }
+    }
+
+    /**
+     * Returns a full state list of the entire world
+     * @return array
+     */
+    public static function get_StatesOpts() {
+        static $states_opts = array();
+        if (empty($states_opts)) {
+            $states_list = self::get_States();
+            if (!empty($states_list)) {
+                foreach($states_list as $country_code => $states) {
+                    if (!empty($states)) {
+                        foreach($states as $state_name) {
+                            $state_entities = addslashes(htmlentities($state_name));
+                            $states_opts[$state_entities.','.$country_code] = $state_name;
+                        }
+                    }
+                }
+            }
+        }
+        return $states_opts;
+    }
+
+    /**
+     * Returns a parent and child relationship between states and country
+     * Formatted the use of chain_index for form_select
+     * @return array
+     */
+    static function get_StatesChainIndex() {
+        static $states_chain_index = array();
+
+        if (empty($states_chain_index)) {
+            $states_list = self::get_States();
+            if (!empty($states_list)) {
+                foreach($states_list as $country_code => $states) {
+                    if (!empty($states)) {
+                        foreach($states as $state_name) {
+                            // the parent is the
+                            $state_entities = addslashes(htmlentities($state_name));
+                            $states_chain_index[$state_entities.','.$country_code] = $country_code;
+                        }
+                    }
+                }
+            }
+        }
+        return $states_chain_index;
     }
 
     /**
