@@ -1,6 +1,7 @@
 <?php
 // Infusion Management
 $locale['400'] = "Infusions";
+$locale['400a'] = "Infusion";
 $locale['401'] = "Infuse";
 $locale['402'] = "This item is currently infused";
 $locale['403'] = "This item cannot be infused";
@@ -22,6 +23,7 @@ $locale['418'] = "Status";
 $locale['419'] = "Options";
 $locale['420'] = "Version";
 $locale['421'] = "Author";
-$locale['422'] = "Download more Addons";
+$locale['422'] = "Infusions allow you to extend your site basic features and extends more functionality to your site. You can find more infusions at the [LINK]PHP-Fusion Marketplace[/LINK]";
 $locale['423'] = "%s Infusion has been installed";
 $locale['424'] = "%s Infusion has been uninstalled";
+$locale['425'] = "Description";

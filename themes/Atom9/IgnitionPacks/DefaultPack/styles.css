@@ -280,6 +280,11 @@ a:focus {
     height: 36px;
 }
 
+.form-control:focus {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
 textarea.form-control {
     -webkit-border-radius: 10px;
     border-radius: 10px;

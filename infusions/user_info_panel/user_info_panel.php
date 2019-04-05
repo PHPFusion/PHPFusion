@@ -40,15 +40,14 @@ class User_Info {
     private function getMemberInfo() {
         $userdata = fusion_get_userdata();
         $modules = \PHPFusion\Admins::getInstance()->getSubmitData();
-        $info = [];
 
         $messages_count = dbquery("SELECT
-    SUM(message_folder=0) AS inbox_count,
-    SUM(message_folder=1) AS outbox_count,
-    SUM(message_folder=2) AS archive_count,
-    SUM(message_read=0 AND message_folder=0) AS unread_count
-    FROM ".DB_MESSAGES."
-    WHERE message_to=:user_id", [':user_id' => $userdata['user_id']]);
+            SUM(message_folder=0) AS inbox_count,
+            SUM(message_folder=1) AS outbox_count,
+            SUM(message_folder=2) AS archive_count,
+            SUM(message_read=0 AND message_folder=0) AS unread_count
+            FROM ".DB_MESSAGES."
+            WHERE message_to=:user_id", [':user_id' => $userdata['user_id']]);
         $messages_count = dbarray($messages_count);
         $inbox_count = (int)$messages_count['inbox_count'];
         $outbox_count = (int)$messages_count['outbox_count'];
@@ -91,6 +90,8 @@ class User_Info {
             }
         }
 
+        $pm_title = sprintf($this->locale['UM085'], $msg_count).($msg_count == 1 ? $this->locale['UM086'] : $this->locale['UM087']);
+
         return [
                 'forum_exists'         => $forum_exists,
                 'show_reputation'      => !empty($forum_settings['forum_show_reputation']) && $forum_settings['forum_show_reputation'] ? 1 : 0,
@@ -100,8 +101,8 @@ class User_Info {
                 'user_reputation'      => $forum_exists ? fusion_get_userdata('user_reputation') ?: 0 : '',
                 'user_reputation_icon' => $forum_exists ? "<i class='fa fa-dot-circle-o' title='".fusion_get_locale('forum_0014', INFUSIONS.'forum/locale/'.LOCALESET.'forum.php')."'></i>\n" : '',
                 'user_pm_link'         => BASEDIR."messages.php?folder=inbox",
-                'user_pm_notice'       => ($msg_count ? "<a href='".$info['user_pm_link']."' title='".$info['user_pm_title']."'><i class='fa fa-envelope-o'></i> $msg_count</a>" : ''),
-                'user_pm_title'        => sprintf($this->locale['UM085'], $msg_count).($msg_count == 1 ? $this->locale['UM086'] : $this->locale['UM087']),
+                'user_pm_notice'       => ($msg_count ? "<a href='".BASEDIR."messages.php?folder=inbox' title='".$pm_title."'><i class='fa fa-envelope-o'></i> $msg_count</a>" : ''),
+                'user_pm_title'        => $pm_title,
                 'user_pm_progress'     => $pm_progress,
                 'submissions'          => $submissions_link_arr,
                 'submit'               => $submit_link,
@@ -150,6 +151,7 @@ class User_Info {
 
         }
 
+        return NULL;
     }
 }
 
