@@ -23,6 +23,7 @@ class Core {
     /*
      * readme.md
      */
+    public static $locale = [];
     protected static $options = [
         'header'                 => TRUE, // has header
         'header_content'         => '', // content in the header
@@ -89,13 +90,19 @@ class Core {
         'right_is_affix'         => FALSE, // @todo: auto affix
         'right_pre_content'      => '', // right side top content
         'right_post_content'     => '', // right side bottom content,
-        'header_affix' => FALSE,
+        'header_affix'           => FALSE,
     ];
-
     private static $instance = NULL;
     private static $module_instance = NULL;
     private static $module_list = [];
-    public static $locale = [];
+    /**
+     * @var string
+     */
+    public $cssPath = '';
+    /**
+     * @var bool
+     */
+    public $devMode = FALSE;
 
     public function __construct() {
         if (file_exists(THEME.'locale/'.LANGUAGE.'.php')) {
@@ -127,7 +134,7 @@ class Core {
             "id"                => "footer_1",
             "container"         => FALSE,
             'navbar_class'      => 'nav-stacked text-sm',
-            'nav_class' => "block strong",
+            'nav_class'         => "block strong",
             "language_switcher" => FALSE,
             "searchbar"         => FALSE,
             "caret_icon"        => "fa fa-angle-down",
@@ -137,13 +144,13 @@ class Core {
             "links_per_page"    => fusion_get_settings("links_per_page"),
             "show_header"       => FALSE,
             "link_position"     => 4,
-            'responsive' => FALSE,
+            'responsive'        => FALSE,
         ];
         $menu_config2 = [
             'id'                => 'footer_3',
             'container'         => FALSE,
             'navbar_class'      => 'nav-stacked text-sm',
-            'nav_class' => "block strong",
+            'nav_class'         => "block strong",
             'language_switcher' => FALSE,
             'searchbar'         => FALSE,
             'caret_icon'        => 'fa fa-angle-down',
@@ -153,7 +160,7 @@ class Core {
             'links_per_page'    => fusion_get_settings('links_per_page'),
             'show_header'       => FALSE,
             'link_position'     => 5,
-            'responsive' => FALSE,
+            'responsive'        => FALSE,
         ];
 
         $privacy_link = BASEDIR."legal/privacy.php";
@@ -174,7 +181,7 @@ class Core {
         endif;
 
         $html =
-        "<div class='panel panel-default'>\n<div class='panel-body'>
+            "<div class='panel panel-default'>\n<div class='panel-body'>
             <div class='row'>
                 <div class='col-xs-6'>                                
                 ".SiteLinks::setSubLinks($menu_config)->showSubLinks()."                
@@ -192,11 +199,23 @@ class Core {
             Powered by PHP-Fusion Copyright © ".date('Y')." PHP-Fusion Inc. Published without warranties under <a href='https://www.php-fusion.co.uk/licensing/licensing.php?epal' target='blank' title='Enduser PHP-Fusion Addon License'>EPAL</a>            
         </div>
         </div>
-        ".($chtml ? "<div class='panel-footer text-sm'>$chtml</div>": "")."                 
+        ".($chtml ? "<div class='panel-footer text-sm'>$chtml</div>" : "")."                 
         </div>";
 
 
         return $html;
+    }
+
+    public static function getInstance() {
+        if (self::$instance === NULL) {
+            self::$instance = new static();
+        }
+
+        return self::$instance;
+    }
+
+    public static function setParam($prop, $value) {
+        self::$options[$prop] = (is_bool($value)) ? $value : self::getParam($prop).$value;
     }
 
     protected static function set_body_span() {
@@ -213,22 +232,6 @@ class Core {
         }
     }
 
-    public static function replaceParam($prop, $value) {
-        self::$options[$prop] = $value;
-    }
-
-    public static function getInstance() {
-        if (self::$instance === NULL) {
-            self::$instance = new static();
-        }
-
-        return self::$instance;
-    }
-
-    public static function setParam($prop, $value) {
-        self::$options[$prop] = (is_bool($value)) ? $value : self::getParam($prop).$value;
-    }
-
     public static function getParam($prop = FALSE) {
         if (isset(self::$options[$prop])) { // will return an error if $prop is not available
             return self::$options[$prop];
@@ -240,33 +243,28 @@ class Core {
         return NULL;
     }
 
-	/**
-	 * @var string
-	 */
-    public $cssPath = '';
-	/**
-	 * @var bool
-	 */
-    public $devMode = FALSE;
+    public static function replaceParam($prop, $value) {
+        self::$options[$prop] = $value;
+    }
 
     public function get_themePack($themePack) {
 
-    	$path = THEME."themepack/".strtolower($themePack)."/theme.php";
+        $path = THEME."themepack/".strtolower($themePack)."/theme.php";
 
         if ($this->devMode === TRUE && is_file(THEME.'themepack/'.strtolower($themePack).'/styles.dev.css')) {
 
-        	$this->cssPath = THEME.'themepack/'.strtolower($themePack).'/styles.dev.css';
+            $this->cssPath = THEME.'themepack/'.strtolower($themePack).'/styles.dev.css';
 
         } else {
 
-	        if (is_file(THEME."themepack/".strtolower($themePack)."/styles.min.css")) {
+            if (is_file(THEME."themepack/".strtolower($themePack)."/styles.min.css")) {
 
-		        $this->cssPath = THEME."themepack/".strtolower($themePack)."/styles.min.css";
+                $this->cssPath = THEME."themepack/".strtolower($themePack)."/styles.min.css";
 
-	        } else {
+            } else {
 
-		        $this->cssPath = THEME."themepack/".strtolower($themePack)."/styles.css";
-	        }
+                $this->cssPath = THEME."themepack/".strtolower($themePack)."/styles.css";
+            }
 
         }
 

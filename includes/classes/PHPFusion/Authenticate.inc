@@ -17,28 +17,28 @@
 +--------------------------------------------------------*/
 namespace PHPFusion;
 
-use PHPFusion\Infusions\Login\Login;
-
 $settings = fusion_get_settings();
-if (!empty($settings['domain_server'])) {
-    // convert to arr
-    $domain_server = explode("|", $settings['domain_server']);
-    $domain_server[] = (strstr($settings['site_host'], "www.") ? substr($settings['site_host'], 3) : $settings['site_host']);
-    $domain_server = array_unique(array_filter($domain_server));
-    foreach($domain_server as $server_name) {
-        if ($_SERVER['SERVER_NAME'] === $server_name) {
-            define("COOKIE_DOMAIN", $server_name);
+if (!empty($settings)) {
+    if (!empty($settings['domain_server'])) {
+        // convert to arr
+        $domain_server = explode("|", $settings['domain_server']);
+        $domain_server[] = (strstr($settings['site_host'], "www.") ? substr($settings['site_host'], 3) : $settings['site_host']);
+        $domain_server = array_unique(array_filter($domain_server));
+        foreach ($domain_server as $server_name) {
+            if ($_SERVER['SERVER_NAME'] === $server_name) {
+                define("COOKIE_DOMAIN", $server_name);
+            }
         }
+    } else {
+        $fusion_domain = (strstr($settings['site_host'], "www.") ? substr($settings['site_host'], 3) : $settings['site_host']);
+        define("COOKIE_DOMAIN", $settings['site_host'] != 'localhost' ? $fusion_domain : FALSE);
     }
-} else {
-    $fusion_domain = (strstr($settings['site_host'], "www.") ? substr($settings['site_host'], 3) : $settings['site_host']);
-    define("COOKIE_DOMAIN", $settings['site_host'] != 'localhost' ? $fusion_domain : FALSE);
+    define("COOKIE_PATH", $settings['site_path']);
+    define("COOKIE_USER", COOKIE_PREFIX."user");
+    define("COOKIE_ADMIN", COOKIE_PREFIX."admin");
+    define("COOKIE_VISITED", COOKIE_PREFIX."visited");
+    define("COOKIE_LASTVISIT", COOKIE_PREFIX."lastvisit");
 }
-define("COOKIE_PATH", $settings['site_path']);
-define("COOKIE_USER", COOKIE_PREFIX."user");
-define("COOKIE_ADMIN", COOKIE_PREFIX."admin");
-define("COOKIE_VISITED", COOKIE_PREFIX."visited");
-define("COOKIE_LASTVISIT", COOKIE_PREFIX."lastvisit");
 
 class Authenticate {
 
@@ -169,13 +169,13 @@ class Authenticate {
      * Get the redirection url
      * If there is a new authentication url, error request will not valid
      *
-     * @todo: use addNotice('') instead of going for errorId
-     *
      * @param        $errorId
      * @param string $userStatus
      * @param string $userId
      *
      * @return string
+     * @todo: use addNotice('') instead of going for errorId
+     *
      */
     public static function getRedirectUrl($errorId, $userStatus = "", $userId = "") {
         global $_SERVER;
@@ -365,7 +365,7 @@ class Authenticate {
 
     // Checks and sets the admin last visit cookie
     public static function validateAuthUser() {
-        if (isset($_COOKIE[COOKIE_USER]) && $_COOKIE[COOKIE_USER] != "") {
+        if (defined('COOKIE_USER') && isset($_COOKIE[COOKIE_USER]) && $_COOKIE[COOKIE_USER] != "") {
             $cookieDataArr = explode(".", $_COOKIE[COOKIE_USER]);
             if (count($cookieDataArr) == 3) {
                 list($userID, $cookieExpiration, $cookieHash) = $cookieDataArr;

@@ -67,7 +67,11 @@ $inf_mlt[] = [
 $enabled_languages = makefilelist(LOCALE, ".|..", TRUE, "folders");
 if (!empty($enabled_languages)) {
     foreach ($enabled_languages as $language) {
-        include INFUSIONS."shoutbox_panel/locale/".$language."/shoutbox.php";
+        if (file_exists(INFUSIONS."shoutbox_panel/locale/".$language."/shoutbox.php")) {
+            include INFUSIONS."shoutbox_panel/locale/".$language."/shoutbox.php";
+        } else {
+            include INFUSIONS."shoutbox_panel/locale/English/shoutbox.php";
+        }
 
         $mlt_adminpanel[$language][] = [
             "rights"   => "S",

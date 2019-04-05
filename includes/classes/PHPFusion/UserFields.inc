@@ -603,13 +603,13 @@ class UserFields extends UserFieldsQuantum {
                 $user_groups_opts = [];
 
                 $this->info['user_admin'] = [
-                    'user_edit_title'     => $locale['u069'],
+                    'user_edit_title'     => $locale['edit'],
                     'user_edit_link'      => ADMIN."members.php".$aidlink."&amp;ref=edit&amp;lookup=".$this->user_data['user_id'],
                     'user_ban_title'      => $this->user_data['user_status'] == 1 ? $locale['u074'] : $locale['u070'],
                     'user_ban_link'       => ADMIN."members.php".$aidlink."&amp;action=".($this->user_data['user_status'] == 1 ? 2 : 1)."&amp;lookup=".$this->user_data['user_id'],
                     'user_suspend_title'  => $locale['u071'],
                     'user_suspend_link'   => ADMIN."members.php".$aidlink."&amp;action=3&amp;lookup=".$this->user_data['user_id'],
-                    'user_delete_title'   => $locale['u072'],
+                    'user_delete_title'   => $locale['delete'],
                     'user_delete_link'    => ADMIN."members.php".$aidlink."&amp;ref=delete&amp;lookup=".$this->user_data['user_id'],
                     'user_delete_onclick' => "onclick=\"return confirm('".$locale['u072']."');\"",
                     'user_susp_title'     => $locale['u054'],

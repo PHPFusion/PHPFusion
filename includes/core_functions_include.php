@@ -1683,13 +1683,6 @@ function fusion_get_infusions($folder = NULL) {
         if (dbrows($result)) {
             while ($data = dbarray($result)) {
                 $infusions[$data['inf_folder']] = $data['inf_version'];
-                if (defined(strtoupper($data['inf_folder']).'_EXIST')) {
-                    define(strtoupper($data['inf_folder']).'_EXIST', TRUE);
-                }
-
-                if (defined(strtoupper($data['inf_folder']).'_EXISTS')) {
-                    define(strtoupper($data['inf_folder']).'_EXISTS', TRUE);
-                }
             }
         }
     }
