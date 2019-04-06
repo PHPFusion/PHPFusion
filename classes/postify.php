@@ -63,7 +63,7 @@ class Forum_Postify extends ForumServer {
         if (!isset($_GET['thread_id']))
             throw new \Exception(self::$locale['forum_0588']);
 
-        self::$default_redirect_link = fusion_get_settings('site_seo') && defined('IN_PERMALINK') ? INFUSIONS.'forum/index.php' : FORUM."viewthread.php?thread_id=".$_GET['thread_id'];
+        self::$default_redirect_link = fusion_get_settings('site_seo') && defined('IN_PERMALINK') ? fusion_get_settings('siteurl').'infusions/forum/index.php' : fusion_get_settings('siteurl')."infusions/forum/viewthread.php?thread_id=".$_GET['thread_id'];
 
         if (!iMEMBER) {
             redirect(self::$default_redirect_link);
@@ -174,11 +174,11 @@ class Forum_Postify extends ForumServer {
                 addNotice('danger', 'URL Error');
                 redirect(self::$default_redirect_link);
             }
-            $link[] = ['url' => FORUM.'viewthread.php?thread_id='.$_GET['thread_id'], 'title' => self::$locale['forum_0548']];
-            redirect(FORUM.'viewthread.php?thread_id='.$_GET['thread_id'], 3);
+            $link[] = ['url' => fusion_get_settings('siteurl').'infusions/forum/viewthread.php?thread_id='.$_GET['thread_id'], 'title' => self::$locale['forum_0548']];
+            redirect(fusion_get_settings('siteurl').'infusions/forum/viewthread.php?thread_id='.$_GET['thread_id'], 3);
         }
-        $link[] = ['url' => FORUM."index.php?viewforum&amp;forum_id=".$_GET['forum_id'], 'title' => self::$locale['forum_0549']];
-        $link[] = ['url' => FORUM."index.php", 'title' => self::$locale['forum_0550']];
+        $link[] = ['url' => fusion_get_settings('siteurl')."infusions/forum/index.php?viewforum&amp;forum_id=".$_GET['forum_id'], 'title' => self::$locale['forum_0549']];
+        $link[] = ['url' => fusion_get_settings('siteurl')."infusions/forum/index.php", 'title' => self::$locale['forum_0550']];
 
         return (array)$link;
     }

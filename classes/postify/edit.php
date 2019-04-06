@@ -31,6 +31,8 @@ class Postify_Edit extends Forum_Postify {
 
     public function execute() {
 
+        $settings = fusion_get_settings();
+
         if (isset($_GET['post_count'])) {
 
             // Post deleted
@@ -41,24 +43,34 @@ class Postify_Edit extends Forum_Postify {
             $title = self::$locale['forum_0506'];
             $description = self::$locale['forum_0546'];
             if ($_GET['post_count'] > 0) {
-                $link[] = ['url' => FORUM.'viewthread.php?thread_id='.$_GET['thread_id'], 'title' => self::$locale['forum_0548']];
+                $link[] = ['url' => $settings['siteurl'].'infusions/forum/viewthread.php?thread_id='.$_GET['thread_id'], 'title' => self::$locale['forum_0548']];
             }
-            $link[] = ['url' => FORUM.'index.php?viewforum.php?forum_id='.$_GET['forum_id'], 'title' => self::$locale['forum_0549']];
-            $link[] = ['url' => FORUM.'index.php', 'title' => self::$locale['forum_0550']];
+            $link[] = ['url' => $settings['siteurl'].'infusions/forum/index.php?viewforum.php?forum_id='.$_GET['forum_id'], 'title' => self::$locale['forum_0549']];
+            $link[] = ['url' => $settings['siteurl'].'infusions/forum/index.php', 'title' => self::$locale['forum_0550']];
 
         } else {
 
             // Post Edited
             add_to_title(self::$locale['global_201'].self::$locale['forum_0508']);
             BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => self::$locale['forum_0508']]);
-            redirect(FORUM.'viewthread.php?thread_id='.$_GET['thread_id'].'&amp;pid='.$_GET['post_id'].'#post_'.$_GET['post_id'], 3);
+
+            if (isset($_GET['post_id'])) {
+                redirect($settings['siteurl'].'infusions/forum/viewthread.php?thread_id='.$_GET['thread_id'].'&amp;pid='.$_GET['post_id'].'#post_'.$_GET['post_id'], 3);
+            } else {
+                redirect($settings['siteurl'].'infusions/forum/index.php?viewforum&amp;forum_id='.$_GET['forum_id'], 3);
+            }
 
             $title = self::$locale['forum_0508'];
             $description = $this->get_postify_error_message() ?: self::$locale['forum_0547'];
-            $link[] = ['url' => FORUM.'viewthread.php?thread_id='.$_GET['thread_id'].'&amp;pid='.$_GET['post_id'].'#post_'.$_GET['post_id'], 'title' => self::$locale['forum_0548']];
-            $link[] = ['url' => FORUM.'index.php?viewforum&amp;forum_id='.$_GET['forum_id'], 'title' => self::$locale['forum_0549']];
-            $link[] = ['url' => FORUM.'index.php', 'title' => self::$locale['forum_0550']];
 
+            if (isset($_GET['post_id'])) {
+                $link[] = ['url' => $settings['siteurl'].'infusions/forum/viewthread.php?thread_id='.$_GET['thread_id'].'&amp;pid='.$_GET['post_id'].'#post_'.$_GET['post_id'], 'title' => self::$locale['forum_0548']];
+            } else {
+                $link[] = ['url' => $settings['siteurl'].'infusions/forum/viewthread.php?thread_id='.$_GET['thread_id'], 'title' => self::$locale['forum_0548']];
+            }
+
+            $link[] = ['url' => $settings['siteurl'].'infusions/forum/index.php?viewforum&amp;forum_id='.$_GET['forum_id'], 'title' => self::$locale['forum_0549']];
+            $link[] = ['url' => $settings['siteurl'].'infusions/forum/index.php', 'title' => self::$locale['forum_0550']];
         }
 
         render_postify([
