@@ -175,6 +175,8 @@ class Forum_Mood extends Forum_Server {
 
             return (string)$output_message;
         }
+
+        return NULL;
     }
 
     public static function cache_mood() {

@@ -15,10 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+namespace PHPFusion\Infusions\Forum\Classes\Post;
 
-namespace PHPFusion\Forums\Post;
+use PHPFusion\Infusions\Forum\Classes\Forum_Server;
 
-use PHPFusion\Forums\ForumServer;
-
-class ForumRanks extends ForumServer {
+class ForumRanks extends Forum_Server {
 }

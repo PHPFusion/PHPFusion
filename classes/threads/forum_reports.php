@@ -18,8 +18,6 @@
 
 namespace PHPFusion\Infusions\Forum\Classes\Threads;
 
-use PHPFusion\Infusions\Forum\Classes\Forum_Server;
-
 /**
  * Class Forum_Reports
  *
@@ -92,7 +90,7 @@ class Forum_Reports {
             // in the info we can see the thread.
             if (isset($_GET['report']) && $_GET['report'] == "true" && isset($_GET['rtid']) && isnum($_GET['rtid'])) {
 
-                $rep_thread_id = $_GET['rtid'];
+                //$rep_thread_id = $_GET['rtid'];
                 // get the first post.
                 // the post id
                 $policy_link = "";
@@ -253,8 +251,8 @@ class Forum_Reports {
                                 dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE post_id=:id", [":id" => $data['post_id']]);
                             }
 
-                            \PHPFusion\Forums\Moderator::refresh_forum($data['forum_id']);
-                            \PHPFusion\Forums\Moderator::refresh_thread($data['thread_id']);
+                            \PHPFusion\Infusions\Forum\Classes\Forum_Moderator::refresh_forum($data['forum_id']);
+                            \PHPFusion\Infusions\Forum\Classes\Forum_Moderator::refresh_thread($data['thread_id']);
                             // set the issue as resolved.
                             dbquery("UPDATE ".DB_FORUM_REPORTS." SET report_status=:status, report_comment=:msg, report_updated=:updated, report_archive=:data  WHERE post_id=:id", [
                                 ":id"      => intval($data['post_id']),
@@ -275,8 +273,8 @@ class Forum_Reports {
                                 dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE post_id=:id", [":id" => $data['post_id']]);
                             }
                             dbquery("UPDATE ".DB_USERS." SET user_status=1 WHERE user_id=:aid", [":aid" => $data['post_author']]);
-                            \PHPFusion\Forums\Moderator::refresh_forum($data['forum_id']);
-                            \PHPFusion\Forums\Moderator::refresh_thread($data['thread_id']);
+                            \PHPFusion\Infusions\Forum\Classes\Forum_Moderator::refresh_forum($data['forum_id']);
+                            \PHPFusion\Infusions\Forum\Classes\Forum_Moderator::refresh_thread($data['thread_id']);
                             // set the issue as resolved.
                             dbquery("UPDATE ".DB_FORUM_REPORTS." SET report_status=:status, report_comment=:msg, report_updated=:updated, report_archive=:data WHERE post_id=:id", [
                                 ":id"      => intval($data['post_id']),
@@ -293,6 +291,7 @@ class Forum_Reports {
                                 ":msg"     => $rdata['report_comment'],
                                 ":updated" => TIME,
                             ]);
+                            break;
                         default:
                             // set as resolved, but other reports will still be active.
                             dbquery("UPDATE ".DB_FORUM_REPORTS." SET report_status=:status, report_comment=:msg, report_updated=:updated, report_archive=:data WHERE report_id=:id", [
@@ -350,7 +349,7 @@ class Forum_Reports {
                     ]
                 );
             }
-            $tpl->set_tag("comments", PHPFusion\Feedback\Comments::getInstance(
+            $tpl->set_tag("comments", \PHPFusion\Feedback\Comments::getInstance(
                 [
                     'comment_item_type'     => "FR",
                     'comment_db'            => DB_FORUM_REPORTS,

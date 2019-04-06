@@ -21,7 +21,6 @@ namespace PHPFusion\Infusions\Forum\Classes\Forum;
 use PHPFusion\BreadCrumbs;
 use PHPFusion\Infusions\Forum\Classes\Forum_Moderator;
 use PHPFusion\Infusions\Forum\Classes\Forum_Server;
-use PHPFusion\Infusions\Forum\Classes\Threads\Forum_Reports;
 
 /**
  * Class Forum
@@ -88,6 +87,8 @@ class Forum extends Forum_Server {
                 );
                 break;
         }
+
+        return NULL;
     }
 
     /**

@@ -105,6 +105,8 @@ class View_Thread extends Forum_Server {
 
             return render_thread($info);
         }
+
+        return NULL;
     }
 
     /**
@@ -481,9 +483,9 @@ class View_Thread extends Forum_Server {
                         echo "</div>\n";
                         echo "<div class='small'>".$locale['forum_0524'].showdate("forumdate", $data['post_datestamp'])."</div>\n";
                         echo "</td>\n";
-                        echo "</tr>\n<tr>\n<td valign='top' class='tbl2 forum_thread_user_info' style='width:10%'>\n";
+                        echo "</tr>\n<tr>\n<td class='vatop tbl2 forum_thread_user_info' style='width:10%'>\n";
                         echo display_avatar($data, '50px');
-                        echo "</td>\n<td valign='top' class='tbl1 forum_thread_user_post'>\n";
+                        echo "</td>\n<td class='vatop tbl1 forum_thread_user_post'>\n";
                         echo nl2br($message);
                         echo "</td>\n</tr>\n";
                         $i--;
@@ -502,6 +504,8 @@ class View_Thread extends Forum_Server {
             }
             redirect(INFUSIONS.'forum/index.php');
         }
+
+        return NULL;
     }
 
     /*
@@ -770,6 +774,8 @@ class View_Thread extends Forum_Server {
         } else {
             redirect($default_redirect);
         }
+
+        return NULL;
     }
 
     /**

@@ -53,7 +53,7 @@ class Forum_Moderator {
      */
     public static function __getInstance() {
         if (self::$instance === NULL) {
-            self::$instance = new Static();
+            self::$instance = new static();
         }
 
         return self::$instance;
@@ -383,7 +383,7 @@ class Forum_Moderator {
                 $response = self::remove_thread();
 
                 // refresh forum information as if thread never existed
-                self::refresh_forum($this->forum_id, TRUE);
+                self::refresh_forum($this->forum_id);
 
                 if ($response == TRUE) {
                     echo $this->locale['forum_0701']."<br /><br />\n";

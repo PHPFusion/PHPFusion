@@ -233,6 +233,8 @@ class Forum_Poll {
         } else {
             redirect(FORUM);
         }
+
+        return NULL;
     }
 
     /**

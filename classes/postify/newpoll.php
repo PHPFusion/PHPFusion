@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-namespace PHPFusion\Forums\Postify;
+namespace PHPFusion\Infusions\Forum\Classes;
 
 use PHPFusion\BreadCrumbs;
 

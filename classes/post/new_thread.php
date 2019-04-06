@@ -361,7 +361,6 @@ class New_Thread extends Forum_Server {
                         "message_field"     => form_textarea("post_message", "", $post_data['post_message'], [
                             "required"    => TRUE,
                             "autosize"    => TRUE,
-                            "height"      => "200px",
                             "no_resize"   => TRUE,
                             "preview"     => FALSE,
                             "form_name"   => "input_form",
@@ -674,7 +673,6 @@ class New_Thread extends Forum_Server {
                     "message_field"     => form_textarea("post_message", "", $post_data['post_message'], [
                         "required"    => TRUE,
                         "autosize"    => TRUE,
-                        "height"      => "200px",
                         "no_resize"   => TRUE,
                         "preview"     => FALSE,
                         "form_name"   => "input_form",

@@ -1,6 +1,7 @@
 <?php
 /**
  * Forum Page Control Layout and Viewer.
+ * @param $info
  */
 if (!function_exists('render_forum')) {
     function render_forum($info) {

@@ -15,10 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-namespace PHPFusion\Forums;
+namespace PHPFusion\Infusions\Forum\Classes;
 
-use \PHPFusion\BreadCrumbs;
-use \PHPFusion\Infusions\Forum\Classes\Forum_Server;
+use PHPFusion\BreadCrumbs;
 
 /**
  * Forum Administration Console and functions
@@ -556,8 +555,6 @@ class Admin extends Forum_Server {
      *
      * @param      $forum_id
      * @param bool $time
-     *
-     * @return string
      */
     public static function prune_attachment($forum_id, $time = FALSE) {
 
@@ -579,7 +576,6 @@ class Admin extends Forum_Server {
                 }
             }
         }
-
     }
 
     /**
@@ -587,8 +583,6 @@ class Admin extends Forum_Server {
      *
      * @param      $forum_id
      * @param bool $time
-     *
-     * @return string
      */
     public static function prune_posts($forum_id, $time = FALSE) {
 
@@ -618,8 +612,6 @@ class Admin extends Forum_Server {
      * Recalculate a forum post count
      *
      * @param $forum_id
-     *
-     * @return string
      */
     public static function recalculate_post($forum_id) {
         // update last post

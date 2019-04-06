@@ -298,7 +298,7 @@ class ForumAdminRanks extends ForumAdminInterface {
                     $html .= self::$locale['forum_rank_429a'];
                 }
 
-                $html .= "</td>\n<td width='1%' style='white-space:nowrap'>".
+                $html .= "</td>\n<td style='white-space:nowrap;width:1%;'>".
                     "<a href='".clean_request("section=fr&ref=rank_form&rank_id=".$data['rank_id']."", ["rank_id", "ref"], FALSE)."'>".self::$locale['edit']."</a> -\n".
                     "<a href='".clean_request("section=fr&ref=rank_form&delete=".$data['rank_id']."", ["rank_id", "ref"], FALSE)."'>".self::$locale['delete']."</a></td>\n</tr>\n";
 

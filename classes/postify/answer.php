@@ -15,10 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-namespace PHPFusion\Forums\Postify;
+namespace PHPFusion\Infusions\Forum\Classes;
 
 use PHPFusion\BreadCrumbs;
-use PHPFusion\Forums\Moderator;
 
 /**
  * Class Postify_Answer
@@ -44,7 +43,7 @@ class Postify_Answer extends Forum_Postify {
             )
         );
         if (!empty($thread_data)) {
-            Moderator::define_forum_mods($thread_data);
+            Forum_Moderator::define_forum_mods($thread_data);
 
             $title = '';
             $description = '';

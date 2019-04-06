@@ -150,7 +150,7 @@ if (isset($_GET['rid']) && isnum($_GET['rid'])) {
                 if (!empty($post['is_first_post'])) {
                     // Just do reset instead of removing.
                     $amend_query = "UPDATE ".DB_FORUM_POSTS." SET post_message=:message, post_author=:new_aid WHERE post_id=:pid";
-                    $fpost_param = [':pid' => intval($fpost_id), ':message' => "", ':new_aid' => '-1'];
+                    $fpost_param = [':pid' => intval($post['post_id']), ':message' => "", ':new_aid' => '-1'];
                     dbquery($amend_query, $fpost_param);
                 } else {
                     // Delete post

@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-namespace PHPFusion\Forums\Postify;
-
-use PHPFusion\Forums\Moderator;
+namespace PHPFusion\Infusions\Forum\Classes;
 
 /**
  * Vote Up and Down on Q&A Forum Type
@@ -44,7 +42,7 @@ class Postify_Vote extends Forum_Postify {
             ]
         ));
         if (!empty($thread_data)) {
-            Moderator::define_forum_mods($thread_data);
+            Forum_Moderator::define_forum_mods($thread_data);
             // i can upvote as many post but each post only once.
             $thread_data['thread_link'] = fusion_get_settings('siteurl')."infusions/forum/viewthread.php?forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']."&pid=".$thread_data['thread_lastpostid']."#post_".$thread_data['thread_lastpostid'];
             $forum_index = dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat');

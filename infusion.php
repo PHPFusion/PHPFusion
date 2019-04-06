@@ -35,16 +35,6 @@ $inf_weburl = 'https://www.php-fusion.co.uk';
 $inf_folder = 'forum';
 $inf_image = 'forums.svg';
 
-// Multilanguage table for Administration
-$inf_mlt[] = [
-    'title'  => $locale['forums']['title'],
-    'rights' => 'FO'
-];
-$inf_mlt[] = [
-    'title'  => $locale['setup_3038'],
-    'rights' => 'FR'
-];
-
 // Moderator Discussions
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("FR", "<i class='admin-ico fas fa-comment-alt fa-fw'></i>");
 \PHPFusion\Admins::getInstance()->setCommentType("FR", $locale['forum_0667']);
@@ -279,14 +269,6 @@ $inf_newtable[] = DB_FORUM_POST_NOTIFY." (
 if (!column_exists('users', 'user_reputation')) {
     $inf_altertable[] = $db_prefix."users ADD user_reputation INT(10) UNSIGNED NOT NULL AFTER user_status";
 }
-// Admin links
-$inf_adminpanel[] = [
-    "image"  => $inf_image,
-    "page"   => 1,
-    "rights" => "F",
-    "title"  => $locale['setup_3012'],
-    "panel"  => "admin/forums.php"
-];
 
 // Insert Forum Settings
 $settings = [

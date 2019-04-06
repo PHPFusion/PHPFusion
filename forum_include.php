@@ -20,43 +20,44 @@ if (!defined("IN_FUSION")) {
 }
 
 function attach_exists($file) {
-    return \PHPFusion\Forums\forumfunctions::attach_exists($file);
+    return \PHPFusion\Infusions\Forum\Classes\Forum_Functions::attach_exists($file);
 }
 
 function forum_rank_cache() {
-    return \PHPFusion\Forums\ForumServer::forum_rank_cache();
+    return \PHPFusion\Infusions\Forum\Classes\Forum_Server::forum_rank_cache();
 }
 
-function show_forum_rank($posts, $level, $groups) {
-    return PHPFusion\Forums\ForumServer::show_forum_rank($posts, $level, $groups);
-}
+/*function show_forum_rank($posts, $level, $groups) {
+    return \PHPFusion\Infusions\Forum\Classes\Forum_Server::show_forum_rank($posts, $level, $groups);
+}*/
 
 function display_image($file) {
-    PHPFusion\Forums\forumfunctions::display_image($file);
+    \PHPFusion\Infusions\Forum\Classes\Forum_Functions::display_image($file);
 }
 
 function display_image_attach($file, $width = 50, $height = 50, $rel = "") {
-    return PHPFusion\Forums\forumfunctions::display_image_attach($file, $width, $height, $rel);
+    return \PHPFusion\Infusions\Forum\Classes\Forum_Functions::display_image_attach($file, $width, $height, $rel);
 }
 
 function define_forum_mods($info) {
-    PHPFusion\Forums\Moderator::define_forum_mods($info);
+    \PHPFusion\Infusions\Forum\Classes\Forum_Moderator::define_forum_mods($info);
 }
 
 function verify_forum($forum_id) {
-    return PHPFusion\Forums\ForumServer::verify_forum($forum_id);
+    return \PHPFusion\Infusions\Forum\Classes\Forum_Server::verify_forum($forum_id);
 }
 
 function verify_post($post_id) {
-    return PHPFusion\Forums\ForumServer::verify_post($post_id);
+    return \PHPFusion\Infusions\Forum\Classes\Forum_Server::verify_post($post_id);
 }
 
 function verify_thread($thread_id) {
-    return PHPFusion\Forums\ForumServer::verify_thread($thread_id);
+    return \PHPFusion\Infusions\Forum\Classes\Forum_Server::verify_thread($thread_id);
 }
 
 function get_thread($thread_id) {
-    return \PHPFusion\Forums\Threads\ForumThreads::get_thread($thread_id);
+    $thread = new \PHPFusion\Infusions\Forum\Classes\Threads\Forum_Threads;
+    return $thread->get_forum_thread($thread_id);
 }
 
 /**
@@ -106,21 +107,21 @@ function set_forumVotes($info, $points = 0) {
 }
 
 function parse_forumMods($forum_mods) {
-    return PHPFusion\Forums\Moderator::parse_forum_mods($forum_mods);
+    return \PHPFusion\Infusions\Forum\Classes\Forum_Moderator::parse_forum_mods($forum_mods);
 }
 
 function get_recentTopics($forum_id = 0) {
-    return PHPFusion\Forums\ForumServer::get_recentTopics($forum_id);
+    return \PHPFusion\Infusions\Forum\Classes\Forum_Server::get_recentTopics($forum_id);
 }
 
 function set_forumIcons(array $icons = []) {
-    PHPFusion\Forums\ForumServer::set_forumIcons($icons);
+    \PHPFusion\Infusions\Forum\Classes\Forum_Server::set_forumIcons($icons);
 }
 
 function get_forum($forum_id = 0, $forum_branch = 0) {
-    return PHPFusion\Forums\Forum::get_forum($forum_id, $forum_branch);
+    return \PHPFusion\Infusions\Forum\Classes\Forum::get_forum($forum_id, $forum_branch);
 }
 
 function get_forumIcons($type = '') {
-    return \PHPFusion\Forums\ForumServer::get_ForumIcons($type);
+    return \PHPFusion\Infusions\Forum\Classes\Forum_Server::get_ForumIcons($type);
 }

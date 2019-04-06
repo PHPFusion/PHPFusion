@@ -19,7 +19,6 @@
 namespace PHPFusion\Infusions\Forum\Classes;
 
 use PHPFusion\BreadCrumbs;
-use PHPFusion\Template;
 
 class Forum_Postify extends Forum_Server {
 
@@ -44,7 +43,7 @@ class Forum_Postify extends Forum_Server {
             throw new \Exception(self::$locale['forum_0588']);
         }
 
-        self::$default_redirect_link = fusion_get_settings('site_seo') && defined('IN_PERMALINK') ? fusion_get_settings('siteurl').'infusions/forum/index.php' : FORUM."viewthread.php?thread_id=".$_GET['thread_id'];
+        self::$default_redirect_link = fusion_get_settings('site_seo') && defined('IN_PERMALINK') ? INFUSIONS.'forum/index.php' : FORUM."viewthread.php?thread_id=".$_GET['thread_id'];
 
         if (!iMEMBER) {
             redirect(self::$default_redirect_link);
@@ -54,55 +53,28 @@ class Forum_Postify extends Forum_Server {
         BreadCrumbs::getInstance()->addBreadCrumb(['link' => FORUM.'index.php', 'title' => self::$locale['forum_0000']]);
     }
 
-    protected function get_postify_error_message() {
-        $_GET['error'] = (!empty($_GET['error']) && isnum($_GET['error']) && $_GET['error'] <= 6 ? $_GET['error'] : 0);
-        if (!empty($_GET['error'])) {
-            switch ($_GET['error']) {
-                case 1:
-                    // Attachment file type is not allowed
-                    return self::$locale['forum_0540'];
-                    break;
-                case 2:
-                    // Invalid attachment of filesize
-                    return self::$locale['forum_0541'];
-                    break;
-                case 3:
-                    // Error: You did not specify a Subject and/or Message
-                    return self::$locale['forum_0542'];
-                    break;
-                case 4:
-                    // Error: Your cookie session has expired, please login and repost
-                    return self::$locale['forum_0551'];
-                case 5:
-                    // This post is locked. Contact the moderator for further information.
-                    return self::$locale['forum_0555'];
-                    break;
-                case 6:
-                    // You may only edit a post for %d minute(s) after initial submission.
-                    return sprintf(self::$locale['forum_0556'], self::$forum_settings['forum_edit_timelimit']);
-                    break;
-            }
-        }
-    }
-
     /**
-     * Generate default postify uri
-     *
-     * @return array
+     * @return mixed
+     * @throws \Exception
      */
-    protected function get_postify_uri() {
-        if ($_GET['error'] < 3) {
-            if (!isset($_GET['thread_id']) || !isnum($_GET['thread_id'])) {
-                addNotice('danger', 'URL Error');
+    public function do_postify() {
+        if ($postify = $this->load_postify($_GET['post'])) {
+            if (method_exists($postify, 'execute')) {
+                return $postify->execute();
+            } else {
+                if (iMOD) {
+                    addNotice('danger', 'No action taken');
+                    redirect(self::$default_redirect_link);
+                }
+            }
+        } else {
+            if (iMOD) {
+                addNotice('danger', 'No action taken');
                 redirect(self::$default_redirect_link);
             }
-            $link[] = ['url' => FORUM.'viewthread.php?thread_id='.$_GET['thread_id'], 'title' => self::$locale['forum_0548']];
-            redirect(FORUM.'viewthread.php?thread_id='.$_GET['thread_id'], 3);
         }
-        $link[] = ['url' => FORUM."index.php?viewforum&amp;forum_id=".$_GET['forum_id'], 'title' => self::$locale['forum_0549']];
-        $link[] = ['url' => FORUM."index.php", 'title' => self::$locale['forum_0550']];
 
-        return (array)$link;
+        return NULL;
     }
 
     /**
@@ -139,25 +111,56 @@ class Forum_Postify extends Forum_Server {
         }
     }
 
-    /**
-     * @return mixed
-     * @throws \Exception
-     */
-    public function do_postify() {
-        if ($postify = $this->load_postify($_GET['post'])) {
-            if (method_exists($postify, 'execute')) {
-                return $postify->execute();
-            } else {
-                if (iMOD) {
-                    addNotice('danger', 'No action taken');
-                    redirect(self::$default_redirect_link);
-                }
-            }
-        } else {
-            if (iMOD) {
-                addNotice('danger', 'No action taken');
-                redirect(self::$default_redirect_link);
+    protected function get_postify_error_message() {
+        $_GET['error'] = (!empty($_GET['error']) && isnum($_GET['error']) && $_GET['error'] <= 6 ? $_GET['error'] : 0);
+        if (!empty($_GET['error'])) {
+            switch ($_GET['error']) {
+                case 1:
+                    // Attachment file type is not allowed
+                    return self::$locale['forum_0540'];
+                    break;
+                case 2:
+                    // Invalid attachment of filesize
+                    return self::$locale['forum_0541'];
+                    break;
+                case 3:
+                    // Error: You did not specify a Subject and/or Message
+                    return self::$locale['forum_0542'];
+                    break;
+                case 4:
+                    // Error: Your cookie session has expired, please login and repost
+                    return self::$locale['forum_0551'];
+                case 5:
+                    // This post is locked. Contact the moderator for further information.
+                    return self::$locale['forum_0555'];
+                    break;
+                case 6:
+                    // You may only edit a post for %d minute(s) after initial submission.
+                    return sprintf(self::$locale['forum_0556'], self::$forum_settings['forum_edit_timelimit']);
+                    break;
             }
         }
+
+        return NULL;
+    }
+
+    /**
+     * Generate default postify uri
+     *
+     * @return array
+     */
+    protected function get_postify_uri() {
+        if ($_GET['error'] < 3) {
+            if (!isset($_GET['thread_id']) || !isnum($_GET['thread_id'])) {
+                addNotice('danger', 'URL Error');
+                redirect(self::$default_redirect_link);
+            }
+            $link[] = ['url' => FORUM.'viewthread.php?thread_id='.$_GET['thread_id'], 'title' => self::$locale['forum_0548']];
+            redirect(FORUM.'viewthread.php?thread_id='.$_GET['thread_id'], 3);
+        }
+        $link[] = ['url' => FORUM."index.php?viewforum&amp;forum_id=".$_GET['forum_id'], 'title' => self::$locale['forum_0549']];
+        $link[] = ['url' => FORUM."index.php", 'title' => self::$locale['forum_0550']];
+
+        return (array)$link;
     }
 }

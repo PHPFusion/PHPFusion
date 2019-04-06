@@ -19,13 +19,14 @@
 namespace PHPFusion\Infusions\Forum\Classes;
 
 use PHPFusion\BreadCrumbs;
-use PHPFusion\Template;
+use PHPFusion\Infusions\Forum\Classes\Forum\Forum;
 use PHPFusion\Infusions\Forum\Classes\Forum\Forum_Tags;
 use PHPFusion\Infusions\Forum\Classes\Post\New_Thread;
 use PHPFusion\Infusions\Forum\Classes\Threads\Forum_Mood;
 use PHPFusion\Infusions\Forum\Classes\Threads\Forum_ThreadFilter;
 use PHPFusion\Infusions\Forum\Classes\Threads\Forum_Threads;
-use PHPFusion\Infusions\Forum\Classes\Forum\Forum;
+use PHPFusion\Template;
+
 //use PHPFusion\Infusions\Forum\Classes\Post\NewThread;
 
 /**
@@ -108,6 +109,7 @@ abstract class Forum_Server {
      * @return array Cached forum ranks
      */
     private static $forum_rank_cache = NULL;
+    private $forum_access = FALSE;
 
     /**
      * @param string $type
@@ -146,68 +148,11 @@ abstract class Forum_Server {
         return FALSE;
     }
 
-    private $forum_access = FALSE;
-
-    /**
-     * Check all forum access
-     *
-     * @param     $forum_index
-     * @param int $forum_id
-     * @param int $thread_id
-     * @param int $user_id - if provided with user_id, to check against that user
-     *
-     * Breaks the check and returns true for Super Administrator
-     * You need to define either forum id or thread id when accessing this function
-     * This function is non-dependent on GET against tampering (bot access)
-     *
-     * @return bool
-     * @throws \Exception
-     */
-    protected function check_forum_access($forum_index, $forum_id = 0, $thread_id = 0, $user_id = 0) {
-        if (iSUPERADMIN) {
-            $this->forum_access = TRUE;
-
-            return $this->forum_access;
-        }
-        if (!$forum_id or isnum($forum_id)) {
-            if ($thread_id && isnum($thread_id)) {
-                $forum_id = dbresult(dbquery("SELECT forum_id FROM ".DB_FORUM_THREADS." WHERE thread_id=:thread_id", [':thread_id' => $thread_id]), 0);
-                $list[] = $forum_id;
-                if ($ancestor = get_all_parent($forum_index, $forum_id)) {
-                    $list = array_merge_recursive($list, $ancestor);
-                }
-
-                if (!empty($list)) {
-                    $list_sql = implode(',', $list);
-                    $query = "SELECT forum_access FROM ".DB_FORUMS." WHERE forum_id IN ($list_sql) ORDER BY forum_cat ASC";
-                    $result = dbquery($query);
-                    if (dbrows($result)) {
-                        while ($data = dbarray($result)) {
-                            if ($user_id) {
-                                $user = fusion_get_user($user_id);
-                                $this->forum_access = checkusergroup($data['forum_access'], $user['user_level'], $user['user_groups']) ? TRUE : FALSE;
-                            } else {
-                                $this->forum_access = checkgroup($data['forum_access']) ? TRUE : FALSE;
-                            }
-                            if ($this->forum_access === FALSE) {
-                                break;
-                            }
-                        }
-                    }
-                }
-            } else {
-                throw new \Exception(fusion_get_locale('forum_4120'));
-            }
-        }
-
-        return (bool)$this->forum_access;
-    }
-
     /**
      * Get HTML source of forum rank images of a member
      *
-     * @param int   $posts The number of posts of the member
-     * @param int   $level The level of the member
+     * @param int   $posts  The number of posts of the member
+     * @param int   $level  The level of the member
      * @param array $groups The groups of the member
      *
      * @return string HTML source of forum rank images
@@ -255,7 +200,7 @@ abstract class Forum_Server {
         if (!empty($forum_rank_cache['special'])) {
             if (!empty($groups)) {
                 if (!is_array($groups)) {
-                    $groups = explode(".", $groups);
+                    $groups = explode(".", (string)$groups);
                 }
 
                 foreach ($forum_rank_cache['special'] as $rank) {
@@ -402,42 +347,29 @@ abstract class Forum_Server {
     public static function get_recentTopics($forum_id = 0) {
         $forum_settings = self::get_forum_settings();
         $result = dbquery("SELECT tt.*, tf.*, tp.post_id, tp.post_datestamp,
-			u.user_id, u.user_name as last_user_name, u.user_status as last_user_status, u.user_avatar as last_user_avatar,
-			uc.user_id AS s_user_id, uc.user_name AS author_name, uc.user_status AS author_status, uc.user_avatar AS author_avatar,
-			count(v.post_id) AS vote_count
-			FROM ".DB_FORUM_THREADS." tt
-			INNER JOIN ".DB_FORUMS." tf ON (tt.forum_id=tf.forum_id)
-			LEFT JOIN ".DB_FORUM_POSTS." tp on (tt.thread_lastpostid = tp.post_id)
-			LEFT JOIN ".DB_USERS." u ON u.user_id=tt.thread_lastuser
-			LEFT JOIN ".DB_USERS." uc ON uc.user_id=tt.thread_author
-			LEFT JOIN ".DB_FORUM_VOTES." v ON v.thread_id = tt.thread_id AND tp.post_id = v.post_id
-			".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND" : "WHERE")."
-			".groupaccess('tf.forum_access')." AND tt.thread_hidden='0'
-			".($forum_id ? "AND forum_id='".intval($forum_id)."'" : '')."
-			GROUP BY thread_id ORDER BY tt.thread_lastpost LIMIT 0, ".$forum_settings['threads_per_page']."");
+            u.user_id, u.user_name as last_user_name, u.user_status as last_user_status, u.user_avatar as last_user_avatar,
+            uc.user_id AS s_user_id, uc.user_name AS author_name, uc.user_status AS author_status, uc.user_avatar AS author_avatar,
+            count(v.post_id) AS vote_count
+            FROM ".DB_FORUM_THREADS." tt
+            INNER JOIN ".DB_FORUMS." tf ON (tt.forum_id=tf.forum_id)
+            LEFT JOIN ".DB_FORUM_POSTS." tp on (tt.thread_lastpostid = tp.post_id)
+            LEFT JOIN ".DB_USERS." u ON u.user_id=tt.thread_lastuser
+            LEFT JOIN ".DB_USERS." uc ON uc.user_id=tt.thread_author
+            LEFT JOIN ".DB_FORUM_VOTES." v ON v.thread_id = tt.thread_id AND tp.post_id = v.post_id
+            ".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND" : "WHERE")."
+            ".groupaccess('tf.forum_access')." AND tt.thread_hidden='0'
+            ".($forum_id ? "AND forum_id='".intval($forum_id)."'" : '')."
+            GROUP BY thread_id ORDER BY tt.thread_lastpost LIMIT 0, ".$forum_settings['threads_per_page']."");
         $info['rows'] = dbrows($result);
         if ($info['rows'] > 0) {
             // need to throw moderator as an object
             while ($data = dbarray($result)) {
-                $data['moderators'] = Moderator::parse_forum_mods($data['forum_mods']);
+                $data['moderators'] = Forum_Moderator::parse_forum_mods($data['forum_mods']);
                 $info['item'][$data['thread_id']] = $data;
             }
         }
 
         return $info;
-    }
-
-    /**
-     * Moderator Instance
-     *
-     * @return \PHPFusion\Infusions\Forum\Classes\Forum_Moderator
-     */
-    protected function moderator() {
-        if (empty(self::$moderator_instance)) {
-            self::$moderator_instance = new Forum_Moderator();
-        }
-
-        return self::$moderator_instance;
     }
 
     /**
@@ -547,6 +479,7 @@ abstract class Forum_Server {
 
     /**
      * Load and do postify
+     *
      * @return \PHPFusion\Infusions\Forum\Classes\Forum_Postify
      * @throws \Exception
      */
@@ -556,6 +489,45 @@ abstract class Forum_Server {
         }
 
         return self::$postify_instance;
+    }
+
+    /**
+     * Method to change template path
+     *
+     * @param string|array $key instance key
+     *
+     * @return mixed
+     */
+    public static function get_template($key) {
+        $default_paths = [
+            'forum'            => FORUM.'templates/index/forum_index.html',
+            'forum_section'    => FORUM.'templates/forum_section.html',
+            'forum_postify'    => FORUM.'templates/forum_postify.html',
+            'forum_postform'   => FORUM.'templates/forms/post.html',
+            'forum_pollform'   => FORUM.'templates/forms/poll.html',
+            'forum_bountyform' => FORUM.'templates/forms/bounty.html',
+            'forum_qrform'     => FORUM.'templates/forms/quick_reply.html',
+            'tags_thread'      => FORUM.'templates/tags/tag_threads.html',
+            'tags'             => FORUM.'templates/tags/tag.html',
+            'viewthreads'      => FORUM.'templates/forum_threads.html',
+            'viewforum'        => FORUM.'templates/forum_viewforum.html',
+            'forums'           => FORUM.'templates/index/forum_item.html',
+            'forum_post'       => FORUM.'templates/forum_post_item.html',
+            'forum_thread'     => FORUM.'templates/viewforum/forum_thread_item.html',
+            'forum_lastpost'   => FORUM.'templates/index/forum_item_lastpost.html',
+        ];
+
+        return (isset(self::$forum_template_paths[$key]) ? self::$forum_template_paths[$key] : $default_paths[$key]);
+    }
+
+    /**
+     * Method to set new template path
+     *
+     * @param string $key       instance key
+     * @param string $file_path path relative to basedir
+     */
+    public static function set_template($key, $file_path) {
+        self::$forum_template_paths[$key] = $file_path;
     }
 
     /**
@@ -616,42 +588,71 @@ abstract class Forum_Server {
     }
 
     /**
-     * Method to change template path
+     * Check all forum access
      *
-     * @param string|array $key  instance key
+     * @param     $forum_index
+     * @param int $forum_id
+     * @param int $thread_id
+     * @param int $user_id - if provided with user_id, to check against that user
      *
-     * @return mixed
+     * Breaks the check and returns true for Super Administrator
+     * You need to define either forum id or thread id when accessing this function
+     * This function is non-dependent on GET against tampering (bot access)
+     *
+     * @return bool
+     * @throws \Exception
      */
-    public static function get_template($key) {
-        $default_paths = [
-            'forum'            => FORUM.'templates/index/forum_index.html',
-            'forum_section'    => FORUM.'templates/forum_section.html',
-            'forum_postify'    => FORUM.'templates/forum_postify.html',
-            'forum_postform'   => FORUM.'templates/forms/post.html',
-            'forum_pollform'   => FORUM.'templates/forms/poll.html',
-            'forum_bountyform' => FORUM.'templates/forms/bounty.html',
-            'forum_qrform'     => FORUM.'templates/forms/quick_reply.html',
-            'tags_thread'      => FORUM.'templates/tags/tag_threads.html',
-            'tags'             => FORUM.'templates/tags/tag.html',
-            'viewthreads'      => FORUM.'templates/forum_threads.html',
-            'viewforum'        => FORUM.'templates/forum_viewforum.html',
-            'forums'           => FORUM.'templates/index/forum_item.html',
-            'forum_post'       => FORUM.'templates/forum_post_item.html',
-            'forum_thread'     => FORUM.'templates/viewforum/forum_thread_item.html',
-            'forum_lastpost'   => FORUM.'templates/index/forum_item_lastpost.html',
-        ];
+    protected function check_forum_access($forum_index, $forum_id = 0, $thread_id = 0, $user_id = 0) {
+        if (iSUPERADMIN) {
+            $this->forum_access = TRUE;
 
-        return (isset(self::$forum_template_paths[$key]) ? self::$forum_template_paths[$key] : $default_paths[$key]);
+            return $this->forum_access;
+        }
+        if (!$forum_id or isnum($forum_id)) {
+            if ($thread_id && isnum($thread_id)) {
+                $forum_id = dbresult(dbquery("SELECT forum_id FROM ".DB_FORUM_THREADS." WHERE thread_id=:thread_id", [':thread_id' => $thread_id]), 0);
+                $list[] = $forum_id;
+                if ($ancestor = get_all_parent($forum_index, $forum_id)) {
+                    $list = array_merge_recursive($list, $ancestor);
+                }
+
+                if (!empty($list)) {
+                    $list_sql = implode(',', $list);
+                    $query = "SELECT forum_access FROM ".DB_FORUMS." WHERE forum_id IN ($list_sql) ORDER BY forum_cat ASC";
+                    $result = dbquery($query);
+                    if (dbrows($result)) {
+                        while ($data = dbarray($result)) {
+                            if ($user_id) {
+                                $user = fusion_get_user($user_id);
+                                $this->forum_access = checkusergroup($data['forum_access'], $user['user_level'], $user['user_groups']) ? TRUE : FALSE;
+                            } else {
+                                $this->forum_access = checkgroup($data['forum_access']) ? TRUE : FALSE;
+                            }
+                            if ($this->forum_access === FALSE) {
+                                break;
+                            }
+                        }
+                    }
+                }
+            } else {
+                throw new \Exception(fusion_get_locale('forum_4120'));
+            }
+        }
+
+        return (bool)$this->forum_access;
     }
 
     /**
-     * Method to set new template path
+     * Moderator Instance
      *
-     * @param string $key          instance key
-     * @param string $file_path    path relative to basedir
+     * @return \PHPFusion\Infusions\Forum\Classes\Forum_Moderator
      */
-    public static function set_template($key, $file_path) {
-        self::$forum_template_paths[$key] = $file_path;
+    protected function moderator() {
+        if (empty(self::$moderator_instance)) {
+            self::$moderator_instance = new Forum_Moderator();
+        }
+
+        return self::$moderator_instance;
     }
 
 }
