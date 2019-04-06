@@ -59,7 +59,7 @@ if (isset($_GET['folder'])) {
     $pattern_tables["%msg_id%"] = [
         "table"       => DB_MESSAGES." m $join_table",
         "primary_key" => "message_id",
-        "query"       => "message_user='".$userdata['user_id']."'",
+        "query"       => "message_user='".fusion_get_userdata('user_id')."'",
         "id"          => ["%msg_id%" => "message_id"],
         "columns"     => ["%user_name%" => "user_name"]
     ];

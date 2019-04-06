@@ -26,9 +26,8 @@ namespace PHPFusion\Rewrite;
  */
 class Permalinks extends RewriteDriver {
 
-    public $debug_regex = TRUE;
-
     private static $permalink_instance = NULL;
+    public $debug_regex = TRUE;
 
     /**
      * Get the instance of the class
@@ -161,8 +160,6 @@ class Permalinks extends RewriteDriver {
         $this->includeRewrite();
         // Read from DB
         $this->verifyHandlers();
-        // Include the files
-        $this->includeHandlers();
         // Prepare the strings
         $this->importPatterns();
         // Prepare search strings against buffers and URI

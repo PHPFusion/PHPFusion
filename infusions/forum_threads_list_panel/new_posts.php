@@ -77,6 +77,6 @@ if ($rows) {
 closetable();
 
 if ($threads > 20) {
-    echo "<div class='text-center'>".makepagenav($_GET['rowstart'], 20, $threads, 3, FUSION_SELF."?")."</div>\n";
+    echo "<div class='text-center'>".makepagenav($_GET['rowstart'], 20, $threads, 3, INFUSIONS."forum_threads_list_panel/new_posts.php?")."</div>\n";
 }
 require_once THEMES.'templates/footer.php';
