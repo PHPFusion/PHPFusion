@@ -18,23 +18,15 @@
 require_once __DIR__.'/maincore.php';
 require_once THEMES.'templates/header.php';
 require_once THEMES."templates/global/error.php";
-/**
- * Dir Replacements
- * @param string $output
- * @return mixed
- */
-function replaceDir($output = "") {
-    $findHTMLTags = "/(href|src)=('|\")((?!(htt|ft)p(s)?:\\/\\/)[^\\']*)/i";
-    if (!function_exists("replaceHTMLTags")) {
-        function replaceHTMLTags($m) {
-            return $m[1]."=".$m[2].fusion_get_settings('siteurl').$m[3];
-        }
-    }
 
-    return preg_replace_callback("$findHTMLTags", "replaceHTMLTags", $output);
+function replaceHTMLTags($m) {
+    return (string) $m[1]."=".$m[2].fusion_get_settings('siteurl').$m[3];
 }
-
-add_handler("replaceDir");
+function replaceDir($output = '') {
+    $findHTMLTags = "/(href|src)=(\'|\")((?!(htt|ft)p(s)?:\/\/)[^\\\\(\'|\")]*)/im";
+    return (string) preg_replace_callback("$findHTMLTags", "replaceHTMLTags", $output);
+}
+add_handler('replaceDir');
 
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'error.php');
 
