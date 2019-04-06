@@ -42,7 +42,7 @@ class Postify_Track extends Forum_Postify {
 
             if (self::$forum_settings['thread_notify']) {
 
-                $thread_data['thread_link'] = FORUM.'viewthread.php?thread_id='.$thread_data['thread_id'].'&pid='.$thread_data['thread_lastpostid'].'#post_'.$thread_data['thread_lastpostid'];
+                $thread_data['thread_link'] = fusion_get_settings('siteurl').'infusions/forum/viewthread.php?thread_id='.$thread_data['thread_id'].'&pid='.$thread_data['thread_lastpostid'].'#post_'.$thread_data['thread_lastpostid'];
 
                 $forum_index = dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat');
                 if ($this->check_forum_access($forum_index, $_GET['forum_id'], $_GET['thread_id'])) {
@@ -78,7 +78,6 @@ class Postify_Track extends Forum_Postify {
 
                 }
             } else {
-
                 redirect($thread_data['thread_link'], 3);
 
             }

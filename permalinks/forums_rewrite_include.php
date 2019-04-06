@@ -52,7 +52,6 @@ $pattern = [];
 /**
  * Generate All Possible Filter Rules for SEF Installation
  */
-
 $filter_sef_rules = [];
 $forum_filterTypes = [
     "time-%time%"   => "time=%time%",
@@ -116,6 +115,7 @@ $pattern = [
     "forum/viewforum/%forum_id%/activity"                                           => "infusions/forum/index.php?viewforum&amp;forum_id=%forum_id%&amp;view=activity",
     "forum/viewforum/%forum_id%/people"                                             => "infusions/forum/index.php?viewforum&amp;forum_id=%forum_id%&amp;view=people",
     "forum/create-new-thread"                                                       => "infusions/forum/newthread.php",
+    "forum/create-new-thread/%forum_id%/%forum_name%"                               => "infusions/forum/newthread.php?forum_id=%forum_id%",
     "forum/tags/%tag_id%/%tag_name%"                                                => "infusions/forum/tags.php?tag_id=%tag_id%",
     "forum/tags"                                                                    => "infusions/forum/tags.php",
     "forum"                                                                         => "infusions/forum/index.php",
@@ -124,29 +124,30 @@ $pattern = [
     "forum/%forum_id%/%action%/post_%post_id%/thread_%thread_id%/%thread_name%"     => "infusions/forum/viewthread.php?action=%action%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%",
     "forum/%forum_id%/%action%/%quote_id%/%post_id%/%thread_id%/%thread_name%"      => "infusions/forum/viewthread.php?action=%action%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%&amp;quote=%quote_id%",
     "forum/%forum_id%/%action%/%thread_id%/%thread_name%"                           => "infusions/forum/viewthread.php?action=%action%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%",
-    "forum/thread/view/%thread_id%/%thread_name%/sort-by/%sort_action%"             => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;sort_post=%sort_action%",
     "forum/thread/view/%thread_id%/%thread_name%"                                   => "infusions/forum/viewthread.php?thread_id=%thread_id%",
-    "forum/thread/view/%thread_id%/%thread_name%-row-%rowstart%"                    => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;rowstart=%rowstart%",
+    "forum/thread/view/%thread_id%/%thread_name%/sort-by/%sort_action%"             => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;sort_post=%sort_action%",
+    "forum/thread/view/%thread_id%/%thread_name%/rows-%rowstart%"                   => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;rowstart=%rowstart%",
+    "forum/thread/%thread_id%/%thread_name%/view-%pid%"                             => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;pid=%pid%",
+    "forum/thread/%thread_id%/%thread_name%/view-%pid%#post_%post_id%"              => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;pid=%pid%#post_%post_id%",
     "forum/thread/view/%forum_id%/%thread_id%/%thread_name%-row-%rowstart%"         => "infusions/forum/viewthread.php?forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;rowstart=%rowstart%",
     "forum/thread/confirm-move/%forum_id%/%thread_id%/%thread_name%-row-%rowstart%" => "infusions/forum/viewthread.php?forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;rowstart=%rowstart%&amp;sv",
-    "forum/thread/%thread_id%/%thread_name%/view-%pid%"                             => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;pid=%pid%",
     // valid request for router
-    "forum/thread/%thread_id%/%thread_name%/view-%pid%#post_%post_id%"              => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;pid=%pid%#post_%post_id%",
-    "forum/thread/%track_status%/%forum_id%/%thread_id%/%thread_name%"              => "infusions/forum/postify.php?post=%track_status%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%",
+    "forum/thread/%track_status%/forum-%forum_id%/%thread_id%/%thread_name%"        => "infusions/forum/postify.php?post=%track_status%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%",
     "print/F/%nr%/%post_id%/%thread_id%/%thread_name%"                              => "print.php?type=F&amp;item_id=%thread_id%&amp;post=%post_id%&amp;nr=%nr%",
     "print/F/%rowstart%/%thread_id%/%thread_name%"                                  => "print.php?type=F&amp;item_id=%thread_id%&amp;rowstart=%rowstart%",
 
-    "forum/%section%"                                 => "infusions/forum/index.php?section=%section%",
+    "forum/%section%"                 => "infusions/forum/index.php?section=%section%",
+    "forum/%section%/rows-%rowstart%" => "infusions/forum/index.php?section=%section%&amp;rowstart=%rowstart%",
 
-    // Buttons & Forms
-    "forum/%forum_id%/%forum_name%/create-new-thread" => "infusions/forum/newthread.php?forum_id=%forum_id%",
-
-    "forum/my-threads"                                              => "infusions/forum_threads_list_panel/my_threads.php",
-    "forum/my-post"                                                 => "infusions/forum_threads_list_panel/my_posts.php",
-    "forum/my-post-rows-%rowstart%"                                 => "infusions/forum_threads_list_panel/my_posts.php?rowstart=%rowstart%",
-    "forum/new-post"                                                => "infusions/forum_threads_list_panel/new_posts.php",
-    "forum/tracked-threads"                                         => "infusions/forum_threads_list_panel/my_tracked_threads.php",
-    "forum/tracked-threads/%thread_id%/stop-tracking-%thread_name%" => "infusions/forum_threads_list_panel/tracked_threads.php?delete=%thread_id%"
+    "forum/my-threads"                                                 => "infusions/forum_threads_list_panel/my_threads.php",
+    "forum/my-threads/rows-%rowstart%"                                 => "infusions/forum_threads_list_panel/my_threads.php?rowstart=%rowstart%",
+    "forum/my-post"                                                    => "infusions/forum_threads_list_panel/my_posts.php",
+    "forum/my-post/rows-%rowstart%"                                    => "infusions/forum_threads_list_panel/my_posts.php?rowstart=%rowstart%",
+    "forum/my-new-posts"                                               => "infusions/forum_threads_list_panel/new_posts.php",
+    "forum/my-new-posts/rows-%rowstart%"                               => "infusions/forum_threads_list_panel/new_posts.php?rowstart=%rowstart%",
+    "forum/my-tracked-threads"                                         => "infusions/forum_threads_list_panel/my_tracked_threads.php",
+    "forum/my-tracked-threads/rows-%rowstart%"                         => "infusions/forum_threads_list_panel/my_tracked_threads.php?rowstart=%rowstart%",
+    "forum/my-tracked-threads/%thread_id%/stop-tracking-%thread_name%" => "infusions/forum_threads_list_panel/tracked_threads.php?delete=%thread_id%"
 ];
 
 $pattern_tables["%forum_id%"] = [
