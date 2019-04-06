@@ -183,7 +183,7 @@ abstract class RewriteDriver {
      * @access protected
      */
     protected function includeRewrite() {
-        if (!empty($this->handlers)) {
+        if (is_array($this->handlers) && !empty($this->handlers)) {
             foreach ($this->handlers as $key => $name) {
                 if (file_exists(BASEDIR."includes/rewrites/".$name."_rewrite_include.php")) {
                     // If the File is found, include it
@@ -197,18 +197,26 @@ abstract class RewriteDriver {
                         $this->pattern_tables[$name] = $pattern_tables;
                         unset($pattern_tables);
                     }
-                } else if (file_exists(INFUSIONS.$name."/permalinks/".$name."_rewrite_include.php")) {
-                	include_once INFUSIONS.$name."/permalinks/".$name."_rewrite_include.php";
-                    if (isset($regex) && is_array($regex)) {
-                    	$this->addRegexTag($regex, $name);
-                    	unset($regex);
-                    }
-                    if (isset($pattern_tables) && is_array($pattern_tables)) {
-                        $this->pattern_tables[$name] = $pattern_tables;
-                        unset($pattern_tables);
-                    }
-                } else {
-                    $this->setWarning(4, $name."_rewrite_include.php");
+                } /*else {
+                    $this->setWarning(4, BASEDIR."includes/rewrites/".$name."_rewrite_include.php");
+                }*/
+
+                $infusions = makefilelist(INFUSIONS, '.|..|index.php', TRUE, 'folders');
+                foreach ($infusions as $inf_file) {
+                    if (file_exists(INFUSIONS.$inf_file."/permalinks/".$name."_rewrite_include.php")) {
+                        include_once INFUSIONS.$inf_file."/permalinks/".$name."_rewrite_include.php";
+                        if (isset($regex) && is_array($regex)) {
+                            $this->addRegexTag($regex, $name);
+                            unset($regex);
+                        }
+                        // Load pattern tables into driver
+                        if (isset($pattern_tables) && is_array($pattern_tables)) {
+                            $this->pattern_tables[$name] = $pattern_tables;
+                            unset($pattern_tables);
+                        }
+                    }/* else {
+                        $this->setWarning(4, INFUSIONS.$inf_file."/permalinks/".$name."_rewrite_include.php");
+                    }*/
                 }
             }
         }
@@ -220,7 +228,7 @@ abstract class RewriteDriver {
      * search patterns.
      * Example: %news_id% could be replaced with ([0-9]+) as it must be a number.
      *
-     * @param array  $regex Array of Tags to be added.
+     * @param array  $regex  Array of Tags to be added.
      * @param string $driver Type or Handler name
      *
      * @access protected
@@ -229,31 +237,6 @@ abstract class RewriteDriver {
         foreach ($regex as $reg_search => $reg_replace) {
             $this->rewrite_code[$driver][] = $reg_search;
             $this->rewrite_replace[$driver][] = $reg_replace;
-        }
-    }
-
-    /**
-     * Set Warnings
-     * This function will set Warnings. It will set them by Adding them into
-     * the $this->warnings array.
-     *
-     * @param integer $code The Code Number of the Warning
-     * @param string  $info Any other Info to Show along with Warning
-     *
-     * @access protected
-     */
-    protected function setWarning($code, $info = "") {
-        $info = ($info != "") ? $info." : " : "";
-        $warnings = [
-            1 => "No matching Alias found.", 2 => "No matching Alias Pattern found.",
-            3 => "No matching Regex pattern found.", 4 => "Rewrite Include file not found.",
-            5 => "Tag not found in the pattern.", 6 => "File path is empty.", 7 => "Alias found.",
-            8 => "Alias Pattern found.", 9 => "Regex Pattern found."
-        ];
-        if ($code <= 6) {
-            $this->warnings[] = "<span style='color:#ff0000;'>".$info.$warnings[$code]."</span>";
-        } else {
-            $this->warnings[] = "<span style='color:#009900;'>".$info.$warnings[$code]."</span>";
         }
     }
 
@@ -282,44 +265,6 @@ abstract class RewriteDriver {
             // Compute the Intersection
             // This is because we want only those Handlers, which are Enabled on website by admin
             $this->handlers = array_intersect($this->handlers, $types_enabled);
-        }
-    }
-
-    /**
-     * Include the Handlers
-     * This function will include the neccessary files for the Handler and call
-     * the functions to manipulate the information from the Handler files.
-     */
-    protected function includeHandlers() {
-        if (is_array($this->handlers) && !empty($this->handlers)) {
-            foreach ($this->handlers as $key => $name) {
-                if (file_exists(BASEDIR."includes/rewrites/".$name."_rewrite_include.php")) {
-                    // If the File is found, include it
-                    include BASEDIR."includes/rewrites/".$name."_rewrite_include.php";
-                    if (isset($regex) && is_array($regex)) {
-                        $this->addRegexTag($regex, $name);
-                        unset($regex);
-                    }
-                    // Load pattern tables into driver
-                    if (isset($pattern_tables) && is_array($pattern_tables)) {
-                        $this->pattern_tables[$name] = $pattern_tables;
-                        unset($pattern_tables);
-                    }
-                } else if (file_exists(INFUSIONS.$name."/permalinks/".$name."_rewrite_include.php")) {
-                	include INFUSIONS.$name."/permalinks/".$name."_rewrite_include.php";
-                    if (isset($regex) && is_array($regex)) {
-                        $this->addRegexTag($regex, $name);
-                        unset($regex);
-                    }
-                    // Load pattern tables into driver
-                    if (isset($pattern_tables) && is_array($pattern_tables)) {
-                        $this->pattern_tables[$name] = $pattern_tables;
-                        unset($pattern_tables);
-                    }
-                } else {
-                    $this->setWarning(4, $name."_rewrite_include.php");
-                }
-            }
         }
     }
 
@@ -956,10 +901,10 @@ abstract class RewriteDriver {
      * matches. All the Information is passed to the function and it will replace the
      * Tags with their respective matches.
      *
-     * @param string $type Type of Pattern
-     * @param string $search specific Search Pattern
-     * @param string $replace specific Replace Pattern
-     * @param array  $matches Array of the Matches found for a specific pattern
+     * @param string $type     Type of Pattern
+     * @param string $search   specific Search Pattern
+     * @param string $replace  specific Replace Pattern
+     * @param array  $matches  Array of the Matches found for a specific pattern
      * @param string $matchkey A Unique matchkey for different matches found for same pattern
      *
      * @return string
@@ -994,7 +939,7 @@ abstract class RewriteDriver {
      * Example: %id% is at 2 position in articles-%title%-%id%
      *
      * @param string $pattern The Pattern string in which particular Tag will be searched.
-     * @param string $search The Tag which will be searched.
+     * @param string $search  The Tag which will be searched.
      *
      * @access protected
      * @return int
@@ -1012,6 +957,31 @@ abstract class RewriteDriver {
     }
 
     /**
+     * Set Warnings
+     * This function will set Warnings. It will set them by Adding them into
+     * the $this->warnings array.
+     *
+     * @param integer $code The Code Number of the Warning
+     * @param string  $info Any other Info to Show along with Warning
+     *
+     * @access protected
+     */
+    protected function setWarning($code, $info = "") {
+        $info = ($info != "") ? $info." : " : "";
+        $warnings = [
+            1 => "No matching Alias found.", 2 => "No matching Alias Pattern found.",
+            3 => "No matching Regex pattern found.", 4 => "Rewrite Include file not found.",
+            5 => "Tag not found in the pattern.", 6 => "File path is empty.", 7 => "Alias found.",
+            8 => "Alias Pattern found.", 9 => "Regex Pattern found."
+        ];
+        if ($code <= 6) {
+            $this->warnings[] = "<span style='color:#ff0000;'>".$info.$warnings[$code]."</span>";
+        } else {
+            $this->warnings[] = "<span style='color:#009900;'>".$info.$warnings[$code]."</span>";
+        }
+    }
+
+    /**
      * Get the Tag of the Unique ID type
      * Example: For news, unique ID should be news_id
      * So it will return %news_id% because of array("%%news_id" => "news_id")
@@ -1020,7 +990,7 @@ abstract class RewriteDriver {
      *
      * @access       protected
      * @return string
-     * @todo   : Roadmap 9.1 to have this read seperately
+     * @todo         : Roadmap 9.1 to have this read seperately
      */
     protected function getUniqueIDtag($type) {
         $tag = "";
@@ -1039,7 +1009,7 @@ abstract class RewriteDriver {
      * Example: %news_id% could be replaced with ([0-9]+) as it must be a number.
      *
      * @param string $pattern Array of Tags to be added.
-     * @param string $type Type or Handler name
+     * @param string $type    Type or Handler name
      *
      * @access protected
      * @return string

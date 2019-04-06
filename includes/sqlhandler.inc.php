@@ -126,8 +126,6 @@ class SqlHandler {
      * @param $old_column_name
      * @param $new_column_name
      * @param $field_attributes
-     *
-     * @return bool|mixed|PDOStatement|resource
      */
     public static function rename_column($table_name, $old_column_name, $new_column_name, $field_attributes) {
         $result = dbquery("ALTER TABLE ".$table_name." CHANGE ".$old_column_name." ".$new_column_name." ".$field_attributes."");
@@ -255,8 +253,8 @@ function tree_index($data) {
 /**
  * Reduce the results of a hierarchy tree array to a non multidimensional single output value while preserving keys
  *
- * @param $result       results from dbquery_tree_full() or dbquery_tree()
- * @param $id_col       the id_col
+ * @param string $result results from dbquery_tree_full() or dbquery_tree()
+ * @param int    $id_col the id_col
  *
  * @return array
  */
@@ -291,21 +289,22 @@ function get_root(array $index, $child_id) {
             }
         }
     }
+
+    return NULL;
 }
 
 /**
  * Get Tree Root ID of a child via SQL
  * Alternative function to get a root of a specific item when dbtree is not available
  *
- * @param $db               The table name relative to the search
- * @param $id_col           The unique id column name of $db
- * @param $cat_col          The category id column name of $db
- * @param $current_id       The current id of the item relative to the ancestor root
+ * @param string $db         The table name relative to the search
+ * @param int    $id_col     The unique id column name of $db
+ * @param int    $cat_col    The category id column name of $db
+ * @param int    $current_id The current id of the item relative to the ancestor root
  *
  * @return int
  */
 function get_hkey($db, $id_col, $cat_col, $current_id) {
-    $hkey = &$hkey;
     $result = dbquery("SELECT $id_col, $cat_col FROM ".$db." WHERE $id_col =:pid LIMIT 1", [':pid' => intval($current_id)]);
     if (dbrows($result) > 0) {
         $data = dbarray($result);
@@ -338,6 +337,8 @@ function get_parent(array $index, $child_id) {
             return (int)$key;
         }
     }
+
+    return NULL;
 }
 
 /**
@@ -354,6 +355,8 @@ function get_parent_array(array $data, $child_id) {
             return (array)$value[$child_id];
         }
     }
+
+    return NULL;
 }
 
 /**
@@ -366,7 +369,6 @@ function get_parent_array(array $data, $child_id) {
  * @return array
  */
 function get_all_parent(array $index, $child_id, array &$list = []) {
-
     foreach ($index as $key => $value) {
 
         if (in_array($child_id, $value)) {
@@ -387,6 +389,8 @@ function get_all_parent(array $index, $child_id, array &$list = []) {
 
         }
     }
+
+    return NULL;
 }
 
 /**
@@ -432,6 +436,8 @@ function get_depth($index, $child_id, $depth = FALSE) {
             }
         }
     }
+
+    return NULL;
 }
 
 /**
@@ -501,7 +507,7 @@ function dbtree($db, $id_col, $cat_col, $cat_value = FALSE, $filter = FALSE) {
  *
  * @return array
  */
-function dbtree_index($db = FALSE, $id_col, $cat_col, $cat_value = FALSE) {
+function dbtree_index($db, $id_col, $cat_col, $cat_value = FALSE) {
     $refs = [];
     $list = [];
     $result = dbquery("SELECT * FROM ".$db);
@@ -583,19 +589,18 @@ function sorter(&$array, $key, $sort = 'ASC') {
 /**
  * Get the total max depths of dbtree()
  *
- * @param        $data
- * @param        $field
- * @param        $match
- * @param string $depth
+ * @param $data
+ * @param $field
+ * @param $match
+ * @param $depth
  *
  * @return int
  */
-function tree_depth($data, $field, $match, $depth = '1') {
+function tree_depth($data, $field, $match, $depth = 1) {
     if (!$depth) {
-        $depth = '1';
-    } else {
-        $depth = &$depth;
+        $depth = 1;
     }
+
     foreach ($data as $arr) {
         if ($arr[$field] == $match) {
             return (int)$depth;
@@ -608,27 +613,28 @@ function tree_depth($data, $field, $match, $depth = '1') {
             }
         }
     }
+
+    return NULL;
 }
 
 /**
- * @todo: Change to count on index in favor of deprecated method
- * Get the occurences of a column name matching value
- * $unpublish_count = tree_count($dbtree_result, "column_name", "value")-1;
- *
  * @param      $data - $data = dbquery_tree(...);
  * @param bool $column_name
  * @param bool $value_to_match
  *
  * @return int
+ * @todo: Change to count on index in favor of deprecated method
+ *      Get the occurences of a column name matching value
+ *      $unpublish_count = tree_count($dbtree_result, "column_name", "value")-1;
+ *
  */
 function tree_count($data, $column_name = FALSE, $value_to_match = FALSE) {
     // Find Occurence of match in a tree.
     //
     if (!isset($counter)) {
         $counter = 0;
-    } else {
-        $counter = &$counter;
     }
+
     foreach ($data as $arr) {
         if (!empty($column_name)) {
             if ($arr[$column_name] == $value_to_match) {
@@ -754,8 +760,6 @@ function dbquery_insert($table, $inputdata, $mode, array $options = []) {
 
         return FALSE;
     }
-
-    $defender = Defender::getInstance();
 
     $cresult = dbquery("SHOW COLUMNS FROM $table");
     $columns = [];
@@ -899,7 +903,6 @@ function multilang_column($table_col) {
 function getcategory($cat) {
     $presult = dbquery("SELECT link_id, link_name, link_order FROM ".DB_SITE_LINKS." WHERE link_id='$cat'");
     if (dbrows($presult) > 0) {
-        $pdata = dbarray($presult);
         $md[$cat] = "Menu Item Root";
         $result = dbquery("SELECT link_id, link_name FROM ".DB_SITE_LINKS." WHERE link_cat='$cat' ORDER BY link_order ASC");
         if (dbrows($result) > 0) {
@@ -1056,6 +1059,8 @@ function dbquery_order($dbname, $current_order, $order_col, $current_id = 0, $id
         default:
             \Defender::stop();
     }
+
+    return NULL;
 }
 
 // Array Makers
@@ -1100,8 +1105,10 @@ function construct_array($string, $string2 = FALSE, $delimiter = FALSE) {
 
         return $value;
     } else {
-        notify("Debug notice: There is a string injected in construct_array() function!", "Please recheck source codes in this page.");
+        addNotice('info', "Debug notice: There is a string injected in construct_array() function!<br/>Please recheck source codes in this page.");
     }
+
+    return NULL;
 }
 
 /**

@@ -65,7 +65,7 @@ if ($rows) {
         echo "</table></div>";
 
     if ($rows > 20) {
-        echo "<div class='text-center'>".makepagenav($_GET['rowstart'], 20, $rows, 3, FUSION_SELF."?")."</div>\n";
+        echo "<div class='text-center'>".makepagenav($_GET['rowstart'], 20, $rows, 3, INFUSIONS."forum_threads_list_panel/my_posts.php?")."</div>\n";
     }
 } else {
     echo "<div class='text-center'>".$locale['global_054']."</div>\n";

@@ -25,9 +25,9 @@ namespace PHPFusion\Rewrite;
  * and map them to suitable existing URLs in website.
  * You can use this API to Add custom rules for handling requests
  */
-
 class Router extends RewriteDriver {
 
+    private static $router_instance = NULL;
     /**
      * True = SEF URL to FilePath
      * False = File Path to SEF URL
@@ -36,38 +36,32 @@ class Router extends RewriteDriver {
      */
     public $routing = TRUE;
     /**
-     * Name of the php file which will be loaded
-     * for the permalink.
-     * example: news.php, articles.php
-     *
-     * @data_type String
-     * @access private
-     */
-    private $pathtofile = "";
-    /**
      * Array of Parameters with their
      * corresponding Tags.
      * example: thread_id => %thread_id%
      *
      * @data_type Array
-     * @access private
+     * @access    private
      */
     //private $parameters = [];
+    /**
+     * Name of the php file which will be loaded
+     * for the permalink.
+     * example: news.php, articles.php
+     *
+     * @data_type String
+     * @access    private
+     */
+    private $pathtofile = "";
     /**
      * Array of Parameters with their
      * actual values.
      * example: thread_id => 1, rowstart => 20
      *
      * @data_type Array
-     * @access private
+     * @access    private
      */
     private $get_parameters = [];
-
-    public function get_FileParams() {
-        return $this->get_parameters;
-    }
-
-    private static $router_instance = NULL;
 
     public function __construct() {
         // Pretty URL
@@ -82,6 +76,9 @@ class Router extends RewriteDriver {
         return self::$router_instance;
     }
 
+    public function get_FileParams() {
+        return $this->get_parameters;
+    }
 
     /**
      * @param mixed $pathtofile
@@ -207,9 +204,9 @@ class Router extends RewriteDriver {
      * 1. The Permalink URL of Alias
      * 2. PHP URL of the Alias
      *
-     * @param string $url The Permalink URL (incomplete)
+     * @param string $url     The Permalink URL (incomplete)
      * @param string $php_url The PHP URL (incomplete)
-     * @param string $type Type of Alias
+     * @param string $type    Type of Alias
      *
      * @access private
      * @return mixed|string
@@ -239,7 +236,7 @@ class Router extends RewriteDriver {
      * [rowstart] => 20
      * )
      *
-     * @param string $url The URL
+     * @param string $url             The URL
      * @param string $param_delimiter The Parameters to explode by
      *
      * @access private
@@ -533,26 +530,6 @@ class Router extends RewriteDriver {
     }
 
     /**
-     * Index Include File
-     * Returns the filename of the php file which will be included.
-     * If this file is blank, index.php will redirect to 404 error page
-     *
-     * @access public
-     */
-    public function getFilePath() {
-        return $this->pathtofile;
-    }
-
-    /**
-     * Get the Current URL
-     *
-     * @return string
-     */
-    public function getCurrentURL() {
-        return $this->pathtofile.(!empty($this->get_parameters) ? '?'.http_build_query($this->get_parameters, '', '&amp;') : '');
-    }
-
-    /**
      * Show Warnings or Debugging Information
      * This function will show the Warnings or Debugging Information
      * if Warnings are enabled or if Debug Mode is enabled.
@@ -565,15 +542,25 @@ class Router extends RewriteDriver {
         foreach ($this->queries as $key => $query) {
             echo $query.";<br />\n";
         }
-        echo "<script type='text/javascript'>
-        $('#rewritestoggledebugdiv').on('click', function() {
-            $('#rewrites-debug-info').slideToggle('slow');
-        });
-        </script>\n";
+        add_to_footer("<script type='text/javascript'>
+        var el = document.getElementById('rewritestoggledebugdiv');
+        
+        if (el) {
+            el.addEventListener('click', function() {
+                var el2 = document.getElementById('rewritesdebuginfo');
+                
+                if (el2.style.display === 'none') {
+                    el2.style.display = 'block';
+                } else {
+                    el2.style.display = 'none';
+                }
+            });
+        }
+        </script>");
         echo "<input type='button' class='btn btn-default btn-sm' value='Toggle Rewriting Debug Information' id='rewritestoggledebugdiv' />\n<br />";
         echo "Path to File: <strong>".$this->pathtofile."</strong><br />";
         echo "Request URI: <strong>".$this->requesturi."</strong><br />";
-        echo "<div id='rewrites-debug-info' style='display: ".($this->pathtofile != "" ? "none" : "block").";'>\n";
+        echo "<div id='rewritesdebuginfo' style='display: ".($this->pathtofile != "" ? "none" : "block").";'>\n";
         foreach ($this->warnings as $key => $val) {
             echo (intval($key) + 1).". ".$val."<br />\n";
         }
@@ -676,5 +663,25 @@ class Router extends RewriteDriver {
         echo ");<br />\n";
         echo "</div>\n";
         echo "</div>\n";
+    }
+
+    /**
+     * Index Include File
+     * Returns the filename of the php file which will be included.
+     * If this file is blank, index.php will redirect to 404 error page
+     *
+     * @access public
+     */
+    public function getFilePath() {
+        return $this->pathtofile;
+    }
+
+    /**
+     * Get the Current URL
+     *
+     * @return string
+     */
+    public function getCurrentURL() {
+        return $this->pathtofile.(!empty($this->get_parameters) ? '?'.http_build_query($this->get_parameters, '', '&amp;') : '');
     }
 }
