@@ -2126,20 +2126,13 @@ textarea.form-control.main {
 .tab-sm .nav > li > a {
     padding: 3px 10px;
 }
-.nav > li > a {
-    padding: 22px 25px;
-}
-
 .nav-tabs {
     border-color: #ccc;
     margin-bottom: 0 !important;
 }
 .tab-content {
     background: #fff;
-    padding: 10px 15px;
-    border-left: 1px solid #ccc;
-    border-right: 1px solid #ccc;
-    border-bottom: 1px solid #ccc;
+    padding: 20px 0;
 }
 .nav-wrapper > .nav-pills:not(.nav-stacked) > li {
     margin-right: 10px;

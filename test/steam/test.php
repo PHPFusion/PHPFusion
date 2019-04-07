@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__.'/../../maincore.php';
-
+require_once THEMES.'templates/header.php';
 /**
  * Multipurpose boilerplate API
  */
@@ -30,3 +30,4 @@ echo $fusion_steam->load('layout')->grid(array(
         'lg' => 3
     ]
 ));
+require_once THEMES.'templates/footer.php';

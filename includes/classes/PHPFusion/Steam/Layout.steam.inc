@@ -17,7 +17,7 @@ class Layout {
      */
     public function __construct(\PHPFusion\Steam $steam) {
         $this->steam = $steam;
-        include THEMES.'templates/boilers/'.$this->steam->get_boiler().'/grid.php';
+        require_once THEMES.'templates/boilers/'.$this->steam->get_boiler().'/grid.php';
     }
 
     public function getRowClass() {

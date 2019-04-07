@@ -56,10 +56,9 @@ class Template {
      */
     public static function getInstance($key = self::DefaultID) {
         if (!isset(self::$instance[$key])) {
-            self::$instance[$key] = new static();
+            self::$instance[$key] = new static;
         }
         self::$key = $key;
-
         return self::$instance[$key];
     }
 
@@ -333,53 +332,45 @@ class Template {
         //debug_print_backtrace();
         global $fusion_steam;
 
-        if (empty(self::$short_code_instance[self::$key])) {
+        self::$short_code_instance[self::$key] = TIME;
+        $short_code_pattern = '/\{\[(.*?)\]\}/s'; // group 1 is id, group 2 is the child template
+        preg_match_all($short_code_pattern, $this->template, $cache, PREG_SET_ORDER);
+        if (!empty($cache)) {
+            //print_P($cache);
+            $layout_class = $fusion_steam->load('Layout');
+            $shortcode_cache = [];
 
-            self::$short_code_instance[self::$key] = TIME;
-
-            $short_code_pattern = '/\{\[(.*?)\]\}/s'; // group 1 is id, group 2 is the child template
-
-            preg_match_all($short_code_pattern, $this->template, $cache, PREG_SET_ORDER);
-            if (!empty($cache)) {
-                //print_P($cache);
-                $layout_class = $fusion_steam->load('Layout');
-
-                $shortcode_cache = [];
-                foreach ($cache as $preg_results) { // For each tag found
-                    if (!empty($preg_results[0]) && !empty($preg_results[1])) {
-                        //print_P($preg_results[0]); // {[row_class]}
-                        //print_P($preg_results[1]); // row_class
-                        switch($preg_results[1]) {
-                            default:
-                                break;
-                            case 'container':
-                            case 'container_class':
-                                $shortcode_cache[$preg_results[0]] = $layout_class->getContainerClass();
-                                break;
-                            case 'row':
-                            case 'row_class': // Grid row class values
-                                $shortcode_cache[$preg_results[0]] = $layout_class->getRowClass();
-                                break;
-                            case (stristr($preg_results[1], 'col') ? true : false):
-                            case (stristr($preg_results[1], 'column') ? true : false):
-                            case (stristr($preg_results[1], 'column_class') ? true : false):
-                                if ((preg_match('/[-.\w]+[0-9]/', $preg_results[1]) ? true : false)): // column class - values must contain `column_class(100)`
-                                    preg_match_all('/[-.\w]+[0-9]/', $preg_results[1], $percent);
-                                    if (!empty($percent[0])) {
-                                        $shortcode_cache[$preg_results[0]] = $layout_class->getColumnClass($percent[0]);
-                                    }
-                                endif;
-                                break;
-                        }
+            foreach ($cache as $preg_results) { // For each tag found
+                if (!empty($preg_results[0]) && !empty($preg_results[1])) {
+                    //print_P($preg_results[0]); // {[row_class]}
+                    //print_P($preg_results[1]); // row_class
+                    switch($preg_results[1]) {
+                        default:
+                            break;
+                        case 'container':
+                        case 'container_class':
+                            $shortcode_cache[$preg_results[0]] = $layout_class->getContainerClass();
+                            break;
+                        case 'row':
+                        case 'row_class': // Grid row class values
+                            $shortcode_cache[$preg_results[0]] = $layout_class->getRowClass();
+                            break;
+                        case (stristr($preg_results[1], 'col') ? true : false):
+                        case (stristr($preg_results[1], 'column') ? true : false):
+                        case (stristr($preg_results[1], 'column_class') ? true : false):
+                            if ((preg_match('/[-.\w]+[0-9]/', $preg_results[1]) ? true : false)): // column class - values must contain `column_class(100)`
+                                preg_match_all('/[-.\w]+[0-9]/', $preg_results[1], $percent);
+                                if (!empty($percent[0])) {
+                                    $shortcode_cache[$preg_results[0]] = $layout_class->getColumnClass($percent[0]);
+                                }
+                            endif;
+                            break;
                     }
                 }
-                //print_p($shortcode_cache);
-                $this->template = strtr($this->template, $shortcode_cache);
             }
+            //print_p($shortcode_cache);
+            $this->template = strtr($this->template, $shortcode_cache);
         }
-
-
-
     }
 
 }
