@@ -120,7 +120,7 @@ class Forum_Poll {
                             }
                         }
                         if (\Defender::safe()) {
-                            redirect(FORUM."postify.php?post=editpoll&error=0&forum_id=".self::$data['forum_id']."&thread_id=".self::$data['thread_id']);
+                            redirect(fusion_get_settings('siteurl')."infusions/forum/postify.php?post=editpoll&error=0&forum_id=".self::$data['forum_id']."&thread_id=".self::$data['thread_id']);
                         }
                     }
                     // how to make sure values containing options votes
@@ -190,7 +190,7 @@ class Forum_Poll {
                     }
                     if (\Defender::safe()) {
                         dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_poll='1' WHERE thread_id='".self::$data['thread_id']."'");
-                        redirect(FORUM."postify.php?post=newpoll&error=0&forum_id=".self::$data['forum_id']."&thread_id=".self::$data['thread_id']);
+                        redirect(fusion_get_settings('siteurl')."infusions/forum/postify.php?post=newpoll&error=0&forum_id=".self::$data['forum_id']."&thread_id=".self::$data['thread_id']);
                     }
 
                 }

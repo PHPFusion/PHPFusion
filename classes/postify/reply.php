@@ -31,6 +31,8 @@ class Postify_Reply extends Forum_Postify {
 
     public function execute() {
 
+        $settings = fusion_get_settings();
+
         add_to_title(self::$locale['global_201'].self::$locale['forum_0360']);
 
         BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => self::$locale['forum_0360']]);
@@ -111,20 +113,20 @@ class Postify_Reply extends Forum_Postify {
                 $redirect_add = '&amp;rowstart='.$thread_last_page;
             }
             $link[] = [
-                'url'   => FORUM.'viewthread.php?thread_id='.$thread_data['thread_id'].$redirect_add.'&amp;pid='.$thread_data['thread_lastpostid'].'#post_'.$thread_data['thread_lastpostid'],
+                'url'   => $settings['siteurl'].'infusions/forum/viewthread.php?thread_id='.$thread_data['thread_id'].$redirect_add.'&amp;pid='.$thread_data['thread_lastpostid'].'#post_'.$thread_data['thread_lastpostid'],
                 'title' => self::$locale['forum_0548']
             ];
-            redirect(FORUM.'viewthread.php?thread_id='.$thread_data['thread_id'].$redirect_add.'&amp;pid='.$thread_data['thread_lastpostid'].'#post_'.$thread_data['thread_lastpostid'], 3);
+            redirect($settings['siteurl'].'infusions/forum/viewthread.php?thread_id='.$thread_data['thread_id'].$redirect_add.'&amp;pid='.$thread_data['thread_lastpostid'].'#post_'.$thread_data['thread_lastpostid'], 3);
 
         } else {
             $link[] = [
-                'url'   => FORUM.'viewthread.php?thread_id='.$thread_data['thread_id'].'&amp;pid='.$thread_data['thread_lastpostid'].'#post_'.$thread_data['thread_lastpostid'],
+                'url'   => $settings['siteurl'].'infusions/forum/viewthread.php?thread_id='.$thread_data['thread_id'].'&amp;pid='.$thread_data['thread_lastpostid'].'#post_'.$thread_data['thread_lastpostid'],
                 'title' => self::$locale['forum_0548']
             ];
-            redirect(FORUM.'viewthread.php?thread_id='.$thread_data['thread_id'].'&amp;pid='.$thread_data['thread_lastpostid'].'#post_'.$thread_data['thread_lastpostid'], 4);
+            redirect($settings['siteurl'].'infusions/forum/viewthread.php?thread_id='.$thread_data['thread_id'].'&amp;pid='.$thread_data['thread_lastpostid'].'#post_'.$thread_data['thread_lastpostid'], 4);
         }
-        $link[] = ['url' => FORUM.'index.php?viewforum&amp;forum_id='.$thread_data['forum_id'], 'title' => self::$locale['forum_0549']];
-        $link[] = ['url' => FORUM.'index.php', 'title' => self::$locale['forum_0550']];
+        $link[] = ['url' => $settings['siteurl'].'infusions/forum/index.php?viewforum&amp;forum_id='.$thread_data['forum_id'], 'title' => self::$locale['forum_0549']];
+        $link[] = ['url' => $settings['siteurl'].'infusions/forum/index.php', 'title' => self::$locale['forum_0550']];
 
         render_postify([
             'title'       => self::$locale['forum_0360'],
