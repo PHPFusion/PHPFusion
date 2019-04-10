@@ -642,7 +642,8 @@ class SiteLinks {
                             if (stristr($link_data['link_url'], "index.php")) {
                                 $data_link_url = str_replace("index.php", "", $data_link_url);
                             }
-                            $url = parse_url(htmlspecialchars_decode($_SERVER['REQUEST_URI']));
+                            $request_uri = str_replace('//', '/', $_SERVER['REQUEST_URI']);
+                            $url = parse_url(htmlspecialchars_decode($request_uri));
                             $current_url = str_replace(fusion_get_settings('site_path'), "", $url['path']);
                             if (stristr($url['path'], "index.php")) {
                                 $current_url = str_replace("index.php", "", $current_url);
