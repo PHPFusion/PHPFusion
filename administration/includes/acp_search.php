@@ -17,6 +17,11 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/../../maincore.php';
 
+$settings = fusion_get_settings();
+if (preg_match("/^([a-z0-9_-]){2,50}$/i", $settings['admin_theme']) && file_exists(THEMES."admin_themes/".$settings['admin_theme']."/acp_theme.php")) {
+    require_once THEMES."admin_themes/".$settings['admin_theme']."/acp_theme.php";
+}
+
 header('Content-Type: application/json');
 
 $search = new PHPFusion\AdminSearch();
