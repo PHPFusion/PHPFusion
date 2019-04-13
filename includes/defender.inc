@@ -436,7 +436,7 @@ class Defender {
      *
      * @param $notice - Show custom notice message on validation errors
      */
-    static function stop($notice = '') {
+    public static function stop($notice = '') {
         if (!defined('FUSION_NULL')) {
             define('FUSION_NULL', TRUE);
             if ($notice) {

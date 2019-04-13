@@ -419,9 +419,17 @@ class Authenticate {
     }
 
     public static function getEmptyUserData() {
-        global $settings;
 
-        return ["user_level" => 0, "user_rights" => "", "user_groups" => "", "user_theme" => $settings['theme']];
+        return [
+            "user_id"     => USER_IP,
+            "user_name"   => fusion_get_locale("user_guest"),
+            "user_status" => 1,
+            "user_level"  => 0,
+            "user_rights" => "",
+            "user_groups" => "",
+            "user_theme"  => fusion_get_settings("theme"),
+        ];
+
     }
 
     public static function setLastVisitCookie() {

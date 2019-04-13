@@ -202,13 +202,15 @@ class Token extends \Defender {
         // resets remote file every callback
         $remote_file = ($file ? $file : '');
         \Defender::getInstance()->set_RemoteFile($remote_file);
+
         $userdata = fusion_get_userdata();
-        $user_id = (iMEMBER ? $userdata['user_id'] : 0);
+        $user_id = $userdata['user_id'];
         $secret_key = defined('SECRET_KEY') ? SECRET_KEY : 'secret_key';
         $secret_key_salt = defined('SECRET_KEY_SALT') ? SECRET_KEY_SALT : 'secret_salt';
         $algo = fusion_get_settings('password_algorithm') ? fusion_get_settings('password_algorithm') : 'sha256';
         $key = $user_id.$token_time.$form_id.$secret_key;
         $salt = md5(isset($userdata['user_salt']) ? $userdata['user_salt'].$secret_key_salt : $secret_key_salt);
+
         // generate a new token
         $token = $user_id.'.'.$token_time.'.'.hash_hmac($algo, $key, $salt);
 

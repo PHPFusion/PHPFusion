@@ -1740,20 +1740,7 @@ function fusion_get_userdata($key = NULL) {
     static $userdata = [];
 
     if (empty($userdata)) {
-
         $userdata = Authenticate::validateAuthUser();
-
-        if ($userdata === NULL) {
-            $userdata = [
-                "user_id"     => USER_IP,
-                "user_name"   => fusion_get_locale("user_guest"),
-                "user_status" => 1,
-                "user_level"  => 0,
-                "user_rights" => "",
-                "user_groups" => "",
-                "user_theme"  => fusion_get_settings("theme"),
-            ];
-        }
     }
 
     return $key === NULL ? $userdata : (isset($userdata[$key]) ? $userdata[$key] : NULL);
