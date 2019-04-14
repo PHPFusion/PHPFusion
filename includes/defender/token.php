@@ -51,14 +51,18 @@ class Token extends \Defender {
      */
     private static $debug = FALSE;
 
+    /**
+     * Error string
+     * @var string
+     */
+    private $error = FALSE;
+
+
     public function __construct() {
 
         parent::__construct();
 
         $locale = fusion_get_locale();
-
-        $error = FALSE;
-
         // Validate the Token When POST is not Empty Automatically
         if (!empty($_POST)) {
 
@@ -66,21 +70,22 @@ class Token extends \Defender {
                     $_POST['fusion_token']
                 ) || !is_string($_POST['form_id'])) {
                 // Check if a token is being posted and make sure is a string
-                $error = $locale['token_error_2'];
+                $this->error = $locale['token_error_2'];
 
             } else if (!isset($_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']])) {
                 // Cannot find any token for this form
-                $error = $locale['token_error_9'];
+                $this->error = $locale['token_error_9'];
 
             } else if (!in_array(
                 $_POST['fusion_token'], $_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']]
             )) {
                 // Check if the token exists in storage
-                $error = $locale['token_error_10'].stripinput($_POST['fusion_token']);
+                $this->error = $locale['token_error_10'].stripinput($_POST['fusion_token']);
 
-            } else if ($error = self::verify_token()) {
+            } else if ( $error = self::verify_token()) {
+                $this->error = $error;
                 // Unable to Verify Token
-                $error = $locale['token_error_3'].stripinput($_POST['fusion_token']).$error;
+                //$error = $locale['token_error_3'].stripinput($_POST['fusion_token']).$error;
             }
 
             $tokens_consumed = '';
@@ -127,13 +132,13 @@ class Token extends \Defender {
             }
         }
 
-        if ($error) {
+        if ($this->error) {
             self::$tokenIsValid = FALSE;
             //echo $error;
             self::stop();
             if (self::$debug === TRUE) {
                 addNotice('danger', $_SERVER['PHP_SELF']);
-                addNotice('danger', $error);
+                addNotice('danger', $this->error);
             }
         }
     }
@@ -149,18 +154,17 @@ class Token extends \Defender {
         $userdata = fusion_get_userdata();
         $error = FALSE;
         $settings = fusion_get_settings();
-        $token_data = explode('.', stripinput($_POST['fusion_token']));
+        $token_data = explode('-', stripinput($_POST['fusion_token']));
         //if (!$post_time) {
         //  $post_time = $settings['flood_interval'];
         //}
         // check if the token has the correct format
         if (count($token_data) == 3) {
             list($tuser_id, $token_time, $hash) = $token_data;
-            $user_id = (iMEMBER ? $userdata['user_id'] : 0);
+            $user_id = $userdata['user_id'];
             $algo = $settings['password_algorithm'];
-            $salt = md5(
-                isset($userdata['user_salt']) && !isset($_POST['login']) ? $userdata['user_salt'].SECRET_KEY_SALT : SECRET_KEY_SALT
-            );
+            $secret_key_salt = defined('SECRET_KEY_SALT') ? SECRET_KEY_SALT : 'secret_salt';
+            $salt = md5(isset($userdata['user_salt']) && !isset($_POST['login']) ? $userdata['user_salt'].$secret_key_salt : $secret_key_salt);
             // check if the logged user has the same ID as the one in token
             if ($tuser_id != $user_id) {
                 $error = $locale['token_error_4'];
@@ -200,19 +204,21 @@ class Token extends \Defender {
      */
     public static function generate_token($form_id = 'phpfusion', $max_tokens = 5, $file = '', $token_time = TIME) {
         // resets remote file every callback
+
         $remote_file = ($file ? $file : '');
         \Defender::getInstance()->set_RemoteFile($remote_file);
 
         $userdata = fusion_get_userdata();
+        $settings = fusion_get_settings();
         $user_id = $userdata['user_id'];
         $secret_key = defined('SECRET_KEY') ? SECRET_KEY : 'secret_key';
         $secret_key_salt = defined('SECRET_KEY_SALT') ? SECRET_KEY_SALT : 'secret_salt';
-        $algo = fusion_get_settings('password_algorithm') ? fusion_get_settings('password_algorithm') : 'sha256';
+        $algo = $settings['password_algorithm'] ? $settings['password_algorithm'] : 'sha256';
         $key = $user_id.$token_time.$form_id.$secret_key;
         $salt = md5(isset($userdata['user_salt']) ? $userdata['user_salt'].$secret_key_salt : $secret_key_salt);
 
         // generate a new token
-        $token = $user_id.'.'.$token_time.'.'.hash_hmac($algo, $key, $salt);
+        $token = $user_id.'-'.$token_time.'-'.hash_hmac($algo, $key, $salt);
 
         if (\Defender::safe()) {
             // Store into session
@@ -238,8 +244,7 @@ class Token extends \Defender {
             }
             if (!empty($_SESSION['csrf_tokens'][self::pageHash($file)][$form_id])) {
                 $token_ring = $_SESSION['csrf_tokens'][self::pageHash($file)][$form_id];
-                $text = "<strong>New Valid tokens for Form ID <kbd>$form_id</kbd> for ".self::pageHash(
-                        $file
+                $text = "<strong>New Valid tokens for Form ID <kbd>$form_id</kbd> for ".self::pageHash($file
                     ).": </strong><ul class='block'><li>".implode("</li><li>", $token_ring)."</li></ul>\n";
                 echo alert($text, ['class' => 'alert-success']);
             } else {
