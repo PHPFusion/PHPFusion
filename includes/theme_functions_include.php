@@ -1202,7 +1202,7 @@ if (!function_exists("tab_active")
             $this->remember = $value;
         }
 
-        public function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE, $getname = 'section', array $cleanup_GET = []) {
+        public function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE, $getname = 'section', array $cleanup_GET = [], $wrapper_class = NULL) {
             $this->id = $id;
             $this->cookie_name = $this->cookie_prefix.'-'.$id;
             $this->tab_info = $tab_title;
@@ -1217,8 +1217,8 @@ if (!function_exists("tab_active")
                     $link_active_arrkey = str_replace('tab-', '', $_COOKIE[$this->cookie_name]);
                 }
             }
-            $html = "<div class='nav-wrapper".($class ? " ".$class : '')."'>\n";
-            $html .= "<ul id='$id' class='nav nav-tabs'>\n";
+            $html = "<div class='nav-wrapper".($wrapper_class ? " ".$wrapper_class : '')."'>\n";
+            $html .= "<ul id='$id' class='nav nav-tabs".($class ? " ".$class : '')."'>\n";
             foreach ($tab_title['title'] as $arr => $v) {
                 $v_title = $v;
                 $tab_id = $tab_title['id'][$arr];
