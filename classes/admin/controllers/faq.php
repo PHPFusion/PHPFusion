@@ -410,39 +410,41 @@ class FaqAdmin extends FaqAdminModel {
         }
 
         // Search
-        $sql_condition = '';
         $search_string = [];
-        if (isset($_POST['p-submit-faq_text'])) {
-            $search_string['ac.faq_answer'] = [
+        $sql_condition = multilang_table("FQ") ? "faq_language='".LANGUAGE."'" : "";
+        if (isset($_POST['p-submit-faq_answer'])) {
+            $search_string['faq_answer'] = [
                 'input' => form_sanitizer($_POST['faq_answer'], '', 'faq_answer'), 'operator' => 'LIKE'
             ];
         }
 
         if (!empty($_POST['faq_status']) && isnum($_POST['faq_status']) && $_POST['faq_status'] == '1') {
-            $search_string['ac.faq_status'] = ['input' => 0, 'operator' => '='];
+            $search_string['faq_status'] = ['input' => 0, 'operator' => '='];
         }
 
         if (!empty($_POST['faq_visibility'])) {
-            $search_string['ac.faq_visibility'] = [
+            $search_string['faq_visibility'] = [
                 'input' => form_sanitizer($_POST['faq_visibility'], '', 'faq_visibility'), 'operator' => '='
             ];
         }
 
         if (!empty($_POST['faq_language'])) {
-            $search_string['ac.faq_language'] = [
+            $search_string['faq_language'] = [
                 'input' => form_sanitizer($_POST['faq_language'], '', 'faq_language'), 'operator' => '='
             ];
         }
 
         if (!empty($_POST['faq_name'])) {
-            $search_string['ac.faq_name'] = [
+            $search_string['faq_name'] = [
                 'input' => form_sanitizer($_POST['faq_name'], '', 'faq_name'), 'operator' => '='
             ];
         }
 
         if (!empty($search_string)) {
             foreach ($search_string as $key => $values) {
-                $sql_condition .= " AND $key".$values['operator'].($values['operator'] == "LIKE" ? "'%" : "'").$values['input'].($values['operator'] == "LIKE" ? "%'" : "'");
+                if ($sql_condition)
+                    $sql_condition .= " AND ";
+                $sql_condition .= "`$key` ".$values['operator'].($values['operator'] == "LIKE" ? "'%" : "'").$values['input'].($values['operator'] == "LIKE" ? "%'" : "'");
             }
         }
 
@@ -462,7 +464,7 @@ class FaqAdmin extends FaqAdminModel {
             'criteria' => "ac.*, IF(a.faq_cat_name != '', a.faq_cat_name, '".$this->locale['faq_0010']."') 'faq_cat_name', u.user_id, u.user_name, u.user_status, u.user_avatar",
             'join'     => "INNER JOIN ".DB_USERS." u ON u.user_id=ac.faq_name
             LEFT JOIN ".DB_FAQ_CATS." a ON a.faq_cat_id=ac.faq_cat_id",
-            'where'    => (multilang_table("FQ") ? "ac.faq_language='".LANGUAGE."'" : "").$sql_condition,
+            'where'    => $sql_condition,
             //'sql_condition' => ,
             'limit'    => "LIMIT $rowstart, $limit"
         ];
