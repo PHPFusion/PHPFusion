@@ -25,7 +25,8 @@ $regex = [
     "%folder_inbox%"   => "(inbox)",
     "%folder_outbox%"  => "(outbox)",
     "%folder_archive%" => "(archive)",
-    "%user_name%"      => "([0-9a-zA-Z._\W]+)"
+    "%user_name%"      => "([0-9a-zA-Z._\W]+)",
+    "%rowstart%"       => "([0-9]+)"
 ];
 
 $pattern = [
@@ -35,6 +36,7 @@ $pattern = [
     "messages/%folder_inbox%/%msg_id%/message-from-%user_name%"   => "messages.php?folder=%folder_inbox%&amp;msg_read=%msg_id%",
     "messages/%folder_archive%/%msg_id%/message-with-%user_name%" => "messages.php?folder=%folder_archive%&amp;msg_read=%msg_id%",
     "messages/%folder%"                                           => "messages.php?folder=%folder%",
+    "messages/%folder%/rowstart/%rowstart%"                       => "messages.php?folder=%folder%&amp;rowstart=%rowstart%",
     "messages"                                                    => "messages.php"
 ];
 
