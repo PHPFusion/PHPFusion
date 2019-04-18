@@ -94,7 +94,7 @@ class FaqAdminView extends FaqAdminModel {
 
         // Display Content
         opentable($this->locale['faq_0000']);
-        echo opentab($tab, $_GET['section'], 'faq_admin', TRUE, '', 'section');
+        echo opentab($tab, $_GET['section'], 'faq_admin', TRUE, '', 'section', ['faq_cat_id', 'rowstart', 'faq_display', 'faq_status', 'faq_visibility', 'faq_language', 'faq_name']);
         switch ($_GET['section']) {
             case 'submissions':
                 FaqSubmissionsAdmin::getInstance()->displayFaqAdmin();

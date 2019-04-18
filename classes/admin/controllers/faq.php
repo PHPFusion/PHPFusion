@@ -414,50 +414,75 @@ class FaqAdmin extends FaqAdminModel {
         $sql_condition = multilang_table("FQ") ? "faq_language='".LANGUAGE."'" : "";
         if (isset($_POST['p-submit-faq_answer'])) {
             $search_string['faq_answer'] = [
-                'input' => form_sanitizer($_POST['faq_answer'], '', 'faq_answer'), 'operator' => 'LIKE'
+                'input'    => form_sanitizer($_POST['faq_answer'], '', 'faq_answer'),
+                'operator' => 'LIKE'
             ];
         }
 
-        if (!empty($_POST['faq_status']) && isnum($_POST['faq_status']) && $_POST['faq_status'] == '1') {
-            $search_string['faq_status'] = ['input' => 0, 'operator' => '='];
+        if ((!empty($_POST['faq_status']) && isnum($_POST['faq_status']) && $_POST['faq_status'] == '1') || !empty($_GET['faq_status'])) {
+            $search_string['faq_status'] = [
+                'input'    => 0,
+                'operator' => '='
+            ];
         }
 
-        if (!empty($_POST['faq_visibility'])) {
+        if (!empty($_POST['faq_visibility']) || !empty($_GET['faq_visibility'])) {
             $search_string['faq_visibility'] = [
-                'input' => form_sanitizer($_POST['faq_visibility'], '', 'faq_visibility'), 'operator' => '='
+                'input'    => (!empty($_POST['faq_visibility']) ? form_sanitizer($_POST['faq_visibility'], '', 'faq_visibility') : (!empty($_GET['faq_visibility']) ? $_GET['faq_visibility'] : '')),
+                'operator' => '='
             ];
         }
 
-        if (!empty($_POST['faq_language'])) {
+        if (!empty($_POST['faq_cat']) || !empty($_GET['faq_cat_id'])) {
+            $search_string['faq_cat_id'] = [
+                'input'    => (!empty($_POST['faq_cat']) ? form_sanitizer($_POST['faq_cat'], '', 'faq_cat') : (!empty($_GET['faq_cat_id']) ? $_GET['faq_cat_id'] : '')),
+                'operator' => '='
+            ];
+        }
+
+        if (!empty($_POST['faq_language']) || !empty($_GET['faq_language'])) {
             $search_string['faq_language'] = [
-                'input' => form_sanitizer($_POST['faq_language'], '', 'faq_language'), 'operator' => '='
+                'input'    => (!empty($_POST['faq_language']) ? form_sanitizer($_POST['faq_language'], '', 'faq_language') : (!empty($_GET['faq_language']) ? $_GET['faq_language'] : '')),
+                'operator' => '='
             ];
         }
 
-        if (!empty($_POST['faq_name'])) {
+        if (!empty($_POST['faq_name']) || !empty($_GET['faq_name'])) {
             $search_string['faq_name'] = [
-                'input' => form_sanitizer($_POST['faq_name'], '', 'faq_name'), 'operator' => '='
+                'input'    => (!empty($_POST['faq_name']) ? form_sanitizer($_POST['faq_name'], '', 'faq_name') : (!empty($_GET['faq_name']) ? $_GET['faq_name'] : '')),
+                'operator' => '='
             ];
         }
+
 
         if (!empty($search_string)) {
             foreach ($search_string as $key => $values) {
                 if ($sql_condition)
                     $sql_condition .= " AND ";
-                $sql_condition .= "`$key` ".$values['operator'].($values['operator'] == "LIKE" ? "'%" : "'").$values['input'].($values['operator'] == "LIKE" ? "%'" : "'");
+                $sql_condition .= "ac.$key ".$values['operator'].($values['operator'] == "LIKE" ? "'%" : "'").$values['input'].($values['operator'] == "LIKE" ? "%'" : "'");
             }
         }
-
         $default_display = 16;
         $limit = $default_display;
         if ((!empty($_POST['faq_display']) && isnum($_POST['faq_display'])) || (!empty($_GET['faq_display']) && isnum($_GET['faq_display']))) {
             $limit = (!empty($_POST['faq_display']) ? $_POST['faq_display'] : $_GET['faq_display']);
+            $search_string['faq_display'] = [
+                'input' => (!empty($_POST['faq_display']) ? $_POST['faq_display'] : $_GET['faq_display'])
+            ];
         }
 
         $rowstart = 0;
-        $max_rows = dbcount("(faq_id)", DB_FAQS, (multilang_table("FQ") ? "faq_language='".LANGUAGE."'" : ""));
+        $max_rows = dbcount("(faq_id)", DB_FAQS." AS ac", $sql_condition);
         if (!isset($_POST['faq_display'])) {
             $rowstart = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $max_rows ? $_GET['rowstart'] : 0);
+        }
+
+        $row_condition = '';
+        if (!empty($search_string)) {
+            foreach ($search_string as $key => $values) {
+                if ($values)
+                $row_condition .= "&".$key.'='.$values['input'];
+            }
         }
 
         $criteria = [
@@ -481,7 +506,7 @@ class FaqAdmin extends FaqAdminModel {
             'faq_question'   => !empty($_POST['faq_question']) ? form_sanitizer($_POST['faq_question'], '', 'faq_question') : '',
             'faq_answer'     => !empty($_POST['faq_answer']) ? form_sanitizer($_POST['faq_answer'], '', 'faq_answer') : '',
             'faq_status'     => !empty($_POST['faq_status']) ? form_sanitizer($_POST['faq_status'], 0, 'faq_status') : '',
-            'faq_cat_id'     => !empty($_POST['faq_cat_id']) ? form_sanitizer($_POST['faq_cat_id'], 0, 'faq_cat_id') : '',
+            'faq_cat'        => !empty($_POST['faq_cat']) ? form_sanitizer($_POST['faq_cat'], 0, 'faq_cat') : '',
             'faq_visibility' => !empty($_POST['faq_visibility']) ? form_sanitizer($_POST['faq_visibility'], 0, 'faq_visibility') : '',
             'faq_language'   => !empty($_POST['faq_language']) ? form_sanitizer($_POST['faq_language'], LANGUAGE, 'faq_language') : '',
             'faq_name'       => !empty($_POST['faq_name']) ? form_sanitizer($_POST['faq_name'], '', 'faq_name') : '',
@@ -494,13 +519,18 @@ class FaqAdmin extends FaqAdminModel {
             }
         }
 
-        $faq_cats = dbcount("(faq_cat_id)", DB_FAQ_CATS);
-
+        $faq_cats = [];
+        $cat_result = dbquery("SELECT * FROM ".DB_FAQ_CATS.(multilang_table('FQ') ? " WHERE faq_cat_language='".LANGUAGE."' " : '')."ORDER BY faq_cat_name ASC");
+        if (dbrows($cat_result)) {
+            while ($cat_data = dbarray($cat_result)) {
+                $faq_cats[$cat_data['faq_cat_id']] = $cat_data['faq_cat_name'];
+            }
+        }
         echo "<div class='m-t-15'>\n";
         echo openform('faq_filter', 'post', FUSION_REQUEST);
         echo "<div class='clearfix'>\n";
         echo "<div class='pull-right'>\n";
-        if ($faq_cats) {
+        if (!empty($faq_cats)) {
             echo "<a class='btn btn-success btn-sm' href='".clean_request('ref=faq_form', ['ref'], FALSE)."'><i class='fa fa-plus'></i> ".$this->locale['faq_0003']."</a>\n";
         }
         echo "<a class='m-l-5 btn btn-primary btn-sm' href='".clean_request('ref=faq_cat_form', ['ref'], FALSE)."'><i class='fa fa-plus'></i> ".$this->locale['faq_0119']."</a>
@@ -539,6 +569,13 @@ class FaqAdmin extends FaqAdminModel {
                 'options'     => fusion_get_groups()
             ])."
         </div>
+        <div class='display-inline-block'>
+        ".form_select('faq_cat', '', $filter_values['faq_cat'], [
+                'allowclear'  => TRUE,
+                'placeholder' => '- '.$this->locale['faq_0133'].' -',
+                'options'     => $faq_cats
+            ])."
+        </div>
         <div class='display-inline-block'>\n";
         $language_opts = [0 => $this->locale['faq_0129']];
         $language_opts += fusion_get_enabled_languages();
@@ -566,6 +603,13 @@ class FaqAdmin extends FaqAdminModel {
             'placeholder' => '- '.$this->locale['faq_0130'].' -',
             'options'     => $author_opts
         ]);
+        echo "</div>\n";
+        echo "</div><div class='display-inline-block'>\n";
+        echo form_select('faq_display', $this->locale['faq_0132'], $info['limit'], [
+                'width'       => '70px',
+                'inner_width' => '70px',
+                'options'     => [5 => 5, 10 => 10, 16 => 16, 25 => 25, 50 => 50]
+        ]);
         echo "</div>\n</div>\n";
         echo closeform();
         echo "</div>\n";
@@ -575,17 +619,11 @@ class FaqAdmin extends FaqAdminModel {
         echo "<div class='display-block'>\n";
 
         // Category Management
-        $cat_options = [];
-        $cat_result = dbquery("SELECT * FROM ".DB_FAQ_CATS.(multilang_table('FQ') ? " WHERE faq_cat_language='".LANGUAGE."' " : '')."ORDER BY faq_cat_name ASC");
-        if (dbrows($cat_result)) {
+        if (!empty($faq_cats)) {
             echo "<div class='well'>\n";
-            while ($cat_data = dbarray($cat_result)) {
-                $cat_options[$cat_data['faq_cat_id']] = $cat_data['faq_cat_name'];
-            }
-
             echo "<div class='row'>\n";
             echo "<div class='col-xs-12 col-sm-6'>\n";
-            echo form_select('faq_cat_id', $this->locale['faq_0009'], '', ['inline' => TRUE, 'options' => $cat_options, 'class' => 'm-b-0']);
+            echo form_select('faq_cat_id', $this->locale['faq_0009'], '', ['inline' => TRUE, 'options' => $faq_cats, 'class' => 'm-b-0']);
             echo "</div>\n<div class='col-xs-12 col-sm-6'>\n";
             echo form_button('edit_faq_cat', $this->locale['edit'], $this->locale['edit'], ['class' => 'btn-default btn-sm']);
             echo form_button('delete_faq_cat', $this->locale['delete'], $this->locale['delete'], ['class' => 'btn-danger btn-sm']);
@@ -598,7 +636,7 @@ class FaqAdmin extends FaqAdminModel {
             <thead>
             <tr>
             <th class='hidden-xs'></th>
-            <th>".$this->locale['faq_0100']."</td>
+            <th>".$this->locale['faq_0100']."</th>
             <th>".$this->locale['faq_0102']."</th>
             <th>".$this->locale['faq_0252']."</th>
             <th>".$this->locale['faq_0105']."</th>
@@ -633,14 +671,8 @@ class FaqAdmin extends FaqAdminModel {
             echo "<tr><td colspan='8' class='text-center'>".($faq_cats ? $this->locale['faq_0112'] : $this->locale['faq_0114'])."</td></tr>";
         }
         echo "</tbody>\n</table>\n</div>";
-        echo "<div class='display-inline-block'>\n
-        ".form_select('faq_display', $this->locale['faq_0132'], $info['limit'], [
-                'width'       => '70px',
-                'inner_width' => '70px',
-                'options'     => [5 => 5, 10 => 10, 16 => 16, 25 => 25, 50 => 50]])."
-        </div>";
         if ($info['max_rows'] > $info['faq_rows']) {
-            echo "<div class='display-inline-block pull-right'>".makepagenav($info['rowstart'], $info['limit'], $info['max_rows'], 3, FUSION_SELF.fusion_get_aidlink().'&amp;faq_display='.$info['limit'].'&amp;')."</div>";
+            echo "<div class='display-inline-block pull-right'>".makepagenav($info['rowstart'], $info['limit'], $info['max_rows'], 3, FUSION_SELF.fusion_get_aidlink().$row_condition.'&amp;')."</div>";
         }
         echo "</div>\n";
         echo closeform();
@@ -661,7 +693,7 @@ class FaqAdmin extends FaqAdminModel {
                 }
             });
             // Select Change
-            $('#faq_status, #faq_visibility, #faq_language, #faq_name, #faq_display').bind('change', function(e){
+            $('#faq_status, #faq_visibility, #faq_language, #faq_name, #faq_display, #faq_cat').bind('change', function(e){
                 $(this).closest('form').submit();
             });
         ");

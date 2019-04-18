@@ -52,6 +52,7 @@ $locale['faq_0129'] = "All Languages";
 $locale['faq_0130'] = "Choose Author";
 $locale['faq_0131'] = "All Authors";
 $locale['faq_0132'] = "Items per Page";
+$locale['faq_0133'] = "Choose Category";
 $locale['faq_0200'] = "ID";
 $locale['faq_0202'] = "Submissioner";
 $locale['faq_0203'] = "Date";
