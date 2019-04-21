@@ -32,8 +32,8 @@ use PHPFusion\UserFieldsQuantum;
  */
 class Forum_Threads extends Forum_Server {
 
-        private static $custom_query = ''; // make a default
-protected $thread_info = [];
+    private static $custom_query = ''; // make a default
+    protected $thread_info = [];
     protected $thread_data = [];
 
     /**

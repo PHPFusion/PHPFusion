@@ -387,7 +387,7 @@ class Forum_Viewer {
 
                 $user_profiles .= $open_user_profiles;
                 $user_profiles .= "<li>";
-                $user_profiles .= "<strong>".$attr['title']."</strong>: ".strip_tags($attr['value']);
+                $user_profiles .= "<strong>".$attr['title']."</strong>: ".$attr['value'];
                 $user_profiles .= "</li>";
                 $temp_name = $attr['field_cat_name'];
             }
@@ -892,7 +892,7 @@ class Forum_Viewer {
         $html = \PHPFusion\Template::getInstance('contributor_list');
         $html_file = __DIR__.'/../templates/panel/contributor_panel.html';
         $html->set_template($html_file);
-        $result = dbquery("SELECT post_author, COUNT(post_id) 'post_count'  FROM ".DB_FORUM_POSTS." WHERE 
+        $result = dbquery("SELECT post_author, COUNT(post_id) 'post_count'  FROM ".DB_FORUM_POSTS." WHERE
         post_datestamp BETWEEN :from_time AND :current_time AND post_author > 0
         GROUP BY post_author ORDER BY post_count DESC LIMIT 5
         ", [
@@ -922,8 +922,8 @@ class Forum_Viewer {
         add_to_jquery("
         $('#contributor-tab li a').bind('click', function(e){
             var i = $(this).data('value');
-            var t = $(this).attr('href'); 
-            // only if it is empty            
+            var t = $(this).attr('href');
+            // only if it is empty
            if( !$.trim( $(t).html() ).length ) {
                 $.ajax({
                 'url' : '".FORUM."templates/ajax/contributor.php',
@@ -933,7 +933,7 @@ class Forum_Viewer {
                 'beforeSend': function(e) {
                     $(t).html('Loading...');
                 },
-                'success': function(e) {                    
+                'success': function(e) {
                     setTimeout(function(f){
                         $(t).html(e);
                     },300);
@@ -942,7 +942,7 @@ class Forum_Viewer {
                     console.log('error fetching data');
                 }
                 });
-           }            
+           }
         });
         ");
 
@@ -952,7 +952,7 @@ class Forum_Viewer {
     private function sticky_discussions_panel() {
         $html = \PHPFusion\Template::getInstance('sticky_discussions');
         $html->set_template(__DIR__.'/../templates/panel/sticky_panel.html');
-        $result = dbquery("SELECT thread_id, thread_subject, thread_author, thread_lastpost, thread_postcount FROM ".DB_FORUM_THREADS." 
+        $result = dbquery("SELECT thread_id, thread_subject, thread_author, thread_lastpost, thread_postcount FROM ".DB_FORUM_THREADS."
         WHERE thread_sticky=1 ORDER BY thread_lastpost DESC LIMIT 5");
         if (dbrows($result)) {
             while ($data = dbarray($result)) {
@@ -1217,14 +1217,14 @@ class Forum_Viewer {
         $html->set_tag('delay', 3);
         add_to_jquery("
         var delay_sec = 4;
-        var delay = setInterval(function(e) {                  
+        var delay = setInterval(function(e) {
             var count = 1;
             var delay_left = delay_sec - count;
             delay_sec = delay_left;
             $('.delay').text(delay_left);
             if (delay_left == 0) {
                 clearInterval(delay);
-            }            
+            }
         }, 1000);
         ");
         if (!empty($info['description'])) {
