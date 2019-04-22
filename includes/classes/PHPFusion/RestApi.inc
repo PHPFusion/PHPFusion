@@ -18,9 +18,9 @@
 namespace PHPFusion;
 
 /**
- * Class restAPI
+ * Class RestApi
  *
- * @package License
+ * @package PHPFusion
  */
 abstract class RestApi {
     /**
@@ -28,6 +28,12 @@ abstract class RestApi {
      * The HTTP method this request was made in, either GET, POST, PUT or DELETE
      */
     protected $method = '';
+
+    /**
+     * Property: request GET or POST strings
+     * @var array|string
+     */
+    protected $request = '';
 
     /**
      * Property: endpoint
@@ -73,7 +79,6 @@ abstract class RestApi {
 
         $this->endpoint = isset($request['endpoint']) ? $request['endpoint'] : "";
 
-        /*
         if (!empty($request['request'])) {
             preg_match_all("~(.*?)\/(.*)$~", $request['request'], $args, PREG_PATTERN_ORDER);
             $args = flatten_array($args);
@@ -87,12 +92,11 @@ abstract class RestApi {
                 $this->verb = array_shift($this->args);
             }
         } else {
-            //throw new \Exception("No Request");
+            throw new \Exception("No Request");
         }
-        */
-
 
         $this->method = $_SERVER['REQUEST_METHOD'];
+
         if ($this->method == 'POST' && array_key_exists('HTTP_X_HTTP_METHOD', $_SERVER)) {
             if ($_SERVER['HTTP_X_HTTP_METHOD'] == 'DELETE') {
                 $this->method = 'DELETE';

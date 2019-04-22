@@ -26,7 +26,7 @@ if (!function_exists('display_inbox')) {
          *
          * @param $info
          */
-        $tpl = \PHPFusion\Template::getInstance('inbox');
+        $tpl = \PHPFusion\Template::getInstance('pm');
         $tpl->set_template(__DIR__.'/tpl/messages.html');
         $tpl->set_locale(fusion_get_locale());
         $tpl->set_tag('opentable', fusion_get_function('opentable', $locale['400']));
@@ -88,10 +88,10 @@ if (!function_exists('display_inbox')) {
                     // keep injecting new item
                     //send_pm(fusion_get_userdata('user_id'), 3, 'Test Message', lorem_ipsum(1000));
 
-                    $unread = \PHPFusion\Template::getInstance('unread_mails');
+                    $unread = \PHPFusion\Template::getInstance('pm-unread');
                     $unread->set_template(__DIR__.'/tpl/message_list.html');
 
-                    $read = \PHPFusion\Template::getInstance('read_mails');
+                    $read = \PHPFusion\Template::getInstance('pm-read');
                     $read->set_template(__DIR__.'/tpl/message_list.html');
 
                     if (!empty($info['items'])) {
@@ -141,11 +141,11 @@ if (!function_exists('display_inbox')) {
                             'read_content'   => $read->get_output()
                         ]
                     );
-                } // end display view
+                }
             }
         }
 
-        return $tpl->get_output();
+        return (string)$tpl->get_output();
 
     }
 }

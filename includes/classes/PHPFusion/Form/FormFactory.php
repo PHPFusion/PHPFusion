@@ -55,25 +55,16 @@ class FormFactory {
     public function __construct(AdminFormSDK $api) {
 
         if ($api instanceof AdminFormSDK) {
-
             $this->api = $api;
-
             $this->defender = \Defender::getInstance();
-
             $this->form_properties = $this->getFormProperties();
-
             $this->data = $this->api->data();
-
             $this->field = $this->api->fields($this->data);
-
             $this->tags = $this->api->tags($this->data);
-
             $this->categories = $this->api->categories($this->data);
-
         } else {
-
+            echo 'Your current object requires the implementation of the \PHPFusion\Interfaces\AdminFormSDK interface.';
         }
-
     }
 
     /**
@@ -127,7 +118,7 @@ class FormFactory {
                 $this->api->remove($this->data);
             }
 
-            if ($this->Defender::safe()) {
+            if (\Defender::safe()) {
 
                 $redirect_link = FUSION_REQUEST; // this is bound to have error in most use case
 
@@ -169,8 +160,7 @@ class FormFactory {
                     //@todo: Categories check must be required or not.
                     $id_value = (!empty($this->data[$id_field])) ? $this->api->update($this->data) : $this->api->save($this->data);
 
-
-                    if ($this->Defender::safe()) {
+                    if (\Defender::safe()) {
 
                         $redirect_uri = FUSION_REQUEST;
 
@@ -221,13 +211,9 @@ class FormFactory {
      */
     public function getFormProperties() {
         $prop = $this->api->properties(); // if this is null.
-
         if (!empty($prop) && is_array($prop)) {
-            $prop = (array)$prop + (array)$this->form_properties;
+            $this->form_properties = (array)$prop + (array)$this->form_properties;
         }
-
-        $this->form_properties = $prop;
-
         return (array) $this->form_properties;
     }
 

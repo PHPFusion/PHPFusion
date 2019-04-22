@@ -61,6 +61,22 @@ interface AdminFormSDK {
      */
     public function remove($data);
 
+    /*
+     * array(
+        'db'               => '', // database
+        'id_col'           => '', // id column
+        'cat_col'          => '', // category column
+        'title_col'        => '', // title column
+        'custom_query'     => '',
+        'unroot'           => TRUE, // true to allow 'uncategorized' options.
+        'multiple'         => FALSE, // true for checkboxes instead of radios
+        'parent_db'        => '', // current item db
+        'parent_id_col'    => '', // current item db id column
+        'parent_cat_col'   => '', // current item db category column
+        'parent_title_col' => '',
+        'select2_disabled' => TRUE,
+    );
+     */
     public function categories($data);
 
     public function tags($data);

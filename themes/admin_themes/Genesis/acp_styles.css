@@ -837,9 +837,11 @@ a:hover, a:focus {
 
 #devlpr #main_content .content header {
     padding:20px 40px 10px;
-    background-color: #fff;
+    background-color: rgb(232,238,243);
 }
-
+#devlpr #main_content .content header > h3 {
+    font-weight:300;
+}
 #devlpr #main_content .content header > h2 {
     color: #333C48;
     font-size: 1.625rem;
@@ -871,6 +873,7 @@ a:hover, a:focus {
     -moz-border-radius: 4px;
     border-radius: 4px;
     overflow: hidden;
+    margin-bottom: 40px;
 }
 #devlpr #main_content .app_aside_head {
     border-bottom:1px solid #D5DCE6;
@@ -879,7 +882,7 @@ a:hover, a:focus {
     color:#7F8FA4;
 }
 #devlpr #main_content .app_aside_body, #devlpr #main_content .app_aside_head {
-    padding: 1.2rem;
+    padding: 24px;
     background:#FFF;
     display: block;
 }
@@ -1920,7 +1923,7 @@ label small {
 
 .form-group label,
 .form-group > div {
-    color: #23282d;;
+    color: #576575;
 }
 
 .form-group:not(.m-b-0) {
@@ -1979,10 +1982,10 @@ label small {
 
 .form-control {
     background-color: #fafbfc;
-    border: 1px solid #ddd;
-    -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, .07);
-    -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, .07);
-    box-shadow: inset 0 1px 2px rgba(0, 0, 0, .07);
+    border: 1px solid rgba(0, 0, 20, 0.1);
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
     background-color: #fff;
     color: #32373c;
     outline: 0;
@@ -2011,6 +2014,11 @@ label small {
 
 .form-control:focus {
     background-color: #fff;
+    border-color: #0D99F2;
+    outline: 0;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
 }
 
 .form-group-lg input.form-control {

@@ -29,10 +29,7 @@ class TagsMeta {
         }
     }
 
-    /**
-     * @param $id_value
-     */
-    public function process_tags($id_value) {
+    public function process_tags() {
 
         $_tags = self::getTagsConfig();
 

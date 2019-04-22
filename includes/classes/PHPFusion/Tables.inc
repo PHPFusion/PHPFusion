@@ -33,6 +33,8 @@ class Tables {
 
     private $query = [];
 
+    private $jsonRows = [];
+
     private $rowsCount = 0;
 
     private $maxRows = 0;
@@ -1335,7 +1337,6 @@ class Tables {
 
                 // Quickfields
                 if (!empty($this->quick_fields)) {
-
                     foreach($this->quick_fields as $table_col => $table_fields) {
                         if (isset($data[$table_col])) {
                             $this->jsonRows[$table_col] = $data[$table_col]; // this is old data, and js will not replace this.

@@ -55,3 +55,4 @@ define("DB_USER_GROUPS", DB_PREFIX."user_groups");
 define("DB_USER_LOG", DB_PREFIX."user_log");
 define("DB_USERS", DB_PREFIX."users");
 define("DB_THEME", DB_PREFIX."theme");
+define("DB_TAGS", DB_PREFIX."tags");
