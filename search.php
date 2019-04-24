@@ -217,20 +217,24 @@ function search_textfrag($text) {
 function search_stringscount($text) {
     global $swords;
     $count = 0;
-    $c_swords = count($swords); //sizeof($swords)
-    for ($i = 0; $i < $c_swords; $i++) {
-        $count += substr_count(strtolower($text), strtolower($swords[$i]));
+    if (is_array($swords)) {
+        $c_swords = count($swords); //sizeof($swords)
+        for ($i = 0; $i < $c_swords; $i++) {
+            $count += substr_count(strtolower($text), strtolower($swords[$i]));
+        }
     }
+
     return $count;
 }
 
 function search_querylike($field) {
     global $swords;
     $querylike = "";
-    $c_swords = count($swords); //sizeof($swords)
+    $c_swords = number_format(count((array)$swords)); //sizeof($swords)
     for ($i = 0; $i < $c_swords; $i++) {
-        $querylike .= $field." LIKE '%".$swords[$i]."%'".($i < $c_swords - 1 ? " ".$_REQUEST['method']." " : "");
+        $querylike .= $field." LIKE '%".(!empty($swords[$i]) ? $swords[$i] : ' ')."%'".($i < $c_swords - 1 ? " ".$_REQUEST['method']." " : "");
     }
+
     return $querylike;
 }
 
