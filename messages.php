@@ -508,7 +508,7 @@ if (!isset($_GET['msg_send']) && !isset($_GET['msg_read']) && $_GET['folder'] !=
     }
     if (iADMIN && !isset($_GET['msg_id'])) {
         $user_groups = getusergroups();
-        foreach ($user_groups as $ket => $user_group) {
+        foreach ($user_groups as $user_group) {
             if ($user_group['0'] != "0") {
                 $sel = ($msg_to_group == $user_group['0'] ? " selected='selected'" : "");
                 $user_types .= "<option value='".$user_group['0']."'$sel>".$user_group['1']."</option>\n";
