@@ -1,8 +1,16 @@
-<div class="grid-sample">
+<div class="grid-sample spacer-md">
     <div class="{[container]}">
+        <h2>Responsive Grid</h2>
         <div class="{[row]}">
-            <div class="{[col(100,100,50,50)]}"><h4>Col</h4></div>
-            <div class="{[col(100,100,50,50)]}"><h4>Col</h4></div>
+            <div class="{[col(100,100,50,50)]} list-group-item spacer-xs"><p>Col</p></div>
+            <div class="{[col(00,100,50,50)]} list-group-item spacer-xs"><p>Hidden XS column</p></div>
+        </div>
+    </div>
+    <div class="{[container]}">
+        <h2>Mobile First</h2>
+        <div class="{[row]}">
+            <div class="{[col(100)]} list-group-item spacer-xs"><p>Col without sm, md, lg</p></div>
+            <div class="{[col(50)]} list-group-item spacer-xs"><p>Col</p></div>
         </div>
     </div>
 </div>

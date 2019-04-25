@@ -358,8 +358,8 @@ class Template {
                         case (stristr($preg_results[1], 'col') ? true : false):
                         case (stristr($preg_results[1], 'column') ? true : false):
                         case (stristr($preg_results[1], 'column_class') ? true : false):
-                            if ((preg_match('/[-.\w]+[0-9]/', $preg_results[1]) ? true : false)): // column class - values must contain `column_class(100)`
-                                preg_match_all('/[-.\w]+[0-9]/', $preg_results[1], $percent);
+                            if ((preg_match('/[-.\w]+[\d]/', $preg_results[1]) ? true : false)): // column class - values must contain `column_class(100)`
+                                preg_match_all('/[-.\w]+[\d]/', $preg_results[1], $percent);
                                 if (!empty($percent[0])) {
                                     $shortcode_cache[$preg_results[0]] = $layout_class->getColumnClass($percent[0]);
                                 }

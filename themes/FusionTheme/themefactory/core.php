@@ -102,7 +102,7 @@ class Core {
     /**
      * @var bool
      */
-    public $devMode = FALSE;
+    public $devMode = TRUE;
 
     public function __construct() {
         if (file_exists(THEME.'locale/'.LANGUAGE.'.php')) {
@@ -251,23 +251,11 @@ class Core {
 
         $path = THEME."themepack/".strtolower($themePack)."/theme.php";
 
-        if ($this->devMode === TRUE && is_file(THEME.'themepack/'.strtolower($themePack).'/styles.dev.css')) {
-
-            $this->cssPath = THEME.'themepack/'.strtolower($themePack).'/styles.dev.css';
-
+        if (is_file(THEME."themepack/".strtolower($themePack)."/styles.min.css") && $this->devMode === FALSE) {
+            $this->cssPath = THEME."themepack/".strtolower($themePack)."/styles.min.css";
         } else {
-
-            if (is_file(THEME."themepack/".strtolower($themePack)."/styles.min.css")) {
-
-                $this->cssPath = THEME."themepack/".strtolower($themePack)."/styles.min.css";
-
-            } else {
-
-                $this->cssPath = THEME."themepack/".strtolower($themePack)."/styles.css";
-            }
-
+            $this->cssPath = THEME."themepack/".strtolower($themePack)."/styles.css";
         }
-
         add_to_head("<link rel='stylesheet' href='$this->cssPath' type='text/css'/>");
 
         require_once $path;

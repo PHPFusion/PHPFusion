@@ -350,10 +350,10 @@ function form_select($input_name, $label = "", $input_value, array $options = []
     }
 
     $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] ? 'display-block overflow-hide' : '').$error_class.' '.$options['class']."' ".($options['width'] && !$label ? "style='width: ".$options['width']."'" : '').">\n";
-    $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-12 col-md-3 col-lg-3" : 'col-xs-12 p-l-0')."' for='".$options['input_id']."'>".$label.($options['required'] == TRUE ? "<span class='required'>&nbsp;*</span>" : '')."
+    $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-12 col-md-3 col-lg-3" : '')."' for='".$options['input_id']."'>".$label.($options['required'] == TRUE ? "<span class='required'>&nbsp;*</span>" : '')."
     ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."
     </label>\n" : '';
-    $html .= ($options['inline'] && $label) ? "<div class='col-xs-12 ".($label ? "col-sm-12 col-md-9 col-lg-9" : "col-sm-12 p-l-0")."'>\n" : "";
+    $html .= ($options['inline'] && $label) ? "<div class='col-xs-12 ".($label ? "col-sm-12 col-md-9 col-lg-9" : "col-sm-12")."'>\n" : "";
     if ($options['jsonmode'] || $options['tags']) {
         // json mode.
         $html .= "<div id='".$options['input_id']."-spinner' style='display:none;'>\n<img src='".fusion_get_settings('siteurl')."images/loader.svg'>\n</div>\n";
@@ -361,7 +361,7 @@ function form_select($input_name, $label = "", $input_value, array $options = []
     } else {
         // normal mode
 
-        $html .= "<select name='$input_name' id='".$options['input_id']."' style='width: ".($options['inner_width'] ? $options['inner_width'] : $default_options['inner_width'])."'".($options['deactivate'] ? " disabled" : "").($options['onchange'] ? ' onchange="'.$options['onchange'].'"' : '').($options['multiple'] ? " multiple" : "").">\n";
+        $html .= "<select name='$input_name' id='".$options['input_id']."'".($options['select2_disabled'] === TRUE  ? " class='form-control' " : "")."style='width: ".($options['inner_width'] ? $options['inner_width'] : $default_options['inner_width'])."'".($options['deactivate'] ? " disabled" : "").($options['onchange'] ? ' onchange="'.$options['onchange'].'"' : '').($options['multiple'] ? " multiple" : "").">\n";
         $html .= ($options['allowclear']) ? "<option value=''></option>\n" : '';
         // add parent value
         if ($options['no_root'] == FALSE && !empty($options['cat_col']) || $options['add_parent_opts'] === TRUE) { // api options to remove root from selector. used in items creation.
@@ -850,7 +850,7 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
         );
     }
 
-    return $html;
+    return (string) (!empty($html) ? $html : '');
 }
 
 /*
@@ -868,5 +868,5 @@ function dropdown_select($db, $id_col, $name_col, $cat_col, $index_values, $filt
         $data[$id] = $row;
     }
 
-    return $data;
+    return (array) $data;
 }

@@ -347,7 +347,7 @@ class Tables {
 
         if ($this->query['id'] && $this->query['parent']) {
 
-            $sql_statement = /** @lang text */
+            $sql_statement = /** @lang mysql */
                 "SELECT base.* {SELECT} FROM {TABLE} base {JOINS} {SEARCH} {CONDITIONS} {GROUP} ORDER BY {ORDER_BY} {ID} {ORDER_SORTING} {LIMIT}";
 
             $sql_query = strtr(

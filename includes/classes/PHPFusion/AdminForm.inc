@@ -163,7 +163,10 @@ class AdminForm {
      */
     private function side_content() {
 
-        $this->side_content .= $this->ui_meta().$this->ui_meta_categories().$this->ui_meta_tags();
+        $this->side_content .=
+            $this->ui_meta().
+            $this->ui_meta_categories().
+            $this->ui_meta_tags();
 
     }
 

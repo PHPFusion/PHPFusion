@@ -22,14 +22,23 @@ class Grid {
      */
     public static function getColumnClass($percent) {
         if (is_array($percent)) {
-            $default_options = [100,100,100,100];
+            $default_options = [100];
             $percent += $default_options;
             $arr = ['xs','sm', 'md', 'lg'];
             $val = [];
             foreach($percent as $index => $value) {
-                $val[$arr[$index]] =  floor( ($value * 12 ) / 100 );
+                $calculated = floor( ($value * 12 ) / 100 );
+                if (!$calculated) {
+                    $calculated = 'hidden';
+                }
+                $val[$arr[$index]] =  $calculated;
             }
-            return (string) implode(' ', array_map(function($i, $e) { return "col-$i-$e"; }, array_keys($val), array_values($val)));
+            return (string) implode(' ', array_map(function($i, $e) {
+                if ($e == 'hidden') {
+                    return "hidden-$i";
+                }
+                return "col-$i-$e";
+                }, array_keys($val), array_values($val)));
         } else {
             return (string)"col-xs='".floor( ($percent * 12 ) / 100)."'";
         }

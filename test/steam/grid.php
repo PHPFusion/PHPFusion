@@ -15,6 +15,6 @@ $tpl = \PHPFusion\Template::getInstance('test-grid');
 $tpl->set_template(__DIR__.'/html/grid-sample.html');
 // No modifier needed.
 // Template class finds the activated boiler and parse automatically.
-$tpl->get_output();
+echo $tpl->get_output();
 
 require_once THEMES.'templates/footer.php';

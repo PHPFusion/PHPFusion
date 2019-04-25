@@ -24,7 +24,8 @@ class FormFactory {
      * @var array
      */
     public $form_properties = [
-        'form_name' => 'input_form'
+        'form_name' => 'input_form',
+        'back_link' => '',
     ];
 
     /**
@@ -68,6 +69,7 @@ class FormFactory {
     }
 
     /**
+     * Check and assigns keys for form_sanitizer for UI API assignments and keys during $_POST
      * @throws \Exception
      */
     public function process_request() {
@@ -77,21 +79,33 @@ class FormFactory {
             // process remove request.
             if (!$this->process_remove_action()) {
                 foreach ($_POST as $keys => $val) {
+
+
+                    if ($keys == 'startdate' || $keys == 'enddate') {
+                        $keys = 'af_startdate';
+                    } elseif ($keys == 'parent') {
+                        $keys = 'ui_cat_parent';
+                    }
+
                     $data_keys = $this->field_prop($keys, 'name', '');
+
+                    $excluded_keys = ['ui_cat_parent', 'af_startdate', 'af_enddate'];
+
                     if (in_array($keys, ['form_id', 'fusion_token'])) {
+
                         $this->data[$keys] = $val;
+
                     } else if ($data_keys) {
-                        if ($keys == 'startdate' || $keys == 'enddate') {
-                            $keys = 'af_startdate';
-                        }
+
                         $this->data[$data_keys] = form_sanitizer($val, '', $keys);
-                    } else {
+
+                    } elseif (!in_array($keys, $excluded_keys)) {
+
                         $this->data[$keys] = form_sanitizer($val, '', $keys);
                     }
                 }
 
                 $this->unsetAPIFields();
-
             }
         }
 
@@ -147,6 +161,8 @@ class FormFactory {
             if ($post_save === FALSE) {
                 $post_save_close = !empty($_POST[$this->get_save_close_prop('name')]) ? TRUE : FALSE;
             }
+            //print_P($post_save);
+            //print_P($post_save_close);
 
             if (($post_save or $post_save_close) && !empty($this->data)) {
 
@@ -160,17 +176,19 @@ class FormFactory {
                     //@todo: Categories check must be required or not.
                     $id_value = (!empty($this->data[$id_field])) ? $this->api->update($this->data) : $this->api->save($this->data);
 
+                    // handle redirection
                     if (\Defender::safe()) {
-
                         $redirect_uri = FUSION_REQUEST;
-
-                        if (!empty($this->form_properties['back_link'])) {
-
-                            $redirect_uri = $this->form_properties['back_link'];
+                        if ($post_save) {
+                            redirect($redirect_uri);
+                        } elseif ($post_save_close) {
+                            if (!empty($this->form_properties['back_link'])) {
+                                $redirect_uri = $this->form_properties['back_link'];
+                            }
+                            redirect($redirect_uri);
                         }
-
-                        redirect($redirect_uri);
                     }
+
                 } else {
                     addNotice('danger', 'Error. Primary id field has to be defined.');
                 }
@@ -179,18 +197,26 @@ class FormFactory {
 
     }
 
-
     /**
-     *
+     * Unset (Placeholder for now)
      */
     private function unsetAPIFields() {
         unset($_POST['af_status']);
+        unset($this->data['af_status']);
         unset($_POST['af_visibility']);
+        unset($this->data['af_visibility']);
         unset($_POST['af_password']);
+        unset($this->data['af_password']);
         unset($_POST['af_startdate']);
+        unset($this->data['af_startdate']);
+        // tags
         unset($_POST['admin_ui_tags']);
+        unset($this->data['admin_ui_tags']);
+        // category
         unset($_POST['ui_cat_title']);
+        unset($this->data['ui_cat_title']);
         unset($_POST['ui_cat_parent']);
+        unset($this->data['ui_cat_parent']);
     }
 
 

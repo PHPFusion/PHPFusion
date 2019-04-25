@@ -34,7 +34,7 @@ class CategoryMeta {
                 'cat_col'          => '', // category column
                 'title_col'        => '', // title column
                 'custom_query'     => '',
-                'unroot'           => TRUE, // true to allow 'uncategorized' options.
+                'no_root'           => FALSE, // true to allow 'uncategorized' options.
                 'multiple'         => FALSE, // true for checkboxes instead of radios
                 'parent_db'        => '', // current item db
                 'parent_id_col'    => '', // current item db id column
@@ -55,7 +55,7 @@ class CategoryMeta {
             $html .= "<div id='admin_category_list' style='max-height:200px; overflow-y:scroll;'>\n";
 
             $cat_options = [];
-            if ($_category['unroot'] === TRUE) {
+            if ($_category['no_root'] === FALSE) {
                 $cat_options[0] = "Uncategorized";
             }
 
@@ -65,23 +65,31 @@ class CategoryMeta {
                 $_category['title_col'],
             ];
 
-            $sql = "SELECT `{ID}` FROM `{DB}` ORDER BY `{ORDER}`"; // we need a hierarchy ui in the UL checkboxes
+            $sql = $_category['custom_query'];
 
-            $sql = strtr($sql, [
-                '`{ID}`'    => implode(',', array_filter($id_col)),
-                '`{DB}`'    => $_category['db'],
-                '`{ORDER}`' => $_category['title_col'].' ASC'
-            ]);
+            if (empty($sql)) {
+                // Is a Callback when PRI_KEY Id is not empty
+                $is_edit = !empty($this->factory->data[$_category['id_col']]) ? $this->factory->data[$_category['id_col']] : FALSE;
+                $sql = "SELECT `{ID}` FROM `{DB}`".($is_edit ? " WHERE `".$_category['id_col']."` !='$is_edit' " : "")."ORDER BY `{ORDER}`"; //@todo: we need a hierarchy ui in the UL checkboxes
+                $sql = strtr($sql, [
+                    '`{ID}`'    => implode(',', array_filter($id_col)),
+                    '`{DB}`'    => $_category['db'],
+                    '`{ORDER}`' => $_category['title_col'].' ASC'
+                ]);
 
-            $sql = !empty($_category['custom_query']) ? $_category['custom_query'] : $sql;
+            }
 
             $result = dbquery($sql);
             if (dbrows($result)) {
                 while ($data = dbarray($result)) {
-                    $cat_options[$data[$_category['id_col']]] = $data [$_category['title_col']];
+                    $key = $data[$_category['id_col']];
+                    $cat_options[$key] = $data [$_category['title_col']];
                 }
             }
-            $category_value = $this->factory->field_value('category');
+
+            // The value is similar to $this->factory->data[$_category['id_col']]) // from data() SDK method
+            $category_value = $this->factory->field_value('category'); // Fetch from fields() SDK method
+
             if (!empty($cat_options)) {
                 if ($_category['multiple'] === TRUE) {
                     $html .= form_checkbox('category[]', '', $category_value, [

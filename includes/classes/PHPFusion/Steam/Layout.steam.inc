@@ -8,8 +8,6 @@ class Layout {
 
     private $steam; // pass the steam here.
 
-    private $boiler = 'bootstrap3';
-
     /**
      * Blocks constructor.
      *
@@ -28,8 +26,11 @@ class Layout {
         return (string) Grid::getColumnClass($percent);
     }
 
-    public function grid(array $options) {
+    public function getContainerClass() {
+        return Grid::getContainerClass();
+    }
 
+    public function deprecated_grid(array $options) {
         $default = array(
             array(
                 'content' => '',
@@ -41,13 +42,9 @@ class Layout {
             )
         );
         $options += $default;
-
         $tpl = \PHPFusion\Template::getInstance('grid');
-
         $tpl->set_template(THEMES.'templates/boilers/'.$this->steam->get_boiler().'/html/grid.html');
-
         foreach($options as $grid) {
-
             if (empty($grid['class'])) {
                 switch($this->steam->get_boiler()) {
                     case 'bootstrap3':
@@ -56,20 +53,14 @@ class Layout {
                     default:
                 }
             }
-
             $tpl->set_block('column', $grid);
-
         }
 
         return (string)$this->steam->render($tpl);
 
     }
 
-    public function getContainerClass() {
-        return Grid::getContainerClass();
-    }
-
-    public function get_bootstrap_class($grid) {
+    public function deprecated_get_bootstrap_class($grid) {
         // use implode and run foreach.
         $array = array('xs', 'sm', 'md', 'lg');
         $class = array();
