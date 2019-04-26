@@ -33,6 +33,7 @@ body {
     background: url('images/topbg.png') #f6f6f6 center top no-repeat;
     display: block;
     min-height: 70px;
+    margin-top: 13px;
 }
 
 ol, ul {
@@ -105,6 +106,10 @@ ol, ul {
     margin-bottom: 10px !Important;
 }
 
+.navbar-atom .nav > li {
+    margin: 0 5px;
+}
+
 .navbar-atom .nav > li > a {
     text-shadow: none !important;
     color: #333;
@@ -113,7 +118,6 @@ ol, ul {
     border: 1px solid transparent;
     padding: 4px 10px !important;
     background: none !important;
-    margin-right: 10px;
 }
 
 .navbar-atom .nav > li > a:hover, .navbar-atom > li > a:focus, .navbar-atom > li > a:active {

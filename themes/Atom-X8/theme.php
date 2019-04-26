@@ -90,7 +90,7 @@ function render_page($license = FALSE) {
     </script>');
 
     // Start Theme
-    echo "<section id='topnav' style='margin-top:13px;'>\n";
+    echo "<section id='topnav'>\n";
     echo "<div class='container'>\n";
     echo "<nav class='nav atom-x-nav'>\n";
     echo user_login();
@@ -121,7 +121,7 @@ function render_page($license = FALSE) {
 	echo "Atom-X8 for PHP-Fusion Version 8 - ".date('Y')." All rights reserved <br />\n";
 	echo "".stripslashes($settings['footer'])."\n";
 	echo "</div>\n";
-	
+
 	echo "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6 text-right'>".license()."
 	".(($settings['rendertime_enabled'] == 1) || ($settings['rendertime_enabled'] == 2 && iADMIN) ? showrendertime()." - ".showMemoryUsage() : '')."
 	".showcounter()."

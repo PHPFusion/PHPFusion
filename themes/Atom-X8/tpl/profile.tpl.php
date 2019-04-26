@@ -253,17 +253,6 @@ function user_profile_page() {
                     } else if ($field_value['field_name'] == 'user_sig') {
 
                         $value = ($field_value['value'] && iMEMBER) ? parseubb(parsesmileys($field_value['value'])) : '';
-
-                    } else if ($field_value['field_name'] == 'user_gender') {
-
-                        if ($field_value['value'] == '0') {
-                            $value = "<img src='".IMAGES."unspecified.gif'> ".$locale['ax8_13'];
-                        } else if ($field_value['value'] == '1') {
-                            $value = "<img src='".IMAGES."female.gif'> ".$locale['ax8_14'];
-                        } else if ($field_value['value'] == '2') {
-                            $value = "<img src='".IMAGES."male.gif'> ".$locale['ax8_15'];
-                        }
-
                     } else {
                         $value = $field_value['value'];
                     }

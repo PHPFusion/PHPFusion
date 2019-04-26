@@ -58,7 +58,7 @@ function horizontalnav() {
     }
 
     $html = "";
-    $html .= "<div class='navbar-atom m-t-15'>";
+    $html .= "<div class='navbar-default navbar-atom m-t-15'>";
     $html .= "<div class='navbar-header'>\n";
     $html .= "<button type='button' class='navbar-toggle' data-toggle='collapse' data-target='#navbar-atom'>
               <span class='sr-only'>Toggle Navigation</span>
@@ -128,7 +128,7 @@ function user_login() {
         $name = $locale['login']." / ".$locale['register'];
     }
 
-    $html = "<ul class='nav navbar-nav pull-right m-r-20'>";
+    $html = "<ul class='pull-right m-r-20'>";
 
     //Search bar (Courtesy iTheme II)
     $locale['search'] = str_replace($locale['global_200'], "", $locale['global_202']);
@@ -136,7 +136,7 @@ function user_login() {
     $html .= "<li id='user-info' class='dropdown' >\n";
     $html .= "<button type='button' class='btn btn-primary btn-sm dropdown-toggle' data-toggle='dropdown' style='margin-top: 8px;' >$name <span class='caret'></span></button>";
     if (iMEMBER) {
-        $html .= "<ul class='dropdown-menu text-left'>";
+        $html .= "<ul class='dropdown-menu text-left' style='margin-left:-7px;'>";
         $html .= "<li><a href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'>".$locale['view']." ".$locale['profile']."</a></li>";
         $html .= "<li><a href='".BASEDIR."messages.php'>".$locale['global_121']."</a></li>";
         $html .= "<li class='divider'></li>";
@@ -228,7 +228,8 @@ function user_info_bar($data) {
         $html .= "<h4>".$userdata['user_name']." <b class='caret'></b></h4> <span><small>".getuserlevel($userdata['user_level'])."</small></span>\n</a>";
         $html .= "<ul class='dropdown-menu' style='width:400px;'><li>\n";
         $html .= "<p><strong>Fusioneer ".timer($userdata['user_joined'])."</strong>\n</p>\n";
-        $html .= "<p class='pull-left' style='width:180px;'>\n";
+        $html .= "<div class='row'><div class='col-xs-6'>";
+        $html .= "<p class='pull-left'>\n";
         $html .= "<small>\n";
         $html .= "<strong>".$locale['u066']."</strong>: ".showdate("shortdate", $userdata['user_joined'])."</strong><br />\n";
         $lastVisit = ($userdata['user_lastvisit']) ? showdate("shortdate", $userdata['user_lastvisit']) : $locale['u042'];
@@ -236,15 +237,15 @@ function user_info_bar($data) {
         $html .= "<strong>".$locale['uf_location']."</strong>: ".(($userdata['user_location']) ? $userdata['user_location'] : $locale['ax8_02'])."</strong>";
         $html .= "</small>\n";
         $html .= "</p>\n";
-        $html .= "<p class='pull-left' style='width:100px;'>\n";
-        $html .= "<small><strong>".$locale['u047']."</strong></small><br />\n";
-        $html .= "<small>\n";
-        $html .= "<strong>".$locale['uf_comments-stat']."</strong> : ".number_format(dbcount("(comment_id)", DB_COMMENTS, "comment_name='".$userdata['user_id']."'"))."<br />\n";
-        $html .= "<strong>".$locale['uf_forum-stat']."</strong> : ".number_format($userdata['user_posts'])."<br />\n";
-        $html .= "<strong>".$locale['u049']."</strong> : ".(($userdata['user_ip_type'] == '4') ? $userdata['user_ip'] : 'Local IP')."\n";
+        $html .= "</div><div class='col-xs-6'>";
+        $html .= "<p class='pull-left'>\n";
+        $html .= "<small><strong>".$locale['u047']."</strong><br />\n";
+        $html .= "<strong>".$locale['uf_comments-stat']."</strong>: ".number_format(dbcount("(comment_id)", DB_COMMENTS, "comment_name='".$userdata['user_id']."'"))."<br />\n";
+        $html .= "<strong>".$locale['uf_forum-stat']."</strong>: ".number_format($userdata['user_posts'])."<br />\n";
+        $html .= "<strong>".$locale['u049']."</strong>: ".(($userdata['user_ip_type'] == '4') ? $userdata['user_ip'] : 'Local IP')."\n";
         $html .= "</small>\n";
-        $html .= "</p>\n";
-        $html .= "</li>\n</ul>\n</li></ul>\n";
+        $html .= "</p></div>\n";
+        $html .= "</div></li>\n</ul>\n</li></ul>\n";
         $html .= "\n</div>\n";
         $_pull = '';
         $_pull_width = '30%';
