@@ -90,6 +90,7 @@ function form_select($input_name, $label = "", $input_value, array $options = []
         'max_select'           => FALSE,
         'error_text'           => $locale['error_input_default'],
         'class'                => '',
+        'inner_class'          => '',
         'inline'               => FALSE,
         'tip'                  => '',
         'ext_tip'              => '',
@@ -359,9 +360,12 @@ function form_select($input_name, $label = "", $input_value, array $options = []
         $html .= "<div id='".$options['input_id']."-spinner' style='display:none;'>\n<img src='".fusion_get_settings('siteurl')."images/loader.svg'>\n</div>\n";
         $html .= "<input ".($options['required'] ? "class='req'" : '')." type='hidden' name='$input_name' id='".$options['input_id']."' style='width: ".($options['width'] ? $options['inner_width'] : $default_options['width'])."'/>\n";
     } else {
-        // normal mode
 
-        $html .= "<select name='$input_name' id='".$options['input_id']."'".($options['select2_disabled'] === TRUE  ? " class='form-control' " : "")."style='width: ".($options['inner_width'] ? $options['inner_width'] : $default_options['inner_width'])."'".($options['deactivate'] ? " disabled" : "").($options['onchange'] ? ' onchange="'.$options['onchange'].'"' : '').($options['multiple'] ? " multiple" : "").">\n";
+        // normal mode
+        $class[] = !empty($options['inner_class']) ? $options['inner_class'] : '';
+        $class[] = !empty($options['select2_disabled']) ? 'form-control' : '';
+
+        $html .= "<select name='$input_name' id='".$options['input_id']."'".(!empty($class)  ? " class='".implode(' ', $class)."'" : '')." style='width: ".($options['inner_width'] ? $options['inner_width'] : $default_options['inner_width'])."'".($options['deactivate'] ? " disabled" : "").($options['onchange'] ? ' onchange="'.$options['onchange'].'"' : '').($options['multiple'] ? " multiple" : "").">\n";
         $html .= ($options['allowclear']) ? "<option value=''></option>\n" : '';
         // add parent value
         if ($options['no_root'] == FALSE && !empty($options['cat_col']) || $options['add_parent_opts'] === TRUE) { // api options to remove root from selector. used in items creation.

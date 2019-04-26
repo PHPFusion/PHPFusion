@@ -895,7 +895,8 @@ class Tables {
         $html .= openform('cat_table_frm', 'post', FUSION_REQUEST).form_select(
                 'filter_actions', '', '', [
                     'inner_width'      => '150px',
-                    'class'            => 'm-0',
+                    'inner_class' => 'display-inline-block',
+                    'class'            => 'm-0 display-inline-block',
                     'options'          => [
                         '' => 'Bulk Actions',
                         1  => 'Delete',
@@ -904,7 +905,7 @@ class Tables {
                     //						                'placeholder'      => 'Bulk Actions',
                     'select2_disabled' => TRUE,
                     'stacked'          => form_button(
-                            'apply_filter', 'Apply', 'apply_filter', ['class' => 'btn-xs']
+                            'apply_filter', 'Apply', 'apply_filter', ['class' => 'btn-sm']
                         ).form_hidden(
                             'filter_ids', '', ''
                         )
@@ -930,7 +931,7 @@ class Tables {
             }
 
             $html .= form_button(
-                'table_filter', 'Filter', 'table_filter', ['class' => 'btn-xs m-r-10']
+                'table_filter', 'Filter', 'table_filter', ['class' => 'btn-sm m-r-10']
             );
 
             $html .= closeform()."</div>";
@@ -1459,7 +1460,7 @@ class Tables {
             $html .= form_select(
                 $column_name, '', $date_active, [
                     //      'allowclear'       => FALSE,
-                    'inner_width'      => '120px',
+                    'inner_width'      => '130px',
                     'class'            => 'm-0',
                     'options'          => $options,
                     //    'placeholder'      => 'All Dates',
