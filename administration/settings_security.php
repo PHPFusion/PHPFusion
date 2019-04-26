@@ -155,8 +155,8 @@ closeside();
 openside('');
 echo form_select('bad_words_enabled', $locale['659'], $settings['bad_words_enabled'], [
     'options'     => $yes_no_array,
-    'inner_width' => '100 % ',
-    'width'       => '100 % '
+    'inner_width' => '100% ',
+    'width'       => '100% '
 ]);
 echo form_text('bad_word_replace', $locale['654'], $settings['bad_word_replace']);
 echo form_textarea('bad_words', $locale['651'], $settings['bad_words'], [
@@ -172,8 +172,9 @@ closeside();
 echo "</div><div class='col-xs-12 col-sm-4'>\n";
 openside('');
 echo form_select('captcha', $locale['693'], $settings['captcha'], [
-    'options' => $available_captchas,
-    'class'   => 'm-b-0'
+    'options'     => $available_captchas,
+    'inner_width' => '100%',
+    'width'       => '100%'
 ]);
 echo "<div id='extDiv' ".($settings['captcha'] !== 'grecaptcha' ? "style='display:none;'" : '').">\n";
 if (!$settings['recaptcha_public']) {
