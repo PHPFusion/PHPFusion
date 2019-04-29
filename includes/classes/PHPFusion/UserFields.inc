@@ -611,7 +611,7 @@ class UserFields extends UserFieldsQuantum {
                     'user_suspend_link'   => ADMIN."members.php".$aidlink."&amp;action=3&amp;lookup=".$this->user_data['user_id'],
                     'user_delete_title'   => $locale['delete'],
                     'user_delete_link'    => ADMIN."members.php".$aidlink."&amp;ref=delete&amp;lookup=".$this->user_data['user_id'],
-                    'user_delete_onclick' => "onclick=\"return confirm('".$locale['u072']."');\"",
+                    'user_delete_onclick' => "onclick=\"return confirm('".$locale['u073']."');\"",
                     'user_susp_title'     => $locale['u054'],
                     'user_susp_link'      => ADMIN."members.php".$aidlink."&amp;ref=log&amp;lookup=".$this->user_data['user_id']
                 ];
