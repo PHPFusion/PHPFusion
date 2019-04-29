@@ -17,31 +17,24 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 /**
- * @param null $key
- * @param int  $type
+ * @param null   $key
+ * @param int    $type
+ * @param string $flags
  *
  * @return mixed
  */
-function get($key = NULL, $type = FILTER_DEFAULT) {
-    return filter_input(INPUT_GET, $key, $type);
+function get($key = NULL, $type = FILTER_DEFAULT, $flags = '') {
+    return filter_input(INPUT_GET, $key, $type, $flags);
 }
 /**
  * @param     $key
  * @param int $type
+ * @param     $flags
  *
  * @return mixed
  */
-function post($key, $type = FILTER_DEFAULT) {
-    return filter_input(INPUT_POST, $key, $type);
-}
-/**
- * @param     $key
- * @param int $type
- *
- * @return mixed
- */
-function request($key, $type = FILTER_DEFAULT) {
-    return filter_input(INPUT_REQUEST, $key, $type);
+function post($key, $type = FILTER_DEFAULT, $flags = '') {
+    return filter_input(INPUT_POST, $key, $type, $flags);
 }
 /**
  * @param     $key
@@ -52,17 +45,6 @@ function request($key, $type = FILTER_DEFAULT) {
 function server($key, $type = FILTER_DEFAULT) {
     return filter_input(INPUT_SERVER, $key, $type);
 }
-
-/**
- * @param     $key
- * @param int $type
- *
- * @return mixed
- */
-function session($key, $type = FILTER_DEFAULT) {
-    return filter_input(INPUT_SESSION, $key, $type);
-}
-
 /**
  * @param     $key
  * @param int $type
@@ -72,7 +54,6 @@ function session($key, $type = FILTER_DEFAULT) {
 function environment($key, $type = FILTER_DEFAULT) {
     return filter_input(INPUT_ENV, $key, $type);
 }
-
 /**
  * @param     $key
  * @param int $type

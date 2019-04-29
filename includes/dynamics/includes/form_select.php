@@ -214,13 +214,15 @@ function form_select($input_name, $label = "", $input_value, array $options = []
                     return (array)$list;
                 }
             }
-            /**
-             * Build Chainable Reference Array
-             * array key    current id
-             *      value   parent id
-             */
-            if (!function_exists('get_form_select_chain_index')) {
 
+            if (!function_exists('get_form_select_chain_index')) {
+                /**
+                 * Build Chainable Reference Array
+                 * @param $data ('key' - current id 'value' - parent id)
+                 * @param $options
+                 *
+                 * @return array
+                 */
                 function get_form_select_chain_index($data, $options) {
                     $list = [];
                     if (!empty($data)) {
@@ -450,6 +452,7 @@ function form_select($input_name, $label = "", $input_value, array $options = []
         'type'           => 'dropdown',
         'regex'          => $options['regex'],
         'required'       => $options['required'],
+        'multiple'       => $options['multiple'],
         'safemode'       => $options['safemode'],
         'error_text'     => $options['error_text'],
         'callback_check' => $options['callback_check'],
@@ -843,10 +846,11 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
         $input_name = ($options['multiple']) ? str_replace("[]", "", $input_name) : $input_name;
         \Defender::add_field_session(
             [
-                'input_name'     => $input_name,
+                'input_name'     => trim($input_name, '[]'),
                 'title'          => trim($title, '[]'),
                 'id'             => $options['input_id'],
                 'type'           => 'dropdown',
+                'multiple'       => $options['multiple'],
                 'regex'          => $options['regex'],
                 'required'       => $options['required'],
                 'safemode'       => $options['safemode'],

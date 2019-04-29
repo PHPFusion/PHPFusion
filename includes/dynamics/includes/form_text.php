@@ -279,7 +279,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 
     // Add input settings in the SESSION
     \Defender::add_field_session([
-        'input_name'     => $input_name,
+        'input_name'     => trim($input_name, '[]'),
         'title'          => trim($title, '[]'),
         'id'             => $options['input_id'],
         'type'           => $options['type'],

@@ -263,6 +263,17 @@ class Defender {
         return self::$input_errors;
     }
 
+    public function filter_post($input_name) {
+        $flag = '';
+        if (is_array($input_name)) {
+            $input_name = $input_name[0];
+            $flag = FILTER_REQUIRE_ARRAY;
+        }
+
+        return post($input_name, FILTER_DEFAULT, $flag);
+    }
+
+
     /**
      * Sanitize
      *
@@ -387,6 +398,22 @@ class Defender {
         }
 
         throw new \Exception('The form sanitizer could not handle the request! (input: '.$input_name.')');
+    }
+
+    /**
+     * Sanitize with input name
+     *
+     * @param        $key
+     * @param string $default
+     * @param bool   $input_name
+     * @param bool   $is_multiLang
+     *
+     * @return string
+     * @throws Exception
+     */
+    public function sanitizer($key, $default = '', $input_name = FALSE, $is_multiLang = FALSE) {
+        $value = $this->filter_post($key);
+        return $this->form_sanitizer($value, $default, $input_name, $is_multiLang);
     }
 
     /** @noinspection PhpInconsistentReturnPointsInspection */
@@ -543,7 +570,6 @@ class Defender {
     }
 
 }
-
 /**
  * Verify and Sanitize Inputs
  *
@@ -557,6 +583,21 @@ class Defender {
  */
 function form_sanitizer($value, $default = "", $input_name = FALSE, $is_multiLang = FALSE) {
     return Defender::getInstance()->form_sanitizer($value, $default, $input_name, $is_multiLang);
+}
+/**
+ * Verify and Sanitize Inputs with input_name
+ * A more secured method
+ *
+ * @param        $value
+ * @param string $default
+ * @param bool   $input_name
+ * @param bool   $is_multiLang
+ *
+ * @return string
+ * @throws Exception
+ */
+function sanitizer($value, $default='', $input_name = FALSE, $is_multiLang = FALSE) {
+    return Defender::getInstance()->sanitizer($value, $default, $input_name, $is_multiLang);
 }
 
 require(__DIR__.'/defender/index.php');
