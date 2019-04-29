@@ -70,7 +70,7 @@ class CategoryMeta {
             if (empty($sql)) {
                 // Is a Callback when PRI_KEY Id is not empty
                 $is_edit = !empty($this->factory->data[$_category['id_col']]) ? $this->factory->data[$_category['id_col']] : FALSE;
-                $sql = "SELECT `{ID}` FROM `{DB}`".($is_edit ? " WHERE `".$_category['id_col']."` !='$is_edit' " : "")."ORDER BY `{ORDER}`"; //@todo: we need a hierarchy ui in the UL checkboxes
+                $sql = "SELECT `{ID}` FROM `{DB}`".($is_edit ? " WHERE `".$_category['id_col']."` !='$is_edit' " : "")." ORDER BY `{ORDER}`"; //@todo: we need a hierarchy ui in the UL checkboxes
                 $sql = strtr($sql, [
                     '`{ID}`'    => implode(',', array_filter($id_col)),
                     '`{DB}`'    => $_category['db'],
