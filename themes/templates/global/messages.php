@@ -20,6 +20,7 @@ defined('IN_FUSION') || exit;
 if (!function_exists('display_inbox')) {
 
     function display_inbox($info) {
+
         $locale = fusion_get_locale();
         /**
          * Message Reader Functions for Inbox, Outbox, Archive
@@ -42,7 +43,7 @@ if (!function_exists('display_inbox')) {
         // Navigation
         $i = 1;
         foreach ($info['folders'] as $key => $folders) {
-            $folders['class'] = ($_GET['folder'] == $key ? "class='active'" : "");
+            $folders['class'] = ($info['current_folder'] == $key ? "class='active'" : "");
             $folders['total'] = '';
             $folders['icon'] = (isset($folder_icons[$key]) ? $folder_icons[$key] : "");
             if ($i < count($info['folders'])) {
@@ -53,18 +54,22 @@ if (!function_exists('display_inbox')) {
             $i++;
         }
 
-        if (isset($_GET['folder'])) {
+        //print_P($info['current_folder']);
 
-            if ($_GET['folder'] === 'options') {
+        if ($info['current_folder']) {
+
+            if ($info['current_folder'] === 'options') {
                 // Configuration Page
                 $tpl->set_block('settings', ['content' => $info['options_form']]);
 
             } else {
 
-                if (isset($_GET['msg_read']) && isset($info['items'][$_GET['msg_read']])) { // read view
+                if ($info['msg_read'] && isset($info['items'][$info['msg_read']])) { // read view
+
+                    $data = $info['items'][$info['msg_read']];
+
                     $tpl->set_block('compose_button', $info['button']['new']);
 
-                    $data = $info['items'][$_GET['msg_read']];
                     $tpl->set_block('actions', ['form' => $info['actions_form']]);
 
                     $tpl->set_block('mail_read', [
@@ -78,15 +83,14 @@ if (!function_exists('display_inbox')) {
                         'reply_form'   => $info['reply_form']
                     ]);
 
-                } else if (isset($_GET['msg_send'])) { // send new message form
+                }
+                else if ($info['msg_send']) { // send new message form
 
                     $tpl->set_block('send_form', ['content' => $info['reply_form']]);
 
                 } else { // display view
 
                     $tpl->set_block('compose_button', $info['button']['new']);
-                    // keep injecting new item
-                    //send_pm(fusion_get_userdata('user_id'), 3, 'Test Message', lorem_ipsum(1000));
 
                     $unread = \PHPFusion\Template::getInstance('pm-unread');
                     $unread->set_template(__DIR__.'/tpl/message_list.html');
@@ -95,6 +99,7 @@ if (!function_exists('display_inbox')) {
                     $read->set_template(__DIR__.'/tpl/message_list.html');
 
                     if (!empty($info['items'])) {
+
                         foreach ($info['items'] as $message_id => $message) {
 
                             $user = $message['contact_user'];
@@ -146,6 +151,5 @@ if (!function_exists('display_inbox')) {
         }
 
         return (string)$tpl->get_output();
-
     }
 }
