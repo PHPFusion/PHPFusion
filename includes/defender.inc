@@ -7,7 +7,7 @@
 | Filename: defender.inc
 | Author : Frederick MC Chan (Chan)
 | Co-Author: Dan C (JoiNNN)
-| Version : 9.0.5 (please update every commit)
+| Version : 9.04
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -559,6 +559,7 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $is_multiLan
     return Defender::getInstance()->form_sanitizer($value, $default, $input_name, $is_multiLang);
 }
 
+require(__DIR__.'/defender/index.php');
 require(__DIR__.'/defender/validation.php');
 require(__DIR__.'/defender/token.php');
 require(__DIR__.'/defender/mimecheck.php');
