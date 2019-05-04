@@ -9,9 +9,9 @@ $locale['406'] = "Please try again.";
 $locale['407'] = "Please enter the email address your account is registered with below.<br/>A new password will be created and sent to this address.";
 $locale['408'] = "Send Password";
 $locale['409'] = "New password for ";
-$locale['410'] = "Hello [USER_NAME],<br/>You have or someone has requested a new password to access your [SITENAME] account.<br/>
-To change your password please click the following link:<br/>[NEW_PASS_LINK]<br/>Regards,<br/>[SITEUSERNAME]";
-$locale['411'] = "Hello [USER_NAME],<br/>Your new password to access your [SITENAME] account is:<br/>
-[NEW_PASS]<br/>Regards,<br/>[SITEUSERNAME]";
+$locale['410'] = "Hello [USER_NAME],<br/>\r\nYou have or someone has requested a new password to access your [SITENAME] account.<br/>\r\n
+To change your password please click the following link:<br/>\r\n[NEW_PASS_LINK]<br/>\r\nRegards,<br/>\r\n[SITEUSERNAME]";
+$locale['411'] = "Hello [USER_NAME],<br/>\r\nYour new password to access your [SITENAME] account is:<br/>\r\n
+[NEW_PASS]<br/>\r\nRegards,<br/>\r\n[SITEUSERNAME]";
 $locale['412'] = "There was an error, please try again.";
 $locale['413'] = "Please enter your email address:";
