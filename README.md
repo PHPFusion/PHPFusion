@@ -1,7 +1,7 @@
 PHP-Fusion Babylon
 ---
 
-This is the development of PHP-Fusion Version 9.1.XX, code name Babylon.
+This is the development of PHP-Fusion Version 9.10.XX, code name Babylon.
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/3702a8fcb1214628bc7c721340d775d8)](https://www.codacy.com/app/FrederickChan/PHP-Fusion?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=php-fusion/PHP-Fusion&amp;utm_campaign=Badge_Grade)
 
@@ -32,15 +32,6 @@ Development Discord
 PHP-Fusion Official Developer Discord Channel - https://discord.gg/CGSYU8r
 
 Those who are active on PHP-Fusion Development is encouraged to join.
-
-What's new on this repository management?
----
-The latest repository contains all the previous commits done by all the core developers.
-- 9.01 is beta 1
-- 9.02 is beta 2
-- Removed 9.1 branch
-- Protected 7.02.07 branch from branch removal
-- Submodules added to /infusions
 
 New Changes: About Submodules and Git Management of Core Infusions (CI)
 ===
