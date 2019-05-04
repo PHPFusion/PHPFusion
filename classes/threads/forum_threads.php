@@ -664,7 +664,7 @@ class Forum_Threads extends Forum_Server {
                  * Thread moderation form template
                  */
                 $addition = isset($_GET['rowstart']) ? "&amp;rowstart=".intval($_GET['rowstart']) : "";
-                $this->thread_info['form_action'] = fusion_get_settings('site_seo') ? PERMALINK_CURRENT_PATH : FORUM."viewthread.php?thread_id=".intval($this->thread_data['thread_id']).$addition;
+                $this->thread_info['form_action'] = fusion_get_settings('siteurl')."infusions/forum/viewthread.php?thread_id=".intval($this->thread_data['thread_id']).$addition;
 
                 $this->thread_info['mod_options'] = [
                     'renew'                                                      => $locale['forum_0207'],
