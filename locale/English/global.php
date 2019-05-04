@@ -241,9 +241,9 @@ $locale['UM096'] = "Welcome: ";
 $locale['UM097'] = "Personal menu";
 $locale['UM101'] = "Switch Language";
 // Gauges
-$locale['UM098'] = "PM Inbox :";
-$locale['UM099'] = "PM Outbox :";
-$locale['UM100'] = "PM Archive :";
+$locale['UM098'] = "PM Inbox:";
+$locale['UM099'] = "PM Outbox:";
+$locale['UM100'] = "PM Archive:";
 // Keywords and Meta
 $locale['tags'] = "Tags";
 // Captcha
