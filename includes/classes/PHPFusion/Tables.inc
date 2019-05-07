@@ -196,6 +196,18 @@ class Tables {
     }
 
     /**
+     * cannot use base.* prefix in PHP
+     * Return clean ID column name
+     */
+    private $query_id = '';
+
+    private function getIdCol() {
+        if (empty($this->query_id) && $this->query['id']) {
+            $this->query_id = str_replace('base.', '', $this->query['id']);
+        }
+        return $this->query_id;
+    }
+    /**
      * Callback
      *
      * @return array
@@ -334,9 +346,7 @@ class Tables {
             $this->maxRows = $this->query['limit'];
 
         } else {
-
-            $this->maxRows = dbcount("(".$this->query['id'].")", $this->query['table'], $count_conditions);
-
+            $this->maxRows = dbcount("(".$this->query['id'].")", $this->query['table'].' base', $count_conditions);
         }
 
         $_GET['rowstart'] = (isset($_GET['rowstart']) && isnum(
@@ -427,7 +437,7 @@ class Tables {
             $result = dbquery($sql_query);
             if ($this->rowsCount = dbrows($result)) {
                 while ($rows = dbarray($result)) {
-                    $data[$_GET['rowstart']][$rows[$this->query['id']]] = $rows;
+                    $data[$_GET['rowstart']][$rows[$this->getIdCol()]] = $rows;
 
                 }
             }
@@ -615,9 +625,7 @@ class Tables {
         $header = '';
 
         $cdata = $this->getData();
-
         $col_span = count($this->columns) + 1;
-
         $order_col = $this->table_props['order_col'];
 
         // The bullk actions
@@ -948,7 +956,6 @@ class Tables {
         if ($this->table_props['edit_link'] or $this->table_props['delete_link']) {
 
             $check_all_col = "<th class='min'>".form_checkbox('chk_all', '', '', ['class' => 'm-b-0'])."</th>\n";
-
             $check_all_col_2 = "<th>".form_checkbox('chk_all2', '', '', ['class' => 'm-b-0'])."</th>\n";
 
         }
@@ -966,7 +973,7 @@ class Tables {
 
             foreach ($cdata[$_GET['rowstart']] as $data) {
 
-                $id = $data[$this->query['id']];
+                $id = $data[$this->getIdCol()];
                 // the edit link
                 // key need to be dynamic as the del and edit may be present.
                 $get_rid = [$this->table_props['edit_key'], $this->table_props['del_key']];
