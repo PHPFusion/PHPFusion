@@ -29,7 +29,7 @@ class AdminDashboard {
     }
 
     private  $default_position = [
-        'column_1' => ['summary', 'comments'],
+        'column_1' => ['summary', 'comments', 'ratings'],
         'column_2' => [],
         'column_3' => [],
         'top' => ['welcome']
@@ -77,10 +77,11 @@ class AdminDashboard {
 }
 
 // Add compatibility mode function
-/**
- * Template boiler using Bootstrap 3
- */
 if (!function_exists('open_sidex')) {
+    /**
+     * Template boiler using Bootstrap 3
+     * @param $title
+     */
     function open_sidex($title) {
         echo '<div class="sidex list-group">';
         echo '<div class="title list-group-item"><strong>'.$title.'</strong><span class="pull-right"><span class="caret"></span></span></div>';

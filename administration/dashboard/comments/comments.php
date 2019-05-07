@@ -46,11 +46,17 @@ function display_comments_widget() {
             $info['comments_user'] = (!empty($comment_data['user_id']) ? profile_link($comment_data['user_id'], $comment_data['user_name'], $comment_data['user_status']) : $comment_data['comment_name']);
             $info['name'] = strtr($comment_item_url, ["{%item%}" => $comment_item_name]);
             $info['comments'] = parse_textarea($comments, TRUE, FALSE);
-
             $tpl->set_block('li', $info);
         }
+        if (isset($global_comments['comments_nav'])) {
+            $tpl->set_block('li_nav', $global_comments['comments_nav']);
+        }
+    } else {
+        $info = [
+            'text' => $global_comments['nodata'],
+        ];
+        $tpl->set_block('li_na', $info);
     }
-
 
     $content = fusion_get_function("open_sidex", $locale['277']." - ".format_num($global_comments['rows']));
     $content .= $tpl->get_output();

@@ -51,37 +51,6 @@ class adminDashboard extends resource {
         echo "<div class='col-xs-12 col-sm-12 col-md-6 col-lg-3 responsive-admin-column'>\n";
 
         echo "<div class='list-group'>\n";
-
-
-        // Ratings
-        echo "<div class='list-group-item'>\n";
-        echo "<h4 class='m-0'>".$locale['278']." <span class='badge pull-right'>".number_format($global_ratings['rows'])."</span></h4>";
-        echo "</div>\n";
-        echo "<div class='list-group-item clearfix'>\n";
-        if (count($global_ratings['data']) > 0) {
-            foreach ($global_ratings['data'] as $i => $ratings_data) {
-                $ratings_url = isset($link_type[$ratings_data['rating_type']]) ? "<a href='".sprintf($link_type[$ratings_data['rating_type']], $ratings_data['rating_item_id'])."'>{%item%}</a>\n" : "{%item%}";
-                $ratings_item = isset($comments_type[$ratings_data['rating_type']]) ? $comments_type[$ratings_data['rating_type']] : $locale['ratings'];
-                echo "<!--Start Rating Item-->\n";
-                echo "<div class='comment_content clearfix p-t-10 p-b-10' ".($i > 0 ? "style='border-top:1px solid #ddd;'" : '')." >\n";
-                echo "<div class='pull-left display-inline-block m-r-15' style='margin-top:5px; margin-bottom:10px;'>".display_avatar($ratings_data, "50px", '', '', '')."</div>\n";
-                echo "<strong>".profile_link($ratings_data['user_id'], $ratings_data['user_name'], $ratings_data['user_status'])."</strong>\n";
-                echo "<span class='text-lighter'>".$locale['273a']." </span>\n";
-                echo strtr($ratings_url, ['{%item%}' => $ratings_item]);
-                echo "<span class='text-lighter m-l-10'>".str_repeat("<i class='fa fa-star fa-fw'></i>", $ratings_data['rating_vote'])."</span>\n<br/>";
-                echo timer($ratings_data['rating_datestamp'])."<br/>\n";
-                echo "</div>\n";
-                echo "<!--End Rating Item-->\n";
-            }
-            if (isset($global_ratings['ratings_nav'])) {
-                echo "<div class='clearfix'>\n";
-                echo "<span class='pull-right text-smaller'>".$global_ratings['ratings_nav']."</span>";
-                echo "</div>\n";
-            }
-        } else {
-            echo "<div class='text-center'>".$global_ratings['nodata']."</div>\n";
-        }
-        echo "</div>\n";
         echo "</div>\n";
         echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-6 col-lg-3 responsive-admin-column'>\n";
         // lets do an internal analytics
