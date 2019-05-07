@@ -49,10 +49,6 @@ class adminDashboard extends resource {
         );
         echo "<div class='row'>\n";
         echo "<div class='col-xs-12 col-sm-12 col-md-6 col-lg-3 responsive-admin-column'>\n";
-
-        echo "<div class='list-group'>\n";
-        echo "</div>\n";
-        echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-6 col-lg-3 responsive-admin-column'>\n";
         // lets do an internal analytics
         // members registered
         // members online
