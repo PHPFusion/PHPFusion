@@ -38,6 +38,9 @@ class adminDashboard extends resource {
         $settings = fusion_get_settings();
 
         opentable($locale['250']);
+        new \AdminDashboard();
+
+
         $panels = array(
             'registered'   => array('link' => '', 'title' => 251),
             'cancelled'    => array('link' => 'status=5', 'title' => 263),
@@ -48,179 +51,9 @@ class adminDashboard extends resource {
         echo "<div class='col-xs-12 col-sm-12 col-md-6 col-lg-3 responsive-admin-column'>\n";
 
         echo "<div class='list-group'>\n";
-        echo "<div class='list-group-item'><h4 class='m-0'>".$settings['sitename']." Summary</h4></div>";
-        echo "<div class='list-group-item'>\n";
-        echo "<ul class='block'>\n";
-        echo "<li><div class='strong m-b-15'>Recently Published</div></li>\n";
-        if (infusion_exists('news')) {
-            $result = dbquery("SELECT news_id, news_subject, news_datestamp FROM ".DB_NEWS." WHERE news_draft=0 ORDER BY news_datestamp DESC LIMIT 1");
-            $content = "<div>".$locale['269']."</div>";
-            $content = "There are no news";
-            if (dbrows($result)) {
-                $data = dbarray($result);
-                $content = "<div>".$locale['269']."</div>
-                <div class='pull-left text-lighter m-r-10'>".showdate('%b%d, %R %p', $data['news_datestamp'])."</div>\n
-                <div class='overflow-hide'>\n
-                <a href='".INFUSIONS."news/news_admin.php$aidlink&amp;action=edit&amp;ref=news_form&amp;news_id=".$data['news_id']."'>".$data['news_subject']."</a>\n
-                </div>\n";
-            }
-            echo "<li class='clearfix'>\n";
-            echo "<div class='pull-left m-r-10 admin-icon news'><img alt='".$locale['269']." ".$locale['258']."' src='".get_image("ac_N")."'/>\n</div>";
-            echo "<div class='display-inline-block'>\n$content</div>";
-            echo "<div class='pull-right m-r-10'><i title='".$locale['269']."' class='fas fa-comment m-r-10 text-lighter'></i>".number_format($news['news'])."</div>
-            <div class='pull-right m-r-10'><i title='".$locale['257']."' class='fas fa-comment m-r-10 text-lighter'></i>".number_format($news['comment'])."</div>
-            <div class='pull-right m-r-10'><i title='".$locale['254']."' class='fas fa-users m-r-10 text-lighter'></i>".number_format($news['submit'])."</div>
-            </li>\n";
-        }
-        if (infusion_exists('articles')) {
-            $content = "<div>".$locale['A']."</div>";
-            $content .= 'There are no articles';
-            $result = dbquery("SELECT article_id, article_subject, article_datestamp FROM ".DB_ARTICLES." WHERE article_draft=0 ORDER BY article_datestamp DESC LIMIT 1");
-            if (dbrows($result)) {
-                $data = dbarray($result);
-                $content = "<div>".$locale['A']."</div>
-                <div class='pull-left text-lighter m-r-10'>".showdate('%b%d, %R %p', $data['article_datestamp'])."</div>
-                <div class='overflow-hide'>
-                <a href='".INFUSIONS."articles/articles_admin.php$aidlink'>".$data['news_subject']."</a>
-                </div>
-                ";
-            }
-            echo "<li class='clearfix m-t-10'>\n";
-            echo "<div class='pull-right m-r-10'><i title='".$locale['257']."' class='fas fa-edit m-r-10 text-lighter'></i> ".number_format($articles['article'])." ".$locale['270']."</div>\n";
-            echo "<div class='pull-right m-r-10'><i title='".$locale['257']."' class='fas fa-comment m-r-10 text-lighter'></i>".number_format($articles['comment'])."</div>
-            <div class='pull-right m-r-10'><i title='".$locale['254']."' class='fas fa-thumbtack m-r-10 text-lighter'></i>".number_format($articles['submit'])."</div>\n";
 
-            echo "<div class='pull-left m-r-10 admin-icon articles'><img alt='".$locale['A']."' src='".get_image("ac_A")."'/>\n</div>";
-            echo "<div class='display-inline-block'>\n$content</div>\n";
-            echo "</li>\n";
-        }
-        if (infusion_exists('forum')) {
-            $content = "<div>".$locale['F']."</div>";
-            $content .= 'There are no forum posts';
-            $result = dbquery("SELECT p.post_id, p.thread_id, t.thread_subject, p.post_datestamp FROM ".DB_FORUM_POSTS." p
-            INNER JOIN ".DB_FORUM_THREADS." t ON t.thread_id = p.thread_id
-            ORDER BY post_datestamp DESC LIMIT 1");
 
-            if (dbrows($result)) {
-                $data = dbarray($result);
-                $content = "<div>".$locale['F']."</div>
-                <div class='pull-left text-lighter m-r-10'>".showdate('%b%d, %R %p', $data['post_datestamp'])."</div>
-                <div class='overflow-hide'>
-                <a href='".INFUSIONS."forum/viewthread.php?thread_id=".$data['thread_id']."&amp;pid=".$data['post_id']."'>".$data['thread_subject']."</a>
-                </div>
-                ";
-            }
-            echo "<li class='clearfix m-t-10'>\n";
-            echo "<div class='pull-right m-r-10'><i title='".$locale['256']."' class='fas fa-edit m-r-10 text-lighter'></i>".number_format($forum['thread'])."</div>
-            <div class='pull-right m-r-10'><i title='".$locale['259']."' class='fas fa-comment m-r-10 text-lighter'></i>".number_format($forum['post'])."</div>
-            <div class='pull-right m-r-10'><i title='".$locale['260']."' class='fas fa-users m-r-10 text-lighter'></i>".number_format($forum['users'])."</div>\n";
-            echo "<div class='pull-left m-r-10 admin-icon forum'><img alt='".$locale['F']."' src='".get_image("ac_F")."'/>\n</div>";
-            echo $content;
-            echo "</li>\n";
-        }
-        if (infusion_exists('downloads')) {
-            $content = "<div>".$locale['D']."</div>";
-            $content .= 'There are no downloads';
-            $result = dbquery("SELECT download_id, download_title, download_datestamp FROM ".DB_DOWNLOADS." ORDER BY download_datestamp DESC LIMIT 1");
-            if (dbrows($result)) {
-                $data = dbarray($result);
-                $content = "<div>".$locale['D']."</div>
-                <div class='pull-left text-lighter m-r-10'>".showdate('%b%d, %R %p', $data['download_datestamp'])."</div>
-                <div class='overflow-hide'>
-               <a href='".INFUSIONS."downloads/downloads_admin.php$aidlink'>".$data['download_title']."</a>
-                </div>
-                ";
-            }
-            echo "<li class='clearfix m-t-10'>\n";
-            echo "<div class='pull-right'><i title='".$locale['257']."' class='fas fa-comment m-r-10 text-lighter'></i>".number_format($download['download'])." ".$locale['268']."</div>\n";
-            echo "<div class='pull-right m-r-10'><i title='".$locale['257']."' class='fas fa-comment m-r-10 text-lighter'></i>".number_format($download['comment'])."</div>
-            <div class='pull-right m-r-10'><i title='".$locale['254']."' class='fas fa-thumbtack m-r-10 text-lighter'></i>".number_format($download['submit'])."</div>\n";
-            echo "<div class='pull-left m-r-10 admin-icon downloads'><img alt='".$locale['D']."' src='".get_image("ac_D")."'/>\n</div>";
-            echo $content;
-
-            echo "</li>\n";
-        }
-        if (infusion_exists('weblinks')) {
-            $content = "<div>".$locale['W']."</div>";
-            $content .= 'There are no weblinks';
-            $result = dbquery("SELECT weblink_id, weblink_name, weblink_datestamp FROM ".DB_WEBLINKS." ORDER BY weblink_datestamp DESC LIMIT 1");
-            if (dbrows($result)) {
-                $data = dbarray($result);
-                $content = "<div>".$locale['W']."</div>
-                <div class='pull-left text-lighter m-r-10'>".showdate('%b%d, %R %p', $data['weblink_datestamp'])."</div>
-                <div class='overflow-hide'>
-               <a href='".INFUSIONS."weblinks/weblinks_admin.php$aidlink'>".$data['weblink_name']."</a>
-                </div>
-                ";
-            }
-            echo "<li class='clearfix m-t-10'>\n";
-            echo "<div class='pull-left m-r-10 admin-icon weblinks'><img alt='".$locale['271']." ".$locale['258']."' src='".get_image("ac_W")."'/>\n</div>";
-            echo "<div class='pull-right'>".number_format($weblinks['weblink'])." ".$locale['271']."</a></div>\n
-            <div class='pull-right m-r-10'><i title='".$locale['254']."' class='fas fa-thumbtack m-r-10 text-lighter'></i>".number_format($weblinks['submit'])."</div>\n";
-            echo $content;
-            echo "</li>\n";
-        }
-        if (infusion_exists('gallery')) {
-
-            $content = "<div>".$locale['PH']."</div>";
-            $content .= 'There are no gallery';
-            $result = dbquery("SELECT photo_id, photo_title, photo_datestamp FROM ".DB_PHOTOS." ORDER BY photo_datestamp DESC LIMIT 1");
-            if (dbrows($result)) {
-                $data = dbarray($result);
-                $content = "<div>".$locale['PH']."</div>
-                <div class='pull-left text-lighter m-r-10'>".showdate('%b%d, %R %p', $data['photo_datestamp'])."</div>
-                <div class='overflow-hide'>
-                <a href='".INFUSIONS."gallery/gallery_admin.php$aidlink'>".number_format($photos['photo'])." ".$locale['261']."</a>
-                </div>
-                ";
-            }
-            echo "<li class='clearfix m-t-10'>\n";
-            echo "<div class='pull-left m-r-10 admin-icon gallery'><img alt='".$locale['272']." ".$locale['258']."' src='".get_image("ac_PH")."'/>\n</div>";
-            echo "<div class='pull-right'>".number_format($photos['photo'])." ".$locale['261']."</a></div>\n
-            <div class='pull-right m-r-10'><i title='".$locale['257']."' class='fas fa-comment m-r-10 text-lighter'></i>".number_format($photos['comment'])."</div>
-            <div class='pull-right m-r-10'><i title='".$locale['254']."' class='fas fa-thumbtack m-r-10  text-lighter'></i>".number_format($photos['submit'])."</div>\n";
-            echo $content;
-            echo "</li>\n";
-        }
-        echo "</ul>\n";
-        echo "</div>\n";
-        echo "<div class='list-group-item'>\n";
-        echo "<h4 class='m-0'>".$locale['277']." <span class='badge pull-right'>".number_format($global_comments['rows'])."</span></h4>";
-        echo "</div>\n";
-        echo "<div class='list-group-item clearfix'>\n";
-        if (count($global_comments['data']) > 0) {
-            echo "<ul class='block'>\n";
-            foreach ($global_comments['data'] as $i => $comment_data) {
-                $comment_item_url = (isset($link_type[$comment_data['comment_type']]) ? "<a href='".sprintf($link_type[$comment_data['comment_type']]."'", $comment_data['comment_item_id'])."'>{%item%}</a>" : '{%item%}');
-                $comment_item_name = (isset($comments_type[$comment_data['comment_type']])) ? $comments_type[$comment_data['comment_type']] : $locale['global_073b'];
-                echo "<div data-id='$i' class='comment_content clearfix p-t-10 p-b-10' ".($i > 0 ? "style='border-top:1px solid #ddd;'" : '')." >\n";
-                echo "<div class='pull-left display-inline-block m-r-15' style='margin-top:5px; margin-bottom:10px;'>".display_avatar($comment_data, "50px", '', '', '')."</div>\n";
-                echo "<div id='comment_action-$i' class='pull-right dropdown dropdown-menu-right'>\n
-                                <a class='dropdown-toggle btn btn-default btn-xs' data-toggle='dropdown'><i class='fa fa-angle-down'></i></a>
-                                <ul class='dropdown-menu'>
-                                <li><a title='".$locale['274']."' href='".ADMIN."comments.php".$aidlink."&amp;ctype=".$comment_data['comment_type']."&amp;comment_item_id=".$comment_data['comment_item_id']."'><i class='fa fa-eye fa-fw m-r-10'></i>".$locale['274']."</a></li>
-                                <li><a title='".$locale['275']."' href='".ADMIN."comments.php".$aidlink."&amp;action=edit&amp;comment_id=".$comment_data['comment_id']."&amp;ctype=".$comment_data['comment_type']."&amp;comment_item_id=".$comment_data['comment_item_id']."'><i class='fa fa-edit fa-fw m-r-10'></i>".$locale['275']."</a></li>
-                                <li><a title='".$locale['276']."' href='".ADMIN."comments.php".$aidlink."&amp;action=delete&amp;comment_id=".$comment_data['comment_id']."&amp;ctype=".$comment_data['comment_type']."&amp;comment_item_id=".$comment_data['comment_item_id']."'><i class='fa fa-trash fa-fw m-r-10'></i>".$locale['276']."</a></li>
-                                </ul>
-                                ";
-                echo "</div>\n";
-                echo "<div class='pull-right m-r-10 small'>".timer($comment_data['comment_datestamp'])."</div>\n";
-                echo "<strong>".(!empty($comment_data['user_id']) ? profile_link($comment_data['user_id'], $comment_data['user_name'], $comment_data['user_status']) : $comment_data['comment_name'])." </strong>\n";
-                echo "<span class='text-lighter'>".$locale['273']."</span> ".strtr($comment_item_url, ['{%item%}' => $comment_item_name]);
-                $mess = trimlink(strip_tags(parse_textarea($comment_data['comment_message'], FALSE, TRUE)), 70);
-                echo "<p>".parse_textarea($mess, TRUE, FALSE)."</p>\n";
-                echo "</div>\n";
-            }
-            if (isset($global_comments['comments_nav'])) {
-                echo "<div class='clearfix'>\n";
-                echo "<span class='pull-right text-smaller'>".$global_comments['comments_nav']."</span>";
-                echo "</div>\n";
-            }
-            echo "</ul>\n";
-        } else {
-            echo "<div class='text-center'>".$global_comments['nodata']."</div>\n";
-        }
-        echo "</div>\n";
+        // Ratings
         echo "<div class='list-group-item'>\n";
         echo "<h4 class='m-0'>".$locale['278']." <span class='badge pull-right'>".number_format($global_ratings['rows'])."</span></h4>";
         echo "</div>\n";
