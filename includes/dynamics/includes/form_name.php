@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-function form_name($input_name, $label = "", $input_value = FALSE, array $options) {
+function form_name($input_name, $label = "", $input_value = FALSE, array $options = array()) {
 
     $locale = fusion_get_locale();
 
