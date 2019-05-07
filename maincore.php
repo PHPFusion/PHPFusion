@@ -88,9 +88,15 @@ header('X-Powered-By: PHP-Fusion'.(isset($settings['version']) ? ' '.$settings['
 ob_start();
 
 // Sanitise $_SERVER globals
-$_SERVER['PHP_SELF'] = cleanurl($_SERVER['PHP_SELF']);
-$_SERVER['QUERY_STRING'] = isset($_SERVER['QUERY_STRING']) ? cleanurl($_SERVER['QUERY_STRING']) : "";
-$_SERVER['REQUEST_URI'] = isset($_SERVER['REQUEST_URI']) ? cleanurl($_SERVER['REQUEST_URI']) : "";
+$_SERVER['PHP_SELF'] = server('PHP_SELF');
+$_SERVER['QUERY_STRING'] = server('QUERY_STRING')?: '';
+$_SERVER['REQUEST_URI'] = server('REQUEST_URI')?:'';
+
+// If form could not be posted, check this might be culprit over bad hosting env during peak traffics.
+//if (!empty($_SERVER['REQUEST_URI'])) {
+  //  $_SERVER['REQUEST_URI'] = str_replace('//', '/', $_SERVER['REQUEST_URI']);
+//}
+
 $PHP_SELF = cleanurl($_SERVER['PHP_SELF']);
 
 // Redirects to the index if the URL is invalid (eg. file.php/folder/)
@@ -116,8 +122,9 @@ if ($settings['site_protocol'] == 'https' && !isset($_SERVER['HTTPS'])) {
 
 define("FUSION_QUERY", isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : "");
 define("FUSION_SELF", basename($_SERVER['PHP_SELF']));
-define("FUSION_REQUEST", isset($_SERVER['REQUEST_URI']) && $_SERVER['REQUEST_URI'] != "" ? $_SERVER['REQUEST_URI'] : $_SERVER['SCRIPT_NAME']);
+define("FUSION_REQUEST", $_SERVER['REQUEST_URI'] ?: server('SCRIPT_NAME'));
 define('FUSION_REFERER', isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : NULL);
+
 // Variables initializing
 $mysql_queries_count = 0;
 $mysql_queries_time = [];
@@ -142,7 +149,6 @@ if (explode("?", PERMALINK_CURRENT_PATH)) {
 } else {
     define("FUSION_FILELINK", PERMALINK_CURRENT_PATH);
 }
-
 $count = substr_count(PERMALINK_CURRENT_PATH, "/");
 $root = "";
 for ($i = 0; $i < $count; $i++) { // moved 0 to 1 will crash.
