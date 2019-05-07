@@ -241,7 +241,7 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
     }
 
     \Defender::add_field_session([
-        'input_name' => str_replace("[]", "", $input_name),
+        'input_name' => $input_name,
         'title'      => trim($title, '[]'),
         'id'         => $options['input_id'],
         'type'       => $options['type'],

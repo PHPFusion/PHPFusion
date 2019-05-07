@@ -55,26 +55,27 @@ function showrendertime($queries = TRUE) {
 function showBenchmark($show_sql_performance = FALSE, $performance_threshold = '0.01', $filter_results = FALSE) {
     $locale = fusion_get_locale();
     if ($show_sql_performance) {
-        $query_log = DatabaseFactory::getConnection('default')->getQueryLog();
+        $query_log = DatabaseFactory::getConnection()->getQueryLog();
         $modal = openmodal('querylogsModal', "<h4><strong>Database Query Performance Logs</strong></h4>");
         $modal_body = '';
         $i = 0;
         $time = 0;
         if (!empty($query_log)) {
+            $highlighted_query = "";
             foreach ($query_log as $connectionID => $sql) {
                 $current_time = $sql[0];
                 $highlighted = $current_time > $performance_threshold ? TRUE : FALSE;
                 if ($filter_results === FALSE || $filter_results === TRUE AND $highlighted === TRUE) {
-                    $modal_body .= "<div class='spacer-xs m-10".($highlighted ? " alert alert-warning" : "")."'>\n";
-                    $modal_body .= "<h5><strong>SQL run#$i : ".($highlighted ? "<span class='text-danger'>".$sql[0]."</span>" : "<span class='text-success'>".$sql[0]."</span>")." seconds</strong></h5>\n\r";
-                    $modal_body .= "[code]".$sql[1].($sql[2] ? " [Parameters -- ".implode(',', $sql[2])." ]" : '')."[/code]\n\r";
-                    $modal_body .= "<div>\n";
+                    $highlighted_query .= "<div class='spacer-xs m-10".($highlighted ? " alert alert-warning" : "")."'>\n";
+                    $highlighted_query .= "<h5><strong>SQL run#$i : ".($highlighted ? "<span class='text-danger'>".$sql[0]."</span>" : "<span class='text-success'>".$sql[0]."</span>")." seconds</strong></h5>\n\r";
+                    $highlighted_query .= "[code]".$sql[1].($sql[2] ? " [Parameters -- ".implode(',', $sql[2])." ]" : '')."[/code]\n\r";
+                    $highlighted_query .= "<div>\n";
                     $end_sql = end($sql[3]);
-                    $modal_body .= "<kbd>".$end_sql['file']."</kbd><span class='badge pull-right'>Line #".$end_sql['line'].", ".$end_sql['function']."</span> - <a href='#' data-toggle='collapse' data-target='#trace_$connectionID'>Toggle Backtrace</a>\n";
+                    $highlighted_query .= "<kbd>".$end_sql['file']."</kbd><span class='badge pull-right'>Line #".$end_sql['line'].", ".$end_sql['function']."</span> - <a href='#' data-toggle='collapse' data-target='#trace_$connectionID'>Toggle Backtrace</a>\n";
                     if (is_array($sql[3])) {
-                        $modal_body .= "<div id='trace_$connectionID' class='alert alert-info collapse spacer-sm'>";
+                        $highlighted_query .= "<div id='trace_$connectionID' class='alert alert-info collapse spacer-sm'>";
                         foreach ($sql[3] as $id => $debug_backtrace) {
-                            $modal_body .= "<kbd>Stack Trace #$id - ".$debug_backtrace['file']." @ Line ".$debug_backtrace['line']."</kbd><br/>";
+                            $highlighted_query .= "<kbd>Stack Trace #$id - ".$debug_backtrace['file']." @ Line ".$debug_backtrace['line']."</kbd><br/>";
                             if (!empty($debug_backtrace['args'][0])) {
                                 $debug_line = $debug_backtrace['args'][0];
                                 if (is_array($debug_backtrace['args'][0])) {
@@ -98,18 +99,21 @@ function showBenchmark($show_sql_performance = FALSE, $performance_threshold = '
                                         $debug_param .= $debug_backtrace['args'][1];
                                     }
                                 }
-                                $modal_body .= "Statement::: <code>$debug_line</code><br/>Parameters::: <code>".($debug_param ?: "--")."</code><br/>";
+                                $highlighted_query .= "Statement::: <code>$debug_line</code><br/>Parameters::: <code>".($debug_param ?: "--")."</code><br/>";
                             }
 
                         }
-                        $modal_body .= "</div>\n";
+                        $highlighted_query .= "</div>\n";
                     }
-                    $modal_body .= "</div>\n";
-                    $modal_body .= "</div>\n";
+                    $highlighted_query .= "</div>\n";
+                    $highlighted_query .= "</div>\n";
                     $i++;
                 }
                 $time = $current_time + $time;
             }
+            $modal_body .= $highlighted_query ?: "<h4>Perfect! The SQL are very much optimized.</h4>";
+        } else {
+            $modal_body .= "<h4>Could not get any query logs</h4>";
         }
         $modal .= parse_textarea($modal_body, FALSE, TRUE, FALSE);
         $modal .= modalfooter("<h4><strong>Total Time Expended in ALL SQL Queries: ".$time." seconds</strong></h4>", FALSE);

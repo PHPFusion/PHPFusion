@@ -144,7 +144,9 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         $options['error_text'] = empty($options['error_text']) ? $locale['error_input_default'] : $options['error_text'];
     }
 
+    //print_p(\Defender::inputHasError($input_name));
     $error_class = "";
+
     if (\Defender::inputHasError($input_name)) {
         $error_class = " has-error";
         if (!empty($options['error_text'])) {
@@ -279,7 +281,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 
     // Add input settings in the SESSION
     \Defender::add_field_session([
-        'input_name'     => trim($input_name, '[]'),
+        'input_name'     => $input_name,
         'title'          => trim($title, '[]'),
         'id'             => $options['input_id'],
         'type'           => $options['type'],
@@ -334,5 +336,5 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         ");
     }
 
-    return $html;
+    return (string)$html;
 }

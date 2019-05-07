@@ -346,13 +346,11 @@ class Defender {
                         (is_callable($callback) && !$callback($secured))
                     ) {
                         self::stop();
+                        self::setInputError($input_name);
                         // Add regex error message.
                         if ($secured != '' && $regex && !preg_match('@^'.$regex.'$@i', $secured)) {
-                            self::stop();
                             addNotice("danger", sprintf(fusion_get_locale('regex_error'), $this->field_config['title']));
                             unset($locale);
-                        } else {
-                            self::setInputError($input_name);
                         }
                         // Add a notice
                         if (self::$debug) {
