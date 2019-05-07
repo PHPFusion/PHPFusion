@@ -39,11 +39,11 @@ function display_comments_widget() {
 
             $info['border_style'] = ($i > 0 ? "style='border-top:1px solid #ddd;'" : '');
             $info['avatar'] = display_avatar($comment_data, "50px", '', '', '');
-            $info['comments_date'] = timer($comment_data['comment_datestamp']);
+            $info['date'] = timer($comment_data['comment_datestamp']);
             $info['manage_comments_link'] = ADMIN."comments.php".$aidlink."&amp;ctype=".$comment_data['comment_type']."&amp;comment_item_id=".$comment_data['comment_item_id'];
             $info['edit_comments_link'] = ADMIN."comments.php".$aidlink."&amp;action=edit&amp;comment_id=".$comment_data['comment_id']."&amp;ctype=".$comment_data['comment_type']."&amp;comment_item_id=".$comment_data['comment_item_id'];
             $info['delete_comments_link'] = ADMIN.'comments.php'.$aidlink.'&amp;action=delete&amp;comment_id='.$comment_data['comment_id'].'&amp;ctype='.$comment_data['comment_type'].'&amp;comment_item_id='.$comment_data['comment_item_id'];
-            $info['comments_user'] = (!empty($comment_data['user_id']) ? profile_link($comment_data['user_id'], $comment_data['user_name'], $comment_data['user_status']) : $comment_data['comment_name']);
+            $info['profile_link'] = (!empty($comment_data['user_id']) ? profile_link($comment_data['user_id'], $comment_data['user_name'], $comment_data['user_status']) : $comment_data['comment_name']);
             $info['name'] = strtr($comment_item_url, ["{%item%}" => $comment_item_name]);
             $info['comments'] = parse_textarea($comments, TRUE, FALSE);
             $tpl->set_block('li', $info);
@@ -65,23 +65,3 @@ function display_comments_widget() {
     return (string)$content;
 
 }
-
-/*
-echo "<div class='list-group-item clearfix'>\n";
-if (count($global_comments['data']) > 0) {
-    echo "<ul class='block'>\n";
-
-
-    }
-
-    if (isset($global_comments['comments_nav'])) {
-        echo "<div class='clearfix'>\n";
-        echo "<span class='pull-right text-smaller'>".$global_comments['comments_nav']."</span>";
-        echo "</div>\n";
-    }
-    echo "</ul>\n";
-} else {
-    echo "<div class='text-center'>".$global_comments['nodata']."</div>\n";
-}
-echo "</div>\n";
-*/
