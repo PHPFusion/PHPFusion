@@ -709,6 +709,7 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
         echo openform("link_table", "post", FUSION_REQUEST);
         echo form_hidden("table_action", "", "");
         echo "<div class='table-responsive'><table class='table table-striped'>\n";
+        echo '<thead>';
         echo "<tr>\n";
         echo "<th>".form_checkbox('check_all', '', '')."</th>\n";
         add_to_jquery("
@@ -729,6 +730,7 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
         echo "<th>".$this->locale['SL_0051']."</th>";
         echo "<th>".$this->locale['SL_0052']."</th>";
         echo "</tr>\n";
+        echo '</thead>';
 
         // Load form data. Then, if have data, show form.. when post, we use back this page's script.
         if (isset($_POST['link_quicksave'])) {

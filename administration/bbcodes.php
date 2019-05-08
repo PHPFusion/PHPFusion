@@ -27,9 +27,6 @@ global $p_data;
 BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'bbcodes.php'.fusion_get_aidlink(), 'title' => $locale['BBCA_400']]);
 $allowed_section = ['bbcode_form', 'bbcode_list'];
 $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_section) ? $_GET['section'] : 'bbcode_form';
-if ($_GET['section'] == 'bbcode_list') {
-    BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'bbcodes.php'.fusion_get_aidlink(), 'title' => $locale['BBCA_400']]);
-}
 
 $tab_title['title'][] = $locale['BBCA_400a'];
 $tab_title['id'][] = 'bbcode_form';
@@ -81,6 +78,8 @@ function bbcode_list() {
         'error_text' => $locale['BBCA_418b'],
         'type'       => 'bbcode'
     ]);
+
+    echo '<div class="row">';
     echo "<div class='col-xs-6 col-md-6 text-right'>\n";
     echo form_checkbox('test_smileys', $locale['BBCA_418'], $smileys_checked, [
         'type'          => 'checkbox',
@@ -89,6 +88,7 @@ function bbcode_list() {
     echo "</div>\n";
     echo "<div class='col-xs-6 col-md-6 text-left'>\n";
     echo form_button('post_test', $locale['BBCA_401'], $locale['BBCA_401'], ['class' => 'btn-primary']);
+    echo "</div>\n";
     echo "</div>\n";
     closeform();
     closetable();
