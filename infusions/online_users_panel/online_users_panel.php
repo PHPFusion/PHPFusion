@@ -49,7 +49,7 @@ if (!empty($members)) {
 }
 if (iADMIN && checkrights("M") && fusion_get_settings("admin_activation") == "1") {
     $tpl->set_block('unactivated_members', [
-            'admin_link'    => ADMIN."members.php.".fusion_get_aidlink()."&amp;status=2",
+            'admin_link'    => ADMIN."members.php".fusion_get_aidlink()."&amp;status=2",
             'total_members' => number_format(dbcount("(user_id)", DB_USERS, "user_status='2'"), 0)]
     );
 }
