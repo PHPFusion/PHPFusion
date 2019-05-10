@@ -92,7 +92,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
         $options['template'] = "classic";
     }
 
-    $options['input_id'] = trim($options['input_id'], "[]");
+    $options['input_id'] = trim(str_replace("[", "-", $options['input_id']), "]");
 
     $error_class = "";
     if (\Defender::inputHasError($input_name)) {

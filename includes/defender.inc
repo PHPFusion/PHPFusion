@@ -263,7 +263,7 @@ class Defender {
         return self::$input_errors;
     }
 
-    public function filter_post($input_name) {
+    public function filterPostArray($input_name) {
         $flag = '';
         if (is_array($input_name)) {
             $input_name = $input_name[0];
@@ -410,7 +410,7 @@ class Defender {
      * @throws Exception
      */
     public function sanitizer($key, $default = '', $input_name = FALSE, $is_multiLang = FALSE) {
-        $value = $this->filter_post($key);
+        $value = $this->filterPostArray($key);
         return $this->form_sanitizer($value, $default, $input_name, $is_multiLang);
     }
 

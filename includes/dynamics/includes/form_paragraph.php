@@ -16,6 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 function form_para($title, $id, $class = 'underline', array $options = []) {
+    $id = trim(str_replace("[", "-", $id), "]");
     $options += [
         'tip' => !empty($options['tip']) ? "title='".$options['tip']."'" : '',
     ];

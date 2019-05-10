@@ -28,9 +28,7 @@ use Genesis\Model\resource;
 class adminDashboard extends resource {
 
     public static function do_dashboard() {
-        global $members, $forum, $download, $news, $articles, $weblinks, $photos, $global_comments,
-               $global_ratings, $global_submissions, $link_type,
-               $comments_type, $infusions_count, $global_infusions, $submit_data;
+        global $members, $global_submissions,  $infusions_count, $global_infusions, $submit_data;
 
         $locale = fusion_get_locale();
         $aidlink = fusion_get_aidlink();
@@ -39,7 +37,6 @@ class adminDashboard extends resource {
 
         opentable($locale['250']);
         new \AdminDashboard();
-
 
         $panels = array(
             'registered'   => array('link' => '', 'title' => 251),

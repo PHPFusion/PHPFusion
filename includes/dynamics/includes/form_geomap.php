@@ -256,7 +256,7 @@ function form_location($input_name, $label = '', $input_value = FALSE, array $op
     }
 
     // always trim id
-    $options['input_id'] = trim($options['input_id'], "[]");
+    $options['input_id'] = trim(str_replace("[", "-", $options['input_id']), "]");
 
     $length = "minimumInputLength: 1,";
 
@@ -291,6 +291,7 @@ function form_location($input_name, $label = '', $input_value = FALSE, array $op
         } else {
             $encoded = json_encode([]);
         }
+
         add_to_jquery("
         $('#".$options['input_id']."').select2({
         $length
@@ -375,7 +376,7 @@ function form_location($input_name, $label = '', $input_value = FALSE, array $op
         'error_text'     => $options['error_text']
     ]);
 
-    return $html;
+    return (string)$html;
 }
 
 function map_country($states, $country) {

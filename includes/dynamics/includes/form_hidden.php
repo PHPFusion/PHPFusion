@@ -40,7 +40,7 @@ function form_hidden($input_name, $label = "", $input_value = "", array $options
         'error_text'  => '',
     ];
     $options += $default_options;
-
+    $options['input_id'] = trim(str_replace("[", "-", $options['input_id']), "]");
     if ($options['show_title']) {
         $html .= "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] ? 'display-block overflow-hide ' : '').$options['class']." '>\n";
         $html .= ($label) ? "<label class='control-label".($options['inline'] ? " col-xs-12 col-sm-3 col-md-3 col-lg-3" : '')."' for='".$options['input_id']."'>".$title.($options['required'] ? "<span class='required'>&nbsp;*</span>" : '')."</label>\n" : '';

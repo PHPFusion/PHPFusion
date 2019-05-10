@@ -77,7 +77,7 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
 
     $title = $label ?: ucfirst(strtolower(str_replace('_', ' ', $input_name)));
 
-    $options['input_id'] = trim(str_replace('[', '-', $options['input_id']), "]");
+    $options['input_id'] = trim(str_replace("[", "-", $options['input_id']), "]");
 
     if (\Defender::inputHasError($input_name)) {
         $error_class = "has-error ";

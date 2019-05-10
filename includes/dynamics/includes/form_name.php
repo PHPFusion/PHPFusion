@@ -47,7 +47,7 @@ function form_name($input_name, $label = "", $input_value = FALSE, array $option
         'safemode'     => FALSE,
         'stacked'      => '',
     ];
-
+    $options['input_id'] = trim(str_replace("[", "-", $options['input_id']), "]");
     $error_class = \Defender::inputHasError($input_name.'-firstname') || \Defender::inputHasError($input_name.'-lastname') ? "has-error " : "";
     $html = "<div id='".$options['input_id']."-field' class='form-group clearfix ".($options['inline'] ? 'display-block overflow-hide ' : '').$error_class.$options['class']."' >\n";
 

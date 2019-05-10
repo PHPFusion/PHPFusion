@@ -53,7 +53,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 
-    $id = trim($input_name, "[]");
+    $id = trim(str_replace("[", "-", $input_name), "]");
 
     $default_options = [
         'type'               => 'text',
@@ -64,7 +64,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         'regex'              => '',
         'regex_error_text'   => '',
         'callback_check'     => FALSE,
-        'input_id'           => $id,
+        'input_id'           => $input_name,
         'placeholder'        => '',
         'deactivate'         => FALSE,
         'width'              => '',
@@ -113,6 +113,8 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
     ];
 
     $options['type'] = in_array($options['type'], $valid_types) ? $options['type'] : 'text';
+
+    $options['input_id'] = trim(str_replace("[", "-", $options['input_id']), "]");
 
     $options += [
         'append_button_name'  => !empty($options['append_button_name']) ? $options['append_button_name'] : "p-submit-".$options['input_id'],

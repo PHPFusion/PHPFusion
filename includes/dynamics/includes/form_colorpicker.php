@@ -44,10 +44,12 @@ function form_colorpicker($input_name, $label = '', $input_value = '', array $op
         'format'      => 'hex', //options = the color format - hex | rgb | rgba.
     ];
     $options += $default_options;
+
     if (!$options['width']) {
         $options['width'] = $default_options['width'];
     }
-    $input_id = $options['input_id'] ?: $default_options['input_id'];
+
+    $options['input_id'] = trim(str_replace("[", "-", $options['input_id']), "]");
 
     $error_class = "";
     if (\Defender::inputHasError($input_name)) {

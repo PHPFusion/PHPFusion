@@ -36,7 +36,7 @@ function form_button($input_name, $title, $input_value, array $options = []) {
     ];
 
     $options = $options + $default_options;
-
+    $options['input_id'] = strtr($options['input_id'], ["[" => "", "]" => ""]);
     if ($options['block']) {
         $options['class'] = $options['class']." btn-block";
     }
