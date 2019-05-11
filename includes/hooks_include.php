@@ -90,6 +90,15 @@ function fusion_apply_hook($name) {
  */
 function fusion_filter_hook($name) {
     $function_args = func_get_args();
+    // Flatten each function args.
+    // Each function arguments can only have a set of array values for proper callback
+    if (count($function_args) > 1) {
+        for($i = 1; $i < count($function_args); $i++) {
+            if (is_array($function_args[$i])) {
+                $function_args[$i] = flatten_array($function_args[$i]);
+            }
+        }
+    }
 
     return call_user_func_array([
         \PHPFusion\Hooks::get_instances($name),

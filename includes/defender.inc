@@ -263,14 +263,30 @@ class Defender {
         return self::$input_errors;
     }
 
-    public function filterPostArray($input_name) {
+    /**
+     * @param $key
+     *
+     * @return string
+     */
+    public function filterPostArray($key) {
         $flag = '';
-        if (is_array($input_name)) {
-            $input_name = $input_name[0];
+        $input_key = $key;
+        if (is_array($key)) {
+            // always use key 0 for filter var
+            $input_key = $key[0];
             $flag = FILTER_REQUIRE_ARRAY;
         }
 
-        return post($input_name, FILTER_DEFAULT, $flag);
+        $filtered = post($input_key, FILTER_DEFAULT, $flag);
+
+        if (is_array($key)) {
+            $input_ref = $key;
+            unset($input_ref[0]);
+            // Get the value of the filtered post value using the $key array as map
+            return (string) array_reduce($input_ref, function($value, $key) { return (!empty($value[$key]) ? $value[$key] : $value); }, $filtered);
+        }
+
+        return (string)$filtered;
     }
 
 

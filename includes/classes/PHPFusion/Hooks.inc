@@ -155,6 +155,8 @@ final class Hooks {
         $function_args = func_get_args();
 
         $current_hook = $this->get_hook($filter_name);
+        //print_P($function_args);
+        //print_P($current_hook);
 
         if (!empty($current_hook)) {
 
@@ -205,7 +207,6 @@ final class Hooks {
     public function filter_hook($filter_name) {
 
         $function_args = func_get_args();
-
         call_user_func_array([$this, 'apply_hook'], $function_args);
 
         if (!empty($this->output[$filter_name])) {
