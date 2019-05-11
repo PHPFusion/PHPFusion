@@ -283,7 +283,9 @@ class Defender {
             $input_ref = $key;
             unset($input_ref[0]);
             // Get the value of the filtered post value using the $key array as map
-            return (string) array_reduce($input_ref, function($value, $key) { return (!empty($value[$key]) ? $value[$key] : $value); }, $filtered);
+            return array_reduce($input_ref, function($value, $key) {
+                return (!empty($value[$key]) ? $value[$key] : '');
+            }, $filtered);
         }
 
         return (string)$filtered;
@@ -427,6 +429,7 @@ class Defender {
      */
     public function sanitizer($key, $default = '', $input_name = FALSE, $is_multiLang = FALSE) {
         $value = $this->filterPostArray($key);
+        print_p($value);
         return $this->form_sanitizer($value, $default, $input_name, $is_multiLang);
     }
 
