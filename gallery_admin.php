@@ -26,8 +26,7 @@ require_once INCLUDES."infusions_include.php";
 add_to_title($locale['gallery_0001']);
 $gll_settings = get_settings("gallery");
 
-add_to_head("
-<style>
+add_to_css("
 .panel-default > .panel-image-wrapper {
     height: 120px;
     max-height: 120px;
@@ -52,24 +51,6 @@ add_to_head("
     content: \"\";
     position:relative;
 }
-.panel-default .album_title,
-.panel-default .album_link {
-    text-decoration: none;
-}
-.panel-default .album_title:hover, .panel-default .album_title:focus {
-    color: #333;
-}
-.panel-default .album_title:before {
-    content: '';
-    width: 100%;
-    height: 50px;
-    position: absolute;
-    left: 0;
-    display: block;
-    top: 0;
-    background: linear-gradient(transparent 32px, white);
-}
-</style>
 ");
 $allowed_pages = ['album_form', 'photo_form', 'settings', 'submissions', 'actions'];
 if (isset($_GET['section']) && $_GET['section'] == "back") {
