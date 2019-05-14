@@ -890,18 +890,23 @@ class UserFieldsInput {
 
     private function update_public_profile() {
 
-        if (isset($_POST[$this->post_name])) {
-            $data = [];
+        if ( post($this->post_name) ) {
+
+            $data = array();
+            $data['user_avatar'] = $this->set_user_avatar();
+
             $quantum = new UserFieldsQuantum();
             $quantum->load_fields();
             $quantum->load_field_cats();
             $quantum->setCallbackData($this->user_data);
-            $_input = $quantum->return_fields_input(DB_USERS, 'user_id');
-            if (!empty($_input)) {
-                foreach ($_input as $input) {
-                    $data += $input;
+            $input = $quantum->return_fields_input(DB_USERS, 'user_id');
+
+            if (!empty($input)) {
+                foreach ($input as $input_data) {
+                    $data += $input_data;
                 }
             }
+
 
             if ($this->is_admin_panel === TRUE) {
                 $data['user_name'] = $this->validate_user_name();
@@ -916,9 +921,10 @@ class UserFieldsInput {
 
             if ($this->check_user_hash()) {
                 if (\Defender::safe()) {
-                    $data['user_avatar'] = $this->set_user_avatar();
+
                     $data['user_id'] = $this->user_data['user_id'];
                     $quantum->log_user_action(DB_USERS, "user_id");
+
                     dbquery_insert(DB_USERS, $data, 'update');
                     addNotice('success', "Public profile updated successfully");
                     $redirect_uri = FUSION_REQUEST;
@@ -1045,16 +1051,19 @@ class UserFieldsInput {
      * Save user avatar
      */
     private function set_user_avatar() {
-        if (isset($_POST['delAvatar'])) {
+
+        if (post('delAvatar')) {
             if ($this->user_data['user_avatar'] != "" && file_exists(IMAGES."avatars/".$this->user_data['user_avatar']) && is_file(IMAGES."avatars/".$this->user_data['user_avatar'])) {
                 unlink(IMAGES."avatars/".$this->user_data['user_avatar']);
             }
-
             return NULL;
         }
+
         if (isset($_FILES['user_avatar']) && $_FILES['user_avatar']['name']) { // uploaded avatar
             if (!empty($_FILES['user_avatar']) && is_uploaded_file($_FILES['user_avatar']['tmp_name'])) {
                 $upload = form_sanitizer($_FILES['user_avatar'], '', 'user_avatar');
+                //print_p($upload);
+                //define('STOP_REDIRECT', true);
                 if (isset($upload['error']) && empty($upload['error'])) {
                     return $upload['image_name'];
                 }

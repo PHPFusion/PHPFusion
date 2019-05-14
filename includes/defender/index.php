@@ -24,7 +24,7 @@
  * @return mixed
  */
 function get($key = NULL, $type = FILTER_DEFAULT, $flags = '') {
-    return filter_input(INPUT_GET, $key, $type, $flags);
+    return stripinput(filter_input(INPUT_GET, $key, $type, $flags));
 }
 /**
  * @param     $key
@@ -61,5 +61,5 @@ function environment($key, $type = FILTER_DEFAULT) {
  * @return mixed
  */
 function cookie($key, $type = FILTER_DEFAULT) {
-    return filter_input(INPUT_COOKIE, $key, $type);
+    return stripinput(filter_input(INPUT_COOKIE, $key, $type));
 }

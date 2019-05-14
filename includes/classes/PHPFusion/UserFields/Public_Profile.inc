@@ -29,7 +29,7 @@ class Public_Profile extends UserFieldsQuantum {
         $info = [];
 
         if (iADMIN || $this->user_name_change) {
-            $user_name = isset($_POST['user_name']) ? $_POST['user_name'] : $this->user_data['user_name'];
+            $user_name = post("user_name") ?: $this->user_data['user_name'];
             $info['user_name'] = form_text('user_name', $this->locale['u127'], $user_name, [
                 'max_length' => 30,
                 'required'   => 1,
@@ -44,54 +44,58 @@ class Public_Profile extends UserFieldsQuantum {
             // Avatar Field
             if (isset($this->user_data['user_avatar']) && $this->user_data['user_avatar'] != "") {
                 $info['user_avatar'] = "
-                    <div class='row'>\n
-                    <div class='col-xs-12 col-sm-3'>".$this->locale['u185']."</div>
-                    <div class='col-xs-12 col-sm-9'>
-                        <div class='p-l-10'>
-                        <label for='user_avatar_upload'>".display_avatar($this->user_data, '150px', '', FALSE, 'img-thumbnail')."</label>\n<br />\n".form_checkbox("delAvatar", $this->locale['u187'], '', ['reverse_label' => TRUE])."
-                        </div>
-                    </div></div>
-                    ";
+                <div class='row'>\n
+                <div class='col-xs-12 col-sm-3'>".$this->locale['u185']."</div>
+                <div class='col-xs-12 col-sm-9'>
+                    <div class='p-l-10'>
+                    <label for='user_avatar_upload'>".display_avatar($this->user_data, '150px', '', FALSE, 'img-thumbnail')."</label>\n<br />\n".form_checkbox("delAvatar", $this->locale['u187'], '', ['reverse_label' => TRUE])."
+                    </div>
+                </div></div>
+                ";
                 add_to_jquery("
-                    $('#delAvatar').bind('click', function(e) {
-                        var checked= $(this).prop('checked');
-                        if (checked) {
-                            if (confirm(\"Are you sure you are to remove your current existing avatar?\")) {
-                                return true;
-                            } else {
-                                return false;
-                            }
+                $('#delAvatar').bind('click', function(e) {
+                    var checked= $(this).prop('checked');
+                    if (checked) {
+                        if (confirm(\"Are you sure you are to remove your current existing avatar?\")) {
+                            return true;
+                        } else {
+                            return false;
                         }
-                    });
-                    ");
+                    }
+                });
+                ");
             } else {
                 $upload_settings = [
-                    'upload_path'    => IMAGES."avatars/",
-                    'input_id'       => 'user_avatar_upload',
-                    'valid_ext'      => ".jpg,.png,.gif,.svg",
-                    'type'           => 'image',
-                    'max_byte'       => $settings['avatar_filesize'],
-                    'max_height'     => $settings['avatar_width'],
-                    'max_width'      => $settings['avatar_height'],
-                    'inline'         => TRUE,
-                    'thumbnail'      => 0,
-                    'width'          => '100%',
-                    'class'          => 'm-t-10 m-b-0',
-                    "error_text"     => $this->locale['u180'],
-                    "template"       => "thumbnail",
-                    'croppie'        => TRUE,
-                    "croppie_resize" => TRUE,
-                    "croppie_zoom"   => TRUE,
-                    'ext_tip'        => sprintf($this->locale['u184'], parsebytesize($settings['avatar_filesize']), $settings['avatar_width'], $settings['avatar_height'])
+                    "disable_fileinput" => FALSE,
+                    'upload_path'       => IMAGES."avatars/",
+                    'input_id'          => 'user_avatar_upload',
+                    'valid_ext'         => ".jpg,.png,.gif,.svg",
+                    'type'              => 'image',
+                    'max_byte'          => $settings['avatar_filesize'],
+                    'max_height'        => $settings['avatar_width'],
+                    'max_width'         => $settings['avatar_height'],
+                    'inline'            => TRUE,
+                    'thumbnail'         => 0,
+                    'width'             => '100%',
+                    'class'             => 'm-t-10 m-b-0',
+                    "error_text"        => $this->locale['u180'],
+                    "template"          => "thumbnail",
+                    'croppie'           => TRUE,
+                    "croppie_resize"    => TRUE,
+                    "croppie_zoom"      => TRUE,
+                    'ext_tip'           => sprintf($this->locale['u184'], parsebytesize($settings['avatar_filesize']), $settings['avatar_width'], $settings['avatar_height'])
                 ];
+
                 $info['user_avatar'] = form_fileinput('user_avatar', $this->locale['u185'], '', $upload_settings);
+
             }
             // Real name change button
             $info['name_change_button'] = form_button('update_name', 'Update Name', 'update_name', ['class' => $this->options['btn_post_class']]);
 
             // User Reputation
             if ($this->is_admin_panel === TRUE && infusion_exists('forum')) {
-                $user_reputation = isset($_POST['user_reputation']) ? $_POST['user_reputation'] : $this->user_data['user_reputation'];
+
+                $user_reputation = post("user_reputation", FILTER_VALIDATE_INT) ?: $this->user_data['user_reputation'];
                 $info['user_reputation'] = form_text('user_reputation', $this->locale['u210'], $user_reputation, [
                         'type'   => 'number',
                         'inline' => $this->inline_field
@@ -128,6 +132,7 @@ class Public_Profile extends UserFieldsQuantum {
             }
         } else {
             $info += $this->get_user_fields();
+
             if ($this->display_validation == 1 && $this->is_admin_panel === FALSE) {
                 $info['validate'] = $this->renderValidation();
             }
@@ -184,8 +189,8 @@ class Public_Profile extends UserFieldsQuantum {
         if ($this->is_admin_panel === FALSE) {
 
             $field_cats = UserFields::get_user_field_cats();
-
-            $index_page_id = (isset($_GET['section']) && isnum($_GET['section']) && isset($field_cats[$_GET['section']]) ? intval($_GET['section']) : 1);
+            $section = get("section", FILTER_VALIDATE_INT);
+            $index_page_id = isset($field_cats[$section]) ?: 1;
             $registration_cond = ($this->registration === TRUE && $this->is_admin_panel === FALSE ? ' AND field.field_registration=:field_register' : '');
             $registration_bind = ($this->registration === TRUE && $this->is_admin_panel === FALSE ? [':field_register' => 1] : []);
 
@@ -255,6 +260,7 @@ class Public_Profile extends UserFieldsQuantum {
             $result = dbquery($query);
 
             $rows = dbrows($result);
+            $m_category = array();
             if ($rows != '0') {
                 while ($data = dbarray($result)) {
                     if ($data['field_cat_id']) {
@@ -264,41 +270,43 @@ class Public_Profile extends UserFieldsQuantum {
                         $item[$data['field_cat']][] = $data;
                     }
                 }
-                foreach ($m_category as $m_cat_id => $category) {
-                    // cat is array.
-                    foreach ($category as $cat_id => $cat) {
-                        if ($this->registration || $this->method == 'input') {
-                            if (isset($item[$cat_id])) {
-                                $fields['user_field'][$m_cat_id][$cat_id]['title'] = $cat;
-                                foreach ($item[$cat_id] as $field_id => $field) {
-                                    $options = [
-                                        'show_title' => TRUE,
-                                        'inline'     => $this->inline_field,
-                                        'required'   => (bool)$field['field_required']
-                                    ];
-                                    if ($field['field_type'] == 'file') {
-                                        $options += [
-                                            'plugin_folder'        => $this->plugin_folder,
-                                            'plugin_locale_folder' => $this->plugin_locale_folder,
-                                            'inline'               => $this->inline_field,
+                if (!empty($m_category)) {
+                    foreach ($m_category as $m_cat_id => $category) {
+                        // cat is array.
+                        foreach ($category as $cat_id => $cat) {
+                            if ($this->registration || $this->method == 'input') {
+                                if (isset($item[$cat_id])) {
+                                    $fields['user_field'][$m_cat_id][$cat_id]['title'] = $cat;
+                                    foreach ($item[$cat_id] as $field_id => $field) {
+                                        $options = [
+                                            'show_title' => TRUE,
+                                            'inline'     => $this->inline_field,
+                                            'required'   => (bool)$field['field_required']
                                         ];
+                                        if ($field['field_type'] == 'file') {
+                                            $options += [
+                                                'plugin_folder'        => $this->plugin_folder,
+                                                'plugin_locale_folder' => $this->plugin_locale_folder,
+                                                'inline'               => $this->inline_field,
+                                            ];
+                                        }
+                                        $field_output = $this->display_fields($field, $this->user_data, $this->method, $options);
+                                        $fields['user_field'][$m_cat_id][$cat_id]['fields'][$field['field_id']] = $field_output;
+                                        //$fields['extended_field'][$field['field_name']] = $field_output; // for the gets
                                     }
-                                    $field_output = $this->display_fields($field, $this->user_data, $this->method, $options);
-                                    $fields['user_field'][$m_cat_id][$cat_id]['fields'][$field['field_id']] = $field_output;
-                                    //$fields['extended_field'][$field['field_name']] = $field_output; // for the gets
                                 }
-                            }
-                        } else {
-                            // Display User Fields
-                            if (isset($item[$cat_id])) {
-                                $fields['user_field'][$cat_id]['title'] = $cat;
-                                foreach ($item[$cat_id] as $field_id => $field) {
-                                    // Outputs array
-                                    $field_output = $this->display_fields($field, $this->callback_data, $this->method);
-                                    $fields['user_field'][$m_cat_id][$cat_id]['fields'][$field['field_id']] = $field_output; // relational to the category
-                                    //$fields['extended_field'][$field['field_name']] = $field_output; // for the gets
-                                    if (!empty($field_output)) {
-                                        $fields['user_field'][$m_cat_id][$cat_id]['fields'][$field['field_id']] = array_merge($field, $field_output);
+                            } else {
+                                // Display User Fields
+                                if (isset($item[$cat_id])) {
+                                    $fields['user_field'][$cat_id]['title'] = $cat;
+                                    foreach ($item[$cat_id] as $field_id => $field) {
+                                        // Outputs array
+                                        $field_output = $this->display_fields($field, $this->callback_data, $this->method);
+                                        $fields['user_field'][$m_cat_id][$cat_id]['fields'][$field['field_id']] = $field_output; // relational to the category
+                                        //$fields['extended_field'][$field['field_name']] = $field_output; // for the gets
+                                        if (!empty($field_output)) {
+                                            $fields['user_field'][$m_cat_id][$cat_id]['fields'][$field['field_id']] = array_merge($field, $field_output);
+                                        }
                                     }
                                 }
                             }
@@ -365,10 +373,10 @@ class Public_Profile extends UserFieldsQuantum {
         $modal .= closemodal();
         add_to_footer($modal);
         add_to_jquery('
-            $("#agree").on("click", function() {
-                $("#register").attr("disabled", false).removeClass("disabled");
-                $("#agreement").attr("checked", true);
-            });
+        $("#agree").on("click", function() {
+            $("#register").attr("disabled", false).removeClass("disabled");
+            $("#agreement").attr("checked", true);
+        });
         ');
 
         $html = "<div class='form-group clearfix'>";
@@ -378,7 +386,7 @@ class Public_Profile extends UserFieldsQuantum {
         $html .= "</div>\n</div>\n";
         add_to_head("<script type='text/javascript'>$(function() {
         $('#agreement').bind('click', function() {
-            var regBtn = $('#register');
+            let regBtn = $('#register');
             if ($(this).is(':checked')) {
                 regBtn.attr('disabled', false).removeClass('disabled');
             } else {

@@ -139,6 +139,7 @@ $locale['u180'] = "There is an error uploading avatar image";
 $locale['u184'] = "Max. file size: %s / Max. size: %ux%u pixels";
 $locale['u185'] = "Avatar";
 $locale['u186'] = "Click Browse to upload an image";
+$locale['u187'] = "Check to delete this user avatar";
 // Captcha and terms
 $locale['u190'] = "Validation Code";
 $locale['u191'] = "Enter Validation Code";

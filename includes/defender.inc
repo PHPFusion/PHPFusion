@@ -125,7 +125,8 @@ class Defender {
     }
 
     public static function add_field_session(array $array) {
-        $_SESSION['form_fields'][self::pageHash(self::$remote_file)][$array['input_name']] = $array;
+        $page_hash = self::pageHash(self::$remote_file);
+        $_SESSION['form_fields'][$page_hash][$array['input_name']] = $array;
     }
 
     /**
@@ -363,8 +364,10 @@ class Defender {
                         ($secured != '' && $regex && !preg_match('@^'.$regex.'$@i', $secured)) || // regex will fail for an imploded array, maybe move this check
                         (is_callable($callback) && !$callback($secured))
                     ) {
+
                         self::stop();
                         self::setInputError($input_name);
+
                         // Add regex error message.
                         if ($secured != '' && $regex && !preg_match('@^'.$regex.'$@i', $secured)) {
                             addNotice("danger", sprintf(fusion_get_locale('regex_error'), $this->field_config['title']));
@@ -462,6 +465,7 @@ class Defender {
                 }
 
                 return \Defender\Validation::getValidated();
+
             } else {
                 self::stop();
                 $locale['type_unknown'] = '%s: has an unknown type set'; // to be moved

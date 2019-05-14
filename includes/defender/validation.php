@@ -80,7 +80,9 @@ abstract class Validation {
             $object = self::$validate_instance[self::$inputName];
             $method = self::$validation_rules_assigned[self::$inputConfig['type']][1];
             if (is_callable([$object, $method])) {
+
                 return $object->$method();
+
             } else {
                 \Defender::stop();
                 $locale['type_unset'] = '%s: has no type set of %s'; // to be moved
