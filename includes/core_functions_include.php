@@ -227,7 +227,7 @@ function cleanurl($url) {
  *
  * @return string|string[]
  */
-function stripinput($text) {
+function stripinput($text = "") {
     if (!is_array($text)) {
         return str_replace('\\', '&#092;', htmlspecialchars(stripslash(trim($text)), ENT_QUOTES));
     }

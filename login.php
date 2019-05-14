@@ -21,6 +21,7 @@ require_once THEMES."templates/global/login.php";
 $locale = fusion_get_locale();
 add_to_title($locale['global_200'].$locale['global_100']);
 add_to_meta("keywords", $locale['global_100']);
+$settings = fusion_get_settings();
 $info = [];
 if (!iMEMBER) {
     if (isset($_GET['error']) && isnum($_GET['error'])) {
@@ -81,7 +82,7 @@ if (!iMEMBER) {
                 addNotice('danger', $locale['error_input_password']);
         }
     }
-    switch (fusion_get_settings("login_method")) {
+    switch ($settings['login_method']) {
         case "2" :
             $placeholder = $locale['global_101c'];
             break;
@@ -92,15 +93,20 @@ if (!iMEMBER) {
             $placeholder = $locale['global_101a'];
     }
 
-    // new include
-    $login = NULL;
-    if (file_exists(INFUSIONS.'login/login.php')) {
-        $login = new \PHPFusion\Infusions\Login\Login();
+    $login = new \PHPFusion\LoginAuth();
+
+    $post_url = $settings['opening_page'];
+    if ($site_referer = server('HTTP_REFERER')) {
+        // check if last referrer page is from own site.
+        if (stristr($site_referer, $settings['siteurl'])) {
+            // path change to relative path
+            $post_url = strtr($site_referer, [$settings['siteurl'] => BASEDIR]);
+        }
+        unset($site_referer);
     }
-    $connectors = (method_exists($login, 'get_login_connectors') ? $login->get_login_connectors() : ''); // get the buttons
 
     $info = [
-        'open_form'            => openform('loginpageform', 'POST', fusion_get_settings('opening_page')),
+        'open_form'            => openform('loginpageform', 'POST', $post_url),
         'user_name'            => form_text('user_name', $placeholder, '', ['placeholder' => $placeholder]),
         'user_pass'            => form_text('user_pass', $locale['global_102'], '', ['placeholder' => $locale['global_102'], 'type' => 'password']),
         'remember_me'          => form_checkbox('remember_me', $locale['global_103'], '', ['reverse_label' => TRUE, 'ext_tip' => $locale['UM067']]),
@@ -109,7 +115,8 @@ if (!iMEMBER) {
         'registration_link'    => (fusion_get_settings('enable_registration')) ? strtr($locale['global_105'], ['[LINK]' => "<a href='".BASEDIR."register.php'>\n", '[/LINK]' => "</a>\n"]) : '',
         'forgot_password_link' => strtr($locale['global_106'], ['[LINK]' => "<a href='".BASEDIR."lostpassword.php'>\n", '[/LINK]' => "</a>\n",]),
         'close_form'           => closeform(),
-        'connect_buttons'      => $connectors
+        'connect_buttons'      => $login->get_login_connectors(),
+        'form_action'          => $post_url,
     ];
 }
 display_loginform($info);

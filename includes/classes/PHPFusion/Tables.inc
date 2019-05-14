@@ -489,6 +489,7 @@ class Tables {
      */
     private function filterDeleteRows() {
         // id
+
         if (isset($_POST['id']) && is_array($_POST['id'])) {
             $params = [];
             $data = [];
@@ -528,7 +529,7 @@ class Tables {
                         }
                     } else {
 
-                        dbquery("DELETE FROM ".$this->query['table']." WHERE ".$this->query['id']."=:id", [':id' => $val]);
+                        dbquery("DELETE FROM ".$this->query['table']." WHERE ".$this->getIdCol()."=:id", [':id' => $val]);
                         addNotice('success', $this->table_props['deleted_message']);
                         $continue = TRUE;
                     }

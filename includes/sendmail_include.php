@@ -31,8 +31,10 @@ defined('IN_FUSION') || exit;
  * @param string $bcc
  *
  * @return bool
+ * @throws \PHPMailer\PHPMailer\Exception
  */
 if (!function_exists('sendemail')) {
+
     function sendemail($toname, $toemail, $fromname, $fromemail, $subject, $message, $type = "html", $cc = "", $bcc = "") {
         $settings = fusion_get_settings();
         $locale = fusion_get_locale();

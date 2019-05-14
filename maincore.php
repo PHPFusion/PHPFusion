@@ -88,7 +88,7 @@ header('X-Powered-By: PHP-Fusion'.(isset($settings['version']) ? ' '.$settings['
 ob_start();
 
 // Sanitise $_SERVER globals
-$_SERVER['PHP_SELF'] = server('PHP_SELF');
+$php_self = $_SERVER['PHP_SELF'] = server('PHP_SELF');
 $_SERVER['QUERY_STRING'] = server('QUERY_STRING')?: '';
 $_SERVER['REQUEST_URI'] = server('REQUEST_URI')?:'';
 
@@ -131,7 +131,7 @@ $mysql_queries_time = [];
 $locale = [];
 
 // Calculate ROOT path for Permalinks
-$current_path = html_entity_decode($_SERVER['REQUEST_URI']);
+$current_path = html_entity_decode(server("REQUEST_URI"));
 if (isset($settings['site_path']) && strcmp($settings['site_path'], "/") != 0) {
     $current_path = str_replace($settings['site_path'], '', $current_path);
 } else {
@@ -164,7 +164,7 @@ for ($i = 0; $i < $root_count; $i++) { // moved 0 to 1 will crash.
 define("FUSION_ROOT", $fusion_root);
 
 // Calculate current true url
-$script_url = explode("/", $_SERVER['PHP_SELF']);
+$script_url = explode("/", $php_self);
 $url_count = count($script_url);
 $base_url_count = substr_count(BASEDIR, "/") + 1;
 $current_page = "";
@@ -181,14 +181,18 @@ define("START_PAGE", substr(preg_replace("#(&amp;|\?)(s_action=edit&amp;shout_id
 /**
  * Login / Logout / Revalidate
  */
-if (isset($_POST['login']) && isset($_POST['user_name']) && isset($_POST['user_pass'])) {
+$login_post = post("login");
+$user_name_post = post("user_name");
+$user_pass_post = post("user_pass");
+if ($login_post && $user_name_post && $user_pass_post) {
     if (\Defender::safe()) {
-        $auth = new Authenticate($_POST['user_name'], $_POST['user_pass'], (isset($_POST['remember_me']) ? TRUE : FALSE));
+        $remember_me = post('remember_me') ? TRUE : FALSE;
+        $auth = new Authenticate($user_name_post, $user_pass_post, $remember_me);
         $userdata = $auth->getUserData();
         unset($auth, $_POST['user_name'], $_POST['user_pass']);
         redirect(FUSION_REQUEST);
     }
-} else if (isset($_GET['logout']) && $_GET['logout'] == "yes") {
+} else if (get("logout") == "yes") {
     $userdata = Authenticate::logOut();
     $request = clean_request('', ['logout'], FALSE);
     redirect($request);
