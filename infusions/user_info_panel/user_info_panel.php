@@ -109,14 +109,20 @@ class User_Info {
             ] + $userdata;
     }
 
+    public static function getLoginPostUrl() {
+        $action_url = FUSION_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : "");
+        $redirect_url = get("redirect");
+        if ($redirect_url && strstr($redirect_url, "/")) {
+            $action_url = cleanurl(urldecode($redirect_url));
+        }
+        return $action_url;
+    }
+
     private function getGuestInfo() {
 
         if (!preg_match('/login.php/i', FUSION_SELF)) {
 
-            $action_url = FUSION_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : "");
-            if (isset($_GET['redirect']) && strstr($_GET['redirect'], "/")) {
-                $action_url = cleanurl(urldecode($_GET['redirect']));
-            }
+
             switch (fusion_get_settings("login_method")) {
                 case 2 :
                     $placeholder = $this->locale['global_101c'];
@@ -132,7 +138,7 @@ class User_Info {
                 'title'                => $this->locale['global_100'],
                 'open_side'            => fusion_get_function('openside', $this->locale['global_100']),
                 'close_side'           => fusion_get_function('closeside'),
-                'login_openform'       => openform('loginform', 'post', $action_url),
+                'login_openform'       => openform('loginform', 'post', self::getLoginPostUrl()),
                 'login_closeform'      => closeform(),
                 'login_name_input'     => form_text('user_name', $this->locale['global_101'], '', [
                     'placeholder' => $placeholder,
@@ -144,7 +150,7 @@ class User_Info {
                     'required'    => 1
                 ]),
                 'login_remember_input' => form_checkbox('remember_me', $this->locale['global_103'], '', ['value' => 'y']),
-                'login_submit'         => form_button('login', $this->locale['global_104'], '', ['class' => 'm-t-20 m-b-20 btn-block btn-primary']),
+                'login_submit'         => form_button('login', $this->locale['global_104'], 'login', ['class' => 'm-t-20 m-b-20 btn-block btn-primary']),
                 'registration_link'    => (fusion_get_settings('enable_registration') ? strtr($this->locale['global_105'], ['[LINK]' => "<a href='".BASEDIR."register.php'>", '[/LINK]' => "</a>\n"]) : ''),
                 'lostpassword_link'    => strtr($this->locale['global_106'], ['[LINK]' => "<a href='".BASEDIR."lostpassword.php'>", '[/LINK]' => "</a>"])
             ];

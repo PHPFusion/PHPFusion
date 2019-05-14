@@ -184,6 +184,7 @@ define("START_PAGE", substr(preg_replace("#(&amp;|\?)(s_action=edit&amp;shout_id
 $login_post = post("login");
 $user_name_post = post("user_name");
 $user_pass_post = post("user_pass");
+
 if ($login_post && $user_name_post && $user_pass_post) {
     if (\Defender::safe()) {
         $remember_me = post('remember_me') ? TRUE : FALSE;
@@ -191,6 +192,8 @@ if ($login_post && $user_name_post && $user_pass_post) {
         $userdata = $auth->getUserData();
         unset($auth, $_POST['user_name'], $_POST['user_pass']);
         redirect(FUSION_REQUEST);
+    } else {
+        addNotice("danger", "CSRF Token not validated");
     }
 } else if (get("logout") == "yes") {
     $userdata = Authenticate::logOut();

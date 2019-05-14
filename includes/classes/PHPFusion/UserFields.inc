@@ -28,6 +28,8 @@ use PHPFusion\UserFields\Public_Profile;
  */
 class UserFields extends UserFieldsQuantum {
 
+    private $profile_id = 0;
+
     public $display_terms = 0;
     public $display_validation = 0;
     public $errors = [];
@@ -70,6 +72,8 @@ class UserFields extends UserFieldsQuantum {
     public $paginate = TRUE;
     public $admin_mode = FALSE;
     public $user_name_change = FALSE;
+    private static $pages = [];
+    protected static $additional_pages = [];
 
     protected $info = [
         'terms'               => '',
@@ -83,9 +87,11 @@ class UserFields extends UserFieldsQuantum {
         'btn_post_class' => 'btn-primary spacer-sm',
         'btn_class'      => 'btn btn-primary',
     ];
-
     private static $instance = NULL;
 
+    /**
+     * @return object
+     */
     public static function getInstance() {
         if (empty(self::$instance)) {
             self::$instance = new static();
@@ -120,24 +126,29 @@ class UserFields extends UserFieldsQuantum {
      *
      * @return array|null
      */
-    public static function get_user_field_cats($id = 0) {
+    public function get_user_field_cats($id = 0) {
 
         static $section = [];
-        $aid = isset($_GET['aid']) ? fusion_get_aidlink() : '';
+        $aid = get("aid") ? fusion_get_aidlink() : "";
 
         if (empty($section)) {
-            $result = dbquery("SELECT * FROM ".DB_USER_FIELD_CATS." WHERE field_parent=:field_parent ORDER BY field_cat_order ASC", [':field_parent' => 0]);
+
+            $result = dbquery("SELECT * FROM ".DB_USER_FIELD_CATS." WHERE field_parent=:field_parent ORDER BY field_cat_order ASC", [
+                ':field_parent' => 0
+            ]);
+
             if (dbrows($result)) {
+
                 $i = 0;
                 while ($data = dbarray($result)) {
-                    if (isset($_GET['lookup'])) {
-                        $link = clean_request($aid.'&section='.$data['field_cat_id'].'&lookup='.$_GET['lookup'], ['section'], FALSE);
+                    if ($this->profile_id) {
+                        $link = clean_request($aid.'&section='.$data['field_cat_id'].'&lookup='.$this->profile_id, ['section'], FALSE);
                     } else {
                         $link = clean_request($aid.'&section='.$data['field_cat_id'], ['section'], FALSE);
                     }
                     $section[$data['field_cat_id']] = [
                         'id'     => $data['field_cat_id'],
-                        'active' => (isset($_GET['section']) && $_GET['section'] == $data['field_cat_id']) ? 1 : (!isset($_GET['section']) && $i == 0 ? 1 : 0),
+                        'active' => ($this->section_id == $data['field_cat_id']) ? 1 : (!$this->section_id && $i == 0 ? 1 : 0),
                         'link'   => $link,
                         'name'   => ucwords(UserFieldsQuantum::parse_label($data['field_cat_name'])),
                         'icon'   => $data['field_cat_class']
@@ -178,9 +189,6 @@ class UserFields extends UserFieldsQuantum {
 
         return empty($key) ? (array)$section : (isset($section[$key]) ? (array)$section[$key] : NULL);
     }
-
-    private static $pages = [];
-    protected static $additional_pages = [];
 
     /**
      * Custom add files into the edit profile page.
@@ -451,7 +459,6 @@ class UserFields extends UserFieldsQuantum {
         return ($this->registration ? display_register_form($this->info) : display_profile_form($this->info));
     }
 
-
     private function renderButton() {
         $disabled = $this->display_terms ? TRUE : FALSE;
         $this->options += $this->default_options;
@@ -465,66 +472,85 @@ class UserFields extends UserFieldsQuantum {
         return (string)$html;
     }
 
-    /***
-     * Fetch profile output data
-     * - Display Profile (View)
+    /**
+     * Display Profile
+     *
+     * @param $profile_id
      */
+    private $section_id = 0;
+
     public function display_profile_output() {
 
         require_once THEMES."templates/global/profile.php";
 
         $locale = fusion_get_locale();
         $aidlink = fusion_get_aidlink();
+        // globals
+        $this->section_id = get("section");
+        $this->profile_id = get("lookup");
+
+        set_title($locale['u103'].$locale['global_201'].$this->user_data['user_name']);
+        OpenGraph::ogUserProfile($this->profile_id);
 
         // Add User to Groups
         if (iADMIN && checkrights("UG") && isset($_GET['lookup']) && $_GET['lookup'] !== fusion_get_userdata('user_id')) {
-            if ((isset($_POST['add_to_group'])) && (isset($_POST['user_group']) && isnum($_POST['user_group']))) {
-                $lookup = stripinput($_GET['lookup']);
-                $user_group = stripinput($_POST['user_group']);
+            if (post("add_to_group") && $user_group = post("user_group", FILTER_VALIDATE_INT)) {
                 if (!preg_match("(^\.{$user_group}$|\.{$user_group}\.|\.{$user_group}$)", $this->user_data['user_groups'])) {
                     $userdata = [
                         'user_groups' => $this->user_data['user_groups'].".".$user_group,
-                        'user_id'     => $lookup
+                        'user_id'     => $this->user_data['user_id']
                     ];
                     dbquery_insert(DB_USERS, $userdata, 'update');
                 }
                 if (defined('ADMIN_PANEL') && isset($_GET['step']) && $_GET['step'] == "view") {
-                    redirect(ADMIN."members.php".fusion_get_aidlink()."&amp;step=view&amp;user_id=".$this->user_data['user_id']);
+                    redirect(ADMIN."members.php".$aidlink."&amp;step=view&amp;user_id=".$this->user_data['user_id']);
                 } else {
-                    redirect(BASEDIR."profile.php?lookup=".$lookup);
+                    redirect(BASEDIR."profile.php?lookup=".$this->user_data['user_id']);
                 }
             }
         }
 
         $this->info['section'] = $this->get_user_field_cats();
+
         $this->info['user_id'] = $this->user_data['user_id'];
         $this->info['user_name'] = $this->user_data['user_name'];
+        $this->info['section_id'] = $this->section_id;
 
+        $this->info['profile_id'] = $this->profile_id;
+
+        // FUSION_PROFILE_PAGE const
         $current_section = [['id' => 1]];
         if (!empty($this->info['section'])) {
             $current_section = current($this->info['section']);
         }
-        $_GET['section'] = isset($_GET['section']) && isset($this->info['section'][$_GET['section']]) ? $_GET['section'] : $current_section['id'];
+        $this->section_id = $this->section_id && isset($this->info['section'][$this->section_id]) ? $this->section_id : $current_section['id'];
+
         if (empty($this->user_data['user_avatar']) && !file_exists(IMAGES."avatars/".$this->user_data['user_avatar'])) {
             $this->user_data['user_avatar'] = get_image('noavatar');
         }
 
-        $this->info['core_field']['profile_user_avatar'] = [
-            'title'  => $locale['u186'],
-            'value'  => $this->user_data['user_avatar'],
-            'status' => $this->user_data['user_status']
-        ];
-
-        // user name
-        $this->info['core_field']['profile_user_name'] = [
-            'title' => $locale['u068'],
-            'value' => $this->user_data['user_name']
-        ];
-
-        // user level
-        $this->info['core_field']['profile_user_level'] = [
-            'title' => $locale['u063'],
-            'value' => getgroupname($this->user_data['user_level'])
+        $this->info['core_field'] = [
+            'profile_user_avatar' => [
+                'title'  => $locale['u186'],
+                'value'  => $this->user_data['user_avatar'],
+                'status' => $this->user_data['user_status']
+            ],
+            'profile_user_name'   => [
+                'title' => $locale['u068'],
+                'value' => $this->user_data['user_name']
+            ],
+            'profile_user_level'  => [
+                'title' => $locale['u063'],
+                'value' => getgroupname($this->user_data['user_level'])
+            ],
+            'profile_user_joined' => [
+                'title' => $locale['u066'],
+                'value' => showdate("longdate", $this->user_data['user_joined'])
+            ],
+            'profile_user_visit'  => [
+                'title' => $locale['u067'],
+                'value' => $this->user_data['user_lastvisit'] ? showdate("longdate", $this->user_data['user_lastvisit']) : $locale['u042']
+            ],
         ];
 
         // user email
@@ -535,25 +561,12 @@ class UserFields extends UserFieldsQuantum {
             ];
         }
 
-        // user joined
-        $this->info['core_field']['profile_user_joined'] = [
-            'title' => $locale['u066'],
-            'value' => showdate("longdate", $this->user_data['user_joined'])
-        ];
-
-        // Last seen
-        $this->info['core_field']['profile_user_visit'] = [
-            'title' => $locale['u067'],
-            'value' => $this->user_data['user_lastvisit'] ? showdate("longdate", $this->user_data['user_lastvisit']) : $locale['u042']
-        ];
-
         // user status
         if (iADMIN && $this->user_data['user_status'] > 0) {
             $this->info['core_field']['profile_user_status'] = [
                 'title' => $locale['u055'],
                 'value' => getuserstatus($this->user_data['user_status'])
             ];
-
             if ($this->user_data['user_status'] == 3) {
                 $this->info['core_field']['profile_user_reason'] = [
                     'title' => $locale['u056'],
@@ -589,7 +602,7 @@ class UserFields extends UserFieldsQuantum {
             $this->info['core_field']['profile_user_group']['value'] = $group_info; // is array
         }
 
-        if (iMEMBER && fusion_get_userdata('user_id') != $this->user_data['user_id']) {
+        if (iMEMBER && fusion_get_userdata("user_id") != $this->user_data['user_id']) {
 
             $this->info['buttons'] = [
                 'user_pm_title' => $locale['u043'],
@@ -639,7 +652,7 @@ class UserFields extends UserFieldsQuantum {
             }
         }
 
-        // Now, we need to list the user profile profile.
+        // Public Profile Page
         $public_profile = new Public_Profile();
         $public_profile->user_data = $this->user_data;
         $public_profile->post_name = $this->post_name;
@@ -655,7 +668,6 @@ class UserFields extends UserFieldsQuantum {
 
         $this->info = array_merge($this->info, $output_info);
 
-        // Display Template
         echo display_user_profile($this->info);
     }
 
@@ -673,6 +685,10 @@ class UserFields extends UserFieldsQuantum {
         }
 
         return (string)$html;
+    }
+
+    public function getSectionId() {
+        return $this->section_id;
     }
 
     /**
