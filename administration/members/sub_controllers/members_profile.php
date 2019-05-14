@@ -166,6 +166,7 @@ class Members_Profile extends Members_Admin {
             $userFields->skip_password = TRUE;
             $userFields->method = 'input';
             $userFields->user_data = $user;
+            $userFields->user_name_change = TRUE;
 
             $userInput = new \UserFieldsInput();
             $userInput->admin_activation = FALSE;

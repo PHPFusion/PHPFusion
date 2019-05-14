@@ -80,11 +80,13 @@ class UserFieldsInput {
 
     /**
      * Checks user password integrity
+     *
      * @return bool
      * @throws \Exception
      */
     public function check_user_hash() {
-        if ($this->is_admin_panel === TRUE && checkrights('M')) return TRUE;
+        if ($this->is_admin_panel === TRUE && checkrights('M'))
+            return TRUE;
 
         if (isset($_POST['user_hash'])) {
             $user_hash = form_sanitizer($_POST['user_hash'], '', 'user_hash');
@@ -122,7 +124,8 @@ class UserFieldsInput {
                 }
             }
             // Captcha check
-            if ($this->validation == 1) $this->validate_captcha();
+            if ($this->validation == 1)
+                $this->validate_captcha();
             if (\Defender::safe()) {
                 if ($this->email_verification === TRUE && $this->is_admin_panel === FALSE) {
                     $this->send_verification_email();
@@ -150,6 +153,7 @@ class UserFieldsInput {
 
     /**
      * Creates a user account
+     *
      * @param $data
      */
     private function create_user_account($data) {
@@ -244,7 +248,8 @@ class UserFieldsInput {
                 ]);
                 $name_inactive = dbcount("(user_code)", DB_NEW_USERS, "user_name=':u_name'");
                 if ($name_active == 0 && $name_inactive == 0) {
-                    if ($this->registration === FALSE) addNotice('success', 'Your username has been updated successfully.');
+                    if ($this->registration === FALSE)
+                        addNotice('success', 'Your username has been updated successfully.');
 
                     return $username;
                 } else {
@@ -382,7 +387,7 @@ class UserFieldsInput {
      * Handle User Name Input and Validation
      */
     private function update_user_name() {
-        if ($this->userNameChange) {
+        if ($this->user_name_change) {
             $new_username = $this->validate_user_name();
             if (\Defender::safe()) {
                 dbquery("UPDATE `".DB_USERS."` SET `user_name`=:u_name WHERE `user_id`=:uid", [
@@ -402,6 +407,12 @@ class UserFieldsInput {
      * Handle User Password Input and Validation
      */
     private function update_user_password() {
+        $user_salt = '';
+        $user_algo = '';
+        $user_password = '';
+        $notice_class = '';
+        $notice_message = '';
+
         // method - validate_update
         $this->_userPassword = self::_getPasswordInput('user_password');
         $this->_newUserPassword = self::_getPasswordInput('user_password1');
@@ -526,6 +537,11 @@ class UserFieldsInput {
     }
 
     private function update_admin_password() {
+        $user_admin_algo = '';
+        $user_admin_password = '';
+        $user_admin_salt = '';
+        $notice_message = '';
+        $notice_class = '';
 
         if ($this->_getPasswordInput("user_admin_password")) { // if submit current admin password
 
@@ -890,9 +906,9 @@ class UserFieldsInput {
 
     private function update_public_profile() {
 
-        if ( post($this->post_name) ) {
+        if (post($this->post_name)) {
 
-            $data = array();
+            $data = [];
             $data['user_avatar'] = $this->set_user_avatar();
 
             $quantum = new UserFieldsQuantum();
@@ -954,23 +970,30 @@ class UserFieldsInput {
     }
 
     private function update_security() {
-        if ($this->is_admin_panel === FALSE) {
-
-        }
+        /*if ($this->is_admin_panel === FALSE) {
+        }*/
     }
 
     private function update_settings_profile() {
         if ($this->is_admin_panel === FALSE) {
             // Account Settings - high security risk
-            if (isset($_POST[$this->post_name.'_username'])) $this->update_user_name();
-            if (isset($_POST[$this->post_name.'_password'])) $this->update_user_password().$this->update_admin_password();
-            if (isset($_POST[$this->post_name.'_email'])) $this->update_user_email();
-            if (isset($_POST[$this->post_name.'_close'])) $this->update_user_close();
+            if (isset($_POST[$this->post_name.'_username']))
+                $this->update_user_name();
+            if (isset($_POST[$this->post_name.'_password']))
+                $this->update_user_password();
+                $this->update_admin_password();
+            if (isset($_POST[$this->post_name.'_email']))
+                $this->update_user_email();
+            if (isset($_POST[$this->post_name.'_close']))
+                $this->update_user_close();
             // Preferences - low security risk
-            if (isset($_POST[$this->post_name.'_pref'])) $this->update_preferences();
+            if (isset($_POST[$this->post_name.'_pref']))
+                $this->update_preferences();
             // Security - added level security
-            if (isset($_POST[$this->post_name.'_block']) || isset($_GET[$this->post_name.'_unblock'])) $this->update_user_blacklist();
-            if (isset($_POST[$this->post_name.'_security'])) $this->update_security();
+            if (isset($_POST[$this->post_name.'_block']) || isset($_GET[$this->post_name.'_unblock']))
+                $this->update_user_blacklist();
+            if (isset($_POST[$this->post_name.'_security']))
+                $this->update_security();
         }
     }
 
@@ -1024,8 +1047,6 @@ class UserFieldsInput {
 
     /**
      * Update User Fields
-     *
-     * @return bool
      */
     public function saveUpdate() {
         $this->locale = fusion_get_locale();
@@ -1041,7 +1062,7 @@ class UserFieldsInput {
                 $this->update_settings_profile();
                 break;
             case 'custom':
-                $this->update_custom_profile();
+                //$this->update_custom_profile();
                 break;
         }
 

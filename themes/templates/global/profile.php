@@ -412,7 +412,7 @@ if (!function_exists('display_user_profile')) {
             }
         }
 
-        $tpl->set_tag('tab_header', (isset($tab_title) ? opentab($tab_title, $_GET['section'], 'profile_tab', TRUE, FALSE, 'section') : ''));
+        $tpl->set_tag('tab_header', (isset($tab_title) ? opentab($tab_title, get('section') ?: 1, 'profile_tab', TRUE, FALSE, 'section') : ''));
         $tpl->set_tag('user_name', $user_name);
         $tpl->set_tag('user_avatar', $user_avatar);
         $tpl->set_tag('user_level', $user_level);
