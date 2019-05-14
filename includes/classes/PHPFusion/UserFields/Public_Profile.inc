@@ -188,7 +188,7 @@ class Public_Profile extends UserFieldsQuantum {
 
         if ($this->is_admin_panel === FALSE) {
 
-            $field_cats = UserFields::get_user_field_cats();
+            $field_cats = UserFields::getInstance()->get_user_field_cats();
             $section = get("section", FILTER_VALIDATE_INT);
             $index_page_id = isset($field_cats[$section]) ?: 1;
             $registration_cond = ($this->registration === TRUE && $this->is_admin_panel === FALSE ? ' AND field.field_registration=:field_register' : '');

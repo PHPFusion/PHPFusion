@@ -111,8 +111,4 @@ function display_user_profile($info) {
     AtomX2Theme\Templates\Profile::GetInstance()->DisplayProfile($info);
 }
 
-function display_profile_form() {
-    AtomX2Theme\Templates\Profile::GetInstance()->EditProfile();
-}
-
 set_image('noavatar50', fusion_get_settings('siteurl').'themes/Atom-X2/images/noavatar50.png');

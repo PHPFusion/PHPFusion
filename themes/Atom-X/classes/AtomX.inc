@@ -219,7 +219,7 @@ class AtomX extends Components {
                             echo form_text('user_name', '', '', ['placeholder' => $placeholder, 'required' => TRUE, 'input_id' => 'username']);
                             echo form_text('user_pass', '', '', ['placeholder' => $this->locale['global_102'], 'type' => 'password', 'required' => TRUE, 'input_id' => 'userpassword']);
                             echo form_checkbox('remember_me', $this->locale['global_103'], '', ['value' => 'y', 'class' => 'm-0', 'reverse_label' => TRUE, 'input_id' => 'rememberme']);
-                            echo form_button('login', $this->locale['global_104'], '', ['class' => 'btn-primary btn-sm m-b-5', 'input_id' => 'loginbtn']);
+                            echo form_button('login', $this->locale['global_104'], 'login', ['class' => 'btn-primary btn-sm m-b-5', 'input_id' => 'loginbtn']);
                             echo closeform();
                         echo '</li>';
                         echo '<li>'.str_replace(['[LINK]', '[/LINK]'], ['<a href="'.BASEDIR.'lostpassword.php">', '</a>'], $this->locale['global_106']).'</li>';
