@@ -652,8 +652,8 @@ class UserFieldsInput {
 
     /**
      * Update User Fields
-     *
      * @return bool
+     * @throws \Exception
      */
     public function saveUpdate() {
         $locale = fusion_get_locale();

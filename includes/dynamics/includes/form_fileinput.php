@@ -77,6 +77,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
         'form_id'           => '',
         'hide_upload'       => TRUE,
         'hide_remove'       => FALSE,
+        'krajee_disabled' => FALSE,
         'replace_upload'    => FALSE, // makes upload unique (i.e. overwrite instead of creating new)
     ];
 
@@ -92,13 +93,13 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
         $options['template'] = "classic";
     }
 
-    $options['input_id'] = trim($options['input_id'], "[]");
+    $options['input_id'] = trim(str_replace("[", "-", $options['input_id']), "]");
 
     $error_class = "";
-    if (\defender::inputHasError($input_name)) {
+    if (\Defender::inputHasError($input_name)) {
         $error_class = "has-error ";
         if (!empty($options['error_text'])) {
-            $new_error_text = \defender::getErrorText($input_name);
+            $new_error_text = \Defender::getErrorText($input_name);
             if (!empty($new_error_text)) {
                 $options['error_text'] = $new_error_text;
             }
@@ -108,55 +109,6 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
 
     // default max file size
     $format = '';
-    $browseLabel = $locale['df_300'];
-
-    // file type if single filter, if not will accept as object if left empty.
-    $type_for_js = NULL;
-    if ($options['type']) {
-        if (!stristr($options['type'], ',') && $options['type']) {
-            if ($options['type'] == 'image') {
-                $format = "image/*";
-                $browseLabel = $locale['df_301'];
-            } else if ($options['type'] == 'video') {
-                $format = "video/*";
-                $browseLabel = $locale['df_302'];
-            } else if ($options['type'] == 'audio') {
-                $format = "audio/*";
-                $browseLabel = $locale['df_303'];
-            }
-        }
-        $type_for_js = json_encode((array)$options['type']);
-    }
-    $browseLabel = $options['placeholder'] ?: $browseLabel;
-
-    $value = '';
-    if (!empty($input_value)) {
-        if (is_array($input_value)) {
-            $value = [];
-            foreach ($input_value as $c_value) {
-                $value[] = (file_exists($options['upload_path'].$c_value)) ? $options['upload_path'].$c_value : $c_value;
-            }
-        } else {
-            $value = (file_exists($options['upload_path'].$input_value)) ? $options['upload_path'].$input_value : $input_value;
-        }
-        $value = json_encode($value);
-    }
-
-    //$lang = '';
-    $lang = file_exists(DYNAMICS.'assets/fileinput/js/locales/'.$locale['short_lang_name'].'.js') ? 'language: "'.$locale['short_lang_name'].'",' : '';
-    if (!defined('form_fileinput')) {
-        add_to_head("<link href='".DYNAMICS."assets/fileinput/css/fileinput.min.css' media='all' rel='stylesheet' type='text/css' />");
-        if ($locale['text-direction'] == 'rtl') {
-            add_to_head("<link href='".DYNAMICS."assets/fileinput/css/fileinput-rtl.min.css' media='all' rel='stylesheet' type='text/css' />");
-        }
-        add_to_footer("<script src='".DYNAMICS."assets/fileinput/js/fileinput.min.js' type='text/javascript'></script>");
-
-        if (file_exists(DYNAMICS.'assets/fileinput/js/locales/'.$locale['short_lang_name'].'.js')) {
-            add_to_footer("<script src='".DYNAMICS."assets/fileinput/js/locales/".$locale['short_lang_name'].".js' type='text/javascript'></script>");
-            //$lang = 'language: "'.$locale['short_lang_name'].'",';
-        }
-        define('form_fileinput', TRUE);
-    }
 
     $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] ? 'display-block overflow-hide ' : '').$error_class.$options['class']."' ".($options['width'] ? "style='width: ".$options['width']." !important;'" : '').">\n";
     $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3" : '')."' for='".$options['input_id']."'>".$label.($options['required'] ? "<span class='required'>&nbsp;*</span>" : '')."
@@ -165,7 +117,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
     $html .= ($options['inline']) ? "<div class='col-xs-12 ".($label ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12")."'>\n" : "";
     $html .= "<input type='file' ".($format ? "accept='".$format."'" : '')." name='".$input_name."' id='".$options['input_id']."' style='width:".$options['width']."' ".($options['deactivate'] ? 'readonly' : '')." ".($options['multiple'] ? "multiple='1'" : '')." />\n";
     $html .= $options['ext_tip'] ? "<span class='tip'><i>".$options['ext_tip']."</i></span><br/>" : "";
-    $html .= (\defender::inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : '';
+    $html .= (\Defender::inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : '';
 
     // Inserts Media Selector
     // Draw the framework first
@@ -204,7 +156,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
                 mediaSelect();
             ");
         }
-        $html .= (\defender::inputHasError($input_name."-mediaSelector")) ? "<div id='".$options['input_id']."-mediaSelector' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
+        $html .= (\Defender::inputHasError($input_name."-mediaSelector")) ? "<div id='".$options['input_id']."-mediaSelector' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
 
         $html .= "</div>\n";
         $html .= "</div>\n";
@@ -212,7 +164,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
     $html .= ($options['inline']) ? "</div>\n" : "";
     $html .= "</div>\n";
 
-    \defender::getInstance()->add_field_session(
+    \Defender::getInstance()->add_field_session(
         [
             'input_name'        => trim($input_name, '[]'),
             'type'              => ((array)$options['type'] == ['image'] ? 'image' : 'file'),
@@ -244,9 +196,48 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
         ]
     );
 
-    $extra_data_js = "";
-    if ($options['form_id'] && $options['jsonurl']) {
-        $extra_data_js = "
+
+    if ($options['krajee_disabled'] === FALSE) {
+        $browseLabel = $locale['df_300'];
+
+        // file type if single filter, if not will accept as object if left empty.
+        $type_for_js = NULL;
+        if ($options['type']) {
+            if (!stristr($options['type'], ',') && $options['type']) {
+                if ($options['type'] == 'image') {
+                    $format = "image/*";
+                    $browseLabel = $locale['df_301'];
+                } else if ($options['type'] == 'video') {
+                    $format = "video/*";
+                    $browseLabel = $locale['df_302'];
+                } else if ($options['type'] == 'audio') {
+                    $format = "audio/*";
+                    $browseLabel = $locale['df_303'];
+                }
+            }
+            $type_for_js = json_encode((array)$options['type']);
+        }
+
+        $browseLabel = $options['placeholder'] ?: $browseLabel;
+
+        $value = "";
+        if (!empty($input_value)) {
+            if (is_array($input_value)) {
+                $value = [];
+                foreach ($input_value as $c_value) {
+                    $value[] = (file_exists($options['upload_path'].$c_value)) ? $options['upload_path'].$c_value : $c_value;
+                }
+            } else {
+                $value = (file_exists($options['upload_path'].$input_value)) ? $options['upload_path'].$input_value : $input_value;
+            }
+            $value = json_encode($value);
+        }
+
+        $lang = file_exists(DYNAMICS.'assets/fileinput/js/locales/'.$locale['short_lang_name'].'.js') ? 'language: "'.$locale['short_lang_name'].'",' : '';
+
+        $extra_data_js = "";
+        if ($options['form_id'] && $options['jsonurl']) {
+            $extra_data_js = "
         uploadExtraData: function() {
             var inputs = $('#".$options['form_id']." :input');
             var obj = $.map(inputs, function(x, y) {
@@ -258,23 +249,24 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
             return obj;
         },
         ";
-    }
-    if ($options['media']) {
-        \defender::getInstance()->add_field_session(
-            [
-                'input_name' => $input_name."-mediaSelector",
-                'title'      => trim($title, '[]'),
-                'id'         => $options['input_id']."-mediaSelector",
-                'type'       => 'mediaSelect',
-                'path'       => $options['upload_path'],
-                'required'   => $options['required'],
-                'safemode'   => $options['safemode'],
-            ]
-        );
-    }
-    switch ($options['template']) {
-        case "classic":
-            add_to_jquery("
+        }
+        if ($options['media']) {
+            \Defender::getInstance()->add_field_session(
+                [
+                    'input_name' => $input_name."-mediaSelector",
+                    'title'      => trim($title, '[]'),
+                    'id'         => $options['input_id']."-mediaSelector",
+                    'type'       => 'mediaSelect',
+                    'path'       => $options['upload_path'],
+                    'required'   => $options['required'],
+                    'safemode'   => $options['safemode'],
+                ]
+            );
+        }
+
+        switch ($options['template']) {
+            case "classic":
+                add_to_jquery("
             $('#".$options['input_id']."').fileinput({
                 allowedFileTypes: ".$type_for_js.",
                 allowedPreviewTypes : ".$type_for_js.",
@@ -296,9 +288,9 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
                 ".$lang."
             });
             ");
-            break;
-        case "modern":
-            add_to_jquery("
+                break;
+            case "modern":
+                add_to_jquery("
             $('#".$options['input_id']."').fileinput({
                 allowedFileTypes: ".$type_for_js.",
                 allowedPreviewTypes : ".$type_for_js.",
@@ -325,9 +317,9 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
                 ".$lang."
             });
             ");
-            break;
-        case "thumbnail":
-            add_to_jquery("
+                break;
+            case "thumbnail":
+                add_to_jquery("
             $('#".$options['input_id']."').fileinput({
                 allowedFileTypes: ".$type_for_js.",
                 allowedPreviewTypes : ".$type_for_js.",
@@ -355,7 +347,23 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
                 ".$lang."
             });
             ");
-            break;
+                break;
+        }
+
+        if (!defined('form_fileinput')) {
+            add_to_head("<link href='".DYNAMICS."assets/fileinput/css/fileinput.min.css' media='all' rel='stylesheet' type='text/css' />");
+            if ($locale['text-direction'] == 'rtl') {
+                add_to_head("<link href='".DYNAMICS."assets/fileinput/css/fileinput-rtl.min.css' media='all' rel='stylesheet' type='text/css' />");
+            }
+            add_to_footer("<script src='".DYNAMICS."assets/fileinput/js/fileinput.min.js' type='text/javascript'></script>");
+
+            if (file_exists(DYNAMICS.'assets/fileinput/js/locales/'.$locale['short_lang_name'].'.js')) {
+                add_to_footer("<script src='".DYNAMICS."assets/fileinput/js/locales/".$locale['short_lang_name'].".js' type='text/javascript'></script>");
+                //$lang = 'language: "'.$locale['short_lang_name'].'",';
+            }
+            define('form_fileinput', TRUE);
+        }
+
     }
 
     return $html;
