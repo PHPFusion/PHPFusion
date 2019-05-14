@@ -213,7 +213,7 @@ class Token extends \Defender {
         $user_id = $userdata['user_id'];
         $secret_key = defined('SECRET_KEY') ? SECRET_KEY : 'secret_key';
         $secret_key_salt = defined('SECRET_KEY_SALT') ? SECRET_KEY_SALT : 'secret_salt';
-        $algo = $settings['password_algorithm'] ? $settings['password_algorithm'] : 'sha256';
+        $algo = !empty($settings['password_algorithm']) ? $settings['password_algorithm'] : 'sha256';
         $key = $user_id.$token_time.$form_id.$secret_key;
         $salt = md5(isset($userdata['user_salt']) ? $userdata['user_salt'].$secret_key_salt : $secret_key_salt);
 
