@@ -49,7 +49,7 @@ function display_comments_widget() {
             $tpl->set_block('li', $info);
         }
         if (isset($global_comments['comments_nav'])) {
-            $tpl->set_block('li_nav', $global_comments['comments_nav']);
+            $tpl->set_tag('li_nav', $global_comments['comments_nav']);
         }
     } else {
         $info = [

@@ -81,6 +81,8 @@ function bbcode_list() {
         'error_text' => $locale['BBCA_418b'],
         'type'       => 'bbcode'
     ]);
+
+    echo '<div class="row">';
     echo "<div class='col-xs-6 col-md-6 text-right'>\n";
     echo form_checkbox('test_smileys', $locale['BBCA_418'], $smileys_checked, [
         'type'          => 'checkbox',
@@ -89,6 +91,7 @@ function bbcode_list() {
     echo "</div>\n";
     echo "<div class='col-xs-6 col-md-6 text-left'>\n";
     echo form_button('post_test', $locale['BBCA_401'], $locale['BBCA_401'], ['class' => 'btn-primary']);
+    echo "</div>\n";
     echo "</div>\n";
     closeform();
     closetable();

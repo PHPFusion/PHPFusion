@@ -155,8 +155,8 @@ closeside();
 openside('');
 echo form_select('bad_words_enabled', $locale['659'], $settings['bad_words_enabled'], [
     'options'     => $yes_no_array,
-    'inner_width' => '100% ',
-    'width'       => '100% '
+    'inner_width' => '100%',
+    'width'       => '100%'
 ]);
 echo form_text('bad_word_replace', $locale['654'], $settings['bad_word_replace']);
 echo form_textarea('bad_words', $locale['651'], $settings['bad_words'], [
