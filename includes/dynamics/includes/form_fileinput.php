@@ -77,7 +77,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
         'form_id'           => '',
         'hide_upload'       => TRUE,
         'hide_remove'       => FALSE,
-        'disable_fileinput' => FALSE,
+        'krajee_disabled'   => FALSE,
         'replace_upload'    => FALSE, // makes upload unique (i.e. overwrite instead of creating new)
     ];
 
@@ -109,6 +109,17 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
 
     // default max file size
     $format = '';
+    if ($options['type']) {
+        if (!stristr($options['type'], ',') && $options['type']) {
+            if ($options['type'] == 'image') {
+                $format = "image/*";
+            } else if ($options['type'] == 'video') {
+                $format = "video/*";
+            } else if ($options['type'] == 'audio') {
+                $format = "audio/*";
+            }
+        }
+    }
 
     $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] ? 'display-block overflow-hide ' : '').$error_class.$options['class']."' ".($options['width'] ? "style='width: ".$options['width']." !important;'" : '').">\n";
     $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3" : '')."' for='".$options['input_id']."'>".$label.($options['required'] ? "<span class='required'>&nbsp;*</span>" : '')."
@@ -197,7 +208,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
     );
 
 
-    if ($options['disable_fileinput'] === FALSE) {
+    if ($options['krajee_disabled'] === FALSE) {
         $browseLabel = $locale['df_300'];
 
         // file type if single filter, if not will accept as object if left empty.
@@ -205,13 +216,9 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
         if ($options['type']) {
             if (!stristr($options['type'], ',') && $options['type']) {
                 if ($options['type'] == 'image') {
-                    $format = "image/*";
                     $browseLabel = $locale['df_301'];
-                } else if ($options['type'] == 'video') {
-                    $format = "video/*";
                     $browseLabel = $locale['df_302'];
                 } else if ($options['type'] == 'audio') {
-                    $format = "audio/*";
                     $browseLabel = $locale['df_303'];
                 }
             }
