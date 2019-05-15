@@ -65,6 +65,7 @@ class Public_Profile extends UserFieldsQuantum {
                 });
                 ");
             } else {
+
                 $upload_settings = [
                     "disable_fileinput" => FALSE,
                     'upload_path'       => IMAGES."avatars/",
@@ -87,7 +88,6 @@ class Public_Profile extends UserFieldsQuantum {
                 ];
 
                 $info['user_avatar'] = form_fileinput('user_avatar', $this->locale['u185'], '', $upload_settings);
-
             }
             // Real name change button
             $info['name_change_button'] = form_button('update_name', 'Update Name', 'update_name', ['class' => $this->options['btn_post_class']]);
@@ -188,9 +188,9 @@ class Public_Profile extends UserFieldsQuantum {
 
         if ($this->is_admin_panel === FALSE) {
 
-            $field_cats = UserFields::get_user_field_cats();
-            $section = get("section", FILTER_VALIDATE_INT);
-            $index_page_id = isset($field_cats[$section]) ?: 1;
+            $field_cats = UserFields::getInstance()->get_user_field_cats();
+            $section_id = UserFields::getInstance()->getSectionId();
+            $index_page_id = isset($field_cats[$section_id]) ?: 1;
             $registration_cond = ($this->registration === TRUE && $this->is_admin_panel === FALSE ? ' AND field.field_registration=:field_register' : '');
             $registration_bind = ($this->registration === TRUE && $this->is_admin_panel === FALSE ? [':field_register' => 1] : []);
 

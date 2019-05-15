@@ -1,0 +1,40 @@
+<div class="spacer-sm">
+    {%tab_header%}
+</div>
+
+<div class="spacer-md">
+    <div class="row">
+        <div class="col-xs-12 col-sm-9">
+            <div class="clearfix">
+                {fields_block.{
+                {%fields%}
+                <hr/>
+                }}
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-3">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h5 class="text-uppercase m-t-0">{[u057]}</h5>
+                    <hr/>
+                    {user_groups.{
+                    <a href="{%group_url%}">{%group_name%}</a>,
+                    }}
+                    {user_group_na.{
+                    {[u117]}
+                    }}
+                </div>
+                {group_admin.{
+                <div class="panel-footer">
+                    {%ug_openform%}
+                    <div class="strong">{%ug_title%}</div>
+                    <div class="spacer-xs">{%ug_dropdown_input%}</div>
+                    <div>{%ug_button%}</div>
+                    {%ug_closeform%}
+                </div>
+                }}
+            </div>
+        </div>
+    </div>
+</div>
+{%tab_footer%}

@@ -74,6 +74,7 @@ class OpenGraph {
             $info['title'] = $locale['u103'].$locale['global_201'].$data['user_name'];
             $info['image'] = $data['user_avatar'] ? $settings['siteurl'].'images/avatars/'.$data['user_avatar'] : $settings['siteurl'].'images/avatars/no-avatar.jpg';
             $info['description'] = $settings['description'];
+            set_title($info['title']);
         }
 
         OpenGraph::setValues($info);
