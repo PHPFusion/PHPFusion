@@ -65,7 +65,6 @@ class Public_Profile extends UserFieldsQuantum {
                 });
                 ");
             } else {
-
                 $upload_settings = [
                     "disable_fileinput" => FALSE,
                     'upload_path'       => IMAGES."avatars/",

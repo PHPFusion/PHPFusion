@@ -71,6 +71,7 @@ function render_page() {
             echo showsublinks('', 'navbar-default', [
                 'id'                => 'main-nav',
                 'show_header'       => TRUE,
+                'banner_class'      => 'hidden',
                 'searchbar'         => TRUE,
                 'language_switcher' => TRUE
             ]);

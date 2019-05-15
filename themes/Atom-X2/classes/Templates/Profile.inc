@@ -23,6 +23,8 @@ use AtomX2Theme\Components;
 use \PHPFusion\Locale;
 
 class Profile extends Core {
+    private static $section;
+
     public static function DisplayProfile($info) {
         global $userFields;
 
@@ -32,6 +34,8 @@ class Profile extends Core {
         $userdata = fusion_get_userdata();
         $user_data = $userFields->getUserData();
         $settings = fusion_get_settings();
+
+        self::$section = get('section') ?: 1;
 
         Components::HidePanels();
 
@@ -93,13 +97,13 @@ class Profile extends Core {
                     $tab_title['icon'][$page_section['id']] = $page_section['icon'];
                 }
 
-                $tab_active = tab_active($tab_title, $_GET['section']);
+                $tab_active = tab_active($tab_title, self::$section);
 
                 echo '<div class="profile-main">';
-                echo opentab($tab_title, $_GET['section'], 'profile_tab', TRUE, '', 'section', ['section']);
-                echo opentabbody($tab_title['title'][$_GET['section']], $tab_title['id'][$_GET['section']], $tab_active, TRUE);
+                echo opentab($tab_title, self::$section, 'profile_tab', TRUE, '', 'section', ['section']);
+                echo opentabbody($tab_title['title'][self::$section], $tab_title['id'][self::$section], $tab_active, TRUE);
 
-                if ($tab_title['id'][$_GET['section']] == $tab_title['id'][1]) {
+                if ($tab_title['id'][self::$section] == $tab_title['id'][1]) {
                     echo '<div class="panel panel-default">';
                         echo '<div class="panel-heading" style="background: #222;color: #fff;">'.strtoupper($locale['AX9_013']).'</div>';
                         echo '<div class="panel-body">';
@@ -218,7 +222,7 @@ class Profile extends Core {
                     echo '<div class="text-center well">'.$locale['uf_108'].'</div>';
                 }
 
-                if ($tab_title['id'][$_GET['section']] == $tab_title['id'][1]) {
+                if ($tab_title['id'][self::$section] == $tab_title['id'][1]) {
                     echo '<div>';
                     echo '<h4 style="font-weight: bold;">'.$locale['AX9_018'].'</h4>';
 
@@ -462,32 +466,6 @@ class Profile extends Core {
                 echo '</div>';
             echo '</div>';
 
-        echo '</div>';
-    }
-
-    public static function EditProfile() {
-        self::SetParam('greybody', 'TRUE');
-        Components::HidePanels();
-
-        echo '<div class="panel panel-default">';
-        echo '<div class="panel-heading"><h4><b>'.fusion_get_locale('u102').'</b></h4></div>';
-        echo '<div class="panel-body">';
-        echo '{%tab_header%}';
-        echo '{%open_form%}';
-        echo '{%user_name_field%}';
-        echo '{%user_email_field%}';
-        echo '{%user_hide_email_field%}';
-        echo '{%user_reputation_field%}';
-        echo '{%user_avatar_field%}';
-        echo '{%user_password_field%}';
-        echo '{%user_admin_password_field%}';
-        echo '{%custom_fields%}';
-        echo '{%captcha_fields%}';
-        echo '{%eula%}';
-        echo '{%post_button%}';
-        echo '{%close_form%}';
-        echo '{%tab_footer%}';
-        echo '</div>';
         echo '</div>';
     }
 }

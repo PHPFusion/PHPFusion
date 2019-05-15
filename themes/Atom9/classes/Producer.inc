@@ -148,7 +148,7 @@ class Producer extends Core {
             echo SiteLinks::setSubLinks($menu_options)->showSubLinks();
         echo '</div>';
 
-        add_to_jquery('$("#main-menu").affix({offset: {top: 67}});');
+        //add_to_jquery('$("#main-menu").affix({offset: {top: 67}});');
     }
 
     private function DispalyBanner() {

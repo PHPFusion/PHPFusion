@@ -20,7 +20,8 @@ $settings = fusion_get_settings();
 $update_settings_tbl = [
     'version'         => '9.10.00',
     'pm_email_notify' => $settings['pm_email_notify'] == 2 ? 1 : 0,
-    'pm_save_sent'    => $settings['pm_save_sent'] == 2 ? 1 : 0
+    'pm_save_sent'    => $settings['pm_save_sent'] == 2 ? 1 : 0,
+    'mime_check'      => 1
 ];
 
 foreach ($update_settings_tbl as $key => $value) {

@@ -454,7 +454,7 @@ function get_table_rows($table_name, $localeset = 'English') {
             ],
             [
                 'settings_name'  => 'mime_check',
-                'settings_value' => 0
+                'settings_value' => 1
             ],
             [
                 'settings_name'  => 'normalize_seo',
