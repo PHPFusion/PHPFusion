@@ -201,7 +201,7 @@ if (!function_exists('forum_newtopic')) {
             $_POST['forum_sel'] = isset($_POST['forum_sel']) && isnum($_POST['forum_sel']) ? $_POST['forum_sel'] : 0;
             redirect(FORUM.'post.php?action=newthread&forum_id='.$_POST['forum_sel']);
         }
-        echo openmodal('newtopic', $locale['forum_0057'], ['button_id' => 'newtopic', 'class' => 'modal-md']);
+        echo openmodal('newtopic', $locale['forum_0057'], ['button_id' => 'newtopic', 'class_dialog' => 'modal-md']);
         $index = dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat');
         $result = dbquery("SELECT a.forum_id, a.forum_name, b.forum_name as forum_cat_name, a.forum_post
          FROM ".DB_FORUMS." a

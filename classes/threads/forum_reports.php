@@ -107,7 +107,7 @@ class Forum_Reports {
                 });
                 ");
                 // let us do a hidden input here, and see which tab is active.
-                $modal = openmodal("report_frm", "<h4 class='strong m-0'>Report Thread</h4>", ["class" => "modal-md", "static" => TRUE]);
+                $modal = openmodal("report_frm", "<h4 class='strong m-0'>Report Thread</h4>", ["class_dialog" => "modal-md", "static" => TRUE]);
                 $modal .= "<h5 class='p-15 p-t-0 strong'>We are sorry something is wrong. How can we help?</h5>";
                 $modal .= "<div class='p-0'>\n";
                 $modal .= openform("report_frm", "post", FUSION_REQUEST);

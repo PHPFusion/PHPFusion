@@ -506,7 +506,7 @@ class ForumAdminView extends ForumAdminInterface {
 
         ob_start();
 
-        echo openmodal('move', self::$locale['forum_060'], ['static' => 1, 'class' => 'modal-md']);
+        echo openmodal('move', self::$locale['forum_060'], ['static' => 1, 'class_dialog' => 'modal-md']);
         echo openform('moveform', 'post', FUSION_REQUEST);
         echo "<div class='row'>\n";
         echo "<div class='col-xs-12 col-sm-5 col-md-5 col-lg-5'>\n";

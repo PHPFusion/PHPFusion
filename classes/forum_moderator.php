@@ -151,7 +151,7 @@ class Forum_Moderator {
             if (!empty($forum_mods)) {
                 $mod_groups = explode(".", $forum_mods);
             }
-            $result = dbquery("SELECT user_id, user_name, user_level, user_groups 
+            $result = dbquery("SELECT user_id, user_name, user_level, user_groups
             FROM ".DB_USERS." WHERE user_level <= :admin ORDER BY user_name ASC", [":admin" => USER_LEVEL_MEMBER]);
             if (dbrows($result)) {
                 while ($data = dbarray($result)) {
@@ -344,7 +344,7 @@ class Forum_Moderator {
                     ]);
 
                 ob_start();
-                echo openmodal('renew', $this->locale['forum_0207'], ['class' => 'modal-center', 'static' => 1]);
+                echo openmodal('renew', $this->locale['forum_0207'], ['class_dialog' => 'modal-center', 'static' => 1]);
                 echo "<div style='text-align:center'><br />\n".$this->locale['forum_0759']."<br /><br />\n";
                 echo "<a href='".FORUM."index.php?viewforum&amp;forum_id=".$this->forum_id."&amp;parent_id=".$this->parent_id."'>".$this->locale['forum_0549']."</a><br /><br />\n";
                 echo "<a href='".FORUM."index.php'>".$this->locale['forum_0550']."</a><br /><br /></div>\n";
@@ -365,7 +365,7 @@ class Forum_Moderator {
     private function mod_delete_thread() {
         if (iMOD) {
             ob_start();
-            echo openmodal('deletethread', $this->locale['forum_0201'], ['class' => 'modal-center']);
+            echo openmodal('deletethread', $this->locale['forum_0201'], ['class_dialog' => 'modal-center']);
             echo "<div class='text-center'><br />\n";
             if (!isset($_POST['deletethread'])) {
                 echo openform('delform', 'post', $this->form_action."&amp;step=delete");
@@ -481,7 +481,7 @@ class Forum_Moderator {
             $fid = intval($forum_id);
             $param[':thread_count'] = dbcount("(forum_id)", DB_FORUM_THREADS, "forum_id=:fid", [":fid" => $fid]);
             if ($param[':thread_count']) {
-                $result = dbquery("SELECT p.forum_id ':fid', p.post_id ':pid', p.post_author ':aid', p.post_datestamp ':time', COUNT(p.post_id) ':post_count' 
+                $result = dbquery("SELECT p.forum_id ':fid', p.post_id ':pid', p.post_author ':aid', p.post_datestamp ':time', COUNT(p.post_id) ':post_count'
                             FROM ".DB_FORUM_POSTS." p
                             INNER JOIN ".DB_FORUM_THREADS." t ON p.thread_id=t.thread_id
                             WHERE p.forum_id=:fid AND t.thread_hidden='0' AND p.post_hidden='0'
@@ -529,7 +529,7 @@ class Forum_Moderator {
         if (iMOD) {
             dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_locked='1' WHERE thread_id='".intval($this->thread_id)."' AND thread_hidden='0'");
             ob_start();
-            echo openmodal('lockthread', $this->locale['forum_0202'], ['class' => 'modal-center']);
+            echo openmodal('lockthread', $this->locale['forum_0202'], ['class_dialog' => 'modal-center']);
             echo "<div style='text-align:center'><br />\n";
             echo "<strong>".$this->locale['forum_0711']."</strong><br /><br />\n";
             echo "<a href='".FORUM."index.php?viewforum&amp;forum_id=".$this->forum_id."&amp;parent_id=".$this->parent_id."'>".$this->locale['forum_0549']."</a><br /><br />\n";
@@ -548,7 +548,7 @@ class Forum_Moderator {
         if (iMOD) {
             dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_locked='0' WHERE thread_id='".intval($this->thread_id)."' AND thread_hidden='0'");
             ob_start();
-            echo openmodal('lockthread', $this->locale['forum_0720'], ['class' => 'modal-center']);
+            echo openmodal('lockthread', $this->locale['forum_0720'], ['class_dialog' => 'modal-center']);
             echo "<div style='text-align:center'><br />\n";
             echo "<strong>".$this->locale['forum_0721']."</strong><br /><br />\n";
             echo "<a href='".FORUM."index.php?viewforum&amp;forum_id=".$this->forum_id."&amp;parent_id=".$this->parent_id."'>".$this->locale['forum_0549']."</a><br /><br />\n";
@@ -567,7 +567,7 @@ class Forum_Moderator {
         if (iMOD) {
             dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_sticky='1' WHERE thread_id='".intval($this->thread_id)."' AND thread_hidden='0'");
             ob_start();
-            echo openmodal('lockthread', $this->locale['forum_0204'], ['class' => 'modal-center']);
+            echo openmodal('lockthread', $this->locale['forum_0204'], ['class_dialog' => 'modal-center']);
             echo "<div style='text-align:center'><br />\n";
             echo "<strong>".$this->locale['forum_0731']."</strong><br /><br />\n";
             echo "<a href='".FORUM."index.php?viewforum&amp;forum_id=".$this->forum_id."&amp;parent_id=".$this->parent_id."'>".$this->locale['forum_0549']."</a><br /><br />\n";
@@ -586,7 +586,7 @@ class Forum_Moderator {
         if (iMOD) {
             dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_sticky='0' WHERE thread_id='".intval($this->thread_id)."' AND thread_hidden='0'");
             ob_start();
-            echo openmodal('lockthread', $this->locale['forum_0205'], ['class' => 'modal-center']);
+            echo openmodal('lockthread', $this->locale['forum_0205'], ['class_dialog' => 'modal-center']);
             echo "<div style='text-align:center'><br />\n";
             echo "<strong>".$this->locale['forum_0741']."</strong><br /><br />\n";
             echo "<a href='".FORUM."index.php?viewforum&amp;forum_id=".$this->forum_id."&amp;parent_id=".$this->parent_id."'>".$this->locale['forum_0549']."</a><br /><br />\n";
@@ -604,7 +604,7 @@ class Forum_Moderator {
         if (iMOD) {
 
             ob_start();
-            echo openmodal('movethread', $this->locale['forum_0206'], ['class' => 'modal-center']);
+            echo openmodal('movethread', $this->locale['forum_0206'], ['class_dialog' => 'modal-center']);
 
             if (isset($_POST['move_thread'])) {
 
@@ -883,7 +883,7 @@ class Forum_Moderator {
                         $post_count = dbcount("(post_id)", DB_FORUM_POSTS, "thread_id='".intval($pdata['thread_id'])."'");
 
                         ob_start();
-                        echo openmodal('forum0300', $this->locale['forum_0176'], ['class' => 'modal-center']);
+                        echo openmodal('forum0300', $this->locale['forum_0176'], ['class_dialog' => 'modal-center']);
                         if ($first_post_found) {
                             // there is a first post.
                             echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>";
@@ -1069,11 +1069,11 @@ class Forum_Moderator {
 
                                     // ReUpdate the target thread
                                     dbquery("
-                                    UPDATE ".DB_FORUM_THREADS." SET 
-                                    thread_lastpost=:thread_lastpost, 
-                                    thread_lastpostid=:thread_lastpostid, 
-                                    thread_postcount=thread_postcount+".intval($pdata['num_posts']).", 
-                                    thread_lastuser=:thread_lastuser                                    
+                                    UPDATE ".DB_FORUM_THREADS." SET
+                                    thread_lastpost=:thread_lastpost,
+                                    thread_lastpostid=:thread_lastpostid,
+                                    thread_postcount=thread_postcount+".intval($pdata['num_posts']).",
+                                    thread_lastuser=:thread_lastuser
                                     WHERE thread_id=:new_thread_id", [
                                             ':thread_lastpost'   => $param[':thread_lastpost'],
                                             ':thread_lastpostid' => $param[':thread_lastpostid'],
@@ -1083,9 +1083,9 @@ class Forum_Moderator {
                                     );
 
                                     // Re update the target forum
-                                    dbquery("UPDATE ".DB_FORUMS." SET 
-                                    forum_lastpost=:thread_lastpost, 
-                                    forum_postcount=forum_postcount+".intval($pdata['num_posts']).", 
+                                    dbquery("UPDATE ".DB_FORUMS." SET
+                                    forum_lastpost=:thread_lastpost,
+                                    forum_postcount=forum_postcount+".intval($pdata['num_posts']).",
                                     forum_lastuser=:thread_lastuser WHERE forum_id=:new_forum_id", [
                                         ':thread_lastpost' => $param[':thread_lastpost'],
                                         ':thread_lastuser' => $param[':thread_lastuser'],
@@ -1097,14 +1097,14 @@ class Forum_Moderator {
                                         // Select
 
                                         $forum_lastpost_res = dbarray(dbquery("
-                                        SELECT post_author, post_datestamp FROM ".DB_FORUM_POSTS." WHERE forum_id='".intval($pdata['forum_id'])."' ORDER BY post_datestamp DESC 
+                                        SELECT post_author, post_datestamp FROM ".DB_FORUM_POSTS." WHERE forum_id='".intval($pdata['forum_id'])."' ORDER BY post_datestamp DESC
                                         LIMIT 1
                                         "));
 
-                                        dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".intval($forum_lastpost_res['post_datestamp'])."', 
-                                        forum_postcount=forum_postcount-".intval($pdata['num_posts']).", 
-                                        forum_threadcount='".(dbcount("(thread_id)", DB_FORUM_THREADS, "forum_id='".intval($pdata['forum_id'])."'") - 1)."', 
-                                        forum_lastuser='".intval($forum_lastpost_res['post_author'])."' 
+                                        dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".intval($forum_lastpost_res['post_datestamp'])."',
+                                        forum_postcount=forum_postcount-".intval($pdata['num_posts']).",
+                                        forum_threadcount='".(dbcount("(thread_id)", DB_FORUM_THREADS, "forum_id='".intval($pdata['forum_id'])."'") - 1)."',
+                                        forum_lastuser='".intval($forum_lastpost_res['post_author'])."'
                                         WHERE forum_id='".intval($pdata['forum_id'])."'");
 
                                         dbquery("DELETE FROM ".DB_FORUM_THREADS." WHERE thread_id='".intval($pdata['thread_id'])."'");
