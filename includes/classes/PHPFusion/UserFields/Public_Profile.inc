@@ -193,8 +193,6 @@ class Public_Profile extends UserFieldsQuantum {
 
     public function get_OutputInfo() {
         $this->section_id = get("section");
-
-
         $info = [
                 'section'    => $this->get_category(),
                 'section_id' => $this->section_id,
@@ -204,7 +202,6 @@ class Public_Profile extends UserFieldsQuantum {
         if (!empty($info['section'])) {
             $current_section = current($info['section']);
         }
-
         $this->info['section_id'] = isset($this->info['section'][$this->section_id]) ? $this->section_id : $current_section['id'];
 
         return $info;

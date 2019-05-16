@@ -1,14 +1,14 @@
 <!--userprofile_pre_idx-->
 {%opentable%}
-<section id='user-profile' class='overflow-hide'>
-    <div class="row">
-        <div class="col-xs-12 col-sm-2">
+<section id="user-profile">
+    <div class="clearfix">
+        <div class="pull-left" style="min-width:250px; padding-right:15px;">
             {%user_avatar%}
             {buttons.{
             <a class="btn btn-success btn-block spacer-sm" href="{%user_pm_link%}">{[send_message]}</a>
             }}
         </div>
-        <div class="col-xs-12 col-sm-10">
+        <div class="overflow-hide" style="padding-left:15px; padding-right:15px;">
             {user_admin.{
             <div class="pull-right btn-group">
                 <a class="btn btn-sm btn-default" href="{%user_susp_link%}">{%user_susp_title%}</a>

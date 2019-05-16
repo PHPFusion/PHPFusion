@@ -302,6 +302,7 @@ if (!function_exists('display_profile')) {
     function display_profile($info) {
 
         $locale = fusion_get_locale();
+
         add_to_head("<link href='".THEMES."templates/global/css/profile.css' rel='stylesheet'/>");
         $tpl = \PHPFusion\Template::getInstance('profile');
         $tpl->set_template(__DIR__.'/tpl/user_profile.html');
@@ -414,9 +415,7 @@ if (!function_exists('display_profile')) {
         if (!empty($info['user_admin'])) {
             $tpl->set_block('user_admin', $info['user_admin']);
         }
-        if (!empty($info['group_admin'])) {
-            $tpl->set_block('group_admin', $info['group_admin']);
-        }
+
         if (!empty($info['buttons'])) {
             $tpl->set_block('buttons', $info['buttons']);
         }
@@ -503,34 +502,25 @@ if (!function_exists('display_user_profile')) {
 
 if (!function_exists('display_profile_groups')) {
     function display_profile_groups($info) {
-        print_P($info);
-        if (!empty($info)) {
+        $tpl = \PHPFusion\Template::getInstance("user-groups");
+        $tpl->set_template(__DIR__."/tpl/profile/profile-groups.html");
 
-        } else {
-            return "There were no groups found";
+        $tpl->set_locale( fusion_get_locale() );
+        $tpl->set_tag("pagenav", $info['pagenav']);
+        $tpl->set_tag("total", $info['group_max_count']);
+
+        if (!empty($info['group_admin'])) {
+
+            $tpl->set_block('group_admin', $info['group_admin']);
         }
-        /*
-         * <div class="panel panel-default">
-                <div class="panel-body">
-                    <h5 class="text-uppercase m-t-0">{[u057]}</h5>
-                    <hr/>
-                    {user_groups.{
-                    <a href="{%group_url%}">{%group_name%}</a>,
-                    }}
-                    {user_group_na.{
-                    {[u117]}
-                    }}
-                </div>
-                {group_admin.{
-                <div class="panel-footer">
-                    {%ug_openform%}
-                    <div class="strong">{%ug_title%}</div>
-                    <div class="spacer-xs">{%ug_dropdown_input%}</div>
-                    <div>{%ug_button%}</div>
-                    {%ug_closeform%}
-                </div>
-                }}
-            </div>
-         */
+
+        if (!empty($info['user_groups'])) {
+            foreach($info['user_groups'] as $groups) {
+                $tpl->set_block("groups", $groups);
+            }
+        } else {
+            $tpl->set_block("groups_na");
+        }
+        return $tpl->get_output();
     }
 }

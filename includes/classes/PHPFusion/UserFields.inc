@@ -192,30 +192,40 @@ class UserFields extends UserFieldsQuantum {
             $active_class = ' class="active"';
             $ppCache = [
                 'activity' => ['id'    => 'activity',
-                               'title' => 'Activity',
+                               'title' => 'User Activity',
                                'link'  => BASEDIR.'profile.php?lookup='.$this->profile_id.'&amp;profile_page=activity',
                                'class' => $current_page == 'activity' ? $active_class : ""
                 ],
                 'profile'  => ['id'    => 'profile',
-                               'title' => 'Profile',
+                               'title' => 'User Profile',
                                'link'  => BASEDIR.'profile.php?lookup='.$this->profile_id.'&amp;profile_page=profile',
                                'class' => $current_page == 'profile' ? $active_class : ""
 
                 ],
                 'friends'  => ['id'    => 'friends',
-                               'title' => 'Friends',
+                               'title' => 'User Friends',
                                'link'  => BASEDIR.'profile.php?lookup='.$this->profile_id.'&amp;profile_page=friends',
                                'class' => $current_page == 'friends' ? $active_class : ""
                 ],
-                'groups'   => ['id'    => 'groups', 'title' => 'Groups',
+                'groups'   => ['id'    => 'groups',
+                               'title' => 'User Groups <span class="badge">'.format_num($this->total_groups).'</span>',
                                'link'  => BASEDIR.'profile.php?lookup='.$this->profile_id.'&amp;profile_page=groups',
                                'class' => $current_page == 'groups' ? $active_class : ""
-                ],
+                ]
             ];
+
             $this->current_page = isset($ppCache[$current_page]) ? $ppCache[$current_page]['id'] : "activity";
         }
 
         return $ppCache;
+    }
+
+    public function userModeratorAccess() {
+        return (checkrights("M") && fusion_get_userdata("user_level") <= USER_LEVEL_ADMIN && $this->profile_id != '1' || iSUPERADMIN) ? TRUE : FALSE;
+    }
+
+    public function groupModeratorAccess() {
+        return (checkrights("UG") && fusion_get_userdata("user_level") <= USER_LEVEL_ADMIN && $this->profile_id != '1' || iSUPERADMIN) ? TRUE : FALSE;
     }
 
     // for input
@@ -490,8 +500,8 @@ class UserFields extends UserFieldsQuantum {
             WHERE user_id=:uid".$user_status."
             ORDER BY suspend_date DESC
             LIMIT 1", [
-                    ':uid' => intval($this->profile_id)
-                ]);
+                ':uid' => intval($this->profile_id)
+            ]);
             if (dbrows($result)) {
 
                 $userdata = dbarray($result);
@@ -517,7 +527,12 @@ class UserFields extends UserFieldsQuantum {
     }
 
     private function getProfileContent() {
+
+        $aidlink = fusion_get_aidlink();
+        $locale = fusion_get_locale();
+
         switch ($this->current_page) {
+
             case "profile":
                 // Public Profile Page
                 $public_profile = new Public_Profile();
@@ -532,42 +547,75 @@ class UserFields extends UserFieldsQuantum {
                 $public_profile->plugin_locale_folder = $this->plugin_locale_folder;
                 $public_profile->inline_field = $this->inline_field;
                 $public_profile->method = $this->method;
-                $info = $public_profile->get_OutputInfo();
 
-                return display_user_profile($info);
+                return display_user_profile($public_profile->get_OutputInfo());
 
                 break;
             case "friends":
                 return "The friend page is currently under development.";
                 break;
+
             case "groups":
-                $user_data = $this->getCurrentUserData();
-                print_P($user_data);
-                $locale = fusion_get_locale();
+                $group_admin = [];
+                $user = $this->getCurrentUserData();
 
-                // Groups - need translating.
-                $this->info['core_field']['profile_user_group']['title'] = $locale['u057'];
-                $this->info['core_field']['profile_user_group']['value'] = "";
-                $user_groups = strpos($user_data['user_groups'], ".") == 0 ? substr($user_data['user_groups'], 1) : $user_data['user_groups'];
-                $user_groups = explode(".", $user_groups);
-                $user_groups = array_filter($user_groups);
-                $info = [];
-                if (!empty($user_groups)) {
-
-                    foreach($user_groups as $group_id) {
-
-                        if ($group = getgroupname($group_id)) {
-
-                            $info[] = [
-                                'group_url'  => BASEDIR."profile.php?group_id=".$group_id,
-                                'group_name' => $group
-                            ];
+                if ($this->groupModeratorAccess()) {
+                    if (post("add_to_group") && $user_group = post("user_group", FILTER_VALIDATE_INT)) {
+                        $response = UserGroups::getInstance()->setGroup($user_group)->add($this->profile_id);
+                        if ($response === TRUE) {
+                            $step = get("step");
+                            if (defined('ADMIN_PANEL') && $step == "view") {
+                                redirect(ADMIN."members.php".fusion_get_aidlink()."&amp;step=view&amp;user_id=".$this->profile_id);
+                            } else {
+                                redirect(BASEDIR."profile.php?lookup=".$user['user_id']);
+                            }
                         }
                     }
 
+                    $groups_cache = cache_groups();
+                    $user_groups_opts = [];
+                    if (count($groups_cache) > 0) {
+                        foreach ($groups_cache as $group) {
+                            if (!preg_match("(^{$group['group_id']}|\.{$group['group_id']}\.|\.{$group['group_id']}$)", $user['user_groups'])) {
+                                $user_groups_opts[$group['group_id']] = $group['group_name'];
+                            }
+                        }
+                    }
+
+
+                    if (!empty($user_groups_opts)) {
+
+                        $submit_link = BASEDIR."profile.php?lookup=".$this->profile_id."&amp;profile_page=groups";
+                        if (defined('ADMIN_PANEL') && get("step") == "view") {
+                            $submit_link = ADMIN."members.php".$aidlink."&amp;step=view&amp;user_id=".$this->profile_id."&amp;lookup=".$this->profile_id;
+                        }
+
+                        $group_admin["group_admin"] = [
+                            'ug_openform'       => openform("admin_grp_form", "POST", $submit_link),
+                            'ug_closeform'      => closeform(),
+                            'ug_title'          => $locale['u061'],
+                            'ug_dropdown_input' => form_select("user_group", '',
+                                "", [
+                                    "select2_disabled" => TRUE,
+                                    "class" => "m-b-0",
+                                    "options"          => $user_groups_opts,
+                                    "width"            => "100%",
+                                    "inner_width"      => "100%",
+                                    "inline"           => TRUE,
+                                ]),
+                            'ug_button'         =>form_button("add_to_group", $locale['u059'], $locale['u059'], ["class" => "btn-default"])
+                        ];
+                    }
                 }
-                // $group_info as output
+
+                $user_groups = new UserGroups();
+                $user_groups->user_data = $this->getCurrentUserData();
+                $user_groups->profile_id = $this->profile_id;
+
+                $info = $user_groups->get_OutputInfo() + $group_admin;
+
                 return display_profile_groups($info);
+
                 break;
             case "activity":
                 return "This activity page is currently under development..";
@@ -576,6 +624,8 @@ class UserFields extends UserFieldsQuantum {
                 return "This page is currently unavailable.";
         }
     }
+
+    private $total_groups = 0;
 
     public function display_profile_output() {
 
@@ -589,38 +639,23 @@ class UserFields extends UserFieldsQuantum {
 
         $locale = fusion_get_locale();
         $aidlink = fusion_get_aidlink();
+
         $this->settings = fusion_get_settings();
         $this->profile_id = get("lookup", FILTER_VALIDATE_INT);
 
         OpenGraph::ogUserProfile($this->profile_id);
 
         $userdata = $this->getCurrentUserData();
+        $this->total_groups = UserGroups::get_userGroupCount($userdata['user_groups']);
 
         // info
         $this->info = [
                 'profile_id'      => $this->profile_id,
                 'profile_pages'   => $this->getOutputPages(),
                 'profile_content' => $this->getProfileContent(),
+                'total_groups' => $this->total_groups,
 
             ] + $userdata;
-
-        // Add User to Groups
-        if (iADMIN && checkrights("UG") && $this->profile_id !== fusion_get_userdata("user_id")) {
-            if (post("add_to_group") && $user_group = post("user_group", FILTER_VALIDATE_INT)) {
-                if (!preg_match("(^\.{$user_group}$|\.{$user_group}\.|\.{$user_group}$)", $this->user_data['user_groups'])) {
-                    $userdata = [
-                        'user_groups' => $this->user_data['user_groups'].".".$user_group,
-                        'user_id'     => $this->user_data['user_id']
-                    ];
-                    dbquery_insert(DB_USERS, $userdata, 'update');
-                }
-                if (defined('ADMIN_PANEL') && isset($_GET['step']) && $_GET['step'] == "view") {
-                    redirect(ADMIN."members.php".$aidlink."&amp;step=view&amp;user_id=".$this->user_data['user_id']);
-                } else {
-                    redirect(BASEDIR."profile.php?lookup=".$this->user_data['user_id']);
-                }
-            }
-        }
 
         // This is for profile.
         $this->info['core_field'] = [
@@ -677,57 +712,26 @@ class UserFields extends UserFieldsQuantum {
 
         // Not own
         if (iMEMBER && fusion_get_userdata("user_id") != $this->info['user_id']) {
-
             $this->info['buttons'] = [
                 'user_pm_title' => $locale['u043'],
                 'user_pm_link'  => BASEDIR."messages.php?msg_send=".$this->info['user_id']
             ];
+        }
 
-            if (checkrights("M") && fusion_get_userdata("user_level") <= USER_LEVEL_ADMIN && $this->info['user_id'] != '1') {
-
-                $this->info['user_admin'] = [
-                    'user_edit_title'     => $locale['edit'],
-                    'user_edit_link'      => ADMIN."members.php".$aidlink."&amp;ref=edit&amp;lookup=".$this->info['user_id'],
-                    'user_ban_title'      => $this->info['user_status'] == 1 ? $locale['u074'] : $locale['u070'],
-                    'user_ban_link'       => ADMIN."members.php".$aidlink."&amp;action=".($this->info['user_status'] == 1 ? 2 : 1)."&amp;lookup=".$this->info['user_id'],
-                    'user_suspend_title'  => $locale['u071'],
-                    'user_suspend_link'   => ADMIN."members.php".$aidlink."&amp;action=3&amp;lookup=".$this->info['user_id'],
-                    'user_delete_title'   => $locale['delete'],
-                    'user_delete_link'    => ADMIN."members.php".$aidlink."&amp;ref=delete&amp;lookup=".$this->info['user_id'],
-                    'user_delete_onclick' => "onclick=\"return confirm('".$locale['u073']."');\"",
-                    'user_susp_title'     => $locale['u054'],
-                    'user_susp_link'      => ADMIN."members.php".$aidlink."&amp;ref=log&amp;lookup=".$this->info['user_id']
-                ];
-
-                $groups_cache = cache_groups();
-                $user_groups_opts = [];
-                if (count($groups_cache) > 0) {
-                    foreach ($groups_cache as $group) {
-                        if (!preg_match("(^{$group['group_id']}|\.{$group['group_id']}\.|\.{$group['group_id']}$)", $this->info['user_groups'])) {
-                            $user_groups_opts[$group['group_id']] = $group['group_name'];
-                        }
-                    }
-
-                    if (iADMIN && checkrights("UG") && !empty($user_groups_opts)) {
-
-                        $submit_link = BASEDIR."profile.php?lookup=".$this->info['user_id'];
-                        if (defined('ADMIN_PANEL') && get("step") == "view") {
-                            $submit_link = ADMIN."members.php".$aidlink."&amp;step=view&amp;user_id=".$this->info['user_id']."&amp;lookup=".$this->info['user_id'];
-                        }
-
-                        $this->info['group_admin'] = [
-                            'ug_openform'       => openform("admin_grp_form", "POST", $submit_link),
-                            'ug_closeform'      => closeform(),
-                            'ug_title'          => $locale['u061'],
-                            'ug_dropdown_input' => form_select("user_group", '', "", ["options" => $user_groups_opts, "width" => "100%", "inner_width" => "100%", "inline" => FALSE, 'class' => 'm-0']),
-                            'ug_button'         => form_button("add_to_group", $locale['u059'], $locale['u059'])
-                        ];
-
-                    }
-
-                }
-
-            }
+        if ($this->userModeratorAccess()) {
+            $this->info['user_admin'] = [
+                'user_edit_title'     => $locale['edit'],
+                'user_edit_link'      => ADMIN."members.php".$aidlink."&amp;ref=edit&amp;lookup=".$this->info['user_id'],
+                'user_ban_title'      => $this->info['user_status'] == 1 ? $locale['u074'] : $locale['u070'],
+                'user_ban_link'       => ADMIN."members.php".$aidlink."&amp;action=".($this->info['user_status'] == 1 ? 2 : 1)."&amp;lookup=".$this->info['user_id'],
+                'user_suspend_title'  => $locale['u071'],
+                'user_suspend_link'   => ADMIN."members.php".$aidlink."&amp;action=3&amp;lookup=".$this->info['user_id'],
+                'user_delete_title'   => $locale['delete'],
+                'user_delete_link'    => ADMIN."members.php".$aidlink."&amp;ref=delete&amp;lookup=".$this->info['user_id'],
+                'user_delete_onclick' => "onclick=\"return confirm('".$locale['u073']."');\"",
+                'user_susp_title'     => $locale['u054'],
+                'user_susp_link'      => ADMIN."members.php".$aidlink."&amp;ref=log&amp;lookup=".$this->info['user_id']
+            ];
         }
 
         echo display_profile($this->info);

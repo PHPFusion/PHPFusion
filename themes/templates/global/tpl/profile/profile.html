@@ -1,27 +1,21 @@
-<div class="spacer-md">
-    <div class="{[row]}">
-        <div class="{[col(100,80)]}">
-            <div class="list-group">
-                <div class="list-group-item"><h3 class="m-0">About</h3></div>
-                <div class="list-group-item">
-                    <div class="{[row]} equal-height">
-                        <div class="{[col(100,100,30)]} m-b-20">
-                            <nav class="nav nav-tabs nav-stacked" style="border-bottom:0;">
-                                {sections.{
-                                <li><a{%class%}href="{%link%}">{%name%}</a></li>
-                                }}
-                            </nav>
-                        </div>
-                        <div class="{[col(100,100,70)]}">
-                            {fields_block.{
-                            {%fields%}
-                            }}
-                        </div>
-                    </div>
-                </div>
+<div class="list-group">
+    <div class="list-group-item"><h3 class="m-0">About</h3></div>
+    <div class="list-group-item">
+        <div class="{[row]} equal-height">
+            <div class="m-b-20" style="width:250px; float:left; padding-left:15px; padding-right:15px;">
+                <nav class="nav nav-tabs nav-stacked" style="border-bottom:0;">
+                    {sections.{
+                    <li><a{%class%}href="{%link%}">{%name%}</a></li>
+                    }}
+                </nav>
+            </div>
+            <div style="flex-grow: 1; padding-right:15px; padding-left:15px;">
+                {fields_block.{
+                {%fields%}
+                }}
             </div>
         </div>
-        <div class="{[col(100,20)]}"></div>
     </div>
 </div>
+
 {%tab_footer%}

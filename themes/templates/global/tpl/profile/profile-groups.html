@@ -1,0 +1,43 @@
+{%pagenav%}
+<div class="{[row]}">
+    <div class="{[col(100,100,100,80)]}">
+        {groups.{
+        <div class="list-group-item m-b-20">
+            <div class="pull-left m-r-15">
+                {%group_icon%}
+            </div>
+            <div class="overflow-hide">
+                <div class="m-b-20">
+                    <a href="{%group_url%}"><strong>{%group_name%}</strong></a> | {%group_visibility%}<br/>
+                    <small>
+                        <span class="m-r-10"><i class="fas fa-users fa-fw"></i> {%group_member_count%}</span>
+                        <span class="m-r-10"><i class="fas fa-clock"></i> {%group_created%}</span>
+                    </small>
+                </div>
+                {%group_description%}
+            </div>
+        </div>
+        }}
+        {groups_na.{
+        {[u117]}
+        }}
+    </div><div class="{[col(100,100,100,20)]}">
+    {group_admin.{
+    <div class="list-group">
+
+        <div class="list-group-item">
+            <h5>{%ug_title%}</h5><hr/>
+            {%ug_openform%}
+            <div class="display-inline-block" style="width:80%;">
+                {%ug_dropdown_input%}
+            </div>
+            <div class="display-inline-block">
+                {%ug_button%}
+            </div>
+            {%ug_closeform%}
+        </div>
+    </div>
+
+    }}
+    </div>
+</div>

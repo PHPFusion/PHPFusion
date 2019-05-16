@@ -28,11 +28,16 @@ class UserGroups {
 
     private $groupID = 0;
 
+
     private $info = [
         'total_rows'    => 0,
         'rows'          => 0,
         'group_members' => []
     ];
+
+    // For Profile output
+    public $user_data = [];
+    public $profile_id = 0;
 
     /**
      * Get the UserGroups Instance
@@ -111,7 +116,8 @@ class UserGroups {
         if ($this->groupID && isnum($this->groupID) && $set_info === TRUE) {
             $this->info = $this->setGroupInfo($group_id);
         }
-        return $this->getInstance();
+
+        return $this;
     }
 
     /**
@@ -122,4 +128,96 @@ class UserGroups {
         render_user_group($this->info);
     }
 
+    /**
+     * Note: You are required to add setGroup function prior to using this function
+     * @param $user_id
+     *
+     * @return bool
+     */
+    public function add($user_id) {
+        if (!empty($this->info['group_id'])) {
+            $user_groups = fusion_get_user($user_id, "user_groups");
+            if (!empty($user_groups)) {
+                if (!preg_match("(^\.{$this->info['group_id']}$|\.{$this->info['group_id']}\.|\.{$this->info['group_id']}$)", $user_groups)) {
+                    $userdata = [
+                        'user_id'     => $user_id,
+                        'user_groups' => $user_groups.".".$this->info['group_id']
+                    ];
+                    dbquery_insert(DB_USERS, $userdata, 'update');
+                    addNotice("success", "User has been added to group id ".$this->info['group_id']);
+                    return TRUE;
+                }
+            }
+        }
+        return FALSE;
+    }
+
+    public function get_groupVisibility($group_access) {
+        $groups = fusion_get_groups();
+        return $groups[$group_access].' Group';
+    }
+
+    /**
+     *
+     * @param $user_groups  $userdata['user_groups']
+     */
+    public static function get_userGroupCount($user_groups) {
+        $user_groups = strpos($user_groups, ".") == 0 ? substr($user_groups, 1) : $user_groups;
+        return count(explode(".", $user_groups));
+    }
+
+    public function get_OutputInfo() {
+        static $info = [];
+
+        // Groups - need translating.
+        //$this->info['core_field']['profile_user_group']['title'] = $locale['u057'];
+        if (empty($info)) {
+
+            $info = [
+                'group_max_count' => 0,
+                'limit' => 16,
+                'pagenav' => '',
+                'user_groups' => []
+            ];
+
+            $info['group_max_count'] = self::get_userGroupCount($this->user_data['user_groups']);
+
+            if ($info['group_max_count']) {
+
+                $rowstart = get("rowstart");
+                $rowstart = $rowstart && $rowstart <= $info['group_max_count'] ? $rowstart : 0;
+
+                $user_groups = strpos($this->user_data['user_groups'], ".") == 0 ? substr($this->user_data['user_groups'], 1) : $this->user_data['user_groups'];
+                $user_groups = str_replace(".", ",", $user_groups);
+
+                $result = dbquery("SELECT * FROM ".DB_USER_GROUPS."                
+                WHERE group_id IN ($user_groups) ORDER BY group_name ASC LIMIT :rowstart, :limiter", [
+                    ':rowstart' => $rowstart,
+                    ":limiter" => $info['limit']
+                ]);
+
+                if ($group_count = dbrows($result)) {
+
+                    $info['pagenav'] = makepagenav($rowstart, $info['limit'], $info['group_max_count'], 3,
+                        BASEDIR."profile.php?lookup=".$this->profile_id."&amp;profile_page=groups&amp;",
+                        "rowstart"
+                        );
+
+                    while ($data = dbarray($result)) {
+                        // group members checks
+                        $user_rows = dbrows(dbquery("SELECT user_id FROM ".DB_USERS." WHERE user_groups REGEXP('^\\.{".$data['group_id']."}$|\\.{".$data['group_id']."}\\.|\\.{".$data['group_id']."}$')"));
+                        $info['user_groups'][$data['group_id']] = $data + [
+                            "group_url" => BASEDIR."profile.php?group_id=".$data['group_id'],
+                            "group_member_count" => format_word($user_rows, "member|members", ['format_num'=>TRUE]),
+                            "group_created" => timer(TIME),
+                            "group_visibility" => $this->get_groupVisibility($data['group_access'])
+                            ];
+                    }
+                }
+            }
+        }
+
+        return (array) $info;
+
+    }
 }

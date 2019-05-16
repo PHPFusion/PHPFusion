@@ -113,6 +113,7 @@ class Locale {
             'html'          => FALSE,
             'html_template' => "<span class='fusion_count'>{%count%}</span> <span class='fusion_word'>{%result%}</span>",
             'language'      => LANGUAGE,
+            'format_num'    => FALSE,
         ];
 
         $options += $default_options;
@@ -160,12 +161,12 @@ class Locale {
             if ($options['html'] && !empty($options['html_template'])) {
                 return strtr($options['html_template'],
                     [
-                        "{%count%}"  => $count,
+                        "{%count%}"  => ($options['format_num'] === TRUE ? format_num($count) : $count),
                         "{%result%}" => $result
                     ]
                 );
             } else {
-                return $count.' '.$result;
+                return ($options['format_num'] === TRUE ? format_num($count) : $count).' '.$result;
             }
         }
 
