@@ -57,6 +57,20 @@ class SiteLinks {
 
     private static $current_url = "";
 
+
+    /**
+     * @param string $id
+     *
+     * @return SiteLinks
+     */
+    public static function getInstance($id = self::MenuDefaultID) {
+        self::$id = $id;
+        if (!isset(self::$instances[$id])) {
+            self::$instances[$id] = new static();
+        }
+        return self::$instances[$id];
+    }
+
     /**
      * Get Site Links Position Options
      *
@@ -235,13 +249,13 @@ class SiteLinks {
 
             $options['banner'] = $settings['sitebanner'] && $options['show_banner'] == TRUE ? "<img src='".BASEDIR.$settings['sitebanner']."' alt='".$settings['sitename']."'/>" : $settings['sitename'];
 
-            $pageInfo = pathinfo($_SERVER['REQUEST_URI']);
+            $pageInfo = pathinfo(server('REQUEST_URI'));
             $start_page = $pageInfo['dirname'] !== "/" ? ltrim($pageInfo['dirname'], "/")."/" : "";
             $site_path = ltrim($settings['site_path'], "/");
             $start_page = str_replace([$site_path, '\/'], ['', ''], $start_page);
             $start_page .= $pageInfo['basename'];
 
-            if ($settings['site_seo'] && defined('IN_PERMALINK') && !isset($_GET['aid'])) {
+            if ($settings['site_seo'] && defined('IN_PERMALINK') && get("aid") === NULL) {
                 $filepath = Router::getRouterInstance()->getFilePath();
                 $start_page = $filepath;
             }
@@ -306,17 +320,6 @@ class SiteLinks {
         }
 
         return (array)dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat", "", $query_replace);
-    }
-
-
-    public static function getInstance($id = self::MenuDefaultID) {
-        self::$id = $id;
-
-        if (!isset(self::$instances[$id])) {
-            self::$instances[$id] = new static();
-        }
-
-        return self::$instances[$id];
     }
 
     /**
@@ -394,21 +397,16 @@ class SiteLinks {
     }
 
     public function showSubLinks() {
+        $settings = fusion_get_settings();
 
         $this->cacheSiteLinks();
 
         $options = self::getMenuParam();
-
-        $settings = fusion_get_settings();
         $locale = $options['locale'];
 
         if (empty($options['id'])) {
             $options['id'] = self::MenuDefaultID;
         }
-
-
-        // add all menu
-
 
         $bootstrap3_nav_li_dropdown = THEMES.'templates/boilers/bootstrap3/html/navbar/nav_li_dropdown.html';
         $bootstrap3_nav_li_link = THEMES.'templates/boilers/bootstrap3/html/navbar/nav_li_link.html';
@@ -558,24 +556,24 @@ class SiteLinks {
         }
 
         $tpl->set_template($bootstrap3_nav);
-        $tpl->set_locale(fusion_get_locale());
+        $tpl->set_locale($locale);
 
         return $tpl->get_output();
 
     }
 
     private function cacheSiteLinks() {
+
         $options = self::getMenuParam();
 
-        $callback_data = self::getMenuParam("callback_data");
+        $callback_data = $options['callback_data'];
         $primary_cache = (isset(self::$primary_cache_data[self::$id]) ? self::$primary_cache_data[self::$id] : []);
         if (!empty($options['callback_data']) && is_array($callback_data)) {
             self::replaceMenuParam('callback_data', array_replace_recursive($callback_data, $primary_cache));
         } else {
             self::replaceMenuParam('callback_data', $primary_cache);
         }
-
-        $callback_data = self::getMenuParam("additional_data");
+        $callback_data = $options['additional_data'];
         $secondary_cache = (isset(self::$optional_cache_data[self::$id]) ? self::$optional_cache_data[self::$id] : []);
         if (!empty($callback_data && is_array($callback_data))) {
             self::replaceMenuParam('additional_data', array_replace_recursive($callback_data, $secondary_cache));
@@ -586,6 +584,7 @@ class SiteLinks {
         // Change hierarchy data when grouping is activated
         if ($options['grouping']) {
 
+            // Fetch the latest callback data changes
             $callback_data = self::getMenuParam('callback_data');
 
             if (isset($callback_data[0])) {
@@ -597,7 +596,7 @@ class SiteLinks {
                     $more[$more_index] = [
                         "link_id"         => $more_index,
                         "link_cat"        => 0,
-                        "link_name"       => fusion_get_locale('global_700'),
+                        "link_name"       => $options['locale']['global_700'],
                         "link_url"        => "#",
                         "link_icon"       => "",
                         "link_visibility" => 0,
@@ -898,7 +897,6 @@ class SiteLinks {
         }
 
         return FALSE;
-
     }
 
     /**
@@ -908,7 +906,7 @@ class SiteLinks {
      */
     private function get_currentURL() {
         if (empty(self::$current_url)) {
-            $current_url = ltrim(htmlspecialchars_decode($_SERVER['REQUEST_URI']), '/');
+            $current_url = ltrim(htmlspecialchars_decode(server('REQUEST_URI')), '/');
             $site_path = fusion_get_settings('site_path');
             if ($site_path != '/') {
                 $current_url = str_replace($site_path, "", $current_url);
