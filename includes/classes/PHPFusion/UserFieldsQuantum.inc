@@ -709,7 +709,7 @@ class UserFieldsQuantum extends \SqlHandler {
                     if (isset($this->page[$data['field_parent']]) or !empty($field_list) && $field_list[$_GET['cat_id']] > 0) {
                         ob_start();
                         echo openmodal("delete", $this->locale['fields_0313'], [
-                            'class'  => 'modal-lg modal-center',
+                            'class_dialog'  => 'modal-lg modal-center',
                             'static' => TRUE
                         ]);
                         echo openform('delete_cat_form', 'post', $form_action);
