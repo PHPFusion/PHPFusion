@@ -303,7 +303,7 @@ if (!function_exists('display_profile')) {
 
         $locale = fusion_get_locale();
         add_to_head("<link href='".THEMES."templates/global/css/profile.css' rel='stylesheet'/>");
-        $tpl = \PHPFusion\Template::getInstance('user_profile');
+        $tpl = \PHPFusion\Template::getInstance('profile');
         $tpl->set_template(__DIR__.'/tpl/user_profile.html');
         $tpl->set_locale($locale);
 
@@ -311,6 +311,7 @@ if (!function_exists('display_profile')) {
             $tpl->set_block('profile_nav', $profile_page);
         }
         $tpl->set_tag("profile_content", $info['profile_content']);
+
         $tpl->set_tag('opentable', fusion_get_function('opentable', ''));
         $tpl->set_tag('closetable', fusion_get_function('closetable'));
 
@@ -318,8 +319,7 @@ if (!function_exists('display_profile')) {
         $user_avatar = '';
         $user_level = '';
         $basic_info = '';
-
-        // Basic User Information
+        // Basic user information in the header
         if (!empty($info['core_field'])) {
             // Core field put on top
             $basic_info = '';
@@ -335,7 +335,6 @@ if (!function_exists('display_profile')) {
                 if (!in_array($field_id, $skip)) {
                     $tpl->set_block('user_core_fields', $field_data);
                 }
-
                 // old method
                 switch ($field_id) {
                     case 'profile_user_group':
@@ -407,7 +406,7 @@ if (!function_exists('display_profile')) {
             }
         }
 
-        $tpl->set_tag('tab_header', (isset($tab_title) ? opentab($tab_title, $info['section_id'], 'profile_tab', TRUE, FALSE, 'section') : ''));
+        //$tpl->set_tag('tab_header', (isset($tab_title) ? opentab($tab_title, $info['section_id'], 'profile_tab', TRUE, FALSE, 'section') : ''));
         $tpl->set_tag('user_name', $user_name);
         $tpl->set_tag('user_avatar', $user_avatar);
         $tpl->set_tag('user_level', $user_level);
@@ -444,62 +443,12 @@ if (!function_exists('display_user_profile')) {
     function display_user_profile($info) {
         $locale = fusion_get_locale();
         $tpl = \PHPFusion\Template::getInstance('user_profile');
-        $tpl->set_template(__DIR__.'/tpl/user_profile.html');
+        $tpl->set_template(__DIR__.'/tpl/profile/profile.html');
         $tpl->set_locale($locale);
 
-        $tpl->set_tag('opentable', fusion_get_function('opentable', ''));
-        $tpl->set_tag('closetable', fusion_get_function('closetable'));
-
-        $user_name = '';
-        $user_avatar = '';
-        $user_level = '';
-        $basic_info = '';
-
-        // Basic User Information
-        if (!empty($info['core_field'])) {
-            // Core field put on top
-            $basic_info = '';
-            foreach ($info['core_field'] as $field_id => $field_data) {
-                // Sets data to core field block
-                $tpl->set_block($field_id, $field_data);
-                $skip = [
-                    'profile_user_avatar',
-                    'profile_user_name',
-                    'profile_user_level',
-                    'profile_user_group'
-                ];
-                if (!in_array($field_id, $skip)) {
-                    $tpl->set_block('user_core_fields', $field_data);
-                }
-
-                // old method
-                switch ($field_id) {
-                    case 'profile_user_group':
-                        if (!empty($field_data['value'])) {
-                            foreach ($field_data['value'] as $groups) {
-                                $tpl->set_block('user_groups', $groups);
-                            }
-                        } else {
-                            $tpl->set_block('user_group_na', []);
-                        }
-                        break;
-                    case 'profile_user_avatar':
-                        $avatar['user_id'] = $info['user_id'];
-                        $avatar['user_name'] = $info['user_name'];
-                        $avatar['user_avatar'] = $field_data['value'];
-                        $avatar['user_status'] = $field_data['status'];
-                        $user_avatar = display_avatar($avatar, '130px', 'profile-avatar', FALSE, 'img-responsive');
-                        break;
-                    case 'profile_user_name':
-                        $user_name = $field_data['value'];
-                        break;
-                    case 'profile_user_level':
-                        $user_level = $field_data['value'];
-                        break;
-                    default:
-                        break;
-                }
-            }
+        foreach($info['section'] as $section) {
+            $section['class'] = $section['active'] ? " class='active'" : "";
+            $tpl->set_block("sections", $section);
         }
 
         //User Fields Module Information
@@ -507,9 +456,10 @@ if (!function_exists('display_user_profile')) {
             // first we need to identify the wrapper
             foreach ($info['user_field'] as $catID => $categoryData) {
                 $tpl2 = \PHPFusion\Template::getInstance('user_fields');
-                $tpl2->set_template(__DIR__.'/tpl/user_profile_fields.html');
+                $tpl2->set_template(__DIR__.'/tpl/profile/profile-fields.html');
                 if (!empty($categoryData['fields'])) {
                     foreach ($categoryData['fields'] as $_id => $_fields) {
+                        //@todo: add value as a member searchable keyword
                         if (!empty($_fields)) {
                             if (isset($_fields['type']) && $_fields['type'] == 'social') {
                                 $tpl->set_block('social_icons', $_fields);
@@ -527,26 +477,13 @@ if (!function_exists('display_user_profile')) {
                     if (!empty($categoryData['title'])) {
                         $tpl2->set_block('user_fields_cat', ['category_title' => $categoryData['title']]);
                     }
+
                     $tpl->set_block('fields_block', ["fields" => $tpl2->get_output()]);
                 }
             }
         } else {
             $info['no_fields'] = $locale['uf_108'];
         }
-
-        // Tabs
-        if (!empty($info['section'])) {
-            foreach ($info['section'] as $page_section) {
-                $tab_title['title'][$page_section['id']] = $page_section['name'];
-                $tab_title['id'][$page_section['id']] = $page_section['id'];
-                $tab_title['icon'][$page_section['id']] = $page_section['icon'];
-            }
-        }
-
-        $tpl->set_tag('tab_header', (isset($tab_title) ? opentab($tab_title, $info['section_id'], 'profile_tab', TRUE, FALSE, 'section') : ''));
-        $tpl->set_tag('user_name', $user_name);
-        $tpl->set_tag('user_avatar', $user_avatar);
-        $tpl->set_tag('user_level', $user_level);
 
         if (!empty($info['user_admin'])) {
             $tpl->set_block('user_admin', $info['user_admin']);
@@ -558,10 +495,42 @@ if (!function_exists('display_user_profile')) {
             $tpl->set_block('buttons', $info['buttons']);
         }
 
-        $tpl->set_tag('basic_info', $basic_info);
-        $tpl->set_tag('tab_footer', (isset($tab_title) ? closetab() : ''));
         $tpl->set_tag('no_fields', (!empty($info['no_fields']) ? $info['no_fields'] : ''));
 
         return $tpl->get_output();
+    }
+}
+
+if (!function_exists('display_profile_groups')) {
+    function display_profile_groups($info) {
+        print_P($info);
+        if (!empty($info)) {
+
+        } else {
+            return "There were no groups found";
+        }
+        /*
+         * <div class="panel panel-default">
+                <div class="panel-body">
+                    <h5 class="text-uppercase m-t-0">{[u057]}</h5>
+                    <hr/>
+                    {user_groups.{
+                    <a href="{%group_url%}">{%group_name%}</a>,
+                    }}
+                    {user_group_na.{
+                    {[u117]}
+                    }}
+                </div>
+                {group_admin.{
+                <div class="panel-footer">
+                    {%ug_openform%}
+                    <div class="strong">{%ug_title%}</div>
+                    <div class="spacer-xs">{%ug_dropdown_input%}</div>
+                    <div>{%ug_button%}</div>
+                    {%ug_closeform%}
+                </div>
+                }}
+            </div>
+         */
     }
 }

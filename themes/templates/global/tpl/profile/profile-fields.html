@@ -1,0 +1,25 @@
+<div class="user_section">
+
+    {user_fields_cat.{
+    <h3 class="m-t-0">{%category_title%}</h3>
+    }}
+
+    {user_fields.{
+    <div id="{%id%}" class="{[row]}">
+        <label class="{[col(100)]}"><strong>{%icon%} {%title%}</strong></label>
+        <div class="{[col(100)]}"><span class="profile_text">{%value%}</span></div>
+    </div>
+    }}
+
+    {user_fields_inline.{
+    <div id="{%id%}" class="{[row]}">
+        <div class="{[col(100,100,20,20)]}">
+            {%icon%} {%title%}
+        </div>
+        <div class="{[col(100,100,80,80)]}">
+            <span class="profile_text">{%value%}</span>
+        </div>
+    </div>
+    }}
+
+</div>

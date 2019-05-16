@@ -26,13 +26,21 @@ class Grid {
             $percent += $default_options;
             $arr = ['xs','sm', 'md', 'lg'];
             $val = [];
+
             foreach($percent as $index => $value) {
-                $calculated = floor( ($value * 12 ) / 100 );
+                $calculated = ($value * 12 ) / 100;
+                if ($calculated < 5) {
+                    $calculated = ceil(  $calculated );
+                } else {
+                    $calculated = floor( $calculated );
+                }
+
                 if (!$calculated) {
                     $calculated = 'hidden';
                 }
                 $val[$arr[$index]] =  $calculated;
             }
+
             return (string) implode(' ', array_map(function($i, $e) {
                 if ($e == 'hidden') {
                     return "hidden-$i";

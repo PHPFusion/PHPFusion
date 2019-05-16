@@ -2,13 +2,13 @@
 
 namespace PHPFusion\UserFields;
 
-use PHPFusion\UserFields;
 use PHPFusion\UserFieldsQuantum;
 
 class Public_Profile extends UserFieldsQuantum {
 
     public $post_name;
     public $user_data = [];
+    public $profile_id = 0;
     public $inline_field = FALSE;
     public $registration = FALSE;
     public $display_validation = FALSE;
@@ -24,9 +24,51 @@ class Public_Profile extends UserFieldsQuantum {
         $this->locale = fusion_get_locale();
     }
 
+    /**
+     * Get user field cats.
+     *
+     * @param int $id
+     *
+     * @return array|null
+     */
+    public function get_category($id = 0) {
+
+        static $section = [];
+        $aid = get("aid") ? fusion_get_aidlink() : "";
+        if (empty($section)) {
+            $result = dbquery("SELECT * FROM ".DB_USER_FIELD_CATS." WHERE field_parent=:field_parent ORDER BY field_cat_order ASC", [
+                ':field_parent' => 0
+            ]);
+            if (dbrows($result)) {
+                $i = 0;
+                while ($data = dbarray($result)) {
+                    if ($this->profile_id) {
+                        $link = clean_request($aid.'&section='.$data['field_cat_id'].'&lookup='.$this->profile_id, ['section'], FALSE);
+                    } else {
+                        $link = clean_request($aid.'&section='.$data['field_cat_id'], ['section'], FALSE);
+                    }
+                    $section[$data['field_cat_id']] = [
+                        'id'     => $data['field_cat_id'],
+                        'active' => ($this->section_id == $data['field_cat_id']) ? 1 : (!$this->section_id && $i == 0 ? 1 : 0),
+                        'link'   => $link,
+                        'name'   => ucwords(UserFieldsQuantum::parse_label($data['field_cat_name'])),
+                        'icon'   => $data['field_cat_class']
+                    ];
+                    $i++;
+                }
+            }
+        }
+
+        return empty($id) ? (array)$section : (isset($section[$id]) ? (array)$section[$id] : NULL);
+    }
+
+
     public function get_info() {
         $settings = fusion_get_settings();
-        $info = [];
+        $info = [
+            'section'    => $this->get_category(),
+            'section_id' => $this->section_id,
+        ];
 
         if (iADMIN || $this->user_name_change) {
             $user_name = post("user_name") ?: $this->user_data['user_name'];
@@ -143,8 +185,29 @@ class Public_Profile extends UserFieldsQuantum {
         return (array)$info;
     }
 
-    public function get_output_info() {
-        return $this->get_user_fields();
+    private $section_id = 0;
+
+    public function get_SectionId() {
+        return $this->section_id;
+    }
+
+    public function get_OutputInfo() {
+        $this->section_id = get("section");
+
+
+        $info = [
+                'section'    => $this->get_category(),
+                'section_id' => $this->section_id,
+            ] + $this->get_user_fields();
+
+        $current_section = [['id' => 1]];
+        if (!empty($info['section'])) {
+            $current_section = current($info['section']);
+        }
+
+        $this->info['section_id'] = isset($this->info['section'][$this->section_id]) ? $this->section_id : $current_section['id'];
+
+        return $info;
     }
 
     private function get_section_title($cat_id) {
@@ -164,7 +227,6 @@ class Public_Profile extends UserFieldsQuantum {
         return NULL;
     }
 
-
     /**
      * Fetch User Fields Array to templates
      * Toggle with class string method - input or display
@@ -174,6 +236,7 @@ class Public_Profile extends UserFieldsQuantum {
         $fields = [];
         $category = [];
         $item = [];
+
         $this->callback_data = $this->user_data;
 
         switch ($this->method) {
@@ -187,29 +250,26 @@ class Public_Profile extends UserFieldsQuantum {
 
         if ($this->is_admin_panel === FALSE) {
 
-            $field_cats = UserFields::getInstance()->get_user_field_cats();
-            $section_id = UserFields::getInstance()->getSectionId();
+            $field_cats = $this->get_category();
+            $section_id = $this->get_SectionId();
             $index_page_id = isset($field_cats[$section_id]) ?: 1;
+
             $registration_cond = ($this->registration === TRUE && $this->is_admin_panel === FALSE ? ' AND field.field_registration=:field_register' : '');
             $registration_bind = ($this->registration === TRUE && $this->is_admin_panel === FALSE ? [':field_register' => 1] : []);
 
-            $query = "SELECT field.*, cat.field_cat_id, cat.field_cat_name, cat.field_parent, root.field_cat_id as page_id, root.field_cat_name as page_name, root.field_cat_db, root.field_cat_index
-                  FROM ".DB_USER_FIELDS." field
-                  INNER JOIN ".DB_USER_FIELD_CATS." cat ON (cat.field_cat_id = field.field_cat)
-                  INNER JOIN ".DB_USER_FIELD_CATS." root on (cat.field_parent = root.field_cat_id)
-                  WHERE (cat.field_cat_id=:index00 OR root.field_cat_id=:index01) $registration_cond
-                  ORDER BY root.field_cat_order, cat.field_cat_order, field.field_order
-                  ";
-            $bind = [
-                ':index00' => $index_page_id,
-                ':index01' => $index_page_id,
-            ];
-            $bind = $bind + $registration_bind;
-            $result = dbquery($query, $bind);
-            $rows = dbrows($result);
-            if ($rows != '0') {
+            $result = dbquery("SELECT f.*, c.* FROM 
+            ".DB_USER_FIELDS." f
+            INNER JOIN ".DB_USER_FIELD_CATS." c ON c.field_cat_id=f.field_cat
+            WHERE c.field_parent='$index_page_id' $registration_cond 
+            ORDER BY c.field_cat_order, f.field_order
+            ", [
+                ":index00" => $index_page_id,
+            ] + $registration_bind);
+
+            if (dbrows($result)) {
 
                 while ($data = dbarray($result)) {
+
                     if ($data['field_cat_id']) {
                         $category[$data['field_parent']][$data['field_cat_id']] = UserFieldsQuantum::parse_label($data['field_cat_name']);
                     }
@@ -235,8 +295,7 @@ class Public_Profile extends UserFieldsQuantum {
                                 $fields['user_field'][$cat_id]['title'] = $cat;
                                 foreach ($item[$cat_id] as $field_id => $field) {
                                     // Outputs array
-                                    $field_output = $this->display_fields($field, $this->callback_data, $this->method);
-                                    //$fields['user_field'][$cat_id]['fields'][$field['field_id']] = $field_output; // relational to the category
+                                    $field_output = $this->display_fields($field, $this->user_data, $this->method);
                                     $fields['extended_field'][$field['field_name']] = $field_output; // for the gets
                                     if (!empty($field_output)) {
                                         $fields['user_field'][$cat_id]['fields'][$field['field_id']] = array_merge($field, $field_output);
@@ -259,7 +318,7 @@ class Public_Profile extends UserFieldsQuantum {
             $result = dbquery($query);
 
             $rows = dbrows($result);
-            $m_category = array();
+            $m_category = [];
             if ($rows != '0') {
                 while ($data = dbarray($result)) {
                     if ($data['field_cat_id']) {

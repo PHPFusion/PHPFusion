@@ -109,60 +109,83 @@ class UserGroups {
      * Update add member, remove member
      */
     private function update_group() {
-        if (isset($_POST['save_group'])) {
+
+        if (post("save_group")) {
             $this->data = [
-                'group_id'          => form_sanitizer($_POST['group_id'], 0, "group_id"),
-                'group_name'        => form_sanitizer($_POST['group_name'], '', 'group_name'),
-                'group_description' => form_sanitizer($_POST['group_description'], '', 'group_description'),
-                'group_icon'        => form_sanitizer($_POST['group_icon'], '', "group_icon"),
+                'group_id'          => sanitizer('group_id', 0, "group_id"),
+                'group_name'        => sanitizer('group_name', '', 'group_name'),
+                'group_description' => sanitizer('group_description', '', 'group_description'),
+                'group_icon'        => sanitizer('group_icon', '', "group_icon")
             ];
+
             if (\Defender::safe()) {
                 dbquery_insert(DB_USER_GROUPS, $this->data, empty($this->data['group_id']) ? "save" : "update");
                 addNotice("success", empty($this->data['group_id']) ? self::$locale['GRP_401'] : self::$locale['GRP_400']);
                 redirect(clean_request("section=usergroup", ["", "aid"], TRUE));
             }
         }
-        if (isset($_POST['add_sel'])) {
-            $group_userSend = form_sanitizer($_POST['groups_add'], '', 'groups_add');
-            $group_userSender = explode(',', $group_userSend);
-            $i = 0;
-            if (isnum($_GET['group_id'])) {
-                $group = getgroupname($_GET['group_id']);
-                if ($group) {
+
+        $group_id = get("group_id", FILTER_VALIDATE_INT);
+
+        if (post("add_sel")) {
+            $users_add = sanitizer(['groups_add'], '', 'groups_add[]');
+            $users_add = explode(',', $users_add);
+            if ($group_id) {
+
+                $group = getgroupname($group_id);
+                if (!empty($group) && !empty($users_add)) {
+
                     $added_user = [];
-                    foreach ($group_userSender as $grp) {
-                        $groupadduser = fusion_get_user($grp);
-                        if (!in_array($_GET['group_id'], explode(".", $groupadduser['user_groups']))) {
-                            $groupadduser['user_groups'] = $groupadduser['user_groups'].".".$_GET['group_id'];
-                            $added_user[] = $groupadduser['user_name'];
-                            dbquery_insert(DB_USERS, $groupadduser, "update");
-                            $i++;
+                    foreach ($users_add as $user_id) {
+
+                        $user = fusion_get_user($user_id);
+
+                        if (!in_array($group_id, explode(".", $user['user_groups']))) {
+                            $user['user_groups'] = $user['user_groups'].".".$group_id;
+                            dbquery_insert(DB_USERS, $user, "update");
+                            // Names of the users
+                            $added_user[] = $user['user_name'];
+
                         }
+
                     }
+
                     addNotice("success", sprintf(self::$locale['GRP_410'], implode(', ', $added_user), $group));
                     redirect(FUSION_REQUEST);
+                } else {
+                    addNotice("danger", "Invalid group");
                 }
             }
         }
 
-        if (isset($_POST['remove_sel'])) {
-            $group_userSend = form_sanitizer($_POST['group'], '', 'group');
-            $group_userSender = explode(',', $group_userSend);
-            $i = 0;
-            if (isnum($_GET['group_id'])) {
-                $group = getgroupname($_GET['group_id']);
-                if ($group) {
+        if (post("remove_sel")) {
+            $users_rem = sanitizer(['group'], '', 'group[]');
+
+            $users_rem = explode(',', $users_rem);
+
+            if ($group_id) {
+
+                $group = getgroupname($group_id);
+
+                if (!empty($group) && !empty($users_rem)) {
+
                     $rem_user = [];
-                    foreach ($group_userSender as $grp) {
-                        $groupadduser = fusion_get_user($grp);
-                        if (in_array($_GET['group_id'], explode(".", $groupadduser['user_groups']))) {
-                            $groupadduser['user_groups'] = self::Addusergroup($_GET['group_id'], $groupadduser['user_groups']);
-                            $rem_user[] = $groupadduser['user_name'];
+                    foreach ($users_rem as $user_id) {
+                        $groupadduser = fusion_get_user($user_id);
+
+                        if (in_array($group_id, explode(".", $groupadduser['user_groups']))) {
+
+                            $groupadduser['user_groups'] = self::Addusergroup($group_id, $groupadduser['user_groups']);
+
                             dbquery_insert(DB_USERS, $groupadduser, "update");
-                            $i++;
+
+                            $rem_user[] = $groupadduser['user_name'];
+
                         }
                     }
+
                     addNotice("success", sprintf(self::$locale['GRP_411'], implode(', ', $rem_user), $group));
+
                     redirect(FUSION_REQUEST);
                 }
             }
@@ -233,9 +256,11 @@ class UserGroups {
     }
 
     public function _selectDB($rows, $min) {
-        $result = dbquery("SELECT user_id, user_name, user_level, user_avatar, user_status
+        $group_id = get("group_id", FILTER_VALIDATE_INT);
+
+        $result = dbquery("SELECT user_id, user_name, user_level, user_avatar, user_status, user_groups
             FROM ".DB_USERS."
-            WHERE user_groups REGEXP('^\\\.{$_GET['group_id']}$|\\\.{$_GET['group_id']}\\\.|\\\.{$_GET['group_id']}$')
+            WHERE user_groups REGEXP('^\\.{$group_id}$\\|\\.{$group_id}\\.|\\.{$group_id}$')
             ORDER BY user_level DESC, user_name
             LIMIT ".intval($rows).", ".$min
         );
@@ -367,12 +392,17 @@ class UserGroups {
      */
     public function userForm() {
         $total_rows = $this->count_usergroup($_GET['group_id']);
-        $rowstart = isset($_GET['rowstart']) && ($_GET['rowstart'] <= $total_rows) ? $_GET['rowstart'] : 0;
+
+        // make to super globals
+        $group_id = get("group_id", FILTER_VALIDATE_INT);
+        $rowstart = get("rowstart", FILTER_VALIDATE_INT);
+        $rowstart = $rowstart && $rowstart <= $total_rows ? $rowstart : 0;
+
         $result = $this->_selectDB($rowstart, self::$limit);
         $rows = dbrows($result);
 
         $html = "<div class='spacer-xs'>\n";
-        $html .= "<h4>".self::$locale['GRP_452'].getgroupname($_GET['group_id'], $return_desc = FALSE, $return_icon = FALSE)."</h4>\n";
+        $html .= "<h4>".self::$locale['GRP_452'].getgroupname($group_id, $return_desc = FALSE, $return_icon = FALSE)."</h4>\n";
         $html .= "<hr/>\n";
         $html .= "<div class='row flexbox'>\n";
         $html .= "<div class='col-xs-12 col-sm-4'>\n";
@@ -390,6 +420,7 @@ class UserGroups {
         ]);
         $html .= form_button('search_users', self::$locale['confirm'], self::$locale['confirm'], ['class' => 'btn-primary']);
         $html .= closeform();
+
         if (!empty(self::$GroupUser)) {
             $html .= openform('add_users_form', 'post', FUSION_SELF.fusion_get_aidlink()."&amp;section=user_form&amp;action=user_edit&amp;group_id=".$_GET['group_id']);
             $html .= "<div class='table-responsive'><table class='table table-striped table-hover'>\n";
@@ -418,13 +449,16 @@ class UserGroups {
             $html .= "</div>\n";
             $html .= closeform();
         }
+
         $html .= "</div>\n";
         $html .= "<div class='col-xs-12 col-sm-8'>\n";
 
         if ($rows > 0) {
+            $page_nav = makepagenav($rowstart, self::$limit, $total_rows, self::$limit, clean_request("", ['rowstart'], FALSE)."&amp;");
+
             $html .= fusion_get_function('openside', self::$locale['GRP_460']);
             $html .= "<div class='clearfix spacer-xs'>\n";
-            $html .= ($total_rows > $rows ? "<div class='pull-right'>\n".makepagenav($rowstart, self::$limit, $total_rows, self::$limit, clean_request("", ['rowstart'], FALSE)."&amp;")."</div>\n" : "");
+            $html .= ($total_rows > $rows ? "<div class='pull-right'>\n$page_nav\n</div>\n" : "");
             $html .= "<div class='overflow-hide'>".sprintf(self::$locale['GRP_427'], $rows, $total_rows)."</div>\n";
             $html .= "</div>\n";
             $html .= openform('rem_users_form', 'post', FUSION_SELF.fusion_get_aidlink()."&amp;section=user_form&amp;action=user_edit&amp;group_id=".$_GET['group_id']);

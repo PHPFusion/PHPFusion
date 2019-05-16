@@ -124,46 +124,7 @@ class UserFields extends UserFieldsQuantum {
         return in_array($field_name, $list) ? TRUE : FALSE;
     }
 
-    /**
-     * Get user field cats.
-     *
-     * @param int $id
-     *
-     * @return array|null
-     */
-    public function get_user_field_cats($id = 0) {
-
-        static $section = [];
-        $aid = get("aid") ? fusion_get_aidlink() : "";
-
-        if (empty($section)) {
-
-            $result = dbquery("SELECT * FROM ".DB_USER_FIELD_CATS." WHERE field_parent=:field_parent ORDER BY field_cat_order ASC", [
-                ':field_parent' => 0
-            ]);
-
-            if (dbrows($result)) {
-
-                $i = 0;
-                while ($data = dbarray($result)) {
-                    if ($this->profile_id) {
-                        $link = clean_request($aid.'&section='.$data['field_cat_id'].'&lookup='.$this->profile_id, ['section'], FALSE);
-                    } else {
-                        $link = clean_request($aid.'&section='.$data['field_cat_id'], ['section'], FALSE);
-                    }
-                    $section[$data['field_cat_id']] = [
-                        'id'     => $data['field_cat_id'],
-                        'active' => ($this->section_id == $data['field_cat_id']) ? 1 : (!$this->section_id && $i == 0 ? 1 : 0),
-                        'link'   => $link,
-                        'name'   => ucwords(UserFieldsQuantum::parse_label($data['field_cat_name'])),
-                        'icon'   => $data['field_cat_class']
-                    ];
-                    $i++;
-                }
-            }
-        }
-
-        return empty($id) ? (array)$section : (isset($section[$id]) ? (array)$section[$id] : NULL);
+    public function get_user_field_cats() {
     }
 
     /**
@@ -220,10 +181,9 @@ class UserFields extends UserFieldsQuantum {
         return self::$pages = array_merge(self::$pages, self::$additional_pages);
     }
 
+
     /**
-     * @param null $key
-     *
-     * @return array|mixed|null
+     * @return array
      */
     private function getOutputPages() {
         $current_page = get("profile_page");
@@ -231,24 +191,24 @@ class UserFields extends UserFieldsQuantum {
         if (empty($ppCache)) {
             $active_class = ' class="active"';
             $ppCache = [
-                'activity' => ['id' => 'activity',
+                'activity' => ['id'    => 'activity',
                                'title' => 'Activity',
-                               'link' => BASEDIR.'profile.php?lookup='.$this->profile_id.'&amp;profile_page=activity',
+                               'link'  => BASEDIR.'profile.php?lookup='.$this->profile_id.'&amp;profile_page=activity',
                                'class' => $current_page == 'activity' ? $active_class : ""
                 ],
-                'profile'  => ['id' => 'profile',
+                'profile'  => ['id'    => 'profile',
                                'title' => 'Profile',
-                               'link' => BASEDIR.'profile.php?lookup='.$this->profile_id.'&amp;profile_page=profile',
+                               'link'  => BASEDIR.'profile.php?lookup='.$this->profile_id.'&amp;profile_page=profile',
                                'class' => $current_page == 'profile' ? $active_class : ""
 
                 ],
-                'friends'  => ['id' => 'friends',
+                'friends'  => ['id'    => 'friends',
                                'title' => 'Friends',
-                               'link' => BASEDIR.'profile.php?lookup='.$this->profile_id.'&amp;profile_page=friends',
+                               'link'  => BASEDIR.'profile.php?lookup='.$this->profile_id.'&amp;profile_page=friends',
                                'class' => $current_page == 'friends' ? $active_class : ""
                 ],
-                'groups'   => ['id' => 'groups', 'title' => 'Groups',
-                               'link' => BASEDIR.'profile.php?lookup='.$this->profile_id.'&amp;profile_page=groups',
+                'groups'   => ['id'    => 'groups', 'title' => 'Groups',
+                               'link'  => BASEDIR.'profile.php?lookup='.$this->profile_id.'&amp;profile_page=groups',
                                'class' => $current_page == 'groups' ? $active_class : ""
                 ],
             ];
@@ -517,56 +477,97 @@ class UserFields extends UserFieldsQuantum {
     }
 
     private function getCurrentUserData() {
-        $user_status = " AND (user_status='0' OR user_status='3' OR user_status='7')";
-        if (iADMIN) {
-            $user_status = "";
-        }
-        $result = dbquery("SELECT u.*, s.suspend_reason
-        FROM ".DB_USERS." u
-        LEFT JOIN ".DB_SUSPENDS." s ON u.user_id=s.suspended_user
-        WHERE user_id=:uid".$user_status."
-        ORDER BY suspend_date DESC
-        LIMIT 1", [
-            ':uid' => intval($this->profile_id)
-        ]);
+        static $userdata = [];
 
-        if (dbrows($result)) {
-
-            $userdata = dbarray($result);
-
-            if (empty($userdata['user_avatar']) && !file_exists(IMAGES."avatars/".$userdata['user_avatar'])) {
-                $userdata['user_avatar'] = get_image('noavatar');
+        if (empty($userdata)) {
+            $user_status = " AND (user_status='0' OR user_status='3' OR user_status='7')";
+            if (iADMIN) {
+                $user_status = "";
             }
-            unset($userdata['user_algo']);
-            unset($userdata['user_salt']);
-            unset($userdata['user_password']);
-            unset($userdata['user_admin_algo']);
-            unset($userdata['user_admin_salt']);
-            unset($userdata['user_admin_password']);
+            $result = dbquery("SELECT u.*, s.suspend_reason
+            FROM ".DB_USERS." u
+            LEFT JOIN ".DB_SUSPENDS." s ON u.user_id=s.suspended_user
+            WHERE user_id=:uid".$user_status."
+            ORDER BY suspend_date DESC
+            LIMIT 1", [
+                    ':uid' => intval($this->profile_id)
+                ]);
+            if (dbrows($result)) {
 
-            return (array)$userdata;
-        } else {
-            redirect(BASEDIR."index.php");
+                $userdata = dbarray($result);
+
+                if (empty($userdata['user_avatar']) && !file_exists(IMAGES."avatars/".$userdata['user_avatar'])) {
+                    $userdata['user_avatar'] = get_image('noavatar');
+                }
+
+                unset($userdata['user_algo']);
+                unset($userdata['user_salt']);
+                unset($userdata['user_password']);
+                unset($userdata['user_admin_algo']);
+                unset($userdata['user_admin_salt']);
+                unset($userdata['user_admin_password']);
+
+            } else {
+                redirect(BASEDIR."index.php");
+            }
         }
+
+        return (array)$userdata;
+
     }
 
-    /**
-     * Display Profile
-     *
-     * @param $profile_id
-     */
-    private $section_id = 0;
-
     private function getProfileContent() {
-        switch($this->current_page) {
+        switch ($this->current_page) {
             case "profile":
-                return "This profile page is currently unavailable.";
+                // Public Profile Page
+                $public_profile = new Public_Profile();
+                $public_profile->user_data = $this->getCurrentUserData();
+                $public_profile->profile_id = $this->profile_id;
+                $public_profile->post_name = $this->post_name;
+                $public_profile->options = $this->options;
+                $public_profile->registration = $this->registration;
+                $public_profile->display_validation = $this->display_validation;
+                $public_profile->display_terms = $this->display_terms;
+                $public_profile->plugin_folder = $this->plugin_folder;
+                $public_profile->plugin_locale_folder = $this->plugin_locale_folder;
+                $public_profile->inline_field = $this->inline_field;
+                $public_profile->method = $this->method;
+                $info = $public_profile->get_OutputInfo();
+
+                return display_user_profile($info);
+
                 break;
             case "friends":
                 return "The friend page is currently under development.";
                 break;
             case "groups":
-                return "This groups page is currently under development..";
+                $user_data = $this->getCurrentUserData();
+                print_P($user_data);
+                $locale = fusion_get_locale();
+
+                // Groups - need translating.
+                $this->info['core_field']['profile_user_group']['title'] = $locale['u057'];
+                $this->info['core_field']['profile_user_group']['value'] = "";
+                $user_groups = strpos($user_data['user_groups'], ".") == 0 ? substr($user_data['user_groups'], 1) : $user_data['user_groups'];
+                $user_groups = explode(".", $user_groups);
+                $user_groups = array_filter($user_groups);
+                $info = [];
+                if (!empty($user_groups)) {
+
+                    foreach($user_groups as $group_id) {
+
+                        if ($group = getgroupname($group_id)) {
+
+                            $info[] = [
+                                'group_url'  => BASEDIR."profile.php?group_id=".$group_id,
+                                'group_name' => $group
+                            ];
+                        }
+                    }
+
+                }
+                // $group_info as output
+                return display_profile_groups($info);
                 break;
             case "activity":
                 return "This activity page is currently under development..";
@@ -575,7 +576,6 @@ class UserFields extends UserFieldsQuantum {
                 return "This page is currently unavailable.";
         }
     }
-
 
     public function display_profile_output() {
 
@@ -590,23 +590,19 @@ class UserFields extends UserFieldsQuantum {
         $locale = fusion_get_locale();
         $aidlink = fusion_get_aidlink();
         $this->settings = fusion_get_settings();
-        $this->section_id = get("section");
         $this->profile_id = get("lookup", FILTER_VALIDATE_INT);
-
-
 
         OpenGraph::ogUserProfile($this->profile_id);
 
+        $userdata = $this->getCurrentUserData();
+
         // info
         $this->info = [
-            'section'         => $this->get_user_field_cats(),
-            'section_id'      => $this->section_id,
-            'profile_id'      => $this->profile_id,
-            //'user_data'       => $this->getCurrentUserData(), // move this out of the way
-            'profile_pages'   => $this->getOutputPages(),
-            'profile_content' => $this->getProfileContent(),
+                'profile_id'      => $this->profile_id,
+                'profile_pages'   => $this->getOutputPages(),
+                'profile_content' => $this->getProfileContent(),
 
-        ] + $this->getCurrentUserData();
+            ] + $userdata;
 
         // Add User to Groups
         if (iADMIN && checkrights("UG") && $this->profile_id !== fusion_get_userdata("user_id")) {
@@ -626,17 +622,7 @@ class UserFields extends UserFieldsQuantum {
             }
         }
 
-        /**
-         * TO MIGRATE
-         */
         // This is for profile.
-        // FUSION_PROFILE_PAGE const
-        $current_section = [['id' => 1]];
-        if (!empty($this->info['section'])) {
-            $current_section = current($this->info['section']);
-        }
-        $this->info['section_id'] = $this->section_id && isset($this->info['section'][$this->section_id]) ? $this->section_id : $current_section['id'];
-
         $this->info['core_field'] = [
             'profile_user_avatar' => [
                 'title'  => $locale['u186'],
@@ -668,7 +654,6 @@ class UserFields extends UserFieldsQuantum {
                 'value' => hide_email($this->user_data['user_email'], fusion_get_locale("UM061a"))
             ];
         }
-
         // user status
         if (iADMIN && $this->info['user_status'] > 0) {
             $this->info['core_field']['profile_user_status'] = [
@@ -682,7 +667,6 @@ class UserFields extends UserFieldsQuantum {
                 ];
             }
         }
-
         // IP
         if (iADMIN && checkrights('M')) {
             $this->info['core_field']['profile_user_ip'] = [
@@ -691,26 +675,7 @@ class UserFields extends UserFieldsQuantum {
             ];
         }
 
-        // Groups - need translating.
-        $this->info['core_field']['profile_user_group']['title'] = $locale['u057'];
-        $this->info['core_field']['profile_user_group']['value'] = '';
-
-        $user_groups = strpos($this->info['user_groups'], ".") == 0 ? substr($this->info['user_groups'], 1) : $this->info['user_groups'];
-        $user_groups = explode(".", $user_groups);
-        $user_groups = array_filter($user_groups);
-        $group_info = [];
-        if (!empty($user_groups)) {
-            for ($i = 0; $i < count($user_groups); $i++) {
-                if ($group_name = getgroupname($user_groups[$i])) {
-                    $group_info[] = [
-                        'group_url'  => BASEDIR."profile.php?group_id=".$user_groups[$i],
-                        'group_name' => $group_name
-                    ];
-                }
-            }
-            $this->info['core_field']['profile_user_group']['value'] = $group_info; // is array
-        }
-
+        // Not own
         if (iMEMBER && fusion_get_userdata("user_id") != $this->info['user_id']) {
 
             $this->info['buttons'] = [
@@ -718,11 +683,7 @@ class UserFields extends UserFieldsQuantum {
                 'user_pm_link'  => BASEDIR."messages.php?msg_send=".$this->info['user_id']
             ];
 
-            if (checkrights('M') && fusion_get_userdata('user_level') <= USER_LEVEL_ADMIN && $this->info['user_id'] != '1') {
-
-                $groups_cache = cache_groups();
-
-                $user_groups_opts = [];
+            if (checkrights("M") && fusion_get_userdata("user_level") <= USER_LEVEL_ADMIN && $this->info['user_id'] != '1') {
 
                 $this->info['user_admin'] = [
                     'user_edit_title'     => $locale['edit'],
@@ -738,6 +699,8 @@ class UserFields extends UserFieldsQuantum {
                     'user_susp_link'      => ADMIN."members.php".$aidlink."&amp;ref=log&amp;lookup=".$this->info['user_id']
                 ];
 
+                $groups_cache = cache_groups();
+                $user_groups_opts = [];
                 if (count($groups_cache) > 0) {
                     foreach ($groups_cache as $group) {
                         if (!preg_match("(^{$group['group_id']}|\.{$group['group_id']}\.|\.{$group['group_id']}$)", $this->info['user_groups'])) {
@@ -748,41 +711,24 @@ class UserFields extends UserFieldsQuantum {
                     if (iADMIN && checkrights("UG") && !empty($user_groups_opts)) {
 
                         $submit_link = BASEDIR."profile.php?lookup=".$this->info['user_id'];
-
-                        if (defined('ADMIN_PANEL') && isset($_GET['step']) && $_GET['step'] == "view") {
+                        if (defined('ADMIN_PANEL') && get("step") == "view") {
                             $submit_link = ADMIN."members.php".$aidlink."&amp;step=view&amp;user_id=".$this->info['user_id']."&amp;lookup=".$this->info['user_id'];
                         }
 
-                        $this->info['group_admin']['ug_openform'] = openform("admin_grp_form", "post", $submit_link);
+                        $this->info['group_admin'] = [
+                            'ug_openform'       => openform("admin_grp_form", "POST", $submit_link),
+                            'ug_closeform'      => closeform(),
+                            'ug_title'          => $locale['u061'],
+                            'ug_dropdown_input' => form_select("user_group", '', "", ["options" => $user_groups_opts, "width" => "100%", "inner_width" => "100%", "inline" => FALSE, 'class' => 'm-0']),
+                            'ug_button'         => form_button("add_to_group", $locale['u059'], $locale['u059'])
+                        ];
 
-                        $this->info['group_admin']['ug_closeform'] = closeform();
-
-                        $this->info['group_admin']['ug_title'] = $locale['u061'];
-
-                        $this->info['group_admin']['ug_dropdown_input'] = form_select("user_group", '', "", ["options" => $user_groups_opts, "width" => "100%", "inner_width" => "100%", "inline" => FALSE, 'class' => 'm-0']);
-
-                        $this->info['group_admin']['ug_button'] = form_button("add_to_group", $locale['u059'], $locale['u059']);
                     }
 
                 }
+
             }
         }
-
-        // Public Profile Page
-        $public_profile = new Public_Profile();
-        $public_profile->user_data = $this->user_data;
-        $public_profile->post_name = $this->post_name;
-        $public_profile->options = $this->options;
-        $public_profile->registration = $this->registration;
-        $public_profile->display_validation = $this->display_validation;
-        $public_profile->display_terms = $this->display_terms;
-        $public_profile->plugin_folder = $this->plugin_folder;
-        $public_profile->plugin_locale_folder = $this->plugin_locale_folder;
-        $public_profile->inline_field = $this->inline_field;
-        $public_profile->method = $this->method;
-        $output_info = $public_profile->get_output_info();
-
-        $this->info = array_merge($this->info, $output_info);
 
         echo display_profile($this->info);
     }
@@ -801,10 +747,6 @@ class UserFields extends UserFieldsQuantum {
         }
 
         return (string)$html;
-    }
-
-    public function getSectionId() {
-        return $this->section_id;
     }
 
     /**
