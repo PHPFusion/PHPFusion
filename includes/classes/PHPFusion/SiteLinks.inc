@@ -43,10 +43,14 @@ class SiteLinks {
      * So in order to add a cart icon, we must declare at theme.
      *
      */
-    const MenuDefaultID = 'DefaultMenu';
-    protected static $position_opts = [];
-    private static $id = '';
     private static $instances = [];
+
+    const MenuDefaultID = 'DefaultMenu';
+
+    protected static $position_opts = [];
+
+    private static $id = '';
+
     private static $primary_cache_data = [];
     private static $optional_cache_data = [];
     private static $link_instances = [];
@@ -167,8 +171,9 @@ class SiteLinks {
 
     /**
      * Calling the SiteLinks instance with Custom Parameters
-     *
      * @param array $options
+     *
+     * @return static
      */
     public static function setSubLinks(array $options = []) {
         /*
@@ -243,13 +248,11 @@ class SiteLinks {
             $options['start_page'] = $start_page;
 
             self::$instances[$options['id']] = self::getInstance($options['id']);
-
             self::$id = $options['id'];
-
             self::$instances[$options['id']]->menu_options = $options;
         }
 
-        return (object)self::$instances[$options['id']];
+        return self::$instances[$options['id']];
     }
 
     /**
@@ -304,18 +307,15 @@ class SiteLinks {
         return (array)dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat", "", $query_replace);
     }
 
-    /**
-     * @param string $id
-     *
-     * @return static
-     */
+
     public static function getInstance($id = self::MenuDefaultID) {
         self::$id = $id;
-        if (isset(self::$instances[$id])) {
-            return self::$instances[$id];
-        } else {
-            return self::$instances[$id] = new static();
+
+        if (!isset(self::$instances[$id])) {
+            self::$instances[$id] = new static();
         }
+
+        return self::$instances[$id];
     }
 
     /**
@@ -333,7 +333,7 @@ class SiteLinks {
      * @param string     $link_class
      * @param bool|FALSE $link_content
      */
-    public static function addMenuLink($link_id = 0, $link_name = '', $link_cat = 0, $link_url = '', $link_icon = '', $link_active = FALSE, $link_title = FALSE, $link_disabled = FALSE, $link_window = FALSE, $link_class = '', $link_content = FALSE) {
+    public function addMenuLink($link_id = 0, $link_name = '', $link_cat = 0, $link_url = '', $link_icon = '', $link_active = FALSE, $link_title = FALSE, $link_disabled = FALSE, $link_window = FALSE, $link_class = '', $link_content = FALSE) {
         self::$primary_cache_data[self::$id][$link_cat][$link_id] = [
             'link_id'       => $link_id,
             'link_name'     => $link_name,
@@ -394,13 +394,20 @@ class SiteLinks {
 
     public function showSubLinks() {
 
+        $this->setLinks();
+
         $options = self::getMenuParam();
+
         $settings = fusion_get_settings();
         $locale = $options['locale'];
+
         if (empty($options['id'])) {
             $options['id'] = self::MenuDefaultID;
-            self::setLinks();
         }
+
+
+        // add all menu
+
 
         $bootstrap3_nav_li_dropdown = THEMES.'templates/boilers/bootstrap3/html/navbar/nav_li_dropdown.html';
         $bootstrap3_nav_li_link = THEMES.'templates/boilers/bootstrap3/html/navbar/nav_li_link.html';
@@ -556,10 +563,12 @@ class SiteLinks {
 
     }
 
-    private static function setLinks() {
+    private function setLinks() {
+
         $primary_cache = (isset(self::$primary_cache_data[self::$id])) ? self::$primary_cache_data[self::$id] : [];
 
         $secondary_cache = (isset(self::$optional_cache_data[self::$id])) ? self::$optional_cache_data[self::$id] : [];
+
         if (!empty(self::getMenuParam('callback_data')) && is_array(self::getMenuParam('callback_data'))) {
             if (isset($primary_cache)) {
                 self::replaceMenuParam('callback_data', array_replace_recursive(self::getMenuParam('callback_data'), $primary_cache));
