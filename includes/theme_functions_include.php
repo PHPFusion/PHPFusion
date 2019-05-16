@@ -392,6 +392,7 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
     function openmodal($id, $title, $options = []) {
         $default_options = [
             "class"        => "",
+            "class_dialog" => "",
             "button_id"    => "",
             "button_class" => "",
             "static"       => FALSE,
@@ -421,8 +422,8 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
         $modal->set_locale(['close' => fusion_get_locale('close')]);
         $modal->set_template($modal_template);
         $modal->set_block("modal_open", [
-            'modal_id'    => $id,
-            'modal_class' => " ".$options['class'],
+            'modal_id'           => $id,
+            'modal_class'        => " ".$options['class'],
             'modal_dialog_class' => " ".$options['class_dialog']
         ]);
         if (!empty($title) || $options['static'] === FALSE) {
@@ -1173,14 +1174,15 @@ if (!function_exists("tab_active")
          */
         public static function getInstance($id = 'default') {
 
-            if (! self::$instance) {
+            if (!self::$instance) {
                 self::$instance = new FusionTabs;
             }
 
             return self::$instance;
         }
 
-        public function __construct() {}
+        public function __construct() {
+        }
 
         public static function tab_active($array, $default_active, $getname = FALSE) {
             if (!empty($getname)) {
