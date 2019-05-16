@@ -422,7 +422,8 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
         $modal->set_template($modal_template);
         $modal->set_block("modal_open", [
             'modal_id'    => $id,
-            'modal_class' => " ".$options['class']
+            'modal_class' => " ".$options['class'],
+            'modal_dialog_class' => " ".$options['class_dialog']
         ]);
         if (!empty($title) || $options['static'] === FALSE) {
             $modal->set_block("modal_open_header");

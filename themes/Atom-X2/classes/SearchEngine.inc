@@ -38,7 +38,7 @@ class SearchEngine extends Core {
         ');
 
         ob_start();
-        echo openmodal('searchbox', '<h4>'.str_replace('[SITENAME]', $this->settings['sitename'], $this->locale['400']).'</h4>', ['button_id' => 'search-btn']);
+        echo openmodal('searchbox', '<h4>'.str_replace('[SITENAME]', $this->settings['sitename'], $this->locale['400']).'</h4>', ['button_id' => 'search-btn', 'class_dialog' => 'modal-lg']);
             echo openform('searchform', 'post', BASEDIR.'search.php');
             echo '<div class="row m-t-20">';
                 echo '<div class="col-xs-12 col-sm-10 col-md-10 col-lg-10">';
