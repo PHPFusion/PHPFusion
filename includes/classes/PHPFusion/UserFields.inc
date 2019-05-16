@@ -170,7 +170,7 @@ class UserFields extends UserFieldsQuantum {
         ];
     }
 
-    private function getInputPages() {
+    private static function getInputPages() {
         if (empty(self::$pages)) {
             self::$pages = [
                 'pu_profile' => ['title' => 'Public Profile'], // Public Profile
@@ -567,7 +567,7 @@ class UserFields extends UserFieldsQuantum {
                             if (defined('ADMIN_PANEL') && $step == "view") {
                                 redirect(ADMIN."members.php".fusion_get_aidlink()."&amp;step=view&amp;user_id=".$this->profile_id);
                             } else {
-                                redirect(BASEDIR."profile.php?lookup=".$user['user_id']);
+                                redirect(BASEDIR."profile.php?lookup=".$user['user_id']."&profile_page=groups");
                             }
                         }
                     }
@@ -594,15 +594,14 @@ class UserFields extends UserFieldsQuantum {
                             'ug_openform'       => openform("admin_grp_form", "POST", $submit_link),
                             'ug_closeform'      => closeform(),
                             'ug_title'          => $locale['u061'],
-                            'ug_dropdown_input' => form_select("user_group", '',
-                                "", [
-                                    "select2_disabled" => TRUE,
-                                    "class" => "m-b-0",
-                                    "options"          => $user_groups_opts,
-                                    "width"            => "100%",
-                                    "inner_width"      => "100%",
-                                    "inline"           => TRUE,
-                                ]),
+                            'ug_dropdown_input' => form_select("user_group", '', "", [
+                                 "select2_disabled" => TRUE,
+                                 "class"            => "m-b-0",
+                                 "options"          => $user_groups_opts,
+                                 "width"            => "100%",
+                                 "inner_width"      => "100%",
+                                 "inline"           => TRUE
+                            ]),
                             'ug_button'         =>form_button("add_to_group", $locale['u059'], $locale['u059'], ["class" => "btn-default"])
                         ];
                     }

@@ -137,16 +137,14 @@ class UserGroups {
     public function add($user_id) {
         if (!empty($this->info['group_id'])) {
             $user_groups = fusion_get_user($user_id, "user_groups");
-            if (!empty($user_groups)) {
-                if (!preg_match("(^\.{$this->info['group_id']}$|\.{$this->info['group_id']}\.|\.{$this->info['group_id']}$)", $user_groups)) {
-                    $userdata = [
-                        'user_id'     => $user_id,
-                        'user_groups' => $user_groups.".".$this->info['group_id']
-                    ];
-                    dbquery_insert(DB_USERS, $userdata, 'update');
-                    addNotice("success", "User has been added to group id ".$this->info['group_id']);
-                    return TRUE;
-                }
+            if (!preg_match("(^\.{$this->info['group_id']}$|\.{$this->info['group_id']}\.|\.{$this->info['group_id']}$)", $user_groups)) {
+                $userdata = [
+                    'user_id'     => $user_id,
+                    'user_groups' => $user_groups.".".$this->info['group_id']
+                ];
+                dbquery_insert(DB_USERS, $userdata, 'update');
+                addNotice("success", "User has been added to group id ".$this->info['group_id']);
+                return TRUE;
             }
         }
         return FALSE;
@@ -162,8 +160,11 @@ class UserGroups {
      * @param $user_groups  $userdata['user_groups']
      */
     public static function get_userGroupCount($user_groups) {
-        $user_groups = strpos($user_groups, ".") == 0 ? substr($user_groups, 1) : $user_groups;
-        return count(explode(".", $user_groups));
+    	if (!empty($user_groups)) {
+            $user_groups = strpos($user_groups, ".") == 0 ? substr($user_groups, 1) : $user_groups;
+            return count(explode(".", $user_groups));
+    	}
+    	return NULL;
     }
 
     public function get_OutputInfo() {
@@ -190,7 +191,7 @@ class UserGroups {
                 $user_groups = strpos($this->user_data['user_groups'], ".") == 0 ? substr($this->user_data['user_groups'], 1) : $this->user_data['user_groups'];
                 $user_groups = str_replace(".", ",", $user_groups);
 
-                $result = dbquery("SELECT * FROM ".DB_USER_GROUPS."                
+                $result = dbquery("SELECT * FROM ".DB_USER_GROUPS."
                 WHERE group_id IN ($user_groups) ORDER BY group_name ASC LIMIT :rowstart, :limiter", [
                     ':rowstart' => $rowstart,
                     ":limiter" => $info['limit']
@@ -210,7 +211,7 @@ class UserGroups {
                             "group_url" => BASEDIR."profile.php?group_id=".$data['group_id'],
                             "group_member_count" => format_word($user_rows, "member|members", ['format_num'=>TRUE]),
                             "group_created" => timer(TIME),
-                            "group_visibility" => $this->get_groupVisibility($data['group_access'])
+                            "group_visibility" => $this->get_groupVisibility($data['group_id'])
                             ];
                     }
                 }
