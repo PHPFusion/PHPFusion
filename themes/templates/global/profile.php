@@ -524,3 +524,17 @@ if (!function_exists('display_profile_groups')) {
         return $tpl->get_output();
     }
 }
+
+if (!function_exists('display_profile_activity')) {
+    function display_profile_activity($info) {
+        $tpl = \PHPFusion\Template::getInstance("user-groups");
+        $tpl->set_template(__DIR__."/tpl/profile/profile-activity.html");
+        $tpl->set_tag("dropdown_filter", form_select("profile_activity_display", "", "", [
+                "options" => [
+                    0 => "No Filter",
+
+                ]
+        ]));
+        return $tpl->get_output();
+    }
+}

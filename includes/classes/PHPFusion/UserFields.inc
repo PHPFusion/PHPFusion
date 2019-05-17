@@ -19,6 +19,8 @@
 namespace PHPFusion;
 
 use PHPFusion\UserFields\Account_Profile;
+use PHPFusion\UserFields\Profile_Activity;
+use PHPFusion\UserFields\Profile_Groups;
 use PHPFusion\UserFields\Public_Profile;
 
 /**
@@ -552,71 +554,20 @@ class UserFields extends UserFieldsQuantum {
 
                 break;
             case "friends":
+
                 return "The friend page is currently under development.";
+
                 break;
 
             case "groups":
-                $group_admin = [];
-                $user = $this->getCurrentUserData();
-
-                if ($this->groupModeratorAccess()) {
-                    if (post("add_to_group") && $user_group = post("user_group", FILTER_VALIDATE_INT)) {
-                        $response = UserGroups::getInstance()->setGroup($user_group)->add($this->profile_id);
-                        if ($response === TRUE) {
-                            $step = get("step");
-                            if (defined('ADMIN_PANEL') && $step == "view") {
-                                redirect(ADMIN."members.php".fusion_get_aidlink()."&amp;step=view&amp;user_id=".$this->profile_id);
-                            } else {
-                                redirect(BASEDIR."profile.php?lookup=".$user['user_id']."&profile_page=groups");
-                            }
-                        }
-                    }
-
-                    $groups_cache = cache_groups();
-                    $user_groups_opts = [];
-                    if (count($groups_cache) > 0) {
-                        foreach ($groups_cache as $group) {
-                            if (!preg_match("(^{$group['group_id']}|\.{$group['group_id']}\.|\.{$group['group_id']}$)", $user['user_groups'])) {
-                                $user_groups_opts[$group['group_id']] = $group['group_name'];
-                            }
-                        }
-                    }
-
-
-                    if (!empty($user_groups_opts)) {
-
-                        $submit_link = BASEDIR."profile.php?lookup=".$this->profile_id."&amp;profile_page=groups";
-                        if (defined('ADMIN_PANEL') && get("step") == "view") {
-                            $submit_link = ADMIN."members.php".$aidlink."&amp;step=view&amp;user_id=".$this->profile_id."&amp;lookup=".$this->profile_id;
-                        }
-
-                        $group_admin["group_admin"] = [
-                            'ug_openform'       => openform("admin_grp_form", "POST", $submit_link),
-                            'ug_closeform'      => closeform(),
-                            'ug_title'          => $locale['u061'],
-                            'ug_dropdown_input' => form_select("user_group", '', "", [
-                                 "select2_disabled" => TRUE,
-                                 "class"            => "m-b-0",
-                                 "options"          => $user_groups_opts,
-                                 "width"            => "100%",
-                                 "inner_width"      => "100%",
-                                 "inline"           => TRUE
-                            ]),
-                            'ug_button'         =>form_button("add_to_group", $locale['u059'], $locale['u059'], ["class" => "btn-default"])
-                        ];
-                    }
-                }
-
-                $user_groups = new UserGroups();
-                $user_groups->user_data = $this->getCurrentUserData();
-                $user_groups->profile_id = $this->profile_id;
-
-                $info = $user_groups->get_OutputInfo() + $group_admin;
-
-                return display_profile_groups($info);
-
+                $class = new Profile_Groups($this->profile_id, $this->getCurrentUserData());
+                return display_profile_groups($class->showGroupProfile());
                 break;
             case "activity":
+                $class = new Profile_Activity($this->profile_id, $this->getCurrentUserData());
+                $info = $class->showActivityProfile();
+                return display_profile_activity($info);
+
                 return "This activity page is currently under development..";
                 break;
             case "default":
