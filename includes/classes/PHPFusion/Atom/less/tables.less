@@ -1,9 +1,31 @@
+// stylelint-disable selector-max-type, selector-max-compound-selectors, selector-no-qualifying-type
+
 //
 // Tables
 // --------------------------------------------------
 
+
 table {
     background-color: @table-bg;
+
+    // Table cell sizing
+    //
+    // Reset default table behavior
+
+    col[class*="col-"] {
+        position: static; // Prevent border hiding in Firefox and IE9-11 (see https://github.com/twbs/bootstrap/issues/11623)
+        display: table-column;
+        float: none;
+    }
+
+    td,
+    th {
+        &[class*="col-"] {
+            position: static; // Prevent border hiding in Firefox and IE9-11 (see https://github.com/twbs/bootstrap/issues/11623)
+            display: table-cell;
+            float: none;
+        }
+    }
 }
 
 caption {
@@ -16,6 +38,7 @@ caption {
 th {
     text-align: left;
 }
+
 
 // Baseline styles
 
@@ -37,11 +60,13 @@ th {
             }
         }
     }
+
     // Bottom align for column headings
     > thead > tr > th {
         vertical-align: bottom;
         border-bottom: 2px solid @table-border-color;
     }
+
     // Remove top border from thead by default
     > caption + thead,
     > colgroup + thead,
@@ -53,6 +78,7 @@ th {
             }
         }
     }
+
     // Account for multiple tbody instances
     > tbody + tbody {
         border-top: 2px solid @table-border-color;
@@ -63,6 +89,7 @@ th {
         background-color: @body-bg;
     }
 }
+
 
 // Condensed table w/ half padding
 
@@ -79,12 +106,14 @@ th {
     }
 }
 
+
 // Bordered version
 //
 // Add borders all around the table and between all the columns.
 
 .table-bordered {
     border: 1px solid @table-border-color;
+
     > thead,
     > tbody,
     > tfoot {
@@ -95,6 +124,7 @@ th {
             }
         }
     }
+
     > thead > tr {
         > th,
         > td {
@@ -102,6 +132,7 @@ th {
         }
     }
 }
+
 
 // Zebra-striping
 //
@@ -113,6 +144,7 @@ th {
     }
 }
 
+
 // Hover effect
 //
 // Placed here since it has to come after the potential zebra striping
@@ -123,26 +155,6 @@ th {
     }
 }
 
-// Table cell sizing
-//
-// Reset default table behavior
-
-table col[class*="col-"] {
-    position: static; // Prevent border hiding in Firefox and IE9-11 (see https://github.com/twbs/bootstrap/issues/11623)
-    float: none;
-    display: table-column;
-}
-
-table {
-    td,
-    th {
-        &[class*="col-"] {
-            position: static; // Prevent border hiding in Firefox and IE9-11 (see https://github.com/twbs/bootstrap/issues/11623)
-            float: none;
-            display: table-cell;
-        }
-    }
-}
 
 // Table backgrounds
 //
@@ -156,6 +168,7 @@ table {
 .table-row-variant(warning; @state-warning-bg);
 .table-row-variant(danger; @state-danger-bg);
 
+
 // Responsive tables
 //
 // Wrap your tables in `.table-responsive` and we'll make them mobile friendly
@@ -163,12 +176,12 @@ table {
 // will display normally.
 
 .table-responsive {
+    min-height: .01%; // Workaround for IE9 bug (see https://github.com/twbs/bootstrap/issues/14837)
     overflow-x: auto;
-    min-height: 0.01%; // Workaround for IE9 bug (see https://github.com/twbs/bootstrap/issues/14837)
 
     @media screen and (max-width: @screen-xs-max) {
         width: 100%;
-        margin-bottom: (@line-height-computed * 0.75);
+        margin-bottom: (@line-height-computed * .75);
         overflow-y: hidden;
         -ms-overflow-style: -ms-autohiding-scrollbar;
         border: 1px solid @table-border-color;
@@ -203,6 +216,7 @@ table {
                     > td:first-child {
                         border-left: 0;
                     }
+
                     > th:last-child,
                     > td:last-child {
                         border-right: 0;
