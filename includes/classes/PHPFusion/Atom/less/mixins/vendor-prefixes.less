@@ -1,3 +1,5 @@
+// stylelint-disable indentation, property-no-vendor-prefix, selector-no-vendor-prefix
+
 // Vendor Prefixes
 //
 // All vendor mixins are deprecated as of v3.2.0 due to the introduction of
@@ -13,6 +15,7 @@
 // - Transformations
 // - Transitions
 // - User Select
+
 
 // Animations
 .animation(@animation) {
@@ -95,12 +98,12 @@
 
 // Optional hyphenation
 .hyphens(@mode: auto) {
-    word-wrap: break-word;
     -webkit-hyphens: @mode;
     -moz-hyphens: @mode;
     -ms-hyphens: @mode; // IE10+
     -o-hyphens: @mode;
     hyphens: @mode;
+    word-wrap: break-word;
 }
 
 // Placeholder text
@@ -208,6 +211,7 @@
     transform-origin: @origin;
 }
 
+
 // Transitions
 
 .transition(@transition) {
@@ -242,6 +246,7 @@
     -o-transition: -o-transform @transition;
     transition: transform @transition;
 }
+
 
 // User select
 // For selecting text on the page

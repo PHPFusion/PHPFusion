@@ -1,6 +1,9 @@
+// stylelint-disable at-rule-no-vendor-prefix
+
 //
 // Progress bars
 // --------------------------------------------------
+
 
 // Bar animations
 // -------------------------
@@ -25,14 +28,15 @@
     }
 }
 
+
 // Bar itself
 // -------------------------
 
 // Outer container
 .progress {
-    overflow: hidden;
     height: @line-height-computed;
     margin-bottom: @line-height-computed;
+    overflow: hidden;
     background-color: @progress-bg;
     border-radius: @progress-border-radius;
     .box-shadow(inset 0 1px 2px rgba(0, 0, 0, .1));
@@ -41,7 +45,7 @@
 // Bar of progress
 .progress-bar {
     float: left;
-    width: 0;
+    width: 0%;
     height: 100%;
     font-size: @font-size-small;
     line-height: @line-height-computed;
@@ -71,6 +75,7 @@
 .progress-bar.active {
     .animation(progress-bar-stripes 2s linear infinite);
 }
+
 
 // Variations
 // -------------------------

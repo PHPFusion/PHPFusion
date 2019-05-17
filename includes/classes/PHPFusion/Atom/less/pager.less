@@ -2,14 +2,17 @@
 // Pager pagination
 // --------------------------------------------------
 
+
 .pager {
     padding-left: 0;
     margin: @line-height-computed 0;
-    list-style: none;
     text-align: center;
+    list-style: none;
     &:extend(.clearfix all);
+
     li {
         display: inline;
+
         > a,
         > span {
             display: inline-block;
@@ -46,8 +49,8 @@
         > a:focus,
         > span {
             color: @pager-disabled-color;
-            background-color: @pager-bg;
             cursor: @cursor-disabled;
+            background-color: @pager-bg;
         }
     }
 }

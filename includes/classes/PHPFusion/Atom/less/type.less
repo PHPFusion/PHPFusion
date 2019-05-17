@@ -1,6 +1,9 @@
+// stylelint-disable selector-list-comma-newline-after, selector-no-qualifying-type
+
 //
 // Typography
 // --------------------------------------------------
+
 
 // Headings
 // -------------------------
@@ -14,7 +17,7 @@ h1, h2, h3, h4, h5, h6,
 
     small,
     .small {
-        font-weight: normal;
+        font-weight: 400;
         line-height: 1;
         color: @headings-small-color;
     }
@@ -68,6 +71,7 @@ h6, .h6 {
     font-size: @font-size-h6;
 }
 
+
 // Body text
 // -------------------------
 
@@ -86,6 +90,7 @@ p {
     }
 }
 
+
 // Emphasis & misc
 // -------------------------
 
@@ -97,8 +102,8 @@ small,
 
 mark,
 .mark {
-    background-color: @state-warning-bg;
     padding: .2em;
+    background-color: @state-warning-bg;
 }
 
 // Alignment
@@ -186,6 +191,7 @@ mark,
     .bg-variant(@state-danger-bg);
 }
 
+
 // Page header
 // -------------------------
 
@@ -195,6 +201,7 @@ mark,
     border-bottom: 1px solid @page-header-border-color;
 }
 
+
 // Lists
 // -------------------------
 
@@ -203,6 +210,7 @@ ul,
 ol {
     margin-top: 0;
     margin-bottom: (@line-height-computed / 2);
+
     ul,
     ol {
         margin-bottom: 0;
@@ -224,8 +232,8 @@ ol {
 
     > li {
         display: inline-block;
-        padding-left: 5px;
         padding-right: 5px;
+        padding-left: 5px;
     }
 }
 
@@ -241,7 +249,7 @@ dd {
 }
 
 dt {
-    font-weight: bold;
+    font-weight: 700;
 }
 
 dd {
@@ -273,15 +281,15 @@ dd {
     }
 }
 
+
 // Misc
 // -------------------------
 
 // Abbreviations and acronyms
+// Add data-* attribute to help out our tooltip plugin, per https://github.com/twbs/bootstrap/issues/5257
 abbr[title],
-    // Add data-* attribute to help out our tooltip plugin, per https://github.com/twbs/bootstrap/issues/5257
 abbr[data-original-title] {
     cursor: help;
-    border-bottom: 1px dotted @abbr-border-color;
 }
 
 .initialism {
@@ -315,7 +323,7 @@ blockquote {
         color: @blockquote-small-color;
 
         &:before {
-            content: '\2014 \00A0'; // em dash, nbsp
+            content: "\2014 \00A0"; // em dash, nbsp
         }
     }
 }
@@ -327,19 +335,20 @@ blockquote {
 blockquote.pull-right {
     padding-right: 15px;
     padding-left: 0;
+    text-align: right;
     border-right: 5px solid @blockquote-border-color;
     border-left: 0;
-    text-align: right;
 
     // Account for citation
     footer,
     small,
     .small {
         &:before {
-            content: '';
+            content: "";
         }
+
         &:after {
-            content: '\00A0 \2014'; // nbsp, em dash
+            content: "\00A0 \2014"; // nbsp, em dash
         }
     }
 }
