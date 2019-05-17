@@ -1116,21 +1116,68 @@ function get_core_tables($localeset) {
         ], //reinstate_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
     ];
     $table_package['tags'] = [
-        'tag_id'           => [
+        'tag_id'       => [
             'type'           => 'MEDIUMINT',
             'length'         => 8,
             'auto_increment' => TRUE,
             'key'            => 1, //PRIMARY KEY (field_id)
             'unsigned'       => TRUE,
         ],
-        'tag_title'        => [
-            'type' => 'VARCHAR',
+        'tag_title'    => [
+            'type'   => 'VARCHAR',
             'length' => 200,
         ],
-        'tag_language'         => [
+        'tag_language' => [
             'type'   => 'VARCHAR',
             'length' => 50,
         ],
+    ];
+    // User Activity Table
+    $table_package['user_activity'] = [
+        'action_id'         => [
+            'type'           => 'BIGINT',
+            'length'         => 20,
+            'auto_increment' => TRUE,
+            'key'            => 1,
+            'unsigned'       => TRUE
+        ],
+        'action_user_id'    => [
+            'type'   => 'BIGINT',
+            'length' => 20,
+            'key'    => 2,
+        ],
+        'action_visibility' => [
+            'type'   => 'CHAR',
+            'length' => 4,
+            'key'    => 2,
+        ],
+        'action_item_type'  => [
+            'type'   => 'VARCHAR',
+            'length' => 100,
+            'key'    => 2,
+        ],
+        'action_item_id'    => [
+            'type'     => 'BIGINT',
+            'length'   => 20,
+            'key'      => 2,
+            'unsigned' => TRUE,
+        ],
+        'action_subject'    => [
+            'type'   => 'VARCHAR',
+            'length' => 100
+        ],
+        'action_content'    => [
+            'type' => 'TEXT'
+        ],
+        'action_datestamp'  => [
+            'type'     => 'INT',
+            'length'   => 10,
+            'unsigned' => TRUE,
+        ],
+        'action_spam'       => [
+            'type'   => 'TINYINT',
+            'length' => 1,
+        ]
     ];
     $table_package['user_field_cats'] = [
         'field_cat_id'    => [
@@ -1227,27 +1274,125 @@ function get_core_tables($localeset) {
             'type' => 'TEXT'
         ] //field_config TEXT NOT NULL,
     ];
+    // Social Relationships Table
+    $table_package['user_social'] = [
+        'social_id'           => [
+            'type'           => 'BIGINT',
+            'length'         => 20,
+            'auto_increment' => TRUE,
+            'key'            => 1,
+            'unsigned'       => TRUE
+        ],
+        'social_from_user_id' => [
+            'type'   => 'BIGINT',
+            'length' => 20,
+            'key'    => 2,
+        ],
+        'social_to_user_id'   => [
+            'type'   => 'BIGINT',
+            'length' => 20,
+            'key'    => 2,
+        ],
+        'social_status'       => [
+            'type'   => 'TINYINT',
+            'length' => 1
+        ],
+        'social_datestamp'    => [
+            'type'     => 'INT',
+            'length'   => 10,
+            'unsigned' => TRUE,
+        ]
+    ];
+    // User Groups Table
     $table_package['user_groups'] = [
         'group_id'          => [
-            'type'           => 'TINYINT',
-            'length'         => 3,
+            'type'           => 'BIGINT',
+            'length'         => 20,
             'auto_increment' => TRUE,
             'key'            => 1, //PRIMARY KEY (group_id)
             'unsigned'       => TRUE,
         ], //group_id TINYINT(3) UNSIGNED NOT NULL AUTO_INCREMENT,
+        'group_user_id'     => [
+            'type'   => 'BIGINT',
+            'length' => 20,
+            'key'    => 2
+        ], // Group leadership
+        'group_moderator'   => [
+            'type' => 'TEXT',
+            'key'  => 2,
+        ], // Group moderator
         'group_name'        => [
             'type'   => 'VARCHAR',
             'length' => 100,
         ], //group_name VARCHAR(100) NOT NULL,
         'group_description' => [
+            'type' => 'LONGTEXT',
+        ], //group_description changed to longtext to accomodate HTML
+        'group_keywords'    => [
+            'type'   => 'VARCHAR',
+            'length' => 100,
+            'key'    => 3, // need a FULLTEXT index for scoring search
+        ],
+        'group_alias'       => [
             'type'   => 'VARCHAR',
             'length' => 200,
-        ], //group_description VARCHAR(200) NOT NULL,
+        ],
+        'group_status'      => [
+            'type'   => 'TINYINT',
+            'length' => 1,
+            'key'    => 2,
+        ],
         'group_icon'        => [
             'type'   => 'VARCHAR',
             'length' => 100,
-        ] //group_icon VARCHAR(100) NOT NULL,
+        ], //group_icon VARCHAR(100) NOT NULL,
+        'group_datestamp'   => [
+            'type'     => 'INT',
+            'length'   => 10,
+            'unsigned' => TRUE
+        ]
     ];
+    // User notifications table
+    $table_package['user_notifications'] = [
+        'notify_id'        => [
+            'type'           => 'BIGINT',
+            'length'         => 20,
+            'auto_increment' => TRUE,
+            'key'            => 1,
+            'unsigned'       => TRUE
+        ],
+        'notify_user_id'   => [
+            'type'   => 'BIGINT',
+            'length' => 20,
+            'key'    => 2,
+        ],
+        'notify_item_id'   => [
+            'type'   => 'BIGINT',
+            'length' => 20,
+            'key'    => 2
+        ],
+        'notify_item_type' => [
+            'type'   => 'VARCHAR',
+            'length' => 100,
+            'key'    => 2,
+        ],
+        'notify_action'    => [
+            'type'   => 'VARCHAR',
+            'length' => 100,
+            'key'    => 2,
+        ],
+        'notify_datestamp' => [
+            'type'     => 'INT',
+            'length'   => 10,
+            'unsigned' => TRUE,
+        ],
+        'notify_new'       => [
+            'type'    => 'TINYINT',
+            'length'  => 1,
+            'default' => '0'
+        ]
+    ];
+    // User Administration User Log
     $table_package['user_log'] = [
         'userlog_id'        => [
             'type'           => 'MEDIUMINT',
