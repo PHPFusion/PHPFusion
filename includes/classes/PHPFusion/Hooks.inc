@@ -155,8 +155,8 @@ final class Hooks {
         $function_args = func_get_args();
 
         $current_hook = $this->get_hook($filter_name);
-        //print_P($function_args);
-        //print_P($current_hook);
+        //print_p($function_args);
+        //print_p($current_hook);
 
         if (!empty($current_hook)) {
 
@@ -197,6 +197,53 @@ final class Hooks {
         }
     }
 
+    public function apply_hook_once($filter_name) {
+
+        $function_args = func_get_args();
+
+        $current_hook = $this->get_hook($filter_name);
+        //print_p($function_args);
+        //print_p($current_hook);
+
+        if (!empty($current_hook)) {
+
+            foreach ($current_hook as $hook) {
+
+                // prevent the current hook from being called twice, executed or not, else crash
+                $this->remove_hook($filter_name, $hook['function'], $hook['que']);
+
+                if (function_exists($hook['function'])) {
+
+                    $args = (!empty($hook['default_args']) ? $hook['default_args'] : array());
+
+                    $_callback_args = FALSE;
+
+                    if (count($function_args) > 1) {
+                        unset($function_args[0]);
+                        $args = $function_args;
+                        $_callback_args = TRUE;
+                    }
+
+                    if ($hook['accepted_args']) {
+                        if ($hook['accepted_args'] < (count($function_args) - 1 ) ) {
+                            throw new \Exception("Too many arguments during executing the $filter_name hook");
+                        }
+                    }
+
+                    $output = $_callback_args === FALSE ? $hook['function']($args) : call_user_func_array($hook['function'], $args);
+
+                    if (!empty($output)) {
+
+                        $this->output[$filter_name] = $output;
+
+                    }
+                }
+            }
+
+            if (!empty($this->get_hook($filter_name))) $this->apply_hook($filter_name, $function_args);
+        }
+    }
+
     /**
      * Run the hooks by $filter_name and $args parameters
      *
@@ -209,10 +256,20 @@ final class Hooks {
         $function_args = func_get_args();
         call_user_func_array([$this, 'apply_hook'], $function_args);
 
-        if (!empty($this->output[$filter_name])) {
-            if (is_array($this->output[$filter_name])) {
-                return $this->output[$filter_name];
-            }
+        if (!empty($this->output[$filter_name]) && is_array($this->output[$filter_name])) {
+            return $this->output[$filter_name];
+        }
+
+        return array();
+    }
+
+    public function filter_hook_once($filter_name) {
+
+        $function_args = func_get_args();
+        call_user_func_array([$this, 'apply_hook_once'], $function_args);
+
+        if (!empty($this->output[$filter_name]) && is_array($this->output[$filter_name])) {
+            return $this->output[$filter_name];
         }
 
         return array();

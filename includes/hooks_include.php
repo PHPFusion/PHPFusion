@@ -102,7 +102,6 @@ function fusion_filter_hook($name) {
             }
         }
     }*/
-
     return call_user_func_array([
         \PHPFusion\Hooks::get_instances($name),
         'filter_hook'
@@ -110,4 +109,12 @@ function fusion_filter_hook($name) {
         $function_args);
 
     //return \PHPFusion\Hooks::get_instances($name)->filter_hook($name, isset($function_args[1]) ? $function_args[1] : NULL);
+}
+
+function fusion_filter_current_hook($name) {
+    return call_user_func_array([
+        \PHPFusion\Hooks::get_instances($name),
+        'filter_hook_once'
+    ],
+        func_get_args());
 }
