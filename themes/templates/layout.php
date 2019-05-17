@@ -73,7 +73,7 @@ if (!defined('NO_DEFAULT_CSS')) {
 $theme_css = file_exists(THEME.'styles.min.css') ? THEME.'styles.min.css' : THEME.'styles.css';
 echo "<link rel='stylesheet' href='".$theme_css."?v=".filemtime($theme_css)."'/>\n";
 
-/* Atom Engine
+// Atom Engine
 $user_theme = fusion_get_userdata('user_theme');
 $theme_name = $user_theme !== 'Default' ? $user_theme : fusion_get_settings('theme');
 $theme_data = dbarray(dbquery("SELECT theme_file FROM ".DB_THEME." WHERE theme_name='".$theme_name."' AND theme_active='1'"));
@@ -83,7 +83,7 @@ if (!empty($theme_data)) {
 } else {
     $theme_css = file_exists(THEME.'styles.min.css') ? THEME.'styles.min.css' : THEME.'styles.css';
     echo "<link href='".$theme_css."' rel='stylesheet' type='text/css' media='screen' />\n";
-}*/
+}
 
 echo render_favicons(defined('THEME_ICON') ? THEME_ICON : IMAGES.'favicons/');
 
