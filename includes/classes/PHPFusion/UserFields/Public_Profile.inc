@@ -251,17 +251,15 @@ class Public_Profile extends UserFieldsQuantum {
             $section_id = $this->get_SectionId();
             $index_page_id = isset($field_cats[$section_id]) ?: 1;
 
-            $registration_cond = ($this->registration === TRUE && $this->is_admin_panel === FALSE ? ' AND field.field_registration=:field_register' : '');
-            $registration_bind = ($this->registration === TRUE && $this->is_admin_panel === FALSE ? [':field_register' => 1] : []);
+            $registration_cond = ($this->registration === TRUE && $this->is_admin_panel === FALSE ? 'AND f.field_registration=:field_register' : '');
+            $registration_bind = ($this->registration === TRUE && $this->is_admin_panel === FALSE ? [":field_register" => '1'] : []);
 
-            $result = dbquery("SELECT f.*, c.* FROM 
+            $result = dbquery("SELECT f.*, c.* FROM
             ".DB_USER_FIELDS." f
             INNER JOIN ".DB_USER_FIELD_CATS." c ON c.field_cat_id=f.field_cat
-            WHERE c.field_parent='$index_page_id' $registration_cond 
+            WHERE c.field_parent='$index_page_id' $registration_cond
             ORDER BY c.field_cat_order, f.field_order
-            ", [
-                ":index00" => $index_page_id,
-            ] + $registration_bind);
+            ", $registration_bind);
 
             if (dbrows($result)) {
 
@@ -306,11 +304,11 @@ class Public_Profile extends UserFieldsQuantum {
 
         } else {
 
-            $query = "SELECT field.*, 
+            $query = "SELECT field.*,
                   cat.field_cat_id, cat.field_cat_name, cat.field_parent, root.field_cat_id AS page_id, root.field_cat_name AS page_name, root.field_cat_db, root.field_cat_index
                   FROM ".DB_USER_FIELDS." field
                   INNER JOIN ".DB_USER_FIELD_CATS." cat ON (cat.field_cat_id = field.field_cat)
-                  INNER JOIN ".DB_USER_FIELD_CATS." root ON (cat.field_parent = root.field_cat_id)                   
+                  INNER JOIN ".DB_USER_FIELD_CATS." root ON (cat.field_parent = root.field_cat_id)
                   ORDER BY root.field_cat_order, cat.field_cat_order, field.field_order";
             $result = dbquery($query);
 
