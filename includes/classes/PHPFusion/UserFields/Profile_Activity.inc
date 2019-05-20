@@ -1,8 +1,6 @@
 <?php
 namespace PHPFusion\UserFields;
 
-use PHPFusion\Template;
-
 class Profile_Activity {
 
     private $user_data = [];
@@ -17,6 +15,5 @@ class Profile_Activity {
         $info = [];
         return $info;
     }
-
 
 }
