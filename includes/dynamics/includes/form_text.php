@@ -170,11 +170,11 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
             if (!$password_toggle) {
                 $password_toggle = TRUE;
                 $pwd_locale = fusion_get_locale("password_strength");
-                $path = DYNAMICS."assets".DIRECTORY_SEPARATOR."password/lang/$pwd_locale.js";
-                if (file_exists($path)) {
-                    $path = DYNAMICS."assets/password/lang/$pwd_locale.js";
-                } else {
-                    $path = DYNAMICS."assets/password/lang/en.js";
+                $password_dir = DYNAMICS."assets".DIRECTORY_SEPARATOR."password".DIRECTORY_SEPARATOR."lang".DIRECTORY_SEPARATOR;
+                $path = $password_dir.'en.js';
+                $pwd_locale_path = $password_dir.$pwd_locale.'.js';
+                if (is_file($pwd_locale_path)) {
+                    $path = $pwd_locale_path;
                 }
                 PHPFusion\OutputHandler::addToFooter("<script type='text/javascript' src='$path'></script>");
                 PHPFusion\OutputHandler::addToFooter("<script type='text/javascript' src='".DYNAMICS."assets/password/pwtoggle.js'></script>");
@@ -190,10 +190,10 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
                 $options['append_button_name'] = $options['input_id'].'_pwdToggle';
                 $options['append_button_id'] = $options['input_id'].'_pwdToggle';
                 add_to_jquery("
-                    $('#".$options['input_id']."_pwdToggle').bind('click', function(e) {
-                        togglePasswordInput('".$options['input_id']."_pwdToggle', '".$options['input_id']."');
-                    });
-                    ");
+                $('#".$options['input_id']."_pwdToggle').bind('click', function(e) {
+                    togglePasswordInput('".$options['input_id']."_pwdToggle', '".$options['input_id']."');
+                });
+                ");
             }
             break;
     }
