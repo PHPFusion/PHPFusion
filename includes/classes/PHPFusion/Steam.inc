@@ -25,7 +25,8 @@ namespace PHPFusion;
  */
 class Steam {
 
-    private $boilers = 'bootstrap3';
+    private $boilers = 'bootstrap3'; // Default boiler
+    private $boiler_path = NULL;
 
     public function __construct($boilers ='') {
 
@@ -33,12 +34,20 @@ class Steam {
         // drop $settings['bootstrap']
         if ($boilers) {
             $this->boilers = $boilers;
+            $this->boiler_path = THEMES."templates".DIRECTORY_SEPARATOR."boilers".DIRECTORY_SEPARATOR.$boilers.DIRECTORY_SEPARATOR;
         }
 
     }
 
     /**
-     * Override boilers.
+     * @return null|string
+     */
+    public function get_BoilerPath() {
+        return $this->boiler_path;
+    }
+
+    /**
+     * Override boilers
      * @param $boilers
      */
     public function set_boiler($boilers) {
@@ -46,14 +55,15 @@ class Steam {
     }
 
     /**
-     * Run the boiler.
+     * Run the boiler
      */
     public function run() {
-        require_once THEMES.'templates/boilers/'.$this->boilers.'/package.php';
+        require_once $this->boiler_path."package.php";
     }
 
 
     /**
+     * Get the current boiler
      * @return string
      */
     public function get_boiler() {
@@ -64,22 +74,27 @@ class Steam {
      * @param $command
      *
      * @return object
+     * @throws \ReflectionException
      */
     public function load($command) {
         $command_name = strtolower($command);
         $command_name = ucfirst($command_name);
-        require_once __DIR__.'/Steam/'.$command_name.'.steam.inc';
+        $file = __DIR__.DIRECTORY_SEPARATOR.'Steam'.DIRECTORY_SEPARATOR.$command_name.'.steam.inc';
+        require_once $file;
+        $input_class = new \ReflectionClass('PHPFusion\\Steam\\'.$command_name);
 
-        return (object)new $command_name( $this );
+        return $input_class->newInstance($this);
     }
 
     /**
-     * @param $tpl
+     * Render the output from the template
+     * @param Template $tpl
      *
      * @return string
      */
-    public function render($tpl) {
-        return $tpl->get_output();
+
+    public function render(Template $tpl) {
+        return (string) $tpl->get_output();
     }
 
 }

@@ -1,5 +1,5 @@
 <?php
-
+namespace PHPFusion\Steam;
 /**
  * Class Blocks
  * Render a cross framework HTML blocks.
@@ -15,19 +15,19 @@ class Layout {
      */
     public function __construct(\PHPFusion\Steam $steam) {
         $this->steam = $steam;
-        require_once THEMES.'templates/boilers/'.$this->steam->get_boiler().'/grid.php';
+        require_once $this->steam->get_BoilerPath().DIRECTORY_SEPARATOR."grid.php";
     }
 
     public function getRowClass() {
-        return (string) Grid::getRowClass();
+        return (string) \Grid::getRowClass();
     }
 
     public function getColumnClass($percent = 100) {
-        return (string) Grid::getColumnClass($percent);
+        return (string) \Grid::getColumnClass($percent);
     }
 
     public function getContainerClass() {
-        return Grid::getContainerClass();
+        return \Grid::getContainerClass();
     }
 
     public function deprecated_grid(array $options) {

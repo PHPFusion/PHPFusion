@@ -1,0 +1,49 @@
+<div id="{%input_id%}-field" class="form-group{%group_class%}" {%group_inline_css%}>
+    {control_label.{
+    <label class="control-label{%label_grid%}" for="{%input_id%}">{%label_icon%}{%label_text%}{%label_required%}{%label_tip%}</label>
+    }}
+    {inline_start.{
+    <div class="{[col(100,100,70,70)]}">
+        }}
+        {group_start.{
+        <div class="input-group{%group_size%}" {%group_width%}>
+            }}
+            {input_prepend_button.{
+            <span class="input-group-btn"><button id="{%prepend_id%}" name="{%prepend_name%}" type="{%prepend_type%}" value="{%prepend_value%}" class="btn{%prepend_size%}{%prepend_class%}">{%prepend_text%}</button></span>
+            }}
+            {input_prepend.{
+            <span class="input-group-addon" id="{%prepend_id%}">{%prepend_text%}</span>
+            }}
+            {input_text.{
+            <input type="text" name="{%input_name%}" id="{%input_id%}" value="{%input_value%}" placeholder="{%placeholder%}" data-type="text" class="form-control textbox {%inner_class%}" {%input_data%}{%min%}{%max%}{%step%}{%inner_width%}{%max_length%}{%autocomplete%}{%readonly%}>{%pwstrength%}
+            }}
+            {input_append_button.{
+            <span class="input-group-btn"><button id="{%prepend_id%}" name="{%prepend_name%}" type="{%prepend_type%}" value="{%prepend_value%}" class="btn{%prepend_size%}{%prepend_class%}">{%prepend_text%}</button></span>
+            }}
+            {input_append.{
+            <span class="input-group-addon" id="{%prepend_id%}">{%prepend_text%}</span>
+            }}
+            {feedback.{
+            <div class="form-control-feedback" style="top:0;"><i class="{%icon%}"></i></div>
+            }}
+            {stacked.{
+            <!--fusion stacked information-->{%content%}
+            }}
+            {group_end.{
+        </div>
+        }}
+        {tip.{
+        <br/><span class="tip"><i>{%tip_text%}</i></span>
+        }}
+        {error_message.{
+        <div class="input-error{%error_class%}">
+            <div id="{%input_id%}-help" class="label label-danger p-5 display-inline-block">{%error_text%}</div>
+        </div>
+        }}
+        {append_html.{
+        <!--fusion appended information-->{%content%}
+        }}
+        {inline_end.{
+    </div>
+    }}
+</div>

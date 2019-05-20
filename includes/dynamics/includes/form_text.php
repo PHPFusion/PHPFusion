@@ -19,18 +19,15 @@
 
 /**
  * Generates a text input
- * TODO: Document each option
- *
  * Generates the HTML for a textbox or password input
  *
- * @param string $input_name Name of the input, by
- *                            default it's also used as the ID for the input
- * @param string $label The label
- * @param string $input_value The value to be displayed
- *                            in the input, usually a value from DB prev. saved
- * @param array  $options Various options
+ * @param        $input_name    Name of the input, by default it's also used as the ID for the input
+ * @param string $label     The label text
+ * @param string $input_value   The value to be display in the input, usually a value from DB prev. saved
+ * @param array  $options       Various options
  *
- * @return string
+ * @return mixed
+ * @throws ReflectionException
  *
  * To add an inline button (set prepend or append - respectively)
  * register these options accordingly into the function
@@ -46,14 +43,15 @@
  * $options['append_value'] = "your-value" - You can also insert HTML <i class='fa fa-something'></i> for glyphs
  *
  */
-
 function form_text($input_name, $label = "", $input_value = "", array $options = []) {
+    global $fusion_steam;
 
     $locale = fusion_get_locale();
-
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
-
     $id = trim(str_replace("[", "-", $input_name), "]");
+    $valid_types = [
+        'text', 'number', 'password', 'email', 'url', 'color', 'date', 'datetime', 'datetime-local', 'month', 'range', 'search', 'tel', 'time', 'week'
+    ];
 
     $default_options = [
         'type'               => 'text',
@@ -103,15 +101,14 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         'data'               => [],
         'append_html'        => '',
         'censor_words'       => TRUE,
-
+        'min' => '',
+        'max' => '',
+        'step' => '',
+        'options_data' => []
     ];
-
     $options += $default_options;
 
-    $valid_types = [
-        'text', 'number', 'password', 'email', 'url', 'color', 'date', 'datetime', 'datetime-local', 'month', 'range', 'search', 'tel', 'time', 'week'
-    ];
-
+    // Type check
     $options['type'] = in_array($options['type'], $valid_types) ? $options['type'] : 'text';
 
     $options['input_id'] = trim(str_replace("[", "-", $options['input_id']), "]");
@@ -121,36 +118,19 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         'prepend_button_name' => !empty($options['append_button_name']) ? $options['append_button_name'] : "p-submit-".$options['input_id'],
         'append_button_id'    => !empty($options['append_button_id']) ? $options['append_button_id'] : $options['input_id'].'-append-btn',
         'prepend_button_id'   => !empty($options['prepend_button_id']) ? $options['prepend_button_id'] : $options['input_id'].'-prepend-btn',
+        'error_class' => '',
+        'error_text' => empty($options['error_text']) ? $locale['error_input_default'] : $options['error_text']
     ];
 
     if (!empty($options['data'])) {
         array_walk($options['data'], function ($a, $b) use (&$options_data) {
-            $options_data[] = "data-$b='$a'";
+            $options['options_data'] = "data-$b='$a'";
         }, $options_data);
     }
 
-    // Error messages based on settings
-    if ($options['type'] == 'password') {
-        $options['error_text'] = empty($options['error_text']) ? $locale['error_input_password'] : $options['error_text'];
-    } else if ($options['type'] == 'email') {
-        $options['error_text'] = empty($options['error_text']) ? $locale['error_input_email'] : $options['error_text'];
-    } else if ($options['type'] == 'number') {
-        $options['error_text'] = empty($options['error_text']) ? $locale['error_input_number'] : $options['error_text'];
-    } else if ($options['type'] == 'url') {
-        $options['error_text'] = empty($options['error_text']) ? $locale['error_input_url'] : $options['error_text'];
-    } else if ($options['regex']) {
-        $options['error_text'] = empty($options['error_text']) ? $locale['error_input_regex'] : $options['error_text'];
-    } else if ($options['safemode']) {
-        $options['error_text'] = empty($options['error_text']) ? $locale['error_input_safemode'] : $options['error_text'];
-    } else {
-        $options['error_text'] = empty($options['error_text']) ? $locale['error_input_default'] : $options['error_text'];
-    }
-
-    //print_p(\Defender::inputHasError($input_name));
-    $error_class = "";
-
+    // This is bootstrap only???
     if (\Defender::inputHasError($input_name)) {
-        $error_class = " has-error";
+        $options['error_class'] = " has-error";
         if (!empty($options['error_text'])) {
             $new_error_text = \Defender::getErrorText($input_name);
             if (!empty($new_error_text)) {
@@ -160,27 +140,37 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         }
     }
 
-    $min = '';
-    $max = '';
-    $step = '';
     switch ($options['type']) {
-        case "number":
-            $input_type = "number";
-            $min = ((!empty($options['number_min']) || $options['number_min'] === "0") && isnum($options['number_min']) ? "min='".$options['number_min']."' " : '');
-            $max = ((!empty($options['number_max']) || $options['number_max'] === "0") && isnum($options['number_max']) ? "max='".$options['number_max']."' " : '');
-            // $step = "step='".str_replace(",", ".", $options['number_step'])."' ";
-            $step = "step='any' ";
+        case 'url':
+            $options['error_text'] = empty($options['error_text']) ? $locale['error_input_url'] : $options['error_text'];
             break;
-        case "text":
-            $input_type = "text";
+        case 'email':
+            $options['error_text'] = empty($options['error_text']) ? $locale['error_input_email'] : $options['error_text'];
+            break;
+        case "number":
+            $options['error_text'] = empty($options['error_text']) ? $locale['error_input_number'] : $options['error_text'];
+            $options['min'] = ((!empty($options['number_min']) || $options['number_min'] === "0") && isnum($options['number_min']) ? "min='".$options['number_min']."' " : '');
+            $options['max'] = ((!empty($options['number_max']) || $options['number_max'] === "0") && isnum($options['number_max']) ? "max='".$options['number_max']."' " : '');
+            // $step = "step='".str_replace(",", ".", $options['number_step'])."' ";
+            $options['step'] = "step='any' ";
+
+            if (!defined('number_field_js')) {
+                define('number_field_js', TRUE);
+                add_to_jquery("$('input[data-type=\"number\"]').keypress(function(e) {
+                var key_codes = [96, 97, 98, 99, 100, 101, 102, 103, 44, 46, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 0, 8];
+                if (!($.inArray(e.which, key_codes) >= 0)) { e.preventDefault(); }
+                });\n");
+            }
+
             break;
         case "password":
-            $input_type = "password";
+            $options['error_text'] = empty($options['error_text']) ? $locale['error_input_password'] : $options['error_text'];
+
             static $password_toggle = '';
             if (!$password_toggle) {
                 $password_toggle = TRUE;
                 $pwd_locale = fusion_get_locale("password_strength");
-                $path = DYNAMICS."assets/password/lang/$pwd_locale.js";
+                $path = DYNAMICS."assets".DIRECTORY_SEPARATOR."password/lang/$pwd_locale.js";
                 if (file_exists($path)) {
                     $path = DYNAMICS."assets/password/lang/$pwd_locale.js";
                 } else {
@@ -206,20 +196,45 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
                     ");
             }
             break;
-        default:
-            $input_type = "text";
+    }
+
+    if ($options['regex']) {
+        $options['error_text'] = empty($options['error_text']) ? $locale['error_input_regex'] : $options['error_text'];
+        // Live Regex Error Check
+        if ($options['regex_error_text']) {
+            add_to_jquery("
+            $('#".$options['input_id']."').blur(function(ev) {
+                var Inner_Object = $(this).parent('div').find('.label-danger');
+                var Outer_Object = $(this).parent('div').find('.input-error');
+                if (!$(this).val().match(/".$options['regex']."/g) && $(this).val()) {
+                    var ErrorText = '".$options['regex_error_text']."';
+                    var ErrorDOM = '<div class=\'input-error spacer-xs\'><div class=\'label label-danger p-5\'>'+ ErrorText +'</div></div>';
+                    if (Inner_Object.length > 0) {
+                        object.html(ErrorText);
+                    } else {
+                        $(this).after(function() {
+                            return ErrorDOM;
+                        });
+                    }
+                } else {
+                   Outer_Object.remove();
+                }
+                });
+            ");
+        }
+
+    } elseif ($options['safemode']) {
+        $options['error_text'] = empty($options['error_text']) ? $locale['error_input_safemode'] : $options['error_text'];
     }
 
     // Fixes HTML DOM type number that does not respect max_length prop.
-    $max_length = '';
     if ($options['max_length'] && isnum($options['max_length'])) {
-        $max_length = ' maxlength="'.$options['max_length'].'"';
-        if ($input_type == 'number') {
-            $max_length .= ' oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"';
+        $options['max_length'] = ' maxlength="'.$options['max_length'].'"';
+        if ($options['type'] == 'number') {
+            $options['max_length'] .= ' oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"';
         }
     }
-
-    if ($options['password_strength'] == TRUE) {
+    if ($options['password_strength'] == TRUE) { // does this only work for bootstrap?
         PHPFusion\OutputHandler::addToFooter("<script type='text/javascript' src='".DYNAMICS."assets/password/pwstrength.js'></script>");
         PHPFusion\OutputHandler::addToHead('<script type="text/javascript">'.jsminify('
             jQuery(document).ready(function() {
@@ -234,52 +249,6 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
             });
         ').'</script>');
     }
-
-    $html = "<div id='".$options['input_id']."-field' class='form-group".($options['inline'] ? ' overflow-hide' : '').($error_class ? $error_class : '').($options['class'] ? ' '.$options['class'] : '').($options['icon'] ? ' has-feedback' : '')."'".($options['width'] && !$label ? " style='width: ".$options['width']."'" : '').">\n";
-    $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-12 col-md-3 col-lg-3" : '')."' for='".$options['input_id']."'>".$options['label_icon'].$label.($options['required'] ? "<span class='required'>&nbsp;*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."</label>\n" : '';
-    $html .= ($options['inline'] && $label) ? "<div class='col-xs-12 col-sm-12 col-md-9 col-lg-9'>\n" : "";
-
-    $html .= ($options['append_button'] || $options['prepend_button'] || $options['append_value'] || $options['prepend_value']) ? "<div class='input-group".($options['group_size'] ? ' input-group-'.$options['group_size'] : '')."' ".($options['width'] ? "style='width: ".$options['width']."'" : '').">\n" : "";
-
-    if ($options['prepend_button'] && $options['prepend_type'] && $options['prepend_form_value'] && $options['prepend_class'] && $options['prepend_value']) {
-        $html .= "<span class='input-group-btn'>\n";
-        $html .= "<button id='".$options['prepend_button_id']."' name='".$options['prepend_button_name']."' type='".$options['prepend_type']."' value='".$options['prepend_form_value']."' class='btn ".$options['prepend_size']." ".$options['prepend_class']."'>".$options['prepend_value']."</button>\n";
-        $html .= "</span>\n";
-    } else if ($options['prepend_value']) {
-        $html .= "<span class='input-group-addon' id='".$options['prepend_id']."'>".$options['prepend_value']."</span>\n";
-    }
-
-    $html .= "<input type='".$input_type."' data-type='".$input_type."' ".(!empty($options_data) ? implode(' ', $options_data) : '')." ".$min.$max.$step."class='form-control textbox ".($options['inner_class'] ? " ".$options['inner_class']." " : '')."' ".($options['inner_width'] ? "style='width:".$options['inner_width'].";'" : '').$max_length." name='".$input_name."' id='".$options['input_id']."' value='".$input_value."'".($options['placeholder'] ? " placeholder='".$options['placeholder']."' " : '')."".($options['autocomplete_off'] ? " autocomplete='off'" : '')." ".($options['deactivate'] ? 'readonly' : '').">";
-
-    $html .= $options['password_strength'] == TRUE ? '<div class="pwstrength_viewport_progress"></div>' : '';
-
-    if ($options['append_button'] && $options['append_type'] && $options['append_form_value'] && $options['append_class'] && $options['append_value']) {
-
-        $html .= "<span class='input-group-btn'>\n";
-        $html .= "<button id='".$options['append_button_id']."' name='".$options['append_button_name']."' type='".$options['append_type']."' value='".$options['append_form_value']."' class='btn ".$options['append_size']." ".$options['append_class']."'>".$options['append_value']."</button>\n";
-        $html .= "</span>\n";
-
-    } else if ($options['append_value']) {
-
-        $html .= "<span class='input-group-addon' id='".$options['append_id']."'>".$options['append_value']."</span>\n";
-
-    }
-
-    $html .= ($options['feedback_icon']) ? "<div class='form-control-feedback' style='top:0;'><i class='".$options['icon']."'></i></div>\n" : '';
-
-    $html .= $options['stacked'];
-
-    $html .= ($options['append_button'] || $options['prepend_button'] || $options['append_value'] || $options['prepend_value']) ? "</div>\n" : "";
-
-    $html .= $options['ext_tip'] ? "<br/>\n<span class='tip'><i>".$options['ext_tip']."</i></span>" : "";
-
-    $html .= \Defender::inputHasError($input_name) ? "<div class='input-error".((!$options['inline'] || $options['append_button'] || $options['prepend_button'] || $options['append_value'] || $options['prepend_value']) ? " display-block" : "")."'><div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div></div>" : "";
-
-    $html .= $options['append_html'];
-
-    $html .= ($options['inline'] && $label) ? "</div>\n" : "";
-
-    $html .= "</div>\n";
 
     // Add input settings in the SESSION
     \Defender::add_field_session([
@@ -297,39 +266,6 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         'censor_words'   => $options['censor_words']
     ]);
 
-    // This should affect all number inputs by type, not by ID
-    if ($options['type'] == 'number' && !defined('NUMBERS_ONLY_JS')) {
-        define('NUMBERS_ONLY_JS', TRUE);
-        add_to_jquery("$('input[data-type=\"number\"]').keypress(function(e) {
-		var key_codes = [96, 97, 98, 99, 100, 101, 102, 103, 44, 46, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 0, 8];
-		if (!($.inArray(e.which, key_codes) >= 0)) { e.preventDefault(); }
-		});\n");
-    }
-
-    // Live Regex Error Check
-    if ($options['regex'] && $options['regex_error_text']) {
-
-        add_to_jquery("
-        $('#".$options['input_id']."').blur(function(ev) {
-            var Inner_Object = $(this).parent('div').find('.label-danger');
-            var Outer_Object = $(this).parent('div').find('.input-error');
-            if (!$(this).val().match(/".$options['regex']."/g) && $(this).val()) {
-                var ErrorText = '".$options['regex_error_text']."';
-                var ErrorDOM = '<div class=\'input-error spacer-xs\'><div class=\'label label-danger p-5\'>'+ ErrorText +'</div></div>';
-                if (Inner_Object.length > 0) {
-                    object.html(ErrorText);
-                } else {
-                    $(this).after(function() {
-                        return ErrorDOM;
-                    });
-                }
-            } else {
-               Outer_Object.remove();
-            }
-        });
-        ");
-    }
-
     if ($options['autocomplete_off']) {
         // Delay by 20ms and reset values.
         add_to_jquery("
@@ -338,5 +274,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         ");
     }
 
-    return (string)$html;
+    //return (string)$html;
+    return $fusion_steam->load('Form')->input($input_name, $label, $input_value, $options);
+
 }

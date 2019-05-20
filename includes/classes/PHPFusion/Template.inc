@@ -257,7 +257,6 @@ class Template {
      * @return string   The final HTML markup
      */
     public function get_output() {
-        global $fusion_steam;
 
         $this->template = trim($this->template);
 
@@ -306,9 +305,11 @@ class Template {
         // Direct replacement that doesn't require any conditional checks. This is 1 to 1 string to tag replacements.
         if (!empty($this->tag)) {
             foreach ($this->tag as $tag => $value) {
-                if (is_string($tag) && (is_string($value) || isnum($value))) {
-                    $this->template = strtr($this->template, [$tag => $value]);
-                }
+
+                $value = is_string($tag) && (is_string($value) || isnum($value)) ? $value : '';
+
+                $this->template = strtr($this->template, [$tag => $value]);
+
             }
         }
 

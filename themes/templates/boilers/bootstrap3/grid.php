@@ -11,6 +11,7 @@ class Grid {
 	public static function getRowClass() {
 		return "row";
 	}
+
 	public static function getContainerClass() {
 		return "container";
 	}
