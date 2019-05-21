@@ -18,7 +18,9 @@ class Form {
         $tpl->set_template(__DIR__.DIRECTORY_SEPARATOR.'html'.DIRECTORY_SEPARATOR.'form_input.html');
 
         // input id
+        $tpl->set_tag("input_name", $input_name);
         $tpl->set_tag("input_id", $options['input_id']);
+        $tpl->set_tag("input_type", $options['type']);
         // form-group css class
         $grp_class = ($options['inline'] ? ' overflow-hide' : '');
         $grp_class .= ($options['class'] ? ' '.$options['class'] : '');
