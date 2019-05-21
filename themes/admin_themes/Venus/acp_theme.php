@@ -22,68 +22,6 @@ require_once THEMES."admin_themes/Venus/includes/functions.php";
 define('BOOTSTRAP', TRUE);
 define('FONTAWESOME', TRUE);
 
-function render_admin_login() {
-    $locale = fusion_get_locale();
-    $aidlink = fusion_get_aidlink();
-    $userdata = fusion_get_userdata();
-
-    $html = "<section class='login-bg'>\n";
-    $html .= "<aside class='block-container'>\n";
-    $html .= "<div class='block'>\n";
-    $html .= "<div class='block-content clearfix' style='font-size:13px;'>\n";
-    $html .= "<h6><strong>".$locale['280']."</strong></h6>\n";
-    $html .= "<img src='".IMAGES."php-fusion-icon.png' class='pf-logo position-absolute' alt='PHP-Fusion'/>";
-    $html .= "<p class='fusion-version text-right mid-opacity text-smaller'>".$locale['version'].fusion_get_settings('version')."</p>";
-    $html .= "<div class='row m-0'>\n<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>";
-
-    $form_action = FUSION_SELF.$aidlink == ADMIN."index.php".$aidlink ? FUSION_SELF.$aidlink."&amp;pagenum=0" : FUSION_SELF."?".FUSION_QUERY;
-
-    // Get all notices
-    $html .= renderNotices(getNotices());
-
-    $html .= openform('admin-login-form', 'post', $form_action);
-
-    $html .= fusion_get_function('openside', '');
-
-    $html .= "<div class='m-t-10 clearfix row'>\n";
-    $html .= "<div class='col-xs-3 col-sm-3 col-md-3 col-lg-3'>\n";
-    $html .= "<div class='pull-right'>\n";
-    $html .= display_avatar($userdata, '90px');
-    $html .= "</div>\n";
-    $html .= "</div>\n<div class='col-xs-9 col-sm-9 col-md-8 col-lg-7'>\n";
-    $html .= "<div class='clearfix'>\n";
-
-    $html .= "<h5><strong>".$locale['welcome'].", ".$userdata['user_name']."</strong><br/>".getuserlevel($userdata['user_level'])."</h5>";
-
-    $html .= form_text('admin_password', "", "", array(
-        'callback_check' => 'check_admin_pass',
-        'placeholder' => $locale['281'],
-        'error_text' => $locale['global_182'],
-        'autocomplete_off' => TRUE,
-        'type' => 'password',
-        'required' => TRUE,
-    ));
-
-    $html .= "</div>\n";
-    $html .= "</div>\n";
-    $html .= "</div>\n";
-
-    $html .= fusion_get_function('closeside', '');
-
-    $html .= form_button('admin_login', $locale['login'], $locale['login'], array('class' => 'btn-primary btn-block'));
-
-    $html .= closeform();
-
-    $html .= "</div>\n</div>\n"; // .col-*, .row
-    $html .= "</div>\n"; // .block-content
-    $html .= "</div>\n"; // .block
-    $html .= "<div class='copyright-note clearfix m-t-10'>".showcopyright()."</div>\n";
-    $html .= "</aside>\n";
-    $html .= "</section>\n";
-
-    echo $html;
-}
-
 function render_admin_panel() {
     $locale = fusion_get_locale();
     $userdata = fusion_get_userdata();
@@ -184,7 +122,7 @@ function render_admin_panel() {
 
     add_to_jquery("
         // Initialize slimscroll
-        $('#adl').slimScroll({height: null});
+        $('#adl').slimScroll({height: 'auto'});
 
         $('#toggle-canvas').on('click', function(e) {
             if ($('#admin-panel').hasClass('in')) {
@@ -203,5 +141,95 @@ function render_admin_panel() {
         }
     ");
 
+    echo $html;
+}
+
+function render_admin_login() {
+    $locale = fusion_get_locale();
+    $aidlink = fusion_get_aidlink();
+    $userdata = fusion_get_userdata();
+
+    $html = "<section class='login-bg'>\n";
+    $html .= "<aside class='block-container'>\n";
+    $html .= "<div class='block'>\n";
+    $html .= "<div class='block-content clearfix' style='font-size:13px;'>\n";
+    $html .= "<h6><strong>".$locale['280']."</strong></h6>\n";
+    $html .= "<img src='".IMAGES."php-fusion-icon.png' class='pf-logo position-absolute' alt='PHP-Fusion'/>";
+    $html .= "<p class='fusion-version text-right mid-opacity text-smaller'>".$locale['version'].fusion_get_settings('version')."</p>";
+    $html .= "<div class='row m-0'>\n<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>";
+
+    $form_action = FUSION_SELF.$aidlink == ADMIN."index.php".$aidlink ? FUSION_SELF.$aidlink."&amp;pagenum=0" : FUSION_SELF."?".FUSION_QUERY;
+
+    // Get all notices
+    $html .= renderNotices(getNotices());
+
+    $html .= openform('admin-login-form', 'post', $form_action);
+
+    $html .= fusion_get_function('openside', '');
+
+    $html .= "<div class='m-t-10 clearfix row'>\n";
+    $html .= "<div class='col-xs-3 col-sm-3 col-md-3 col-lg-3'>\n";
+    $html .= "<div class='pull-right'>\n";
+    $html .= display_avatar($userdata, '90px');
+    $html .= "</div>\n";
+    $html .= "</div>\n<div class='col-xs-9 col-sm-9 col-md-8 col-lg-7'>\n";
+    $html .= "<div class='clearfix'>\n";
+
+    $html .= "<h5><strong>".$locale['welcome'].", ".$userdata['user_name']."</strong><br/>".getuserlevel($userdata['user_level'])."</h5>";
+
+    $html .= form_text('admin_password', "", "", array(
+        'callback_check' => 'check_admin_pass',
+        'placeholder' => $locale['281'],
+        'error_text' => $locale['global_182'],
+        'autocomplete_off' => TRUE,
+        'type' => 'password',
+        'required' => TRUE,
+    ));
+
+    $html .= "</div>\n";
+    $html .= "</div>\n";
+    $html .= "</div>\n";
+
+    $html .= fusion_get_function('closeside', '');
+
+    $html .= form_button('admin_login', $locale['login'], $locale['login'], array('class' => 'btn-primary btn-block'));
+
+    $html .= closeform();
+
+    $html .= "</div>\n</div>\n"; // .col-*, .row
+    $html .= "</div>\n"; // .block-content
+    $html .= "</div>\n"; // .block
+    $html .= "<div class='copyright-note clearfix m-t-10'>".showcopyright()."</div>\n";
+    $html .= "</aside>\n";
+    $html .= "</section>\n";
+
+    echo $html;
+}
+
+function openside($title = FALSE, $class = FALSE) {
+    $html = "<div class='panel panel-default $class'>";
+    $html .= ($title) ? "<div class='panel-heading'>$title</div>" : '';
+    $html .= "<div class='panel-body'>";
+
+    echo $html;
+}
+
+function closeside($title = FALSE) {
+    $html = "</div>";
+    $html .= ($title) ? "<div class='panel-footer'>$title</div>" : '';
+    $html .= "</div>";
+
+    echo $html;
+}
+
+function opentable($title, $class = FALSE) {
+    $html = "<div class='panel-default $class' style='border:none; box-shadow:none'><div class='panel-body p-t-20 p-l-0 p-r-0'>";
+    $html .= "<h3>".$title."</h3>";
+
+    echo $html;
+}
+
+function closetable() {
+    $html = "</div></div>";
     echo $html;
 }

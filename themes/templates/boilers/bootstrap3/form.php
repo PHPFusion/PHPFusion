@@ -19,7 +19,9 @@ class Form {
         $tpl->set_tag("input_name", $input_name);
 
         // input id
+        $tpl->set_tag("input_name", $input_name);
         $tpl->set_tag("input_id", $options['input_id']);
+        $tpl->set_tag("input_type", $options['type']);
         // form-group css class
         $grp_class = ($options['inline'] ? ' overflow-hide' : '');
         $grp_class .= ($options['class'] ? ' '.$options['class'] : '');

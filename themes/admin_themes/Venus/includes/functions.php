@@ -17,34 +17,6 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
-function openside($title = FALSE, $class = FALSE) {
-    $html = "<div class='panel panel-default $class'>";
-    $html .= ($title) ? "<div class='panel-heading'>$title</div>" : '';
-    $html .= "<div class='panel-body'>";
-
-    echo $html;
-}
-
-function closeside($title = FALSE) {
-    $html = "</div>";
-    $html .= ($title) ? "<div class='panel-footer'>$title</div>" : '';
-    $html .= "</div>";
-
-    echo $html;
-}
-
-function opentable($title, $class = FALSE) {
-    $html = "<div class='panel-default $class' style='border:none; box-shadow:none'><div class='panel-body p-t-20 p-l-0 p-r-0'>";
-    $html .= "<h3>".$title."</h3>";
-
-    echo $html;
-}
-
-function closetable() {
-    $html = "</div></div>";
-    echo $html;
-}
-
 // Dashboard template
 function render_admin_dashboard() {
     $pagenum = (int)filter_input(INPUT_GET, 'pagenum');

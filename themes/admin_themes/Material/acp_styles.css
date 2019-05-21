@@ -369,7 +369,9 @@ main {
 }
 
 .sidebar .header .pf-logo {
-    background: url("../../../images/php-fusion-icon.png") no-repeat scroll -20px -23px;
+    background: url("../../../images/php-fusion-icon.png") no-repeat scroll -20px -2px;
+    -webkit-background-size: 100px 100px;
+    background-size: 100px;
     width: 260px;
     height: 68px;
     -webkit-transition: all 0.5s ease;
