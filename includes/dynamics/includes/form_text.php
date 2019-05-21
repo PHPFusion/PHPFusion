@@ -21,7 +21,7 @@
  * Generates a text input
  * Generates the HTML for a textbox or password input
  *
- * @param        $input_name    Name of the input, by default it's also used as the ID for the input
+ * @param string $input_name    Name of the input, by default it's also used as the ID for the input
  * @param string $label     The label text
  * @param string $input_value   The value to be display in the input, usually a value from DB prev. saved
  * @param array  $options       Various options
