@@ -30,7 +30,7 @@ body {
 }
 
 #topnav {
-    background: url('images/topbg.png') #f6f6f6 center top no-repeat;
+    background: url('images/topbg.png') #f1f1f1  center top no-repeat;
     display: block;
     min-height: 70px;
     margin-top: 13px;

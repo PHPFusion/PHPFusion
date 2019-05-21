@@ -59,8 +59,6 @@ define("SUBNAV", TRUE);
 function render_page($license = FALSE) {
     global $settings, $main_style, $locale, $userdata;
 
-    add_to_head("<script src='".THEME."pace.min.js'></script>");
-    add_to_head("<link href='".THEME."pace-theme-minimal.css' rel='stylesheet' />");
     add_to_head("<link rel='stylesheet' type='text/css' href='".THEME."colorbox.css'>");
     add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/colorbox/jquery.colorbox.js'></script>");
     add_to_footer('<script type="text/javascript">
