@@ -161,12 +161,12 @@ class Locale {
             if ($options['html'] && !empty($options['html_template'])) {
                 return strtr($options['html_template'],
                     [
-                        "{%count%}"  => ($options['format_num'] === TRUE ? format_num($count) : $count),
+                        "{%count%}"  => ($options['format_num'] === TRUE ? number_format($count) : $count),
                         "{%result%}" => $result
                     ]
                 );
             } else {
-                return ($options['format_num'] === TRUE ? format_num($count) : $count).' '.$result;
+                return ($options['format_num'] === TRUE ? number_format($count) : $count).' '.$result;
             }
         }
 

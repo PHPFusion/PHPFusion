@@ -74,7 +74,16 @@ interface TableSDK {
     'updated_message'    => 'Entries have been updated', // set this value to have custom success message
     'deleted_message'    => 'Entries have been deleted', // set this value to have the custom delete message,
     'class'              => '', // table class
-    'show_count'         => TRUE // show table item count
+    'show_count'         => TRUE // show table item count,
+    'link_filters'       => [ $group_key => [ [$key_values => $key_title], [$key_values => $key_title], ... ] ]
+    'dropdown_filters' => [
+                        'user_level' => [
+                            'type' => 'array', // use 'date' if the column is a datestamp
+                            'title' => $title',
+                            'options' => [ [$key_values => $key_title], [$key_values => $key_title], ... ] ]
+                        ]
+    ]
+     *
      *
      * @return array
      */

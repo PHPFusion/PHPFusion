@@ -630,15 +630,14 @@ class Tables {
         $order_col = $this->table_props['order_col'];
 
         // The bullk actions
-        if (isset($_POST['table_action'])) {
-
-            switch ($_POST['table_action']) {
+        $table_action = post("table_action");
+        if ($table_action) {
+            switch ($table_action) {
                 case 1: // delete
                     $this->filterDeleteRows();
                     break;
                 default:
             }
-
         }
 
         // The delete of a row
@@ -774,15 +773,18 @@ class Tables {
 
                 $order_value = $current_order_col[$col_key]; // title
 
-                if (isset($_GET['order']) && isset($_GET['orderby'])) {
-                    $order = $_GET['order'];
-                    if (isset($_GET['orderby']) && !empty($order_values[$_GET['orderby']]) && $order_values[$_GET['orderby']] == $col_key) {
+                $order = get("order");
+                $order_by = get("orderby");
+
+                if ($order && $order_by) {
+
+                    if (!empty($order_values[$order_by]) && $order_values[$order_by] == $col_key) {
 
                         $order_class = 'order-caret-up-current';
 
                         $order = 'desc';
 
-                        if ($_GET['order'] == 'desc') {
+                        if ($order == 'desc') {
 
                             $order_class = 'order-caret-down-current';
 
@@ -824,9 +826,11 @@ class Tables {
         if (!empty($this->table_props['link_filters'])) {
             foreach ($this->table_props['link_filters'] as $key => $filters) {
                 $_filter = [];
+                //print_p($filters);
                 foreach ($filters['options'] as $filter) {
+                    //print_p($filters);
                     $filter_val = strtolower($filter);
-                    $active_class = (isset($_GET[$key]) && $_GET[$key] == $filter_val) ? " class='strong'" : '';
+                    $active_class = (get($key) == $filter_val) ? " class='strong'" : '';
                     $_filter[] .= "<a href='".clean_request("$key=$filter_val", [$key], FALSE)."'$active_class><small>$filter</small></a>\n";
                 }
                 $link_filters[$key] = "<small>".$filters['title'].":</small> ".implode(' | ', $_filter);
@@ -896,7 +900,7 @@ class Tables {
         $html .= $start_row;
 
         if ($this->table_props['show_count'] === TRUE) {
-            $html .= "<small class='pull-right m-t-5'>".format_word($this->maxRows, "item|items")."</small>\n";
+            $html .= "<small class='pull-right m-t-5'>".format_word($this->maxRows, "item|items", ['html'=>FALSE, 'format_num'=>TRUE])."</small>\n";
         }
 
 
@@ -1484,7 +1488,7 @@ class Tables {
     private function columnFilter($column_name, $filter) {
 
         $options = [
-            'na' => 'Select '.$filter['title']
+            'na' => $filter['title']
         ];
         $options += $filter['options'];
         $filter_val = array_flip (array_map ('strtolower', $options));

@@ -16,6 +16,7 @@ class Form {
 
         $tpl = \PHPFusion\Template::getInstance('field-'.$options['input_id']);
         $tpl->set_template(__DIR__.DIRECTORY_SEPARATOR.'html'.DIRECTORY_SEPARATOR.'form_input.html');
+        $tpl->set_tag("input_name", $input_name);
 
         // input id
         $tpl->set_tag("input_id", $options['input_id']);
