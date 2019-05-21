@@ -698,6 +698,7 @@ nav ul > li.open > a {
     width: 250px;
     z-index: 10;
     margin-left: -250px;
+    height: 100%;
 }
 
 .in #acp-left {
@@ -922,21 +923,14 @@ nav ul > li.open > a {
 }
 
 .brand {
-    background: #fff url("../../../images/php-fusion-icon.png") no-repeat scroll -25px -24px;
+    background: #fff url("../../../images/php-fusion-icon.png") no-repeat scroll -24px 1px;
+    -webkit-background-size: 100px 100px;
+    background-size: 100px;
     width: 250px;
     height: 60px;
     float: left;
     border-right: 1px solid #ccc;
     border-bottom: 1px solid #ccc;
-}
-
-.brand-text {
-    padding-left: 80px;
-    font-weight: 600;
-    color: rgb(0, 0, 0);
-    font-size: 16px;
-    margin: 4px;
-    display: block;
 }
 
 .image-wrap {
