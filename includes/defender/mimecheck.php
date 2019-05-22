@@ -40,12 +40,39 @@ class ImageValidation {
 
                             for ($i = 0; $i < count($each['name']); $i++) {
                                 $file_info = pathinfo($each['name'][$i]);
+                                if (!empty($file_info['extension'])) {
+                                    $extension = strtolower($file_info['extension']);
+                                    if (isset($mime_types[$extension])) {
+                                        if (is_array($mime_types[$extension])) {
+                                            $valid_mimetype = FALSE;
+                                            foreach ($mime_types[$extension] as $each_mimetype) {
+                                                if ($each_mimetype == $each['type'][$i]) {
+                                                    $valid_mimetype = TRUE;
+                                                    break;
+                                                }
+                                            }
+                                            if (!$valid_mimetype) {
+                                                die('Prevented an unwanted file upload attempt!');
+                                            }
+                                            unset($valid_mimetype);
+                                        } else {
+                                            if ($mime_types[$extension] != $each['type']) {
+                                                die('Prevented an unwanted file upload attempt!');
+                                            }
+                                        }
+                                    }
+                                    unset($file_info, $extension);
+                                }
+                            }
+                        } else {
+                            $file_info = pathinfo($each['name']);
+                            if (!empty($file_info['extension'])) {
                                 $extension = strtolower($file_info['extension']);
                                 if (isset($mime_types[$extension])) {
                                     if (is_array($mime_types[$extension])) {
                                         $valid_mimetype = FALSE;
                                         foreach ($mime_types[$extension] as $each_mimetype) {
-                                            if ($each_mimetype == $each['type'][$i]) {
+                                            if ($each_mimetype == $each['type']) {
                                                 $valid_mimetype = TRUE;
                                                 break;
                                             }
@@ -62,29 +89,6 @@ class ImageValidation {
                                 }
                                 unset($file_info, $extension);
                             }
-                        } else {
-                            $file_info = pathinfo($each['name']);
-                            $extension = strtolower($file_info['extension']);
-                            if (isset($mime_types[$extension])) {
-                                if (is_array($mime_types[$extension])) {
-                                    $valid_mimetype = FALSE;
-                                    foreach ($mime_types[$extension] as $each_mimetype) {
-                                        if ($each_mimetype == $each['type']) {
-                                            $valid_mimetype = TRUE;
-                                            break;
-                                        }
-                                    }
-                                    if (!$valid_mimetype) {
-                                        die('Prevented an unwanted file upload attempt!');
-                                    }
-                                    unset($valid_mimetype);
-                                } else {
-                                    if ($mime_types[$extension] != $each['type']) {
-                                        die('Prevented an unwanted file upload attempt!');
-                                    }
-                                }
-                            }
-                            unset($file_info, $extension);
                         }
                     }
                 }
