@@ -108,7 +108,7 @@ class UserFields extends UserFieldsQuantum {
         return self::$instance;
     }
 
-    private function __construct() {
+    public function __construct() {
         $this->aidlink = get('aid') && iADMIN && checkrights('M') ? fusion_get_aidlink() : '';
     }
 
