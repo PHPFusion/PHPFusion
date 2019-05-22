@@ -38,9 +38,10 @@ class NewsAdmin extends NewsAdminModel {
     }
 
     public function displayNewsAdmin() {
-        if (isset($_POST['cancel']))
+        $refs = get('ref');
+        if (post('cancel'))
             redirect(FUSION_SELF.fusion_get_aidlink());
-        if (isset($_GET['ref']) && $_GET['ref'] == 'news_form') {
+        if ($refs == 'news_form') {
             $this->display_news_form();
         } else {
             $this->display_news_listing();
