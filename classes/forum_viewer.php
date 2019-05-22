@@ -178,6 +178,7 @@ class Forum_Viewer {
             'callback_data'     => $this->forum_nav_callback,
             'grouping'          => FALSE,
             'links_per_page'    => FALSE,
+
             //'html_content'      => openform('forum_searchFrm', 'post', FUSION_REQUEST, ["class" => "pull-right"]).form_text("forum_search", "", "", ["placeholder" => "Search...", "class" => "m-0 center-y", "feedback_icon" => TRUE, "icon" => "fas fa-search text-dark"]).closeform(),
         ];
 

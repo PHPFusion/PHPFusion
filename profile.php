@@ -6,7 +6,7 @@
  *  -   $user_fields_section         - required keys are 'title', 'id'
  *  -   $user_fields                 - the view applicable to the current $GET section.
  */
-
+/*
 $user_fields_section = array(
     'title' => [
         0 => 'Section A',
@@ -26,3 +26,4 @@ switch($_GET['section']) {
     $user_fields = 'Content B View';
         break;
 }
+*/

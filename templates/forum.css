@@ -12,13 +12,8 @@ PHP-Fusion 9 Core Template Forum CSS
     color: var(--forum-color);
 }
 
-.forum .breadcrumb {
-    padding: 0;
-    background: transparent;
-}
-
 .forum small {
-    font-size: 13px;
+    font-size: 14px;
 }
 
 .forum .profile-link {
@@ -512,8 +507,6 @@ h4.forum-title a:hover, h4.forum-title a:focus,
     margin: 15px 0;
     word-wrap: break-word;
     overflow-wrap: break-word;
-    font-size: 14px;
-    line-height: 1.5;
     color: #353c41;
 }
 
