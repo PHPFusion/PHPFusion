@@ -19,6 +19,7 @@ class Account_Profile extends UserFieldsQuantum {
     public $is_admin_panel = FALSE;
 
     public function __construct() {
+        //print_p('yes');
         $this->locale = fusion_get_locale();
     }
 

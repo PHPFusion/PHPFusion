@@ -64,16 +64,24 @@ if (!function_exists('display_profile_form')) {
      * @param $info - the array output that is accessible for your custom requirements
      */
     function display_profile_form(array $info = []) {
+
         add_to_head("<link href='".THEMES."templates/global/css/profile.css' rel='stylesheet'/>");
+
         $tpl = \PHPFusion\Template::getInstance('user-profile-form');
+
         $tpl->set_template(__DIR__.'/tpl/edit_profile.html');
+
         $current_page = $info['current_page'];
+
         foreach ($info['pages'] as $page_id => $pages) {
+
             $tpl->set_block('page_tab', [
                 "title" => $pages['title'],
-                "link"  => BASEDIR.'edit_profile.php?ref='.$page_id
+                "link"  => BASEDIR.'edit_profile.php?ref='.$page_id,
+                'class' => $pages['active'] ? ' class="active"' : ''
             ]);
         }
+
         $tpl->set_tag("openform", "");
         $tpl->set_tag("closeform", "");
         $tpl->set_tag("opentable", fusion_get_function("opentable", ""));

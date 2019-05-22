@@ -20,9 +20,11 @@ namespace Administration\Members;
 use Administration\Members\Sub_Controllers\Members_Action;
 use Administration\Members\Sub_Controllers\Members_Display;
 use Administration\Members\Sub_Controllers\Members_Profile;
+use Administration\Members\Users\Display;
 use PHPFusion\BreadCrumbs;
 
-class Members_Admin {
+class Members {
+
     private static $instance = NULL;
     protected static $locale = [];
     protected static $settings = [];
@@ -124,7 +126,7 @@ class Members_Admin {
 
     public function display_admin() {
 
-        if (isset($_POST['cancel'])) {
+        if (post("cancel")) {
             redirect(self::$exit_link);
         }
 
@@ -280,7 +282,7 @@ class Members_Admin {
             }
 
             opentable(self::$locale['ME_400']);
-            echo Members_Display::render_listing();
+            echo Display::display_users();
             closetable();
         }
     }
@@ -288,7 +290,8 @@ class Members_Admin {
 }
 
 require_once(ADMIN.'members/members_view.php');
-require_once(ADMIN.'members/sub_controllers/members_display.php');
-require_once(ADMIN.'members/sub_controllers/members_action.php');
-require_once(ADMIN.'members/sub_controllers/members_profile.php');
+require_once(ADMIN.'members/users/list.class.php');
+require_once(ADMIN.'members/users/display.class.php');
+require_once(ADMIN.'members/users/actions.class.php');
+require_once(ADMIN.'members/users/profile.class.php');
 require_once(INCLUDES.'suspend_include.php');

@@ -659,6 +659,8 @@ class UserFieldsInput {
                     addNotice('warning', str_replace("USER_NAME", $this->user_data['user_name'], $this->locale['global_459']));
                 }
             }
+            addNotice($notice_class, $notice_message);
+            redirect(FUSION_REQUEST);
         } else {
 
             // check db only - admin cannot save profile page without password
@@ -670,12 +672,12 @@ class UserFieldsInput {
                     \Defender::setErrorText('user_admin_password', $this->locale['u149a']);
                     $notice_class = "danger";
                     $notice_message = $this->locale['u149a'];
+                    addNotice($notice_class, $notice_message);
                 }
             }
         }
 
-        addNotice($notice_class, $notice_message);
-        redirect(FUSION_REQUEST);
+
 
     }
 

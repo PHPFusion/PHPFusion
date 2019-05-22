@@ -80,9 +80,6 @@ $theme_data = dbarray(dbquery("SELECT theme_file FROM ".DB_THEME." WHERE theme_n
 if (!empty($theme_data)) {
     $theme_css = THEMES.$theme_data['theme_file'];
     add_to_head("<link href='".$theme_css."' rel='stylesheet' type='text/css' />\n");
-} else {
-    $theme_css = file_exists(THEME.'styles.min.css') ? THEME.'styles.min.css' : THEME.'styles.css';
-    echo "<link href='".$theme_css."' rel='stylesheet' type='text/css' media='screen' />\n";
 }
 
 echo render_favicons(defined('THEME_ICON') ? THEME_ICON : IMAGES.'favicons/');

@@ -228,6 +228,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
     }
 
     // Fixes HTML DOM type number that does not respect max_length prop.
+    $options['max_len'] = $options['max_length'];
     if ($options['max_length'] && isnum($options['max_length'])) {
         $options['max_length'] = ' maxlength="'.$options['max_length'].'"';
         if ($options['type'] == 'number') {
@@ -251,7 +252,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
     }
 
     // Add input settings in the SESSION
-    \Defender::add_field_session([
+    $config = [
         'input_name'     => $input_name,
         'title'          => trim($title, '[]'),
         'id'             => $options['input_id'],
@@ -262,9 +263,11 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         'callback_check' => $options['callback_check'],
         'delimiter'      => $options['delimiter'],
         'min_length'     => $options['min_length'],
-        'max_length'     => $options['max_length'],
+        'max_length'     => $options['max_len'],
         'censor_words'   => $options['censor_words']
-    ]);
+    ];
+
+    \Defender::add_field_session($config);
 
     if ($options['autocomplete_off']) {
         // Delay by 20ms and reset values.

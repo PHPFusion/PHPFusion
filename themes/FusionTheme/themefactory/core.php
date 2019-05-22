@@ -250,12 +250,15 @@ class Core {
     public function get_themePack($themePack) {
 
         $path = THEME."themepack/".strtolower($themePack)."/theme.php";
+        $css_path_dir = THEME.'themepack'.DIRECTORY_SEPARATOR.strtolower($themePack).DIRECTORY_SEPARATOR;
+        $this->cssPath = $css_path_dir.'styles.css';
+        $this->cssPath = $this->cssPath.'?v='.filemtime($this->cssPath);
 
-        if (is_file(THEME."themepack/".strtolower($themePack)."/styles.min.css") && $this->devMode === FALSE) {
-            $this->cssPath = THEME."themepack/".strtolower($themePack)."/styles.min.css";
-        } else {
-            $this->cssPath = THEME."themepack/".strtolower($themePack)."/styles.css";
+        if (file_exists($css_path_dir.'styles.min.css') && $this->devMode === FALSE) {
+            $this->cssPath = $css_path_dir.'styles.min.css';
+            $this->cssPath = $this->cssPath.'?v='.filemtime($this->cssPath);
         }
+
         add_to_head("<link rel='stylesheet' href='$this->cssPath' type='text/css'/>");
 
         require_once $path;

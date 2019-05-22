@@ -86,25 +86,30 @@ class UserFields extends UserFieldsQuantum {
     ];
 
     public $options = [];
-    private $default_options = [
+
+   private $default_options = [
         'btn_post_class' => 'btn-primary spacer-sm',
         'btn_class'      => 'btn btn-primary',
     ];
+
     private static $instance = NULL;
+
     private $settings = [];
-
-    // file based enough.
-    private $profile_pages = [];
-
+    private $aidlink = '';
 
     /**
-     * @return object
+     * Get a user field instance
+     * @return null|UserFields
      */
     public static function getInstance() {
         if (empty(self::$instance)) {
-            self::$instance = new static();
+            self::$instance = new Static();
         }
-        return (object)self::$instance;
+        return self::$instance;
+    }
+
+    private function __construct() {
+        $this->aidlink = get('aid') && iADMIN && checkrights('M') ? fusion_get_aidlink() : '';
     }
 
     /**
@@ -135,23 +140,23 @@ class UserFields extends UserFieldsQuantum {
      * @return array|null
      */
     private function get_settings_sections($key = '') {
-        $aid = isset($_GET['aid']) ? fusion_get_aidlink() : '';
+        $_section = get('section');
         $section['acc_settings'] = [
             'id'     => 'acc_settings',
-            'active' => (isset($_GET['section']) && $_GET['section'] == 'acc_settings' ? 1 : (!isset($_GET['section']) ? 1 : 0)),
-            'link'   => clean_request($aid.'section=acc_settings&lookup='.$this->user_data['user_id'], ['section'], FALSE),
+            'active' => ($_section == 'acc_settings' ? TRUE : (empty($_section) ? TRUE : FALSE) ),
+            'link'   => clean_request($this->aidlink.'section=acc_settings&lookup='.$this->user_data['user_id'], ['section'], FALSE),
             'name'   => 'Account Settings',
         ];
         $section['preferences'] = [
             'id'     => 'preferences',
-            'active' => (isset($_GET['section']) && $_GET['section'] == 'preferences' ? 1 : 0),
-            'link'   => clean_request($aid.'section=preferences&lookup='.$this->user_data['user_id'], ['section'], FALSE),
+            'active' => ($_section == 'preferences' ? TRUE : FALSE),
+            'link'   => clean_request($this->aidlink.'section=preferences&lookup='.$this->user_data['user_id'], ['section'], FALSE),
             'name'   => 'Account Preferences',
         ];
         $section['security'] = [
             'id'     => 'security',
-            'active' => (isset($_GET['section']) && $_GET['section'] == 'security' ? 1 : 0),
-            'link'   => clean_request($aid.'section=security&lookup='.$this->user_data['user_id'], ['section'], FALSE),
+            'active' => ($_section == 'security' ? TRUE : FALSE),
+            'link'   => clean_request($this->aidlink.'section=security&lookup='.$this->user_data['user_id'], ['section'], FALSE),
             'name'   => 'Account Security',
         ];
 
@@ -166,17 +171,26 @@ class UserFields extends UserFieldsQuantum {
      * @param $file
      */
     public function add_pages($key, $title, $file) {
+        $_ref = get('ref');
         self::$additional_pages[$key] = [
             'title' => $title,
-            'file'  => is_file($file) ? $file : ''
+            'file'  => is_file($file) ? $file : '',
+            'active' => $_ref == 'key' ? TRUE : FALSE,
         ];
     }
 
     private static function getInputPages() {
         if (empty(self::$pages)) {
+            $_ref = get('ref');
             self::$pages = [
-                'pu_profile' => ['title' => 'Public Profile'], // Public Profile
-                'se_profile' => ['title' => 'Settings'], // Private Profile
+                'pu_profile' => [
+                    'title' => 'Public Profile',
+                    'active' => $_ref == 'pu_profile' ? TRUE : (!$_ref ? TRUE : FALSE)
+                ], // Public Profile
+                'se_profile' => [
+                    'title' => 'Settings',
+                    'active' => $_ref == 'se_profile' ? TRUE : FALSE
+                ], // Private Profile
             ];
         }
 
@@ -188,7 +202,7 @@ class UserFields extends UserFieldsQuantum {
      * @return array
      */
     private function getOutputPages() {
-        $current_page = get("profile_page");
+        $_current_page = get("profile_page");
         $ppCache = [];
         if (empty($ppCache)) {
             $active_class = ' class="active"';
@@ -196,30 +210,45 @@ class UserFields extends UserFieldsQuantum {
                 'activity' => ['id'    => 'activity',
                                'title' => 'User Activity',
                                'link'  => BASEDIR.'profile.php?lookup='.$this->profile_id.'&amp;profile_page=activity',
-                               'class' => $current_page == 'activity' ? $active_class : ""
+                               'class' => $_current_page == 'activity' ? $active_class : ""
                 ],
                 'profile'  => ['id'    => 'profile',
                                'title' => 'User Profile',
                                'link'  => BASEDIR.'profile.php?lookup='.$this->profile_id.'&amp;profile_page=profile',
-                               'class' => $current_page == 'profile' ? $active_class : ""
+                               'class' => $_current_page == 'profile' ? $active_class : ""
 
                 ],
                 'friends'  => ['id'    => 'friends',
                                'title' => 'User Friends',
                                'link'  => BASEDIR.'profile.php?lookup='.$this->profile_id.'&amp;profile_page=friends',
-                               'class' => $current_page == 'friends' ? $active_class : ""
+                               'class' => $_current_page == 'friends' ? $active_class : ""
                 ],
                 'groups'   => ['id'    => 'groups',
                                'title' => 'User Groups <span class="badge">'.format_num($this->total_groups).'</span>',
                                'link'  => BASEDIR.'profile.php?lookup='.$this->profile_id.'&amp;profile_page=groups',
-                               'class' => $current_page == 'groups' ? $active_class : ""
+                               'class' => $_current_page == 'groups' ? $active_class : ""
                 ]
             ];
 
-            $this->current_page = isset($ppCache[$current_page]) ? $ppCache[$current_page]['id'] : "activity";
+            // For php-fusion.co.uk
+            $ppCache = [
+                'profile'  => ['id'    => 'profile',
+                               'title' => 'User Profile',
+                               'link'  => BASEDIR.'profile.php?lookup='.$this->profile_id.'&amp;profile_page=profile',
+                               'class' => $_current_page == 'profile' ? $active_class : ""
+
+                ],
+                'groups'   => ['id'    => 'groups',
+                               'title' => 'User Groups <span class="badge">'.format_num($this->total_groups).'</span>',
+                               'link'  => BASEDIR.'profile.php?lookup='.$this->profile_id.'&amp;profile_page=groups',
+                               'class' => $_current_page == 'groups' ? $active_class : ""
+                ]
+            ];
+
+            $this->current_page = isset($ppCache[$_current_page]) ? $ppCache[$_current_page]['id'] : "activity";
         }
 
-        return $ppCache;
+        return (array)$ppCache;
     }
 
     public function userModeratorAccess() {
@@ -233,26 +262,34 @@ class UserFields extends UserFieldsQuantum {
     // for input
     public static function get_current_page() {
         $all_pages = self::getInputPages();
-        return isset($_GET['ref']) && isset($all_pages[$_GET['ref']]) ? $_GET['ref'] : 'pu_profile';
+        $refs = get('ref');
+        return $refs && isset($all_pages[$refs]) ? $refs : 'pu_profile';
     }
 
     /**
-     * Returns all fields array
+     * Input data for Edit Profile
      *
      * @return array
      * @throws \Exception
      */
-    public function get_input_info() {
+    private function get_input_info() {
         $this->method = 'input';
+
         $locale = fusion_get_locale();
         $settings = fusion_get_settings();
         // user id
-        $user_id = isset($_GET['lookup']) && isnum($_GET['lookup']) ? $_GET['lookup'] : fusion_get_userdata('user_id');
+        $_lookup = get('lookup');
+
+        $user_id = isset($_lookup) && isnum($_lookup) ? $_lookup : fusion_get_userdata('user_id');
+
         $section = NULL;
-        if ($this->registration)
+
+        if ($this->registration) {
             $user_id = 0;
+        }
 
         $this->info = [
+            'title' => 'Edit Profile',
             'sitename'             => fusion_get_settings('sitename'),
             'section'              => self::get_user_field_cats(),
             'pages'                => $this->getInputPages(),
@@ -427,6 +464,7 @@ class UserFields extends UserFieldsQuantum {
                         break; // Public Profile
 
                     case 'se_profile': // Private Profil (security,preferences,acc_settings)
+
                         $this->info['section'] = $this->get_settings_sections();
                         $section = isset($_GET['section']) && isset($this->info['section'][$_GET['section']]) ? $_GET['section'] : 'acc_settings';
                         $field_cats = $this->get_settings_sections($section);
@@ -530,9 +568,6 @@ class UserFields extends UserFieldsQuantum {
 
     private function getProfileContent() {
 
-        $aidlink = fusion_get_aidlink();
-        $locale = fusion_get_locale();
-
         switch ($this->current_page) {
 
             case "profile":
@@ -556,9 +591,7 @@ class UserFields extends UserFieldsQuantum {
             case "friends":
 
                 return "The friend page is currently under development.";
-
                 break;
-
             case "groups":
                 $class = new Profile_Groups($this->profile_id, $this->getCurrentUserData());
                 return display_profile_groups($class->showGroupProfile());
@@ -567,8 +600,7 @@ class UserFields extends UserFieldsQuantum {
                 $class = new Profile_Activity($this->profile_id, $this->getCurrentUserData());
                 $info = $class->showActivityProfile();
                 return display_profile_activity($info);
-
-                return "This activity page is currently under development..";
+                return "This activity page is currently unavailable.";
                 break;
             case "default":
                 return "This page is currently unavailable.";
