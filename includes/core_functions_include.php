@@ -21,6 +21,31 @@ use PHPFusion\Authenticate;
 use PHPFusion\OutputHandler;
 
 /**
+ * Checks for license data to php-fusion.co.uk for validation of license
+ * User will need this in future to use the Remote update and Plugins download and updates from marketplace.
+ *
+ * @param $public_key   Registered site issued public key
+ * @param $password     Your user password in Php-fusion.co.uk
+ *
+ * @return mixed
+ */
+function fusion_license($public_key, $password) {
+    $curl = curl_init('https://www.php-fusion.co.uk/infusions/license/api/v1/api.php');
+    $curl_post_data = [
+        "password" => $password,
+        "key"      => $public_key,
+        'endpoint' => 'certificates'
+    ];
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+    curl_setopt($curl, CURLOPT_POST, TRUE);
+    curl_setopt($curl, CURLOPT_POSTFIELDS, $curl_post_data);
+    $curl_response = curl_exec($curl);
+    curl_close($curl);
+
+    return (json_decode($curl_response));
+}
+
+/**
  * Current microtime as float to calculate script start/end time
  *
  * @return float
@@ -178,6 +203,7 @@ function check_admin_pass($password) {
 
 /**
  * Redirect browser using header or script function
+ *
  * @param      $location
  * @param bool $delay
  * @param bool $script
