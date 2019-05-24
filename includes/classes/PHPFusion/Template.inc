@@ -103,10 +103,16 @@ class Template {
     }
 
     private static $registered_templates = [];
+    private static $reegistered_stylesheet = [];
     private $template_path = '';
+    private $css_path = '';
 
     public function register_template($template_file_path) {
         self::$registered_templates[self::$key] = $template_file_path;
+    }
+
+    public function register_css($css_file_path) {
+        self::$reegistered_stylesheet[self::$key] = $css_file_path;
     }
 
     /**
@@ -127,6 +133,18 @@ class Template {
         }
 
         $this->template = ob_get_clean();
+    }
+
+    public function set_css($css_file_path) {
+        if (isset(self::$reegistered_stylesheet[self::$key])) {
+            $css_file_path = self::$reegistered_stylesheet[self::$key];
+        }
+
+        if (is_file($css_file_path)) {
+            $this->css_path = $css_file_path;
+        } else {
+            print_p(ob_start().debug_print_backtrace().ob_get_clean(), 1);
+        }
     }
 
     /**
@@ -259,6 +277,10 @@ class Template {
     public function get_output() {
 
         $this->template = trim($this->template);
+        if (!empty($this->css_path)) {
+            $this->css_path = $this->css_path.'?v='.filemtime($this->css_path);
+            add_to_head('<link rel="stylesheet" media="screen" href="'.$this->css_path.'"/>');
+        }
 
         // Locale replacements
         if (!empty($this->locale)) {
