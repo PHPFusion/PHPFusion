@@ -29,101 +29,111 @@ $settings = fusion_get_settings();
 
 $admin_images = TRUE;
 
-$members_count = dbarray(dbquery("SELECT
-    (SELECT COUNT(user_id) FROM ".DB_USERS." WHERE user_status<='1' OR user_status='3' OR user_status='5') AS members_registered,
-    (SELECT COUNT(user_id) FROM ".DB_USERS." WHERE user_status='2') AS members_unactivated,
-    (SELECT COUNT(user_id) FROM ".DB_USERS." WHERE user_status='4') AS members_security_ban,
-    (SELECT COUNT(user_id) FROM ".DB_USERS." WHERE user_status='5') AS members_canceled
+if (defined('ARTICLES_EXIST')) {
+    $article_query = "(SELECT COUNT(article_id) FROM ".DB_PREFIX."articles) AS article_items,
+        (SELECT COUNT(comment_id) FROM ".DB_COMMENTS." WHERE comment_type='A') AS article_comments,
+        (SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='a') AS article_submissions";
+}
+if (defined('BLOG_EXIST')) {
+    $blog_query = "(SELECT COUNT(blog_id) FROM ".DB_PREFIX."blog) AS blog_items,
+        (SELECT COUNT(comment_id) FROM ".DB_COMMENTS." WHERE comment_type='B') AS blog_comments,
+        (SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='b') AS blog_submissions";
+}
+if (defined('DOWNLOADS_EXIST')) {
+    $download_query = "(SELECT COUNT(download_id) FROM ".DB_PREFIX."downloads) AS download_items,
+        (SELECT COUNT(comment_id) FROM ".DB_COMMENTS." WHERE comment_type='D') AS download_comments,
+        (SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='d') AS download_submissions";
+}
+if (defined('FORUM_EXIST')) {
+    $forum_query = "(SELECT COUNT(forum_id) FROM ".DB_PREFIX."forums) AS forums,
+        (SELECT COUNT(thread_id) FROM ".DB_PREFIX."forum_threads) AS threads,
+        (SELECT COUNT(post_id) FROM ".DB_PREFIX."forum_posts) AS posts,
+        (SELECT COUNT(user_id) FROM ".DB_USERS." WHERE user_posts > '0') AS user_posts";
+}
+if (defined('GALLERY_EXIST')) {
+    $photo_query = "(SELECT COUNT(photo_id) FROM ".DB_PREFIX."photos) AS photo_items,
+        (SELECT COUNT(comment_id) FROM ".DB_COMMENTS." WHERE comment_type='P') AS photo_comments,
+        (SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='p') AS photo_submissions";
+}
+if (defined('NEWS_EXIST')) {
+    $news_query = "
+        (SELECT COUNT(news_id) FROM ".DB_PREFIX."news) AS news_items,
+        (SELECT COUNT(comment_id) FROM ".DB_COMMENTS." WHERE comment_type='N') AS news_comments,
+        (SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='n') AS news_submissions";
+}
+if (defined('WEBLINKS_EXIST')) {
+    $weblink_query = "(SELECT COUNT(weblink_id) FROM ".DB_PREFIX."weblinks) AS weblink_items,
+        (SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='l') AS weblink_submissions";
+}
+
+if ($settings['enable_deactivation'] == 1) {
+    $m_inactive = "(SELECT COUNT(user_id) FROM ".DB_USERS." WHERE user_status=8) AS members_inactive";
+}
+
+$queries = dbarray(dbquery("SELECT
+    ".(!empty($article_query) ? $article_query.',' : '')."
+    ".(!empty($blog_query) ? $blog_query.',' : '')."
+    ".(!empty($download_query) ? $download_query.',' : '')."
+    ".(!empty($forum_query) ? $forum_query.',' : '')."
+    ".(!empty($photo_query) ? $photo_query.',' : '')."
+    ".(!empty($news_query) ? $news_query.',' : '')."
+    ".(!empty($weblink_query) ? $weblink_query.',' : '')."
+    ".(!empty($m_inactive) ? $m_inactive.',' : '')."
+    (SELECT COUNT(user_id) FROM ".DB_USERS." WHERE user_status<=1 OR user_status=3 OR user_status=5) AS members_registered,
+    (SELECT COUNT(user_id) FROM ".DB_USERS." WHERE user_status=2) AS members_unactivated,
+    (SELECT COUNT(user_id) FROM ".DB_USERS." WHERE user_status=4) AS members_security_ban,
+    (SELECT COUNT(user_id) FROM ".DB_USERS." WHERE user_status=5) AS members_canceled
 "));
 
 // Members stats
-$members['registered'] = $members_count['members_registered'];
-$members['unactivated'] = $members_count['members_unactivated'];
-$members['security_ban'] = $members_count['members_security_ban'];
-$members['cancelled'] = $members_count['members_canceled'];
-
-if ($settings['enable_deactivation'] == "1") {
-    $time_overdue = time() - (86400 * $settings['deactivation_period']);
-    $members['inactive'] = dbcount("(user_id)", DB_USERS, "user_lastvisit<'$time_overdue' AND user_actiontime='0' AND user_joined<'$time_overdue' AND user_status='0'");
-}
+$members['registered'] = $queries['members_registered'];
+$members['unactivated'] = $queries['members_unactivated'];
+$members['security_ban'] = $queries['members_security_ban'];
+$members['cancelled'] = $queries['members_canceled'];
+$members['inactive'] = $settings['enable_deactivation'] == 1 ? $queries['members_inactive'] : 0;
 
 // Get Core Infusion's stats
-if (defined('FORUM_EXIST')) {
-    $forum = [];
-    $f_count = dbarray(dbquery("SELECT
-        (SELECT COUNT(forum_id) FROM ".DB_PREFIX."forums) AS forums,
-        (SELECT COUNT(thread_id) FROM ".DB_PREFIX."forum_threads) AS threads,
-        (SELECT COUNT(post_id) FROM ".DB_PREFIX."forum_posts) AS posts,
-        (SELECT COUNT(user_id) FROM ".DB_USERS." WHERE user_posts > '0') AS user_posts
-    "));
-    $forum['count'] = $f_count['forums'];
-    $forum['thread'] = $f_count['threads'];
-    $forum['post'] = $f_count['posts'];
-    $forum['users'] = $f_count['user_posts'];
-}
-if (defined('DOWNLOADS_EXIST')) {
-    $download = [];
-    $d_count = dbarray(dbquery("SELECT
-        (SELECT COUNT(download_id) FROM ".DB_PREFIX."downloads) AS items,
-        (SELECT COUNT(comment_id) FROM ".DB_COMMENTS." WHERE comment_type='D') AS comments,
-        (SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='d') AS submissions
-    "));
-    $download['download'] = $d_count['items'];
-    $download['comment'] = $d_count['comments'];
-    $download['submit'] = $d_count['submissions'];
-}
 if (defined('ARTICLES_EXIST')) {
     $articles = [];
-    $a_count = dbarray(dbquery("SELECT
-        (SELECT COUNT(article_id) FROM ".DB_PREFIX."articles) AS items,
-        (SELECT COUNT(comment_id) FROM ".DB_COMMENTS." WHERE comment_type='A') AS comments,
-        (SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='a') AS submissions
-    "));
-    $articles['article'] = $a_count['items'];
-    $articles['comment'] = $a_count['comments'];
-    $articles['submit'] = $a_count['submissions'];
-}
-if (defined('WEBLINKS_EXIST')) {
-    $weblinks = [];
-    $w_count = dbarray(dbquery("SELECT
-        (SELECT COUNT(weblink_id) FROM ".DB_PREFIX."weblinks) AS items,
-        (SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='l') AS submissions
-    "));
-    $weblinks['weblink'] = $w_count['items'];
-    $weblinks['submit'] = $w_count['submissions'];
-}
-if (defined('NEWS_EXIST')) {
-    $news = [];
-    $n_count = dbarray(dbquery("SELECT
-        (SELECT COUNT(news_id) FROM ".DB_PREFIX."news) AS items,
-        (SELECT COUNT(comment_id) FROM ".DB_COMMENTS." WHERE comment_type='N') AS comments,
-        (SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='n') AS submissions
-    "));
-    $news['news'] = $n_count['items'];
-    $news['comment'] = $n_count['comments'];
-    $news['submit'] = $n_count['submissions'];
+    $articles['article'] = $queries['article_items'];
+    $articles['comment'] = $queries['article_comments'];
+    $articles['submit'] = $queries['article_submissions'];
 }
 if (defined('BLOG_EXIST')) {
     $blog = [];
-    $b_count = dbarray(dbquery("SELECT
-        (SELECT COUNT(blog_id) FROM ".DB_PREFIX."blog) AS items,
-        (SELECT COUNT(comment_id) FROM ".DB_COMMENTS." WHERE comment_type='B') AS comments,
-        (SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='b') AS submissions
-    "));
-    $blog['blog'] = $b_count['items'];
-    $blog['comment'] = $b_count['comments'];
-    $blog['submit'] = $b_count['submissions'];
+    $blog['blog'] = $queries['blog_items'];
+    $blog['comment'] = $queries['blog_comments'];
+    $blog['submit'] = $queries['blog_submissions'];
+}
+if (defined('DOWNLOADS_EXIST')) {
+    $download = [];
+    $download['download'] = $queries['download_items'];
+    $download['comment'] = $queries['download_comments'];
+    $download['submit'] = $queries['download_submissions'];
+}
+if (defined('FORUM_EXIST')) {
+    $forum = [];
+    $forum['count'] = $queries['forums'];
+    $forum['thread'] = $queries['threads'];
+    $forum['post'] = $queries['posts'];
+    $forum['users'] = $queries['user_posts'];
 }
 if (defined('GALLERY_EXIST')) {
     $photos = [];
-    $p_count = dbarray(dbquery("SELECT
-        (SELECT COUNT(photo_id) FROM ".DB_PREFIX."photos) AS items,
-        (SELECT COUNT(comment_id) FROM ".DB_COMMENTS." WHERE comment_type='P') AS comments,
-        (SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='p') AS submissions
-    "));
-    $photos['photo'] = $p_count['items'];
-    $photos['comment'] = $p_count['comments'];
-    $photos['submit'] = $p_count['submissions'];
+    $photos['photo'] = $queries['photo_items'];
+    $photos['comment'] = $queries['photo_comments'];
+    $photos['submit'] = $queries['photo_submissions'];
+}
+if (defined('NEWS_EXIST')) {
+    $news = [];
+    $news['news'] = $queries['news_items'];
+    $news['comment'] = $queries['news_comments'];
+    $news['submit'] = $queries['news_submissions'];
+}
+if (defined('WEBLINKS_EXIST')) {
+    $weblinks = [];
+    $weblinks['weblink'] = $queries['weblink_items'];
+    $weblinks['submit'] = $queries['weblink_submissions'];
 }
 $comments_type = [
     'C'  => $locale['272a'],
