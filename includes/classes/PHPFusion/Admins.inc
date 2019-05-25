@@ -688,13 +688,22 @@ class Admins {
      * @param string $link
      * @param string $icon
      */
-    public function addAdminPage($page, $title, $rights, $link, $icon = '') {
+    /**
+     * @param        $page
+     * @param        $title
+     * @param        $rights
+     * @param        $link
+     * @param string $icon
+     * @param array  $data array of data attributes and values ['key'=>'value', 'key2' => 'value2']
+     */
+    public function addAdminPage($page, $title, $rights, $link, $icon = '', $data = []) {
         self::$public_pages[$page][$rights] = [
             "admin_title"  => $title,
             "admin_page"   => $page,
             "admin_rights" => $rights,
             "admin_link"   => $link,
-            "admin_image"  => $icon
+            "admin_image"  => $icon,
+            'data'         => $data,
         ];
     }
 
