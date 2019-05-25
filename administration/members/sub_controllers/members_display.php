@@ -346,7 +346,7 @@ class Members_Display extends Members_Admin {
      * @return string
      */
     protected function list_uri($value) {
-        return "<a href='".self::$status_uri[$value]."'><strong>".getsuspension($value)."</strong></a>\n";
+        return !empty(self::$status_uri[$value]) ? "<a href='".self::$status_uri[$value]."'><strong>".getsuspension($value)."</strong></a>\n" : '';
     }
 
     /**
