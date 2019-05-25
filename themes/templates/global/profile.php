@@ -20,38 +20,88 @@ defined('IN_FUSION') || exit;
 if (!function_exists('display_register_form')) {
     /**
      * Registration Form Template
-     * The tags {%xyz%} are default replacement that the core will perform
-     * echo output design in compatible with Version 7.xx theme set.
+     * @param array $info
      *
-     * @param $info - the array output that is accessible for your custom requirements
+     * @return string
      */
     function display_register_form(array $info = []) {
-        add_to_head("<link href='".THEMES."templates/global/css/profile.css' rel='stylesheet'/>");
-        ?>
-        <!---HTML---->
-        {%tab_header%}
-        <!--register_pre_idx-->
-        <div id='register_form' class='row m-t-20'>
-            <div class='col-xs-12 col-sm-12'>
-                {%open_form%}
-                {%user_id%}
-                {%user_name_field%}
-                {%user_email_field%}
-                {%user_hide_email_field%}
-                {%user_avatar_field%}
-                {%user_password_field%}
-                {%user_admin_password_field%}
-                {%custom_fields%}
-                {%captcha_fields%}
-                {%eula%}
-                {%post_button%}
-                {%close_form%}
-            </div>
-        </div>
-        <!--register_sub_idx-->
-        {%tab_footer%}
-        <!---//HTML---->
-        <?php
+
+        $tpl = \PHPFusion\Template::getInstance('user-register-form');
+        $tpl->set_locale(fusion_get_locale());
+        $tpl->set_css(THEMES.'templates/global/css/profile.css');
+        $tpl->set_template(__DIR__.'/tpl/register.html');
+
+        // page navigation
+        $open = "";
+        $close = "";
+        $tab_title = [];
+        if (isset($info['section']) && count($info['section']) > 1) {
+            foreach ($info['section'] as $page_section) {
+                $tab_title['title'][$page_section['id']] = $page_section['name'];
+                $tab_title['id'][$page_section['id']] = $page_section['id'];
+                $tab_title['icon'][$page_section['id']] = '';
+            }
+            $open = opentab($tab_title, $_GET['section'], 'user-profile-form', TRUE);
+            $close = closetab();
+        }
+
+        // old one.
+        $tpl->set_tag('open_form', '');
+        $tpl->set_tag('user_name', '');
+        $tpl->set_tag('user_email', '');
+        $tpl->set_tag('user_hide_email', '');
+        $tpl->set_tag('user_password', '');
+        $tpl->set_tag('open_tab', $open);
+        $tpl->set_tag('close_tab', $close);
+        $tpl->set_tag('sitename', $info['sitename']);
+        $tpl->set_tag('title', $info['title']);
+
+        if (empty($info['user_name']) && empty($info['user_field'])) {
+            $tpl->set_block('form_error');
+        } else {
+            $tpl->set_tag('open_form', $info['openform']);
+            $tpl->set_tag('user_name', $info['user_name']);
+            $tpl->set_tag('user_email', $info['user_email']);
+            $tpl->set_tag('user_avatar', $info['user_avatar']);
+            $tpl->set_tag('user_hide_email', $info['user_hide_email']);
+            $tpl->set_tag('user_password', $info['user_password']);
+            if (iADMIN) {
+                $tpl->set_block('user_admin_password', ['field' => $info['user_admin_password']]);
+            }
+            if (!empty($info['user_field'])) {
+                foreach ($info['user_field'] as $fieldData) {
+                    $fields = '';
+                    $field_title = '';
+                    if (!empty($fieldData['title'])) {
+                        $field_title = $fieldData['title'];
+                    }
+                    if (!empty($fieldData['fields']) && is_array($fieldData['fields'])) {
+                        foreach ($fieldData['fields'] as $cFieldData) {
+                            if (!empty($cFieldData)) {
+                                $fields .= $cFieldData;
+                            }
+                        }
+                    }
+                    $tpl->set_block('user_fields', [
+                            'field_title' => $field_title,
+                            'fields' => $fields,
+                    ]);
+                }
+            }
+
+            if (!empty($info['validate'])) {
+                $tpl->set_block('validate', ['content' => $info['validate'] ]);
+            }
+            if (!empty($info['terms'])) {
+                $tpl->set_block('terms', ['content' => $info['terms']]);
+            }
+            $tpl->set_tag('button', $info['button']);
+            $tpl->set_tag('close_form', $info['closeform']);
+
+        }
+
+        return (string)$tpl->get_output();
+
     }
 }
 

@@ -76,6 +76,7 @@ if ((isset($_SESSION["validated"]) && $_SESSION["validated"] == "True") || $sett
         }
 
     } else {
+
         $userInput = new PHPFusion\UserFieldsInput();
         $userInput->validation = $settings['display_validation'];
         $userInput->email_verification = $settings['email_verification'];
@@ -99,6 +100,7 @@ if ((isset($_SESSION["validated"]) && $_SESSION["validated"] == "True") || $sett
         $userFields->registration = TRUE;
         $userFields->is_admin_panel = FALSE;
         $userFields->inline_field = FALSE;
+
         echo $userFields->display_input();
     }
 }

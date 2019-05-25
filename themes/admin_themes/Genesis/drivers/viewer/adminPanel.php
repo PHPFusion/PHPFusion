@@ -453,23 +453,28 @@ class adminPanel extends resource {
     private function __li($admin_pages, $array, $i = 0) {
         $html = &$html;
         foreach($array as $rights => $arr) {
-            $class = "";
-            $caret = "";
-            $toggle_class = "";
-            $in = "";
-            $match_c = '';
+            $class = '';
+            $caret = '';
+            $toggle_class = '';
+            $in = '';
             $match_p = '';
+            $data_attr= '';
             if ($match_c = self::check_current_active($arr['admin_link']) === TRUE || $match_p = self::check_parent_active($admin_pages, $rights)) {
                 $class .= " class='active'";
                 if ($match_p) $in = " in";
             }
             if (isset($admin_pages[$rights])) {
                 $toggle_class = " data-toggle='collapse' data-parent='#sub_menu' href='#c-app-$rights'";
-                $caret = "<b class='".($i > 1 ? "fas fa-caret-right" : "fas fa-caret-down")." pull-right m-t-5 m-l-10'></b>";
+                $caret = " <b class='".($i > 1 ? "fas fa-caret-right" : "fas fa-caret-down")." pull-right m-t-5 m-l-10'></b>";
+            }
+            if (!empty($arr['data'])) {
+                foreach($arr['data'] as $key => $val) {
+                    $data_attr .= $key.'="'.$val.'" ';
+                }
             }
 
             $html .= "<li".$class.">\n";
-            $html .= "<a".$toggle_class." href='".$arr['admin_link']."'>".$arr['admin_image'].$arr['admin_title']." ".$caret."</a>\n";
+            $html .= "<a".$toggle_class." href='".$arr['admin_link']."' $data_attr>".$arr['admin_image'].$arr['admin_title'].$caret."</a>\n";
             if (isset($admin_pages[$rights])) {
                 $html = &$html;
                 $html .= "<!--dropdown--->\n";
@@ -515,14 +520,17 @@ class adminPanel extends resource {
                     $active_rights = $admin_data['admin_rights'];
                 }
             }
+
             //print_p($admin_pages[$active_rights], 1);
             if (isset($admin_pages[$active_rights])) {
 
                 $sections = $admin_pages[$active_rights]; // this is just the root of subpage. dropdown array is not present.
+
                 //print_P($sections);
                 if (!empty($sections)) {
                   echo $this->__li($admin_pages, $sections);
                 }
+
             } else {
                 if (!empty($sections)) {
                     $i = 0;
