@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: administration/dashboard/comments/comments.php
+| Filename: administration/dashboard/ratings/ratings.php
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -15,7 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-(defined('IN_FUSION') || exit);
+defined('IN_FUSION') || exit;
+
 /**
  * Ratings Admin Dashboard Widget
  * Widget to display comments latest activity
