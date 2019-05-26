@@ -7,7 +7,6 @@
 | Filename: defender.inc
 | Author : Frederick MC Chan (Chan)
 | Co-Author: Dan C (JoiNNN)
-| Version : 9.04
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -19,7 +18,6 @@
 +--------------------------------------------------------*/
 
 class Defender {
-
     public static $input_errors = [];
     private static $debug = FALSE;
     private static $defender_instance = NULL;
@@ -284,7 +282,7 @@ class Defender {
             $input_ref = $key;
             unset($input_ref[0]);
             // Get the value of the filtered post value using the $key array as map
-            return array_reduce($input_ref, function($value, $key) {
+            return array_reduce($input_ref, function ($value, $key) {
                 return (!empty($value[$key]) ? $value[$key] : '');
             }, $filtered);
         }
@@ -334,12 +332,13 @@ class Defender {
                     return $default;
 
                 } else {
+                    $val_ = [];
 
                     foreach ($val as $lang => $value) {
-                        $val[$lang] = $val[$lang];
+                        $val_[$lang] = $val[$lang];
                     }
 
-                    return serialize($val);
+                    return serialize($val_);
                 }
 
             } else {
@@ -475,6 +474,8 @@ class Defender {
             self::stop();
             addNotice('danger', $e->getMessage());
         }
+
+        return NULL;
     }
 
     /**
@@ -532,7 +533,7 @@ class Defender {
     /**
      * Encrypts a string securely with a private key
      *
-     * @param string $string The text to encrypt
+     * @param string $string      The text to encrypt
      * @param string $private_key For better security use \Defender::get_encrypt_key to generate your private key
      *
      * Does not support array encrypt.
@@ -552,7 +553,7 @@ class Defender {
     /**
      * Decrypts a string securely with a private key
      *
-     * @param $string - The string to decrypt
+     * @param $string      - The string to decrypt
      * @param $private_key - For better security use \Defender::get_encrypt_key to generate your private key
      *
      * @return null|string
@@ -590,6 +591,7 @@ class Defender {
     }
 
 }
+
 /**
  * Verify and Sanitize Inputs
  *
@@ -604,6 +606,7 @@ class Defender {
 function form_sanitizer($value, $default = "", $input_name = FALSE, $is_multiLang = FALSE) {
     return Defender::getInstance()->form_sanitizer($value, $default, $input_name, $is_multiLang);
 }
+
 /**
  * Verify and Sanitize Inputs with input_name
  * A more secured method
@@ -616,11 +619,62 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $is_multiLan
  * @return string
  * @throws Exception
  */
-function sanitizer($value, $default='', $input_name = FALSE, $is_multiLang = FALSE) {
+function sanitizer($value, $default = '', $input_name = FALSE, $is_multiLang = FALSE) {
     return Defender::getInstance()->sanitizer($value, $default, $input_name, $is_multiLang);
 }
 
-require(__DIR__.'/defender/index.php');
-require(__DIR__.'/defender/validation.php');
-require(__DIR__.'/defender/token.php');
-require(__DIR__.'/defender/mimecheck.php');
+/**
+ * @param null   $key
+ * @param int    $type
+ * @param string $flags
+ *
+ * @return mixed
+ */
+function get($key = NULL, $type = FILTER_DEFAULT, $flags = '') {
+    return stripinput(filter_input(INPUT_GET, $key, $type, $flags));
+}
+
+/**
+ * @param     $key
+ * @param int $type
+ * @param     $flags
+ *
+ * @return mixed
+ */
+function post($key, $type = FILTER_DEFAULT, $flags = '') {
+    return filter_input(INPUT_POST, $key, $type, $flags);
+}
+
+/**
+ * @param     $key
+ * @param int $type
+ *
+ * @return mixed
+ */
+function server($key, $type = FILTER_DEFAULT) {
+    return filter_input(INPUT_SERVER, $key, $type);
+}
+
+/**
+ * @param     $key
+ * @param int $type
+ *
+ * @return mixed
+ */
+function environment($key, $type = FILTER_DEFAULT) {
+    return filter_input(INPUT_ENV, $key, $type);
+}
+
+/**
+ * @param     $key
+ * @param int $type
+ *
+ * @return mixed
+ */
+function cookie($key, $type = FILTER_DEFAULT) {
+    return stripinput(filter_input(INPUT_COOKIE, $key, $type));
+}
+
+require_once __DIR__.'/defender/validation.php';
+require_once __DIR__.'/defender/token.php';
+require_once __DIR__.'/defender/mimecheck.php';
