@@ -18,13 +18,11 @@
             <input type="{%input_type%}" name="{%input_name%}" id="{%input_id%}" value="{%input_value%}" placeholder="{%placeholder%}" data-type="text" class="form-control textbox {%inner_class%}" {%input_data%}{%min%}{%max%}{%step%}{%inner_width%}{%max_length%}{%autocomplete%}{%readonly%}>{%pwstrength%}
             }}
             {input_dropdown.{
-            <div class="dropdown" style="width:{%input_width%}">
-                <select name="{%input_name%}" id="{%input_id%}" class="{%input_class%}" style="width:100%" {%readonly%}{%onchange%}{%multiple%}>
-                    {%allowclear%}
-                    {%parent_opts%}
-                    {%options%}
-                </select>
-            </div>
+            <select name="{%input_name%}" id="{%input_id%}" class="{%input_class%}" style="width:{%input_width%}" {%readonly%}{%onchange%}{%multiple%}>
+                {%allowclear%}
+                {%parent_opts%}
+                {%options%}
+            </select>
             }}
             {input_custom.{
                 {%input_field%}

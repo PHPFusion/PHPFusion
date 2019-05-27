@@ -382,7 +382,7 @@ function form_select($input_name, $label = "", $input_value, array $options = []
 
         // normal mode
         $class[] = !empty($options['inner_class']) ? $options['inner_class'] : '';
-        $class[] = !empty($options['select2_disabled']) ? 'form-control' : '';
+        $class[] = !empty($options['select2_disabled']) ? '' : '';
 
         $options['input_class'] = implode(' ', $class);
 

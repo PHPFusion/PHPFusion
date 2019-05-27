@@ -35,15 +35,17 @@ class Form {
         $tpl->set_tag("group_inline_css", $grp_inline);
 
         $is_inline = $options['inline'] && $label ? TRUE : FALSE;
+        // i want it false, then no need to push a grid.
 
         if ($label) {
-            $tpl->set_block('control_label', [
-                'label_grid'     => ($is_inline ? '{[col(100,100,20,20)]}' : ''),
+            $control_label = [
+                'label_grid'     => ($is_inline ? '{[col(100,100,20,20)]}' : ' display-block'),
                 'label_icon'     => ($options['label_icon']) ?: '',
                 'label_text'     => $label,
                 'label_required' => $options['required'] ? '<span class="required">*</span>' : '',
                 'label_tip'      => ($options['tip'] ? ' <i class="pointer fa fa-question-circle" title="'.$options['tip'].'"></i>' : '')
-            ]);
+            ];
+            $tpl->set_block('control_label', $control_label);
         }
 
         if ($is_inline) {
