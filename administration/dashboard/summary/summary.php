@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-(defined('IN_FUSION') || exit);
+defined('IN_FUSION') || exit;
 
 /**
  * Summary Admin Dashboard Widget
