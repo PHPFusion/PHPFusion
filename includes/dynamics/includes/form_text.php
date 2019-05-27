@@ -235,9 +235,16 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
             $options['max_length'] .= ' oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"';
         }
     }
+
     if ($options['password_strength'] == TRUE) { // does this only work for bootstrap?
-        PHPFusion\OutputHandler::addToFooter("<script type='text/javascript' src='".DYNAMICS."assets/password/pwstrength.js'></script>");
-        PHPFusion\OutputHandler::addToHead('<script type="text/javascript">'.jsminify('
+        // if there are 2 password field, will append 2 times.
+        static $pwStrengthFile = '';
+        if (empty($pwStrengthFile)) {
+            $pwStrengthFile = DYNAMICS.'assets/password/pwstrength.js';
+            add_to_footer('<script src="'.$pwStrengthFile.'"></script>');
+        }
+
+        add_to_head('<script type="text/javascript">'.jsminify('
             jQuery(document).ready(function() {
                 var options = {};
                 options.ui = {

@@ -3,7 +3,7 @@
     <label class="control-label{%label_grid%}" for="{%input_id%}">{%label_icon%}{%label_text%}{%label_required%}{%label_tip%}</label>
     }}
     {inline_start.{
-    <div class="{[col(100,100,70,70)]}">
+    <div class="{[col(100,100,80,80)]}">
         }}
         {group_start.{
         <div class="input-group{%group_size%}" {%group_width%}>
@@ -16,6 +16,18 @@
             }}
             {input_text.{
             <input type="{%input_type%}" name="{%input_name%}" id="{%input_id%}" value="{%input_value%}" placeholder="{%placeholder%}" data-type="text" class="form-control textbox {%inner_class%}" {%input_data%}{%min%}{%max%}{%step%}{%inner_width%}{%max_length%}{%autocomplete%}{%readonly%}>{%pwstrength%}
+            }}
+            {input_dropdown.{
+            <div class="dropdown" style="width:{%input_width%}">
+                <select name="{%input_name%}" id="{%input_id%}" class="{%input_class%}" style="width:100%" {%readonly%}{%onchange%}{%multiple%}>
+                    {%allowclear%}
+                    {%parent_opts%}
+                    {%options%}
+                </select>
+            </div>
+            }}
+            {input_custom.{
+                {%input_field%}
             }}
             {input_append_button.{
             <span class="input-group-btn"><button id="{%prepend_id%}" name="{%prepend_name%}" type="{%prepend_type%}" value="{%prepend_value%}" class="btn{%prepend_size%}{%prepend_class%}">{%prepend_text%}</button></span>
