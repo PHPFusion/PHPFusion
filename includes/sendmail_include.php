@@ -142,7 +142,7 @@ if (!function_exists('sendemail_template')) {
             $message_content = str_replace($search, $replace, $message_content);
         }
         if ($template_format == "html") {
-            $message_content = nl2br($message_content);
+            $message_content = nl2br(html_entity_decode($message_content));
         }
         if (sendemail($receiver, $toemail, $sender_name, $sender_email, $message_subject, $message_content, $template_format)) {
             return TRUE;
