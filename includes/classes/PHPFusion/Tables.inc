@@ -991,17 +991,22 @@ class Tables {
         }
 
         $html .= "<div class='display-inline-block m-r-15'>\n";
-        $html .= openform('cat_table_frm', 'post', FUSION_REQUEST).form_select(
+        $actions_options = [
+            '' => 'Bulk Actions',
+            1  => 'Delete'
+        ];
+
+        if (!empty($this->table_props['action_filters'])) {
+            array_push($actions_options, $this->table_props['action_filters']);
+        }
+
+        $html .= openform('cat_table_frm', 'post').form_select(
                 'filter_actions', '', '', [
                     'inner_width'      => '150px',
                     'inner_class'      => 'display-inline-block',
                     'class'            => 'm-0 display-inline-block',
-                    'options'          => [
-                        '' => 'Bulk Actions',
-                        1  => 'Delete',
-                    ],
-                    //						                'allowclear'       => TRUE,
-                    //						                'placeholder'      => 'Bulk Actions',
+                    'optgroup'         => TRUE,
+                    'options'          => $actions_options,
                     'select2_disabled' => TRUE,
                     'stacked'          => form_button(
                             'apply_filter', 'Apply', 'apply_filter', ['class' => 'btn-sm']

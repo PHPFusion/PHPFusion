@@ -1930,8 +1930,9 @@ function fusion_get_language_switch() {
 
 /**
  * Language switcher function
+ * @param bool $icon
  *
- * @param bool|TRUE $icon
+ * @throws ReflectionException
  */
 function lang_switcher($icon = TRUE) {
     $locale = fusion_get_locale();
