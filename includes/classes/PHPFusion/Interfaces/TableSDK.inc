@@ -116,6 +116,7 @@ interface TableSDK {
      * 'format'        => FALSE, // for formatting using strtr
      * 'callback'      => '', // for formatting using function
      * 'debug'         => FALSE,
+     * 'visibility'    => FALSE, // set this column to hide by default until user enables it via custom
      *
      * @return array
      */

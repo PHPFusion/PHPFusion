@@ -26,23 +26,38 @@ var phpfusion_tables = {
 
         phpfusion_tables.quickEdit(table_fields, table_key, table_db);
 
+        phpfusion_tables.customBox();
 
     },
-
+    // controls the custom box link behavior
+    'customBox' : function() {
+        $('body').on('click', '.custom-table', function(e){
+            let target = $('#' + $(this).data('table') + '-custom-box');
+            if (target.is(':visible')) {
+                target.slideUp(150);
+                $(this).find('.caret').removeClass('caret-up');
+            } else {
+                target.slideDown(150);
+                $(this).find('.caret').addClass('caret-up');
+            }
+        });
+    },
+    // responsive row toggling
     'toggleRow' : function() {
         $('button.toggle-row').bind('click', function(e) {
             $(this).closest('tr').toggleClass('expanded');
         });
         // fix layout problems when table resizes.
         window.onresize = function(event) {
-            viewportwidth = $(window).width();
-            if (viewportwidth > 1023) {
+            let viewPortWidth = $(window).width();
+            if (viewPortWidth > 1023) {
                 $('table.fusion-table tr').removeClass('expanded');
             }
         }
 
     },
 
+    // controls filter actions behavior
     'applyFilter': function() {
 
         //var checkboxes = '';
@@ -66,7 +81,9 @@ var phpfusion_tables = {
         });
     },
 
+    // Controls checkbox behavior
     'masterCheck' : function() {
+
         $('#chk_all, #chk_all2').bind('click', function(e) {
 
             var val = $(this).is(':checked') ? 1 : 0;

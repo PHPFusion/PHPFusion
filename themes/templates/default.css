@@ -1342,7 +1342,7 @@ table {
     border-spacing: 0;
 }
 table.fusion-table td {
-    height: 55px;
+    height: 60px;
 }
 table.fusion-table td.has-actions {
     min-width:30%;

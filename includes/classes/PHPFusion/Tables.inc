@@ -43,6 +43,7 @@ class Tables {
 
     private $clear_args = [];
 
+    // Data source
     private $default_args = [
         'debug'                    => FALSE, // True to show the SQL query for the table.
         'table'                    => '',
@@ -60,6 +61,7 @@ class Tables {
         'file_folder'              => '', // to delete files from the folder, use param for string match
         'db'                       => [], // to delete other entries on delete -- use this key. Keys: 'select' => 'ratings_id', 'group' => 'ratings_item_id', 'custom' => "rating_type='CLS'"
         'delete_function_callback' => '',
+        'rowstart'                 => 'rowstart'
     ];
 
     private $default_column_options = [
@@ -83,12 +85,16 @@ class Tables {
         'user'          => FALSE,
         'user_avatar'   => FALSE, // show avatar
         'number'        => FALSE,
+        'parse_value'   => FALSE,
         'format'        => FALSE, // for formatting using strtr
         'callback'      => '', // for formatting using function
+        'visibility'    => TRUE, // customize column options TRUE for default visible.
         'debug'         => FALSE,
     ];
 
+    // Properties
     private $default_prop_options = [
+        'table_id'           => 'fusion_table',
         'table_class'        => '',
         'header_content'     => '',
         'no_record'          => 'There are no records',
@@ -100,10 +106,9 @@ class Tables {
         'edit_link_format'   => '', // set this to format the edit link
         'delete_link_format' => '', // set this to format the delete link
         'view_link_format'   => '', // set this to format the view link
-
-        'edit_key' => 'edit',
-        'del_key'  => 'del', // change this to invoke internal table delete function for custom delete link format
-        'view_key' => 'view',
+        'edit_key'           => 'edit',
+        'del_key'            => 'del', // change this to invoke internal table delete function for custom delete link format
+        'view_key'           => 'view',
 
         'date_col'        => '',  // set this value to sql column name to have date selector input filter
         'order_col'       => '', // set this value to sql column name to have sorting column input filter
@@ -140,13 +145,15 @@ class Tables {
 
             $this->echo = $echo;
 
+            $this->setTableProperties();
+
             $this->setTableData();
 
             $this->setTableCols();
 
-            $this->setTableProperties();
-
             $this->setQuickEdit();
+
+            $this->setCustomSettings();
 
             if ($echo === TRUE) {
 
@@ -162,12 +169,35 @@ class Tables {
 
     }
 
+    private function setCustomSettings() {
+        // Post and set customization
+        if (post('apply_custom')) {
+            $column_cookie_val = sanitizer(['custom_column'], '', 'custom_column[]');
+            if ($column_cookie_val) {
+                setcookie($this->table_props['table_id'].'-cols', $column_cookie_val);
+            }
+
+            $limit_val = sanitizer('custom_limit', $this->query['limit']);
+            if ($limit_val) {
+                setcookie($this->table_props['table_id'].'-limit', $limit_val);
+            }
+
+            redirect(FUSION_REQUEST);
+        }
+
+    }
+
     /**
      * Set the table data configurations
      */
     private function setTableData() {
 
         $this->query = (array)$this->api->data() + $this->default_args;
+
+        $php_limit_cookie = cookie($this->table_props['table_id'].'-limit');
+        if ($php_limit_cookie && isnum($php_limit_cookie)) {
+            $this->query['limit'] = $php_limit_cookie;
+        }
 
     }
 
@@ -207,6 +237,9 @@ class Tables {
         }
         return $this->query_id;
     }
+
+    private $rowStart = 0;
+
     /**
      * Callback
      *
@@ -251,9 +284,9 @@ class Tables {
                     if (isset($_POST[$key])) {
 
                         $filter_val = array_map('strtolower', $filter['options']);
-                        $val = stripinput($_POST [ $key ]);
+                        $val = stripinput($_POST [$key]);
                         if (isset($filter_val[$val])) {
-                            $redirect_param[$key] = $filter_val[ $val ];
+                            $redirect_param[$key] = $filter_val[$val];
                         } else {
                             $redirect_param[$key] = $val;
                         }
@@ -289,7 +322,7 @@ class Tables {
                         // done.
                         if (isset($filters['options']) && isset($_GET[$key])) {
                             $filter_val = array_flip(array_map('strtolower', $filters['options']));
-                             $get_val = strtolower($_GET[$key]);
+                            $get_val = strtolower($_GET[$key]);
                             if (isset($filter_val[$get_val])) {
                                 $filter_cond[] = "$key='".$filter_val[$_GET[$key]]."'";
                             }
@@ -311,7 +344,7 @@ class Tables {
         }
 
         if (!empty($filter_cond)) {
-            $search = ( $search ? $search." AND " : "WHERE " ). implode(' AND ', $filter_cond);
+            $search = ($search ? $search." AND " : "WHERE ").implode(' AND ', $filter_cond);
         }
 
         // Automated Ordering
@@ -321,12 +354,13 @@ class Tables {
         ];
 
         $orderby = '';
-
-        if (isset($_GET['orderby']) && isset($_GET['order']) && isset($order_check[$_GET['order']]) && !empty($this->table_props['order_col'])) {
-            $sort = $order_check[$_GET['order']];
+        $get_orderby = get('orderby');
+        $get_order = get('orderby');
+        if ($get_orderby && $get_order && isset($order_check[$get_order]) && !empty($this->table_props['order_col'])) {
+            $sort = $order_check[$get_order];
             $ordering = array_flip($this->table_props['order_col']);
-            if (isset($ordering[$_GET['orderby']])) {
-                $orderby = $ordering[$_GET['orderby']]." ".$sort.", ";
+            if (isset($ordering[$get_orderby])) {
+                $orderby = $ordering[$get_orderby]." ".$sort.", ";
             }
         } else if (!empty($this->query['order'])) {
             $orderby = $this->query['order'].", ";
@@ -341,17 +375,15 @@ class Tables {
             ]
         );
 
+        // quantify max rows
+        $this->maxRows = dbcount("(".$this->query['id'].")", $this->query['table'].' base', $count_conditions);
+
         if ($this->query['true_limit'] === TRUE) {
-
             $this->maxRows = $this->query['limit'];
-
-        } else {
-            $this->maxRows = dbcount("(".$this->query['id'].")", $this->query['table'].' base', $count_conditions);
         }
 
-        $_GET['rowstart'] = (isset($_GET['rowstart']) && isnum(
-                $_GET['rowstart']
-            ) && $_GET['rowstart'] <= $this->maxRows) ? intval($_GET['rowstart']) : 0;
+        $this->rowStart = get($this->default_args['rowstart'], FILTER_VALIDATE_INT);
+        $this->rowStart = $this->rowStart && isnum($this->rowStart) && $this->rowStart <= $this->maxRows ? intval($this->rowStart) : 0;
 
         // Limiter will only work when there are no parent declared as the hierarchy requires full query and array chunks
 
@@ -408,14 +440,16 @@ class Tables {
         } else {
 
             if ($this->query['true_limit'] === TRUE) {
+
                 $limit = "LIMIT ".$this->query['limit'];
+
             } else {
-                $limit = ($this->query['limit'] && isnum(
-                    $this->query['limit']
-                ) ? "LIMIT ".$_GET['rowstart'].", ".$this->query['limit'] : '');
+
+                $limit = ($this->query['limit'] && isnum($this->query['limit']) ? "LIMIT ".$this->rowStart.", ".$this->query['limit'] : '');
             }
 
-            $sql_statement = "SELECT base.* {SELECT} FROM {TABLE} base {JOINS} {SEARCH} {CONDITIONS} {GROUP} ORDER BY {ORDER_BY} {ID} {ORDER_SORTING} {LIMIT}";
+            $sql_statement = /** @lang text */
+                "SELECT base.* {SELECT} FROM {TABLE} base {JOINS} {SEARCH} {CONDITIONS} {GROUP} ORDER BY {ORDER_BY} {ID} {ORDER_SORTING} {LIMIT}";
 
             $sql_query = strtr(
                 $sql_statement, [
@@ -437,7 +471,7 @@ class Tables {
             $result = dbquery($sql_query);
             if ($this->rowsCount = dbrows($result)) {
                 while ($rows = dbarray($result)) {
-                    $data[$_GET['rowstart']][$rows[$this->getIdCol()]] = $rows;
+                    $data[$this->rowStart][$rows[$this->getIdCol()]] = $rows;
 
                 }
             }
@@ -617,6 +651,34 @@ class Tables {
         }
     }
 
+    private $custom_columns_value = '';
+    private $custom_columns_options = [];
+
+    private function displayCustom() {
+
+        $html = "<div id='".$this->table_props['table_id']."-custom-box' class='list-group-item spacer-sm' style='display:none;'>";
+        $html .= "<div class='p-l-15 m-t-20 strong'>Columns</div>";
+        // get all the data column.
+        $html .= form_checkbox('custom_column[]', '', implode(',', $this->custom_columns_value), [
+            'multiple'       => TRUE, 'inline' => TRUE,
+            'inline_options' => TRUE,
+            'options'        => $this->custom_columns_options
+        ]);
+        $html .= "<div class='p-l-15 m-b-10 strong'>Pagination</div>";
+        $html .= form_text('custom_limit', 'Number of items per page:', $this->query['limit'], [
+            'inline'      => TRUE,
+            'inner_width' => '80px',
+            'class'       => 'form-group-sm m-b-10',
+            'deactivate'  => ($this->query['true_limit'] === TRUE ? TRUE : FALSE),
+        ]);
+        $html .= "<div class='p-l-15 m-b-20'>";
+        $html .= form_button('apply_custom', 'Apply', 'apply_custom', ['class' => 'btn-primary']);
+        $html .= "</div>";
+        $html .= "</div>";
+
+        return $html;
+    }
+
     /**
      * @return string
      * @throws \ReflectionException
@@ -625,9 +687,18 @@ class Tables {
         $html = '';
         $header = '';
 
+        // custom column cookie value
+        $php_column_cookie = cookie($this->table_props['table_id'].'-cols');
+        if ($php_column_cookie) {
+            $column_settings = explode(',', $php_column_cookie);
+            $this->custom_columns_value = array_combine(array_values($column_settings), array_values($column_settings));
+        }
+
         $cdata = $this->getData();
-        $col_span = count($this->columns) + 1;
+        $col_span = 1;
         $order_col = $this->table_props['order_col'];
+
+        $key_delete = get($this->table_props['del_key'], FILTER_VALIDATE_INT);
 
         // The bullk actions
         $table_action = post("table_action");
@@ -641,11 +712,11 @@ class Tables {
         }
 
         // The delete of a row
-        if (isset($_GET[$this->table_props['del_key']]) && isnum($_GET[$this->table_props['del_key']])) {
+        if ($key_delete && isnum($key_delete)) {
 
             $result = dbquery(
                 "SELECT * FROM ".$this->query['table']." WHERE ".$this->query['id']."=:id",
-                [':id' => intval($_GET[$this->table_props['del_key']])]
+                [':id' => intval($key_delete)]
             );
 
             if (dbrows($result)) {
@@ -749,57 +820,70 @@ class Tables {
             $current_order_col[$this->table_props['order_col']] = $order_col;
         }
 
-
+        // TH header row
         foreach ($this->columns as $col_key => $col_data) {
 
-            $order_open = '';
-
-            $order_close = '';
-
-            $order_caret = [
-                'asc'  => 'order-caret-up',
-                'desc' => 'order-caret-down'
-            ];
-
-            if (!empty($current_order_col)) {
-                $order_values = array_flip($current_order_col);
+            // get default custom column values
+            if ($col_key !== $this->getIdCol()) {
+                $this->custom_columns_options[$col_key] = $col_data['title'];
+                //print_P($col_data);
+                if ($col_data['visibility'] === TRUE && empty($this->custom_columns_value)) { //
+                    $this->custom_columns_value[$col_key] = $col_key;
+                }
             }
 
-            if (!empty($current_order_col[$col_key])) { // turn on carets
+            // only id column and custom column value can be rendered
+            if (isset($this->custom_columns_value[$col_key]) || $col_key == $this->getIdCol()) {
 
-                $order = 'asc';
+                $order_open = '';
+                $order_close = '';
+                $order_caret = [
+                    'asc'  => 'order-caret-up',
+                    'desc' => 'order-caret-down'
+                ];
 
-                $order_class = $order_caret['asc'];
-
-                $order_value = $current_order_col[$col_key]; // title
-
-                $order = get("order");
-                $order_by = get("orderby");
-
-                if ($order && $order_by) {
-
-                    if (!empty($order_values[$order_by]) && $order_values[$order_by] == $col_key) {
-
-                        $order_class = 'order-caret-up-current';
-
-                        $order = 'desc';
-
-                        if ($order == 'desc') {
-
-                            $order_class = 'order-caret-down-current';
-
-                            $order = 'asc';
-                        }
-                    }
+                if (!empty($current_order_col)) {
+                    $order_values = array_flip($current_order_col);
                 }
 
-                $order_open = "<a class='table-order $order_class' href='".clean_request("orderby=".$order_value."&order=".$order, ['order', 'orderby'], FALSE)."'>\n";
+                if (!empty($current_order_col[$col_key])) { // turn on carets
 
-                $order_close = "</a>\n";
+                    $order = 'asc';
+                    $order_class = $order_caret['asc'];
+                    $order_value = $current_order_col[$col_key]; // title
+
+                    $order = get("order") ?: $order;
+                    $order_by = get("orderby");
+
+                    if ($order && $order_by) {
+
+                        if (!empty($order_values[$order_by]) && $order_values[$order_by] == $col_key) {
+
+                            $order_class = 'order-caret-up-current';
+
+                            $order = 'desc';
+
+                            if ($order == 'desc') {
+
+                                $order_class = 'order-caret-down-current';
+
+                                $order = 'asc';
+                            }
+                        }
+                    }
+
+                    $order_open = "<a class='table-order $order_class' href='".clean_request("orderby=".$order_value."&order=".$order, ['order', 'orderby'], FALSE)."'>\n";
+
+                    $order_close = "</a>\n";
+                }
+
+                $header .= "<th ".($col_data['title_class'] ? "class='".$col_data['title_class']."'" : "").">".$order_open.$col_data['title'].$order_close."</th>\n";
+
+                $col_span++;
             }
 
-            $header .= "<th ".($col_data['title_class'] ? "class='".$col_data['title_class']."'" : "").">".$order_open.$col_data['title'].$order_close."</th>\n";
         }
+        // End Header TH
 
         /**
          * Link filters
@@ -855,17 +939,17 @@ class Tables {
 
             // Render link filters
             $html .= "<div class='row'>\n";
-            $html .= "<div class='col-xs-12 col-sm-".($this->table_props['search_col'] ? 6 : 12)."'>\n";
-            $active_class = (!in_array($_GET, $link_filter_keys)) ? " class='strong'" : '';
-            $html .= !empty($link_filters) ? "<div class='display-inline-block'><a href='".clean_request('', $link_filter_keys, FALSE)."'$active_class><small>All</small></a> ".implode('', $link_filters)."</div>\n" : '';
-            $html .= "</div>\n";
+            if (!empty($link_filters)) {
+                $html .= "<div class='col-xs-12 col-sm-".($this->table_props['search_col'] ? 6 : 12)."'>\n";
+                $active_class = (!in_array($_GET, $link_filter_keys)) ? " class='strong'" : '';
+                $html .= "<div class='display-inline-block'><a href='".clean_request('', $link_filter_keys, FALSE)."'$active_class><small>All</small></a> ".implode('', $link_filters)."</div>\n";
+                $html .= "</div>\n";
+            }
 
             if (!empty($this->table_props['search_col'])) {
-                $html .= "<div class='col-xs-12 col-sm-".($this->table_props['multilang_col'] ? 6 : 12)." text-right'>\n";
+                $html .= "<div class='col-xs-12 col-sm-".($this->table_props['multilang_col'] || !empty($link_filters) ? 6 : 12)." text-right'>\n";
                 $html .= "<div class='pull-right'>\n";
-
                 $html .= openform('search_frm', 'post');
-
                 $html .= form_text(
                     'search_cat', '', $this->search_text, [
                         'required'           => TRUE,
@@ -880,7 +964,6 @@ class Tables {
                         'width'              => '350px',
                     ]
                 );
-
                 $html .= closeform();
                 $html .= "</div>\n"; // close pull-right
                 $html .= "</div>\n"; // close text right
@@ -899,16 +982,19 @@ class Tables {
 
         $html .= $start_row;
 
-        if ($this->table_props['show_count'] === TRUE) {
-            $html .= "<small class='pull-right m-t-5'>".format_word($this->maxRows, "item|items", ['html'=>FALSE, 'format_num'=>TRUE])."</small>\n";
-        }
+        // Show customization toggle
+        $html .= "<small class='pull-right m-t-5 m-l-5'><a data-target='custom-box' class='pointer custom-table' data-table='".$this->table_props['table_id']."'>Customise Options <span class='caret'></span></a></small>";
 
+        // Show row counter
+        if ($this->table_props['show_count'] === TRUE) {
+            $html .= "<small class='pull-right m-t-5'>".format_word($this->maxRows, "item|items", ['html' => FALSE, 'format_num' => TRUE])."</small>\n";
+        }
 
         $html .= "<div class='display-inline-block m-r-15'>\n";
         $html .= openform('cat_table_frm', 'post', FUSION_REQUEST).form_select(
                 'filter_actions', '', '', [
                     'inner_width'      => '150px',
-                    'inner_class' => 'display-inline-block',
+                    'inner_class'      => 'display-inline-block',
                     'class'            => 'm-0 display-inline-block',
                     'options'          => [
                         '' => 'Bulk Actions',
@@ -944,7 +1030,7 @@ class Tables {
             }
 
             $html .= form_button(
-                'table_filter', 'Filter', 'table_filter', ['class' => 'btn-sm m-r-10']
+                'table_filter', 'Apply', 'table_filter', ['class' => 'btn-sm m-r-10']
             );
 
             $html .= closeform()."</div>";
@@ -953,30 +1039,35 @@ class Tables {
         if (isset($_GET['s'])) {
             $html .= "<a href='".clean_request('', ['s'], FALSE)."'>Clear Search</a>";
         }
+
         $html .= $end_row;
 
-        $check_all_col = "";
-        $check_all_col_2 = "";
+        $check_all_col = '';
+        $check_all_col_2 = '';
 
         if ($this->table_props['edit_link'] or $this->table_props['delete_link']) {
-
             $check_all_col = "<th class='min'>".form_checkbox('chk_all', '', '', ['class' => 'm-b-0'])."</th>\n";
             $check_all_col_2 = "<th>".form_checkbox('chk_all2', '', '', ['class' => 'm-b-0'])."</th>\n";
-
         }
+
 
         $html .= openform('table_frm', 'post');
         $html .= form_hidden('table_action', '', '');
+
+        // Show custom table properties
+        $html .= $this->displayCustom();
+
         $html .= "<table class='fusion-table ".($this->table_props['table_class'] ? ' '.$this->table_props['table_class'] : 'table')."'>\n";
         // head
         $html .= "<thead>\n";
         $html .= "<tr>\n$check_all_col\n".$header."\n</tr>\n";
         $html .= "</thead>\n";
+
         $html .= "<tbody>\n";
         // end of head
         if (!empty($cdata)) {
 
-            foreach ($cdata[$_GET['rowstart']] as $data) {
+            foreach ($cdata[$this->rowStart] as $data) {
 
                 $id = $data[$this->getIdCol()];
                 // the edit link
@@ -1013,351 +1104,365 @@ class Tables {
 
                 foreach ($this->columns as $col_key => $col_data) { // column configurations
 
-                    $edit_open = '';
-                    $edit_close = '';
-                    $edit_actions = '';
-                    $value_class = [];
-                    $data_replace = [];
+                    if (isset($this->custom_columns_value[$col_key]) || $col_key == $this->getIdCol()) {
 
-                    if (!empty($data)) {
-                        foreach (array_keys($data) as $keyname) {
-                            $data_replace[':'.$keyname] = $data[$keyname];
-                        }
-                    }
+                        $edit_open = '';
+                        $edit_close = '';
+                        $edit_actions = '';
+                        $value_class = [];
+                        $data_replace = [];
 
-                    $value = (!empty($data[$col_key]) ? $data[$col_key] : $col_data['empty_value']);
-
-                    $value_class[] = ($col_data['value_class'] ?: '');
-
-                    if ($col_data['edit_link'] || $col_data['delete_link']) {
-
-                        $value_class[] = "has-actions";
-                        /*
-                         * (Optional - sets the current column with the edit link, with quick edit fields)
-                         * array("edit_link" => TRUE)
-                         */
-                        $edit_open = "<a href='$edit_uri' class='strong text-bigger'>\n";
-
-                        $edit_close = "</a>\n";
-
-                        $edit_actions = "<div class='tbl_actions'>\n";
-
-                        $edit_actions .= "<span class='text-lighter'>ID: $id</span>\n";
-
-                        $edit_actions .= ($col_data['edit_link'] ? "<span class='edit'><a href='$edit_uri'>Edit</a></span>\n" : '');
-
-                        $edit_actions .= ((!empty($this->quick_fields)) ? "<span class='qedit'><a class='quick_edit pointer' data-toggle='quick_edit' data-value='".$id."'>Quick Edit</a></span>\n" : '');
-
-                        $edit_actions .= ($col_data['delete_link'] ? "<span class='del'><a onclick='return confirm(\"Are you sure you want to delete this entry? All associated files and images will be permanently removed from the server.\");' href='$del_uri' class='text-danger'>Delete</a></span>\n" : '');
-
-                        $edit_actions .= ($col_data['view_link'] ? "<span class='view'><a href='$view_uri'>View</a></span>\n" : '');
-
-                        $edit_actions .= "</div>\n";
-
-                        $edit_actions .= "<button type='button' class='toggle-row'></button>";
-
-                    }
-
-
-                    /*
-                     * Types of display method supported
-                     */
-                    if ($col_data['image']) {
-                        /*
-                         * array("image"=>TRUE);
-                         *
-                         */
-                        $width = (!empty($col_data['image_width']) ? $col_data['image_width']."; max-width: ".$col_data['image_width'] : 'max-width:150px;');
-                        $class = (!empty($col_data['image_class']) ? $col_data['image_class'] : 'img-responsive');
-
-                        $image_folder = '';
-                        if (!empty($this->query['image_folder'])) {
-                            $image_folder = strtr($this->query['image_folder'], $data_replace);
-
-                        } else if (!empty($col_data['image_folder'])) {
-                            $image_folder = strtr($col_data['image_folder'], $data_replace);
-                        }
-
-                        $default_image_path = ($col_data['default_image'] ?: IMAGES.'imagenotfound.jpg');
-
-                        $value = "<img class='$class' style='$width' src='$default_image_path'/>\n";;
-
-                        if (is_file($image_folder.$data[$col_key])) {
-                            $value = "<img class='$class' style='$width' src='".$image_folder.$data[$col_key]."'/>\n";
-                        }
-
-                    }
-                    else if ($col_data['icon'] && !empty($data[$col_key])) {
-                        /*
-                         * array("icon" => TRUE)
-                         */
-                        $value = "<i class='".$data[$col_key]."'/></i>\n";
-
-                    } else if ($col_data['number']) {
-                        /*
-                         * array("number" => true, "delimiter" => "2", "decimal_point" => ".", "thousand_sep" => ",")
-                         */
-                        if (!empty($data[$col_key]) && isnum($data[$col_key])) {
-                            $value = number_format(
-                                $data[$col_key],
-                                (!empty($col_data['delimiter']) ? $col_data['delimiter'] : 0),
-                                (!empty($col_data['decimal_point']) ? $col_data['decimal_point'] : '.'),
-                                (!empty($col_data['thousand_sep']) ? $col_data['thousand_sep'] : ',')
-                            );
-                        } else {
-
-                            $value = number_format(
-                                $value ?: '0',
-                                (!empty($col_data['delimiter']) ? $col_data['delimiter'] : 0),
-                                (!empty($col_data['decimal_point']) ? $col_data['decimal_point'] : '.'),
-                                (!empty($col_data['thousand_sep']) ? $col_data['thousand_sep'] : ',')
-                            );
-
-                            if (empty($value)) {
-                                $value = (!empty($col_data['delimiter']) ? "0".(!empty($col_data['thousand_sep']) ? $col_data['thousand_sep'] : ',').str_repeat(
-                                        $col_data['delimiter'], "0"
-                                    ) : "0");
-                                //print_P($col_key.' '.$value);
-                            }
-
-                        }
-
-                        //print_P($value);
-
-                    } else if ($col_data['user'] === TRUE) {
-                        /*
-                         * array("user" => TRUE);
-                         */
-                        $user = fusion_get_user($value);
-                        $avatar = '';
-                        if ($col_data['user_avatar'] === TRUE) {
-                            $avatar = display_avatar($user, '30px', 'm-r-5');
-                        }
-                        $value = $avatar.profile_link($user['user_id'], $user['user_name'], $user['user_status']);
-
-                    } else if ($col_data['options']) {
-                        /*
-                         * array("options" => array(1=>"Yes", 0=>"No"))
-                         */
-                        $value = $value ?: 0;
-                        $value = $col_data['options'][$value];
-
-                    } else if ($col_data['count']) {
-                        /*
-                         * array("count" => array("field"=>"column_name", "table" => DB_PREFIX, "conditions" => "column_name=matches"))
-                         */
-                        if (!empty($col_data['count']['field']) && !empty($col_data['count']['table']) && !empty($col_data['count']['conditions'])) {
-                            $data_replace = [];
+                        if (!empty($data)) {
                             foreach (array_keys($data) as $keyname) {
                                 $data_replace[':'.$keyname] = $data[$keyname];
                             }
-                            $col_data['count']['conditions'] = strtr($col_data['count']['conditions'], $data_replace);
-                            $value = dbcount(
-                                "(".$col_data['count']['field'].")", $col_data['count']['table'],
-                                $col_data['count']['conditions']
-                            );
                         }
 
-                    } else if ($col_data['display'] && $col_data['display']['table'] && $col_data['display']['key'] && $col_data['display']['title']) {
+                        // Column value
+                        $value = (!empty($data[$col_key]) ? $data[$col_key] : $col_data['empty_value']);
+                        // Strip all bbcode tags
+                        if (!empty($value)) {
+                            if (!empty($col_data['parse_value'])) {
+                                $value = nl2br(parse_textarea($value));
+                            }
+                            $value = strip_bbcodes($value);
+                            $value = strip_tags($value);
+                        }
+
+                        $value_class[] = ($col_data['value_class'] ?: '');
+
+                        if ($col_data['edit_link'] || $col_data['delete_link']) {
+
+                            $value_class[] = "has-actions";
+                            /*
+                             * (Optional - sets the current column with the edit link, with quick edit fields)
+                             * array("edit_link" => TRUE)
+                             */
+                            $edit_open = "<a href='$edit_uri' class='strong text-bigger'>\n";
+
+                            $edit_close = "</a>\n";
+
+                            $edit_actions = "<div class='tbl_actions'>\n";
+
+                            $edit_actions .= "<span class='text-lighter'>ID: $id</span>\n";
+
+                            $edit_actions .= ($col_data['edit_link'] ? "<span class='edit'><a href='$edit_uri'>Edit</a></span>\n" : '');
+
+                            $edit_actions .= ((!empty($this->quick_fields)) ? "<span class='qedit'><a class='quick_edit pointer' data-toggle='quick_edit' data-value='".$id."'>Quick Edit</a></span>\n" : '');
+
+                            $edit_actions .= ($col_data['delete_link'] ? "<span class='del'><a onclick='return confirm(\"Are you sure you want to delete this entry? All associated files and images will be permanently removed from the server.\");' href='$del_uri' class='text-danger'>Delete</a></span>\n" : '');
+
+                            $edit_actions .= ($col_data['view_link'] ? "<span class='view'><a href='$view_uri'>View</a></span>\n" : '');
+
+                            $edit_actions .= "</div>\n";
+
+                            $edit_actions .= "<button type='button' class='toggle-row'></button>";
+
+                        }
+
 
                         /*
-                         * array('display' => array(
-                                          'key'        => 'feature_id',
-                                          'table'      => DB_CLASS_FEATURE,
-                                          'conditions' => "feature_id IN (:cat_feature)",
-                                          'title'      => 'feature_title',
-                                          'format_result' => "<a href='".INFUSIONS."farlayne/administration/listings/features.php?".fusion_get_aidlink()."&amp;edit=:key'>:title</a>",
-                                      )
-                        )
+                         * Types of display method supported
                          */
+                        if ($col_data['image']) {
+                            /*
+                             * array("image"=>TRUE);
+                             *
+                             */
+                            $width = (!empty($col_data['image_width']) ? $col_data['image_width']."; max-width: ".$col_data['image_width'] : 'max-width:150px;');
+                            $class = (!empty($col_data['image_class']) ? $col_data['image_class'] : 'img-responsive');
 
-                        $value = '';
-                        if (!empty($data[$col_key])) {
+                            $image_folder = '';
+                            if (!empty($this->query['image_folder'])) {
+                                $image_folder = strtr($this->query['image_folder'], $data_replace);
 
-                            $default_select = '';
-                            $default_condition = '';
-                            $default_order = " ORDER BY ".$col_data['display']['key']." ASC";
-
-                            if (!empty($col_data['display']['select'])) {
-                                $col_data['display']['select'] = ", ".$col_data['display']['select'];
-                            } else {
-                                $col_data['display']['select'] = $default_select;
+                            } else if (!empty($col_data['image_folder'])) {
+                                $image_folder = strtr($col_data['image_folder'], $data_replace);
                             }
 
-                            if (!empty($col_data['display']['conditions'])) {
-                                if ($col_data['debug'] === TRUE) {
-                                    print_p($data_replace);
-                                    print_p($col_data['display']['conditions']);
+                            $default_image_path = ($col_data['default_image'] ?: IMAGES.'imagenotfound.jpg');
+
+                            $value = "<img class='$class' style='$width' src='$default_image_path'/>\n";;
+
+                            if (is_file($image_folder.$data[$col_key])) {
+                                $value = "<img class='$class' style='$width' src='".$image_folder.$data[$col_key]."'/>\n";
+                            }
+
+                        } else if ($col_data['icon'] && !empty($data[$col_key])) {
+                            /*
+                             * array("icon" => TRUE)
+                             */
+                            $value = "<i class='".$data[$col_key]."'/></i>\n";
+
+                        } else if ($col_data['number']) {
+                            /*
+                             * array("number" => true, "delimiter" => "2", "decimal_point" => ".", "thousand_sep" => ",")
+                             */
+                            if (!empty($data[$col_key]) && isnum($data[$col_key])) {
+                                $value = number_format(
+                                    $data[$col_key],
+                                    (!empty($col_data['delimiter']) ? $col_data['delimiter'] : 0),
+                                    (!empty($col_data['decimal_point']) ? $col_data['decimal_point'] : '.'),
+                                    (!empty($col_data['thousand_sep']) ? $col_data['thousand_sep'] : ',')
+                                );
+                            } else {
+
+                                $value = number_format(
+                                    $value ?: '0',
+                                    (!empty($col_data['delimiter']) ? $col_data['delimiter'] : 0),
+                                    (!empty($col_data['decimal_point']) ? $col_data['decimal_point'] : '.'),
+                                    (!empty($col_data['thousand_sep']) ? $col_data['thousand_sep'] : ',')
+                                );
+
+                                if (empty($value)) {
+                                    $value = (!empty($col_data['delimiter']) ? "0".(!empty($col_data['thousand_sep']) ? $col_data['thousand_sep'] : ',').str_repeat(
+                                            $col_data['delimiter'], "0"
+                                        ) : "0");
+                                    //print_P($col_key.' '.$value);
                                 }
-                                $col_data['display']['conditions'] = " WHERE ".strtr(
-                                        $col_data['display']['conditions'], $data_replace
-                                    );
-                            } else {
-                                $col_data['display']['conditions'] = $default_condition;
+
                             }
 
-                            if (empty($col_data['display']['order'])) {
-                                $col_data['display']['order'] = $default_order;
+                            //print_P($value);
+
+                        } else if ($col_data['user'] === TRUE) {
+                            /*
+                             * array("user" => TRUE);
+                             */
+                            $user = fusion_get_user($value);
+                            $avatar = '';
+                            if ($col_data['user_avatar'] === TRUE) {
+                                $avatar = display_avatar($user, '32px', 'm-r-10');
+                            }
+                            $value = $avatar.profile_link($user['user_id'], $user['user_name'], $user['user_status']);
+
+                        } else if ($col_data['options']) {
+                            /*
+                             * array("options" => array(1=>"Yes", 0=>"No"))
+                             */
+                            $value = $value ?: 0;
+                            $value = $col_data['options'][$value];
+
+                        } else if ($col_data['count']) {
+                            /*
+                             * array("count" => array("field"=>"column_name", "table" => DB_PREFIX, "conditions" => "column_name=matches"))
+                             */
+                            if (!empty($col_data['count']['field']) && !empty($col_data['count']['table']) && !empty($col_data['count']['conditions'])) {
+                                $data_replace = [];
+                                foreach (array_keys($data) as $keyname) {
+                                    $data_replace[':'.$keyname] = $data[$keyname];
+                                }
+                                $col_data['count']['conditions'] = strtr($col_data['count']['conditions'], $data_replace);
+                                $value = dbcount(
+                                    "(".$col_data['count']['field'].")", $col_data['count']['table'],
+                                    $col_data['count']['conditions']
+                                );
                             }
 
-                            $formatted_value = [];
-                            $sub_query = "SELECT ".$col_data['display']['key'].", ".$col_data['display']['title'].$col_data['display']['select']." FROM ".$col_data['display']['table']." ".$col_data['display']['conditions']." ".$col_data['display']['order']." ".(!empty($col_data['display']['limit']) ? $col_data['display']['limit'] : '');
-                            if ($col_data['debug'] === TRUE) {
-                                print_p($sub_query);
-                                print_p($data_replace);
-                            }
+                        } else if ($col_data['display'] && $col_data['display']['table'] && $col_data['display']['key'] && $col_data['display']['title']) {
 
-                            $sub_query = dbquery($sub_query);
+                            /*
+                             * array('display' => array(
+                                              'key'        => 'feature_id',
+                                              'table'      => DB_CLASS_FEATURE,
+                                              'conditions' => "feature_id IN (:cat_feature)",
+                                              'title'      => 'feature_title',
+                                              'format_result' => "<a href='".INFUSIONS."farlayne/administration/listings/features.php?".fusion_get_aidlink()."&amp;edit=:key'>:title</a>",
+                                          )
+                            )
+                             */
 
-                            if (dbrows($sub_query)) {
+                            $value = '';
+                            if (!empty($data[$col_key])) {
 
-                                while ($sub_data = dbarray($sub_query)) {
+                                $default_select = '';
+                                $default_condition = '';
+                                $default_order = " ORDER BY ".$col_data['display']['key']." ASC";
 
-                                    $search_str = [
-                                        ':key'   => $sub_data[$col_data['display']['key']],
-                                        ':title' => $sub_data[$col_data['display']['title']]
-                                    ];
+                                if (!empty($col_data['display']['select'])) {
+                                    $col_data['display']['select'] = ", ".$col_data['display']['select'];
+                                } else {
+                                    $col_data['display']['select'] = $default_select;
+                                }
 
-                                    //print_p($sub_data);
+                                if (!empty($col_data['display']['conditions'])) {
+                                    if ($col_data['debug'] === TRUE) {
+                                        print_p($data_replace);
+                                        print_p($col_data['display']['conditions']);
+                                    }
+                                    $col_data['display']['conditions'] = " WHERE ".strtr(
+                                            $col_data['display']['conditions'], $data_replace
+                                        );
+                                } else {
+                                    $col_data['display']['conditions'] = $default_condition;
+                                }
+
+                                if (empty($col_data['display']['order'])) {
+                                    $col_data['display']['order'] = $default_order;
+                                }
+
+                                $formatted_value = [];
+                                $sub_query = "SELECT ".$col_data['display']['key'].", ".$col_data['display']['title'].$col_data['display']['select']." FROM ".$col_data['display']['table']." ".$col_data['display']['conditions']." ".$col_data['display']['order']." ".(!empty($col_data['display']['limit']) ? $col_data['display']['limit'] : '');
+                                if ($col_data['debug'] === TRUE) {
+                                    print_p($sub_query);
+                                    print_p($data_replace);
+                                }
+
+                                $sub_query = dbquery($sub_query);
+
+                                if (dbrows($sub_query)) {
+
+                                    while ($sub_data = dbarray($sub_query)) {
+
+                                        $search_str = [
+                                            ':key'   => $sub_data[$col_data['display']['key']],
+                                            ':title' => $sub_data[$col_data['display']['title']]
+                                        ];
+
+                                        //print_p($sub_data);
+                                        foreach ($data as $key => $value) {
+                                            $search_str[":".$key] = $value;
+                                        }
+
+                                        // we need sub_data to support all previous columns
+                                        $sub_data = array_merge($sub_data, $data);
+
+                                        if ($col_data['debug'] === TRUE) {
+                                            print_p($search_str);
+                                            print_P($sub_data);
+                                            print_p($col_data['display']['format_result']);
+                                        }
+                                        $formatted_value[] = (!empty($col_data['display']['format_result']) ? strtr(
+                                            urldecode($col_data['display']['format_result']), $search_str
+                                        ) : $sub_data[$col_data['display']['title']]);
+                                    }
+
+                                    $formatted_value = array_filter($formatted_value);
+
+                                    if ($col_data['debug'] === TRUE) {
+                                        print_p($formatted_value);
+                                    }
+                                } else {
+                                    // No result
+                                    $search_str = [];
                                     foreach ($data as $key => $value) {
                                         $search_str[":".$key] = $value;
                                     }
-
-                                    // we need sub_data to support all previous columns
-                                    $sub_data = array_merge($sub_data, $data);
-
-                                    if ($col_data['debug'] === TRUE) {
-                                        print_p($search_str);
-                                        print_P($sub_data);
-                                        print_p($col_data['display']['format_result']);
-                                    }
-                                    $formatted_value[] = (!empty($col_data['display']['format_result']) ? strtr(
-                                        urldecode($col_data['display']['format_result']), $search_str
-                                    ) : $sub_data[$col_data['display']['title']]);
+                                    $formatted_value = !empty($col_data['display']['no_result']) ? strtr(
+                                        urldecode($col_data['display']['no_result']), $search_str
+                                    ) : "";
                                 }
 
-                                $formatted_value = array_filter($formatted_value);
+                                if (is_array($formatted_value)) {
+                                    $value = implode(', ', $formatted_value);
+                                } else {
+                                    $value = $formatted_value;
+                                }
 
-                                if ($col_data['debug'] === TRUE) {
-                                    print_p($formatted_value);
-                                }
-                            } else {
-                                // No result
-                                $search_str = [];
-                                foreach ($data as $key => $value) {
-                                    $search_str[":".$key] = $value;
-                                }
-                                $formatted_value = !empty($col_data['display']['no_result']) ? strtr(
-                                    urldecode($col_data['display']['no_result']), $search_str
-                                ) : "";
                             }
 
-                            if (is_array($formatted_value)) {
-                                $value = implode(', ', $formatted_value);
+                        } else if (!empty($col_data['date']) && !empty($value)) {
+                            // only accepts timestamp
+                            /*
+                             * array("date" => TRUE, "date_format" => "shortdate")
+                             */
+                            if (!empty($col_data['date_format'])) {
+                                $value = showdate($col_data['date_format'], $value);
                             } else {
-                                $value = $formatted_value;
+                                // if less than a day,
+                                if ((TIME - $value) <= 86400) {
+                                    $value = timer($value);
+                                } else {
+                                    $value = showdate('shortdate', $value);
+                                }
                             }
+
+                        } else if (!empty($col_data['array']) && is_array($col_data['array'])) {
+                            /*
+                             * Similar to options
+                             * array("array" => array(1=>"Yes", 0=>"No"))
+                             */
+                            $value = isset($col_data['array'][$value]) ? $col_data['array'][$value] : $col_data['array'][0];
 
                         }
 
-                    } else if (!empty($col_data['date']) && !empty($value)) {
-                        // only accepts timestamp
-                        /*
-                         * array("date" => TRUE, "date_format" => "shortdate")
-                         */
-                        if (!empty($col_data['date_format'])) {
-                            $value = showdate($col_data['date_format'], $value);
-                        } else {
-                            // if less than a day,
-                            if ((TIME - $value) <= 86400) {
-                                $value = timer($value);
+                        if (!empty($col_data['format'])) {
+                            /*
+                             * Formats the value into a specific format
+                             * Usage: array("format" => ":column_name item(s)")
+                             * array("format"      => "<a href='".ROADMAP."?id=:item_id'>:item_summary</a>")
+                             * */
+
+                            if ($col_data['debug']) {
+                                print_p($data_replace);
+                                print_p($value);
+                            }
+
+                            if (!empty($value)) {
+                                $data_replace[':'.$col_key] = $value;
+                            }
+
+                            $value = strtr($col_data['format'], $data_replace);
+                        }
+
+                        if (!empty($col_data['callback'])) {
+                            /*
+                             * Run your own callback function with the current column data
+                             * Usage on Class Callback: $options['callback'] = array("object_class", "custom_function", "the-path-to-your-class");
+                             * Usage on Function Callback: $options['callback'] = "custom_function";
+                             */
+                            if (!empty($value)) {
+                                $data_replace[':'.$col_key] = $value;
+                            }
+
+                            if (is_array($col_data['callback'])) {
+                                // head to new reflexion class
+                                // for reflection to work you need to push in your PSR4 autoloader file.
+                                require_once $col_data['callback'][2];
+                                unset($col_data['callback'][2]);
+                                //print_p(get_called_class());
+                                $object = new \ReflectionClass($col_data['callback'][0]);
+                                $class = $object->newInstance();
+                                $method = [
+                                    $class,
+                                    $col_data['callback'][1]
+                                ];
+                                if (is_callable($method)) {
+                                    $value = call_user_func($method, $data_replace);
+                                } else if ($col_data['debug']) {
+                                    addNotice("danger", "Callback could not be made");
+                                }
                             } else {
-                                $value = showdate('shortdate', $value);
+                                //print_p(get_defined_functions());
+                                // If your file has a namespace, please add them in as prefix
+                                // some_namespace/callback_function_name
+                                if (is_callable($col_data['callback'])) {
+                                    $value = $col_data['callback']($data_replace);
+                                } else if ($col_data['debug']) {
+                                    addNotice("danger", "Callback could not be made");
+                                }
                             }
                         }
 
-                    } else if (!empty($col_data['array']) && is_array($col_data['array'])) {
-                        /*
-                         * Similar to options
-                         * array("array" => array(1=>"Yes", 0=>"No"))
-                         */
-                        $value = isset($col_data['array'][$value]) ? $col_data['array'][$value] : $col_data['array'][0];
+                        $html .= "<td ".($value_class ? "class='".implode(
+                                    " ", $value_class
+                                )."'" : '')." data-col='$col_key' data-colname='".$col_data['title']."'>".$edit_open."<span class='value'>".($value ?: '-')."</span>".$edit_close.$edit_actions."</td>\n";
 
                     }
 
-                    if (!empty($col_data['format'])) {
-                        /*
-                         * Formats the value into a specific format
-                         * Usage: array("format" => ":column_name item(s)")
-                         * array("format"      => "<a href='".ROADMAP."?id=:item_id'>:item_summary</a>")
-                         * */
-
-                        if ($col_data['debug']) {
-                            print_p($data_replace);
-                            print_p($value);
-                        }
-                        if (!empty($value)) {
-                            $data_replace[':'.$col_key] = $value;
-                        }
-
-                        $value = strtr($col_data['format'], $data_replace);
-                    }
-
-                    if (!empty($col_data['callback'])) {
-                        /*
-                         * Run your own callback function with the current column data
-                         * Usage on Class Callback: $options['callback'] = array("object_class", "custom_function", "the-path-to-your-class");
-                         * Usage on Function Callback: $options['callback'] = "custom_function";
-                         */
-                        if (!empty($value)) {
-                            $data_replace[':'.$col_key] = $value;
-                        }
-
-                        if (is_array($col_data['callback'])) {
-                            // head to new reflexion class
-                            // for reflection to work you need to push in your PSR4 autoloader file.
-                            require_once $col_data['callback'][2];
-                            unset($col_data['callback'][2]);
-                            //print_p(get_called_class());
-                            $object = new \ReflectionClass($col_data['callback'][0]);
-                            $class = $object->newInstance();
-                            $method = [
-                                $class,
-                                $col_data['callback'][1]
-                            ];
-                            if (is_callable($method)) {
-                                $value = call_user_func($method, $data_replace);
-                            } else if ($col_data['debug']) {
-                                addNotice("danger", "Callback could not be made");
-                            }
-                        } else {
-                            //print_p(get_defined_functions());
-                            // If your file has a namespace, please add them in as prefix
-                            // some_namespace/callback_function_name
-                            if (is_callable($col_data['callback'])) {
-                                $value = $col_data['callback']($data_replace);
-                            } else if ($col_data['debug']) {
-                                addNotice("danger", "Callback could not be made");
-                            }
-                        }
-                    }
-
-                    $html .= "<td ".($value_class ? "class='".implode(
-                                " ", $value_class
-                            )."'" : '')." data-col='$col_key' data-colname='".$col_data['title']."'>".$edit_open."<span class='value'>".($value ?: '-')."</span>".$edit_close.$edit_actions."</td>\n";
                 }
                 $html .= "</tr>\n";
 
                 // Quickfields
                 if (!empty($this->quick_fields)) {
-                    foreach($this->quick_fields as $table_col => $table_fields) {
+                    foreach ($this->quick_fields as $table_col => $table_fields) {
                         if (isset($data[$table_col])) {
                             $this->jsonRows[$table_col] = $data[$table_col]; // this is old data, and js will not replace this.
                         }
                     }
 
                     $html .= "<tr></tr>\n<tr id='form-row-".$id."' class='inline-edit-column' style='display:none'>\n";
-                    $html .= "<td colspan='".($col_span+1)."'>\n";
+                    $html .= "<td colspan='".($col_span + 1)."'>\n";
                     $html .= "</td>\n</tr>\n";
                 }
             }
@@ -1409,10 +1514,7 @@ class Tables {
              * @return boolean|string FALSE if $count is invalid
              */
             $html .= "<div class='pull-right m-t-20'>\n";
-            $html .= makepagenav(
-                $_GET['rowstart'], $this->query['limit'], $this->maxRows, 3,
-                clean_request('', ['rowstart'], FALSE).'&amp;'
-            );
+            $html .= makepagenav($this->rowStart, $this->query['limit'], $this->maxRows, 3, clean_request('', [$this->default_args['rowstart']], FALSE).'&amp;');
             $html .= "</div>\n";
         }
         $html .= "</div>\n";
@@ -1429,6 +1531,7 @@ class Tables {
      * @param $filter_options
      *
      * @return string
+     * @throws \ReflectionException
      */
     private function dateFilter($column_name, $filter_options) {
 
@@ -1445,7 +1548,8 @@ class Tables {
             $sql_conditions .= $this->query['conditions'];
         }
 
-        $sql_statement = "SELECT YEAR(FROM_UNIXTIME({DATE_COLUMN})) 'table_year', MONTH(FROM_UNIXTIME({DATE_COLUMN})) 'table_month' FROM {TABLE} {CONDITIONS} GROUP BY table_year, table_month ORDER BY {DATE_COLUMN} DESC";
+        $sql_statement = /** @lang mysql */
+            "SELECT YEAR(FROM_UNIXTIME({DATE_COLUMN})) 'table_year', MONTH(FROM_UNIXTIME({DATE_COLUMN})) 'table_month' FROM {TABLE} {CONDITIONS} GROUP BY table_year, table_month ORDER BY {DATE_COLUMN} DESC";
         $date_sql = strtr(
             $sql_statement, [
                 '{DATE_COLUMN}' => $column_name,
@@ -1491,7 +1595,7 @@ class Tables {
             'na' => $filter['title']
         ];
         $options += $filter['options'];
-        $filter_val = array_flip (array_map ('strtolower', $options));
+        $filter_val = array_flip(array_map('strtolower', $options));
         $value = '';
 
         if (isset($_GET[$column_name])) {
@@ -1517,3 +1621,5 @@ class Tables {
     }
 
 }
+
+require_once INCLUDES.'bbcode_include.php';

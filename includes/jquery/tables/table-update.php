@@ -7,6 +7,8 @@
 | Filename: table-update.php
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
+| This file is for updating the table with Quick Fields
++--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
 | modify it under the terms of this license which you
