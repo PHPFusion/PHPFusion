@@ -8,16 +8,18 @@ html, body, #tinymce body, .form-control {
 :root {
     --app-menu-width : 250px;
     --sub-menu-width: 260px;
-    --primary-color: #2e4054;
-    --primary-hover-color: #3F4E61;
-    --info-color: #2662FF;
-    --info-hover-color: #314ccd;
+    --primary-color: #0073aa;
+    --primary-hover-color: #1d6c91;
+    --info-color: #3498DB;
+    --info-hover-color: #2980B9;
     --warning-color:  #f4b400;
     --warning-hover-color: #f09300;
     --danger-color: #973F59;
     --danger-hover-color:  #df3e7b;
     --success-color: #3FB927;
     --success-hover-color: #16a32e;
+    --primary-link-color: #0073aa;
+    --primary-link-hover-color: #0891d6;
 }
 
 body {
@@ -61,6 +63,7 @@ h1, h2, h3, h4, h5, h6 {
 .text-success {
     color: #39B54A;
 }
+
 /* Admin icons*/
 #devlpr .left_menu > .menu > ul > li > a > svg {
     margin-top: 12px;
@@ -112,16 +115,20 @@ h4 {
 
 h3 {
     font-weight: 700;
-    color: #444;
+    color: #000;
     margin-top:0;
 }
 
 a {
-    color: #0073aa;
+    color: var(--primary-link-color);
 }
 
 a:hover, a:focus {
-    color: #0891d6;
+    color: var(--primary-link-hover-color);
+}
+a:focus {
+    box-shadow: 0 0 0 1px #5b9dd9, 0 0 2px 1px rgba(30,140,190,.8);
+    outline: 1px solid transparent;
 }
 
 #devlpr label:not(.label-success and .label-default) {
@@ -556,9 +563,9 @@ a:hover, a:focus {
 #devlpr #main_content.content {
     position: relative;
     margin-left: 70px;
-    background-color: #f1f4f8;
+    background-color: transparent;
     min-height: 100vh;
-    padding-top: 50px;
+    padding-top: 45px;
     padding-bottom: 50px;
     transition: -webkit-transform .5s;
     -webkit-transition: -webkit-transform .5s;
@@ -802,6 +809,7 @@ a:hover, a:focus {
     -webkit-border-radius: 0;
     -moz-border-radius: 0;
     border-radius: 0;
+    margin-bottom:0;
 }
 
 .breadcrumb > li {
@@ -836,11 +844,12 @@ a:hover, a:focus {
 }
 
 #devlpr #main_content .content header {
-    padding:20px 40px 10px;
-    background-color: rgb(232,238,243);
+    padding: 24px 40px 10px;
+    margin-bottom: 20px;
+    /* background-color: #e8eef3; */
 }
 #devlpr #main_content .content header > h3 {
-    font-weight:300;
+    font-weight:400;
 }
 #devlpr #main_content .content header > h2 {
     color: #333C48;
@@ -953,7 +962,6 @@ a:hover, a:focus {
     border: 1px solid #ccc;
     border-color: #e6e6e6 #e6e6e6 #bfbfbf;
     border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-    border-bottom-color: #b3b3b3;
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
     border-radius: 4px;
@@ -1710,7 +1718,7 @@ Alerts
 #devlpr .list-group-item {
     padding: 10px;
     background: #fff;
-    border: 1px solid #ccc;
+    border: 1px solid #e1e1e1;
 }
 
 #devlpr .list-group-item:first-child {
@@ -1751,7 +1759,10 @@ Alerts
     border-top: 1px solid #ddd;
     padding: 1.4rem 10px;
 }
-
+.form-group .control-label {
+    font-weight: 400;
+    color:#000;
+}
 /* Table controls */
 #devlpr #main_content .content table {
     /* border: 1px solid rgba(34, 36, 38, .15);*/
@@ -2755,9 +2766,6 @@ input[type=checkbox]:checked:before {
     outline: none;
 }
 
-input[type=checkbox] {
-    margin: -2px 4px 0;
-}
 
 input[type=radio] {
     -webkit-border-radius: 50%;
@@ -2920,6 +2928,11 @@ html[dir="rtl"] #devlpr .left_menu .fa.fa-caret-right {
     float: left;
 }
 
+.caret.caret-up {
+    border-top-width: 0;
+    border-bottom: 4px solid #0891d6;
+}
+
 html[dir="rtl"] #devlpr .app_menu {
     left: inherit !important;
     right: 185px;
@@ -3072,27 +3085,21 @@ html[dir="rtl"] .btn:hover,
 html[dir="rtl"] .btn:focus {
     background-position: 100% -15px;
 }
-
 html[dir="rtl"] .btn-primary {
     background-image: -webkit-gradient(linear, right top, right bottom, from(#0088cc), to(#0044cc));
 }
-
 html[dir="rtl"] .btn-warning {
     background-image: -webkit-gradient(linear, right top, right bottom, from(#fbb450), to(#f89406));
 }
-
 html[dir="rtl"] .btn-danger {
     background-image: -webkit-gradient(linear, right top, right bottom, from(#ee5f5b), to(#bd362f));
 }
-
 html[dir="rtl"] .btn-success {
     background-image: -webkit-gradient(linear, right top, right bottom, from(#62c462), to(#51a351));
 }
-
 html[dir="rtl"] .btn-info {
     background-image: -webkit-gradient(linear, right top, right bottom, from(#5bc0de), to(#2f96b4));
 }
-
 html[dir="rtl"] .btn-inverse {
     background-image: -webkit-gradient(linear, right top, right bottom, from(#444444), to(#222222));
 }
@@ -3367,4 +3374,7 @@ html[dir="rtl"] .label {
     background: -webkit-linear-gradient(-45deg, #ffbc49 0%,#ff7e6b 99%);
     background: linear-gradient(135deg, #ffbc49 0%,#ff7e6b 99%);
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffbc49', endColorstr='#ff7e6b',GradientType=1 );
+}
+.profile-link {
+    font-weight:600;
 }

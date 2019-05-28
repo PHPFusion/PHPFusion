@@ -39,7 +39,7 @@ class Form {
 
         if ($label) {
             $control_label = [
-                'label_grid'     => ($is_inline ? '{[col(100,100,20,20)]}' : ' display-block'),
+                'label_grid'     => ($is_inline ? ' {[col(100,100,20,20)]}' : ' display-block'),
                 'label_icon'     => ($options['label_icon']) ?: '',
                 'label_text'     => $label,
                 'label_required' => $options['required'] ? '<span class="required">*</span>' : '',

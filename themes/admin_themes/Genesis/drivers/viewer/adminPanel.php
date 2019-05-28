@@ -554,6 +554,10 @@ class adminPanel extends resource {
     }
 
     public static function opentable($title, $class = NULL) {
+        if (self::$breadcrumb_shown == FALSE) :
+            echo render_breadcrumbs();
+            self::$breadcrumb_shown = TRUE;
+        endif;
         if (!empty($title)) :
             $cur_title = "<h3>$title</h3>";
             if (str_ireplace(array('<h1>','<h2>','<h3>','<h4>','<h5>','<h6>','<div>','<p>'), '', $title) != $title) {
@@ -562,10 +566,7 @@ class adminPanel extends resource {
              ?>
             <header><?php echo $cur_title ?></header>
         <?php endif;
-        if (self::$breadcrumb_shown == FALSE) :
-            echo render_breadcrumbs();
-            self::$breadcrumb_shown = TRUE;
-        endif;
+
         echo '<div class="app_table '.$class.'">';
     }
 
