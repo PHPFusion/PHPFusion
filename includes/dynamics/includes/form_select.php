@@ -230,6 +230,7 @@ function form_select($input_name, $label = "", $input_value, array $options = []
             if (!function_exists('get_form_select_chain_index')) {
                 /**
                  * Build Chainable Reference Array
+                 *
                  * @param $data ('key' - current id 'value' - parent id)
                  * @param $options
                  *
@@ -279,6 +280,7 @@ function form_select($input_name, $label = "", $input_value, array $options = []
 
     // Optgroup with Hierarchy
     if (!function_exists('form_select_build_optgroup')) {
+
         function form_select_build_optgroup($array, $input_value, $options) {
             $html = &$html;
             $disable_opts = '';
@@ -289,41 +291,49 @@ function form_select($input_name, $label = "", $input_value, array $options = []
             foreach ($array as $arr => $value) {
 
                 // where options is more than one value, pass to data attributes.
+                // data attributes
                 $data_attributes = '';
-                if (count($value) > 1) {
+                if (isset($value['data'])) {
                     $data_options = [];
-                    foreach ($value as $datakey => $dataval) {
+                    foreach ($value['data'] as $datakey => $dataval) {
                         $data_options[] = "data-$datakey='$dataval'";
                     }
                     $data_attributes = " ".implode(' ', $data_options)." ";
                 }
 
-                $select = "";
+                $selected = '';
                 $chain = (isset($options['chain_index'][$arr]) ? " class='".$options['chain_index'][$arr]."' " : "");
                 $text_value = isset($value['text']) ? $value['text'] : $value;
+
                 // if you have data attributes, you must have text key
                 if (!empty($text_value) && !is_array($text_value)) {
+
                     if ($options['keyflip']) { // flip mode = store array values
+
                         if ($input_value !== '') {
-                            $select = ($input_value == $text_value) ? " selected" : "";
+                            $selected = ($input_value == $text_value) ? " selected" : "";
                         }
+
                         $disabled = $disable_opts && in_array($arr, $disable_opts) ? TRUE : FALSE;
+
                         $hide = $disabled && $options['hide_disabled'] ? TRUE : FALSE;
-                        $item = (!$hide ? "<option".$data_attributes."value='$text_value'".$chain.$select.($disabled ? 'disabled' : '').">".html_entity_decode($text_value)." ".($options['show_current'] && $input_value == $text_value ? '(Current Item)' : '')."</option>\n" : "");
+
+                        $item = (!$hide ? "<option".$data_attributes." value='$text_value'".$chain.$selected.($disabled ? 'disabled' : '').">".html_entity_decode($text_value)." ".($options['show_current'] && $input_value == $text_value ? '(Current Item)' : '')."</option>\n" : "");
 
                     } else {
                         if ($input_value !== '') {
                             $input_value = stripinput($input_value); // not sure if can turn FALSE to zero not null.
-                            $select = (isset($input_value) && $input_value == $arr) ? ' selected' : '';
+                            $selected = (isset($input_value) && $input_value == $arr) ? ' selected' : '';
                         }
                         $disabled = $disable_opts && in_array($arr, $disable_opts) ? TRUE : FALSE;
                         $hide = $disabled && $options['hide_disabled'] ? TRUE : FALSE;
-                        $item = (!$hide ? "<option".$data_attributes."value='$arr'".$chain.$select.($disabled ? 'disabled' : '').">".html_entity_decode($text_value)." ".($options['show_current'] && $input_value == $text_value ? '(Current Item)' : '')."</option>\n" : "");
-                        //$item = "<option value='$arr'".$chain.$select.">$text_value</option>\n";
+                        $item = (!$hide ? "<option".$data_attributes." value='$arr'".$chain.$selected.($disabled ? 'disabled' : '').">".html_entity_decode($text_value)." ".($options['show_current'] && $input_value == $text_value ? '(Current Item)' : '')."</option>\n" : "");
                     }
+
+
                     if (isset($value['children'])) {
-                        $html .= "<optgroup label='".$value['text']."'>\n";
-                        $html .= $item;
+                        $html .= "<optgroup value='$arr' label='".$value['text']."'>\n";
+                        $html .= empty($value['label']) ? $item : '';
                         $html .= form_select_build_optgroup($value['children'], $input_value, $options);
                         $html .= "</optgroup>\n";
                     } else {
@@ -891,7 +901,7 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
         );
     }
 
-    return (string) (!empty($html) ? $html : '');
+    return (string)(!empty($html) ? $html : '');
 }
 
 /*
@@ -909,5 +919,5 @@ function dropdown_select($db, $id_col, $name_col, $cat_col, $index_values, $filt
         $data[$id] = $row;
     }
 
-    return (array) $data;
+    return (array)$data;
 }
