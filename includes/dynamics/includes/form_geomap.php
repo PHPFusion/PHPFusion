@@ -194,7 +194,7 @@ function form_geo($input_name, $label = '', $input_value = FALSE, array $options
         $states_list = state_search($input_value[2]);
         // submitted but states are blank - find default values
         if (!empty($states_list)) {
-            $state_default_selected = $states_list[1][0];
+            $state_default_selected = $states_list[1]['id'];
             if (count($states_list)>1) {
                 $state_default_selected = $states_list[1]['id'];
             }
