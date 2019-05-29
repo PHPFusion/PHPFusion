@@ -698,16 +698,18 @@ class Tables {
         $col_span = 1;
         $order_col = $this->table_props['order_col'];
 
-        $key_delete = get($this->table_props['del_key'], FILTER_VALIDATE_INT);
+        $key_delete = get($this->table_props['del_key'], FILTER_VALIDATE_INT); // the apply button
 
         // The bullk actions
         $table_action = post("table_action");
         if ($table_action) {
             switch ($table_action) {
-                case 1: // delete
+                case 'bulk_delete': // delete
                     $this->filterDeleteRows();
                     break;
                 default:
+                    $this->bulkActions();
+                    break;
             }
         }
 
@@ -993,7 +995,7 @@ class Tables {
         $html .= "<div class='display-inline-block m-r-15'>\n";
         $actions_options = [
             '' => 'Bulk Actions',
-            1  => 'Delete'
+            'bulk_delete'  => 'Delete'
         ];
 
         if (!empty($this->table_props['action_filters'])) {
@@ -1623,6 +1625,12 @@ class Tables {
 
         return (string)$html;
 
+    }
+
+    private function bulkActions() {
+        if (method_exists($this->api, 'bulkActions')) {
+            $this->api->bulkActions();
+        }
     }
 
 }
