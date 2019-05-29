@@ -17,11 +17,68 @@ class Grid {
 	}
 
     /**
-     * @param $percent - 1-100
+     * @param      $percent
+     * @param bool $is_offset
      *
      * @return string
      */
-    public static function getColumnClass($percent) {
+    public static function getColumnClass($percent, $is_offset = FALSE) {
+        if (is_array($percent)) {
+
+            $default_options = [100];
+            $percent += $default_options;
+
+            $arr = ['xs','sm', 'md', 'lg'];
+            $val = [];
+            $offset = [];
+            if ($is_offset) {
+                $offset = [TRUE, TRUE, TRUE, TRUE];
+            }
+
+            foreach($percent as $index => $value) {
+
+                $calculated = ($value * 12 ) / 100;
+                if ($calculated < 5) {
+                    $calculated = ceil(  $calculated );
+                } else {
+                    $calculated = floor( $calculated );
+                }
+
+                if (!$calculated) {
+                    if ($is_offset === FALSE) {
+                        $calculated = 'hidden';
+                    }
+                }
+
+                $val[$arr[$index]] =  $calculated;
+            }
+
+            return (string) ltrim(implode(' ', array_map(function($i, $e, $offset) {
+                if ($e == 'hidden') {
+                    if ($offset === FALSE) {
+                        return "hidden-$i";
+                    }
+                }
+
+                $offset_prefix = '';
+                if ($offset === TRUE) {
+                    $offset_prefix = 'offset-';
+                }
+                return $e ? "col-$i-".$offset_prefix.$e : '';
+
+                }, array_keys($val), array_values($val), $offset)));
+
+        } else {
+            $offset_prefix = '';
+            if ($is_offset === TRUE) {
+                $offset_prefix = 'offset-';
+            }
+
+            return (string) 'col-xs-'.$offset_prefix.floor( ($percent * 12 ) / 100);
+        }
+    }
+
+    public static function getColumnOffsetClass($percent) {
         if (is_array($percent)) {
             $default_options = [100];
             $percent += $default_options;
@@ -47,11 +104,9 @@ class Grid {
                     return "hidden-$i";
                 }
                 return "col-$i-$e";
-                }, array_keys($val), array_values($val)));
+            }, array_keys($val), array_values($val)));
         } else {
             return (string)"col-xs='".floor( ($percent * 12 ) / 100)."'";
         }
     }
-
-
 }

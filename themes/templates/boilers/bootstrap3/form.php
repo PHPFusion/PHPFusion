@@ -124,7 +124,7 @@ class Form {
 
         } else if ($options['type'] == 'dropdown') {
 
-            $tpl->set_block('input_dropdown', [
+            $config = [
                 'input_name'     => $input_name,
                 'input_id'       => $options['input_id'],
                 'input_class'    => $options['input_class'],
@@ -136,7 +136,9 @@ class Form {
                 'parent_opts'    => $options['parent_opts'],
                 'options'        => $options['options_options'],
                 'required_input' => $options['dropdown_required_input']
-            ]);
+            ];
+
+            $tpl->set_block('input_dropdown', $config);
 
         } else if ($options['type'] == 'custom') {
             $tpl->set_block('input_custom', [

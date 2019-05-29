@@ -67,6 +67,7 @@ $locale['ME_503'] = 'Suspend';
 $locale['ME_504'] = 'Security Ban';
 $locale['ME_505'] = 'Cancel';
 $locale['ME_506'] = 'Anonymize';
+$locale['ME_507'] = 'Deactivate';
 
 // a_message keys
 $locale['ME_550'] = 'banned';

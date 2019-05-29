@@ -22,8 +22,8 @@ class Layout {
         return (string) \Grid::getRowClass();
     }
 
-    public function getColumnClass($percent = 100) {
-        return (string) \Grid::getColumnClass($percent);
+    public function getColumnClass($percent = 100, $offset = FALSE) {
+        return (string) \Grid::getColumnClass($percent, $offset);
     }
 
     public function getContainerClass() {
