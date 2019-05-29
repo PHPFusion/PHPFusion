@@ -323,7 +323,7 @@ class Forum_Reports {
                     "user_id"         => 0,
                     "user_name"       => $locale['forum_0667'],
                     "user_status"     => USER_LEVEL_ADMIN,
-                    "user_avatar"     => IMAGES."avatars/noavatar50.png",
+                    "user_avatar"     => IMAGES."avatars/no-avatar.jpg",
                     "user_level"      => USER_LEVEL_ADMIN,
                     "user_posts"      => '0',
                     "user_reputation" => 0,
