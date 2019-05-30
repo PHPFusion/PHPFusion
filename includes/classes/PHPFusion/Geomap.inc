@@ -126,7 +126,7 @@ class Geomap {
      * @return array
      */
     public static function get_StatesOpts($country_code = NULL) {
-        static $states_opts = array();
+        $states_opts = array();
         if (empty($states_opts)) {
             $states_list = self::get_States();
             if (!empty($states_list)) {

@@ -203,15 +203,15 @@ function form_geo($input_name, $label = '', $input_value = FALSE, array $options
     if (!empty($input_value[2])) {
         // find the states array
         // find the states
-        $states_list = state_search($input_value[2]);
+        $state_default_opts = state_search($input_value[2]);
+        $state_default = json_encode($state_default_opts);
         // submitted but states are blank - find default values
-        if (!empty($states_list)) {
-            $state_default_selected = $states_list[0]['id'];
-            if (count($states_list)>1) {
-                $state_default_selected = $states_list[1]['id'];
+        if (!empty($state_default_opts)) {
+            $state_default_selected = $state_default_opts[0]['id'];
+            if (count($state_default_opts)>1) {
+                $state_default_selected = $state_default_opts[1]['id'];
             }
         }
-        $state_default = json_encode($states_list);
     }
 
     if (!empty($input_value[3])) {
