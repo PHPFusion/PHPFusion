@@ -33,13 +33,13 @@ function form_geo($input_name, $label = '', $input_value = FALSE, array $options
             $input_value = construct_array($input_value, "", "|");
         }
     } else {
-        $input_value = [];
-        $input_value['0'] = "";
-        $input_value['1'] = "";
-        $input_value['2'] = "";
-        $input_value['3'] = "";
-        $input_value['4'] = "";
-        $input_value['5'] = "";
+        $input_value = array();
+        $input_value[] = "";
+        $input_value[] = "";
+        $input_value[] = "";
+        $input_value[] = "";
+        $input_value[] = "";
+        $input_value[] = "";
     }
 
     $options += [
@@ -58,7 +58,7 @@ function form_geo($input_name, $label = '', $input_value = FALSE, array $options
         'error_text_5' => !empty($options['error_text_5']) ? $options['error_text_5'] : $locale['city_error'],
         'error_text_6' => !empty($options['error_text_6']) ? $options['error_text_6'] : $locale['postcode_error'],
         'safemode'     => FALSE,
-        'flag'         => TRUE,
+        'flag'         => FALSE,
         'stacked'      => '',
     ];
 
@@ -91,8 +91,12 @@ function form_geo($input_name, $label = '', $input_value = FALSE, array $options
     }
 
     // input name is
-    $grid_class = $fusion_steam->load('Layout')->getColumnClass([100,100,80]);
-    $grid_offset_class = $fusion_steam->load('Layout')->getColumnClass([0,0,20,20], TRUE);
+    $grid_class = $fusion_steam->load('Layout')->getColumnClass([100,100,100]).' p-0';
+    $grid_offset_class = $fusion_steam->load('Layout')->getColumnClass([0,0,0,0], TRUE);
+    if ($options['inline'] === TRUE && !empty($label)) {
+        $grid_class = $fusion_steam->load('Layout')->getColumnClass([100,100,80]);
+        $grid_offset_class = $fusion_steam->load('Layout')->getColumnClass([0,0,20,20], TRUE);
+    }
 
     // Street 1
     $options['placeholder'] = $locale['street1'];
@@ -108,13 +112,17 @@ function form_geo($input_name, $label = '', $input_value = FALSE, array $options
     $html .= "</div></div>";
 
     // Country
+    // Deprecate this method to MY etc.
+    $country_options = \PHPFusion\Geomap::get_Country();
+
     $array = [];
     foreach ($countries as $arv => $countryname) { // outputs: key, value, class - in order
         $country_key = str_replace(" ", "-", $countryname);
         $country_name = translate_country_names($countryname);
         $array[$country_key] = $country_name;
     }
-    $options['options'] = $array;
+
+    $options['options'] = $country_options;
     $options['input_id'] = $input_id.'-country';
     $options['select2_disabled'] = TRUE;
     $html .= "<div class='clearfix'><div class='$grid_class $grid_offset_class'>";
@@ -168,49 +176,54 @@ function form_geo($input_name, $label = '', $input_value = FALSE, array $options
 
     \Defender::getInstance()->add_field_session($config);
 
-    $flag_function = '';
+    static $flag_function = NULL;
     $flag_plugin = '';
     if ($options['flag']) {
-        $flag_function = "
-        function show_flag(item) {
-        if(!item.id) {return item.text;}
-        var icon = '".IMAGES."small_flag/flag_'+ item.id.replace(/-/gi,'_').toLowerCase() +'.png';
-        return '<img style=\"float:left; margin-right:5px; margin-top:3px;\" src=\"' + icon + '\"/></i>' + item.text;
-        }";
+        if (empty($flag_function)) {
+            $flag_function = DYNAMICS.'assets/geo/flag.select2.js';
+            add_to_head("<script src='$flag_function'></script>");
+        }
+
         $flag_plugin = "
-         formatResult: show_flag,
-         formatSelection: show_flag,
+         formatResult: flag.show_flag,
+         formatSelection: flag.show_flag,
          escapeMarkup: function(m) { return m; },
         ";
     }
+
     $state_default_selected = 0;
-    $state_default = json_encode(array(
-        array(
-            'id'=>'0', 'text'=> $locale['sel_state']
-        )
-    ));
+
+    $default_opts[] = array(
+        'id'=>'0',
+        'text'=> $locale['sel_state']
+    );
+    $default_opts += state_search('AW'); // AW is the first one.
+    $state_default = json_encode($default_opts);
+
     if (!empty($input_value[2])) {
         // find the states array
+        // find the states
         $states_list = state_search($input_value[2]);
         // submitted but states are blank - find default values
         if (!empty($states_list)) {
-            $state_default_selected = $states_list[1]['id'];
+            $state_default_selected = $states_list[0]['id'];
             if (count($states_list)>1) {
                 $state_default_selected = $states_list[1]['id'];
             }
         }
         $state_default = json_encode($states_list);
     }
+
     if (!empty($input_value[3])) {
         $state_default_selected = $input_value[3];
     }
 
     // make this into a function object.
-    add_to_jquery("    
-    $flag_function
-    $('#$input_id-country').select2({
-        $flag_plugin
+    add_to_jquery("            
+    $('#$input_id-country').select2({        
+        $flag_plugin        
         placeholder: '".$locale['sel_country']." ".($options['required'] == 1 ? '*' : '')."'
+        
     });
     
     $('#$input_id-state').select2({
@@ -218,27 +231,24 @@ function form_geo($input_name, $label = '', $input_value = FALSE, array $options
         allowClear: false,        
         //placeholder: '".$locale['sel_state']." ".($options['required'] == 1 ? '*' : '')."'
     });    
+    
     $('#$input_id-state').select2('val', '$state_default_selected');
     
-    $('body').on('change', '#$input_id-country', function(){
-        
-        var ce_id = $(this).val();
-        
+    // on change event.
+    $('body').on('change', '#$input_id-country', function(){        
+        var ce_id = $(this).val();        
         $.ajax({
-            url: '".fusion_get_settings('site_path')."includes/geomap/form_geomap.json.php',
+            url: '".fusion_get_settings('site_path')."includes/dynamics/assets/geo/states.geo.php',
             type: 'GET',
             data: { id : ce_id },
             dataType: 'json',
             success: function(data) {
-                
                 $('#".$input_id."-state').select2({
                     placeholder: '".$locale['sel_state']." ".($options['required'] == 1 ? '*' : '')."',
                     allowClear: false,
                     data : data
-                });
-                                
-                $('#$input_id-state').select2('val', data[1]['id']);
-                
+                });                                
+                $('#$input_id-state').select2('val', data[1]['id']);                
             },
             error : function() {
                 console.log('Error fetching region results');
@@ -538,8 +548,9 @@ function location_search($q) {
 }
 
 
+// New Geomap class functions
 function state_search($country_iso) {
-    $states = [];
+    /*$states = [];
     include INCLUDES."geomap/geomap.inc.php";
     $states_array[] = ["id" => "Other", "text" => fusion_get_locale('other_states')];
 
@@ -552,6 +563,18 @@ function state_search($country_iso) {
              }
              return $states_array;
          }
+    }*/
+
+    $states = \PHPFusion\Geomap::get_StatesOpts($country_iso);
+    $array[] = ['id' => 'other', 'text' => fusion_get_locale('other_states')];
+    if (!empty($states)) {
+        foreach($states as $key => $val) {
+            $array[] = [
+                'id' => $key,
+                'text' => $val
+            ];
+        }
+        return $array;
     }
 
     return [];

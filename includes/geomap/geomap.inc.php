@@ -51,6 +51,7 @@ $countries = [
     "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "USA", "Uruguay", "Uzbekistan", "Vatican City", "Vanuatu", "Venezuela",
     "Vietnam", "Virgin Islands", "Wallis and Futuna", "Yemen", "Yugoslavia", "Zambia", "Zimbabwe"
 ];
+
 // The states
 $states['Afghanistan'] = construct_array("Badakhshan,Badghis,Baghlan,Balkh,Bamian,Daikondi,Farah,Faryab,Ghazni,Ghowr,Helmand,Herat,Jowzjan,Kabul,Kandahar,Kapisa,Khowst,Konar,Kondoz,Laghman,Lowgar,Nangarhar,Nimruz,Nurestan,Oruzgan,Paktia,Paktika,Panjshir,Parvan,Samangam,Sar-e Pol,Takhar,Vardak,Zabol");
 $states['Albania'] = construct_array("Berat,Dibër,Durrës,Elbasan,Fier,Gjirokastër,Korçë,Kukës,Lezhë,Shkodër,Tiranë,Vlorë");

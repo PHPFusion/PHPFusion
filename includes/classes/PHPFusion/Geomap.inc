@@ -17,6 +17,11 @@
 +--------------------------------------------------------*/
 namespace PHPFusion;
 
+/**
+ * Class Geomap
+ *
+ * @package PHPFusion
+ */
 class Geomap {
 
     public static $country_list = [];
@@ -39,7 +44,7 @@ class Geomap {
      * @return mixed|string
      */
     static function getCountryResource() {
-        $map_repo = file_get_contents(CLASSES."PHPFusion/Geomap/Countries.json");
+        $map_repo = file_get_contents(CLASSES."PHPFusion/Geomap/json/countries.json");
 
         return json_decode($map_repo);
     }
@@ -52,7 +57,7 @@ class Geomap {
      */
     static function get_CallingCodes($country_code = NULL) {
         if (empty(self::$calling_codes)) {
-            $resource = json_decode(file_get_contents(CLASSES.'PHPFusion/Geomap/CallingCodes.min.json'));
+            $resource = json_decode(file_get_contents(CLASSES.'PHPFusion/Geomap/json/calling-codes.min.json'));
             foreach($resource as $object) {
                 self::$calling_codes[$object->code] = $object->callingCode;
             }
@@ -71,14 +76,14 @@ class Geomap {
      * @return array|null
      */
     static function get_Country($country_code = NULL) {
-
         if (empty(self::$country_list)) {
-            $resource = json_decode(file_get_contents(CLASSES."PHPFusion/Geomap/Countries.json"));
+            $resource = json_decode(file_get_contents(CLASSES."PHPFusion/Geomap/json/countries.json"));
             foreach ($resource as $object) {
                 $country_name = $object->name->common;
                 self::$country_list[$object->cca2] = $country_name;
             }
         }
+
         if ($country_code !== NULL) {
             return (isset(self::$country_list[$country_code])) ? self::$country_list[$country_code] : NULL;
         } else {
@@ -97,7 +102,7 @@ class Geomap {
      */
     static function get_States($country_code = NULL, $state_code = NULL) {
         if (empty(self::$states_by_country_list)) {
-            $resource = json_decode(file_get_contents(CLASSES.'PHPFusion/Geomap/States.min.json'));
+            $resource = json_decode(file_get_contents(CLASSES.'PHPFusion/Geomap/json/states.min.json'));
             foreach ($resource as $iso2 => $states) {
                 if (!empty($states)) {
                     foreach($states as $state_id => $state_name) {
@@ -116,19 +121,28 @@ class Geomap {
 
     /**
      * Returns a full state list of the entire world
+     * @param null $country_code -
+     *
      * @return array
      */
-    public static function get_StatesOpts() {
+    public static function get_StatesOpts($country_code = NULL) {
         static $states_opts = array();
         if (empty($states_opts)) {
             $states_list = self::get_States();
             if (!empty($states_list)) {
-                foreach($states_list as $country_code => $states) {
+                foreach($states_list as $cca2 => $states) {
+                    $current_states = [];
                     if (!empty($states)) {
                         foreach($states as $state_name) {
                             $state_entities = addslashes(htmlentities($state_name));
-                            $states_opts[$state_entities.','.$country_code] = $state_name;
+                            $current_states[$state_entities.','.$cca2] = $state_name;
+                            //$states_opts[$state_entities.','.$cca2] = $state_name;
                         }
+                    }
+                    if ($country_code && $country_code == $cca2) {
+                        return $current_states;
+                    } else {
+                        $states_opts += $current_states;
                     }
                 }
             }
