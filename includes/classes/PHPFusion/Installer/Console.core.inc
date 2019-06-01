@@ -122,7 +122,7 @@ class Console_Core extends Install_Core {
         if (self::$locale['setup_0012a'] == 'rtl') {
             $html .= "<link href='".INCLUDES."bootstrap/css/bootstrap-rtl.min.css' rel='stylesheet' media='screen' />";
         }
-        $html .= "<link href='".THEMES."templates/install.css?v=".filemtime(THEMES.'templates/install.css')."' rel='stylesheet'/>\n";
+        $html .= "<link href='".THEMES."templates/install.min.css?v=".filemtime(THEMES.'templates/install.min.css')."' rel='stylesheet'/>\n";
         $html .= "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-5/css/all.min.css' type='text/css'/>\n";
         $html .= "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-5/css/v4-shims.min.css' type='text/css'/>\n";
         $html .= OutputHandler::$pageHeadTags;
