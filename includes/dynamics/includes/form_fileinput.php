@@ -217,11 +217,13 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
             if (!stristr($options['type'], ',') && $options['type']) {
                 if ($options['type'] == 'image') {
                     $browseLabel = $locale['df_301'];
+                } else if ($options['type'] == 'video') {
                     $browseLabel = $locale['df_302'];
                 } else if ($options['type'] == 'audio') {
                     $browseLabel = $locale['df_303'];
                 }
             }
+
             $type_for_js = json_encode((array)$options['type']);
         }
 
@@ -245,17 +247,17 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
         $extra_data_js = "";
         if ($options['form_id'] && $options['jsonurl']) {
             $extra_data_js = "
-        uploadExtraData: function() {
-            var inputs = $('#".$options['form_id']." :input');
-            var obj = $.map(inputs, function(x, y) {
-                return {
-                    Key: x.name,
-                    Value: $(x).val()
-                };
-            });
-            return obj;
-        },
-        ";
+                uploadExtraData: function() {
+                    var inputs = $('#".$options['form_id']." :input');
+                    var obj = $.map(inputs, function(x, y) {
+                        return {
+                            Key: x.name,
+                            Value: $(x).val()
+                        };
+                    });
+                    return obj;
+                },
+            ";
         }
         if ($options['media']) {
             \defender::getInstance()->add_field_session(
@@ -274,86 +276,86 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
         switch ($options['template']) {
             case "classic":
                 add_to_jquery("
-            $('#".$options['input_id']."').fileinput({
-                allowedFileTypes: ".$type_for_js.",
-                allowedPreviewTypes : ".$type_for_js.",
-                ".($value ? "initialPreview: ".$value.", " : '')."
-                ".($options['preview_off'] ? "showPreview: false, " : '')."
-                initialPreviewAsData: true,
-                browseClass: 'btn ".$options['btn_class']." button',
-                uploadClass: 'btn btn-default button',
-                captionClass : '',
-                maxFileCount: '".$options['max_count']."',
-                removeClass : 'btn ".$options['btn_class']." button',
-                browseLabel: '".$browseLabel."',
-                browseIcon: '<i class=\"".$options['icon']." m-r-10\"></i>',
-                ".($options['jsonurl'] ? "uploadUrl : '".$options['jsonurl']."'," : '')."
-                ".($options['hide_upload'] ? 'showUpload: false,' : '')."
-                ".($options['hide_remove'] ? 'showRemove: false,' : '')."
-                dropZoneEnabled: ".($options['dropzone'] ? "true" : "false").",
-                $extra_data_js
-                ".$lang."
-            });
-            ");
+                    $('#".$options['input_id']."').fileinput({
+                        allowedFileTypes: ".$type_for_js.",
+                        allowedPreviewTypes : ".$type_for_js.",
+                        ".($value ? "initialPreview: ".$value.", " : '')."
+                        ".($options['preview_off'] ? "showPreview: false, " : '')."
+                        initialPreviewAsData: true,
+                        browseClass: 'btn ".$options['btn_class']." button',
+                        uploadClass: 'btn btn-default button',
+                        captionClass : '',
+                        maxFileCount: '".$options['max_count']."',
+                        removeClass : 'btn ".$options['btn_class']." button',
+                        browseLabel: '".$browseLabel."',
+                        browseIcon: '<i class=\"".$options['icon']." m-r-10\"></i>',
+                        ".($options['jsonurl'] ? "uploadUrl : '".$options['jsonurl']."'," : '')."
+                        ".($options['hide_upload'] ? 'showUpload: false,' : '')."
+                        ".($options['hide_remove'] ? 'showRemove: false,' : '')."
+                        dropZoneEnabled: ".($options['dropzone'] ? "true" : "false").",
+                        $extra_data_js
+                        ".$lang."
+                    });
+                ");
                 break;
             case "modern":
                 add_to_jquery("
-            $('#".$options['input_id']."').fileinput({
-                allowedFileTypes: ".$type_for_js.",
-                allowedPreviewTypes : ".$type_for_js.",
-                ".($value ? "initialPreview: ".$value.", " : '')."
-                initialPreviewAsData: true,
-                ".($options['preview_off'] ? "showPreview: false, " : '')."
-                browseClass: 'btn btn-modal btn-lg',
-                uploadClass: 'btn btn-modal btn-lg',
-                captionClass : '',
-                maxFileCount: '".$options['max_count']."',
-                removeClass : 'btn button',
-                browseLabel: '".$browseLabel."',
-                browseIcon: '<i class=\"".$options['icon']."\"></i>',
-                showCaption: false,
-                showRemove: false,
-                ".($options['jsonurl'] ? "uploadUrl : '".$options['jsonurl']."'," : '')."
-                dropZoneEnabled: ".($options['dropzone'] ? "true" : "false").",
-                ".($options['hide_upload'] ? 'showUpload: false,' : '')."
-                ".($options['hide_remove'] ? 'showRemove: false,' : '')."
-                $extra_data_js
-                layoutTemplates: {
-                    main2: '<div class=\"btn-photo-upload btn-link\">'+' {browse}'+' </div></span></div> {preview}',
-                },
-                ".$lang."
-            });
-            ");
+                    $('#".$options['input_id']."').fileinput({
+                        allowedFileTypes: ".$type_for_js.",
+                        allowedPreviewTypes : ".$type_for_js.",
+                        ".($value ? "initialPreview: ".$value.", " : '')."
+                        initialPreviewAsData: true,
+                        ".($options['preview_off'] ? "showPreview: false, " : '')."
+                        browseClass: 'btn btn-modal btn-lg',
+                        uploadClass: 'btn btn-modal btn-lg',
+                        captionClass : '',
+                        maxFileCount: '".$options['max_count']."',
+                        removeClass : 'btn button',
+                        browseLabel: '".$browseLabel."',
+                        browseIcon: '<i class=\"".$options['icon']."\"></i>',
+                        showCaption: false,
+                        showRemove: false,
+                        ".($options['jsonurl'] ? "uploadUrl : '".$options['jsonurl']."'," : '')."
+                        dropZoneEnabled: ".($options['dropzone'] ? "true" : "false").",
+                        ".($options['hide_upload'] ? 'showUpload: false,' : '')."
+                        ".($options['hide_remove'] ? 'showRemove: false,' : '')."
+                        $extra_data_js
+                        layoutTemplates: {
+                            main2: '<div class=\"btn-photo-upload btn-link\">'+' {browse}'+' </div></span></div> {preview}',
+                        },
+                        ".$lang."
+                    });
+                ");
                 break;
             case "thumbnail":
                 add_to_jquery("
-            $('#".$options['input_id']."').fileinput({
-                allowedFileTypes: ".$type_for_js.",
-                allowedPreviewTypes : ".$type_for_js.",
-                ".($value ? "initialPreview: ".$value.", " : '')."
-                ".($options['preview_off'] ? "showPreview: false, " : '')."
-                initialPreviewAsData: true,
-                defaultPreviewContent: '<img class=\"img-responsive\" src=\"".IMAGES."no_photo.png\" alt=\"".$browseLabel."\" style=\"width:100%;\">',
-                browseClass: 'btn btn-block btn-default',
-                uploadClass: 'btn btn-modal',
-                captionClass : '',
-                maxFileCount: '".$options['max_count']."',
-                removeClass : 'btn button',
-                browseLabel: '".$browseLabel."',
-                browseIcon: '<i class=\"".$options['icon']."\"></i>',
-                showCaption: false,
-                showRemove: false,
-                ".($options['jsonurl'] ? "uploadUrl : '".$options['jsonurl']."'," : '')."
-                ".($options['hide_upload'] ? 'showUpload: false,' : '')."
-                ".($options['hide_remove'] ? 'showRemove: false,' : '')."
-                dropZoneEnabled: ".($options['dropzone'] ? "true" : "false").",
-                $extra_data_js
-                layoutTemplates: {
-                    main2: '<div class=\"panel panel-default\">' + '{preview}' + '<div class=\"panel-body\">' + ' {browse}' + '</div></div>',
-                },
-                ".$lang."
-            });
-            ");
+                    $('#".$options['input_id']."').fileinput({
+                        allowedFileTypes: ".$type_for_js.",
+                        allowedPreviewTypes : ".$type_for_js.",
+                        ".($value ? "initialPreview: ".$value.", " : '')."
+                        ".($options['preview_off'] ? "showPreview: false, " : '')."
+                        initialPreviewAsData: true,
+                        defaultPreviewContent: '<img class=\"img-responsive\" src=\"".IMAGES."no_photo.png\" alt=\"".$browseLabel."\" style=\"width:100%;\">',
+                        browseClass: 'btn btn-block btn-default',
+                        uploadClass: 'btn btn-modal',
+                        captionClass : '',
+                        maxFileCount: '".$options['max_count']."',
+                        removeClass : 'btn button',
+                        browseLabel: '".$browseLabel."',
+                        browseIcon: '<i class=\"".$options['icon']."\"></i>',
+                        showCaption: false,
+                        showRemove: false,
+                        ".($options['jsonurl'] ? "uploadUrl : '".$options['jsonurl']."'," : '')."
+                        ".($options['hide_upload'] ? 'showUpload: false,' : '')."
+                        ".($options['hide_remove'] ? 'showRemove: false,' : '')."
+                        dropZoneEnabled: ".($options['dropzone'] ? "true" : "false").",
+                        $extra_data_js
+                        layoutTemplates: {
+                            main2: '<div class=\"panel panel-default\">' + '{preview}' + '<div class=\"panel-body\">' + ' {browse}' + '</div></div>',
+                        },
+                        ".$lang."
+                    });
+                ");
                 break;
         }
 
