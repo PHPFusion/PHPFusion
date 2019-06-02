@@ -39,11 +39,11 @@ if (defined('BLOG_EXIST')) {
 
     if (dbrows($result) != 0) {
         while ($data = dbarray($result)) {
-            $rss->AddItem($data['blog_subject'], $settings['siteurl'].'infusions/blog/blog.php?readmore='.$data['blog_id'], $data['blog_blog']);
+            $rss->addItem($data['blog_subject'], $settings['siteurl'].'infusions/blog/blog.php?readmore='.$data['blog_id'], $data['blog_blog']);
         }
     } else {
-        $rss->AddItem($settings['sitename'].' - '.$locale['rss_blog'], $settings['siteurl'], $locale['rss_nodata']);
+        $rss->addItem($settings['sitename'].' - '.$locale['rss_blog'], $settings['siteurl'], $locale['rss_nodata']);
     }
 
-    $rss->Write();
+    $rss->write();
 }

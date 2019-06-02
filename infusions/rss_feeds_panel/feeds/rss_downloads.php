@@ -40,11 +40,11 @@ if (defined('DOWNLOADS_EXIST')) {
 
     if (dbrows($result) != 0) {
         while ($data = dbarray($result)) {
-            $rss->AddItem($data['download_title'], $settings['siteurl'].'infusions/downloads/downloads.php?download_id='.$data['download_id'], $data['download_description']);
+            $rss->addItem($data['download_title'], $settings['siteurl'].'infusions/downloads/downloads.php?download_id='.$data['download_id'], $data['download_description']);
         }
     } else {
-        $rss->AddItem($settings['sitename'].' - '.$locale['rss_downloads'], $settings['siteurl'], $locale['rss_nodata']);
+        $rss->addItem($settings['sitename'].' - '.$locale['rss_downloads'], $settings['siteurl'], $locale['rss_nodata']);
     }
 
-    $rss->Write();
+    $rss->write();
 }

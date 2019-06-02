@@ -16,8 +16,6 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-use \PHPFusion\Rewrite\Permalinks;
-
 class RSS {
     private $max_items = 50000;
     private $items_count = 0;
@@ -27,6 +25,7 @@ class RSS {
     private $title;
     private $feed_url;
     private $description;
+    private $settings;
 
     public function __construct($feed_url = '', $title = NULL, $description = NULL) {
         $this->writer = new XMLWriter();
@@ -34,12 +33,14 @@ class RSS {
         $this->title = $title;
         $this->description = $description;
 
-        if (fusion_get_settings('site_seo') == 1 && !defined('IN_PERMALINK')) {
-            Permalinks::getPermalinkInstance()->handle_url_routing('');
+        $this->settings = fusion_get_settings();
+
+        if ($this->settings['site_seo'] == 1 && !defined('IN_PERMALINK')) {
+            \PHPFusion\Rewrite\Permalinks::getPermalinkInstance()->handle_url_routing('');
         }
     }
 
-    private function CreateXML() {
+    private function createXML() {
         $this->item_count++;
 
         $this->writer->openMemory();
@@ -52,48 +53,50 @@ class RSS {
 
         $this->writer->startElement('channel');
 
-        $title = !empty($this->title) ? $this->title : fusion_get_settings('sitename');
+        $title = !empty($this->title) ? $this->title : $this->settings['sitename'];
         $this->writer->writeElement('title', $title);
 
         $this->writer->startElement('atom:link');
-        $this->writer->writeAttribute('href', fusion_get_settings('siteurl').'infusions/rss_feeds_panel/feeds/rss_'.$this->feed_url.'.php');
+        $this->writer->writeAttribute('href', $this->settings['siteurl'].'infusions/rss_feeds_panel/feeds/rss_'.$this->feed_url.'.php');
         $this->writer->writeAttribute('rel', 'self');
         $this->writer->writeAttribute('type', 'application/rss+xml');
         $this->writer->endElement(); // close atom:link
 
-        $this->writer->writeElement('link', fusion_get_settings('siteurl'));
+        $this->writer->writeElement('link', $this->settings['siteurl']);
 
-        $description = !empty($this->description) ? $this->description : fusion_get_settings('description');
-        $this->writer->writeElement('description', $description);
+        $description = !empty($this->description) ? $this->description : $this->settings['description'];
+        $this->writer->writeElement('description', html_entity_decode($description));
     }
 
-    private function CloseXML() {
+    private function closeXML() {
         if ($this->writer !== NULL) {
             $this->writer->endElement(); // close channel
             $this->writer->endElement(); // close rss
             $this->writer->endDocument();
-            $this->Flush();
+            $this->flush();
         }
     }
 
-    public function Write() {
-        $this->CloseXML();
+    public function write() {
+        $this->closeXML();
     }
 
-    private function Flush() {
+    private function flush() {
         echo $this->writer->flush(TRUE);
     }
 
-    public function AddItem($title, $link, $description) {
+    public function addItem($title, $link, $description) {
+        $link = html_entity_decode($link);
+
         if ($this->items_count === 0) {
-            $this->CreateXML();
+            $this->createXML();
         } else if ($this->items_count % $this->max_items === 0) {
-            $this->CloseXML();
-            $this->CreateXML();
+            $this->closeXML();
+            $this->createXML();
         }
 
         if ($this->items_count % $this->buffer_size === 0) {
-            $this->Flush();
+            $this->flush();
         }
 
         $this->writer->startElement('item');
@@ -109,6 +112,8 @@ class RSS {
             $this->writer->writeCData(html_entity_decode($description));
             $this->writer->endElement(); // close description
         }
+
+        $this->writer->writeElement('guid', $link);
 
         $this->writer->endElement(); // close item
 
