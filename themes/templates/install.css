@@ -159,3 +159,12 @@ table {
 .control-label {
     font-size: 12px;
 }
+
+html[dir="rtl"] .menu > li.active:before {
+    right: inherit;
+    left: -1px;
+    border-bottom: 10px solid transparent;
+    border-top: 10px solid transparent;
+    border-right: none;
+    border-left: 10px solid #DCDCDC;
+}
