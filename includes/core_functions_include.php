@@ -1648,27 +1648,30 @@ function profile_link($user_id, $user_name, $user_status, $class = "profile-link
  * @return string
  */
 function print_p($array, $modal = FALSE, $print = TRUE) {
-    //debug_print_backtrace();
-    ob_start();
-    echo htmlspecialchars(print_r($array, TRUE), ENT_QUOTES, 'utf-8');
-    $debug = ob_get_clean();
-    if ($modal == TRUE) {
-        $modal = openmodal('Debug', 'Debug');
-        $modal .= "<pre style='white-space:pre-wrap !important;'>";
-        $modal .= $debug;
-        $modal .= "</pre>\n";
-        $modal .= closemodal();
-        PHPFusion\OutputHandler::addToFooter($modal);
+    if (iSUPERADMIN || iADMIN) {
+        //debug_print_backtrace();
+        ob_start();
+        echo htmlspecialchars(print_r($array, TRUE), ENT_QUOTES, 'utf-8');
+        $debug = ob_get_clean();
+        if ($modal == TRUE) {
+            $modal = openmodal('Debug', 'Debug');
+            $modal .= "<pre style='white-space:pre-wrap !important;'>";
+            $modal .= $debug;
+            $modal .= "</pre>\n";
+            $modal .= closemodal();
+            PHPFusion\OutputHandler::addToFooter($modal);
 
-        return FALSE;
-    }
-    if ($print == TRUE) {
-        echo "<pre style='white-space:pre-wrap !important;'>";
-        echo $debug;
-        echo "</pre>\n";
-    }
+            return FALSE;
+        }
+        if ($print == TRUE) {
+            echo "<pre style='white-space:pre-wrap !important;'>";
+            echo $debug;
+            echo "</pre>\n";
+        }
 
-    return $debug;
+        return $debug;
+    }
+    return '';
 }
 
 /**
