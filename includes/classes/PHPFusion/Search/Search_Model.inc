@@ -289,9 +289,21 @@ abstract class Search_Model {
     public static function search_conditions($field_module) {
         // the conditions is imposition and must reset.
         if (!empty(self::$conditions[$field_module])) {
-            return "(".implode(' || ', array_map(function ($field_var) {
-                    return implode('', $field_var);
-                }, self::$conditions[$field_module])).")";
+
+            // remove duplicate query
+            $reverse_array = [];
+            foreach(self::$conditions[$field_module] as $field_name => $sql_conditions) {
+                if (!empty($sql_conditions)) {
+                    foreach($sql_conditions as $conditions) {
+                        $reverse_array[$field_name][$conditions] = $conditions;
+                    }
+                }
+            }
+
+            $sql = "(".implode(' || ', array_map(function ($field_var) { return implode('', $field_var); }, $reverse_array)).")";
+
+            return $sql;
+
         } else {
             return NULL;
         }

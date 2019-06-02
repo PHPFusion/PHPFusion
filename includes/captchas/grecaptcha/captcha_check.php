@@ -23,10 +23,10 @@ $resp = NULL;
 
 $reCaptcha = new ReCaptcha(fusion_get_settings('recaptcha_private'));
 
-if (isset($_POST['g-recaptcha-response'])) {
+if ($captcha = post('g-recaptcha-response')) {
     $resp = $reCaptcha->verifyResponse(
-        $_SERVER['REMOTE_ADDR'],
-        $_POST['g-recaptcha-response']
+        server('REMOTE_ADDR'),
+        $captcha
     );
 }
 
