@@ -40,11 +40,11 @@ if (defined('WEBLINKS_EXIST')) {
 
     if (dbrows($result) != 0) {
         while ($data = dbarray($result)) {
-            $rss->AddItem($data['weblink_name'], $settings['siteurl'].'infusions/weblinks/weblinks.php?weblink_id='.$data['weblink_id'], $data['weblink_description']);
+            $rss->addItem($data['weblink_name'], $settings['siteurl'].'infusions/weblinks/weblinks.php?weblink_id='.$data['weblink_id'], $data['weblink_description']);
         }
     } else {
-        $rss->AddItem($settings['sitename'].' - '.$locale['rss_weblinks'], $settings['siteurl'], $locale['rss_nodata']);
+        $rss->addItem($settings['sitename'].' - '.$locale['rss_weblinks'], $settings['siteurl'], $locale['rss_nodata']);
     }
 
-    $rss->Write();
+    $rss->write();
 }

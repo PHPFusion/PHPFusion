@@ -34,7 +34,7 @@ if (defined('FORUM_EXIST')) {
         p.post_message
         FROM ".DB_FORUMS." f
         LEFT JOIN ".DB_FORUM_THREADS." t ON f.forum_id = t.forum_id
-        LEFT JOIN ".DB_FORUM_POSTS." p ON t.thread_id = p.post_id
+        LEFT JOIN ".DB_FORUM_POSTS." p ON t.thread_id = p.thread_id
         ".(multilang_table('FO') ? "WHERE f.forum_language='".LANGUAGE."' AND" : "WHERE")." f.forum_access=0 AND f.forum_type!='1' AND f.forum_type!='3' AND t.thread_hidden='0'
         GROUP BY t.thread_id ORDER BY t.thread_lastpost DESC LIMIT 0,10
     ");
@@ -45,11 +45,11 @@ if (defined('FORUM_EXIST')) {
 
     if (dbrows($result) != 0) {
         while ($data = dbarray($result)) {
-            $rss->AddItem($data['thread_subject'].' ['.$data['forum_name'].']', $settings['siteurl'].'infusions/forum/viewthread.php?forum_id='.$data['forum_id'].'&thread_id='.$data['thread_id'], $data['post_message']);
+            $rss->addItem($data['thread_subject'].' ['.$data['forum_name'].']', $settings['siteurl'].'infusions/forum/viewthread.php?forum_id='.$data['forum_id'].'&thread_id='.$data['thread_id'], $data['post_message']);
         }
     } else {
-        $rss->AddItem($settings['sitename'].' - '.$locale['rss_forums'], $settings['siteurl'], $locale['rss_nodata']);
+        $rss->addItem($settings['sitename'].' - '.$locale['rss_forums'], $settings['siteurl'], $locale['rss_nodata']);
     }
 
-    $rss->Write();
+    $rss->write();
 }

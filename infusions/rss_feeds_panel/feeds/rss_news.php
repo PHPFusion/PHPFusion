@@ -40,11 +40,11 @@ if (defined('NEWS_EXIST')) {
 
     if (dbrows($result) != 0) {
         while ($data = dbarray($result)) {
-            $rss->AddItem($data['news_subject'], $settings['siteurl'].'infusions/news/news.php?readmore='.$data['news_id'], $data['news_news']);
+            $rss->addItem($data['news_subject'], $settings['siteurl'].'infusions/news/news.php?readmore='.$data['news_id'], $data['news_news']);
         }
     } else {
-        $rss->AddItem($settings['sitename'].' - '.$locale['rss_news'], $settings['siteurl'], $locale['rss_news']);
+        $rss->addItem($settings['sitename'].' - '.$locale['rss_news'], $settings['siteurl'], $locale['rss_news']);
     }
 
-    $rss->Write();
+    $rss->write();
 }
