@@ -43,7 +43,7 @@ class ArticlesSettingsAdmin extends ArticlesAdminModel {
             ];
 
             // Update
-            if (\defender::safe()) {
+            if (\Defender::safe()) {
                 foreach ($inputArray as $settings_name => $settings_value) {
                     $inputSettings = [
                         'settings_name' => $settings_name, 'settings_value' => $settings_value, 'settings_inf' => 'articles',

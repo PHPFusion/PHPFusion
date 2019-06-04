@@ -64,12 +64,12 @@ if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_status='1' AND ".g
             ];
 
             // Save
-            if (\defender::safe() && isset($_POST['submit_article'])) {
+            if (\Defender::safe() && isset($_POST['submit_article'])) {
                 $inputArray = [
                     'submit_type'      => "a",
                     'submit_user'      => fusion_get_userdata('user_id'),
                     'submit_datestamp' => time(),
-                    'submit_criteria'  => \defender::encode($criteriaArray)
+                    'submit_criteria'  => \Defender::encode($criteriaArray)
                 ];
                 dbquery_insert(DB_SUBMISSIONS, $inputArray, 'save');
                 addNotice('success', $locale['article_0910']);
@@ -77,7 +77,7 @@ if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_status='1' AND ".g
             }
 
             // Display
-            if (\defender::safe() && isset($_POST['preview_article'])) {
+            if (\Defender::safe() && isset($_POST['preview_article'])) {
                 $footer = openmodal("article_preview", "<i class='fa fa-eye fa-lg m-r-10'></i> ".$locale['preview'].": ".$criteriaArray['article_subject']);
                 $footer .= nl2br(parse_textarea($article_snippet));
                 if ($criteriaArray['article_article']) {
