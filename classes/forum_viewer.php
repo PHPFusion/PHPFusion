@@ -22,6 +22,31 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
+/**
+ * Class Forum_Viewer
+ *
+ *  Template names and functions
+ *  Namespace Key               Callback function               Has CSS / Is a Page?
+ *  forum-reports               forum_reports();                Yes
+ *  forum-post                  render_post_item();             -
+ *  forum-thread                forum_threads_item()            -
+ *  forum-section               forum_section()                 Yes
+ *  viewforum                   forum_viewforum()               Yes
+ *  forum                       forum_index()                   Yes
+ *  forum-contributor-list      popular_contributor_panel()     -
+ *  forum-sticky-panel          sticky_discussions_panel()      -
+ *  forum-subforum-item         forum_subforums_item()          -
+ *  viewthreads                 render_thread()                 Yes
+ *  forum-quick-reply           display_quick_reply             -
+ *  forum-poll                  display_forum_pollform()        -
+ *  forum-postify               display_forum_postify()         -
+ *  forum-post-form             display_forum_postform()        Yes
+ *  forum-bounty-form           display_forum_bountyform()      -
+ *  forum-tags                  display_forum_tags()            Yes
+ *
+ * @package PHPFusion\Infusions\Forum\Classes
+ */
+
 class Forum_Viewer {
 
     private static $instance = NULL;
@@ -29,17 +54,26 @@ class Forum_Viewer {
     private $info = [];
     private $locale = [];
     private $forum_nav_callback = [];
+    private $css_file_path = '';
+
+    public function __construct() {
+
+        $dev_mode = FALSE;
+        $css_min_file_path = FORUM.'templates/forum.min.css';
+        $this->css_file_path = FORUM.'templates/forum.css';
+        if (file_exists($css_min_file_path) && $dev_mode === FALSE) {
+            $this->css_file_path = $css_min_file_path;
+        }
+    }
 
     /**
      * Forum View Instance
      * @return null|Forum_Viewer
      */
     public static function getInstance() {
-
         if (self::$instance == NULL) {
             self::$instance = new static();
         }
-
         return self::$instance;
     }
 
@@ -72,7 +106,7 @@ class Forum_Viewer {
 
     /**
      * forum/index.php?section=moderator&rid={int}
-     *
+     * Template name - forum-reports
      * @param $info
      *
      * @return string
@@ -80,9 +114,9 @@ class Forum_Viewer {
     private function forum_report($info) {
         //print_p($info);
         $locale = fusion_get_locale();
-        $html = \PHPFusion\Template::getInstance('forum_reports');
+        $html = \PHPFusion\Template::getInstance('forum-reports');
         $html->set_template(__DIR__.'/../templates/forum_reports.html');
-        $html->set_css(INFUSIONS.'forum/templates/forum.min.css');
+        $html->set_css($this->css_file_path);
         $html->set_locale($locale);
         $html->set_tag("forum_navs", self::get_forum_navs());
         $html->set_tag("title", $info['title']);
@@ -178,7 +212,6 @@ class Forum_Viewer {
             'callback_data'     => $this->forum_nav_callback,
             'grouping'          => FALSE,
             'links_per_page'    => FALSE,
-
             //'html_content'      => openform('forum_searchFrm', 'post', FUSION_REQUEST, ["class" => "pull-right"]).form_text("forum_search", "", "", ["placeholder" => "Search...", "class" => "m-0 center-y", "feedback_icon" => TRUE, "icon" => "fas fa-search text-dark"]).closeform(),
         ];
 
@@ -205,7 +238,7 @@ class Forum_Viewer {
 
     /**
      * Render the forum thread post item
-     *
+     * Template name - forum-post
      * @param mixed $data post data
      * @param int   $n    nth count
      *
@@ -217,9 +250,9 @@ class Forum_Viewer {
         $settings = fusion_get_settings();
         $forum_settings = Forum_Server::get_forum_settings();
         $file_path = Forum_Server::get_template('forum_post');
-        $html = \PHPFusion\Template::getInstance('forum_post');
+        $html = \PHPFusion\Template::getInstance('forum-post');
         $html->set_template($file_path);
-        $html->set_css(INFUSIONS.'forum/templates/forum.min.css');
+        //$html->set_css($this->css_file_path);
         $html->set_locale($locale);
         $html->set_tag("post_html_comment", "<!--forum_thread_prepost_".$data['post_id']."-->");
         $html->set_tag("post_date", $data['post_shortdate']);
@@ -404,7 +437,9 @@ class Forum_Viewer {
      * Threads Item Display
      * Enable with ajax based filters for faster performance
      *
+     * Template name    forum-thread
      * Template File     templates/viewforum/forum_thread_item.html
+     *
      *
      * @param $info
      *
@@ -414,7 +449,7 @@ class Forum_Viewer {
         $locale = fusion_get_locale();
         // Ok, since this is a subpage and also require replacement, we need a new html file.
         $file_path = Forum_Server::get_template('forum_thread');
-        $html = \PHPFusion\Template::getInstance('forum_thread');
+        $html = \PHPFusion\Template::getInstance('forum-thread');
         $html->set_locale($locale);
         $html->set_template($file_path);
         $html->set_template(__DIR__.'/../templates/forum_thread_item.html');
@@ -541,6 +576,7 @@ class Forum_Viewer {
 
     /**
      * Forum Sections Item Display (Latest, Participated, Tracked, Unanswered, Unsolved)
+     * Template name    forum-section
      * Template File     templates/viewforum/forum_section.html
      *
      * @param $info
@@ -550,9 +586,9 @@ class Forum_Viewer {
     private function forum_section($info) {
         $locale = fusion_get_locale();
         $file_path = Forum_Server::get_template('forum_section');
-        $html = \PHPFusion\Template::getInstance('forum_section');
+        $html = \PHPFusion\Template::getInstance('forum-section');
         $html->set_template($file_path);
-        $html->set_css(INFUSIONS.'forum/templates/forum.min.css');
+        $html->set_css($this->css_file_path);
         $html->set_locale($locale);
         $html->set_tag('baselink', $info['link']);
         $html->set_tag('forum_navs', $this->get_forum_navs());
@@ -614,7 +650,7 @@ class Forum_Viewer {
         $file_path = Forum_Server::get_template('viewforum');
         $html = \PHPFusion\Template::getInstance('viewforum');
         $html->set_template($file_path);
-        $html->set_css(INFUSIONS.'forum/templates/forum.min.css');
+        $html->set_css($this->css_file_path);
         $html->set_locale($locale);
         $html->set_tag('forum_navs', $this->get_forum_navs());
         $html->set_tag('breadcrumb', render_breadcrumbs());
@@ -771,7 +807,7 @@ class Forum_Viewer {
         $html = \PHPFusion\Template::getInstance('forum');
         $html->set_locale($this->locale);
         $html->set_template($file_path);
-        $html->set_css(INFUSIONS.'forum/templates/forum.min.css');
+        $html->set_css($this->css_file_path);
         $html->set_tag('baselink', FORUM);
         $html->set_tag('breadcrumb', render_breadcrumbs());
         $html->set_tag("forum_navs", $this->get_forum_navs());
@@ -893,7 +929,7 @@ class Forum_Viewer {
 
     private function popular_contributor_panel() {
         // Week, Month, Year, All Time
-        $html = \PHPFusion\Template::getInstance('contributor_list');
+        $html = \PHPFusion\Template::getInstance('forum-contributor-list');
         $html_file = __DIR__.'/../templates/panel/contributor_panel.html';
         $html->set_template($html_file);
         $result = dbquery("SELECT post_author, COUNT(post_id) 'post_count'  FROM ".DB_FORUM_POSTS." WHERE
@@ -954,7 +990,7 @@ class Forum_Viewer {
     }
 
     private function sticky_discussions_panel() {
-        $html = \PHPFusion\Template::getInstance('sticky_discussions');
+        $html = \PHPFusion\Template::getInstance('forum-sticky-panel');
         $html->set_template(__DIR__.'/../templates/panel/sticky_panel.html');
         $result = dbquery("SELECT thread_id, thread_subject, thread_author, thread_lastpost, thread_postcount FROM ".DB_FORUM_THREADS."
         WHERE thread_sticky=1 ORDER BY thread_lastpost DESC LIMIT 5");
@@ -986,7 +1022,7 @@ class Forum_Viewer {
      */
     public function forum_subforums_item($info) {
         $file_path = Forum_Server::get_template('forums');
-        $html = \PHPFusion\Template::getInstance('forums');
+        $html = \PHPFusion\Template::getInstance('forum-subforum-item');
         $html->set_template($file_path);
         $html->set_tag("forum_name", $info['forum_link']['title']);
         $html->set_tag("forum_link", $info['forum_link']['link']);
@@ -1007,6 +1043,7 @@ class Forum_Viewer {
 
         $file_path = Forum_Server::get_template('viewthreads');
         $html = \PHPFusion\Template::getInstance('viewthreads');
+        $html->set_css($this->css_file_path);
         $html->set_template($file_path);
         $html->set_locale($locale);
         $html->set_tag("forum_navs", $this->get_forum_navs());
@@ -1177,7 +1214,7 @@ class Forum_Viewer {
 
     public function display_quick_reply($info) {
         $file_path = Forum_Server::get_template('forum_qrform');
-        $html = \PHPFusion\Template::getInstance('forum_qrform');
+        $html = \PHPFusion\Template::getInstance('forum-quick-reply');
         $html->set_tag('description', $info['description']);
         $html->set_tag('message_field', $info['field']['message']);
         $html->set_tag('options_field', $info['field']['options']);
@@ -1197,7 +1234,7 @@ class Forum_Viewer {
      */
     public function display_forum_pollform($info) {
         $file_path = Forum_Server::get_template('forum_pollform');
-        $html = \PHPFusion\Template::getInstance('forum_pollform');
+        $html = \PHPFusion\Template::getInstance('forum-poll');
         $html->set_template($file_path);
         $html->set_tag('breadcrumb', render_breadcrumbs());
         $html->set_tag('opentable', fusion_get_function('opentable', $info['title']));
@@ -1211,7 +1248,7 @@ class Forum_Viewer {
     public function render_postify($info) {
         $locale = fusion_get_locale();
         $file_path = Forum_Server::get_template('forum_postify');
-        $html = \PHPFusion\Template::getInstance('forum_postify');
+        $html = \PHPFusion\Template::getInstance('forum-postify');
         $html->set_template($file_path);
         $html->set_locale($locale);
         $html->set_tag('forum_navs', $this->get_forum_navs());
@@ -1253,7 +1290,7 @@ class Forum_Viewer {
     function display_forum_postform($info) {
         $locale = fusion_get_locale();
         $file_path = Forum_Server::get_template('forum_postform');
-        $html = \PHPFusion\Template::getInstance('forum_postform');
+        $html = \PHPFusion\Template::getInstance('forum-post-form');
         $html->set_template($file_path);
         $html->set_locale($locale);
         $html->set_tag("baselink", FORUM);
@@ -1300,7 +1337,7 @@ class Forum_Viewer {
      */
     public function display_forum_bountyform($info) {
         $file_path = Forum_Server::get_template('forum_bountyform');
-        $html = \PHPFusion\Template::getInstance('forum_bountyform');
+        $html = \PHPFusion\Template::getInstance('forum-bounty-form');
         $html->set_template($file_path);
         $html->set_tag('breadcrumb', render_breadcrumbs());
         $html->set_tag('opentable', fusion_get_function('opentable', $info['title']));
@@ -1317,13 +1354,12 @@ class Forum_Viewer {
         $tag_threads_file_path = FORUM.'templates/forum_tag_threads.html';
 
         if (isset($_GET['tag_id'])) {
-            $html = \PHPFusion\Template::getInstance('tags');
+            $html = \PHPFusion\Template::getInstance('forum-tags');
             $html->set_template($tag_threads_file_path);
             $html->set_locale($locale);
             $html->set_tag("baselink", FORUM);
             $html->set_tag("title", $info['title']);
             $html->set_tag("description", $info['description']);
-
             $html->set_tag("forum_navs", $this->get_forum_navs());
             $html->set_tag('breadcrumb', render_breadcrumbs());
             if (!empty($info['filters']['type'])) {
@@ -1352,7 +1388,7 @@ class Forum_Viewer {
         } else {
 
 
-            $html = \PHPFusion\Template::getInstance('tags');
+            $html = \PHPFusion\Template::getInstance('forum-tags');
             $html->set_template($tag_file_path);
             $html->set_locale($locale);
             $html->set_tag("baselink", FORUM);
