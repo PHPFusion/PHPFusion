@@ -18,6 +18,7 @@ html, body, #tinymce body, .form-control {
     --danger-hover-color:  #df3e7b;
     --success-color: #3FB927;
     --success-hover-color: #16a32e;
+    --inverse-color: #111B28;
     --primary-link-color: #0073aa;
     --primary-link-hover-color: #0891d6;
 }
@@ -1850,6 +1851,15 @@ table tr.danger td:first-child {
 .select2-drop td,
 .select2-search-choice td {
     padding: 0;
+}
+/**
+Formatted json options
+ */
+#devlpr #main_content .content ul.select2-choices > li.select2-search-choice > div > table {
+    background:none;
+    border:0;
+    margin:0;
+    box-shadow: none;
 }
 footer {
     width: 100%;
