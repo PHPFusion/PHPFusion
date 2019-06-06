@@ -1,7 +1,5 @@
 <?php
 /**
- * English Locale
- *
  * @locale charset           ISO 639-1 - http://www.loc.gov/standards/iso639-2/php/code_list.php
  * @locale region            ISO-3166 (2 Alpha numeric) - https://www.iso.org/obp/ui/#search
  * @locale tinymce           refer to path includes/jscripts/tinymce/langs/{value}.js
@@ -9,7 +7,6 @@
  * @locale phpmailer         refer to path includes/classes/PHPMailer/language/phpmailer.lang-{value}.php
  * @locale password_strength refer to path includes/dynamics/password/lang/{value}.js
  * @locale filemanager       refer to path includes/filemanager/lang/{value}.php
- * @package locale/English
  */
 setlocale(LC_TIME, "en_GB.UTF-8"); // Linux Server (Windows may differ)
 $locale['charset'] = "utf-8";
