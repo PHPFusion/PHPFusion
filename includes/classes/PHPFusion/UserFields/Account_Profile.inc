@@ -81,13 +81,13 @@ class Account_Profile extends UserFieldsQuantum {
 
     private function security() {
 
+        redirect(BASEDIR.'edit_profile.php?ref=se_profile&section=acc_settings');
+
         $info['user_lastvisit'] = showdate('longdate', $this->user_data['user_lastvisit']);
 
         $info['update_security_button'] = form_button($this->post_name.'_security', 'Update Security', $this->post_name.'_security', ['class' => $this->options['btn_post_class']]);
 
-        $info['user_block'] = form_user_select("user_block", "Block users", "", [
-            "stacked" => form_button($this->post_name."_block", "Block", $this->post_name."_block")
-        ]);
+        $info['user_block'] = form_user_select("user_block", "Block users", "", ["stacked" => form_button($this->post_name."_block", "Block", $this->post_name."_block")]);
         $blocked_users = "";
         if (!empty($this->user_data['user_block'])) {
             $buid = ltrim(str_replace(".", ",", $this->user_data['user_block']), ",");

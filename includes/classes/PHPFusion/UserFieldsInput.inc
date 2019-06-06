@@ -830,9 +830,10 @@ class UserFieldsInput {
     }
 
     /**
-     * Handle new email verification procedures
-     *
+     *  Handle new email verification procedures
      * @param $email
+     *
+     * @throws \PHPMailer\PHPMailer\Exception
      */
     private function verify_new_email($email) {
         $settings = fusion_get_settings();

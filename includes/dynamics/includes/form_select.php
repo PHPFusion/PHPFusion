@@ -57,8 +57,11 @@
  * @package dynamics/select2
  */
 function form_select($input_name, $label = "", $input_value, array $options = []) {
+
     global $fusion_steam;
+
     static $_select_chained;
+
     $locale = fusion_get_locale();
 
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
@@ -352,9 +355,11 @@ function form_select($input_name, $label = "", $input_value, array $options = []
     }
 
     if ($options['multiple']) {
-        $input_value = [];
         if ($input_value) {
             $input_value = construct_array($input_value, 0, $options['delimiter']);
+        }
+        if (empty($input_value)) {
+            $input_value = [];
         }
     }
 
@@ -364,13 +369,11 @@ function form_select($input_name, $label = "", $input_value, array $options = []
         }, $options_data);
     }
 
-
     // always trim id
 
     $options['input_id'] = trim(str_replace("[", "-", $options['input_id']), "]");
 
     $allowclear = ($options['placeholder'] && $options['multiple'] || $options['allowclear']) ? "allowClear:true," : '';
-
 
     if (\Defender::inputHasError($input_name)) {
         $options['error_class'] = " has-error ";
@@ -393,6 +396,7 @@ function form_select($input_name, $label = "", $input_value, array $options = []
 
         // normal mode
         $class[] = !empty($options['inner_class']) ? $options['inner_class'] : '';
+
         $class[] = !empty($options['select2_disabled']) ? '' : '';
 
         $options['input_class'] = implode(' ', $class);
@@ -473,9 +477,6 @@ function form_select($input_name, $label = "", $input_value, array $options = []
         $options['dropdown_required_input'] = "<input class='req' id='dummy-".$options['input_id']."' type='hidden'>"; // for jscheck
     }
 
-    // Generate Defender Tag
-    $input_name = ($options['multiple']) ? str_replace("[]", "", $input_name) : $input_name;
-
     // Initialize Select2
     if ($options['select2_disabled'] === FALSE) {
         // Select 2 Multiple requires hidden DOM.
@@ -494,6 +495,7 @@ function form_select($input_name, $label = "", $input_value, array $options = []
             }
 
             if ($options['required']) {
+
                 add_to_jquery("
                 var init_value = $('#".$options['input_id']."').select2('val');
                 if (init_value) { $('dummy-".$options['input_id']."').val(init_value);	} else { $('dummy-".$options['input_id']."').val('');	}

@@ -153,12 +153,12 @@ class UserFields extends UserFieldsQuantum {
             'link'   => clean_request($this->aidlink.'section=preferences&lookup='.$this->user_data['user_id'], ['section'], FALSE),
             'name'   => 'Account Preferences',
         ];
-        $section['security'] = [
+        /*$section['security'] = [
             'id'     => 'security',
             'active' => ($_section == 'security' ? TRUE : FALSE),
             'link'   => clean_request($this->aidlink.'section=security&lookup='.$this->user_data['user_id'], ['section'], FALSE),
             'name'   => 'Account Security',
-        ];
+        ];*/
 
         return empty($key) ? (array)$section : (isset($section[$key]) ? (array)$section[$key] : NULL);
     }
@@ -245,7 +245,7 @@ class UserFields extends UserFieldsQuantum {
                 ]
             ];
 
-            $this->current_page = isset($ppCache[$_current_page]) ? $ppCache[$_current_page]['id'] : "activity";
+            $this->current_page = isset($ppCache[$_current_page]) ? $ppCache[$_current_page]['id'] : "profile";
         }
 
         return (array)$ppCache;
@@ -272,7 +272,7 @@ class UserFields extends UserFieldsQuantum {
      * @return array
      * @throws \Exception
      */
-    private function get_input_info() {
+    public function get_input_info() {
         $this->method = 'input';
 
         $locale = fusion_get_locale();
@@ -471,6 +471,7 @@ class UserFields extends UserFieldsQuantum {
                         if (isset($field_cats['name'])) {
                             $this->info['title'] = $field_cats['name'];
                         }
+
                         $class = new Account_Profile();
                         $class->user_data = $this->user_data;
                         $class->options = $this->options;
@@ -502,7 +503,7 @@ class UserFields extends UserFieldsQuantum {
      *
      * @param array $input
      *
-     * Template IDs     Registration    core_user_registration_form
+     * Template IDs     Registration    user-register-form
      *                  Edit Profile    user-profile-form
      *
      * @throws \Exception

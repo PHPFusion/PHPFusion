@@ -249,26 +249,26 @@ class Tables {
         $data = [];
         $search = '';
 
-        if (isset($_POST['search_cat_btn']) && isset($_POST['search_cat'])) {
-            $this->search_text = stripinput($_POST['search_cat']);
+        if (post('search_cat_btn') && post('search_cat')) {
+            $this->search_text = stripinput(post('search_cat'));
             redirect(clean_request('s='.$this->search_text, ['s'], FALSE));
         }
 
-        if (isset($_GET['s']) && !empty($this->table_props['search_col'])) {
+        if (get('s') && !empty($this->table_props['search_col'])) {
             $this->search_text = stripinput($_GET['s']);
             //@todo: support two or three columns
             $search = "WHERE ".$this->table_props['search_col']." LIKE ('%$this->search_text%')";
         }
 
         // Dropdown link filters redirect to $_GET
-        if (isset($_POST['table_filter']) && !empty($this->table_props['dropdown_filters'])) {
+        if (post('table_filter') && !empty($this->table_props['dropdown_filters'])) {
             $redirect_param = [];
             $redirect_keys = [];
 
             foreach ($this->table_props['dropdown_filters'] as $key => $filter) {
 
                 if ($filter['type'] == 'date') {
-                    $date_filter = explode('_', stripinput($_POST[$key]));
+                    $date_filter = explode('_', post($key));
                     if (count($date_filter) == 2) {
 
                         $redirect_param[$key.'-date_year'] = $date_filter[0];
@@ -281,10 +281,10 @@ class Tables {
                     }
                 } else {
 
-                    if (isset($_POST[$key])) {
+                    if (post($key)) {
 
                         $filter_val = array_map('strtolower', $filter['options']);
-                        $val = stripinput($_POST [$key]);
+                        $val = stripinput(post($key));
                         if (isset($filter_val[$val])) {
                             $redirect_param[$key] = $filter_val[$val];
                         } else {
@@ -375,8 +375,14 @@ class Tables {
             ]
         );
 
+        $sql_table = "{TABLE} base {JOINS}";
+        $sql_table = strtr($sql_table, [
+            '{TABLE}' => $this->query['table'],
+            '{JOINS}' => $this->query['joins'],
+        ]);
+
         // quantify max rows
-        $this->maxRows = dbcount("(".$this->query['id'].")", $this->query['table'].' base', $count_conditions);
+        $this->maxRows = dbcount("(".$this->query['id'].")", $sql_table, $count_conditions);
 
         if ($this->query['true_limit'] === TRUE) {
             $this->maxRows = $this->query['limit'];
@@ -386,18 +392,17 @@ class Tables {
         $this->rowStart = $this->rowStart && isnum($this->rowStart) && $this->rowStart <= $this->maxRows ? intval($this->rowStart) : 0;
 
         // Limiter will only work when there are no parent declared as the hierarchy requires full query and array chunks
+        $sql_statement = /** @lang mysql */
+        "SELECT base.* {SELECT} FROM {TABLE} {SEARCH} {CONDITIONS} {GROUP} ORDER BY {ORDER_BY} {ID} {ORDER_SORTING} {LIMIT}";
 
         if ($this->query['id'] && $this->query['parent']) {
 
-            $sql_statement = /** @lang mysql */
-                "SELECT base.* {SELECT} FROM {TABLE} base {JOINS} {SEARCH} {CONDITIONS} {GROUP} ORDER BY {ORDER_BY} {ID} {ORDER_SORTING} {LIMIT}";
 
             $sql_query = strtr(
                 $sql_statement, [
-                    '{TABLE}'         => $this->query['table'],
+                    '{TABLE}'         => $sql_table,
                     '{SELECT}'        => ($this->query['select'] ? ", ".$this->query['select'] : ''),
                     '{SEARCH}'        => $search,
-                    '{JOINS}'         => $this->query['joins'],
                     '{CONDITIONS}'    => ($search && !empty($this->query['conditions']) ? strtr(
                         $conditions, ['{CONDITIONS_PREFIX}' => " AND"]
                     ) : strtr($conditions, ['{CONDITIONS_PREFIX}' => "WHERE"])),
@@ -439,24 +444,20 @@ class Tables {
 
         } else {
 
+            // The difference in limitations
             if ($this->query['true_limit'] === TRUE) {
 
                 $limit = "LIMIT ".$this->query['limit'];
 
             } else {
-
                 $limit = ($this->query['limit'] && isnum($this->query['limit']) ? "LIMIT ".$this->rowStart.", ".$this->query['limit'] : '');
             }
 
-            $sql_statement = /** @lang text */
-                "SELECT base.* {SELECT} FROM {TABLE} base {JOINS} {SEARCH} {CONDITIONS} {GROUP} ORDER BY {ORDER_BY} {ID} {ORDER_SORTING} {LIMIT}";
-
             $sql_query = strtr(
                 $sql_statement, [
-                    '{TABLE}'         => $this->query['table'],
+                    '{TABLE}'         => $sql_table,
                     '{SELECT}'        => ($this->query['select'] ? ", ".$this->query['select'] : ''),
                     '{SEARCH}'        => $search,
-                    '{JOINS}'         => $this->query['joins'],
                     '{CONDITIONS}'    => ($search && !empty($this->query['conditions']) ? strtr(
                         $conditions, ['{CONDITIONS_PREFIX}' => " AND"]
                     ) : strtr($conditions, ['{CONDITIONS_PREFIX}' => "WHERE"])),
@@ -467,6 +468,7 @@ class Tables {
                     '{LIMIT}'         => $limit,
                 ]
             );
+
 
             $result = dbquery($sql_query);
             if ($this->rowsCount = dbrows($result)) {
@@ -651,7 +653,7 @@ class Tables {
         }
     }
 
-    private $custom_columns_value = '';
+    private $custom_columns_value = [];
     private $custom_columns_options = [];
 
     private function displayCustom() {
@@ -1004,6 +1006,7 @@ class Tables {
 
         $html .= openform('cat_table_frm', 'post').form_select(
                 'filter_actions', '', '', [
+                    'inline' => TRUE,
                     'inner_width'      => '150px',
                     'inner_class'      => 'display-inline-block',
                     'class'            => 'm-0 display-inline-block',
@@ -1079,7 +1082,7 @@ class Tables {
                 $id = $data[$this->getIdCol()];
                 // the edit link
                 // key need to be dynamic as the del and edit may be present.
-                $get_rid = [$this->table_props['edit_key'], $this->table_props['del_key']];
+                $get_rid = [$this->table_props['edit_key'], $this->table_props['del_key'], 's'];
                 // All the info available should be replaced.
                 //print_p(array_values($this->columns));
 

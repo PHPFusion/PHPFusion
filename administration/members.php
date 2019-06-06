@@ -17,6 +17,6 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
 require_once THEMES.'templates/admin_header.php';
-require_once ADMIN.'members/members_administration.php';
-Administration\Members\Members_Admin::getInstance()->display_admin();
+require_once ADMIN.'members/members.class.php';
+Administration\Members\Members::getInstance()->display_admin();
 require_once THEMES.'templates/footer.php';

@@ -15,6 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+/**
+ * @todo: deprecate and delete this file. Moving to user control center...
+ */
 require_once __DIR__.'/../maincore.php';
 pageAccess('S9');
 require_once THEMES.'templates/admin_header.php';

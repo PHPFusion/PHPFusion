@@ -1345,7 +1345,7 @@ table.fusion-table td {
     height: 60px;
 }
 table.fusion-table td.has-actions {
-    min-width:30%;
+    min-width:200px;
     position: relative;
     clear: both;
     display: block;

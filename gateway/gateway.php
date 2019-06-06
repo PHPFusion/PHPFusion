@@ -124,8 +124,9 @@ if (isset($_POST['gateway_answer'])) {
 if (!function_exists('display_gateway')) {
     function display_gateway($info) {
         global $locale;
-
+        echo "<div class='container'>";
         if ($info['showform'] == TRUE) {
+
             opentable($locale['gateway_069']);
             echo $info['openform'];
             echo $info['hiddeninput'];
@@ -144,6 +145,7 @@ if (!function_exists('display_gateway')) {
             echo '<input type="button" value="'.$locale['gateway_067'].'" class="text-center btn btn-info spacer-xs" onclick="location=\''.BASEDIR.'register.php\'"/>';
             closetable();
         }
+        echo "</div>";
     }
 }
 
