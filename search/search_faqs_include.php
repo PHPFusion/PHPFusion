@@ -25,7 +25,9 @@ defined('IN_FUSION') || exit;
 if (defined('FAQ_EXIST')) {
 
     if (Search_Engine::get_param('stype') == 'faqs' || Search_Engine::get_param('stype') == 'all') {
+
         $locale = fusion_get_locale('', INFUSIONS."faq/locale/".LOCALESET."search/faqs.php");
+
         $formatted_result = '';
         $item_count = "0 ".$locale['fq402']." ".$locale['522']."<br />\n";
         $order_by = [
