@@ -25,7 +25,7 @@ class User_Info {
     private $aidlink = '';
 
     public function __construct() {
-        require_once __DIR__.'/templates/index.php';
+        require_once __DIR__.'/templates/template.php';
         $this->locale = fusion_get_locale();
         $this->aidlink = fusion_get_aidlink();
     }
@@ -59,16 +59,22 @@ class User_Info {
         $pm_progress = '';
         if (!iSUPERADMIN) {
             $inbox_cfg = user_pm_settings($userdata['user_id'], "user_inbox");
-            $inbox_percent = $inbox_cfg > 1 ? number_format(($inbox_count / $inbox_cfg) * 99, 0) : number_format(0 * 99, 0);
-            $pm_progress = progress_bar($inbox_percent, $this->locale['UM098'], ['reverse' => TRUE, 'disabled' => ($inbox_cfg == 0 ? TRUE : FALSE)]);
+            if ($inbox_cfg !== 0) {
+                $inbox_percent = $inbox_cfg > 1 ? number_format(($inbox_count / $inbox_cfg) * 99, 0) : number_format(0 * 99, 0);
+                $pm_progress .= progress_bar($inbox_percent, $locale['UM098'], ['reverse' => TRUE, 'disabled' => ($inbox_cfg == 0 ? TRUE : FALSE)]);
+            }
 
             $outbox_cfg = user_pm_settings($userdata['user_id'], "user_outbox");
-            $outbox_percent = $outbox_cfg > 1 ? number_format(($outbox_count / $outbox_cfg) * 99, 0) : number_format(0 * 99, 0);
-            $pm_progress .= progress_bar($outbox_percent, $this->locale['UM099'], ['reverse' => TRUE, 'disabled' => ($inbox_cfg == 0 ? TRUE : FALSE)]);
+            if ($outbox_cfg !== 0) {
+                $outbox_percent = $outbox_cfg > 1 ? number_format(($outbox_count / $outbox_cfg) * 99, 0) : number_format(0 * 99, 0);
+                $pm_progress .= progress_bar($outbox_percent, $locale['UM099'], ['reverse' => TRUE, 'disabled' => ($inbox_cfg == 0 ? TRUE : FALSE)]);
+            }
 
             $archive_cfg = user_pm_settings($userdata['user_id'], "user_archive");
-            $archive_percent = $archive_cfg > 1 ? number_format(($archive_count / $archive_cfg) * 99, 0) : number_format(0 * 99, 0);
-            $pm_progress .= progress_bar($archive_percent, $this->locale['UM100'], ['reverse' => TRUE, 'disabled' => ($inbox_cfg == 0 ? TRUE : FALSE)]);
+            if ($archive_cfg !== 0) {
+                $archive_percent = $archive_cfg > 1 ? number_format(($archive_count / $archive_cfg) * 99, 0) : number_format(0 * 99, 0);
+                $pm_progress .= progress_bar($archive_percent, $locale['UM100'], ['reverse' => TRUE, 'disabled' => ($inbox_cfg == 0 ? TRUE : FALSE)]);
+            }
         }
 
         $submissions_link_arr = [];
@@ -78,15 +84,6 @@ class User_Info {
                     'link'  => BASEDIR.$title['submit_link'],
                     'title' => sprintf($title['title'], str_replace('...', '', fusion_get_locale('UM089', LOCALE.LOCALESET."global.php"))),
                 ];
-            }
-        }
-
-        $submit_link = '';
-        if (iADMIN && checkrights("SU")) {
-            $subm_count = dbcount("(submit_id)", DB_SUBMISSIONS);
-            if ($subm_count) {
-                $submit_link = "<a href='".ADMIN."index.php".fusion_get_aidlink()."&amp;pagenum=0' class='side'>".
-                    sprintf($this->locale['global_125'], $subm_count).($subm_count == 1 ? $this->locale['global_128'] : $this->locale['global_129'])."</a>";
             }
         }
 
@@ -104,8 +101,7 @@ class User_Info {
                 'user_pm_notice'       => ($msg_count ? "<a href='".BASEDIR."messages.php?folder=inbox' title='".$pm_title."'><i class='fa fa-envelope-o'></i> $msg_count</a>" : ''),
                 'user_pm_title'        => $pm_title,
                 'user_pm_progress'     => $pm_progress,
-                'submissions'          => $submissions_link_arr,
-                'submit'               => $submit_link,
+                'submissions'          => $submissions_link_arr
             ] + $userdata;
     }
 
