@@ -690,10 +690,10 @@ class PanelsAdministration {
      */
     private static function get_includeOpts() {
         return [
-            3 => self::$locale['459'],
-            2 => self::$locale['467'],
-            1 => self::$locale['464'],
-            0 => self::$locale['465'],
+            3 => self::$locale['459'], // Display panel on all pages
+            2 => self::$locale['467'], // Display on Opening Page only
+            1 => self::$locale['464'], // Exclude on these pages only
+            0 => self::$locale['465'], // Include on these pages only
         ];
     }
 
