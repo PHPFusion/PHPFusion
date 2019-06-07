@@ -43,16 +43,22 @@ if (iMEMBER) {
     $pm_progress = '';
     if (!iSUPERADMIN) {
         $inbox_cfg = user_pm_settings($userdata['user_id'], "user_inbox");
-        $inbox_percent = $inbox_cfg > 1 ? number_format(($inbox_count / $inbox_cfg) * 99, 0) : number_format(0 * 99, 0);
-        $pm_progress = progress_bar($inbox_percent, $locale['UM098'], ['reverse' => TRUE, 'disabled' => ($inbox_cfg == 0 ? TRUE : FALSE)]);
+        if ($inbox_cfg !== 0) {
+            $inbox_percent = $inbox_cfg > 1 ? number_format(($inbox_count / $inbox_cfg) * 99, 0) : number_format(0 * 99, 0);
+            $pm_progress .= progress_bar($inbox_percent, $locale['UM098'], ['reverse' => TRUE, 'disabled' => ($inbox_cfg == 0 ? TRUE : FALSE)]);
+        }
 
         $outbox_cfg = user_pm_settings($userdata['user_id'], "user_outbox");
-        $outbox_percent = $outbox_cfg > 1 ? number_format(($outbox_count / $outbox_cfg) * 99, 0) : number_format(0 * 99, 0);
-        $pm_progress .= progress_bar($outbox_percent, $locale['UM099'], ['reverse' => TRUE, 'disabled' => ($inbox_cfg == 0 ? TRUE : FALSE)]);
+        if ($outbox_cfg !== 0) {
+            $outbox_percent = $outbox_cfg > 1 ? number_format(($outbox_count / $outbox_cfg) * 99, 0) : number_format(0 * 99, 0);
+            $pm_progress .= progress_bar($outbox_percent, $locale['UM099'], ['reverse' => TRUE, 'disabled' => ($inbox_cfg == 0 ? TRUE : FALSE)]);
+        }
 
         $archive_cfg = user_pm_settings($userdata['user_id'], "user_archive");
-        $archive_percent = $archive_cfg > 1 ? number_format(($archive_count / $archive_cfg) * 99, 0) : number_format(0 * 99, 0);
-        $pm_progress .= progress_bar($archive_percent, $locale['UM100'], ['reverse' => TRUE, 'disabled' => ($inbox_cfg == 0 ? TRUE : FALSE)]);
+        if ($archive_cfg !== 0) {
+            $archive_percent = $archive_cfg > 1 ? number_format(($archive_count / $archive_cfg) * 99, 0) : number_format(0 * 99, 0);
+            $pm_progress .= progress_bar($archive_percent, $locale['UM100'], ['reverse' => TRUE, 'disabled' => ($inbox_cfg == 0 ? TRUE : FALSE)]);
+        }
     }
 
     $submissions_link_arr = [];
@@ -66,15 +72,6 @@ if (iMEMBER) {
         }
     }
 
-    $submit_link = '';
-    if (iADMIN && checkrights("SU")) {
-        $subm_count = dbcount("(submit_id)", DB_SUBMISSIONS);
-        if ($subm_count) {
-            $submit_link = "<a href='".ADMIN."index.php".fusion_get_aidlink()."&amp;pagenum=0' class='side'>".
-                sprintf($locale['global_125'], $subm_count).($subm_count == 1 ? $locale['global_128'] : $locale['global_129'])."</a>";
-        }
-    }
-
     $info = [
             'forum_exists'         => $forum_exists,
             'show_reputation'      => !empty($forum_settings['forum_show_reputation']) && $forum_settings['forum_show_reputation'] ? 1 : 0,
@@ -85,8 +82,7 @@ if (iMEMBER) {
             'user_reputation_icon' => $forum_exists ? "<i class='fa fa-dot-circle-o' title='".fusion_get_locale('forum_0014', INFUSIONS.'forum/locale/'.LOCALESET.'forum.php')."'></i>\n" : '',
             'user_pm_link'         => BASEDIR."messages.php?folder=inbox",
             'user_pm_title'        => sprintf($locale['UM085'], $msg_count).($msg_count == 1 ? $locale['UM086'] : $locale['UM087']),
-            'submissions'          => $submissions_link_arr,
-            'submit'               => $submit_link,
+            'submissions'          => $submissions_link_arr
         ] + $userdata;
 
     ob_start();
@@ -113,8 +109,7 @@ if (iMEMBER) {
         '{%acp_link%}'             => (iADMIN ? ADMIN."index.php".fusion_get_aidlink()."&amp;pagenum=0" : ''),
         '{%acp_title%}'            => (iADMIN ? $locale['UM083'] : ''),
         '{%logout_link%}'          => BASEDIR."index.php?logout=yes",
-        '{%logout_title%}'         => $locale['UM084'],
-        '{%submit%}'               => $info['submit'],
+        '{%logout_title%}'         => $locale['UM084']
     ]);
 
 } else {
