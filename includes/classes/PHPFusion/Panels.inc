@@ -261,30 +261,35 @@ class Panels {
                             $url_arr = explode("\r\n", $p_data['panel_url_list']);
                             $url = [];
 
-                            $source = "/".PERMALINK_CURRENT_PATH;
+                            if (fusion_get_settings('site_seo')) {
+                                $params = http_build_query(Router::getRouterInstance()->get_FileParams());
+                                $script_url = '/'.Router::getRouterInstance()->getFilePath().($params ? "?" : '').$params;
+                            } else {
+                                $script_url = '/'.PERMALINK_CURRENT_PATH;
+                            }
 
                             foreach ($url_arr as $url_list) {
                                 $url[] = $url_list;
-                                if ($this->wildcard_match($source, $url_list)) {
-                                    $url[] = $source;
+                                if ($this->wildcard_match($script_url, $url_list)) {
+                                    $url[] = $script_url;
                                 }
                             }
 
                             switch ($p_data['panel_restriction']) {
                                 case 0: // Include on these pages only
                                     //  url_list is set, and panel_restriction set to 0 (Include) and current page matches url_list.
-                                    if (!empty($p_data['panel_url_list']) && (in_array("/".PERMALINK_CURRENT_PATH, $url) || in_array("/".PERMALINK_CURRENT_PATH, $url))) {
+                                    if (!empty($p_data['panel_url_list']) && in_array($script_url, $url)) {
                                         $show_panel = TRUE;
                                     }
                                     break;
                                 case 1: // Exclude on these pages only
                                     //  url_list is set, and panel_restriction set to 1 (Exclude) and current page does not match url_list.
-                                    if (!empty($p_data['panel_url_list']) && (!in_array("/".PERMALINK_CURRENT_PATH, $url) && !in_array("/".PERMALINK_CURRENT_PATH, $url))) {
+                                    if (!empty($p_data['panel_url_list']) && !in_array($script_url, $url)) {
                                         $show_panel = TRUE;
                                     }
                                     break;
                                 case 2: // Display on Opening Page only
-                                    if (!empty($p_data['panel_url_list']) && PERMALINK_CURRENT_PATH == fusion_get_settings('opening_page')) {
+                                    if (!empty($p_data['panel_url_list']) && PERMALINK_CURRENT_PATH === fusion_get_settings('opening_page')) {
                                         $show_panel = TRUE;
                                     }
                                     break;
@@ -413,7 +418,23 @@ class Panels {
         }
 
         if (is_array($exclude_list)) {
-            $current_url = "/".PERMALINK_CURRENT_PATH;
+            if (fusion_get_settings('site_seo')) {
+                $params = http_build_query(Router::getRouterInstance()->get_FileParams());
+                $file_path = '/'.Router::getRouterInstance()->getFilePath().($params ? "?" : '').$params;
+                $script_url = explode("/", $file_path);
+            } else {
+                $script_url = explode("/", '/'.PERMALINK_CURRENT_PATH);
+            }
+
+            $url_count = count($script_url);
+            $base_url_count = substr_count(BASEDIR, "../") + (fusion_get_settings('site_seo') ? ($url_count - 1) : 1);
+            $current_url = "";
+            while ($base_url_count != 0) {
+                $current = $url_count - $base_url_count;
+                $current_url .= "/".$script_url[$current];
+                $base_url_count--;
+            }
+
             $url = [];
             foreach ($exclude_list as $url_list) {
                 $url[] = $url_list;
