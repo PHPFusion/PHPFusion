@@ -161,7 +161,7 @@ if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['photo_
             FALSE, FALSE, "delete");
         dbquery_insert(DB_PHOTOS, $photo_data, 'delete');
         addNotice("success", $locale['photo_0024']);
-        redirect(clean_request("", ["aid", "album_id"], TRUE));
+        redirect(clean_request("", ["aid"], TRUE));
     }
 }
 // purge photos
