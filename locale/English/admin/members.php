@@ -58,6 +58,7 @@ $locale['ME_465'] = 'Please note that some users may have submitted content to y
 $locale['ME_466'] = 'It is strongly recommended to change deactivation action to anonymize instead of delete to prevent data loss!';
 $locale['ME_467'] = "Set deactivation system to anonymize.";
 $locale['ME_468'] = 'Automatic deactivation of inactive users.';
+$locale['ME_469'] = 'User has been activated';
 
 // Actions
 $locale['ME_500'] = 'Ban';
@@ -67,6 +68,7 @@ $locale['ME_503'] = 'Suspend';
 $locale['ME_504'] = 'Security Ban';
 $locale['ME_505'] = 'Cancel';
 $locale['ME_506'] = 'Anonymize';
+$locale['ME_507'] = 'Activate';
 
 // a_message keys
 $locale['ME_550'] = 'banned';

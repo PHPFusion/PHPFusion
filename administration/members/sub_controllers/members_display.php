@@ -208,7 +208,7 @@ class Members_Display extends Members_Admin {
                         <div class='overflow-hide'>".$data['user_name']."<br/>".getsuspension(2)."</div></div>",
                     'user_status'  => getsuspension(2),
                     'user_level'   => self::$locale['ME_562'],
-                    'user_actions' => "<a href='".self::$status_uri['delete'].$data['user_name']."&amp;newuser=1'>".self::$locale['delete']."</a>",
+                    'user_actions' => "<a href='".self::$status_uri['activate'].$data['user_name']."&amp;code=".$data['user_code']."'>".self::$locale['ME_507']."</a> - <a href='".self::$status_uri['delete'].$data['user_name']."&amp;newuser=1'>".self::$locale['delete']."</a>",
                     'user_email'   => $data['user_email']."<br /><a href='".self::$status_uri['resend'].$data['user_name']."' title='".self::$locale['u165']."'><i class='fa fa-envelope fa-lg m-r-10'></i></a>",
                     'user_joined'  => showdate('longdate', $data['user_datestamp']),
                 ];

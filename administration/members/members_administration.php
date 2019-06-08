@@ -99,6 +99,7 @@ class Members_Admin {
             'delete'                => $base_url.'&amp;ref=delete&amp;lookup=',
             'inactive'              => $base_url.'&amp;ref=inactive',
             'resend'                => $base_url.'&amp;ref=resend&amp;lookup=',
+            'activate'              => $base_url.'&amp;ref=activate&amp;lookup=',
         ];
 
         self::$user_id = (isset($_GET['lookup']) && dbcount('(user_id)', DB_USERS, 'user_id=:user_id', [':user_id' => isnum($_GET['lookup']) ? $_GET['lookup'] : 0]) ? $_GET['lookup'] : 0);
@@ -275,6 +276,12 @@ class Members_Admin {
                         redirect(FUSION_SELF.fusion_get_aidlink());
                     }
                     break;
+                case 'activate':
+                    if (!empty($_GET['lookup']) && !empty($_GET['code'])) {
+                        Members_Profile::activate_user();
+                    } else {
+                        redirect(FUSION_SELF.fusion_get_aidlink());
+                    }
             }
         } else {
             if (isset($_REQUEST['action']) && isset($_REQUEST['user_id']) || isset($_REQUEST['lookup'])) {

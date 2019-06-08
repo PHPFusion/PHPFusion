@@ -252,7 +252,6 @@ class Members_Profile extends Members_Admin {
         if (isset($_POST['delete_newuser'])) {
             dbquery("DELETE FROM ".DB_NEW_USERS." WHERE user_name=:user_name", [':user_name' => $_GET['lookup']]);
             redirect(clean_request('', ['ref', 'lookup', 'newuser'], FALSE));
-
         }
 
         echo "<div class='well'>\n";
@@ -265,6 +264,18 @@ class Members_Profile extends Members_Admin {
         echo "</div>\n";
         echo closeform();
         echo "</div>\n";
+    }
+
+    public static function activate_user() {
+        $result = dbquery("SELECT * FROM ".DB_NEW_USERS." WHERE user_code=:code AND user_name=:name", [':code' => $_GET['code'], ':name' => $_GET['lookup']]);
+
+        $data = dbarray($result);
+        $user_info = unserialize(base64_decode($data['user_info']));
+        dbquery_insert(DB_USERS, $user_info, 'save');
+        dbquery("DELETE FROM ".DB_NEW_USERS." WHERE user_code=:code", [':code' => $_GET['code']]);
+
+        addNotice('success', self::$locale['ME_469']);
+        redirect(clean_request('', ['ref', 'lookup', 'code'], FALSE));
     }
 
     public static function resend_email() {
