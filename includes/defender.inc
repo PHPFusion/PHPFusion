@@ -123,42 +123,22 @@ class Defender {
     }
 
     public static function add_field_session(array $array) {
-        $page_hash = self::pageHash(self::$remote_file);
-        $_SESSION['form_fields'][$page_hash][$array['input_name']] = $array;
+        $_SESSION['form_fields'][self::pageHash()][$array['input_name']] = $array;
     }
 
+    private static $page_hash = '';
+
     /**
-     * Generates a md5 hash of the current page to make token session unique
-     * Eg. /php-fusion/infusions/blog/blog.php for Non
-     *
-     * @param string     $file
-     * @param bool|FALSE $encrypt
+     * Hash a token to prevent unauthorized access
      *
      * @return string
      */
-    public static function pageHash($file = '', $encrypt = FALSE) {
-        if (fusion_get_settings("site_seo") == 1 && !preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
-            $hash = $encrypt ? md5('administration') : 'administration';
-        } else {
-            $hash = $encrypt ? md5($_SERVER['PHP_SELF']) : $_SERVER['PHP_SELF'];
+    public static function pageHash() {
+        if (empty(self::$page_hash)) {
+            self::$page_hash = md5(SECRET_KEY);
         }
 
-        if (!empty($file)) {
-            // file needs to take out the request string.
-            if (stristr($file, '?')) {
-                $file_arr = explode('?', $file);
-                $file = $file_arr[0];
-            }
-            $hash = $encrypt ? md5($file) : $file;
-        } else if (!empty($_POST['file'])) {
-            if (stristr($_POST['file'], '?')) {
-                $file_arr = explode('?', $_POST['file']);
-                $file = $file_arr[0];
-            }
-            $hash = $encrypt ? md5($file) : $file;
-        }
-
-        return (string)$hash;
+        return (string) self::$page_hash;
     }
 
     // Checks whether an input was marked as invalid

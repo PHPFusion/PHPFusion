@@ -119,7 +119,7 @@ class CategoryMeta {
 
             $encoded = json_encode($_category);
 
-            add_to_jquery("admin_cat_meta_ui.ajaxCall('".Token::generate_token('ui-category')."', $encoded)");
+            add_to_jquery("admin_cat_meta_ui.ajaxCall('".fusion_get_token('ui-category')."', $encoded)");
 
             return (string)$html;
         }

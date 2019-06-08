@@ -18,7 +18,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-function form_geo($input_name, $label = '', $input_value = FALSE, array $options = []) {
+function form_geo($input_name, $label, $input_value = FALSE, array $options = []) {
     global $fusion_steam;
 
     $locale = fusion_get_locale();
@@ -92,23 +92,47 @@ function form_geo($input_name, $label = '', $input_value = FALSE, array $options
 
     // input name is
     $grid_class = $fusion_steam->load('Layout')->getColumnClass([100,100,100]).' p-0';
+
     $grid_offset_class = $fusion_steam->load('Layout')->getColumnClass([0,0,0,0], TRUE);
+
     if ($options['inline'] === TRUE && !empty($label)) {
+
         $grid_class = $fusion_steam->load('Layout')->getColumnClass([100,100,80]);
+
         $grid_offset_class = $fusion_steam->load('Layout')->getColumnClass([0,0,20,20], TRUE);
+
     }
 
     // Street 1
     $options['placeholder'] = $locale['street1'];
     $options['input_id'] = $input_id.'-street1';
-    $html = form_text($input_name.'[0]',$label, $input_value[0], $options);
+
+    $default_label = [
+        0 => '',
+        1 => '',
+        2 => '',
+        3 => '',
+        4 => '',
+        5 => ''
+    ];
+    $input_label = [];
+    if (!empty($label)) {
+        $input_label = $label;
+        // 9.00 compatibility
+        if (is_string($label)) {
+            $input_label[0] = $label;
+        }
+    }
+    $input_label += $default_label;
+
+    $html = form_text($input_name.'[0]', $input_label[0], $input_value[0], $options);
 
     // Street 2
     // This is not required at all times.
     $options['placeholder'] = $locale['street2'];
     $options['input_id'] = $input_id.'-street2';
     $html .= "<div class='clearfix'><div class='$grid_class $grid_offset_class'>";
-    $html .= form_text($input_name.'[1]', '', $input_value[1], $options + ['required'=>FALSE]);
+    $html .= form_text($input_name.'[1]', $input_label[1], $input_value[1], $options + ['required'=>FALSE]);
     $html .= "</div></div>";
 
     // Country
@@ -128,7 +152,7 @@ function form_geo($input_name, $label = '', $input_value = FALSE, array $options
     $html .= "<div class='clearfix'><div class='$grid_class $grid_offset_class'>";
     // Country
     $html .= "<div class='display-inline-block m-r-10'>";
-    $html .= form_select($input_name.'[2]', '', $input_value[2], $options);
+    $html .= form_select($input_name.'[2]', $input_label[2], $input_value[2], $options);
     $html .= "</div>";
     // Region
     $options['input_id'] = $input_id.'-state';
@@ -136,7 +160,7 @@ function form_geo($input_name, $label = '', $input_value = FALSE, array $options
     $options['jsonmode'] = TRUE;
     $options['allowclear'] = FALSE;
     $html .= "<div class='display-inline-block'>";
-    $html .= form_select($input_name.'[3]', '', $input_value[3], $options);
+    $html .= form_select($input_name.'[3]', $input_label[3], $input_value[3], $options);
     $html .= "</div>";
     $html .= "</div></div>"; // clearfix, gridclass end
 
@@ -147,14 +171,14 @@ function form_geo($input_name, $label = '', $input_value = FALSE, array $options
     $options['inner_width'] = '250px';
     $options['input_id'] = $input_id.'-city';
     $html .= "<div class='display-inline-block m-r-10'>";
-    $html .= form_text($input_name.'[4]', '', $input_value[4], $options);
+    $html .= form_text($input_name.'[4]', $input_label[4], $input_value[4], $options);
     $html .= "</div>";
 
     // Postal code
     $options['placeholder'] = $locale['postcode'];
     $options['input_id'] = $input_id.'-postcode';
     $html .= "<div class='display-inline-block m-r-10'>";
-    $html .= form_text($input_name.'[5]', '', $input_value[5], $options);
+    $html .= form_text($input_name.'[5]', $input_label[5], $input_value[5], $options);
     $html .= "</div>";
     $html .= "</div>";
     $html .= "</div>";
@@ -178,6 +202,7 @@ function form_geo($input_name, $label = '', $input_value = FALSE, array $options
 
     static $flag_function = NULL;
     $flag_plugin = '';
+
     if ($options['flag']) {
         if (empty($flag_function)) {
             $flag_function = DYNAMICS.'assets/geo/flag.select2.js';

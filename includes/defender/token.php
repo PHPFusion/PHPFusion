@@ -134,9 +134,9 @@ class Token extends \Defender {
 
         if ($this->error) {
             self::$tokenIsValid = FALSE;
-            //echo $error;
             self::stop();
-            if (self::$debug === TRUE) {
+            $token_notice = TRUE;
+            if ($token_notice === TRUE) {
                 addNotice('danger', $_SERVER['PHP_SELF']);
                 addNotice('danger', $this->error);
             }
@@ -197,55 +197,72 @@ class Token extends \Defender {
      *
      * @param string $form_id
      * @param int    $max_tokens
-     * @param string $file
-     * @param int    $token_time
      *
      * @return string
      */
-    public static function generate_token($form_id = 'phpfusion', $max_tokens = 5, $file = '', $token_time = TIME) {
-        // resets remote file every callback
-
-        $remote_file = ($file ? $file : '');
-        \Defender::getInstance()->set_RemoteFile($remote_file);
+    public static function generate_token($form_id = 'phpfusion', $max_tokens = 5) {
 
         $userdata = fusion_get_userdata();
+
         $settings = fusion_get_settings();
+
         $user_id = $userdata['user_id'];
+
         $secret_key = defined('SECRET_KEY') ? SECRET_KEY : 'secret_key';
+
         $secret_key_salt = defined('SECRET_KEY_SALT') ? SECRET_KEY_SALT : 'secret_salt';
+
         $algo = !empty($settings['password_algorithm']) ? $settings['password_algorithm'] : 'sha256';
-        $key = $user_id.$token_time.$form_id.$secret_key;
+
+        $key = $user_id.TIME.$form_id.$secret_key;
+
         $salt = md5(isset($userdata['user_salt']) ? $userdata['user_salt'].$secret_key_salt : $secret_key_salt);
 
         // generate a new token
-        $token = $user_id.'-'.$token_time.'-'.hash_hmac($algo, $key, $salt);
+        $token = $user_id.'-'.TIME.'-'.hash_hmac($algo, $key, $salt);
+
+        $page_file = self::pageHash();
 
         if (\Defender::safe()) {
+
             // Store into session
-            $_SESSION['csrf_tokens'][self::pageHash($file)][$form_id][] = $token;
+            $_SESSION['csrf_tokens'][$page_file][$form_id][] = $token;
+
             // Round robin consume token
-            if (count($_SESSION['csrf_tokens'][self::pageHash($file)][$form_id]) > $max_tokens) {
-                array_shift($_SESSION['csrf_tokens'][self::pageHash($file)][$form_id]);
+            if (count($_SESSION['csrf_tokens'][$page_file][$form_id]) > $max_tokens) {
+
+                array_shift($_SESSION['csrf_tokens'][$page_file][$form_id]);
+
             }
+
         } else {
-            if (!empty($_SESSION['csrf_tokens']) && !empty($_SESSION['csrf_tokens'][self::pageHash($file)][$form_id])) {
-                $token_ring = $_SESSION['csrf_tokens'][self::pageHash($file)][$form_id];
+
+            if (!empty($_SESSION['csrf_tokens']) && !empty($_SESSION['csrf_tokens'][$page_file][$form_id])) {
+
+                $token_ring = $_SESSION['csrf_tokens'][$page_file][$form_id];
+
                 $ring = array_rand($token_ring, 1);
+
                 $token = $token_ring[$ring];
+
             } else {
-                $_SESSION['csrf_tokens'][self::pageHash($file)][$form_id][] = $token;
+
+                $_SESSION['csrf_tokens'][$page_file][$form_id][] = $token;
+
             }
+
         }
 
         // Debugging section
         if (self::$debug) {
+
             if (!self::safe()) {
                 echo alert('FUSION NULL is DECLARED');
             }
-            if (!empty($_SESSION['csrf_tokens'][self::pageHash($file)][$form_id])) {
-                $token_ring = $_SESSION['csrf_tokens'][self::pageHash($file)][$form_id];
-                $text = "<strong>New Valid tokens for Form ID <kbd>$form_id</kbd> for ".self::pageHash($file
-                    ).": </strong><ul class='block'><li>".implode("</li><li>", $token_ring)."</li></ul>\n";
+
+            if (!empty($_SESSION['csrf_tokens'][$page_file][$form_id])) {
+                $token_ring = $_SESSION['csrf_tokens'][$page_file][$form_id];
+                $text = "<strong>New Valid tokens for Form ID <kbd>$form_id</kbd> for ".$page_file.": </strong><ul class='block'><li>".implode("</li><li>", $token_ring)."</li></ul>\n";
                 echo alert($text, ['class' => 'alert-success']);
             } else {
                 echo alert('There is no token for this page this round');

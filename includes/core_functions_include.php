@@ -1810,6 +1810,17 @@ function fusion_get_aidlink() {
 }
 
 /**
+ * Get form tokens
+ * @param     $form_id
+ * @param int $max_tokens
+ *
+ * @return string
+ */
+function fusion_get_token($form_id, $max_tokens = 5) {
+    return \Defender\Token::generate_token($form_id, $max_tokens);
+}
+
+/**
  * Fetch PM Settings
  *
  * @param      $user_id

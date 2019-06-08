@@ -217,7 +217,7 @@ class Admins {
         });
         ");*/
         $remote = fusion_get_settings('site_path')."administration/includes/cache_update.php";
-        $token = Token::generate_token($form_id, 5, $remote); // see i can only save about 5 times only. so i need to regen it.
+        $token = fusion_get_token($form_id, 5);
         add_to_jquery("
         function timedCacheRequest(timeout) {
             setTimeout(UpdateAdminCache, timeout);
