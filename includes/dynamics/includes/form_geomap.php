@@ -117,10 +117,11 @@ function form_geo($input_name, $label, $input_value = FALSE, array $options = []
     ];
     $input_label = [];
     if (!empty($label)) {
-        $input_label = $label;
+        $input_label = $label; // array
         // 9.00 compatibility
         if (is_string($label)) {
-            $input_label[0] = $label;
+            unset($input_label);
+            $input_label[] = $label;
         }
     }
     $input_label += $default_label;
