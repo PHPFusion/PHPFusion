@@ -23,8 +23,8 @@ use PHPFusion\OutputHandler;
 /**
  * Current microtime as float to calculate script start/end time
  *
- * @deprecated since version 9.00, use microtime(TRUE) instead
  * @return float
+ * @deprecated since version 9.00, use microtime(TRUE) instead
  */
 function get_microtime() {
     return microtime(TRUE);
@@ -95,11 +95,11 @@ function fusion_get_currency($iso = NULL, $description = TRUE) {
 /**
  * Check if a given theme exists and is valid
  *
- * @global string[] $settings
- *
  * @param string    $theme
  *
  * @return boolean
+ * @global string[] $settings
+ *
  */
 function theme_exists($theme) {
     if ($theme == "Default") {
@@ -113,10 +113,11 @@ function theme_exists($theme) {
 /**
  * Set a valid theme
  *
- * @global string[] $settings
+ * @param string    $theme
+ *
  * @global array    $locale
  *
- * @param string    $theme
+ * @global string[] $settings
  */
 function set_theme($theme) {
     $locale = fusion_get_locale();
@@ -844,11 +845,11 @@ function censorwords($text) {
 /**
  * Get a user level's name by the numeric code of level
  *
- * @global array $locale
- *
  * @param int    $userlevel
  *
  * @return string
+ * @global array $locale
+ *
  */
 function getuserlevel($userlevel) {
     $locale = fusion_get_locale();
@@ -864,11 +865,11 @@ function getuserlevel($userlevel) {
 /**
  * Get a user status by the numeric code of the status
  *
- * @global array $locale
- *
  * @param int    $userstatus
  *
  * @return string|NULL NULL if the status does not exist
+ * @global array $locale
+ *
  */
 function getuserstatus($userstatus) {
     $locale = fusion_get_locale();
@@ -997,9 +998,9 @@ function cache_groups() {
 /**
  * Compile access levels & user group array
  *
- * @global array $locale
  * @return array structure of elements: array($levelOrGroupid, $levelnameOrGroupname, $levelGroupDescription,
  *               $levelGroupIcon)
+ * @global array $locale
  */
 function getusergroups() {
     $locale = fusion_get_locale();
@@ -1021,13 +1022,13 @@ function getusergroups() {
 /**
  * Get the name of the access level or user group
  *
- * @global array  $locale
- *
  * @param int     $group_id
  * @param boolean $return_desc If TRUE, group_description will be returned instead of group_name
  * @param boolean $return_icon If TRUE, group_icon will be returned instead of group_icon group_name
  *
  * @return bool
+ * @global array  $locale
+ *
  */
 function getgroupname($group_id, $return_desc = FALSE, $return_icon = FALSE) {
 
@@ -1132,11 +1133,11 @@ function blacklist($field) {
 /**
  * check if user was blacklisted by a member
  *
- * @global string[] $userdata
- *
  * @param int       $user_id
  *
  * @return boolean
+ * @global string[] $userdata
+ *
  */
 function user_blacklisted($user_id) {
 
@@ -1224,8 +1225,6 @@ function makefileopts(array $files, $selected = "") {
 /**
  * Making Page Navigation
  *
- * @global array  $locale
- *
  * @param int     $start      The number of the first listed item - $_GET['rowstart']
  * @param int     $count      The number of displayed items - LIMIT on sql
  * @param int     $total      The number of all items - a dbcount of total
@@ -1236,6 +1235,8 @@ function makefileopts(array $files, $selected = "") {
  * @param boolean $button     Displays as button
  *
  * @return boolean|string FALSE if $count is invalid
+ * @global array  $locale
+ *
  */
 function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = "rowstart", $button = FALSE) {
 
@@ -1429,14 +1430,14 @@ function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $ge
 /**
  * Format the date & time accordingly
  *
- * @global string[] $settings
- * @global string[] $userdata
- *
  * @param string    $format shortdate, longdate, forumdate, newsdate or date pattern for the strftime
  * @param int       $val    unix timestamp
  * @param array     $options
  *
  * @return string
+ * @global string[] $settings
+ * @global string[] $userdata
+ *
  */
 function showdate($format, $val, $options = []) {
     $userdata = fusion_get_userdata();
@@ -1481,13 +1482,13 @@ function showdate($format, $val, $options = []) {
 /**
  * Translate bytes into kB, MB, GB or TB by CrappoMan, lelebart fix
  *
- * @global array  $locale
- *
  * @param int     $size   The number of bytes
  * @param int     $digits Precision
  * @param boolean $dir    TRUE if it is the size of a directory
  *
  * @return string
+ * @global array  $locale
+ *
  */
 function parsebytesize($size, $digits = 2, $dir = FALSE) {
     $locale = fusion_get_locale();
@@ -1695,6 +1696,18 @@ function fusion_get_aidlink() {
 }
 
 /**
+ * Get form tokens
+ *
+ * @param     $form_id
+ * @param int $max_tokens
+ *
+ * @return string
+ */
+function fusion_get_token($form_id, $max_tokens = 5) {
+    return \defender\Token::generate_token($form_id, $max_tokens);
+}
+
+/**
  * Fetch PM Settings
  *
  * @param      $user_id
@@ -1775,11 +1788,11 @@ function valid_language($lang, $file_check = FALSE) {
 /**
  * Create a selection list of possible languages in list
  *
- * @todo rename it from get_available_languages_list to a more proper name
- *
  * @param string $selected_language
  *
  * @return string
+ * @todo rename it from get_available_languages_list to a more proper name
+ *
  */
 function get_available_languages_list($selected_language = "") {
     $enabled_languages = fusion_get_enabled_languages();

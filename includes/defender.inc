@@ -7,7 +7,6 @@
 | Filename: defender.inc
 | Author : Frederick MC Chan (Chan)
 | Co-Author: Dan C (JoiNNN)
-| Version : 9.0.5 (please update every commit)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -124,41 +123,22 @@ class defender {
     }
 
     public static function add_field_session(array $array) {
-        $_SESSION['form_fields'][self::pageHash(self::$remote_file)][$array['input_name']] = $array;
+        $_SESSION['form_fields'][self::pageHash()][$array['input_name']] = $array;
     }
 
+    private static $page_hash = '';
+
     /**
-     * Generates a md5 hash of the current page to make token session unique
-     * Eg. /php-fusion/infusions/blog/blog.php for Non
-     *
-     * @param string     $file
-     * @param bool|FALSE $encrypt
+     * Hash a token to prevent unauthorized access
      *
      * @return string
      */
-    public static function pageHash($file = '', $encrypt = FALSE) {
-        if (fusion_get_settings("site_seo") == 1 && !preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
-            $hash = $encrypt ? md5('administration') : 'administration';
-        } else {
-            $hash = $encrypt ? md5($_SERVER['PHP_SELF']) : $_SERVER['PHP_SELF'];
+    public static function pageHash() {
+        if (empty(self::$page_hash)) {
+            self::$page_hash = md5(SECRET_KEY);
         }
 
-        if (!empty($file)) {
-            // file needs to take out the request string.
-            if (stristr($file, '?')) {
-                $file_arr = explode('?', $file);
-                $file = $file_arr[0];
-            }
-            $hash = $encrypt ? md5($file) : $file;
-        } else if (!empty($_POST['file'])) {
-            if (stristr($_POST['file'], '?')) {
-                $file_arr = explode('?', $_POST['file']);
-                $file = $file_arr[0];
-            }
-            $hash = $encrypt ? md5($file) : $file;
-        }
-
-        return (string)$hash;
+        return (string)self::$page_hash;
     }
 
     // Checks whether an input was marked as invalid
@@ -219,7 +199,7 @@ class defender {
     /**
      * @return array
      */
-    public function getInputErrors() {
+    public static function getInputErrors() {
         return self::$input_errors;
     }
 
@@ -263,6 +243,35 @@ class defender {
     }
 
     /**
+     * @param $key
+     *
+     * @return string
+     */
+    public function filterPostArray($key) {
+        $flag = '';
+        $input_key = $key;
+        if (is_array($key)) {
+            // always use key 0 for filter var
+            $input_key = $key[0];
+            $flag = FILTER_REQUIRE_ARRAY;
+        }
+
+        $filtered = post($input_key, FILTER_DEFAULT, $flag);
+
+        if (is_array($key)) {
+            $input_ref = $key;
+            unset($input_ref[0]);
+            // Get the value of the filtered post value using the $key array as map
+            return array_reduce($input_ref, function ($value, $key) {
+                return (!empty($value[$key]) ? $value[$key] : '');
+            }, $filtered);
+        }
+
+        return (string)$filtered;
+    }
+
+
+    /**
      * Sanitize
      *
      * @param            $value
@@ -303,12 +312,13 @@ class defender {
                     return $default;
 
                 } else {
+                    $val_ = [];
 
                     foreach ($val as $lang => $value) {
-                        $val[$lang] = $val[$lang];
+                        $val_[$lang] = $val[$lang];
                     }
 
-                    return serialize($val);
+                    return serialize($val_);
                 }
 
             } else {
@@ -333,14 +343,14 @@ class defender {
                         ($secured != '' && $regex && !preg_match('@^'.$regex.'$@i', $secured)) || // regex will fail for an imploded array, maybe move this check
                         (is_callable($callback) && !$callback($secured))
                     ) {
+
                         self::stop();
+                        self::setInputError($input_name);
+
                         // Add regex error message.
                         if ($secured != '' && $regex && !preg_match('@^'.$regex.'$@i', $secured)) {
-                            self::stop();
                             addNotice("danger", sprintf(fusion_get_locale('regex_error'), $this->field_config['title']));
                             unset($locale);
-                        } else {
-                            self::setInputError($input_name);
                         }
                         // Add a notice
                         if (self::$debug) {
@@ -388,13 +398,29 @@ class defender {
         throw new \Exception('The form sanitizer could not handle the request! (input: '.$input_name.')');
     }
 
+    /**
+     * Sanitize with input name
+     *
+     * @param        $key
+     * @param string $default
+     * @param bool   $input_name
+     * @param bool   $is_multiLang
+     *
+     * @return string
+     * @throws Exception
+     */
+    public function sanitizer($key, $default = '', $input_name = FALSE, $is_multiLang = FALSE) {
+        $value = $this->filterPostArray($key);
+        return $this->form_sanitizer($value, $default, $input_name, $is_multiLang);
+    }
+
     /** @noinspection PhpInconsistentReturnPointsInspection */
     public function validate() {
 
-        \Defender\Validation::inputName($this->field_name);
-        \Defender\Validation::inputDefault($this->field_default);
-        \Defender\Validation::inputValue($this->field_value);
-        \Defender\Validation::inputConfig($this->field_config);
+        \defender\Validation::inputName($this->field_name);
+        \defender\Validation::inputDefault($this->field_default);
+        \defender\Validation::inputValue($this->field_value);
+        \defender\Validation::inputConfig($this->field_config);
 
         $locale = fusion_get_locale(LOCALE.LOCALESET.'defender.php');
         // Are there situations were inputs could have leading
@@ -417,7 +443,8 @@ class defender {
                     return $this->field_default;
                 }
 
-                return \Defender\Validation::getValidated();
+                return \defender\Validation::getValidated();
+
             } else {
                 self::stop();
                 $locale['type_unknown'] = '%s: has an unknown type set'; // to be moved
@@ -427,6 +454,8 @@ class defender {
             self::stop();
             addNotice('danger', $e->getMessage());
         }
+
+        return NULL;
     }
 
     /**
@@ -435,7 +464,7 @@ class defender {
      *
      * @param $notice - Show custom notice message on validation errors
      */
-    static function stop($notice = '') {
+    public static function stop($notice = '') {
         if (!defined('FUSION_NULL')) {
             define('FUSION_NULL', TRUE);
             if ($notice) {
@@ -484,7 +513,7 @@ class defender {
     /**
      * Encrypts a string securely with a private key
      *
-     * @param string $string The text to encrypt
+     * @param string $string      The text to encrypt
      * @param string $private_key For better security use \defender::get_encrypt_key to generate your private key
      *
      * Does not support array encrypt.
@@ -504,7 +533,7 @@ class defender {
     /**
      * Decrypts a string securely with a private key
      *
-     * @param $string - The string to decrypt
+     * @param $string      - The string to decrypt
      * @param $private_key - For better security use \defender::get_encrypt_key to generate your private key
      *
      * @return null|string
@@ -558,6 +587,74 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $is_multiLan
     return defender::getInstance()->form_sanitizer($value, $default, $input_name, $is_multiLang);
 }
 
-require(__DIR__.'/defender/validation.php');
-require(__DIR__.'/defender/token.php');
-require(__DIR__.'/defender/mimecheck.php');
+/**
+ * Verify and Sanitize Inputs with input_name
+ * A more secured method
+ *
+ * @param        $value
+ * @param string $default
+ * @param bool   $input_name
+ * @param bool   $is_multiLang
+ *
+ * @return string
+ * @throws Exception
+ */
+function sanitizer($value, $default = '', $input_name = FALSE, $is_multiLang = FALSE) {
+    return defender::getInstance()->sanitizer($value, $default, $input_name, $is_multiLang);
+}
+
+/**
+ * @param null   $key
+ * @param int    $type
+ * @param string $flags
+ *
+ * @return mixed
+ */
+function get($key = NULL, $type = FILTER_DEFAULT, $flags = '') {
+    return stripinput(filter_input(INPUT_GET, $key, $type, $flags));
+}
+
+/**
+ * @param     $key
+ * @param int $type
+ * @param     $flags
+ *
+ * @return mixed
+ */
+function post($key, $type = FILTER_DEFAULT, $flags = '') {
+    return filter_input(INPUT_POST, $key, $type, $flags);
+}
+
+/**
+ * @param     $key
+ * @param int $type
+ *
+ * @return mixed
+ */
+function server($key, $type = FILTER_DEFAULT) {
+    return filter_input(INPUT_SERVER, $key, $type);
+}
+
+/**
+ * @param     $key
+ * @param int $type
+ *
+ * @return mixed
+ */
+function environment($key, $type = FILTER_DEFAULT) {
+    return filter_input(INPUT_ENV, $key, $type);
+}
+
+/**
+ * @param     $key
+ * @param int $type
+ *
+ * @return mixed
+ */
+function cookie($key, $type = FILTER_DEFAULT) {
+    return stripinput(filter_input(INPUT_COOKIE, $key, $type));
+}
+
+require_once __DIR__.'/defender/validation.php';
+require_once __DIR__.'/defender/token.php';
+require_once __DIR__.'/defender/mimecheck.php';
