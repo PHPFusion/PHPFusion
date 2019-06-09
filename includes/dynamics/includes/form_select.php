@@ -562,6 +562,7 @@ function form_select($input_name, $label = "", $input_value, array $options = []
 
     \Defender::add_field_session($config);
 
+    $fusion_steam = new \PHPFusion\Steam('bootstrap3');
     return $fusion_steam->load('Form')->input($input_name, $label, $input_value, $options);
 
     // return (string)$html;
