@@ -134,11 +134,23 @@ class Defender {
      * @return string
      */
     public static function pageHash() {
+        if (!defined('SECRET_KEY')) {
+            $chars = ["abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ", "123456789"];
+            $count = [(strlen($chars[0]) - 1), (strlen($chars[1]) - 1)];
+            $key = "";
+            for ($i = 0; $i < 32; $i++) {
+                $type = mt_rand(0, 1);
+                $key .= substr($chars[$type], mt_rand(0, $count[$type]), 1);
+            }
+
+            define('SECRET_KEY', $key);
+        }
+
         if (empty(self::$page_hash)) {
             self::$page_hash = md5(SECRET_KEY);
         }
 
-        return (string) self::$page_hash;
+        return (string)self::$page_hash;
     }
 
     // Checks whether an input was marked as invalid
