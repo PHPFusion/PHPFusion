@@ -109,16 +109,23 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
 
     // default max file size
     $format = '';
+    $browseLabel = $locale['df_300'];
+    $type_for_js = NULL;
     if ($options['type']) {
+        // file type if single filter, if not will accept as object if left empty.
         if (!stristr($options['type'], ',') && $options['type']) {
             if ($options['type'] == 'image') {
                 $format = "image/*";
+                $browseLabel = $locale['df_301'];
             } else if ($options['type'] == 'video') {
                 $format = "video/*";
+                $browseLabel = $locale['df_302'];
             } else if ($options['type'] == 'audio') {
                 $format = "audio/*";
+                $browseLabel = $locale['df_303'];
             }
         }
+        $type_for_js = json_encode((array)$options['type']);
     }
 
     $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] ? 'display-block overflow-hide ' : '').$error_class.$options['class']."' ".($options['width'] ? "style='width: ".$options['width']." !important;'" : '').">\n";
@@ -209,26 +216,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
 
 
     if ($options['krajee_disabled'] === FALSE) {
-        $browseLabel = $locale['df_300'];
-
-        // file type if single filter, if not will accept as object if left empty.
-        $type_for_js = NULL;
-        if ($options['type']) {
-            if (!stristr($options['type'], ',') && $options['type']) {
-                if ($options['type'] == 'image') {
-                    $browseLabel = $locale['df_301'];
-                } else if ($options['type'] == 'video') {
-                    $browseLabel = $locale['df_302'];
-                } else if ($options['type'] == 'audio') {
-                    $browseLabel = $locale['df_303'];
-                }
-            }
-
-            $type_for_js = json_encode((array)$options['type']);
-        }
-
         $browseLabel = $options['placeholder'] ?: $browseLabel;
-
         $value = "";
         if (!empty($input_value)) {
             if (is_array($input_value)) {
@@ -375,5 +363,5 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
 
     }
 
-    return $html;
+    return (string)$html;
 }
