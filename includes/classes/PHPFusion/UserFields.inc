@@ -594,13 +594,17 @@ class UserFields extends UserFieldsQuantum {
                 return "The friend page is currently under development.";
                 break;
             case "groups":
+
                 $class = new Profile_Groups($this->profile_id, $this->getCurrentUserData());
                 return display_profile_groups($class->showGroupProfile());
+
                 break;
             case "activity":
+
                 $class = new Profile_Activity($this->profile_id, $this->getCurrentUserData());
                 $info = $class->showActivityProfile();
                 return display_profile_activity($info);
+
                 return "This activity page is currently unavailable.";
                 break;
             case "default":
@@ -629,6 +633,7 @@ class UserFields extends UserFieldsQuantum {
         OpenGraph::ogUserProfile($this->profile_id);
 
         $userdata = $this->getCurrentUserData();
+
         $this->total_groups = UserGroups::get_userGroupCount($userdata['user_groups']);
 
         // info
@@ -685,6 +690,7 @@ class UserFields extends UserFieldsQuantum {
                 ];
             }
         }
+
         // IP
         if (iADMIN && checkrights('M')) {
             $this->info['core_field']['profile_user_ip'] = [
@@ -702,6 +708,7 @@ class UserFields extends UserFieldsQuantum {
         }
 
         if ($this->userModeratorAccess()) {
+
             $this->info['user_admin'] = [
                 'user_edit_title'     => $locale['edit'],
                 'user_edit_link'      => ADMIN."members.php".$aidlink."&amp;ref=edit&amp;lookup=".$this->info['user_id'],
@@ -715,6 +722,7 @@ class UserFields extends UserFieldsQuantum {
                 'user_susp_title'     => $locale['u054'],
                 'user_susp_link'      => ADMIN."members.php".$aidlink."&amp;ref=log&amp;lookup=".$this->info['user_id']
             ];
+
         }
 
         echo display_profile($this->info);

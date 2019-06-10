@@ -191,19 +191,19 @@ class Actions extends Members {
         if (!empty($this->users)) {
             $u_name = [];
 
-            if (isset($_POST['post_action'])) {
+            if (post('post_action')) {
 
                 $settings = fusion_get_settings();
                 $userdata = fusion_get_userdata();
                 $reason = '';
 
                 if (!empty($this->action_map[$this->action]['reason'])) {
-                    $reason = form_sanitizer($_POST['reason'], '', 'reason');
+                    $reason = sanitizer('reason', '', 'reason');
                 }
 
                 $duration = 0;
                 if (!empty($this->action_map[$this->action]['action_time'])) {
-                    $duration = form_sanitizer($_POST['duration'], '', 'duration');
+                    $duration = sanitizer('duration', '', 'duration');
                     $duration = ($duration * 86400) + TIME;
                 }
 

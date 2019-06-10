@@ -5,7 +5,7 @@ use Administration\Members\Members;
 use PHPFusion\Interfaces\TableSDK;
 use PHPFusion\UserFieldsQuantum;
 
-class Listing implements TableSDK {
+class User_List implements TableSDK {
 
     /**
      *  Returns the table data source structure configurations
