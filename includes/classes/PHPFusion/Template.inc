@@ -360,6 +360,7 @@ class Template {
         preg_match_all($short_code_pattern, $this->template, $cache, PREG_SET_ORDER);
         if (!empty($cache)) {
             //print_P($cache);
+            $fusion_steam = new \PHPFusion\Steam('bootstrap3');
             $layout_class = $fusion_steam->load('Layout');
             $shortcode_cache = [];
 

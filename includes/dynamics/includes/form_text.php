@@ -44,7 +44,7 @@
  *
  */
 function form_text($input_name, $label = "", $input_value = "", array $options = []) {
-    global $fusion_steam;
+
 
     $locale = fusion_get_locale();
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
@@ -285,6 +285,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
     }
 
     //return (string)$html;
+    $fusion_steam = new \PHPFusion\Steam('bootstrap3');
     return $fusion_steam->load('Form')->input($input_name, $label, $input_value, $options);
 
 }
