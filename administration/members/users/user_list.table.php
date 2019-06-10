@@ -115,7 +115,7 @@ class User_List implements TableSDK {
             'deleted_message'  => 'User have been deleted',
             'view_link_format' => BASEDIR.'profile.php?lookup=:user_id',
             'link_filters'     => [
-                'groups' => [
+                'user_level' => [
                     'title'   => 'Roles:',
                     'options' => $groups_array
                 ]
