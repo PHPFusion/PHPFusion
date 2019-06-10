@@ -15,8 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-namespace PHPFusion\Infusions\Forum\Classes;
+namespace PHPFusion\Infusions\Forum\Classes\Postify;
 
+use PHPFusion\Infusions\Forum\Classes\Forum_Postify;
 /**
  * Vote Up and Down on Q&A Forum Type
  * Class Postify_vote

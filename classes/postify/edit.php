@@ -15,9 +15,10 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-namespace PHPFusion\Infusions\Forum\Classes;
+namespace PHPFusion\Infusions\Forum\Classes\Postify;
 
 use PHPFusion\BreadCrumbs;
+use PHPFusion\Infusions\Forum\Classes\Forum_Postify;
 
 /**
  * Forum Edit Reply
@@ -37,7 +38,9 @@ class Postify_Edit extends Forum_Postify {
 
             // Post deleted
             add_to_title(self::$locale['global_201'].self::$locale['forum_0506']);
-            BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => self::$locale['forum_0506']]);
+
+            add_breadcrumb(['link' => FUSION_REQUEST, 'title' => self::$locale['forum_0506']]);
+
             redirect(self::$default_redirect_link, 3);
 
             $title = self::$locale['forum_0506'];
@@ -52,7 +55,8 @@ class Postify_Edit extends Forum_Postify {
 
             // Post Edited
             add_to_title(self::$locale['global_201'].self::$locale['forum_0508']);
-            BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => self::$locale['forum_0508']]);
+
+            add_breadcrumb(['link' => FUSION_REQUEST, 'title' => self::$locale['forum_0508']]);
 
             if (isset($_GET['post_id'])) {
                 redirect($settings['siteurl'].'infusions/forum/viewthread.php?thread_id='.$_GET['thread_id'].'&amp;pid='.$_GET['post_id'].'#post_'.$_GET['post_id'], 3);

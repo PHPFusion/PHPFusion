@@ -49,7 +49,7 @@ if (!function_exists("display_forum_pollform")) {
  */
 if (!function_exists('render_postify')) {
     function render_postify($info) {
-        return \PHPFusion\Infusions\Forum\Classes\Forum_Viewer::getInstance()->render_postify($info);
+        echo \PHPFusion\Infusions\Forum\Classes\Forum_Viewer::getInstance()->render_postify($info);
     }
 }
 

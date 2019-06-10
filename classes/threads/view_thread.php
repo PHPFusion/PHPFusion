@@ -102,7 +102,6 @@ class View_Thread extends Forum_Server {
             // everyone can upvote and downvote -- doesn't matter.
             // the author must select which is answered.
             // vote get points as usual. if voted up, and change voted down, all logic remains same.
-
             return render_thread($info);
         }
 

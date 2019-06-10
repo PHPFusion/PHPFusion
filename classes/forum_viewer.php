@@ -1153,6 +1153,7 @@ class Forum_Viewer {
         if (!empty($pdata)) {
             $i = 1;
             foreach ($pdata as $post_id => $post_data) {
+
                 $post_items = $this->render_post_item($post_data, $i + (isset($_GET['rowstart']) ? $_GET['rowstart'] : ''));
 
                 if ($post_id == $info['post_firstpost']) {
@@ -1249,7 +1250,9 @@ class Forum_Viewer {
         $locale = fusion_get_locale();
         $file_path = Forum_Server::get_template('forum_postify');
         $html = \PHPFusion\Template::getInstance('forum-postify');
+
         $html->set_template($file_path);
+
         $html->set_locale($locale);
         $html->set_tag('forum_navs', $this->get_forum_navs());
         $html->set_tag('title', $info['title']);
@@ -1257,6 +1260,7 @@ class Forum_Viewer {
         $html->set_tag('closetable', fusion_get_function('closetable'));
         $html->set_tag('alert_class', ($info['error'] ? "alert alert-danger" : ""));
         $html->set_tag('delay', 3);
+
         add_to_jquery("
         var delay_sec = 4;
         var delay = setInterval(function(e) {

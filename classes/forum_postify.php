@@ -77,42 +77,54 @@ class Forum_Postify extends Forum_Server {
         return NULL;
     }
 
+    private function loaded_postify($class_actions) {
+        if (is_file(FORUM_CLASS.'postify/'.strtolower($class_actions).'.php')) {
+            include FORUM_CLASS.'postify/'.strtolower($class_actions).'.php';
+            $namespace_ = '\\PHPFusion\\Infusions\\Forum\\Classes\\Postify\\Postify_';
+            $class_name = $namespace_.ucfirst($class_actions);
+
+            $this->postify_action[$class_actions] = new $class_name();
+
+            return TRUE;
+        }
+
+        return FALSE;
+    }
+
     /**
      * @param $class_actions
      *
-     * @return object
-     * @throws \ReflectionException
+     * @return mixed
+     * @throws \Exception
      */
     private function load_postify($class_actions) {
         /*
          * Overrides
          */
-        $implements = [
-            'on'       => 'Track',
-            'off'      => 'Track',
-            'voteup'   => 'Vote',
-            'votedown' => 'Vote'
+        $override_functions = [
+            'on'       => 'track',
+            'off'      => 'track',
+            'voteup'   => 'vote',
+            'votedown' => 'vote'
         ];
-        // Override the class action with the implemented method.
-        $class_actions = (isset($implements[$class_actions]) ? $implements[$class_actions] : $class_actions);
-        if (file_exists(FORUM_CLASS.'postify/postify_'.strtolower($class_actions).'.php')) {
-            $namespace_ = '\\PHPFusion\\Infusions\\Forum\\Classes\\Postify\\Postify_';
-            $class_name = $namespace_.$class_actions;
-            $obj = new \ReflectionClass($class_name);
-            if (!empty($obj)) {
-                $this->postify_action[$class_actions] = $obj->newInstance();
 
-                return (object)$this->postify_action[$class_actions];
-            } else {
-                throw new \Exception('Invalid Action');
-            }
+        if (isset($class_actions[$override_functions])) {
+            $class_actions = $class_actions[$override_functions];
+        }
+
+        if ($this->loaded_postify($class_actions)) {
+
+            return $this->postify_action[$class_actions];
+
         } else {
             throw new \Exception('File does not exist');
         }
     }
 
     protected function get_postify_error_message() {
+
         $_GET['error'] = (!empty($_GET['error']) && isnum($_GET['error']) && $_GET['error'] <= 6 ? $_GET['error'] : 0);
+
         if (!empty($_GET['error'])) {
             switch ($_GET['error']) {
                 case 1:
