@@ -32,12 +32,19 @@ spl_autoload_register(function ($className) {
 
     $baseDir = __DIR__.'/';
     $fullPath = $baseDir.$path.'.inc';
+    $fullPath_lc = strtolower($fullPath);
     $fullPath2 = $baseDir.$path.'.php';
+    $fullPath2_lc = strtolower($fullPath2);
     if (is_file($fullPath)) {
         require_once $fullPath;
     } elseif (is_file($fullPath2)) {
         require_once $fullPath2;
+    } elseif (is_file($fullPath_lc)) {
+        require_once $fullPath_lc;
+    } elseif (is_file($fullPath2_lc)) {
+        require_once $fullPath2_lc;
     }
+
 });
 
 /*
