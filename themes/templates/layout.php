@@ -134,10 +134,13 @@ echo "<script type='text/javascript' src='".INCLUDES."jquery/holder/holder.min.j
 // Output lines added with add_to_footer()
 echo $fusion_page_footer_tags;
 
-// Output lines added with add_to_jquery()
-$jquery_tags = "$('[data-submenu]').submenupicker();";
-// Fix select2 on modal - http://stackoverflow.com/questions/13649459/twitter-bootstrap-multiple-modal-error/15856139#15856139
-$jquery_tags .= "$.fn.modal.Constructor.prototype.enforceFocus = function () {};";
+$jquery_tags = '';
+
+if ($settings['bootstrap'] || defined('BOOTSTRAP')) {
+    $jquery_tags .= "$('[data-submenu]').submenupicker();";
+    // Fix select2 on modal - http://stackoverflow.com/questions/13649459/twitter-bootstrap-multiple-modal-error/15856139#15856139
+    $jquery_tags .= "$.fn.modal.Constructor.prototype.enforceFocus = function () {};";
+}
 
 // Output lines added with add_to_jquery()
 if (!empty($fusion_jquery_tags)) {
