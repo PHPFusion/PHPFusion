@@ -108,8 +108,8 @@ class Forum_Postify extends Forum_Server {
             'votedown' => 'vote'
         ];
 
-        if (isset($class_actions[$override_functions])) {
-            $class_actions = $class_actions[$override_functions];
+        if (isset($override_functions[$class_actions])) {
+            $class_actions = $override_functions[$class_actions];
         }
 
         if ($this->loaded_postify($class_actions)) {

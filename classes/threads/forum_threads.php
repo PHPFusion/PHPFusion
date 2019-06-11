@@ -1058,6 +1058,7 @@ class Forum_Threads extends Forum_Server {
             if ($response) {
                 redirect(FUSION_REQUEST);
             }
+
             /* Set Threads Navigation */
             $info['thread_posts'] = format_word($info['post_rows'], $locale['fmt_post']);
             $info['page_nav'] = '';
