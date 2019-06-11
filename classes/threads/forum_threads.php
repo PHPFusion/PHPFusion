@@ -284,7 +284,7 @@ class Forum_Threads extends Forum_Server {
                         'user_name'   => $threads['author_name'],
                         'user_status' => $threads['author_status'],
                         'user_avatar' => $threads['author_avatar'],
-                        'user_rank'   => parent::display_rank($user1['user_posts'], $user1['user_level'], $user1['user_groups']),
+                        'user_rank'   => parent::get_forum_rank($user1['user_posts'], $user1['user_level'], $user1['user_groups']),
                     ];
 
                     $lastuser = [
@@ -292,7 +292,7 @@ class Forum_Threads extends Forum_Server {
                         'user_name'   => $threads['last_user_name'],
                         'user_status' => $threads['last_user_status'],
                         'user_avatar' => $threads['last_user_avatar'],
-                        'user_rank'   => parent::display_rank($user2['user_posts'], $user2['user_level'], $user2['user_groups']),
+                        'user_rank'   => parent::get_forum_rank($user2['user_posts'], $user2['user_level'], $user2['user_groups']),
                     ];
 
                     // Automatic link to the latest post
@@ -1350,11 +1350,14 @@ class Forum_Threads extends Forum_Server {
                     if (!$filter['thread_locked']) {
                         // Check first post.
                         $reply_link = INFUSIONS."forum/viewthread.php?action=reply&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id'];
+
                         $quote_link = INFUSIONS."forum/viewthread.php?action=reply&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id']."&amp;quote=".$pdata['post_id'];
-                        if ($pdata['post_id'] == $filter['post_firstpost']) {
-                            $quote_link = INFUSIONS."forum/viewthread.php?action=reply&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;quote=".$pdata['post_id'];
-                            $reply_link = INFUSIONS."forum/viewthread.php?action=reply&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id'];
-                        }
+
+                        // if ($pdata['post_id'] == $filter['post_firstpost']) {
+                        //     $quote_link = INFUSIONS."forum/viewthread.php?action=reply&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;quote=".$pdata['post_id'];
+                        //     $reply_link = INFUSIONS."forum/viewthread.php?action=reply&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id'].'';
+                        // }
+
                         $pdata['post_quote'] = [
                             'link'  => $quote_link,
                             'title' => $locale['forum_0266']
@@ -1388,20 +1391,25 @@ class Forum_Threads extends Forum_Server {
                         "title" => "Report"
                     ];
                 }
+
+                // return arrays now (purpose of info, render at view_rank or something)
+                $pdata['user_rank'] = $this->get_forum_rank($pdata['user_posts'], ($pdata['user_level'] <= USER_LEVEL_ADMIN && iMOD ? 104 : $pdata['user_level']), $pdata['user_groups']);
+
+
                 // rank img
-                if ($pdata['user_level'] <= USER_LEVEL_ADMIN) {
-                    if ($forum_settings['forum_ranks']) {
-                        $pdata['user_rank'] = self::display_rank($pdata['user_posts'], $pdata['user_level'], $pdata['user_groups']);
-                    } else {
-                        $pdata['user_rank'] = getuserlevel($pdata['user_level']);
-                    }
-                } else {
-                    if ($forum_settings['forum_ranks']) {
-                        $pdata['user_rank'] = iMOD ? self::display_rank($pdata['user_posts'], 104, $pdata['user_groups']) : self::display_rank($pdata['user_posts'], $pdata['user_level'], $pdata['user_groups']);
-                    } else {
-                        $pdata['user_rank'] = iMOD ? $locale['userf1'] : getuserlevel($pdata['user_level']);
-                    }
-                }
+                // if ($pdata['user_level'] <= USER_LEVEL_ADMIN) {
+                //     if ($forum_settings['forum_ranks']) {
+                //         $pdata['user_rank'] = self::display_rank($pdata['user_posts'], $pdata['user_level'], $pdata['user_groups']);
+                //     } else {
+                //         $pdata['user_rank'] = getuserlevel($pdata['user_level']);
+                // } else {
+                //     }
+                //     if ($forum_settings['forum_ranks']) {
+                //         $pdata['user_rank'] = iMOD ? self::display_rank($pdata['user_posts'], 104, $pdata['user_groups']) : self::display_rank($pdata['user_posts'], $pdata['user_level'], $pdata['user_groups']);
+                //     } else {
+                //         $pdata['user_rank'] = iMOD ? $locale['userf1'] : getuserlevel($pdata['user_level']);
+                //     }
+                // }
 
                 // Website
                 if (!empty($pdata['user_web']) && (iADMIN || $pdata['user_status'] != 6 && $pdata['user_status'] != 5)) {
@@ -1478,6 +1486,8 @@ class Forum_Threads extends Forum_Server {
                     $pdata['post_votebox'] .= "<a href='".$pdata['post_vote_down']['link']."' class='text-center vote_down".($pdata['post_vote_down']['active'] ? " text-warning" : '')."' title='".$locale['forum_0511']."'>\n<i class='fa fa-caret-down fa-2x'></i></a>";
                     $pdata['post_votebox'] .= "</div>\n";*/
                 } else {
+
+                    // this still have HTML, get rid of it.
                     $pdata['post_votebox'] = "<div class='text-center'>\n";
                     $pdata['post_votebox'] .= "<h3 class='m-0'>".(!empty($pdata['vote_points']) ? $pdata['vote_points'] : 0)."</h3>\n";
                     $pdata['post_votebox'] .= "</div>\n";
@@ -1499,6 +1509,7 @@ class Forum_Threads extends Forum_Server {
                         ];
                         $pdata += $edit_user;
                     }
+                    // has html get rid of it.
                     $edit_reason = "<div class='post-edit-reason'>".$locale['forum_0164']." ".profile_link($edit_user['edit_userid'], $edit_user['edit_username'], $edit_user['edit_userstatus'])." ".$locale['forum_0167']." ".showdate("forumdate", $pdata['post_edittime']).", ".timer($pdata['post_edittime']);
                     if ($pdata['post_editreason'] && iMEMBER) {
                         $edit_reason .= " - <a id='reason_pid_".$pdata['post_id']."' rel='".$pdata['post_id']."' class='reason_button pointer' data-target='reason_div_pid_".$pdata['post_id']."'>";
@@ -1518,15 +1529,18 @@ class Forum_Threads extends Forum_Server {
                 $pdata['post_links'] .= !empty($pdata['print']) ? "<a class='btn btn-xs btn-default' title='".$pdata['print']["title"]."' href='".$pdata['print']['link']."'>".$pdata['print']['title']."</a>\n" : '';
                 $pdata['post_links'] .= !empty($pdata['user_web']) ? "<a class='btn btn-xs btn-default forum_user_actions' href='".$pdata['user_web']['link']."' target='_blank'>".$pdata['user_web']['title']."</a>\n" : '';
                 $pdata['post_links'] .= !empty($pdata['user_message']) ? "<a class='btn btn-xs btn-default' href='".$pdata['user_message']['link']."' target='_blank'>".$pdata['user_message']['title']."</a>\n" : '';
+
                 // Post Date
                 $pdata['post_date'] = $locale['forum_0524']." ".timer($pdata['post_datestamp'])." - ".showdate('forumdate', $pdata['post_datestamp']);
+
                 $pdata['post_shortdate'] = $locale['forum_0524']." ".timer($pdata['post_datestamp']);
+
                 $pdata['post_longdate'] = $locale['forum_0524']." ".showdate('forumdate', $pdata['post_datestamp']);
 
-                //$this->thread_info['post_items'][$pdata['post_id']] = $pdata;
                 $info['post_items'][$pdata['post_id']] = $pdata;
+
                 $i++;
-                //print_p($pdata);
+
             }
         }
 

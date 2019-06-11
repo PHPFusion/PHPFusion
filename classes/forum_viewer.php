@@ -259,8 +259,16 @@ class Forum_Viewer {
         $html->set_tag("item_marker_id", $data['marker']['id']);
         $html->set_tag("item_id", $n);
         $html->set_tag("user_avatar", $data['user_avatar_image']);
-        $html->set_tag("user_avatar_rank", ($forum_settings['forum_rank_style'] == '1' ? "<div class='m-t-10'>".$data['user_rank']."</div>" : ''));
-        $html->set_tag("user_rank", ($forum_settings['forum_rank_style'] == '0' ? "<span class='forum-rank'>".$data['user_rank']."</span>" : ''));
+
+        // label style
+        $html->set_tag('user_avatar_rank', '');
+        $html->set_tag('user_rank', '<span class="forum-rank">'.$data['user_rank']['rank_title'].'</span>');
+        // image style
+        if ($forum_settings['forum_rank_style']) {
+            $html->set_tag('user_rank', '');
+            $html->set_tag('user_avatar_rank', '<span class="forum-rank"><img title="'.$data['user_rank']['rank_title'].'" src="'.$data['user_rank']['rank_image_src'].'"/></span>');
+        }
+
         $html->set_tag("user_profile_link", $data['user_profile_link']);
         $html->set_tag("user_online_status", ($data['user_online'] ? "fa fa-circle" : "fa fa-circle-thin"));
         $html->set_tag("user_signature", ($data['user_sig'] ? "<div class='forum-sig'>".$data['user_sig']."</div>" : ''));

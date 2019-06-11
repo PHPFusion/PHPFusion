@@ -282,12 +282,15 @@ class ForumAdminRanks extends ForumAdminInterface {
                 "</thead>\n<tbody>\n";
 
             $i = 0;
+
             while ($data = dbarray($result)) {
+
+                $ranks = Forum_Server::get_forum_rank($data['rank_posts'], $data['rank_apply'], $data['rank_apply']);
 
                 $html .= "<tr>\n".
                     "<td '>".$data['rank_title']."</td>\n".
                     "<td>".($data['rank_apply'] == -104 ? self::$locale['forum_rank_425'] : getgroupname($data['rank_apply']))."</td>\n".
-                    "<td class='col-xs-2'>".Forum_Server::display_rank($data['rank_posts'], $data['rank_apply'], $data['rank_apply'])."</td>\n".
+                    "<td class='col-xs-2'><img src='".$ranks['rank_image_src']."'></td>\n".
                     "<td>";
 
                 if ($data['rank_type'] == 0) {

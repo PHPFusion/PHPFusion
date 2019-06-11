@@ -25,7 +25,6 @@ use PHPFusion\Infusions\Forum\Classes\Post\New_Thread;
 use PHPFusion\Infusions\Forum\Classes\Threads\Forum_Mood;
 use PHPFusion\Infusions\Forum\Classes\Threads\Forum_ThreadFilter;
 use PHPFusion\Infusions\Forum\Classes\Threads\Forum_Threads;
-use PHPFusion\Template;
 
 //use PHPFusion\Infusions\Forum\Classes\Post\NewThread;
 
@@ -157,31 +156,24 @@ abstract class Forum_Server {
      *
      * @return string HTML source of forum rank images
      */
-    public static function display_rank($posts, $level, $groups) {
-
-        $forum_settings = self::get_forum_settings();
+    public static function get_forum_rank($posts, $level, $groups) {
 
         $ranks = [];
-
-        if (!$forum_settings['forum_ranks']) {
-            return '';
-        }
-
-        $image = ($forum_settings['forum_rank_style'] == 1);
 
         $forum_rank_cache = self::forum_rank_cache();
 
         $forum_rank_css_class = [
             USER_LEVEL_MEMBER      => 'label-member',
-            USER_LEVEL_ADMIN       => 'label-mod',
+            USER_LEVEL_ADMIN       => 'label-admin',
             USER_LEVEL_SUPER_ADMIN => 'label-super-admin',
+            '-104'                 => 'label-mod'
         ];
 
         $forum_rank_icon_class = [
-            USER_LEVEL_MEMBER      => 'fa fa-legal fa-fw',
-            USER_LEVEL_ADMIN       => 'fa fa-legal fa-fw',
-            USER_LEVEL_SUPER_ADMIN => 'fa fa-legal fa-fw',
-            '-104'                 => 'fa fa-legal fa-fw',
+            USER_LEVEL_MEMBER      => 'fas fa-user fa-fw',
+            USER_LEVEL_ADMIN       => 'fas fa-user-user-secret fa-fw',
+            USER_LEVEL_SUPER_ADMIN => 'fas fa-user-astronaut fa-fw',
+            '-104'                 => 'fas fa-user-secret fa-fw',
         ];
 
         // Moderator ranks
@@ -234,23 +226,20 @@ abstract class Forum_Server {
             }
         }
 
-        $tpl = Template::getInstance('forum_ranks_label');
-
-        foreach ($ranks as $rank) {
-            $tpl->set_tag('rank_title', $rank['rank_title']);
-            $tpl->set_tag('rank_image', RANKS.$rank['rank_image']);
-            $tpl->set_tag('rank_class', (isset($forum_rank_css_class[$rank['rank_apply']]) ? $forum_rank_css_class[$rank['rank_apply']] : "label-default"));
-            $tpl->set_tag('css_icon', (isset($forum_rank_icon_class[$rank['rank_apply']]) ? $forum_rank_icon_class[$rank['rank_apply']] : "fa fa-user fa-fw"));
+        if (!empty($ranks['post_rank'])) {
+            $ranks['post_rank']['rank_image_src'] = RANKS.$ranks['post_rank']['rank_image'];
+            $ranks['post_rank']['rank_class'] = (isset($forum_rank_css_class[$ranks['post_rank']['rank_apply']]) ? $forum_rank_css_class[$ranks['post_rank']['rank_apply']] : "label-default");
+            $ranks['post_rank']['rank_icon'] = (isset($forum_rank_icon_class[$ranks['post_rank']['rank_apply']]) ? $forum_rank_icon_class[$ranks['post_rank']['rank_apply']] : "fa fa-user");
+        } else if (!empty($ranks[0])) {
+            $ranks['post_rank']['rank_image_src'] = RANKS.$ranks[0]['rank_image'];
+            $ranks['post_rank']['rank_class'] = (isset($forum_rank_css_class[$ranks[0]['rank_apply']]) ? $forum_rank_css_class[$ranks[0]['rank_apply']] : "label-default");
+            $ranks['post_rank']['rank_icon'] = (isset($forum_rank_icon_class[$ranks[0]['rank_apply']]) ? $forum_rank_icon_class[$ranks[0]['rank_apply']] : "fa fa-user");
         }
 
-        if ($image) {
-            $tpl->set_template(__DIR__."/../templates/forum_rank_image.html");
-        } else {
-            $tpl->set_template(__DIR__."/../templates/forum_rank.html");
-        }
+        // end of cached.
+        $ranks['post_rank']['rank_user_level'] = getuserlevel($level);
 
-        return (string)$tpl->get_output();
-
+        return $ranks['post_rank'];
     }
 
     /**
