@@ -25,8 +25,9 @@ namespace PHPFusion\Weblinks;
  */
 class WeblinksView extends Weblinks {
     public function display_weblink() {
-        $weblink_id = filter_input(INPUT_GET, 'weblink_id', FILTER_VALIDATE_INT);
-        $this->cat_id = filter_input(INPUT_GET, 'cat_id', FILTER_VALIDATE_INT);
+        // filter_input - does not working with SEO
+        $weblink_id = isset($_GET['weblink_id']) ? $_GET['weblink_id'] : 0;
+        $this->cat_id = isset($_GET['cat_id']) ? $_GET['cat_id'] : 0;
         if (!empty($weblink_id) && isnum($weblink_id)) {
             return self::set_WeblinkCount($weblink_id);
         } else if (!empty($this->cat_id) && isnum($this->cat_id)) {

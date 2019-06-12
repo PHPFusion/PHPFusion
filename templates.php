@@ -93,14 +93,6 @@ if (!function_exists('display_weblinks_item')) {
             ]);
         }
 
-        foreach ($info['navbar'] as $view_keys => $navbar_link) {
-            $html->set_block('navbar_item', [
-                'links' => $navbar_link['links']
-            ]);
-        }
-
-        $html->set_tag('weblinks_span', $info['span']);
-
         if (!empty($info['weblink_items'])) {
             foreach ($info['weblink_items'] as $web_data) {
                 $html->set_block('weblink', [
