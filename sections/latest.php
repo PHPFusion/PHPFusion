@@ -33,7 +33,7 @@ $opts = [
     '180' => $locale['forum_p180'],
     '365' => $locale['forum_3015']
 ];
-$this->forum_info['threads_time_filter'] = openform('filter_form', 'post', INFUSIONS."forum/index.php?section=latest").
+$this->forum_info['threads_time_filter'] = openform('filter_form', 'post', FUSION_REQUEST).
     form_select('filter_date', $locale['forum_0009'], (isset($_POST['filter_date']) && $_POST['filter_date'] ? $_POST['filter_date'] : 0), [
         'options' => $opts,
         'width'   => '300px',

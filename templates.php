@@ -209,7 +209,7 @@ if (!function_exists('forum_viewforum')) {
         $tpl->set_tag('background_src', fusion_get_settings('siteurl').'infusions/forum/images/bg/default_forum_bg.jpg');
         $tpl->set_tag('breadcrumb', render_breadcrumbs());
         $tpl->set_tag('title', $info['forum_name']);
-        $tpl->set_tag('description', $info['forum_description']);
+        $tpl->set_tag('description', nl2br(parseubb($info['forum_description'])));
         if ($info['forum_rules']) {
             $tpl->set_block('rules', ['forum_rules' => alert("<span class='strong'><i class='fa fa-exclamation fa-fw'></i>".$locale['forum_0350']."</span> ".$info['forum_rules'])]);
         }
@@ -1191,7 +1191,7 @@ if (!function_exists('render_post_item')) {
                 $user_profiles .= $open_user_profiles;
                 $user_profiles .= "<li class='row'>\n";
                 $user_profiles .= "<div class='col-xs-12 col-sm-4 strong'>\n".$attr['title'].":\n</div>\n";
-                $user_profiles .= "<div class='col-xs-12 col-sm-8'>\n".strip_tags($attr['value'])."\n</div>\n";
+                $user_profiles .= "<div class='col-xs-12 col-sm-8'>\n".$attr['value']."\n</div>\n";
                 $user_profiles .= "</li>\n";
                 $temp_name = $attr['field_cat_name'];
             }

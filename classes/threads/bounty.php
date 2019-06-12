@@ -56,7 +56,7 @@ class Forum_Bounty extends ForumServer {
                             ]
                         );
                     } else {
-                        $bounty_points = form_sanitizer($_POST['bounty_points'], $default, 'bounty_points');
+                        $bounty_points = form_sanitizer(isset($_POST['bounty_points']) ? $_POST['bounty_points'] : 0, $default, 'bounty_points');
                         $point_bal = fusion_get_userdata('user_reputation') - $bounty_points;
                         $user_id = fusion_get_userdata('user_id');
                         dbquery('UPDATE '.DB_USERS.' SET user_reputation=:point_balance WHERE user_id=:my_id', [

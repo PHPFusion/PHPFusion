@@ -436,7 +436,7 @@ class ViewThread extends ForumServer {
                     }
                     ob_start();
                     echo "<p><strong>".$title."</strong>\n</p>\n";
-                    echo "<table class='table table-responsive'>\n";
+                    echo "<div class='table-responsive'><table class='table'>\n";
                     $i = $forum_settings['posts_per_page'];
 
                     while ($data = dbarray($last_post_result)) {
@@ -460,7 +460,7 @@ class ViewThread extends ForumServer {
                         $i--;
                     }
 
-                    echo "</table>\n";
+                    echo "</table></div>\n";
                     $info['last_posts_reply'] = ob_get_contents();
                     ob_end_clean();
                 }
