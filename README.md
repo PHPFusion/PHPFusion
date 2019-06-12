@@ -9,7 +9,6 @@ Welcome to the PHP-Fusion Official Repository
 ====
 The latest branch is Babylon. It contains all the previous commits done by all the core developers up to date.
 
-
 To sync to this database and not to conflict with your work, please do the following before doing anything:
 
   1. Save all your current local work to a temporary folder.
@@ -74,6 +73,39 @@ Pulling a CI changes (using the CI's own VCS root):
 ````git
 C:\php-fusion\infusions\forum> git pull
 ````
+
+New Class, Method, Function Naming Convention
+===
+This will be one of the main things to do in the Babylon project.
+
+Please observe the new naming convention system, as we will be refactoring the entire system files to the following:
+
+**File Name:** file-name.php or file_name.php are accepted.
+
+**Function Name:** some_function() {} using snake case 
+
+**Class Name:** Some_Class {} using camel case where the first letter is an Uppercase and if file is separated with a - to be represented with a _ underscore in the class name.
+
+**Class Method Name:** public someFunction() {} using pascal case where the first letter is a Lowercase.
+
+**Other Notes on File Naming:** 
+
+On PSR4 autoloaders issues, we'll do both - , _ and implement strict strtolower on filenames with a common goal to support all files in the PHP-Fusion project scope.
+Further update will follow as we observe the growth of the project.
+
+You can still run .inc but those will not be supported by PHP-Fusion Autoloader anymore. A custom autoloader will be needed from your end.
+
+The file name must be in all small caps, not .inc but .php extension. 
+
+Just in case, in some rare scenarios, that if the files are already existing public url files, **please do not refactor the file name**. You must create a new file and put up a 301 on the old file and redirect it to the new one. This will prevent users losing page rank on live sites.
+
+If you want special identifiers for a subset of class file, you can have them renamed as file-name.classname.php
+
+**Special Note Regarding Function Naming:** 
+
+When the function/method does something, point it out as a prefix. A normal convention is to add a verb in front of the function name like 'do, get, set, define, etc'. Implementation example is such as 'doSomeFunction(), setSomeInfo(), defineConstant(), etc'.
+
+This way it is simpler on the eyes to figure out what the function does before going through the function docs.
 
 New Core Team Project Colloboration
 ====
