@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 /*
  * Loads classes from ClassName.php
  */
@@ -93,6 +94,13 @@ spl_autoload_register(function ($className) {
         //print_p($fullPath);
         if (is_file($fullPath)) {
             require $fullPath;
+        }
+
+        $className = str_replace('_', '-', $className);
+        $fullPath = BASEDIR.'infusions'.DIRECTORY_SEPARATOR.$className.'.php';
+
+        if (is_file($fullPath)) {
+            require_once $fullPath;
         }
     }
 });
