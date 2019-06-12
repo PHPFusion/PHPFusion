@@ -355,11 +355,15 @@ function form_select($input_name, $label = "", $input_value, array $options = []
     }
 
     if ($options['multiple']) {
-        if ($input_value) {
-            $input_value = construct_array($input_value, 0, $options['delimiter']);
-        }
-        if (empty($input_value)) {
-            $input_value = [];
+        if (!empty($input_value)) {
+
+            if (!is_array($input_value)) {
+                $input_value = construct_array($input_value, 0, $options['delimiter']);
+            }
+
+            if (empty($input_value)) {
+                $input_value = [];
+            }
         }
     }
 
