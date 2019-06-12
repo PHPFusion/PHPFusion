@@ -623,6 +623,14 @@ function sanitizer($value, $default = '', $input_name = FALSE, $is_multiLang = F
  * @return mixed
  */
 function get($key = NULL, $type = FILTER_DEFAULT, $flags = '') {
+
+    if ($flags == FILTER_VALIDATE_INT) {
+
+        if (isset($_GET[$key]) && isnum($_GET[$key]) && $_GET[$key] > PHP_INT_MAX) {
+            return intval($_GET[$key]);
+        }
+    }
+
     return stripinput(filter_input(INPUT_GET, $key, $type, $flags));
 }
 
@@ -634,6 +642,14 @@ function get($key = NULL, $type = FILTER_DEFAULT, $flags = '') {
  * @return mixed
  */
 function post($key, $type = FILTER_DEFAULT, $flags = '') {
+
+    if ($flags == FILTER_VALIDATE_INT) {
+
+        if (isset($_POST[$key]) && isnum($_POST[$key]) && $_POST[$key] > PHP_INT_MAX) {
+            return intval($_GET[$key]);
+        }
+    }
+
     return filter_input(INPUT_POST, $key, $type, $flags);
 }
 
