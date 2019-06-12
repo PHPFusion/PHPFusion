@@ -740,10 +740,13 @@ function fieldgenerator($db) {
  *                     bool keep_session If TRUE, defender will not unset field sessions.
  *
  * @return int|FALSE
- *    If an error happens, it returns FALSE.
- *    Otherwise, if $mode is save and the primary key column is
- *    incremented automatically, this function returns the last inserted id.
- *    In other cases it always returns 0.
+ * @throws Exception
+ *
+ * If an error happens, it returns FALSE.
+ * Otherwise, if $mode is save and the primary key column is
+ * incremented automatically, this function returns the last inserted id.
+ *
+ * In other cases it always returns 0.
  */
 function dbquery_insert($table, $inputdata, $mode, array $options = []) {
     $options += [
@@ -797,7 +800,31 @@ function dbquery_insert($table, $inputdata, $mode, array $options = []) {
         'delete' => 'DELETE FROM `{table}` {where}'
     ];
 
+    // If values are missing, means that the $value below is an array. Set $strict to true to check for arrays.
+    $strict = FALSE;
+
     foreach ($data as $name => $value) {
+
+        if ($strict === TRUE) {
+            if (is_array($name)) {
+                print_p($name);
+                throw new Exception('SQL column name cannot be an array');
+            }
+
+            if (is_array($value)) {
+                print_p($name);
+                print_p($value);
+                print_d();
+
+                throw new Exception('SQL value cannot be an array');
+            }
+        }
+
+        // No value into SQL is in array
+        if (is_array($value)) {
+            $value = '';
+        }
+
         $sanitized_input[] = "`$name` = '$value'";
     }
 
@@ -1105,6 +1132,7 @@ function construct_array($string, $string2 = FALSE, $delimiter = FALSE) {
 
         return $value;
     } else {
+        //debug_print_backtrace();
         addNotice('info', "Debug notice: There is a string injected in construct_array() function!<br/>Please recheck source codes in this page.");
     }
 
