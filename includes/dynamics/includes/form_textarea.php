@@ -73,6 +73,8 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         'tinymce_spellcheck'  => TRUE,
         'rows'                => 5,
         'censor_words'        => TRUE,
+        'grippie' => FALSE,
+        'tab' => FALSE,
     ];
 
     $options += $default_options;
@@ -280,14 +282,36 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         }
     } else {
 
+        if ($options['tab']) {
+
+            static $tab_js = FALSE;
+            if ($tab_js === FALSE) {
+                add_to_footer("<script src='".DYNAMICS."assets/tab/tab.min.js'></script>");
+                $tab_js = TRUE;
+            }
+
+            $tabs_js = "fusion_textarea_tab('".$options['input_id']."');";
+            add_to_jquery($tabs_js);
+
+        }
+
         if ($options['bbcode']) {
+
             $options['type'] = 'bbcode';
+
         } else if ($options['html']) {
             $options['type'] = 'html';
         }
 
-        if ($options['autosize'] || defined('AUTOSIZE')) {
-            add_to_footer("<script src='".DYNAMICS."assets/autosize/autosize.min.js'></script>");
+
+        if ($options['autosize']) {
+
+            static $autosize = FALSE;
+
+            if ($autosize === FALSE) {
+                add_to_footer("<script src='".DYNAMICS."assets/autosize/autosize.min.js'></script>");
+            }
+
             add_to_jquery("autosize($('#".$options['input_id']."'));");
         }
     }
@@ -300,6 +324,22 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         if ($options['type'] !== "tinymce") {
             $input_value = str_replace("<br />", "", $input_value);
         }
+    }
+
+    // load grippie
+    if ($options['grippie'] && !$options['no_resize']) {
+
+        static $grippie = FALSE;
+        if ($grippie === FALSE) {
+            $grippie = TRUE;
+            add_to_footer("<script src='".DYNAMICS."assets/grippie/grippie.min.js'></script>");
+            add_to_head("<link rel='stylesheet' href='".DYNAMICS."assets/grippie/grippie.css'/>");
+        }
+
+        $options['inner_class'] .= " resizable";
+
+        $grippie_js = "$('#".$options['input_id'].".resizable:not(.processed)').TextAreaResizer();";
+        add_to_jquery($grippie_js);
     }
 
     $error_class = "";
@@ -319,6 +359,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
     $html .= ($options['inline']) ? "<div class='clearfix".($label ? ' col-xs-12 col-sm-9 col-md-9 col-lg-9' : '')."'>\n" : '';
     $tab_active = 0;
     $tab_title = [];
+
     if ($options['preview'] && ($options['type'] == "html" || $options['type'] == "bbcode")) {
         $tab_title['title'][] = $locale['preview'];
         $tab_title['id'][] = "prw-".$options['input_id'];
@@ -337,9 +378,11 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
     }
 
     if ($options['type'] == "bbcode" && $options['form_name']) {
+
         $html .= "<div class='bbcode_input'>\n";
         $html .= display_bbcodes('100%', $options['input_id'], $options['form_name'], $options['input_bbcode']);
-        $html .= $options['preview'] ? "</div>\n" : "";
+        $html .= $options['preview'] ? "</div>\n" : '';
+
     } else if ($options['type'] == "html" && $options['form_name']) {
         $html .= "<div class='m-t-10 m-b-10'>\n";
         $html .= display_html($options['form_name'], $options['input_id'], TRUE, TRUE, TRUE, $options['path']); // @todo: image_path to be turned off by default
@@ -410,15 +453,18 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         ");
         $html .= "</div>\n<!---panel-footer-->";
     }
+
     if ((!$options['type'] == "bbcode" && !$options['type'] == "html")) {
         $html .= $options['ext_tip'] ? "<span class='tip'><i>".$options['ext_tip']."</i></span>" : "";
     }
+
     $html .= $options['inline'] ? "</div>\n" : '';
+
     if (($options['type'] == "bbcode" || $options['type'] == "html")) {
+
         if ($options['wordcount']) {
             $html .= "</div>\n";
             $html .= $options['ext_tip'] ? "<br/>\n<span class='tip'><i>".$options['ext_tip']."</i></span>" : "";
-
         } else {
             $html .= "</div>\n";
             $html .= "</div>\n";
@@ -428,6 +474,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
     }
 
     $html .= (($options['required'] == 1 && \Defender::inputHasError($input_name)) || \Defender::inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger text-white p-5 display-inline-block'>".$options['error_text']."</div>" : "";
+
     $html .= "</div>\n";
 
     \Defender::add_field_session([

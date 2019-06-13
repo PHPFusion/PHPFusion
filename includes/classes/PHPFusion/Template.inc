@@ -59,6 +59,7 @@ class Template {
             self::$instance[$key] = new static;
         }
         self::$key = $key;
+
         return self::$instance[$key];
     }
 
@@ -139,7 +140,6 @@ class Template {
         if (isset(self::$reegistered_stylesheet[self::$key])) {
             $css_file_path = self::$reegistered_stylesheet[self::$key];
         }
-
         if (is_file($css_file_path)) {
             $this->css_path = $css_file_path;
         } else {
@@ -276,6 +276,9 @@ class Template {
      */
     public function get_output() {
 
+        if (self::$key == 'forum-post-form') {
+            print_P($this->template_path);
+        }
         $this->template = trim($this->template);
         if (!empty($this->css_path)) {
             $this->css_path = $this->css_path.'?v='.filemtime($this->css_path);
@@ -340,8 +343,10 @@ class Template {
         $this->parseShortCodes($this->template);
 
         unset($this->tag);
-
         unset($this->block);
+        unset($this->template_path);
+        unset($this->locale);
+        unset($this->css_path);
 
         return (string)trim($this->template);
     }
@@ -353,14 +358,14 @@ class Template {
 
     private function parseShortCodes() {
         //debug_print_backtrace();
-        global $fusion_steam;
+
 
         self::$short_code_instance[self::$key] = TIME;
         $short_code_pattern = '/\{\[(.*?)\]\}/s'; // group 1 is id, group 2 is the child template
         preg_match_all($short_code_pattern, $this->template, $cache, PREG_SET_ORDER);
         if (!empty($cache)) {
             //print_P($cache);
-            $fusion_steam = new \PHPFusion\Steam('bootstrap3');
+            $fusion_steam = new Steam('bootstrap3');
             $layout_class = $fusion_steam->load('Layout');
             $shortcode_cache = [];
 
