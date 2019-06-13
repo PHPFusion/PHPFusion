@@ -424,48 +424,51 @@ if (!function_exists('display_profile')) {
             }
         }
 
-        //User Fields Module Information
-        if (!empty($info['user_field'])) {
-            // first we need to identify the wrapper
-            foreach ($info['user_field'] as $catID => $categoryData) {
-                $tpl2 = \PHPFusion\Template::getInstance('user_fields');
-                $tpl2->set_template(__DIR__.'/tpl/user_profile_fields.html');
-                if (!empty($categoryData['fields'])) {
-                    foreach ($categoryData['fields'] as $_id => $_fields) {
-                        if (!empty($_fields)) {
-                            if (isset($_fields['type']) && $_fields['type'] == 'social') {
-                                $tpl->set_block('social_icons', $_fields);
-                            } else {
-                                $block_type = ($_fields['title'] ? 'user_fields_inline' : 'user_fields');
-                                $tpl2->set_block($block_type, [
-                                    'id'    => $_id,
-                                    'icon'  => !empty($_fields['icon']) ? $_fields['icon'] : '',
-                                    'title' => $_fields['title'],
-                                    'value' => $_fields['value']
-                                ]);
-                            }
-                        }
-                    }
-                    if (!empty($categoryData['title'])) {
-                        $tpl2->set_block('user_fields_cat', ['category_title' => $categoryData['title']]);
-                    }
-                    $tpl->set_block('fields_block', ["fields" => $tpl2->get_output()]);
-                }
-            }
-        } else {
-            $info['no_fields'] = $locale['uf_108'];
-        }
-
-        // Tabs
-        if (!empty($info['section'])) {
-            foreach ($info['section'] as $page_section) {
-                $tab_title['title'][$page_section['id']] = $page_section['name'];
-                $tab_title['id'][$page_section['id']] = $page_section['id'];
-                $tab_title['icon'][$page_section['id']] = $page_section['icon'];
-            }
-        }
-
+        //
+        // //User Fields Module Information
+        // if (!empty($info['user_field'])) {
+        //
+        //     // first we need to identify the wrapper
+        //     foreach ($info['user_field'] as $catID => $categoryData) {
+        //         $tpl2 = \PHPFusion\Template::getInstance('user-fields');
+        //
+        //         $tpl2->set_template(__DIR__.'/tpl/user_profile_fields.html');
+        //
+        //         if (!empty($categoryData['fields'])) {
+        //             foreach ($categoryData['fields'] as $_id => $_fields) {
+        //                 if (!empty($_fields)) {
+        //                     if (isset($_fields['type']) && $_fields['type'] == 'social') {
+        //                         $tpl->set_block('social_icons', $_fields);
+        //                     } else {
+        //                         $block_type = ($_fields['title'] ? 'user_fields_inline' : 'user_fields');
+        //                         $tpl2->set_block($block_type, [
+        //                             'id'    => $_id,
+        //                             'icon'  => !empty($_fields['icon']) ? $_fields['icon'] : '',
+        //                             'title' => $_fields['title'],
+        //                             'value' => $_fields['value']
+        //                         ]);
+        //                     }
+        //                 }
+        //             }
+        //             if (!empty($categoryData['title'])) {
+        //                 $tpl2->set_block('user_fields_cat', ['category_title' => $categoryData['title']]);
+        //             }
+        //             $tpl->set_block('fields_block', ["fields" => $tpl2->get_output()]);
+        //         }
+        //     }
+        // } else {
+        //     $info['no_fields'] = $locale['uf_108'];
+        // }
+        // // Tabs
+        // if (!empty($info['section'])) {
+        //     foreach ($info['section'] as $page_section) {
+        //         $tab_title['title'][$page_section['id']] = $page_section['name'];
+        //         $tab_title['id'][$page_section['id']] = $page_section['id'];
+        //         $tab_title['icon'][$page_section['id']] = $page_section['icon'];
+        //     }
+        // }
         //$tpl->set_tag('tab_header', (isset($tab_title) ? opentab($tab_title, $info['section_id'], 'profile_tab', TRUE, FALSE, 'section') : ''));
+
         $tpl->set_tag('user_name', $user_name);
         $tpl->set_tag('user_avatar', $user_avatar);
         $tpl->set_tag('user_level', $user_level);
@@ -479,7 +482,9 @@ if (!function_exists('display_profile')) {
         }
 
         $tpl->set_tag('basic_info', $basic_info);
+
         $tpl->set_tag('tab_footer', (isset($tab_title) ? closetab() : ''));
+
         $tpl->set_tag('no_fields', (!empty($info['no_fields']) ? $info['no_fields'] : ''));
 
         return $tpl->get_output();
@@ -497,10 +502,15 @@ if (!function_exists('display_profile')) {
  * print_p($current_user_info); // debug print
  */
 if (!function_exists('display_user_profile')) {
+
     function display_user_profile($info) {
+
         $locale = fusion_get_locale();
-        $tpl = \PHPFusion\Template::getInstance('user_profile');
+
+        $tpl = \PHPFusion\Template::getInstance('user-profile');
+
         $tpl->set_template(__DIR__.'/tpl/profile/profile.html');
+
         $tpl->set_locale($locale);
 
         foreach($info['section'] as $section) {
@@ -510,34 +520,48 @@ if (!function_exists('display_user_profile')) {
 
         //User Fields Module Information
         if (!empty($info['user_field'])) {
+
             // first we need to identify the wrapper
             foreach ($info['user_field'] as $catID => $categoryData) {
-                $tpl2 = \PHPFusion\Template::getInstance('user_fields');
+
+                $tpl2 = \PHPFusion\Template::getInstance('user-profile-fields');
+
                 $tpl2->set_template(__DIR__.'/tpl/profile/profile-fields.html');
+
                 if (!empty($categoryData['fields'])) {
+
                     foreach ($categoryData['fields'] as $_id => $_fields) {
-                        //@todo: add value as a member searchable keyword
+
                         if (!empty($_fields)) {
+
                             if (isset($_fields['type']) && $_fields['type'] == 'social') {
+
                                 $tpl->set_block('social_icons', $_fields);
+
                             } else {
-                                $block_type = ($_fields['title'] ? 'user_fields_inline' : 'user_fields');
-                                $tpl2->set_block($block_type, [
+
+                                // do not need the block type.
+                                $tpl2->set_block('user_fields', [
                                     'id'    => $_id,
                                     'icon'  => !empty($_fields['icon']) ? $_fields['icon'] : '',
                                     'title' => $_fields['title'],
                                     'value' => $_fields['value']
                                 ]);
+
                             }
                         }
+
                     }
                     if (!empty($categoryData['title'])) {
+
                         $tpl2->set_block('user_fields_cat', ['category_title' => $categoryData['title']]);
+
                     }
 
                     $tpl->set_block('fields_block', ["fields" => $tpl2->get_output()]);
                 }
             }
+
         } else {
             $info['no_fields'] = $locale['uf_108'];
         }
@@ -545,9 +569,11 @@ if (!function_exists('display_user_profile')) {
         if (!empty($info['user_admin'])) {
             $tpl->set_block('user_admin', $info['user_admin']);
         }
+
         if (!empty($info['group_admin'])) {
             $tpl->set_block('group_admin', $info['group_admin']);
         }
+
         if (!empty($info['buttons'])) {
             $tpl->set_block('buttons', $info['buttons']);
         }
