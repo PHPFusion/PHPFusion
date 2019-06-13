@@ -691,10 +691,15 @@ class Tables {
 
         // custom column cookie value
         $php_column_cookie = cookie($this->table_props['table_id'].'-cols');
+
         if ($php_column_cookie) {
+
             $column_settings = explode(',', $php_column_cookie);
+
             $this->custom_columns_value = array_combine(array_values($column_settings), array_values($column_settings));
+
         }
+
 
         $cdata = $this->getData();
         $col_span = 1;
@@ -804,11 +809,15 @@ class Tables {
 
         // The saves of this quick fields.
         if (!empty($this->quick_fields)) {
-            if (!empty($_POST['save_quick_editor'])) {
+
+            $save_quick = post('save_quick_editor');
+
+            if ($save_quick) {
                 $post_data[$this->query['id']] = form_sanitizer($_POST[$this->query['id']], '', $this->query['id']);
                 foreach ($this->quick_fields as $table_col => $table_fields) {
                     $post_data[$table_col] = form_sanitizer($_POST[$table_col], '', $table_col);
                 }
+
                 if (\Defender::safe()) {
                     dbquery_insert($this->query['table'], $post_data, 'update', ['keep_session' => TRUE]);
                     redirect(FUSION_REQUEST);
@@ -829,11 +838,17 @@ class Tables {
 
             // get default custom column values
             if ($col_key !== $this->getIdCol()) {
+
                 $this->custom_columns_options[$col_key] = $col_data['title'];
+
                 //print_P($col_data);
-                if ($col_data['visibility'] === TRUE && empty($this->custom_columns_value)) { //
+
+                if (
+                    $col_data['visibility'] === TRUE && empty($php_column_cookie) || isset($this->custom_columns_value[$col_key])
+                ) {
                     $this->custom_columns_value[$col_key] = $col_key;
                 }
+
             }
 
             // only id column and custom column value can be rendered
@@ -887,6 +902,8 @@ class Tables {
             }
 
         }
+
+
         // End Header TH
 
         /**
