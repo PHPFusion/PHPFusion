@@ -20,11 +20,11 @@ if (!defined("IN_FUSION")) {
 }
 
 function attach_exists($file) {
-    return \PHPFusion\Infusions\Forum\Classes\Forum_Functions::attach_exists($file);
+    return \PHPFusion\Infusions\Forum\Classes\Forum_Functions::attachmentExists($file);
 }
 
 function forum_rank_cache() {
-    return \PHPFusion\Infusions\Forum\Classes\Forum_Server::forum_rank_cache();
+    return \PHPFusion\Infusions\Forum\Classes\Forum_Server::forumRankCache();
 }
 
 /*function show_forum_rank($posts, $level, $groups) {
@@ -32,15 +32,15 @@ function forum_rank_cache() {
 }*/
 
 function display_image($file) {
-    \PHPFusion\Infusions\Forum\Classes\Forum_Functions::display_image($file);
+    \PHPFusion\Infusions\Forum\Classes\Forum_Functions::displayImage($file);
 }
 
 function display_image_attach($file, $width = 50, $height = 50, $rel = "") {
-    return \PHPFusion\Infusions\Forum\Classes\Forum_Functions::display_image_attach($file, $width, $height, $rel);
+    return \PHPFusion\Infusions\Forum\Classes\Forum_Functions::displayImageAttachments($file, $width, $height, $rel);
 }
 
-function define_forum_mods($info) {
-    \PHPFusion\Infusions\Forum\Classes\Forum_Moderator::define_forum_mods($info);
+function set_forum_mods($info) {
+    \PHPFusion\Infusions\Forum\Classes\Forum_Moderator::setForumMods($info);
 }
 
 function verify_forum($forum_id) {
@@ -57,7 +57,11 @@ function verify_thread($thread_id) {
 
 function get_thread($thread_id) {
     $thread = new \PHPFusion\Infusions\Forum\Classes\Threads\Forum_Threads;
-    return $thread->get_forum_thread($thread_id);
+    return $thread->getThreadInfo($thread_id);
+}
+
+function get_thread_stats($thread_id) {
+    return \PHPFusion\Infusions\Forum\Classes\Threads\Forum_Threads::getStats($thread_id);
 }
 
 /**
@@ -69,7 +73,7 @@ function get_thread($thread_id) {
  * @todo: move and improvise the voting system
  */
 
-function set_forumVotes($info, $points = 0) {
+function set_forum_votes($info, $points = 0) {
     $userdata = fusion_get_userdata();;
     // @todo: extend on user's rank threshold before can vote. - Reputation threshold- Roadmap 9.1
     // @todo: allow multiple votes / drop $res - Roadmap 9.1
@@ -106,22 +110,22 @@ function set_forumVotes($info, $points = 0) {
     }
 }
 
-function parse_forumMods($forum_mods) {
-    return \PHPFusion\Infusions\Forum\Classes\Forum_Moderator::parse_forum_mods($forum_mods);
+function display_forum_mods($forum_mods) {
+    return \PHPFusion\Infusions\Forum\Classes\Forum_Moderator::displayForumMods($forum_mods);
 }
 
-function get_recentTopics($forum_id = 0) {
-    return \PHPFusion\Infusions\Forum\Classes\Forum_Server::get_recentTopics($forum_id);
+function get_recent_topics($forum_id = 0) {
+    return \PHPFusion\Infusions\Forum\Classes\Forum_Server::getRecentTopics($forum_id);
 }
 
-function set_forumIcons(array $icons = []) {
-    \PHPFusion\Infusions\Forum\Classes\Forum_Server::set_forumIcons($icons);
+function set_forum_icons(array $icons = []) {
+    \PHPFusion\Infusions\Forum\Classes\Forum_Server::setForumIcons($icons);
 }
 
 function get_forum($forum_id = 0, $forum_branch = 0) {
-    return \PHPFusion\Infusions\Forum\Classes\Forum::get_forum($forum_id, $forum_branch);
+    return \PHPFusion\Infusions\Forum\Classes\Forum::getForum($forum_id, $forum_branch);
 }
 
-function get_forumIcons($type = '') {
-    return \PHPFusion\Infusions\Forum\Classes\Forum_Server::get_ForumIcons($type);
+function get_forum_icons($type = '') {
+    return \PHPFusion\Infusions\Forum\Classes\Forum_Server::getForumIcons($type);
 }

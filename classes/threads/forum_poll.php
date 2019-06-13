@@ -289,7 +289,7 @@ class Forum_Poll {
         'content'       => [],
     ];
 
-    public static function get_poll_info() {
+    public static function getPollInfo() {
         return self::$poll_info;
     }
 
@@ -300,7 +300,7 @@ class Forum_Poll {
      *
      * @return string
      */
-    public static function generate_poll(array $thread_data) {
+    public static function generatePoll(array $thread_data) {
 
         $locale = fusion_get_locale();
         $html = '';

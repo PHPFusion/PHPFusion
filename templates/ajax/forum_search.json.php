@@ -147,7 +147,7 @@ switch ($_REQUEST['section_value']) {
 
 //print_p($count_q);
 $thread_obj = \PHPFusion\Infusions\Forum\Classes\Forum_Server::thread(FALSE);
-$threads = $thread_obj->get_forum_thread(0, array(
+$threads = $thread_obj->getThreadInfo(0, array(
     "count_query" => $count_q,
     "query"       => $select_q
 ));

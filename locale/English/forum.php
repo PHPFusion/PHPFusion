@@ -158,6 +158,9 @@ $locale['forum_0325'] = "Trophies";
 $locale['forum_0326'] = "or Start a Discussion Thread";
 $locale['forum_0327'] = "There are no forums defined under this category";
 $locale['forum_0328'] = "There are no forums defined.";
+$locale['forum_0329'] = "You cannot perform this action.";
+
+
 $locale['forum_0340'] = "Questions";
 $locale['forum_0350'] = "Forum Rules:";
 $locale['forum_0351'] = "Sub-forums";
@@ -257,6 +260,7 @@ $locale['forum_0597'] = "Question|Questions";
 $locale['forum_0598'] = "This question has been answered";
 $locale['forum_0599'] = "This question has not been answered";
 
+
 $locale['forum_0601'] = "Message";
 $locale['forum_0602'] = "Options";
 $locale['forum_0603'] = "Edit Poll";
@@ -315,6 +319,14 @@ $locale['forum_0759'] = "The thread has been renewed.";
 $locale['forum_0800'] = "Vote rejected";
 $locale['forum_0802'] = "You cannot vote at your own post.";
 $locale['forum_0803'] = "Vote accepted";
+
+// Logging Actions
+$locale['forum_1100'] = '%s added %s';
+$locale['forum_1101'] = '%s removed %s';
+$locale['forum_1102'] = '%s changed %s to %s';
+$locale['forum_1103'] = '%s deleted %s';
+
+
 $locale['forum_2000'] = "Thread topic :";
 $locale['forum_2001'] = "Type the thread title here";
 $locale['forum_2002'] = "Re:";
@@ -336,6 +348,7 @@ $locale['forum_3012'] = "Two Months";
 $locale['forum_3013'] = "Three Months";
 $locale['forum_3014'] = "Six Months";
 $locale['forum_3015'] = "1 Year";
+
 $locale['forum_4001'] = "Thread Answering";
 $locale['forum_4002'] = "Post Answer Accepted";
 $locale['forum_4003'] = "You have marked the post as the answered to your question";

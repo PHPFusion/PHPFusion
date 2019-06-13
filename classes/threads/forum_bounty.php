@@ -141,7 +141,7 @@ class Forum_Bounty extends Forum_Server {
     }
 
     // What happens when bounty ends?
-    public function display_bounty() {
+    public function displayForumBounty() {
         $html = '';
         if (self::$data['thread_bounty']) {
             $user = fusion_get_user(self::$data['thread_bounty_user']);

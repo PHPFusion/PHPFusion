@@ -163,7 +163,7 @@ class Forum_Viewer {
 
     }
 
-    private function get_forum_navs() {
+    public function get_forum_navs() {
 
         if (empty($this->forum_nav_callback)) {
             // get all root forums
@@ -1073,8 +1073,8 @@ class Forum_Viewer {
             $html->set_block('pagenav_bottom', ['pagenav' => $info['page_nav']]);
         }
         // Icons
-        $html->set_tag('sticky_icon', ($data['thread_sticky'] == TRUE ? "<i title='".$locale['forum_0103']."' class='".get_forumIcons("sticky")."'></i>" : ''));
-        $html->set_tag('locked_icon', ($data['thread_locked'] == TRUE ? "<i title='".$locale['forum_0102']."' class='".get_forumIcons("lock")."'></i>" : ''));
+        $html->set_tag('sticky_icon', ($data['thread_sticky'] == TRUE ? "<i title='".$locale['forum_0103']."' class='".getForumIcons("sticky")."'></i>" : ''));
+        $html->set_tag('locked_icon', ($data['thread_locked'] == TRUE ? "<i title='".$locale['forum_0102']."' class='".getForumIcons("lock")."'></i>" : ''));
         // Texts and Labels
         $html->set_tag('thread_subject', $data['thread_subject']);
         $html->set_tag('time_updated', $locale['forum_0363'].' '.timer($data['thread_lastpost']));
@@ -1299,39 +1299,67 @@ class Forum_Viewer {
      *
      * @return string
      */
-    function display_forum_postform($info) {
+    public function display_forum_postform($info) {
+
         $locale = fusion_get_locale();
-        $file_path = Forum_Server::get_template('forum_postform');
+
         $html = \PHPFusion\Template::getInstance('forum-post-form');
-        $html->set_template($file_path);
+
+        $html->set_template(Forum_Server::get_template('forum_postform'));
+
         $html->set_locale($locale);
+
         $html->set_tag("baselink", FORUM);
+
         $html->set_tag("forum_navs", $this->get_forum_navs());
+
         $html->set_tag('breadcrumb', render_breadcrumbs());
+
         $html->set_tag("title", $info['title']);
+
         $html->set_tag("openform", $info['openform']);
+
         $html->set_tag("closeform", $info['closeform']);
+
         $html->set_tag('opentable', fusion_get_function('opentable', $info['title']));
+
         $html->set_tag('closetable', fusion_get_function('closetable'));
+
         $html->set_tag('description', $info['description']);
+
         $html->set_tag('forum_field', $info['forum_field'].$info['forum_id_field'].$info['thread_id_field']);
+
         $html->set_tag('forum_subject_field', $info['subject_field']);
+
         $html->set_tag('forum_tag_field', $info['tags_field']);
+
         $html->set_tag('forum_message_field', $info['message_field']);
+
         $html->set_tag('forum_edit_reason_field', $info['edit_reason_field']);
+
         $html->set_tag('forum_poll_form', $info['poll_form']);
+
+        $html->set_tag("delete", $info['delete_field']);
+
+        $html->set_tag("sticky", $info['sticky_field']);
+
+        $html->set_tag("notify", $info['notify_field']);
+
+        $html->set_tag("lock", $info['lock_field']);
+
+        $html->set_tag("hide_edit", $info['hide_edit_field']);
+
+        $html->set_tag("smiley", $info['smileys_field']);
+
+        $html->set_tag("user_sig", $info['signature_field']);
+
+        $html->set_tag('forum_post_button', $info['post_buttons']);
+
+        //$html->set_tag('preview_box', $info['preview_box']);
         if (!empty($info['attachment_field'])) {
             $html->set_block("forum_attachment", ["field" => $info['attachment_field']]);
         }
-        $html->set_tag("delete", $info['delete_field']);
-        $html->set_tag("sticky", $info['sticky_field']);
-        $html->set_tag("notify", $info['notify_field']);
-        $html->set_tag("lock", $info['lock_field']);
-        $html->set_tag("hide_edit", $info['hide_edit_field']);
-        $html->set_tag("smiley", $info['smileys_field']);
-        $html->set_tag("user_sig", $info['signature_field']);
-        $html->set_tag('forum_post_button', $info['post_buttons']);
-        //$html->set_tag('preview_box', $info['preview_box']);
+
         if (!empty($info['last_posts_reply'])) {
             $html->set_block('lastpost', ['post_items' => $info['last_posts_reply']]);
         }

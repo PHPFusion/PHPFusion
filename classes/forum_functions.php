@@ -28,7 +28,7 @@ class Forum_Functions {
      *
      * @return string
      */
-    public static function attach_exists($file) {
+    public static function attachmentExists($file) {
         $dir = INFUSIONS."forum/attachments/";
         $i = 1;
         $file_name = substr($file, 0, strrpos($file, "."));
@@ -48,7 +48,7 @@ class Forum_Functions {
      *
      * @return string
      */
-    public static function display_image($file) {
+    public static function displayImage($file) {
         $size = @getimagesize(INFUSIONS."forum/attachments/".$file);
         if ($size[0] > 300 || $size[1] > 200) {
             if ($size[0] <= $size[1]) {
@@ -84,7 +84,7 @@ class Forum_Functions {
      *
      * @return string
      */
-    public static function display_image_attach($file, $width = 200, $height = 200, $rel = "") {
+    public static function displayImageAttachments($file, $width = 200, $height = 200, $rel = "") {
         if (file_exists(INFUSIONS."forum/attachments/".$file)) {
             $size = @getimagesize(INFUSIONS."forum/attachments/".$file);
             if ($size [0] > $height || $size [1] > $width) {

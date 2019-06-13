@@ -70,13 +70,13 @@ class Postify_Reply extends Forum_Postify {
                         $template_data = dbarray($template_result);
                         if ($template_data['template_active'] == 1) {
                             while ($data = dbarray($notify_result)) {
-                                if ($this->check_forum_access($forum_index, '', $_GET['thread_id'], $data['user_id'])) {
+                                if ($this->checkForumAccess($forum_index, '', $_GET['thread_id'], $data['user_id'])) {
                                     sendemail_template("POST", $thread_data['thread_subject'], "", "", $data['user_name'], $thread_data['thread_link'], $data['user_email']);
                                 }
                             }
                         } else {
                             while ($data = dbarray($notify_result)) {
-                                if ($this->check_forum_access($forum_index, '', $_GET['thread_id'], $data['user_id'])) {
+                                if ($this->checkForumAccess($forum_index, '', $_GET['thread_id'], $data['user_id'])) {
                                     $message_subject = str_replace("{THREAD_SUBJECT}", $thread_data['thread_subject'], self::$locale['forum_0660']);
                                     $message_content = strtr(self::$locale['forum_0661'], [
                                         '{USERNAME}'       => $data['user_name'],
@@ -91,7 +91,7 @@ class Postify_Reply extends Forum_Postify {
                         }
                     } else {
                         while ($data = dbarray($notify_result)) {
-                            if ($this->check_forum_access($forum_index, '', $_GET['thread_id'], $data['user_id'])) {
+                            if ($this->checkForumAccess($forum_index, '', $_GET['thread_id'], $data['user_id'])) {
                                 $message_subject = str_replace("{THREAD_SUBJECT}", $thread_data['thread_subject'], self::$locale['forum_0660']);
                                 $message_content = strtr(self::$locale['forum_0661'], [
                                     '{USERNAME}'       => $data['user_name'],

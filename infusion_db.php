@@ -68,6 +68,9 @@ if (!defined("DB_FORUMS")) {
     define("DB_FORUMS", DB_PREFIX."forums");
 }
 
+const DB_FORUM_THREAD_LOGS = DB_PREFIX.'forum_thread_logs';
+
+
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("F", "<i class='admin-ico fa fa-fw fa-comment-o'></i>");
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("FR", "<i class='admin-ico fa fa-fw fa-gavel'></i>");
 \PHPFusion\Admins::getInstance()->setFolderPermissions('forum', [

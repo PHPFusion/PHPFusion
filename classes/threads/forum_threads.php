@@ -18,7 +18,6 @@
 
 namespace PHPFusion\Infusions\Forum\Classes\Threads;
 
-use PHPFusion\BreadCrumbs;
 use PHPFusion\Infusions\Forum\Classes\Forum_Moderator;
 use PHPFusion\Infusions\Forum\Classes\Forum_Server;
 use PHPFusion\Infusions\Forum\Classes\Post\Quick_Reply;
@@ -51,7 +50,7 @@ class Forum_Threads extends Forum_Server {
      *
      * @return array
      */
-    public function get_forum_thread($forum_id = 0, array $filter = []) {
+    public function getThreadInfo($forum_id = 0, array $filter = []) {
 
         $info = [];
         $locale = fusion_get_locale();
@@ -317,12 +316,12 @@ class Forum_Threads extends Forum_Server {
                         "forum_type"          => $threads['forum_type'],
                         "thread_pages"        => makepagenav(0, $forum_settings['posts_per_page'], $threads['thread_postcount'], 3, FORUM."viewthread.php?thread_id=".$threads['thread_id']."&amp;"),
                         "thread_icons"        => [
-                            'lock'   => $threads['thread_locked'] ? "<i class='".self::get_forumIcons('lock')."' title='".$locale['forum_0263']."'></i>" : '',
-                            'sticky' => $threads['thread_sticky'] ? "<i class='".self::get_forumIcons('sticky')."' title='".$locale['forum_0103']."'></i>" : '',
-                            'poll'   => $threads['thread_poll'] ? "<i class='".self::get_forumIcons('poll')."' title='".$locale['forum_0314']."'></i>" : '',
-                            'hot'    => $threads['thread_postcount'] >= 20 ? "<i class='".self::get_forumIcons('hot')."' title='".$locale['forum_0311']."'></i>" : '',
-                            'reads'  => $threads['thread_views'] >= 20 ? "<i class='".self::get_forumIcons('reads')."' title='".$locale['forum_0311']."'></i>" : '',
-                            'attach' => $threads['attach_count'] > 0 ? "<i class='".self::get_forumIcons('image')."' title='".$locale['forum_0312']."'></i>" : '',
+                            'lock'   => $threads['thread_locked'] ? "<i class='".self::getForumIcons('lock')."' title='".$locale['forum_0263']."'></i>" : '',
+                            'sticky' => $threads['thread_sticky'] ? "<i class='".self::getForumIcons('sticky')."' title='".$locale['forum_0103']."'></i>" : '',
+                            'poll'   => $threads['thread_poll'] ? "<i class='".self::getForumIcons('poll')."' title='".$locale['forum_0314']."'></i>" : '',
+                            'hot'    => $threads['thread_postcount'] >= 20 ? "<i class='".self::getForumIcons('hot')."' title='".$locale['forum_0311']."'></i>" : '',
+                            'reads'  => $threads['thread_views'] >= 20 ? "<i class='".self::getForumIcons('reads')."' title='".$locale['forum_0311']."'></i>" : '',
+                            'attach' => $threads['attach_count'] > 0 ? "<i class='".self::getForumIcons('image')."' title='".$locale['forum_0312']."'></i>" : '',
                             'icon'   => $icon,
                         ],
                         "thread_starter_text" => $locale['forum_0006'].' '.$locale['by']." ".profile_link($author['user_id'], $author['user_name'], $author['user_status'])."</span>",
@@ -489,25 +488,51 @@ class Forum_Threads extends Forum_Server {
      *
      * @return array
      */
-    public function get_threadInfo() {
+    public function getInfo() {
         return (array)$this->thread_info;
+    }
+
+    private function getForumId($key) {
+
+        $requested_id = get($key, FILTER_VALIDATE_INT);
+
+        if (parent::verify_forum($requested_id)) {
+            return $requested_id;
+        }
+
+        return 0;
+    }
+
+    public function getForumPostId($key) {
+
+        $requested_id = get($key, FILTER_VALIDATE_INT);
+
+        if (parent::verify_post($requested_id)) {
+            return $requested_id;
+        }
+
+        return 0;
     }
 
     /**
      * Thread Class constructor - This builds all essential data on load.
      */
-    public function set_threadInfo() {
+    public function setThreadInfo() {
 
-        if (!isset($_GET['thread_id']) or !isnum($_GET['thread_id'])) {
+        $thread_id = get('thread_id');
+
+        if (!$thread_id || !isnum($thread_id)) {
             redirect(FORUM.'index.php');
         }
 
-        if (isset($_GET['forum_id'])) {
-            if (isnum($_GET['forum_id'])) {
-                if (!dbcount('(forum_id)', DB_FORUM_THREADS, "forum_id=:forum_id AND thread_id=:thread_id",
+        $forum_id = get('forum_id');
+        if ($forum_id) {
+            if (isnum($forum_id)) {
+                if (!dbcount('(forum_id)', DB_FORUM_THREADS, "forum_id=:fid AND thread_id=:tid",
                     [
-                        ':forum_id'  => $_GET['forum_id'],
-                        ':thread_id' => $_GET['thread_id']]
+                        ':fid' => $forum_id,
+                        ':tid' => $thread_id
+                    ]
                 )
                 ) {
                     redirect(FORUM.'index.php');
@@ -518,13 +543,16 @@ class Forum_Threads extends Forum_Server {
         }
 
         $forum_settings = parent::get_forum_settings();
+
         $locale = fusion_get_locale("", [FORUM_LOCALE, FORUM_TAGS_LOCALE]);
+
         $userdata = fusion_get_userdata();
+
         $forum_index = dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat');
 
-        $this->thread_data = self::get_thread_view($_GET['thread_id']); // fetch query and define iMOD
+        $this->thread_data = $this->getThreadData($thread_id); // fetch query and define iMOD
 
-        if (!empty($this->thread_data) && !empty($_GET['thread_id']) && isnum($_GET['thread_id']) && $this->check_forum_access($forum_index, 0, $_GET['thread_id'])) {
+        if (!empty($this->thread_data) && !empty($thread_id) && isnum($thread_id) && $this->checkForumAccess($forum_index, 0, $thread_id)) {
 
             if ($this->thread_data['forum_type'] == 1) {
                 if (fusion_get_settings("site_seo")) {
@@ -534,9 +562,10 @@ class Forum_Threads extends Forum_Server {
             }
 
             // get post_count, lastpost_id, first_post_id.
-            $thread_stat = self::get_thread_stats($_GET['thread_id']);
+            $thread_stat = get_thread_stats($thread_id);
 
             $this->thread_data['thread_firstpostid'] = $thread_stat['first_post_id'];
+
             // get first post result
             $first_post_result = dbquery("SELECT post_message, post_datestamp FROM ".DB_FORUM_POSTS." WHERE post_id=:pid", [":pid" => $thread_stat['first_post_id']]);
             if (dbrows($first_post_result)) {
@@ -544,20 +573,20 @@ class Forum_Threads extends Forum_Server {
             }
 
             if (!$thread_stat['post_count']) {
-                if (fusion_get_settings("site_seo")) {
-                    redirect(fusion_get_settings("siteurl")."infusions/forum/index.php");
+                if (fusion_get_settings('site_seo')) {
+                    redirect(fusion_get_settings('siteurl')."infusions/forum/index.php");
                 }
-                redirect(FORUM."index.php");
+                redirect(FORUM.'index.php');
             }
 
-            $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart'])
-            && $_GET['rowstart'] <= $thread_stat['last_post_id'] ? $_GET['rowstart'] : 0; // secure against XSS
+            $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $thread_stat['last_post_id'] ? $_GET['rowstart'] : 0; // secure against XSS
 
             // Set the thread permissions
             $this->setThreadPermission(Forum_Moderator::check_forum_mods($this->thread_data['forum_mods']));
 
             // Set meta
             add_to_title($this->thread_data['thread_subject']);
+
             add_to_meta($locale['forum_0000']);
 
             if ($this->thread_data['forum_description'] !== '') {
@@ -567,9 +596,11 @@ class Forum_Threads extends Forum_Server {
                 add_to_meta('keywords', $this->thread_data['forum_meta']);
             }
 
-            BreadCrumbs::getInstance()->addBreadCrumb(['link' => FORUM.'index.php', 'title' => $locale['forum_0000']]);
-            $this->add_forum_breadcrumbs($forum_index, $this->thread_data['forum_id']);
-            BreadCrumbs::getInstance()->addBreadCrumb(['link' => FORUM.'viewthread.php?forum_id='.$this->thread_data['forum_id'].'&amp;thread_id='.$this->thread_data['thread_id'], 'title' => $this->thread_data['thread_subject']]);
+            add_breadcrumb(['link' => FORUM.'index.php', 'title' => $locale['forum_0000']]);
+
+            add_breadcrumb($forum_index, $this->thread_data['forum_id']);
+
+            add_breadcrumb(['link' => FORUM.'viewthread.php?forum_id='.$this->thread_data['forum_id'].'&amp;thread_id='.$this->thread_data['thread_id'], 'title' => $this->thread_data['thread_subject']]);
 
             // Override $_GET['forum_id'] against tampering
             $_GET['forum_id'] = intval($this->thread_data['forum_id']);
@@ -578,23 +609,32 @@ class Forum_Threads extends Forum_Server {
              * Generate User Tracked Buttons
              */
             $this->thread_info['buttons']['notify'] = [];
+
             if ($this->getThreadPermission("can_access")) {
+
                 // only member can track the thread
                 if ($this->thread_data['user_tracked']) {
+
                     $this->thread_info['buttons']['notify'] = [
                         'link'  => INFUSIONS."forum/postify.php?post=off&amp;forum_id=".$this->thread_data['forum_id']."&amp;thread_id=".$this->thread_data['thread_id'],
                         'title' => $locale['forum_0174']
                     ];
+
                 } else {
+
                     $this->thread_info['buttons']['notify'] = [
                         'link'  => INFUSIONS."forum/postify.php?post=on&amp;forum_id=".$this->thread_data['forum_id']."&amp;thread_id=".$this->thread_data['thread_id'],
                         'title' => $locale['forum_0175']
                     ];
                 }
-                // only member can lodge a report
-                if (isset($_GET['report']) && isset($_GET['rtid'])) {
+
+                $report = get('report');
+                $report_id = get('rtid');
+                if ($report && $report_id) {
+                    // Only members can lodge a report
                     Forum_Reports::render_report_form();
                 }
+
             }
 
             $this->thread_info['thread'] = $this->thread_data;
@@ -612,6 +652,7 @@ class Forum_Threads extends Forum_Server {
             ];
 
             $author = fusion_get_user($this->thread_data['thread_author']);
+
             if (!empty($author['user_name'])) {
                 $thread_author = [
                     "user_id"      => $author['user_id'],
@@ -623,8 +664,10 @@ class Forum_Threads extends Forum_Server {
                     "profile_link" => profile_link($author['user_id'], $author['user_name'], $author['user_status'])
                 ];
                 unset($author);
+
             }
 
+            // Caution all post use this info -- might cause Exception.
             $this->thread_info['thread']['thread_author'] = $thread_author;
 
             /**
@@ -636,20 +679,20 @@ class Forum_Threads extends Forum_Server {
              * Generate Poll Form
              */
             $poll = new Forum_Poll($this->thread_info);
-            $poll_form = $poll->generate_poll($this->thread_data);
-            $poll_info = $poll->get_poll_info();
+            $poll_form = $poll->generatePoll($this->thread_data);
+            $poll_info = $poll->getPollInfo();
 
             /**
              * Generate Attachment
              */
             $attach = new Forum_Attachment($this->thread_info);
-            $attachments = $attach::get_attachments($this->thread_data);
+            $attachments = $attach::getForumAttachments($this->thread_data);
 
             /**
              * Display thread bounty
              */
             $bounty = new Forum_Bounty($this->thread_info);
-            $bounty_display = $bounty->display_bounty();
+            $bounty_display = $bounty->displayForumBounty();
 
             /**
              * Generate Mod Form
@@ -657,13 +700,16 @@ class Forum_Threads extends Forum_Server {
             if (iMOD) {
 
                 $this->moderator()->setForumID($this->thread_data['forum_id']);
+
                 $this->moderator()->setThreadId($this->thread_data['thread_id']);
-                $this->moderator()->set_modActions();
+
+                $this->moderator()->setModActions();
 
                 /**
                  * Thread moderation form template
                  */
-                $addition = isset($_GET['rowstart']) ? "&amp;rowstart=".intval($_GET['rowstart']) : "";
+                $addition = isset($_GET['rowstart']) ? "&amp;rowstart=".intval($_GET['rowstart']) : '';
+
                 $this->thread_info['form_action'] = fusion_get_settings('siteurl')."infusions/forum/viewthread.php?thread_id=".intval($this->thread_data['thread_id']).$addition;
 
                 $this->thread_info['mod_options'] = [
@@ -691,6 +737,7 @@ class Forum_Threads extends Forum_Server {
                     'class'       => 'm-b-0 display-inline-block',
                     'inline'      => TRUE
                 ]);
+
                 $this->thread_info['mod_form_parts']['go_button'] = form_button('go', $locale['forum_0208'], $locale['forum_0208'], ['class' => 'btn-default']);
                 $this->thread_info['mod_form_parts']['closeform'] = closeform();
 
@@ -720,49 +767,93 @@ class Forum_Threads extends Forum_Server {
                 ");
             }
 
+            $validated_forum_cat_id = $this->getForumId('forum_cat');
+
+            $validated_forum_branch_id = $this->getForumId('forum_branch');
+
+            $validated_post_id = $this->getForumPostId('post_id');
+
+            $validated_post_pid = $this->getForumPostId('pid');
+
             $this->thread_info += [
-                'thread'               => $this->thread_data,
-                'thread_id'            => $this->thread_data['thread_id'],
-                'forum_id'             => $this->thread_data['forum_id'],
-                'thread_tags'          => $this->thread_data['thread_tags'],
-                'thread_tags_display'  => '',
-                'buttons'              => [],
-                'forum_cat'            => isset($_GET['forum_cat']) && self::verify_forum($_GET['forum_cat']) ? $_GET['forum_cat'] : 0,
-                'forum_branch'         => isset($_GET['forum_branch']) && self::verify_forum($_GET['forum_branch']) ? $_GET['forum_branch'] : 0,
-                'forum_link'           => [
+                'thread' => $this->thread_data,
+
+                'thread_id' => $this->thread_data['thread_id'],
+
+                'forum_id' => $this->thread_data['forum_id'],
+
+                'thread_tags' => $this->thread_data['thread_tags'],
+
+                'thread_tags_display' => '',
+
+                'buttons' => [],
+
+                'forum_cat' => $validated_forum_cat_id, // this is get based
+
+                'forum_branch' => $validated_forum_branch_id, // this is get based
+
+                'forum_link' => [
                     'link'  => FORUM.'index.php?viewforum&amp;forum_id='.$this->thread_data['forum_id'].'&amp;forum_cat='.$this->thread_data['forum_cat'].'&amp;forum_branch='.$this->thread_data['forum_branch'],
                     'title' => $this->thread_data['forum_name']
                 ],
-                'thread_attachments'   => $attachments,
-                'post_id'              => isset($_GET['post_id']) && self::verify_post($_GET['post_id']) ? intval($_GET['post_id']) : 0,
-                'pid'                  => isset($_GET['pid']) && isnum($_GET['pid']) ? $_GET['pid'] : 0,
-                'section'              => isset($_GET['section']) ? $_GET['section'] : '',
-                'sort_post'            => isset($_GET['sort_post']) ? $_GET['sort_post'] : '',
-                'forum_moderators'     => $this->moderator()->parse_forum_mods($this->thread_data['forum_mods']),
-                'max_post_items'       => $thread_stat['post_count'],
-                'post_firstpost'       => $thread_stat['first_post_id'],
-                'post_lastpost'        => $thread_stat['last_post_id'],
-                'posts_per_page'       => $forum_settings['posts_per_page'],
-                'threads_per_page'     => $forum_settings['threads_per_page'],
-                'lastvisited'          => (isset($userdata['user_lastvisit']) && isnum($userdata['user_lastvisit'])) ? $userdata['user_lastvisit'] : time(),
+
+                'thread_attachments' => $attachments,
+
+                'post_id' => $validated_post_id,
+
+                'pid' => $validated_post_pid,
+
+                'section' => get('section'),
+
+                'sort_post' => get('sort_post'),
+
+                'forum_moderators' => $this->moderator()->displayForumMods($this->thread_data['forum_mods']),
+
+                'max_post_items' => $thread_stat['post_count'],
+
+                'post_firstpost' => $thread_stat['first_post_id'],
+
+                'post_lastpost' => $thread_stat['last_post_id'],
+
+                'posts_per_page' => $forum_settings['posts_per_page'],
+
+                'threads_per_page' => $forum_settings['threads_per_page'],
+
+                'lastvisited' => (isset($userdata['user_lastvisit']) && isnum($userdata['user_lastvisit'])) ? $userdata['user_lastvisit'] : time(),
+
                 'allowed_post_filters' => ['oldest', 'latest', 'high'],
-                'attachtypes'          => explode(',', $forum_settings['forum_attachtypes']),
-                'quick_reply_form'     => $qr_form,
-                'thread_bounty'        => $bounty_display,
-                'poll_form'            => $poll_form,
-                'poll_info'            => $poll_info,
-                'post-filters'         => [],
-                'mod_options'          => [],
-                'form_action'          => '',
-                'open_post_form'       => '',
-                'close_post_form'      => '',
-                'mod_form'             => '',
-                'mod_form_parts'       => '',
-                'permissions'          => $this->getThreadPermission()
+
+                'attachtypes' => explode(',', $forum_settings['forum_attachtypes']),
+
+                'quick_reply_form' => $qr_form,
+
+                'thread_bounty' => $bounty_display,
+
+                'poll_form' => $poll_form,
+
+                'poll_info' => $poll_info,
+
+                'post-filters' => [],
+
+                'mod_options' => [],
+
+                'form_action' => '',
+
+                'open_post_form' => '',
+
+                'close_post_form' => '',
+
+                'mod_form' => '',
+
+                'mod_form_parts' => '',
+
+                'permissions' => $this->getThreadPermission()
             ];
 
             if (!empty($this->thread_info['thread_tags'])) {
-                $this->thread_info['thread_tags_display'] = $this->tag(FALSE)->display_thread_tags($this->thread_info['thread_tags']);
+
+                $this->thread_info['thread']['thread_tags'] = parent::tag(FALSE)->getTagsInfo($this->thread_info['thread_tags']);
+
             }
 
             /**
@@ -816,20 +907,24 @@ class Forum_Threads extends Forum_Server {
             $this->handle_quick_reply();
 
             // Get Threads Post
-            $post_info = $this->get_thread_post($this->thread_info['thread_id'], 0, [
-                "forum_type"      => $this->thread_info['thread']['forum_type'],
-                "post_firstpost"  => $this->thread_info['post_firstpost'],
-                "post_lastpost"   => $this->thread_info['post_lastpost'],
-                "rowstart"        => $_GET['rowstart'],
-                "post_count"      => $thread_stat['post_count'],
-                "thread_author"   => $this->thread_info['thread']['thread_author'],
-                "thread_answered" => $this->thread_info['thread']['thread_answered'],
-                "thread_locked"   => $this->thread_info['thread']['thread_locked'],
-            ]);
+            $post_info = $this->getThreadPost($this->thread_info['thread_id'], 0,
+                [
+                    "forum_type"      => $this->thread_info['thread']['forum_type'],
+                    "post_firstpost"  => $this->thread_info['post_firstpost'],
+                    "post_lastpost"   => $this->thread_info['post_lastpost'],
+                    "rowstart"        => $_GET['rowstart'],
+                    "post_count"      => $thread_stat['post_count'],
+                    "thread_author"   => $this->thread_info['thread']['thread_author'],
+                    "thread_answered" => $this->thread_info['thread']['thread_answered'],
+                    "thread_locked"   => $this->thread_info['thread']['thread_locked'],
+                ]);
 
             $this->thread_info = $this->thread_info + $post_info;
 
+
+
         } else {
+
             redirect(FORUM.'index.php');
         }
     }
@@ -841,9 +936,10 @@ class Forum_Threads extends Forum_Server {
      *
      * @return array
      */
-    private static function get_thread_view($thread_id = 0) {
-        $userdata = fusion_get_userdata();
-        $userid = !empty($userdata['user_id']) ? (int)$userdata['user_id'] : 0;
+    private function getThreadData($thread_id = 0) {
+
+        $user_id = fusion_get_userdata('user_id');
+
         $query = !empty(self::$custom_query) ? self::$custom_query : "SELECT t.*, f.*,
                 u.user_id, u.user_name, u.user_status, u.user_avatar, u.user_joined,
                 IF (n.thread_id > 0, 1 , 0) 'user_tracked',
@@ -852,16 +948,21 @@ class Forum_Threads extends Forum_Server {
                 FROM ".DB_FORUM_THREADS." t
                 LEFT JOIN ".DB_USERS." u ON t.thread_author = u.user_id
                 INNER JOIN ".DB_FORUMS." f ON t.forum_id=f.forum_id
-                LEFT JOIN ".DB_FORUM_VOTES." v ON v.thread_id = t.thread_id AND v.vote_user='".intval($userid)."' AND v.forum_id=f.forum_id AND f.forum_type='4'
-                LEFT JOIN ".DB_FORUM_POLL_VOTERS." p ON p.thread_id = t.thread_id AND p.forum_vote_user_id='".intval($userid)."' AND t.thread_poll='1'
-                LEFT JOIN ".DB_FORUM_THREAD_NOTIFY." n ON n.thread_id = t.thread_id AND n.notify_user = '".intval($userid)."'
+                LEFT JOIN ".DB_FORUM_VOTES." v ON v.thread_id = t.thread_id AND v.vote_user='".intval($user_id)."' AND v.forum_id=f.forum_id
+                LEFT JOIN ".DB_FORUM_POLL_VOTERS." p ON p.thread_id = t.thread_id AND p.forum_vote_user_id='".intval($user_id)."' AND t.thread_poll=1
+                LEFT JOIN ".DB_FORUM_THREAD_NOTIFY." n ON n.thread_id = t.thread_id AND n.notify_user = '".intval($user_id)."'
                 ".(multilang_table('FO') ? " WHERE f.forum_language='".LANGUAGE."' AND " : " WHERE ")."
                 ".groupaccess('f.forum_access')." AND t.thread_id='".intval($thread_id)."' AND t.thread_hidden='0'";
+
         $result = dbquery($query);
+
         if (dbrows($result)) {
+
             $data = dbarray($result);
+
             if ($data['forum_id']) {
-                Forum_Moderator::define_forum_mods($data);
+
+                set_forum_mods($data);
 
                 return (array)$data;
             } else {
@@ -881,7 +982,7 @@ class Forum_Threads extends Forum_Server {
      *
      * @return array
      */
-    public static function get_thread_stats($thread_id) {
+    public static function getStats($thread_id) {
         list($array['post_count'], $array['last_post_id'], $array['first_post_id']) = dbarraynum(dbquery("SELECT COUNT(post_id), MAX(post_id), MIN(post_id) FROM ".DB_FORUM_POSTS." WHERE thread_id='".intval($thread_id)."' AND post_hidden='0' GROUP BY thread_id"));
 
         return (array)$array;
@@ -983,7 +1084,7 @@ class Forum_Threads extends Forum_Server {
      * @return array
      * @todo: optimize post reply with a subnested query to reduce post^n queries.
      */
-    public function get_thread_post($thread_id = 0, $post_id = 0, array $filter = []) {
+    public function getThreadPost($thread_id = 0, $post_id = 0, array $filter = []) {
         global $pid;
 
         $forum_settings = self::get_forum_settings();
@@ -1552,7 +1653,7 @@ class Forum_Threads extends Forum_Server {
     /**
      * New Status
      */
-    public function set_thread_visitor() {
+    public function setThreadVisits() {
         if (iMEMBER) {
             $userdata = fusion_get_userdata();
             $thread_match = $this->thread_info['thread_id']."\|".$this->thread_info['thread']['thread_lastpost']."\|".$this->thread_info['thread']['forum_id'];

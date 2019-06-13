@@ -108,7 +108,7 @@ if (isset($_GET['rid']) && isnum($_GET['rid'])) {
             AND f.report_status='$status' GROUP BY f.post_id ORDER BY f.report_datestamp DESC";
 }
 
-$threads = \PHPFusion\Infusions\Forum\Classes\Forum_Server::thread(FALSE)->get_forum_thread(0, ["item_id" => "report_id", "count_query" => $count_query, "query" => $query]);
+$threads = \PHPFusion\Infusions\Forum\Classes\Forum_Server::thread(FALSE)->getThreadInfo(0, ["item_id" => "report_id", "count_query" => $count_query, "query" => $query]);
 $this->forum_info = array_merge_recursive($this->forum_info, $threads);
 
 if (isset($_GET['rid']) && isnum($_GET['rid'])) {
@@ -116,7 +116,7 @@ if (isset($_GET['rid']) && isnum($_GET['rid'])) {
         $rdata = $this->forum_info['threads']['item'][$_GET['rid']];
 
         $forum_threads = \PHPFusion\Infusions\Forum\Classes\Forum_Server::thread(FALSE);
-        $pdata = $forum_threads->get_thread_post(0, $rdata['report_post_id']);
+        $pdata = $forum_threads->getThreadPost(0, $rdata['report_post_id']);
         $post = $pdata['post_items'][$rdata['report_post_id']];
 
         if (!empty($_POST)) {

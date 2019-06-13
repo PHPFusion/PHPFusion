@@ -115,7 +115,7 @@ abstract class Forum_Server {
      *
      * @return array
      */
-    public static function get_ForumIcons($type = '') {
+    public static function getForumIcons($type = '') {
         if (isset(self::$forum_icons[$type])) {
             return self::$forum_icons[$type];
         }
@@ -128,7 +128,7 @@ abstract class Forum_Server {
      *
      * @param array $icons
      */
-    public static function set_forumIcons(array $icons = []) {
+    public static function setForumIcons(array $icons = []) {
         self::$forum_icons = $icons + self::$forum_icons;
     }
 
@@ -160,7 +160,7 @@ abstract class Forum_Server {
 
         $ranks = [];
 
-        $forum_rank_cache = self::forum_rank_cache();
+        $forum_rank_cache = self::forumRankCache();
 
         $forum_rank_css_class = [
             USER_LEVEL_MEMBER      => 'label-member',
@@ -262,7 +262,7 @@ abstract class Forum_Server {
      *
      * @return array
      */
-    public static function forum_rank_cache() {
+    public static function forumRankCache() {
 
         $forum_settings = self::get_forum_settings();
 
@@ -333,7 +333,7 @@ abstract class Forum_Server {
      *
      * @return mixed
      */
-    public static function get_recentTopics($forum_id = 0) {
+    public static function getRecentTopics($forum_id = 0) {
         $forum_settings = self::get_forum_settings();
         $result = dbquery("SELECT tt.*, tf.*, tp.post_id, tp.post_datestamp,
             u.user_id, u.user_name as last_user_name, u.user_status as last_user_status, u.user_avatar as last_user_avatar,
@@ -429,7 +429,7 @@ abstract class Forum_Server {
             self::$thread_instance = new Forum_Threads();
             if ($set_info == TRUE) {
                 require_once INCLUDES."mimetypes_include.php";
-                self::$thread_instance->set_threadInfo();
+                self::$thread_instance->setThreadInfo();
             }
         }
 
@@ -591,7 +591,7 @@ abstract class Forum_Server {
      * @return bool
      * @throws \Exception
      */
-    protected function check_forum_access($forum_index, $forum_id = 0, $thread_id = 0, $user_id = 0) {
+    protected function checkForumAccess($forum_index, $forum_id = 0, $thread_id = 0, $user_id = 0) {
         if (iSUPERADMIN) {
             $this->forum_access = TRUE;
 

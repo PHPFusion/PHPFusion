@@ -22,7 +22,7 @@ require_once THEMES."templates/header.php";
 require_once INFUSIONS."forum/forum_include.php";
 require_once INFUSIONS."forum/templates.php";
 fusion_get_locale("", [FORUM_LOCALE, FORUM_TAGS_LOCALE]);
-$info = \PHPFusion\Infusions\Forum\Classes\Forum_Server::new_thread()->get_newThreadInfo();
+$info = \PHPFusion\Infusions\Forum\Classes\Forum_Server::new_thread()->getInfo();
 echo display_forum_postform($info);
 
 require_once THEMES."templates/footer.php";

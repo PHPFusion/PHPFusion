@@ -24,7 +24,7 @@ $this->forum_info['filter'] = \PHPFusion\Infusions\Forum\Classes\Forum_Server::f
 
 $filter = \PHPFusion\Infusions\Forum\Classes\Forum_Server::filter()->get_filterSQL();
 $base_condition = (multilang_table("FO") ? "tf.forum_language='".LANGUAGE."' AND " : "")." tf.forum_type='4' AND t.thread_answered='0' AND t.thread_locked='0' AND t.thread_hidden='0' AND ".groupaccess('tf.forum_access');
-$threads = \PHPFusion\Infusions\Forum\Classes\Forum_Server::thread(FALSE)->get_forum_thread(0,
+$threads = \PHPFusion\Infusions\Forum\Classes\Forum_Server::thread(FALSE)->getThreadInfo(0,
     [
         "count_query" => "
         SELECT t.thread_id

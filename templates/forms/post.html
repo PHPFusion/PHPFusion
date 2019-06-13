@@ -14,19 +14,17 @@
         <!--pre_form-->
         <h4 class="spacer-sm">{%title%}</h4>
         {%openform%}
-        <div class="row">
-            <div class="col-xs-12">
-
+        <div class="{[row]}">
+            <div class="{[col(100)]}">
                 {%forum_subject_field%}
-                <div class="row">
-                    <div class="col-xs-12 col-sm-6">
+                <div class="{[row]}">
+                    <div class="{[col(100,50)]}">
                         {%forum_field%}
                     </div>
-                    <div class="col-xs-12 col-sm-6">
+                    <div class="{[col(100,50)]}">
                         {%forum_tag_field%}
                     </div>
                 </div>
-
                 {%forum_message_field%}
                 {%delete%} {%sticky%} {%notify%} {%lock%} {%hide_edit%} {%smiley%} {%user_sig%}
                 {forum_attachment.{

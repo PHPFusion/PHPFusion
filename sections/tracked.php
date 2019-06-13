@@ -35,7 +35,7 @@ $filter = \PHPFusion\Infusions\Forum\Classes\Forum_Server::filter()->get_filterS
 
 $base_condition = "tn.notify_user='".$userdata['user_id']."' AND t.thread_hidden='0' AND ".groupaccess('tf.forum_access');
 
-$threads = \PHPFusion\Infusions\Forum\Classes\Forum_Server::thread(FALSE)->get_forum_thread(0,
+$threads = \PHPFusion\Infusions\Forum\Classes\Forum_Server::thread(FALSE)->getThreadInfo(0,
     [
         'count_query' => "SELECT tn.thread_id
         FROM ".DB_FORUM_THREAD_NOTIFY." tn

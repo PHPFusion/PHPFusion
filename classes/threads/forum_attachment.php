@@ -63,7 +63,7 @@ class Forum_Attachment {
      *
      * @return array
      */
-    public static function get_attachments(array $thread_data) {
+    public static function getForumAttachments(array $thread_data) {
 
         $attachments = [];
         if (self::get_attachment_permissions("can_download_attach") == TRUE) {

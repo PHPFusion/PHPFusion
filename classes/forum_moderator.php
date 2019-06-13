@@ -18,8 +18,6 @@
 
 namespace PHPFusion\Infusions\Forum\Classes;
 
-use PHPFusion\Infusions\Forum\Classes\Threads\Forum_Threads;
-
 /**
  * Class Moderator
  * Forum Moderation Controller
@@ -96,7 +94,7 @@ class Forum_Moderator {
      *
      * @param $info // need forum_mods key
      */
-    public static function define_forum_mods($info) {
+    public static function setForumMods($info) {
         $imod = FALSE;
         if (!defined("iMOD")) {
             if (iMEMBER && $info['forum_mods']) {
@@ -175,7 +173,7 @@ class Forum_Moderator {
      *
      * @return string
      */
-    public static function parse_forum_mods($forum_mods) {
+    public static function displayForumMods($forum_mods) {
         $moderators = '';
         if ($forum_mods) {
             $_mgroup = explode('.', $forum_mods);
@@ -219,7 +217,7 @@ class Forum_Moderator {
         $this->forum_id = $value;
     }
 
-    public function set_modActions() {
+    public function setModActions() {
 
         $this->locale = fusion_get_locale('', FORUM_LOCALE);
 
@@ -254,7 +252,8 @@ class Forum_Moderator {
         /**
          * Thread actions
          */
-        switch ($_GET['step']) {
+
+        switch (get('step')) {
             case 'renew':
                 self::mod_renew_thread();
                 break;
@@ -277,9 +276,9 @@ class Forum_Moderator {
                 self::mod_move_thread();
                 break;
         }
-        $message = '';
 
-        switch ($_GET['error']) {
+        $message = '';
+        switch (get('error')) {
             case '1':
                 $message = $this->locale['error-MP001'];
                 break;
@@ -728,17 +727,27 @@ class Forum_Moderator {
      * refer to - viewthread_options.php
      */
     private function mod_delete_posts() {
-        if (isset($_POST['delete_posts']) && iMOD) {
-            $post_items = form_sanitizer($_POST['delete_item_post'], '', 'delete_item_post');
+
+        $post_delete = post('delete_posts');
+
+        if ($post_delete && iMOD) {
+
+            $post_items = sanitizer('delete_item_post', '', 'delete_item_post');
+
             $post_items = explode(',', $post_items);
+
             $post_items = array_filter($post_items);
+
             if (!empty($post_items)) { // the checkboxes
                 // get the thread post item.
                 $thread_count = FALSE;
                 $i = 0;
                 $fpost_id = 0;
-                $thread_data = Forum_Threads::get_thread_stats($this->thread_id);
+
+                $thread_data = get_thread_stats($this->thread_id);
+
                 $sanitized_post_id = [];
+
                 foreach ($post_items as $del_post_id) {
                     if (isnum($del_post_id)) {
                         if ($del_post_id == $thread_data['first_post_id']) {
@@ -837,12 +846,15 @@ class Forum_Moderator {
      * Moving Posts
      */
     private function mod_move_posts() {
-        if (isset($_POST['move_posts']) && iMOD) {
+
+        $move_posts = post('move_posts');
+
+        if ($move_posts && iMOD) {
 
             $remove_first_post = FALSE;
             $f_post_blo = FALSE;
 
-            $post_items = form_sanitizer($_POST['delete_item_post'], '', 'delete_item_post'); // The selected checkbox of post to move.
+            $post_items = sanitizer('delete_item_post', '', 'delete_item_post'); // The selected checkbox of post to move.
             $post_items = explode(',', $post_items);
             $post_items = array_filter($post_items);
 
@@ -1152,12 +1164,12 @@ class Forum_Moderator {
                     }
                 } else {
                     addNotice('danger', $this->locale['forum_0307']); // No post to move
-                    //redirect($this->form_action);
+                    redirect($this->form_action);
                 }
 
             } else {
                 addNotice('danger', $this->locale['forum_0307']); // No post to move
-                //redirect($this->form_action);
+                redirect($this->form_action);
             }
         }
     }

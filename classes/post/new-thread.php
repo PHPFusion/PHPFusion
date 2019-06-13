@@ -79,13 +79,16 @@ class New_Thread extends Forum_Server {
                 }
 
                 $forum_data['lock_edit'] = $forum_settings['forum_edit_lock'];
+
                 self::setPermission($forum_data);
 
                 if (self::getPermission('can_post') && self::getPermission('can_access')) {
+
                     BreadCrumbs::getInstance()->addBreadCrumb([
                         'link'  => INFUSIONS.'forum/index.php?viewforum&amp;forum_id='.$forum_data['forum_id'],
                         'title' => $forum_data['forum_name']
                     ]);
+
                     BreadCrumbs::getInstance()->addBreadCrumb([
                         'link'  => INFUSIONS.'forum/index.php?viewforum&amp;forum_id='.$forum_data['forum_id'],
                         'title' => self::$locale['forum_0057']
@@ -95,6 +98,7 @@ class New_Thread extends Forum_Server {
                      * Generate a poll form
                      */
                     $poll_form = '';
+
                     if (self::getPermission('can_create_poll')) {
 
                         // initial data to push downwards
@@ -723,9 +727,8 @@ class New_Thread extends Forum_Server {
 
     private function setPermission($forum_data) {
         // Generate iMOD Constant
-        $mods = $this->moderator();
-        $mods::define_forum_mods($forum_data);
-        unset($mods);
+        set_forum_mods($forum_data);
+
         // Access the forum
         self::$permissions['permissions']['can_access'] = (iMOD || checkgroup($forum_data['forum_access'])) ? TRUE : FALSE;
         // Create new thread -- whether user has permission to create a thread
@@ -751,7 +754,7 @@ class New_Thread extends Forum_Server {
     /**
      * @return array
      */
-    public function get_newThreadInfo() {
+    public function getInfo() {
         return $this->info;
     }
 }

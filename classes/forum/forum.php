@@ -307,7 +307,7 @@ class Forum extends Forum_Server {
                 $last_visited = (isset($userdata['user_lastvisit']) && isnum($userdata['user_lastvisit'])) ? $userdata['user_lastvisit'] : TIME;
                 if ($data['thread_lastpost'] > $last_visited) {
                     if (iMEMBER && ($data['thread_lastuser'] !== $userdata['user_id'] || !preg_match("({$forum_match}\\.|{$forum_match}$)", $userdata['user_threads']))) {
-                        $newStatus = "<span class='forum-new-icon'><i title='".$locale['forum_0260']."' class='".self::get_forumIcons('new')."'></i></span>";
+                        $newStatus = "<span class='forum-new-icon'><i title='".$locale['forum_0260']."' class='".self::getForumIcons('new')."'></i></span>";
                     }
                 }
             }
@@ -315,20 +315,20 @@ class Forum extends Forum_Server {
             // Icons
             switch ($data['forum_type']) {
                 case '1':
-                    $forum_icon = "<i class='".self::get_forumIcons('forum')." fa-fw'></i>";
-                    $forum_icon_lg = "<i class='".self::get_forumIcons('forum')." fa-3x fa-fw'></i>";
+                    $forum_icon = "<i class='".self::getForumIcons('forum')." fa-fw'></i>";
+                    $forum_icon_lg = "<i class='".self::getForumIcons('forum')." fa-3x fa-fw'></i>";
                     break;
                 case '2':
-                    $forum_icon = "<i class='".self::get_forumIcons('thread')." fa-fw'></i>";
-                    $forum_icon_lg = "<i class='".self::get_forumIcons('thread')." fa-3x fa-fw'></i>";
+                    $forum_icon = "<i class='".self::getForumIcons('thread')." fa-fw'></i>";
+                    $forum_icon_lg = "<i class='".self::getForumIcons('thread')." fa-3x fa-fw'></i>";
                     break;
                 case '3':
-                    $forum_icon = "<i class='".self::get_forumIcons('link')." fa-fw'></i>";
-                    $forum_icon_lg = "<i class='".self::get_forumIcons('link')." fa-3x fa-fw'></i>";
+                    $forum_icon = "<i class='".self::getForumIcons('link')." fa-fw'></i>";
+                    $forum_icon_lg = "<i class='".self::getForumIcons('link')." fa-3x fa-fw'></i>";
                     break;
                 case '4':
-                    $forum_icon = "<i class='".self::get_forumIcons('question')." fa-fw'></i>";
-                    $forum_icon_lg = "<i class='".self::get_forumIcons('question')." fa-3x fa-fw'></i>";
+                    $forum_icon = "<i class='".self::getForumIcons('question')." fa-fw'></i>";
+                    $forum_icon_lg = "<i class='".self::getForumIcons('question')." fa-3x fa-fw'></i>";
                     break;
                 default:
                     $forum_icon = "";
@@ -336,7 +336,7 @@ class Forum extends Forum_Server {
             }
 
             $row = array_merge($row, $data, [
-                "forum_moderators"       => Forum_Moderator::parse_forum_mods($data['forum_mods']),
+                "forum_moderators"       => Forum_Moderator::displayForumMods($data['forum_mods']),
                 "forum_new_status"       => $newStatus,
                 "forum_link"             => [
                     "link"  => INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$data['forum_id'],
@@ -472,27 +472,27 @@ class Forum extends Forum_Server {
                                     $last_visited = (isset($userdata['user_lastvisit']) && isnum($userdata['user_lastvisit'])) ? $userdata['user_lastvisit'] : time();
                                     if ($row['forum_lastpost'] > $last_visited) {
                                         if (iMEMBER && ($row['forum_lastuser'] !== $userdata['user_id'] || !preg_match("({$forum_match}\.|{$forum_match}$)", $userdata['user_threads']))) {
-                                            $newStatus = "<span class='forum-new-icon'><i title='".$locale['forum_0260']."' class='".self::get_forumIcons('new')."'></i></span>";
+                                            $newStatus = "<span class='forum-new-icon'><i title='".$locale['forum_0260']."' class='".self::getForumIcons('new')."'></i></span>";
                                         }
                                     }
 
                                     //Default system icons - why do i need this? Why not let themers decide?
                                     switch ($row['forum_type']) {
                                         case '1':
-                                            $forum_icon = "<i class='".self::get_forumIcons('forum')." fa-fw'></i>";
-                                            $forum_icon_lg = "<i class='".self::get_forumIcons('forum')." fa-3x fa-fw'></i>";
+                                            $forum_icon = "<i class='".self::getForumIcons('forum')." fa-fw'></i>";
+                                            $forum_icon_lg = "<i class='".self::getForumIcons('forum')." fa-3x fa-fw'></i>";
                                             break;
                                         case '2':
-                                            $forum_icon = "<i class='".self::get_forumIcons('thread')." fa-fw'></i>";
-                                            $forum_icon_lg = "<i class='".self::get_forumIcons('thread')." fa-3x fa-fw'></i>";
+                                            $forum_icon = "<i class='".self::getForumIcons('thread')." fa-fw'></i>";
+                                            $forum_icon_lg = "<i class='".self::getForumIcons('thread')." fa-3x fa-fw'></i>";
                                             break;
                                         case '3':
-                                            $forum_icon = "<i class='".self::get_forumIcons('link')." fa-fw'></i>";
-                                            $forum_icon_lg = "<i class='".self::get_forumIcons('link')." fa-3x fa-fw'></i>";
+                                            $forum_icon = "<i class='".self::getForumIcons('link')." fa-fw'></i>";
+                                            $forum_icon_lg = "<i class='".self::getForumIcons('link')." fa-3x fa-fw'></i>";
                                             break;
                                         case '4':
-                                            $forum_icon = "<i class='".self::get_forumIcons('question')." fa-fw'></i>";
-                                            $forum_icon_lg = "<i class='".self::get_forumIcons('question')." fa-3x fa-fw'></i>";
+                                            $forum_icon = "<i class='".self::getForumIcons('question')." fa-fw'></i>";
+                                            $forum_icon_lg = "<i class='".self::getForumIcons('question')." fa-3x fa-fw'></i>";
                                             break;
                                         default:
                                             $forum_icon = "";
@@ -672,7 +672,7 @@ class Forum extends Forum_Server {
 
                 // Make a new template, use Jquery to cut out loading time.
                 $filter_sql = $this->filter()->get_filterSQL();
-                $thread_info = $this->thread(FALSE)->get_forum_thread($this->forum_info['forum_id'], $filter_sql);
+                $thread_info = $this->thread(FALSE)->getThreadInfo($this->forum_info['forum_id'], $filter_sql);
 
                 $this->forum_info = array_merge_recursive($this->forum_info, $thread_info);
             }

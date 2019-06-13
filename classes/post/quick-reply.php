@@ -82,6 +82,7 @@ class Quick_Reply extends Forum_Server {
                         'bbcode'      => TRUE,
                         'required'    => TRUE,
                         'preview'     => TRUE,
+                        'input_id' => 'thread-qr-form',
                         'form_name'   => $form_name,
                         'height'      => '250px'
                     ]),

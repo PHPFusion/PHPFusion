@@ -23,7 +23,7 @@ $this->forum_info['link'] = FORUM;
 $this->forum_info['filter'] = \PHPFusion\Infusions\Forum\Classes\Forum_Server::filter()->get_FilterInfo();
 $filter = \PHPFusion\Infusions\Forum\Classes\Forum_Server::filter()->get_filterSQL();
 
-$threads = \PHPFusion\Infusions\Forum\Classes\Forum_Server::thread(FALSE)->get_forum_thread(0,
+$threads = \PHPFusion\Infusions\Forum\Classes\Forum_Server::thread(FALSE)->getThreadInfo(0,
     [
         "count_query" => "SELECT t.thread_id
         FROM ".DB_FORUM_THREADS." t

@@ -174,8 +174,6 @@ $inf_newtable[] = DB_FORUM_THREADS." (
     forum_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
     thread_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
     thread_tags TEXT NOT NULL,
-    thread_tags_old TEXT NOT NULL,
-    thread_tags_change INT(10) UNSIGNED NOT NULL DEFAULT '0',
     thread_subject VARCHAR(100) NOT NULL DEFAULT '',
     thread_author MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
     thread_views MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
@@ -265,6 +263,25 @@ $inf_newtable[] = DB_FORUM_POST_NOTIFY." (
     notify_status tinyint(1) UNSIGNED NOT NULL DEFAULT '1',
     KEY notify_datestamp (notify_datestamp)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+
+// Logging of an action on the thread or post.
+$inf_newtable[] = DB_FORUM_THREAD_LOGS." (    
+    thread_log_id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,    
+    thread_id BIGINT(20) UNSIGNED NOT NULL DEFAULT '0',
+    post_id BIGINT(20) UNSIGNED NOT NULL DEFAULT '0',
+    thread_log_action SMALLINT(5) UNSIGNED NOT NULL,
+    thread_log_item_type SMALLINT(5) UNSIGNED NOT NULL,
+    thread_log_new_value VARCHAR(70) NOT NULL,
+    thread_log_old_value VARCHAR(70) NOT NULL,
+    thread_log_user BIGINT(20) UNSIGNED NOT NULL,
+    thread_log_visibility SMALLINT(5) UNSIGNED NOT NULL,
+    thread_log_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',    
+    KEY thread_id (thread_id),
+    KEY post_id (post_id),
+    PRIMARY KEY (thread_log_id)
+) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+
+
 
 if (!column_exists('users', 'user_reputation')) {
     $inf_altertable[] = $db_prefix."users ADD user_reputation INT(10) UNSIGNED NOT NULL AFTER user_status";
