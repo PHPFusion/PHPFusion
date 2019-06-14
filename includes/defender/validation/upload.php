@@ -299,7 +299,7 @@ class Upload extends \Defender\Validation {
                                 require_once INCLUDES."photo_functions_include.php";
                                 $noThumb = FALSE;
                                 if ($thumb1) {
-                                    if ($image_res[0] <= $thumb1_width && $image_res[1] <= $thumb1_height) {
+                                    if ($image_res[0] < $thumb1_width && $image_res[1] < $thumb1_height) {
                                         $noThumb = TRUE;
                                         $image_info['thumb1_name'] = $image_info['image_name'];
                                         $image_info['thumb1'] = TRUE;
@@ -317,6 +317,7 @@ class Upload extends \Defender\Validation {
                                         }
                                     }
                                 }
+
                                 if ($thumb2) {
                                     if ($image_res[0] < $thumb2_width && $image_res[1] < $thumb2_height) {
                                         $noThumb = TRUE;
@@ -370,12 +371,12 @@ class Upload extends \Defender\Validation {
                     self::$inputConfig['delete_original'], // delete original
                     self::$inputConfig['thumbnail'], // thumb1 enable
                     self::$inputConfig['thumbnail2'], // thumb2 enable
-                    1, //thumb ratio
+                    self::$inputConfig['thumbnail_ratio'], //thumb ratio
                     self::$inputConfig['path'].self::$inputConfig['thumbnail_folder']."/", // thumb folder
                     self::$inputConfig['thumbnail_suffix'], //thumb suffix
                     self::$inputConfig['thumbnail_w'], //thumb width
                     self::$inputConfig['thumbnail_h'], // thumb h eight
-                    0, // thumb 2 ratio
+                    self::$inputConfig['thumbnail2_ratio'], // thumb 2 ratio
                     self::$inputConfig['path'].self::$inputConfig['thumbnail_folder']."/", //thumb2 folder
                     self::$inputConfig['thumbnail2_suffix'], // thumb2 suffix
                     self::$inputConfig['thumbnail2_w'], // thumb2 width
