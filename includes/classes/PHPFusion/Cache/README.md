@@ -24,7 +24,6 @@ Add this to the config.php
 
 ```php
 $cache_config = [
-    'enable'         => TRUE,
     'storage'        => 'memcache', // file|redis|memcache
     'memcache_hosts' => ['localhost:11211'], // e.g. ['localhost:11211', '192.168.1.100:11211', 'unix:///var/tmp/memcached.sock']
     'redis_hosts'    => ['localhost:6379'], // e.g. ['localhost:6379', '192.168.1.100:6379:1:passwd']
