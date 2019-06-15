@@ -39,7 +39,6 @@ $locale['setup_0118'] = "Your web server does not appear to support PDO (PHP Dat
 $locale['setup_0119a'] = "Consider increasing your PHP memory limit to %memory_minimum_limit to help prevent errors in the installation process.";
 $locale['setup_0119b'] = "Increase the memory limit by editing the memory_limit parameter in the file ".get_cfg_var('cfg_file_path')." and then restart your web server (or contact your system administrator or hosting provider for assistance).";
 $locale['setup_0119c'] = "Contact your system administrator or hosting provider for assistance with increasing your PHP memory limit.";
-$locale['setup_stepx'] = "%2\$s";
 // Buttons
 $locale['setup_0120'] = "Finish Configuration";
 $locale['setup_0121'] = "Save and Proceed";
@@ -310,7 +309,7 @@ $locale['setup_3650'] = "Welcome to your site";
 // Final message
 $locale['setup_1700'] = "Setup is Complete";
 $locale['setup_1701'] = "PHP-Fusion 9 is now ready for use. Click Finish to rewrite your config_temp.php file to config.php<br/>";
-$locale['setup_1702'] = "<strong>Note: After you enter your site you should delete the entire /install folder and chmod your config.php back to 0644 for security reasons.</strong>";
+$locale['setup_1702'] = "<strong>Note: After you enter your site you should delete /install.php file and chmod your config.php back to 0644 for security reasons.</strong>";
 $locale['setup_1703'] = "Thank you for choosing PHP-Fusion.";
 // Default time settings
 // http://php.net/manual/en/function.strftime.php
@@ -327,7 +326,7 @@ $locale['setup_3802'] = "You have a new private message from [USER] waiting at [
 $locale['setup_3803'] = "Hello [RECEIVER],<br/>\r\nYou have received a new Private Message titled [SUBJECT] from [USER] at [SITENAME]. You can read your private message at [SITEURL]messages.php<br/>\r\nMessage: [MESSAGE]<br/>\r\nYou can disable email notification through the options panel of the Private Message page if you no longer wish to be notified of new messages.<br/>\r\nRegards,<br/>\r\n[SENDER].";
 $locale['setup_3804'] = "Notification on new forum posts";
 $locale['setup_3805'] = "Thread Reply Notification - [SUBJECT]";
-$locale['setup_3806'] = "Hello [RECEIVER],<br/>\r\nA reply has been posted in the forum thread \'[SUBJECT]\' which you are tracking at [SITENAME]. You can use the following link to view the reply:<br/>\r\n[THREAD_URL]<br/>\r\nIf you no longer wish to watch this thread you can click the \'Stop tracking this thread\' link located at the top of the thread.<br/>\r\nRegards,<br/>\r\n[SENDER].";
+$locale['setup_3806'] = "Hello [RECEIVER],<br/>\r\nA reply has been posted in the forum thread \\'[SUBJECT]\\' which you are tracking at [SITENAME]. You can use the following link to view the reply:<br/>\r\n[THREAD_URL]<br/>\r\nIf you no longer wish to watch this thread you can click the \\'Stop tracking this thread\\' link located at the top of the thread.<br/>\r\nRegards,<br/>\r\n[SENDER].";
 $locale['setup_3807'] = "Contact form";
 $locale['setup_3808'] = "[SUBJECT]";
 $locale['setup_3809'] = "[MESSAGE]";

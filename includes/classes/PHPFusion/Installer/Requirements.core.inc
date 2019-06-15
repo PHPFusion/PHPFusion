@@ -227,7 +227,7 @@ class Requirements extends Install_Core {
             }
         }
 
-        $root = $_SERVER['DOCUMENT_ROOT'].substr($_SERVER['SCRIPT_NAME'], 0, strpos($_SERVER['SCRIPT_NAME'],basename($_SERVER['SCRIPT_NAME'])));
+        $root = $_SERVER['DOCUMENT_ROOT'].substr($_SERVER['SCRIPT_NAME'], 0, strpos($_SERVER['SCRIPT_NAME'], basename($_SERVER['SCRIPT_NAME'])));
 
         // Check system core files and folders
         // $requirements['files_check']
@@ -443,7 +443,7 @@ function write_config(array $system = []) {
     $config = "<?php\n";
     $config .= "// database settings\n";
     $config .= "\$db_host = '".$system['db_host']."';\n";
-    if ($system['db_port'] !== 3306) {
+    if (!empty($system['db_port']) && $system['db_port'] !== 3306) {
         $config .= "\$db_port = '".$system['db_port']."';\n";
     }
     $config .= "\$db_user = '".$system['db_user']."';\n";

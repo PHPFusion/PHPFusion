@@ -56,7 +56,7 @@ class Console_Core extends Install_Core {
         foreach ($steps as $key => $value) {
             if ($key !== 4) {
                 $active = intval(INSTALLATION_STEP) === $key;
-                $html .= '<li'.($active ? ' class="active"' : '').'>'.(isset(self::$locale['setup_stepx']) ? sprintf(self::$locale['setup_stepx'], $key, $value) : $value).'</li>';
+                $html .= '<li'.($active ? ' class="active"' : '').'>'.$value.'</li>';
             }
         }
         $html .= '</ul>';
