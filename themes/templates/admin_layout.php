@@ -46,14 +46,8 @@ if ($settings['entypo'] || defined('ENTYPO')) {
 }
 
 if ($settings['fontawesome'] || defined('FONTAWESOME')) {
-    // Font Awesome 4
-    if (defined('FONTAWESOME-V4')) {
-        echo "<link rel='stylesheet' href='".$_includes."fonts/font-awesome/css/font-awesome.min.css'/>\n";
-    } else {
-        // Font Awesome 5
-        echo "<link rel='stylesheet' href='".$_includes."fonts/font-awesome-5/css/all.min.css'/>\n";
-        echo "<link rel='stylesheet' href='".$_includes."fonts/font-awesome-5/css/v4-shims.min.css'/>\n";
-    }
+    echo "<link rel='stylesheet' href='".$_includes."fonts/font-awesome-5/css/all.min.css'/>\n";
+    echo "<link rel='stylesheet' href='".$_includes."fonts/font-awesome-5/css/v4-shims.min.css'/>\n";
 }
 
 // Default CSS styling which applies to all themes but can be overriden
@@ -74,7 +68,6 @@ if (function_exists("get_head_tags")) {
 }
 
 echo "<script type='text/javascript' src='".$_includes."jquery/jquery.min.js'></script>\n";
-//echo "<script type='text/javascript' src='".$_includes."jquery/jquery-migrate.min.js'></script>\n";
 echo "<script>const SITE_PATH = '".$settings['site_path']."';const CDN = '".CDN."';</script>\n";
 echo "<script type='text/javascript' src='".$_includes."jscripts/jscript.min.js?v=".filemtime($_includes.'jscripts/jscript.min.js')."'></script>\n";
 echo "</head>\n";
