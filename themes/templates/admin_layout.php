@@ -41,19 +41,9 @@ if ($settings['entypo'] || defined('ENTYPO')) {
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo.min.css' type='text/css'/>\n";
 }
 
-// Font Awesome 4
-if (defined('FONTAWESOME-V4')) {
-    if ($settings['fontawesome'] || defined('FONTAWESOME')) {
-        echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome/css/font-awesome.min.css' type='text/css'/>\n";
-    }
-}
-
-// Font Awesome 5
-if (!defined('FONTAWESOME-V4')) {
-    if ($settings['fontawesome'] || defined('FONTAWESOME')) {
-        echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-5/css/all.min.css' type='text/css'/>\n";
-        echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-5/css/v4-shims.min.css' type='text/css'/>\n";
-    }
+if ($settings['fontawesome'] || defined('FONTAWESOME')) {
+    echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-5/css/all.min.css' type='text/css'/>\n";
+    echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-5/css/v4-shims.min.css' type='text/css'/>\n";
 }
 
 // Default CSS styling which applies to all themes but can be overriden
