@@ -1596,13 +1596,13 @@ function parsebytesize($size, $digits = 2, $dir = FALSE) {
     } else if ($size < $kb) {
         return $size.$locale['global_461'];
     } else if ($size < $mb) {
-        return round($size / $kb, $digits).$locale['global_462'];
+        return round($size / $kb, $digits).'kB';
     } else if ($size < $gb) {
-        return round($size / $mb, $digits).$locale['global_463'];
+        return round($size / $mb, $digits).'MB';
     } else if ($size < $tb) {
-        return round($size / $gb, $digits).$locale['global_464'];
+        return round($size / $gb, $digits).'GB';
     } else {
-        return round($size / $tb, $digits).$locale['global_465'];
+        return round($size / $tb, $digits).'TB';
     }
 }
 
