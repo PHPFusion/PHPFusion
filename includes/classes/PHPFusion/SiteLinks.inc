@@ -188,6 +188,7 @@ class SiteLinks {
             'grouping'             => '',
             'show_banner'          => FALSE,
             'show_header'          => FALSE,
+            'custom_header'        => '',
             'language_switcher'    => FALSE,
             'searchbar'            => FALSE,
             'search_icon'          => 'fa fa-search',
@@ -442,10 +443,13 @@ class SiteLinks {
                 $res .= "<!--Menu Header End-->\n";
                 $res .= "</div>\n";
             }
+
+            $res .= self::getMenuParam('custom_header');
+
             if (self::getMenuParam('responsive')) {
                 $res .= "<div class='navbar-collapse collapse' id='".self::getMenuParam('id')."_menu'>\n";
             }
-            $class = (fusion_get_settings("bootstrap") ? " class='nav navbar-nav primary'" : " id='main-menu' class='primary sm sm-simple'");
+            $class = (fusion_get_settings("bootstrap") || defined('BOOTSTRAP') ? " class='nav navbar-nav primary'" : " id='main-menu' class='primary sm sm-simple'");
             if (self::getMenuParam('nav_class')) {
                 $class = " class='".self::getMenuParam('nav_class')."'";
             }
@@ -463,7 +467,7 @@ class SiteLinks {
             $res .= self::getMenuParam('html_content');
 
             if (self::getMenuParam('language_switcher') == TRUE || self::getMenuParam('searchbar') == TRUE || !empty(self::getMenuParam('additional_data'))) {
-                $class = (fusion_get_settings("bootstrap") ? "class='nav navbar-nav secondary navbar-right'" : "id='second-menu' class='secondary sm sm-simple'");
+                $class = (fusion_get_settings("bootstrap") || defined('BOOTSTRAP') ? "class='nav navbar-nav secondary navbar-right'" : "id='second-menu' class='secondary sm sm-simple'");
                 if (self::getMenuParam('additional_nav_class')) {
                     $class = "class='".self::getMenuParam('additional_nav_class')."'";
                 }
@@ -474,7 +478,7 @@ class SiteLinks {
                         $language_switch = fusion_get_language_switch();
                         $current_language = $language_switch[LANGUAGE];
                         $language_opts = "<li class='dropdown'>";
-                        $language_opts .= "<a href='#' class='dropdown-toggle pointer' data-toggle='dropdown' title='".translate_lang_names(LANGUAGE)."'><img class='m-r-5' src='".$current_language['language_icon_s']."'/> <span class='".self::getMenuParam('caret_icon')."'></span></a>";
+                        $language_opts .= "<a href='#' class='dropdown-toggle pointer' data-toggle='dropdown' title='".translate_lang_names(LANGUAGE)."'><img class='m-r-5' src='".$current_language['language_icon_s']."' alt='".translate_lang_names(LANGUAGE)."'/> <span class='".self::getMenuParam('caret_icon')."'></span></a>";
                         $language_opts .= "<ul class='dropdown-menu dropdown-menu-right' role='menu'>\n";
                         if (!empty($language_switch)) {
                             foreach ($language_switch as $folder => $langData) {
@@ -762,7 +766,7 @@ class SiteLinks {
                         $link_class = (!empty($link_data['link_class']) ? " ".$link_data['link_class'] : '');
                         $l_1 = " class='dropdown-toggle".$link_class."' data-toggle='dropdown' ";
                         $l_1 .= (empty($id) && $has_child ? "data-submenu " : "");
-                        $l_2 = (empty($id) ? "<i class='".self::getMenuParam('caret_icon')."'></i>" : "");
+                        $l_2 = (empty($id) ? "<span class='".self::getMenuParam('caret_icon')."'></i>" : "");
                         $li_class[] = (!empty($id) ? "dropdown-submenu" : "dropdown");
                         $tab_index .= !empty($id) ? " tabindex='0'" : "";
                     } else {
@@ -777,7 +781,7 @@ class SiteLinks {
                     $res .= $link_data['link_name']." ".$l_2;
                     $res .= ($itemlink ? "</a>" : '');
                     if ($has_child) {
-                        $res .= "\n<ul id='menu-".$link_data['link_id']."'".(fusion_get_settings("bootstrap") ? " class='dropdown-menu'" : "").">\n";
+                        $res .= "\n<ul id='menu-".$link_data['link_id']."' class='dropdown-menu'>\n";
                         if (!empty($link_data['link_url']) and $link_data['link_url'] !== "#") {
                             $res .= "<li".(!$itemlink ? " class='no-link'" : '').">\n".self::getMenuParam('seperator');
                             $res .= ($itemlink ? "<a ".$itemlink." ".$link_target.">\n" : '');
