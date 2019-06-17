@@ -21,6 +21,8 @@ defined('IN_FUSION') || exit;
 require_once INCLUDES.'theme_functions_include.php';
 
 define('THEME_BULLET', '&middot;');
+define('BOOTSTRAP', TRUE);
+define('FONTAWESOME', TRUE);
 define('HEADER_LINKS', TRUE);
 
 // Settings for 2 columns layout
