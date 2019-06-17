@@ -7,13 +7,8 @@
                 <div class="col-xs-12 col-sm-3">
                     <ul class="block nav p-5">
                         {folders.{
-                        <li {%class%}>
-                            <a href="{%link%}">
-                                <h5 class="m-0">
-                                    <i class="{%icon%} m-r-10"></i><strong>{%title%}</strong>
-                                    {%total%}
-                                </h5>
-                            </a>
+                        <li class="display-block{%class%}">
+                            <a href="{%link%}"><i class="{%icon%} m-r-10"></i>{%title%} {%total%}</a>
                         </li>
                         }}
                     </ul>
@@ -22,12 +17,10 @@
                 <div class="col-xs-12 col-sm-9">
                     <div class="clearfix">
                         {compose_button.{
-                        <div class="pull-right">
-                            <a class="btn btn-primary btn-block m-t-15" href="{%link%}">{%title%}</a>
-                        </div>
+                            <a class="pull-right btn btn-primary btn-sm" href="{%link%}">{%title%}</a>
                         }}
                         {actions.{
-                        <div class="spacer-xs">{%form%}</div>
+                        {%form%}
                         <hr/>
                         }}
                         <div class="text-right">{%pagenav%}</div>
@@ -72,14 +65,15 @@
                                 <span class="caret m-r-10"></span>{[446]}
                             </a>
                         </h4>
-                        <div id="unread-inbox" class="collapse in">
+                        <div id="unread-inbox" class="collapse in show">
                             <table id="unread_tbl" class="table table-hover">
                                 {%unread_content%}
                             </table>
                         </div>
-                        <h4 class="m-b-0"><a data-target="#read-inbox" class="pointer text-dark text-normal"
-                                             data-toggle="collapse"><span class="caret m-r-10"></span>{[447]}</a></h4>
-                        <div id="read-inbox" class="collapse in">
+                        <h4 class="m-b-0">
+                            <a data-target="#read-inbox" class="pointer text-dark text-normal" data-toggle="collapse"><span class="caret m-r-10"></span>{[447]}</a>
+                        </h4>
+                        <div id="read-inbox" class="collapse in show">
                             <table id="read_tbl" class="table table-hover">
                                 {%read_content%}
                             </table>
