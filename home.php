@@ -26,7 +26,6 @@ add_to_title($locale['home']);
 
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['title' => $locale['home'], 'link' => BASEDIR.'home.php']);
 
-
 $configs = [];
 
 $limit = 3;
@@ -191,57 +190,52 @@ foreach ($configs as $table => $config) {
             'cat_name'  => $row['cat_name'],
         ];
 
-        /* Infusion Settings Readings */
-        switch ($table) {
-            case DB_NEWS:
-                if ($config['infSettings']['news_image_frontpage']) { // if it's 0 use uploaded photo, 1 always use category image
-                    // go for cat image always
-                    if ($row['cat_image']) {
-                        $data[$count]['image'] = INFUSIONS."news/news_cats/".$row['cat_image'];
-                    }
-                } else {
-                    // go for image if available
-                    if ($row['image'] || $row['cat_image']) {
-                        if ($row['image_thumb'] && file_exists(INFUSIONS."news/images/thumbs/".$row['image_thumb'])) {
-                            $data[$count]['image'] = INFUSIONS."news/images/thumbs/".$row['image_thumb'];
-                        } else if ($row['image'] && file_exists(INFUSIONS."news/images/".$row['image'])) {
-                            $data[$count]['image'] = INFUSIONS."news/images/".$row['image'];
-                        } else if ($row['cat_image']) {
-                            $data[$count]['image'] = INFUSIONS."news/news_cats/".$row['cat_image'];
-                        } else {
-                            $data[$count]['image'] = get_image('imagenotfound');
-                        }
-                    } else {
-                        $data[$count]['image'] = get_image('imagenotfound');
-                    }
+        if (defined('DB_NEWS') && $table == DB_NEWS) {
+            if ($config['infSettings']['news_image_frontpage']) { // if it's 0 use uploaded photo, 1 always use category image
+                // go for cat image always
+                if ($row['cat_image']) {
+                    $data[$count]['image'] = INFUSIONS."news/news_cats/".$row['cat_image'];
                 }
-                break;
-            case DB_BLOG:
+            } else {
+                // go for image if available
                 if ($row['image'] || $row['cat_image']) {
-                    if ($row['image_thumb'] && file_exists(INFUSIONS."blog/images/thumbs/".$row['image_thumb'])) {
-                        $data[$count]['image'] = INFUSIONS."blog/images/thumbs/".$row['image_thumb'];
-                    } else if ($row['image'] && file_exists(INFUSIONS."blog/images/".$row['image'])) {
-                        $data[$count]['image'] = INFUSIONS."blog/images/".$row['image'];
+                    if ($row['image_thumb'] && file_exists(INFUSIONS."news/images/thumbs/".$row['image_thumb'])) {
+                        $data[$count]['image'] = INFUSIONS."news/images/thumbs/".$row['image_thumb'];
+                    } else if ($row['image'] && file_exists(INFUSIONS."news/images/".$row['image'])) {
+                        $data[$count]['image'] = INFUSIONS."news/images/".$row['image'];
                     } else if ($row['cat_image']) {
-                        $data[$count]['image'] = INFUSIONS."blog/blog_cats/".$row['cat_image'];
+                        $data[$count]['image'] = INFUSIONS."news/news_cats/".$row['cat_image'];
                     } else {
                         $data[$count]['image'] = get_image('imagenotfound');
                     }
                 } else {
                     $data[$count]['image'] = get_image('imagenotfound');
                 }
-                break;
-            case DB_DOWNLOADS:
-                if ($config['infSettings']['download_screenshot']) {
-                    if ($row['image_thumb'] && file_exists(INFUSIONS."downloads/images/".$row['image_thumb'])) {
-                        $data[$count]['image'] = INFUSIONS."downloads/images/".$row['image_thumb'];
-                    } else if ($row['image'] && file_exists(INFUSIONS."downloads/images/".$row['image'])) {
-                        $data[$count]['image'] = INFUSIONS."downloads/images/".$row['image'];
-                    } else {
-                        $data[$count]['image'] = get_image('imagenotfound');
-                    }
+            }
+        } else if (defined('DB_BLOG') && $table == DB_BLOG) {
+            if ($row['image'] || $row['cat_image']) {
+                if ($row['image_thumb'] && file_exists(INFUSIONS."blog/images/thumbs/".$row['image_thumb'])) {
+                    $data[$count]['image'] = INFUSIONS."blog/images/thumbs/".$row['image_thumb'];
+                } else if ($row['image'] && file_exists(INFUSIONS."blog/images/".$row['image'])) {
+                    $data[$count]['image'] = INFUSIONS."blog/images/".$row['image'];
+                } else if ($row['cat_image']) {
+                    $data[$count]['image'] = INFUSIONS."blog/blog_cats/".$row['cat_image'];
+                } else {
+                    $data[$count]['image'] = get_image('imagenotfound');
                 }
-                break;
+            } else {
+                $data[$count]['image'] = get_image('imagenotfound');
+            }
+        } else if (defined('DB_DOWNLOADS') && $table == DB_DOWNLOADS) {
+            if ($config['infSettings']['download_screenshot']) {
+                if ($row['image_thumb'] && file_exists(INFUSIONS."downloads/images/".$row['image_thumb'])) {
+                    $data[$count]['image'] = INFUSIONS."downloads/images/".$row['image_thumb'];
+                } else if ($row['image'] && file_exists(INFUSIONS."downloads/images/".$row['image'])) {
+                    $data[$count]['image'] = INFUSIONS."downloads/images/".$row['image'];
+                } else {
+                    $data[$count]['image'] = get_image('imagenotfound');
+                }
+            }
         }
 
         $count++;
