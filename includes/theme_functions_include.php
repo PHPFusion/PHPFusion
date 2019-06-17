@@ -1172,7 +1172,7 @@ if (!function_exists("tab_active")
             $key = $key ? $key : 'section';
             if (isset($_GET[$key]) && $this->link_mode) {
                 if ($link_active_arrkey == $id) {
-                    $status = 'in active';
+                    $status = 'in active show';
                 } else {
                     $status = '';
                 }
@@ -1184,7 +1184,7 @@ if (!function_exists("tab_active")
                         }
                     }
                 }
-                $status = ($link_active_arrkey == $id ? " in active" : '');
+                $status = ($link_active_arrkey == $id ? " in active show" : '');
 
             }
             return "<div class='tab-pane fade".$status."' id='".$id."'>\n";
