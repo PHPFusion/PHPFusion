@@ -26,23 +26,6 @@ use PHPFusion\Database\DatabaseFactory;
  * @package PHPFusion
  */
 class Errors {
-    const E_ERROR = 1;
-    const E_WARNING = 2;
-    const E_PARSE = 4;
-    const E_NOTICE = 8;
-    const E_CORE_ERROR = 16;
-    const E_CORE_WARNING = 32;
-    const E_COMPILE_ERROR = 64;
-    const E_COMPILE_WARNING = 128;
-    const E_USER_ERROR = 256;
-    const E_USER_WARNING = 512;
-    const E_USER_NOTICE = 1024;
-    const E_ALL = 2047;
-
-    /*
-     * Severity when set Error Level
-     */
-    const E_STRICT = 2048;
     private static $instances = [];
     private static $locale = [];
     public $no_notice = 0;
@@ -55,6 +38,23 @@ class Errors {
     private $error_id = '';
     private $errors = [];
     private $new_errors = [];
+
+    /*
+     * Severity when set Error Level
+     */
+    const E_ERROR = 1;
+    const E_WARNING = 2;
+    const E_PARSE = 4;
+    const E_NOTICE = 8;
+    const E_CORE_ERROR = 16;
+    const E_CORE_WARNING = 32;
+    const E_COMPILE_ERROR = 64;
+    const E_COMPILE_WARNING = 128;
+    const E_USER_ERROR = 256;
+    const E_USER_WARNING = 512;
+    const E_USER_NOTICE = 1024;
+    const E_ALL = 2047;
+    const E_STRICT = 2048;
 
     public function __construct() {
         $this->error_status = filter_input(INPUT_POST, 'error_status', FILTER_VALIDATE_INT, ['min_range' => 0, 'max_range' => 2]);
@@ -360,10 +360,10 @@ class Errors {
                     $html .= "</td>\n";
                     $html .= "<td>".$this->getSources($data['error_id'])."</td>\n";
                     $html .= "<td id='ecmd_".$data['error_id']."' style='white-space:nowrap;'>\n";
-                    $html .= "<a data-id='".$data['error_id']."' data-type='0' class='btn ".($data['error_status'] == 0 ? 'active' : '')." e_status_0 button btn-default move_error_log'>".$locale['ERROR_450']."</a>\n";
-                    $html .= "<a data-id='".$data['error_id']."' data-type='1' class='btn ".($data['error_status'] == 1 ? 'active' : '')." e_status_1 button btn-default move_error_log'>".$locale['ERROR_451']."</a>\n";
-                    $html .= "<a data-id='".$data['error_id']."' data-type='2' class='btn ".($data['error_status'] == 2 ? 'active' : '')." e_status_2 button btn-default move_error_log'>".$locale['ERROR_452']."</a>\n";
-                    $html .= "<a data-id='".$data['error_id']."' data-type='999' class='btn e_status_999 button btn-default move_error_log'>".$locale['delete']."</a>\n";
+                    $html .= "<a data-id='".$data['error_id']."' data-type='0' class='btn ".($data['error_status'] == 0 ? 'active' : '')." e_status_0 button btn-default btn-sm move_error_log'>".$locale['ERROR_450']."</a>\n";
+                    $html .= "<a data-id='".$data['error_id']."' data-type='1' class='btn ".($data['error_status'] == 1 ? 'active' : '')." e_status_1 button btn-default btn-sm move_error_log'>".$locale['ERROR_451']."</a>\n";
+                    $html .= "<a data-id='".$data['error_id']."' data-type='2' class='btn ".($data['error_status'] == 2 ? 'active' : '')." e_status_2 button btn-default btn-sm move_error_log'>".$locale['ERROR_452']."</a>\n";
+                    $html .= "<a data-id='".$data['error_id']."' data-type='999' class='btn e_status_999 button btn-default btn-sm move_error_log'>".$locale['delete']."</a>\n";
                     $html .= "</td>\n";
                     $html .= "</tr>\n";
 
@@ -395,10 +395,10 @@ class Errors {
                     $html .= "</td>\n";
                     $html .= "<td>".$this->getSources($data['error_id'])."</td>\n";
                     $html .= "<td id='ecmd_".$data['error_id']."' style='white-space:nowrap;'>\n";
-                    $html .= "<a data-id='".$data['error_id']."' data-type='0' class='btn ".($data['error_status'] == 0 ? 'active' : '')." e_status_0 button btn-default move_error_log'>".$locale['ERROR_450']."</a>\n";
-                    $html .= "<a data-id='".$data['error_id']."' data-type='1' class='btn ".($data['error_status'] == 1 ? 'active' : '')." e_status_1 button btn-default move_error_log'>".$locale['ERROR_451']."</a>\n";
-                    $html .= "<a data-id='".$data['error_id']."' data-type='2' class='btn ".($data['error_status'] == 2 ? 'active' : '')." e_status_2 button btn-default move_error_log'>".$locale['ERROR_452']."</a>\n";
-                    $html .= "<a data-id='".$data['error_id']."' data-type='999' class='btn e_status_999 button btn-default move_error_log'>".$locale['delete']."</a>\n";
+                    $html .= "<a data-id='".$data['error_id']."' data-type='0' class='btn ".($data['error_status'] == 0 ? 'active' : '')." e_status_0 button btn-default btn-sm move_error_log'>".$locale['ERROR_450']."</a>\n";
+                    $html .= "<a data-id='".$data['error_id']."' data-type='1' class='btn ".($data['error_status'] == 1 ? 'active' : '')." e_status_1 button btn-default btn-sm move_error_log'>".$locale['ERROR_451']."</a>\n";
+                    $html .= "<a data-id='".$data['error_id']."' data-type='2' class='btn ".($data['error_status'] == 2 ? 'active' : '')." e_status_2 button btn-default btn-sm move_error_log'>".$locale['ERROR_452']."</a>\n";
+                    $html .= "<a data-id='".$data['error_id']."' data-type='999' class='btn e_status_999 button btn-default btn-sm move_error_log'>".$locale['delete']."</a>\n";
                     $html .= "</td>\n";
                     $html .= "</tr>\n";
                     /* Toggle Info */
@@ -462,8 +462,8 @@ class Errors {
         $link = ADMIN."errors.php$aidlink&amp;rowstart=".$this->rowstart."&amp;error_id=".$error_id."#file";
 
         $html = "<div class='btn-group'>\n";
-        $html .= "<a class='btn btn-default' href='$link' target='new_window'><i class='fa fa-eye m-0'></i></a>\n";
-        $html .= "<button class='btn btn-default copy-error' data-clipboard-target='#error-".$error_id."'><i class='fa fa-copy m-0'></i></button>\n";
+        $html .= "<a class='btn btn-default btn-sm' href='$link' target='new_window'><i class='fa fa-eye m-0'></i></a>\n";
+        $html .= "<button class='btn btn-default btn-sm copy-error' data-clipboard-target='#error-".$error_id."'><i class='fa fa-copy m-0'></i></button>\n";
         $html .= "</div>\n";
 
         return $html;
