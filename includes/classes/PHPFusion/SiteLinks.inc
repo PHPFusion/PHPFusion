@@ -209,6 +209,7 @@ class SiteLinks {
             'grouping'             => '',
             'show_banner'          => FALSE,
             'show_header'          => FALSE,
+            'custom_header'        => '',
             'header_content'       => '',
             'custom_banner'        => '',
             'custom_banner_link'   => '',
@@ -547,6 +548,7 @@ class SiteLinks {
 
         }
 
+        $tpl->set_tag('custom_header', $options['custom_header']);
         $tpl->set_tag('html_content', $options['html_content']);
         $tpl->set_tag('html_pre_content', $options['html_pre_content']);
         $tpl->set_tag('html_post_content', $options['html_post_content']);
