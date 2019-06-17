@@ -48,7 +48,9 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 
     $locale = fusion_get_locale();
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
-    $id = trim(str_replace("[", "-", $input_name), "]");
+
+    $id = trim(str_replace("[", '', $input_name), "]");
+
     $valid_types = [
         'text', 'number', 'password', 'email', 'url', 'color', 'date', 'datetime', 'datetime-local', 'month', 'range', 'search', 'tel', 'time', 'week'
     ];
@@ -111,7 +113,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
     // Type check
     $options['type'] = in_array($options['type'], $valid_types) ? $options['type'] : 'text';
 
-    $options['input_id'] = trim(str_replace("[", "-", $options['input_id']), "]");
+    $options['input_id'] = trim(str_replace("[", '', $options['input_id']), "]");
 
     $options += [
         'append_button_name'  => !empty($options['append_button_name']) ? $options['append_button_name'] : "p-submit-".$options['input_id'],

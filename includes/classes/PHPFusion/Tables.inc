@@ -1380,28 +1380,35 @@ class Tables {
                                     ) : "";
                                 }
 
-                                if (is_array($formatted_value)) {
-                                    $value = implode(', ', $formatted_value);
-                                } else {
-                                    $value = $formatted_value;
+                                if (!empty($formatted_value)) {
+                                    if (is_array($formatted_value)) {
+                                        $value = implode(', ', $formatted_value);
+                                    } else {
+                                        $value = $formatted_value;
+                                    }
                                 }
-
                             }
 
-                        } else if (!empty($col_data['date']) && !empty($value)) {
+                        } else if (!empty($col_data['date']) && !empty($value) && isnum($value)) {
                             // only accepts timestamp
                             /*
                              * array("date" => TRUE, "date_format" => "shortdate")
                              */
                             if (!empty($col_data['date_format'])) {
+
                                 $value = showdate($col_data['date_format'], $value);
+
                             } else {
+
                                 // if less than a day,
-                                if ((TIME - $value) <= 86400) {
-                                    $value = timer($value);
-                                } else {
-                                    $value = showdate('shortdate', $value);
+                                if (TIME > $value) {
+                                    if ((TIME - $value) <= 86400) {
+                                        $value = timer($value);
+                                    } else {
+                                        $value = showdate('shortdate', $value);
+                                    }
                                 }
+
                             }
 
                         } else if (!empty($col_data['array']) && is_array($col_data['array'])) {

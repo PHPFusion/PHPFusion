@@ -764,24 +764,36 @@ function dbquery_insert($table, $inputdata, $mode, array $options = []) {
         return FALSE;
     }
 
-    $cresult = dbquery("SHOW COLUMNS FROM $table");
-    $columns = [];
-    $pkcolumns = [];
-    while ($cdata = dbarray($cresult)) {
-        $columns[] = $cdata['Field'];
-        if ($cdata['Key'] === 'PRI') {
-            $pkcolumns[$cdata['Field']] = $cdata['Field'];
+    static $table_data = [];
+
+    if (empty($table_data[$table])) {
+
+        $cresult = dbquery("SHOW COLUMNS FROM $table");
+        $columns = [];
+        $pkcolumns = [];
+        while ($cdata = dbarray($cresult)) {
+            $columns[] = $cdata['Field'];
+            if ($cdata['Key'] === 'PRI') {
+                $pkcolumns[$cdata['Field']] = $cdata['Field'];
+            }
         }
+
+        $table_data[$table] = [
+            'columns' => $columns,
+            'pkcolumns' => $pkcolumns
+        ];
     }
+
     if ($options['primary_key']) {
-        $options['primary_key'] = (array)$options['primary_key'];
-        $pkcolumns = array_combine($options['primary_key'], $options['primary_key']);
+        $options['primary_key'] = (array) $options['primary_key'];
+        $table_data[$table]['pkcolumns'] = array_combine($options['primary_key'], $options['primary_key']);
     }
+
     $sanitized_input = [];
-    $data = array_intersect_key($inputdata, array_flip($columns));
-    $pkvalues = array_intersect_key($data, $pkcolumns);
+    $data = array_intersect_key($inputdata, array_flip($table_data[$table]['columns']));
+    $pkvalues = array_intersect_key($data, $table_data[$table]['pkcolumns']);
     if (!$options['no_unique'] and $mode !== 'save') {
-        foreach ($pkcolumns as $c) {
+        foreach ($table_data[$table]['pkcolumns'] as $c) {
             unset($data[$c]);
         }
     }

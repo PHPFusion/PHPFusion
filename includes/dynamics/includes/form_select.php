@@ -375,7 +375,7 @@ function form_select($input_name, $label = "", $input_value, array $options = []
 
     // always trim id
 
-    $options['input_id'] = trim(str_replace("[", "-", $options['input_id']), "]");
+    $options['input_id'] = trim(str_replace("[", '', $options['input_id']), "]");
 
     $allowclear = ($options['placeholder'] && $options['multiple'] || $options['allowclear']) ? "allowClear:true," : '';
 
