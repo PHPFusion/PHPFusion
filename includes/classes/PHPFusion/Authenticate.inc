@@ -413,7 +413,11 @@ class Authenticate {
         //header("P3P: CP='NOI ADM DEV PSAi COM NAV OUR OTRo STP IND DEM'");
         Authenticate::_setCookie(COOKIE_USER, "", time() - 1209600, COOKIE_PATH, COOKIE_DOMAIN, FALSE, TRUE);
         Authenticate::_setCookie(COOKIE_LASTVISIT, "", time() - 1209600, COOKIE_PATH, COOKIE_DOMAIN, FALSE, TRUE);
-        session_destroy();
+
+        if (session_id()) {
+            session_destroy();
+        }
+
 
         return Authenticate::getEmptyUserData();
     }
