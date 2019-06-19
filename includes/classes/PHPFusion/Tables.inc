@@ -262,6 +262,7 @@ class Tables {
 
         // Dropdown link filters redirect to $_GET
         if (post('table_filter') && !empty($this->table_props['dropdown_filters'])) {
+
             $redirect_param = [];
             $redirect_keys = [];
 
@@ -354,14 +355,22 @@ class Tables {
         ];
 
         $orderby = '';
+
         $get_orderby = get('orderby');
-        $get_order = get('orderby');
+
+        $get_order = get('order');
+
         if ($get_orderby && $get_order && isset($order_check[$get_order]) && !empty($this->table_props['order_col'])) {
+
             $sort = $order_check[$get_order];
+
             $ordering = array_flip($this->table_props['order_col']);
+
             if (isset($ordering[$get_orderby])) {
+
                 $orderby = $ordering[$get_orderby]." ".$sort.", ";
             }
+
         } else if (!empty($this->query['order'])) {
             $orderby = $this->query['order'].", ";
         }
@@ -656,6 +665,11 @@ class Tables {
     private $custom_columns_value = [];
     private $custom_columns_options = [];
 
+    /**
+     * Table individual user customization Menu
+     * @return string
+     * @throws \ReflectionException
+     */
     private function displayCustom() {
 
         $html = "<div id='".$this->table_props['table_id']."-custom-box' class='list-group-item spacer-sm' style='display:none;'>";
@@ -700,9 +714,10 @@ class Tables {
 
         }
 
-
         $cdata = $this->getData();
+
         $col_span = 1;
+
         $order_col = $this->table_props['order_col'];
 
         $key_delete = get($this->table_props['del_key'], FILTER_VALIDATE_INT); // the apply button
@@ -903,7 +918,6 @@ class Tables {
 
         }
 
-
         // End Header TH
 
         /**
@@ -1021,12 +1035,14 @@ class Tables {
             array_push($actions_options, $this->table_props['action_filters']);
         }
 
+        // print_P($this->table_props['action_filters']);
+        // print_P($actions_options);
+
         $html .= openform('cat_table_frm', 'post').form_select(
                 'filter_actions', '', '', [
                     'inline' => TRUE,
                     'inner_width'      => '150px',
-                    'inner_class'      => 'display-inline-block',
-                    'class'            => 'm-0 display-inline-block',
+                    'class'            => 'm-0 display-inline-block pull-left',
                     'optgroup'         => TRUE,
                     'options'          => $actions_options,
                     'select2_disabled' => TRUE,
@@ -1063,8 +1079,9 @@ class Tables {
             $html .= closeform()."</div>";
         }
 
-        if (isset($_GET['s'])) {
-            $html .= "<a href='".clean_request('', ['s'], FALSE)."'>Clear Search</a>";
+        $has_search = get('s');
+        if ($has_search) {
+            $html .= "<a class='btn btn-link btn-sm' href='".clean_request('', ['s'], FALSE)."'>Clear Search</a>";
         }
 
         $html .= $end_row;
@@ -1389,27 +1406,29 @@ class Tables {
                                 }
                             }
 
-                        } else if (!empty($col_data['date']) && !empty($value) && isnum($value)) {
+                        } else if (!empty($col_data['date']) && !empty($value)) {
+
                             // only accepts timestamp
-                            /*
-                             * array("date" => TRUE, "date_format" => "shortdate")
-                             */
-                            if (!empty($col_data['date_format'])) {
+                            if (isnum($value)) {
 
-                                $value = showdate($col_data['date_format'], $value);
+                                //Format : array("date" => TRUE, "date_format" => "shortdate")
 
-                            } else {
+                                if (!empty($col_data['date_format'])) {
 
-                                // if less than a day,
-                                if (TIME > $value) {
-                                    if ((TIME - $value) <= 86400) {
+                                    $value = showdate($col_data['date_format'], $value);
+
+                                } else {
+
+                                    // if less than a day,
+                                    if (TIME > $value && ((TIME - $value) <= 86400)) {
                                         $value = timer($value);
                                     } else {
                                         $value = showdate('shortdate', $value);
                                     }
-                                }
 
+                                }
                             }
+
 
                         } else if (!empty($col_data['array']) && is_array($col_data['array'])) {
                             /*
@@ -1628,8 +1647,11 @@ class Tables {
         $options = [
             'na' => $filter['title']
         ];
+
         $options += $filter['options'];
+
         $filter_val = array_flip(array_map('strtolower', $options));
+
         $value = '';
 
         if (isset($_GET[$column_name])) {
@@ -1641,7 +1663,7 @@ class Tables {
         $html .= form_select(
             $column_name, '', $value, [
                 'inner_width'      => '160px',
-                'class'            => 'm-0',
+                'class'            => 'm-0 display-inline-block pull-left',
                 'options'          => $options,
                 'select2_disabled' => TRUE,
                 //        'allowclear'       => FALSE,
@@ -1651,7 +1673,6 @@ class Tables {
         $html .= "</div>\n"; // close inline
 
         return (string)$html;
-
     }
 
     private function bulkActions() {

@@ -52,37 +52,59 @@ interface TableSDK {
     /**
      * Returns the table outlook/presentation configurations
      *
-    'table_class'        => '',
-    'header_content'     => '',
-    'no_record'          => 'There are no records',
-    'search_label'       => 'Search',
-    'search_placeholder' => "Search",
-    'search_col'         => '', // set this value sql column name to have search input input filter
-    'delete_link' => TRUE,
-    'edit_link' => TRUE,
-    'edit_link_format'   => '', // set this to format the edit link
-    'delete_link_format' => '', // set this to format the delete link
-    'view_link_format' => '', // set this to format the view link
-
-    'edit_key'           => 'edit',
-    'del_key'            => 'del', // change this to invoke internal table delete function for custom delete link format
-    'view_key'           => 'view',
-
-    'date_col'           => '',  // set this value to sql column name to have date selector input filter
-    'order_col'          => '', // set this value to sql column name to have sorting column input filter
-    'multilang_col'      => '', // set this value to have multilanguage column filter
-    'updated_message'    => 'Entries have been updated', // set this value to have custom success message
-    'deleted_message'    => 'Entries have been deleted', // set this value to have the custom delete message,
-    'class'              => '', // table class
-    'show_count'         => TRUE // show table item count,
-    'link_filters'       => [ $group_key => [ [$key_values => $key_title], [$key_values => $key_title], ... ] ]
-    'dropdown_filters' => [
-                        'user_level' => [
-                            'type' => 'array', // use 'date' if the column is a datestamp
-                            'title' => $title',
-                            'options' => [ [$key_values => $key_title], [$key_values => $key_title], ... ] ]
-                        ]
-    ]
+     * 'table_class'        => '',
+     * 'header_content'     => '',
+     * 'no_record'          => 'There are no records',
+     * 'search_label'       => 'Search',
+     * 'search_placeholder' => "Search",
+     * 'search_col'         => '', // set this value sql column name to have search input input filter
+     * 'delete_link' => TRUE,
+     * 'edit_link' => TRUE,
+     * 'edit_link_format'   => '', // set this to format the edit link
+     * 'delete_link_format' => '', // set this to format the delete link
+     * 'view_link_format' => '', // set this to format the view link
+     *
+     * 'edit_key'           => 'edit',
+     * 'del_key'            => 'del', // change this to invoke internal table delete function for custom delete link format
+     * 'view_key'           => 'view',
+     *
+     * 'date_col'           => '',  // set this value to sql column name to have date selector input filter
+     * 'order_col'          => '', // set this value to sql column name to have sorting column input filter
+     * 'multilang_col'      => '', // set this value to have multilanguage column filter
+     * 'updated_message'    => 'Entries have been updated', // set this value to have custom success message
+     * 'deleted_message'    => 'Entries have been deleted', // set this value to have the custom delete message,
+     * 'class'              => '', // table class
+     * 'show_count'         => TRUE // show table item count,
+     * // This will add an extra link on top of the bulk actions selector
+     * 'link_filters'       => [
+     * 'group_key' => [
+     *                  [$key_values => $key_title],
+     *                  [$key_values => $key_title]
+     *              ]
+     * ]
+     * // This will add extra dropdown pair of dropdown selectors to act as column filter that has such value.
+     * 'dropdown_filters' => [
+     * 'user_level' => [
+     * 'type' => 'array', // use 'date' if the column is a datestamp
+     * 'title' => $title',
+     * 'options' => [ [$key_values => $key_title], [$key_values => $key_title], ... ] ]
+     * ]
+     * ],
+     *  // This allows you to add more options to the bulk filters.
+     * 'action_filters'   => [
+     * 'text'     => 'Member Actions',
+     * 'label'    => TRUE,
+     * 'children' => [
+     * Members::USER_BAN          => $locale['ME_500'],
+     * Members::USER_REINSTATE    => $locale['ME_501'],
+     * Members::USER_SUSPEND      => $locale['ME_503'],
+     * Members::USER_SECURITY_BAN => $locale['ME_504'],
+     * Members::USER_CANCEL       => $locale['ME_505'],
+     * Members::USER_ANON         => $locale['ME_506'],
+     * Members::USER_DEACTIVATE   => $locale['ME_507']
+     * ]
+     * ]
+     *
      *
      *
      * @return array
@@ -124,6 +146,7 @@ interface TableSDK {
 
     /**
      * Every row of the array is a field input.
+     *
      * @return array
      */
     public function quickEdit();
