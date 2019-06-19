@@ -84,12 +84,16 @@ interface TableSDK {
      * ]
      * // This will add extra dropdown pair of dropdown selectors to act as column filter that has such value.
      * 'dropdown_filters' => [
-     * 'user_level' => [
-     * 'type' => 'array', // use 'date' if the column is a datestamp
-     * 'title' => $title',
-     * 'options' => [ [$key_values => $key_title], [$key_values => $key_title], ... ] ]
-     * ]
+     *          'user_level' => [
+     *          'type' => 'array', // use 'date' if the column is a datestamp
+     *          'title' => $title',
+     *          'options' => [ [$key_values => $key_title], [$key_values => $key_title], ... ] ] //$key_values - This is the key to be used on actions_filters_confirm
+     *          ]
      * ],
+     * // This will add your confirmation messages -- key_values is the key to 'dropdown_filters'['options'][key']
+     * 'actions_filters_confirm' => [
+                'key_values' => 'Are you sure to delete this record?'
+        ],
      *  // This allows you to add more options to the bulk filters.
      * 'action_filters'   => [
      * 'text'     => 'Member Actions',

@@ -41,8 +41,6 @@ class Tables {
 
     private $echo = TRUE;
 
-    private $clear_args = [];
-
     // Data source
     private $default_args = [
         'debug'                    => FALSE, // True to show the SQL query for the table.
@@ -116,7 +114,10 @@ class Tables {
         'updated_message' => 'Entries have been updated', // set this value to have custom success message
         'deleted_message' => 'Entries have been deleted', // set this value to have the custom delete message,
         'class'           => '', // table class
-        'show_count'      => TRUE // show table item count
+        'show_count'      => TRUE, // show table item count
+        'action_filters' => [],
+        'actions_filters_confirm' => [],
+        'link_filters' => [],
     ];
 
     private $columns = [];
@@ -196,6 +197,7 @@ class Tables {
 
         $php_limit_cookie = cookie($this->table_props['table_id'].'-limit');
         if ($php_limit_cookie && isnum($php_limit_cookie)) {
+
             $this->query['limit'] = $php_limit_cookie;
         }
 
@@ -358,7 +360,7 @@ class Tables {
 
         $get_orderby = get('orderby');
 
-        $get_order = get('order');
+        $get_order = get('order'); // asc or desc
 
         if ($get_orderby && $get_order && isset($order_check[$get_order]) && !empty($this->table_props['order_col'])) {
 
@@ -372,6 +374,7 @@ class Tables {
             }
 
         } else if (!empty($this->query['order'])) {
+
             $orderby = $this->query['order'].", ";
         }
 
@@ -663,6 +666,7 @@ class Tables {
     }
 
     private $custom_columns_value = [];
+
     private $custom_columns_options = [];
 
     /**
@@ -725,14 +729,20 @@ class Tables {
         // The bullk actions
         $table_action = post("table_action");
         if ($table_action) {
-            switch ($table_action) {
-                case 'bulk_delete': // delete
-                    $this->filterDeleteRows();
-                    break;
-                default:
-                    $this->bulkActions();
-                    break;
+            $id = sanitizer(['id'], '', 'id[]');
+            if ($id) {
+                switch ($table_action) {
+                    case 'bulk_delete': // delete
+                        $this->filterDeleteRows();
+                        break;
+                    default:
+                        $this->bulkActions();
+                        break;
+                }
+            } else {
+                addNotice('warning', 'No record has been selected for this table action.');
             }
+
         }
 
         // The delete of a row
@@ -883,11 +893,16 @@ class Tables {
                 if (!empty($current_order_col[$col_key])) { // turn on carets
 
                     $order = 'asc';
+
                     $order_class = $order_caret['asc'];
+
                     $order_value = $current_order_col[$col_key]; // title
 
-                    $order = get("order") ?: $order;
+                    $order = get("order") ? get('order') : $order; // asc or desc
+
                     $order_by = get("orderby");
+
+                    $order_val = 'desc';
 
                     if ($order && $order_by) {
 
@@ -895,18 +910,16 @@ class Tables {
 
                             $order_class = 'order-caret-up-current';
 
-                            $order = 'desc';
-
                             if ($order == 'desc') {
 
                                 $order_class = 'order-caret-down-current';
 
-                                $order = 'asc';
+                                $order_val = 'asc';
                             }
                         }
                     }
 
-                    $order_open = "<a class='table-order $order_class' href='".clean_request("orderby=".$order_value."&order=".$order, ['order', 'orderby'], FALSE)."'>\n";
+                    $order_open = "<a class='table-order $order_class' href='".clean_request("orderby=".$order_value."&order=".$order_val, ['order', 'orderby'], FALSE)."'>\n";
 
                     $order_close = "</a>\n";
                 }
@@ -1038,7 +1051,7 @@ class Tables {
         // print_P($this->table_props['action_filters']);
         // print_P($actions_options);
 
-        $html .= openform('cat_table_frm', 'post').form_select(
+        $html .= openform('cat_table_frm', 'post', FUSION_REQUEST).form_select(
                 'filter_actions', '', '', [
                     'inline' => TRUE,
                     'inner_width'      => '150px',
@@ -1094,6 +1107,15 @@ class Tables {
             $check_all_col_2 = "<th>".form_checkbox('chk_all2', '', '', ['class' => 'm-b-0'])."</th>\n";
         }
 
+        $validate_messages = [
+            'bulk_delete' => 'Are you sure to delete all these records?'
+        ];
+        if (!empty($this->table_props['actions_filters_confirm'])) {
+            if (is_array($this->table_props['actions_filters_confirm'])) {
+                $validate_messages = $validate_messages + $this->table_props['actions_filters_confirm'];
+            }
+        }
+        $validate_opts = json_encode($validate_messages);
 
         $html .= openform('table_frm', 'post');
         $html .= form_hidden('table_action', '', '');
@@ -1573,7 +1595,8 @@ class Tables {
         $html .= "</div>\n";
 
         add_to_footer("<script src='".INCLUDES."jquery/tables/tables.js'></script>");
-        add_to_jquery("phpfusion_tables.init('".json_encode($this->jsonRows)."', '".$this->query['id']."', '".$this->query['table']."');");
+
+        add_to_jquery("phpfusion_tables.init('".json_encode($this->jsonRows)."', '".$this->query['id']."', '".$this->query['table']."', $validate_opts );");
 
         return (string)$html;
 

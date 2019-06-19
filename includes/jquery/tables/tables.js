@@ -14,13 +14,13 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-var phpfusion_tables = {
+let phpfusion_tables = {
 
-    'init' : function(table_fields, table_key, table_db) {
+    'init' : function(table_fields, table_key, table_db, actions_validate) {
 
         phpfusion_tables.toggleRow();
 
-        phpfusion_tables.applyFilter();
+        phpfusion_tables.applyFilter(actions_validate);
 
         phpfusion_tables.masterCheck();
 
@@ -56,12 +56,11 @@ var phpfusion_tables = {
         }
 
     },
-
     // controls filter actions behavior
-    'applyFilter': function() {
+    'applyFilter' : function(opts) {
 
-        //var checkboxes = '';
-        /* var array_values = [];
+        //let checkboxes = '';
+        /* let array_values = [];
         $('input[name^="id[]"]').each( function() {
             if( $(this).is(':checked') ) {
                 array_values.push( $(this).val() );
@@ -75,18 +74,52 @@ var phpfusion_tables = {
 
             e.preventDefault();
 
-            $('#table_action').val($('#filter_actions').val());
+            e.stopPropagation();
 
-            $('#table_frm').submit();
+            let current_val = $('#filter_actions').val();
+
+            let confirmation = function(opts, current_val) {
+
+                let has_confirmation;
+
+                $.each(opts, function (key, val) {
+
+                    if (key == current_val) { // found a required confirm.
+
+                        if (confirm(val)) {
+
+                            $('#table_action').val(current_val);
+
+                            $('#table_frm').submit();
+
+                        }
+
+                        has_confirmation = true;
+                    }
+
+                });
+
+                if (!has_confirmation) {
+
+                    $('#table_action').val(current_val);
+
+                    $('#table_frm').submit();
+                }
+
+
+            }
+
+           confirmation(opts, current_val);
+
         });
-    },
 
+    },
     // Controls checkbox behavior
     'masterCheck' : function() {
 
         $('#chk_all, #chk_all2').bind('click', function(e) {
 
-            var val = $(this).is(':checked') ? 1 : 0;
+            let val = $(this).is(':checked') ? 1 : 0;
 
             setChecked('table_frm', 'id[]', val);
 
@@ -97,7 +130,7 @@ var phpfusion_tables = {
     },
 
     'fetchQuickEdit': function(id, table_key, table_db, success_function) {
-        var data = {
+        let data = {
             table_col :id,
             table_key: table_key,
             table_db : table_db
@@ -131,13 +164,13 @@ var phpfusion_tables = {
 
         $('.quick_edit').bind('click', function(e) {
             e.preventDefault();
-            var val = {
+            let val = {
                 table_col : $(this).data('value'),
                 table_key: table_key,
                 table_db : table_db
             };
 
-            var showQuickEdit = function(id, table_col, table_key, response) {
+            let showQuickEdit = function(id, table_col, table_key, response) {
 
                 $('#qc-input #qc_id').val( id );
 
@@ -148,7 +181,7 @@ var phpfusion_tables = {
 
                 if (id) {
                     // copy the qc-input into the row.
-                    var qc_rows = $('#form-row-'+id+' > td');
+                    let qc_rows = $('#form-row-'+id+' > td');
 
                     $('#qc-input').find('button[name*="cancel_quick_editor"]').val( id );
 
@@ -167,8 +200,8 @@ var phpfusion_tables = {
 
         $('body').on('click', 'button[name*="cancel_quick_editor"]', function(e) {
             e.preventDefault();
-            var val = $(this).val();
-            var qc_rows = $('#form-row-'+val+' > td');
+            let val = $(this).val();
+            let qc_rows = $('#form-row-'+val+' > td');
             if (val) {
                 qc_rows.html('');
                 $('#form-row-'+val).hide();
@@ -180,13 +213,13 @@ var phpfusion_tables = {
 
             e.preventDefault();
 
-            var loader_ui =  $(this).find('.qc-spinner');
+            let loader_ui =  $(this).find('.qc-spinner');
 
             loader_ui.show();
 
-            var fields = {}
+            let fields = {}
 
-            var post_data = {
+            let post_data = {
 
                 fusion_token: $('#table_frm').find('input[name*="fusion_token"]').val(),
 
@@ -197,7 +230,7 @@ var phpfusion_tables = {
                 table_key : table_key
             }
 
-            var row_id = $(this).closest('#qc-input').find('#qc_id').val();
+            let row_id = $(this).closest('#qc-input').find('#qc_id').val();
 
             fields[ table_key ] = row_id;
 
@@ -209,7 +242,7 @@ var phpfusion_tables = {
 
             post_data['table_fields'] = fields;
 
-            var qc_rows = $('#form-row-'+row_id+' > td'); // the form container
+            let qc_rows = $('#form-row-'+row_id+' > td'); // the form container
 
             $.ajax({
 
@@ -239,7 +272,7 @@ var phpfusion_tables = {
 
                             $.each(e.responseJSON['data'], function(key, value) {
 
-                                var s = $('#entry-row-'+ row_id).find('[data-col="'+ key + '"] span.value');
+                                let s = $('#entry-row-'+ row_id).find('[data-col="'+ key + '"] span.value');
 
                                 //console.log(s);
 
@@ -262,7 +295,6 @@ var phpfusion_tables = {
                 }
             });
         });
-    }
+    },
+
 }
-
-
