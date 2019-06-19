@@ -1639,20 +1639,26 @@ function profile_link($user_id, $user_name, $user_status, $class = "profile-link
 }
 
 /**
- * Variable dump printer for debugging purposes
+ *  Variable dump printer for debugging purposes
+ * @param        $array
+ * @param bool   $modal
+ * @param bool   $print
+ * @param string $default_visibility
  *
- * @param      $array
- * @param bool $modal
- * @param bool $print
- *
- * @return string
+ * @return bool|false|string
  */
-function print_p($array, $modal = FALSE, $print = TRUE) {
-    if (iSUPERADMIN || iADMIN) {
+function print_p($array, $modal = FALSE, $print = TRUE, $default_visibility = '-102') {
+
+    if (checkgroup($default_visibility)) {
+
         //debug_print_backtrace();
+
         ob_start();
+
         echo htmlspecialchars(print_r($array, TRUE), ENT_QUOTES, 'utf-8');
+
         $debug = ob_get_clean();
+
         if ($modal == TRUE) {
             $modal = openmodal('Debug', 'Debug');
             $modal .= "<pre style='white-space:pre-wrap !important;'>";
@@ -1671,6 +1677,7 @@ function print_p($array, $modal = FALSE, $print = TRUE) {
 
         return $debug;
     }
+
     return '';
 }
 
