@@ -244,7 +244,7 @@ class Infusion_Core {
 
             $inf_image_tmp = !empty($inf_image) && file_exists(ADMIN."images/".$inf_image) ? ADMIN."images/".$inf_image : ADMIN."images/infusion_panel.png";
 
-            if (!empty($inf_image) && file_exists(INFUSIONS.$inf_folder."/".$inf_image)) {
+            if (!empty($inf_image) && is_file(INFUSIONS.$inf_folder."/".$inf_image)) {
                 $inf_image = INFUSIONS.$inf_folder."/".$inf_image;
             } else {
                 $inf_image = $inf_image_tmp;
