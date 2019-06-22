@@ -17,6 +17,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
+use PHPFusion\OpenGraph;
 use PHPFusion\OutputHandler;
 
 /**
@@ -78,8 +79,8 @@ function add_to_footer($tag = "") {
 /**
  * Replace something in the output using regexp
  *
- * @param string $target Regexp pattern without delimiters
- * @param string $replace The new content
+ * @param string $target    Regexp pattern without delimiters
+ * @param string $replace   The new content
  * @param string $modifiers Regexp modifiers
  */
 function replace_in_output($target, $replace, $modifiers = "") {
@@ -122,4 +123,13 @@ function add_to_jquery($tag = "") {
  */
 function add_to_css($tag = "") {
     OutputHandler::addToCss($tag);
+}
+
+function set_og($title = '', $description = '', $url = '', $keywords = '') {
+    OpenGraph::setCustom([
+        'title'       => $title,
+        'description' => $description,
+        'url'         => $url,
+        'keywords'    => $keywords
+    ]);
 }
