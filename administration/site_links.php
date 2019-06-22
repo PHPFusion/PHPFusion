@@ -16,11 +16,13 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
+
 require_once THEMES.'templates/admin_header.php';
 
 class SiteLinks_Admin extends PHPFusion\SiteLinks {
 
     private static $siteLinksAdmin_instance = NULL;
+
     private $data = [
         'link_id'          => 0,
         'link_name'        => '',
@@ -35,11 +37,17 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
         'link_position_id' => 0,
         'link_window'      => 0,
     ];
+
     private $language_opts = [];
+
     private $link_index = [];
+
     private static $default_display = 16;
+
     private $form_action = '';
+
     private $aidlink = '';
+
     private $locale = [];
 
     private function __construct() {
@@ -47,33 +55,42 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
         $this->locale = fusion_get_locale("", LOCALE.LOCALESET."admin/sitelinks.php");
         $this->language_opts = fusion_get_enabled_languages();
         $this->link_index = dbquery_tree(DB_SITE_LINKS, 'link_id', 'link_cat');
+
         $_GET['link_id'] = isset($_GET['link_id']) && isnum($_GET['link_id']) ? $_GET['link_id'] : 0;
+
         $_GET['link_cat'] = isset($_GET['link_cat']) && isnum($_GET['link_cat']) ? $_GET['link_cat'] : 0;
-        $_GET['action'] = isset($_GET['action']) ? $_GET['action'] : '';
-        if (isset($_GET['action'])) {
-            switch ($_GET['action']) {
-                case 'edit':
-                    $this->data = self::get_sitelinks($_GET['link_id']);
-                    $this->data['link_position_id'] = 0;
-                    if (!$this->data['link_id']) {
-                        redirect(FUSION_SELF.$this->aidlink);
-                    }
-                    $this->form_action = FUSION_SELF.$this->aidlink."&amp;action=edit&amp;section=nform&amp;link_id=".$_GET['link_id']."&amp;link_cat=".$_GET['link_cat'];
-                    \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => $this->form_action, 'title' => $this->locale['SL_0011']]);
-                    break;
-                case 'delete':
-                    $result = self::delete_sitelinks($_GET['link_id']);
-                    if ($result) {
-                        addNotice("success", $this->locale['SL_0017']);
-                        redirect(FUSION_SELF.$this->aidlink);
-                    }
-                    break;
-                default:
-                    $this->form_action = FUSION_SELF.$this->aidlink."&amp;section=link_form";
-                    \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => $this->form_action, 'title' => (isset($_GET['ref']) && $_GET['ref'] == 'link_form' ? $this->locale['SL_0010'] : $this->locale['SL_0012'])]);
-                    break;
-            }
+
+        $action = get('action');
+
+        switch ($action) {
+            case 'edit':
+                $this->data = self::get_sitelinks($_GET['link_id']);
+                $this->data['link_position_id'] = 0;
+                if (!$this->data['link_id']) {
+                    redirect(FUSION_SELF.$this->aidlink);
+                }
+
+                $this->form_action = FUSION_SELF.$this->aidlink."&amp;action=edit&amp;section=nform&amp;link_id=".$_GET['link_id']."&amp;link_cat=".$_GET['link_cat'];
+
+                \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => $this->form_action, 'title' => $this->locale['SL_0011']]);
+
+                break;
+            case 'delete':
+
+                $result = self::delete_sitelinks($_GET['link_id']);
+
+                if ($result) {
+                    addNotice("success", $this->locale['SL_0017']);
+                    redirect(FUSION_SELF.$this->aidlink);
+                }
+
+                break;
+            default:
+                $this->form_action = FUSION_SELF.$this->aidlink."&amp;section=link_form";
+                \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => $this->form_action, 'title' => (isset($_GET['ref']) && $_GET['ref'] == 'link_form' ? $this->locale['SL_0010'] : $this->locale['SL_0012'])]);
+                break;
         }
+
         add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/jquery-ui.js'></script>");
         add_to_jquery("
         $('#site-links').sortable({
@@ -427,14 +444,41 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
      * Form for Listing Menu
      */
     private function display_sitelinks_list() {
-        $visibility = self::get_LinkVisibility();
-        $position_opts = self::get_SiteLinksPosition();
-        $allowed_actions = array_flip(["publish", "unpublish", "move", "move_confirm", "delete"]);
+
+        include ADMIN.'sitelinks/sitelinks.table.php';
+
+        $link_position = \PHPFusion\SiteLinks::get_SiteLinksPosition();
+
+        echo "<div class='row'>";
+        echo "<div class='col-xs-12 col-sm-2'>";
+        if (!empty($link_position)) {
+            echo "<h4>Menus</h4>";
+            echo "<div class='list-group'>";
+            foreach($link_position as $pos_id => $pos_name) {
+                echo "<div class='list-group-item'><a href='".clean_request('menu='.$pos_id, ['menu'], FALSE)."'>$pos_name</a></div>";
+            }
+            echo "</div>";
+        }
+        echo "</div><div class='col-xs-12 col-sm-10'>\n";
+
+        new \PHPFusion\Tables( new SiteLinks_Table() );
+
+        echo "</div>";
+        echo "</div>";
+
+
+
+        return '';
+
+        //$visibility = self::get_LinkVisibility();
+        //$position_opts = self::get_SiteLinksPosition();
+        //$allowed_actions = array_flip(["publish", "unpublish", "move", "move_confirm", "delete"]);
 
         if (isset($_POST['link_clear'])) {
             redirect(FUSION_SELF.$this->aidlink);
         }
 
+        // custom table action
         if (isset($_POST['table_action']) && isset($allowed_actions[$_POST['table_action']])) {
             $input = (isset($_POST['link_id']) ? explode(",", form_sanitizer($_POST['link_id'], "", "link_id")) : 0);
             if (!empty($input)) {
@@ -503,7 +547,6 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
                 redirect(FUSION_SELF.$this->aidlink);
             }
         }
-
 
         $sql_condition = multilang_table('SL') ? 'link_language="'.LANGUAGE.'"' : '';
         $search_string = [];
@@ -841,13 +884,17 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
                 echo "<tr id='listItem_".$data['link_id']."' data-id='".$data['link_id']."' class='list-result '>\n";
                 echo "<td>".form_checkbox("link_id[]", "", '', ["value" => $data['link_id'], "class" => 'm-0'])."</td>\n";
                 echo "<td><i class='pointer handle fa fa-arrows' title='".$this->locale['SL_0074']."'></i></td>\n";
+
                 echo "<td>\n";
+
                 echo "<a class='text-dark' href='".FUSION_SELF.$this->aidlink."&amp;section=links&amp;link_cat=".$data['link_id']."'>".$data['link_name']."</a>\n";
+
                 echo "<div class='actionbar text-smaller' id='sl-".$data['link_id']."-actions'>
-                <a href='".FUSION_SELF.$this->aidlink."&amp;section=links&amp;ref=link_form&amp;action=edit&amp;link_id=".$data['link_id']."&amp;link_cat=".$data['link_cat']."'>".$this->locale['edit']."</a> |
+                //<a href='".FUSION_SELF.$this->aidlink."&amp;section=links&amp;ref=link_form&amp;action=edit&amp;link_id=".$data['link_id']."&amp;link_cat=".$data['link_cat']."'>".$this->locale['edit']."</a> |
                 <a class='qedit pointer' data-id='".$data['link_id']."'>".$this->locale['qedit']."</a> |
                 ";
-                echo (isset($this->link_index[$data['link_id']]) ? $this->locale['SL_0034'] : "<a class='delete' href='".FUSION_SELF.$this->aidlink."&amp;action=delete&amp;link_id=".$data['link_id']."' onclick=\"return confirm('".$this->locale['SL_0080']."');\">".$this->locale['delete']."</a>")." | ";
+                //echo (isset($this->link_index[$data['link_id']]) ? $this->locale['SL_0034'] : "<a class='delete' href='".FUSION_SELF.$this->aidlink."&amp;action=delete&amp;link_id=".$data['link_id']."' onclick=\"return confirm('".$this->locale['SL_0080']."');\">".$this->locale['delete']."</a>")." | ";
+
                 if (strstr($data['link_url'], "http://") || strstr($data['link_url'], "https://")) {
                     echo "<a href='".$data['link_url']."'>".$this->locale['view']."</a>\n";
                 } else {
@@ -855,8 +902,11 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
                 }
                 echo "</div>";
                 echo "</td>\n";
+
                 echo "<td><span class='badge'>".(isset($this->link_index[$data['link_id']]) ? count($this->link_index[$data['link_id']]) : 0)."</span></td>\n";
+
                 echo "<td>$link_status</td>\n";
+
                 echo "<td><i class='".$data['link_icon']."'></i></td>\n";
                 echo "<td>".($data['link_window'] ? $this->locale['yes'] : $this->locale['no'])."</td>\n";
                 echo "<td>$link_position</td>\n";
@@ -867,7 +917,7 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
             }
         } else {
             echo "<tr>\n";
-            echo "<td colspan='10' class='text-center'>".$this->locale['SL_0062']."</td>\n";
+            //echo "<td colspan='10' class='text-center'>".$this->locale['SL_0062']."</td>\n";
             echo "</tr>\n";
 
             //redirect(FUSION_SELF.$this->aidlink);
@@ -928,4 +978,5 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
 }
 
 SiteLinks_Admin::Administration()->display_administration_form();
+
 require_once THEMES.'templates/footer.php';
