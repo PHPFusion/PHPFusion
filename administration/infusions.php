@@ -24,10 +24,10 @@ $settings = fusion_get_settings();
 add_to_jquery("$('.defuse').bind('click', function() {return confirm('".$locale['412']."');});");
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'infusions.php'.fusion_get_aidlink(), 'title' => $locale['400']]);
 
-if (($folder = filter_input(INPUT_POST, 'infuse'))) {
+if (($folder = post('infuse'))) {
     \PHPFusion\Installer\Infusion_Core::getInstance()->infuse($folder);
     redirect(FUSION_REQUEST);
-} else if ($folder = filter_input(INPUT_POST, 'defuse')) {
+} else if ($folder = post('defuse')) {
     \PHPFusion\Installer\Infusion_Core::getInstance()->defuse($folder);
     redirect(FUSION_REQUEST);
 }
@@ -41,6 +41,7 @@ foreach ($temp as $folders) {
     if (!empty($inf)) {
         $infs[$folders] = $inf;
     }
+    unset($inf);
 }
 
 echo "<div class='alert alert-info'>\n";
