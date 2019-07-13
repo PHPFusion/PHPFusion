@@ -641,6 +641,7 @@ class ForumAdminView extends ForumAdminInterface {
         $section = get('section');
         switch ($section) {
             case 'fr':
+                // FORUM RANKS ADMIN
                 BreadCrumbs::getInstance()->addBreadCrumb([
                     'link'  => INFUSIONS.'forum/admin/forums.php'.$this->aidlink.'&section=fr',
                     'title' => self::$locale['forum_rank_404']
@@ -660,11 +661,12 @@ class ForumAdminView extends ForumAdminInterface {
                 closetable();
                 break;
             case 'fmd':
+                // FORUM MOOD ADMIN
                 BreadCrumbs::getInstance()->addBreadCrumb([
                     'link'  => INFUSIONS.'forum/admin/forums.php'.$this->aidlink.'&section=fmd',
                     'title' => self::$locale['forum_admin_004']
                 ]);
-                opentable(self::$locale['forum_admin_004']);
+                opentable(self::$locale['forum_admin_004'].'<small class="m-l-15"><i class="fas fa-info-circle" title="'.self::$locale['forum_090'].'"></i></small>');
                 $this->viewMood()->viewMoodAdmin();
                 closetable();
                 break;

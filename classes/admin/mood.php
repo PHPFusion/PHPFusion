@@ -17,6 +17,8 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Forums\Admin;
 
+use PHPFusion\Interfaces\TableSDK;
+use PHPFusion\Tables;
 use PHPFusion\UserFieldsQuantum;
 
 class ForumAdminMood extends ForumAdminInterface {
@@ -38,79 +40,50 @@ class ForumAdminMood extends ForumAdminInterface {
     public function viewMoodAdmin() {
         pageAccess('F');
 
-        echo "<div class='well m-t-15'>".self::$locale['forum_090']."</div>\n";
-        $mood_pages = ["mood_list", "mood_form"];
+        echo "<div class='".grid_row()."'>\n<div class='".grid_column_size(100, 100, 100, 40)."'>\n";
 
-        if (isset($_GET['ref']) && $_GET['ref'] == "back") {
-            redirect(clean_request("section=fmd", ["ref", "section", 'mood_id', 'rowstart'], FALSE));
-        }
+        $this->showMoodForm();
 
-        $_GET['ref'] = isset($_GET['ref']) && in_array($_GET['ref'], $mood_pages) ? $_GET['ref'] : $mood_pages[0];
+        echo "</div>\n<div class='".grid_column_size(100, 100, 100, 60)."'>\n";
 
-        if ($_GET['ref'] != $mood_pages[0]) {
-            $tab['title'][] = self::$locale['back'];
-            $tab['id'][] = "back";
-            $tab['icon'][] = "fa fa-fw fa-arrow-left";
-        } else {
+        new Tables(new Mood_List());
 
-            $tab['title'][] = self::$locale['forum_093'];
-            $tab['id'][] = "mood_list";
-            $tab['icon'][] = "fa fa-fw fa-eye";
-        }
-        $tab['title'][] = isset($_GET['mood_id']) && isnum($_GET['mood_id']) ? self::$locale['forum_092'] : self::$locale['forum_091'];
-        $tab['id'][] = "mood_form";
-        $tab['icon'][] = isset($_GET['mood_id']) && isnum($_GET['mood_id']) ? "fa fa-fw fa fa-pencil" : "fa fa-fw fa fa-plus";
+        echo "</div>\n</div>\n";
 
-        $_GET['ref'] = isset($_GET['ref']) && in_array($_GET['ref'], $tab['id']) ? $_GET['ref'] : "mood_list";
-
-        echo opentab($tab, $_GET['ref'], "mood_admin", TRUE, "nav-tabs m-t-10 m-b-15", "ref", ['mood_id', 'action']);
-
-        switch ($_GET['ref']) {
-            case "mood_form" :
-                $this->displayMoodForm();
-                break;
-            default:
-                $this->displayMoodList();
-        }
-        echo closetab();
     }
 
     /**
      * Displays forum mood form
      */
-    private function displayMoodForm() {
+    private function showMoodForm() {
 
-        if (isset($_POST['cancel_mood'])) {
+        if (post('cancel_mood')) {
             redirect(clean_request('', ['mood_id', 'ref'], FALSE));
         }
 
-        $this->post_Mood();
+        $this->updateMood();
 
         $groups = fusion_get_groups();
+
         unset($groups[0]);
 
-        $form_action = clean_request("section=fmd&ref=mood_form", ["mood_id", "ref"], FALSE);
+        if ($mood_id = get('mood_id', FILTER_VALIDATE_INT)) {
 
-        if (isset($_GET['mood_id']) && isnum($_GET['mood_id'])) {
+            $result = dbquery("SELECT * FROM ".DB_FORUM_MOODS." WHERE mood_id=:mid", [':mid' => intval($mood_id)]);
 
-            $result = dbquery("SELECT * FROM ".DB_FORUM_MOODS." WHERE mood_id='".intval($_GET['mood_id'])."'");
-
-            if (dbrows($result) > 0) {
+            if (dbrows($result)) {
 
                 $this->data = dbarray($result);
-
-                $form_action = clean_request("section=fmd&ref=mood_form&mood_id=".$_GET['mood_id'], ["mood_id", "ref"], FALSE);
             }
         }
 
-        echo openform("mood_form", "POST", $form_action).
+        echo openform("mood_form", 'post').
+
             form_hidden('mood_id', '', $this->data['mood_id']).
 
-            UserFieldsQuantum::quantum_multilocale_fields('mood_name', self::$locale['forum_094'], $this->data['mood_name'],
-                ['required' => TRUE, 'inline' => TRUE, 'placeholder' => self::$locale['forum_096']]).
+            UserFieldsQuantum::quantum_multilocale_fields('mood_name', self::$locale['forum_094'], $this->data['mood_name'], ['required' => TRUE, 'inline' => FALSE, 'placeholder' => self::$locale['forum_096']]).
 
-            UserFieldsQuantum::quantum_multilocale_fields('mood_description', self::$locale['forum_095'], $this->data['mood_description'],
-                ['required' => TRUE, 'inline' => TRUE, 'placeholder' => self::$locale['forum_097'], 'ext_tip' => self::$locale['forum_098']]).
+            UserFieldsQuantum::quantum_multilocale_fields('mood_description', self::$locale['forum_095'], $this->data['mood_description'], ['required' => TRUE, 'inline' => FALSE, 'placeholder' => self::$locale['forum_097'], 'ext_tip' => self::$locale['forum_098']]).
 
             form_text('mood_icon', self::$locale['forum_099'], $this->data['mood_icon'],
                 ['inline' => TRUE, 'width' => '350px', 'placeholder' => 'fa fa-thumbs-up']).
@@ -120,35 +93,35 @@ class ForumAdminMood extends ForumAdminInterface {
                     self::$locale['forum_101'],
                     self::$locale['forum_102']
                 ],
-                 'inline'  => TRUE,
+                 'inline'  => FALSE,
                  'type'    => 'radio'
                 ]).
 
-            form_checkbox('mood_notify', self::$locale['forum_103'], $this->data['mood_notify'],
-                ['options' => $groups, 'inline' => TRUE, 'type' => 'radio']).
+            form_checkbox('mood_notify', self::$locale['forum_103'], $this->data['mood_notify'], ['options' => $groups, 'inline' => FALSE, 'type' => 'radio']).
 
-            form_checkbox('mood_access', self::$locale['forum_104'], $this->data['mood_access'],
-                ['options' => $groups, 'inline' => TRUE, 'type' => 'radio']);
+            form_checkbox('mood_access', self::$locale['forum_104'], $this->data['mood_access'], ['options' => $groups, 'inline' => FALSE, 'type' => 'radio']).
 
-        echo form_button('save_mood', !empty($this->data['mood_id']) ? self::$locale['forum_106'] : self::$locale['forum_105'], self::$locale['save_changes'], ['class' => 'btn-success m-r-10', 'icon' => 'fa fa-hdd-o']);
-        echo form_button('cancel_mood', self::$locale['cancel'], self::$locale['cancel'], ['icon' => 'fa fa-times']);
-        echo closeform();
+            form_button('save_mood', !empty($this->data['mood_id']) ? self::$locale['forum_106'] : self::$locale['forum_105'], self::$locale['save_changes'], ['class' => 'btn-primary m-r-10']).
+
+            form_button('cancel_mood', self::$locale['cancel'], self::$locale['cancel'], ['icon' => 'fa fa-times']).
+
+            closeform();
     }
 
     /**
      * Post execution of forum mood
      */
-    protected function post_Mood() {
+    protected function updateMood() {
 
-        if (isset($_POST['save_mood'])) {
+        if (post('save_mood')) {
             $this->data = [
-                'mood_id'          => form_sanitizer($_POST['mood_id'], 0, 'mood_id'),
+                'mood_id'          => sanitizer('mood_id', 0, 'mood_id'),
                 'mood_name'        => form_sanitizer($_POST['mood_name'], '', 'mood_name', TRUE),
                 'mood_description' => form_sanitizer($_POST['mood_description'], '', 'mood_description', TRUE),
-                'mood_icon'        => form_sanitizer($_POST['mood_icon'], '', 'mood_icon'),
-                'mood_status'      => form_sanitizer($_POST['mood_status'], '', 'mood_status'),
-                'mood_notify'      => form_sanitizer($_POST['mood_notify'], '', 'mood_notify'),
-                'mood_access'      => form_sanitizer($_POST['mood_access'], '', 'mood_access'),
+                'mood_icon'        => sanitizer('mood_icon', '', 'mood_icon'),
+                'mood_status'      => sanitizer('mood_status', '', 'mood_status'),
+                'mood_notify'      => sanitizer('mood_notify', '', 'mood_notify'),
+                'mood_access'      => sanitizer('mood_access', '', 'mood_access'),
             ];
 
             if (\Defender::safe()) {
@@ -163,90 +136,148 @@ class ForumAdminMood extends ForumAdminInterface {
             }
         }
 
-        if (isset($_GET['delete']) && isnum($_GET['delete'])) {
+        if ($delete_id = get('delete', FILTER_VALIDATE_INT)) {
             addNotice('success', self::$locale['forum_notice_14']);
-            dbquery("DELETE FROM ".DB_FORUM_MOODS." WHERE mood_id='".intval($_GET['delete'])."'");
+
+            dbquery("DELETE FROM ".DB_FORUM_MOODS." WHERE mood_id=:did", [':did' => $delete_id]);
+
             redirect(clean_request("section=fmd", ["delete", "ref"], FALSE));
         }
     }
 
+}
+
+/**
+ * Class Mood_List
+ *
+ * @package PHPFusion\Forums\Admin
+ */
+class Mood_List implements TableSDK {
+
+    private $locale = [];
+
     /**
-     * Displays forum mood listing
+     * Mood_List constructor.
      */
-    private function displayMoodList() {
+    public function __construct() {
+        $this->locale = fusion_get_locale();
+    }
 
-        $mood_max_count = dbcount("(mood_id)", DB_FORUM_MOODS, "");
+    /**
+     * @return array
+     */
+    public function data() {
+        return [
+            'table'  => DB_FORUM_MOODS,
+            'select' => "count(pn.post_id) AS 'mood_count'",
+            'joins'  => 'LEFT JOIN '.DB_FORUM_POST_NOTIFY.' pn ON pn.notify_mood_id=base.mood_id',
+            'group'  => 'mood_id',
+            'order'  => 'mood_id ASC, mood_name ASC',
+            'id'     => 'mood_id',
+            'title'  => 'mood_name',
+        ];
+    }
 
-        $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $mood_max_count ? intval($_GET['rowstart']) : 0;
+    /**
+     * @return array
+     */
+    public function properties() {
 
-        $mood_query = "SELECT fm.*, count(pn.post_id) AS 'mood_count'
-            FROM ".DB_FORUM_MOODS." fm
-            LEFT JOIN ".DB_FORUM_POST_NOTIFY." pn ON pn.notify_mood_id=fm.mood_id
-            GROUP BY mood_id
-            ORDER BY mood_id ASC
-            LIMIT ".$_GET['rowstart'].", 16";
+        $aidlink = fusion_get_aidlink();
 
-        $mood_result = dbquery($mood_query);
+        return [
+            'table_id'           => 'forum-mood-list',
+            'no_record'          => $this->locale['forum_114'],
+            'edit_link_format'   => FORUM.'admin/forums.php'.$aidlink.'&amp;section=fmd&mood_id=',
+            'delete_link_format' => FORUM.'admin/forums.php'.$aidlink.'&amp;section=fmd&delete=',
+            'search_col'         => 'rank_title',
+            'order_col'          => [
+                'mood_name' => 'mood-title',
+                'mood_status'  => 'mood-status',
+                'mood_notify'  => 'mood-notify',
+                'mood_access'  => 'mood-access',
+                'mood_count' => 'mood-post'
+            ]
+        ];
+    }
 
-        $rows = dbrows($mood_result);
+    /**
+     * @param $data
+     *
+     * @return string
+     */
+    public function getMoodDescription($data) {
+        return (string)sprintf($this->locale['forum_113'], ucfirst(fusion_get_userdata("user_name")), UserFieldsQuantum::parse_label($data[':mood_description']));
+    }
 
-        if ($rows > 0) :
+    /**
+     * @param $data
+     *
+     * @return string
+     */
+    public function getGroupName1($data) {
+        return (string)getgroupname($data[':mood_notify']);
+    }
 
-            ?>
-            <div class="table-responsive">
-                <table class="table table-striped table-hover m-b-20">
-                    <thead>
-                    <tr>
-                        <td class="col-xs-2"><?php echo self::$locale['forum_107'] ?></td>
-                        <td class="col-xs-2"><?php echo self::$locale['forum_108'] ?></td>
-                        <td><?php echo self::$locale['forum_109'] ?></td>
-                        <td><?php echo self::$locale['forum_115'] ?></td>
-                        <td><?php echo self::$locale['forum_110'] ?></td>
-                        <td><?php echo self::$locale['forum_111'] ?></td>
-                        <td><?php echo self::$locale['forum_112'] ?></td>
-                    </tr>
-                    </thead>
-                    <tbody>
+    /**
+     * @param $data
+     *
+     * @return string
+     */
+    public function getGroupName2($data) {
+        return (string)getgroupname($data[':mood_access']);
+    }
 
-                    <?php while ($data = dbarray($mood_result)) :
-                        $edit_link = clean_request("section=fmd&ref=mood_form&mood_id=".$data['mood_id'], ["ref", "mood_id"], FALSE);
-                        $delete_link = clean_request("section=fmd&ref=mood_form&delete=".$data['mood_id'], ["ref", "mood_id"], FALSE);
-                        ?>
-                        <tr>
-                            <td>
-                                <a href="<?php echo $edit_link ?>">
-                                    <?php echo UserFieldsQuantum::parse_label($data['mood_name']) ?>
-                                </a>
-                            </td>
-                            <td><?php echo sprintf(self::$locale['forum_113'],
-                                    ucfirst(fusion_get_userdata("user_name")),
-                                    UserFieldsQuantum::parse_label($data['mood_description'])) ?>
-                            </td>
-                            <td>
-                                <?php if (!empty($data['mood_icon'])) : ?>
-                                    <i class="<?php echo $data['mood_icon'] ?>"></i>
-                                <?php endif; ?>
-                            </td>
-                            <td><?php echo format_word($data['mood_count'], self::$locale['fmt_post']) ?></td>
-                            <td><?php echo getgroupname($data['mood_notify']) ?></td>
-                            <td><?php echo getgroupname($data['mood_access']) ?></td>
-                            <td>
-                                <a href="<?php echo $edit_link ?>"><?php echo self::$locale['edit'] ?></a> -
-                                <a href="<?php echo $delete_link ?>"><?php echo self::$locale['delete'] ?></a>
-                            </td>
-                        </tr>
-                    <?php endwhile; ?>
+    /**
+     * @param $data
+     *
+     * @return string
+     */
+    public function getMoodPostCount($data) {
+        return (string)format_word($data[':mood_count'], $this->locale['fmt_post']);
+    }
 
-                    </tbody>
-                </table>
-            </div>
+    /**
+     * @return array
+     */
+    public function column() {
 
-            <?php if ($mood_max_count > 16) {
-            echo makepagenav($_GET['rowstart'], $rows, $mood_max_count, 3, FUSION_SELF.fusion_get_aidlink()."&section=fmd&");
-        } ?>
+        return [
+            'mood_name'        => [
+                'title'       => $this->locale['forum_107'],
+                'edit_link'   => TRUE,
+                'delete_link' => TRUE,
+                'multilang'   => TRUE,
+            ],
+            'mood_description' => [
+                'title'    => $this->locale['forum_108'],
+                'callback' => ['PHPFusion\\Forums\\Admin\\Mood_list', 'getMoodDescription'],
+            ],
+            'mood_icon'        => [
+                'title' => $this->locale['forum_109'],
+                'icon'  => TRUE,
+            ],
+            'mood_count'       => [
+                'title'  => $this->locale['forum_115'],
+                'number' => TRUE,
+            ],
+            'mood_notify'      => [
+                'title'    => $this->locale['forum_110'],
+                'callback' => ['PHPFusion\\Forums\\Admin\\Mood_list', 'getGroupName1'],
+            ],
+            'mood_access'      => [
+                'title'    => $this->locale['forum_111'],
+                'callback' => ['PHPFusion\\Forums\\Admin\\Mood_list', 'getGroupName2'],
+            ]
+        ];
+    }
 
-        <?php else : ?>
-            <div class="well text-center m-t-10"><?php echo self::$locale['forum_114'] ?></div>
-        <?php endif;
+    /**
+     * Every row of the array is a field input.
+     *
+     * @return array
+     */
+    public function quickEdit() {
+        return [];
     }
 }
