@@ -1777,6 +1777,7 @@ Alerts
 .form-group .control-label {
     font-weight: 400;
     color:#000;
+    padding-left:0;
 }
 /* Table controls */
 #devlpr #main_content .content table {
@@ -1956,8 +1957,7 @@ label small {
     font-weight: normal;
 }
 
-.form-group label,
-.form-group > div {
+.form-group label {
     color: #576575;
 }
 
