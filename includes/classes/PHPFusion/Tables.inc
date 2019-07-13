@@ -86,6 +86,7 @@ class Tables {
         'user_avatar'   => FALSE, // show avatar
         'number'        => FALSE,
         'parse_value'   => FALSE,
+        'multilang' => FALSE,
         'format'        => FALSE, // for formatting using strtr
         'callback'      => '', // for formatting using function
         'visibility'    => TRUE, // customize column options TRUE for default visible.
@@ -1235,7 +1236,6 @@ class Tables {
 
                         }
 
-
                         /*
                          * Types of display method supported
                          */
@@ -1263,13 +1263,23 @@ class Tables {
                                 $value = "<img class='$class' style='$width' src='".$image_folder.$data[$col_key]."'/>\n";
                             }
 
-                        } else if ($col_data['icon'] && !empty($data[$col_key])) {
+                        }
+
+                        else if ($col_data['multilang']) {
+
+                            $value = UserFieldsQuantum::parse_label($data[$col_key]);
+
+                        }
+
+                        else if ($col_data['icon'] && !empty($data[$col_key])) {
                             /*
                              * array("icon" => TRUE)
                              */
                             $value = "<i class='".$data[$col_key]."'/></i>\n";
 
-                        } else if ($col_data['number']) {
+                        }
+
+                        else if ($col_data['number']) {
                             /*
                              * array("number" => true, "delimiter" => "2", "decimal_point" => ".", "thousand_sep" => ",")
                              */
@@ -1437,7 +1447,9 @@ class Tables {
                                 }
                             }
 
-                        } else if (!empty($col_data['date']) && !empty($value)) {
+                        }
+
+                        else if (!empty($col_data['date']) && !empty($value)) {
 
                             // only accepts timestamp
                             if (isnum($value)) {
@@ -1461,7 +1473,9 @@ class Tables {
                             }
 
 
-                        } else if (!empty($col_data['array']) && is_array($col_data['array'])) {
+                        }
+
+                        else if (!empty($col_data['array']) && is_array($col_data['array'])) {
                             /*
                              * Similar to options
                              * array("array" => array(1=>"Yes", 0=>"No"))
