@@ -629,6 +629,7 @@ function get($key = NULL, $type = FILTER_DEFAULT, $flags = '') {
         if (isset($_GET[$key]) && isnum($_GET[$key]) && $_GET[$key] > PHP_INT_MAX) {
             return intval($_GET[$key]);
         }
+        return intval(0);
     }
 
     return stripinput(filter_input(INPUT_GET, $key, $type, $flags));
@@ -651,6 +652,15 @@ function post($key, $type = FILTER_DEFAULT, $flags = '') {
     }
 
     return filter_input(INPUT_POST, $key, $type, $flags);
+}
+
+/**
+ * @param $key
+ *
+ * @return array
+ */
+function post_array($key) {
+    return (array)\Defender::getInstance()->filterPostArray($key);
 }
 
 /**
