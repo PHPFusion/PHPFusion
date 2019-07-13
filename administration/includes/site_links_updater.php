@@ -23,7 +23,7 @@ $result = '';
 if (isset($_GET['listItem']) && is_array($_GET['listItem'])) {
     foreach ($_GET['listItem'] as $position => $item) {
         if (isnum($position) && isnum($item)) {
-            $result = dbquery("UPDATE ".DB_SITE_LINKS." SET link_order=:order WHERE link_id=:linkid", [':order' => ($position + 1), 'linkid' => $item]);
+            $result = dbquery("UPDATE ".DB_SITE_LINKS." SET link_order=:order WHERE link_id=:linkid", [':order' => ($position + 1), ':linkid' => $item]);
         }
     }
 }

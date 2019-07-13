@@ -1,6 +1,7 @@
 /* Globals */
+
 html, body, #tinymce body, .form-control {
-    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+    font-family: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
     font-size: 15px;
     -webkit-font-smoothing: subpixel-antialiased;
 }
@@ -162,7 +163,7 @@ a:focus {
 
 #devlpr .app_menu,
 #devlpr .app_menu > .affix {
-    background-color: #1F242B;
+    background-color: #1D2127;
 }
 
 #devlpr .left_menu header, #devlpr .app_menu header {
@@ -266,7 +267,7 @@ a:focus {
 }
 
 #devlpr .left_menu li.active {
-    background-color: #1F242B;
+    background-color: #1D2127;
     margin-left:10px;
     box-shadow: -4px 0 8px rgba(0,0,0,.5);
     border-radius: 6px 0 0 6px;
@@ -355,11 +356,13 @@ a:focus {
     height: 40px;
 }
 #devlpr .apps-lists {
-    border-radius: 7px;
     display: block;
     height: 36px;
     position: relative;
     padding-left: 47px;
+}
+#devlpr .apps-list:focus {
+    outline:none;
 }
 #devlpr .admin-ico {
     font-size: 17px;
@@ -368,8 +371,8 @@ a:focus {
 #devlpr .app_menu .app_list li:hover .apps-lists,
 #devlpr .app_menu .app_list li:focus .apps-lists,
 #devlpr .app_menu .app_list li.active .apps-lists {
-    color: #fff;
-    background: #353D45;
+    color: #abb4be;
+    background: none;
     text-decoration: none;
 }
 
@@ -385,7 +388,7 @@ a:focus {
     border-radius: 10px;
 }
 #devlpr .app_menu .app_list li a div.apps h4 {
-    color: #a0a4a7;
+    color: #abb4be;
     font-weight: 400;
     font-size: 14px;
     margin-top: 8px;
@@ -407,7 +410,7 @@ a:focus {
     max-width: 100%;
     overflow-y: auto;
     padding-bottom: 50px;
-    background: #252A31;
+    background: #1D2127;
     height: 100%;
     width: var(--sub-menu-width);
     float: left;
@@ -420,8 +423,8 @@ a:focus {
 #devlpr .sub_menu nav > ul > li > a {
     display: block;
     width: 100%;
-    font-size: 13px;
-    color: #fff;
+    font-size: 14px;
+    color: #abb4be;
     padding: 8px 20px !important;
 }
 #devlpr .sub_menu nav ul > li.active > a {
@@ -429,16 +432,27 @@ a:focus {
     font-weight: 600;
 
 }
-#devlpr .sub_menu nav > ul > li.active > a,
-#devlpr .sub_menu nav > ul > li > a:hover,
-#devlpr .sub_menu nav > ul > li > a:focus {
+#devlpr .sub_menu nav > ul > li.active > a:hover,
+#devlpr .sub_menu nav > ul > li.active > a:focus,
+#devlpr .sub_menu nav > ul > li.active > a {
     background: -moz-linear-gradient(top, rgba(33,150,224,0.55) 0%, rgba(33,151,224,0.55) 1%, rgba(71,240,234,0.55) 100%); /* FF3.6-15 */
     background: -webkit-linear-gradient(top, rgba(33,150,224,0.55) 0%,rgba(33,151,224,0.55) 1%,rgba(71,240,234,0.55) 100%); /* Chrome10-25,Safari5.1-6 */
     background: linear-gradient(to bottom, rgba(33,150,224,0.55) 0%,rgba(33,151,224,0.55) 1%,rgba(71,240,234,0.55) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#8c2196e0', endColorstr='#8c47f0ea',GradientType=0 ); /* IE6-9 */
-    background: #2b80ff;
+    background: #0088cc;
+    color:#fff;
     text-decoration: none;
 }
+#devlpr .sub_menu nav > ul > li > a:hover,
+#devlpr .sub_menu nav > ul > li > a:focus {
+    color: #0088cc;
+    background: none;
+    outline: none;
+    box-shadow: none;
+    text-decoration: none;
+}
+
+
 #devlpr .sub_menu nav > ul > li > a:after {
     display: block;
     width: 20%;
@@ -2205,8 +2219,10 @@ textarea.form-control.main {
     background: linear-gradient(to bottom, #fff 54%, #e6e6e6 100%);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#e6e6e6', GradientType=0);
     border: 1px solid #ccc;
-    color: #7F8FA4;
     font-weight: 500;
+    border-radius: 0;
+    color: #555;
+    padding:8px 15px;
 }
 .nav-tabs > li > a:hover, .nav-tabs > li > a:focus {
     color: #008FBE;
@@ -2228,6 +2244,7 @@ textarea.form-control.main {
     border-bottom: 1px solid #fff;
     font-weight: 600;
     line-height: 30px;
+    color: #000;
     margin-top: -9px;
 }
 

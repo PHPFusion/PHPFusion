@@ -52,8 +52,11 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
 
     private function __construct() {
         $this->aidlink = fusion_get_aidlink();
+
         $this->locale = fusion_get_locale("", LOCALE.LOCALESET."admin/sitelinks.php");
+
         $this->language_opts = fusion_get_enabled_languages();
+
         $this->link_index = dbquery_tree(DB_SITE_LINKS, 'link_id', 'link_cat');
 
         $_GET['link_id'] = isset($_GET['link_id']) && isnum($_GET['link_id']) ? $_GET['link_id'] : 0;
@@ -92,6 +95,7 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
         }
 
         add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/jquery-ui.js'></script>");
+
         add_to_jquery("
         $('#site-links').sortable({
             handle : '.handle',
@@ -138,6 +142,11 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
             }
         }
         ");
+
+        $admin = PHPFusion\Admins::getInstance();
+        $admin->addAdminPage('SL', 'Site Links', 'SL1', ADMIN.'site_links.php'.$this->aidlink, '<i class="fas fa-drafting-compass fa-fw m-r-10"></i>');
+        $admin->addAdminPage('SL', 'Link Menu', 'SL2', ADMIN.'site_links.php'.$this->aidlink.'&ref=menu', '<i class="fas fa-bars fa-fw m-r-10"></i>');
+        $admin->addAdminPage('SL', 'Link Settings', 'SL3', ADMIN.'site_links.php'.$this->aidlink.'&ref=settings', '<i class="fas fa-wrench fa-fw m-r-10"></i>');
     }
 
     public static function Administration() {
@@ -149,6 +158,7 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
     }
 
     public function display_administration_form() {
+
         pageAccess("SL");
 
         if (isset($_POST['cancel'])) {
@@ -172,7 +182,9 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
         $link_data = dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat");
         make_page_breadcrumbs($link_index, $link_data, "link_id", "link_name", "link_cat");
 
-        opentable($this->locale['SL_0012']);
+        //https://www.php-fusion.co.uk/administration/site_links.php?aid=fa08a64ec1e557c6
+        opentable($this->locale['SL_0012'].'<a class="btn btn-default m-l-15" href="'.ADMIN.'site_links.php'.$this->aidlink.'&amp;ref=link_form">Add Site Links</a>');
+
         echo opentab($master_title, (isset($_GET['section']) ? $_GET['section'] : "links"), 'link', TRUE);
         if (isset($_GET['section']) && $_GET['section'] == "settings") {
             $this->display_sitelinks_settings();

@@ -39,6 +39,8 @@ class Tables {
 
     private $maxRows = 0;
 
+    private $rowStart = 0;
+
     private $echo = TRUE;
 
     // Data source
@@ -92,32 +94,32 @@ class Tables {
 
     // Properties
     private $default_prop_options = [
-        'table_id'           => 'fusion_table',
-        'table_class'        => '',
-        'header_content'     => '',
-        'no_record'          => 'There are no records',
-        'search_label'       => 'Search',
-        'search_placeholder' => "Search",
-        'search_col'         => '', // set this value sql column name to have search input input filter
-        'delete_link'        => TRUE,
-        'edit_link'          => TRUE,
-        'edit_link_format'   => '', // set this to format the edit link
-        'delete_link_format' => '', // set this to format the delete link
-        'view_link_format'   => '', // set this to format the view link
-        'edit_key'           => 'edit',
-        'del_key'            => 'del', // change this to invoke internal table delete function for custom delete link format
-        'view_key'           => 'view',
-
-        'date_col'        => '',  // set this value to sql column name to have date selector input filter
-        'order_col'       => '', // set this value to sql column name to have sorting column input filter
-        'multilang_col'   => '', // set this value to have multilanguage column filter
-        'updated_message' => 'Entries have been updated', // set this value to have custom success message
-        'deleted_message' => 'Entries have been deleted', // set this value to have the custom delete message,
-        'class'           => '', // table class
-        'show_count'      => TRUE, // show table item count
-        'action_filters' => [],
+        'table_id'                => 'fusion_table',
+        'table_class'             => '',
+        'header_content'          => '',
+        'no_record'               => 'There are no records',
+        'search_label'            => 'Search',
+        'search_placeholder'      => "Search",
+        'ordering_col'            => '', // set this value to the sql column name to have the ordering during update
+        'search_col'              => '', // set this value sql column name to have search input input filter
+        'delete_link'             => TRUE,
+        'edit_link'               => TRUE,
+        'edit_link_format'        => '', // set this to format the edit link
+        'delete_link_format'      => '', // set this to format the delete link
+        'view_link_format'        => '', // set this to format the view link
+        'edit_key'                => 'edit',
+        'del_key'                 => 'del', // change this to invoke internal table delete function for custom delete link format
+        'view_key'                => 'view',
+        'date_col'                => '',  // set this value to sql column name to have date selector input filter
+        'order_col'               => [], // set this value to sql column name to have sorting column input filter
+        'multilang_col'           => '', // set this value to have multilanguage column filter
+        'updated_message'         => 'Entries have been updated', // set this value to have custom success message
+        'deleted_message'         => 'Entries have been deleted', // set this value to have the custom delete message,
+        'class'                   => '', // table class
+        'show_count'              => TRUE, // show table item count
+        'action_filters'          => [],
         'actions_filters_confirm' => [],
-        'link_filters' => [],
+        'link_filters'            => [],
     ];
 
     private $columns = [];
@@ -240,8 +242,6 @@ class Tables {
         return $this->query_id;
     }
 
-    private $rowStart = 0;
-
     /**
      * Callback
      *
@@ -305,11 +305,16 @@ class Tables {
         $filter_cond = [];
         if (!empty($this->table_props['link_filters'])) {
             foreach ($this->table_props['link_filters'] as $key => $filters) {
+
                 if (!empty($_GET[$key])) { // we are getting unpublished
                     $filter_val = array_flip(array_map('strtolower', $filters['options']));
-                    $get_val = strtolower($_GET[$key]);
+                    $get_val = strtolower(get($key));
                     if (isset($filter_val[$get_val])) {
-                        $filter_cond[] = "$key='".$filter_val[$_GET[$key]]."'";
+
+                        if (strlen($filter_val[$get_val])) {
+                            $filter_cond[] = "$key='".$filter_val[$get_val]."'";
+                        }
+
                     }
                 }
             }
@@ -405,7 +410,7 @@ class Tables {
 
         // Limiter will only work when there are no parent declared as the hierarchy requires full query and array chunks
         $sql_statement = /** @lang mysql */
-        "SELECT base.* {SELECT} FROM {TABLE} {SEARCH} {CONDITIONS} {GROUP} ORDER BY {ORDER_BY} {ID} {ORDER_SORTING} {LIMIT}";
+            "SELECT base.* {SELECT} FROM {TABLE} {SEARCH} {CONDITIONS} {GROUP} ORDER BY {ORDER_BY} {ID} {ORDER_SORTING} {LIMIT}";
 
         if ($this->query['id'] && $this->query['parent']) {
 
@@ -537,7 +542,6 @@ class Tables {
      */
     private function filterDeleteRows() {
         // id
-
         if (isset($_POST['id']) && is_array($_POST['id'])) {
             $params = [];
             $data = [];
@@ -671,6 +675,7 @@ class Tables {
 
     /**
      * Table individual user customization Menu
+     *
      * @return string
      * @throws \ReflectionException
      */
@@ -838,9 +843,9 @@ class Tables {
             $save_quick = post('save_quick_editor');
 
             if ($save_quick) {
-                $post_data[$this->query['id']] = form_sanitizer($_POST[$this->query['id']], '', $this->query['id']);
+                $post_data[$this->query['id']] = sanitizer($this->query['id'], '', $this->query['id']);
                 foreach ($this->quick_fields as $table_col => $table_fields) {
-                    $post_data[$table_col] = form_sanitizer($_POST[$table_col], '', $table_col);
+                    $post_data[$table_col] = sanitizer($table_col, '', $table_col);
                 }
 
                 if (\Defender::safe()) {
@@ -1038,35 +1043,39 @@ class Tables {
             $html .= "<small class='pull-right m-t-5'>".format_word($this->maxRows, "item|items", ['html' => FALSE, 'format_num' => TRUE])."</small>\n";
         }
 
-        $html .= "<div class='display-inline-block m-r-15'>\n";
-        $actions_options = [
-            '' => 'Bulk Actions',
-            'bulk_delete'  => 'Delete'
-        ];
+        if ($this->table_props['delete_link'] === TRUE || $this->table_props['edit_link'] === TRUE || !empty($this->table_props['action_filters'])) {
+            $html .= "<div class='display-inline-block m-r-15'>\n";
 
-        if (!empty($this->table_props['action_filters'])) {
-            array_push($actions_options, $this->table_props['action_filters']);
+            $actions_options = [
+                ''            => 'Bulk Actions',
+                'bulk_delete' => 'Delete'
+            ];
+
+            if (!empty($this->table_props['action_filters'])) {
+                array_push($actions_options, $this->table_props['action_filters']);
+            }
+
+            // print_P($this->table_props['action_filters']);
+            // print_P($actions_options);
+
+            $html .= openform('cat_table_frm', 'post', FUSION_REQUEST).form_select(
+                    'filter_actions', '', '', [
+                        'inline'           => TRUE,
+                        'inner_width'      => '150px',
+                        'class'            => 'm-0 display-inline-block pull-left',
+                        'optgroup'         => TRUE,
+                        'options'          => $actions_options,
+                        'select2_disabled' => TRUE,
+                        'stacked'          => form_button(
+                                'apply_filter', 'Apply', 'apply_filter', ['class' => 'btn-sm']
+                            ).form_hidden(
+                                'filter_ids', '', ''
+                            )
+                    ]
+                ).closeform();
+            $html .= "</div>\n";
         }
 
-        // print_P($this->table_props['action_filters']);
-        // print_P($actions_options);
-
-        $html .= openform('cat_table_frm', 'post', FUSION_REQUEST).form_select(
-                'filter_actions', '', '', [
-                    'inline' => TRUE,
-                    'inner_width'      => '150px',
-                    'class'            => 'm-0 display-inline-block pull-left',
-                    'optgroup'         => TRUE,
-                    'options'          => $actions_options,
-                    'select2_disabled' => TRUE,
-                    'stacked'          => form_button(
-                            'apply_filter', 'Apply', 'apply_filter', ['class' => 'btn-sm']
-                        ).form_hidden(
-                            'filter_ids', '', ''
-                        )
-                ]
-            ).closeform();
-        $html .= "</div>\n";
 
         if (!empty($this->table_props['dropdown_filters'])) {
             $html .= "<div class='display-inline-block'>".openform('date_frm', 'post', FUSION_REQUEST);
@@ -1197,9 +1206,9 @@ class Tables {
 
                         $value_class[] = ($col_data['value_class'] ?: '');
 
-                        if ($col_data['edit_link'] || $col_data['delete_link']) {
+                        if ($col_data['edit_link'] || $col_data['delete_link'] || $col_data['view_link']) {
 
-                            $value_class[] = "has-actions";
+                            $value_class[] = "has-actions clearfix";
                             /*
                              * (Optional - sets the current column with the edit link, with quick edit fields)
                              * array("edit_link" => TRUE)
@@ -1493,8 +1502,10 @@ class Tables {
                             if (is_array($col_data['callback'])) {
                                 // head to new reflexion class
                                 // for reflection to work you need to push in your PSR4 autoloader file.
-                                require_once $col_data['callback'][2];
-                                unset($col_data['callback'][2]);
+                                if (isset($col_data['callback'][2])) {
+                                    require_once $col_data['callback'][2];
+                                    unset($col_data['callback'][2]);
+                                }
                                 //print_p(get_called_class());
                                 $object = new \ReflectionClass($col_data['callback'][0]);
                                 $class = $object->newInstance();
@@ -1521,7 +1532,7 @@ class Tables {
 
                         $html .= "<td ".($value_class ? "class='".implode(
                                     " ", $value_class
-                                )."'" : '')." data-col='$col_key' data-colname='".$col_data['title']."'>".$edit_open."<span class='value'>".($value ?: '-')."</span>".$edit_close.$edit_actions."</td>\n";
+                                )."'" : '')." data-col='$col_key' data-colname='".$col_data['title']."' data-col-options='".\json_encode($col_data['options'])."'>".$edit_open."<span class='value'>".($value ?: '-')."</span>".$edit_close.$edit_actions."</td>\n";
 
                     }
 
@@ -1543,6 +1554,7 @@ class Tables {
             }
 
         } else {
+
             $html .= "<tr>\n<td colspan='$col_span'>\n".$this->table_props['no_record']."</td>\n</tr>\n";
         }
 
@@ -1554,10 +1566,11 @@ class Tables {
         $html .= closeform();
 
         if (!empty($this->quick_fields) && !empty($cdata)) {
-            $html .= "<div id='qc-input' style='display: none;'>\n";
+
+            $html .= "<div id='qc-input' class='qc-input' style='display: none;'>\n";
             foreach ($this->quick_fields as $table_col => $table_fields) {
                 $html .= "<div class='clearfix'><span class='tbl-qc-title'>".$table_fields['title']."</span>\n";
-                $html .= $table_fields['function']($table_col, '', '', $table_fields); // you won't be able to use quick fields if you turn off jquery.
+                $html .= $table_fields['function']($table_col, isset($table_fields['label']) ? $table_fields['label'] : '','', $table_fields); // you won't be able to use quick fields if you turn off jquery.
                 $html .= "</div>\n";
             }
             $html .= form_hidden('qc_id', '');
@@ -1596,7 +1609,17 @@ class Tables {
 
         add_to_footer("<script src='".INCLUDES."jquery/tables/tables.js'></script>");
 
-        add_to_jquery("phpfusion_tables.init('".json_encode($this->jsonRows)."', '".$this->query['id']."', '".$this->query['table']."', $validate_opts );");
+        $table_js = "phpfusion_tables.init(
+        '".json_encode($this->jsonRows)."', 
+        '".$this->query['id']."', 
+        '".$this->query['parent']."', 
+        '".$this->query['table']."', 
+        $validate_opts, 
+        '".$this->table_props['ordering_col']."', 
+        '".$this->table_props['multilang_col']."'
+        );";
+
+        add_to_jquery("$table_js");
 
         return (string)$html;
 
