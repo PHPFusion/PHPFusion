@@ -29,13 +29,14 @@ interface TableSDK {
      *
      *
      * 'debug'                    => FALSE, // True to show the SQL query for the table.
-     * 'table'                    => '',
-     * 'id'                       => '', // if hierarchy
-     * 'parent'                   => '', // if hierarchy
-     * 'limit'                    => 24,
+     * 'table'                    => '', // db name
+     * 'id'                       => '', // id column name
+     * 'title'                    => '', // title column name
+     * 'parent'                   => '', // parent column name (if hierarchy)
+     * 'limit'                    => 24, // limit
      * 'true_limit'               => FALSE, // if true, the limit is true limit (only limited results will display without page nav)
-     * 'joins'                    => '',
-     * 'select'                   => '',
+     * 'joins'                    => '', // INNER JOIN etc on etc=base.id
+     * 'select'                   => '', // addditional
      * 'conditions'               => '', // to match list to a condition. string value only
      * 'group'                    => '', // group by column
      * 'image_folder'             => '', // for deletion (i.e. IMAGES.'folder/') , use param for string match
