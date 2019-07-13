@@ -16,7 +16,7 @@
 +--------------------------------------------------------*/
 let phpfusion_tables = {
 
-    'init' : function(table_fields, table_key, table_db, actions_validate) {
+    'init' : function(table_fields, table_key, table_cat, table_db, actions_validate, table_ordering, table_multilang) {
 
         phpfusion_tables.toggleRow();
 
@@ -24,7 +24,7 @@ let phpfusion_tables = {
 
         phpfusion_tables.masterCheck();
 
-        phpfusion_tables.quickEdit(table_fields, table_key, table_db);
+        phpfusion_tables.quickEdit(table_fields, table_key, table_cat, table_db, table_ordering, table_multilang);
 
         phpfusion_tables.customBox();
 
@@ -129,7 +129,7 @@ let phpfusion_tables = {
         });
     },
 
-    'fetchQuickEdit': function(id, table_key, table_db, success_function) {
+    fetchQuickEdit: function(id, table_key, table_db, success_function) {
         let data = {
             table_col :id,
             table_key: table_key,
@@ -160,24 +160,23 @@ let phpfusion_tables = {
         });
     },
 
-    'quickEdit': function(table_fields, table_key, table_db) {
+    'quickEdit': function(table_fields, table_key, table_cat, table_db, table_ordering, table_multilang) {
 
         $('.quick_edit').bind('click', function(e) {
             e.preventDefault();
+
             let val = {
+
                 table_col : $(this).data('value'),
+
                 table_key: table_key,
+
                 table_db : table_db
             };
 
             let showQuickEdit = function(id, table_col, table_key, response) {
 
-                $('#qc-input #qc_id').val( id );
-
-                $.each(response.data, function (fieldName, fieldValue) {
-
-                    $('#qc-input #' + fieldName ).val( fieldValue );
-                });
+                $('.qc-input #qc_id').val( id );
 
                 if (id) {
                     // copy the qc-input into the row.
@@ -186,6 +185,26 @@ let phpfusion_tables = {
                     $('#qc-input').find('button[name*="cancel_quick_editor"]').val( id );
 
                     $('#qc-input').clone().appendTo( qc_rows ).show();
+
+                    let frm = qc_rows;
+
+                    $.each(response.data, function (fieldName, fieldValue) {
+
+                        let inputDOM = frm.find('input[name=' + fieldName + ']');
+
+                        if (inputDOM.length) {
+                            if (inputDOM.length > 1) {
+
+                                if (inputDOM.prop('type') == 'radio' || inputDOM.prop('type') == 'checkbox') {
+                                    $('.qc-input input[name='+ fieldName+'][value *=\"'+ fieldValue +'\"]').prop('checked', true);
+                                }
+                            } else {
+                                $('.qc-input input[name=' + fieldName +']').val( fieldValue ); // conflict, this set all input value to 2.
+                            }
+                        }
+
+                    });
+
 
                     $('#form-row-'+id).show();
 
@@ -227,20 +246,40 @@ let phpfusion_tables = {
 
                 table_db : table_db,
 
-                table_key : table_key
+                table_key : table_key,
+
+                table_cat: table_cat,
+
+                table_ordering: table_ordering,
+
+                table_multilang: table_multilang,
             }
 
-            let row_id = $(this).closest('#qc-input').find('#qc_id').val();
+            let qcfrm = $(this).closest('.qc-input');
+
+            let row_id = qcfrm.find('#qc_id').val();
 
             fields[ table_key ] = row_id;
 
+            //console.log(table_fields);
+
             $.each(JSON.parse(table_fields), function (index, old_value) {
 
-                fields[ index ] = $('#'+ index).val();
+                let inputDOM = qcfrm.find('input[name='+ index + ']');
+
+                let val = inputDOM.val();
+
+                if (inputDOM.prop('type') == 'radio' || inputDOM.prop('type') == 'checkbox') {
+                   val = qcfrm.find('input[name='+index+']:checked').val();
+                }
+                  // this would be differ if the input_id is different.
+                fields[ index ] = val;
 
             });
 
             post_data['table_fields'] = fields;
+
+            console.log(post_data);
 
             let qc_rows = $('#form-row-'+row_id+' > td'); // the form container
 
@@ -254,7 +293,9 @@ let phpfusion_tables = {
 
                 dataType: 'json',
 
-                success: function(e) {},
+                success: function(e) {
+                    console.log(e);
+                },
 
                 error: function(e) {
                     console.log('Error fetching file');
@@ -272,11 +313,26 @@ let phpfusion_tables = {
 
                             $.each(e.responseJSON['data'], function(key, value) {
 
+                                // conflict with options parse back value
+                                // check if there are any options attached to the field.
                                 let s = $('#entry-row-'+ row_id).find('[data-col="'+ key + '"] span.value');
+                                let td_options = $('#entry-row-'+ row_id).find('[data-col="'+ key + '"]').data('col-options');
+                                if (td_options && td_options[value]) {
+                                    //console.log(td_options);
+                                    s.html(td_options[value]);
+                                } else {
+                                    s.html( value );
+                                }
+
+
+                                // check the column options
+
+
+
 
                                 //console.log(s);
 
-                                s.html( value );
+
                             });
 
                             loader_ui.hide();
