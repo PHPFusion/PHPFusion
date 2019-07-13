@@ -26,7 +26,7 @@ namespace PHPFusion;
 class Steam {
 
     private $boilers = 'bootstrap3'; // Default boiler
-    private $boiler_path = NULL;
+    private static $boiler_path = NULL;
 
     public function __construct($boilers ='') {
 
@@ -34,7 +34,7 @@ class Steam {
         // drop $settings['bootstrap']
         if ($boilers) {
             $this->boilers = $boilers;
-            $this->boiler_path = THEMES."templates".DIRECTORY_SEPARATOR."boilers".DIRECTORY_SEPARATOR.$boilers.DIRECTORY_SEPARATOR;
+            self::$boiler_path = THEMES."templates".DIRECTORY_SEPARATOR."boilers".DIRECTORY_SEPARATOR.$boilers.DIRECTORY_SEPARATOR;
         }
 
     }
@@ -43,7 +43,7 @@ class Steam {
      * @return null|string
      */
     public function get_BoilerPath() {
-        return $this->boiler_path;
+        return self::$boiler_path;
     }
 
     /**
@@ -58,7 +58,7 @@ class Steam {
      * Run the boiler
      */
     public function run() {
-        require_once $this->boiler_path."package.php";
+        require_once self::$boiler_path."package.php";
     }
 
 
@@ -83,7 +83,7 @@ class Steam {
         require_once $file;
         $input_class = new \ReflectionClass('PHPFusion\\Steam\\'.$command_name);
 
-        return $input_class->newInstance($this);
+        return (object) $input_class->newInstance($this);
     }
 
     /**

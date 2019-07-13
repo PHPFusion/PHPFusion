@@ -33,7 +33,7 @@ function form_geo($input_name, $label, $input_value = FALSE, array $options = []
             $input_value = construct_array($input_value, "", "|");
         }
     } else {
-        $input_value = array();
+        $input_value = [];
         $input_value[] = "";
         $input_value[] = "";
         $input_value[] = "";
@@ -91,15 +91,15 @@ function form_geo($input_name, $label, $input_value = FALSE, array $options = []
     }
 
     // input name is
-    $grid_class = $fusion_steam->load('Layout')->getColumnClass([100,100,100]).' p-0';
+    $grid_class = $fusion_steam->load('Layout')->getColumnClass([100, 100, 100]).' p-0';
 
-    $grid_offset_class = $fusion_steam->load('Layout')->getColumnClass([0,0,0,0], TRUE);
+    $grid_offset_class = $fusion_steam->load('Layout')->getColumnClass([0, 0, 0, 0], TRUE);
 
     if ($options['inline'] === TRUE && !empty($label)) {
 
-        $grid_class = $fusion_steam->load('Layout')->getColumnClass([100,100,80]);
+        $grid_class = $fusion_steam->load('Layout')->getColumnClass([100, 100, 80]);
 
-        $grid_offset_class = $fusion_steam->load('Layout')->getColumnClass([0,0,20,20], TRUE);
+        $grid_offset_class = $fusion_steam->load('Layout')->getColumnClass([0, 0, 20, 20], TRUE);
 
     }
 
@@ -133,7 +133,7 @@ function form_geo($input_name, $label, $input_value = FALSE, array $options = []
     $options['placeholder'] = $locale['street2'];
     $options['input_id'] = $input_id.'-street2';
     $html .= "<div class='clearfix'><div class='$grid_class $grid_offset_class'>";
-    $html .= form_text($input_name.'[1]', $input_label[1], $input_value[1], $options + ['required'=>FALSE]);
+    $html .= form_text($input_name.'[1]', $input_label[1], $input_value[1], $options + ['required' => FALSE]);
     $html .= "</div></div>";
 
     // Country
@@ -219,10 +219,10 @@ function form_geo($input_name, $label, $input_value = FALSE, array $options = []
 
     $state_default_selected = 0;
 
-    $default_opts[] = array(
-        'id'=>'0',
-        'text'=> $locale['sel_state']
-    );
+    $default_opts[] = [
+        'id'   => '0',
+        'text' => $locale['sel_state']
+    ];
     $default_opts += state_search('AW'); // AW is the first one.
     $state_default = json_encode($default_opts);
 
@@ -234,7 +234,7 @@ function form_geo($input_name, $label, $input_value = FALSE, array $options = []
         // submitted but states are blank - find default values
         if (!empty($state_default_opts)) {
             $state_default_selected = $state_default_opts[0]['id'];
-            if (count($state_default_opts)>1) {
+            if (count($state_default_opts) > 1) {
                 $state_default_selected = $state_default_opts[1]['id'];
             }
         }
@@ -268,7 +268,7 @@ function form_geo($input_name, $label, $input_value = FALSE, array $options = []
             type: 'GET',
             data: { id : ce_id },
             dataType: 'json',
-            success: function(data) {
+            success: function(data) {                    
                 $('#".$input_id."-state').select2({
                     placeholder: '".$locale['sel_state']." ".($options['required'] == 1 ? '*' : '')."',
                     allowClear: false,
@@ -536,9 +536,12 @@ function state_search($country_iso) {
     $states = \PHPFusion\Geomap::get_StatesOpts($country_iso);
     $array[] = ['id' => 'other', 'text' => fusion_get_locale('other_states')];
     if (!empty($states)) {
-        foreach($states as $key => $val) {
+        foreach ($states as $key => $val) {
+
+            $key = normalize(html_entity_decode($key));
+
             $array[] = [
-                'id' => $key,
+                'id'   => $key,
                 'text' => $val
             ];
         }

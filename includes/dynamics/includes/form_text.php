@@ -201,9 +201,11 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
     }
 
     if ($options['regex']) {
+
         $options['error_text'] = empty($options['error_text']) ? $locale['error_input_regex'] : $options['error_text'];
+
         // Live Regex Error Check
-        if ($options['regex_error_text']) {
+        if ($options['regex_error_text'] && $options['regex']) {
             add_to_jquery("
             $('#".$options['input_id']."').blur(function(ev) {
                 var Inner_Object = $(this).parent('div').find('.label-danger');
