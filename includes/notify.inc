@@ -32,9 +32,9 @@ function renderNotices($notices) {
             $messages .= "<div id='close-message'>\n";
         }
         $messages .= "<div class='admin-message alert alert-".$status." alert-dismissible' role='alert'>";
-        $messages .= "<button type='button' class='close' data-dismiss='alert'><span aria-hidden='true'>&times;</span></button>";
+        $messages .= "<div class='admin-message-body'><button type='button' class='close' data-dismiss='alert'><span aria-hidden='true'>&times;</span></button>";
         $messages .= implode("<br/>", $notice);
-        $messages .= "</div>\n";
+        $messages .= "</div>\n</div>\n";
         if ($status == "success") {
             $messages .= "</div>\n";
         }
