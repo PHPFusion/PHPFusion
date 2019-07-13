@@ -404,6 +404,16 @@ function trim_text($str, $length = FALSE) {
 }
 
 /**
+ * Normalize characters.
+ * @param $string
+ *
+ * @return string
+ */
+function normalize($string) {
+    return \PHPFusion\Rewrite\RewriteDriver::normalize($string);
+}
+
+/**
  * Validate numeric input
  *
  * @param            $value

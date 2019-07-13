@@ -615,7 +615,7 @@ abstract class RewriteDriver {
      */
     protected static function cleanURL($string, $delimiter = "-") {
         if (fusion_get_settings("normalize_seo") == "1") {
-            $string = self::normalize($string);
+            $string = normalize($string);
             if (function_exists('iconv')) {
                 $string = iconv("UTF-8", "ASCII//TRANSLIT//IGNORE", $string);
             }
@@ -646,11 +646,11 @@ abstract class RewriteDriver {
      *
      * @return string
      */
-    protected static function normalize($string) {
+    public static function normalize($string) {
         $table = [
             '&amp;' => 'and', '@' => 'at', '©' => 'c', '®' => 'r', 'À' => 'a',
             '('     => '', ')' => '', '.' => '',
-            'Á'     => 'a', 'Â' => 'a', 'Ä' => 'a', 'Å' => 'a', 'Æ' => 'ae', 'Ç' => 'c',
+            'Á'     => 'a', 'Â' => 'a', 'Ä' => 'a', 'ä'=>'a', 'Å' => 'a', 'Æ' => 'ae', 'Ç' => 'c',
             'È'     => 'e', 'É' => 'e', 'Ë' => 'e', 'Ì' => 'i', 'Í' => 'i', 'Î' => 'i',
             'Ï'     => 'i', 'Ò' => 'o', 'Ó' => 'o', 'Ô' => 'o', 'Õ' => 'o', 'Ö' => 'o',
             'Ø'     => 'o', 'Ù' => 'u', 'Ú' => 'u', 'Û' => 'u', 'Ü' => 'u', 'Ý' => 'y',
