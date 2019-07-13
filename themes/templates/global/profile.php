@@ -362,16 +362,21 @@ if (!function_exists('display_profile')) {
         $locale = fusion_get_locale();
 
         add_to_head("<link href='".THEMES."templates/global/css/profile.css' rel='stylesheet'/>");
+
         $tpl = \PHPFusion\Template::getInstance('profile');
+
         $tpl->set_template(__DIR__.'/tpl/user_profile.html');
+
         $tpl->set_locale($locale);
 
         foreach($info['profile_pages'] as $profile_page) {
             $tpl->set_block('profile_nav', $profile_page);
         }
+
         $tpl->set_tag("profile_content", $info['profile_content']);
 
         $tpl->set_tag('opentable', fusion_get_function('opentable', ''));
+
         $tpl->set_tag('closetable', fusion_get_function('closetable'));
 
         $user_name = '';
@@ -470,7 +475,9 @@ if (!function_exists('display_profile')) {
         //$tpl->set_tag('tab_header', (isset($tab_title) ? opentab($tab_title, $info['section_id'], 'profile_tab', TRUE, FALSE, 'section') : ''));
 
         $tpl->set_tag('user_name', $user_name);
+
         $tpl->set_tag('user_avatar', $user_avatar);
+
         $tpl->set_tag('user_level', $user_level);
 
         if (!empty($info['user_admin'])) {
@@ -504,7 +511,7 @@ if (!function_exists('display_profile')) {
 if (!function_exists('display_user_profile')) {
 
     function display_user_profile($info) {
-
+        //print_P($info);
         $locale = fusion_get_locale();
 
         $tpl = \PHPFusion\Template::getInstance('user-profile');
@@ -566,6 +573,7 @@ if (!function_exists('display_user_profile')) {
             $info['no_fields'] = $locale['uf_108'];
         }
 
+
         if (!empty($info['user_admin'])) {
             $tpl->set_block('user_admin', $info['user_admin']);
         }
@@ -580,13 +588,15 @@ if (!function_exists('display_user_profile')) {
 
         $tpl->set_tag('no_fields', (!empty($info['no_fields']) ? $info['no_fields'] : ''));
 
-        return $tpl->get_output();
+        return (string) $tpl->get_output();
     }
 }
 
 if (!function_exists('display_profile_groups')) {
     function display_profile_groups($info) {
+
         $tpl = \PHPFusion\Template::getInstance("user-groups");
+
         $tpl->set_template(__DIR__."/tpl/profile/profile-groups.html");
 
         $tpl->set_locale( fusion_get_locale() );

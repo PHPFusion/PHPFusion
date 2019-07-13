@@ -76,7 +76,11 @@ class UserFields extends UserFieldsQuantum {
     public $user_name_change = FALSE;
     private static $pages = [];
     protected static $additional_pages = [];
-    private $current_page = "";
+
+    private $current_page = '';
+    public $current_output_page = 'profile';
+
+    private static $output_page = [];
 
     protected $info = [
         'terms'               => '',
@@ -87,7 +91,7 @@ class UserFields extends UserFieldsQuantum {
 
     public $options = [];
 
-   private $default_options = [
+    private $default_options = [
         'btn_post_class' => 'btn-primary spacer-sm',
         'btn_class'      => 'btn btn-primary',
     ];
@@ -95,10 +99,12 @@ class UserFields extends UserFieldsQuantum {
     private static $instance = NULL;
 
     private $settings = [];
+
     private $aidlink = '';
 
     /**
      * Get a user field instance
+     *
      * @return null|UserFields
      */
     public static function getInstance() {
@@ -131,8 +137,10 @@ class UserFields extends UserFieldsQuantum {
         return in_array($field_name, $list) ? TRUE : FALSE;
     }
 
-    public function get_user_field_cats() {
-    }
+    /**
+     * Deprecated FUNCTION
+     */
+    public function get_user_field_cats() {}
 
     /**
      * @param string $key
@@ -143,7 +151,7 @@ class UserFields extends UserFieldsQuantum {
         $_section = get('section');
         $section['acc_settings'] = [
             'id'     => 'acc_settings',
-            'active' => ($_section == 'acc_settings' ? TRUE : (empty($_section) ? TRUE : FALSE) ),
+            'active' => ($_section == 'acc_settings' ? TRUE : (empty($_section) ? TRUE : FALSE)),
             'link'   => clean_request($this->aidlink.'section=acc_settings&lookup='.$this->user_data['user_id'], ['section'], FALSE),
             'name'   => 'Account Settings',
         ];
@@ -170,25 +178,45 @@ class UserFields extends UserFieldsQuantum {
      * @param $title
      * @param $file
      */
-    public function add_pages($key, $title, $file) {
+    public function addInputPage($key, $title, $file) {
         $_ref = get('ref');
         self::$additional_pages[$key] = [
-            'title' => $title,
-            'file'  => is_file($file) ? $file : '',
+            'title'  => $title,
+            'file'   => $file,
             'active' => $_ref == 'key' ? TRUE : FALSE,
         ];
     }
 
+    /**
+     * Add profile view output page
+     * @param $key      unique id
+     * @param $title    localized title of the page
+     * @param $file    the url of the file to be included
+     */
+    public function addOutputPage($key, $title, $file) {
+        $active_class = ' class="active"';
+        self::$output_page[$key] = [
+            'id'    => $key,
+            'title' => $title,
+            'class' => $this->current_output_page == $key ? $active_class : '',
+            'file' => $file,
+        ];
+    }
+
+    /**
+     * @return array
+     */
     private static function getInputPages() {
+
         if (empty(self::$pages)) {
             $_ref = get('ref');
             self::$pages = [
                 'pu_profile' => [
-                    'title' => 'Public Profile',
+                    'title'  => 'Public Profile',
                     'active' => $_ref == 'pu_profile' ? TRUE : (!$_ref ? TRUE : FALSE)
                 ], // Public Profile
                 'se_profile' => [
-                    'title' => 'Settings',
+                    'title'  => 'Settings',
                     'active' => $_ref == 'se_profile' ? TRUE : FALSE
                 ], // Private Profile
             ];
@@ -197,12 +225,12 @@ class UserFields extends UserFieldsQuantum {
         return self::$pages = array_merge(self::$pages, self::$additional_pages);
     }
 
-
     /**
+     * Parse all profile view pages
      * @return array
      */
     private function getOutputPages() {
-        $_current_page = get("profile_page");
+        $this->current_output_page = get("profile_page");
         $ppCache = [];
         if (empty($ppCache)) {
             $active_class = ' class="active"';
@@ -210,46 +238,41 @@ class UserFields extends UserFieldsQuantum {
                 'activity' => ['id'    => 'activity',
                                'title' => 'User Activity',
                                'link'  => BASEDIR.'profile.php?lookup='.$this->profile_id.'&amp;profile_page=activity',
-                               'class' => $_current_page == 'activity' ? $active_class : ""
+                               'class' => $this->current_output_page == 'activity' ? $active_class : ""
                 ],
                 'profile'  => ['id'    => 'profile',
                                'title' => 'User Profile',
                                'link'  => BASEDIR.'profile.php?lookup='.$this->profile_id.'&amp;profile_page=profile',
-                               'class' => $_current_page == 'profile' ? $active_class : ""
+                               'class' => $this->current_output_page == 'profile' ? $active_class : ""
 
                 ],
                 'friends'  => ['id'    => 'friends',
                                'title' => 'User Friends',
                                'link'  => BASEDIR.'profile.php?lookup='.$this->profile_id.'&amp;profile_page=friends',
-                               'class' => $_current_page == 'friends' ? $active_class : ""
+                               'class' => $this->current_output_page == 'friends' ? $active_class : ""
                 ],
                 'groups'   => ['id'    => 'groups',
                                'title' => 'User Groups <span class="badge">'.format_num($this->total_groups).'</span>',
                                'link'  => BASEDIR.'profile.php?lookup='.$this->profile_id.'&amp;profile_page=groups',
-                               'class' => $_current_page == 'groups' ? $active_class : ""
+                               'class' => $this->current_output_page == 'groups' ? $active_class : ""
                 ]
             ];
 
-            // For php-fusion.co.uk
-            $ppCache = [
-                'profile'  => ['id'    => 'profile',
-                               'title' => 'User Profile',
-                               'link'  => BASEDIR.'profile.php?lookup='.$this->profile_id.'&amp;profile_page=profile',
-                               'class' => $_current_page == 'profile' ? $active_class : ""
+            if (!empty(self::$output_page)) {
+                $output_pages_keys = array_keys(self::$output_page);
+                foreach($output_pages_keys as $key) {
+                    self::$output_page[$key]['link'] =  BASEDIR.'profile.php?lookup='.$this->profile_id.'&amp;profile_page='.$key;
+                }
 
-                ],
-                'groups'   => ['id'    => 'groups',
-                               'title' => 'User Groups <span class="badge">'.format_num($this->total_groups).'</span>',
-                               'link'  => BASEDIR.'profile.php?lookup='.$this->profile_id.'&amp;profile_page=groups',
-                               'class' => $_current_page == 'groups' ? $active_class : ""
-                ]
-            ];
+                $ppCache = array_merge($ppCache, self::$output_page);
+            }
 
-            $this->current_page = isset($ppCache[$_current_page]) ? $ppCache[$_current_page]['id'] : "profile";
+            $this->current_page = isset($ppCache[$this->current_output_page]) ? $ppCache[$this->current_output_page]['id'] : "profile";
         }
 
         return (array)$ppCache;
     }
+
 
     public function userModeratorAccess() {
         return (checkrights("M") && fusion_get_userdata("user_level") <= USER_LEVEL_ADMIN && $this->profile_id != '1' || iSUPERADMIN) ? TRUE : FALSE;
@@ -289,7 +312,7 @@ class UserFields extends UserFieldsQuantum {
         }
 
         $this->info = [
-            'title' => 'Edit Profile',
+            'title'                => 'Edit Profile',
             'sitename'             => fusion_get_settings('sitename'),
             'section'              => self::get_user_field_cats(),
             'pages'                => $this->getInputPages(),
@@ -572,6 +595,7 @@ class UserFields extends UserFieldsQuantum {
         switch ($this->current_page) {
 
             case "profile":
+
                 // Public Profile Page
                 $public_profile = new Public_Profile();
                 $public_profile->user_data = $this->getCurrentUserData();
@@ -592,23 +616,47 @@ class UserFields extends UserFieldsQuantum {
             case "friends":
 
                 return "The friend page is currently under development.";
+
                 break;
             case "groups":
 
                 $class = new Profile_Groups($this->profile_id, $this->getCurrentUserData());
+
                 return display_profile_groups($class->showGroupProfile());
 
                 break;
             case "activity":
 
                 $class = new Profile_Activity($this->profile_id, $this->getCurrentUserData());
+
                 $info = $class->showActivityProfile();
                 return display_profile_activity($info);
 
                 return "This activity page is currently unavailable.";
                 break;
-            case "default":
-                return "This page is currently unavailable.";
+
+            default:
+
+                // find API added pages
+                if (!empty(self::$output_page[$this->current_page]['file']) ) {
+                    $output = $this->loadPage(self::$output_page[$this->current_page]['file']);
+                }
+
+                return !empty($output) ? $output :  "This page is currently unavailable.";
+        }
+    }
+
+    /**
+     * Load the file
+     * @param $file_link
+     *
+     * @return false|string
+     */
+    private function loadPage($file_link) {
+        if (is_file($file_link)) {
+            ob_start();
+            require_once $file_link;
+            return ob_get_clean();
         }
     }
 
@@ -625,9 +673,11 @@ class UserFields extends UserFieldsQuantum {
         }
 
         $locale = fusion_get_locale();
+
         $aidlink = fusion_get_aidlink();
 
         $this->settings = fusion_get_settings();
+
         $this->profile_id = get("lookup", FILTER_VALIDATE_INT);
 
         OpenGraph::ogUserProfile($this->profile_id);
@@ -641,7 +691,7 @@ class UserFields extends UserFieldsQuantum {
                 'profile_id'      => $this->profile_id,
                 'profile_pages'   => $this->getOutputPages(),
                 'profile_content' => $this->getProfileContent(),
-                'total_groups' => $this->total_groups,
+                'total_groups'    => $this->total_groups,
 
             ] + $userdata;
 

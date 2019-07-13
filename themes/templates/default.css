@@ -1414,8 +1414,11 @@ table.fusion-table tr th.check-col {
         position: relative;
         width:100%;
     }
-    table.fusion-table tr th:not(:nth-child(1)) {
+    table.fusion-table tr th:not(.has-actions) {
         display: none;
+    }
+    table.fusion-table tr th.check-col {
+        display: block !important;
     }
     table.fusion-table tr th:nth-child(2) {
         display: table-cell;
@@ -1423,6 +1426,8 @@ table.fusion-table tr th.check-col {
     table.fusion-table td.has-actions {
         display: block!important;
         width:100%;
+        height:auto;
+        min-height: 55px;
     }
     table.fusion-table .has-actions > button.toggle-row {
         display: block;
@@ -1461,7 +1466,7 @@ table.fusion-table tr th.check-col {
     }
 
     table.fusion-table tr:not(.inline-edit-column).expanded td:not(.has-actions) {
-        height: 25px;
+        height: auto;
         padding: 3px 8px 3px 35%;
     }
     table.fusion-table tr:not(.inline-edit-column).expanded td:not(.has-actions):last-of-type {

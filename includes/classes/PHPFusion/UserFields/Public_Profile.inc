@@ -192,7 +192,9 @@ class Public_Profile extends UserFieldsQuantum {
     }
 
     public function get_OutputInfo() {
+
         $this->section_id = get("section");
+
         $info = [
                 'section'    => $this->get_category(),
                 'section_id' => $this->section_id,
@@ -248,54 +250,53 @@ class Public_Profile extends UserFieldsQuantum {
         if ($this->is_admin_panel === FALSE) {
 
             $field_cats = $this->get_category();
+
             $section_id = $this->get_SectionId();
-            $index_page_id = isset($field_cats[$section_id]) ?: 1;
 
-            $registration_cond = ($this->registration === TRUE && $this->is_admin_panel === FALSE ? 'AND f.field_registration=:field_register' : '');
-            $registration_bind = ($this->registration === TRUE && $this->is_admin_panel === FALSE ? [":field_register" => '1'] : []);
+            $index_page_id = isset($field_cats[$section_id]['id']) ? $field_cats[$section_id]['id'] : 1;
 
-            $result = dbquery("SELECT f.*, c.* FROM
+            $uf_cond = '';
+            $uf_bind = [];
+            if ($this->registration === TRUE && $this->is_admin_panel === FALSE) {
+                $uf_cond = 'f.field_registration=:field_register';
+                $uf_bind = [":field_register" => '1'];
+            }
+
+
+            $uf_query = "SELECT f.*, c.* FROM
             ".DB_USER_FIELDS." f
             INNER JOIN ".DB_USER_FIELD_CATS." c ON c.field_cat_id=f.field_cat
-            WHERE c.field_parent='$index_page_id' $registration_cond
-            ORDER BY c.field_cat_order, f.field_order
-            ", $registration_bind);
+            ".( $uf_cond ? "WHERE $uf_cond" : '')." ORDER BY c.field_cat_order, f.field_order";
+
+            $result = dbquery($uf_query, $uf_bind);
 
             if (dbrows($result)) {
 
                 while ($data = dbarray($result)) {
 
                     if ($data['field_cat_id']) {
-                        $category[$data['field_parent']][$data['field_cat_id']] = UserFieldsQuantum::parse_label($data['field_cat_name']);
+                        $cat_name = UserFieldsQuantum::parse_label($data['field_cat_name']);
+                        $category[$data['field_parent']][$data['field_cat_id']] = $cat_name;
+                        $fields['user_field_extended'][$data['field_cat_id']] ['title' ] = $cat_name;
                     }
+
                     if ($data['field_cat']) {
-                        $item[$data['field_cat']][] = $data;
+                        $item[$data['field_cat']][$data['field_id']] = $data;
+                        $item_output = $this->display_fields($data, $this->user_data, $this->method, !empty($field['field_config']) ? $field['field_config'] : []);
+                        $item[$data['field_cat']][$data['field_id']]['field_output'] = $item_output;
+                        if (!empty($item_output)) {
+                            $fields['user_field_extended'][$data['field_cat_id']]['fields'][$data['field_name']] = $item_output;
+                        }
+
                     }
                 }
 
                 if (isset($category[$index_page_id])) {
                     foreach ($category[$index_page_id] as $cat_id => $cat) {
-                        if ($this->registration || $this->method == 'input') {
-                            if (isset($item[$cat_id])) {
-                                $fields['user_field'][$cat_id]['title'] = $cat;
-                                foreach ($item[$cat_id] as $field_id => $field) {
-                                    $field_output = $this->display_fields($field, $this->user_data, $this->method, !empty($field['field_config']) ? $field['field_config'] : []);
-                                    $fields['user_field'][$cat_id]['fields'][$field['field_id']] = $field_output;
-                                    $fields['extended_field'][$field['field_name']] = $field_output; // for the gets
-                                }
-                            }
-                        } else {
-                            // Display User Fields
-                            if (isset($item[$cat_id])) {
-                                $fields['user_field'][$cat_id]['title'] = $cat;
-                                foreach ($item[$cat_id] as $field_id => $field) {
-                                    // Outputs array
-                                    $field_output = $this->display_fields($field, $this->user_data, $this->method);
-                                    $fields['extended_field'][$field['field_name']] = $field_output; // for the gets
-                                    if (!empty($field_output)) {
-                                        $fields['user_field'][$cat_id]['fields'][$field['field_id']] = array_merge($field, $field_output);
-                                    }
-                                }
+                        if (isset($item[$cat_id])) {
+                            $fields['user_field'][$cat_id]['title'] = $cat;
+                            foreach ($item[$cat_id] as $field_id => $field) {
+                                $fields['user_field'][$cat_id]['fields'][$field['field_id']] = $field['field_output'];
                             }
                         }
                     }
@@ -374,8 +375,8 @@ class Public_Profile extends UserFieldsQuantum {
 
     /**
      * Display Captcha
-     *
      * @return string
+     * @throws \ReflectionException
      */
     private function renderValidation() {
         $this->locale = fusion_get_locale();
