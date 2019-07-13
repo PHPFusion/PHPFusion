@@ -21,6 +21,57 @@ use PHPFusion\OutputHandler;
 
 defined('IN_FUSION') || exit;
 
+// Steam Functions
+/**
+ * @param string $component - File prefix in /classes/PHPFusion/Steam/
+ *
+ * @return object
+ * @throws ReflectionException
+ */
+function get_fusion_steam($component = 'Layout') {
+    static $fusion_steam;
+    if (empty($fusion_steam)) {
+        $fusion_steam = new \PHPFusion\Steam();
+    }
+    return (object) $fusion_steam->load($component);
+}
+
+/**
+ * Get responsive row class
+ * @return string
+ * @throws ReflectionException
+ */
+function grid_row() {
+    $layout = get_fusion_steam('Layout');
+    return (string) $layout->getRowClass();
+}
+
+/**
+ * Get responsive column class
+ * @param int $mobile
+ * @param int $tablet
+ * @param int $laptop
+ * @param int $desktop
+ *
+ * @return string
+ * @throws ReflectionException
+ */
+function grid_column_size($mobile = 100, $tablet = 0, $laptop = 0, $desktop = 0) {
+    $layout = get_fusion_steam('Layout');
+    return (string) $layout->getColumnClass([$mobile,$tablet,$laptop,$desktop], FALSE);
+}
+
+/**
+ * Get responsive container class
+ * @return string
+ * @throws ReflectionException
+ */
+function grid_container() {
+    $layout = get_fusion_steam('Layout');
+    return (string) $layout->getContainerClass();
+}
+
+
 /**
  * Show PHP-Fusion Performance
  *
