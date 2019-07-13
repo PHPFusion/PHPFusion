@@ -1064,8 +1064,6 @@ class ForumAdminView extends ForumAdminInterface {
      */
     private function display_forum_list() {
 
-        include FORUM.'classes/admin/forum-list.table.php';
-
         $locale = fusion_get_locale();
 
         $title = !empty($this->level['title']) ? sprintf(self::$locale['forum_000b'], $this->level['title'][0]) : self::$locale['forum_root'];
@@ -1076,7 +1074,7 @@ class ForumAdminView extends ForumAdminInterface {
 
         $threads_per_page = $forum_settings['threads_per_page'];
 
-        new Tables(new \Forum_List($this->forum_cat, $threads_per_page));
+        new Tables(new Forum_List($this->forum_cat, $threads_per_page));
 
     }
 
@@ -1096,4 +1094,196 @@ class ForumAdminView extends ForumAdminInterface {
         echo form_button('init_forum', self::$locale['forum_001'], 'init_forum', ['class' => 'btn btn-primary']);
         echo closeform();
     }
+}
+
+
+class Forum_List implements \PHPFusion\Interfaces\TableSDK {
+
+    private $forum_cat_id = 0;
+    private $default_limit = 0;
+
+    public function __construct($forum_cat_id = 0, $threads_per_page) {
+        $this->forum_cat_id = isnum($forum_cat_id) ? $forum_cat_id : 0;
+        $this->default_limit = isnum($threads_per_page) ? $threads_per_page : 0;
+    }
+
+    public function data() {
+
+        return [
+            'debug'  => FALSE,
+            'table'  => DB_FORUMS,
+            'id'     => 'forum_id',
+            'parent' => 'forum_cat',
+            'title'  => 'forum_name',
+            'order'  => 'forum_order ASC',
+            'limit'  => intval($this->default_limit),
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    private function getForumRoot() {
+        $refs = [];
+        $forum_result = dbquery("SELECT forum_id, forum_name FROM ".DB_FORUMS." WHERE 
+        forum_cat=0 ".(multilang_column('FO') ? " AND forum_language='".LANGUAGE."'" : '')." ORDER BY forum_name ASC");
+        if (dbrows($forum_result)) {
+            while ($forum_data = dbarray($forum_result)) {
+                $refs[$forum_data['forum_id']] = $forum_data['forum_name'];
+            }
+        }
+        return $refs;
+    }
+
+    /**
+     * @return array
+     */
+    public function properties() {
+
+        $locale = fusion_get_locale();
+
+        $aidlink = fusion_get_aidlink();
+
+        $forum_arr = $this->getForumRoot();
+
+        return [
+            'edit_link_format'   => FORUM.'admin/forums.php'.$aidlink.'&amp;action=edit&amp;forum_id=',
+            'delete_link_format' => FORUM.'admin/forums.php'.$aidlink.'&amp;action=delete&amp;forum_id=',
+            'search_label'       => $locale['search'],
+            'search_col'         => 'forum_name',
+            'no_record'          => $locale['560'],
+            'dropdown_filters'   => [
+                'forum_branch' => [
+                    'type'    => 'array',
+                    'title'   => 'Filter by:',
+                    'options' => $forum_arr
+                ]
+            ],
+            'ordering_col'       => 'forum_order',
+            'multilang_col'      => 'forum_language',
+            'link_filters'       =>
+                [
+                    'forum_cat' => [
+                        'title'   => 'Display',
+                        'options' => [
+                            '0'  => 'Root Entries only', // where forum cat = 0
+                            NULL => 'All Entries' // where forum cat = 1=1
+                        ]
+                    ],
+                ],
+            'order_col'          => [
+                'forum_name'        => 'forum-name',
+                'forum_description' => 'forum-description',
+                'forum_type'        => 'forum-type',
+                'forum_image'       => 'forum-image',
+                'forum_alias'       => 'forum-alias',
+                'forum_order'       => 'forum-order',
+            ]
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function column() {
+
+        $locale = fusion_get_locale();
+
+        return [
+            'forum_name'        => [
+                'title'       => 'Forum',
+                'edit_link'   => TRUE,
+                'delete_link' => TRUE,
+                'title_class' => 'col-xs-4',
+                'visibility'  => TRUE,
+            ],
+            'forum_description' => [
+                'title'       => 'Description',
+                'title_class' => 'col-xs-3',
+                'visibility'  => TRUE,
+            ],
+            'forum_type'        => [
+                'title'      => 'Forum Type',
+                'options'    => $this->getTypeOptions(),
+                'visibility' => TRUE,
+            ],
+            'forum_image'       => [
+                'title'       => 'Image',
+                'callback'    => ['PHPFusion\\Forums\\Admin\\ForumAdminView', 'check_forum_image'],
+                'title_class' => 'text-center',
+                'value_class' => 'text-center',
+                'visibility'  => TRUE,
+            ],
+            'forum_alias'       => [
+                'title'       => 'Alias',
+                'title_class' => 'col-xs-2',
+                'visibility'  => TRUE,
+            ],
+            'forum_order'       => [
+                'title'       => 'Ordering',
+                'title_class' => 'Order',
+                'visibility'  => TRUE,
+            ]
+        ];
+    }
+
+    /**
+     * Every row of the array is a field input.
+     *
+     * @return array
+     */
+
+    public function quickEdit() {
+
+        $lang_field = [];
+        if (multilang_column('FO')) {
+            $lang_field = [
+                'forum_language' => [
+                    'function' => 'form_select',
+                    'options'  => fusion_get_enabled_languages(),
+                    'label'    => 'Forum Language',
+                    'inline'   => TRUE,
+                ]
+            ];
+        }
+
+        return [
+                'forum_name'  => [
+                    'label'    => 'Forum Name',
+                    'function' => 'form_text',
+                    'inline'   => TRUE,
+                    'required' => TRUE,
+                ],
+                'forum_order' => [
+                    'label'    => 'Forum Order',
+                    'function' => 'form_text',
+                    'inline'   => TRUE,
+                ],
+                'forum_id'    => [
+                    'function' => 'form_hidden'
+                ],
+                'forum_cat'   => [
+                    'function' => 'form_hidden',
+                ],
+                'forum_type'  => [
+                    'label'    => 'Forum Type',
+                    'function' => 'form_checkbox',
+                    'type'     => 'radio',
+                    'options'  => $this->getTypeOptions(),
+                    'inline'   => TRUE,
+                ]
+            ] + $lang_field;
+    }
+
+
+    private function getTypeOptions() {
+        $locale = fusion_get_locale();
+        return [
+            '1' => $locale['forum_opts_001'],
+            '2' => $locale['forum_opts_002'],
+            '3' => $locale['forum_opts_003'],
+            '4' => $locale['forum_opts_004'],
+        ];
+    }
+
 }

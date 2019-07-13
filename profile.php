@@ -11,7 +11,8 @@ $tpl->set_template(__DIR__.'/templates/forum-uf.html');
 $tpl->set_tag('reputation_count', format_num($user_data['user_reputation']));
 $tpl->set_tag('post_count', format_num($user_data['user_posts']));
 
-
+// Appreciators
+$result = dbquery("SELECT ");
 
 //print_P($user_data);
 
