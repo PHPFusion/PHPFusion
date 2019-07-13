@@ -650,11 +650,12 @@ class ForumAdminView extends ForumAdminInterface {
                 closetable();
                 break;
             case 'ft':
+                // FORUM TAGS ADMIN
                 BreadCrumbs::getInstance()->addBreadCrumb([
                     'link'  => INFUSIONS.'forum/admin/forums.php'.$this->aidlink.'&section=ft',
                     'title' => self::$locale['forum_tag_0100']
                 ]);
-                opentable(self::$locale['forum_tag_0100']);
+                opentable(self::$locale['forum_tag_0100'].'<small class="m-l-15"><i class="fas fa-info-circle" title="'.self::$locale['forum_tag_0101'].'"></i></small>');
                 $this->viewTags()->viewTagsAdmin();
                 closetable();
                 break;
@@ -684,6 +685,7 @@ class ForumAdminView extends ForumAdminInterface {
                 self::forum_jump();
 
                 self::set_forumDB();
+
                 /**
                  * Ordering actions
                  */
@@ -701,7 +703,6 @@ class ForumAdminView extends ForumAdminInterface {
                         $this->data = self::get_forum($this->forum_id);
                         break;
                 }
-
 
                 $append_title = '';
                 if (get('action') == 'edit') {

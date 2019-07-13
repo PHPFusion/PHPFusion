@@ -17,6 +17,9 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Forums\Admin;
 
+use PHPFusion\Interfaces\TableSDK;
+use PHPFusion\Tables;
+
 class ForumAdminTags extends ForumAdminInterface {
 
     protected $data = [
@@ -32,49 +35,22 @@ class ForumAdminTags extends ForumAdminInterface {
      * Admin interface
      */
     public function viewTagsAdmin() {
-
         pageAccess('F');
 
-        echo "<div class='well m-t-15'>".self::$locale['forum_tag_0101']."</div>\n";
-        $tag_pages = ["tag_list", "tag_form"];
+        echo "<div class='".grid_row()."'>\n<div class='".grid_column_size(100, 100, 50, 40)."'>\n";
 
-        if (isset($_GET['ref']) && $_GET['ref'] == "back") {
-            redirect(clean_request("section=ft", ["ref", "section", 'tag_id'], FALSE));
-        }
+        echo $this->displayTagForm();
 
-        $_GET['ref'] = isset($_GET['ref']) && in_array($_GET['ref'], $tag_pages) ? $_GET['ref'] : $tag_pages[0];
+        echo "</div>\n<div class='".grid_column_size(100, 100, 50, 60)."'>\n";
 
-        if ($_GET['ref'] != $tag_pages[0]) {
-            $tab['title'][] = self::$locale['back'];
-            $tab['id'][] = "back";
-            $tab['icon'][] = "fa fa-fw fa-arrow-left";
-        } else {
-            $tab['title'][] = self::$locale['forum_tag_0102'];
-            $tab['id'][] = "tag_list";
-            $tab['icon'][] = "";
-        }
-        $tab['title'][] = isset($_GET['tag_id']) && isnum($_GET['tag_id']) ? self::$locale['forum_tag_0104'] : self::$locale['forum_tag_0103'];
-        $tab['id'][] = "tag_form";
-        $tab['icon'][] = "";
+        new Tables(new Tags_List());
 
-        echo opentab($tab, $_GET['ref'], "rank_admin", TRUE, 'nav-pills m-t-20', "ref");
-
-        switch ($_GET['ref']) {
-            case "tag_form":
-                echo '<div class="m-t-10">';
-                echo $this->displayTagForm();
-                echo '</div>';
-                break;
-            default:
-                echo $this->displayTagList();
-        }
-
-        echo closetab();
+        echo "</div>\n</div>\n";
     }
 
     protected function displayTagForm() {
 
-        if (isset($_POST['cancel_tag'])) {
+        if (post('cancel_tag')) {
             redirect(clean_request("", ["tag_id", "ref"], FALSE));
         }
 
@@ -92,66 +68,47 @@ class ForumAdminTags extends ForumAdminInterface {
 
         $this->post_tags();
 
-        $form_action = clean_request("section=ft&ref=tag_form", ["tag_id", "ref"], FALSE);
-
-        if (isset($_GET['tag_id']) && isnum($_GET['tag_id'])) {
-
-            $result = dbquery("SELECT * FROM ".DB_FORUM_TAGS." WHERE tag_id='".intval($_GET['tag_id'])."'");
-
-            if (dbrows($result) > 0) {
-
+        if ($tag_id = get('tag_id', FILTER_VALIDATE_INT)) {
+            $result = dbquery("SELECT * FROM ".DB_FORUM_TAGS." WHERE tag_id=:tid", [':tid' => intval($tag_id)]);
+            if (dbrows($result)) {
                 $this->data = dbarray($result);
-
-                $form_action = clean_request("section=ft&ref=tag_form&tag_id=".$_GET['tag_id'], ["tag_id", "ref"], FALSE);
-
             }
         }
 
         $button_locale = $this->data['tag_id'] ? self::$locale['forum_tag_0208'] : self::$locale['forum_tag_0103'];
 
-        $html =
-            openform('tag_form', 'post', $form_action).
+        echo openform('tag_form', 'post').
+
             form_hidden('tag_id', '', $this->data['tag_id']).
 
-            form_text('tag_title', self::$locale['forum_tag_0200'], $this->data['tag_title'],
-                ['required' => TRUE, 'error_text' => self::$locale['414'], "inline" => TRUE]).
+            form_text('tag_title', self::$locale['forum_tag_0200'], $this->data['tag_title'], ['required' => TRUE, 'error_text' => self::$locale['414'], "inline" => FALSE]).
 
-            form_textarea('tag_description', self::$locale['forum_tag_0201'], $this->data['tag_description'],
-                [
-                    'inline'   => TRUE,
-                    'type'     => 'bbcode',
-                    'autosize' => TRUE,
-                    'preview'  => TRUE,
-                ]).
+            form_colorpicker('tag_color', self::$locale['forum_tag_0202'], $this->data['tag_color'], ['inline' => FALSE, 'required' => TRUE]).
 
-            form_colorpicker('tag_color', self::$locale['forum_tag_0202'], $this->data['tag_color'],
-                ['inline' => TRUE, 'required' => TRUE]);
+            form_textarea('tag_description', self::$locale['forum_tag_0201'], $this->data['tag_description'], ['inline' => FALSE ]);
 
         if (multilang_table("FR")) {
-            $html .=
-                form_select('tag_language', self::$locale['forum_tag_0203'], $this->data['tag_language'],
-                    ['inline' => TRUE, 'options' => $language_opts, 'placeholder' => self::$locale['choose']]);
 
+            echo form_select('tag_language', self::$locale['forum_tag_0203'], $this->data['tag_language'], ['inline' => FALSE, 'options' => $language_opts, 'placeholder' => self::$locale['choose']]);
 
         } else {
-            $html .= form_hidden('tag_language', '', $this->data['tag_language']);
+            echo form_hidden('tag_language', '', $this->data['tag_language']);
         }
 
-        $html .= form_checkbox('tag_status', self::$locale['forum_tag_0204'], $this->data['tag_status'],
+        echo form_checkbox('tag_status', self::$locale['forum_tag_0204'], $this->data['tag_status'],
                 ['options' => [
                     1 => self::$locale['forum_tag_0205'],
                     0 => self::$locale['forum_tag_0206'],
                 ],
                  'type'    => 'radio',
-                 'inline'  => TRUE,
+                 'inline'  => FALSE,
                 ]).
 
-            form_button('save_tag', $button_locale, $button_locale, ['class' => 'btn-success m-r-10', 'icon' => 'fa fa-hdd-o']).
+            form_button('save_tag', $button_locale, $button_locale, ['class' => 'btn-primary m-r-10']).
+
             form_button('cancel_tag', self::$locale['cancel'], self::$locale['cancel'], ['class' => 'btn-default', 'icon' => 'fa fa-times']).
+
             closeform();
-
-        return $html;
-
     }
 
     protected function post_tags() {
@@ -196,54 +153,90 @@ class ForumAdminTags extends ForumAdminInterface {
         }
     }
 
+}
+
+/**
+ * Class Tags_List
+ *
+ * @package PHPFusion\Forums\Admin
+ */
+class Tags_List implements TableSDK {
+
+    private $locale = [];
+
     /**
-     * Ranks Listing
-     *
-     * @return string
+     * Tags_List constructor.
      */
-    protected function displayTagList() {
+    public function __construct() {
+        $this->locale = fusion_get_locale();
+    }
 
-        $tag_list_query = "
-        SELECT * FROM ".DB_FORUM_TAGS."
-        ".(multilang_table("FO") ? "WHERE tag_language='".LANGUAGE."'" : "")."
-        ORDER BY tag_id DESC, tag_title ASC
-        ";
+    /**
+     * @return array
+     */
+    public function data() {
+        return [
+            'table'      => DB_FORUM_TAGS,
+            'id'         => 'tag_id',
+            'title'      => 'tag_title',
+            'conditions' => (multilang_table("FO") ? "tag_language='".LANGUAGE."'" : ""),
+            'order'      => 'tag_id DESC, tag_title ASC'
+        ];
+    }
 
-        $result = dbquery($tag_list_query);
+    /**
+     * @return array
+     */
+    public function properties() {
 
-        if (dbrows($result) > 0) {
-            add_to_jquery("$('.tag-container').hover(
-            function(e) { $(this).parent().find('.tag-action').show(); },
-            function(e) { $(this).parent().find('.tag-action').hide(); }
-            );
-            ");
-            $html = "<div class='row m-t-20 equal-height'>\n";
+        $aidlink = fusion_get_aidlink();
 
-            while ($data = dbarray($result)) {
+        return [
+            'table_id'           => 'tags-list',
+            'no_record'          => $this->locale['forum_tag_0209'],
+            'edit_link_format'   => FORUM.'admin/forums.php'.$aidlink.'&amp;section=ft&tag_id=',
+            'delete_link_format' => FORUM.'admin/forums.php'.$aidlink.'&amp;section=ft&&delete=',
+            'search_col'         => 'tag_title',
+            'order_col'          => [
+                'tag_title' => 'tag-title',
+                'tag_type'  => 'tag-type',
+            ]
+        ];
+    }
 
-                $html .= "<div class='col-xs-12 col-sm-3 m-t-20'>\n";
-                $html .= "<div class='list-group-item tag-container'>\n";
-                $html .= "<div class='pull-left'>\n";
-                $html .= "<i class='fa fa-square fa-2x fa-fw m-r-10' style='color:".$data['tag_color']."'></i>\n";
-                $html .= "</div>\n";
-                $html .= "<div class='overflow-hide'>\n";
-                $html .= "<div class='strong text-bigger m-b-5'>".$data['tag_title']."</div>\n";
-                $html .= "<p class='description'>".$data['tag_description']."</p>";
-                $html .= "<small>".($data['tag_status'] ? self::$locale['forum_tag_0205'] : self::$locale['forum_tag_0206'])."</small><br/><br/>".
-                    "<span class='tag-action' style='display:none; height: 40px;'>".
-                    "<a href='".clean_request("tag_id=".$data['tag_id']."&section=ft&ref=tag_form", ["tag_id", "ref"], FALSE)."'>".self::$locale['edit']."</a> -\n".
-                    "<a href='".clean_request("delete=".$data['tag_id']."&section=ft&ref=tag_form", ["tag_id", "ref"], FALSE)."'>".self::$locale['delete']."</a>".
-                    "</span>".
-                    "</div>\n</div>\n</div>\n";
-            }
+    /**
+     * @return array
+     */
+    public function column() {
+        return [
+            'tag_title'       => [
+                'title'       => $this->locale['forum_tag_0200'],
+                'edit_link'   => TRUE,
+                'delete_link' => TRUE,
+            ],
+            'tag_color'       => [
+                'title'  => $this->locale['forum_tag_0202'],
+                'format' => '<i class="fa fa-square fa-2x fa-fw m-r-10" style="color: :tag_color"></i>',
+            ],
+            'tag_description' => [
+                'title' => $this->locale['forum_tag_0201'],
+            ],
+            'tag_status'      => [
+                'title'   => $this->locale['forum_tag_0204'],
+                'options' => [
+                    0 => $this->locale['forum_tag_0205'],
+                    1 => $this->locale['forum_tag_0206']
+                ]
+            ]
+        ];
+    }
 
-            $html .= "</div>\n";
-
-        } else {
-
-            $html = "<div class='well text-center m-t-10'>".self::$locale['forum_tag_0209']."</div>\n";
-
-        }
-        return $html;
+    /**
+     * Every row of the array is a field input.
+     *
+     * @return array
+     */
+    public function quickEdit() {
+        return [];
     }
 }
