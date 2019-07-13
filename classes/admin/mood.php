@@ -192,11 +192,11 @@ class Mood_List implements TableSDK {
             'delete_link_format' => FORUM.'admin/forums.php'.$aidlink.'&amp;section=fmd&delete=',
             'search_col'         => 'rank_title',
             'order_col'          => [
-                'mood_name' => 'mood-title',
-                'mood_status'  => 'mood-status',
-                'mood_notify'  => 'mood-notify',
-                'mood_access'  => 'mood-access',
-                'mood_count' => 'mood-post'
+                'mood_name'   => 'mood-title',
+                'mood_status' => 'mood-status',
+                'mood_notify' => 'mood-notify',
+                'mood_access' => 'mood-access',
+                'mood_count'  => 'mood-post'
             ]
         ];
     }
