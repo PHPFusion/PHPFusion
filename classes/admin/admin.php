@@ -299,7 +299,7 @@ abstract class ForumAdminInterface extends Forum_Server {
      *
      * @return array
      */
-    protected static function get_forum_index() {
+    public static function get_forum_index() {
         return dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat');
     }
 }

@@ -145,8 +145,8 @@ if (!defined("FORUM_TEMPLATES")) {
  * New API for user fields
  * Documentation to add a custom user field page in the new User Fields 2.0
  */
-//if (iMEMBER && defined('FORUM_EXISTS')) {
+if (iMEMBER && infusion_exists('forum')) {
     //Now add a link to your sitelinks with the url:  BASEDIR.'edit_profile?ref=forum'
-    //$userFields = \PHPFusion\UserFields::getInstance();
-    //$userFields->add_pages('forum', 'Forums', FORUM.'profile.php');
-//}
+    $userFields = \PHPFusion\UserFields::getInstance();
+    $userFields->addOutputPage('forum', 'Forum', FORUM.'profile.php');
+}

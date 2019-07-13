@@ -1,29 +1,21 @@
 <?php
-
 /**
- * The API is as following:
- * 2 new strings:
- *  -   $user_fields_section         - required keys are 'title', 'id'
- *  -   $user_fields                 - the view applicable to the current $GET section.
+ * Babylon user profile forum extensions
  */
-/*
-$user_fields_section = array(
-    'title' => [
-        0 => 'Section A',
-        1 => 'Section B',
-    ],
-    'id' => [
-        0 => 'a',
-        1 => 'b'
-    ]
-);
-switch($_GET['section']) {
-    default:
-    case 'a':
-    $user_fields = 'Content View';
-        break;
-    case 'b':
-    $user_fields = 'Content B View';
-        break;
-}
-*/
+defined('IN_FUSION') || exit;
+$user_data = fusion_get_user( floatval(get('lookup', FILTER_VALIDATE_INT) ?:0) );
+
+$tpl = \PHPFusion\Template::getInstance('uf-forum');
+
+$tpl->set_template(__DIR__.'/templates/forum-uf.html');
+$tpl->set_tag('reputation_count', format_num($user_data['user_reputation']));
+$tpl->set_tag('post_count', format_num($user_data['user_posts']));
+
+
+
+//print_P($user_data);
+
+
+
+
+echo $tpl->get_output();
