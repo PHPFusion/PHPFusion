@@ -58,7 +58,7 @@ class ForumAdminSettings extends ForumAdminInterface {
         $tab['callback']['ufields'] = 'display_uf_settings';
 
         $refs = get('ref');
-        $refs = method_exists($this, $tab['callback'][$refs]) ? $refs : 'general';
+        $refs = isset($tab['callback'][$refs]) && method_exists($this, $tab['callback'][$refs]) ? $refs : 'general';
 
         echo opentab($tab, $refs, 'forum_settings_tab', TRUE, 'nav-tabs m-t-15', 'ref', ['ref'], TRUE);
         $function = $tab['callback'][$refs];
