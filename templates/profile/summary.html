@@ -1,0 +1,109 @@
+<!--Summary Screen -->
+<div class="clearfix m-t-20 p-t-20">
+    <div class="{[row]} equal-height m-b-50">
+        <div class="{[col(100,50)]}">
+            <!--Top answers summary-->
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h5 class="text-dark pull-left strong m-b-0">Answers
+                        <span class="display-inline text-normal {%answer_count%}">({%answer_rowcount%})</span></h5>
+                    <ul class="nav nav-pills nav-right nav-sm" role="tablist" id="{%answer_trigger%}">
+                        {answer_nav.{
+                        <li {%active%} role="presentation"><a data-toggle="pill" aria-controls="{%id%}" role="tab" href="{%link%}">{%title%}</a></li>
+                        }}
+                    </ul>
+                    <div id="{%answer_target%}">
+                        {answered_threads.{
+                        <div class="m-t-20">
+                            <div class="clearfix">
+                                <span class="label label-success strong m-r-10">{%thread_views%}</span>
+                                <span class="display-inline"><a href="{%thread_link%}">{%thread_subject%}</a></span>
+                            </div>
+                        </div>
+                        }}
+                        {no_answer_threads.{
+                        <div class="m-t-20">There are no threads found.</div>
+                        }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="{[col(100,50)]}">
+            <!--Reputation summary-->
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h5 class="text-dark pull-left strong m-b-0">Reputation
+                        <span class="display-inline text-normal">(2,639)</span></h5>
+                    <ul class="nav nav-pills nav-right nav-sm">
+                        <li><a href="">Votes</a></li>
+                        <li><a href="">Activity</a></li>
+                        <li class="active"><a href="">Latest</a></li>
+                    </ul>
+                    <div class="m-t-20">
+                        <div class="clearfix">
+                            <span class="label label-success strong m-r-10">209</span>
+                            <span class="display-inline">
+                        <a href="">How to make facebook login button required to click?</a>
+                    </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="{[row]} equal-height">
+    <div class="{[col(100,50)]}">
+
+        <!--Top questions summary-->
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <h5 class="text-dark pull-left strong m-b-0">Questions
+                    <span class="display-inline text-normal {%question_count%}">({%question_rowcount%})</span></h5>
+                <ul class="nav nav-pills nav-right nav-sm" role="tablist" id="{%question_trigger%}">
+                    {question_nav.{
+                    <li {%active%} role="presentation"><a data-toggle="pill" aria-controls="{%id%}" role="tab" href="{%link%}">{%title%}</a></li>
+                    }}
+                </ul>
+                <div id="{%question_target%}">
+                    {question_threads.{
+                    <div class="m-t-20">
+                        <div class="clearfix">
+                            <span class="label label-success strong m-r-10">{%thread_views%}</span>
+                            <span class="display-inline"><a href="{%thread_link%}">{%thread_subject%}</a></span>
+                        </div>
+                    </div>
+                    }}
+                    {no_question_threads.{
+                    <div class="m-t-20">There are no threads found.</div>
+                    }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="{[col(100,50)]}">
+        <!--Reputation summary-->
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="br-b-1 clearfix">
+                    <h5 class="text-dark pull-left strong m-b-0">Tags
+                        <span class="display-inline text-normal">(2,639)</span></h5>
+                </div>
+                <div class="{[row]}">
+                    <div class="{[col(100,50)]}">
+                        <div class="spacer-xs">43k <span class="label label-info">something</span> x300</div>
+                        <div class="spacer-xs">43k <span class="label label-info">something</span> x300</div>
+                        <div class="spacer-xs">43k <span class="label label-info">something</span> x300</div>
+                        <div class="spacer-xs">43k <span class="label label-info">something</span> x300</div>
+                    </div>
+                    <div class="{[col(100,50)]}">
+                        <div class="spacer-xs">43k <span class="label label-info">something</span> x300</div>
+                        <div class="spacer-xs">43k <span class="label label-info">something</span> x300</div>
+                        <div class="spacer-xs">43k <span class="label label-info">something</span> x300</div>
+                        <div class="spacer-xs">43k <span class="label label-info">something</span> x300</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
