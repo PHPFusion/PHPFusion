@@ -18,11 +18,13 @@
                     <div style="column-count: 2">
                         <div><strong>Impact</strong><br/>
                             <h2 class="display-inline text-dark">~{%affect_count%}</h2>
-                            <small>people reached</small>
+                            <small>views reached</small>
                         </div>
-                        <i class="fas fa-pencil-alt m-r-10"></i>704 posts edited<br/>
-                        <i class="far fa-thumbs-up m-r-10"></i>2,123 helpful flags<br/>
-                        <i class="fas fa-caret-up m-r-10"></i>103 votes cast<br/>
+                        <span title="The total of edits made to improve existing posts"><i class="fas fa-pencil-alt fa-fw m-r-10"></i>{%edit_count%} posts edit</span><br/>
+                        <span title="The total of up and down votes cast"><i class="fas fa-caret-up fa-fw m-r-10"></i>{%vote_count%} votes cast</span><br/>
+                        {mood.{
+                        <span title="The total of {%title%} post flags raised">{%icon%}{%count%} {%title%}</span><br/>
+                        }}
                     </div>
                 </div>
             </div>

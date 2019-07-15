@@ -26,7 +26,8 @@ let forum_summary = {
                     console.log(e);
                     if (e.status == 200 && e.responseJSON.count && e.responseJSON.html)  {
                         $('#' + container_id).html(e.responseJSON.html);
-                        $('#' + counter_id).html(e.responseJSON.count);
+                        console.log(e.responseJSON.count);
+                        $('.' + counter_id).html(e.responseJSON.count);
                     }
                 }
             });

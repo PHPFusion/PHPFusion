@@ -1073,8 +1073,8 @@ class Forum_Viewer {
             $html->set_block('pagenav_bottom', ['pagenav' => $info['page_nav']]);
         }
         // Icons
-        $html->set_tag('sticky_icon', ($data['thread_sticky'] == TRUE ? "<i title='".$locale['forum_0103']."' class='".getForumIcons("sticky")."'></i>" : ''));
-        $html->set_tag('locked_icon', ($data['thread_locked'] == TRUE ? "<i title='".$locale['forum_0102']."' class='".getForumIcons("lock")."'></i>" : ''));
+        $html->set_tag('sticky_icon', ($data['thread_sticky'] == TRUE ? "<i title='".$locale['forum_0103']."' class='".get_forum_icons("sticky")."'></i>" : ''));
+        $html->set_tag('locked_icon', ($data['thread_locked'] == TRUE ? "<i title='".$locale['forum_0102']."' class='".get_forum_icons("lock")."'></i>" : ''));
         // Texts and Labels
         $html->set_tag('thread_subject', $data['thread_subject']);
         $html->set_tag('time_updated', $locale['forum_0363'].' '.timer($data['thread_lastpost']));

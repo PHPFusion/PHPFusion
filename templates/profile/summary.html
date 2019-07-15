@@ -1,3 +1,6 @@
+<!--@Todo:-->
+<!--1. All the sql query needs to be inspected on large datasets.-->
+<!--2. Type: Latest -&#45;&#45; sort by post datestamp, Activity &#45;&#45; sort by activity thread datestamp, Votes &#45;&#45; sort by highest voted threads.-->
 <!--Summary Screen -->
 <div class="clearfix m-t-20 p-t-20">
     <div class="{[row]} equal-height m-b-50">
@@ -5,8 +8,8 @@
             <!--Top answers summary-->
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <h5 class="text-dark pull-left strong m-b-0">Answers
-                        <span class="display-inline text-normal {%answer_count%}">({%answer_rowcount%})</span></h5>
+                    <h5 class="text-dark pull-left strong m-b-0"><a href="{%answers_link%}" title="Answers">Answers</a>
+                        <span class="display-inline text-normal">(<span class="{%answer_count%}">{%answer_rowcount%}</span>)</span></h5>
                     <ul class="nav nav-pills nav-right nav-sm" role="tablist" id="{%answer_trigger%}">
                         {answer_nav.{
                         <li {%active%} role="presentation"><a data-toggle="pill" aria-controls="{%id%}" role="tab" href="{%link%}">{%title%}</a></li>
@@ -16,8 +19,8 @@
                         {answered_threads.{
                         <div class="m-t-20">
                             <div class="clearfix">
-                                <span class="label label-success strong m-r-10">{%thread_views%}</span>
-                                <span class="display-inline"><a href="{%thread_link%}">{%thread_subject%}</a></span>
+                                <span  class="label label-success m-r-10 display-inline-block strong" style="width:40px;">{%thread_views%}</span>
+                                <span class="display-inline"><a title="{%thread_subject%}" href="{%thread_link%}">{%thread_subject%}</a></span>
                             </div>
                         </div>
                         }}
@@ -32,21 +35,27 @@
             <!--Reputation summary-->
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <h5 class="text-dark pull-left strong m-b-0">Reputation
-                        <span class="display-inline text-normal">(2,639)</span></h5>
-                    <ul class="nav nav-pills nav-right nav-sm">
-                        <li><a href="">Votes</a></li>
-                        <li><a href="">Activity</a></li>
-                        <li class="active"><a href="">Latest</a></li>
+                    <h5 class="text-dark pull-left strong m-b-0"><a href="{%reputation_link%}" title="Reputation">Reputation</a>
+                        <span class="display-inline text-normal">(<span class="{%reputation_count%}">{%reputation_rowcount%}</span>)</span></h5>
+                    <ul class="nav nav-pills nav-right nav-sm" role="tablist" id="{%reputation_trigger%}">
+                        {reputation_nav.{
+                        <li {%active%} role="presentation"><a data-toggle="pill" aria-controls="{%id%}" role="tab" href="{%link%}">{%title%}</a></li>
+                        }}
                     </ul>
+                    <div id="{%reputation_target%}">
+                    {reputation_threads.{
                     <div class="m-t-20">
                         <div class="clearfix">
-                            <span class="label label-success strong m-r-10">209</span>
-                            <span class="display-inline">
-                        <a href="">How to make facebook login button required to click?</a>
-                    </span>
+                            <span  class="label label-success m-r-10 display-inline-block strong" style="width:40px;">{%thread_views%}</span>
+                            <span class="display-inline"><a title="{%thread_subject%}" href="{%thread_link%}">{%thread_subject%}</a></span>
                         </div>
                     </div>
+                    }}
+                    {no_reputation_threads.{
+                    <div class="m-t-20">There are no threads found.</div>
+                    }}
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -54,12 +63,11 @@
 </div>
 <div class="{[row]} equal-height">
     <div class="{[col(100,50)]}">
-
         <!--Top questions summary-->
         <div class="panel panel-default">
             <div class="panel-body">
-                <h5 class="text-dark pull-left strong m-b-0">Questions
-                    <span class="display-inline text-normal {%question_count%}">({%question_rowcount%})</span></h5>
+                <h5 class="text-dark pull-left strong m-b-0"><a href="{%questions_link%}" title="Questions">Questions</a>
+                    <span class="display-inline text-normal">(<span class="{%question_count%}">{%question_rowcount%}</span>)</span></h5>
                 <ul class="nav nav-pills nav-right nav-sm" role="tablist" id="{%question_trigger%}">
                     {question_nav.{
                     <li {%active%} role="presentation"><a data-toggle="pill" aria-controls="{%id%}" role="tab" href="{%link%}">{%title%}</a></li>
@@ -67,10 +75,10 @@
                 </ul>
                 <div id="{%question_target%}">
                     {question_threads.{
-                    <div class="m-t-20">
+                    <div class="m-t-15">
                         <div class="clearfix">
-                            <span class="label label-success strong m-r-10">{%thread_views%}</span>
-                            <span class="display-inline"><a href="{%thread_link%}">{%thread_subject%}</a></span>
+                            <span class="label label-success m-r-10 display-inline-block strong" style="width:40px;">{%thread_views%}</span>
+                            <span class="display-inline"><a title="{%thread_subject%}" href="{%thread_link%}">{%thread_subject%}</a></span>
                         </div>
                     </div>
                     }}
@@ -86,23 +94,17 @@
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="br-b-1 clearfix">
-                    <h5 class="text-dark pull-left strong m-b-0">Tags
-                        <span class="display-inline text-normal">(2,639)</span></h5>
+                    <h5 class="text-dark pull-left strong m-b-0"><a href="{%tags_link%}" title="Tags">Tags</a>
+                        <span class="display-inline text-normal">({%tag_count%})</span></h5>
                 </div>
-                <div class="{[row]}">
-                    <div class="{[col(100,50)]}">
-                        <div class="spacer-xs">43k <span class="label label-info">something</span> x300</div>
-                        <div class="spacer-xs">43k <span class="label label-info">something</span> x300</div>
-                        <div class="spacer-xs">43k <span class="label label-info">something</span> x300</div>
-                        <div class="spacer-xs">43k <span class="label label-info">something</span> x300</div>
-                    </div>
-                    <div class="{[col(100,50)]}">
-                        <div class="spacer-xs">43k <span class="label label-info">something</span> x300</div>
-                        <div class="spacer-xs">43k <span class="label label-info">something</span> x300</div>
-                        <div class="spacer-xs">43k <span class="label label-info">something</span> x300</div>
-                        <div class="spacer-xs">43k <span class="label label-info">something</span> x300</div>
-                    </div>
+                <div class="column-2" data-column="2">
+                    {tag_block.{
+                    <div class="p-t-15 p-b-15">{%thread_count%}<a href="{%tag_link%}"><span class="label label-info m-l-10 m-r-10 strong">{%tag_title%}</span></a> x{%tag_info%}</div>
+                    }}
                 </div>
+                {no_tags.{
+                <div class="m-t-20">There are no tags found.</div>
+                }}
             </div>
         </div>
     </div>

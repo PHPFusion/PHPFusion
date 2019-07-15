@@ -224,8 +224,8 @@ class Tags_List implements TableSDK {
             'tag_status'      => [
                 'title'   => $this->locale['forum_tag_0204'],
                 'options' => [
-                    0 => $this->locale['forum_tag_0205'],
-                    1 => $this->locale['forum_tag_0206']
+                    1 => $this->locale['forum_tag_0205'],
+                    0 => $this->locale['forum_tag_0206']
                 ]
             ]
         ];
