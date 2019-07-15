@@ -1,5 +1,4 @@
 <?php
-
 require_once __DIR__.'/../../../../../../maincore.php';
 require_once INCLUDES.'ajax_include.php';
 
@@ -8,77 +7,8 @@ $user = get('uid', FILTER_VALIDATE_INT);
 if ($user) {
     $user_data = fusion_get_user($user);
     $type = get('type');
-    switch($type) {
-        case 'answer-latest':
-            $sql = "SELECT ft.thread_id, ft.thread_subject, ft.thread_views FROM ".DB_FORUM_POSTS." fp 
-            INNER JOIN ".DB_FORUM_THREADS." ft ON ft.thread_id = fp.thread_id
-            INNER JOIN ".DB_FORUMS." f ON f.forum_id=fp.forum_id AND f.forum_type=4 AND ".groupaccess('f.forum_access')."
-            WHERE fp.post_answer=1 AND fp.post_author='".$user_data['user_id']."' AND fp.post_hidden=0 GROUP BY ft.thread_id ORDER BY fp.post_datestamp DESC LIMIT 6
-            ";
-            break;
-        case 'answer-activity':
-            $sql = "SELECT ft.thread_id, ft.thread_subject, ft.thread_views FROM ".DB_FORUM_POSTS." fp 
-            INNER JOIN ".DB_FORUM_THREADS." ft ON ft.thread_id = fp.thread_id
-            INNER JOIN ".DB_FORUMS." f ON f.forum_id=fp.forum_id AND f.forum_type=4 AND ".groupaccess('f.forum_access')."
-            WHERE fp.post_author='".$user_data['user_id']."' AND fp.post_hidden=0 GROUP BY ft.thread_id ORDER BY fp.post_datestamp DESC LIMIT 6
-            ";
-            break;
-        case 'answer-votes':
-            $sql = "SELECT ft.thread_id, ft.thread_subject, ft.thread_views FROM ".DB_FORUM_POSTS." fp 
-            INNER JOIN ".DB_FORUM_THREADS." ft ON ft.thread_id = fp.thread_id
-            INNER JOIN ".DB_FORUMS." f ON f.forum_id=fp.forum_id AND f.forum_type=4 AND ".groupaccess('f.forum_access')."
-            WHERE fp.post_author='".$user_data['user_id']."' AND fp.post_hidden=0 GROUP BY ft.thread_id ORDER BY post_datestamp DESC LIMIT 6
-            ";
-            break;
-        case 'question-latest':
-            $sql = "SELECT ft.thread_id, ft.thread_subject, ft.thread_views FROM ".DB_FORUM_POSTS." fp 
-            INNER JOIN ".DB_FORUM_THREADS." ft ON ft.thread_id = fp.thread_id AND ft.thread_author='".$user_data['user_id']."'
-            INNER JOIN ".DB_FORUMS." f ON f.forum_id=fp.forum_id AND f.forum_type=4 AND ".groupaccess('f.forum_access')."
-            WHERE fp.post_author='".$user_data['user_id']."' AND fp.post_hidden=0 GROUP BY ft.thread_id ORDER BY fp.post_datestamp DESC LIMIT 6
-            ";
-            break;
-        case 'question-activity':
-            $sql = "SELECT ft.thread_id, ft.thread_subject, ft.thread_views FROM ".DB_FORUM_POSTS." fp 
-            INNER JOIN ".DB_FORUM_THREADS." ft ON ft.thread_id = fp.thread_id AND ft.thread_author='".$user_data['user_id']."'
-            INNER JOIN ".DB_FORUMS." f ON f.forum_id=fp.forum_id AND f.forum_type=4
-            WHERE fp.post_author='".$user_data['user_id']."' AND fp.post_hidden=0 GROUP BY ft.thread_id ORDER BY fp.post_datestamp DESC LIMIT 6
-            ";
-            break;
-        case 'question-votes':
-            $sql = "SELECT ft.thread_id, ft.thread_subject, ft.thread_views FROM ".DB_FORUM_POSTS." fp 
-            INNER JOIN ".DB_FORUM_THREADS." ft ON ft.thread_id = fp.thread_id AND ft.thread_author='".$user_data['user_id']."'
-            INNER JOIN ".DB_FORUMS." f ON f.forum_id=fp.forum_id AND f.forum_type=4 AND ".groupaccess('f.forum_access')."
-            WHERE fp.post_author='".$user_data['user_id']."' AND fp.post_hidden=0 GROUP BY ft.thread_id ORDER BY fp.post_datestamp DESC LIMIT 6
-            ";
-            break;
-        case 'reputation-latest':
-            $sql = "SELECT SUM(frpp.points_gain) 'thread_points', ft.thread_id, ft.thread_subject, ft.thread_views 
-            FROM ".DB_FORUM_USER_REP." frp 
-            INNER JOIN ".DB_FORUM_USER_REP." frpp ON frpp.thread_id=frp.thread_id AND frpp.user_id='".$user_data['user_id']."' 
-            INNER JOIN ".DB_FORUM_THREADS." ft ON ft.thread_id = frp.thread_id
-            INNER JOIN ".DB_FORUMS." f ON f.forum_id = frp.forum_id AND ".groupaccess('f.forum_access')."
-            WHERE frp.user_id='".$user_data['user_id']."'
-            GROUP BY frp.thread_id LIMIT 6";
-            break;
-        case 'reputation-activity':
-            $sql = "SELECT SUM(frpp.points_gain) 'thread_points', ft.thread_id, ft.thread_subject, ft.thread_views 
-            FROM ".DB_FORUM_USER_REP." frp 
-            INNER JOIN ".DB_FORUM_USER_REP." frpp ON frpp.thread_id=frp.thread_id AND frpp.user_id='".$user_data['user_id']."' 
-            INNER JOIN ".DB_FORUM_THREADS." ft ON ft.thread_id = frp.thread_id
-            INNER JOIN ".DB_FORUMS." f ON f.forum_id = frp.forum_id AND ".groupaccess('f.forum_access')."
-            WHERE frp.user_id='".$user_data['user_id']."'
-            GROUP BY frp.thread_id LIMIT 6";
-            break;
-        case 'reputation-votes':
-            $sql = "SELECT SUM(frpp.points_gain) 'thread_points', ft.thread_id, ft.thread_subject, ft.thread_views 
-            FROM ".DB_FORUM_USER_REP." frp 
-            INNER JOIN ".DB_FORUM_USER_REP." frpp ON frpp.thread_id=frp.thread_id AND frpp.user_id='".$user_data['user_id']."' 
-            INNER JOIN ".DB_FORUM_THREADS." ft ON ft.thread_id = frp.thread_id
-            INNER JOIN ".DB_FORUMS." f ON f.forum_id = frp.forum_id AND ".groupaccess('f.forum_access')."
-            WHERE frp.user_id='".$user_data['user_id']."'
-            GROUP BY frp.thread_id LIMIT 6";
-        default:
-    }
+    $class = new \PHPFusion\Infusions\Forum\Classes\Forum_Profile($user_data['user_id'], $locale = []);
+    $sql = $class->getSQL($type);
 }
 
 $tpl = \PHPFusion\Template::getInstance('forum-profile-item');
