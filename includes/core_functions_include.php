@@ -1762,6 +1762,16 @@ function fusion_get_locale($key = NULL, $include_file = '') {
 }
 
 /**
+ * Returns the current language on serialized locale string
+ * @param $string
+ *
+ * @return string
+ */
+function fusion_parse_locale($string) {
+    return \PHPFusion\UserFieldsQuantum::parse_label($string);
+}
+
+/**
  * Fetches username
  *
  * @param $user_id
