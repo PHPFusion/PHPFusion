@@ -51,7 +51,8 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
         'inner_width'    => '',
         'reverse_label'  => FALSE,
         'deactivate_key' => NULL,
-        'onclick'        => ''
+        'onclick'        => '',
+        'stacked' => '',
     ];
 
     $options += $default_options;
@@ -107,16 +108,18 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
 
         }
 
+        // for checkbox only
         // if there are options, and i want the options to be having input value.
         // options_value
-        $input_value = [];
-
-        $default_checked = empty($option_value) ? TRUE : FALSE;
-
-        foreach (array_keys($options['options']) as $key) {
-            $input_value[$key] = isset($option_value[$key]) ? (!empty($options['options_value'][$key]) ? $options['options_value'][$key] : 1) : 0;
+        if ($options['type'] == 'checkbox' && count($options['options']) > 1) {
+            $input_value = [];
+            $default_checked = empty($option_value) ? TRUE : FALSE;
+            foreach (array_keys($options['options']) as $key) {
+                $input_value[$key] = isset($option_value[$key]) ? (!empty($options['options_value'][$key]) ? $options['options_value'][$key] : 1) : 0;
+            }
         }
     }
+
 
     $checkbox = "";
 
@@ -195,17 +198,23 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
 
         if (!empty($options['options']) && is_array($options['options'])) {
             foreach ($options['options'] as $key => $value) {
+
                 if ($options['deactivate_key'] !== NULL && $options['deactivate_key'] == $key) {
                     $checkbox .= form_hidden($input_name, '', $key);
+                }
+
+                $checked = ($options['deactivate'] || $options['deactivate_key'] === $key ? 'disabled' : '').($options['onclick'] ? ' onclick="'.$options['onclick'].'"' : '');
+                if ($options['type'] == 'checkbox' && count($options['options']) > 1) {
+                    $checked = ($input_value[$key] == TRUE || $default_checked && $key == FALSE ? ' checked' : '');
+                } else {
+                    $checked .= ($input_value == $key || $default_checked && $key == FALSE ? ' checked' : '');
                 }
 
                 $checkbox .= "<div class='".($options['type'] == 'radio' ? 'radio' : 'checkbox').($options['inline_options'] ? ' display-inline-block m-r-5' : '')."'>\n";
 
                 $checkbox .= "<label class='control-label m-r-10' data-label='$key' for='".$options['input_id']."-$key'".($options['inner_width'] ? " style='width: ".$options['inner_width']."'" : '').">";
 
-                $checkbox .= "<input id='".$options['input_id']."-$key' name='$input_name' value='$key' type='".$options['type']."'
-
-                ".($options['deactivate'] || $options['deactivate_key'] === $key ? 'disabled' : '').($options['onclick'] ? ' onclick="'.$options['onclick'].'"' : '').($input_value[$key] == TRUE || $default_checked && $key == FALSE ? ' checked' : '')." />\n";
+                $checkbox .= "<input id='".$options['input_id']."-$key' name='$input_name' value='$key' type='".$options['type']."' $checked />\n";
 
                 $checkbox .= $value;
 
@@ -217,6 +226,9 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
 
             $checkbox .= "<div class='".(!empty($label) ? 'pull-left' : 'text-center')." m-r-10'>\n<input id='".$options['input_id']."' ".($options['toggle'] ? "data-on-text='".$on_label."' data-off-text='".$off_label."'" : "")." style='margin: 0;vertical-align: middle' name='$input_name' value='".$options['value']."' type='".$options['type']."' ".($options['deactivate'] ? 'disabled' : '')." ".($options['onclick'] ? 'onclick="'.$options['onclick'].'"' : '')." ".($input_value == $options['value'] ? 'checked' : '')." />\n</div>\n";
 
+        }
+        if ($options['stacked']) {
+            $checkbox .= $options['stacked'];
         }
 
         $html = "<div id='".$options['input_id']."-field' class='$switch_class form-group clearfix".($options['inline'] ? ' display-block overflow-hide ' : '').$error_class.($options['class'] ? " ".$options['class'] : "")."'>\n";
