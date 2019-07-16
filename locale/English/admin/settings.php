@@ -85,6 +85,12 @@ $locale['464'] = "Default timezone";
 $locale['465'] = "First day of week";
 $locale['466'] = "Default for New Users";
 
+$locale['467'] = "Timezone Settings";
+$locale['468'] = "Configure time offsets according to your server location.";
+$locale['469'] = "Time format";
+$locale['470'] = "Settings for displaying dates in the website.";
+$locale['471'] = "Custom Format";
+
 // Registration Settings
 $locale['550'] = "Registration";
 $locale['551'] = "Enable registration system?";
