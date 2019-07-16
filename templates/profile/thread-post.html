@@ -1,21 +1,29 @@
 <div class="clearfix m-t-20">
     <h5 class="text-dark pull-left strong m-b-0">Top Posts</h5>
-    <ul class="nav nav-tabs nav-right">
-        <li><a href="">Answers</a></li>
-        <li><a href="">Questions</a></li>
-        <li class="active"><a href="">All</a></li>
+    <ul id="nav-trigger" class="nav nav-tabs nav-right">
+        <li role="presentation"><a data-toggle="tab" href="answer">Answers</a></li>
+        <li role="presentation"><a data-toggle="tab" href="question">Questions</a></li>
+        <li role="presentation" class="active"><a data-toggle="tab" href="all">All</a></li>
     </ul>
-    <div class="m-t-20">
-        <div class="{[row]}">
-            <div class="{[col(70)]}">
-                <span class="label label-success strong m-r-10">209</span>
-                <h5 class="display-inline">
-                    <a href="">How to make facebook login button required to click?</a>
-                </h5>
-            </div>
-            <div class="{[col(30)]} text-right">
-                Mar 28' 18
+    <div id="body-content" class="m-t-20">
+        {thread_item.{
+        <div class="spacer-sm p-b-10 br-b-1">
+            <div class="{[row]}">
+                <div class="{[col(70)]}">
+                    <span class="label label-success strong m-r-10">209</span>
+                    <a href="">
+                       {%thread_subject%}
+                    </a>
+                </div>
+                <div class="{[col(30)]} text-right">
+                    Mar 28' 18
+                </div>
             </div>
         </div>
+
+        }}
+        {no_thread_item.{
+            <div class="text-center">There are no thread found.</div>
+        }}
     </div>
 </div>
