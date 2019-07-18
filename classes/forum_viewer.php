@@ -111,7 +111,7 @@ class Forum_Viewer {
      *
      * @return string
      */
-    private function forum_report($info) {
+    public function forum_report($info) {
         //print_p($info);
         $locale = fusion_get_locale();
         $html = \PHPFusion\Template::getInstance('forum-reports');
@@ -220,7 +220,7 @@ class Forum_Viewer {
 
     // Modules to import into settings
 
-    private static function sub_link_item($i, $link_name, $url = '', $link_cat = 0, $link_visibility = iGUEST, $as_title = FALSE, $is_disabled = FALSE, $li_class = '', $link_class = '', $link_icon = '', $link_active = FALSE) {
+    public static function sub_link_item($i, $link_name, $url = '', $link_cat = 0, $link_visibility = iGUEST, $as_title = FALSE, $is_disabled = FALSE, $li_class = '', $link_class = '', $link_icon = '', $link_active = FALSE) {
         return [
             'link_id'         => $i,
             'link_url'        => $url,
@@ -244,7 +244,7 @@ class Forum_Viewer {
      *
      * @return string
      */
-    private function render_post_item($data, $n = 0) {
+    public function render_post_item($data, $n = 0) {
         $locale = fusion_get_locale();
         $aidlink = fusion_get_aidlink();
         $settings = fusion_get_settings();
@@ -261,12 +261,15 @@ class Forum_Viewer {
         $html->set_tag("user_avatar", $data['user_avatar_image']);
 
         // label style
+        $html->set_tag('user_rank', '');
         $html->set_tag('user_avatar_rank', '');
-        $html->set_tag('user_rank', '<span class="forum-rank">'.$data['user_rank']['rank_title'].'</span>');
-        // image style
-        if ($forum_settings['forum_rank_style']) {
-            $html->set_tag('user_rank', '');
-            $html->set_tag('user_avatar_rank', '<span class="forum-rank"><img title="'.$data['user_rank']['rank_title'].'" src="'.$data['user_rank']['rank_image_src'].'"/></span>');
+        if (!empty($data['user_rank']['rank_title'])) {
+            $html->set_tag('user_rank', '<span class="forum-rank">'.$data['user_rank']['rank_title'].'</span>');
+            // image style
+            if ($forum_settings['forum_rank_style']) {
+                $html->set_tag('user_rank', '');
+                $html->set_tag('user_avatar_rank', '<span class="forum-rank"><img title="'.$data['user_rank']['rank_title'].'" src="'.$data['user_rank']['rank_image_src'].'"/></span>');
+            }
         }
 
         $html->set_tag("user_profile_link", $data['user_profile_link']);
@@ -591,7 +594,7 @@ class Forum_Viewer {
      *
      * @return string
      */
-    private function forum_section($info) {
+    public function forum_section($info) {
         $locale = fusion_get_locale();
         $file_path = Forum_Server::get_template('forum_section');
         $html = \PHPFusion\Template::getInstance('forum-section');
@@ -653,7 +656,7 @@ class Forum_Viewer {
      *
      * @return string
      */
-    private function forum_viewforum($info) {
+    public function forum_viewforum($info) {
         $locale = fusion_get_locale();
         $file_path = Forum_Server::get_template('viewforum');
         $html = \PHPFusion\Template::getInstance('viewforum');
@@ -810,7 +813,7 @@ class Forum_Viewer {
      *
      * @return string
      */
-    private function forum_index(array $info = [], $id = 0) {
+    public function forum_index(array $info = [], $id = 0) {
         $file_path = Forum_Server::get_template('forum');
         $html = \PHPFusion\Template::getInstance('forum');
         $html->set_locale($this->locale);
@@ -935,7 +938,7 @@ class Forum_Viewer {
         return $html->get_output();
     }
 
-    private function popular_contributor_panel() {
+    public function popular_contributor_panel() {
         // Week, Month, Year, All Time
         $html = \PHPFusion\Template::getInstance('forum-contributor-list');
         $html_file = __DIR__.'/../templates/panel/contributor_panel.html';
@@ -997,7 +1000,7 @@ class Forum_Viewer {
         return $html->get_output();
     }
 
-    private function sticky_discussions_panel() {
+    public function sticky_discussions_panel() {
         $html = \PHPFusion\Template::getInstance('forum-sticky-panel');
         $html->set_template(__DIR__.'/../templates/panel/sticky_panel.html');
         $result = dbquery("SELECT thread_id, thread_subject, thread_author, thread_lastpost, thread_postcount FROM ".DB_FORUM_THREADS."

@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 $userdata = fusion_get_userdata();
 $locale = fusion_get_locale();
-\PHPFusion\Infusions\Forum\Classes\Forum_Moderator::define_forum_mods(array("forum_mods" => ""));
+\PHPFusion\Infusions\Forum\Classes\Forum_Moderator::setForumMods(array("forum_mods" => ""));
 if (!iMOD) {
     redirect(FORUM."index.php");
 }
@@ -39,7 +39,8 @@ $this->forum_info['section_links'] = [
     ],
 ];
 $read = FALSE;
-if (isset($_GET['rid']) && isnum($_GET['rid'])) {
+$rid = get('rid', FILTER_VALIDATE_INT);
+if ($rid) {
     $this->forum_info['description'] = "Report details";
     $read = TRUE;
     $report_status = [
@@ -64,7 +65,7 @@ if (isset($_GET['rid']) && isnum($_GET['rid'])) {
                     INNER JOIN ".DB_FORUM_THREADS." t ON p.thread_id=t.thread_id                                                        
                     INNER JOIN ".DB_FORUMS." tf ON p.forum_id = tf.forum_id
                     ".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('tf.forum_access')." 
-                    AND f.report_id='".intval($_GET['rid'])."'                    
+                    AND f.report_id='".intval($rid)."'                    
                     GROUP BY f.post_id";
     $query = "SELECT  f.post_id 'report_post_id', t.thread_id, t.thread_subject, t.thread_author, t.thread_lastuser, t.thread_lastpost, t.thread_lastpostid, 
             t.thread_postcount, t.thread_locked, t.thread_sticky, t.thread_poll, t.thread_postcount, t.thread_views,             
@@ -78,7 +79,7 @@ if (isset($_GET['rid']) && isnum($_GET['rid'])) {
             LEFT JOIN ".DB_FORUM_POLL_VOTERS." pv ON pv.thread_id = t.thread_id AND pv.forum_vote_user_id='".$userdata['user_id']."' AND t.thread_poll=1
             LEFT JOIN ".DB_FORUM_THREAD_NOTIFY." n ON n.thread_id = t.thread_id AND n.notify_user = '".$userdata['user_id']."'                            
             ".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('tf.forum_access')."
-            AND f.report_id='".intval($_GET['rid'])."' ORDER BY f.report_datestamp DESC";
+            AND f.report_id='".intval($rid)."' ORDER BY f.report_datestamp DESC";
 } else {
     $status = isset($_GET['type']) && $_GET['type'] == "closed" ? 1 : 0;
     $this->forum_info['description'] = "This is a list of all reports which are still open";
@@ -111,9 +112,9 @@ if (isset($_GET['rid']) && isnum($_GET['rid'])) {
 $threads = \PHPFusion\Infusions\Forum\Classes\Forum_Server::thread(FALSE)->getThreadInfo(0, ["item_id" => "report_id", "count_query" => $count_query, "query" => $query]);
 $this->forum_info = array_merge_recursive($this->forum_info, $threads);
 
-if (isset($_GET['rid']) && isnum($_GET['rid'])) {
-    if (!empty($this->forum_info['threads']['item'][$_GET['rid']])) {
-        $rdata = $this->forum_info['threads']['item'][$_GET['rid']];
+if ($rid) {
+    if (!empty($this->forum_info['threads']['item'][$rid])) {
+        $rdata = $this->forum_info['threads']['item'][$rid];
 
         $forum_threads = \PHPFusion\Infusions\Forum\Classes\Forum_Server::thread(FALSE);
         $pdata = $forum_threads->getThreadPost(0, $rdata['report_post_id']);
@@ -121,13 +122,13 @@ if (isset($_GET['rid']) && isnum($_GET['rid'])) {
 
         if (!empty($_POST)) {
             if (isset($_POST['close_report'])) {
-                dbquery("UPDATE ".DB_FORUM_REPORTS." SET report_status=1 WHERE report_id=:rid", [':rid' => intval($_GET['rid'])]);
+                dbquery("UPDATE ".DB_FORUM_REPORTS." SET report_status=1 WHERE report_id=:rid", [':rid' => intval($rid)]);
                 addNotice("success", "Report has been closed");
             } elseif (isset($_POST['delete_report'])) {
-                dbquery("DELETE FROM ".DB_FORUM_REPORTS." WHERE report_id=:rid", [':rid' => intval($_GET['rid'])]);
+                dbquery("DELETE FROM ".DB_FORUM_REPORTS." WHERE report_id=:rid", [':rid' => intval($rid)]);
                 addNotice("success", "Report has been deleted");
             } elseif (isset($_POST['open_report'])) {
-                dbquery("UPDATE ".DB_FORUM_REPORTS." SET report_status=0 WHERE report_id=:rid", [':rid' => intval($_GET['rid'])]);
+                dbquery("UPDATE ".DB_FORUM_REPORTS." SET report_status=0 WHERE report_id=:rid", [':rid' => intval($rid)]);
                 addNotice("success", "Report has been reopened");
             } elseif (isset($_POST['close_delete'])) {
                 $post_param = [":pid" => $post['post_id']];
@@ -179,12 +180,12 @@ if (isset($_GET['rid']) && isnum($_GET['rid'])) {
                 }
                 // Update Forum
                 \PHPFusion\Infusions\Forum\Classes\Forum_Moderator::refresh_forum($post['forum_id']);
-                dbquery("DELETE FROM ".DB_FORUM_REPORTS." WHERE report_id=:rid", [':rid' => intval($_GET['rid'])]);
+                dbquery("DELETE FROM ".DB_FORUM_REPORTS." WHERE report_id=:rid", [':rid' => intval($rid)]);
                 addNotice('success', $locale['success-DP001']);
                 redirect(clean_request("", ["rid"], FALSE));
             } elseif (isset($_POST['close_lock'])) {
                 dbquery("UPDATE ".DB_FORUM_POSTS." SET post_locked=1 WHERE post_id=:pid", [":pid" => $post['post_id']]);
-                dbquery("UPDATE ".DB_FORUM_REPORTS." SET report_status=1 WHERE report_id=:rid", [':rid' => intval($_GET['rid'])]);
+                dbquery("UPDATE ".DB_FORUM_REPORTS." SET report_status=1 WHERE report_id=:rid", [':rid' => intval($rid)]);
                 addNotice("success", "Post has been locked and user can no longer edit the post.");
             }
             redirect(FUSION_REQUEST);

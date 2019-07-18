@@ -18,9 +18,9 @@
 
 namespace PHPFusion\Infusions\Forum\Classes\Post;
 
-use PHPFusion\Infusions\Forum\Classes\Forum_Server;
+//use PHPFusion\Infusions\Forum\Classes\Forum_Server;
 
-class Quick_Reply extends Forum_Server {
+class Quick_Replys {
 
     /**
      * Forum Reply Text Box
@@ -31,6 +31,8 @@ class Quick_Reply extends Forum_Server {
      * @return string
      */
     public static function display_quickReply($info, array $options = array()) {
+
+        debug_print_backtrace();
 
         $default_options = [
             "post_id"    => 0, // reply to post id
