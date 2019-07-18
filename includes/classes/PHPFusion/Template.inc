@@ -129,6 +129,10 @@ class Template {
         $this->template_path = $template_file_path;
         if (is_file($template_file_path)) {
             @include $template_file_path;
+            $this->helper[self::$key] = [
+                'template_id' => self::$key,
+                'template_src' => $template_file_path
+            ];
         } else {
             print_p(ob_start().debug_print_backtrace().ob_get_clean(), 1);
         }
@@ -179,6 +183,15 @@ class Template {
         }
         $this->block[$block_id][] = $filtered_value;
         $this->raw_block[$block_id][] = $value;
+
+        if (!empty($value)) {
+            $var_output = '<table class="table">';
+            foreach($value as $key => $var) {
+                $var_output .= "<tr><td><strong>$key</strong></td><td>$var</td></tr>";
+            }
+            $var_output .= '</table>';
+            $this->helper[self::$key]['<span class="label label-info strong">Block</span> '. $block_id] = $var_output;
+        }
     }
 
     /**
@@ -232,6 +245,7 @@ class Template {
     public function set_tag($html_tag, $value) {
         $this->tag['{%'.$html_tag.'%}'] = $value;
         $this->raw_tag[$html_tag] = $value;
+        $this->helper[self::$key]['Tag:'. $html_tag] = $value;
     }
 
     /**
@@ -276,9 +290,6 @@ class Template {
      */
     public function get_output() {
 
-        if (self::$key == 'forum-post-form') {
-            print_P($this->template_path);
-        }
         $this->template = trim($this->template);
         if (!empty($this->css_path)) {
             $this->css_path = $this->css_path.'?v='.filemtime($this->css_path);
@@ -342,6 +353,8 @@ class Template {
         // Find {()} tag in template, and automate parsing.
         $this->parseShortCodes($this->template);
 
+        //$this->displayHelper();
+
         unset($this->tag);
         unset($this->block);
         unset($this->template_path);
@@ -350,6 +363,24 @@ class Template {
 
         return (string)trim($this->template);
     }
+
+    private $helper = [];
+
+    // Do another class for this
+    // No need to localize
+    public function displayHelper($key = NULL) {
+        if (!empty($this->helper)) {
+            foreach($this->helper as $instance => $value) {
+                echo "<table class='table'>\n";
+                echo "<tr><th colspan='2' class='strong'>Template Instance Generated : $instance</th></tr>";
+                foreach($value as $v1 => $v2) {
+                    echo "<tr><td>$v1</td><td>$v2</td></tr>";
+                }
+                echo "</table>";
+            }
+        }
+    }
+
 
     /**
      * Boilerplate conversion in HTML using tags.
