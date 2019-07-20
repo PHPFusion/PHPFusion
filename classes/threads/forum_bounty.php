@@ -28,13 +28,42 @@ use PHPFusion\Infusions\Forum\Classes\Forum_Server;
 class Forum_Bounty extends Forum_Server {
 
     /**
-     * Permissions for Forum Poll
+     * Permissions for forum bounty
      *
      * @var array
      */
     private static $permissions = [];
-    private static $data = [];
 
+    /**
+     * @var array
+     */
+    private static $data = [];
+    private static $bounty_end = '';
+    private static $locale = [];
+    private static $post_data = [];
+
+    /**
+     * Forum_Bounty constructor.
+     *
+     * @param array $thread_info
+     */
+    public function __construct(array $thread_info) {
+        self::set_bounty_permissions($thread_info['permissions']);
+
+        self::set_thread_data($thread_info['thread']);
+
+        self::set_thread_post_data($thread_info);
+
+        self::$locale = fusion_get_locale('', FORUM_LOCALE);
+    }
+
+    /**
+     * Displays the bounty start form
+     * @param bool $edit
+     *
+     * @return string
+     * @throws \ReflectionException
+     */
     public function render_bounty_form($edit = FALSE) {
         $bounty_description = '';
         $bounty_points = 50;
@@ -51,7 +80,8 @@ class Forum_Bounty extends Forum_Server {
             for ($i = 1; $i <= 3; $i++) {
                 $current = $i * $default;
                 $points[$current] = format_word($current, $locale['forum_2015']);
-                if ($total_user_rep > $current) continue;
+                if ($total_user_rep > $current)
+                    continue;
             }
 
             if (post('save_bounty')) {
@@ -117,60 +147,77 @@ class Forum_Bounty extends Forum_Server {
         }
     }
 
+    /**
+     * SQL action
+     * Award bounty action
+     *
+     * @throws \Exception
+     */
     public function award_bounty() {
         // via postify
         if (self::get_bounty_permissions('can_award_bounty')) {
 
-            if (isset(self::$post_data['post_items'][$_GET['post_id']])) {
-                $user_id = fusion_get_userdata('user_id');
+            $post_id = get('post_id', FILTER_VALIDATE_INT);
 
-                $post_data = self::$post_data['post_items'][$_GET['post_id']];
+            if ($post_id) {
 
-                if ($post_data['post_author'] !== $user_id) {
+                if (isset(self::$post_data['post_items'][$post_id])) {
 
-                    // give the user the points.
-                    dbquery("UPDATE ".DB_USERS." SET user_reputation=user_reputation+:points WHERE user_id=:user_id",
-                        [
-                            ':points'  => self::$data['thread_bounty'],
-                            ':user_id' => $post_data['post_author'],
-                        ]
-                    );
-                    // log the points change
-                    $d = [
-                        'post_id'     => $post_data['post_id'],
-                        'thread_id'   => $post_data['thread_id'],
-                        'forum_id'    => $post_data['forum_id'],
-                        'points_gain' => self::$data['thread_bounty'],
-                        'voter_id'    => $user_id,
-                        'user_id'     => $post_data['post_author'],
-                    ];
-                    dbquery_insert(DB_FORUM_USER_REP, $d, 'save');
+                    $user_id = fusion_get_userdata('user_id');
 
+                    $post_data = self::$post_data['post_items'][$post_id];
 
-                    $message = strtr(self::$locale['forum_4106'], ['{%thread_link%}' => "[url=".fusion_get_settings('siteurl')."infusions/forum/viewthread.php?thread_id=".self::$data['thread_id']."]".self::$data['thread_subject']."[/url]"]);
-                    send_pm($post_data['post_author'], 0, self::$locale['forum_4105'], stripinput($message));
+                    if ($post_data['post_author'] !== $user_id) {
 
-                    // set the post as answered
-                    dbquery("UPDATE ".DB_FORUM_POSTS." SET post_answer=1 WHERE post_id=:pid", [':pid'=>$post_data['post_id']]);
+                        // give the user the points.
+                        dbquery("UPDATE ".DB_USERS." SET user_reputation=user_reputation+:points WHERE user_id=:uid",
+                            [
+                                ':points'  => self::$data['thread_bounty'],
+                                ':uid' => intval($post_data['post_author']),
+                            ]
+                        );
 
-                    // update thread as answered
-                    dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_answered=:ta, thread_bounty=:bounty, thread_bounty_description=:desc, thread_bounty_user=:user, thread_bounty_start=:start WHERE thread_id=:thread_id",
-                        [
-                            ':ta' => 1,
-                            ':bounty'    => 0,
-                            ':desc'      => '',
-                            ':user'      => 0,
-                            ':start'     => 0,
-                            ':thread_id' => $post_data['thread_id']
-                        ]);
-                    redirect(FORUM.'postify.php?post=award&amp;error=0&amp;forum_id='.$post_data['forum_id'].'&amp;thread_id='.$post_data['thread_id'].'&amp;post_id='.$post_data['post_id']);
+                        // log the points change
+                        $d = [
+                            'post_id'     => intval($post_data['post_id']),
+                            'thread_id'   => intval($post_data['thread_id']),
+                            'forum_id'    => intval($post_data['forum_id']),
+                            'points_gain' => self::$data['thread_bounty'],
+                            'rep_answer'  => 1,
+                            'voter_id'    => intval($user_id),
+                            'user_id'     => intval($post_data['post_author']),
+                            'datestamp'   => TIME
+                        ];
+
+                        dbquery_insert(DB_FORUM_USER_REP, $d, 'save');
+
+                        $message = strtr(self::$locale['forum_4106'], ['{%thread_link%}' => "[url=".fusion_get_settings('siteurl')."infusions/forum/viewthread.php?thread_id=".self::$data['thread_id']."]".self::$data['thread_subject']."[/url]"]);
+                        send_pm($post_data['post_author'], 0, self::$locale['forum_4105'], stripinput($message));
+
+                        // set the post as answered
+                        dbquery("UPDATE ".DB_FORUM_POSTS." SET post_answer=1 WHERE post_id=:pid", [':pid' => intval($post_data['post_id']) ]);
+
+                        // update thread as answered
+                        dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_answered=:ta, thread_bounty=:bounty, thread_bounty_description=:desc, thread_bounty_user=:user, thread_bounty_start=:start WHERE thread_id=:thread_id",
+                            [
+                                ':ta'        => 1,
+                                ':bounty'    => 0,
+                                ':desc'      => '',
+                                ':user'      => 0,
+                                ':start'     => 0,
+                                ':thread_id' => intval($post_data['thread_id'])
+                            ]);
+                        redirect(FORUM.'postify.php?post=award&amp;error=0&amp;forum_id='.$post_data['forum_id'].'&amp;thread_id='.$post_data['thread_id'].'&amp;post_id='.$post_data['post_id']);
+                    }
+                    redirect(FORUM.'postify.php?post=award&amp;error=7&amp;forum_id='.$post_data['forum_id'].'&amp;thread_id='.$post_data['thread_id'].'&amp;post_id='.$post_data['post_id']);
                 }
-                redirect(FORUM.'postify.php?post=award&amp;error=7&amp;forum_id='.$post_data['forum_id'].'&amp;thread_id='.$post_data['thread_id'].'&amp;post_id='.$post_data['post_id']);
             }
         }
     }
 
-    // What happens when bounty ends?
+    /**
+     * @return string
+     */
     public function displayForumBounty() {
         $html = '';
         if (self::$data['thread_bounty']) {
@@ -192,32 +239,25 @@ class Forum_Bounty extends Forum_Server {
         return $html;
     }
 
-    private static $bounty_end = '';
-    private static $locale = [];
-    private static $post_data = [];
-
     /**
-     * Object
-     *
-     * @param array $thread_info
+     * @param array $post_data
      */
-    public function __construct(array $thread_info) {
-        self::set_bounty_permissions($thread_info['permissions']);
-        self::set_thread_data($thread_info['thread']);
-        self::set_thread_post_data($thread_info);
-        self::$locale = fusion_get_locale('', FORUM_LOCALE);
-    }
-
     private static function set_thread_post_data(array $post_data) {
         self::$post_data = $post_data;
     }
 
+    /**
+     * @param array $thread_data
+     */
     private static function set_thread_data(array $thread_data) {
+
         self::$data = $thread_data;
 
         // Cronjob on this thread
         self::$bounty_end = self::$data['thread_bounty_start'] + (7 * 24 * 3600);
+
         if (TIME > self::$bounty_end) {
+
             if (self::$data['thread_bounty']) { // have a bounty
                 // find the highest post
                 $result = dbquery("

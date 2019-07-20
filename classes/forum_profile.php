@@ -3,7 +3,9 @@ namespace PHPFusion\Infusions\Forum\Classes;
 
 use PHPFusion\Infusions\Forum\Classes\Profile\Answer;
 use PHPFusion\Infusions\Forum\Classes\Profile\Bounties;
+use PHPFusion\Infusions\Forum\Classes\Profile\Bounty;
 use PHPFusion\Infusions\Forum\Classes\Profile\Questions;
+use PHPFusion\Infusions\Forum\Classes\Profile\Reputation;
 use PHPFusion\Infusions\Forum\Classes\Profile\Summary;
 use PHPFusion\Infusions\Forum\Classes\Profile\Tags;
 use PHPFusion\Infusions\Forum\Classes\Profile\Tracked;
@@ -20,12 +22,19 @@ class Forum_Profile {
 
     private $SQL_rowstart = 0;
 
+    public $self_noun = '';
+
     public function __construct($lookup_id, $locale) {
         $this->locale = $locale;
 
         $this->user_data = fusion_get_user(intval($lookup_id ?: 0));
 
         $this->profile_url = BASEDIR.'profile.php?lookup='.$this->user_data['user_id'].'&amp;profile_page=forum&amp;';
+
+        $this->self_noun = 'This user';
+        if (fusion_get_userdata('user_id') == $this->user_data['user_id']) {
+            $this->self_noun = 'You';
+        }
     }
 
     public function setSQLResults($limit = 6) {
@@ -119,7 +128,11 @@ class Forum_Profile {
                 $page_output = $profile->displayProfile();
                 break;
             case 'bounties':
-                $profile = new Bounties($this);
+                $profile = new Bounty($this);
+                $page_output = $profile->displayProfile();
+                break;
+            case 'reputation':
+                $profile = new Reputation($this);
                 $page_output = $profile->displayProfile();
                 break;
         }
@@ -147,6 +160,7 @@ class Forum_Profile {
      * @return string
      */
     public function getSQL($type) {
+
         switch($type) {
             case 'answer-latest': //answers latest
                 // to find the first post of this thread, we need to use MIN post id of the thread id.
@@ -276,9 +290,70 @@ class Forum_Profile {
                 LIMIT ".$this->SQL_rowstart.",".$this->SQL_results;
 
                 break;
+            case 'bounty-active':
+                $sql = "SELECT ft.thread_id, ft.thread_subject, ft.thread_views, ft.thread_tags, ft.thread_lastpost              
+                FROM ".DB_FORUM_THREADS." ft
+                INNER JOIN ".DB_FORUMS." f ON f.forum_id=ft.forum_id AND ".groupaccess('f.forum_access')."
+                WHERE ft.thread_bounty_user='".$this->user_data['user_id']."' AND ft.thread_answered = '0'
+                GROUP BY ft.thread_id 
+                ORDER BY ft.thread_id DESC
+                LIMIT ".$this->SQL_rowstart.",".$this->SQL_results;
+                break;
+            case 'bounty-offered':
+                $sql = "SELECT ft.thread_id, ft.thread_subject, ft.thread_views, ft.thread_tags, ft.thread_lastpost              
+                FROM ".DB_FORUM_THREADS." ft
+                INNER JOIN ".DB_FORUMS." f ON f.forum_id=ft.forum_id AND ".groupaccess('f.forum_access')."
+                WHERE ft.thread_bounty_user='".$this->user_data['user_id']."' AND ft.thread_answered = '0'
+                GROUP BY ft.thread_id 
+                ORDER BY ft.thread_bounty_start DESC
+                LIMIT ".$this->SQL_rowstart.",".$this->SQL_results;
+                break;
+            case 'bounty-earned':
+                $sql = "SELECT ft.thread_id, ft.thread_subject, ft.thread_views, ft.thread_tags, ft.thread_lastpost              
+                FROM ".DB_FORUM_USER_REP." frp
+                INNER JOIN  ".DB_FORUM_THREADS." ft ON frp.thread_id=ft.thread_id
+                INNER JOIN ".DB_FORUMS." f ON f.forum_id=ft.forum_id AND ".groupaccess('f.forum_access')."
+                WHERE frp.user_id='".$this->user_data['user_id']."' AND frp.rep_answer = '1'
+                GROUP BY ft.thread_id 
+                ORDER BY frp.datestamp DESC
+                LIMIT ".$this->SQL_rowstart.",".$this->SQL_results;
+                break;
+            case 'reputation-post':
+                // Sort by year, month, day in results
+                $sql = "SELECT frp.rep_id,
+                YEAR(from_unixtime(frp.datestamp)) 'rep_year', MONTH(from_unixtime(frp.datestamp)) 'rep_month', DAY(from_unixtime(frp.datestamp)) 'rep_day', 
+                frp.rep_type, frp.points_gain, ft.thread_id, ft.thread_subject, ft.thread_views, ft.thread_tags, ft.thread_lastpost, frp.datestamp, 
+                COUNT(fp.post_id) 'post_count', 
+                fp.post_datestamp, fp.post_id               
+                FROM ".DB_FORUM_USER_REP." frp
+                INNER JOIN ".DB_FORUM_POSTS." fp ON fp.post_id=frp.post_id
+                INNER JOIN  ".DB_FORUM_THREADS." ft ON frp.thread_id=ft.thread_id
+                INNER JOIN ".DB_FORUMS." f ON f.forum_id=ft.forum_id AND ".groupaccess('f.forum_access')."
+                WHERE frp.user_id='".$this->user_data['user_id']."' AND frp.rep_answer = '0'
+                GROUP BY frp.rep_id 
+                ORDER BY rep_year DESC, rep_month DESC, rep_day DESC
+                LIMIT ".$this->SQL_rowstart.",".$this->SQL_results;
+                break;
+            case 'reputation-chart':
+                // poll for 30 days of the current month
+                $sql = "SELECT frp.rep_id,
+                YEAR(from_unixtime(frp.datestamp)) 'rep_year', MONTH(from_unixtime(frp.datestamp)) 'rep_month', DAY(from_unixtime(frp.datestamp)) 'rep_day', 
+                frp.rep_type, frp.points_gain, ft.thread_id, ft.thread_subject, ft.thread_views, ft.thread_tags, ft.thread_lastpost, frp.datestamp, 
+                COUNT(fp.post_id) 'post_count', 
+                fp.post_datestamp, fp.post_id               
+                FROM ".DB_FORUM_USER_REP." frp
+                INNER JOIN ".DB_FORUM_POSTS." fp ON fp.post_id=frp.post_id
+                INNER JOIN  ".DB_FORUM_THREADS." ft ON frp.thread_id=ft.thread_id
+                INNER JOIN ".DB_FORUMS." f ON f.forum_id=ft.forum_id AND ".groupaccess('f.forum_access')."
+                WHERE frp.user_id='".$this->user_data['user_id']."' AND frp.rep_answer = '0' AND frp.datestamp > '".strtotime('last month')."' AND frp.datestamp < '".strtotime('next month')."'
+                GROUP BY frp.rep_id                
+                ORDER BY rep_year DESC, rep_month DESC, rep_day DESC                
+                LIMIT ".$this->SQL_rowstart.",".$this->SQL_results;
+                break;
             default:
                 $sql = '';
         }
+
         return $sql;
     }
 

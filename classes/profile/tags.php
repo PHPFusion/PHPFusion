@@ -5,7 +5,7 @@ use PHPFusion\Infusions\Forum\Classes\Forum_Profile;
 use PHPFusion\Template;
 
 /**
- * Class Summary
+ * Class Tags
  *
  * @package PHPFusion\Infusions\Forum\Classes\Profile
  */

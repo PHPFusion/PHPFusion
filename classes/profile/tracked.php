@@ -5,7 +5,7 @@ use PHPFusion\Infusions\Forum\Classes\Forum_Profile;
 use PHPFusion\Template;
 
 /**
- * Class Summary
+ * Class Tracked
  *
  * @package PHPFusion\Infusions\Forum\Classes\Profile
  */
@@ -115,6 +115,8 @@ class Tracked  {
             if ($max_count > $row_count) {
                 $ctpl->set_block('page_nav',['nav'=> makepagenav($rowstart, $limit, $max_count, 3, $this->profile_url) ]);
             }
+        } else {
+            $ctpl->set_block('no_thread_item', ['message' => $this->self_noun.' have not track any thread.']);
         }
 
         return $ctpl->get_output();

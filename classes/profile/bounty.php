@@ -5,11 +5,11 @@ use PHPFusion\Infusions\Forum\Classes\Forum_Profile;
 use PHPFusion\Template;
 
 /**
- * Class Summary
+ * Class Bounty
  *
  * @package PHPFusion\Infusions\Forum\Classes\Profile
  */
-class Bounties  {
+class Bounty  {
 
     private $profile_url = '';
 
@@ -21,9 +21,11 @@ class Bounties  {
 
     private $nav_tabs = [];
 
-    private $nav_active = 'latest';
+    private $nav_active = 'active';
 
-    private $nav_sql = 'question-latest';
+    private $nav_sql = 'bounty-active';
+
+    private $self_noun = '';
 
     /**
      * Summary constructor.
@@ -33,25 +35,25 @@ class Bounties  {
      */
     public function __construct(Forum_Profile $obj) {
 
-        $this->profile_url = $obj->getProfileUrl().'ref=questions&amp;';
+        $this->profile_url = $obj->getProfileUrl().'ref=bounties&amp;';
 
         $type = get('type');
 
         $this->nav_tabs = [
-            'votes' => [
-                'link' => $this->profile_url.'type=votes',
-                'title' => 'Votes',
-                'sql' => 'question-votes'
+            'offered' => [
+                'link' => $this->profile_url.'type=offered',
+                'title' => 'Offered',
+                'sql' => 'bounty-offered'
             ],
-            'activity' => [
-                'link' => $this->profile_url.'type=activity',
-                'title' => 'Activity',
-                'sql' => 'question-activity',
+            'earned' => [
+                'link' => $this->profile_url.'type=earned',
+                'title' => 'Earned',
+                'sql' => 'bounty-earned',
             ],
-            'latest' => [
-                'link' => $this->profile_url.'type=latest',
-                'title' => 'All',
-                'sql' => 'question-latest'
+            'active' => [
+                'link' => $this->profile_url.'type=active',
+                'title' => 'Active',
+                'sql' => 'bounty-active'
             ],
         ];
 
@@ -63,6 +65,7 @@ class Bounties  {
         $this->profile_url = $this->profile_url.'type='.$this->nav_active.'&amp;';
         $this->user_data = $obj->getUserData();
         $this->locale = $obj->getLocale();
+        $this->self_noun = $obj->self_noun;
         $this->class = $obj;
     }
 
@@ -95,7 +98,16 @@ class Bounties  {
             $i++;
         }
 
-        $ctpl->set_tag('row_count', format_word($max_count, 'question|questions') );
+        switch($this->nav_active) {
+            case 'active':
+                $ctpl->set_tag('row_count', format_word($max_count, 'active bounty|active bounties') );
+                break;
+            case 'earned':
+                $ctpl->set_tag('row_count', format_word($max_count, 'earned bounty|earned bounties') );
+                break;
+            default:
+                $ctpl->set_tag('row_count', format_word($max_count, 'offered bounty|offered bounties') );
+        }
 
         $result = dbquery($sql);
 
@@ -115,6 +127,8 @@ class Bounties  {
             if ($max_count > $row_count) {
                 $ctpl->set_block('page_nav',['nav'=> makepagenav($rowstart, $limit, $max_count, 3, $this->profile_url) ]);
             }
+        } else {
+            $ctpl->set_block('no_thread_item', ['message' => $this->self_noun.' have not participated in any bounty.']);
         }
 
         return $ctpl->get_output();
