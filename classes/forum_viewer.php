@@ -1372,6 +1372,7 @@ class Forum_Viewer {
 
     /**
      * Display the bounty creation form
+     * Instance name        forum-bounty-form
      * Template File        templates/forms/bounty.html
      *
      * @param $info
@@ -1383,6 +1384,7 @@ class Forum_Viewer {
         $html = \PHPFusion\Template::getInstance('forum-bounty-form');
         $html->set_template($file_path);
         $html->set_tag('breadcrumb', render_breadcrumbs());
+        $html->set_tag("forum_navs", $this->get_forum_navs());
         $html->set_tag('opentable', fusion_get_function('opentable', $info['title']));
         $html->set_tag('closetable', fusion_get_function('closetable'));
         $html->set_tag('description', $info['description']);

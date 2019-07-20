@@ -136,14 +136,16 @@ abstract class ForumAdminInterface extends Forum_Server {
      */
     protected static function check_validForumName($forum_name, $forum_id = 0) {
         if ($forum_name) {
+
+            $cond = "forum_name='".$forum_name."'".(multilang_table('FO') ? " AND forum_language='".LANGUAGE."'" : '');
             if ($forum_id) {
-                $name_check = dbcount("('forum_name')", DB_FORUMS, "forum_name='".$forum_name."' AND forum_id !='".$forum_id."'");
-            } else {
-                $name_check = dbcount("('forum_name')", DB_FORUMS, "forum_name='".$forum_name."'");
+                $cond = "forum_name='".$forum_name."' AND forum_id !='".$forum_id."'".(multilang_table('FO') ? " AND forum_language='".LANGUAGE."'" : '');
             }
-            if ($name_check) {
+
+            if (dbcount("('forum_id')", DB_FORUMS, $cond)) {
                 \Defender::stop();
                 addNotice('danger', self::$locale['forum_error_7']);
+
             } else {
                 return $forum_name;
             }

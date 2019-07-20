@@ -40,10 +40,12 @@ class View_Thread extends Forum_Server {
         $info = self::thread()->getInfo();
 
         $this->set_ThreadJs();
-
-        if (isset($_GET['action'])) {
-
-            switch ($_GET['action']) {
+        $action = get('action');
+        $all_actions = [
+            'editpoll', 'deletepoll', 'newpoll', 'edit', 'reply', 'award', 'newbounty', 'editbounty'
+        ];
+        if (in_array($action, $all_actions)) {
+            switch ($action) {
                 case 'editpoll':
                     // Template
                     $poll = new Forum_Poll($info);

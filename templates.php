@@ -67,7 +67,7 @@ if (!function_exists("display_forum_postform")) {
  * Display the bounty creation form
  * Template File        templates/forms/bounty.html
  */
-if (!function_exists('display_form_bountyform')) {
+if (!function_exists('display_forum_bountyform')) {
     function display_forum_bountyform($info) {
         return \PHPFusion\Infusions\Forum\Classes\Forum_Viewer::getInstance()->display_forum_bountyform($info);
     }

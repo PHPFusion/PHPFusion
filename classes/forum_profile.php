@@ -2,7 +2,11 @@
 namespace PHPFusion\Infusions\Forum\Classes;
 
 use PHPFusion\Infusions\Forum\Classes\Profile\Answer;
+use PHPFusion\Infusions\Forum\Classes\Profile\Bounties;
+use PHPFusion\Infusions\Forum\Classes\Profile\Questions;
 use PHPFusion\Infusions\Forum\Classes\Profile\Summary;
+use PHPFusion\Infusions\Forum\Classes\Profile\Tags;
+use PHPFusion\Infusions\Forum\Classes\Profile\Tracked;
 
 class Forum_Profile {
 
@@ -38,7 +42,7 @@ class Forum_Profile {
             'answers'    => ['title' => $this->locale['forum_ufp_101'], 'link' => $this->profile_url.'ref=answers'],
             'questions'  => ['title' => $this->locale['forum_ufp_102'], 'link' => $this->profile_url.'ref=questions'],
             'tags'       => ['title' => $this->locale['forum_ufp_103'], 'link' => $this->profile_url.'ref=tags'],
-            'tracks'     => ['title' => $this->locale['forum_ufp_104'], 'link' => $this->profile_url.'ref=tracks'],
+            'tracked'     => ['title' => $this->locale['forum_ufp_104'], 'link' => $this->profile_url.'ref=tracked'],
             'bounties'   => ['title' => $this->locale['forum_ufp_105'], 'link' => $this->profile_url.'ref=bounties'],
             'reputation' => ['title' => $this->locale['forum_ufp_106'], 'link' => $this->profile_url.'ref=reputation'],
         ];
@@ -56,6 +60,7 @@ class Forum_Profile {
         $tpl->set_tag('post_count', number_format($this->user_data['user_posts']));
 
         $total_thread_views = dbresult(dbquery("SELECT SUM(thread_views) 'total_views' FROM ".DB_FORUM_THREADS." WHERE thread_author=:uid", [':uid'=>$this->user_data['user_id']]),0);
+
         $tpl->set_tag('affect_count', format_num($total_thread_views)); // count the people who has viewed my threads.
 
         $edit_count = dbresult(dbquery("SELECT COUNT(post_id) 'total_posts' FROM ".DB_FORUM_POSTS." WHERE post_edituser=:uid", [':uid'=>$this->user_data['user_id']]),0);
@@ -94,12 +99,28 @@ class Forum_Profile {
         switch($ref_link) {
             default:
             case 'summary':
-                $profile_summary = new Summary($this);
-                $page_output = $profile_summary->displayProfile();
+                $profile = new Summary($this);
+                $page_output = $profile->displayProfile();
                 break;
             case 'answers':
-                $profile_answer = new Answer($this);
-                $page_output = $profile_answer->displayProfile();
+                $profile = new Answer($this);
+                $page_output = $profile->displayProfile();
+                break;
+            case 'questions':
+                $profile = new Questions($this);
+                $page_output = $profile->displayProfile();
+                break;
+            case 'tags':
+                $profile = new Tags($this);
+                $page_output = $profile->displayProfile();
+                break;
+            case 'tracked':
+                $profile = new Tracked($this);
+                $page_output = $profile->displayProfile();
+                break;
+            case 'bounties':
+                $profile = new Bounties($this);
+                $page_output = $profile->displayProfile();
                 break;
         }
 
@@ -127,79 +148,96 @@ class Forum_Profile {
      */
     public function getSQL($type) {
         switch($type) {
-            case 'answer-latest':
-                $sql = "SELECT ft.thread_id, ft.thread_subject, ft.thread_views FROM ".DB_FORUM_POSTS." fp 
+            case 'answer-latest': //answers latest
+                // to find the first post of this thread, we need to use MIN post id of the thread id.
+                $sql = "SELECT ft.thread_id, ft.thread_subject, ft.thread_views, ft.thread_lastpost, fp.post_id, fp.post_datestamp 
+                FROM ".DB_FORUM_POSTS." fp 
                 INNER JOIN ".DB_FORUM_THREADS." ft ON ft.thread_id = fp.thread_id
-                INNER JOIN ".DB_FORUMS." f ON f.forum_id=fp.forum_id AND f.forum_type=4 AND ".groupaccess('f.forum_access')."
-                WHERE fp.post_answer=1 AND fp.post_author='".$this->user_data['user_id']."' AND fp.post_hidden=0 GROUP BY ft.thread_id ORDER BY fp.post_datestamp DESC 
+                INNER JOIN ".DB_FORUMS." f ON f.forum_id=fp.forum_id AND f.forum_type=4 AND ".groupaccess('f.forum_access')."            
+                WHERE (
+                ## that the current post id which is fp.post_id IS NOT the first post of the current thread
+                SELECT MIN(post_id) FROM ".DB_FORUM_POSTS." WHERE thread_id=ft.thread_id 
+                ) !=fp.post_id AND fp.post_author='".$this->user_data['user_id']."' AND fp.post_hidden=0 GROUP BY ft.thread_id 
+                ORDER BY fp.post_datestamp DESC 
                 LIMIT ".$this->SQL_rowstart.",".$this->SQL_results;
                 break;
             case 'answer-activity':
-                $sql = "SELECT ft.thread_id, ft.thread_subject, ft.thread_views FROM ".DB_FORUM_POSTS." fp 
+                $sql = "SELECT ft.thread_id, ft.thread_subject, ft.thread_views, ft.thread_lastpost, fp.post_id, fp.post_datestamp
+                FROM ".DB_FORUM_POSTS." fp 
                 INNER JOIN ".DB_FORUM_THREADS." ft ON ft.thread_id = fp.thread_id
                 INNER JOIN ".DB_FORUMS." f ON f.forum_id=fp.forum_id AND f.forum_type=4 AND ".groupaccess('f.forum_access')."
-                WHERE fp.post_author='".$this->user_data['user_id']."' AND fp.post_hidden=0 GROUP BY ft.thread_id ORDER BY ft.thread_lastpost DESC 
+                WHERE (
+                ## that the current post id which is fp.post_id IS NOT the first post of the current thread
+                SELECT MIN(post_id) FROM ".DB_FORUM_POSTS." WHERE thread_id=ft.thread_id 
+                ) !=fp.post_id AND fp.post_author='".$this->user_data['user_id']."' AND fp.post_hidden=0 
+                GROUP BY ft.thread_id ORDER BY ft.thread_lastpost DESC 
                 LIMIT ".$this->SQL_rowstart.",".$this->SQL_results;
                 break;
             case 'answer-votes':
-                $sql = "SELECT ft.thread_id, ft.thread_subject, ft.thread_views 
+                $sql = "SELECT ft.thread_id, ft.thread_subject, ft.thread_views, ft.thread_lastpost, fp.post_id, fp.post_datestamp  
                 FROM ".DB_FORUM_POSTS." fp 
                 INNER JOIN ".DB_FORUM_THREADS." ft ON ft.thread_id = fp.thread_id
                 INNER JOIN ".DB_FORUM_VOTES." fv ON fv.thread_id=fp.thread_id
                 INNER JOIN ".DB_FORUMS." f ON f.forum_id=fp.forum_id AND f.forum_type=4 AND ".groupaccess('f.forum_access')."
-                WHERE fp.post_author='".$this->user_data['user_id']."' AND fp.post_hidden=0 GROUP BY ft.thread_id ORDER BY fv.vote_datestamp DESC 
+                WHERE (
+                ## that the current post id which is fp.post_id IS NOT the first post of the current thread
+                SELECT MIN(post_id) FROM ".DB_FORUM_POSTS." WHERE thread_id=ft.thread_id 
+                ) !=fp.post_id AND fp.post_author='".$this->user_data['user_id']."' AND fp.post_hidden=0 GROUP BY ft.thread_id ORDER BY fv.vote_datestamp DESC 
                 LIMIT ".$this->SQL_rowstart.",".$this->SQL_results;
                 break;
             case 'question-latest':
-                $sql = "SELECT ft.thread_id, ft.thread_subject, ft.thread_views FROM ".DB_FORUM_POSTS." fp 
+                $sql = "SELECT ft.thread_id, ft.thread_subject, ft.thread_views, ft.thread_lastpost, fp.post_id, fp.post_datestamp  
+                FROM ".DB_FORUM_POSTS." fp 
                 INNER JOIN ".DB_FORUM_THREADS." ft ON ft.thread_id = fp.thread_id AND ft.thread_author='".$this->user_data['user_id']."'
                 INNER JOIN ".DB_FORUMS." f ON f.forum_id=fp.forum_id AND f.forum_type=4 AND ".groupaccess('f.forum_access')."
-                WHERE fp.post_author='".$this->user_data['user_id']."' AND fp.post_hidden=0 GROUP BY ft.thread_id ORDER BY fp.post_datestamp DESC 
+                WHERE ft.thread_author='".$this->user_data['user_id']."' AND fp.post_author='".$this->user_data['user_id']."' AND fp.post_hidden=0 GROUP BY ft.thread_id ORDER BY fp.post_datestamp DESC 
                 LIMIT ".$this->SQL_rowstart.",".$this->SQL_results."
                 ";
                 break;
             case 'question-activity':
-                $sql = "SELECT ft.thread_id, ft.thread_subject, ft.thread_views FROM ".DB_FORUM_POSTS." fp 
+                $sql = "SELECT ft.thread_id, ft.thread_subject, ft.thread_views, ft.thread_lastpost, fp.post_id, fp.post_datestamp  
+                FROM ".DB_FORUM_POSTS." fp 
                 INNER JOIN ".DB_FORUM_THREADS." ft ON ft.thread_id = fp.thread_id AND ft.thread_author='".$this->user_data['user_id']."'
                 INNER JOIN ".DB_FORUMS." f ON f.forum_id=fp.forum_id AND f.forum_type=4
-                WHERE fp.post_author='".$this->user_data['user_id']."' AND fp.post_hidden=0 GROUP BY ft.thread_id ORDER BY ft.thread_lastpost DESC 
+                WHERE ft.thread_author='".$this->user_data['user_id']."' AND  fp.post_author='".$this->user_data['user_id']."' AND fp.post_hidden=0 
+                GROUP BY ft.thread_id ORDER BY ft.thread_lastpost DESC 
                 LIMIT ".$this->SQL_rowstart.",".$this->SQL_results;
 
                 break;
             case 'question-votes':
-                $sql = "SELECT ft.thread_id, ft.thread_subject, ft.thread_views 
+                $sql = "SELECT ft.thread_id, ft.thread_subject, ft.thread_views, ft.thread_lastpost, fp.post_id, fp.post_datestamp  
                 FROM ".DB_FORUM_POSTS." fp 
                 INNER JOIN ".DB_FORUM_THREADS." ft ON ft.thread_id = fp.thread_id AND ft.thread_author='".$this->user_data['user_id']."'
                 INNER JOIN ".DB_FORUM_VOTES." fv ON fv.thread_id=ft.thread_id 
                 INNER JOIN ".DB_FORUMS." f ON f.forum_id=fp.forum_id AND f.forum_type=4 AND ".groupaccess('f.forum_access')."
-                WHERE fp.post_author='".$this->user_data['user_id']."' AND fp.post_hidden=0 GROUP BY ft.thread_id ORDER BY fv.vote_datestamp DESC 
+                WHERE ft.thread_author='".$this->user_data['user_id']."' AND  fp.post_author='".$this->user_data['user_id']."' AND fp.post_hidden=0 GROUP BY ft.thread_id ORDER BY fv.vote_datestamp DESC 
                 LIMIT ".$this->SQL_rowstart.",".$this->SQL_results;
 
                 break;
             case 'reputation-latest':
-                $sql = "SELECT SUM(frpp.points_gain) 'thread_points', ft.thread_id, ft.thread_subject, ft.thread_views 
+                $sql = "SELECT SUM(frpp.points_gain) 'thread_points', ft.thread_id, ft.thread_subject, ft.thread_views, ft.thread_lastpost 
                 FROM ".DB_FORUM_USER_REP." frp 
                 INNER JOIN ".DB_FORUM_USER_REP." frpp ON frpp.thread_id=frp.thread_id AND frpp.user_id='".$this->user_data['user_id']."' 
                 INNER JOIN ".DB_FORUM_THREADS." ft ON ft.thread_id = frp.thread_id
                 INNER JOIN ".DB_FORUMS." f ON f.forum_id = frp.forum_id AND ".groupaccess('f.forum_access')."
                 WHERE frp.user_id='".$this->user_data['user_id']."'
-                GROUP BY frp.thread_id 
+                GROUP BY frp.thread_id
                 LIMIT ".$this->SQL_rowstart.",".$this->SQL_results;
 
                 break;
             case 'reputation-activity':
-                $sql = "SELECT SUM(frpp.points_gain) 'thread_points', ft.thread_id, ft.thread_subject, ft.thread_views 
+                $sql = "SELECT SUM(frpp.points_gain) 'thread_points', ft.thread_id, ft.thread_subject, ft.thread_views, ft.thread_lastpost  
                 FROM ".DB_FORUM_USER_REP." frp 
                 INNER JOIN ".DB_FORUM_USER_REP." frpp ON frpp.thread_id=frp.thread_id AND frpp.user_id='".$this->user_data['user_id']."' 
                 INNER JOIN ".DB_FORUM_THREADS." ft ON ft.thread_id = frp.thread_id
                 INNER JOIN ".DB_FORUMS." f ON f.forum_id = frp.forum_id AND ".groupaccess('f.forum_access')."
                 WHERE frp.user_id='".$this->user_data['user_id']."'
-                GROUP BY frp.thread_id ORDER BY ft.thread_lastpost DESC 
+                GROUP BY frp.thread_id ORDER BY ft.thread_lastpost DESC  
                 LIMIT ".$this->SQL_rowstart.",".$this->SQL_results;
 
                 break;
             case 'reputation-votes':
-                $sql = "SELECT SUM(frpp.points_gain) 'thread_points', ft.thread_id, ft.thread_subject, ft.thread_views, fv.vote_datestamp 
+                $sql = "SELECT SUM(frpp.points_gain) 'thread_points', ft.thread_id, ft.thread_subject, ft.thread_views, fv.vote_datestamp, ft.thread_lastpost  
                 FROM ".DB_FORUM_USER_REP." frp 
                 INNER JOIN ".DB_FORUM_USER_REP." frpp ON frpp.thread_id=frp.thread_id AND frpp.user_id='".$this->user_data['user_id']."' 
                 INNER JOIN ".DB_FORUM_VOTES." fv ON fv.thread_id=frp.thread_id 
@@ -210,13 +248,33 @@ class Forum_Profile {
                 LIMIT ".$this->SQL_rowstart.",".$this->SQL_results;
 
                 break;
+            case 'tracked-latest':
+                $sql = "SELECT ft.thread_id, ft.thread_subject, ft.thread_views, ft.thread_lastpost, ft.thread_lastpostid  
+                FROM ".DB_FORUM_THREAD_NOTIFY." tn                 
+                INNER JOIN ".DB_FORUM_THREADS." ft ON ft.thread_id = tn.thread_id 
+                INNER JOIN ".DB_FORUMS." f ON f.forum_id=ft.forum_id AND ".groupaccess('f.forum_access')."
+                WHERE tn.notify_user='".$this->user_data['user_id']."' AND tn.notify_status=1 
+                LIMIT ".$this->SQL_rowstart.",".$this->SQL_results;
+
+                break;
+            case 'tracked-activity':
+                $sql = "SELECT ft.thread_id, ft.thread_subject, ft.thread_views, ft.thread_lastpost, ft.thread_lastpostid
+                FROM ".DB_FORUM_THREAD_NOTIFY." tn                 
+                INNER JOIN ".DB_FORUM_THREADS." ft ON ft.thread_id = tn.thread_id 
+                INNER JOIN ".DB_FORUMS." f ON f.forum_id=ft.forum_id AND ".groupaccess('f.forum_access')."
+                WHERE tn.notify_user='".$this->user_data['user_id']."' AND tn.notify_status=1 ORDER BY ft.thread_lastpost DESC 
+                LIMIT ".$this->SQL_rowstart.",".$this->SQL_results;
+                break;
+
             case 'tags-latest':
-                $sql = "SELECT ft.thread_id, ft.thread_subject, ft.thread_views, ft.thread_tags
+                $sql = "SELECT ft.thread_id, ft.thread_subject, ft.thread_views, ft.thread_tags, ft.thread_lastpost
                 FROM ".DB_FORUM_POSTS." fp 
                 INNER JOIN ".DB_FORUM_THREADS." ft ON ft.thread_id = fp.thread_id
                 INNER JOIN ".DB_FORUMS." f ON f.forum_id=fp.forum_id AND ".groupaccess('f.forum_access')."
-                WHERE fp.post_author='".$this->user_data['user_id']."' AND ft.thread_tags !='' AND fp.post_hidden=0 GROUP BY ft.thread_id ORDER BY fp.post_datestamp DESC
-                ";
+                WHERE fp.post_author='".$this->user_data['user_id']."' AND ft.thread_tags !='' AND fp.post_hidden=0 GROUP BY ft.thread_id 
+                ORDER BY fp.post_datestamp DESC
+                LIMIT ".$this->SQL_rowstart.",".$this->SQL_results;
+
                 break;
             default:
                 $sql = '';
@@ -232,17 +290,17 @@ class Forum_Profile {
     }
 
     /**
-     * @return array|mixed
+     * @return array
      */
-    public function getUserData() {
-        return $this->user_data;
+    public function getUserData() : array {
+        return (array)$this->user_data;
     }
 
     /**
      * @return array
      */
     public function getLocale(): array {
-        return $this->locale;
+        return (array)$this->locale;
     }
 
 }

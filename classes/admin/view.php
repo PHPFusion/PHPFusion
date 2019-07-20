@@ -165,7 +165,7 @@ class ForumAdminView extends ForumAdminInterface {
 
 
         // Save_permission
-        if (isset($_POST['save_permission'])) {
+        if (post('save_permission')) {
 
             $this->data['forum_id'] = form_sanitizer($_POST['forum_id'], '', 'forum_id');
 
@@ -199,31 +199,34 @@ class ForumAdminView extends ForumAdminInterface {
             }
         }
 
-        if (isset($_POST['save_forum'])) {
+        if (post('save_forum')) {
             $this->data = [
-                'forum_id'           => form_sanitizer($_POST['forum_id'], 0, 'forum_id'),
-                'forum_name'         => form_sanitizer($_POST['forum_name'], '', 'forum_name'),
-                'forum_description'  => form_sanitizer($_POST['forum_description'], '', 'forum_description'),
-                'forum_cat'          => form_sanitizer($_POST['forum_cat'], 0, 'forum_cat'),
-                'forum_type'         => form_sanitizer($_POST['forum_type'], '', 'forum_type'),
-                'forum_language'     => form_sanitizer($_POST['forum_language'], '', 'forum_language'),
-                'forum_alias'        => form_sanitizer($_POST['forum_alias'], '', 'forum_alias'),
-                'forum_meta'         => form_sanitizer($_POST['forum_meta'], '', 'forum_meta'),
-                'forum_rules'        => form_sanitizer($_POST['forum_rules'], '', 'forum_rules'),
-                'forum_image_enable' => isset($_POST['forum_image_enable']) ? 1 : 0,
-                'forum_merge'        => isset($_POST['forum_merge']) ? 1 : 0,
-                'forum_allow_attach' => isset($_POST['forum_allow_attach']) ? 1 : 0,
-                'forum_quick_edit'   => isset($_POST['forum_quick_edit']) ? 1 : 0,
-                'forum_allow_poll'   => isset($_POST['forum_allow_poll']) ? 1 : 0,
+                'forum_id'           => sanitizer('forum_id', 0, 'forum_id'),
+                'forum_name'         => sanitizer('forum_name', '', 'forum_name'),
+                'forum_description'  => sanitizer('forum_description', '', 'forum_description'),
+                'forum_cat'          => sanitizer('forum_cat', 0, 'forum_cat'),
+                'forum_type'         => sanitizer('forum_type', '', 'forum_type'),
+                'forum_language'     => sanitizer('forum_language', '', 'forum_language'),
+                'forum_alias'        => sanitizer('forum_alias', '', 'forum_alias'),
+                'forum_meta'         => sanitizer('forum_meta', '', 'forum_meta'),
+                'forum_rules'        => sanitizer('forum_rules', '', 'forum_rules'),
+                'forum_image_enable' => post('forum_image_enable') ? 1 : 0,
+                'forum_merge'        => post('forum_merge') ? 1 : 0,
+                'forum_allow_attach' => post('forum_allow_attach') ? 1 : 0,
+                'forum_quick_edit'   => post('forum_quick_edit') ? 1 : 0,
+                'forum_allow_poll'   => post('forum_allow_poll') ? 1 : 0,
                 'forum_poll'         => USER_LEVEL_MEMBER,
-                'forum_users'        => isset($_POST['forum_users']) ? 1 : 0,
-                'forum_lock'         => isset($_POST['forum_lock']) ? 1 : 0,
-                'forum_permissions'  => isset($_POST['forum_permissions']) ? form_sanitizer($_POST['forum_permissions'], 0, 'forum_permissions') : 0,
-                'forum_order'        => isset($_POST['forum_order']) ? form_sanitizer($_POST['forum_order']) : '',
+                'forum_users'        => post('forum_users') ? 1 : 0,
+                'forum_lock'         => post('forum_lock') ? 1 : 0,
+                'forum_permissions'  => post('forum_permissions') ? form_sanitizer('forum_permissions', 0, 'forum_permissions') : 0,
+                'forum_order'        => post('forum_order') ? form_sanitizer('forum_order') : '',
                 'forum_branch'       => get_hkey(DB_FORUMS, 'forum_id', 'forum_cat', $this->data['forum_cat']),
                 'forum_image'        => '',
-                'forum_mods'         => "",
+                'forum_mods'         => '',
             ];
+            //define('STOP_REDIRECT',true);
+            //print_p($this->data);
+
             $this->data['forum_alias'] = $this->data['forum_alias'] ? str_replace(' ', '-',
                 $this->data['forum_alias']) : '';
             // Checks for unique forum alias
@@ -242,6 +245,7 @@ class ForumAdminView extends ForumAdminInterface {
 
                 }
             }
+
             // check forum name unique
             $this->data['forum_name'] = $this->check_validForumName($this->data['forum_name'], $this->data['forum_id']);
 
@@ -726,8 +730,8 @@ class ForumAdminView extends ForumAdminInterface {
      */
     public function forumIndex() {
         pageAccess('F');
-
         $res = FALSE;
+
         if (post('init_forum')) {
             $this->data['forum_name'] = self::check_validForumName(sanitizer('forum_name', '', 'forum_name'), 0);
             if ($this->data['forum_name']) {
@@ -778,9 +782,9 @@ class ForumAdminView extends ForumAdminInterface {
 
         $forum_image_path = FORUM."images/";
 
-        if (isset($_POST['remove_image']) && isset($_POST['forum_id'])) {
+        if (post('remove_image') && post('forum_id', FILTER_VALIDATE_INT)) {
 
-            $data['forum_id'] = form_sanitizer($_POST['forum_id'], '', 'forum_id');
+            $data['forum_id'] = sanitizer('forum_id', '', 'forum_id');
 
             if ($data['forum_id']) {
                 $data = self::get_forum($data['forum_id']);
@@ -948,9 +952,6 @@ class ForumAdminView extends ForumAdminInterface {
         }
 
         echo closetab();
-
-
-        //closetable();
     }
 
     /**

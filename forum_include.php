@@ -65,6 +65,30 @@ function get_thread_stats($thread_id) {
 }
 
 /**
+ * Check if user has seen this thread or not.
+ * @param $forum_id
+ * @param $thread_lastpost
+ * @param $thread_lastuser
+ *
+ * @return bool
+ */
+function check_thread_new_status($forum_id, $thread_lastpost, $thread_lastuser) {
+    if (iMEMBER) {
+        $user_lastvisit = fusion_get_userdata('user_lastvisit');
+        $user_id = fusion_get_userdata('user_id');
+        $user_threads = fusion_get_userdata('user_threads');
+        $forum_match = "\\|".$thread_lastpost."\\|".$forum_id;
+        $last_visited = (!empty($user_lastvisit) && isnum($user_lastvisit)) ? $user_lastvisit : TIME;
+        if ($thread_lastpost > $last_visited) {
+            if ($thread_lastuser !== $user_id || !preg_match("({$forum_match}\\.|{$forum_match}$)", $user_threads)) {
+                return TRUE;
+            }
+        }
+    }
+    return FALSE;
+}
+
+/**
  * Cast Question Votes
  *
  * @param     $info

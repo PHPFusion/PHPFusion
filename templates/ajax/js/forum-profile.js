@@ -1,6 +1,4 @@
-
 let forum_summary = {
-
     answer_panel : function( nav_id , container_id, counter_id, uid) {
         $('#'+nav_id + ' li > a').bind('click', function(e) {
             // the value
@@ -34,6 +32,4 @@ let forum_summary = {
 
         });
     },
-
 }
-

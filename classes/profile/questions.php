@@ -9,7 +9,7 @@ use PHPFusion\Template;
  *
  * @package PHPFusion\Infusions\Forum\Classes\Profile
  */
-class Answer  {
+class Questions  {
 
     private $profile_url = '';
 
@@ -20,8 +20,10 @@ class Answer  {
     private $class = NULL;
 
     private $nav_tabs = [];
+
     private $nav_active = 'latest';
-    private $nav_sql = 'answer-latest';
+
+    private $nav_sql = 'question-latest';
 
     /**
      * Summary constructor.
@@ -31,23 +33,25 @@ class Answer  {
      */
     public function __construct(Forum_Profile $obj) {
 
-        $this->profile_url = $obj->getProfileUrl().'ref=answers&amp;';
+        $this->profile_url = $obj->getProfileUrl().'ref=questions&amp;';
+
         $type = get('type');
+
         $this->nav_tabs = [
             'votes' => [
                 'link' => $this->profile_url.'type=votes',
                 'title' => 'Votes',
-                'sql' => 'answer-votes'
+                'sql' => 'question-votes'
             ],
             'activity' => [
                 'link' => $this->profile_url.'type=activity',
                 'title' => 'Activity',
-                'sql' => 'answer-activity',
+                'sql' => 'question-activity',
             ],
             'latest' => [
                 'link' => $this->profile_url.'type=latest',
                 'title' => 'All',
-                'sql' => 'answer-latest'
+                'sql' => 'question-latest'
             ],
         ];
 
@@ -91,7 +95,7 @@ class Answer  {
             $i++;
         }
 
-        $ctpl->set_tag('row_count', format_word($max_count, 'answer|answers') );
+        $ctpl->set_tag('row_count', format_word($max_count, 'question|questions') );
 
         $result = dbquery($sql);
 

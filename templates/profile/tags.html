@@ -1,0 +1,17 @@
+<div class="clearfix m-t-20">
+    <h5 class="text-dark strong m-b-0">{%tag_count%}</h5>
+    <hr/>
+    <div class="m-t-20 column-4">
+        <div class="column-4" data-column="4">
+            {tag_block.{
+            <div class="p-t-15 p-b-15">{%thread_count%}<a href="{%tag_link%}"><span class="label label-info m-l-10 m-r-10 strong">{%tag_title%}</span></a> x{%tag_info%}</div>
+            }}
+        </div>
+        {no_tags.{
+        <div class="m-t-20">There are no tags found.</div>
+        }}
+    </div>
+    {page_nav.{
+    {%nav%}
+    }}
+</div>

@@ -60,17 +60,17 @@ class Forum_Threads extends Forum_Server {
         $lastVisited = defined('LASTVISITED') ? LASTVISITED : TIME;
 
         $default_filter = [
-            'join'             => "",
-            'custom_join'      => "",
-            'select'           => "",
-            'order'            => "",
-            'condition'        => "",
+            'join'             => '',
+            'custom_join'      => '',
+            'select'           => '',
+            'order'            => '',
+            'condition'        => '',
             'custom_condition' => '',
             'time_condition'   => '',
             'type_condition'   => '',
-            'count_query'      => "", // using normal dbquery
-            'query'            => "", // actual query for more intensive output.
-            "item_id"          => "thread_id" // sorting output key
+            'count_query'      => '', // using normal dbquery
+            'query'            => '', // actual query for more intensive output.
+            'item_id'          => 'thread_id' // sorting output key
 
         ];
         $filter += $default_filter;
@@ -429,11 +429,13 @@ class Forum_Threads extends Forum_Server {
     /**
      * Set in full extent of forum permissions and current user thread permissions
      *
-     * @param $iMOD
+     * @param $iMOD Whether the user is a moderator of the group
      *
      * @return array
      */
     private function setThreadPermission($iMOD) {
+
+        $user_reputation = fusion_get_userdata('user_reputation');
         // Access the forum
         $this->thread_info['permissions']['can_access'] = ($iMOD || checkgroup($this->thread_data['forum_access'])) ? TRUE : FALSE;
         // Create another thread under the same forum
@@ -455,7 +457,7 @@ class Forum_Threads extends Forum_Server {
         // Can accept an answer
         $this->thread_info['permissions']['can_answer'] = $this->thread_info['permissions']['can_post'] && $this->thread_data['forum_type'] == 4 && $this->thread_data['thread_answered'] == FALSE && $this->thread_data['thread_locked'] == FALSE && ($this->thread_data['thread_author'] == fusion_get_userdata('user_id') || $iMOD) ? TRUE : FALSE;
         // Can start a bounty
-        $this->thread_info['permissions']['can_start_bounty'] = $this->thread_info['permissions']['can_post'] && $this->thread_data['forum_type'] == 4 && iMEMBER && !$this->thread_data['thread_bounty'] && $this->thread_data['thread_locked'] == FALSE && fusion_get_userdata('user_reputation') >= 50 ? TRUE : FALSE;
+        $this->thread_info['permissions']['can_start_bounty'] = $this->thread_info['permissions']['can_post'] && $this->thread_data['forum_type'] == 4 && iMEMBER && !$this->thread_data['thread_bounty'] && !$this->thread_data['thread_locked'] && $user_reputation >= 50 ? TRUE : FALSE;
         // Can edit a bounty
         $this->thread_info['permissions']['can_edit_bounty'] = $this->thread_info['permissions']['can_post'] && $this->thread_data['forum_type'] == 4 && iMEMBER && $this->thread_data['thread_bounty'] && $this->thread_data['thread_locked'] == FALSE && ($this->thread_data['thread_bounty_user'] == fusion_get_userdata('user_id') || $iMOD) ? TRUE : FALSE;
         // Can award bounty

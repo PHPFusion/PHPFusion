@@ -55,9 +55,11 @@ class Summary  {
         $answers_result = dbquery($sql);
         $row_count = 0;
         if (dbrows($answers_result)) {
+
             $row_count = dbrows(dbquery(str_replace('LIMIT 6', '', $sql)));
+
             while ($data = dbarray($answers_result)) {
-                $ctpl->set_block('answer_threads', [
+                $ctpl->set_block('answered_threads', [
                     'thread_views' => format_num($data['thread_views']),
                     'thread_subject' => $data['thread_subject'],
                     'thread_link' => FORUM.'viewthread.php?thread_id='.$data['thread_id'],

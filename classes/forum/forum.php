@@ -52,29 +52,29 @@ class Forum extends Forum_Server {
         switch ($key) {
             default:
             case 'latest':
-                return array(
+                return [
                     'attachment' => dbresult(dbquery("SELECT t.thread_id FROM ".DB_FORUM_THREADS." t INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id
                             INNER JOIN ".DB_FORUM_ATTACHMENTS." a ON a.thread_id=t.thread_id
                             WHERE ".(multilang_table("FO") ? "tf.forum_language='".LANGUAGE."' AND " : "").groupaccess('tf.forum_access')." AND t.thread_locked=0 AND t.thread_hidden=0 GROUP BY a.thread_id"), 0),
                     'bounty'     => dbcount("(thread_id)", DB_FORUM_THREADS." t INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id", (multilang_table("FO") ? "tf.forum_language='".LANGUAGE."' AND " : "")." t.thread_bounty=1 AND t.thread_locked=0 AND t.thread_hidden=0 AND ".groupaccess('tf.forum_access')),
                     'poll'       => dbcount("(thread_id)", DB_FORUM_THREADS." t INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id", (multilang_table("FO") ? "tf.forum_language='".LANGUAGE."' AND " : "")." t.thread_poll=1 AND t.thread_locked=0 AND t.thread_hidden=0 AND ".groupaccess('tf.forum_access')),
-                );
+                ];
                 break;
             case 'participated':
 
                 break;
             case 'unanswered':
-                return array(
+                return [
                     'attachment' => dbresult(dbquery("SELECT t.thread_id FROM ".DB_FORUM_THREADS." t INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id
                             INNER JOIN ".DB_FORUM_ATTACHMENTS." a ON a.thread_id=t.thread_id
                             WHERE ".(multilang_table("FO") ? "tf.forum_language='".LANGUAGE."' AND " : "")." t.thread_postcount=1 AND ".groupaccess('tf.forum_access')." AND t.thread_locked=0 AND t.thread_hidden=0
                             GROUP BY a.thread_id"), 0),
                     'bounty'     => dbcount("(thread_id)", DB_FORUM_THREADS." t INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id", (multilang_table("FO") ? "tf.forum_language='".LANGUAGE."' AND " : "")." t.thread_bounty=1 AND t.thread_postcount=1 AND t.thread_locked=0 AND t.thread_hidden=0 AND ".groupaccess('tf.forum_access')),
                     'poll'       => dbcount("(thread_id)", DB_FORUM_THREADS." t INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id", (multilang_table("FO") ? "tf.forum_language='".LANGUAGE."' AND " : "")." t.thread_poll=1 AND t.thread_postcount=1  AND t.thread_locked=0 AND t.thread_hidden=0 AND ".groupaccess('tf.forum_access')),
-                );
+                ];
                 break;
             case 'unsolved':
-                return array(
+                return [
                     'attachment' => dbresult(dbquery("SELECT t.thread_id FROM ".DB_FORUM_THREADS." t INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id
                             INNER JOIN ".DB_FORUM_ATTACHMENTS." a ON a.thread_id=t.thread_id
                             WHERE ".(multilang_table("FO") ? "tf.forum_language='".LANGUAGE."' AND " : "").groupaccess('tf.forum_access')." AND
@@ -84,7 +84,7 @@ class Forum extends Forum_Server {
                     AND t.thread_bounty=1 AND t.thread_answered=0 AND t.thread_locked=0 AND t.thread_hidden=0 AND ".groupaccess("tf.forum_access")),
 
                     'poll' => dbcount("(thread_id)", DB_FORUM_THREADS." t INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id", (multilang_table("FO") ? "tf.forum_language='".LANGUAGE."' AND " : "")." tf.forum_type=4 AND t.thread_bounty=1 AND t.thread_locked=0 AND t.thread_answered=0 AND t.thread_poll=1 AND t.thread_hidden=0 AND ".groupaccess("tf.forum_access")),
-                );
+                ];
                 break;
         }
 
@@ -122,7 +122,7 @@ class Forum extends Forum_Server {
 
         $this->forum_info = [
             'link'             => FORUM,
-            'forum_id'         => isset($_GET['forum_id']) && isnum($_GET['forum_id']) ? $_GET['forum_id'] : 0,
+            'forum_id'         => get('forum_id', FILTER_VALIDATE_INT),
             'parent_id'        => 0,
             'forum_page_link'  => [],
             'new_thread_link'  => '',
@@ -134,94 +134,96 @@ class Forum extends Forum_Server {
             'section'          => isset($_GET['section']) ? $_GET['section'] : 'thread',
             'new_topic_link'   => ['link' => FORUM.'newthread.php', 'title' => $locale['forum_0057']],
         ];
+
         // Rss panel feed support
         if (file_exists(INFUSIONS.'rss_feeds_panel/feeds/rss_forums.php')) {
             add_to_head('<link rel="alternate" type="application/rss+xml" title="'.$locale['forum_0000'].' - RSS Feed" href="'.$settings['siteurl'].'infusions/rss_feeds_panel/feeds/rss_forums.php"/>');
         }
+
         add_to_title($locale['global_200'].$locale['forum_0000']);
         BreadCrumbs::getInstance()->addBreadCrumb(['link' => FORUM."index.php", "title" => $locale['forum_0000']]);
-        // Additional Sections in Index View
-        if (isset($_GET['section'])) {
-            switch ($_GET['section']) {
-                case "participated":
-                    add_to_title($locale['global_201'].$locale['global_024']);
-                    BreadCrumbs::getInstance()->addBreadCrumb([
-                        'link'  => FORUM."index.php?section=participated",
-                        'title' => $locale['global_024']
-                    ]);
-                    set_meta("description", $locale['global_024']);
-                    include FORUM_SECTIONS."participated.php";
-                    break;
-                case 'latest':
-                    add_to_title($locale['global_201'].$locale['global_021']);
-                    BreadCrumbs::getInstance()->addBreadCrumb([
-                        'link'  => FORUM."index.php?section=latest",
-                        'title' => $locale['global_021']
-                    ]);
-                    set_meta("description", $locale['global_021']);
-                    // Clocks at 0.5s
-                    include FORUM_SECTIONS."latest.php";
-                    break;
-                case 'tracked':
-                    add_to_title($locale['global_201'].$locale['global_056']);
-                    BreadCrumbs::getInstance()->addBreadCrumb([
-                        'link'  => FORUM."index.php?section=tracked",
-                        'title' => $locale['global_056']
-                    ]);
-                    set_meta("description", $locale['global_056']);
-                    include FORUM_SECTIONS."tracked.php";
-                    break;
-                case "unanswered":
-                    include FORUM_SECTIONS."unanswered.php";
-                    add_to_title($locale['global_201'].$locale['global_027']);
-                    BreadCrumbs::getInstance()->addBreadCrumb([
-                        'link'  => INFUSIONS."forum/index.php?section=unanswered",
-                        'title' => $locale['global_027']
-                    ]);
-                    set_meta("description", $locale['global_027']);
-                    break;
-                case "unsolved":
-                    add_to_title($locale['global_201'].$locale['global_028']);
-                    BreadCrumbs::getInstance()->addBreadCrumb([
-                        'link'  => INFUSIONS."forum/index.php?section=unsolved",
-                        'title' => $locale['global_028']
-                    ]);
-                    set_meta("description", $locale['global_028']);
-                    include FORUM_SECTIONS."unsolved.php";
-                    break;
-                case "people":
-                    add_to_title($locale['global_201'].$locale['global_028']);
-                    BreadCrumbs::getInstance()->addBreadCrumb([
-                        'link'  => INFUSIONS."forum/index.php?section=unsolved",
-                        'title' => $locale['global_028']
-                    ]);
-                    set_meta("description", $locale['global_028']);
-                    include FORUM_SECTIONS."unsolved.php";
-                    break;
-                case "moderator":
-                    // what is the report links?
-                    add_to_title($locale['global_201']."Reports");
-                    BreadCrumbs::getInstance()->addBreadCrumb([
-                        'link'  => INFUSIONS."forum/index.php?section=moderator",
-                        'title' => "Reports"
-                    ]);
-                    set_meta("description", "Reports");
-                    include FORUM_SECTIONS."reports.php";
-                    break;
-                default:
-                    redirect(FORUM."index.php");
-            }
-        } else {
-            // Viewforum view
-            if (!empty($this->forum_info['forum_id']) && isset($_GET['viewforum'])) {
-                $this->forum_info['forums'] = self::get_forums($this->forum_info['forum_id']);
-                $this->add_forum_breadcrumbs($this->forum_info['forum_index'], $this->forum_info['forum_id']);
-                $this->get_view_forum_threads();
-            } else {
-                // Categories
-                $this->forum_info['forums'] = self::get_forums();
-            }
+
+        $section = get('section');
+
+        // Section View
+        switch ($section) {
+            case "participated":
+                add_to_title($locale['global_201'].$locale['global_024']);
+                BreadCrumbs::getInstance()->addBreadCrumb([
+                    'link'  => FORUM."index.php?section=participated",
+                    'title' => $locale['global_024']
+                ]);
+                set_meta("description", $locale['global_024']);
+                include FORUM_SECTIONS."participated.php";
+                break;
+            case 'latest':
+                add_to_title($locale['global_201'].$locale['global_021']);
+                BreadCrumbs::getInstance()->addBreadCrumb([
+                    'link'  => FORUM."index.php?section=latest",
+                    'title' => $locale['global_021']
+                ]);
+                set_meta("description", $locale['global_021']);
+                // Clocks at 0.5s
+                include FORUM_SECTIONS."latest.php";
+                break;
+            case 'tracked':
+                add_to_title($locale['global_201'].$locale['global_056']);
+                BreadCrumbs::getInstance()->addBreadCrumb([
+                    'link'  => FORUM."index.php?section=tracked",
+                    'title' => $locale['global_056']
+                ]);
+                set_meta("description", $locale['global_056']);
+                include FORUM_SECTIONS."tracked.php";
+                break;
+            case "unanswered":
+                include FORUM_SECTIONS."unanswered.php";
+                add_to_title($locale['global_201'].$locale['global_027']);
+                BreadCrumbs::getInstance()->addBreadCrumb([
+                    'link'  => INFUSIONS."forum/index.php?section=unanswered",
+                    'title' => $locale['global_027']
+                ]);
+                set_meta("description", $locale['global_027']);
+                break;
+            case "unsolved":
+                add_to_title($locale['global_201'].$locale['global_028']);
+                BreadCrumbs::getInstance()->addBreadCrumb([
+                    'link'  => INFUSIONS."forum/index.php?section=unsolved",
+                    'title' => $locale['global_028']
+                ]);
+                set_meta("description", $locale['global_028']);
+                include FORUM_SECTIONS."unsolved.php";
+                break;
+            case "people":
+                add_to_title($locale['global_201'].$locale['global_028']);
+                BreadCrumbs::getInstance()->addBreadCrumb([
+                    'link'  => INFUSIONS."forum/index.php?section=unsolved",
+                    'title' => $locale['global_028']
+                ]);
+                set_meta("description", $locale['global_028']);
+                include FORUM_SECTIONS."unsolved.php";
+                break;
+            case "moderator":
+                // what is the report links?
+                add_to_title($locale['global_201']."Reports");
+                BreadCrumbs::getInstance()->addBreadCrumb([
+                    'link'  => INFUSIONS."forum/index.php?section=moderator",
+                    'title' => "Reports"
+                ]);
+                set_meta("description", "Reports");
+                include FORUM_SECTIONS."reports.php";
+                break;
+            default:
+                // Viewforum view
+                if (!empty($this->forum_info['forum_id']) && isset($_GET['viewforum'])) {
+                    $this->forum_info['forums'] = self::get_forums($this->forum_info['forum_id']);
+                    $this->add_forum_breadcrumbs($this->forum_info['forum_index'], $this->forum_info['forum_id']);
+                    $this->get_view_forum_threads();
+                } else {
+                    // Categories
+                    $this->forum_info['forums'] = self::get_forums();
+                }
         }
+
 
     }
 
@@ -303,13 +305,10 @@ class Forum extends Forum_Server {
                 ];
 
                 // Calculate Forum New Status
-                $forum_match = "\\|".$data['thread_lastpost']."\\|".$data['forum_id'];
-                $last_visited = (isset($userdata['user_lastvisit']) && isnum($userdata['user_lastvisit'])) ? $userdata['user_lastvisit'] : TIME;
-                if ($data['thread_lastpost'] > $last_visited) {
-                    if (iMEMBER && ($data['thread_lastuser'] !== $userdata['user_id'] || !preg_match("({$forum_match}\\.|{$forum_match}$)", $userdata['user_threads']))) {
-                        $newStatus = "<span class='forum-new-icon'><i title='".$locale['forum_0260']."' class='".self::getForumIcons('new')."'></i></span>";
-                    }
+                if (check_thread_new_status($data['forum_id'], $data['thread_lastpost'], $data['thread_lastuser'])) {
+                    $newStatus = "<span class='forum-new-icon'><i title='".$locale['forum_0260']."' class='".self::getForumIcons('new')."'></i></span>";
                 }
+
             }
 
             // Icons
@@ -395,8 +394,10 @@ class Forum extends Forum_Server {
             $this->forum_info['forum_threadcount_word'] = format_word($this->forum_info['thread_count'], $locale['fmt_thread']);
             $this->forum_info['post_count'] = dbcount("(post_id)", DB_FORUM_POSTS, "forum_id=:forum_id", [':forum_id' => $this->forum_info['forum_id']]);
             $this->forum_info['forum_postcount_word'] = format_word($this->forum_info['post_count'], $locale['fmt_post']);
-            if (!empty($forum_data['forum_description'])) set_meta('description', $forum_data['forum_description']);
-            if (!empty($forum_data['forum_meta'])) set_meta('keywords', $forum_data['forum_meta']);
+            if (!empty($forum_data['forum_description']))
+                set_meta('description', $forum_data['forum_description']);
+            if (!empty($forum_data['forum_meta']))
+                set_meta('keywords', $forum_data['forum_meta']);
             // Generate New thread link
             if ($this->getForumPermission("can_post") && $this->forum_info['forum_type'] > 1) {
                 $this->forum_info['new_thread_link'] = [
@@ -672,6 +673,7 @@ class Forum extends Forum_Server {
 
                 // Make a new template, use Jquery to cut out loading time.
                 $filter_sql = $this->filter()->get_filterSQL();
+
                 $thread_info = $this->thread(FALSE)->getThreadInfo($this->forum_info['forum_id'], $filter_sql);
 
                 $this->forum_info = array_merge_recursive($this->forum_info, $thread_info);

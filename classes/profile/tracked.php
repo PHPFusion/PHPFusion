@@ -9,7 +9,7 @@ use PHPFusion\Template;
  *
  * @package PHPFusion\Infusions\Forum\Classes\Profile
  */
-class Answer  {
+class Tracked  {
 
     private $profile_url = '';
 
@@ -20,8 +20,10 @@ class Answer  {
     private $class = NULL;
 
     private $nav_tabs = [];
+
     private $nav_active = 'latest';
-    private $nav_sql = 'answer-latest';
+
+    private $nav_sql = 'tracked-latest';
 
     /**
      * Summary constructor.
@@ -31,23 +33,20 @@ class Answer  {
      */
     public function __construct(Forum_Profile $obj) {
 
-        $this->profile_url = $obj->getProfileUrl().'ref=answers&amp;';
+        $this->profile_url = $obj->getProfileUrl().'ref=tracked&amp;';
+
         $type = get('type');
+
         $this->nav_tabs = [
-            'votes' => [
-                'link' => $this->profile_url.'type=votes',
-                'title' => 'Votes',
-                'sql' => 'answer-votes'
-            ],
             'activity' => [
                 'link' => $this->profile_url.'type=activity',
                 'title' => 'Activity',
-                'sql' => 'answer-activity',
+                'sql' => 'tracked-activity',
             ],
             'latest' => [
                 'link' => $this->profile_url.'type=latest',
                 'title' => 'All',
-                'sql' => 'answer-latest'
+                'sql' => 'tracked-latest'
             ],
         ];
 
@@ -64,12 +63,15 @@ class Answer  {
 
 
     public function displayProfile() {
+
         $locale = fusion_get_locale();
 
-        $ctpl = Template::getInstance('uf-forum-summary');
+        $ctpl = Template::getInstance('uf-forum-tracked');
+
         $ctpl->set_template(__DIR__.'/../../templates/profile/thread-post.html');
 
         $limit = 24;
+
         $this->class->setSQLResults($limit);
 
         $sql = $this->class->getSQL($this->nav_sql); // all types of posts.
@@ -91,7 +93,7 @@ class Answer  {
             $i++;
         }
 
-        $ctpl->set_tag('row_count', format_word($max_count, 'answer|answers') );
+        $ctpl->set_tag('row_count', format_word($max_count, 'thread|threads') );
 
         $result = dbquery($sql);
 
@@ -99,12 +101,14 @@ class Answer  {
 
             // the actual rows
             while ($data = dbarray($result)) {
-                $data['thread_lastpost'] = showdate('shortdate', $data['thread_lastpost']);
-                $data['post_datestamp'] = showdate('shortdate', $data['post_datestamp']);
+
+                $data['post_datestamp'] = showdate('shortdate', $data['thread_lastpost']);
+
                 $data['thread_viewcount'] = format_word($data['thread_views'], 'time|times');
+
                 $data['thread_subject'] = ucfirst($data['thread_subject']);
-                $data['thread_link'] = FORUM.'viewthread.php?thread_id='.$data['thread_id'].'&amp;pid='.$data['post_id'];
-                $data['post_link'] = FORUM.'viewthread.php?thread_id='.$data['thread_id'].'&amp;pid='.$data['post_id'].'#post_'.$data['post_id'];
+
+                $data['post_link'] = FORUM.'viewthread.php?thread_id='.$data['thread_id'].'&amp;pid='.$data['thread_lastpostid'].'#post_'.$data['thread_lastpostid'];
 
                 $ctpl->set_block('thread_item', $data);
             }
