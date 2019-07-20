@@ -1,8 +1,8 @@
 <?php
 /**
  * Charts.JS API
+ * https://www.chartjs.org/docs/latest/getting-started/usage.html
  */
-
 class Charts {
 
     private $options = [];
@@ -159,7 +159,8 @@ class Charts {
         //print_p($chart_data);
         //print_p($js);
         add_to_jquery($js);
-        return "<canvas id='chart-".$this->chart_id."'></canvas>\n";
+        $height = !empty($options['height']) ? $options['height'] : '350px';
+        return "<canvas id='chart-".$this->chart_id."' style='min-height:$height;'></canvas>\n";
     }
 
 }

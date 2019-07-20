@@ -1057,7 +1057,7 @@ if (!function_exists("timer")) {
             $updated = time();
         }
         $updated = stripinput($updated);
-        $current = time();
+        $current = TIME;
         $calculated = $current - $updated;
         $second = 1;
         $minute = $second * 60;
