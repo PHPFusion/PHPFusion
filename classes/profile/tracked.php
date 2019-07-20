@@ -25,6 +25,7 @@ class Tracked  {
 
     private $nav_sql = 'tracked-latest';
 
+    private $self_noun = '';
     /**
      * Summary constructor.
      * Lock implementation method
@@ -34,6 +35,8 @@ class Tracked  {
     public function __construct(Forum_Profile $obj) {
 
         $this->profile_url = $obj->getProfileUrl().'ref=tracked&amp;';
+
+        $this->self_noun = $obj->self_noun;
 
         $type = get('type');
 

@@ -25,6 +25,8 @@ class Questions  {
 
     private $nav_sql = 'question-latest';
 
+    private $self_noun = '';
+
     /**
      * Summary constructor.
      * Lock implementation method
@@ -34,6 +36,8 @@ class Questions  {
     public function __construct(Forum_Profile $obj) {
 
         $this->profile_url = $obj->getProfileUrl().'ref=questions&amp;';
+
+        $this->self_noun = $obj->self_noun;
 
         $type = get('type');
 

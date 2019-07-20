@@ -22,6 +22,7 @@ class Answer  {
     private $nav_tabs = [];
     private $nav_active = 'latest';
     private $nav_sql = 'answer-latest';
+    private $self_noun = '';
 
     /**
      * Summary constructor.
@@ -32,6 +33,8 @@ class Answer  {
     public function __construct(Forum_Profile $obj) {
 
         $this->profile_url = $obj->getProfileUrl().'ref=answers&amp;';
+        $this->self_noun = $obj->self_noun;
+
         $type = get('type');
         $this->nav_tabs = [
             'votes' => [
