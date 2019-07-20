@@ -218,8 +218,8 @@ class ForumAdminView extends ForumAdminInterface {
                 'forum_poll'         => USER_LEVEL_MEMBER,
                 'forum_users'        => post('forum_users') ? 1 : 0,
                 'forum_lock'         => post('forum_lock') ? 1 : 0,
-                'forum_permissions'  => post('forum_permissions') ? form_sanitizer('forum_permissions', 0, 'forum_permissions') : 0,
-                'forum_order'        => post('forum_order') ? form_sanitizer('forum_order') : '',
+                'forum_permissions'  => post('forum_permissions') ? sanitizer('forum_permissions', 0, 'forum_permissions') : 0,
+                'forum_order'        => sanitizer('forum_order', 0, 'forum_order'),
                 'forum_branch'       => get_hkey(DB_FORUMS, 'forum_id', 'forum_cat', $this->data['forum_cat']),
                 'forum_image'        => '',
                 'forum_mods'         => '',
@@ -675,6 +675,7 @@ class ForumAdminView extends ForumAdminInterface {
                 closetable();
                 break;
             case 'fs':
+                // Forum settings admin
                 BreadCrumbs::getInstance()->addBreadCrumb([
                     'link'  => ADMIN.'settings_forum.php'.$this->aidlink,
                     'title' => self::$locale['forum_settings']

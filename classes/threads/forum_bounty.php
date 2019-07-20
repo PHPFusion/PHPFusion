@@ -120,11 +120,14 @@ class Forum_Bounty extends Forum_Server {
     public function award_bounty() {
         // via postify
         if (self::get_bounty_permissions('can_award_bounty')) {
+
             if (isset(self::$post_data['post_items'][$_GET['post_id']])) {
+                $user_id = fusion_get_userdata('user_id');
 
                 $post_data = self::$post_data['post_items'][$_GET['post_id']];
 
-                if ($post_data['post_author'] !== fusion_get_userdata('user_id')) {
+                if ($post_data['post_author'] !== $user_id) {
+
                     // give the user the points.
                     dbquery("UPDATE ".DB_USERS." SET user_reputation=user_reputation+:points WHERE user_id=:user_id",
                         [
@@ -138,20 +141,22 @@ class Forum_Bounty extends Forum_Server {
                         'thread_id'   => $post_data['thread_id'],
                         'forum_id'    => $post_data['forum_id'],
                         'points_gain' => self::$data['thread_bounty'],
-                        'voter_id'    => fusion_get_userdata('user_id'),
+                        'voter_id'    => $user_id,
                         'user_id'     => $post_data['post_author'],
                     ];
                     dbquery_insert(DB_FORUM_USER_REP, $d, 'save');
 
-                    $title = self::$locale['forum_4105'];
+
                     $message = strtr(self::$locale['forum_4106'], ['{%thread_link%}' => "[url=".fusion_get_settings('siteurl')."infusions/forum/viewthread.php?thread_id=".self::$data['thread_id']."]".self::$data['thread_subject']."[/url]"]);
-                    send_pm($post_data['post_author'], 0, $title, stripinput($message));
+                    send_pm($post_data['post_author'], 0, self::$locale['forum_4105'], stripinput($message));
+
                     // set the post as answered
-                    // set the thread as answered
+                    dbquery("UPDATE ".DB_FORUM_POSTS." SET post_answer=1 WHERE post_id=:pid", [':pid'=>$post_data['post_id']]);
 
-
-                    dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_bounty=:bounty, thread_bounty_description=:desc, thread_bounty_user=:user, thread_bounty_start=:start WHERE thread_id=:thread_id",
+                    // update thread as answered
+                    dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_answered=:ta, thread_bounty=:bounty, thread_bounty_description=:desc, thread_bounty_user=:user, thread_bounty_start=:start WHERE thread_id=:thread_id",
                         [
+                            ':ta' => 1,
                             ':bounty'    => 0,
                             ':desc'      => '',
                             ':user'      => 0,
