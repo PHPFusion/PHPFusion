@@ -1676,6 +1676,14 @@ Global Administration template
     float:left;
     width: 100%;
 }
+
+.avatar-selector {
+    border:2px solid transparent;
+}
+.avatar-selector.active {
+    border:2px solid #ddd;
+}
+
 /* responsive media */
 @media only screen and (max-width: 850px) {
 
@@ -1688,3 +1696,4 @@ Global Administration template
         width: 100%;
     }
 }
+

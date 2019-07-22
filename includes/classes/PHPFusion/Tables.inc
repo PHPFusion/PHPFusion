@@ -1068,7 +1068,7 @@ class Tables {
                         'options'          => $actions_options,
                         'select2_disabled' => TRUE,
                         'stacked'          => form_button(
-                                'apply_filter', 'Apply', 'apply_filter', ['class' => 'btn-sm']
+                                'apply_filter', 'Apply', 'apply_filter', ['class' => 'btn-sm btn-default']
                             ).form_hidden(
                                 'filter_ids', '', ''
                             )

@@ -55,4 +55,21 @@ class Blocks {
 
     }
 
+    public function openside($title = '') {
+        return fusion_get_function('openside', $title);
+    }
+
+    public function closeside() {
+        return fusion_get_function('closeside');
+    }
+
+    public function opentable($title = '') {
+        return fusion_get_function('opentable', $title);
+    }
+
+    public function closetable() {
+        return fusion_get_function('closetable');
+    }
+
+
 }

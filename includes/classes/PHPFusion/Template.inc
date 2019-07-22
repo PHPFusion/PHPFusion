@@ -389,43 +389,74 @@ class Template {
 
     private function parseShortCodes() {
         //debug_print_backtrace();
-
-
         self::$short_code_instance[self::$key] = TIME;
+
         $short_code_pattern = '/\{\[(.*?)\]\}/s'; // group 1 is id, group 2 is the child template
         preg_match_all($short_code_pattern, $this->template, $cache, PREG_SET_ORDER);
         if (!empty($cache)) {
             //print_P($cache);
             $fusion_steam = new Steam('bootstrap3');
             $layout_class = $fusion_steam->load('Layout');
+            $box_class = $fusion_steam->load('Blocks');
             $shortcode_cache = [];
 
             foreach ($cache as $preg_results) { // For each tag found
+
                 if (!empty($preg_results[0]) && !empty($preg_results[1])) {
                     //print_P($preg_results[0]); // {[row_class]}
                     //print_P($preg_results[1]); // row_class
-                    switch($preg_results[1]) {
-                        default:
-                            break;
-                        case 'container':
-                        case 'container_class':
-                            $shortcode_cache[$preg_results[0]] = $layout_class->getContainerClass();
-                            break;
-                        case 'row':
-                        case 'row_class': // Grid row class values
-                            $shortcode_cache[$preg_results[0]] = $layout_class->getRowClass();
-                            break;
-                        case (stristr($preg_results[1], 'col') ? true : false):
-                        case (stristr($preg_results[1], 'column') ? true : false):
-                        case (stristr($preg_results[1], 'column_class') ? true : false):
-                            if ((preg_match('/[-.\w]+[\d]/', $preg_results[1]) ? true : false)): // column class - values must contain `column_class(100)`
-                                preg_match_all('/[-.\w]+[\d]/', $preg_results[1], $percent);
-                                if (!empty($percent[0])) {
-                                    $shortcode_cache[$preg_results[0]] = $layout_class->getColumnClass($percent[0]);
-                                }
-                            endif;
-                            break;
+
+                    // CHECK FOR function() calls.
+                    preg_match_all('/\$(.*)\((.*?)\)/', $preg_results[1], $function, PREG_SET_ORDER);
+
+                    if (!empty($function[0][1])) {
+                        // this is one group
+                        $func_call = $function[0][1];
+                        $func_param = '';
+                        if (!empty($function[0][2])) {
+                            $func_param = $function[0][2];
+                        }
+                        switch($func_call) {
+                            case 'opentable':
+                                $shortcode_cache[$preg_results[0]] = $box_class->opentable($func_param);
+                                break;
+                            case 'closetable':
+                                $shortcode_cache[$preg_results[0]] = $box_class->closetable();
+                                break;
+                            case 'openside':
+                                $shortcode_cache[$preg_results[0]] = $box_class->openside($func_param);
+                                break;
+                            case 'closeside':
+                                $shortcode_cache[$preg_results[0]] = $box_class->closeside();
+                                break;
+                        }
+
+                    } else {
+
+                        switch($preg_results[1]) {
+                            default:
+                                break;
+                            case 'container':
+                            case 'container_class':
+                                $shortcode_cache[$preg_results[0]] = $layout_class->getContainerClass();
+                                break;
+                            case 'row':
+                            case 'row_class': // Grid row class values
+                                $shortcode_cache[$preg_results[0]] = $layout_class->getRowClass();
+                                break;
+                            case (stristr($preg_results[1], 'col') ? true : false):
+                            case (stristr($preg_results[1], 'column') ? true : false):
+                            case (stristr($preg_results[1], 'column_class') ? true : false):
+                                if ((preg_match('/[-.\w]+[\d]/', $preg_results[1]) ? true : false)): // column class - values must contain `column_class(100)`
+                                    preg_match_all('/[-.\w]+[\d]/', $preg_results[1], $percent);
+                                    if (!empty($percent[0])) {
+                                        $shortcode_cache[$preg_results[0]] = $layout_class->getColumnClass($percent[0]);
+                                    }
+                                endif;
+                                break;
+                        }
                     }
+
                 }
             }
             //print_p($shortcode_cache);

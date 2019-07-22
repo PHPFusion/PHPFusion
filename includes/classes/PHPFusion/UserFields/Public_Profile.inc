@@ -2,6 +2,7 @@
 
 namespace PHPFusion\UserFields;
 
+use PHPFusion\UserFieldsInput;
 use PHPFusion\UserFieldsQuantum;
 
 class Public_Profile extends UserFieldsQuantum {
@@ -71,8 +72,10 @@ class Public_Profile extends UserFieldsQuantum {
         ];
 
         if (iADMIN || $this->user_name_change) {
+
             $user_name = post("user_name") ?: $this->user_data['user_name'];
-            $info['user_name'] = form_text('user_name', $this->locale['u127'], $user_name, [
+
+            $info['user_name_input'] = form_text('user_name', $this->locale['u127'], $user_name, [
                 'max_length' => 30,
                 'required'   => 1,
                 'error_text' => $this->locale['u122'],
@@ -83,53 +86,8 @@ class Public_Profile extends UserFieldsQuantum {
         // Field exist only in edit profile
         if ($this->registration === FALSE) {
 
-            // Avatar Field
-            if (isset($this->user_data['user_avatar']) && $this->user_data['user_avatar'] != "") {
-                $info['user_avatar'] = "
-                <div class='row'>\n
-                <div class='col-xs-12 col-sm-3'>".$this->locale['u185']."</div>
-                <div class='col-xs-12 col-sm-9'>
-                    <div class='p-l-10'>
-                    <label for='user_avatar_upload'>".display_avatar($this->user_data, '150px', '', FALSE, 'img-thumbnail')."</label>\n<br />\n".form_checkbox("delAvatar", $this->locale['u187'], '', ['reverse_label' => TRUE])."
-                    </div>
-                </div></div>
-                ";
-                add_to_jquery("
-                $('#delAvatar').bind('click', function(e) {
-                    var checked= $(this).prop('checked');
-                    if (checked) {
-                        if (confirm(\"Are you sure you are to remove your current existing avatar?\")) {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    }
-                });
-                ");
-            } else {
-                $upload_settings = [
-                    "disable_fileinput" => FALSE,
-                    'upload_path'       => IMAGES."avatars/",
-                    'input_id'          => 'user_avatar_upload',
-                    'valid_ext'         => ".jpg,.png,.gif,.svg",
-                    'type'              => 'image',
-                    'max_byte'          => $settings['avatar_filesize'],
-                    'max_height'        => $settings['avatar_width'],
-                    'max_width'         => $settings['avatar_height'],
-                    'inline'            => TRUE,
-                    'thumbnail'         => 0,
-                    'width'             => '100%',
-                    'class'             => 'm-t-10 m-b-0',
-                    "error_text"        => $this->locale['u180'],
-                    "template"          => "thumbnail",
-                    'croppie'           => TRUE,
-                    "croppie_resize"    => TRUE,
-                    "croppie_zoom"      => TRUE,
-                    'ext_tip'           => sprintf($this->locale['u184'], parsebytesize($settings['avatar_filesize']), $settings['avatar_width'], $settings['avatar_height'])
-                ];
+            $info['user_avatar'] = $this->userAvatarStudio();
 
-                $info['user_avatar'] = form_fileinput('user_avatar', $this->locale['u185'], '', $upload_settings);
-            }
             // Real name change button
             $info['name_change_button'] = form_button('update_name', 'Update Name', 'update_name', ['class' => $this->options['btn_post_class']]);
 
@@ -137,6 +95,7 @@ class Public_Profile extends UserFieldsQuantum {
             if ($this->is_admin_panel === TRUE && infusion_exists('forum')) {
 
                 $user_reputation = post("user_reputation", FILTER_VALIDATE_INT) ?: $this->user_data['user_reputation'];
+
                 $info['user_reputation'] = form_text('user_reputation', $this->locale['u210'], $user_reputation, [
                         'type'   => 'number',
                         'inline' => $this->inline_field
@@ -146,32 +105,56 @@ class Public_Profile extends UserFieldsQuantum {
 
             // Quantum
             $this->load_fields();
+
             if ($this->is_admin_panel === TRUE) {
                 // admin edit profile
                 $info += $this->get_user_fields();
+
             } else {
+
                 $info['user_fields'] = '';
+
                 foreach ($this->fields as $cat_id => $field_rows) {
-                    $info['user_fields'] .= "<h4>".$this->get_section_title($cat_id)."</h4>";
+
+                    $section_title = $this->get_section_title($cat_id);
+
+                    $info['user_fields'] .= "<h4>".$section_title."</h4>";
+
+                    $field_output = '';
+
                     if (!empty($field_rows)) {
+
                         foreach ($field_rows as $fields) {
+
                             $options = [
                                 'show_title' => TRUE,
                                 'inline'     => $this->inline_field,
                                 'required'   => (bool)$fields['field_required']
                             ];
+
                             if ($fields['field_type'] == 'file') {
-                                $options += [
-                                    'plugin_folder' => $this->plugin_folder,
-                                ];
+                                $options += ['plugin_folder' => $this->plugin_folder];
                             }
+
                             $output = $this->display_fields($fields, $this->user_data, $this->method, $options);
+
                             $info['user_fields'] .= $output;
+
+                            $field_output .= $output;
                         }
                     }
+
+                    $info['fields'][$cat_id] = [
+                        'title'  => $section_title,
+                        'fields' => $field_output
+                    ];
+
                 }
             }
+
         } else {
+
+            // This is registration
             $info += $this->get_user_fields();
 
             if ($this->display_validation == 1 && $this->is_admin_panel === FALSE) {
@@ -226,6 +209,166 @@ class Public_Profile extends UserFieldsQuantum {
         return NULL;
     }
 
+    private function userAvatarStudio() {
+        $settings = fusion_get_settings();
+
+        $settings['avatar_studio'] = 1;
+
+        // Save input for avatar studio or custom upload
+        if (post('user_hash')) {
+            // check user password
+            $uf_input = new UserFieldsInput();
+            $uf_input->user_data = $this->user_data;
+            if ($uf_input->check_user_hash()) {
+                if (!empty($_FILES['uav_input']['tmp_name'])) {
+                    $avatar = form_sanitizer($_FILES['uav_input'], '', 'uav_input');
+                    if (isset($avatar['error']) && $avatar['error'] == 0) {
+                        // success in uploading.
+                        if (!empty($avatar['image_name'])) {
+                            // delete the old avatar from the database
+                            if (is_file(BASEDIR.'images/avatars/'.$this->user_data['user_avatar'])) {
+                                unlink(BASEDIR.'images/avatars/'.$this->user_data['user_avatar']);
+                            }
+                            dbquery("UPDATE ".DB_USERS." SET user_avatar=:filename WHERE user_id=:uid", [
+                                ':filename' => $avatar['image_name'],
+                                ':uid'      => $this->user_data['user_id']
+                            ]);
+                            addNotice('success', 'Your avatar has been updated');
+                        }
+                    }
+                    //redirect(FUSION_REQUEST);
+                } else if ($settings['avatar_studio'] == 1) {
+                    // avatar studio functions
+                    $avatar = sanitizer('avatar_studio', '', 'avatar_studio');
+                    if (is_file(BASEDIR.'images/avatars/studio/'.$avatar)) {
+
+                        require_once INCLUDES.'photo_functions_include.php';
+
+                        // delete the old avatar from the database
+                        if (is_file(BASEDIR.'images/avatars/'.$this->user_data['user_avatar'])) {
+                            unlink(BASEDIR.'images/avatars/'.$this->user_data['user_avatar']);
+                        }
+
+                        $image_name = stripfilename(substr($avatar, 0, strrpos($avatar, ".")));
+                        if ($avatar != "" && !preg_match("/[^a-zA-Z0-9_-]/", $avatar)) {
+                            $image_name = $avatar;
+                        }
+                        $image_ext = strtolower(strrchr($avatar, '.'));
+                        $avatar_filename = filename_exists(BASEDIR.'images/avatars/', $image_name.$image_ext);
+
+                        copy(BASEDIR.'images/avatars/studio/'.$avatar, BASEDIR.'images/avatars/'.$avatar_filename);
+
+                        dbquery("UPDATE ".DB_USERS." SET user_avatar=:filename WHERE user_id=:uid", [
+                            ':filename' => $avatar_filename,
+                            ':uid'      => $this->user_data['user_id']
+                        ]);
+                        addNotice('success', 'Your avatar has been updated');
+                    }
+                }
+            } else {
+                addNotice('danger', 'Account security error');
+            }
+            redirect(FUSION_REQUEST);
+        }
+        // Avatar Field
+        // if (isset($this->user_data['user_avatar']) && $this->user_data['user_avatar'] != "") {
+        //     $info['user_avatar'] = "<label for='user_avatar_upload'>".display_avatar($this->user_data, '150px', '', FALSE, 'img-thumbnail')."</label>\n<br />\n".form_checkbox("delAvatar", $this->locale['u187'], '', ['reverse_label' => TRUE]);
+        //     add_to_jquery("
+        //     $('#delAvatar').bind('click', function(e) {
+        //         var checked= $(this).prop('checked');
+        //         if (checked) {
+        //             if (confirm(\"Are you sure you are to remove your current existing avatar?\")) {
+        //                 return true;
+        //             } else {
+        //                 return false;
+        //             }
+        //         }
+        //     });
+        //     ");
+        // // } else {
+
+        $avatar_settings = [
+            'upload_path'     => IMAGES."avatars/",
+            'valid_ext'       => ".jpg,.png,.gif,.svg",
+            'type'            => 'image',
+            'max_byte'        => $settings['avatar_filesize'],
+            'max_height'      => $settings['avatar_width'],
+            'max_width'       => $settings['avatar_height'],
+            'inline'          => FALSE,
+            'thumbnail'       => FALSE,
+            'width'           => '100%',
+            "error_text"      => $this->locale['u180'],
+            "template"        => "modern",
+            'croppie'         => TRUE,
+            "croppie_resize"  => TRUE,
+            "croppie_zoom"    => TRUE,
+            'default_preview' => IMAGES.'avatars/no-avatar.jpg',
+            "crop_box_width"  => 250, // 300 px default
+            "crop_box_height" => 250,
+            //'class' => 'spacer-sm',
+            'placeholder'     => '<h4 class="strong m-t-5 m-b-5">Click or drag photo here</h4><small>'.sprintf($this->locale['u184'], parsebytesize($settings['avatar_filesize']), $settings['avatar_width'], $settings['avatar_height']),
+            'icon'            => '',
+        ];
+
+        $info['user_avatar'] = '<div class="clearfix"><div class="'.grid_column_size(100, 40, 20).'">';
+        $info['user_avatar'] .= '<label for="uav" class="control-label spacer-xs">'.$this->locale['u185'].':</label>';
+        $info['user_avatar'] .= '</div><div class="'.grid_column_size(100, 40, 30).'">';
+        $info['user_avatar'] .= display_avatar($this->user_data, '70px', FALSE, '', 'img-circle').'<a href="#uav" class="open-uav m-l-15">Change</a>';
+        $info['user_avatar'] .= '</div></div>';
+
+        // Modal
+        $avatar_header = '<ul class="nav nav-pills m-b-0" role="tablist" style="font-size:16px;">';
+        $avatar_header .= '<li role="presentation" class="active"><a aria-controls="avatar-studio" role="tab" href="#avatar-studio" data-toggle="tab">Avatar Studio</a></li>';
+        $avatar_header .= '<li role="presentation"><a aria-controls="avatar-studio" role="tab" href="#avatar-upload" data-toggle="tab">Upload your own Avatar</a></li>';
+        $avatar_header .= '</ul>';
+        $avatar_media = '<div class="tab-content p-0" style="border:0;">';
+        if ($settings['avatar_studio'] == 1) {
+            $avatars = makefilelist(IMAGES.'avatars/studio/');
+            $user_studio_val = '';
+            if (!empty($avatars)) {
+                $avatar_media .= '<div role="tabpanel" class="tab-pane active" id="avatar-studio">';
+                $avatar_media .= '<div class="uav-media column-4">';
+                foreach ($avatars as $avatar_file) {
+                    $current_file = $this->user_data['user_avatar'] == $avatar_file ? ' active' : '';
+                    $user_studio_val = $current_file ? $this->user_data['user_avatar'] : '';
+                    $avatar_media .= '<div data-file="'.$avatar_file.'" class="avatar-selector m-b-20'.$current_file.'"><img src="'.IMAGES.'avatars/studio/'.$avatar_file.'" class="img-responsive"/></div>';
+                }
+                $avatar_media .= form_hidden('avatar_studio', '', $user_studio_val);
+                $avatar_media .= '</div>';
+                $avatar_media .= '</div>';
+            }
+            add_to_jquery("
+                $('#avatar-studio .avatar-selector').bind('click', function( e ) {
+                    let as_file = $(this).data('file');
+                    if (as_file) {
+                        $('.avatar-selector').removeClass('active');
+                        $(this).addClass('active');
+                        $('#avatar_studio').val( as_file );
+                    }
+                });
+                $('button[name=\"confirm_avatar\"]').bind('click', function() {
+                    $('#avatar_studio_frm').submit();
+                });
+                ");
+        }
+        $avatar_media .= '<div role="tabpanel" class="tab-pane" id="avatar-upload">';
+        $avatar_media .= form_fileinput('uav_input', '', '', $avatar_settings);
+        $avatar_media .= form_hidden('user_id', '', $this->user_data['user_id']);
+        $avatar_media .= form_hidden('user_hash', '', $this->user_data['user_password']);
+        $avatar_media .= '</div>';
+
+        $modal = openmodal('uav', $avatar_header, ['button_class' => 'open-uav']);
+        $modal .= openform('avatar_studio_frm', 'post', FORM_REQUEST, ['enctype' => TRUE]);
+        $modal .= $avatar_media;
+        $modal .= closeform();
+        $modal .= modalfooter(form_button('cancel_uav', 'Cancel', 'cancel_uav', ['data' => ['dismiss' => 'modal']]).form_button('confirm_avatar', 'Confirm', 'confirm_avatar', ['class' => 'btn-primary']));
+        $modal .= closemodal();
+
+        add_to_footer($modal);
+
+        return $info['user_avatar'];
+    }
+
     /**
      * Fetch User Fields Array to templates
      * Toggle with class string method - input or display
@@ -266,7 +409,7 @@ class Public_Profile extends UserFieldsQuantum {
             $uf_query = "SELECT f.*, c.* FROM
             ".DB_USER_FIELDS." f
             INNER JOIN ".DB_USER_FIELD_CATS." c ON c.field_cat_id=f.field_cat
-            ".( $uf_cond ? "WHERE $uf_cond" : '')." ORDER BY c.field_cat_order, f.field_order";
+            ".($uf_cond ? "WHERE $uf_cond" : '')." ORDER BY c.field_cat_order, f.field_order";
 
             $result = dbquery($uf_query, $uf_bind);
 
@@ -277,7 +420,7 @@ class Public_Profile extends UserFieldsQuantum {
                     if ($data['field_cat_id']) {
                         $cat_name = UserFieldsQuantum::parse_label($data['field_cat_name']);
                         $category[$data['field_parent']][$data['field_cat_id']] = $cat_name;
-                        $fields['user_field_extended'][$data['field_cat_id']] ['title' ] = $cat_name;
+                        $fields['user_field_extended'][$data['field_cat_id']] ['title'] = $cat_name;
                     }
 
                     if ($data['field_cat']) {
@@ -375,6 +518,7 @@ class Public_Profile extends UserFieldsQuantum {
 
     /**
      * Display Captcha
+     *
      * @return string
      * @throws \ReflectionException
      */

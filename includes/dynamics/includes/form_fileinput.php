@@ -66,6 +66,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
         'thumbnail2_suffix' => '_t2',
         'thumbnail2_ratio'  => 0,
         'delete_original'   => FALSE,
+        'default_preview'   => IMAGES.'no_photo.png',
         'max_width'         => 1800,
         'max_height'        => 1600,
         'max_byte'          => 1500000,
@@ -79,6 +80,13 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
         'hide_remove'       => FALSE,
         'krajee_disabled'   => FALSE,
         'replace_upload'    => FALSE, // makes upload unique (i.e. overwrite instead of creating new)
+        "croppie"              => FALSE,
+        "croppie_resize"       => FALSE,
+        "cropper_zoom"         => FALSE,
+        "crop_viewport_width"  => 200, // 200px default
+        "crop_viewport_height" => 200,
+        "crop_box_width"       => 300, // 300 px default
+        "crop_box_height"      => 300,
     ];
 
     $options += $default_options;
@@ -134,6 +142,104 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
     </label>\n" : '';
     $html .= ($options['inline']) ? "<div class='col-xs-12 ".($label ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12")."'>\n" : "";
     $html .= "<input type='file' ".($format ? "accept='".$format."'" : '')." name='".$input_name."' id='".$options['input_id']."' style='width:".$options['width']."' ".($options['deactivate'] ? 'readonly' : '')." ".($options['multiple'] ? "multiple='1'" : '')." />\n";
+
+    // Croppie
+    if ($options['croppie'] === TRUE) {
+        if (!defined("CROPPIE_JS")) {
+            add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/croppie/croppie.css'/>");
+            add_to_footer("<script src='".INCLUDES."jquery/croppie/exif.js'></script>");
+            add_to_footer("<script src='".INCLUDES."jquery/croppie/croppie.js'></script>");
+            define("CROPPIE_JS", true);
+        }
+        $html .= "<div id='".$options['input_id']."-croppie'></div>\n";
+        //$html .= "<button type='button' class='upload-result'>Result</button>\n";
+        $html .= form_hidden("top_x", "Top X", "");
+        $html .= form_hidden("top_y", "Top Y", "");
+        $html .= form_hidden("bottom_x", "Bottom X", "");
+        $html .= form_hidden("bottom_y", "Bottom Y", "");
+        $html .= form_hidden("upload_zoom", "Zoom Point", "");
+        add_to_jquery("
+        function runCroppie() {
+     
+            var uploadCrop = $('#".$options['input_id']."-croppie').croppie({
+                viewport: {
+                    width: ".$options['crop_viewport_width'].",
+                    height: ".$options['crop_viewport_height'].",
+                },
+                boundary: { 
+                    width: ".$options['crop_box_width'].", 
+                    height: ".$options['crop_box_height']." 
+                },
+                enableResize: false,
+                enableExif: true
+            }).hide();
+				
+		    function readFile(input) {
+ 			    if (input.files && input.files[0]) {
+                    var reader = new FileReader();	            
+                    reader.onload = function (e) {
+                        $('#".$options['input_id']."-croppie').addClass('ready');
+                        uploadCrop.croppie('bind', {
+                            url: e.target.result
+                        }).then(function(){
+                            console.log('jQuery bind complete');	            			            		
+                        });	            		            	
+                    }	            
+                    reader.readAsDataURL(input.files[0]);
+                    $('.file-input').hide();
+                    uploadCrop.show();	            
+	            } else {
+		            swal(\"Sorry - you're browser doesn't support the FileReader API\");
+		        }
+		    }
+		
+            $('#".$options['input_id']."').on('change', function (e) { 
+                readFile(this);
+                var imgProp = uploadCrop.croppie('get');
+                console.log(imgProp);            
+                var topLeftX = imgProp.points[0];
+                var topLeftY = imgProp.points[1];
+                var bottomRightX = imgProp.points[2];
+                var bottomRightY = imgProp.points[3];
+                var zoomPoint = imgProp.zoom;                        
+                $('#top_x').val(topLeftX);
+                $('#top_y').val(topLeftY);
+                $('#bottom_x').val(bottomRightX);
+                $('#bottom_y').val(bottomRightY);
+                $('#upload_zoom').val(zoomPoint);
+            });
+		
+            uploadCrop.on('update.croppie', function(ev, imgProp) {		    
+                var topLeftX = imgProp.points[0];
+                var topLeftY = imgProp.points[1];
+                var bottomRightX = imgProp.points[2];
+                var bottomRightY = imgProp.points[3];
+                var zoomPoint = imgProp.zoom;                        
+                $('#top_x').val(topLeftX);
+                $('#top_y').val(topLeftY);
+                $('#bottom_x').val(bottomRightX);
+                $('#bottom_y').val(bottomRightY);
+                $('#upload_zoom').val(zoomPoint);
+            });
+		
+		
+		
+		$('.upload-result').on('click', function (ev) {
+            // generate thumbnail.
+			uploadCrop.croppie('result', {
+				type: 'canvas',
+				size: 'viewport'
+			}).then(function (resp) {
+				console.log(resp);
+			});
+		});
+		
+	}   
+	
+	 runCroppie();
+    ");
+    }
+
     $html .= $options['ext_tip'] ? "<span class='tip'><i>".$options['ext_tip']."</i></span><br/>" : "";
     $html .= (\Defender::inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : '';
 
@@ -323,14 +429,14 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
                         ".($value ? "initialPreview: ".$value.", " : '')."
                         ".($options['preview_off'] ? "showPreview: false, " : '')."
                         initialPreviewAsData: true,
-                        defaultPreviewContent: '<img class=\"img-responsive\" src=\"".IMAGES."no_photo.png\" alt=\"".$browseLabel."\" style=\"width:100%;\">',
+                        defaultPreviewContent: '<img class=\"img-responsive\" src=\"".$options['default_preview']."\" alt=\"".$browseLabel."\" style=\"width:100%;\">',
                         browseClass: 'btn btn-block btn-default',
                         uploadClass: 'btn btn-modal',
                         captionClass : '',
                         maxFileCount: '".$options['max_count']."',
                         removeClass : 'btn button',
                         browseLabel: '".$browseLabel."',
-                        browseIcon: '<i class=\"".$options['icon']."\"></i>',
+                        browseIcon: '', //<i class=\"".$options['icon']."\"></i>',
                         showCaption: false,
                         showRemove: false,
                         ".($options['jsonurl'] ? "uploadUrl : '".$options['jsonurl']."'," : '')."
@@ -339,7 +445,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
                         dropZoneEnabled: ".($options['dropzone'] ? "true" : "false").",
                         $extra_data_js
                         layoutTemplates: {
-                            main2: '<div class=\"panel panel-default\">' + '{preview}' + '<div class=\"panel-body\">' + ' {browse}' + '</div></div>',
+                            main2: '<div class=\"panel panel-default no-shadow\">' + '{preview}' + '<div class=\"panel-body\">' + ' {browse}' + '</div></div>',
                         },
                         ".$lang."
                     });

@@ -80,22 +80,21 @@ class UserFieldsInput {
 
     /**
      * Checks user password integrity
-     *
+     * Requires POST of 'user_hash'
      * @return bool
      * @throws \Exception
      */
     public function check_user_hash() {
-        if ($this->is_admin_panel === TRUE && checkrights('M'))
+        if ($this->is_admin_panel === TRUE && checkrights('M')) {
             return TRUE;
-
-        if (isset($_POST['user_hash'])) {
-            $user_hash = form_sanitizer($_POST['user_hash'], '', 'user_hash');
-            if ($user_hash == $this->user_data['user_password']) {
-                return TRUE;
-            }
         }
-        \Defender::stop();
 
+        $user_hash = sanitizer('user_hash', '', 'user_hash');
+        if ($user_hash == $this->user_data['user_password']) {
+            return TRUE;
+        }
+
+        \Defender::stop();
         return FALSE;
     }
 

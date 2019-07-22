@@ -28,7 +28,7 @@ $admin->addAdminPage('UF', "Security Fields", "UF-3", ADMIN.'user_fields.php'.fu
 
 $user_field = new PHPFusion\UserFieldsQuantum();
 $user_field->setLocale($locale);
-$user_field->setSystemTitle($locale['202']);
+$user_field->setTitle($locale['202']);
 $user_field->setAdminRights('UF');
 $user_field->setMethod('input');
 $user_field->displayQuantumAdmin();
