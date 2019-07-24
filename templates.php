@@ -10,6 +10,19 @@ if (!function_exists('render_forum')) {
 }
 
 /**
+ * Displays viewforum for 4 basic pages
+ * get view - threads
+ * get view - subforums
+ * get view - people
+ * get view - activity
+ */
+if (!function_exists('render_viewforum')) {
+    function render_viewforum($info) {
+        return \PHPFusion\Infusions\Forum\Classes\Forum_Viewer::getInstance()->viewforum($info);
+    }
+}
+
+/**
  * Display The Forum Thread Page
  * Template File        templates/forum_threads.html
  */
@@ -131,9 +144,11 @@ if (!function_exists('forum_filter')) {
             <div class='pull-left'>
                 <?php echo $locale['forum_0388']; ?>
                 <div class='forum-filter dropdown'>
-                    <button class='btn btn-xs <?php echo(isset($_GET['time']) ? "btn-default active" : "btn-default") ?> dropdown-toggle' data-toggle='dropdown'>
-                        <?php echo(isset($_GET['time']) && in_array($_GET['time'], array_flip($selector)) ? $selector[$_GET['time']] : $locale['forum_0211']) ?>
-                        <span class='caret'></span>
+                    <button class='btn btn-sm <?php echo(isset($_GET['time']) ? "btn-default active" : "btn-default") ?> dropdown-toggle' data-toggle='dropdown'>
+                        <strong>
+                            <?php echo(isset($_GET['time']) && in_array($_GET['time'], array_flip($selector)) ? $selector[$_GET['time']] : $locale['forum_0211']) ?>
+                        </strong>
+                        <span class='caret m-l-5'></span>
                     </button>
                     <ul class='dropdown-menu'>
                         <?php
@@ -147,9 +162,9 @@ if (!function_exists('forum_filter')) {
             <div class='pull-left'>
                 <?php echo $locale['forum_0225'] ?>
                 <div class='forum-filter dropdown'>
-                    <button class='btn btn-xs <?php echo(isset($_GET['sort']) ? "btn-default active" : "btn-default") ?> dropdown-toggle' data-toggle='dropdown'>
-                        <?php echo(isset($_GET['sort']) && in_array($_GET['sort'], array_flip($selector3)) ? $selector3[$_GET['sort']] : $locale['forum_0381']) ?>
-                        <span class='caret'></span>
+                    <button class='btn btn-sm <?php echo(isset($_GET['sort']) ? "btn-default active" : "btn-default") ?> dropdown-toggle' data-toggle='dropdown'>
+                        <strong><?php echo(isset($_GET['sort']) && in_array($_GET['sort'], array_flip($selector3)) ? $selector3[$_GET['sort']] : $locale['forum_0381']) ?></strong>
+                        <span class='caret m-l-5'></span>
                     </button>
                     <ul class='dropdown-menu dropdown-menu-right'>
                         <?php
@@ -160,9 +175,11 @@ if (!function_exists('forum_filter')) {
                     </ul>
                 </div>
                 <div class='forum-filter dropdown'>
-                    <button class='btn btn-xs <?php echo(isset($_GET['order']) ? "btn-default active" : "btn-default") ?> dropdown-toggle' data-toggle='dropdown'>
-                        <?php echo(isset($_GET['order']) && in_array($_GET['order'], array_flip($selector4)) ? $selector4[$_GET['order']] : $locale['forum_0230']) ?>
-                        <span class='caret'></span>
+                    <button class='btn btn-sm <?php echo(isset($_GET['order']) ? "btn-default active" : "btn-default") ?> dropdown-toggle' data-toggle='dropdown'>
+                        <strong>
+                            <?php echo(isset($_GET['order']) && in_array($_GET['order'], array_flip($selector4)) ? $selector4[$_GET['order']] : $locale['forum_0230']) ?>
+                        </strong>
+                        <span class='caret m-l-5'></span>
                     </button>
                     <ul class='dropdown-menu dropdown-menu-right'>
                         <?php
@@ -178,7 +195,7 @@ if (!function_exists('forum_filter')) {
                 $reset_url = clean_request('', ['time', 'sort', 'order'], FALSE);
                 ?>
                 <div class="pull-right">
-                    <a href="<?php echo $reset_url ?>" class="btn btn-xs btn-default"><i class="fas fa-times-circle"></i> Reset</a>
+                    <a href="<?php echo $reset_url ?>" class="btn btn-sm btn-default"><i class="fas fa-times-circle"></i> Reset</a>
                 </div>
                 <?php
             }

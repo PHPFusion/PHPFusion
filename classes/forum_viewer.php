@@ -46,16 +46,23 @@ if (!defined("IN_FUSION")) {
  *
  * @package PHPFusion\Infusions\Forum\Classes
  */
-
 class Forum_Viewer {
 
     private static $instance = NULL;
+
     protected $forum_id = 0;
+
     private $info = [];
+
     private $locale = [];
+
     private $forum_nav_callback = [];
+
     private $css_file_path = '';
 
+    /**
+     * Forum_Viewer constructor.
+     */
     public function __construct() {
 
         $dev_mode = FALSE;
@@ -68,6 +75,7 @@ class Forum_Viewer {
 
     /**
      * Forum View Instance
+     *
      * @return null|Forum_Viewer
      */
     public static function getInstance() {
@@ -91,13 +99,17 @@ class Forum_Viewer {
             }
 
             return $this->forum_section($info);
+
         } else {
+
             if (isset($_GET['viewforum'])) {
+
                 if ($info['forum_type'] > 1) {
-                    return $this->forum_viewforum($info);
+                    return render_viewforum($info);
                 } else {
                     return $this->forum_index($info);
                 }
+
             } else {
                 return $this->forum_index($info);
             }
@@ -107,6 +119,7 @@ class Forum_Viewer {
     /**
      * forum/index.php?section=moderator&rid={int}
      * Template name - forum-reports
+     *
      * @param $info
      *
      * @return string
@@ -239,6 +252,7 @@ class Forum_Viewer {
     /**
      * Render the forum thread post item
      * Template name - forum-post
+     *
      * @param mixed $data post data
      * @param int   $n    nth count
      *
@@ -249,7 +263,7 @@ class Forum_Viewer {
         $aidlink = fusion_get_aidlink();
         $settings = fusion_get_settings();
         $forum_settings = Forum_Server::get_forum_settings();
-        $file_path = Forum_Server::get_template('forum_post');
+        $file_path = get_forum_template('forum_post');
         $html = \PHPFusion\Template::getInstance('forum-post');
         $html->set_template($file_path);
         //$html->set_css($this->css_file_path);
@@ -459,7 +473,7 @@ class Forum_Viewer {
     public function forum_threads_item($info) {
         $locale = fusion_get_locale();
         // Ok, since this is a subpage and also require replacement, we need a new html file.
-        $file_path = Forum_Server::get_template('forum_thread');
+        $file_path = get_forum_template('forum_thread');
         $html = \PHPFusion\Template::getInstance('forum-thread');
         $html->set_locale($locale);
         $html->set_template($file_path);
@@ -537,7 +551,7 @@ class Forum_Viewer {
                         $thread_buttons = $html3->get_output();
                     }
 
-                    $html->set_block('threads', [
+                    $threads_arr = [
                         'thread_id'             => $cdata['thread_id'],
                         'thread_link_url'       => $cdata['thread_link']['link'],
                         'thread_link_title'     => $cdata['thread_link']['title'],
@@ -558,10 +572,10 @@ class Forum_Viewer {
                         'thread_views_word'     => format_word($cdata['thread_views'], 'view|views'),
                         'thread_postcount_word' => format_word($cdata['thread_postcount'], 'post|posts'),
                         'thread_votecount_word' => format_word($cdata['vote_count'], 'vote|votes'),
-                        "thread_user_avatars"   => implode("", $cdata['thread_user_avatars']),
+                        "thread_user_avatars"   => implode('', $cdata['thread_user_avatars']),
                         // Last info
                         'last_avatar'           => $cdata['thread_last']['avatar'],
-                        'last_rank'             => $cdata['thread_last']['user']['user_rank'],
+                        'last_rank'             => $cdata['thread_last']['user']['user_rank']['rank_user_level'],
                         'last_profile_link'     => $cdata['thread_last']['profile_link'],
                         'last_avatar_sm'        => $cdata['thread_last']['avatar_sm'],
                         'last_post_message'     => trim_text($cdata['last_post_message'], 80),
@@ -572,7 +586,11 @@ class Forum_Viewer {
                         "track_title"           => $cdata['track_button']['title'],
                         "track_onclick"         => $cdata['track_button']['onclick'],
                         "thread_buttons"        => $thread_buttons
-                    ]);
+                    ];
+                    //print_P($threads_arr);
+                    //print_P($cdata['thread_last']['user']);
+                    $html->set_block('threads', $threads_arr);
+
                 }
             }
         } else {
@@ -596,7 +614,7 @@ class Forum_Viewer {
      */
     public function forum_section($info) {
         $locale = fusion_get_locale();
-        $file_path = Forum_Server::get_template('forum_section');
+        $file_path = get_forum_template('forum_section');
         $html = \PHPFusion\Template::getInstance('forum-section');
         $html->set_template($file_path);
         $html->set_css($this->css_file_path);
@@ -656,26 +674,142 @@ class Forum_Viewer {
      *
      * @return string
      */
-    public function forum_viewforum($info) {
+    public function viewforum($info) { // need the $info['get_view']....
+
         $locale = fusion_get_locale();
-        $file_path = Forum_Server::get_template('viewforum');
-        $html = \PHPFusion\Template::getInstance('viewforum');
-        $html->set_template($file_path);
+
+        $html = \PHPFusion\Template::getInstance('forum-viewforum');
+        $html->set_template(get_forum_template('viewforum'));
         $html->set_css($this->css_file_path);
         $html->set_locale($locale);
+
+        $view = get('view');
+        $view = $view && in_array($view, ['threads', 'subforums', 'people', 'activity']) ? $view : '';
+        switch ($view) {
+            default:
+                if (!empty($info['filters']['type'])) {
+                    foreach ($info['filters']['type'] as $key => $tabs) {
+                        $html->set_block('tab_filter', [
+                            'filter_link' => $tabs['link'],
+                            'active_text' => ($tabs['active'] ? ' strong' : ''),
+                            'title'       => $tabs['icon'].$tabs['title'],
+                            'count'       => $tabs['count']
+                        ]);
+                    }
+                }
+
+                $html->set_tag('forum_filter', forum_filter($info));
+
+                if (!empty($info['threads']['pagenav'])) {
+                    $html->set_block('pagenav_top', ['navigation' => $info['threads']['pagenav']]);
+                    $html->set_block('pagenav_bottom', ['navigation' => $info['threads']['pagenav']]);
+                }
+
+                $html->set_block('view', ['content' => $this->forum_threads_item($info)]);
+
+            case 'threads':
+                if ($info['forum_type'] > 1) {
+                    $html->set_block('view', ['content' => $this->forum_threads_item($info)]);
+                }
+                break;
+
+            case 'subforums':
+
+                $html->set_template(FORUM.'templates/viewforum/forum_subforums.html');
+
+                if (!empty($info['item'][$_GET['forum_id']]['child'])) {
+                    $i = 1;
+                    foreach ($info['item'][$_GET['forum_id']]['child'] as $subforum_id => $subforum_data) {
+                        $html->set_block('subforums', [
+                            'content' => forum_subforums_item($subforum_data)
+                        ]);
+                        $i++;
+                    }
+                } else {
+                    $html->set_block('no_forum');
+                }
+
+                return $html->get_output();
+                break;
+
+            case 'people':
+
+                $html->set_template(FORUM.'templates/viewforum/forum_users.html');
+                // print_p('people setter now');
+                $html->set_block('pagenav_top', ['pagenav' => $info['pagenav']]);
+                $html->set_block('pagenav_bottom', ['pagenav' => $info['pagenav']]);
+                $html->set_tag('person_title', $locale['forum_0018']);
+                $html->set_tag('latest_thread_title', $locale['forum_0012']);
+                $html->set_tag('activity_title', $locale['forum_0016']);
+
+                if (!empty($info['item'])) {
+                    foreach ($info['item'] as $user) {
+                        $html->set_block('users_list', [
+                            'avatar'        => display_avatar($user, '50px', '', '', ''),
+                            'profile_link'  => profile_link($user['user_id'], $user['user_name'], $user['user_status']),
+                            'thread_title'  => $user['thread_link']['title'],
+                            'thread_link'   => $user['thread_link']['link'],
+                            'activity_date' => showdate('forumdate', $user['post_datestamp']).", ".timer($user['post_datestamp'])
+                        ]);
+                    }
+                } else {
+                    $html->set_block('no_items');
+                }
+
+
+                break;
+
+            case 'activity':
+                $html->set_template(FORUM.'templates/viewforum/forum_activity.html');
+
+                if (!empty($info['item'])) {
+                    $html->set_block('pagenav_top', ['pagenav' => $info['pagenav']]);
+                    $html->set_block('pagenav_bottom', ['pagenav' => $info['pagenav']]);
+                    $html->set_block('activity', [
+                        'post_count'         => format_word($info['max_post_count'], $locale['fmt_post']),
+                        'last_activity_link' => "<a href='".$info['last_activity']['link']."'>".$locale['forum_0020']."</a>",
+                        'last_activity_info' => sprintf($locale['forum_0021'],
+                            showdate('forumdate', $info['last_activity']['time']),
+                            profile_link($info['last_activity']['user']['user_id'], $info['last_activity']['user']['user_name'], $info['last_activity']['user']['user_status'])
+                        )
+                    ]);
+                    $i = 0;
+                    foreach ($info['item'] as $post_id => $postData) {
+                        $html->set_block('activity_items', [
+                            'spacing'      => (!$i ? " m-t-0" : ''),
+                            'avatar'       => display_avatar($postData['post_author'], '50px', FALSE, '', ''),
+                            'profile_link' => profile_link($postData['post_author']['user_id'], $postData['post_author']['user_name'], $postData['post_author']['user_status']),
+                            'post_date'    => showdate('forumdate', $postData['post_datestamp']),
+                            'post_timer'   => timer($postData['post_datestamp']),
+                            'post_link'    => $locale['forum_0022']." <a href='".$postData['thread_link']['link']."'>".$postData['thread_link']['title']."</a>",
+                            'thread_link'  => $locale['forum_0023']." ".$postData['thread_link']['title'],
+                            'post_message' => parse_textarea($postData['post_message'], TRUE, TRUE, TRUE, IMAGES, TRUE),
+                            //'post_link'    => "<a href='".$postData['thread_link']['link']."'>".$locale['forum_0024']."</a>"
+                        ]);
+                        $i++;
+                    }
+                } else {
+                    $html->set_block('no_item', ['message' => $locale['forum_4121']]);
+                }
+                break;
+        }
+
         $html->set_tag('forum_navs', $this->get_forum_navs());
         $html->set_tag('breadcrumb', render_breadcrumbs());
         $html->set_tag('title', $info['forum_name']);
         $html->set_tag('baselink', $info['link']);
         $html->set_tag('description', nl2br(parseubb($info['forum_description'])));
+
         if ($info['forum_rules']) {
             $html->set_block('rules', ['forum_rules' => alert("<span class='strong'><i class='fa fa-exclamation fa-fw'></i>".$locale['forum_0350']."</span> ".$info['forum_rules'])]);
         }
+
         $html->set_tag('can_access', sprintf($locale['forum_perm_access'], $info['permissions']['can_access'] == TRUE ? "<strong class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>"));
         $html->set_tag('can_post', sprintf($locale['forum_perm_post'], $info['permissions']['can_post'] == TRUE ? "<strong class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>"));
         $html->set_tag('can_create_poll', sprintf($locale['forum_perm_create_poll'], $info['permissions']['can_create_poll'] == TRUE ? "<strong  class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>"));
         $html->set_tag('can_upload_attach', sprintf($locale['forum_perm_upload'], $info['permissions']['can_upload_attach'] == TRUE ? "<strong  class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>"));
         $html->set_tag('can_download_attach', sprintf($locale['forum_perm_download'], $info['permissions']['can_download_attach'] == TRUE ? "<strong  class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>"));
+
         $i = 0;
         foreach ($info['forum_page_link'] as $view_keys => $page_link) {
             $html->set_block('navbar_item', [
@@ -685,8 +819,9 @@ class Forum_Viewer {
             ]);
             $i++;
         }
+
         if (iMEMBER && $info['permissions']['can_post'] && !empty($info['new_thread_link'])) {
-            $html->set_block('post_button', [
+            $html->set_block('new_thread_link', [
                 'new_thread_link_url'   => $info['new_thread_link']['link'],
                 'new_thread_link_title' => $info['new_thread_link']['title']
             ]);
@@ -696,112 +831,7 @@ class Forum_Viewer {
             $html->set_block('moderator_list', ['moderators' => $info['forum_moderators'], 'mod_title' => $locale['forum_0185']]);
         }
 
-        // Draw the view
-        if (isset($_GET['view'])) {
-            switch ($_GET['view']) {
-                default:
-                case 'threads':
-                    if ($info['forum_type'] > 1) {
-                        $html->set_block('view', ['content' => $this->forum_threads_item($info)]);
-                    }
-                    break;
-                case 'subforums':
-                    $html->set_template(FORUM.'templates/viewforum/forum_subforums.html');
-                    if (!empty($info['item'][$_GET['forum_id']]['child'])) {
-                        $i = 1;
-                        foreach ($info['item'][$_GET['forum_id']]['child'] as $subforum_id => $subforum_data) {
-                            $html->set_block('subforums', ['content' => forum_subforums_item($subforum_data)]);
-                            $i++;
-                        }
-                    } else {
-                        $html->set_block('no_forum');
-                    }
-
-                    return $html->get_output();
-                    break;
-                case 'people':
-                    $html->set_template(FORUM.'templates/viewforum/forum_users.html');
-                    $html->set_block('pagenav_top', ['pagenav' => $info['pagenav']]);
-                    $html->set_block('pagenav_bottom', ['pagenav' => $info['pagenav']]);
-                    $html->set_tag('person_title', $locale['forum_0018']);
-                    $html->set_tag('latest_thread_title', $locale['forum_0012']);
-                    $html->set_tag('activity_title', $locale['forum_0016']);
-                    if (!empty($info['item'])) {
-                        foreach ($info['item'] as $user) {
-                            $html->set_block('users_list', [
-                                'avatar'        => display_avatar($user, '50px', '', '', ''),
-                                'profile_link'  => profile_link($user['user_id'], $user['user_name'], $user['user_status']),
-                                'thread_title'  => $user['thread_link']['title'],
-                                'thread_link'   => $user['thread_link']['link'],
-                                'activity_date' => showdate('forumdate', $user['post_datestamp']).", ".timer($user['post_datestamp'])
-                            ]);
-                        }
-                    } else {
-                        $html->set_block('no_items');
-                    }
-
-                    return $html->get_output();
-                    break;
-                case 'activity':
-                    $html->set_template(FORUM.'templates/viewforum/forum_activity.html');
-                    if (!empty($info['item'])) {
-                        $html->set_block('pagenav_top', ['pagenav' => $info['pagenav']]);
-                        $html->set_block('pagenav_bottom', ['pagenav' => $info['pagenav']]);
-                        $html->set_block('activity', [
-                            'post_count'         => format_word($info['max_post_count'], $locale['fmt_post']),
-                            'last_activity_link' => "<a href='".$info['last_activity']['link']."'>".$locale['forum_0020']."</a>",
-                            'last_activity_info' => sprintf($locale['forum_0021'],
-                                showdate('forumdate', $info['last_activity']['time']),
-                                profile_link($info['last_activity']['user']['user_id'], $info['last_activity']['user']['user_name'], $info['last_activity']['user']['user_status'])
-                            )
-                        ]);
-                        $i = 0;
-                        foreach ($info['item'] as $post_id => $postData) {
-                            $html->set_block('activity_items', [
-                                'spacing'      => (!$i ? " m-t-0" : ''),
-                                'avatar'       => display_avatar($postData['post_author'], '50px', FALSE, '', ''),
-                                'profile_link' => profile_link($postData['post_author']['user_id'], $postData['post_author']['user_name'], $postData['post_author']['user_status']),
-                                'post_date'    => showdate('forumdate', $postData['post_datestamp']),
-                                'post_timer'   => timer($postData['post_datestamp']),
-                                'post_link'    => $locale['forum_0022']." <a href='".$postData['thread_link']['link']."'>".$postData['thread_link']['title']."</a>",
-                                'thread_link'  => $locale['forum_0023']." ".$postData['thread_link']['title'],
-                                'post_message' => parse_textarea($postData['post_message'], TRUE, TRUE, TRUE, IMAGES, TRUE),
-                                //'post_link'    => "<a href='".$postData['thread_link']['link']."'>".$locale['forum_0024']."</a>"
-                            ]);
-                            $i++;
-                        }
-                    } else {
-                        $html->set_block('no_item', ['message' => $locale['forum_4121']]);
-                    }
-
-                    return $html->get_output();
-                    break;
-            }
-        } else {
-
-            // these 3 suppose to be blocks
-            if (!empty($info['filters']['type'])) {
-                foreach ($info['filters']['type'] as $key => $tabs) {
-                    $html->set_block('tab_filter', [
-                        'filter_link' => $tabs['link'],
-                        'active_text' => $tabs['active'] ? " text-active" : "",
-                        'title'       => $tabs['icon'].$tabs['title'],
-                        'count'       => $tabs['count']
-                    ]);
-                }
-            }
-
-            $html->set_tag('forum_filter', forum_filter($info));
-
-            if (!empty($info['threads']['pagenav'])) {
-                $html->set_block('pagenav_top', ['navigation' => $info['threads']['pagenav']]);
-                $html->set_block('pagenav_bottom', ['navigation' => $info['threads']['pagenav']]);
-            }
-
-            $html->set_block('view', ['content' => $this->forum_threads_item($info)]);
-        }
-
-        return $html->get_output();
+        return (string)$html->get_output();
     }
 
     /**
@@ -814,7 +844,7 @@ class Forum_Viewer {
      * @return string
      */
     public function forum_index(array $info = [], $id = 0) {
-        $file_path = Forum_Server::get_template('forum');
+        $file_path = get_forum_template('forum');
         $html = \PHPFusion\Template::getInstance('forum');
         $html->set_locale($this->locale);
         $html->set_template($file_path);
@@ -851,7 +881,7 @@ class Forum_Viewer {
                                     $sub_forum_color = stringToColorCode($sub_forum_data['forum_name']);
                                     $font_color = get_brightness($sub_forum_color) > 130 ? '000' : 'fff';
                                     $sub_forum_image = ($sub_forum_data['forum_image'] ? thumbnail($sub_forum_data['forum_image'], '10px') :
-                                    "<div class='img-circle m-t-5 m-b-10' style='background:#$sub_forum_color; color:#$font_color;padding: 0 5px;font-size:12px;margin-right:10px;'>".$sub_forum_data['forum_icon']."</div>");
+                                        "<div class='img-circle m-t-5 m-b-10' style='background:#$sub_forum_color; color:#$font_color;padding: 0 5px;font-size:12px;margin-right:10px;'>".$sub_forum_data['forum_icon']."</div>");
 
                                     $shtml->set_block("forum_block", [
                                         "forum_link"  => $sub_forum_data['forum_link']['link'],
@@ -1032,7 +1062,7 @@ class Forum_Viewer {
      * @return string
      */
     public function forum_subforums_item($info) {
-        $file_path = Forum_Server::get_template('forums');
+        $file_path = get_forum_template('forums');
         $html = \PHPFusion\Template::getInstance('forum-subforum-item');
         $html->set_template($file_path);
         $html->set_tag("forum_name", $info['forum_link']['title']);
@@ -1045,6 +1075,7 @@ class Forum_Viewer {
 
     /**
      * Thread view on viewthread.php
+     *
      * @param $info
      *
      * @return string
@@ -1052,7 +1083,7 @@ class Forum_Viewer {
     public function render_thread($info) {
         $locale = fusion_get_locale();
 
-        $file_path = Forum_Server::get_template('viewthreads');
+        $file_path = get_forum_template('viewthreads');
         $html = \PHPFusion\Template::getInstance('viewthreads');
         $html->set_css($this->css_file_path);
         $html->set_template($file_path);
@@ -1225,7 +1256,7 @@ class Forum_Viewer {
     }
 
     public function display_quick_reply($info) {
-        $file_path = Forum_Server::get_template('forum_qrform');
+        $file_path = get_forum_template('forum_qrform');
         $html = \PHPFusion\Template::getInstance('forum-quick-reply');
         $html->set_tag('description', $info['description']);
         $html->set_tag('message_field', $info['field']['message']);
@@ -1245,7 +1276,7 @@ class Forum_Viewer {
      * @return string
      */
     public function display_forum_pollform($info) {
-        $file_path = Forum_Server::get_template('forum_pollform');
+        $file_path = get_forum_template('forum_pollform');
         $html = \PHPFusion\Template::getInstance('forum-poll');
         $html->set_template($file_path);
         $html->set_tag('breadcrumb', render_breadcrumbs());
@@ -1259,7 +1290,7 @@ class Forum_Viewer {
 
     public function render_postify($info) {
         $locale = fusion_get_locale();
-        $file_path = Forum_Server::get_template('forum_postify');
+        $file_path = get_forum_template('forum_postify');
         $html = \PHPFusion\Template::getInstance('forum-postify');
 
         $html->set_template($file_path);
@@ -1308,7 +1339,7 @@ class Forum_Viewer {
 
         $html = \PHPFusion\Template::getInstance('forum-post-form');
 
-        $html->set_template(Forum_Server::get_template('forum_postform'));
+        $html->set_template(get_forum_template('forum_postform'));
 
         $html->set_locale($locale);
 
@@ -1380,7 +1411,7 @@ class Forum_Viewer {
      * @return string
      */
     public function display_forum_bountyform($info) {
-        $file_path = Forum_Server::get_template('forum_bountyform');
+        $file_path = get_forum_template('forum_bountyform');
         $html = \PHPFusion\Template::getInstance('forum-bounty-form');
         $html->set_template($file_path);
         $html->set_tag('breadcrumb', render_breadcrumbs());

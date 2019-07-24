@@ -40,6 +40,7 @@ class View_Thread extends Forum_Server {
         $info = self::thread()->getInfo();
 
         $this->set_ThreadJs();
+
         $action = get('action');
         $all_actions = [
             'editpoll', 'deletepoll', 'newpoll', 'edit', 'reply', 'award', 'newbounty', 'editbounty'
@@ -105,11 +106,8 @@ class View_Thread extends Forum_Server {
 
             }
 
-            // the upvote changes
-            // everyone can upvote and downvote -- doesn't matter.
-            // the author must select which is answered.
-            // vote get points as usual. if voted up, and change voted down, all logic remains same.
             return render_thread($info);
+
         }
 
         return NULL;

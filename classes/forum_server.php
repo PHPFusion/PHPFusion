@@ -487,7 +487,7 @@ abstract class Forum_Server {
      *
      * @return mixed
      */
-    public static function get_template($key) {
+    public static function getForumTemplate($key) {
         $default_paths = [
             'forum'            => FORUM.'templates/index/forum_index.html',
             'forum_section'    => FORUM.'templates/forum_section.html',
@@ -519,44 +519,52 @@ abstract class Forum_Server {
         self::$forum_template_paths[$key] = $file_path;
     }
 
+    /* Make an infinity traverse */
+    private function getForumBreadcrumbs(array $index, $id) {
+        $crumb = [];
+
+        if (isset($index[get_parent($index, $id)])) {
+            $_name = dbarray(dbquery("SELECT forum_id, forum_name, forum_cat, forum_branch FROM ".DB_FORUMS." WHERE forum_id=:fid", [':fid' => $id]));
+            $crumb = [
+                'link'  => FORUM.'index.php?viewforum&amp;forum_id='.$_name['forum_id'],
+                'title' => $_name['forum_name']
+            ];
+
+            if (isset($index[get_parent($index, $id)])) {
+
+                if (get_parent($index, $id) == 0) {
+                    return $crumb;
+                }
+
+                $crumb_1 = $this->getForumBreadcrumbs($index, get_parent($index, $id));
+
+                if (is_array($crumb_1)) {
+                    $crumb = array_merge_recursive($crumb, $crumb_1); // convert so can comply to Fusion Tab API.
+                }
+
+            }
+        }
+
+        return (array)$crumb;
+    }
+
     /**
      * Forum Breadcrumbs Generator
      *
      * @param array $forum_index - requires a dbquery_tree() output
      * @param int   $forum_id
      */
-    function add_forum_breadcrumbs(array $forum_index, $forum_id = 0) {
+    function addForumBreadcrumb(array $forum_index, $forum_id = 0) {
         $locale = fusion_get_locale('', FORUM_LOCALE);
 
         if (empty($forum_id)) {
-            $forum_id = isset($_GET['forum_id']) && isnum($_GET['forum_id']) ? $_GET['forum_id'] : 0;
+            $forum_id = get('forum_id', FILTER_VALIDATE_INT) ?: 0;
         }
-        /* Make an infinity traverse */
-        function forum_breadcrumb_arrays(array $index, $id) {
-            $crumb = [];
 
-            if (isset($index[get_parent($index, $id)])) {
-                $_name = dbarray(dbquery("SELECT forum_id, forum_name, forum_cat, forum_branch FROM ".DB_FORUMS." WHERE forum_id='".$id."'"));
-                $crumb = [
-                    'link'  => INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$_name['forum_id'],
-                    'title' => $_name['forum_name']
-                ];
-                if (isset($index[get_parent($index, $id)])) {
-                    if (get_parent($index, $id) == 0) {
-                        return $crumb;
-                    }
-                    $crumb_1 = forum_breadcrumb_arrays($index, get_parent($index, $id));
-                    if (is_array($crumb_1)) {
-                        $crumb = array_merge_recursive($crumb, $crumb_1); // convert so can comply to Fusion Tab API.
-                    }
-                }
-            }
-
-            return $crumb;
-        }
 
         // then we make a infinity recursive function to loop/break it out.
-        $crumb = forum_breadcrumb_arrays($forum_index, $forum_id);
+        $crumb = $this->getForumBreadcrumbs($forum_index, $forum_id);
+
         $title_count = !empty($crumb['title']) && is_array($crumb['title']) ? count($crumb['title']) > 1 : 0;
         // then we sort in reverse.
         if ($title_count) {
@@ -565,14 +573,14 @@ abstract class Forum_Server {
         }
         if ($title_count) {
             foreach ($crumb['title'] as $i => $value) {
-                BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'][$i], 'title' => $value]);
+                add_breadcrumb(['link' => $crumb['link'][$i], 'title' => $value]);
                 if ($i == count($crumb['title']) - 1) {
                     add_to_title($locale['global_201'].$value);
                 }
             }
         } else if (isset($crumb['title'])) {
             add_to_title($locale['global_201'].$crumb['title']);
-            BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'], 'title' => $crumb['title']]);
+            add_breadcrumb(['link' => $crumb['link'], 'title' => $crumb['title']]);
         }
     }
 

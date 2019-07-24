@@ -1149,6 +1149,7 @@ class Forum_List implements \PHPFusion\Interfaces\TableSDK {
         $forum_arr = $this->getForumRoot();
 
         return [
+            'table_id'           => 'forum-admin-list',
             'edit_link_format'   => FORUM.'admin/forums.php'.$aidlink.'&amp;action=edit&amp;forum_id=',
             'delete_link_format' => FORUM.'admin/forums.php'.$aidlink.'&amp;action=delete&amp;forum_id=',
             'search_label'       => $locale['search'],

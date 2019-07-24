@@ -53,9 +53,13 @@ class Forum_Threads extends Forum_Server {
     public function getThreadInfo($forum_id = 0, array $filter = []) {
 
         $info = [];
+
         $locale = fusion_get_locale();
+
         $forum_settings = parent::get_forum_settings();
+
         $userdata = fusion_get_userdata();
+
         $userdata['user_id'] = !empty($userdata['user_id']) ? (int)intval($userdata['user_id']) : 0;
         $lastVisited = defined('LASTVISITED') ? LASTVISITED : TIME;
 
@@ -103,8 +107,11 @@ class Forum_Threads extends Forum_Server {
         $count_result = dbquery($info['count_query']);
 
         $info['thread_max_rows'] = dbrows($count_result);
+
         $info['item'][$forum_id]['forum_threadcount'] = $info['thread_max_rows'];
+
         $info['item'][$forum_id]['forum_threadcount_word'] = format_word($info['thread_max_rows'], $locale['fmt_thread']);
+
         if ($info['thread_max_rows']) {
 
             // anti-XSS filtered rowstart
@@ -112,9 +119,11 @@ class Forum_Threads extends Forum_Server {
             $info['thread_query'] .= " LIMIT :rowstart, :tpp";
 
             $cthread_result = dbquery($info['thread_query'], [":rowstart" => intval($_GET['rowstart']), ":tpp" => intval($forum_settings['threads_per_page'])]);
+
             $info['thread_rows'] = dbrows($cthread_result);
 
             $info['threads']['pagenav'] = ($info['thread_max_rows'] > $info['thread_rows'] ? makepagenav($_GET['rowstart'], $forum_settings['threads_per_page'], $info['thread_max_rows'], 3, clean_request('', ['rowstart']).'&rowstart=') : '');
+
             $info['threads']['pagenav2'] = $info['threads']['pagenav'];
 
             if (!empty($filter['debug'])) {
@@ -151,6 +160,7 @@ class Forum_Threads extends Forum_Server {
                             "thread_user_avatars" => [],
                         ];
                     $this->thread_data = $threads;
+
                     $this->setThreadPermission(Forum_Moderator::check_forum_mods($threads['forum_mods']));
 
                     // Find First Post Message
@@ -570,6 +580,7 @@ class Forum_Threads extends Forum_Server {
 
             // get first post result
             $first_post_result = dbquery("SELECT post_message, post_datestamp FROM ".DB_FORUM_POSTS." WHERE post_id=:pid", [":pid" => $thread_stat['first_post_id']]);
+
             if (dbrows($first_post_result)) {
                 $this->thread_data += dbarray($first_post_result);
             }
@@ -598,9 +609,10 @@ class Forum_Threads extends Forum_Server {
                 add_to_meta('keywords', $this->thread_data['forum_meta']);
             }
 
+            // here is the core of the problem in main... there is no recursion of forum info here.
             add_breadcrumb(['link' => FORUM.'index.php', 'title' => $locale['forum_0000']]);
 
-            add_breadcrumb($forum_index, $this->thread_data['forum_id']);
+            $this->addForumBreadcrumb($forum_index, $this->thread_data['forum_id']);
 
             add_breadcrumb(['link' => FORUM.'viewthread.php?forum_id='.$this->thread_data['forum_id'].'&amp;thread_id='.$this->thread_data['thread_id'], 'title' => $this->thread_data['thread_subject']]);
 

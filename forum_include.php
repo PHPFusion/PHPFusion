@@ -153,3 +153,11 @@ function get_forum($forum_id = 0, $forum_branch = 0) {
 function get_forum_icons($type = '') {
     return \PHPFusion\Infusions\Forum\Classes\Forum_Server::getForumIcons($type);
 }
+
+function get_forum_template($key = NULL) {
+    return \PHPFusion\Infusions\Forum\Classes\Forum_Server::getForumTemplate($key);
+}
+
+function get_forum_settings($key = NULL) {
+    return \PHPFusion\Infusions\Forum\Classes\Forum_Server::get_forum_settings($key);
+}

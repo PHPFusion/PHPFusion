@@ -151,6 +151,11 @@ if (infusion_exists('forum')) {
     $userFields->addOutputPage('forum', 'Forum', FORUM.'profile.php');
 }
 
+/**
+ * @param $data
+ *
+ * @return string
+ */
 function forum_activity_title($data) {
     //print_p($data);
     $locale['thread_title'] = '%s created a new thread %s - %s';
@@ -165,6 +170,11 @@ function forum_activity_title($data) {
     }
 }
 
+/**
+ * @param $data
+ *
+ * @return string
+ */
 function forum_activity_content($data) {
     if ($data['action_item_type'] == 'forum') {
         switch($data['action_type']) {
@@ -180,3 +190,7 @@ function forum_activity_content($data) {
 fusion_add_hook('profile_activity_title', 'forum_activity_title');
 
 fusion_add_hook('profile_activity_content', 'forum_activity_content');
+
+// add hook for increment post on each post count
+
+// a delete hook for - delete post, and delete thread
