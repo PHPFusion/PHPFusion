@@ -89,32 +89,9 @@ function fusion_apply_hook($name) {
  * @return mixed
  */
 function fusion_filter_hook($name) {
-    $function_args = func_get_args();
-    // Flatten each function args.
-    /*print_P($function_args);
-    // Each function arguments can only have a set of array values for proper callback
-    if (count($function_args) > 1) {
-        for($i = 1; $i < count($function_args); $i++) {
-            if (is_array($function_args[$i])) {
-                print_P($function_args[$i]);
-                //$function_args[$i] = flatten_array($function_args[$i]);
-                print_p($function_args[$i]);
-            }
-        }
-    }*/
-    return call_user_func_array([
-        \PHPFusion\Hooks::get_instances($name),
-        'filter_hook'
-    ],
-        $function_args);
-
-    //return \PHPFusion\Hooks::get_instances($name)->filter_hook($name, isset($function_args[1]) ? $function_args[1] : NULL);
+    return call_user_func_array([\PHPFusion\Hooks::get_instances($name),'filter_hook'], func_get_args());
 }
 
 function fusion_filter_current_hook($name) {
-    return call_user_func_array([
-        \PHPFusion\Hooks::get_instances($name),
-        'filter_hook_once'
-    ],
-        func_get_args());
+    return call_user_func_array([\PHPFusion\Hooks::get_instances($name),'filter_hook_once'], func_get_args());
 }

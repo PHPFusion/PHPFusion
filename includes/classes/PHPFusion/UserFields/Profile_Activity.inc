@@ -1,19 +1,165 @@
 <?php
 namespace PHPFusion\UserFields;
 
+use PHPFusion\Template;
+
 class Profile_Activity {
 
     private $user_data = [];
     private $profile_id = 0;
+    private $pages = [];
+    private $url = '';
+    private $info = [];
+    private $page_nav = '';
 
     public function __construct($profile_id, $user_data) {
         $this->profile_id = $profile_id;
         $this->user_data = $user_data;
+        $this->url = BASEDIR.'profile.php?lookup='.$this->user_data['user_id'].'&amp;profile_page=activity';
+        $this->getPages();
+
     }
 
+    private function getPages() {
+        // Check settings to see if it is enabled
+        $this->pages = [
+            // new friendship, broken friendship, joined groups, your submissions, your comments, your new stuff.
+            'personal' => ['link' => $this->url.'&amp;section=personal', 'title' => 'Personal'],
+
+            // friends level - all updates.
+            'friends'  => ['link' => $this->url.'&amp;section=friends', 'title' => 'Friends'],
+
+            // groups activity
+            'groups'   => ['link' => $this->url.'&amp;section=groups', 'title' => 'Groups'],
+
+            // all your tracked notices
+            'tracked'  => ['link' => $this->url.'&amp;section=tracked', 'title' => 'Tracked'],
+
+            // all your mention notices
+            'mentions' => ['link' => $this->url.'&amp;section=mentions', 'title' => 'Mentions'],
+        ];
+    }
+
+    /**
+     * Personal activity info
+     *
+     * @return array
+     */
+    private function getPersonalFeed() {
+
+        $sql = [
+            'personal' => [
+                'sql' => 'SELECT * FROM '.DB_USER_ACTIVITY.' WHERE action_user_id=:uid AND '.groupaccess('action_visibility').' ORDER BY action_datestamp DESC LIMIT :rowstart, :limiter',
+                'count' => 'action_user_id=:uid AND '.groupaccess('action_visibility'),
+            ],
+        ];
+
+        $section = get('section');
+        if ($section && isset($sql[$section])) {
+            $max_rows = dbcount('(action_id)', DB_USER_ACTIVITY, $sql[$section]['count'], [':uid'=>$this->user_data['user_id']]);
+            if ($max_rows) {
+
+                $sql = $sql[$section]['sql'];
+
+                $rowstart = get('rowstart', FILTER_VALIDATE_INT);
+
+                $rowstart = $rowstart && $rowstart <= $max_rows ? $rowstart : 0;
+
+                $limit = 3;
+
+                $result = dbquery($sql, [':uid' => $this->user_data['user_id'], ':rowstart'=>$rowstart, ':limiter'=>$limit]);
+
+                if ($rows = dbrows($result)) {
+
+                    if ($max_rows > $rows) {
+                        $this->page_nav = makepagenav($rowstart, $limit, $max_rows, 3, $this->url.'&amp;');
+                    }
+
+                    while ($data = dbarray($result)) {
+
+                        $user = fusion_get_user($this->user_data['user_id']);
+
+                        $activity_title = fusion_get_activity_title($data);
+
+                        $activity_content = fusion_get_activity_content($data);
+
+                        $avatar_size = '35px';
+                        if ($activity_content && $activity_title) {
+                            $avatar_size = '80px';
+                        }
+
+                        $this->info[$data['action_id']] = [
+                            'profile_link' => profile_link($user['user_id'], $user['user_name'], $user['user_status']),
+                            'title'        => $activity_title,
+                            'content'      => $activity_content,
+                            'avatar'       => display_avatar($user, $avatar_size)
+                        ];
+
+                    }
+                }
+            }
+        }
+
+
+        return (array) $this->info;
+    }
+
+
     public function showActivityProfile() {
-        $info = [];
-        return $info;
+
+        $this->getPersonalFeed();
+
+        // Model
+        // Template
+        $tpl = Template::getInstance('activity-profile');
+        $tpl->set_text('
+        <ul class="nav nav-pills" role="list">
+        {tab.{
+          <li role="presentation"{%active%}><a href="{%link%}" title="{%title%}">{%title%}</a></li>  
+        }}
+        </ul>
+        <div class="spacer-md">          
+        {activity_item.{
+            <div class="clearfix" style="border-bottom:1px solid #ddd; padding:10px 15px;">
+            <div class="pull-left m-r-15" style="width:80px; text-align: center">{%avatar%}</div>
+            <div class="overflow-hide">{%title%}<br/><span class="text-dark">{%content%}</span></div>
+            </div>
+        }}
+        {no_item.{
+            <div class="alert alert-warning">Sorry, there was no activity found.</div>
+        }}
+        </div>
+        {page_nav.{
+            <div class="text-right spacer-xs">{%content%}</div>
+        }}     
+        ');
+
+        $section = get('section');
+
+        $section = $section && isset($this->pages[$section]) ? $section : 'personal';
+
+        foreach ($this->pages as $key => $page_info) {
+            $page_info['active'] = $section == $key ? ' class="active"' : '';
+            $tpl->set_block('tab', $page_info);
+        }
+
+        if (!empty($this->info)) {
+            foreach ($this->info as $feed_id => $feed_info) {
+                $tpl->set_block('activity_item', $feed_info);
+            }
+        } else {
+            $tpl->set_block('no_item');
+        }
+
+        if ($this->page_nav) {
+            $tpl->set_block('page_nav', ['content'=>$this->page_nav]);
+        }
+
+        return $tpl->get_output();
+
+
+        //return display_profile_activity($info);
+
     }
 
 }

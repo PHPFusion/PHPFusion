@@ -209,6 +209,11 @@ class Public_Profile extends UserFieldsQuantum {
         return NULL;
     }
 
+    /**
+     * Edit profile change avatar form
+     * @return string
+     * @throws \ReflectionException
+     */
     private function userAvatarStudio() {
         $settings = fusion_get_settings();
 

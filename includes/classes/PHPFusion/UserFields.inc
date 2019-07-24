@@ -622,6 +622,10 @@ class UserFields extends UserFieldsQuantum {
 
     }
 
+    /**
+     * Profile View Output
+     * @return false|mixed|string|void
+     */
     private function getProfileContent() {
 
         switch ($this->current_page) {
@@ -651,29 +655,18 @@ class UserFields extends UserFieldsQuantum {
 
                 break;
             case "groups":
-
                 $class = new Profile_Groups($this->profile_id, $this->getCurrentUserData());
-
                 return display_profile_groups($class->showGroupProfile());
-
                 break;
-            case "activity":
-
+            case 'activity':
                 $class = new Profile_Activity($this->profile_id, $this->getCurrentUserData());
-
-                $info = $class->showActivityProfile();
-                return display_profile_activity($info);
-
-                return "This activity page is currently unavailable.";
+                return $class->showActivityProfile();
                 break;
-
             default:
-
                 // find API added pages
                 if (!empty(self::$output_page[$this->current_page]['file']) ) {
                     $output = $this->loadPage(self::$output_page[$this->current_page]['file']);
                 }
-
                 return !empty($output) ? $output :  "This page is currently unavailable.";
         }
     }
