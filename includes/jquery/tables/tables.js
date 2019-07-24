@@ -135,6 +135,7 @@ let phpfusion_tables = {
             table_key: table_key,
             table_db : table_db
         };
+
         $.ajax({
 
             url: INCLUDES + 'jquery/tables/table-fetch.php',
@@ -160,7 +161,7 @@ let phpfusion_tables = {
         });
     },
 
-    'quickEdit': function(table_fields, table_key, table_cat, table_db, table_ordering, table_multilang) {
+    quickEdit: function(table_fields, table_key, table_cat, table_db, table_ordering, table_multilang) {
 
         $('.quick_edit').bind('click', function(e) {
             e.preventDefault();
