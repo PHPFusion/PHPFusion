@@ -217,23 +217,26 @@ class Forum_Moderator {
         $this->forum_id = $value;
     }
 
+    private function validateStep() {
+        $step_post = post('step');
+        if (!$step_post) {
+            $step_post = get('step');
+        }
+        return ($step_post && in_array($step_post, $this->allowed_actions) ? $step_post : '');
+    }
+
     public function setModActions() {
 
         $this->locale = fusion_get_locale('', FORUM_LOCALE);
 
-        $this->form_action = FORUM.'viewthread.php?thread_id='.$this->thread_id.(isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? "&amp;rowstart=".$_GET['rowstart'] : '');
+        $this->form_action = FORM_REQUEST;
+            //FORUM.'viewthread.php?thread_id='.$this->thread_id.(isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? "&amp;rowstart=".$_GET['rowstart'] : '');
 
-        if (!isset($_GET['rowstart'])) {
-            $_GET['rowstart'] = 0;
-        }
+        $rowstart = get('rowstart', FILTER_VALIDATE_INT);
 
-        if (isset($_POST['step']) && $_POST['step'] != "") {
-            $_GET['step'] = $_POST['step'];
-        }
+        $step = $this->validateStep();
 
-        $_GET['step'] = isset($_GET['step']) && in_array($_GET['step'], $this->allowed_actions) ? $_GET['step'] : '';
-
-        $_GET['error'] = isset($_GET['error']) ? $_GET['error'] : '';
+        $error = get('error');
 
         if ($this->thread_id && !$this->forum_id) {
             $forum_id_data = dbarray(dbquery("SELECT forum_id FROM ".DB_FORUM_THREADS." WHERE thread_id='".$this->thread_id."'"));
@@ -245,15 +248,14 @@ class Forum_Moderator {
         $this->parent_id = $branch_data['forum_cat'];
         $this->branch_id = $branch_data['forum_branch'];
         // at any time when cancel is clicked, redirect to forum id.
-        if (isset($_POST['cancelDelete'])) {
+        if (post('cancelDelete')) {
             redirect(FORUM."viewthread.php?thread_id=".intval($this->thread_id));
         }
 
         /**
          * Thread actions
          */
-
-        switch (get('step')) {
+        switch ($step) {
             case 'renew':
                 self::mod_renew_thread();
                 break;
@@ -278,8 +280,8 @@ class Forum_Moderator {
         }
 
         $message = '';
-        switch (get('error')) {
-            case '1':
+        switch ($error) {
+           case '1':
                 $message = $this->locale['error-MP001'];
                 break;
             case '2':
@@ -290,7 +292,7 @@ class Forum_Moderator {
                 break;
         }
 
-        if ($message != "") {
+        if ($message) {
             opentable($this->locale['error-MP000']);
             echo "<div id='close-message'><div class='admin-message'>".$message."<br /><br />\n";
             echo "<a href='".$this->form_action."'>".$this->locale['forum_0309']."</a><br />";
@@ -303,6 +305,7 @@ class Forum_Moderator {
 
         // Move Posts
         self::mod_move_posts();
+
     }
 
     /**

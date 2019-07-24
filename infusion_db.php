@@ -150,3 +150,33 @@ if (infusion_exists('forum')) {
     $userFields = \PHPFusion\UserFields::getInstance();
     $userFields->addOutputPage('forum', 'Forum', FORUM.'profile.php');
 }
+
+function forum_activity_title($data) {
+    //print_p($data);
+    $locale['thread_title'] = '%s created a new thread %s - %s';
+    if ($data['action_item_type'] == 'forum') {
+        $user = fusion_get_user($data['action_user_id']);
+        $profile_link = profile_link($user['user_id'], $user['user_name'], $user['user_status']);
+        switch($data['action_type']) {
+            case 'thread_new':
+                return sprintf($locale['thread_title'], $profile_link, '<strong>'.html_entity_decode($data['action_subject'], ENT_QUOTES).'</strong>', timer($data['action_datestamp']) );
+                break;
+        }
+    }
+}
+
+function forum_activity_content($data) {
+    if ($data['action_item_type'] == 'forum') {
+        switch($data['action_type']) {
+            case 'thread_new':
+                return parse_textarea($data['action_content']);
+                break;
+        }
+    }
+    return '';
+}
+
+
+fusion_add_hook('profile_activity_title', 'forum_activity_title');
+
+fusion_add_hook('profile_activity_content', 'forum_activity_content');
