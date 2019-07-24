@@ -55,6 +55,9 @@ class Profile_Activity {
         ];
 
         $section = get('section');
+        if (empty($section)) {
+            $section = 'personal';
+        }
         if ($section && isset($sql[$section])) {
             $max_rows = dbcount('(action_id)', DB_USER_ACTIVITY, $sql[$section]['count'], [':uid'=>$this->user_data['user_id']]);
             if ($max_rows) {
