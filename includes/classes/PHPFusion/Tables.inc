@@ -770,7 +770,7 @@ class Tables {
         // The delete of a row
         if ($key_delete && isnum($key_delete)) {
 
-            $result = dbquery("SELECT * FROM ".$this->query['table']." WHERE ".$this->query['id']."=:id",[':id' => intval($key_delete)]);
+            $result = dbquery("SELECT * FROM ".$this->query['table']." WHERE ".$this->query['id']."=:id",[':id' => (int)$key_delete]);
 
             if (dbrows($result)) {
 
