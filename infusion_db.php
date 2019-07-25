@@ -186,10 +186,102 @@ function forum_activity_content($data) {
     return '';
 }
 
+// when deleting a forum user.
+function forum_delete_user($data) {
+    $user_id = $data['user_id'];
+    $param = [':uid' => $user_id];
+    // Delete threads made by user
+    dbquery("DELETE FROM ".DB_FORUM_THREADS." WHERE thread_author=:uid", $param);
+    // Delete posts made by user
+    dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE post_author=:uid", $param);
+    // Delete user notification track by user
+    dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE notify_user=:uid", $param);
+    // Delete votes on forum threads by user
+    dbquery("DELETE FROM ".DB_FORUM_POLL_VOTERS." WHERE forum_vote_user_id=:uid" ,$param);
+    // Update thread stats
+    $threads = dbquery("SELECT * FROM ".DB_FORUM_THREADS." WHERE thread_lastuser=:uid", $param);
+    if (dbrows($threads)) {
+        while ($thread = dbarray($threads)) {
+
+            // Update thread last post author, date and id
+            $last_thread_post = dbarray(dbquery("SELECT post_id, post_author, post_datestamp FROM ".DB_FORUM_POSTS." WHERE thread_id='".$thread['thread_id']."' ORDER BY post_id DESC LIMIT 0,1"));
+            dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost=:thread_lastpost, thread_lastpostid=:thread_lastpostid, thread_lastuser=:thread_lastuser WHERE thread_id=:thread_id",
+                [
+                    ':thread_lastpost'   => $last_thread_post['post_datestamp'],
+                    ':thread_lastpostid' => $last_thread_post['post_id'],
+                    ':thread_lastuser'   => $last_thread_post['post_author'],
+                    ':thread_id'         => $thread['thread_id']
+                ]);
+
+            // Update thread posts count
+            $posts_count = dbcount("(post_id)", DB_FORUM_POSTS, "thread_id=:thread_id", [':thread_id' => $thread['thread_id']]);
+            dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_postcount=:thread_postcount WHERE thread_id=:thread_id", [':thread_postcount' => $posts_count, ':thread_id' => $thread['thread_id']]);
+
+            // Update forum threads count and posts count
+            // forum_postcount, forum_threadcount,
+
+            // forum_lastuser, forum_lastpostid , forum_lastpost,
+            list($threadcount, $postcount) = dbarraynum(dbquery("SELECT COUNT(thread_id), SUM(thread_postcount) FROM ".DB_FORUM_THREADS." WHERE forum_id=:forum_id AND thread_lastuser=:thread_lastuser AND thread_hidden=:thread_hidden", [':forum_id' => $thread['forum_id'], ':thread_lastuser' => $user_id, ':thread_hidden' => '0']));
+            if (isnum($threadcount) && isnum($postcount)) {
+                dbquery("UPDATE ".DB_FORUMS." SET forum_postcount=:forum_postcount, forum_threadcount=:forum_threadcount WHERE forum_id=:forum_id AND forum_lastuser=:forum_lastuser",
+                    [
+                        ':forum_postcount'   => $postcount,
+                        ':forum_threadcount' => $threadcount,
+                        ':forum_id'          => $thread['forum_id'],
+                        ':forum_lastuser'    => $user_id
+                    ]);
+            }
+
+        }
+    }
+    // If thread started by user, delete the thread, and all posts within the thread
+    $threads = dbquery("SELECT * FROM ".DB_FORUM_THREADS." WHERE thread_author=:uid", $param);
+    if (dbrows($threads)) {
+        while ($thread = dbarray($threads)) {
+            // Delete the posts made by other users in threads started by deleted user
+            if ($thread['thread_postcount'] > 0) {
+                dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE thread_id=:tid", [':tid' => $thread['thread_id']]);
+            }
+            // Delete polls in threads and their associated poll options and votes cast by other users in threads started by deleted user
+            if ($thread['thread_poll'] == 1) {
+                dbquery("DELETE FROM ".DB_FORUM_POLLS." WHERE thread_id=:tid", [':tid' => $thread['thread_id']]);
+                dbquery("DELETE FROM ".DB_FORUM_POLL_OPTIONS." WHERE thread_id=:tid", [':tid' => $thread['thread_id']]);
+                dbquery("DELETE FROM ".DB_FORUM_POLL_VOTERS." WHERE thread_id=:tid", [':tid' => $thread['thread_id']]);
+            }
+            // Update forum count?
+        }
+    }
+    // Update forums
+    $forums = dbquery("SELECT * FROM ".DB_FORUMS." WHERE forum_lastuser=:uid", $param);
+    if (dbrows($forums)) {
+        while ($forum = dbarray($forums)) {
+            // Update forum last post
+            $last_forum_post = dbarray(dbquery("SELECT post_id, post_author, post_datestamp FROM ".DB_POSTS." WHERE forum_id='".$forum['forum_id']."' ORDER BY post_id DESC LIMIT 0,1"));
+            dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost=:lastpost, forum_lastuser=:lastuser, forum_lastpostid=:lastpostid WHERE forum_id=:fid AND forum_lastuser=:forum_lastuser",
+                [
+                    ':lastpost' => $last_forum_post['post_datestamp'],
+                    ':lastuser' => $last_forum_post['post_author'],
+                    ':lastpostid' => $last_forum_post['post_id'],
+                    ':fid' => $forum['forum_id'],
+                    ':forum_lastuser' => $user_id
+                ]);
+        }
+    }
+    // Recount posts
+    $count_posts = dbquery("SELECT post_author, COUNT(post_id) as num_posts FROM ".DB_FORUM_POSTS." GROUP BY post_author");
+    if (dbrows($count_posts)) {
+        while ($data = dbarray($count_posts)) {
+            // Update the posts count for all users
+            dbquery("UPDATE ".DB_USERS." SET user_posts=:user_posts WHERE user_id=:uid", [':user_posts' => $data['num_posts'], ':uid' => $data['post_author']]);
+        }
+    }
+}
 
 fusion_add_hook('profile_activity_title', 'forum_activity_title');
 
 fusion_add_hook('profile_activity_content', 'forum_activity_content');
+
+fusion_add_hook('admin_user_delete', 'forum_delete_user'); // when admin deletes a user, forum must be updated.
 
 // add hook for increment post on each post count
 

@@ -20,6 +20,12 @@ if (!defined('FORUM_EXIST')) {
     redirect(BASEDIR."error.php?code=404");
 }
 require_once THEMES."templates/header.php";
+require_once INCLUDES."infusions_include.php";
+require_once INFUSIONS."forum/forum_include.php";
+require_once INFUSIONS."forum/templates.php";
+
 fusion_get_locale("", [FORUM_LOCALE, FORUM_TAGS_LOCALE]);
+
 echo \PHPFusion\Infusions\Forum\Classes\Forum_Server::postify()->do_postify();
+
 require_once THEMES."templates/footer.php";
