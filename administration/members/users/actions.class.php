@@ -150,14 +150,14 @@ class Actions extends Members {
     ];
 
     /**
-     * Get the MYSQL status operator for user status
+     * Checks user status against action map check value
      * @param $var1
      * @param $var2
      * @param $case
      *
      * @return bool
      */
-    public function getStatusOperator($var1, $var2, $case) {
+    public function isUser($var1, $var2, $case) {
         switch ($case) {
             case '>':
                 return ($var1 > $var2);
@@ -181,11 +181,12 @@ class Actions extends Members {
         $form = '';
         $users_list = '';
 
+        // Cache affected users
         $query = "SELECT user_id, user_name, user_avatar, user_email, user_level, user_password, user_status FROM ".DB_USERS." WHERE user_id IN (".implode(',', $this->action_user_id).") AND user_level > ".USER_LEVEL_SUPER_ADMIN." GROUP BY user_id";
         $result = dbquery($query);
         if (dbrows($result)) {
             while ($u_data = dbarray($result)) {
-                if ($this->getStatusOperator($u_data['user_status'], $this->action_map[$this->action]['check_value'], $this->action_map[$this->action]['check_operator'])) {
+                if ($this->isUser($u_data['user_status'], $this->action_map[$this->action]['check_value'], $this->action_map[$this->action]['check_operator'])) {
                     $this->users[$u_data['user_id']] = $u_data;
                 }
             }
