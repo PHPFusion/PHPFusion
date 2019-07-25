@@ -2792,21 +2792,17 @@ input[type=checkbox]:checked:before {
     -moz-osx-font-smoothing: grayscale;
     outline: none;
 }
-
 input[type=checkbox]:checked:before {
     content: "\e013";
     margin: -1px 0 0 0;
     color: #1e8cbe;
     outline: none;
 }
-
-
 input[type=radio] {
     -webkit-border-radius: 50%;
     -moz-border-radius: 50%;
     border-radius: 50%;
 }
-
 input[type=radio]:checked:before {
     content: "";
     background-color: #1e8cbe;
@@ -2819,6 +2815,9 @@ input[type=radio]:checked:before {
     position: absolute;
     left: 2px;
     top: 2px;
+}
+.checkbox > .control-label {
+    padding-left:18px;
 }
 .input-error {
     margin: 5px 0;
@@ -3354,6 +3353,9 @@ html[dir="rtl"] .copyright {
 
 html[dir="rtl"] .label {
     margin: 0 0 0.5em 0.5em;
+}
+.checkbox {
+    margin-right:20px !important;
 }
 /* admin icons */
 .admin-icon {

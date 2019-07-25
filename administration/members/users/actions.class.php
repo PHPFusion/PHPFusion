@@ -149,19 +149,27 @@ class Actions extends Members {
         ]
     ];
 
-    public function getStatusOperator($x, $y, $z) {
-        switch ($z) {
+    /**
+     * Get the MYSQL status operator for user status
+     * @param $var1
+     * @param $var2
+     * @param $case
+     *
+     * @return bool
+     */
+    public function getStatusOperator($var1, $var2, $case) {
+        switch ($case) {
             case '>':
-                return ($x > $y);
+                return ($var1 > $var2);
                 break;
             case '<':
-                return ($x < $y);
+                return ($var1 < $var2);
                 break;
             case '==':
-                return ($x == $y);
+                return ($var1 == $var2);
                 break;
             case '!==':
-                return ($x !== $y);
+                return ($var1 !== $var2);
                 break;
         }
 
