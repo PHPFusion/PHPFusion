@@ -40,7 +40,6 @@ class Actions extends Members {
      */
     public function set_userID(array $value = []) {
         $user_id = [];
-
         foreach ($value as $id) {
             if (isnum($id)) {
                 $user_id[$id] = $id;
@@ -150,7 +149,7 @@ class Actions extends Members {
         ]
     ];
 
-    public function user_check($x, $y, $z) {
+    public function getStatusOperator($x, $y, $z) {
         switch ($z) {
             case '>':
                 return ($x > $y);
@@ -169,7 +168,7 @@ class Actions extends Members {
         return FALSE;
     }
 
-
+    // this is the mapping for all other actions except delete
     public function execute() {
         $form = '';
         $users_list = '';
@@ -178,11 +177,7 @@ class Actions extends Members {
         $result = dbquery($query);
         if (dbrows($result)) {
             while ($u_data = dbarray($result)) {
-                if ($this->user_check(
-                    $u_data['user_status'],
-                    $this->action_map[$this->action]['check_value'],
-                    $this->action_map[$this->action]['check_operator'])
-                ) {
+                if ($this->getStatusOperator($u_data['user_status'], $this->action_map[$this->action]['check_value'], $this->action_map[$this->action]['check_operator'])) {
                     $this->users[$u_data['user_id']] = $u_data;
                 }
             }
@@ -216,16 +211,14 @@ class Actions extends Members {
                             ':action_time' => $duration,
                             ':user_id'     => $user_id
                         ]);
-                        /*
-                         * Executes log
-                         */
+
+                        // Executes log
                         if (!empty($this->action_map[$this->action]['user_status_log_func'])) {
                             $log_value = ($this->action_map[$this->action]['user_status_log_func'] == 'suspend_log' ? $this->action : $u_data['user_status']);
                             $this->action_map[$this->action]['user_status_log_func']($user_id, $log_value, $reason);
                         }
-                        /*
-                         * Email users
-                         */
+
+                        // Email users
                         if (!empty($this->action_map[$this->action]['email'])) {
                             $email_locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/members_email.php');
                             $subject = strtr($email_locale[$this->action_map[$this->action]['email_title']],
@@ -248,11 +241,13 @@ class Actions extends Members {
 
                             sendemail($u_data['user_name'], $u_data['user_email'], $settings['siteusername'], $settings['siteemail'], $subject, $message);
                         }
+
                         $u_name[] = $u_data['user_name'];
                     }
 
                     addNotice('success', sprintf(self::$locale['ME_432'], implode(', ', $u_name), self::$locale[$this->action_map[$this->action]['a_message']]));
-                    redirect(FUSION_REQUEST);
+
+                    //redirect(FUSION_REQUEST);
                 }
 
             } else {
@@ -283,18 +278,16 @@ class Actions extends Members {
 
                 $form .= form_button('post_action', self::$locale['update'], $this->action, ['class' => 'btn-primary']);
 
-                ob_start();
-                echo openmodal('uAdmin_modal', self::$locale[$this->action_map[$this->action]['title']].self::$locale['ME_413'], ['static' => TRUE]);
-                echo openform('uAdmin_frm', 'post', FUSION_REQUEST);
-                echo strtr($this->action_form_template(), [
+                $modal = openmodal('uAdmin_modal', self::$locale[$this->action_map[$this->action]['title']].self::$locale['ME_413'], ['static' => TRUE]);
+                $modal .= openform('uAdmin_frm', 'post', FUSION_REQUEST);
+                $modal .= strtr($this->action_form_template(), [
                     '{%message%}'    => sprintf(self::$locale['ME_431'], self::$locale[$this->action_map[$this->action]['a_message']]),
                     '{%users_list%}' => $users_list,
                     '{%form%}'       => $form,
                 ]);
-                echo closeform();
-                echo closemodal();
-                $modal = ob_get_contents();
-                ob_end_clean();
+                $modal .= closeform();
+                $modal .= closemodal();
+
                 add_to_footer($modal);
 
             }

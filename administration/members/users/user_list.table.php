@@ -5,6 +5,11 @@ use Administration\Members\Members;
 use PHPFusion\Interfaces\TableSDK;
 use PHPFusion\UserFieldsQuantum;
 
+/**
+ * Class User_List
+ *
+ * @package Administration\Members\Users
+ */
 class User_List implements TableSDK {
 
     /**
@@ -26,21 +31,31 @@ class User_List implements TableSDK {
      * 'file_field'               => '',  // to delete (i.e. news_attach)
      * 'file_folder'              => '', // to delete files from the folder, use param for string match
      * 'db'                       => [], // to delete other entries on delete -- use this key. Keys: 'select' => 'ratings_id', 'group' => 'ratings_item_id', 'custom' => "rating_type='CLS'"
-     * 'delete_function_callback' => '',
+     * 'delete_function_callback' => '', // can be array or string - if array, first parameter - class, second parameter method, third optional parameter file path
      *
      * @return array
      */
     public function data() {
         return [
-            'debug'        => FALSE,
-            'table'        => DB_USERS,
-            'id'           => 'user_id',
-            'limit'        => 24,
-            'image_folder' => IMAGES.'avatars'.DIRECTORY_SEPARATOR,
-            'image_field'  => 'user_avatar',
+            'debug'                    => FALSE,
+            'table'                    => DB_USERS,
+            'id'                       => 'user_id',
+            'limit'                    => 24,
+            'image_folder'             => IMAGES.'avatars'.DIRECTORY_SEPARATOR,
+            'image_field'              => 'user_avatar',
+            // this method will work as well, but the bulkDelete function is much better option without using reflection class
+            //'delete_function_callback' => ['Administration\\Members\\Users\\User_List', 'deleteUser', ADMIN.'members/users/user_list.table.php']
         ];
     }
 
+
+    public function bulkDelete($data) {
+        fusion_filter_current_hook('admin_user_delete', $data);
+    }
+
+    /**
+     * For bulk action array
+     */
     public function bulkActions() {
         $table_action = post('table_action');
         if ($table_action) {
@@ -106,7 +121,7 @@ class User_List implements TableSDK {
         ];
 
         return [
-            'table_id'         => 'userTbl',
+            'table_id'         => 'user-table',
             'search_col'       => 'user_name',
             'search_label'     => 'Search User',
             'date_col'         => 'user_lastvisit',
@@ -137,25 +152,16 @@ class User_List implements TableSDK {
                     ],
                 ]
             ],
-            'action_filters'   =>
-                [
-                    'text'     => 'Member Actions',
-                    'label'    => TRUE,
-                    'children' => [
-                        Members::USER_BAN          => $locale['ME_500'],
-                        Members::USER_REINSTATE    => $locale['ME_501'],
-                        Members::USER_SUSPEND      => $locale['ME_503'],
-                        Members::USER_SECURITY_BAN => $locale['ME_504'],
-                        Members::USER_CANCEL       => $locale['ME_505'],
-                        Members::USER_ANON         => $locale['ME_506'],
-                        Members::USER_DEACTIVATE   => $locale['ME_507']
-                    ]
-                ]
-
+            'action_filters'   => [
+                Members::USER_BAN          => $locale['ME_500'],
+                Members::USER_REINSTATE    => $locale['ME_501'],
+                Members::USER_SUSPEND      => $locale['ME_503'],
+                Members::USER_SECURITY_BAN => $locale['ME_504'],
+                Members::USER_CANCEL       => $locale['ME_505'],
+                Members::USER_ANON         => $locale['ME_506'],
+                Members::USER_DEACTIVATE   => $locale['ME_507']
+            ]
         ];
-        /*
-         *  // the status is user_timezone, user_joined, user_lastivist, user_groups
-         */
     }
 
     /**
@@ -188,18 +194,18 @@ class User_List implements TableSDK {
      * @return array
      */
     public function column() {
-
+        $locale = fusion_get_locale();
         // Find all user fields
         // @todo: Extend it to all database as per UFv1.2 data model.
         $user_fields = [];
-        $result = dbquery("SELECT child.field_cat_id FROM ".DB_USER_FIELD_CATS." root LEFT JOIN ".DB_USER_FIELD_CATS." child ON child.field_parent=root.field_cat_id        
+        $result = dbquery("SELECT   child.field_cat_id FROM ".DB_USER_FIELD_CATS." root LEFT JOIN ".DB_USER_FIELD_CATS." child ON child.field_parent=root.field_cat_id  
         WHERE root.field_parent=0 AND root.field_cat_db='users' GROUP BY child.field_cat_id");
         if (dbrows($result)) {
             $rows = [];
             while ($data = dbarray($result)) {
                 $rows[] = $data['field_cat_id'];
             }
-            $cresult = dbquery("SELECT field_title, field_name, field_type FROM ".DB_USER_FIELDS." WHERE field_cat IN (".implode(',', $rows).")");
+            $cresult = dbquery("SELECT  field_title, field_name, field_type FROM ".DB_USER_FIELDS." WHERE field_cat IN (".implode(',', $rows).")");
             if (dbrows($cresult)) {
                 while ($cdata = dbarray($cresult)) {
                     $user_fields[$cdata['field_name']]['title'] = UserFieldsQuantum::parse_label($cdata['field_title']);
@@ -209,7 +215,7 @@ class User_List implements TableSDK {
         }
 
         return [
-                'user_id'        => [
+                'user_id'         => [
                     'title'       => 'User Name',
                     'title_class' => 'col-xs-3',
                     'user_avatar' => TRUE,
@@ -218,29 +224,56 @@ class User_List implements TableSDK {
                     'edit_link'   => TRUE,
                     'delete_link' => TRUE,
                 ],
-                'user_email'     => [
+                'user_email'      => [
                     'title' => 'Email',
                 ],
-                'user_level'     => [
+                'user_level'      => [
                     'title'   => 'Role',
                     'class'   => 'width-15',
                     'options' => fusion_get_groups(),
                 ],
-                'user_joined'    => [
-                    'title'      => 'Joined',
+                'user_joined'     => [
+                    'title'      => $locale['ME_421'],
                     'date'       => TRUE,
                     'visibility' => FALSE,
                 ],
-                'user_lastvisit' => [
-                    'title'      => 'Last seen',
+                'user_lastvisit'  => [
+                    'title'      => $locale['ME_422'],
                     'date'       => TRUE,
                     'visibility' => FALSE,
                 ],
-                'user_ip'        => [
-                    'title'      => 'IP',
+                'user_hide_email' => [
+                    'title'   => $locale['ME_420'],
+                    'options' => [
+                        0 => $locale['no'],
+                        1 => $locale['yes'],
+                        2 => 'N/A'
+                    ]
+                ],
+                // 'user_status'    => [
+                //     'title'      => self::$locale['ME_427'],
+                //     'callback'   => [
+                //
+                //     ],
+                //     'visibility' => FALSE,
+                // ],
+                'user_ip'         => [
+                    'title'      => $locale['ME_423'],
                     'visibility' => FALSE,
-                ]
+                ],
+                'user_ip_type'    => [
+                    'title'      => $locale['ME_424'],
+                    'visibility' => FALSE,
+                ],
             ] + $user_fields;
+
+        /*
+         * $tLocale = [
+            'user_groups'     => self::$locale['ME_425'],
+            'user_timezone'   => self::$locale['ME_426'],
+            ''     => self::$locale['']
+        ];
+         */
     }
 
     /**
@@ -548,6 +581,5 @@ class User_List implements TableSDK {
 
         return (string)$html;
     }
-
 
 }

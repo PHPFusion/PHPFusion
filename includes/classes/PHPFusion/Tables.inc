@@ -56,10 +56,14 @@ class Tables {
         'conditions'               => '', // to match list to a condition. string value only
         'group'                    => '', // group by column
         'image_folder'             => '', // for deletion (i.e. IMAGES.'folder/') , use param for string match
-        'image_field'              => '', // to delete (i.e. news_image)
-        'file_field'               => '',  // to delete (i.e. news_attach)
+        'image_field'              => '', // to delete (i.e. news_image,news_photo,news_photo_thumbs) or (i.e. news_image)
+        'file_field'               => '',  // to delete (i.e. news_attach,news_attach2,news_attach3) or (i.e. news_attach)
         'file_folder'              => '', // to delete files from the folder, use param for string match
-        'db'                       => [], // to delete other entries on delete -- use this key. Keys: 'select' => 'ratings_id', 'group' => 'ratings_item_id', 'custom' => "rating_type='CLS'"
+        'db'                       => [
+            'select' => '', // ratings_id
+            'group' => '',  // ratings_item_id
+            'custom' => '', // rating_type='N'
+        ], // to delete other entries on delete -- use this key. Keys: 'select' => 'ratings_id', 'group' => 'ratings_item_id', 'custom' => "rating_type='CLS'"
         'delete_function_callback' => '',
         'rowstart'                 => 'rowstart'
     ];
@@ -542,30 +546,24 @@ class Tables {
      * Do delete record multiple checkboxes
      */
     private function filterDeleteRows() {
-        // id
-        if (isset($_POST['id']) && is_array($_POST['id'])) {
+        $del_id = post_array(['id']);
+        if (!empty($del_id)) {
             $params = [];
-            $data = [];
-            foreach ($_POST['id'] as $val) {
-                $continue = FALSE;
+            foreach ($del_id as $val) {
 
                 if (isnum($val)) {
-                    if ($this->query['parent']) {
-                        // search for id
-                        $self = dbquery(
-                            "SELECT  ".$this->query['id'].",".$this->query['parent']." FROM ".$this->query['table']." WHERE ".$this->query['id']."=:id",
-                            [':id' => $val]
-                        );
-                        if (dbrows($self)) {
-                            $data = dbarray($self);
-                            foreach ($data as $key => $value) {
-                                $params[':'.$key] = $value;
-                            }
+
+                    $result = dbquery("SELECT * FROM ".$this->query['table']."  WHERE ".$this->query['id']."=:id", [':id'=>$val]);
+                    if (dbrows($result)) {
+                        $data = dbarray($result);
+                        foreach ($data as $key => $value) {
+                            $params[':'.$key] = $value;
+                        }
+
+                        // delete principal
+                        if ($this->query['parent']) {
                             //append all child to parentless
-                            $child_result = dbquery(
-                                "SELECT ".$this->query['id'].",".$this->query['parent']." FROM ".$this->query['table']." WHERE ".$this->query['parent']."=:id",
-                                [':id' => $val]
-                            );
+                            $child_result = dbquery("SELECT ".$this->query['id'].",".$this->query['parent']."   FROM ".$this->query['table']."  WHERE ".$this->query['parent']."=:id", [':id' => $val]);
                             if (dbrows($child_result)) {
                                 while ($cdata = dbarray($child_result)) {
                                     // id
@@ -578,68 +576,84 @@ class Tables {
                             }
 
                             dbquery_insert($this->query['table'], $data, 'delete');
-                            $continue = TRUE;
+
+                        } else {
+
+                            dbquery("DELETE FROM ".$this->query['table']."  WHERE ".$this->getIdCol()."=:id", [':id' => $val]);
+
                         }
-                    } else {
 
-                        dbquery("DELETE FROM ".$this->query['table']." WHERE ".$this->getIdCol()."=:id", [':id' => $val]);
-                        addNotice('success', $this->table_props['deleted_message']);
-                        $continue = TRUE;
-                    }
-                }
+                        if (!empty($params) && !empty($data)) {
 
-                if ($continue && !empty($params) && !empty($data)) {
-                    // delete all images - images is by "," delimiter in a single column
-                    if ($this->query['image_field'] && $this->query['image_folder']) {
-                        $this->query['image_folder'] = strtr($this->query['image_folder'], $params);
+                            // This one looks buggy, because it is only for item with parent.
+                            // delete all images - images is by "," delimiter in a single column
+                            if ($this->query['image_field'] && $this->query['image_folder']) {
 
-                        if (!empty($data[$this->query['image_field']])) {
+                                $this->query['image_folder'] = strtr($this->query['image_folder'], $params);
 
-                            $list_images = explode(',', $data[$this->query['image_field']]);
-                            foreach ($list_images as $filename) {
-                                if (file_exists($this->query['image_folder'].$filename)) {
-                                    unlink($this->query['image_folder'].$filename);
+                                if (!empty($data[$this->query['image_field']])) {
+                                    // image field can be multiple, -
+                                    $list_images = explode(',', $data[$this->query['image_field']]);
+
+                                    foreach ($list_images as $filename) {
+                                        if (file_exists($this->query['image_folder'].$filename)) {
+                                            unlink($this->query['image_folder'].$filename);
+                                        }
+                                    }
+                                }
+
+                            }
+
+                            // delete all files - files is by "," delimiter in a single column
+                            if ($this->query['file_field'] && $this->query['file_folder']) {
+                                $this->query['file_folder'] = strtr($this->query['file_folder'], $params);
+                                if ($data[$this->query['file_field']]) {
+                                    $list_images = explode(',', $data[$this->query['file_field']]);
+                                    foreach ($list_images as $filename) {
+                                        if (file_exists($this->query['file_folder'].$filename)) {
+                                            unlink($this->query['file_folder'].$filename);
+                                        }
+                                    }
+                                }
+                            }
+
+                            // execute sql delete using custom parameter
+                            if (!empty($this->query['db']['select']) && !empty($this->query['db']['group'])) {
+                                foreach ($this->query['db'] as $table_name => $table_prop) {
+                                    $custom_condition = !empty($table_prop['custom']) ? "AND ".$table_prop['custom'] : '';
+                                    if (dbcount("(".$table_prop['select'].")", $table_name, $table_prop['group']."='".$data[$this->query['id']]."' $custom_condition")) {
+                                        dbquery("DELETE FROM ".$table_name." WHERE ".$table_prop['group']."='".$data[$this->query['id']]."' $custom_condition");
+                                    }
+                                }
+                            }
+
+                            //function callback on deletion
+                            if (!empty($this->query['del_function_callback'])) {
+                                $this->query['delete_function_callback']($data);
+                                if (is_callable($this->query['delete_function_callback'])) {
+                                    // use reflexion class
+                                    if (is_array($this->query['delete_function_callback'])) {
+                                        // delete class callback
+                                        if (isset($this->query['delete_function_callback'][3])) {
+                                            require_once $this->query['delete_function_callback'][3];
+                                        }
+                                        $class_name = $this->query['delete_function_callback'][0];
+                                        $method = $this->query['delete_function_callback'][1];
+                                        $obj = new \ReflectionClass($class_name);
+                                        $class = $obj->newInstance();
+                                        if (method_exists($class, $method)) {
+                                            $class->$method($data);
+                                        }
+                                    } else {
+                                        // delete function callback
+                                        $this->query['delete_function_callback']($data);
+                                    }
                                 }
                             }
                         }
-                    }
 
-                    // delete all files - files is by "," delimiter in a single column
-                    if ($this->query['file_field'] && $this->query['file_folder']) {
-                        $this->query['file_folder'] = strtr($this->query['file_folder'], $params);
-                        if ($data[$this->query['file_field']]) {
-                            $list_images = explode(',', $data[$this->query['file_field']]);
-                            foreach ($list_images as $filename) {
-                                if (file_exists($this->query['file_folder'].$filename)) {
-                                    unlink($this->query['file_folder'].$filename);
-                                }
-                            }
-                        }
+                        $this->bulkDelete($data);
                     }
-                    // other to delete
-                    // ratings, reviews, comments, photos
-                    if (!empty($this->query['db'])) {
-                        foreach ($this->query['db'] as $table_name => $table_prop) {
-                            $custom_condition = !empty($table_prop['custom']) ? "AND ".$table_prop['custom'] : "";
-                            if (dbcount(
-                                "(".$table_prop['select'].")", $table_name,
-                                $table_prop['group']."='".$data[$this->query['id']]."' $custom_condition"
-                            )) {
-                                dbquery(
-                                    "DELETE FROM ".$table_name." WHERE ".$table_prop['group']."='".$data[$this->query['id']]."' $custom_condition"
-                                );
-                            }
-                        }
-                    }
-
-                    //function callback
-                    if (!empty($this->query['del_function_callback'])) {
-                        $this->query['delete_function_callback']($data);
-                        if (is_callable($this->query['delete_function_callback'])) {
-                            $this->query['delete_function_callback']($data);
-                        }
-                    }
-
                 }
             }
 
@@ -682,27 +696,30 @@ class Tables {
      */
     private function displayCustom() {
 
-        $html = "<div id='".$this->table_props['table_id']."-custom-box' class='list-group-item spacer-sm' style='display:none;'>";
-        $html .= "<div class='p-l-15 m-t-20 strong'>Columns</div>";
+        $html = "<div id='".$this->table_props['table_id']."-custom-box' class='list-group-item m-b-15' style='display:none;'>";
+        $html .= "<div class='p-l-15 strong'>Columns</div>";
         // get all the data column.
+        $html .= "<div class='p-l-15'>";
         $html .= form_checkbox('custom_column[]', '', implode(',', $this->custom_columns_value), [
-            'multiple'       => TRUE, 'inline' => TRUE,
+            'multiple'       => TRUE,
+            'inline' => FALSE,
             'inline_options' => TRUE,
             'options'        => $this->custom_columns_options
         ]);
-        $html .= "<div class='p-l-15 m-b-10 strong'>Pagination</div>";
+        $html .= "</div>";
+        //$html .= "<div class='p-l-15 m-b-10 strong'>Pagination</div>";
         $html .= form_text('custom_limit', 'Number of items per page:', $this->query['limit'], [
             'inline'      => TRUE,
             'inner_width' => '80px',
-            'class'       => 'form-group-sm m-b-10',
+            'class'       => 'm-b-10',
             'deactivate'  => ($this->query['true_limit'] === TRUE ? TRUE : FALSE),
         ]);
-        $html .= "<div class='p-l-15 m-b-20'>";
-        $html .= form_button('apply_custom', 'Apply', 'apply_custom', ['class' => 'btn-primary']);
-        $html .= "</div>";
+        //$html .= "<div class='p-l-15 m-b-20'>";
+        $html .= form_button('apply_custom', 'Apply Filter', 'apply_custom', ['class' => 'btn-primary m-l-15']);
+        //$html .= "</div>";
         $html .= "</div>";
 
-        return $html;
+        return (string)$html;
     }
 
     /**
@@ -748,16 +765,12 @@ class Tables {
             } else {
                 addNotice('warning', 'No record has been selected for this table action.');
             }
-
         }
 
         // The delete of a row
         if ($key_delete && isnum($key_delete)) {
 
-            $result = dbquery(
-                "SELECT * FROM ".$this->query['table']." WHERE ".$this->query['id']."=:id",
-                [':id' => intval($key_delete)]
-            );
+            $result = dbquery("SELECT * FROM ".$this->query['table']." WHERE ".$this->query['id']."=:id",[':id' => intval($key_delete)]);
 
             if (dbrows($result)) {
 
@@ -813,13 +826,8 @@ class Tables {
                 if (!empty($this->query['db'])) {
                     foreach ($this->query['db'] as $table_name => $table_prop) {
                         $custom_condition = (!empty($table_prop['custom']) ? 'AND '.$table_prop['custom'] : '');
-                        if (dbcount(
-                            "(".$table_prop['select'].")", $table_name,
-                            $table_prop['group']."='".$del_data[$this->query['id']]."' $custom_condition"
-                        )) {
-                            dbquery(
-                                "DELETE FROM ".$table_name." WHERE ".$table_prop['group']."='".$del_data[$this->query['id']]."' $custom_condition"
-                            );
+                        if (dbcount("(".$table_prop['select'].")", $table_name, $table_prop['group']."='".$del_data[$this->query['id']]."' $custom_condition")) {
+                            dbquery("DELETE FROM ".$table_name." WHERE ".$table_prop['group']."='".$del_data[$this->query['id']]."' $custom_condition");
                         }
                     }
                 }
@@ -830,7 +838,9 @@ class Tables {
                     }
                 }
 
-                dbquery_insert($this->query['table'], $del_data, 'delete');
+                $this->bulkDelete($del_data);
+
+                //dbquery_insert($this->query['table'], $del_data, 'delete');
 
                 addNotice('success', $this->table_props['deleted_message']);
 
@@ -1053,11 +1063,13 @@ class Tables {
             ];
 
             if (!empty($this->table_props['action_filters'])) {
-                array_push($actions_options, $this->table_props['action_filters']);
+                // 'text' (string), 'label' (string), 'children' (array)
+                if (isset($this->table_props['action_filters']['children'])) {
+                    array_push($actions_options, $this->table_props['action_filters']);
+                } else {
+                    $actions_options = $actions_options + $this->table_props['action_filters'];
+                }
             }
-
-            // print_P($this->table_props['action_filters']);
-            // print_P($actions_options);
 
             $html .= openform('cat_table_frm', 'post', FUSION_REQUEST).form_select(
                     'filter_actions', '', '', [
@@ -1315,10 +1327,12 @@ class Tables {
                              * array("user" => TRUE);
                              */
                             $user = fusion_get_user($value);
+
                             $avatar = '';
                             if ($col_data['user_avatar'] === TRUE) {
                                 $avatar = display_avatar($user, '32px', 'm-r-10');
                             }
+
                             $value = $avatar.profile_link($user['user_id'], $user['user_name'], $user['user_status']);
 
                         } else if ($col_data['options']) {
@@ -1735,9 +1749,22 @@ class Tables {
         return (string)$html;
     }
 
+    /**
+     * Provides a method for executing custom actions
+     */
     private function bulkActions() {
         if (method_exists($this->api, 'bulkActions')) {
             $this->api->bulkActions();
+        }
+    }
+
+    /**
+     * Provides a method for deleting
+     * @param $data
+     */
+    private function bulkDelete($data) {
+        if (method_exists($this->api, 'bulkDelete')) {
+            $this->api->bulkDelete($data);
         }
     }
 
