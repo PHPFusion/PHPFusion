@@ -204,14 +204,19 @@ function showcopyright($class = "", $nobreak = FALSE) {
     return $res;
 }
 
-function showcounter() {
+/**
+ * @param string $delimiter
+ * @param string $thousand_sep
+ *
+ * @return string
+ */
+function showcounter($delimiter='.', $thousand_sep=',') {
     $locale = fusion_get_locale();
     $settings = fusion_get_settings();
     if ($settings['visitorcounter_enabled']) {
-        return "<!--counter-->".number_format($settings['counter'])." ".($settings['counter'] == 1 ? $locale['global_170'] : $locale['global_171']);
-    } else {
-        return "";
+        return "<!--counter-->".number_format($settings['counter'], 0, $delimiter, $thousand_sep)." ".($settings['counter'] == 1 ? $locale['global_170'] : $locale['global_171']);
     }
+    return '';
 }
 
 function showprivacypolicy() {
