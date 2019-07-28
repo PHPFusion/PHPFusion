@@ -1,6 +1,7 @@
 <?php
 namespace PHPFusion\Infusions\Forum\Classes\Moderator;
 
+use Administration\Members\Users\Actions;
 use PHPFusion\Infusions\Forum\Classes\Forum_Moderator;
 
 class Threads_Mod {
@@ -17,7 +18,9 @@ class Threads_Mod {
         'sticky',
         'lock',
         'unlock',
-        'move'
+        'move',
+        'ban_user',
+        'delete_user'
     ];
 
     public function __construct(Forum_Moderator $obj) {
@@ -50,6 +53,12 @@ class Threads_Mod {
                 case 'move':
                     $this->moveThread();
                     break;
+                case 'ban_user':
+                    $this->banUser();
+                    break;
+                case 'delete_user':
+                    $this->deleteUser();
+                    break;
             }
         }
     }
@@ -60,6 +69,49 @@ class Threads_Mod {
             $step_post = get('step');
         }
         return ($step_post && in_array($step_post, $this->registered_actions) ? $step_post : '');
+    }
+
+    private function deleteUser() {
+        if (checkrights('M') && iMOD) {
+            if (post('cancel')) {
+                redirect(FORUM.'viewthread.php?thread_id='.$this->thread_id);
+            }
+            // need to confirm first. because this is very dangerous.
+            $user_id = get('user_id', FILTER_VALIDATE_INT);
+            if ($user_name = fusion_get_user($user_id, 'user_name')) {
+                // requirement to confirm, post confirm
+                if (post('delete_confirm')) {
+                    dbquery("DELETE FROM ".DB_USERS."   WHERE user_id=:uid", [':uid'=>(int)$user_id]);
+                    $user_data = fusion_get_user($user_id);
+                    fusion_filter_current_hook('admin_user_delete', $user_data);
+                    addNotice('success', $user_name.' has been deleted');
+                } else {
+                    $modal = openmodal('confirmDelete', 'User delete confirmation', ['static'=>TRUE]);
+                    $modal .= "<div class='alert alert-danger'><strong><i class='fas fa-exclamation-triangle m-r-10'></i>You are about to delete user:".$user_name." on this site.</strong><br/>";
+                    $modal .= "This action is irreversible and may not be restored. All posts and any information submitted by this user will be removed from this site.</div><hr/>";
+                    $modal .= openform('cdelete', 'post').form_button('delete_confirm', 'Delete User', 'delete_confirm', ['class'=>'btn-danger']).form_button('cancel', 'Cancel', 'cancel').closeform();
+                    $modal .= closemodal();
+                    add_to_footer($modal);
+                }
+            }
+        }else {
+            addNotice('danger', 'You do not have permission to moderate users.');
+        }
+    }
+
+    private function banUser() {
+        if (checkrights('M') && iMOD) {
+            $user_id = get('user_id', FILTER_VALIDATE_INT);
+            if ($user_name = fusion_get_user($user_id, 'user_name')) {
+                $user_class = new Actions();
+                $user_class->set_userID([$user_id]);
+                $user_class->set_action(1);
+                $user_class->setCancelLink(FORUM.'viewthread.php?thread_id='.get('thread_id', FILTER_VALIDATE_INT));
+                $user_class->execute();
+            }
+        } else {
+            addNotice('danger', 'You do not have permission to moderate users.');
+        }
     }
 
     /**
@@ -459,5 +511,7 @@ class Threads_Mod {
     //         dbquery("DELETE FROM ".DB_FORUM_THREADS." WHERE thread_id=:tid", [':tid' => $param[':tid']]);
     //     }
     // }
-
 }
+
+require_once ADMIN.'members/members.class.php';
+require_once ADMIN.'members/users/actions.class.php';

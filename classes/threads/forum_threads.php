@@ -594,6 +594,9 @@ class Forum_Threads extends Forum_Server {
 
             $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $thread_stat['last_post_id'] ? $_GET['rowstart'] : 0; // secure against XSS
 
+            $rowstart = get('rowstart', FILTER_VALIDATE_INT);
+            $rowstart = $rowstart && $rowstart <= $thread_stat['last_post_id'] ? $rowstart : 0;
+
             // Set the thread permissions
             $this->setThreadPermission(Forum_Moderator::check_forum_mods($this->thread_data['forum_mods']));
 
@@ -645,7 +648,7 @@ class Forum_Threads extends Forum_Server {
                 $report = get('report');
                 $report_id = get('rtid');
                 if ($report && $report_id) {
-                    // Only members can lodge a report
+                    // render a reporting modal popup
                     Forum_Reports::render_report_form();
                 }
 
@@ -745,23 +748,27 @@ class Forum_Threads extends Forum_Server {
                 $this->thread_info['mod_form_parts']['dropdown'] = form_select('step', '', '', [
                     'options'     => $this->thread_info['mod_options'],
                     'placeholder' => $locale['forum_0200'],
-                    'width'       => '180px',
-                    'inner_width' => '180px',
+                    'width'       => '250px',
+                    'inner_width' => '250px',
                     'allowclear'  => TRUE,
-                    'class'       => 'm-b-0 display-inline-block',
+                    'class'       => 'm-0',
                     'inline'      => TRUE
                 ]);
-
                 $this->thread_info['mod_form_parts']['go_button'] = form_button('go', $locale['forum_0208'], $locale['forum_0208'], ['class' => 'btn-default']);
                 $this->thread_info['mod_form_parts']['closeform'] = closeform();
 
                 // Reconstruct the mod bar
                 $this->thread_info['mod_form'] =
-                    $this->thread_info['mod_form_parts']['openform'].
+                    $this->thread_info['mod_form_parts']['openform']."
+                    <div class='pull-right'>
+                    <div style='width:300px;' class='display-block'>
+                    <div class='pull-left'>".$this->thread_info['mod_form_parts']['dropdown']."</div>
+                    <div class='pull-right'>".$this->thread_info['mod_form_parts']['go_button']."</div>
+                    </div>
+                    </div>".
                     $this->thread_info['mod_form_parts']['button_group'].
                     $this->thread_info['mod_form_parts']['move_button'].
-                    $this->thread_info['mod_form_parts']['delete_button']."
-                    <div class='pull-right'>".$this->thread_info['mod_form_parts']['dropdown']."<div class='pull-right'>".$this->thread_info['mod_form_parts']['go_button']."</div></div>".
+                    $this->thread_info['mod_form_parts']['delete_button'].
                     $this->thread_info['mod_form_parts']['closeform'];
 
                 // Mod form jquery codes
@@ -791,83 +798,48 @@ class Forum_Threads extends Forum_Server {
 
             $this->thread_info += [
                 'thread' => $this->thread_data,
-
                 'thread_id' => $this->thread_data['thread_id'],
-
+                'thread_link' => FORUM.'viewthread.php?thread_id='.$this->thread_data['thread_id'].($rowstart? '&amp;rowstart='.$rowstart : ''),
                 'forum_id' => $this->thread_data['forum_id'],
-
                 'thread_tags' => $this->thread_data['thread_tags'],
-
                 'thread_tags_display' => '',
-
                 'buttons' => [],
-
                 'forum_cat' => $validated_forum_cat_id, // this is get based
-
                 'forum_branch' => $validated_forum_branch_id, // this is get based
-
                 'forum_link' => [
                     'link'  => FORUM.'index.php?viewforum&amp;forum_id='.$this->thread_data['forum_id'].'&amp;forum_cat='.$this->thread_data['forum_cat'].'&amp;forum_branch='.$this->thread_data['forum_branch'],
                     'title' => $this->thread_data['forum_name']
                 ],
-
                 'thread_attachments' => $attachments,
-
                 'post_id' => $validated_post_id,
-
                 'pid' => $validated_post_pid,
-
                 'section' => get('section'),
-
                 'sort_post' => get('sort_post'),
-
                 'forum_moderators' => $this->moderator()->displayForumMods($this->thread_data['forum_mods']),
-
                 'max_post_items' => $thread_stat['post_count'],
-
                 'post_firstpost' => $thread_stat['first_post_id'],
-
                 'post_lastpost' => $thread_stat['last_post_id'],
-
                 'posts_per_page' => $forum_settings['posts_per_page'],
-
                 'threads_per_page' => $forum_settings['threads_per_page'],
-
                 'lastvisited' => (isset($userdata['user_lastvisit']) && isnum($userdata['user_lastvisit'])) ? $userdata['user_lastvisit'] : time(),
-
                 'allowed_post_filters' => ['oldest', 'latest', 'high'],
-
                 'attachtypes' => explode(',', $forum_settings['forum_attachtypes']),
-
                 'quick_reply_form' => $qr_form,
-
                 'thread_bounty' => $bounty_display,
-
                 'poll_form' => $poll_form,
-
                 'poll_info' => $poll_info,
-
                 'post-filters' => [],
-
                 'mod_options' => [],
-
                 'form_action' => '',
-
                 'open_post_form' => '',
-
                 'close_post_form' => '',
-
                 'mod_form' => '',
-
                 'mod_form_parts' => '',
-
                 'permissions' => $this->getThreadPermission()
             ];
 
             if (!empty($this->thread_info['thread_tags'])) {
-
                 $this->thread_info['thread']['thread_tags'] = parent::tag(FALSE)->getTagsInfo($this->thread_info['thread_tags']);
-
             }
 
             /**
@@ -1119,7 +1091,7 @@ class Forum_Threads extends Forum_Server {
 
         $filter += $default_filter;
 
-        $sort_post = isset($_GET['sort_post']) ? $_GET['sort_post'] : '';
+        $sort_post = get('sort_post');
         switch ($sort_post) {
             case 'oldest':
                 $sortCol = 'p.post_datestamp ASC';
@@ -1134,7 +1106,7 @@ class Forum_Threads extends Forum_Server {
                 $sortCol = 'p.post_datestamp ASC';
         }
 
-        $post_query_cond = "";
+        $post_query_cond = '';
         if ($thread_id) {
             $post_query_cond = "p.thread_id='".$thread_id."' AND";
         } else if ($post_id) {
@@ -1160,7 +1132,6 @@ class Forum_Threads extends Forum_Server {
         $result = dbquery($info['post_query']);
         $info['post_rows'] = dbrows($result);
         if ($info['post_rows'] > 0) {
-
             // Get all post reported in this thread
             $post_rep = [];
             $post_res = dbresult(dbquery("SELECT GROUP_CONCAT(post_id) 'post_id' FROM ".DB_FORUM_REPORTS." WHERE report_status=0"), 0);
@@ -1378,7 +1349,7 @@ class Forum_Threads extends Forum_Server {
                     'user_profile_link'  => profile_link($pdata['user_id'], $pdata['user_name'], $pdata['user_status']),
                     'user_avatar_image'  => display_avatar($pdata, '50px', FALSE, FALSE, 'img-rounded'),
                     'user_post_count'    => format_word($pdata['user_posts'], $locale['fmt_post'], ['html' => FALSE]),
-                    "user_sig"           => "",
+                    "user_sig"           => '',
                     "user_message"       => $default_blank_arr,
                     'print'              => [
                         'link'  => BASEDIR.'print.php?type=F&amp;item_id='.$thread_id.'&amp;post='.$pdata['post_id'].'&amp;nr='.($i + $_GET['rowstart']),
@@ -1511,7 +1482,6 @@ class Forum_Threads extends Forum_Server {
                 // return arrays now (purpose of info, render at view_rank or something)
                 $pdata['user_rank'] = $this->get_forum_rank($pdata['user_posts'], ($pdata['user_level'] <= USER_LEVEL_ADMIN && iMOD ? 104 : $pdata['user_level']), $pdata['user_groups']);
 
-
                 // rank img
                 // if ($pdata['user_level'] <= USER_LEVEL_ADMIN) {
                 //     if ($forum_settings['forum_ranks']) {
@@ -1535,7 +1505,7 @@ class Forum_Threads extends Forum_Server {
                         'title' => $locale['forum_0364']
                     ];
                 } else {
-                    $pdata['user_web'] = ['link' => '', 'title' => ''];
+                    $pdata['user_web'] = ['link' => '', 'title'=>''];
                 }
 
                 // PM link
@@ -1563,7 +1533,13 @@ class Forum_Threads extends Forum_Server {
                 if ($filter['forum_type'] == 4) {
                     // If I am author, I can mark as answered
                     if ($filter['thread_author'] == fusion_get_userdata('user_id') or iMOD) {
-                        // all post items have checkbox greyed.
+                        // Is not an answer
+                        $pdata['vote_answered'] = [
+                            'link'  => FORUM."postify.php?post=answer&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id'],
+                            'title' => $locale['forum_0512'] //0512
+                        ];
+                        $pdata['post_answer_check'] = "<a href='".$pdata['vote_answered']['link']."' class='answer_button answer_unchecked display-block center-x text-center' title='".$pdata['vote_answered']['title']."'><i class='fa fa-check fa-2x'></i></a>";
+
                         // if thread is answered, then just this post is answer have checkbox
                         if ($filter['thread_answered'] && $pdata['post_answer']) {
                             // Is Answer
@@ -1572,13 +1548,6 @@ class Forum_Threads extends Forum_Server {
                                 'title' => $locale['forum_0513'] //0513
                             ];
                             $pdata['post_answer_check'] = "<a href='".$pdata['vote_answered']['link']."' class='answer_button answer_checked display-block center-x text-center' title='".$pdata['vote_answered']['title']."'><i class='fa fa-check fa-2x'></i></a>";
-                        } else {
-                            // Is not an answer
-                            $pdata['vote_answered'] = [
-                                'link'  => FORUM."postify.php?post=answer&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id'],
-                                'title' => $locale['forum_0512'] //0512
-                            ];
-                            $pdata['post_answer_check'] = "<a href='".$pdata['vote_answered']['link']."' class='answer_button answer_unchecked display-block center-x text-center' title='".$pdata['vote_answered']['title']."'><i class='fa fa-check fa-2x'></i></a>";
                         }
                     }
                 }
@@ -1602,7 +1571,6 @@ class Forum_Threads extends Forum_Server {
                     $pdata['post_votebox'] .= "<a href='".$pdata['post_vote_down']['link']."' class='text-center vote_down".($pdata['post_vote_down']['active'] ? " text-warning" : '')."' title='".$locale['forum_0511']."'>\n<i class='fa fa-caret-down fa-2x'></i></a>";
                     $pdata['post_votebox'] .= "</div>\n";*/
                 } else {
-
                     // this still have HTML, get rid of it.
                     $pdata['post_votebox'] = "<div class='text-center'>\n";
                     $pdata['post_votebox'] .= "<h3 class='m-0'>".(!empty($pdata['vote_points']) ? $pdata['vote_points'] : 0)."</h3>\n";
@@ -1648,11 +1616,9 @@ class Forum_Threads extends Forum_Server {
 
                 // Post Date
                 $pdata['post_date'] = $locale['forum_0524']." ".timer($pdata['post_datestamp'])." - ".showdate('forumdate', $pdata['post_datestamp']);
-
                 $pdata['post_shortdate'] = $locale['forum_0524']." ".timer($pdata['post_datestamp']);
-
                 $pdata['post_longdate'] = $locale['forum_0524']." ".showdate('forumdate', $pdata['post_datestamp']);
-
+                $pdata['thread_link'] = $this->thread_info['thread_link'];
                 $info['post_items'][$pdata['post_id']] = $pdata;
 
                 $i++;

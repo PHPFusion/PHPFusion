@@ -259,6 +259,7 @@ class Forum_Viewer {
      * @return string
      */
     public function render_post_item($data, $n = 0) {
+
         $locale = fusion_get_locale();
         $aidlink = fusion_get_aidlink();
         $settings = fusion_get_settings();
@@ -394,6 +395,7 @@ class Forum_Viewer {
             ]);
         }
         if ($data['user_level'] > USER_LEVEL_SUPER_ADMIN) {
+            // thread id
             if (iSUPERADMIN || (iADMIN && checkrights('M'))) {
                 $html->set_block("li_admin_title", [
                     'title' => $locale['forum_0662']
@@ -404,12 +406,12 @@ class Forum_Viewer {
                     'title'      => $locale['forum_0663'],
                 ]);
                 $html->set_block("li_ban_user", [
-                    'link_url'   => ADMIN."members.php".$aidlink."&amp;user_id=".$data['user_id']."&amp;action=1",
+                    'link_url'   => $data['thread_link'].'&amp;step=ban_user&amp;user_id='.$data['user_id'],
                     'link_title' => $locale['forum_0664'],
                     'title'      => $locale['forum_0664'],
                 ]);
                 $html->set_block("li_delete_user", [
-                    'link_url'   => ADMIN."members.php".$aidlink."&amp;step=delete&amp;status=0&amp;user_id=".$data['user_id'],
+                    'link_url'   => $data['thread_link'].'&amp;step=delete_user&amp;user_id='.$data['user_id'],
                     'link_title' => $locale['forum_0665'],
                     'title'      => $locale['forum_0665'],
                 ]);
