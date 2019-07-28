@@ -717,7 +717,7 @@ class Forum_Threads extends Forum_Server {
 
                 $this->moderator()->setThreadId($this->thread_data['thread_id']);
 
-                $this->moderator()->setModActions();
+                $this->moderator()->doModActions();
 
                 /**
                  * Thread moderation form template
