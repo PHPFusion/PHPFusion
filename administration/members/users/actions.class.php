@@ -33,24 +33,7 @@ class Actions extends Members {
 
     private $users = [];
 
-    /**
-     * Setter of the class user_id
-     *
-     * @param array $value
-     */
-    public function set_userID(array $value = []) {
-        $user_id = [];
-        foreach ($value as $id) {
-            if (isnum($id)) {
-                $user_id[$id] = $id;
-            }
-        }
-        $this->action_user_id = $user_id;
-    }
-
-    public function set_action($value) {
-        $this->action = $value;
-    }
+    private $cancel_link = '';
 
     /**
      * Action Script Configurations
@@ -58,11 +41,6 @@ class Actions extends Members {
      * @var array
      */
     private $action_map = [
-        // OK
-        /*
-         * Eligible is anyone not 1
-         * Anything that is 1-5
-         */
         parent::USER_BAN          => [
             'check_operator'       => '!==', // Make it fluid.
             'check_value'          => self::USER_BAN,
@@ -150,6 +128,36 @@ class Actions extends Members {
     ];
 
     /**
+     * Set a user id
+     * @param array $value
+     */
+    public function set_userID(array $value = []) {
+        $user_id = [];
+        foreach ($value as $id) {
+            if (isnum($id)) {
+                $user_id[$id] = $id;
+            }
+        }
+        $this->action_user_id = $user_id;
+    }
+
+    /**
+     * Set an action for this user class - 1 for ban, etc
+     * @param $value
+     */
+    public function set_action($value) {
+        $this->action = $value;
+    }
+
+    /**
+     * Set an abort link
+     * @param $value
+     */
+    public function setCancelLink($value) {
+        $this->cancel_link = $value;
+    }
+
+    /**
      * Checks user status against action map check value
      * @param $var1
      * @param $var2
@@ -176,10 +184,17 @@ class Actions extends Members {
         return FALSE;
     }
 
+    public function getActionArr() {
+        return $this->action_map;
+    }
+
     // this is the mapping for all other actions except delete
     public function execute() {
         $form = '';
         $users_list = '';
+        if (post('cancel')) {
+            redirect( $this->cancel_link ?: FUSION_REQUEST );
+        }
 
         // Cache affected users
         $query = "SELECT user_id, user_name, user_avatar, user_email, user_level, user_password, user_status FROM ".DB_USERS." WHERE user_id IN (".implode(',', $this->action_user_id).") AND user_level > ".USER_LEVEL_SUPER_ADMIN." GROUP BY user_id";
@@ -207,7 +222,7 @@ class Actions extends Members {
 
                 $duration = 0;
                 if (!empty($this->action_map[$this->action]['action_time'])) {
-                    $duration = sanitizer('duration', '', 'duration');
+                    $duration = sanitizer('duration', 1, 'duration');
                     $duration = ($duration * 86400) + TIME;
                 }
 
@@ -254,13 +269,13 @@ class Actions extends Members {
                         $u_name[] = $u_data['user_name'];
                     }
 
-                    addNotice('success', sprintf(self::$locale['ME_432'], implode(', ', $u_name), self::$locale[$this->action_map[$this->action]['a_message']]));
+                    addNotice('success', sprintf(self::$locale['ME_432'], implode(', ', $u_name), self::$locale[$this->action_map[$this->action]['a_message']]), 'all');
 
-                    //redirect(FUSION_REQUEST);
+                    redirect(FUSION_REQUEST);
                 }
+            }
 
-            } else {
-
+            if (!post('post_action') || !\Defender::safe()) {
                 $height = '45px';
                 foreach ($this->users as $user_data) {
                     $users_list .= strtr($this->user_block_template(),
@@ -271,7 +286,6 @@ class Actions extends Members {
                         ]
                     );
                 }
-
                 if (isset($this->action_map[$this->action]['action_time'])) {
                     $form .= form_text('duration', self::$locale['ME_435'], '', ['type' => 'number', 'append' => TRUE, 'append_value' => self::$locale['ME_436'], 'required' => TRUE, 'inner_width' => '120px']);
                 }
@@ -279,13 +293,12 @@ class Actions extends Members {
                     $form .= form_textarea('reason', self::$locale['ME_433'], '', ['required' => TRUE, 'placeholder' => self::$locale['ME_434']]);
                 }
                 $form .= form_hidden('action', '', $this->action);
-
                 // the user id is multiple
                 foreach ($this->action_user_id as $user_id) {
                     $form .= form_hidden('user_id[]', '', $user_id);
                 }
-
                 $form .= form_button('post_action', self::$locale['update'], $this->action, ['class' => 'btn-primary']);
+                $form .= form_button('cancel', self::$locale['cancel'], 'cancel');
 
                 $modal = openmodal('uAdmin_modal', self::$locale[$this->action_map[$this->action]['title']].self::$locale['ME_413'], ['static' => TRUE]);
                 $modal .= openform('uAdmin_frm', 'post', FUSION_REQUEST);
@@ -296,13 +309,12 @@ class Actions extends Members {
                 ]);
                 $modal .= closeform();
                 $modal .= closemodal();
-
                 add_to_footer($modal);
-
             }
+
         } else {
             // addNotice('danger', self::$locale['ME_430']);
-            redirect(FUSION_SELF.fusion_get_aidlink());
+            redirect( clean_request('', ['step', 'uid', 'user_id'], FALSE) );
         }
     }
 

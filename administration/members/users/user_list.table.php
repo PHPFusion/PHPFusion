@@ -232,6 +232,11 @@ class User_List implements TableSDK {
                     'class'   => 'width-15',
                     'options' => fusion_get_groups(),
                 ],
+                'user_status'    => [
+                    'title'      => $locale['ME_427'],
+                    'callback'   => ['Administration\\Members\\Members', 'checkUserStatus'],
+                    'visibility' => TRUE,
+                ],
                 'user_joined'     => [
                     'title'      => $locale['ME_421'],
                     'date'       => TRUE,
@@ -250,13 +255,7 @@ class User_List implements TableSDK {
                         2 => 'N/A'
                     ]
                 ],
-                // 'user_status'    => [
-                //     'title'      => self::$locale['ME_427'],
-                //     'callback'   => [
-                //
-                //     ],
-                //     'visibility' => FALSE,
-                // ],
+
                 'user_ip'         => [
                     'title'      => $locale['ME_423'],
                     'visibility' => FALSE,

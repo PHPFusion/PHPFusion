@@ -18,9 +18,7 @@
 defined('IN_FUSION') || exit;
 
 function getsuspension($type, $action = FALSE) {
-
     $locale = fusion_get_locale("", LOCALE.LOCALESET."admin/members_include.php");
-
     $i = ($action ? 1 : 0);
     return $type > 8 ? $locale['susp_sys'] : $locale['susp'.$i.$type];
 }

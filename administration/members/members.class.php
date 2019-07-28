@@ -141,10 +141,8 @@ class Members {
         return self::$instance;
     }
 
-    // i will need a function for deleting members
-
-
     /**
+     * @throws \PHPMailer\PHPMailer\Exception
      * @throws \ReflectionException
      */
     public function display_admin() {
@@ -152,193 +150,192 @@ class Members {
         if (post('cancel')) {
             redirect(self::$exit_link);
         }
-
         add_breadcrumb(['link' => ADMIN.'members.php'.$aidlink, 'title' => self::$locale['ME_400']]);
         opentable(self::$locale['ME_400']);
-        new Tables(new User_List());
+        $ref = get('ref');
+        if (!empty($ref)) {
+            switch ($ref) {
+                case 'log': // Show Logs
+                    if (!self::$is_admin) {
+                        display_suspend_log(self::$user_id, "all", self::$rowstart);
+                    }
+                    break;
+                case 'inactive':
+
+                    if (!self::$user_id && self::$settings['enable_deactivation'] && self::$is_admin) {
+
+                        $inactive = dbcount("(user_id)", DB_USERS,
+                            "user_status='0' AND user_level>".USER_LEVEL_SUPER_ADMIN." AND user_lastvisit <:last_visited AND user_actiontime=:action_time",
+                            [
+                                ':last_visited' => self::$time_overdue,
+                                ':action_time'  => 0,
+                            ]
+                        );
+
+                        $button = self::$locale['ME_502'].format_word($inactive, self::$locale['fmt_user']);
+
+                        if (!$inactive) {
+                            addNotice('success', self::$locale['ME_460']);
+                            redirect(FUSION_SELF.$aidlink);
+                        }
+
+                        if (post('deactivate_users') && \Defender::safe()) {
+
+                            require_once INCLUDES."sendmail_include.php";
+
+                            $result = dbquery("SELECT user_id, user_name, user_email, user_password FROM ".DB_USERS."
+                                        WHERE user_level>".USER_LEVEL_SUPER_ADMIN." AND user_lastvisit<'".self::$time_overdue."' AND user_actiontime='0' AND user_status='0'");
+
+                            $rows = dbrows($result);
+
+                            if ($rows != '0') {
+
+                                while ($data = dbarray($result)) {
+
+                                    $message = strtr(self::$locale['email_deactivate_message'], [
+                                            '[CODE]'         => md5(self::$response_required.$data['user_password']),
+                                            '[SITENAME]'     => self::$settings['sitename'],
+                                            '[SITEUSERNAME]' => self::$settings['siteusername'],
+                                            '[USER_NAME]'    => $data['user_name'],
+                                            '[USER_ID]'      => $data['user_id'],
+                                        ]
+                                    );
+
+                                    if (sendemail($data['user_name'], $data['user_email'], self::$settings['siteusername'], self::$settings['siteemail'], self::$locale['email_deactivate_subject'], $message)) {
+                                        dbquery("UPDATE ".DB_USERS." SET user_status='7', user_actiontime='".self::$response_required."' WHERE user_id='".$data['user_id']."'");
+                                        suspend_log($data['user_id'], self::USER_DEACTIVATE, self::$locale['ME_468']);
+                                    }
+                                }
+                                addNotice('success', sprintf(self::$locale['ME_461'], format_word($rows, self::$locale['fmt_user'])));
+                                redirect(FUSION_SELF.fusion_get_aidlink());
+                            }
+                        }
+
+                        // Put this into view.
+                        add_breadcrumb(['link' => self::$status_uri['inactive'], 'title' => self::$locale['ME_462']]);
+
+                        opentable(self::$locale['ME_462']);
+
+                        if ($inactive > 50) {
+                            addNotice('info', sprintf(self::$locale['ME_463'], floor($inactive / 50)));
+                        }
+
+                        echo "<div>\n";
+
+                        $action = self::$settings['deactivation_action'] == 0 ? self::$locale['ME_556'] : self::$locale['ME_557'];
+
+                        $text = sprintf(self::$locale['ME_464'], $inactive, self::$settings['deactivation_period'], self::$settings['deactivation_response'], $action);
+
+                        echo str_replace(["[strong]", "[/strong]"], ["<strong>", "</strong>"], $text );
+
+                        if (self::$settings['deactivation_action'] == 1) {
+                            echo "<br />\n".self::$locale['ME_465'];
+                            echo "</div>\n<div class='admin-message alert alert-warning m-t-10'><strong>".self::$locale['ME_454']."</strong>\n".self::$locale['ME_466']."\n";
+                            if (checkrights('S9')) {
+                                echo "<a href='".ADMIN."settings_users.php".$aidlink."'>".self::$locale['ME_467']."</a>";
+                            }
+                        }
+
+                        echo "</div>\n<div class='text-center'>\n";
+                        echo openform('member_form', 'post', self::$status_uri['inactive']);
+                        echo form_button('deactivate_users', $button, $button, ['class' => 'btn-primary m-r-10']);
+                        echo form_button('cancel', self::$locale['cancel'], self::$locale['cancel']);
+                        echo closeform();
+                        echo "</div>\n";
+                        closetable();
+
+                    }
+                    break;
+                case 'add':
+
+                    add_breadcrumb(['link' => self::$status_uri['add_user'], 'title' => self::$locale['ME_450']]);
+                    opentable(self::$locale['ME_450']);
+                    Members_Profile::display_new_user_form();
+                    closetable();
+
+                    break;
+                case 'view':
+
+                    if (!empty(self::$user_id)) {
+
+                        $query = "SELECT u.*, s.suspend_reason
+                                FROM ".DB_USERS." u
+                                LEFT JOIN ".DB_SUSPENDS." s ON u.user_id=s.suspended_user
+                                WHERE u.user_id=:user_id GROUP BY u.user_id
+                                ORDER BY s.suspend_date DESC
+                                ";
+                        $bind = [
+                            ':user_id' => self::$user_id
+                        ];
+
+                        self::$user_data = dbarray(dbquery($query, $bind));
+
+                        $title = sprintf(self::$locale['ME_451'], self::$user_data['user_name']);
+
+                        add_breadcrumb(['link' => self::$status_uri['view'].get('lookup'), 'title' => $title]);
+
+                        opentable($title);
+                        Members_Profile::display_user_profile();
+                        closetable();
+
+                    } else {
+                        redirect(FUSION_SELF.fusion_get_aidlink());
+                    }
+                    break;
+                case 'edit': // Edit User Profile
+
+                    if (!empty(self::$user_id)) {
+
+                        self::$user_data = dbarray(dbquery("SELECT * FROM ".DB_USERS." WHERE user_id=:user_id", [':user_id' => self::$user_id]));
+
+                        if (empty(self::$user_data) || self::$user_data['user_level'] <= USER_LEVEL_SUPER_ADMIN) {
+                            redirect(FUSION_SELF.$aidlink);
+                        }
+
+                        $title = sprintf(self::$locale['ME_452'], self::$user_data['user_name']);
+
+                        add_breadcrumb(['link' => self::$status_uri['view'].$_GET['lookup'], 'title' => $title]);
+
+                        opentable($title);
+                        Members_Profile::edit_user_form();
+                        closetable();
+
+                    } else {
+                        redirect(FUSION_SELF.$aidlink);
+                    }
+                    break;
+                case 'delete':
+
+                    if (get('newuser')) {
+
+                        opentable(sprintf(self::$locale['ME_453'], get('lookup')));
+                        Members_Profile::delete_unactivated_user();
+                        closetable();
+
+                    } else if (!empty(self::$user_id)) {
+
+                        self::$user_data = dbarray(dbquery("SELECT * FROM ".DB_USERS." WHERE user_id=:uid", [':uid' => self::$user_id]));
+                        if (empty(self::$user_data) || self::$user_data['user_level'] <= USER_LEVEL_SUPER_ADMIN) {
+                            redirect(FUSION_SELF.$aidlink);
+                        }
+
+                        opentable(sprintf(self::$locale['ME_453'], self::$user_data['user_name']));
+                        Members_Profile::delete_user();
+                        closetable();
+
+                    } else {
+                        redirect(FUSION_SELF.$aidlink);
+                    }
+                    break;
+            }
+        } else {
+            new Tables(new User_List());
+        }
         closetable();
+    }
 
-        //
-        // $ref = get('ref');
-        // if (!empty($ref)) {
-        //     switch ($ref) {
-        //         case 'log': // Show Logs
-        //             if (!self::$is_admin) {
-        //                 display_suspend_log(self::$user_id, "all", self::$rowstart);
-        //             }
-        //             break;
-        //         case 'inactive':
-        //
-        //             if (!self::$user_id && self::$settings['enable_deactivation'] && self::$is_admin) {
-        //
-        //                 $inactive = dbcount("(user_id)", DB_USERS,
-        //                     "user_status='0' AND user_level>".USER_LEVEL_SUPER_ADMIN." AND user_lastvisit <:last_visited AND user_actiontime=:action_time",
-        //                     [
-        //                         ':last_visited' => self::$time_overdue,
-        //                         ':action_time'  => 0,
-        //                     ]
-        //                 );
-        //
-        //                 $button = self::$locale['ME_502'].format_word($inactive, self::$locale['fmt_user']);
-        //
-        //                 if (!$inactive) {
-        //                     addNotice('success', self::$locale['ME_460']);
-        //                     redirect(FUSION_SELF.$aidlink);
-        //                 }
-        //
-        //                 if (post('deactivate_users') && \Defender::safe()) {
-        //
-        //                     require_once INCLUDES."sendmail_include.php";
-        //
-        //                     $result = dbquery("SELECT user_id, user_name, user_email, user_password FROM ".DB_USERS."
-        //                                 WHERE user_level>".USER_LEVEL_SUPER_ADMIN." AND user_lastvisit<'".self::$time_overdue."' AND user_actiontime='0' AND user_status='0'");
-        //
-        //                     $rows = dbrows($result);
-        //
-        //                     if ($rows != '0') {
-        //
-        //                         while ($data = dbarray($result)) {
-        //
-        //                             $message = strtr(self::$locale['email_deactivate_message'], [
-        //                                     '[CODE]'         => md5(self::$response_required.$data['user_password']),
-        //                                     '[SITENAME]'     => self::$settings['sitename'],
-        //                                     '[SITEUSERNAME]' => self::$settings['siteusername'],
-        //                                     '[USER_NAME]'    => $data['user_name'],
-        //                                     '[USER_ID]'      => $data['user_id'],
-        //                                 ]
-        //                             );
-        //
-        //                             if (sendemail($data['user_name'], $data['user_email'], self::$settings['siteusername'], self::$settings['siteemail'], self::$locale['email_deactivate_subject'], $message)) {
-        //                                 dbquery("UPDATE ".DB_USERS." SET user_status='7', user_actiontime='".self::$response_required."' WHERE user_id='".$data['user_id']."'");
-        //                                 suspend_log($data['user_id'], self::USER_DEACTIVATE, self::$locale['ME_468']);
-        //                             }
-        //                         }
-        //                         addNotice('success', sprintf(self::$locale['ME_461'], format_word($rows, self::$locale['fmt_user'])));
-        //                         redirect(FUSION_SELF.fusion_get_aidlink());
-        //                     }
-        //                 }
-        //
-        //                 // Put this into view.
-        //                 add_breadcrumb(['link' => self::$status_uri['inactive'], 'title' => self::$locale['ME_462']]);
-        //
-        //                 opentable(self::$locale['ME_462']);
-        //
-        //                 if ($inactive > 50) {
-        //                     addNotice('info', sprintf(self::$locale['ME_463'], floor($inactive / 50)));
-        //                 }
-        //
-        //                 echo "<div>\n";
-        //
-        //                 $action = self::$settings['deactivation_action'] == 0 ? self::$locale['ME_556'] : self::$locale['ME_557'];
-        //
-        //                 $text = sprintf(self::$locale['ME_464'], $inactive, self::$settings['deactivation_period'], self::$settings['deactivation_response'], $action);
-        //
-        //                 echo str_replace(["[strong]", "[/strong]"], ["<strong>", "</strong>"], $text );
-        //
-        //                 if (self::$settings['deactivation_action'] == 1) {
-        //                     echo "<br />\n".self::$locale['ME_465'];
-        //                     echo "</div>\n<div class='admin-message alert alert-warning m-t-10'><strong>".self::$locale['ME_454']."</strong>\n".self::$locale['ME_466']."\n";
-        //                     if (checkrights('S9')) {
-        //                         echo "<a href='".ADMIN."settings_users.php".$aidlink."'>".self::$locale['ME_467']."</a>";
-        //                     }
-        //                 }
-        //
-        //                 echo "</div>\n<div class='text-center'>\n";
-        //                 echo openform('member_form', 'post', self::$status_uri['inactive']);
-        //                 echo form_button('deactivate_users', $button, $button, ['class' => 'btn-primary m-r-10']);
-        //                 echo form_button('cancel', self::$locale['cancel'], self::$locale['cancel']);
-        //                 echo closeform();
-        //                 echo "</div>\n";
-        //                 closetable();
-        //
-        //             }
-        //             break;
-        //         case 'add':
-        //
-        //             add_breadcrumb(['link' => self::$status_uri['add_user'], 'title' => self::$locale['ME_450']]);
-        //             opentable(self::$locale['ME_450']);
-        //             Members_Profile::display_new_user_form();
-        //             closetable();
-        //
-        //             break;
-        //         case 'view':
-        //
-        //             if (!empty(self::$user_id)) {
-        //
-        //                 $query = "SELECT u.*, s.suspend_reason
-        //                         FROM ".DB_USERS." u
-        //                         LEFT JOIN ".DB_SUSPENDS." s ON u.user_id=s.suspended_user
-        //                         WHERE u.user_id=:user_id GROUP BY u.user_id
-        //                         ORDER BY s.suspend_date DESC
-        //                         ";
-        //                 $bind = [
-        //                     ':user_id' => self::$user_id
-        //                 ];
-        //
-        //                 self::$user_data = dbarray(dbquery($query, $bind));
-        //
-        //                 $title = sprintf(self::$locale['ME_451'], self::$user_data['user_name']);
-        //
-        //                 add_breadcrumb(['link' => self::$status_uri['view'].get('lookup'), 'title' => $title]);
-        //
-        //                 opentable($title);
-        //                 Members_Profile::display_user_profile();
-        //                 closetable();
-        //
-        //             } else {
-        //                 redirect(FUSION_SELF.fusion_get_aidlink());
-        //             }
-        //             break;
-        //         case 'edit': // Edit User Profile
-        //
-        //             if (!empty(self::$user_id)) {
-        //
-        //                 self::$user_data = dbarray(dbquery("SELECT * FROM ".DB_USERS." WHERE user_id=:user_id", [':user_id' => self::$user_id]));
-        //
-        //                 if (empty(self::$user_data) || self::$user_data['user_level'] <= USER_LEVEL_SUPER_ADMIN) {
-        //                     redirect(FUSION_SELF.$aidlink);
-        //                 }
-        //
-        //                 $title = sprintf(self::$locale['ME_452'], self::$user_data['user_name']);
-        //
-        //                 add_breadcrumb(['link' => self::$status_uri['view'].$_GET['lookup'], 'title' => $title]);
-        //
-        //                 opentable($title);
-        //                 Members_Profile::edit_user_form();
-        //                 closetable();
-        //
-        //             } else {
-        //                 redirect(FUSION_SELF.$aidlink);
-        //             }
-        //             break;
-        //         case 'delete':
-        //
-        //             if (get('newuser')) {
-        //
-        //                 opentable(sprintf(self::$locale['ME_453'], get('lookup')));
-        //                 Members_Profile::delete_unactivated_user();
-        //                 closetable();
-        //
-        //             } else if (!empty(self::$user_id)) {
-        //
-        //                 self::$user_data = dbarray(dbquery("SELECT * FROM ".DB_USERS." WHERE user_id=:uid", [':uid' => self::$user_id]));
-        //                 if (empty(self::$user_data) || self::$user_data['user_level'] <= USER_LEVEL_SUPER_ADMIN) {
-        //                     redirect(FUSION_SELF.$aidlink);
-        //                 }
-        //
-        //                 opentable(sprintf(self::$locale['ME_453'], self::$user_data['user_name']));
-        //                 Members_Profile::delete_user();
-        //                 closetable();
-        //
-        //             } else {
-        //                 redirect(FUSION_SELF.$aidlink);
-        //             }
-        //             break;
-        //     }
-        // } else {
-        //
-        // }
-
+    public function checkUserStatus($data) {
+        return getsuspension($data[':user_status']);
     }
 
 }
