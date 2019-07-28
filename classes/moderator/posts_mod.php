@@ -310,7 +310,7 @@ class Posts_Mod {
             ], DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat');
 
             foreach ($this->post_id_array as $value) {
-                $html .= form_text("delete_item_post[]", '', $value, ["input_id" => "delete_post[$value]"]);
+                $html .= form_hidden("delete_item_post[]", '', $value, ["input_id" => "delete_post[$value]"]);
             }
             $html .= form_hidden('move_posts', '', 1);
             $html .= modalfooter(form_button($locale['forum_0302'], $locale['forum_0208'], $locale['forum_0208'], ['class' => 'btn-primary']));
