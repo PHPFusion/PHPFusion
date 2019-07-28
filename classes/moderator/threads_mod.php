@@ -1,7 +1,6 @@
 <?php
 namespace PHPFusion\Infusions\Forum\Classes\Moderator;
 
-use PHPFusion\Infusions\Forum\Classes\Forum\Forum;
 use PHPFusion\Infusions\Forum\Classes\Forum_Moderator;
 
 class Threads_Mod {
@@ -71,9 +70,9 @@ class Threads_Mod {
      */
     private function renewThread() {
         $locale = fusion_get_locale();
-        $thread_id = (int) $this->class->getThreadID();
-        $forum_id = (int) $this->class->getForumID();
-        $parent_id = (int)  $this->class->getForumParentID();
+        $thread_id = (int)$this->class->getThreadID();
+        $forum_id = (int)$this->class->getForumID();
+        $parent_id = (int)$this->class->getForumParentID();
 
         $result = dbquery("SELECT p.post_id, p.post_author, p.post_datestamp, f.forum_id, f.forum_cat
                     FROM ".DB_FORUM_POSTS." p
@@ -101,9 +100,9 @@ class Threads_Mod {
             // update forum lastpost timestamp
             dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost=:time, forum_lastuser=:puid WHERE forum_id=:fid",
                 [
-                    ':time'        => TIME,
+                    ':time' => TIME,
                     ':puid' => $data['post_author'],
-                    ':fid'    => $data['forum_id']
+                    ':fid'  => $data['forum_id']
                 ]);
 
 
@@ -174,15 +173,15 @@ class Threads_Mod {
      */
     public function reduceUserPost() {
         $post_count = 0;
-        $thread_id = (int) $this->class->getThreadID();
+        $thread_id = (int)$this->class->getThreadID();
 
         if ($this->class->verifyThreadID($thread_id)) {
 
-            $result = dbquery("SELECT post_author, COUNT(post_id) 'num_posts'  FROM ".DB_FORUM_POSTS."  WHERE thread_id=:tid    GROUP BY post_author", [':tid'=>$thread_id]);
+            $result = dbquery("SELECT post_author, COUNT(post_id) 'num_posts'  FROM ".DB_FORUM_POSTS."  WHERE thread_id=:tid    GROUP BY post_author", [':tid' => $thread_id]);
             if (dbrows($result)) {
                 while ($pdata = dbarray($result)) {
-                    $num_post = (int)   $pdata['num_posts'];
-                    dbquery("UPDATE ".DB_USERS." SET user_posts=user_posts-$num_post WHERE user_id=:uid", [':uid'=>(int) $pdata['post_author']]);
+                    $num_post = (int)$pdata['num_posts'];
+                    dbquery("UPDATE ".DB_USERS." SET user_posts=user_posts-$num_post WHERE user_id=:uid", [':uid' => (int)$pdata['post_author']]);
                     $post_count = $pdata['num_posts'] + $post_count;
                 }
             }
@@ -199,10 +198,10 @@ class Threads_Mod {
      */
     private function lockThread() {
         $locale = fusion_get_locale();
-        $thread_id = (int) $this->class->getThreadID();
-        $forum_id = (int) $this->class->getForumID();
-        $forum_parent_id = (int) $this->class->getForumParentID();
-        dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_locked='1' WHERE thread_id=:tid AND thread_hidden=0", [':tid'=>$thread_id]);
+        $thread_id = (int)$this->class->getThreadID();
+        $forum_id = (int)$this->class->getForumID();
+        $forum_parent_id = (int)$this->class->getForumParentID();
+        dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_locked='1' WHERE thread_id=:tid AND thread_hidden=0", [':tid' => $thread_id]);
 
         $modal = openmodal('lockthread', $locale['forum_0202'], ['class_dialog' => 'modal-center']);
         $modal .= "<div style='text-align:center'><br />\n";
@@ -223,10 +222,10 @@ class Threads_Mod {
     private function unlockThread() {
         $locale = fusion_get_locale();
         $thread_id = (int)$this->class->getThreadID();
-        $forum_id = (int)   $this->class->getForumID();
-        $parent_id = (int)  $this->class->getForumParentID();
+        $forum_id = (int)$this->class->getForumID();
+        $parent_id = (int)$this->class->getForumParentID();
 
-        dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_locked='0' WHERE thread_id=:tid AND thread_hidden=0", [':tid'=> $thread_id]);
+        dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_locked='0' WHERE thread_id=:tid AND thread_hidden=0", [':tid' => $thread_id]);
 
         $modal = openmodal('lockthread', $locale['forum_0720'], ['class_dialog' => 'modal-center']);
         $modal .= "<div style='text-align:center'><br />\n";
@@ -246,10 +245,10 @@ class Threads_Mod {
     private function stickyThread() {
         $locale = fusion_get_locale();
         $thread_id = (int)$this->class->getThreadID();
-        $forum_id = (int)   $this->class->getForumID();
-        $parent_id = (int)  $this->class->getForumParentID();
+        $forum_id = (int)$this->class->getForumID();
+        $parent_id = (int)$this->class->getForumParentID();
 
-        dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_sticky='1' WHERE thread_id=:tid AND thread_hidden='0'", [':tid'=>$thread_id]);
+        dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_sticky='1' WHERE thread_id=:tid AND thread_hidden='0'", [':tid' => $thread_id]);
         $modal = openmodal('lockthread', $locale['forum_0204'], ['class_dialog' => 'modal-center']);
         $modal .= "<div style='text-align:center'><br />\n";
         $modal .= "<strong>".$locale['forum_0731']."</strong><br /><br />\n";
@@ -268,10 +267,10 @@ class Threads_Mod {
     private function unstickyThread() {
         $locale = fusion_get_locale();
         $thread_id = (int)$this->class->getThreadID();
-        $forum_id = (int)   $this->class->getForumID();
-        $parent_id = (int)  $this->class->getForumParentID();
+        $forum_id = (int)$this->class->getForumID();
+        $parent_id = (int)$this->class->getForumParentID();
 
-        dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_sticky='0' WHERE thread_id=:tid AND thread_hidden='0'", [':tid'=>$thread_id]);
+        dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_sticky='0' WHERE thread_id=:tid AND thread_hidden='0'", [':tid' => $thread_id]);
 
         $modal = openmodal('lockthread', $locale['forum_0205'], ['class_dialog' => 'modal-center']);
         $modal .= "<div style='text-align:center'><br />\n";
@@ -292,7 +291,7 @@ class Threads_Mod {
     private function moveThread() {
         $locale = fusion_get_locale();
         $forum_id = (int)$this->class->getForumID();
-        $thread_id = (int) $this->class->getThreadID();
+        $thread_id = (int)$this->class->getThreadID();
 
         if (post('move_thread')) {
 
@@ -303,32 +302,32 @@ class Threads_Mod {
                 redirect(FORUM."index.php");
             }
 
-            $currentThreadPostCount = dbcount("(post_id)", DB_FORUM_POSTS, "thread_id=:tid", [':tid'=>$thread_id]); // total post in current thread
+            $cur_thread_posts = dbcount("(post_id)", DB_FORUM_POSTS, "thread_id=:tid", [':tid' => $thread_id]); // total post in current thread
 
-            $currentThreadArray = dbarray(dbquery("SELECT thread_lastpost, thread_lastpostid, thread_lastuser  FROM ".DB_FORUM_THREADS." WHERE thread_id=:tid AND thread_hidden='0'", [':tid'=>$thread_id]));
-            if ($currentThreadPostCount == 0 || empty($currentThreadArray)) {
+            $cur_thread_arr = dbarray(dbquery("SELECT thread_lastpost, thread_lastpostid, thread_lastuser  FROM ".DB_FORUM_THREADS." WHERE thread_id=:tid AND thread_hidden='0'", [':tid' => $thread_id]));
+            if ($cur_thread_posts == 0 || empty($cur_thread_arr)) {
                 redirect(FORUM.'index.php');
             }
 
-            list($forum_lastpostid, $forum_lastpost, $forum_lastpost_author) = dbarraynum(dbquery("SELECT forum_lastpostid, forum_lastpost, forum_lastuser FROM ".DB_FORUMS." WHERE forum_id=:nfid AND forum_type !=1", [':nfid'=>$new_forum_id]));
+            list($forum_lastpostid, $forum_lastpost) = dbarraynum(dbquery("SELECT forum_lastpostid, forum_lastpost FROM ".DB_FORUMS." WHERE forum_id=:nfid AND forum_type !=1", [':nfid' => $new_forum_id]));
 
             if ($forum_lastpostid && $forum_lastpost) {
 
-                if ($currentThreadArray['thread_lastpost'] > $forum_lastpost) {
+                if ($cur_thread_arr['thread_lastpost'] > $forum_lastpost) {
                     // As the current thread has a later datestamp than the target forum, copy current thread stats to the target forum.
                     dbquery("UPDATE ".DB_FORUMS." SET
-                            forum_lastpost='".$currentThreadArray['thread_lastpost']."',
-                            forum_lastpostid = '".$currentThreadArray['thread_lastpostid']."',
-                            forum_postcount=forum_postcount+".$currentThreadPostCount.",
+                            forum_lastpost='".$cur_thread_arr['thread_lastpost']."',
+                            forum_lastpostid = '".$cur_thread_arr['thread_lastpostid']."',
+                            forum_postcount=forum_postcount+".$cur_thread_posts.",
                             forum_threadcount=forum_threadcount+1,
-                            forum_lastuser='".$currentThreadArray['thread_lastuser']."'
+                            forum_lastuser='".$cur_thread_arr['thread_lastuser']."'
                             WHERE forum_id=".$new_forum_id
                     );
 
                 } else {
                     // update add the postcount with the total postcount of current thread, and up +1 threadcount on the target forum
                     dbquery("UPDATE ".DB_FORUMS." SET
-                            forum_postcount=forum_postcount+".$currentThreadPostCount.",
+                            forum_postcount=forum_postcount+".$cur_thread_posts.",
                             forum_threadcount=forum_threadcount+1
                             WHERE forum_id=".$new_forum_id
                     );
@@ -336,14 +335,14 @@ class Threads_Mod {
                 }
 
                 // change current thread forum
-                dbquery("UPDATE ".DB_FORUM_THREADS."    SET forum_id=:nfid WHERE thread_id=:tid", [':nfid'=>$new_forum_id, ':tid'=>$thread_id]);
+                dbquery("UPDATE ".DB_FORUM_THREADS."    SET forum_id=:nfid WHERE thread_id=:tid", [':nfid' => $new_forum_id, ':tid' => $thread_id]);
 
                 // change current thread post
-                dbquery("UPDATE ".DB_FORUM_POSTS."  SET forum_id=:nfid WHERE thread_id=:tid", [':nfid'=>$new_forum_id, ':tid'=>$thread_id]);
+                dbquery("UPDATE ".DB_FORUM_POSTS."  SET forum_id=:nfid WHERE thread_id=:tid", [':nfid' => $new_forum_id, ':tid' => $thread_id]);
 
                 $bestForumLastThread = dbarray(dbquery("SELECT * FROM ".DB_FORUM_THREADS." WHERE forum_id='".$forum_id."' ORDER BY thread_lastpost DESC LIMIT 1"));
                 dbquery("UPDATE ".DB_FORUMS." SET
-                            forum_postcount=forum_postcount-".$currentThreadPostCount.",
+                            forum_postcount=forum_postcount-".$cur_thread_posts.",
                             forum_threadcount=forum_threadcount-1,
                             forum_lastpost='".$bestForumLastThread['thread_lastpost']."',
                             forum_lastpostid = '".$bestForumLastThread['thread_lastpostid']."',
@@ -370,13 +369,13 @@ class Threads_Mod {
                 }
             }
             $modal .= form_select_tree('new_forum_id', $locale['forum_0751'], '',
-                    [
-                        'input_id'     => "new_forum_id",
-                        'no_root'      => TRUE,
-                        'inline'       => TRUE,
-                        'disable_opts' => $disabled_opts
-                    ],
-                    DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat');
+                [
+                    'input_id'     => "new_forum_id",
+                    'no_root'      => TRUE,
+                    'inline'       => TRUE,
+                    'disable_opts' => $disabled_opts
+                ],
+                DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat');
             $modal .= form_button('move_thread', $locale['forum_0206'], $locale['forum_0206'], ['class' => 'btn-primary']);
             $modal .= closeform();
             $modal .= closemodal();
@@ -394,10 +393,10 @@ class Threads_Mod {
      */
     private function removeThread() {
         $response = FALSE;
-        $thread_id = (int)  $this->class->getThreadID();
-        $forum_id = (int)   $this->class->getForumID();
+        $thread_id = (int)$this->class->getThreadID();
+        $forum_id = (int)$this->class->getForumID();
 
-        if ($this->class->verifyThreadID($thread_id ) && $this->class->verifyForumID($forum_id)) {
+        if ($this->class->verifyThreadID($thread_id) && $this->class->verifyForumID($forum_id)) {
 
             $param = [':tid' => (int)$thread_id];
 
@@ -438,27 +437,27 @@ class Threads_Mod {
         return (boolean)$response;
     }
 
-    /**
-     * Refresh db_threads thread's stats
-     *
-     * @param $thread_id
-     */
-    private function refreshThread($thread_id) {
-        $query = "SELECT post_datestamp ':time', post_author ':aid', post_id ':pid' FROM ".DB_FORUM_POSTS." WHERE thread_id=:tid ORDER BY post_datestamp DESC LIMIT 1";
-        $param[':tid'] = intval($thread_id);
-        $param[':post_count'] = dbcount("(post_id)", DB_FORUM_POSTS, "thread_id=:tid", $param);
-        $result = dbarray(dbquery($query, $param));
-        if (dbrows($result)) {
-            $pdata = dbarray($result) + $param;
-            dbquery("
-            UPDATE ".DB_FORUM_THREADS." SET thread_lastpost=:time,
-            thread_lastpostid=:pid,
-            thread_postcount=:post_count,
-            thread_lastuser=:aid", $pdata);
-        } else {
-            // delete the thread because there are no post count in this thread.
-            dbquery("DELETE FROM ".DB_FORUM_THREADS." WHERE thread_id=:tid", [':tid' => $param[':tid']]);
-        }
-    }
+    // /**
+    //  * Refresh db_threads thread's stats
+    //  *
+    //  * @param $thread_id
+    //  */
+    // private function refreshThread($thread_id) {
+    //     $query = "SELECT post_datestamp ':time', post_author ':aid', post_id ':pid' FROM ".DB_FORUM_POSTS." WHERE thread_id=:tid ORDER BY post_datestamp DESC LIMIT 1";
+    //     $param[':tid'] = intval($thread_id);
+    //     $param[':post_count'] = dbcount("(post_id)", DB_FORUM_POSTS, "thread_id=:tid", $param);
+    //     $result = dbarray(dbquery($query, $param));
+    //     if (dbrows($result)) {
+    //         $pdata = dbarray($result) + $param;
+    //         dbquery("
+    //         UPDATE ".DB_FORUM_THREADS." SET thread_lastpost=:time,
+    //         thread_lastpostid=:pid,
+    //         thread_postcount=:post_count,
+    //         thread_lastuser=:aid", $pdata);
+    //     } else {
+    //         // delete the thread because there are no post count in this thread.
+    //         dbquery("DELETE FROM ".DB_FORUM_THREADS." WHERE thread_id=:tid", [':tid' => $param[':tid']]);
+    //     }
+    // }
 
 }

@@ -24,9 +24,9 @@ class Posts_Mod {
         $locale = fusion_get_locale();
 
         $thread_id = $this->class->getThreadID();
-        $forum_id = $this->class->getForumID();
+        //$forum_id = $this->class->getForumID();
         $thread_param[':tid'] = (int)$thread_id;
-        $forum_param[':fid'] = (int)$forum_id;
+//        $forum_param[':fid'] = (int)$forum_id;
 
         if (post('delete_posts')) {
 
@@ -39,7 +39,7 @@ class Posts_Mod {
             if (!empty($post_items)) { // the checkboxes
                 // get the thread post item.
                 $thread_count = FALSE;
-                $i = 0;
+                $count = 0;
                 $fpost_id = 0;
 
                 $thread_data = get_thread_stats($thread_id);
@@ -53,7 +53,7 @@ class Posts_Mod {
                             $fpost_id = $del_post_id;
                         }
                         $sanitized_post_id[] = $del_post_id;
-                        $i++;
+                        $count++;
                     }
                 }
                 if (!empty($sanitized_post_id)) {
@@ -404,8 +404,8 @@ class Posts_Mod {
             ':ntid' => (int)$new_thread_id,
             ':nfid' => (int)$new_forum_id
         ];
-        $ntid_param[':ntid'] = (int)$new_thread_id;
-        $nfid_param[':nfid'] = (int)$new_forum_id;
+        // $ntid_param[':ntid'] = (int)$new_thread_id;
+        // $nfid_param[':nfid'] = (int)$new_forum_id;
 
         // Redirect if there is no thread count
         $new_thread_subject = post('new_thread_subject');
@@ -503,12 +503,12 @@ class Posts_Mod {
                 // If current thread has no more post
                 if (!dbcount("(post_id)", DB_FORUM_POSTS, "thread_id=:ctid", [':ctid' => $this->class->getPostId() ])) {
                     // Select last post information from post db
-                    list($forum_lastpost, $forum_lastpost_author) = dbarraynum(dbquery("SELECT post_author, post_datestamp FROM ".DB_FORUM_POSTS." WHERE forum_id=:cfid ORDER BY post_datestamp DESC  LIMIT 1", [':cfid' => $this->class->getForumID() ]));
+                    list($last_post, $last_user) = dbarraynum(dbquery("SELECT post_author, post_datestamp FROM ".DB_FORUM_POSTS." WHERE forum_id=:cfid ORDER BY post_datestamp DESC  LIMIT 1", [':cfid' => $this->class->getForumID() ]));
 
                     // update the forum to deduct a thread and update last post info
                     dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost=:flp, forum_postcount=forum_postcount-$num_posts, forum_threadcount=:tcount, forum_lastuser=:fla   WHERE forum_id=:cfid", [
-                        ':flp'    => $forum_lastpost,
-                        ':fla'    => $forum_lastpost_author,
+                        ':flp'    => $last_post,
+                        ':fla'    => $last_user,
                         ':tcount' => (dbcount("(thread_id)", DB_FORUM_THREADS, "forum_id=:cfid", [':cfid' => $current_forum_id ]) - 1),
                         ':cfid'   => $current_forum_id
                     ]);
