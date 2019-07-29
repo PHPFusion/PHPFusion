@@ -21,6 +21,7 @@ use Administration\Members\Sub_Controllers\Members_Action;
 use Administration\Members\Sub_Controllers\Members_Display;
 use Administration\Members\Sub_Controllers\Members_Profile;
 use Administration\Members\Users\Display;
+use Administration\Members\Users\Profile;
 use Administration\Members\Users\User_List;
 use PHPFusion\BreadCrumbs;
 use PHPFusion\Tables;
@@ -73,9 +74,7 @@ class Members {
             LOCALE.LOCALESET.'admin/members_email.php',
             LOCALE.LOCALESET."user_fields.php"
         ]);
-
         self::$rowstart = get('rowstart', FILTER_SANITIZE_NUMBER_INT); //(isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? $_GET['rowstart'] : 0);
-
         self::$sortby = get('sortby') ?: 'all'; //(isset($_GET['sortby']) ? stripinput($_GET['sortby']) : "all");
 
         $status = get('status', FILTER_VALIDATE_INT);
@@ -86,7 +85,6 @@ class Members {
         if ($usr_mysql_status < 9) {
             self::$usr_mysql_status = $usr_mysql_status;
         }
-
         if (self::$settings['enable_deactivation'] == 1) {
             if (self::$status == 0) {
                 self::$usr_mysql_status = "0' AND user_lastvisit > '".self::$time_overdue."' AND user_actiontime='0";
@@ -94,11 +92,8 @@ class Members {
                 self::$usr_mysql_status = "0' AND user_lastvisit < '".self::$time_overdue."' AND user_actiontime='0";
             }
         }
-
         self::$exit_link = FUSION_SELF.$aidlink."&sortby=".self::$sortby."&status=".self::$status."&rowstart=".self::$rowstart;
-
         $base_url = FUSION_SELF.$aidlink;
-
         self::$status_uri = [
             self::USER_MEMBER       => $base_url."&amp;status=".self::USER_MEMBER,
             self::USER_UNACTIVATED  => $base_url."&amp;status=".self::USER_UNACTIVATED,
@@ -151,7 +146,7 @@ class Members {
             redirect(self::$exit_link);
         }
         add_breadcrumb(['link' => ADMIN.'members.php'.$aidlink, 'title' => self::$locale['ME_400']]);
-        opentable(self::$locale['ME_400']);
+
         $ref = get('ref');
         if (!empty($ref)) {
             switch ($ref) {
@@ -247,15 +242,12 @@ class Members {
                     }
                     break;
                 case 'add':
-
                     add_breadcrumb(['link' => self::$status_uri['add_user'], 'title' => self::$locale['ME_450']]);
                     opentable(self::$locale['ME_450']);
                     Members_Profile::display_new_user_form();
                     closetable();
-
                     break;
                 case 'view':
-
                     if (!empty(self::$user_id)) {
 
                         $query = "SELECT u.*, s.suspend_reason
@@ -282,27 +274,8 @@ class Members {
                         redirect(FUSION_SELF.fusion_get_aidlink());
                     }
                     break;
-                case 'edit': // Edit User Profile
-
-                    if (!empty(self::$user_id)) {
-
-                        self::$user_data = dbarray(dbquery("SELECT * FROM ".DB_USERS." WHERE user_id=:user_id", [':user_id' => self::$user_id]));
-
-                        if (empty(self::$user_data) || self::$user_data['user_level'] <= USER_LEVEL_SUPER_ADMIN) {
-                            redirect(FUSION_SELF.$aidlink);
-                        }
-
-                        $title = sprintf(self::$locale['ME_452'], self::$user_data['user_name']);
-
-                        add_breadcrumb(['link' => self::$status_uri['view'].$_GET['lookup'], 'title' => $title]);
-
-                        opentable($title);
-                        Members_Profile::edit_user_form();
-                        closetable();
-
-                    } else {
-                        redirect(FUSION_SELF.$aidlink);
-                    }
+                case 'edit':
+                    $this->editUser();
                     break;
                 case 'delete':
 
@@ -329,9 +302,35 @@ class Members {
                     break;
             }
         } else {
+            opentable(self::$locale['ME_400']);
             new Tables(new User_List());
+            closetable();
         }
-        closetable();
+
+    }
+
+    /**
+     * Edit user
+     */
+    private function editUser() {
+        $aidlink = fusion_get_aidlink();
+        if (!empty(self::$user_id)) {
+            self::$user_data = dbarray(dbquery("SELECT * FROM ".DB_USERS." WHERE user_id=:uid", [
+                    ':uid' => (int)self::$user_id
+                ]
+            ));
+            if (empty(self::$user_data) || fusion_get_userdata('user_level') > self::$user_data['user_level']) {
+                redirect(FUSION_SELF.$aidlink);
+            }
+            $title = sprintf(self::$locale['ME_452'], self::$user_data['user_name']);
+            add_breadcrumb(['link' => self::$status_uri['view'].self::$user_data['user_id'], 'title' => $title]);
+            opentable($title);
+            $profile = new Profile($this);
+            $profile->editForm();
+            closetable();
+        } else {
+            redirect(FUSION_SELF.$aidlink);
+        }
     }
 
     public function checkUserStatus($data) {
@@ -341,7 +340,7 @@ class Members {
 }
 
 require_once(ADMIN.'members/members_view.php');
-require_once(ADMIN.'members/users/user_list.table.php');
+require_once(ADMIN.'members/users/list.table.php');
 require_once(ADMIN.'members/users/display.class.php');
 require_once(ADMIN.'members/users/actions.class.php');
 require_once(ADMIN.'members/users/profile.class.php');

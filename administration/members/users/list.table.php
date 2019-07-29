@@ -113,6 +113,7 @@ class User_List implements TableSDK {
     public function properties() {
 
         $locale = fusion_get_locale();
+        $aidlink = fusion_get_aidlink();
 
         $groups_array = [
             USER_LEVEL_MEMBER      => $locale['user1'],
@@ -128,6 +129,7 @@ class User_List implements TableSDK {
             'order_col'        => 'user_id',
             'updated_message'  => 'User have been updated',
             'deleted_message'  => 'User have been deleted',
+            'edit_link_format' => ADMIN.'members.php'.$aidlink.'&amp;ref=edit&amp;lookup=',
             'view_link_format' => BASEDIR.'profile.php?lookup=:user_id',
             'link_filters'     => [
                 'user_level' => [

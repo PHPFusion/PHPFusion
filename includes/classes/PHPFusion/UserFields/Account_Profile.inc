@@ -59,7 +59,7 @@ class Account_Profile extends UserFieldsQuantum {
                     '2' => $this->locale['522'],
                 ],
                 'type'    => 'radio',
-                'inline'  => FALSE
+                'inline'  => $this->inline_field
             ]
         );
         $user_hide_email = isset($_POST['user_hide_email']) ? $_POST['user_hide_email'] : $this->user_data['user_hide_email'];
@@ -130,14 +130,14 @@ class Account_Profile extends UserFieldsQuantum {
             $deactivate_user = $this->user_name_change ? FALSE : TRUE;
             $info['username_openform'] = openform('username_frm', 'post');
             $info['username_closeform'] = closeform();
-            $info['user_name'] = form_text('user_name', 'User Name', $this->user_data['user_name'], ['required' => TRUE, 'deactivate' => $deactivate_user, 'inline' => FALSE]);
+            $info['user_name'] = form_text('user_name', 'User Name', $this->user_data['user_name'], ['required' => TRUE, 'deactivate' => $deactivate_user, 'inline' => $this->inline_field]);
             $info['update_user_name'] = form_button($this->post_name.'_username', "Update User Name", $this->post_name.'_username', ['class' => $this->options['btn_post_class'], 'deactivate' => $this->user_name_change ? FALSE : TRUE]);
         }
         $user_email = post('user_email') ?: $this->user_data['user_email'];
         $info['user_email'] = form_text('user_email', $this->locale['u128'], $user_email, [
                 'type'       => 'email',
                 "required"   => TRUE,
-                'inline'     => FALSE,
+                'inline'     => $this->inline_field,
                 'max_length' => '100',
                 'error_text' => $this->locale['u126']
             ]

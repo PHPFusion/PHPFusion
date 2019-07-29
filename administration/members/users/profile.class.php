@@ -27,18 +27,67 @@ use PHPFusion\UserFieldsInput;
  *
  * @package Administration\Members\Sub_Controllers
  */
-class Profile extends Members {
+class Profile {
 
-    private static $info;
+    private $class = '';
+    private $info = [];
+
+    public function __construct($obj) {
+        $this->class = $obj;
+    }
+
+    /**
+     * Edit User Profile in Administration
+     */
+    public function editForm() {
+
+        $locale = fusion_get_locale();
+        $lookup = get('lookup', FILTER_VALIDATE_INT);
+        if (fusion_get_user($lookup, 'user_id')) {
+            $user = fusion_get_user($lookup);
+
+            $userFields = new \UserFields();
+            $userFields->post_name = 'update_user';
+            $userFields->post_value = $locale['ME_437'];
+            $userFields->display_validation = FALSE;
+            $userFields->is_admin_panel = TRUE;
+            $userFields->display_terms = FALSE;
+            $userFields->plugin_folder = [INCLUDES."user_fields/", INFUSIONS];
+            $userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
+            $userFields->show_admin_password = ($user['user_level'] <= USER_LEVEL_ADMIN ? TRUE : FALSE);
+            $userFields->skip_password = TRUE;
+            $userFields->inline_field = TRUE;
+            $userFields->method = 'input';
+            $userFields->user_data = $user;
+            $userFields->user_name_change = TRUE;
+
+            $userInput = new \UserFieldsInput();
+            $userInput->admin_activation = FALSE;
+            $userInput->registration = FALSE;
+            $userInput->email_verification = FALSE;
+            $userInput->is_admin_panel = TRUE;
+            $userInput->skip_password = TRUE;
+            $userInput->user_data = $user;
+            $userInput->post_name = 'update_user';
+            $userInput->saveUpdate();
+
+            $this->info = $userFields->get_input_info();
+            //display_profile_form($info);
+            $this->display_register_form();
+        } else {
+            addNotice('danger', "There are no user by found by the user id");
+            redirect(clean_request('', ['ref', 'lookup'], FALSE));
+        }
+    }
 
     /*
      * Displays new user form
      */
-    public static function display_new_user_form() {
-
+    public function display_new_user_form() {
+        $locale = fusion_get_locale();
         $userFields = new UserFields();
         $userFields->post_name = "add_new_user";
-        $userFields->post_value = self::$locale['ME_450'];
+        $userFields->post_value = $locale['ME_450'];
         $userFields->display_validation = FALSE;
         $userFields->plugin_folder = [INCLUDES."user_fields/", INFUSIONS];
         $userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
@@ -63,77 +112,76 @@ class Profile extends Members {
         self::display_register_form();
     }
 
-    public static function display_register_form() {
-        echo self::$info['openform'];
-        echo "<div class='row'>\n<div class='col-xs-12 col-sm-12 col-md-12 col-lg-10'>\n";
-
-        if (self::$info['user_password_notice']) {
-            echo "<div class='alert alert-warning'>".self::$info['user_password_notice']."</div>\n";
+    public function display_register_form() {
+        echo $this->info['openform'];
+        echo "<div class='".grid_row()."'>";
+        echo "<div class='".grid_column_size(100,100,100,80)."'>\n";
+        if ($this->info['user_password_notice']) {
+            echo "<div class='alert alert-warning'>".$this->info['user_password_notice']."</div>\n";
         }
-        if (isset(self::$info['user_admin_password_notice'])) {
-            echo "<div class='alert alert-danger'>".self::$info['user_admin_password_notice']."</div>\n";
+        if (isset($this->info['user_admin_password_notice'])) {
+            echo "<div class='alert alert-danger'>".$this->info['user_admin_password_notice']."</div>\n";
         }
         echo "<div class='spacer-sm'>\n";
-        if (self::$info['user_avatar']) {
-            echo self::$info['user_avatar'];
+        if ($this->info['user_avatar']) {
+            echo $this->info['user_avatar'];
         }
-        echo self::$info['user_name'];
-        echo self::$info['user_email'];
-        echo self::$info['user_password'];
-        if (self::$info['user_admin_password']) {
-            echo self::$info['user_admin_password'];
+        echo $this->info['user_name'];
+        echo $this->info['user_email'];
+        echo $this->info['user_password'];
+        if ($this->info['user_admin_password']) {
+            echo $this->info['user_admin_password'];
         }
-        if (self::$info['user_reputation']) {
-            echo self::$info['user_reputation'];
+        if ($this->info['user_reputation']) {
+            echo $this->info['user_reputation'];
         }
         $opentab = '';
         $closetab = '';
         $tabpages = [];
         $tab_content = '';
-        if (!empty(self::$info['section'])) {
+        if (!empty($this->info['section'])) {
             $tab = new \FusionTabs();
             $tab->set_remember(TRUE);
 
-            foreach (self::$info['section'] as $tab_id => $tabdata) {
+            foreach ($this->info['section'] as $tab_id => $tabdata) {
                 $tabpages['title'][$tab_id] = $tabdata['name'];
                 $tabpages['id'][$tab_id] = $tabdata['id'];
             }
-            reset(self::$info['section']);
-            $default_active = key(self::$info['section']);
+            reset($this->info['section']);
+            $default_active = key($this->info['section']);
             $tab_active = $tab::tab_active($tabpages, $default_active);
             $tab_content = '';
-            foreach (self::$info['section'] as $tab_id => $tabdata) {
+            foreach ($this->info['section'] as $tab_id => $tabdata) {
                 $user_field = '';
-                if (isset(self::$info['user_field'][$tab_id])) {
-                    foreach (self::$info['user_field'][$tab_id] as $cat_id => $field_prop) {
+                if (isset($this->info['user_field'][$tab_id])) {
+                    foreach ($this->info['user_field'][$tab_id] as $cat_id => $field_prop) {
                         $user_field .= "<h4>\n".$field_prop['title']."</h4>";
                         $user_field .= implode('', $field_prop['fields']);
                     }
                 }
                 $tab_content .= $tab->opentabbody($tabdata['id'], $tab_active).$user_field.$tab->closetabbody();
             }
-
             $opentab = $tab->opentab($tabpages, $tab_active, 'admin_registration', FALSE, 'nav-tabs nav-stacked');
             $closetab = $tab->closetab();
         }
         echo $opentab.$tab_content.$closetab;
-        echo self::$info['button'];
+        echo $this->info['button'];
         echo "</div>\n";
-
-        echo "</div>\n<div class='col-xs-12 col-sm-3'>\n";
+        echo "</div>\n<div class='".grid_column_size(100,100,100,20)."'>\n";
         echo "</div>\n</div>\n";
 
-        echo self::$info['closeform'];
+        echo $this->info['closeform'];
     }
 
     /*
      * Displays user profile
      */
-    public static function display_user_profile() {
+    public function display_user_profile() {
+        $locale = fusion_get_locale();
         $settings = fusion_get_settings();
         $userFields = new UserFields();
         $userFields->post_name = "register";
-        $userFields->post_value = self::$locale['u101'];
+        $userFields->post_value = $locale['u101'];
         $userFields->display_validation = $settings['display_validation'];
         $userFields->display_terms = $settings['enable_terms'];
         $userFields->plugin_folder = [INCLUDES."user_fields/", INFUSIONS];
@@ -146,51 +194,8 @@ class Profile extends Members {
         $userFields->display_profile_output();
     }
 
-    /**
-     * Edit User Profile in Administration
-     */
-    public static function edit_user_form() {
-
-        if (isset($_GET['lookup']) && isnum($_GET['lookup'])) {
-
-            $user = fusion_get_user($_GET['lookup']);
-            $userFields = new \UserFields();
-            $userFields->post_name = 'update_user';
-            $userFields->post_value = self::$locale['ME_437'];
-            $userFields->display_validation = FALSE;
-            $userFields->is_admin_panel = TRUE;
-            $userFields->display_terms = FALSE;
-            $userFields->plugin_folder = [INCLUDES."user_fields/", INFUSIONS];
-            $userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
-            $userFields->show_admin_password = ($user['user_level'] <= USER_LEVEL_ADMIN ? TRUE : FALSE);
-            $userFields->skip_password = TRUE;
-            $userFields->method = 'input';
-            $userFields->user_data = $user;
-            $userFields->user_name_change = TRUE;
-
-            $userInput = new \UserFieldsInput();
-            $userInput->admin_activation = FALSE;
-            $userInput->registration = FALSE;
-            $userInput->email_verification = FALSE;
-            $userInput->is_admin_panel = TRUE;
-            $userInput->skip_password = TRUE;
-            $userInput->user_data = $user;
-
-            $userInput->post_name = 'update_user';
-            $userInput->saveUpdate();
-
-            self::$info = $userFields->get_input_info();
-            self::display_register_form();
-        } else {
-
-            addNotice('danger', "There are no user by found by the user id");
-            redirect(clean_request('', ['ref', 'lookup'], FALSE));
-        }
-
-    }
-
-    public static function delete_user() {
-
+    public function delete_user() {
+        $locale = fusion_get_locale();
         if (isset($_POST['delete_user'])) {
             $result = dbquery("SELECT user_id, user_avatar FROM ".DB_USERS." WHERE user_id=:user_id AND user_level >:user_level",
                 [
@@ -316,18 +321,19 @@ class Profile extends Members {
             }
         }
         echo "<div class='well'>\n";
-        echo "<h4>".self::$locale['ME_454']."</h4>";
-        echo "<p>".nl2br(sprintf(self::$locale['ME_455'], "<strong>".self::$user_data['user_name']."</strong>"))."</p>\n";
+        echo "<h4>".$locale['ME_454']."</h4>";
+        echo "<p>".nl2br(sprintf($locale['ME_455'], "<strong>".self::$user_data['user_name']."</strong>"))."</p>\n";
         echo openform('mod_form', 'post', FUSION_SELF.fusion_get_aidlink()."&amp;ref=delete&amp;lookup=".self::$user_id."");
         echo "<div class='spacer-sm'>\n";
-        echo form_button('delete_user', self::$locale['ME_456'], self::$locale['ME_456'], ['class' => 'btn-danger m-r-10']);
-        echo form_button('cancel', self::$locale['cancel'], self::$locale['cancel']);
+        echo form_button('delete_user', $locale['ME_456'], $locale['ME_456'], ['class' => 'btn-danger m-r-10']);
+        echo form_button('cancel', $locale['cancel'], $locale['cancel']);
         echo "</div>\n";
         echo closeform();
         echo "</div>\n";
     }
 
-    public static function delete_unactivated_user() {
+    public function delete_unactivated_user() {
+        $locale = fusion_get_locale();
         if (isset($_POST['delete_newuser'])) {
             dbquery("DELETE FROM ".DB_NEW_USERS." WHERE user_name=:user_name", [':user_name' => $_GET['lookup']]);
             redirect(clean_request('', ['ref', 'lookup', 'newuser'], FALSE));
@@ -335,12 +341,12 @@ class Profile extends Members {
         }
 
         echo "<div class='well'>\n";
-        echo "<h4>".self::$locale['ME_454']."</h4>";
-        echo "<p>".nl2br(sprintf(self::$locale['ME_457'], "<strong>".$_GET['lookup']."</strong>"))."</p>\n";
+        echo "<h4>".$locale['ME_454']."</h4>";
+        echo "<p>".nl2br(sprintf($locale['ME_457'], "<strong>".$_GET['lookup']."</strong>"))."</p>\n";
         echo openform('mod_form', 'post', FUSION_REQUEST);
         echo "<div class='spacer-sm'>\n";
-        echo form_button('delete_newuser', self::$locale['ME_456'], self::$locale['ME_456'], ['class' => 'btn-danger m-r-10']);
-        echo form_button('cancel', self::$locale['cancel'], self::$locale['cancel']);
+        echo form_button('delete_newuser', $locale['ME_456'], $locale['ME_456'], ['class' => 'btn-danger m-r-10']);
+        echo form_button('cancel', $locale['cancel'], $locale['cancel']);
         echo "</div>\n";
         echo closeform();
         echo "</div>\n";

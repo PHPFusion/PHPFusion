@@ -271,40 +271,36 @@ class UserFieldsQuantum extends \SqlHandler {
         $cond = '';
 
         if ($this->is_admin_panel === FALSE) {
-
             $section = get('section', FILTER_VALIDATE_INT);
-
             if (!$section || !isset($this->page[$section])) {
                 $section = 1;
             }
-
             $param = [
                 ':index00' => intval($section),
                 ':index01' => intval($section),
             ];
             $cond = "WHERE (cat.field_cat_id=:index00 OR root.field_cat_id=:index01)";
-
             // for registration
             if ($this->registration === TRUE) {
                 $cond .= ' AND field.field_registration=:fieldreg';
                 $param += [':fieldreg' => 1];
             }
-        }
 
-        switch ($folder) {
-            default:
-            case 'public':
-                $cond .= ' AND field_section=:type00';
-                $param += [':type00' => 'public'];
-                break;
-            case 'security':
-                $cond .= ' AND field_section=:type00';
-                $param += [':type00' => 'security'];
-                break;
-            case 'preference':
-                $cond .= ' AND field_section !=:type00';
-                $param += [':type00' => 'preference'];
-                break;
+            switch ($folder) {
+                default:
+                case 'public':
+                    $cond .= ' AND field_section=:type00';
+                    $param += [':type00' => 'public'];
+                    break;
+                case 'security':
+                    $cond .= ' AND field_section=:type00';
+                    $param += [':type00' => 'security'];
+                    break;
+                case 'preference':
+                    $cond .= ' AND field_section !=:type00';
+                    $param += [':type00' => 'preference'];
+                    break;
+            }
         }
 
         $sql = "SELECT field.*,

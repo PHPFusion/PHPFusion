@@ -351,8 +351,6 @@ class UserFields extends UserFieldsQuantum {
         if ($this->registration) {
             // registration
             // bound in page 1 only.
-
-            $_GET['section'] = 1;
             $class = new Public_Profile();
             $class->user_data = $this->user_data;
             $class->post_name = $this->post_name;
@@ -386,8 +384,6 @@ class UserFields extends UserFieldsQuantum {
 
             // Edit Profile in Administration
             if ($this->is_admin_panel === TRUE) {
-
-                $_GET['section'] = 1;
 
                 $class = new Public_Profile();
                 $class->user_data = $this->user_data;
@@ -440,20 +436,16 @@ class UserFields extends UserFieldsQuantum {
                             $this->info['custom_page'] = TRUE;
                             $this->info['title'] = $this->info['pages'][$this->info['current_page']]['title'];
                             $this->info['page_content'] = 'There are no page content yet.';
-
                             $user_fields = '';
                             $user_fields_meta = '';
                             $user_fields_section = [];
                             $user_fields_title = '';
-
                             if (is_file($this->info['pages'][$this->info['current_page']]['file'])) {
                                 include $this->info['pages'][$this->info['current_page']]['file'];
                             }
-
                             if (!empty($user_fields_section)) {
                                 $section = isset($_GET['section']) ? $_GET['section'] : $user_fields_section['id'][0];
                             }
-
                             // Custom title
                             if ($user_fields) {
                                 // Title info
@@ -464,21 +456,17 @@ class UserFields extends UserFieldsQuantum {
                                 if ($user_fields_meta) {
                                     add_to_meta('keywords', $user_fields_meta);
                                 }
-
                                 // Navigation
                                 if (!empty($user_fields_section)) {
                                     $this->info['section'] = $user_fields_section;
                                 }
-
                                 // Additional navigation
                                 if (!empty($user_fields_nav)) {
                                     $this->info['section_nav'] = $user_fields_nav;
                                 }
-
                                 // Page content info
                                 $this->info['page_content'] = $user_fields;
                             }
-
                             add_to_title($locale['global_201'].$this->info['title']);
                             break;
                         }
@@ -486,15 +474,11 @@ class UserFields extends UserFieldsQuantum {
                     case 'pu_profile': // edit_profile.php -- Core Fields
 
                         $this->info['section'] = $this->get_user_field_cats();
-
                         $section = $section && isset($this->info['section'][$section]) ? $section : 1;
-
                         $field_cats = $this->get_user_field_cats($section);
-
                         if (isset($field_cats['name'])) {
                             $this->info['title'] = $field_cats['name'];
                         }
-
                         // Public Profile
                         $class = new Public_Profile();
                         $class->user_data = $this->user_data;
@@ -507,7 +491,6 @@ class UserFields extends UserFieldsQuantum {
                         $class->plugin_locale_folder = $this->plugin_locale_folder;
                         $class->inline_field = $this->inline_field;
                         $this->info['user_hash'] = form_hidden('user_hash', '', $this->user_data['user_password']);
-
                         $this->info = array_merge($this->info, $class->get_info());
 
                         //print_P($this->info);
