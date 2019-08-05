@@ -115,7 +115,7 @@ class Text extends \Defender\Validation {
             \defender::stop();
             \defender::setInputError(self::$inputName);
         }
-        if (preg_check("/^[-0-9A-Z+_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,4}$/i", self::$inputValue)) {
+        if (preg_check("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,})$/i", self::$inputValue)) {
             return self::$inputValue;
         }
         return FALSE;
