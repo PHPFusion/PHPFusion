@@ -1775,9 +1775,16 @@ Alerts
     padding: 1.4rem 10px;
 }
 .form-group .control-label {
-    font-weight: 400;
+    font-weight: 600;
     color:#000;
     padding-left:0;
+}
+/*collapse*/
+.panel-group .panel-heading a {
+    font-weight:600;
+    font-size:14px;
+    color:#222;
+    display: block;
 }
 /* Table controls */
 #devlpr #main_content .content table {
@@ -1786,6 +1793,10 @@ Alerts
     -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .04);
     -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, .04);
     box-shadow: 0 1px 1px rgba(0, 0, 0, .04);
+}
+
+#devlpr #main_content .content .bootstrap-datetimepicker-widget.dropdown-menu table {
+    border:0;
 }
 
 #devlpr #main_content .content table thead {
@@ -2738,7 +2749,6 @@ div.mce-edit-area {
 }
 
 .file-input .panel .file-preview-image {
-    max-height: 143px !important;
     margin: 5px auto 0;
 }
 .panel-title {
@@ -2755,6 +2765,7 @@ div.mce-edit-area {
 .input-group .btn {
     margin-top: -1px;
 }
+
 input[type=radio],
 input[type=checkbox] {
     border: 1px solid #b4b9be;
@@ -2864,16 +2875,26 @@ input[type=radio]:checked:before {
     bottom: 20px;
 }
 
-input[type=text] {
+.control-label,
+input[type=text],
+input[type=email],
+textarea,
+select,
+input[type=password] {
     -webkit-border-radius: 0 !important;
     -moz-border-radius: 0 !important;
     border-radius: 0 !important;
+    font-size:14px;
 }
-
 .dashboard-icon {
     width: 50px;
 }
-
+.radio.display-inline-block .control-label {
+    padding-left:15px;
+}
+/*.radio.display-inline-block input[type=radio] {*/
+    /*margin-left:-15px;*/
+/*}*/
 .bootstrap-datetimepicker-widget table > thead th {
     padding: 5px !important;
 }

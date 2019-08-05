@@ -753,7 +753,7 @@ function dbquery_insert($table, $inputdata, $mode, array $options = []) {
         'debug'        => FALSE,
         'primary_key'  => '',
         'no_unique'    => FALSE,
-        'keep_session' => FALSE
+        'keep_session' => TRUE
     ];
 
     if (!Defender::safe()) {

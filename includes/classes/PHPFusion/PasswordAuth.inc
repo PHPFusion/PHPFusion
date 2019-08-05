@@ -93,7 +93,6 @@ class PasswordAuth {
             if ($this->inputNewPassword == $this->inputNewPassword2) {
                 if ($this->_isValidPasswordInput()) {
                     $this->_setNewHash($this->inputNewPassword);
-
                     return 0;
                 } else {
                     // New password contains invalid chars

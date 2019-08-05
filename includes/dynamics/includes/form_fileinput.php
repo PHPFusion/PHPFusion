@@ -32,54 +32,55 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
     $input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
 
-    $template_choices = ['classic', 'modern', 'thumbnail'];
+    $template_choices = ['classic', 'modern', 'thumbnail', 'avatar'];
 
     $default_options = [
-        'input_id'          => $input_name,
-        'upload_path'       => IMAGES,
-        'required'          => FALSE,
-        'safemode'          => FALSE,
-        'deactivate'        => FALSE,
-        'preview_off'       => FALSE,
-        'type'              => 'image', //// ['image', 'html', 'text', 'video', 'audio', 'flash', 'object']
-        'width'             => '100%',
-        'label'             => $locale['browse'],
-        'inline'            => TRUE,
-        'class'             => "",
-        'tip'               => "",
-        'ext_tip'           => "",
-        'error_text'        => $locale['error_input_file'],
-        'btn_class'         => 'btn-default',
-        'icon'              => 'fa fa-upload',
-        'jsonurl'           => FALSE,
-        'dropzone'          => FALSE,
-        'valid_ext'         => '.jpg,.png,.PNG,.JPG,.JPEG,.gif,.GIF,.bmp,.BMP',
-        'thumbnail'         => FALSE,
-        'thumbnail_w'       => 300,
-        'thumbnail_h'       => 300,
-        'thumbnail_folder'  => "",
-        'thumbnail_ratio'   => 0,
-        'thumbnail_suffix'  => '_t1',
-        'thumbnail2'        => FALSE,
-        'thumbnail2_w'      => 600,
-        'thumbnail2_h'      => 400,
-        'thumbnail2_suffix' => '_t2',
-        'thumbnail2_ratio'  => 0,
-        'delete_original'   => FALSE,
-        'default_preview'   => IMAGES.'no_photo.png',
-        'max_width'         => 1800,
-        'max_height'        => 1600,
-        'max_byte'          => 1500000,
-        'max_count'         => 1,
-        'multiple'          => FALSE,
-        'template'          => 'classic',
-        'media'             => FALSE,
-        'placeholder'       => '',
-        'form_id'           => '',
-        'hide_upload'       => TRUE,
-        'hide_remove'       => FALSE,
-        'krajee_disabled'   => FALSE,
-        'replace_upload'    => FALSE, // makes upload unique (i.e. overwrite instead of creating new)
+        'input_id'             => $input_name,
+        'upload_path'          => IMAGES,
+        'required'             => FALSE,
+        'safemode'             => FALSE,
+        'deactivate'           => FALSE,
+        'preview_off'          => FALSE,
+        'type'                 => 'image', //// ['image', 'html', 'text', 'video', 'audio', 'flash', 'object']
+        'width'                => '100%',
+        'label'                => $locale['browse'],
+        'inline'               => TRUE,
+        'class'                => "",
+        'tip'                  => "",
+        'ext_tip'              => "",
+        'error_text'           => $locale['error_input_file'],
+        'btn_class'            => 'btn-default',
+        'icon'                 => 'fa fa-upload',
+        'jsonurl'              => FALSE,
+        'dropzone'             => FALSE,
+        'valid_ext'            => '.jpg,.png,.PNG,.JPG,.JPEG,.gif,.GIF,.bmp,.BMP',
+        'thumbnail'            => FALSE,
+        'thumbnail_w'          => 300,
+        'thumbnail_h'          => 300,
+        'thumbnail_folder'     => "",
+        'thumbnail_ratio'      => 0,
+        'thumbnail_suffix'     => '_t1',
+        'thumbnail2'           => FALSE,
+        'thumbnail2_w'         => 600,
+        'thumbnail2_h'         => 400,
+        'thumbnail2_suffix'    => '_t2',
+        'thumbnail2_ratio'     => 0,
+        'delete_original'      => FALSE,
+        'button_text'          => '',
+        'default_preview'      => IMAGES.'no_photo.png',
+        'max_width'            => 1800,
+        'max_height'           => 1600,
+        'max_byte'             => 1500000,
+        'max_count'            => 1,
+        'multiple'             => FALSE,
+        'template'             => 'classic',
+        'media'                => FALSE,
+        'placeholder'          => '',
+        'form_id'              => '',
+        'hide_upload'          => TRUE,
+        'hide_remove'          => FALSE,
+        'krajee_disabled'      => FALSE,
+        'replace_upload'       => FALSE, // makes upload unique (i.e. overwrite instead of creating new)
         "croppie"              => FALSE,
         "croppie_resize"       => FALSE,
         "cropper_zoom"         => FALSE,
@@ -135,6 +136,9 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
         }
         $type_for_js = json_encode((array)$options['type']);
     }
+    if ($options['button_text']) {
+        $browseLabel = $options['button_text'];
+    }
 
     $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] ? 'display-block overflow-hide ' : '').$error_class.$options['class']."' ".($options['width'] ? "style='width: ".$options['width']." !important;'" : '').">\n";
     $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3" : '')."' for='".$options['input_id']."'>".$label.($options['required'] ? "<span class='required'>&nbsp;*</span>" : '')."
@@ -149,7 +153,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
             add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/croppie/croppie.css'/>");
             add_to_footer("<script src='".INCLUDES."jquery/croppie/exif.js'></script>");
             add_to_footer("<script src='".INCLUDES."jquery/croppie/croppie.js'></script>");
-            define("CROPPIE_JS", true);
+            define("CROPPIE_JS", TRUE);
         }
         $html .= "<div id='".$options['input_id']."-croppie'></div>\n";
         //$html .= "<button type='button' class='upload-result'>Result</button>\n";
@@ -446,6 +450,36 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
                         $extra_data_js
                         layoutTemplates: {
                             main2: '<div class=\"panel panel-default no-shadow\">' + '{preview}' + '<div class=\"panel-body\">' + ' {browse}' + '</div></div>',
+                        },
+                        ".$lang."
+                    });
+                ");
+                break;
+            case 'avatar':
+                add_to_jquery("
+                    $('#".$options['input_id']."').fileinput({
+                        allowedFileTypes: ".$type_for_js.",
+                        allowedPreviewTypes : ".$type_for_js.",
+                        ".($value ? "initialPreview: ".$value.", " : '')."
+                        ".($options['preview_off'] ? "showPreview: false, " : '')."
+                        initialPreviewAsData: true,
+                        defaultPreviewContent: '<img class=\"img-responsive\" src=\"".$options['default_preview']."\" alt=\"".$browseLabel."\" style=\"width:100%;\">',
+                        browseClass: 'btn btn-block btn-default',
+                        uploadClass: 'btn btn-modal',
+                        captionClass : '',
+                        maxFileCount: '".$options['max_count']."',
+                        removeClass : 'btn button',
+                        browseLabel: '".$browseLabel."',
+                        browseIcon: '', //<i class=\"".$options['icon']."\"></i>',
+                        showCaption: false,
+                        showRemove: false,
+                        ".($options['jsonurl'] ? "uploadUrl : '".$options['jsonurl']."'," : '')."
+                        ".($options['hide_upload'] ? 'showUpload: false,' : '')."
+                        ".($options['hide_remove'] ? 'showRemove: false,' : '')."
+                        dropZoneEnabled: ".($options['dropzone'] ? "true" : "false").",
+                        $extra_data_js
+                        layoutTemplates: {
+                            main2: '<div class=\"panel panel-default no-shadow\">' + '{preview}' + '<div class=\"panel-body\">' + ' {browse}' + ' <a href=\"#\" class=\"btn btn-primary btn-block as-".$options['input_id']."\">Select Avatar</a></div></div>',
                         },
                         ".$lang."
                     });

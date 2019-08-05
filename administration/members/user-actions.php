@@ -1,31 +1,12 @@
 <?php
-/*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
-+--------------------------------------------------------+
-| Filename: members/sub_controllers/members_action.php
-| Author: PHP-Fusion Development Team
-+--------------------------------------------------------+
-| This program is released as free software under the
-| Affero GPL license. You can redistribute it and/or
-| modify it under the terms of this license which you
-| can read by viewing the included agpl.txt or online
-| at www.gnu.org/licenses/agpl.html. Removal of this
-| copyright header is strictly prohibited without
-| written permission from the original author(s).
-+--------------------------------------------------------*/
-namespace Administration\Members\Users;
-
-use Administration\Members\Members;
-
+namespace PHPFusion\Administration\Members;
 /**
  * Class Members_Action
  * All function are in the form of multiples user_id
  *
  * @package Administration\Members\Sub_Controllers
  */
-class Actions extends Members {
+class UserActions extends UserList {
 
     private $action_user_id = [];
 
@@ -190,6 +171,7 @@ class Actions extends Members {
 
     // this is the mapping for all other actions except delete
     public function execute() {
+        $locale = fusion_get_locale();
         $form = '';
         $users_list = '';
         if (post('cancel')) {
@@ -269,7 +251,7 @@ class Actions extends Members {
                         $u_name[] = $u_data['user_name'];
                     }
 
-                    addNotice('success', sprintf(self::$locale['ME_432'], implode(', ', $u_name), self::$locale[$this->action_map[$this->action]['a_message']]), 'all');
+                    addNotice('success', sprintf($locale['ME_432'], implode(', ', $u_name), $locale[$this->action_map[$this->action]['a_message']]), 'all');
 
                     redirect(FUSION_REQUEST);
                 }
@@ -287,23 +269,23 @@ class Actions extends Members {
                     );
                 }
                 if (isset($this->action_map[$this->action]['action_time'])) {
-                    $form .= form_text('duration', self::$locale['ME_435'], '', ['type' => 'number', 'append' => TRUE, 'append_value' => self::$locale['ME_436'], 'required' => TRUE, 'inner_width' => '120px']);
+                    $form .= form_text('duration', $locale['ME_435'], '', ['type' => 'number', 'append' => TRUE, 'append_value' => $locale['ME_436'], 'required' => TRUE, 'inner_width' => '120px']);
                 }
                 if (!empty($this->action_map[$this->action]['reason'])) {
-                    $form .= form_textarea('reason', self::$locale['ME_433'], '', ['required' => TRUE, 'placeholder' => self::$locale['ME_434']]);
+                    $form .= form_textarea('reason', $locale['ME_433'], '', ['required' => TRUE, 'placeholder' => $locale['ME_434']]);
                 }
                 $form .= form_hidden('action', '', $this->action);
                 // the user id is multiple
                 foreach ($this->action_user_id as $user_id) {
                     $form .= form_hidden('user_id[]', '', $user_id);
                 }
-                $form .= form_button('post_action', self::$locale['update'], $this->action, ['class' => 'btn-primary']);
-                $form .= form_button('cancel', self::$locale['cancel'], 'cancel');
+                $form .= form_button('post_action', $locale['update'], $this->action, ['class' => 'btn-primary']);
+                $form .= form_button('cancel', $locale['cancel'], 'cancel');
 
-                $modal = openmodal('uAdmin_modal', self::$locale[$this->action_map[$this->action]['title']].self::$locale['ME_413'], ['static' => TRUE]);
+                $modal = openmodal('uAdmin_modal', $locale[$this->action_map[$this->action]['title']].$locale['ME_413'], ['static' => TRUE]);
                 $modal .= openform('uAdmin_frm', 'post', FUSION_REQUEST);
                 $modal .= strtr($this->action_form_template(), [
-                    '{%message%}'    => sprintf(self::$locale['ME_431'], self::$locale[$this->action_map[$this->action]['a_message']]),
+                    '{%message%}'    => sprintf($locale['ME_431'], $locale[$this->action_map[$this->action]['a_message']]),
                     '{%users_list%}' => $users_list,
                     '{%form%}'       => $form,
                 ]);
@@ -313,7 +295,7 @@ class Actions extends Members {
             }
 
         } else {
-            // addNotice('danger', self::$locale['ME_430']);
+            // addNotice('danger', $locale['ME_430']);
             redirect( clean_request('', ['step', 'uid', 'user_id'], FALSE) );
         }
     }
@@ -340,6 +322,3 @@ class Actions extends Members {
     }
 
 }
-
-require_once(__DIR__.'/../../../includes/sendmail_include.php');
-require_once(__DIR__.'/../../../includes/suspend_include.php');

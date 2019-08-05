@@ -106,6 +106,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         'min' => '',
         'max' => '',
         'step' => '',
+        'error_class' => '',
         'options_data' => []
     ];
     $options += $default_options;
@@ -120,9 +121,9 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         'prepend_button_name' => !empty($options['append_button_name']) ? $options['append_button_name'] : "p-submit-".$options['input_id'],
         'append_button_id'    => !empty($options['append_button_id']) ? $options['append_button_id'] : $options['input_id'].'-append-btn',
         'prepend_button_id'   => !empty($options['prepend_button_id']) ? $options['prepend_button_id'] : $options['input_id'].'-prepend-btn',
-        'error_class' => '',
-        'error_text' => empty($options['error_text']) ? $locale['error_input_default'] : $options['error_text']
     ];
+
+    $options['error_text'] = $options['error_text'] ?: $locale['error_input_default'];
 
     if (!empty($options['data'])) {
         array_walk($options['data'], function ($a, $b) use (&$options_data) {
@@ -133,12 +134,15 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
     // This is bootstrap only???
     if (\Defender::inputHasError($input_name)) {
         $options['error_class'] = " has-error";
+
+        // print_p($input_name);
+        // print_p($new_error_text);
         if (!empty($options['error_text'])) {
             $new_error_text = \Defender::getErrorText($input_name);
             if (!empty($new_error_text)) {
                 $options['error_text'] = $new_error_text;
             }
-            addNotice("danger", "<strong>$title</strong> - ".$options['error_text']);
+            //addNotice("danger", "<strong>$title</strong> - ".$options['error_text']);
         }
     }
 
@@ -183,21 +187,24 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
             }
             // Incompatible with password meter strength due to jquery appending layout.
             // @todo: Fix pwstrength.js
-            if ($options['password_strength'] == FALSE) {
-                $options['append_button'] = TRUE;
-                $options['append_type'] = "button";
-                $options['append_form_value'] = 'show';
-                $options['append_class'] = 'btn-default';
-                $options['append_value'] = $locale['show'];
-                $options['append_button_name'] = $options['input_id'].'_pwdToggle';
-                $options['append_button_id'] = $options['input_id'].'_pwdToggle';
-                add_to_jquery("
-                $('#".$options['input_id']."_pwdToggle').bind('click', function(e) {
-                    togglePasswordInput('".$options['input_id']."_pwdToggle', '".$options['input_id']."');
-                });
-                ");
-            }
-            break;
+
+        if (!$options['password_strength']) {
+            $options['append_button'] = TRUE;
+            $options['append_type'] = "button";
+            $options['append_form_value'] = 'show';
+            $options['append_class'] = 'btn-default';
+            $options['append_value'] = $locale['show'];
+            $options['append_button_name'] = $options['input_id'].'_pwdToggle';
+            $options['append_button_id'] = $options['input_id'].'_pwdToggle';
+            add_to_jquery("
+            $('#".$options['input_id']."_pwdToggle').bind('click', function(e) {
+                togglePasswordInput('".$options['input_id']."_pwdToggle', '".$options['input_id']."');
+            });
+            ");
+        } else {
+            $options['type'] = 'text';
+        }
+        break;
     }
 
     if ($options['regex']) {
@@ -257,7 +264,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
                         progress: ".pwstrength_viewport_progress"
                     }
                 };
-                $("#'.$options['input_id'].'").pwstrength(options);
+                $("#'.$options['input_id'].'").pwstrength(options);                                               
             });
         ').'</script>');
     }

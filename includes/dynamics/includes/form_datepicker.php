@@ -78,8 +78,6 @@
  *
  * @return string
  */
-
-
 function form_datepicker($input_name, $label = '', $input_value = '', array $options = []) {
 
     $locale = fusion_get_locale();
@@ -264,7 +262,7 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
             ".(!empty($weekendFilter) ? $weekendFilter[0].$weekendFilter[1]."," : "")."
             format: '".$options['date_format_js']."',
             ".(!empty($options['join_from_id']) ? "useCurrent: false" : "")."
-            });
+            });                         
             ".$bindingJs."
         ");
     }

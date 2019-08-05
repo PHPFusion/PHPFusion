@@ -80,7 +80,7 @@ class Geomap {
             $resource = json_decode(file_get_contents(CLASSES."PHPFusion/Geomap/json/countries.json"));
             foreach ($resource as $object) {
                 $country_name = $object->name->common;
-                self::$country_list[$object->cca2] = $country_name;
+                self::$country_list[$object->cca2] = translate_country_names($country_name);
             }
         }
 

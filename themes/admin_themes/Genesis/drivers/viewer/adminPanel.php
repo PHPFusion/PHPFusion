@@ -404,16 +404,19 @@ class adminPanel extends resource {
                     parse_str(self::$current_url['query'], self::$current_url['current_query']);
                 }
             }
-
-            $this_url = ((array)parse_url(htmlspecialchars_decode($url))) + [
+            $current_url = ((array)parse_url(htmlspecialchars_decode($url))) + [
                     'path'  => '',
                     'query' => ''
                 ];
-            $this_url['path'] = str_replace(INFUSIONS, '/infusions/', $this_url['path']);
-            if (self::$current_url['path'] === $this_url['path']) {
-                if (!empty($this_url['query'])) {
-                    parse_str($this_url['query'], $queries);
+            $current_url['path'] = strtr($current_url['path'], [
+                INFUSIONS => '/infusions/',
+                '..' => ''
+            ]);
+            if (self::$current_url['path'] == $current_url['path']) {
+                if (!empty($current_url['query'])) {
+                    parse_str($current_url['query'], $queries);
                 }
+
                 if (isset(self::$current_url['current_query']) && isset($queries) && count(self::$current_url['current_query']) === count($queries)) {
                     if (empty(array_diff(self::$current_url['current_query'], $queries))) {
                         return TRUE;
@@ -459,7 +462,9 @@ class adminPanel extends resource {
             $in = '';
             $match_p = '';
             $data_attr= '';
-            if ($match_c = self::check_current_active($arr['admin_link']) === TRUE || $match_p = self::check_parent_active($admin_pages, $rights)) {
+            $match_c = self::check_current_active($arr['admin_link']);
+            $match_p = self::check_parent_active($admin_pages, $rights);
+            if ($match_c || $match_p) {
                 $class .= " class='active'";
                 if ($match_p) $in = " in";
             }
@@ -511,8 +516,8 @@ class adminPanel extends resource {
 
         $current_page = $admin->_currentPage();
 
-        echo "<nav>";
-        echo "<ul>\n";
+        echo "<nav role='navigation'>";
+        echo "<ul role='presentation'>\n";
         $active_rights = 0;
         if (isset($sections[$active_section]) && !empty($admin_pages[$active_section])) { // the current active section is present.
             foreach($admin_pages[$active_section] as $key => $admin_data) {
@@ -521,16 +526,11 @@ class adminPanel extends resource {
                 }
             }
 
-            //print_p($admin_pages[$active_rights], 1);
             if (isset($admin_pages[$active_rights])) {
-
                 $sections = $admin_pages[$active_rights]; // this is just the root of subpage. dropdown array is not present.
-
-                //print_P($sections);
                 if (!empty($sections)) {
                   echo $this->__li($admin_pages, $sections);
                 }
-
             } else {
                 if (!empty($sections)) {
                     $i = 0;

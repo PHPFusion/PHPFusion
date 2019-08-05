@@ -1172,7 +1172,7 @@ if (!function_exists("opencollapse")
         $html = "<div class='panel panel-default'>\n";
         $html .= "<div class='panel-heading clearfix'>\n";
         $html .= "<div class='overflow-hide'>\n";
-        $html .= "<span class='display-inline-block strong'><a ".collapse_header_link($grouping_id, $unique_id, $active, $class).">".$title."</a></span>\n";
+        $html .= "<a ".collapse_header_link($grouping_id, $unique_id, $active, $class).">".$title."</a>\n";
         $html .= "</div>\n";
         $html .= "</div>\n";
         $html .= "<div ".collapse_footer_link($grouping_id, $unique_id, $active).">\n"; // body.

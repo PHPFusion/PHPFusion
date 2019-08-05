@@ -17,7 +17,19 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
 pageAccess('AD');
+$aidlink = fusion_get_aidlink();
+$admin = \PHPFusion\Admins::getInstance();
+$admin->addAdminPage('AD', 'All Users', 'M1', ADMIN.'members.php'.$aidlink);
+$admin->addAdminPage('AD', 'Add User', 'M2', ADMIN.'members.php'.$aidlink.'&amp;action=add');
+$admin->addAdminPage('AD', 'Manage Signups', 'M3', ADMIN.'members.php'.$aidlink.'&amp;action=signup');
+$admin->addAdminPage('AD', 'Administrators', 'M4', ADMIN.'administrators.php'.$aidlink);
+$admin->addAdminPage('AD', 'User Fields', 'M5', ADMIN.'user_fields.php'.$aidlink);
+$admin->addAdminPage('M5', "Public Fields", "UF-1", ADMIN.'user_fields.php'.fusion_get_aidlink());
+$admin->addAdminPage('M5', "Preference Fields", "UF-2", ADMIN.'user_fields.php'.fusion_get_aidlink().'&amp;ref=preference');
+$admin->addAdminPage('M5', "Security Fields", "UF-3", ADMIN.'user_fields.php'.fusion_get_aidlink().'&amp;ref=security');
+
 require_once THEMES.'templates/admin_header.php';
+
 $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/admins.php");
 
 PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([

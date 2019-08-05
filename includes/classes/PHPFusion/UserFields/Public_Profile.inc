@@ -64,8 +64,8 @@ class Public_Profile extends UserFieldsQuantum {
     }
 
 
-    public function get_info() {
-        $settings = fusion_get_settings();
+    public function getInfo() {
+
         $info = [
             'section'    => $this->get_category(),
             'section_id' => $this->section_id,
@@ -83,6 +83,7 @@ class Public_Profile extends UserFieldsQuantum {
 
         // Field exist only in edit profile
         if ($this->registration === FALSE) {
+
             $info['user_avatar'] = $this->userAvatarStudio();
             // Real name change button
             $info['name_change_button'] = form_button('update_name', 'Update Name', 'update_name', ['class' => $this->options['btn_post_class']]);

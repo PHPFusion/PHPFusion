@@ -1,16 +1,21 @@
 <?php
-namespace Administration\Members\Users;
-
-use Administration\Members\Members;
-use PHPFusion\Interfaces\TableSDK;
-use PHPFusion\UserFieldsQuantum;
-
+namespace PHPFusion\Administration\Members;
 /**
  * Class User_List
  *
  * @package Administration\Members\Users
  */
-class User_List implements TableSDK {
+class UserList implements \PHPFusion\Interfaces\TableSDK {
+
+    const USER_MEMBER = 0;
+    const USER_BAN = 1;
+    const USER_REINSTATE = 2;
+    const USER_SUSPEND = 3;
+    const USER_SECURITY_BAN = 4;
+    const USER_CANCEL = 5;
+    const USER_ANON = 6;
+    const USER_DEACTIVATE = 7;
+    const USER_UNACTIVATED = 2;
 
     /**
      *  Returns the table data source structure configurations
@@ -61,7 +66,7 @@ class User_List implements TableSDK {
         if ($table_action) {
             // merge with the member actions here.
             if ($user_ids = \Defender::getInstance()->filterPostArray(['id'])) {
-                $user_action = new Actions();
+                $user_action = new UserActions();
                 $user_action->set_userID($user_ids);
                 $user_action->set_action($table_action);
                 $user_action->execute();
@@ -81,35 +86,7 @@ class User_List implements TableSDK {
          */
     }
 
-    /**
-     * Returns the table outlook/presentation configurations
-     *
-     * 'table_class'        => '',
-     * 'header_content'     => '',
-     * 'no_record'          => 'There are no records',
-     * 'search_label'       => 'Search',
-     * 'search_placeholder' => "Search",
-     * 'search_col'         => '', // set this value sql column name to have search input input filter
-     * 'delete_link' => TRUE,
-     * 'edit_link' => TRUE,
-     * 'edit_link_format'   => '', // set this to format the edit link
-     * 'delete_link_format' => '', // set this to format the delete link
-     * 'view_link_format' => '', // set this to format the view link
-     *
-     * 'edit_key'           => 'edit',
-     * 'del_key'            => 'del', // change this to invoke internal table delete function for custom delete link format
-     * 'view_key'           => 'view',
-     *
-     * 'date_col'           => '',  // set this value to sql column name to have date selector input filter
-     * 'order_col'          => '', // set this value to sql column name to have sorting column input filter
-     * 'multilang_col'      => '', // set this value to have multilanguage column filter
-     * 'updated_message'    => 'Entries have been updated', // set this value to have custom success message
-     * 'deleted_message'    => 'Entries have been deleted', // set this value to have the custom delete message,
-     * 'class'              => '', // table class
-     * 'show_count'         => TRUE // show table item count
-     *
-     * @return array
-     */
+
     public function properties() {
 
         $locale = fusion_get_locale();
@@ -126,10 +103,20 @@ class User_List implements TableSDK {
             'search_col'       => 'user_name',
             'search_label'     => 'Search User',
             'date_col'         => 'user_lastvisit',
-            'order_col'        => 'user_id',
+            'order_col'        => [
+                'user_id' => 'id',
+                'user_email' => 'email',
+                'user_level' => 'level',
+                'user_status' => 'status',
+                'user_joined' => 'joined',
+                'user_lastvisit' => 'lastvisit',
+                'user_hide_email' => 'email',
+                'user_ip' => 'ip',
+                'user_groups' => 'groups'
+            ],
             'updated_message'  => 'User have been updated',
             'deleted_message'  => 'User have been deleted',
-            'edit_link_format' => ADMIN.'members.php'.$aidlink.'&amp;ref=edit&amp;lookup=',
+            'edit_link_format' => ADMIN.'members.php'.$aidlink.'&amp;action=edit&amp;lookup=',
             'view_link_format' => BASEDIR.'profile.php?lookup=:user_id',
             'link_filters'     => [
                 'user_level' => [
@@ -155,52 +142,24 @@ class User_List implements TableSDK {
                 ]
             ],
             'action_filters'   => [
-                Members::USER_BAN          => $locale['ME_500'],
-                Members::USER_REINSTATE    => $locale['ME_501'],
-                Members::USER_SUSPEND      => $locale['ME_503'],
-                Members::USER_SECURITY_BAN => $locale['ME_504'],
-                Members::USER_CANCEL       => $locale['ME_505'],
-                Members::USER_ANON         => $locale['ME_506'],
-                Members::USER_DEACTIVATE   => $locale['ME_507']
+                self::USER_BAN          => $locale['ME_500'],
+                self::USER_REINSTATE    => $locale['ME_501'],
+                self::USER_SUSPEND      => $locale['ME_503'],
+                self::USER_SECURITY_BAN => $locale['ME_504'],
+                self::USER_CANCEL       => $locale['ME_505'],
+                self::USER_ANON         => $locale['ME_506'],
+                self::USER_DEACTIVATE   => $locale['ME_507']
             ]
         ];
     }
 
-    /**
-     * Returns the column structure configurations
-     *
-     * 'title'         => '',
-     * 'title_class'   => '',
-     * 'value_class'   => '',
-     * 'edit_link'     => FALSE,
-     * 'delete_link'   => FALSE,
-     * 'view_link'     => '',
-     * 'image'         => FALSE,
-     * 'image_folder'  => '', // set image folder (method2)
-     * 'default_image' => '',
-     * 'image_width'   => '', // set image width
-     * 'image_class'   => '', // set image class
-     * 'icon'          => '',
-     * 'empty_value'   => '',
-     * 'count'         => [],
-     * 'display'       => [], // API for display
-     * 'date'          => FALSE,
-     * 'options'       => [],
-     * 'user'          => FALSE,
-     * 'user_avatar'   => FALSE, // show avatar
-     * 'number'        => FALSE,
-     * 'format'        => FALSE, // for formatting using strtr
-     * 'callback'      => '', // for formatting using function
-     * 'debug'         => FALSE,
-     *
-     * @return array
-     */
+
     public function column() {
         $locale = fusion_get_locale();
         // Find all user fields
         // @todo: Extend it to all database as per UFv1.2 data model.
         $user_fields = [];
-        $result = dbquery("SELECT   child.field_cat_id FROM ".DB_USER_FIELD_CATS." root LEFT JOIN ".DB_USER_FIELD_CATS." child ON child.field_parent=root.field_cat_id  
+        $result = dbquery("SELECT child.field_cat_id FROM ".DB_USER_FIELD_CATS." root LEFT JOIN ".DB_USER_FIELD_CATS." child ON child.field_parent=root.field_cat_id  
         WHERE root.field_parent=0 AND root.field_cat_db='users' GROUP BY child.field_cat_id");
         if (dbrows($result)) {
             $rows = [];
@@ -210,7 +169,7 @@ class User_List implements TableSDK {
             $cresult = dbquery("SELECT  field_title, field_name, field_type FROM ".DB_USER_FIELDS." WHERE field_cat IN (".implode(',', $rows).")");
             if (dbrows($cresult)) {
                 while ($cdata = dbarray($cresult)) {
-                    $user_fields[$cdata['field_name']]['title'] = UserFieldsQuantum::parse_label($cdata['field_title']);
+                    $user_fields[$cdata['field_name']]['title'] = \PHPFusion\UserFieldsQuantum::parse_label($cdata['field_title']);
                     $user_fields[$cdata['field_name']]['visibility'] = FALSE;
                 }
             }
@@ -236,7 +195,7 @@ class User_List implements TableSDK {
                 ],
                 'user_status'    => [
                     'title'      => $locale['ME_427'],
-                    'callback'   => ['Administration\\Members\\Members', 'checkUserStatus'],
+                    'callback'   => ['Members_Administration', 'checkUserStatus'],
                     'visibility' => TRUE,
                 ],
                 'user_joined'     => [
@@ -257,7 +216,6 @@ class User_List implements TableSDK {
                         2 => 'N/A'
                     ]
                 ],
-
                 'user_ip'         => [
                     'title'      => $locale['ME_423'],
                     'visibility' => FALSE,
@@ -584,3 +542,5 @@ class User_List implements TableSDK {
     }
 
 }
+require_once(__DIR__.'/../../includes/sendmail_include.php');
+require_once(__DIR__.'/../../includes/suspend_include.php');

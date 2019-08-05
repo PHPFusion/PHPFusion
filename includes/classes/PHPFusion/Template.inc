@@ -361,6 +361,7 @@ class Template {
         unset($this->locale);
         unset($this->css_path);
 
+        $this->template = trim(preg_replace('/\s\s+/', ' ', $this->template));
         return (string)trim($this->template);
     }
 

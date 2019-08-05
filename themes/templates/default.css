@@ -1068,8 +1068,8 @@ th.min, td.min {
 .file-input .panel .file-default-preview,
 .file-input .panel .file-preview-frame,
 .file-input .panel .file-preview-other {
-    height: 143px;
-    max-height: 143px;
+    height: 182px;
+    max-height: 182px;
     width: 100%;
     display: block;
     margin: 0;
@@ -1081,11 +1081,22 @@ th.min, td.min {
     float: none;
     overflow: hidden;
 }
-
 .file-input img {
     height: 100%;
     width: auto;
     margin: 0 auto;
+}
+.file-input .panel-body {
+    padding: 0 10px 10px !important;
+}
+.file-input .krajee-default.file-preview-frame .kv-file-content {
+    height:100%;
+    width:100%;
+}
+.file-input .file-preview-frame:hover,
+.file-input .file-preview-frame:focus {
+    box-shadow: none !important;
+    border:0 !important;
 }
 
 .comments-form-panel, .comments-panel {

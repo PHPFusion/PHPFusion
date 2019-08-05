@@ -43,6 +43,10 @@ class Tables {
 
     private $echo = TRUE;
 
+    private $custom_columns_value = [];
+
+    private $custom_columns_options = [];
+
     // Data source
     private $default_args = [
         'debug'                    => FALSE, // True to show the SQL query for the table.
@@ -467,12 +471,9 @@ class Tables {
         } else {
 
             // The difference in limitations
+            $limit = ($this->query['limit'] && isnum($this->query['limit']) ? "LIMIT ".$this->rowStart.", ".$this->query['limit'] : '');
             if ($this->query['true_limit'] === TRUE) {
-
                 $limit = "LIMIT ".$this->query['limit'];
-
-            } else {
-                $limit = ($this->query['limit'] && isnum($this->query['limit']) ? "LIMIT ".$this->rowStart.", ".$this->query['limit'] : '');
             }
 
             $sql_query = strtr(
@@ -491,12 +492,10 @@ class Tables {
                 ]
             );
 
-
             $result = dbquery($sql_query);
             if ($this->rowsCount = dbrows($result)) {
                 while ($rows = dbarray($result)) {
                     $data[$this->rowStart][$rows[$this->getIdCol()]] = $rows;
-
                 }
             }
 
@@ -551,7 +550,7 @@ class Tables {
             $params = [];
             foreach ($del_id as $val) {
 
-                if (isnum($val)) {
+                if ($val) {
 
                     $result = dbquery("SELECT * FROM ".$this->query['table']."  WHERE ".$this->query['id']."=:id", [':id'=>$val]);
                     if (dbrows($result)) {
@@ -574,13 +573,9 @@ class Tables {
                                     dbquery_insert($this->query['table'], $cdata, 'update');
                                 }
                             }
-
                             dbquery_insert($this->query['table'], $data, 'delete');
-
                         } else {
-
                             dbquery("DELETE FROM ".$this->query['table']."  WHERE ".$this->getIdCol()."=:id", [':id' => $val]);
-
                         }
 
                         if (!empty($params) && !empty($data)) {
@@ -684,9 +679,6 @@ class Tables {
         }
     }
 
-    private $custom_columns_value = [];
-
-    private $custom_columns_options = [];
 
     /**
      * Table individual user customization Menu
@@ -784,9 +776,7 @@ class Tables {
 
                 // Remove Image
                 if ($this->query['image_field'] && $this->query['image_folder']) {
-
                     $this->query['image_folder'] = strtr($this->query['image_folder'], $params);
-
                     if (!empty($del_data[$this->query['image_field']])) {
                         // support column with ',' images list (i.e. the value is 'abc.png,bbb.jpg')
                         $list_images = explode(',', $del_data[$this->query['image_field']]);
@@ -802,9 +792,7 @@ class Tables {
 
                 // Remove File
                 if ($this->query['file_field'] && $this->query['file_folder']) {
-
                     $this->query['file_folder'] = strtr($this->query['file_folder'], $params);
-
                     if (!empty($del_data[$this->query['file_field']])) {
                         // support column with ',' files list (i.e. the value is 'abc.rar,bbb.zip')
                         $list_images = explode(',', $del_data[$this->query['file_field']]);
@@ -816,14 +804,11 @@ class Tables {
                                 unlink($file);
                             }
                         }
-
                     }
                 }
 
-                /*
-                 * Custom delete
-                 */
-                if (!empty($this->query['db'])) {
+                // Custom delete
+                if (!empty($this->query['db']) && !empty($table_prop['custom']) && !empty($table_prop['group'])) {
                     foreach ($this->query['db'] as $table_name => $table_prop) {
                         $custom_condition = (!empty($table_prop['custom']) ? 'AND '.$table_prop['custom'] : '');
                         if (dbcount("(".$table_prop['select'].")", $table_name, $table_prop['group']."='".$del_data[$this->query['id']]."' $custom_condition")) {
@@ -832,6 +817,7 @@ class Tables {
                     }
                 }
 
+                // Custom function delete
                 if (!empty($this->query['delete_function_callback'])) {
                     if (is_callable($this->query['delete_function_callback'])) {
                         $this->query['delete_function_callback']($del_data);
@@ -839,8 +825,6 @@ class Tables {
                 }
 
                 $this->bulkDelete($del_data);
-
-                //dbquery_insert($this->query['table'], $del_data, 'delete');
 
                 addNotice('success', $this->table_props['deleted_message']);
 
@@ -958,11 +942,12 @@ class Tables {
         // Lang Filters
         if (!empty($this->table_props['multilang_col'])) { // this one do as tab on top.
             $enabled_languages = fusion_get_enabled_languages();
+            $cur_language = get('language');
             if (count($enabled_languages) > 0) {
                 $_filter[] = '';
                 foreach ($enabled_languages as $lang) {
                     $lang_val = strtolower($lang);
-                    $active_class = (isset($_GET['language']) && $_GET['language'] == $lang_val) ? " class='strong'" : '';
+                    $active_class = ($cur_language && $cur_language == $lang_val) ? " class='strong'" : '';
                     $_filter[] = "<a href='".clean_request('language='.$lang_val, ['language'], FALSE)."'$active_class><small>$lang</small></a>\n | ";
                 }
                 $link_filters['language'] = " | <small>Language:</small> ".implode(' ', $_filter);
@@ -974,12 +959,15 @@ class Tables {
         if (!empty($this->table_props['link_filters'])) {
             foreach ($this->table_props['link_filters'] as $key => $filters) {
                 $_filter = [];
-                //print_p($filters);
-                foreach ($filters['options'] as $filter) {
-                    //print_p($filters);
+                foreach ($filters['options'] as $filter_key => $filter) {
+                    // do a count if count options is assigned
+                    $count_num = '';
+                    if (!empty($filters['count'])) {
+                        $count_num = " (".dbcount("(".$this->query['id'].")", $this->query['table'], $key.'=:key', [':key'=>$filter_key]).")";
+                    }
                     $filter_val = strtolower($filter);
                     $active_class = (get($key) == $filter_val) ? " class='strong'" : '';
-                    $_filter[] .= "<a href='".clean_request("$key=$filter_val", [$key], FALSE)."'$active_class><small>$filter</small></a>\n";
+                    $_filter[] .= "<a href='".clean_request("$key=$filter_val", [$key], FALSE)."'$active_class><small>$filter</small></a>$count_num\n";
                 }
                 $link_filters[$key] = "<small>".$filters['title'].":</small> ".implode(' | ', $_filter);
                 array_push($link_filter_keys, $key);
@@ -1002,7 +990,7 @@ class Tables {
         if (!empty($link_filters) || !empty($this->table_props['search_col'])) {
 
             // Render link filters
-            $html .= "<div class='row'>\n";
+            $html .= "<div class='".grid_row()."'>\n";
             if (!empty($link_filters)) {
                 $html .= "<div class='col-xs-12 col-sm-".($this->table_props['search_col'] ? 6 : 12)."'>\n";
                 $active_class = (!in_array($_GET, $link_filter_keys)) ? " class='strong'" : '';
@@ -1029,11 +1017,10 @@ class Tables {
                     ]
                 );
                 $html .= closeform();
-                $html .= "</div>\n"; // close pull-right
-                $html .= "</div>\n"; // close text right
+                $html .= "</div>\n";
+                $html .= "</div>\n";
             }
-
-            $html .= "</div>\n"; // close row
+            $html .= "</div>\n";
         }
 
         $start_row = '';
@@ -1041,7 +1028,7 @@ class Tables {
 
         if ($this->table_props['show_count'] === TRUE || $this->quick_fields || !empty($this->table_props['date_col'])) {
             $start_row = "<div class='clearfix m-t-5 m-b-5' style='width:100%;'>\n";
-            $end_row = "</div>\n"; // close clearfix
+            $end_row = "</div>\n";
         }
 
         $html .= $start_row;
@@ -1088,7 +1075,6 @@ class Tables {
                 ).closeform();
             $html .= "</div>\n";
         }
-
 
         if (!empty($this->table_props['dropdown_filters'])) {
             $html .= "<div class='display-inline-block'>".openform('date_frm', 'post', FUSION_REQUEST);
@@ -1154,7 +1140,6 @@ class Tables {
         $html .= "<tbody>\n";
         // end of head
         if (!empty($cdata)) {
-
             foreach ($cdata[$this->rowStart] as $data) {
 
                 $id = $data[$this->getIdCol()];
