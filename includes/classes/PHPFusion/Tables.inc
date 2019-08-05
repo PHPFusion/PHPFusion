@@ -1094,7 +1094,7 @@ class Tables {
             }
 
             $html .= form_button(
-                'table_filter', 'Apply', 'table_filter', ['class' => 'btn-sm m-r-10']
+                'table_filter', 'Apply', 'table_filter', ['class' => 'btn-default btn-sm m-r-10']
             );
 
             $html .= closeform()."</div>";
