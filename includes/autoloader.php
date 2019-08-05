@@ -150,3 +150,5 @@ require_once __DIR__."/sqlhandler.inc.php";
 require_once __DIR__."/translate_include.php";
 require_once __DIR__."/output_handling_include.php";
 require_once __DIR__."/notify.inc";
+require_once __DIR__."/defender.inc";
+require_once __DIR__.'/hooks_include.php';
