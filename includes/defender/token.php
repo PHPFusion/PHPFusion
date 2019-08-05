@@ -135,7 +135,7 @@ class Token extends \Defender {
         if ($this->error) {
             self::$tokenIsValid = FALSE;
             self::stop();
-            $token_notice = TRUE;
+            $token_notice = FALSE;
             if ($token_notice === TRUE) {
                 addNotice('danger', $_SERVER['PHP_SELF']);
                 addNotice('danger', $this->error);

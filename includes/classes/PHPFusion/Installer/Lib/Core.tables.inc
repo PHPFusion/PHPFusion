@@ -27,35 +27,35 @@ function get_core_tables($localeset) {
             'auto_increment' => TRUE,
             'key'            => 1, //PRIMARY KEY (admin_id)
             'unsigned'       => TRUE,
-        ], //admin_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+        ],
         'admin_rights'   => [
             'type'   => 'CHAR',
             'length' => 4
-        ], //admin_rights CHAR(4) NOT NULL DEFAULT '',
+        ],
         'admin_image'    => [
             'type'   => 'VARCHAR',
             'length' => 50
-        ], //admin_image VARCHAR(50) NOT NULL DEFAULT '',
+        ],
         'admin_title'    => [
             'type'   => 'VARCHAR',
             'length' => 50
-        ], //admin_title VARCHAR(50) NOT NULL DEFAULT '',
+        ],
         'admin_link'     => [
             'type'    => 'VARCHAR',
             'length'  => 100,
             'default' => 'reserved',
-        ], //admin_link VARCHAR(100) NOT NULL DEFAULT 'reserved',
+        ],
         'admin_page'     => [
             'type'     => 'TINYINT',
             'length'   => 1,
             'default'  => 1,
             'unsigned' => TRUE,
-        ], //admin_page TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
+        ],
         'admin_language' => [
             'type'    => 'VARCHAR',
             'length'  => 50,
             'default' => $localeset,
-        ], //admin_language VARCHAR(50) NOT NULL DEFAULT '".$localeset."',
+        ],
     ];
     $table_package['mlt_tables'] = [
         'mlt_rights' => [
@@ -572,25 +572,42 @@ function get_core_tables($localeset) {
         'user_code'      => [
             'type'   => 'VARCHAR',
             'length' => 40,
-        ], //user_code VARCHAR(40) NOT NULL,
+        ],
         'user_name'      => [
             'type'   => 'VARCHAR',
             'length' => 30,
-        ], //user_name VARCHAR(30) NOT NULL,
+        ],
+        'user_firstname' => [
+            'type' => 'VARCHAR',
+            'length' => 70,
+        ],
+        'user_lastname' => [
+            'type' => 'VARCHAR',
+            'length' => 70,
+        ],
         'user_email'     => [
             'type'   => 'VARCHAR',
             'length' => 100,
-        ], //user_email VARCHAR(100) NOT NULL,
+        ],
+        'user_language' => [
+            'type' => 'VARCHAR',
+            'length' => 70,
+        ],
+        'user_status' => [
+            'type' => 'SMALLINT',
+            'length' => 3,
+            'key' => 2,
+        ],
         'user_datestamp' => [
             'type'     => 'INT',
             'length'   => 10,
             'default'  => '0',
-            'key'      => 2, //KEY user_datestamp (user_datestamp)
+            'key'      => 2,
             'unsigned' => TRUE,
-        ], //user_datestamp INT(10) UNSIGNED DEFAULT '0' NOT NULL,
+        ],
         'user_info'      => [
-            'type' => 'TEXT'
-        ], //user_info TEXT NOT NULL,
+            'type' => 'MEDIUMTEXT'
+        ],
     ];
     $table_package['email_verify'] = [
         'user_id'        => [
@@ -1184,95 +1201,100 @@ function get_core_tables($localeset) {
             'type'           => 'MEDIUMINT',
             'length'         => 8,
             'auto_increment' => TRUE,
-            'key'            => 1, //PRIMARY KEY (field_cat_id)
+            'key'            => 1,
             'unsigned'       => TRUE,
-        ],//field_cat_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT ,
+        ],
         'field_cat_name'  => [
             'type' => 'TEXT',
-        ],//field_cat_name TEXT NOT NULL,
+        ],
         'field_parent'    => [
             'type'     => 'MEDIUMINT',
             'length'   => 8,
             'unsigned' => TRUE,
-        ],//field_parent MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+        ],
         'field_cat_db'    => [
             'type'   => 'VARCHAR',
             'length' => 100
-        ],//field_cat_db VARCHAR(100) NOT NULL,
+        ],
         'field_cat_index' => [
             'type'   => 'VARCHAR',
             'length' => 200
-        ],//field_cat_index VARCHAR(200) NOT NULL,
+        ],
         'field_cat_class' => [
             'type'   => 'VARCHAR',
             'length' => 50,
-        ],//field_cat_class VARCHAR(50) NOT NULL,
+        ],
         'field_cat_order' => [
             'type'     => 'SMALLINT',
             'length'   => 5,
             'key'      => 2, //@noted: changed
             'unsigned' => TRUE,
-        ]//field_cat_order SMALLINT(5) UNSIGNED NOT NULL ,
+        ]
     ];
     $table_package['user_fields'] = [
         'field_id'           => [
             'type'           => 'MEDIUMINT',
             'length'         => 8,
             'auto_increment' => TRUE,
-            'key'            => 1, //PRIMARY KEY (field_id)
+            'key'            => 1,
             'unsigned'       => TRUE,
-        ], //field_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+        ],
         'field_title'        => [
             'type' => 'TEXT'
-        ], //field_title TEXT NOT NULL,
+        ],
         'field_name'         => [
             'type'   => 'VARCHAR',
             'length' => 50,
-        ], //field_name VARCHAR(50) NOT NULL,
+        ],
         'field_cat'          => [
             'type'     => 'MEDIUMINT',
             'length'   => 8,
             'default'  => 1,
             'unsigned' => TRUE
-        ], //field_cat MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '1',
+        ],
         'field_type'         => [
             'type'   => 'VARCHAR',
             'length' => 25,
-        ], //field_type VARCHAR(25) NOT NULL,
+        ],
         'field_default'      => [
-            'type' => 'TEXT'
-        ], //field_default TEXT NOT NULL,
+            'type' => 'MEDIUMINT'
+        ],
         'field_options'      => [
-            'type' => 'TEXT'
+            'type' => 'MEDIUMINT'
         ], //field_options TEXT NOT NULL,
         'field_error'        => [
             'type'   => 'VARCHAR',
             'length' => 50,
-        ], //field_error VARCHAR(50) NOT NULL,
+        ],
         'field_required'     => [
             'type'     => 'TINYINT',
             'length'   => 1,
             'unsigned' => TRUE,
-        ], //field_required TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+        ],
         'field_log'          => [
             'type'     => 'TINYINT',
             'length'   => 1,
             'unsigned' => TRUE,
-        ], //field_log TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+        ],
         'field_registration' => [
             'type'     => 'TINYINT',
             'length'   => 1,
             'unsigned' => TRUE,
-        ], //field_registration TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+        ],
         'field_order'        => [
             'type'     => 'SMALLINT',
             'length'   => 5,
             'unsigned' => TRUE,
-            'key'      => 2 //KEY field_order (field_order)
-        ], //field_order SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+            'key'      => 2
+        ],
         'field_config'       => [
             'type' => 'TEXT'
-        ] //field_config TEXT NOT NULL,
+        ],
+        'field_section'      => [
+            'type'   => 'VARCHAR',
+            'length' => 70,
+            'key'    => 2,
+        ]
     ];
     // Social Relationships Table
     $table_package['user_social'] = [
@@ -1437,7 +1459,23 @@ function get_core_tables($localeset) {
             'length'    => 30,
             'key'       => 2, //KEY user_name (user_name),
             'full_text' => TRUE, // FULLTEXT (user_name ASC)
-        ], //user_name VARCHAR(30) NOT NULL DEFAULT '',
+        ],
+        'user_display' => [
+            'type' => 'TINYINT',
+            'length' => 1,
+        ],
+        'user_displayname' => [
+            'type' => 'VARCHAR',
+            'length' => 70,
+        ],
+        'user_firstname' => [
+            'type' => 'VARCHAR',
+            'length' => 70,
+        ],
+        'user_lastname' => [
+            'type' => 'VARCHAR',
+            'length' => 70,
+        ],
         'user_algo'            => [
             'type'    => 'VARCHAR',
             'length'  => 10,
