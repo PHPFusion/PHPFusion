@@ -31,7 +31,6 @@ use PHPFusion\UserFields\Public_Profile;
 class UserFields extends UserFieldsQuantum {
 
     private $profile_id = 0;
-
     public $display_terms = 0;
     public $display_validation = 0;
     public $errors = [];
@@ -40,12 +39,9 @@ class UserFields extends UserFieldsQuantum {
     public $post_name;
     public $post_value;
     public $inline_field = TRUE;
-    public $is_admin_panel = FALSE;
-
     public $show_admin_options = FALSE;
     public $show_admin_password = TRUE;
     public $show_avatar_input = TRUE;
-
     public $base_request = FALSE; // new in API 1.02 - turn fusion_self to fusion_request - 3rd party pages. Turn this on if you have more than one $_GET pagination str.
     public $skip_password = FALSE;
     public $registration = FALSE;
@@ -271,8 +267,11 @@ class UserFields extends UserFieldsQuantum {
         return (checkrights('UG') && fusion_get_userdata('user_level') <= USER_LEVEL_ADMIN && $this->profile_id != '1' || iSUPERADMIN) ? TRUE : FALSE;
     }
 
-    // for input
-    public function getCurrentPage() {
+    /**
+     * Current page - pu_profile , pu_security, pu_prefs etc. this is for edit profile only.
+     * @return mixed|string
+     */
+    public function getEditCurrentPage() {
         $all_pages = $this->getInputPages();
         $refs = get('ref');
         return $refs && isset($all_pages[$refs]) ? $refs : 'pu_profile';
@@ -325,13 +324,8 @@ class UserFields extends UserFieldsQuantum {
                 ]
             )
         ];
-
-        $this->info['current_page'] = $this->getCurrentPage();
-
+        $this->info['current_page'] = $this->getEditCurrentPage();
         $this->options += $this->default_options;
-
-        $section = get('section');
-
         if ($this->registration) {
             // registration
             // bound in page 1 only.
@@ -348,7 +342,7 @@ class UserFields extends UserFieldsQuantum {
             $class->plugin_locale_folder = $this->plugin_locale_folder;
             $class->inline_field = $this->inline_field;
 
-            $this->info = array_merge($this->info, $class->getInfo());
+            $this->info = array_merge($this->info, $class->inputInfo());
 
             // Edit Profile Fields
             $class = new Account_Profile();
@@ -364,62 +358,20 @@ class UserFields extends UserFieldsQuantum {
             $this->info = array_merge($this->info, $class->get_info());
 
         } else {
-            // Edit.
-            if ($this->is_admin_panel === TRUE) {
-                // Edit Profile in Administration
-                $this->setAdminInfo();
-            } else {
-                // Edit Profile
-                $this->setMemberInfo();
-            }
+            $this->editProfileInfo();
         }
-
         $this->info += [
             'register'        => $this->registration,
-            'current_section' => ($this->paginate && !$this->registration) ? $section : '',
             'openform'        => openform($this->form_name, 'post', FUSION_REQUEST, ['enctype' => ($this->show_avatar_input ? TRUE : FALSE)]),
             'closeform'       => closeform(),
             'button'          => $this->renderButton(),
         ];
 
-
         return (array)$this->info;
     }
 
-    // The required admin $info output
-    private function setAdminInfo() {
-
-        // admin profile.
-        $class = new Public_Profile();
-        $class->user_data = $this->user_data;
-        $class->post_name = $this->post_name;
-        $class->options = $this->options;
-        $class->user_name_change = $this->user_name_change;
-        $class->registration = $this->registration;
-        $class->display_validation = $this->display_validation;
-        $class->display_terms = $this->display_terms;
-        $class->plugin_folder = $this->plugin_folder;
-        $class->plugin_locale_folder = $this->plugin_locale_folder;
-        $class->inline_field = $this->inline_field;
-        $class->is_admin_panel = TRUE;
-        $this->info = array_merge($this->info, $class->getInfo());
-
-        // Edit Profile Fields
-        $class = new Account_Profile();
-        $class->user_data = $this->user_data;
-        $class->options = $this->options;
-        $class->registration = $this->registration;
-        $class->post_name = $this->post_name;
-        $class->user_name_change = $this->user_name_change;
-        $class->show_admin_password = $this->show_admin_password;
-        $class->inline_field = $this->inline_field;
-        $class->is_admin_panel = TRUE;
-
-        $this->info = array_merge($this->info, $class->get_info());
-    }
-
     // The required public members $info output
-    private function setMemberInfo() {
+    private function editProfileInfo() {
         $settings = fusion_get_settings();
         $locale = fusion_get_locale();
         // Notice to tell that there are email pending for verification.
@@ -432,149 +384,101 @@ class UserFields extends UserFieldsQuantum {
                 addNotice('success', sprintf($locale['u200'], $data['user_email'])."\n<br />\n".$locale['u201']);
             }
         }
-
         // info output
         switch ($this->info['current_page']) {
             default:
-                // Custom page content
-                $this->setCustomInfo();
+                if (isset($this->info['pages'][$this->info['current_page']]['file'])) {
+                    $this->info['custom_page'] = TRUE;
+                    $this->info['title'] = $this->info['pages'][$this->info['current_page']]['title'];
+                    $this->info['page_content'] = 'There are no page content yet.';
+                    $user_fields = '';
+                    $user_fields_meta = '';
+                    $user_fields_section = [];
+                    $user_fields_title = '';
+                    if (is_file($this->info['pages'][$this->info['current_page']]['file'])) {
+                        include $this->info['pages'][$this->info['current_page']]['file'];
+                    }
+                    if (!empty($user_fields_section)) {
+                        $section = get('section') ?: $user_fields['id'][0];
+                    }
+                    // Custom title
+                    if ($user_fields) {
+                        // Title info
+                        if ($user_fields_title) {
+                            $this->info['title'] = $user_fields_title;
+                        }
+                        // Meta info
+                        if ($user_fields_meta) {
+                            add_to_meta('keywords', $user_fields_meta);
+                        }
+                        // Navigation
+                        if (!empty($user_fields_section)) {
+                            $this->info['section'] = $user_fields_section;
+                        }
+                        // Additional navigation
+                        if (!empty($user_fields_nav)) {
+                            $this->info['section_nav'] = $user_fields_nav;
+                        }
+                        // Page content info
+                        $this->info['page_content'] = $user_fields;
+                    }
+                    add_to_title($locale['global_201'].$this->info['title']);
+                }
                 break;
-            case 'pu_profile': // edit_profile.php -- Core Fields
-                $this->setPublicInfo();
-                //print_P($this->info);
+            case 'pu_profile':
+                $class = new Public_Profile();
+                $class->user_data = $this->user_data;
+                $class->post_name = $this->post_name;
+                $class->options = $this->options;
+                $class->registration = $this->registration;
+                $class->display_validation = $this->display_validation;
+                $class->display_terms = $this->display_terms;
+                $class->plugin_folder = $this->plugin_folder;
+                $class->plugin_locale_folder = $this->plugin_locale_folder;
+                $class->inline_field = $this->inline_field;
+                $this->info['user_hash'] = form_hidden('user_hash', '', $this->user_data['user_password']);
+                $this->info = array_merge($this->info, $class->inputInfo());
                 break;
-            case 'se_profile': // Private Profil (security,preferences,acc_settings)
-                $this->setSettingsInfo();
+            case 'se_profile':
+                $class = new Account_Profile();
+                $class->user_data = $this->user_data;
+                $class->options = $this->options;
+                $class->registration = $this->registration;
+                $class->post_name = $this->post_name;
+                $class->user_name_change = $this->user_name_change;
+                $class->show_admin_password = (iADMIN ? TRUE : FALSE);
+                $class->inline_field = $this->inline_field;
+                $this->info = array_merge($this->info, $class->get_info());
                 break;
         }
     }
 
-    // Public info
-    private function setPublicInfo() {
-        $section = get('section');
-        $this->info['section'] = $this->get_user_field_cats();
-        $section = $section && isset($this->info['section'][$section]) ? $section : 1;
-        $field_cats = $this->get_user_field_cats($section);
-        if (isset($field_cats['name'])) {
-            $this->info['title'] = $field_cats['name'];
-        }
-        // Public Profile
-        $class = new Public_Profile();
-        $class->user_data = $this->user_data;
-        $class->post_name = $this->post_name;
-        $class->options = $this->options;
-        $class->registration = $this->registration;
-        $class->display_validation = $this->display_validation;
-        $class->display_terms = $this->display_terms;
-        $class->plugin_folder = $this->plugin_folder;
-        $class->plugin_locale_folder = $this->plugin_locale_folder;
-        $class->inline_field = $this->inline_field;
-        $this->info['user_hash'] = form_hidden('user_hash', '', $this->user_data['user_password']);
-        $this->info = array_merge($this->info, $class->get_info());
-    }
-    // Settings info
-    public function setSettingsInfo() {
-        // only happens on Front End only
-        $current_section = get('section');
-        $current_section = $current_section && isset($this->info['section'][$current_section]) ? $current_section : 'account';
-        $this->info['section'] = [
-            'account' => [
-                'id'     => 'account',
-                'active' => ($current_section == 'account' ? TRUE : (empty($_section) ? TRUE : FALSE)),
-                'link'   => clean_request('section=acc_settings',['section'], FALSE),
-                'name'   => 'Account Settings',
-            ],
-            'preferences' => [
-                'id'     => 'preferences',
-                'active' => ($current_section == 'preferences' ? TRUE : FALSE),
-                'link'   => clean_request('section=preferences', ['section'], FALSE),
-                'name'   => 'Account Preferences',
-            ]
-        ];
-        /*$section['security'] = [
-            'id'     => 'security',
-            'active' => ($_section == 'security' ? TRUE : FALSE),
-            'link'   => clean_request($this->aidlink.'section=security&lookup='.$this->user_data['user_id'], ['section'], FALSE),
-            'name'   => 'Account Security',
-        ];*/
-
-        $this->info['title'] = isset($this->info[$current_section]) ? $this->info[$current_section] : 'Account Settings';
-
-        $class = new Account_Profile();
-        $class->user_data = $this->user_data;
-        $class->options = $this->options;
-        $class->registration = $this->registration;
-        $class->post_name = $this->post_name;
-        $class->user_name_change = $this->user_name_change;
-        $class->show_admin_password = (iADMIN ? TRUE : FALSE);
-        $class->inline_field = $this->inline_field;
-        $this->info = array_merge($this->info, $class->get_info());
-    }
-    // Custom info
-    public function setCustomInfo() {
-        $locale = fusion_get_locale();
-        if (isset($this->info['pages'][$this->info['current_page']]['file'])) {
-            $this->info['custom_page'] = TRUE;
-            $this->info['title'] = $this->info['pages'][$this->info['current_page']]['title'];
-            $this->info['page_content'] = 'There are no page content yet.';
-            $user_fields = '';
-            $user_fields_meta = '';
-            $user_fields_section = [];
-            $user_fields_title = '';
-            if (is_file($this->info['pages'][$this->info['current_page']]['file'])) {
-                include $this->info['pages'][$this->info['current_page']]['file'];
-            }
-            if (!empty($user_fields_section)) {
-                $section = isset($_GET['section']) ? $_GET['section'] : $user_fields_section['id'][0];
-            }
-            // Custom title
-            if ($user_fields) {
-                // Title info
-                if ($user_fields_title) {
-                    $this->info['title'] = $user_fields_title;
-                }
-                // Meta info
-                if ($user_fields_meta) {
-                    add_to_meta('keywords', $user_fields_meta);
-                }
-                // Navigation
-                if (!empty($user_fields_section)) {
-                    $this->info['section'] = $user_fields_section;
-                }
-                // Additional navigation
-                if (!empty($user_fields_nav)) {
-                    $this->info['section_nav'] = $user_fields_nav;
-                }
-                // Page content info
-                $this->info['page_content'] = $user_fields;
-            }
-            add_to_title($locale['global_201'].$this->info['title']);
-        }
-    }
 
 
     /**
-     * show profile edit page.
-     *
-     * @param array $input
-     *
-     * Template IDs     Registration    user-register-form
-     *                  Edit Profile    user-profile-form
-     *
-     * @throws \Exception
+     * Show Registration Form
+     * Registration    user-register-form
      * @return string|void
+     * @throws \Exception
      */
-    public function showInputPage() {
-        // load the input info
+    public function registration() {
         $this->getInputInfo();
-
-        if ($this->is_admin_panel) {
-            return ($this->registration) ? display_admin_register_form($this->info) : display_admin_profile_form($this->info);
-        }
-
-        return ($this->registration ? display_register_form($this->info) : display_profile_form($this->info));
+        return display_register_form($this->info);
     }
 
+    /**
+     * Show Edit Profile
+     * Edit Profile    user-profile-form
+     * @throws \ReflectionException
+     */
+    public function editProfile() {
+        $this->getInputInfo();
+        return display_profile_form($this->info);
+    }
+
+    /**
+     * @return string
+     */
     private function renderButton() {
         $disabled = $this->display_terms ? TRUE : FALSE;
         $this->options += $this->default_options;
@@ -629,14 +533,13 @@ class UserFields extends UserFieldsQuantum {
     }
 
     /**
-     * Profile View Output
+     * Profile View Output ---- VIEW PROFILE
      * @return false|mixed|string|void
      */
     private function getProfileContent() {
-
         switch ($this->current_page) {
 
-            case "profile":
+            case 'profile':
 
                 // Public Profile Page
                 $public_profile = new Public_Profile();
@@ -652,7 +555,7 @@ class UserFields extends UserFieldsQuantum {
                 $public_profile->inline_field = $this->inline_field;
                 $public_profile->method = $this->method;
 
-                return display_user_profile($public_profile->get_OutputInfo());
+                return display_user_profile($public_profile->outputInfo());
 
                 break;
             case "friends":
@@ -842,10 +745,3 @@ class UserFields extends UserFieldsQuantum {
     }
 
 }
-
-function display_admin_profile_form($info) {
-
-}
-
-require_once THEMES.'templates/global/profile.php';
-require_once THEMES.'templates/global/register.php';

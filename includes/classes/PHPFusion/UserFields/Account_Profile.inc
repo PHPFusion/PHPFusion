@@ -15,32 +15,53 @@ class Account_Profile extends UserFieldsQuantum {
     public $show_admin_password = FALSE;
     public $user_data = [];
     public $options = [];
-    private $locale = [];
     public $is_admin_panel = FALSE;
 
-    public function __construct() {
-        $this->locale = fusion_get_locale();
-    }
-
     public function get_info() {
-        $section = get('section');
-        $section = $section && in_array($section, ['account', 'preferences', 'security']) ? $section : '';
-        switch ($section) {
+        $current_section = get('section');
+        $current_section = $current_section && in_array($current_section, ['account', 'preferences', 'security']) ? $current_section : 'account';
+
+        $info['section'] = [
+            'account' => [
+                'id'     => 'account',
+                'active' => ($current_section == 'account' ? TRUE : FALSE),
+                'link'   => clean_request('section=acc_settings',['section'], FALSE),
+                'name'   => 'Account Settings',
+            ],
+            'preferences' => [
+                'id'     => 'preferences',
+                'active' => ($current_section == 'preferences' ? TRUE : FALSE),
+                'link'   => clean_request('section=preferences', ['section'], FALSE),
+                'name'   => 'Account Preferences',
+            ]
+        ];
+        /*$section['security'] = [
+            'id'     => 'security',
+            'active' => ($_section == 'security' ? TRUE : FALSE),
+            'link'   => clean_request($this->aidlink.'section=security&lookup='.$this->user_data['user_id'], ['section'], FALSE),
+            'name'   => 'Account Security',
+        ];*/
+
+        // only happens on Front End only
+        $info['current_section'] = $current_section;
+        $info['section_title'] = isset($info[$current_section]) ? $info[$current_section] : 'Account Settings';
+
+        switch ($info['current_section']) {
             default:
             case 'account':
-                return $this->account_settings();
+                return $info + $this->account_settings();
                 break;
             case 'preferences':
-                return $this->account_preferences();
+                return $info + $this->account_preferences();
                 break;
             case 'security':
-                return $this->security();
+                return $info + $this->security();
         }
     }
 
     // Language, Currency, Location, Region
     private function account_preferences() {
-        $this->locale = fusion_get_locale("", [LOCALE.LOCALESET."messages.php"]);
+        $locale = fusion_get_locale("", [LOCALE.LOCALESET."messages.php"]);
         $languages = fusion_get_enabled_languages();
         $info['user_language'] = form_btngroup('user_language', "", $this->user_data['user_language'], [
             'options' => $languages,
@@ -52,24 +73,24 @@ class Account_Profile extends UserFieldsQuantum {
 
         $info['update_preference_button'] = form_button($this->post_name.'_pref', 'Update Preferences', $this->post_name.'_pref', ['class' => $this->options['btn_post_class']]);
 
-        $info['pm_notify'] = form_checkbox('pm_email_notify', $this->locale['621'], $this->user_data['user_pm_email_notify'], [
+        $info['pm_notify'] = form_checkbox('pm_email_notify', $locale['621'], $this->user_data['user_pm_email_notify'], [
                 'options' => [
-                    '0' => $this->locale['520'],
-                    '1' => $this->locale['521'],
-                    '2' => $this->locale['522'],
+                    '0' => $locale['520'],
+                    '1' => $locale['521'],
+                    '2' => $locale['522'],
                 ],
                 'type'    => 'radio',
                 'inline'  => $this->inline_field
             ]
         );
         $user_hide_email = isset($_POST['user_hide_email']) ? $_POST['user_hide_email'] : $this->user_data['user_hide_email'];
-        $info['user_hide_email'] = form_checkbox('user_hide_email', $this->locale['u051'], $user_hide_email,
+        $info['user_hide_email'] = form_checkbox('user_hide_email', $locale['u051'], $user_hide_email,
             [
                 'inline'  => $this->inline_field,
                 'type'    => 'radio',
                 'options' => [
-                    1 => $this->locale['u052'],
-                    0 => $this->locale['u053'],
+                    1 => $locale['u052'],
+                    0 => $locale['u053'],
                 ],
             ]
         );
@@ -121,7 +142,7 @@ class Account_Profile extends UserFieldsQuantum {
      * @throws \ReflectionException
      */
     private function account_settings() {
-
+        $locale = fusion_get_locale();
         if ($this->registration === TRUE) {
             $input_value = post('user_name_reg');
             $info['user_name'] = form_text('user_name_reg', 'User Name', $input_value, ['required' => TRUE, 'deactivate' => FALSE, 'inline' => FALSE]);
@@ -134,12 +155,12 @@ class Account_Profile extends UserFieldsQuantum {
             $info['update_user_name'] = form_button($this->post_name.'_username', "Update User Name", $this->post_name.'_username', ['class' => $this->options['btn_post_class'], 'deactivate' => $this->user_name_change ? FALSE : TRUE]);
         }
         $user_email = post('user_email') ?: $this->user_data['user_email'];
-        $info['user_email'] = form_text('user_email', $this->locale['u128'], $user_email, [
+        $info['user_email'] = form_text('user_email', $locale['u128'], $user_email, [
                 'type'       => 'email',
                 "required"   => TRUE,
                 'inline'     => $this->inline_field,
                 'max_length' => '100',
-                'error_text' => $this->locale['u126']
+                'error_text' => $locale['u126']
             ]
         );
         add_to_jquery("
@@ -207,25 +228,26 @@ class Account_Profile extends UserFieldsQuantum {
     }
 
     private function get_user_password() {
-        if ($this->registration === TRUE || $this->is_admin_panel === TRUE) {
+        $locale = fusion_get_locale();
+        if ($this->registration === TRUE) {
             // bypass need for password verification
             // New Password
             $input_value = isset($_POST['user_password1']) ? $_POST['user_password1'] : '';
-            $info['user_password'] = form_text('user_password1', $this->locale['u134a'], $input_value, [
+            $info['user_password'] = form_text('user_password1', $locale['u134a'], $input_value, [
                 'type'              => 'password',
                 'autocomplete_off'  => FALSE,
                 'inline'            => $this->inline_field,
                 'max_length'        => 64,
-                'error_text'        => $this->locale['u134'].$this->locale['u143a'],
+                'error_text'        => $locale['u134'].$locale['u143a'],
                 'required'          => $this->admin_mode ? FALSE : TRUE,
                 'password_strength' => FALSE,
             ]);
-            $info['user_password'] .= form_text('user_password2', $this->locale['u134b'], '', [
+            $info['user_password'] .= form_text('user_password2', $locale['u134b'], '', [
                 'type'             => 'password',
                 'autocomplete_off' => FALSE,
                 'inline'           => $this->inline_field,
                 'max_length'       => 64,
-                'error_text'       => $this->locale['u133'],
+                'error_text'       => $locale['u133'],
                 'required'         => $this->admin_mode ? FALSE : TRUE
             ]);
             $info['user_password'] .= "<div class='clearfix text-right m-b-20 p-r-15'>".form_button('gen_user_passwd', "Generate Password", "", [
@@ -240,33 +262,33 @@ class Account_Profile extends UserFieldsQuantum {
             $info['user_password_notice'] = "<p>A more secure password will improve the security of your acocunt. It is recommended that you change your password regularly, and choose a password containing at least two types of characters (letters, symbols or numbers) and with a length of no less than six characters.</p>";
         } else {
             // Edit Profile
-            $info['user_password_openform'] = openform('userpwd_frm', 'post', FUSION_REQUEST);
+            $info['user_password_openform'] = openform('userpwd_frm', 'post');
             $info['user_password_closeform'] = closeform();
             $info['user_password_notice'] = "<p>To change your account password, enter your <a class='field_focus' data-focus='user_password' href='#'>current
             password</a>, <a class='field_focus' data-focus='user_password1' href='#'>new password</a> and <a class='field_focus' data-focus='user_password2' href='#'>confirm new password</a>.</p>";
             $info['update_password_button'] = form_button($this->post_name.'_password', 'Update Password', $this->post_name.'_password', ['class' => $this->options['btn_post_class']]);
             $info['user_password'] = form_hidden('user_id', '', isset($this->user_data['user_id']) && isnum($this->user_data['user_id']) ? $this->user_data['user_id'] : 0, ['input_id' => 'userid']);
-            $info['user_password'] .= form_text('user_password', $this->locale['u135a'], '', [
+            $info['user_password'] .= form_text('user_password', $locale['u135a'], '', [
                 'type'             => 'password',
                 'autocomplete_off' => 1,
                 'inline'           => $this->inline_field,
                 'max_length'       => 64,
-                'error_text'       => $this->locale['u133']
+                'error_text'       => $locale['u133']
             ]);
-            $info['user_password'] .= form_text('user_password1', $this->locale['u135b'], '', [
+            $info['user_password'] .= form_text('user_password1', $locale['u135b'], '', [
                 'type'             => 'password',
                 'autocomplete_off' => 1,
                 'inline'           => $this->inline_field,
                 'max_length'       => 64,
-                'error_text'       => $this->locale['u133'],
+                'error_text'       => $locale['u133'],
             ]);
-            $info['user_password'] .= form_text('user_password2', $this->locale['u135c'], '', [
+            $info['user_password'] .= form_text('user_password2', $locale['u135c'], '', [
                 'class'            => 'm-b-0',
                 'type'             => 'password',
                 'autocomplete_off' => 1,
                 'inline'           => $this->inline_field,
                 'max_length'       => 64,
-                'error_text'       => $this->locale['u133']
+                'error_text'       => $locale['u133']
             ]);
             $info['user_password'] .= "<div class='clearfix text-right m-b-20 p-r-15'>".form_button('gen_user_passwd',
                     "Generate Password", "", [
@@ -283,27 +305,27 @@ class Account_Profile extends UserFieldsQuantum {
     }
 
     private function get_admin_password() {
+        $locale = fusion_get_locale();
         $info = [];
-
-        if ($this->registration === TRUE || $this->is_admin_panel === TRUE) {
+        if ($this->registration === TRUE) {
 
             $input_value = post('user_admin_password1');
 
-            $info['user_admin_password'] = form_text('user_admin_password1', $this->locale['u144'], $input_value, [
+            $info['user_admin_password'] = form_text('user_admin_password1', $locale['u144'], $input_value, [
                     'type'             => 'password',
                     'autocomplete_off' => FALSE,
                     'inline'           => $this->inline_field,
                     'max_length'       => 64,
-                    'error_text'       => $this->locale['u136']
+                    'error_text'       => $locale['u136']
                 ]
             );
-            $info['user_admin_password'] .= form_text('user_admin_password2', $this->locale['u145'], '', [
+            $info['user_admin_password'] .= form_text('user_admin_password2', $locale['u145'], '', [
                 'class'            => 'm-b-0',
                 'type'             => 'password',
                 'autocomplete_off' => 1,
                 'inline'           => $this->inline_field,
                 'max_length'       => 64,
-                'error_text'       => $this->locale['u136']
+                'error_text'       => $locale['u136']
             ]);
             $info['user_admin_password'] .= "<div class='clearfix text-right m-b-20 p-r-15'>".form_button('gen_admin_passwd', "Generate Password", "", [
                     'type'  => 'button',
@@ -319,26 +341,26 @@ class Account_Profile extends UserFieldsQuantum {
         } else {
 
             if (iADMIN) {
-                //                $info['user_admin_password'] = "<h4>".$this->locale['u131']."</h4>\n<br/>";
+                //                $info['user_admin_password'] = "<h4>".$locale['u131']."</h4>\n<br/>";
                 $info['user_admin_password_notice'] = "<p>To update user admin password, enter a new password <a class='field_focus' data-focus='user_admin_password1' href='#'>new admin password field</a>. <strong>This action will override current user password.</strong></p>";
 
                 if ($this->user_data['user_admin_password']) {
 
                     // This is for changing password
-                    $info['user_admin_password'] = form_text('user_admin_password', $this->locale['u144a'], '', [
+                    $info['user_admin_password'] = form_text('user_admin_password', $locale['u144a'], '', [
                             'type'             => 'password',
                             'autocomplete_off' => 1,
                             'inline'           => $this->inline_field,
                             'max_length'       => 64,
-                            'error_text'       => $this->locale['u136']
+                            'error_text'       => $locale['u136']
                         ]
                     );
-                    $info['user_admin_password'] .= form_text('user_admin_password1', $this->locale['u144'], '', [
+                    $info['user_admin_password'] .= form_text('user_admin_password1', $locale['u144'], '', [
                             'type'               => 'password',
                             'autocomplete_off'   => 1,
                             'inline'             => $this->inline_field,
                             'max_length'         => 64,
-                            'error_text'         => $this->locale['u136'],
+                            'error_text'         => $locale['u136'],
                             'append_button'      => TRUE,
                             'append_type'        => 'button',
                             'append_form_value'  => 'show',
@@ -351,23 +373,23 @@ class Account_Profile extends UserFieldsQuantum {
                 } else {
 
                     // This is just setting new password off blank records
-                    $info['user_admin_password'] = form_text('user_admin_password', $this->locale['u144'], '', [
+                    $info['user_admin_password'] = form_text('user_admin_password', $locale['u144'], '', [
                             'type'             => 'password',
                             'autocomplete_off' => 1,
                             'inline'           => $this->inline_field,
                             'max_length'       => 64,
-                            'error_text'       => $this->locale['u136']
+                            'error_text'       => $locale['u136']
                         ]
                     );
                 }
 
-                $info['user_admin_password'] .= form_text('user_admin_password2', $this->locale['u145'], '', [
+                $info['user_admin_password'] .= form_text('user_admin_password2', $locale['u145'], '', [
                     'class'            => 'm-b-0',
                     'type'             => 'password',
                     'autocomplete_off' => 1,
                     'inline'           => $this->inline_field,
                     'max_length'       => 64,
-                    'error_text'       => $this->locale['u136']
+                    'error_text'       => $locale['u136']
                 ]);
                 $info['user_admin_password'] .= "<div class='clearfix text-right m-b-20 p-r-15'>".form_button('gen_admin_passwd', "Generate Password", "", [
                         'type'  => 'button',

@@ -508,13 +508,10 @@ if (!function_exists('display_profile')) {
 if (!function_exists('display_user_profile')) {
 
     function display_user_profile($info) {
-        //print_P($info);
         $locale = fusion_get_locale();
 
         $tpl = \PHPFusion\Template::getInstance('user-profile');
-
         $tpl->set_template(__DIR__.'/tpl/profile/profile.html');
-
         $tpl->set_locale($locale);
 
         foreach($info['section'] as $section) {
@@ -569,7 +566,6 @@ if (!function_exists('display_user_profile')) {
         } else {
             $info['no_fields'] = $locale['uf_108'];
         }
-
 
         if (!empty($info['user_admin'])) {
             $tpl->set_block('user_admin', $info['user_admin']);

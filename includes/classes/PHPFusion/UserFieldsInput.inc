@@ -125,7 +125,7 @@ class UserFieldsInput {
                 $this->validate_captcha();
             if (\Defender::safe()) {
                 if ($this->email_verification === TRUE && $this->is_admin_panel === FALSE) {
-                    $this->send_verification_email();
+                    $this->sendVerificationEmail();
                 } else {
                     $this->create_user_account($data);
                     if ($this->auto_login === TRUE) {
@@ -413,7 +413,7 @@ class UserFieldsInput {
      * Sends Verification code when you change email
      * Sends Verification code when you register
      */
-    private function send_verification_email() {
+    private function sendVerificationEmail() {
         $settings = fusion_get_settings();
         $this->locale = fusion_get_locale();
         require_once INCLUDES."sendmail_include.php";
@@ -474,29 +474,26 @@ class UserFieldsInput {
     // Update Mode
     private function updatePublic() {
         if (post($this->post_name)) {
-            $data = [];
-            $data['user_avatar'] = $this->set_user_avatar();
-            $quantum = new UserFieldsQuantum();
-            $quantum->load_fields();
-            $quantum->load_field_cats();
-            $quantum->setCallbackData($this->user_data);
-            $input = $quantum->return_fields_input(DB_USERS, 'user_id');
-            if (!empty($input)) {
-                foreach ($input as $input_data) {
-                    $data += $input_data;
+            if ($this->check_user_hash()) {
+                $data = [];
+                $data['user_avatar'] = $this->set_user_avatar();
+                $quantum = new UserFieldsQuantum();
+                $quantum->load_fields();
+                $quantum->load_field_cats();
+                $quantum->setCallbackData($this->user_data);
+                $input = $quantum->return_fields_input(DB_USERS, 'user_id');
+                if (!empty($input)) {
+                    foreach ($input as $input_data) {
+                        $data += $input_data;
+                    }
                 }
-            }
-            if ($this->check_user_hash() || $this->is_admin_panel) {
                 if (\Defender::safe()) {
                     $data['user_id'] = $this->user_data['user_id'];
                     $quantum->log_user_action(DB_USERS, 'user_id');
                     dbquery_insert(DB_USERS, $data, 'update');
-                    addNotice('success', 'Profile updated successfully.');
+                    addNotice('success', 'Your profile has been updated successfully.', 'all');
                     redirect(FUSION_REQUEST);
                 }
-            } else {
-                //print_P($data);
-                addNotice("danger", "Update could not be completed.");
             }
         }
     }
@@ -571,9 +568,10 @@ class UserFieldsInput {
     public function saveUpdate() {
         $this->locale = fusion_get_locale();
         $this->_method = "validate_update";
+
         $uf_class = new UserFields();
-        $uf_class->is_admin_panel = $this->is_admin_panel;
-        $current_page = $uf_class->getCurrentPage();
+        $current_page = $uf_class->getEditCurrentPage();
+
         switch ($current_page) {
             case 'pu_profile':
                 $this->updatePublic();

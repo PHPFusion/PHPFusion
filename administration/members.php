@@ -129,13 +129,13 @@ class Members_Administration {
     }
 
     /**
-     * @return object
+     * @return Members_Administration
      */
     public static function getInstance() {
-        if (self::$instance === NULL) {
+        if (empty(self::$instance)) {
             self::$instance = new static();
         }
-        return (object)self::$instance;
+        return self::$instance;
     }
 
     public function display() {
@@ -246,7 +246,7 @@ class Members_Administration {
                         $title = sprintf(self::$locale['ME_451'], self::$user_data['user_name']);
                         add_breadcrumb(['link' => self::$status_uri['view'].get('lookup'), 'title' => $title]);
                         opentable($title);
-                        Members_Profile::display_user_profile();
+                        // Members_Profile::display_user_profile();
                         closetable();
                     } else {
                         redirect(FUSION_SELF.fusion_get_aidlink());
@@ -262,7 +262,6 @@ class Members_Administration {
                     $this->editUser();
                     break;
                 case 'delete':
-
                     if (get('newuser')) {
 
                         opentable(sprintf(self::$locale['ME_453'], get('lookup')));
