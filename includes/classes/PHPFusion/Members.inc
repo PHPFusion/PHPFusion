@@ -95,7 +95,7 @@ class Members {
         if (iMEMBER) {
 
             $search_form = openform('searchform', 'get', BASEDIR."members.php?");
-            $search_form .= "<div class='display-inline-block pull-left m-r-10' style='width:300px;'>\n";
+            $search_form .= "<div class='display-inline-block pull-left m-r-10'>\n";
             $search_form .= form_text('search_text', '', form_sanitizer($_GET['search_text'], '', 'search_text'),
                 [
                     'inline'             => TRUE,
@@ -105,14 +105,15 @@ class Members {
                     'append_form_value'  => 'search',
                     'append_value'       => "<i class='fa fa-search'></i> ".self::$locale['MEMB_006'],
                     'append_button_name' => 'search',
-                    'width'              => "260px",
+                    'width'              => "200px",
                     'class'              => 'no-border m-b-0',
                     'group_size'         => 'sm'
                 ]
             );
             $search_form .= "</div>\n";
+            $search_form .= '<span class="m-r-10">'.self::$locale['MEMB_007'].'</span>';
             $search_form .= "<div class='display-inline-block' style='vertical-align:top;'>\n";
-            $search_form .= form_select('orderby', self::$locale['MEMB_007'], $_GET['orderby'],
+            $search_form .= form_select('orderby', '', $_GET['orderby'],
                 [
                     'options'     => [
                         'active'     => self::$locale['MEMB_008'],
@@ -131,7 +132,8 @@ class Members {
                     'ASC'  => self::$locale['MEMB_012'],
                     'DESC' => self::$locale['MEMB_013'],
                 ],
-                'inner_width' => "150px"
+                'inner_width' => "150px",
+                'inline' => TRUE
             ]);
             $search_form .= "</div>\n";
             $search_form .= closeform();
