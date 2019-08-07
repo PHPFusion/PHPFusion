@@ -1344,7 +1344,7 @@ function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = 
     /* Bootstrap may be disabled in theme (see Gillette for example) without settings change in DB.
        In such case this function will not work properly.
        With this fix (used $settings instead fusion_get_settings) function will work.*/
-    if (fusion_get_settings("bootstrap")) {
+    if (fusion_get_settings("bootstrap") || defined('BOOTSTRAP')) {
         $tpl_global = "<nav>%s<div class='btn-group'>\n%s</div></nav>\n";
         $tpl_currpage = "<a class='btn btn-sm btn-default active' href='%s=%d'><strong>%d</strong></a>\n";
         $tpl_page = "<a class='btn btn-sm btn-default' data-value='%d' href='%s=%d'>%s</a>\n";
@@ -1353,10 +1353,10 @@ function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = 
         $tpl_lastpage = "<a class='btn btn-sm btn-default' data-value='%d' href='%s=%d'>%s</a>\n";
         $tpl_button = "<a class='btn btn-primary btn-block btn-md' data-value='%d' href='%s=%d'>%s</a>\n";
     } else {
-        $tpl_global = "<div class='pagenav'>%s\n%s\n</div>\n";
-        $tpl_currpage = "<span><strong>%d</strong></span>";
+        $tpl_global = "<div class='pagenav'>%s\n%s</div>\n";
+        $tpl_currpage = "<a class='pagenavlink active' href='%s=%d'>%d</a>";
         $tpl_page = "<a class='pagenavlink' data-value='%d' href='%s=%d'>%s</a>";
-        $tpl_divider = "...";
+        $tpl_divider = "<span class='pagenavdivider'>...</span>";
         $tpl_firstpage = "<a class='pagenavlink' data-value='0' href='%s=0'>1</a>";
         $tpl_lastpage = "<a class='pagenavlink' data-value='%d' href='%s=%d'>%s</a>\n";
         $tpl_button = "<a class='pagenavlink' data-value='%d' href='%s=%d'>%s</a>\n";
@@ -1419,7 +1419,7 @@ function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = 
         }
     }
 
-    return sprintf($tpl_global, "<small class='m-r-10'>".$locale['global_092']." ".$cur_page.$locale['global_093'].$pg_cnt."</small> ", $res);
+    return sprintf($tpl_global, "<small class='m-r-10'><span>".$locale['global_092']."</span> ".$cur_page.$locale['global_093'].$pg_cnt."</small> ", $res);
 }
 
 /**
