@@ -513,5 +513,5 @@ class Threads_Mod {
     // }
 }
 
-require_once ADMIN.'members/members.class.php';
-require_once ADMIN.'members/users/actions.class.php';
+// require_once ADMIN.'members/members.class.php';
+// require_once ADMIN.'members/users/actions.class.php';
