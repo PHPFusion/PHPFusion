@@ -19,16 +19,17 @@ require_once __DIR__.'/maincore.php';
 require_once THEMES.'templates/header.php';
 $locale = fusion_get_locale("", LOCALE.LOCALESET."user_fields.php");
 $settings = fusion_get_settings();
-require_once THEMES."templates/global/profile.php";
 add_to_title($locale['global_107']);
 add_to_meta("keywords", $locale['global_107']);
-$_GET['profiles'] = 1;
+
+require_once THEMES."templates/global/profile.php";
 
 if (iMEMBER || $settings['enable_registration'] == 0) {
     redirect(BASEDIR.'index.php');
 }
 
 if ($settings['gateway'] == 1) {
+
 	if (empty($_SESSION["validated"])) {
 		$_SESSION['validated'] = 'False';
 	}
@@ -77,6 +78,18 @@ if ((isset($_SESSION["validated"]) && $_SESSION["validated"] == "True") || $sett
 
     } else {
 
+        $userFields = new PHPFusion\UserFields();
+        $userFields->post_name = "register";
+        $userFields->post_value = $locale['u101'];
+        $userFields->display_validation = $settings['display_validation'];
+        $userFields->display_terms = $settings['enable_terms'];
+        $userFields->plugin_folder = [INCLUDES."user_fields/", INFUSIONS];
+        $userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
+        $userFields->show_admin_password = FALSE;
+        $userFields->skip_password = TRUE;
+        $userFields->registration = TRUE;
+        $userFields->inline_field = FALSE;
+
         $userInput = new PHPFusion\UserFieldsInput();
         $userInput->validation = $settings['display_validation'];
         $userInput->email_verification = $settings['email_verification'];
@@ -88,20 +101,7 @@ if ((isset($_SESSION["validated"]) && $_SESSION["validated"] == "True") || $sett
         $userInput->redirect_uri = BASEDIR.$settings['opening_page'];
         $userInput->saveInsert();
 
-        $userFields = new PHPFusion\UserFields();
-        $userFields->post_name = "register";
-        $userFields->post_value = $locale['u101'];
-        $userFields->display_validation = $settings['display_validation'];
-        $userFields->display_terms = $settings['enable_terms'];
-        $userFields->plugin_folder = [INCLUDES."user_fields/", INFUSIONS];
-        $userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
-        $userFields->show_admin_password = FALSE;
-        $userFields->skip_password = TRUE;
-        $userFields->registration = TRUE;
-        $userFields->is_admin_panel = FALSE;
-        $userFields->inline_field = FALSE;
-
-        echo $userFields->display_input();
+        echo $userFields->registration();
     }
 }
 

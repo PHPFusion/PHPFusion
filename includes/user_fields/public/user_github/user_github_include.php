@@ -19,15 +19,16 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 include __DIR__.'/locale/'.LANGUAGE.'.php';
-$icon = "<img src='".INCLUDES."user_fields/public/user_github/images/github.svg' title='GitHub' alt='GitHub'/>";
+$icon = "<img class='icon-xs' src='".INCLUDES."user_fields/public/user_github/images/github.svg' title='GitHub' alt='GitHub'/>";
 // Display user field input
 if ($profile_method == "input") {
     $options = [
-            'inline'      => TRUE,
             'max_length'  => 16,
             'error_text'  => $locale['uf_github_error'],
             'placeholder' => $locale['uf_github_id'],
-            'label_icon'  => $icon
+            'prepend' => TRUE,
+            'prepend_value' => $icon,
+            //'label_icon'  => $icon
         ] + $options;
     $user_fields = form_text('user_github', $locale['uf_github'], $field_value, $options);
     // Display in profile

@@ -63,6 +63,11 @@ class Public_Profile extends UserFieldsQuantum {
         return empty($id) ? (array)$section : (isset($section[$id]) ? (array)$section[$id] : NULL);
     }
 
+    /**
+     * Get profile input form fields
+     * @return array
+     * @throws \ReflectionException
+     */
     public function inputInfo() {
         $locale = fusion_get_locale();
         $info = [
@@ -83,14 +88,12 @@ class Public_Profile extends UserFieldsQuantum {
                 'inline'     => $this->inline_field
             ]);
         }
-
         // Field exist only in edit profile
         if ($this->registration === FALSE) {
 
             $info['user_avatar'] = $this->userAvatarStudio();
             // Real name change button
             $info['name_change_button'] = form_button('update_name', 'Update Name', 'update_name', ['class' => $this->options['btn_post_class']]);
-
             // User Reputation
             if ($this->is_admin_panel === TRUE && infusion_exists('forum')) {
                 $user_reputation = post("user_reputation", FILTER_VALIDATE_INT) ?: $this->user_data['user_reputation'];
@@ -133,23 +136,23 @@ class Public_Profile extends UserFieldsQuantum {
             }
 
         } else {
-
             // This is registration
             $info += $this->getUserFields();
-
             if ($this->display_validation == 1 && $this->is_admin_panel === FALSE) {
                 $info['validate'] = $this->renderValidation();
             }
             if ($this->display_terms == 1 && $this->is_admin_panel === FALSE) {
                 $info['terms'] = $this->renderTerms();
             }
-
         }
 
         return (array)$info;
     }
 
-
+    /**
+     * Get profile output info
+     * @return array
+     */
     public function outputInfo() {
         $this->section_id = get('section');
         $info = [
@@ -357,7 +360,6 @@ class Public_Profile extends UserFieldsQuantum {
         }
 
         $field_cats = $this->getCategory();
-
         $section_id = $this->get_SectionId();
 
         $index_page_id = isset($field_cats[$section_id]['id']) ? $field_cats[$section_id]['id'] : 1;
@@ -371,30 +373,27 @@ class Public_Profile extends UserFieldsQuantum {
         }
 
         $uf_query = "SELECT f.*, c.* FROM
-            ".DB_USER_FIELDS." f
-            INNER JOIN ".DB_USER_FIELD_CATS." c ON c.field_cat_id=f.field_cat
-            ".($uf_cond ? "WHERE $uf_cond" : '')." ORDER BY c.field_cat_order, f.field_order";
+        ".DB_USER_FIELDS." f
+        INNER JOIN ".DB_USER_FIELD_CATS." c ON c.field_cat_id=f.field_cat
+        ".($uf_cond ? "WHERE $uf_cond" : '')." ORDER BY c.field_cat_order, f.field_order";
 
         $result = dbquery($uf_query, $uf_bind);
-
         if (dbrows($result)) {
-
             while ($data = dbarray($result)) {
-
                 if ($data['field_cat_id']) {
                     $cat_name = UserFieldsQuantum::parse_label($data['field_cat_name']);
                     $category[$data['field_parent']][$data['field_cat_id']] = $cat_name;
                     $fields['user_field_extended'][$data['field_cat_id']] ['title'] = $cat_name;
                 }
-
                 if ($data['field_cat']) {
                     $item[$data['field_cat']][$data['field_id']] = $data;
-                    $item_output = $this->display_fields($data, $this->user_data, $this->method, !empty($field['field_config']) ? $field['field_config'] : []);
+                    $field_config = ['inline'=>$this->inline_field];
+                    $field_config += (!empty( $data['field_config'] ) ? $data['field_config'] : []);
+                    $item_output = $this->display_fields($data, $this->user_data, $this->method, $field_config);
                     $item[$data['field_cat']][$data['field_id']]['field_output'] = $item_output;
                     if (!empty($item_output)) {
                         $fields['user_field_extended'][$data['field_cat_id']]['fields'][$data['field_name']] = $item_output;
                     }
-
                 }
             }
 
@@ -420,25 +419,26 @@ class Public_Profile extends UserFieldsQuantum {
      * @throws \ReflectionException
      */
     private function renderValidation() {
-        $this->locale = fusion_get_locale();
+        $locale = fusion_get_locale();
         $_CAPTCHA_HIDE_INPUT = FALSE;
         $html = "<div class='form-group m-t-20'>\n";
-        $html .= "<label for='captcha_code' class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0'>\n".$this->locale['u190']." <span class='required'>*</span></label>\n";
-        $html .= "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>";
+        $html .= "<label for='captcha_code' class='control-label p-0 ".($this->inline_field ? grid_column_size(100,100,80,20) : grid_column_size(100))."'>\n".$this->locale['u190']." <span class='required'>*</span></label>\n";
+        $html .= "<div class='".($this->inline_field ? grid_column_size(100,100,80,80) : grid_column_size(100))."'>";
         include INCLUDES."captchas/".fusion_get_settings("captcha")."/captcha_display.php";
+        $html .= "<div class='list-group-item'>\n";
         $html .= display_captcha([
             'captcha_id' => 'captcha_userfields',
             'input_id'   => 'captcha_code_userfields',
             'image_id'   => 'captcha_image_userfields'
         ]);
+        $html .= "</div>\n";
         if (!$_CAPTCHA_HIDE_INPUT) {
             $html .= form_text('captcha_code', '', '', [
-                'inline'           => 1,
-                'required'         => 1,
-                'autocomplete_off' => 1,
-                'width'            => '200px',
+                'inline'           => $this->inline_field,
+                'required'         => TRUE,
+                'autocomplete_off' => TRUE,
                 'class'            => 'm-t-15',
-                'placeholder'      => $this->locale['u191']
+                'placeholder'      => $locale['u191']
             ]);
         }
         $html .= "</div>\n";
@@ -474,11 +474,8 @@ class Public_Profile extends UserFieldsQuantum {
         });
         ');
 
-        $html = "<div class='form-group clearfix'>";
-        $html .= "<label class='control-label col-xs-12 col-sm-3 p-l-0'>".$this->locale['u192']."</label>";
-        $html .= "<div class='col-xs-12 col-sm-9'>\n";
-        $html .= form_checkbox('agreement', $agreement, '', ["required" => TRUE, "reverse_label" => TRUE]);
-        $html .= "</div>\n</div>\n";
+        $html = form_checkbox('agreement', '<strong>'.$this->locale['u192'].'</strong><br/>'.$agreement, '', ["required" => TRUE, "reverse_label" => TRUE, 'inline'=>$this->inline_field]);
+
         add_to_head("<script type='text/javascript'>$(function() {
         $('#agreement').bind('click', function() {
             let regBtn = $('#register');

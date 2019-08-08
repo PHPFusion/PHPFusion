@@ -31,28 +31,12 @@ if (!function_exists('display_register_form')) {
         $tpl->set_css(THEMES.'templates/global/css/profile.css');
         $tpl->set_template(__DIR__.'/tpl/register.html');
 
-        // page navigation
-        $open = "";
-        $close = "";
-        $tab_title = [];
-        if (isset($info['section']) && count($info['section']) > 1) {
-            foreach ($info['section'] as $page_section) {
-                $tab_title['title'][$page_section['id']] = $page_section['name'];
-                $tab_title['id'][$page_section['id']] = $page_section['id'];
-                $tab_title['icon'][$page_section['id']] = '';
-            }
-            $open = opentab($tab_title, $_GET['section'], 'user-profile-form', TRUE);
-            $close = closetab();
-        }
-
         // old one.
         $tpl->set_tag('open_form', '');
         $tpl->set_tag('user_name', '');
         $tpl->set_tag('user_email', '');
         $tpl->set_tag('user_hide_email', '');
         $tpl->set_tag('user_password', '');
-        $tpl->set_tag('open_tab', $open);
-        $tpl->set_tag('close_tab', $close);
         $tpl->set_tag('sitename', $info['sitename']);
         $tpl->set_tag('title', $info['title']);
 

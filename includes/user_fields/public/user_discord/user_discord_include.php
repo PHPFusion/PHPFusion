@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 include __DIR__.'/locale/'.LANGUAGE.'.php';
-$icon = "<img src='".INCLUDES."user_fields/public/user_discord/images/discord.svg' title='Discord' alt='Discord'/>";
+$icon = "<img class='icon-xs' src='".INCLUDES."user_fields/public/user_discord/images/discord.svg' title='Discord' alt='Discord'/>";
 // Display user field input
 if ($profile_method == "input") {
     $options = [
@@ -27,7 +27,8 @@ if ($profile_method == "input") {
             'error_text'       => $locale['uf_discord_error'],
             'regex_error_text' => $locale['uf_discord_error_1'],
             'placeholder'      => $locale['uf_discord'],
-            'label_icon'       => $icon
+            'prepend' => TRUE,
+            'prepend_value'       => $icon
         ] + $options;
     $user_fields = form_text('user_discord', $locale['uf_discord'], $field_value, $options);
     // Display in profile

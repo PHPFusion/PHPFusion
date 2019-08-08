@@ -17,9 +17,6 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/maincore.php';
 require_once THEMES.'templates/header.php';
-require_once THEMES.'templates/global/profile.php';
-// require_once THEMES.'templates/global/profile.php';
-// require_once THEMES.'templates/global/register.php';
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'user_fields.php');
 $user_name_change = fusion_get_settings('userNameChange');
 

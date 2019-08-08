@@ -177,28 +177,21 @@ class UserFields extends UserFieldsQuantum {
     private function getInputPages() {
         if (empty(self::$pages)) {
             $_ref = get('ref');
-
             $profile_page = [
-                'pu_profile' => [
-                    'title'  => 'Public Profile',
-                ],
-                'se_profile' => [
-                    'title'  => 'Account Information',
-                ]
+                'pu_profile' => ['title'  => 'Public Profile'],
+                'se_profile' => ['title'  => 'Account Information']
             ];
-            if ($this->is_admin_panel) {
-                $profile_page = [
-                    'pu_profile' => [
-                        'title' => 'Profile'
-                    ],
-                    'pu_fields' => [
-                        'title' => 'User Fields'
-                    ]
-                ];
-            }
-            if ($this->is_admin_panel === FALSE) {
-                $profile_page = array_merge($profile_page, self::$additional_pages);
-            }
+            // if ($this->is_admin_panel) {
+            //     $profile_page = [
+            //         'pu_profile' => [
+            //             'title' => 'Profile'
+            //         ],
+            //         'pu_fields' => [
+            //             'title' => 'User Fields'
+            //         ]
+            //     ];
+            // }
+            $profile_page = array_merge($profile_page, self::$additional_pages);
             $count = 0;
             foreach($profile_page as $key => $arr) {
                 $profile_page[$key]['active'] = (($_ref && $_ref == $key || !$_ref && !$count) ? TRUE : FALSE);
@@ -314,7 +307,7 @@ class UserFields extends UserFieldsQuantum {
             'terms'                => '',
             'user_close_message'   => '',
             'custom_page'          => FALSE,
-            'user_password_verify' => (iADMIN && checkrights("M")) ? "" : form_text('user_password_verify', $locale['u135a'], '',
+            'user_password_verify' => (iADMIN && checkrights('M')) ? '' : form_text('user_password_verify', $locale['u135a'], '',
                 [
                     'type'             => 'password',
                     'autocomplete_off' => 1,
@@ -326,6 +319,7 @@ class UserFields extends UserFieldsQuantum {
         ];
         $this->info['current_page'] = $this->getEditCurrentPage();
         $this->options += $this->default_options;
+
         if ($this->registration) {
             // registration
             // bound in page 1 only.
@@ -341,7 +335,6 @@ class UserFields extends UserFieldsQuantum {
             $class->plugin_folder = $this->plugin_folder;
             $class->plugin_locale_folder = $this->plugin_locale_folder;
             $class->inline_field = $this->inline_field;
-
             $this->info = array_merge($this->info, $class->inputInfo());
 
             // Edit Profile Fields
@@ -356,16 +349,14 @@ class UserFields extends UserFieldsQuantum {
             $class->inline_field = $this->inline_field;
 
             $this->info = array_merge($this->info, $class->get_info());
-
         } else {
             $this->editProfileInfo();
         }
-        $this->info += [
-            'register'        => $this->registration,
-            'openform'        => openform($this->form_name, 'post', FUSION_REQUEST, ['enctype' => ($this->show_avatar_input ? TRUE : FALSE)]),
-            'closeform'       => closeform(),
-            'button'          => $this->renderButton(),
-        ];
+
+        $this->info['register'] = $this->registration;
+        $this->info['openform'] = openform($this->form_name, 'post', FUSION_REQUEST, ['enctype' => ($this->show_avatar_input ? TRUE : FALSE)]);
+        $this->info['closeform'] = closeform();
+        $this->info['button'] = $this->renderButton();
 
         return (array)$this->info;
     }
@@ -477,11 +468,13 @@ class UserFields extends UserFieldsQuantum {
     }
 
     /**
+     * Display button post button
      * @return string
      */
     private function renderButton() {
         $disabled = $this->display_terms ? TRUE : FALSE;
         $this->options += $this->default_options;
+
         $html = (!$this->skip_password) ? form_hidden('user_hash', '', $this->user_data['user_password']) : '';
         $html .= form_button($this->post_name, $this->post_value, $this->post_value,
             [
@@ -601,7 +594,7 @@ class UserFields extends UserFieldsQuantum {
         require_once THEMES."templates/global/profile.php";
 
         if (!defined('ADMIN_PANEL')) {
-            if (!iMEMBER && $this->settings['hide_userprofiles'] == 1) {
+            if (!iMEMBER && fusion_get_settings('hide_userprofiles') == 1) {
                 redirect(BASEDIR."index.php");
             }
         }

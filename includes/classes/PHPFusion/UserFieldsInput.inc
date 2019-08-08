@@ -106,8 +106,8 @@ class UserFieldsInput {
         if (isset($_POST[$this->post_name])) {
             $data = $this->_setEmptyFields();
             // Set Core Fields.
-            $data['user_name'] = $this->validate_user_name();
-            $data['user_email'] = $this->validate_user_email();
+            $data['user_name'] = $this->validateUserName();
+            $data['user_email'] = $this->validateEmail();
             $data += $this->validate_user_password();
 
             $quantum = new UserFieldsQuantum();

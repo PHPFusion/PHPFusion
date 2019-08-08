@@ -232,8 +232,7 @@ class Account_Profile extends UserFieldsQuantum {
         if ($this->registration === TRUE) {
             // bypass need for password verification
             // New Password
-            $input_value = isset($_POST['user_password1']) ? $_POST['user_password1'] : '';
-            $info['user_password'] = form_text('user_password1', $locale['u134a'], $input_value, [
+            $info['user_password'] = form_text('user_password1', $locale['u134a'], post('user_password1'), [
                 'type'              => 'password',
                 'autocomplete_off'  => FALSE,
                 'inline'            => $this->inline_field,
@@ -270,7 +269,7 @@ class Account_Profile extends UserFieldsQuantum {
             $info['user_password'] = form_hidden('user_id', '', isset($this->user_data['user_id']) && isnum($this->user_data['user_id']) ? $this->user_data['user_id'] : 0, ['input_id' => 'userid']);
             $info['user_password'] .= form_text('user_password', $locale['u135a'], '', [
                 'type'             => 'password',
-                'autocomplete_off' => 1,
+                'autocomplete_off' => TRUE,
                 'inline'           => $this->inline_field,
                 'max_length'       => 64,
                 'error_text'       => $locale['u133']
