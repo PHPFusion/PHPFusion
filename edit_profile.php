@@ -19,6 +19,7 @@ require_once __DIR__.'/maincore.php';
 require_once THEMES.'templates/header.php';
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'user_fields.php');
 $user_name_change = fusion_get_settings('userNameChange');
+require_once THEMES."templates/global/profile.php";
 
 // The output class
 $userFields = \PHPFusion\UserFields::getInstance();

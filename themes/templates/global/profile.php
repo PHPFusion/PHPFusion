@@ -99,6 +99,7 @@ if (!function_exists('display_profile_form')) {
         add_to_head("<link href='".THEMES."templates/global/css/profile.css' rel='stylesheet'/>");
 
         $tpl = \PHPFusion\Template::getInstance('user-profile-form');
+        $tpl->set_locale(fusion_get_locale());
 
         $tpl->set_template(__DIR__.'/tpl/edit_profile.html');
 
