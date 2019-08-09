@@ -17,10 +17,14 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
 require_once THEMES.'templates/admin_header.php';
-
 pageAccess('S9');
+
+$settings = fusion_get_settings();
+
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/settings.php');
-\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'settings_security.php'.fusion_get_aidlink(), 'title' => $locale['security_settings']]);
+
+add_breadcrumb(['link' => ADMIN.'settings_security.php'.fusion_get_aidlink(), 'title' => $locale['security_settings']]);
+
 $available_captchas = [];
 if ($temp = opendir(INCLUDES."captchas/")) {
     while (FALSE !== ($file = readdir($temp))) {
@@ -30,9 +34,7 @@ if ($temp = opendir(INCLUDES."captchas/")) {
     }
 }
 
-$settings = fusion_get_settings();
-
-if (isset($_POST['clear_cache'])) {
+if (post('clear_cache')) {
     if ($settings['database_sessions']) {
         $session = \PHPFusion\Sessions::getInstance(COOKIE_PREFIX.'session');
         $session->_purge();
@@ -44,36 +46,36 @@ if (isset($_POST['clear_cache'])) {
     redirect(FUSION_REQUEST);
 }
 
-if (isset($_POST['savesettings'])) {
+if (post('savesettings')) {
     // Save settings after validation
     $inputData = [
-        'captcha'               => form_sanitizer($_POST['captcha'], '', 'captcha'),
-        'privacy_policy'        => addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['privacy_policy'])),
-        'allow_php_exe'         => form_sanitizer($_POST['allow_php_exe'], 0, 'allow_php_exe'),
-        'flood_interval'        => form_sanitizer($_POST['flood_interval'], 15, 'flood_interval'),
-        'flood_autoban'         => form_sanitizer($_POST['flood_autoban'], 0, 'flood_autoban'),
-        'maintenance_level'     => form_sanitizer($_POST['maintenance_level'], 102, 'maintenance_level'),
-        'maintenance'           => form_sanitizer($_POST['maintenance'], 0, 'maintenance'),
-        'maintenance_message'   => addslash(descript($_POST['maintenance_message'])),
-        'bad_words_enabled'     => form_sanitizer($_POST['bad_words_enabled'], 0, 'bad_words_enabled'),
-        'bad_words'             => stripinput($_POST['bad_words']),
-        'bad_word_replace'      => form_sanitizer($_POST['bad_word_replace'], '', 'bad_word_replace'),
-        'user_name_ban'         => form_sanitizer($_POST['user_name_ban'], '', 'user_name_ban'),
-        'database_sessions'     => form_sanitizer($_POST['database_sessions'], '', 'database_sessions'),
-        'form_tokens'           => form_sanitizer($_POST['form_tokens'], '', 'form_tokens'),
-        'gateway'               => form_sanitizer($_POST['gateway'], 0, 'gateway'),
-        'error_logging_enabled' => form_sanitizer($_POST['error_logging_enabled'], 0, 'error_logging_enabled'),
-        'error_logging_method'  => form_sanitizer($_POST['error_logging_method'], '', 'error_logging_method'),
+        'captcha'               => sanitizer('captcha', '', 'captcha'),
+        'privacy_policy'        => addslash(preg_replace("(^<p>\s</p>$)", "", post('privacy_policy'))),
+        'allow_php_exe'         => sanitizer('allow_php_exe', 0, 'allow_php_exe'),
+        'flood_interval'        => sanitizer('flood_interval', 15, 'flood_interval'),
+        'flood_autoban'         => sanitizer('flood_autoban', 0, 'flood_autoban'),
+        'maintenance_level'     => sanitizer('maintenance_level', 102, 'maintenance_level'),
+        'maintenance'           => sanitizer('maintenance', 0, 'maintenance'),
+        'maintenance_message'   => addslash(descript(post('maintenance_message'))),
+        'bad_words_enabled'     => sanitizer('bad_words_enabled', 0, 'bad_words_enabled'),
+        'bad_words'             => stripinput(post('bad_words')),
+        'bad_word_replace'      => sanitizer('bad_word_replace', '', 'bad_word_replace'),
+        'user_name_ban'         => sanitizer('user_name_ban', '', 'user_name_ban'),
+        'database_sessions'     => sanitizer('database_sessions', '', 'database_sessions'),
+        'form_tokens'           => sanitizer('form_tokens', '', 'form_tokens'),
+        'gateway'               => sanitizer('gateway', 0, 'gateway'),
+        'error_logging_enabled' => sanitizer('error_logging_enabled', 0, 'error_logging_enabled'),
+        'error_logging_method'  => sanitizer('error_logging_method', '', 'error_logging_method'),
     ];
 
     // Validate extra fields
     if ($inputData['captcha'] == "grecaptcha") {
         // appends captcha settings
         $inputData += [
-            'recaptcha_public'  => form_sanitizer($_POST['recaptcha_public'], '', 'recaptcha_public'),
-            'recaptcha_private' => form_sanitizer($_POST['recaptcha_private'], '', 'recaptcha_private'),
-            'recaptcha_theme'   => form_sanitizer($_POST['recaptcha_theme'], '', 'recaptcha_theme'),
-            'recaptcha_type'    => form_sanitizer($_POST['recaptcha_type'], '', 'recaptcha_type'),
+            'recaptcha_public'  => sanitizer('recaptcha_public', '', 'recaptcha_public'),
+            'recaptcha_private' => sanitizer('recaptcha_private', '', 'recaptcha_private'),
+            'recaptcha_theme'   => sanitizer('recaptcha_theme', '', 'recaptcha_theme'),
+            'recaptcha_type'    => sanitizer('recaptcha_type', '', 'recaptcha_type'),
         ];
     }
 
@@ -99,15 +101,16 @@ $yes_no_array = ['1' => $locale['yes'], '0' => $locale['no']];
 
 opentable($locale['683']);
 echo "<div class='well'>".$locale['security_description']."</div>\n";
-echo openform('settingsform', 'post', FUSION_REQUEST);
-echo "<div class='row'>\n";
-echo "<div class='col-xs-12 col-sm-8'>\n";
+echo openform('securityfrm', 'post');
+echo "<div class='".grid_row()."'>\n";
+echo "<div class='".grid_column_size(100, 70)."'>\n";
 
 // This opens roadmaps to load balancers.
 openside('');
-echo "<div class='row'><div class='col-xs-12 col-sm-3'>\n";
+echo "<div class='".grid_row()."'>";
+echo "<div class='".grid_column_size(100, 40, 20)."'>\n";
 echo "<strong>".$locale['security_001']."</strong><br/>".$locale['security_002'];
-echo "</div><div class='col-xs-12 col-sm-9'>\n";
+echo "</div><div class='".grid_column_size(100, 70)."'>\n";
 echo form_btngroup('database_sessions', $locale['security_003'], $settings['database_sessions'], [
     'options' => [
         1 => $locale['security_004'],
@@ -118,9 +121,10 @@ echo form_btngroup('database_sessions', $locale['security_003'], $settings['data
 echo form_button('clear_cache', $locale['security_006'], 'clear_cache', ['class' => 'btn-default m-b-20']);
 echo "</div></div>";
 
-echo "<div class='row'><div class='col-xs-12 col-sm-3'>\n";
+echo "<div class='".grid_row()."'>";
+echo "<div class='".grid_column_size(100, 40, 20)."'>\n";
 echo "<strong>".$locale['security_008']."</strong><br/>".$locale['security_009'];
-echo "</div><div class='col-xs-12 col-sm-9'>\n";
+echo "</div><div class='".grid_column_size(100, 70)."'>\n";
 echo form_btngroup('form_tokens', '', $settings['form_tokens'], ['options' => range(0, 10)]);
 echo "</div></div>";
 closeside();
@@ -169,7 +173,7 @@ echo form_textarea('user_name_ban', $locale['649'], $settings['user_name_ban'], 
 ]);
 closeside();
 
-echo "</div><div class='col-xs-12 col-sm-4'>\n";
+echo "</div><div class='".grid_column_size(100, 30)."'>\n";
 openside('');
 echo form_select('captcha', $locale['693'], $settings['captcha'], [
     'options'     => $available_captchas,
@@ -189,7 +193,7 @@ if (!$settings['recaptcha_public']) {
     $locale['no_keys'] = str_replace($link, $link_replacements, $locale['no_keys']);
     echo "<div class='alert alert-warning m-t-10 col-sm-offset-3'><i class='fa fa-google fa-lg fa-fw'></i> ".$locale['no_keys']."</div>\n";
 }
-echo "<div class='row'>\n";
+echo "<div class='".grid_row()."'>\n";
 echo "<div class='hidden-xs col-sm-3 text-right'>\n";
 echo thumbnail(INCLUDES."captchas/grecaptcha/grecaptcha.png", "196px");
 echo "</div>\n<div class='col-xs-12 col-sm-9'>\n";

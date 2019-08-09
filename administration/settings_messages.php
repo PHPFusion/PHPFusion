@@ -16,20 +16,22 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
-pageAccess("S7");
 require_once THEMES.'templates/admin_header.php';
-$locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/settings.php');
-\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'settings_messages.php'.fusion_get_aidlink(), 'title' => $locale['message_settings']]);
+pageAccess("S7");
 
 $settings = fusion_get_settings();
 
-if (isset($_POST['save_settings'])) {
+$locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/settings.php');
+
+add_breadcrumb(['link' => ADMIN.'settings_messages.php'.fusion_get_aidlink(), 'title' => $locale['message_settings']]);
+
+if (post('save_settings')) {
     $inputData = [
-        'pm_inbox_limit'   => form_sanitizer($_POST['pm_inbox_limit'], '20', 'pm_inbox_limit'),
-        'pm_outbox_limit'  => form_sanitizer($_POST['pm_outbox_limit'], '20', 'pm_outbox_limit'),
-        'pm_archive_limit' => form_sanitizer($_POST['pm_archive_limit'], '20', 'pm_archive_limit'),
-        'pm_email_notify'  => (isset($_POST['pm_email_notify']) ? form_sanitizer($_POST['pm_email_notify'], '1', 'pm_email_notify') : 0),
-        'pm_save_sent'     => (isset($_POST['pm_save_sent']) ? form_sanitizer($_POST['pm_save_sent'], '1', 'pm_save_sent') : 0)
+        'pm_inbox_limit'   => sanitizer('pm_inbox_limit', '20', 'pm_inbox_limit'),
+        'pm_outbox_limit'  => sanitizer('pm_outbox_limit', '20', 'pm_outbox_limit'),
+        'pm_archive_limit' => sanitizer('pm_archive_limit', '20', 'pm_archive_limit'),
+        'pm_email_notify'  => (post('pm_email_notify') ? sanitizer('pm_email_notify', '1', 'pm_email_notify') : 0),
+        'pm_save_sent'     => (post('pm_save_sent') ? sanitizer('pm_save_sent', '1', 'pm_save_sent') : 0)
     ];
 
     if (\Defender::safe()) {
@@ -46,19 +48,20 @@ if (isset($_POST['save_settings'])) {
     }
 }
 
-if (isset($_POST['delete-messages'])) {
+if (post('delete-messages')) {
     dbquery("TRUNCATE TABLE ".DB_MESSAGES);
     addNotice('success', $locale['712']);
     redirect(FUSION_REQUEST);
 }
 
 opentable($locale['message_settings']);
-echo openform('settingsform', 'post', FUSION_REQUEST);
+echo openform('messagesfrm', 'post');
 echo "<p>".$locale['message_description']."</p>\n";
 echo "<hr/>\n";
-echo "<div class='row'>\n<div class='col-xs-12 col-sm-3'>\n";
+echo "<div class='".grid_row()."'>\n";
+echo "<div class='".grid_column_size(100, 20)."'>\n";
 echo "<h4 class='m-0'>".$locale['message_settings']."</h4>";
-echo "</div>\n<div class='col-xs-12 col-sm-9'>\n";
+echo "</div>\n<div class='".grid_column_size(100, 70)."'>\n";
 echo form_checkbox('pm_email_notify', $locale['709'], $settings['pm_email_notify'], ['reverse_label' => TRUE]);
 echo form_checkbox('pm_save_sent', $locale['710'], $settings['pm_save_sent'], ['reverse_label' => TRUE]);
 echo "</div>\n</div>\n";
@@ -86,8 +89,9 @@ echo form_text('pm_archive_limit', $locale['703'], $settings['pm_archive_limit']
 echo "<hr/>\n";
 
 // Danger zone
-echo "<div class='row'>\n<div class='col-xs-12 col-sm-3'>\n";
-echo "</div>\n<div class='col-xs-12 col-sm-9'>\n";
+echo "<div class='".grid_row()."'>\n";
+echo "<div class='".grid_column_size(100, 20)."'>\n";
+echo "</div>\n<div class='".grid_column_size(100, 70)."'>\n";
 openform('delete-pm', 'post', FUSION_REQUEST);
 fusion_confirm_exit();
 add_to_jquery("$('#delete-messages').bind('click', function() { return confirm('".$locale['713']."'); });");

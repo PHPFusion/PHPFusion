@@ -16,12 +16,14 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
-pageAccess('S1');
 require_once THEMES.'templates/admin_header.php';
+pageAccess('S1');
+
+$settings = fusion_get_settings();
 
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/settings.php');
 
-\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'settings_main.php'.fusion_get_aidlink(), 'title' => $locale['main_settings']]);
+add_breadcrumb(['link' => ADMIN.'settings_main.php'.fusion_get_aidlink(), 'title' => $locale['main_settings']]);
 /**
  * Get the default search options
  * with file exists validation of the PHP-Fusion Search SDK files.
@@ -107,40 +109,38 @@ function validate_site_port($value) {
     return ((isnum($value) || empty($value)) && in_array($value, [0, 80, 443]) or $value < 65001) ? TRUE : FALSE;
 }
 
-$settings = fusion_get_settings();
-
 // Saving settings
-if (isset($_POST['savesettings'])) {
+if (post('savesettings')) {
     $inputData = [
-        'siteintro'       => descript(addslashes($_POST['siteintro'])),
-        'sitename'        => form_sanitizer($_POST['sitename'], '', 'sitename'),
-        'sitebanner'      => form_sanitizer($_POST['sitebanner'], '', 'sitebanner'),
-        'siteemail'       => form_sanitizer($_POST['siteemail'], '', 'siteemail'),
-        'siteusername'    => form_sanitizer($_POST['siteusername'], '', 'siteusername'),
-        'footer'          => descript(addslashes($_POST['footer'])),
-        'site_protocol'   => form_sanitizer($_POST['site_protocol'], '', 'site_protocol'),
-        'site_host'       => form_sanitizer($_POST['site_host'], '', 'site_host'),
-        'site_path'       => form_sanitizer($_POST['site_path'], '', 'site_path'),
-        'site_port'       => form_sanitizer($_POST['site_port'], '', 'site_port'),
-        'description'     => form_sanitizer($_POST['description'], '', 'description'),
-        'keywords'        => form_sanitizer($_POST['keywords'], '', 'keywords'),
-        'opening_page'    => form_sanitizer($_POST['opening_page'], '', 'opening_page'),
-        'default_search'  => form_sanitizer($_POST['default_search'], '', 'default_search'),
-        'exclude_left'    => form_sanitizer($_POST['exclude_left'], '', 'exclude_left'),
-        'exclude_upper'   => form_sanitizer($_POST['exclude_upper'], '', 'exclude_upper'),
-        'exclude_aupper'  => form_sanitizer($_POST['exclude_aupper'], '', 'exclude_aupper'),
-        'exclude_lower'   => form_sanitizer($_POST['exclude_lower'], '', 'exclude_lower'),
-        'exclude_blower'  => form_sanitizer($_POST['exclude_blower'], '', 'exclude_blower'),
-        'exclude_right'   => form_sanitizer($_POST['exclude_right'], '', 'exclude_right'),
-        'exclude_user1'   => form_sanitizer($_POST['exclude_user1'], '', 'exclude_user1'),
-        'exclude_user2'   => form_sanitizer($_POST['exclude_user2'], '', 'exclude_user2'),
-        'exclude_user3'   => form_sanitizer($_POST['exclude_user3'], '', 'exclude_user3'),
-        'exclude_user4'   => form_sanitizer($_POST['exclude_user4'], '', 'exclude_user4'),
-        'logoposition_xs' => form_sanitizer($_POST['logoposition_xs'], '', 'logoposition_xs'),
-        'logoposition_sm' => form_sanitizer($_POST['logoposition_sm'], '', 'logoposition_sm'),
-        'logoposition_md' => form_sanitizer($_POST['logoposition_md'], '', 'logoposition_md'),
-        'logoposition_lg' => form_sanitizer($_POST['logoposition_lg'], '', 'logoposition_lg'),
-        'domain_server'   => form_sanitizer($_POST['domain_server'], '', 'domain_server')
+        'siteintro'       => descript(addslashes(post('siteintro'))),
+        'sitename'        => sanitizer('sitename', '', 'sitename'),
+        'sitebanner'      => sanitizer('sitebanner', '', 'sitebanner'),
+        'siteemail'       => sanitizer('siteemail', '', 'siteemail'),
+        'siteusername'    => sanitizer('siteusername', '', 'siteusername'),
+        'footer'          => descript(addslashes(post('footer'))),
+        'site_protocol'   => sanitizer('site_protocol', '', 'site_protocol'),
+        'site_host'       => sanitizer('site_host', '', 'site_host'),
+        'site_path'       => sanitizer('site_path', '', 'site_path'),
+        'site_port'       => sanitizer('site_port', '', 'site_port'),
+        'description'     => sanitizer('description', '', 'description'),
+        'keywords'        => sanitizer('keywords', '', 'keywords'),
+        'opening_page'    => sanitizer('opening_page', '', 'opening_page'),
+        'default_search'  => sanitizer('default_search', '', 'default_search'),
+        'exclude_left'    => sanitizer('exclude_left', '', 'exclude_left'),
+        'exclude_upper'   => sanitizer('exclude_upper', '', 'exclude_upper'),
+        'exclude_aupper'  => sanitizer('exclude_aupper', '', 'exclude_aupper'),
+        'exclude_lower'   => sanitizer('exclude_lower', '', 'exclude_lower'),
+        'exclude_blower'  => sanitizer('exclude_blower', '', 'exclude_blower'),
+        'exclude_right'   => sanitizer('exclude_right', '', 'exclude_right'),
+        'exclude_user1'   => sanitizer('exclude_user1', '', 'exclude_user1'),
+        'exclude_user2'   => sanitizer('exclude_user2', '', 'exclude_user2'),
+        'exclude_user3'   => sanitizer('exclude_user3', '', 'exclude_user3'),
+        'exclude_user4'   => sanitizer('exclude_user4', '', 'exclude_user4'),
+        'logoposition_xs' => sanitizer('logoposition_xs', '', 'logoposition_xs'),
+        'logoposition_sm' => sanitizer('logoposition_sm', '', 'logoposition_sm'),
+        'logoposition_md' => sanitizer('logoposition_md', '', 'logoposition_md'),
+        'logoposition_lg' => sanitizer('logoposition_lg', '', 'logoposition_lg'),
+        'domain_server'   => sanitizer('domain_server', '', 'domain_server')
     ];
 
     if (strpos($inputData['site_host'], "/") !== FALSE) {
@@ -173,7 +173,8 @@ if (isset($_POST['savesettings'])) {
 echo fusion_get_function('opentable', $locale['main_settings']);
 echo "<div class='well'>".$locale['main_description']."</div>";
 echo openform('settingsform', 'post', FUSION_REQUEST);
-echo "<div class='row'><div class='col-xs-12 col-sm-12 col-md-6'>\n";
+echo "<div class='".grid_row()."'>";
+echo "<div class='".grid_column_size(100, 100, 50)."'>\n";
 echo fusion_get_function('openside', '');
 echo form_text('sitename', $locale['402'], $settings['sitename'], [
     'inline'     => FALSE,
@@ -270,11 +271,11 @@ echo form_select('default_search', $locale['419'], $settings['default_search'], 
 ]);
 
 echo fusion_get_function('closeside', '');
-echo "</div><div class='col-xs-12 col-sm-12 col-md-6'>\n";
+echo "</div><div class='".grid_column_size(100, 100, 50)."'>\n";
 
 echo fusion_get_function('openside', '');
-echo "<div class='row'>\n";
-echo "<div class='col-xs-12 col-sm-3'>\n";
+echo "<div class='".grid_row()."'>\n";
+echo "<div class='".grid_column_size(100, 20)."'>\n";
 echo "<strong>".$locale['401a']."</strong><br/><i>".$locale['401b']."</i>";
 echo "<div class='spacer-xs'>\n";
 echo "<i class='fa fa-external-link m-r-10'></i>";
@@ -283,7 +284,7 @@ echo "<span id='display_host'>".$settings['site_host']."</span>";
 echo "<span id='display_port'>".($settings['site_port'] ? ":".$settings['site_port'] : "")."</span>";
 echo "<span id='display_path'>".$settings['site_path']."</span>";
 echo "</div>\n";
-echo "</div>\n<div class='col-xs-12 col-sm-9'>\n";
+echo "</div>\n<div class='".grid_column_size(100, 80)."'>\n";
 echo form_select('site_protocol', $locale['426'], $settings['site_protocol'], [
     'inline'     => TRUE,
     'regex'      => 'http(s)?',
@@ -319,10 +320,10 @@ echo form_text('site_port', $locale['430'], $settings['site_port'], [
 ]);
 echo "</div>\n</div>\n";
 // Domain names
-echo "<div class='row'>\n";
-echo "<div class='col-xs-12 col-sm-3'>\n";
+echo "<div class='".grid_row()."'>\n";
+echo "<div class='".grid_column_size(100, 20)."'>\n";
 echo "<strong>".$locale['444']."</strong><br/><i>".nl2br($locale['444a'])."</i>";
-echo "</div>\n<div class='col-xs-12 col-sm-9'>\n";
+echo "</div>\n<div class='".grid_column_size(100, 80)."'>\n";
 $domain_server = str_replace('|', PHP_EOL, $settings['domain_server']);
 echo form_textarea('domain_server', $locale['444b'], $domain_server, ['autosize' => TRUE, 'placeholder' => "example1.com\nexample2.com\n"]);
 echo "</div>\n</div>\n";

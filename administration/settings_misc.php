@@ -16,35 +16,37 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
-pageAccess('S6');
 require_once THEMES.'templates/admin_header.php';
-$locale = fusion_get_locale('', LOCALE.LOCALESET."admin/settings.php");
-\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'settings_misc.php'.fusion_get_aidlink(), 'title' => $locale['misc_settings']]);
+pageAccess('S6');
 
 $settings = fusion_get_settings();
 
-if (isset($_POST['savesettings'])) {
+$locale = fusion_get_locale('', LOCALE.LOCALESET."admin/settings.php");
+
+add_breadcrumb(['link' => ADMIN.'settings_misc.php'.fusion_get_aidlink(), 'title' => $locale['misc_settings']]);
+
+if (post('savesettings')) {
     $inputData = [
-        'tinymce_enabled'        => form_sanitizer($_POST['tinymce_enabled'], '0', 'tinymce_enabled'),
-        'smtp_host'              => form_sanitizer($_POST['smtp_host'], '', 'smtp_host'),
-        'smtp_port'              => form_sanitizer($_POST['smtp_port'], '', 'smtp_port'),
-        'smtp_auth'              => isset($_POST['smtp_auth']) && !empty($_POST['smtp_username']) && !empty($_POST['smtp_password']) ? 1 : 0,
-        'smtp_username'          => form_sanitizer($_POST['smtp_username'], '', 'smtp_username'),
-        'smtp_password'          => form_sanitizer($_POST['smtp_password'], '', 'smtp_password'),
-        'thumb_compression'      => form_sanitizer($_POST['thumb_compression'], '0', 'thumb_compression'),
-        'mime_check'             => form_sanitizer($_POST['mime_check'], '0', 'mime_check'),
-        'guestposts'             => form_sanitizer($_POST['guestposts'], '0', 'guestposts'),
-        'comments_enabled'       => form_sanitizer($_POST['comments_enabled'], '0', 'comments_enabled'),
-        'comments_per_page'      => form_sanitizer($_POST['comments_per_page'], '10', 'comments_per_page'),
-        'ratings_enabled'        => form_sanitizer($_POST['ratings_enabled'], '0', 'ratings_enabled'),
-        'visitorcounter_enabled' => form_sanitizer($_POST['visitorcounter_enabled'], '0', 'visitorcounter_enabled'),
-        'rendertime_enabled'     => form_sanitizer($_POST['rendertime_enabled'], '0', 'rendertime_enabled'),
-        'comments_avatar'        => form_sanitizer($_POST['comments_avatar'], '0', 'comments_avatar'),
-        'comments_sorting'       => form_sanitizer($_POST['comments_sorting'], 'DESC', 'comments_sorting'),
-        'index_url_bbcode'       => form_sanitizer($_POST['index_url_bbcode'], '0', 'index_url_bbcode'),
-        'index_url_userweb'      => form_sanitizer($_POST['index_url_userweb'], '0', 'index_url_userweb'),
-        'create_og_tags'         => form_sanitizer($_POST['create_og_tags'], '0', 'create_og_tags'),
-        'devmode'                => form_sanitizer($_POST['devmode'], '0', 'devmode'),
+        'tinymce_enabled'        => sanitizer('tinymce_enabled', '0', 'tinymce_enabled'),
+        'smtp_host'              => sanitizer('smtp_host', '', 'smtp_host'),
+        'smtp_port'              => sanitizer('smtp_port', '', 'smtp_port'),
+        'smtp_auth'              => post('smtp_auth') && !empty(post('smtp_username')) && !empty(post('smtp_password')) ? 1 : 0,
+        'smtp_username'          => sanitizer('smtp_username', '', 'smtp_username'),
+        'smtp_password'          => sanitizer('smtp_password', '', 'smtp_password'),
+        'thumb_compression'      => sanitizer('thumb_compression', '0', 'thumb_compression'),
+        'mime_check'             => sanitizer('mime_check', '0', 'mime_check'),
+        'guestposts'             => sanitizer('guestposts', '0', 'guestposts'),
+        'comments_enabled'       => sanitizer('comments_enabled', '0', 'comments_enabled'),
+        'comments_per_page'      => sanitizer('comments_per_page', '10', 'comments_per_page'),
+        'ratings_enabled'        => sanitizer('ratings_enabled', '0', 'ratings_enabled'),
+        'visitorcounter_enabled' => sanitizer('visitorcounter_enabled', '0', 'visitorcounter_enabled'),
+        'rendertime_enabled'     => sanitizer('rendertime_enabled', '0', 'rendertime_enabled'),
+        'comments_avatar'        => sanitizer('comments_avatar', '0', 'comments_avatar'),
+        'comments_sorting'       => sanitizer('comments_sorting', 'DESC', 'comments_sorting'),
+        'index_url_bbcode'       => sanitizer('index_url_bbcode', '0', 'index_url_bbcode'),
+        'index_url_userweb'      => sanitizer('index_url_userweb', '0', 'index_url_userweb'),
+        'create_og_tags'         => sanitizer('create_og_tags', '0', 'create_og_tags'),
+        'devmode'                => sanitizer('devmode', '0', 'devmode'),
     ];
 
     if (\Defender::safe()) {
@@ -63,8 +65,8 @@ if (isset($_POST['savesettings'])) {
 opentable($locale['misc_settings']);
 echo "<div class='well'>".$locale['misc_description']."</div>";
 echo openform('settingsform', 'post', FUSION_REQUEST);
-echo "<div class='row'>\n";
-echo "<div class='col-xs-12 col-sm-12 col-md-8'>\n";
+echo "<div class='".grid_row()."'>\n";
+echo "<div class='".grid_column_size(100, 100, 70)."'>\n";
 openside('');
 $choice_arr = ['1' => $locale['yes'], '0' => $locale['no']];
 echo form_select('tinymce_enabled', $locale['662'], $settings['tinymce_enabled'], [
@@ -131,7 +133,7 @@ echo form_checkbox('comments_avatar', $locale['656'], $settings['comments_avatar
 ]);
 closeside();
 
-echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-4'>\n";
+echo "</div>\n<div class='".grid_column_size(100, 100, 30)."'>\n";
 openside('');
 $gd_opts = ['gd1' => $locale['607'], 'gd2' => $locale['608']];
 echo form_select('thumb_compression', $locale['606'], $settings['thumb_compression'], [
