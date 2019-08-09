@@ -18,7 +18,6 @@
 
 namespace PHPFusion\Infusions\Forum\Classes\Forum;
 
-use PHPFusion\BreadCrumbs;
 use PHPFusion\Infusions\Forum\Classes\Forum_Moderator;
 use PHPFusion\Infusions\Forum\Classes\Forum_Server;
 
@@ -61,7 +60,6 @@ class Forum extends Forum_Server {
                 ];
                 break;
             case 'participated':
-
                 break;
             case 'unanswered':
                 return [
@@ -92,6 +90,17 @@ class Forum extends Forum_Server {
     }
 
     /**
+     * Get section in forum
+     * @return mixed|string
+     */
+    public function getForumSection() {
+        $section = get('section');
+        $section = $section && in_array($section, ['participated', 'latest', 'tracked', 'unanswered','unsolved','people', 'moderator']) ? $section : '';
+        return $section;
+    }
+
+
+    /**
      * Executes forum
      */
     public function set_ForumInfo() {
@@ -102,24 +111,20 @@ class Forum extends Forum_Server {
         $userdata = fusion_get_userdata();
         $locale = fusion_get_locale();
 
-        $section = get('section');
-        $section = $section ? $section : 'thread';
-
         // security boot due to insufficient access level
         if (isset($_GET['viewforum']) && (empty($_GET['forum_id']) OR !isnum($_GET['forum_id']) || !verify_forum($_GET['forum_id']))) {
             redirect(FORUM.'index.php');
         }
 
-        // Old panel support
+        // legacy version panel support
         if (stristr(server('PHP_SELF'), 'forum_id')) {
+            $section = $this->getForumSection();
             if ($section) {
                 if ($section == 'latest') {
                     redirect(INFUSIONS.'forum/index.php?section=latest');
-                }
-                else if ($section == 'mypost') {
+                } else if ($section == 'mypost') {
                     redirect(INFUSIONS.'forum/index.php?section=mypost');
-                }
-                else if ($section == 'tracked') {
+                } else if ($section == 'tracked') {
                     redirect(INFUSIONS.'forum/index.php?section=tracked');
                 }
             }
@@ -136,7 +141,7 @@ class Forum extends Forum_Server {
             'threads_per_page' => $forum_settings['threads_per_page'],
             'forum_index'      => dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat', (multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('forum_access')), // waste resources here.
             'threads'          => [],
-            'section'          => $section,
+            'section'          => $this->getForumSection(),
             'new_topic_link'   => ['link' => FORUM.'newthread.php', 'title' => $locale['forum_0057']],
         ];
 
@@ -146,19 +151,18 @@ class Forum extends Forum_Server {
         }
 
         add_to_title($locale['global_200'].$locale['forum_0000']);
-
         add_breadcrumb(['link' => FORUM."index.php", "title" => $locale['forum_0000']]);
 
         // Section View
-        switch ($section) {
-            case "participated":
+        switch ($this->forum_info['section']) {
+            case 'participated':
                 add_to_title($locale['global_201'].$locale['global_024']);
                 add_breadcrumb([
                     'link'  => FORUM."index.php?section=participated",
                     'title' => $locale['global_024']
                 ]);
                 set_meta("description", $locale['global_024']);
-                include FORUM_SECTIONS."participated.php";
+                $this->loadSection('participated');
                 break;
             case 'latest':
                 add_to_title($locale['global_201'].$locale['global_021']);
@@ -167,8 +171,7 @@ class Forum extends Forum_Server {
                     'title' => $locale['global_021']
                 ]);
                 set_meta("description", $locale['global_021']);
-                // Clocks at 0.5s
-                include FORUM_SECTIONS."latest.php";
+                $this->loadSection('latest');
                 break;
             case 'tracked':
                 add_to_title($locale['global_201'].$locale['global_056']);
@@ -177,36 +180,36 @@ class Forum extends Forum_Server {
                     'title' => $locale['global_056']
                 ]);
                 set_meta("description", $locale['global_056']);
-                include FORUM_SECTIONS."tracked.php";
+                $this->loadSection('tracked');
                 break;
-            case "unanswered":
-                include FORUM_SECTIONS."unanswered.php";
+            case 'unanswered':
                 add_to_title($locale['global_201'].$locale['global_027']);
                 add_breadcrumb([
                     'link'  => INFUSIONS."forum/index.php?section=unanswered",
                     'title' => $locale['global_027']
                 ]);
                 set_meta("description", $locale['global_027']);
+                $this->loadSection('unanswered');
                 break;
-            case "unsolved":
+            case 'unsolved':
                 add_to_title($locale['global_201'].$locale['global_028']);
                 add_breadcrumb([
                     'link'  => INFUSIONS."forum/index.php?section=unsolved",
                     'title' => $locale['global_028']
                 ]);
                 set_meta("description", $locale['global_028']);
-                include FORUM_SECTIONS."unsolved.php";
+                $this->loadSection('unsolved');
                 break;
-            case "people":
+            case 'people':
                 add_to_title($locale['global_201'].$locale['global_028']);
                 add_breadcrumb([
                     'link'  => INFUSIONS."forum/index.php?section=unsolved",
                     'title' => $locale['global_028']
                 ]);
                 set_meta("description", $locale['global_028']);
-                include FORUM_SECTIONS."unsolved.php";
+                $this->loadSection('people');
                 break;
-            case "moderator":
+            case 'moderator':
                 // what is the report links?
                 add_to_title($locale['global_201']."Reports");
                 add_breadcrumb([
@@ -214,7 +217,7 @@ class Forum extends Forum_Server {
                     'title' => "Reports"
                 ]);
                 set_meta("description", "Reports");
-                include FORUM_SECTIONS."reports.php";
+                $this->loadSection('reports');
                 break;
             default:
                 // Viewforum view
@@ -231,8 +234,10 @@ class Forum extends Forum_Server {
                     $this->forum_info['forums'] = self::get_forums();
                 }
         }
+    }
 
-
+    private function loadSection($filename) {
+        include FORUM_SECTIONS.$filename.'.php';
     }
 
     /**
@@ -460,7 +465,7 @@ class Forum extends Forum_Server {
             $view_get = get('view');
             $this->forum_info['view_get'] = ($view_get && in_array($view_get, ['subforums', 'gallery', 'people', 'activity']) ? $view_get : 'default');
 
-            switch($this->forum_info['view_get']) {
+            switch ($this->forum_info['view_get']) {
                 case 'subforums':
                     // Get Subforum data
                     if ($this->forum_info['subforum_count']) {

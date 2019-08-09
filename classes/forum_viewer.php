@@ -15,12 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 namespace PHPFusion\Infusions\Forum\Classes;
 
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+use PHPFusion\Infusions\Forum\Classes\Forum\Forum;
 
 /**
  * Class Forum_Viewer
@@ -60,6 +57,8 @@ class Forum_Viewer {
 
     private $css_file_path = '';
 
+    private $forum = NULL;
+
     /**
      * Forum_Viewer constructor.
      */
@@ -71,6 +70,7 @@ class Forum_Viewer {
         if (file_exists($css_min_file_path) && $dev_mode === FALSE) {
             $this->css_file_path = $css_min_file_path;
         }
+        $this->forum = new Forum();
     }
 
     /**
@@ -93,8 +93,10 @@ class Forum_Viewer {
     public function render_forum($info) {
         $this->info = $info;
         $this->locale = fusion_get_locale();
-        if (isset($_GET['section'])) {
-            if ($_GET['section'] == 'moderator') {
+        $section = $this->forum->getForumSection();
+
+        if ($section) {
+            if ($section == 'moderator') {
                 return $this->forum_report($info);
             }
 
@@ -177,7 +179,7 @@ class Forum_Viewer {
     }
 
     public function get_forum_navs() {
-
+        $locale = fusion_get_locale();
         if (empty($this->forum_nav_callback)) {
             // get all root forums
             $menu_arr = [];
@@ -225,6 +227,9 @@ class Forum_Viewer {
             'callback_data'     => $this->forum_nav_callback,
             'grouping'          => FALSE,
             'links_per_page'    => FALSE,
+            'show_banner' => TRUE,
+            'show_header' => TRUE,
+            'custom_banner' => '<h4>'.$locale['forum_0000'].'</h4>',
             //'html_content'      => openform('forum_searchFrm', 'post', FUSION_REQUEST, ["class" => "pull-right"]).form_text("forum_search", "", "", ["placeholder" => "Search...", "class" => "m-0 center-y", "feedback_icon" => TRUE, "icon" => "fas fa-search text-dark"]).closeform(),
         ];
 
@@ -615,6 +620,11 @@ class Forum_Viewer {
      * @return string
      */
     public function forum_section($info) {
+
+        if (!$this->forum->getForumSection()) {
+            redirect(FORUM.'index.php');
+        }
+
         $locale = fusion_get_locale();
         $file_path = get_forum_template('forum_section');
         $html = \PHPFusion\Template::getInstance('forum-section');

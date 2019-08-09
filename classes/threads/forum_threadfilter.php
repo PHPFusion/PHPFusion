@@ -54,25 +54,22 @@ class Forum_ThreadFilter {
             'solved'      => " AND t.thread_answered = '1'",
             'unsolved'    => " AND t.thread_answered = '0'",
         ];
-
         $sql_select_array = [
             'all'         => '',
             'discussions' => '',
             'attachments' => ", a.attach_id, COUNT(a.attach_id) 'attach_count'",
-            'poll'        => "",
-            'solved'      => "",
-            'unsolved'    => "",
+            'poll'        => '',
+            'solved'      => '',
+            'unsolved'    => '',
         ];
-
         $sql_joins_array = [
             'all'         => '',
             'discussions' => '',
             'attachments' => " LEFT JOIN ".DB_FORUM_ATTACHMENTS." a ON a.thread_id=t.thread_id",
-            'poll'        => "",
-            'solved'      => "",
-            'unsolved'    => "",
+            'poll'        => '',
+            'solved'      => '',
+            'unsolved'    => '',
         ];
-
         $sort_array = [
             'author'  => 't.thread_author',
             'time'    => 't.thread_lastpost',
@@ -84,11 +81,15 @@ class Forum_ThreadFilter {
             'ascending'  => 'ASC',
             'descending' => 'DESC'
         ];
+        $time = get('time');
+        $time = ($time && isset($time_array[$time]) ? $time : '');
+        $type = get('type');
+        $type = ($type && isset($type_array[$type]) ? $type : '');
+        $sort = get('sort');
+        $sort = (isset($sort) && isset($sort_array[$sort]) ? $sort : '');
+        $order = get('order');
+        $order = (isset($order) && isset($order_array[$order]) ? $order : '');
 
-        $time = (isset($_GET['time']) && isset($time_array[$_GET['time']]) ? $_GET['time'] : '');
-        $type = (isset($_GET['type']) && isset($type_array[$_GET['type']]) ? $_GET['type'] : '');
-        $sort = (isset($_GET['sort']) && isset($sort_array[$_GET['sort']]) ? $_GET['sort'] : '');
-        $order = (isset($_GET['order']) && isset($order_array[$_GET['order']]) ? $_GET['order'] : '');
         $select = (isset($sql_select_array[$type]) ? $sql_select_array[$type] : '');
         $joins = (isset($sql_joins_array[$type]) ? $sql_joins_array[$type] : '');
 
@@ -126,14 +127,16 @@ class Forum_ThreadFilter {
         ];
 
         // Filter Links
-        $timeExt = isset($_GET['time']) ? "&time=".$time : '';
-        $typeExt = isset($_GET['type']) ? "&type=".$type : '';
-        $sortExt = isset($_GET['sort']) ? "&sort=".$sort : '';
-        $orderExt = isset($_GET['order']) ? "&order=".$order : '';
+        $timeExt = $time ? "&time=".$time : '';
+        $typeExt = $type ? "&type=".$type : '';
+        $sortExt = $sort ? "&sort=".$sort : '';
+        $orderExt = $order ? "&order=".$order : '';
 
         $baseLink = clean_request("", ["time", "type", "sort", "order"], FALSE);
-        if (isset($_GET['viewforum']) && isset($_GET['forum_id'])) {
-            $baseLink = INFUSIONS.'forum/index.php?viewforum&forum_id='.$_GET['forum_id'].''.(isset($_GET['parent_id']) ? '&parent_id='.$_GET['parent_id'].'' : '');
+        $parent_id = get('parent_id', FILTER_VALIDATE_INT);
+        $forum_id = get('forum_id', FILTER_VALIDATE_INT);
+        if (isset($_GET['viewforum']) && $forum_id) {
+            $baseLink = INFUSIONS.'forum/index.php?viewforum&forum_id='.$forum_id.($parent_id ? '&amp;parent_id='.$parent_id : '');
         }
 
         $timeLink = $baseLink.$typeExt.$sortExt.$orderExt;
