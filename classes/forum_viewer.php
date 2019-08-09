@@ -229,6 +229,7 @@ class Forum_Viewer {
             'links_per_page'    => FALSE,
             'show_banner' => TRUE,
             'show_header' => TRUE,
+            'custom_banner_link' => FORUM.'index.php',
             'custom_banner' => '<h4>'.$locale['forum_0000'].'</h4>',
             //'html_content'      => openform('forum_searchFrm', 'post', FUSION_REQUEST, ["class" => "pull-right"]).form_text("forum_search", "", "", ["placeholder" => "Search...", "class" => "m-0 center-y", "feedback_icon" => TRUE, "icon" => "fas fa-search text-dark"]).closeform(),
         ];
@@ -1267,7 +1268,7 @@ class Forum_Viewer {
         return $html->get_output();
     }
 
-    public function display_quick_reply($info) {
+    public function displayQuickReply($info) {
         $file_path = get_forum_template('forum_qrform');
         $html = \PHPFusion\Template::getInstance('forum-quick-reply');
         $html->set_tag('description', $info['description']);

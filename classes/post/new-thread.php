@@ -58,7 +58,7 @@ class New_Thread extends Forum_Server {
 
                 add_to_title($locale['forum_0000'].$locale['global_201'].$locale['forum_0057']);
                 add_to_meta("description", $locale['forum_0000']);
-                add_breadcrumb(["link" => FORUM."index.php", "title" => $locale['forum_0000']]);
+                add_breadcrumb(['link' => FORUM.'index.php', 'title' => $locale['forum_0000']]);
 
                 $forum_data = dbarray(dbquery("SELECT f.*, f2.forum_name AS forum_cat_name
                 FROM ".DB_FORUMS." f
@@ -79,7 +79,7 @@ class New_Thread extends Forum_Server {
 
                 self::setPermission($forum_data);
 
-                 if (self::getPermission('can_post') && self::getPermission('can_access')) {
+                if (self::getPermission('can_post') && self::getPermission('can_access')) {
                     add_breadcrumb([
                         'link'  => INFUSIONS.'forum/index.php?viewforum&amp;forum_id='.$forum_data['forum_id'],
                         'title' => $forum_data['forum_name']
@@ -249,7 +249,7 @@ class New_Thread extends Forum_Server {
 
                                 dbquery("UPDATE ".DB_USERS." SET user_posts=user_posts+1 WHERE user_id=:uid", [':uid' => intval($post_data['post_author'])]);
 
-                                $this->updateThreadStat($post_data['forum_id'], $last_thread_id, $post_data['post_id'], $post_data['post_author'], $thread_data['thread_subject'],  $post_data['post_message'], TIME);
+                                $this->updateThreadStat($post_data['forum_id'], $last_thread_id, $post_data['post_id'], $post_data['post_author'], $thread_data['thread_subject'], $post_data['post_message'], TIME);
 
                                 // set notify
                                 if ($forum_settings['thread_notify'] && $post_data['notify_me'] && $post_data['thread_id']) {
@@ -306,7 +306,8 @@ class New_Thread extends Forum_Server {
                                 'required'    => 1,
                                 'placeholder' => $locale['forum_2001'],
                                 'error_text'  => '',
-                                'class'       => 'm-t-20 m-b-20'
+                                'class'       => 'm-t-20 m-b-20',
+                                'class'       => 'form-group-lg',
                             ]),
                         'tags_field'        => form_select('thread_tags[]', "", $thread_data['thread_tags'],
                             [
@@ -318,14 +319,16 @@ class New_Thread extends Forum_Server {
                                 'max_select'  => 3, // to do settings on this
                             ]),
                         "message_field"     => form_textarea("post_message", "", $post_data['post_message'], [
-                            "required"    => TRUE,
-                            "autosize"    => TRUE,
-                            "no_resize"   => TRUE,
-                            "preview"     => FALSE,
-                            "form_name"   => "input_form",
-                            "type"        => "bbcode",
-                            "height"      => "300px",
-                            "placeholder" => $locale['forum_0601'],
+                            'required'    => TRUE,
+                            'preview'     => FALSE,
+                            'form_name'   => 'input_form',
+                            'type'        => 'bbcode',
+                            'height'      => '300px',
+                            'placeholder' => $locale['forum_0601'],
+                            'bbcode'      => TRUE,
+                            'height'      => '500px',
+                            'grippie'     => TRUE,
+                            'tab'         => TRUE,
                         ]),
                         'attachment_field'  => self::getPermission("can_upload_attach") ?
                             form_fileinput('file_attachments[]',
@@ -581,9 +584,10 @@ class New_Thread extends Forum_Server {
                             'query'        => (multilang_table('FO') ? 'WHERE forum_language="'.LANGUAGE.'"' : ''),
                         ],
                         DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat'),
-                    'subject_field'     => form_text('thread_subject', '', $thread_data['thread_subject'], [
-                        'required'    => 1,
-                        'placeholder' => $locale['forum_0051'],
+                    'subject_field'     => form_text('thread_subject', $locale['forum_0051'], $thread_data['thread_subject'], [
+                        'required'    => TRUE,
+                        'placeholder' => $locale['forum_2001'],
+                        'class'       => 'form-group-lg',
                     ]),
                     'tags_field'        => form_select('thread_tags[]', '', $thread_data['thread_tags'],
                         [
@@ -596,13 +600,15 @@ class New_Thread extends Forum_Server {
                         ]),
                     'message_field'     => form_textarea('post_message', '', $post_data['post_message'], [
                         'required'    => TRUE,
-                        'autosize'    => TRUE,
-                        'no_resize'   => TRUE,
                         'preview'     => FALSE,
                         'form_name'   => 'input_form',
                         'type'        => 'bbcode',
                         'height'      => '300px',
                         'placeholder' => $locale['forum_0601'],
+                        'bbcode'      => TRUE,
+                        'height'      => '500px',
+                        'grippie'     => TRUE,
+                        'tab'         => TRUE,
                     ]),
                     'attachment_field'  => '',
                     'poll_form'         => '',
@@ -664,9 +670,9 @@ class New_Thread extends Forum_Server {
             foreach ($list_of_forums as $fid) {
                 $param = [
                     ':time' => $time,
-                    ':pid' => $post_id,
-                    ':uid' => $post_author,
-                    ':fid' => $fid
+                    ':pid'  => $post_id,
+                    ':uid'  => $post_author,
+                    ':fid'  => $fid
                 ];
                 dbquery($forum_sql, $param);
             }
@@ -679,7 +685,7 @@ class New_Thread extends Forum_Server {
         ];
         dbquery($forum_sql, $param);
 
-       // update current thread stats
+        // update current thread stats
         $sql = "UPDATE ".DB_FORUM_THREADS." SET thread_lastpost=:time, thread_lastpostid=:pid, thread_lastuser=:uid WHERE thread_id=:tid";
         $param = [
             ':time' => TIME,

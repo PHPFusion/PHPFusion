@@ -301,13 +301,14 @@ class Edit_Post {
                         'message_field'     => form_textarea('post_message', $locale['forum_0601'], $post_data['post_message'],
                             [
                                 'required'  => TRUE,
-                                'height'    => '300px',
                                 'preview'   => TRUE,
                                 'form_name' => 'input_form',
+                                'tab'       => TRUE,
+                                'input_id'  => 'thread-edit-form',
                                 'bbcode'    => TRUE,
+                                'height'    => '500px',
                                 'grippie'   => TRUE,
                                 'tab' => TRUE,
-                                'input_id'  => 'thread-edit-form'
                             ]),
                         // happens only in EDIT
                         'delete_field'      => form_checkbox('delete', $locale['forum_0624'], "", ['class' => 'm-b-10', 'type' => 'button', 'button_class' => 'btn-danger']),

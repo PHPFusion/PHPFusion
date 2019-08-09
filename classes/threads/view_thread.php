@@ -20,7 +20,6 @@ namespace PHPFusion\Infusions\Forum\Classes\Threads;
 
 use PHPFusion\BreadCrumbs;
 use PHPFusion\httpdownload;
-
 use PHPFusion\Infusions\Forum\Classes\Forum_Server;
 use PHPFusion\Infusions\Forum\Classes\Post\Edit_Post;
 
@@ -42,9 +41,8 @@ class View_Thread extends Forum_Server {
         $this->set_ThreadJs();
 
         $action = get('action');
-        $all_actions = [
-            'editpoll', 'deletepoll', 'newpoll', 'edit', 'reply', 'award', 'newbounty', 'editbounty'
-        ];
+        $all_actions = ['editpoll', 'deletepoll', 'newpoll', 'edit', 'reply', 'award', 'newbounty', 'editbounty'];
+
         if (in_array($action, $all_actions)) {
             switch ($action) {
                 case 'editpoll':
@@ -71,7 +69,7 @@ class View_Thread extends Forum_Server {
                     break;
                 case 'reply':
                     // Template
-                    return $this->render_reply_form();
+                    return $this->threadReplyForm();
                     break;
                 case 'award':
                     $bounty = new Forum_Bounty($info);
@@ -117,7 +115,7 @@ class View_Thread extends Forum_Server {
      * Displays Reply To A Thread Form
      * Template: function display_form_postform
      */
-    public function render_reply_form() {
+    public function threadReplyForm() {
 
         $thread = self::thread();
         $thread_info = $thread->getInfo();
@@ -134,19 +132,18 @@ class View_Thread extends Forum_Server {
         }
 
         // Make a JS version
-        if (isset($_POST['cancel']) && !empty($thread_data['thread_id'])) {
+        if (post('cancel') && !empty($thread_data['thread_id'])) {
             if (fusion_get_settings("site_seo")) {
                 redirect(fusion_get_settings("siteurl")."infusions/forum/viewthread.php?thread_id=".$thread_data['thread_id']);
             }
             redirect(FORUM.'viewthread.php?thread_id='.$thread_data['thread_id']);
-
         }
 
-        if ($thread->getThreadPermission("can_reply") && !empty($thread_data['thread_id'])) {
+        if ($thread->getThreadPermission('can_reply') && !empty($thread_data['thread_id'])) {
 
             add_to_title($locale['global_201'].$locale['forum_0360']);
+            add_breadcrumb(['link' => FUSION_REQUEST, 'title' => $locale['forum_0360']]);
             //add_to_footer("<script src='".FORUM."templates/ajax/post_preview.js'></script>");
-            BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['forum_0360']]);
 
             // field data
             $post_data = [
@@ -170,7 +167,7 @@ class View_Thread extends Forum_Server {
             ];
 
             // execute form post actions
-            if (isset($_POST['post_reply'])) {
+            if (post('post_reply')) {
 
                 require_once INCLUDES."flood_include.php";
 
@@ -313,54 +310,61 @@ class View_Thread extends Forum_Server {
             }
 
             $info = [
-                "title"             => $locale['forum_0360'],
-                "description"       => $locale['forum_2000'].$thread_data['thread_subject'],
-                "openform"          => openform("input_form", "post", $form_action, ["enctype" => $thread->getThreadPermission("can_upload_attach")]).form_hidden("preview_src_file", "", INCLUDES."dynamics/assets/preview/preview.ajax.php"),
-                "closeform"         => closeform(),
-                "preview_box"       => "<div id='preview_box'></div>",
-                "forum_id_field"    => form_hidden('forum_id', "", $post_data['forum_id']),
-                "thread_id_field"   => form_hidden('thread_id', "", $post_data['thread_id']),
-                "forum_field"       => "",
-                "tags_field"        => "",
-                "subject_field"     => form_hidden('thread_subject', "", $thread_data['thread_subject']),
+                'title'             => $locale['forum_0360'],
+                'description'       => $locale['forum_2000'].$thread_data['thread_subject'],
+                'openform'          => openform('input_form', 'post', $form_action, ['enctype' => $thread->getThreadPermission('can_upload_attach')]).form_hidden('preview_src_file', '', INCLUDES.'dynamics/assets/preview/preview.ajax.php'),
+                'closeform'         => closeform(),
+                'preview_box'       => '<div id="preview_box"></div>',
+                'forum_id_field'    => form_hidden('forum_id', '', $post_data['forum_id']),
+                'thread_id_field'   => form_hidden('thread_id', '', $post_data['thread_id']),
+                'forum_field'       => '',
+                'tags_field'        => '',
+                "subject_field"     => form_hidden('thread_subject', $locale['forum_0051'], $thread_data['thread_subject'], [
+                    'required'    => 1,
+                    'placeholder' => $locale['forum_2001'],
+                    'error_text'  => '',
+                    'class'       => 'm-t-20 m-b-20',
+                    'class'       => 'form-group-lg',
+                ]),
                 "message_field"     => form_textarea('post_message', $locale['forum_0601'], $post_data['post_message'],
                     [
-                        "required"  => TRUE,
-                        "preview"   => TRUE,
-                        "form_name" => "input_form",
-                        "bbcode"    => TRUE,
-                        "height"    => "500px",
-                        'grippie' => TRUE,
+                        'required'  => TRUE,
+                        'preview'   => TRUE,
+                        'form_name' => 'input_form',
+                        'bbcode'    => TRUE,
+                        'height'    => '500px',
+                        'grippie'   => TRUE,
+                        'tab'       => TRUE,
                     ]),
                 // happens only in EDIT
                 "delete_field"      => "",
                 "edit_reason_field" => "",
                 "attachment_field"  => $thread->getThreadPermission("can_upload_attach") ?
-                    form_fileinput("file_attachments[]", $locale['forum_0557'], "",
-                        ["input_id"    => "file_attachments",
-                         "upload_path" => INFUSIONS.'forum/attachments/',
-                         "type"        => "object",
-                         "template"    => "modern",
-                         "multiple"    => TRUE,
-                         "inline"      => FALSE,
-                         "max_count"   => $forum_settings['forum_attachmax_count'],
-                         "valid_ext"   => $forum_settings['forum_attachtypes'],
-                         "max_byte"    => $forum_settings['forum_attachmax'],
-                         "class"       => "m-b-0",
+                    form_fileinput('file_attachments[]', $locale['forum_0557'], '',
+                        ['input_id'    => 'file_attachments',
+                         'upload_path' => INFUSIONS.'forum/attachments/',
+                         'type'        => 'object',
+                         'template'    => 'modern',
+                         'multiple'    => TRUE,
+                         'inline'      => FALSE,
+                         'max_count'   => $forum_settings['forum_attachmax_count'],
+                         'valid_ext'   => $forum_settings['forum_attachtypes'],
+                         'max_byte'    => $forum_settings['forum_attachmax'],
+                         'class'       => 'm-b-0',
                         ])."
                         <div class='m-b-20'>\n<small>".sprintf($locale['forum_0559'], parsebytesize($forum_settings['forum_attachmax']), str_replace('|', ', ', $forum_settings['forum_attachtypes']), $forum_settings['forum_attachmax_count'])."</small>\n</div>\n"
                     : "",
-                "poll_form"         => "",
+                'poll_form'         => '',
                 "smileys_field"     => form_checkbox('post_smileys', $locale['forum_0169'], $post_data['post_smileys'], ['class' => 'm-b-0', 'type' => 'button', 'ext_tip' => $locale['forum_0622']]),
                 "signature_field"   => (array_key_exists("user_sig", $userdata) && $userdata['user_sig']) ? form_checkbox('post_showsig', $locale['forum_0264'], $post_data['post_showsig'], ['class' => 'm-b-0', 'type' => 'button', 'ext_tip' => $locale['forum_0170']]) : "",
-                "sticky_field"      => "",
-                "lock_field"        => "",
-                "hide_edit_field"   => "",
-                "post_locked_field" => "",
+                'sticky_field'      => '',
+                'lock_field'        => '',
+                'hide_edit_field'   => '',
+                'post_locked_field' => '',
                 // not available in edit mode.
                 "notify_field"      => $forum_settings['thread_notify'] ? form_checkbox('notify_me', $locale['forum_0552'], $post_data['notify_me'], ['class' => 'm-b-0', 'type' => 'button', 'ext_tip' => $locale['forum_0171']]) : "",
                 "post_buttons"      => form_button('post_reply', $locale['forum_0172'], $locale['forum_0172'], ['class' => 'btn-primary']).form_button('cancel', $locale['cancel'], $locale['cancel'], ['class' => 'btn-default m-l-10']),
-                "last_posts_reply"  => ""
+                'last_posts_reply'  => ''
             ];
 
             // only in reply

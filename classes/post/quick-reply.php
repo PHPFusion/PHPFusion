@@ -30,7 +30,7 @@ class Quick_Reply extends Forum_Server {
      *
      * @return string
      */
-    public static function display_quickReply($info, array $options = array()) {
+    public static function display_quickReply($info, array $options = []) {
         $default_options = [
             "post_id"    => 0, // reply to post id
             "quote"      => FALSE, // attach reply as quote
@@ -76,14 +76,14 @@ class Quick_Reply extends Forum_Server {
                     [
                         'input_id'    => $textarea_id,
                         'placeholder' => $locale['forum_0601']."...",
-                        'autosize'    => TRUE,
-                        'no_resize'   => TRUE,
-                        'bbcode'      => TRUE,
-                        'required'    => TRUE,
-                        'preview'     => TRUE,
-                        'input_id' => 'thread-qr-form',
-                        'form_name'   => $form_name,
-                        'height'      => '250px'
+                        'required'  => TRUE,
+                        'preview'   => TRUE,
+                        'input_id'  => 'thread-qr-form',
+                        'form_name' => $form_name,
+                        'height'    => '300px',
+                        'bbcode'    => TRUE,
+                        'grippie'   => TRUE,
+                        'tab'       => TRUE,
                     ]),
                 'button'  => form_button('post_quick_reply', $locale['forum_0172'], $locale['forum_0172'], ['class' => 'btn-primary']),
                 'options' => $options_field

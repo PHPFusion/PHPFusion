@@ -38,7 +38,7 @@ if (!function_exists('render_thread')) {
  */
 if (!function_exists("display_quick_reply")) {
     function display_quick_reply($info) {
-        return \PHPFusion\Infusions\Forum\Classes\Forum_Viewer::getInstance()->display_quick_reply($info);
+        return \PHPFusion\Infusions\Forum\Classes\Forum_Viewer::getInstance()->displayQuickReply($info);
     }
 }
 

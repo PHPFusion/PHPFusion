@@ -443,7 +443,7 @@ abstract class Forum_Server {
      *
      * @return \PHPFusion\Infusions\Forum\Classes\Post\New_Thread
      */
-    public static function new_thread($set_info = TRUE) {
+    public static function newThread($set_info = TRUE) {
         if (empty(self::$new_thread_instance)) {
             self::$new_thread_instance = new New_Thread();
             if ($set_info == TRUE) {
