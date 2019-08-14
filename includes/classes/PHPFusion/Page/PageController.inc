@@ -76,7 +76,7 @@ class PageController extends PageModel {
         if (fusion_get_settings("allow_php_exe")) {
             eval("?>".stripslashes($colData['page_content'])."<?php ");
         } else {
-            echo "<p>".parse_textarea($colData['page_content'])."</p>\n";
+            echo "<p>".parse_textarea($colData['page_content'], TRUE, TRUE, TRUE, IMAGES, FALSE, FALSE)."</p>\n";
         }
 
         $eval = ob_get_contents();

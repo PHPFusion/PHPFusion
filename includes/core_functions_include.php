@@ -609,10 +609,11 @@ function parse_imageDir($data, $prefix_ = "") {
  * @param bool|TRUE  $decode
  * @param string     $default_image_folder
  * @param bool|FALSE $add_line_breaks
+ * @param bool       $descript
  *
  * @return string
  */
-function parse_textarea($text, $smileys = TRUE, $bbcode = TRUE, $decode = TRUE, $default_image_folder = IMAGES, $add_line_breaks = FALSE) {
+function parse_textarea($text, $smileys = TRUE, $bbcode = TRUE, $decode = TRUE, $default_image_folder = IMAGES, $add_line_breaks = FALSE, $descript = TRUE) {
     $text = $decode == TRUE ? html_entity_decode(stripslashes($text), ENT_QUOTES, fusion_get_locale('charset')) : $text;
     $text = $decode == TRUE ? html_entity_decode($text, ENT_QUOTES, fusion_get_locale('charset')) : $text; // decode for double encoding.
     $text = !empty($default_image_folder) ? parse_imageDir($text, $default_image_folder) : $text;
@@ -620,7 +621,7 @@ function parse_textarea($text, $smileys = TRUE, $bbcode = TRUE, $decode = TRUE, 
     $text = $bbcode == TRUE ? parseubb($text) : $text;
     $text = fusion_parse_user($text);
     $text = $add_line_breaks ? nl2br($text) : $text;
-    $text = descript($text);
+    $text = $descript == TRUE ? descript($text) : $text;
 
     return (string)$text;
 }
