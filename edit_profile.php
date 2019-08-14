@@ -21,6 +21,10 @@ $locale = fusion_get_locale('', LOCALE.LOCALESET.'user_fields.php');
 $user_name_change = fusion_get_settings('userNameChange');
 require_once THEMES."templates/global/profile.php";
 
+if (!iMEMBER) {
+    redirect(BASEDIR.fusion_get_settings('opening_page'));
+}
+
 // The output class
 $userFields = \PHPFusion\UserFields::getInstance();
 $userFields->post_name = "update_profile";
