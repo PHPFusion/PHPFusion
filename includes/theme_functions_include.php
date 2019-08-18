@@ -1170,9 +1170,12 @@ if (!function_exists("tab_active")
          */
         public function opentabbody($id, $link_active_arrkey = FALSE, $key = FALSE) {
             $key = $key ? $key : 'section';
+
+            $bootstrap = defined('BOOTSTRAP4') ? ' show' : '';
+
             if (isset($_GET[$key]) && $this->link_mode) {
                 if ($link_active_arrkey == $id) {
-                    $status = 'in active show';
+                    $status = 'in active'.$bootstrap;
                 } else {
                     $status = '';
                 }
@@ -1184,7 +1187,7 @@ if (!function_exists("tab_active")
                         }
                     }
                 }
-                $status = ($link_active_arrkey == $id ? " in active show" : '');
+                $status = ($link_active_arrkey == $id ? " in active".$bootstrap : '');
 
             }
             return "<div class='tab-pane fade".$status."' id='".$id."'>\n";
