@@ -2749,28 +2749,47 @@ class QuantumFields extends \SqlHandler {
 
     /**
      * Return sanitized post values of input fields
-     *
-     * @param            $db
-     * @param            $primary_key
-     * @param bool|FALSE $callback_data
+     * @param      $db
+     * @param      $primary_key
+     * @param bool $callback_data
      *
      * @return array
+     * @throws \Exception
      */
     public function return_fields_input($db, $primary_key, $callback_data = FALSE) {
         $output_fields = [];
+        //print_P($this->field_cat_index);
 
-        $field = flatten_array($this->fields);
+        // default section id
+        $indexes = array_reverse($this->field_cat_index[0]);
+        $sec_id = array_pop($indexes);
+
+        $cur_section = isset($_GET['section']) && in_array($_GET['section'], array_values($this->field_cat_index[0])) ? (int) $_GET['section'] : $sec_id;
+        // get current section categories
+        $cur_cid = array_values($this->field_cat_index[$cur_section]);
+        $fields = [];
+        foreach($cur_cid as $category_id) {
+            if (isset($this->fields[$category_id])) {
+                $fields[] = $this->fields[$category_id];
+            }
+        }
+        // print_P($fields);
+        // selected fields to push
+        $field = flatten_array($fields);
         if ($callback_data == TRUE) {
             $output_fields[$db] = $this->callback_data;
         }
+
         foreach ($field as $arr => $field_data) {
             $target_database = $field_data['field_cat_db'] ? DB_PREFIX.$field_data['field_cat_db'] : $db;
             $col_name = $field_data['field_cat_index'] ? $field_data['field_cat_index'] : $primary_key;
             // Find index primary key value
-            $primaryKeyVal = isset($_POST[$col_name]) ? form_sanitizer($_POST[$col_name], '', $col_name) : '';
+            $primaryKeyVal = isset($_POST[$col_name]) ? form_sanitizer($_POST[$col_name], $field_data['field_default'], $col_name) : '';
             if (!isset($output_fields[$target_database][$col_name])) {
                 $output_fields[$target_database][$col_name] = $primaryKeyVal;
             }
+
+            $output_fields[$target_database][$field_data['field_name']] = $field_data['field_default'];
             // Set input as default if posted but blank
             if (isset($_POST[$field_data['field_name']])) {
                 $output_fields[$target_database][$field_data['field_name']] =
@@ -2788,9 +2807,10 @@ class QuantumFields extends \SqlHandler {
 
     /**
      * Logs the user actions
-     *
      * @param $db
      * @param $primary_key
+     *
+     * @throws \Exception
      */
     public function log_user_action($db, $primary_key) {
         if (\defender::safe()) {
