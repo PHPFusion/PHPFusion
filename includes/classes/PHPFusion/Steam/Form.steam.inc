@@ -19,4 +19,9 @@ class Form {
         return \Form::form_input($input_name, $label, $input_value, $options);
     }
 
+    public function checkbox($input_name, $label, $input_value, $options) {
+        return \Form::form_checkbox($input_name, $label, $input_value, $options);
+    }
+
+
 }

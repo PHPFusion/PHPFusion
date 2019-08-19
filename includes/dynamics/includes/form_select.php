@@ -551,8 +551,8 @@ function form_select($input_name, $label = "", $input_value, array $options = []
     }
 
     $config = [
-        'input_name'     => $input_name,
-        'title'          => trim($title, '[]'),
+        'input_name'     => clean_input_name($input_name),
+        'title'          => clean_input_name($title),
         'id'             => $options['input_id'],
         'type'           => 'dropdown',
         'regex'          => $options['regex'],
@@ -657,16 +657,18 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
     } else {
         $encoded = json_encode([]);
     }
+
     Defender::getInstance()->add_field_session([
-        'input_name' => $input_name,
-        'title'      => $title,
+        'input_name' => clean_input_name($input_name),
+        'title'      => clean_input_name($title),
         'id'         => $options['input_id'],
         'type'       => 'dropdown',
         'required'   => $options['required'],
         'safemode'   => $options['safemode'],
         'error_text' => $options['error_text']
     ]);
-    \PHPFusion\OutputHandler::addToJQuery("
+
+    add_to_jquery("
         function avatar(item) {
             if(!item.id) {return item.text;}
             var avatar = item.avatar;

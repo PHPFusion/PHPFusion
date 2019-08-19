@@ -16,26 +16,24 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
+add_to_head('<link rel="stylesheet" href="'.INCLUDES.'bbcodes/code/prism.css" type="text/css"/>');
+add_to_footer('<script src="'.INCLUDES.'bbcodes/code/prism.js"></script>');
 
 if (preg_match_all('#\[code(=(.*?))?\](.*?)\[/code\]#si', $text) ||
     preg_match_all('#````(.*?)````#si', $text) ||
     preg_match_all('#\[php\](.*?)\[/php\]#si', $text) ||
     preg_match_all('#\[geshi=(.*?)\](.*?)\[/geshi\]#si', $text)
 ) {
-    add_to_head('<link rel="stylesheet" href="'.INCLUDES.'bbcodes/code/prism.css" type="text/css"/>');
-    add_to_footer('<script src="'.INCLUDES.'bbcodes/code/prism.js"></script>');
 
     $text = preg_replace_callback(
+
         "#\[code(=(?P<lang>.*?))?\](?P<code>.*?)\[/code\]#si",
         function ($m) use (&$i) {
-            global $pid;
+            $pid = get('pid', FILTER_VALIDATE_INT);
+            $thread_id = get('thread_id', FILTER_VALIDATE_INT);
 
-            $data = [];
+            if ($thread_id) {
 
-            add_to_head('<link rel="stylesheet" href="'.INCLUDES.'bbcodes/code/prism.css" type="text/css"/>');
-            add_to_footer('<script src="'.INCLUDES.'bbcodes/code/prism.js"></script>');
-
-            if (isset($_GET['thread_id'])) {
                 if (preg_match("/\/forum\//i", FUSION_REQUEST)) {
                     $result = dbquery("SELECT p.post_id, t.thread_id
                     FROM ".DB_FORUM_POSTS." p
@@ -48,25 +46,26 @@ if (preg_match_all('#\[code(=(.*?))?\](.*?)\[/code\]#si', $text) ||
             }
 
             $locale = fusion_get_locale();
-            if (preg_match("/\/forum\//i",
-                    FUSION_REQUEST) && isset($_GET['thread_id']) && (isset($data['post_id']) && isnum($data['post_id']))
-            ) { // this one rely on global.
-                $code_save = '<a class="pull-right m-t-0 btn btn-sm btn-default" href="'.INCLUDES.'bbcodes/code_bbcode_save.php?thread_id='.$_GET['thread_id'].'&amp;post_id='.$data['post_id'].'&amp;code_id='.$i.'"><i class="fa fa-download"></i> '.$locale['bb_code_save'].'</a>&nbsp;&nbsp;';
-            } else {
-                $code_save = '';
+
+            $code_save = '';
+            if (preg_match("/\/forum\//i", FUSION_REQUEST) && $thread_id && $pid) { // this one rely on global.
+                $code_save = '<a class="pull-right text-dark text-uppercase small" href="'.INCLUDES.'bbcodes/code_bbcode_save.php?thread_id='.$thread_id.'&amp;post_id='.$pid.'&amp;code_id='.$i.'">Download</a>&nbsp;&nbsp;';
             }
             $i++;
+            $code = formatcode($m['code']);
+            $steam = new \PHPFusion\Steam();
+            $html = $steam->load('Blocks')->code(
+                $locale['bb_code_code'],
+                '<pre><code class="language-'.(!empty($m['lang']) ? $m['lang'] : 'php').' line-numbers">{%code%}</code></pre>',
+                $code_save
+            );
+            // strip all template whitespace
+            $html = trim(preg_replace('/\s\s+/', '', $html));
+            $html = str_replace('{%code%}', $code, $html);
 
-            $html = '<div class="code_bbcode">';
-            $html .= '<div class="clearfix m-b-5"><strong>'.$locale['bb_code_code'].'</strong>'.$code_save.'</div>';
-            $lang = !empty($m['lang']) ? $m['lang'] : 'php';
-            $html .= '<pre><code class="language-'.$lang.'">'.formatcode($m['code']).'</code></pre>';
-            $html .= '</div>';
+            return (string)$html;
 
-            return $html;
-        },
-        $text
-    );
+        }, $text);
 
     /*
      * Adds a rule to ```` (markdown) to translate to <code>

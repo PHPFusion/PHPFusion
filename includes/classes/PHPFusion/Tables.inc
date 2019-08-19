@@ -537,7 +537,6 @@ class Tables {
                 }
             }
         }
-
         return $data;
     }
 
@@ -963,7 +962,7 @@ class Tables {
                     // do a count if count options is assigned
                     $count_num = '';
                     if (!empty($filters['count'])) {
-                        $count_num = " (".dbcount("(".$this->query['id'].")", $this->query['table'], $key.'=:key', [':key'=>$filter_key]).")";
+                        $count_num = " (".dbcount("(".$this->query['id'].")", $this->query['table'].' base', $key.'=:key', [':key'=>$filter_key]).")";
                     }
                     $filter_val = strtolower($filter);
                     $active_class = (get($key) == $filter_val) ? " class='strong'" : '';
@@ -1041,7 +1040,7 @@ class Tables {
             $html .= "<small class='pull-right m-t-5'>".format_word($this->maxRows, "item|items", ['html' => FALSE, 'format_num' => TRUE])."</small>\n";
         }
 
-        if ($this->table_props['delete_link'] === TRUE || $this->table_props['edit_link'] === TRUE || !empty($this->table_props['action_filters'])) {
+        if ($this->table_props['delete_link'] === TRUE || !empty($this->table_props['action_filters'])) {
             $html .= "<div class='display-inline-block m-r-15'>\n";
 
             $actions_options = [
@@ -1140,8 +1139,12 @@ class Tables {
         $html .= "<tbody>\n";
         // end of head
         if (!empty($cdata)) {
-            foreach ($cdata[$this->rowStart] as $data) {
 
+            if ($this->query['debug']) {
+                print_p($cdata);
+            }
+
+            foreach ($cdata[$this->rowStart] as $data) {
                 $id = $data[$this->getIdCol()];
                 // the edit link
                 // key need to be dynamic as the del and edit may be present.

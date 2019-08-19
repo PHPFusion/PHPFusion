@@ -169,4 +169,244 @@ class Form {
         return $tpl->get_output();
     }
 
+    /**
+     * Checkbox, Radio, Toggle Switch, Toggle Button
+     * @param $input_name
+     * @param $label
+     * @param $input_value
+     * @param $options
+     *
+     * @return string
+     * @throws ReflectionException
+     */
+    public static function form_checkbox($input_name, $label, $input_value, $options) {
+
+        // support inline if there are multiple options only.
+        $template = '
+        <div id="{%input_id%}-field" class="{%input_class%} form-group clearfix">
+            <label class="control-label{%label_class%}" data-checked="{%data_value%}"{%style%}>         
+            {%pre_checkbox%}
+            {%label%}
+            {required.{
+            <span class="required">&nbsp;*</span>
+            }}
+            {tip.{
+                <i class="pointer fa fa-question-circle text-lighter" title="{%title%}"></i>
+            }}            
+            {%post_checkbox%}                     
+            {stacked.{
+            <!--fusion stacked information-->{%content%}
+            }}            
+           
+           
+                                                                                        
+            </label>
+            {ext_tip.{
+            <br/><span class="tip"><i>{%tip_text%}</i></span>
+            }}
+            {error_message.{
+            <div class="input-error{%error_class%}">
+                <div id="{%input_id%}-help" class="label label-danger p-5 display-inline-block">{%error_text%}</div>
+            </div>
+            }}
+        </div>
+        ';
+
+        $button_template = '
+        <span class="button-checkbox">
+        <button type="button" class="btn btn-{%button_class%} {%class%}" data-color="{%button_class%}">$label</button>
+        <input name="{%input_name%}" id="{%input_id%}" type="checkbox" value="{%input_value%}" class="hidden">
+        </span>
+        ';
+
+        $tpl = \PHPFusion\Template::getInstance('field-'.$options['input_id']);
+
+
+
+        $tpl->set_text($template);
+        $tpl->set_tag('label', $label);
+        $tpl->set_tag('label_class', '');
+        $tpl->set_tag('style', '');
+
+        if ($options['type'] == 'button') {
+
+            $tpl->set_text($button_template);
+
+            $tpl->set_tag('button_class', $options['button_class']);
+            $tpl->set_tag('class', $options['class']);
+            if (!defined('btn-checkbox-js')) {
+                define('btn-checkbox-js', TRUE);
+                add_to_jquery("
+        	$('.button-checkbox').each(function () {
+            // Settings
+            var widget = $(this),
+            button = widget.find('button'),
+            checkbox = widget.find('input:checkbox'),
+            color = button.data('color'),
+            settings = {
+                on: {
+                    icon: 'glyphicon glyphicon-check fa-fw'
+                },
+                off: {
+                    icon: 'glyphicon glyphicon-unchecked fa-fw'
+                }
+            };
+        // Event Handlers
+        button.on('click', function () {
+            checkbox.prop('checked', !checkbox.is(':checked'));
+            checkbox.triggerHandler('change');
+            updateDisplay();
+        });
+        checkbox.on('change', function () {
+            updateDisplay();
+        });
+        // Actions
+        function updateDisplay() {
+            var isChecked = checkbox.is(':checked');
+            // Set the button's state
+            button.data('state', (isChecked) ? \"on\" : \"off\");
+            // Set the button's icon
+            button.find('.state-icon').removeClass().addClass('state-icon ' + settings[button.data('state')].icon);
+            // Update the button's color
+            if (isChecked) {
+                button.removeClass('btn-default').addClass('' + color + ' active');
+            } else {
+                button.removeClass('' + color + ' active').addClass('btn-default');
+            }
+        }
+        // Initialization
+        function init() {
+            updateDisplay();
+            // Inject the icon if applicable
+            if (button.find('.state-icon').length == 0) {
+                button.prepend('<i class=\"state-icon ' + settings[button.data('state')].icon + ' \"></i>');
+            }
+        }
+        init();
+        });
+        ");
+            }
+
+        } else {
+
+            // calculate all possible class
+            $wrapper_class[] = $options['type'] == 'radio' ? 'radio' : 'checkbox';
+            $wrapper_class[] = $options['class'];
+            if ($options['toggle']) {
+                $wrapper_class[] = 'is-bootstrap-switch';
+            }
+            if ($options['inline']) {
+                $wrapper_class[] = 'display-block overflow-hide';
+            }
+
+            if (\Defender::inputHasError($input_name)) {
+                $wrapper_class[] = "has-error ";
+                if (!empty($options['error_text'])) {
+                    $new_error_text = \Defender::getErrorText($input_name);
+                    if (!empty($new_error_text)) {
+                        $options['error_text'] = $new_error_text;
+                    }
+                    //addNotice("danger", "<strong>$title</strong> - ".$options['error_text']);
+                }
+            }
+            $tpl->set_tag("input_class", implode(' ', $wrapper_class));
+
+            if ($options['inline']) {
+                $tpl->set_tag('label_class', ' '.grid_column_size(100, 100, 25, 25));
+            }
+
+            $tpl->set_tag('data_value', (!empty($input_value) ? 1 : 0));
+
+            if ($options['inner_width']) {
+                $tpl->set_tag('style', ' style="width:'.$options['inner_width'].'px');
+            }
+
+            if (!empty($label)) {
+                if ($options['required']) {
+                    $tpl->set_block('required');
+                }
+                if ($options['tip']) {
+                    $tpl->set_block('tip', ['title' => $options['tip']]);
+                }
+            }
+            if (!empty($options['ext_tip'])) {
+                $tpl->set_block('ext_tip', ['tip_text' => $options['ext_tip']]);
+            }
+
+            if (\Defender::inputHasError($input_name)) {
+                $tpl->set_block("error_message", [
+                    'error_class' => (!$options['inline'] ? ' display-block' : ''),
+                    'input_id'    => $options['input_id'],
+                    'error_text'  => $options['error_text']
+                ]);
+            }
+
+            if ($options['stacked']) {
+                $tpl->set_block('stacked', $options['stacked']);
+            }
+
+            $on_label = $options['toggle_text'][1];
+            $off_label = $options['toggle_text'][0];
+
+            if ($options['keyflip']) {
+                $on_label = $options['toggle_text'][0];
+                $off_label = $options['toggle_text'][1];
+            }
+
+            $checkbox = "<div class='".(!empty($label) ? 'pull-left' : 'text-center')." m-r-10'>\n<input id='".$options['input_id']."' ".($options['toggle'] ? "data-on-text='".$on_label."' data-off-text='".$off_label."'" : "")." style='margin: 0;vertical-align: middle' name='$input_name' value='".$options['value']."' type='".$options['type']."' ".($options['deactivate'] ? 'disabled' : '')." ".($options['onclick'] ? 'onclick="'.$options['onclick'].'"' : '')." ".($input_value == $options['value'] ? 'checked' : '')." />\n</div>\n";
+
+            if (!empty($options['options']) && is_array($options['options'])) {
+                $options['toggle'] = FALSE; // force toggle to be false if options existed
+                $default_checked = FALSE;
+
+                if (!empty($input_value)) {
+                    $option_value = array_flip(explode($options['delimiter'], (string)$input_value)); // require key to value
+
+                }
+                // for checkbox only
+                // if there are options, and i want the options to be having input value.
+                // options_value
+                if ($options['type'] == 'checkbox' && count($options['options']) > 1) {
+                    $input_value = [];
+                    $default_checked = empty($option_value) ? TRUE : FALSE;
+                    foreach (array_keys($options['options']) as $key) {
+                        $input_value[$key] = isset($option_value[$key]) ? (!empty($options['options_value'][$key]) ? $options['options_value'][$key] : 1) : 0;
+                    }
+                }
+
+                $checkbox = '';
+                foreach ($options['options'] as $key => $value) {
+                    if ($options['deactivate_key'] !== NULL && $options['deactivate_key'] == $key) {
+                        $checkbox .= form_hidden($input_name, '', $key);
+                    }
+                    $checked = ($options['deactivate'] || $options['deactivate_key'] === $key ? 'disabled' : '').($options['onclick'] ? ' onclick="'.$options['onclick'].'"' : '');
+                    if ($options['type'] == 'checkbox' && count($options['options']) > 1) {
+                        $checked = ($input_value[$key] == TRUE || $default_checked && $key == FALSE ? ' checked' : '');
+                    } else {
+                        $checked .= ($input_value == $key || $default_checked && $key == FALSE ? ' checked' : '');
+                    }
+                    $checkbox .= "<div class='".($options['type'] == 'radio' ? 'radio' : 'checkbox').($options['inline_options'] ? ' display-inline-block m-r-5' : '')."'>\n";
+                    $checkbox .= "<label class='control-label m-r-10' data-label='$key' for='".$options['input_id']."-$key'".($options['inner_width'] ? " style='width: ".$options['inner_width']."'" : '').">";
+                    $checkbox .= "<input id='".$options['input_id']."-$key' name='$input_name' value='$key' type='".$options['type']."' $checked />\n";
+                    $checkbox .= $value;
+                    $checkbox .= "</label>\n";
+                    $checkbox .= "</div>\n";
+                }
+            }
+
+            $tpl->set_tag('post_checkbox', $checkbox);
+            $tpl->set_tag('pre_checkbox', '');
+            if ($options['label_reverse']) {
+                $tpl->set_tag('post_checkout', '');
+                $tpl->set_tag('pre_checkbox', $checkbox);
+            }
+        }
+
+        $tpl->set_tag("input_name", $input_name);
+        $tpl->set_tag("input_id", $options['input_id']);
+        $tpl->set_tag("input_type", $options['type']);
+
+
+        return $tpl->get_output();
+    }
 }

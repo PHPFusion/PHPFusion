@@ -391,19 +391,21 @@ class adminPanel extends resource {
      *
      * @return bool
      */
-    private static function check_current_active($url) {
+    private function checkCurrentActive($url) {
+
         if ($url!=='#' or $url !== "---") {
 
             if (empty(self::$current_url)) {
-                self::$current_url = ((array)parse_url(htmlspecialchars_decode($_SERVER['REQUEST_URI']))) + [
-                        'path'  => '',
-                        'query' => ''
-                    ];
+
+                self::$current_url = ( (array) parse_url(htmlspecialchars_decode(server('REQUEST_URI')))) + ['path'  => '','query' => ''];
+
                 self::$current_url['path'] = str_replace(INFUSIONS, '/infusions/', self::$current_url['path']);
+
                 if (self::$current_url['query']) {
                     parse_str(self::$current_url['query'], self::$current_url['current_query']);
                 }
             }
+
             $current_url = ((array)parse_url(htmlspecialchars_decode($url))) + [
                     'path'  => '',
                     'query' => ''
@@ -412,14 +414,18 @@ class adminPanel extends resource {
                 INFUSIONS => '/infusions/',
                 '..' => ''
             ]);
+
             if (self::$current_url['path'] == $current_url['path']) {
+
                 if (!empty($current_url['query'])) {
                     parse_str($current_url['query'], $queries);
                 }
 
-                if (isset(self::$current_url['current_query']) && isset($queries) && count(self::$current_url['current_query']) === count($queries)) {
-                    if (empty(array_diff(self::$current_url['current_query'], $queries))) {
-                        return TRUE;
+                if (isset(self::$current_url['current_query']) && isset($queries)) {
+                    if (count(self::$current_url['current_query']) === count($queries)) {
+                        if (empty(array_diff(self::$current_url['current_query'], $queries))) {
+                            return TRUE;
+                        }
                     }
                 }
             }
@@ -434,10 +440,13 @@ class adminPanel extends resource {
      *
      * @return bool
      */
-    private static function check_parent_active($admin_pages, $rights) {
+    private function checkParentActive($admin_pages, $rights) {
         if (isset($admin_pages[$rights])) {
             foreach($admin_pages[$rights] as $c_rights => $c_arr) {
-                if (self::check_current_active($c_arr['admin_link'])) {
+                if ($c_arr['admin_active']) {
+                    return TRUE;
+                }
+                if ($this->checkCurrentActive($c_arr['admin_link'])) {
                     return TRUE;
                 }
             }
@@ -455,16 +464,21 @@ class adminPanel extends resource {
      */
     private function __li($admin_pages, $array, $i = 0) {
         $html = &$html;
+
         foreach($array as $rights => $arr) {
             $class = '';
             $caret = '';
             $toggle_class = '';
             $in = '';
-            $match_p = '';
             $data_attr= '';
-            $match_c = self::check_current_active($arr['admin_link']);
-            $match_p = self::check_parent_active($admin_pages, $rights);
-            if ($match_c || $match_p) {
+            // child active
+            $match_c = $this->checkCurrentActive($arr['admin_link']);
+            //print_p($match_c);
+            // parent active
+            $match_p = $this->checkParentActive($admin_pages, $rights);
+            //print_p($match_p);
+
+            if ($match_c || $match_p || $arr['admin_active']) {
                 $class .= " class='active'";
                 if ($match_p) $in = " in";
             }
@@ -481,6 +495,7 @@ class adminPanel extends resource {
             $html .= "<li".$class.">\n";
             $html .= "<a".$toggle_class." href='".$arr['admin_link']."' $data_attr>".$arr['admin_image'].$arr['admin_title'].$caret."</a>\n";
             if (isset($admin_pages[$rights])) {
+                // now we need to check how many keys this guy has.
                 $html = &$html;
                 $html .= "<!--dropdown--->\n";
                 $html .= "<ul id='c-app-$rights' class='collapse".$in."'>".$this->__li($admin_pages, $admin_pages[$rights], $i)."</ul>\n";
@@ -503,31 +518,40 @@ class adminPanel extends resource {
         return '';
     }
 
+    private $active_rights = 0;
+
     private function display_admin_pages() {
         $aidlink = fusion_get_aidlink();
 
         $admin = Admins::getInstance();
 
         $sections = $admin->getAdminSections();
+        //print_P($sections);
 
         $admin_pages = $admin->getAdminPages();
+        //print_p($admin_pages, 1);
 
         $active_section = $admin->_isActive();
+        //print_p($active_section);
 
         $current_page = $admin->_currentPage();
+        //print_p($current_page);
 
         echo "<nav role='navigation'>";
         echo "<ul role='presentation'>\n";
-        $active_rights = 0;
+
         if (isset($sections[$active_section]) && !empty($admin_pages[$active_section])) { // the current active section is present.
+
             foreach($admin_pages[$active_section] as $key => $admin_data) {
                 if ($current_page == $admin_data['admin_link']) {
-                    $active_rights = $admin_data['admin_rights'];
+                    $this->active_rights = $admin_data['admin_rights']; // is correct
                 }
             }
+            //print_P($active_rights);
 
-            if (isset($admin_pages[$active_rights])) {
-                $sections = $admin_pages[$active_rights]; // this is just the root of subpage. dropdown array is not present.
+            if (isset($admin_pages[$this->active_rights])) {
+                // get current section
+                $sections = $admin_pages[$this->active_rights]; // this is just the root of subpage. dropdown array is not present.
                 if (!empty($sections)) {
                   echo $this->__li($admin_pages, $sections);
                 }

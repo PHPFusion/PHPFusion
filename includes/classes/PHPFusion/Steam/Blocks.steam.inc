@@ -20,6 +20,7 @@ class Blocks {
     public function box(array $options) {
 
         $default = [
+            'class'   => '',
             'title'       => '',
             'meta'        => '',
             'image_src'   => '',
@@ -35,24 +36,42 @@ class Blocks {
 
         $tpl->set_template($path);
 
-        if ($options['title'])
+        $tpl->set_tag('class', $options['class'] ? ' '.$options['class'] : '');
+
+        if ($options['title']) {
             $tpl->set_block('title', $options);
+        }
 
         if ($options['meta']) {
             $tpl->set_block('meta', $options);
         }
 
-        if ($options['image_src'])
+        if ($options['image_src']) {
             $tpl->set_block('image_src', $options);
+        }
 
-        if ($options['description'])
+        if ($options['description']) {
             $tpl->set_block('description', $options);
+        }
 
-        if ($options['footer'])
+        if ($options['footer']) {
             $tpl->set_block('footer', $options);
+        }
 
-        return $this->steam->render($tpl);
+        return (string) $this->steam->render($tpl);
+    }
 
+    public function code($title, $value, $save = '') {
+        $path = $this->steam->get_BoilerPath()."html".DIRECTORY_SEPARATOR."code.html";
+        $tpl = \PHPFusion\Template::getInstance('box');
+        $tpl->set_template($path);
+        $tpl->set_tag('title', $title);
+        $tpl->set_tag('code', $value);
+        if ($save) {
+            $tpl->set_block('save_link', ['link'=>$save]);
+        }
+
+        return (string) $this->steam->render($tpl);
     }
 
     public function openside($title = '') {

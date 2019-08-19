@@ -80,6 +80,20 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
 
     $options['input_id'] = trim(str_replace("[", "-", $options['input_id']), "]");
 
+    \Defender::add_field_session([
+        'input_name' => clean_input_name($input_name),
+        'title'      => clean_input_name($title),
+        'id'         => $options['input_id'],
+        'type'       => $options['type'],
+        'required'   => $options['required'],
+        'safemode'   => $options['safemode'],
+        'error_text' => $options['error_text'],
+        'delimiter'  => $options['delimiter'],
+    ]);
+
+    // $fusion_steam = new \PHPFusion\Steam('bootstrap3');
+    // return $fusion_steam->load('Form')->checkbox($input_name, $label, $input_value, $options);
+
     if (\Defender::inputHasError($input_name)) {
         $error_class = "has-error ";
         if (!empty($options['error_text'])) {
@@ -126,60 +140,6 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
     if ($options['type'] == 'button') {
 
         $checkbox .= "<span class='button-checkbox'><button type='button' class='btn btn-".$options['button_class']." ".$options['class']."' data-color='".$options['button_class']."'>$label</button><input name='$input_name' id='".$options['input_id']."' type='checkbox' value='".$options['value']."' class='hidden'></span>";
-
-        if (!defined('btn-checkbox-js')) {
-            define('btn-checkbox-js', TRUE);
-            add_to_jquery("
-        	$('.button-checkbox').each(function () {
-            // Settings
-            var widget = $(this),
-            button = widget.find('button'),
-            checkbox = widget.find('input:checkbox'),
-            color = button.data('color'),
-            settings = {
-                on: {
-                    icon: 'glyphicon glyphicon-check fa-fw'
-                },
-                off: {
-                    icon: 'glyphicon glyphicon-unchecked fa-fw'
-                }
-            };
-        // Event Handlers
-        button.on('click', function () {
-            checkbox.prop('checked', !checkbox.is(':checked'));
-            checkbox.triggerHandler('change');
-            updateDisplay();
-        });
-        checkbox.on('change', function () {
-            updateDisplay();
-        });
-        // Actions
-        function updateDisplay() {
-            var isChecked = checkbox.is(':checked');
-            // Set the button's state
-            button.data('state', (isChecked) ? \"on\" : \"off\");
-            // Set the button's icon
-            button.find('.state-icon').removeClass().addClass('state-icon ' + settings[button.data('state')].icon);
-            // Update the button's color
-            if (isChecked) {
-                button.removeClass('btn-default').addClass('' + color + ' active');
-            } else {
-                button.removeClass('' + color + ' active').addClass('btn-default');
-            }
-        }
-        // Initialization
-        function init() {
-            updateDisplay();
-            // Inject the icon if applicable
-            if (button.find('.state-icon').length == 0) {
-                button.prepend('<i class=\"state-icon ' + settings[button.data('state')].icon + ' \"></i>');
-            }
-        }
-        init();
-        });
-        ");
-        }
-
         $html = $checkbox;
         if ($error_class) {
             $html .= "<span class='m-l-10'></span><div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>";
@@ -251,17 +211,6 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
 
         $html .= "</div>\n";
     }
-
-    \Defender::add_field_session([
-        'input_name' => $input_name,
-        'title'      => trim($title, '[]'),
-        'id'         => $options['input_id'],
-        'type'       => $options['type'],
-        'required'   => $options['required'],
-        'safemode'   => $options['safemode'],
-        'error_text' => $options['error_text'],
-        'delimiter'  => $options['delimiter'],
-    ]);
 
     return (string)$html;
 }

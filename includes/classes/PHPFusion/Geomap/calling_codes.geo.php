@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__.'/../../../../../maincore.php';
+require_once __DIR__.'/../../../../maincore.php';
 
 /**
  * $q - iso2 country code

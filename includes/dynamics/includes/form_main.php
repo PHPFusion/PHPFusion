@@ -69,3 +69,8 @@ function openform($form_name, $method, $action_url = FORM_REQUEST, array $option
 function closeform() {
     return (string)"</form>\n";
 }
+
+function clean_input_name($value) {
+    $re = '/(\[\d+\])/';
+    return preg_replace($re, '', $value);
+}
