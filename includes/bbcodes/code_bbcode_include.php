@@ -26,30 +26,25 @@ if (preg_match_all('#\[code(=(.*?))?\](.*?)\[/code\]#si', $text) ||
 ) {
 
     $text = preg_replace_callback(
-
         "#\[code(=(?P<lang>.*?))?\](?P<code>.*?)\[/code\]#si",
         function ($m) use (&$i) {
+            $locale = fusion_get_locale();
             $pid = get('pid', FILTER_VALIDATE_INT);
-            $thread_id = get('thread_id', FILTER_VALIDATE_INT);
-
-            if ($thread_id) {
-
-                if (preg_match("/\/forum\//i", FUSION_REQUEST)) {
+            $tid = get('thread_id', FILTER_VALIDATE_INT);
+            $code_save = '';
+            if (preg_match("/\/forum\//i", FUSION_REQUEST)) {
+                if ($tid) {
                     $result = dbquery("SELECT p.post_id, t.thread_id
                     FROM ".DB_FORUM_POSTS." p
                     INNER JOIN ".DB_FORUM_THREADS." t ON t.thread_id = p.thread_id
-                    WHERE p.thread_id='".intval($_GET['thread_id'])."' AND p.post_id ='".intval($pid)."' AND post_hidden='0'
-                ");
-
+                    WHERE p.thread_id=:tid AND p.post_id=:pid AND post_hidden='0'
+                ", [
+                    'tid' => (int) $tid,
+                    ':pid' => (int) $pid
+                    ]);
                     $data = dbarray($result);
+                    $code_save = '<a class="pull-right text-dark text-uppercase small" href="'.INCLUDES.'bbcodes/code_bbcode_save.php?thread_id='.$data['thread_id'].'&amp;post_id='.$data['post_id'].'&amp;code_id='.$i.'">Download</a>&nbsp;&nbsp;';
                 }
-            }
-
-            $locale = fusion_get_locale();
-
-            $code_save = '';
-            if (preg_match("/\/forum\//i", FUSION_REQUEST) && $thread_id && $pid) { // this one rely on global.
-                $code_save = '<a class="pull-right text-dark text-uppercase small" href="'.INCLUDES.'bbcodes/code_bbcode_save.php?thread_id='.$thread_id.'&amp;post_id='.$pid.'&amp;code_id='.$i.'">Download</a>&nbsp;&nbsp;';
             }
             $i++;
             $code = formatcode($m['code']);
