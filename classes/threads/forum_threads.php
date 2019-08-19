@@ -609,6 +609,7 @@ class Forum_Threads extends Forum_Server {
 
             $this->rowstart = get('rowstart', FILTER_VALIDATE_INT);
             $this->rowstart = $this->rowstart && $this->rowstart <= $thread_stat['last_post_id'] ? $this->rowstart : 0;
+            $this->thread_data['rowstart'] = $this->rowstart;
 
             // Set the thread permissions
             $mods = Forum_Moderator::check_forum_mods($this->thread_data['forum_mods']);
