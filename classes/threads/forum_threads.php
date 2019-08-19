@@ -34,6 +34,8 @@ class Forum_Threads extends Forum_Server {
     private static $custom_query = ''; // make a default
     protected $thread_info = [];
     protected $thread_data = [];
+    private $rowstart = 0;
+
 
     /**
      * @param $query
@@ -52,7 +54,9 @@ class Forum_Threads extends Forum_Server {
      */
     public function getThreadInfo($forum_id = 0, array $filter = []) {
 
-        $info = [];
+        $info = [
+            'rowstart' => 0,
+        ];
 
         $locale = fusion_get_locale();
 
@@ -61,6 +65,7 @@ class Forum_Threads extends Forum_Server {
         $userdata = fusion_get_userdata();
 
         $userdata['user_id'] = !empty($userdata['user_id']) ? (int)intval($userdata['user_id']) : 0;
+
         $lastVisited = defined('LASTVISITED') ? LASTVISITED : TIME;
 
         $default_filter = [
@@ -78,6 +83,8 @@ class Forum_Threads extends Forum_Server {
 
         ];
         $filter += $default_filter;
+
+        $this->rowstart = get('rowstart', FILTER_VALIDATE_INT);
 
         // Get threads with filter conditions (XSS prevention)
         $info['count_query'] = $filter['count_query'] ?: "
@@ -115,14 +122,17 @@ class Forum_Threads extends Forum_Server {
         if ($info['thread_max_rows']) {
 
             // anti-XSS filtered rowstart
-            $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $info['thread_max_rows'] ? $_GET['rowstart'] : 0;
+            $this->rowstart = $this->rowstart && $this->rowstart <= $info['thread_max_rows'] ? $this->rowstart : 0;
+
+            $info['rowstart'] = $this->rowstart;
+
             $info['thread_query'] .= " LIMIT :rowstart, :tpp";
 
-            $cthread_result = dbquery($info['thread_query'], [":rowstart" => intval($_GET['rowstart']), ":tpp" => intval($forum_settings['threads_per_page'])]);
+            $cthread_result = dbquery($info['thread_query'], [":rowstart" =>(int) $this->rowstart, ":tpp" => intval($forum_settings['threads_per_page'])]);
 
             $info['thread_rows'] = dbrows($cthread_result);
 
-            $info['threads']['pagenav'] = ($info['thread_max_rows'] > $info['thread_rows'] ? makepagenav($_GET['rowstart'], $forum_settings['threads_per_page'], $info['thread_max_rows'], 3, clean_request('', ['rowstart']).'&rowstart=') : '');
+            $info['threads']['pagenav'] = ($info['thread_max_rows'] > $info['thread_rows'] ? makepagenav($this->rowstart, $forum_settings['threads_per_page'], $info['thread_max_rows'], 3, clean_request('', ['rowstart']).'&rowstart=') : '');
 
             $info['threads']['pagenav2'] = $info['threads']['pagenav'];
 
@@ -161,7 +171,9 @@ class Forum_Threads extends Forum_Server {
                         ];
                     $this->thread_data = $threads;
 
-                    $this->setThreadPermission(Forum_Moderator::check_forum_mods($threads['forum_mods']));
+                    $forum_mods = Forum_Moderator::check_forum_mods($threads['forum_mods']);
+
+                    $this->setThreadPermission($forum_mods);
 
                     // Find First Post Message
                     $first_post_query = "SELECT post_id, post_message, post_smileys, post_author, post_datestamp
@@ -358,9 +370,9 @@ class Forum_Threads extends Forum_Server {
             if ($info['thread_max_rows'] > $info['thread_rows']) {
                 $_page_nav_link = clean_request("", ["rowstart"], FALSE)."&amp;";
                 // navigation type
-                $info['threads']['pagenav'] = makepagenav($_GET['rowstart'], $forum_settings['threads_per_page'], $info['thread_max_rows'], 3, $_page_nav_link, 'rowstart', FALSE);
+                $info['threads']['pagenav'] = makepagenav($this->rowstart, $forum_settings['threads_per_page'], $info['thread_max_rows'], 3, $_page_nav_link, 'rowstart', FALSE);
                 // button type
-                $info['threads']['pagenav2'] = makepagenav($_GET['rowstart'], $forum_settings['threads_per_page'], $info['thread_max_rows'], 3, $_page_nav_link, 'rowstart', TRUE);
+                $info['threads']['pagenav2'] = makepagenav($this->rowstart, $forum_settings['threads_per_page'], $info['thread_max_rows'], 3, $_page_nav_link, 'rowstart', TRUE);
             }
         }
 
@@ -422,16 +434,18 @@ class Forum_Threads extends Forum_Server {
             ]
         ];
 
+        $type = get('type');
         $i = 0;
         foreach (array_keys($info['filters']['type']) as $key) {
-            if ((isset($_GET['type']) && $key == $_GET['type']) || ($i == 0 && !isset($_GET['type']))) {
+            if (($type && $key == $type) || ($i == 0 && !$type)) {
                 $info['filters']['type'][$key]['active'] = TRUE;
             }
             $i++;
         }
 
-        if (!empty($filter['debug']) && !$info['thread_max_rows'])
+        if (!empty($filter['debug']) && !$info['thread_max_rows']) {
             print_p($info);
+        }
 
         return (array)$info;
     }
@@ -506,10 +520,10 @@ class Forum_Threads extends Forum_Server {
 
     private function getForumId($key) {
 
-        $requested_id = get($key, FILTER_VALIDATE_INT);
+        $value = get($key, FILTER_VALIDATE_INT);
 
-        if (parent::verify_forum($requested_id)) {
-            return $requested_id;
+        if (parent::verify_forum($value)) {
+            return (int)$value;
         }
 
         return 0;
@@ -517,10 +531,10 @@ class Forum_Threads extends Forum_Server {
 
     public function getForumPostId($key) {
 
-        $requested_id = get($key, FILTER_VALIDATE_INT);
+        $value = get($key, FILTER_VALIDATE_INT);
 
-        if (parent::verify_post($requested_id)) {
-            return $requested_id;
+        if (parent::verify_post($value)) {
+            return (int) $value;
         }
 
         return 0;
@@ -531,13 +545,14 @@ class Forum_Threads extends Forum_Server {
      */
     public function setThreadInfo() {
 
-        $thread_id = get('thread_id');
+        $thread_id = get('thread_id', FILTER_VALIDATE_INT);
 
         if (!$thread_id || !isnum($thread_id)) {
             redirect(FORUM.'index.php');
         }
 
-        $forum_id = get('forum_id');
+        $forum_id = get('forum_id', FILTER_VALIDATE_INT);
+
         if ($forum_id) {
             if (isnum($forum_id)) {
                 if (!dbcount('(forum_id)', DB_FORUM_THREADS, "forum_id=:fid AND thread_id=:tid",
@@ -592,17 +607,15 @@ class Forum_Threads extends Forum_Server {
                 redirect(FORUM.'index.php');
             }
 
-            $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $thread_stat['last_post_id'] ? $_GET['rowstart'] : 0; // secure against XSS
-
-            $rowstart = get('rowstart', FILTER_VALIDATE_INT);
-            $rowstart = $rowstart && $rowstart <= $thread_stat['last_post_id'] ? $rowstart : 0;
+            $this->rowstart = get('rowstart', FILTER_VALIDATE_INT);
+            $this->rowstart = $this->rowstart && $this->rowstart <= $thread_stat['last_post_id'] ? $this->rowstart : 0;
 
             // Set the thread permissions
-            $this->setThreadPermission(Forum_Moderator::check_forum_mods($this->thread_data['forum_mods']));
+            $mods = Forum_Moderator::check_forum_mods($this->thread_data['forum_mods']);
+            $this->setThreadPermission($mods);
 
             // Set meta
             add_to_title($this->thread_data['thread_subject']);
-
             add_to_meta($locale['forum_0000']);
 
             if ($this->thread_data['forum_description'] !== '') {
@@ -620,7 +633,7 @@ class Forum_Threads extends Forum_Server {
             add_breadcrumb(['link' => FORUM.'viewthread.php?forum_id='.$this->thread_data['forum_id'].'&amp;thread_id='.$this->thread_data['thread_id'], 'title' => $this->thread_data['thread_subject']]);
 
             // Override $_GET['forum_id'] against tampering
-            $_GET['forum_id'] = intval($this->thread_data['forum_id']);
+            $_GET['forum_id'] = (int)$this->thread_data['forum_id'];
 
             /**
              * Generate User Tracked Buttons
@@ -661,7 +674,7 @@ class Forum_Threads extends Forum_Server {
             $thread_author = [
                 "user_id"      => -1,
                 "user_name"    => $locale['forum_0667'],
-                "user_avatar"  => "",
+                "user_avatar"  => '',
                 "user_level"   => USER_LEVEL_ADMIN,
                 "user_joined"  => TIME,
                 "user_status"  => 0,
@@ -725,10 +738,7 @@ class Forum_Threads extends Forum_Server {
                 /**
                  * Thread moderation form template
                  */
-                $addition = isset($_GET['rowstart']) ? "&amp;rowstart=".intval($_GET['rowstart']) : '';
-
-                $this->thread_info['form_action'] = fusion_get_settings('siteurl')."infusions/forum/viewthread.php?thread_id=".intval($this->thread_data['thread_id']).$addition;
-
+                $this->thread_info['form_action'] = fusion_get_settings('siteurl')."infusions/forum/viewthread.php?thread_id=".intval($this->thread_data['thread_id']).($this->rowstart ? "&amp;rowstart=".$this->rowstart : '');
                 $this->thread_info['mod_options'] = [
                     'renew'                                                      => $locale['forum_0207'],
                     'delete'                                                     => $locale['forum_0201'],
@@ -799,7 +809,7 @@ class Forum_Threads extends Forum_Server {
             $this->thread_info += [
                 'thread' => $this->thread_data,
                 'thread_id' => $this->thread_data['thread_id'],
-                'thread_link' => FORUM.'viewthread.php?thread_id='.$this->thread_data['thread_id'].($rowstart? '&amp;rowstart='.$rowstart : ''),
+                'thread_link' => FORUM.'viewthread.php?thread_id='.$this->thread_data['thread_id'].($this->rowstart ? '&amp;rowstart='.$this->rowstart : ''),
                 'forum_id' => $this->thread_data['forum_id'],
                 'thread_tags' => $this->thread_data['thread_tags'],
                 'thread_tags_display' => '',
@@ -835,7 +845,8 @@ class Forum_Threads extends Forum_Server {
                 'close_post_form' => '',
                 'mod_form' => '',
                 'mod_form_parts' => '',
-                'permissions' => $this->getThreadPermission()
+                'permissions' => $this->getThreadPermission(),
+                'rowstart' => $this->rowstart
             ];
 
             if (!empty($this->thread_info['thread_tags'])) {
@@ -847,7 +858,7 @@ class Forum_Threads extends Forum_Server {
              */
             $this->thread_info['buttons'] += [
                 'print'     => [
-                    'link'  => BASEDIR.'print.php?type=F&amp;item_id='.$this->thread_data['thread_id'].'&amp;rowstart='.$_GET['rowstart'],
+                    'link'  => BASEDIR.'print.php?type=F&amp;item_id='.$this->thread_data['thread_id'].($this->rowstart ? '&amp;rowstart='.$this->rowstart : ''),
                     'title' => $locale['forum_0178']
                 ],
                 'newthread' => $this->getThreadPermission('can_post') == TRUE ?
@@ -898,7 +909,7 @@ class Forum_Threads extends Forum_Server {
                     "forum_type"      => $this->thread_info['thread']['forum_type'],
                     "post_firstpost"  => $this->thread_info['post_firstpost'],
                     "post_lastpost"   => $this->thread_info['post_lastpost'],
-                    "rowstart"        => $_GET['rowstart'],
+                    "rowstart"        => $this->rowstart,
                     "post_count"      => $thread_stat['post_count'],
                     "thread_author"   => $this->thread_info['thread']['thread_author'],
                     "thread_answered" => $this->thread_info['thread']['thread_answered'],
@@ -990,21 +1001,21 @@ class Forum_Threads extends Forum_Server {
                 if (!flood_control("post_datestamp", DB_FORUM_POSTS, "post_author='".$userdata['user_id']."'")) { // have notice
                     $post_data = [
                         'post_id'         => 0,
-                        'forum_id'        => $this->thread_data['forum_id'],
-                        'thread_id'       => $this->thread_data['thread_id'],
-                        'post_message'    => form_sanitizer($_POST['post_message'], '', 'post_message'),
-                        'post_cat'        => form_sanitizer($_POST['post_cat'], "", "post_cat"),
+                        'forum_id'        => (int) $this->thread_data['forum_id'],
+                        'thread_id'       => (int) $this->thread_data['thread_id'],
+                        'post_message'    => sanitizer('post_message', '', 'post_message'),
+                        'post_cat'        => sanitizer('post_cat', '', 'post_cat'),
                         'post_showsig'    => isset($_POST['post_showsig']) ? 1 : 0,
                         'post_smileys'    => isset($_POST['post_smileys']) || preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $_POST['post_message']) ? 1 : 0,
-                        'post_author'     => $userdata['user_id'],
-                        'post_datestamp'  => time(),
+                        'post_author'     => (int) $userdata['user_id'],
+                        'post_datestamp'  => (int)TIME,
                         'post_ip'         => USER_IP,
                         'post_ip_type'    => USER_IP_TYPE,
-                        'post_edituser'   => 0,
-                        'post_edittime'   => 0,
+                        'post_edituser'   => (int)0,
+                        'post_edittime'   => (int)0,
                         'post_editreason' => '',
-                        'post_hidden'     => 0,
-                        'post_locked'     => $forum_settings['forum_edit_lock'] || isset($_POST['post_locked']) ? 1 : 0
+                        'post_hidden'     => (int)0,
+                        'post_locked'     => (int)$forum_settings['forum_edit_lock'] || isset($_POST['post_locked']) ? 1 : 0
                     ];
 
                     // Post category must be 0 if reply or quoted on first post.
@@ -1076,6 +1087,7 @@ class Forum_Threads extends Forum_Server {
         $forum_settings = self::get_forum_settings();
         $userdata = fusion_get_userdata();
         $locale = fusion_get_locale();
+
 
         $default_filter = [
             "forum_type"      => 0,
@@ -1287,7 +1299,7 @@ class Forum_Threads extends Forum_Server {
                 // Marker
                 $marker = [
                     'link'  => "#post_".$pdata['post_id'],
-                    "title" => "#".($i + $_GET['rowstart']),
+                    "title" => "#".($i + $this->rowstart),
                     'id'    => "post_".$pdata['post_id']
                 ];
 
@@ -1352,7 +1364,7 @@ class Forum_Threads extends Forum_Server {
                     "user_sig"           => '',
                     "user_message"       => $default_blank_arr,
                     'print'              => [
-                        'link'  => BASEDIR.'print.php?type=F&amp;item_id='.$thread_id.'&amp;post='.$pdata['post_id'].'&amp;nr='.($i + $_GET['rowstart']),
+                        'link'  => BASEDIR.'print.php?type=F&amp;item_id='.$thread_id.'&amp;post='.$pdata['post_id'].'&amp;nr='.($i + $this->rowstart),
                         'title' => $locale['forum_0179']
                     ],
                     'post_marker'        => $post_marker,

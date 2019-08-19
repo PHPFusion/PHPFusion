@@ -22,17 +22,16 @@ use PHPFusion\BreadCrumbs;
 use PHPFusion\httpdownload;
 use PHPFusion\Infusions\Forum\Classes\Forum_Server;
 use PHPFusion\Infusions\Forum\Classes\Post\Edit_Post;
+require_once THEMES."templates/header.php";
+require_once INCLUDES."infusions_include.php";
+require_once INFUSIONS."forum/forum_include.php";
+include INFUSIONS."forum/templates.php";
 
 class View_Thread extends Forum_Server {
 
-    public function __construct() {
-        require_once THEMES."templates/header.php";
-        require_once INCLUDES."infusions_include.php";
-        require_once INFUSIONS."forum/forum_include.php";
-        include INFUSIONS."forum/templates.php";
-    }
-
     private $thread_data = [];
+
+    public function __construct() {}
 
     public function display_thread() {
 
@@ -293,11 +292,12 @@ class View_Thread extends Forum_Server {
             }
 
             // Quote Get
-            if (isset($_GET['quote']) && isnum($_GET['quote'])) {
+            $quote = get('quote', FILTER_VALIDATE_INT);
+            if ($quote) {
                 $quote_result = dbquery("SELECT a.post_message, b.user_name
                                         FROM ".DB_FORUM_POSTS." a
                                         INNER JOIN ".DB_USERS." b ON a.post_author=b.user_id
-                                        WHERE thread_id='".intval($thread_data['thread_id'])."' AND post_id='".intval($_GET['quote'])."'");
+                                        WHERE thread_id=:tid AND post_id=:quote", [':quote'=>(int)$quote, ':tid'=>(int) $thread_data['thread_id'] ]);
 
                 if (dbrows($quote_result) > 0) {
                     require_once INCLUDES.'bbcode_include.php';
