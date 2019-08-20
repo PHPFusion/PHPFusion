@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: buildlist.php
-| Author: Johs Lind
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -17,46 +17,55 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
+$settings = fusion_get_settings();
+$locale = fusion_get_locale();
+
 $image_files = [];
-// images ------------------------
+
 $temp = opendir(IMAGES);
 while ($file = readdir($temp)) {
     if (!in_array($file, [".", "..", "/", "index.php", "imagelist.js"]) && !is_dir(IMAGES.$file)) {
-        $image_files[] = "['".self::$locale['422'].": ".$file."','".self::$settings['siteurl']."images/".$file."'], ";
+        $image_files[] = "['".$locale['422'].": ".$file."','".$settings['siteurl']."images/".$file."'], ";
     }
 }
 closedir($temp);
-// articles ---------------
-$temp = opendir(IMAGES_A);
-while ($file = readdir($temp)) {
-    if (!in_array($file, [".", "..", "/", "index.php"])) {
-        $image_files[] = "['".self::$locale['423'].": ".$file."','".self::$settings['siteurl']."infusions/articles/images/".$file."'], ";
+
+if (defined('IMAGES_A')) {
+    $temp = opendir(IMAGES_A);
+    while ($file = readdir($temp)) {
+        if (!in_array($file, [".", "..", "/", "index.php"])) {
+            $image_files[] = "['".$locale['423'].": ".$file."','".$settings['siteurl']."infusions/articles/images/".$file."'], ";
+        }
     }
+    closedir($temp);
 }
-closedir($temp);
-// news -------------------
-$temp = opendir(IMAGES_N);
-while ($file = readdir($temp)) {
-    if (!in_array($file, [".", "..", "/", "index.php"]) && !is_dir(IMAGES_N.$file)) {
-        $image_files[] = "['".self::$locale['424'].": ".$file."','".self::$settings['siteurl']."infusions/news/images/".$file."'], ";
+
+if (defined('IMAGES_N')) {
+    $temp = opendir(IMAGES_N);
+    while ($file = readdir($temp)) {
+        if (!in_array($file, [".", "..", "/", "index.php"]) && !is_dir(IMAGES_N.$file)) {
+            $image_files[] = "['".$locale['424'].": ".$file."','".$settings['siteurl']."infusions/news/images/".$file."'], ";
+        }
     }
+    closedir($temp);
 }
-closedir($temp);
-// news cats -------------------
-$temp = opendir(IMAGES_NC);
-while ($file = readdir($temp)) {
-    if (!in_array($file, [".", "..", "/", "index.php"]) && !is_dir(IMAGES_NC.$file)) {
-        $image_files[] = "['".self::$locale['427'].": ".$file."','".self::$settings['siteurl']."infusions/news/news_cats/".$file."'], ";
+
+if (defined('IMAGES_NC')) {
+    $temp = opendir(IMAGES_NC);
+    while ($file = readdir($temp)) {
+        if (!in_array($file, [".", "..", "/", "index.php"]) && !is_dir(IMAGES_NC.$file)) {
+            $image_files[] = "['".$locale['427'].": ".$file."','".$settings['siteurl']."infusions/news/news_cats/".$file."'], ";
+        }
     }
+    closedir($temp);
 }
-closedir($temp);
-// photoalbum -------------------
+
 if (defined('GALLERY_EXIST')) {
     $result = dbquery("
-    SELECT ".DB_PHOTO_ALBUMS.".album_title, ".DB_PHOTOS.".photo_id
-    FROM ".DB_PHOTO_ALBUMS.", ".DB_PHOTOS."
-    WHERE ".DB_PHOTO_ALBUMS.".album_id = ".DB_PHOTOS.".album_id
-");
+        SELECT ".DB_PHOTO_ALBUMS.".album_title, ".DB_PHOTOS.".photo_id
+        FROM ".DB_PHOTO_ALBUMS.", ".DB_PHOTOS."
+        WHERE ".DB_PHOTO_ALBUMS.".album_id = ".DB_PHOTOS.".album_id
+    ");
     $album = [];
     while ($data = dbarray($result)) {
         $album[] = $data['album_title'];
@@ -74,12 +83,14 @@ if (defined('GALLERY_EXIST')) {
                     break;
                 }
             }
-            $image_files[] = "['".$navn." album: ".$file."','".self::$settings['siteurl']."infusions/gallery/photos/".$file."'], ";
+            $image_files[] = "['".$navn." album: ".$file."','".$settings['siteurl']."infusions/gallery/photos/".$file."'], ";
         }
     }
     closedir($temp);
 }
+
 sort($image_files);
+
 // compile list -----------------
 if (isset($image_files)) {
     $indhold = "var tinyMCEImageList = new Array(";
