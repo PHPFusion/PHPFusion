@@ -41,7 +41,9 @@ if ($_POST['editor'] == 'html') {
     if (isset($_POST['mode']) && $_POST['mode'] == 'admin') {
         $images = str_replace('../../../', '', IMAGES);
         $text = str_replace(IMAGES, $images, $text);
-        $text = str_replace(IMAGES_N, $images, $text);
+        if (defined('IMAGES_N')) {
+            $text = str_replace(IMAGES_N, $images, $text);
+        }
         $text = parse_imageDir($text, $prefix_."images/");
     }
     echo nl2br(html_entity_decode($text, ENT_QUOTES, $locale['charset'])) ?: "<p class='text-center'>".$locale['nopreview']."</p>\n";
@@ -51,7 +53,9 @@ if ($_POST['editor'] == 'html') {
     if (isset($_POST['mode']) && $_POST['mode'] == 'admin') {
         $images = str_replace('../../../', '', IMAGES);
         $text = str_replace(IMAGES, $images, $text);
-        $text = str_replace(IMAGES_N, $images, $text);
+        if (defined('IMAGES_N')) {
+            $text = str_replace(IMAGES_N, $images, $text);
+        }
         $text = parse_imageDir($text, $prefix_."images/");
     }
     echo nl2br(html_entity_decode($text, ENT_QUOTES, $locale['charset'])) ?: "<p class='text-center'>".$locale['nopreview']."</p>\n";
@@ -61,7 +65,9 @@ if ($_POST['editor'] == 'html') {
     if (isset($_POST['mode']) && $_POST['mode'] == 'admin') {
         $images = str_replace('../../../', '', IMAGES);
         $text = str_replace(IMAGES, $images, $text);
-        $text = str_replace(IMAGES_N, $images, $text);
+        if (defined('IMAGES_N')) {
+            $text = str_replace(IMAGES_N, $images, $text);
+        }
     }
     echo parse_imageDir(nl2br(html_entity_decode($text, ENT_QUOTES, $locale['charset']))) ?: "<p class='text-center'>".$locale['nopreview']."</p>\n";
 }
