@@ -18,6 +18,7 @@
 namespace PHPFusion\Infusions\Forum\Classes\Postify;
 
 use PHPFusion\BreadCrumbs;
+use PHPFusion\Infusions\Forum\Classes\Forum_Moderator;
 use PHPFusion\Infusions\Forum\Classes\Forum_Postify;
 
 /**
@@ -44,7 +45,8 @@ class Postify_Answer extends Forum_Postify {
             )
         );
         if (!empty($thread_data)) {
-            Forum_Moderator::define_forum_mods($thread_data);
+
+            Forum_Moderator::setForumMods($thread_data);
 
             $title = '';
             $description = '';
@@ -53,7 +55,7 @@ class Postify_Answer extends Forum_Postify {
             // if this is an author or is a forum moderator
             if (($thread_data['thread_author'] == fusion_get_userdata('user_id') || iMOD)) {
                 add_to_title(self::$locale['global_201'].self::$locale['forum_4001']);
-                BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => self::$locale['forum_4001']]);
+                add_breadcrumb(['link' => FUSION_REQUEST, 'title' => self::$locale['forum_4001']]);
 
                 // Accepting the answer
                 // 3 scenarios
