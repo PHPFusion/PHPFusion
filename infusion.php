@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: infusion.php
-| Author: J.Falk (Falk)
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -28,6 +28,7 @@ $inf_email = "info@php-fusion.co.uk";
 $inf_weburl = "https://www.php-fusion.co.uk";
 $inf_folder = "news";
 $inf_image = "news.svg";
+$inf_rights = 'N';
 
 // Create tables
 $inf_newtable[] = DB_NEWS." (
@@ -179,3 +180,29 @@ $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='infusions/".$inf_folder."/news
 $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=n'";
 $inf_deldbrow[] = DB_LANGUAGE_TABLES." WHERE mlt_rights='NS'";
 $inf_deldbrow[] = DB_SUBMISSIONS." WHERE submit_type='n'";
+
+
+$inf[DB_NEWS] = [
+    'news_id'                  => ['type' => 'BIGINT', 'length' => 20, 'auto_increment' => TRUE, 'key' => 1, 'unsigned' => TRUE],
+    'news_subject'             => ['type' => 'TEXT', 'key' => 2],
+    'news_cat'                 => ['type' => 'BIGINT', 'length' => 20, 'unsigned' => TRUE, 'key' => 2],
+    'news_news'                => ['type' => 'TEXT'],
+    'news_extended'            => ['type' => 'LONGTEXT'],
+    'news_keywords'            => ['type' => 'VARCHAR', 'length' => '200'],
+    'news_breaks'              => ['type' => 'CHAR', 'length' => 1,],
+    'news_name'                => ['type' => 'BIGINT', 'length' => 20, 'key' => 2],
+    'news_datestamp'           => ['type' => 'INT', 'unsigned' => TRUE, 'length' => 10, 'key' => 2],
+    'news_start'               => ['type' => 'INT', 'unsigned' => TRUE, 'length' => 10, 'key' => 2],
+    'news_end'                 => ['type' => 'INT', 'unsigned' => TRUE, 'length' => 10, 'key' => 2],
+    'news_visibility'          => ['type' => 'TINYINT', 'length' => 4, 'key' => 2],
+    'news_reads'               => ['type' => 'INT', 'length' => 10, 'unsigned' => TRUE, 'default' => '0', 'key' => 2],
+    'news_draft'               => ['type' => 'TINYINT', 'length' => 1, 'unsigned' => TRUE, 'default' => '0'],
+    'news_sticky'              => ['type' => 'TINYINT', 'length' => 1, 'unsigned' => TRUE, 'default' => '0'],
+    'news_image_full_default'  => ['type' => 'BIGINT', 'length' => 20, 'unsigned' => TRUE, 'default' => '0'],
+    'news_image_front_default' => ['type' => 'BIGINT', 'length' => 20, 'unsigned' => TRUE, 'default' => '0'],
+    'news_image_front_default' => ['type' => 'BIGINT', 'length' => 20, 'unsigned' => TRUE, 'default' => '0'],
+    'news_image_align'         => ['type' => 'TINYINT', 'length' => 5], // this need to change, pull-left will not work on Semantic UI
+    'news_allow_comments'      => ['type' => 'TINYINT', 'length' => 1, 'unsigned' => TRUE, 'default' => '1'],
+    'news_allow_ratings'       => ['type' => 'TINYINT', 'length' => 1, 'unsigned' => TRUE, 'default' => '1'],
+    'news_language'            => ['type' => 'VARCHAR', 'length' => 50, 'unsigned' => TRUE, 'default' => LANGUAGE],
+];
