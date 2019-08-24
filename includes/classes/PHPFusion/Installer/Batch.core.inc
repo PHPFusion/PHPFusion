@@ -213,20 +213,20 @@ class Batch_Core extends Install_Core {
                             include $inf_include;
                             if (!empty($inf)) {
                                 foreach ($inf as self::$table_name => self::$table_cols) {
-                                    // now we need to modify a bit
-                                    if (db_exists(self::$table_name) && $upgrade === TRUE) {
-                                        /*
-                                         * Existing Installation
-                                         */
-                                        $this->check_existing_table(); //where is the one that runs upgrade?
+                                    if ($upgrade === TRUE && infusion_exists($folder) || $upgrade === FALSE) {
+                                        if (db_exists(self::$table_name)) {
+                                            /*
+                                             * Existing Installation
+                                             */
+                                            $this->check_existing_table(); //where is the one that runs upgrade?
+                                        } else {
+                                            /*
+                                             * New Installation
+                                             */
+                                            $this->create_new_table();
+                                        }
                                     }
 
-                                    if ($upgrade === FALSE && !db_exists(self::$table_name)) {
-                                        /*
-                                         * New Installation
-                                         */
-                                        $this->create_new_table();
-                                    }
                                 }
 
                                 // get the run time.
