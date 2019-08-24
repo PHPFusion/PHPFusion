@@ -264,6 +264,10 @@ if (isset($_GET['pagenum']) && isnum($_GET['pagenum'])) {
     }
 }
 
+\PHPFusion\Installer\Batch_Core::getInstance()->batchInfusions();
+
+$upgrade_info = \PHPFusion\Installer\Batch_Core::getInstance()->getUpgradeNotice();
+
 require_once ADMIN.'/dashboard/AdminDashboard.php';
 
 render_admin_dashboard();

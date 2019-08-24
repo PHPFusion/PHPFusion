@@ -190,8 +190,102 @@ class Batch_Core extends Install_Core {
         return ($key != NULL && isset(self::$runtime_results[$key]) ? self::$runtime_results[$key] : NULL);
     }
 
+
     /**
-     * When table exists, need to be checked for data-types consistencies and column name consistencies
+     * Get the infusions runtime results
+     *
+     * @return null
+     */
+    public function batchInfusions() {
+
+        if (self::$runtime_results === NULL) {
+
+            if (dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'], self::$connection['db_name'], TRUE)) {
+
+                // now load all infusion
+                $inf_folder = makefilelist(INFUSIONS, '.|..|.htaccess|index.php|._DS_Store|.tmp', TRUE, 'folders');
+                if (!empty($inf_folder)) {
+                    foreach ($inf_folder as $folder) {
+                        $inf_include = INFUSIONS.$folder."/infusion.php";
+                        $inf_rights = '';
+                        $inf_title = '';
+                        if (file_exists($inf_include)) {
+                            include $inf_include;
+                            if (!empty($inf)) {
+                                foreach ($inf as self::$table_name => self::$table_cols) {
+                                    // now we need to modify a bit
+                                    if (db_exists(self::$table_name)) {
+                                        /*
+                                         * Existing Installation
+                                         */
+                                        $this->check_existing_table(); //where is the one that runs upgrade?
+
+                                    } else {
+                                        /*
+                                         * New Installation
+                                         */
+                                        $this->create_new_table();
+                                    }
+                                }
+
+                                // get the run time.
+                                if (!empty(self::$runtime_results)) {
+                                    self::$infusion_runtime[$inf_rights] = self::$runtime_results;
+                                    self::$runtime_results = []; // resets
+
+                                    // there is an upgrade to do
+                                    $this->addUpgradeNotice($inf_rights, $inf_title);
+                                }
+                                unset($inf);
+                            }
+                        }
+                    } // end foreach
+
+                    if ($inf_rights = post('upgrade_infusion')) {
+                        if (isset(self::$infusion_runtime[$inf_rights])) {
+                            foreach (self::$infusion_runtime[$inf_rights] as $db_command_type => $inf_table) {
+                                foreach ($inf_table as $table_name => $table_query) {
+                                    if (!empty($table_query)) {
+                                        foreach($table_query as $sql_query) {
+                                            dbquery($sql_query);
+                                        }
+                                    }
+                                }
+                            }
+                            addNotice('success', 'Infusion has been upgraded to the latest version.');
+                            redirect(FUSION_REQUEST);
+                        }
+                    }
+
+                }
+            } else {
+                // failing to connect will result in an installer crash.
+                exit('Illegal operations');
+            }
+
+        } // end runtime null
+
+        return (array)self::$runtime_results;
+    }
+
+    private static $infusion_runtime = [];
+
+    private function addUpgradeNotice($inf_rights, $inf_title) {
+        self::$upgrade_info[$inf_rights] = [
+            'title'       => $inf_title,
+            'description' => 'There is an upgrade available for this infusion.'
+        ];
+    }
+
+    private static $upgrade_info = [];
+
+    public function getUpgradeNotice() {
+        return self::$upgrade_info;
+    }
+
+
+    /**
+     * When table exists, need to be checked for both data-types and column name consistencies
      */
     private function check_existing_table() {
 
@@ -472,6 +566,7 @@ class Batch_Core extends Install_Core {
 
     /**
      * Checks for Upgrade Files
+     *
      * @return array
      */
     public function check_upgrades() {

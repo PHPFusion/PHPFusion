@@ -31,7 +31,7 @@ class Infusion_Core {
     /**
      * Version 7 compatible infusions load constants.
      */
-    public static function load_Configuration() {
+    public function loadConfiguration() {
         /*
          * Non-core infusions_db.php inclusion.
          * These files are supposed to be infusion_db.php using Infusion SDK
@@ -113,8 +113,9 @@ class Infusion_Core {
 
     /**
      * Execute Installation according to Infusion Standard Developer Kit
-     *
      * @param $folder
+     *
+     * @return null
      */
     public function infuse($folder) {
         $error = FALSE;

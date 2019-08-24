@@ -311,4 +311,4 @@ set_theme(empty($userdata['user_theme']) ? fusion_get_settings("theme") : $userd
  * Reduction of 0.04 seconds in performance.
  * We can use manually include the configuration if needed.
  */
-\PHPFusion\Installer\Infusion_core::load_Configuration();
+\PHPFusion\Installer\Infusion_Core::getInstance()->loadConfiguration();

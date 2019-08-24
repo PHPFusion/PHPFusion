@@ -48,7 +48,7 @@ class AdminDashboard {
         'column_1' => ['summary', 'comments', 'ratings'],
         'column_2' => [],
         'column_3' => [],
-        'top'      => ['welcome']
+        'top'      => ['welcome', 'notice']
     ];
 
     private function getWidget($key) {
