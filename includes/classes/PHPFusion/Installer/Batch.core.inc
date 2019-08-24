@@ -190,13 +190,13 @@ class Batch_Core extends Install_Core {
         return ($key != NULL && isset(self::$runtime_results[$key]) ? self::$runtime_results[$key] : NULL);
     }
 
-
     /**
      * Get the infusions runtime results
+     * @param bool $upgrade
      *
-     * @return null
+     * @return array
      */
-    public function batchInfusions() {
+    public function batchInfusions($upgrade = FALSE) {
 
         if (self::$runtime_results === NULL) {
 
@@ -214,13 +214,14 @@ class Batch_Core extends Install_Core {
                             if (!empty($inf)) {
                                 foreach ($inf as self::$table_name => self::$table_cols) {
                                     // now we need to modify a bit
-                                    if (db_exists(self::$table_name)) {
+                                    if (db_exists(self::$table_name) && $upgrade === TRUE) {
                                         /*
                                          * Existing Installation
                                          */
                                         $this->check_existing_table(); //where is the one that runs upgrade?
+                                    }
 
-                                    } else {
+                                    if ($upgrade === FALSE && !db_exists(self::$table_name)) {
                                         /*
                                          * New Installation
                                          */
@@ -232,7 +233,6 @@ class Batch_Core extends Install_Core {
                                 if (!empty(self::$runtime_results)) {
                                     self::$infusion_runtime[$inf_rights] = self::$runtime_results;
                                     self::$runtime_results = []; // resets
-
                                     // there is an upgrade to do
                                     $this->addUpgradeNotice($inf_rights, $inf_title);
                                 }
