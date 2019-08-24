@@ -502,7 +502,7 @@ function get_table_rows($table_name, $localeset = 'English') {
             ],
             [
                 'settings_name'  => 'enabled_languages',
-                'settings_value' => $_GET['localeset']
+                'settings_value' => get('localeset') ?: $localeset
             ],
             [
                 'settings_name'  => 'user_name_ban',

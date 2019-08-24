@@ -205,6 +205,8 @@ class Batch_Core extends Install_Core {
                 // now load all infusion
                 $inf_folder = makefilelist(INFUSIONS, '.|..|.htaccess|index.php|._DS_Store|.tmp', TRUE, 'folders');
                 if (!empty($inf_folder)) {
+                    self::$localeset = LANGUAGE;
+
                     foreach ($inf_folder as $folder) {
                         $inf_include = INFUSIONS.$folder."/infusion.php";
                         $inf_rights = '';
@@ -223,6 +225,7 @@ class Batch_Core extends Install_Core {
                                             /*
                                              * New Installation
                                              */
+
                                             $this->create_new_table();
                                         }
                                     }
@@ -240,14 +243,17 @@ class Batch_Core extends Install_Core {
                             }
                         }
                     } // end foreach
-
                     if ($inf_rights = post('upgrade_infusion')) {
                         if (isset(self::$infusion_runtime[$inf_rights])) {
                             foreach (self::$infusion_runtime[$inf_rights] as $db_command_type => $inf_table) {
                                 foreach ($inf_table as $table_name => $table_query) {
                                     if (!empty($table_query)) {
-                                        foreach($table_query as $sql_query) {
-                                            dbquery($sql_query);
+                                        if (is_array($table_query)) {
+                                            foreach($table_query as $sql_query) {
+                                                dbquery($sql_query);
+                                            }
+                                        } else {
+                                            dbquery($table_query);
                                         }
                                     }
                                 }
@@ -451,6 +457,7 @@ class Batch_Core extends Install_Core {
      * Auto function - Table does not exist, and create new table and rows
      */
     private function create_new_table() {
+
         self::$runtime_results['create'][self::$table_name] = $this->batch_create_table();
         // Will only set and create on current locale only
         $batch_inserts = self::batch_insert_rows(self::$table_name, self::$localeset);
@@ -544,6 +551,7 @@ class Batch_Core extends Install_Core {
     public static function batch_insert_rows($table_name, $localeset) {
 
         if ($table_rows = get_table_rows($table_name, $localeset)) {
+
             if (isset($table_rows['insert'])) {
                 $values = [];
                 // get column pattern
