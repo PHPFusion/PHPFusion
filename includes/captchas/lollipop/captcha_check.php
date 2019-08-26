@@ -17,14 +17,12 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
-$captcha = new Lollipop(post('form_id'));
+require_once INCLUDES.'captchas/lollipop/lollipop.php';
 
-$_CAPTCHA_IS_VALID = $captcha->validateCaptcha();
+$captcha = new Lollipop(post('inputform'));
 
-if ($_CAPTCHA_IS_VALID !== NULL) {
-    if ($_CAPTCHA_IS_VALID === TRUE) {
-        addNotice('success', 'Captcha is validated');
-    } else {
-        addNotice('danger', 'Captcha is invalid');
-    }
+$is_valid = $captcha->validateCaptcha();
+
+if ($is_valid === TRUE) {
+    $_CAPTCHA_IS_VALID = TRUE;
 }

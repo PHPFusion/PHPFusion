@@ -427,6 +427,7 @@ class Public_Profile extends UserFieldsQuantum {
         include INCLUDES."captchas/".fusion_get_settings("captcha")."/captcha_display.php";
         $html .= "<div class='list-group-item'>\n";
         $html .= display_captcha([
+            'form_name'  => 'userfieldsform',
             'captcha_id' => 'captcha_userfields',
             'input_id'   => 'captcha_code_userfields',
             'image_id'   => 'captcha_image_userfields'

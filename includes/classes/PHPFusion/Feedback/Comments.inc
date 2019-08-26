@@ -246,6 +246,7 @@ class Comments {
                         include INCLUDES.'captchas/'.$settings['captcha'].'/captcha_display.php';
 
                         $_CAPTCHA_INPUT .= display_captcha([
+                            'form_name'  => 'inputform',
                             'captcha_id' => 'captcha_'.$this->getParams('comment_key'),
                             'input_id'   => 'captcha_code_'.$this->getParams('comment_key'),
                             'image_id'   => 'captcha_image_'.$this->getParams('comment_key')
@@ -1108,6 +1109,7 @@ class Comments {
                 include INCLUDES.'captchas/'.fusion_get_settings('captcha').'/captcha_display.php';
 
                 $_CAPTCHA_HTML .= display_captcha([
+                    'form_name'  => 'comments_reply_frm-'.$row['comment_id'],
                     'captcha_id' => 'reply_captcha_'.$this->getParams('comment_key'),
                     'input_id'   => 'reply_captcha_code_'.$this->getParams('comment_key'),
                     'image_id'   => 'reply_captcha_image_'.$this->getParams('comment_key')

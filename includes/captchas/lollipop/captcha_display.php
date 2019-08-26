@@ -19,22 +19,26 @@ defined('IN_FUSION') || exit;
 
 $_CAPTCHA_HIDE_INPUT = TRUE;
 
+// Display Capthca
 if (!function_exists('display_captcha')) {
+    function display_captcha($options = []) {
+        $default_options = [
+            'form_name'      => 'inputform',
+            'inline_options' => TRUE,
+            'inline'         => TRUE
+        ];
 
-    /**
-     * Displays Lollipop Captcha
-     * @param      $form_name
-     * @param bool $inline_options
-     * @param bool $inline
-     *
-     * @throws Exception
-     */
-    function display_captcha($form_name, $inline = TRUE, $inline_options = TRUE) {
-        $captcha = new Lollipop($form_name);
-        echo form_checkbox('lollipop[]', $captcha->getQuestions(), '', [
+        $options += $default_options;
+
+        require_once INCLUDES.'captchas/lollipop/lollipop.php';
+
+        $captcha = new Lollipop($options['form_name']);
+        $html = form_checkbox('lollipop[]', $captcha->getQuestions(), '', [
             'options'        => $captcha->getAnswers(),
-            'inline_options' => $inline_options,
-            'inline'         => $inline,
+            'inline_options' => $options['inline_options'],
+            'inline'         => $options['inline'],
         ]);
+
+        return $html;
     }
 }

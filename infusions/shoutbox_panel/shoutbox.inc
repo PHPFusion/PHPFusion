@@ -304,6 +304,7 @@ class ShoutBox {
                 include INCLUDES.'captchas/'.fusion_get_settings('captcha').'/captcha_display.php';
 
                 echo display_captcha([
+                    'form_name'  => self::$default_params['sbform_name'],
                     'captcha_id' => 'captcha_shoutbox',
                     'input_id'   => 'captcha_code_shoutbox',
                     'image_id'   => 'captcha_image_shoutbox'

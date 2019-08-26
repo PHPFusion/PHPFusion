@@ -15,6 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+defined('IN_FUSION') || exit;
+
 require_once 'securimage.php';
 
 $securimage = new Securimage();

@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+defined('IN_FUSION') || exit;
 
 // Display Capthca
 if (!function_exists('display_captcha')) {

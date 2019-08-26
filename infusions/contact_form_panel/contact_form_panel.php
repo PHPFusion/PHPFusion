@@ -102,7 +102,7 @@ $message = str_replace("[PM_LINK]", "<a href='messages.php?msg_send=1'>".$locale
 $info = [
     'tablename'    => $locale['CT_400'],
     'prmessages'   => $message,
-    'openform'     => openform('contactform', 'post', FUSION_SELF, ['max_tokens' => 1]),
+    'openform'     => openform('contactformpanel', 'post', FUSION_SELF, ['max_tokens' => 1]),
     'mail_name'    => form_text('mailname', $locale['CT_402'], $input['mailname'], ['required' => TRUE, 'error_text' => $locale['CT_420'], 'max_length' => 64]),
     'email'        => form_text('email', $locale['CT_403'], $input['email'], ['required' => TRUE, 'error_text' => $locale['CT_421'], 'type' => 'email', 'max_length' => 64]),
     'subject'      => form_text('subject', $locale['CT_404'], $input['subject'], ['required' => TRUE, 'error_text' => $locale['CT_422'], 'max_length' => 64]),

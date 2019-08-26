@@ -99,6 +99,7 @@ $info['captcha_code'] = '';
 if (iGUEST) {
     include INCLUDES.'captchas/'.$settings['captcha'].'/captcha_display.php';
     $captcha_settings = [
+        'form_name'  => 'contactform',
         'captcha_id' => 'captcha_contact',
         'input_id'   => 'captcha_code_contact',
         'image_id'   => 'captcha_image_contact'

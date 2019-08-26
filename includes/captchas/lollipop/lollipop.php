@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 /**
  * Lollipop Captcha
  *
@@ -24,18 +25,21 @@ class Lollipop {
 
     /**
      * Default number of options
+     *
      * @var int
      */
     private $list_num = 9;
 
     /**
      * Current captcha choice
+     *
      * @var int
      */
     private $current_choice = 0;
 
     /**
      * Current captcha instance embedded form name
+     *
      * @var string
      */
     private $form_name = '';
@@ -52,7 +56,7 @@ class Lollipop {
         $this->form_name = $form_name;
         $this->session_opts_id = 'lollipop_opts-'.$form_name;
         $this->session_id = 'lollipop-'.$form_name;
-        $this->current_choice =  $this->setSession();
+        $this->current_choice = $this->setSession();
 
     }
 
@@ -66,6 +70,7 @@ class Lollipop {
 
     /**
      * Generate random choice
+     *
      * @return int
      */
     public function randChoice() {
@@ -87,6 +92,7 @@ class Lollipop {
 
     /**
      * Validates Captcha
+     *
      * @return bool
      * @throws Exception
      */
@@ -99,7 +105,8 @@ class Lollipop {
         }
 
         $validate = NULL;
-        switch($this->current_choice) {
+
+        switch ($this->current_choice) {
             case 1:
                 $validate = $this->lengthCheck($values);
                 break;
@@ -130,9 +137,12 @@ class Lollipop {
     private function lengthCheck(array $value) {
         $session_options = session_read($this->session_opts_id);
         $session_arr = [];
-        foreach ($session_options as $index => $val) {
-            if (strlen($val) == 1 && !isnum($val)) {
-                $session_arr[] = $index;
+
+        if (is_array($session_options)) {
+            foreach ($session_options as $index => $val) {
+                if (strlen($val) == 1 && !isnum($val)) {
+                    $session_arr[] = $index;
+                }
             }
         }
 
@@ -144,6 +154,7 @@ class Lollipop {
 
     /**
      * Validate numbers
+     *
      * @param array $value
      *
      * @return bool
@@ -151,20 +162,25 @@ class Lollipop {
     private function numCheck(array $value) {
         $session_options = session_read($this->session_opts_id);
         $session_arr = [];
-        foreach ($session_options as $index => $val) {
-            if (isnum($val)) {
-                $session_arr[] = $index;
+
+        if (is_array($session_options)) {
+            foreach ($session_options as $index => $val) {
+                if (isnum($val)) {
+                    $session_arr[] = $index;
+                }
             }
         }
+
         if (empty(array_diff($session_arr, $value)) && empty(array_diff($value, $session_arr))) {
             return TRUE;
         }
-        return FALSE;
 
+        return FALSE;
     }
 
     /**
      * Validate words
+     *
      * @param $value
      *
      * @return bool
@@ -172,11 +188,15 @@ class Lollipop {
     private function wordCheck($value) {
         $session_options = session_read($this->session_opts_id);
         $session_arr = [];
-        foreach ($session_options as $index => $val) {
-            if (strlen($val) > 1 && !isnum($val)) {
-                $session_arr[] = $index;
+
+        if (is_array($session_options)) {
+            foreach ($session_options as $index => $val) {
+                if (strlen($val) > 1 && !isnum($val)) {
+                    $session_arr[] = $index;
+                }
             }
         }
+
         if (empty(array_diff($session_arr, $value)) && empty(array_diff($value, $session_arr))) {
             return TRUE;
         }
@@ -186,6 +206,7 @@ class Lollipop {
 
     /**
      * Validate mixed number of words
+     *
      * @param $value
      *
      * @return bool
@@ -193,11 +214,15 @@ class Lollipop {
     private function mixedCheck($value) {
         $session_options = session_read($this->session_opts_id);
         $session_arr = [];
-        foreach ($session_options as $index => $session_val) {
-            if (preg_match('/[A-Za-z].*[0-9]|[0-9].*[A-Za-z]/', $session_val)) {
-                $session_arr[] = $index;
+
+        if (is_array($session_options)) {
+            foreach ($session_options as $index => $session_val) {
+                if (preg_match('/[A-Za-z].*[0-9]|[0-9].*[A-Za-z]/', $session_val)) {
+                    $session_arr[] = $index;
+                }
             }
         }
+
         if (empty(array_diff($session_arr, $value)) && empty(array_diff($value, $session_arr))) {
             return TRUE;
         }
@@ -206,6 +231,7 @@ class Lollipop {
 
     /**
      * Get captcha answers
+     *
      * @return array
      */
     public function getAnswers() {
@@ -235,6 +261,7 @@ class Lollipop {
 
     /**
      * Shuffles an array
+     *
      * @param $list
      *
      * @return array
@@ -254,6 +281,7 @@ class Lollipop {
 
     /**
      * Return array of random letter
+     *
      * @return array
      */
     private function getLetters() {
@@ -268,6 +296,7 @@ class Lollipop {
 
     /**
      * Return array of words
+     *
      * @return array
      */
     private function getWords() {
@@ -279,16 +308,18 @@ class Lollipop {
 
     /**
      * Return array of numbers
+     *
      * @return array
      */
     private function getNumbers() {
         $numbers = range(1, 300, 3);
         $numbers = array_chunk($numbers, $this->list_num);
-        return (array) $numbers[0];
+        return (array)$numbers[0];
     }
 
     /**
      * Return array of mixed words and numbers
+     *
      * @return array
      */
     private function getBoth() {

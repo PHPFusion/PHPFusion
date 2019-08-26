@@ -19,6 +19,7 @@ defined('IN_FUSION') || exit;
 
 $_CAPTCHA_HIDE_INPUT = TRUE;
 
+// Display Capthca
 if (!function_exists('display_captcha')) {
     function display_captcha($options = []) {
         $default_options = [
