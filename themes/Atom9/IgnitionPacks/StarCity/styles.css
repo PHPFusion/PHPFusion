@@ -175,7 +175,7 @@ pre {
     top: 0;
     position: absolute;
     width: 100%;
-    height: 830px;
+    height: 100%;
     color: #fff;
     background: url("assets/images/bg.png") no-repeat;
     -webkit-background-size: cover;
