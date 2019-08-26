@@ -66,6 +66,16 @@ class Token extends \Defender {
         // Validate the Token When POST is not Empty Automatically
         if (!empty($_POST)) {
 
+            if ($form_id = post('form_id')) {
+               $honeypot = \Defender::getInstance()->getHoneypot($form_id.'_honeypot');
+               if ($honeypot['type'] == 'honeypot') {
+                   if (post($honeypot['input_name'])) {
+                       \Authenticate::logOut();
+                       redirect(BASEDIR.'error.php?code=403');
+                   }
+               }
+            }
+
             if (!isset($_POST['fusion_token']) || !isset($_POST['form_id']) || !is_string(
                     $_POST['fusion_token']
                 ) || !is_string($_POST['form_id'])) {

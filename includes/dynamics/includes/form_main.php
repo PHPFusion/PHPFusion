@@ -38,6 +38,7 @@ function openform($form_name, $method, $action_url = FORM_REQUEST, array $option
         'max_tokens' => fusion_get_settings('form_tokens'),
         'inline'     => FALSE,
         'on_submit'  => '',
+        'honeypot'   => TRUE,
     ];
 
     $options += $default_options;
@@ -58,6 +59,16 @@ function openform($form_name, $method, $action_url = FORM_REQUEST, array $option
         $token = fusion_get_token($options['form_id'], $options['max_tokens']);
         $html .= "<input type='hidden' name='fusion_token' value='".$token."' />\n";
         $html .= "<input type='hidden' name='form_id' value='".$options['form_id']."' />\n";
+        if ($options['honeypot']) {
+            $input_name = 'fusion_'.random_string();
+            $html .= "<input type='hidden' name='$input_name' value='virus'>\n";
+            \Defender::getInstance()->addHoneypot([
+                'honeypot' => $options['form_id'].'_honeypot',
+                'input_name' => $input_name,
+                'form_name'  => $form_name,
+                'type'       => 'honeypot',
+            ]);
+        }
     }
 
     return (string)$html;
