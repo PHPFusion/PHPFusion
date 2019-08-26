@@ -19,7 +19,7 @@ defined('IN_FUSION') || exit;
 
 require_once INCLUDES.'captchas/lollipop/lollipop.php';
 
-$captcha = new Lollipop(post('inputform'));
+$captcha = new Lollipop('inputform');
 
 $is_valid = $captcha->validateCaptcha();
 
