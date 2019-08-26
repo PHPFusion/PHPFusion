@@ -18,10 +18,25 @@ class Lollipop {
     }
 
     public function __construct($form_name) {
-        //unset($_SESSION['lollipop']);
-        $_SESSION['lollipop'][$form_name] = !empty($_SESSION['lollipop'][$form_name]) ? $_SESSION['lollipop'][$form_name] : $this->randChoice();
-        $this->current_choice = $_SESSION['lollipop'][$form_name];
         $this->form_name = $form_name;
+        $this->setSession();
+        $this->current_choice = $this->getSessionChoice();
+    }
+
+    private function setSession() {
+        $_SESSION['lollipop'][$this->form_name] = !empty($_SESSION['lollipop'][$this->form_name]) ? $_SESSION['lollipop'][$this->form_name] : $this->randChoice();
+    }
+
+    private function getSessionChoice() {
+        return $_SESSION['lollipop'][$this->form_name];
+    }
+
+    private function getSessionOptions() {
+        return $_SESSION['lollipop_options'][$this->form_name];
+    }
+
+    private function setSessionOptions(array $values) {
+        return $_SESSION['lollipop_options'][$this->form_name] = $values;
     }
 
     /**
@@ -49,17 +64,22 @@ class Lollipop {
     public function validateCaptcha() {
         $value = sanitizer(['lollipop'], [], 'lollipop');
         if (!empty($value)) {
-            $value = explode(',', $value);
-
-            $a_arr = [
-                1 => 'lengthCheck',
-                2 => 'numCheck',
-                3 => 'wordCheck',
-                4 => 'mixedCheck'
-            ];
-            $method = $a_arr[$this->current_choice];
-            $validate = $this->$method($value);
-
+            $values = explode(',', $value);
+            $validate = NULL;
+            switch($this->current_choice) {
+                case 1:
+                    $validate = $this->lengthCheck($values);
+                    break;
+                case 2:
+                    $validate = $this->numCheck($values);
+                    break;
+                case 3:
+                    $validate = $this->wordCheck($values);
+                    break;
+                case 4:
+                    $validate = $this->mixedCheck($values);
+                    break;
+            }
             if ($validate === TRUE) {
                 unset($_SESSION['lollipop_options']);
                 unset($_SESSION['lollipop']);
@@ -77,7 +97,7 @@ class Lollipop {
      * @return bool
      */
     private function lengthCheck(array $value) {
-        $session_options = $_SESSION['lollipop_options'][$this->form_name];
+        $session_options = $this->getSessionOptions();;
         $session_arr = [];
         foreach ($session_options as $index => $val) {
             if (strlen($val) == 1 && !isnum($val)) {
@@ -97,7 +117,7 @@ class Lollipop {
      * @return bool
      */
     private function numCheck(array $value) {
-        $session_options = $_SESSION['lollipop_options'][$this->form_name];
+        $session_options = $this->getSessionOptions();;
         $session_arr = [];
         foreach ($session_options as $index => $val) {
             if (isnum($val)) {
@@ -111,8 +131,13 @@ class Lollipop {
 
     }
 
+    /**
+     * @param $value
+     *
+     * @return bool
+     */
     private function wordCheck($value) {
-        $session_options = $_SESSION['lollipop_options'][$this->form_name];
+        $session_options = $this->getSessionOptions();;
         $session_arr = [];
         foreach ($session_options as $index => $val) {
             if (strlen($val) > 1 && !isnum($val)) {
@@ -126,8 +151,13 @@ class Lollipop {
 
     }
 
+    /**
+     * @param $value
+     *
+     * @return bool
+     */
     private function mixedCheck($value) {
-        $session_options = $_SESSION['lollipop_options'][$this->form_name];
+        $session_options = $this->getSessionOptions();;
         $session_arr = [];
         foreach ($session_options as $index => $session_val) {
             if (preg_match('/[A-Za-z].*[0-9]|[0-9].*[A-Za-z]/', $session_val)) {
@@ -140,9 +170,13 @@ class Lollipop {
         return FALSE;
     }
 
+    /**
+     * @return array
+     */
     public function getAnswers() {
+        $session_options = $this->getSessionOptions();
 
-        if (empty($_SESSION['lollipop_options'][$this->form_name])) {
+        if (empty($session_options)) {
 
             $answers = [
                 1 => $this->getLetters(),
@@ -153,16 +187,16 @@ class Lollipop {
             $array = flatten_array($answers); //3 possible ones everytime. (Nope, better for impossible guess without rule - i.e. Mix them all)
             $array = $this->shuffle($array); //ones everytime with a twist
             $array = array_chunk($array, $this->list_num);
-            $_SESSION['lollipop_options'][$this->form_name] = array_combine(
+            $this->setSessionOptions(array_combine(
                 array_map(function ($key) {
                     return ++$key;
                 }, array_keys($array[0])),
                 $array[0]
-            );
+            ));
 
         }
 
-        return (array)$_SESSION['lollipop_options'][$this->form_name];
+        return (array) $this->getSessionOptions();
     }
 
     private function shuffle($list) {
@@ -193,19 +227,28 @@ class Lollipop {
         return (array)$array[0];
     }
 
+    /**
+     * @return array
+     */
     private function getWords() {
         //1) Make a randomized output , maybe even a algo.. shuffling a lorem_ipsum is your 'algo'
         $lipsum = $this->shuffle(explode(' ', str_replace([',', '.'], [], lorem_ipsum(300))));
         $array = array_chunk($lipsum, $this->list_num);
-        return $array[0];
+        return (array)$array[0];
     }
 
+    /**
+     * @return array
+     */
     private function getNumbers() {
         $numbers = range(1, 300, 3);
         $numbers = array_chunk($numbers, $this->list_num);
-        return $numbers[0];
+        return (array) $numbers[0];
     }
 
+    /**
+     * @return array
+     */
     private function getBoth() {
         $words_arr = $this->getWords();
         $numbers_arr = $this->getNumbers();
@@ -213,7 +256,7 @@ class Lollipop {
         foreach ($words_arr as $index => $words) {
             $options[] = str_shuffle($words.$numbers_arr[$index]);
         }
-        return array_filter($options);
+        return (array)array_filter($options);
     }
 
 }
