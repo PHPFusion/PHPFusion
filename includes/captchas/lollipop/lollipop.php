@@ -39,6 +39,9 @@ class Lollipop {
      * @var string
      */
     private $form_name = '';
+    private $session_opts_id = '';
+    private $session_id = '';
+
 
     /**
      * Lollipop constructor.
@@ -47,24 +50,18 @@ class Lollipop {
      */
     public function __construct($form_name) {
         $this->form_name = $form_name;
+        $this->session_opts_id = 'lollipop_opts-'.$form_name;
+        $this->session_id = 'lollipop-'.$form_name;
         $this->current_choice =  $this->setSession();
+
     }
 
     private function setSession() {
-        if (empty(session_read('lollipop-'.$this->form_name))) {
-            return session_add('lollipop-'.$this->form_name, $this->randChoice());
+        if (empty(session_read($this->session_id))) {
+            return session_add($this->session_id, $this->randChoice());
         }
 
-        return session_read('lollipop-'.$this->form_name);
-        // $_SESSION['lollipop'][$this->form_name] = !empty($_SESSION['lollipop'][$this->form_name]) ? $_SESSION['lollipop'][$this->form_name] : $this->randChoice();
-    }
-
-    private function getSessionOptions() {
-        return $_SESSION['lollipop_options'][$this->form_name];
-    }
-
-    private function setSessionOptions(array $values) {
-        return $_SESSION['lollipop_options'][$this->form_name] = $values;
+        return session_read($this->session_id);
     }
 
     /**
@@ -94,33 +91,35 @@ class Lollipop {
      * @throws Exception
      */
     public function validateCaptcha() {
-        $value = sanitizer(['lollipop'], [], 'lollipop');
-        if (!empty($value)) {
-            $values = explode(',', $value);
-            $validate = NULL;
-            switch($this->current_choice) {
-                case 1:
-                    $validate = $this->lengthCheck($values);
-                    break;
-                case 2:
-                    $validate = $this->numCheck($values);
-                    break;
-                case 3:
-                    $validate = $this->wordCheck($values);
-                    break;
-                case 4:
-                    $validate = $this->mixedCheck($values);
-                    break;
-            }
-            if ($validate === TRUE) {
-                unset($_SESSION['lollipop_options']);
-                unset($_SESSION['lollipop']);
-            }
 
-            return (boolean)$validate;
+        $values = sanitizer(['lollipop'], [], 'lollipop');
+
+        if (!empty($values)) {
+            $values = explode(',', $values);
         }
 
-        return NULL;
+        $validate = NULL;
+        switch($this->current_choice) {
+            case 1:
+                $validate = $this->lengthCheck($values);
+                break;
+            case 2:
+                $validate = $this->numCheck($values);
+                break;
+            case 3:
+                $validate = $this->wordCheck($values);
+                break;
+            case 4:
+                $validate = $this->mixedCheck($values);
+                break;
+        }
+
+        if ($validate === TRUE) {
+            session_remove($this->session_opts_id);
+            session_remove($this->session_id);
+        }
+
+        return (boolean)$validate;
     }
 
     /**
@@ -129,7 +128,7 @@ class Lollipop {
      * @return bool
      */
     private function lengthCheck(array $value) {
-        $session_options = $this->getSessionOptions();;
+        $session_options = session_read($this->session_opts_id);
         $session_arr = [];
         foreach ($session_options as $index => $val) {
             if (strlen($val) == 1 && !isnum($val)) {
@@ -137,7 +136,7 @@ class Lollipop {
             }
         }
 
-        if (empty(array_diff($session_arr, $value))) {
+        if (empty(array_diff($session_arr, $value)) && empty(array_diff($value, $session_arr))) {
             return TRUE;
         }
         return FALSE;
@@ -150,14 +149,14 @@ class Lollipop {
      * @return bool
      */
     private function numCheck(array $value) {
-        $session_options = $this->getSessionOptions();;
+        $session_options = session_read($this->session_opts_id);
         $session_arr = [];
         foreach ($session_options as $index => $val) {
             if (isnum($val)) {
                 $session_arr[] = $index;
             }
         }
-        if (empty(array_diff($session_arr, $value))) {
+        if (empty(array_diff($session_arr, $value)) && empty(array_diff($value, $session_arr))) {
             return TRUE;
         }
         return FALSE;
@@ -171,14 +170,14 @@ class Lollipop {
      * @return bool
      */
     private function wordCheck($value) {
-        $session_options = $this->getSessionOptions();;
+        $session_options = session_read($this->session_opts_id);
         $session_arr = [];
         foreach ($session_options as $index => $val) {
             if (strlen($val) > 1 && !isnum($val)) {
                 $session_arr[] = $index;
             }
         }
-        if (empty(array_diff($session_arr, $value))) {
+        if (empty(array_diff($session_arr, $value)) && empty(array_diff($value, $session_arr))) {
             return TRUE;
         }
         return FALSE;
@@ -192,14 +191,14 @@ class Lollipop {
      * @return bool
      */
     private function mixedCheck($value) {
-        $session_options = $this->getSessionOptions();;
+        $session_options = session_read($this->session_opts_id);
         $session_arr = [];
         foreach ($session_options as $index => $session_val) {
             if (preg_match('/[A-Za-z].*[0-9]|[0-9].*[A-Za-z]/', $session_val)) {
                 $session_arr[] = $index;
             }
         }
-        if (empty(array_diff($session_arr,$value))) {
+        if (empty(array_diff($session_arr, $value)) && empty(array_diff($value, $session_arr))) {
             return TRUE;
         }
         return FALSE;
@@ -211,10 +210,9 @@ class Lollipop {
      */
     public function getAnswers() {
         // $session_options = $this->getSessionOptions();
-        $session_options = session_read('lollipop_opts-'.$this->form_name);
+        $session_options = session_read($this->session_opts_id);
 
         if (empty($session_options)) {
-
             $answers = [
                 1 => $this->getLetters(),
                 2 => $this->getNumbers(),
@@ -224,17 +222,15 @@ class Lollipop {
             $array = flatten_array($answers); //3 possible ones everytime. (Nope, better for impossible guess without rule - i.e. Mix them all)
             $array = $this->shuffle($array); //ones everytime with a twist
             $array = array_chunk($array, $this->list_num);
-            return session_add('lollipop_opts-'.$this->form_name, array_combine(
+            return session_add($this->session_opts_id, array_combine(
                 array_map(function ($key) {
                     return ++$key;
                 }, array_keys($array[0])),
                 $array[0]
             ));
-
         }
 
-        return session_read('lollipop_opts-'.$this->form_name);
-        // return (array) $this->getSessionOptions();
+        return (array)session_read($this->session_opts_id);
     }
 
     /**

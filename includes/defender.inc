@@ -759,6 +759,10 @@ function session_read($key) {
     return (isset($_SESSION[$key]) ? $_SESSION[$key] : NULL);
 }
 
+function session_remove($key) {
+    unset($_SESSION[$key]);
+}
+
 require_once __DIR__.'/defender/validation.php';
 require_once __DIR__.'/defender/token.php';
 require_once __DIR__.'/defender/mimecheck.php';
