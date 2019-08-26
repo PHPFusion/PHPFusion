@@ -740,6 +740,25 @@ function cookie($key, $type = FILTER_DEFAULT) {
     return stripinput(filter_input(INPUT_COOKIE, $key, $type));
 }
 
+/**
+ * @param $key
+ * @param $value
+ *
+ * @return mixed
+ */
+function session_add($key, $value) {
+    return $_SESSION[$key] = $value;
+}
+
+/**
+ * @param $key
+ *
+ * @return null
+ */
+function session_read($key) {
+    return (isset($_SESSION[$key]) ? $_SESSION[$key] : NULL);
+}
+
 require_once __DIR__.'/defender/validation.php';
 require_once __DIR__.'/defender/token.php';
 require_once __DIR__.'/defender/mimecheck.php';

@@ -47,16 +47,16 @@ class Lollipop {
      */
     public function __construct($form_name) {
         $this->form_name = $form_name;
-        $this->setSession();
-        $this->current_choice = $this->getSessionChoice();
+        $this->current_choice =  $this->setSession();
     }
 
     private function setSession() {
-        $_SESSION['lollipop'][$this->form_name] = !empty($_SESSION['lollipop'][$this->form_name]) ? $_SESSION['lollipop'][$this->form_name] : $this->randChoice();
-    }
+        if (empty(session_read('lollipop-'.$this->form_name))) {
+            return session_add('lollipop-'.$this->form_name, $this->randChoice());
+        }
 
-    private function getSessionChoice() {
-        return $_SESSION['lollipop'][$this->form_name];
+        return session_read('lollipop-'.$this->form_name);
+        // $_SESSION['lollipop'][$this->form_name] = !empty($_SESSION['lollipop'][$this->form_name]) ? $_SESSION['lollipop'][$this->form_name] : $this->randChoice();
     }
 
     private function getSessionOptions() {
@@ -210,7 +210,8 @@ class Lollipop {
      * @return array
      */
     public function getAnswers() {
-        $session_options = $this->getSessionOptions();
+        // $session_options = $this->getSessionOptions();
+        $session_options = session_read('lollipop_opts-'.$this->form_name);
 
         if (empty($session_options)) {
 
@@ -223,7 +224,7 @@ class Lollipop {
             $array = flatten_array($answers); //3 possible ones everytime. (Nope, better for impossible guess without rule - i.e. Mix them all)
             $array = $this->shuffle($array); //ones everytime with a twist
             $array = array_chunk($array, $this->list_num);
-            $this->setSessionOptions(array_combine(
+            return session_add('lollipop_opts-'.$this->form_name, array_combine(
                 array_map(function ($key) {
                     return ++$key;
                 }, array_keys($array[0])),
@@ -232,7 +233,8 @@ class Lollipop {
 
         }
 
-        return (array) $this->getSessionOptions();
+        return session_read('lollipop_opts-'.$this->form_name);
+        // return (array) $this->getSessionOptions();
     }
 
     /**
