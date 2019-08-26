@@ -82,7 +82,7 @@ class InstallerInfusions extends Install_Core {
                 add_to_jquery("$('.defuse').bind('click', function() {return confirm('".$locale['412']."');});");
 
                 $inf_core = Infusion_Core::getInstance();
-                $inf_core::load_Configuration();
+                $inf_core::loadConfiguration();
                 if (($folder = filter_input(INPUT_POST, 'infuse'))) {
                     $inf_core->infuse($folder);
                 } else if ($folder = filter_input(INPUT_POST, 'defuse')) {
