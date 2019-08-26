@@ -1,5 +1,20 @@
 <?php
-
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: lollipop.php
+| Author: PHP-Fusion Development Team
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 /**
  * Lollipop Captcha
  *
@@ -7,16 +22,29 @@
  */
 class Lollipop {
 
-    private $list_num = 9; // For example 9 inputs options,
+    /**
+     * Default number of options
+     * @var int
+     */
+    private $list_num = 9;
 
+    /**
+     * Current captcha choice
+     * @var int
+     */
     private $current_choice = 0;
 
+    /**
+     * Current captcha instance embedded form name
+     * @var string
+     */
     private $form_name = '';
 
-    public function randChoice() {
-        return rand(1, 4);
-    }
-
+    /**
+     * Lollipop constructor.
+     *
+     * @param $form_name
+     */
     public function __construct($form_name) {
         $this->form_name = $form_name;
         $this->setSession();
@@ -40,6 +68,14 @@ class Lollipop {
     }
 
     /**
+     * Generate random choice
+     * @return int
+     */
+    public function randChoice() {
+        return rand(1, 4);
+    }
+
+    /**
      * Personal request, please avoid the questions that requires one to google or calculate for an answer.
      */
     public function getQuestions() {
@@ -54,10 +90,6 @@ class Lollipop {
 
     /**
      * Validates Captcha
-     *
-     * @return bool
-     */
-    /**
      * @return bool
      * @throws Exception
      */
@@ -112,6 +144,7 @@ class Lollipop {
     }
 
     /**
+     * Validate numbers
      * @param array $value
      *
      * @return bool
@@ -132,6 +165,7 @@ class Lollipop {
     }
 
     /**
+     * Validate words
      * @param $value
      *
      * @return bool
@@ -152,6 +186,7 @@ class Lollipop {
     }
 
     /**
+     * Validate mixed number of words
      * @param $value
      *
      * @return bool
@@ -171,6 +206,7 @@ class Lollipop {
     }
 
     /**
+     * Get captcha answers
      * @return array
      */
     public function getAnswers() {
@@ -199,6 +235,12 @@ class Lollipop {
         return (array) $this->getSessionOptions();
     }
 
+    /**
+     * Shuffles an array
+     * @param $list
+     *
+     * @return array
+     */
     private function shuffle($list) {
         if (!is_array($list))
             return $list;
@@ -213,8 +255,7 @@ class Lollipop {
     }
 
     /**
-     * Generate random letter
-     *
+     * Return array of random letter
      * @return array
      */
     private function getLetters() {
@@ -228,6 +269,7 @@ class Lollipop {
     }
 
     /**
+     * Return array of words
      * @return array
      */
     private function getWords() {
@@ -238,6 +280,7 @@ class Lollipop {
     }
 
     /**
+     * Return array of numbers
      * @return array
      */
     private function getNumbers() {
@@ -247,6 +290,7 @@ class Lollipop {
     }
 
     /**
+     * Return array of mixed words and numbers
      * @return array
      */
     private function getBoth() {
