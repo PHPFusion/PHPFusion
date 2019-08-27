@@ -16,50 +16,36 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
+require_once THEMES.'templates/admin_header.php';
 pageAccess('PI');
 
-use PHPFusion\BreadCrumbs;
-
-require_once THEMES.'templates/admin_header.php';
 $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/phpinfo.php");
 $aidlink = fusion_get_aidlink();
-BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'phpinfo.php'.fusion_get_aidlink(), 'title' => $locale['400']]);
+add_breadcrumb(['link' => ADMIN.'phpinfo.php'.$aidlink, 'title' => $locale['PHPI_400']]);
 
 $allowed_section = ['general', 'phpsettings', 'folderpermission', 'details'];
-$_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_section) ? $_GET['section'] : 'general';
+$section = get('section');
+$section = $section && in_array($section, $allowed_section) ? $section : $allowed_section[0];
 
-$master_tab_title['title'][] = $locale['401'];
+$master_tab_title['title'][] = $locale['PHPI_401'];
 $master_tab_title['id'][] = 'general';
 $master_tab_title['icon'][] = "";
-$master_tab_title['title'][] = $locale['420'];
+
+$master_tab_title['title'][] = $locale['PHPI_420'];
 $master_tab_title['id'][] = 'phpsettings';
 $master_tab_title['icon'][] = "";
-$master_tab_title['title'][] = $locale['440'];
+
+$master_tab_title['title'][] = $locale['PHPI_440'];
 $master_tab_title['id'][] = 'folderpermission';
 $master_tab_title['icon'][] = "";
-$master_tab_title['title'][] = $locale['450'];
+
+$master_tab_title['title'][] = $locale['PHPI_450'];
 $master_tab_title['id'][] = 'details';
 $master_tab_title['icon'][] = "";
 
-if (isset($_GET['section'])) {
-    switch ($_GET['section']) {
-        case "phpsettings":
-            BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['420']]);
-            break;
-        case "folderpermission":
-            BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['440']]);
-            break;
-        case "details":
-            BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['450']]);
-            break;
-        default:
-            break;
-    }
-}
-
-opentable($locale['400']);
-echo opentab($master_tab_title, $_GET['section'], 'general', TRUE, 'nav-tabs m-b-15');
-switch ($_GET['section']) {
+opentable($locale['PHPI_400']);
+echo opentab($master_tab_title, $section, 'general', TRUE, 'nav-tabs m-b-15');
+switch ($section) {
     case "phpsettings":
         phpsettings();
         break;
@@ -80,16 +66,16 @@ function general() {
     $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/phpinfo.php");
     $settings = fusion_get_settings();
     $phpinfo = "<div class='table-responsive'><table class='table table-hover table-striped' id='folders'>\n";
-    $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['402']."</td><td class='text-right'>".php_uname()."</td></tr>\n";
-    $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['403']."</td><td class='text-right'>".$_SERVER['SERVER_SOFTWARE']."</td></tr>\n";
-    $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['404']."</td><td class='text-right'>".phpversion()."</td></tr>\n";
-    $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['405']."</td><td class='text-right'>".php_sapi_name()."</td></tr>\n";
-    $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['406']."</td><td class='text-right'>".dbconnection()->getServerVersion()."</td></tr>\n";
-    $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['406a']."</td><td class='text-right'>".str_replace('\\PHPFusion\\Database\Driver\\', '', \PHPFusion\Database\DatabaseFactory::getDriverClass())."</td></tr>\n";
-    $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['407']."</td><td class='text-right'>".$settings['version']."</td></tr>\n";
-    $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['408']."</td><td class='text-right'>".DB_PREFIX."</td></tr>\n";
-    $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['409']."</td><td class='text-right'>".COOKIE_PREFIX."</td></tr>\n";
-    $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['410']."</td><td class='text-right'>".stripinput($_SERVER['HTTP_USER_AGENT'])."</td></tr>\n";
+    $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['PHPI_402']."</td><td class='text-right'>".php_uname()."</td></tr>\n";
+    $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['PHPI_403']."</td><td class='text-right'>".server('SERVER_SOFTWARE')."</td></tr>\n";
+    $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['PHPI_404']."</td><td class='text-right'>".phpversion()."</td></tr>\n";
+    $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['PHPI_405']."</td><td class='text-right'>".php_sapi_name()."</td></tr>\n";
+    $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['PHPI_406']."</td><td class='text-right'>".dbconnection()->getServerVersion()."</td></tr>\n";
+    $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['PHPI_406a']."</td><td class='text-right'>".str_replace('\\PHPFusion\\Database\Driver\\', '', \PHPFusion\Database\DatabaseFactory::getDriverClass())."</td></tr>\n";
+    $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['PHPI_407']."</td><td class='text-right'>".$settings['version']."</td></tr>\n";
+    $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['PHPI_408']."</td><td class='text-right'>".DB_PREFIX."</td></tr>\n";
+    $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['PHPI_409']."</td><td class='text-right'>".COOKIE_PREFIX."</td></tr>\n";
+    $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['PHPI_410']."</td><td class='text-right'>".stripinput(server('HTTP_USER_AGENT'))."</td></tr>\n";
     $phpinfo .= "</table>\n</div>";
     echo $phpinfo;
 }
@@ -105,14 +91,14 @@ function phpsettings() {
         $gd_ver = '';
     }
     $phpinfo = "<div class='table-responsive'><table class='table table-hover table-striped' id='folders'>\n";
-    $phpinfo .= "<tr>\n<td style='width:50%'>".$locale['423']."</td><td class='text-right'>".(ini_get('safe_mode') ? $locale['yes'] : $locale['no'])."</td></tr>\n";
-    $phpinfo .= "<tr>\n<td style='width:50%'>".$locale['424']."</td><td class='text-right'>".(ini_get('register_globals') ? $locale['yes'] : $locale['no'])."</td></tr>\n";
-    $phpinfo .= "<tr>\n<td style='width:50%'>".$locale['425']." GD (".$locale['431'].")</td><td class='text-right'>".(extension_loaded('gd') ? $locale['yes']." (".$gd_ver[0].")" : $locale['no'])."</td></tr>\n";
-    $phpinfo .= "<tr>\n<td style='width:50%'>".$locale['425']." zlib</td><td class='text-right'>".(extension_loaded('zlib') ? $locale['yes'] : $locale['no'])."</td></tr>\n";
-    $phpinfo .= "<tr>\n<td style='width:50%'>".$locale['425']." Magic_quotes_gpc</td><td class='text-right'>".(ini_get('magic_quotes_gpc') ? $locale['yes'] : $locale['no'])."</td></tr>\n";
-    $phpinfo .= "<tr>\n<td style='width:50%'>".$locale['426']."</td><td class='text-right'>".(ini_get('file_uploads') ? $locale['yes']." (".ini_get('upload_max_filesize')."B)" : $locale['no'])."</td></tr>\n";
-    $phpinfo .= "<tr>\n<td style='width:50%'>".$locale['428']."</td><td class='text-right'>".(ini_get('display_errors') ? $locale['yes'] : $locale['no'])."</td></tr>\n";
-    $phpinfo .= "<tr>\n<td style='width:50%'>".$locale['429']."</td><td class='text-right'>".(ini_get('disable_functions') ? str_replace(',', ', ', ini_get('disable_functions')) : $locale['430'])."</td></tr>\n";
+    $phpinfo .= "<tr>\n<td style='width:50%'>".$locale['PHPI_423']."</td><td class='text-right'>".(ini_get('safe_mode') ? $locale['yes'] : $locale['no'])."</td></tr>\n";
+    $phpinfo .= "<tr>\n<td style='width:50%'>".$locale['PHPI_424']."</td><td class='text-right'>".(ini_get('register_globals') ? $locale['yes'] : $locale['no'])."</td></tr>\n";
+    $phpinfo .= "<tr>\n<td style='width:50%'>".$locale['PHPI_425']." GD (".$locale['PHPI_431'].")</td><td class='text-right'>".(extension_loaded('gd') ? $locale['yes']." (".$gd_ver[0].")" : $locale['no'])."</td></tr>\n";
+    $phpinfo .= "<tr>\n<td style='width:50%'>".$locale['PHPI_425']." zlib</td><td class='text-right'>".(extension_loaded('zlib') ? $locale['yes'] : $locale['no'])."</td></tr>\n";
+    $phpinfo .= "<tr>\n<td style='width:50%'>".$locale['PHPI_425']." Magic_quotes_gpc</td><td class='text-right'>".(ini_get('magic_quotes_gpc') ? $locale['yes'] : $locale['no'])."</td></tr>\n";
+    $phpinfo .= "<tr>\n<td style='width:50%'>".$locale['PHPI_426']."</td><td class='text-right'>".(ini_get('file_uploads') ? $locale['yes']." (".ini_get('upload_max_filesize')."B)" : $locale['no'])."</td></tr>\n";
+    $phpinfo .= "<tr>\n<td style='width:50%'>".$locale['PHPI_428']."</td><td class='text-right'>".(ini_get('display_errors') ? $locale['yes'] : $locale['no'])."</td></tr>\n";
+    $phpinfo .= "<tr>\n<td style='width:50%'>".$locale['PHPI_429']."</td><td class='text-right'>".(ini_get('disable_functions') ? str_replace(',', ', ', ini_get('disable_functions')) : $locale['PHPI_430'])."</td></tr>\n";
     $phpinfo .= "</table>\n</div>";
     echo $phpinfo;
 }
@@ -142,9 +128,9 @@ function folderpermission() {
     foreach ($folders as $folder => $writeable) {
         $status .= "<tr>\n<td style='width:50%'><i class='fa fa-folder fa-fw'></i> ".$folder."</td><td class='text-right'>";
         if (is_writable(BASEDIR.$folder) == TRUE) {
-            $status .= "<span class='".($writeable == TRUE ? "passed" : "failed")."'>".$locale['441']."</span>";
+            $status .= "<span class='".($writeable == TRUE ? "passed" : "failed")."'>".$locale['PHPI_441']."</span>";
         } else {
-            $status .= "<span class='".($writeable == TRUE ? "failed" : "passed")."'>".$locale['442']."</span>";
+            $status .= "<span class='".($writeable == TRUE ? "failed" : "passed")."'>".$locale['PHPI_442']."</span>";
         }
         $status .= " (".substr(sprintf('%o', fileperms(BASEDIR.$folder)), -4).")</td></tr>\n";
         $i++;
@@ -174,7 +160,7 @@ function details() {
         $phpinfo = str_replace('class="e"', "class='tbl2'", $phpinfo);
         $phpinfo = str_replace('class="v"', "class='tbl1'", $phpinfo);
     } else {
-        $phpinfo = "<div class='admin-message'>".$locale['451']."</div>\n";
+        $phpinfo = "<div class='admin-message'>".$locale['PHPI_451']."</div>\n";
     }
     echo $phpinfo;
 }

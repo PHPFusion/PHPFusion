@@ -1,31 +1,31 @@
 <?php
-$locale['400'] = "PHP Info";
+$locale['PHPI_400'] = "PHP Info";
 //General
-$locale['401'] = "General";
-$locale['402'] = "Server software";
-$locale['403'] = "Web-server software";
-$locale['404'] = "PHP version";
-$locale['405'] = "PHP interface";
-$locale['406'] = "MySQL Server version";
-$locale['406a'] = "Database Driver";
-$locale['407'] = "PHP-Fusion version";
-$locale['408'] = "Database prefix";
-$locale['409'] = "Cookie prefix";
-$locale['410'] = "Web-browser and OS";
+$locale['PHPI_401'] = "General";
+$locale['PHPI_402'] = "Server software";
+$locale['PHPI_403'] = "Web-server software";
+$locale['PHPI_404'] = "PHP version";
+$locale['PHPI_405'] = "PHP interface";
+$locale['PHPI_406'] = "MySQL Server version";
+$locale['PHPI_406a'] = "Database Driver";
+$locale['PHPI_407'] = "PHP-Fusion version";
+$locale['PHPI_408'] = "Database prefix";
+$locale['PHPI_409'] = "Cookie prefix";
+$locale['PHPI_410'] = "Web-browser and OS";
 //PHP settings
-$locale['420'] = "PHP settings";
-$locale['423'] = "Safe-mode";
-$locale['424'] = "RegisterGlobals";
-$locale['425'] = "Support for";
-$locale['426'] = "Files upload (max file size)";
-$locale['428'] = "Display errors";
-$locale['429'] = "Disabled functions";
-$locale['430'] = "n/a";
-$locale['431'] = "version";
+$locale['PHPI_420'] = "PHP settings";
+$locale['PHPI_423'] = "Safe-mode";
+$locale['PHPI_424'] = "RegisterGlobals";
+$locale['PHPI_425'] = "Support for";
+$locale['PHPI_426'] = "Files upload (max file size)";
+$locale['PHPI_428'] = "Display errors";
+$locale['PHPI_429'] = "Disabled functions";
+$locale['PHPI_430'] = "n/a";
+$locale['PHPI_431'] = "version";
 //Write permission
-$locale['440'] = "Folder Permissions";
-$locale['441'] = "Writeable";
-$locale['442'] = "Not writeable";
+$locale['PHPI_440'] = "Folder Permissions";
+$locale['PHPI_441'] = "Writeable";
+$locale['PHPI_442'] = "Not writeable";
 //PHPinfo
-$locale['450'] = "Details";
-$locale['451'] = "Unable to get data. Check if phpinfo() function is switched off?";
+$locale['PHPI_450'] = "Details";
+$locale['PHPI_451'] = "Unable to get data. Check if phpinfo() function is switched off?";
