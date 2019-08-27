@@ -747,6 +747,19 @@ function cookie($key, $type = FILTER_DEFAULT) {
  * @return mixed
  */
 function session_add($key, $value) {
+
+    if (is_array($key)) {
+        $x = count($key) - 1;
+        $new_arr = [];
+        for($i = $x; $i >=0; $i--) {
+            if (!$i) {
+                $new_arr[$key[$i+1]] = $value;
+            }
+            $new_arr = array($key[$i] => $new_arr);
+        }
+        return $_SESSION = array_merge($new_arr, $_SESSION);
+    }
+
     return $_SESSION[$key] = $value;
 }
 
@@ -762,6 +775,45 @@ function session_read($key) {
 function session_remove($key) {
     unset($_SESSION[$key]);
 }
+
+/**
+ * @param $value
+ *
+ * @return string
+ */
+function fusion_encode($value) {
+    return \Defender::encode($value);
+}
+
+/**
+ * @param $value
+ *
+ * @return mixed
+ */
+function fusion_decode($value) {
+    return \Defender::decode($value);
+}
+
+/**
+ * @param $value
+ * @param $password
+ *
+ * @return string
+ */
+function fusion_encrypt($value, $password) {
+    return \Defender::encrypt_string($value, $password);
+}
+
+/**
+ * @param $value
+ * @param $password
+ *
+ * @return null|string
+ */
+function fusion_decrypt($value, $password) {
+    return \Defender::decrypt_string($value, $password);
+}
+
 
 require_once __DIR__.'/defender/validation.php';
 require_once __DIR__.'/defender/token.php';
