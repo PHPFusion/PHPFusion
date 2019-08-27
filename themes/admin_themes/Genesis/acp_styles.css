@@ -3021,7 +3021,9 @@ input[type=password] {
 .radio.display-inline-block .control-label {
     padding-left: 15px;
 }
-
+.radio > .control-label {
+    padding-left: 15px;
+}
 /*.radio.display-inline-block input[type=radio] {*/
 /*margin-left:-15px;*/
 /*}*/

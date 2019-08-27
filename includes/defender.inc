@@ -747,17 +747,17 @@ function cookie($key, $type = FILTER_DEFAULT) {
  * @return mixed
  */
 function session_add($key, $value) {
-
     if (is_array($key)) {
         $x = count($key) - 1;
         $new_arr = [];
         for($i = $x; $i >=0; $i--) {
-            if (!$i) {
+            if ($i === 0) {
                 $new_arr[$key[$i+1]] = $value;
             }
             $new_arr = array($key[$i] => $new_arr);
         }
-        return $_SESSION = array_merge($new_arr, $_SESSION);
+        $_SESSION = array_merge_recursive($_SESSION , $new_arr);
+        return (array)  session_read($key[0]);
     }
 
     return $_SESSION[$key] = $value;
