@@ -17,12 +17,11 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/maincore.php';
 require_once THEMES.'templates/header.php';
-$locale = fusion_get_locale("", LOCALE.LOCALESET."lostpassword.php");
-require_once INCLUDES."sendmail_include.php";
 if (iMEMBER) {
     redirect(BASEDIR.'index.php');
 }
-
+require_once INCLUDES."sendmail_include.php";
+$locale = fusion_get_locale('', LOCALE.LOCALESET."lostpassword.php");
 add_to_title($locale['global_200'].$locale['400']);
 
 ob_start();

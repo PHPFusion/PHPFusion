@@ -1675,7 +1675,7 @@ function profile_link($user_id, $user_name, $user_status, $class = "profile-link
  *
  * @return bool|false|string
  */
-function print_p($array, $modal = FALSE, $print = TRUE, $default_visibility = '-102') {
+function print_p($array, $modal = FALSE, $print = TRUE, $default_visibility = '0') {
 
     if (checkgroup($default_visibility)) {
 

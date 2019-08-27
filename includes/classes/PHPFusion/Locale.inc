@@ -60,7 +60,7 @@ class Locale {
             include $filename;
         }
 
-        self::$locale += $locale;
+        self::$locale = $locale + self::$locale;
         self::$locale_file[$filename] = debug_backtrace();
     }
 
