@@ -785,6 +785,8 @@ function session_get($key) {
 
 /**
  * @param $key
+ *
+ * @return mixed
  */
 function session_remove($key) {
     if (is_array($key)) {
@@ -796,8 +798,11 @@ function session_remove($key) {
                 $temp = &$temp[$nkey];
             }
         }
+        $session = &$temp;
+        return $session;
     } else {
         unset($_SESSION[$key]);
+        return $_SESSION;
     }
 }
 
