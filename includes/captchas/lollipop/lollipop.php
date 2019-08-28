@@ -61,11 +61,11 @@ class Lollipop {
     }
 
     private function setSession() {
-        if (empty(session_read($this->session_id))) {
+        if (empty(session_get($this->session_id))) {
             return session_add($this->session_id, $this->randChoice());
         }
 
-        return session_read($this->session_id);
+        return session_get($this->session_id);
     }
 
     /**
@@ -135,7 +135,7 @@ class Lollipop {
      * @return bool
      */
     private function lengthCheck(array $value) {
-        $session_options = session_read($this->session_opts_id);
+        $session_options = session_get($this->session_opts_id);
         $session_arr = [];
 
         if (is_array($session_options)) {
@@ -160,7 +160,7 @@ class Lollipop {
      * @return bool
      */
     private function numCheck(array $value) {
-        $session_options = session_read($this->session_opts_id);
+        $session_options = session_get($this->session_opts_id);
         $session_arr = [];
 
         if (is_array($session_options)) {
@@ -186,7 +186,7 @@ class Lollipop {
      * @return bool
      */
     private function wordCheck($value) {
-        $session_options = session_read($this->session_opts_id);
+        $session_options = session_get($this->session_opts_id);
         $session_arr = [];
 
         if (is_array($session_options)) {
@@ -212,7 +212,7 @@ class Lollipop {
      * @return bool
      */
     private function mixedCheck($value) {
-        $session_options = session_read($this->session_opts_id);
+        $session_options = session_get($this->session_opts_id);
         $session_arr = [];
 
         if (is_array($session_options)) {
@@ -236,7 +236,7 @@ class Lollipop {
      */
     public function getAnswers() {
         // $session_options = $this->getSessionOptions();
-        $session_options = session_read($this->session_opts_id);
+        $session_options = session_get($this->session_opts_id);
 
         if (empty($session_options)) {
             $answers = [
@@ -256,7 +256,7 @@ class Lollipop {
             ));
         }
 
-        return (array)session_read($this->session_opts_id);
+        return (array)session_get($this->session_opts_id);
     }
 
     /**

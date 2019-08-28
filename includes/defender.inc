@@ -740,6 +740,10 @@ function cookie($key, $type = FILTER_DEFAULT) {
     return stripinput(filter_input(INPUT_COOKIE, $key, $type));
 }
 
+function session_clean(){
+    $_SESSION = [];
+}
+
 /**
  * @param $key
  * @param $value
@@ -747,17 +751,16 @@ function cookie($key, $type = FILTER_DEFAULT) {
  * @return mixed
  */
 function session_add($key, $value) {
+    //global $_SESSION;
     if (is_array($key)) {
-        $x = count($key) - 1;
-        $new_arr = [];
-        for($i = $x; $i >=0; $i--) {
-            if ($i === 0) {
-                $new_arr[$key[$i+1]] = $value;
-            }
-            $new_arr = array($key[$i] => $new_arr);
+      //  print_p($_SESSION);
+        $session =& $_SESSION;
+        foreach($key as $pkey) {
+            $session =& $session[$pkey];
         }
-        $_SESSION = array_merge_recursive($_SESSION , $new_arr);
-        return (array)  session_read($key[0]);
+        $session = $value;
+
+        return $session;
     }
 
     return $_SESSION[$key] = $value;
@@ -768,12 +771,34 @@ function session_add($key, $value) {
  *
  * @return null
  */
-function session_read($key) {
+function session_get($key) {
+    if (is_array($key)) {
+        $session =& $_SESSION;
+        foreach ($key as $i)
+        {
+            $session  =& $session[$i];
+        }
+        return $session;
+    }
     return (isset($_SESSION[$key]) ? $_SESSION[$key] : NULL);
 }
 
+/**
+ * @param $key
+ */
 function session_remove($key) {
-    unset($_SESSION[$key]);
+    if (is_array($key)) {
+        $temp = & $_SESSION;
+        foreach($key as $nkey) {
+            if (!is_array($temp[$nkey])) {
+                unset($temp[$nkey]);
+            } else {
+                $temp = &$temp[$nkey];
+            }
+        }
+    } else {
+        unset($_SESSION[$key]);
+    }
 }
 
 /**
