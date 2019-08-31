@@ -41,7 +41,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
         'safemode'          => FALSE,
         'deactivate'        => FALSE,
         'preview_off'       => FALSE,
-        'type'              => 'image', //// ['image', 'html', 'text', 'video', 'audio', 'flash', 'object']
+        'type'              => 'image', //// ['image', 'html', 'text', 'video', 'audio', 'flash', 'object', 'file']
         'width'             => '100%',
         'label'             => $locale['browse'],
         'inline'            => TRUE,
