@@ -360,7 +360,7 @@ function form_select($input_name, $label = "", $input_value, array $options = []
     } else {
         // normal mode
 
-        $html .= "<select name='$input_name' id='".$options['input_id']."' style='width: ".($options['inner_width'] ? $options['inner_width'] : $default_options['inner_width'])."'".($options['deactivate'] ? " disabled" : "").($options['onchange'] ? ' onchange="'.$options['onchange'].'"' : '').($options['multiple'] ? " multiple" : "").">\n";
+        $html .= "<select ".($options['select2_disabled'] == TRUE ? " class='form-control' " : "")." name='$input_name' id='".$options['input_id']."' style='width: ".($options['inner_width'] ? $options['inner_width'] : $default_options['inner_width'])."'".($options['deactivate'] ? " disabled" : "").($options['onchange'] ? ' onchange="'.$options['onchange'].'"' : '').($options['multiple'] ? " multiple" : "").">\n";
         $html .= ($options['allowclear']) ? "<option value=''></option>\n" : '';
         // add parent value
         if ($options['no_root'] == FALSE && !empty($options['cat_col']) || $options['add_parent_opts'] === TRUE) { // api options to remove root from selector. used in items creation.
