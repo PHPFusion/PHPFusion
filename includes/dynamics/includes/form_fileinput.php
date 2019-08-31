@@ -41,7 +41,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
         'safemode'             => FALSE,
         'deactivate'           => FALSE,
         'preview_off'          => FALSE,
-        'type'                 => 'image', //// ['image', 'html', 'text', 'video', 'audio', 'flash', 'object']
+        'type'                 => 'image', //// ['image', 'html', 'text', 'video', 'audio', 'flash', 'object', 'file']
         'width'                => '100%',
         'label'                => $locale['browse'],
         'inline'               => TRUE,
@@ -70,7 +70,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
         'default_preview'      => IMAGES.'no_photo.png',
         'max_width'            => 1800,
         'max_height'           => 1600,
-        'max_byte'             => 1500000,
+        'max_byte'             => 15728640,
         'max_count'            => 1,
         'multiple'             => FALSE,
         'template'             => 'classic',
@@ -145,7 +145,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
     ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."
     </label>\n" : '';
     $html .= ($options['inline']) ? "<div class='col-xs-12 ".($label ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12")."'>\n" : "";
-    $html .= "<input type='file' ".($format ? "accept='".$format."'" : '')." name='".$input_name."' id='".$options['input_id']."' style='width:".$options['width']."' ".($options['deactivate'] ? 'readonly' : '')." ".($options['multiple'] ? "multiple='1'" : '')." />\n";
+    $html .= "<input type='file'".($options['krajee_disabled'] == TRUE ? " class='form-control' " : "").($format ? " accept='".$format."'" : '')." name='".$input_name."' id='".$options['input_id']."' style='width:".$options['width']."' ".($options['deactivate'] ? 'readonly' : '')." ".($options['multiple'] ? "multiple='1'" : '')." />\n";
 
     // Croppie
     if ($options['croppie'] === TRUE) {
@@ -164,70 +164,70 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
         $html .= form_hidden("upload_zoom", "Zoom Point", "");
         add_to_jquery("
         function runCroppie() {
-     
+
             var uploadCrop = $('#".$options['input_id']."-croppie').croppie({
                 viewport: {
                     width: ".$options['crop_viewport_width'].",
                     height: ".$options['crop_viewport_height'].",
                 },
-                boundary: { 
-                    width: ".$options['crop_box_width'].", 
-                    height: ".$options['crop_box_height']." 
+                boundary: {
+                    width: ".$options['crop_box_width'].",
+                    height: ".$options['crop_box_height']."
                 },
                 enableResize: false,
                 enableExif: true
             }).hide();
-				
+
 		    function readFile(input) {
  			    if (input.files && input.files[0]) {
-                    var reader = new FileReader();	            
+                    var reader = new FileReader();
                     reader.onload = function (e) {
                         $('#".$options['input_id']."-croppie').addClass('ready');
                         uploadCrop.croppie('bind', {
                             url: e.target.result
                         }).then(function(){
-                            console.log('jQuery bind complete');	            			            		
-                        });	            		            	
-                    }	            
+                            console.log('jQuery bind complete');
+                        });
+                    }
                     reader.readAsDataURL(input.files[0]);
                     $('.file-input').hide();
-                    uploadCrop.show();	            
+                    uploadCrop.show();
 	            } else {
 		            swal(\"Sorry - you're browser doesn't support the FileReader API\");
 		        }
 		    }
-		
-            $('#".$options['input_id']."').on('change', function (e) { 
+
+            $('#".$options['input_id']."').on('change', function (e) {
                 readFile(this);
                 var imgProp = uploadCrop.croppie('get');
-                console.log(imgProp);            
+                console.log(imgProp);
                 var topLeftX = imgProp.points[0];
                 var topLeftY = imgProp.points[1];
                 var bottomRightX = imgProp.points[2];
                 var bottomRightY = imgProp.points[3];
-                var zoomPoint = imgProp.zoom;                        
+                var zoomPoint = imgProp.zoom;
                 $('#top_x').val(topLeftX);
                 $('#top_y').val(topLeftY);
                 $('#bottom_x').val(bottomRightX);
                 $('#bottom_y').val(bottomRightY);
                 $('#upload_zoom').val(zoomPoint);
             });
-		
-            uploadCrop.on('update.croppie', function(ev, imgProp) {		    
+
+            uploadCrop.on('update.croppie', function(ev, imgProp) {
                 var topLeftX = imgProp.points[0];
                 var topLeftY = imgProp.points[1];
                 var bottomRightX = imgProp.points[2];
                 var bottomRightY = imgProp.points[3];
-                var zoomPoint = imgProp.zoom;                        
+                var zoomPoint = imgProp.zoom;
                 $('#top_x').val(topLeftX);
                 $('#top_y').val(topLeftY);
                 $('#bottom_x').val(bottomRightX);
                 $('#bottom_y').val(bottomRightY);
                 $('#upload_zoom').val(zoomPoint);
             });
-		
-		
-		
+
+
+
 		$('.upload-result').on('click', function (ev) {
             // generate thumbnail.
 			uploadCrop.croppie('result', {
@@ -237,9 +237,9 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
 				console.log(resp);
 			});
 		});
-		
-	}   
-	
+
+	}
+
 	 runCroppie();
     ");
     }
