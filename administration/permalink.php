@@ -94,7 +94,13 @@ if (!empty($inf_list)) {
                         $available_rewrites[] = $rewrite_name;
                         $driver_file = INFUSIONS.$infusions_to_check."/permalinks/".$rewrite_name."_rewrite_include.php";
                         $info_file = INFUSIONS.$infusions_to_check."/permalinks/".$rewrite_name."_rewrite_info.php";
-                        $locale_file = INFUSIONS.$infusions_to_check."/locale/".LANGUAGE."/permalinks/".$rewrite_name.".php";
+
+                        if (file_exists(INFUSIONS.$infusions_to_check."/locale/".LANGUAGE."/permalinks/".$rewrite_name.".php")) {
+                            $locale_file = INFUSIONS.$infusions_to_check."/locale/".LANGUAGE."/permalinks/".$rewrite_name.".php";
+                        } else {
+                            $locale_file = INFUSIONS.$infusions_to_check."/locale/English/permalinks/".$rewrite_name.".php";
+                        }
+
                         $rewrite_registers[$rewrite_name] = [];
                         $rewrite_registers[$rewrite_name]['driver_path'] = $driver_file;
                         if (file_exists($info_file)) {
