@@ -29,29 +29,26 @@ if (iMEMBER || $settings['enable_registration'] == 0) {
 }
 
 if ($settings['gateway'] == 1) {
-
-	if (empty($_SESSION["validated"])) {
-		$_SESSION['validated'] = 'False';
-	}
-
-	if (isset($_SESSION["validated"]) && $_SESSION['validated'] !== 'True') {
+    if (session_get('validated') !== 'TRUE') {
         require_once BASEDIR."gateway/gateway.php";
-	}
+    }
 }
 
-if ((isset($_SESSION["validated"]) && $_SESSION["validated"] == "True") || $settings['gateway'] == 0) {
+if ($settings['gateway'] == 1 && session_get('validated') == 'TRUE' || $settings['gateway'] == 0) {
     $errors = [];
+    $email = get('email');
+    $code = get('code');
 
-    if (isset($_GET['email']) && isset($_GET['code'])) {
-        if (!preg_check("/^[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,4}$/i", $_GET['email'])) {
+    if ($email && $code) {
+        if (!preg_check("/^[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,4}$/i", $email)) {
             redirect("register.php?error=activate");
         }
 
-        if (!preg_check("/^[0-9a-z]{40}$/", $_GET['code'])) {
+        if (!preg_check("/^[0-9a-z]{40}$/", $code)) {
             redirect("register.php?error=activate");
         }
 
-        $result = dbquery("SELECT user_info FROM ".DB_NEW_USERS." WHERE user_code=:code AND user_email=:email", [':code' => $_GET['code'], ':email' => $_GET['email']]);
+        $result = dbquery("SELECT user_info FROM ".DB_NEW_USERS." WHERE user_code=:code AND user_email=:email", [':code' => $code, ':email' => $email]);
 
         if (dbrows($result) > 0) {
 

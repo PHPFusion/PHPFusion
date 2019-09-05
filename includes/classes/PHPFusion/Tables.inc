@@ -65,7 +65,7 @@ class Tables {
         'file_folder'              => '', // to delete files from the folder, use param for string match
         'db'                       => [
             'select' => '', // ratings_id
-            'group' => '',  // ratings_item_id
+            'group'  => '',  // ratings_item_id
             'custom' => '', // rating_type='N'
         ], // to delete other entries on delete -- use this key. Keys: 'select' => 'ratings_id', 'group' => 'ratings_item_id', 'custom' => "rating_type='CLS'"
         'delete_function_callback' => '',
@@ -94,7 +94,7 @@ class Tables {
         'user_avatar'   => FALSE, // show avatar
         'number'        => FALSE,
         'parse_value'   => FALSE,
-        'multilang' => FALSE,
+        'multilang'     => FALSE,
         'format'        => FALSE, // for formatting using strtr
         'callback'      => '', // for formatting using function
         'visibility'    => TRUE, // customize column options TRUE for default visible.
@@ -119,7 +119,6 @@ class Tables {
         'edit_key'                => 'edit',
         'del_key'                 => 'del', // change this to invoke internal table delete function for custom delete link format
         'view_key'                => 'view',
-        'date_col'                => '',  // set this value to sql column name to have date selector input filter
         'order_col'               => [], // set this value to sql column name to have sorting column input filter
         'multilang_col'           => '', // set this value to have multilanguage column filter
         'updated_message'         => 'Entries have been updated', // set this value to have custom success message
@@ -268,7 +267,16 @@ class Tables {
         if (get('s') && !empty($this->table_props['search_col'])) {
             $this->search_text = stripinput($_GET['s']);
             //@todo: support two or three columns
-            $search = "WHERE ".$this->table_props['search_col']." LIKE ('%$this->search_text%')";
+            if (is_array($this->table_props['search_col'])) {
+                $var_output = [];
+                foreach ($this->table_props['search_col'] as $column_name) {
+                    $var_output[] = $column_name." LIKE '$this->search_text%'";
+                }
+                $search = "WHERE ".implode(' OR ', $var_output);
+            } else {
+                $search = "WHERE ".$this->table_props['search_col']." LIKE '(%$this->search_text%)'";
+            }
+
         }
 
         // Dropdown link filters redirect to $_GET
@@ -319,7 +327,6 @@ class Tables {
                     $filter_val = array_flip(array_map('strtolower', $filters['options']));
                     $get_val = strtolower(get($key));
                     if (isset($filter_val[$get_val])) {
-
                         if (strlen($filter_val[$get_val])) {
                             $filter_cond[] = "$key='".$filter_val[$get_val]."'";
                         }
@@ -415,6 +422,7 @@ class Tables {
         }
 
         $this->rowStart = get($this->default_args['rowstart'], FILTER_VALIDATE_INT);
+
         $this->rowStart = $this->rowStart && isnum($this->rowStart) && $this->rowStart <= $this->maxRows ? intval($this->rowStart) : 0;
 
         // Limiter will only work when there are no parent declared as the hierarchy requires full query and array chunks
@@ -476,17 +484,17 @@ class Tables {
                 $limit = "LIMIT ".$this->query['limit'];
             }
 
+            $conditions = ($search && !empty($this->query['conditions']) ? strtr($conditions, ['{CONDITIONS_PREFIX}' => " AND"]) : strtr($conditions, ['{CONDITIONS_PREFIX}' => "WHERE"]));
+
             $sql_query = strtr(
                 $sql_statement, [
                     '{TABLE}'         => $sql_table,
                     '{SELECT}'        => ($this->query['select'] ? ", ".$this->query['select'] : ''),
                     '{SEARCH}'        => $search,
-                    '{CONDITIONS}'    => ($search && !empty($this->query['conditions']) ? strtr(
-                        $conditions, ['{CONDITIONS_PREFIX}' => " AND"]
-                    ) : strtr($conditions, ['{CONDITIONS_PREFIX}' => "WHERE"])),
+                    '{CONDITIONS}'    => !$search ? $conditions : '',
                     '{GROUP}'         => ($this->query['group'] ? "GROUP BY ".$this->query['group']." " : ''),
                     '{ID}'            => $this->query['id'],
-                    '{ORDER_SORTING}' => 'ASC',
+                    '{ORDER_SORTING}' => 'DESC',
                     '{ORDER_BY}'      => $orderby,
                     '{LIMIT}'         => $limit,
                 ]
@@ -551,7 +559,7 @@ class Tables {
 
                 if ($val) {
 
-                    $result = dbquery("SELECT * FROM ".$this->query['table']."  WHERE ".$this->query['id']."=:id", [':id'=>$val]);
+                    $result = dbquery("SELECT * FROM ".$this->query['table']."  WHERE ".$this->query['id']."=:id", [':id' => $val]);
                     if (dbrows($result)) {
                         $data = dbarray($result);
                         foreach ($data as $key => $value) {
@@ -646,6 +654,7 @@ class Tables {
                             }
                         }
 
+                        // run sdk delete cmd
                         $this->bulkDelete($data);
                     }
                 }
@@ -693,7 +702,7 @@ class Tables {
         $html .= "<div class='p-l-15'>";
         $html .= form_checkbox('custom_column[]', '', implode(',', $this->custom_columns_value), [
             'multiple'       => TRUE,
-            'inline' => FALSE,
+            'inline'         => FALSE,
             'inline_options' => TRUE,
             'options'        => $this->custom_columns_options
         ]);
@@ -761,12 +770,11 @@ class Tables {
         // The delete of a row
         if ($key_delete && isnum($key_delete)) {
 
-            $result = dbquery("SELECT * FROM ".$this->query['table']." WHERE ".$this->query['id']."=:id",[':id' => (int)$key_delete]);
+            $result = dbquery("SELECT * FROM ".$this->query['table']." WHERE ".$this->query['id']."=:id", [':id' => (int)$key_delete]);
 
             if (dbrows($result)) {
 
                 $del_data = dbarray($result);
-
                 $params = [];
 
                 foreach ($del_data as $key => $value) {
@@ -782,8 +790,11 @@ class Tables {
                         foreach ($list_images as $filename) {
                             if (file_exists($this->query['image_folder'].$filename)) {
                                 $file = $this->query['image_folder'].$filename;
-                                //print_p($file);
-                                unlink($file);
+                                if ($this->query['debug']) {
+                                    print_p('Remove '.$file);
+                                } else {
+                                    unlink($file);
+                                }
                             }
                         }
                     }
@@ -800,18 +811,12 @@ class Tables {
                             if (file_exists($this->query['file_folder'].$filename)) {
                                 $file = $this->query['file_folder'].$filename;
                                 //print_p($file);
-                                unlink($file);
+                                if ($this->query['debug']) {
+                                    print_p('Remove '.$file);
+                                } else {
+                                    unlink($file);
+                                }
                             }
-                        }
-                    }
-                }
-
-                // Custom delete
-                if (!empty($this->query['db']) && !empty($table_prop['custom']) && !empty($table_prop['group'])) {
-                    foreach ($this->query['db'] as $table_name => $table_prop) {
-                        $custom_condition = (!empty($table_prop['custom']) ? 'AND '.$table_prop['custom'] : '');
-                        if (dbcount("(".$table_prop['select'].")", $table_name, $table_prop['group']."='".$del_data[$this->query['id']]."' $custom_condition")) {
-                            dbquery("DELETE FROM ".$table_name." WHERE ".$table_prop['group']."='".$del_data[$this->query['id']]."' $custom_condition");
                         }
                     }
                 }
@@ -820,14 +825,34 @@ class Tables {
                 if (!empty($this->query['delete_function_callback'])) {
                     if (is_callable($this->query['delete_function_callback'])) {
                         $this->query['delete_function_callback']($del_data);
+                    } else {
+                        addNotice('warning', 'Function '.$this->query['delete_function_callback'].' is not found');
                     }
+                } else {
+
+                    // Custom delete
+                    if (!empty($this->query['db']) && !empty($table_prop['custom']) && !empty($table_prop['group'])) {
+                        foreach ($this->query['db'] as $table_name => $table_prop) {
+                            $custom_condition = (!empty($table_prop['custom']) ? 'AND '.$table_prop['custom'] : '');
+                            if (dbcount("(".$table_prop['select'].")", $table_name, $table_prop['group']."='".$del_data[$this->query['id']]."' $custom_condition")) {
+                                $del_statement = "DELETE FROM ".$table_name." WHERE ".$table_prop['group']."='".$del_data[$this->query['id']]."' $custom_condition";
+                                if ($this->query['debug']) {
+                                    print_p($del_statement);
+                                } else {
+                                    dbquery($del_statement);
+                                }
+                            }
+                        }
+                    } else {
+                        dbquery_insert($this->query['db'], $del_data, 'delete');
+                    }
+
                 }
 
                 $this->bulkDelete($del_data);
 
                 addNotice('success', $this->table_props['deleted_message']);
-
-                redirect(clean_request('', ['del'], FALSE));
+                redirect(clean_request('', [$this->table_props['del_key']], FALSE));
             }
         }
 
@@ -962,7 +987,7 @@ class Tables {
                     // do a count if count options is assigned
                     $count_num = '';
                     if (!empty($filters['count'])) {
-                        $count_num = " (".dbcount("(".$this->query['id'].")", $this->query['table'].' base', $key.'=:key', [':key'=>$filter_key]).")";
+                        $count_num = " (".dbcount("(".$this->query['id'].")", $this->query['table'].' base', $key.'=:key', [':key' => $filter_key]).")";
                     }
                     $filter_val = strtolower($filter);
                     $active_class = (get($key) == $filter_val) ? " class='strong'" : '';
@@ -1025,7 +1050,7 @@ class Tables {
         $start_row = '';
         $end_row = '';
 
-        if ($this->table_props['show_count'] === TRUE || $this->quick_fields || !empty($this->table_props['date_col'])) {
+        if ($this->table_props['show_count'] === TRUE || $this->quick_fields) {
             $start_row = "<div class='clearfix m-t-5 m-b-5' style='width:100%;'>\n";
             $end_row = "</div>\n";
         }
@@ -1041,7 +1066,7 @@ class Tables {
         }
 
         if ($this->table_props['delete_link'] === TRUE || !empty($this->table_props['action_filters'])) {
-            $html .= "<div class='display-inline-block m-r-15'>\n";
+            $html .= "<div class='display-inline-block pull-left m-r-15'>\n";
 
             $actions_options = [
                 ''            => 'Bulk Actions',
@@ -1057,7 +1082,7 @@ class Tables {
                 }
             }
 
-            $html .= openform('cat_table_frm', 'post', FUSION_REQUEST).form_select(
+            $html .= '<div class="display-inline pull-left">'.openform('cat_table_frm', 'post', FUSION_REQUEST).form_select(
                     'filter_actions', '', '', [
                         'inline'           => TRUE,
                         'inner_width'      => '150px',
@@ -1071,12 +1096,12 @@ class Tables {
                                 'filter_ids', '', ''
                             )
                     ]
-                ).closeform();
+                ).closeform().'</div>';
             $html .= "</div>\n";
         }
 
         if (!empty($this->table_props['dropdown_filters'])) {
-            $html .= "<div class='display-inline-block'>".openform('date_frm', 'post', FUSION_REQUEST);
+            $html .= "<div class='display-inline'>".openform('date_frm', 'post');
 
             if (!empty($this->table_props['dropdown_filters'])) {
                 foreach ($this->table_props['dropdown_filters'] as $column_name => $filter_prop) {
@@ -1263,23 +1288,17 @@ class Tables {
                                 $value = "<img class='$class' style='$width' src='".$image_folder.$data[$col_key]."'/>\n";
                             }
 
-                        }
-
-                        else if ($col_data['multilang']) {
+                        } else if ($col_data['multilang']) {
 
                             $value = UserFieldsQuantum::parse_label($data[$col_key]);
 
-                        }
-
-                        else if ($col_data['icon'] && !empty($data[$col_key])) {
+                        } else if ($col_data['icon'] && !empty($data[$col_key])) {
                             /*
                              * array("icon" => TRUE)
                              */
                             $value = "<i class='".$data[$col_key]."'/></i>\n";
 
-                        }
-
-                        else if ($col_data['number']) {
+                        } else if ($col_data['number']) {
                             /*
                              * array("number" => true, "delimiter" => "2", "decimal_point" => ".", "thousand_sep" => ",")
                              */
@@ -1449,9 +1468,7 @@ class Tables {
                                 }
                             }
 
-                        }
-
-                        else if (!empty($col_data['date']) && !empty($value)) {
+                        } else if (!empty($col_data['date']) && !empty($value)) {
 
                             // only accepts timestamp
                             if (isnum($value)) {
@@ -1475,9 +1492,7 @@ class Tables {
                             }
 
 
-                        }
-
-                        else if (!empty($col_data['array']) && is_array($col_data['array'])) {
+                        } else if (!empty($col_data['array']) && is_array($col_data['array'])) {
                             /*
                              * Similar to options
                              * array("array" => array(1=>"Yes", 0=>"No"))
@@ -1586,7 +1601,7 @@ class Tables {
             $html .= "<div id='qc-input' class='qc-input' style='display: none;'>\n";
             foreach ($this->quick_fields as $table_col => $table_fields) {
                 $html .= "<div class='clearfix'><span class='tbl-qc-title'>".$table_fields['title']."</span>\n";
-                $html .= $table_fields['function']($table_col, isset($table_fields['label']) ? $table_fields['label'] : '','', $table_fields); // you won't be able to use quick fields if you turn off jquery.
+                $html .= $table_fields['function']($table_col, isset($table_fields['label']) ? $table_fields['label'] : '', '', $table_fields); // you won't be able to use quick fields if you turn off jquery.
                 $html .= "</div>\n";
             }
             $html .= form_hidden('qc_id', '');
@@ -1644,7 +1659,7 @@ class Tables {
     /**
      * @param $column_name
      * @param $filter_options
-     *
+     * @todo: bug, there is no way to clear filter options.
      * @return string
      * @throws \ReflectionException
      */
@@ -1664,11 +1679,12 @@ class Tables {
         }
 
         $sql_statement = /** @lang mysql */
-            "SELECT YEAR(FROM_UNIXTIME({DATE_COLUMN})) 'table_year', MONTH(FROM_UNIXTIME({DATE_COLUMN})) 'table_month' FROM {TABLE} {CONDITIONS} GROUP BY table_year, table_month ORDER BY {DATE_COLUMN} DESC";
+            "SELECT YEAR(FROM_UNIXTIME({DATE_COLUMN})) 'table_year', MONTH(FROM_UNIXTIME({DATE_COLUMN})) 'table_month' FROM {TABLE} {JOINS} {CONDITIONS} GROUP BY table_year, table_month ORDER BY {DATE_COLUMN} DESC";
         $date_sql = strtr(
             $sql_statement, [
                 '{DATE_COLUMN}' => $column_name,
-                '{TABLE}'       => $this->query['table'],
+                '{TABLE}'       => $this->query['table'].' base',
+                '{JOINS}'       => $this->query['joins'] ? $this->query['joins'] : '',
                 '{CONDITIONS}'  => $sql_conditions
             ]
         );
@@ -1700,7 +1716,7 @@ class Tables {
             );
             $html .= "</div>\n"; // close inline
 
-            return $html;
+            return (string)$html;
         }
     }
 
@@ -1748,6 +1764,7 @@ class Tables {
 
     /**
      * Provides a method for deleting
+     *
      * @param $data
      */
     private function bulkDelete($data) {

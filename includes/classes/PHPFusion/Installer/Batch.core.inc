@@ -72,6 +72,8 @@ class Batch_Core extends Install_Core {
 
     const ADD_INDEX_STATEMENT = "ALTER TABLE {%table%} ADD INDEX {%column_name%} ({%column_name%})";
 
+    const DROP_INDEX_STATEMENT = 'ALTER TABLE {%table%} DROP INDEX {%column_name%}';
+
     /*
      * Defines the PHP-Fusion Package and to be developed with the PHP-Fusion sql-handler
      * http://dev.mysql.com/doc/refman/5.7/en/show-columns.html
@@ -192,6 +194,7 @@ class Batch_Core extends Install_Core {
 
     /**
      * Get the infusions runtime results
+     *
      * @param bool $upgrade
      *
      * @return array
@@ -243,13 +246,14 @@ class Batch_Core extends Install_Core {
                             }
                         }
                     } // end foreach
+
                     if ($inf_rights = post('upgrade_infusion')) {
                         if (isset(self::$infusion_runtime[$inf_rights])) {
                             foreach (self::$infusion_runtime[$inf_rights] as $db_command_type => $inf_table) {
                                 foreach ($inf_table as $table_name => $table_query) {
                                     if (!empty($table_query)) {
                                         if (is_array($table_query)) {
-                                            foreach($table_query as $sql_query) {
+                                            foreach ($table_query as $sql_query) {
                                                 dbquery($sql_query);
                                             }
                                         } else {
@@ -290,13 +294,23 @@ class Batch_Core extends Install_Core {
     }
 
 
+    private function alterIndex($schema, $colattr) {
+        print_p($schema);
+        // drop index statement
+        if (isset($schema['key'])) {
+            return '';
+        }
+        // add index statement.
+        return '';
+        print_P($colattr);
+    }
+
     /**
      * When table exists, need to be checked for both data-types and column name consistencies
      */
     private function check_existing_table() {
 
         if ($schema_check = $this->get_table_schema(self::$table_name)) {
-
             // Iterate checks on every column of the table for consistency
             foreach (self::$table_cols as $col_name => $col_attr) {
 
@@ -308,7 +322,6 @@ class Batch_Core extends Install_Core {
                  * If column does not exist, add the column
                  */
                 if (isset($schema_check[$col_name])) {
-
                     // has column and proceed to compare
                     $schema_compare[self::$table_name][$col_name] = array_diff($schema_check[$col_name], $col_attr);
 
@@ -318,12 +331,39 @@ class Batch_Core extends Install_Core {
                         // Register column primary_keys and keys - @todo: have a check on this as well
                         if (isset($col_attr['key'])) {
                             $keys[$col_attr['key']] = $col_name;
+
                         }
 
-                        self::$runtime_results['alter_column'][self::$table_name][$col_name] = strtr(self::ALTER_COLUMN_STATEMENT, [
-                            '{%table%}'      => self::$connection['db_prefix'].self::$table_name,
-                            '{%table_attr%}' => $this->get_table_attr($col_name, $col_attr)
-                        ]);
+                        if (isset($schema_compare[self::$table_name][$col_name]['key'])) {
+
+                            self::$runtime_results['alter_index'][self::$table_name][$col_name] = strtr(self::ADD_INDEX_STATEMENT, [
+                                '{%table%}'       => self::$connection['db_prefix'].self::$table_name,
+                                '{%column_name%}' => $col_name,
+                            ]);
+
+                            if ($schema_check[$col_name]) {
+                                self::$runtime_results['alter_index'][self::$table_name][$col_name] = strtr(self::DROP_INDEX_STATEMENT, [
+                                    '{%table%}'       => self::$connection['db_prefix'].self::$table_name,
+                                    '{%column_name%}' => $col_name,
+                                ]);
+                            }
+
+                            //@todo: if key 2 != 1 (different type of index)
+                            // remove the key difference.
+                            unset($schema_compare[self::$table_name][$col_name]['key']);
+                            //print_P($schema_compare[self::$table_name][$col_name]);
+                        }
+
+                        // check if there are any other column attribute difference
+                        if (!empty($schema_compare[self::$table_name][$col_name])) {
+                            self::$runtime_results['alter_column'][self::$table_name][$col_name] = strtr(self::ALTER_COLUMN_STATEMENT, [
+                                '{%table%}'      => self::$connection['db_prefix'].self::$table_name,
+                                '{%table_attr%}' => $this->get_table_attr($col_name, $col_attr)
+                            ]);
+
+                        }
+
+                        print_P(self::$runtime_results);
                     }
 
                 } else {

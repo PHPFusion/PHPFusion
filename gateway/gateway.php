@@ -27,16 +27,17 @@ require_once "functions_include.php";
 antiflood_countaccess();
 
 // Flag for pass, just increment on amount of checks we add.
-$multiplier = "0";
+$multiplier = 0;
 $reply_method = '';
 
 $info = [
     'showform'         => FALSE,
     'incorrect_answer' => FALSE
 ];
+// print_P($_POST);
+session_add('validated', 'FALSE');
 
-// Don´t run twice
-if (!isset($_POST['gateway_submit']) && !isset($_POST['register'])) {
+if (!post('gateway_submit') && !post('register')) {
 
     // Get some numbers up. Always keep an odd number to void 10-10 etc.
     $a = rand(11, 20);
@@ -48,12 +49,14 @@ if (!isset($_POST['gateway_submit']) && !isset($_POST['register'])) {
         $reply_method = $locale['gateway_062'];
         $a = convertNumberToWord($a);
         $antibot = convertNumberToWord($antibot);
-        $_SESSION["antibot"] = strtolower($antibot);
+        // $_SESSION["antibot"] = strtolower($antibot);
+        session_add('antibot', strtolower($antibot));
     } else {
         $antibot = intval($a - $b);
         $multiplier = "-";
         $reply_method = $locale['gateway_063'];
-        $_SESSION["antibot"] = intval($antibot);
+        //$_SESSION["antibot"] = intval($antibot);
+        session_add('antibot', (int) $antibot);
         $b = convertNumberToWord($b);
     }
 
@@ -65,13 +68,13 @@ if (!isset($_POST['gateway_submit']) && !isset($_POST['register'])) {
     // Just add fields to random
     $honeypot_array = [$locale['gateway_053'], $locale['gateway_054'], $locale['gateway_055'], $locale['gateway_056'], $locale['gateway_057'], $locale['gateway_058'], $locale['gateway_059']];
     shuffle($honeypot_array);
-    $_SESSION["honeypot"] = $honeypot_array[3];
+    //$_SESSION["honeypot"] = $honeypot_array[3];
+    session_add('honeypot', $honeypot_array[3]);
 
     // Try this and we see, Rot47 Encryption etc..
     add_to_footer('<script type="text/javascript">
         function decode(x) {
             let s = "";
-
             for (let i = 0; i < x.length; i++) {
                 let j = x.charCodeAt(i);
                 if ((j >= 33) && (j <= 126)) {
@@ -83,7 +86,6 @@ if (!isset($_POST['gateway_submit']) && !isset($_POST['register'])) {
 
             return s;
         }
-
         $("#gateway_question").append("'.$locale['gateway_060'].' " + decode("'.$a.'") + " '.$multiplier.' " + decode("'.$b.'") + " '.$locale['gateway_061'].' '.$reply_method.'");
     </script>');
 
@@ -98,35 +100,31 @@ if (!isset($_POST['gateway_submit']) && !isset($_POST['register'])) {
     ];
 }
 
-if (isset($_POST['gateway_answer'])) {
-    $honeypot = '';
+if (post('gateway_answer')) {
+    $honeypot = session_get('honeypot');
 
-    if (isset($_SESSION["honeypot"])) {
-        $honeypot = $_SESSION["honeypot"];
-    }
+    if (isset($_POST[$honeypot]) && !post($honeypot)) {
+        $antibot = stripinput(strtolower(post('gateway_answer')));
+        $antibot_session = session_get('antibot');
+        if ($antibot_session == $antibot) {
 
-    $_SESSION["validated"] = "False";
+            session_add('validated', 'TRUE');
 
-    if (isset($_POST["$honeypot"]) && $_POST["$honeypot"] == "") {
-        $antibot = stripinput(strtolower($_POST["gateway_answer"]));
-
-        if (isset($_SESSION["antibot"])) {
-            if ($_SESSION["antibot"] == $antibot) {
-                $_SESSION["validated"] = "True";
-				redirect(BASEDIR."register.php");
-            } else {
-                $info['incorrect_answer'] = TRUE;
-            }
+            redirect(BASEDIR.'register.php');
+        } else {
+            $info['incorrect_answer'] = TRUE;
         }
     }
 }
 
+// print_P(session_get('antibot'), FALSE, TRUE, 0);
+
 if (!function_exists('display_gateway')) {
     function display_gateway($info) {
         global $locale;
+
         echo "<div class='container'>";
         if ($info['showform'] == TRUE) {
-
             opentable($locale['gateway_069']);
             echo $info['openform'];
             echo $info['hiddeninput'];
