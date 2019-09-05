@@ -16,20 +16,22 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
-pageAccess('S3');
 require_once THEMES.'templates/admin_header.php';
+pageAccess('S3');
+
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/settings.php');
-\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'settings_theme.php'.fusion_get_aidlink(), 'title' => $locale['theme_settings']]);
+
+add_breadcrumb(['link' => ADMIN.'settings_theme.php'.fusion_get_aidlink(), 'title' => $locale['theme_settings']]);
 
 $settings = fusion_get_settings();
 
-if (isset($_POST['savesettings'])) {
+if (post('savesettings')) {
     $inputData = [
-        'admin_theme' => form_sanitizer($_POST['admin_theme'], $settings['admin_theme'], 'admin_theme'),
-        'theme'       => form_sanitizer($_POST['theme'], $settings['theme'], 'theme'),
-        'bootstrap'   => form_sanitizer($_POST['bootstrap'], '0', 'bootstrap'),
-        'entypo'      => form_sanitizer($_POST['entypo'], '0', 'entypo'),
-        'fontawesome' => form_sanitizer($_POST['fontawesome'], '0', 'fontawesome'),
+        'admin_theme' => sanitizer('admin_theme', $settings['admin_theme'], 'admin_theme'),
+        'theme'       => sanitizer('theme', $settings['theme'], 'theme'),
+        'bootstrap'   => sanitizer('bootstrap', '0', 'bootstrap'),
+        'entypo'      => sanitizer('entypo', '0', 'entypo'),
+        'fontawesome' => sanitizer('fontawesome', '0', 'fontawesome'),
     ];
 
     if (\Defender::safe()) {
@@ -51,8 +53,9 @@ $admin_theme_files = makefilelist(THEMES."admin_themes/", ".|..", TRUE, "folders
 
 opentable($locale['theme_settings']);
 echo "<div class='well'>".$locale['theme_description']."</div>";
-echo openform('settingsform', 'post', FUSION_REQUEST, ['max_tokens' => 2]);
-echo "<div class='row'><div class='col-xs-12 col-sm-12 col-md-6'>\n";
+echo openform('settingsform', 'post');
+echo "<div class='".grid_row()."'>";
+echo "<div class='".grid_column_size(100, 100, 50)."'>\n";
 
 openside('');
 

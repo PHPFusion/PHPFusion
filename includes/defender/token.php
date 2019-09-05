@@ -53,6 +53,7 @@ class Token extends \Defender {
 
     /**
      * Error string
+     *
      * @var string
      */
     private $error = FALSE;
@@ -67,13 +68,13 @@ class Token extends \Defender {
         if (!empty($_POST)) {
 
             if ($form_id = post('form_id')) {
-               $honeypot = \Defender::getInstance()->getHoneypot($form_id.'_honeypot');
-               if ($honeypot['type'] == 'honeypot') {
-                   if (post($honeypot['input_name'])) {
-                       \Authenticate::logOut();
-                       redirect(BASEDIR.'error.php?code=403');
-                   }
-               }
+                $honeypot = \Defender::getInstance()->getHoneypot($form_id.'_honeypot');
+                if ($honeypot['type'] == 'honeypot') {
+                    if (post($honeypot['input_name'])) {
+                        \Authenticate::logOut();
+                        redirect(BASEDIR.'error.php?code=403');
+                    }
+                }
             }
 
             if (!isset($_POST['fusion_token']) || !isset($_POST['form_id']) || !is_string(
@@ -92,7 +93,7 @@ class Token extends \Defender {
                 // Check if the token exists in storage
                 $this->error = $locale['token_error_10'].stripinput($_POST['fusion_token']);
 
-            } else if ( $error = self::verify_token()) {
+            } else if ($error = self::verify_token()) {
                 $this->error = $error;
                 // Unable to Verify Token
                 //$error = $locale['token_error_3'].stripinput($_POST['fusion_token']).$error;

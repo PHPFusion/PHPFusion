@@ -132,6 +132,7 @@ class Form {
                 'readonly'       => $options['deactivate'] ? ' disabled' : '',
                 'onchange'       => $options['onchange'] ? ' onchange="'.$options['onchange'].'"' : '',
                 'multiple'       => $options['multiple'] ? ' multiple' : '',
+                'class'          => $options['select2_disabled'] == TRUE ? " class='form-control'" : "",
                 'allowclear'     => $options['allowclear'],
                 'parent_opts'    => $options['parent_opts'],
                 'options'        => $options['options_options'],
@@ -184,7 +185,7 @@ class Form {
         // support inline if there are multiple options only.
         $template = '
         <div id="{%input_id%}-field" class="{%input_class%} form-group clearfix">
-            <label class="control-label{%label_class%}" data-checked="{%data_value%}"{%style%}>         
+            <label class="control-label{%label_class%}" data-checked="{%data_value%}"{%style%}>
             {%pre_checkbox%}
             {%label%}
             {required.{
@@ -192,14 +193,14 @@ class Form {
             }}
             {tip.{
                 <i class="pointer fa fa-question-circle text-lighter" title="{%title%}"></i>
-            }}            
-            {%post_checkbox%}                     
+            }}
+            {%post_checkbox%}
             {stacked.{
             <!--fusion stacked information-->{%content%}
-            }}            
-           
-           
-                                                                                        
+            }}
+
+
+
             </label>
             {ext_tip.{
             <br/><span class="tip"><i>{%tip_text%}</i></span>
