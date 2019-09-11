@@ -23,7 +23,7 @@ use PHPFusion\Database\DatabaseFactory;
 require_once __DIR__.'/autoloader.php';
 require_once fusion_detect_installation();
 require_once __DIR__.'/multisite_include.php';
-
+require_once __DIR__.'/core_constants_include.php';
 // Database handler functions
 /**
  * Documentation:
@@ -47,7 +47,7 @@ DatabaseFactory::registerConfiguration(DatabaseFactory::getDefaultConnectionID()
     'debug'    => DatabaseFactory::isDebug(DatabaseFactory::getDefaultConnectionID())
 ]);
 DatabaseFactory::registerConfigurationFromFile(__DIR__.'/../config.db.php');
-require_once DB_HANDLERS."all_functions_include.php";
+require_once __DIR__."/db_handlers/all_functions_include.php";
 require_once __DIR__."/system_images.php";
 require_once __DIR__."/output_handling_include.php";
 require_once __DIR__."/translate_include.php";

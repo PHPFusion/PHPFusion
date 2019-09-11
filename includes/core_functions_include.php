@@ -1356,7 +1356,7 @@ function makefileopts(array $files, $selected = "") {
  * @global array  $locale
  *
  */
-function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = "rowstart", $button = FALSE) {
+function makepagenav(int $start = 0, int $count = 0, int $total = 0, int $range = 0, $link = "", $getname = "rowstart", $button = FALSE) {
 
     $locale = fusion_get_locale();
     /* Bootstrap may be disabled in theme (see Gillette for example) without settings change in DB.
