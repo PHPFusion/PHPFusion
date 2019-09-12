@@ -1695,6 +1695,13 @@ Global Administration template
     border:2px solid #ddd;
 }
 
+.nav-caret-link {
+    color:#243D54;
+}
+.nav-caret {
+    font-size:20px;
+}
+
 /* responsive media */
 @media only screen and (max-width: 850px) {
 

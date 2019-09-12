@@ -1362,23 +1362,26 @@ function makepagenav(int $start = 0, int $count = 0, int $total = 0, int $range 
     /* Bootstrap may be disabled in theme (see Gillette for example) without settings change in DB.
        In such case this function will not work properly.
        With this fix (used $settings instead fusion_get_settings) function will work.*/
+    $tpl_global = "<div class='pagenav'>%s\n%s\n%s</div>\n";
+    $tpl_currpage = "<a class='pagenavlink active' href='%s=%d'>%d</a>";
+    $tpl_page = "<a class='pagenavlink' data-value='%d' href='%s=%d'>%s</a>";
+    $tpl_divider = "<span class='pagenavdivider'>...</span>";
+    $tpl_firstpage = "<a class='pagenavlink' data-value='0' href='%s=0'>1</a>";
+    $tpl_lastpage = "<a class='pagenavlink' data-value='%d' href='%s=%d'>%s</a>\n";
+    $tpl_button = "<a class='pagenavlink' data-value='%d' href='%s=%d'>%s</a>\n";
+    $tpl_next = "<a class='pagenavlink' data-value='%d' href='%s=%d'>%s</a>\n";
+
     if (fusion_get_settings("bootstrap") || defined('BOOTSTRAP')) {
-        $tpl_global = "<nav>%s<div class='btn-group'>\n%s</div></nav>\n";
-        $tpl_currpage = "<a class='btn btn-sm btn-default active' href='%s=%d'><strong>%d</strong></a>\n";
-        $tpl_page = "<a class='btn btn-sm btn-default' data-value='%d' href='%s=%d'>%s</a>\n";
+        $tpl_global = "<nav><div class='btn-group'>\n%s\n%s\n%s</div></nav>\n";
+        $tpl_currpage = "<a class='btn btn-default active' href='%s=%d'><strong>%d</strong></a>\n";
+        $tpl_page = "<a class='btn btn-default' data-value='%d' href='%s=%d'>%s</a>\n";
         $tpl_divider = "</div>\n<div class='btn-group'>";
-        $tpl_firstpage = "<a class='btn btn-sm btn-default' data-value='0' href='%s=0'>1</a>\n";
-        $tpl_lastpage = "<a class='btn btn-sm btn-default' data-value='%d' href='%s=%d'>%s</a>\n";
+        $tpl_firstpage = "<a class='btn btn-default' data-value='0' href='%s=0'>1</a>\n";
+        $tpl_lastpage = "<a class='btn btn-default' data-value='%d' href='%s=%d'>%s</a>\n";
         $tpl_button = "<a class='btn btn-primary btn-block btn-md' data-value='%d' href='%s=%d'>%s</a>\n";
-    } else {
-        $tpl_global = "<div class='pagenav'>%s\n%s</div>\n";
-        $tpl_currpage = "<a class='pagenavlink active' href='%s=%d'>%d</a>";
-        $tpl_page = "<a class='pagenavlink' data-value='%d' href='%s=%d'>%s</a>";
-        $tpl_divider = "<span class='pagenavdivider'>...</span>";
-        $tpl_firstpage = "<a class='pagenavlink' data-value='0' href='%s=0'>1</a>";
-        $tpl_lastpage = "<a class='pagenavlink' data-value='%d' href='%s=%d'>%s</a>\n";
-        $tpl_button = "<a class='pagenavlink' data-value='%d' href='%s=%d'>%s</a>\n";
+        $tpl_next = "<a class='btn btn-default' data-value='%d' href='%s=%d'>%s</a>\n";
     }
+
 
     if ($link == '') {
         $link = FUSION_SELF."?";
@@ -1437,8 +1440,85 @@ function makepagenav(int $start = 0, int $count = 0, int $total = 0, int $range 
         }
     }
 
-    return sprintf($tpl_global, "<small class='m-r-10'><span>".$locale['global_092']."</span> ".$cur_page.$locale['global_093'].$pg_cnt."</small> ", $res);
+    $last_button = sprintf($tpl_next, $idx_next, $link.$getname, $idx_next, 'Next');
+    $first_button = '';
+    if ($cur_page == $idx_lst) {
+        $first_button = sprintf($tpl_next, $idx_fst, $link.$getname, $idx_fst, 'Previous');
+        $last_button = '';
+    }
+
+    return (string)sprintf($tpl_global, $first_button, $res, $last_button);
 }
+
+/**
+ * @param int    $start
+ * @param int    $count
+ * @param int    $total
+ * @param int    $range
+ * @param string $link
+ * @param string $getname
+ *
+ * @return bool|string
+ * @throws ReflectionException
+ */
+function makepagepointer(int $start = 0, int $count = 0, int $total = 0, int $range = 0, $link = "", $getname = "rowstart") {
+    $locale = fusion_get_locale();
+    if ($link == '') {
+        $link = FUSION_SELF."?";
+        if (fusion_get_settings("site_seo") && defined('IN_PERMALINK')) {
+            global $filepath;
+            $link = $filepath."?";
+        }
+    }
+
+    if (!preg_match("#[0-9]+#", $count) || $count == 0) {
+        return FALSE;
+    }
+
+    $pg_cnt = ceil($total / $count);
+
+    $idx_back = $start - $count;
+    $idx_next = $start + $count;
+
+    $cur_page = ceil(($start + 1) / $count);
+
+    $idx_fst = max($cur_page - $range, 1);
+    $idx_lst = min($cur_page + $range, $pg_cnt);
+    if ($range == 0) {
+        $idx_fst = 1;
+        $idx_lst = $pg_cnt;
+    }
+
+    $prev_arrow = '<a class="nav-caret-link" title="Previous" href="'.$link.$getname.'='.$idx_back.'"><i class="fas fa-caret-left nav-caret"></i></a>';
+    if ($cur_page == $idx_fst) {
+        $prev_arrow = '<i class="fas fa-caret-left nav-caret"></i>';
+    }
+    $next_arrow = '<a class="nav-caret-link" title="Next" href="'.$link.$getname.'='.$idx_next.'"><i class="fas fa-caret-right nav-caret"></i></a>';
+    if ($cur_page == $idx_lst) {
+        $next_arrow = '<i class="fas fa-caret-right nav-caret"></i>';
+    }
+
+    $res = '<span class="m-l-15 display-inline-block">'.$prev_arrow.'</span><span class="m-l-5 display-inline-block">'.$next_arrow.'</span>';
+
+    if (isset($_POST[$getname])) {
+        $key = post($getname, FILTER_VALIDATE_INT);
+        if (!$key) {
+            $key = 1;
+        }
+        $row_key = ($key-1) * $count; // indicated rowstart
+        $last_row_key = $idx_lst * $count; // last max possible.
+        if ($row_key > $last_row_key) {
+            $row_key = $last_row_key;
+        }
+        redirect($link.$getname.'='.$row_key);
+    }
+
+    return '<nav><small>'.$locale['global_092'].openform('pagepointer_frm', 'post', FORM_REQUEST, ['class'=>'display-inline-block m-0']).
+        form_text($getname, '', $cur_page, ['width'=>'30px', 'class'=>'m-0', 'inner_class'=>'input-sm']).
+        closeform().$locale['global_093'].$pg_cnt.'</small>'.$res.'</span></nav>';
+
+}
+
 
 /**
  * @param string $scroll_url            The ajax script that loads the content
