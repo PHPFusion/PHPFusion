@@ -18,28 +18,60 @@
 
 namespace PHPFusion\Infusions\Forum\Classes;
 
-use PHPFusion\BreadCrumbs;
-
+/**
+ * Class Forum_Postify
+ *
+ * @package PHPFusion\Infusions\Forum\Classes
+ */
 class Forum_Postify extends Forum_Server {
 
+    /**
+     * @var array|null
+     */
     protected static $locale = [];
+    /**
+     * @var string
+     */
     protected static $default_redirect_link = '';
+    /**
+     * @var array
+     */
     protected static $postify_uri = [];
+    /**
+     * @var array|string|string[]
+     */
     protected static $settings = [];
+    /**
+     * @var
+     */
     private $postify_action;
+    /**
+     * @var int
+     */
+    private $forum_id = 0;
+    /**
+     * @var int
+     */
+    private $thread_id = 0;
 
+    /**
+     * Forum_Postify constructor.
+     *
+     * @throws \Exception
+     */
     public function __construct() {
         require_once INCLUDES."infusions_include.php";
         require_once INFUSIONS."forum/templates.php";
         self::$locale = fusion_get_locale();
         self::$settings = fusion_get_settings();
         self::get_forum_settings();
+        $this->forum_id = get('forum_id', FILTER_VALIDATE_INT);
+        $this->thread_id = get('thread_id', FILTER_VALIDATE_INT);
 
-        if (!isset($_GET['forum_id'])) {
+        if (!$this->forum_id) {
             throw new \Exception(self::$locale['forum_0587']);
         }
-
-        if (!isset($_GET['thread_id'])) {
+        if (!$this->thread_id) {
             throw new \Exception(self::$locale['forum_0588']);
         }
 
@@ -50,7 +82,7 @@ class Forum_Postify extends Forum_Server {
         }
 
         set_title(self::$locale['forum_0000']);
-        BreadCrumbs::getInstance()->addBreadCrumb(['link' => FORUM.'index.php', 'title' => self::$locale['forum_0000']]);
+        add_breadcrumb(['link' => FORUM.'index.php', 'title' => self::$locale['forum_0000']]);
     }
 
     /**
@@ -58,7 +90,8 @@ class Forum_Postify extends Forum_Server {
      * @throws \Exception
      */
     public function do_postify() {
-        if ($postify = $this->load_postify($_GET['post'])) {
+        $post = get('post');
+        if ($postify = $this->load_postify($post)) {
             if (method_exists($postify, 'execute')) {
                 return $postify->execute();
             } else {
@@ -77,6 +110,11 @@ class Forum_Postify extends Forum_Server {
         return NULL;
     }
 
+    /**
+     * @param $class_actions
+     *
+     * @return bool
+     */
     private function loaded_postify($class_actions) {
         if (is_file(FORUM_CLASS.'postify/'.strtolower($class_actions).'.php')) {
             include FORUM_CLASS.'postify/'.strtolower($class_actions).'.php';
@@ -113,20 +151,25 @@ class Forum_Postify extends Forum_Server {
         }
 
         if ($this->loaded_postify($class_actions)) {
-
             return $this->postify_action[$class_actions];
-
         } else {
             throw new \Exception('File does not exist');
         }
     }
 
+    /**
+     * @return int
+     */
+    protected function getPostifyError() {
+        $error = get('error', FILTER_VALIDATE_INT);
+        return (int)($error < 6 ? $error : 0);
+    }
+
     protected function get_postify_error_message() {
+        $error = $this->getPostifyError();
 
-        $_GET['error'] = (!empty($_GET['error']) && isnum($_GET['error']) && $_GET['error'] <= 6 ? $_GET['error'] : 0);
-
-        if (!empty($_GET['error'])) {
-            switch ($_GET['error']) {
+        if (!empty($error)) {
+            switch ($error) {
                 case 1:
                     // Attachment file type is not allowed
                     return self::$locale['forum_0540'];
@@ -162,15 +205,17 @@ class Forum_Postify extends Forum_Server {
      * @return array
      */
     protected function get_postify_uri() {
-        if ($_GET['error'] < 3) {
-            if (!isset($_GET['thread_id']) || !isnum($_GET['thread_id'])) {
+        $error = $this->getPostifyError();
+
+        if ($error < 3) {
+            if (!$this->thread_id) {
                 addNotice('danger', 'URL Error');
                 redirect(self::$default_redirect_link);
             }
-            $link[] = ['url' => fusion_get_settings('siteurl').'infusions/forum/viewthread.php?thread_id='.$_GET['thread_id'], 'title' => self::$locale['forum_0548']];
-            redirect(fusion_get_settings('siteurl').'infusions/forum/viewthread.php?thread_id='.$_GET['thread_id'], 3);
+            $link[] = ['url' => fusion_get_settings('siteurl').'infusions/forum/viewthread.php?thread_id='.$this->thread_id, 'title' => self::$locale['forum_0548']];
+            redirect(fusion_get_settings('siteurl').'infusions/forum/viewthread.php?thread_id='.$this->thread_id, 3);
         }
-        $link[] = ['url' => fusion_get_settings('siteurl')."infusions/forum/index.php?viewforum&amp;forum_id=".$_GET['forum_id'], 'title' => self::$locale['forum_0549']];
+        $link[] = ['url' => fusion_get_settings('siteurl')."infusions/forum/index.php?viewforum&amp;forum_id=".$this->forum_id, 'title' => self::$locale['forum_0549']];
         $link[] = ['url' => fusion_get_settings('siteurl')."infusions/forum/index.php", 'title' => self::$locale['forum_0550']];
 
         return (array)$link;

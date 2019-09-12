@@ -98,8 +98,8 @@ abstract class Forum_Server {
         'file'     => 'fa fa-file-zip-o fa-fw',
         'tracked'  => 'fa fa-bell-o fa-fw',
         'hot'      => 'fa fa-heartbeat fa-fw',
-        'sticky'   => 'fas fa-thumb-tack fa-fw',
-        'reads'    => 'fas fa-fire fa-fw',
+        'sticky'   => 'fa fa-thumb-tack fa-fw',
+        'reads'    => 'fa fa-fire fa-fw',
     ];
     /**
      * Get records of cached forum ranks

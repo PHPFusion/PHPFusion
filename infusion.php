@@ -19,6 +19,9 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
+
+//@todo: ALTER TABLE `xxxx_forum_posts` ADD FULLTEXT(`post_message`); on new infusion API
+
 $locale = fusion_get_locale('', [
     LOCALE.LOCALESET."setup.php",
     INFUSIONS."forum/locale/".LOCALESET."forum.php",

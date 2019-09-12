@@ -224,7 +224,7 @@ class Forum_Bounty extends Forum_Server {
             $user = fusion_get_user(self::$data['thread_bounty_user']);
 
             $html .= (self::get_bounty_permissions('can_edit_bounty') ? "<div class='text-right spacer-xs'><a href='".FORUM."viewthread.php?action=editbounty&amp;thread_id=".get('thread_id', FILTER_VALIDATE_INT)."'><i class='fas fa-pencil-alt m-r-5'></i>".self::$locale['forum_4100']."</a></div>" : '');
-            $html .= "<div class='well'>\n";
+            $html .= "<div class='alert alert-warning forum-bounty-msg'>\n";
             $bounty_end = self::$bounty_end - TIME;
             $html .= "<p>".strtr(self::$locale['forum_4101'], [
                     '{%points%}'       => "<span class='label label-default strong m-l-5 m-r-5'>+".format_word(self::$data['thread_bounty'], self::$locale['fmt_points'])."</span>",

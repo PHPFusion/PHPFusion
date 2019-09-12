@@ -1115,9 +1115,9 @@ class Forum_Viewer {
         // End inspection
         $html->set_tag('breadcrumb', render_breadcrumbs());
         // need to change to pagenav
+        $html->set_block('pagenav_top', ['navigation' => $info['threads']['pagenav_top']]);
         if (isset($info['page_nav'])) {
-            $html->set_block('pagenav_top', ['pagenav' => $info['page_nav']]);
-            $html->set_block('pagenav_bottom', ['pagenav' => $info['page_nav']]);
+            $html->set_block('pagenav_bottom', ['pagenav' => $info['pagenav']]);
         }
         // Icons
         $html->set_tag('sticky_icon', ($data['thread_sticky'] == TRUE ? "<i title='".$locale['forum_0103']."' class='".get_forum_icons("sticky")."'></i>" : ''));
@@ -1131,6 +1131,7 @@ class Forum_Viewer {
         if (!empty($info['poll_form'])) {
             $html->set_block('poll_form', ['poll' => $info['poll_form']]);
         }
+        $html->set_tag('thread_search_filter', $info['thread_search_filter']);
         // Filters
         $filter_dropdown = '';
         if (!empty($info['post-filters'])) {
@@ -1301,13 +1302,17 @@ class Forum_Viewer {
         return $info['field']['openform'].$html->get_output().$info['field']['closeform'];
     }
 
+    /**
+     * @param $info
+     *
+     * @return string
+     */
     public function render_postify($info) {
         $locale = fusion_get_locale();
         $file_path = get_forum_template('forum_postify');
         $html = \PHPFusion\Template::getInstance('forum-postify');
 
         $html->set_template($file_path);
-
         $html->set_locale($locale);
         $html->set_tag('forum_navs', $this->get_forum_navs());
         $html->set_tag('title', $info['title']);
@@ -1315,6 +1320,12 @@ class Forum_Viewer {
         $html->set_tag('closetable', fusion_get_function('closetable'));
         $html->set_tag('alert_class', ($info['error'] ? "alert alert-danger" : ""));
         $html->set_tag('delay', 3);
+        if (!empty($info['description'])) {
+            $html->set_block('message', ['message' => $info['description']]);
+        }
+        foreach ($info['link'] as $link) {
+            $html->set_block('links', ['link_url' => $link['url'], 'link_title' => $link['title']]);
+        }
 
         add_to_jquery("
         var delay_sec = 4;
@@ -1328,14 +1339,8 @@ class Forum_Viewer {
             }
         }, 1000);
         ");
-        if (!empty($info['description'])) {
-            $html->set_block('message', ['message' => $info['description']]);
-        }
-        foreach ($info['link'] as $link) {
-            $html->set_block('links', ['link_url' => $link['url'], 'link_title' => $link['title']]);
-        }
 
-        return $html->get_output();
+        return (string)$html->get_output();
     }
 
     /**
@@ -1461,12 +1466,15 @@ class Forum_Viewer {
                     ]);
                 }
             }
+
             $html->set_tag('forum_filter', forum_filter($info));
 
+            $html->set_block('pagenav_top', ['navigation' => $info['threads']['pagenav_top']]);
+
             if (!empty($info['threads']['pagenav'])) {
-                $html->set_block('pagenav_top', ['navigation' => $info['threads']['pagenav']]);
                 $html->set_block('pagenav_bottom', ['navigation' => $info['threads']['pagenav']]);
             }
+
             if (!empty($info['threads_time_filter'])) {
                 $html->set_block('filter_dropdown', ["content" => $info['threads_time_filter']]);
             }

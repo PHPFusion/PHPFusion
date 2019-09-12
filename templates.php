@@ -1,9 +1,13 @@
 <?php
 /**
  * Forum Page Control Layout and Viewer.
- * @param $info
  */
 if (!function_exists('render_forum')) {
+    /**
+     * @param $info
+     *
+     * @return string
+     */
     function render_forum($info) {
         return \PHPFusion\Infusions\Forum\Classes\Forum_Viewer::getInstance()->render_forum($info);
     }
@@ -27,6 +31,11 @@ if (!function_exists('render_viewforum')) {
  * Template File        templates/forum_threads.html
  */
 if (!function_exists('render_thread')) {
+    /**
+     * @param $info
+     *
+     * @return string
+     */
     function render_thread($info) {
         return \PHPFusion\Infusions\Forum\Classes\Forum_Viewer::getInstance()->render_thread($info);
     }
@@ -37,6 +46,11 @@ if (!function_exists('render_thread')) {
  * Template File        templates/forms/quick_reply.html
  */
 if (!function_exists("display_quick_reply")) {
+    /**
+     * @param $info
+     *
+     * @return string
+     */
     function display_quick_reply($info) {
         return \PHPFusion\Infusions\Forum\Classes\Forum_Viewer::getInstance()->displayQuickReply($info);
     }
@@ -45,12 +59,13 @@ if (!function_exists("display_quick_reply")) {
 /**
  * Display the poll creation form
  * Template File    templates/forms/poll.html
- *
- * @param $info
- *
- * @return string
  */
 if (!function_exists("display_forum_pollform")) {
+    /**
+     * @param $info
+     *
+     * @return string
+     */
     function display_forum_pollform($info) {
         return \PHPFusion\Infusions\Forum\Classes\Forum_Viewer::getInstance()->display_forum_pollform($info);
     }
@@ -61,6 +76,9 @@ if (!function_exists("display_forum_pollform")) {
  * Template File    templates/forum_postify.html
  */
 if (!function_exists('render_postify')) {
+    /**
+     * @param $info
+     */
     function render_postify($info) {
         echo \PHPFusion\Infusions\Forum\Classes\Forum_Viewer::getInstance()->render_postify($info);
     }
