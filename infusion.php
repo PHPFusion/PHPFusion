@@ -108,47 +108,42 @@ $inf_newtable[] = DB_FORUM_POLLS." (
     KEY thread_id (thread_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
-$inf_newtable[] = DB_FORUMS." (
-    forum_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-    forum_cat MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-    forum_branch MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-    forum_name VARCHAR(50) NOT NULL DEFAULT '',
-    forum_type TINYINT(1) NOT NULL DEFAULT '1',
-    forum_answer_threshold TINYINT(3) NOT NULL DEFAULT '15',
-    forum_lock TINYINT(1) NOT NULL DEFAULT '0',
-    forum_order SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
-    forum_description TEXT NOT NULL,
-    forum_rules TEXT NOT NULL,
-    forum_mods TEXT NOT NULL,
-    forum_access TINYINT(4) NOT NULL DEFAULT '0',
-    forum_post TINYINT(4) DEFAULT ".USER_LEVEL_MEMBER.",
-    forum_reply TINYINT(4) DEFAULT ".USER_LEVEL_MEMBER.",
-    forum_allow_poll TINYINT(1) NOT NULL DEFAULT '0',
-    forum_poll TINYINT(4) NOT NULL DEFAULT ".USER_LEVEL_MEMBER.",
-    forum_vote TINYINT(4) NOT NULL DEFAULT ".USER_LEVEL_MEMBER.",
-    forum_image VARCHAR(100) NOT NULL DEFAULT '',
-    forum_post_ratings TINYINT(4) NOT NULL DEFAULT ".USER_LEVEL_MEMBER.",
-    forum_users TINYINT(1) NOT NULL DEFAULT '0',
-    forum_allow_attach TINYINT(1) NOT NULL DEFAULT '0',
-    forum_attach TINYINT(4) NOT NULL DEFAULT ".USER_LEVEL_MEMBER.",
-    forum_attach_download TINYINT(4) NOT NULL DEFAULT ".USER_LEVEL_MEMBER.",
-    forum_quick_edit TINYINT(1) NOT NULL DEFAULT '0',
-    forum_lastpostid MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-    forum_lastpost INT(10) UNSIGNED NOT NULL DEFAULT '0',
-    forum_postcount MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-    forum_threadcount MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-    forum_lastuser MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-    forum_merge TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-    forum_language VARCHAR(50) NOT NULL DEFAULT '".LANGUAGE."',
-    forum_meta TEXT NOT NULL,
-    forum_alias VARCHAR(50) NOT NULL DEFAULT '',
-    PRIMARY KEY (forum_id),
-    KEY forum_cat (forum_cat),
-    KEY forum_order (forum_order),
-    KEY forum_lastpostid (forum_lastpostid),
-    KEY forum_postcount (forum_postcount),
-    KEY forum_threadcount (forum_threadcount)
-) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+$inf[DB_FORUMS] = [
+    'forum_id'               => ['type' => 'BIGINT', 'length' => 20, 'unsigned' => TRUE, 'key' => 1, 'auto_increment' => TRUE],
+    'forum_cat'              => ['type' => 'BIGINT', 'length' => 20, 'unsigned' => TRUE, 'key' => 2],
+    'forum_branch'           => ['type' => 'BIGINT', 'length' => 20, 'unsigned' => TRUE, 'key' => 2],
+    'forum_name'             => ['type' => 'VARCHAR', 'length' => 70, 'key'=>2],
+    'forum_meta'             => ['type' => 'TEXT'],
+    'forum_language'         => ['type' => 'VARCHAR', 'length' => 70, 'default' => LANGUAGE],
+    'forum_alias'            => ['type' => 'VARCHAR', 'length' => 100],
+    'forum_image'            => ['type' => 'VARCHAR', 'length' => 200],
+    'forum_type'             => ['type' => 'TINYINT', 'length' => 1, 'default' => 1],
+    'forum_answer_threshold' => ['type' => 'TINYINT', 'length' => 3, 'default' => 15, 'unsigned' => TRUE],
+    'forum_lock'             => ['type' => 'TINYINT', 'length' => 1],
+    'forum_order'            => ['type' => 'SMALLINT', 'length' => 5, 'unsigned' => TRUE, 'key' => 2],
+    'forum_description'      => ['type' => 'TEXT'],
+    'forum_rules'            => ['type' => 'TEXT'],
+    'forum_mods'             => ['type' => 'TEXT'],
+    'forum_access'           => ['type' => 'TINYINT', 'length' => 4],
+    'forum_users'            => ['type' => 'TINYINT', 'length' => 1],
+    'forum_merge'            => ['type' => 'TINYINT', 'length' => 1],
+    'forum_quick_edit'       => ['type' => 'TINYINT', 'length' => 1],
+    'forum_allow_comments'   => ['type' => 'TINYINT', 'length' => 1],
+    'forum_allow_attach'     => ['type' => 'TINYINT', 'length' => 1],
+    'forum_post'             => ['type' => 'TINYINT', 'length' => 4, 'default' => USER_LEVEL_MEMBER],
+    'forum_reply'            => ['type' => 'TINYINT', 'length' => 4, 'default' => USER_LEVEL_MEMBER],
+    'forum_poll'             => ['type' => 'TINYINT', 'length' => 4, 'default' => USER_LEVEL_MEMBER],
+    'forum_allow_poll'       => ['type' => 'TINYINT', 'length' => 1],
+    'forum_vote'             => ['type' => 'TINYINT', 'length' => 4, 'default' => USER_LEVEL_MEMBER],
+    'forum_post_ratings'     => ['type' => 'TINYINT', 'length' => 4, 'default' => USER_LEVEL_MEMBER],
+    'forum_attach'           => ['type' => 'TINYINT', 'length' => 4, 'default' => USER_LEVEL_MEMBER],
+    'forum_attach_download'  => ['type' => 'TINYINT', 'length' => 4, 'default' => USER_LEVEL_MEMBER],
+    'forum_lastpostid'       => ['type' => 'BIGINT', 'length' => 20, 'unsigned' => TRUE, 'key' => 2],
+    'forum_lastuser'         => ['type' => 'BIGINT', 'length' => 20, 'unsigned' => TRUE, 'key' => 2],
+    'forum_lastpost'         => ['type' => 'INT', 'length' => 10, 'unsigned' => TRUE, 'key'=>2],
+    'forum_postcount'        => ['type' => 'MEDIUMINT', 'length' => 10, 'unsigned' => TRUE],
+    'forum_threadcount'      => ['type' => 'MEDIUMINT', 'length' => 10, 'unsigned' => TRUE],
+];
 
 $inf_newtable[] = DB_FORUM_POSTS." (
     forum_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
@@ -283,7 +278,6 @@ $inf_newtable[] = DB_FORUM_THREAD_LOGS." (
     KEY post_id (post_id),
     PRIMARY KEY (thread_log_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
-
 
 
 if (!column_exists('users', 'user_reputation')) {

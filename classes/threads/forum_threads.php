@@ -18,6 +18,7 @@
 
 namespace PHPFusion\Infusions\Forum\Classes\Threads;
 
+use PHPFusion\Feedback\Comments;
 use PHPFusion\Infusions\Forum\Classes\Forum_Moderator;
 use PHPFusion\Infusions\Forum\Classes\Forum_Server;
 use PHPFusion\Infusions\Forum\Classes\Post\Quick_Reply;
@@ -590,6 +591,19 @@ class Forum_Threads extends Forum_Server {
                 redirect(FORUM.'index.php');
             }
 
+            if ($this->thread_data['forum_allow_comments']) {
+                add_to_jquery("
+                $('.comment-link').bind('click', function(e) {
+                    e.preventDefault();
+                    let target = $(this).data('target');
+                    console.log(target);
+                    if (target) {
+                        $('#'+target).closest('.comments-form').show();
+                    }           
+                });
+                ");
+            }
+
             // get post_count, lastpost_id, first_post_id.
             $thread_stat = get_thread_stats($thread_id);
 
@@ -929,13 +943,13 @@ class Forum_Threads extends Forum_Server {
     private function threadSearch() {
         return openform('thread_search_frm', 'post').form_text('thread_search_txt', '', post('thread_search_txt'), [
                 'append_button'      => TRUE,
-                'class' => 'm-0',
+                'class'              => 'm-0',
                 'append_form_value'  => 'thread_search',
                 'append_class'       => 'btn-primary',
                 'append_value'       => '<i class="fas fa-search"></i>',
                 'append_button_name' => 'thread_search',
                 'append_button_id'   => 'thread_search',
-                'placeholder' => fusion_get_locale('search'),
+                'placeholder'        => fusion_get_locale('search'),
             ]).closeform();
     }
 
@@ -1089,13 +1103,14 @@ class Forum_Threads extends Forum_Server {
 
     /**
      * Get thread posts info
+     *
      * @param int   $thread_id
      * @param int   $post_id
      * @param array $filter
      *
      * @return array
      * @throws \ReflectionException
-     *                             @todo: optimize post reply with a subnested query to reduce post^n queries.
+     * @todo: optimize post reply with a subnested query to reduce post^n queries.
      */
     public function getThreadPost($thread_id = 0, $post_id = 0, array $filter = []) {
         global $pid;
@@ -1103,8 +1118,6 @@ class Forum_Threads extends Forum_Server {
         $forum_settings = self::get_forum_settings();
         $userdata = fusion_get_userdata();
         $locale = fusion_get_locale();
-
-
         $default_filter = [
             "forum_type"      => 0,
             "post_firstpost"  => 0,
@@ -1148,12 +1161,12 @@ class Forum_Threads extends Forum_Server {
 
         $post_query_cond_2 = '';
         if (($filter['forum_type'] == 4) && !empty($filter['post_firstpost'])) {
-            $post_firstpost = (int) $filter['post_firstpost'];
+            $post_firstpost = (int)$filter['post_firstpost'];
             $post_query_cond_2 = " OR p.post_id='$post_firstpost'";
         }
 
-        $limit = (int) $filter['rowstart'];
-        $posts_pp = (int) $forum_settings['posts_per_page'];
+        $limit = (int)$filter['rowstart'];
+        $posts_pp = (int)$forum_settings['posts_per_page'];
 
         $info['post_query'] = "SELECT p.*,
                     SUM(v.vote_points) 'vote_points',
@@ -1209,6 +1222,7 @@ class Forum_Threads extends Forum_Server {
                 }
             });
             ");
+
             if (iMOD) {
                 // pass the checkbox value to an input field
                 add_to_jquery("
@@ -1483,7 +1497,6 @@ class Forum_Threads extends Forum_Server {
                     if (!$filter['thread_locked']) {
                         // Check first post.
                         $reply_link = INFUSIONS."forum/viewthread.php?action=reply&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id'];
-
                         $quote_link = INFUSIONS."forum/viewthread.php?action=reply&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id']."&amp;quote=".$pdata['post_id'];
 
                         // if ($pdata['post_id'] == $filter['post_firstpost']) {
@@ -1517,6 +1530,15 @@ class Forum_Threads extends Forum_Server {
                             'title' => $locale['forum_0265']
                         ];
                     }
+
+                    // comments
+                    if ($this->thread_data['forum_allow_comments'] == 1) {
+                        $pdata['post_comments'] = [
+                            'title'    => 'Comment', // @todo: localize
+                            'comments' => $this->postComments($pdata['thread_id'], $pdata['post_id'], $marker['title'])
+                        ];
+                    }
+
                 }
                 if (iMEMBER) {
                     $pdata['post_report'] = [
@@ -1689,6 +1711,28 @@ class Forum_Threads extends Forum_Server {
         }
     }
 
+    private function postComments($thread_id, $post_id, $post_marker) {
+        require_once FORUM.'classes/forum_comments.php';
+        require_once INCLUDES.'comments_include.php';
+
+        return Comments::getInstance([
+                'comment_item_type'     => 'FO',
+                'comment_db'            => DB_FORUM_POSTS,
+                'comment_col'           => 'post_id',
+                'comment_item_id'       => $post_id,
+                'comment_marker' => $post_marker,
+                'clink'                 => FORUM.'viewthread.php?thread_id='.$thread_id,
+                'comment_echo'          => FALSE,
+                'comment_allow_subject' => FALSE,
+                'comment_allow_ratings' => FALSE,
+                'comment_form_template' => 'forum_comments',
+                'comment_ui_template' => 'forum_comments_ui',
+            ], '_FO'.$post_id
+        )->showComments();
+
+    }
+
 }
+
 
 require_once INCLUDES."bbcode_include.php";
