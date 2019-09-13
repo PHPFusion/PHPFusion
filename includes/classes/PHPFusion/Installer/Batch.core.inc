@@ -212,7 +212,6 @@ class Batch_Core extends Install_Core {
 
                     foreach ($inf_folder as $folder) {
                         $inf_include = INFUSIONS.$folder."/infusion.php";
-                        $inf_rights = '';
                         $inf_title = '';
                         if (file_exists($inf_include)) {
                             include $inf_include;
@@ -237,26 +236,30 @@ class Batch_Core extends Install_Core {
 
                                 // get the run time.
                                 if (!empty(self::$runtime_results)) {
-                                    self::$infusion_runtime[$inf_rights] = self::$runtime_results;
+                                    self::$infusion_runtime[$folder] = self::$runtime_results;
                                     self::$runtime_results = []; // resets
                                     // there is an upgrade to do
-                                    $this->addUpgradeNotice($inf_rights, $inf_title);
+                                    $this->addUpgradeNotice($folder, $inf_title);
                                 }
                                 unset($inf);
                             }
                         }
                     } // end foreach
 
-                    if ($inf_rights = post('upgrade_infusion')) {
-                        if (isset(self::$infusion_runtime[$inf_rights])) {
-                            foreach (self::$infusion_runtime[$inf_rights] as $db_command_type => $inf_table) {
+                    $folder = post('upgrade_infusion');
+                    if ($folder) {
+                        if (isset(self::$infusion_runtime[$folder])) {
+                            foreach (self::$infusion_runtime[$folder] as $db_command_type => $inf_table) {
                                 foreach ($inf_table as $table_name => $table_query) {
                                     if (!empty($table_query)) {
                                         if (is_array($table_query)) {
                                             foreach ($table_query as $sql_query) {
+                                                print_p($sql_query);
                                                 dbquery($sql_query);
                                             }
                                         } else {
+                                            print_p('table query executing');
+                                            print_P($table_query);
                                             dbquery($table_query);
                                         }
                                     }
@@ -266,8 +269,8 @@ class Batch_Core extends Install_Core {
                             redirect(FUSION_REQUEST);
                         }
                     }
-
                 }
+
             } else {
                 // failing to connect will result in an installer crash.
                 exit('Illegal operations');
@@ -293,24 +296,15 @@ class Batch_Core extends Install_Core {
         return self::$upgrade_info;
     }
 
-
-    private function alterIndex($schema, $colattr) {
-        print_p($schema);
-        // drop index statement
-        if (isset($schema['key'])) {
-            return '';
-        }
-        // add index statement.
-        return '';
-        print_P($colattr);
-    }
-
     /**
      * When table exists, need to be checked for both data-types and column name consistencies
      */
     private function check_existing_table() {
+        $schema_check = $this->get_table_schema(self::$table_name);
 
-        if ($schema_check = $this->get_table_schema(self::$table_name)) {
+        //print_P($schema_check);
+
+        if ($schema_check) {
             // Iterate checks on every column of the table for consistency
             foreach (self::$table_cols as $col_name => $col_attr) {
 
@@ -324,18 +318,20 @@ class Batch_Core extends Install_Core {
                 if (isset($schema_check[$col_name])) {
                     // has column and proceed to compare
                     $schema_compare[self::$table_name][$col_name] = array_diff($schema_check[$col_name], $col_attr);
-
                     // There is a difference in column data-types structures
                     if (!empty($schema_compare[self::$table_name][$col_name])) {
-
-                        // Register column primary_keys and keys - @todo: have a check on this as well
                         if (isset($col_attr['key'])) {
                             $keys[$col_attr['key']] = $col_name;
-
                         }
-
                         if (isset($schema_compare[self::$table_name][$col_name]['key'])) {
-
+                            //
+                            // print_p($schema_compare[self::$table_name][$col_name]['key']);
+                            // print_P($schema_check[$col_name]);
+                            //
+                            // print_p($col_name.' is now having this defined');
+                            // print_P($col_attr);
+                            // // the system column scan results;
+                            // print_P($schema_check[$col_name]);
                             self::$runtime_results['alter_index'][self::$table_name][$col_name] = strtr(self::ADD_INDEX_STATEMENT, [
                                 '{%table%}'       => self::$connection['db_prefix'].self::$table_name,
                                 '{%column_name%}' => $col_name,
@@ -347,7 +343,6 @@ class Batch_Core extends Install_Core {
                                     '{%column_name%}' => $col_name,
                                 ]);
                             }
-
                             //@todo: if key 2 != 1 (different type of index)
                             // remove the key difference.
                             unset($schema_compare[self::$table_name][$col_name]['key']);
@@ -363,7 +358,7 @@ class Batch_Core extends Install_Core {
 
                         }
 
-                        print_P(self::$runtime_results);
+                        //print_P(self::$runtime_results);
                     }
 
                 } else {

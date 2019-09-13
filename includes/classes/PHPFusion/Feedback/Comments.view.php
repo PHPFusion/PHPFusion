@@ -87,6 +87,9 @@ if (!function_exists('display_no_comments')) {
  * Single Comment List {%comments_lists%}
  */
 if (!function_exists('display_comments_list')) {
+    /**
+     * @param array $info
+     */
     function display_comments_list($info = []) {
         ?>
         <li id='{%comment_list_id%}' class='m-b-15'>
