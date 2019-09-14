@@ -25,7 +25,7 @@ $available_captchas = [];
 if ($temp = opendir(INCLUDES."captchas/")) {
     while (FALSE !== ($file = readdir($temp))) {
         if ($file != "." && $file != ".." && is_dir(INCLUDES."captchas/".$file)) {
-            $available_captchas[$file] = $locale[$file];
+            $available_captchas[$file] = !empty($locale[$file]) ? $locale[$file] : $file;
         }
     }
 }
