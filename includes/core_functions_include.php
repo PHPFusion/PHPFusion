@@ -1109,11 +1109,13 @@ function blacklist($field) {
     $userdata = fusion_get_userdata('user_id');
     $blacklist = [];
     if (in_array('user_blacklist', fieldgenerator(DB_USERS))) {
-        $result = dbquery("SELECT user_id, user_level FROM ".DB_USERS." WHERE user_blacklist REGEXP('^\\\.{$userdata['user_id']}$|\\\.{$userdata['user_id']}\\\.|\\\.{$userdata['user_id']}$')");
-        if (dbrows($result) > 0) {
-            while ($data = dbarray($result)) {
-                if ($data['user_level'] > USER_LEVEL_ADMIN) {
-                    $blacklist[] = $data['user_id']; // all users to filter
+        if (!empty($userdata['user_id'])) {
+            $result = dbquery("SELECT user_id, user_level FROM ".DB_USERS." WHERE user_blacklist REGEXP('^\\\.{$userdata['user_id']}$|\\\.{$userdata['user_id']}\\\.|\\\.{$userdata['user_id']}$')");
+            if (dbrows($result) > 0) {
+                while ($data = dbarray($result)) {
+                    if ($data['user_level'] > USER_LEVEL_ADMIN) {
+                        $blacklist[] = $data['user_id']; // all users to filter
+                    }
                 }
             }
         }
