@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined('IN_FUSION') || exit;
 include __DIR__.'/locale/'.LANGUAGE.'.php';
 // Variation Customization
 $gen_set = 2; //0 = Just text; 1 = Icon + text; 2 = text + image; 3 = Just images.

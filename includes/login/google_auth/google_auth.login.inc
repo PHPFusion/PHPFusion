@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined('IN_FUSION') || exit;
 $locale = fusion_get_locale("", [INCLUDES.'login/google_auth/locale/'.LANGUAGE.'.php']);
 
 $login_plugin_name = $locale['uf_gauth'];

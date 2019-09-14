@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined('IN_FUSION') || exit;
 include __DIR__.'/locale/'.LANGUAGE.'.php';
 $icon = "<img src='".INCLUDES."user_fields/public/user_yahoo/images/yahoo.svg' title='Yahoo' alt='Yahoo'/>";
 // Display user field input
