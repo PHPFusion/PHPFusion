@@ -133,11 +133,6 @@ foreach ($timezones_json as $zone => $zone_city) {
     $offset = $date->getOffset() / 3600;
     $timezone_array[$zone] = '(GMT'.($offset < 0 ? $offset : '+'.$offset).') '.$zone_city;
 }
-$weekdayslist = explode("|", $locale['weekdays']);
-foreach ($locale['dateformats'] as $dateformat) {
-    $date_opts[$dateformat] = showdate($dateformat, TIME);
-}
-unset($dateformat);
 
 $weekdayslist = explode("|", $locale['weekdays']);
 
