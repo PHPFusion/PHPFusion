@@ -27,3 +27,7 @@ foreach ($update_settings_tbl as $key => $value) {
         $inf_updatedbrow[] = DB_SETTINGS." SET settings_value='$value' WHERE settings_name='$key'";
     }
 }
+
+if (!column_exists('users', 'user_aim')) {
+    $inf_dropcol[] = ['table' => DB_USERS, 'column' => 'user_aim'];
+}

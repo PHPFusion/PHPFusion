@@ -1390,10 +1390,6 @@ function get_core_tables($localeset) {
             'type'   => 'VARCHAR',
             'length' => 100
         ], //user_skype VARCHAR(100) NOT NULL DEFAULT '',
-        'user_aim'             => [
-            'type'   => 'VARCHAR',
-            'length' => 16
-        ], //user_aim VARCHAR(16) NOT NULL DEFAULT '',
         'user_icq'             => [
             'type'   => 'VARCHAR',
             'length' => 15

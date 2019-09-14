@@ -1119,18 +1119,6 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'field_config'   => ''
             ],
             [
-                'field_name'     => 'user_aim',
-                'field_title'    => $locale['uf_aim'],
-                'field_cat'      => 2,
-                'field_type'     => 'file',
-                'field_required' => 0,
-                'field_order'    => 2,
-                'field_default'  => '',
-                'field_options'  => '',
-                'field_error'    => '',
-                'field_config'   => ''
-            ],
-            [
                 'field_name'     => 'user_icq',
                 'field_title'    => $locale['uf_icq'],
                 'field_cat'      => 2,
