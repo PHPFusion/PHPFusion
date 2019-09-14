@@ -38,9 +38,9 @@ class OpenGraph {
         if (dbrows($result)) {
             $data = dbarray($result);
             $info['url'] = $settings['siteurl'].'viewpage.php?page_id='.$pageid;
-            $info['keywords'] = $data['page_keywords'] ? $data['page_keywords'] : fusion_get_settings('keywords');
-            $info['image'] = $settings['siteurl'].'images/favicons/mstile-150x150.png';
-            $info['title'] = $data['page_title'].' - '.fusion_get_settings('sitename');
+            $info['keywords'] = $data['page_keywords'] ? $data['page_keywords'] : $settings['keywords'];
+            $info['image'] = defined('THEME_ICON') ? THEME_ICON.'mstile-150x150.png' : $settings['siteurl'].'images/favicons/mstile-150x150.png';
+            $info['title'] = $data['page_title'].' - '.$settings['sitename'];
             $info['description'] = $data['page_content'] ? fusion_first_words(strip_tags($data['page_content']), 50) : $settings['description'];
         }
 
@@ -123,7 +123,7 @@ class OpenGraph {
             'description' => $settings['description'],
             'url'         => $settings['siteurl'],
             'keywords'    => $settings['keywords'],
-            'image'       => $settings['siteurl'].'images/favicons/mstile-150x150.png',
+            'image'       => defined('THEME_ICON') ? THEME_ICON.'mstile-150x150.png' : $settings['siteurl'].'images/favicons/mstile-150x150.png',
             'site_name'   => $settings['sitename'],
             'type'        => 'website'
         ];
