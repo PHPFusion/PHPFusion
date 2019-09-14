@@ -286,6 +286,7 @@ if (dbrows($result)) {
     while ($data = dbarray($result)) {
         if (file_exists(INFUSIONS.$data['inf_folder'])) {
             define(strtoupper($data['inf_folder']).'_EXIST', TRUE);
+            define(strtoupper($data['inf_folder']).'_EXISTS', TRUE);
         }
     }
 }
