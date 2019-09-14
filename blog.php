@@ -218,15 +218,6 @@ if (isset($_GET['readmore'])) {
             if (isset($item['user_skype']) && $item['user_skype']) {
                 $user_contact .= "<strong>Skype:</strong> ".$item['user_skype'];
             }
-            if (isset($item['user_aim']) && $item['user_aim']) {
-                $user_contact .= "<strong>AIM:</strong> ".$item['user_aim'];
-            }
-            if (isset($item['user_yahoo']) && $item['user_yahoo']) {
-                $user_contact .= "<strong>Yahoo:</strong> ".$item['user_yahoo']." , ";
-            }
-            if (isset($item['user_yahoo']) && $item['user_yahoo']) {
-                $user_contact .= "<strong>YahooIM:</strong> ".$item['user_yahoo']." , ";
-            }
             if (isset($item['user_yahoo']) && $item['user_yahoo']) {
                 $user_contact .= "<strong>YahooIM:</strong> ".$item['user_yahoo']." , ";
             }
