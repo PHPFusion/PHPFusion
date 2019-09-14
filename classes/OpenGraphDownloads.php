@@ -33,7 +33,7 @@ class OpenGraphDownloads extends OpenGraph {
             if (!empty($data['download_image_thumb'])) {
                 $info['image'] = $settings['siteurl'].'infusions/downloads/images/'.$data['download_image_thumb'];
             } else {
-                $info['image'] = $settings['siteurl'].'images/favicons/mstile-150x150.png';
+                $info['image'] = defined('THEME_ICON') ? THEME_ICON.'mstile-150x150.png' : $settings['siteurl'].'images/favicons/mstile-150x150.png';
             }
         }
 
@@ -51,7 +51,7 @@ class OpenGraphDownloads extends OpenGraph {
             $info['title'] = $data['download_cat_name'].' - '.$settings['sitename'];
             $info['description'] = $data['download_cat_description'] ? fusion_first_words(strip_tags(html_entity_decode($data['download_cat_description'])), 50) : $settings['description'];
             $info['type'] = 'website';
-            $info['image'] = $settings['siteurl'].'images/favicons/mstile-150x150.png';
+            $info['image'] = defined('THEME_ICON') ? THEME_ICON.'mstile-150x150.png' : $settings['siteurl'].'images/favicons/mstile-150x150.png';
         }
         OpenGraphDownloads::setValues($info);
     }
