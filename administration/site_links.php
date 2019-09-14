@@ -55,7 +55,7 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
                 case 'edit':
                     $this->data = self::get_sitelinks($_GET['link_id']);
                     $this->data['link_position_id'] = 0;
-                    if (!$this->data['link_id']) {
+                    if (empty($this->data['link_id'])) {
                         redirect(FUSION_SELF.$this->aidlink);
                     }
                     $this->form_action = FUSION_SELF.$this->aidlink."&amp;action=edit&amp;section=nform&amp;link_id=".$_GET['link_id']."&amp;link_cat=".$_GET['link_cat'];
