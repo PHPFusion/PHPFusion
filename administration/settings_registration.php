@@ -207,13 +207,13 @@ class Settings_Registration {
 
             $inputData = [
                 'login_method'        => sanitizer('login_method', '0', 'login_method'),
-                'license_agreement'   => addslash(preg_replace('(^<p>\s</p>$)', '', post('license_agreement'))),
+                'license_agreement'   => form_sanitizer($_POST['license_agreement'], '', 'license_agreement', TRUE),
                 'enable_registration' => sanitizer('enable_registration', '0', 'enable_registration'),
                 'email_verification'  => (post('email_verification') ? 1 : 0),
                 'admin_activation'    => (post('admin_activation') ? 1 : 0),
                 'display_validation'  => (post('display_validation') ? 1 : 0),
                 'enable_terms'        => sanitizer('enable_terms', '0', 'enable_terms'),
-                'license_lastupdate'  => (addslash(post('license_agreement')) != $this->settings['license_agreement'] ? time() : $this->settings['license_lastupdate'])
+                'license_lastupdate'  => ($_POST['license_agreement'] != $this->settings['license_agreement'] ? time() : $this->settings['license_lastupdate'])
             ];
 
             if (\Defender::safe()) {
@@ -254,11 +254,12 @@ class Settings_Registration {
             0 => $this->locale['disable'],
             1 => $this->locale['enable'],
         ]]);
-        echo form_textarea('license_agreement', $this->locale['559'], $this->settings['license_agreement'], [
+        echo \PHPFusion\UserFieldsQuantum::quantum_multilocale_fields('license_agreement', $this->locale['559'], $this->settings['license_agreement'], [
             'form_name' => 'registrationfrm',
             'input_id'  => 'enable_license_agreement',
             'autosize'  => !$this->settings['tinymce_enabled'] ? FALSE : TRUE,
-            'type'      => ($this->settings['tinymce_enabled'] ? 'tinymce' : 'html')
+            'type'      => ($this->settings['tinymce_enabled'] ? 'tinymce' : 'html'),
+            'function'  => 'form_textarea'
         ]);
 
         echo form_button('savesettings', $this->locale['750'], $this->locale['750'], ['class' => 'btn-success']);
