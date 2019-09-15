@@ -435,13 +435,13 @@ class UserFields extends QuantumFields {
         );
         /*
         add_to_jquery("
-        var current_email = $('#user_email').val();        
+        var current_email = $('#user_email').val();
         $('#user_email').on('input change propertyChange paste', function(e){
             if (current_email !== $(this).val()) {
                 $('#user_password_verify-field').removeClass('display-none');
             } else {
             $('#user_password_verify-field').addClass('display-none');
-            }            
+            }
         });
         ");
         */
@@ -497,7 +497,7 @@ class UserFields extends QuantumFields {
         );
 
         $modal = openmodal('license_agreement', $locale['u192'], ['button_id' => 'license_agreement']);
-        $modal .= parse_textarea(fusion_get_settings('license_agreement'));
+        $modal .= parse_textarea(self::parse_label(fusion_get_settings('license_agreement')));
         $modal_content = '<p class="pull-left">'.$locale['u193a'].' '.ucfirst(showdate('shortdate', fusion_get_settings('license_lastupdate'))).'</p>';
         $modal_content .= '<button type="button" id="agree" class="btn btn-success" data-dismiss="modal">'.$locale['u193b'].'</button>';
         $modal .= modalfooter($modal_content, TRUE);

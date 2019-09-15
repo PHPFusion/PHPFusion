@@ -48,7 +48,7 @@ if (isset($_POST['savesettings'])) {
     // Save settings after validation
     $inputData = [
         'captcha'             => form_sanitizer($_POST['captcha'], '', 'captcha'),
-        'privacy_policy'      => addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['privacy_policy'])),
+        'privacy_policy'      => form_sanitizer($_POST['privacy_policy'], '', 'privacy_policy', TRUE),
         'allow_php_exe'       => form_sanitizer($_POST['allow_php_exe'], 0, 'allow_php_exe'),
         'flood_interval'      => form_sanitizer($_POST['flood_interval'], 15, 'flood_interval'),
         'flood_autoban'       => form_sanitizer($_POST['flood_autoban'], 0, 'flood_autoban'),
@@ -143,10 +143,11 @@ echo form_select('maintenance', $locale['657'], $settings['maintenance'], [
 echo form_textarea('maintenance_message', $locale['658'], $settings['maintenance_message'], ['autosize' => TRUE]);
 closeside();
 openside('');
-echo form_textarea('privacy_policy', $locale['820'], $settings['privacy_policy'], [
+echo \PHPFusion\QuantumFields::quantum_multilocale_fields('privacy_policy', $locale['820'], $settings['privacy_policy'], [
     'autosize'  => 1,
     'form_name' => 'settingsform',
-    'html'      => !fusion_get_settings('tinymce_enabled') ? TRUE : FALSE
+    'html'      => !fusion_get_settings('tinymce_enabled') ? TRUE : FALSE,
+    'function'  => 'form_textarea'
 ]);
 closeside();
 
