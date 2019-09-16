@@ -17,14 +17,14 @@
 +--------------------------------------------------------*/
 require_once "../../maincore.php";
 
-$token = filter_input(INPUT_GET, 'token', FILTER_DEFAULT)
+$token = filter_input(INPUT_GET, 'token', FILTER_DEFAULT);
 $aid = !empty($token) ? explode('=', $token) : '';
 
 if (!empty($aid)) {
     $aid = $aid[1];
 }
 
-$inputq = filter_input(INPUT_GET, 'q', FILTER_VALIDATE_INT)
+$inputq = filter_input(INPUT_GET, 'q', FILTER_VALIDATE_INT);
 $q = !empty($inputq) ? $inputq : 0;
 
 if (checkrights("SL") && defined("iAUTH") && $aid == iAUTH) {
