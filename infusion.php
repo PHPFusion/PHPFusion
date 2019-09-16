@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined('IN_FUSION') || exit;
 
 
 //@todo: ALTER TABLE `xxxx_forum_posts` ADD FULLTEXT(`post_message`); on new infusion API
@@ -263,8 +261,8 @@ $inf_newtable[] = DB_FORUM_POST_NOTIFY." (
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 // Logging of an action on the thread or post.
-$inf_newtable[] = DB_FORUM_THREAD_LOGS." (    
-    thread_log_id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,    
+$inf_newtable[] = DB_FORUM_THREAD_LOGS." (
+    thread_log_id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
     thread_id BIGINT(20) UNSIGNED NOT NULL DEFAULT '0',
     post_id BIGINT(20) UNSIGNED NOT NULL DEFAULT '0',
     thread_log_action SMALLINT(5) UNSIGNED NOT NULL,
@@ -273,7 +271,7 @@ $inf_newtable[] = DB_FORUM_THREAD_LOGS." (
     thread_log_old_value VARCHAR(70) NOT NULL,
     thread_log_user BIGINT(20) UNSIGNED NOT NULL,
     thread_log_visibility SMALLINT(5) UNSIGNED NOT NULL,
-    thread_log_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',    
+    thread_log_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
     KEY thread_id (thread_id),
     KEY post_id (post_id),
     PRIMARY KEY (thread_log_id)

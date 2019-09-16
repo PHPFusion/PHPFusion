@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined('IN_FUSION') || exit;
 
 function attach_exists($file) {
     return \PHPFusion\Infusions\Forum\Classes\Forum_Functions::attachmentExists($file);
