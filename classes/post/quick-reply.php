@@ -85,8 +85,7 @@ class Quick_Reply extends Forum_Server {
           el.val(before + newText + after)
           el[0].selectionStart = el[0].selectionEnd = start + newText.length
           el.focus()
-        }
-        
+        }        
         $('#file_upload_btn').bind('click', function(e) {
             e.preventDefault();
             $('#file').click();
@@ -111,8 +110,7 @@ class Quick_Reply extends Forum_Server {
                 contentType: false,
                 processData: false,
                 dataType: 'json',               
-                success: function(html){
-                   console.log(html);
+                success: function(html){          
                    $.each(html, function(index) {
                         let image = html[index].html;
                         let error = html[index].error;                        
@@ -151,8 +149,7 @@ class Quick_Reply extends Forum_Server {
                 processData: false,
                 dataType: 'json',              
                 success: function(html){
-                    // if remove
-                    console.log(html);                                         
+                    // if remove                                                     
                    if (html.image_name) {
                         addInTextarea($('#$textarea_id'), html.image_name);                                      
                    } else if (size == 'remove') {
@@ -191,7 +188,7 @@ class Quick_Reply extends Forum_Server {
                         'required'    => TRUE,
                         'preview'     => TRUE,
                         'form_name'   => $form_name,
-                        'height'      => '300px',
+                        'height'      => '150px',
                         'class'       => 'm-b-0',
                         'bbcode'      => TRUE,
                         'grippie'     => TRUE,
