@@ -46,13 +46,36 @@ function attach_insert() {
                     $col = '';
                     switch ($size) {
                         case 'remove':
-
-                            // remove the whole attachment
-                            dbquery("DELETE FROM ".DB_FORUM_ATTACHMENTS." WHERE attach_id=:aid AND post_user=:uid", [
+                            $pic_result = dbquery("SELECT attach_id, attach_name, attach_t1_name, attach_t2_name, attach_t3_name, attach_t4_name 
+                            FROM ".DB_FORUM_ATTACHMENTS." WHERE attach_id=:aid AND post_user=:uid", [
                                 ':aid' => (int) $aid,
                                 ':uid' => (int) $user_id
                             ]);
-
+                            if (dbrows($pic_result)) {
+                                $pdata = dbarray($pic_result);
+                                $folder = FORUM.'attachments/';
+                                $thumb_folder = FORUM.'attachments/thumbs/';
+                                if ($pdata['attach_name'] && file_exists($folder.$pdata['attach_name'])) {
+                                    unlink($folder.$pdata['attach_name']);
+                                }
+                                if ($pdata['attach_t1_name'] && file_exists($thumb_folder.$pdata['attach_t1_name'])) {
+                                    unlink($thumb_folder.$pdata['attach_t1_name']);
+                                }
+                                if ($pdata['attach_t2_name'] && file_exists($thumb_folder.$pdata['attach_t2_name'])) {
+                                    unlink($thumb_folder.$pdata['attach_t2_name']);
+                                }
+                                if ($pdata['attach_t3_name'] && file_exists($thumb_folder.$pdata['attach_t3_name'])) {
+                                    unlink($thumb_folder.$pdata['attach_t3_name']);
+                                }
+                                if ($pdata['attach_t4_name'] && file_exists($thumb_folder.$pdata['attach_t4_name'])) {
+                                    unlink($thumb_folder.$pdata['attach_t4_name']);
+                                }
+                                // remove the whole attachment
+                                dbquery("DELETE FROM ".DB_FORUM_ATTACHMENTS." WHERE attach_id=:aid AND post_user=:uid", [
+                                    ':aid' => (int) $aid,
+                                    ':uid' => (int) $user_id
+                                ]);
+                            }
                             $image_info['image_name'] = '';
 
                             return $image_info;
