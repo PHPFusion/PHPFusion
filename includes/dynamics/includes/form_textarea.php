@@ -73,6 +73,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         'tinymce_spellcheck'  => TRUE,
         'rows'                => 5,
         'censor_words'        => TRUE,
+        'post_attach' => FALSE,
         'grippie' => FALSE,
         'tab' => FALSE,
     ];
@@ -419,6 +420,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                 'text' : text,
                 'editor' : format,
                 'url' : '".$_SERVER['REQUEST_URI']."',
+                'post_attach' : '".($options['post_attach'] ? TRUE : FALSE)."',
             };
             var sendData = form.serialize() + '&' + $.param(data);
             $.ajax({

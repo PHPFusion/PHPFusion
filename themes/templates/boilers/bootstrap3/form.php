@@ -198,9 +198,6 @@ class Form {
             {stacked.{
             <!--fusion stacked information-->{%content%}
             }}
-
-
-
             </label>
             {ext_tip.{
             <br/><span class="tip"><i>{%tip_text%}</i></span>
@@ -215,14 +212,12 @@ class Form {
 
         $button_template = '
         <span class="button-checkbox">
-        <button type="button" class="btn btn-{%button_class%} {%class%}" data-color="{%button_class%}">$label</button>
+        <button type="button" class="btn btn-{%button_class%} {%class%}" data-color="{%button_class%}">'.$label.'</button>
         <input name="{%input_name%}" id="{%input_id%}" type="checkbox" value="{%input_value%}" class="hidden">
         </span>
         ';
 
         $tpl = \PHPFusion\Template::getInstance('field-'.$options['input_id']);
-
-
 
         $tpl->set_text($template);
         $tpl->set_tag('label', $label);
@@ -232,7 +227,6 @@ class Form {
         if ($options['type'] == 'button') {
 
             $tpl->set_text($button_template);
-
             $tpl->set_tag('button_class', $options['button_class']);
             $tpl->set_tag('class', $options['class']);
             if (!defined('btn-checkbox-js')) {
@@ -397,7 +391,7 @@ class Form {
 
             $tpl->set_tag('post_checkbox', $checkbox);
             $tpl->set_tag('pre_checkbox', '');
-            if ($options['label_reverse']) {
+            if ($options['reverse_label']) {
                 $tpl->set_tag('post_checkout', '');
                 $tpl->set_tag('pre_checkbox', $checkbox);
             }

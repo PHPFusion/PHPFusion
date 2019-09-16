@@ -1519,6 +1519,25 @@ function makepagepointer(int $start = 0, int $count = 0, int $total = 0, int $ra
 
 }
 
+/**
+ * @param     $total
+ * @param     $count
+ * @param int $range
+ *
+ * @return float|int
+ */
+function rowstart_count($total, $count, $range = 3) {
+    if ($total > $count) {
+        $cur_page = ceil(($total + 1) / $count);
+        $pg_cnt = ceil($total / $count);
+        if ($pg_cnt <= 1) {
+            return 0;
+        }
+        $row = min($cur_page + $range, $pg_cnt);
+        return ($row - 1) * $count;
+    }
+    return 0;
+}
 
 /**
  * @param string $scroll_url            The ajax script that loads the content

@@ -101,8 +101,8 @@ class ImageValidation {
      * Check for alteration of file extensions to prevent unwanted payload executions
      * https://securelist.com/blog/virus-watch/74297/png-embedded-malicious-payload-hidden-in-a-png-file/
      *
-     * @param $file_src - the tmp src file
-     * @param $file_ext - the current tmp src file extensions
+     * @param $file_src  - the tmp src file
+     * @param $file_ext  - the current tmp src file extensions
      * @param $valid_ext - all accepted file extensions
      *
      * @return bool
@@ -120,6 +120,7 @@ class ImageValidation {
                     $check_type[$ext] = $mime_types[$ext];
                 }
             }
+            // check extensions
             $check_ext = strtolower(ltrim($file_ext, '.'));
             if (!empty($check_type[$check_ext])) {
                 if (is_array($check_type[$check_ext])) {

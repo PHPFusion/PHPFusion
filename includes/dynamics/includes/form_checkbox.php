@@ -135,82 +135,85 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
     }
 
 
-    $checkbox = "";
+    //$checkbox = "";
+    // if ($options['type'] == 'button') {
+    //
+    //     $checkbox .= "<span class='button-checkbox'><button type='button' class='btn btn-".$options['button_class']." ".$options['class']."' data-color='".$options['button_class']."'>$label</button><input name='$input_name' id='".$options['input_id']."' type='checkbox' value='".$options['value']."' class='hidden'></span>";
+    //     $html = $checkbox;
+    //     if ($error_class) {
+    //         $html .= "<span class='m-l-10'></span><div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>";
+    //     }
+    //
+    // } else {
+    //
+    //     $open_check = '';
+    //     $close_check = '';
+    //     if ($options['inline']) {
+    //         $open_check = "<div class='col-xs-12 col-sm-12 col-md-9 col-lg-9'>\n";
+    //         $close_check = "</div>";
+    //     }
+    //
+    //     $checkbox .= $open_check;
+    //
+    //     if (!empty($options['options']) && is_array($options['options'])) {
+    //         foreach ($options['options'] as $key => $value) {
+    //
+    //             if ($options['deactivate_key'] !== NULL && $options['deactivate_key'] == $key) {
+    //                 $checkbox .= form_hidden($input_name, '', $key);
+    //             }
+    //
+    //             $checked = ($options['deactivate'] || $options['deactivate_key'] === $key ? 'disabled' : '').($options['onclick'] ? ' onclick="'.$options['onclick'].'"' : '');
+    //             if ($options['type'] == 'checkbox' && count($options['options']) > 1) {
+    //                 $checked = ($input_value[$key] == TRUE || $default_checked && $key == FALSE ? ' checked' : '');
+    //             } else {
+    //                 $checked .= ($input_value == $key || $default_checked && $key == FALSE ? ' checked' : '');
+    //             }
+    //
+    //             $checkbox .= "<div class='".($options['type'] == 'radio' ? 'radio' : 'checkbox').($options['inline_options'] ? ' display-inline-block m-r-5' : '')."'>\n";
+    //
+    //             $checkbox .= "<label class='control-label m-r-10' data-label='$key' for='".$options['input_id']."-$key'".($options['inner_width'] ? " style='width: ".$options['inner_width']."'" : '').">";
+    //
+    //             $checkbox .= "<input id='".$options['input_id']."-$key' name='$input_name' value='$key' type='".$options['type']."' $checked />\n";
+    //
+    //             $checkbox .= $value;
+    //
+    //             $checkbox .= "</label>\n";
+    //
+    //             $checkbox .= "</div>\n";
+    //         }
+    //     } else {
+    //
+    //         $checkbox .= "<div class='".(!empty($label) ? 'pull-left' : 'text-center')." m-r-10'>\n<input id='".$options['input_id']."' ".($options['toggle'] ? "data-on-text='".$on_label."' data-off-text='".$off_label."'" : "")." style='margin: 0;vertical-align: middle' name='$input_name' value='".$options['value']."' type='".$options['type']."' ".($options['deactivate'] ? 'disabled' : '')." ".($options['onclick'] ? 'onclick="'.$options['onclick'].'"' : '')." ".($input_value == $options['value'] ? 'checked' : '')." />\n</div>\n";
+    //
+    //     }
+    //     if ($options['stacked']) {
+    //         $checkbox .= $options['stacked'];
+    //     }
+    //
+    //     $html = "<div id='".$options['input_id']."-field' class='$switch_class form-group clearfix".($options['inline'] ? ' display-block overflow-hide ' : '').$error_class.($options['class'] ? " ".$options['class'] : "")."'>\n";
+    //
+    //     $html .= (!empty($label)) ? "<label class='control-label".($options['inline'] ? " col-xs-12 col-sm-12 col-md-3 col-lg-3" : '')."' data-checked='".(!empty($input_value) ? "1" : "0")."'  for='".$options['input_id']."'".($options['inner_width'] ? " style='width: ".$options['inner_width']."'" : '').">\n" : "";
+    //
+    //     $html .= ($options['reverse_label'] == TRUE) ? $checkbox : "";
+    //
+    //     $html .= (!empty($label)) ? "<div class='overflow-hide'>\n".$label.($options['required'] == 1 ? "<span class='required'>&nbsp;*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle text-lighter' title='".$options['tip']."'></i>" : '')."</div>\n</label>\n" : "";
+    //
+    //     $html .= ($options['reverse_label'] == FALSE) ? $checkbox : "";
+    //
+    //     $html .= $options['ext_tip'] ? "<br/>\n<span class='tip'><i>".$options['ext_tip']."</i></span>" : "";
+    //
+    //     if ($error_class) {
+    //         $html .= "<span class='m-l-10'></span>\n<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>\n";
+    //     }
+    //
+    //     $html .= $close_check;
+    //
+    //     $html .= "</div>\n";
+    // }
 
-    if ($options['type'] == 'button') {
+    $fusion_steam = new \PHPFusion\Steam('bootstrap3');
 
-        $checkbox .= "<span class='button-checkbox'><button type='button' class='btn btn-".$options['button_class']." ".$options['class']."' data-color='".$options['button_class']."'>$label</button><input name='$input_name' id='".$options['input_id']."' type='checkbox' value='".$options['value']."' class='hidden'></span>";
-        $html = $checkbox;
-        if ($error_class) {
-            $html .= "<span class='m-l-10'></span><div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>";
-        }
-
-    } else {
-
-        $open_check = '';
-        $close_check = '';
-        if ($options['inline']) {
-            $open_check = "<div class='col-xs-12 col-sm-12 col-md-9 col-lg-9'>\n";
-            $close_check = "</div>";
-        }
-
-        $checkbox .= $open_check;
-
-        if (!empty($options['options']) && is_array($options['options'])) {
-            foreach ($options['options'] as $key => $value) {
-
-                if ($options['deactivate_key'] !== NULL && $options['deactivate_key'] == $key) {
-                    $checkbox .= form_hidden($input_name, '', $key);
-                }
-
-                $checked = ($options['deactivate'] || $options['deactivate_key'] === $key ? 'disabled' : '').($options['onclick'] ? ' onclick="'.$options['onclick'].'"' : '');
-                if ($options['type'] == 'checkbox' && count($options['options']) > 1) {
-                    $checked = ($input_value[$key] == TRUE || $default_checked && $key == FALSE ? ' checked' : '');
-                } else {
-                    $checked .= ($input_value == $key || $default_checked && $key == FALSE ? ' checked' : '');
-                }
-
-                $checkbox .= "<div class='".($options['type'] == 'radio' ? 'radio' : 'checkbox').($options['inline_options'] ? ' display-inline-block m-r-5' : '')."'>\n";
-
-                $checkbox .= "<label class='control-label m-r-10' data-label='$key' for='".$options['input_id']."-$key'".($options['inner_width'] ? " style='width: ".$options['inner_width']."'" : '').">";
-
-                $checkbox .= "<input id='".$options['input_id']."-$key' name='$input_name' value='$key' type='".$options['type']."' $checked />\n";
-
-                $checkbox .= $value;
-
-                $checkbox .= "</label>\n";
-
-                $checkbox .= "</div>\n";
-            }
-        } else {
-
-            $checkbox .= "<div class='".(!empty($label) ? 'pull-left' : 'text-center')." m-r-10'>\n<input id='".$options['input_id']."' ".($options['toggle'] ? "data-on-text='".$on_label."' data-off-text='".$off_label."'" : "")." style='margin: 0;vertical-align: middle' name='$input_name' value='".$options['value']."' type='".$options['type']."' ".($options['deactivate'] ? 'disabled' : '')." ".($options['onclick'] ? 'onclick="'.$options['onclick'].'"' : '')." ".($input_value == $options['value'] ? 'checked' : '')." />\n</div>\n";
-
-        }
-        if ($options['stacked']) {
-            $checkbox .= $options['stacked'];
-        }
-
-        $html = "<div id='".$options['input_id']."-field' class='$switch_class form-group clearfix".($options['inline'] ? ' display-block overflow-hide ' : '').$error_class.($options['class'] ? " ".$options['class'] : "")."'>\n";
-
-        $html .= (!empty($label)) ? "<label class='control-label".($options['inline'] ? " col-xs-12 col-sm-12 col-md-3 col-lg-3" : '')."' data-checked='".(!empty($input_value) ? "1" : "0")."'  for='".$options['input_id']."'".($options['inner_width'] ? " style='width: ".$options['inner_width']."'" : '').">\n" : "";
-
-        $html .= ($options['reverse_label'] == TRUE) ? $checkbox : "";
-
-        $html .= (!empty($label)) ? "<div class='overflow-hide'>\n".$label.($options['required'] == 1 ? "<span class='required'>&nbsp;*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle text-lighter' title='".$options['tip']."'></i>" : '')."</div>\n</label>\n" : "";
-
-        $html .= ($options['reverse_label'] == FALSE) ? $checkbox : "";
-
-        $html .= $options['ext_tip'] ? "<br/>\n<span class='tip'><i>".$options['ext_tip']."</i></span>" : "";
-
-        if ($error_class) {
-            $html .= "<span class='m-l-10'></span>\n<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>\n";
-        }
-
-        $html .= $close_check;
-
-        $html .= "</div>\n";
-    }
+    return $fusion_steam->load('Form')->checkbox($input_name, $label, $input_value, $options);
 
     return (string)$html;
 }

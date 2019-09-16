@@ -69,7 +69,7 @@ class Token extends \Defender {
 
             if ($form_id = post('form_id')) {
                 $honeypot = \Defender::getInstance()->getHoneypot($form_id.'_honeypot');
-                if ($honeypot['type'] == 'honeypot') {
+                if (!empty($honeypot['type']) && $honeypot['type'] == 'honeypot') {
                     if (post($honeypot['input_name'])) {
                         \Authenticate::logOut();
                         redirect(BASEDIR.'error.php?code=403');
