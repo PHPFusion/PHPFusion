@@ -41,23 +41,27 @@ class Postify_Reply extends Forum_Postify {
 
         $thread_data['thread_link'] = fusion_get_settings('siteurl')."infusions/forum/viewthread.php?forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']."&pid=".$thread_data['thread_lastpostid']."#post_".$thread_data['thread_lastpostid'];
 
-        if ($_GET['error'] < 2) {
+        if (get('error', FILTER_VALIDATE_INT) < 2) {
 
-            if (!isset($_GET['post_id']) || !isnum($_GET['post_id'])) {
+            $thread_id = get('thread_id', FILTER_VALIDATE_INT);
+
+            if (!get('post_id', FILTER_VALIDATE_INT)) {
                 throw new \Exception('$_GET[ post_id ] is blank, and not passed! Please report this.');
             }
 
-            if (self::$forum_settings['thread_notify'] && isnum($_GET['thread_id'])) {
+            if (self::$forum_settings['thread_notify'] && $thread_id) {
                 // Find all users to notify
                 $notify_query = "SELECT tn.*, tu.user_id, tu.user_name, tu.user_email, tu.user_level, tu.user_groups
                 FROM ".DB_FORUM_THREAD_NOTIFY." tn
                 LEFT JOIN ".DB_USERS." tu ON tn.notify_user=tu.user_id
                 WHERE thread_id=:thread_id AND notify_user !=:my_id AND notify_status=:status GROUP BY tn.notify_user";
+
                 $notify_bind = [
-                    ':thread_id' => intval($_GET['thread_id']),
+                    ':thread_id' => (int) $thread_id,
                     ':my_id'     => fusion_get_userdata('user_id'),
                     ':status'    => 1,
                 ];
+
                 $notify_result = dbquery($notify_query, $notify_bind);
 
                 if (dbrows($notify_result)) {
@@ -107,7 +111,8 @@ class Postify_Reply extends Forum_Postify {
                 }
             }
 
-            $thread_last_page = ($thread_data['thread_postcount'] > self::$forum_settings['posts_per_page'] ? floor(floor($thread_data['thread_postcount'] / self::$forum_settings['posts_per_page']) * self::$forum_settings['posts_per_page']) : 0);
+            $thread_last_page = rowstart_count($thread_data['thread_postcount'], self::$forum_settings['posts_per_page'], 3);
+
             $redirect_add = '';
             if ($thread_last_page) {
                 $redirect_add = '&amp;rowstart='.$thread_last_page;

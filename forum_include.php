@@ -93,10 +93,9 @@ function check_thread_new_status($forum_id, $thread_lastpost, $thread_lastuser) 
  *
  * @param     $info
  * @param int $points
- *
  * @todo: move and improvise the voting system
+ * @throws Exception
  */
-
 function set_forum_votes($info, $points = 0) {
     $userdata = fusion_get_userdata();;
     // @todo: extend on user's rank threshold before can vote. - Reputation threshold- Roadmap 9.1
@@ -160,4 +159,20 @@ function get_forum_template($key = NULL) {
 
 function get_forum_settings($key = NULL) {
     return \PHPFusion\Infusions\Forum\Classes\Forum_Server::get_forum_settings($key);
+}
+
+function parse_attach($message) {
+    $re = '/\[attach\](.*?)\[\/attach\]/m';
+    preg_match_all($re, $message, $matches, PREG_SET_ORDER, 0);
+    if (!empty($matches)) {
+        foreach($matches as $match) {
+            if (!empty($match[1])) {
+                $replace_set[$match[0]] = html_entity_decode('<img class="img-responsive" src="'.FORUM.'fetchimage.php?'.$match[1].'"/>');
+            }
+        }
+    }
+    if (!empty($replace_set)) {
+        return strtr($message, $replace_set);
+    }
+    return $message;
 }

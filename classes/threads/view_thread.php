@@ -77,7 +77,6 @@ class View_Thread extends Forum_Server {
                 case 'newbounty':
                     // Template
                     $bounty = new Forum_Bounty($info);
-
                     return $bounty->render_bounty_form();
                     break;
                 case 'editbounty':
@@ -93,9 +92,9 @@ class View_Thread extends Forum_Server {
 
             self::check_download_request();
             // +1 threadviews
-            self::increment_thread_views($info['thread']['thread_id']);
+            $this->addViewCount($info['thread']['thread_id']);
             // +1 see who is viewing thread
-            self::thread()->setThreadVisits();
+            self::thread()->addThreadVisit();
 
             if ($info['thread']['forum_users'] == TRUE) {
 
@@ -460,7 +459,7 @@ class View_Thread extends Forum_Server {
      *
      * @param $thread_id
      */
-    private static function increment_thread_views($thread_id) {
+    private function addViewCount($thread_id) {
         $days_to_keep_session = 7;
         if (!isset($_SESSION['thread'][$thread_id])) {
             $_SESSION['thread'][$thread_id] = time();

@@ -18,7 +18,6 @@
 
 namespace PHPFusion\Infusions\Forum\Classes;
 
-use PHPFusion\BreadCrumbs;
 use PHPFusion\Infusions\Forum\Classes\Forum\Forum;
 use PHPFusion\Infusions\Forum\Classes\Forum\Forum_Tags;
 use PHPFusion\Infusions\Forum\Classes\Post\New_Thread;
@@ -496,6 +495,7 @@ abstract class Forum_Server {
             'forum_pollform'   => FORUM.'templates/forms/poll.html',
             'forum_bountyform' => FORUM.'templates/forms/bounty.html',
             'forum_qrform'     => FORUM.'templates/forms/quick_reply.html',
+            'forum_qr_attach'  => FORUM.'templates/forms/qr_attachments.html',
             'tags_thread'      => FORUM.'templates/tags/tag_threads.html',
             'tags'             => FORUM.'templates/tags/tag.html',
             'viewthreads'      => FORUM.'templates/forum_threads.html',
