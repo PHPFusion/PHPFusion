@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-defined('IN_FUSION') || exit;
+defined('IN_FUSION') || die('Access Denied');
 
 $locale = fusion_get_locale('', [GALLERY_LOCALE, GALLERY_ADMIN_LOCALE]);
 $gll_settings = get_settings("gallery");
