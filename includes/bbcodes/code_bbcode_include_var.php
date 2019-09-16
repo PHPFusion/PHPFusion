@@ -15,10 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
+defined('IN_FUSION') || exit;
 
-    die("Access Denied");
-}
 $__BBCODE__[] = [
     "description" => $locale['bb_code_description'],
     "value"       => "code", "bbcode_start" => "[code]", "bbcode_end" => "[/code]",

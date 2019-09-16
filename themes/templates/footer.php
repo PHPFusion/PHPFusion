@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-defined('IN_FUSION') || die('Access Denied');
+defined('IN_FUSION') || exit;
 
 require_once INCLUDES."footer_includes.php";
 
