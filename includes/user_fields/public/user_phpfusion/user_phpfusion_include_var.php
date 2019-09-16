@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: user_aim_include_var.php
+| Filename: user_phpfusion_include_var.php
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -15,19 +15,18 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined('IN_FUSION') || exit;
+
 include __DIR__.'/locale/'.LANGUAGE.'.php';
+
 // Version of the user fields api
 $user_field_api_version = "1.01.00";
-$user_field_name = $locale['uf_aim'];
-$user_field_desc = $locale['uf_aim_desc'];
-$user_field_dbname = "user_aim";
+$user_field_name = $locale['uf_phpfusion'];
+$user_field_desc = $locale['uf_phpfusion_desc'];
+$user_field_dbname = "user_phpfusion";
 $user_field_group = 1;
-$user_field_dbinfo = "VARCHAR(16) NOT NULL DEFAULT ''";
+$user_field_dbinfo = "VARCHAR(20) NOT NULL DEFAULT ''";
 $user_field_default = '';
 $user_field_options = '';
 $user_field_error = '';
 $user_field_config = '';
-$user_field_author = "PHP-Fusion Development Team";

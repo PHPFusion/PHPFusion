@@ -41,6 +41,10 @@ foreach ($insert_settings_tbl as $key => $value) {
     }
 }
 
+if (!column_exists('users', 'user_aim')) {
+    $inf_dropcol[] = ['table' => DB_USERS, 'column' => 'user_aim'];
+}
+
 if (db_exists(DB_PREFIX.'login_connectors')) {
     $inf_newtable[] = DB_LOGIN." (
         login_name VARCHAR(100) NOT NULL DEFAULT '0',

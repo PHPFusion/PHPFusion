@@ -275,14 +275,14 @@ if (isset($_GET['type'])) {
             if ($settings['enable_terms'] == 1) {
                 echo "<strong>".$settings['sitename']." ".$locale['600']."</strong><br />\n";
                 echo "<small>".$locale['601']." ".ucfirst(showdate("longdate", $settings['license_lastupdate']))."<small>\n";
-                echo "<hr />".parse_textarea($settings['license_agreement'])."\n";
+                echo "<hr />".parse_textarea(\PHPFusion\UserFieldsQuantum::parse_label($settings['license_agreement']))."\n";
             } else {
                 redirect($settings['opening_page']);
             }
             break;
         case "P":
             echo "<strong>".$settings['sitename']." ".$locale['700']."</strong><br />\n";
-            echo "<hr />".parse_textarea($settings['privacy_policy'])."\n";
+            echo "<hr />".parse_textarea(\PHPFusion\UserFieldsQuantum::parse_label($settings['privacy_policy']))."\n";
             break;
     }
 } else {

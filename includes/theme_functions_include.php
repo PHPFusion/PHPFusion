@@ -224,7 +224,7 @@ function showprivacypolicy() {
     if (!empty(fusion_get_settings('privacy_policy'))) {
         $html .= "<a href='".BASEDIR."print.php?type=P' id='privacy_policy'>".fusion_get_locale('global_176')."</a>";
         $modal = openmodal('privacy_policy', fusion_get_locale('global_176'), ['button_id' => 'privacy_policy']);
-        $modal .= parse_textarea(fusion_get_settings('privacy_policy'));
+        $modal .= parse_textarea(\PHPFusion\UserFieldsQuantum::parse_label(fusion_get_settings('privacy_policy')));
         $modal .= closemodal();
         add_to_footer($modal);
     }

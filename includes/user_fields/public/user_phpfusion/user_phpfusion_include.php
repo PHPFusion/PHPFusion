@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: user_aim_include.php
+| Filename: user_phpfusion_include.php
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -15,29 +15,26 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined('IN_FUSION') || exit;
+
 include __DIR__.'/locale/'.LANGUAGE.'.php';
 
-$icon = "<img src='".INCLUDES."user_fields/public/user_aim/images/aim.svg' title='Aim' alt='Aim'/>";
+$icon = "<img src='".IMAGES."php-fusion-icon.png' title='PHP Fusion' alt='PHP Fusion'/>";
 // Display user field input
 if ($profile_method == "input") {
     $options = [
-            'inline'           => TRUE,
-            'max_length'       => 16,
-            'regex'            => '[a-z](?=[\w.]{3,31}$)\w*\.?\w*',
-            'error_text'       => $locale['uf_aim_error'],
-            'regex_error_text' => $locale['uf_aim_error_1'],
-            'placeholder'      => $locale['uf_aim'],
-            'label_icon'       => $icon
+            'inline'      => TRUE,
+            'max_length'  => 20,
+            'error_text'  => $locale['uf_phpfusion_error'],
+            'placeholder' => $locale['uf_phpfusion_id'],
+            'label_icon'  => $icon,
         ] + $options;
-    $user_fields = form_text('user_aim', $locale['uf_aim'], $field_value, $options);
+    $user_fields = form_text('user_phpfusion', $locale['uf_phpfusion'], $field_value, $options);
     // Display in profile
 } else if ($profile_method == "display") {
     $user_fields = [
         'icon'  => $icon,
-        'title' => $locale['uf_aim'],
+        'title' => $locale['uf_phpfusion'],
         'value' => $field_value ?: ''
     ];
 }
