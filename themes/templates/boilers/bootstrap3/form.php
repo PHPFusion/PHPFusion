@@ -348,15 +348,18 @@ class Form {
                 $off_label = $options['toggle_text'][1];
             }
 
-            $checkbox = "<div class='".(!empty($label) ? 'pull-left' : 'text-center')." m-r-10'>\n<input id='".$options['input_id']."' ".($options['toggle'] ? "data-on-text='".$on_label."' data-off-text='".$off_label."'" : "")." style='margin: 0;vertical-align: middle' name='$input_name' value='".$options['value']."' type='".$options['type']."' ".($options['deactivate'] ? 'disabled' : '')." ".($options['onclick'] ? 'onclick="'.$options['onclick'].'"' : '')." ".($input_value == $options['value'] ? 'checked' : '')." />\n</div>\n";
+            $checkbox = "<div class='".(!empty($label) ? 'display-inline' : 'text-center')." m-r-5'>\n<input id='".$options['input_id']."' ".($options['toggle'] ? "data-on-text='".$on_label."' data-off-text='".$off_label."'" : "")." style='vertical-align: middle' name='$input_name' value='".$options['value']."' type='".$options['type']."' ".($options['deactivate'] ? 'disabled' : '')." ".($options['onclick'] ? 'onclick="'.$options['onclick'].'"' : '')." ".($input_value == $options['value'] ? 'checked' : '')." />\n</div>\n";
 
             if (!empty($options['options']) && is_array($options['options'])) {
                 $options['toggle'] = FALSE; // force toggle to be false if options existed
                 $default_checked = FALSE;
 
                 if (!empty($input_value)) {
-                    $option_value = array_flip(explode($options['delimiter'], (string)$input_value)); // require key to value
-
+                    if (is_array($input_value)) {
+                        $option_value = $input_value;
+                    } else {
+                        $option_value = array_flip(explode($options['delimiter'], (string)$input_value)); // require key to value
+                    }
                 }
                 // for checkbox only
                 // if there are options, and i want the options to be having input value.
@@ -388,11 +391,12 @@ class Form {
                     $checkbox .= "</div>\n";
                 }
             }
+            //print_P($checkbox);
 
             $tpl->set_tag('post_checkbox', $checkbox);
             $tpl->set_tag('pre_checkbox', '');
             if ($options['reverse_label']) {
-                $tpl->set_tag('post_checkout', '');
+                $tpl->set_tag('post_checkbox', '');
                 $tpl->set_tag('pre_checkbox', $checkbox);
             }
         }
@@ -400,7 +404,6 @@ class Form {
         $tpl->set_tag("input_name", $input_name);
         $tpl->set_tag("input_id", $options['input_id']);
         $tpl->set_tag("input_type", $options['type']);
-
 
         return $tpl->get_output();
     }
