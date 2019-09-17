@@ -18,7 +18,6 @@
 
 namespace PHPFusion\Infusions\Forum\Classes\Forum;
 
-use PHPFusion\BreadCrumbs;
 use PHPFusion\Infusions\Forum\Classes\Forum_Server;
 
 class Forum_Tags extends Forum_Server {
@@ -35,32 +34,43 @@ class Forum_Tags extends Forum_Server {
      * @param bool|TRUE $setTitle
      */
     public function set_TagInfo($setTitle = TRUE) {
+        $data = [
+            'secret_project_data' => 'This is some sensitive information'
+        ];
+        $personal_password = 'Ac*?cauQjjS';
+        $array_to_str = \Defender::encode($data);
+        $sql_value = \Defender::encrypt_string($array_to_str, $personal_password);
+        print_p($sql_value);
+        $sql_value = \Defender::decrypt_string($sql_value, $personal_password);
+        $str_to_array = \Defender::decode($sql_value);
+        print_P($str_to_array);
+
 
         $locale = fusion_get_locale();
 
         if ($setTitle == TRUE) {
             set_title($locale['forum_0000']);
             add_to_title($locale['global_201'].$locale['forum_tag_0100']);
-            BreadCrumbs::getInstance()->addBreadCrumb([
+            add_breadcrumb([
                 'link'  => FORUM."index.php",
                 'title' => $locale['forum_0000']
             ]);
-            BreadCrumbs::getInstance()->addBreadCrumb([
+            add_breadCrumb([
                 'link'  => FORUM."tags.php",
                 'title' => $locale['forum_tag_0100']
             ]);
         }
+        $tag_id = get('tag_id', FILTER_VALIDATE_INT);
+        if ($tag_id) {
 
-        if (isset($_GET['tag_id']) && isnum($_GET['tag_id'])) {
-
-            $tag_query = "SELECT * FROM ".DB_FORUM_TAGS." WHERE tag_status=1 AND tag_id='".intval($_GET['tag_id'])."'
-            ".(multilang_table("FO") ? "AND tag_language='".LANGUAGE."'" : "")."
-            ";
-            $tag_result = dbquery($tag_query);
-            if (dbrows($tag_result) > 0) {
+            $tag_query = "SELECT * FROM ".DB_FORUM_TAGS." WHERE tag_status=1 AND tag_id=:tgid ".(multilang_table("FO") ? "AND tag_language='".LANGUAGE."'" : '');
+            $tag_result = dbquery($tag_query, [
+                ':tgid' => (int) $tag_id,
+            ]);
+            if (dbrows($tag_result)) {
                 $data = dbarray($tag_result);
                 add_to_title($locale['global_201'].$data['tag_title']);
-                BreadCrumbs::getInstance()->addBreadCrumb([
+                add_breadcrumb([
                     'link'  => FORUM."tags.php?tag_id=".$data['tag_id'],
                     'title' => $data['tag_title']
                 ]);
@@ -68,7 +78,7 @@ class Forum_Tags extends Forum_Server {
                     set_meta('description', $data['tag_description']);
                 }
                 $data['tag_link'] = FORUM."tags.php?tag_id=".$data['tag_id'];
-                $data['tag_active'] = (isset($_GET['viewtags']) && isset($_GET['tag_id']) && $_GET['tag_id'] == $data['tag_id'] ? TRUE : FALSE);
+                $data['tag_active'] = (isset($_GET['viewtags']) && $tag_id == $data['tag_id'] ? TRUE : FALSE);
 
                 $this->tag_info['tags'][$data['tag_id']] = $data;
                 $this->tag_info['title'] = $data['tag_title'];
@@ -85,11 +95,11 @@ class Forum_Tags extends Forum_Server {
                 $filter = $this->filter()->get_filterSQL();
                 $thread_info = Forum_Server::thread(FALSE)->getThreadInfo(0,
                     [
-                        "condition" => " AND ".in_group('t.thread_tags', intval($data['tag_id']), '.')." ".$filter['condition'],
+                        "condition" => " AND ".in_group('t.thread_tags', (int)$data['tag_id'], '.')." ".$filter['condition'],
                         "order"     => $filter['order'],
                         "debug"     => FALSE,
                     ] + $filter + [
-                        'custom_condition' => " AND ".in_group('t.thread_tags', intval($data['tag_id']), '.'),
+                        'custom_condition' => " AND ".in_group('t.thread_tags', (int)$data['tag_id'], '.'),
                     ]
                 );
 

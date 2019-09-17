@@ -1495,7 +1495,9 @@ class Forum_Viewer {
 
             $html->set_tag('forum_filter', forum_filter($info));
 
-            $html->set_block('pagenav_top', ['navigation' => $info['threads']['pagenav_top']]);
+            if (!empty($info['threads']['pagenav_top'])) {
+                $html->set_block('pagenav_top', ['navigation' => $info['threads']['pagenav_top']]);
+            }
 
             if (!empty($info['threads']['pagenav'])) {
                 $html->set_block('pagenav_bottom', ['navigation' => $info['threads']['pagenav']]);
