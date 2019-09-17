@@ -42,18 +42,20 @@ $inf_image = 'forums.svg';
 \PHPFusion\Admins::getInstance()->setLinkType("FR", fusion_get_settings("siteurl")."infusions/forum/index.php?ref=news/news.php?readmore=moderator&amp;id=%s");
 
 // Create tables
-$inf_newtable[] = DB_FORUM_ATTACHMENTS." (
-    attach_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-    thread_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-    post_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-    attach_name VARCHAR(100) NOT NULL DEFAULT '',
-    attach_mime VARCHAR(20) NOT NULL DEFAULT '',
-    attach_size INT(20) UNSIGNED NOT NULL DEFAULT '0',
-    attach_count INT(10) UNSIGNED NOT NULL DEFAULT '0',
-    PRIMARY KEY (attach_id),
-    KEY thread_id (thread_id),
-    KEY post_id (post_id)
-) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+$inf[DB_FORUM_ATTACHMENTS] = [
+    'attach_id'      => ['type' => 'BIGINT', 'length' => 20, 'unsigned' => TRUE, 'key' => 1, 'auto_increment' => TRUE],
+    'thread_id'      => ['type' => 'BIGINT', 'length' => 20, 'unsigned' => TRUE, 'key' => 2],
+    'post_id'        => ['type' => 'BIGINT', 'length' => 20, 'unsigned' => TRUE, 'key' => 2],
+    'post_user'      => ['type' => 'BIGINT', 'length' => 20, 'unsigned' => TRUE, 'key' => 2],
+    'attach_name'    => ['type' => 'VARCHAR', 'length' => 150],
+    'attach_t1_name' => ['type' => 'VARCHAR', 'length' => 150],
+    'attach_t2_name' => ['type' => 'VARCHAR', 'length' => 150],
+    'attach_t3_name' => ['type' => 'VARCHAR', 'length' => 150],
+    'attach_t4_name' => ['type' => 'VARCHAR', 'length' => 150],
+    'attach_mime'    => ['type' => 'VARCHAR', 'length' => 20],
+    'attach_size'    => ['type' => 'INT', 'length' => 20, 'unsigned' => TRUE],
+    'attach_count'   => ['type' => 'INT', 'length' => 10, 'unsigned' => TRUE],
+];
 
 $inf_newtable[] = DB_FORUM_VOTES." (
     vote_id MEDIUMINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -110,7 +112,7 @@ $inf[DB_FORUMS] = [
     'forum_id'               => ['type' => 'BIGINT', 'length' => 20, 'unsigned' => TRUE, 'key' => 1, 'auto_increment' => TRUE],
     'forum_cat'              => ['type' => 'BIGINT', 'length' => 20, 'unsigned' => TRUE, 'key' => 2],
     'forum_branch'           => ['type' => 'BIGINT', 'length' => 20, 'unsigned' => TRUE, 'key' => 2],
-    'forum_name'             => ['type' => 'VARCHAR', 'length' => 70, 'key'=>2],
+    'forum_name'             => ['type' => 'VARCHAR', 'length' => 70, 'key' => 2],
     'forum_meta'             => ['type' => 'TEXT'],
     'forum_language'         => ['type' => 'VARCHAR', 'length' => 70, 'default' => LANGUAGE],
     'forum_alias'            => ['type' => 'VARCHAR', 'length' => 100],
@@ -138,33 +140,28 @@ $inf[DB_FORUMS] = [
     'forum_attach_download'  => ['type' => 'TINYINT', 'length' => 4, 'default' => USER_LEVEL_MEMBER],
     'forum_lastpostid'       => ['type' => 'BIGINT', 'length' => 20, 'unsigned' => TRUE, 'key' => 2],
     'forum_lastuser'         => ['type' => 'BIGINT', 'length' => 20, 'unsigned' => TRUE, 'key' => 2],
-    'forum_lastpost'         => ['type' => 'INT', 'length' => 10, 'unsigned' => TRUE, 'key'=>2],
+    'forum_lastpost'         => ['type' => 'INT', 'length' => 10, 'unsigned' => TRUE, 'key' => 2],
     'forum_postcount'        => ['type' => 'MEDIUMINT', 'length' => 10, 'unsigned' => TRUE],
     'forum_threadcount'      => ['type' => 'MEDIUMINT', 'length' => 10, 'unsigned' => TRUE],
 ];
-
-$inf_newtable[] = DB_FORUM_POSTS." (
-    forum_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-    thread_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-    post_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-    post_cat MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-    post_message TEXT NOT NULL,
-    post_showsig TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-    post_smileys TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
-    post_author MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-    post_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
-    post_ip VARCHAR(45) NOT NULL DEFAULT '',
-    post_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
-    post_edituser MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-    post_edittime INT(10) UNSIGNED NOT NULL DEFAULT '0',
-    post_editreason TEXT NOT NULL,
-    post_hidden TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-    post_locked TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-    post_answer TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-    PRIMARY KEY (post_id),
-    KEY thread_id (thread_id),
-    KEY post_datestamp (post_datestamp)
-) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+$inf[DB_FORUM_POSTS] = [
+    'forum_id'        => ['type' => 'BIGINT', 'length' => 20, 'unsigned' => TRUE, 'key' => 2],
+    'thread_id'       => ['type' => 'BIGINT', 'length' => 20, 'unsigned' => TRUE, 'key' => 2],
+    'post_id'         => ['type' => 'BIGINT', 'length' => 20, 'unsigned' => TRUE, 'key' => 1, 'auto_increment' => TRUE],
+    'post_message'    => ['type' => 'TEXT'],
+    'post_showsig'    => ['type' => 'TINYINT', 'length' => 1],
+    'post_smileys'    => ['type' => 'TINYINT', 'length' => 1, 'default' => 1],
+    'post_author'     => ['type' => 'BIGINT', 'length' => 20, 'unsigned' => TRUE, 'key' => 2],
+    'post_datestamp'  => ['type' => 'INT', 'length' => 10, 'unsigned' => TRUE, 'key' => 2],
+    'post_ip'         => ['type' => 'VARCHAR', 'length' => 45, 'key' => 2],
+    'post_ip_type'    => ['type' => 'TINYINT', 'length' => 1, 'default' => 4],
+    'post_edituser'   => ['type' => 'BIGINT', 'length' => 20, 'unsigned' => TRUE, 'key' => 2],
+    'post_edittime'   => ['type' => 'INT', 'length' => 10, 'unsigned' => TRUE, 'key' => 2],
+    'post_editreason' => ['type' => 'TEXT'],
+    'post_hidden'     => ['type' => 'TINYINT', 'length' => 1],
+    'post_locked'     => ['type' => 'TINYINT', 'length' => 1],
+    'post_answer'     => ['type' => 'TINYINT', 'length' => 1],
+];
 
 $inf_newtable[] = DB_FORUM_THREADS." (
     forum_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
