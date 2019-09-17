@@ -3272,9 +3272,7 @@ table.text-center th {
   .skin-blue .main-header .navbar .dropdown-menu li.divider {
     background-color: rgba(255, 255, 255, 0.1);
   }
-  .skin-blue .main-header .navbar .dropdown-menu li a {
-    color: #fff;
-  }
+
   .skin-blue .main-header .navbar .dropdown-menu li a:hover {
     background: #367fa9;
   }
