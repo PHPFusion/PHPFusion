@@ -116,8 +116,7 @@ class Quick_Reply extends Forum_Server {
                         let error = html[index].error;                        
                         $('.quick-img-container').append(image);
                         if (error) {
-                            alert(error);
-                            $('#file').val('').show();
+                            alert(error);                            
                         }                        
                    });            
                 },
