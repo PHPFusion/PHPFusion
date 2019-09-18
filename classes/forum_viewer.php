@@ -612,6 +612,135 @@ class Forum_Viewer {
         return $html->get_output();
     }
 
+    public function forum_filter($info) {
+        // Put into core views
+        $locale = fusion_get_locale();
+        // This one need to push to core.
+        $selector = [
+            'today'  => $locale['forum_0212'],
+            '2days'  => $locale['forum_p002'],
+            '1week'  => $locale['forum_p007'],
+            '2week'  => $locale['forum_p014'],
+            '1month' => $locale['forum_p030'],
+            '2month' => $locale['forum_p060'],
+            '3month' => $locale['forum_p090'],
+            '6month' => $locale['forum_p180'],
+            '1year'  => $locale['forum_3015']
+        ];
+        $selector3 = [
+            'author'  => $locale['forum_0052'],
+            'time'    => $locale['forum_0381'],
+            'subject' => $locale['forum_0051'],
+            'reply'   => $locale['forum_0054'],
+            'view'    => $locale['forum_0053'],
+        ];
+        // how to stack it.
+        $selector4 = [
+            'descending' => $locale['forum_0230'],
+            'ascending'  => $locale['forum_0231']
+        ];
+
+
+        $tpl = '
+        <div class="clearfix">
+        {time_filter.{
+        <div class="pull-left">
+        {[forum_0388]}
+        <div class="forum-filter dropdown">
+        <button class="btn btn-sm btn-default {%time_active%} dropdown-toggle" data-toggle="dropdown">
+        <strong>{%time%}</strong><span class="caret m-l-5"></span>
+        </button>
+        <ul class="dropdown-menu">{%time_filter%}</ul>                        
+        </div>
+        </div>    
+        }}
+        <div class="pull-left">
+        {sort_filter.{
+        {[forum_0225]}
+        <div class="forum-filter dropdown">      
+        <button class="btn btn-sm btn-default {%sort_active%} dropdown-toggle" data-toggle="dropdown">
+        <strong>{%sort%}</strong>
+        <span class="caret m-l-5"></span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right">{%sort_filter%}</ul>                        
+        </div>
+        }}
+        {order_filter.{
+        <div class="forum-filter dropdown">      
+        <button class="btn btn-sm btn-default {%order_active%} dropdown-toggle" data-toggle="dropdown">
+        <strong>{%order%}</strong><span class="caret m-l-5"></span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right">{%order_filter%}</ul>                        
+        </div>
+        }}
+        </div>
+        {reset_filter.{
+        <div class="pull-right">
+        <a href="{%reset_link%}" class="btn btn-sm btn-default"><i class="fas fa-times-circle"></i> Reset</a>
+        </div>              
+        }}
+        </div>';
+
+        $html = Template::getInstance('forum-filter');
+        $html->set_text($tpl);
+        $html->set_locale($locale);
+
+
+        if (!empty($info['filter']['time'])) {
+            $get_time = get('time');
+            $time_active = $get_time && isset($selector[$get_time]) ? 'active' : '';
+            $time_value = $time_active ? $selector[$get_time] : $locale['forum_0211'];
+            $time_filter = '';
+            foreach ($info['filter']['time'] as $filter_locale => $filter_link) {
+                $time_filter .= '<li><a href="'.$filter_link.'">'.$filter_locale.'</a></li>';
+            }
+            $html->set_block('time_filter', [
+                'time'        => $time_value,
+                'time_active' => $time_active,
+                'time_filter' => $time_filter
+            ]);
+        }
+
+        if (!empty($info['filter']['sort'])) {
+            $get_sort = get('sort');
+            $sort_active = $get_sort && isset($selector3[$get_sort]) ? 'active' : '';
+            $sort_value = $sort_active ? $selector3[$get_sort] : $locale['forum_0381'];
+            $sort_filter = '';
+            foreach ($info['filter']['sort'] as $filter_locale => $filter_link) {
+                $sort_filter .= '<li><a href="'.$filter_link.'">'.$filter_locale.'</a></li>';
+            }
+            $html->set_block('sort_filter', [
+                'sort'        => $sort_value,
+                'sort_active' => $sort_active,
+                'sort_filter' => $sort_filter
+            ]);
+        }
+
+        if (!empty($info['filter']['order'])) {
+            $get_order = get('order');
+            $order_active = $get_order && isset($selector4[$get_order]) ? 'active' : '';
+            $order_value = $order_active ? $selector3[$get_order] : $locale['forum_0381'];
+            $order_filter = '';
+            foreach ($info['filter']['order'] as $filter_locale => $filter_link) {
+                $order_filter .= '<li><a href="'.$filter_link.'">'.$filter_locale.'</a></li>';
+            }
+            $html->set_block('sort_filter', [
+                'sort'        => $order_value,
+                'sort_active' => $order_active,
+                'sort_filter' => $order_filter
+            ]);
+        }
+
+        if (!empty($get_sort) || !empty($get_order) || !empty($get_time)) {
+            $reset_url = clean_request('', ['time', 'sort', 'order'], FALSE);
+            $html->set_block('reset_filter', [
+                    'reset_link' => $reset_url
+            ]);
+        }
+
+        return $html->get_output();
+    }
+
     /**
      * Forum Sections Item Display (Latest, Participated, Tracked, Unanswered, Unsolved)
      * Template name    forum-section
@@ -1470,12 +1599,13 @@ class Forum_Viewer {
 
     public function display_forum_tags($info) {
         $locale = fusion_get_locale();
-        $tag_file_path = FORUM.'templates/forum_tags.html';
-        $tag_threads_file_path = FORUM.'templates/forum_tag_threads.html';
+        //$tag_file_path = FORUM.'templates/forum_tags.html';
+        // $tag_threads_file_path = FORUM.'templates/forum_tag_threads.html';
 
-        if (isset($_GET['tag_id'])) {
-            $html = Template::getInstance('forum-tags');
-            $html->set_template($tag_threads_file_path);
+        if (get('tag_id', FILTER_VALIDATE_INT)) {
+
+            $html = Template::getInstance('forum-tags-threads');
+            $html->set_template( get_forum_template('forum_tag_threads')); //$tag_threads_file_path
             $html->set_locale($locale);
             $html->set_tag("baselink", FORUM);
             $html->set_tag("title", $info['title']);
@@ -1512,9 +1642,8 @@ class Forum_Viewer {
 
         } else {
 
-
             $html = Template::getInstance('forum-tags');
-            $html->set_template($tag_file_path);
+            $html->set_template(get_forum_template('forum_tags'));
             $html->set_locale($locale);
             $html->set_tag("baselink", FORUM);
             $html->set_tag("forum_navs", $this->get_forum_navs());

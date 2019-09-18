@@ -67,7 +67,6 @@ class View_Thread extends Forum_Server {
                     return $edit_form->render_edit_form();
                     break;
                 case 'reply':
-                    // Template
                     return $this->threadReplyForm();
                     break;
                 case 'award':

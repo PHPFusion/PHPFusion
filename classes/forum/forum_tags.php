@@ -28,26 +28,20 @@ class Forum_Tags extends Forum_Server {
         return (array)$this->tag_info;
     }
 
+    private function tagAccess() {
+        if (isset($_GET['tag_id']) && !isnum($_GET['tag_id'])) {
+            redirect(FORUM.'tags.php');
+        }
+    }
+
     /**
      * Fetches all Forum Tag Table records
      *
      * @param bool|TRUE $setTitle
      */
-    public function set_TagInfo($setTitle = TRUE) {
-        $data = [
-            'secret_project_data' => 'This is some sensitive information'
-        ];
-        $personal_password = 'Ac*?cauQjjS';
-        $array_to_str = \Defender::encode($data);
-        $sql_value = \Defender::encrypt_string($array_to_str, $personal_password);
-        print_p($sql_value);
-        $sql_value = \Defender::decrypt_string($sql_value, $personal_password);
-        $str_to_array = \Defender::decode($sql_value);
-        print_P($str_to_array);
-
-
+    public function setTagInfo($setTitle = TRUE) {
         $locale = fusion_get_locale();
-
+        $this->tagAccess();
         if ($setTitle == TRUE) {
             set_title($locale['forum_0000']);
             add_to_title($locale['global_201'].$locale['forum_tag_0100']);
@@ -62,7 +56,6 @@ class Forum_Tags extends Forum_Server {
         }
         $tag_id = get('tag_id', FILTER_VALIDATE_INT);
         if ($tag_id) {
-
             $tag_query = "SELECT * FROM ".DB_FORUM_TAGS." WHERE tag_status=1 AND tag_id=:tgid ".(multilang_table("FO") ? "AND tag_language='".LANGUAGE."'" : '');
             $tag_result = dbquery($tag_query, [
                 ':tgid' => (int) $tag_id,
@@ -104,11 +97,9 @@ class Forum_Tags extends Forum_Server {
                 );
 
                 $this->tag_info = array_merge_recursive($this->tag_info, $thread_info);
-
             } else {
                 redirect(FORUM."index.php");
             }
-
         } else {
             $this->cache_tags();
         }

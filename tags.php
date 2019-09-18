@@ -26,5 +26,4 @@ require_once INFUSIONS."forum/templates.php";
 fusion_get_locale("", [FORUM_LOCALE, FORUM_TAGS_LOCALE]);
 $info = \PHPFusion\Infusions\Forum\Classes\Forum_Server::Tag(TRUE, TRUE)->get_TagInfo();
 echo display_forum_tags($info);
-
 require_once THEMES."templates/footer.php";

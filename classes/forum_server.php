@@ -409,7 +409,7 @@ abstract class Forum_Server {
             self::$tag_instance = new Forum_Tags();
             if ($set_info == TRUE) {
                 require_once INCLUDES."mimetypes_include.php";
-                self::$tag_instance->set_TagInfo($set_title);
+                self::$tag_instance->setTagInfo($set_title);
             }
         }
 
@@ -504,6 +504,9 @@ abstract class Forum_Server {
             'forum_post'       => FORUM.'templates/forum_post_item.html',
             'forum_thread'     => FORUM.'templates/viewforum/forum_thread_item.html',
             'forum_lastpost'   => FORUM.'templates/index/forum_item_lastpost.html',
+            'forum_tag_threads' => FORUM.'templates/forum_tag_threads.html',
+            'forum_tags' => FORUM.'templates/forum_tags.html'
+
         ];
 
         return (isset(self::$forum_template_paths[$key]) ? self::$forum_template_paths[$key] : $default_paths[$key]);
