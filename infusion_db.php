@@ -18,7 +18,7 @@
 defined('IN_FUSION') || exit;
 if (!defined('FORUM_EXISTS')) {
     if (get_settings('forum')) {
-        define('FORUM_EXISTS', true);
+        define('FORUM_EXISTS', TRUE);
     }
 }
 if (!defined("LASTVISITED")) {
@@ -160,9 +160,9 @@ function forum_activity_title($data) {
     if ($data['action_item_type'] == 'forum') {
         $user = fusion_get_user($data['action_user_id']);
         $profile_link = profile_link($user['user_id'], $user['user_name'], $user['user_status']);
-        switch($data['action_type']) {
+        switch ($data['action_type']) {
             case 'thread_new':
-                return sprintf($locale['thread_title'], $profile_link, '<strong>'.html_entity_decode($data['action_subject'], ENT_QUOTES).'</strong>', timer($data['action_datestamp']) );
+                return sprintf($locale['thread_title'], $profile_link, '<strong>'.html_entity_decode($data['action_subject'], ENT_QUOTES).'</strong>', timer($data['action_datestamp']));
                 break;
         }
     }
@@ -175,7 +175,7 @@ function forum_activity_title($data) {
  */
 function forum_activity_content($data) {
     if ($data['action_item_type'] == 'forum') {
-        switch($data['action_type']) {
+        switch ($data['action_type']) {
             case 'thread_new':
                 return parse_textarea($data['action_content']);
                 break;
@@ -195,7 +195,7 @@ function forum_delete_user($data) {
     // Delete user notification track by user
     dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE notify_user=:uid", $param);
     // Delete votes on forum threads by user
-    dbquery("DELETE FROM ".DB_FORUM_POLL_VOTERS." WHERE forum_vote_user_id=:uid" ,$param);
+    dbquery("DELETE FROM ".DB_FORUM_POLL_VOTERS." WHERE forum_vote_user_id=:uid", $param);
     // Update thread stats
     $threads = dbquery("SELECT * FROM ".DB_FORUM_THREADS." WHERE thread_lastuser=:uid", $param);
     if (dbrows($threads)) {
@@ -254,14 +254,14 @@ function forum_delete_user($data) {
     if (dbrows($forums)) {
         while ($forum = dbarray($forums)) {
             // Update forum last post
-            $last_forum_post = dbarray(dbquery("SELECT post_id, post_author, post_datestamp FROM ".DB_POSTS." WHERE forum_id='".$forum['forum_id']."' ORDER BY post_id DESC LIMIT 0,1"));
+            $last_forum_post = dbarray(dbquery("SELECT post_id, post_author, post_datestamp FROM ".DB_FORUM_POSTS." WHERE forum_id='".$forum['forum_id']."' ORDER BY post_id DESC LIMIT 0,1"));
             dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost=:lastpost, forum_lastuser=:lastuser, forum_lastpostid=:lastpostid WHERE forum_id=:fid AND forum_lastuser=:forum_lastuser",
                 [
-                    ':lastpost' => $last_forum_post['post_datestamp'],
-                    ':lastuser' => $last_forum_post['post_author'],
-                    ':lastpostid' => $last_forum_post['post_id'],
-                    ':fid' => $forum['forum_id'],
-                    ':forum_lastuser' => $user_id
+                    ':lastpost'       => (int)$last_forum_post['post_datestamp'],
+                    ':lastuser'       => (int)$last_forum_post['post_author'],
+                    ':lastpostid'     => (int)$last_forum_post['post_id'],
+                    ':fid'            => (int)$forum['forum_id'],
+                    ':forum_lastuser' => (int)$user_id
                 ]);
         }
     }
@@ -282,5 +282,4 @@ fusion_add_hook('profile_activity_content', 'forum_activity_content');
 fusion_add_hook('admin_user_delete', 'forum_delete_user'); // when admin deletes a user, forum must be updated.
 
 // add hook for increment post on each post count
-
 // a delete hook for - delete post, and delete thread

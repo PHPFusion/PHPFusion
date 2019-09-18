@@ -52,16 +52,22 @@ class Quick_Reply extends Forum_Server {
         $form_name = "thread_reply";
         $textarea_id = "post_message";
 
-        if ($options['quote']) {
-            $result = dbquery("SELECT post_id, post_message FROM ".DB_FORUM_POSTS." WHERE post_id=:post_id", [':post_id' => intval($options['post_id'])]);
+        $quote = get('quote', FILTER_VALIDATE_INT);
+        if ($quote) {
+            $result = dbquery("SELECT post_id, post_message FROM ".DB_FORUM_POSTS." WHERE post_id=:pid", [':pid' => (int) $quote]);
             if (dbrows($result)) {
                 $quotedata = dbarray($result);
                 $post_id = $quotedata['post_id'];
                 $post_message = nl2br("[quote]".$quotedata['post_message']."[/quote]");
                 $form_name = "post_reply_".$post_id;
                 $textarea_id = "post_message_".$post_id;
+            } else {
+                addNotice('warning', 'Post to quote could not be found.');
+                redirect(clean_request('', ['quote'], FALSE));
             }
         }
+
+        $post_reply = get('reply', FILTER_VALIDATE_INT);
 
         // Buttons Checkbox
         $options_field = form_checkbox('post_smileys', $locale['forum_0169'], '', ['class' => 'm-r-10', 'type' => 'button', 'ext_tip' => $locale['forum_0622']]);
@@ -161,6 +167,7 @@ class Quick_Reply extends Forum_Server {
             });
         });        
         ");
+
         // Attachments
         $result = dbquery("SELECT * FROM ".DB_FORUM_ATTACHMENTS." WHERE post_user=:uid AND thread_id=:tid AND post_id=0 ORDER BY attach_id ASC", [
             ':tid' => (int)$info['thread_id'],
@@ -173,12 +180,16 @@ class Quick_Reply extends Forum_Server {
             }
         }
 
+
+
+
         $remote_param = $options['remote_url'] !== $default_options['remote_url'] ? ["remote_url" => $options['remote_url']] : [];
 
         $info += [
             'openform'    => openform($form_name, 'post', $options['remote_url'], $remote_param).form_hidden('post_cat', '', $post_id),
             'description' => $locale['forum_0168'],
             'attachments' => (array)$attachments,
+            'header' => $box_header,
             'field'       => [
                 'message'     => form_textarea("post_message", '', $post_message,
                     [
@@ -193,7 +204,7 @@ class Quick_Reply extends Forum_Server {
                         'grippie'     => TRUE,
                         'tab'         => TRUE,
                         'post_attach' => TRUE,
-                    ]),
+                    ]).form_text('post_cat', '', $post_reply, ['type'=>'number']),
                 'button'      => form_button('post_quick_reply', $locale['forum_0172'], $locale['forum_0172'], ['class' => 'btn-primary']),
                 'options'     => $options_field,
                 'file_upload' => $file_upload

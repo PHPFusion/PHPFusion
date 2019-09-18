@@ -719,7 +719,7 @@ class Forum_Viewer {
         if (!empty($info['filter']['order'])) {
             $get_order = get('order');
             $order_active = $get_order && isset($selector4[$get_order]) ? 'active' : '';
-            $order_value = $order_active ? $selector3[$get_order] : $locale['forum_0381'];
+            $order_value = $order_active ? $selector4[$get_order] : $locale['forum_0381'];
             $order_filter = '';
             foreach ($info['filter']['order'] as $filter_locale => $filter_link) {
                 $order_filter .= '<li><a href="'.$filter_link.'">'.$filter_locale.'</a></li>';

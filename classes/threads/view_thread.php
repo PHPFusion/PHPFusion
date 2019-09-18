@@ -47,7 +47,6 @@ class View_Thread extends Forum_Server {
                 case 'editpoll':
                     // Template
                     $poll = new Forum_Poll($info);
-
                     return $poll::render_poll_form(TRUE);
                     break;
                 case 'deletepoll':
@@ -87,6 +86,7 @@ class View_Thread extends Forum_Server {
                 default:
                     redirect(clean_request("", ['action'], FALSE));
             }
+
         } else {
 
             self::check_download_request();
@@ -96,9 +96,7 @@ class View_Thread extends Forum_Server {
             self::thread()->addThreadVisit();
 
             if ($info['thread']['forum_users'] == TRUE) {
-
                 $info['thread_users'] = $this->get_participated_users($info);
-
             }
 
             return render_thread($info);

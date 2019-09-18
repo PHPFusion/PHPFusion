@@ -1,7 +1,7 @@
 <?php
 namespace PHPFusion\Infusions\Forum\Classes\Moderator;
 
-use Administration\Members\Users\Actions;
+use PHPFusion\Administration\Members\UserActions;
 use PHPFusion\Infusions\Forum\Classes\Forum_Moderator;
 
 class Threads_Mod {
@@ -103,7 +103,7 @@ class Threads_Mod {
         if (checkrights('M') && iMOD) {
             $user_id = get('user_id', FILTER_VALIDATE_INT);
             if ($user_name = fusion_get_user($user_id, 'user_name')) {
-                $user_class = new Actions();
+                $user_class = new UserActions();
                 $user_class->set_userID([$user_id]);
                 $user_class->set_action(1);
                 $user_class->setCancelLink(FORUM.'viewthread.php?thread_id='.get('thread_id', FILTER_VALIDATE_INT));

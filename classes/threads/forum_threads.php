@@ -1463,42 +1463,42 @@ class Forum_Threads extends Forum_Server {
                  * Increment DB_FORUM_POSTS with 'post_replied' column and have postify set it.
                  */
 
-                $replies_sql = "SELECT post_id FROM ".DB_FORUM_POSTS." WHERE post_cat=:post_id AND thread_id=:thread_id AND forum_id=:forum_id LIMIT 1";
-                $replies_param = [
-                    ':post_id'   => $pdata['post_id'],
-                    ':thread_id' => $pdata['thread_id'],
-                    ':forum_id'  => $pdata['forum_id']
-                ];
-                if (dbrows(dbquery($replies_sql, $replies_param))) {
-
-                    $replies_sql = "SELECT post_id, post_datestamp, post_author
-                    FROM ".DB_FORUM_POSTS." WHERE post_cat=:post_id AND thread_id=:thread_id AND forum_id=:forum_id
-                    GROUP BY post_author ORDER BY post_datestamp DESC";
-
-                    $reply_result = dbquery($replies_sql, $replies_param);
-
-                    if (dbrows($reply_result)) {
-                        // who has replied
-                        $reply_sender = [];
-                        $last_datestamp = 0;
-                        while ($r_data = dbarray($reply_result)) {
-                            $user_replied = fusion_get_user($r_data['post_author']);
-                            $r_data += [
-                                'user_id'     => $user_replied['user_id'],
-                                'user_name'   => $user_replied['user_name'],
-                                'user_status' => $user_replied['user_status'],
-                            ];
-                            $reply_sender[$r_data['post_id']] = "
-                            <a class='reply_sender' href='".FUSION_REQUEST."#post_".$r_data['post_id']."'>\n
-                            ".profile_link($r_data['user_id'], $r_data['user_name'], $r_data['user_status'], "", FALSE)."
-                            </a>
-                            ";
-                            $last_datestamp = $r_data['post_datestamp'];
-                        }
-                        $senders = implode(", ", $reply_sender);
-                        $pdata['post_reply_message'] = "<i class='fa fa-reply fa-fw'></i>".sprintf($locale['forum_0527'], $senders, timer($last_datestamp));
-                    }
-                }
+                // $replies_sql = "SELECT post_id FROM ".DB_FORUM_POSTS." WHERE post_cat=:post_id AND thread_id=:thread_id AND forum_id=:forum_id LIMIT 1";
+                // $replies_param = [
+                //     ':post_id'   => $pdata['post_id'],
+                //     ':thread_id' => $pdata['thread_id'],
+                //     ':forum_id'  => $pdata['forum_id']
+                // ];
+                // if (dbrows(dbquery($replies_sql, $replies_param))) {
+                //
+                //     $replies_sql = "SELECT post_id, post_datestamp, post_author
+                //     FROM ".DB_FORUM_POSTS." WHERE post_cat=:post_id AND thread_id=:thread_id AND forum_id=:forum_id
+                //     GROUP BY post_author ORDER BY post_datestamp DESC";
+                //
+                //     $reply_result = dbquery($replies_sql, $replies_param);
+                //
+                //     if (dbrows($reply_result)) {
+                //         // who has replied
+                //         $reply_sender = [];
+                //         $last_datestamp = 0;
+                //         while ($r_data = dbarray($reply_result)) {
+                //             $user_replied = fusion_get_user($r_data['post_author']);
+                //             $r_data += [
+                //                 'user_id'     => $user_replied['user_id'],
+                //                 'user_name'   => $user_replied['user_name'],
+                //                 'user_status' => $user_replied['user_status'],
+                //             ];
+                //             $reply_sender[$r_data['post_id']] = "
+                //             <a class='reply_sender' href='".FUSION_REQUEST."#post_".$r_data['post_id']."'>\n
+                //             ".profile_link($r_data['user_id'], $r_data['user_name'], $r_data['user_status'], "", FALSE)."
+                //             </a>
+                //             ";
+                //             $last_datestamp = $r_data['post_datestamp'];
+                //         }
+                //         $senders = implode(", ", $reply_sender);
+                //         $pdata['post_reply_message'] = "<i class='fa fa-reply fa-fw'></i>".sprintf($locale['forum_0527'], $senders, timer($last_datestamp));
+                //     }
+                // }
 
                 /**
                  * Displays mood buttons
@@ -1523,7 +1523,17 @@ class Forum_Threads extends Forum_Server {
                     if (!$filter['thread_locked']) {
                         // Check first post.
                         $reply_link = INFUSIONS."forum/viewthread.php?action=reply&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id'];
+
                         $quote_link = INFUSIONS."forum/viewthread.php?action=reply&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id']."&amp;quote=".$pdata['post_id'];
+
+                        if ($this->thread_data['forum_quick_edit']) {
+                            $quote_link = INFUSIONS."forum/viewthread.php?forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id']."&amp;quote=".$pdata['post_id'];
+                            $reply_link = INFUSIONS."forum/viewthread.php?forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id']."&amp;reply=".$pdata['post_id'];
+
+
+                        }
+
+
 
                         // if ($pdata['post_id'] == $filter['post_firstpost']) {
                         //     $quote_link = INFUSIONS."forum/viewthread.php?action=reply&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;quote=".$pdata['post_id'];
@@ -1542,17 +1552,20 @@ class Forum_Threads extends Forum_Server {
                         ) {
                             $pdata['post_edit'] = [
                                 'link'  => INFUSIONS."forum/viewthread.php?action=edit&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id'],
+                                'id' => $pdata['post_id'],
                                 'title' => $locale['forum_0265']
                             ];
                         }
                         // Check first post
                         $pdata['post_reply'] = [
                             'link'  => $reply_link,
+                            'id' => $pdata['post_id'],
                             'title' => $locale['forum_0509']
                         ];
                     } else if (iMOD) {
                         $pdata['post_edit'] = [
                             'link'  => INFUSIONS."forum/viewthread.php?action=edit&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id'],
+                            'id' => $pdata['post_id'],
                             'title' => $locale['forum_0265']
                         ];
                     }
@@ -1658,12 +1671,6 @@ class Forum_Threads extends Forum_Server {
                         "title"  => $locale['forum_0511'],
                         'active' => $pdata['has_voted'] && $pdata['has_voted_points'] < 0 ? TRUE : FALSE,
                     ];
-
-                    /*$pdata['post_votebox'] = "<div class='text-center post_vote_box'>\n";
-                    $pdata['post_votebox'] .= "<a href='".$pdata['post_vote_up']['link']."' class='text-center vote_up".($pdata['post_vote_up']['active'] ? " text-warning" : '')."' title='".$locale['forum_0510']."'>\n<i class='fa fa-caret-up fa-2x'></i></a>";
-                    $pdata['post_votebox'] .= "<h3 class='m-0'>".(!empty($pdata['vote_points']) ? $pdata['vote_points'] : 0)."</h3>\n";
-                    $pdata['post_votebox'] .= "<a href='".$pdata['post_vote_down']['link']."' class='text-center vote_down".($pdata['post_vote_down']['active'] ? " text-warning" : '')."' title='".$locale['forum_0511']."'>\n<i class='fa fa-caret-down fa-2x'></i></a>";
-                    $pdata['post_votebox'] .= "</div>\n";*/
                 } else {
                     // this still have HTML, get rid of it.
                     $pdata['post_votebox'] = "<div class='text-center'>\n";
@@ -1702,8 +1709,8 @@ class Forum_Threads extends Forum_Server {
 
                 // Custom Post Message Link/Buttons
                 $pdata['post_links'] = '';
-                $pdata['post_links'] .= !empty($pdata['post_quote']) ? "<a class='btn btn-xs btn-default' title='".$pdata['post_quote']["title"]."' href='".$pdata['post_quote']['link']."'>".$pdata['post_quote']['title']."</a>\n" : '';
-                $pdata['post_links'] .= !empty($pdata['post_edit']) ? "<a class='btn btn-xs btn-default' title='".$pdata['post_edit']["title"]."' href='".$pdata['post_edit']['link']."'>".$pdata['post_edit']['title']."</a>\n" : '';
+                $pdata['post_links'] .= !empty($pdata['post_quote']) ? "<a class='btn btn-xs btn-default' data-id='".$pdata['post_id']."' title='".$pdata['post_quote']["title"]."' href='".$pdata['post_quote']['link']."'>".$pdata['post_quote']['title']."</a>\n" : '';
+                $pdata['post_links'] .= !empty($pdata['post_edit']) ? "<a class='btn btn-xs btn-default' data-id='".$pdata['post_id']."' title='".$pdata['post_edit']["title"]."' href='".$pdata['post_edit']['link']."'>".$pdata['post_edit']['title']."</a>\n" : '';
                 $pdata['post_links'] .= !empty($pdata['print']) ? "<a class='btn btn-xs btn-default' title='".$pdata['print']["title"]."' href='".$pdata['print']['link']."'>".$pdata['print']['title']."</a>\n" : '';
                 $pdata['post_links'] .= !empty($pdata['user_web']) ? "<a class='btn btn-xs btn-default forum_user_actions' href='".$pdata['user_web']['link']."' target='_blank'>".$pdata['user_web']['title']."</a>\n" : '';
                 $pdata['post_links'] .= !empty($pdata['user_message']) ? "<a class='btn btn-xs btn-default' href='".$pdata['user_message']['link']."' target='_blank'>".$pdata['user_message']['title']."</a>\n" : '';
