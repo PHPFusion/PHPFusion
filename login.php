@@ -93,7 +93,13 @@ if (!iMEMBER) {
             $placeholder = $locale['global_101a'];
     }
 
-    $login = new \PHPFusion\LoginAuth();
+    $login_connectors = [];
+    $login_hooks = fusion_filter_hook('fusion_login_connectors');
+    if (!empty($login_hooks)) {
+        foreach($login_hooks as $buttons) {
+            $login_connectors[] = $buttons;
+        }
+    }
 
     $post_url = $settings['opening_page'];
     if ($site_referer = server('HTTP_REFERER')) {
@@ -115,7 +121,7 @@ if (!iMEMBER) {
         'registration_link'    => (fusion_get_settings('enable_registration')) ? strtr($locale['global_105'], ['[LINK]' => "<a href='".BASEDIR."register.php'>\n", '[/LINK]' => "</a>\n"]) : '',
         'forgot_password_link' => strtr($locale['global_106'], ['[LINK]' => "<a href='".BASEDIR."lostpassword.php'>\n", '[/LINK]' => "</a>\n",]),
         'close_form'           => closeform(),
-        'connect_buttons'      => $login->get_login_connectors(),
+        'connect_buttons'      => $login_connectors,
         'form_action'          => $post_url,
     ];
 }

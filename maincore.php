@@ -181,10 +181,12 @@ define("START_PAGE", substr(preg_replace("#(&amp;|\?)(s_action=edit&amp;shout_id
 /**
  * Login / Logout / Revalidate
  */
+
+
+
 $login_post = post("login");
 $user_name_post = post("user_name");
 $user_pass_post = post("user_pass");
-
 if ($login_post && $user_name_post && $user_pass_post) {
     if (\Defender::safe()) {
         $remember_me = post('remember_me') ? TRUE : FALSE;
@@ -312,3 +314,6 @@ set_theme(empty($userdata['user_theme']) ? fusion_get_settings("theme") : $userd
  * We can use manually include the configuration if needed.
  */
 \PHPFusion\Installer\Infusion_Core::getInstance()->loadConfiguration();
+
+// applying hook for social login
+fusion_apply_hook('fusion_login_connect');

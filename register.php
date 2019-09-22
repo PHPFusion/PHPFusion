@@ -40,10 +40,10 @@ if ($settings['gateway'] == 1 && session_get('validated') == 'TRUE' || $settings
     $code = get('code');
 
     if ($email && $code) {
+
         if (!preg_check("/^[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,4}$/i", $email)) {
             redirect("register.php?error=activate");
         }
-
         if (!preg_check("/^[0-9a-z]{40}$/", $code)) {
             redirect("register.php?error=activate");
         }

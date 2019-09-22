@@ -212,7 +212,7 @@ function check_admin_pass($password) {
  * @define STOP_REDIRECT to prevent redirection
  */
 function redirect($location, $delay = FALSE, $script = FALSE, $http_response_code = FALSE) {
-    //define('STOP_REDIRECT', true);
+     //define('STOP_REDIRECT', true);
     if (!defined('STOP_REDIRECT')) {
         if (isnum($delay)) {
             $ref = "<meta http-equiv='refresh' content='$delay; url=".$location."' />";

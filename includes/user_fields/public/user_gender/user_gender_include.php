@@ -68,7 +68,6 @@ if (!$with_secret) {
 if ($profile_method == "input") {
     $options = [
             'type'       => 'radio',
-            'inline'     => TRUE,
             'error_text' => $locale['uf_gender_error'],
             'options'    => $locale['uf_gender_title_img'],
         ] + $options;

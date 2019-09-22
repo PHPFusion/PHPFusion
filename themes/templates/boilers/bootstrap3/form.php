@@ -181,12 +181,12 @@ class Form {
      * @throws ReflectionException
      */
     public static function form_checkbox($input_name, $label, $input_value, $options) {
-
+        //print_p($options);
         // support inline if there are multiple options only.
         $template = '
         <div id="{%input_id%}-field" class="{%input_class%} form-group clearfix">
-            <label class="control-label{%label_class%}" data-checked="{%data_value%}"{%style%}>
-            {%pre_checkbox%}
+          {%pre_checkbox%}
+            <label class="control-label{%label_class%}" data-checked="{%data_value%}"{%style%}>                                  
             {%label%}
             {required.{
             <span class="required">&nbsp;*</span>
@@ -194,6 +194,7 @@ class Form {
             {tip.{
                 <i class="pointer fa fa-question-circle text-lighter" title="{%title%}"></i>
             }}
+            </label>
             {%post_checkbox%}
             {stacked.{
             <!--fusion stacked information-->{%content%}
@@ -348,7 +349,9 @@ class Form {
                 $off_label = $options['toggle_text'][1];
             }
 
-            $checkbox = "<div class='".(!empty($label) ? 'display-inline' : 'text-center')." m-r-5'>\n<input id='".$options['input_id']."' ".($options['toggle'] ? "data-on-text='".$on_label."' data-off-text='".$off_label."'" : "")." style='vertical-align: middle' name='$input_name' value='".$options['value']."' type='".$options['type']."' ".($options['deactivate'] ? 'disabled' : '')." ".($options['onclick'] ? 'onclick="'.$options['onclick'].'"' : '')." ".($input_value == $options['value'] ? 'checked' : '')." />\n</div>\n";
+            $checkbox = "<div class='".(!empty($label) ? 'display-inline' : 'text-center')." m-r-5'>\n
+            <input id='".$options['input_id']."' ".($options['toggle'] ? "data-on-text='".$on_label."' data-off-text='".$off_label."'" : "")." style='vertical-align: middle' name='$input_name' value='".$options['value']."' type='".$options['type']."' ".($options['deactivate'] ? 'disabled' : '')." ".($options['onclick'] ? 'onclick="'.$options['onclick'].'"' : '')." ".($input_value == $options['value'] ? 'checked' : '')." />\n
+            </div>\n";
 
             if (!empty($options['options']) && is_array($options['options'])) {
                 $options['toggle'] = FALSE; // force toggle to be false if options existed
@@ -373,6 +376,9 @@ class Form {
                 }
 
                 $checkbox = '';
+                if ($options['inline']) {
+                    $checkbox .= "<div class='".grid_column_size(100,100,75,75)."'>\n";
+                }
                 foreach ($options['options'] as $key => $value) {
                     if ($options['deactivate_key'] !== NULL && $options['deactivate_key'] == $key) {
                         $checkbox .= form_hidden($input_name, '', $key);
@@ -383,11 +389,15 @@ class Form {
                     } else {
                         $checked .= ($input_value == $key || $default_checked && $key == FALSE ? ' checked' : '');
                     }
+
                     $checkbox .= "<div class='".($options['type'] == 'radio' ? 'radio' : 'checkbox').($options['inline_options'] ? ' display-inline-block m-r-5' : '')."'>\n";
                     $checkbox .= "<label class='control-label m-r-10' data-label='$key' for='".$options['input_id']."-$key'".($options['inner_width'] ? " style='width: ".$options['inner_width']."'" : '').">";
                     $checkbox .= "<input id='".$options['input_id']."-$key' name='$input_name' value='$key' type='".$options['type']."' $checked />\n";
                     $checkbox .= $value;
                     $checkbox .= "</label>\n";
+                    $checkbox .= "</div>\n";
+                }
+                if ($options['inline']) {
                     $checkbox .= "</div>\n";
                 }
             }

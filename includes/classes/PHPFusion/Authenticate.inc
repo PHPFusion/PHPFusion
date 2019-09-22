@@ -91,14 +91,15 @@ class Authenticate {
                         SET user_algo='".$user['user_algo']."', user_salt='".$user['user_salt']."', user_password='".$user['user_password']."'
                         WHERE user_id='".$user['user_id']."'");
                 }
+
                 if ($user['user_status'] == 0 && $user['user_actiontime'] == 0) {
                     // Implement new login class
-                    $login = new LoginAuth();
-                    if (empty($login->authenticate($user))) {
+                    // $login = new LoginAuth();
+                    // if (empty($login->authenticate($user))) {
                         Authenticate::setUserCookie($user['user_id'], $user['user_salt'], $user['user_algo'], $remember, TRUE);
                         Authenticate::_setUserTheme($user);
                         $this->_userData = $user;
-                    }
+                    // }
                 } else {
                     require_once INCLUDES."suspend_include.php";
                     require_once INCLUDES."sendmail_include.php";
@@ -129,7 +130,6 @@ class Authenticate {
     }
 
     // Get user data when authenticating in user
-
     public static function setUserCookie($userID, $salt, $algo, $remember = FALSE, $userCookie = TRUE) {
         global $_COOKIE;
         $cookiePath = COOKIE_PATH;
@@ -475,6 +475,39 @@ class Authenticate {
         }
 
         return $lastvisit;
+    }
+
+    public static function loginUser($user_id) {
+        $settings = fusion_get_settings();
+        $locale = fusion_get_locale();
+        $user = fusion_get_user($user_id);
+        $remember = FALSE;
+        // Initialize password auth
+        if (!empty($user['user_id']) && $user['user_status'] == 0) {
+            Authenticate::setUserCookie($user['user_id'], $user['user_salt'], $user['user_algo'], $remember, TRUE);
+            Authenticate::_setUserTheme($user);
+            return TRUE;
+        } else {
+            require_once INCLUDES."suspend_include.php";
+            require_once INCLUDES."sendmail_include.php";
+            if (($user['user_status'] == 3 && $user['user_actiontime'] < time()) || $user['user_status'] == 7) {
+                dbquery("UPDATE ".DB_USERS." SET user_status='0', user_actiontime='0' WHERE user_id='".$user['user_id']."'");
+                if ($user['user_status'] == 3) {
+                    $subject = str_replace("[SITENAME]", $settings['sitename'], $locale['global_451']);
+                    $message = str_replace("[SITEURL]", $settings['siteurl'], $locale['global_455']);
+                    $message = str_replace("[SITEUSERNAME]", $settings['siteusername'], $message);
+                    unsuspend_log($user['user_id'], 3, $locale['global_450'], TRUE);
+                } else {
+                    $subject = $locale['global_454'];
+                    $message = str_replace("[SITEURL]", $settings['siteurl'], $locale['global_452']);
+                    $message = str_replace("[SITEUSERNAME]", $settings['siteusername'], $message);
+                }
+                $message = str_replace("USER_NAME", $user['user_name'], $message);
+                sendemail($user['user_name'], $user['user_email'], $settings['siteusername'], $settings['siteemail'], $subject, $message);
+            }
+            return FALSE;
+        }
+        return FALSE;
     }
 
     public function getUserData() {

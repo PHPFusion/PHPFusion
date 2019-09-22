@@ -724,7 +724,10 @@ class UserFieldsInput {
         $this->_userPassword = self::_getPasswordInput('user_password');
         $this->_newUserPassword = self::_getPasswordInput('user_password1');
         $this->_newUserPassword2 = self::_getPasswordInput('user_password2');
-        if ($this->is_admin_panel || $this->_userPassword && (post($this->post_name.'_password'))) {
+        if ($this->is_admin_panel || (post($this->post_name.'_password'))) {
+            if (!fusion_get_userdata('user_password')) {
+                $skip_pass = TRUE;
+            }
             /**
              * Validation of Password
              */
@@ -736,7 +739,7 @@ class UserFieldsInput {
             $passAuth->currentAlgo = $this->user_data['user_algo'];
             $passAuth->currentSalt = $this->user_data['user_salt'];
 
-            if ($this->is_admin_panel or $passAuth->isValidCurrentPassword()) {
+            if ($this->is_admin_panel or $passAuth->isValidCurrentPassword() or isset($skip_pass)) {
 
                 // Just for validation purposes for example email change
                 $this->_isValidCurrentPassword = 1;
@@ -999,11 +1002,11 @@ class UserFieldsInput {
                 // override the requirements of password to change email address of a member in admin panel
                 $is_valid_password = TRUE; // changing an email in administration panel
             } else {
-                if (isset($_POST['user_email_hash'])) {
+                if (post('user_email_hash')) {
                     $is_valid_password = $this->verify_password('user_email_hash');
                 }
                 if (!$is_valid_password) {
-                    if (isset($_POST['account_close_hash'])) {
+                    if (post('account_close_hash')) {
                         \Defender::setInputError('user_email_hash');
                         \Defender::setErrorText('user_email_hash', 'The password you given does not match your current account password');
                     }

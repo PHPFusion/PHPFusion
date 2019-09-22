@@ -378,7 +378,7 @@ class UserFields extends UserFieldsQuantum {
         // info output
         switch ($this->info['current_page']) {
             default:
-                if (isset($this->info['pages'][$this->info['current_page']]['file'])) {
+                if (isset($this->info['pages'][$this->info['current_page']]['file']) && is_file($this->info['pages'][$this->info['current_page']]['file'])) {
                     $this->info['custom_page'] = TRUE;
                     $this->info['title'] = $this->info['pages'][$this->info['current_page']]['title'];
                     $this->info['page_content'] = 'There are no page content yet.';
@@ -386,13 +386,14 @@ class UserFields extends UserFieldsQuantum {
                     $user_fields_meta = '';
                     $user_fields_section = [];
                     $user_fields_title = '';
-                    if (is_file($this->info['pages'][$this->info['current_page']]['file'])) {
-                        include $this->info['pages'][$this->info['current_page']]['file'];
-                    }
+                    $default_section = 'default';
+
+                    include $this->info['pages'][$this->info['current_page']]['file'];
+
                     if (!empty($user_fields_section)) {
-                        $section = get('section') ?: $user_fields['id'][0];
+                        // what is the default section?
+                        $section = get('section') ?: $default_section;
                     }
-                    // Custom title
                     if ($user_fields) {
                         // Title info
                         if ($user_fields_title) {
@@ -413,7 +414,10 @@ class UserFields extends UserFieldsQuantum {
                         // Page content info
                         $this->info['page_content'] = $user_fields;
                     }
+                    // Custom title
                     add_to_title($locale['global_201'].$this->info['title']);
+                } else {
+                    redirect(BASEDIR.'edit_profile.php');
                 }
                 break;
             case 'pu_profile':

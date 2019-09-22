@@ -208,14 +208,6 @@ class LoginAuth {
         return (array)$settings;
     }
 
-    /**
-     * Store plugin driver settings
-     *
-     * @param       $title
-     * @param array $settings_array
-     *
-     * @return bool
-     */
     protected function update_driver_settings($title, $settings_array = []) {
         if (\Defender::safe() && !empty($settings_array) && !empty($title)) {
             // I will need a pair to encrypt
@@ -240,79 +232,9 @@ class LoginAuth {
         return FALSE;
     }
 
-    /**
-     * This is read by the the authenticator class.
-     *
-     * @param array $userdata
-     *
-     * @return bool
-     */
-    public function authenticate(array $userdata = []) {
-        // set language constants
-        $this->set_current_language();
-        if (!empty($userdata)) { // user found
-            $enabled_plugins = $this->cache_driver();
-            if (!empty($enabled_plugins)) {
-                foreach ($enabled_plugins as $plugin_name => $data) {
-                    // Detect if there are any 2 factor authentication required for additional steps, and if not, return false to login
-                    if ($data['login_type'] == '2FA' && $data['login_status']) {
-                        $plugin = $this->get_login_file($plugin_name);
-                        if (!empty($plugin['login_method']) && !empty($plugin['dbname'])) {
-                            // Display the field with accessing the class or function names
-                            if (is_array($plugin['login_method']) && count($plugin['login_method']) > 1) {
-                                // Call the authentication method
-                                $login_class = $plugin['login_method'][0];
-                                $login_method = $plugin['login_method'][1];
-                                $login_authenticator = new $login_class();
-                                $login_authenticator->$login_method($userdata);
-                            } else if (is_callable($plugin['login_method'])) {
-                                // Call the authentication method
-                                $plugin['login_method']();
-                            }
-                        }
-                    }
-                }
-            }
-
-            return FALSE;
-        }
-
-        return FALSE;
-    }
-
     // Outputs a string where MVT logins can display the user fields buttons.
     public function get_login_connectors() {
         $this->set_current_language();
-        $enabled_plugins = $this->cache_driver();
-        if (!empty($enabled_plugins)) {
-            foreach ($enabled_plugins as $plugin_id => $plugin_data) {
-                $login_connectors = NULL;
-                if ($plugin_data['login_type'] == 'LGA') {
-                    $plugin = $this->get_login_file($plugin_id);
-                    $method = (iMEMBER ? "connect_method" : "login_method");
-                    if (!empty($plugin[$method])) {
-                        // Display the field with accessing the class or function names
-                        if (is_array($plugin[$method]) && count($plugin[$method]) > 1) {
-                            $login_class = $plugin[$method][0];
-                            $login_method = $plugin[$method][1];
-                            $login_connectors = new $login_class();
-                            $logins = $login_connectors->$login_method();
-                            // Call the authentication method
-                        } else if (is_callable($plugin[$method])) {
-                            // Call the authentication method
-                            $logins = $plugin[$method]();
-                        }
-                        if (!empty($logins)) {
-                            self::$login_connectors[$plugin_id] = [
-                                'title'     => $plugin['name'],
-                                'icon'      => $plugin['icon'],
-                                'connector' => $logins,
-                            ];
-                        }
-                    }
-                }
-            }
-        }
 
         return self::$login_connectors;
     }
@@ -425,47 +347,6 @@ class LoginAuth {
                     ('".$userCode."', '".$user_name."', '".$user_email."', '".TIME."', '".$userInfo."')
                     ");
         addNotice("success", $locale['u150'], 'all');
-    }
-
-    /**
-     * Authenticate a user login session
-     *
-     * @param $user_id
-     */
-    protected static function authenticate_user_login($user_id) {
-
-        $settings = fusion_get_settings();
-        $locale = fusion_get_locale();
-        $user = fusion_get_user($user_id);
-        $remember = FALSE;
-        // Initialize password auth
-        if (!empty($user['user_id']) && $user['user_status'] == 0) {
-            // Implement new login class
-            $login = new LoginAuth();
-            $authenticate_methods = $login->authenticate($user);
-            if (empty($authenticate_methods)) {
-                Authenticate::setUserCookie($user['user_id'], $user['user_salt'], $user['user_algo'], $remember, TRUE);
-                Authenticate::_setUserTheme($user);
-            }
-        } else {
-            require_once INCLUDES."suspend_include.php";
-            require_once INCLUDES."sendmail_include.php";
-            if (($user['user_status'] == 3 && $user['user_actiontime'] < time()) || $user['user_status'] == 7) {
-                dbquery("UPDATE ".DB_USERS." SET user_status='0', user_actiontime='0' WHERE user_id='".$user['user_id']."'");
-                if ($user['user_status'] == 3) {
-                    $subject = str_replace("[SITENAME]", $settings['sitename'], $locale['global_451']);
-                    $message = str_replace("[SITEURL]", $settings['siteurl'], $locale['global_455']);
-                    $message = str_replace("[SITEUSERNAME]", $settings['siteusername'], $message);
-                    unsuspend_log($user['user_id'], 3, $locale['global_450'], TRUE);
-                } else {
-                    $subject = $locale['global_454'];
-                    $message = str_replace("[SITEURL]", $settings['siteurl'], $locale['global_452']);
-                    $message = str_replace("[SITEUSERNAME]", $settings['siteusername'], $message);
-                }
-                $message = str_replace("USER_NAME", $user['user_name'], $message);
-                sendemail($user['user_name'], $user['user_email'], $settings['siteusername'], $settings['siteemail'], $subject, $message);
-            }
-        }
     }
 
 }
