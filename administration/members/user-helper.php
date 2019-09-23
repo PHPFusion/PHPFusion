@@ -30,6 +30,11 @@ class User_Helper {
     }
 
     public function checkUserPass($user_exist = FALSE) {
+        $user_data = [
+            'user_password' => '',
+            'user_algo' => '',
+            'user_salt' => '',
+        ];
 
         if ($user_exist === FALSE) {
             $this->class->user_data['user_password'] = '';
@@ -39,41 +44,22 @@ class User_Helper {
 
         $password = sanitizer('user_password', '', 'user_password');
         if ($password) {
+
             $passAuth = new PasswordAuth();
-            $passAuth->inputPassword = '';
+            $passAuth->inputPassword = $this->class->user_data['user_password'];
             $passAuth->inputNewPassword = $password;
             $passAuth->inputNewPassword2 = $password;
             $passAuth->currentPasswordHash = $this->class->user_data['user_password'];
             $passAuth->currentAlgo = $this->class->user_data['user_algo'];
             $passAuth->currentSalt = $this->class->user_data['user_salt'];
-            // Change new password
-            switch ($passAuth->isValidNewPassword()) {
-                case 0:
-                    // New password is valid
-                    $user_data['user_password'] = $passAuth->getNewHash();
-                    $user_data['user_algo'] = $passAuth->getNewAlgo();
-                    $user_data['user_salt'] = $passAuth->getNewSalt();
-
-                    return $user_data;
-                    break;
-                case 1:
-                    // New Password equal old password
-                    \Defender::stop();
-                    \Defender::setInputError('user_password');
-                    \Defender::setErrorText('user_password', $this->locale['u134'].$this->locale['u146'].$this->locale['u133']);
-                    break;
-                case '2':
-                    // The two new passwords are not identical
-                    \Defender::stop();
-                    \Defender::setInputError('user_password');
-                    break;
-                case '3':
-                    // New password contains invalid chars / symbols
-                    \Defender::stop();
-                    \Defender::setInputError('user_password');
-                    break;
+            $_isValidNewPassword = $passAuth->isValidNewPassword();
+            if ($_isValidNewPassword == 0) {
+                $user_data['user_password'] = $passAuth->getNewHash();
+                $user_data['user_algo'] = $passAuth->getNewAlgo();
+                $user_data['user_salt'] = $passAuth->getNewSalt();
             }
         }
+        return (array)$user_data;
     }
 
     public function checkUserEmail() {
@@ -144,6 +130,39 @@ class User_Helper {
             ('".$userCode."', '".$user_name."', '".$user_firstname."', '".$user_lastname."', '".$user_email."', '".TIME."', '".$user_language."', '".$user_status."', '".$userInfo."')");
         }
     }
+
+    public function sendNewPasswordEmail() {
+        $locale = fusion_get_locale();
+        include INCLUDES."sendmail_include.php";
+        addNotice("success", str_replace("USER_NAME", $this->class->user_data['user_name'], $locale['global_458']));
+        $settings = fusion_get_settings();
+        $password = sanitizer('user_password', '', 'user_password');
+        $input = [
+            "mailname" => $this->class->user_data['user_name'],
+            "email"    => $this->class->user_data['user_email'],
+            "subject"  => str_replace("[SITENAME]", $settings['sitename'], $locale['global_456']),
+            "message"  => str_replace(
+                [
+                    "[SITENAME]",
+                    "[SITEUSERNAME]",
+                    "USER_NAME",
+                    "[PASSWORD]"
+                ],
+                [
+                    $settings['sitename'],
+                    $settings['siteusername'],
+                    $this->class->user_data['user_name'],
+                    $password,
+                ],
+                $locale['global_457']
+            )
+        ];
+        if (!sendemail($input['mailname'], $input['email'], $settings['siteusername'], $settings['siteemail'], $input['subject'],
+             $input['message'])) {
+             addNotice('warning', str_replace("USER_NAME", $this->user_data['user_name'], $this->locale['global_459']));
+        }
+    }
+
 }
 
 require_once INCLUDES."sendmail_include.php";

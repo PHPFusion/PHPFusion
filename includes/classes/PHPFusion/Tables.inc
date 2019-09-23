@@ -274,7 +274,7 @@ class Tables {
                 }
                 $search = "WHERE ".implode(' OR ', $var_output);
             } else {
-                $search = "WHERE ".$this->table_props['search_col']." LIKE '(%$this->search_text%)'";
+                $search = "WHERE ".$this->table_props['search_col']." LIKE '%$this->search_text%'";
             }
 
         }

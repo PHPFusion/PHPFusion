@@ -186,7 +186,7 @@ class Form {
         $template = '
         <div id="{%input_id%}-field" class="{%input_class%} form-group clearfix">
           {%pre_checkbox%}
-            <label class="control-label{%label_class%}" data-checked="{%data_value%}"{%style%}>                                  
+            <label class="control-label{%label_class%}" for="{%input_id%}" data-checked="{%data_value%}"{%style%}>                                  
             {%label%}
             {required.{
             <span class="required">&nbsp;*</span>
@@ -349,7 +349,7 @@ class Form {
                 $off_label = $options['toggle_text'][1];
             }
 
-            $checkbox = "<div class='".(!empty($label) ? 'display-inline' : 'text-center')." m-r-5'>\n
+            $checkbox = "<div class='".(!empty($label) ? 'display-inline m-l-20' : 'text-center')." m-r-5'>\n
             <input id='".$options['input_id']."' ".($options['toggle'] ? "data-on-text='".$on_label."' data-off-text='".$off_label."'" : "")." style='vertical-align: middle' name='$input_name' value='".$options['value']."' type='".$options['type']."' ".($options['deactivate'] ? 'disabled' : '')." ".($options['onclick'] ? 'onclick="'.$options['onclick'].'"' : '')." ".($input_value == $options['value'] ? 'checked' : '')." />\n
             </div>\n";
 

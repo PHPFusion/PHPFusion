@@ -9,13 +9,12 @@ if (!defined('FBC_LOCALE')) {
 }
 
 if (infusion_exists('facebook_connect')) {
-
     if (!function_exists('display_facebook_button')) {
         function display_facebook_button() {
             $locale = fusion_get_locale('', [FBC_LOCALE]);
+            add_to_head('<link rel="stylesheet" href="'.INFUSIONS.'facebook_connect/button.css">');
             $fb = new \PHPFusion\Infusions\Facebook_Connect\Facebook_Connect();
             $login_url = $fb->getLoginButtonUrl();
-            add_to_head('<link rel="stylesheet" href="'.INFUSIONS.'facebook_connect/button.css">');
             return (string)'<a href="'.$login_url.'" class="btn btn-block btn-fb"><i class="fab fa-facebook-f fa-fw"></i>Login with Facebook</a>';
         }
     }

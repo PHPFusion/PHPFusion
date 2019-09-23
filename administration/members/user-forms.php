@@ -25,6 +25,9 @@ class UserForms {
         'user_avatar'      => '',
         'user_language'    => LANGUAGE,
         'user_location'    => '',
+        'user_password' => '',
+        'user_salt' => '',
+        'user_algo' => '',
     ];
 
     private $helper = NULL;
@@ -36,6 +39,10 @@ class UserForms {
 
     public function __construct() {
         $this->helper = new User_Helper($this);
+    }
+
+    private function sendPasswordEmail() {
+
     }
 
     public function adminEdit() {
@@ -81,6 +88,7 @@ class UserForms {
             ];
 
             $user_password = $this->helper->checkUserPass(TRUE);
+
             if (!empty($user_password)) {
                 $user_data['user_password'] = $user_password['user_password'];
                 $user_data['user_algo'] = $user_password['user_algo'];
@@ -96,6 +104,12 @@ class UserForms {
 
             if (\Defender::safe()) {
                 dbquery_insert(DB_USERS, $this->user_data, 'update');
+
+                // send email.
+                if (!empty($user_password)) {
+                    $this->helper->sendNewPasswordEmail();
+                }
+
                 addNotice('success', 'User profile has been updated.');
                 redirect(FUSION_REQUEST);
             }

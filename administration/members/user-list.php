@@ -42,7 +42,7 @@ class UserList implements \PHPFusion\Interfaces\TableSDK {
      */
     public function data() {
         return [
-            'debug'                    => FALSE,
+            'debug'                    => TRUE,
             'table'                    => DB_USERS,
             'id'                       => 'user_id',
             'limit'                    => 24,
