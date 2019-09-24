@@ -19,6 +19,7 @@ $inf_adminpanel[] = [
     "panel"  => ""
 ];
 
-$inf_insertdbrows[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('fb_app_id', '', '$inf_folder')";
-$inf_insertdbrows[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('fb_secret', '', '$inf_folder')";
-$inf_deldbrows[] = DB_SETTINGS_INF." WHERE settings_inf='$inf_folder'";
+$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('fb_app_id', '', '".$inf_folder."')";
+$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('fb_secret', '', '$inf_folder')";
+
+$inf_deldbrow[] = DB_SETTINGS_INF." WHERE settings_inf='$inf_folder'";
