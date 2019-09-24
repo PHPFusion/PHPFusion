@@ -26,62 +26,68 @@ class GoogleAuthenticator {
 
     protected $_codeLength = 6;
 
-    public function login_authenticate($user) {
-        if (isset($user['user_gauth']) && !empty($user['user_gauth'])) { // check if there are any secret code.
-            $_SESSION['secret_code'] = $user['user_gauth'];
-            $_SESSION['uid'] = $user['user_id'];
-            redirect(INCLUDES.'login/google_auth/authentication.php');
-        }
+    /**
+     * Displays the authenticator
+     *
+     * @return null
+     */
+    public function displayAuthenticator() {
+        if (iMEMBER) { // from login that you have successfully attempted login.
+            $code = session_get('google_secret_code');
+            $user_id = session_get('google_uid');
+            $google_authorization = session_get('google_2fa_auth');
 
-        return NULL;
+            if (!$code && !$user_id) {
+                $code = fusion_get_userdata('user_google2fa');
+                $user_id = fusion_get_userdata('user_id');
+                if ($code) { // already set up google2fa
+                    session_add('google_secret_code', $code);
+                    session_add('google_uid', $user_id);
+                }
+            }
+            // if no google_code authorization token
+            if ($code && !$google_authorization) {
+                if (FUSION_SELF !== 'two-factor-authentication.php') {
+                    redirect(INFUSIONS.'google_2fa/two-factor-authentication.php');
+                }
+            }
+        }
     }
 
-    /**
-     * User configuration field.
-     */
-    public function display_connector() {
-        $locale = fusion_get_locale();
-        $settings = fusion_get_settings();
-        $user_data = fusion_get_userdata();
-        $field_name = "user_gauth";
-
-        $tpl = \PHPFusion\Template::getInstance('gauth');
-        $tpl->set_template(__DIR__.'/templates/create.html');
-        // html text replacement
-        $tpl->set_tag('title', $locale['uf_gauth_108']);
-        $tpl->set_tag('description', str_replace('{SITE_NAME}', $settings['sitename'], $locale['uf_gauth_111']));
-
-        if (isset($_POST['authenticate']) && isset($_POST['enable_2step']) && $_POST['enable_2step'] == 1) {
+    private function setUp2FA($user_id, $field_value) {
+        $locale = fusion_get_locale('', [G2FA_LOCALE]);
+        if (post('authenticate') && post('enable_2step', FILTER_VALIDATE_INT) == 1) {
             $google = new GoogleAuthenticator();
-            $gCode = form_sanitizer($_POST['g_code'], '', 'g_code');
-            $secret = form_sanitizer($_POST['secret'], '', 'secret');
+            $gCode = sanitizer('g_code', '', 'g_code');
+            $secret = sanitizer('secret', '', 'secret');
             $checkResult = $google->verifyCode($secret, $gCode, 2);    // 2 = 2*30sec clock tolerance
+
             if ($checkResult && \Defender::safe()) {
                 // successful paired
                 $user = [
-                    'user_id'    => $user_data['user_id'],
-                    'user_gauth' => $secret,
+                    'user_id'        => (int)$user_id,
+                    'user_google2fa' => (string)$secret,
                 ];
                 dbquery_insert(DB_USERS, $user, 'update');
                 addNotice('success', $locale['uf_gauth_140']);
                 redirect(FUSION_REQUEST);
+
             } else {
-                // unsuccessful. try again.
                 addNotice('danger', $locale['uf_gauth_141']);
                 redirect(FUSION_REQUEST);
             }
         }
 
-        if (isset($_POST['deactivate'])) {
+        if (post('deactivate')) {
             $google = new GoogleAuthenticator();
-            $gCode = form_sanitizer($_POST['g_code'], '', 'g_code');
-            $secret = $user_data[$field_name];
-            $checkResult = $google->verifyCode($secret, $gCode, 2);    // 2 = 2*30sec clock tolerance
+            $gCode = sanitizer('g_code', '', 'g_code');
+
+            $checkResult = $google->verifyCode($field_value, $gCode, 2);    // 2 = 2*30sec clock tolerance
             if ($checkResult && \Defender::safe()) {
                 // successful paired
                 $user = [
-                    'user_id'    => $user_data['user_id'],
-                    'user_gauth' => '',
+                    'user_id'        => $user_id,
+                    'user_google2fa' => '',
                 ];
                 dbquery_insert(DB_USERS, $user, 'update');
                 addNotice('success', $locale['uf_gauth_142']);
@@ -93,7 +99,25 @@ class GoogleAuthenticator {
             }
         }
 
-        if (!empty($user_data[$field_name])) {
+    }
+
+    /**
+     * User configuration field.
+     */
+    public function displayConnector() {
+
+        $locale = fusion_get_locale('', [G2FA_LOCALE]);
+        $settings = fusion_get_settings();
+        $user_data = fusion_get_userdata();
+
+        $this->setUp2FA($user_data['user_id'], $user_data['user_google2fa']);
+
+        $tpl = \PHPFusion\Template::getInstance('gauth');
+        $tpl->set_template(__DIR__.'/templates/create.html');
+        $tpl->set_tag('title', $locale['uf_gauth_108']);
+        $tpl->set_tag('description', str_replace('{SITE_NAME}', $settings['sitename'], $locale['uf_gauth_111']));
+
+        if (!empty($user_data['user_google2fa'])) {
             // Reset options
             $tpl->set_block('current_block', [
                 'title'       => $locale['uf_gauth_112'],
@@ -137,7 +161,7 @@ class GoogleAuthenticator {
                 'account_name' => $account_name,
                 'key'          => $secret,
                 'image_src'    => $qrCodeUrl,
-                'text_input'   => form_text('g_code', $locale['uf_gauth_103'], '', ['type' => 'password', 'required' => TRUE, 'placeholder' => $locale['uf_gauth_105']]),
+                'text_input'   => form_text('g_code', $locale['uf_gauth_103'], '', ['type' => 'password', 'required' => TRUE, 'class'=>'form-group-lg', 'placeholder' => $locale['uf_gauth_105']]),
                 'button'       => form_button('authenticate', $locale['uf_gauth_106'], $locale['uf_gauth_106'], ['class' => 'btn-primary'])
             ]);
 
@@ -145,19 +169,15 @@ class GoogleAuthenticator {
             $('input[name=\"enable_2step\"]').bind('change', function(e) {
                 if ($(this).val() == 1) {
                     $('#gauth_setup_form').slideDown();
-
                 } else {
                     $('#gauth_setup_form').slideUp();
                 }
             });
             ");
 
-            return $tpl->get_output();
-
+            return (string)$tpl->get_output();
         }
     }
-
-
 
     /**
      * Create new secret.
@@ -255,7 +275,7 @@ class GoogleAuthenticator {
      *
      * @param string   $secret
      * @param string   $code
-     * @param int      $discrepancy This is the allowed time drift in 30 second units (8 means 4 minutes before or after)
+     * @param int      $discrepancy      This is the allowed time drift in 30 second units (8 means 4 minutes before or after)
      * @param int|null $currentTimeSlice time slice if we want use other that time()
      *
      * @return bool

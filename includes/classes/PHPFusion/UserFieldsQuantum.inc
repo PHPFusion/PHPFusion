@@ -265,21 +265,23 @@ class UserFieldsQuantum extends \SqlHandler {
     public function load_fields($folder = 'public') {
 
         $this->page = dbquery_tree_full(DB_USER_FIELD_CATS, "field_cat_id", "field_parent", "ORDER BY field_cat_order ASC");
-
         $param = [];
-
         $cond = '';
 
         if ($this->is_admin_panel === FALSE) {
+
             $section = get('section', FILTER_VALIDATE_INT);
+
             if (!$section || !isset($this->page[$section])) {
                 $section = 1;
             }
+
             $param = [
-                ':index00' => intval($section),
-                ':index01' => intval($section),
+                ':index00' => (int) $section,
+                ':index01' => (int) $section,
             ];
             $cond = "WHERE (cat.field_cat_id=:index00 OR root.field_cat_id=:index01)";
+
             // for registration
             if ($this->registration === TRUE) {
                 $cond .= ' AND field.field_registration=:fieldreg';
@@ -303,9 +305,7 @@ class UserFieldsQuantum extends \SqlHandler {
             }
         }
 
-        $sql = "SELECT field.*,
-        cat.field_cat_id, cat.field_cat_name, cat.field_parent, cat.field_cat_class, root.field_cat_id 'page_id',
-        root.field_cat_name 'page_name', root.field_cat_db, root.field_cat_index
+        $sql = "SELECT field.*, cat.field_cat_id, cat.field_cat_name, cat.field_parent, cat.field_cat_class, root.field_cat_id 'page_id', root.field_cat_name 'page_name', root.field_cat_db, root.field_cat_index
         FROM ".DB_USER_FIELDS." field
         LEFT JOIN ".DB_USER_FIELD_CATS." cat ON (cat.field_cat_id = field.field_cat)
         LEFT JOIN ".DB_USER_FIELD_CATS." root ON (root.field_cat_id = cat.field_parent)
@@ -1484,9 +1484,9 @@ class UserFieldsQuantum extends \SqlHandler {
 
         // Format Callback Data
         $field_value = isset($callback_data[$data['field_name']]) ? $callback_data[$data['field_name']] : '';
-
-        if (isset($_POST[$data['field_name']]) && !$options['hide_value']) {
-            $field_value = form_sanitizer($_POST[$data['field_name']], '', $data['field_name']);
+        $field_post_value = post($data['field_name']);
+        if ($field_post_value && !$options['hide_value']) {
+            $field_value = $field_post_value;
         } else if ($options['hide_value']) {
             $field_value = '';
         }
@@ -1497,22 +1497,24 @@ class UserFieldsQuantum extends \SqlHandler {
             case 'file':
                 $user_data = $callback_data;
                 $profile_method = $method;
-                $include_file = '';
-                $plugin_folder = INCLUDES.'user_fields/'.$data['field_type'];
-                if ($data['field_type'] == 'file') {
-                    $plugin_folder = INCLUDES.'user_fields/public/';
+
+                $plugin_folder = INCLUDES.'user_fields/'.$data['field_section'];
+                if ($options['plugin_folder']) {
+                    $plugin_folder = $options['plugin_folder'];
                 }
                 $plugin_file = $plugin_folder.$data['field_name'].'/'.$data['field_name'].'_include.php';
-                if (is_file($plugin_file))
-                    include $plugin_file;
 
-                if ($method == 'input') {
-                    if (isset($user_fields)) {
+                if (file_exists($plugin_file)) {
+                    include $plugin_file;
+                    if ($method == 'input') {
+                        if (isset($user_fields)) {
+                            return $user_fields;
+                        }
+                    } else if ($method == 'display' && !empty($user_fields['value'])) {
                         return $user_fields;
                     }
-                } else if ($method == 'display' && !empty($user_fields['value'])) {
-                    return $user_fields;
                 }
+
                 unset($user_data);
                 unset($profile_method);
                 unset($locale);
@@ -2961,7 +2963,7 @@ class Security implements TableSDK {
      */
     public function quickEdit() {
         return  [
-            'field_title' => ['title' => 'Field Name', 'required' => TRUE],
-            'field_order' => ['title' => 'Field Order', 'dynamics' => 'form_textarea'],
+            'field_title' => ['title' => 'Field Name', 'required' => TRUE, 'function'=>'form_text'],
+            'field_order' => ['title' => 'Field Order', 'function' => 'form_textarea'],
         ];
 }}

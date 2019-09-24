@@ -181,9 +181,6 @@ define("START_PAGE", substr(preg_replace("#(&amp;|\?)(s_action=edit&amp;shout_id
 /**
  * Login / Logout / Revalidate
  */
-
-
-
 $login_post = post("login");
 $user_name_post = post("user_name");
 $user_pass_post = post("user_pass");
@@ -226,8 +223,9 @@ $language_opts = fusion_get_enabled_languages();
 $enabled_languages = array_keys($language_opts);
 
 // If language change is initiated and if the selected language is valid
-if (isset($_GET['lang']) && isset($_GET['lang']) != "" && file_exists(LOCALE.$_GET['lang']."/global.php") && in_array($_GET['lang'], $enabled_languages)) {
-    $current_user_language = stripinput($_GET['lang']);
+$lang_switch = get('lang');
+if ($lang_switch && file_exists(LOCALE.$lang_switch."/global.php") && in_array($lang_switch, $enabled_languages)) {
+    $current_user_language = stripinput($lang_switch);
     set_language($current_user_language);
 } else {
     if (count($enabled_languages) > 1) {

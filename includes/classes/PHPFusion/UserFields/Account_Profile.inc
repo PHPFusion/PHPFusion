@@ -17,9 +17,24 @@ class Account_Profile extends UserFieldsQuantum {
     public $options = [];
     public $is_admin_panel = FALSE;
 
+
+    private function cacheSecurityPlugins() {
+        static $security_fields = [];
+        if (dbcount("(field_id)", DB_USER_FIELDS, "field_section='security'")) {
+            $result = dbquery("SELECT * FROM ".DB_USER_FIELDS." WHERE field_section='security' ORDER BY field_order ASC");
+            if (dbrows($result)) {
+                while ($rows = dbarray($result)) {
+                    $security_fields[$rows['field_name']] = $rows;
+                }
+            }
+        }
+        return $security_fields;
+    }
+
     public function get_info() {
         $current_section = get('section');
         $current_section = $current_section && in_array($current_section, ['account', 'preferences', 'security']) ? $current_section : 'account';
+        $security_fields = $this->cacheSecurityPlugins();
 
         $info['section'] = [
             'account' => [
@@ -35,12 +50,14 @@ class Account_Profile extends UserFieldsQuantum {
                 'name'   => 'Account Preferences',
             ]
         ];
-        /*$section['security'] = [
-            'id'     => 'security',
-            'active' => ($_section == 'security' ? TRUE : FALSE),
-            'link'   => clean_request($this->aidlink.'section=security&lookup='.$this->user_data['user_id'], ['section'], FALSE),
-            'name'   => 'Account Security',
-        ];*/
+        if (!empty($security_fields)) {
+            $info['section']['security'] = [
+                'id'     => 'security',
+                'active' => ($current_section == 'security' ? TRUE : FALSE),
+                'link'   => clean_request('section=security', ['section'], FALSE),
+                'name'   => 'Account Security',
+            ];
+        }
 
         // only happens on Front End only
         $info['current_section'] = $current_section;
@@ -96,7 +113,6 @@ class Account_Profile extends UserFieldsQuantum {
         );
 
         $this->plugin_folder = INCLUDES.'user_fields/preference/';
-
         $this->load_fields();
 
         return (array)$info;
@@ -104,14 +120,10 @@ class Account_Profile extends UserFieldsQuantum {
 
     private function security() {
 
-        redirect(BASEDIR.'edit_profile.php?ref=se_profile&section=acc_settings');
-
         $info['user_lastvisit'] = showdate('longdate', $this->user_data['user_lastvisit']);
-
         $info['update_security_button'] = form_button($this->post_name.'_security', 'Update Security', $this->post_name.'_security', ['class' => $this->options['btn_post_class']]);
 
         $info['user_block'] = form_user_select("user_block", "Block users", "", ["stacked" => form_button($this->post_name."_block", "Block", $this->post_name."_block")]);
-
         $blocked_users = '';
         if (!empty($this->user_data['user_block'])) {
             $buid = ltrim(str_replace(".", ",", $this->user_data['user_block']), ",");
@@ -127,11 +139,20 @@ class Account_Profile extends UserFieldsQuantum {
         }
         $info['user_block_content'] = "<ul class='list'>$blocked_users</ul>";
 
-        $login = new LoginAuth();
-        $info['security_connectors'] = $login->get_security_connectors();
-
-        $this->plugin_folder = INCLUDES.'user_fields/preference/';
-        $this->load_fields();
+        $security_plugins = $this->cacheSecurityPlugins();
+        if (!empty($security_plugins)) {
+            // now we need to load these stuff.
+            foreach($security_plugins as $plugin_name => $plugin) {
+                $options['plugin_folder'] = INCLUDES.'user_fields/security/';
+                $options['plugin_locale_folder'] =  INCLUDES.'user_fields/security/'.$plugin_name.'/locale/';
+                $field = $this->display_fields($plugin, $this->user_data, $this->method, $options);
+                $info['security_connectors'][] = [
+                    'title' => $plugin['field_title'],
+                    'icon' => '',
+                    'connector' => $field,
+                ];
+            }
+        }
 
         return (array)$info;
     }

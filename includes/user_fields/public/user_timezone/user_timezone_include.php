@@ -106,9 +106,10 @@ if ($profile_method == "input") {
         $offset = $date->getOffset() / 3600;
         $timezone_array[$zone] = '(GMT'.($offset < 0 ? $offset : '+'.$offset).') '.$zone_city;
     }
-
     $options = [
             'inline'  => TRUE,
+            'width' => '100%',
+            'inner_width' => '100%',
             'options' => $timezone_array,
         ] + $options;
     $user_fields = form_select('user_timezone', $locale['uf_timezone'], $field_value, $options);

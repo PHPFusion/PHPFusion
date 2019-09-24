@@ -186,15 +186,9 @@ class Form {
         $template = '
         <div id="{%input_id%}-field" class="{%input_class%} clearfix">          
             <label {%label_class%}for="{%input_id%}" data-checked="{%data_value%}"{%style%}>
-            {%pre_checkbox%}                                  
+            {%pre_checkbox%}
             {%label%}
-            {required.{
-            <span class="required">&nbsp;*</span>
-            }}
-            {tip.{
-                <i class="pointer fa fa-question-circle text-lighter" title="{%title%}"></i>
-            }}
-              {%post_checkbox%}
+            {%post_checkbox%}
             </label>         
             {stacked.{
             <!--fusion stacked information-->{%content%}
@@ -320,10 +314,10 @@ class Form {
 
             if (!empty($label)) {
                 if ($options['required']) {
-                    $tpl->set_block('required');
+                    $label = $label.'<span class="required">&nbsp;*</span>';
                 }
                 if ($options['tip']) {
-                    $tpl->set_block('tip', ['title' => $options['tip']]);
+                    $label = $label.'<i class="pointer fa fa-question-circle text-lighter" title="{%title%}"></i>';
                 }
             }
 

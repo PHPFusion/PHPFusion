@@ -349,6 +349,7 @@ class UserFields extends UserFieldsQuantum {
             $class->inline_field = $this->inline_field;
 
             $this->info = array_merge($this->info, $class->get_info());
+
         } else {
             $this->editProfileInfo();
         }
@@ -394,6 +395,7 @@ class UserFields extends UserFieldsQuantum {
                         // what is the default section?
                         $section = get('section') ?: $default_section;
                     }
+
                     if ($user_fields) {
                         // Title info
                         if ($user_fields_title) {
@@ -428,8 +430,6 @@ class UserFields extends UserFieldsQuantum {
                 $class->registration = $this->registration;
                 $class->display_validation = $this->display_validation;
                 $class->display_terms = $this->display_terms;
-                $class->plugin_folder = $this->plugin_folder;
-                $class->plugin_locale_folder = $this->plugin_locale_folder;
                 $class->inline_field = $this->inline_field;
                 $this->info['user_hash'] = form_hidden('user_hash', '', $this->user_data['user_password']);
                 $this->info = array_merge($this->info, $class->inputInfo());

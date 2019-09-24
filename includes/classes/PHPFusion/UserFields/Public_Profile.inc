@@ -15,8 +15,6 @@ class Public_Profile extends UserFieldsQuantum {
     public $display_validation = FALSE;
     public $display_terms = FALSE;
     public $options = [];
-    public $plugin_folder = '';
-    public $plugin_locale_folder = '';
     public $user_name_change = FALSE;
     public $is_admin_panel = FALSE;
     private $locale;
@@ -69,6 +67,7 @@ class Public_Profile extends UserFieldsQuantum {
      * @throws \ReflectionException
      */
     public function inputInfo() {
+
         $locale = fusion_get_locale();
         $info = [
             'section'    => $this->getCategory(),
@@ -107,9 +106,8 @@ class Public_Profile extends UserFieldsQuantum {
             }
 
             // Quantum
-            $this->load_fields();
-
             $info['user_fields'] = '';
+            $this->load_fields('public');
             foreach ($this->fields as $cat_id => $field_rows) {
                 $section_title = $this->get_section_title($cat_id);
                 $info['user_fields'] .= "<h4>".$section_title."</h4>";
@@ -122,7 +120,7 @@ class Public_Profile extends UserFieldsQuantum {
                             'required'   => (bool)$fields['field_required']
                         ];
                         if ($fields['field_type'] == 'file') {
-                            $options += ['plugin_folder' => $this->plugin_folder];
+                            $options += ['plugin_folder' => INCLUDES.'user_fields/public/'];
                         }
                         $output = $this->display_fields($fields, $this->user_data, $this->method, $options);
                         $info['user_fields'] .= $output;

@@ -91,15 +91,10 @@ class Authenticate {
                         SET user_algo='".$user['user_algo']."', user_salt='".$user['user_salt']."', user_password='".$user['user_password']."'
                         WHERE user_id='".$user['user_id']."'");
                 }
-
                 if ($user['user_status'] == 0 && $user['user_actiontime'] == 0) {
-                    // Implement new login class
-                    // $login = new LoginAuth();
-                    // if (empty($login->authenticate($user))) {
                         Authenticate::setUserCookie($user['user_id'], $user['user_salt'], $user['user_algo'], $remember, TRUE);
                         Authenticate::_setUserTheme($user);
                         $this->_userData = $user;
-                    // }
                 } else {
                     require_once INCLUDES."suspend_include.php";
                     require_once INCLUDES."sendmail_include.php";
