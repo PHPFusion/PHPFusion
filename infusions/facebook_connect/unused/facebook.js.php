@@ -20,7 +20,7 @@
  * Class Facebook_Authenticate
  * Facebook web login handler
  */
-class Facebook extends \PHPFusion\LoginAuth {
+class Facebook_JS {
 
     private static $locale = [];
     private static $site_settings = [];

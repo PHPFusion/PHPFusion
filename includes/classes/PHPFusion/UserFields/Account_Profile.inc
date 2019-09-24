@@ -2,7 +2,6 @@
 
 namespace PHPFusion\UserFields;
 
-use PHPFusion\LoginAuth;
 use PHPFusion\UserFieldsQuantum;
 
 class Account_Profile extends UserFieldsQuantum {
@@ -236,10 +235,6 @@ class Account_Profile extends UserFieldsQuantum {
             $info['user_close_closeform'] = closeform();
             $info['user_close_message'] = form_textarea('user_close_message', 'Please help us improve by telling us why you are leaving', '', ['placeholder' => '(Optional)', 'inline' => FALSE]);
             $info['user_close_button'] = form_button($this->post_name.'_close', 'Close Account', $this->post_name.'_close', ['class' => $this->options['btn_post_class']]);
-
-            // Social connectors
-            $login = new LoginAuth();
-            $info['social_connectors'] = $login->get_login_connectors();
         }
 
         $info = $this->get_user_password() + $this->get_admin_password() + $info;
