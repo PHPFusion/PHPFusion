@@ -290,7 +290,8 @@ class Template {
      */
     public function get_output() {
 
-        $this->template = trim($this->template);
+        // $this->template = trim($this->template);
+        $this->template = trim(preg_replace('/\s\s+/', ' ', $this->template));
         if (!empty($this->css_path)) {
             $this->css_path = $this->css_path.'?v='.filemtime($this->css_path);
             add_to_head('<link rel="stylesheet" media="screen" href="'.$this->css_path.'"/>');
