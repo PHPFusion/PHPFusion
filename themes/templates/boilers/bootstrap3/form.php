@@ -184,9 +184,9 @@ class Form {
         //print_p($options);
         // support inline if there are multiple options only.
         $template = '
-        <div id="{%input_id%}-field" class="{%input_class%} form-group clearfix">
-          {%pre_checkbox%}
-            <label class="control-label{%label_class%}" for="{%input_id%}" data-checked="{%data_value%}"{%style%}>                                  
+        <div id="{%input_id%}-field" class="{%input_class%} clearfix">          
+            <label {%label_class%}for="{%input_id%}" data-checked="{%data_value%}"{%style%}>
+            {%pre_checkbox%}                                  
             {%label%}
             {required.{
             <span class="required">&nbsp;*</span>
@@ -194,12 +194,11 @@ class Form {
             {tip.{
                 <i class="pointer fa fa-question-circle text-lighter" title="{%title%}"></i>
             }}
-            </label>
-            {%post_checkbox%}
+              {%post_checkbox%}
+            </label>         
             {stacked.{
             <!--fusion stacked information-->{%content%}
-            }}
-            </label>
+            }}            
             {ext_tip.{
             <br/><span class="tip"><i>{%tip_text%}</i></span>
             }}
@@ -218,11 +217,12 @@ class Form {
         </span>
         ';
 
+        //print_p($options);
+
         $tpl = \PHPFusion\Template::getInstance('field-'.$options['input_id']);
 
         $tpl->set_text($template);
-        $tpl->set_tag('label', $label);
-        $tpl->set_tag('label_class', '');
+
         $tpl->set_tag('style', '');
 
         if ($options['type'] == 'button') {
@@ -305,6 +305,7 @@ class Form {
                     //addNotice("danger", "<strong>$title</strong> - ".$options['error_text']);
                 }
             }
+
             $tpl->set_tag("input_class", implode(' ', $wrapper_class));
 
             if ($options['inline']) {
@@ -325,6 +326,7 @@ class Form {
                     $tpl->set_block('tip', ['title' => $options['tip']]);
                 }
             }
+
             if (!empty($options['ext_tip'])) {
                 $tpl->set_block('ext_tip', ['tip_text' => $options['ext_tip']]);
             }
@@ -349,9 +351,18 @@ class Form {
                 $off_label = $options['toggle_text'][1];
             }
 
-            $checkbox = "<div class='".(!empty($label) ? 'display-inline m-l-20' : 'text-center')." m-r-5'>\n
-            <input id='".$options['input_id']."' ".($options['toggle'] ? "data-on-text='".$on_label."' data-off-text='".$off_label."'" : "")." style='vertical-align: middle' name='$input_name' value='".$options['value']."' type='".$options['type']."' ".($options['deactivate'] ? 'disabled' : '')." ".($options['onclick'] ? 'onclick="'.$options['onclick'].'"' : '')." ".($input_value == $options['value'] ? 'checked' : '')." />\n
-            </div>\n";
+            $label_class = [];
+            $label_class[] = $options['class'];
+            $prepend = "";
+            $append = "";
+            if (!$options['reverse_label']) {
+                $label_class[] = 'p-l-0';
+                $prepend = "<span class='m-t-5 m-l-30'>";
+                $append = "</span>";
+            }
+
+
+            $checkbox = $prepend."<input id='".$options['input_id']."' ".($options['toggle'] ? "data-on-text='".$on_label."' data-off-text='".$off_label."'" : "")." name='$input_name' value='".$options['value']."' type='".$options['type']."'".($options['onclick'] ? ' onclick="'.$options['onclick'].'"' : '').($input_value == $options['value'] ? ' checked' : '').($options['deactivate'] ? ' disabled' : '').">".$append;
 
             if (!empty($options['options']) && is_array($options['options'])) {
                 $options['toggle'] = FALSE; // force toggle to be false if options existed
@@ -377,7 +388,21 @@ class Form {
 
                 $checkbox = '';
                 if ($options['inline']) {
-                    $checkbox .= "<div class='".grid_column_size(100,100,75,75)."'>\n";
+
+                    $class_a = grid_column_size(100,100,75,75);
+                    $class_b = grid_column_size(100,100,25,25).' p-l-0';
+
+                    $col_a = $class_a;
+                    $col_b = $class_b;
+                    if ($options['reverse_label']) {
+                        $col_a = $class_b;
+                        $col_b = $class_a;
+                    }
+
+
+                    $checkbox .= "<div class='$col_a'>\n";
+                    $label = "<div class='$col_b'>$label</div>";
+                    $label_class[] = 'display-block';
                 }
                 foreach ($options['options'] as $key => $value) {
                     if ($options['deactivate_key'] !== NULL && $options['deactivate_key'] == $key) {
@@ -390,8 +415,8 @@ class Form {
                         $checked .= ($input_value == $key || $default_checked && $key == FALSE ? ' checked' : '');
                     }
 
-                    $checkbox .= "<div class='".($options['type'] == 'radio' ? 'radio' : 'checkbox').($options['inline_options'] ? ' display-inline-block m-r-5' : '')."'>\n";
-                    $checkbox .= "<label class='control-label m-r-10' data-label='$key' for='".$options['input_id']."-$key'".($options['inner_width'] ? " style='width: ".$options['inner_width']."'" : '').">";
+                    $checkbox .= "<div class='".($options['inline_options'] ? ' display-inline-block m-r-5' : '')."'>\n";
+                    $checkbox .= "<label class='m-r-20' data-label='$key' for='".$options['input_id']."-$key'".($options['inner_width'] ? " style='width: ".$options['inner_width']."'" : '').">";
                     $checkbox .= "<input id='".$options['input_id']."-$key' name='$input_name' value='$key' type='".$options['type']."' $checked />\n";
                     $checkbox .= $value;
                     $checkbox .= "</label>\n";
@@ -402,6 +427,11 @@ class Form {
                 }
             }
             //print_P($checkbox);
+            $tpl->set_tag('label', $label);
+            $tpl->set_tag('label_class', '');
+            if (!empty($label_class)) {
+                $tpl->set_tag('label_class', 'class="'.implode(' ',$label_class).'" ');
+            }
 
             $tpl->set_tag('post_checkbox', $checkbox);
             $tpl->set_tag('pre_checkbox', '');

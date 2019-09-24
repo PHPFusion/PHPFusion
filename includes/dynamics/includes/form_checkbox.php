@@ -17,12 +17,14 @@
 +--------------------------------------------------------*/
 
 /**
+ * Checkbox Input
  * @param        $input_name
  * @param string $label
  * @param string $input_value
  * @param array  $options
  *
  * @return string
+ * @throws ReflectionException
  */
 function form_checkbox($input_name, $label = '', $input_value = '0', array $options = []) {
 
@@ -57,14 +59,6 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
 
     $options += $default_options;
 
-    $error_class = '';
-
-    $option_value = [];
-
-    $default_checked = FALSE;
-
-    $switch_class = '';
-
     if ($options['toggle']) {
         $switch_class = 'is-bootstrap-switch ';
         if (!defined("BOOTSTRAP_SWITCH_ASSETS")) {
@@ -91,11 +85,8 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
         'delimiter'  => $options['delimiter'],
     ]);
 
-    // $fusion_steam = new \PHPFusion\Steam('bootstrap3');
-    // return $fusion_steam->load('Form')->checkbox($input_name, $label, $input_value, $options);
-
     if (\Defender::inputHasError($input_name)) {
-        $error_class = "has-error ";
+        // $error_class = "has-error ";
         if (!empty($options['error_text'])) {
             $new_error_text = \Defender::getErrorText($input_name);
             if (!empty($new_error_text)) {
@@ -105,115 +96,37 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
         }
     }
 
-    $on_label = $options['toggle_text'][1];
-    $off_label = $options['toggle_text'][0];
-    if ($options['keyflip']) {
-        $on_label = $options['toggle_text'][0];
-        $off_label = $options['toggle_text'][1];
-    }
-
-    if (!empty($options['options']) && is_array($options['options'])) {
-
-        $options['toggle'] = FALSE; // force toggle to be false if options existed
-
-        if (!empty($input_value)) {
-
-            $option_value = array_flip(explode($options['delimiter'], (string)$input_value)); // require key to value
-
-        }
-
-        // for checkbox only
-        // if there are options, and i want the options to be having input value.
-        // options_value
-        if ($options['type'] == 'checkbox' && count($options['options']) > 1) {
-            $input_value = [];
-            $default_checked = empty($option_value) ? TRUE : FALSE;
-            foreach (array_keys($options['options']) as $key) {
-                $input_value[$key] = isset($option_value[$key]) ? (!empty($options['options_value'][$key]) ? $options['options_value'][$key] : 1) : 0;
-            }
-        }
-    }
-
-
-    //$checkbox = "";
-    // if ($options['type'] == 'button') {
+    // $on_label = $options['toggle_text'][1];
+    // $off_label = $options['toggle_text'][0];
+    // if ($options['keyflip']) {
+    //     $on_label = $options['toggle_text'][0];
+    //     $off_label = $options['toggle_text'][1];
+    // }
     //
-    //     $checkbox .= "<span class='button-checkbox'><button type='button' class='btn btn-".$options['button_class']." ".$options['class']."' data-color='".$options['button_class']."'>$label</button><input name='$input_name' id='".$options['input_id']."' type='checkbox' value='".$options['value']."' class='hidden'></span>";
-    //     $html = $checkbox;
-    //     if ($error_class) {
-    //         $html .= "<span class='m-l-10'></span><div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>";
+    // if (!empty($options['options']) && is_array($options['options'])) {
+    //
+    //     $options['toggle'] = FALSE; // force toggle to be false if options existed
+    //
+    //     if (!empty($input_value)) {
+    //
+    //         $option_value = array_flip(explode($options['delimiter'], (string)$input_value)); // require key to value
+    //
     //     }
     //
-    // } else {
-    //
-    //     $open_check = '';
-    //     $close_check = '';
-    //     if ($options['inline']) {
-    //         $open_check = "<div class='col-xs-12 col-sm-12 col-md-9 col-lg-9'>\n";
-    //         $close_check = "</div>";
-    //     }
-    //
-    //     $checkbox .= $open_check;
-    //
-    //     if (!empty($options['options']) && is_array($options['options'])) {
-    //         foreach ($options['options'] as $key => $value) {
-    //
-    //             if ($options['deactivate_key'] !== NULL && $options['deactivate_key'] == $key) {
-    //                 $checkbox .= form_hidden($input_name, '', $key);
-    //             }
-    //
-    //             $checked = ($options['deactivate'] || $options['deactivate_key'] === $key ? 'disabled' : '').($options['onclick'] ? ' onclick="'.$options['onclick'].'"' : '');
-    //             if ($options['type'] == 'checkbox' && count($options['options']) > 1) {
-    //                 $checked = ($input_value[$key] == TRUE || $default_checked && $key == FALSE ? ' checked' : '');
-    //             } else {
-    //                 $checked .= ($input_value == $key || $default_checked && $key == FALSE ? ' checked' : '');
-    //             }
-    //
-    //             $checkbox .= "<div class='".($options['type'] == 'radio' ? 'radio' : 'checkbox').($options['inline_options'] ? ' display-inline-block m-r-5' : '')."'>\n";
-    //
-    //             $checkbox .= "<label class='control-label m-r-10' data-label='$key' for='".$options['input_id']."-$key'".($options['inner_width'] ? " style='width: ".$options['inner_width']."'" : '').">";
-    //
-    //             $checkbox .= "<input id='".$options['input_id']."-$key' name='$input_name' value='$key' type='".$options['type']."' $checked />\n";
-    //
-    //             $checkbox .= $value;
-    //
-    //             $checkbox .= "</label>\n";
-    //
-    //             $checkbox .= "</div>\n";
+    //     // for checkbox only
+    //     // if there are options, and i want the options to be having input value.
+    //     // options_value
+    //     if ($options['type'] == 'checkbox' && count($options['options']) > 1) {
+    //         $input_value = [];
+    //         $default_checked = empty($option_value) ? TRUE : FALSE;
+    //         foreach (array_keys($options['options']) as $key) {
+    //             $input_value[$key] = isset($option_value[$key]) ? (!empty($options['options_value'][$key]) ? $options['options_value'][$key] : 1) : 0;
     //         }
-    //     } else {
-    //
-    //         $checkbox .= "<div class='".(!empty($label) ? 'pull-left' : 'text-center')." m-r-10'>\n<input id='".$options['input_id']."' ".($options['toggle'] ? "data-on-text='".$on_label."' data-off-text='".$off_label."'" : "")." style='margin: 0;vertical-align: middle' name='$input_name' value='".$options['value']."' type='".$options['type']."' ".($options['deactivate'] ? 'disabled' : '')." ".($options['onclick'] ? 'onclick="'.$options['onclick'].'"' : '')." ".($input_value == $options['value'] ? 'checked' : '')." />\n</div>\n";
-    //
     //     }
-    //     if ($options['stacked']) {
-    //         $checkbox .= $options['stacked'];
-    //     }
-    //
-    //     $html = "<div id='".$options['input_id']."-field' class='$switch_class form-group clearfix".($options['inline'] ? ' display-block overflow-hide ' : '').$error_class.($options['class'] ? " ".$options['class'] : "")."'>\n";
-    //
-    //     $html .= (!empty($label)) ? "<label class='control-label".($options['inline'] ? " col-xs-12 col-sm-12 col-md-3 col-lg-3" : '')."' data-checked='".(!empty($input_value) ? "1" : "0")."'  for='".$options['input_id']."'".($options['inner_width'] ? " style='width: ".$options['inner_width']."'" : '').">\n" : "";
-    //
-    //     $html .= ($options['reverse_label'] == TRUE) ? $checkbox : "";
-    //
-    //     $html .= (!empty($label)) ? "<div class='overflow-hide'>\n".$label.($options['required'] == 1 ? "<span class='required'>&nbsp;*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle text-lighter' title='".$options['tip']."'></i>" : '')."</div>\n</label>\n" : "";
-    //
-    //     $html .= ($options['reverse_label'] == FALSE) ? $checkbox : "";
-    //
-    //     $html .= $options['ext_tip'] ? "<br/>\n<span class='tip'><i>".$options['ext_tip']."</i></span>" : "";
-    //
-    //     if ($error_class) {
-    //         $html .= "<span class='m-l-10'></span>\n<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>\n";
-    //     }
-    //
-    //     $html .= $close_check;
-    //
-    //     $html .= "</div>\n";
     // }
 
     $fusion_steam = new \PHPFusion\Steam('bootstrap3');
-
-    return $fusion_steam->load('Form')->checkbox($input_name, $label, $input_value, $options);
+    $html = $fusion_steam->load('Form')->checkbox($input_name, $label, $input_value, $options);
 
     return (string)$html;
 }
