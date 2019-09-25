@@ -48,14 +48,27 @@ class FileCache implements ICache {
      *
      * @param string $key cache key
      * @param mixed  $data
+     * @param mixed  $seconds
      */
-    public function set($key, $data) {
-        $expire = time() + 2592000;
+    public function set($key, $data, $seconds = NULL) {
         $data = serialize($data);
 
-        if (@file_put_contents($this->path.$key.'.cache', $data, LOCK_EX) == strlen($data)) {
-            @chmod($this->path.$key.'.cache', 0777);
-            @touch($this->path.$key.'.cache', $expire);
+        if ($seconds !== NULL) {
+            $file_time = 0;
+
+            if (file_exists($this->path.$key.'.cache')) {
+                $file_time = filemtime($this->path.$key.'.cache');
+            }
+
+            if (($file_time + $seconds) < time()) {
+                if (@file_put_contents($this->path.$key.'.cache', $data, LOCK_EX) == strlen($data)) {
+                    @chmod($this->path.$key.'.cache', 0777);
+                }
+            }
+        } else {
+            if (@file_put_contents($this->path.$key.'.cache', $data, LOCK_EX) == strlen($data)) {
+                @chmod($this->path.$key.'.cache', 0777);
+            }
         }
     }
 
@@ -67,18 +80,10 @@ class FileCache implements ICache {
      * @return mixed
      */
     public function get($key) {
-        if (file_exists($this->path.$key.'.cache')) {
-            if (@filemtime($this->path.$key.'.cache') > time()) {
-                $data = file_get_contents($this->path.$key.'.cache');
-                $data = unserialize($data);
+        $data = file_get_contents($this->path.$key.'.cache');
+        $data = unserialize($data);
 
-                return $data;
-            } else {
-                @unlink($this->path.$key.'.cache');
-            }
-        }
-
-        return NULL;
+        return $data;
     }
 
     /**

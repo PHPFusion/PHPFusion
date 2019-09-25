@@ -78,9 +78,23 @@ class MemcacheCache implements ICache {
      *
      * @param string $key cache key
      * @param mixed  $data
+     * @param mixed  $seconds
      */
-    public function set($key, $data) {
-        $this->memcache->set($key, $data);
+    public function set($key, $data, $seconds = NULL) {
+        if ($seconds !== NULL) {
+            $time = 0;
+
+            if (!empty($this->get($key.'_time')) && !empty($this->get($key))) {
+                $time = $this->get($key.'_time');
+            }
+
+            if (($time + $seconds) < time()) {
+                $this->memcache->set($key.'_time', time(), NULL, $seconds);
+                $this->memcache->set($key, $data, NULL, $seconds);
+            }
+        } else {
+            $this->memcache->set($key, $data, NULL, $seconds);
+        }
     }
 
     /**

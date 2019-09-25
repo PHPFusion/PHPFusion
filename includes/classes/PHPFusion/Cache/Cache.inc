@@ -118,9 +118,10 @@ class Cache {
      *
      * @param string $key cache key
      * @param mixed  $data
+     * @param mixed  $seconds
      */
-    public function set($key, $data) {
-        $this->cache->set($key, $data);
+    public function set($key, $data, $seconds = NULL) {
+        $this->cache->set($key, $data, $seconds);
     }
 
     /**
