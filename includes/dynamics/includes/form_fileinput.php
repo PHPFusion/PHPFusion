@@ -42,7 +42,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
         'deactivate'        => FALSE,
         'preview_off'       => FALSE,
         'type'              => 'image', //// ['image', 'html', 'text', 'video', 'audio', 'flash', 'object', 'file']
-        'width'             => '100%',
+        'width'             => '',
         'label'             => $locale['browse'],
         'inline'            => TRUE,
         'class'             => "",
