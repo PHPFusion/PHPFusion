@@ -1394,10 +1394,6 @@ function get_core_tables($localeset) {
             'type'   => 'VARCHAR',
             'length' => 15
         ], //user_icq VARCHAR(15) NOT NULL DEFAULT '',
-        'user_yahoo'           => [
-            'type'   => 'VARCHAR',
-            'length' => 100
-        ], //user_yahoo VARCHAR(100) NOT NULL DEFAULT '',
         'user_web'             => [
             'type'   => 'VARCHAR',
             'length' => 200,
