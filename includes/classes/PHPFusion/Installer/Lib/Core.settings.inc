@@ -1139,18 +1139,6 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'field_config'   => ''
             ],
             [
-                'field_name'     => 'user_yahoo',
-                'field_title'    => $locale['uf_yahoo'],
-                'field_cat'      => 2,
-                'field_type'     => 'file',
-                'field_required' => 0,
-                'field_order'    => 4,
-                'field_default'  => '',
-                'field_options'  => '',
-                'field_error'    => '',
-                'field_config'   => ''
-            ],
-            [
                 'field_name'     => 'user_web',
                 'field_title'    => $locale['uf_web'],
                 'field_cat'      => 3,
