@@ -43,4 +43,9 @@ if (iMEMBER) {
     $result = dbquery("UPDATE ".DB_USERS." SET user_lastvisit='".time()."', user_ip='".USER_IP."', user_ip_type='".USER_IP_TYPE."' WHERE user_id='".$userdata['user_id']."'");
 }
 
+if (fusion_get_settings('debug_seo') && iSUPERADMIN && iADMIN) {
+    $router = PHPFusion\Rewrite\Router::getRouterInstance();
+    $router->displayWarnings();
+}
+
 ob_start();

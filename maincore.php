@@ -1450,4 +1450,16 @@ function column_exists($table, $column, $add_prefix = TRUE) {
     return (isset($table_config[$table][$column]) ? TRUE : FALSE);
 }
 
+/**
+ * To flatten ANY multidimensional array
+ * Best used to flatten any hierarchy array data
+ *
+ * @param $result
+ *
+ * @return mixed
+ */
+function flatten_array($result) {
+    return call_user_func_array('array_merge', $result);
+}
+
 include INCLUDES."system_images.php";
