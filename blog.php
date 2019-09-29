@@ -218,9 +218,6 @@ if (isset($_GET['readmore'])) {
             if (isset($item['user_skype']) && $item['user_skype']) {
                 $user_contact .= "<strong>Skype:</strong> ".$item['user_skype'];
             }
-            if (isset($item['user_yahoo']) && $item['user_yahoo']) {
-                $user_contact .= "<strong>YahooIM:</strong> ".$item['user_yahoo']." , ";
-            }
             if (isset($item['user_icq']) && $item['user_icq']) {
                 $user_contact .= "<strong>ICQ:</strong> ".$item['user_icq'];
             }
