@@ -1206,7 +1206,6 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
                             user_location VARCHAR(50) NOT NULL DEFAULT '',
                             user_birthdate DATE NOT NULL DEFAULT '1900-01-01',
                             user_skype VARCHAR(100) NOT NULL DEFAULT '',
-                            user_aim VARCHAR(16) NOT NULL DEFAULT '',
                             user_icq VARCHAR(15) NOT NULL DEFAULT '',
                             user_yahoo VARCHAR(100) NOT NULL DEFAULT '',
                             user_web VARCHAR(200) NOT NULL DEFAULT '',
@@ -1693,13 +1692,13 @@ if (isset($_POST['step']) && $_POST['step'] == "6") {
             $result = dbquery("INSERT INTO ".$db_prefix."users (
                 user_name, user_algo, user_salt, user_password, user_admin_algo, user_admin_salt, user_admin_password, user_email, user_hide_email, user_offset,
                 user_avatar, user_posts, user_threads, user_joined, user_lastvisit, user_ip, user_rights,
-                user_groups, user_level, user_status, user_theme, user_location, user_birthdate, user_aim,
+                user_groups, user_level, user_status, user_theme, user_location, user_birthdate,
                 user_icq, user_yahoo, user_web, user_sig
             ) VALUES (
                 '".$username."', 'sha256', '".$userSalt."', '".$userPassword."', 'sha256', '".$adminSalt."', '".$adminPassword."',
                 '".$email."', '1', '0', '',  '0', '', '".time()."', '0', '0.0.0.0',
                 'A.AC.AD.APWR.B.BB.C.CP.DB.DC.D.ERRO.FQ.F.FR.IM.I.IP.M.MAIL.N.NC.P.PH.PI.PL.PO.ROB.SL.S1.S2.S3.S4.S5.S6.S7.S8.S9.S10.S11.S12.S13.S14.SB.SM.SU.UF.UFC.UG.UL.U.W.WC.BLOG.BLC.MAIL.LANG.MI.FM',
-                '', '103', '0', 'Default', '', '1900-01-01', '', '',  '', '', ''
+                '', '103', '0', 'Default', '', '1900-01-01', '', '', '', ''
             )");
             $result = dbquery("INSERT INTO ".$db_prefix."messages_options (user_id, pm_email_notify, pm_save_sent, pm_inbox, pm_savebox, pm_sentbox) VALUES ('0', '0', '1', '20', '20', '20')");
             $result = dbquery("INSERT INTO ".$db_prefix."bbcodes (bbcode_name, bbcode_order) VALUES ('smiley', '1')");
@@ -1751,7 +1750,6 @@ if (isset($_POST['step']) && $_POST['step'] == "6") {
             $result = dbquery("INSERT INTO ".$db_prefix."user_fields (field_name, field_cat, field_required, field_order) VALUES ('user_location', '2', '0', '1')");
             $result = dbquery("INSERT INTO ".$db_prefix."user_fields (field_name, field_cat, field_required, field_order) VALUES ('user_birthdate', '2', '0', '2')");
             $result = dbquery("INSERT INTO ".$db_prefix."user_fields (field_name, field_cat, field_required, field_order) VALUES ('user_skype', '1', '0', '1')");
-            $result = dbquery("INSERT INTO ".$db_prefix."user_fields (field_name, field_cat, field_required, field_order) VALUES ('user_aim', '1', '0', '2')");
             $result = dbquery("INSERT INTO ".$db_prefix."user_fields (field_name, field_cat, field_required, field_order) VALUES ('user_icq', '1', '0', '3')");
             $result = dbquery("INSERT INTO ".$db_prefix."user_fields (field_name, field_cat, field_required, field_order) VALUES ('user_yahoo', '1', '0', '5')");
             $result = dbquery("INSERT INTO ".$db_prefix."user_fields (field_name, field_cat, field_required, field_order) VALUES ('user_web', '1', '0', '6')");
