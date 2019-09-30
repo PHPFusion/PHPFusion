@@ -572,12 +572,24 @@ class Admins {
 
                     if (!empty($admin_pages[$data['admin_rights']])) {
                         if (checkrights($data['admin_rights'])) {
-                            $html .= "<li".($secondary_active ? " class='active'" : '')."id='adl-sub' class='sub_pages'>";
-                            $html .= "<a class='adl-link' data-parent='#adl-sub' data-toggle='collapse' href='#adl-sub-$key'>".$icons." <span class='adl-submenu-title'>".$title."</span> <span class='adl-drop pull-right'><i class='fa fa-angle-".($secondary_active ? 'left' : 'down')."'></i></span></a>";
+                            $html .= "<li".($secondary_active ? " class='active'" : '')." class='sub_pages'>";
+                            $html .= "<a class='adl-link' data-toggle='collapse' href='#adl-sub-$key'>".$icons." <span class='adl-submenu-title'>".$title."</span> <span class='adl-drop pull-right'><i class='fa fa-angle-".($secondary_active ? 'left' : 'down')."'></i></span></a>";
                             $html .= "<ul id='adl-sub-$key' class='admin-subpages collapse".($secondary_active ? ' in' : '')."'>";
 
                             foreach ($admin_pages[$data['admin_rights']] as $sub_key => $sub_page) {
-                                $html .= "<li><a href='".$sub_page['admin_link']."'><span class='adl-submenu-title'>".$sub_page['admin_title']."</span></a></li>";
+                                if (!empty($admin_pages[$sub_page['admin_rights']])) {
+                                    $html .= "<li".($secondary_active ? " class='active'" : '')." class='sub_sub_pages'>";
+                                        $html .= "<a class='adl-link' data-toggle='collapse' href='#adl-sub-sub-$key'><span class='adl-submenu-title'>".$sub_page['admin_title']."</span> <span class='adl-drop pull-right'><i class='fa fa-angle-".($secondary_active ? 'left' : 'down')."'></i></span></a>";
+                                        $html .= "<ul id='adl-sub-sub-$key' class='admin-subpages collapse".($secondary_active ? ' in' : '')."'>";
+
+                                        foreach ($admin_pages[$sub_page['admin_rights']] as $subsub_key => $subsub_page) {
+                                            $html .= "<li class='m-l-10'><a href='".$subsub_page['admin_link']."'><span class='adl-submenu-title'>".$subsub_page['admin_title']."</span></a></li>";
+                                        }
+                                        $html .= "</ul>\n";
+                                    $html .= "</li>";
+                                } else {
+                                    $html .= "<li><a href='".$sub_page['admin_link']."'><span class='adl-submenu-title'>".$sub_page['admin_title']."</span></a></li>";
+                                }
                             }
 
                             $html .= "</ul>\n";
