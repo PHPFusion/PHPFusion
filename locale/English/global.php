@@ -504,5 +504,8 @@ $locale['fmt_group'] = "group|groups";
 $locale['fmt_category'] = "category|categories";
 $locale['fmt_review'] = "review|reviews";
 $locale['fmt_infusion'] = "infusion|infusions";
+// Social Media sharing
+$locale['social_001'] = "Shared Link";
+$locale['social_002'] = "Post on ";
 // include Defender locales
 include_once __DIR__."/defender.php";
