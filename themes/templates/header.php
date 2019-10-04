@@ -38,6 +38,7 @@ require_once INCLUDES."header_includes.php";
 require_once THEME."theme.php";
 require_once INCLUDES."theme_functions_include.php";
 require_once THEMES."templates/render_functions.php";
+require_once INCLUDES."social_media_include.php";
 
 $o_param = [
     ':user_id'   => (iMEMBER ? fusion_get_userdata('user_id') : 0),
