@@ -33,21 +33,23 @@ function get_fusion_steam($component = 'Layout') {
     if (empty($fusion_steam)) {
         $fusion_steam = new \PHPFusion\Steam();
     }
-    return (object) $fusion_steam->load($component);
+    return (object)$fusion_steam->load($component);
 }
 
 /**
  * Get responsive row class
+ *
  * @return string
  * @throws ReflectionException
  */
 function grid_row() {
     $layout = get_fusion_steam('Layout');
-    return (string) $layout->getRowClass();
+    return (string)$layout->getRowClass();
 }
 
 /**
  * Get responsive column class
+ *
  * @param int $mobile
  * @param int $tablet
  * @param int $laptop
@@ -58,17 +60,18 @@ function grid_row() {
  */
 function grid_column_size($mobile = 100, $tablet = 0, $laptop = 0, $desktop = 0) {
     $layout = get_fusion_steam('Layout');
-    return (string) $layout->getColumnClass([$mobile,$tablet,$laptop,$desktop], FALSE);
+    return (string)$layout->getColumnClass([$mobile, $tablet, $laptop, $desktop], FALSE);
 }
 
 /**
  * Get responsive container class
+ *
  * @return string
  * @throws ReflectionException
  */
 function grid_container() {
     $layout = get_fusion_steam('Layout');
-    return (string) $layout->getContainerClass();
+    return (string)$layout->getContainerClass();
 }
 
 
@@ -210,7 +213,7 @@ function showcopyright($class = "", $nobreak = FALSE) {
  *
  * @return string
  */
-function showcounter($delimiter='.', $thousand_sep=',') {
+function showcounter($delimiter = '.', $thousand_sep = ',') {
     $locale = fusion_get_locale();
     $settings = fusion_get_settings();
     if ($settings['visitorcounter_enabled']) {
@@ -1528,5 +1531,94 @@ if (!function_exists("fusion_confirm_exit")) {
                 });
             });
         ");
+    }
+}
+
+/**
+ * Return a list of social media sharing services where an url can be shared
+ * Requires the loading of Font Awesome which can be enabled in theme settings.
+ */
+if (!function_exists('social_media_links')) {
+    function social_media_links($url, $options = []) {
+        $default = [
+            'facebook' => TRUE,
+            'twitter'  => TRUE,
+            'reddit'   => TRUE,
+            'vk'       => TRUE,
+            'whatsapp' => TRUE,
+            'telegram' => TRUE,
+            'linkedin' => TRUE,
+            'class'    => ''
+        ];
+
+        $options += $default;
+
+        $services = [];
+
+        if ($options['facebook'] == 1) {
+            $services['facebook'] = [
+                'name' => 'Facebook',
+                'icon' => 'fa fa-2x fa-facebook-square',
+                'url'  => 'https://www.facebook.com/sharer.php?u='
+            ];
+        }
+
+        if ($options['twitter'] == 1) {
+            $services['twitter'] = [
+                'name' => 'Twitter',
+                'icon' => 'fa fa-2x fa-twitter-square',
+                'url'  => 'https://twitter.com/intent/tweet?url='
+            ];
+        }
+
+        if ($options['reddit'] == 1) {
+            $services['reddit'] = [
+                'name' => 'Reddit',
+                'icon' => 'fa fa-2x fa-reddit-square',
+                'url'  => 'https://www.reddit.com/submit?url='
+            ];
+        }
+
+        if ($options['vk'] == 1) {
+            $services['vk'] = [
+                'name' => 'VK',
+                'icon' => 'fa fa-2x fa-vk',
+                'url'  => 'https://vk.com/share.php?url='
+            ];
+        }
+
+        if ($options['whatsapp'] == 1) {
+            $services['whatsapp'] = [
+                'name' => 'WhatsApp',
+                'icon' => 'fa fa-2x fa-whatsapp',
+                'url'  => 'https://api.whatsapp.com/send?text='
+            ];
+        }
+
+        if ($options['telegram'] == 1) {
+            $services['telegram'] = [
+                'name' => 'Telegram',
+                'icon' => 'fa fa-2x fa-telegram',
+                'url'  => 'https://telegram.me/share/url?url='
+            ];
+        }
+
+        if ($options['linkedin'] == 1) {
+            $services['linkedin'] = [
+                'name' => 'LinkedIn',
+                'icon' => 'fa fa-2x fa-linkedin',
+                'url'  => 'https://www.linkedin.com/shareArticle?mini=true&url=',
+            ];
+        }
+
+        $html = '';
+
+        if (!empty($services) && is_array($services)) {
+            foreach ($services as $service) {
+                $html .= '<a class="m-5 '.$options['class'].'" href="'.$service['url'].$url.'" title="'.$service['name'].'" target="_blank" rel="nofollow noopener noreferrer"><i class="'.$service['icon'].'"></i></a>';
+            }
+        }
+
+        return $html;
     }
 }

@@ -119,6 +119,7 @@ class News extends Core {
 
     public static function render_news_item($info) {
         $locale = fusion_get_locale('', MG_LOCALE);
+        $theme_settings = get_theme_settings('Magazine');
         $data = $info['news_item'];
 
         Panels::getInstance(TRUE)->hide_panel('RIGHT');
@@ -182,11 +183,11 @@ class News extends Core {
                     echo '</div>';
                 }
 
-                if (SOCIAL_SHARE == TRUE) {
+                if (!empty($theme_settings['social_share']) && $theme_settings['social_share'] == 1) {
                     echo '<div class="text-center clearfix">';
                         $url = (isset($_SERVER['HTTPS']) ? 'https' : 'http').'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
                         echo '<div class="m-r-5 display-inline">';
-                            echo get_social_media_sharing_html( $url );
+                            echo social_media_links($url);
                         echo '</div>';
                     echo '</div>';
                 }

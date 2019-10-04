@@ -136,7 +136,7 @@ class News extends Core {
         if (SOCIAL_SHARE == TRUE) {
             $url = (isset($_SERVER['HTTPS']) ? 'https' : 'http').'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
             echo '<div class="m-r-5 display-inline">';
-                echo get_social_media_sharing_html( $url );
+                echo social_media_links($url);
             echo '</div>';
         }
 
