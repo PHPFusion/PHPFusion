@@ -281,6 +281,37 @@ class Batch_Core extends Install_Core {
         return (array)self::$runtime_results;
     }
 
+    /**
+     * @param $folder
+     *
+     * @return null
+     */
+    public function batchInfNewTables($folder) {
+        if (dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'], self::$connection['db_name'], TRUE)) {
+            if (($inf = self::load_infusion($folder))) {
+                if (!empty($inf['infs'])) {
+                    self::$localeset = LANGUAGE;
+                    foreach ($inf['infs'] as self::$table_name => self::$table_cols) {
+                        if (infusion_exists($folder)) {
+                            if (db_exists(self::$table_name)) {
+                                $this->check_existing_table(); //where is the one that runs upgrade?
+                            } else {
+                                $this->createInfusionTable();
+                            }
+                        } else {
+                            $this->createInfusionTable();
+                        }
+                    }
+                    // get the run time.
+                    if (!empty(self::$runtime_results)) {
+                        return self::$runtime_results;
+                    }
+                }
+            }
+        }
+        return NULL;
+    }
+
     private static $infusion_runtime = [];
 
     private function addUpgradeNotice($inf_rights, $inf_title) {
@@ -500,6 +531,16 @@ class Batch_Core extends Install_Core {
             self::$runtime_results['insert'][self::$table_name] = $batch_inserts;
         }
     }
+
+    private function createInfusionTable() {
+        self::$runtime_results['create'][self::$table_name] = $this->batch_create_table();
+        // Will only set and create on current locale only
+        $batch_inserts = self::batch_insert_rows(self::$table_name, self::$localeset);
+        if (!empty($batch_inserts)) {
+            self::$runtime_results['insert'][self::$table_name] = $batch_inserts;
+        }
+    }
+
 
     /**
      * Create codes generation

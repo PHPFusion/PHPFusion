@@ -661,7 +661,9 @@ class Tables {
             }
 
             if (\Defender::safe()) {
-                addNotice('success', $this->table_props['deleted_message']);
+                if ($this->table_props['deleted_message']) {
+                    addNotice('success', $this->table_props['deleted_message']);
+                }
                 redirect(FUSION_REQUEST);
             }
 
@@ -775,8 +777,8 @@ class Tables {
             if (dbrows($result)) {
 
                 $del_data = dbarray($result);
-                $params = [];
 
+                $params = [];
                 foreach ($del_data as $key => $value) {
                     $params[':'.$key] = $value;
                 }
@@ -844,7 +846,8 @@ class Tables {
                             }
                         }
                     } else {
-                        dbquery_insert($this->query['db'], $del_data, 'delete');
+                        // this one is malfunctioning
+                        dbquery_insert($this->query['table'], $del_data, 'delete');
                     }
 
                 }

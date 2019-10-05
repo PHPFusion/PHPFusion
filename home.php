@@ -18,16 +18,13 @@
 require_once __DIR__.'/maincore.php';
 require_once THEMES.'templates/header.php';
 
-$locale = fusion_get_locale('', LOCALE.LOCALESET.'homepage.php');
+$locale = fusion_get_locale('', [LOCALE.LOCALESET.'homepage.php']);
+add_to_title($locale['home']);
+add_breadcrumb(['title' => $locale['home'], 'link' => BASEDIR.'home.php']);
 
 require_once THEMES.'templates/global/homepage.php';
 
-add_to_title($locale['home']);
-
-\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['title' => $locale['home'], 'link' => BASEDIR.'home.php']);
-
 $configs = [];
-
 $limit = 3;
 
 if (defined('DB_NEWS')) {

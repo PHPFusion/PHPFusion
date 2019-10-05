@@ -557,7 +557,6 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'mlt_status' => 1
             ]
         ]
-
     ];
     $table_settings['admin'] = [
         'insert' => [

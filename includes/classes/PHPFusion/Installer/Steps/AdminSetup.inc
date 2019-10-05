@@ -358,7 +358,7 @@ class InstallerAdminSetup extends Install_Core {
      */
     private function update() {
 
-        if (isset($_POST['sitename']) && isset($_POST['siteemail']) && isset($_POST['user_name'])) {
+        if (post('sitename') && post('siteemail') && post('user_name')) {
 
             function user_name_check($username) {
                 return !preg_match("/^[-0-9A-Z_@\s]+$/i", $username);

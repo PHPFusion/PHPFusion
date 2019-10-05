@@ -8,7 +8,7 @@ html, body, #tinymce body, .form-control {
 
 :root {
     --app-menu-width: 250px;
-    --sub-menu-width: 260px;
+    --sub-menu-width: 200px;
     --primary-color: #0073aa;
     --primary-hover-color: #1d6c91;
     --info-color: #3498DB;
@@ -639,7 +639,6 @@ a:focus {
     background-color: transparent;
     min-height: 100vh;
     padding-top: 45px;
-    padding-bottom: 50px;
     transition: -webkit-transform .5s;
     -webkit-transition: -webkit-transform .5s;
     -o-transition: transform .5s;
@@ -851,10 +850,11 @@ a:focus {
     -moz-background-clip: padding-box;
     -o-background-clip: padding-box;
     background-clip: padding-box;
-    min-height: -webkit-calc(100vh - 85px);
-    min-height: -moz-calc(100vh - 85px);
-    min-height: calc(100vh - 85px);
-    position: relative;
+    min-height: calc(100vh);
+    /*min-height: -webkit-calc(100vh - 85px);*/
+    /*min-height: -moz-calc(100vh - 85px);*/
+    /*min-height: calc(100vh - 85px);*/
+    /*position: relative;*/
     display: table;
 }
 
@@ -1431,7 +1431,7 @@ input[type="submit"].btn.btn-mini {
 }
 
 .btn-link {
-    color: #08c;
+    color: var(--primary-link-color);
     cursor: pointer;
     border-color: transparent;
     -webkit-border-radius: 0;
@@ -1442,7 +1442,7 @@ input[type="submit"].btn.btn-mini {
 
 .btn-link:hover,
 .btn-link:focus {
-    color: #005580;
+    color: var(--primary-link-hover-color);
     text-decoration: underline;
     background-color: transparent;
     outline: none;
@@ -1909,19 +1909,6 @@ table > tr:not(:last-child) > thead th {
     border-bottom: 1px solid #ccc !important;
 }
 
-#devlpr #main_content .content table > thead td,
-#devlpr #main_content .content table > thead th,
-#devlpr #main_content .content table > tfoot td,
-#devlpr #main_content .content table > tfoot th {
-    color: #aaa;
-    background: #fff;
-    border-bottom: 1px solid #e1e1e1;
-    font-weight: 600;
-    padding: 13px 8px !important;
-    word-break: keep-all;
-    white-space: nowrap;
-}
-
 table:not(.table-striped) tbody tr:nth-child(odd) {
     background: #f9f9f9;
 }
@@ -1932,10 +1919,12 @@ table:not(.table-striped) tbody tr:nth-child(even) {
 
 table > tbody > tr > td {
     padding: 8px 10px;
-    border-bottom: 0 !important;
-    border-top: 0 !important;
-    font-size: 13px;
+    font-size: 14px;
     line-height: 1.5em;
+}
+table tr > th {
+    font-color: #333;
+    font-weight: 400;
 }
 
 table tr.info td {
@@ -1943,15 +1932,15 @@ table tr.info td {
 }
 
 table tr.info td:first-child {
-    border-left: 3px solid #0366d6;
+    border-left: 5px solid #0366d6;
 }
 
 table tr.warning td {
-    background-color: #F7FCFE !important;
+    background-color: #FFF8E5 !important;
 }
 
 table tr.warning td:first-child {
-    border-left: 3px solid #FFB936;
+    border-left: 5px solid #FFB936;
 }
 
 table tr.danger td {
@@ -2987,7 +2976,7 @@ input[type=radio]:checked:before {
     position: absolute;
     bottom: 0;
     right: 0;
-    height: 30px;
+    height: 60px;
 }
 
 .copyright {
@@ -2995,11 +2984,8 @@ input[type=radio]:checked:before {
     text-align: right;
     display: block;
     width: 100%;
-    padding-right: 40px;
-    margin: 34px 0;
-    padding-bottom: 30px;
+    padding-right: 20px;
     font-size: 12px;
-    bottom: 20px;
 }
 
 .control-label,

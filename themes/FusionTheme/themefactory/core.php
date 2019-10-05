@@ -247,18 +247,29 @@ class Core {
         self::$options[$prop] = $value;
     }
 
-    public function get_themePack($themePack) {
+    public function getThemePack() {
 
+        static $theme_package = '';
+        if (empty($theme_package)) {
+            $theme_settings = get_theme_settings('FusionTheme');
+            $theme_package = !empty($theme_settings['theme_pack']) ? $theme_settings['theme_pack'] : 'nebula';
+            if (!defined('THEME_PACK')) {
+                define("THEME_PACK", THEME."themepack/".$theme_package."/");
+            }
+        }
+
+        return $theme_package;
+    }
+
+    public function load_themePack($themePack) {
         $path = THEME."themepack/".strtolower($themePack)."/theme.php";
         $css_path_dir = THEME.'themepack'.DIRECTORY_SEPARATOR.strtolower($themePack).DIRECTORY_SEPARATOR;
         $this->cssPath = $css_path_dir.'styles.css';
         $this->cssPath = $this->cssPath.'?v='.filemtime($this->cssPath);
-
         if (file_exists($css_path_dir.'styles.min.css') && $this->devMode === FALSE) {
             $this->cssPath = $css_path_dir.'styles.min.css';
             $this->cssPath = $this->cssPath.'?v='.filemtime($this->cssPath);
         }
-
         add_to_head("<link rel='stylesheet' href='$this->cssPath' type='text/css'/>");
 
         require_once $path;
@@ -288,3 +299,5 @@ class Core {
     private function __clone() {
     }
 }
+
+require_once INCLUDES.'theme_functions_include.php';

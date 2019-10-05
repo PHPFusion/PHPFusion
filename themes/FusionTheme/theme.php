@@ -16,7 +16,5 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once THEME."autoloader.php";
-$theme_settings = get_theme_settings('FusionTheme');
-$theme_package = !empty($theme_settings['theme_pack']) ? $theme_settings['theme_pack'] : 'nebula';
-define("THEME_PACK", THEME."themepack/".$theme_package."/");
-ThemeFactory\Core::getInstance()->get_ThemePack($theme_package);
+$theme_package = \ThemeFactory\Core::getInstance()->getThemePack();
+ThemeFactory\Core::getInstance()->load_ThemePack($theme_package);
