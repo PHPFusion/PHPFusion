@@ -71,9 +71,23 @@ class RedisCache implements ICache {
      *
      * @param string $key cache key
      * @param mixed  $data
+     * @param mixed  $seconds
      */
-    public function set($key, $data) {
-        $this->redis->set($key, $data);
+    public function set($key, $data, $seconds = NULL) {
+        if ($seconds !== NULL) {
+            $time = 0;
+
+            if (!empty($this->get($key.'_time')) && !empty($this->get($key))) {
+                $time = $this->get($key.'_time');
+            }
+
+            if (($time + $seconds) < time()) {
+                $this->redis->set($key.'_time', time(), $seconds);
+                $this->redis->set($key, $data, $seconds);
+            }
+        } else {
+            $this->redis->set($key, $data, $seconds);
+        }
     }
 
     /**

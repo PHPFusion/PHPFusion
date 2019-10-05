@@ -71,8 +71,15 @@ function get_default_search_opts() {
                         foreach ($inf_files as $file) {
                             if (preg_match("/_include.php/i", $file)) {
                                 $file = str_replace(['search_', '_include.php', '_include_button.php'], '', $file);
-                                $locale += fusion_get_locale('', INFUSIONS.$infusions_to_check.'/locale/'.LOCALESET."search/".$file.".php");
-                                $search_opts[$file] = $locale[$file.'.php'];
+
+                                if (file_exists(INFUSIONS.$infusions_to_check.'/locale/'.LOCALESET."search/".$file.".php")) {
+                                    $locale_file = INFUSIONS.$infusions_to_check.'/locale/'.LOCALESET."search/".$file.".php";
+                                } else {
+                                    $locale_file = INFUSIONS.$infusions_to_check."/locale/English/search/".$file.".php";
+                                }
+
+                                $locale += fusion_get_locale('', $locale_file);
+                                $search_opts[$file] = !empty($locale[$file.'.php']) ? $locale[$file.'.php'] : $file;
                             }
                         }
                     }

@@ -119,6 +119,7 @@ class News extends Core {
 
     public static function render_news_item($info) {
         $locale = fusion_get_locale('', MG_LOCALE);
+        $theme_settings = get_theme_settings('Magazine');
         $data = $info['news_item'];
 
         Panels::getInstance(TRUE)->hide_panel('RIGHT');
@@ -182,15 +183,14 @@ class News extends Core {
                     echo '</div>';
                 }
 
-                echo '<div class="text-center clearfix">';
-                    $url = (isset($_SERVER['HTTPS']) ? 'https' : 'http').'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-                    echo '<div class="m-r-5 display-inline">';
-                        echo '<iframe src="https://www.facebook.com/plugins/share_button.php?href='.$url.'&layout=button&size=small&mobile_iframe=true&width=58&height=20" width="65" height="20" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true"></iframe>';
+                if (!empty($theme_settings['social_share']) && $theme_settings['social_share'] == 1) {
+                    echo '<div class="text-center clearfix">';
+                        $url = (isset($_SERVER['HTTPS']) ? 'https' : 'http').'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+                        echo '<div class="m-r-5 display-inline">';
+                            echo social_media_links($url);
+                        echo '</div>';
                     echo '</div>';
-
-                    OutputHandler::addToHead('<script src="https://platform.twitter.com/widgets.js" async defer></script>');
-                    echo '<div class="m-r-5 display-inline"><a href="https://twitter.com/share" class="twitter-share-button" data-show-count="false">Tweet</a></div>';
-                echo '</div>';
+                }
 
                 echo '<div class="well text-center m-t-10 m-b-0">';
                     echo '<span class="m-l-10"><i class="fa fa-user"></i> '.profile_link($data['user_id'], $data['user_name'], $data['user_status']).'</span>';

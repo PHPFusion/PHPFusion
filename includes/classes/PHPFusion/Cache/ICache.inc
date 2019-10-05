@@ -23,8 +23,9 @@ interface ICache {
      *
      * @param string $key cache key
      * @param mixed  $data
+     * @param mixed  $seconds
      */
-    public function set($key, $data);
+    public function set($key, $data, $seconds);
 
     /**
      * Return data by key

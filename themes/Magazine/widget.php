@@ -22,7 +22,8 @@ if (isset($_POST['save_settings'])) {
     $settings = [
         'github_url'   => form_sanitizer($_POST['github_url'], '', 'github_url'),
         'facebook_url' => form_sanitizer($_POST['facebook_url'], '', 'facebook_url'),
-        'twitter_url'  => form_sanitizer($_POST['twitter_url'], '', 'twitter_url')
+        'twitter_url'  => form_sanitizer($_POST['twitter_url'], '', 'twitter_url'),
+        'social_share' => form_sanitizer($_POST['social_share'], 0, 'social_share'),
     ];
 
     if (\Defender::safe()) {
@@ -46,6 +47,7 @@ openside('');
 echo form_text('github_url', $locale['MG_202'], $settings['github_url'], ['type' => 'url', 'inline' => TRUE]);
 echo form_text('facebook_url', $locale['MG_203'], $settings['facebook_url'], ['type' => 'url', 'inline' => TRUE]);
 echo form_text('twitter_url', $locale['MG_204'], $settings['twitter_url'], ['type' => 'url', 'inline' => TRUE]);
+echo form_select('social_share', $locale['MG_205'], $settings['social_share'], ['options' => [0 => $locale['no'], 1 => $locale['yes']], 'inline' => TRUE]);
 closeside();
 
 echo form_button('save_settings', $locale['save_changes'], 'save', ['class' => 'btn-primary']);
