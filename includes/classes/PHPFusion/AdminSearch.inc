@@ -37,12 +37,11 @@ class AdminSearch {
      *
      * @return false|string|null
      */
-    public function Result() {
+    public function result() {
         $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/main.php');
 
         if ($this->authorizeAid()) {
             if (\defender::safe()) {
-                $result = [];
                 $search_string = (string)filter_input(INPUT_GET, 'pagestring');
 
                 if (isset($search_string)) {
@@ -73,7 +72,8 @@ class AdminSearch {
                     }
                 }
 
-                $result['status'] = !empty($this->result['status']) ? $locale['search_msg_'.$this->result['status']] : '';
+                $results = [];
+                $results['status'] = !empty($this->result['status']) ? $locale['search_msg_'.$this->result['status']] : '';
 
                 if (!empty($this->result)) {
                     $this->setResult($this->result);
@@ -100,17 +100,19 @@ class AdminSearch {
                             ]);
 
                             if (checkrights($data['admin_rights'])) {
-                                $result[] = [
+                                $result = [
                                     'title' => $title,
                                     'link'  => $link,
                                     'icon'  => $icon
                                 ];
+
+                                array_push($results, $result);
                             }
                         }
                     }
                 }
 
-                return json_encode($result);
+                return json_encode($results);
             } else {
                 $this->result['status'] = 101;
             }

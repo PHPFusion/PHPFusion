@@ -22,10 +22,24 @@ if (preg_match("/^([a-z0-9_-]){2,50}$/i", $settings['admin_theme']) && file_exis
     require_once THEMES."admin_themes/".$settings['admin_theme']."/acp_theme.php";
 }
 
+header("Cache-control: max-age=290304000, public");
+$tsstring = gmdate('D, d M Y H:i:s ', TIME).'GMT';
+$etag = LANGUAGE.TIME;
+$if_modified_since = isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? $_SERVER['HTTP_IF_MODIFIED_SINCE'] : FALSE;
+$if_none_match = isset($_SERVER['HTTP_IF_NONE_MATCH']) ? $_SERVER['HTTP_IF_NONE_MATCH'] : FALSE;
+if ((($if_none_match && $if_none_match == $etag) || (!$if_none_match)) &&
+    ($if_modified_since && $if_modified_since == $tsstring)) {
+    header('HTTP/1.1 304 Not Modified');
+    exit();
+} else {
+    header("Last-Modified: $tsstring");
+    header("ETag: \"{$etag}\"");
+}
+
 header('Content-Type: application/json');
 
 $search = new PHPFusion\AdminSearch();
-echo $search->Result();
+echo $search->result();
 
 /**
  * Example usage
