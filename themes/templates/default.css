@@ -551,11 +551,17 @@ Grids
 .display-table-row {
     display: table-row;
 }
-
 .display-table-cell {
     display: table-cell;
 }
-
+.display-flex-row {
+    display: flex;
+    flex-direction: row;
+}
+.display-flex-column {
+    display: flex;
+    flex-direction: column;
+}
 .position-relative {
     position: relative;
 }

@@ -28,7 +28,7 @@ function display_summary_widget() {
 
     $locale = fusion_get_locale();
     $aidlink= fusion_get_aidlink();
-
+    $content = FALSE;
     $tpl = \PHPFusion\Template::getInstance('summary-widget');
     $tpl->set_template(__DIR__.'/summary.html');
     // Check news infusion
@@ -51,6 +51,7 @@ function display_summary_widget() {
             $info['text'] = "<a href='".INFUSIONS."news/news_admin.php$aidlink&amp;action=edit&amp;ref=news_form&amp;news_id=".$data['news_id']."'>".$data['news_subject']."</a>";
         }
         $tpl->set_block('li', $info);
+        $content = TRUE;
     }
     // Check articles infusion
     if (infusion_exists('articles')) {
@@ -72,6 +73,7 @@ function display_summary_widget() {
             $info['text'] = "<a href='".INFUSIONS."articles/articles_admin.php$aidlink'>".$data['article_subject']."</a>";
         }
         $tpl->set_block('li', $info);
+        $content = TRUE;
     }
     // Check forum infusion
     if (infusion_exists('forum')) {
@@ -96,6 +98,7 @@ function display_summary_widget() {
             $info['date'] = showdate('%b %d, %R %p', $data['post_datestamp']);
         }
         $tpl->set_block('li', $info);
+        $content = TRUE;
     }
     // Check download infusion
     if (infusion_exists('downloads')) {
@@ -117,6 +120,7 @@ function display_summary_widget() {
             $info['date'] = showdate('%b %d, %R %p', $data['download_datestamp']);
         }
         $tpl->set_block('li', $info);
+        $content = TRUE;
     }
     // Check weblinks infusion
     if (infusion_exists('weblinks')) {
@@ -138,6 +142,7 @@ function display_summary_widget() {
             $info['date'] = showdate('%b %d, %R %p', $data['weblink_datestamp']);
         }
         $tpl->set_block('li', $info);
+        $content = TRUE;
     }
     // Check gallery infusion
     if (infusion_exists('gallery')) {
@@ -159,11 +164,16 @@ function display_summary_widget() {
             $info['text'] = "<a href='".INFUSIONS."gallery/gallery_admin.php$aidlink'>".number_format($photos['photo'])." ".$locale['261']."</a>";
         }
         $tpl->set_block('li', $info);
+        $content = TRUE;
     }
 
-    $content = fusion_get_function("open_sidex", "Site Summary");
-    $content .= $tpl->get_output();
-    $content .= fusion_get_function("close_sidex");
+    if ($content === FALSE) {
+        $tpl->set_block('li_na');
+    }
 
-    return (string) $content;
+    $html = fusion_get_function("open_sidex", "Site Summary");
+    $html .= $tpl->get_output();
+    $html .= fusion_get_function("close_sidex");
+
+    return (string) $html;
 }

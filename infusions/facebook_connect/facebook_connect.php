@@ -31,32 +31,36 @@ class Facebook_Connect {
      */
     public function __construct() {
         $this->settings = get_settings('facebook_connect');
+        if ($this->settings['fb_app_id'] && $this->settings['fb_secret']) {
+
         $this->fb = new Facebook([
             'app_id'                => $this->settings['fb_app_id'],
             'app_secret'            => $this->settings['fb_secret'],
             'default_graph_version' => 'v2.10',
             //'persistent_data_handler' => 'session',
         ]);
-        $this->fb_uid = fusion_get_userdata('user_facebook');
-        $section = get('section');
-        if ($section) {
-            $this->section = $section;
-        }
-
-        if (iMEMBER) {
-            if (!$this->fb_uid && session_get('facebook_access_token')) {
-                session_remove('facebook_access_token');
-                redirect(FUSION_REQUEST);
+            $this->fb_uid = fusion_get_userdata('user_facebook');
+            $section = get('section');
+            if ($section) {
+                $this->section = $section;
             }
-        } else {
-            session_remove('facebook_access_token');
+
+            if (iMEMBER) {
+                if (!$this->fb_uid && session_get('facebook_access_token')) {
+                    session_remove('facebook_access_token');
+                    redirect(FUSION_REQUEST);
+                }
+            } else {
+                session_remove('facebook_access_token');
+            }
+
+            $this->helper = $this->fb->getRedirectLoginHelper();
+
+            if (get('state')) {
+                $this->helper->getPersistentDataHandler()->set('state', get('state'));
+            }
         }
 
-        $this->helper = $this->fb->getRedirectLoginHelper();
-
-        if (get('state')) {
-            $this->helper->getPersistentDataHandler()->set('state', get('state'));
-        }
     }
 
     /**
