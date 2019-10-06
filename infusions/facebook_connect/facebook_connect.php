@@ -15,7 +15,10 @@ require_once INFUSIONS.'facebook_connect/class/autoload.php';
  */
 class Facebook_Connect {
 
-    private $settings = [];
+    private $settings = [
+        'fb_app_id' => 0,
+        'fb_secret' => '',
+    ];
     private $fb = NULL;
     private $fb_uid = 0;
     private $section = 0;
