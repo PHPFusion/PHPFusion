@@ -112,6 +112,7 @@ class UserFieldsQuantum extends \SqlHandler {
     private $get_available_modules = [];
     private $user_field_dbinfo = '';
     private $field_cat_index = [];
+
     ### Setters ###
 
     public static function fusion_getlocale($data, $input_name) {
@@ -277,8 +278,8 @@ class UserFieldsQuantum extends \SqlHandler {
             }
 
             $param = [
-                ':index00' => (int) $section,
-                ':index01' => (int) $section,
+                ':index00' => (int)$section,
+                ':index01' => (int)$section,
             ];
             $cond = "WHERE (cat.field_cat_id=:index00 OR root.field_cat_id=:index01)";
 
@@ -1081,6 +1082,7 @@ class UserFieldsQuantum extends \SqlHandler {
 
     /**
      * Public Profile Field Admin
+     *
      * @return string
      * @throws \ReflectionException
      */
@@ -1131,7 +1133,7 @@ class UserFieldsQuantum extends \SqlHandler {
             $default_active = key($tab_title['title']);
 
             // Tab
-            $tab_active = tab_active($tab_title, ($active? $active : $default_active));
+            $tab_active = tab_active($tab_title, ($active ? $active : $default_active));
 
             $html .= opentab($tab_title, $tab_active, 'uftab', FALSE, '', '', [], TRUE);
 
@@ -1252,11 +1254,12 @@ class UserFieldsQuantum extends \SqlHandler {
         //$html .= $this->quantum_admin_buttons();
         //$html .="</div>\n</div>\n";
 
-        return (string) $html;
+        return (string)$html;
     }
 
     /**
      * @todo: increment rest api from marketplace.
+     *
      * @param string $folder
      *
      * @return string
@@ -1444,24 +1447,18 @@ class UserFieldsQuantum extends \SqlHandler {
 
         $options += $default_options;
 
-        if (!$options['plugin_folder']) {
-            $options['plugin_folder'] = $default_options['plugin_folder'];
-        }
-
-        if (!$options['plugin_locale_folder']) {
-            $options['plugin_locale_folder'] = $default_options['plugin_locale_folder'];
-        }
-
         $options['plugin_locale_folder'] = rtrim($options['plugin_locale_folder'], '/').'/';
 
         if (is_array($options['plugin_folder']) && !empty($options['plugin_folder'])) {
             $p_folder = $options['plugin_folder'];
             unset($options['plugin_folder']);
+
             foreach ($p_folder as $plugin_folder) {
                 $plugin_folder = rtrim($plugin_folder, '/').'/';
                 // Identify the correct folder for the current module.
                 if (is_file($plugin_folder.$data['field_name'].'_include.php')) {
                     $options['plugin_folder'] = $plugin_folder;
+
                 } else {
                     $folder_list = makefilelist($plugin_folder, '.|..|index.php', TRUE, 'folders');
                     if (!empty($folder_list)) {
@@ -1475,6 +1472,7 @@ class UserFieldsQuantum extends \SqlHandler {
                     }
                 }
             }
+
         } else {
             $options['plugin_folder'] = rtrim($options['plugin_folder'], '/').'/';
         }
@@ -1485,6 +1483,7 @@ class UserFieldsQuantum extends \SqlHandler {
         // Format Callback Data
         $field_value = isset($callback_data[$data['field_name']]) ? $callback_data[$data['field_name']] : '';
         $field_post_value = post($data['field_name']);
+
         if ($field_post_value && !$options['hide_value']) {
             $field_value = $field_post_value;
         } else if ($options['hide_value']) {
@@ -1494,18 +1493,21 @@ class UserFieldsQuantum extends \SqlHandler {
         $field_label = $options['show_title'] ? self::parse_label($data['field_title']).':' : '';
 
         switch ($data['field_type']) {
+
             case 'file':
+
                 $user_data = $callback_data;
+
                 $profile_method = $method;
 
-                $plugin_folder = INCLUDES.'user_fields/'.$data['field_section'];
-                if ($options['plugin_folder']) {
-                    $plugin_folder = $options['plugin_folder'];
-                }
+                $plugin_folder = rtrim(INCLUDES.'user_fields/'.$data['field_section'], '/').'/';
+
                 $plugin_file = $plugin_folder.$data['field_name'].'/'.$data['field_name'].'_include.php';
 
                 if (file_exists($plugin_file)) {
+
                     include $plugin_file;
+
                     if ($method == 'input') {
                         if (isset($user_fields)) {
                             return $user_fields;
@@ -1721,6 +1723,7 @@ class UserFieldsQuantum extends \SqlHandler {
 
     /**
      * Category form input
+     *
      * @return string
      * @throws \ReflectionException
      */
@@ -1888,7 +1891,7 @@ class UserFieldsQuantum extends \SqlHandler {
         $html = openform('cat_form', 'post');
         $html .= self::quantum_multilocale_fields('field_cat_name', $this->locale['fields_0430'], $this->field_cat_data['field_cat_name'], ['required' => 1]);
         // cannot move if there are siblings
-        if ($cat_id && isset($this->field_cat_index[ $cat_id ])) {
+        if ($cat_id && isset($this->field_cat_index[$cat_id])) {
             $html .= form_hidden('field_parent', '', $this->field_cat_data['field_parent']);
         } else {
             $cat_list[] = isset($_GET['cat_id']) ? $_GET['cat_id'] : '';
@@ -2379,6 +2382,7 @@ class UserFieldsQuantum extends \SqlHandler {
 
     /**
      * Add Field into table
+     *
      * @param        $data
      * @param string $type
      * @param string $table_name
@@ -2635,7 +2639,9 @@ class UserFieldsQuantum extends \SqlHandler {
             $result = dbquery("SELECT * FROM ".DB_USER_FIELDS." WHERE field_id=:mid", [':mid' => intval($_GET['module_id'])]);
             if (dbrows($result)) {
                 $field_data = dbarray($result);
+
                 $_GET['install'] = $field_data['field_name'];
+
             } else {
                 addNotice('info', $this->locale['field_0205']);
                 redirect(FUSION_SELF.$aidlink.'&amp;ref='.$_GET['ref'].'&amp;action='.$_GET['action']);
@@ -2645,22 +2651,32 @@ class UserFieldsQuantum extends \SqlHandler {
         // is adding.
         $plugin = $this->modules;
         $install_plugin = get("install");
+        $ref_module = get('ref');
+        $module_id = get('module_id', FILTER_VALIDATE_INT);
 
         if (isset($plugin[$install_plugin])) {
 
             $plugin_data = $plugin[$install_plugin];
 
             if (post('enable')) {
+
                 $accepted_type = [
                     'public'     => 'file',
                     'preference' => 'preference',
                     'security'   => 'security'
                 ];
-                if (isset($accepted_type[$_GET['ref']])) {
+
+                $sections = [
+                    'file'       => 'public',
+                    'preference' => 'preference',
+                    'security'   => 'security'
+                ];
+
+                if (isset($accepted_type[$ref_module])) {
 
                     $this->field_data = [
                         'add_module'         => sanitizer('add_module') ?: $this->field_data['field_name'],
-                        'field_type'         => $accepted_type[$_GET['ref']],
+                        'field_type'         => $accepted_type[$ref_module],
                         'field_id'           => sanitizer('field_id', '', 'field_id') ?: get('module_id', FILTER_VALIDATE_INT) ?: 0,
                         'field_title'        => sanitizer('field_title', '', 'field_title'),
                         'field_name'         => sanitizer('field_name', '', 'field_name'),
@@ -2670,7 +2686,8 @@ class UserFieldsQuantum extends \SqlHandler {
                         'field_required'     => post("field_required") ? 1 : 0,
                         'field_registration' => post("field_registration") ? 1 : 0,
                         'field_log'          => post("field_log") ? 1 : 0,
-                        'field_order'        => sanitizer("field_order", '0', 'field_order')
+                        'field_order'        => sanitizer("field_order", '0', 'field_order'),
+                        'field_section'      => $ref_module,
                     ];
                     $this->field_data['field_name'] = str_replace(' ', '_', $this->field_data['field_name']); // make sure no space.
                     if (!$this->field_data['field_order']) {
@@ -2681,10 +2698,14 @@ class UserFieldsQuantum extends \SqlHandler {
                 }
             }
 
-            if (!empty($field_data))
+            if (!empty($field_data)) {
                 $this->field_data = $field_data;
+            }
 
-            $this->field_data['add_module'] = sanitizer('add_module') ?: $this->field_data['field_name'];
+            $this->field_data['add_module'] = $this->field_data['field_name'];
+            if (post('add_module')) {
+                $this->field_data['add_module'] = sanitizer('add_module', '', 'add_module');
+            }
 
             $html = openform('fieldform', 'post');
             $html .= "<div><strong>".$plugin_data['user_field_name']."</strong></div>\n";
@@ -2700,7 +2721,7 @@ class UserFieldsQuantum extends \SqlHandler {
             $html .= "</div>\n<hr/>\n";
 
             $html .= form_select_tree('field_cat', $this->locale['fields_0410'], $this->field_data['field_cat'], [
-                'no_root'      => 1,
+                'no_root'      => TRUE,
                 'disable_opts' => array_keys($this->page_list),
             ], DB_USER_FIELD_CATS, 'field_cat_name', 'field_cat_id', 'field_parent');
 
@@ -2733,7 +2754,9 @@ class UserFieldsQuantum extends \SqlHandler {
                 ($this->field_data['field_id'] ? $this->locale['fields_0415'] : $this->locale['fields_0416']),
                 ($this->field_data['field_id'] ? $this->locale['fields_0415'] : $this->locale['fields_0416']),
                 ['class' => 'btn-default m-r-10']);
-            if (isset($_GET['module_id'])) {
+
+
+            if ($module_id) {
                 $html .= "<a href='".ADMIN."user_fields.php".fusion_get_aidlink()."'>".$this->locale['cancel']."</a>";
             } else {
                 $html .= "<a href='".ADMIN."user_fields.php".fusion_get_aidlink()."&amp;ref=public&amp;action=new'>".$this->locale['cancel']."</a>";
@@ -2747,8 +2770,6 @@ class UserFieldsQuantum extends \SqlHandler {
             addNotice('danger', $this->locale['fields_0109']);
             redirect(ADMIN.'user_fields.php'.$aidlink.'&amp;ref=public&amp;action=new');
         }
-
-
     }
 
     public function quantum_insert(array $data = []) {
@@ -2876,10 +2897,10 @@ class Preference implements TableSDK {
 
     public function properties() {
         return [
-            'no_record'      => 'There are no Preference Field Plugins installed.',
-            'search_label'   => 'Search User Fields',
-            'search_col'     => 'field_title',
-            'order_col'      => ['field_title' => 'title', 'field_order' => 'order'],
+            'no_record'    => 'There are no Preference Field Plugins installed.',
+            'search_label' => 'Search User Fields',
+            'search_col'   => 'field_title',
+            'order_col'    => ['field_title' => 'title', 'field_order' => 'order'],
         ];
     }
 
@@ -2929,10 +2950,10 @@ class Security implements TableSDK {
 
     public function properties() {
         return [
-            'no_record'      => 'There are no Security Field Plugins installed.',
-            'search_label'   => 'Search User Fields',
-            'search_col'     => 'field_title',
-            'order_col'      => ['field_title' => 'title', 'field_order' => 'order'],
+            'no_record'    => 'There are no Security Field Plugins installed.',
+            'search_label' => 'Search User Fields',
+            'search_col'   => 'field_title',
+            'order_col'    => ['field_title' => 'title', 'field_order' => 'order'],
         ];
     }
 
@@ -2962,8 +2983,9 @@ class Security implements TableSDK {
      * @return array
      */
     public function quickEdit() {
-        return  [
-            'field_title' => ['title' => 'Field Name', 'required' => TRUE, 'function'=>'form_text'],
+        return [
+            'field_title' => ['title' => 'Field Name', 'required' => TRUE, 'function' => 'form_text'],
             'field_order' => ['title' => 'Field Order', 'function' => 'form_textarea'],
         ];
-}}
+    }
+}

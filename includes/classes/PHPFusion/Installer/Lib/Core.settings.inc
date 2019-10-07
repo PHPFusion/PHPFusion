@@ -1099,7 +1099,8 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'field_default'  => '1900-01-01',
                 'field_options'  => '',
                 'field_error'    => '',
-                'field_config'   => ''
+                'field_config'   => '',
+                'field_section'  => 'public',
             ],
             [
                 'field_name'     => 'user_location',
@@ -1111,7 +1112,8 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'field_default'  => '',
                 'field_options'  => '',
                 'field_error'    => '',
-                'field_config'   => ''
+                'field_config'   => '',
+                'field_section'  => 'public',
             ],
             [
                 'field_name'     => 'user_skype',
@@ -1123,7 +1125,8 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'field_default'  => '',
                 'field_options'  => '',
                 'field_error'    => '',
-                'field_config'   => ''
+                'field_config'   => '',
+                'field_section'  => 'public',
             ],
             [
                 'field_name'     => 'user_icq',
@@ -1135,7 +1138,8 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'field_default'  => '',
                 'field_options'  => '',
                 'field_error'    => '',
-                'field_config'   => ''
+                'field_config'   => '',
+                'field_section'  => 'public',
             ],
             [
                 'field_name'     => 'user_web',
@@ -1147,7 +1151,8 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'field_default'  => '',
                 'field_options'  => '',
                 'field_error'    => '',
-                'field_config'   => ''
+                'field_config'   => '',
+                'field_section'  => 'public',
             ],
             [
                 'field_name'     => 'user_timezone',
@@ -1159,7 +1164,8 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'field_default'  => '',
                 'field_options'  => '',
                 'field_error'    => '',
-                'field_config'   => ''
+                'field_config'   => '',
+                'field_section'  => 'public',
             ],
             [
                 'field_name'     => 'user_theme',
@@ -1171,7 +1177,8 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'field_default'  => '',
                 'field_options'  => '',
                 'field_error'    => '',
-                'field_config'   => ''
+                'field_config'   => '',
+                'field_section'  => 'public',
             ],
             [
                 'field_name'     => 'user_sig',
@@ -1183,7 +1190,8 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'field_default'  => '',
                 'field_options'  => '',
                 'field_error'    => '',
-                'field_config'   => ''
+                'field_config'   => '',
+                'field_section'  => 'public',
             ]
         ]
     ];
