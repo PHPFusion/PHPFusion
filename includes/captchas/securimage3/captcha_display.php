@@ -17,7 +17,6 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
-// Display Capthca
 if (!function_exists('display_captcha')) {
     function display_captcha($options = []) {
         $default_options = [
