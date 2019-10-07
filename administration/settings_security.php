@@ -69,14 +69,25 @@ if (post('savesettings')) {
     ];
 
     // Validate extra fields
-    if ($inputData['captcha'] == "grecaptcha") {
+    if ($inputData['captcha'] == 'grecaptcha' || $inputData['captcha'] == 'grecaptcha3') {
         // appends captcha settings
         $inputData += [
             'recaptcha_public'  => sanitizer('recaptcha_public', '', 'recaptcha_public'),
-            'recaptcha_private' => sanitizer('recaptcha_private', '', 'recaptcha_private'),
-            'recaptcha_theme'   => sanitizer('recaptcha_theme', '', 'recaptcha_theme'),
-            'recaptcha_type'    => sanitizer('recaptcha_type', '', 'recaptcha_type'),
+            'recaptcha_private' => sanitizer('recaptcha_private', '', 'recaptcha_private')
         ];
+
+        if ($inputData['captcha'] == 'grecaptcha') {
+            $inputData += [
+                'recaptcha_theme' => sanitizer('recaptcha_theme', '', 'recaptcha_theme'),
+                'recaptcha_type'  => sanitizer('recaptcha_type', '', 'recaptcha_type')
+            ];
+        }
+
+        if ($inputData['captcha'] == 'grecaptcha3') {
+            $inputData += [
+                'recaptcha_score' => sanitizer('recaptcha_score', '', 'recaptcha_score')
+            ];
+        }
     }
 
     if (\Defender::safe()) {
@@ -181,7 +192,7 @@ echo form_select('captcha', $locale['693'], $settings['captcha'], [
     'inner_width' => '100%',
     'width'       => '100%'
 ]);
-echo "<div id='extDiv' ".($settings['captcha'] !== 'grecaptcha' ? "style='display:none;'" : '').">\n";
+echo "<div id='extDiv' ".($settings['captcha'] !== 'grecaptcha' || $settings['captcha'] !== 'grecaptcha3' ? "style='display:none;'" : '').">\n";
 if (!$settings['recaptcha_public']) {
     $link = [
         'start' => '[RECAPTCHA_LINK]',
@@ -196,7 +207,7 @@ if (!$settings['recaptcha_public']) {
 }
 echo "<div class='".grid_row()."'>\n";
 echo "<div class='hidden-xs col-sm-3 text-right'>\n";
-echo thumbnail(INCLUDES."captchas/grecaptcha/grecaptcha.png", "196px");
+echo thumbnail(INCLUDES.'captchas/grecaptcha/grecaptcha.svg', '196px');
 echo "</div>\n<div class='col-xs-12 col-sm-9'>\n";
 echo form_text('recaptcha_public', $locale['grecaptcha_0100'], $settings['recaptcha_public'], [
     'placeholder' => $locale['grecaptcha_placeholder_1'],
@@ -206,6 +217,8 @@ echo form_text('recaptcha_private', $locale['grecaptcha_0101'], $settings['recap
     'placeholder' => $locale['grecaptcha_placeholder_2'],
     'required'    => FALSE
 ]);
+
+echo '<div id="grecaptcha2" '.($settings['captcha'] == 'grecaptcha3' ? 'style="display:none;"' : '').'>';
 echo form_select('recaptcha_theme', $locale['grecaptcha_0102'], $settings['recaptcha_theme'], [
     'options'     => [
         'light' => $locale['grecaptcha_0102a'],
@@ -224,6 +237,25 @@ echo form_select('recaptcha_type', $locale['grecaptcha_0103'], $settings['recapt
     'width'       => '100%',
     'required'    => TRUE
 ]);
+echo '</div>';
+
+echo '<div id="grecaptcha3" '.($settings['captcha'] == 'grecaptcha' ? 'style="display:none;"' : '').'>';
+echo form_select('recaptcha_score', $locale['grecaptcha_0104'], $settings['recaptcha_score'], [
+    'options' => [
+        '1.0' => '1.0',
+        '0.9' => '0.9',
+        '0.8' => '0.8',
+        '0.7' => '0.7',
+        '0.6' => '0.6',
+        '0.5' => '0.5',
+        '0.4' => '0.4',
+        '0.3' => '0.3',
+        '0.2' => '0.2',
+        '0.1' => '0.1'
+    ]
+]);
+echo '</div>';
+
 echo "</div>\n</div>\n";
 echo "</div>\n";
 closeside();
@@ -277,19 +309,34 @@ echo form_button('savesettings', $locale['750'], $locale['750'], ['class' => 'bt
 echo closeform();
 closetable();
 add_to_jquery("
-val = $('#captcha').select2().val();
-if (val == 'grecaptcha') {
-    $('#extDiv').slideDown('slow');
-} else {
-    $('#extDiv').slideUp('slow');
-}
-$('#captcha').bind('change', function() {
-    var val = $(this).select2().val();
+function recaptcha(val) {
+    if (val == 'grecaptcha3') {
+        $('#grecaptcha3').slideDown('slow');
+        $('#grecaptcha2').slideUp('slow');
+    } else {
+        $('#grecaptcha3').slideUp('slow');
+        $('#grecaptcha2').slideDown('slow');
+    }
+    
     if (val == 'grecaptcha') {
+        $('#grecaptcha2').slideDown('slow');
+        $('#grecaptcha3').slideUp('slow');
+    } else {
+        $('#grecaptcha2').slideUp('slow');
+        $('#grecaptcha3').slideDown('slow');
+    }
+    
+    if (val == 'grecaptcha' || val == 'grecaptcha3') {
         $('#extDiv').slideDown('slow');
     } else {
         $('#extDiv').slideUp('slow');
     }
+}
+
+recaptcha($('#captcha').select2().val());
+
+$('#captcha').bind('change', function() {
+    recaptcha($(this).select2().val());
 });
 ");
 require_once THEMES.'templates/footer.php';

@@ -441,6 +441,10 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'settings_value' => 'text'
             ],
             [
+                'settings_name'  => 'recaptcha_score',
+                'settings_value' => '0.5'
+            ],
+            [
                 'settings_name'  => 'allow_php_exe',
                 'settings_value' => 0
             ],
