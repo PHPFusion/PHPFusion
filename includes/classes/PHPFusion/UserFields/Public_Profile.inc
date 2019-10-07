@@ -419,18 +419,21 @@ class Public_Profile extends UserFieldsQuantum {
     private function renderValidation() {
         $locale = fusion_get_locale();
         $_CAPTCHA_HIDE_INPUT = FALSE;
-        $html = "<div class='form-group m-t-20'>\n";
-        $html .= "<label for='captcha_code' class='control-label p-0 ".($this->inline_field ? grid_column_size(100,100,80,20) : grid_column_size(100))."'>\n".$this->locale['u190']." <span class='required'>*</span></label>\n";
-        $html .= "<div class='".($this->inline_field ? grid_column_size(100,100,80,80) : grid_column_size(100))."'>";
         include INCLUDES."captchas/".fusion_get_settings("captcha")."/captcha_display.php";
-        $html .= "<div class='list-group-item'>\n";
+        $html = "<div class='form-group m-t-20'>\n";
+
+        if (!$_CAPTCHA_HIDE_INPUT) {
+            $html .= "<label for='captcha_code' class='control-label p-0 ".($this->inline_field ? grid_column_size(100, 100, 80, 20) : grid_column_size(100))."'>\n".$this->locale['u190']." <span class='required'>*</span></label>\n";
+        }
+
+        $html .= "<div class='".($this->inline_field ? grid_column_size(100,100,80,80) : grid_column_size(100))."'>";
+
         $html .= display_captcha([
             'form_name'  => 'userfieldsform',
             'captcha_id' => 'captcha_userfields',
             'input_id'   => 'captcha_code_userfields',
             'image_id'   => 'captcha_image_userfields'
         ]);
-        $html .= "</div>\n";
         if (!$_CAPTCHA_HIDE_INPUT) {
             $html .= form_text('captcha_code', '', '', [
                 'inline'           => $this->inline_field,

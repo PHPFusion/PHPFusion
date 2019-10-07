@@ -2831,22 +2831,25 @@ class UserFieldsQuantum extends \SqlHandler {
         if ($callback_data == TRUE) {
             $output_fields[$db] = $this->callback_data;
         }
-        foreach ($field as $arr => $field_data) {
-            $target_database = $field_data['field_cat_db'] ? DB_PREFIX.$field_data['field_cat_db'] : $db;
-            $col_name = $field_data['field_cat_index'] ? $field_data['field_cat_index'] : $primary_key;
-            // Find index primary key value
-            $primaryKeyVal = isset($_POST[$col_name]) ? form_sanitizer($_POST[$col_name], '', $col_name) : '';
-            if (!isset($output_fields[$target_database][$col_name])) {
-                $output_fields[$target_database][$col_name] = $primaryKeyVal;
-            }
-            // Set input as default if posted but blank
-            if (isset($_POST[$field_data['field_name']])) {
-                $output_fields[$target_database][$field_data['field_name']] =
-                    form_sanitizer(
-                        $_POST[$field_data['field_name']],
-                        $field_data['field_default'],
-                        $field_data['field_name']
-                    );
+
+        if (is_array($field)) {
+            foreach ($field as $arr => $field_data) {
+                $target_database = $field_data['field_cat_db'] ? DB_PREFIX.$field_data['field_cat_db'] : $db;
+                $col_name = $field_data['field_cat_index'] ? $field_data['field_cat_index'] : $primary_key;
+                // Find index primary key value
+                $primaryKeyVal = isset($_POST[$col_name]) ? form_sanitizer($_POST[$col_name], '', $col_name) : '';
+                if (!isset($output_fields[$target_database][$col_name])) {
+                    $output_fields[$target_database][$col_name] = $primaryKeyVal;
+                }
+                // Set input as default if posted but blank
+                if (isset($_POST[$field_data['field_name']])) {
+                    $output_fields[$target_database][$field_data['field_name']] =
+                        form_sanitizer(
+                            $_POST[$field_data['field_name']],
+                            $field_data['field_default'],
+                            $field_data['field_name']
+                        );
+                }
             }
         }
         $this->output_fields = $output_fields;
