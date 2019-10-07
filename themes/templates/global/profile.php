@@ -134,13 +134,19 @@ if (!function_exists('display_profile_form')) {
                     break;
                 }
             case 'pu_profile': // public profile.
+                $current_section = get('section', FILTER_VALIDATE_INT);
+                if (!$current_section && !empty($info['section'])) {
+                    $section_arr = reset($info['section']);
+                    $current_section = $section_arr['id'];
+                }
+
                 $tpl->set_tag('openform', $info['openform']);
                 $tpl->set_tag('closeform', $info['closeform']);
                 foreach ($info['section'] as $id => $sections) {
                     $tab['title'][] = $sections['name'];
                     $tab['id'][] = $sections['id'];
                 }
-                if ($info['current_section'] == 1) {
+                if ($current_section== 1) {
                     $tpl->set_block('public_fields', [
                         "eula"                  => $info['terms'],
                         "user_avatar_field"     => $info['user_avatar'],
@@ -328,8 +334,11 @@ if (!function_exists('display_profile_form')) {
                 break;
         }
 
+
+
+
         if (isset($tab) && isset($tab['title'])) {
-            $tpl->set_tag("tab_header", opentab($tab, $info['current_section'], "user-profile-form", TRUE, "", "section", ['search', 'sref', 'category', 'id', 'section', 'aid', 'action', 'id'], FALSE));
+            $tpl->set_tag("tab_header", opentab($tab, $current_section, "user-profile-form", TRUE, "", "section", ['search', 'sref', 'category', 'id', 'section', 'aid', 'action', 'id'], FALSE));
             $tpl->set_tag("tab_footer", closetab());
         }
 

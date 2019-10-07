@@ -44,7 +44,7 @@ class adminDashboard extends resource {
             'security_ban' => array('link' => 'status=4', 'title' => 253)
         );
         echo "<div class='".grid_row()."'>\n";
-        echo "<div class='".grid_column_size(100,100,50,25)." responsive-admin-column'>\n";
+        echo "<div class='".grid_column_size(100,100,50,33)." responsive-admin-column'>\n";
         // lets do an internal analytics
         // members registered
         // members online
@@ -87,7 +87,7 @@ class adminDashboard extends resource {
         }
         echo "</div>\n";
         echo "</div>\n";
-        echo "</div>\n<div class='".grid_column_size(100,100,50,25)." responsive-admin-column'>\n";
+        echo "</div>\n<div class='".grid_column_size(100,100,50,33)." responsive-admin-column'>\n";
         echo "<div class='list-group'>\n<div class='list-group-item'>\n";
         echo "<h4 class='display-inline-block m-0'>".$locale['279']."</h4>\n";
         echo "<span class='pull-right badge'>".number_format($global_submissions['rows'])."</span>\n";
@@ -120,7 +120,7 @@ class adminDashboard extends resource {
         }
         echo "</div>\n";
         echo "</div>\n";
-        echo "</div>\n<div class='".grid_column_size(100,100,50,25)." responsive-admin-column'>\n";
+        echo "</div>\n<div class='".grid_column_size(100,100,50,33)." responsive-admin-column'>\n";
 
         echo "</div>\n</div>\n";
         closetable();

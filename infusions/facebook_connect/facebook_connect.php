@@ -389,10 +389,11 @@ class Facebook_Connect {
         if ($field_value) {
             $text = $locale['fbc_0107'];
         }
+        $login_url = $this->getConnectButtonUrl();
 
         return '<div class="social-connector m-b-15 '.grid_column_size(100).'">
         <span class="pull-right">
-        <a class="btn btn-primary btn-rounded" href="'.$this->getConnectButtonUrl().'">'.$text.'</a>
+        <a class="btn btn-primary btn-rounded'.(!$login_url ? ' disabled' : '').'" href="'.$login_url.'">'.$text.'</a>
         </span>
         <h5 class="display-inline text-dark strong"><span class="control-label display-inline">'.$icon.'</span>'.$locale['fbc_0105'].'</h5>
         </div>';
@@ -402,13 +403,19 @@ class Facebook_Connect {
         if ($this->fb_uid) {
             return clean_request('fb_disconnect=true', ['fb_disconnect'], FALSE);
         }
-        $permissions = ['email']; // Optional permissions
-        return $this->helper->getLoginUrl(fusion_get_settings('siteurl').'edit_profile.php?section='.$this->section, $permissions);
+        if ($this->helper) {
+            $permissions = ['email']; // Optional permissions
+            return $this->helper->getLoginUrl(fusion_get_settings('siteurl').'edit_profile.php?section='.$this->section, $permissions);
+        }
+        return NULL;
     }
 
     public function getLoginButtonUrl() {
         $permissions = ['email']; // Optional permissions
-        return $this->helper->getLoginUrl(fusion_get_settings('siteurl').'login.php?connect=facebook', $permissions);
+        if ($this->helper) {
+            return $this->helper->getLoginUrl(fusion_get_settings('siteurl').'login.php?connect=facebook', $permissions);
+        }
+        return NULL;
     }
 
     function displaySettingsAdmin() {

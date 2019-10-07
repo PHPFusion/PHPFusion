@@ -26,12 +26,12 @@ class AdminDashboard {
             {%content%}
         }}
         <div class="{[row]}">
-        <div class="{[col(100,100,50,34)]}">
+        <div class="{[col(100,100,50, 33)]}">
         {%column_1_widget%}
-        </div><div class="{[col(100,100,50,34)]}">
+        </div><div class="{[col(100,100,50, 33)]}">
         {%column_2_widget%}
         </div>
-        <div class="{[col(100,100,50,34)]}">
+        <div class="{[col(100,100,50, 33)]}">
         {%column_3_widget%}
         </div>
         </div>
