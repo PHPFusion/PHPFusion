@@ -1692,10 +1692,10 @@ class UserFieldsQuantum extends \SqlHandler {
         }
 
         if (post('save_cat')) {
-
+            // print_p($_POST);
             $this->field_cat_data = [
                 'field_cat_id'    => sanitizer('field_cat_id', '', 'field_cat_id'),
-                'field_cat_name'  => sanitizer('field_cat_name', '', 'field_cat_name', TRUE),
+                'field_cat_name'  => sanitizer(['field_cat_name'], '', 'field_cat_name', TRUE),
                 'field_parent'    => sanitizer('field_parent', '', 'field_parent'),
                 'field_cat_order' => sanitizer('field_cat_order', '', 'field_cat_order'),
                 'field_cat_db'    => '',
