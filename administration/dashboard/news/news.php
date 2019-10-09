@@ -18,7 +18,8 @@
 defined('IN_FUSION') || exit;
 
 function display_news_widget() {
-    if (infusion_exists('news')) {
+
+    if (infusion_exists('news') && checkrights('N')) {
         $uid = (int)fusion_get_userdata('user_id');
         $aid = fusion_get_aidlink();
 
