@@ -24,3 +24,5 @@ $user_field_desc = $locale['uf_skype_desc'];
 $user_field_dbname = "user_skype";
 $user_field_group = 1;
 $user_field_dbinfo = "VARCHAR(100) NOT NULL DEFAULT ''";
+$user_field_author = 'PHPFusion Development Team';
+$user_field_image = INCLUDES.'user_fields/public/user_skype/images/skype.svg';

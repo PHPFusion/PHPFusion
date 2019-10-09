@@ -1261,7 +1261,7 @@ class UserFieldsQuantum extends \SqlHandler {
                 $html .= "<div class='".grid_column_size(100,50,33,25)."'>\n";
                 $html .= "<div class='list-group-item text-center'>";
                 if ($module_data['module_image']) {
-                    $html .= "<img src='".$module_data['module_image']."' class='icon spacer-sm img-responsive' style='max-height:48px;'>";
+                    $html .= "<img src='".$module_data['module_image']."' class='icon img-responsive' style='margin:15px auto; max-height:48px;'>";
                 }
                 $html .= "<h4 class='strong'>".$module_data['user_field_name']."</h4>";
                 $html .= "<div class='clearfix position-relative overflow-hide'>";
