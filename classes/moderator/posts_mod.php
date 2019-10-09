@@ -6,6 +6,12 @@ use PHPFusion\Infusions\Forum\Classes\Forum_Moderator;
 class Posts_Mod {
 
     private $class = NULL;
+    private $post_id_array = [];
+    private $first_post_found = FALSE;
+    private $first_post_id = 0;
+    private $remove_first_post = FALSE;
+    private $f_post_blo = FALSE;
+    private $current_num_post = 0;
 
     public function __construct(Forum_Moderator $obj) {
         $this->class = $obj;
@@ -99,8 +105,11 @@ class Posts_Mod {
                             unset($sanitized_post_id[$fpost_key]);
                         }
 
-                        $frm_pid = implode(',', $sanitized_post_id);
-                        $delete_forum_posts = "DELETE FROM ".DB_FORUM_POSTS." WHERE thread_id=:tid AND post_id IN ($frm_pid)";
+                        $rm_pid = implode(',', $sanitized_post_id);
+                        $delete_forum_posts = "DELETE FROM ".DB_FORUM_POSTS." WHERE thread_id=:tid AND post_id IN ($rm_pid)";
+                    }
+                    if (!empty($delete_forum_posts) && !empty($rm_pid)) {
+                        dbquery($delete_forum_posts, $thread_param);
                     }
 
                     dbquery($remove_mood);
@@ -108,11 +117,6 @@ class Posts_Mod {
                     dbquery($delete_attachments, $thread_param);
 
                     dbquery($del_reports);
-
-                    if (!empty($delete_forum_posts)) {
-                        dbquery($delete_forum_posts, $thread_param);
-                    }
-
                     // Recalculate Authors Post .. this one is mistaken, because all must also delete.
                     $calculate_post = "SELECT post_author, COUNT(post_id) 'num_posts' FROM ".DB_FORUM_POSTS." WHERE post_id IN ($rm_pid) GROUP BY post_author";
                     $result = dbquery($calculate_post);
@@ -125,16 +129,11 @@ class Posts_Mod {
 
                     // Update Thread
                     if (!dbcount("(post_id)", DB_FORUM_POSTS, "thread_id=:tid", $thread_param)) {
-
                         dbquery("DELETE FROM ".DB_FORUM_THREADS." WHERE thread_id=:tid", $thread_param); // you will not get this with the new patch, leave here until further examination.
-
                     } else {
-
                         // Find last post
                         $find_lastpost = "SELECT post_datestamp, post_author, post_id FROM ".DB_FORUM_POSTS." WHERE thread_id=:tid ORDER BY post_datestamp DESC LIMIT 1";
-
                         $pdata = dbarray(dbquery($find_lastpost, $thread_param));
-
                         dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost=:time, thread_lastpostid=:pid, thread_postcount=:count, thread_lastuser=:auid WHERE thread_id=:tid", [
                             ":time"  => (int)$pdata['post_datestamp'],
                             ":pid"   => (int)$pdata['post_id'],
@@ -168,13 +167,6 @@ class Posts_Mod {
         }
     }
 
-    private $post_id_array = [];
-    private $first_post_found = FALSE;
-    private $first_post_id = 0;
-    private $remove_first_post = FALSE;
-    private $f_post_blo = FALSE;
-    private $current_num_post = 0;
-
     /**
      * Moving Posts
      */
@@ -185,36 +177,40 @@ class Posts_Mod {
 
             $thread_id = $this->class->getThreadID();
             $thread_param[':tid'] = (int)$thread_id;
-            $post_items = form_sanitizer($_POST['delete_item_post'], '', 'delete_item_post'); // The selected checkbox of post to move.
 
+            // The selected checkbox of post to move.
+            $post_items = sanitizer('delete_item_post', '', 'delete_item_post');
+            // $post_items = form_sanitizer($_POST['delete_item_post'], '', 'delete_item_post');
             $post_items = explode(',', $post_items);
 
             $this->post_id_array = array_filter($post_items);
 
             if (!empty($this->post_id_array)) {
 
-                $this->first_post_id = dbresult(dbquery("SELECT post_id FROM ".DB_FORUM_POSTS." WHERE thread_id=:tid ORDER BY post_datestamp ASC LIMIT 1", $thread_param), 0);
-
+                //
+                $this->first_post_id = dbresult(dbquery("SELECT post_id FROM ".DB_FORUM_POSTS."                 
+                WHERE thread_id=:tid ORDER BY post_datestamp ASC LIMIT 1", $thread_param), 0);
                 /**
                  * Scan for Posts
                  */
-                $sanitized_post_id = [];
+                $sanitized_posts = [];
                 foreach ($post_items as $move_post_id) {
                     // sanitize and make sure it is a number.
                     if (isnum($move_post_id)) {
-                        $sanitized_post_id[] = $move_post_id;
+                        $sanitized_posts[] = $move_post_id;
                         if ($move_post_id == $this->first_post_id) {
                             $this->first_post_found = TRUE;
                         }
                     }
                 }
 
-                $move_posts = implode($sanitized_post_id);
-                $this->post_id_array = $sanitized_post_id;
+                $this->post_id_array = $sanitized_posts;
+
+                $move_posts = implode(',', $sanitized_posts);
+
 
                 // found post items.
-                if (!empty($move_posts)) {
-
+                if (!empty( $this->post_id_array)) {
                     // Current Status Before Move.
                     // this one is redundant.
                     // it just a matter for validation.
@@ -242,12 +238,17 @@ class Posts_Mod {
 
                     // just move any post within thread, without moving first post or move to any other forum.
                     if (!post('new_forum_id', FILTER_VALIDATE_INT) && !$this->f_post_blo) {
+
                         $modal .= $this->moveSimilarPostForm();
+
                     } else if (post('new_forum_id', FILTER_VALIDATE_INT) && !post('new_thread_id', FILTER_VALIDATE_INT) && !post('new_thread_subject') && !$this->f_post_blo) {
+
                         $modal .= $this->moveOptionsForm();
+
                     } else if (get('sv', FILTER_VALIDATE_INT) && post('new_forum_id', FILTER_VALIDATE_INT) && post('new_thread_id', FILTER_VALIDATE_INT) || post('new_thread_subject')) {
 
                         $modal .= $this->executeMovePost();
+
                     }
 
                     $modal .= closemodal();

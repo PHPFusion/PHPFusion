@@ -29,11 +29,11 @@ class Quick_Reply extends Forum_Server {
 
     /**
      * Forum Reply Text Box
-     *
      * @param       $info
-     * @param array $options additional parameters to change behaviours
+     * @param array $options
      *
      * @return string
+     * @throws \ReflectionException
      */
     public function getForm($info, array $options = []) {
 
@@ -179,9 +179,7 @@ class Quick_Reply extends Forum_Server {
                 $attachments[] = $data;
             }
         }
-
-
-
+        $box_header = '';
 
         $remote_param = $options['remote_url'] !== $default_options['remote_url'] ? ["remote_url" => $options['remote_url']] : [];
 
@@ -217,7 +215,4 @@ class Quick_Reply extends Forum_Server {
 
         return (string)$html;
     }
-
-
-
 }
