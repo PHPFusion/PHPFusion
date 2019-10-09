@@ -46,7 +46,7 @@ class AdminDashboard {
 
     private $default_position = [
         'column_1' => ['summary', 'comments', 'ratings'],
-        'column_2' => [],
+        'column_2' => ['news'],
         'column_3' => [],
         'top'      => ['welcome', 'notice']
     ];
