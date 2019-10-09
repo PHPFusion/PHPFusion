@@ -28,3 +28,5 @@ $user_field_default = '';
 $user_field_options = '';
 $user_field_error = '';
 $user_field_config = '';
+$user_field_author = 'PHPFusion Development Team';
+$user_field_image = INCLUDES.'user_fields/public/user_behance/images/behance.svg';

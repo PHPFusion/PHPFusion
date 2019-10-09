@@ -16,7 +16,6 @@ class Account_Profile extends UserFieldsQuantum {
     public $options = [];
     public $is_admin_panel = FALSE;
 
-
     private function cacheSecurityPlugins() {
         static $security_fields = [];
         if (dbcount("(field_id)", DB_USER_FIELDS, "field_section='security'")) {

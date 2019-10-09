@@ -109,8 +109,8 @@ class UserFieldsQuantum extends \SqlHandler {
         'field_cat_class' => '',
     ];
     private $output_fields = [];
-    private $get_available_modules = [];
-    private $user_field_dbinfo = '';
+    // private $get_available_modules = [];
+    // private $user_field_dbinfo = '';
     private $field_cat_index = [];
 
     ### Setters ###
@@ -233,26 +233,27 @@ class UserFieldsQuantum extends \SqlHandler {
     public function displayQuantumAdmin() {
         pageAccess($this->admin_rights);
         define('IN_QUANTUM', TRUE);
-
         $refs = get('ref');
         $refs = $refs && in_array($refs, ['preference', 'security']) ? $refs : 'public';
-
+        $this->is_admin_panel = TRUE;
         $this->plugin_folder = [INCLUDES.'user_fields/'.$refs.'/', INFUSIONS];
 
-        $this->is_admin_panel = TRUE;
+        $this->cacheModuleFiles();
 
         if ($this->title) {
-            BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'user_fields.php'.fusion_get_aidlink(), 'title' => $this->title]);
+            add_breadcrumb(['link' => ADMIN.'user_fields.php'.fusion_get_aidlink(), 'title' => $this->title]);
             add_to_title($this->title.' | ');
         }
 
         if ($this->method == 'input') {
             $this->load_fields(); // return fields
             $this->load_field_cats(); // return cat
+
             $this->_move_fields();
             $this->_delete_category();
             $this->_delete_fields();
-            $this->get_available_modules();
+
+            $this->_loadPlugins();
         }
 
         $this->view($refs);
@@ -854,25 +855,7 @@ class UserFieldsQuantum extends \SqlHandler {
         }
     }
 
-    /**
-     * Get the field title from filename
-     *
-     * @param $filename
-     *
-     * @return string
-     */
-    private function filename_to_title($filename) {
-        $field_name = explode("_", $filename);
-        $field_title = "";
-        for ($i = 0; $i <= count($field_name) - 3; $i++) {
-            $field_title .= ($field_title) ? "_" : "";
-            $field_title .= $field_name[$i];
-        }
-
-        return (string)$field_title;
-    }
-
-    private function get_available_modules() {
+    private function _loadPlugins() {
         $this->locale = fusion_get_locale();
         $result = dbquery("SELECT field_id, field_name, field_cat, field_required, field_log, field_registration, field_order, field_type,
                     field_cat_name
@@ -886,102 +869,43 @@ class UserFieldsQuantum extends \SqlHandler {
             }
         }
 
-        $user_field_name = '';
-        $user_field_desc = '';
-        $user_field_dbname = '';
-        $user_field_group = '';
-        $user_field_dbinfo = '';
-        $user_field_author = '';
-        $user_field_api_version = '';
+        if (!empty(self::$module_list_var)) {
+            foreach(self::$module_list_var as $plugin_name => $plugin_var_file) {
+                $user_field_name = '';
+                $user_field_desc = '';
+                $user_field_dbname = '';
+                $user_field_group = '';
+                $user_field_dbinfo = '';
+                $user_field_author = '';
+                $user_field_api_version = '';
+                $user_field_image = '';
 
-        foreach ($this->plugin_folder as $folder_name) {
-            $folders = makefilelist($folder_name, '.|..|index.php|._DS_Store', TRUE, 'folders');
-            if (!empty($folders)) {
-                foreach ($folders as $folder) {
-                    $folder_path = $folder_name.$folder.'/';
-                    $files = makefilelist($folder_path, '.|..|index.php|._DS_Store', TRUE, 'files');
-                    if (!empty($files)) {
-                        foreach ($files as $file) {
+                require_once($plugin_var_file);
 
-                            if (preg_match("/_var.php/i", $file)) {
-
-                                $field_title = $this->filename_to_title($file);
-
-                                include $folder_path.$field_title."_include_var.php";
-
-                                if (!in_array($field_title, $this->enabled_fields)) {
-                                    $this->available_field_info[$field_title] = [
-                                        'title'       => $user_field_name,
-                                        'description' => $user_field_desc
-                                    ];
-                                }
-
-                                // API information
-                                $this->modules[$field_title] = [
-                                    'user_field_name'      => $user_field_name,
-                                    'user_field_dbname'    => $user_field_name,
-                                    'user_field_desc'      => $user_field_desc,
-                                    'user_field_dbname'    => $user_field_dbname,
-                                    'user_field_group'     => $user_field_group,
-                                    'user_field_dbinfo'    => $user_field_dbinfo,
-                                    'user_field_author'    => $user_field_author,
-                                    'user_field_version'   => $user_field_api_version,
-                                    'module_file_path'     => $folder_path.$field_title.'.php',
-                                    'module_var_file_path' => $folder_path.$field_title.'_include_var.php',
-                                ];
-
-                                unset($field_name);
-
-                            } else {
-                                // Check for folders under user_fields.
-                                $folders = makefilelist($folder_path, '.|..|index.php', TRUE, 'folders');
-                                if (!empty($folders)) {
-                                    foreach ($folders as $folder) {
-                                        //$locale_path = $folder_name.$folder.'/locale/'.LANGUAGE.'/';
-                                        $plugin_path = $folder_name.$folder.'/user_fields/';
-                                        if (is_dir($plugin_path)) {
-                                            $files = makefilelist($plugin_path, '.|..|index.php', TRUE, 'files');
-                                            foreach ($files as $file) {
-                                                if (preg_match("/_var.php/i", $file)) {
-
-                                                    $field_title = $this->filename_to_title($file);
-
-                                                    include($plugin_path.$field_title."_include_var.php");
-
-                                                    if (!in_array($field_title, $this->enabled_fields)) {
-                                                        $this->available_field_info[$field_title] = [
-                                                            'title'       => $user_field_name,
-                                                            'description' => $user_field_desc
-                                                        ];
-                                                    }
-
-                                                    $this->modules[$field_title] = [
-                                                        'user_field_name'      => $user_field_name,
-                                                        'user_field_dbname'    => $user_field_name,
-                                                        'user_field_desc'      => $user_field_desc,
-                                                        'user_field_dbname'    => $user_field_dbname,
-                                                        'user_field_group'     => $user_field_group,
-                                                        'user_field_dbinfo'    => $user_field_dbinfo,
-                                                        'user_field_author'    => $user_field_author,
-                                                        'user_field_version'   => $user_field_api_version,
-                                                        'module_file_path'     => $folder_path.$field_title.'.php',
-                                                        'module_var_file_path' => $folder_path.$field_title.'_include_var.php',
-                                                    ];
-
-                                                    unset($field_name);
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+                $field_title = $plugin_name;
+                if (!in_array($plugin_name, $this->enabled_fields)) {
+                    $this->available_field_info[$plugin_name] = [
+                        'title'       => $user_field_name,
+                        'description' => $user_field_desc
+                    ];
                 }
+                // API information
+                $this->modules[$field_title] = [
+                    'user_field_name'      => $user_field_name,
+                    'user_field_dbname'    => $user_field_name,
+                    'user_field_desc'      => $user_field_desc,
+                    'user_field_dbname'    => $user_field_dbname,
+                    'user_field_group'     => $user_field_group,
+                    'user_field_dbinfo'    => $user_field_dbinfo,
+                    'user_field_author'    => $user_field_author,
+                    'user_field_version'   => $user_field_api_version,
+                    'module_file_path'     => self::$module_list[$plugin_name],
+                    'module_var_file_path' => $plugin_var_file,
+                    'module_image' => $user_field_image,
+                ];
+                unset($field_name);
             }
-
         }
-
     }
 
     public function view($refs) {
@@ -1266,8 +1190,7 @@ class UserFieldsQuantum extends \SqlHandler {
      * @throws \Exception
      */
     private function view_modules($folder = 'public') {
-        //print_p($this->plugin_folder); // why is it common.
-        //print_P($this->get_available_modules);
+
         $html = "<h4>Add User Fields</h4>\n";
         $aidlink = fusion_get_aidlink();
 
@@ -1289,15 +1212,19 @@ class UserFieldsQuantum extends \SqlHandler {
 
         // modules
         if (!empty($this->modules)) {
-            $html .= "<div class='row equal-height'>\n";
-            if (isset($_GET['install'])) {
-                if ($_GET['ref'] == 'public') {
+
+            $_user_field = stripinput(get('install'));
+            if ($_user_field) {
+
+                if ($folder == 'public') {
+
                     $modal = openmodal('modadd', "<h4 class='m-0'>Add User Fields Module</h4>");
                     $modal .= $this->display_module_form();
                     $modal .= closemodal();
                     add_to_footer($modal);
+
                 } else {
-                    $_user_field = stripinput($_GET['install']);
+
                     if (isset($this->modules[$_user_field])) {
                         if (in_array($_user_field, array_keys($this->available_field_info))) {
                             $module_data = $this->modules[$_user_field];
@@ -1325,22 +1252,27 @@ class UserFieldsQuantum extends \SqlHandler {
                 }
             }
 
+            $html .= "<div class='row equal-height'>\n";
             foreach ($this->modules as $module_name => $module_data) {
                 $button = "<a class='btn btn-default' href='".clean_request("install=".$module_name, ['install', 'uninstall'], FALSE)."'>Install</a>";
-
                 if (!in_array($module_name, array_keys($this->available_field_info))) {
                     $button = "<a class='btn btn-danger' href='".clean_request("uninstall=".$module_name, ['install', 'uninstall'], FALSE)."'>Uninstall</a>";
                 }
-                $html .= "<div class='col-xs-12 col-sm-3'><div>\n";
-                $html .= "<div class='panel panel-default'><div class='panel-body'>
-                        <div class='pull-right'>$button</div>
-                        <h4>".$module_data['user_field_name']."</h4>
-                        <div class='overflow-hide'><div class='spacer-sm'>".$module_data['user_field_desc']."</div>By <i>".$module_data['user_field_author']."</i></div>
-                        </div><div class='panel-footer'>
-                        <small>Release Version: ".$module_data['user_field_version']."</small>
-                        </div>\n</div>\n";
-                $html .= "</div></div>\n";
-
+                $html .= "<div class='".grid_column_size(100,50,33,25)."'>\n";
+                $html .= "<div class='list-group-item text-center'>";
+                if ($module_data['module_image']) {
+                    $html .= "<img src='".$module_data['module_image']."' class='icon spacer-sm img-responsive' style='max-height:48px;'>";
+                }
+                $html .= "<h4 class='strong'>".$module_data['user_field_name']."</h4>";
+                $html .= "<div class='clearfix position-relative overflow-hide'>";
+                $html .= $module_data['user_field_desc'];
+                $html .= "<br/><small>Version: ".$module_data['user_field_version']."</small>";
+                $html .= "</div>";
+                $html .= "<div class='clearfix text-right'>";
+                $html .= $button;
+                $html .= "</div>";
+                $html .= "</div>";
+                $html .= "</div>";
             }
             $html .= "</div>\n";
         } else {
@@ -1447,35 +1379,9 @@ class UserFieldsQuantum extends \SqlHandler {
 
         $options += $default_options;
 
+        $options['plugin_folder'] = $this->getPluginFolder($data['field_name']);
+
         $options['plugin_locale_folder'] = rtrim($options['plugin_locale_folder'], '/').'/';
-
-        if (is_array($options['plugin_folder']) && !empty($options['plugin_folder'])) {
-            $p_folder = $options['plugin_folder'];
-            unset($options['plugin_folder']);
-
-            foreach ($p_folder as $plugin_folder) {
-                $plugin_folder = rtrim($plugin_folder, '/').'/';
-                // Identify the correct folder for the current module.
-                if (is_file($plugin_folder.$data['field_name'].'_include.php')) {
-                    $options['plugin_folder'] = $plugin_folder;
-
-                } else {
-                    $folder_list = makefilelist($plugin_folder, '.|..|index.php', TRUE, 'folders');
-                    if (!empty($folder_list)) {
-                        // attempt to search.
-                        foreach ($folder_list as $folder) {
-                            if (is_file($plugin_folder.$folder.'/user_fields/'.$data['field_name'].'_include.php')) {
-                                $options['plugin_folder'] = $plugin_folder.$folder.'/user_fields/';
-                                $options['plugin_locale_folder'] = $plugin_folder.$folder.'/locale/'.LANGUAGE.'/';
-                            }
-                        }
-                    }
-                }
-            }
-
-        } else {
-            $options['plugin_folder'] = rtrim($options['plugin_folder'], '/').'/';
-        }
 
         // Sets callback data automatically.
         $option_list = $data['field_options'] ? explode(',', $data['field_options']) : [];
@@ -1486,7 +1392,9 @@ class UserFieldsQuantum extends \SqlHandler {
 
         if ($field_post_value && !$options['hide_value']) {
             $field_value = $field_post_value;
-        } else if ($options['hide_value']) {
+        }
+
+        if ($options['hide_value']) {
             $field_value = '';
         }
 
@@ -1696,6 +1604,41 @@ class UserFieldsQuantum extends \SqlHandler {
         return FALSE;
     }
 
+    private static $module_list = [];
+    private static $module_list_var = [];
+
+    private function cacheModuleFiles() {
+        if (empty(self::$module_list)) {
+            foreach($this->plugin_folder as $plugin_folder) { // infusions/ user_fields.
+                $plugin_folder = rtrim($plugin_folder, '/').'/';
+                $folders = makefilelist($plugin_folder, '.|..|index.php', TRUE, 'folders');
+                if (!empty($folders)) {
+                    foreach($folders as $folder_name) {
+                        $path = $plugin_folder.$folder_name.'/'.$folder_name.'_include.php';
+                        $var_path = $plugin_folder.$folder_name.'/'.$folder_name.'_include_var.php';
+                        if ($plugin_folder == INFUSIONS) {
+                            $path = $plugin_folder.$folder_name.'/user_fields/'.$folder_name.'_include.php';
+                            $var_path = $plugin_folder.$folder_name.'/user_fields/'.$folder_name.'_include_var.php';
+                        }
+                        if (file_exists($path) && file_exists($var_path)) {
+                            // i also need var file
+                            self::$module_list_var[$folder_name] = $var_path;
+                            self::$module_list[$folder_name] = $path;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // we need a cache for the plugin folder in one go
+    private function getPluginFolder($field_name) {
+        if (isset(self::$module_list[$field_name])) {
+            return self::$module_list[$field_name];
+        }
+        return NULL;
+    }
+
     /**
      * @return array
      */
@@ -1751,10 +1694,10 @@ class UserFieldsQuantum extends \SqlHandler {
         if (post('save_cat')) {
 
             $this->field_cat_data = [
-                'field_cat_id'    => form_sanitizer($_POST['field_cat_id'], '', 'field_cat_id'),
-                'field_cat_name'  => form_sanitizer($_POST['field_cat_name'], '', 'field_cat_name', TRUE),
-                'field_parent'    => form_sanitizer($_POST['field_parent'], '', 'field_parent'),
-                'field_cat_order' => form_sanitizer($_POST['field_cat_order'], '', 'field_cat_order'),
+                'field_cat_id'    => sanitizer('field_cat_id', '', 'field_cat_id'),
+                'field_cat_name'  => sanitizer('field_cat_name', '', 'field_cat_name', TRUE),
+                'field_parent'    => sanitizer('field_parent', '', 'field_parent'),
+                'field_cat_order' => sanitizer('field_cat_order', '', 'field_cat_order'),
                 'field_cat_db'    => '',
                 'field_cat_index' => '',
                 'field_cat_class' => '',
@@ -1894,7 +1837,8 @@ class UserFieldsQuantum extends \SqlHandler {
         if ($cat_id && isset($this->field_cat_index[$cat_id])) {
             $html .= form_hidden('field_parent', '', $this->field_cat_data['field_parent']);
         } else {
-            $cat_list[] = isset($_GET['cat_id']) ? $_GET['cat_id'] : '';
+
+            $cat_list[] = get('cat_id', FILTER_VALIDATE_INT);
             if (!empty($this->cat_list)) {
                 foreach ($this->cat_list as $id => $value) {
                     $cat_list[] = $id;
@@ -1906,6 +1850,7 @@ class UserFieldsQuantum extends \SqlHandler {
                     'disable_opts' => $cat_list
                 ], DB_USER_FIELD_CATS, 'field_cat_name', 'field_cat_id', 'field_parent');
         }
+
         $html .= form_text('field_cat_order', $this->locale['fields_0433'], $this->field_cat_data['field_cat_order'], ['type' => 'number', 'inner_width' => '100px']);
         $html .= form_hidden('field_cat_id', '', $this->field_cat_data['field_cat_id'], ['number' => 1]);
         $html .= form_hidden('add_cat', '', 'add_cat');
@@ -2073,15 +2018,23 @@ class UserFieldsQuantum extends \SqlHandler {
             'field_delete_original'    => 0
         ];
 
-        if (isset($_GET['action']) && $_GET['action'] == 'field_edit' && isset($_GET['field_id']) && self::validate_field($_GET['field_id'])) {
+        $action = get('action');
+        $field_id = get('field_id', FILTER_VALIDATE_INT);
 
-            $result = dbquery("SELECT * FROM ".DB_USER_FIELDS." WHERE field_id='".intval($_GET['field_id'])."'");
-            if (dbrows($result) > 0) {
-                $this->field_data = dbarray($result);
-                if ($this->field_data['field_type'] == 'upload') {
-                    $this->field_data['field_config'] = \Defender::decode($this->field_data['field_config']);
-                    if ($this->debug) {
-                        print_p($this->field_data);
+        if ($action == 'field_edit' && $field_id) {
+            if (self::validate_field($field_id)) {
+                $result = dbquery("SELECT * FROM ".DB_USER_FIELDS." WHERE field_id='".intval($_GET['field_id'])."'");
+                if (dbrows($result) > 0) {
+                    $this->field_data = dbarray($result);
+                    if ($this->field_data['field_type'] == 'upload') {
+                        $this->field_data['field_config'] = \Defender::decode($this->field_data['field_config']);
+                        if ($this->debug) {
+                            print_p($this->field_data);
+                        }
+                    }
+                } else {
+                    if (!$this->debug) {
+                        redirect(FUSION_SELF.$aidlink);
                     }
                 }
             } else {
@@ -2159,6 +2112,7 @@ class UserFieldsQuantum extends \SqlHandler {
         }
 
         $html = openform('fieldform', 'post');
+
         $disable_opts = [];
         foreach ($this->page_list as $index => $v) {
             $disable_opts[] = $index;
