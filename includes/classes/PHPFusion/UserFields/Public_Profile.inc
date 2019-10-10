@@ -105,9 +105,13 @@ class Public_Profile extends UserFieldsQuantum {
                 );
             }
 
+
             // Quantum
             $info['user_fields'] = '';
             $this->load_fields('public');
+            $this->cacheModuleFiles();
+            $this->cacheModulePlugins();
+
             foreach ($this->fields as $cat_id => $field_rows) {
                 $section_title = $this->get_section_title($cat_id);
                 $info['user_fields'] .= "<h4>".$section_title."</h4>";

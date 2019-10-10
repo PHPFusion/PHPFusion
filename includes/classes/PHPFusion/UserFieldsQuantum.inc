@@ -112,6 +112,8 @@ class UserFieldsQuantum extends \SqlHandler {
     // private $get_available_modules = [];
     // private $user_field_dbinfo = '';
     private $field_cat_index = [];
+    private static $module_list = [];
+    private static $module_list_var = [];
 
     ### Setters ###
 
@@ -236,9 +238,11 @@ class UserFieldsQuantum extends \SqlHandler {
         $refs = get('ref');
         $refs = $refs && in_array($refs, ['preference', 'security']) ? $refs : 'public';
         $this->is_admin_panel = TRUE;
-        $this->plugin_folder = [INCLUDES.'user_fields/'.$refs.'/', INFUSIONS];
+
+        $this->load_fields(); // return fields
 
         $this->cacheModuleFiles();
+        $this->cacheModulePlugins();
 
         if ($this->title) {
             add_breadcrumb(['link' => ADMIN.'user_fields.php'.fusion_get_aidlink(), 'title' => $this->title]);
@@ -246,14 +250,12 @@ class UserFieldsQuantum extends \SqlHandler {
         }
 
         if ($this->method == 'input') {
-            $this->load_fields(); // return fields
+
             $this->load_field_cats(); // return cat
 
             $this->_move_fields();
             $this->_delete_category();
             $this->_delete_fields();
-
-            $this->_loadPlugins();
         }
 
         $this->view($refs);
@@ -265,6 +267,8 @@ class UserFieldsQuantum extends \SqlHandler {
      * @param string $folder
      */
     public function load_fields($folder = 'public') {
+
+        $this->plugin_folder = [INCLUDES.'user_fields/'.$folder.'/', INFUSIONS];
 
         $this->page = dbquery_tree_full(DB_USER_FIELD_CATS, "field_cat_id", "field_parent", "ORDER BY field_cat_order ASC");
         $param = [];
@@ -855,7 +859,7 @@ class UserFieldsQuantum extends \SqlHandler {
         }
     }
 
-    private function _loadPlugins() {
+    protected function cacheModulePlugins() {
         $this->locale = fusion_get_locale();
         $result = dbquery("SELECT field_id, field_name, field_cat, field_required, field_log, field_registration, field_order, field_type,
                     field_cat_name
@@ -1372,16 +1376,10 @@ class UserFieldsQuantum extends \SqlHandler {
             'error_text'           => $data['field_error'],
             'required'             => (bool)$data['field_required'],
             'placeholder'          => $data['field_default'],
-            'plugin_folder'        => $this->plugin_folder,
-            'plugin_locale_folder' => $this->plugin_locale_folder,
             'debug'                => FALSE
         ];
 
         $options += $default_options;
-
-        $options['plugin_folder'] = $this->getPluginFolder($data['field_name']);
-
-        $options['plugin_locale_folder'] = rtrim($options['plugin_locale_folder'], '/').'/';
 
         // Sets callback data automatically.
         $option_list = $data['field_options'] ? explode(',', $data['field_options']) : [];
@@ -1408,9 +1406,7 @@ class UserFieldsQuantum extends \SqlHandler {
 
                 $profile_method = $method;
 
-                $plugin_folder = rtrim(INCLUDES.'user_fields/'.$data['field_section'], '/').'/';
-
-                $plugin_file = $plugin_folder.$data['field_name'].'/'.$data['field_name'].'_include.php';
+                $plugin_file = $this->modules[$data['field_name']]['module_file_path'];
 
                 if (file_exists($plugin_file)) {
 
@@ -1604,10 +1600,8 @@ class UserFieldsQuantum extends \SqlHandler {
         return FALSE;
     }
 
-    private static $module_list = [];
-    private static $module_list_var = [];
 
-    private function cacheModuleFiles() {
+    protected function cacheModuleFiles() {
         if (empty(self::$module_list)) {
             foreach($this->plugin_folder as $plugin_folder) { // infusions/ user_fields.
                 $plugin_folder = rtrim($plugin_folder, '/').'/';
@@ -1629,14 +1623,6 @@ class UserFieldsQuantum extends \SqlHandler {
                 }
             }
         }
-    }
-
-    // we need a cache for the plugin folder in one go
-    private function getPluginFolder($field_name) {
-        if (isset(self::$module_list[$field_name])) {
-            return self::$module_list[$field_name];
-        }
-        return NULL;
     }
 
     /**
@@ -2542,7 +2528,7 @@ class UserFieldsQuantum extends \SqlHandler {
                 // Alter DB_USER_FIELDS table - add column.
                 // Checking for database registered users.
                 if (!in_array($data['field_name'], $field_arrays)) { // safe to execute alter.
-                    if (!empty($data['field_name'])) {
+                    if (!empty($data['field_name']) && !empty($field_attr)) {
                         self::add_column($new_table, $data['field_name'], $field_attr);
                         //print_p("ALTER TABLE ".$new_table." ADD ".$data['field_name']." ".$field_attr);
                     }
