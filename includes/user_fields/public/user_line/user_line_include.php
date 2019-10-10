@@ -16,7 +16,9 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
-include __DIR__.'/locale/'.LANGUAGE.'.php';
+
+$locale = fusion_get_locale('', __DIR__.'/locale/'.LANGUAGE.'.php');
+
 $icon = "<img src='".INCLUDES."user_fields/public/user_line/images/line.svg' title='Line' alt='Line'/>";
 // Display user field input
 if ($profile_method == "input") {

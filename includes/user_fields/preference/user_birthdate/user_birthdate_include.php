@@ -17,6 +17,8 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
+$locale = fusion_get_locale('', __DIR__.'/locale/'.LANGUAGE.'.php');
+
 // Display user field input
 if ($profile_method == "input") {
     if (isset($field_value) && $field_value != "1900-01-01") {

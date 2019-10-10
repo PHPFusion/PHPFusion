@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
-include __DIR__.'/locale/'.LANGUAGE.'.php';
+$locale = fusion_get_locale('', __DIR__.'/locale/'.LANGUAGE.'.php');
 
 $icon = "<img src='".IMAGES."php-fusion-icon.png' title='PHP Fusion' alt='PHP Fusion'/>";
 // Display user field input

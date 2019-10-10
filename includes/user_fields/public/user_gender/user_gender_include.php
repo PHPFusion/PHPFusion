@@ -16,7 +16,9 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
-include __DIR__.'/locale/'.LANGUAGE.'.php';
+
+$locale = fusion_get_locale('', __DIR__.'/locale/'.LANGUAGE.'.php');
+
 // Variation Customization
 $gen_set = 2; //0 = Just text; 1 = Icon + text; 2 = text + image; 3 = Just images.
 $with_secret = FALSE; // True for additiona unspecified option

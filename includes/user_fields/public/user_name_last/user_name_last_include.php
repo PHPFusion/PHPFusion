@@ -16,7 +16,9 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
-include __DIR__.'/locale/'.LANGUAGE.'.php';
+
+$locale = fusion_get_locale('', __DIR__.'/locale/'.LANGUAGE.'.php');
+
 if ($profile_method == "input") {
     $options += ['inline' => TRUE, 'max_length' => 20];
     $user_fields = form_text('user_name_last', $locale['uf_name_last'], $field_value, $options);

@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
-include __DIR__.'/locale/'.LANGUAGE.'.php';
+$locale = fusion_get_locale('', __DIR__.'/locale/'.LANGUAGE.'.php');
 // Version of the user fields api
 $user_field_api_version = "1.01.00";
 $user_field_name = $locale['uf_birthdate'];
@@ -25,3 +25,4 @@ $user_field_dbname = "user_birthdate";
 $user_field_group = 2;
 $user_field_dbinfo = "DATE NOT NULL DEFAULT '1900-01-01'";
 $user_field_author = 'PHP-Fusion Development Team';
+$user_field_image = INCLUDES.'user_fields/preference/user_birthdate/images/birthdate.svg';

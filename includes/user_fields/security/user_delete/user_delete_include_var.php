@@ -16,9 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
-
-include __DIR__.'/locale/'.LANGUAGE.'.php';
-
+$locale = fusion_get_locale('', __DIR__.'/locale/'.LANGUAGE.'.php');
 // Version of the user fields api
 $user_field_api_version = "1.01.00";
 $user_field_name = $locale['uf_delete'];
@@ -26,3 +24,5 @@ $user_field_desc = $locale['uf_delete_desc'];
 $user_field_dbname = "user_delete";
 $user_field_group = 1;
 $user_field_dbinfo = "VARCHAR(2) NOT NULL DEFAULT ''";
+$user_field_author = 'PHP-Fusion Development Team';
+$user_field_image = INCLUDES.'user_fields/security/user_delete/images/delete.svg';

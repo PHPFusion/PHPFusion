@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
-include __DIR__.'/locale/'.LANGUAGE.'.php';
+$locale = fusion_get_locale('', __DIR__.'/locale/'.LANGUAGE.'.php');
 
 if (!function_exists('show_blacklist')) {
     function show_blacklist($data) {

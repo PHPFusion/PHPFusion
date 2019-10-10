@@ -17,7 +17,8 @@
 +--------------------------------------------------------*/
 require_once __DIR__."../../../maincore.php";
 
-include __DIR__.'/locale/'.LANGUAGE.'.php';
+$locale = fusion_get_locale('', __DIR__.'/locale/'.LANGUAGE.'.php');
+
 $user_id = (isset($_POST['user_id']) && isnum($_POST['user_id'])) ? $_POST['user_id'] : 0;
 $user_query = dbquery("SELECT user_id, user_blacklist FROM ".DB_USERS." WHERE user_id='".$userdata['user_id']."' LIMIT 1");
 if (dbrows($user_query) > 0) {

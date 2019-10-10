@@ -16,7 +16,9 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
-include __DIR__.'/locale/'.LANGUAGE.'.php';
+
+$locale = fusion_get_locale('', __DIR__.'/locale/'.LANGUAGE.'.php');
+
 $icon = "<img class='icon-xs' src='".INCLUDES."user_fields/public/user_github/images/github.svg' title='GitHub' alt='GitHub'/>";
 // Display user field input
 if ($profile_method == "input") {
