@@ -293,7 +293,7 @@ class Public_Profile extends UserFieldsQuantum {
         $avatar_header .= '</ul>';
         $avatar_media = '<div class="tab-content p-0" style="border:0;">';
         if ($settings['avatar_studio'] == 1) {
-            $avatars = makefilelist(IMAGES.'avatars/studio/');
+            $avatars = makefilelist(IMAGES.'avatars/studio/', '.|..|index.php');
             $user_studio_val = '';
             if (!empty($avatars)) {
                 $avatar_media .= '<div role="tabpanel" class="tab-pane active" id="avatar-studio">';

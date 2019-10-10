@@ -267,6 +267,8 @@ class UserFieldsQuantum extends \SqlHandler {
      * @param string $folder
      */
     public function load_fields($folder = 'public') {
+        $folder = get('ref');
+        $folder = $folder && in_array($folder, ['preference', 'security']) ? $folder : 'public';
 
         $this->plugin_folder = [INCLUDES.'user_fields/'.$folder.'/', INFUSIONS];
 
@@ -874,7 +876,7 @@ class UserFieldsQuantum extends \SqlHandler {
         }
 
         if (!empty(self::$module_list_var)) {
-            foreach(self::$module_list_var as $plugin_name => $plugin_var_file) {
+            foreach (self::$module_list_var as $plugin_name => $plugin_var_file) {
                 $user_field_name = '';
                 $user_field_desc = '';
                 $user_field_dbname = '';
@@ -905,7 +907,7 @@ class UserFieldsQuantum extends \SqlHandler {
                     'user_field_version'   => $user_field_api_version,
                     'module_file_path'     => self::$module_list[$plugin_name],
                     'module_var_file_path' => $plugin_var_file,
-                    'module_image' => $user_field_image,
+                    'module_image'         => $user_field_image,
                 ];
                 unset($field_name);
             }
@@ -1186,15 +1188,14 @@ class UserFieldsQuantum extends \SqlHandler {
     }
 
     /**
-     * @todo: increment rest api from marketplace.
-     *
      * @param string $folder
      *
      * @return string
      * @throws \Exception
+     * @todo: increment rest api from marketplace.
+     *
      */
     private function view_modules($folder = 'public') {
-
         $html = "<h4>Add User Fields</h4>\n";
         $aidlink = fusion_get_aidlink();
 
@@ -1262,7 +1263,7 @@ class UserFieldsQuantum extends \SqlHandler {
                 if (!in_array($module_name, array_keys($this->available_field_info))) {
                     $button = "<a class='btn btn-danger' href='".clean_request("uninstall=".$module_name, ['install', 'uninstall'], FALSE)."'>Uninstall</a>";
                 }
-                $html .= "<div class='".grid_column_size(100,50,33,25)."'>\n";
+                $html .= "<div class='m-b-15 ".grid_column_size(100, 50, 33, 25)."'>\n";
                 $html .= "<div class='list-group-item text-center'>";
                 if ($module_data['module_image']) {
                     $html .= "<img src='".$module_data['module_image']."' class='icon img-responsive' style='margin:15px auto; max-height:48px;'>";
@@ -1368,15 +1369,15 @@ class UserFieldsQuantum extends \SqlHandler {
         ];
 
         $default_options = [
-            'hide_value'           => FALSE,
-            'encrypt'              => FALSE,
-            'show_title'           => $method == "input" ? TRUE : FALSE,
-            'deactivate'           => FALSE,
-            'inline'               => FALSE,
-            'error_text'           => $data['field_error'],
-            'required'             => (bool)$data['field_required'],
-            'placeholder'          => $data['field_default'],
-            'debug'                => FALSE
+            'hide_value'  => FALSE,
+            'encrypt'     => FALSE,
+            'show_title'  => $method == "input" ? TRUE : FALSE,
+            'deactivate'  => FALSE,
+            'inline'      => FALSE,
+            'error_text'  => $data['field_error'],
+            'required'    => (bool)$data['field_required'],
+            'placeholder' => $data['field_default'],
+            'debug'       => FALSE
         ];
 
         $options += $default_options;
@@ -1406,18 +1407,20 @@ class UserFieldsQuantum extends \SqlHandler {
 
                 $profile_method = $method;
 
-                $plugin_file = $this->modules[$data['field_name']]['module_file_path'];
+                if (!empty($this->modules[$data['field_name']]['module_file_path'])) {
+                    $plugin_file = $this->modules[$data['field_name']]['module_file_path'];
 
-                if (file_exists($plugin_file)) {
+                    if (file_exists($plugin_file)) {
 
-                    include $plugin_file;
+                        include $plugin_file;
 
-                    if ($method == 'input') {
-                        if (isset($user_fields)) {
+                        if ($method == 'input') {
+                            if (isset($user_fields)) {
+                                return $user_fields;
+                            }
+                        } else if ($method == 'display' && !empty($user_fields['value'])) {
                             return $user_fields;
                         }
-                    } else if ($method == 'display' && !empty($user_fields['value'])) {
-                        return $user_fields;
                     }
                 }
 
@@ -1603,11 +1606,11 @@ class UserFieldsQuantum extends \SqlHandler {
 
     protected function cacheModuleFiles() {
         if (empty(self::$module_list)) {
-            foreach($this->plugin_folder as $plugin_folder) { // infusions/ user_fields.
+            foreach ($this->plugin_folder as $plugin_folder) { // infusions/ user_fields.
                 $plugin_folder = rtrim($plugin_folder, '/').'/';
                 $folders = makefilelist($plugin_folder, '.|..|index.php', TRUE, 'folders');
                 if (!empty($folders)) {
-                    foreach($folders as $folder_name) {
+                    foreach ($folders as $folder_name) {
                         $path = $plugin_folder.$folder_name.'/'.$folder_name.'_include.php';
                         $var_path = $plugin_folder.$folder_name.'/'.$folder_name.'_include_var.php';
                         if ($plugin_folder == INFUSIONS) {

@@ -124,6 +124,8 @@ if (!function_exists('display_profile_form')) {
         $tpl->set_tag("page_title", $info['title']);
         $tpl->set_tag('sitename', $info['sitename']);
 
+        $current_section = get('section', FILTER_VALIDATE_INT);
+
         // Default profile page
         switch ($current_page) {
             default:
@@ -134,7 +136,6 @@ if (!function_exists('display_profile_form')) {
                     break;
                 }
             case 'pu_profile': // public profile.
-                $current_section = get('section', FILTER_VALIDATE_INT);
                 if (!$current_section && !empty($info['section'])) {
                     $section_arr = reset($info['section']);
                     $current_section = $section_arr['id'];
@@ -333,8 +334,6 @@ if (!function_exists('display_profile_form')) {
                 // account deletion
                 break;
         }
-
-
 
 
         if (isset($tab) && isset($tab['title'])) {
