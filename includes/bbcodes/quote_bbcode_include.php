@@ -44,7 +44,7 @@ for ($i = 0; $i < $qcount; $i++) {
 if (!defined('bbcode_quote_js')) {
     define('bbcode_quote_js', TRUE);
     add_to_footer("<script type='text/javascript'>".jsminify("$(function() {
-        /*!
+        /*
          * Extended Quote BBcode for PHP-Fusion
          * with jQuery Quote Collapse
          * Author: JoiNNN
