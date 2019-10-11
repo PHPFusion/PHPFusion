@@ -93,7 +93,7 @@ function form_select($input_name, $label = "", $input_value, array $options = []
         'optgroup'             => FALSE,      // Enable the option group output - if db, id_col, cat_col, and title_col is specified.
         'option_pattern'       => "&#8212;",
         'display_search_count' => 5,
-        'max_select'           => FALSE,
+        'max_select'           => NULL,
         'error_text'           => $locale['error_input_default'],
         'class'                => '',
         'inner_class'          => '',
@@ -104,7 +104,8 @@ function form_select($input_name, $label = "", $input_value, array $options = []
         'callback_check'       => '',
         'stacked'              => '',
         'onchange'             => '',
-        'select2_disabled'     => FALSE, // if select2_disabled is set to true, then we will not use the select2 plugin
+        'select2_disabled'     => FALSE,        // if select2_disabled is set to true, then we will not use the select2 plugin
+        'select_alt'           => FALSE,        //if true , change to using Selectize plugin instead
         'parent_value'         => $locale['root'],
         'add_parent_opts'      => FALSE,
         'disable_opts'         => '',
@@ -482,7 +483,7 @@ function form_select($input_name, $label = "", $input_value, array $options = []
     }
 
     // Initialize Select2
-    if ($options['select2_disabled'] === FALSE) {
+    if ($options['select2_disabled'] === FALSE && $options['select_alt'] === FALSE) {
         // Select 2 Multiple requires hidden DOM.
         if ($options['jsonmode'] === FALSE) {
             // not json mode (normal)
@@ -523,11 +524,9 @@ function form_select($input_name, $label = "", $input_value, array $options = []
                     ".$tag_js."
                 });
                 ");
-
             }
 
         } else {
-
             // json mode
             add_to_jquery("
                 var this_data = [{id:0, text: '".$options['placeholder']."'}];
@@ -536,7 +535,6 @@ function form_select($input_name, $label = "", $input_value, array $options = []
                 data: this_data
                 });
             ");
-
         }
 
         // For Multiple Callback JS
@@ -549,6 +547,26 @@ function form_select($input_name, $label = "", $input_value, array $options = []
             add_to_jquery("$('#".$options['input_id']."').select2('val', [$vals]);");
         }
     }
+
+
+    // Initialize Selectize
+    if ($options['select2_disabled'] === FALSE && $options['select_alt'] === TRUE) {
+        $js['sortField'] = "text";
+        $js['allowEmptyOption'] = (boolean)$options['allowclear'];
+        $js['placeholder'] = (string)$options['placeholder'];
+        if ($options['tags']) {
+            $js['create'] = "true";
+            $js['delimiter'] = $options['delimiter'];
+            $js['persist'] = false;
+        }
+        if ($options['multiple']) {
+            $js['maxItems'] = $options['max_select'];
+        }
+        $js = json_encode($js);
+        add_to_jquery("$('#".$options['input_id']."').selectize({$js});");
+        add_to_head("<style>.modal-body {overflow: visible!important;} .modal-content{overflow: visible!important;}</style>");
+    }
+
 
     $config = [
         'input_name'     => clean_input_name($input_name),

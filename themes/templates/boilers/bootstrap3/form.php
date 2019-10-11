@@ -23,8 +23,8 @@ class Form {
         $tpl->set_tag("input_id", $options['input_id']);
         $tpl->set_tag("input_type", $options['type']);
         // form-group css class
-        $grp_class = ($options['inline'] ? ' overflow-hide' : '');
-        $grp_class .= ($options['class'] ? ' '.$options['class'] : '');
+        $grp_class = ($options['class'] ? ' '.$options['class'] : '');
+        $grp_class = ($options['inline'] ? ' clearfix' : '');
         $grp_class .= (!empty($options['icon']) ? ' has-feedback' : '');
         $grp_class .= ($options['error_class'] ? ' '.$options['error_class'] : '');
 
