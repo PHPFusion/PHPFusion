@@ -15,10 +15,10 @@
             <span class="input-group-addon" id="{%prepend_id%}">{%prepend_text%}</span>
             }}
             {input_text.{
-            <input type="{%input_type%}" name="{%input_name%}" id="{%input_id%}" value="{%input_value%}" placeholder="{%placeholder%}" data-type="text" class="form-control textbox {%inner_class%}" {%input_data%}{%min%}{%max%}{%step%}{%inner_width%}{%max_length%}{%autocomplete%}{%readonly%}>{%pwstrength%}
+            <input type="{%input_type%}" name="{%input_name%}" id="{%input_id%}" value="{%input_value%}" placeholder="{%placeholder%}" data-type="text" class="form-control textbox {%inner_class%}" {%input_data%}{%min%}{%max%}{%step%}{%inner_width%}{%max_length%}{%autocomplete%}{%readonly%}{%required%}>{%pwstrength%}
             }}
             {input_dropdown.{
-            <select name="{%input_name%}" id="{%input_id%}" class="{%input_class%}" style="width:{%input_width%}" {%readonly%}{%onchange%}{%multiple%}{%class%}>
+            <select name="{%input_name%}" id="{%input_id%}" class="{%input_class%}" style="width:{%input_width%}" {%readonly%}{%onchange%}{%multiple%}{%class%}{%required%}>
                 {%allowclear%}
                 {%parent_opts%}
                 {%options%}

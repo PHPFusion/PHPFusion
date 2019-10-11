@@ -24,7 +24,7 @@ class Form {
         $tpl->set_tag("input_type", $options['type']);
         // form-group css class
         $grp_class = ($options['class'] ? ' '.$options['class'] : '');
-        $grp_class = ($options['inline'] ? ' clearfix' : '');
+        $grp_class .= ($options['inline'] ? ' clearfix' : '');
         $grp_class .= (!empty($options['icon']) ? ' has-feedback' : '');
         $grp_class .= ($options['error_class'] ? ' '.$options['error_class'] : '');
 
@@ -113,6 +113,7 @@ class Form {
                 'placeholder'  => ($options['placeholder'] ? $options['placeholder'] : ''),
                 'autocomplete' => ($options['autocomplete_off'] ? ' autocomplete="off"' : ''),
                 'readonly'     => $options['deactivate'] ? ' readonly' : '',
+                'required' => $options['required'] ? ' required' : '',
                 'pwstrength'   => $options['password_strength'] ? '<div class="pwstrength_viewport_progress"></div>' : '' // do this for external plugin
             ]);
 
@@ -136,7 +137,8 @@ class Form {
                 'allowclear'     => $options['allowclear'],
                 'parent_opts'    => $options['parent_opts'],
                 'options'        => $options['options_options'],
-                'required_input' => $options['dropdown_required_input']
+                'required_input' => $options['dropdown_required_input'],
+                'required' => $options['required'] ? ' required' : '',
             ];
 
             $tpl->set_block('input_dropdown', $config);

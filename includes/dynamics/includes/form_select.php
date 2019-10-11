@@ -484,6 +484,7 @@ function form_select($input_name, $label = "", $input_value, array $options = []
 
     // Initialize Select2
     if ($options['select2_disabled'] === FALSE && $options['select_alt'] === FALSE) {
+
         // Select 2 Multiple requires hidden DOM.
         if ($options['jsonmode'] === FALSE) {
             // not json mode (normal)
@@ -546,6 +547,8 @@ function form_select($input_name, $label = "", $input_value, array $options = []
             }
             add_to_jquery("$('#".$options['input_id']."').select2('val', [$vals]);");
         }
+
+
     }
 
 
@@ -555,15 +558,31 @@ function form_select($input_name, $label = "", $input_value, array $options = []
         $js['allowEmptyOption'] = (boolean)$options['allowclear'];
         $js['placeholder'] = (string)$options['placeholder'];
         if ($options['tags']) {
-            $js['create'] = "true";
+            // if that is tags, do not include a text field.
+            // $js['create'] = "function(input){return{value:input,text:input}}";
+            $js['create'] = true;
+            $js['createOnBlur'] = true;
             $js['delimiter'] = $options['delimiter'];
             $js['persist'] = false;
+
+            $options['input_field'] = "<input ".($options['required'] ? "class='req'" : '')." type='text' name='$input_name' id='".$options['input_id']."' value='".$input_value."' style='".($options['width'] ? "width: ".$options['inner_width']."" : '')."'/>";
         }
+
         if ($options['multiple']) {
             $js['maxItems'] = $options['max_select'];
+            $multiple_values = json_encode($input_value);
         }
+
         $js = json_encode($js);
-        add_to_jquery("$('#".$options['input_id']."').selectize({$js});");
+
+
+        add_to_jquery("let select_".$options['input_id']." = $('#".$options['input_id']."').selectize({$js});");
+        if (isset($multiple_values)) {
+            add_to_jquery("
+            let selectize = select_".$options['input_id']."[0].selectize;            
+            selectize.setValue($multiple_values);
+            ");
+        }
         add_to_head("<style>.modal-body {overflow: visible!important;} .modal-content{overflow: visible!important;}</style>");
     }
 
@@ -585,7 +604,9 @@ function form_select($input_name, $label = "", $input_value, array $options = []
     \Defender::add_field_session($config);
 
     $fusion_steam = new \PHPFusion\Steam('bootstrap3');
-    return $fusion_steam->load('Form')->input($input_name, $label, $input_value, $options);
+    $html = $fusion_steam->load('Form')->input($input_name, $label, $input_value, $options);
+
+    return $html;
 
     // return (string)$html;
 }
