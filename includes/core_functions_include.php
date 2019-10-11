@@ -1967,6 +1967,21 @@ function fusion_get_token($form_id, $max_tokens = 5) {
 }
 
 /**
+ * Verify the token
+ * @param string $token_ring
+ * @param string $key
+ *
+ * @return bool
+ */
+function fusion_verify_token($token_ring = '', $key = '') {
+    $token_errors = \Defender\Token::verify_token($token_ring, $key);
+    if (!empty($token_errors)) {
+        return FALSE;
+    }
+    return TRUE;
+}
+
+/**
  * Fetch PM Settings
  *
  * @param      $user_id

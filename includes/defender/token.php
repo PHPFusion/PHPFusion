@@ -66,8 +66,14 @@ class Token extends \Defender {
         $locale = fusion_get_locale();
         // Validate the Token When POST is not Empty Automatically
         if (!empty($_POST)) {
+            $form_id = post('form_id');
+            $fusion_token = post('fusion_token');
 
-            if ($form_id = post('form_id')) {
+            // @todo: increment later on session function
+            // $token_ring = session_get(['csrf_tokens', self::pageHash(), $form_id]);
+            // print_P($csrf_token);
+
+            if ($form_id) {
                 $honeypot = \Defender::getInstance()->getHoneypot($form_id.'_honeypot');
                 if (!empty($honeypot['type']) && $honeypot['type'] == 'honeypot') {
                     if (post($honeypot['input_name'])) {
@@ -77,9 +83,7 @@ class Token extends \Defender {
                 }
             }
 
-            if (!isset($_POST['fusion_token']) || !isset($_POST['form_id']) || !is_string(
-                    $_POST['fusion_token']
-                ) || !is_string($_POST['form_id'])) {
+            if (!isset($fusion_token) || !$form_id || !is_string($fusion_token) || !is_string($form_id)) {
                 // Check if a token is being posted and make sure is a string
                 $this->error = $locale['token_error_2'];
 
@@ -154,18 +158,36 @@ class Token extends \Defender {
         }
     }
 
+    public static function removeToken($form_id) {
+        session_remove(['csrf_tokens', self::pageHash(), $form_id]);
+    }
+
     /**
      * Plain Token Validation - executed at maincore.php through sniff_token() only.
      * Makes thorough checks of a posted token, and the token alone. It does not unset token.
      *
+     * @param string   $token
+     * @param   string $form_id
+     *
      * @return bool
      */
-    private static function verify_token() {
+    public static function verify_token($token = '', $form_id = '') {
         $locale = fusion_get_locale();
         $userdata = fusion_get_userdata();
         $error = FALSE;
         $settings = fusion_get_settings();
-        $token_data = explode('-', stripinput($_POST['fusion_token']));
+
+        // added support for legacy $_POST token
+        if (!empty($token)) {
+            $token_data = explode('-', $token);
+        } else {
+            $token_data = explode('-', post('fusion_token'));
+        }
+
+        if (empty($form_id)) {
+            $form_id = post('form_id');
+        }
+
         //if (!$post_time) {
         //  $post_time = $settings['flood_interval'];
         //}
@@ -183,10 +205,10 @@ class Token extends \Defender {
             } else if (!isnum($token_time)) {
                 $error = $locale['token_error_5'];
                 // check if the hash is valid
-            } else if ($hash !== hash_hmac(
-                    $algo, $user_id.$token_time.stripinput($_POST['form_id']).SECRET_KEY, $salt
-                )) {
+            } else if ($hash !== hash_hmac($algo, $user_id.$token_time.$form_id.SECRET_KEY, $salt)) {
+
                 $error = $locale['token_error_7'];
+
             } else if ((TIME - $token_time) < fusion_get_settings('flood_interval') && !iADMIN) {
                 // check if a post wasn't made too fast. Set $post_time to 0 for instant. Go for System Settings later.
                 $error = $locale['token_error_6'];
