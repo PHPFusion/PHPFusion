@@ -237,7 +237,7 @@ $inf_newtable[] = DB_POST_NOTIFY." (
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 if (!column_exists('users', 'user_reputation')) {
-    $inf_altertable[] = $db_prefix."users ADD user_reputation INT(10) UNSIGNED NOT NULL AFTER user_status";
+    $inf_altertable[] = DB_USERS." ADD user_reputation INT(10) UNSIGNED NOT NULL AFTER user_status";
 }
 
 // Insert settings
