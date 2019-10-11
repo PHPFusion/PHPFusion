@@ -71,8 +71,9 @@ class UserFieldsInput {
 
     public function __construct() {
         $this->locale = fusion_get_locale();
-        if (isset($_GET['code']) && fusion_get_settings('email_verification') == 1) {
-            $this->verifyCode($_GET['code']);
+
+        if (get('code') && fusion_get_settings('email_verification') == 1 && get('ref') == 'se_profile') {
+            $this->verifyCode(get('code'));
             redirect(FUSION_REQUEST);
         }
     }
