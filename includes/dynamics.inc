@@ -58,11 +58,13 @@ class Dynamics {
                 add_to_footer("<script src='$select2_locale_path'></script>");
             }
         }
-
         if (!defined("SELECTIZE")) {
             define('SELECTIZE', true);
+            // add_to_footer("<script src='".fusion_get_settings('siteurl')."includes/dynamics/assets/selectize/microplugin.min.js'></script>");
+            add_to_footer("<script src='".fusion_get_settings('siteurl')."includes/dynamics/assets/selectize/js/es5.js'></script>");
             add_to_footer("<script src='".fusion_get_settings('siteurl')."includes/dynamics/assets/selectize/js/standalone/selectize.min.js'></script>");
-            add_to_head("<link href='".DYNAMICS."assets/selectize/css/selectize.default.css' rel='stylesheet'/>");
+            add_to_head("<link href='".DYNAMICS."assets/selectize/css/selectize.default.min.css' rel='stylesheet'/>");
+            // locale?
         }
     }
 }
