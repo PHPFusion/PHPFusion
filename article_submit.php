@@ -38,20 +38,20 @@ if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_status='1' AND ".g
             'article_article'  => ''
         ];
 
-        if (isset($_POST['cancel_article'])) {
+        if (post('cancel_article')) {
             redirect(FUSION_REQUEST);
         }
 
-        if (isset($_POST['submit_article']) || isset($_POST['preview_article'])) {
+        if (post('submit_article') || post('preview_article')) {
             // Check posted Informations
-            $article_snippet = "";
-            if ($_POST['article_snippet']) {
-                $article_snippet = parse_textarea($_POST['article_snippet']);
+            $article_snippet = post('article_snippet');
+            if ($article_snippet) {
+                $article_snippet = parse_textarea($article_snippet);
             }
 
-            $article_article = "";
-            if ($_POST['article_article']) {
-                $article_article = parse_textarea($_POST['article_article']);
+            $article_article = post('article_article');
+            if ($article_article) {
+                $article_article = parse_textarea($article_article);
             }
 
             $criteriaArray = [
@@ -64,13 +64,14 @@ if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_status='1' AND ".g
             ];
 
             // Save
-            if (\Defender::safe() && isset($_POST['submit_article'])) {
+            if (\Defender::safe() && post('submit_article')) {
                 $inputArray = [
                     'submit_type'      => "a",
                     'submit_user'      => fusion_get_userdata('user_id'),
                     'submit_datestamp' => time(),
                     'submit_criteria'  => \Defender::encode($criteriaArray)
                 ];
+
                 dbquery_insert(DB_SUBMISSIONS, $inputArray, 'save');
                 addNotice('success', $locale['article_0910']);
                 redirect(clean_request('submitted=a', ['stype'], TRUE));
@@ -90,7 +91,7 @@ if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_status='1' AND ".g
         }
 
         // Display Success Message
-        if (isset($_GET['submitted']) && $_GET['submitted'] == "a") {
+        if (get('submitted') == "a") {
             echo '<div class="well text-center text-strong">';
             echo '<p>'.$locale['article_0911'].'</p>';
             echo '<p><a href="'.BASEDIR.'submit.php?stype=a" title="'.$locale['article_0912'].'">'.$locale['article_0912'].'</a></p>';
@@ -165,16 +166,21 @@ if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_status='1' AND ".g
                 'multiple'    => TRUE
             ]);
 
-            echo form_select_tree('article_cat', $locale['article_0101'], $criteriaArray['article_cat'], [
+            $article_query = /** @lang MySQL */
+                "SELECT article_cat_id, article_cat_parent, article_cat_name ".(multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "");
+
+            echo form_select('article_cat', $locale['article_0101'], $criteriaArray['article_cat'], [
                 'required'     => TRUE,
                 'error_text'   => $locale['article_0273'],
                 'inner_width'  => '100%',
                 'inline'       => TRUE,
                 'parent_value' => $locale['choose'],
-                'query'        => (multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "")
-            ],
-                DB_ARTICLE_CATS, "article_cat_name", "article_cat_id", "article_cat_parent"
-            );
+                'db' => DB_ARTICLE_CATS,
+                'id_col' => 'article_cat_id',
+                'cat_col' => 'article_cat_parent',
+                'title_col' => 'article_cat_name',
+                'custom_query'        => $article_query
+            ]);
 
             if (multilang_table("AR")) {
                 echo form_select('article_language', $locale['language'], $criteriaArray['article_language'], [
