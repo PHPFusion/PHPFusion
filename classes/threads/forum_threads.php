@@ -721,7 +721,7 @@ class Forum_Threads extends Forum_Server {
              * Generate Quick Reply Form
              */
             $qr_form = '';
-            if (($this->getThreadPermission("can_reply") == TRUE && iMEMBER ? TRUE: FALSE)) {
+            if (($this->getThreadPermission("can_reply") == TRUE && iMEMBER ? TRUE : FALSE)) {
                 if ($this->thread_data['forum_quick_edit'] == TRUE) {
                     $qr_class = new Quick_Reply();
                     $qr_form = $qr_class->getForm($this->thread_data);
@@ -1534,7 +1534,6 @@ class Forum_Threads extends Forum_Server {
                         }
 
 
-
                         // if ($pdata['post_id'] == $filter['post_firstpost']) {
                         //     $quote_link = INFUSIONS."forum/viewthread.php?action=reply&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;quote=".$pdata['post_id'];
                         //     $reply_link = INFUSIONS."forum/viewthread.php?action=reply&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id'].'';
@@ -1552,20 +1551,20 @@ class Forum_Threads extends Forum_Server {
                         ) {
                             $pdata['post_edit'] = [
                                 'link'  => INFUSIONS."forum/viewthread.php?action=edit&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id'],
-                                'id' => $pdata['post_id'],
+                                'id'    => $pdata['post_id'],
                                 'title' => $locale['forum_0265']
                             ];
                         }
                         // Check first post
                         $pdata['post_reply'] = [
                             'link'  => $reply_link,
-                            'id' => $pdata['post_id'],
+                            'id'    => $pdata['post_id'],
                             'title' => $locale['forum_0509']
                         ];
                     } else if (iMOD) {
                         $pdata['post_edit'] = [
                             'link'  => INFUSIONS."forum/viewthread.php?action=edit&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id'],
-                            'id' => $pdata['post_id'],
+                            'id'    => $pdata['post_id'],
                             'title' => $locale['forum_0265']
                         ];
                     }

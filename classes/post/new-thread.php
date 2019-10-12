@@ -55,7 +55,6 @@ class New_Thread extends Forum_Server {
             if ($_forum_id && parent::verify_forum($_forum_id)) {
 
                 // URL: newthread.php?forum_id=int
-
                 add_to_title($locale['forum_0000'].$locale['global_201'].$locale['forum_0057']);
                 add_to_meta("description", $locale['forum_0000']);
                 add_breadcrumb(['link' => FORUM.'index.php', 'title' => $locale['forum_0000']]);
@@ -64,7 +63,7 @@ class New_Thread extends Forum_Server {
                 FROM ".DB_FORUMS." f
                 LEFT JOIN ".DB_FORUMS." f2 ON f.forum_cat=f2.forum_id
                 WHERE f.forum_id=:fid AND ".groupaccess('f.forum_access'), [
-                    ':fid' => intval($_forum_id)
+                    ':fid' => (int)$_forum_id
                 ]));
 
                 if ($forum_data['forum_type'] == 1 or $forum_data['forum_lock']) {
@@ -93,7 +92,6 @@ class New_Thread extends Forum_Server {
                      * Generate a poll form
                      */
                     $poll_form = '';
-
                     if (self::getPermission('can_create_poll')) {
 
                         // initial data to push downwards
@@ -290,17 +288,19 @@ class New_Thread extends Forum_Server {
                         "preview_box"       => "<div id='preview_box'></div>",
                         'forum_id_field'    => '',
                         'thread_id_field'   => '',
-                        "forum_field"       => form_select_tree("forum_id", "", $thread_data['forum_id'],
+                        "forum_field"       => form_select('forum_id', '', $thread_data['forum_id'],
                             [
-                                "required"    => TRUE,
-                                "width"       => "100%",
-                                "inner_width" => "100%",
-                                "no_root"     => TRUE,
-                                //"disable_opts" => $disabled_opts,
-                                "placeholder" => $locale['forum_0395'],
-                                "query"       => (multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."'" : ''),
-                            ],
-                            DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat'),
+                                "required"     => TRUE,
+                                "width"        => "100%",
+                                "inner_width"  => "100%",
+                                "no_root"      => TRUE,
+                                "placeholder"  => $locale['forum_0395'],
+                                'db'           => DB_FORUMS,
+                                'title_col'    => 'forum_name',
+                                'id_col'       => 'forum_id',
+                                'cat_col'      => 'forum_cat',
+                                'custom_query' => "SELECT forum_id, forum_cat, forum_name FROM ".DB_FORUMS.(multilang_table('FO') ? ' WHERE forum_language="'.LANGUAGE.'"' : ''),
+                            ]),
                         'subject_field'     => form_text('thread_subject', $locale['forum_0051'], $thread_data['thread_subject'],
                             [
                                 'required'    => 1,
@@ -363,17 +363,16 @@ class New_Thread extends Forum_Server {
                     ];
                     // add a jquery to toggle the poll form
                     add_to_jquery("
+                    $('#poll_form').hide();
                     if ($('#add_poll').is(':checked')) {
-                        $('#poll_form').show();
+                    $('#poll_form').show();
+                    } 
+                    $('#add_poll').bind('click', function() {                   
+                    if ($(this).is(':checked')) {
+                        $('#poll_form').slideDown();
                     } else {
-                        $('#poll_form').hide();
+                        $('#poll_form').slideUp();        
                     }
-                    $('#add_poll').bind('click', function() {
-                        if ($(this).is(':checked')) {
-                            $('#poll_form').slideDown();
-                        } else {
-                            $('#poll_form').slideUp();
-                        }
                     });
                     ");
 
@@ -539,7 +538,7 @@ class New_Thread extends Forum_Server {
                                 }
 
                                 if (\Defender::safe()) {
-                                    redirect(INFUSIONS."forum/postify.php?post=new&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;thread_id=".intval($post_data['thread_id'].""));
+                                    redirect(FORUM."postify.php?post=new&error=0&amp;forum_id=".$post_data['forum_id']."&amp;thread_id=".$post_data['thread_id']);
                                 }
                             } else {
                                 addNotice("danger", $locale['forum_0186']);
@@ -548,7 +547,7 @@ class New_Thread extends Forum_Server {
 
                             addNotice("danger", $locale['forum_0187']);
 
-                            redirect(INFUSIONS."forum/index.php");
+                            redirect(FORUM."index.php");
                         }
                     }
                 }
@@ -564,6 +563,7 @@ class New_Thread extends Forum_Server {
                 }
 
                 // Have 3 types of forum configurations
+                // print_P($disabled_opts);
                 $this->info = [
                     'title'             => $locale['forum_0057'],
                     'description'       => '',
@@ -573,17 +573,23 @@ class New_Thread extends Forum_Server {
                     'thread_id_field'   => '',
                     'preview_box'       => '<div id=\'preview_box\'></div>',
                     // need to disable all parents
-                    'forum_field'       => form_select_tree('forum_id', '', $thread_data['forum_id'],
+                    'forum_field'       => form_select('forum_id', '', $thread_data['forum_id'],
                         [
                             'required'     => TRUE,
                             'width'        => '100%',
                             'inner_width'  => '100%',
                             'no_root'      => TRUE,
+                            'optgroup'     => TRUE,
                             'disable_opts' => $disabled_opts,
+                            'hide_disabled' => TRUE,
                             'placeholder'  => $locale['forum_0395'],
-                            'query'        => (multilang_table('FO') ? 'WHERE forum_language="'.LANGUAGE.'"' : ''),
-                        ],
-                        DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat'),
+                            'db'           => DB_FORUMS,
+                            'id_col'       => 'forum_id',
+                            'cat_col'      => 'forum_cat',
+                            'title_col'    => 'forum_name',
+                            'select_alt'   => TRUE,
+                            'custom_query' => "SELECT forum_id, forum_cat, forum_name FROM ".DB_FORUMS.(multilang_table('FO') ? ' WHERE forum_language="'.LANGUAGE.'"' : ''),
+                        ]),
                     'subject_field'     => form_text('thread_subject', $locale['forum_0051'], $thread_data['thread_subject'], [
                         'required'    => TRUE,
                         'placeholder' => $locale['forum_2001'],
@@ -664,7 +670,8 @@ class New_Thread extends Forum_Server {
      */
     public function updateThreadStat($forum_id, $thread_id, $post_id, $post_author, $thread_subject, $post_message = '', $time) {
         // find all parents and update them
-        $forum_sql = "UPDATE ".DB_FORUMS." SET forum_lastpost=:time, forum_postcount=forum_postcount+1, forum_threadcount=forum_threadcount+1, forum_lastpostid=:pid, forum_lastuser=:uid WHERE forum_id=:fid";
+        $forum_sql = /** @lang MySQL */
+            "UPDATE ".DB_FORUMS." SET forum_lastpost=:time, forum_postcount=forum_postcount+1, forum_threadcount=forum_threadcount+1, forum_lastpostid=:pid, forum_lastuser=:uid WHERE forum_id=:fid";
         $list_of_forums = get_all_parent(dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat'), $forum_id);
         if (!empty($list_of_forums)) {
             foreach ($list_of_forums as $fid) {

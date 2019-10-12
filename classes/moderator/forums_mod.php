@@ -21,7 +21,7 @@ class Forums_Mod {
 
         if ($this->class->verifyForumID($forum_id)) {
 
-            $thread_count = dbcount("(forum_id)", DB_FORUM_THREADS, "forum_id=:fid", [':fid'=>$forum_id]);
+            $thread_count = dbcount("(forum_id)", DB_FORUM_THREADS, "forum_id=:fid", [':fid' => (int)$forum_id]);
 
             if ($thread_count) {
 
@@ -30,18 +30,18 @@ class Forums_Mod {
                 FROM ".DB_FORUM_POSTS." p  
                 INNER JOIN ".DB_FORUM_THREADS." t ON p.thread_id=t.thread_id 
                 WHERE p.forum_id=:fid AND t.thread_hidden=0 AND p.post_hidden=0 
-                ORDER BY p.post_datestamp DESC LIMIT 1", [':fid' => $forum_id]));
+                ORDER BY p.post_datestamp DESC LIMIT 1", [':fid' => (int)$forum_id]));
 
                 dbquery("UPDATE ".DB_FORUMS." SET forum_lastpostid=:pid, forum_lastpost=:time, forum_postcount=:pcount, forum_threadcount=:tcount, forum_lastuser=:aid WHERE forum_id=:fid", [
-                    ':pid' => $post_id,
-                    ':time' => $lastpost,
-                    ':pcount' => $post_count,
-                    ':tcount' => $thread_count,
-                    ':aid' => $user_id,
-                    ':fid' => $forum_id
+                    ':pid'    => (int)$post_id,
+                    ':time'   => (int)$lastpost,
+                    ':pcount' => (int)$post_count,
+                    ':tcount' => (int)$thread_count,
+                    ':aid'    => (int)$user_id,
+                    ':fid'    => (int)$forum_id
                 ]);
             } else {
-                dbquery("UPDATE ".DB_FORUMS." SET forum_lastpostid=0, forum_lastpost=0, forum_postcount=0, forum_threadcount=0, forum_lastuser=0 WHERE forum_id=:fid", [':fid'=>$forum_id]);
+                dbquery("UPDATE ".DB_FORUMS." SET forum_lastpostid=0, forum_lastpost=0, forum_postcount=0, forum_threadcount=0, forum_lastuser=0 WHERE forum_id=:fid", [':fid' => $forum_id]);
             }
         }
     }

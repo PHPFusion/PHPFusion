@@ -141,14 +141,15 @@ class View_Thread extends Forum_Server {
             //add_to_footer("<script src='".FORUM."templates/ajax/post_preview.js'></script>");
 
             // field data
+            (int) $post_id = get('post_id', FILTER_VALIDATE_INT);
             $post_data = [
                 'post_id'         => 0,
-                'post_cat'        => isset($_GET['post_id']) && isnum($_GET['post_id']) && $this->thread_data['thread_firstpostid'] !== $_GET['post_id'] ? intval($_GET['post_id']) : 0,
+                'post_cat'        => $post_id && $this->thread_data['thread_firstpostid'] !== $post_id ? $post_id : 0,
                 'forum_id'        => $thread_info['thread']['forum_id'],
                 'thread_id'       => $thread_info['thread']['thread_id'],
-                'post_message'    => isset($_POST['post_message']) ? form_sanitizer($_POST['post_message'], "", 'post_message') : "",
-                'post_showsig'    => isset($_POST['post_showsig']) ? 1 : 0,
-                'post_smileys'    => isset($_POST['post_smileys']) || isset($_POST['post_message']) && preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $_POST['post_message']) ? 1 : 0,
+                'post_message'    => sanitizer('post_message', "", 'post_message'),
+                'post_showsig'    => post('post_showsig') ? 1 : 0,
+                'post_smileys'    => post('post_smileys') || post('post_message') && preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", post('post_message')) ? 1 : 0,
                 'post_author'     => $userdata['user_id'],
                 'post_datestamp'  => time(),
                 'post_ip'         => USER_IP,
@@ -175,16 +176,16 @@ class View_Thread extends Forum_Server {
                         // Prepare forum merging action
                         $last_post_author = dbarray(dbquery("
                         SELECT post_author FROM ".DB_FORUM_POSTS."
-                        WHERE thread_id='".intval($thread_data['thread_id'])."'
+                        WHERE thread_id=:tid
                         ORDER BY post_id DESC LIMIT 1
-                        "));
+                        ", [':tid' => (int) $thread_data['thread_id']]));
 
                         // delete post checkbox...
                         // if is lastpost, update thread on the last.
 
                         if ($last_post_author['post_author'] == $post_data['post_author'] && $thread_data['forum_merge'] == TRUE) {
 
-                            $last_message = dbarray(dbquery("SELECT post_id, post_message, post_datestamp FROM ".DB_FORUM_POSTS." WHERE thread_id='".intval($thread_data['thread_id'])."' ORDER BY post_id DESC"));
+                            $last_message = dbarray(dbquery("SELECT post_id, post_message, post_datestamp FROM ".DB_FORUM_POSTS." WHERE thread_id=:tid ORDER BY post_id DESC", [':tid'=>(int) $thread_data['thread_id']]));
                             $post_data['post_id'] = $last_message['post_id'];
                             $post_data['post_message'] = $last_message['post_message']."\n\n".$locale['forum_0640']." ".showdate("longdate", time()).":\n".$post_data['post_message'];
                             $post_data['post_datestamp'] = $last_message['post_datestamp'];
