@@ -301,7 +301,7 @@ class Facebook_Connect {
 
     private function sendFbEmail($first_name, $email) {
         $settings = fusion_get_settings();
-        $locale = fusion_get_locale();
+        $locale = fusion_get_locale('', [LOCALE.LOCALESET.'user_fields.php']);
 
         require_once INCLUDES."sendmail_include.php";
         mt_srand((double)microtime() * 1000000);
