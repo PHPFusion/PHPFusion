@@ -422,14 +422,17 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
             'width'   => '100%',
         ]);
 
-        echo form_select_tree("link_cat", $this->locale['SL_0029'], $this->data['link_cat'], [
+        echo form_select('link_cat', $this->locale['SL_0029'], $this->data['link_cat'], [
             'input_id'      => 'link_categories',
-            "parent_value"  => $this->locale['parent'],
-            'width'         => '100%',
-            'query'         => (multilang_table("SL") ? "WHERE link_language='".LANGUAGE."'" : ''),
+            'parent_value'  => $this->locale['parent'],
             'disable_opts'  => $this->data['link_id'],
-            'hide_disabled' => 1
-        ], DB_SITE_LINKS, "link_name", "link_id", "link_cat");
+            'hide_disabled' => TRUE,
+            'db'            => DB_SITE_LINKS,
+            'id_col'        => 'link_id',
+            'cat_col'       => 'link_cat',
+            'title_col'     => 'link_name',
+            'custom_query'  => "SELECT link_id, link_name, link_cat FROM ".DB_SITE_LINKS.(multilang_table("SL") ? " WHERE link_language='".LANGUAGE."'" : '')
+        ]);
 
         echo form_select('link_language', $this->locale['global_ML100'], $this->data['link_language'], [
             'options'     => $this->language_opts,
@@ -466,18 +469,17 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
         if (!empty($link_position)) {
             echo "<h4>Menus</h4>";
             echo "<div class='list-group'>";
-            foreach($link_position as $pos_id => $pos_name) {
+            foreach ($link_position as $pos_id => $pos_name) {
                 echo "<div class='list-group-item'><a href='".clean_request('menu='.$pos_id, ['menu'], FALSE)."'>$pos_name</a></div>";
             }
             echo "</div>";
         }
         echo "</div><div class='col-xs-12 col-sm-10'>\n";
 
-        new \PHPFusion\Tables( new SiteLinks_Table() );
+        new \PHPFusion\Tables(new SiteLinks_Table());
 
         echo "</div>";
         echo "</div>";
-
 
 
         return '';
@@ -584,7 +586,8 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
 
         if (!empty($search_string)) {
             foreach ($search_string as $key => $values) {
-                if ($sql_condition) $sql_condition .= ' AND ';
+                if ($sql_condition)
+                    $sql_condition .= ' AND ';
                 $sql_condition .= "`$key` ".$values['operator'].($values['operator'] == "LIKE" ? "'%" : "'").$values['input'].($values['operator'] == "LIKE" ? "%'" : "'");
             }
         }

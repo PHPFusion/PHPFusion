@@ -78,7 +78,7 @@ function form_select($input_name, $label = "", $input_value, array $options = []
         'allowclear'           => FALSE,
         'multiple'             => FALSE,
         'width'                => '',
-        'inner_width'          => '250px',
+        'inner_width'          => '300px',
         'keyflip'              => FALSE,
         'tags'                 => FALSE,
         'jsonmode'             => FALSE,
