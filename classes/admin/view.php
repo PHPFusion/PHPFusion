@@ -49,6 +49,7 @@ class ForumAdminView extends ForumAdminInterface {
         'forum_vote'               => USER_LEVEL_MEMBER,
         'forum_image'              => '',
         'forum_allow_post_ratings' => 0,
+        'forum_allow_comments' => '',
         'forum_post_ratings'       => USER_LEVEL_MEMBER,
         'forum_users'              => 0,
         'forum_allow_attach'       => USER_LEVEL_MEMBER,
@@ -62,7 +63,7 @@ class ForumAdminView extends ForumAdminInterface {
         'forum_merge'              => 0,
         'forum_language'           => LANGUAGE,
         'forum_meta'               => '',
-        'forum_alias'              => ''
+        'forum_alias'              => '',
     ];
 
     private $forum_id = 0;
@@ -769,7 +770,7 @@ class ForumAdminView extends ForumAdminInterface {
 
         $admin_title = ($this->data['forum_id'] ? self::$locale['forum_002'] : self::$locale['forum_001']);
 
-        BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $admin_title]);
+        add_breadcrumb(['link' => FUSION_REQUEST, 'title' => $admin_title]);
 
         if (!get('action') && $this->parent_id) {
             $data['forum_cat'] = $this->parent_id;
@@ -823,7 +824,7 @@ class ForumAdminView extends ForumAdminInterface {
         } else {
 
             echo openform('inputform', 'post', FUSION_REQUEST, ['enctype' => 1]);
-            echo "<div class='".grid_row()."'>\n<div class='".grid_column_size(100, 70, 70, 70)."'>\n";
+            echo "<div class='".grid_row()."'>\n<div class='".grid_column_size(100, 70, 70, 80)."'>\n";
             echo form_text('forum_name', self::$locale['forum_006'], $this->data['forum_name'], [
                     'required'   => TRUE,
                     'class'      => 'form-group-lg',
@@ -844,7 +845,7 @@ class ForumAdminView extends ForumAdminInterface {
                 'inner_width' => '100%',
                 'width'       => '100%'
             ]);
-            echo "</div><div class='".grid_column_size(100, 30, 30, 30)."'>\n";
+            echo "</div><div class='".grid_column_size(100, 30, 30, 20)."'>\n";
             echo "<div class='well'>\n";
             $self_id = $this->data['forum_id'] ? $this->data['forum_id'] : '';
             echo form_select_tree('forum_cat', self::$locale['forum_008'], $this->data['forum_cat'], [
@@ -859,7 +860,7 @@ class ForumAdminView extends ForumAdminInterface {
             echo "</div>\n";
             echo "</div>\n</div>\n";
 
-            echo "<div class='".grid_row()."'>\n<div class='".grid_column_size(100, 70, 70, 70)."'>\n";
+            echo "<div class='".grid_row()."'>\n<div class='".grid_column_size(100, 70, 70, 80)."'>\n";
             echo form_textarea('forum_rules', self::$locale['forum_017'], $this->data['forum_rules'], [
                 'autosize'  => TRUE,
                 'type'      => 'bbcode',
@@ -913,7 +914,7 @@ class ForumAdminView extends ForumAdminInterface {
                 echo "</div>\n";
                 closeside();
             }
-            echo "</div><div class='".grid_column_size(100, 30, 30, 30)."'>\n";
+            echo "</div><div class='".grid_column_size(100, 30, 30, 20)."'>\n";
             echo "<div class='well'>\n";
             // need to get parent category
             echo form_select_tree('forum_permissions', self::$locale['forum_025'], $this->data['forum_branch'],
