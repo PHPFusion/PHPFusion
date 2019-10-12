@@ -866,7 +866,7 @@ ul > li {
 }
 
 .required {
-    color: red !important;
+    color: red;
 }
 
 a img {

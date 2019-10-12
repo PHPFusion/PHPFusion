@@ -369,3 +369,7 @@
   border-bottom: 1px solid #f0f0f0;
   border-top: 1px solid #f0f0f0;
 }
+.selectize-dropdown [data-selectable].option-disabled {
+  color: #aaa;
+  cursor: default;
+}

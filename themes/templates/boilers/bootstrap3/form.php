@@ -113,7 +113,7 @@ class Form {
                 'placeholder'  => ($options['placeholder'] ? $options['placeholder'] : ''),
                 'autocomplete' => ($options['autocomplete_off'] ? ' autocomplete="off"' : ''),
                 'readonly'     => $options['deactivate'] ? ' readonly' : '',
-                'required' => $options['required'] ? ' required' : '',
+                'required'     => $options['required'] ? ' required' : '',
                 'pwstrength'   => $options['password_strength'] ? '<div class="pwstrength_viewport_progress"></div>' : '' // do this for external plugin
             ]);
 
@@ -138,7 +138,7 @@ class Form {
                 'parent_opts'    => $options['parent_opts'],
                 'options'        => $options['options_options'],
                 'required_input' => $options['dropdown_required_input'],
-                'required' => $options['required'] ? ' required' : '',
+                'required'       => $options['required'] ? ' required' : '',
             ];
 
             $tpl->set_block('input_dropdown', $config);
@@ -174,6 +174,7 @@ class Form {
 
     /**
      * Checkbox, Radio, Toggle Switch, Toggle Button
+     *
      * @param $input_name
      * @param $label
      * @param $input_value
@@ -385,8 +386,8 @@ class Form {
                 $checkbox = '';
                 if ($options['inline']) {
 
-                    $class_a = grid_column_size(100,100,75,75);
-                    $class_b = grid_column_size(100,100,25,25).' p-l-0';
+                    $class_a = grid_column_size(100, 100, 75, 75);
+                    $class_b = grid_column_size(100, 100, 25, 25).' p-l-0';
 
                     $col_a = $class_a;
                     $col_b = $class_b;
@@ -426,7 +427,7 @@ class Form {
             $tpl->set_tag('label', $label);
             $tpl->set_tag('label_class', '');
             if (!empty($label_class)) {
-                $tpl->set_tag('label_class', 'class="'.implode(' ',$label_class).'" ');
+                $tpl->set_tag('label_class', 'class="'.implode(' ', $label_class).'" ');
             }
 
             $tpl->set_tag('post_checkbox', $checkbox);

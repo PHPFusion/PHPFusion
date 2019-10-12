@@ -322,7 +322,7 @@ function form_select($input_name, $label = "", $input_value, array $options = []
 
                         $hide = $disabled && $options['hide_disabled'] ? TRUE : FALSE;
 
-                        $item = (!$hide ? "<option".$data_attributes." value='$text_value'".$chain.$selected.($disabled ? 'disabled' : '').">".html_entity_decode($text_value)." ".($options['show_current'] && $input_value == $text_value ? '(Current Item)' : '')."</option>\n" : "");
+                        $item = (!$hide ? "<option".$data_attributes." value='$text_value'".$chain.$selected.($disabled ? ' disabled' : '').">".html_entity_decode($text_value)." ".($options['show_current'] && $input_value == $text_value ? '(Current Item)' : '')."</option>\n" : "");
 
                     } else {
                         if ($input_value !== '') {
@@ -331,7 +331,7 @@ function form_select($input_name, $label = "", $input_value, array $options = []
                         }
                         $disabled = $disable_opts && in_array($arr, $disable_opts) ? TRUE : FALSE;
                         $hide = $disabled && $options['hide_disabled'] ? TRUE : FALSE;
-                        $item = (!$hide ? "<option".$data_attributes." value='$arr'".$chain.$selected.($disabled ? 'disabled' : '').">".html_entity_decode($text_value)." ".($options['show_current'] && $input_value == $text_value ? '(Current Item)' : '')."</option>\n" : "");
+                        $item = (!$hide ? "<option".$data_attributes." value='$arr'".$chain.$selected.($disabled ? ' disabled' : '').">".html_entity_decode($text_value)." ".($options['show_current'] && $input_value == $text_value ? '(Current Item)' : '')."</option>\n" : "");
                     }
 
 
@@ -375,7 +375,6 @@ function form_select($input_name, $label = "", $input_value, array $options = []
     }
 
     // always trim id
-
     $options['input_id'] = trim(str_replace("[", '', $options['input_id']), "]");
 
     $allowclear = ($options['placeholder'] && $options['multiple'] || $options['allowclear']) ? "allowClear:true," : '';
@@ -468,15 +467,15 @@ function form_select($input_name, $label = "", $input_value, array $options = []
                         }
                         $disabled = $disable_opts && in_array($arr, $disable_opts) ? TRUE : FALSE;
                         $hide = $disabled && $options['hide_disabled'] ? TRUE : FALSE;
-                        $options['options_options'] .= (!$hide ? "<option value='$arr'".$chain.$select.($disabled ? 'disabled' : '').">".html_entity_decode($v)." ".($options['show_current'] && $input_value == $v ? '(Current Item)' : '')."</option>\n" : "");
+                        $options['options_options'] .= (!$hide ? "<option value='$arr'".$chain.$select.($disabled ? ' disabled' : '').">".html_entity_decode($v)." ".($options['show_current'] && $input_value == $v ? '(Current Item)' : '')."</option>\n" : "");
                     }
 
                 }
 
             }
         }
-
     }
+
 
     if ($options['required']) {
         $options['dropdown_required_input'] = "<input class='req' id='dummy-".$options['input_id']."' type='hidden'>"; // for jscheck
@@ -564,25 +563,32 @@ function form_select($input_name, $label = "", $input_value, array $options = []
             $js['createOnBlur'] = true;
             $js['delimiter'] = $options['delimiter'];
             $js['persist'] = false;
-
             $options['input_field'] = "<input ".($options['required'] ? "class='req'" : '')." type='text' name='$input_name' id='".$options['input_id']."' value='".$input_value."' style='".($options['width'] ? "width: ".$options['inner_width']."" : '')."'/>";
         }
-
         if ($options['multiple']) {
             $js['maxItems'] = $options['max_select'];
             $multiple_values = json_encode($input_value);
         }
+        if (!empty($options['disable_opts'])) {
+            $js['plugins'] = [
+                'disable_options' => [
+                    'disableOptions' => $options['disable_opts']
+                ]
+            ];
+        }
 
-        $js = json_encode($js);
-
+        $js = json_encode($js, JSON_PRETTY_PRINT);
 
         add_to_jquery("let select_".$options['input_id']." = $('#".$options['input_id']."').selectize({$js});");
+
         if (isset($multiple_values)) {
             add_to_jquery("
             let selectize = select_".$options['input_id']."[0].selectize;            
-            selectize.setValue($multiple_values);
+            selectize.setValue($multiple_values);            
             ");
         }
+
+
         add_to_head("<style>.modal-body {overflow: visible!important;} .modal-content{overflow: visible!important;}</style>");
     }
 
@@ -910,8 +916,6 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
             //$hide = $disable_branch && $value == $self_id ? 1 : 0;
             $html = &$html;
             $name = $data[$value][$name_col];
-            //print_p($data[$value]);
-
             $name = PHPFusion\UserFieldsQuantum::parse_label($name);
             $select = ($input_value !== "" && ($input_value == $value)) ? 'selected' : '';
             $disabled = $disable_opts && in_array($value, $disable_opts) ? TRUE : FALSE;

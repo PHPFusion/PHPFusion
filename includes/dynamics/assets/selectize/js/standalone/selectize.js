@@ -3507,8 +3507,7 @@
 	$.fn.selectize.support = {
 		validity: SUPPORTS_VALIDITY_API
 	};
-	
-	
+
 	Selectize.define('drag_drop', function(options) {
 		if (!$.fn.sortable) throw new Error('The "drag_drop" plugin requires jQuery UI "sortable".');
 		if (this.settings.mode !== 'multi') return;
@@ -3794,8 +3793,7 @@
 				multiClose(this, options);
 			}
 	});
-	
-	
+
 	Selectize.define('restore_on_backspace', function(options) {
 		var self = this;
 	
@@ -3823,7 +3821,60 @@
 			};
 		})();
 	});
-	
+
+    Selectize.define('disable_options', function(options) {
+        var self = this;
+
+        options = $.extend({
+            'disableOptions': []
+        }, options);
+
+        self.onFocus = (function() {
+            var original = self.onFocus;
+
+            return function() {
+                original.apply(this, arguments);
+
+                $.each(options.disableOptions, function(index, option) {
+                    self.$dropdown_content.find('[data-value="' + String(option) + '"]').addClass('option-disabled');
+                });
+            };
+        })();
+
+        self.onOptionSelect = (function() {
+            var original = self.onOptionSelect;
+
+            return function(e) {
+                var value, $target, $option;
+
+                if (e.preventDefault) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+
+                $target = $(e.currentTarget);
+
+                if ($target.hasClass('option-disabled')) {
+                    return;
+                } else if ($target.hasClass('create')) {
+                    self.createItem();
+                } else {
+                    value = $target.attr('data-value');
+                    if (value) {
+                        self.lastQuery = null;
+                        self.setTextboxValue('');
+                        self.addItem(value);
+                        if (!self.settings.hideSelected && e.type && /mouse/.test(e.type)) {
+                            self.setActiveOption(self.getOption(value));
+                        }
+                    }
+
+                    self.blur();
+                }
+                return original.apply(this, arguments);
+            };
+        })();
+    });
 
 	return Selectize;
 }));

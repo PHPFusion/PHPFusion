@@ -406,3 +406,7 @@
   -moz-border-radius: 0;
   border-radius: 0;
 }
+.selectize-dropdown [data-selectable].option-disabled {
+  color: #aaa;
+  cursor: default;
+}

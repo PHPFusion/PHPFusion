@@ -492,3 +492,7 @@
   *background-color: #0088cc;
   border: 1px solid #0088cc;
 }
+.selectize-dropdown [data-selectable].option-disabled {
+  color: #aaa;
+  cursor: default;
+}

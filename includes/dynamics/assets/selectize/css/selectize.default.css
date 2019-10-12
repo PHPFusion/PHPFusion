@@ -392,3 +392,7 @@
 .selectize-dropdown .optgroup:first-child {
   border-top: 0 none;
 }
+.selectize-dropdown [data-selectable].option-disabled {
+  color: #aaa;
+  cursor: default;
+}

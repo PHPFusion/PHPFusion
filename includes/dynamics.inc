@@ -60,9 +60,8 @@ class Dynamics {
         }
         if (!defined("SELECTIZE")) {
             define('SELECTIZE', true);
-            // add_to_footer("<script src='".fusion_get_settings('siteurl')."includes/dynamics/assets/selectize/microplugin.min.js'></script>");
             add_to_footer("<script src='".fusion_get_settings('siteurl')."includes/dynamics/assets/selectize/js/es5.js'></script>");
-            add_to_footer("<script src='".fusion_get_settings('siteurl')."includes/dynamics/assets/selectize/js/standalone/selectize.min.js'></script>");
+            add_to_footer("<script src='".fusion_get_settings('siteurl')."includes/dynamics/assets/selectize/js/standalone/selectize.js'></script>");
             add_to_head("<link href='".DYNAMICS."assets/selectize/css/selectize.default.min.css' rel='stylesheet'/>");
             // locale?
         }

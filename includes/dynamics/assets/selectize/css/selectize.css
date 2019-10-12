@@ -322,3 +322,7 @@
   opacity: 0.5;
   background-color: #fafafa;
 }
+.selectize-dropdown [data-selectable].option-disabled {
+  color: #aaa;
+  cursor: default;
+}

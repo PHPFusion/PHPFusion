@@ -121,7 +121,7 @@ echo $fusion_page_footer_tags;
 
 echo "<script src='".$_includes."jquery/admin-scripts.js'></script>\n";
 echo "<script src='".$_includes."jquery/holder/holder.min.js'></script>\n";
-
+echo "<script type='text/javascript' src='".$_includes."jquery/jquery-ui.js'></script>\n";
 // Output lines added with add_to_jquery()
 if (!empty($fusion_jquery_tags)) {
     if ($settings['devmode'] == 0) {
