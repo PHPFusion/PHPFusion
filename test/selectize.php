@@ -36,6 +36,15 @@ echo form_select('selectize_db', 'Selectize Database Callback', '', [
 ]);
 // Advanced Examples
 // Opt Group -- done (REMEMBER TO HIDE DISABLED IF OPTGROUP IS ON)
+//Disable all parents
+$disabled_opts = [];
+$disable_query = "SELECT forum_id FROM ".DB_FORUMS." WHERE forum_type=1 ".(multilang_table("FO") ? "AND forum_language='".LANGUAGE."'" : '');
+$disable_query = dbquery($disable_query);
+if (dbrows($disable_query) > 0) {
+    while ($d_forum = dbarray($disable_query)) {
+        $disabled_opts[] = $d_forum['forum_id'];
+    }
+}
 echo form_select('forum_id', 'Select your forum', '',
     [
         'required'      => TRUE,
