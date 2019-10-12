@@ -65,8 +65,8 @@ echo form_select('forum_id', 'Select your forum', '',
 
 // User Select
 echo form_select('user_id', 'Select User', '', [
-    'width'        => '100%',
-    'inner_width'  => '100%',
+    'width'       => '100%',
+    'inner_width' => '100%',
     //'json' => INCLUDES.''
 ]);
 
