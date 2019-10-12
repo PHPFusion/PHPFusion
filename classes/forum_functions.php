@@ -18,9 +18,7 @@
 
 namespace PHPFusion\Infusions\Forum\Classes;
 
-class Forum_Functions {
-
-
+class ForumFunctions {
     /**
      * Appends increment integer on multiple files on same post
      *
@@ -28,14 +26,14 @@ class Forum_Functions {
      *
      * @return string
      */
-    public static function attachmentExists($file) {
+    public static function attachmentExists( $file ) {
         $dir = INFUSIONS."forum/attachments/";
-        $i = 1;
-        $file_name = substr($file, 0, strrpos($file, "."));
-        $file_ext = strrchr($file, ".");
+        $count = 1;
+        $fileName = substr($file, 0, strrpos($file, "."));
+        $fileExt = strrchr($file, ".");
         while (file_exists($dir.$file)) {
-            $file = $file_name."_".$i.$file_ext;
-            $i++;
+            $file = $fileName."_".$count.$fileExt;
+            $count++;
         }
 
         return $file;
@@ -49,26 +47,26 @@ class Forum_Functions {
      * @return string
      */
     public static function displayImage($file) {
-        $size = @getimagesize(INFUSIONS."forum/attachments/".$file);
+        $size = getimagesize(INFUSIONS."forum/attachments/".$file);
         if ($size[0] > 300 || $size[1] > 200) {
             if ($size[0] <= $size[1]) {
-                $img_w = round(($size[0] * 200) / $size[1]);
-                $img_h = 200;
+                $imgWidth = round(($size[0] * 200) / $size[1]);
+                $imgHeight = 200;
             } else if ($size[0] > $size[1]) {
-                $img_w = 300;
-                $img_h = round(($size[1] * 300) / $size[0]);
+                $imgWidth = 300;
+                $imgHeight = round(($size[1] * 300) / $size[0]);
             } else {
-                $img_w = 300;
-                $img_h = 200;
+                $imgWidth = 300;
+                $imgHeight = 200;
             }
         } else {
-            $img_w = $size[0];
-            $img_h = $size[1];
+            $imgWidth = $size[0];
+            $imgHeight = $size[1];
         }
-        if ($size[0] != $img_w || $size[1] != $img_h) {
-            $res = "<a href='".INFUSIONS."forum/attachments/".$file."'><img src='".INFUSIONS."forum/attachments/".$file."' width='".$img_w."' height='".$img_h."' style='border:0;' alt='".$file."' /></a>";
+        if ($size[0] != $imgWidth || $size[1] != $imgHeight) {
+            $res = "<a href='".INFUSIONS."forum/attachments/".$file."'><img src='".INFUSIONS."forum/attachments/".$file."' width='".$imgWidth."' height='".$imgHeight."' style='border:0;' alt='".$file."' /></a>";
         } else {
-            $res = "<img src='".INFUSIONS."forum/attachments/".$file."' width='".$img_w."' height='".$img_h."' style='border:0;' alt='".$file."' />";
+            $res = "<img src='".INFUSIONS."forum/attachments/".$file."' width='".$imgWidth."' height='".$imgHeight."' style='border:0;' alt='".$file."' />";
         }
 
         return $res;
@@ -86,23 +84,23 @@ class Forum_Functions {
      */
     public static function displayImageAttachments($file, $width = 200, $height = 200, $rel = "") {
         if (file_exists(INFUSIONS."forum/attachments/".$file)) {
-            $size = @getimagesize(INFUSIONS."forum/attachments/".$file);
+            $size = getimagesize(INFUSIONS."forum/attachments/".$file);
             if ($size [0] > $height || $size [1] > $width) {
                 if ($size [0] < $size [1]) {
-                    $img_w = round(($size [0] * $width) / $size [1]);
-                    $img_h = $width;
+                    $imgWidth = round(($size [0] * $width) / $size [1]);
+                    $imgHeight = $width;
                 } else if ($size [0] > $size [1]) {
-                    $img_w = $height;
-                    $img_h = round(($size [1] * $height) / $size [0]);
+                    $imgWidth = $height;
+                    $imgHeight = round(($size [1] * $height) / $size [0]);
                 } else {
-                    $img_w = $height;
-                    $img_h = $width;
+                    $imgWidth = $height;
+                    $imgHeight = $width;
                 }
             } else {
-                $img_w = $size [0];
-                $img_h = $size [1];
+                $imgWidth = $size [0];
+                $imgHeight = $size [1];
             }
-            $res = "<a target='_blank' href='".INFUSIONS."forum/attachments/".$file."' rel='attach_".$rel."' title='".$file."'><img src='".INFUSIONS."forum/attachments/".$file."' alt='".$file."' style='width:".$img_w."px; height:".$img_h."px;' /></a>\n";
+            $res = "<a target='_blank' href='".INFUSIONS."forum/attachments/".$file."' rel='attach_".$rel."' title='".$file."'><img src='".INFUSIONS."forum/attachments/".$file."' alt='".$file."' style='width:".$imgWidth."px; height:".$imgHeight."px;' /></a>\n";
         } else {
             $res = fusion_get_locale('forum_0188');
         }
