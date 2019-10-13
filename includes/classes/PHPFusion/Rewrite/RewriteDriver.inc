@@ -630,6 +630,7 @@ abstract class RewriteDriver {
         $search = ["\"", "&#039;", "\\", "\'", "<", ">", "~", "!", "@", "$", "%", "^", "*", ";", ",", "[", "]", "{", "}"];
         $string = str_replace($search, "", $string);
         $string = str_replace("&amp;", "&", $string); // Must Support &
+        $string = str_replace("-", "", $string);
         $string = preg_replace("/[\s]+/i", $delimiter, $string); // Replace All <space> by Delimiter
         $string = trim($string, "-");
 
@@ -646,11 +647,11 @@ abstract class RewriteDriver {
      *
      * @return string
      */
-    protected static function normalize($string) {
+    public static function normalize($string) {
         $table = [
             '&amp;' => 'and', '@' => 'at', '©' => 'c', '®' => 'r', 'À' => 'a',
             '('     => '', ')' => '', '.' => '',
-            'Á'     => 'a', 'Â' => 'a', 'Ä' => 'a', 'Å' => 'a', 'Æ' => 'ae', 'Ç' => 'c',
+            'Á'     => 'a', 'Â' => 'a', 'Ä' => 'a', 'ä'=>'a', 'Å' => 'a', 'Æ' => 'ae', 'Ç' => 'c',
             'È'     => 'e', 'É' => 'e', 'Ë' => 'e', 'Ì' => 'i', 'Í' => 'i', 'Î' => 'i',
             'Ï'     => 'i', 'Ò' => 'o', 'Ó' => 'o', 'Ô' => 'o', 'Õ' => 'o', 'Ö' => 'o',
             'Ø'     => 'o', 'Ù' => 'u', 'Ú' => 'u', 'Û' => 'u', 'Ü' => 'u', 'Ý' => 'y',
