@@ -456,11 +456,15 @@ class UserFields extends QuantumFields {
     private function renderValidation() {
         $locale = fusion_get_locale();
         $_CAPTCHA_HIDE_INPUT = FALSE;
+        include INCLUDES."captchas/".fusion_get_settings("captcha")."/captcha_display.php";
         $html = "<hr>\n";
         $html .= "<div class='form-group m-t-20'>\n";
-        $html .= "<label for='captcha_code' class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0'>\n".$locale['u190']." <span class='required'>*</span></label>\n";
+        if (!$_CAPTCHA_HIDE_INPUT) {
+            $html .= "<label for='captcha_code' class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0'>\n".$locale['u190']." <span class='required'>*</span></label>\n";
+        }
+
         $html .= "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>";
-        include INCLUDES."captchas/".fusion_get_settings("captcha")."/captcha_display.php";
+
         $html .= display_captcha([
             'captcha_id' => 'captcha_userfields',
             'input_id'   => 'captcha_code_userfields',
