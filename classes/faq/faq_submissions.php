@@ -65,7 +65,7 @@ class FaqSubmissions extends FaqServer {
                     'faq_status'   => 1
                 ];
                 // Save
-                if (\Defender::safe()) {
+                if (fusion_safe()) {
                     $inputArray = [
                         'submit_type'      => 'q',
                         'submit_user'      => fusion_get_userdata('user_id'),
