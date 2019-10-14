@@ -211,16 +211,13 @@ function showcopyright($class = "", $nobreak = FALSE) {
 }
 
 /**
- * @param string $delimiter
- * @param string $thousand_sep
- *
  * @return string
  */
-function showcounter($delimiter = '.', $thousand_sep = ',') {
+function showcounter() {
     $locale = fusion_get_locale();
     $settings = fusion_get_settings();
     if ($settings['visitorcounter_enabled']) {
-        return "<!--counter-->".number_format($settings['counter'], 0, $delimiter, $thousand_sep)." ".($settings['counter'] == 1 ? $locale['global_170'] : $locale['global_171']);
+        return "<!--counter-->".number_format($settings['counter'], 0, $settings['number_delimiter'], $settings['number_seperator'])." ".($settings['counter'] == 1 ? $locale['global_170'] : $locale['global_171']);
     }
 
     return '';
