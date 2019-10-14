@@ -78,7 +78,7 @@ class WeblinksSubmissions extends WeblinksServer {
                 ];
 
                 // Save
-                if (\Defender::safe()) {
+                if (fusion_safe()) {
                     $inputArray = [
                         'submit_type'      => 'l',
                         'submit_user'      => fusion_get_userdata('user_id'),

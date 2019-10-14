@@ -55,7 +55,7 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
             ];
 
             // Handle
-            if (\Defender::safe()) {
+            if (fusion_safe()) {
 
                 // Publish Submission
                 $publish_submission = filter_input(INPUT_POST, 'publish_submission', FILTER_DEFAULT);
