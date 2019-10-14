@@ -1333,7 +1333,7 @@ if (!function_exists("tab_active")
                     }
                     $html .= ($link_active_arrkey == $tab_id) ? "<li class='active'>\n" : "<li>\n";
                 } else {
-                    $html .= ($link_active_arrkey == "".$tab_id) ? "<li class='active'>\n" : "<li>\n";
+                    $html .= ($link_active_arrkey == $tab_id) ? "<li class='active'>\n" : "<li>\n";
                 }
                 $html .= "<a class='pointer' ".(!$link ? "id='tab-".$tab_id."' data-toggle='tab' data-target='#".$tab_id."'" : "href='$link_url'")." role='tab'>\n".($icon ? "<i class='".$icon."'></i>" : '')." <span>".$v_title."</span></a>\n";
                 $html .= "</li>\n";
@@ -1343,8 +1343,9 @@ if (!function_exists("tab_active")
             if (empty($link) && $this->remember) {
                 if (!defined('JS_COOKIES')) {
                     define('JS_COOKIES', TRUE);
-                    add_to_jquery('<script type="text/javascript" src="'.INCLUDES.'jquery/jquery.cookie.js"></script>');
+                    add_to_footer('<script type="text/javascript" src="'.INCLUDES.'jquery/jquery.cookie.js"></script>');
                 }
+
                 add_to_jquery("
                 $('#".$tabId." > li').on('click', function() {
                 var cookieName = '".$this->cookie_name."';

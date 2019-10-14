@@ -316,11 +316,11 @@ class Errors {
         closetable();
     }
 
-    /**
+	/**
      * Displays error logs HTML Form
-     *
-     * @return string
-     */
+	 * @return string
+	 * @throws \ReflectionException
+	 */
     private function getErrorLogs() {
         $aidlink = fusion_get_aidlink();
         $locale = self::$locale;
@@ -385,7 +385,7 @@ class Errors {
 
             if (!empty($this->new_errors)) {
                 foreach ($this->new_errors as $i => $data) {
-                    $link_title = $this->getMaxFolders($data['error_file'], 1);
+                    $link_title = self::getMaxFolders($data['error_file'], 1);
                     $html .= "<tr id='rmd-".$data['error_id']."'>";
                     $html .= "<td class='word-break' style='text-align:left;'>";
                     $html .= "<a data-toggle='collapse' data-target='#err_rmd-".$data['error_id']."' class='accordion-toggle strong' title='".$locale['show']."' style='font-size:15px;'>".$link_title."</a><br/>\n";
@@ -517,11 +517,10 @@ class Errors {
                 $.ajax({
                     url: '".FUSION_ROOT.ADMIN."includes/error_logs_updater.php',
                     dataType: 'json',
-                    method : 'GET',
-                    type: 'json',
+                    method : 'GET',                    
                     data: sendData,
                     success: function(e) {
-                        console.log(e);
+                        //console.log(e);
                         if (e.status == 'OK') {
                             var target_group_add  = $('tr#rmd-'+e.fusion_error_id+' > td > a.e_status_'+ e.to);
                             var target_group_remove = $('tr#rmd-'+e.fusion_error_id+' > td > a.e_status_'+ e.from)
@@ -533,8 +532,8 @@ class Errors {
                              $('tr#err_rmd-'+e.fusion_error_id).remove();
                         }
                     },
-                    error : function(e) {
-                        console.log('fail');
+                    error : function(e) {                        
+                        console.log('Fail to load Error Logs Update');
                     }
                 });
             });
