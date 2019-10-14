@@ -65,7 +65,15 @@ class Router extends RewriteDriver {
 
     public function __construct() {
         // Pretty URL
-        $this->requesturi = rtrim(urldecode(PERMALINK_CURRENT_PATH), '/');
+        $this->requesturi = rtrim(urldecode($this->removeParam(PERMALINK_CURRENT_PATH)), '/');
+    }
+
+    private function removeParam($urlValue) {
+        $urlArray = explode('?', $urlValue);
+        if (isset($urlArray)) {
+            return $urlArray[0];
+        }
+        return $urlValue;
     }
 
     public static function getRouterInstance() {
@@ -544,11 +552,11 @@ class Router extends RewriteDriver {
         }
         add_to_footer("<script type='text/javascript'>
         var el = document.getElementById('rewritestoggledebugdiv');
-        
+
         if (el) {
             el.addEventListener('click', function() {
                 var el2 = document.getElementById('rewritesdebuginfo');
-                
+
                 if (el2.style.display === 'none') {
                     el2.style.display = 'block';
                 } else {
