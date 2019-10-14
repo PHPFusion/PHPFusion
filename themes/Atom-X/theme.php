@@ -73,7 +73,7 @@ function render_page() {
 
 function opentable($title = FALSE, $class = '') {
     echo '<div class="panel panel-default '.$class.'">';
-    echo '<div class="panel-heading"><h4><strong>'.$title.'</strong></h4></div>';
+    echo !empty($title) ? '<div class="panel-heading"><h4><strong>'.$title.'</strong></h4></div>' : '';
     echo '<div class="panel-body">';
 }
 
