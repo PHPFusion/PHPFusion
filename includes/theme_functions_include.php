@@ -424,7 +424,7 @@ function showMemoryUsage() {
 function showcounter() {
     global $locale, $settings;
     if ($settings['visitorcounter_enabled']) {
-        return "<!--counter-->".number_format($settings['counter'])." ".($settings['counter'] == 1 ? $locale['global_170'] : $locale['global_171']);
+        return "<!--counter-->".number_format($settings['counter'], 0, $settings['number_delimiter'], $settings['number_seperator'])." ".($settings['counter'] == 1 ? $locale['global_170'] : $locale['global_171']);
     } else {
         return "";
     }
