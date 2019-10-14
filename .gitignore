@@ -15,3 +15,5 @@ config-copy.php
 gateway/flood/
 images/thumbs/
 fusion_error_log.log
+vendor
+composer.lock
