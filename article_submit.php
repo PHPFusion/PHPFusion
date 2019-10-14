@@ -166,8 +166,7 @@ if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_status='1' AND ".g
                 'multiple'    => TRUE
             ]);
 
-            $article_query = /** @lang MySQL */
-                "SELECT article_cat_id, article_cat_parent, article_cat_name ".(multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "");
+            $article_query = "SELECT article_cat_id, article_cat_parent, article_cat_name FROM ".DB_ARTICLE_CATS.(multilang_table("AR") ? " WHERE article_cat_language='".LANGUAGE."'" : "");
 
             echo form_select('article_cat', $locale['article_0101'], $criteriaArray['article_cat'], [
                 'required'     => TRUE,
@@ -175,11 +174,11 @@ if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_status='1' AND ".g
                 'inner_width'  => '100%',
                 'inline'       => TRUE,
                 'parent_value' => $locale['choose'],
-                'db' => DB_ARTICLE_CATS,
-                'id_col' => 'article_cat_id',
-                'cat_col' => 'article_cat_parent',
-                'title_col' => 'article_cat_name',
-                'custom_query'        => $article_query
+                'db'           => DB_ARTICLE_CATS,
+                'id_col'       => 'article_cat_id',
+                'cat_col'      => 'article_cat_parent',
+                'title_col'    => 'article_cat_name',
+                'custom_query' => $article_query
             ]);
 
             if (multilang_table("AR")) {
