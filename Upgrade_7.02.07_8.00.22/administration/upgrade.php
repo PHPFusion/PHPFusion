@@ -658,6 +658,10 @@ if (str_replace(".", "", $settings['version']) < "80022") {
                     // Gateway check for registration
                     $result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('gateway', '1')");
 
+                    // Number Formating
+                    $result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('number_delimiter', '.')");
+                    $result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('number_seperator', ',')");
+
                     // Update admin icons
                     $new_icon_array = [
                         "APWR" => "admin_pass.png",

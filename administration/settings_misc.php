@@ -92,7 +92,11 @@ if (isset($_POST['savesettings'])) {
     if (!$result) {
         $error = 1;
     }
-    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['comments_avatar']) ? $_POST['comments_avatar'] : "0")."' WHERE settings_name='comments_avatar'");
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['number_delimiter']) ? $_POST['number_delimiter'] : ".")."' WHERE settings_name='number_delimiter'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['number_seperator']) ? $_POST['number_seperator'] : ",")."' WHERE settings_name='number_seperator'");
     if (!$result) {
         $error = 1;
     }
@@ -177,6 +181,18 @@ echo "<td width='50%' class='tbl'><select name='rendertime_enabled' class='textb
 echo "<option value='0'".($settings['rendertime_enabled'] == "0" ? " selected='selected'" : "").">".$locale['519']."</option>\n";
 echo "<option value='1'".($settings['rendertime_enabled'] == "1" ? " selected='selected'" : "").">".$locale['689']."</option>\n";
 echo "<option value='2'".($settings['rendertime_enabled'] == "2" ? " selected='selected'" : "").">".$locale['690']."</option>\n";
+echo "</select></td>\n";
+echo "</tr>\n<tr>\n";
+echo "<td width='50%' class='tbl'>".$locale['699i']."</td>\n";
+echo "<td width='50%' class='tbl'><select name='number_delimiter' class='textbox'>\n";
+echo "<option value='.'".($settings['number_delimiter'] == "." ? " selected='selected'" : "").">.</option>\n";
+echo "<option value=','".($settings['number_delimiter'] == "," ? " selected='selected'" : "").">,</option>\n";
+echo "</select></td>\n";
+echo "</tr>\n<tr>\n";
+echo "<td width='50%' class='tbl'>".$locale['699k']."</td>\n";
+echo "<td width='50%' class='tbl'><select name='number_seperator' class='textbox'>\n";
+echo "<option value='.'".($settings['number_seperator'] == "." ? " selected='selected'" : "").">.</option>\n";
+echo "<option value=','".($settings['number_seperator'] == "," ? " selected='selected'" : "").">,</option>\n";
 echo "</select></td>\n";
 echo "</tr>\n<tr>\n";
 echo "<td align='center' colspan='2' class='tbl'><br />\n";
