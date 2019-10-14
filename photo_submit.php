@@ -41,7 +41,7 @@ if ($gll_settings['gallery_allow_submission']) {
             'photo_thumb1'      => '',
             'photo_thumb2'      => '',
         ];
-        if (\Defender::safe()) {
+        if (fusion_safe()) {
             if (!empty($_FILES['photo_image']) && is_uploaded_file($_FILES['photo_image']['tmp_name'])) {
                 $upload = form_sanitizer($_FILES['photo_image'], "", "photo_image");
                 if (isset($upload['error']) && !$upload['error']) {
@@ -61,7 +61,7 @@ if ($gll_settings['gallery_allow_submission']) {
                 addNotice('danger', $locale['photo_0014']);
             }
         }
-        if (\Defender::safe()) {
+        if (fusion_safe()) {
             $inputArray = [
                 "submit_id"        => 0,
                 "submit_type"      => 'p',
