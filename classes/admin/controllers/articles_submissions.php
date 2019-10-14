@@ -414,7 +414,7 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
         $this->articleSettings = self::get_article_settings();
 
         // Handle a Submission
-        if (isset($_GET['submit_id']) && isNum($_GET['submit_id']) && dbcount("(submit_id)", DB_SUBMISSIONS, "submit_id=:submitid AND submit_type=:submittype", ['submitid' => $_GET['submit_id'], ':submittype' => 'a'])) {
+        if (isset($_GET['submit_id']) && isNum($_GET['submit_id']) && dbcount("(submit_id)", DB_SUBMISSIONS, "submit_id=".(int)$_GET['submit_id']." AND submit_type='a'")) {
             $this->inputArray = self::unserializeData();
 
             // Get Infos about Submissioner
