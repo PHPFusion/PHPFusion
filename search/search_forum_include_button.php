@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: search_forums_include_button.php
+| Filename: search_forum_include_button.php
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -43,7 +43,7 @@ if (defined('FORUM_EXIST')) {
     }
 
     $form_elements += [
-        'forums' => [
+        'forum' => [
             'enabled'   => [
                 '0' => 'datelimit', '1' => 'fields1', '2' => 'fields2', '3' => 'fields3', '4' => 'sort', '5' => 'order1', '6' => 'order2',
                 '7' => 'chars'
@@ -55,13 +55,13 @@ if (defined('FORUM_EXIST')) {
     ];
 
     $radio_button += [
-        'forums' => form_checkbox('stype', fusion_get_locale('f400', INFUSIONS."forum/locale/".LOCALESET."search/forum.php"), Search_Engine::get_param('stype'),
+        'forum' => form_checkbox('stype', fusion_get_locale('f400', INFUSIONS."forum/locale/".LOCALESET."search/forum.php"), Search_Engine::get_param('stype'),
                 [
                     'type'          => 'radio',
-                    'value'         => 'forums',
+                    'value'         => 'forum',
                     'reverse_label' => TRUE,
                     'onclick'       => 'display(this.value)',
-                    'input_id'      => 'forums',
+                    'input_id'      => 'forum',
                     'class'         => 'm-b-0'
                 ]
             ).form_select('forum_id', '', Search_Engine::get_param('forum_id'),
@@ -74,7 +74,7 @@ if (defined('FORUM_EXIST')) {
     ];
 
     add_to_jquery('
-      $("#advanced_search_form #forums-field").addClass("display-inline-block");
+      $("#advanced_search_form #forum-field").addClass("display-inline-block");
       $("#advanced_search_form #forum_id-field").removeClass("display-block").addClass("display-inline-block").addClass("m-b-0");
     ');
 }
