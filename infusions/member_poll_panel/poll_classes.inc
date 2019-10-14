@@ -84,7 +84,7 @@ class MemberPoll {
                 'poll_ended'      => (isset($_POST['poll_ended']) ? form_sanitizer($_POST['poll_ended'], 0, 'poll_ended') : 0)
             ];
 
-            if (\Defender::safe()) {
+            if (fusion_safe()) {
                 addNotice("success", $this->data['poll_id'] == 0 ? self::$locale['POLL_005'] : self::$locale['POLL_006']);
                 dbquery_insert(DB_POLLS, $this->data, ($this->data['poll_id'] == 0 ? "save" : "update"));
                 redirect(clean_request("", ["section=poll", "aid"], TRUE));
@@ -315,7 +315,7 @@ class MemberPoll {
                     'poll_id'           => intval($_POST['poll_id'])
                 ];
 
-                if (\Defender::safe()) {
+                if (fusion_safe()) {
                     dbquery_insert(DB_POLL_VOTES, $vote_save, "save");
                     addNotice('success', "<i class='fa fa-check-square-o fa-lg m-r-10'></i>".self::$locale['POLL_013']);
                 }

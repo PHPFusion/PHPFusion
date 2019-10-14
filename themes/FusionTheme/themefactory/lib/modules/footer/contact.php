@@ -57,7 +57,7 @@ class Contact {
                 }
             }
 
-            if (\Defender::safe()) {
+            if (fusion_safe()) {
                 die('contact form sent');
                 require_once INCLUDES."sendmail_include.php";
                 $template_result = dbquery("
@@ -91,7 +91,7 @@ class Contact {
                     }
                 }
 
-                if (\Defender::safe()) {
+                if (fusion_safe()) {
                     addNotice('warning', $locale['425']);
                     redirect(FORM_REQUEST);
                 }

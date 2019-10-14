@@ -304,7 +304,7 @@ class ImagesAdministration {
                 'myfile' => ''
             ];
 
-            if (\Defender::safe()) {
+            if (fusion_safe()) {
                 if (!empty($_FILES['myfile'])) {
                     $upload = form_sanitizer($_FILES['myfile'], '', 'myfile');
 
@@ -313,7 +313,7 @@ class ImagesAdministration {
                         if (self::$settings['tinymce_enabled'] == 1) {
                             include INCLUDES."buildlist.php";
                         }
-                        if (\Defender::safe()) {
+                        if (fusion_safe()) {
                             addNotice('success', self::$locale['420']);
                             redirect(clean_request("", ["section"], FALSE));
                         }

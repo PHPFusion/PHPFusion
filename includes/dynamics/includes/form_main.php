@@ -49,7 +49,7 @@ function openform($form_name, $method, $action_url = FORM_REQUEST, array $option
 
     $class = $options['class'];
 
-    if (!Defender::safe()) {
+    if (!fusion_safe()) {
         $class .= " warning";
     }
 

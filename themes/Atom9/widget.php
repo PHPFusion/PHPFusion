@@ -35,7 +35,7 @@ if (isset($_POST['save_settings'])) {
         'column_side'     => form_sanitizer($_POST['column_side'], '', 'column_side')
     ];
 
-    if (\Defender::safe()) {
+    if (fusion_safe()) {
         foreach ($settings as $settings_name => $settings_value) {
             $db = [
                 'settings_name'  => $settings_name,

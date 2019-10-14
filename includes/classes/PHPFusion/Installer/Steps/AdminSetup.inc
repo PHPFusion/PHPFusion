@@ -63,7 +63,7 @@ class InstallerAdminSetup extends Install_Core {
                 \Defender::stop();
             }
 
-            if (\Defender::safe()) {
+            if (fusion_safe()) {
                 $user_auth = new \PasswordAuth(self::INSTALLER_ALGO);
                 $user_auth->inputNewPassword = self::$userData['password1'];
                 $user_auth->inputNewPassword2 = self::$userData['password2'];
@@ -99,7 +99,7 @@ class InstallerAdminSetup extends Install_Core {
                         break;
                 }
 
-                if (\Defender::safe()) {
+                if (fusion_safe()) {
                     dbquery_insert(DB_PREFIX."users", self::$userData, 'update');
                     addNotice('success', self::$locale['setup_1217']);
 
@@ -373,7 +373,7 @@ class InstallerAdminSetup extends Install_Core {
                 addNotice('danger', self::$locale['setup_5016']);
             }
 
-            if (\Defender::safe()) {
+            if (fusion_safe()) {
 
                 $user_auth = new PasswordAuth(self::INSTALLER_ALGO);
 
@@ -418,7 +418,7 @@ class InstallerAdminSetup extends Install_Core {
                         break;
                 }
 
-                if (\Defender::safe()) {
+                if (fusion_safe()) {
 
                     self::$userData['user_timezone'] = self::$siteData['default_timezone'];
                     $batch_core = Batch_Core::getInstance();
@@ -527,7 +527,7 @@ class InstallerAdminSetup extends Install_Core {
                         }
                     }
 
-                    if (\Defender::safe()) {
+                    if (fusion_safe()) {
                         require_once BASEDIR."config_temp.php";
                         require_once INCLUDES."multisite_include.php";
                         self::installer_step(self::STEP_INFUSIONS);

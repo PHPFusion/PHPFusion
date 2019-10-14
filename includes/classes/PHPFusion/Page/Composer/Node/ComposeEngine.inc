@@ -201,7 +201,7 @@ class ComposeEngine extends PageAdmin {
                 }
             }
             dbquery_insert(DB_CUSTOM_PAGES_GRID, self::$rowData, 'delete');
-            if (\Defender::safe()) {
+            if (fusion_safe()) {
                 addNotice('success', self::$locale['page_0403']);
             }
         } else {
@@ -236,7 +236,7 @@ class ComposeEngine extends PageAdmin {
                     }
                 }
             }
-            if (\Defender::safe()) {
+            if (fusion_safe()) {
                 addNotice('success', self::$locale['page_0407']);
             }
         } else {
@@ -264,7 +264,7 @@ class ComposeEngine extends PageAdmin {
     }
 
     protected static function execute_RowUpdate() {
-        if (\Defender::safe()) {
+        if (fusion_safe()) {
             if (!empty(self::$rowData['page_grid_id'])) {
                 dbquery_order(DB_CUSTOM_PAGES_GRID, self::$rowData['page_grid_order'], 'page_grid_order',
                     self::$rowData['page_grid_id'], 'page_grid_id', 0, FALSE, FALSE, '', 'update');
@@ -434,7 +434,7 @@ class ComposeEngine extends PageAdmin {
                     }
                 }
 
-                if (\Defender::safe()) {
+                if (fusion_safe()) {
                     if (self::$colData['page_content_id'] > 0) {
                         dbquery_order(DB_CUSTOM_PAGES_CONTENT, self::$colData['page_content_order'],
                             'page_content_order',

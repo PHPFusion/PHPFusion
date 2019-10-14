@@ -519,7 +519,7 @@ class Infusion_Core {
                 ':folder' => $infData['inf_folder']
             ]);
 
-            if (\Defender::safe()) {
+            if (fusion_safe()) {
                 addNotice("success", sprintf(self::$locale['424'], self::$inf['title']));
                 redirect(FUSION_REQUEST);
             }

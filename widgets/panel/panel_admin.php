@@ -43,7 +43,7 @@ class panelWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine imple
         self::$widget_data = [
             'panel_include' => form_sanitizer($_POST['panel_include'], '', 'panel_include')
         ];
-        if (\Defender::safe()) {
+        if (fusion_safe()) {
             return \Defender::serialize(self::$widget_data);
         }
     }

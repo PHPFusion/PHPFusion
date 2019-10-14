@@ -44,7 +44,7 @@ class fileWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine implem
             'file_title' => form_sanitizer($_POST['file_title'], '', 'file_title'),
             'file_url'   => form_sanitizer($_POST['file_url'], '', 'file_url'),
         ];
-        if (\Defender::safe()) {
+        if (fusion_safe()) {
             return \Defender::serialize(self::$widget_data);
         }
     }

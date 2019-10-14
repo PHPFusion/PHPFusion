@@ -1735,7 +1735,7 @@ class UserFieldsQuantum extends \SqlHandler {
                 );
 
                 if (!$this->debug) {
-                    if (\Defender::safe()) {
+                    if (fusion_safe()) {
                         if (!empty($old_data['field_cat_db']) or $old_data['field_cat_db'] !== "users") {
 
                             if (!empty($old_data['field_cat_db']) && !empty($old_data['field_cat_index'])) {
@@ -1794,7 +1794,7 @@ class UserFieldsQuantum extends \SqlHandler {
                     'save'
                 );
 
-                if (!$this->debug && \Defender::safe()) {
+                if (!$this->debug && fusion_safe()) {
 
                     if (!empty($this->field_cat_data['field_cat_index']) &&
                         !empty($this->field_cat_data['field_cat_db']) &&
@@ -2090,7 +2090,7 @@ class UserFieldsQuantum extends \SqlHandler {
                 $this->field_data['field_order'] = dbresult(dbquery("SELECT MAX(field_order) FROM ".DB_USER_FIELDS." WHERE field_cat=:cat_id", [':cat_id' => $this->field_data['field_cat']]), 0) + 1;
             }
 
-            if (\Defender::safe()) {
+            if (fusion_safe()) {
                 if (!empty($this->field_data['field_config'])) {
                     $this->field_data['field_config'] = \Defender::encode($this->field_data['field_config']);
                 }
@@ -2419,7 +2419,7 @@ class UserFieldsQuantum extends \SqlHandler {
                                 //self::add_column($new_table, $data['field_name'], $field_attr);
                                 self::move_column($old_table, $new_table, $data['field_name']);
                                 self::drop_column($old_table, $oldRows['field_name']);
-                                if (\Defender::safe()) {
+                                if (fusion_safe()) {
                                     // sort the fields. if 2, greater than 2 all +1 on the new category
                                     dbquery("UPDATE ".DB_USER_FIELDS." SET field_order=field_order+1 WHERE field_order >= '".$data['field_order']."' AND field_cat='".$data['field_cat']."'");
                                     // since change table. fix all which is greater than link order.
@@ -2442,7 +2442,7 @@ class UserFieldsQuantum extends \SqlHandler {
                             }
                         }
                     } else {
-                        if (\Defender::safe()) {
+                        if (fusion_safe()) {
                             dbquery("UPDATE ".DB_USER_FIELDS." SET field_order=field_order+1 WHERE field_order >= '".$data['field_order']."' AND field_cat='".$data['field_cat']."'");
                             if (dbcount("(field_id)", DB_USER_FIELDS)) {
                                 dbquery("UPDATE ".DB_USER_FIELDS." SET field_order=field_order-1 WHERE field_order >= '".$oldRows['field_order']."' AND field_cat='".$oldRows['field_cat']."'");
@@ -2472,7 +2472,7 @@ class UserFieldsQuantum extends \SqlHandler {
                         }
                     }
                     if (!$this->debug) {
-                        if (\Defender::safe()) {
+                        if (fusion_safe()) {
                             // make ordering of the same table.
                             if ($data['field_order'] > $oldRows['field_order']) {
                                 dbquery("UPDATE ".DB_USER_FIELDS." SET field_order=field_order-1 WHERE field_order > ".$oldRows['field_order']." AND field_order <= '".$data['field_order']."' AND field_cat='".$data['field_cat']."'");
@@ -2492,7 +2492,7 @@ class UserFieldsQuantum extends \SqlHandler {
                 }
 
                 if (!$this->debug) {
-                    if (\Defender::safe()) {
+                    if (fusion_safe()) {
                         dbquery_insert(DB_USER_FIELDS, $data, 'update');
                         addNotice('success', $this->locale['field_0203']);
                         redirect(FUSION_SELF.$aidlink);
@@ -2526,7 +2526,7 @@ class UserFieldsQuantum extends \SqlHandler {
                 }
             }
 
-            if (\Defender::safe()) {
+            if (fusion_safe()) {
                 $field_arrays = fieldgenerator($new_table);
                 // Alter DB_USER_FIELDS table - add column.
                 // Checking for database registered users.
@@ -2540,7 +2540,7 @@ class UserFieldsQuantum extends \SqlHandler {
                     addNotice('danger', $this->locale['fields_0106']);
                 }
                 // ordering
-                if (\Defender::safe()) {
+                if (fusion_safe()) {
                     dbquery("UPDATE ".DB_USER_FIELDS." SET field_order=field_order+1 WHERE field_order > '".$data['field_order']."' AND field_cat='".$data['field_cat']."'");
                     dbquery_insert(DB_USER_FIELDS, $data, 'save');
                     addNotice('success', $this->locale['field_0204']);
@@ -2809,7 +2809,7 @@ class UserFieldsQuantum extends \SqlHandler {
      * @throws \Exception
      */
     public function log_user_action($db, $primary_key) {
-        if (\Defender::safe()) {
+        if (fusion_safe()) {
             $output_fields = [];
             $field = flatten_array($this->fields);
             $output_fields[$db] = $this->callback_data;

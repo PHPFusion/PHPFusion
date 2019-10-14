@@ -57,7 +57,7 @@ if (
         stripinput($_category['cat_col']) =>stripinput($_POST['cat_parent'])
     ];
 
-    if (\Defender::safe() && $table_data[$_category['title_col']] && !empty($_category['db'])) {
+    if (fusion_safe() && $table_data[$_category['title_col']] && !empty($_category['db'])) {
 
         $new_id = dbquery_insert($_category['db'], $table_data, 'save', ['keep_session'=>TRUE]);
 

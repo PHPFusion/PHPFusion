@@ -199,7 +199,7 @@ class Facebook_Connect {
 
         $is_new_email = $this->validateNewEmail($userProp['user_email']);
 
-        if (\Defender::safe()) {
+        if (fusion_safe()) {
 
             if ($is_new_email) {
 
@@ -427,7 +427,7 @@ class Facebook_Connect {
                 'fb_app_id' => sanitizer('fb_app_id', '', 'fb_app_id'),
                 'fb_secret' => sanitizer('fb_secret', '', 'fb_secret'),
             ];
-            if (\Defender::safe()) {
+            if (fusion_safe()) {
                 dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value=:s001 WHERE settings_name=:s001a AND settings_inf=:s001b", [':s001' => $settings['fb_app_id'], ':s001a' => 'fb_app_id', ':s001b' => 'facebook_connect']);
                 dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value=:s001 WHERE settings_name=:s001a AND settings_inf=:s001b", [':s001' => $settings['fb_secret'], ':s001a' => 'fb_secret', ':s001b' => 'facebook_connect']);
                 addNotice('success', $locale['fbc_0104']);

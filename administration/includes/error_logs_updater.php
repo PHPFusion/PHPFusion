@@ -30,7 +30,7 @@ $id = !empty($error_id) ? $error_id : 0;
 $error_type = filter_input(INPUT_GET, 'error_type', FILTER_VALIDATE_INT);
 $type = !empty($error_type) ? $error_type : 0;
 
-if (checkrights("ERRO") && defined("iAUTH") && $aid == iAUTH && Defender::safe()) {
+if (checkrights("ERRO") && defined("iAUTH") && $aid == iAUTH && fusion_safe()()) {
 
     $this_response = ['fusion_error_id' => $id, 'from' => 0, 'status' => 'Not Updated'];
 

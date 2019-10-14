@@ -45,7 +45,7 @@ class loginPanel extends resource {
                     </div>
                     <div class="login_panel">
                         <?php
-                        if (!\Defender::safe()) {
+                        if (!fusion_safe()) {
                             setNotice('danger', $locale['global_182']);
                         }
 

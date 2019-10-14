@@ -96,13 +96,13 @@ class UserForms {
             }
 
             // handles user avatar upload
-            if (\Defender::safe()) {
+            if (fusion_safe()) {
                 $user_data['user_avatar'] = $this->helper->checkUserAvatar();
             }
 
             $this->user_data = $user_data;
 
-            if (\Defender::safe()) {
+            if (fusion_safe()) {
                 dbquery_insert(DB_USERS, $this->user_data, 'update');
 
                 // send email.
@@ -262,7 +262,7 @@ class UserForms {
                 }
             }
             $this->user_data = $user_data;
-            if (\Defender::safe()) {
+            if (fusion_safe()) {
                 dbquery_insert(DB_USERS, $user_data, 'update', ['keep_session' => TRUE]);
                 addNotice('success', 'Profile has been updated.');
                 redirect(FUSION_REQUEST);
@@ -356,7 +356,7 @@ class UserForms {
 
             $this->user_data = $user_data;
 
-            if (\Defender::safe()) {
+            if (fusion_safe()) {
                 if (post('send_email')) {
                     $this->helper->sendNewAccountEmail();
                 } else {

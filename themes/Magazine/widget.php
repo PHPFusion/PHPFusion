@@ -26,7 +26,7 @@ if (isset($_POST['save_settings'])) {
         'social_share' => form_sanitizer($_POST['social_share'], 0, 'social_share'),
     ];
 
-    if (\Defender::safe()) {
+    if (fusion_safe()) {
         foreach ($settings as $settings_name => $settings_value) {
             $db = [
                 'settings_name'  => $settings_name,

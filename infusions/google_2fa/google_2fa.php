@@ -62,7 +62,7 @@ class GoogleAuthenticator {
             $secret = sanitizer('secret', '', 'secret');
             $checkResult = $google->verifyCode($secret, $gCode, 2);    // 2 = 2*30sec clock tolerance
 
-            if ($checkResult && \Defender::safe()) {
+            if ($checkResult && fusion_safe()) {
                 // successful paired
                 $user = [
                     'user_id'        => (int)$user_id,
@@ -83,7 +83,7 @@ class GoogleAuthenticator {
             $gCode = sanitizer('g_code', '', 'g_code');
 
             $checkResult = $google->verifyCode($field_value, $gCode, 2);    // 2 = 2*30sec clock tolerance
-            if ($checkResult && \Defender::safe()) {
+            if ($checkResult && fusion_safe()) {
                 // successful paired
                 $user = [
                     'user_id'        => $user_id,

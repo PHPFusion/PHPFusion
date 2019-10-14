@@ -182,7 +182,7 @@ class InstallerDbSetup extends Install_Core {
 
         $_SESSION['db_config_connection'] = self::$connection;
 
-        if (\Defender::safe()) {
+        if (fusion_safe()) {
 
             $validate = Requirements::get_system_validation();
 

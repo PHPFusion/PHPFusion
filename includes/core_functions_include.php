@@ -17,8 +17,15 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
+use Defender\CSRFToken;
 use PHPFusion\Authenticate;
+use PHPFusion\BreadCrumbs;
+use PHPFusion\ImageRepo;
+use PHPFusion\Minify\JS;
 use PHPFusion\OutputHandler;
+use PHPFusion\PrivateMessages;
+use PHPFusion\Rewrite\RewriteDriver;
+use PHPFusion\UserFieldsQuantum;
 
 /**
  * Checks for license data to php-fusion.co.uk for validation of license
@@ -420,7 +427,7 @@ function trim_text($str, $length = FALSE) {
  * @return string
  */
 function normalize($string) {
-    return \PHPFusion\Rewrite\RewriteDriver::normalize($string);
+    return RewriteDriver::normalize($string);
 }
 
 /**
@@ -534,7 +541,7 @@ function clean_request($request_addition = '', array $filter_array = [], $keep_f
  * @return array
  */
 function cache_smileys() {
-    return \PHPFusion\ImageRepo::cache_smileys();
+    return ImageRepo::cache_smileys();
 }
 
 /**
@@ -1617,7 +1624,7 @@ function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $ge
                 $_name = get_parent_array($tree_full, $id);
                 $crumb = [
                     'link'  => isset($_name[$id_col]) ? clean_request($getname."=".$_name[$id_col], ["aid"], TRUE) : "",
-                    'title' => isset($_name[$title_col]) ? \PHPFusion\UserFieldsQuantum::parse_label($_name[$title_col]) : "",
+                    'title' => isset($_name[$title_col]) ? UserFieldsQuantum::parse_label($_name[$title_col]) : "",
                 ];
                 if (get_parent($tree_index, $id) == 0) {
                     return $crumb;
@@ -1644,7 +1651,7 @@ function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $ge
     }
     if ($title_count) {
         foreach ($crumb['title'] as $i => $value) {
-            \PHPFusion\BreadCrumbs::getInstance($key)->addBreadCrumb(['link' => $crumb['link'][$i], 'title' => $value]);
+            BreadCrumbs::getInstance($key)->addBreadCrumb(['link' => $crumb['link'][$i], 'title' => $value]);
             if ($i == count($crumb['title']) - 1) {
                 OutputHandler::addToTitle($GLOBALS['locale']['global_200'].$value);
                 OutputHandler::addToMeta($value);
@@ -1653,7 +1660,7 @@ function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $ge
     } else if (isset($crumb['title'])) {
         OutputHandler::addToTitle($GLOBALS['locale']['global_200'].$crumb['title']);
         OutputHandler::addToMeta($crumb['title']);
-        \PHPFusion\BreadCrumbs::getInstance($key)->addBreadCrumb(['link' => $crumb['link'], 'title' => $crumb['title']]);
+        BreadCrumbs::getInstance($key)->addBreadCrumb(['link' => $crumb['link'], 'title' => $crumb['title']]);
     }
 }
 
@@ -1897,7 +1904,7 @@ function fusion_get_locale($key = NULL, $include_file = '') {
  * @return string
  */
 function fusion_parse_locale($string) {
-    return \PHPFusion\UserFieldsQuantum::parse_label($string);
+    return UserFieldsQuantum::parse_label($string);
 }
 
 /**
@@ -1973,7 +1980,7 @@ function fusion_get_aidlink() {
  * @return string
  */
 function fusion_get_token($form_id, $max_tokens = 5) {
-    return \Defender\Token::generate_token($form_id, $max_tokens);
+    return CSRFToken::generate_token($form_id, $max_tokens);
 }
 
 /**
@@ -1984,7 +1991,7 @@ function fusion_get_token($form_id, $max_tokens = 5) {
  * @return bool
  */
 function fusion_verify_token($token_ring = '', $key = '') {
-    $token_errors = \Defender\Token::verify_token($token_ring, $key);
+    $token_errors = CSRFToken::verify_token($token_ring, $key);
     if (!empty($token_errors)) {
         return FALSE;
     }
@@ -2000,7 +2007,7 @@ function fusion_verify_token($token_ring = '', $key = '') {
  * @return array|bool|null
  */
 function user_pm_settings($user_id, $key = NULL) {
-    return \PHPFusion\PrivateMessages::get_pm_settings($user_id, $key);
+    return PrivateMessages::get_pm_settings($user_id, $key);
 }
 
 /**
@@ -2240,7 +2247,7 @@ function save_user_log($user_id, $column_name, $new_value, $old_value) {
  * @return string
  */
 function jsminify($code) {
-    $minifier = new \PHPFusion\Minify\JS($code);
+    $minifier = new JS($code);
 
     return $minifier->minify();
 }
@@ -2261,12 +2268,12 @@ function jsminify($code) {
 function write_file($file, $data, $flags = NULL) {
     $bytes = NULL;
     if ($flags === NULL) {
-        $bytes = \file_put_contents($file, $data);
+        $bytes = file_put_contents($file, $data);
     } else {
-        $bytes = \file_put_contents($file, $data, $flags);
+        $bytes = file_put_contents($file, $data, $flags);
     }
     if (function_exists('opcache_invalidate')) {
-        \opcache_invalidate($file, TRUE);
+        opcache_invalidate($file, TRUE);
     }
 
     return $bytes;

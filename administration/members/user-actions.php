@@ -208,7 +208,7 @@ class UserActions extends UserList {
                     $duration = ($duration * 86400) + TIME;
                 }
 
-                if (\Defender::safe()) {
+                if (fusion_safe()) {
 
                     foreach ($this->users as $user_id => $u_data) {
 
@@ -257,7 +257,7 @@ class UserActions extends UserList {
                 }
             }
 
-            if (!post('post_action') || !\Defender::safe()) {
+            if (!post('post_action') || !fusion_safe()) {
                 $height = '45px';
                 foreach ($this->users as $user_data) {
                     $users_list .= strtr($this->user_block_template(),

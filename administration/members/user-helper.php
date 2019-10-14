@@ -124,7 +124,7 @@ class User_Helper {
         } else {
             addNotice('success', 'A verification email has been sent to '.$user_name.' The account will only be active after email verification.');
         }
-        if (\Defender::safe()) {
+        if (fusion_safe()) {
             $userInfo = base64_encode(serialize($this->class->user_data));
             dbquery("INSERT INTO ".DB_NEW_USERS." (user_code, user_name, user_firstname, user_lastname, user_email, user_datestamp, user_language, user_status, user_info) VALUES 
             ('".$userCode."', '".$user_name."', '".$user_firstname."', '".$user_lastname."', '".$user_email."', '".TIME."', '".$user_language."', '".$user_status."', '".$userInfo."')");

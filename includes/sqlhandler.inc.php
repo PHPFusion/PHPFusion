@@ -29,7 +29,7 @@ class SqlHandler {
         if (!empty($field_attributes)) {
             $result = dbquery("ALTER TABLE ".$table_name." ADD ".$new_column_name." ".$field_attributes); // create the new one.
             if (!$result) {
-                \Defender::stop();
+                fusion_stop();
                 addNotice("danger", "Unable to add column ".$new_column_name." with attributes - ".$field_attributes);
             }
         }
@@ -88,13 +88,13 @@ class SqlHandler {
             while ($data = dbarray($result)) {
                 if ($data['Key'] !== "PRI" && $i > 2) {
                     $result = dbquery("ALTER TABLE ".$new_table." ADD COLUMN ".$data['Field']." ".$data['Type']." ".($data['Null'] == "NO" ? "NOT NULL" : "NULL")." DEFAULT '".$data['Default']."'");
-                    if (!$result && \Defender::safe()) {
+                    if (!$result && fusion_safe()) {
                         dbquery("INSERT INTO ".$new_table." (".$data['Field'].") SELECT ".$data['Field']." FROM ".$old_table);
                     }
                 }
                 $i++;
             }
-            if (!\Defender::safe()) {
+            if (!fusion_safe()) {
                 addNotice("danger", "Unable to move all columns from ".$old_table." to " > $new_table);
             }
         }
@@ -112,7 +112,7 @@ class SqlHandler {
         if (!$result) {
             \Defender::stop();
         }
-        if (!\Defender::safe()) {
+        if (!fusion_safe()) {
             addNotice("danger", "Unable to drop ".$old_table);
         }
 
@@ -158,13 +158,13 @@ class SqlHandler {
             if (!$result) {
                 \Defender::stop();
             }
-            if ($result && \Defender::safe()) {
+            if ($result && fusion_safe()) {
                 dbquery("INSERT INTO ".$new_table." (".$data['Field'].") SELECT ".$data['Field']." FROM ".$old_table);
             }
-            if (!$result && \Defender::safe()) {
+            if (!$result && fusion_safe()) {
                 \Defender::stop();
             }
-            if (!\Defender::safe()) {
+            if (!fusion_safe()) {
                 addNotice("danger", "Cannot move ".$column_name);
             }
         }
@@ -756,7 +756,7 @@ function dbquery_insert($table, $inputdata, $mode, array $options = []) {
         'keep_session' => TRUE
     ];
 
-    if (!Defender::safe()) {
+    if (!fusion_safe()) {
         if ($options['debug']) {
             print_p('Fusion Null Declared. Developer, check form tokens.');
         }

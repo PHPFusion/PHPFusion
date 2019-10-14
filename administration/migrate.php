@@ -35,7 +35,7 @@ if (isset($_POST['migrate'])) {
         redirect(FUSION_REQUEST);
     }
 
-    if (\Defender::safe()) {
+    if (fusion_safe()) {
         $result = dbquery("SELECT user_id, user_name FROM ".DB_USERS." WHERE user_id=:userid", [':userid' => $user_primary_id]);
         if (dbrows($result) > 0) {
             $result2 = dbquery("SELECT user_id, user_name FROM ".DB_USERS." WHERE user_id=:userid", [':userid' => $user_temp_id]);

@@ -132,7 +132,7 @@ class FormFactory {
                 $this->api->remove($this->data);
             }
 
-            if (\Defender::safe()) {
+            if (fusion_safe()) {
 
                 $redirect_link = FUSION_REQUEST; // this is bound to have error in most use case
 
@@ -177,7 +177,7 @@ class FormFactory {
                     $id_value = (!empty($this->data[$id_field])) ? $this->api->update($this->data) : $this->api->save($this->data);
 
                     // handle redirection
-                    if (\Defender::safe()) {
+                    if (fusion_safe()) {
                         $redirect_uri = FUSION_REQUEST;
                         if ($post_save) {
                             redirect($redirect_uri);

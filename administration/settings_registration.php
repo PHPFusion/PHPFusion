@@ -49,7 +49,7 @@ class Settings_Registration {
                 'license_lastupdate'  => ($_POST['license_agreement'] != $this->settings['license_agreement'] ? time() : $this->settings['license_lastupdate'])
             ];
 
-            if (\Defender::safe()) {
+            if (fusion_safe()) {
                 foreach ($inputData as $settings_name => $settings_value) {
                     $data = [
                         'settings_name'  => $settings_name,

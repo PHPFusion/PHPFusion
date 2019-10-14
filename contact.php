@@ -57,7 +57,7 @@ if (isset($_POST['sendmessage'])) {
         }
     }
 
-    if (\Defender::safe()) {
+    if (fusion_safe()) {
         require_once INCLUDES."sendmail_include.php";
 
         $template_result = dbquery("SELECT template_key, template_active, template_sender_name, template_sender_email FROM ".DB_EMAIL_TEMPLATES." WHERE template_key='CONTACT' LIMIT 1");
@@ -83,7 +83,7 @@ if (isset($_POST['sendmessage'])) {
             }
         }
 
-        if (\Defender::safe()) {
+        if (fusion_safe()) {
             addNotice('success', $locale['CT_440']);
             redirect(BASEDIR.'contact.php');
         }

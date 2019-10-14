@@ -31,7 +31,7 @@ function display_news_widget() {
                 'news_draft'     => 1,
                 'news_datestamp' => TIME,
             ];
-            if (\Defender::safe()) {
+            if (fusion_safe()) {
                 dbquery_insert(DB_NEWS, $news, 'save');
                 addNotice('success', 'News draft has been posted');
                 redirect(FUSION_REQUEST);

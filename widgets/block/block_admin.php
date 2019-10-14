@@ -48,7 +48,7 @@ class blockWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine imple
             'block_margin'      => form_sanitizer($_POST['block_margin'], '', 'block_margin'),
             'block_padding'     => form_sanitizer($_POST['block_padding'], '', 'block_padding'),
         ];
-        if (\Defender::safe()) {
+        if (fusion_safe()) {
             return \Defender::serialize(self::$widget_data);
         }
     }

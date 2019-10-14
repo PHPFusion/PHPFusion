@@ -815,7 +815,7 @@ class PrivateMessages {
                 $this->data['to'] = sanitizer('msg_send', 0, 'msg_send');
             }
 
-            if (\Defender::safe()) {
+            if (fusion_safe()) {
                 if (iADMIN && $sendToAll && $this->data['msg_group_send']) {
                     self::send_pm($this->data['msg_group_send'], $this->data['from'], $this->data['subject'], $this->data['message'], $this->data['smileys'], TRUE);
                 } else {

@@ -45,7 +45,7 @@ if (post('save_robots')) {
         addNotice("danger", $locale['ROBOT_417']);
     }
 
-    if (\Defender::safe()) {
+    if (fusion_safe()) {
         $message = !file_exists($file) ? $locale['ROBOT_416'] : $locale['ROBOT_412'];
         write_file($file, $robots_content);
         addNotice("success", $message);
@@ -60,7 +60,7 @@ if (post('set_default')) {
         \Defender::stop();
         addNotice("danger", $locale['ROBOT_414']);
     }
-    if (\Defender::safe() && !defined('FUSION_NULL')) {
+    if (fusion_safe() && !defined('FUSION_NULL')) {
         write_file($file, write_Default());
         addNotice("success", $locale['ROBOT_412']);
         redirect(FUSION_REQUEST);

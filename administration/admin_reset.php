@@ -79,7 +79,7 @@ class AdminPasswordResetAdministration {
             $reset_success = [];
             $reset_failed = [];
 
-            if (\Defender::safe()) {
+            if (fusion_safe()) {
                 $user_sql = (isnum($reset_admin) ? "user_id='".$reset_admin."'" :
                     ($reset_admin == "all" ? "user_level=".USER_LEVEL_ADMIN." OR user_level=".USER_LEVEL_SUPER_ADMIN :
                         ($reset_admin == "sa" ? "user_level=".USER_LEVEL_SUPER_ADMIN :

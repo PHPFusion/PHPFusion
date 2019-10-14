@@ -660,7 +660,7 @@ class Tables {
                 }
             }
 
-            if (\Defender::safe()) {
+            if (fusion_safe()) {
                 if ($this->table_props['deleted_message']) {
                     addNotice('success', $this->table_props['deleted_message']);
                 }
@@ -870,7 +870,7 @@ class Tables {
                     $post_data[$table_col] = sanitizer($table_col, '', $table_col);
                 }
 
-                if (\Defender::safe()) {
+                if (fusion_safe()) {
                     dbquery_insert($this->query['table'], $post_data, 'update', ['keep_session' => TRUE]);
                     redirect(FUSION_REQUEST);
                 }

@@ -51,7 +51,7 @@ class TagsMeta {
                         "SELECT {ID}, {TITLE} FROM {DB} WHERE {TITLE} IN ({TAGS_INPUT}) AND {LANG}='".LANGUAGE."'";
                 }
 
-                if (\Defender::safe()) {
+                if (fusion_safe()) {
 
                     $sql = strtr($sql, [
                         '{ID}' => $_tags['id_col'],

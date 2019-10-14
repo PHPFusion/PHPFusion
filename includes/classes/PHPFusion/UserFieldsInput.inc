@@ -124,7 +124,7 @@ class UserFieldsInput {
             // Captcha check
             if ($this->validation == 1)
                 $this->validate_captcha();
-            if (\Defender::safe()) {
+            if (fusion_safe()) {
                 if ($this->email_verification === TRUE && $this->is_admin_panel === FALSE) {
                     $this->sendVerificationEmail();
                 } else {
@@ -434,7 +434,7 @@ class UserFieldsInput {
             addNotice('warning', $this->locale['u153']."<br />".$message, 'all');
         }
         $userInfo = base64_encode(serialize($this->data));
-        if (\Defender::safe()) {
+        if (fusion_safe()) {
             dbquery("INSERT INTO ".DB_NEW_USERS."
 					(user_code, user_name, user_email, user_datestamp, user_info)
 					VALUES
@@ -456,7 +456,7 @@ class UserFieldsInput {
             $update['user_language'] = sanitizer('user_language', '', 'user_language');
             $update['user_location'] = sanitizer('user_location', '', 'user_location');
             $update['user_hide_email'] = sanitizer('user_hide_email', '0', 'user_hide_email');
-            if (\Defender::safe()) {
+            if (fusion_safe()) {
                 $update['user_id'] = $this->user_data['user_id'];
                 dbquery_insert(DB_USERS, $update, 'update', ['keep_session' => TRUE]);
                 if (!$this->is_admin_panel) {
@@ -488,7 +488,7 @@ class UserFieldsInput {
                         $data += $input_data;
                     }
                 }
-                if (\Defender::safe()) {
+                if (fusion_safe()) {
                     $data['user_id'] = $this->user_data['user_id'];
                     $quantum->log_user_action(DB_USERS, 'user_id');
                     dbquery_insert(DB_USERS, $data, 'update');
@@ -695,7 +695,7 @@ class UserFieldsInput {
     private function updateUserName() {
         if ($this->user_name_change && post($this->post_name.'_username') || $this->is_admin_panel) {
             $new_username = $this->validateUserName();
-            if (\Defender::safe()) {
+            if (fusion_safe()) {
                 dbquery("UPDATE `".DB_USERS."` SET `user_name`=:uname WHERE `user_id`=:uid", [
                     ':uname' => $new_username,
                     ':uid'   => $this->user_data['user_id']
@@ -807,7 +807,7 @@ class UserFieldsInput {
                 $notice_class = 'danger';
                 $notice_message = $this->locale['u149'];
             }
-            if (\Defender::safe()) {
+            if (fusion_safe()) {
                 dbquery("UPDATE `".DB_USERS."` SET user_salt=:u_salt, user_algo=:u_algo, user_password=:u_passwd WHERE user_id=:uid", [
                     ':u_salt'   => $user_salt,
                     ':u_algo'   => $user_algo,
@@ -933,7 +933,7 @@ class UserFieldsInput {
                 $notice_message = $this->locale['u149a'];
             }
 
-            if (\Defender::safe()) {
+            if (fusion_safe()) {
                 dbquery("UPDATE `".DB_USERS."` SET user_admin_algo=:ua_algo, user_admin_password=:ua_passwd, user_admin_salt=:ua_salt WHERE user_id=:uid", [
                     ':uid'       => $this->user_data['user_id'],
                     ':ua_algo'   => $user_admin_algo,
@@ -1065,7 +1065,7 @@ class UserFieldsInput {
     private function updateEmail() {
         if (post($this->post_name.'_email') || $this->is_admin_panel) {
             $user_email = $this->validateEmail();
-            if (\Defender::safe()) {
+            if (fusion_safe()) {
                 if ($user_email) {
                     dbquery("UPDATE `".DB_USERS."` SET user_email=:u_email WHERE user_id=:uid", [
                         ':uid'     => $this->user_data['user_id'],

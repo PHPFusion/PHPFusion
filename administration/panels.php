@@ -293,7 +293,7 @@ class PanelsAdministration {
                     $current_side = $panel_side;
                 }
             }
-            if (\Defender::safe()) {
+            if (fusion_safe()) {
                 redirect(FUSION_SELF.$aidlink."&amp;section=listpanel");
             }
         }
@@ -519,7 +519,7 @@ class PanelsAdministration {
 
         if (isset($_POST['panel_preview']) && $settings['allow_php_exe']) {
             $panel_title = form_sanitizer($_POST['panel_name'], "", "panel_name");
-            if (\Defender::safe()) {
+            if (fusion_safe()) {
                 ob_start();
                 echo openmodal("cp_preview", $panel_title);
                 if (fusion_get_settings("allow_php_exe")) {

@@ -41,7 +41,7 @@ class AdminSearch {
         $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/main.php');
 
         if ($this->authorizeAid()) {
-            if (\defender::safe()) {
+            if (fusion_safe()) {
                 $search_string = (string)filter_input(INPUT_GET, 'pagestring');
 
                 if (isset($search_string)) {

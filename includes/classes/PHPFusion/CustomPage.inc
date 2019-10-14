@@ -131,7 +131,7 @@ class CustomPage {
         $locale = fusion_get_locale("", LOCALE.LOCALESET."admin/custom_pages.php");
 
         if (isset($_POST['preview'])) {
-            if (\Defender::safe()) {
+            if (fusion_safe()) {
                 $previewHtml = openmodal("cp_preview", $locale['429']);
                 $previewHtml .= "<h3>".$data['page_title']."</h3>\n";
                 if (fusion_get_settings("allow_php_exe")) {
@@ -506,7 +506,7 @@ class CustomPage {
 
                 dbquery_insert(DB_CUSTOM_PAGES, $data, 'update');
 
-                if (\Defender::safe()) {
+                if (fusion_safe()) {
                     addNotice('success', $locale['411']);
                     redirect(FUSION_SELF.$aidlink."&amp;pid=".$data['page_id']);
                 }
@@ -521,7 +521,7 @@ class CustomPage {
                     self::set_customPageLinks($data);
                 }
 
-                if (\Defender::safe()) {
+                if (fusion_safe()) {
                     addNotice('success', $locale['410']);
                     redirect(FUSION_SELF.$aidlink."&amp;pid=".$data['page_id']);
                 }

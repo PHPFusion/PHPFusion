@@ -172,7 +172,7 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine im
             $data['slider_order'] = count($widget_data) + 1;
         }
 
-        if (\Defender::safe()) {
+        if (fusion_safe()) {
             if (!empty($_FILES['slider_image_src']['tmp_name'])) {
                 $upload = form_sanitizer($_FILES['slider_image_src'], '', 'slider_image_src');
                 if (empty($upload['error'])) {
@@ -210,7 +210,7 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine im
             $count++;
         }
 
-        if (\Defender::safe() && !empty($widget_data)) {
+        if (fusion_safe() && !empty($widget_data)) {
             $widget_data = \Defender::serialize($widget_data);
             return $widget_data;
         }
@@ -226,7 +226,7 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine im
             'slider_indicator'  => form_sanitizer($_POST['slider_indicator'], 0, 'slider_indicator'),
             'slider_interval'   => form_sanitizer($_POST['slider_interval'], 0, 'slider_interval')
         ];
-        if (Defender::safe() && !empty($widget_settings)) {
+        if (fusion_safe()() && !empty($widget_settings)) {
             return \Defender::serialize($widget_settings);
         }
     }

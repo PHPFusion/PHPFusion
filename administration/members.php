@@ -168,7 +168,7 @@ class Members_Administration {
                             redirect(FUSION_SELF.$aidlink);
                         }
 
-                        if (post('deactivate_users') && \Defender::safe()) {
+                        if (post('deactivate_users') && fusion_safe()) {
 
                             require_once INCLUDES."sendmail_include.php";
 

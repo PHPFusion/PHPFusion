@@ -35,4 +35,4 @@ if ((($if_none_match && $if_none_match == $etag) || (!$if_none_match)) &&
     header("ETag: \"{$etag}\"");
 }
 
-\Defender::safe() || exit;
+fusion_safe() || exit;

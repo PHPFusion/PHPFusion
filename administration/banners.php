@@ -83,7 +83,7 @@ class BannersAdministration {
                 'sitebanner2' => post('sitebanner2') ? descript(addslashes(post('sitebanner2'))) : self::$settings['sitebanner2'],
             ];
 
-            if (\Defender::safe()) {
+            if (fusion_safe()) {
                 foreach ($settings_main as $settings_key => $settings_value) {
                     dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:value WHERE settings_name=:name", [':value' => $settings_value, ':name' => $settings_key]);
                     addNotice('success', self::$locale['BN_012']);
@@ -105,7 +105,7 @@ class BannersAdministration {
                 'sitebanner2' => get('banner_id') == 'sitebanner2' ? '' : self::$settings['sitebanner2'],
             ];
 
-            if (\Defender::safe()) {
+            if (fusion_safe()) {
                 foreach ($settings_main as $settings_key => $settings_value) {
                     dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:value WHERE settings_name=:name", [':value' => $settings_value, ':name' => $settings_key]);
                 }

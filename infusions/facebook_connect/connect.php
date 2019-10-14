@@ -3,7 +3,7 @@ require_once __DIR__.'/../../maincore.php';
 require_once INFUSIONS.'facebook_connect/class/autoload.php';
 // facebook connect code
 if (iMEMBER) {
-    if (\Defender::safe()) {
+    if (fusion_safe()) {
         $action = post('action');
         $settings = get_settings('facebook_connect');
         if ($action == 'connect') {

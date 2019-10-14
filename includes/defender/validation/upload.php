@@ -161,7 +161,7 @@ class Upload extends \Defender\Validation {
             }
         } else {
 
-            if (!empty($_FILES[self::$inputConfig['input_name']]['name']) && is_uploaded_file($_FILES[self::$inputConfig['input_name']]['tmp_name']) && \Defender::safe()) {
+            if (!empty($_FILES[self::$inputConfig['input_name']]['name']) && is_uploaded_file($_FILES[self::$inputConfig['input_name']]['tmp_name']) && fusion_safe()) {
 
                 $upload = upload_file(self::$inputConfig['input_name'], $_FILES[self::$inputConfig['input_name']]['name'], self::$inputConfig['path'], self::$inputConfig['valid_ext'], self::$inputConfig['max_byte'], "", self::$inputConfig['replace_upload']);
 
@@ -224,7 +224,7 @@ class Upload extends \Defender\Validation {
             $thumb2_height = self::$inputConfig['thumbnail2_h'];
             $query = '';
 
-            if (!empty($_FILES[self::$inputConfig['input_name']]['name']) && is_uploaded_file($_FILES[self::$inputConfig['input_name']]['tmp_name'][0]) && \Defender::safe()) {
+            if (!empty($_FILES[self::$inputConfig['input_name']]['name']) && is_uploaded_file($_FILES[self::$inputConfig['input_name']]['tmp_name'][0]) && fusion_safe()) {
                 $result = [];
                 for ($i = 0; $i <= count($_FILES[self::$inputConfig['input_name']]['name']) - 1; $i++) {
                     if (is_uploaded_file($_FILES[self::$inputConfig['input_name']]['tmp_name'][$i])) {
@@ -359,7 +359,7 @@ class Upload extends \Defender\Validation {
             }
         } else {
 
-            if (!empty($_FILES[self::$inputConfig['input_name']]['name']) && is_uploaded_file($_FILES[self::$inputConfig['input_name']]['tmp_name']) && \Defender::safe()) {
+            if (!empty($_FILES[self::$inputConfig['input_name']]['name']) && is_uploaded_file($_FILES[self::$inputConfig['input_name']]['tmp_name']) && fusion_safe()) {
 
                 $upload = upload_image(
                     self::$inputConfig['input_name'], // src image

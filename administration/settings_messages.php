@@ -34,7 +34,7 @@ if (post('save_settings')) {
         'pm_save_sent'     => (post('pm_save_sent') ? sanitizer('pm_save_sent', '1', 'pm_save_sent') : 0)
     ];
 
-    if (\Defender::safe()) {
+    if (fusion_safe()) {
         foreach ($inputData as $settings_name => $settings_value) {
             $data = [
                 'settings_name'  => $settings_name,

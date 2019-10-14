@@ -681,7 +681,7 @@ class Comments {
                         AND comment_item_id='".$this->getParams('comment_item_id')."'
                         AND comment_type='".$this->getParams('comment_item_type')."'
                         AND comment_name='".$this->userdata['user_id']."'
-                        AND comment_hidden='0'")) && \Defender::safe()
+                        AND comment_hidden='0'")) && fusion_safe()
                 ) {
 
                     $c_name_query = "SELECT comment_name FROM ".DB_COMMENTS." WHERE comment_id='".$comment_data['comment_id']."'";
@@ -710,7 +710,7 @@ class Comments {
                             AND comment_type='".$this->getParams('comment_item_type')."'");
 
                     $c_start = (ceil($c_count / $this->settings['comments_per_page']) - 1) * $this->settings['comments_per_page'];
-                    if ($this->jquery_enabled === FALSE && \Defender::safe()) {
+                    if ($this->jquery_enabled === FALSE && fusion_safe()) {
                         addNotice("success", $this->locale['c114']);
                         $_c = (isset($c_start) && isnum($c_start) ? $c_start : "");
                         $c_link = $this->getParams('clink');
@@ -722,7 +722,7 @@ class Comments {
 
                 $comment_data['comment_datestamp'] = TIME;
 
-                if (\Defender::safe()) {
+                if (fusion_safe()) {
 
                     $c_start = 0;
 

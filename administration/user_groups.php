@@ -118,7 +118,7 @@ class UserGroups {
                 'group_icon'        => sanitizer('group_icon', '', "group_icon")
             ];
 
-            if (\Defender::safe()) {
+            if (fusion_safe()) {
                 dbquery_insert(DB_USER_GROUPS, $this->data, empty($this->data['group_id']) ? "save" : "update");
                 addNotice("success", empty($this->data['group_id']) ? self::$locale['GRP_401'] : self::$locale['GRP_400']);
                 redirect(clean_request("section=usergroup", ["", "aid"], TRUE));

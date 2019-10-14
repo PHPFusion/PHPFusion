@@ -85,7 +85,7 @@ class featureboxWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine 
                 self::$widget_data['box_icon_src'] = form_sanitizer($_POST['box_icon_src-mediaSelector'], '', 'box_icon_src-mediaSelector');
             }
         }
-        if (\Defender::safe()) {
+        if (fusion_safe()) {
             return \Defender::serialize(self::$widget_data);
         }
     }

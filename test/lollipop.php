@@ -12,7 +12,7 @@ if (post('validate')) {
         addNotice('success', 'Captcha is validated');
     }
 
-    if (\Defender::safe()) {
+    if (fusion_safe()) {
         redirect(FUSION_SELF);
     }
 }

@@ -205,7 +205,7 @@ class Defender {
 	/**
 	 * Fetches the latest error text of this input
 	 * Important! Ensure your applications do not refresh screen for this error to show.
-	 * Usage \Defender::safe(); for conditional redirect.
+	 * Usage fusion_safe(); for conditional redirect.
 	 *
 	 * @param $input_name
 	 *
@@ -862,5 +862,5 @@ function fusion_decrypt($value, $password) {
 }
 
 require_once __DIR__.'/defender/validation.php';
-require_once __DIR__.'/defender/token.php';
+require_once __DIR__.'/defender/csrftoken.php';
 require_once __DIR__.'/defender/mimecheck.php';

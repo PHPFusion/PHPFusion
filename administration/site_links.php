@@ -232,7 +232,7 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
                 "links_grouping" => form_sanitizer($_POST['links_grouping'], 0, "links_grouping"),
                 'link_bbcode'    => form_sanitizer($_POST['link_bbcode'], 0, 'link_bbcode')
             ];
-            if (\Defender::safe()) {
+            if (fusion_safe()) {
                 foreach ($settings as $key => $value) {
                     dbquery("UPDATE ".DB_SETTINGS." SET settings_value = '$value' WHERE settings_name = '$key'");
                 }
@@ -328,7 +328,7 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
                 $this->data['link_order'] = dbresult(dbquery($max_order_query), 0) + 1;
             }
 
-            if (\Defender::safe()) {
+            if (fusion_safe()) {
 
                 if (!empty($this->data['link_id'])) {
 
@@ -532,7 +532,7 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
 
                     foreach ($input as $link_id) {
                         // check input table
-                        if (self::verify_sitelinks($link_id) && \Defender::safe()) {
+                        if (self::verify_sitelinks($link_id) && fusion_safe()) {
                             switch ($_POST['table_action']) {
                                 case "publish":
                                     dbquery("UPDATE ".DB_SITE_LINKS." SET link_status='1' WHERE link_id='".intval($link_id)."'");
@@ -804,7 +804,7 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
             if ($this->data['link_position'] > 3) {
                 $this->data['link_position'] = form_sanitizer($_POST['link_position_id'], 3, 'link_position_id');
             }
-            if (\Defender::safe()) {
+            if (fusion_safe()) {
                 dbquery_insert(DB_SITE_LINKS, $this->data, "update");
                 $child = get_child($this->link_index, $this->data['link_id']);
                 if (!empty($child)) {

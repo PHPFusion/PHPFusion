@@ -16,7 +16,12 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
+use Defender\CSRFToken;
+use Defender\ImageValidation;
 use PHPFusion\Authenticate;
+use PHPFusion\Installer\Infusion_Core;
+use PHPFusion\OutputHandler;
+use PHPFusion\Steam;
 
 if (preg_match("/maincore.php/i", $_SERVER['PHP_SELF'])) {
     die();
@@ -185,7 +190,7 @@ $login_post = post("login");
 $user_name_post = post("user_name");
 $user_pass_post = post("user_pass");
 if ($login_post && $user_name_post && $user_pass_post) {
-    if (\Defender::safe()) {
+    if (fusion_safe()) {
         $remember_me = post('remember_me') ? TRUE : FALSE;
         $auth = new Authenticate($user_name_post, $user_pass_post, $remember_me);
         $userdata = $auth->getUserData();
@@ -249,10 +254,10 @@ require_once INCLUDES."error_handling_include.php";
 $defender = Defender::getInstance();
 
 if (!defined('FUSION_ALLOW_REMOTE')) {
-    new \Defender\Token();
+    new CSRFToken();
 }
 
-\Defender\ImageValidation::ValidateExtensions();
+ImageValidation::ValidateExtensions();
 
 // Define aidlink
 if (iADMIN) {
@@ -282,18 +287,18 @@ Authenticate::setAdminLogin();
 
 $fusion_dynamics = Dynamics::getInstance();
 
-$fusion_page_head_tags = &\PHPFusion\OutputHandler::$pageHeadTags;
+$fusion_page_head_tags = &OutputHandler::$pageHeadTags;
 
-$fusion_page_footer_tags = &\PHPFusion\OutputHandler::$pageFooterTags;
+$fusion_page_footer_tags = &OutputHandler::$pageFooterTags;
 
-$fusion_jquery_tags = &\PHPFusion\OutputHandler::$jqueryTags;
+$fusion_jquery_tags = &OutputHandler::$jqueryTags;
 
-$fusion_css_tags = &\PHPFusion\OutputHandler::$cssTags;
+$fusion_css_tags = &OutputHandler::$cssTags;
 
 // Get installed infusions
 $fusion_infusions = fusion_get_infusions();
 
-$fusion_steam = new \PHPFusion\Steam('bootstrap3'); // use bootstrap 3
+$fusion_steam = new Steam('bootstrap3'); // use bootstrap 3
 
 // Set theme using $_GET as well.
 // Set theme
@@ -311,7 +316,7 @@ set_theme(empty($userdata['user_theme']) ? fusion_get_settings("theme") : $userd
  * Reduction of 0.04 seconds in performance.
  * We can use manually include the configuration if needed.
  */
-\PHPFusion\Installer\Infusion_Core::getInstance()->loadConfiguration();
+Infusion_Core::getInstance()->loadConfiguration();
 
 // applying hook for social login
 fusion_apply_hook('fusion_login_connect');

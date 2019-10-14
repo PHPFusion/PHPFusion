@@ -32,7 +32,7 @@ class User extends \Defender\Validation {
             \Defender::stop();
             \Defender::setInputError($name.'-lastname');
         }
-        if (\Defender::safe()) {
+        if (fusion_safe()) {
             $return_value = Text::verify_text();
             return $return_value;
         }
@@ -61,7 +61,7 @@ class User extends \Defender\Validation {
             \Defender::stop();
             \Defender::setInputError($name.'-postcode');
         }
-        if (\Defender::safe()) {
+        if (fusion_safe()) {
             $return_value = Text::verify_text();
             return $return_value;
         }
@@ -89,7 +89,7 @@ class User extends \Defender\Validation {
             \Defender::stop();
             \Defender::setInputError($name.'-doc-5');
         }
-        if (\Defender::safe()) {
+        if (fusion_safe()) {
             $return_value = Text::verify_text();
             return $return_value;
         }

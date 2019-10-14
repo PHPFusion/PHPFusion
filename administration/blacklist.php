@@ -81,7 +81,7 @@ class BlacklistAdministration {
                 'blacklist_datestamp' => empty($_POST['blacklist_datestamp']) ? time() : $_POST['blacklist_datestamp']
             ];
 
-            if (\Defender::safe()) {
+            if (fusion_safe()) {
                 if (empty($this->data['blacklist_ip']) && empty($this->data['blacklist_email'])) {
                     \Defender::stop();
                     addNotice('danger', self::$locale['BLS_010']);
@@ -182,7 +182,7 @@ class BlacklistAdministration {
 
             if (!empty($input)) {
                 foreach ($input as $blacklist_id) {
-                    if (self::verify_blacklist($blacklist_id) && \Defender::safe()) {
+                    if (self::verify_blacklist($blacklist_id) && fusion_safe()) {
                         if ($_POST['table_action'] == 'delete') {
                             self::delete_blacklist($blacklist_id);
                             addNotice('warning', self::$locale['BLS_013']);

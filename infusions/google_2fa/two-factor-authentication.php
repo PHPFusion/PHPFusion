@@ -53,7 +53,7 @@ function google_2fa_authenticate() {
 
                     $gCode = sanitizer('g_code', '', 'g_code');
 
-                    if (\Defender::safe()) {
+                    if (fusion_safe()) {
 
                         $checkResult = $google->verifyCode($google_secret, $gCode, 2);    // 2 = 2*30sec clock tolerance
 

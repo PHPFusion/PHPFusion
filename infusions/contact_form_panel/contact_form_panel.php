@@ -52,7 +52,7 @@ if (isset($_POST['sendmessage'])) {
         }
     }
 
-    if (\Defender::safe()) {
+    if (fusion_safe()) {
         require_once INCLUDES.'sendmail_include.php';
 
         $template_result = dbquery("
@@ -82,7 +82,7 @@ if (isset($_POST['sendmessage'])) {
             }
         }
 
-        if (\Defender::safe()) {
+        if (fusion_safe()) {
             addNotice('warning', $locale['CT_425']);
             redirect(FUSION_SELF);
         }
