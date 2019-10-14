@@ -49,7 +49,7 @@ function openform($form_name, $method, $action_url = FORM_REQUEST, array $option
 
     $class = $options['class'];
 
-    if (!\Defender::safe()) {
+    if (!Defender::safe()) {
         $class .= " warning";
     }
 
@@ -62,7 +62,7 @@ function openform($form_name, $method, $action_url = FORM_REQUEST, array $option
         if ($options['honeypot']) {
             $input_name = 'fusion_'.random_string();
             $html .= "<input type='hidden' name='$input_name' value=''>\n";
-            \Defender::getInstance()->addHoneypot([
+            Defender::getInstance()->addHoneypot([
                 'honeypot' => $options['form_id'].'_honeypot',
                 'input_name' => $input_name,
                 'form_name'  => $form_name,
@@ -81,7 +81,12 @@ function closeform() {
     return (string)"</form>\n";
 }
 
+/**
+ * @param $value
+ *
+ * @return string
+ */
 function clean_input_name($value) {
     $re = '/(\[\d+\])/';
-    return preg_replace($re, '', $value);
+    return (string)preg_replace($re, '', $value);
 }

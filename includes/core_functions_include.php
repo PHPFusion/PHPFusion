@@ -202,6 +202,16 @@ function check_admin_pass($password) {
 }
 
 /**
+ * @return bool
+ */
+function fusion_safe() {
+    return Defender::getInstance()->safe();
+}
+
+function fusion_stop() {
+    return Defender::getInstance()->stop();
+}
+/**
  * Redirect browser using header or script function
  *
  * @param      $location

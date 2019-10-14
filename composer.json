@@ -1,5 +1,5 @@
 {
-  "name": "PHPFusion/9.10.00",
+  "name": "phpfusion/9.10.00",
   "description": "PHP-Fusion is a free and open-source web framework based on PHP and MySQL that has an integrated content management system (CMS) among many other features.",
   "minimum-stability": "alpha",
   "license": "AGPLv3",
@@ -10,6 +10,10 @@
     }
   ],
   "require": {
-    "phpmd/phpmd" : "@stable"
+    "phpmd/phpmd" : "@stable",
+    "squizlabs/php_codesniffer": "3.5.0",
+    "dealerdirect/phpcodesniffer-composer-installer": "v0.5.0",
+    "wp-coding-standards/wpcs": "2.1.1",
+    "ext-openssl": "*"
   }
 }

@@ -37,7 +37,7 @@ if (isset($_REQUEST['form_id'])
     if (iADMIN && fusion_get_aidlink() == $_REQUEST['aidlink']) {
         if ($_REQUEST['callback'] == 'set_cache') {
             $status['response'] = 200;
-            $_SESSION['form_cache'][$form_id][$form_type][$item_id] = \Defender::getInstance()->form_sanitizer($_REQUEST['fields']);
+            $_SESSION['form_cache'][$form_id][$form_type][$item_id] = form_sanitizer($_REQUEST['fields']);
             /*if ($item_id) {
                 if (\Defender::safe()) {
                     $status['response'] = 201;

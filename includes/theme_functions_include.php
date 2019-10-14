@@ -1264,31 +1264,42 @@ if (!function_exists("tab_active")
         public function __construct() {
         }
 
-        public static function tab_active($array, $default_active, $getname = FALSE) {
+        /**
+         * @param      $array
+         * @param      $default_active
+         * @param bool $getname
+         *
+         * @return mixed
+         */
+        public static function tabActive($array, $default_active, $getname = FALSE) {
+            $tab_id = $array['id'][$default_active];
             if (!empty($getname)) {
-                $section = isset($_GET[$getname]) && $_GET[$getname] ? $_GET[$getname] : $default_active;
+                $section = get($getname) ?: $default_active;
+                //$section = isset($_GET[$getname]) && $_GET[$getname] ? $_GET[$getname] : $default_active;
                 $count = count($array['title']);
                 if ($count > 0) {
-                    for ($i = 0; $i < $count; $i++) {
-                        $id = $array['id'][$i];
-                        if ($section == $id) {
-                            return $id;
+                    for ($tabCount = 0; $tabCount < $count; $tabCount++) {
+                        $tab_id = $array['id'][$tabCount];
+                        if ($section == $tab_id) {
+                            return $tab_id;
                         }
                     }
-                } else {
-                    return $default_active;
                 }
-            } else {
-                $id = $array['id'][$default_active];
-
-                return $id;;
+                return $default_active;
             }
+            return $tab_id;;
         }
 
-        public function set_remember($boolean) {
+        /**
+         * @param $boolean
+         */
+        public function setRemember($boolean) {
             $this->remember = $boolean;
         }
 
+        /**
+         * @param $tabId
+         */
         public function removeRemember($tabId) {
             unset($_COOKIE[$this->cookie_prefix.'-'.$tabId]);
         }
@@ -1332,51 +1343,46 @@ if (!function_exists("tab_active")
             if (empty($link) && $this->remember) {
                 if (!defined('JS_COOKIES')) {
                     define('JS_COOKIES', TRUE);
-                    OutputHandler::addToFooter('<script type="text/javascript" src="'.INCLUDES.'jquery/jquery.cookie.js"></script>');
+                    add_to_jquery('<script type="text/javascript" src="'.INCLUDES.'jquery/jquery.cookie.js"></script>');
                 }
-                OutputHandler::addToJQuery("
-    $('#".$tabId." > li').on('click', function() {
-    var cookieName = '".$this->cookie_name."';
-    var cookieValue = $(this).find(\"a[role='tab']\").attr('id');
-    Cookies.set(cookieName, cookieValue);
-    });
-    var cookieName = '".$this->cookie_name."';
-    if (Cookies.get(cookieName)) {
-    $('#".$tabId."').find('#'+Cookies.get(cookieName)).click();
-    }
-    ");
+                add_to_jquery("
+                $('#".$tabId." > li').on('click', function() {
+                var cookieName = '".$this->cookie_name."';
+                var cookieValue = $(this).find(\"a[role='tab']\").attr('id');
+                Cookies.set(cookieName, cookieValue);
+                });
+                var cookieName = '".$this->cookie_name."';
+                if (Cookies.get(cookieName)) {
+                $('#".$tabId."').find('#'+Cookies.get(cookieName)).click();
+                }
+                ");
             }
 
             return (string)$html;
         }
 
-        /*
-         * Deprecated $tab_title.
-         * Deprecated $link
+        /**
+         * @param      $id
+         * @param bool $link_active_arrkey
+         * @param bool $key
          *
-         * Commit title:
-         * Using globals without adding parameter to pass $id set on previous opentabs() to next opentabbody()
+         * @return string
          */
         public function opentabbody($id, $link_active_arrkey = FALSE, $key = FALSE) {
-
             $key = $key ? $key : 'section';
-            if (isset($_GET[$key]) && $this->link_mode) {
-                if ($link_active_arrkey == $id) {
-                    $status = 'in active';
-                } else {
-                    $status = '';
-                }
-            } else {
-                if (!$this->link_mode) {
-
-                    if ($this->remember) {
-                        if (isset($_COOKIE[$this->cookie_name])) {
-                            $link_active_arrkey = str_replace('tab-', '', $_COOKIE[$this->cookie_name]);
-                        }
+            if (!$this->link_mode) {
+                if ($this->remember) {
+                    if (isset($_COOKIE[$this->cookie_name])) {
+                        $link_active_arrkey = str_replace('tab-', '', $_COOKIE[$this->cookie_name]);
                     }
                 }
-                $status = ($link_active_arrkey == $id ? " in active" : '');
-
+            }
+            $status = ($link_active_arrkey == $id ? " in active" : '');
+            if (get($key) && $this->link_mode) {
+                $status = '';
+                if ($link_active_arrkey == $id) {
+                    $status = 'in active';
+                }
             }
 
             return "<div class='tab-pane fade".$status."' id='".$id."'>\n";
@@ -1391,7 +1397,7 @@ if (!function_exists("tab_active")
             if ($options['tab_nav'] == TRUE) {
                 $nextBtn = "<a class='btn btn-warning btnNext pull-right' >".$locale['next']."</a>";
                 $prevBtn = "<a class='btn btn-warning btnPrevious m-r-10'>".$locale['previous']."</a>";
-                OutputHandler::addToJQuery("
+                add_to_jquery("
                 $('.btnNext').click(function(){
                   $('.nav-tabs > .active').next('li').find('a').trigger('click');
                 });
@@ -1424,7 +1430,7 @@ if (!function_exists("tab_active")
      * @todo: options base
      */
     function tab_active($array, $default_active, $getname = FALSE) {
-        return \FusionTabs::tab_active($array, $default_active, $getname);
+        return FusionTabs::tabActive($array, $default_active, $getname);
     }
 
     /**
@@ -1458,7 +1464,7 @@ if (!function_exists("tab_active")
     function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE, $getname = "section", array $cleanup_GET = [], $remember = FALSE) {
         $fusion_tabs = FusionTabs::getInstance($id);
         if ($remember) {
-            $fusion_tabs->set_remember(TRUE);
+            $fusion_tabs->setRemember(TRUE);
         }
 
         return $fusion_tabs->opentab($tab_title, $link_active_arrkey, $id, $link, $class, $getname, $cleanup_GET, $remember);
@@ -1493,17 +1499,26 @@ if (!function_exists("tab_active")
 }
 
 if (!function_exists("display_ratings")) {
-    /* Standard ratings display */
+    /**
+     * Standard ratings display
+     *
+     * @param        $total_sum
+     * @param        $total_votes
+     * @param bool   $link
+     * @param bool   $class
+     * @param string $mode
+     *
+     * @return string
+     */
     function display_ratings($total_sum, $total_votes, $link = FALSE, $class = FALSE, $mode = '1') {
         $locale = fusion_get_locale();
         $start_link = $link ? "<a class='comments-item ".$class."' href='".$link."'>" : '';
         $end_link = $link ? "</a>\n" : '';
         $average = $total_votes > 0 ? number_format($total_sum / $total_votes, 2) : 0;
         $str = $mode == 1 ? $average.$locale['global_094'].format_word($total_votes, $locale['fmt_rating']) : "$average/$total_votes";
+        $answer = $start_link."<i title='".sprintf($locale['global_089a'], $locale['global_077'])."' class='fa fa-star-o high-opacity m-l-0'></i> ".$str.$end_link;
         if ($total_votes > 0) {
             $answer = $start_link."<i title='".$locale['ratings']."' class='fa fa-star-o m-l-0'></i>".$str.$end_link;
-        } else {
-            $answer = $start_link."<i title='".sprintf($locale['global_089a'], $locale['global_077'])."' class='fa fa-star-o high-opacity m-l-0'></i> ".$str.$end_link;
         }
 
         return $answer;
@@ -1511,7 +1526,16 @@ if (!function_exists("display_ratings")) {
 }
 
 if (!function_exists("display_comments")) {
-    /* Standard comment display */
+    /**
+     * Standard comment display
+     *
+     * @param        $news_comments
+     * @param bool   $link
+     * @param bool   $class
+     * @param string $mode
+     *
+     * @return string
+     */
     function display_comments($news_comments, $link = FALSE, $class = FALSE, $mode = '1') {
         $locale = fusion_get_locale();
         $start_link = $link ? "<a class='comments-item ".$class."' href='".$link."' {%title%} >" : '';
@@ -1530,7 +1554,7 @@ if (!function_exists("display_comments")) {
 if (!function_exists("fusion_confirm_exit")) {
     /* JS form exit confirmation if form has changed */
     function fusion_confirm_exit() {
-        OutputHandler::addToJQuery("
+        add_to_jquery("
             $('form').change(function() {
                 window.onbeforeunload = function() {
                     return true;
@@ -1548,6 +1572,12 @@ if (!function_exists("fusion_confirm_exit")) {
  * Requires the loading of Font Awesome which can be enabled in theme settings.
  */
 if (!function_exists('social_media_links')) {
+    /**
+     * @param       $url
+     * @param array $options
+     *
+     * @return string
+     */
     function social_media_links($url, $options = []) {
         $default = [
             'facebook' => TRUE,
