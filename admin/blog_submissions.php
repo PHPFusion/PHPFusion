@@ -82,7 +82,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 $data['blog_image_t1'] = "";
                 $data['blog_image_t2'] = "";
             }
-            if (Defender::safe()) {
+            if (fusion_safe()()) {
                 dbquery_insert(DB_BLOG, $data, "save");
                 $result = dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id='".$_GET['submit_id']."'");
                 if ($data['blog_draft']) {
@@ -184,7 +184,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                         $callback_data['blog_extended'] = nl2br($callback_data['blog_extended']);
                     }
                 }
-                if (Defender::safe()) {
+                if (fusion_safe()()) {
                     echo openmodal('blog_preview', $locale['blog_0141']);
                     echo "<h3>".$callback_data['blog_subject']."</h3>\n";
                     echo $callback_data['blog_blog'];

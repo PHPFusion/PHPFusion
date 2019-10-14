@@ -55,7 +55,7 @@ if (isset($_POST['save_cat'])) {
         "when_updating" => "blog_cat_name='".$inputArray['blog_cat_name']."' and blog_cat_id !='".$inputArray['blog_cat_id']."' ".(multilang_table("BL") ? "and blog_cat_language = '".LANGUAGE."'" : ""),
         "when_saving"   => "blog_cat_name='".$inputArray['blog_cat_name']."' ".(multilang_table("BL") ? "and blog_cat_language = '".LANGUAGE."'" : ""),
     ];
-    if (Defender::safe()) {
+    if (fusion_safe()()) {
         // check category name is unique when updating
         if (dbcount("(blog_cat_id)", DB_BLOG_CATS, "blog_cat_id='".$inputArray['blog_cat_id']."'")) {
             if (!dbcount("(blog_cat_id)", DB_BLOG_CATS, $categoryNameCheck['when_updating'])) {
