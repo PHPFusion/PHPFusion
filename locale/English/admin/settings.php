@@ -203,7 +203,7 @@ $locale['699f'] = "General";
 $locale['699g'] = "Check uploaded files for MIME type?";
 $locale['699h'] = "Enable Registration Gateway?";
 $locale['699i'] = "Number Delimiter";
-$locale['699k'] = "Number Seperator";
+$locale['699j'] = "Thousands separator";
 // Private Message Settings
 $locale['700'] = "Private Messages";
 $locale['701'] = "Inbox message limit:";

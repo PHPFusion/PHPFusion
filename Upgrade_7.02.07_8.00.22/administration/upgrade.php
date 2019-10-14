@@ -660,7 +660,7 @@ if (str_replace(".", "", $settings['version']) < "80022") {
 
                     // Number Formating
                     $result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('number_delimiter', '.')");
-                    $result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('number_seperator', ',')");
+                    $result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('thousands_separator', ',')");
 
                     // Update admin icons
                     $new_icon_array = [

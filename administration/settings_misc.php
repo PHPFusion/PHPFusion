@@ -96,7 +96,7 @@ if (isset($_POST['savesettings'])) {
     if (!$result) {
         $error = 1;
     }
-    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['number_seperator']) ? $_POST['number_seperator'] : ",")."' WHERE settings_name='number_seperator'");
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['thousands_separator']) ? $_POST['thousands_separator'] : ",")."' WHERE settings_name='thousands_separator'");
     if (!$result) {
         $error = 1;
     }
@@ -189,10 +189,10 @@ echo "<option value='.'".($settings['number_delimiter'] == "." ? " selected='sel
 echo "<option value=','".($settings['number_delimiter'] == "," ? " selected='selected'" : "").">,</option>\n";
 echo "</select></td>\n";
 echo "</tr>\n<tr>\n";
-echo "<td width='50%' class='tbl'>".$locale['699k']."</td>\n";
-echo "<td width='50%' class='tbl'><select name='number_seperator' class='textbox'>\n";
-echo "<option value='.'".($settings['number_seperator'] == "." ? " selected='selected'" : "").">.</option>\n";
-echo "<option value=','".($settings['number_seperator'] == "," ? " selected='selected'" : "").">,</option>\n";
+echo "<td width='50%' class='tbl'>".$locale['699j']."</td>\n";
+echo "<td width='50%' class='tbl'><select name='thousands_separator' class='textbox'>\n";
+echo "<option value='.'".($settings['thousands_separator'] == "." ? " selected='selected'" : "").">.</option>\n";
+echo "<option value=','".($settings['thousands_separator'] == "," ? " selected='selected'" : "").">,</option>\n";
 echo "</select></td>\n";
 echo "</tr>\n<tr>\n";
 echo "<td align='center' colspan='2' class='tbl'><br />\n";

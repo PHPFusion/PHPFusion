@@ -48,7 +48,7 @@ if (str_replace(".", "", $settings['version']) < "80022") {
         echo "<input type='submit' name='upgrade' value='".$locale['400']."' class='button'><br /><br />\n";
     } else if (isset($_POST['upgrade']) && isset($_POST['stage']) && $_POST['stage'] == 2) {
         $result = dbquery("INSERT INTO ".DB_SETTINGS."settings (settings_name, settings_value) VALUES ('number_delimiter', '.')");
-        $result = dbquery("INSERT INTO ".DB_SETTINGS."settings (settings_name, settings_value) VALUES ('number_seperator', ',')");
+        $result = dbquery("INSERT INTO ".DB_SETTINGS."settings (settings_name, settings_value) VALUES ('thousands_separator', ',')");
 
         // Convert the Database to utf8mb4
         $result = dbquery("SELECT @@character_set_database as charset, @@collation_database as collation;");
