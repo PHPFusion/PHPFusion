@@ -33,6 +33,7 @@ function get_fusion_steam($component = 'Layout') {
     if (empty($fusion_steam)) {
         $fusion_steam = new \PHPFusion\Steam();
     }
+
     return (object)$fusion_steam->load($component);
 }
 
@@ -44,6 +45,7 @@ function get_fusion_steam($component = 'Layout') {
  */
 function grid_row() {
     $layout = get_fusion_steam('Layout');
+
     return (string)$layout->getRowClass();
 }
 
@@ -60,6 +62,7 @@ function grid_row() {
  */
 function grid_column_size($mobile = 100, $tablet = 0, $laptop = 0, $desktop = 0) {
     $layout = get_fusion_steam('Layout');
+
     return (string)$layout->getColumnClass([$mobile, $tablet, $laptop, $desktop], FALSE);
 }
 
@@ -71,9 +74,9 @@ function grid_column_size($mobile = 100, $tablet = 0, $laptop = 0, $desktop = 0)
  */
 function grid_container() {
     $layout = get_fusion_steam('Layout');
+
     return (string)$layout->getContainerClass();
 }
-
 
 /**
  * Show PHP-Fusion Performance
@@ -219,6 +222,7 @@ function showcounter($delimiter = '.', $thousand_sep = ',') {
     if ($settings['visitorcounter_enabled']) {
         return "<!--counter-->".number_format($settings['counter'], 0, $delimiter, $thousand_sep)." ".($settings['counter'] == 1 ? $locale['global_170'] : $locale['global_171']);
     }
+
     return '';
 }
 
@@ -366,6 +370,7 @@ if (!function_exists("alert")) {
             'class'   => $options['class'],
             'content' => $title,
         ]);
+
         return (string)$alert_tpl->get_output();
     }
 }
@@ -1280,13 +1285,17 @@ if (!function_exists("tab_active")
             }
         }
 
-        public function set_remember($value) {
-            $this->remember = $value;
+        public function set_remember($boolean) {
+            $this->remember = $boolean;
         }
 
-        public function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE, $getname = 'section', array $cleanup_GET = [], $wrapper_class = NULL) {
-            $this->id = $id;
-            $this->cookie_name = $this->cookie_prefix.'-'.$id;
+        public function removeRemember($tabId) {
+            unset($_COOKIE[$this->cookie_prefix.'-'.$tabId]);
+        }
+
+        public function opentab($tab_title, $link_active_arrkey, $tabId, $link = FALSE, $class = FALSE, $getname = 'section', array $cleanup_GET = [], $wrapper_class = NULL) {
+            $this->id = $tabId;
+            $this->cookie_name = $this->cookie_prefix.'-'.$tabId;
             $this->tab_info = $tab_title;
             $this->link_mode = $link;
 
@@ -1300,7 +1309,7 @@ if (!function_exists("tab_active")
                 }
             }
             $html = "<div class='nav-wrapper".($wrapper_class ? " ".$wrapper_class : '')."'>\n";
-            $html .= "<ul id='$id' class='nav nav-tabs".($class ? " ".$class : '')."'>\n";
+            $html .= "<ul id='$tabId' class='nav nav-tabs".($class ? " ".$class : '')."'>\n";
             foreach ($tab_title['title'] as $arr => $v) {
                 $v_title = $v;
                 $tab_id = $tab_title['id'][$arr];
@@ -1319,23 +1328,23 @@ if (!function_exists("tab_active")
                 $html .= "</li>\n";
             }
             $html .= "</ul>\n";
-            $html .= "<div id='tab-content-$id' class='tab-content'>\n";
+            $html .= "<div id='tab-content-$tabId' class='tab-content'>\n";
             if (empty($link) && $this->remember) {
                 if (!defined('JS_COOKIES')) {
                     define('JS_COOKIES', TRUE);
                     OutputHandler::addToFooter('<script type="text/javascript" src="'.INCLUDES.'jquery/jquery.cookie.js"></script>');
                 }
                 OutputHandler::addToJQuery("
-                $('#".$id." > li').on('click', function() {
-                    var cookieName = '".$this->cookie_name."';
-                    var cookieValue = $(this).find(\"a[role='tab']\").attr('id');
-                    Cookies.set(cookieName, cookieValue);
-                });
-                var cookieName = 'tab_js-".$id."';
-                if (Cookies.get(cookieName)) {
-                    $('#".$id."').find('#'+Cookies.get(cookieName)).click();
-                }
-                ");
+    $('#".$tabId." > li').on('click', function() {
+    var cookieName = '".$this->cookie_name."';
+    var cookieValue = $(this).find(\"a[role='tab']\").attr('id');
+    Cookies.set(cookieName, cookieValue);
+    });
+    var cookieName = '".$this->cookie_name."';
+    if (Cookies.get(cookieName)) {
+    $('#".$tabId."').find('#'+Cookies.get(cookieName)).click();
+    }
+    ");
             }
 
             return (string)$html;
