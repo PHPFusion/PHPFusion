@@ -71,7 +71,7 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
             }
 
             // Handle
-            if (\Defender::safe()) {
+            if (fusion_safe()) {
 
                 // Publish Submission
                 if (isset($_POST['publish_submission'])) {
