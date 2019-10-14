@@ -29,6 +29,7 @@ class FaqAdminModel extends FaqServer {
         'faq_breaks'     => 'n',
         'faq_visibility' => 0,
         'faq_status'     => 1,
+        'faq_order'      => 0,
         'faq_language'   => LANGUAGE
     ];
 

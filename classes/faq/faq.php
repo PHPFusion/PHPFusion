@@ -113,7 +113,7 @@ abstract class Faq extends FaqServer {
             LEFT JOIN ".DB_USERS." AS fu ON fq.faq_name=fu.user_id
             WHERE fq.faq_status='1' AND ".groupaccess("fq.faq_visibility").
             (multilang_table('FQ') ? " AND fq.faq_language='".LANGUAGE."'" : '').($cat ? " AND fq.faq_cat_id='$cat'" : ' AND fq.faq_cat_id=0')."
-            GROUP BY fq.faq_id ORDER BY fq.faq_cat_id ASC, fq.faq_id ASC
+            GROUP BY fq.faq_id ORDER BY fq.faq_order ASC
         ");
 
         if (dbrows($result)) {

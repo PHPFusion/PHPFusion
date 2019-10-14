@@ -40,6 +40,7 @@ $inf_newtable[] = DB_FAQS." (
     faq_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
     faq_visibility CHAR(4) NOT NULL DEFAULT '0',
     faq_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+    faq_order SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
     faq_language VARCHAR(50) NOT NULL DEFAULT '".LANGUAGE."',
     PRIMARY KEY(faq_id),
     KEY faq_cat_id (faq_cat_id),

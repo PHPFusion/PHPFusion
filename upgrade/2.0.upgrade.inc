@@ -16,3 +16,13 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 $inf_version = '2.0';
+
+$check_faq = [
+    'faq_order' => " ADD faq_order SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0' AFTER faq_status",
+];
+
+foreach ($check_faq as $key => $value) {
+    if (!column_exists(DB_FAQS, $key, FALSE)) {
+        $inf_altertable[] = DB_FAQS.$value;
+    }
+}

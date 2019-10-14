@@ -180,6 +180,7 @@ class FaqAdmin extends FaqAdminModel {
                 'faq_datestamp'  => form_sanitizer($_POST['faq_datestamp'], '', 'faq_datestamp'),
                 'faq_visibility' => form_sanitizer($_POST['faq_visibility'], 0, 'faq_visibility'),
                 'faq_status'     => isset($_POST['faq_status']) ? '1' : '0',
+                'faq_order'      => form_sanitizer($_POST['faq_order'], 0, 'faq_order'),
                 'faq_language'   => form_sanitizer($_POST['faq_language'], LANGUAGE, 'faq_language'),
             ];
 
@@ -190,16 +191,22 @@ class FaqAdmin extends FaqAdminModel {
                 $this->faq_data['faq_breaks'] = "n";
             }
 
+            if (!$this->faq_data['faq_order']) {
+                $this->faq_data['faq_order'] = dbresult(dbquery("SELECT MAX(faq_order) FROM ".DB_FAQS." ".(multilang_table("FQ") ? "WHERE faq_language='".LANGUAGE."' AND" : "WHERE")." faq_cat_id='".$this->faq_data['faq_cat_id']."'"), 0) + 1;
+            }
+
             // Handle
             if (fusion_safe()) {
                 // Update
                 if (dbcount("(faq_id)", DB_FAQS, "faq_id='".$this->faq_data['faq_id']."'")) {
+                    dbquery_order(DB_FAQS, $this->faq_data['faq_order'], 'faq_order', $this->faq_data['faq_id'], 'faq_id', $this->faq_data['faq_cat_id'], 'faq_cat_id', 1, 'faq_language', 'update');
                     $this->faq_data['faq_datestamp'] = isset($_POST['update_datestamp']) ? time() : $this->faq_data['faq_datestamp'];
                     dbquery_insert(DB_FAQS, $this->faq_data, 'update');
                     addNotice('success', $this->locale['faq_0031']);
 
                     // Create
                 } else {
+                    dbquery_order(DB_FAQS, $this->faq_data['faq_order'], 'faq_order', FALSE, FALSE, $this->faq_data['faq_cat_id'], 'faq_cat_id', 1, 'faq_language', 'save');
                     $this->faq_data['faq_name'] = fusion_get_userdata('user_id');
                     $this->faq_data['article_id'] = dbquery_insert(DB_FAQS, $this->faq_data, 'save');
                     addNotice('success', $this->locale['faq_0030']);
@@ -311,6 +318,9 @@ class FaqAdmin extends FaqAdminModel {
                 if (!empty($_GET['action']) && $_GET['action'] == 'edit') {
                     echo form_checkbox('update_datestamp', $this->locale['faq_0257'], '');
                 }
+
+                echo form_text('faq_order', $this->locale['order'], $this->faq_data['faq_order'], ['type' => 'number']);
+
                 closeside();
                 openside($this->locale['faq_0258']);
                 echo form_checkbox('faq_status', $this->locale['faq_0255'], $this->faq_data['faq_status'], [
