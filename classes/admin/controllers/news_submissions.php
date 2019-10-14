@@ -86,7 +86,7 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                         $this->news_data['news_breaks'] = "n";
                     }
 
-                    if (\Defender::safe()) {
+                    if (fusion_safe()) {
 
                         if (!empty($_FILES['featured_image'])) { // when files is uploaded.
                             $upload = form_sanitizer($_FILES['featured_image'], '', 'featured_image');
@@ -577,7 +577,7 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                 if ($failed_upload) {
                     addNotice("warning", sprintf(self::$locale['news_0269'], $failed_upload));
                 }
-                if (\Defender::safe()) {
+                if (fusion_safe()) {
                     redirect(FUSION_REQUEST);
                 }
             }

@@ -67,7 +67,7 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
             }
         }
 
-        if (\Defender::safe()) {
+        if (fusion_safe()) {
             $inputArray = [
                 'submit_type'      => 'n',
                 'submit_user'      => fusion_get_userdata('user_id'),
@@ -91,7 +91,7 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
             'news_keywords'    => form_sanitizer($_POST['news_keywords'], '', 'news_keywords'),
             'news_image_align' => !empty($_POST['news_image_align']) ? form_sanitizer($_POST['news_image_align'], '', 'news_image_align') : "",
         ];
-        if (\Defender::safe() && isset($_POST['preview_news'])) {
+        if (fusion_safe() && isset($_POST['preview_news'])) {
             $footer = openmodal("news_preview", "<i class='fa fa-eye fa-lg m-r-10'></i> ".$locale['preview'].": ".$criteriaArray['news_subject']);
             $footer .= nl2br(parse_textarea($criteriaArray['news_news']));
             if ($criteriaArray['news_extended']) {
