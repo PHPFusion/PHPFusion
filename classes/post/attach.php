@@ -11,10 +11,10 @@ function post_image_upload() {
         'error'         => 'Invalid actions',
         'user_id'       => post('user_id', FILTER_VALIDATE_INT),
         'thread_id'     => post('thread_id', FILTER_VALIDATE_INT),
-        'defender_safe' => \Defender::safe()
+        'defender_safe' => fusion_safe()
     ];
 
-    if (\Defender::safe()) {
+    if (fusion_safe()) {
 
         if (!empty($_FILES['upload']['tmp_name']) && $output['thread_id'] && $output['user_id']) {
 

@@ -80,7 +80,7 @@ class ForumAdminRanks extends ForumAdminInterface {
                 'rank_apply' => $this->data['rank_type'] == 2 ? $this->data['rank_apply_special'] : $this->data['rank_apply_normal']
             ];
 
-            if (\Defender::safe()) {
+            if (fusion_safe()) {
 
                 if (!empty($this->data['rank_id']) && !$this->check_duplicate_ranks()) {
                     /**

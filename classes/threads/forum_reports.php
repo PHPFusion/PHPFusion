@@ -78,7 +78,7 @@ class Forum_Reports {
                         "report_datestamp" => TIME,
                         "report_updated"   => TIME,
                     ];
-                    if (\Defender::safe()) {
+                    if (fusion_safe()) {
                         dbquery_insert(DB_FORUM_REPORTS, $rdata, "save");
                         addNotice("success", "Your feedback has been received. Thank you.");
                         redirect($exit_uri);
@@ -236,7 +236,7 @@ class Forum_Reports {
                     "report_comment" => form_sanitizer($_POST['report_comment'], "", "report_comment"),
                     "report_actions" => form_sanitizer($_POST['report_actions'], "", "report_actions")
                 ];
-                if (\Defender::safe()) {
+                if (fusion_safe()) {
                     $first_postid = dbresult(dbquery("SELECT MIN(post_id) FROM ".DB_FORUM_POSTS." WHERE thread_id=:tid", [':tid' => $data['thread_id']]), 0);
                     switch ($rdata['report_actions']) {
                         // check whether it is a first post.

@@ -1033,7 +1033,7 @@ class Forum_Threads extends Forum_Server {
 
         if (post('post_quick_reply')) {
 
-            if ($this->getThreadPermission("can_reply") && \Defender::safe()) {
+            if ($this->getThreadPermission("can_reply") && fusion_safe()) {
 
                 $this->thread_data = $this->thread_info['thread'];
 
@@ -1065,7 +1065,7 @@ class Forum_Threads extends Forum_Server {
                         $post_data['post_cat'] = 0;
                     }
 
-                    if (\Defender::safe()) { // post message is invalid or whatever is invalid
+                    if (fusion_safe()) { // post message is invalid or whatever is invalid
 
                         $update_forum_lastpost = FALSE;
                         // Prepare forum merging action

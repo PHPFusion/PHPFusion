@@ -85,7 +85,7 @@ class ForumAdminSettings extends ForumAdminInterface {
                 'points_to_downvote'        => sanitizer('points_to_downvote', 100, 'points_to_downvote'),
                 'forum_show_reputation'     => sanitizer('forum_show_reputation', 0, 'forum_show_reputation'),
             ];
-            if (\Defender::safe()) {
+            if (fusion_safe()) {
                 foreach ($inputArray as $settings_name => $settings_value) {
                     $inputSettings = [
                         "settings_name"  => $settings_name,
@@ -227,7 +227,7 @@ class ForumAdminSettings extends ForumAdminInterface {
                 'forum_last_post_avatar'     => sanitizer('forum_last_post_avatar', 0, 'forum_last_post_avatar'),
                 'forum_editpost_to_lastpost' => sanitizer('forum_editpost_to_lastpost', 0, 'forum_editpost_to_lastpost'),
             ];
-            if (\Defender::safe()) {
+            if (fusion_safe()) {
                 foreach ($inputArray as $settings_name => $settings_value) {
                     $inputSettings = [
                         "settings_name" => $settings_name, "settings_value" => $settings_value, "settings_inf" => "forum",
@@ -372,7 +372,7 @@ class ForumAdminSettings extends ForumAdminInterface {
 
             $current_uf = sanitizer('uf_field_enabled', '', 'uf_field_enabled');
 
-            if (\Defender::safe()) {
+            if (fusion_safe()) {
                 if ($_enabled === NULL) {
                     $result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_enabled_userfields', :current_uf, 'forum')", [':current_uf' => $current_uf]);
                 } else {

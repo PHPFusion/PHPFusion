@@ -188,7 +188,7 @@ class Edit_Post {
                                 $this->deletePostEdit($post_data['post_id'], $post_data['thread_id'], $post_data['forum_id'], $is_first_post);
                             }
 
-                            if (\Defender::safe()) {
+                            if (fusion_safe()) {
 
                                 // Handle file attachments
                                 // Delete attachments if there is any
@@ -228,7 +228,7 @@ class Edit_Post {
                                     }
                                 }
 
-                                if (\Defender::safe()) {
+                                if (fusion_safe()) {
 
                                     // Do forum post merging actions
                                     $last_post_author = dbarray(dbquery("SELECT post_author FROM ".DB_FORUM_POSTS." WHERE thread_id='".$thread_data['thread_id']."' ORDER BY post_id DESC LIMIT 1"));

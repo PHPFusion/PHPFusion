@@ -124,7 +124,7 @@ class ForumAdminMood extends ForumAdminInterface {
                 'mood_access'      => sanitizer('mood_access', '', 'mood_access'),
             ];
 
-            if (\Defender::safe()) {
+            if (fusion_safe()) {
                 if (!empty($this->data['mood_id'])) {
                     dbquery_insert(DB_FORUM_MOODS, $this->data, 'update');
                     addNotice('success', self::$locale['forum_notice_16']);

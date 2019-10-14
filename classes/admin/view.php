@@ -193,7 +193,7 @@ class ForumAdminView extends ForumAdminInterface {
 
                 addnotice('success', self::$locale['forum_notice_10']);
 
-                if (\Defender::safe()) {
+                if (fusion_safe()) {
                     redirect(FUSION_SELF.$this->aidlink.$this->ext);
                 }
 
@@ -299,7 +299,7 @@ class ForumAdminView extends ForumAdminInterface {
                         0) + 1;
             }
 
-            if (\Defender::safe()) {
+            if (fusion_safe()) {
 
                 if ($this->verify_forum($this->data['forum_id'])) {
 
@@ -743,7 +743,7 @@ class ForumAdminView extends ForumAdminInterface {
             }
         }
 
-        if ($res == TRUE or (post('save_forum') && !\Defender::safe()) or get('action') == 'edit' && isset($this->forum_id) && isnum($this->forum_id)) {
+        if ($res == TRUE or (post('save_forum') && !fusion_safe()) or get('action') == 'edit' && isset($this->forum_id) && isnum($this->forum_id)) {
 
             $this->display_forum_form();
 

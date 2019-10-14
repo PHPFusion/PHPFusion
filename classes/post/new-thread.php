@@ -120,7 +120,7 @@ class New_Thread extends Forum_Server {
                         }
                         if (post('add_poll_option')) {
                             // reindex the whole array with blank values.
-                            if (\Defender::safe()) {
+                            if (fusion_safe()) {
                                 $option_data = array_values(array_filter($option_data));
                                 array_unshift($option_data, NULL);
                                 unset($option_data[0]);
@@ -207,7 +207,7 @@ class New_Thread extends Forum_Server {
                         // all data is sanitized here.
                         if (!flood_control("post_datestamp", DB_FORUM_POSTS, "post_author='".$userdata['user_id']."'")) {
 
-                            if (\Defender::safe()) {
+                            if (fusion_safe()) {
 
                                 // create a new thread.
                                 $last_thread_id = dbquery_insert(DB_FORUM_THREADS, $thread_data, 'save', [
@@ -273,7 +273,7 @@ class New_Thread extends Forum_Server {
                                 }
 
                             }
-                            if (\Defender::safe()) {
+                            if (fusion_safe()) {
                                 redirect(INFUSIONS."forum/postify.php?post=new&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;thread_id=".intval($post_data['thread_id'].""));
                             }
                         }
@@ -448,7 +448,7 @@ class New_Thread extends Forum_Server {
 
                 $post_data['post_smileys'] = (!post('post_smileys') || $post_data['post_message'] && preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $post_data['post_message']) ? 0 : 1);
 
-                if (post('post_newthread') && \Defender::safe()) {
+                if (post('post_newthread') && fusion_safe()) {
 
                     require_once INCLUDES.'flood_include.php';
 
@@ -537,7 +537,7 @@ class New_Thread extends Forum_Server {
                                     $this->addTracking($post_data['thread_id'], $post_data['post_author']);
                                 }
 
-                                if (\Defender::safe()) {
+                                if (fusion_safe()) {
                                     redirect(FORUM."postify.php?post=new&error=0&amp;forum_id=".$post_data['forum_id']."&amp;thread_id=".$post_data['thread_id']);
                                 }
                             } else {

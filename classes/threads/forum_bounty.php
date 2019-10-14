@@ -88,7 +88,7 @@ class Forum_Bounty extends Forum_Server {
 
                 $bounty_description = sanitizer('bounty_description', '', 'bounty_description');
 
-                if (\Defender::safe()) {
+                if (fusion_safe()) {
 
                     if ($edit) {
                         dbquery('UPDATE '.DB_FORUM_THREADS.' SET thread_bounty_description=:desc WHERE thread_id=:thread_id',

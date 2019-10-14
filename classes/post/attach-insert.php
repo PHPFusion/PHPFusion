@@ -10,7 +10,7 @@ function attach_insert() {
     $size = post('attach_size');
 
     if ($aid && $user_id  &&  $tid && $size) {
-        if (\Defender::safe()) {
+        if (fusion_safe()) {
             $image_info['error'] = 'Original file unspecified.';
             $result = dbquery("SELECT * FROM ".DB_FORUM_ATTACHMENTS." WHERE attach_id=:aid AND post_user=:uid AND thread_id=:tid",
                 [':aid' => (int)$aid,
