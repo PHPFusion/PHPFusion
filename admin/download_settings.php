@@ -34,10 +34,10 @@ if (isset($_POST['savesettings'])) {
         "download_screenshot_required" => isset($_POST['download_screenshot_required']) ? 1 : 0,
         "download_extended_required"   => isset($_POST['download_extended_required']) ? 1 : 0,
     ];
-    if (\Defender::safe()) {
+    if (fusion_safe()) {
         foreach ($StoreArray as $key => $value) {
             $result = NULL;
-            if (\Defender::safe()) {
+            if (fusion_safe()) {
                 $Array = ["settings_name" => $key, "settings_value" => $value, "settings_inf" => "downloads"];
                 dbquery_insert(DB_SETTINGS_INF, $Array, 'update', ["primary_key" => "settings_name"]);
             }

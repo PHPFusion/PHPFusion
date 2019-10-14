@@ -58,7 +58,7 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
         /**
          * Download File Section
          */
-        if (\Defender::safe() && !empty($_FILES['download_file']['name']) && is_uploaded_file($_FILES['download_file']['tmp_name'])) {
+        if (fusion_safe() && !empty($_FILES['download_file']['name']) && is_uploaded_file($_FILES['download_file']['tmp_name'])) {
 
             $upload = form_sanitizer($_FILES['download_file'], '', 'download_file');
             $criteriaArray['download_filesize'] = parsebytesize($_FILES['download_file']['size']);
@@ -82,7 +82,7 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
             addNotice('danger', $locale['download_0111']);
         }
         // Screenshot submissions
-        if (\Defender::safe() && !empty($_FILES['download_image']['name']) && is_uploaded_file($_FILES['download_image']['tmp_name'])) {
+        if (fusion_safe() && !empty($_FILES['download_image']['name']) && is_uploaded_file($_FILES['download_image']['tmp_name'])) {
             $upload = form_sanitizer($_FILES['download_image'], '', 'download_image');
             if (empty($upload['error'])) {
                 $criteriaArray['download_image'] = $upload['image_name'];
@@ -95,7 +95,7 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
                 \Defender::setInputError("download_image");
             }
         }
-        if (Defender::safe()) {
+        if (fusion_safe()()) {
             $inputArray = [
                 'submit_type'      => 'd',
                 'submit_user'      => $userdata['user_id'],
