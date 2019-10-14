@@ -65,7 +65,15 @@ class Router extends RewriteDriver {
 
     public function __construct() {
         // Pretty URL
-        $this->requesturi = rtrim(urldecode(PERMALINK_CURRENT_PATH), '/');
+        $this->requesturi = rtrim(urldecode($this->removeParam(PERMALINK_CURRENT_PATH)), '/');
+    }
+
+    private function removeParam($urlValue) {
+        $urlArray = explode('?', $urlValue);
+        if (isset($urlArray)) {
+            return $urlArray[0];
+        }
+        return $urlValue;
     }
 
     public static function getRouterInstance() {
