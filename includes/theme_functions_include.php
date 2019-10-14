@@ -217,7 +217,7 @@ function showcounter() {
     $locale = fusion_get_locale();
     $settings = fusion_get_settings();
     if ($settings['visitorcounter_enabled']) {
-        return "<!--counter-->".number_format($settings['counter'], 0, $settings['number_delimiter'], $settings['number_seperator'])." ".($settings['counter'] == 1 ? $locale['global_170'] : $locale['global_171']);
+        return "<!--counter-->".number_format($settings['counter'], 0, $settings['number_delimiter'], $settings['thousands_separator'])." ".($settings['counter'] == 1 ? $locale['global_170'] : $locale['global_171']);
     }
 
     return '';
@@ -874,13 +874,13 @@ if (!function_exists('opensidex')) {
             define('sidex_js', TRUE);
             add_to_jquery("
             $('body').on('click', '.sidex > .title', function(e) {
-                let sidexBody = $(this).siblings('.body'); 
+                let sidexBody = $(this).siblings('.body');
                 sidexBody.toggleClass('display-none');
-                if (sidexBody.is(':hidden')) {                    
+                if (sidexBody.is(':hidden')) {
                     $(this).closest('div').find('.pull-right').addClass('dropup');
                 } else {
                     $(this).closest('div').find('.pull-right').removeClass('dropup');
-                }                                        
+                }
             });
             ");
         }

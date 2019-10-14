@@ -111,7 +111,7 @@ $locale['607'] = "GD1";
 $locale['608'] = "GD2";
 $locale['609'] = "Development Mode";
 $locale['610'] = "Number Delimiter";
-$locale['611'] = "Number Separator";
+$locale['611'] = "Thousands separator";
 
 $locale['649'] = "Prohibited user names:";
 $locale['650'] = "Miscellaneous";

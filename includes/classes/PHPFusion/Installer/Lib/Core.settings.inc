@@ -541,7 +541,7 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'settings_value' => '.'
             ],
             [
-                'settings_name'  => 'number_seperator',
+                'settings_name'  => 'thousands_separator',
                 'settings_value' => ','
             ]
         ]
