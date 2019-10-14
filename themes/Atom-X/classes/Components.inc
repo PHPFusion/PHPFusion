@@ -50,8 +50,6 @@ class Components extends Core {
                                 if (column_exists('users', 'user_location')) echo '<b>'.fusion_get_locale('uf_location', LOCALE.LOCALESET.'user_fields/user_location.php').':</b> '.(!empty($this->userdata['user_location']) ? $this->userdata['user_location'] : $this->locale['user_na']).'<br/>';
                             echo '</small></div>';
                             echo '<div class="col-xs-6"><small>';
-                                echo '<b>'.fusion_get_locale('uf_comments-stat', LOCALE.LOCALESET.'user_fields/user_comments-stat.php').':</b> '.number_format(dbcount("(comment_id)", DB_COMMENTS, "comment_name='".$this->userdata['user_id']."'")).'<br/>';
-                                if (column_exists('users', 'user_posts')) echo '<b>'.fusion_get_locale('uf_forum-stat', LOCALE.LOCALESET.'user_fields/user_forum-stat.php').':</b> '.number_format($this->userdata['user_posts']).'<br/>';
                                 echo '<b>'.$this->locale['u049'].':</b> '.$this->userdata['user_ip'].'<br/>';
                             echo '</small></div>';
                         echo '</div>';

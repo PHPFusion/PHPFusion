@@ -100,6 +100,8 @@ function render_page() {
                 echo '<div class="col-xs-12 col-sm-6">';
                     echo nl2br(parse_textarea($settings['footer'], FALSE, TRUE)).'<br/>';
                     echo showprivacypolicy();
+                    echo '<br/>';
+                    echo showcounter();
                 echo '</div>';
             echo '</div>';
         echo '</footer>';

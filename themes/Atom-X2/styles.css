@@ -62,7 +62,7 @@ a:active {
     background: -moz-linear-gradient(top, rgba(94, 94, 94, 1) 2%, rgba(9, 17, 27, 1) 100%);
     background: linear-gradient(to bottom, rgba(94, 94, 94, 1) 2%, rgba(9, 17, 27, 1) 100%);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#5e5e5e', endColorstr='#09111b', GradientType=0);
-    min-height: 54px;
+    height: 54px;
     margin-top: 10px;
     -webkit-border-radius: 4px 4px 0 0;
     -moz-border-radius: 4px 4px 0 0;

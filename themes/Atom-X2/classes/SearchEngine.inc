@@ -24,7 +24,7 @@ class SearchEngine extends Core {
     public function __construct() {
         parent::__construct();
 
-        $this->locale += fusion_get_locale('', LOCALE.LOCALESET.'search.php');
+        $this->locale = fusion_get_locale('', LOCALE.LOCALESET.'search.php');
 
         add_to_jquery('
             var modal_id = $("#searchbox-Modal");
