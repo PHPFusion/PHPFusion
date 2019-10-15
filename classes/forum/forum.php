@@ -422,14 +422,14 @@ class Forum extends ForumServer {
                                         ':forum_id' => $this->forum_info['forum_id']
                                     ];
                                     $this->forum_info['max_post_count'] = dbcount("(post_id)", $sql_select, $sql_cond, $sql_param);
-                                    $_GET['rowstart'] = (isset($_GET['rowstart']) && $_GET['rowstart'] <= $this->forum_info['max_post_count'] ? $_GET['rowstart'] : 0);
-                                    $query = "SELECT p.*, t.thread_id, t.thread_subject FROM $sql_select WHERE $sql_cond ORDER BY p.post_datestamp DESC LIMIT ".$_GET['rowstart'].", ".$this->forum_info['posts_per_page']."";
+                                    $rowstart = (isset($_GET['rowstart']) && $_GET['rowstart'] <= $this->forum_info['max_post_count'] ? $_GET['rowstart'] : 0);
+                                    $query = "SELECT p.*, t.thread_id, t.thread_subject FROM $sql_select WHERE $sql_cond ORDER BY p.post_datestamp DESC LIMIT ".$rowstart.", ".$this->forum_info['posts_per_page'];
                                     // Make var for Limits
                                     $result = dbquery($query, $sql_param);
                                     $rows = dbrows($result);
                                     if ($rows) {
                                         if ($this->forum_info['max_post_count'] > $rows) {
-                                            $this->forum_info['pagenav'] = makepagenav($_GET['rowstart'], $rows, $this->forum_info['max_post_count'], 3, FORUM.'index.php?viewforum&amp;forum_id='.$this->forum_info['forum_id'].'&amp;view=activity&amp;');
+                                            $this->forum_info['pagenav'] = makepagenav($rowstart, $rows, $this->forum_info['max_post_count'], 3, FORUM.'index.php?viewforum&amp;forum_id='.$this->forum_info['forum_id'].'&amp;view=activity&amp;');
                                         }
                                         $i = 0;
                                         while ($data = dbarray($result)) {
