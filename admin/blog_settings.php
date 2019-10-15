@@ -34,7 +34,7 @@ if (isset($_POST['savesettings'])) {
         "blog_photo_max_b"            => form_sanitizer($_POST['calc_b'], 153600, 'calc_b') * form_sanitizer($_POST['calc_c'], 1, 'calc_c'),
         "blog_file_types"             => form_sanitizer($_POST['blog_file_types'], '.pdf,.gif,.jpg,.png,.svg,.zip,.rar,.tar,.bz2,.7z', "blog_file_types"),
     ];
-    if (fusion_safe()()) {
+    if (fusion_safe()) {
         foreach ($inputArray as $settings_name => $settings_value) {
             $inputSettings = [
                 "settings_name" => $settings_name, "settings_value" => $settings_value, "settings_inf" => "blog",

@@ -69,7 +69,7 @@ if (iMEMBER && $blog_settings['blog_allow_submission']) {
                 }
             }
         }
-        if (fusion_safe()()) {
+        if (fusion_safe()) {
             $inputArray = [
                 "submit_type"      => "b",
                 "submit_user"      => $userdata['user_id'],
