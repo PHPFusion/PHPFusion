@@ -67,7 +67,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
             "when_updating" => "download_cat_name='".$data['download_cat_name']."' and download_cat_id !='".$data['download_cat_id']."'",
             "when_saving"   => "download_cat_name='".$data['download_cat_name']."'",
         ];
-        if (fusion_safe()()) {
+        if (fusion_safe()) {
             if (dbcount("(download_cat_id)", DB_DOWNLOAD_CATS, "download_cat_id='".$data['download_cat_id']."'")) {
                 if (!dbcount("(download_cat_id)", DB_DOWNLOAD_CATS, $categoryNameCheck['when_updating'])) {
                     dbquery_insert(DB_DOWNLOAD_CATS, $data, "update");

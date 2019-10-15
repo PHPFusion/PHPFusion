@@ -95,7 +95,7 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
                 \Defender::setInputError("download_image");
             }
         }
-        if (fusion_safe()()) {
+        if (fusion_safe()) {
             $inputArray = [
                 'submit_type'      => 'd',
                 'submit_user'      => $userdata['user_id'],

@@ -134,7 +134,7 @@ if (isset($_POST['save_download'])) {
         }
         $data['download_image'] = '';
         $data['download_image_thumb'] = '';
-    } else if (fusion_safe()() && !empty($_FILES['download_image']['name']) && is_uploaded_file($_FILES['download_image']['tmp_name'])) {
+    } else if (fusion_safe() && !empty($_FILES['download_image']['name']) && is_uploaded_file($_FILES['download_image']['tmp_name'])) {
         $upload = form_sanitizer($_FILES['download_image'], '', 'download_image');
         if (empty($upload['error'])) {
             $data['download_image'] = !empty($upload['image_name']) ? $upload['image_name'] : '';
