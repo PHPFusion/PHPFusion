@@ -167,9 +167,7 @@ function render_page() {
     echo "<span>".showcopyright().showprivacypolicy()."</span><br/>\n";
     echo "<span>Bootstrap Theme by <a href='http://www.php-fusion.co.uk' target='_blank'>PHP-Fusion Inc</a></span><br/>\n";
     echo "<span>";
-    if ($settings['visitorcounter_enabled']) {
-        echo showcounter();
-    }
+    echo showcounter();
     if ($settings['rendertime_enabled'] == '1' || $settings['rendertime_enabled'] == '2') {
         if ($settings['visitorcounter_enabled']) {
             echo " | ";

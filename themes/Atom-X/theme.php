@@ -73,7 +73,7 @@ function render_page() {
 
 function opentable($title = FALSE, $class = '') {
     echo '<div class="panel panel-default '.$class.'">';
-    echo '<div class="panel-heading"><h4><strong>'.$title.'</strong></h4></div>';
+    echo !empty($title) ? '<div class="panel-heading"><h4><strong>'.$title.'</strong></h4></div>' : '';
     echo '<div class="panel-body">';
 }
 
@@ -109,8 +109,8 @@ function render_news_item($info) {
     AtomXTheme\Templates\News::GetInstance()->render_news_item($info);
 }
 
-function display_user_profile($info) {
+/*function display_user_profile($info) {
     AtomXTheme\Templates\Profile::GetInstance()->DisplayProfile($info);
-}
+}*/
 
 set_image('noavatar50', fusion_get_settings('siteurl').'themes/Atom-X/images/noavatar50.png');

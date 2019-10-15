@@ -535,6 +535,14 @@ function get_table_rows($table_name, $localeset = 'English') {
             [
                 'settings_name'  => 'error_logging_method',
                 'settings_value' => 'database'
+            ],
+            [
+                'settings_name'  => 'number_delimiter',
+                'settings_value' => '.'
+            ],
+            [
+                'settings_name'  => 'thousands_separator',
+                'settings_value' => ','
             ]
         ]
     ];

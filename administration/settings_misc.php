@@ -47,6 +47,8 @@ if (post('savesettings')) {
         'index_url_userweb'      => sanitizer('index_url_userweb', '0', 'index_url_userweb'),
         'create_og_tags'         => sanitizer('create_og_tags', '0', 'create_og_tags'),
         'devmode'                => sanitizer('devmode', '0', 'devmode'),
+        'number_delimiter'       => sanitizer('number_delimiter', '.', 'number_delimiter'),
+        'thousands_separator'    => sanitizer('thousands_separator', ',', 'thousands_separator')
     ];
 
     if (fusion_safe()) {
@@ -177,6 +179,24 @@ echo form_select('devmode', $locale['609'], $settings['devmode'], [
     'options' => $choice_arr,
     'width'   => '100%'
 ]);
+closeside();
+
+openside('');
+
+$options = [
+    '.' => '.',
+    ',' => ','
+];
+echo form_select('number_delimiter', $locale['610'], $settings['number_delimiter'], [
+    'options' => $options,
+    'width'   => '100%'
+]);
+
+echo form_select('thousands_separator', $locale['611'], $settings['thousands_separator'], [
+    'options' => $options,
+    'width'   => '100%'
+]);
+
 closeside();
 
 echo "</div>\n</div>";

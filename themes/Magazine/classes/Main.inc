@@ -155,6 +155,7 @@ class Main extends Core {
                     echo '</div>';
                 }
                 echo '<div class="text-center strong">Magazine theme &copy; '.date('Y').' '.$locale['created_by'].' <a href="https://github.com/RobiNN1" target="_blank">RobiNN</a></div>';
+                echo showcounter();
             echo '</div>';
         echo '</div></footer>';
     }
