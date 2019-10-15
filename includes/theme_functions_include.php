@@ -1272,11 +1272,11 @@ if (!function_exists("tab_active")
          * @return mixed
          */
         public static function tabActive($array, $default_active, $getname = FALSE) {
-            $tab_id = $array['id'][$default_active];
             if (!empty($getname)) {
                 $section = get($getname) ?: $default_active;
                 //$section = isset($_GET[$getname]) && $_GET[$getname] ? $_GET[$getname] : $default_active;
                 $count = count($array['title']);
+
                 if ($count > 0) {
                     for ($tabCount = 0; $tabCount < $count; $tabCount++) {
                         $tab_id = $array['id'][$tabCount];
@@ -1285,9 +1285,10 @@ if (!function_exists("tab_active")
                         }
                     }
                 }
+
                 return $default_active;
             }
-            return $tab_id;;
+	        return $array['id'][$default_active];
         }
 
         /**
@@ -1301,7 +1302,7 @@ if (!function_exists("tab_active")
          * @param $tabId
          */
         public function removeRemember($tabId) {
-            unset($_COOKIE[$this->cookie_prefix.'-'.$tabId]);
+            cookie_remove($this->cookie_prefix.'-'.$tabId);
         }
 
         public function opentab($tab_title, $link_active_arrkey, $tabId, $link = FALSE, $class = FALSE, $getname = 'section', array $cleanup_GET = [], $wrapper_class = NULL) {
@@ -1315,8 +1316,9 @@ if (!function_exists("tab_active")
                 $getArray = array_merge_recursive($cleanup_GET, $getArray);
             }
             if (empty($link) && $this->remember) {
-                if (isset($_COOKIE[$this->cookie_name])) {
-                    $link_active_arrkey = str_replace('tab-', '', $_COOKIE[$this->cookie_name]);
+            	$cookie = cookie($this->cookie_name);
+               if ($cookie) {
+                    $link_active_arrkey = str_replace('tab-', '', $cookie);
                 }
             }
             $html = "<div class='nav-wrapper".($wrapper_class ? " ".$wrapper_class : '')."'>\n";
@@ -1329,7 +1331,7 @@ if (!function_exists("tab_active")
                 if ($link) {
                     $link_url = $link.(stristr($link, '?') ? '&' : '?').$getname."=".$tab_id; // keep all request except GET array
                     if ($link === TRUE) {
-                        $link_url = clean_request($getname.'='.$tab_id.(defined('ADMIN_PANEL') ? "&aid=".$_GET['aid'] : ""), $getArray, FALSE);
+                        $link_url = clean_request($getname.'='.$tab_id.(defined('ADMIN_PANEL') ? "&aid=".get('aid') : ''), $getArray, FALSE);
                     }
                     $html .= ($link_active_arrkey == $tab_id) ? "<li class='active'>\n" : "<li>\n";
                 } else {

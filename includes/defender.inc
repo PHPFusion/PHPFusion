@@ -744,16 +744,31 @@ function environment($key, $type = FILTER_DEFAULT) {
 	return filter_input(INPUT_ENV, $key, $type);
 }
 
-/**
- * @param     $key
- * @param int $type
+/***
+ * Sets a cookie
+ * @param string $key
+ * @param int    $type
  *
- * @return mixed
+ * @return mixed|string|string[]
  */
-function cookie($key, $type = FILTER_DEFAULT) {
+function cookie(string $key, $type = FILTER_DEFAULT) {
 	return stripinput(filter_input(INPUT_COOKIE, $key, $type));
 }
 
+/**
+ * Remove a cookie
+ * @param string $key
+ *
+ * @return mixed
+ */
+function cookie_remove(string $key) {
+	unset($_COOKIE[$key]);
+	return $_COOKIE;
+}
+
+/**
+ * Cleans curent session
+ */
 function session_clean() {
 	$_SESSION = [];
 }
@@ -816,11 +831,10 @@ function session_remove($key) {
 		$session = &$temp;
 
 		return $session;
-	} else {
-		unset($_SESSION[$key]);
-
-		return $_SESSION;
 	}
+
+	unset($_SESSION[$key]);
+	return $_SESSION;
 }
 
 /**
