@@ -51,7 +51,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 "photo_thumb2"         => isset($_POST['photo_thumb2']) ? form_sanitizer($_POST['photo_thumb2'], "", "photo_thumb2") : "",
             ];
 
-            if (fusion_safe()()) {
+            if (fusion_safe()) {
 
                 $photo_name = $callback_data['photo_filename'];
                 $thumb1_name = $callback_data['photo_thumb1'];
