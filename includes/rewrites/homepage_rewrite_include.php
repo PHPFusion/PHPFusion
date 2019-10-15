@@ -41,7 +41,7 @@ $pattern = [
     "website-members/search-%search_text%-%search%/%orderby%/%sort_order%/" => "members.php?search_text=%search_text%&amp;search=%search%&amp;orderby=%orderby%&amp;sort_order=%sort_order%",
     "website-members/search-%search_text%/%orderby%/%sort_order%/"          => "members.php?search_text=%search_text%&amp;orderby=%orderby%&amp;sort_order=%sort_order%",
     "website-members/%sortby%-%rowstart%"                                   => "members.php?sortby=%sortby%&amp;rowstart=%rowstart%",
-    "website-members/search-%sortby%"                                       => "members.php?sortby=%sortby%",
+    "website-members/%sortby%"                                              => "members.php?sortby=%sortby%",
     "website-members"                                                       => "members.php",
     "create/ref=%time%"                                                     => "register.php?ref=%time%",
     "contact"                                                               => "contact.php",
