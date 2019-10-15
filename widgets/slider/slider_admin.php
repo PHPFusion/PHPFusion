@@ -226,7 +226,7 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine im
             'slider_indicator'  => form_sanitizer($_POST['slider_indicator'], 0, 'slider_indicator'),
             'slider_interval'   => form_sanitizer($_POST['slider_interval'], 0, 'slider_interval')
         ];
-        if (fusion_safe()() && !empty($widget_settings)) {
+        if (fusion_safe() && !empty($widget_settings)) {
             return \Defender::serialize($widget_settings);
         }
     }

@@ -1372,11 +1372,13 @@ if (!function_exists("tab_active")
             $key = $key ? $key : 'section';
             if (!$this->link_mode) {
                 if ($this->remember) {
-                    if (isset($_COOKIE[$this->cookie_name])) {
-                        $link_active_arrkey = str_replace('tab-', '', $_COOKIE[$this->cookie_name]);
+                	$cookie = cookie($this->cookie_name);
+                    if ($cookie) {
+                        $link_active_arrkey = str_replace('tab-', '', $cookie);
                     }
                 }
             }
+
             $status = ($link_active_arrkey == $id ? " in active" : '');
             if (get($key) && $this->link_mode) {
                 $status = '';

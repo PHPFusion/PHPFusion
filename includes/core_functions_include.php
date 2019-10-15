@@ -230,6 +230,7 @@ function fusion_stop() {
  */
 function redirect($location, $delay = FALSE, $script = FALSE, $http_response_code = FALSE) {
      //define('STOP_REDIRECT', true);
+
     if (!defined('STOP_REDIRECT')) {
         if (isnum($delay)) {
             $ref = "<meta http-equiv='refresh' content='$delay; url=".$location."' />";
@@ -1846,7 +1847,6 @@ function fusion_get_settings($key = NULL) {
             }
         }
     }
-
 
     return $key === NULL ? $settings : (isset($settings[$key]) ? $settings[$key] : NULL);
 }

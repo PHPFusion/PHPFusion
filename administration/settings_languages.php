@@ -71,7 +71,7 @@ if (isset($_POST['savesettings'])) {
         addNotice("danger", "You need to enable at least one language");
     }
 
-    if (fusion_safe()()) {
+    if (fusion_safe()) {
 
         $inArray_SQLCond = [
             "enabled_languages"     => str_replace(".", "','", $inputData['enabled_languages']),

@@ -979,9 +979,12 @@ a:focus {
 }
 
 #devlpr #main_content .app_aside_body, #devlpr #main_content .app_aside_head {
-    padding: 24px;
+    padding: 15px;
     background: #FFF;
     display: block;
+}
+#main_content .app_aside_head h4 {
+    margin:0;
 }
 
 #devlpr #main_content aside.header > nav .dropdown-menu {
