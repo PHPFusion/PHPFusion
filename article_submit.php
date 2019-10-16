@@ -171,17 +171,19 @@ if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_status='1' AND ".g
                 'inner_width'  => '100%',
                 'inline'       => TRUE,
                 'parent_value' => $locale['choose'],
-                'query'        => (multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "")
+                'query'        => (multilang_table("AR") ? "WHERE ".in_group('article_cat_language', LANGUAGE) : "")
             ],
                 DB_ARTICLE_CATS, "article_cat_name", "article_cat_id", "article_cat_parent"
             );
 
             if (multilang_table("AR")) {
-                echo form_select('article_language', $locale['language'], $criteriaArray['article_language'], [
+                echo form_select('article_language[]', $locale['language'], $criteriaArray['article_language'], [
                     'options'     => fusion_get_enabled_languages(),
                     'placeholder' => $locale['choose'],
                     'inner_width' => '100%',
                     'inline'      => TRUE,
+                    'multiple'    => TRUE,
+                    'delimeter'   => '.'
                 ]);
             } else {
                 echo form_hidden('article_language', '', $criteriaArray['article_language']);

@@ -98,7 +98,7 @@ abstract class Articles extends ArticlesServer {
         $result = dbquery("SELECT article_cat_id, article_cat_name
             FROM ".DB_ARTICLE_CATS."
             WHERE article_cat_status='1' AND ".groupaccess("article_cat_visibility")."
-            ".(multilang_table("AR") ? " AND article_cat_language='".LANGUAGE."'" : "")."
+            ".(multilang_table("AR") ? " AND ".in_group('article_cat_language', LANGUAGE) : "")."
             ORDER BY article_cat_id ASC
         ");
         if (dbrows($result) > 0) {
@@ -168,7 +168,7 @@ abstract class Articles extends ArticlesServer {
             FROM ".DB_ARTICLES." AS a
             LEFT JOIN ".DB_USERS." AS au ON a.article_name=au.user_id
             LEFT JOIN ".DB_ARTICLE_CATS." AS ac ON a.article_cat=ac.article_cat_id
-            ".(multilang_table("AR") ? "WHERE a.article_language='".LANGUAGE."' AND ac.article_cat_language='".LANGUAGE."' AND " : "WHERE ")."
+            ".(multilang_table("AR") ? "WHERE ".in_group('a.article_language', LANGUAGE)." AND ".in_group('ac.article_cat_language', LANGUAGE)." AND " : "WHERE ")."
             a.article_draft='0' AND ".groupaccess("a.article_visibility")." AND ac.article_cat_status='1' AND ".groupaccess("ac.article_cat_visibility")."
             ".(!empty($filters['condition']) ? " AND ".$filters['condition'] : "")."
             GROUP BY a.article_id
@@ -335,7 +335,7 @@ abstract class Articles extends ArticlesServer {
         $max_article_rows = '';
 
         // Filtered by Category ID.
-        $select = "SELECT * FROM ".DB_ARTICLE_CATS." WHERE ".(multilang_table("AR") ? "article_cat_language='".LANGUAGE."' AND " : '')." article_cat_id=:cat_id AND article_cat_status=:status AND ".groupaccess("article_cat_visibility");
+        $select = "SELECT * FROM ".DB_ARTICLE_CATS." WHERE ".(multilang_table("AR") ? in_group('article_cat_language', LANGUAGE)." AND " : '')." article_cat_id=:cat_id AND article_cat_status=:status AND ".groupaccess("article_cat_visibility");
         $bind = [
             ':cat_id' => intval($article_cat_id),
             ':status' => 1
@@ -409,7 +409,7 @@ abstract class Articles extends ArticlesServer {
             if (isset($index[get_parent($index, $id)])) {
 
                 $_name = dbarray(dbquery("SELECT article_cat_id, article_cat_name, article_cat_parent
-                FROM ".DB_ARTICLE_CATS.(multilang_table("AR") ? " WHERE article_cat_language='".LANGUAGE."' AND " : " WHERE ")."
+                FROM ".DB_ARTICLE_CATS.(multilang_table("AR") ? " WHERE ".in_group('article_cat_language', LANGUAGE)." AND " : " WHERE ")."
                 article_cat_id=:id AND article_cat_status=:status AND ".groupaccess("article_cat_visibility")." ",
                         [
                             ':id'     => $id,

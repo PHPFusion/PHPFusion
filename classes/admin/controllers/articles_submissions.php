@@ -258,7 +258,7 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
                     'inner_width'  => '100%',
                     'inline'       => TRUE,
                     'parent_value' => $this->locale['choose'],
-                    'query'        => (multilang_table('AR') ? "WHERE article_cat_language='".LANGUAGE."'" : '')
+                    'query'        => (multilang_table('AR') ? "WHERE ".in_group('article_cat_language', LANGUAGE) : '')
                 ],
                     DB_ARTICLE_CATS, "article_cat_name", "article_cat_id", "article_cat_parent"
                 );
@@ -271,11 +271,13 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
                 ]);
 
                 if (multilang_table("AR")) {
-                    echo form_select('article_language', $this->locale['language'], $this->inputArray['article_language'], [
+                    echo form_select('article_language[]', $this->locale['language'], $this->inputArray['article_language'], [
                         'inline'      => TRUE,
                         'placeholder' => $this->locale['choose'],
                         'inner_width' => '100%',
                         'options'     => fusion_get_enabled_languages(),
+                        'multiple'    => TRUE,
+                        'delimeter'   => '.'
                     ]);
                 } else {
                     echo form_hidden('article_language', '', $this->inputArray['article_language']);

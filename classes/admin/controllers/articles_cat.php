@@ -84,7 +84,7 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
             // Check Where Condition
             $categoryNameCheck = [
                 "when_updating" => "article_cat_name='".$inputArray['article_cat_name']."' AND article_cat_id !='".$inputArray['article_cat_id']."' ".(multilang_table("AR") ? "AND article_cat_language = '".LANGUAGE."'" : ""),
-                "when_saving"   => "article_cat_name='".$inputArray['article_cat_name']."' ".(multilang_table("AR") ? "AND article_cat_language = '".LANGUAGE."'" : ""),
+                "when_saving"   => "article_cat_name='".$inputArray['article_cat_name']."' ".(multilang_table("AR") ? "AND ".in_group('article_cat_language', LANGUAGE) : ""),
             ];
 
             // Save
@@ -126,7 +126,7 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
 
             // Edit
         } else if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
-            $result = dbquery("SELECT * FROM ".DB_ARTICLE_CATS." ".(multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."' AND" : "WHERE")." article_cat_id=:articlecatid", [':articlecatid' => $_GET['cat_id']]);
+            $result = dbquery("SELECT * FROM ".DB_ARTICLE_CATS." ".(multilang_table("AR") ? "WHERE ".in_group('article_cat_language', LANGUAGE)." AND" : "WHERE")." article_cat_id=:articlecatid", [':articlecatid' => $_GET['cat_id']]);
             if (dbrows($result)) {
                 $data = dbarray($result);
             } else {
@@ -165,7 +165,7 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
                         'inline'        => TRUE,
                         'disable_opts'  => $data['article_cat_id'],
                         'hide_disabled' => TRUE,
-                        'query'         => (multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "")
+                        'query'         => (multilang_table("AR") ? "WHERE ".in_group('article_cat_language', LANGUAGE) : "")
                     ], DB_ARTICLE_CATS, "article_cat_name", "article_cat_id", "article_cat_parent");
 
                     echo form_textarea('article_cat_description', $this->locale['article_0304'], $data['article_cat_description'], [
@@ -188,10 +188,12 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
                     openside($this->locale['article_0261']);
 
                     if (multilang_table("AR")) {
-                        echo form_select('article_cat_language', $this->locale['language'], $data['article_cat_language'], [
+                        echo form_select('article_cat_language[]', $this->locale['language'], $data['article_cat_language'], [
                             'inline'      => TRUE,
                             'options'     => fusion_get_enabled_languages(),
-                            'placeholder' => $this->locale['choose']
+                            'placeholder' => $this->locale['choose'],
+                            'multiple'    => TRUE,
+                            'delimeter'   => '.'
                         ]);
                     } else {
                         echo form_hidden('article_cat_language', '', $data['article_cat_language']);
@@ -273,7 +275,7 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
         }
 
         // Search
-        $sql_condition = multilang_table("AR") ? "ac.article_cat_language='".LANGUAGE."'" : "";
+        $sql_condition = multilang_table("AR") ? in_group('ac.article_cat_language', LANGUAGE) : "";
         $search_string = [];
         if (isset($_POST['p-submit-article_cat_name'])) {
             $search_string['article_cat_name'] = [

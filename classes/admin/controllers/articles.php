@@ -256,7 +256,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
             'error_text'   => $this->locale['article_0273'],
             'inner_width'  => '100%',
             'parent_value' => $this->locale['choose'],
-            'query'        => (multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "")
+            'query'        => (multilang_table("AR") ? "WHERE ".in_group('article_cat_language', LANGUAGE) : "")
         ],
             DB_ARTICLE_CATS, "article_cat_name", "article_cat_id", "article_cat_parent"
         );
@@ -267,11 +267,13 @@ class ArticlesAdmin extends ArticlesAdminModel {
             'inline'      => TRUE
         ]);
         if (multilang_table("AR")) {
-            echo form_select('article_language', $this->locale['language'], $this->article_data['article_language'], [
+            echo form_select('article_language[]', $this->locale['language'], $this->article_data['article_language'], [
                 'options'     => fusion_get_enabled_languages(),
                 'placeholder' => $this->locale['choose'],
                 'inner_width' => '100%',
-                'inline'      => TRUE
+                'inline'      => TRUE,
+                'multiple'    => TRUE,
+                'delimeter'   => '.'
             ]);
         } else {
             echo form_hidden('article_language', '', $this->article_data['article_language']);
@@ -388,7 +390,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
         }
 
         // Search
-        $sql_condition = multilang_table("AR") ? "article_language='".LANGUAGE."'" : "";
+        $sql_condition = multilang_table("AR") ? in_group('article_language', LANGUAGE) : "";
         $search_string = [];
         if (isset($_POST['p-submit-article_text'])) {
             $search_string['article_subject'] = [
@@ -553,7 +555,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
                         'parent_value' => $this->locale['article_0127'],
                         'placeholder'  => '- '.$this->locale['article_0126'].' -',
                         'allowclear'   => TRUE,
-                        'query'        => (multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "")
+                        'query'        => (multilang_table("AR") ? "WHERE ".in_group('article_cat_language', LANGUAGE) : "")
                     ], DB_ARTICLE_CATS, "article_cat_name", "article_cat_id", "article_cat_parent");
                     ?>
                 </div>
