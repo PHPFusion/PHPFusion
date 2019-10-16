@@ -26,7 +26,7 @@ $data = [
     'album_image'       => '',
     'album_thumb1'      => '',
     'album_thumb2'      => '',
-    'album_order'       => dbcount("(album_id)", DB_PHOTO_ALBUMS, multilang_table("PG") ? "album_language='".LANGUAGE."'" : "") + 1
+    'album_order'       => dbcount("(album_id)", DB_PHOTO_ALBUMS, multilang_table("PG") ? in_group('album_language', LANGUAGE) : "") + 1
 ];
 if (isset($_POST['save_album'])) {
     $data = [
@@ -45,7 +45,7 @@ if (isset($_POST['save_album'])) {
     ];
     if (empty($data['album_order'])) {
         $data['album_order'] = dbresult(dbquery("SELECT MAX(album_order) FROM ".DB_PHOTO_ALBUMS."
-                ".(multilang_table("PG") ? "where album_language='".LANGUAGE."'" : "").""), 0) + 1;
+                ".(multilang_table("PG") ? "where ".in_group('album_language', LANGUAGE) : "").""), 0) + 1;
     }
     // do delete image
     if (\defender::safe()) {
@@ -169,8 +169,10 @@ echo fusion_get_function('openside', '');
 echo form_select('album_access', $locale['album_0007'], $data['album_access'], [
     'options' => fusion_get_groups()
 ]);
-echo form_select('album_language', $locale['album_0008'], $data['album_language'], [
-    'options' => fusion_get_enabled_languages()
+echo form_select('album_language[]', $locale['album_0008'], $data['album_language'], [
+    'options'   => fusion_get_enabled_languages(),
+    'multiple'  => TRUE,
+    'delimeter' => '.'
 ]);
 echo form_select("album_keywords", $locale['album_0005'], $data['album_keywords'], [
     'max_length'  => 320,

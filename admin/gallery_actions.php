@@ -23,7 +23,7 @@ if (isset($_POST['cancel'])) {
  * Move up and down album
  */
 if (isset($_GET['action']) && ($_GET['action'] == "mu" || $_GET['action'] == "md") && isset($_GET['cat_id']) && isnum($_GET['cat_id']) && isset($_GET['order']) && isnum($_GET['order'])) {
-    $album_max_order = dbresult(dbquery("SELECT MAX(album_order) FROM ".DB_PHOTO_ALBUMS." WHERE album_language='".LANGUAGE."'"), 0) + 1;
+    $album_max_order = dbresult(dbquery("SELECT MAX(album_order) FROM ".DB_PHOTO_ALBUMS." WHERE ".in_group('album_language', LANGUAGE)), 0) + 1;
     if (dbcount("('album_id')", DB_PHOTO_ALBUMS, "album_id=' ".intval($_GET['cat_id'])." '")) {
         switch ($_GET['action']) {
             case "mu": // -1 album order

@@ -264,7 +264,7 @@ function gallery_album_listing() {
     $gll_settings = get_settings('gallery');
 
     // xss
-    $albumRows = dbcount("(album_id)", DB_PHOTO_ALBUMS, multilang_table("PG") ? "album_language='".LANGUAGE."'" : "");
+    $albumRows = dbcount("(album_id)", DB_PHOTO_ALBUMS, multilang_table("PG") ? in_group('album_language', LANGUAGE) : "");
     $photoRows = dbcount("(photo_id)", DB_PHOTOS, "");
     $update = dbarray(dbquery("SELECT MAX(photo_datestamp) 'last_updated' FROM ".DB_PHOTOS.""));
     $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $albumRows ? $_GET['rowstart'] : 0;
@@ -276,7 +276,7 @@ function gallery_album_listing() {
         FROM ".DB_PHOTO_ALBUMS." album
         LEFT JOIN ".DB_PHOTOS." photo on photo.album_id=album.album_id
         INNER JOIN ".DB_USERS." u on u.user_id=album.album_user
-        ".(multilang_table("PG") ? "WHERE album_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('album.album_access')."
+        ".(multilang_table("PG") ? "WHERE ".in_group('album.album_language', LANGUAGE)." AND " : "WHERE ").groupaccess('album.album_access')."
         GROUP BY album.album_id
         ORDER BY album.album_order ASC, album.album_datestamp DESC LIMIT ".intval($_GET['rowstart']).", ".$gll_settings['gallery_pagination'];
         $result = dbquery($gallery_sql);
@@ -352,7 +352,7 @@ function gallery_album_listing() {
  */
 function get_albumOpts() {
     $list = [];
-    $result = dbquery("SELECT * FROM ".DB_PHOTO_ALBUMS." ".(multilang_table("PG") ? "where album_language='".LANGUAGE."'" : "")." ORDER BY album_order ASC");
+    $result = dbquery("SELECT * FROM ".DB_PHOTO_ALBUMS." ".(multilang_table("PG") ? "where ".in_group('album_language', LANGUAGE) : "")." ORDER BY album_order ASC");
     if (dbrows($result) > 0) {
         while ($data = dbarray($result)) {
             $list[$data['album_id']] = $data['album_title'];

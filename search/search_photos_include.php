@@ -71,7 +71,7 @@ if (defined('GALLERY_EXIST')) {
             SELECT tp.*,ta.*
             FROM ".DB_PHOTOS." tp
             INNER JOIN ".DB_PHOTO_ALBUMS." ta ON tp.album_id=ta.album_id
-            ".(multilang_table("PG") ? "WHERE ta.album_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('album_access')." AND
+            ".(multilang_table("PG") ? "WHERE ".in_group('ta.album_language', LANGUAGE)." AND " : "WHERE ").groupaccess('album_access')." AND
             ".Search_Engine::search_conditions('gallery');
             $param = Search_Engine::get_param('search_param');
             $result = dbquery($query, $param);

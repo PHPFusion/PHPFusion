@@ -38,7 +38,7 @@ function photo_form() {
     $aidlink = fusion_get_aidlink();
     $userdata = fusion_get_userdata();
     $gll_settings = get_settings('gallery');
-    $albumRows = dbcount("(album_id)", DB_PHOTO_ALBUMS, multilang_table("PG") ? "album_language='".LANGUAGE."'" : "");
+    $albumRows = dbcount("(album_id)", DB_PHOTO_ALBUMS, multilang_table("PG") ? in_group('album_language', LANGUAGE) : "");
     if ($albumRows) {
         $data = [
             'photo_id'             => 0,
@@ -260,7 +260,7 @@ function mass_photo_form() {
     $aidlink = fusion_get_aidlink();
     $userdata = fusion_get_userdata();
     $gll_settings = get_settings('gallery');
-    $albumRows = dbcount("(album_id)", DB_PHOTO_ALBUMS, multilang_table("PG") ? "album_language='".LANGUAGE."'" : "");
+    $albumRows = dbcount("(album_id)", DB_PHOTO_ALBUMS, multilang_table("PG") ? in_group('album_language', LANGUAGE) : "");
     if ($albumRows) {
         if (isset($_POST['upload_photo'])) {
             $data['album_id'] = form_sanitizer($_POST['album_id'], 0, 'album_id');
