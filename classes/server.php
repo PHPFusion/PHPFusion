@@ -350,7 +350,7 @@ abstract class ForumServer {
 
             $cache_query = "
             SELECT rank_title, rank_image, rank_type, rank_posts, rank_apply, rank_language
-            FROM ".DB_FORUM_RANKS." ".(multilang_table("FR") ? "WHERE rank_language='".LANGUAGE."'" : "")."
+            FROM ".DB_FORUM_RANKS." ".(multilang_table("FR") ? "WHERE ".in_group('rank_language', LANGUAGE) : "")."
             ORDER BY rank_apply DESC, rank_posts ASC
             ";
 
@@ -414,7 +414,7 @@ abstract class ForumServer {
 			LEFT JOIN ".DB_USERS." u ON u.user_id=tt.thread_lastuser
 			LEFT JOIN ".DB_USERS." uc ON uc.user_id=tt.thread_author
 			LEFT JOIN ".DB_FORUM_VOTES." v ON v.thread_id = tt.thread_id AND tp.post_id = v.post_id
-			".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND" : "WHERE")."
+			".(multilang_table("FO") ? "WHERE ".in_group('tf.forum_language', LANGUAGE)." AND" : "WHERE")."
 			".groupaccess('tf.forum_access')." AND tt.thread_hidden='0'
 			".($forum_id ? "AND forum_id='".intval($forum_id)."'" : '')."
 			GROUP BY thread_id ORDER BY tt.thread_lastpost LIMIT 0, ".$forum_settings['threads_per_page']."");

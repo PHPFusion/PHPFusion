@@ -115,7 +115,7 @@ if (!function_exists('render_forum_main')) {
         $html->set_tag('popular_threads_title', $locale['forum_0273']);
         $custom_result = dbquery("SELECT t.thread_id, t.thread_subject, t.thread_author, t.thread_postcount FROM ".DB_FORUMS." tf
         INNER JOIN ".DB_FORUM_THREADS." t ON tf.forum_id=t.forum_id
-        ".(multilang_column('FO') ? " WHERE forum_language='".LANGUAGE."' AND " : " WHERE ").groupaccess('forum_access')." and (t.thread_lastpost >=:one_week and t.thread_lastpost < :current) and t.thread_locked=:not_locked and t.thread_hidden=:not_hidden
+        ".(multilang_column('FO') ? " WHERE ".in_group('forum_language', LANGUAGE)." AND " : " WHERE ").groupaccess('forum_access')." and (t.thread_lastpost >=:one_week and t.thread_lastpost < :current) and t.thread_locked=:not_locked and t.thread_hidden=:not_hidden
         GROUP BY t.thread_id ORDER BY t.thread_postcount DESC LIMIT 10",
             [
                 ':one_week'   => TIME - (7 * 24 * 3600),
@@ -597,7 +597,7 @@ if (!function_exists('forum_newtopic')) {
         $result = dbquery("SELECT a.forum_id, a.forum_name, b.forum_name as forum_cat_name, a.forum_post
          FROM ".DB_FORUMS." a
          LEFT JOIN ".DB_FORUMS." b ON a.forum_cat=b.forum_id
-         WHERE ".groupaccess('a.forum_access')." ".(multilang_table("FO") ? "AND a.forum_language='".LANGUAGE."' AND" : "AND")."
+         WHERE ".groupaccess('a.forum_access')." ".(multilang_table("FO") ? "AND ".in_group('a.forum_language', LANGUAGE)." AND" : "AND")."
          (a.forum_type ='2' or a.forum_type='4') AND a.forum_post < ".USER_LEVEL_PUBLIC." AND a.forum_lock !='1' ORDER BY a.forum_cat ASC, a.forum_branch ASC, a.forum_name ASC");
         $options = [];
         if (dbrows($result) > 0) {

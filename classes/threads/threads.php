@@ -111,7 +111,7 @@ class ForumThreads extends ForumServer {
             LEFT JOIN ".DB_FORUM_ATTACHMENTS." a on a.thread_id = t.thread_id
             LEFT JOIN ".DB_FORUM_THREAD_NOTIFY." n on n.thread_id = t.thread_id and n.notify_user = '".$userdata['user_id']."'
             WHERE ".($forum_id ? "t.forum_id='".$forum_id."' AND " : "")."t.thread_hidden='0' AND ".groupaccess('tf.forum_access')."
-            ".(isset($filter['condition']) ? $filter['condition'] : '')." ".(multilang_table("FO") ? "AND tf.forum_language='".LANGUAGE."'" : '')."
+            ".(isset($filter['condition']) ? $filter['condition'] : '')." ".(multilang_table("FO") ? "AND ".in_group('tf.forum_language', LANGUAGE) : '')."
             GROUP BY t.thread_id
             ".(isset($filter['order']) ? $filter['order'] : '');
 
@@ -577,7 +577,7 @@ class ForumThreads extends ForumServer {
                 LEFT JOIN ".DB_FORUM_VOTES." v on v.thread_id = t.thread_id AND v.vote_user='".intval($userid)."' AND v.forum_id=f.forum_id AND f.forum_type='4'
                 LEFT JOIN ".DB_FORUM_POLL_VOTERS." p on p.thread_id = t.thread_id AND p.forum_vote_user_id='".intval($userid)."' AND t.thread_poll='1'
                 LEFT JOIN ".DB_FORUM_THREAD_NOTIFY." n on n.thread_id = t.thread_id and n.notify_user = '".intval($userid)."'
-                ".(multilang_table('FO') ? " WHERE f.forum_language='".LANGUAGE."' AND " : " WHERE ")."
+                ".(multilang_table('FO') ? " WHERE ".in_group('f.forum_language', LANGUAGE)." AND " : " WHERE ")."
                 ".groupaccess('f.forum_access')." AND t.thread_id='".intval($thread_id)."' AND t.thread_hidden='0'";
         $result = dbquery($query);
         if (dbrows($result)) {

@@ -410,7 +410,7 @@ class NewThread extends ForumServer {
                 if (!dbcount("(forum_id)", DB_FORUMS, "forum_type !='1'")) {
                     redirect(FORUM.'index.php');
                 }
-                if (!dbcount("(forum_id)", DB_FORUMS, "forum_language ='".LANGUAGE."'")) {
+                if (!dbcount("(forum_id)", DB_FORUMS, in_group('forum_language', LANGUAGE))) {
                     redirect(FORUM.'index.php');
                 }
 				if (isset($_GET['forum_id']) && !isnum($_GET['forum_id'])) {
@@ -608,7 +608,7 @@ class NewThread extends ForumServer {
 
                 //Disable all parents
                 $disabled_opts = [];
-                $disable_query = "SELECT forum_id FROM ".DB_FORUMS." WHERE forum_type=1 ".(multilang_table("FO") ? "AND forum_language='".LANGUAGE."'" : '');
+                $disable_query = "SELECT forum_id FROM ".DB_FORUMS." WHERE forum_type=1 ".(multilang_table("FO") ? "AND ".in_group('forum_language', LANGUAGE) : '');
                 $disable_query = dbquery(" $disable_query ");
                 if (dbrows($disable_query) > 0) {
                     while ($d_forum = dbarray($disable_query)) {
@@ -630,7 +630,7 @@ class NewThread extends ForumServer {
                             'width'        => '320px',
                             'no_root'      => TRUE,
                             'disable_opts' => $disabled_opts,
-                            'query'        => (multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."'" : ''),
+                            'query'        => (multilang_table("FO") ? "WHERE ".in_group('forum_language', LANGUAGE) : ''),
                         ],
                         DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat'),
                     'subject_field'     => form_text('thread_subject', self::$locale['forum_0051'], $thread_data['thread_subject'], [

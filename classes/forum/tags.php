@@ -55,7 +55,7 @@ class ThreadTags extends ForumServer {
         if (isset($_GET['tag_id']) && isnum($_GET['tag_id'])) {
 
             $tag_query = "SELECT * FROM ".DB_FORUM_TAGS." WHERE tag_status=1 AND tag_id='".intval($_GET['tag_id'])."'
-            ".(multilang_table("FO") ? "AND tag_language='".LANGUAGE."'" : "")."
+            ".(multilang_table("FO") ? "AND ".in_group('tag_language', LANGUAGE) : "")."
             ";
             $tag_result = dbquery($tag_query);
             if (dbrows($tag_result) > 0) {
@@ -204,7 +204,7 @@ class ThreadTags extends ForumServer {
             LEFT JOIN ".DB_FORUM_THREAD_NOTIFY." n on n.thread_id = t.thread_id and n.notify_user = '".$userdata['user_id']."'
             WHERE ".in_group('t.thread_tags', intval($tag_id), '.')." AND t.thread_hidden='0' AND ".groupaccess('tf.forum_access')."
             ".(isset($filter['condition']) ? $filter['condition'] : '')."
-            ".(multilang_table("FO") ? "AND tf.forum_language='".LANGUAGE."'" : '')."
+            ".(multilang_table("FO") ? "AND ".in_group('tf.forum_language', LANGUAGE) : '')."
             GROUP BY t.thread_id
             ".(isset($filter['order']) ? $filter['order'] : '')."
             LIMIT ".intval($_GET['thread_rowstart']).", ".$forum_settings['threads_per_page'];
@@ -308,7 +308,7 @@ class ThreadTags extends ForumServer {
 
     public function cache_tags() {
 
-        $tag_query = "SELECT * FROM ".DB_FORUM_TAGS." WHERE tag_status=:tag_status ".(multilang_table("FO") ? "AND tag_language='".LANGUAGE."'" : "")." ORDER BY tag_title ASC";
+        $tag_query = "SELECT * FROM ".DB_FORUM_TAGS." WHERE tag_status=:tag_status ".(multilang_table("FO") ? "AND ".in_group('tag_language', LANGUAGE) : "")." ORDER BY tag_title ASC";
         $tag_param = [':tag_status' => 1];
         $tag_result = dbquery($tag_query, $tag_param);
 

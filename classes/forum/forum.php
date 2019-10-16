@@ -72,7 +72,7 @@ class Forum extends ForumServer {
             'lastvisited'      => isset($userdata['user_lastvisit']) && isnum($userdata['user_lastvisit']) ? $userdata['user_lastvisit'] : TIME,
             'posts_per_page'   => $forum_settings['posts_per_page'],
             'threads_per_page' => $forum_settings['threads_per_page'],
-            'forum_index'      => dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat', (multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('forum_access')), // waste resources here.
+            'forum_index'      => dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat', (multilang_table("FO") ? "WHERE ".in_group('forum_language', LANGUAGE)." AND" : "WHERE")." ".groupaccess('forum_access')), // waste resources here.
             'threads'          => [],
             'section'          => isset($_GET['section']) ? $_GET['section'] : 'thread',
             'new_topic_link'   => ['link' => FORUM.'newthread.php', 'title' => $locale['forum_0057']],
@@ -180,7 +180,7 @@ class Forum extends ForumServer {
                      * @todo: INSPECT TO SEE WHETHER THIS IS REQUIRED
                      *      It is taking some resource
                      */
-                    //$this->forum_info['forum_max_rows'] = dbcount("('forum_id')", DB_FORUMS, (multilang_table("FO") ? "forum_language='".LANGUAGE."' AND" : '')." forum_cat='".$this->forum_info['parent_id']."' AND ".groupaccess('forum_access')."");
+                    //$this->forum_info['forum_max_rows'] = dbcount("('forum_id')", DB_FORUMS, (multilang_table("FO") ? in_group('forum_language', LANGUAGE)." AND" : '')." forum_cat='".$this->forum_info['parent_id']."' AND ".groupaccess('forum_access')."");
                     //$_GET['rowstart'] = (isset($_GET['rowstart']) && $_GET['rowstart'] <= $this->forum_info['forum_max_rows']) ? $_GET['rowstart'] : 0;
                     //$this->ext = isset($this->forum_info['parent_id']) && isnum($this->forum_info['parent_id']) ? "&amp;parent_id=".$this->forum_info['parent_id'] : '';
                     /*
@@ -229,7 +229,7 @@ class Forum extends ForumServer {
                                 // Get Subforum data
                                 if ($this->forum_info['subforum_count']) {
                                     $select_column = "SELECT * FROM ".DB_FORUMS;
-                                    $select_cond = (multilang_table("FO") ? " WHERE forum_language='".LANGUAGE."' AND " : " WHERE ")." ".groupaccess('forum_access')." AND forum_cat=:forum_id";
+                                    $select_cond = (multilang_table("FO") ? " WHERE ".in_group('forum_language', LANGUAGE)." AND " : " WHERE ")." ".groupaccess('forum_access')." AND forum_cat=:forum_id";
                                     $child_sql = $select_column.$select_cond;
                                     $child_param = [
                                         ':forum_id' => $this->forum_info['forum_id'],
@@ -638,7 +638,7 @@ class Forum extends ForumServer {
             t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_lastuser, t.thread_subject
             FROM ".DB_FORUMS." f
             LEFT JOIN ".DB_FORUM_THREADS." t ON f.forum_lastpostid = t.thread_lastpostid
-            ".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('f.forum_access')."
+            ".(multilang_table("FO") ? "WHERE ".in_group('f.forum_language', LANGUAGE)." AND" : "WHERE")." ".groupaccess('f.forum_access')."
             ".($forum_id && $branch_id ? "AND f.forum_id=:forum_id or f.forum_cat=:forum_id OR f.forum_branch=:branch_id" : '')."
             GROUP BY f.forum_id ORDER BY f.forum_cat ASC, f.forum_order ASC, t.thread_lastpost DESC
         ", [

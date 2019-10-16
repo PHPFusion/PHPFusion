@@ -142,8 +142,13 @@ class ForumAdminRanks extends ForumAdminInterface {
 
         if (multilang_table("FR")) {
             $html .=
-                form_select('rank_language', self::$locale['global_ML100'], $this->data['rank_language'], [
-                    'inline' => TRUE, 'options' => $language_opts, 'placeholder' => self::$locale['choose']]);
+                form_select('rank_language[]', self::$locale['global_ML100'], $this->data['rank_language'], [
+                    'inline'      => TRUE,
+                    'options'     => $language_opts,
+                    'placeholder' => self::$locale['choose'],
+                    'multiple'    => TRUE,
+                    'delimeter'   => '.'
+                ]);
 
         } else {
             $html .= form_hidden('rank_language', '', $this->data['rank_language']);
@@ -245,7 +250,7 @@ class ForumAdminRanks extends ForumAdminInterface {
             ($this->data['rank_apply'] < USER_LEVEL_MEMBER && $this->data['rank_apply'] != $comparing_data['rank_apply'])
             && (dbcount("(rank_id)",
                 DB_FORUM_RANKS,
-                (multilang_table("FR") ? "rank_language='".LANGUAGE."' AND" : "")."
+                (multilang_table("FR") ? in_group('rank_language', LANGUAGE)." AND" : "")."
                                     rank_id!='".$this->data['rank_id']."' AND rank_apply='".$this->data['rank_apply']."'"))
         ) {
             addNotice('info', self::$locale['forum_rank_413']);
@@ -264,7 +269,7 @@ class ForumAdminRanks extends ForumAdminInterface {
 
         $rank_list_query = "SELECT *
         FROM ".DB_FORUM_RANKS."
-        ".(multilang_table("FR") ? "WHERE rank_language='".LANGUAGE."'" : "")."
+        ".(multilang_table("FR") ? "WHERE ".in_group('rank_language', LANGUAGE) : "")."
         ORDER BY rank_type DESC, rank_apply DESC, rank_posts
         ";
 
