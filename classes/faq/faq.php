@@ -88,7 +88,7 @@ abstract class Faq extends FaqServer {
         $c_result = dbquery("SELECT fc.*, count(fq.faq_id) 'faq_count'
             FROM ".DB_FAQ_CATS." fc
             LEFT JOIN ".DB_FAQS." fq using (faq_cat_id)
-            ".(multilang_table("FQ") ? "WHERE faq_cat_language='".LANGUAGE."'" : "")."
+            ".(multilang_table("FQ") ? "WHERE ".in_group('faq_cat_language', LANGUAGE) : "")."
             GROUP BY fc.faq_cat_id
             ORDER BY faq_cat_id ASC
         ");
@@ -112,7 +112,7 @@ abstract class Faq extends FaqServer {
             FROM ".DB_FAQS." fq
             LEFT JOIN ".DB_USERS." AS fu ON fq.faq_name=fu.user_id
             WHERE fq.faq_status='1' AND ".groupaccess("fq.faq_visibility").
-            (multilang_table('FQ') ? " AND fq.faq_language='".LANGUAGE."'" : '').($cat ? " AND fq.faq_cat_id='$cat'" : ' AND fq.faq_cat_id=0')."
+            (multilang_table('FQ') ? " AND ".in_group('fq.faq_language', LANGUAGE) : '').($cat ? " AND fq.faq_cat_id='$cat'" : ' AND fq.faq_cat_id=0')."
             GROUP BY fq.faq_id ORDER BY fq.faq_cat_id ASC, fq.faq_id ASC
         ");
 
