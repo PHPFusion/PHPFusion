@@ -117,7 +117,7 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
          * The form
          */
         // must have category
-        if (dbcount("(download_cat_id)", DB_DOWNLOAD_CATS, multilang_table("DL") ? "download_cat_language='".LANGUAGE."'" : "")) {
+        if (dbcount("(download_cat_id)", DB_DOWNLOAD_CATS, multilang_table("DL") ? in_group('download_cat_language', LANGUAGE) : "")) {
             echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
             echo "<div class='alert alert-info m-b-20 submission-guidelines'>".str_replace("[SITENAME]", fusion_get_settings("sitename"),
                     $locale['download_0044'])."</div>\n";
@@ -131,7 +131,7 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
                 "inline"      => TRUE,
                 "no_root"     => TRUE,
                 "placeholder" => $locale['choose'],
-                "query"       => (multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."'" : "")
+                "query"       => (multilang_table("DL") ? "WHERE ".in_group('download_cat_language', LANGUAGE) : "")
             ], DB_DOWNLOAD_CATS, "download_cat_name", "download_cat_id", "download_cat_parent");
             echo form_select('download_keywords', $locale['download_0203'], $criteriaArray['download_keywords'], [
                 "placeholder" => $locale['download_0203a'],

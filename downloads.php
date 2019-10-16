@@ -139,7 +139,7 @@ if (isset($_GET['download_id'])) {
             FROM ".DB_DOWNLOADS." AS d
             INNER JOIN ".DB_DOWNLOAD_CATS." AS dc ON d.download_cat = dc.download_cat_id
             LEFT JOIN ".DB_USERS." AS du ON d.download_user = du.user_id
-            ".(multilang_table("DL") ? "WHERE dc.download_cat_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('d.download_visibility')." AND
+            ".(multilang_table("DL") ? "WHERE ".in_group('dc.download_cat_language', LANGUAGE)." AND" : "WHERE")." ".groupaccess('d.download_visibility')." AND
             d.download_id='".intval($_GET['download_id'])."'
             GROUP BY d.download_id
         ");
@@ -217,7 +217,7 @@ if (isset($_GET['download_id'])) {
         set_title($locale['download_1000']);
         set_meta("name", $locale['download_1000']);
 
-        $res = dbarray(dbquery("SELECT * FROM ".DB_DOWNLOAD_CATS.(multilang_table('DL') ? " WHERE download_cat_language='".LANGUAGE."' AND " : " WHERE ")."download_cat_id='".intval($_GET['cat_id'])."'"));
+        $res = dbarray(dbquery("SELECT * FROM ".DB_DOWNLOAD_CATS.(multilang_table('DL') ? " WHERE ".in_group('download_cat_language', LANGUAGE)." AND " : " WHERE ")."download_cat_id='".intval($_GET['cat_id'])."'"));
         if (!empty($res)) {
             $info += $res;
         } else {
@@ -257,7 +257,7 @@ if (isset($_GET['download_id'])) {
                 FROM ".DB_DOWNLOADS." AS d
                 INNER JOIN ".DB_DOWNLOAD_CATS." AS dc ON d.download_cat=dc.download_cat_id
                 LEFT JOIN ".DB_USERS." du ON d.download_user=du.user_id
-                ".(multilang_table("DL") ? " WHERE download_cat_language='".LANGUAGE."' AND " : " WHERE ")." ".groupaccess('download_visibility')."
+                ".(multilang_table("DL") ? " WHERE ".in_group('download_cat_language', LANGUAGE)." AND " : " WHERE ")." ".groupaccess('download_visibility')."
                 AND d.download_cat = '".intval($_GET['cat_id'])."'
                 GROUP BY d.download_id
                 ORDER BY ".(!empty($filter_condition) ? $filter_condition : "dc.download_cat_sorting")."
@@ -293,7 +293,7 @@ if (isset($_GET['download_id'])) {
                 FROM ".DB_DOWNLOADS." AS d
                 INNER JOIN ".DB_DOWNLOAD_CATS." AS dc ON d.download_cat=dc.download_cat_id
                 LEFT JOIN ".DB_USERS." AS du ON d.download_user=du.user_id
-                ".(multilang_table("DL") ? "WHERE dc.download_cat_language = '".LANGUAGE."' AND" : "WHERE")." ".groupaccess('download_visibility')."
+                ".(multilang_table("DL") ? "WHERE ".in_group('dc.download_cat_language', LANGUAGE)." AND" : "WHERE")." ".groupaccess('download_visibility')."
                 ".$condition."
                 GROUP BY d.download_id
                 ORDER BY ".($filter_condition ? $filter_condition : "dc.download_cat_sorting")."

@@ -90,7 +90,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
         }
     }
     if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
-        $result = dbquery("SELECT * FROM ".DB_DOWNLOAD_CATS." ".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."' AND" : "WHERE")." download_cat_id='".$_GET['cat_id']."'");
+        $result = dbquery("SELECT * FROM ".DB_DOWNLOAD_CATS." ".(multilang_table("DL") ? "WHERE ".in_group('download_cat_language', LANGUAGE)." AND" : "WHERE")." download_cat_id='".$_GET['cat_id']."'");
         if (dbrows($result)) {
             $data = dbarray($result);
             $data['download_cat_hidden'] = [$data['download_cat_id']];
@@ -164,10 +164,12 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
         'width'         => '100%'
     ], DB_DOWNLOAD_CATS, "download_cat_name", "download_cat_id", "download_cat_parent");
     if (multilang_table("DL")) {
-        echo form_select('download_cat_language', $locale['global_ML100'], $data['download_cat_language'], [
+        echo form_select('download_cat_language[]', $locale['global_ML100'], $data['download_cat_language'], [
             'options'     => $language_opts,
             'placeholder' => $locale['choose'],
-            'width'       => '100%'
+            'width'       => '100%',
+            'multiple'    => TRUE,
+            'delimeter'   => '.'
         ]);
     } else {
         echo form_hidden('download_cat_language', '', $data['download_cat_language']);
@@ -205,7 +207,7 @@ function showcatlist($parent = 0, $level = 0) {
     from ".DB_DOWNLOAD_CATS." d
     left join ".DB_DOWNLOAD_CATS." dc on dc.download_cat_parent=d.download_cat_id
     left join ".DB_DOWNLOADS." dl on dl.download_cat=d.download_cat_id
-    WHERE d.download_cat_parent='$parent' ".(multilang_table("DL") ? "and d.download_cat_language='".LANGUAGE."'" : "")."
+    WHERE d.download_cat_parent='$parent' ".(multilang_table("DL") ? "and ".in_group('d.download_cat_language', LANGUAGE) : "")."
     group by d.download_cat_id
     ORDER BY d.download_cat_name
     ");

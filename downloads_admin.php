@@ -106,7 +106,7 @@ function download_listing() {
     // add a filter browser
     $catOpts['all'] = $locale['download_0004'];
 
-    $categories = dbquery("select download_cat_id, download_cat_name from ".DB_DOWNLOAD_CATS." ".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."'" : "")."");
+    $categories = dbquery("select download_cat_id, download_cat_name from ".DB_DOWNLOAD_CATS." ".(multilang_table("DL") ? "WHERE ".in_group('download_cat_language', LANGUAGE) : "")."");
     if (dbrows($categories) > 0) {
         while ($cat_data = dbarray($categories)) {
             $catOpts[$cat_data['download_cat_id']] = $cat_data['download_cat_name'];
@@ -120,7 +120,7 @@ function download_listing() {
         }
     }
 
-    $langFilter = multilang_table("DL") ? "download_cat_language='".LANGUAGE."'" : "";
+    $langFilter = multilang_table("DL") ? in_group('download_cat_language', LANGUAGE) : "";
 
     if ($catFilter && $langFilter) {
         $filter = $catFilter." AND ".$langFilter;
