@@ -869,7 +869,7 @@ class ForumAdminView extends ForumAdminInterface {
                 'hide_disabled'   => 1
             ], DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat', $self_id).
             form_select('forum_type', self::$locale['forum_009'], $this->data['forum_type'], ["options" => $type_opts]).
-            form_select('forum_language', self::$locale['forum_010'], $this->data['forum_language'], [
+            form_select('forum_language[]', self::$locale['forum_010'], $this->data['forum_language'], [
                 "options"   => $language_opts,
                 'multiple'  => TRUE,
                 'delimeter' => '.'
