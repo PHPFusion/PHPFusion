@@ -250,7 +250,7 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                 echo "</div>\n";
 
                 $news_cat_opts = [];
-                $query = "SELECT news_cat_id, news_cat_name FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."'" : '')." ORDER BY news_cat_name";
+                $query = "SELECT news_cat_id, news_cat_name FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? "WHERE ".in_group('news_cat_language', LANGUAGE) : '')." ORDER BY news_cat_name";
                 $result = dbquery($query);
                 $news_cat_opts['0'] = self::$locale['news_0202'];
                 if (dbrows($result)) {
@@ -322,7 +322,7 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                                     'inner_width'  => '100%',
                                     'inline'       => TRUE,
                                     'parent_value' => self::$locale['news_0202'],
-                                    'query'        => (multilang_table('NS') ? "WHERE news_cat_language='".LANGUAGE."'" : '')
+                                    'query'        => (multilang_table('NS') ? "WHERE ".in_group('news_cat_language', LANGUAGE) : '')
                                 ],
                                 DB_NEWS_CATS, 'news_cat_name', 'news_cat_id', 'news_cat_parent'
                             ).
@@ -336,11 +336,13 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                             );
 
                         if (multilang_table('NS')) {
-                            echo form_select('news_language', self::$locale['language'], $this->news_data['news_language'], [
+                            echo form_select('news_language[]', self::$locale['language'], $this->news_data['news_language'], [
                                 'options'     => fusion_get_enabled_languages(),
                                 'placeholder' => self::$locale['choose'],
                                 'inner_width' => '100%',
                                 'inline'      => TRUE,
+                                'multiple'    => TRUE,
+                                'delimeter'   => '.'
                             ]);
                         } else {
                             echo form_hidden('news_language', '', $this->news_data['news_language']);

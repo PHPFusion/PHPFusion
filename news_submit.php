@@ -122,12 +122,14 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
                     'required' => TRUE,
                     'inline'   => TRUE
                 ]),
-            'news_language_field'    => (multilang_table('NS') ? form_select('news_language', $locale['global_ML100'], $criteriaArray['news_language'],
+            'news_language_field'    => (multilang_table('NS') ? form_select('news_language[]', $locale['global_ML100'], $criteriaArray['news_language'],
                 [
                     'options'     => fusion_get_enabled_languages(),
                     'placeholder' => $locale['choose'],
                     'width'       => '250px',
                     'inline'      => TRUE,
+                    'multiple'    => TRUE,
+                    'delimeter'   => '.'
                 ]) : form_hidden('news_language', '', $criteriaArray['news_language'])),
             'news_keywords_field'    => form_select('news_keywords', $locale['news_0205'], $criteriaArray['news_keywords'],
                 [
@@ -145,7 +147,7 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
                     'width'        => '250px',
                     'inline'       => TRUE,
                     'parent_value' => $locale['news_0202'],
-                    "query"        => (multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."'" : "")
+                    "query"        => (multilang_table("NS") ? "WHERE ".in_group('news_cat_language', LANGUAGE) : "")
                 ],
                 DB_NEWS_CATS, "news_cat_name", "news_cat_id", "news_cat_parent"
             ),

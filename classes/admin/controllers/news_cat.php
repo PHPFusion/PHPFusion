@@ -94,8 +94,8 @@ class NewsCategoryAdmin extends NewsAdminModel {
             ];
 
             $categoryNameCheck = [
-                "when_updating" => "news_cat_name='".$inputArray['news_cat_name']."' and news_cat_id !='".$inputArray['news_cat_id']."' ".(multilang_table("NS") ? "and news_cat_language = '".LANGUAGE."'" : ""),
-                "when_saving"   => "news_cat_name='".$inputArray['news_cat_name']."' ".(multilang_table("NS") ? "and news_cat_language = '".LANGUAGE."'" : ""),
+                "when_updating" => "news_cat_name='".$inputArray['news_cat_name']."' and news_cat_id !='".$inputArray['news_cat_id']."' ".(multilang_table("NS") ? "and ".in_group('news_cat_language', LANGUAGE) : ""),
+                "when_saving"   => "news_cat_name='".$inputArray['news_cat_name']."' ".(multilang_table("NS") ? "and ".in_group('news_cat_language', LANGUAGE) : ""),
             ];
 
             if (\defender::safe()) {
@@ -132,7 +132,7 @@ class NewsCategoryAdmin extends NewsAdminModel {
             }
 
         } else if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
-            $result = dbquery("SELECT * FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."' AND" : "WHERE")." news_cat_id='".$_GET['cat_id']."'");
+            $result = dbquery("SELECT * FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? "WHERE ".in_group('news_cat_language', LANGUAGE)." AND" : "WHERE")." news_cat_id='".$_GET['cat_id']."'");
             if (dbrows($result)) {
                 $data = dbarray($result);
                 $data['news_cat_hidden'] = [$data['news_cat_id']];
@@ -159,7 +159,7 @@ class NewsCategoryAdmin extends NewsAdminModel {
                     "inline"        => TRUE,
                     "disable_opts"  => $data['news_cat_hidden'],
                     "hide_disabled" => TRUE,
-                    "query"         => (multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."'" : "")
+                    "query"         => (multilang_table("NS") ? "WHERE ".in_group('news_cat_language', LANGUAGE) : "")
                 ], DB_NEWS_CATS, "news_cat_name", "news_cat_id", "news_cat_parent");
 
                 echo form_select("news_cat_image", self::$locale['news_0301'], $data['news_cat_image'], [
@@ -176,10 +176,12 @@ class NewsCategoryAdmin extends NewsAdminModel {
             <div class="col-xs-12 col-sm-4">
                 <?php
                 if (multilang_table("NS")) {
-                    echo form_select("news_cat_language", self::$locale['global_ML100'], $data['news_cat_language'], [
+                    echo form_select("news_cat_language[]", self::$locale['global_ML100'], $data['news_cat_language'], [
                         "inline"      => TRUE,
                         "options"     => fusion_get_enabled_languages(),
-                        "placeholder" => self::$locale['choose']
+                        "placeholder" => self::$locale['choose'],
+                        'multiple'    => TRUE,
+                        'delimeter'   => '.'
                     ]);
                 } else {
                     echo form_hidden("news_cat_language", "", $data['news_cat_language']);
@@ -306,7 +308,7 @@ class NewsCategoryAdmin extends NewsAdminModel {
             ];
         }
         if (multilang_table("NS")) {
-            $sql_condition = "news_cat_language='".LANGUAGE."'";
+            $sql_condition = in_group('news_cat_language', LANGUAGE);
         }
         if (!empty($search_string)) {
             foreach ($search_string as $key => $values) {
@@ -412,9 +414,7 @@ class NewsCategoryAdmin extends NewsAdminModel {
             echo "<div class='display-inline-block'>\n";
             $language_opts = [0 => self::$locale['news_0249']];
             $language_opts += fusion_get_enabled_languages();
-            echo form_select("news_cat_language", "", $filter_values['news_cat_language'], [
-                "allowclear" => TRUE, "placeholder" => "-  ".self::$locale['news_0250']." -", "options" => $language_opts
-            ]);
+            echo form_select("news_cat_language", "", $filter_values['news_cat_language'], ["allowclear" => TRUE, "placeholder" => "-  ".self::$locale['news_0250']." -", "options" => $language_opts]);
             echo "</div>\n";
             echo "</div>\n";
             echo closeform();
