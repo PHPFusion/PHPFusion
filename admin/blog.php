@@ -21,7 +21,7 @@ $userdata = fusion_get_userdata();
 
 // use the select
 $blog_cat_opts[0] = $locale['blog_0424'];
-$cat_result = dbquery("SELECT blog_cat_id, blog_cat_name FROM ".DB_BLOG_CATS." ".(multilang_table("BL") ? "WHERE blog_cat_language='".LANGUAGE."'" : "")." ORDER BY blog_cat_name ASC");
+$cat_result = dbquery("SELECT blog_cat_id, blog_cat_name FROM ".DB_BLOG_CATS." ".(multilang_table("BL") ? "WHERE ".in_group('blog_cat_language', LANGUAGE) : "")." ORDER BY blog_cat_name ASC");
 if (dbrows($result) > 0) {
     while ($bcData = dbarray($cat_result)) {
         $blog_cat_opts[$bcData['blog_cat_id']] = $bcData['blog_cat_name'];
@@ -218,11 +218,13 @@ echo form_select('blog_visibility', $locale['blog_0430'], $data['blog_visibility
 ]);
 
 if (multilang_table("BL")) {
-    echo form_select('blog_language', $locale['global_ML100'], $data['blog_language'], [
+    echo form_select('blog_language[]', $locale['global_ML100'], $data['blog_language'], [
         'options'     => fusion_get_enabled_languages(),
         'placeholder' => $locale['choose'],
         'width'       => '100%',
         "inline"      => TRUE,
+        'multiple'    => TRUE,
+        'delimeter'   => '.'
     ]);
 } else {
     echo form_hidden('blog_language', '', $data['blog_language']);

@@ -271,11 +271,13 @@ if (!function_exists('display_blog_submit')) {
                     "inline"   => TRUE
                 ]);
                 if (multilang_table("BL")) {
-                    echo form_select('blog_language', $locale['global_ML100'], $criteriaArray['blog_language'], [
+                    echo form_select('blog_language[]', $locale['global_ML100'], $criteriaArray['blog_language'], [
                         "options"     => fusion_get_enabled_languages(),
                         "placeholder" => $locale['choose'],
                         "width"       => "250px",
                         "inline"      => TRUE,
+                        'multiple'    => TRUE,
+                        'delimeter'   => '.'
                     ]);
                 } else {
                     echo form_hidden('blog_language', '', $criteriaArray['blog_language']);
@@ -293,7 +295,7 @@ if (!function_exists('display_blog_submit')) {
                     "width"        => "250px",
                     "inline"       => TRUE,
                     "parent_value" => $locale['blog_0424'],
-                    "query"        => (multilang_table("BL") ? "WHERE blog_cat_language='".LANGUAGE."'" : "")
+                    "query"        => (multilang_table("BL") ? "WHERE ".in_group('blog_cat_language', LANGUAGE) : "")
                 ], DB_BLOG_CATS, "blog_cat_name", "blog_cat_id", "blog_cat_parent");
                 if ($blog_settings['blog_allow_submission_files']) {
                     $file_input_options = [
