@@ -187,7 +187,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
                     'required'    => TRUE,
                     'no_root'     => TRUE,
                     'placeholder' => $this->locale['choose'],
-                    'query'       => (multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."'" : "")
+                    'query'       => (multilang_table("WL") ? "WHERE ".in_group('weblink_cat_language', LANGUAGE) : "")
                 ], DB_WEBLINK_CATS, "weblink_cat_name", "weblink_cat_id", "weblink_cat_parent");
 
                 echo form_select('weblink_visibility', $this->locale['WLS_0103'], $this->weblink_data['weblink_visibility'], [
@@ -196,9 +196,11 @@ class WeblinksAdmin extends WeblinksAdminModel {
                 ]);
 
                 if (multilang_table("WL")) {
-                    echo form_select('weblink_language', $this->locale['language'], $this->weblink_data['weblink_language'], [
+                    echo form_select('weblink_language[]', $this->locale['language'], $this->weblink_data['weblink_language'], [
                         'options'     => fusion_get_enabled_languages(),
-                        'placeholder' => $this->locale['choose']
+                        'placeholder' => $this->locale['choose'],
+                        'multiple'    => TRUE,
+                        'delimeter'   => '.'
                     ]);
                 } else {
                     echo form_hidden('weblink_language', '', $this->weblink_data['weblink_language']);
@@ -372,7 +374,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
         $result2 = dbquery("SELECT  w.*, wc.*
             FROM ".DB_WEBLINKS." w
             LEFT JOIN ".DB_WEBLINK_CATS." wc ON wc.weblink_cat_id=w.weblink_cat
-            WHERE ".(multilang_table("WL") ? "weblink_language='".LANGUAGE."'" : "")."
+            WHERE ".(multilang_table("WL") ? in_group('w.weblink_language', LANGUAGE) : "")."
             $sql_condition
             ORDER BY w.weblink_status DESC, w.weblink_datestamp DESC
             LIMIT $rowstart, $limit
@@ -463,7 +465,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
                         'parent_value' => $this->locale['WLS_0127'],
                         'placeholder'  => "- ".$this->locale['WLS_0126']." -",
                         'allowclear'   => TRUE,
-                        'query'        => (multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."'" : "")
+                        'query'        => (multilang_table("WL") ? "WHERE ".in_group('weblink_cat_language', LANGUAGE) : "")
                     ], DB_WEBLINK_CATS, "weblink_cat_name", "weblink_cat_id", "weblink_cat_parent");
                     ?>
                 </div>

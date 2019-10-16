@@ -64,7 +64,7 @@ if (defined('WEBLINKS_EXIST')) {
             $query = "SELECT tw.*,twc.*
             FROM ".DB_WEBLINKS." tw
             INNER JOIN ".DB_WEBLINK_CATS." twc ON tw.weblink_cat=twc.weblink_cat_id
-            ".(multilang_table("WL") ? "WHERE twc.weblink_cat_language='".LANGUAGE."' AND tw.weblink_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('weblink_visibility')."
+            ".(multilang_table("WL") ? "WHERE ".in_group('twc.weblink_cat_language', LANGUAGE)." AND ".in_group('tw.weblink_language', LANGUAGE)." AND " : "WHERE ").groupaccess('weblink_visibility')."
             AND ".Search_Engine::search_conditions('weblinks').$date_search;
 
             $result = dbquery($query, Search_Engine::get_param('search_param'));

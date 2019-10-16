@@ -85,8 +85,8 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
             ];
             // Check Where Condition
             $categoryNameCheck = [
-                'when_updating' => "weblink_cat_name='".$inputArray['weblink_cat_name']."' and weblink_cat_id !='".$inputArray['weblink_cat_id']."' ".(multilang_table("WL") ? "and weblink_cat_language = '".LANGUAGE."'" : ""),
-                'when_saving'   => "weblink_cat_name='".$inputArray['weblink_cat_name']."' ".(multilang_table("WL") ? "and weblink_cat_language = '".LANGUAGE."'" : ""),
+                'when_updating' => "weblink_cat_name='".$inputArray['weblink_cat_name']."' and weblink_cat_id !='".$inputArray['weblink_cat_id']."' ".(multilang_table("WL") ? "and ".in_group('weblink_cat_language', LANGUAGE) : ""),
+                'when_saving'   => "weblink_cat_name='".$inputArray['weblink_cat_name']."' ".(multilang_table("WL") ? "and ".in_group('weblink_cat_language', LANGUAGE) : ""),
             ];
 
             // Save
@@ -123,7 +123,7 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
 
             // Edit
         } else if ((!empty($action) && $action == "edit") && $cat_id) {
-            $result = dbquery("SELECT * FROM ".DB_WEBLINK_CATS." ".(multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."' AND" : "WHERE")." weblink_cat_id='".(int)$cat_id."'");
+            $result = dbquery("SELECT * FROM ".DB_WEBLINK_CATS." ".(multilang_table("WL") ? "WHERE ".in_group('weblink_cat_language', LANGUAGE)." AND" : "WHERE")." weblink_cat_id='".(int)$cat_id."'");
             if (dbrows($result)) {
                 $data = dbarray($result);
             } else {
@@ -154,7 +154,7 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
         echo form_select_tree('weblink_cat_parent', $this->locale['WLS_0303'], $data['weblink_cat_parent'], [
             'disable_opts'  => $data['weblink_cat_id'],
             'hide_disabled' => TRUE,
-            'query'         => (multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."'" : "")
+            'query'         => (multilang_table("WL") ? "WHERE ".in_group('weblink_cat_language', LANGUAGE) : "")
         ], DB_WEBLINK_CATS, "weblink_cat_name", "weblink_cat_id", "weblink_cat_parent");
         echo form_textarea('weblink_cat_description', $this->locale['WLS_0254'], $data['weblink_cat_description'], [
             'autosize'  => TRUE,
@@ -167,10 +167,12 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
         echo "<div class='col-xs-12 col-sm-4'>";
         openside($this->locale['WLS_0260']);
         if (multilang_table("WL")) {
-            echo form_select('weblink_cat_language', $this->locale['language'], $data['weblink_cat_language'], [
+            echo form_select('weblink_cat_language[]', $this->locale['language'], $data['weblink_cat_language'], [
                 'inner_width' => '100%',
                 'options'     => fusion_get_enabled_languages(),
-                'placeholder' => $this->locale['choose']
+                'placeholder' => $this->locale['choose'],
+                'multiple'    => TRUE,
+                'delimeter'   => '.'
             ]);
         } else {
             echo form_hidden('weblink_cat_language', '', $data['weblink_cat_language']);
@@ -293,7 +295,7 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
             "SELECT ac.*, COUNT(a.weblink_id) AS weblink_count
             FROM ".DB_WEBLINK_CATS." ac
             LEFT JOIN ".DB_WEBLINKS." AS a ON a.weblink_cat=ac.weblink_cat_id
-            WHERE ".(multilang_table("WL") ? "ac.weblink_cat_language='".LANGUAGE."'" : "")."
+            WHERE ".(multilang_table("WL") ? in_group('ac.weblink_cat_language', LANGUAGE) : "")."
             $sql_condition
             GROUP BY ac.weblink_cat_id
             ORDER BY ac.weblink_cat_parent ASC, ac.weblink_cat_id ASC"
