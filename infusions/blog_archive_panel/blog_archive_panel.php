@@ -24,10 +24,10 @@ if (defined('BLOG_EXIST')) {
 
     $result = dbquery("SELECT blog_id, blog_subject, blog_datestamp
         FROM ".DB_BLOG."
-        WHERE blog_draft =:draft
-        AND ".groupaccess('blog_visibility').(multilang_table("BL") ? " AND blog_language=:language" : "")."
+        WHERE blog_draft=0
+        AND ".groupaccess('blog_visibility').(multilang_table("BL") ? " AND ".in_group('blog_language', LANGUAGE) : "")."
         ORDER BY blog_datestamp DESC
-    ", [':draft' => '0', ':language' => LANGUAGE]);
+    ");
 
     if (dbrows($result)) {
         echo "<ul class='blog_archive_inner' id='blog_archive'>\n";

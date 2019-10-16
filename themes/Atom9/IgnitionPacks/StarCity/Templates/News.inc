@@ -200,11 +200,11 @@ class News extends Core {
 
                     echo '<div class="collapse navbar-collapse" id="news-cats-nav">';
                         echo '<ul class="nav navbar-nav">';
-                            $info['news_categories'] = dbquery_tree_full(DB_NEWS_CATS, 'news_cat_id', 'news_cat_parent', "WHERE news_cat_language='".LANGUAGE."'");
+                            $info['news_categories'] = dbquery_tree_full(DB_NEWS_CATS, 'news_cat_id', 'news_cat_parent', "WHERE ".in_group('news_cat_language', LANGUAGE));
                             $current_parent = 0;
 
                             if (isset($_GET['cat_id'])) {
-                                $news_index = dbquery_tree(DB_NEWS_CATS, 'news_cat_id', 'news_cat_parent', "WHERE news_cat_language='".LANGUAGE."'");
+                                $news_index = dbquery_tree(DB_NEWS_CATS, 'news_cat_id', 'news_cat_parent', "WHERE ".in_group('news_cat_language', LANGUAGE));
                                 $current_parent = get_parent($news_index, $_GET['cat_id']);
                             }
 

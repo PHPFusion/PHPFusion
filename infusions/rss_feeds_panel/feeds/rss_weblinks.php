@@ -30,7 +30,7 @@ require_once INFUSIONS.'rss_feeds_panel/RSS.php';
 if (defined('WEBLINKS_EXIST')) {
     $result = dbquery("SELECT tbl1.*, tbl2.* FROM ".DB_WEBLINK_CATS." tbl1
         RIGHT JOIN ".DB_WEBLINKS." tbl2 ON tbl1.weblink_cat_id=tbl2.weblink_cat
-        WHERE ".groupaccess('weblink_visibility').(multilang_table('WL') ? " AND weblink_cat_language='".LANGUAGE."'" : '')."
+        WHERE ".groupaccess('weblink_visibility').(multilang_table('WL') ? " AND ".in_group('weblink_cat_language', LANGUAGE) : '')."
         ORDER BY tbl2.weblink_count DESC LIMIT 0,10
     ");
 

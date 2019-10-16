@@ -24,7 +24,7 @@ if (defined('DOWNLOADS_EXIST')) {
         FROM ".DB_DOWNLOADS." d
         INNER JOIN ".DB_DOWNLOAD_CATS." dc ON d.download_cat=dc.download_cat_id
         LEFT JOIN ".DB_USERS." u ON u.user_id = d.download_user
-        ".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('download_visibility')."
+        ".(multilang_table("DL") ? "WHERE ".in_group('download_cat_language', LANGUAGE)." AND " : "WHERE ").groupaccess('download_visibility')."
         ORDER BY download_datestamp DESC
         LIMIT 5
     ");

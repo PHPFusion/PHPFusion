@@ -255,8 +255,8 @@ function tree_index($data) {
 /**
  * Reduce the results of a hierarchy tree array to a non multidimensional single output value while preserving keys
  *
- * @param $result       results from dbquery_tree_full() or dbquery_tree()
- * @param $id_col       the id_col
+ * @param string $result results from dbquery_tree_full() or dbquery_tree()
+ * @param string $id_col the id_col
  *
  * @return array
  */
@@ -297,15 +297,14 @@ function get_root(array $index, $child_id) {
  * Get Tree Root ID of a child via SQL
  * Alternative function to get a root of a specific item when dbtree is not available
  *
- * @param $db               The table name relative to the search
- * @param $id_col           The unique id column name of $db
- * @param $cat_col          The category id column name of $db
- * @param $current_id       The current id of the item relative to the ancestor root
+ * @param string $db         The table name relative to the search
+ * @param string $id_col     The unique id column name of $db
+ * @param string $cat_col    The category id column name of $db
+ * @param int    $current_id The current id of the item relative to the ancestor root
  *
  * @return int
  */
 function get_hkey($db, $id_col, $cat_col, $current_id) {
-    $hkey = &$hkey;
     $result = dbquery("SELECT $id_col, $cat_col FROM ".$db." WHERE $id_col =:pid LIMIT 1", [':pid' => intval($current_id)]);
     if (dbrows($result) > 0) {
         $data = dbarray($result);
@@ -501,7 +500,7 @@ function dbtree($db, $id_col, $cat_col, $cat_value = FALSE, $filter = FALSE) {
  *
  * @return array
  */
-function dbtree_index($db = FALSE, $id_col, $cat_col, $cat_value = FALSE) {
+function dbtree_index($db, $id_col, $cat_col, $cat_value = FALSE) {
     $refs = [];
     $list = [];
     $result = dbquery("SELECT * FROM ".$db);
@@ -611,15 +610,15 @@ function tree_depth($data, $field, $match, $depth = '1') {
 }
 
 /**
- * @todo: Change to count on index in favor of deprecated method
- * Get the occurences of a column name matching value
- * $unpublish_count = tree_count($dbtree_result, "column_name", "value")-1;
- *
  * @param      $data - $data = dbquery_tree(...);
  * @param bool $column_name
  * @param bool $value_to_match
  *
  * @return int
+ * @todo: Change to count on index in favor of deprecated method
+ *      Get the occurences of a column name matching value
+ *      $unpublish_count = tree_count($dbtree_result, "column_name", "value")-1;
+ *
  */
 function tree_count($data, $column_name = FALSE, $value_to_match = FALSE) {
     // Find Occurence of match in a tree.
@@ -798,7 +797,6 @@ function dbquery_insert($table, $inputdata, $mode, array $options = []) {
     }
 
     if (!isset($sqlPatterns[$mode])) {
-        // TODO Replace die with something better. I kept the old way (Rimelek)
         die();
     }
     $where = '';
@@ -982,8 +980,8 @@ function column_exists($table, $column, $add_prefix = TRUE) {
  */
 function dbquery_order($dbname, $current_order, $order_col, $current_id = 0, $id_col = FALSE, $current_category = 0, $cat_col = FALSE, $multilang = FALSE, $multilang_col = '', $mode = 'update') {
 
-    $multilang_sql_1 = $multilang && $multilang_col ? "WHERE $multilang_col='".LANGUAGE."'" : '';
-    $multilang_sql_2 = $multilang && $multilang_col ? "AND $multilang_col='".LANGUAGE."'" : '';
+    $multilang_sql_1 = $multilang && $multilang_col ? "WHERE ".in_group($multilang_col, LANGUAGE) : '';
+    $multilang_sql_2 = $multilang && $multilang_col ? "AND ".in_group($multilang_col, LANGUAGE) : '';
 
     if (!$current_order) {
         $current_order = dbresult(dbquery("SELECT MAX($order_col) FROM ".$dbname." ".$multilang_sql_1), 0) + 1;
@@ -1100,7 +1098,7 @@ function construct_array($string, $string2 = FALSE, $delimiter = FALSE) {
 
         return $value;
     } else {
-        notify("Debug notice: There is a string injected in construct_array() function!", "Please recheck source codes in this page.");
+        addNotice('info', "Debug notice: There is a string injected in construct_array() function! Please recheck source codes in this page.");
     }
 }
 

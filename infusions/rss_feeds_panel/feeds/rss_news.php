@@ -30,7 +30,7 @@ require_once INFUSIONS.'rss_feeds_panel/RSS.php';
 if (defined('NEWS_EXIST')) {
     $result = dbquery("SELECT *
         FROM ".DB_NEWS."
-        WHERE ".groupaccess('news_visibility').(multilang_table('NS') ? " AND news_language='".LANGUAGE."'" : '')."
+        WHERE ".groupaccess('news_visibility').(multilang_table('NS') ? " AND ".in_group('news_language', LANGUAGE) : '')."
         ORDER BY news_datestamp DESC LIMIT 0,10
     ");
 

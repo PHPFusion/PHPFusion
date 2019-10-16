@@ -30,7 +30,7 @@ class LatestBlogs {
         if ($blogs) {
             $result = dbquery("SELECT blog_id, blog_subject
                 FROM ".DB_BLOG."
-                ".(multilang_table("BL") ? "WHERE blog_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('blog_visibility')." AND (blog_start='0'||blog_start<=".time().")
+                ".(multilang_table("BL") ? "WHERE ".in_group('blog_language', LANGUAGE)." AND" : "WHERE")." ".groupaccess('blog_visibility')." AND (blog_start='0'||blog_start<=".time().")
                 AND (blog_end='0'||blog_end>=".time().") AND blog_draft='0'
                 ORDER BY blog_start DESC
                 LIMIT 5

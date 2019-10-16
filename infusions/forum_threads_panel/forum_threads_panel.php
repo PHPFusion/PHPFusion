@@ -27,7 +27,7 @@ if (defined('FORUM_EXIST')) {
     $result = dbquery("SELECT f.forum_id, f.forum_access, t.thread_id, t.thread_subject
         FROM ".DB_FORUMS." f
         LEFT JOIN ".DB_FORUM_THREADS." t ON f.forum_id = t.forum_id
-        ".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('f.forum_access')." AND f.forum_type!='1' AND f.forum_type!='3' AND t.thread_hidden='0'
+        ".(multilang_table("FO") ? "WHERE ".in_group('f.forum_language', LANGUAGE)." AND " : "WHERE ").groupaccess('f.forum_access')." AND f.forum_type!='1' AND f.forum_type!='3' AND t.thread_hidden='0'
         GROUP BY t.thread_id
         ORDER BY t.thread_lastpost DESC
         LIMIT 0,".$inf_settings['numofthreads']."
@@ -60,7 +60,7 @@ if (defined('FORUM_EXIST')) {
     $result = dbquery("SELECT tf.forum_id, t.thread_id, t.thread_subject, t.thread_postcount
         FROM ".DB_FORUMS." tf
         INNER JOIN ".DB_FORUM_THREADS." t USING(forum_id)
-        ".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('tf.forum_access')." AND tf.forum_type!='1' AND tf.forum_type!='3' AND t.thread_hidden='0' AND t.thread_postcount >= '".$min_posts."'".$timeframe."
+        ".(multilang_table("FO") ? "WHERE ".in_group('tf.forum_language', LANGUAGE)." AND " : "WHERE ").groupaccess('tf.forum_access')." AND tf.forum_type!='1' AND tf.forum_type!='3' AND t.thread_hidden='0' AND t.thread_postcount >= '".$min_posts."'".$timeframe."
         ORDER BY t.thread_postcount DESC, t.thread_lastpost DESC
         LIMIT 0,".$inf_settings['numofthreads']."
     ");

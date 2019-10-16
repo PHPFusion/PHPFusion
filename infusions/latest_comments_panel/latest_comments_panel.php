@@ -47,13 +47,13 @@ function latest_comments_get_item_title($type, $item_id) {
                 FROM '.DB_ARTICLES.' AS ar
                 WHERE ar.article_id=:id AND ar.article_draft=0
                 AND '.groupaccess('ar.article_visibility').'
-                '.(multilang_table('AR') ? 'AND ar.article_language="'.LANGUAGE.'"' : '');
+                '.(multilang_table('AR') ? "AND ".in_group('ar.article_language', LANGUAGE) : '');
                 break;
             case 'B':
                 $query = 'SELECT b.blog_subject as title
                 FROM '.DB_BLOG.' AS b
                 WHERE b.blog_id=:id AND '.groupaccess('b.blog_visibility').'
-                '.(multilang_table('BL') ? 'AND b.blog_language="'.LANGUAGE.'"' : '');
+                '.(multilang_table('BL') ? 'AND '.in_group('b.blog_language', LANGUAGE) : '');
                 break;
             case 'D':
                 $query = 'SELECT d.download_title as title
@@ -68,14 +68,14 @@ function latest_comments_get_item_title($type, $item_id) {
                 WHERE ns.news_id=:id AND (ns.news_start=0 OR ns.news_start<="'.TIME.'")
                 AND (ns.news_end=0 OR ns.news_end>="'.TIME.'") AND ns.news_draft=0
                 AND '.groupaccess('ns.news_visibility').'
-                '.(multilang_table('NS') ? 'AND ns.news_language="'.LANGUAGE.'"' : '');
+                '.(multilang_table('NS') ? 'AND '.in_group('ns.news_language', LANGUAGE) : '');
                 break;
             case 'P':
                 $query = 'SELECT p.photo_title as title
                 FROM '.DB_PHOTOS.' AS p
                 INNER JOIN '.DB_PHOTO_ALBUMS.' AS a ON p.album_id=a.album_id
                 WHERE p.photo_id=:id AND '.groupaccess('a.album_access').'
-                '.(multilang_table('PG') ? 'AND a.album_language="'.LANGUAGE.'"' : '');
+                '.(multilang_table('PG') ? 'AND '.in_group('a.album_language', LANGUAGE) : '');
                 break;
             default:
                 $cache[$key] = FALSE;

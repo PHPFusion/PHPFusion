@@ -30,7 +30,7 @@ require_once INFUSIONS.'rss_feeds_panel/RSS.php';
 if (defined('ARTICLES_EXIST')) {
     $result = dbquery("SELECT ta.*,tac.* FROM ".DB_ARTICLES." ta
         INNER JOIN ".DB_ARTICLE_CATS." tac ON ta.article_cat=tac.article_cat_id
-        WHERE ".groupaccess('article_visibility').(multilang_table('AR') ? " AND article_cat_language='".LANGUAGE."'" : '')."
+        WHERE ".groupaccess('article_visibility').(multilang_table('AR') ? " AND ".in_group('article_cat_language', LANGUAGE) : '')."
         ORDER BY article_datestamp DESC LIMIT 0,10
     ");
 
