@@ -313,7 +313,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
             tu.user_id, tu.user_name, tu.user_status
             FROM ".DB_PHOTO_ALBUMS." AS ta
             LEFT JOIN ".DB_USERS." AS tu ON ta.album_user=tu.user_id
-            ".(multilang_table("PG") ? "WHERE album_language='".LANGUAGE."' AND" : "WHERE")."
+            ".(multilang_table("PG") ? "WHERE ".in_group('album_language', LANGUAGE)." AND" : "WHERE")."
             ".groupaccess('album_access')." ORDER BY album_order
             LIMIT ".$_GET['rowstart'].", ".$gallery_settings['gallery_pagination']);
             while ($data = dbarray($result)) {
