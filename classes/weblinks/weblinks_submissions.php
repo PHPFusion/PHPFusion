@@ -61,7 +61,7 @@ class WeblinksSubmissions extends WeblinksServer {
             'weblink_language'    => LANGUAGE,
         ];
 
-        if (dbcount("(weblink_cat_id)", DB_WEBLINK_CATS, (multilang_table("WL") ? "weblink_cat_language='".LANGUAGE."' AND " : "")."weblink_cat_status=1 AND ".groupaccess("weblink_cat_visibility")."")) {
+        if (dbcount("(weblink_cat_id)", DB_WEBLINK_CATS, (multilang_table("WL") ? in_group('weblink_cat_language', LANGUAGE)." AND " : "")."weblink_cat_status=1 AND ".groupaccess("weblink_cat_visibility")."")) {
 
             // Save
             $submit_link = filter_input(INPUT_POST, 'submit_link', FILTER_DEFAULT);
@@ -109,7 +109,7 @@ class WeblinksSubmissions extends WeblinksServer {
                             'no_root'     => TRUE,
                             'inline'      => TRUE,
                             'placeholder' => $this->locale['choose'],
-                            'query'       => (multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."'" : "")
+                            'query'       => (multilang_table("WL") ? "WHERE ".in_group('weblink_cat_language', LANGUAGE) : "")
                         ], DB_WEBLINK_CATS, 'weblink_cat_name', 'weblink_cat_id', 'weblink_cat_parent'),
                     'weblink_name'        => form_text('weblink_name', $this->locale['WLS_0201'], $criteriaArray['weblink_name'],
                         [
@@ -125,12 +125,14 @@ class WeblinksSubmissions extends WeblinksServer {
                             'type'        => "url",
                             'placeholder' => "http://"
                         ]),
-                    'weblink_language'    => (multilang_table('WL') ? form_select('weblink_language', $this->locale['language'], $criteriaArray['weblink_language'],
+                    'weblink_language'    => (multilang_table('WL') ? form_select('weblink_language[]', $this->locale['language'], $criteriaArray['weblink_language'],
                         [
                             'options'     => fusion_get_enabled_languages(),
                             'placeholder' => $this->locale['choose'],
                             'width'       => '250px',
                             'inline'      => TRUE,
+                            'multiple'    => TRUE,
+                            'delimeter'   => '.'
                         ]) : form_hidden('weblink_language', '', $criteriaArray['weblink_language'])),
                     'weblink_description' => form_textarea('weblink_description', $this->locale['WLS_0254'], $criteriaArray['weblink_description'],
                         [

@@ -187,7 +187,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
                     'required'    => TRUE,
                     'no_root'     => TRUE,
                     'placeholder' => $this->locale['choose'],
-                    'query'       => (multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."'" : "")
+                    'query'       => (multilang_table("WL") ? "WHERE ".in_group('weblink_cat_language', LANGUAGE) : "")
                 ], DB_WEBLINK_CATS, "weblink_cat_name", "weblink_cat_id", "weblink_cat_parent");
 
                 echo form_select('weblink_visibility', $this->locale['WLS_0103'], $this->weblink_data['weblink_visibility'], [
@@ -196,9 +196,11 @@ class WeblinksAdmin extends WeblinksAdminModel {
                 ]);
 
                 if (multilang_table("WL")) {
-                    echo form_select('weblink_language', $this->locale['language'], $this->weblink_data['weblink_language'], [
+                    echo form_select('weblink_language[]', $this->locale['language'], $this->weblink_data['weblink_language'], [
                         'options'     => fusion_get_enabled_languages(),
-                        'placeholder' => $this->locale['choose']
+                        'placeholder' => $this->locale['choose'],
+                        'multiple'    => TRUE,
+                        'delimeter'   => '.'
                     ]);
                 } else {
                     echo form_hidden('weblink_language', '', $this->weblink_data['weblink_language']);
@@ -341,13 +343,6 @@ class WeblinksAdmin extends WeblinksAdminModel {
             ];
         }
 
-        $weblink_language = filter_input(INPUT_POST, 'weblink_language', FILTER_DEFAULT);
-        if (!empty($weblink_language)) {
-            $search_string['weblink_language'] = [
-                'input' => form_sanitizer($weblink_language, '', 'weblink_language'), 'operator' => "=", 'option' => "AND"
-            ];
-        }
-
         if (!empty($search_string)) {
             foreach ($search_string as $key => $values) {
                 $sql_condition .= " ".$values['option']." `$key` ".$values['operator'].($values['operator'] == "LIKE" ? "'%" : "'").$values['input'].($values['operator'] == "LIKE" ? "%'" : "'");
@@ -372,7 +367,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
         $result2 = dbquery("SELECT  w.*, wc.*
             FROM ".DB_WEBLINKS." w
             LEFT JOIN ".DB_WEBLINK_CATS." wc ON wc.weblink_cat_id=w.weblink_cat
-            WHERE ".(multilang_table("WL") ? "weblink_language='".LANGUAGE."'" : "")."
+            WHERE ".(multilang_table("WL") ? in_group('weblink_language', LANGUAGE) : "")."
             $sql_condition
             ORDER BY w.weblink_status DESC, w.weblink_datestamp DESC
             LIMIT $rowstart, $limit
@@ -385,8 +380,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
             'weblink_name'       => !empty($weblink_name) ? form_sanitizer($weblink_name, '', 'weblink_name') : '',
             'weblink_status'     => !empty($weblink_status) ? form_sanitizer($weblink_status, '', 'weblink_status') : '',
             'weblink_cat'        => !empty($weblink_cat) ? form_sanitizer($weblink_cat, '', 'weblink_cat') : '',
-            'weblink_visibility' => !empty($weblink_visibility) ? form_sanitizer($weblink_visibility, '', 'weblink_visibility') : '',
-            'weblink_language'   => !empty($weblink_language) ? form_sanitizer($weblink_language, '', 'weblink_language') : '',
+            'weblink_visibility' => !empty($weblink_visibility) ? form_sanitizer($weblink_visibility, '', 'weblink_visibility') : ''
         ];
 
         $filter_empty = TRUE;
@@ -463,19 +457,8 @@ class WeblinksAdmin extends WeblinksAdminModel {
                         'parent_value' => $this->locale['WLS_0127'],
                         'placeholder'  => "- ".$this->locale['WLS_0126']." -",
                         'allowclear'   => TRUE,
-                        'query'        => (multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."'" : "")
+                        'query'        => (multilang_table("WL") ? "WHERE ".in_group('weblink_cat_language', LANGUAGE) : "")
                     ], DB_WEBLINK_CATS, "weblink_cat_name", "weblink_cat_id", "weblink_cat_parent");
-                    ?>
-                </div>
-                <div class="display-inline-block">
-                    <?php
-                    $language_opts = [0 => $this->locale['WLS_0129']];
-                    $language_opts += fusion_get_enabled_languages();
-                    echo form_select('weblink_language', '', $filter_values['weblink_language'], [
-                        'allowclear'  => TRUE,
-                        'placeholder' => '- '.$this->locale['WLS_0128'].' -',
-                        'options'     => $language_opts
-                    ]);
                     ?>
                 </div>
                 <div class="display-inline-block">
@@ -515,7 +498,6 @@ class WeblinksAdmin extends WeblinksAdminModel {
                     <th class="strong"><?php echo $this->locale['WLS_0101'] ?></th>
                     <th class="strong"><?php echo $this->locale['WLS_0102'] ?></th>
                     <th class="strong"><?php echo $this->locale['WLS_0103'] ?></th>
-                    <th class="strong"><?php echo $this->locale['language'] ?></th>
                     <th class="strong"><?php echo $this->locale['WLS_0104'] ?></th>
                 </tr>
                 </thead>
@@ -533,7 +515,6 @@ class WeblinksAdmin extends WeblinksAdminModel {
                             <td><a class="text-dark" href="<?php echo $cat_edit_link ?>"><?php echo $data['weblink_cat_name']; ?></a></td>
                             <td><span class="badge"><?php echo $data['weblink_status'] ? $this->locale['yes'] : $this->locale['no']; ?></span></td>
                             <td><span class="badge"><?php echo getgroupname($data['weblink_visibility']); ?></span></td>
-                            <td><?php echo $data['weblink_language'] ?></td>
                             <td>
                                 <a href="<?php echo $edit_link; ?>" title="<?php echo $this->locale['edit']; ?>"><?php echo $this->locale['edit']; ?></a>&nbsp;|&nbsp;
                                 <a href="<?php echo $delete_link; ?>" title="<?php echo $this->locale['delete']; ?>" onclick="return confirm('<?php echo $this->locale['WLS_0111']; ?>')"><?php echo $this->locale['delete']; ?></a>
@@ -549,7 +530,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
                     });');
                     endwhile;
                     ?>
-                    <th colspan='7'><?php
+                    <th colspan='6'><?php
                         echo form_checkbox('check_all', $this->locale['WLS_0206'], '', ['class' => 'm-b-0', 'reverse_label' => TRUE]);
 
                         add_to_jquery("
@@ -565,7 +546,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
                         ");
                         ?></th>
                 <?php else: ?>
-                    <tr><td colspan="7" class="text-center"><?php echo($weblink_cats ? ($filter_empty ? $this->locale['WLS_0112'] : $this->locale['WLS_0113']) : $this->locale['WLS_0114']); ?></td></tr>
+                    <tr><td colspan="6" class="text-center"><?php echo($weblink_cats ? ($filter_empty ? $this->locale['WLS_0112'] : $this->locale['WLS_0113']) : $this->locale['WLS_0114']); ?></td></tr>
                 <?php endif; ?>
                 </tbody>
             </table>
@@ -596,7 +577,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
             });
 
             // Select Change
-            $('#weblink_status, #weblink_visibility, #weblink_cat, #weblink_language, #weblink_display').bind('change', function(e){
+            $('#weblink_status, #weblink_visibility, #weblink_cat, #weblink_display').bind('change', function(e){
                 $(this).closest('form').submit();
             });
         ");

@@ -198,7 +198,7 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
                     'no_root'     => TRUE,
                     'inner_width' => '100%',
                     'placeholder' => $this->locale['choose'],
-                    'query'       => (multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."'" : "")
+                    'query'       => (multilang_table("WL") ? "WHERE ".in_group('weblink_cat_language', LANGUAGE) : "")
                 ], DB_WEBLINK_CATS, "weblink_cat_name", "weblink_cat_id", "weblink_cat_parent");
 
                 echo form_select('weblink_visibility', $this->locale['WLS_0103'], $this->inputArray['weblink_visibility'], [
@@ -208,10 +208,12 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
                 ]);
 
                 if (multilang_table("WL")) {
-                    echo form_select('weblink_language', $this->locale['language'], $this->inputArray['weblink_language'], [
+                    echo form_select('weblink_language[]', $this->locale['language'], $this->inputArray['weblink_language'], [
                         'options'     => fusion_get_enabled_languages(),
                         'placeholder' => $this->locale['choose'],
-                        'inner_width' => '100%'
+                        'inner_width' => '100%',
+                        'multiple'    => TRUE,
+                        'delimeter'   => '.'
                     ]);
                 } else {
                     echo form_hidden('article_language', '', $this->inputArray['article_language']);

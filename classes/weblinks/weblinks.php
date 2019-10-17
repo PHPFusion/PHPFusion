@@ -101,9 +101,9 @@ abstract class Weblinks extends WeblinksServer {
         $result = dbquery("
             SELECT wc.weblink_cat_id, wc.weblink_cat_name, wc.weblink_cat_parent, wc.weblink_cat_description, w.weblink_status, count(w.weblink_id) 'weblink_count'
             FROM ".DB_WEBLINK_CATS." AS wc
-            LEFT JOIN ".DB_WEBLINKS." AS w ON w.weblink_cat = wc.weblink_cat_id AND ".groupaccess("weblink_visibility").(multilang_table("WL") ? " AND w.weblink_language='".LANGUAGE."'" : "")."
+            LEFT JOIN ".DB_WEBLINKS." AS w ON w.weblink_cat = wc.weblink_cat_id AND ".groupaccess("weblink_visibility").(multilang_table("WL") ? " AND ".in_group('w.weblink_language', LANGUAGE) : "")."
             WHERE wc.weblink_cat_status='1' AND ".groupaccess("wc.weblink_cat_visibility")."
-            ".(multilang_table("WL") ? " AND wc.weblink_cat_language='".LANGUAGE."'" : "")."
+            ".(multilang_table("WL") ? " AND ".in_group('wc.weblink_cat_language', LANGUAGE) : "")."
             GROUP BY wc.weblink_cat_id
             ORDER BY wc.weblink_cat_id ASC
         ");
@@ -136,8 +136,8 @@ abstract class Weblinks extends WeblinksServer {
         $result = dbquery("SELECT *
             FROM ".DB_WEBLINK_CATS."
             WHERE weblink_cat_id = :catid AND weblink_cat_status = :status AND ".groupaccess("weblink_cat_visibility")."
-            ".(multilang_table("WL") ? " AND weblink_cat_language = :language" : '')."
-            LIMIT 0,1", [':catid' => (int)$weblink_cat_id, ':status' => '1', ':language' => LANGUAGE]
+            ".(multilang_table("WL") ? " AND ".in_group('weblink_cat_language', LANGUAGE) : '')."
+            LIMIT 0,1", [':catid' => (int)$weblink_cat_id, ':status' => '1']
         );
 
         if (dbrows($result) > 0) {
@@ -160,7 +160,7 @@ abstract class Weblinks extends WeblinksServer {
             // Predefined variables, do not edit these values
             $weblink_cat_index = dbquery_tree(DB_WEBLINK_CATS, "weblink_cat_id", "weblink_cat_parent");
 
-            $max_weblink_rows = dbcount("(weblink_id)", DB_WEBLINKS, "weblink_cat='".$data['weblink_cat_id']."' AND ".groupaccess("weblink_visibility").(multilang_table("WL") ? " AND weblink_language='".LANGUAGE."'" : "")." AND weblink_status='1'");
+            $max_weblink_rows = dbcount("(weblink_id)", DB_WEBLINKS, "weblink_cat='".$data['weblink_cat_id']."' AND ".groupaccess("weblink_visibility").(multilang_table("WL") ? " AND ".in_group('weblink_language', LANGUAGE) : "")." AND weblink_status='1'");
 
             $this->def_data['pagenav'] = makepagenav($this->rowstart, $this->weblink_settings['links_per_page'], $max_weblink_rows, 3, INFUSIONS."weblinks/weblinks.php?cat_id=".$weblink_cat_id.$linktype."&amp;");
 
@@ -229,7 +229,7 @@ abstract class Weblinks extends WeblinksServer {
         function breadcrumb_arrays($index, $webid) {
             $crumb = [];
             if (isset($index[get_parent($index, $webid)])) {
-                $_name = dbarray(dbquery("SELECT weblink_cat_id, weblink_cat_name, weblink_cat_parent FROM ".DB_WEBLINK_CATS." WHERE weblink_cat_id='".$webid."' AND weblink_cat_status='1' AND ".groupaccess("weblink_cat_visibility").(multilang_table("WL") ? " AND weblink_cat_language='".LANGUAGE."'" : "").""));
+                $_name = dbarray(dbquery("SELECT weblink_cat_id, weblink_cat_name, weblink_cat_parent FROM ".DB_WEBLINK_CATS." WHERE weblink_cat_id='".$webid."' AND weblink_cat_status='1' AND ".groupaccess("weblink_cat_visibility").(multilang_table("WL") ? " AND ".in_group('weblink_cat_language', LANGUAGE) : "").""));
                 $crumb = [
                     "link"  => INFUSIONS."weblinks/weblinks.php?cat_id=".$_name['weblink_cat_id'],
                     "title" => $_name['weblink_cat_name']
@@ -273,7 +273,7 @@ abstract class Weblinks extends WeblinksServer {
             FROM ".DB_WEBLINKS." AS w
             LEFT JOIN ".DB_WEBLINK_CATS." AS wc ON wc.weblink_cat_id = w.weblink_cat
             WHERE w.weblink_status='1' AND ".groupaccess("w.weblink_visibility")." AND wc.weblink_cat_status='1' AND ".groupaccess("wc.weblink_cat_visibility")."
-            ".(multilang_table("WL") ? " AND w.weblink_language='".LANGUAGE."' AND wc.weblink_cat_language='".LANGUAGE."'" : "")."
+            ".(multilang_table("WL") ? " AND ".in_group('w.weblink_language', LANGUAGE)." AND ".in_group('wc.weblink_cat_language', LANGUAGE) : "")."
             ".(!empty($filters['condition']) ? " AND ".$filters['condition'] : "")."
             GROUP BY w.weblink_id
             ORDER BY ".$this->check_WeblinksFilter()."
