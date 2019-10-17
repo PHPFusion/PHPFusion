@@ -256,7 +256,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
             'error_text'   => $this->locale['article_0273'],
             'inner_width'  => '100%',
             'parent_value' => $this->locale['choose'],
-            'query'        => (multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "")
+            'query'        => (multilang_table("AR") ? "WHERE ".in_group('article_cat_language', LANGUAGE) : "")
         ],
             DB_ARTICLE_CATS, "article_cat_name", "article_cat_id", "article_cat_parent"
         );
@@ -267,11 +267,13 @@ class ArticlesAdmin extends ArticlesAdminModel {
             'inline'      => TRUE
         ]);
         if (multilang_table("AR")) {
-            echo form_select('article_language', $this->locale['language'], $this->article_data['article_language'], [
+            echo form_select('article_language[]', $this->locale['language'], $this->article_data['article_language'], [
                 'options'     => fusion_get_enabled_languages(),
                 'placeholder' => $this->locale['choose'],
                 'inner_width' => '100%',
-                'inline'      => TRUE
+                'inline'      => TRUE,
+                'multiple'    => TRUE,
+                'delimeter'   => '.'
             ]);
         } else {
             echo form_hidden('article_language', '', $this->article_data['article_language']);
@@ -388,7 +390,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
         }
 
         // Search
-        $sql_condition = multilang_table("AR") ? "article_language='".LANGUAGE."'" : "";
+        $sql_condition = multilang_table("AR") ? in_group('article_language', LANGUAGE) : "";
         $search_string = [];
         if (isset($_POST['p-submit-article_text'])) {
             $search_string['article_subject'] = [
@@ -414,13 +416,6 @@ class ArticlesAdmin extends ArticlesAdminModel {
         if (!empty($_POST['article_category'])) {
             $search_string['article_cat'] = [
                 'input'    => form_sanitizer($_POST['article_category'], '', 'article_category'),
-                'operator' => "="
-            ];
-        }
-
-        if (!empty($_POST['article_language'])) {
-            $search_string['article_language'] = [
-                'input'    => form_sanitizer($_POST['article_language'], '', 'article_language'),
                 'operator' => "="
             ];
         }
@@ -474,7 +469,6 @@ class ArticlesAdmin extends ArticlesAdminModel {
             'article_status'     => !empty($_POST['article_status']) ? form_sanitizer($_POST['article_status'], '', 'article_status') : '',
             'article_category'   => !empty($_POST['article_category']) ? form_sanitizer($_POST['article_category'], '', 'article_category') : '',
             'article_visibility' => !empty($_POST['article_visibility']) ? form_sanitizer($_POST['article_visibility'], '', 'article_visibility') : '',
-            'article_language'   => !empty($_POST['article_language']) ? form_sanitizer($_POST['article_language'], '', 'article_language') : '',
             'article_author'     => !empty($_POST['article_author']) ? form_sanitizer($_POST['article_author'], '', 'article_author') : ''
         ];
 
@@ -553,19 +547,8 @@ class ArticlesAdmin extends ArticlesAdminModel {
                         'parent_value' => $this->locale['article_0127'],
                         'placeholder'  => '- '.$this->locale['article_0126'].' -',
                         'allowclear'   => TRUE,
-                        'query'        => (multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "")
+                        'query'        => (multilang_table("AR") ? "WHERE ".in_group('article_cat_language', LANGUAGE) : "")
                     ], DB_ARTICLE_CATS, "article_cat_name", "article_cat_id", "article_cat_parent");
-                    ?>
-                </div>
-                <div class="display-inline-block">
-                    <?php
-                    $language_opts = [0 => $this->locale['article_0129']];
-                    $language_opts += fusion_get_enabled_languages();
-                    echo form_select('article_language', '', $filter_values['article_language'], [
-                        'allowclear'  => TRUE,
-                        'placeholder' => '- '.$this->locale['article_0128'].' -',
-                        'options'     => $language_opts
-                    ]);
                     ?>
                 </div>
                 <div class="display-inline-block">
@@ -611,7 +594,6 @@ class ArticlesAdmin extends ArticlesAdminModel {
                     <th class="strong"><?php echo $this->locale['article_0104'] ?></th>
                     <th class="strong"><?php echo $this->locale['article_0105'] ?></th>
                     <th class="strong"><?php echo $this->locale['article_0106'] ?></th>
-                    <th class="strong"><?php echo $this->locale['language'] ?></th>
                     <th class="strong"><?php echo $this->locale['article_0107'] ?></th>
                 </tr>
                 </thead>
@@ -639,7 +621,6 @@ class ArticlesAdmin extends ArticlesAdminModel {
                                 <div class="overflow-hide"><?php echo profile_link($data['user_id'], $data['user_name'], $data['user_status']); ?></div>
                             </td>
                             <td><span class="badge"><?php echo getgroupname($data['article_visibility']); ?></span></td>
-                            <td><?php echo $data['article_language'] ?></td>
                             <td>
                                 <a href="<?php echo $edit_link; ?>" title="<?php echo $this->locale['edit']; ?>"><?php echo $this->locale['edit']; ?></a>&nbsp;|&nbsp;
                                 <a href="<?php echo $delete_link; ?>" title="<?php echo $this->locale['delete']; ?>" onclick="return confirm('<?php echo $this->locale['article_0111']; ?>')"><?php echo $this->locale['delete']; ?></a>
@@ -649,7 +630,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
                     endwhile;
                 else: ?>
                     <tr>
-                        <td colspan="10" class="text-center"><?php echo($article_cats ? ($filter_empty ? $this->locale['article_0112'] : $this->locale['article_0113']) : $this->locale['article_0114']); ?></td>
+                        <td colspan="9" class="text-center"><?php echo($article_cats ? ($filter_empty ? $this->locale['article_0112'] : $this->locale['article_0113']) : $this->locale['article_0114']); ?></td>
                     </tr>
                 <?php endif; ?>
                 </tbody>
@@ -690,7 +671,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
             });
 
             // Select Change
-            $('#article_status, #article_visibility, #article_category, #article_language, #article_author, #article_display').bind('change', function(e){
+            $('#article_status, #article_visibility, #article_category, #article_author, #article_display').bind('change', function(e){
                 $(this).closest('form').submit();
             });
         ");

@@ -65,7 +65,7 @@ if (defined('ARTICLES_EXIST')) {
             FROM ".DB_ARTICLES." ta
             INNER JOIN ".DB_ARTICLE_CATS." tac ON ta.article_cat=tac.article_cat_id
             INNER JOIN ".DB_USERS." u ON ta.article_name=u.user_id
-            ".(multilang_table('AR') ? "WHERE tac.article_cat_language='".LANGUAGE."' AND " : "WHERE ")
+            ".(multilang_table('AR') ? "WHERE ".in_group('tac.article_cat_language', LANGUAGE)." AND " : "WHERE ")
                 .groupaccess('article_visibility')." AND article_cat_status=1 AND article_draft='0' AND ".Search_Engine::search_conditions('article')
                 .$date_search;
             $result = dbquery($query, Search_Engine::get_param('search_param'));
