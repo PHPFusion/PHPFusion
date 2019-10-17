@@ -200,7 +200,6 @@ $inf[DB_NEWS] = [
     'news_sticky'              => ['type' => 'TINYINT', 'length' => 1, 'unsigned' => TRUE, 'default' => '0'],
     'news_image_full_default'  => ['type' => 'BIGINT', 'length' => 20, 'unsigned' => TRUE, 'default' => '0'],
     'news_image_front_default' => ['type' => 'BIGINT', 'length' => 20, 'unsigned' => TRUE, 'default' => '0'],
-    'news_image_front_default' => ['type' => 'BIGINT', 'length' => 20, 'unsigned' => TRUE, 'default' => '0'],
     'news_image_align'         => ['type' => 'TINYINT', 'length' => 5], // this need to change, pull-left will not work on Semantic UI
     'news_allow_comments'      => ['type' => 'TINYINT', 'length' => 1, 'unsigned' => TRUE, 'default' => '1'],
     'news_allow_ratings'       => ['type' => 'TINYINT', 'length' => 1, 'unsigned' => TRUE, 'default' => '1'],
