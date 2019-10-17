@@ -33,7 +33,7 @@ class LatestArticles {
                 INNER JOIN ".DB_ARTICLE_CATS." AS ac ON a.article_cat=ac.article_cat_id
                 LEFT JOIN ".DB_USERS." u ON u.user_id = a.article_name
                 WHERE a.article_draft='0' AND ac.article_cat_status='1' AND ".groupaccess("a.article_visibility")." AND ".groupaccess("ac.article_cat_visibility")."
-                ".(multilang_table("AR") ? "AND a.article_language='".LANGUAGE."' AND ac.article_cat_language='".LANGUAGE."'" : '')."
+                ".(multilang_table("AR") ? "AND ".in_group('a.article_language', LANGUAGE)." AND ".in_group('ac.article_cat_language', LANGUAGE) : '')."
                 ORDER BY a.article_datestamp DESC
                 LIMIT 5
             ");

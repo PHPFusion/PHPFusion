@@ -28,8 +28,8 @@ if (defined('FORUM_EXIST')) {
     include_once INFUSIONS."forum_mods_online_panel/templates.php";
 
     $moderator_groups = [];
-    $mod_group = [];
-    $group_sql = "";
+    $mod_group = '';
+    $group_sql = '';
     $forum_mods_query = "SELECT forum_id, forum_mods FROM ".DB_FORUMS." WHERE forum_type=2 OR forum_type=3";
     $forum_mods_result = dbquery($forum_mods_query);
 

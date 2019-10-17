@@ -30,7 +30,7 @@ class LatestNews {
         if ($news) {
             $result = dbquery("SELECT news_id, news_subject
                 FROM ".DB_NEWS."
-                ".(multilang_table("NS") ? "WHERE news_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('news_visibility')."
+                ".(multilang_table("NS") ? "WHERE ".in_group('news_language', LANGUAGE)." AND" : "WHERE")." ".groupaccess('news_visibility')."
                 AND (news_start='0'||news_start<=".time().") AND (news_end='0' || news_end>=".time().") AND news_draft='0'
                 ORDER BY news_start DESC
                 LIMIT 5

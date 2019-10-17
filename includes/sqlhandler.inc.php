@@ -1024,8 +1024,8 @@ function column_exists($table, $column, $add_prefix = TRUE) {
  */
 function dbquery_order($dbname, $current_order, $order_col, $current_id = 0, $id_col = FALSE, $current_category = 0, $cat_col = FALSE, $multilang = FALSE, $multilang_col = '', $mode = 'update') {
 
-    $multilang_sql_1 = $multilang && $multilang_col ? "WHERE $multilang_col='".LANGUAGE."'" : '';
-    $multilang_sql_2 = $multilang && $multilang_col ? "AND $multilang_col='".LANGUAGE."'" : '';
+    $multilang_sql_1 = $multilang && $multilang_col ? "WHERE ".in_group($multilang_col, LANGUAGE) : '';
+    $multilang_sql_2 = $multilang && $multilang_col ? "AND ".in_group($multilang_col, LANGUAGE) : '';
 
     if (!$current_order) {
         $current_order = dbresult(dbquery("SELECT MAX($order_col) FROM ".$dbname." ".$multilang_sql_1), 0) + 1;

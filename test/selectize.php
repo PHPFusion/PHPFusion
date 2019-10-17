@@ -38,7 +38,7 @@ echo form_select('selectize_db', 'Selectize Database Callback', '', [
 // Opt Group -- done (REMEMBER TO HIDE DISABLED IF OPTGROUP IS ON)
 //Disable all parents
 $disabled_opts = [];
-$disable_query = "SELECT forum_id FROM ".DB_FORUMS." WHERE forum_type=1 ".(multilang_table("FO") ? "AND forum_language='".LANGUAGE."'" : '');
+$disable_query = "SELECT forum_id FROM ".DB_FORUMS." WHERE forum_type=1 ".(multilang_table("FO") ? "AND ".in_group('forum_language', LANGUAGE) : '');
 $disable_query = dbquery($disable_query);
 if (dbrows($disable_query) > 0) {
     while ($d_forum = dbarray($disable_query)) {
@@ -60,7 +60,7 @@ echo form_select('forum_id', 'Select your forum', '',
         'cat_col'       => 'forum_cat',
         'title_col'     => 'forum_name',
         'select_alt'    => TRUE,
-        'custom_query'  => "SELECT forum_id, forum_cat, forum_name FROM ".DB_FORUMS.(multilang_table('FO') ? ' WHERE forum_language="'.LANGUAGE.'"' : ''),
+        'custom_query'  => "SELECT forum_id, forum_cat, forum_name FROM ".DB_FORUMS.(multilang_table('FO') ? ' WHERE '.in_group('forum_language', LANGUAGE) : ''),
     ]);
 
 // User Select

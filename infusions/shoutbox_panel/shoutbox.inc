@@ -197,7 +197,7 @@ class ShoutBox {
     static function verify_sbdb($id) {
         if (isnum($id)) {
             if ((iADMIN && checkrights("S")) ||
-                (iMEMBER && dbcount("(shout_id)", DB_SHOUTBOX, "shout_id='".$id."' AND shout_name='".fusion_get_userdata("user_id")."'".(multilang_table("SB") ? " AND shout_language='".LANGUAGE."'" : "").""))
+                (iMEMBER && dbcount("(shout_id)", DB_SHOUTBOX, "shout_id='".$id."' AND shout_name='".fusion_get_userdata("user_id")."'".(multilang_table("SB") ? " AND ".in_group('shout_language', LANGUAGE) : "").""))
             ) {
                 return TRUE;
             }
@@ -213,7 +213,7 @@ class ShoutBox {
             u.user_id, u.user_name, u.user_avatar, u.user_status, u.user_lastvisit
             FROM ".DB_SHOUTBOX." s
             LEFT JOIN ".DB_USERS." u ON s.shout_name=u.user_id
-            WHERE ".(multilang_table("SB") ? "shout_language='".LANGUAGE."' AND " : "")."
+            WHERE ".(multilang_table("SB") ? in_group('shout_language', LANGUAGE)." AND " : "")."
             ".groupaccess('s.shout_hidden')."
             ORDER BY shout_datestamp DESC
             LIMIT ".intval($rows).", ".$min
@@ -226,7 +226,7 @@ class ShoutBox {
         if (self::verify_sbdb($ids)) {
             $result = dbquery("SELECT shout_id, shout_name, shout_message, shout_datestamp, shout_ip, shout_ip_type, shout_hidden, shout_language
                 FROM ".DB_SHOUTBOX."
-                WHERE shout_id=".intval($ids).(multilang_table("SB") ? " AND shout_language='".LANGUAGE."'" : "")
+                WHERE shout_id=".intval($ids).(multilang_table("SB") ? " AND ".in_group('shout_language', LANGUAGE) : "")
             );
 
             if (dbrows($result) > 0) {
@@ -316,10 +316,12 @@ class ShoutBox {
             }
 
             if ((count(fusion_get_enabled_languages()) > 1) && multilang_table("SB")) {
-                echo form_select('shout_language', self::$locale['global_ML100'], $this->data['shout_language'], [
+                echo form_select('shout_language[]', self::$locale['global_ML100'], $this->data['shout_language'], [
                     "inner_width" => "100%",
                     'required'    => TRUE,
-                    'options'     => fusion_get_enabled_languages()
+                    'options'     => fusion_get_enabled_languages(),
+                    'multiple'    => TRUE,
+                    'delimeter'   => '.'
                 ]);
             } else {
                 echo form_hidden('shout_language', '', $this->data['shout_language']);
@@ -350,7 +352,7 @@ class ShoutBox {
     }
 
     private function ShoutsAdminListing() {
-        $total_rows = dbcount("(shout_id)", DB_SHOUTBOX, (multilang_table("SB") ? "shout_language='".LANGUAGE."' AND " : "").groupaccess('shout_hidden'));
+        $total_rows = dbcount("(shout_id)", DB_SHOUTBOX, (multilang_table("SB") ? in_group('shout_language', LANGUAGE)." AND " : "").groupaccess('shout_hidden'));
         $rowstart = isset($_GET['rowstart']) && ($_GET['rowstart'] <= $total_rows) ? $_GET['rowstart'] : 0;
         $result = $this->_selectDB($rowstart, self::$limit);
         $rows = dbrows($result);
@@ -409,7 +411,7 @@ class ShoutBox {
 
     public function ShoutsListing($info) {
         self::sbForm();
-        $total_rows = dbcount("(shout_id)", DB_SHOUTBOX, (multilang_table("SB") ? "shout_language='".LANGUAGE."' AND " : "").groupaccess('shout_hidden'));
+        $total_rows = dbcount("(shout_id)", DB_SHOUTBOX, (multilang_table("SB") ? in_group('shout_language', LANGUAGE)." AND " : "").groupaccess('shout_hidden'));
         $_GET['rows'] = isset($_GET['rows']) && $_GET['rows'] <= $total_rows ? $_GET['rows'] : 0;
         $rows = $_GET['rows'];
         $result = $this->_selectDB($rows, $info['sb_limit']);
