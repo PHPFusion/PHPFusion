@@ -433,12 +433,6 @@ class FaqAdmin extends FaqAdminModel {
             ];
         }
 
-        if (!empty($_POST['faq_language'])) {
-            $search_string['faq_language'] = [
-                'input' => form_sanitizer($_POST['faq_language'], '', 'faq_language'), 'operator' => '='
-            ];
-        }
-
         if (!empty($_POST['faq_name'])) {
             $search_string['faq_name'] = [
                 'input' => form_sanitizer($_POST['faq_name'], '', 'faq_name'), 'operator' => '='
@@ -488,7 +482,6 @@ class FaqAdmin extends FaqAdminModel {
             'faq_status'     => !empty($_POST['faq_status']) ? form_sanitizer($_POST['faq_status'], 0, 'faq_status') : '',
             'faq_cat_id'     => !empty($_POST['faq_cat_id']) ? form_sanitizer($_POST['faq_cat_id'], 0, 'faq_cat_id') : '',
             'faq_visibility' => !empty($_POST['faq_visibility']) ? form_sanitizer($_POST['faq_visibility'], 0, 'faq_visibility') : '',
-            'faq_language'   => !empty($_POST['faq_language']) ? form_sanitizer($_POST['faq_language'], LANGUAGE, 'faq_language') : '',
             'faq_name'       => !empty($_POST['faq_name']) ? form_sanitizer($_POST['faq_name'], '', 'faq_name') : '',
         ];
 
@@ -543,16 +536,7 @@ class FaqAdmin extends FaqAdminModel {
                 'placeholder' => '- '.$this->locale['faq_0125'].' -',
                 'options'     => fusion_get_groups()
             ])."
-        </div>
-        <div class='display-inline-block'>\n";
-        $language_opts = [0 => $this->locale['faq_0129']];
-        $language_opts += fusion_get_enabled_languages();
-        echo form_select('faq_language', '', $filter_values['faq_language'], [
-            'allowclear'  => TRUE,
-            'placeholder' => '- '.$this->locale['faq_0128'].' -',
-            'options'     => $language_opts
-        ]);
-        echo "</div><div class='display-inline-block'>\n";
+        </div><div class='display-inline-block'>\n";
         $author_opts = [0 => $this->locale['faq_0131']];
         $result0 = dbquery('
                         SELECT n.faq_name, u.user_id, u.user_name, u.user_status
@@ -608,7 +592,6 @@ class FaqAdmin extends FaqAdminModel {
             <th>".$this->locale['faq_0252']."</th>
             <th>".$this->locale['faq_0105']."</th>
             <th>".$this->locale['faq_0106']."</th>
-            <th>".$this->locale['language']."</th>
             <th>".$this->locale['faq_0107']."</th>
             </tr></thead>\n<tbody>\n";
         if (dbrows($result) > 0) {
@@ -628,14 +611,13 @@ class FaqAdmin extends FaqAdminModel {
                         <div class='overflow-hide'>".profile_link($cdata['user_id'], $cdata['user_name'], $cdata['user_status'])."</div>
                         </td>
                         <td><span class='badge'>".getgroupname($cdata['faq_visibility'])."</span></td>
-                        <td>".translate_lang_names($cdata['faq_language'])."</td>
                         <td>
                         <a href='$edit_link' title='".$this->locale['edit']."'>".$this->locale['edit']."</a>&nbsp;&middot;&nbsp;
                         <a href='$delete_link' title='".$this->locale['delete']."' onclick=\"return confirm('".$this->locale['faq_0111']."')\">".$this->locale['delete']."</a>
                         </td></tr>\n";
             }
         } else {
-            echo "<tr><td colspan='8' class='text-center'>".($faq_cats ? $this->locale['faq_0112'] : $this->locale['faq_0114'])."</td></tr>";
+            echo "<tr><td colspan='7' class='text-center'>".($faq_cats ? $this->locale['faq_0112'] : $this->locale['faq_0114'])."</td></tr>";
         }
         echo "</tbody>\n</table>\n</div>";
         echo "<div class='display-inline-block'>\n
@@ -666,7 +648,7 @@ class FaqAdmin extends FaqAdminModel {
                 }
             });
             // Select Change
-            $('#faq_status, #faq_visibility, #faq_language, #faq_name, #faq_display').bind('change', function(e){
+            $('#faq_status, #faq_visibility, #faq_name, #faq_display').bind('change', function(e){
                 $(this).closest('form').submit();
             });
         ");
