@@ -302,11 +302,7 @@ class NewsCategoryAdmin extends NewsAdminModel {
                 "input" => form_sanitizer($_POST['news_cat_visibility'], "", "news_cat_visibility"), "operator" => "="
             ];
         }
-        if (!empty($_POST['news_cat_language'])) {
-            $search_string['news_cat_language'] = [
-                "input" => form_sanitizer($_POST['news_cat_language'], "", "news_cat_language"), "operator" => "="
-            ];
-        }
+
         if (multilang_table("NS")) {
             $sql_condition = in_group('news_cat_language', LANGUAGE);
         }
@@ -348,8 +344,7 @@ class NewsCategoryAdmin extends NewsAdminModel {
             $filter_values = [
                 "news_cat_name"       => !empty($_POST['news_cat_name']) ? form_sanitizer($_POST['news_cat_name'], "", "news_cat_name") : "",
                 "news_cat_status"     => !empty($_POST['news_cat_status']) ? form_sanitizer($_POST['news_cat_status'], "", "news_cat_status") : "",
-                "news_cat_visibility" => !empty($_POST['news_cat_visibility']) ? form_sanitizer($_POST['news_cat_visibility'], "", "news_cat_visibility") : "",
-                "news_cat_language"   => !empty($_POST['news_cat_language']) ? form_sanitizer($_POST['news_cat_language'], "", "news_cat_language") : "",
+                "news_cat_visibility" => !empty($_POST['news_cat_visibility']) ? form_sanitizer($_POST['news_cat_visibility'], "", "news_cat_visibility") : ""
             ];
             $filter_empty = TRUE;
             foreach ($filter_values as $val) {
@@ -391,7 +386,7 @@ class NewsCategoryAdmin extends NewsAdminModel {
             });
 
             // Select change
-            $('#news_status, #news_visibility, #news_category, #news_language, #news_author').bind('change', function(e){
+            $('#news_status, #news_visibility, #news_category, #news_author').bind('change', function(e){
                 $(this).closest('form').submit();
             });
             ");
@@ -410,11 +405,6 @@ class NewsCategoryAdmin extends NewsAdminModel {
             echo form_select("news_cat_visibility", "", $filter_values['news_cat_visibility'], [
                 "allowclear" => TRUE, "placeholder" => "-  ".self::$locale['news_0246']." -", "options" => fusion_get_groups()
             ]);
-            echo "</div>\n";
-            echo "<div class='display-inline-block'>\n";
-            $language_opts = [0 => self::$locale['news_0249']];
-            $language_opts += fusion_get_enabled_languages();
-            echo form_select("news_cat_language", "", $filter_values['news_cat_language'], ["allowclear" => TRUE, "placeholder" => "-  ".self::$locale['news_0250']." -", "options" => $language_opts]);
             echo "</div>\n";
             echo "</div>\n";
             echo closeform();
@@ -441,14 +431,12 @@ class NewsCategoryAdmin extends NewsAdminModel {
             <thead>
             <tr>
                 <th class="hidden-xs"></th>
-                <th><?php echo self::$locale['actions'] ?></th>
                 <th class="col-xs-3"><?php echo self::$locale['news_0300'] ?></th>
                 <th><?php echo self::$locale['news_0253'] ?></th>
                 <th><?php echo self::$locale['news_0215'] ?></th>
                 <th><?php echo self::$locale['sticky'] ?></th>
                 <th><?php echo self::$locale['news_0209'] ?></th>
-                <th><?php echo self::$locale['language'] ?></th>
-                <th>ID</th>
+                <th><?php echo self::$locale['actions'] ?></th>
             </tr>
             </thead>
             <tbody>
@@ -468,12 +456,6 @@ class NewsCategoryAdmin extends NewsAdminModel {
                         }
                     });');
                         ?></td>
-                    <td>
-                        <div class="btn-group m-0">
-                            <a class="btn btn-xs btn-default" href="<?php echo $edit_link ?>"><?php echo self::$locale['edit'] ?></a>
-                            <a class="btn btn-xs btn-default" href="<?php echo $delete_link ?>" onclick="return confirm('<?php echo self::$locale['news_0282']; ?>')"><?php echo self::$locale['delete'] ?></a>
-                        </div>
-                    </td>
                     <td><a class="text-dark" href="<?php echo $edit_link ?>"><img style="width:25px" class="display-inline-block m-r-15" src="<?php echo get_image("nc_".$cdata['news_cat_name']) ?>" alt="<?php echo $cdata['news_cat_name'] ?>"/><?php echo $cdata['news_cat_name'] ?></a></td>
                     <td>
                         <span class="badge"><?php echo sprintf(self::$locale['news_0254'], $cdata['news_published']) ?></span>
@@ -483,8 +465,12 @@ class NewsCategoryAdmin extends NewsAdminModel {
                     <td><span class="badge"><?php echo $cdata['news_cat_draft'] ? self::$locale['yes'] : self::$locale['no'] ?></span></td>
                     <td><span class="badge"><?php echo $cdata['news_cat_sticky'] ? self::$locale['yes'] : self::$locale['no'] ?></span></td>
                     <td><span class="badge"><?php echo getgroupname($cdata['news_cat_visibility']) ?></span></td>
-                    <td><?php echo $cdata['news_cat_language'] ?></td>
-                    <td><?php echo $cdata['news_cat_id'] ?></td>
+                    <td>
+                        <div class="btn-group m-0">
+                            <a class="btn btn-xs btn-default" href="<?php echo $edit_link ?>"><?php echo self::$locale['edit'] ?></a>
+                            <a class="btn btn-xs btn-default" href="<?php echo $delete_link ?>" onclick="return confirm('<?php echo self::$locale['news_0282']; ?>')"><?php echo self::$locale['delete'] ?></a>
+                        </div>
+                    </td>
                 </tr>
                 <?php
                 if (isset($data[$cdata['news_cat_id']])) {
@@ -493,7 +479,7 @@ class NewsCategoryAdmin extends NewsAdminModel {
                 ?>
             <?php endforeach; ?>
         <?php else: ?>
-            <tr><td colspan="10" class="text-center"><?php echo self::$locale['news_0303'] ?></td></tr>
+            <tr><td colspan="9" class="text-center"><?php echo self::$locale['news_0303'] ?></td></tr>
         <?php endif; ?>
 
         <?php if (!$id) : ?>

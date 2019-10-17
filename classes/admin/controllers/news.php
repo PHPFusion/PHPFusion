@@ -798,12 +798,6 @@ class NewsAdmin extends NewsAdminModel {
             ];
         }
 
-        if (!empty($_POST['news_language'])) {
-            $search_string['news_language'] = [
-                "input" => form_sanitizer($_POST['news_language'], "", "news_language"), "operator" => "="
-            ];
-        }
-
         if (!empty($_POST['news_author'])) {
             $search_string['news_name'] = [
                 "input" => form_sanitizer($_POST['news_author'], "", "news_author"), "operator" => "="
@@ -877,7 +871,6 @@ class NewsAdmin extends NewsAdminModel {
                 "news_status"     => !empty($_POST['news_status']) ? form_sanitizer($_POST['news_status'], "", "news_status") : "",
                 "news_category"   => !empty($_POST['news_category']) ? form_sanitizer($_POST['news_category'], "", "news_category") : "",
                 "news_visibility" => !empty($_POST['news_visibility']) ? form_sanitizer($_POST['news_visibility'], "", "news_visibility") : "",
-                "news_language"   => !empty($_POST['news_language']) ? form_sanitizer($_POST['news_language'], "", "news_language") : "",
                 "news_author"     => !empty($_POST['news_author']) ? form_sanitizer($_POST['news_author'], "", "news_author") : "",
             ];
             $filter_empty = TRUE;
@@ -918,7 +911,7 @@ class NewsAdmin extends NewsAdminModel {
                 }
             });
             // Select change
-            $('#news_status, #news_visibility, #news_category, #news_language, #news_author, #news_display').bind('change', function(e){
+            $('#news_status, #news_visibility, #news_category, #news_author, #news_display').bind('change', function(e){
                 $(this).closest('form').submit();
             });
             ");
@@ -947,11 +940,6 @@ class NewsAdmin extends NewsAdminModel {
                 }
             }
             echo form_select("news_category", "", $filter_values['news_category'], ["allowclear" => TRUE, "placeholder" => "- ".self::$locale['news_0248']." -", "options" => $news_cats_opts]);
-            echo "</div>\n";
-            echo "<div class='display-inline-block'>\n";
-            $language_opts = [0 => self::$locale['news_0249']];
-            $language_opts += fusion_get_enabled_languages();
-            echo form_select("news_language", "", $filter_values['news_language'], ["allowclear" => TRUE, "placeholder" => "- ".self::$locale['news_0250']." -", "options" => $language_opts]);
             echo "</div>\n";
             echo "<div class='display-inline-block'>\n";
             $author_opts = [0 => self::$locale['news_0251']];
@@ -1019,9 +1007,8 @@ class NewsAdmin extends NewsAdminModel {
                     <th class="strong min"><?php echo self::$locale['draft'] ?></th>
                     <th class="strong"><?php echo self::$locale['global_073'] ?></th>
                     <th class="strong"><?php echo self::$locale['news_0009'] ?></th>
-                    <th class="strong"><?php echo self::$locale['news_0142'] ?></th>
+                    <th class="strong"><?php echo self::$locale['global_050'] ?></th>
                     <th class="strong"><?php echo self::$locale['actions'] ?></th>
-                    <th class="strong min">ID</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -1047,12 +1034,11 @@ class NewsAdmin extends NewsAdminModel {
                                 <a href="<?php echo FUSION_SELF.fusion_get_aidlink()."&amp;action=delete&amp;news_id=".$data['news_id'] ?>" onclick="return confirm('<?php echo self::$locale['news_0281']; ?>')"><?php echo self::$locale['delete'] ?>
                                 </a>
                             </td>
-                            <td><?php echo $data['news_id'] ?></td>
                         </tr>
                     <?php
                     endwhile;
                 else: ?>
-                    <tr><td colspan="11" class="text-center"><strong><?php echo self::$locale['news_0109'] ?></strong></td></tr>
+                    <tr><td colspan="10" class="text-center"><strong><?php echo self::$locale['news_0109'] ?></strong></td></tr>
                 <?php endif; ?>
                 </tbody>
             </table>
