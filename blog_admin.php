@@ -128,7 +128,7 @@ function blog_listing() {
     // consistently monitor sql results rendertime. -- Do not Surpass 0.15
     // all blog are uncategorized by default unless specified.
     $limit = 15;
-    $total_rows = dbcount("(blog_id)", DB_BLOG, (multilang_table("BL") ? "blog_language='".LANGUAGE."'" : ""));
+    $total_rows = dbcount("(blog_id)", DB_BLOG, (multilang_table("BL") ? in_group('blog_language', LANGUAGE) : ""));
     $rowstart = isset($_GET['rowstart']) && ($_GET['rowstart'] <= $total_rows) ? $_GET['rowstart'] : 0;
 
     // add a filter browser
@@ -136,7 +136,7 @@ function blog_listing() {
         "all" => $locale['blog_0460'],
         "0"   => $locale['blog_0424']
     ];
-    $categories = dbquery("select blog_cat_id, blog_cat_name FROM ".DB_BLOG_CATS." ".(multilang_table("BL") ? "where blog_cat_language='".LANGUAGE."'" : "")."");
+    $categories = dbquery("select blog_cat_id, blog_cat_name FROM ".DB_BLOG_CATS." ".(multilang_table("BL") ? "where ".in_group('blog_cat_language', LANGUAGE) : "")."");
     if (dbrows($categories) > 0) {
         while ($cat_data = dbarray($categories)) {
             $catOpts[$cat_data['blog_cat_id']] = $cat_data['blog_cat_name'];
@@ -150,7 +150,7 @@ function blog_listing() {
         }
     }
 
-    $langFilter = multilang_table("BL") ? ($catFilter != '' ? " AND " : '')."blog_language='".LANGUAGE."'" : "";
+    $langFilter = multilang_table("BL") ? ($catFilter != '' ? " AND " : '').in_group('blog_language', LANGUAGE) : "";
 
     $filter = $catFilter.$langFilter;
 
