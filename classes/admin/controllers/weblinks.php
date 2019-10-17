@@ -530,7 +530,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
                     });');
                     endwhile;
                     ?>
-                    <th colspan='7'><?php
+                    <th colspan='6'><?php
                         echo form_checkbox('check_all', $this->locale['WLS_0206'], '', ['class' => 'm-b-0', 'reverse_label' => TRUE]);
 
                         add_to_jquery("
@@ -546,7 +546,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
                         ");
                         ?></th>
                 <?php else: ?>
-                    <tr><td colspan="7" class="text-center"><?php echo($weblink_cats ? ($filter_empty ? $this->locale['WLS_0112'] : $this->locale['WLS_0113']) : $this->locale['WLS_0114']); ?></td></tr>
+                    <tr><td colspan="6" class="text-center"><?php echo($weblink_cats ? ($filter_empty ? $this->locale['WLS_0112'] : $this->locale['WLS_0113']) : $this->locale['WLS_0114']); ?></td></tr>
                 <?php endif; ?>
                 </tbody>
             </table>
