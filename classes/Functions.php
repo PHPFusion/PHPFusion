@@ -27,7 +27,7 @@ class Functions {
      */
     public static function get_downloadCats() {
         return dbquery_tree_full(DB_DOWNLOAD_CATS, 'download_cat_id', 'download_cat_parent',
-            (multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."'" : "")."");
+            (multilang_table("DL") ? "WHERE ".in_group('download_cat_language', LANGUAGE) : "")."");
     }
 
     /**
@@ -71,7 +71,7 @@ class Functions {
      */
     public static function get_downloadCatsIndex() {
         return dbquery_tree(DB_DOWNLOAD_CATS, 'download_cat_id', 'download_cat_parent',
-            "".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."'" : '')."");
+            "".(multilang_table("DL") ? "WHERE ".in_group('download_cat_language', LANGUAGE) : '')."");
     }
 
     /**
@@ -80,7 +80,7 @@ class Functions {
      * @return array
      */
     public static function get_downloadCatsData() {
-        $data = dbquery_tree_full(DB_DOWNLOAD_CATS, 'download_cat_id', 'download_cat_parent', (multilang_table('DL') ? "WHERE download_cat_language='".LANGUAGE."'" : ''));
+        $data = dbquery_tree_full(DB_DOWNLOAD_CATS, 'download_cat_id', 'download_cat_parent', (multilang_table('DL') ? "WHERE ".in_group('download_cat_language', LANGUAGE) : ''));
         foreach ($data as $index => $cat_data) {
             foreach ($cat_data as $download_cat_id => $cat) {
                 $data[$index][$download_cat_id]['download_cat_link'] = "<a href='".DOWNLOADS."downloads.php?cat_id=".$cat['download_cat_id']."'>".$cat['download_cat_name']."</a>";
@@ -116,7 +116,7 @@ class Functions {
         function breadcrumb_arrays($index, $id) {
             $crumb = [];
             if (isset($index[get_parent($index, $id)])) {
-                $_name = dbarray(dbquery("SELECT download_cat_id, download_cat_name, download_cat_parent FROM ".DB_DOWNLOAD_CATS.(multilang_table('DL') ? " WHERE download_cat_language='".LANGUAGE."' AND " : " WHERE ")." download_cat_id='".intval($id)."'"));
+                $_name = dbarray(dbquery("SELECT download_cat_id, download_cat_name, download_cat_parent FROM ".DB_DOWNLOAD_CATS.(multilang_table('DL') ? " WHERE ".in_group('download_cat_language', LANGUAGE)." AND " : " WHERE ")." download_cat_id='".intval($id)."'"));
                 $crumb = [
                     'link'  => INFUSIONS."downloads/downloads.php?cat_id=".$_name['download_cat_id'],
                     'title' => $_name['download_cat_name']

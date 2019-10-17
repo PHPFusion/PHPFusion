@@ -64,7 +64,7 @@ if (defined('DOWNLOADS_EXIST')) {
             $query = "SELECT td.*,tdc.*
             FROM ".DB_DOWNLOADS." td
             INNER JOIN ".DB_DOWNLOAD_CATS." tdc ON td.download_cat=tdc.download_cat_id
-            ".(multilang_table("DL") ? "WHERE tdc.download_cat_language='".LANGUAGE."' AND " : "WHERE ")
+            ".(multilang_table("DL") ? "WHERE ".in_group('tdc.download_cat_language', LANGUAGE)." AND " : "WHERE ")
                 .groupaccess('download_visibility')." AND ".Search_Engine::search_conditions('downloads').$date_search;
             $result = dbquery($query, Search_Engine::get_param('search_param'));
             $rows = dbrows($result);
@@ -79,7 +79,7 @@ if (defined('DOWNLOADS_EXIST')) {
             FROM ".DB_DOWNLOADS." td
             INNER JOIN ".DB_DOWNLOAD_CATS." tdc ON td.download_cat=tdc.download_cat_id
             LEFT JOIN ".DB_USERS." tu ON td.download_user=tu.user_id
-            ".(multilang_table("DL") ? "WHERE tdc.download_cat_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('td.download_visibility')." AND
+            ".(multilang_table("DL") ? "WHERE ".in_group('tdc.download_cat_language', LANGUAGE)." AND " : "WHERE ").groupaccess('td.download_visibility')." AND
             ".Search_Engine::search_conditions('downloads').$date_search.$sortby.$limit, Search_Engine::get_param('search_param'));
 
             $search_result = '';

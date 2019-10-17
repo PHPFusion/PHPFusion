@@ -235,7 +235,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                     "no_root"     => 1,
                     "placeholder" => $locale['choose'],
                     'width'       => '100%',
-                    "query"       => (multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."'" : "")
+                    "query"       => (multilang_table("DL") ? "WHERE ".in_group('download_cat_language', LANGUAGE) : "")
                 ], DB_DOWNLOAD_CATS, "download_cat_name", "download_cat_id", "download_cat_parent");
                 echo form_select('download_visibility', $locale['download_0205'], $callback_data['download_visibility'], [
                     'options'     => fusion_get_groups(),
