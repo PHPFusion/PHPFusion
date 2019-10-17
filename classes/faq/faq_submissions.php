@@ -53,7 +53,7 @@ class FaqSubmissions extends FaqServer {
             'faq_status'   => 1
         ];
 
-        if (dbcount("(faq_cat_id)", DB_FAQ_CATS, (multilang_table("FQ") ? "faq_cat_language='".LANGUAGE."'" : ""))) {
+        if (dbcount("(faq_cat_id)", DB_FAQ_CATS, (multilang_table("FQ") ? in_group('faq_cat_language', LANGUAGE) : ""))) {
             // Save
             if (isset($_POST['submit_link'])) {
                 $submit_info['faq_question'] = parse_textarea($_POST['faq_question']);
@@ -89,7 +89,7 @@ class FaqSubmissions extends FaqServer {
             } else {
                 $options = [];
                 $faq_data = [];
-                $faq_result = dbquery("SELECT faq_cat_id, faq_cat_name FROM ".DB_FAQ_CATS.(multilang_table("FQ") ? " WHERE faq_cat_language='".LANGUAGE."'" : "")." ORDER BY faq_cat_name ASC");
+                $faq_result = dbquery("SELECT faq_cat_id, faq_cat_name FROM ".DB_FAQ_CATS.(multilang_table("FQ") ? " WHERE ".in_group('faq_cat_language', LANGUAGE) : "")." ORDER BY faq_cat_name ASC");
                 if (dbrows($faq_result)) {
                     $options[0] = $this->locale['faq_0010'];
                     while ($faq_data = dbarray($faq_result)) {
@@ -119,12 +119,14 @@ class FaqSubmissions extends FaqServer {
                             'inline'      => TRUE,
                             'options'     => $options
                         ]),
-                    'faq_language'   => (multilang_table('FQ') ? form_select('faq_language', $this->locale['language'], $criteriaArray['faq_language'],
+                    'faq_language'   => (multilang_table('FQ') ? form_select('faq_language[]', $this->locale['language'], $criteriaArray['faq_language'],
                         [
                             'options'     => fusion_get_enabled_languages(),
                             'placeholder' => $this->locale['choose'],
                             'width'       => '250px',
                             'inline'      => TRUE,
+                            'multiple'    => TRUE,
+                            'delimeter'   => '.'
                         ]) : form_hidden('faq_language', '', $criteriaArray['faq_language'])),
                     'faq_submit'     => form_button('submit_link', $this->locale['submit'], $this->locale['submit'], ['class' => 'btn-success', 'icon' => 'fa fa-fw fa-hdd-o']),
                     'criteria_array' => $criteriaArray

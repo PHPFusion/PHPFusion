@@ -220,7 +220,7 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
 
                 openside($this->locale['faq_0259']);
                 $options = [];
-                $faq_result = dbquery("SELECT faq_cat_id, faq_cat_name FROM ".DB_FAQ_CATS.(multilang_table("FQ") ? " WHERE faq_cat_language='".LANGUAGE."'" : "")." ORDER BY faq_cat_name ASC");
+                $faq_result = dbquery("SELECT faq_cat_id, faq_cat_name FROM ".DB_FAQ_CATS.(multilang_table("FQ") ? " WHERE ".in_group('faq_cat_language', LANGUAGE) : "")." ORDER BY faq_cat_name ASC");
                 if (dbrows($faq_result)) {
                     $options[0] = $this->locale['faq_0010'];
                     while ($faq_data = dbarray($faq_result)) {
@@ -242,12 +242,14 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
                     ]);
 
                 if (multilang_table('FQ')) {
-                    echo form_select('faq_language', $this->locale['language'], $this->inputArray['faq_language'],
+                    echo form_select('faq_language[]', $this->locale['language'], $this->inputArray['faq_language'],
                         [
                             'inline'      => TRUE,
                             'placeholder' => $this->locale['choose'],
                             'inner_width' => '100%',
-                            'options'     => fusion_get_enabled_languages()
+                            'options'     => fusion_get_enabled_languages(),
+                            'multiple'    => TRUE,
+                            'delimeter'   => '.'
                         ]);
                 } else {
                     echo form_hidden('faq_language', "", $this->inputArray['faq_language']);
