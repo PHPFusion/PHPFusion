@@ -60,7 +60,7 @@ function latest_comments_get_item_title($type, $item_id) {
                 FROM '.DB_DOWNLOADS.' AS d
                 INNER JOIN '.DB_DOWNLOAD_CATS.' AS c ON c.download_cat_id=d.download_cat
                 WHERE d.download_id=:id AND '.groupaccess('d.download_visibility').'
-                '.(multilang_table('DL') ? 'AND c.download_cat_language="'.LANGUAGE.'"' : '');
+                '.(multilang_table('DL') ? 'AND '.in_group('c.download_cat_language', LANGUAGE) : '');
                 break;
             case 'N':
                 $query = 'SELECT ns.news_subject as title
