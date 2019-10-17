@@ -479,7 +479,7 @@ class NewsCategoryAdmin extends NewsAdminModel {
                 ?>
             <?php endforeach; ?>
         <?php else: ?>
-            <tr><td colspan="9" class="text-center"><?php echo self::$locale['news_0303'] ?></td></tr>
+            <tr><td colspan="8" class="text-center"><?php echo self::$locale['news_0303'] ?></td></tr>
         <?php endif; ?>
 
         <?php if (!$id) : ?>
