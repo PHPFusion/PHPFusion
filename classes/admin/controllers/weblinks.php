@@ -343,13 +343,6 @@ class WeblinksAdmin extends WeblinksAdminModel {
             ];
         }
 
-        $weblink_language = filter_input(INPUT_POST, 'weblink_language', FILTER_DEFAULT);
-        if (!empty($weblink_language)) {
-            $search_string['weblink_language'] = [
-                'input' => form_sanitizer($weblink_language, '', 'weblink_language'), 'operator' => "=", 'option' => "AND"
-            ];
-        }
-
         if (!empty($search_string)) {
             foreach ($search_string as $key => $values) {
                 $sql_condition .= " ".$values['option']." `$key` ".$values['operator'].($values['operator'] == "LIKE" ? "'%" : "'").$values['input'].($values['operator'] == "LIKE" ? "%'" : "'");
@@ -387,8 +380,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
             'weblink_name'       => !empty($weblink_name) ? form_sanitizer($weblink_name, '', 'weblink_name') : '',
             'weblink_status'     => !empty($weblink_status) ? form_sanitizer($weblink_status, '', 'weblink_status') : '',
             'weblink_cat'        => !empty($weblink_cat) ? form_sanitizer($weblink_cat, '', 'weblink_cat') : '',
-            'weblink_visibility' => !empty($weblink_visibility) ? form_sanitizer($weblink_visibility, '', 'weblink_visibility') : '',
-            'weblink_language'   => !empty($weblink_language) ? form_sanitizer($weblink_language, '', 'weblink_language') : '',
+            'weblink_visibility' => !empty($weblink_visibility) ? form_sanitizer($weblink_visibility, '', 'weblink_visibility') : ''
         ];
 
         $filter_empty = TRUE;
@@ -470,17 +462,6 @@ class WeblinksAdmin extends WeblinksAdminModel {
                     ?>
                 </div>
                 <div class="display-inline-block">
-                    <?php
-                    $language_opts = [0 => $this->locale['WLS_0129']];
-                    $language_opts += fusion_get_enabled_languages();
-                    echo form_select('weblink_language', '', $filter_values['weblink_language'], [
-                        'allowclear'  => TRUE,
-                        'placeholder' => '- '.$this->locale['WLS_0128'].' -',
-                        'options'     => $language_opts
-                    ]);
-                    ?>
-                </div>
-                <div class="display-inline-block">
                 </div>
             </div>
 
@@ -517,7 +498,6 @@ class WeblinksAdmin extends WeblinksAdminModel {
                     <th class="strong"><?php echo $this->locale['WLS_0101'] ?></th>
                     <th class="strong"><?php echo $this->locale['WLS_0102'] ?></th>
                     <th class="strong"><?php echo $this->locale['WLS_0103'] ?></th>
-                    <th class="strong"><?php echo $this->locale['language'] ?></th>
                     <th class="strong"><?php echo $this->locale['WLS_0104'] ?></th>
                 </tr>
                 </thead>
@@ -535,7 +515,6 @@ class WeblinksAdmin extends WeblinksAdminModel {
                             <td><a class="text-dark" href="<?php echo $cat_edit_link ?>"><?php echo $data['weblink_cat_name']; ?></a></td>
                             <td><span class="badge"><?php echo $data['weblink_status'] ? $this->locale['yes'] : $this->locale['no']; ?></span></td>
                             <td><span class="badge"><?php echo getgroupname($data['weblink_visibility']); ?></span></td>
-                            <td><?php echo $data['weblink_language'] ?></td>
                             <td>
                                 <a href="<?php echo $edit_link; ?>" title="<?php echo $this->locale['edit']; ?>"><?php echo $this->locale['edit']; ?></a>&nbsp;|&nbsp;
                                 <a href="<?php echo $delete_link; ?>" title="<?php echo $this->locale['delete']; ?>" onclick="return confirm('<?php echo $this->locale['WLS_0111']; ?>')"><?php echo $this->locale['delete']; ?></a>
@@ -598,7 +577,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
             });
 
             // Select Change
-            $('#weblink_status, #weblink_visibility, #weblink_cat, #weblink_language, #weblink_display').bind('change', function(e){
+            $('#weblink_status, #weblink_visibility, #weblink_cat, #weblink_display').bind('change', function(e){
                 $(this).closest('form').submit();
             });
         ");

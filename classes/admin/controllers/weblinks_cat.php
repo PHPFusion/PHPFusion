@@ -277,13 +277,6 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
             ];
         }
 
-        $weblink_cat_language = filter_input(INPUT_POST, 'weblink_cat_language', FILTER_DEFAULT);
-        if (!empty($_POST['weblink_cat_language'])) {
-            $search_string['weblink_cat_language'] = [
-                'input' => form_sanitizer($weblink_cat_language, '', 'weblink_cat_language'), 'operator' => "="
-            ];
-        }
-
         if (!empty($search_string)) {
             foreach ($search_string as $key => $values) {
                 $sql_condition .= " ".$values['option']." `$key` ".$values['operator'].($values['operator'] == "LIKE" ? "'%" : "'").$values['input'].($values['operator'] == "LIKE" ? "%'" : "'");
@@ -305,8 +298,7 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
         $filter_values = [
             'weblink_cat_name'       => !empty($weblink_cat_name) ? form_sanitizer($weblink_cat_name, '', 'weblink_cat_name') : '',
             'weblink_cat_status'     => !empty($weblink_cat_status) ? form_sanitizer($weblink_cat_status, '', 'weblink_cat_status') : '',
-            'weblink_cat_visibility' => !empty($weblink_cat_visibility) ? form_sanitizer($weblink_cat_visibility, '', 'weblink_cat_visibility') : '',
-            'weblink_cat_language'   => !empty($weblink_cat_language) ? form_sanitizer($weblink_cat_language, '', 'weblink_cat_language') : ''
+            'weblink_cat_visibility' => !empty($weblink_cat_visibility) ? form_sanitizer($weblink_cat_visibility, '', 'weblink_cat_visibility') : ''
         ];
 
         $filter_empty = TRUE;
@@ -374,13 +366,6 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
                         'options'     => fusion_get_groups()
                     ]); ?>
                 </div>
-                <div class="display-inline-block">
-                    <?php echo form_select('weblink_cat_language', '', $filter_values['weblink_cat_language'], [
-                        'allowclear'  => TRUE,
-                        'placeholder' => '-  '.$this->locale['WLS_0128'].' -',
-                        'options'     => $language_opts
-                    ]); ?>
-                </div>
             </div>
             <?php echo closeform(); ?>
         </div>
@@ -407,7 +392,7 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
             });
 
             // Select change
-            $('#weblink_cat_status, #weblink_cat_visibility, #weblink_cat_language').bind('change', function(e){
+            $('#weblink_cat_status, #weblink_cat_visibility').bind('change', function(e){
                 $(this).closest('form').submit();
             });
         ");
@@ -433,7 +418,6 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
                 <th><?php echo $this->locale['WLS_0151'] ?></th>
                 <th><?php echo $this->locale['WLS_0102'] ?></th>
                 <th><?php echo $this->locale['WLS_0103'] ?></th>
-                <th><?php echo $this->locale['language'] ?></th>
                 <th><?php echo $this->locale['WLS_0104'] ?></th>
             </tr>
             </thead>
@@ -459,7 +443,6 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
                     <td><span class="badge"><?php echo format_word($cdata['weblink_count'], $this->locale['fmt_weblink']); ?></span></td>
                     <td><span class="badge"><?php echo($cdata['weblink_cat_status'] == 0 ? $this->locale['unpublish'] : $this->locale['publish']); ?></span></td>
                     <td><span class="badge"><?php echo getgroupname($cdata['weblink_cat_visibility']); ?></span></td>
-                    <td><?php echo translate_lang_names($cdata['weblink_cat_language']) ?></td>
                     <td>
                         <a href="<?php echo $edit_link; ?>" title="<?php echo $this->locale['edit']; ?>"><?php echo $this->locale['edit']; ?></a>&nbsp;|&nbsp;
                         <a href="<?php echo $delete_link; ?>" title="<?php echo $this->locale['delete']; ?>" onclick="return confirm('<?php echo $this->locale['WLS_0161']; ?>')"><?php echo $this->locale['delete']; ?></a>
@@ -472,7 +455,7 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
                 ?>
             <?php endforeach; ?>
         <?php else: ?>
-            <tr><td colspan="7" class="text-center"><?php echo $this->locale['WLS_0162']; ?></td></tr>
+            <tr><td colspan="6" class="text-center"><?php echo $this->locale['WLS_0162']; ?></td></tr>
         <?php endif; ?>
 
         <?php if (!$id) : ?>
