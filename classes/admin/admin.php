@@ -137,9 +137,9 @@ abstract class ForumAdminInterface extends Forum_Server {
     protected static function check_validForumName($forum_name, $forum_id = 0) {
         if ($forum_name) {
 
-            $cond = "forum_name='".$forum_name."'".(multilang_table('FO') ? " AND forum_language='".LANGUAGE."'" : '');
+            $cond = "forum_name='".$forum_name."'".(multilang_table('FO') ? " AND ".in_group('forum_language', LANGUAGE) : '');
             if ($forum_id) {
-                $cond = "forum_name='".$forum_name."' AND forum_id !='".$forum_id."'".(multilang_table('FO') ? " AND forum_language='".LANGUAGE."'" : '');
+                $cond = "forum_name='".$forum_name."' AND forum_id !='".$forum_id."'".(multilang_table('FO') ? " AND ".in_group('forum_language', LANGUAGE) : '');
             }
 
             if (dbcount("('forum_id')", DB_FORUMS, $cond)) {
@@ -254,7 +254,7 @@ abstract class ForumAdminInterface extends Forum_Server {
         //print_p($branch_data[$index]);
         //print_p("Index is $index");
 
-        $index_data = dbarray(dbquery("SELECT forum_id, forum_image, forum_order FROM ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".$index."'"));
+        $index_data = dbarray(dbquery("SELECT forum_id, forum_image, forum_order FROM ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE ".in_group('forum_language', LANGUAGE)." AND" : "WHERE")." forum_id='".$index."'"));
 
         // check if there is a sub for this node.
 
@@ -262,15 +262,15 @@ abstract class ForumAdminInterface extends Forum_Server {
             $data = [];
 
             foreach ($branch_data[$index] as $forum_id) {
-                $data = dbarray(dbquery("SELECT forum_id, forum_image, forum_order FROM ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".$forum_id."'"));
+                $data = dbarray(dbquery("SELECT forum_id, forum_image, forum_order FROM ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE ".in_group('forum_language', LANGUAGE)." AND" : "WHERE")." forum_id='".$forum_id."'"));
 
                 if ($data['forum_image'] && file_exists(IMAGES."forum/".$data['forum_image'])) {
                     unlink(IMAGES."forum/".$data['forum_image']);
                 }
 
-                dbquery("UPDATE ".DB_FORUMS." SET forum_order=forum_order-1 ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".$forum_id."' AND forum_order>'".$data['forum_order']."'");
+                dbquery("UPDATE ".DB_FORUMS." SET forum_order=forum_order-1 ".(multilang_table("FO") ? "WHERE ".in_group('forum_language', LANGUAGE)." AND" : "WHERE")." forum_id='".$forum_id."' AND forum_order>'".$data['forum_order']."'");
 
-                dbquery("DELETE FROM ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='$forum_id' ".($time ? "AND forum_lastpost < '".$time."'" : '')." ");
+                dbquery("DELETE FROM ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE ".in_group('forum_language', LANGUAGE)." AND" : "WHERE")." forum_id='$forum_id' ".($time ? "AND forum_lastpost < '".$time."'" : '')." ");
 
                 if (isset($branch_data[$data['forum_id']])) {
                     self::prune_forums($branch_data, $time);
@@ -282,17 +282,17 @@ abstract class ForumAdminInterface extends Forum_Server {
                 unlink(IMAGES."forum/".$data['forum_image']);
                 //print_p("unlinked ".$index_data['forum_image']."");
             }
-            dbquery("UPDATE ".DB_FORUMS." SET forum_order=forum_order-1 ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".$index."' AND forum_order>'".$index_data['forum_order']."'");
+            dbquery("UPDATE ".DB_FORUMS." SET forum_order=forum_order-1 ".(multilang_table("FO") ? "WHERE ".in_group('forum_language', LANGUAGE)." AND" : "WHERE")." forum_id='".$index."' AND forum_order>'".$index_data['forum_order']."'");
             //print_p("deleted ".$index."");
-            dbquery("DELETE FROM ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".$index."' ".($time ? "AND forum_lastpost < '".$time."'" : '')." ");
+            dbquery("DELETE FROM ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE ".in_group('forum_language', LANGUAGE)." AND" : "WHERE")." forum_id='".$index."' ".($time ? "AND forum_lastpost < '".$time."'" : '')." ");
         } else {
             if ($index_data['forum_image'] && file_exists(IMAGES."forum/".$index_data['forum_image'])) {
                 unlink(IMAGES."forum/".$index_data['forum_image']);
                 //print_p("unlinked ".$index_data['forum_image']."");
             }
-            dbquery("UPDATE ".DB_FORUMS." SET forum_order=forum_order-1 ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".$index."' AND forum_order>'".$index_data['forum_order']."'");
+            dbquery("UPDATE ".DB_FORUMS." SET forum_order=forum_order-1 ".(multilang_table("FO") ? "WHERE ".in_group('forum_language', LANGUAGE)." AND" : "WHERE")." forum_id='".$index."' AND forum_order>'".$index_data['forum_order']."'");
             //print_p("deleted ".$index."");
-            dbquery("DELETE FROM ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".$index."' ".($time ? "AND forum_lastpost < '".$time."'" : '')." ");
+            dbquery("DELETE FROM ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE ".in_group('forum_language', LANGUAGE)." AND" : "WHERE")." forum_id='".$index."' ".($time ? "AND forum_lastpost < '".$time."'" : '')." ");
         }
     }
 

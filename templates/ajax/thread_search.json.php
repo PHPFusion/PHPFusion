@@ -58,17 +58,17 @@ if (!empty($response['join_terms'])) {
 }
 
 //print_p($response['search']);
-$count_q = "SELECT t.thread_id                  
+$count_q = "SELECT t.thread_id
             FROM ".DB_FORUM_THREADS." t
-            INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id ".$response['join']."                       
-            ".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND " : "WHERE ")." t.thread_hidden='0' ".$response['search']." AND ".groupaccess('tf.forum_access')." GROUP BY t.thread_id";
+            INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id ".$response['join']."
+            ".(multilang_table("FO") ? "WHERE ".in_group('tf.forum_language', LANGUAGE)." AND " : "WHERE ")." t.thread_hidden='0' ".$response['search']." AND ".groupaccess('tf.forum_access')." GROUP BY t.thread_id";
 $select_q = "SELECT t.thread_id, t.thread_subject, t.thread_author, t.thread_lastuser, t.thread_lastpost,
             t.thread_lastpostid, t.thread_postcount, t.thread_locked, t.thread_sticky, t.thread_poll, t.thread_postcount, t.thread_views,
             t.forum_id 'forum_id', tf.* ".$response['select']."
             FROM ".DB_FORUMS." tf
             INNER JOIN ".DB_FORUM_THREADS." t ON t.forum_id=tf.forum_id
             ".$response['join']."
-            ".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('tf.forum_access')."
+            ".(multilang_table("FO") ? "WHERE ".in_group('tf.forum_language', LANGUAGE)." AND " : "WHERE ").groupaccess('tf.forum_access')."
             ".$response['search']."
             GROUP BY t.thread_id ORDER BY t.thread_lastpost DESC";
 

@@ -25,14 +25,13 @@ if (defined('FORUM_EXIST')) {
     $form_elements = &$form_elements;
     $radio_button = &$radio_button;
     $bind = [
-        ':language' => LANGUAGE,
         ':cat'      => '0',
     ];
     $fresult = "
             SELECT f.forum_id, f.forum_name, f2.forum_name 'forum_cat_name'
             FROM ".DB_FORUMS." f
             INNER JOIN ".DB_FORUMS." f2 ON f.forum_cat=f2.forum_id
-            ".(multilang_table('FO') ? "WHERE f.forum_language=:language AND " : 'WHERE ').groupaccess('f.forum_access')."
+            ".(multilang_table('FO') ? "WHERE ".in_group('f.forum_language', LANGUAGE)." AND " : 'WHERE ').groupaccess('f.forum_access')."
             AND f.forum_cat!=:cat ORDER BY f2.forum_order ASC, f.forum_order ASC
             ";
     $result = dbquery($fresult, $bind);

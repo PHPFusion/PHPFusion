@@ -650,34 +650,34 @@ class Forum_Viewer {
         <button class="btn btn-sm btn-default {%time_active%} dropdown-toggle" data-toggle="dropdown">
         <strong>{%time%}</strong><span class="caret m-l-5"></span>
         </button>
-        <ul class="dropdown-menu">{%time_filter%}</ul>                        
+        <ul class="dropdown-menu">{%time_filter%}</ul>
         </div>
-        </div>    
+        </div>
         }}
         <div class="pull-left">
         {sort_filter.{
         {[forum_0225]}
-        <div class="forum-filter dropdown">      
+        <div class="forum-filter dropdown">
         <button class="btn btn-sm btn-default {%sort_active%} dropdown-toggle" data-toggle="dropdown">
         <strong>{%sort%}</strong>
         <span class="caret m-l-5"></span>
         </button>
-        <ul class="dropdown-menu dropdown-menu-right">{%sort_filter%}</ul>                        
+        <ul class="dropdown-menu dropdown-menu-right">{%sort_filter%}</ul>
         </div>
         }}
         {order_filter.{
-        <div class="forum-filter dropdown">      
+        <div class="forum-filter dropdown">
         <button class="btn btn-sm btn-default {%order_active%} dropdown-toggle" data-toggle="dropdown">
         <strong>{%order%}</strong><span class="caret m-l-5"></span>
         </button>
-        <ul class="dropdown-menu dropdown-menu-right">{%order_filter%}</ul>                        
+        <ul class="dropdown-menu dropdown-menu-right">{%order_filter%}</ul>
         </div>
         }}
         </div>
         {reset_filter.{
         <div class="pull-right">
         <a href="{%reset_link%}" class="btn btn-sm btn-default"><i class="fas fa-times-circle"></i> Reset</a>
-        </div>              
+        </div>
         }}
         </div>';
 
@@ -1082,7 +1082,7 @@ class Forum_Viewer {
         // An example that you can run core codes still in the template controller function
         $custom_result = dbquery("SELECT t.thread_id, t.thread_subject, t.thread_author, t.thread_postcount FROM ".DB_FORUMS." tf
         INNER JOIN ".DB_FORUM_THREADS." t ON tf.forum_id=t.forum_id
-        ".(multilang_column('FO') ? " WHERE forum_language='".LANGUAGE."' AND " : " WHERE ").groupaccess('forum_access')." and (t.thread_lastpost >=:one_week and t.thread_lastpost < :current) and t.thread_locked=:not_locked and t.thread_hidden=:not_hidden
+        ".(multilang_column('FO') ? " WHERE ".in_group('forum_language', LANGUAGE)." AND " : " WHERE ").groupaccess('forum_access')." and (t.thread_lastpost >=:one_week and t.thread_lastpost < :current) and t.thread_locked=:not_locked and t.thread_hidden=:not_hidden
         GROUP BY t.thread_id ORDER BY t.thread_postcount DESC LIMIT 10",
             [
                 ':one_week'   => TIME - (7 * 24 * 3600),

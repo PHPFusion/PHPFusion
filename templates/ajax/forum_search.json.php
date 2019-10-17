@@ -66,10 +66,10 @@ switch ($_REQUEST['section_value']) {
     default:
     case 'latest':
         $count_q = "
-        SELECT t.thread_id                  
+        SELECT t.thread_id
         FROM ".DB_FORUM_THREADS." t
-        INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id ".$response['join']."                       
-        ".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND " : "WHERE ")." t.thread_hidden='0' ".$response['search']." AND ".groupaccess('tf.forum_access')." GROUP BY t.thread_id";
+        INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id ".$response['join']."
+        ".(multilang_table("FO") ? "WHERE ".in_group('tf.forum_language', LANGUAGE)." AND " : "WHERE ")." t.thread_hidden='0' ".$response['search']." AND ".groupaccess('tf.forum_access')." GROUP BY t.thread_id";
 
         $select_q = "SELECT t.*, tf.*, ".$response['select']."
         COUNT(pv.forum_vote_user_id) 'poll_voted',
@@ -79,7 +79,7 @@ switch ($_REQUEST['section_value']) {
         ".$response['join']."
         LEFT JOIN ".DB_FORUM_POLL_VOTERS." pv ON pv.thread_id = t.thread_id AND pv.forum_vote_user_id='".$userdata['user_id']."' AND t.thread_poll=1
         LEFT JOIN ".DB_FORUM_THREAD_NOTIFY." n ON n.thread_id = t.thread_id AND n.notify_user = '".$userdata['user_id']."'
-        ".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND " : "WHERE ").$time_sql." ".groupaccess('tf.forum_access').$response['search']."
+        ".(multilang_table("FO") ? "WHERE ".in_group('tf.forum_language', LANGUAGE)." AND " : "WHERE ").$time_sql." ".groupaccess('tf.forum_access').$response['search']."
         GROUP BY t.thread_id ORDER BY t.thread_lastpost DESC
         ";
 
@@ -94,52 +94,52 @@ switch ($_REQUEST['section_value']) {
         $count_q = "SELECT t.thread_id
         FROM ".DB_FORUM_THREADS." t
         INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id
-        ".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND " : "WHERE ")." tf.forum_type='4' AND t.thread_answered='0' AND t.thread_locked='0' AND t.thread_hidden='0' ".$response['search']." AND ".groupaccess('tf.forum_access')." GROUP BY t.thread_id";
+        ".(multilang_table("FO") ? "WHERE ".in_group('tf.forum_language', LANGUAGE)." AND " : "WHERE ")." tf.forum_type='4' AND t.thread_answered='0' AND t.thread_locked='0' AND t.thread_hidden='0' ".$response['search']." AND ".groupaccess('tf.forum_access')." GROUP BY t.thread_id";
 
         $select_q = "SELECT t.thread_id, t.thread_subject, t.thread_author, t.thread_lastuser, t.thread_lastpost, t.thread_lastpostid, t.forum_id, t.thread_postcount,
-        t.thread_locked, t.thread_sticky, t.thread_poll, t.thread_postcount, t.thread_views, 
+        t.thread_locked, t.thread_sticky, t.thread_poll, t.thread_postcount, t.thread_views,
         tf.* ".$response['select']."
         FROM ".DB_FORUM_THREADS." t
         INNER JOIN ".DB_FORUMS." tf ON tf.forum_id=t.forum_id
         ".$response['join']."
-        ".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND " : "WHERE ")."  tf.forum_type='4' AND t.thread_answered='0' AND t.thread_locked='0' 
+        ".(multilang_table("FO") ? "WHERE ".in_group('tf.forum_language', LANGUAGE)." AND " : "WHERE ")."  tf.forum_type='4' AND t.thread_answered='0' AND t.thread_locked='0'
         AND t.thread_hidden='0' ".$response['search']." AND ".groupaccess('tf.forum_access')."
         GROUP BY t.thread_id
         ORDER BY t.thread_lastpost DESC";
         break;
     case 'participated':
         $count_q = "SELECT t.thread_id
-        FROM ".DB_FORUMS." tf        
-        INNER JOIN ".DB_FORUM_POSTS." p ON p.forum_id=tf.forum_id 
-        INNER JOIN ".DB_FORUM_THREADS." t ON p.thread_id=t.thread_id AND t.forum_id=tf.forum_id                       
-        ".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND " : "WHERE ")." p.post_author='".$userdata['user_id']."' AND ".groupaccess('tf.forum_access')." ".$response['search']." GROUP BY t.thread_id";
+        FROM ".DB_FORUMS." tf
+        INNER JOIN ".DB_FORUM_POSTS." p ON p.forum_id=tf.forum_id
+        INNER JOIN ".DB_FORUM_THREADS." t ON p.thread_id=t.thread_id AND t.forum_id=tf.forum_id
+        ".(multilang_table("FO") ? "WHERE ".in_group('tf.forum_language', LANGUAGE)." AND " : "WHERE ")." p.post_author='".$userdata['user_id']."' AND ".groupaccess('tf.forum_access')." ".$response['search']." GROUP BY t.thread_id";
 
         "SELECT p.forum_id, p.thread_id, p.post_id, p.thread_id 'thread_id', p.forum_id 'forum_id',
         t.thread_subject, t.thread_author, t.thread_lastuser, t.thread_lastpost, t.thread_lastpostid, t.thread_postcount,
-        t.thread_locked, t.thread_sticky, t.thread_poll, t.thread_postcount, t.thread_views,             
-        tf.*, 
+        t.thread_locked, t.thread_sticky, t.thread_poll, t.thread_postcount, t.thread_views,
+        tf.*,
         COUNT(pv.forum_vote_user_id) 'poll_voted',
         IF (n.thread_id > 0, 1 , 0) 'user_tracked'
         FROM ".DB_FORUMS." tf
         INNER JOIN ".DB_FORUM_POSTS." p ON p.forum_id=tf.forum_id
         INNER JOIN ".DB_FORUM_THREADS." t ON p.thread_id=t.thread_id AND t.forum_id=tf.forum_id
         LEFT JOIN ".DB_FORUM_POLL_VOTERS." pv ON pv.thread_id = t.thread_id AND pv.forum_vote_user_id='".$userdata['user_id']."' AND t.thread_poll=1
-        LEFT JOIN ".DB_FORUM_THREAD_NOTIFY." n ON n.thread_id = t.thread_id AND n.notify_user = '".$userdata['user_id']."'           		
-        ".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND " : "WHERE ").$time_sql." p.post_author='".$userdata['user_id']."' AND ".groupaccess('tf.forum_access').$response['search']."
+        LEFT JOIN ".DB_FORUM_THREAD_NOTIFY." n ON n.thread_id = t.thread_id AND n.notify_user = '".$userdata['user_id']."'
+        ".(multilang_table("FO") ? "WHERE ".in_group('tf.forum_language', LANGUAGE)." AND " : "WHERE ").$time_sql." p.post_author='".$userdata['user_id']."' AND ".groupaccess('tf.forum_access').$response['search']."
         GROUP BY p.thread_id ORDER BY t.thread_sticky DESC, t.thread_lastpost DESC";
         break;
 
     case 'unanswered':
-        $count_q = "SELECT t.thread_id                  
+        $count_q = "SELECT t.thread_id
         FROM ".DB_FORUM_THREADS." t
-        INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id                        
-        ".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND " : "WHERE ").$time_sql." t.thread_postcount='1' AND t.thread_locked='0' AND t.thread_hidden='0' AND ".groupaccess('tf.forum_access')." ".$response['search']." GROUP BY t.thread_id";
+        INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id
+        ".(multilang_table("FO") ? "WHERE ".in_group('tf.forum_language', LANGUAGE)." AND " : "WHERE ").$time_sql." t.thread_postcount='1' AND t.thread_locked='0' AND t.thread_hidden='0' AND ".groupaccess('tf.forum_access')." ".$response['search']." GROUP BY t.thread_id";
 
-        $select_q = "SELECT t.thread_id, t.thread_subject, t.thread_author, t.thread_lastuser, t.thread_lastpost, t.thread_lastpostid, t.forum_id, t.thread_postcount, t.thread_locked, 
+        $select_q = "SELECT t.thread_id, t.thread_subject, t.thread_author, t.thread_lastuser, t.thread_lastpost, t.thread_lastpostid, t.forum_id, t.thread_postcount, t.thread_locked,
         t.thread_sticky, t.thread_poll, t.thread_postcount, t.thread_views, tf.*
         FROM ".DB_FORUM_THREADS." t
         INNER JOIN ".DB_FORUMS." tf ON tf.forum_id=t.forum_id
-        ".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND " : "WHERE ")." t.thread_postcount='1' AND t.thread_locked='0' AND t.thread_hidden='0' AND ".groupaccess('tf.forum_access').$response['search']."
+        ".(multilang_table("FO") ? "WHERE ".in_group('tf.forum_language', LANGUAGE)." AND " : "WHERE ")." t.thread_postcount='1' AND t.thread_locked='0' AND t.thread_hidden='0' AND ".groupaccess('tf.forum_access').$response['search']."
         GROUP BY t.thread_id
         ORDER BY t.thread_lastpost DESC";
         break;

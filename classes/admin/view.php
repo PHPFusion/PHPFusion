@@ -295,7 +295,7 @@ class ForumAdminView extends ForumAdminInterface {
 
             // Set last order
             if (!$this->data['forum_order']) {
-                $this->data['forum_order'] = dbresult(dbquery("SELECT MAX(forum_order) FROM ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_cat='".$this->data['forum_cat']."'"),
+                $this->data['forum_order'] = dbresult(dbquery("SELECT MAX(forum_order) FROM ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE ".in_group('forum_language', LANGUAGE)." AND" : "WHERE")." forum_cat='".$this->data['forum_cat']."'"),
                         0) + 1;
             }
 
@@ -417,7 +417,7 @@ class ForumAdminView extends ForumAdminInterface {
                                     'forum_id',
                                     'forum_cat',
                                     $action_data['subforums_to_forum'])."'
-                ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_cat='".$action_data['forum_id']."'");
+                ".(multilang_table("FO") ? "WHERE ".in_group('forum_language', LANGUAGE)." AND" : "WHERE")." forum_cat='".$action_data['forum_id']."'");
                         } else if (!$action_data['delete_forums']) {
                             \Defender::stop();
                             addNotice('danger', self::$locale['forum_notice_na']);
@@ -854,7 +854,11 @@ class ForumAdminView extends ForumAdminInterface {
                     'hide_disabled'   => 1
                 ], DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat', $self_id).
                 form_select('forum_type', self::$locale['forum_009'], $this->data['forum_type'], ["options" => $type_opts]).
-                form_select('forum_language', self::$locale['forum_010'], $this->data['forum_language'], ["options" => $language_opts]).
+                form_select('forum_language[]', self::$locale['forum_010'], $this->data['forum_language'], [
+                    "options"   => $language_opts,
+                    'multiple'  => TRUE,
+                    'delimiter' => '.'
+                ]).
                 form_text('forum_order', self::$locale['forum_043'], $this->data['forum_order'], ['number' => 1]).
                 form_button('save_forum', $this->data['forum_id'] ? self::$locale['forum_000a'] : self::$locale['forum_000'], self::$locale['forum_000'], ['class' => 'btn btn-primary']);
             echo "</div>\n";
@@ -1137,8 +1141,8 @@ class Forum_List implements \PHPFusion\Interfaces\TableSDK {
      */
     private function getForumRoot() {
         $refs = [];
-        $forum_result = dbquery("SELECT forum_id, forum_name FROM ".DB_FORUMS." WHERE 
-        forum_cat=0 ".(multilang_column('FO') ? " AND forum_language='".LANGUAGE."'" : '')." ORDER BY forum_name ASC");
+        $forum_result = dbquery("SELECT forum_id, forum_name FROM ".DB_FORUMS." WHERE
+        forum_cat=0 ".(multilang_column('FO') ? " AND ".in_group('forum_language', LANGUAGE) : '')." ORDER BY forum_name ASC");
         if (dbrows($forum_result)) {
             while ($forum_data = dbarray($forum_result)) {
                 $refs[$forum_data['forum_id']] = $forum_data['forum_name'];

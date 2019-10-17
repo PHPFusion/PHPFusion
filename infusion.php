@@ -205,7 +205,7 @@ $inf_newtable[] = DB_FORUM_TAGS." (
     tag_description VARCHAR(250) NOT NULL DEFAULT '',
     tag_color VARCHAR(20) NOT NULL DEFAULT '',
     tag_status SMALLINT(1) NOT NULL DEFAULT '0',
-    tag_language VARCHAR(100) NOT NULL DEFAULT '',
+    tag_language VARCHAR(100) NOT NULL DEFAULT '".LANGUAGE."',
     PRIMARY KEY (tag_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 

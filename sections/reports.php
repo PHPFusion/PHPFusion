@@ -62,23 +62,23 @@ if ($rid) {
     $count_query = "SELECT f.report_id
                     FROM ".DB_FORUM_REPORTS." f
                     INNER JOIN ".DB_FORUM_POSTS." p ON f.post_id=p.post_id
-                    INNER JOIN ".DB_FORUM_THREADS." t ON p.thread_id=t.thread_id                                                        
+                    INNER JOIN ".DB_FORUM_THREADS." t ON p.thread_id=t.thread_id
                     INNER JOIN ".DB_FORUMS." tf ON p.forum_id = tf.forum_id
-                    ".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('tf.forum_access')." 
-                    AND f.report_id='".intval($rid)."'                    
+                    ".(multilang_table("FO") ? "WHERE ".in_group('tf.forum_language', LANGUAGE)." AND " : "WHERE ").groupaccess('tf.forum_access')."
+                    AND f.report_id='".intval($rid)."'
                     GROUP BY f.post_id";
-    $query = "SELECT  f.post_id 'report_post_id', t.thread_id, t.thread_subject, t.thread_author, t.thread_lastuser, t.thread_lastpost, t.thread_lastpostid, 
-            t.thread_postcount, t.thread_locked, t.thread_sticky, t.thread_poll, t.thread_postcount, t.thread_views,             
+    $query = "SELECT  f.post_id 'report_post_id', t.thread_id, t.thread_subject, t.thread_author, t.thread_lastuser, t.thread_lastpost, t.thread_lastpostid,
+            t.thread_postcount, t.thread_locked, t.thread_sticky, t.thread_poll, t.thread_postcount, t.thread_views,
             t.forum_id 'forum_id', tf.*, f.*, p.post_id, p.post_message, p.post_smileys,
             COUNT(pv.forum_vote_user_id) 'poll_voted',
             IF (n.thread_id > 0, 1 , 0) 'user_tracked'
-            FROM ".DB_FORUM_REPORTS." f                            
+            FROM ".DB_FORUM_REPORTS." f
             INNER JOIN ".DB_FORUM_POSTS." p ON f.post_id=p.post_id
-            INNER JOIN ".DB_FORUM_THREADS." t ON p.thread_id=t.thread_id                                                        
-            INNER JOIN ".DB_FORUMS." tf ON p.forum_id = tf.forum_id    
+            INNER JOIN ".DB_FORUM_THREADS." t ON p.thread_id=t.thread_id
+            INNER JOIN ".DB_FORUMS." tf ON p.forum_id = tf.forum_id
             LEFT JOIN ".DB_FORUM_POLL_VOTERS." pv ON pv.thread_id = t.thread_id AND pv.forum_vote_user_id='".$userdata['user_id']."' AND t.thread_poll=1
-            LEFT JOIN ".DB_FORUM_THREAD_NOTIFY." n ON n.thread_id = t.thread_id AND n.notify_user = '".$userdata['user_id']."'                            
-            ".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('tf.forum_access')."
+            LEFT JOIN ".DB_FORUM_THREAD_NOTIFY." n ON n.thread_id = t.thread_id AND n.notify_user = '".$userdata['user_id']."'
+            ".(multilang_table("FO") ? "WHERE ".in_group('tf.forum_language', LANGUAGE)." AND " : "WHERE ").groupaccess('tf.forum_access')."
             AND f.report_id='".intval($rid)."' ORDER BY f.report_datestamp DESC";
 } else {
     $status = isset($_GET['type']) && $_GET['type'] == "closed" ? 1 : 0;
@@ -89,23 +89,23 @@ if ($rid) {
     $count_query = "SELECT f.report_id
                     FROM ".DB_FORUM_REPORTS." f
                     INNER JOIN ".DB_FORUM_POSTS." p ON f.post_id=p.post_id
-                    INNER JOIN ".DB_FORUM_THREADS." t ON p.thread_id=t.thread_id                                                        
+                    INNER JOIN ".DB_FORUM_THREADS." t ON p.thread_id=t.thread_id
                     INNER JOIN ".DB_FORUMS." tf ON p.forum_id = tf.forum_id
-                    ".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('tf.forum_access')." 
-                    AND f.report_status='$status'                        
+                    ".(multilang_table("FO") ? "WHERE ".in_group('tf.forum_language', LANGUAGE)." AND " : "WHERE ").groupaccess('tf.forum_access')."
+                    AND f.report_status='$status'
                     GROUP BY f.post_id";
-    $query = "SELECT t.thread_id, t.thread_subject, t.thread_author, t.thread_lastuser, t.thread_lastpost, t.thread_lastpostid, 
-            t.thread_postcount, t.thread_locked, t.thread_sticky, t.thread_poll, t.thread_postcount, t.thread_views,             
+    $query = "SELECT t.thread_id, t.thread_subject, t.thread_author, t.thread_lastuser, t.thread_lastpost, t.thread_lastpostid,
+            t.thread_postcount, t.thread_locked, t.thread_sticky, t.thread_poll, t.thread_postcount, t.thread_views,
             t.forum_id 'forum_id', tf.*, f.*, p.post_id, p.post_message, p.post_smileys,
             COUNT(pv.forum_vote_user_id) 'poll_voted',
             IF (n.thread_id > 0, 1 , 0) 'user_tracked'
-            FROM ".DB_FORUM_REPORTS." f                            
+            FROM ".DB_FORUM_REPORTS." f
             INNER JOIN ".DB_FORUM_POSTS." p ON f.post_id=p.post_id
-            INNER JOIN ".DB_FORUM_THREADS." t ON p.thread_id=t.thread_id                                                        
-            INNER JOIN ".DB_FORUMS." tf ON p.forum_id = tf.forum_id    
+            INNER JOIN ".DB_FORUM_THREADS." t ON p.thread_id=t.thread_id
+            INNER JOIN ".DB_FORUMS." tf ON p.forum_id = tf.forum_id
             LEFT JOIN ".DB_FORUM_POLL_VOTERS." pv ON pv.thread_id = t.thread_id AND pv.forum_vote_user_id='".$userdata['user_id']."' AND t.thread_poll=1
-            LEFT JOIN ".DB_FORUM_THREAD_NOTIFY." n ON n.thread_id = t.thread_id AND n.notify_user = '".$userdata['user_id']."'                            
-            ".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('tf.forum_access')."
+            LEFT JOIN ".DB_FORUM_THREAD_NOTIFY." n ON n.thread_id = t.thread_id AND n.notify_user = '".$userdata['user_id']."'
+            ".(multilang_table("FO") ? "WHERE ".in_group('tf.forum_language', LANGUAGE)." AND " : "WHERE ").groupaccess('tf.forum_access')."
             AND f.report_status='$status' GROUP BY f.post_id ORDER BY f.report_datestamp DESC";
 }
 

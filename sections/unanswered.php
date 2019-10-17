@@ -23,7 +23,7 @@ $this->forum_info['link'] = FORUM;
 $this->forum_info['filter'] = \PHPFusion\Infusions\Forum\Classes\Forum_Server::filter()->get_FilterInfo();
 
 $filter = \PHPFusion\Infusions\Forum\Classes\Forum_Server::filter()->get_filterSQL();
-$base_condition = (multilang_table("FO") ? "tf.forum_language='".LANGUAGE."' AND " : "")." t.thread_postcount='1' AND t.thread_locked='0' AND t.thread_hidden='0' AND ".groupaccess('tf.forum_access');
+$base_condition = (multilang_table("FO") ? in_group('tf.forum_language', LANGUAGE)." AND " : "")." t.thread_postcount='1' AND t.thread_locked='0' AND t.thread_hidden='0' AND ".groupaccess('tf.forum_access');
 $threads = \PHPFusion\Infusions\Forum\Classes\Forum_Server::thread(FALSE)->getThreadInfo(0,
     [
         "count_query" => "SELECT t.thread_id ".$filter['select']."
@@ -34,7 +34,7 @@ $threads = \PHPFusion\Infusions\Forum\Classes\Forum_Server::thread(FALSE)->getTh
         "query" => "SELECT t.*, tf.* ".$filter['select']."
         FROM ".DB_FORUM_THREADS." t
         INNER JOIN ".DB_FORUMS." tf ON tf.forum_id=t.forum_id
-        ".$filter['join']." 
+        ".$filter['join']."
         WHERE $base_condition ".$filter['condition']."
         GROUP BY t.thread_id ".$filter['order'],
 

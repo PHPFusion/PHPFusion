@@ -56,7 +56,7 @@ class Forum_Tags extends Forum_Server {
         }
         $tag_id = get('tag_id', FILTER_VALIDATE_INT);
         if ($tag_id) {
-            $tag_query = "SELECT * FROM ".DB_FORUM_TAGS." WHERE tag_status=1 AND tag_id=:tgid ".(multilang_table("FO") ? "AND tag_language='".LANGUAGE."'" : '');
+            $tag_query = "SELECT * FROM ".DB_FORUM_TAGS." WHERE tag_status=1 AND tag_id=:tgid ".(multilang_table("FO") ? "AND ".in_group('tag_language', LANGUAGE) : '');
             $tag_result = dbquery($tag_query, [
                 ':tgid' => (int) $tag_id,
             ]);
@@ -107,7 +107,7 @@ class Forum_Tags extends Forum_Server {
 
     public function cache_tags() {
 
-        $tag_query = "SELECT * FROM ".DB_FORUM_TAGS." WHERE tag_status=:tag_status ".(multilang_table("FO") ? "AND tag_language='".LANGUAGE."'" : "")." ORDER BY tag_title ASC";
+        $tag_query = "SELECT * FROM ".DB_FORUM_TAGS." WHERE tag_status=:tag_status ".(multilang_table("FO") ? "AND ".in_group('tag_language', LANGUAGE) : "")." ORDER BY tag_title ASC";
         $tag_param = [':tag_status' => 1];
         $tag_result = dbquery($tag_query, $tag_param);
 

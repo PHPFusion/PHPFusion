@@ -28,7 +28,7 @@ $this->forum_info['link'] = FORUM;
 $this->forum_info['filter'] = \PHPFusion\Infusions\Forum\Classes\Forum_Server::filter()->get_FilterInfo();
 
 $filter = \PHPFusion\Infusions\Forum\Classes\Forum_Server::filter()->get_filterSQL();
-$base_condition = (multilang_table("FO") ? "tf.forum_language='".LANGUAGE."' AND " : "")." p.post_author='".$userdata['user_id']."' AND t.thread_locked='0' AND t.thread_hidden='0' AND ".groupaccess('tf.forum_access');
+$base_condition = (multilang_table("FO") ? in_group('tf.forum_language', LANGUAGE)." AND " : "")." p.post_author='".$userdata['user_id']."' AND t.thread_locked='0' AND t.thread_hidden='0' AND ".groupaccess('tf.forum_access');
 
 $threads = \PHPFusion\Infusions\Forum\Classes\Forum_Server::thread(FALSE)->getThreadInfo(0,
     [
@@ -38,13 +38,13 @@ $threads = \PHPFusion\Infusions\Forum\Classes\Forum_Server::thread(FALSE)->getTh
         INNER JOIN ".DB_FORUM_THREADS." t ON p.thread_id=t.thread_id AND t.forum_id=tf.forum_id
         ".$filter['join']." WHERE $base_condition ".$filter['condition']." GROUP BY t.thread_id",
 
-        "query" => "SELECT p.forum_id, p.thread_id, p.post_id, p.thread_id 'thread_id', p.forum_id 'forum_id', p.post_author, 
+        "query" => "SELECT p.forum_id, p.thread_id, p.post_id, p.thread_id 'thread_id', p.forum_id 'forum_id', p.post_author,
         t.*, tf.* ".$filter['select']."
         FROM ".DB_FORUMS." tf
         INNER JOIN ".DB_FORUM_POSTS." p ON p.forum_id=tf.forum_id
         INNER JOIN ".DB_FORUM_THREADS." t ON p.thread_id=t.thread_id AND t.forum_id=tf.forum_id
         ".$filter['join']."
-        WHERE $base_condition ".$filter['condition']." 
+        WHERE $base_condition ".$filter['condition']."
         GROUP BY t.thread_id ".$filter['order'],
 
         "debug" => FALSE,

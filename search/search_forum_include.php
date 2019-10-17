@@ -66,7 +66,7 @@ if (defined('FORUM_EXIST')) {
             FROM ".DB_FORUM_POSTS." tp
             LEFT JOIN ".DB_FORUMS." tf ON tf.forum_id = tp.forum_id
             LEFT JOIN ".DB_FORUM_THREADS." tt ON tt.thread_id = tp.thread_id
-            ".(multilang_table("FR") ? "WHERE tf.forum_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('forum_access')
+            ".(multilang_table("FR") ? "WHERE ".in_group('tf.forum_language', LANGUAGE)." AND " : "WHERE ").groupaccess('forum_access')
                 .(Search_Engine::get_param('forum_id') != 0 ? " AND tf.forum_id=".Search_Engine::get_param('forum_id') : "")."
             AND ".Search_Engine::search_conditions('forum')." GROUP BY tt.thread_id ".$date_search;
             $result = dbquery($query, Search_Engine::get_param('search_param'));
@@ -88,7 +88,7 @@ if (defined('FORUM_EXIST')) {
             LEFT JOIN ".DB_FORUM_THREADS." tt ON tp.thread_id = tt.thread_id
             LEFT JOIN ".DB_FORUMS." tf ON tp.forum_id = tf.forum_id
             LEFT JOIN ".DB_USERS." tu ON tp.post_author=tu.user_id
-            ".(multilang_table("FR") ? "WHERE tf.forum_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('forum_access').
+            ".(multilang_table("FR") ? "WHERE ".in_group('tf.forum_language', LANGUAGE)." AND " : "WHERE ").groupaccess('forum_access').
                 (Search_Engine::get_param('forum_id') != 0 ? " AND tf.forum_id=".Search_Engine::get_param('forum_id') : '')."
             AND ".Search_Engine::search_conditions('forum')." GROUP BY tt.thread_id ".$date_search.$sortby.$limit;
 
