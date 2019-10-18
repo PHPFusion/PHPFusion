@@ -24,6 +24,7 @@ if (!iMEMBER) {
     redirect(BASEDIR."index.php");
 }
 
+$inf_settings = get_settings('forum');
 $locale = fusion_get_locale();
 $userdata = fusion_get_userdata();
 
@@ -73,8 +74,15 @@ if ($rows) {
           echo "</tr>\n</thead>";
           echo "<tbody>";
                while ($data = dbarray($result)) {
+                    $thread_rowstart = '';
+                    if (!empty($data['thread_postcount']) && !empty($inf_settings['posts_per_page'])) {
+                        if ($data['thread_postcount'] > $inf_settings['posts_per_page']) {
+                            $thread_rowstart = $inf_settings['posts_per_page'] * floor($data['thread_postcount'] / $inf_settings['posts_per_page']);
+                            $thread_rowstart = "&amp;rowstart=".$thread_rowstart;
+                        }
+                    }
                     echo "<tr>\n";
-                    echo "<td><a href='".FORUM."viewthread.php?thread_id=".$data['thread_id']."'>".$data['thread_subject']."</a></td>\n";
+                    echo "<td><a href='".FORUM."viewthread.php?thread_id=".$data['thread_id'].$thread_rowstart."'>".$data['thread_subject']."</a></td>\n";
                     echo "<td>".profile_link($data['user_id1'], $data['user_name1'], $data['user_status1'])."</td>\n";
                     echo "<td>".profile_link($data['user_id2'], $data['user_name2'], $data['user_status2'])."<br />".showdate("forumdate", $data['thread_lastpost'])."</td>\n";
                     echo "<td>".($data['thread_postcount'] - 1)."</td>\n";

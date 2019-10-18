@@ -25,6 +25,7 @@ if (!iMEMBER) {
 }
 
 require_once THEMES.'templates/header.php';
+$inf_settings = get_settings('forum');
 $locale = fusion_get_locale();
 $userdata = fusion_get_userdata();
 
@@ -40,7 +41,7 @@ opentable($locale['global_042']);
 if ($rows) {
     $_GET['rowstart'] = !isset($_GET['rowstart']) || !isnum($_GET['rowstart']) ? 0 : $_GET['rowstart'];
     $result = dbquery("SELECT tp.forum_id, tp.thread_id, tp.post_id, tp.post_author, tp.post_datestamp,
-        tf.forum_name, tf.forum_access, tt.thread_subject
+        tf.forum_name, tf.forum_access, tt.thread_subject, tt.thread_postcount
         FROM ".DB_FORUM_POSTS." tp
         INNER JOIN ".DB_FORUMS." tf ON tp.forum_id=tf.forum_id
         INNER JOIN ".DB_FORUM_THREADS." tt ON tp.thread_id=tt.thread_id
@@ -55,9 +56,27 @@ if ($rows) {
             echo "</tr></thead>";
             echo "<tbody>";
                 while ($data = dbarray($result)) {
+                    $thread_rowstart = '';
+                    if (!empty($inf_settings['posts_per_page']) && $data['thread_postcount'] > $inf_settings['posts_per_page']) {
+                        $thread_posts = dbquery("SELECT p.post_id, p.forum_id, p.thread_id, p.post_author, p.post_datestamp
+                                        FROM ".DB_FORUM_POSTS." p
+                                        LEFT JOIN ".DB_FORUM_THREADS." t ON p.thread_id=t.thread_id
+                                        WHERE p.forum_id='".$data['forum_id']."' AND p.thread_id='".$data['thread_id']."' AND thread_hidden='0' AND post_hidden='0'
+                                        ORDER BY post_datestamp ASC");
+                        if (dbrows($thread_posts)) {
+                            $counter = 1;
+                            while ($thread_post_data = dbarray($thread_posts)) {
+                                if ($thread_post_data['post_id'] == $data['post_id']) {
+                                    $thread_rowstart = $inf_settings['posts_per_page'] * floor($counter / $inf_settings['posts_per_page']);
+                                    $thread_rowstart = "&amp;rowstart=".$thread_rowstart;
+                                }
+                                $counter++;
+                            }
+                        }
+                    }
                     echo "<tr>\n";
                         echo "<td>".trimlink($data['forum_name'], 30)."</td>\n";
-                        echo "<td><a href='".FORUM."viewthread.php?thread_id=".$data['thread_id']."&amp;pid=".$data['post_id']."#post_".$data['post_id']."' title='".$data['thread_subject']."'>".trimlink($data['thread_subject'], 40)."</a></td>\n";
+                        echo "<td><a href='".FORUM."viewthread.php?thread_id=".$data['thread_id'].$thread_rowstart."&amp;pid=".$data['post_id']."#post_".$data['post_id']."' title='".$data['thread_subject']."'>".trimlink($data['thread_subject'], 40)."</a></td>\n";
                         echo "<td>".showdate("forumdate", $data['post_datestamp'])."</td>\n";
                     echo "</tr>\n";
                 }
