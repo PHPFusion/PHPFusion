@@ -24,6 +24,7 @@ if (!iMEMBER) {
     redirect(BASEDIR."index.php");
 }
 require_once THEMES.'templates/header.php';
+$inf_settings = get_settings('forum');
 $locale = fusion_get_locale();
 $userdata = fusion_get_userdata();
 
@@ -57,6 +58,13 @@ if ($rows) {
             echo "</tr></thead>";
             echo "<tbody>";
                 while ($data = dbarray($result)) {
+                    $thread_rowstart = '';
+                    if (!empty($data['thread_postcount']) && !empty($inf_settings['posts_per_page'])) {
+                        if ($data['thread_postcount'] > $inf_settings['posts_per_page']) {
+                            $thread_rowstart = $inf_settings['posts_per_page'] * floor($data['thread_postcount'] / $inf_settings['posts_per_page']);
+                            $thread_rowstart = "&amp;rowstart=".$thread_rowstart;
+                        }
+                    }
                     echo "<tr>\n";
                         echo "<td>";
                         if ($data['thread_lastpost'] > $lastvisited) {
@@ -70,7 +78,7 @@ if ($rows) {
                              echo "<i class='fa fa-folder-o fa-2x'></i>";
                         }
                         echo "</td>\n";
-                        echo "<td><a href='".FORUM."viewthread.php?thread_id=".$data['thread_id']."' title='".$data['thread_subject']."'>".trimlink($data['thread_subject'], 30)."</a><br />\n".$data['forum_name']."</td>\n";
+                        echo "<td><a href='".FORUM."viewthread.php?thread_id=".$data['thread_id'].$thread_rowstart."' title='".$data['thread_subject']."'>".trimlink($data['thread_subject'], 45)."</a><br />\n".$data['forum_name']."</td>\n";
                         echo "<td>".$data['thread_views']."</td>\n";
                         echo "<td>".($data['thread_postcount'] - 1)."</td>\n";
                         echo "<td>".profile_link($data['thread_lastuser'], $data['user_name'], $data['user_status'])."<br />\n".showdate("forumdate", $data['thread_lastpost'])."</td>\n";

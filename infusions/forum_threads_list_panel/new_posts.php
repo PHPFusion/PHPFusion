@@ -27,9 +27,11 @@ if (!iMEMBER) {
 require_once THEMES.'templates/header.php';
 
 $lastvisited = defined('LASTVISITED') ? LASTVISITED : TIME;
-
+$inf_settings = get_settings('forum');
 $locale = fusion_get_locale();
+
 add_to_title($locale['global_200'].$locale['global_043']);
+
 opentable($locale['global_043']);
 $result = dbquery("SELECT tp.post_id FROM ".DB_FORUM_POSTS." tp
     LEFT JOIN ".DB_FORUMS." tf ON tp.forum_id = tf.forum_id
@@ -42,7 +44,7 @@ if ($rows) {
     $_GET['rowstart'] = !isset($_GET['rowstart']) || !isnum($_GET['rowstart']) ? 0 : $_GET['rowstart'];
 
     $result = dbquery("SELECT tp.forum_id, tp.thread_id, tp.post_id, tp.post_author, IF(tp.post_datestamp>tp.post_edittime, tp.post_datestamp, tp.post_edittime) AS post_timestamp,
-        tf.forum_name, tf.forum_access, tt.thread_subject, tu.user_id, tu.user_name, tu.user_status
+        tf.forum_name, tf.forum_access, tt.thread_subject, tt.thread_postcount, tu.user_id, tu.user_name, tu.user_status
         FROM ".DB_FORUM_POSTS." tp
         LEFT JOIN ".DB_FORUMS." tf ON tp.forum_id = tf.forum_id
         LEFT JOIN ".DB_FORUM_THREADS." tt ON tp.thread_id = tt.thread_id
@@ -60,9 +62,27 @@ if ($rows) {
         echo "<tbody>";
             $threads = dbrows($result);
             while ($data = dbarray($result)) {
+                $thread_rowstart = '';
+                if (!empty($inf_settings['posts_per_page']) && $data['thread_postcount'] > $inf_settings['posts_per_page']) {
+                    $thread_posts = dbquery("SELECT p.post_id, p.forum_id, p.thread_id, p.post_author, p.post_datestamp
+                                    FROM ".DB_FORUM_POSTS." p
+                                    LEFT JOIN ".DB_FORUM_THREADS." t ON p.thread_id=t.thread_id
+                                    WHERE p.forum_id='".$data['forum_id']."' AND p.thread_id='".$data['thread_id']."' AND thread_hidden='0' AND post_hidden='0'
+                                    ORDER BY post_datestamp ASC");
+                    if (dbrows($thread_posts)) {
+                        $counter = 1;
+                        while ($thread_post_data = dbarray($thread_posts)) {
+                            if ($thread_post_data['post_id'] == $data['post_id']) {
+                                $thread_rowstart = $inf_settings['posts_per_page'] * floor($counter / $inf_settings['posts_per_page']);
+                                $thread_rowstart = "&amp;rowstart=".$thread_rowstart;
+                            }
+                            $counter++;
+                        }
+                    }
+                }
                 echo "<tr>\n";
                 echo "<td>".$data['forum_name']."</td>\n";
-                echo "<td><a href='".INFUSIONS."forum/viewthread.php?thread_id=".$data['thread_id']."&amp;pid=".$data['post_id']."#post_".$data['post_id']."'>".$data['thread_subject']."</a></td>\n";
+                echo "<td><a href='".INFUSIONS."forum/viewthread.php?thread_id=".$data['thread_id'].$thread_rowstart."&amp;pid=".$data['post_id']."#post_".$data['post_id']."'>".trimlink($data['thread_subject'], 40)."</a></td>\n";
                 echo "<td>".profile_link($data['post_author'], $data['user_name'], $data['user_status'])."<br />\n".showdate("forumdate", $data['post_timestamp'])."</td>\n";
                 echo "</tr>\n";
             }
