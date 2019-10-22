@@ -80,6 +80,7 @@ if (empty($settings)) {
 }
 
 header('X-Powered-By: PHP-Fusion'.(isset($settings['version']) ? ' '.$settings['version'] : ''));
+header('Set-Cookie: cross-site-cookie=name; SameSite=None; Secure'); // Fix for https://www.chromestatus.com/feature/5088147346030592
 
 //ob_start("ob_gzhandler"); // Uncomment this line and comment the one below to enable output compression.
 ob_start();
