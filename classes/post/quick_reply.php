@@ -28,7 +28,7 @@ class QuickReply extends ForumServer {
         require_once FORUM."templates.php";
 
         $options_field = form_checkbox('post_smileys', $locale['forum_0169'], '', ['class' => 'm-b-0', 'reverse_label' => TRUE]);
-        if (!$user_sig) {
+        if ($user_sig) {
             $options_field .= form_checkbox('post_showsig', $locale['forum_0170'], '1', ['class' => 'm-b-0', 'reverse_label' => TRUE]);
         }
         if ($notify_options) {
