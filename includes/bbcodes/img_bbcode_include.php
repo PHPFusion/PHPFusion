@@ -23,7 +23,7 @@ if (!function_exists("img_bbcode_callback")) {
             return "<span class='forum-img-wrapper'><img src='".$matches[1].str_replace(
                     ["?", "&amp;", "&", "="],
                     "",
-                    $matches[3]).$matches[4]."' alt='".$matches[3].$matches[4]."' style='border:0px' class='img-responsive forum-img' /></span>";
+                    $matches[3]).$matches[4]."' alt='".$matches[3].$matches[4]."' style='border:0px' class='img-responsive forum-img' referrerpolicy='no-referrer' /></span>";
         } else {
             return $matches[0];
         }
