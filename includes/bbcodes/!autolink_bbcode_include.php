@@ -25,7 +25,7 @@ if (!function_exists('PHPFusion\BBCode\Autolink\run')) {
             $text = str_replace("[", " &#91;", $text);
             $text = str_replace("]", "&#93; ", $text);
         } else if ($part == 2) {
-            $text = preg_replace('^<a href="(.*?)" target="_blank" title="autolink" rel="nofollow">(.*?)</a>^si', '\1', $text);
+            $text = preg_replace('^<a href="(.*?)" target="_blank" title="autolink" rel="nofollow noopener noreferrer">(.*?)</a>^si', '\1', $text);
             $text = str_replace(" &#91;", "&#91;", $text);
             $text = str_replace("&#93; ", "&#93;", $text);
         }
@@ -60,7 +60,7 @@ if (!function_exists('PHPFusion\BBCode\Autolink\run')) {
     function callbackURLWithProtocol($matches) {
         $len = strlen($matches[2]);
 
-        return $matches[1].'<a href="'.$matches[2].'" target="_blank" title="autolink" rel="nofollow">'
+        return $matches[1].'<a href="'.$matches[2].'" target="_blank" title="autolink" rel="nofollow noopener noreferrer">'
             .trimlink($matches[2], 20)
             .($len > 30 ? substr($matches[2], $len - 10, $len) : '').'</a>';
     }
@@ -68,7 +68,7 @@ if (!function_exists('PHPFusion\BBCode\Autolink\run')) {
     function callbackURLWithoutProtocol($matches) {
         $len = strlen($matches[2]);
 
-        return $matches[1].'<a href="http://'.$matches[2].'" target="_blank" title="autolink" rel="nofollow">'
+        return $matches[1].'<a href="http://'.$matches[2].'" target="_blank" title="autolink" rel="nofollow noopener noreferrer">'
             .trimlink($matches[2], 20)
             .(strlen($matches[1]) > 30 ? substr($matches[2], $len - 10, $len) : '').'</a>';
     }
