@@ -102,6 +102,8 @@ if (isset($_GET['lang']) && isset($_GET['lang']) != "" && file_exists(LOCALE.$_G
         $result = dbquery("DELETE FROM ".DB_LANGUAGE_SESSIONS." WHERE user_datestamp<'".(time() - (86400 * 60))."'");
     }
 
+    $this_redir = "";
+
     if (FUSION_QUERY != "") {
         if (stristr(FUSION_QUERY, '?')) {
             $this_redir = str_replace("?lang=".$lang, "", FUSION_QUERY);
@@ -113,9 +115,8 @@ if (isset($_GET['lang']) && isset($_GET['lang']) != "" && file_exists(LOCALE.$_G
 
         if ($this_redir != "")
             $this_redir = "?".$this_redir;
-    } else {
-        $this_redir = "";
     }
+
     redirect(FUSION_SELF.$this_redir);
 }
 
