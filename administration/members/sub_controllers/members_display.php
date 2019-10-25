@@ -40,7 +40,7 @@ class Members_Display extends Members_Admin {
         add_to_footer("<script type='text/javascript' src='".ADMIN."members/js/user_display.js'></script>");
 
         $c_name = 'usertbl_results';
-        $default_selected = ['user_timezone', 'user_joined', 'user_lastvisit', 'user_groups'];
+        $default_selected = ['user_joined', 'user_lastvisit', 'user_groups'];
         $default_status_selected = ['0'];
         $s_name = 'usertbl_status';
         $selected_status = [];
@@ -128,7 +128,6 @@ class Members_Display extends Members_Admin {
             'user_ip'         => self::$locale['ME_423'],
             'user_ip_type'    => self::$locale['ME_424'],
             'user_groups'     => self::$locale['ME_425'],
-            'user_timezone'   => self::$locale['ME_426'],
             'user_status'     => self::$locale['ME_427']
         ];
 
@@ -232,9 +231,7 @@ class Members_Display extends Members_Admin {
                 $key = array_keys($data);
                 foreach ($key as $data_key) {
                     switch ($data_key) {
-                        case 'user_joined' :
-                            $data[$data_key] = showdate('shortdate', $data[$data_key]);
-                            break;
+                        case 'user_joined':
                         case 'user_lastvisit':
                             $data[$data_key] = showdate('shortdate', $data[$data_key]);
                             break;
