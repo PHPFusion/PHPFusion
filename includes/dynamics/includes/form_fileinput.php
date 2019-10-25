@@ -222,10 +222,10 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
             if (is_array($input_value)) {
                 $value = [];
                 foreach ($input_value as $c_value) {
-                    $value[] = (file_exists($options['upload_path'].$c_value)) ? $options['upload_path'].$c_value : $c_value;
+                    $value[] = (file_exists($options['upload_path'].$c_value) ? $options['upload_path'].$c_value : $c_value);
                 }
             } else {
-                $value = (file_exists($options['upload_path'].$input_value)) ? $options['upload_path'].$input_value : $input_value;
+                $value = (file_exists($options['upload_path'].$input_value) ? $options['upload_path'].$input_value : $input_value);
             }
             $value = json_encode($value);
         }
