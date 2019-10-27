@@ -147,7 +147,7 @@ if (!function_exists('forum_newtopic')) {
         $result = dbquery("SELECT a.forum_id, a.forum_name, b.forum_name as forum_cat_name, a.forum_post
          FROM ".DB_FORUMS." a
          LEFT JOIN ".DB_FORUMS." b ON a.forum_cat=b.forum_id
-         WHERE ".groupaccess('a.forum_access')." ".(multilang_table("FO") ? "AND a.forum_language='".LANGUAGE."' AND" : "AND")."
+         WHERE ".groupaccess('a.forum_access')." ".(multilang_table("FO") ? "AND ".in_group('a.forum_language', LANGUAGE)." AND" : "AND")."
          (a.forum_type ='2' or a.forum_type='4') AND a.forum_post < ".USER_LEVEL_PUBLIC." AND a.forum_lock !='1' ORDER BY a.forum_cat ASC, a.forum_branch ASC, a.forum_name ASC");
         $options = [];
         if (dbrows($result) > 0) {

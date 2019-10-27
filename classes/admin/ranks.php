@@ -118,7 +118,7 @@ class ForumAdminRanks extends ForumAdminInterface {
             ($this->data['rank_apply'] < USER_LEVEL_MEMBER && $this->data['rank_apply'] != $comparing_data['rank_apply'])
             && (dbcount("(rank_id)",
                 DB_FORUM_RANKS,
-                (multilang_table("FR") ? "rank_language='".LANGUAGE."' AND" : "")."
+                (multilang_table("FR") ? in_group('rank_language', LANGUAGE)." AND" : "")."
                                     rank_id!='".$this->data['rank_id']."' AND rank_apply='".$this->data['rank_apply']."'"))
         ) {
             addNotice('info', self::$locale['forum_rank_413']);
@@ -171,7 +171,13 @@ class ForumAdminRanks extends ForumAdminInterface {
 
         if (multilang_table("FR")) {
 
-            echo form_select('rank_language', self::$locale['global_ML100'], $this->data['rank_language'], ['inline' => FALSE, 'options' => $language_opts, 'placeholder' => self::$locale['choose']]);
+            echo form_select('rank_language[]', self::$locale['global_ML100'], $this->data['rank_language'], [
+                'inline'      => FALSE,
+                'options'     => $language_opts,
+                'placeholder' => self::$locale['choose'],
+                'multiple'    => TRUE,
+                'delimeter'   => '.'
+            ]);
 
         } else {
 
@@ -242,7 +248,7 @@ class Rank_Table implements TableSDK {
             'table'      => DB_FORUM_RANKS,
             'id'         => 'rank_id',
             'title'      => 'rank_title',
-            'conditions' => (multilang_table("FR") ? "rank_language='".LANGUAGE."'" : ""),
+            'conditions' => (multilang_table("FR") ? in_group('rank_language', LANGUAGE) : ""),
             'order'      => 'rank_type DESC, rank_apply DESC, rank_posts'
         ];
     }

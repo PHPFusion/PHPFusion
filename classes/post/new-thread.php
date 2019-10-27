@@ -299,7 +299,7 @@ class New_Thread extends Forum_Server {
                                 'title_col'    => 'forum_name',
                                 'id_col'       => 'forum_id',
                                 'cat_col'      => 'forum_cat',
-                                'custom_query' => "SELECT forum_id, forum_cat, forum_name FROM ".DB_FORUMS.(multilang_table('FO') ? ' WHERE forum_language="'.LANGUAGE.'"' : ''),
+                                'custom_query' => "SELECT forum_id, forum_cat, forum_name FROM ".DB_FORUMS.(multilang_table('FO') ? ' WHERE '.in_group('forum_language', LANGUAGE) : ''),
                             ]),
                         'subject_field'     => form_text('thread_subject', $locale['forum_0051'], $thread_data['thread_subject'],
                             [
@@ -366,12 +366,12 @@ class New_Thread extends Forum_Server {
                     $('#poll_form').hide();
                     if ($('#add_poll').is(':checked')) {
                     $('#poll_form').show();
-                    } 
-                    $('#add_poll').bind('click', function() {                   
+                    }
+                    $('#add_poll').bind('click', function() {
                     if ($(this).is(':checked')) {
                         $('#poll_form').slideDown();
                     } else {
-                        $('#poll_form').slideUp();        
+                        $('#poll_form').slideUp();
                     }
                     });
                     ");
@@ -396,7 +396,7 @@ class New_Thread extends Forum_Server {
                 if (!dbcount("(forum_id)", DB_FORUMS, "forum_type !='1'")) {
                     redirect(FORUM.'index.php');
                 }
-                if (!dbcount("(forum_id)", DB_FORUMS, "forum_language ='".LANGUAGE."'")) {
+                if (!dbcount("(forum_id)", DB_FORUMS, in_group('forum_language', LANGUAGE))) {
                     redirect(FORUM.'index.php');
                 }
 
@@ -554,7 +554,7 @@ class New_Thread extends Forum_Server {
 
                 //Disable all parents
                 $disabled_opts = [];
-                $disable_query = "SELECT forum_id FROM ".DB_FORUMS." WHERE forum_type=1 ".(multilang_table("FO") ? "AND forum_language='".LANGUAGE."'" : '');
+                $disable_query = "SELECT forum_id FROM ".DB_FORUMS." WHERE forum_type=1 ".(multilang_table("FO") ? "AND ".in_group('forum_language', LANGUAGE) : '');
                 $disable_query = dbquery($disable_query);
                 if (dbrows($disable_query) > 0) {
                     while ($d_forum = dbarray($disable_query)) {
@@ -588,7 +588,7 @@ class New_Thread extends Forum_Server {
                             'cat_col'      => 'forum_cat',
                             'title_col'    => 'forum_name',
                             'select_alt'   => TRUE,
-                            'custom_query' => "SELECT forum_id, forum_cat, forum_name FROM ".DB_FORUMS.(multilang_table('FO') ? ' WHERE forum_language="'.LANGUAGE.'"' : ''),
+                            'custom_query' => "SELECT forum_id, forum_cat, forum_name FROM ".DB_FORUMS.(multilang_table('FO') ? ' WHERE '.in_group('forum_language', LANGUAGE) : ''),
                         ]),
                     'subject_field'     => form_text('thread_subject', $locale['forum_0051'], $thread_data['thread_subject'], [
                         'required'    => TRUE,

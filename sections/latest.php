@@ -29,14 +29,14 @@ $threads = \PHPFusion\Infusions\Forum\Classes\Forum_Server::thread(FALSE)->getTh
         FROM ".DB_FORUM_THREADS." t
         INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id
         ".$filter['join']."
-        ".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND " : "WHERE ")." t.thread_hidden=0 AND ".groupaccess('tf.forum_access')." ".$filter['condition']." GROUP BY t.thread_id",
+        ".(multilang_table("FO") ? "WHERE ".in_group('tf.forum_language', LANGUAGE)." AND " : "WHERE ")." t.thread_hidden=0 AND ".groupaccess('tf.forum_access')." ".$filter['condition']." GROUP BY t.thread_id",
 
-        "query" => "SELECT 
+        "query" => "SELECT
         t.*, tf.* ".$filter['select']."
         FROM ".DB_FORUM_THREADS." t
         INNER JOIN ".DB_FORUMS." tf ON tf.forum_id=t.forum_id
-        ".$filter['join']."      
-        ".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND " : "WHERE ")." ".groupaccess('tf.forum_access')." ".$filter['condition']."
+        ".$filter['join']."
+        ".(multilang_table("FO") ? "WHERE ".in_group('tf.forum_language', LANGUAGE)." AND " : "WHERE ")." ".groupaccess('tf.forum_access')." ".$filter['condition']."
         GROUP BY t.thread_id ".$filter['order'],
 
         "debug" => FALSE

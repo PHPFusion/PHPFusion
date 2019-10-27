@@ -97,7 +97,7 @@ class Forum_Threads extends Forum_Server {
         ##LEFT JOIN ".DB_FORUM_POSTS." p1 ON p1.thread_id=t.thread_id AND tf.forum_id=p1.forum_id
         ##LEFT JOIN ".DB_FORUM_VOTES." v ON v.thread_id = t.thread_id AND p1.post_id = v.post_id
         ".$filter['join']."
-        WHERE ".($forum_id ? " tf.forum_id='".intval($forum_id)."' AND " : "")."t.thread_hidden='0' AND ".groupaccess('tf.forum_access').$filter['condition'].(multilang_table("FO") ? " AND tf.forum_language='".LANGUAGE."'" : '')." GROUP BY t.thread_id";
+        WHERE ".($forum_id ? " tf.forum_id='".intval($forum_id)."' AND " : "")."t.thread_hidden='0' AND ".groupaccess('tf.forum_access').$filter['condition'].(multilang_table("FO") ? " AND ".in_group('tf.forum_language', LANGUAGE) : '')." GROUP BY t.thread_id";
 
         $info['thread_query'] = $filter['query'] ?: "
             SELECT t.*, tf.*,
@@ -109,7 +109,7 @@ class Forum_Threads extends Forum_Server {
             LEFT JOIN ".DB_FORUM_POLL_VOTERS." pv ON pv.thread_id = t.thread_id AND pv.forum_vote_user_id='".$userdata['user_id']."' AND t.thread_poll=1
             LEFT JOIN ".DB_FORUM_THREAD_NOTIFY." n ON n.thread_id = t.thread_id AND n.notify_user = '".$userdata['user_id']."'
             ".$filter['join']."
-            WHERE ".($forum_id ? "t.forum_id='".intval($forum_id)."' AND " : "")." t.thread_hidden='0' AND ".groupaccess('tf.forum_access').$filter['condition'].(multilang_table("FO") ? " AND tf.forum_language='".LANGUAGE."'" : '')."
+            WHERE ".($forum_id ? "t.forum_id='".intval($forum_id)."' AND " : "")." t.thread_hidden='0' AND ".groupaccess('tf.forum_access').$filter['condition'].(multilang_table("FO") ? " AND ".in_group('tf.forum_language', LANGUAGE) : '')."
             GROUP BY t.thread_id ".$filter['order'];
 
         $count_result = dbquery($info['count_query']);
@@ -604,7 +604,7 @@ class Forum_Threads extends Forum_Server {
                     console.log(target);
                     if (target) {
                         $('#'+target).closest('.comments-form').show();
-                    }           
+                    }
                 });
                 ");
             }
@@ -987,7 +987,7 @@ class Forum_Threads extends Forum_Server {
                 LEFT JOIN ".DB_FORUM_VOTES." v ON v.thread_id = t.thread_id AND v.vote_user='".intval($user_id)."' AND v.forum_id=f.forum_id
                 LEFT JOIN ".DB_FORUM_POLL_VOTERS." p ON p.thread_id = t.thread_id AND p.forum_vote_user_id='".intval($user_id)."' AND t.thread_poll=1
                 LEFT JOIN ".DB_FORUM_THREAD_NOTIFY." n ON n.thread_id = t.thread_id AND n.notify_user = '".intval($user_id)."'
-                ".(multilang_table('FO') ? " WHERE f.forum_language='".LANGUAGE."' AND " : " WHERE ")."
+                ".(multilang_table('FO') ? " WHERE ".in_group('f.forum_language', LANGUAGE)." AND " : " WHERE ")."
                 ".groupaccess('f.forum_access')." AND t.thread_id='".intval($thread_id)."' AND t.thread_hidden='0'";
 
         $result = dbquery($query);
@@ -1210,7 +1210,7 @@ class Forum_Threads extends Forum_Server {
                     LEFT JOIN ".DB_FORUM_VOTES." v ON v.post_id=p.post_id
                     LEFT JOIN ".DB_FORUM_VOTES." v2 ON v2.post_id=p.post_id AND v2.vote_user='".$userdata['user_id']."'
                     LEFT JOIN ".DB_FORUM_ATTACHMENTS." a ON p.thread_id=a.thread_id AND a.post_id=p.post_id
-                    WHERE $post_query_cond p.post_hidden='0' $post_query_cond_2                   
+                    WHERE $post_query_cond p.post_hidden='0' $post_query_cond_2
                     GROUP by p.post_id
                     ORDER BY $sortCol LIMIT $limit, $posts_pp";
 

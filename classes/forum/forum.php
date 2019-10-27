@@ -54,9 +54,9 @@ class Forum extends Forum_Server {
                 return [
                     'attachment' => dbresult(dbquery("SELECT t.thread_id FROM ".DB_FORUM_THREADS." t INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id
                             INNER JOIN ".DB_FORUM_ATTACHMENTS." a ON a.thread_id=t.thread_id
-                            WHERE ".(multilang_table("FO") ? "tf.forum_language='".LANGUAGE."' AND " : "").groupaccess('tf.forum_access')." AND t.thread_locked=0 AND t.thread_hidden=0 GROUP BY a.thread_id"), 0),
-                    'bounty'     => dbcount("(thread_id)", DB_FORUM_THREADS." t INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id", (multilang_table("FO") ? "tf.forum_language='".LANGUAGE."' AND " : "")." t.thread_bounty=1 AND t.thread_locked=0 AND t.thread_hidden=0 AND ".groupaccess('tf.forum_access')),
-                    'poll'       => dbcount("(thread_id)", DB_FORUM_THREADS." t INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id", (multilang_table("FO") ? "tf.forum_language='".LANGUAGE."' AND " : "")." t.thread_poll=1 AND t.thread_locked=0 AND t.thread_hidden=0 AND ".groupaccess('tf.forum_access')),
+                            WHERE ".(multilang_table("FO") ? in_group('tf.forum_language', LANGUAGE)." AND " : "").groupaccess('tf.forum_access')." AND t.thread_locked=0 AND t.thread_hidden=0 GROUP BY a.thread_id"), 0),
+                    'bounty'     => dbcount("(thread_id)", DB_FORUM_THREADS." t INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id", (multilang_table("FO") ? in_group('tf.forum_language', LANGUAGE)." AND " : "")." t.thread_bounty=1 AND t.thread_locked=0 AND t.thread_hidden=0 AND ".groupaccess('tf.forum_access')),
+                    'poll'       => dbcount("(thread_id)", DB_FORUM_THREADS." t INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id", (multilang_table("FO") ? in_group('tf.forum_language', LANGUAGE)." AND " : "")." t.thread_poll=1 AND t.thread_locked=0 AND t.thread_hidden=0 AND ".groupaccess('tf.forum_access')),
                 ];
                 break;
             case 'participated':
@@ -65,23 +65,23 @@ class Forum extends Forum_Server {
                 return [
                     'attachment' => dbresult(dbquery("SELECT t.thread_id FROM ".DB_FORUM_THREADS." t INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id
                             INNER JOIN ".DB_FORUM_ATTACHMENTS." a ON a.thread_id=t.thread_id
-                            WHERE ".(multilang_table("FO") ? "tf.forum_language='".LANGUAGE."' AND " : "")." t.thread_postcount=1 AND ".groupaccess('tf.forum_access')." AND t.thread_locked=0 AND t.thread_hidden=0
+                            WHERE ".(multilang_table("FO") ? in_group('tf.forum_language', LANGUAGE)." AND " : "")." t.thread_postcount=1 AND ".groupaccess('tf.forum_access')." AND t.thread_locked=0 AND t.thread_hidden=0
                             GROUP BY a.thread_id"), 0),
-                    'bounty'     => dbcount("(thread_id)", DB_FORUM_THREADS." t INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id", (multilang_table("FO") ? "tf.forum_language='".LANGUAGE."' AND " : "")." t.thread_bounty=1 AND t.thread_postcount=1 AND t.thread_locked=0 AND t.thread_hidden=0 AND ".groupaccess('tf.forum_access')),
-                    'poll'       => dbcount("(thread_id)", DB_FORUM_THREADS." t INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id", (multilang_table("FO") ? "tf.forum_language='".LANGUAGE."' AND " : "")." t.thread_poll=1 AND t.thread_postcount=1  AND t.thread_locked=0 AND t.thread_hidden=0 AND ".groupaccess('tf.forum_access')),
+                    'bounty'     => dbcount("(thread_id)", DB_FORUM_THREADS." t INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id", (multilang_table("FO") ? in_group('tf.forum_language', LANGUAGE)." AND " : "")." t.thread_bounty=1 AND t.thread_postcount=1 AND t.thread_locked=0 AND t.thread_hidden=0 AND ".groupaccess('tf.forum_access')),
+                    'poll'       => dbcount("(thread_id)", DB_FORUM_THREADS." t INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id", (multilang_table("FO") ? in_group('tf.forum_language', LANGUAGE)." AND " : "")." t.thread_poll=1 AND t.thread_postcount=1  AND t.thread_locked=0 AND t.thread_hidden=0 AND ".groupaccess('tf.forum_access')),
                 ];
                 break;
             case 'unsolved':
                 return [
                     'attachment' => dbresult(dbquery("SELECT t.thread_id FROM ".DB_FORUM_THREADS." t INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id
                             INNER JOIN ".DB_FORUM_ATTACHMENTS." a ON a.thread_id=t.thread_id
-                            WHERE ".(multilang_table("FO") ? "tf.forum_language='".LANGUAGE."' AND " : "").groupaccess('tf.forum_access')." AND
+                            WHERE ".(multilang_table("FO") ? in_group('tf.forum_language', LANGUAGE)." AND " : "").groupaccess('tf.forum_access')." AND
                             tf.forum_type=4 AND t.thread_bounty=1 AND t.thread_answered=0 AND t.thread_locked=0 AND t.thread_hidden=0 GROUP BY a.thread_id"), 0),
 
-                    'bounty' => dbcount("(thread_id)", DB_FORUM_THREADS." t INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id", (multilang_table("FO") ? "tf.forum_language='".LANGUAGE."' AND " : "")." tf.forum_type=4
+                    'bounty' => dbcount("(thread_id)", DB_FORUM_THREADS." t INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id", (multilang_table("FO") ? in_group('tf.forum_language', LANGUAGE)." AND " : "")." tf.forum_type=4
                     AND t.thread_bounty=1 AND t.thread_answered=0 AND t.thread_locked=0 AND t.thread_hidden=0 AND ".groupaccess("tf.forum_access")),
 
-                    'poll' => dbcount("(thread_id)", DB_FORUM_THREADS." t INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id", (multilang_table("FO") ? "tf.forum_language='".LANGUAGE."' AND " : "")." tf.forum_type=4 AND t.thread_bounty=1 AND t.thread_locked=0 AND t.thread_answered=0 AND t.thread_poll=1 AND t.thread_hidden=0 AND ".groupaccess("tf.forum_access")),
+                    'poll' => dbcount("(thread_id)", DB_FORUM_THREADS." t INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id", (multilang_table("FO") ? in_group('tf.forum_language', LANGUAGE)." AND " : "")." tf.forum_type=4 AND t.thread_bounty=1 AND t.thread_locked=0 AND t.thread_answered=0 AND t.thread_poll=1 AND t.thread_hidden=0 AND ".groupaccess("tf.forum_access")),
                 ];
                 break;
         }
@@ -139,7 +139,7 @@ class Forum extends Forum_Server {
             'lastvisited'      => isset($userdata['user_lastvisit']) && isnum($userdata['user_lastvisit']) ? $userdata['user_lastvisit'] : TIME,
             'posts_per_page'   => $forum_settings['posts_per_page'],
             'threads_per_page' => $forum_settings['threads_per_page'],
-            'forum_index'      => dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat', (multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('forum_access')), // waste resources here.
+            'forum_index'      => dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat', (multilang_table("FO") ? "WHERE ".in_group('forum_language', LANGUAGE)." AND" : "WHERE")." ".groupaccess('forum_access')), // waste resources here.
             'threads'          => [],
             'section'          => $this->getForumSection(),
             'new_topic_link'   => ['link' => FORUM.'newthread.php', 'title' => $locale['forum_0057']],
@@ -275,7 +275,7 @@ class Forum extends Forum_Server {
             t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_lastuser, t.thread_subject
             FROM ".DB_FORUMS." f
             LEFT JOIN ".DB_FORUM_THREADS." t ON f.forum_lastpostid = t.thread_lastpostid
-            ".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('f.forum_access')."
+            ".(multilang_table("FO") ? "WHERE ".in_group('f.forum_language', LANGUAGE)." AND" : "WHERE")." ".groupaccess('f.forum_access')."
             ".($forum_id && $branch_id ? "AND f.forum_id=:forum_id or f.forum_cat=:forum_id01 OR f.forum_branch=:branch_id" : '')."
             GROUP BY f.forum_id ORDER BY f.forum_cat ASC, f.forum_order ASC, t.thread_lastpost DESC
         ", [
@@ -470,7 +470,7 @@ class Forum extends Forum_Server {
                     // Get Subforum data
                     if ($this->forum_info['subforum_count']) {
                         $select_column = "SELECT * FROM ".DB_FORUMS;
-                        $select_cond = (multilang_table("FO") ? " WHERE forum_language='".LANGUAGE."' AND " : " WHERE ")." ".groupaccess('forum_access')." AND forum_cat=:forum_id";
+                        $select_cond = (multilang_table("FO") ? " WHERE ".in_group('forum_language', LANGUAGE)." AND " : " WHERE ")." ".groupaccess('forum_access')." AND forum_cat=:forum_id";
                         $child_sql = $select_column.$select_cond;
                         $child_param = [
                             ':forum_id' => $this->forum_info['forum_id'],

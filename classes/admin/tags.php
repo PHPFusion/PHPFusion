@@ -89,7 +89,13 @@ class ForumAdminTags extends ForumAdminInterface {
 
         if (multilang_table("FR")) {
 
-            echo form_select('tag_language', self::$locale['forum_tag_0203'], $this->data['tag_language'], ['inline' => FALSE, 'options' => $language_opts, 'placeholder' => self::$locale['choose']]);
+            echo form_select('tag_language[]', self::$locale['forum_tag_0203'], $this->data['tag_language'], [
+                'inline'      => FALSE,
+                'options'     => $language_opts,
+                'placeholder' => self::$locale['choose'],
+                'multiple'    => TRUE,
+                'delimeter'   => '.'
+             ]);
 
         } else {
             echo form_hidden('tag_language', '', $this->data['tag_language']);
@@ -179,7 +185,7 @@ class Tags_List implements TableSDK {
             'table'      => DB_FORUM_TAGS,
             'id'         => 'tag_id',
             'title'      => 'tag_title',
-            'conditions' => (multilang_table("FO") ? "tag_language='".LANGUAGE."'" : ""),
+            'conditions' => (multilang_table("FO") ? in_group('tag_language', LANGUAGE) : ""),
             'order'      => 'tag_id DESC, tag_title ASC'
         ];
     }
