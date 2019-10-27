@@ -18,11 +18,11 @@
 defined('IN_FUSION') || exit;
 
 function attach_exists($file) {
-    return \PHPFusion\Infusions\Forum\Classes\Forum_Functions::attachmentExists($file);
+    return \PHPFusion\Infusions\Forum\Classes\ForumFunctions::attachmentExists($file);
 }
 
 function forum_rank_cache() {
-    return \PHPFusion\Infusions\Forum\Classes\Forum_Server::forumRankCache();
+    return \PHPFusion\Infusions\Forum\Classes\ForumFunctions::forumRankCache();
 }
 
 /*function show_forum_rank($posts, $level, $groups) {
@@ -30,11 +30,11 @@ function forum_rank_cache() {
 }*/
 
 function display_image($file) {
-    \PHPFusion\Infusions\Forum\Classes\Forum_Functions::displayImage($file);
+    \PHPFusion\Infusions\Forum\Classes\ForumFunctions::displayImage($file);
 }
 
 function display_image_attach($file, $width = 50, $height = 50, $rel = "") {
-    return \PHPFusion\Infusions\Forum\Classes\Forum_Functions::displayImageAttachments($file, $width, $height, $rel);
+    return \PHPFusion\Infusions\Forum\Classes\ForumFunctions::displayImageAttachments($file, $width, $height, $rel);
 }
 
 function set_forum_mods($info) {

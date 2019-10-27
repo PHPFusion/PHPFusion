@@ -37,11 +37,11 @@ class Forum_Threads extends Forum_Server {
     protected $thread_data = [];
     private $rowstart = 0;
 
-
     /**
      * @param $query
      */
     public static function set_thread_query($query) {
+
         self::$custom_query = $query;
     }
 
@@ -438,12 +438,12 @@ class Forum_Threads extends Forum_Server {
         ];
 
         $type = get('type');
-        $i = 0;
+        $counter = 0;
         foreach (array_keys($info['filters']['type']) as $key) {
-            if (($type && $key == $type) || ($i == 0 && !$type)) {
+            if (($type && $key == $type) || ($counter == 0 && !$type)) {
                 $info['filters']['type'][$key]['active'] = TRUE;
             }
-            $i++;
+            $counter++;
         }
 
         if (!empty($filter['debug']) && !$info['thread_max_rows']) {
@@ -454,11 +454,14 @@ class Forum_Threads extends Forum_Server {
     }
 
     /**
-     * Set in full extent of forum permissions and current user thread permissions
+     *  Set in full extent of forum permissions and current user thread permissions
      *
-     * @param $iMOD Whether the user is a moderator of the group
+     * @param $iMOD
      *
      * @return array
+     * @todo: Fix CC fo 70 out of maximum of 10
+     *
+     * @todo: Fix Npath complexity of 12288 of maximum of 200 for optimization
      */
     private function setThreadPermission($iMOD) {
 
@@ -501,6 +504,7 @@ class Forum_Threads extends Forum_Server {
      * @return null
      */
     public function getThreadPermission($key = NULL) {
+
         if (!empty($this->thread_info['permissions'])) {
             if ($key !== NULL) {
                 return (isset($this->thread_info['permissions'][$key]) ? $this->thread_info['permissions'][$key] : NULL);
@@ -518,6 +522,7 @@ class Forum_Threads extends Forum_Server {
      * @return array
      */
     public function getInfo() {
+
         return (array)$this->thread_info;
     }
 
@@ -947,6 +952,7 @@ class Forum_Threads extends Forum_Server {
     }
 
     private function threadSearch() {
+
         return openform('thread_search_frm', 'post').form_text('thread_search_txt', '', post('thread_search_txt'), [
                 'append_button'      => TRUE,
                 'class'              => 'm-0',
@@ -1016,6 +1022,7 @@ class Forum_Threads extends Forum_Server {
      * @return array
      */
     public static function getStats($thread_id) {
+
         list($array['post_count'], $array['last_post_id'], $array['first_post_id']) = dbarraynum(dbquery("SELECT COUNT(post_id), MAX(post_id), MIN(post_id) FROM ".DB_FORUM_POSTS." WHERE thread_id='".intval($thread_id)."' AND post_hidden='0' GROUP BY thread_id"));
 
         return (array)$array;
@@ -1126,7 +1133,6 @@ class Forum_Threads extends Forum_Server {
         }
     }
 
-
     /**
      * Get thread posts info
      *
@@ -1139,6 +1145,7 @@ class Forum_Threads extends Forum_Server {
      * @todo: optimize post reply with a subnested query to reduce post^n queries.
      */
     public function getThreadPost($thread_id = 0, $post_id = 0, array $filter = []) {
+
         global $pid;
 
         $forum_settings = self::get_forum_settings();
@@ -1533,7 +1540,6 @@ class Forum_Threads extends Forum_Server {
 
                         }
 
-
                         // if ($pdata['post_id'] == $filter['post_firstpost']) {
                         //     $quote_link = INFUSIONS."forum/viewthread.php?action=reply&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;quote=".$pdata['post_id'];
                         //     $reply_link = INFUSIONS."forum/viewthread.php?action=reply&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id'].'';
@@ -1734,6 +1740,7 @@ class Forum_Threads extends Forum_Server {
      * New Status
      */
     public function addThreadVisit() {
+
         if (iMEMBER) {
             $userdata = fusion_get_userdata();
             $thread_match = $this->thread_info['thread_id']."\|".$this->thread_info['thread']['thread_lastpost']."\|".$this->thread_info['thread']['forum_id'];
@@ -1744,6 +1751,7 @@ class Forum_Threads extends Forum_Server {
     }
 
     private function postComments($thread_id, $post_id, $post_marker) {
+
         require_once FORUM.'classes/forum_comments.php';
         require_once INCLUDES.'comments_include.php';
 
@@ -1765,6 +1773,5 @@ class Forum_Threads extends Forum_Server {
     }
 
 }
-
 
 require_once INCLUDES."bbcode_include.php";

@@ -15,12 +15,15 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
+use PHPFusion\Infusions\Forum\Classes\Threads\View_Thread;
+
 require_once __DIR__.'/../../maincore.php';
 if (!defined('FORUM_EXIST')) {
     redirect(BASEDIR."error.php?code=404");
 }
 
-$thread = new \PHPFusion\Infusions\Forum\Classes\Threads\View_Thread();
+$thread = new View_Thread();
 echo $thread->display_thread();
 
 require_once THEMES."templates/footer.php";

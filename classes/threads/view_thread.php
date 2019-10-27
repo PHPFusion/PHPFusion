@@ -18,10 +18,10 @@
 
 namespace PHPFusion\Infusions\Forum\Classes\Threads;
 
-use PHPFusion\BreadCrumbs;
 use PHPFusion\httpdownload;
 use PHPFusion\Infusions\Forum\Classes\Forum_Server;
 use PHPFusion\Infusions\Forum\Classes\Post\Edit_Post;
+
 require_once THEMES."templates/header.php";
 require_once INCLUDES."infusions_include.php";
 require_once INFUSIONS."forum/forum_include.php";
@@ -31,7 +31,8 @@ class View_Thread extends Forum_Server {
 
     private $thread_data = [];
 
-    public function __construct() {}
+    public function __construct() {
+    }
 
     public function display_thread() {
 
@@ -47,6 +48,7 @@ class View_Thread extends Forum_Server {
                 case 'editpoll':
                     // Template
                     $poll = new Forum_Poll($info);
+
                     return $poll::render_poll_form(TRUE);
                     break;
                 case 'deletepoll':
@@ -63,6 +65,7 @@ class View_Thread extends Forum_Server {
                 case 'edit':
                     // Template
                     $edit_form = new Edit_Post($this);
+
                     return $edit_form->render_edit_form();
                     break;
                 case 'reply':
@@ -75,6 +78,7 @@ class View_Thread extends Forum_Server {
                 case 'newbounty':
                     // Template
                     $bounty = new Forum_Bounty($info);
+
                     return $bounty->render_bounty_form();
                     break;
                 case 'editbounty':
@@ -141,17 +145,17 @@ class View_Thread extends Forum_Server {
             //add_to_footer("<script src='".FORUM."templates/ajax/post_preview.js'></script>");
 
             // field data
-            (int) $post_id = get('post_id', FILTER_VALIDATE_INT);
+            (int)$post_id = get('post_id', FILTER_VALIDATE_INT);
             $post_data = [
                 'post_id'         => 0,
                 'post_cat'        => $post_id && $this->thread_data['thread_firstpostid'] !== $post_id ? $post_id : 0,
                 'forum_id'        => $thread_info['thread']['forum_id'],
                 'thread_id'       => $thread_info['thread']['thread_id'],
-                'post_message'    => sanitizer('post_message', "", 'post_message'),
-                'post_showsig'    => post('post_showsig') ? 1 : 0,
-                'post_smileys'    => post('post_smileys') || post('post_message') && preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", post('post_message')) ? 1 : 0,
                 'post_author'     => $userdata['user_id'],
                 'post_datestamp'  => time(),
+                'post_message'    => '',
+                'post_showsig'    => 1,
+                'post_smileys'    => 1,
                 'post_ip'         => USER_IP,
                 'post_ip_type'    => USER_IP_TYPE,
                 'post_edituser'   => 0,
@@ -168,6 +172,9 @@ class View_Thread extends Forum_Server {
                 require_once INCLUDES."flood_include.php";
 
                 if (!flood_control("post_datestamp", DB_FORUM_POSTS, "post_author='".$userdata['user_id']."'")) { // have notice
+                    $post_data['post_message'] = sanitizer('post_message', "", 'post_message');
+                    $post_data['post_message'] = (post('post_showsig') ? 1 : 0);
+                    $post_data['post_smileys'] = (post('post_smileys') || post('post_message') && preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", post('post_message')) ? 1 : 0);
 
                     // If you merge, the datestamp on all forum, threads, post will not be updated.
                     $update_forum_lastpost = FALSE;
@@ -178,14 +185,14 @@ class View_Thread extends Forum_Server {
                         SELECT post_author FROM ".DB_FORUM_POSTS."
                         WHERE thread_id=:tid
                         ORDER BY post_id DESC LIMIT 1
-                        ", [':tid' => (int) $thread_data['thread_id']]));
+                        ", [':tid' => (int)$thread_data['thread_id']]));
 
                         // delete post checkbox...
                         // if is lastpost, update thread on the last.
 
                         if ($last_post_author['post_author'] == $post_data['post_author'] && $thread_data['forum_merge'] == TRUE) {
 
-                            $last_message = dbarray(dbquery("SELECT post_id, post_message, post_datestamp FROM ".DB_FORUM_POSTS." WHERE thread_id=:tid ORDER BY post_id DESC", [':tid'=>(int) $thread_data['thread_id']]));
+                            $last_message = dbarray(dbquery("SELECT post_id, post_message, post_datestamp FROM ".DB_FORUM_POSTS." WHERE thread_id=:tid ORDER BY post_id DESC", [':tid' => (int)$thread_data['thread_id']]));
                             $post_data['post_id'] = $last_message['post_id'];
                             $post_data['post_message'] = $last_message['post_message']."\n\n".$locale['forum_0640']." ".showdate("longdate", time()).":\n".$post_data['post_message'];
                             $post_data['post_datestamp'] = $last_message['post_datestamp'];
@@ -294,7 +301,7 @@ class View_Thread extends Forum_Server {
                 $quote_result = dbquery("SELECT a.post_message, b.user_name
                                         FROM ".DB_FORUM_POSTS." a
                                         INNER JOIN ".DB_USERS." b ON a.post_author=b.user_id
-                                        WHERE thread_id=:tid AND post_id=:quote", [':quote'=>(int)$quote, ':tid'=>(int) $thread_data['thread_id'] ]);
+                                        WHERE thread_id=:tid AND post_id=:quote", [':quote' => (int)$quote, ':tid' => (int)$thread_data['thread_id']]);
 
                 if (dbrows($quote_result) > 0) {
                     require_once INCLUDES.'bbcode_include.php';
@@ -431,6 +438,7 @@ class View_Thread extends Forum_Server {
      * Attachment download request
      */
     public static function check_download_request() {
+
         $locale = fusion_get_locale("", FORUM_LOCALE);
         if (isset($_GET['getfiles']) && isnum($_GET['getfiles'])) {
             $result = dbquery("SELECT attach_id, attach_name FROM ".DB_FORUM_ATTACHMENTS." WHERE attach_id='".$_GET['getfiles']."'");
@@ -458,6 +466,7 @@ class View_Thread extends Forum_Server {
      * @param $thread_id
      */
     private function addViewCount($thread_id) {
+
         $days_to_keep_session = 7;
         if (!isset($_SESSION['thread'][$thread_id])) {
             $_SESSION['thread'][$thread_id] = time();
@@ -478,6 +487,7 @@ class View_Thread extends Forum_Server {
      * @return array
      */
     public function get_participated_users($info) {
+
         $user = [];
         $result = dbquery("SELECT u.user_id, u.user_name, u.user_status, u.user_avatar, count(p.post_id) 'post_count'
                 FROM ".DB_FORUM_POSTS." p
@@ -493,6 +503,7 @@ class View_Thread extends Forum_Server {
     }
 
     private function set_ThreadJs() {
+
         $viewthread_js = "";
         //javascript to footer
         $highlight_js = "";
