@@ -17,3 +17,5 @@ images/thumbs/
 fusion_error_log.log
 vendor
 composer.lock
+header_includes.php
+includes/header_includes.php;

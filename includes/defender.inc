@@ -542,7 +542,17 @@ class Defender {
 
 		throw new Exception('The form sanitizer could not handle the request! (input: '.$input_name.')');
 	}
-
+	
+	public function fileSanitizer($key, $default = '', $input_name = FALSE) {
+		
+		$upload = $this->form_sanitizer($_FILES[$key], $default, $input_name);
+		if (isset($upload['error']) && $upload['error'] == 0) {
+			return $upload;
+		}
+		
+		return [];
+	}
+	
 	public function validate() {
 
 		Validation::inputName($this->field_name);
@@ -647,6 +657,13 @@ function sanitizer($value, $default = '', $input_name = false, $is_multiLang = f
 	return Defender::getInstance()->sanitizer($value, $default, $input_name, $is_multiLang);
 }
 
+
+function file_sanitizer($value, $default = '', $input_name = FALSE) {
+	
+	return defender::getInstance()->fileSanitizer($value, $default, $input_name);
+}
+
+
 /**
  * @param null   $key
  * @param int    $type
@@ -733,6 +750,29 @@ function post_array($key) {
 function server($key, $type = FILTER_DEFAULT) {
 	return filter_input(INPUT_SERVER, $key, $type);
 }
+
+
+/**
+ * @param $key
+ *
+ * @return bool
+ */
+function file_uploaded($key) {
+	if (!empty($_FILES)) {
+		if (is_array($key)) {
+			$files =& $_FILES;
+			foreach ($key as $pkey) {
+				$files =& $files[$pkey];
+			}
+			
+			return is_uploaded_file($files['tmp_name']);
+		}
+		
+		return is_uploaded_file($_FILES[$key]['tmp_name']);
+	}
+	return false;
+}
+
 
 /**
  * @param     $key
@@ -855,14 +895,10 @@ function fusion_decode($value) {
 	return Defender::decode($value);
 }
 
-/**
- * @param $value
- * @param $password
- *
- * @return string
- */
-function fusion_encrypt($value, $password) {
-	return Defender::encrypt_string($value, $password);
+
+function fusion_safe() {
+	
+	return Defender::safe();
 }
 
 /**
