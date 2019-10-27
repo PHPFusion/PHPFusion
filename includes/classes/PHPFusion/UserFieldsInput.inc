@@ -18,6 +18,8 @@
 
 namespace PHPFusion;
 
+use Defender;
+
 class UserFieldsInput {
 
     public $post_name = 'update_profile';
@@ -93,7 +95,7 @@ class UserFieldsInput {
         if ($user_hash == $this->user_data['user_password']) {
             return TRUE;
         }
-        \Defender::stop();
+        Defender::stop();
         return FALSE;
     }
 
@@ -104,7 +106,8 @@ class UserFieldsInput {
 
         $this->_method = "validate_insert";
 
-        if (isset($_POST[$this->post_name])) {
+        if (post($this->post_name)) {
+
             $data = $this->_setEmptyFields();
             // Set Core Fields.
             $data['user_name'] = $this->validateUserName();
@@ -122,9 +125,12 @@ class UserFieldsInput {
                 }
             }
             // Captcha check
-            if ($this->validation == 1)
+            if ($this->validation == 1) {
                 $this->validate_captcha();
+            }
+
             if (fusion_safe()) {
+
                 if ($this->email_verification === TRUE && $this->is_admin_panel === FALSE) {
                     $this->sendVerificationEmail();
                 } else {
@@ -248,31 +254,31 @@ class UserFieldsInput {
                     break;
                 case '1':
                     // New Password equal old password
-                    \Defender::stop();
-                    \Defender::setInputError('user_password2');
-                    \Defender::setInputError('user_password2');
-                    \Defender::setErrorText('user_password', $this->locale['u134'].$this->locale['u146'].$this->locale['u133']);
-                    \Defender::setErrorText('user_password2', $this->locale['u134'].$this->locale['u146'].$this->locale['u133']);
+                    Defender::stop();
+                    Defender::setInputError('user_password2');
+                    Defender::setInputError('user_password2');
+                    Defender::setErrorText('user_password', $this->locale['u134'].$this->locale['u146'].$this->locale['u133']);
+                    Defender::setErrorText('user_password2', $this->locale['u134'].$this->locale['u146'].$this->locale['u133']);
                     break;
                 case '2':
                     // The two new passwords are not identical
-                    \Defender::stop();
-                    \Defender::setInputError('user_password1');
-                    \Defender::setInputError('user_password2');
-                    \Defender::setErrorText('user_password1', $this->locale['u148']);
-                    \Defender::setErrorText('user_password2', $this->locale['u148']);
+                    Defender::stop();
+                    Defender::setInputError('user_password1');
+                    Defender::setInputError('user_password2');
+                    Defender::setErrorText('user_password1', $this->locale['u148']);
+                    Defender::setErrorText('user_password2', $this->locale['u148']);
                     break;
                 case '3':
                     // New password contains invalid chars / symbols
-                    \Defender::stop();
-                    \Defender::setInputError('user_password1');
-                    \Defender::setErrorText('user_password1', $this->locale['u134'].$this->locale['u142']."<br />".$this->locale['u147']);
+                    Defender::stop();
+                    Defender::setInputError('user_password1');
+                    Defender::setErrorText('user_password1', $this->locale['u134'].$this->locale['u142']."<br />".$this->locale['u147']);
                     break;
             }
         } else {
-            \Defender::stop();
-            \Defender::setInputError('user_password1');
-            \Defender::setErrorText('user_password1', $this->locale['u134'].$this->locale['u143a']);
+            Defender::stop();
+            Defender::setInputError('user_password1');
+            Defender::setErrorText('user_password1', $this->locale['u134'].$this->locale['u143a']);
         }
 
         return (array)$password;
@@ -308,31 +314,31 @@ class UserFieldsInput {
                     break;
                 case '1':
                     // New Password equal old password
-                    \Defender::stop();
-                    \Defender::setInputError('user_admin_password2');
-                    \Defender::setInputError('user_admin_password2');
-                    \Defender::setErrorText('user_admin_password', $this->locale['u134'].$this->locale['u146'].$this->locale['u133']);
-                    \Defender::setErrorText('user_admin_password2', $this->locale['u134'].$this->locale['u146'].$this->locale['u133']);
+                    Defender::stop();
+                    Defender::setInputError('user_admin_password2');
+                    Defender::setInputError('user_admin_password2');
+                    Defender::setErrorText('user_admin_password', $this->locale['u134'].$this->locale['u146'].$this->locale['u133']);
+                    Defender::setErrorText('user_admin_password2', $this->locale['u134'].$this->locale['u146'].$this->locale['u133']);
                     break;
                 case '2':
                     // The two new passwords are not identical
-                    \Defender::stop();
-                    \Defender::setInputError('user_admin_password1');
-                    \Defender::setInputError('user_admin_password2');
-                    \Defender::setErrorText('user_admin_password1', $this->locale['u148']);
-                    \Defender::setErrorText('user_admin_password2', $this->locale['u148']);
+                    Defender::stop();
+                    Defender::setInputError('user_admin_password1');
+                    Defender::setInputError('user_admin_password2');
+                    Defender::setErrorText('user_admin_password1', $this->locale['u148']);
+                    Defender::setErrorText('user_admin_password2', $this->locale['u148']);
                     break;
                 case '3':
                     // New password contains invalid chars / symbols
-                    \Defender::stop();
-                    \Defender::setInputError('user_admin_password1');
-                    \Defender::setErrorText('user_admin_password1', $this->locale['u134'].$this->locale['u142']."<br />".$this->locale['u147']);
+                    Defender::stop();
+                    Defender::setInputError('user_admin_password1');
+                    Defender::setErrorText('user_admin_password1', $this->locale['u134'].$this->locale['u142']."<br />".$this->locale['u147']);
                     break;
             }
         } else {
-            \Defender::stop();
-            \Defender::setInputError('user_admin_password1');
-            \Defender::setErrorText('user_admin_password1', $this->locale['u134'].$this->locale['u143a']);
+            Defender::stop();
+            Defender::setInputError('user_admin_password1');
+            Defender::setErrorText('user_admin_password1', $this->locale['u134'].$this->locale['u143a']);
         }
 
         return (array)$password;
@@ -403,8 +409,8 @@ class UserFieldsInput {
         $_CAPTCHA_IS_VALID = FALSE;
         include INCLUDES."captchas/".$settings['captcha']."/captcha_check.php";
         if ($_CAPTCHA_IS_VALID == FALSE) {
-            \Defender::stop();
-            \Defender::setInputError('user_captcha');
+            Defender::stop();
+            Defender::setInputError('user_captcha');
             addNotice('danger', $this->locale['u194']);
         }
     }
@@ -537,7 +543,7 @@ class UserFieldsInput {
                     ]);
                     addNotice("success", "The selected user has been blocked");
                 } else {
-                    \Defender::stop();
+                    Defender::stop();
                     addNotice("danger", "The selected user has already been blocked.");
                 }
                 redirect(FUSION_REQUEST);
@@ -555,7 +561,7 @@ class UserFieldsInput {
                     ]);
                     addNotice("success", "The selected user has been unblocked.");
                 } else {
-                    \Defender::stop();
+                    Defender::stop();
                     addNotice("danger", "The user does not exist in your block list.");
                 }
                 redirect(clean_request("", [$this->post_name."_unblock"], FALSE));
@@ -660,13 +666,13 @@ class UserFieldsInput {
             $uban = explode(',', $settings['user_name_ban']);
             if (!preg_check("/^[-0-9A-Z_@\s]+$/i", $username)) {
                 // Check for invalid characters
-                \Defender::stop();
-                \Defender::setInputError($field_name);
-                \Defender::setErrorText($field_name, $this->locale['u120']);
+                Defender::stop();
+                Defender::setInputError($field_name);
+                Defender::setErrorText($field_name, $this->locale['u120']);
             } else if (in_array($username, $uban)) {
-                \Defender::stop();
-                \Defender::setInputError($field_name);
-                \Defender::setErrorText($field_name, $this->locale['u119']);
+                Defender::stop();
+                Defender::setInputError($field_name);
+                Defender::setErrorText($field_name, $this->locale['u119']);
             } else {
                 // Make sure the username is not used already
                 $name_active = dbcount("(user_id)", DB_USERS, "user_name=:uname", [":uname" => $username,]);
@@ -677,9 +683,9 @@ class UserFieldsInput {
                     }
                     return (string)$username;
                 } else {
-                    \Defender::stop();
-                    \Defender::setInputError($field_name);
-                    \Defender::setErrorText($field_name, $this->locale['u121']);
+                    Defender::stop();
+                    Defender::setInputError($field_name);
+                    Defender::setErrorText($field_name, $this->locale['u121']);
                 }
             }
         }
@@ -770,29 +776,29 @@ class UserFieldsInput {
                             break;
                         case '1':
                             // New Password equal old password
-                            \Defender::stop();
-                            \Defender::setInputError('user_password');
-                            \Defender::setInputError('user_password1');
-                            \Defender::setErrorText('user_password', $this->locale['u134'].$this->locale['u146'].$this->locale['u133']);
-                            \Defender::setErrorText('user_password1', $this->locale['u134'].$this->locale['u146'].$this->locale['u133']);
+                            Defender::stop();
+                            Defender::setInputError('user_password');
+                            Defender::setInputError('user_password1');
+                            Defender::setErrorText('user_password', $this->locale['u134'].$this->locale['u146'].$this->locale['u133']);
+                            Defender::setErrorText('user_password1', $this->locale['u134'].$this->locale['u146'].$this->locale['u133']);
                             $notice_class = 'danger';
                             $notice_message = $this->locale['u133'];
                             break;
                         case '2':
                             // The two new passwords are not identical
-                            \Defender::stop();
-                            \Defender::setInputError('user_password1');
-                            \Defender::setInputError('user_password2');
-                            \Defender::setErrorText('user_password1', $this->locale['u148']);
-                            \Defender::setErrorText('user_password2', $this->locale['u148']);
+                            Defender::stop();
+                            Defender::setInputError('user_password1');
+                            Defender::setInputError('user_password2');
+                            Defender::setErrorText('user_password1', $this->locale['u148']);
+                            Defender::setErrorText('user_password2', $this->locale['u148']);
                             $notice_class = 'danger';
                             $notice_message = $this->locale['u148'];
                             break;
                         case '3':
                             // New password contains invalid chars / symbols
-                            \Defender::stop();
-                            \Defender::setInputError('user_password1');
-                            \Defender::setErrorText('user_password1', $this->locale['u134'].$this->locale['u142']."<br />".$this->locale['u147']);
+                            Defender::stop();
+                            Defender::setInputError('user_password1');
+                            Defender::setErrorText('user_password1', $this->locale['u134'].$this->locale['u142']."<br />".$this->locale['u147']);
                             $notice_class = 'danger';
                             $notice_message = $this->locale['u134'].$this->locale['u142'].$this->locale['u147'];
                             break;
@@ -801,9 +807,9 @@ class UserFieldsInput {
 
             } else {
 
-                \Defender::stop();
-                \Defender::setInputError('user_password');
-                \Defender::setErrorText('user_password', $this->locale['u149']);
+                Defender::stop();
+                Defender::setInputError('user_password');
+                Defender::setErrorText('user_password', $this->locale['u149']);
                 $notice_class = 'danger';
                 $notice_message = $this->locale['u149'];
             }
@@ -898,37 +904,37 @@ class UserFieldsInput {
                         break;
                     case '1':
                         // new password is old password
-                        \Defender::stop();
-                        \Defender::setInputError('user_admin_password');
-                        \Defender::setInputError('user_admin_password1');
-                        \Defender::setErrorText('user_admin_password', $this->locale['u144'].$this->locale['u146'].$this->locale['u133']);
-                        \Defender::setErrorText('user_admin_password1', $this->locale['u144'].$this->locale['u146'].$this->locale['u133']);
+                        Defender::stop();
+                        Defender::setInputError('user_admin_password');
+                        Defender::setInputError('user_admin_password1');
+                        Defender::setErrorText('user_admin_password', $this->locale['u144'].$this->locale['u146'].$this->locale['u133']);
+                        Defender::setErrorText('user_admin_password1', $this->locale['u144'].$this->locale['u146'].$this->locale['u133']);
                         $notice_class = "danger";
                         $notice_message = $this->locale['u144'].$this->locale['u146'].$this->locale['u133'];
                         break;
                     case '2':
                         // The two new passwords are not identical
-                        \Defender::stop();
-                        \Defender::setInputError('user_admin_password1');
-                        \Defender::setInputError('user_admin_password2');
-                        \Defender::setErrorText('user_admin_password1', $this->locale['u144'].$this->locale['u148a']);
-                        \Defender::setErrorText('user_admin_password2', $this->locale['u144'].$this->locale['u148a']);
+                        Defender::stop();
+                        Defender::setInputError('user_admin_password1');
+                        Defender::setInputError('user_admin_password2');
+                        Defender::setErrorText('user_admin_password1', $this->locale['u144'].$this->locale['u148a']);
+                        Defender::setErrorText('user_admin_password2', $this->locale['u144'].$this->locale['u148a']);
                         $notice_class = "danger";
                         $notice_message = $this->locale['u144'].$this->locale['u148a'];
                         break;
                     case '3':
                         // New password contains invalid chars / symbols
-                        \Defender::stop();
-                        \Defender::setInputError('user_admin_password1');
-                        \Defender::setErrorText('user_admin_password1', $this->locale['u144'].$this->locale['u142']."<br />".$this->locale['u147']);
+                        Defender::stop();
+                        Defender::setInputError('user_admin_password1');
+                        Defender::setErrorText('user_admin_password1', $this->locale['u144'].$this->locale['u142']."<br />".$this->locale['u147']);
                         $notice_class = "danger";
                         $notice_message = $this->locale['u144'].$this->locale['u142'].$this->locale['u147'];
                         break;
                 }
             } else {
-                \Defender::stop();
-                \Defender::setInputError('user_admin_password');
-                \Defender::setErrorText('user_admin_password', $this->locale['u149a']);
+                Defender::stop();
+                Defender::setInputError('user_admin_password');
+                Defender::setErrorText('user_admin_password', $this->locale['u149a']);
                 $notice_class = "danger";
                 $notice_message = $this->locale['u149a'];
             }
@@ -978,9 +984,9 @@ class UserFieldsInput {
             if (iADMIN && checkrights('M')) {
                 $require_valid_password = $this->user_data['user_admin_password'] ? TRUE : FALSE;
                 if (!$require_valid_password) {
-                    \Defender::stop();
-                    \Defender::setInputError('user_admin_password');
-                    \Defender::setErrorText('user_admin_password', $this->locale['u149a']);
+                    Defender::stop();
+                    Defender::setInputError('user_admin_password');
+                    Defender::setErrorText('user_admin_password', $this->locale['u149a']);
                     $notice_class = "danger";
                     $notice_message = $this->locale['u149a'];
                     addNotice($notice_class, $notice_message);
@@ -1008,8 +1014,8 @@ class UserFieldsInput {
                 }
                 if (!$is_valid_password) {
                     if (post('account_close_hash')) {
-                        \Defender::setInputError('user_email_hash');
-                        \Defender::setErrorText('user_email_hash', 'The password you given does not match your current account password');
+                        Defender::setInputError('user_email_hash');
+                        Defender::setErrorText('user_email_hash', 'The password you given does not match your current account password');
                     }
                     $modal = openmodal('emailchange_modal', "Change of Primary Email address", ['static' => TRUE]);
                     $modal .= "<div>As a security measure, please enter your current account password to change your email address.</div><hr/>";
@@ -1029,9 +1035,9 @@ class UserFieldsInput {
                         ":email like replace(if (blacklist_email like '%@%' or blacklist_email like '%\\%%', blacklist_email, concat('%@', blacklist_email)), '_', '\\_')",
                         [':email' => $new_user_email])) {
                         // this email blacklisted.
-                        \Defender::stop();
-                        \Defender::setInputError('user_email');
-                        \Defender::setErrorText('user_email', $this->locale['u124']);
+                        Defender::stop();
+                        Defender::setInputError('user_email');
+                        Defender::setErrorText('user_email', $this->locale['u124']);
                     } else {
                         $email_active = dbcount("(user_id)", DB_USERS, "user_email=:u_email", [':u_email' => $new_user_email]);
                         $email_inactive = dbcount("(user_code)", DB_NEW_USERS, "user_email=:u_email", [':u_email' => $new_user_email]);
@@ -1045,16 +1051,16 @@ class UserFieldsInput {
                             }
                         } else {
                             // email taken
-                            \Defender::stop();
-                            \Defender::setInputError('user_email');
-                            \Defender::setErrorText('user_email', $this->locale['u125']);
+                            Defender::stop();
+                            Defender::setInputError('user_email');
+                            Defender::setErrorText('user_email', $this->locale['u125']);
                         }
                     }
                 } else {
                     // invalid email address
-                    \Defender::stop();
-                    \Defender::setInputError('user_email');
-                    \Defender::setErrorText('user_email', $this->locale['u123']); // once refresh, text lost.
+                    Defender::stop();
+                    Defender::setInputError('user_email');
+                    Defender::setErrorText('user_email', $this->locale['u123']); // once refresh, text lost.
                 }
             }
         } // end of email change
@@ -1094,8 +1100,8 @@ class UserFieldsInput {
             }
             if (!$is_valid_password) {
                 if (isset($_POST['account_close_hash'])) {
-                    \Defender::setInputError('account_close_hash');
-                    \Defender::setErrorText('account_close_hash', 'The password you given does not match your current account password');
+                    Defender::setInputError('account_close_hash');
+                    Defender::setErrorText('account_close_hash', 'The password you given does not match your current account password');
                 }
                 $modal = openmodal('userclose_modal', "Closing of your user account", ['static' => TRUE]);
                 $modal .= "<div>As a security measure, please enter your current account password to close your user account.</div><hr/>";

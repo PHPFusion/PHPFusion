@@ -2,8 +2,10 @@
 
 namespace PHPFusion\UserFields;
 
+use PHPFusion\UserFields;
 use PHPFusion\UserFieldsInput;
 use PHPFusion\UserFieldsQuantum;
+use ReflectionException;
 
 class Public_Profile extends UserFieldsQuantum {
 
@@ -19,8 +21,10 @@ class Public_Profile extends UserFieldsQuantum {
     public $is_admin_panel = FALSE;
     private $locale;
     private $section_id = 0;
+    private $userFieldClass = NULL;
 
-    public function __construct() {
+    public function __construct(UserFields $userFieldClass) {
+        $this->userFieldClass = $userFieldClass;
         $this->locale = fusion_get_locale();
     }
 
@@ -63,17 +67,18 @@ class Public_Profile extends UserFieldsQuantum {
 
     /**
      * Get profile input form fields
+     *
      * @return array
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function inputInfo() {
 
         $locale = fusion_get_locale();
         $info = [
-            'section'    => $this->getCategory(),
+            'section' => $this->getCategory(),
         ];
         $info['section_id'] = get('section', FILTER_VALIDATE_INT);
-        if (! $info['section_id']) {
+        if (!$info['section_id']) {
             $info['section_id'] = current(array_keys($info['section']));
         }
         $info['section_title'] = $info['section'][$info['section_id']]['name'];
@@ -195,7 +200,7 @@ class Public_Profile extends UserFieldsQuantum {
      * Edit profile change avatar form
      *
      * @return string
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     private function userAvatarStudio() {
         $settings = fusion_get_settings();
@@ -418,7 +423,7 @@ class Public_Profile extends UserFieldsQuantum {
      * Display Captcha
      *
      * @return string
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     private function renderValidation() {
         $locale = fusion_get_locale();
@@ -427,17 +432,18 @@ class Public_Profile extends UserFieldsQuantum {
         $html = "<div class='form-group m-t-20'>\n";
 
         if (!$_CAPTCHA_HIDE_INPUT) {
-            $html .= "<label for='captcha_code' class='control-label p-0 ".($this->inline_field ? grid_column_size(100, 100, 80, 20) : grid_column_size(100))."'>\n".$this->locale['u190']." <span class='required'>*</span></label>\n";
+            $html .= "<label for='captcha_code' class='control-label p-0 ".($this->inline_field ? grid_column_size(100, 100, 80, 20) : grid_column_size(100, 100, 100, 100))."'>\n".$this->locale['u190']." <span class='required'>*</span></label>\n";
         }
 
-        $html .= "<div class='".($this->inline_field ? grid_column_size(100,100,80,80) : grid_column_size(100))."'>";
+        $html .= "<div class='".($this->inline_field ? grid_column_size(100, 100, 80, 80) : grid_column_size(100, 100, 100, 100))."'>";
 
         $html .= display_captcha([
-            'form_name'  => 'userfieldsform',
+            'form_name'  => $this->userFieldClass->form_name,
             'captcha_id' => 'captcha_userfields',
             'input_id'   => 'captcha_code_userfields',
             'image_id'   => 'captcha_image_userfields'
         ]);
+
         if (!$_CAPTCHA_HIDE_INPUT) {
             $html .= form_text('captcha_code', '', '', [
                 'inline'           => $this->inline_field,

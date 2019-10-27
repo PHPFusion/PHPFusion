@@ -18,10 +18,12 @@
 +--------------------------------------------------------*/
 namespace PHPFusion;
 
+use Exception;
 use PHPFusion\UserFields\Account_Profile;
 use PHPFusion\UserFields\Profile_Activity;
 use PHPFusion\UserFields\Profile_Groups;
 use PHPFusion\UserFields\Public_Profile;
+use ReflectionException;
 
 /**
  * Class UserFields
@@ -166,7 +168,7 @@ class UserFields extends UserFieldsQuantum {
             'id'    => $key,
             'title' => $title,
             'class' => $this->current_output_page == $key ? $active_class : '',
-            'file' => $file,
+            'file'  => $file,
         ];
     }
 
@@ -178,8 +180,8 @@ class UserFields extends UserFieldsQuantum {
         if (empty(self::$pages)) {
             $_ref = get('ref');
             $profile_page = [
-                'pu_profile' => ['title'  => 'Public Profile'],
-                'se_profile' => ['title'  => 'Account Information']
+                'pu_profile' => ['title' => 'Public Profile'],
+                'se_profile' => ['title' => 'Account Information']
             ];
             // if ($this->is_admin_panel) {
             //     $profile_page = [
@@ -274,7 +276,7 @@ class UserFields extends UserFieldsQuantum {
      * Input data for Edit Profile
      *
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     private function getInputInfo() {
         $this->method = 'input';
@@ -323,7 +325,9 @@ class UserFields extends UserFieldsQuantum {
         if ($this->registration) {
             // registration
             // bound in page 1 only.
-            $class = new Public_Profile();
+            $class = new Public_Profile($this);
+
+            // Can remove all these, as we do DI approach
             $class->user_data = $this->user_data;
             $class->post_name = $this->post_name;
             $class->options = $this->options;
@@ -449,12 +453,12 @@ class UserFields extends UserFieldsQuantum {
     }
 
 
-
     /**
      * Show Registration Form
      * Registration    user-register-form
+     *
      * @return string|void
-     * @throws \Exception
+     * @throws Exception
      */
     public function registration() {
         $this->getInputInfo();
@@ -464,7 +468,8 @@ class UserFields extends UserFieldsQuantum {
     /**
      * Show Edit Profile
      * Edit Profile    user-profile-form
-     * @throws \ReflectionException
+     *
+     * @throws ReflectionException
      */
     public function editProfile() {
         $this->getInputInfo();
