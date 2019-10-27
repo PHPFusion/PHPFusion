@@ -1345,13 +1345,13 @@ class Tables {
 
                             $value = $avatar.profile_link($user['user_id'], $user['user_name'], $user['user_status']);
 
-                        } else if ($col_data['options']) {
-                            /*
-                             * array("options" => array(1=>"Yes", 0=>"No"))
-                             */
-                            $value = $value ?: 0;
-                            $value = $col_data['options'][$value];
-
+                        } else if (!empty($col_data['options'])) {
+	                        
+                        	$option = $col_data['options'];
+                        	if (isset($option[$value])) {
+		                        $value = $option[$value];
+	                        }
+                        	
                         } else if ($col_data['count']) {
                             /*
                              * array("count" => array("field"=>"column_name", "table" => DB_PREFIX, "conditions" => "column_name=matches"))
