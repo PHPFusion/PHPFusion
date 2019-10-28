@@ -31,10 +31,11 @@ if (!function_exists("display_maintenance")) {
         echo "<div class='m-t-20 jumbotron text-center'>\n";
         echo "<img class='img-responsive center-x' src='".fusion_get_settings("sitebanner")."' alt='".fusion_get_settings("sitename")."'/>\n";
         echo "<h1><strong>".fusion_get_settings("sitename")."</strong></h1>\n";
-        $message = fusion_get_settings("maintenance_message");
-        if (!empty($message)) {
-            echo "<h1 class='m-b-20'>".stripslashes(nl2br(fusion_get_settings("maintenance_message")))."</h1>\n";
+
+        if (!empty($settings['maintenance_message'])) {
+            echo parse_textarea($settings['maintenance_message'], TRUE, FALSE, TRUE, IMAGES, TRUE);
         }
+
         if (!empty($info)) {
             echo "<hr/>\n";
             echo "<div class='well clearfix m-t-20 p-20 p-b-0'>\n";

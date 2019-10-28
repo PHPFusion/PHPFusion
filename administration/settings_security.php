@@ -50,17 +50,17 @@ if (post('savesettings')) {
     // Save settings after validation
     $inputData = [
         'captcha'               => sanitizer('captcha', '', 'captcha'),
-        'privacy_policy'        => form_sanitizer($_POST['privacy_policy'], '', 'privacy_policy', TRUE),
+        'privacy_policy'        => sanitizer('privacy_policy', '', 'privacy_policy', TRUE),
         'allow_php_exe'         => sanitizer('allow_php_exe', 0, 'allow_php_exe'),
         'flood_interval'        => sanitizer('flood_interval', 15, 'flood_interval'),
         'flood_autoban'         => sanitizer('flood_autoban', 0, 'flood_autoban'),
         'maintenance_level'     => sanitizer('maintenance_level', 102, 'maintenance_level'),
         'maintenance'           => sanitizer('maintenance', 0, 'maintenance'),
-        'maintenance_message'   => addslash(descript(post('maintenance_message'))),
+        'maintenance_message'   => descript(addslashes(post('maintenance_message'))),
         'bad_words_enabled'     => sanitizer('bad_words_enabled', 0, 'bad_words_enabled'),
         'bad_words'             => stripinput(post('bad_words')),
         'bad_word_replace'      => sanitizer('bad_word_replace', '', 'bad_word_replace'),
-        'user_name_ban'         => sanitizer('user_name_ban', '', 'user_name_ban'),
+        'user_name_ban'         => stripinput('user_name_ban'),
         'database_sessions'     => sanitizer('database_sessions', '', 'database_sessions'),
         'form_tokens'           => sanitizer('form_tokens', '', 'form_tokens'),
         'gateway'               => sanitizer('gateway', 0, 'gateway'),
@@ -157,7 +157,7 @@ echo form_select('maintenance', $locale['657'], $settings['maintenance'], [
     'width'       => '100%',
     'inner_width' => '100%'
 ]);
-echo form_textarea('maintenance_message', $locale['658'], $settings['maintenance_message'], ['autosize' => TRUE]);
+echo form_textarea('maintenance_message', $locale['658'], stripslashes($settings['maintenance_message']), ['autosize' => TRUE, 'html' => !fusion_get_settings('tinymce_enabled') ? TRUE : FALSE]);
 closeside();
 openside('');
 echo \PHPFusion\UserFieldsQuantum::quantum_multilocale_fields('privacy_policy', $locale['820'], $settings['privacy_policy'], [
