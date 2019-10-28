@@ -214,12 +214,12 @@ function check_admin_pass($password) {
  * @param      $location
  * @param bool $delay
  * @param bool $script
- * @param bool $http_response_code
+ * @param int  $code
  *
  * @define STOP_REDIRECT to prevent redirection
  */
-function redirect($location, $delay = FALSE, $script = FALSE, $http_response_code = FALSE) {
-     //define('STOP_REDIRECT', true);
+function redirect($location, $delay = FALSE, $script = FALSE, $code = 200) {
+    //define('STOP_REDIRECT', true);
 
     if (!defined('STOP_REDIRECT')) {
         if (isnum($delay)) {
@@ -227,7 +227,8 @@ function redirect($location, $delay = FALSE, $script = FALSE, $http_response_cod
             add_to_head($ref);
         } else {
             if ($script == FALSE && !headers_sent()) {
-                header("Location: ".str_replace("&amp;", "&", $location), TRUE, $http_response_code);
+                set_status_header($code);
+                header("Location: ".str_replace("&amp;", "&", $location));
                 exit;
             } else {
                 echo "<script type='text/javascript'>document.location.href='".str_replace("&amp;", "&", $location)."'</script>\n";
@@ -238,6 +239,85 @@ function redirect($location, $delay = FALSE, $script = FALSE, $http_response_cod
         debug_print_backtrace();
         echo "redirected to ".$location;
     }
+}
+
+/**
+ * Set HTTP status header
+ *
+ * @param int $code status header code
+ *
+ * @return bool      whether header was sent
+ */
+function set_status_header($code = 200) {
+    if (headers_sent()) {
+        return FALSE;
+    }
+
+    $protocol = $_SERVER['SERVER_PROTOCOL'];
+
+    if ('HTTP/1.1' != $protocol && 'HTTP/1.0' != $protocol) {
+        $protocol = 'HTTP/1.0';
+    }
+
+    $desc = [
+        100 => 'Continue',
+        101 => 'Switching Protocols',
+        102 => 'Processing',
+        200 => 'OK',
+        201 => 'Created',
+        202 => 'Accepted',
+        203 => 'Non-Authoritative Information',
+        204 => 'No Content',
+        205 => 'Reset Content',
+        206 => 'Partial Content',
+        207 => 'Multi-Status',
+        226 => 'IM Used',
+        300 => 'Multiple Choices',
+        301 => 'Moved Permanently',
+        302 => 'Found',
+        303 => 'See Other',
+        304 => 'Not Modified',
+        305 => 'Use Proxy',
+        306 => 'Reserved',
+        307 => 'Temporary Redirect',
+        400 => 'Bad Request',
+        401 => 'Unauthorized',
+        402 => 'Payment Required',
+        403 => 'Forbidden',
+        404 => 'Not Found',
+        405 => 'Method Not Allowed',
+        406 => 'Not Acceptable',
+        407 => 'Proxy Authentication Required',
+        408 => 'Request Timeout',
+        409 => 'Conflict',
+        410 => 'Gone',
+        411 => 'Length Required',
+        412 => 'Precondition Failed',
+        413 => 'Request Entity Too Large',
+        414 => 'Request-URI Too Long',
+        415 => 'Unsupported Media Type',
+        416 => 'Requested Range Not Satisfiable',
+        417 => 'Expectation Failed',
+        422 => 'Unprocessable Entity',
+        423 => 'Locked',
+        424 => 'Failed Dependency',
+        426 => 'Upgrade Required',
+        500 => 'Internal Server Error',
+        501 => 'Not Implemented',
+        502 => 'Bad Gateway',
+        503 => 'Service Unavailable',
+        504 => 'Gateway Timeout',
+        505 => 'HTTP Version Not Supported',
+        506 => 'Variant Also Negotiates',
+        507 => 'Insufficient Storage',
+        510 => 'Not Extended'
+    ];
+
+    $desc = isset($desc[$code]) ? $desc[$code] : '';
+
+    header("$protocol $code $desc");
+
+    return TRUE;
 }
 
 /**
@@ -413,6 +493,7 @@ function trim_text($str, $length = FALSE) {
 
 /**
  * Normalize characters.
+ *
  * @param $string
  *
  * @return string
@@ -423,6 +504,7 @@ function normalize($string) {
 
 /**
  * Generate random string numbers
+ *
  * @param int $length
  *
  * @return string
@@ -1515,7 +1597,7 @@ function makepagepointer(int $start = 0, int $count = 0, int $total = 0, int $ra
         if (!$key) {
             $key = 1;
         }
-        $row_key = ($key-1) * $count; // indicated rowstart
+        $row_key = ($key - 1) * $count; // indicated rowstart
         $last_row_key = $idx_lst * $count; // last max possible.
         if ($row_key > $last_row_key) {
             $row_key = $last_row_key;
@@ -1523,8 +1605,8 @@ function makepagepointer(int $start = 0, int $count = 0, int $total = 0, int $ra
         redirect($link.$getname.'='.$row_key);
     }
 
-    return '<nav><small>'.$locale['global_092'].openform('pagepointer_frm', 'post', FORM_REQUEST, ['class'=>'display-inline-block m-0']).
-        form_text($getname, '', $cur_page, ['width'=>'30px', 'class'=>'m-0', 'inner_class'=>'input-sm']).
+    return '<nav><small>'.$locale['global_092'].openform('pagepointer_frm', 'post', FORM_REQUEST, ['class' => 'display-inline-block m-0']).
+        form_text($getname, '', $cur_page, ['width' => '30px', 'class' => 'm-0', 'inner_class' => 'input-sm']).
         closeform().$locale['global_093'].$pg_cnt.'</small>'.$res.'</span></nav>';
 
 }
@@ -1777,6 +1859,7 @@ function profile_link($user_id, $user_name, $user_status, $class = "profile-link
 
 /**
  *  Variable dump printer for debugging purposes
+ *
  * @param        $array
  * @param bool   $modal
  * @param bool   $print
@@ -1889,6 +1972,7 @@ function fusion_get_locale($key = NULL, $include_file = '') {
 
 /**
  * Returns the current language on serialized locale string
+ *
  * @param $string
  *
  * @return string
@@ -1964,6 +2048,7 @@ function fusion_get_aidlink() {
 
 /**
  * Get form tokens
+ *
  * @param     $form_id
  * @param int $max_tokens
  *
@@ -1975,6 +2060,7 @@ function fusion_get_token($form_id, $max_tokens = 5) {
 
 /**
  * Verify the token
+ *
  * @param string $token_ring
  * @param string $key
  *
@@ -2112,6 +2198,7 @@ function fusion_get_language_switch() {
 
 /**
  * Language switcher function
+ *
  * @param bool $icon
  *
  * @throws ReflectionException

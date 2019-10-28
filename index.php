@@ -27,21 +27,21 @@ if ($settings['site_seo'] && !isset($_GET['aid'])) {
     $filepath = $router->getFilePath();
 
     if (empty($filepath) && filter_var(PERMALINK_CURRENT_PATH, FILTER_VALIDATE_URL)) {
-        redirect(PERMALINK_CURRENT_PATH);
+        redirect(PERMALINK_CURRENT_PATH, FALSE, FALSE, 301);
     } else {
         if (isset($_GET['lang']) && valid_language($_GET['lang'])) {
             $lang = stripinput($_GET['lang']);
             set_language($lang);
             $redirectPath = clean_request("", ["lang"], FALSE);
-            redirect($redirectPath);
+            redirect($redirectPath, FALSE, FALSE, 301);
         } else {
             if (isset($_GET['logout']) && $_GET['logout'] == "yes") {
                 $userdata = Authenticate::logOut();
-                redirect(BASEDIR.$settings['opening_page']);
+                redirect(BASEDIR.$settings['opening_page'], FALSE, FALSE, 301);
             } else {
                 if (!empty($filepath)) {
                     if ($filepath == "index.php") {
-                        redirect(BASEDIR.$settings['opening_page']);
+                        redirect(BASEDIR.$settings['opening_page'], FALSE, FALSE, 301);
                     } else {
                         require_once $filepath;
                     }
@@ -50,7 +50,7 @@ if ($settings['site_seo'] && !isset($_GET['aid'])) {
                         or $_SERVER['REQUEST_URI'] == $settings['site_path']."index.php"
                         or $_SERVER['REQUEST_URI'] == $settings['site_path']
                     ) {
-                        redirect(BASEDIR.$settings['opening_page']);
+                        redirect(BASEDIR.$settings['opening_page'], FALSE, FALSE, 301);
                     } else {
                         $router->setPathtofile("error.php");
                         $params = [
@@ -66,5 +66,5 @@ if ($settings['site_seo'] && !isset($_GET['aid'])) {
         }
     }
 } else {
-    redirect(BASEDIR.$settings['opening_page']);
+    redirect(BASEDIR.$settings['opening_page'], FALSE, FALSE, 301);
 }

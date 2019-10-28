@@ -26,7 +26,13 @@ if (!empty('CDN')) {
     $_includes = CDN.'includes/';
 }
 
-header("Content-Type: text/html; charset=".$locale['charset']."");
+if (!headers_sent()) {
+    header('Expires: Thu, 23 Mar 1972 07:00:00 GMT');
+    header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+    header('Cache-Control: no-cache, must-revalidate, max-age=0');
+    header('Pragma: no-cache');
+    header("Content-Type: text/html; charset=".$locale['charset']);
+}
 
 echo "<!DOCTYPE html>\n";
 echo "<html lang='".$locale['xml_lang']."' dir='".$locale['text-direction']."'".($settings['create_og_tags'] ? " prefix='og: http://ogp.me/ns#'" : "").">\n";

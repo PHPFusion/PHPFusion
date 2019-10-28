@@ -59,6 +59,13 @@ function write_htaccess() {
     $htc .= "    deny from all".PHP_EOL;
     $htc .= "</Files>".PHP_EOL.PHP_EOL;
 
+    // Error pages
+    $htc .= "ErrorDocument 400 ".$site_path."error.php?code=400".PHP_EOL;
+    $htc .= "ErrorDocument 401 ".$site_path."error.php?code=401".PHP_EOL;
+    $htc .= "ErrorDocument 403 ".$site_path."error.php?code=403".PHP_EOL;
+    $htc .= "ErrorDocument 404 ".$site_path."error.php?code=404".PHP_EOL;
+    $htc .= "ErrorDocument 500 ".$site_path."error.php?code=500".PHP_EOL;
+
     $htc .= "# Cache images for 7 days to soften network load".PHP_EOL;
     $htc .= "<IfModule mod_headers.c>".PHP_EOL;
     $htc .= '    <filesMatch "\\.(ico|pdf|flv|jpg|jpeg|png|gif|swf|ttf|otf|woff|woff2|eot|svg)$">'.PHP_EOL;
@@ -120,13 +127,6 @@ function write_htaccess() {
         $htc .= "    RewriteCond %{REQUEST_URI} !^/(administration|config|index.php)".PHP_EOL;
         $htc .= "    RewriteRule ^(.*?)$ index.php [L]".PHP_EOL;
         $htc .= "</IfModule>".PHP_EOL;
-    } else {
-        // Error pages
-        $htc .= "ErrorDocument 400 ".$site_path."error.php?code=400".PHP_EOL;
-        $htc .= "ErrorDocument 401 ".$site_path."error.php?code=401".PHP_EOL;
-        $htc .= "ErrorDocument 403 ".$site_path."error.php?code=403".PHP_EOL;
-        $htc .= "ErrorDocument 404 ".$site_path."error.php?code=404".PHP_EOL;
-        $htc .= "ErrorDocument 500 ".$site_path."error.php?code=500".PHP_EOL;
     }
 
     write_file(BASEDIR.".htaccess", $htc);
