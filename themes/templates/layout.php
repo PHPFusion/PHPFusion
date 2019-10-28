@@ -15,9 +15,16 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-$locale= fusion_get_locale();
+$locale = fusion_get_locale();
 $settings = fusion_get_settings();
-header("Content-Type: text/html; charset=".$locale['charset']);
+
+if (!headers_sent()) {
+    header('Expires: Thu, 23 Mar 1972 07:00:00 GMT');
+    header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+    header('Cache-Control: no-cache, must-revalidate, max-age=0');
+    header('Pragma: no-cache');
+    header("Content-Type: text/html; charset=".$locale['charset']);
+}
 
 echo "<!DOCTYPE html>\n";
 echo "<html lang='".$locale['xml_lang']."' dir='".$locale['text-direction']."'".($settings['create_og_tags'] ? " prefix='og: http://ogp.me/ns#'" : "").">\n";
