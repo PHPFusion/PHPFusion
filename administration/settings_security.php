@@ -54,11 +54,11 @@ if (isset($_POST['savesettings'])) {
         'flood_autoban'       => form_sanitizer($_POST['flood_autoban'], 0, 'flood_autoban'),
         'maintenance_level'   => form_sanitizer($_POST['maintenance_level'], 102, 'maintenance_level'),
         'maintenance'         => form_sanitizer($_POST['maintenance'], 0, 'maintenance'),
-        'maintenance_message' => addslash(descript($_POST['maintenance_message'])),
+        'maintenance_message' => descript(addslashes($_POST['maintenance_message'])),
         'bad_words_enabled'   => form_sanitizer($_POST['bad_words_enabled'], 0, 'bad_words_enabled'),
         'bad_words'           => stripinput($_POST['bad_words']),
         'bad_word_replace'    => form_sanitizer($_POST['bad_word_replace'], '', 'bad_word_replace'),
-        'user_name_ban'       => form_sanitizer($_POST['user_name_ban'], '', 'user_name_ban'),
+        'user_name_ban'       => stripinput($_POST['user_name_ban']),
         'database_sessions'   => form_sanitizer($_POST['database_sessions'], '', 'database_sessions'),
         'form_tokens'         => form_sanitizer($_POST['form_tokens'], '', 'form_tokens'),
         'gateway'             => form_sanitizer($_POST['gateway'], 0, 'gateway')
@@ -140,7 +140,7 @@ echo form_select('maintenance', $locale['657'], $settings['maintenance'], [
     'width'       => '100%',
     'inner_width' => '100%'
 ]);
-echo form_textarea('maintenance_message', $locale['658'], $settings['maintenance_message'], ['autosize' => TRUE]);
+echo form_textarea('maintenance_message', $locale['658'], stripslashes($settings['maintenance_message']), ['autosize' => TRUE, 'html' => !fusion_get_settings('tinymce_enabled') ? TRUE : FALSE]);
 closeside();
 openside('');
 echo \PHPFusion\QuantumFields::quantum_multilocale_fields('privacy_policy', $locale['820'], $settings['privacy_policy'], [
