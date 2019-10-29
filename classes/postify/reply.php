@@ -107,7 +107,7 @@ class Postify_Reply extends Forum_Postify {
                 }
             }
 
-            $thread_last_page = ($thread_data['thread_postcount'] > self::$forum_settings['posts_per_page'] ? floor(floor($thread_data['thread_postcount'] / self::$forum_settings['posts_per_page']) * self::$forum_settings['posts_per_page']) : 0);
+            $thread_last_page = ($thread_data['thread_postcount'] > self::$forum_settings['posts_per_page'] ? floor(floor(($thread_data['thread_postcount'] - 1) / self::$forum_settings['posts_per_page']) * self::$forum_settings['posts_per_page']) : 0);
             $redirect_add = '';
             if ($thread_last_page) {
                 $redirect_add = '&amp;rowstart='.$thread_last_page;
