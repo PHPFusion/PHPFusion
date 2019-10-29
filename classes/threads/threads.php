@@ -194,7 +194,7 @@ class ForumThreads extends ForumServer {
                     $thread_rowstart = '';
                     if (!empty($threads['thread_postcount']) && !empty($forum_settings['posts_per_page'])) {
                         if ($threads['thread_postcount'] > $forum_settings['posts_per_page']) {
-                            $thread_rowstart = $forum_settings['posts_per_page'] * floor($threads['thread_postcount'] / $forum_settings['posts_per_page']);
+                            $thread_rowstart = $forum_settings['posts_per_page'] * floor(($threads['thread_postcount'] - 1) / $forum_settings['posts_per_page']);
                             $thread_rowstart = "&amp;rowstart=".$thread_rowstart;
                         }
                     }
