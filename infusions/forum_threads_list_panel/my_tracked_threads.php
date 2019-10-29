@@ -77,7 +77,7 @@ if ($rows) {
                     $thread_rowstart = '';
                     if (!empty($data['thread_postcount']) && !empty($inf_settings['posts_per_page'])) {
                         if ($data['thread_postcount'] > $inf_settings['posts_per_page']) {
-                            $thread_rowstart = $inf_settings['posts_per_page'] * floor($data['thread_postcount'] / $inf_settings['posts_per_page']);
+                            $thread_rowstart = $inf_settings['posts_per_page'] * floor(($data['thread_postcount'] - 1) / $inf_settings['posts_per_page']);
                             $thread_rowstart = "&amp;rowstart=".$thread_rowstart;
                         }
                     }
