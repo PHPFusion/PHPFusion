@@ -73,7 +73,7 @@ if ($rows) {
                         $counter = 1;
                         while ($thread_post_data = dbarray($thread_posts)) {
                             if ($thread_post_data['post_id'] == $data['post_id']) {
-                                $thread_rowstart = $inf_settings['posts_per_page'] * floor($counter / $inf_settings['posts_per_page']);
+                                $thread_rowstart = $inf_settings['posts_per_page'] * floor(($counter - 1) / $inf_settings['posts_per_page']);
                                 $thread_rowstart = "&amp;rowstart=".$thread_rowstart;
                             }
                             $counter++;
