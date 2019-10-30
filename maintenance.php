@@ -118,6 +118,8 @@ if ($settings['bootstrap'] == TRUE || defined('BOOTSTRAP')) {
 echo render_favicons(defined('THEME_ICON') ? THEME_ICON : IMAGES.'favicons/');
 
 echo "<script src='".INCLUDES."jquery/jquery.min.js'></script>\n";
+echo "<script>var site_path = '".$settings['site_path']."';</script>";
+echo "<script src='".INCLUDES."jscripts/jscript.min.js?v=".filemtime(INCLUDES.'jscripts/jscript.min.js')."'></script>\n";
 echo "</head>\n";
 
 display_maintenance($info);
