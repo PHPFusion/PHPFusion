@@ -57,6 +57,7 @@ if ($settings['entypo'] || defined('ENTYPO')) {
 
 if ($settings['fontawesome'] || defined('FONTAWESOME')) {
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-5/css/all.min.css'>\n";
+    echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-5/css/v4-shims.min.css'/>\n";
 }
 
 if (!defined('NO_DEFAULT_CSS')) {
