@@ -30,43 +30,41 @@ echo "<!DOCTYPE html>\n";
 echo "<html lang='".$locale['xml_lang']."' dir='".$locale['text-direction']."'".($settings['create_og_tags'] ? " prefix='og: http://ogp.me/ns#'" : "").">\n";
 echo "<head>\n";
 echo "<title>".$settings['sitename']."</title>\n";
-echo "<meta charset='".$locale['charset']."'/>\n";
-echo "<meta name='description' content='".$settings['description']."'/>\n";
-echo "<meta name='url' content='".$settings['siteurl']."'/>\n";
-echo "<meta name='keywords' content='".$settings['keywords']."'/>\n";
-echo "<meta name='image' content='".$settings['siteurl'].$settings['sitebanner']."'/>\n";
+echo "<meta charset='".$locale['charset']."'>\n";
+echo "<meta name='description' content='".$settings['description']."'>\n";
+echo "<meta name='url' content='".$settings['siteurl']."'>\n";
+echo "<meta name='keywords' content='".$settings['keywords']."'>\n";
+echo "<meta name='image' content='".$settings['siteurl'].$settings['sitebanner']."'>\n";
 
 if (fusion_get_enabled_languages() > 1) {
-    echo "<link rel='alternate' hreflang='x-default' href='".$settings['siteurl']."'/>\n";
+    echo "<link rel='alternate' hreflang='x-default' href='".$settings['siteurl']."'>\n";
 }
 
-// Load bootstrap stylesheets
 if ($settings['bootstrap'] || defined('BOOTSTRAP')) {
-    echo "<meta http-equiv='X-UA-Compatible' content='IE=edge'/>\n";
-    echo "<meta name='viewport' content='width=device-width, initial-scale=1.0'/>\n";
-    echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/css/bootstrap.min.css' type='text/css'/>\n";
-    echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/css/bootstrap-submenu.min.css' type='text/css'/>\n";
+    echo "<meta http-equiv='X-UA-Compatible' content='IE=edge'>\n";
+    echo "<meta name='viewport' content='width=device-width, initial-scale=1.0'>\n";
+    echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/css/bootstrap.min.css'>\n";
+    echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/css/bootstrap-submenu.min.css'>\n";
 
     if ($locale['text-direction'] == 'rtl') {
-        echo "<link href='".INCLUDES."bootstrap/css/bootstrap-rtl.min.css' rel='stylesheet' media='screen'/>\n";
+        echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/css/bootstrap-rtl.min.css'>\n";
     }
 }
 
 if ($settings['entypo'] || defined('ENTYPO')) {
-    echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo.min.css' type='text/css'/>\n";
+    echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo.min.css'>\n";
 }
 
 if ($settings['fontawesome'] || defined('FONTAWESOME')) {
-    echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-5/css/all.min.css' type='text/css'/>\n";
-    echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-5/css/v4-shims.min.css' type='text/css'/>\n";
+    echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-5/css/all.min.css'>\n";
 }
 
 if (!defined('NO_DEFAULT_CSS')) {
-    echo "<link href='".THEMES."templates/default.min.css?v=".filemtime(THEMES.'templates/default.min.css')."' rel='stylesheet' type='text/css' media='screen'/>\n";
+    echo "<link rel='stylesheet' href='".THEMES."templates/default.min.css?v=".filemtime(THEMES.'templates/default.min.css')."'>\n";
 }
 
 $theme_css = file_exists(THEME.'styles.min.css') ? THEME.'styles.min.css' : THEME.'styles.css';
-echo "<link href='".$theme_css."?v=".filemtime($theme_css)."' rel='stylesheet' type='text/css' media='screen'/>\n";
+echo "<link rel='stylesheet' href='".$theme_css."?v=".filemtime($theme_css)."'>\n";
 
 if ($settings['bootstrap'] == TRUE || defined('BOOTSTRAP')) {
     $user_theme = fusion_get_userdata('user_theme');
@@ -74,8 +72,7 @@ if ($settings['bootstrap'] == TRUE || defined('BOOTSTRAP')) {
     $theme_data = dbarray(dbquery("SELECT theme_file FROM ".DB_THEME." WHERE theme_name='".$theme_name."' AND theme_active='1'"));
 
     if (!empty($theme_data)) {
-        $theme_css = THEMES.$theme_data['theme_file'];
-        echo "<link href='".$theme_css."' rel='stylesheet' type='text/css'/>\n";
+        echo "<link rel='stylesheet' href='".THEMES.$theme_data['theme_file']."'>\n";
     }
 }
 
@@ -85,9 +82,9 @@ if (function_exists("get_head_tags")) {
     echo get_head_tags();
 }
 
-echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery.min.js'></script>\n";
+echo "<script src='".INCLUDES."jquery/jquery.min.js'></script>\n";
 echo "<script>var site_path = '".$settings['site_path']."';</script>";
-echo "<script type='text/javascript' src='".INCLUDES."jscripts/jscript.min.js?v=".filemtime(INCLUDES.'jscripts/jscript.min.js')."'></script>\n";
+echo "<script src='".INCLUDES."jscripts/jscript.min.js?v=".filemtime(INCLUDES.'jscripts/jscript.min.js')."'></script>\n";
 echo "</head>\n";
 
 /**
@@ -122,12 +119,11 @@ if (function_exists("render_page")) {
 
 // Load Bootstrap javascript
 if ($settings['bootstrap'] || defined('BOOTSTRAP')) {
-    echo "<script type='text/javascript' src='".INCLUDES."bootstrap/js/bootstrap.min.js'></script>\n";
-    echo "<script type='text/javascript' src='".INCLUDES."bootstrap/js/bootstrap-submenu.min.js'></script>\n";
+    echo "<script src='".INCLUDES."bootstrap/js/bootstrap.min.js'></script>\n";
+    echo "<script src='".INCLUDES."bootstrap/js/bootstrap-submenu.min.js'></script>\n";
 }
 
-echo "<script type='text/javascript' src='".INCLUDES."jquery/admin-scripts.js'></script>\n";
-echo "<script type='text/javascript' src='".INCLUDES."jquery/holder/holder.min.js'></script>\n";
+echo "<script src='".INCLUDES."jquery/holder/holder.min.js'></script>\n";
 
 // Output lines added with add_to_footer()
 echo $fusion_page_footer_tags;
@@ -151,7 +147,7 @@ if (!empty($fusion_jquery_tags)) {
         $js = $jquery_tags;
     }
 
-    echo "<script type='text/javascript'>$(function(){".$js."});</script>\n";
+    echo "<script>$(function(){".$js."});</script>\n";
 }
 
 // Uncomment to guide your theme development

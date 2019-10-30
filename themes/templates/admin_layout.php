@@ -23,37 +23,37 @@ echo "<!DOCTYPE html>";
 echo "<html lang='".$locale['xml_lang']."' dir='".$locale['text-direction']."'>";
 echo "<head>";
 echo "<title>".$settings['sitename']."</title>";
-echo "<meta charset='".$locale['charset']."'/>";
-echo "<meta name='robots' content='none'/>";
-echo "<meta name='googlebot' content='noarchive'/>";
+echo "<meta charset='".$locale['charset']."'>";
+echo "<meta name='robots' content='none'>";
+echo "<meta name='googlebot' content='noarchive'>";
 
 if ($settings['bootstrap'] || defined('BOOTSTRAP')) {
-    echo "<meta http-equiv='X-UA-Compatible' content='IE=edge'/>\n";
-    echo "<meta name='viewport' content='width=device-width, initial-scale=1.0'/>\n";
-    echo "<link href='".INCLUDES."bootstrap/css/bootstrap.min.css' rel='stylesheet' media='screen'/>";
+    echo "<meta http-equiv='X-UA-Compatible' content='IE=edge'>\n";
+    echo "<meta name='viewport' content='width=device-width, initial-scale=1.0'>\n";
+    echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/css/bootstrap.min.css'>\n";
+    echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/css/bootstrap-submenu.min.css'>\n";
 
     if ($locale['text-direction'] == 'rtl') {
-        echo "<link href='".INCLUDES."bootstrap/css/bootstrap-rtl.min.css' rel='stylesheet' media='screen'/>";
+        echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/css/bootstrap-rtl.min.css'>\n";
     }
 }
 
 if ($settings['entypo'] || defined('ENTYPO')) {
-    echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo.min.css' type='text/css'/>\n";
+    echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo.min.css'>\n";
 }
 
 if ($settings['fontawesome'] || defined('FONTAWESOME')) {
-    echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-5/css/all.min.css' type='text/css'/>\n";
-    echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-5/css/v4-shims.min.css' type='text/css'/>\n";
+    echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-5/css/all.min.css'>\n";
+    echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-5/css/v4-shims.min.css'/>\n";
 }
 
-// Default CSS styling which applies to all themes but can be overriden
 if (!defined('NO_DEFAULT_CSS')) {
-    echo "<link href='".THEMES."templates/default.min.css?v=".filemtime(THEMES.'templates/default.min.css')."' rel='stylesheet' type='text/css' media='screen'/>\n";
+    echo "<link rel='stylesheet' href='".THEMES."templates/default.min.css?v=".filemtime(THEMES.'templates/default.min.css')."'>\n";
 }
 
 // Admin Panel Theme CSS
 $admin_theme_css = file_exists(THEMES.'admin_themes/'.$settings['admin_theme'].'/acp_styles.min.css') ? THEMES.'admin_themes/'.$settings['admin_theme'].'/acp_styles.min.css' : THEMES.'admin_themes/'.$settings['admin_theme'].'/acp_styles.css';
-echo "<link href='".$admin_theme_css."?v=".filemtime($admin_theme_css)."' rel='stylesheet' type='text/css' media='screen'/>\n";
+echo "<link rel='stylesheet' href='".$admin_theme_css."?v=".filemtime($admin_theme_css)."'/>\n";
 
 echo render_favicons(defined('THEME_ICON') ? THEME_ICON : IMAGES.'favicons/');
 
@@ -61,9 +61,9 @@ if (function_exists("get_head_tags")) {
     echo get_head_tags();
 }
 
-echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery.min.js'></script>\n";
+echo "<script src='".INCLUDES."jquery/jquery.min.js'></script>\n";
 echo "<script>var site_path = '".$settings['site_path']."';</script>";
-echo "<script type='text/javascript' src='".INCLUDES."jscripts/jscript.min.js'></script>\n";
+echo "<script src='".INCLUDES."jscripts/jscript.min.js?v=".filemtime(INCLUDES.'jscripts/jscript.min.js')."'></script>\n";
 echo "</head>";
 
 /**
@@ -91,11 +91,10 @@ if (!check_admin_pass('')) {
 
 // Load Bootstrap javascript
 if ($settings['bootstrap'] || defined('BOOTSTRAP')) {
-    echo "<script type='text/javascript' src='".INCLUDES."bootstrap/js/bootstrap.min.js'></script>\n";
+    echo "<script src='".INCLUDES."bootstrap/js/bootstrap.min.js'></script>\n";
 }
 
-echo "<script type='text/javascript' src='".INCLUDES."jquery/admin-scripts.js'></script>\n";
-echo "<script type='text/javascript' src='".INCLUDES."jquery/holder/holder.min.js'></script>\n";
+echo "<script src='".INCLUDES."jquery/holder/holder.min.js'></script>\n";
 
 // Output lines added with add_to_footer()
 echo $fusion_page_footer_tags;
@@ -109,7 +108,7 @@ if (!empty($fusion_jquery_tags)) {
         $js = $fusion_jquery_tags;
     }
 
-    echo "<script type='text/javascript'>$(function(){".$js."});</script>\n";
+    echo "<script>$(function(){".$js."});</script>\n";
 }
 
 // Uncomment to guide your theme development

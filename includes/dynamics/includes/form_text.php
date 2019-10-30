@@ -183,7 +183,6 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
                     $path = DYNAMICS."assets/password/lang/en.js";
                 }
                 PHPFusion\OutputHandler::addToFooter("<script type='text/javascript' src='$path'></script>");
-                PHPFusion\OutputHandler::addToFooter("<script type='text/javascript' src='".DYNAMICS."assets/password/pwtoggle.js'></script>");
             }
             // Incompatible with password meter strength due to jquery appending layout.
             // @todo: Fix pwstrength.js

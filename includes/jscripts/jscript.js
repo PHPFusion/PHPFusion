@@ -369,6 +369,36 @@ function onload_events() {
 
 window.onload = onload_events;
 
+function togglePasswordInput(button_id, field_id) {
+    var button = $('#'+button_id);
+    var input = $('#'+field_id);
+    if (input.attr('type') == 'password') {
+        input.attr('type', 'text');
+        button.text(locale['hide']);
+    } else {
+        input.attr('type', 'password');
+        button.text(locale['show']);
+    }
+}
+
+function closeDiv() {
+    $('#close-message').fadeTo('slow', 0.01, function () {
+        $(this).slideUp('slow', function () {
+            $(this).hide()
+        })
+    })
+}
+
+window.setTimeout('closeDiv()', 5000);
+
+function run_admin(action, table_action, reset_table) {
+    table_action = table_action || '#table_action';
+    reset_table = reset_table || '#reset_table';
+
+    $(table_action).val(action);
+    $(reset_table).submit();
+}
+
 var BASEDIR = document.location.origin + site_path;
 var INFUSIONS = document.location.origin + "/infusions/";
 var INCLUDES = document.location.origin + "/includes/";

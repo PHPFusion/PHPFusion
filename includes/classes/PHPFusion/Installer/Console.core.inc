@@ -102,35 +102,26 @@ class Console_Core extends Install_Core {
         $html .= "<html lang='".self::$locale['setup_0011']."' dir='".self::$locale['setup_0012a']."'>\n";
         $html .= "<head>\n";
         $html .= "<title>".(isset($_GET['upgrade']) ? self::$locale['setup_0020'] : self::$locale['setup_0000'])."</title>\n";
-        $html .= "<meta charset='".self::$locale['setup_0012']."' />";
-        $html .= "<link rel='apple-touch-icon' sizes='144x144' href='".IMAGES."favicons/apple-touch-icon.png'/>";
-        $html .= "<link rel='icon' type='image/png' sizes='32x32' href='".IMAGES."favicons/favicon-32x32.png'>";
-        $html .= "<link rel='icon' type='image/png' sizes='16x16' href='".IMAGES."favicons/favicon-16x16.png'/>";
-        $html .= "<link rel='manifest' href='".IMAGES."favicons/site.webmanifest'/>";
-        $html .= "<link rel='mask-icon' href='".IMAGES."favicons/safari-pinned-tab.svg' color='#262626'/>";
-        $html .= "<link rel='shortcut icon' href='".IMAGES."favicons/favicon.ico'/>";
-        $html .= "<meta name='msapplication-TileColor' content='#262626'/>";
-        $html .= "<meta name='msapplication-config' content='".IMAGES."favicons/browserconfig.xml'/>";
-        $html .= "<meta name='theme-color' content='#ffffff'/>";
+        $html .= "<meta charset='".self::$locale['setup_0012']."'>";
+        $html .= '<link rel="shortcut icon" href="'.IMAGES.'favicons/favicon.ico">';
         $html .= "<meta http-equiv='X-UA-Compatible' content='IE=edge'>\n";
         $html .= "<meta name='viewport' content='width=device-width, initial-scale=1.0' />\n";
-        $html .= "<script type='text/javascript' src='".INCLUDES."jquery/jquery.min.js'></script>\n";
-        $html .= "<script type='text/javascript' src='".INCLUDES."bootstrap/js/bootstrap.min.js'></script>\n";
-        $html .= "<link href='".DYNAMICS."assets/select2/select2.min.css' rel='stylesheet' />\n";
-        $html .= "<link href='".THEMES."templates/default.min.css?v=".filemtime(THEMES.'templates/default.min.css')."' rel='stylesheet' />\n";
-        $html .= "<link href='".INCLUDES."bootstrap/css/bootstrap.min.css' rel='stylesheet' />\n";
+        $html .= "<script src='".INCLUDES."jquery/jquery.min.js'></script>\n";
+        $html .= "<script src='".INCLUDES."bootstrap/js/bootstrap.min.js'></script>\n";
+        $html .= "<link rel='stylesheet' href='".DYNAMICS."assets/select2/select2.min.css'>\n";
+        $html .= "<link rel='stylesheet' href='".THEMES."templates/default.min.css?v=".filemtime(THEMES.'templates/default.min.css')."'>\n";
+        $html .= "<link rel='stylesheet' href='".INCLUDES."bootstrap/css/bootstrap.min.css'>\n";
         if (self::$locale['setup_0012a'] == 'rtl') {
-            $html .= "<link href='".INCLUDES."bootstrap/css/bootstrap-rtl.min.css' rel='stylesheet' media='screen' />";
+            $html .= "<link rel='stylesheet' href='".INCLUDES."bootstrap/css/bootstrap-rtl.min.css'>";
         }
-        $html .= "<link href='".THEMES."templates/install.min.css?v=".filemtime(THEMES.'templates/install.min.css')."' rel='stylesheet'/>\n";
-        $html .= "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-5/css/all.min.css' type='text/css'/>\n";
-        $html .= "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-5/css/v4-shims.min.css' type='text/css'/>\n";
+        $html .= "<link rel='stylesheet' href='".THEMES."templates/install.min.css?v=".filemtime(THEMES.'templates/install.min.css')."'>\n";
+        $html .= "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-5/css/all.min.css'>\n";
         $html .= OutputHandler::$pageHeadTags;
         $html .= "</head>\n<body".(isset($_GET['upgrade']) ? " class='upgrade'" : '').">\n";
         $html .= "{%content%}";
         $fusion_jquery_tags = OutputHandler::$jqueryTags;
         if (!empty($fusion_jquery_tags)) {
-            $html .= "<script type=\"text/javascript\">$(function() {
+            $html .= "<script>$(function() {
             let container = $('.block-container');
             let diff_height = container.height() - $('body').height();
             if (diff_height > 1) {
