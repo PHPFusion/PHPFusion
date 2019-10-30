@@ -182,7 +182,18 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
                 } else {
                     $path = DYNAMICS."assets/password/lang/en.js";
                 }
-                PHPFusion\OutputHandler::addToFooter("<script type='text/javascript' src='$path'></script>");
+                PHPFusion\OutputHandler::addToFooter("<script src='$path'></script>");
+                PHPFusion\OutputHandler::addToFooter("<script>".jsminify("function togglePasswordInput(button_id, field_id) {
+                    var button = $('#'+button_id);
+                    var input = $('#'+field_id);
+                    if (input.attr('type') == 'password') {
+                        input.attr('type', 'text');
+                        button.text(locale['hide']);
+                    } else {
+                        input.attr('type', 'password');
+                        button.text(locale['show']);
+                    }
+                }")."</script>");
             }
             // Incompatible with password meter strength due to jquery appending layout.
             // @todo: Fix pwstrength.js

@@ -369,18 +369,6 @@ function onload_events() {
 
 window.onload = onload_events;
 
-function togglePasswordInput(button_id, field_id) {
-    var button = $('#'+button_id);
-    var input = $('#'+field_id);
-    if (input.attr('type') == 'password') {
-        input.attr('type', 'text');
-        button.text(locale['hide']);
-    } else {
-        input.attr('type', 'password');
-        button.text(locale['show']);
-    }
-}
-
 function closeDiv() {
     $('#close-message').fadeTo('slow', 0.01, function () {
         $(this).slideUp('slow', function () {
