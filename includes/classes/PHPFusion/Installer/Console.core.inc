@@ -108,7 +108,6 @@ class Console_Core extends Install_Core {
         $html .= "<meta name='viewport' content='width=device-width, initial-scale=1.0' />\n";
         $html .= "<script src='".INCLUDES."jquery/jquery.min.js'></script>\n";
         $html .= "<script src='".INCLUDES."bootstrap/js/bootstrap.min.js'></script>\n";
-        $html .= "<link rel='stylesheet' href='".DYNAMICS."assets/select2/select2.min.css'>\n";
         $html .= "<link rel='stylesheet' href='".THEMES."templates/default.min.css?v=".filemtime(THEMES.'templates/default.min.css')."'>\n";
         $html .= "<link rel='stylesheet' href='".INCLUDES."bootstrap/css/bootstrap.min.css'>\n";
         if (self::$locale['setup_0012a'] == 'rtl') {

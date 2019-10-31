@@ -49,6 +49,7 @@ if ($settings['fontawesome'] || defined('FONTAWESOME')) {
 
 if (!defined('NO_DEFAULT_CSS')) {
     echo "<link rel='stylesheet' href='".THEMES."templates/default.min.css?v=".filemtime(THEMES.'templates/default.min.css')."'>\n";
+    echo "<link rel='stylesheet' href='".INCLUDES."fonts/PHPFusion/font.min.css'>\n";
 }
 
 // Admin Panel Theme CSS
