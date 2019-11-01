@@ -595,7 +595,7 @@ class PanelsAdministration {
             'required' => TRUE
         ]);
         echo "<div class='text-smaller'>".self::$locale['463']." <br />
-        /index.php <br />
+        /home.php <br />
         /infusions/news* <br />
         /infusions/news/news.php <br />
         /infusions/forum* <br />
