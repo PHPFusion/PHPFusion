@@ -31,7 +31,8 @@ $regex = [
 ];
 
 $pattern = [
-    //"home"                                                                  => "index.php",
+    //"home"                                                                  => "index.php", // Enable this if your main page is index.php
+    "homepage"                                                              => "home.php",
     "login"                                                                 => "login.php",
     "logout/%logout%"                                                       => "index.php?logout=%logout%",
     "maintenance"                                                           => "maintenance.php",
