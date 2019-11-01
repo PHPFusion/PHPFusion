@@ -18,8 +18,9 @@
 $settings = fusion_get_settings();
 
 $update_settings_tbl = [
-    'version'    => '9.03.10',
-    'mime_check' => 1
+    'version'      => '9.03.10',
+    'mime_check'   => 1,
+    'opening_page' => 'index.php'
 ];
 
 foreach ($update_settings_tbl as $key => $value) {

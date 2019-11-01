@@ -118,7 +118,7 @@ function write_htaccess() {
         $htc .= "    RewriteCond %{REQUEST_FILENAME} !-d".PHP_EOL;
         $htc .= "    RewriteCond %{REQUEST_FILENAME} !-l".PHP_EOL;
         $htc .= "    RewriteCond %{REQUEST_URI} !^/(administration|config|index.php)".PHP_EOL;
-        $htc .= "    RewriteRule ^(.*?)$ index.php [L]".PHP_EOL;
+        $htc .= "    RewriteRule ^(.*?)$ loader.php [L]".PHP_EOL;
         $htc .= "</ifModule>".PHP_EOL;
     }
 

@@ -85,7 +85,7 @@ if (db_exists(DB_SETTINGS)) {
         'rendertime_enabled' => '0',
         'timeoffset'         => 'Europe/London',
         'serveroffset'       => 'Europe/London',
-        'opening_page'       => 'home.php',
+        'opening_page'       => 'index.php',
         'captcha'            => 'securimage3',
     ];
 
