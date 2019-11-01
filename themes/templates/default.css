@@ -1,4 +1,3 @@
-@import url('../../includes/fonts/PHPFusion/font.css');
 .no-js #loader { display: none;  }
 .js #loader { display: block; position: absolute; left: 100px; top: 0; }
 .fusion-pre-loader {
@@ -555,11 +554,25 @@ Grids
     display: table-cell;
 }
 .display-flex-row {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
     display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
     flex-direction: row;
 }
 .display-flex-column {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
     display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
     flex-direction: column;
 }
 .position-relative {
@@ -1101,6 +1114,7 @@ th.min, td.min {
 }
 .file-input .file-preview-frame:hover,
 .file-input .file-preview-frame:focus {
+    -webkit-box-shadow: none !important;
     box-shadow: none !important;
     border:0 !important;
 }
@@ -1453,6 +1467,7 @@ table.fusion-table tr th.check-col {
         position: absolute;
         top: -5px;
         left: 10px;
+        -webkit-border-radius: 50%;
         border-radius: 50%;
         display: block;
         padding: 1px 2px 1px 0;
@@ -1479,6 +1494,7 @@ table.fusion-table tr th.check-col {
         content: "▲";
     }
     table.fusion-table .has-actions > button.toggle-row:focus::before {
+        -webkit-box-shadow: 0 0 0 1px #5b9dd9, 0 0 2px 1px rgba(30,140,190,.8);
         box-shadow: 0 0 0 1px #5b9dd9, 0 0 2px 1px rgba(30,140,190,.8);
     }
 
@@ -1497,6 +1513,7 @@ table.fusion-table tr th.check-col {
         width: 32%;
         content: attr(data-colname);
         white-space: nowrap;
+        -o-text-overflow: ellipsis;
         text-overflow: ellipsis;
     }
 
@@ -1652,10 +1669,10 @@ html[dir="rtl"] .center-xy {
 /**
 Non Responsive CSS Grid
  */
-.column-2 {column-count: 2;}
-.column-3 {column-count: 3;}
-.column-4 { column-count: 4;}
-.column-5 { column-count: 5;}
+.column-2 {-webkit-column-count: 2;-moz-column-count: 2;column-count: 2;}
+.column-3 {-webkit-column-count: 3;-moz-column-count: 3;column-count: 3;}
+.column-4 { -webkit-column-count: 4; -moz-column-count: 4; column-count: 4;}
+.column-5 { -webkit-column-count: 5; -moz-column-count: 5; column-count: 5;}
 
 .column-2 > ul, .column-2 > div,
 .column-3 > ul, .column-3 > div,

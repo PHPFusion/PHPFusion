@@ -32,9 +32,9 @@ echo "<!DOCTYPE html>";
 echo "<html lang='".$locale['xml_lang']."' dir='".$locale['text-direction']."'>";
 echo "<head>";
 echo "<title>".$settings['sitename']."</title>";
-echo "<meta charset='".$locale['charset']."' />";
-echo "<meta name='robots' content='none' />";
-echo "<meta name='googlebot' content='noarchive' />";
+echo "<meta charset='".$locale['charset']."'>";
+echo "<meta name='robots' content='none'>";
+echo "<meta name='googlebot' content='noarchive'>";
 
 if (isset($fusion_steam)) {
     $fusion_steam->run();
@@ -42,24 +42,25 @@ if (isset($fusion_steam)) {
 }
 
 if ($settings['entypo'] || defined('ENTYPO')) {
-    echo "<link rel='stylesheet' href='".$_includes."fonts/entypo/entypo.min.css'/>\n";
+    echo "<link rel='stylesheet' href='".$_includes."fonts/entypo/entypo.min.css'>\n";
 }
 
 if ($settings['fontawesome'] || defined('FONTAWESOME')) {
-    echo "<link rel='stylesheet' href='".$_includes."fonts/font-awesome-5/css/all.min.css'/>\n";
-    echo "<link rel='stylesheet' href='".$_includes."fonts/font-awesome-5/css/v4-shims.min.css'/>\n";
+    echo "<link rel='stylesheet' href='".$_includes."fonts/font-awesome-5/css/all.min.css'>\n";
+    echo "<link rel='stylesheet' href='".$_includes."fonts/font-awesome-5/css/v4-shims.min.css'>\n";
 }
 
 // Default CSS styling which applies to all themes but can be overriden
 if (!defined('NO_DEFAULT_CSS')) {
     $dev_mode = TRUE;
     $default_css_file = $dev_mode ? $_themes.'templates/default.css' : $_themes.'templates/default.min.css';
-    echo "<link rel='stylesheet' href='$default_css_file?v=".filemtime($default_css_file)."'/>\n";
+    echo "<link rel='stylesheet' href='$default_css_file?v=".filemtime($default_css_file)."'>\n";
+    echo "<link rel='stylesheet' href='".INCLUDES."fonts/PHPFusion/font.min.css'>\n";
 }
 
 // Admin Panel Theme CSS
 $admin_theme_css = file_exists(THEMES.'admin_themes/'.$settings['admin_theme'].'/acp_styles.min.css') ? THEMES.'admin_themes/'.$settings['admin_theme'].'/acp_styles.min.css' : THEMES.'admin_themes/'.$settings['admin_theme'].'/acp_styles.css';
-echo "<link rel='stylesheet' href='".$admin_theme_css."?v=".filemtime($admin_theme_css)."'/>\n";
+echo "<link rel='stylesheet' href='".$admin_theme_css."?v=".filemtime($admin_theme_css)."'>\n";
 
 echo render_favicons(defined('THEME_ICON') ? THEME_ICON : IMAGES.'favicons/');
 
@@ -67,9 +68,9 @@ if (function_exists("get_head_tags")) {
     echo get_head_tags();
 }
 
-echo "<script type='text/javascript' src='".$_includes."jquery/jquery.min.js'></script>\n";
+echo "<script src='".$_includes."jquery/jquery.min.js'></script>\n";
 echo "<script>const SITE_PATH = '".$settings['site_path']."';const CDN = '".CDN."';</script>\n";
-echo "<script type='text/javascript' src='".$_includes."jscripts/jscript.min.js?v=".filemtime($_includes.'jscripts/jscript.min.js')."'></script>\n";
+echo "<script src='".$_includes."jscripts/jscript.min.js?v=".filemtime($_includes.'jscripts/jscript.min.js')."'></script>\n";
 echo "</head>\n";
 
 /**
@@ -97,7 +98,6 @@ if (!check_admin_pass('')) {
 // Output lines added with add_to_footer()
 echo $fusion_page_footer_tags;
 
-echo "<script src='".$_includes."jquery/admin-scripts.js'></script>\n";
 echo "<script src='".$_includes."jquery/holder/holder.min.js'></script>\n";
 
 // Output lines added with add_to_jquery()

@@ -183,7 +183,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
                     $path = $pwd_locale_path;
                 }
                 PHPFusion\OutputHandler::addToFooter("<script type='text/javascript' src='$path'></script>");
-                PHPFusion\OutputHandler::addToFooter("<script type='text/javascript' src='".DYNAMICS."assets/password/pwtoggle.js'></script>");
+                PHPFusion\OutputHandler::addToFooter("<script type='text/javascript' src='".DYNAMICS."assets/password/pwtoggle.min.js'></script>");
             }
             // Incompatible with password meter strength due to jquery appending layout.
             // @todo: Fix pwstrength.js
@@ -264,7 +264,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
                         progress: ".pwstrength_viewport_progress"
                     }
                 };
-                $("#'.$options['input_id'].'").pwstrength(options);                                               
+                $("#'.$options['input_id'].'").pwstrength(options);
             });
         ').'</script>');
     }

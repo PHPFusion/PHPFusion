@@ -289,7 +289,10 @@ class Panels {
                                     }
                                     break;
                                 case 2: // Display on Opening Page only
-                                    if (!empty($p_data['panel_url_list']) && PERMALINK_CURRENT_PATH === fusion_get_settings('opening_page')) {
+                                    $opening_page = fusion_get_settings('opening_page');
+                                    if (!empty($p_data['panel_url_list']) && $opening_page == 'index.php' && $script_url == '/' || $script_url == '/'.$opening_page) {
+                                        $show_panel = TRUE;
+                                    } else if (!empty($p_data['panel_url_list']) && PERMALINK_CURRENT_PATH === $opening_page) {
                                         $show_panel = TRUE;
                                     }
                                     break;

@@ -73,45 +73,49 @@ echo "<!DOCTYPE html>\n";
 echo "<html lang='".$locale['xml_lang']."' dir='".$locale['text-direction']."'>\n";
 echo "<head>\n";
 echo "<title>".$settings['sitename']."</title>\n";
-echo "<meta charset='".$locale['charset']."' />\n";
-echo "<meta name='description' content='".$settings['description']."' />\n";
-echo "<meta name='url' content='".$settings['siteurl']."' />\n";
-echo "<meta name='keywords' content='".$settings['keywords']."' />\n";
-echo "<meta name='image' content='".$settings['siteurl'].$settings['sitebanner']."' />\n";
+echo "<meta charset='".$locale['charset']."'>\n";
+echo "<meta name='description' content='".$settings['description']."'>\n";
+echo "<meta name='url' content='".$settings['siteurl']."'>\n";
+echo "<meta name='keywords' content='".$settings['keywords']."'>\n";
+echo "<meta name='image' content='".$settings['siteurl'].$settings['sitebanner']."'>\n";
 // Load bootstrap stylesheets
 if ($settings['bootstrap'] || defined('BOOTSTRAP')) {
-    echo "<meta http-equiv='X-UA-Compatible' content='IE=edge' />\n";
-    echo "<meta name='viewport' content='width=device-width, initial-scale=1.0' />\n";
-    echo "<link rel='stylesheet' href='".THEMES."templates/boilers/bootstrap3/css/bootstrap.min.css' type='text/css' />\n";
-    echo "<link rel='stylesheet' href='".THEMES."templates/boilers/bootstrap3/css/bootstrap-submenu.min.css' type='text/css' />\n";
+    echo "<meta http-equiv='X-UA-Compatible' content='IE=edge'>\n";
+    echo "<meta name='viewport' content='width=device-width, initial-scale=1.0'>\n";
+    echo "<link rel='stylesheet' href='".THEMES."templates/boilers/bootstrap3/css/bootstrap.min.css'>\n";
+    echo "<link rel='stylesheet' href='".THEMES."templates/boilers/bootstrap3/css/bootstrap-submenu.min.css'>\n";
+
     if ($locale['text-direction'] == 'rtl') {
-        echo "<link href='".THEMES."templates/boilers/bootstrap3/css/bootstrap-rtl.min.css' rel='stylesheet' media='screen' />";
+        echo "<link rel='stylesheet' href='".THEMES."templates/boilers/bootstrap3/css/bootstrap-rtl.min.css'>";
     }
+
     $user_theme = fusion_get_userdata('user_theme');
     $theme_name = $user_theme !== 'Default' ? $user_theme : $settings['theme'];
     $theme_data = dbarray(dbquery("SELECT theme_file FROM ".DB_THEME." WHERE theme_name='".$theme_name."' AND theme_active='1'"));
     if (!empty($theme_data)) {
-        echo "<link href='".THEMES.$theme_data['theme_file']."' rel='stylesheet' type='text/css' />\n";
+        echo "<link rel='stylesheet' href='".THEMES.$theme_data['theme_file']."'>\n";
     }
 }
 
 if ($settings['entypo'] || defined('ENTYPO')) {
-    echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo.min.css' type='text/css'/>\n";
+    echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo.min.css'>\n";
 }
 
 if ($settings['fontawesome'] || defined('FONTAWESOME')) {
-    echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-5/css/all.min.css' type='text/css'/>\n";
-    echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-5/css/v4-shims.min.css' type='text/css'/>\n";
+    echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-5/css/all.min.css'>\n";
+    echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-5/css/v4-shims.min.css'>\n";
 }
 
 if (!defined('NO_DEFAULT_CSS')) {
-    echo "<link href='".THEMES."templates/default.min.css' rel='stylesheet' type='text/css' media='screen' />\n";
+    echo "<link rel='stylesheet' href='".THEMES."templates/default.min.css'>\n";
 }
-echo "<link href='".THEME."styles.css' rel='stylesheet' type='text/css' media='screen' />\n";
+
+$theme_css = file_exists(THEME.'styles.min.css') ? THEME.'styles.min.css' : THEME.'styles.css';
+echo "<link rel='stylesheet' href='".$theme_css."?v=".filemtime($theme_css)."'>\n";
 
 echo render_favicons(defined('THEME_ICON') ? THEME_ICON : IMAGES.'favicons/');
 
-echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery.min.js'></script>\n";
+echo "<script src='".INCLUDES."jquery/jquery.min.js'></script>\n";
 echo "</head>\n";
 
 display_maintenance($info);
@@ -120,11 +124,11 @@ echo \PHPFusion\OutputHandler::$pageFooterTags;
 $fusion_jquery_tags = PHPFusion\OutputHandler::$jqueryTags;
 if (!empty($fusion_jquery_tags)) {
     $minifier = new PHPFusion\Minify\JS($fusion_jquery_tags);
-    echo "<script type='text/javascript'>$(function(){".$minifier->minify()."});</script>\n";
+    echo "<script>$(function(){".$minifier->minify()."});</script>\n";
 }
 
 if ($settings['bootstrap'] || defined('BOOTSTRAP')) {
-    echo "<script type='text/javascript' src='".THEMES."templates/boilers/bootstrap3/js/bootstrap.min.js'></script>\n";
+    echo "<script src='".THEMES."templates/boilers/bootstrap3/js/bootstrap.min.js'></script>\n";
 }
 echo "</body>\n";
 echo "</html>";

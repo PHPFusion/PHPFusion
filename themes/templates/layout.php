@@ -38,14 +38,14 @@ echo "<!DOCTYPE html>\n";
 echo "<html lang='".$locale['xml_lang']."' dir='".$locale['text-direction']."'".($settings['create_og_tags'] ? " prefix='og: http://ogp.me/ns#'" : "").">\n";
 echo "<head>\n";
 echo "<title>".$settings['sitename']."</title>\n";
-echo "<meta charset='".$locale['charset']."'/>\n";
-echo "<meta name='description' content='".$settings['description']."'/>\n";
-echo "<meta name='url' content='".$settings['siteurl']."'/>\n";
-echo "<meta name='keywords' content='".$settings['keywords']."'/>\n";
-echo "<meta name='image' content='".$settings['siteurl'].$settings['sitebanner']."'/>\n";
+echo "<meta charset='".$locale['charset']."'>\n";
+echo "<meta name='description' content='".$settings['description']."'>\n";
+echo "<meta name='url' content='".$settings['siteurl']."'>\n";
+echo "<meta name='keywords' content='".$settings['keywords']."'>\n";
+echo "<meta name='image' content='".$settings['siteurl'].$settings['sitebanner']."'>\n";
 
 if (fusion_get_enabled_languages() > 1) {
-    echo "<link rel='alternate' hreflang='x-default' href='".$settings['siteurl']."'/>\n";
+    echo "<link rel='alternate' hreflang='x-default' href='".$settings['siteurl']."'>\n";
 }
 
 if (isset($fusion_steam)) {
@@ -54,32 +54,32 @@ if (isset($fusion_steam)) {
 }
 
 if ($settings['entypo'] || defined('ENTYPO')) {
-    echo "<link rel='stylesheet' href='".$_includes."fonts/entypo/entypo.min.css'/>\n";
+    echo "<link rel='stylesheet' href='".$_includes."fonts/entypo/entypo.min.css'>\n";
 }
 
 if ($settings['fontawesome'] || defined('FONTAWESOME')) {
-    echo "<link rel='stylesheet' href='".$_includes."fonts/font-awesome-5/css/all.min.css'/>\n";
-    echo "<link rel='stylesheet' href='".$_includes."fonts/font-awesome-5/css/v4-shims.min.css'/>\n";
+    echo "<link rel='stylesheet' href='".$_includes."fonts/font-awesome-5/css/all.min.css'>\n";
+    echo "<link rel='stylesheet' href='".$_includes."fonts/font-awesome-5/css/v4-shims.min.css'>\n";
 }
 
 // Default CSS styling which applies to all themes but can be overriden
 if (!defined('NO_DEFAULT_CSS')) {
     $dev_mode = TRUE;
     $default_css_file = $dev_mode ? $_themes.'templates/default.css' : $_themes.'templates/default.min.css';
-    echo "<link rel='stylesheet' href='$default_css_file?v=".filemtime($default_css_file)."'/>\n";
+    echo "<link rel='stylesheet' href='$default_css_file?v=".filemtime($default_css_file)."'>\n";
+    echo "<link rel='stylesheet' href='".INCLUDES."fonts/PHPFusion/font.min.css'>\n";
 }
 
 // Theme CSS
 $theme_css = file_exists(THEME.'styles.min.css') ? THEME.'styles.min.css' : THEME.'styles.css';
-echo "<link rel='stylesheet' href='".$theme_css."?v=".filemtime($theme_css)."'/>\n";
+echo "<link rel='stylesheet' href='".$theme_css."?v=".filemtime($theme_css)."'>\n";
 
 // Atom Engine
 $user_theme = fusion_get_userdata('user_theme');
 $theme_name = $user_theme !== 'Default' ? $user_theme : fusion_get_settings('theme');
 $theme_data = dbarray(dbquery("SELECT theme_file FROM ".DB_THEME." WHERE theme_name='".$theme_name."' AND theme_active='1'"));
 if (!empty($theme_data)) {
-    $theme_css = THEMES.$theme_data['theme_file'];
-    add_to_head("<link href='".$theme_css."' rel='stylesheet' type='text/css' />\n");
+    add_to_head("<link rel='stylesheet' href='".THEMES.$theme_data['theme_file']."'>\n");
 }
 
 echo render_favicons(defined('THEME_ICON') ? THEME_ICON : IMAGES.'favicons/');
@@ -88,9 +88,9 @@ if (function_exists("get_head_tags")) {
     echo get_head_tags();
 }
 
-echo "<script type='text/javascript' src='".$_includes."jquery/jquery.min.js'></script>\n";
+echo "<script src='".$_includes."jquery/jquery.min.js'></script>\n";
 echo "<script>const SITE_PATH = '".$settings['site_path']."';const CDN = '".CDN."';</script>\n";
-echo "<script type='text/javascript' src='".$_includes."jscripts/jscript.min.js?v=".filemtime($_includes.'jscripts/jscript.min.js')."'></script>\n";
+echo "<script src='".$_includes."jscripts/jscript.min.js?v=".filemtime($_includes.'jscripts/jscript.min.js')."'></script>\n";
 echo "</head>\n";
 
 /**
@@ -125,9 +125,8 @@ if (function_exists("render_page")) {
 // Output lines added with add_to_footer()
 echo $fusion_page_footer_tags;
 
-echo "<script src='".$_includes."jquery/admin-scripts.js'></script>\n";
 echo "<script src='".$_includes."jquery/holder/holder.min.js'></script>\n";
-echo "<script type='text/javascript' src='".$_includes."jquery/jquery-ui.js'></script>\n";
+echo "<script src='".$_includes."jquery/jquery-ui.js'></script>\n";
 // Output lines added with add_to_jquery()
 if (!empty($fusion_jquery_tags)) {
     if ($settings['devmode'] == 0) {
