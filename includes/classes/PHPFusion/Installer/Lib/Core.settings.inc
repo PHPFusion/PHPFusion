@@ -114,7 +114,7 @@ function get_table_rows($table_name, $localeset = 'English') {
             ],
             [
                 'settings_name'  => 'opening_page',
-                'settings_value' => 'index.php'
+                'settings_value' => 'home.php'
             ],
             [
                 'settings_name'  => 'locale',
@@ -975,7 +975,7 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'panel_access'      => 0,
                 'panel_display'     => 0,
                 'panel_status'      => 1,
-                'panel_url_list'    => 'index.php',
+                'panel_url_list'    => 'home.php',
                 'panel_restriction' => 2
             ],
             [
@@ -1002,7 +1002,7 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'panel_access'      => 0,
                 'panel_display'     => 0,
                 'panel_status'      => 1,
-                'panel_url_list'    => 'index.php',
+                'panel_url_list'    => 'home.php',
                 'panel_restriction' => 2
             ],
             // RIGHT
@@ -1186,7 +1186,7 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'link_name'       => $locale['setup_3300'],
                 'link_cat'        => '0',
                 'link_icon'       => '',
-                'link_url'        => 'index.php',
+                'link_url'        => 'home.php',
                 'link_visibility' => '0',
                 'link_position'   => '2',
                 'link_status'     => '1',
