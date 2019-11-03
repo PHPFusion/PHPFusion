@@ -45,7 +45,7 @@ if (isset($_POST['add_admin']) && (isset($_POST['user_id']) && isnum($_POST['use
     if (isset($_POST['all_rights']) || isset($_POST['make_super'])) {
         $admin_rights_array = [];
 
-        $result = dbquery("SELECT DISTINCT admin_rights AS admin_right FROM ".DB_ADMIN." ORDER BY admin_right");
+        $result = dbquery("SELECT DISTINCT admin_rights AS admin_right, admin_language FROM ".DB_ADMIN." WHERE admin_language='".LANGUAGE."' ORDER BY admin_right");
         while ($data = dbarray($result)) {
             $admin_rights_array[] = $data['admin_right'];
         }
@@ -102,7 +102,7 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
     if (dbrows($result)) {
         $data = dbarray($result);
         $user_rights = explode(".", $data['user_rights']);
-        $rights_result = dbquery("SELECT admin_rights, admin_title, admin_page FROM ".DB_ADMIN." ORDER BY admin_page ASC, admin_title ASC");
+        $rights_result = dbquery("SELECT admin_rights, admin_title, admin_page, admin_language FROM ".DB_ADMIN." WHERE admin_language='".LANGUAGE."' ORDER BY admin_page ASC, admin_title ASC");
 
         opentable($locale['ADM_440']." [".$data['user_name']."]");
         $columns = 2;
