@@ -657,8 +657,7 @@ if ( !function_exists( "progress_bar" ) ) {
                 // Automatic class selection
                 // calculate 100 to the max of 4 options
                 $progress_calc = floor( $num / 25 );
-                
-                if ( $options['reverse'] === TRUE ) {
+                if ( $options['reverse'] === TRUE && isset( $r[ $progress_calc ] ) ) {
                     $progress_calc = $r[ $progress_calc ];
                 }
                 
@@ -1263,11 +1262,11 @@ if ( !function_exists( "tab_active" )
          * @return FusionTabs|null
          */
         public static function getInstance( $id = 'default' ) {
-        
+    
             if ( !self::$instance ) {
                 self::$instance = new FusionTabs;
             }
-        
+    
             return self::$instance;
         }
     
@@ -1286,7 +1285,7 @@ if ( !function_exists( "tab_active" )
                 $section = get( $getname ) ?: $default_active;
                 //$section = isset($_GET[$getname]) && $_GET[$getname] ? $_GET[$getname] : $default_active;
                 $count = count( $array['title'] );
-            
+    
                 if ( $count > 0 ) {
                     for ( $tabCount = 0; $tabCount < $count; $tabCount++ ) {
                         $tab_id = $array['id'][ $tabCount ];
@@ -1295,7 +1294,7 @@ if ( !function_exists( "tab_active" )
                         }
                     }
                 }
-            
+    
                 return $default_active;
             }
             return $array['id'][ $default_active ];
@@ -1357,7 +1356,7 @@ if ( !function_exists( "tab_active" )
                     define( 'JS_COOKIES', TRUE );
                     add_to_footer( '<script type="text/javascript" src="'.INCLUDES.'jquery/jquery.cookie.js"></script>' );
                 }
-            
+    
                 add_to_jquery( "
                 $('#".$tabId." > li').on('click', function() {
                 var cookieName = '".$this->cookie_name."';
@@ -1391,7 +1390,7 @@ if ( !function_exists( "tab_active" )
                     }
                 }
             }
-        
+    
             $status = ( $link_active_arrkey == $id ? " in active" : '' );
             if ( get( $key ) && $this->link_mode ) {
                 $status = '';
@@ -1399,7 +1398,7 @@ if ( !function_exists( "tab_active" )
                     $status = 'in active';
                 }
             }
-        
+    
             return "<div class='tab-pane fade".$status."' id='".$id."'>\n";
         }
     

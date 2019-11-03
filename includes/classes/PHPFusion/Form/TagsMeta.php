@@ -32,8 +32,8 @@ class TagsMeta {
     public function process_tags() {
 
         $_tags = self::getTagsConfig();
-
-        $tags_input = stripinput($_POST['tags']);
+    
+        $tags_input = sanitizer( 'tags' );
 
         if (!empty($tags_input)) {
 
