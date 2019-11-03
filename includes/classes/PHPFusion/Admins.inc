@@ -26,7 +26,7 @@ use Defender\Token;
  * Determine how to we set variables on 3rd party script
  */
 class Admins {
-
+    
     private static $instance = NULL;
     private static $admin_pages = [];
     private static $locale = [];
@@ -90,7 +90,7 @@ class Admins {
     /**
      * @var array
      */
-    private $admin_sections = [1 => FALSE, 2 => FALSE, 3 => FALSE, 4 => FALSE, 5 => FALSE];
+    private $admin_sections = [ 1 => FALSE, 2 => FALSE, 3 => FALSE, 4 => FALSE, 5 => FALSE ];
     /**
      * @var array
      */
@@ -105,39 +105,39 @@ class Admins {
     private $link_type = [];
     private $submit_data = [];
     private $folder_permissions = [];
-
+    
     public function __construct() {
         self::$locale = self::getAdminLocale();
     }
-
+    
     public static function getAdminLocale() {
-        if (empty(self::$locale)) {
-            self::$locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/main.php');
+        if ( empty( self::$locale ) ) {
+            self::$locale = fusion_get_locale( '', LOCALE.LOCALESET.'admin/main.php' );
         }
-
+        
         return self::$locale;
     }
-
+    
     /**
      * Add instance
      *
      * @return static
      */
     public static function getInstance() {
-        if (empty(self::$instance)) {
+        if ( empty( self::$instance ) ) {
             self::$instance = new static();
         }
-
+    
         return self::$instance;
     }
-
-    public function setCache($form_id, $form_type, $cache_time = 36000) {
+    
+    public function setCache( $form_id, $form_type, $cache_time = 36000 ) {
         // set one instance of cache
         echo "<script>
 
         </script>";
     }
-
+    
     /**
      * @param       $form_id
      * @param       $form_type
@@ -146,12 +146,12 @@ class Admins {
      *
      * @return string
      */
-    public function renderCache($form_id, $form_type, $item_id, array $field_names) {
+    public function renderCache( $form_id, $form_type, $item_id, array $field_names ) {
         $html = "";
-
+        
         return $html;
     }
-
+    
     /**
      * Cache the Current Field Inputs within Login session.
      *
@@ -163,7 +163,7 @@ class Admins {
      *
      * @return string
      */
-    public function requestCache($form_id, $form_type, $item_id, array $callback_fields = [], $cache_time = 30000) {
+    public function requestCache( $form_id, $form_type, $item_id, array $callback_fields = [], $cache_time = 30000 ) {
         /*
         add_to_footer("<script src='".INCLUDES."jquery/confirm/jquery-confirm.min.js'></script>");
         add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/confirm/jquery-confirm.min.css'>");
@@ -216,9 +216,9 @@ class Admins {
             }
         });
         ");*/
-        $remote = fusion_get_settings('site_path')."administration/includes/cache_update.php";
-        $token = fusion_get_token($form_id, 5);
-        add_to_jquery("
+        $remote = fusion_get_settings( 'site_path' )."administration/includes/cache_update.php";
+        $token = fusion_get_token( $form_id, 5 );
+        add_to_jquery( "
         function timedCacheRequest(timeout) {
             setTimeout(UpdateAdminCache, timeout);
         }
@@ -253,32 +253,32 @@ class Admins {
         $('#".$form_id." :input').blur(function(e) {
             UpdateAdminCache(1);
         });
-        ");
-        if (!isset($_GET['autosave'])) {
+        " );
+        if ( !isset( $_GET['autosave'] ) ) {
             // not to pass prefix xhr for security reason.
-            add_to_jquery("setTimeout( function(e) { UpdateAdminCache() }, $cache_time);");
+            add_to_jquery( "setTimeout( function(e) { UpdateAdminCache() }, $cache_time);" );
         }
-
+        
         $html = "";
-        if (!empty($_SESSION['form_cache'][$form_id][$form_type][$item_id])) {
-
-            $html .= "<label class='list-group-item text-normal spacer-xs p-15 m-b-10'>".self::$locale['290']." <a href='".clean_request('autosave=view', ['autosave'], FALSE)."'>".self::$locale['291']."</a></label>";
-
-            if (isset($_GET['autosave']) && $_GET['autosave'] == 'view') {
-
+        if ( !empty( $_SESSION['form_cache'][ $form_id ][ $form_type ][ $item_id ] ) ) {
+            
+            $html .= "<label class='list-group-item text-normal spacer-xs p-15 m-b-10'>".self::$locale['290']." <a href='".clean_request( 'autosave=view', [ 'autosave' ], FALSE )."'>".self::$locale['291']."</a></label>";
+            
+            if ( isset( $_GET['autosave'] ) && $_GET['autosave'] == 'view' ) {
+                
                 $html .= "<div id='rev-window'>\n";
-                $html .= fusion_get_function('openside', "<h4><i class='fas fa-thumbtack m-r-10'></i>".self::$locale['292']."</h4>");
-                $session = html_entity_decode($_SESSION['form_cache'][$form_id][$form_type][$item_id]);
-                parse_str($session, $data);
-                unset($data['form_id']);
-                unset($data['fusion_token']);
-
+                $html .= fusion_get_function( 'openside', "<h4><i class='fas fa-thumbtack m-r-10'></i>".self::$locale['292']."</h4>" );
+                $session = html_entity_decode( $_SESSION['form_cache'][ $form_id ][ $form_type ][ $item_id ] );
+                parse_str( $session, $data );
+                unset( $data['form_id'] );
+                unset( $data['fusion_token'] );
+                
                 $html .= "<dl id='restore_results' class='dl-horizontal'>\n";
                 $fill_js = "";
-                foreach ($data as $field_name => $value) {
-                    if (isset($callback_fields[$field_name])) {
-                        $html .= "<dt>".$callback_fields[$field_name]."</dt>\n";
-                        $html .= "<dd class='m-b-15'><samp>".nl2br(html_entity_decode($value))."</samp>".form_hidden('s_'.$field_name, '', $value)."</dd>\n";
+                foreach ( $data as $field_name => $value ) {
+                    if ( isset( $callback_fields[ $field_name ] ) ) {
+                        $html .= "<dt>".$callback_fields[ $field_name ]."</dt>\n";
+                        $html .= "<dd class='m-b-15'><samp>".nl2br( html_entity_decode( $value ) )."</samp>".form_hidden( 's_'.$field_name, '', $value )."</dd>\n";
                         $fill_js .= "
                             var c = $('#s_$field_name').val();
                             $('#".$field_name."').val(c);
@@ -290,9 +290,9 @@ class Admins {
                 $html .= "<button name='cancel_session' type='button' class='btn btn-default' value='cancel_session'>".self::$locale['cancel']."</button>\n";
                 $html .= "<button name='fill_session' type='button' class='btn btn-primary' value='fill_session'>".self::$locale['293']."</button>\n";
                 $html .= "</div>\n";
-                $html .= fusion_get_function('closeside');
+                $html .= fusion_get_function( 'closeside' );
                 $html .= "</div>\n";
-                add_to_jquery("
+                add_to_jquery( "
                     $('button[name^=\"fill_session\"]').bind('click', function(e) {
                         $fill_js
                         $('#rev-window').hide();
@@ -302,99 +302,99 @@ class Admins {
                         $('#rev-window').hide();
                         UpdateAdminCache();
                     });
-            ");
+            " );
             }
         }
-
+        
         return $html;
     }
-
+    
     public function setAdmin() {
-        if (!defined('IN_SETUP')) {
+        if ( !defined( 'IN_SETUP' ) ) {
             self::$admin_pages = $this->getAdminPages();
-
-            $this->admin_sections = array_filter(array_merge([
+            
+            $this->admin_sections = array_filter( array_merge( [
                     0 => self::$locale['ac00'],
                     1 => self::$locale['ac01'],
                     2 => self::$locale['ac02'],
                     3 => self::$locale['ac03'],
                     4 => self::$locale['ac04'],
                     5 => self::$locale['ac05'],
-                ], $this->admin_sections)
+                ], $this->admin_sections )
             );
-
-            $this->admin_sections = array_values($this->admin_sections);
-
+            
+            $this->admin_sections = array_values( $this->admin_sections );
+            
             $this->current_page = $this->_currentPage();
         }
     }
-
+    
     /**
      * @return array
      */
     public function getAdminPages() {
-        self::$admin_pages = array_filter(self::$admin_pages);
-        if (empty(self::$admin_pages)) {
-            $result = dbquery("SELECT admin_title, admin_page, admin_rights, admin_link FROM ".DB_ADMIN." WHERE admin_language='".LANGUAGE."' ORDER BY admin_page DESC, admin_id ASC, admin_title ASC");
-            $rows = dbrows($result);
-            if ($rows) {
-                while ($data = dbarray($result)) {
-                    if (file_exists(ADMIN.$data['admin_link']) || file_exists(INFUSIONS.$data['admin_link'])) {
-                        if (checkrights($data['admin_rights']) && $data['admin_link'] != "reserved") {
-                            $data['admin_title'] = preg_replace("/&(?!(#\d+|\w+);)/", "&amp;", $data['admin_title']);
-                            self::$admin_pages[$data['admin_page']][] = $data;
+        self::$admin_pages = array_filter( self::$admin_pages );
+        if ( empty( self::$admin_pages ) ) {
+            $result = dbquery( "SELECT admin_title, admin_page, admin_rights, admin_link FROM ".DB_ADMIN." WHERE admin_language='".LANGUAGE."' ORDER BY admin_page DESC, admin_id ASC, admin_title ASC" );
+            $rows = dbrows( $result );
+            if ( $rows ) {
+                while ( $data = dbarray( $result ) ) {
+                    if ( file_exists( ADMIN.$data['admin_link'] ) || file_exists( INFUSIONS.$data['admin_link'] ) ) {
+                        if ( checkrights( $data['admin_rights'] ) && $data['admin_link'] != "reserved" ) {
+                            $data['admin_title'] = preg_replace( "/&(?!(#\d+|\w+);)/", "&amp;", $data['admin_title'] );
+                            self::$admin_pages[ $data['admin_page'] ][] = $data;
                         }
                     }
                 }
             }
         }
-
+    
         return (array)self::$admin_pages + self::$public_pages;
     }
-
+    
     /**
      * Build a return that always synchronize with the DB_ADMIN url.
      */
     public function _currentPage() {
         $path = $_SERVER['PHP_SELF'];
-        if (defined('START_PAGE')) {
-            $path_info = pathinfo(START_PAGE);
-            if (stristr($_SERVER['REQUEST_URI'], '/administration/') && !stristr($_SERVER['REQUEST_URI'], "/infusions/")) {
+        if ( defined( 'START_PAGE' ) ) {
+            $path_info = pathinfo( START_PAGE );
+            if ( stristr( $_SERVER['REQUEST_URI'], '/administration/' ) && !stristr( $_SERVER['REQUEST_URI'], "/infusions/" ) ) {
                 $path = $path_info['filename'].'.php';
             } else {
                 $path = '../'.$path_info['dirname'].'/'.$path_info['filename'].'.php';
             }
         }
-
+    
         return $path;
     }
-
+    
     /**
      * @param $page          - 0-5 is core section pages. 6 and above are free to use.
      * @param $section_title - Section title
      * @param $icons         - Section Icons
      */
-    public function addAdminSection($page, $section_title, $icons) {
-        $this->admin_sections[$page] = $section_title;
-        $this->admin_section_icons[$page] = $icons;
-        self::$admin_pages[$page] = [];
+    public function addAdminSection( $page, $section_title, $icons ) {
+        $this->admin_sections[ $page ] = $section_title;
+        $this->admin_section_icons[ $page ] = $icons;
+        self::$admin_pages[ $page ] = [];
     }
-
+    
     public function setAdminBreadcrumbs() {
-        BreadCrumbs::getInstance()->addBreadCrumb([
+        add_breadcrumb( [
             'link'  => ADMIN.'index.php'.fusion_get_aidlink().'&amp;pagenum=0',
             'title' => self::$locale['ac10']
-        ]);
-
-        $acTab = (isset($_GET['pagenum']) && isnum($_GET['pagenum'])) ? $_GET['pagenum'] : $this->_isActive();
-        if ($acTab != 0 && $acTab <= 5) {
-            BreadCrumbs::getInstance()->addBreadCrumb([
+        ] );
+        
+        $acTab = ( isset( $_GET['pagenum'] ) && isnum( $_GET['pagenum'] ) ) ? $_GET['pagenum'] : $this->_isActive();
+        if ( $acTab != 0 && $acTab <= 5 ) {
+            add_breadcrumb( [
                 'link'  => ADMIN.fusion_get_aidlink()."&amp;pagenum=".$acTab,
-                'title' => self::$locale['ac0'.$acTab]
-            ]);
+                'title' => self::$locale[ 'ac0'.$acTab ]
+            ] );
         }
     }
-
+    
     /**
      * Determine which section is currently active.
      *
@@ -403,49 +403,49 @@ class Admins {
     public function _isActive() {
         $active_key = 0;
         self::$admin_pages = $this->getAdminPages();
-        if (empty($active_key) && !empty(self::$admin_pages)) {
-            foreach (self::$admin_pages as $key => $data) {
+        if ( empty( $active_key ) && !empty( self::$admin_pages ) ) {
+            foreach ( self::$admin_pages as $key => $data ) {
                 $link = [];
-                foreach ($data as $arr => $admin_data) {
+                foreach ( $data as $arr => $admin_data ) {
                     $link[] = $admin_data['admin_link'];
                 }
-                $data_link = array_flip($link);
-                if (isset($data_link[$this->_currentPage()])) {
+                $data_link = array_flip( $link );
+                if ( isset( $data_link[ $this->_currentPage() ] ) ) {
                     return $key;
                 }
             }
         }
-
+    
         return '0';
     }
-
+    
     /**
      * @return array
      */
     public function getAdminPageIcons() {
         return $this->admin_page_icons;
     }
-
+    
     /**
      * @param $rights
      * @param $icons
      */
-    public function setAdminPageIcons($rights, $icons) {
-        $this->admin_page_icons[$rights] = $icons;
+    public function setAdminPageIcons( $rights, $icons ) {
+        $this->admin_page_icons[ $rights ] = $icons;
     }
-
-    public function getLinkType($type = NULL) {
-        return ($type !== NULL ? (isset($this->link_type[$type]) ? $this->link_type[$type] : NULL) : $this->link_type);
+    
+    public function getLinkType( $type = NULL ) {
+        return ( $type !== NULL ? ( isset( $this->link_type[ $type ] ) ? $this->link_type[ $type ] : NULL ) : $this->link_type );
     }
-
+    
     /**
      * @param $type - link prefix
      * @param $link - link url
      */
-    public function setLinkType($type, $link) {
-        $this->link_type[$type] = $link;
+    public function setLinkType( $type, $link ) {
+        $this->link_type[ $type ] = $link;
     }
-
+    
     /**
      * Get Submit Type
      *
@@ -453,85 +453,85 @@ class Admins {
      *
      * @return array|mixed|null
      */
-    public function getSubmitType($type = NULL) {
-        return ($type !== NULL ? (isset($this->submit_type[$type]) ? $this->submit_type[$type] : NULL) : $this->submit_type);
+    public function getSubmitType( $type = NULL ) {
+        return ( $type !== NULL ? ( isset( $this->submit_type[ $type ] ) ? $this->submit_type[ $type ] : NULL ) : $this->submit_type );
     }
-
+    
     /**
      * @param $type  - submissions prefix
      * @param $title - title
      */
-    public function setSubmitType($type, $title) {
-        $this->submit_type[$type] = $title;
+    public function setSubmitType( $type, $title ) {
+        $this->submit_type[ $type ] = $title;
     }
-
-    public function getSubmitData($type = NULL) {
-        return ($type !== NULL ? (isset($this->submit_data[$type]) ? $this->submit_data[$type] : NULL) : $this->submit_data);
+    
+    public function getSubmitData( $type = NULL ) {
+        return ( $type !== NULL ? ( isset( $this->submit_data[ $type ] ) ? $this->submit_data[ $type ] : NULL ) : $this->submit_data );
     }
-
+    
     /**
      * @param $type    - submissions prefix
      * @param $options - array(infusion_name, link, submit_link, submit_locale, title,admin_link)
      */
-    public function setSubmitData($type, array $options = []) {
-        defined(strtoupper($options['infusion_name']).'_EXIST') ? $this->submit_data[$type] = $options : NULL;
+    public function setSubmitData( $type, array $options = [] ) {
+        defined( strtoupper( $options['infusion_name'] ).'_EXIST' ) ? $this->submit_data[ $type ] = $options : NULL;
     }
-
-    public function getSubmitLink($type = NULL) {
-        return ($type !== NULL ? (isset($this->submit_link[$type]) ? $this->submit_link[$type] : NULL) : $this->submit_link);
+    
+    public function getSubmitLink( $type = NULL ) {
+        return ( $type !== NULL ? ( isset( $this->submit_link[ $type ] ) ? $this->submit_link[ $type ] : NULL ) : $this->submit_link );
     }
-
+    
     /**
      * @param string $link Admin submission url
      * @param string $type Submissions stype prefix
      */
-    public function setSubmitLink($type, $link) {
-        $this->submit_link[$type] = $link;
+    public function setSubmitLink( $type, $link ) {
+        $this->submit_link[ $type ] = $link;
     }
-
-    public function getCommentType($type = NULL) {
-        return ($type !== NULL ? (isset($this->comment_type[$type]) ? $this->comment_type[$type] : NULL) : $this->comment_type);
+    
+    public function getCommentType( $type = NULL ) {
+        return ( $type !== NULL ? ( isset( $this->comment_type[ $type ] ) ? $this->comment_type[ $type ] : NULL ) : $this->comment_type );
     }
-
+    
     /**
      * @param string type  comment prefix
      * @param string title title
      */
-    public function setCommentType($type, $title) {
-        $this->comment_type[$type] = $title;
+    public function setCommentType( $type, $title ) {
+        $this->comment_type[ $type ] = $title;
     }
-
+    
     /**
      * @param null $type
      *
      * @return array|mixed|null
      */
-    public function getFolderPermissions($type = NULL) {
-        return ($type !== NULL ? (isset($this->folder_permissions[$type]) ? $this->folder_permissions[$type] : NULL) : $this->folder_permissions);
+    public function getFolderPermissions( $type = NULL ) {
+        return ( $type !== NULL ? ( isset( $this->folder_permissions[ $type ] ) ? $this->folder_permissions[ $type ] : NULL ) : $this->folder_permissions );
     }
-
+    
     /**
      * @param string $type    infusion_name
      * @param array  $options array(image_folder => TRUE or FALSE)
      */
-    public function setFolderPermissions($type, array $options = []) {
-        defined(strtoupper($type).'_EXIST') ? $this->folder_permissions[$type] = $options : NULL;
+    public function setFolderPermissions( $type, array $options = [] ) {
+        defined( strtoupper( $type ).'_EXIST' ) ? $this->folder_permissions[ $type ] = $options : NULL;
     }
-
+    
     /**
      * @return array
      */
     public function getAdminPageLink() {
         return $this->admin_page_link;
     }
-
+    
     /**
      * @return mixed
      */
     public function getCurrentPage() {
         return $this->current_page;
     }
-
+    
     /**
      * Displays vertical collapsible administration navigation
      *
@@ -539,116 +539,116 @@ class Admins {
      *
      * @return string
      */
-    public function vertical_admin_nav($image_icon = FALSE) {
-        return $this->verticalAdminNav($image_icon);
+    public function vertical_admin_nav( $image_icon = FALSE ) {
+        return $this->verticalAdminNav( $image_icon );
     }
-
-    public function verticalAdminNav($image_icon = FALSE) {
+    
+    public function verticalAdminNav( $image_icon = FALSE ) {
         $aidlink = fusion_get_aidlink();
         $admin_sections = self::getAdminSections();
         $admin_pages = self::getAdminPages();
-
-        add_to_jquery('$("[data-toggle=collapse]").click(function () {$(this).find(".adl-drop i").toggleClass("fa-angle-left fa-angle-down");});');
-
+        
+        add_to_jquery( '$("[data-toggle=collapse]").click(function () {$(this).find(".adl-drop i").toggleClass("fa-angle-left fa-angle-down");});' );
+        
         $html = "<ul id='adl' class='admin-vertical-link'>\n";
-
-        foreach ($admin_sections as $i => $section_name) {
-            $active = ((isset($_GET['pagenum']) && $_GET['pagenum'] == $i) || (!isset($_GET['pagenum']) && $this->_isActive() == $i)) ? TRUE : FALSE;
-
-            $html .= "<li class='".($active ? 'active panel' : 'panel')."' >\n";
-
-            if (!empty($admin_pages[$i]) && is_array($admin_pages[$i])) {
-                $html .= "<a class='adl-link ".($active ? '' : 'collapsed')."' data-parent='#adl' data-toggle='collapse' href='#adl-$i'>".$this->getAdminSectionIcons($i)." <span class='adl-section-name'>".$section_name.($i > 4 ? " <span class='badge'>".count($admin_pages[$i])."</span>" : "")."</span> ".($i > 0 ? "<span class='adl-drop pull-right'><i class='fa fa-angle-".($active ? "left" : "down")."'></i></span>" : '')."</a>\n";
-                $html .= "<ul id='adl-$i' class='admin-submenu collapse ".($active ? 'in' : '')."'>\n";
-
-                foreach ($admin_pages[$i] as $key => $data) {
+        
+        foreach ( $admin_sections as $i => $section_name ) {
+            $active = ( ( isset( $_GET['pagenum'] ) && $_GET['pagenum'] == $i ) || ( !isset( $_GET['pagenum'] ) && $this->_isActive() == $i ) ) ? TRUE : FALSE;
+            
+            $html .= "<li class='".( $active ? 'active panel' : 'panel' )."' >\n";
+            
+            if ( !empty( $admin_pages[ $i ] ) && is_array( $admin_pages[ $i ] ) ) {
+                $html .= "<a class='adl-link ".( $active ? '' : 'collapsed' )."' data-parent='#adl' data-toggle='collapse' href='#adl-$i'>".$this->getAdminSectionIcons( $i )." <span class='adl-section-name'>".$section_name.( $i > 4 ? " <span class='badge'>".count( $admin_pages[ $i ] )."</span>" : "" )."</span> ".( $i > 0 ? "<span class='adl-drop pull-right'><i class='fa fa-angle-".( $active ? "left" : "down" )."'></i></span>" : '' )."</a>\n";
+                $html .= "<ul id='adl-$i' class='admin-submenu collapse ".( $active ? 'in' : '' )."'>\n";
+                
+                foreach ( $admin_pages[ $i ] as $key => $data ) {
                     $title = $data['admin_title'];
-                    if ($data['admin_page'] !== 5) {
-                        $title = isset(self::$locale[$data['admin_rights']]) ? self::$locale[$data['admin_rights']] : $title;
+                    if ( $data['admin_page'] !== 5 ) {
+                        $title = isset( self::$locale[ $data['admin_rights'] ] ) ? self::$locale[ $data['admin_rights'] ] : $title;
                     }
-
+                    
                     $secondary_active = $data['admin_link'] == $this->_currentPage() ? TRUE : FALSE;
-                    $icons = ($image_icon === TRUE) ? "<img class='admin-image' src='".get_image("ac_".$data['admin_rights'])."' alt='$title'/>" : $this->getAdminIcons($data['admin_rights']);
-
-                    if (!empty($admin_pages[$data['admin_rights']])) {
-                        if (checkrights($data['admin_rights'])) {
-                            $html .= "<li".($secondary_active ? " class='active'" : '')." class='sub_pages'>";
-                            $html .= "<a class='adl-link' data-toggle='collapse' href='#adl-sub-$key'>".$icons." <span class='adl-submenu-title'>".$title."</span> <span class='adl-drop pull-right'><i class='fa fa-angle-".($secondary_active ? 'left' : 'down')."'></i></span></a>";
-                            $html .= "<ul id='adl-sub-$key' class='admin-subpages collapse".($secondary_active ? ' in' : '')."'>";
-
-                            foreach ($admin_pages[$data['admin_rights']] as $sub_key => $sub_page) {
-                                if (!empty($admin_pages[$sub_page['admin_rights']])) {
-                                    $html .= "<li".($secondary_active ? " class='active'" : '')." class='sub_sub_pages'>";
-                                        $html .= "<a class='adl-link' data-toggle='collapse' href='#adl-sub-sub-$key'><span class='adl-submenu-title'>".$sub_page['admin_title']."</span> <span class='adl-drop pull-right'><i class='fa fa-angle-".($secondary_active ? 'left' : 'down')."'></i></span></a>";
-                                        $html .= "<ul id='adl-sub-sub-$key' class='admin-subpages collapse".($secondary_active ? ' in' : '')."'>";
-
-                                        foreach ($admin_pages[$sub_page['admin_rights']] as $subsub_key => $subsub_page) {
-                                            $html .= "<li class='m-l-10'><a href='".$subsub_page['admin_link']."'><span class='adl-submenu-title'>".$subsub_page['admin_title']."</span></a></li>";
-                                        }
-                                        $html .= "</ul>\n";
+                    $icons = ( $image_icon === TRUE ) ? "<img class='admin-image' src='".get_image( "ac_".$data['admin_rights'] )."' alt='$title'/>" : $this->getAdminIcons( $data['admin_rights'] );
+                    
+                    if ( !empty( $admin_pages[ $data['admin_rights'] ] ) ) {
+                        if ( checkrights( $data['admin_rights'] ) ) {
+                            $html .= "<li".( $secondary_active ? " class='active'" : '' )." class='sub_pages'>";
+                            $html .= "<a class='adl-link' data-toggle='collapse' href='#adl-sub-$key'>".$icons." <span class='adl-submenu-title'>".$title."</span> <span class='adl-drop pull-right'><i class='fa fa-angle-".( $secondary_active ? 'left' : 'down' )."'></i></span></a>";
+                            $html .= "<ul id='adl-sub-$key' class='admin-subpages collapse".( $secondary_active ? ' in' : '' )."'>";
+                            
+                            foreach ( $admin_pages[ $data['admin_rights'] ] as $sub_key => $sub_page ) {
+                                if ( !empty( $admin_pages[ $sub_page['admin_rights'] ] ) ) {
+                                    $html .= "<li".( $secondary_active ? " class='active'" : '' )." class='sub_sub_pages'>";
+                                    $html .= "<a class='adl-link' data-toggle='collapse' href='#adl-sub-sub-$key'><span class='adl-submenu-title'>".$sub_page['admin_title']."</span> <span class='adl-drop pull-right'><i class='fa fa-angle-".( $secondary_active ? 'left' : 'down' )."'></i></span></a>";
+                                    $html .= "<ul id='adl-sub-sub-$key' class='admin-subpages collapse".( $secondary_active ? ' in' : '' )."'>";
+                                    
+                                    foreach ( $admin_pages[ $sub_page['admin_rights'] ] as $subsub_key => $subsub_page ) {
+                                        $html .= "<li class='m-l-10'><a href='".$subsub_page['admin_link']."'><span class='adl-submenu-title'>".$subsub_page['admin_title']."</span></a></li>";
+                                    }
+                                    $html .= "</ul>\n";
                                     $html .= "</li>";
                                 } else {
                                     $html .= "<li><a href='".$sub_page['admin_link']."'><span class='adl-submenu-title'>".$sub_page['admin_title']."</span></a></li>";
                                 }
                             }
-
+                            
                             $html .= "</ul>\n";
                             $html .= "</li>";
                         }
                     } else {
-                        $html .= checkrights($data['admin_rights']) ? "<li".($secondary_active ? " class='active'" : '')."><a href='".ADMIN.$data['admin_link'].$aidlink."'>".$icons." <span class='adl-submenu-title'>".$title."</span></a></li>\n" : "";
+                        $html .= checkrights( $data['admin_rights'] ) ? "<li".( $secondary_active ? " class='active'" : '' )."><a href='".ADMIN.$data['admin_link'].$aidlink."'>".$icons." <span class='adl-submenu-title'>".$title."</span></a></li>\n" : "";
                     }
-
+                    
                 }
-
+                
                 $html .= "</ul>\n";
             } else {
-                $html .= "<a class='adl-link' href='".ADMIN."index.php".$aidlink."&amp;pagenum=0'>".$this->getAdminSectionIcons($i)." <span class='adl-section-name'>".$section_name."</span></a>\n";
+                $html .= "<a class='adl-link' href='".ADMIN."index.php".$aidlink."&amp;pagenum=0'>".$this->getAdminSectionIcons( $i )." <span class='adl-section-name'>".$section_name."</span></a>\n";
             }
             $html .= "</li>\n";
         }
-
+        
         $html .= "</ul>\n";
-
+        
         return (string)$html;
     }
-
+    
     /**
      * @return array
      */
     public function getAdminSections() {
         return $this->admin_sections;
     }
-
+    
     /**
      * @param $page_number
      *
      * @return string
      */
-    public function get_admin_section_icons($page_number) {
-        return $this->getAdminSectionIcons($page_number);
+    public function get_admin_section_icons( $page_number ) {
+        return $this->getAdminSectionIcons( $page_number );
     }
-
-    public function getAdminSectionIcons($page_number) {
-        if (!empty($this->admin_section_icons[$page_number]) && $this->admin_section_icons[$page_number]) {
-            return $this->admin_section_icons[$page_number];
+    
+    public function getAdminSectionIcons( $page_number ) {
+        if ( !empty( $this->admin_section_icons[ $page_number ] ) && $this->admin_section_icons[ $page_number ] ) {
+            return $this->admin_section_icons[ $page_number ];
         }
-
+        
         return FALSE;
     }
-
+    
     /**
      * Replace admin page icons
      *
      * @param $page
      * @param $icons
      */
-    public function setAdminSectionIcons($page, $icons) {
-        if (isset($this->admin_section_icons[$page])) {
-            $this->admin_section_icons[$page] = $icons;
+    public function setAdminSectionIcons( $page, $icons ) {
+        if ( isset( $this->admin_section_icons[ $page ] ) ) {
+            $this->admin_section_icons[ $page ] = $icons;
         }
     }
-
+    
     /**
      * Get the administration page icons
      *
@@ -656,19 +656,19 @@ class Admins {
      *
      * @return string
      */
-    public function get_admin_icons($admin_rights) {
-        return $this->getAdminIcons($admin_rights);
+    public function get_admin_icons( $admin_rights ) {
+        return $this->getAdminIcons( $admin_rights );
     }
-
-    public function getAdminIcons($admin_rights) {
-        if (!empty($this->admin_page_icons[$admin_rights])) {
-
-            return (string)$this->admin_page_icons[$admin_rights];
+    
+    public function getAdminIcons( $admin_rights ) {
+        if ( !empty( $this->admin_page_icons[ $admin_rights ] ) ) {
+            
+            return (string)$this->admin_page_icons[ $admin_rights ];
         }
-
+        
         return '';
     }
-
+    
     /**
      * Displays horizontal administration navigation
      *
@@ -676,23 +676,23 @@ class Admins {
      *
      * @return string
      */
-    public function horizontal_admin_nav($icon_only = FALSE) {
-        return $this->horizontalAdminNav($icon_only);
+    public function horizontal_admin_nav( $icon_only = FALSE ) {
+        return $this->horizontalAdminNav( $icon_only );
     }
-
-    public function horizontalAdminNav($icon_only = FALSE) {
+    
+    public function horizontalAdminNav( $icon_only = FALSE ) {
         $aidlink = fusion_get_aidlink();
         $html = "<ul class='admin-horizontal-link'>\n";
-        foreach ($this->admin_sections as $i => $section_name) {
-            $active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && $this->_isActive() == $i) ? 1 : 0;
+        foreach ( $this->admin_sections as $i => $section_name ) {
+            $active = ( isset( $_GET['pagenum'] ) && $_GET['pagenum'] == $i || !isset( $_GET['pagenum'] ) && $this->_isActive() == $i ) ? 1 : 0;
             $admin_text = $icon_only == FALSE ? " ".$section_name : "";
-            $html .= "<li ".($active ? "class='active'" : '')."><a title='".$section_name."' href='".ADMIN.$aidlink."&amp;pagenum=$i'>".$this->getAdminSectionIcons($i).$admin_text."</a></li>\n";
+            $html .= "<li ".( $active ? "class='active'" : '' )."><a title='".$section_name."' href='".ADMIN.$aidlink."&amp;pagenum=$i'>".$this->getAdminSectionIcons( $i ).$admin_text."</a></li>\n";
         }
         $html .= "</ul>\n";
-
+        
         return $html;
     }
-
+    
     /**
      * @param string $page Use number to add child to sub-section and admin_rights to sub-pages
      * @param string $title
@@ -708,8 +708,8 @@ class Admins {
      * @param string $icon
      * @param array  $data array of data attributes and values ['key'=>'value', 'key2' => 'value2']
      */
-    public function addAdminPage($page, $title, $rights, $link, $icon = '', $data = [], $active = FALSE) {
-        self::$public_pages[$page][$rights] = [
+    public function addAdminPage( $page, $title, $rights, $link, $icon = '', $data = [], $active = FALSE ) {
+        self::$public_pages[ $page ][ $rights ] = [
             "admin_title"  => $title,
             "admin_page"   => $page,
             "admin_rights" => $rights,
@@ -719,7 +719,7 @@ class Admins {
             'admin_active' => $active,
         ];
     }
-
+    
     public function getPublicPages() {
         return self::$public_pages;
     }

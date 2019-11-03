@@ -413,8 +413,8 @@ class AdminForm {
         }
 
         $fhtml = '';
-
-
+    
+        // Remove
         if (!empty($this->factory->get_remove_prop('name')) &&  !empty($this->factory->data[$this->factory->field['id']['name']])) { // what is the primary column?
 
             $fhtml = form_button($this->factory->get_remove_prop('name'),
@@ -423,16 +423,17 @@ class AdminForm {
                 $this->factory->get_remove_prop('options')
             );
         }
-
+    
+        // Save
         $fhtml .= form_button($this->factory->get_save_prop('name'),
             $this->factory->get_save_prop('label'),
             $this->factory->get_save_prop('value'),
             $this->factory->get_save_prop('options') ? $this->factory->get_save_prop('options') : []);
 
         $button[] = "#".$this->factory->get_save_prop('name');
-
+    
+        // Save and Close
         if (!empty($this->factory->form_properties['back_link'])) {
-
             $fhtml .= form_button($this->factory->get_save_close_prop('name'),
                 $this->factory->get_save_close_prop('label'),
                 $this->factory->get_save_close_prop('value'),
@@ -454,21 +455,26 @@ class AdminForm {
      * @throws \Exception
      */
     function ui_meta_categories() {
-        return (string)$this->render_panel([
-            'title'       => 'Categories',
-            'description' => CategoryMeta::getInstance($this->factory)->displayMeta()
-
-        ]);
+        if ( $this->factory->categories ) {
+            return (string)$this->render_panel( [
+                'title'       => 'Categories',
+                'description' => CategoryMeta::getInstance( $this->factory )->displayMeta()
+            ] );
+        }
+        return '';
     }
 
     /**
      * @return mixed
      */
     function ui_meta_tags() {
-        return (string)$this->render_panel([
-            'title'       => 'Tags',
-            'description' => Form\TagsMeta::getInstance($this->factory)->displayMeta()
-        ]);
+        if ( $this->factory->tags ) {
+            return (string)$this->render_panel( [
+                'title'       => 'Tags',
+                'description' => Form\TagsMeta::getInstance( $this->factory )->displayMeta()
+            ] );
+        }
+        return '';
     }
 
     /**
