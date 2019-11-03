@@ -71,7 +71,7 @@ class Quick_Reply extends Forum_Server {
 
         // Buttons Checkbox
         $options_field = form_checkbox('post_smileys', $locale['forum_0169'], '', ['class' => 'm-r-10', 'type' => 'button', 'ext_tip' => $locale['forum_0622']]);
-        if (!fusion_get_userdata('user_sig')) {
+        if (fusion_get_userdata('user_sig')) {
             $options_field .= form_checkbox('post_showsig', $locale['forum_0264'], '1', ['class' => 'm-r-10', 'type' => 'button', 'ext_tip' => $locale['forum_0170']]);
         }
         if (parent::get_forum_settings('thread_notify')) {
@@ -91,81 +91,81 @@ class Quick_Reply extends Forum_Server {
           el.val(before + newText + after)
           el[0].selectionStart = el[0].selectionEnd = start + newText.length
           el.focus()
-        }        
+        }
         $('#file_upload_btn').bind('click', function(e) {
             e.preventDefault();
             $('#file').click();
         });
-        
+
         $('#file').on('change', function(e) {
-            let formData = new FormData();         
+            let formData = new FormData();
             var ins = this.files.length;
             for (var x = 0; x < ins; x++) {
                 formData.append('upload[]', this.files[x]);
-            }            
+            }
 
             formData.append('fusion_token', '".fusion_get_token('post_attachments', 10)."');
             formData.append('form_id', 'post_attachments');
             formData.append('thread_id', '".$info['thread_id']."');
             formData.append('user_id', '".$user_id."');
-            
+
             $.ajax({
                 url: '".fusion_get_settings('siteurl')."infusions/forum/classes/post/attach.php',  //Server script to process data
                 type: 'POST',
                 data: formData,
                 contentType: false,
                 processData: false,
-                dataType: 'json',               
-                success: function(html){          
+                dataType: 'json',
+                success: function(html){
                    $.each(html, function(index) {
                         let image = html[index].html;
-                        let error = html[index].error;                        
+                        let error = html[index].error;
                         $('.quick-img-container').append(image);
                         if (error) {
-                            alert(error);                            
-                        }                        
-                   });            
+                            alert(error);
+                        }
+                   });
                 },
                 error: function(e) {
                     console.log('Something went wrong!');
                 }
             });
         });
-        
+
         $('body').on('click', '.insert-image', function(e) {
             e.preventDefault();
-            
+
             let aid = $(this).data('id');
-            let size =  $(this).data('size');  
-            console.log(size);          
+            let size =  $(this).data('size');
+            console.log(size);
             let formData = new FormData();
             formData.append('fusion_token', '".fusion_get_token('post_attachments', 10)."');
             formData.append('form_id', 'post_attachments');
             formData.append('thread_id', '".$info['thread_id']."');
-            formData.append('user_id', '".$user_id."');         
+            formData.append('user_id', '".$user_id."');
             formData.append('attach_size', size );
             formData.append('attach_id', aid );
-            
+
             $.ajax({
                 url: '".fusion_get_settings('siteurl')."infusions/forum/classes/post/attach-insert.php',  //Server script to process data
                 type: 'POST',
                 data: formData,
                 contentType: false,
                 processData: false,
-                dataType: 'json',              
+                dataType: 'json',
                 success: function(html){
-                    // if remove                                                     
+                    // if remove
                    if (html.image_name) {
-                        addInTextarea($('#$textarea_id'), html.image_name);                                      
+                        addInTextarea($('#$textarea_id'), html.image_name);
                    } else if (size == 'remove') {
-                        $('#atc_' + aid).remove();                        
-                   }                                                                   
+                        $('#atc_' + aid).remove();
+                   }
                 },
                 error: function(e) {
                     console.log('Something went wrong!');
                 }
             });
-        });        
+        });
         ");
 
         // Attachments
