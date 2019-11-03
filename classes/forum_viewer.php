@@ -92,11 +92,15 @@ class Forum_Viewer {
      * @return string
      */
     public function render_forum($info) {
+    
         $this->info = $info;
+    
         $this->locale = fusion_get_locale();
-        $section = $this->forum->getForumSection();
+    
+        $section = $this->forum->getCurrentSection();
 
         if ($section) {
+    
             if ($section == 'moderator') {
                 return $this->forum_report($info);
             }
@@ -130,7 +134,7 @@ class Forum_Viewer {
     public function forum_report($info) {
         //print_p($info);
         $locale = fusion_get_locale();
-        $html = \PHPFusion\Template::getInstance('forum-reports');
+        $html = Template::getInstance( 'forum-reports' );
         $html->set_template(__DIR__.'/../templates/forum_reports.html');
         $html->set_css($this->css_file_path);
         $html->set_locale($locale);
@@ -272,7 +276,7 @@ class Forum_Viewer {
         $settings = fusion_get_settings();
         $forum_settings = Forum_Server::get_forum_settings();
         $file_path = get_forum_template('forum_post');
-        $html = \PHPFusion\Template::getInstance('forum-post');
+        $html = Template::getInstance( 'forum-post' );
         $html->set_template($file_path);
         //$html->set_css($this->css_file_path);
         $html->set_locale($locale);
@@ -483,7 +487,7 @@ class Forum_Viewer {
         $locale = fusion_get_locale();
         // Ok, since this is a subpage and also require replacement, we need a new html file.
         $file_path = get_forum_template('forum_thread');
-        $html = \PHPFusion\Template::getInstance('forum-thread');
+        $html = Template::getInstance( 'forum-thread' );
         $html->set_locale($locale);
         $html->set_template($file_path);
         $html->set_template(__DIR__.'/../templates/forum_thread_item.html');
@@ -493,11 +497,13 @@ class Forum_Viewer {
         $html->set_tag('title3', $locale['forum_0020']);
         $html->set_tag('title4', $locale['forum_0053']);
         if (!empty($info['threads'])) {
+    
             if (!empty($info['threads']['sticky'])) {
                 foreach ($info['threads']['sticky'] as $cdata) {
+    
                     $thread_buttons = "";
                     if (iMEMBER) {
-                        $html3 = \PHPFusion\Template::getInstance('threads_'.$cdata['thread_id']);
+                        $html3 = Template::getInstance( 'threads_'.$cdata['thread_id'] );
                         $html3->set_block("track_button", [
                             "track_link"    => $cdata['track_button']['link'],
                             "track_title"   => $cdata['track_button']['title'],
@@ -751,13 +757,15 @@ class Forum_Viewer {
      * @return string
      */
     public function forum_section($info) {
-
-        if (!$this->forum->getForumSection()) {
+    
+        if ( !$this->forum->getCurrentSection() ) {
             redirect(FORUM.'index.php');
         }
 
         $locale = fusion_get_locale();
+    
         $file_path = get_forum_template('forum_section');
+    
         $html = Template::getInstance('forum-section');
         $html->set_template($file_path);
         $html->set_css($this->css_file_path);
@@ -778,6 +786,7 @@ class Forum_Viewer {
                 ]);
             }
         }
+    
         $html->set_tag('forum_filter', forum_filter($info));
 
         if (!empty($info['threads']['pagenav'])) {
@@ -849,8 +858,9 @@ class Forum_Viewer {
                 }
 
                 $html->set_block('view', ['content' => $this->forum_threads_item($info)]);
-
+                break;
             case 'threads':
+    
                 if ($info['forum_type'] > 1) {
                     $html->set_block('view', ['content' => $this->forum_threads_item($info)]);
                 }
