@@ -257,7 +257,7 @@ class MemberPoll {
                 echo "<p>".self::$locale['POLL_048']." ".showdate("shortdate", $data['poll_started'])."</p>\n";
                 echo "<p class='display-inline-block badge'>".self::$locale['POLL_064'].' '.($data['poll_started'] > time() ? self::$locale['POLL_065'] : (!empty($data['poll_ended']) && ($data['poll_ended'] < time()) ? self::$locale['POLL_066'] : self::$locale['POLL_067']))."</p>\n";
                 if (!empty($data['poll_ended']) && $data['poll_ended'] < time()) {
-                    echo "<p>".self::$locale['POLL_066'].": ".showdate("shortdate", $data['poll_ended'])."</p>\n";
+                    echo "<p>".self::$locale['POLL_049'].": ".showdate("shortdate", $data['poll_ended'])."</p>\n";
                 }
                 echo "</div>\n";
 
@@ -571,7 +571,7 @@ class MemberPoll {
                 echo "<p class='display-inline-block badge m-b-0'>".self::$locale['POLL_064'].' '.($data['poll_started'] > time() ? self::$locale['POLL_065'] : (!empty($data['poll_ended']) && ($data['poll_ended'] < time()) ? self::$locale['POLL_066'] : self::$locale['POLL_067']))."</p>\n";
 
                 if (!empty($data['poll_ended']) && $data['poll_ended'] < time()) {
-                    echo "<p>".self::$locale['POLL_066'].": ".showdate("shortdate", $data['poll_ended'])."</p>\n";
+                    echo "<p>".self::$locale['POLL_049'].": ".showdate("shortdate", $data['poll_ended'])."</p>\n";
                 }
 
                 echo "</div>\n";
