@@ -597,6 +597,15 @@ h4.forum-title a:hover, h4.forum-title a:focus,
     margin-bottom: 10px;
 }
 
+.post_items .post_profiles .social-link {
+    display: inline-block;
+}
+
+.post_items .post_profiles .social-link > img {
+    width: 20px;
+    height: 20px;
+}
+
 .forum_sig {
     display: block;
     opacity: 0.8;
