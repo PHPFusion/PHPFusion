@@ -427,7 +427,7 @@ class UserFields extends UserFieldsQuantum {
                 }
                 break;
             case 'pu_profile':
-                $class = new Public_Profile();
+                $class = new Public_Profile($this);
                 $class->user_data = $this->user_data;
                 $class->post_name = $this->post_name;
                 $class->options = $this->options;
@@ -544,7 +544,7 @@ class UserFields extends UserFieldsQuantum {
             case 'profile':
 
                 // Public Profile Page
-                $public_profile = new Public_Profile();
+                $public_profile = new Public_Profile($this);
                 $public_profile->user_data = $this->getCurrentUserData();
                 $public_profile->profile_id = $this->profile_id;
                 $public_profile->post_name = $this->post_name;
