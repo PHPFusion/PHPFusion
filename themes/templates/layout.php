@@ -39,7 +39,8 @@ echo "<meta name='image' content='".$settings['siteurl'].$settings['sitebanner']
 $languages = fusion_get_enabled_languages();
 if (count($languages) > 1) {
     foreach ($languages as $language_folder => $language_name) {
-        echo '<link rel="alternate" hreflang="'.fusion_get_locale('xml_lang', LOCALE.$language_folder.'/global.php').'" href="'.$settings['siteurl'].$settings['opening_page'].'?lang='.$language_folder.'">';
+        include LOCALE.$language_folder.'/global.php';
+        echo '<link rel="alternate" hreflang="'.$locale['xml_lang'].'" href="'.$settings['siteurl'].$settings['opening_page'].'?lang='.$language_folder.'">';
     }
 
     echo "<link rel='alternate' hreflang='x-default' href='".$settings['siteurl']."'>\n";
