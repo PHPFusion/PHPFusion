@@ -1178,22 +1178,16 @@ if (!function_exists('render_post_item')) {
         //$callback = implode('', array_map(function($array) { return "<li><div class='col-xs-12 col-sm-3 strong'>".$array['title']."</div><div class='col-xs-12 col-sm-9'>".$array['value']."</div></li>";}, $data['user_profiles']));        if (!empty($callback)) {
         $user_profiles = "";
         if (!empty($data['user_profiles'])) {
-            $temp_name = '';
+            //$temp_name = '';
             $user_profiles .= "<ul class='post_profiles'>\n";
             // must nest for easier implementation?
-            $i = 0;
+            //$i = 0;
             foreach ($data['user_profiles'] as $attr) {
-                $open_user_profiles = '';
-                if ($temp_name !== $attr['field_cat_name']) {
-                    $open_user_profiles .= $i ? "</ul><ul class='post_profiles'>\n" : "";
-                    $open_user_profiles .= "<li class='title'>".\PHPFusion\QuantumFields::parse_label($attr['field_cat_name'])."</li>\n";
+                if (!empty($attr['type']) && $attr['type'] == 'social') {
+                    $user_profiles .= "<a class='social-link' href='".$attr['link']."' ".(fusion_get_settings('index_url_userweb') ? "" : "rel='nofollow noopener noreferrer' ")."target='_blank'>".$attr['icon']."</a>";
+                } else {
+                    $user_profiles .= "<div>\n<b>".$attr['title']."</b>: ".$attr['value']."\n</div>\n";
                 }
-                $user_profiles .= $open_user_profiles;
-                $user_profiles .= "<li class='row'>\n";
-                $user_profiles .= "<div class='col-xs-12 col-sm-4 strong'>\n".$attr['title'].":\n</div>\n";
-                $user_profiles .= "<div class='col-xs-12 col-sm-8'>\n".$attr['value']."\n</div>\n";
-                $user_profiles .= "</li>\n";
-                $temp_name = $attr['field_cat_name'];
             }
             $user_profiles .= "</ul>\n";
             $html->set_block('user_profiles', ['profiles' => $user_profiles]);

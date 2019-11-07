@@ -243,6 +243,7 @@ PHP-Fusion 9 Core Template Forum CSS
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
+    text-align: right;
 }
 
 .post_items .post_profiles img {
@@ -257,6 +258,15 @@ PHP-Fusion 9 Core Template Forum CSS
     font-weight: 600;
     font-size: 80%;
     margin-bottom: 10px;
+}
+
+.post_items .post_profiles .social-link {
+    display: inline-block;
+}
+
+.post_items .post_profiles .social-link > img {
+    width: 20px;
+    height: 20px;
 }
 
 .forum_sig {
