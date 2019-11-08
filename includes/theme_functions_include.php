@@ -17,7 +17,6 @@
 +--------------------------------------------------------*/
 
 use PHPFusion\Database\DatabaseFactory;
-use PHPFusion\OutputHandler;
 use PHPFusion\SiteLinks;
 use PHPFusion\Steam;
 use PHPFusion\Template;
@@ -472,14 +471,14 @@ if ( !function_exists( "openmodal" ) && !function_exists( "closemodal" ) && !fun
         }
         
         if ( $options['static'] && !empty( $modal_trigger ) ) {
-            OutputHandler::addToJQuery( "$('".$modal_trigger."').bind('click', function(e){ $('#".$id."-Modal').modal({backdrop: 'static', keyboard: false}).modal('show'); e.preventDefault(); });" );
+            add_to_jquery( "$('".$modal_trigger."').bind('click', function(e){ $('#".$id."-Modal').modal({backdrop: 'static', keyboard: false}).modal('show'); e.preventDefault(); });" );
         } else if ( $options['static'] && empty( $options['button_id'] ) ) {
-            OutputHandler::addToJQuery( "$('#".$id."-Modal').modal({	backdrop: 'static',	keyboard: false }).modal('show');" );
+            add_to_jquery( "$('#".$id."-Modal').modal({	backdrop: 'static',	keyboard: false }).modal('show');" );
         } else if ( $modal_trigger && empty( $options['static'] ) ) {
-            OutputHandler::addToJQuery( "$('".$modal_trigger."').bind('click', function(e){ $('#".$id."-Modal').modal('show'); e.preventDefault(); });" );
+            add_to_jquery( "$('".$modal_trigger."').bind('click', function(e){ $('#".$id."-Modal').modal('show'); e.preventDefault(); });" );
         } else {
             if ( empty( $options['hidden'] ) ) {
-                OutputHandler::addToJQuery( "$('#".$id."-Modal').modal('show');" );
+                add_to_jquery( "$('#".$id."-Modal').modal('show');" );
             }
         }
         $modal_template = THEMES.'templates/boilers/bootstrap3/html/modal.html';

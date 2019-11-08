@@ -15,13 +15,13 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-defined('IN_FUSION') || exit;
+defined( 'IN_FUSION' ) || exit;
 
-$locale = fusion_get_locale('', __DIR__.'/locale/'.LANGUAGE.'.php');
+$locale = fusion_get_locale( '', __DIR__.'/locale/'.LANGUAGE.'.php' );
 
 // Display user field input
-if ($profile_method == "input") {
-    $timezones_json = json_decode('{
+if ( $profile_method == "input" ) {
+    $timezones_json = json_decode( '{
       "Etc/GMT+12": "International Date Line West",
       "Pacific/Midway": "Midway Island, Samoa",
       "Pacific/Honolulu": "Hawaii",
@@ -98,28 +98,34 @@ if ($profile_method == "input") {
       "Pacific/Fiji": "Fiji Islands, Kamchatka, Marshall Islands",
       "Pacific/Auckland": "Auckland, Wellington",
       "Pacific/Tongatapu": "Nuku\'alofa"
-    }', TRUE);
-
+    }', TRUE );
+    
     $timezone_array = [];
-    foreach ($timezones_json as $zone => $zone_city) {
-        $date = new DateTime(NULL, new DateTimeZone($zone));
+    
+    foreach ( $timezones_json as $zone => $zone_city ) {
+        $date = new DateTime( NULL, new DateTimeZone( $zone ) );
         $offset = $date->getOffset() / 3600;
-        $timezone_array[$zone] = '(GMT'.($offset < 0 ? $offset : '+'.$offset).') '.$zone_city;
+        $timezone_array[ $zone ] = '(GMT'.( $offset < 0 ? $offset : '+'.$offset ).') '.$zone_city;
     }
-    $options = [
-            'inline'  => TRUE,
-            'width' => '100%',
-            'inner_width' => '100%',
-            'options' => $timezone_array,
-        ] + $options;
-    $user_fields = form_select('user_timezone', $locale['uf_timezone'], $field_value, $options);
+    
+    $default_options = [
+        'inline'      => FALSE,
+        'width'       => '100%',
+        'inner_width' => '100%',
+        'options'     => $timezone_array,
+        'select_alt'  => TRUE,
+    ];
+    
+    $options += $default_options;
+    
+    $user_fields = form_select( 'user_timezone', $locale['uf_timezone'], $field_value, $options );
     // Display in profile
-} else if ($profile_method == "display") {
-    if (!empty($field_value)) {
-        $date = new DateTime(NULL, new DateTimeZone($field_value));
+} else if ( $profile_method == "display" ) {
+    if ( !empty( $field_value ) ) {
+        $date = new DateTime( NULL, new DateTimeZone( $field_value ) );
         $offset = $date->getOffset() / 3600;
-        $field_value = 'GMT'.($offset < 0 ? $offset : '+'.$offset);
-
+        $field_value = 'GMT'.( $offset < 0 ? $offset : '+'.$offset );
+        
         $user_fields = [
             'title' => $locale['uf_timezone'],
             'value' => $field_value

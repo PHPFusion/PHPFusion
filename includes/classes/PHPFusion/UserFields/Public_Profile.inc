@@ -92,6 +92,7 @@ class Public_Profile extends UserFieldsQuantum {
                 'inline'     => $this->inline_field
             ]);
         }
+    
         // Field exist only in edit profile
         if ($this->registration === FALSE) {
 
@@ -114,25 +115,36 @@ class Public_Profile extends UserFieldsQuantum {
             // Quantum
             $info['user_fields'] = '';
             $this->load_fields('public');
-            $this->cacheModuleFiles();
+    
             $this->cacheModulePlugins();
 
             foreach ($this->fields as $cat_id => $field_rows) {
+    
                 $section_title = $this->get_section_title($cat_id);
+    
                 $info['user_fields'] .= "<h4>".$section_title."</h4>";
+    
                 $field_output = '';
+    
                 if (!empty($field_rows)) {
+        
                     foreach ($field_rows as $fields) {
+            
                         $options = [
                             'show_title' => TRUE,
                             'inline'     => $this->inline_field,
                             'required'   => (bool)$fields['field_required']
                         ];
+            
                         if ($fields['field_type'] == 'file') {
+                            // necessary?
                             $options += ['plugin_folder' => INCLUDES.'user_fields/public/'];
                         }
+            
                         $output = $this->display_fields($fields, $this->user_data, $this->method, $options);
+            
                         $info['user_fields'] .= $output;
+            
                         $field_output .= $output;
                     }
                 }

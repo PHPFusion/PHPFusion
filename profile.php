@@ -36,6 +36,7 @@ if ($profile_id) {
      * Show group
      */
     \PHPFusion\UserGroups::getInstance()->setGroup($group_id)->showGroup();
+    
 } else {
     redirect(BASEDIR."index.php");
 }

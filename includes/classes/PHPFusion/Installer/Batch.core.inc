@@ -211,10 +211,20 @@ class Batch_Core extends Install_Core {
                     self::$localeset = LANGUAGE;
 
                     foreach ($inf_folder as $folder) {
+    
                         $inf_include = INFUSIONS.$folder."/infusion.php";
+    
                         $inf_title = '';
+                        $inf_newtable = [];
+                        $inf_altertable = [];
+                        $inf_droptable = [];
+                        $inf_adminpanel = [];
+                        $inf_sitelink = [];
+                        
                         if (file_exists($inf_include)) {
+    
                             include $inf_include;
+    
                             if (!empty($inf)) {
                                 foreach ($inf as self::$table_name => self::$table_cols) {
                                     if ($upgrade === TRUE && infusion_exists($folder) || $upgrade === FALSE) {

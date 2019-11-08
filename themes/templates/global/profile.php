@@ -15,6 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
+use PHPFusion\Template;
+
 defined('IN_FUSION') || exit;
 
 if (!function_exists('display_register_form')) {
@@ -25,8 +28,8 @@ if (!function_exists('display_register_form')) {
      * @return string
      */
     function display_register_form(array $info = []) {
-
-        $tpl = \PHPFusion\Template::getInstance('user-register-form');
+    
+        $tpl = Template::getInstance( 'user-register-form' );
         $tpl->set_locale(fusion_get_locale());
         $tpl->set_css(THEMES.'templates/global/css/profile.css');
         $tpl->set_template(__DIR__.'/tpl/register.html');
@@ -97,8 +100,8 @@ if (!function_exists('display_profile_form')) {
     function display_profile_form(array $info = []) {
 
         add_to_head("<link href='".THEMES."templates/global/css/profile.css' rel='stylesheet'/>");
-
-        $tpl = \PHPFusion\Template::getInstance('user-profile-form');
+    
+        $tpl = Template::getInstance( 'user-profile-form' );
         $tpl->set_locale(fusion_get_locale());
 
         $tpl->set_template(__DIR__.'/tpl/edit_profile.html');
@@ -186,7 +189,7 @@ if (!function_exists('display_profile_form')) {
                         // social connectors
                         $social_connectors = "";
                         if (!empty($info['social_connectors'])) {
-                            $stpl = \PHPFusion\Template::getInstance('social_connector');
+                            $stpl = Template::getInstance( 'social_connector' );
                             $stpl->set_template(__DIR__."/tpl/edit_profile_connector.html");
                             foreach ($info['social_connectors'] as $connector) {
                                 $stpl->set_block("social_connector", [
@@ -347,13 +350,20 @@ if (!function_exists('display_profile_form')) {
 }
 
 if (!function_exists('display_profile')) {
+    /**
+     * Main profile page
+     *
+     * @param $info
+     *
+     * @return string
+     */
     function display_profile($info) {
 
         $locale = fusion_get_locale();
 
-        add_to_head("<link href='".THEMES."templates/global/css/profile.css' rel='stylesheet'/>");
-
-        $tpl = \PHPFusion\Template::getInstance('profile');
+        add_to_head("<link href='".THEMES."templates/global/css/profile.css' rel='stylesheet'/>" );
+    
+        $tpl = Template::getInstance( 'profile');
 
         $tpl->set_template(__DIR__.'/tpl/user_profile.html');
 
@@ -490,7 +500,7 @@ if (!function_exists('display_profile')) {
 }
 
 /**
- * Profile display view
+ * Public Profile User Fields Page
  * @param $info (array) - prepared responsive fields
  * To get information of the current raw userData
  * Uncomment and include the 3 lines at bottom inside render_userprofile()
@@ -498,12 +508,11 @@ if (!function_exists('display_profile')) {
  * $current_user_info = $userFields->getUserData(); // returns array();
  * print_p($current_user_info); // debug print
  */
-if (!function_exists('display_user_profile')) {
-
-    function display_user_profile($info) {
+if ( !function_exists( 'display_public_profile' ) ) {
+    function display_public_profile( $info) {
         $locale = fusion_get_locale();
-
-        $tpl = \PHPFusion\Template::getInstance('user-profile');
+        
+        $tpl = Template::getInstance( 'user-profile');
         $tpl->set_template(__DIR__.'/tpl/profile/profile.html');
         $tpl->set_locale($locale);
 
@@ -516,9 +525,9 @@ if (!function_exists('display_user_profile')) {
         if (!empty($info['user_field'])) {
 
             // first we need to identify the wrapper
-            foreach ($info['user_field'] as $catID => $categoryData) {
-
-                $tpl2 = \PHPFusion\Template::getInstance('user-profile-fields');
+            foreach ($info['user_field'] as $catID => $categoryData ) {
+    
+                $tpl2 = Template::getInstance( 'user-profile-fields');
 
                 $tpl2->set_template(__DIR__.'/tpl/profile/profile-fields.html');
 
@@ -579,9 +588,9 @@ if (!function_exists('display_user_profile')) {
 }
 
 if (!function_exists('display_profile_groups')) {
-    function display_profile_groups($info) {
-
-        $tpl = \PHPFusion\Template::getInstance("user-groups");
+    function display_profile_groups($info ) {
+    
+        $tpl = Template::getInstance( "user-groups");
 
         $tpl->set_template(__DIR__."/tpl/profile/profile-groups.html");
 
@@ -606,8 +615,8 @@ if (!function_exists('display_profile_groups')) {
 }
 
 if (!function_exists('display_profile_activity')) {
-    function display_profile_activity($info) {
-        $tpl = \PHPFusion\Template::getInstance("user-groups");
+    function display_profile_activity($info ) {
+        $tpl = Template::getInstance( "user-groups");
         $tpl->set_template(__DIR__."/tpl/profile/profile-activity.html");
         $tpl->set_tag("dropdown_filter", form_select("profile_activity_display", "", "", [
                 "options" => [

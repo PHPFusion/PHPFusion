@@ -111,19 +111,25 @@ final class Hooks {
      *
      * @return bool
      */
-    public function remove_hook($filter_name, $function, $que) {
-        if (isset($this->hooks[$que][$filter_name])) {
-            foreach ($this->hooks[$que][$filter_name] as $key => $hooks) {
-                if ($hooks['function'] == $function) {
-                    unset($this->hooks[$que][$filter_name][$key]);
-                    if (empty($this->hooks[$que][$filter_name])) unset($this->hooks[$que][$filter_name]);
-
-                    return TRUE;
+    public function remove_hook( $filter_name, $function = '', $que ) {
+        
+        if ( $function ) {
+            if ( isset( $this->hooks[ $que ][ $filter_name ] ) ) {
+                foreach ( $this->hooks[ $que ][ $filter_name ] as $key => $hooks ) {
+                    if ( $hooks['function'] == $function ) {
+                        unset( $this->hooks[ $que ][ $filter_name ][ $key ] );
+                        if ( empty( $this->hooks[ $que ][ $filter_name ] ) )
+                            unset( $this->hooks[ $que ][ $filter_name ] );
+                        
+                        return TRUE;
+                    }
                 }
             }
         }
-
-        return FALSE;
+        
+        unset( $this->hooks[ $que ][ $filter_name ] );
+        
+        return TRUE;
     }
 
     /**
@@ -221,6 +227,10 @@ final class Hooks {
                         }
                     }
                     $output = call_user_func_array($hook['function'], $args);
+    
+                    // remove the hook
+                    $this->remove_hook( $filter_name, $hook['function'], $hook['que'] );
+                    
                     if (!empty($output)) {
                         return $output;
                     }

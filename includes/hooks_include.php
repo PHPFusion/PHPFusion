@@ -16,6 +16,8 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
+use PHPFusion\Hooks;
+
 /**
  * Add a hook
  *
@@ -29,7 +31,7 @@
  */
 function fusion_add_hook($name, $function, $que = 10, $default_args = [], $accepted_args = 1) {
     // once you need to add hook, we'll poll the instance.
-    return \PHPFusion\Hooks::get_instances($name)->add_hook($name, $function, $que, $default_args, $accepted_args);
+    return Hooks::get_instances( $name )->add_hook( $name, $function, $que, $default_args, $accepted_args );
 }
 
 /**
@@ -41,7 +43,7 @@ function fusion_add_hook($name, $function, $que = 10, $default_args = [], $accep
  * @return bool
  */
 function fusion_check_hook($name, $function) {
-    $hook = \PHPFusion\Hooks::get_instances($name)->get_hook($name, $function);
+    $hook = Hooks::get_instances( $name )->get_hook( $name, $function );
     if (!empty($hook)) {
         return TRUE;
     }
@@ -57,7 +59,7 @@ function fusion_check_hook($name, $function) {
  *
  * @return bool
  */
-function fusion_remove_hook($name, $function, $que = 10) {
+function fusion_remove_hook( $name, $function = '', $que = 10 ) {
     return PHPFusion\Hooks::get_instances($name)->remove_hook($name, $function, $que);
 }
 
@@ -73,7 +75,7 @@ function fusion_apply_hook($name) {
     $function_args = func_get_args();
 
     return call_user_func_array([
-        \PHPFusion\Hooks::get_instances($name),
+        Hooks::get_instances( $name ),
         'apply_hook'
     ],
         $function_args);
@@ -89,9 +91,16 @@ function fusion_apply_hook($name) {
  * @return mixed
  */
 function fusion_filter_hook($name) {
-    return call_user_func_array([\PHPFusion\Hooks::get_instances($name),'filter_hook'], func_get_args());
+    return call_user_func_array( [ Hooks::get_instances( $name ), 'filter_hook' ], func_get_args() );
 }
 
+/**
+ * Returns only the current hook
+ *
+ * @param $name
+ *
+ * @return mixed
+ */
 function fusion_filter_current_hook($name) {
-    return call_user_func_array([\PHPFusion\Hooks::get_instances($name),'filter_hook_once'], func_get_args());
+    return call_user_func_array( [ Hooks::get_instances( $name ), 'filter_hook_once' ], func_get_args() );
 }
