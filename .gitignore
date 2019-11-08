@@ -7,12 +7,12 @@
 .htaccess
 config.php
 config-copy.php
-/infusions/news/news_cats/
-header_includes.php
-footer_includes.php
-/.github/
+/nfusions/news/news_cats/
+includes/header_includes.php
+includes/footer_includes.php
 gateway/flood/
 images/thumbs/
 fusion_error_log.log
 vendor
 composer.lock
+home.php
