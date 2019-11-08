@@ -439,7 +439,7 @@ class UserFieldsQuantum extends QuantumActions {
      * @return string
      */
     public static function parse_label( $value ) {
-        return self::$helper::parseLabel( $value );
+        return QuantumHelper::parseLabel( $value );
     }
     
     public function getEnabledFields() {
