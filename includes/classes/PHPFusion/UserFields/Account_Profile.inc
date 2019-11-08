@@ -143,7 +143,7 @@ class Account_Profile extends UserFieldsQuantum {
             foreach($security_plugins as $plugin_name => $plugin) {
                 $options['plugin_folder'] = INCLUDES.'user_fields/security/';
                 $options['plugin_locale_folder'] =  INCLUDES.'user_fields/security/'.$plugin_name.'/locale/';
-                $field = $this->display_fields($plugin, $this->user_data, $this->method, $options);
+                $field = $this->displayFields( $plugin, $this->user_data, $this->method, $options );
                 $info['security_connectors'][] = [
                     'title' => $plugin['field_title'],
                     'icon' => '',

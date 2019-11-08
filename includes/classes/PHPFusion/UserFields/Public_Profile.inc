@@ -140,8 +140,8 @@ class Public_Profile extends UserFieldsQuantum {
                             // necessary?
                             $options += ['plugin_folder' => INCLUDES.'user_fields/public/'];
                         }
-            
-                        $output = $this->display_fields($fields, $this->user_data, $this->method, $options);
+    
+                        $output = $this->displayFields( $fields, $this->user_data, $this->method, $options );
             
                         $info['user_fields'] .= $output;
             
@@ -408,7 +408,7 @@ class Public_Profile extends UserFieldsQuantum {
                     $item[$data['field_cat']][$data['field_id']] = $data;
                     $field_config = ['inline'=>$this->inline_field];
                     $field_config += (!empty( $data['field_config'] ) ? $data['field_config'] : []);
-                    $item_output = $this->display_fields($data, $this->user_data, $this->method, $field_config);
+                    $item_output = $this->displayFields( $data, $this->user_data, $this->method, $field_config );
                     $item[$data['field_cat']][$data['field_id']]['field_output'] = $item_output;
                     if (!empty($item_output)) {
                         $fields['user_field_extended'][$data['field_cat_id']]['fields'][$data['field_name']] = $item_output;

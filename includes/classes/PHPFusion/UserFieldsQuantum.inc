@@ -575,7 +575,7 @@ class UserFieldsQuantum extends QuantumActions {
     
     
                                 $html .= "<div class='row'>\n<div class='col-xs-12 col-sm-9'>\n";
-                                $html .= $this->display_fields( $field_data, $this->callback_data, $this->method, $options );
+                                $html .= $this->displayFields( $field_data, $this->callback_data, $this->method, $options );
                                 $html .= "</div><div class='col-xs-12 col-sm-3'>\n";
                                 $html .= "<div class='text-right'>\n";
                                 if ( $k != 0 ) {
@@ -716,13 +716,13 @@ class UserFieldsQuantum extends QuantumActions {
         return $html;
     }
     
-    private function view_preference_admin() {
+    private function viewPreferenceAdmin() {
         $new_button = "<a class='btn btn-default' href='".ADMIN."user_fields.php".fusion_get_aidlink()."&amp;ref=preference&amp;action=new'>Add New</a>";
         $table = new Tables( new Preference(), FALSE );
         return $new_button.$table->displayTable();
     }
     
-    private function view_security_admin() {
+    private function viewSecurityAdmin() {
         $new_button = "<a class='btn btn-default' href='".ADMIN."user_fields.php".fusion_get_aidlink()."&amp;ref=security&amp;action=new'>Add New</a>";
         $table = new Tables( new Security(), FALSE );
         return $new_button.$table->displayTable();
@@ -782,7 +782,7 @@ class UserFieldsQuantum extends QuantumActions {
      *                       </ul>
      * @throws \ReflectionException
      */
-    public function display_fields( array $data, $callback_data, $method = 'input', array $options = [] ) {
+    public function displayFields( array $data, $callback_data, $method = 'input', array $options = [] ) {
         $fields = new DisplayFields( $this );
         if ( $data['field_type'] == 'file' ) {
             $options['field_file'] = self::$module_list_var[ $data['field_name'] ]['include'];

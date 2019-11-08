@@ -194,7 +194,7 @@ class UserForms {
         // default hides using jquery
         $html .= "<script>$('#user_password, #hideShowPass, #cancelPass, .pwstrength_viewport_progress').hide();</script>";
         // password javascript
-        add_to_jquery("        
+        add_to_jquery( "
         // Generate a password string
             function randString(id){
               var dataSet = $('#'+id).attr('data-character-set').split(',');
@@ -225,8 +225,8 @@ class UserForms {
             $('#hideShowPass,#cancelPass,#user_password,.pwstrength_viewport_progress').show();
         });
         $('#hideShowPass').bind('click', function(e) {
-            e.preventDefault();            
-            let type = 'text';            
+            e.preventDefault();
+            let type = 'text';
             if ($(this).val() == 1) {
                 type = 'password';
                 $(this).val(0);
@@ -238,7 +238,7 @@ class UserForms {
             $('#user_password').attr('type', type);
         });
         $('#cancelPass').bind('click', function(e) {
-             e.preventDefault();     
+             e.preventDefault();
              $('#user_password').val('');
              $('#user_password, #hideShowPass,.pwstrength_viewport_progress').hide();
             $(this).hide();
@@ -292,7 +292,7 @@ class UserForms {
                             $options += ['plugin_folder' => INCLUDES.'user_fields/public/'];
                         }
                         // print_p($field);
-                        $html .= $quantum_class->display_fields($field, $this->user_data, 'input', $options);
+                        $html .= $quantum_class->displayFields( $field, $this->user_data, 'input', $options );
                         if ($field_count !== $field_total_count - 1) {
                             $html .= '<hr/>';
                         }
@@ -410,7 +410,7 @@ class UserForms {
             $html .= "<script>$('#user_password,.pwstrength_viewport_progress').hide();</script>";
         }
         // password javascript
-        add_to_jquery("        
+        add_to_jquery( "
         // Generate a password string
             function randString(id){
               var dataSet = $('#'+id).attr('data-character-set').split(',');
@@ -441,8 +441,8 @@ class UserForms {
             $('#hideShowPass,#cancelPass,#user_password,.pwstrength_viewport_progress').show();
         });
         $('#hideShowPass').bind('click', function(e) {
-            e.preventDefault();            
-            let type = 'text';            
+            e.preventDefault();
+            let type = 'text';
             if ($(this).val() == 1) {
                 type = 'password';
                 $(this).val(0);
@@ -454,7 +454,7 @@ class UserForms {
             $('#user_password').attr('type', type);
         });
         $('#cancelPass').bind('click', function(e) {
-             e.preventDefault();     
+             e.preventDefault();
              $('#user_password').val('');
              $('#user_password, #hideShowPass,.pwstrength_viewport_progress').hide();
             $(this).hide();
