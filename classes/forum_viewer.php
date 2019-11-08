@@ -92,15 +92,15 @@ class Forum_Viewer {
      * @return string
      */
     public function render_forum($info) {
-    
+
         $this->info = $info;
-    
+
         $this->locale = fusion_get_locale();
-    
+
         $section = $this->forum->getCurrentSection();
 
         if ($section) {
-    
+
             if ($section == 'moderator') {
                 return $this->forum_report($info);
             }
@@ -446,25 +446,17 @@ class Forum_Viewer {
         }
         //$callback = implode('', array_map(function($array) { return "<li><div class='col-xs-12 col-sm-3 strong'>".$array['title']."</div><div class='col-xs-12 col-sm-9'>".$array['value']."</div></li>";}, $data['user_profiles']));        if (!empty($callback)) {
         if (!empty($data['user_profiles'])) {
-            $temp_name = '';
-            $user_profiles = "";
-            $user_profiles .= '<ul class="block">';
+            $user_profiles = "<ul class='post_profiles'>\n";
             // must nest for easier implementation?
-            $i = 0;
             foreach ($data['user_profiles'] as $attr) {
-                $open_user_profiles = '';
-                if ($temp_name !== $attr['field_cat_name']) {
-                    $open_user_profiles .= $i ? "</ul><ul class='block m-t-5'>" : "";
-                    $open_user_profiles .= "<li class='strong'>".\PHPFusion\UserFieldsQuantum::parse_label($attr['field_cat_name'])."</li>";
+                if (!empty($attr['type']) && $attr['type'] == 'social') {
+                    $user_profiles .= "<a class='social-link' href='".$attr['link']."' ".(fusion_get_settings('index_url_userweb') ? "" : "rel='nofollow noopener noreferrer' ")."target='_blank'>".$attr['icon']."</a>";
+                } else {
+                    $user_profiles .= "<div>\n<b>".$attr['title']."</b>: ".$attr['value']."\n</div>\n";
                 }
-
-                $user_profiles .= $open_user_profiles;
-                $user_profiles .= "<li>";
-                $user_profiles .= "<strong>".$attr['title']."</strong>: ".$attr['value'];
-                $user_profiles .= "</li>";
-                $temp_name = $attr['field_cat_name'];
             }
-            $user_profiles .= "</ul>";
+
+            $user_profiles .= "</ul>\n";
             $html->set_block("user_profiles", ['profiles' => $user_profiles]);
         }
 
@@ -497,10 +489,10 @@ class Forum_Viewer {
         $html->set_tag('title3', $locale['forum_0020']);
         $html->set_tag('title4', $locale['forum_0053']);
         if (!empty($info['threads'])) {
-    
+
             if (!empty($info['threads']['sticky'])) {
                 foreach ($info['threads']['sticky'] as $cdata) {
-    
+
                     $thread_buttons = "";
                     if (iMEMBER) {
                         $html3 = Template::getInstance( 'threads_'.$cdata['thread_id'] );
@@ -757,15 +749,15 @@ class Forum_Viewer {
      * @return string
      */
     public function forum_section($info) {
-    
+
         if ( !$this->forum->getCurrentSection() ) {
             redirect(FORUM.'index.php');
         }
 
         $locale = fusion_get_locale();
-    
+
         $file_path = get_forum_template('forum_section');
-    
+
         $html = Template::getInstance('forum-section');
         $html->set_template($file_path);
         $html->set_css($this->css_file_path);
@@ -786,7 +778,7 @@ class Forum_Viewer {
                 ]);
             }
         }
-    
+
         $html->set_tag('forum_filter', forum_filter($info));
 
         if (!empty($info['threads']['pagenav'])) {
@@ -860,7 +852,7 @@ class Forum_Viewer {
                 $html->set_block('view', ['content' => $this->forum_threads_item($info)]);
                 break;
             case 'threads':
-    
+
                 if ($info['forum_type'] > 1) {
                     $html->set_block('view', ['content' => $this->forum_threads_item($info)]);
                 }
@@ -1255,7 +1247,7 @@ class Forum_Viewer {
         // End inspection
         $html->set_tag('breadcrumb', render_breadcrumbs());
         // need to change to pagenav
-        $html->set_block('pagenav_top', ['navigation' => $info['threads']['pagenav_top']]);
+        $html->set_block('pagenav_top', ['navigation' => $info['pagenav']]);
         if (isset($info['page_nav'])) {
             $html->set_block('pagenav_bottom', ['pagenav' => $info['pagenav']]);
         }
@@ -1350,7 +1342,7 @@ class Forum_Viewer {
             $i = 1;
             foreach ($pdata as $post_id => $post_data) {
 
-                $post_items = $this->render_post_item($post_data, $i + (isset($_GET['rowstart']) ? $_GET['rowstart'] : ''));
+                $post_items = $this->render_post_item($post_data, $i + (isset($_GET['rowstart']) ? $_GET['rowstart'] : NULL));
 
                 if ($post_id == $info['post_firstpost']) {
                     $html->set_block('post_firstpost_item', ['content' => $post_items]);

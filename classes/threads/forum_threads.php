@@ -1221,7 +1221,7 @@ class Forum_Threads extends Forum_Server {
         if ($info['post_rows'] > 0) {
             // Get all post reported in this thread
             $post_rep = [];
-            $post_res = dbresult(dbquery("SELECT GROUP_CONCAT(post_id) 'post_id' FROM ".DB_FORUM_REPORTS." WHERE report_status=0"), 0);
+            $post_res = dbresult(dbquery("SELECT GROUP_CONCAT(report_post_id) 'post_id' FROM ".DB_FORUM_REPORTS." WHERE report_status=0"), 0);
             if (!empty($post_res)) {
                 $post_rep = explode(",", $post_res);
             }
