@@ -134,7 +134,6 @@ class UserFieldsQuantum extends QuantumActions {
         self::$module_list_var = $quantum->getModulesList();
         self::$available_field_info = $quantum->getAvailableModulesInfo();
         self::$modules = $quantum->getLoadedModules();
-        
     }
     
     /**

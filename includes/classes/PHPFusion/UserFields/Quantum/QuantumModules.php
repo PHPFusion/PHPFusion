@@ -78,9 +78,13 @@ class QuantumModules {
                                     $var_files_matches = preg_grep( $regex, $files );
                                     
                                     if ( !empty( $var_files_matches ) ) {
+    
                                         foreach ( $var_files_matches as $var_files ) {
+        
                                             $curent_var_path = $uf_folder_path.$var_files;
+        
                                             $include_path = $uf_folder_path.str_replace( '_var', '', $var_files );
+        
                                             if ( is_file( $include_path ) ) {
                                                 
                                                 $var_path = $curent_var_path;
@@ -88,21 +92,25 @@ class QuantumModules {
                                                 $module = $this->getModuleName( $var_path );
                                                 
                                                 $path = $include_path;
-                                                
+            
+                                                if ( file_exists( $path ) && file_exists( $var_path ) ) {
+                                                    // i also need var file
+                                                    $modules_list[ $module ]['var'] = $var_path;
+                                                    $modules_list[ $module ]['include'] = $path;
+                
+                                                }
                                             }
                                         }
                                     }
                                 }
                             }
-                        }
-                        
-                        // $folder_name is wrong.
-                        
-                        if ( file_exists( $path ) && file_exists( $var_path ) ) {
-                            // i also need var file
-                            $modules_list[ $module ]['var'] = $var_path;
-                            $modules_list[ $module ]['include'] = $path;
-                            
+                        } else {
+                            if ( file_exists( $path ) && file_exists( $var_path ) ) {
+                                // i also need var file
+                                $modules_list[ $module ]['var'] = $var_path;
+                                $modules_list[ $module ]['include'] = $path;
+        
+                            }
                         }
                     }
                 }
