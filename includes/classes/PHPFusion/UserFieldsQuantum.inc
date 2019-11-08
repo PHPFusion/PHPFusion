@@ -657,11 +657,13 @@ class UserFieldsQuantum extends QuantumActions {
                     add_to_footer( $modal );
                     
                 } else {
-                    
-                    if ( isset( $this->modules[ $_user_field ] ) ) {
-                        if ( in_array( $_user_field, array_keys( $this->available_field_info ) ) ) {
-                            $module_data = $this->modules[ $_user_field ];
-                            $_fieldInstall = [
+    
+                    if ( isset( self::$modules[ $_user_field ] ) ) {
+                        if ( in_array( $_user_field, array_keys( self::$available_field_info ) ) ) {
+            
+                            $module_data = self::$modules[ $_user_field ];
+            
+                            $module = [
                                 'field_id'           => 0,
                                 'field_title'        => $module_data['user_field_name'],
                                 'field_name'         => $module_data['user_field_dbname'],
@@ -675,12 +677,13 @@ class UserFieldsQuantum extends QuantumActions {
                                 'field_order'        => 0,
                                 'field_config'       => 0
                             ];
-                            $_fieldInstall['field_order'] = dbresult( dbquery( "SELECT COUNT(field_id) FROM ".DB_USER_FIELDS." WHERE field_type=:type AND field_cat=:cat_id",
-                                    [ ':cat_id' => $this->field_data['field_cat'],
-                                      ':type'   => $folder
-                                    ] ), 0 ) + 1;
-                            $this->create_fields( $_fieldInstall, 'module', DB_USERS );
+            
+                            $module['field_order'] = dbresult( dbquery( "SELECT COUNT(field_id) FROM ".DB_USER_FIELDS." WHERE field_type=:type AND field_cat=:cat_id", [ ':cat_id' => $this->field_data['field_cat'], ':type' => $folder ] ), 0 ) + 1;
+            
+                            $this->create_fields( $module, 'module', DB_USERS );
+                            
                         }
+        
                     }
                 }
             }
@@ -727,18 +730,6 @@ class UserFieldsQuantum extends QuantumActions {
         return $new_button.$table->displayTable();
     }
     
-    public function get_field_description( $data ) {
-        $plugin_file = INCLUDES.'user_fields/'.$data[':field_type'].'/'.$data[':field_name'].'/'.$data[':field_name'].'_include_var.php';
-        $user_field_desc = '';
-        $user_field_author = '';
-        $user_field_api_version = '';
-        if ( is_file( $plugin_file ) ) {
-            include $plugin_file;
-        }
-        
-        return "<h4 class='m-0'>".$data[':field_title']."</h4>".$user_field_desc."<div class='m-0'>by <i>$user_field_author</i> | Version: $user_field_api_version</div>";
-        
-    }
     
     /**
      * Display fields for each fieldDB record entry
@@ -1732,6 +1723,23 @@ class UserFieldsQuantum extends QuantumActions {
         return $this->output_fields;
     }
     
+    public function getUserFieldDescription( $data ) {
+        
+        $user_field_api_version = '';
+        $user_field_image = '';
+        $user_field_name = '';
+        $user_field_desc = '';
+        $user_field_author = '';
+        if ( isset( self::$module_list_var[ $data[':field_name'] ]['var'] ) ) {
+            if ( is_file( self::$module_list_var[ $data[':field_name'] ]['var'] ) ) {
+                include self::$module_list_var[ $data[':field_name'] ]['var'];
+            }
+        }
+        
+        return "<strong class='m-0'>".$data[':field_title']."</strong><br/>".$user_field_desc."<div class='m-0'>by <i>$user_field_author</i> | Version: $user_field_api_version</div>";
+        
+    }
+    
 }
 
 class Preference implements TableSDK {
@@ -1749,6 +1757,7 @@ class Preference implements TableSDK {
     
     public function properties() {
         return [
+            'table_id'     => 'uf-preference-table',
             'no_record'    => 'There are no Preference Field Plugins installed.',
             'search_label' => 'Search User Fields',
             'search_col'   => 'field_title',
@@ -1762,7 +1771,7 @@ class Preference implements TableSDK {
                 'title'       => 'User Field',
                 'title_class' => 'col-xs-11',
                 'value_class' => 'no-break',
-                'callback'    => [ 'PHPFusion\\UserFieldsQuantum', 'get_field_description', CLASSES.'PHPFusion/UserFieldsQuantum.inc' ],
+                'callback'    => [ 'PHPFusion\\UserFieldsQuantum', 'getUserFieldDescription', CLASSES.'PHPFusion/UserFieldsQuantum.inc' ],
                 'edit_link'   => FALSE,
                 'delete_link' => FALSE,
             ],
@@ -1781,8 +1790,8 @@ class Preference implements TableSDK {
      */
     public function quickEdit() {
         return [
-            'field_title' => [ 'title' => 'Field Name', 'required' => TRUE ],
-            'field_order' => [ 'title' => 'Field Order', 'dynamics' => 'form_textarea' ],
+            //'field_title' => [ 'title' => 'Field Name', 'required' => TRUE ],
+            'field_order' => [ 'label' => 'Field Order', 'function' => 'form_textarea' ],
         ];
     }
 }
@@ -1802,6 +1811,7 @@ class Security implements TableSDK {
     
     public function properties() {
         return [
+            'table_id'     => 'uf-security-table',
             'no_record'    => 'There are no Security Field Plugins installed.',
             'search_label' => 'Search User Fields',
             'search_col'   => 'field_title',
