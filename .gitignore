@@ -8,11 +8,11 @@
 config.php
 config-copy.php
 /nfusions/news/news_cats/
-includes/header_includes.php
-includes/footer_includes.php
+/includes/header_includes.php
+/includes/footer_includes.php
 gateway/flood/
 images/thumbs/
 fusion_error_log.log
 vendor
 composer.lock
-home.php
+/home.php
