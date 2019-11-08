@@ -119,10 +119,9 @@ class UserFieldsQuantum extends QuantumActions {
     
     private static $modules = [];
     
-    
     public function __construct() {
-        
-        $this->load_fields(); // return fields
+    
+        $this->loadUserFields(); // return fields
         self::$helper = new QuantumHelper();
         
     }
@@ -229,7 +228,7 @@ class UserFieldsQuantum extends QuantumActions {
         }
         
         if ( $this->method == 'input' ) {
-            $this->load_field_cats(); // return cat
+            $this->loadUserFieldCats(); // return cat
             $this->doAction();
         }
         
@@ -242,6 +241,7 @@ class UserFieldsQuantum extends QuantumActions {
             default:
             case 'public':
                 add_breadcrumb( [ 'title' => 'Public Fields', 'link' => ADMIN.'user_fields.php'.fusion_get_aidlink().'&amp;ref=public' ] );
+                $content = $this->viewPublicAdmin();
                 if ( $action ) {
                     switch ( $action ) {
                         case 'new':
@@ -266,7 +266,7 @@ class UserFieldsQuantum extends QuantumActions {
                                 $modal .= closemodal();
                                 add_to_footer( $modal );
                             }
-                            $content = $this->view_public_admin();
+    
                             break;
                         case 'new_cat':
                         case 'cat_edit':
@@ -280,7 +280,7 @@ class UserFieldsQuantum extends QuantumActions {
                             $modal .= $this->quantum_category_form();
                             $modal .= closemodal();
                             add_to_footer( $modal );
-                            $content = $this->view_public_admin();
+    
                             break;
                         case 'module_edit':
                             // Module Edit
@@ -293,34 +293,24 @@ class UserFieldsQuantum extends QuantumActions {
                                 $modal .= closemodal();
                                 add_to_footer( $modal );
                             }
-                            $content = $this->view_public_admin();
                             break;
-                        default:
-                            $content = $this->view_public_admin();
                     }
-                } else {
-                    $content = $this->view_public_admin();
                 }
-                
                 break;
-            
             case 'preference':
                 add_breadcrumb( [ 'title' => 'Preference User Fields', 'link' => ADMIN.'user_fields.php'.fusion_get_aidlink().'&amp;ref=preference' ] );
+                $content = $this->viewPreferenceAdmin();
                 if ( $action == 'new' ) {
                     add_breadcrumb( [ 'title' => 'Manage Preference User Fields', 'link' => ADMIN.'user_fields.php'.fusion_get_aidlink().'&amp;ref=preference&amp;action=new' ] );
                     $content = $this->view_modules( 'preference' );
-                } else {
-                    $content = $this->view_preference_admin();
                 }
                 break;
-            
             case 'security':
                 add_breadcrumb( [ 'title' => 'Security User Fields', 'link' => ADMIN.'user_fields.php'.fusion_get_aidlink().'&amp;ref=security' ] );
+                $content = $this->viewSecurityAdmin();
                 if ( $action == 'new' ) {
                     add_breadcrumb( [ 'title' => 'Manage Security User Fields', 'link' => ADMIN.'user_fields.php'.fusion_get_aidlink().'&amp;ref=security&amp;action=new' ] );
                     $content = $this->view_modules( 'security' );
-                } else {
-                    $content = $this->view_security_admin();
                 }
                 break;
         }
@@ -336,7 +326,7 @@ class UserFieldsQuantum extends QuantumActions {
      *
      * @param string $folder
      */
-    public function load_fields( $folder = '' ) {
+    public function loadUserFields( $folder = '' ) {
         
         if ( !$folder ) {
             $folder = get( 'ref' );
@@ -465,21 +455,19 @@ class UserFieldsQuantum extends QuantumActions {
      * @return string
      * @throws \ReflectionException
      */
-    private function view_public_admin() {
+    private function viewPublicAdmin() {
         $aidlink = fusion_get_aidlink();
-    
+        $this->callback_data = fusion_get_userdata();
         $active = '';
         $new_button = "<a class='btn btn-default m-r-10' href='".ADMIN."user_fields.php".fusion_get_aidlink()."&amp;ref=public&amp;action=new'>Add New Field</a>";
         $new_button .= "<a class='btn btn-default' href='".ADMIN."user_fields.php".fusion_get_aidlink()."&amp;ref=public&amp;action=new_cat'>".$this->locale['fields_0311']."</a>";
-    
+        
         $html = "<h4 class='display-inline-block m-r-10'>Public User Fields</h4>\n$new_button<hr/>\n";
-    
-        $field_id = get( 'field_id', FILTER_VALIDATE_INT );
-    
-        $module_id = get( 'module_id', FILTER_VALIDATE_INT );
-    
+        
+        $current_field_id = get( 'field_id', FILTER_VALIDATE_INT );
+        $current_module_id = get( 'module_id', FILTER_VALIDATE_INT );
         $cat_id = get( 'cat_id', FILTER_VALIDATE_INT );
-    
+        
         if ( !empty( $this->page[0] ) ) {
             $tab_title = [];
             foreach ( $this->page[0] as $page_id => $page_data ) {
@@ -488,21 +476,21 @@ class UserFieldsQuantum extends QuantumActions {
                 $tab_title['icon'][ $page_id ] = $page_data['field_cat_class'];
                 $active = ( $cat_id && $page_id == $cat_id ) ? $page_id : '';
             }
-        
-            if ( $field_id || $module_id ) {
-                $_fields = flatten_array( $this->fields );
             
+            if ( $current_field_id || $current_module_id ) {
+                $_fields = flatten_array( $this->fields );
+                
                 foreach ( $_fields as $fData ) {
-                    if ( $field_id ) {
-                        if ( $fData['field_id'] == $field_id ) {
+                    if ( $current_field_id ) {
+                        if ( $fData['field_id'] == $current_field_id ) {
                             $fieldCat = $fData['field_cat'];
-                            $active = isset( $_GET['field_id'] ) ? get_root( $this->field_cat_index, $fieldCat ) : 0;
+                            $active = ( $current_field_id ? get_root( $this->field_cat_index, $fieldCat ) : 0 );
                             break;
                         }
-                    } else if ( $module_id ) {
-                        if ( $fData['field_id'] == $module_id ) {
+                    } else if ( $current_module_id ) {
+                        if ( $fData['field_id'] == $current_module_id ) {
                             $fieldCat = $fData['field_cat'];
-                            $active = isset( $_GET['module_id'] ) ? get_root( $this->field_cat_index, $fieldCat ) : 0;
+                            $active = ( $current_module_id ? get_root( $this->field_cat_index, $fieldCat ) : 0 );
                             break;
                         }
                     }
@@ -513,24 +501,24 @@ class UserFieldsQuantum extends QuantumActions {
             
             // Tab
             $tab_active = tab_active( $tab_title, ( $active ? $active : $default_active ) );
-        
-            $html .= opentab( $tab_title, $tab_active, 'uftab', FALSE, '', '', [], TRUE );
-        
-            foreach ( $this->page[0] as $page_id => $page_details ) {
             
+            $html .= opentab( $tab_title, $tab_active, 'uftab', FALSE, '', '', [], TRUE );
+            
+            foreach ( $this->page[0] as $page_id => $page_details ) {
+                
                 $html .= opentabbody( $tab_title['title'][ $page_id ], $tab_title['id'][ $page_id ], $tab_active );
                 
                 // load all categories here.
-                if ( $this->debug ) {
-                    $html .= "<div class='m-t-20 text-dark'>\n";
-                    if ( $page_id == 1 ) {
-                        $html .= sprintf( $this->locale['fields_0100'], DB_USERS );
-                    } else {
-                        $html .= sprintf( $this->locale['fields_0101'], $page_details['field_cat_db'], $page_details['field_cat_index'] );
-                    }
-                    $html .= "</div>\n";
-                }
-            
+                //if ( $this->debug ) {
+                //    $html .= "<div class='m-t-20 text-dark'>\n";
+                //    if ( $page_id == 1 ) {
+                //        $html .= sprintf( $this->locale['fields_0100'], DB_USERS );
+                //    } else {
+                //        $html .= sprintf( $this->locale['fields_0101'], $page_details['field_cat_db'], $page_details['field_cat_index'] );
+                //    }
+                //    $html .= "</div>\n";
+                //}
+                
                 // Edit/Delete Category Administration
                 $html .= "<div class='clearfix'>\n";
                 $html .= "<div class='pull-right'>\n";
@@ -540,7 +528,7 @@ class UserFieldsQuantum extends QuantumActions {
                 $html .= "</div>\n";
                 $html .= "</div>\n";
                 $html .= "</div>\n";
-            
+                
                 if ( isset( $this->page[ $page_id ] ) ) {
                     $html .= "<div class='clearfix'>\n";
                     $i = 0;
@@ -548,11 +536,11 @@ class UserFieldsQuantum extends QuantumActions {
                     foreach ( $this->page[ $page_id ] as $cat_id => $field_cat ) {
                         // field category information
                         $html .= "<div class='list-group'>\n";
-                    
-                        if ( $this->debug ) {
-                            print_p( $field_cat );
-                        }
-                    
+    
+                        //if ( $this->debug ) {
+                        //    print_p( $field_cat );
+                        //}
+                        
                         $html .= "<div class='list-group-item'>\n";
                         $html .= "<h4 class='display-block m-0'>".self::parse_label( $field_cat['field_cat_name'] )."</h4>";
                         $html .= "<div class='display-block'>\n";
@@ -569,7 +557,7 @@ class UserFieldsQuantum extends QuantumActions {
                         $html .= "<a href='".FUSION_SELF.$aidlink."&amp;action=cat_edit&amp;cat_id=".$cat_id."'>".$this->locale['edit']."</a> &middot; ";
                         $html .= "<a class='text-danger' href='".FUSION_SELF.$aidlink."&amp;action=cat_delete&amp;cat_id=".$cat_id."'>".$this->locale['delete']."</a>";
                         $html .= "</div>\n";
-                    
+    
                         $html .= "</div>\n<div class='list-group-item'>\n";
                         // print all fields.
                         if ( isset( $this->fields[ $cat_id ] ) ) {
@@ -578,11 +566,11 @@ class UserFieldsQuantum extends QuantumActions {
                             foreach ( $this->fields[ $cat_id ] as $arr => $field_data ) {
                                 //print_P($field_data);
                                 //Fields - Move down/Move Up - Edit - Delete
-                                $item_id = $module_id ? $module_id : 0;
+                                $item_id = $current_module_id ?: 0;
                                 if ( !$item_id ) {
-                                    $item_id = $field_id ? $field_id : 0;
+                                    $item_id = $current_field_id ?: 0;
                                 }
-                            
+    
                                 $options = [ 'inline' => TRUE, 'show_title' => 1, 'hide_value' => 1 ];
     
     
@@ -625,7 +613,7 @@ class UserFieldsQuantum extends QuantumActions {
         } else {
             $html .= "<div class='well text-center'>".$this->locale['fields_0103']."</div>\n";
         }
-    
+        
         return (string)$html;
     }
     
@@ -907,11 +895,11 @@ class UserFieldsQuantum extends QuantumActions {
                     $this->field_cat_data['field_cat_id'], 'field_cat_id',
                     $this->field_cat_data['field_parent'], 'field_parent', FALSE, FALSE, 'update'
                 );
-            
+    
                 if ( !$this->debug ) {
                     if ( fusion_safe() ) {
                         if ( !empty( $old_data['field_cat_db'] ) or $old_data['field_cat_db'] !== "users" ) {
-                        
+    
                             if ( !empty( $old_data['field_cat_db'] ) && !empty( $old_data['field_cat_index'] ) ) {
                                 // CONDITION: HAVE A PREVIOUS TABLE SET
                                 if ( !empty( $this->field_cat_data['field_cat_db'] ) ) {
@@ -927,34 +915,34 @@ class UserFieldsQuantum extends QuantumActions {
                                         if ( $old_data['field_cat_index'] !== $this->field_cat_data['field_cat_index'] ) {
                                             self::rename_column( $this->field_cat_data['field_cat_db'], $old_data['field_cat_index'], $this->field_cat_data['field_cat_index'], "MEDIUMINT(8) NOT NULL DEFAULT '0'" );
                                         }
-                                    
+    
                                     }
-                                
+    
                                 } else if ( empty( $this->field_cat_data['field_cat_db'] ) ) {
                                     self::drop_table( $this->field_cat_data['field_cat_db'] );
                                 }
-                            
+        
                             } else if ( !empty( $this->field_cat_data['field_cat_index'] ) && !empty( $this->field_cat_data['field_cat_db'] ) ) {
-                            
+        
                                 self::build_table( $this->field_cat_data['field_cat_db'],
                                     $this->field_cat_data['field_cat_index'] );
                                 
                             }
-                        
+    
                             dbquery_insert( DB_USER_FIELD_CATS, $this->field_cat_data, 'update' );
-                        
+    
                             addNotice( 'success', $this->locale['field_0207'] );
                         }
                         redirect( FUSION_SELF.$aidlink );
                     }
-                
+        
                 } else {
                     print_p( $this->locale['fields_0661'] );
                     print_p( $this->field_cat_data );
                 }
-            
+    
             } else {
-            
+    
                 dbquery_order(
                     DB_USER_FIELD_CATS,
                     $this->field_cat_data['field_cat_order'],
@@ -967,25 +955,25 @@ class UserFieldsQuantum extends QuantumActions {
                     'field_cat_name',
                     'save'
                 );
-            
+    
                 if ( !$this->debug && fusion_safe() ) {
-                
+        
                     if ( !empty( $this->field_cat_data['field_cat_index'] ) &&
                         !empty( $this->field_cat_data['field_cat_db'] ) &&
                         $this->field_cat_data['field_cat_db'] !== 'users'
                     ) {
-                    
+            
                         self::build_table( $this->field_cat_data['field_cat_db'], $this->field_cat_data['field_cat_index'] );
                     }
-                
+        
                     dbquery_insert( DB_USER_FIELD_CATS, $this->field_cat_data, 'save' );
-                
+        
                     addNotice( 'success', $this->locale['field_0208'] );
-                
+        
                     redirect( FUSION_SELF.$aidlink );
                     
                 } else {
-                
+        
                     if ( $this->debug ) {
                         print_p( $this->locale['fields_0662'] );
                         print_p( $this->field_cat_data );
@@ -1000,7 +988,7 @@ class UserFieldsQuantum extends QuantumActions {
         if ( $cat_id && isset( $this->field_cat_index[ $cat_id ] ) ) {
             $html .= form_hidden( 'field_parent', '', $this->field_cat_data['field_parent'] );
         } else {
-        
+    
             $cat_list[] = get( 'cat_id', FILTER_VALIDATE_INT );
             if ( !empty( $this->cat_list ) ) {
                 foreach ( $this->cat_list as $id => $value ) {
@@ -1161,7 +1149,11 @@ class UserFieldsQuantum extends QuantumActions {
     
     /** The master form for Adding or Editing Dynamic Fields */
     private function quantum_dynamics_form() {
+    
         $aidlink = fusion_get_aidlink();
+    
+        $this->field_data['field_type'] = get( 'add_field' );
+        
         $this->field_data['field_config'] = [
             'field_max_b'              => 1000000,
             'field_upload_type'        => 'file',
@@ -1185,25 +1177,19 @@ class UserFieldsQuantum extends QuantumActions {
         $field_id = get( 'field_id', FILTER_VALIDATE_INT );
     
         if ( $action == 'field_edit' && $field_id ) {
-            if ( self::validate_field( $field_id ) ) {
-                $result = dbquery( "SELECT * FROM ".DB_USER_FIELDS." WHERE field_id='".intval( $_GET['field_id'] )."'" );
-                if ( dbrows( $result ) > 0 ) {
-                    $this->field_data = dbarray( $result );
-                    if ( $this->field_data['field_type'] == 'upload' ) {
-                        $this->field_data['field_config'] = \Defender::decode( $this->field_data['field_config'] );
-                        if ( $this->debug ) {
-                            print_p( $this->field_data );
-                        }
-                    }
-                } else {
-                    if ( !$this->debug ) {
-                        redirect( FUSION_SELF.$aidlink );
-                    }
+        
+            if ( $this->validate_field( $field_id ) ) {
+            
+                $this->field_data = dbarray( dbquery( "SELECT * FROM ".DB_USER_FIELDS." WHERE field_id=:fid", [ ':fid' => (int)$field_id ] ) );
+            
+                if ( $this->field_data['field_type'] == 'upload' ) {
+                    $this->field_data['field_config'] = fusion_decode( $this->field_data['field_config'] );
+                    //print_p( $this->field_data );
                 }
+                
             } else {
-                if ( !$this->debug ) {
-                    redirect( FUSION_SELF.$aidlink );
-                }
+            
+                redirect( FUSION_SELF.$aidlink );
             }
         }
     
@@ -1216,16 +1202,17 @@ class UserFieldsQuantum extends QuantumActions {
             $this->field_data = [
                 'field_type'         => $add_field ? $add_field : $this->field_data['field_type'],
                 'field_id'           => sanitizer( 'field_id', '0', 'field_id' ),
-                'field_title'        => form_sanitizer( $_POST['field_title'], '', 'field_title', 1 ),
+                'field_title'        => form_sanitizer( $_POST['field_title'], '', 'field_title', TRUE ),
                 'field_name'         => sanitizer( 'field_name', '', 'field_name' ),
                 'field_cat'          => sanitizer( 'field_cat', '0', 'field_cat' ),
-                'field_options'      => isset( $_POST['field_options'] ) ? sanitizer( 'field_options', '', 'field_options' ) : $this->field_data['field_options'],
-                'field_default'      => isset( $_POST['field_default'] ) ? sanitizer( 'field_default', '', 'field_default' ) : $this->field_data['field_default'],
+                'field_options'      => sanitizer( 'field_options', '', 'field_options' ),
+                'field_default'      => sanitizer( 'field_default', '', 'field_default' ),
                 'field_error'        => sanitizer( 'field_error', '', 'field_error' ),
                 'field_required'     => isset( $_POST['field_required'] ) ? 1 : 0,
                 'field_log'          => isset( $_POST['field_log'] ) ? 1 : 0,
                 'field_registration' => isset( $_POST['field_registration'] ) ? 1 : 0,
-                'field_order'        => sanitizer( 'field_order', '0', 'field_order' )
+                'field_order'        => sanitizer( 'field_order', '0', 'field_order' ),
+                'field_section'      => 'public'
             ];
         
             $this->field_data['field_name'] = str_replace( ' ', '_', $this->field_data['field_name'] ); // make sure no space.
@@ -1236,7 +1223,7 @@ class UserFieldsQuantum extends QuantumActions {
                 $calc = isset( $_POST['field_calc'] ) ? form_sanitizer( $_POST['field_calc'], '', 'field_calc' ) : 1;
                 $this->field_data['field_upload_type'] = isset( $_POST['field_upload_type'] ) ? form_sanitizer( $_POST['field_upload_type'], '', 'field_upload_type' ) : '';
                 if ( !in_array( $this->field_data['field_upload_type'], [ 'file', 'image' ] ) ) {
-                    \Defender::stop();
+                    fusion_stop();
                     addNotice( 'danger', $this->locale['fields_0108'] );
                 } else {
                     $this->field_data['field_config'] = [
@@ -1266,7 +1253,8 @@ class UserFieldsQuantum extends QuantumActions {
         
             if ( fusion_safe() ) {
                 if ( !empty( $this->field_data['field_config'] ) ) {
-                    $this->field_data['field_config'] = \Defender::encode( $this->field_data['field_config'] );
+                    $this->field_data['field_config'] = fusion_encode( $this->field_data['field_config'] );
+                    
                 }
             
                 $this->create_fields( $this->field_data, 'dynamics' ); // will redirect and refresh config
@@ -1281,12 +1269,26 @@ class UserFieldsQuantum extends QuantumActions {
             $disable_opts[] = $index;
         }
         // ok the value generated needs to be parsed by quantum
-        $html .= form_select_tree( 'field_cat', $this->locale['fields_0450'], $this->field_data['field_cat'], [
+        //$html .= form_select_tree( 'field_cat', $this->locale['fields_0450'], $this->field_data['field_cat'], [
+        //    'no_root'      => TRUE,
+        //    'width'        => '100%',
+        //    'disable_opts' => $disable_opts
+        //], DB_USER_FIELD_CATS, 'field_cat_name', 'field_cat_id', 'field_parent' );
+        //
+        $html .= form_select( 'field_cat', $this->locale['fields_0410'], $this->field_data['field_cat'], [
             'no_root'      => TRUE,
-            'width'        => '100%',
-            'disable_opts' => $disable_opts
-        ], DB_USER_FIELD_CATS, 'field_cat_name', 'field_cat_id', 'field_parent' );
+            'db'           => DB_USER_FIELD_CATS,
+            'disable_opts' => array_keys( $this->page_list ),
+            'id_col'       => 'field_cat_id',
+            'cat_col'      => 'field_parent',
+            'title_col'    => 'field_cat_name',
+            'optgroup'     => TRUE,
+            'select_alt'   => TRUE,
+            'parse_label'  => TRUE,
+        ] );
+        
         $html .= self::quantum_multilocale_fields( 'field_title', $this->locale['fields_0451'], $this->field_data['field_title'], [ 'required' => 1 ] );
+    
         $html .= form_text( 'field_name', $this->locale['fields_0453'], $this->field_data['field_name'],
             [
                 'placeholder' => $this->locale['fields_0454'],
@@ -1298,10 +1300,10 @@ class UserFieldsQuantum extends QuantumActions {
                 $html .= form_select( 'field_options', $this->locale['fields_0455'], $this->field_data['field_options'],
                     [
                         'required'    => TRUE,
-                        'tags'        => TRUE,
-                        'multiple'    => TRUE,
                         'width'       => '100%',
-                        'inner_width' => '100%'
+                        'inner_width' => '100%',
+                        'select_alt'  => TRUE,
+                        'tags'        => TRUE,
                     ]
                 );
                 break;
@@ -1558,7 +1560,7 @@ class UserFieldsQuantum extends QuantumActions {
                     if ( !$this->field_data['field_order'] ) {
                         $this->field_data['field_order'] = dbresult( dbquery( "SELECT MAX(field_order) FROM ".DB_USER_FIELDS." WHERE field_cat=:cat_id", [ ':cat_id' => $this->field_data['field_cat'] ] ), 0 ) + 1;
                     }
-    
+                
                     $this->create_fields( $this->field_data, 'module', '', self::$modules );
                 }
             }
@@ -1585,10 +1587,20 @@ class UserFieldsQuantum extends QuantumActions {
             
             $html .= "</div>\n<hr/>\n";
         
-            $html .= form_select_tree( 'field_cat', $this->locale['fields_0410'], $this->field_data['field_cat'], [
+            //$html .= form_select_tree( 'field_cat', $this->locale['fields_0410'], $this->field_data['field_cat'], [
+            //    'no_root'      => TRUE,
+            //    'disable_opts' => array_keys( $this->page_list ),
+            //], DB_USER_FIELD_CATS, 'field_cat_name', 'field_cat_id', 'field_parent' );
+        
+            $html .= form_select( 'field_cat', $this->locale['fields_0410'], $this->field_data['field_cat'], [
                 'no_root'      => TRUE,
+                'db'           => DB_USER_FIELD_CATS,
                 'disable_opts' => array_keys( $this->page_list ),
-            ], DB_USER_FIELD_CATS, 'field_cat_name', 'field_cat_id', 'field_parent' );
+                'id_col'       => 'field_cat_id',
+                'cat_col'      => 'field_parent',
+                'title_col'    => 'field_cat_name'
+            ] );
+            
             $html .= form_text( 'field_order', $this->locale['fields_0414'], $this->field_data['field_order'], [ 'type' => 'number', 'inner_width' => '100px' ] );
         
             if ( !empty( $plugin_data['user_field_dbinfo'] ) ) {
@@ -1629,7 +1641,9 @@ class UserFieldsQuantum extends QuantumActions {
             return (string)$html;
         
         } else {
+        
             addNotice( 'danger', $this->locale['fields_0109'] );
+        
             redirect( ADMIN.'user_fields.php'.$aidlink.'&amp;ref=public&amp;action=new' );
         }
     }

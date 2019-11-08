@@ -409,7 +409,7 @@ abstract class QuantumActions extends SqlHandler {
     /**
      * Returns $this->page_list and $this->cat_list
      */
-    protected function load_field_cats() {
+    public function loadUserFieldCats() {
         // Load Field Cats
         if ( empty( $this->page_list ) && empty( $this->cat_list ) ) {
             $result = dbquery( "SELECT * FROM ".DB_USER_FIELD_CATS." ORDER BY field_cat_order ASC" );
@@ -567,7 +567,7 @@ abstract class QuantumActions extends SqlHandler {
                                 print_p( str_replace( [ '[FIELD_NAME]', '[OLD_TABLE]', '[FIELD_NAME_]' ], [ $oldRows['field_name'], $old_table, $data['field_name'] ], $locale['fields_0669'] ).$field_attr );
                             }
                         } else {
-                            \Defender::stop();
+                            fusion_stop();
                             addNotice( 'danger', sprintf( $locale['fields_0104'], "($new_table)" ) );
                         }
                     }

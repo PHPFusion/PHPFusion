@@ -111,7 +111,7 @@ class Account_Profile extends UserFieldsQuantum {
         );
 
         $this->plugin_folder = INCLUDES.'user_fields/preference/';
-        $this->load_fields();
+        $this->loadUserFields();
 
         return (array)$info;
     }

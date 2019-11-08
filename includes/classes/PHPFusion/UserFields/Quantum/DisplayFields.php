@@ -97,8 +97,8 @@ class DisplayFields {
         if ( $options['hide_value'] ) {
             $field_value = '';
         }
-        
-        $field_label = $options['show_title'] ? $this->class::parse_label( $data['field_title'] ).':' : '';
+    
+        $field_label = $options['show_title'] ? fusion_parse_locale( $data['field_title'] ).':' : '';
         
         switch ( $data['field_type'] ) {
             
@@ -136,7 +136,7 @@ class DisplayFields {
                     return form_text( $data['field_name'], $field_label, $field_value, $options );
                 } else if ( $method == 'display' && $field_value ) {
                     return [
-                        'title' => self::parse_label( $data['field_title'] ),
+                        'title' => fusion_parse_locale( $data['field_title'] ),
                         'value' => $field_value,
                     ];
                 }
@@ -148,7 +148,7 @@ class DisplayFields {
                     return form_text( $data['field_name'], $field_label, $field_value, $options );
                 } else if ( $method == 'display' && $field_value ) {
                     return [
-                        'title' => self::parse_label( $data['field_title'] ),
+                        'title' => fusion_parse_locale( $data['field_title'] ),
                         'value' => $field_value,
                     ];
                 }
@@ -160,7 +160,7 @@ class DisplayFields {
                     return form_text( $data['field_name'], $field_label, $field_value, $options );
                 } else if ( $method == 'display' && $field_value ) {
                     return [
-                        'title' => $this->class::parse_label( $data['field_title'] ),
+                        'title' => fusion_parse_locale( $data['field_title'] ),
                         'value' => $field_value
                     ];
                 }
@@ -172,23 +172,24 @@ class DisplayFields {
                     return form_text( $data['field_name'], $field_label, $field_value, $options );
                 } else if ( $method == 'display' && $field_value ) {
                     return [
-                        'title' => $this->class::parse_label( $data['field_title'] ),
+                        'title' => fusion_parse_locale( $data['field_title'] ),
                         'value' => $field_value
                     ];
                 }
                 break;
             case 'select':
                 if ( $method == 'input' ) {
-                    $options += [ 'options' => $option_list ];
-                    $options['keyflip'] = TRUE;
-                    
-                    return form_select( $data['field_name'], $this->class::parse_label( $data['field_title'] ), $field_value, $options );
+    
+                    $options += [ 'options' => $option_list, 'select_alt' => TRUE, 'optgroup' => FALSE, ];
+    
+                    return form_select( $data['field_name'], fusion_parse_locale( $data['field_title'] ), $field_value, $options );
                     
                 } else if ( $method == 'display' && $field_value ) {
+    
                     $options_value = explode( ",", $data['field_options'] );
                     
                     return [
-                        'title' => $this->class::parse_label( $data['field_title'] ),
+                        'title' => fusion_parse_locale( $data['field_title'] ),
                         'value' => !empty( $options_value[ $field_value ] ) ? $options_value[ $field_value ] : $field_value,
                     ];
                 }
@@ -198,11 +199,11 @@ class DisplayFields {
                     $options += [ 'options' => $option_list, 'tags' => TRUE, 'multiple' => TRUE, 'width' => '100%', 'inner_width' => '100%' ];
                     
                     return form_select( $data['field_name'],
-                        $options['show_title'] ? $this->class::parse_label( $data['field_title'] ) : '',
+                        $options['show_title'] ? fusion_parse_locale( $data['field_title'] ) : '',
                         $field_value, $options );
                 } else if ( $method == 'display' && $field_value ) {
                     return [
-                        'title' => $this->class::parse_label( $data['field_title'] ),
+                        'title' => fusion_parse_locale( $data['field_title'] ),
                         'value' => $field_value,
                     ];
                 }
@@ -214,7 +215,7 @@ class DisplayFields {
                     return form_select( $data['field_name'], $field_label, $field_value, $options );
                 } else if ( $method == 'display' && $field_value ) {
                     return [
-                        'title' => $this->class::parse_label( $data['field_title'] ),
+                        'title' => fusion_parse_locale( $data['field_title'] ),
                         'value' => $field_value,
                     ];
                 }
@@ -224,7 +225,7 @@ class DisplayFields {
                     return form_textarea( $data['field_name'], $field_label, $field_value, $options );
                 } else if ( $method == 'display' && $field_value ) {
                     return [
-                        'title' => $this->class::parse_label( $data['field_title'] ),
+                        'title' => fusion_parse_locale( $data['field_title'] ),
                         'value' => $field_value
                     ];
                 }
@@ -234,7 +235,7 @@ class DisplayFields {
                     return form_checkbox( $data['field_name'], $field_label, $field_value, $options );
                 } else if ( $method == 'display' && $field_value ) {
                     return [
-                        'title' => $this->class::parse_label( $data['field_title'] ),
+                        'title' => fusion_parse_locale( $data['field_title'] ),
                         'value' => $field_value,
                     ];
                 }
@@ -244,7 +245,7 @@ class DisplayFields {
                     return form_datepicker( $data['field_name'], $field_label, $field_value, $options );
                 } else if ( $method == 'display' && $field_value ) {
                     return [
-                        'title' => $this->class::parse_label( $data['field_title'] ),
+                        'title' => fusion_parse_locale( $data['field_title'] ),
                         'value' => showdate( 'shortdate', $field_value )
                     ];
                 }
@@ -254,7 +255,7 @@ class DisplayFields {
                     return form_colorpicker( $data['field_name'], $field_label, $field_value, $options );
                 } else if ( $method == 'display' && $field_value ) {
                     return [
-                        'title' => $this->class::parse_label( $data['field_title'] ),
+                        'title' => fusion_parse_locale( $data['field_title'] ),
                         'value' => $field_value,
                     ];
                 }
@@ -264,7 +265,7 @@ class DisplayFields {
                     return form_fileinput( $data['field_name'], $field_label, $field_value, $options );
                 } else if ( $method == 'display' && $field_value ) {
                     return [
-                        'title' => $this->class::parse_label( $data['field_title'] ),
+                        'title' => fusion_parse_locale( $data['field_title'] ),
                         'value' => $field_value
                     ];
                 }
@@ -274,7 +275,7 @@ class DisplayFields {
                     return form_hidden( $data['field_name'], self::parse_label( $data['field_title'] ), $field_value, $options );
                 } else if ( $method == 'display' && $field_value ) {
                     return [
-                        'title' => $this->class::parse_label( $data['field_title'] ),
+                        'title' => fusion_parse_locale( $data['field_title'] ),
                         'value' => $field_value
                     ];
                 }
@@ -284,7 +285,7 @@ class DisplayFields {
                     return form_geo( $data['field_name'], $field_label, $options );
                 } else if ( $method == 'display' && $field_value ) {
                     return [
-                        'title' => $this->class::parse_label( $data['field_title'] ),
+                        'title' => fusion_parse_locale( $data['field_title'] ),
                         'value' => implode( '|', $field_value )
                     ];
                 }
@@ -296,7 +297,7 @@ class DisplayFields {
                     return form_checkbox( $data['field_name'], $field_label, $field_value, $options );
                 } else if ( $method == 'display' && $field_value ) {
                     return [
-                        'title' => $this->class::parse_label( $data['field_title'] ),
+                        'title' => fusion_parse_locale( $data['field_title'] ),
                         'value' => $field_value,
                     ];
                 }

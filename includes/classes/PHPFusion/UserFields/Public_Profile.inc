@@ -114,7 +114,7 @@ class Public_Profile extends UserFieldsQuantum {
 
             // Quantum
             $info['user_fields'] = '';
-            $this->load_fields('public');
+            $this->loadUserFields( 'public' );
     
             $this->cacheModulePlugins();
 
@@ -224,7 +224,7 @@ class Public_Profile extends UserFieldsQuantum {
             // check user password
             $uf_input = new UserFieldsInput();
             $uf_input->user_data = $this->user_data;
-            if ($uf_input->check_user_hash()) {
+            if ( $uf_input->checkUserHash() ) {
                 if (!empty($_FILES['uav_input']['tmp_name'])) {
                     $avatar = form_sanitizer($_FILES['uav_input'], '', 'uav_input');
                     if (isset($avatar['error']) && $avatar['error'] == 0) {
