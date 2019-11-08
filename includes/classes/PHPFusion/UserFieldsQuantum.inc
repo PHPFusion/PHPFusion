@@ -1559,8 +1559,7 @@ class UserFieldsQuantum extends QuantumActions {
                     if ( !$this->field_data['field_order'] ) {
                         $this->field_data['field_order'] = dbresult( dbquery( "SELECT MAX(field_order) FROM ".DB_USER_FIELDS." WHERE field_cat=:cat_id", [ ':cat_id' => $this->field_data['field_cat'] ] ), 0 ) + 1;
                     }
-                    print_P( $this->field_data );
-                
+    
                     $this->create_fields( $this->field_data, 'module', '', self::$modules );
                 }
             }
