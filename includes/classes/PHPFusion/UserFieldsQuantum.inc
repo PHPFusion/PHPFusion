@@ -584,12 +584,8 @@ class UserFieldsQuantum extends QuantumActions {
                                 }
                             
                                 $options = [ 'inline' => TRUE, 'show_title' => 1, 'hide_value' => 1 ];
-                            
-                                if ( $field_data['field_type'] == 'file' ) {
-                                    //print_p(self::$modules);
-                                    $options['field_file'] = self::$module_list_var[ $field_data['field_name'] ]['include'];
-                                }
-                                
+    
+    
                                 $html .= "<div class='row'>\n<div class='col-xs-12 col-sm-9'>\n";
                                 $html .= $this->display_fields( $field_data, $this->callback_data, $this->method, $options );
                                 $html .= "</div><div class='col-xs-12 col-sm-3'>\n";
@@ -800,6 +796,9 @@ class UserFieldsQuantum extends QuantumActions {
      */
     public function display_fields( array $data, $callback_data, $method = 'input', array $options = [] ) {
         $fields = new DisplayFields( $this );
+        if ( $data['field_type'] == 'file' ) {
+            $options['field_file'] = self::$module_list_var[ $data['field_name'] ]['include'];
+        }
         return $fields->displayFields( $data, $callback_data, $method, $options );
     }
     
