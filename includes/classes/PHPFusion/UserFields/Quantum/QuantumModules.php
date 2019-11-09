@@ -63,6 +63,7 @@ class QuantumModules {
                     foreach ( $folders as $module ) {
                         
                         $path = $plugin_folder.$module.'/'.$module.'_include.php';
+    
                         $var_path = $plugin_folder.$module.'/'.$module.'_include_var.php';
                         
                         if ( $plugin_folder == INFUSIONS ) {

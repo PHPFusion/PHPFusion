@@ -353,7 +353,7 @@ class UserFieldsQuantum extends QuantumActions {
     }
     
     
-    private function setPluginFolder( $folder ) {
+    public function setPluginFolder( $folder ) {
         if ( !$folder ) {
             $folder = get( 'section' );
             if ( defined( 'IN_QUANTUM' ) ) {
@@ -649,7 +649,6 @@ class UserFieldsQuantum extends QuantumActions {
         return (string)$html;
     }
     
-
     private function viewPreferenceAdmin() {
         $new_button = "<a class='btn btn-default' href='".ADMIN."user_fields.php".fusion_get_aidlink()."&amp;ref=preferences&amp;action=new'>Add New</a>";
         $table = new Tables( new Preference(), FALSE );

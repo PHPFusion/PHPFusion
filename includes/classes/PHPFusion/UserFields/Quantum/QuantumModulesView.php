@@ -28,118 +28,119 @@ class QuantumModulesView {
      * @todo: REST API module load
      */
     public function viewModules( $folder = 'public' ) {
-        $html = '';
         $aidlink = fusion_get_aidlink();
-        if ( !empty( $this->cat_list ) ) {
-            // The edit and add form will be in modal phase.
-            if ( $folder == 'public' ) {
-                $html .= "<div class='list-group-item'>\n";
-                $html .= "<div class='row m-t-20'>\n";
-                $field_type = $this->class->get_dynamics_type();
-                unset( $field_type['file'] );
-                foreach ( $field_type as $type => $name ) {
-                    $html .= "<div class='col-xs-6 col-sm-4 col-md-2 col-lg-2 p-b-20'>
-                    <a class='btn btn-block btn-default' href='".ADMIN."user_fields.php$aidlink&amp;ref=public&amp;action=new&amp;add_field=$type'>$name</a>
-                    </div>\n";
-                }
-                $html .= "</div>\n</div>\n<hr/>";
+        $pf_html = '';
+        $no_modules = '<div class="strong text-center">There are no user fields available</div>';
+        if ( !empty( $this->cat_list ) && $folder == 'public' ) {
+            $field_type = $this->class->get_dynamics_type();
+            unset( $field_type['file'] );
+            $pf_html .= '<div class="list-group-item"><div class="row equal-height">';
+            foreach ( $field_type as $type => $name ) {
+                $pf_html .= '<div class="'.grid_column_size( 50, 50, 20 ).' p-b-20"><a class="btn btn-block btn-default" href="'.ADMIN.'user_fields.php'.$aidlink.'&amp;ref=public&amp;action=new&amp;add_field='.$type.'">'.$name.'</a></div>';
             }
+            $pf_html .= '</div></div><hr/>';
         }
-        
         // modules
         if ( !empty( $this->modules ) ) {
+    
+            $no_modules = '';
+    
+            $this->doModuleAction( $folder );
+    
+            $pf_html .= '<div class="row equal-height">';
             
-            // 1 click uninstall modules
-            //https://php-fusion.test/administration/user_fields.php?aid=be2d2e94f3170679&ref=preferences&action=new&uninstall=user_birthdate_show
-            
-            if ( $install = get( 'install' ) ) {
-                
-                if ( $folder == 'public' ) {
-                    
-                    $modal = openmodal( 'modadd', "<h4 class='m-0'>Add User Fields Module</h4>" );
-                    $modal .= $this->viewModulesForm();
-                    $modal .= closemodal();
-                    add_to_footer( $modal );
-                    
-                } else {
-                    
-                    // Install for preferences and security
-                    if ( isset( $this->modules[ $install ] ) ) {
-                        
-                        if ( in_array( $install, array_keys( $this->available_field_info ) ) ) {
-                            
-                            $module_data = $this->modules[ $install ];
-                            
-                            $module = [
-                                'field_id'           => 0,
-                                'field_title'        => $module_data['user_field_name'],
-                                'field_name'         => $module_data['user_field_dbname'],
-                                'field_cat'          => 0,
-                                'field_type'         => 'file',
-                                'field_default'      => '',
-                                'field_error'        => '',
-                                'field_required'     => 0,
-                                'field_log'          => 0,
-                                'field_registration' => 0,
-                                'field_order'        => 0,
-                                'field_config'       => 0,
-                                'field_section'      => $folder
-                            ];
-                            
-                            $module['field_order'] = dbresult( dbquery( "SELECT COUNT(field_id) FROM ".DB_USER_FIELDS." WHERE field_type=:type AND field_cat=:cat_id", [ ':cat_id' => $module['field_cat'], ':type' => $folder ] ), 0 ) + 1;
-                            if ( $this->class->updateFields( $module, 'module', DB_USERS, $this->modules ) ) {
-                                redirect( clean_request( '', [ 'install' ], FALSE ) );
-                            }
-                        }
-                    }
-                }
-            } else if ( $uninstall = get( 'uninstall' ) ) {
-                
-                if ( isset( $this->modules[ $uninstall ] ) ) {
-                    $module = $this->modules[ $uninstall ];
-                    $field_id = (int)dbresult( dbquery( "SELECT field_id FROM ".DB_USER_FIELDS." WHERE field_name=:name AND field_type=:file AND field_section=:folder", [
-                        ':name'   => $module['user_field_dbname'],
-                        ':file'   => 'file',
-                        ':folder' => $folder
-                    ] ), 0 );
-                    if ( $this->class->removeField( $field_id ) ) {
-                        redirect( clean_request( '', [ 'uninstall' ], FALSE ) );
-                    }
-                }
-            }
-            
-            $html .= "<div class='row equal-height'>\n";
             foreach ( $this->modules as $module_name => $module_data ) {
-                
                 $button = "<a class='btn btn-default' href='".clean_request( "install=".$module_name, [ 'install', 'uninstall' ], FALSE )."'>Install</a>";
-                
                 if ( !in_array( $module_name, array_keys( $this->available_field_info ) ) ) {
                     $button = "<a class='btn btn-danger' href='".clean_request( "uninstall=".$module_name, [ 'install', 'uninstall' ], FALSE )."'>Uninstall</a>";
                 }
-                
-                $html .= "<div class='m-b-15 ".grid_column_size( 100, 50, 33, 25 )."'>\n";
-                $html .= "<div class='list-group-item text-center'>";
+                $image = '';
                 if ( $module_data['module_image'] ) {
-                    $html .= "<img src='".$module_data['module_image']."' class='icon img-responsive' style='margin:15px auto; max-height:48px;'>";
+                    $image = "<img src='".$module_data['module_image']."' class='icon img-responsive' style='margin:15px auto; max-height:48px;'>";
                 }
-                $html .= "<h4 class='strong'>".$module_data['user_field_name']."</h4>";
-                $html .= "<div class='clearfix position-relative overflow-hide'>";
-                $html .= $module_data['user_field_desc'];
-                $html .= "<br/><small>Version: ".$module_data['user_field_version']."</small>";
-                $html .= "</div>";
-                $html .= "<div class='clearfix text-right'>";
-                $html .= $button;
-                $html .= "</div>";
-                $html .= "</div>";
-                $html .= "</div>";
+    
+                $pf_html .= '<div class="m-b-15 '.grid_column_size( 100, 50, 33, 25 ).'">
+                <div class="list-group-item text-center">'.$image.'
+                <div class="display-flex-column">
+                <h4 class="strong">'.$module_data['user_field_name'].'</h4>
+                <div class="clearfix position-relative overflow-hide">'.$module_data['user_field_desc'].'<br/><small>Version: '.$module_data['user_field_version'].'</small></div>
+                <div class="clearfix text-right m-t-20" style="margin-top:auto;">'.$button.'</div>
+                </div>
+                </div>
+                </div>';
             }
-            $html .= "</div>\n";
+    
+            $pf_html .= '</div>';
+        }
+        $pf_html .= $no_modules;
+    
+        return (string)$pf_html;
+    }
+    
+    /**
+     * Do module installation
+     *
+     * @param $folder
+     *
+     * @throws \Exception
+     */
+    private function doModuleAction( $folder ) {
+        // 1 click uninstall modules
+        if ( $install = get( 'install' ) ) {
             
-        } else {
-            $html .= "<div>There are no user fields available</div>\n";
+            if ( $folder == 'public' ) {
+                
+                $modal = openmodal( 'modadd', "<h4 class='m-0'>Add User Fields Module</h4>" );
+                $modal .= $this->viewModulesForm();
+                $modal .= closemodal();
+                add_to_footer( $modal );
+                
+            } else {
+                // Install for preferences and security
+                if ( isset( $this->modules[ $install ] ) ) {
+                    
+                    if ( in_array( $install, array_keys( $this->available_field_info ) ) ) {
+                        
+                        $module_data = $this->modules[ $install ];
+                        
+                        $module = [
+                            'field_id'           => 0,
+                            'field_title'        => $module_data['user_field_name'],
+                            'field_name'         => $module_data['user_field_dbname'],
+                            'field_cat'          => 0,
+                            'field_type'         => 'file',
+                            'field_default'      => '',
+                            'field_error'        => '',
+                            'field_required'     => 0,
+                            'field_log'          => 0,
+                            'field_registration' => 0,
+                            'field_order'        => 0,
+                            'field_config'       => 0,
+                            'field_section'      => $folder
+                        ];
+                        
+                        $module['field_order'] = dbresult( dbquery( "SELECT COUNT(field_id) FROM ".DB_USER_FIELDS." WHERE field_type=:type AND field_cat=:cat_id", [ ':cat_id' => $module['field_cat'], ':type' => $folder ] ), 0 ) + 1;
+                        if ( $this->class->updateFields( $module, 'module', DB_USERS, $this->modules ) ) {
+                            redirect( clean_request( '', [ 'install' ], FALSE ) );
+                        }
+                    }
+                }
+            }
+        } else if ( $uninstall = get( 'uninstall' ) ) {
+            
+            if ( isset( $this->modules[ $uninstall ] ) ) {
+                $module = $this->modules[ $uninstall ];
+                $field_id = (int)dbresult( dbquery( "SELECT field_id FROM ".DB_USER_FIELDS." WHERE field_name=:name AND field_type=:file AND field_section=:folder", [
+                    ':name'   => $module['user_field_dbname'],
+                    ':file'   => 'file',
+                    ':folder' => $folder
+                ] ), 0 );
+                if ( $this->class->removeField( $field_id ) ) {
+                    redirect( clean_request( '', [ 'uninstall' ], FALSE ) );
+                }
+            }
         }
         
-        return $html;
     }
     
     /** Modules Form */
@@ -147,12 +148,10 @@ class QuantumModulesView {
         $locale = fusion_get_locale();
         $aidlink = fusion_get_aidlink();
         $field_data = [];
-        
         $install_plugin = get( 'install' );
         $action = get( 'action' );
         $module_id = get( 'module_id', FILTER_VALIDATE_INT );
         $ref_module = get( 'ref' );
-        
         if ( $action == 'module_edit' && $module_id ) {
             $result = dbquery( "SELECT * FROM ".DB_USER_FIELDS." WHERE field_id=:mid", [ ':mid' => (int)$module_id ] );
             if ( dbrows( $result ) ) {

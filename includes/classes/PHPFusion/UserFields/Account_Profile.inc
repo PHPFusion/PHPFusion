@@ -33,6 +33,9 @@ class Account_Profile extends UserFieldsQuantum {
         
         $current_section = get( 'section' );
         $current_section = $current_section && in_array( $current_section, [ 'account', 'preferences', 'security' ] ) ? $current_section : 'account';
+        $current_section = $this->setPluginFolder( $current_section );
+        $this->loadUserFields( $current_section );
+        
         $security_fields = $this->cacheSecurityPlugins();
         $info['section'] = [
             'account'     => [
@@ -57,7 +60,7 @@ class Account_Profile extends UserFieldsQuantum {
                 'name'   => 'Account Security',
             ];
         }
-        
+
         // only happens on Front End only
         $info['current_section'] = $current_section;
         $info['section_title'] = isset( $info[ $current_section ] ) ? $info[ $current_section ] : 'Account Settings';
@@ -113,7 +116,9 @@ class Account_Profile extends UserFieldsQuantum {
         
         // load modules
         $this->cacheModulePlugins();
+    
         $user_fields = $this->getFields();
+    
         if ( !empty( $user_fields ) ) {
             $user_fields = flatten_array( $user_fields );
             foreach ( $user_fields as $field ) {
