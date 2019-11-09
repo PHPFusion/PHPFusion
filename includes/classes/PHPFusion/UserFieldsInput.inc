@@ -64,6 +64,9 @@ class UserFieldsInput {
     private $locale = [];
     private static $instance = NULL;
     
+    /**
+     * @return object
+     */
     public static function get_instance() {
         if ( empty( self::$instance ) ) {
             self::$instance = new static();
@@ -71,13 +74,11 @@ class UserFieldsInput {
         return (object)self::$instance;
     }
     
+    private $section = '';
+    
     public function __construct() {
         $this->locale = fusion_get_locale();
-        
-        if ( get( 'code' ) && fusion_get_settings( 'email_verification' ) == 1 && get( 'ref' ) == 'se_profile' ) {
-            $this->verifyCode( get( 'code' ) );
-            redirect( FUSION_REQUEST );
-        }
+        $this->section = get( 'section' );
     }
     
     /**
@@ -118,7 +119,7 @@ class UserFieldsInput {
             $quantum->loadUserFields();
             $quantum->loadUserFieldCats();
             $quantum->setCallbackData( $this->data );
-            $fields_input = $quantum->return_fields_input( DB_USERS, 'user_id' );
+            $fields_input = $quantum->sanitizeUserFields( DB_USERS, 'user_id' );
             if ( !empty( $fields_input ) ) {
                 foreach ( $fields_input as $table_name => $fields_array ) {
                     $data += $fields_array;
@@ -217,7 +218,7 @@ class UserFieldsInput {
                 'user_timezone'   => fusion_get_settings( 'timeoffset' ),
                 'user_reputation' => 0
             ];
-        
+    
         } else {
             return NULL;
         }
@@ -457,14 +458,26 @@ class UserFieldsInput {
      * @throws \Exception
      */
     private function updatePreference() {
+        // is admin panel allowable to set preference details?
         if ( $this->is_admin_panel || post( $this->post_name.'_pref' ) ) {
-            $update['user_pm_email_notify'] = sanitizer( 'pm_email_notify', 0, 'pm_email_notify' );
-            $update['user_language'] = sanitizer( 'user_language', '', 'user_language' );
-            $update['user_location'] = sanitizer( 'user_location', '', 'user_location' );
-            $update['user_hide_email'] = sanitizer( 'user_hide_email', '0', 'user_hide_email' );
+    
+            $data['user_language'] = sanitizer( 'user_language', '', 'user_language' );
+            $data['user_hide_email'] = sanitizer( 'user_hide_email', '0', 'user_hide_email' );
+            $data['user_location'] = sanitizer( 'user_location', '', 'user_location' );
+            $data['user_pm_email_notify'] = sanitizer( 'pm_email_notify', 0, 'pm_email_notify' );
+            $quantum = new UserFieldsQuantum();
+            $quantum->loadUserFields();
+            $quantum->getCatList();
+            $quantum->setCallbackData( $this->user_data );
+            $input = $quantum->sanitizeUserFields( DB_USERS, 'user_id' );
+            if ( !empty( $input ) ) {
+                foreach ( $input as $input_data ) {
+                    $data += $input_data;
+                }
+            }
             if ( fusion_safe() ) {
-                $update['user_id'] = $this->user_data['user_id'];
-                dbquery_insert( DB_USERS, $update, 'update', [ 'keep_session' => TRUE ] );
+                $data['user_id'] = $this->user_data['user_id'];
+                dbquery_insert( DB_USERS, $data, 'update' );
                 if ( !$this->is_admin_panel ) {
                     addNotice( 'success', 'Your account preference has been updated successfully' );
                     redirect( FUSION_REQUEST );
@@ -474,12 +487,20 @@ class UserFieldsInput {
     }
     
     private function updateSecurity() {
-        /*if ($this->is_admin_panel === FALSE) {
-        }*/
+        $this->updateUserName();
+        $this->updatePass();
+        $this->updateAdminPass();
+        $this->updateEmail();
+        $this->closeAccount();
+        // Security - added level security
+        //if ( post( $this->post_name.'_block' ) || post( $this->post_name.'_unblock' ) ) {
+        //    $this->update_user_blacklist();
+        //}
     }
     
     // Update Mode
     private function updatePublic() {
+    
         if ( post( $this->post_name ) ) {
             if ( $this->checkUserHash() ) {
                 $data = [];
@@ -488,35 +509,32 @@ class UserFieldsInput {
                 $quantum->loadUserFields();
                 $quantum->getCatList();
                 $quantum->setCallbackData( $this->user_data );
-                $input = $quantum->return_fields_input( DB_USERS, 'user_id' );
+                $input = $quantum->sanitizeUserFields( DB_USERS, 'user_id' );
                 if ( !empty( $input ) ) {
                     foreach ( $input as $input_data ) {
                         $data += $input_data;
                     }
                 }
-                if ( fusion_safe() ) {
-                    $data['user_id'] = $this->user_data['user_id'];
-                    $quantum->log_user_action( DB_USERS, 'user_id' );
-                    dbquery_insert( DB_USERS, $data, 'update' );
-                    addNotice( 'success', 'Your profile has been updated successfully.', 'all' );
-                    redirect( FUSION_REQUEST );
-                }
+                //if ( fusion_safe() ) {
+                //    $data['user_id'] = $this->user_data['user_id'];
+                //    $quantum->log_user_action( DB_USERS, 'user_id' );
+                //    dbquery_insert( DB_USERS, $data, 'update' );
+                //    addNotice( 'success', 'Your profile has been updated successfully.', 'all' );
+                //    redirect( FUSION_REQUEST );
+                //}
             }
         }
     }
     
+    /**
+     * Update se_profile
+     *
+     * @throws \Exception
+     */
     private function updateSettings() {
-        $this->updateUserName();
-        $this->updatePass();
-        $this->updateAdminPass();
-        $this->updateEmail();
-        $this->updatePreference();
-        $this->closeAccount();
-        // Security - added level security
-        if ( post( $this->post_name.'_block' ) || post( $this->post_name.'_unblock' ) ) {
-            $this->update_user_blacklist();
-        }
-        if ( post( $this->post_name.'_security' ) ) {
+        if ( $this->section == 'preferences' ) {
+            $this->updatePreference();
+        } else if ( $this->section == 'acc_settings') {
             $this->updateSecurity();
         }
     }
@@ -585,10 +603,13 @@ class UserFieldsInput {
                 break;
             case 'se_profile':
                 // Do this first.
+                if ( get( 'code' ) && fusion_get_settings( 'email_verification' ) == 1 ) {
+                    $this->verifyCode( get( 'code' ) );
+                    redirect( clean_request( '', [ 'code' ], FALSE ) );
+                }
                 $this->updateSettings();
                 break;
             case 'custom':
-                //$this->update_custom_profile();
                 break;
         }
     }
@@ -613,7 +634,7 @@ class UserFieldsInput {
                 if ( isset( $upload['error'] ) && empty( $upload['error'] ) ) {
                     return $upload['image_name'];
                 }
-            
+    
                 return NULL;
             }
         }
@@ -710,7 +731,7 @@ class UserFieldsInput {
             } else {
                 addNotice( 'danger', "You cannot change your username" );
             }
-        
+    
             if ( !$this->is_admin_panel ) {
                 redirect( FUSION_REQUEST );
             }
@@ -745,17 +766,17 @@ class UserFieldsInput {
             $passAuth->currentPasswordHash = $this->user_data['user_password'];
             $passAuth->currentAlgo = $this->user_data['user_algo'];
             $passAuth->currentSalt = $this->user_data['user_salt'];
-        
+    
             if ( $this->is_admin_panel or $passAuth->isValidCurrentPassword() or isset( $skip_pass ) ) {
                 
                 // Just for validation purposes for example email change
                 $this->_isValidCurrentPassword = 1;
-            
+        
                 // Change new password
                 if ( !empty( $this->_newUserPassword ) ) {
                     
                     $_isValidNewPassword = $passAuth->isValidNewPassword();
-                
+    
                     switch ( $_isValidNewPassword ) {
                         case '0':
                             // New password is valid
@@ -804,9 +825,9 @@ class UserFieldsInput {
                             break;
                     }
                 }
-            
+        
             } else {
-            
+        
                 Defender::stop();
                 Defender::setInputError( 'user_password' );
                 Defender::setErrorText( 'user_password', $this->locale['u149'] );
@@ -822,7 +843,7 @@ class UserFieldsInput {
                 ] );
                 
                 include INCLUDES."sendmail_include.php";
-            
+    
                 addNotice( "success", str_replace( "USER_NAME", $this->user_data['user_name'], $this->locale['global_458'] ) );
                 $settings = fusion_get_settings();
                 $input = [
@@ -1096,7 +1117,7 @@ class UserFieldsInput {
         if ( $this->registration === FALSE && ( post( $this->post_name.'_close' ) ) ) {
             $is_valid_password = FALSE;
             $user_close_message = form_sanitizer( $_POST['user_close_message'], '', 'user_close_message' );
-        
+    
             if ( isset( $_POST['account_close_hash'] ) ) {
                 $is_valid_password = $this->verify_password( 'account_close_hash' );
             }

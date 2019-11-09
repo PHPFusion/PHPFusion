@@ -32,16 +32,14 @@ class Account_Profile extends UserFieldsQuantum {
     public function get_info() {
         
         $current_section = get( 'section' );
-        $current_section = $current_section && in_array( $current_section, [ 'account', 'preferences', 'security' ] ) ? $current_section : 'account';
         $current_section = $this->setPluginFolder( $current_section );
         $this->loadUserFields( $current_section );
         
-        $security_fields = $this->cacheSecurityPlugins();
         $info['section'] = [
-            'account'     => [
-                'id'     => 'account',
-                'active' => ( $current_section == 'account' ? TRUE : FALSE ),
-                'link'   => clean_request( 'section=acc_settings', [ 'section' ], FALSE ),
+            'public'      => [
+                'id'     => 'public',
+                'active' => ( $current_section == 'public' ? TRUE : FALSE ),
+                'link'   => clean_request( 'section=public', [ 'section' ], FALSE ),
                 'name'   => 'Account Settings',
             ],
             'preferences' => [
@@ -51,7 +49,8 @@ class Account_Profile extends UserFieldsQuantum {
                 'name'   => 'Account Preferences',
             ]
         ];
-        
+    
+        $security_fields = $this->cacheSecurityPlugins();
         if ( !empty( $security_fields ) ) {
             $info['section']['security'] = [
                 'id'     => 'security',
@@ -64,6 +63,7 @@ class Account_Profile extends UserFieldsQuantum {
         // only happens on Front End only
         $info['current_section'] = $current_section;
         $info['section_title'] = isset( $info[ $current_section ] ) ? $info[ $current_section ] : 'Account Settings';
+
         switch ( $current_section ) {
             default:
             case 'account':
@@ -80,7 +80,7 @@ class Account_Profile extends UserFieldsQuantum {
     
     // Language, Currency, Location, Region + Fields
     private function accountPrefs() {
-        $locale = fusion_get_locale( "", [ LOCALE.LOCALESET."messages.php" ] );
+        $locale = fusion_get_locale( '', [ LOCALE.LOCALESET."messages.php" ] );
         $languages = fusion_get_enabled_languages();
         $info['user_language'] = form_btngroup( 'user_language', "", $this->user_data['user_language'], [
             'options' => $languages,

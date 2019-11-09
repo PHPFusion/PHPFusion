@@ -292,7 +292,6 @@ class UserFields extends UserFieldsQuantum {
         $this->info = [
             'title'                => 'Edit Profile',
             'sitename'             => fusion_get_settings( 'sitename' ),
-            'section'              => self::get_user_field_cats(),
             'pages'                => $this->getInputPages(),
             'user_id'              => form_hidden( 'user_id', '', $user_id ),
             'name'                 => $this->user_data['user_name'],
@@ -355,6 +354,7 @@ class UserFields extends UserFieldsQuantum {
             $this->info = array_merge( $this->info, $class->get_info() );
             
         } else {
+    
             $this->editProfileInfo();
         }
     
@@ -363,6 +363,7 @@ class UserFields extends UserFieldsQuantum {
         $this->info['closeform'] = closeform();
         $this->info['button'] = $this->renderButton();
     
+    
         return (array)$this->info;
     }
     
@@ -370,6 +371,7 @@ class UserFields extends UserFieldsQuantum {
     private function editProfileInfo() {
         $settings = fusion_get_settings();
         $locale = fusion_get_locale();
+    
         // Notice to tell that there are email pending for verification.
         if ( $settings['email_verification'] ) {
             $result = dbquery( "SELECT user_email FROM ".DB_EMAIL_VERIFY." WHERE user_id=:selfid", [
@@ -377,9 +379,10 @@ class UserFields extends UserFieldsQuantum {
             ] );
             if ( dbrows( $result ) ) {
                 $data = dbarray( $result );
-                addNotice( 'success', sprintf( $locale['u200'], $data['user_email'] )."\n<br />\n".$locale['u201'] );
+                addNotice( 'info', sprintf( $locale['u200'], $data['user_email'] )."\n<br />\n".$locale['u201'] );
             }
         }
+    
         // info output
         switch ( $this->info['current_page'] ) {
             default:
@@ -428,6 +431,7 @@ class UserFields extends UserFieldsQuantum {
                 break;
         
             case 'pu_profile':
+    
                 $class = new Public_Profile( $this );
                 $class->user_data = $this->user_data;
                 $class->post_name = $this->post_name;
@@ -441,6 +445,7 @@ class UserFields extends UserFieldsQuantum {
                 break;
         
             case 'se_profile':
+    
                 $class = new Account_Profile();
                 $class->user_data = $this->user_data;
                 $class->options = $this->options;
@@ -486,7 +491,6 @@ class UserFields extends UserFieldsQuantum {
     private function renderButton() {
         $disabled = $this->display_terms ? TRUE : FALSE;
         $this->options += $this->default_options;
-    
         $html = ( !$this->skip_password ) ? form_hidden( 'user_hash', '', $this->user_data['user_password'] ) : '';
         $html .= form_button( $this->post_name, $this->post_value, $this->post_value,
             [
@@ -511,7 +515,7 @@ class UserFields extends UserFieldsQuantum {
             WHERE user_id=:uid".$user_status."
             ORDER BY suspend_date DESC
             LIMIT 1", [
-                ':uid' => intval( $this->profile_id )
+                ':uid' => (int)$this->profile_id
             ] );
             if ( dbrows( $result ) ) {
                 

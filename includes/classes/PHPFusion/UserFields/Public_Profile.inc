@@ -20,12 +20,19 @@ class Public_Profile extends UserFieldsQuantum {
     public $user_name_change = FALSE;
     public $is_admin_panel = FALSE;
     private $locale;
-    private $section_id = 0;
+    private $section = 0;
     private $userFieldClass = NULL;
 
     public function __construct(UserFields $userFieldClass) {
         $this->userFieldClass = $userFieldClass;
         $this->locale = fusion_get_locale();
+        $this->section = get( 'section', FILTER_VALIDATE_INT );
+        if ( !$this->section ) {
+            $this->section = dbresult( dbquery( "SELECT MIN(field_cat_id) FROM ".DB_USER_FIELD_CATS." WHERE field_parent=0" ), 0 );
+        }
+        //if (!$info['section_id']) {
+        //    $info['section_id'] = current(array_keys($info['section']));
+        //}
     }
 
     /**
@@ -35,28 +42,29 @@ class Public_Profile extends UserFieldsQuantum {
      *
      * @return array|null
      */
-    public function getCategory($id = 0) {
+    public function get_info( $id = 0 ) {
         static $section = [];
         $aid = get('aid') ? fusion_get_aidlink() : '';
         if (empty($section)) {
-            $result = dbquery("SELECT * FROM ".DB_USER_FIELD_CATS." WHERE field_parent=:fparent ORDER BY field_cat_order ASC", [
-                ':fparent' => 0
-            ]);
+            $result = dbquery( "SELECT * FROM ".DB_USER_FIELD_CATS." WHERE field_parent=:pid ORDER BY field_cat_order ASC", [ ':pid' => 0 ] );
             if (dbrows($result)) {
                 $i = 0;
                 while ($data = dbarray($result)) {
+    
                     if ($this->profile_id) {
                         $link = clean_request($aid.'&section='.$data['field_cat_id'].'&lookup='.$this->profile_id, ['section'], FALSE);
                     } else {
                         $link = clean_request($aid.'&section='.$data['field_cat_id'], ['section'], FALSE);
                     }
+    
                     $section[$data['field_cat_id']] = [
                         'id'     => $data['field_cat_id'],
-                        'active' => ($this->section_id == $data['field_cat_id']) ? 1 : (!$this->section_id && $i == 0 ? 1 : 0),
+                        'active' => ( $this->section == $data['field_cat_id'] ) ? 1 : ( !$this->section && $i == 0 ? 1 : 0 ),
                         'link'   => $link,
                         'name'   => ucwords( fusion_parse_locale( $data['field_cat_name'] ) ),
                         'icon'   => $data['field_cat_class']
                     ];
+    
                     $i++;
                 }
             }
@@ -75,12 +83,10 @@ class Public_Profile extends UserFieldsQuantum {
 
         $locale = fusion_get_locale();
         $info = [
-            'section' => $this->getCategory(),
+            'section' => $this->get_info(),
         ];
         $info['section_id'] = get('section', FILTER_VALIDATE_INT);
-        if (!$info['section_id']) {
-            $info['section_id'] = current(array_keys($info['section']));
-        }
+    
         $info['section_title'] = $info['section'][$info['section_id']]['name'];
 
         if (iADMIN || $this->user_name_change) {
@@ -173,9 +179,9 @@ class Public_Profile extends UserFieldsQuantum {
      * @return array
      */
     public function outputInfo() {
-        $this->section_id = get('section');
+
         $info = [
-                'section'    => $this->getCategory(),
+                'section'    => $this->get_info(),
                 'section_id' => $this->section_id,
             ] + $this->getUserFields();
 
@@ -183,12 +189,14 @@ class Public_Profile extends UserFieldsQuantum {
         if (!empty($info['section'])) {
             $current_section = current($info['section']);
         }
-        $this->info['section_id'] = isset($this->info['section'][$this->section_id]) ? $this->section_id : $current_section['id'];
+    
+        $this->info['section_id'] = isset( $this->info['section'][ $this->section ] ) ? $this->section : $current_section['id'];
+        
         return $info;
     }
 
     public function get_SectionId() {
-        return $this->section_id;
+        return $this->section;
     }
 
     private function get_section_title($cat_id) {
@@ -377,8 +385,8 @@ class Public_Profile extends UserFieldsQuantum {
                 $info['user_field'] = [];
                 break;
         }
-
-        $field_cats = $this->getCategory();
+    
+        $field_cats = $this->get_info();
         $section_id = $this->get_SectionId();
 
         $index_page_id = isset($field_cats[$section_id]['id']) ? $field_cats[$section_id]['id'] : 1;
