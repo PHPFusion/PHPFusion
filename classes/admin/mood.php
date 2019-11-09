@@ -207,7 +207,7 @@ class Mood_List implements TableSDK {
      * @return string
      */
     public function getMoodDescription($data) {
-        return (string)sprintf($this->locale['forum_113'], ucfirst(fusion_get_userdata("user_name")), UserFieldsQuantum::parse_label($data[':mood_description']));
+        return (string)sprintf( $this->locale['forum_113'], ucfirst( fusion_get_userdata( "user_name" ) ), fusion_parse_locale( $data[':mood_description'] ) );
     }
 
     /**

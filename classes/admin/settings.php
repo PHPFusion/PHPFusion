@@ -18,7 +18,6 @@
 namespace PHPFusion\Forums\Admin;
 
 use PHPFusion\Locale;
-use PHPFusion\UserFieldsQuantum;
 
 /**
  * Class ForumAdminSettings
@@ -403,7 +402,7 @@ class ForumAdminSettings extends ForumAdminInterface {
         if (dbrows($ufc_query)) {
             while ($data = dbarray($ufc_query)) {
                 echo "<div class='".grid_row()."'>
-                <div class='".grid_column_size(100, 30, 30, 15)."'><h4>".UserFieldsQuantum::parse_label($data['field_cat_name'])."</h4></div>
+                <div class='".grid_column_size( 100, 30, 30, 15 )."'><h4>".fusion_parse_locale( $data['field_cat_name'] )."</h4></div>
                 <div class='".grid_column_size(100, 70, 70, 75)."'>\n";
 
 
@@ -421,7 +420,7 @@ class ForumAdminSettings extends ForumAdminInterface {
                             }
                             $current_field_title = (!empty($user_field_name) ? $user_field_name : self::$locale['na']);
                         } else {
-                            $current_field_title = UserFieldsQuantum::parse_label($cdata['field_title']);
+                            $current_field_title = fusion_parse_locale( $cdata['field_title'] );
                         }
                         $checked = (isset($enabled_uf[$cdata['field_name']]) ? $cdata['field_name'] : '');
                         echo form_checkbox('uf_field_enabled[]', $current_field_title, $checked, [

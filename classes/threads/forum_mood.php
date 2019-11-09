@@ -19,7 +19,6 @@
 namespace PHPFusion\Infusions\Forum\Classes\Threads;
 
 use PHPFusion\Infusions\Forum\Classes\Forum_Server;
-use PHPFusion\UserFieldsQuantum;
 
 /**
  * Class ForumMood
@@ -185,8 +184,8 @@ class Forum_Mood extends Forum_Server {
             $cache_result = dbquery($cache_query);
             if (dbrows($cache_result) > 0) {
                 while ($data = dbarray($cache_result)) {
-                    $data['mood_name'] = UserFieldsQuantum::parse_label($data['mood_name']);
-                    $data['mood_description'] = UserFieldsQuantum::parse_label($data['mood_description']);
+                    $data['mood_name'] = fusion_parse_locale( $data['mood_name'] );
+                    $data['mood_description'] = fusion_parse_locale( $data['mood_description'] );
                     self::$mood_cache[$data['mood_id']] = $data;
                 }
             }
@@ -216,7 +215,7 @@ class Forum_Mood extends Forum_Server {
                 $html .= form_hidden('post_id', '', $this->post_id);
                 if (!$this->mood_exists($my_id, $mood_id, $this->post_id)) {
                     // Post Button
-                    $html .= form_button("post_mood", UserFieldsQuantum::parse_label($mood_data['mood_name']), $mood_id, [
+                    $html .= form_button( "post_mood", fusion_parse_locale( $mood_data['mood_name'] ), $mood_id, [
                         "id"   => $this->post_id.'-'.$mood_id,
                         "icon" => $mood_data['mood_icon'],
                         "data" => [
@@ -227,7 +226,7 @@ class Forum_Mood extends Forum_Server {
                 } else {
                     // Unpost Button
                     $html .=
-                        form_button("unpost_mood", UserFieldsQuantum::parse_label($mood_data['mood_name']), $mood_id, [
+                        form_button( "unpost_mood", fusion_parse_locale( $mood_data['mood_name'] ), $mood_id, [
                             "id"    => $this->post_id.'-'.$mood_id,
                             "icon"  => $mood_data['mood_icon'],
                             "class" => "btn-default active",

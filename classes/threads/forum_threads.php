@@ -22,7 +22,6 @@ use PHPFusion\Feedback\Comments;
 use PHPFusion\Infusions\Forum\Classes\Forum_Moderator;
 use PHPFusion\Infusions\Forum\Classes\Forum_Server;
 use PHPFusion\Infusions\Forum\Classes\Post\Quick_Reply;
-use PHPFusion\UserFieldsQuantum;
 
 /**
  * Class ForumThreads
@@ -1343,15 +1342,15 @@ class Forum_Threads extends Forum_Server {
                                         include($module_locale_file_path);
                                         include($module_file_path);
                                         if (!empty($user_fields) && is_array($user_fields)) {
-                                            $user_fields['field_cat_name'] = UserFieldsQuantum::parse_label($fieldAttr['field_cat_name']);
+                                            $user_fields['field_cat_name'] = fusion_parse_locale( $fieldAttr['field_cat_name'] );
                                             $author['user_profiles'][$field_name] = $user_fields;
                                         }
                                     }
                                 } else {
                                     // this is just normal type
                                     $author['user_profiles'][$field_name] = [
-                                        'field_cat_name' => UserFieldsQuantum::parse_label($fieldAttr['field_cat_name']),
-                                        'title'          => UserFieldsQuantum::parse_label($fieldAttr['field_title']),
+                                        'field_cat_name' => fusion_parse_locale( $fieldAttr['field_cat_name'] ),
+                                        'title'          => fusion_parse_locale( $fieldAttr['field_title'] ),
                                         'value'          => $field_value
                                     ];
                                 }
