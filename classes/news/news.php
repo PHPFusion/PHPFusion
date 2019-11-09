@@ -409,9 +409,8 @@ abstract class News extends NewsServer {
             $news_sum_rating = 0;
             $news_count_votes = 0;
             if ($data['news_allow_ratings']) {
-                $ratings = $data['news_sum_rating'];
-                $news_count_votes = $data['news_count_votes'];
-                $news_sum_rating = $data['news_sum_rating'];
+                $news_count_votes = !empty($data['news_count_votes']) ? $data['news_count_votes'] : 0;
+                $news_sum_rating = !empty($data['news_sum_rating']) ? $data['news_sum_rating'] : 0;
             }
 
             $info = [
