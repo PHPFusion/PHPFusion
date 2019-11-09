@@ -17,6 +17,7 @@ abstract class QuantumActions extends SqlHandler {
     private $return_url = '';
     
     public function __construct() {
+    
     }
     
     protected function doAction() {
@@ -25,13 +26,19 @@ abstract class QuantumActions extends SqlHandler {
         $this->parent_id = get( 'parent_id', FILTER_VALIDATE_INT );
         $this->cat_id = get( 'cat_id', FILTER_VALIDATE_INT );
         $this->field_id = get( 'field_id', FILTER_VALIDATE_INT );
-        $this->return_url = fusion_get_aidlink();
+        $this->return_url = FUSION_SELF.fusion_get_aidlink();
         
         // trigger all actions event
         $this->doCancelAction();
         $this->reorderFields();
         $this->removeCategory();
-        $this->removeFields();
+    
+        if ( $this->action == 'field_delete' && $this->field_id ) {
+            if ( $this->removeField( $this->field_id ) ) {
+                redirect( $this->return_url );
+            }
+        
+        }
         
     }
     
@@ -122,9 +129,9 @@ abstract class QuantumActions extends SqlHandler {
         if ( $this->action == 'cat_delete' && $this->cat_id ) {
             $delete_cat = post( 'delete_cat' );
             $delete_subcat = post( 'delete_subcat' );
-            $delete_field = post( 'delete_field' );
-            $move_subcat = post( 'move_subcat', FILTER_VALIDATE_INT );
-            $move_field = post( 'move_field', FILTER_VALIDATE_INT );
+            $delete_field = (int)post( 'delete_field', FILTER_VALIDATE_INT );
+            $move_subcat = (int)post( 'move_subcat', FILTER_VALIDATE_INT );
+            $move_field = (int)post( 'move_field', FILTER_VALIDATE_INT );
             
             if ( $this->validate_fieldCat( $this->cat_id ) ) {
                 if ( $delete_cat ) {
@@ -160,7 +167,9 @@ abstract class QuantumActions extends SqlHandler {
                     } else if ( $move_subcat ) {
                         $this->moveSubcategory();
                     } else if ( $delete_field && $this->cat_id ) {
-                        $this->deleteField( $field_list );
+                        if ( $this->removeField( $delete_field ) ) {
+                            redirect( $this->return_url );
+                        }
                     } else if ( !$delete_field && $move_field ) {
                         $this->moveField();
                     }
@@ -310,34 +319,34 @@ abstract class QuantumActions extends SqlHandler {
         }
     }
     
-    protected function deleteField( $target_db, $field_list ) {
-        $locale = fusion_get_locale();
-        // Delete fields
-        //print_p( $locale['fields_0655'] );
-        // Delete Fields - Bug with Isset errors
-        $result = dbquery( "SELECT field_id, field_name FROM ".DB_USER_FIELDS." WHERE field_cat='".intval( $_GET['cat_id'] )."'" );
-        if ( dbrows( $result ) ) {
-            while ( $data = dbarray( $result ) ) {
-                if ( in_array( $data['field_name'], $field_list ) ) { // verify table integrity
-                    //print_p( "DROP ".$data['field_name']." FROM ".$target_db );
-                    //print_p( "DELETE ".$data['field_id']." FROM ".DB_USER_FIELDS );
-                    $field_del_sql = "DELETE FROM ".DB_USER_FIELDS." WHERE field_id=:fid";
-                    $field_count = $this->validate_field( $data['field_id'] );
-                    if ( $field_count ) {
-                        dbquery( $field_del_sql, [ ':fid' => (int)$data['field_id'] ] );
-                    }
-                    // drop a column
-                    if ( !empty( $target_db ) ) {
-                        self::drop_column( $target_db, $data['field_name'] );
-                    }
-                    
-                }
-            }
-            
-            addNotice( 'success', $locale['field_0200'] );
-            redirect( $this->return_url );
-        }
-    }
+    //protected function removeField( $target_db, $field_list ) {
+    //    $locale = fusion_get_locale();
+    //    // Delete fields
+    //    //print_p( $locale['fields_0655'] );
+    //    // Delete Fields - Bug with Isset errors
+    //    $result = dbquery( "SELECT field_id, field_name FROM ".DB_USER_FIELDS." WHERE field_cat='".intval( $_GET['cat_id'] )."'" );
+    //    if ( dbrows( $result ) ) {
+    //        while ( $data = dbarray( $result ) ) {
+    //            if ( in_array( $data['field_name'], $field_list ) ) { // verify table integrity
+    //                //print_p( "DROP ".$data['field_name']." FROM ".$target_db );
+    //                //print_p( "DELETE ".$data['field_id']." FROM ".DB_USER_FIELDS );
+    //                $field_del_sql = "DELETE FROM ".DB_USER_FIELDS." WHERE field_id=:fid";
+    //                $field_count = $this->validate_field( $data['field_id'] );
+    //                if ( $field_count ) {
+    //                    dbquery( $field_del_sql, [ ':fid' => (int)$data['field_id'] ] );
+    //                }
+    //                // drop a column
+    //                if ( !empty( $target_db ) ) {
+    //                    self::drop_column( $target_db, $data['field_name'] );
+    //                }
+    //
+    //            }
+    //        }
+    //
+    //        addNotice( 'success', $locale['field_0200'] );
+    //        redirect( $this->return_url );
+    //    }
+    //}
     
     protected function validate_field( $field_id ) {
         if ( isnum( $field_id ) ) {
@@ -360,50 +369,49 @@ abstract class QuantumActions extends SqlHandler {
     }
     
     /* Outputs Quantum Admin Button Sets */
-    
-    private function removeFields() {
-        $locale = fusion_get_locale();
-        if ( $this->action == 'field_delete' && $this->field_id ) {
-            if ( $this->validate_field( $this->field_id ) ) {
-                $result = dbquery( "SELECT field.field_id, field.field_cat, field.field_order, field.field_name, u.field_cat_id, u.field_parent, root.field_cat_db
+    public function removeField( $field_id ) {
+        
+        if ( $this->validate_field( $field_id ) ) {
+            
+            $locale = fusion_get_locale();
+            
+            $result = dbquery( "SELECT field.field_id, field.field_cat, field.field_order, field.field_name, u.field_cat_id, u.field_parent, root.field_cat_db
                                     FROM ".DB_USER_FIELDS." field
                                     LEFT JOIN ".DB_USER_FIELD_CATS." u ON (field.field_cat=u.field_cat_id)
                                     LEFT JOIN ".DB_USER_FIELD_CATS." root ON (u.field_parent = root.field_cat_id)
-                                    WHERE field_id=:field_id", [ ':field_id' => (int)$this->field_id ] );
-                if ( dbrows( $result ) ) {
+                                    WHERE field_id=:field_id", [ ':field_id' => (int)$field_id ] );
+            if ( dbrows( $result ) ) {
+                
+                $data = dbarray( $result );
+                
+                $target_database = $data['field_cat_db'] ? DB_PREFIX.$data['field_cat_db'] : DB_USERS;
+                
+                $field_list = fieldgenerator( $target_database );
+                
+                if ( in_array( $data['field_name'], $field_list ) ) {
+                    // drop database
+                    SqlHandler::drop_column( $target_database, $data['field_name'] );
+                    // reorder the rest of the same cat minus 1
+                    dbquery( "UPDATE ".DB_USER_FIELDS." SET field_order=field_order-1 WHERE field_order > '".$data['field_order']."' AND field_cat='".$data['field_cat']."'" );
+                    // remove the field entry
+                    dbquery( "DELETE FROM ".DB_USER_FIELDS." WHERE field_id='".$data['field_id']."'" );
                     
-                    $data = dbarray( $result );
-                    
-                    $target_database = $data['field_cat_db'] ? DB_PREFIX.$data['field_cat_db'] : DB_USERS;
-                    
-                    $field_list = fieldgenerator( $target_database );
-                    
-                    if ( in_array( $data['field_name'], $field_list ) ) {
-                        // drop database
-                        if ( !$this->debug && !empty( $target_database ) ) {
-                            dbquery( "ALTER TABLE ".$target_database." DROP ".$data['field_name'] );
-                            // reorder the rest of the same cat minus 1
-                            dbquery( "UPDATE ".DB_USER_FIELDS." SET field_order=field_order-1 WHERE field_order > '".$data['field_order']."' AND field_cat='".$data['field_cat']."'" );
-                            dbquery( "DELETE FROM ".DB_USER_FIELDS." WHERE field_id='".$data['field_id']."'" );
-                        }
-                        
-                    } else {
-                        // just delete the field
-                        //print_p( "DELETE ".$data['field_id']." FROM ".DB_USER_FIELDS );
-                        
-                        dbquery( "DELETE FROM ".DB_USER_FIELDS." WHERE field_id='".$data['field_id']."'" );
-                        
-                    }
-                    
-                    addNotice( 'success', $locale['field_0201'] );
-                    redirect( $this->return_url );
+                } else {
+                    // just delete the field
+                    //print_p( "DELETE ".$data['field_id']." FROM ".DB_USER_FIELDS );
+                    dbquery( "DELETE FROM ".DB_USER_FIELDS." WHERE field_id='".$data['field_id']."'" );
                 }
                 
-                //print_p( $locale['field_0202'] );
-                addNotice( 'warning', $locale['field_0202'] );
-                redirect( $this->return_url );
+                addNotice( 'success', $locale['field_0201'] );
+                return TRUE;
             }
+            
+            //print_p( $locale['field_0202'] );
+            addNotice( 'warning', $locale['field_0202'] );
+            return FALSE;
         }
+        return FALSE;
+        
     }
     
     /**
@@ -431,29 +439,28 @@ abstract class QuantumActions extends SqlHandler {
     
     /* The Current Stable PHP-Fusion Dynamics Module */
     /* Execution of delete fields */
-    
     /**
-     *  Add Field into table
+     * Add Field into table
      *
      * @param        $data
      * @param string $type
      * @param string $table_name
      * @param array  $modules
      *
+     * @return bool
      * @throws \Exception
      */
-    protected function create_fields( $data, $type = 'dynamics', $table_name = '', $modules = [] ) {
-        $aidlink = fusion_get_aidlink();
+    public function updateFields( $data, $type = 'dynamics', $table_name = '', $modules = [] ) {
         $locale = fusion_get_locale();
         
         // Build a field Attr
         $field_attr = '';
         if ( $type == 'dynamics' ) {
             $field_attr = $this->dynamics_fieldinfo( $data['field_type'], $data['field_default'] );
-            
         } else if ( $type == 'module' && !empty( $modules ) ) {
             $field_attr = $modules[ $data['field_name'] ]['user_field_dbinfo'];
         }
+        
         // Field order check
         $max_order = dbresult( dbquery( "SELECT MAX(field_order) FROM ".DB_USER_FIELDS." WHERE field_cat=:cid", [ ':cid' => $data['field_cat'] ] ), 0 ) + 1;
         if ( !$data['field_order'] || $data['field_order'] > $max_order ) {
@@ -468,13 +475,15 @@ abstract class QuantumActions extends SqlHandler {
                                     LEFT JOIN ".DB_USER_FIELD_CATS." cat ON (cat.field_cat_id = uf.field_cat)
                                     LEFT JOIN ".DB_USER_FIELD_CATS." root ON (cat.field_parent = root.field_cat_id)
                                     WHERE uf.field_id=:field_id";
+    
             $field_param = [ ':field_id' => $data['field_id'] ];
-            
-            $old_record = dbquery( $field_query, $field_param ); // search old database.
-            
-            if ( dbrows( $old_record ) ) { // got old field cat
-                
-                $oldRows = dbarray( $old_record );
+    
+            $e_result = dbquery( $field_query, $field_param ); // search old database.
+    
+            if ( dbrows( $e_result ) ) {
+        
+                // has an existing record
+                $oldRows = dbarray( $e_result );
                 
                 $old_table = $oldRows['field_cat_db'] ? DB_PREFIX.$oldRows['field_cat_db'] : DB_USERS; // this was old database
                 
@@ -556,16 +565,12 @@ abstract class QuantumActions extends SqlHandler {
                     // check if same title.
                     // if not same, change column name.
                     //print_p( $locale['fields_0668'] );
-                    
                     if ( $data['field_name'] != $oldRows['field_name'] ) {
                         // not same as old record on dbcolumn
                         // Check for possible duplicates in the new field name
                         if ( !in_array( $data['field_name'], $old_table_columns ) ) {
-                            if ( !$this->debug ) {
-                                self::rename_column( $old_table, $oldRows['field_name'], $data['field_name'], $field_attr );
-                            } else {
-                                print_p( str_replace( [ '[FIELD_NAME]', '[OLD_TABLE]', '[FIELD_NAME_]' ], [ $oldRows['field_name'], $old_table, $data['field_name'] ], $locale['fields_0669'] ).$field_attr );
-                            }
+                            //print_p( str_replace( [ '[FIELD_NAME]', '[OLD_TABLE]', '[FIELD_NAME_]' ], [ $oldRows['field_name'], $old_table, $data['field_name'] ], $locale['fields_0669'] ).$field_attr );
+                            self::rename_column( $old_table, $oldRows['field_name'], $data['field_name'], $field_attr );
                         } else {
                             fusion_stop();
                             addNotice( 'danger', sprintf( $locale['fields_0104'], "($new_table)" ) );
@@ -593,56 +598,67 @@ abstract class QuantumActions extends SqlHandler {
                 if ( fusion_safe() ) {
                     dbquery_insert( DB_USER_FIELDS, $data, 'update' );
                     addNotice( 'success', $locale['field_0203'] );
-                    redirect( FUSION_SELF.$aidlink );
+    
+                    return TRUE;
                 }
-                
+            }
+    
+            fusion_stop();
+    
+            addNotice( 'danger', $locale['fields_0105'] );
+    
+            return FALSE;
+        }
+        
+        $new_table = $this->getTableName( $table_name, $data['field_cat'] );
+        
+        if ( fusion_safe() ) {
+            
+            $field_arrays = fieldgenerator( $new_table );
+            // Alter DB_USER_FIELDS table - add column.
+            // Checking for database registered users.
+            if ( !in_array( $data['field_name'], $field_arrays ) ) { // safe to execute alter.
+                if ( !empty( $data['field_name'] ) && !empty( $field_attr ) ) {
+                    //print_p("ALTER TABLE ".$new_table." ADD ".$data['field_name']." ".$field_attr);
+                    self::add_column( $new_table, $data['field_name'], $field_attr );
+                }
             } else {
                 fusion_stop();
-                addNotice( 'danger', $locale['fields_0105'] );
+                addNotice( 'danger', $locale['fields_0106'] );
+                return false;
             }
             
-        } else {
-            
-            // Add new column to table.
-            if ( $table_name ) {
-                $new_table = $table_name;
-            } else {
-                $new_table = '';
-                $cresult = dbquery( "SELECT cat.field_cat_id, cat.field_parent, cat.field_cat_order, root.field_cat_db, root.field_cat_index
-                            FROM ".DB_USER_FIELD_CATS." cat
-                            LEFT JOIN ".DB_USER_FIELD_CATS." root ON (cat.field_parent = root.field_cat_id)
-                            WHERE cat.field_cat_id=:cid", [ ':cid' => (int)$data['field_cat'] ] );
-                if ( dbrows( $cresult ) ) {
-                    $cat_data = dbarray( $cresult );
-                    $new_table = $cat_data['field_cat_db'] ? DB_PREFIX.$cat_data['field_cat_db'] : DB_USERS;
-                } else {
-                    fusion_stop();
-                    addNotice( 'danger', $locale['fields_0107'] );
-                }
-            }
-            
+            // ordering
             if ( fusion_safe() ) {
-                $field_arrays = fieldgenerator( $new_table );
-                // Alter DB_USER_FIELDS table - add column.
-                // Checking for database registered users.
-                if ( !in_array( $data['field_name'], $field_arrays ) ) { // safe to execute alter.
-                    if ( !empty( $data['field_name'] ) && !empty( $field_attr ) ) {
-                        self::add_column( $new_table, $data['field_name'], $field_attr );
-                        //print_p("ALTER TABLE ".$new_table." ADD ".$data['field_name']." ".$field_attr);
-                    }
-                } else {
-                    fusion_stop();
-                    addNotice( 'danger', $locale['fields_0106'] );
-                }
-                // ordering
-                if ( fusion_safe() ) {
-                    dbquery( "UPDATE ".DB_USER_FIELDS." SET field_order=field_order+1 WHERE field_order > '".$data['field_order']."' AND field_cat='".$data['field_cat']."'" );
-                    dbquery_insert( DB_USER_FIELDS, $data, 'save' );
-                    addNotice( 'success', $locale['field_0204'] );
-                    redirect( FUSION_SELF.$aidlink );
-                }
+                dbquery( "UPDATE ".DB_USER_FIELDS." SET field_order=field_order+1 WHERE field_order > '".$data['field_order']."' AND field_cat='".$data['field_cat']."'" );
+                dbquery_insert( DB_USER_FIELDS, $data, 'save' );
+                addNotice( 'success', $locale['field_0204'] );
+                return true;
+            }
+            return false;
+        }
+        
+        return false;
+    }
+    
+    private function getTableName( $table_name = '', $cat_id ) {
+        if ( $table_name ) {
+            return $table_name;
+        } else {
+            $cresult = dbquery( "SELECT cat.field_cat_id, cat.field_parent, cat.field_cat_order, root.field_cat_db, root.field_cat_index
+                            FROM ".DB_USER_FIELD_CATS." cat
+                            LEFT JOIN ".DB_USER_FIELD_CATS." root ON cat.field_parent=root.field_cat_id
+                            WHERE cat.field_cat_id=:cid", [ ':cid' => (int)$cat_id ] );
+            
+            if ( dbrows( $cresult ) ) {
+                $cat_data = dbarray( $cresult );
+                return $cat_data['field_cat_db'] ? DB_PREFIX.$cat_data['field_cat_db'] : DB_USERS;
+            } else {
+                fusion_stop();
+                addNotice( 'danger', fusion_get_locale( 'fields_0107' ) );
             }
         }
+        return false;
     }
     
     

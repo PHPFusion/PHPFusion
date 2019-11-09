@@ -15,22 +15,24 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
+use PHPFusion\Admins;
+
 require_once __DIR__.'/../maincore.php';
 require_once THEMES.'templates/admin_header.php';
 $locale = fusion_get_locale('', [LOCALE.LOCALESET.'admin/fields.php']);
 
 // Add tab for public fields, preference fields and security fields
 // Add field type - preference, and security.
-$admin = \PHPFusion\Admins::getInstance();
+$admin = Admins::getInstance();
 $admin->addAdminPage('UF', 'All Users', 'M1', ADMIN.'members.php'.$aidlink);
 $admin->addAdminPage('UF', 'Add User', 'M2', ADMIN.'members.php'.$aidlink.'&amp;action=add');
 $admin->addAdminPage('UF', 'Manage Signups', 'M3', ADMIN.'members.php'.$aidlink.'&amp;action=signup');
 $admin->addAdminPage('UF', 'Administrators', 'M4', ADMIN.'administrators.php'.$aidlink);
 $admin->addAdminPage('UF', 'User Fields', 'M5', ADMIN.'user_fields.php'.$aidlink);
 $admin->addAdminPage('M5', "Public Fields", "UF-1", ADMIN.'user_fields.php'.fusion_get_aidlink());
-$admin->addAdminPage('M5', "Preference Fields", "UF-2", ADMIN.'user_fields.php'.fusion_get_aidlink().'&amp;ref=preference');
+$admin->addAdminPage( 'M5', "Preference Fields", "UF-2", ADMIN.'user_fields.php'.fusion_get_aidlink().'&amp;ref=preferences' );
 $admin->addAdminPage('M5', "Security Fields", "UF-3", ADMIN.'user_fields.php'.fusion_get_aidlink().'&amp;ref=security');
-
 
 $user_field = new PHPFusion\UserFieldsQuantum();
 $user_field->setLocale($locale);

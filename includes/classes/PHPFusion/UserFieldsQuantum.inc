@@ -20,11 +20,13 @@
 
 namespace PHPFusion;
 
-use PHPFusion\Interfaces\TableSDK;
 use PHPFusion\UserFields\Quantum\DisplayFields;
 use PHPFusion\UserFields\Quantum\QuantumActions;
 use PHPFusion\UserFields\Quantum\QuantumHelper;
 use PHPFusion\UserFields\Quantum\QuantumModules;
+use PHPFusion\UserFields\Quantum\QuantumModulesView;
+use PHPFusion\UserFields\Quantum\Table\Preference;
+use PHPFusion\UserFields\Quantum\Table\Security;
 
 class UserFieldsQuantum extends QuantumActions {
     /**
@@ -120,10 +122,34 @@ class UserFieldsQuantum extends QuantumActions {
     private static $modules = [];
     
     public function __construct() {
-    
-        $this->loadUserFields(); // return fields
         self::$helper = new QuantumHelper();
-        
+    }
+    
+    /**
+     * Returns all the installed modules
+     *
+     * @return array
+     */
+    public function getModules() {
+        return self::$modules;
+    }
+    
+    /**
+     * Returns only ROOT category
+     *
+     * @return array
+     */
+    public function getPageList() {
+        return $this->page_list;
+    }
+    
+    /**
+     * Returns modules not installed within the system
+     *
+     * @return array
+     */
+    public function getAvailableFieldInfo() {
+        return self::$available_field_info;
     }
     
     /**
@@ -187,6 +213,7 @@ class UserFieldsQuantum extends QuantumActions {
     }
     
     /**
+     * Returns ALL Categories
      * @return array
      */
     public function getCatList() {
@@ -212,12 +239,14 @@ class UserFieldsQuantum extends QuantumActions {
         pageAccess( $this->admin_rights );
         
         define( 'IN_QUANTUM', TRUE );
+    
+        $this->loadUserFields(); // return fields
         
         $this->cacheModulePlugins();
         
         $refs = get( 'ref' );
-        
-        $refs = $refs && in_array( $refs, [ 'preference', 'security' ] ) ? $refs : 'public';
+    
+        $refs = $refs && in_array( $refs, [ 'preferences', 'security' ] ) ? $refs : 'public';
         
         $this->is_admin_panel = TRUE;
         
@@ -227,15 +256,18 @@ class UserFieldsQuantum extends QuantumActions {
         }
         
         if ( $this->method == 'input' ) {
+            
             $this->loadUserFieldCats(); // return cat
+            
             $this->doAction();
         }
         
         $this->view( $refs );
     }
     
-    public function view( $refs ) {
+    private function view( $refs ) {
         $action = get( 'action' );
+        $quantum_modules = new QuantumModulesView($this);
         switch ( $refs ) {
             default:
             case 'public':
@@ -253,7 +285,8 @@ class UserFieldsQuantum extends QuantumActions {
                                 $modal .= closemodal();
                                 add_to_footer( $modal );
                             }
-                            $content = $this->view_modules( 'public' );
+                            $content = $quantum_modules->viewModules('public');
+                            
                             break;
                         case 'field_edit':
                             $field_id = get( 'field_id', FILTER_VALIDATE_INT );
@@ -265,7 +298,6 @@ class UserFieldsQuantum extends QuantumActions {
                                 $modal .= closemodal();
                                 add_to_footer( $modal );
                             }
-    
                             break;
                         case 'new_cat':
                         case 'cat_edit':
@@ -279,7 +311,6 @@ class UserFieldsQuantum extends QuantumActions {
                             $modal .= $this->quantum_category_form();
                             $modal .= closemodal();
                             add_to_footer( $modal );
-    
                             break;
                         case 'module_edit':
                             // Module Edit
@@ -288,7 +319,7 @@ class UserFieldsQuantum extends QuantumActions {
                                 add_breadcrumb( [ 'title' => 'Manage Module User Fields', 'link' => ADMIN.'user_fields.php'.fusion_get_aidlink().'&amp;ref=public&amp;action=module_edit&amp;module_id='.$module_id ] );
                                 $title = "Edit Module User Fields";
                                 $modal = openmodal( 'cat', "<h4 class='m-0'>$title</h4>", [ 'static' => TRUE ] );
-                                $modal .= $this->display_module_form();
+                                $modal .= $quantum_modules->viewModulesForm();
                                 $modal .= closemodal();
                                 add_to_footer( $modal );
                             }
@@ -296,12 +327,13 @@ class UserFieldsQuantum extends QuantumActions {
                     }
                 }
                 break;
-            case 'preference':
-                add_breadcrumb( [ 'title' => 'Preference User Fields', 'link' => ADMIN.'user_fields.php'.fusion_get_aidlink().'&amp;ref=preference' ] );
+            case 'preferences':
+                add_breadcrumb( [ 'title' => 'Preference User Fields', 'link' => ADMIN.'user_fields.php'.fusion_get_aidlink().'&amp;ref=preferences' ] );
                 $content = $this->viewPreferenceAdmin();
                 if ( $action == 'new' ) {
-                    add_breadcrumb( [ 'title' => 'Manage Preference User Fields', 'link' => ADMIN.'user_fields.php'.fusion_get_aidlink().'&amp;ref=preference&amp;action=new' ] );
-                    $content = $this->view_modules( 'preference' );
+                    add_breadcrumb( [ 'title' => 'Manage Preference User Fields', 'link' => ADMIN.'user_fields.php'.fusion_get_aidlink().'&amp;ref=preferences&amp;action=new' ] );
+    
+                    $content = $quantum_modules->viewModules('preferences');
                 }
                 break;
             case 'security':
@@ -309,7 +341,8 @@ class UserFieldsQuantum extends QuantumActions {
                 $content = $this->viewSecurityAdmin();
                 if ( $action == 'new' ) {
                     add_breadcrumb( [ 'title' => 'Manage Security User Fields', 'link' => ADMIN.'user_fields.php'.fusion_get_aidlink().'&amp;ref=security&amp;action=new' ] );
-                    $content = $this->view_modules( 'security' );
+    
+                    $content = $quantum_modules->viewModules('security');
                 }
                 break;
         }
@@ -320,20 +353,27 @@ class UserFieldsQuantum extends QuantumActions {
     }
     
     
+    private function setPluginFolder( $folder ) {
+        if ( !$folder ) {
+            $folder = get( 'section' );
+            if ( defined( 'IN_QUANTUM' ) ) {
+                $folder = get( 'ref' );
+            }
+        }
+        $folder = $folder && in_array( $folder, [ 'preferences', 'security' ] ) ? $folder : 'public';
+        $this->plugin_folder = [ INCLUDES.'user_fields/'.$folder.'/', INFUSIONS ];
+        
+        return $folder;
+    }
+    
     /**
      * Type can be common, preference, security
      *
      * @param string $folder
      */
     public function loadUserFields( $folder = '' ) {
-        
-        if ( !$folder ) {
-            $folder = get( 'ref' );
-        }
-        
-        $folder = $folder && in_array( $folder, [ 'preference', 'security' ] ) ? $folder : 'public';
-        
-        $this->plugin_folder = [ INCLUDES.'user_fields/'.$folder.'/', INFUSIONS ];
+    
+        $folder = $this->setPluginFolder( $folder );
         
         $this->page = dbquery_tree_full( DB_USER_FIELD_CATS, "field_cat_id", "field_parent", "ORDER BY field_cat_order ASC" );
         
@@ -341,18 +381,19 @@ class UserFieldsQuantum extends QuantumActions {
         $cond = '';
         
         if ( $this->is_admin_panel === FALSE ) {
-            
-            $section = get( 'section', FILTER_VALIDATE_INT );
-            
-            if ( !$section || !isset( $this->page[ $section ] ) ) {
-                $section = 1;
+    
+            if ( $folder === 'public' ) {
+                // Public conditions
+                $section = get( 'section', FILTER_VALIDATE_INT );
+                if ( !$section || !isset( $this->page[ $section ] ) ) {
+                    $section = 1;
+                }
+                $param = [
+                    ':index00' => (int)$section,
+                    ':index01' => (int)$section,
+                ];
+                $cond = "WHERE (cat.field_cat_id=:index00 OR root.field_cat_id=:index01)";
             }
-            
-            $param = [
-                ':index00' => (int)$section,
-                ':index01' => (int)$section,
-            ];
-            $cond = "WHERE (cat.field_cat_id=:index00 OR root.field_cat_id=:index01)";
             
             // for registration
             if ( $this->registration === TRUE ) {
@@ -367,12 +408,12 @@ class UserFieldsQuantum extends QuantumActions {
                     $param += [ ':type00' => 'public' ];
                     break;
                 case 'security':
-                    $cond .= ' AND field_section=:type00';
+                    $cond .= ' WHERE field_section=:type00';
                     $param += [ ':type00' => 'security' ];
                     break;
-                case 'preference':
-                    $cond .= ' AND field_section !=:type00';
-                    $param += [ ':type00' => 'preference' ];
+                case 'preferences':
+                    $cond .= ' WHERE field_section=:type00';
+                    $param += [ ':type00' => 'preferences' ];
                     break;
             }
         }
@@ -386,9 +427,13 @@ class UserFieldsQuantum extends QuantumActions {
         ";
         
         $result = dbquery( $sql, $param );
+        
         if ( $this->field_max_rows = dbrows( $result ) ) {
+            
             while ( $data = dbarray( $result ) ) {
+                
                 $this->fields[ $data['field_cat'] ][ $data['field_id'] ] = $data;
+                
             }
         }
     }
@@ -417,18 +462,6 @@ class UserFieldsQuantum extends QuantumActions {
                 }
             }
         }
-    }
-    
-    /**
-     * Parse the correct label language. Requires serialized $value.
-     * NOTE: If your field does not parse properly, check your column length. Set it to TEXT NOT NULL.
-     *
-     * @param $value - Serialized
-     *
-     * @return string
-     */
-    public static function parse_label( $value ) {
-        return QuantumHelper::parseLabel( $value );
     }
     
     public function getEnabledFields() {
@@ -470,7 +503,7 @@ class UserFieldsQuantum extends QuantumActions {
         if ( !empty( $this->page[0] ) ) {
             $tab_title = [];
             foreach ( $this->page[0] as $page_id => $page_data ) {
-                $tab_title['title'][ $page_id ] = self::parse_label( $page_data['field_cat_name'] );
+                $tab_title['title'][ $page_id ] = fusion_parse_locale( $page_data['field_cat_name'] );
                 $tab_title['id'][ $page_id ] = $page_id;
                 $tab_title['icon'][ $page_id ] = $page_data['field_cat_class'];
                 $active = ( $cat_id && $page_id == $cat_id ) ? $page_id : '';
@@ -541,7 +574,7 @@ class UserFieldsQuantum extends QuantumActions {
                         //}
                         
                         $html .= "<div class='list-group-item'>\n";
-                        $html .= "<h4 class='display-block m-0'>".self::parse_label( $field_cat['field_cat_name'] )."</h4>";
+                        $html .= "<h4 class='display-block m-0'>".fusion_parse_locale( $field_cat['field_cat_name'] )."</h4>";
                         $html .= "<div class='display-block'>\n";
                         if ( $i != 0 ) {
                             $html .= "<a href='".FUSION_SELF.$aidlink."&amp;action=cmu&amp;cat_id=".$cat_id."&amp;parent_id=".$field_cat['field_parent']."&amp;order=".( $field_cat['field_cat_order'] - 1 )."'>".$this->locale['move_up']."</a> &middot; ";
@@ -604,7 +637,7 @@ class UserFieldsQuantum extends QuantumActions {
                     $html .= "</div>\n";
                 } else {
                     // display no category
-                    $html .= "<div class='text-center'><h4>".$this->locale['fields_0102'].self::parse_label( $page_details['field_cat_name'] )."</h4></div>\n";
+                    $html .= "<div class='text-center'><h4>".$this->locale['fields_0102'].fusion_parse_locale( $page_details['field_cat_name'] )."</h4></div>\n";
                 }
                 $html .= closetabbody();
             }
@@ -616,110 +649,9 @@ class UserFieldsQuantum extends QuantumActions {
         return (string)$html;
     }
     
-    /**
-     * @param string $folder
-     *
-     * @return string
-     * @throws \Exception
-     * @todo: increment rest api from marketplace.
-     *
-     */
-    private function view_modules( $folder = 'public' ) {
-        $html = "<h4>Add User Fields</h4>\n";
-        $aidlink = fusion_get_aidlink();
-        if ( !empty( $this->cat_list ) ) {
-            // The edit and add form will be in modal phase.
-            if ( $folder == 'public' ) {
-                $html .= "<div class='list-group-item'>\n";
-                $html .= "<div class='row m-t-20'>\n";
-                $field_type = $this->get_dynamics_type();
-                unset( $field_type['file'] );
-                foreach ( $field_type as $type => $name ) {
-                    $html .= "<div class='col-xs-6 col-sm-4 col-md-2 col-lg-2 p-b-20'>
-                    <a class='btn btn-block btn-default' href='".ADMIN."user_fields.php$aidlink&amp;ref=public&amp;action=new&amp;add_field=$type'>$name</a>
-                    </div>\n";
-                }
-                $html .= "</div>\n</div>\n<hr/>";
-            }
-        }
-        
-        // modules
-        if ( !empty( self::$modules ) ) {
-            
-            $_user_field = stripinput( get( 'install' ) );
-            if ( $_user_field ) {
-                
-                if ( $folder == 'public' ) {
-                    
-                    $modal = openmodal( 'modadd', "<h4 class='m-0'>Add User Fields Module</h4>" );
-                    $modal .= $this->display_module_form();
-                    $modal .= closemodal();
-                    add_to_footer( $modal );
-                    
-                } else {
-    
-                    if ( isset( self::$modules[ $_user_field ] ) ) {
-                        if ( in_array( $_user_field, array_keys( self::$available_field_info ) ) ) {
-            
-                            $module_data = self::$modules[ $_user_field ];
-            
-                            $module = [
-                                'field_id'           => 0,
-                                'field_title'        => $module_data['user_field_name'],
-                                'field_name'         => $module_data['user_field_dbname'],
-                                'field_cat'          => 0,
-                                'field_type'         => $folder,
-                                'field_default'      => '',
-                                'field_error'        => '',
-                                'field_required'     => 0,
-                                'field_log'          => 0,
-                                'field_registration' => 0,
-                                'field_order'        => 0,
-                                'field_config'       => 0
-                            ];
-            
-                            $module['field_order'] = dbresult( dbquery( "SELECT COUNT(field_id) FROM ".DB_USER_FIELDS." WHERE field_type=:type AND field_cat=:cat_id", [ ':cat_id' => $this->field_data['field_cat'], ':type' => $folder ] ), 0 ) + 1;
-            
-                            $this->create_fields( $module, 'module', DB_USERS );
-                            
-                        }
-        
-                    }
-                }
-            }
-            
-            $html .= "<div class='row equal-height'>\n";
-            foreach ( self::$modules as $module_name => $module_data ) {
-                $button = "<a class='btn btn-default' href='".clean_request( "install=".$module_name, [ 'install', 'uninstall' ], FALSE )."'>Install</a>";
-                if ( !in_array( $module_name, array_keys( self::$available_field_info ) ) ) {
-                    $button = "<a class='btn btn-danger' href='".clean_request( "uninstall=".$module_name, [ 'install', 'uninstall' ], FALSE )."'>Uninstall</a>";
-                }
-                $html .= "<div class='m-b-15 ".grid_column_size( 100, 50, 33, 25 )."'>\n";
-                $html .= "<div class='list-group-item text-center'>";
-                if ( $module_data['module_image'] ) {
-                    $html .= "<img src='".$module_data['module_image']."' class='icon img-responsive' style='margin:15px auto; max-height:48px;'>";
-                }
-                $html .= "<h4 class='strong'>".$module_data['user_field_name']."</h4>";
-                $html .= "<div class='clearfix position-relative overflow-hide'>";
-                $html .= $module_data['user_field_desc'];
-                $html .= "<br/><small>Version: ".$module_data['user_field_version']."</small>";
-                $html .= "</div>";
-                $html .= "<div class='clearfix text-right'>";
-                $html .= $button;
-                $html .= "</div>";
-                $html .= "</div>";
-                $html .= "</div>";
-            }
-            $html .= "</div>\n";
-        } else {
-            $html .= "<div>There are no user fields available</div>\n";
-        }
-        
-        return $html;
-    }
-    
+
     private function viewPreferenceAdmin() {
-        $new_button = "<a class='btn btn-default' href='".ADMIN."user_fields.php".fusion_get_aidlink()."&amp;ref=preference&amp;action=new'>Add New</a>";
+        $new_button = "<a class='btn btn-default' href='".ADMIN."user_fields.php".fusion_get_aidlink()."&amp;ref=preferences&amp;action=new'>Add New</a>";
         $table = new Tables( new Preference(), FALSE );
         return $new_button.$table->displayTable();
     }
@@ -784,7 +716,7 @@ class UserFieldsQuantum extends QuantumActions {
      * @return array
      */
     public function get_dynamics_type() {
-    
+        
         return [
             'file'        => $this->locale['fields_0500'],
             'textbox'     => $this->locale['fields_0501'],
@@ -815,14 +747,14 @@ class UserFieldsQuantum extends QuantumActions {
         $aidlink = fusion_get_aidlink();
         $this->locale = fusion_get_locale();
         $this->debug = FALSE;
-    
+        
         add_to_jquery( "$('#field_parent').val() == '0' ? $('#page_settings').show() : $('#page_settings').hide(); $('#field_parent').bind('change', function() { $(this).val() == '0' ? $('#page_settings').show() : $('#page_settings').hide()});" );
-    
+        
         $action = get( 'action' );
         $cat_id = get( 'cat_id', FILTER_VALIDATE_INT );
-    
-        if ( $action == 'cat_edit' && $cat_id && self::validate_fieldCat( $cat_id ) ) {
         
+        if ( $action == 'cat_edit' && $cat_id && self::validate_fieldCat( $cat_id ) ) {
+            
             $result = dbquery( "SELECT * FROM ".DB_USER_FIELD_CATS." WHERE field_cat_id='$cat_id'" );
             if ( dbrows( $result ) ) {
                 $this->field_cat_data = dbarray( $result );
@@ -831,9 +763,9 @@ class UserFieldsQuantum extends QuantumActions {
                 redirect( FUSION_SELF.$aidlink );
             }
         }
-    
+        
         if ( post( 'save_cat' ) ) {
-            // print_p($_POST);
+            
             $this->field_cat_data = [
                 'field_cat_id'    => sanitizer( 'field_cat_id', '', 'field_cat_id' ),
                 'field_cat_name'  => sanitizer( [ 'field_cat_name' ], '', 'field_cat_name', TRUE ),
@@ -847,15 +779,15 @@ class UserFieldsQuantum extends QuantumActions {
             $old_data = [
                 "field_cat_db" => "users"
             ];
-        
+            
             $result = dbquery( "SELECT * FROM ".DB_USER_FIELD_CATS." WHERE field_cat_id='".$this->field_cat_data['field_cat_id']."'" );
-        
+            
             if ( dbrows( $result ) > 0 ) {
                 $old_data = dbarray( $result );
             }
-        
-            if ( $this->field_cat_data['field_parent'] == 0 ) {
             
+            if ( $this->field_cat_data['field_parent'] == 0 ) {
+                
                 $this->field_cat_data['field_cat_db'] = form_sanitizer( $_POST['field_cat_db'], 'users', 'field_cat_db' );
                 $this->field_cat_data['field_cat_index'] = form_sanitizer( $_POST['field_cat_index'], '', 'field_cat_index' );
                 $this->field_cat_data['field_cat_class'] = form_sanitizer( $_POST['field_cat_class'], '', 'field_cat_class' );
@@ -864,9 +796,9 @@ class UserFieldsQuantum extends QuantumActions {
                     \Defender::stop();
                     addNotice( "danger", "Your table must be a valid table. Your column must be a column of a user id in that table." );
                 }
-            
+    
             }
-        
+            
             if ( $this->field_cat_data['field_cat_order'] == 0 ) {
                 
                 $this->field_cat_data['field_cat_order'] = dbresult(
@@ -875,7 +807,7 @@ class UserFieldsQuantum extends QuantumActions {
                                  WHERE field_parent='".$this->field_cat_data['field_parent']."'"
                         ), 0 ) + 1;
             }
-        
+            
             // shuffle between save and update
             if ( self::validate_fieldCat( $this->field_cat_data['field_cat_id'] ) ) {
                 
@@ -886,53 +818,51 @@ class UserFieldsQuantum extends QuantumActions {
                     $this->field_cat_data['field_parent'], 'field_parent', FALSE, FALSE, 'update'
                 );
     
-                if ( !$this->debug ) {
-                    if ( fusion_safe() ) {
-                        if ( !empty( $old_data['field_cat_db'] ) or $old_data['field_cat_db'] !== "users" ) {
     
-                            if ( !empty( $old_data['field_cat_db'] ) && !empty( $old_data['field_cat_index'] ) ) {
-                                // CONDITION: HAVE A PREVIOUS TABLE SET
-                                if ( !empty( $this->field_cat_data['field_cat_db'] ) ) {
-                                    // new demands a table insertion, checks if same or not.. if different.
-                                    if ( $this->field_cat_data['field_cat_db'] !== $old_data['field_cat_db'] ) {
-                                        // But the current table is different than the previous one
-                                        // - build the new one, move the column, drop the old one.
-                                        self::build_table( $this->field_cat_data['field_cat_db'], $this->field_cat_data['field_cat_index'] );
-                                        self::transfer_table( $old_data['field_cat_db'], $this->field_cat_data['field_cat_db'] );
-                                        self::drop_table( $old_data['field_cat_db'] );
-                                        
-                                    } else {
-                                        if ( $old_data['field_cat_index'] !== $this->field_cat_data['field_cat_index'] ) {
-                                            self::rename_column( $this->field_cat_data['field_cat_db'], $old_data['field_cat_index'], $this->field_cat_data['field_cat_index'], "MEDIUMINT(8) NOT NULL DEFAULT '0'" );
-                                        }
+                //print_p( $this->locale['fields_0661'] );
+                //print_p( $this->field_cat_data );
     
+                if ( fusion_safe() ) {
+                    if ( !empty( $old_data['field_cat_db'] ) or $old_data['field_cat_db'] !== "users" ) {
+            
+                        if ( !empty( $old_data['field_cat_db'] ) && !empty( $old_data['field_cat_index'] ) ) {
+                            // CONDITION: HAVE A PREVIOUS TABLE SET
+                            if ( !empty( $this->field_cat_data['field_cat_db'] ) ) {
+                                // new demands a table insertion, checks if same or not.. if different.
+                                if ( $this->field_cat_data['field_cat_db'] !== $old_data['field_cat_db'] ) {
+                                    // But the current table is different than the previous one
+                                    // - build the new one, move the column, drop the old one.
+                                    self::build_table( $this->field_cat_data['field_cat_db'], $this->field_cat_data['field_cat_index'] );
+                                    self::transfer_table( $old_data['field_cat_db'], $this->field_cat_data['field_cat_db'] );
+                                    self::drop_table( $old_data['field_cat_db'] );
+                        
+                                } else {
+                                    if ( $old_data['field_cat_index'] !== $this->field_cat_data['field_cat_index'] ) {
+                                        self::rename_column( $this->field_cat_data['field_cat_db'], $old_data['field_cat_index'], $this->field_cat_data['field_cat_index'], "MEDIUMINT(8) NOT NULL DEFAULT '0'" );
                                     }
-    
-                                } else if ( empty( $this->field_cat_data['field_cat_db'] ) ) {
-                                    self::drop_table( $this->field_cat_data['field_cat_db'] );
+                        
                                 }
-        
-                            } else if ( !empty( $this->field_cat_data['field_cat_index'] ) && !empty( $this->field_cat_data['field_cat_db'] ) ) {
-        
-                                self::build_table( $this->field_cat_data['field_cat_db'],
-                                    $this->field_cat_data['field_cat_index'] );
-                                
+                    
+                            } else if ( empty( $this->field_cat_data['field_cat_db'] ) ) {
+                                self::drop_table( $this->field_cat_data['field_cat_db'] );
                             }
-    
-                            dbquery_insert( DB_USER_FIELD_CATS, $this->field_cat_data, 'update' );
-    
-                            addNotice( 'success', $this->locale['field_0207'] );
+                
+                        } else if ( !empty( $this->field_cat_data['field_cat_index'] ) && !empty( $this->field_cat_data['field_cat_db'] ) ) {
+                
+                            self::build_table( $this->field_cat_data['field_cat_db'],
+                                $this->field_cat_data['field_cat_index'] );
+                
                         }
-                        redirect( FUSION_SELF.$aidlink );
+            
+                        dbquery_insert( DB_USER_FIELD_CATS, $this->field_cat_data, 'update' );
+            
+                        addNotice( 'success', $this->locale['field_0207'] );
                     }
-        
-                } else {
-                    print_p( $this->locale['fields_0661'] );
-                    print_p( $this->field_cat_data );
+                    redirect( FUSION_SELF.$aidlink );
                 }
     
             } else {
-    
+                
                 dbquery_order(
                     DB_USER_FIELD_CATS,
                     $this->field_cat_data['field_cat_order'],
@@ -945,25 +875,25 @@ class UserFieldsQuantum extends QuantumActions {
                     'field_cat_name',
                     'save'
                 );
-    
+                
                 if ( !$this->debug && fusion_safe() ) {
-        
+                    
                     if ( !empty( $this->field_cat_data['field_cat_index'] ) &&
                         !empty( $this->field_cat_data['field_cat_db'] ) &&
                         $this->field_cat_data['field_cat_db'] !== 'users'
                     ) {
-            
+    
                         self::build_table( $this->field_cat_data['field_cat_db'], $this->field_cat_data['field_cat_index'] );
                     }
-        
-                    dbquery_insert( DB_USER_FIELD_CATS, $this->field_cat_data, 'save' );
-        
-                    addNotice( 'success', $this->locale['field_0208'] );
-        
-                    redirect( FUSION_SELF.$aidlink );
                     
+                    dbquery_insert( DB_USER_FIELD_CATS, $this->field_cat_data, 'save' );
+                    
+                    addNotice( 'success', $this->locale['field_0208'] );
+                    
+                    redirect( FUSION_SELF.$aidlink );
+    
                 } else {
-        
+                    
                     if ( $this->debug ) {
                         print_p( $this->locale['fields_0662'] );
                         print_p( $this->field_cat_data );
@@ -971,14 +901,14 @@ class UserFieldsQuantum extends QuantumActions {
                 }
             }
         }
-    
+        
         $html = openform( 'cat_form', 'post' );
         $html .= self::quantum_multilocale_fields( 'field_cat_name', $this->locale['fields_0430'], $this->field_cat_data['field_cat_name'], [ 'required' => 1 ] );
         // cannot move if there are siblings
         if ( $cat_id && isset( $this->field_cat_index[ $cat_id ] ) ) {
             $html .= form_hidden( 'field_parent', '', $this->field_cat_data['field_parent'] );
         } else {
-    
+            
             $cat_list[] = get( 'cat_id', FILTER_VALIDATE_INT );
             if ( !empty( $this->cat_list ) ) {
                 foreach ( $this->cat_list as $id => $value ) {
@@ -991,13 +921,13 @@ class UserFieldsQuantum extends QuantumActions {
                     'disable_opts' => $cat_list
                 ], DB_USER_FIELD_CATS, 'field_cat_name', 'field_cat_id', 'field_parent' );
         }
-    
+        
         $html .= form_text( 'field_cat_order', $this->locale['fields_0433'], $this->field_cat_data['field_cat_order'], [ 'type' => 'number', 'inner_width' => '100px' ] );
         $html .= form_hidden( 'field_cat_id', '', $this->field_cat_data['field_cat_id'], [ 'number' => 1 ] );
         $html .= form_hidden( 'add_cat', '', 'add_cat' );
         // root settings
         $html .= "<div id='page_settings' class='list-group-item m-t-20'>\n";
-    
+        
         global $db_name;
         $tableList = [];
         $show_tables = dbquery( "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES
@@ -1008,7 +938,7 @@ class UserFieldsQuantum extends QuantumActions {
                 $tableList[ $table_name ] = $table_name;
             }
         }
-    
+        
         $html .= form_select( 'field_cat_db', sprintf( $this->locale['fields_0434'], " db_prefix_ " ),
             $this->field_cat_data['field_cat_db'], [
                 'placeholder' => $this->locale['fields_0663'],
@@ -1037,7 +967,7 @@ class UserFieldsQuantum extends QuantumActions {
         $html .= form_button( 'save_cat', $this->locale['fields_0318'], 'save_cat', [ 'class' => 'm-r-10 btn-primary' ] );
         $html .= "<a href='".ADMIN."user_fields.php".fusion_get_aidlink()."&amp;ref=public'>".$this->locale['cancel']."</a>";
         $html .= closeform();
-    
+        
         return (string)$html;
     }
     
@@ -1139,9 +1069,9 @@ class UserFieldsQuantum extends QuantumActions {
     
     /** The master form for Adding or Editing Dynamic Fields */
     private function quantum_dynamics_form() {
-    
+        
         $aidlink = fusion_get_aidlink();
-    
+        
         $this->field_data['field_type'] = get( 'add_field' );
         
         $this->field_data['field_config'] = [
@@ -1162,31 +1092,31 @@ class UserFieldsQuantum extends QuantumActions {
             'field_thumb2_w'           => 768,
             'field_delete_original'    => 0
         ];
-    
+        
         $action = get( 'action' );
         $field_id = get( 'field_id', FILTER_VALIDATE_INT );
-    
-        if ( $action == 'field_edit' && $field_id ) {
         
+        if ( $action == 'field_edit' && $field_id ) {
+            
             if ( $this->validate_field( $field_id ) ) {
-            
+                
                 $this->field_data = dbarray( dbquery( "SELECT * FROM ".DB_USER_FIELDS." WHERE field_id=:fid", [ ':fid' => (int)$field_id ] ) );
-            
+                
                 if ( $this->field_data['field_type'] == 'upload' ) {
                     $this->field_data['field_config'] = fusion_decode( $this->field_data['field_config'] );
                     //print_p( $this->field_data );
                 }
-                
+    
             } else {
-            
+                
                 redirect( FUSION_SELF.$aidlink );
             }
         }
-    
-        $this->field_data['field_type'] = isset( $_POST['add_field'] ) ? form_sanitizer( $_POST['add_field'], '' ) : $this->field_data['field_type'];
-    
-        if ( post( 'save_field' ) ) {
         
+        $this->field_data['field_type'] = isset( $_POST['add_field'] ) ? form_sanitizer( $_POST['add_field'], '' ) : $this->field_data['field_type'];
+        
+        if ( post( 'save_field' ) ) {
+            
             $add_field = get( 'add_field' );
             
             $this->field_data = [
@@ -1204,11 +1134,11 @@ class UserFieldsQuantum extends QuantumActions {
                 'field_order'        => sanitizer( 'field_order', '0', 'field_order' ),
                 'field_section'      => 'public'
             ];
-        
-            $this->field_data['field_name'] = str_replace( ' ', '_', $this->field_data['field_name'] ); // make sure no space.
-        
-            if ( $this->field_data['field_type'] == 'upload' ) {
             
+            $this->field_data['field_name'] = str_replace( ' ', '_', $this->field_data['field_name'] ); // make sure no space.
+            
+            if ( $this->field_data['field_type'] == 'upload' ) {
+                
                 $max_b = isset( $_POST['field_max_b'] ) ? form_sanitizer( $_POST['field_max_b'], '', 'field_max_b' ) : 150000;
                 $calc = isset( $_POST['field_calc'] ) ? form_sanitizer( $_POST['field_calc'], '', 'field_calc' ) : 1;
                 $this->field_data['field_upload_type'] = isset( $_POST['field_upload_type'] ) ? form_sanitizer( $_POST['field_upload_type'], '', 'field_upload_type' ) : '';
@@ -1236,22 +1166,22 @@ class UserFieldsQuantum extends QuantumActions {
                     ];
                 }
             }
-        
+            
             if ( !$this->field_data['field_order'] ) {
                 $this->field_data['field_order'] = dbresult( dbquery( "SELECT MAX(field_order) FROM ".DB_USER_FIELDS." WHERE field_cat=:cat_id", [ ':cat_id' => $this->field_data['field_cat'] ] ), 0 ) + 1;
             }
-        
+            
             if ( fusion_safe() ) {
                 if ( !empty( $this->field_data['field_config'] ) ) {
                     $this->field_data['field_config'] = fusion_encode( $this->field_data['field_config'] );
-                    
-                }
-            
-                $this->create_fields( $this->field_data, 'dynamics' ); // will redirect and refresh config
-            }
-        
-        }
     
+                }
+    
+                $this->updateFields( $this->field_data, 'dynamics' ); // will redirect and refresh config
+            }
+    
+        }
+        
         $html = openform( 'fieldform', 'post' );
         
         $disable_opts = [];
@@ -1278,7 +1208,7 @@ class UserFieldsQuantum extends QuantumActions {
         ] );
         
         $html .= self::quantum_multilocale_fields( 'field_title', $this->locale['fields_0451'], $this->field_data['field_title'], [ 'required' => 1 ] );
-    
+        
         $html .= form_text( 'field_name', $this->locale['fields_0453'], $this->field_data['field_name'],
             [
                 'placeholder' => $this->locale['fields_0454'],
@@ -1467,7 +1397,7 @@ class UserFieldsQuantum extends QuantumActions {
         $html .= form_button( 'save_field', $this->locale['fields_0488'], 'save', [ 'class' => 'btn-sm btn-primary m-r-10' ] );
         $html .= "<a href='".ADMIN."user_fields.php".fusion_get_aidlink()."&amp;ref=public'>".$this->locale['cancel']."</a>";
         $html .= closeform();
-    
+        
         return (string)$html;
     }
     
@@ -1489,155 +1419,7 @@ class UserFieldsQuantum extends QuantumActions {
         return 1048576;
     }
     
-    /** Modules Form */
-    private function display_module_form() {
-    
-        $aidlink = fusion_get_aidlink();
-        $field_data = [];
-    
-        $action = get( 'action' );
-        $module_id = get( 'module_id', FILTER_VALIDATE_INT );
-        $ref_module = get( 'ref' );
-    
-        if ( $action == 'module_edit' && $module_id ) {
-            $result = dbquery( "SELECT * FROM ".DB_USER_FIELDS." WHERE field_id=:mid", [ ':mid' => (int)$module_id ] );
-            if ( dbrows( $result ) ) {
-                $field_data = dbarray( $result );
-            } else {
-                addNotice( 'info', $this->locale['field_0205'] );
-                redirect( FUSION_SELF.$aidlink );
-            }
-        }
-    
-        // is adding.
-        $plugin = self::$modules;
-    
-        $install_plugin = get( 'install' );
-        if ( isset( $field_data['field_name'] ) ) {
-            $install_plugin = $field_data['field_name'];
-        }
-    
-        if ( isset( $plugin[ $install_plugin ] ) ) {
-        
-            $plugin_data = $plugin[ $install_plugin ];
-        
-            if ( post( 'enable' ) ) {
-                
-                $accepted_type = [
-                    'public'     => 'file',
-                    'preference' => 'preference',
-                    'security'   => 'security'
-                ];
-            
-                if ( isset( $accepted_type[ $ref_module ] ) ) {
-                    
-                    $this->field_data = [
-                        'add_module'         => sanitizer( 'add_module' ) ?: $this->field_data['field_name'],
-                        'field_type'         => $accepted_type[ $ref_module ],
-                        'field_id'           => sanitizer( 'field_id', '', 'field_id' ) ?: get( 'module_id', FILTER_VALIDATE_INT ) ?: 0,
-                        'field_title'        => sanitizer( 'field_title', '', 'field_title' ),
-                        'field_name'         => sanitizer( 'field_name', '', 'field_name' ),
-                        'field_cat'          => sanitizer( "field_cat", '', 'field_cat' ),
-                        'field_default'      => sanitizer( "field_default", '', 'field_default' ),
-                        'field_error'        => sanitizer( "field_error", '', 'field_error' ),
-                        'field_required'     => post( "field_required" ) ? 1 : 0,
-                        'field_registration' => post( "field_registration" ) ? 1 : 0,
-                        'field_log'          => post( "field_log" ) ? 1 : 0,
-                        'field_order'        => sanitizer( "field_order", '0', 'field_order' ),
-                        'field_section'      => $ref_module,
-                    ];
-                    $this->field_data['field_name'] = str_replace( ' ', '_', $this->field_data['field_name'] ); // make sure no space.
-                    if ( !$this->field_data['field_order'] ) {
-                        $this->field_data['field_order'] = dbresult( dbquery( "SELECT MAX(field_order) FROM ".DB_USER_FIELDS." WHERE field_cat=:cat_id", [ ':cat_id' => $this->field_data['field_cat'] ] ), 0 ) + 1;
-                    }
-                
-                    $this->create_fields( $this->field_data, 'module', '', self::$modules );
-                }
-            }
-        
-            if ( !empty( $field_data ) ) {
-                $this->field_data = $field_data;
-            }
-        
-            $this->field_data['add_module'] = $this->field_data['field_name'];
-            if ( post( 'add_module' ) ) {
-                $this->field_data['add_module'] = sanitizer( 'add_module', '', 'add_module' );
-            }
-        
-            $html = openform( 'fieldform', 'post' );
-            $html .= "<div><strong>".$plugin_data['user_field_name']."</strong></div>\n";
-            if ( !empty( $plugin_data['user_field_desc'] ) ) {
-                $html .= "<div class='spacer-xs m-t-0'>".$plugin_data['user_field_desc']."</div>";
-            }
-            $html .= "<div>\n";
-            $html .= "<span class='m-b-10 strong'>".$this->locale['fields_0400']."</span><br/>\n<br/>\n";
-            $html .= "<span class='strong'>".$this->locale['fields_0401']."</span> ".( $plugin_data['user_field_version'] ?: $this->locale['fields_0402'] )."<br/>\n";
-            $html .= "<span class='strong'>".$this->locale['fields_0403']."</span> ".( $plugin_data['user_field_dbname'] ?: $this->locale['fields_0404'] )."<br/>\n";
-            $html .= "<span class='strong'>".$this->locale['fields_0405']."</span> ".( $plugin_data['user_field_dbinfo'] ?: $this->locale['fields_0406'] )."<br/>\n";
-            
-            $html .= "</div>\n<hr/>\n";
-        
-            //$html .= form_select_tree( 'field_cat', $this->locale['fields_0410'], $this->field_data['field_cat'], [
-            //    'no_root'      => TRUE,
-            //    'disable_opts' => array_keys( $this->page_list ),
-            //], DB_USER_FIELD_CATS, 'field_cat_name', 'field_cat_id', 'field_parent' );
-        
-            $html .= form_select( 'field_cat', $this->locale['fields_0410'], $this->field_data['field_cat'], [
-                'no_root'      => TRUE,
-                'db'           => DB_USER_FIELD_CATS,
-                'disable_opts' => array_keys( $this->page_list ),
-                'id_col'       => 'field_cat_id',
-                'cat_col'      => 'field_parent',
-                'title_col'    => 'field_cat_name'
-            ] );
-            
-            $html .= form_text( 'field_order', $this->locale['fields_0414'], $this->field_data['field_order'], [ 'type' => 'number', 'inner_width' => '100px' ] );
-        
-            if ( !empty( $plugin_data['user_field_dbinfo'] ) ) {
-                if ( version_compare( $plugin_data['user_field_version'], "1.01.00", ">=" ) ) {
-                    $html .= form_checkbox( 'field_required', $this->locale['fields_0411'], $this->field_data['field_required'], [ 'reverse_label' => TRUE ] );
-                }
-                if ( version_compare( $plugin_data['user_field_version'], "1.01.00", ">=" ) ) {
-                    $html .= form_checkbox( 'field_log', $this->locale['fields_0412'], $this->field_data['field_log'], [ 'reverse_label' => TRUE ] );
-                }
-                $html .= form_checkbox( 'field_registration', $this->locale['fields_0413'], $this->field_data['field_registration'], [ 'reverse_label' => TRUE ] );
-            }
-        
-            $html .= form_hidden( 'add_module', '', $this->field_data['add_module'] );
-            $html .= form_hidden( 'field_name', '', $plugin_data['user_field_dbname'] );
-            $html .= form_hidden( 'field_title', '', $plugin_data['user_field_name'] );
-            // Where is this coming from?
-            $html .= form_hidden( 'field_default', '', isset( $user_field_default ) ? $user_field_default : '' );
-            $html .= form_hidden( 'field_options', '', isset( $user_field_options ) ? $user_field_options : '' );
-            $html .= form_hidden( 'field_error', '', isset( $user_field_error ) ? $user_field_error : '' );
-            $html .= form_hidden( 'field_config', '', isset( $user_field_config ) ? $user_field_config : '' );
-            $html .= form_hidden( 'field_id', '', $this->field_data['field_id'] );
-            
-            $html .= "<hr/>\n";
-        
-            $html .= form_button( 'enable',
-                ( $this->field_data['field_id'] ? $this->locale['fields_0415'] : $this->locale['fields_0416'] ),
-                ( $this->field_data['field_id'] ? $this->locale['fields_0415'] : $this->locale['fields_0416'] ),
-                [ 'class' => 'btn-default m-r-10' ] );
-        
-            if ( $module_id ) {
-                $html .= "<a href='".ADMIN."user_fields.php".$aidlink."'>".$this->locale['cancel']."</a>";
-            } else {
-                $html .= "<a href='".ADMIN."user_fields.php".$aidlink."&amp;ref=public&amp;action=new'>".$this->locale['cancel']."</a>";
-            }
-        
-            $html .= closeform();
-        
-            return (string)$html;
-        
-        } else {
-        
-            addNotice( 'danger', $this->locale['fields_0109'] );
-        
-            redirect( ADMIN.'user_fields.php'.$aidlink.'&amp;ref=public&amp;action=new' );
-        }
-    }
-    
+
     public function quantum_insert( array $data = [] ) {
         $quantum_fields = [];
         $infinity_ref = [];
@@ -1703,18 +1485,15 @@ class UserFieldsQuantum extends QuantumActions {
                 $target_database = $field_data['field_cat_db'] ? DB_PREFIX.$field_data['field_cat_db'] : $db;
                 $col_name = $field_data['field_cat_index'] ? $field_data['field_cat_index'] : $primary_key;
                 // Find index primary key value
-                $primaryKeyVal = isset( $_POST[ $col_name ] ) ? form_sanitizer( $_POST[ $col_name ], '', $col_name ) : '';
+                $primaryKeyVal = sanitizer( $col_name, '', $col_name );
+                
                 if ( !isset( $output_fields[ $target_database ][ $col_name ] ) ) {
                     $output_fields[ $target_database ][ $col_name ] = $primaryKeyVal;
                 }
+                
                 // Set input as default if posted but blank
-                if ( isset( $_POST[ $field_data['field_name'] ] ) ) {
-                    $output_fields[ $target_database ][ $field_data['field_name'] ] =
-                        form_sanitizer(
-                            $_POST[ $field_data['field_name'] ],
-                            $field_data['field_default'],
-                            $field_data['field_name']
-                        );
+                if ( post( $field_data['field_name'] ) ) {
+                    $output_fields[ $target_database ][ $field_data['field_name'] ] = sanitizer( $field_data['field_name'], $field_data['field_default'], $field_data['field_name'] );
                 }
             }
         }
@@ -1742,112 +1521,3 @@ class UserFieldsQuantum extends QuantumActions {
     
 }
 
-class Preference implements TableSDK {
-    
-    
-    public function data() {
-        return [
-            'table'      => DB_USER_FIELDS,
-            'id'         => 'field_id',
-            'title'      => 'field_title',
-            'conditions' => "field_type='preference'",
-            'limit'      => 24,
-        ];
-    }
-    
-    public function properties() {
-        return [
-            'table_id'     => 'uf-preference-table',
-            'no_record'    => 'There are no Preference Field Plugins installed.',
-            'search_label' => 'Search User Fields',
-            'search_col'   => 'field_title',
-            'order_col'    => [ 'field_title' => 'title', 'field_order' => 'order' ],
-        ];
-    }
-    
-    public function column() {
-        return [
-            'field_title' => [
-                'title'       => 'User Field',
-                'title_class' => 'col-xs-11',
-                'value_class' => 'no-break',
-                'callback'    => [ 'PHPFusion\\UserFieldsQuantum', 'getUserFieldDescription', CLASSES.'PHPFusion/UserFieldsQuantum.inc' ],
-                'edit_link'   => FALSE,
-                'delete_link' => FALSE,
-            ],
-            'field_order' => [
-                'title'       => 'Order',
-                'title_class' => 'col-xs-2',
-            ],
-            'field_id'    => [
-                'title' => 'ID',
-            ],
-        ];
-    }
-    
-    /**
-     * @return array
-     */
-    public function quickEdit() {
-        return [
-            //'field_title' => [ 'title' => 'Field Name', 'required' => TRUE ],
-            'field_order' => [ 'label' => 'Field Order', 'function' => 'form_textarea' ],
-        ];
-    }
-}
-
-class Security implements TableSDK {
-    
-    public function data() {
-        return [
-            'table'      => DB_USER_FIELDS,
-            'id'         => 'field_id',
-            'title'      => 'field_title',
-            'conditions' => "field_type='security'",
-            'limit'      => 24,
-        ];
-        
-    }
-    
-    public function properties() {
-        return [
-            'table_id'     => 'uf-security-table',
-            'no_record'    => 'There are no Security Field Plugins installed.',
-            'search_label' => 'Search User Fields',
-            'search_col'   => 'field_title',
-            'order_col'    => [ 'field_title' => 'title', 'field_order' => 'order' ],
-        ];
-    }
-    
-    public function column() {
-        return [
-            'field_title' => [
-                'title'       => 'User Field',
-                'title_class' => 'col-xs-11',
-                'value_class' => 'no-break',
-                'callback'    => [ 'PHPFusion\\UserFieldsQuantum', 'get_field_description', CLASSES.'PHPFusion/UserFieldsQuantum.inc' ],
-                'edit_link'   => FALSE,
-                'delete_link' => FALSE,
-            ],
-            'field_order' => [
-                'title'       => 'Order',
-                'title_class' => 'col-xs-2',
-            ],
-            'field_id'    => [
-                'title' => 'ID',
-            ],
-        ];
-    }
-    
-    /**
-     * Every row of the array is a field input.
-     *
-     * @return array
-     */
-    public function quickEdit() {
-        return [
-            'field_title' => [ 'title' => 'Field Name', 'required' => TRUE, 'function' => 'form_text' ],
-            'field_order' => [ 'title' => 'Field Order', 'function' => 'form_textarea' ],
-        ];
-    }
-}

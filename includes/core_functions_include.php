@@ -25,7 +25,7 @@ use PHPFusion\Minify\JS;
 use PHPFusion\OutputHandler;
 use PHPFusion\PrivateMessages;
 use PHPFusion\Rewrite\RewriteDriver;
-use PHPFusion\UserFieldsQuantum;
+use PHPFusion\UserFields\Quantum\QuantumHelper;
 
 /**
  * Checks for license data to php-fusion.co.uk for validation of license
@@ -1697,7 +1697,7 @@ function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $ge
                 $_name = get_parent_array($tree_full, $id);
                 $crumb = [
                     'link'  => isset($_name[$id_col]) ? clean_request($getname."=".$_name[$id_col], ["aid"], TRUE) : "",
-                    'title' => isset($_name[$title_col]) ? UserFieldsQuantum::parse_label($_name[$title_col]) : "",
+                    'title' => isset( $_name[ $title_col ] ) ? fusion_parse_locale( $_name[ $title_col ] ) : "",
                 ];
                 if (get_parent($tree_index, $id) == 0) {
                     return $crumb;
@@ -1978,7 +1978,7 @@ function fusion_get_locale($key = NULL, $include_file = '') {
  * @return string
  */
 function fusion_parse_locale($string) {
-    return UserFieldsQuantum::parse_label($string);
+    return QuantumHelper::parseLabel( $string );
 }
 
 /**

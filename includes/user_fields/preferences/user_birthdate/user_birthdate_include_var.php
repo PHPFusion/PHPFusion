@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: user_theme_include_var.php
+| Filename: user_birthdate_include_var.php
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -19,10 +19,10 @@ defined('IN_FUSION') || exit;
 $locale = fusion_get_locale('', __DIR__.'/locale/'.LANGUAGE.'.php');
 // Version of the user fields api
 $user_field_api_version = "1.01.00";
-$user_field_name = $locale['uf_theme'];
-$user_field_desc = $locale['uf_theme_desc'];
-$user_field_dbname = "user_theme";
-$user_field_group = 3;
-$user_field_dbinfo = "VARCHAR(100) NOT NULL DEFAULT 'Default'";
+$user_field_name = $locale['uf_birthdate'];
+$user_field_desc = $locale['uf_birthdate_desc'];
+$user_field_dbname = "user_birthdate";
+$user_field_group = 2;
+$user_field_dbinfo = "DATE NOT NULL DEFAULT '1900-01-01'";
 $user_field_author = 'PHP-Fusion Development Team';
-$user_field_image = INCLUDES.'user_fields/preference/user_theme/images/theme.svg';
+$user_field_image = INCLUDES.'user_fields/preferences/user_birthdate/images/birthdate.svg';

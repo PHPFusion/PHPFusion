@@ -572,8 +572,8 @@ class Tables {
             foreach ( $del_id as $val ) {
             
                 if ( $val ) {
-                
-                    $result = dbquery( "SELECT * FROM ".$this->query['table']."  WHERE ".$this->query['id']."=:id", [ ':id' => $val ] );
+    
+                    $result = dbquery( "SELECT * FROM ".$this->query['table']."  WHERE ".$this->getIdCol()."=:id", [ ':id' => $val ] );
                     if ( dbrows( $result ) ) {
                         $data = dbarray( $result );
                         foreach ( $data as $key => $value ) {
@@ -1295,8 +1295,8 @@ class Tables {
                             $value = $tableData->imageColumn( $col_key, $data, $col_data, $data_replace );
                         
                         } else if ( $col_data['multilang'] ) {
-                        
-                            $value = UserFieldsQuantum::parse_label( $data[ $col_key ] );
+    
+                            $value = fusion_parse_locale( $data[ $col_key ] );
                         
                         } else if ( $col_data['icon'] && !empty( $data[ $col_key ] ) ) {
                             /*

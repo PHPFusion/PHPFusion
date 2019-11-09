@@ -20,7 +20,6 @@ use PHPFusion\Database\DatabaseFactory;
 use PHPFusion\SiteLinks;
 use PHPFusion\Steam;
 use PHPFusion\Template;
-use PHPFusion\UserFieldsQuantum;
 
 defined( 'IN_FUSION' ) || exit;
 
@@ -231,7 +230,7 @@ function showprivacypolicy() {
     if ( !empty( fusion_get_settings( 'privacy_policy' ) ) ) {
         $html .= "<a href='".BASEDIR."print.php?type=P' id='privacy_policy'>".fusion_get_locale( 'global_176' )."</a>";
         $modal = openmodal( 'privacy_policy', fusion_get_locale( 'global_176' ), [ 'button_id' => 'privacy_policy' ] );
-        $modal .= parse_textarea( UserFieldsQuantum::parse_label( fusion_get_settings( 'privacy_policy' ) ) );
+        $modal .= parse_textarea( fusion_parse_locale( fusion_get_settings( 'privacy_policy' ) ) );
         $modal .= closemodal();
         add_to_footer( $modal );
     }

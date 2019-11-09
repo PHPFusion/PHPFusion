@@ -1,5 +1,6 @@
 <?php
 namespace PHPFusion\Administration\Members;
+
 /**
  * Class User_List
  *
@@ -159,7 +160,7 @@ class UserList implements \PHPFusion\Interfaces\TableSDK {
         // Find all user fields
         // @todo: Extend it to all database as per UFv1.2 data model.
         $user_fields = [];
-        $result = dbquery("SELECT child.field_cat_id FROM ".DB_USER_FIELD_CATS." root LEFT JOIN ".DB_USER_FIELD_CATS." child ON child.field_parent=root.field_cat_id  
+        $result = dbquery( "SELECT child.field_cat_id FROM ".DB_USER_FIELD_CATS." root LEFT JOIN ".DB_USER_FIELD_CATS." child ON child.field_parent=root.field_cat_id
         WHERE root.field_parent=0 AND root.field_cat_db='users' GROUP BY child.field_cat_id");
         if (dbrows($result)) {
             $rows = [];
@@ -169,7 +170,7 @@ class UserList implements \PHPFusion\Interfaces\TableSDK {
             $cresult = dbquery("SELECT  field_title, field_name, field_type FROM ".DB_USER_FIELDS." WHERE field_cat IN (".implode(',', $rows).")");
             if (dbrows($cresult)) {
                 while ($cdata = dbarray($cresult)) {
-                    $user_fields[$cdata['field_name']]['title'] = \PHPFusion\UserFieldsQuantum::parse_label($cdata['field_title']);
+                    $user_fields[ $cdata['field_name'] ]['title'] = fusion_parse_locale( $cdata['field_title'] );
                     $user_fields[$cdata['field_name']]['visibility'] = FALSE;
                 }
             }

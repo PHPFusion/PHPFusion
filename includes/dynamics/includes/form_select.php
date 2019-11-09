@@ -918,7 +918,7 @@ function form_select_tree( $input_name, $label = "", $input_value = FALSE, array
             //$hide = $disable_branch && $value == $self_id ? 1 : 0;
             $html = &$html;
             $name = $data[ $value ][ $name_col ];
-            $name = PHPFusion\UserFieldsQuantum::parse_label( $name );
+            $name = fusion_parse_locale( $name );
             $select = ( $input_value !== "" && ( $input_value == $value ) ) ? 'selected' : '';
             $disabled = $disable_opts && in_array( $value, $disable_opts ) ? TRUE : FALSE;
             $hide = $disabled && $options['hide_disabled'] ? TRUE : FALSE;

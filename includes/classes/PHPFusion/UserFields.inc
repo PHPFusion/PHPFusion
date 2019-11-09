@@ -391,14 +391,14 @@ class UserFields extends UserFieldsQuantum {
                     $user_fields_meta = '';
                     $user_fields_section = [];
                     $user_fields_title = '';
-                    $default_section = 'default';
+                    //$default_section = 'default';
         
                     include $this->info['pages'][ $this->info['current_page'] ]['file'];
-        
-                    if ( !empty( $user_fields_section ) ) {
-                        // what is the default section?
-                        $section = get( 'section' ) ?: $default_section;
-                    }
+    
+                    //if ( !empty( $user_fields_section ) ) {
+                    //    // what is the default section?
+                    //    $section = get( 'section' ) ?: $default_section;
+                    //}
         
                     if ( $user_fields ) {
                         // Title info

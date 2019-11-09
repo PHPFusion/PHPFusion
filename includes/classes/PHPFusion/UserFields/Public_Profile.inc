@@ -54,7 +54,7 @@ class Public_Profile extends UserFieldsQuantum {
                         'id'     => $data['field_cat_id'],
                         'active' => ($this->section_id == $data['field_cat_id']) ? 1 : (!$this->section_id && $i == 0 ? 1 : 0),
                         'link'   => $link,
-                        'name'   => ucwords(UserFieldsQuantum::parse_label($data['field_cat_name'])),
+                        'name'   => ucwords( fusion_parse_locale( $data['field_cat_name'] ) ),
                         'icon'   => $data['field_cat_class']
                     ];
                     $i++;
@@ -201,7 +201,7 @@ class Public_Profile extends UserFieldsQuantum {
         if (!empty($section_titles)) {
             foreach ($section_titles as $cat) {
                 if ($cat['field_cat_id'] == $cat_id) {
-                    return self::parse_label($cat['field_cat_name']);
+                    return fusion_parse_locale( $cat['field_cat_name'] );
                 }
             }
         }
@@ -400,7 +400,7 @@ class Public_Profile extends UserFieldsQuantum {
         if (dbrows($result)) {
             while ($data = dbarray($result)) {
                 if ($data['field_cat_id']) {
-                    $cat_name = UserFieldsQuantum::parse_label($data['field_cat_name']);
+                    $cat_name = fusion_parse_locale( $data['field_cat_name'] );
                     $category[$data['field_parent']][$data['field_cat_id']] = $cat_name;
                     $fields['user_field_extended'][$data['field_cat_id']] ['title'] = $cat_name;
                 }
@@ -485,7 +485,7 @@ class Public_Profile extends UserFieldsQuantum {
         );
 
         $modal = openmodal('license_agreement', $this->locale['u192'], ['button_id' => 'license_agreement']);
-        $modal .= parse_textarea(self::parse_label(fusion_get_settings('license_agreement')));
+        $modal .= parse_textarea( fusion_parse_locale( fusion_get_settings( 'license_agreement' ) ) );
         $modal_content = '<p class="pull-left">'.$this->locale['u193a'].' '.ucfirst(showdate('shortdate', fusion_get_settings('license_lastupdate'))).'</p>';
         $modal_content .= '<button type="button" id="agree" class="btn btn-success" data-dismiss="modal">'.$this->locale['u193b'].'</button>';
         $modal .= modalfooter($modal_content, TRUE);
