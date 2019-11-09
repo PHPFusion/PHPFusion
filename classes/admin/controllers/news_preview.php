@@ -31,6 +31,7 @@ class News_Preview extends News {
     }
 
     public function __construct() {
+        parent::__construct();
     }
 
     public function display_preview() {

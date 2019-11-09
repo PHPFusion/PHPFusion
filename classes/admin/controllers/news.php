@@ -833,7 +833,7 @@ class NewsAdmin extends NewsAdminModel {
         ORDER BY n.news_datestamp DESC
         LIMIT $rowstart, $limit
         ";
-        $result2 = dbquery($news_query);
+        $result2 = dbquery($news_query, $sql_params);
         $news_rows = dbrows($result2);
 
         $image_rows = [];
