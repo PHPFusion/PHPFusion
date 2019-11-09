@@ -565,6 +565,13 @@ Grids
     display: table-cell;
 }
 
+.display-flex {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+}
+
 .display-flex-row {
     display: -webkit-box;
     display: -webkit-flex;
@@ -602,11 +609,13 @@ Grids
 .display-flex-row.flex-start {
     justify-content: flex-start;
     justify-items: flex-start;
+    align-items: flex-start;
 }
 
 .display-flex-row.flex-end {
     justify-content: flex-end;
     justify-items: flex-end;
+    align-items: flex-end;
 }
 
 .position-relative {

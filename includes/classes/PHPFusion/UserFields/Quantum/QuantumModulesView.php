@@ -60,12 +60,10 @@ class QuantumModulesView {
                 }
     
                 $pf_html .= '<div class="m-b-15 '.grid_column_size( 100, 50, 33, 25 ).'">
-                <div class="list-group-item text-center">'.$image.'
-                <div class="display-flex-column">
+                <div class="list-group-item text-center display-flex-column">'.$image.'
                 <h4 class="strong">'.$module_data['user_field_name'].'</h4>
-                <div class="clearfix position-relative overflow-hide">'.$module_data['user_field_desc'].'<br/><small>Version: '.$module_data['user_field_version'].'</small></div>
-                <div class="clearfix text-right m-t-20" style="margin-top:auto;">'.$button.'</div>
-                </div>
+                <div class="clearfix position-relative overflow-hide m-b-20">'.$module_data['user_field_desc'].'<br/><small class="strong">Version: '.$module_data['user_field_version'].'</small></div>
+                <div class="text-right" style="margin-top:auto; padding-top:10px; border-top:1px solid #ddd;">'.$button.'</div>
                 </div>
                 </div>';
             }
@@ -200,9 +198,10 @@ class QuantumModulesView {
                     
                     $this->create_fields( $field_data, 'module', '', self::$modules );
                 }
-            } else if ( get( '' ) )
-                
-                $field_data['add_module'] = $field_data['field_name'];
+            }
+    
+            $field_data['add_module'] = $field_data['field_name'];
+            
             if ( post( 'add_module' ) ) {
                 $field_data['add_module'] = sanitizer( 'add_module', '', 'add_module' );
             }
@@ -230,8 +229,6 @@ class QuantumModulesView {
             if ( !empty( $plugin_data['user_field_dbinfo'] ) ) {
                 if ( version_compare( $plugin_data['user_field_version'], "1.01.00", ">=" ) ) {
                     $html .= form_checkbox( 'field_required', $locale['fields_0411'], $field_data['field_required'], [ 'reverse_label' => TRUE ] );
-                }
-                if ( version_compare( $plugin_data['user_field_version'], "1.01.00", ">=" ) ) {
                     $html .= form_checkbox( 'field_log', $locale['fields_0412'], $field_data['field_log'], [ 'reverse_label' => TRUE ] );
                 }
                 $html .= form_checkbox( 'field_registration', $locale['fields_0413'], $field_data['field_registration'], [ 'reverse_label' => TRUE ] );
@@ -250,19 +247,19 @@ class QuantumModulesView {
                 ( $field_data['field_id'] ? $locale['fields_0415'] : $locale['fields_0416'] ),
                 ( $field_data['field_id'] ? $locale['fields_0415'] : $locale['fields_0416'] ),
                 [ 'class' => 'btn-default m-r-10' ] );
+            $action_link = "<a href='".ADMIN."user_fields.php".$aidlink."&amp;ref=public&amp;action=new'>".$locale['cancel']."</a>";
             if ( $module_id ) {
-                $html .= "<a href='".ADMIN."user_fields.php".$aidlink."'>".$locale['cancel']."</a>";
-            } else {
-                $html .= "<a href='".ADMIN."user_fields.php".$aidlink."&amp;ref=public&amp;action=new'>".$locale['cancel']."</a>";
+                $action_link = "<a href='".ADMIN."user_fields.php".$aidlink."'>".$locale['cancel']."</a>";
             }
+            $html .= $action_link;
             $html .= closeform();
             
             return (string)$html;
-            
-        } else {
-            addNotice( 'danger', $locale['fields_0109'] );
-            redirect( ADMIN.'user_fields.php'.$aidlink.'&amp;ref=public&amp;action=new' );
+    
         }
+    
+        addNotice( 'danger', $locale['fields_0109'] );
+        redirect( ADMIN.'user_fields.php'.$aidlink.'&amp;ref=public&amp;action=new' );
         
     }
     
