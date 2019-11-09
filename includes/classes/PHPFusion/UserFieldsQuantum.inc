@@ -235,10 +235,9 @@ class UserFieldsQuantum extends QuantumActions {
     /* Read into serialized field label and returns the value */
     
     public function displayQuantumAdmin() {
+        define( 'IN_QUANTUM', TRUE );
         
         pageAccess( $this->admin_rights );
-        
-        define( 'IN_QUANTUM', TRUE );
     
         $this->loadUserFields(); // return fields
         

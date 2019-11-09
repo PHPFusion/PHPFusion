@@ -83,9 +83,9 @@ class Public_Profile extends UserFieldsQuantum {
 
         $locale = fusion_get_locale();
         $info = [
-            'section' => $this->get_info(),
+            'section'    => $this->get_info(),
+            'section_id' => $this->section,
         ];
-        $info['section_id'] = get('section', FILTER_VALIDATE_INT);
     
         $info['section_title'] = $info['section'][$info['section_id']]['name'];
 
