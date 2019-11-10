@@ -57,9 +57,8 @@ function bbcode_list() {
     $smileys_checked = 0;
     
     if ( post( 'post_test' ) ) {
-        $test_message = form_sanitizer( $_POST['test_message'], '', 'test_message' );
-        $smileys_checked = isset( $_POST['test_smileys'] ) || preg_match( "#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si",
-            $test_message ) ? 1 : 0;
+        $test_message = sanitizer( 'test_message', '', 'test_message' );
+        $smileys_checked = $test_message || preg_match( "#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $test_message ) ? 1 : 0;
         if ( fusion_safe() ) {
             opentable( $locale['BBCA_417'] );
             echo "<div class='well'>\n";
