@@ -13,7 +13,6 @@ class Account_Profile extends UserFieldsQuantum {
     public $user_name_change = FALSE;
     public $show_admin_password = FALSE;
     public $user_data = [];
-    public $options = [];
     public $is_admin_panel = FALSE;
     
     private function cacheSecurityPlugins() {
@@ -29,7 +28,7 @@ class Account_Profile extends UserFieldsQuantum {
         return $security_fields;
     }
     
-    public function get_info() {
+    public function inputInfo() {
         
         $current_section = get( 'section' );
         $current_section = $this->setPluginFolder( $current_section );
@@ -89,8 +88,8 @@ class Account_Profile extends UserFieldsQuantum {
         $info['language'] = "You are viewing the site in English (US)";
         
         $info['user_location'] = form_location( 'user_location', 'Choose your location to help us show you custom content from your area.', $this->user_data['user_location'], [ 'inline' => FALSE ] );
-        
-        $info['update_preference_button'] = form_button( $this->post_name.'_pref', 'Update Preferences', $this->post_name.'_pref', [ 'class' => $this->options['btn_post_class'] ] );
+    
+        $info['update_preference_button'] = form_button( $this->post_name.'_pref', 'Update Preferences', $this->post_name.'_pref', [ 'class' => btn - primary ] );
         
         $info['pm_notify'] = form_checkbox( 'pm_email_notify', $locale['621'], $this->user_data['user_pm_email_notify'], [
                 'options' => [
@@ -138,8 +137,8 @@ class Account_Profile extends UserFieldsQuantum {
     private function accountSecurity() {
         
         $info['user_lastvisit'] = showdate( 'longdate', $this->user_data['user_lastvisit'] );
-        
-        $info['update_security_button'] = form_button( $this->post_name.'_security', 'Update Security', $this->post_name.'_security', [ 'class' => $this->options['btn_post_class'] ] );
+    
+        $info['update_security_button'] = form_button( $this->post_name.'_security', 'Update Security', $this->post_name.'_security', [ 'class' => btn - primary ] );
         
         $info['user_block'] = form_user_select( "user_block", "Block users", "", [ "stacked" => form_button( $this->post_name."_block", "Block", $this->post_name."_block" ) ] );
         
@@ -196,7 +195,7 @@ class Account_Profile extends UserFieldsQuantum {
             $info['username_openform'] = openform( 'username_frm', 'post' );
             $info['username_closeform'] = closeform();
             $info['user_name'] = form_text( 'user_name', 'User Name', $this->user_data['user_name'], [ 'required' => TRUE, 'deactivate' => $deactivate_user, 'inline' => $this->inline_field ] );
-            $info['update_user_name'] = form_button( $this->post_name.'_username', "Update User Name", $this->post_name.'_username', [ 'class' => $this->options['btn_post_class'], 'deactivate' => $this->user_name_change ? FALSE : TRUE ] );
+            $info['update_user_name'] = form_button( $this->post_name.'_username', "Update User Name", $this->post_name.'_username', [ 'class' => btn - primary, 'deactivate' => $this->user_name_change ? FALSE : TRUE ] );
         }
         $user_email = post( 'user_email' ) ?: $this->user_data['user_email'];
         $info['user_email'] = form_text( 'user_email', $locale['u128'], $user_email, [
@@ -255,11 +254,11 @@ class Account_Profile extends UserFieldsQuantum {
         if ( $this->registration === FALSE && $this->is_admin_panel === FALSE ) {
             $info['user_email_openform'] = openform( 'useremail_frm', 'post', FUSION_REQUEST );
             $info['user_email_closeform'] = closeform();
-            $info['update_email_button'] = form_button( $this->post_name.'_email', 'Update Email', $this->post_name.'_email', [ 'class' => $this->options['btn_post_class'] ] );
+            $info['update_email_button'] = form_button( $this->post_name.'_email', 'Update Email', $this->post_name.'_email', [ 'class' => 'btn-primary' ] );
             $info['user_close_openform'] = openform( 'userclose_frm', 'post', FUSION_REQUEST );
             $info['user_close_closeform'] = closeform();
             $info['user_close_message'] = form_textarea( 'user_close_message', 'Please help us improve by telling us why you are leaving', '', [ 'placeholder' => '(Optional)', 'inline' => FALSE ] );
-            $info['user_close_button'] = form_button( $this->post_name.'_close', 'Close Account', $this->post_name.'_close', [ 'class' => $this->options['btn_post_class'] ] );
+            $info['user_close_button'] = form_button( $this->post_name.'_close', 'Close Account', $this->post_name.'_close', [ 'class' => 'btn-primary' ] );
         }
         
         $info = $this->get_user_password() + $this->get_admin_password() + $info;
@@ -307,7 +306,7 @@ class Account_Profile extends UserFieldsQuantum {
             $info['user_password_closeform'] = closeform();
             $info['user_password_notice'] = "<p>To change your account password, enter your <a class='field_focus' data-focus='user_password' href='#'>current
             password</a>, <a class='field_focus' data-focus='user_password1' href='#'>new password</a> and <a class='field_focus' data-focus='user_password2' href='#'>confirm new password</a>.</p>";
-            $info['update_password_button'] = form_button( $this->post_name.'_password', 'Update Password', $this->post_name.'_password', [ 'class' => $this->options['btn_post_class'] ] );
+            $info['update_password_button'] = form_button( $this->post_name.'_password', 'Update Password', $this->post_name.'_password', [ 'class' => 'btn-primary' ] );
             $info['user_password'] = form_hidden( 'user_id', '', isset( $this->user_data['user_id'] ) && isnum( $this->user_data['user_id'] ) ? $this->user_data['user_id'] : 0, [ 'input_id' => 'userid' ] );
             $info['user_password'] .= form_text( 'user_password', $locale['u135a'], '', [
                 'type'             => 'password',

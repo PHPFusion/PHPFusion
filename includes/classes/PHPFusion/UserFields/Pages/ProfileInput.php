@@ -200,7 +200,6 @@ class ProfileInput {
                 
                 $class = new Account_Profile();
                 $class->user_data = $this->user_data;
-                $class->options = $this->options;
                 $class->registration = $this->registration;
                 $class->post_name = $this->post_name;
                 $class->user_name_change = $this->user_name_change;
