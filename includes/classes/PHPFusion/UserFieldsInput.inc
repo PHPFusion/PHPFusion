@@ -424,8 +424,9 @@ class UserFieldsInput {
     private function sendVerificationEmail() {
         $settings = fusion_get_settings();
         $this->locale = fusion_get_locale();
+        $passAuth = new PasswordAuth();
         require_once INCLUDES."sendmail_include.php";
-        $userCode = hash_hmac( "sha1", PasswordAuth::getNewPassword(), $this->_userEmail );
+        $userCode = hash_hmac( "sha1", $passAuth->getNewPassword(), $this->_userEmail );
         $activationUrl = $settings['siteurl']."register.php?email=".$this->_userEmail."&code=".$userCode;
         $message = str_replace( "USER_NAME", $this->_userName, $this->locale['u152'] );
         $message = str_replace( "SITENAME", $settings['sitename'], $message );

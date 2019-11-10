@@ -204,7 +204,7 @@ class Facebook_Connect {
             if ($is_new_email) {
 
                 $userProp['user_name'] = $this->validateNewUserName($fbUserProfile['first_name']);
-
+                $passAuth = new PasswordAuth();
                 $new_user_info = [
                     'user_name'      => $userProp['user_name'],
                     'user_firstname' => $fbUserProfile['first_name'],
@@ -215,7 +215,7 @@ class Facebook_Connect {
                     'user_ip_type'   => USER_IP_TYPE,
                     'user_language'  => LANGUAGE,
                     'user_status'    => $admin_activation ? 2 : 0,
-                    'user_salt'      => PasswordAuth::getNewRandomSalt(),
+                    'user_salt'      => $passAuth->getNewRandomSalt(),
                     'user_algo'      => fusion_get_settings('password_algorithm'),
                     'user_facebook'  => $fbUserProfile['id']
                 ];

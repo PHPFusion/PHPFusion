@@ -59,19 +59,19 @@ class PasswordAuth {
     // Get new password algorithem
 
     protected function _setNewHash($password) {
-        $this->_newSalt = PasswordAuth::getNewRandomSalt();
+        $this->_newSalt = $this->getNewRandomSalt();
         $this->_newPasswordHash = $this->_hashPassword($password, $this->_newAlgo, $this->_newSalt);
     }
 
     // Get new password salt
-
-    public static function getNewRandomSalt($length = 12) {
-        return sha1(PasswordAuth::getNewPassword($length));
+    
+    public function getNewRandomSalt( $length = 12 ) {
+        return sha1( $this->getNewPassword( $length ) );
     }
 
     // Get new password hash
-
-    public static function getNewPassword($length = 12) {
+    
+    public function getNewPassword( $length = 12 ) {
         $chars = ["abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ", "123456789", "@!#$%&/()=-_?+*.,:;"];
         $count = [(strlen($chars[0]) - 1), (strlen($chars[1]) - 1), (strlen($chars[2]) - 1)];
         if ($length > 64) {
