@@ -535,7 +535,7 @@ class Infusion_Core {
      */
     protected function dropcol_infuse($inf) {
         $error = FALSE;
-        if (isset($inf['dropcol']) && is_array($inf['dropcol'])) {
+        if (isset($inf['dropcol']) && is_array($inf['dropcol']) && $inf['status'] > 0) {
             foreach ($inf['dropcol'] as $dropCol) {
                 if (is_array($dropCol) && !empty($dropCol['table']) && !empty($dropCol['column'])) {
                     $columns = fieldgenerator($dropCol['table']);
