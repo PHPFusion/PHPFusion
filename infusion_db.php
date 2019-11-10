@@ -15,6 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
+use PHPFusion\Admins;
+
 defined( 'IN_FUSION' ) || exit;
 if ( !defined( 'FORUM_EXISTS' ) ) {
     if ( get_settings( 'forum' ) ) {
@@ -69,9 +72,9 @@ if ( !defined( "DB_FORUMS" ) ) {
 const DB_FORUM_THREAD_LOGS = DB_PREFIX.'forum_thread_logs';
 
 
-\PHPFusion\Admins::getInstance()->setAdminPageIcons( "F", "<i class='admin-ico fa fa-fw fa-comment-o'></i>" );
-\PHPFusion\Admins::getInstance()->setAdminPageIcons( "FR", "<i class='admin-ico fa fa-fw fa-gavel'></i>" );
-\PHPFusion\Admins::getInstance()->setFolderPermissions( 'forum', [
+Admins::getInstance()->setAdminPageIcons( "F", "<i class='admin-ico fa fa-fw fa-comment-o'></i>" );
+Admins::getInstance()->setAdminPageIcons( "FR", "<i class='admin-ico fa fa-fw fa-gavel'></i>" );
+Admins::getInstance()->setFolderPermissions( 'forum', [
     'infusions/forum/attachments/' => TRUE,
     'infusions/forum/images/'      => TRUE
 ] );
