@@ -95,6 +95,9 @@ if (!function_exists('display_register_form')) {
 if (!function_exists('display_profile_form')) {
     /**
      * Edit Profile Form Template
+     *
+     * @template-key user-profile-form
+     *
      * @param $info - the array output that is accessible for your custom requirements
      */
     function display_profile_form(array $info = []) {

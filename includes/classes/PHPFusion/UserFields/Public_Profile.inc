@@ -1,14 +1,13 @@
 <?php
-
 namespace PHPFusion\UserFields;
 
-use PHPFusion\UserFields;
 use PHPFusion\UserFieldsInput;
 use PHPFusion\UserFieldsQuantum;
 use ReflectionException;
 
 class Public_Profile extends UserFieldsQuantum {
-
+    
+    public $form_name = '';
     public $post_name;
     public $user_data = [];
     public $profile_id = 0;
@@ -21,10 +20,10 @@ class Public_Profile extends UserFieldsQuantum {
     public $is_admin_panel = FALSE;
     private $locale;
     private $section = 0;
-    private $userFieldClass = NULL;
-
-    public function __construct(UserFields $userFieldClass) {
-        $this->userFieldClass = $userFieldClass;
+    
+    
+    public function __construct() {
+        
         $this->locale = fusion_get_locale();
         $this->section = get( 'section', FILTER_VALIDATE_INT );
         if ( !$this->section ) {
@@ -103,7 +102,7 @@ class Public_Profile extends UserFieldsQuantum {
 
             $info['user_avatar'] = $this->userAvatarStudio();
             // Real name change button
-            $info['name_change_button'] = form_button('update_name', 'Update Name', 'update_name', ['class' => $this->options['btn_post_class']]);
+            $info['name_change_button'] = form_button( 'update_name', 'Update Name', 'update_name', [ 'class' => 'btn-primary' ] );
             // User Reputation
             if ($this->is_admin_panel === TRUE && infusion_exists('forum')) {
                 $user_reputation = post("user_reputation", FILTER_VALIDATE_INT) ?: $this->user_data['user_reputation'];
@@ -116,9 +115,9 @@ class Public_Profile extends UserFieldsQuantum {
                 );
             }
 
-
             // Quantum
             $info['user_fields'] = '';
+
             $this->loadUserFields( 'public' );
     
             $this->cacheModulePlugins();
@@ -457,7 +456,7 @@ class Public_Profile extends UserFieldsQuantum {
         $html .= "<div class='".($this->inline_field ? grid_column_size(100, 100, 80, 80) : grid_column_size(100, 100, 100, 100))."'>";
 
         $html .= display_captcha([
-            'form_name'  => $this->userFieldClass->form_name,
+            'form_name'  => $this->form_name,
             'captcha_id' => 'captcha_userfields',
             'input_id'   => 'captcha_code_userfields',
             'image_id'   => 'captcha_image_userfields'

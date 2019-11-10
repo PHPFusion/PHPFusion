@@ -83,19 +83,21 @@ class UserFieldsInput {
     
     /**
      * Checks user password integrity
-     * Requires POST of 'user_hash'
+     * Requires POST of 'user_password_verify'
      *
      * @return bool
      * @throws \Exception
      */
     public function checkUserHash() {
-        if ( $this->is_admin_panel === TRUE && checkrights( 'M' ) ) {
+        if ( iADMIN && checkrights( 'M' ) && defined( 'IN_ADMIN' ) ) {
             return TRUE;
         }
-        $user_hash = sanitizer( 'user_hash', '', 'user_hash' );
+    
+        $user_hash = sanitizer( 'user_password_verify', '', 'user_password_verify' );
         if ( $user_hash == $this->user_data['user_password'] ) {
             return TRUE;
         }
+
         fusion_stop();
         return FALSE;
     }
@@ -502,29 +504,30 @@ class UserFieldsInput {
     // Update Mode
     private function updatePublic() {
     
-        if ( post( $this->post_name ) ) {
-            if ( $this->checkUserHash() ) {
-                $data = [];
-                $data['user_avatar'] = $this->set_user_avatar();
-                $quantum = new UserFieldsQuantum();
-                $quantum->loadUserFields();
-                $quantum->getCatList();
-                $quantum->setCallbackData( $this->user_data );
-                $input = $quantum->sanitizeUserFields( DB_USERS, 'user_id' );
-                if ( !empty( $input ) ) {
-                    foreach ( $input as $input_data ) {
-                        $data += $input_data;
-                    }
+        if ( post( $this->post_name ) && $this->checkUserHash() ) {
+        
+            $data = [];
+            $data['user_avatar'] = $this->set_user_avatar();
+            $quantum = new UserFieldsQuantum();
+            $quantum->loadUserFields();
+            $quantum->getCatList();
+            $quantum->setCallbackData( $this->user_data );
+            $input = $quantum->sanitizeUserFields( DB_USERS, 'user_id' );
+            if ( !empty( $input ) ) {
+                foreach ( $input as $input_data ) {
+                    $data += $input_data;
                 }
-                //if ( fusion_safe() ) {
-                //    $data['user_id'] = $this->user_data['user_id'];
-                //    $quantum->log_user_action( DB_USERS, 'user_id' );
-                //    dbquery_insert( DB_USERS, $data, 'update' );
-                //    addNotice( 'success', 'Your profile has been updated successfully.', 'all' );
-                //    redirect( FUSION_REQUEST );
-                //}
+            }
+        
+            if ( fusion_safe() ) {
+                $data['user_id'] = $this->user_data['user_id'];
+                $quantum->log_user_action( DB_USERS, 'user_id' );
+                dbquery_insert( DB_USERS, $data, 'update' );
+                addNotice( 'success', 'Your profile has been updated successfully.', 'all' );
+                redirect( FUSION_REQUEST );
             }
         }
+    
     }
     
     /**
@@ -535,7 +538,7 @@ class UserFieldsInput {
     private function updateSettings() {
         if ( $this->section == 'preferences' ) {
             $this->updatePreference();
-        } else if ( $this->section == 'acc_settings') {
+        } else if ( $this->section == 'acc_settings' ) {
             $this->updateSecurity();
         }
     }
@@ -595,9 +598,9 @@ class UserFieldsInput {
         $this->locale = fusion_get_locale();
         $this->_method = "validate_update";
     
-        $uf_class = new UserFields();
-        $current_page = $uf_class->getEditCurrentPage();
-    
+        $userFields = new UserFields();
+        $current_page = $userFields->getCurrentInputPage();
+        
         switch ( $current_page ) {
             case 'pu_profile':
                 $this->updatePublic();

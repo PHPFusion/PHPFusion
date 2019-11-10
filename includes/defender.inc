@@ -634,7 +634,7 @@ class Defender {
      * @param $notice - Show custom notice message on validation errors
      */
     public static function stop($notice = '') {
-
+        debug_print_backtrace();
         if (!defined('FUSION_NULL')) {
             define('FUSION_NULL', TRUE);
             if ($notice) {
@@ -643,12 +643,9 @@ class Defender {
                 } else {
                     addNotice('danger', $notice);
                 }
-            }
-            //addNotice('danger', '<strong>'.fusion_get_locale('error_request', LOCALE.LOCALESET.'defender.php').'</strong>');
-            if (self::$debug) {
-                debug_print_backtrace();
                 define('STOP_REDIRECT', TRUE);
             }
+            //addNotice('danger', '<strong>'.fusion_get_locale('error_request', LOCALE.LOCALESET.'defender.php').'</strong>');
         }
     }
 

@@ -19,11 +19,10 @@
 namespace PHPFusion;
 
 use Exception;
-use PHPFusion\UserFields\Account_Profile;
+use PHPFusion\UserFields\Pages\ProfileInput;
 use PHPFusion\UserFields\Profile_Activity;
 use PHPFusion\UserFields\Profile_Groups;
 use PHPFusion\UserFields\Public_Profile;
-use ReflectionException;
 
 /**
  * Class UserFields
@@ -43,7 +42,6 @@ class UserFields extends UserFieldsQuantum {
     public $inline_field = TRUE;
     public $show_admin_options = FALSE;
     public $show_admin_password = TRUE;
-    public $show_avatar_input = TRUE;
     public $skip_password = FALSE;
     public $registration = FALSE;
     public $user_data = [
@@ -84,11 +82,6 @@ class UserFields extends UserFieldsQuantum {
     
     public $options = [];
     
-    private $default_options = [
-        'btn_post_class' => 'btn-primary spacer-sm',
-        'btn_class'      => 'btn btn-primary',
-    ];
-    
     private static $instance = NULL;
     
     private $settings = [];
@@ -107,6 +100,10 @@ class UserFields extends UserFieldsQuantum {
         return self::$instance;
     }
     
+    /**
+     * UserFields constructor.
+     * Note: leave constructor blank
+     */
     public function __construct() {
         $this->aidlink = get( 'aid' ) && iADMIN && checkrights( 'M' ) ? fusion_get_aidlink() : '';
     }
@@ -118,7 +115,7 @@ class UserFields extends UserFieldsQuantum {
      *
      * @return bool
      */
-    public static function check_user_field( $field_name ) {
+    public function checkInstalledFields( $field_name ) {
         static $list;
         $result = dbquery( "SELECT field_name FROM ".DB_USER_FIELDS );
         if ( dbrows( $result ) > 0 ) {
@@ -126,14 +123,7 @@ class UserFields extends UserFieldsQuantum {
                 $list[] = $data['field_name'];
             }
         }
-        
         return in_array( $field_name, $list ) ? TRUE : FALSE;
-    }
-    
-    /**
-     * Deprecated FUNCTION
-     */
-    public function get_user_field_cats() {
     }
     
     /**
@@ -170,11 +160,11 @@ class UserFields extends UserFieldsQuantum {
     }
     
     /**
-     * Edit Profile Sections
+     * Edit profile view sections
      *
      * @return array
      */
-    private function getInputPages() {
+    public function getInputPages() {
         if ( empty( self::$pages ) ) {
             $_ref = get( 'ref' );
             $profile_page = [
@@ -190,12 +180,23 @@ class UserFields extends UserFieldsQuantum {
             }
             self::$pages = $profile_page;
         }
-    
+        
         return (array)self::$pages;
     }
     
     /**
-     * Parse all profile view pages
+     * Current page - pu_profile , pu_security, pu_prefs etc. this is for edit profile only.
+     *
+     * @return mixed|string
+     */
+    public function getCurrentInputPage() {
+        $all_pages = $this->getInputPages();
+        $refs = get( 'ref' );
+        return $refs && isset( $all_pages[ $refs ] ) ? $refs : 'pu_profile';
+    }
+    
+    /**
+     * Public profile view sections
      *
      * @return array
      */
@@ -227,228 +228,35 @@ class UserFields extends UserFieldsQuantum {
                                 'class' => $this->current_output_page == 'groups' ? $active_class : ""
                 ]
             ];
-        
+    
             if ( !empty( self::$output_page ) ) {
                 $output_pages_keys = array_keys( self::$output_page );
                 foreach ( $output_pages_keys as $key ) {
                     self::$output_page[ $key ]['link'] = BASEDIR.'profile.php?lookup='.$this->profile_id.'&amp;profile_page='.$key;
                 }
-            
+        
                 $ppCache = array_merge( $ppCache, self::$output_page );
             }
-        
+    
             $this->current_page = isset( $ppCache[ $this->current_output_page ] ) ? $ppCache[ $this->current_output_page ]['id'] : "profile";
         }
     
         return (array)$ppCache;
     }
     
+    /**
+     * @return bool
+     */
     public function userModeratorAccess() {
         return ( checkrights( 'M' ) && fusion_get_userdata( 'user_level' ) <= USER_LEVEL_ADMIN && $this->profile_id != '1' || iSUPERADMIN ) ? TRUE : FALSE;
     }
     
+    /**
+     * @return bool
+     */
     public function groupModeratorAccess() {
         return ( checkrights( 'UG' ) && fusion_get_userdata( 'user_level' ) <= USER_LEVEL_ADMIN && $this->profile_id != '1' || iSUPERADMIN ) ? TRUE : FALSE;
     }
-    
-    /**
-     * Current page - pu_profile , pu_security, pu_prefs etc. this is for edit profile only.
-     *
-     * @return mixed|string
-     */
-    public function getEditCurrentPage() {
-        $all_pages = $this->getInputPages();
-        $refs = get( 'ref' );
-        return $refs && isset( $all_pages[ $refs ] ) ? $refs : 'pu_profile';
-    }
-    
-    /**
-     * Input data for Edit Profile
-     *
-     * @return array
-     * @throws Exception
-     */
-    private function getInputInfo() {
-        $this->method = 'input';
-        $locale = fusion_get_locale();
-        // user id
-        $_lookup = get( 'lookup' );
-        $user_id = isset( $_lookup ) && isnum( $_lookup ) ? $_lookup : fusion_get_userdata( 'user_id' );
-        $section = NULL;
-        if ( $this->registration ) {
-            $user_id = 0;
-        }
-    
-        $this->info = [
-            'title'                => 'Edit Profile',
-            'sitename'             => fusion_get_settings( 'sitename' ),
-            'pages'                => $this->getInputPages(),
-            'user_id'              => form_hidden( 'user_id', '', $user_id ),
-            'name'                 => $this->user_data['user_name'],
-            'user_name'            => '',
-            'joined_date'          => showdate( 'longdate', $this->user_data['user_joined'] ),
-            'email'                => $this->user_data['user_email'],
-            'user_password'        => '',
-            'user_admin_password'  => '',
-            'user_email'           => '',
-            'user_hide_email'      => '',
-            'user_avatar'          => '',
-            'user_reputation'      => '',
-            'validate'             => '',
-            'terms'                => '',
-            'user_close_message'   => '',
-            'custom_page'          => FALSE,
-            'user_password_verify' => ( iADMIN && checkrights( 'M' ) ) ? '' : form_text( 'user_password_verify', $locale['u135a'], '',
-                [
-                    'type'             => 'password',
-                    'autocomplete_off' => 1,
-                    'inline'           => TRUE,
-                    'max_length'       => 64,
-                    'error_text'       => $locale['u133']
-                ]
-            )
-        ];
-        $this->info['current_page'] = $this->getEditCurrentPage();
-        $this->options += $this->default_options;
-    
-        if ( $this->registration ) {
-            // registration
-            // bound in page 1 only.
-            $class = new Public_Profile( $this );
-            
-            // Can remove all these, as we do DI approach
-            $class->user_data = $this->user_data;
-            $class->post_name = $this->post_name;
-            $class->options = $this->options;
-            $class->user_name_change = TRUE;
-            $class->registration = $this->registration;
-            $class->is_admin_panel = $this->is_admin_panel;
-            $class->display_validation = $this->display_validation;
-            $class->display_terms = $this->display_terms;
-            $class->plugin_folder = $this->plugin_folder;
-            $class->plugin_locale_folder = $this->plugin_locale_folder;
-            $class->inline_field = $this->inline_field;
-            $this->info = array_merge( $this->info, $class->inputInfo() );
-            
-            // Edit Profile Fields
-            $class = new Account_Profile();
-            $class->user_data = $this->user_data;
-            $class->options = $this->options;
-            $class->is_admin_panel = $this->is_admin_panel;
-            $class->registration = $this->registration;
-            $class->post_name = $this->post_name;
-            $class->plugin_folder = $this->plugin_folder;
-            $class->user_name_change = TRUE;
-            $class->inline_field = $this->inline_field;
-        
-            $this->info = array_merge( $this->info, $class->get_info() );
-            
-        } else {
-    
-            $this->editProfileInfo();
-        }
-    
-        $this->info['register'] = $this->registration;
-        $this->info['openform'] = openform( $this->form_name, 'post', FUSION_REQUEST, [ 'enctype' => ( $this->show_avatar_input ? TRUE : FALSE ) ] );
-        $this->info['closeform'] = closeform();
-        $this->info['button'] = $this->renderButton();
-    
-    
-        return (array)$this->info;
-    }
-    
-    // The required public members $info output
-    private function editProfileInfo() {
-        $settings = fusion_get_settings();
-        $locale = fusion_get_locale();
-    
-        // Notice to tell that there are email pending for verification.
-        if ( $settings['email_verification'] ) {
-            $result = dbquery( "SELECT user_email FROM ".DB_EMAIL_VERIFY." WHERE user_id=:selfid", [
-                ':selfid' => fusion_get_userdata( 'user_id' )
-            ] );
-            if ( dbrows( $result ) ) {
-                $data = dbarray( $result );
-                addNotice( 'info', sprintf( $locale['u200'], $data['user_email'] )."\n<br />\n".$locale['u201'] );
-            }
-        }
-    
-        // info output
-        switch ( $this->info['current_page'] ) {
-            default:
-                if ( isset( $this->info['pages'][ $this->info['current_page'] ]['file'] ) && is_file( $this->info['pages'][ $this->info['current_page'] ]['file'] ) ) {
-                    $this->info['custom_page'] = TRUE;
-                    $this->info['title'] = $this->info['pages'][ $this->info['current_page'] ]['title'];
-                    $this->info['page_content'] = 'There are no page content yet.';
-                    $user_fields = '';
-                    $user_fields_meta = '';
-                    $user_fields_section = [];
-                    $user_fields_title = '';
-                    //$default_section = 'default';
-        
-                    include $this->info['pages'][ $this->info['current_page'] ]['file'];
-    
-                    //if ( !empty( $user_fields_section ) ) {
-                    //    // what is the default section?
-                    //    $section = get( 'section' ) ?: $default_section;
-                    //}
-        
-                    if ( $user_fields ) {
-                        // Title info
-                        if ( $user_fields_title ) {
-                            $this->info['title'] = $user_fields_title;
-                        }
-                        // Meta info
-                        if ( $user_fields_meta ) {
-                            add_to_meta( 'keywords', $user_fields_meta );
-                        }
-                        // Navigation
-                        if ( !empty( $user_fields_section ) ) {
-                            $this->info['section'] = $user_fields_section;
-                        }
-                        // Additional navigation
-                        if ( !empty( $user_fields_nav ) ) {
-                            $this->info['section_nav'] = $user_fields_nav;
-                        }
-                        // Page content info
-                        $this->info['page_content'] = $user_fields;
-                    }
-                    // Custom title
-                    add_to_title( $locale['global_201'].$this->info['title'] );
-                } else {
-                    redirect( BASEDIR.'edit_profile.php' );
-                }
-                break;
-        
-            case 'pu_profile':
-    
-                $class = new Public_Profile( $this );
-                $class->user_data = $this->user_data;
-                $class->post_name = $this->post_name;
-                $class->options = $this->options;
-                $class->registration = $this->registration;
-                $class->display_validation = $this->display_validation;
-                $class->display_terms = $this->display_terms;
-                $class->inline_field = $this->inline_field;
-                $this->info['user_hash'] = form_hidden( 'user_hash', '', $this->user_data['user_password'] );
-                $this->info = array_merge( $this->info, $class->inputInfo() );
-                break;
-        
-            case 'se_profile':
-    
-                $class = new Account_Profile();
-                $class->user_data = $this->user_data;
-                $class->options = $this->options;
-                $class->registration = $this->registration;
-                $class->post_name = $this->post_name;
-                $class->user_name_change = $this->user_name_change;
-                $class->show_admin_password = ( iADMIN ? TRUE : FALSE );
-                $class->inline_field = $this->inline_field;
-                $this->info = array_merge( $this->info, $class->get_info() );
-                break;
-        }
-    }
-    
     
     /**
      * Show Registration Form
@@ -458,39 +266,52 @@ class UserFields extends UserFieldsQuantum {
      * @throws Exception
      */
     public function registration() {
-        $this->getInputInfo();
+        $this->setInputInfo();
         return display_register_form( $this->info );
     }
-    
+
     /**
-     * Show Edit Profile
-     * Edit Profile    user-profile-form
+     * CHECK 1 - OK
+     * Edit Profile Info
      *
-     * @throws ReflectionException
+     * @return array
+     * @throws \ReflectionException
      */
-    public function editProfile() {
-        $this->getInputInfo();
-        return display_profile_form( $this->info );
-    }
-    
-    /**
-     * Display button post button
-     *
-     * @return string
-     */
-    private function renderButton() {
-        $disabled = $this->display_terms ? TRUE : FALSE;
-        $this->options += $this->default_options;
-        $html = ( !$this->skip_password ) ? form_hidden( 'user_hash', '', $this->user_data['user_password'] ) : '';
-        $html .= form_button( $this->post_name, $this->post_value, $this->post_value,
-            [
-                "deactivate" => $disabled,
-                "class"      => $this->options['btn_post_class']
-            ] );
+    public function editProfileInfo() {
         
-        return (string)$html;
+        if ( !iMEMBER ) {
+            redirect( BASEDIR.fusion_get_settings( 'opening_page' ) );
+        }
+        
+        $userProfile = new ProfileInput( $this );
+        // Preconfigured behavior
+        $userProfile->form_name = 'editProfileFrm';
+        $userProfile->post_name = 'update_profile';
+        $userProfile->post_value = fusion_get_locale( 'u105' );
+        $userProfile->user_data = fusion_get_userdata();
+        $userProfile->user_name_change = fusion_get_settings( 'userNameChange' );
+        $userProfile->skip_password = TRUE;
+        $userProfile->registration = FALSE;
+        $userProfile->display_terms = FALSE;
+        $userProfile->display_validation = FALSE;
+        $userProfile->inline_field = TRUE;
+        // // The input class
+        $userInput = new UserFieldsInput();
+        $userInput->post_name = 'update_profile';
+        $userInput->registration = FALSE;
+        $userInput->skip_password = TRUE;
+        $userInput->user_name_change = fusion_get_settings( 'userNameChange' );
+        $userInput->verifyNewEmail = TRUE;
+        $userInput->user_data = fusion_get_userdata();
+        $userInput->saveUpdate();
+        
+        return $userProfile->getInfo();
+        
     }
     
+    /**
+     * @return array
+     */
     private function getCurrentUserData() {
         static $userdata = [];
         
@@ -528,9 +349,12 @@ class UserFields extends UserFieldsQuantum {
         }
         
         return (array)$userdata;
-        
+    
     }
     
+    /**
+     * @return string
+     */
     private function showPublicProfile() {
         // Public Profile Page
         $public_profile = new Public_Profile( $this );
@@ -573,12 +397,12 @@ class UserFields extends UserFieldsQuantum {
             default:
                 // find API added pages
                 if ( !empty( self::$output_page[ $this->current_page ]['file'] ) ) {
-        
+    
                     $this->loadPage( self::$output_page[ $this->current_page ]['file'] );
-        
+    
                     $output = fusion_filter_hook( 'fusion_profile_page', $this );
                     $output = implode( '', $output );
-                    
+    
                 }
     
                 return !empty( $output ) ? $output : "This page is currently unavailable.";
@@ -600,6 +424,9 @@ class UserFields extends UserFieldsQuantum {
     
     private $total_groups = 0;
     
+    /**
+     * Lookup View Page
+     */
     public function display_profile_output() {
         
         require_once THEMES."templates/global/profile.php";
@@ -611,17 +438,13 @@ class UserFields extends UserFieldsQuantum {
         }
         
         $locale = fusion_get_locale();
-        
         $aidlink = fusion_get_aidlink();
-        
         $this->settings = fusion_get_settings();
         
         $this->profile_id = get( "lookup", FILTER_VALIDATE_INT );
-        
         OpenGraph::ogUserProfile( $this->profile_id );
         
         $this->user_data = $this->getCurrentUserData();
-        
         $this->total_groups = UserGroups::get_userGroupCount( $this->user_data['user_groups'] );
         
         // info
@@ -630,7 +453,6 @@ class UserFields extends UserFieldsQuantum {
                 'profile_pages'   => $this->getOutputPages(),
                 'profile_content' => $this->getProfileContent(),
                 'total_groups'    => $this->total_groups,
-    
             ] + $this->user_data;
         
         // This is for profile.
