@@ -181,16 +181,6 @@ class UserFields extends UserFieldsQuantum {
                 'pu_profile' => [ 'title' => 'Public Profile' ],
                 'se_profile' => [ 'title' => 'Account Information' ]
             ];
-            // if ($this->is_admin_panel) {
-            //     $profile_page = [
-            //         'pu_profile' => [
-            //             'title' => 'Profile'
-            //         ],
-            //         'pu_fields' => [
-            //             'title' => 'User Fields'
-            //         ]
-            //     ];
-            // }
             $profile_page = array_merge( $profile_page, self::$additional_pages );
             $count = 0;
             foreach ( $profile_page as $key => $arr ) {
