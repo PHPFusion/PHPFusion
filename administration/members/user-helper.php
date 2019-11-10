@@ -103,7 +103,8 @@ class User_Helper {
         $user_firstname = $this->class->user_data['user_firstname'];
         $user_lastname = $this->class->user_data['user_lastname'];
         $user_language = $this->class->user_data['user_language'];
-        $userCode = hash_hmac("sha1", PasswordAuth::getNewPassword(), $user_email);
+        $passAuth = new PasswordAuth();
+        $userCode = hash_hmac( "sha1", $passAuth->getNewPassword(), $user_email );
         $user_status = fusion_get_settings('admin_activation') ? $this->class::VERIFY_USER_REVIEW : $this->class::VERIFY_USER_EMAIL;
 
         $activationUrl = $settings['siteurl']."register.php?email=".$user_email."&code=".$userCode;
@@ -126,7 +127,7 @@ class User_Helper {
         }
         if (fusion_safe()) {
             $userInfo = base64_encode(serialize($this->class->user_data));
-            dbquery("INSERT INTO ".DB_NEW_USERS." (user_code, user_name, user_firstname, user_lastname, user_email, user_datestamp, user_language, user_status, user_info) VALUES 
+            dbquery( "INSERT INTO ".DB_NEW_USERS." (user_code, user_name, user_firstname, user_lastname, user_email, user_datestamp, user_language, user_status, user_info) VALUES
             ('".$userCode."', '".$user_name."', '".$user_firstname."', '".$user_lastname."', '".$user_email."', '".TIME."', '".$user_language."', '".$user_status."', '".$userInfo."')");
         }
     }
