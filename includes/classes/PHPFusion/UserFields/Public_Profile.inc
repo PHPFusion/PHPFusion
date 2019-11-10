@@ -176,12 +176,12 @@ class Public_Profile extends UserFieldsQuantum {
      * @return array
      */
     public function outputInfo() {
-
+    
         $info = [
                 'section'    => $this->getInfo(),
-                'section_id' => $this->section_id,
             ] + $this->getUserFields();
-
+    
+    
         $current_section = [['id' => 1]];
         if (!empty($info['section'])) {
             $current_section = current($info['section']);
@@ -372,8 +372,6 @@ class Public_Profile extends UserFieldsQuantum {
         $category = [];
         $item = [];
 
-        $this->callback_data = $this->user_data;
-
         switch ($this->method) {
             case 'input':
                 $info['user_field'][0]['fields']['user_id'] = form_hidden('user_id', '', $this->user_data['user_id']);
@@ -402,7 +400,13 @@ class Public_Profile extends UserFieldsQuantum {
         ".($uf_cond ? "WHERE $uf_cond" : '')." ORDER BY c.field_cat_order, f.field_order";
 
         $result = dbquery($uf_query, $uf_bind);
+    
         if (dbrows($result)) {
+        
+            $this->loadUserFields();
+        
+            $this->cacheModulePlugins();
+            
             while ($data = dbarray($result)) {
                 if ($data['field_cat_id']) {
                     $cat_name = fusion_parse_locale( $data['field_cat_name'] );
@@ -410,11 +414,17 @@ class Public_Profile extends UserFieldsQuantum {
                     $fields['user_field_extended'][$data['field_cat_id']] ['title'] = $cat_name;
                 }
                 if ($data['field_cat']) {
+    
                     $item[$data['field_cat']][$data['field_id']] = $data;
+    
                     $field_config = ['inline'=>$this->inline_field];
+    
                     $field_config += (!empty( $data['field_config'] ) ? $data['field_config'] : []);
+    
                     $item_output = $this->displayFields( $data, $this->user_data, $this->method, $field_config );
+    
                     $item[$data['field_cat']][$data['field_id']]['field_output'] = $item_output;
+    
                     if (!empty($item_output)) {
                         $fields['user_field_extended'][$data['field_cat_id']]['fields'][$data['field_name']] = $item_output;
                     }

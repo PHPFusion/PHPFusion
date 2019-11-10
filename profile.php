@@ -15,23 +15,19 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once __DIR__."/maincore.php";
-require_once THEMES."templates/header.php";
-$locale = fusion_get_locale("", LOCALE.LOCALESET."user_fields.php");
-$settings = fusion_get_settings();
-$profile_id = get("lookup", FILTER_VALIDATE_INT);
-$group_id = get("group_id", FILTER_VALIDATE_INT);
-if ($profile_id) {
+require_once __DIR__.'/maincore.php';
+require_once THEMES.'templates/header.php';
+$locale = fusion_get_locale( '', [ LOCALE.LOCALESET.'user_fields.php' ] );
+require_once THEMES."templates/global/profile.php";
+
+if ( $profile_id = get( 'lookup', FILTER_VALIDATE_INT ) ) {
     /*
      * Show user profile
      */
-    require_once THEMES."templates/global/profile.php";
-    $userFields = new PHPFusion\UserFields();
-    $userFields->show_admin_options = TRUE;
-    $userFields->method = 'display';
-    $userFields->display_profile_output();
-
-} else if ($group_id) {
+    $userFields = \PHPFusion\UserFields::getInstance();
+    echo display_profile( $userFields->profileInfo( $profile_id ) );
+    
+} else if ( $group_id = get( 'group_id', FILTER_VALIDATE_INT ) ) {
     /*
      * Show group
      */

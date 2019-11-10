@@ -12,7 +12,14 @@ class Profile_Groups {
         $this->profile_id = $profile_id;
         $this->user_data = $user_data;
     }
-
+    
+    /**
+     * @return bool
+     */
+    private function groupModeratorAccess() {
+        return ( checkrights( "UG" ) && fusion_get_userdata( "user_level" ) <= USER_LEVEL_ADMIN && $this->profile_id != '1' || iSUPERADMIN ) ? TRUE : FALSE;
+    }
+    
     public function showGroupProfile() {
         $group_admin = [];
         $aidlink = fusion_get_aidlink();
@@ -74,8 +81,6 @@ class Profile_Groups {
 
         return $info;
     }
-
-    private function groupModeratorAccess() {
-        return (checkrights("UG") && fusion_get_userdata("user_level") <= USER_LEVEL_ADMIN && $this->profile_id != '1' || iSUPERADMIN) ? TRUE : FALSE;
-    }
+    
+    
 }

@@ -118,10 +118,10 @@ class Profile_Activity {
         $tpl->set_text('
         <ul class="nav nav-pills" role="list">
         {tab.{
-          <li role="presentation"{%active%}><a href="{%link%}" title="{%title%}">{%title%}</a></li>  
+          <li role="presentation"{%active%}><a href="{%link%}" title="{%title%}">{%title%}</a></li>
         }}
         </ul>
-        <div class="spacer-md">          
+        <div class="spacer-md">
         {activity_item.{
             <div class="clearfix" style="border-bottom:1px solid #ddd; padding:10px 15px;">
             <div class="pull-left m-r-15" style="width:80px; text-align: center">{%avatar%}</div>
@@ -134,7 +134,7 @@ class Profile_Activity {
         </div>
         {page_nav.{
             <div class="text-right spacer-xs">{%content%}</div>
-        }}     
+        }}
         ');
 
         $section = get('section');

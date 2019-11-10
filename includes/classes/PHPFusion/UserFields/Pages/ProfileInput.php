@@ -45,7 +45,7 @@ class ProfileInput {
      */
     private function setInfo() {
         $this->method = 'input';
-        $locale = fusion_get_locale();
+    
         // user id
         $this->info = [
             'register'             => $this->registration,
