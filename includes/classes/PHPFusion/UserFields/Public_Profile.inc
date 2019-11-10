@@ -42,30 +42,29 @@ class Public_Profile extends UserFieldsQuantum {
      *
      * @return array|null
      */
-    public function get_info( $id = 0 ) {
+    public function getInfo( $id = 0 ) {
         static $section = [];
-        $aid = get('aid') ? fusion_get_aidlink() : '';
         if (empty($section)) {
             $result = dbquery( "SELECT * FROM ".DB_USER_FIELD_CATS." WHERE field_parent=:pid ORDER BY field_cat_order ASC", [ ':pid' => 0 ] );
             if (dbrows($result)) {
-                $i = 0;
+                $aid = ( get( 'aid' ) ? fusion_get_aidlink() : '' );
+                $counter = 0;
                 while ($data = dbarray($result)) {
     
+                    $link = clean_request( $aid.'&section='.$data['field_cat_id'], [ 'section' ], FALSE );
                     if ($this->profile_id) {
                         $link = clean_request($aid.'&section='.$data['field_cat_id'].'&lookup='.$this->profile_id, ['section'], FALSE);
-                    } else {
-                        $link = clean_request($aid.'&section='.$data['field_cat_id'], ['section'], FALSE);
                     }
     
                     $section[$data['field_cat_id']] = [
                         'id'     => $data['field_cat_id'],
-                        'active' => ( $this->section == $data['field_cat_id'] ) ? 1 : ( !$this->section && $i == 0 ? 1 : 0 ),
+                        'active' => ( $this->section == $data['field_cat_id'] ) ? 1 : ( !$this->section && $counter == 0 ? 1 : 0 ),
                         'link'   => $link,
                         'name'   => ucwords( fusion_parse_locale( $data['field_cat_name'] ) ),
                         'icon'   => $data['field_cat_class']
                     ];
     
-                    $i++;
+                    $counter++;
                 }
             }
         }
@@ -83,7 +82,7 @@ class Public_Profile extends UserFieldsQuantum {
 
         $locale = fusion_get_locale();
         $info = [
-            'section'    => $this->get_info(),
+            'section'    => $this->getInfo(),
             'section_id' => $this->section,
         ];
     
@@ -181,7 +180,7 @@ class Public_Profile extends UserFieldsQuantum {
     public function outputInfo() {
 
         $info = [
-                'section'    => $this->get_info(),
+                'section'    => $this->getInfo(),
                 'section_id' => $this->section_id,
             ] + $this->getUserFields();
 
@@ -386,7 +385,7 @@ class Public_Profile extends UserFieldsQuantum {
                 break;
         }
     
-        $field_cats = $this->get_info();
+        $field_cats = $this->getInfo();
         $section_id = $this->get_SectionId();
 
         $index_page_id = isset($field_cats[$section_id]['id']) ? $field_cats[$section_id]['id'] : 1;
