@@ -15,7 +15,6 @@ class Public_Profile extends UserFieldsQuantum {
     public $registration = FALSE;
     public $display_validation = FALSE;
     public $display_terms = FALSE;
-    public $options = [];
     public $user_name_change = FALSE;
     public $is_admin_panel = FALSE;
     private $locale;

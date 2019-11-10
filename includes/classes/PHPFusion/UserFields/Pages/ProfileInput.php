@@ -124,7 +124,6 @@ class ProfileInput {
         $class->user_data = $this->user_data;
         $class->form_name = $this->form_name;
         $class->post_name = $this->post_name;
-        $class->options = $this->options;
         $class->user_name_change = TRUE;
         $class->registration = $this->registration;
         $class->is_admin_panel = $this->is_admin_panel;
@@ -137,7 +136,6 @@ class ProfileInput {
         // Edit Profile Fields
         $class = new Account_Profile();
         $class->user_data = $this->user_data;
-        $class->options = $this->options;
         $class->is_admin_panel = $this->is_admin_panel;
         $class->registration = $this->registration;
         $class->post_name = $this->post_name;
