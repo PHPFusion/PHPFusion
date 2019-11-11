@@ -1,28 +1,23 @@
-<div class="profile-activity">
-    <div class="spacer-sm">
-        <nav class="navbar navbar-default">
-            <ul class="nav navbar-nav primary">
-                <li><a>Personal</a></li>
-                <li><a>Friends</a></li>
-                <li><a>Groups</a></li>
-                <li><a>Tracked</a></li>
-                <li><a>Mentions</a></li>
-            </ul>
-            <ul class="nav navbar-nav secondary navbar-right">
-                <li>dropdown input</li>
-            </ul>
-        </nav>
-        <div class="activity">
-            <div class="pull-left m-r-15">avatar</div>
-            <div class="overflow-hide">
-                <div class="title">
-                    <h5 class="display-inline">UserProfile posted an update in the forum</h5>
-                    <small>5 min ago</small>
-                </div>
-                <p>Text</p>
-            </div>
-        </div>
-
+<div class="acitivty-nav">
+	<ul class="nav nav-pills" role="list">
+		{tab.{
+		<li role="presentation" {%active%}><a href="{%link%}" title="{%title%}">{%title%}</a></li>
+		}}
+	</ul>
+</div>
+<div class="activity">
+	<div class="spacer-md">
+		{activity_item.{
+		<div class="list-group-item clearfix">
+			<div class="pull-left m-r-15" style="width:80px; text-align: center">{%avatar%}</div>
+			<div class="overflow-hide">{%title%}<br/><span>{%content%}</span></div>
+		</div>
+		}}
+		{%no_item%}
+	</div>
+	{page_nav.{
+	<div class="activity-nav">
+		<div class="text-right spacer-xs">{%content%}</div>
     </div>
-
+	}}
 </div>

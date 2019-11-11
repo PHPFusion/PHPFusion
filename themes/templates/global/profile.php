@@ -619,14 +619,24 @@ if (!function_exists('display_profile_groups')) {
 
 if (!function_exists('display_profile_activity')) {
     function display_profile_activity($info ) {
-        $tpl = Template::getInstance( "user-groups");
-        $tpl->set_template(__DIR__."/tpl/profile/profile-activity.html");
-        $tpl->set_tag("dropdown_filter", form_select("profile_activity_display", "", "", [
-                "options" => [
-                    0 => "No Filter",
-
-                ]
-        ]));
+        $tpl = Template::getInstance( 'activity-profile' );
+        $tpl->set_template( THEMES.'templates/global/tpl/profile/profile-activity.html' );
+        foreach ( $info['pages'] as $key => $page_info ) {
+            $page_info['active'] = $info['section'] == $key ? ' class="active"' : '';
+            $tpl->set_block( 'tab', $page_info );
+        }
+        $tpl->set_tag( 'no_item', 'There are no activity found.' );
+        if ( !empty( $info['items'] ) ) {
+            $tpl->set_tag( 'no_item', '' );
+            foreach ( $info['items'] as $feed_id => $feed_info ) {
+                $tpl->set_block( 'activity_item', $feed_info );
+            }
+        }
+        if ( $info['pagenav'] ) {
+            $tpl->set_block( 'page_nav', [ 'content' => $info['pagenav'] ] );
+        }
+    
         return $tpl->get_output();
+    
     }
 }

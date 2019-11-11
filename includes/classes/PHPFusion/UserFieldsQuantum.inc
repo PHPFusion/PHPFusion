@@ -378,45 +378,39 @@ class UserFieldsQuantum extends QuantumActions {
         
         $param = [];
         $cond = '';
-        
-        if ( $this->is_admin_panel === FALSE ) {
-    
-            if ( $folder === 'public' ) {
-                // Public conditions
-                $section = get( 'section', FILTER_VALIDATE_INT );
-                if ( !$section || !isset( $this->page[ $section ] ) ) {
-                    $section = 1;
-                }
-                $param = [
-                    ':index00' => (int)$section,
-                    ':index01' => (int)$section,
-                ];
-                $cond = "WHERE (cat.field_cat_id=:index00 OR root.field_cat_id=:index01)";
+        if ( $folder === 'public' ) {
+            // Public conditions
+            $section = get( 'section', FILTER_VALIDATE_INT );
+            if ( !$section || !isset( $this->page[ $section ] ) ) {
+                $section = 1;
             }
-            
-            // for registration
-            if ( $this->registration === TRUE ) {
-                $cond .= ' AND field.field_registration=:fieldreg';
-                $param += [ ':fieldreg' => 1 ];
-            }
-            
-            switch ( $folder ) {
-                default:
-                case 'public':
-                    $cond .= ' AND field_section=:type00';
-                    $param += [ ':type00' => 'public' ];
-                    break;
-                case 'security':
-                    $cond .= ' WHERE field_section=:type00';
-                    $param += [ ':type00' => 'security' ];
-                    break;
-                case 'preferences':
-                    $cond .= ' WHERE field_section=:type00';
-                    $param += [ ':type00' => 'preferences' ];
-                    break;
-            }
+            $param = [
+                ':index00' => (int)$section,
+                ':index01' => (int)$section,
+            ];
+            $cond = "WHERE (cat.field_cat_id=:index00 OR root.field_cat_id=:index01)";
         }
-        
+        // for registration
+        if ( $this->registration === TRUE ) {
+            $cond .= ' AND field.field_registration=:fieldreg';
+            $param += [ ':fieldreg' => 1 ];
+        }
+        switch ( $folder ) {
+            default:
+            case 'public':
+                $cond .= ( defined( 'ADMIN_PANEL' ) ? ' OR' : ' AND' ).' field_section=:type00';
+                $param += [ ':type00' => 'public' ];
+                break;
+            case 'security':
+                $cond .= ' AND field_section=:type00';
+                $param += [ ':type00' => 'security' ];
+                break;
+            case 'preferences':
+                $cond .= ' WHERE field_section=:type00';
+                $param += [ ':type00' => 'preferences' ];
+                break;
+        }
+    
         $sql = "SELECT field.*, cat.field_cat_id, cat.field_cat_name, cat.field_parent, cat.field_cat_class, root.field_cat_id 'page_id', root.field_cat_name 'page_name', root.field_cat_db, root.field_cat_index
         FROM ".DB_USER_FIELDS." field
         LEFT JOIN ".DB_USER_FIELD_CATS." cat ON (cat.field_cat_id = field.field_cat)
@@ -424,15 +418,12 @@ class UserFieldsQuantum extends QuantumActions {
         $cond
         ORDER BY root.field_cat_order ASC, cat.field_cat_order ASC, field.field_order ASC
         ";
-        
+
         $result = dbquery( $sql, $param );
-        
+    
         if ( $this->field_max_rows = dbrows( $result ) ) {
-            
             while ( $data = dbarray( $result ) ) {
-                
                 $this->fields[ $data['field_cat'] ][ $data['field_id'] ] = $data;
-                
             }
         }
     }
@@ -532,13 +523,11 @@ class UserFieldsQuantum extends QuantumActions {
             
             // Tab
             $tab_active = tab_active( $tab_title, ( $active ? $active : $default_active ) );
-            
             $html .= opentab( $tab_title, $tab_active, 'uftab', FALSE, '', '', [], TRUE );
             
             foreach ( $this->page[0] as $page_id => $page_details ) {
                 
                 $html .= opentabbody( $tab_title['title'][ $page_id ], $tab_title['id'][ $page_id ], $tab_active );
-                
                 // load all categories here.
                 //if ( $this->debug ) {
                 //    $html .= "<div class='m-t-20 text-dark'>\n";
@@ -564,14 +553,11 @@ class UserFieldsQuantum extends QuantumActions {
                     $html .= "<div class='clearfix'>\n";
                     $i = 0;
                     $counter = count( $this->page[ $page_id ] ) - 1;
+    
                     foreach ( $this->page[ $page_id ] as $cat_id => $field_cat ) {
                         // field category information
+                        //print_P($field_cat);
                         $html .= "<div class='list-group'>\n";
-    
-                        //if ( $this->debug ) {
-                        //    print_p( $field_cat );
-                        //}
-                        
                         $html .= "<div class='list-group-item'>\n";
                         $html .= "<h4 class='display-block m-0'>".fusion_parse_locale( $field_cat['field_cat_name'] )."</h4>";
                         $html .= "<div class='display-block'>\n";
@@ -593,18 +579,18 @@ class UserFieldsQuantum extends QuantumActions {
                         // print all fields.
                         if ( isset( $this->fields[ $cat_id ] ) ) {
                             $k = 0;
+    
                             $item_counter = count( $this->fields[ $cat_id ] ) - 1;
+    
                             foreach ( $this->fields[ $cat_id ] as $arr => $field_data ) {
                                 //print_P($field_data);
                                 //Fields - Move down/Move Up - Edit - Delete
-                                $item_id = $current_module_id ?: 0;
-                                if ( !$item_id ) {
-                                    $item_id = $current_field_id ?: 0;
-                                }
-    
+                                //$item_id = $current_module_id ?: 0;
+                                //if ( !$item_id ) {
+                                //    $item_id = $current_field_id ?: 0;
+                                //}
+                                
                                 $options = [ 'inline' => TRUE, 'show_title' => 1, 'hide_value' => 1 ];
-    
-    
                                 $html .= "<div class='row'>\n<div class='col-xs-12 col-sm-9'>\n";
                                 $html .= $this->displayFields( $field_data, $this->callback_data, $this->method, $options );
                                 $html .= "</div><div class='col-xs-12 col-sm-3'>\n";

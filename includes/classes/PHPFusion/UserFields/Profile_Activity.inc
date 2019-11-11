@@ -1,8 +1,6 @@
 <?php
 namespace PHPFusion\UserFields;
 
-use PHPFusion\Template;
-
 class Profile_Activity {
 
     private $user_data = [];
@@ -111,58 +109,18 @@ class Profile_Activity {
     public function showActivityProfile() {
 
         $this->getPersonalFeed();
-
-        // Model
-        // Template
-        $tpl = Template::getInstance('activity-profile');
-        $tpl->set_text('
-        <ul class="nav nav-pills" role="list">
-        {tab.{
-          <li role="presentation"{%active%}><a href="{%link%}" title="{%title%}">{%title%}</a></li>
-        }}
-        </ul>
-        <div class="spacer-md">
-        {activity_item.{
-            <div class="clearfix" style="border-bottom:1px solid #ddd; padding:10px 15px;">
-            <div class="pull-left m-r-15" style="width:80px; text-align: center">{%avatar%}</div>
-            <div class="overflow-hide">{%title%}<br/><span class="text-dark">{%content%}</span></div>
-            </div>
-        }}
-        {no_item.{
-            <div class="alert alert-warning">Sorry, there was no activity found.</div>
-        }}
-        </div>
-        {page_nav.{
-            <div class="text-right spacer-xs">{%content%}</div>
-        }}
-        ');
-
-        $section = get('section');
-
-        $section = $section && isset($this->pages[$section]) ? $section : 'personal';
-
-        foreach ($this->pages as $key => $page_info) {
-            $page_info['active'] = $section == $key ? ' class="active"' : '';
-            $tpl->set_block('tab', $page_info);
-        }
-
-        if (!empty($this->info)) {
-            foreach ($this->info as $feed_id => $feed_info) {
-                $tpl->set_block('activity_item', $feed_info);
-            }
-        } else {
-            $tpl->set_block('no_item');
-        }
-
-        if ($this->page_nav) {
-            $tpl->set_block('page_nav', ['content'=>$this->page_nav]);
-        }
-
-        return $tpl->get_output();
-
-
-        //return display_profile_activity($info);
-
+        $info = [
+            'items'   => $this->info,
+            'pages'   => $this->pages,
+            'section' => $this->getActivitySection(),
+            'pagenav' => $this->page_nav,
+        ];
+    
+        return display_profile_activity( $info );
     }
-
+    
+    public function getActivitySection() {
+        $section = get('section');
+        return ( $section && isset( $this->pages[ $section ] ) ? $section : 'personal' );
+    }
 }
