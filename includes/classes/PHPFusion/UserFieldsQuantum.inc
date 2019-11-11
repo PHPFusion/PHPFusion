@@ -548,82 +548,82 @@ class UserFieldsQuantum extends QuantumActions {
                 $html .= "</div>\n";
                 $html .= "</div>\n";
                 $html .= "</div>\n";
-                
-                if ( isset( $this->page[ $page_id ] ) ) {
-                    $html .= "<div class='clearfix'>\n";
-                    $i = 0;
-                    $counter = count( $this->page[ $page_id ] ) - 1;
     
+                $cat_html = "<div class='text-center'><h4>".$this->locale['fields_0102'].fusion_parse_locale( $page_details['field_cat_name'] )."</h4></div>\n";
+                if ( isset( $this->page[ $page_id ] ) ) {
+                    $rowcount = 0;
+                    $counter = count( $this->page[ $page_id ] ) - 1;
+                    $cat_html = "<div class='clearfix'>\n";
                     foreach ( $this->page[ $page_id ] as $cat_id => $field_cat ) {
+                        $move_cat_link = "<span class='text-lighter'>".$this->locale['move_up']."</span> &middot; ";
+                        if ( $rowcount != 0 ) {
+                            $move_cat_link = "<a href='".FUSION_SELF.$aidlink."&amp;action=cmu&amp;cat_id=".$cat_id."&amp;parent_id=".$field_cat['field_parent']."&amp;order=".( $field_cat['field_cat_order'] - 1 )."'>".$this->locale['move_up']."</a> &middot; ";
+                        }
+                        $move_cat_link2 = "<span class='text-lighter'>".$this->locale['move_down']."</span> &middot; ";
+                        if ( $rowcount !== $counter ) {
+                            $move_cat_link2 = "<a href='".FUSION_SELF.$aidlink."&amp;action=cmd&amp;cat_id=".$cat_id."&amp;parent_id=".$field_cat['field_parent']."&amp;order=".( $field_cat['field_cat_order'] + 1 )."'>".$this->locale['move_down']."</a> &middot; ";
+                        }
                         // field category information
                         //print_P($field_cat);
-                        $html .= "<div class='list-group'>\n";
-                        $html .= "<div class='list-group-item'>\n";
-                        $html .= "<h4 class='display-block m-0'>".fusion_parse_locale( $field_cat['field_cat_name'] )."</h4>";
-                        $html .= "<div class='display-block'>\n";
-                        if ( $i != 0 ) {
-                            $html .= "<a href='".FUSION_SELF.$aidlink."&amp;action=cmu&amp;cat_id=".$cat_id."&amp;parent_id=".$field_cat['field_parent']."&amp;order=".( $field_cat['field_cat_order'] - 1 )."'>".$this->locale['move_up']."</a> &middot; ";
-                        } else {
-                            $html .= "<span class='text-lighter'>".$this->locale['move_up']."</span> &middot; ";
-                        }
-                        if ( $i !== $counter ) {
-                            $html .= "<a href='".FUSION_SELF.$aidlink."&amp;action=cmd&amp;cat_id=".$cat_id."&amp;parent_id=".$field_cat['field_parent']."&amp;order=".( $field_cat['field_cat_order'] + 1 )."'>".$this->locale['move_down']."</a> &middot; ";
-                        } else {
-                            $html .= "<span class='text-lighter'>".$this->locale['move_down']."</span> &middot; ";
-                        }
-                        $html .= "<a href='".FUSION_SELF.$aidlink."&amp;action=cat_edit&amp;cat_id=".$cat_id."'>".$this->locale['edit']."</a> &middot; ";
-                        $html .= "<a class='text-danger' href='".FUSION_SELF.$aidlink."&amp;action=cat_delete&amp;cat_id=".$cat_id."'>".$this->locale['delete']."</a>";
-                        $html .= "</div>\n";
-    
-                        $html .= "</div>\n<div class='list-group-item'>\n";
+                        $cat_html .= "<div class='list-group'>\n";
+                        $cat_html .= "<div class='list-group-item'>\n";
+                        $cat_html .= "<h4 class='display-block m-0'>".fusion_parse_locale( $field_cat['field_cat_name'] )."</h4>";
+                        $cat_html .= "<div class='display-block'>\n";
+                        $cat_html .= $move_cat_link.$move_cat_link2;
+                        $cat_html .= "<a href='".FUSION_SELF.$aidlink."&amp;action=cat_edit&amp;cat_id=".$cat_id."'>".$this->locale['edit']."</a> &middot; ";
+                        $cat_html .= "<a class='text-danger' href='".FUSION_SELF.$aidlink."&amp;action=cat_delete&amp;cat_id=".$cat_id."'>".$this->locale['delete']."</a>";
+                        $cat_html .= "</div>\n";
+                        $cat_html .= "</div>\n<div class='list-group-item'>\n";
+                        
                         // print all fields.
+                        $field_html = "There are no fields";
                         if ( isset( $this->fields[ $cat_id ] ) ) {
                             $k = 0;
-    
+                            $field_html = '';
                             $item_counter = count( $this->fields[ $cat_id ] ) - 1;
     
                             foreach ( $this->fields[ $cat_id ] as $arr => $field_data ) {
-                                //print_P($field_data);
+    
+                                $field_output = $this->displayFields( $field_data, $this->callback_data, $this->method, [ 'inline' => TRUE, 'show_title' => 1, 'hide_value' => 1 ] );
+    
+                                $move_link = "<span class='text-lighter'>".$this->locale['move_up']."</span> &middot; ";
+                                if ( $k != 0 ) {
+                                    $move_link = "<a href='".FUSION_SELF.$aidlink."&amp;action=fmu&amp;parent_id=".$field_data['field_cat']."&amp;field_id=".$field_data['field_id']."&amp;order=".( $field_data['field_order'] - 1 )."'>".$this->locale['move_up']."</a> &middot; ";
+                                }
+                                $move_link_2 = "<span class='text-lighter'>".$this->locale['move_down']."</span> &middot; ";
+                                if ( $k !== $item_counter ) {
+                                    $move_link_2 = "<a href='".FUSION_SELF.$aidlink."&amp;action=fmd&amp;parent_id=".$field_data['field_cat']."&amp;field_id=".$field_data['field_id']."&amp;order=".( $field_data['field_order'] + 1 )."'>".$this->locale['move_down']."</a> &middot; ";
+                                }
+                                $edit_link = "<a href='".FUSION_SELF.$aidlink."&amp;action=field_edit&amp;field_id=".$field_data['field_id']."&amp;ref=public'>".$this->locale['edit']."</a> &middot; ";
+                                if ( $field_data['field_type'] == 'file' ) {
+                                    $edit_link = "<a href='".FUSION_SELF.$aidlink."&amp;action=module_edit&amp;module_id=".$field_data['field_id']."&amp;ref=public'>".$this->locale['edit']."</a> &middot; ";
+                                }
+                                
                                 //Fields - Move down/Move Up - Edit - Delete
                                 //$item_id = $current_module_id ?: 0;
                                 //if ( !$item_id ) {
                                 //    $item_id = $current_field_id ?: 0;
                                 //}
-                                
-                                $options = [ 'inline' => TRUE, 'show_title' => 1, 'hide_value' => 1 ];
-                                $html .= "<div class='row'>\n<div class='col-xs-12 col-sm-9'>\n";
-                                $html .= $this->displayFields( $field_data, $this->callback_data, $this->method, $options );
-                                $html .= "</div><div class='col-xs-12 col-sm-3'>\n";
-                                $html .= "<div class='text-right'>\n";
-                                if ( $k != 0 ) {
-                                    $html .= "<a href='".FUSION_SELF.$aidlink."&amp;action=fmu&amp;parent_id=".$field_data['field_cat']."&amp;field_id=".$field_data['field_id']."&amp;order=".( $field_data['field_order'] - 1 )."'>".$this->locale['move_up']."</a> &middot; ";
-                                } else {
-                                    $html .= "<span class='text-lighter'>".$this->locale['move_up']."</span> &middot; ";
-                                }
-                                if ( $k !== $item_counter ) {
-                                    $html .= "<a href='".FUSION_SELF.$aidlink."&amp;action=fmd&amp;parent_id=".$field_data['field_cat']."&amp;field_id=".$field_data['field_id']."&amp;order=".( $field_data['field_order'] + 1 )."'>".$this->locale['move_down']."</a> &middot; ";
-                                } else {
-                                    $html .= "<span class='text-lighter'>".$this->locale['move_down']."</span> &middot; ";
-                                }
-                                if ( $field_data['field_type'] == 'file' ) {
-                                    $html .= "<a href='".FUSION_SELF.$aidlink."&amp;action=module_edit&amp;module_id=".$field_data['field_id']."&amp;ref=public'>".$this->locale['edit']."</a> &middot; ";
-                                } else {
-                                    $html .= "<a href='".FUSION_SELF.$aidlink."&amp;action=field_edit&amp;field_id=".$field_data['field_id']."&amp;ref=public'>".$this->locale['edit']."</a> &middot; ";
-                                }
-                                $html .= "<a class='text-danger' href='".FUSION_SELF.$aidlink."&amp;action=field_delete&amp;field_id=".$field_data['field_id']."&amp;ref=public'>".$this->locale['delete']."</a>";
-                                $html .= "</div>\n";
-                                $html .= "</div>\n</div>\n";
+    
+                                $field_html .= "<div class='".grid_row()."'>\n<div class='".grid_column_size( 100, 70 )."'>\n";
+                                $field_html .= $field_output;
+                                $field_html .= "</div><div class='".grid_column_size( 100, 30 )."'>\n";
+                                $field_html .= "<div class='text-right'>\n";
+                                $field_html .= $move_link.$move_link_2.$edit_link;
+                                $field_html .= "<a class='text-danger' href='".FUSION_SELF.$aidlink."&amp;action=field_delete&amp;field_id=".$field_data['field_id']."&amp;ref=public'>".$this->locale['delete']."</a>";
+                                $field_html .= "</div>\n";
+                                $field_html .= "</div>\n</div>\n";
                                 $k++;
                             }
                         }
-                        $i++;
-                        $html .= "</div>\n</div>\n";
+                        $cat_html .= $field_html;
+                        $cat_html .= "</div>\n</div>\n";
+                        $rowcount++;
                     }
-                    $html .= "</div>\n";
-                } else {
-                    // display no category
-                    $html .= "<div class='text-center'><h4>".$this->locale['fields_0102'].fusion_parse_locale( $page_details['field_cat_name'] )."</h4></div>\n";
+                    $cat_html .= "</div>\n";
                 }
+    
+                $html .= $cat_html;
                 $html .= closetabbody();
             }
             $html .= closetab();

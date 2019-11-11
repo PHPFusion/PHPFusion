@@ -4,10 +4,20 @@ namespace PHPFusion\UserFields\Quantum;
 use PHPFusion\Geomap;
 use PHPFusion\UserFieldsQuantum;
 
+/**
+ * Class DisplayFields
+ *
+ * @package PHPFusion\UserFields\Quantum
+ */
 class DisplayFields {
     
     private $class = NULL;
     
+    /**
+     * DisplayFields constructor.
+     *
+     * @param UserFieldsQuantum $class
+     */
     public function __construct( UserFieldsQuantum $class ) {
         $this->class = $class;
     }
@@ -86,225 +96,357 @@ class DisplayFields {
         $option_list = $data['field_options'] ? explode( ',', $data['field_options'] ) : [];
         
         // Format Callback Data
-        $field_value = isset( $callback_data[ $data['field_name'] ] ) ? $callback_data[ $data['field_name'] ] : '';
+        $field_value = $this->getFieldValue( $callback_data, $data['field_name'], $options['hide_value'] );
         
-        $field_post_value = post( $data['field_name'] );
-        
-        if ( $field_post_value && !$options['hide_value'] ) {
-            $field_value = $field_post_value;
-        }
-        
-        if ( $options['hide_value'] ) {
-            $field_value = '';
-        }
-    
         $field_label = $options['show_title'] ? fusion_parse_locale( $data['field_title'] ).':' : '';
         
         switch ( $data['field_type'] ) {
-            
             case 'file':
-                $user_data = $callback_data;
-                $profile_method = $method;
-                // missing
-                
-                if ( file_exists( $options['field_file'] ) ) {
-                    // can access to $user_data;
-                    // can access to $profile_method
-                    include $options['field_file'];
-                    
-                    if ( $method == 'input' ) {
-                        
-                        if ( isset( $user_fields ) ) {
-                            return $user_fields;
-                        }
-                        
-                    } else if ( $method == 'display' && !empty( $user_fields['value'] ) ) {
-                        
-                        return $user_fields;
-                    }
-                }
-                
-                unset( $user_data );
-                
-                unset( $profile_method );
-                
-                unset( $locale );
-                
+                return $this->displayModule( $method, $field_value, $callback_data, $options );
                 break;
             case 'textbox':
-                if ( $method == 'input' ) {
-                    return form_text( $data['field_name'], $field_label, $field_value, $options );
-                } else if ( $method == 'display' && $field_value ) {
-                    return [
-                        'title' => fusion_parse_locale( $data['field_title'] ),
-                        'value' => $field_value,
-                    ];
-                }
+                return $this->displayText( $method, $data['field_title'], $data['field_name'], $field_label, $field_value, $options );
                 break;
             case 'number':
-                if ( $method == 'input' ) {
-                    $options += [ 'type' => 'number' ];
-                    
-                    return form_text( $data['field_name'], $field_label, $field_value, $options );
-                } else if ( $method == 'display' && $field_value ) {
-                    return [
-                        'title' => fusion_parse_locale( $data['field_title'] ),
-                        'value' => $field_value,
-                    ];
-                }
+                return $this->displayText( $method, $data['field_title'], $data['field_name'], $field_label, $field_value, $options + [ 'type' => 'number' ] );
                 break;
             case 'url':
-                if ( $method == 'input' ) {
-                    $options += [ 'type' => 'url' ];
-                    
-                    return form_text( $data['field_name'], $field_label, $field_value, $options );
-                } else if ( $method == 'display' && $field_value ) {
-                    return [
-                        'title' => fusion_parse_locale( $data['field_title'] ),
-                        'value' => $field_value
-                    ];
-                }
+                return $this->displayText( $method, $data['field_title'], $data['field_name'], $field_label, $field_value, $options + [ 'type' => 'url' ] );
                 break;
             case 'email':
-                if ( $method == 'input' ) {
-                    $options += [ 'type' => 'email' ];
-                    
-                    return form_text( $data['field_name'], $field_label, $field_value, $options );
-                } else if ( $method == 'display' && $field_value ) {
-                    return [
-                        'title' => fusion_parse_locale( $data['field_title'] ),
-                        'value' => $field_value
-                    ];
-                }
+                return $this->displayText( $method, $data['field_title'], $data['field_name'], $field_label, $field_value, $options + [ 'type' => 'email' ] );
                 break;
             case 'select':
-                if ( $method == 'input' ) {
-    
-                    $options += [ 'options' => $option_list, 'select_alt' => TRUE, 'optgroup' => FALSE, ];
-    
-                    return form_select( $data['field_name'], fusion_parse_locale( $data['field_title'] ), $field_value, $options );
-                    
-                } else if ( $method == 'display' && $field_value ) {
-    
-                    $options_value = explode( ",", $data['field_options'] );
-                    
-                    return [
-                        'title' => fusion_parse_locale( $data['field_title'] ),
-                        'value' => !empty( $options_value[ $field_value ] ) ? $options_value[ $field_value ] : $field_value,
-                    ];
-                }
+                return $this->displaySelect( $method, $data['field_title'], $data['field_name'], $field_label, $field_value, $options + [ 'options' => array_combine( array_values( $option_list ), array_values( $option_list ) ) ] );
                 break;
             case 'tags':
-                if ( $method == 'input' ) {
-                    $options += [ 'options' => $option_list, 'tags' => TRUE, 'multiple' => TRUE, 'width' => '100%', 'inner_width' => '100%' ];
-                    
-                    return form_select( $data['field_name'],
-                        $options['show_title'] ? fusion_parse_locale( $data['field_title'] ) : '',
-                        $field_value, $options );
-                } else if ( $method == 'display' && $field_value ) {
-                    return [
-                        'title' => fusion_parse_locale( $data['field_title'] ),
-                        'value' => $field_value,
-                    ];
-                }
+                return $this->displaySelect( $method, $data['field_title'], $data['field_name'], $field_label, $field_value, $options + [
+                        'options'     => $option_list,
+                        'tags'        => TRUE,
+                        'width'       => '100%',
+                        'inner_width' => '100%'
+                    ] );
                 break;
             case 'location':
-                if ( $method == 'input' ) {
-                    $options += [ 'width' => '100%' ];
-                    $options['options'] = Geomap::get_Country();
-                    return form_select( $data['field_name'], $field_label, $field_value, $options );
-                } else if ( $method == 'display' && $field_value ) {
-                    return [
-                        'title' => fusion_parse_locale( $data['field_title'] ),
-                        'value' => $field_value,
-                    ];
-                }
+                return $this->displaySelect( $method, $data['field_title'], $data['field_name'], $field_label, $field_value, $options + [
+                        'options' => array_combine( array_values( Geomap::get_Country() ), array_values( Geomap::get_Country() ) ),
+                    ] );
                 break;
             case 'textarea':
-                if ( $method == 'input' ) {
-                    return form_textarea( $data['field_name'], $field_label, $field_value, $options );
-                } else if ( $method == 'display' && $field_value ) {
-                    return [
-                        'title' => fusion_parse_locale( $data['field_title'] ),
-                        'value' => $field_value
-                    ];
-                }
+                return $this->displayTextarea( $method, $data['field_title'], $data['field_name'], $field_label, $field_value, $options );
                 break;
             case 'checkbox':
-                if ( $method == 'input' ) {
-                    return form_checkbox( $data['field_name'], $field_label, $field_value, $options );
-                } else if ( $method == 'display' && $field_value ) {
-                    return [
-                        'title' => fusion_parse_locale( $data['field_title'] ),
-                        'value' => $field_value,
-                    ];
-                }
+                return $this->displayCheckbox( $method, $data['field_title'], $data['field_name'], $field_label, $field_value, $options );
                 break;
             case 'datepicker':
-                if ( $method == 'input' ) {
-                    return form_datepicker( $data['field_name'], $field_label, $field_value, $options );
-                } else if ( $method == 'display' && $field_value ) {
-                    return [
-                        'title' => fusion_parse_locale( $data['field_title'] ),
-                        'value' => showdate( 'shortdate', $field_value )
-                    ];
-                }
+                return $this->displayDatepicker( $method, $data['field_title'], $data['field_name'], $field_label, $field_value, $options );
                 break;
             case 'colorpicker':
-                if ( $method == 'input' ) {
-                    return form_colorpicker( $data['field_name'], $field_label, $field_value, $options );
-                } else if ( $method == 'display' && $field_value ) {
-                    return [
-                        'title' => fusion_parse_locale( $data['field_title'] ),
-                        'value' => $field_value,
-                    ];
-                }
+                return $this->displayColorpicker( $method, $data['field_title'], $data['field_name'], $field_label, $field_value, $options );
                 break;
             case 'upload':
-                if ( $method == 'input' ) {
-                    return form_fileinput( $data['field_name'], $field_label, $field_value, $options );
-                } else if ( $method == 'display' && $field_value ) {
-                    return [
-                        'title' => fusion_parse_locale( $data['field_title'] ),
-                        'value' => $field_value
-                    ];
-                }
+                return $this->displayUpload( $method, $data['field_title'], $data['field_name'], $field_label, $field_value, $options );
                 break;
             case 'hidden':
-                if ( $method == 'input' ) {
-                    return form_hidden( $data['field_name'], self::parse_label( $data['field_title'] ), $field_value, $options );
-                } else if ( $method == 'display' && $field_value ) {
-                    return [
-                        'title' => fusion_parse_locale( $data['field_title'] ),
-                        'value' => $field_value
-                    ];
-                }
+                return $this->displayHidden( $method, $data['field_title'], $data['field_name'], $field_label, $field_value, $options );
                 break;
             case 'address':
-                if ( $method == 'input' ) {
-                    return form_geo( $data['field_name'], $field_label, $options );
-                } else if ( $method == 'display' && $field_value ) {
-                    return [
-                        'title' => fusion_parse_locale( $data['field_title'] ),
-                        'value' => implode( '|', $field_value )
-                    ];
-                }
+                return $this->displayAddress( $method, $data['field_title'], $data['field_name'], $field_label, $field_value, $options );
                 break;
             case 'toggle':
-                $options['toggle'] = 1;
-                $options['toggle_text'] = [ $this->locale['off'], $this->locale['on'] ];
-                if ( $method == 'input' ) {
-                    return form_checkbox( $data['field_name'], $field_label, $field_value, $options );
-                } else if ( $method == 'display' && $field_value ) {
-                    return [
-                        'title' => fusion_parse_locale( $data['field_title'] ),
-                        'value' => $field_value,
-                    ];
-                }
+                return $this->displayToggle( $method, $data['field_title'], $data['field_name'], $field_label, $field_value, $options );
                 break;
         }
+    
+        return '';
+    }
+    
+    /**
+     * @param $callback_data
+     * @param $field_name
+     * @param $hide_value
+     *
+     * @return int|mixed|string
+     */
+    private function getFieldValue( $callback_data, $field_name, $hide_value ) {
+        if ( !$hide_value ) {
+            $field_value = isset( $callback_data[ $field_name ] ) ? $callback_data[ $field_name ] : '';
+            if ( $field_post_value = post( $field_name ) ) {
+                $field_value = $field_post_value;
+            }
+            return $field_value;
+        }
+        return '';
+    }
+    
+    /**
+     * @param       $profile_method
+     * @param       $field_value
+     * @param       $user_data
+     * @param       $options
+     * @param array $user_fields
+     *
+     * @return array|string
+     */
+    private function displayModule( $profile_method, $field_value, $user_data, $options ) {
         
-        return FALSE;
+        if ( file_exists( $options['field_file'] ) ) {
+            
+            $user_fields = '';
+            include $options['field_file'];
+            
+            if ( $profile_method == 'input' ) {
+                return $user_fields;
+            }
+            
+            if ( $profile_method == 'display' && !empty( $user_fields['value'] ) ) {
+                return $user_fields;
+            }
+            return '';
+        }
+    }
+    
+    /**
+     * @param $method
+     * @param $field_title
+     * @param $field_name
+     * @param $field_label
+     * @param $field_value
+     * @param $options
+     *
+     * @return array|string
+     */
+    private function displayColorpicker( $method, $field_title, $field_name, $field_label, $field_value, $options ) {
+        if ( $method == 'input' ) {
+            return form_colorpicker( $field_name, fusion_parse_locale( $field_label ), $field_value, $options );
+        }
+        if ( $method == 'display' && $field_value ) {
+            return [
+                'title' => fusion_parse_locale( $field_title ),
+                'value' => $field_value,
+            ];
+        }
+        return '';
+    }
+    
+    /**
+     * @param $method
+     * @param $field_title
+     * @param $field_name
+     * @param $field_label
+     * @param $field_value
+     * @param $options
+     *
+     * @return array|string
+     */
+    private function displayDatepicker( $method, $field_title, $field_name, $field_label, $field_value, $options ) {
+        if ( $method == 'input' ) {
+            return form_datepicker( $field_name, fusion_parse_locale( $field_label ), $field_value, $options );
+        }
+        if ( $method == 'display' && $field_value ) {
+            return [
+                'title' => fusion_parse_locale( $field_title ),
+                'value' => showdate( 'shortdate', $field_value )
+            ];
+        }
+        return '';
+    }
+    
+    /**
+     * @param $method
+     * @param $field_title
+     * @param $field_name
+     * @param $field_label
+     * @param $field_value
+     * @param $options
+     *
+     * @return array|string
+     * @throws \ReflectionException
+     */
+    private function displayCheckbox( $method, $field_title, $field_name, $field_label, $field_value, $options ) {
+        if ( $method == 'input' ) {
+            return form_checkbox( $field_name, $field_label, $field_value, $options );
+        }
+        if ( $method == 'display' && $field_value ) {
+            return [
+                'title' => fusion_parse_locale( $field_title ),
+                'value' => $field_value,
+            ];
+        }
+        return '';
+    }
+    
+    /**
+     * @param $method
+     * @param $field_title
+     * @param $field_name
+     * @param $field_label
+     * @param $field_value
+     * @param $options
+     *
+     * @return array|string
+     */
+    private function displayTextarea( $method, $field_title, $field_name, $field_label, $field_value, $options ) {
+        if ( $method == 'input' ) {
+            return form_textarea( $field_name, fusion_parse_locale( $field_label ), $field_value, $options );
+        }
+        if ( $method == 'display' && $field_value ) {
+            return [
+                'title' => fusion_parse_locale( $field_title ),
+                'value' => $field_value
+            ];
+        }
+        return '';
+    }
+    
+    
+    /**
+     * @param $method
+     * @param $field_title
+     * @param $field_name
+     * @param $field_label
+     * @param $field_value
+     * @param $options
+     *
+     * @return array|string
+     * @throws \ReflectionException
+     */
+    private function displaySelect( $method, $field_title, $field_name, $field_label, $field_value, $options ) {
+        if ( $method == 'input' ) {
+            
+            return form_select( $field_name, fusion_parse_locale( $field_label ), $field_value, $options + [
+                    'select_alt' => TRUE,
+                    'options'    => $options['options']
+                ] );
+            
+        } else if ( $method == 'display' && $field_value ) {
+            
+            return [
+                'title' => fusion_parse_locale( $field_title ),
+                'value' => !empty( $options['options'][ $field_value ] ) ? $options['options'][ $field_value ] : $field_value,
+            ];
+        }
+    }
+    
+    /**
+     * @param $method
+     * @param $field_title
+     * @param $field_name
+     * @param $field_label
+     * @param $field_value
+     * @param $options
+     *
+     * @return array|mixed|string
+     * @throws \ReflectionException
+     */
+    private function displayText( $method, $field_title, $field_name, $field_label, $field_value, $options ) {
+        if ( $method == 'input' ) {
+            return form_text( $field_name, fusion_parse_locale( $field_label ), $field_value, $options );
+        }
+        if ( $method == 'display' && $field_value ) {
+            return [
+                'title' => fusion_parse_locale( $field_title ),
+                'value' => $field_value,
+            ];
+        }
+        return '';
+    }
+    
+    /**
+     * Display Toggle Field
+     *
+     * @param $method
+     * @param $field_title
+     * @param $field_name
+     * @param $field_label
+     * @param $field_value
+     * @param $options
+     *
+     * @return array|string
+     * @throws \ReflectionException
+     */
+    private function displayToggle( $method, $field_title, $field_name, $field_label, $field_value, $options ) {
+        if ( $method == 'input' ) {
+            $options['toggle'] = 1;
+            $options['toggle_text'] = [ $this->locale['off'], $this->locale['on'] ];
+            return form_checkbox( $field_name, $field_label, $field_value, $options );
+        }
+        if ( $method == 'display' && $field_value ) {
+            return [
+                'title' => fusion_parse_locale( $field_title ),
+                'value' => $field_value,
+            ];
+        }
+        return '';
+    }
+    
+    /**
+     * @param $method
+     * @param $field_title
+     * @param $field_name
+     * @param $field_label
+     * @param $field_value
+     * @param $options
+     *
+     * @return array|string
+     */
+    private function displayAddress( $method, $field_title, $field_name, $field_label, $field_value, $options ) {
+        if ( $method == 'input' ) {
+            return form_geo( $field_name, fusion_parse_locale( $field_label ), $field_value, $options );
+        }
+        if ( $method == 'display' && $field_value ) {
+            return [
+                'title' => fusion_parse_locale( $field_title ),
+                'value' => implode( ',', $field_value )
+            ];
+        }
+        return '';
+    }
+    
+    /**
+     * @param $method
+     * @param $field_title
+     * @param $field_name
+     * @param $field_label
+     * @param $field_value
+     * @param $options
+     *
+     * @return array|string
+     */
+    private function displayHidden( $method, $field_title, $field_name, $field_label, $field_value, $options ) {
+        if ( $method == 'input' ) {
+            return form_hidden( $field_name, fusion_parse_locale( $field_label ), $field_value, $options );
+        }
+        if ( $method == 'display' && $field_value ) {
+            return [
+                'title' => fusion_parse_locale( $field_title ),
+                'value' => $field_value
+            ];
+        }
+        return '';
+    }
+    
+    /**
+     * @param $method
+     * @param $field_title
+     * @param $field_name
+     * @param $field_label
+     * @param $field_value
+     * @param $options
+     *
+     * @return array|string
+     */
+    private function displayUpload( $method, $field_title, $field_name, $field_label, $field_value, $options ) {
+        if ( $method == 'input' ) {
+            return form_fileinput( $field_name, fusion_parse_locale( $field_label ), $field_value, $options );
+        }
+        if ( $method == 'display' && $field_value ) {
+            return [
+                'title' => fusion_parse_locale( $field_title ),
+                'value' => $field_value
+            ];
+        }
+        return '';
     }
     
 }
