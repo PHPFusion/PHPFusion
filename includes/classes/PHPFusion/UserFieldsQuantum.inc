@@ -730,9 +730,6 @@ class UserFieldsQuantum extends QuantumActions {
      */
     private function quantumCategoryForm() {
         $aidlink = fusion_get_aidlink();
-        $locale = fusion_get_locale();
-        $this->debug = FALSE;
-        
         add_to_jquery( "$('#field_parent').val() == '0' ? $('#page_settings').show() : $('#page_settings').hide(); $('#field_parent').bind('change', function() { $(this).val() == '0' ? $('#page_settings').show() : $('#page_settings').hide()});" );
         
         $action = get( 'action' );
@@ -748,8 +745,10 @@ class UserFieldsQuantum extends QuantumActions {
                 redirect( FUSION_SELF.$aidlink );
             }
         }
-        
-        $this->updateCategory();
+    
+        if ( $data = $this->updateCategory() ) {
+            $this->field_cat_data = $data;
+        }
         
         $html = openform( 'quantumCategoryFrm', 'post' );
         $html .= self::quantum_multilocale_fields( 'field_cat_name', $this->locale['fields_0430'], $this->field_cat_data['field_cat_name'], [ 'required' => 1 ] );
