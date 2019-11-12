@@ -16,6 +16,8 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
+use PHPFusion\Steam;
+
 /**
  * Checkbox Input
  * @param        $input_name
@@ -73,8 +75,8 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
     $title = $label ?: ucfirst(strtolower(str_replace('_', ' ', $input_name)));
 
     $options['input_id'] = trim(str_replace("[", "-", $options['input_id']), "]");
-
-    \Defender::add_field_session([
+    
+    Defender::add_field_session( [
         'input_name' => clean_input_name($input_name),
         'title'      => clean_input_name($title),
         'id'         => $options['input_id'],
@@ -84,11 +86,11 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
         'error_text' => $options['error_text'],
         'delimiter'  => $options['delimiter'],
     ]);
-
-    if (\Defender::inputHasError($input_name)) {
+    
+    if ( Defender::inputHasError( $input_name ) ) {
         // $error_class = "has-error ";
         if (!empty($options['error_text'])) {
-            $new_error_text = \Defender::getErrorText($input_name);
+            $new_error_text = Defender::getErrorText( $input_name );
             if (!empty($new_error_text)) {
                 $options['error_text'] = $new_error_text;
             }
@@ -124,8 +126,8 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
     //         }
     //     }
     // }
-
-    $fusion_steam = new \PHPFusion\Steam('bootstrap3');
+    
+    $fusion_steam = new Steam( 'bootstrap3' );
     $html = $fusion_steam->load('Form')->checkbox($input_name, $label, $input_value, $options);
 
     return (string)$html;

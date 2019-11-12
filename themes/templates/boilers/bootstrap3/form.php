@@ -186,6 +186,7 @@ class Form {
      * @throws ReflectionException
      */
     public static function form_checkbox( $input_name, $label, $input_value, $options ) {
+    
         //print_p($options);
         // support inline if there are multiple options only.
         $template = '
@@ -314,7 +315,7 @@ class Form {
             $tpl->set_tag( 'data_value', ( !empty( $input_value ) ? 1 : 0 ) );
             
             if ( $options['inner_width'] ) {
-                $tpl->set_tag( 'style', ' style="width:'.$options['inner_width'].'px' );
+                $tpl->set_tag( 'style', " style='width:".$options['inner_width']."'" );
             }
             
             if ( !empty( $label ) ) {
@@ -386,6 +387,7 @@ class Form {
                 }
                 
                 $checkbox = '';
+    
                 if ( $options['inline'] ) {
                     
                     $class_a = grid_column_size( 100, 100, 75, 75 );
@@ -402,6 +404,7 @@ class Form {
                     $label = "<div class='$col_b'>$label</div>";
                     $label_class[] = 'display-block';
                 }
+    
                 foreach ( $options['options'] as $key => $value ) {
                     if ( $options['deactivate_key'] !== NULL && $options['deactivate_key'] == $key ) {
                         $checkbox .= form_hidden( $input_name, '', $key );
@@ -412,14 +415,19 @@ class Form {
                     } else {
                         $checked .= ( $input_value == $key || $default_checked && $key == FALSE ? ' checked' : '' );
                     }
-                    
-                    $checkbox .= "<div class='".( $options['inline_options'] ? ' display-inline-block m-r-5' : '' )."'>\n";
-                    $checkbox .= "<label class='m-r-20' data-label='$key' for='".$options['input_id']."-$key'".( $options['inner_width'] ? " style='width: ".$options['inner_width']."'" : '' ).">";
+                    $inner_width = '';
+                    if ( $options['inner_width'] ) {
+                        $inner_width = " style='width: ".$options['inner_width']." '";
+                    }
+        
+                    $checkbox .= "<div".( $options['inline_options'] ? ' class="display-inline-block m-r-5"' : '' ).">\n";
+                    $checkbox .= "<label class='m-r-20' data-label='$key' for='".$options['input_id']."-$key'$inner_width>";
                     $checkbox .= "<input id='".$options['input_id']."-$key' name='$input_name' value='$key' type='".$options['type']."' $checked />\n";
                     $checkbox .= $value;
                     $checkbox .= "</label>\n";
                     $checkbox .= "</div>\n";
                 }
+    
                 if ( $options['inline'] ) {
                     $checkbox .= "</div>\n";
                 }
