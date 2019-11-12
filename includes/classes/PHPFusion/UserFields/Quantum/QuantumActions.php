@@ -625,7 +625,7 @@ abstract class QuantumActions extends SqlHandler {
             } else {
                 fusion_stop();
                 addNotice( 'danger', $locale['fields_0106'] );
-                return false;
+                return FALSE;
             }
             
             // ordering
@@ -633,12 +633,12 @@ abstract class QuantumActions extends SqlHandler {
                 dbquery( "UPDATE ".DB_USER_FIELDS." SET field_order=field_order+1 WHERE field_order > '".$data['field_order']."' AND field_cat='".$data['field_cat']."'" );
                 dbquery_insert( DB_USER_FIELDS, $data, 'save' );
                 addNotice( 'success', $locale['field_0204'] );
-                return true;
+                return TRUE;
             }
-            return false;
+            return FALSE;
         }
-        
-        return false;
+    
+        return FALSE;
     }
     
     private function getTableName( $table_name = '', $cat_id ) {
@@ -658,12 +658,10 @@ abstract class QuantumActions extends SqlHandler {
                 addNotice( 'danger', fusion_get_locale( 'fields_0107' ) );
             }
         }
-        return false;
+        return FALSE;
     }
     
-    
     /* Single array output match against $db - use get_structureData before to populate $fields */
-    
     private function dynamics_fieldinfo( $type, $default_value ) {
         $info = [
             'textbox'     => "VARCHAR(70) NOT NULL DEFAULT '".$default_value."'",
@@ -685,5 +683,208 @@ abstract class QuantumActions extends SqlHandler {
         
         return $info[ $type ];
     }
+    
+    
+    protected function saveFields( $field_type = '' ) {
+        
+        if ( post( 'save_field' ) ) {
+            
+            $locale = fusion_get_locale();
+            
+            $data = [
+                'field_type'         => $field_type ?: get( 'add_field' ),
+                'field_id'           => sanitizer( 'field_id', '0', 'field_id' ),
+                'field_title'        => form_sanitizer( $_POST['field_title'], '', 'field_title', TRUE ),
+                'field_name'         => sanitizer( 'field_name', '', 'field_name' ),
+                'field_cat'          => sanitizer( 'field_cat', '0', 'field_cat' ),
+                'field_options'      => sanitizer( 'field_options', '', 'field_options' ),
+                'field_default'      => sanitizer( 'field_default', '', 'field_default' ),
+                'field_error'        => sanitizer( 'field_error', '', 'field_error' ),
+                'field_required'     => ( post( 'field_required' ) ? 1 : 0 ),
+                'field_log'          => ( post( 'field_log' ) ? 1 : 0 ),
+                'field_registration' => ( post( 'field_registration' ) ? 1 : 0 ),
+                'field_order'        => sanitizer( 'field_order', '0', 'field_order' ),
+                'field_section'      => 'public'
+            ];
+            
+            $data['field_name'] = str_replace( ' ', '_', $data['field_name'] ); // make sure no space.
+            
+            if ( $data['field_type'] == 'upload' ) {
+                
+                $max_b = sanitizer( 'field_max_b', 150000, 'field_max_b' );
+                
+                $calc = sanitizer( 'field_calc', '', 'field_calc' );
+                
+                $data['field_upload_type'] = sanitizer( 'field_upload_type', '', 'field_upload_type' );
+                
+                $field_thumbnail = sanitizer( 'field_thumbnail', 0, 'field_thumbnail' );
+                
+                $field_thumbnail2 = sanitizer( 'field_thumbnail_2', 0, 'field_thumbnail_2' );
+                
+                $data['field_config'] = [
+                    'field_upload_type'        => $data['field_upload_type'],
+                    'field_max_b'              => $max_b && $calc ? $max_b * $calc : $data['field_max_b'],
+                    'field_upload_path'        => sanitizer( 'field_upload_path', '', 'field_upload_path' ),
+                    'field_valid_file_ext'     => ( $data['field_upload_type'] == 'file' ? sanitizer( 'field_valid_file_ext', '', 'field_valid_file_ext' ) : '' ),
+                    'field_valid_image_ext'    => ( $data['field_upload_type'] == 'image' ? sanitizer( 'field_valid_image_ext', '', 'field_valid_image_ext' ) : '' ),
+                    'field_image_max_w'        => ( $data['field_upload_type'] == 'image' ? sanitizer( 'field_image_max_w', '', 'field_image_max_w' ) : '' ),
+                    'field_image_max_h'        => ( $data['field_upload_type'] == 'image' ? sanitizer( 'field_image_max_h', '', 'field_image_max_h' ) : '' ),
+                    'field_thumbnail'          => $field_thumbnail,
+                    'field_thumb_upload_path'  => ( $data['field_upload_type'] == 'image' && $field_thumbnail ? sanitizer( 'field_thumb_upload_path', '', 'field_thumb_upload_path' ) : '' ),
+                    'field_thumb_w'            => ( $data['field_upload_type'] == 'image' && $field_thumbnail ? sanitizer( 'field_thumb_w', '', 'field_thumb_w' ) : '' ),
+                    'field_thumb_h'            => ( $data['field_upload_type'] == 'image' && $field_thumbnail ? sanitizer( 'field_thumb_h', '', 'field_thumb_h' ) : '' ),
+                    'field_thumbnail_2'        => $field_thumbnail2,
+                    'field_thumb2_upload_path' => ( $data['field_upload_type'] == 'image' && $field_thumbnail2 ? sanitizer( 'field_thumb2_upload_path', '', 'field_thumb2_upload_path' ) : '' ),
+                    'field_thumb2_w'           => ( $data['field_upload_type'] == 'image' && $field_thumbnail2 ? sanitizer( 'field_thumb2_w', '', 'field_thumb2_w' ) : '' ),
+                    'field_thumb2_h'           => ( $data['field_upload_type'] == 'image' && $field_thumbnail2 ? sanitizer( 'field_thumb2_h', '', 'field_thumb2_h' ) : '' ),
+                    'field_delete_original'    => ( post( 'field_delete_original' ) && $data['field_upload_type'] == 'image' ? 1 : 0 )
+                ];
+                
+                if ( !in_array( $data['field_upload_type'], [ 'file', 'image' ] ) ) {
+                    fusion_stop();
+                    addNotice( 'danger', $locale['fields_0108'] );
+                }
+            }
+            
+            if ( !$data['field_order'] ) {
+                $data['field_order'] = dbresult( dbquery( "SELECT MAX(field_order) FROM ".DB_USER_FIELDS." WHERE field_cat=:cat_id", [ ':cat_id' => $data['field_cat'] ] ), 0 ) + 1;
+            }
+            
+            if ( fusion_safe() ) {
+                if ( !empty( $data['field_config'] ) ) {
+                    $data['field_config'] = fusion_encode( $data['field_config'] );
+                }
+                // will redirect and refresh config
+                if ( $this->updateFields( $data, 'dynamics' ) ) {
+                    redirect( FUSION_SELF.fusion_get_aidlink() );
+                }
+            }
+        }
+    }
+    
+    protected function updateCategory() {
+        if ( post( 'save_cat' ) ) {
+            $aidlink = fusion_get_aidlink();
+            $data = [
+                'field_cat_id'    => sanitizer( 'field_cat_id', '', 'field_cat_id' ),
+                'field_cat_name'  => sanitizer( [ 'field_cat_name' ], '', 'field_cat_name', TRUE ),
+                'field_parent'    => sanitizer( 'field_parent', '', 'field_parent' ),
+                'field_cat_order' => sanitizer( 'field_cat_order', '', 'field_cat_order' ),
+                'field_cat_db'    => '',
+                'field_cat_index' => '',
+                'field_cat_class' => '',
+            ];
+            
+            // only if root then need to sanitize
+            $old_data = [ "field_cat_db" => "users" ];
+            $result = dbquery( "SELECT * FROM ".DB_USER_FIELD_CATS." WHERE field_cat_id=:cid", [ ':cid' => $data['field_cat_id'] ] );
+            if ( dbrows( $result ) ) {
+                $old_data = dbarray( $result );
+            }
+            
+            if ( !$data['field_parent'] ) {
+                
+                $data['field_cat_db'] = sanitizer( 'field_cat_db', 'users', 'field_cat_db' );
+                $data['field_cat_index'] = sanitizer( 'field_cat_index', '', 'field_cat_index' );
+                $data['field_cat_class'] = sanitizer( 'field_cat_class', '', 'field_cat_class' );
+                // Improvised to code jquery chained selector
+                if ( !column_exists( $data['field_cat_db'], $data['field_cat_index'] ) ) {
+                    fusion_stop();
+                    addNotice( "danger", "Your table must be a valid table. Your column must be a column of a user id in that table." );
+                }
+            }
+            
+            if ( !$data['field_cat_order'] ) {
+                $data['field_cat_order'] = dbresult( dbquery( "SELECT MAX(field_cat_order) FROM ".DB_USER_FIELD_CATS." WHERE field_parent=:pid", [ ':pid' => (int)$data['field_parent'] ] ), 0 ) + 1;
+            }
+            
+            // shuffle between save and update
+            if ( self::validate_fieldCat( $data['field_cat_id'] ) ) {
+                
+                //print_p( $this->locale['fields_0661'] );
+                //print_p( $data );
+                dbquery_order(
+                    DB_USER_FIELD_CATS,
+                    $data['field_cat_order'],
+                    'field_cat_order',
+                    $data['field_cat_id'],
+                    'field_cat_id',
+                    $data['field_parent'],
+                    'field_parent',
+                    FALSE,
+                    FALSE,
+                    'update'
+                );
+                
+                if ( fusion_safe() ) {
+                    // New page was set during category update
+                    if ( !empty( $old_data['field_cat_db'] ) or $old_data['field_cat_db'] !== "users" ) {
+                        
+                        if ( !empty( $old_data['field_cat_db'] ) && !empty( $old_data['field_cat_index'] ) ) {
+                            // CONDITION: HAVE A PREVIOUS TABLE SET
+                            if ( !empty( $data['field_cat_db'] ) ) {
+                                // new demands a table insertion, checks if same or not.. if different.
+                                if ( $data['field_cat_db'] !== $old_data['field_cat_db'] ) {
+                                    // But the current table is different than the previous one
+                                    // - build the new one, move the column, drop the old one.
+                                    SqlHandler::build_table( $data['field_cat_db'], $data['field_cat_index'] );
+                                    SqlHandler::transfer_table( $old_data['field_cat_db'], $data['field_cat_db'] );
+                                    SqlHandler::drop_table( $old_data['field_cat_db'] );
+                                    
+                                } else {
+                                    if ( $old_data['field_cat_index'] !== $data['field_cat_index'] ) {
+                                        SqlHandler::rename_column( $data['field_cat_db'], $old_data['field_cat_index'], $data['field_cat_index'], "MEDIUMINT(8) NOT NULL DEFAULT '0'" );
+                                    }
+                                }
+                            } else if ( empty( $data['field_cat_db'] ) ) {
+                                SqlHandler::drop_table( $data['field_cat_db'] );
+                            }
+                            
+                        } else if ( !empty( $data['field_cat_index'] ) && !empty( $data['field_cat_db'] ) ) {
+                            SqlHandler::build_table( $data['field_cat_db'], $data['field_cat_index'] );
+                        }
+                        
+                        dbquery_insert( DB_USER_FIELD_CATS, $data, 'update' );
+                        
+                        addNotice( 'success', fusion_get_locale( 'field_0207' ) );
+                    }
+                    
+                    redirect( FUSION_SELF.$aidlink );
+                }
+                
+            } else {
+                
+                dbquery_order(
+                    DB_USER_FIELD_CATS,
+                    $data['field_cat_order'],
+                    'field_cat_order',
+                    $data['field_cat_id'],
+                    'field_cat_id',
+                    $data['field_parent'],
+                    'field_parent',
+                    TRUE,
+                    'field_cat_name',
+                    'save'
+                );
+                
+                if ( fusion_safe() ) {
+                    //print_p( $this->locale['fields_0662'] );
+                    //print_p( $data );
+                    if ( !empty( $data['field_cat_index'] ) && !empty( $data['field_cat_db'] ) && $data['field_cat_db'] !== 'users' ) {
+                        SqlHandler::build_table( $data['field_cat_db'], $data['field_cat_index'] );
+                    }
+                    
+                    dbquery_insert( DB_USER_FIELD_CATS, $data, 'save' );
+                    addNotice( 'success', fusion_get_locale( 'field_0208' ) );
+                    redirect( FUSION_SELF.$aidlink );
+                }
+            }
+            
+            return $data;
+        }
+        
+        return FALSE;
+    }
+    
     
 }

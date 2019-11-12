@@ -195,8 +195,8 @@ class QuantumModulesView {
                     if ( !$field_data['field_order'] ) {
                         $field_data['field_order'] = dbresult( dbquery( "SELECT MAX(field_order) FROM ".DB_USER_FIELDS." WHERE field_cat=:cat_id", [ ':cat_id' => $field_data['field_cat'] ] ), 0 ) + 1;
                     }
-                    
-                    $this->create_fields( $field_data, 'module', '', self::$modules );
+    
+                    $this->class->updateFields( $field_data, 'module', '', $this->modules );
                 }
             }
     

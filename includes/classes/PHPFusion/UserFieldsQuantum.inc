@@ -214,6 +214,7 @@ class UserFieldsQuantum extends QuantumActions {
     
     /**
      * Returns ALL Categories
+     *
      * @return array
      */
     public function getCatList() {
@@ -266,7 +267,7 @@ class UserFieldsQuantum extends QuantumActions {
     
     private function view( $refs ) {
         $action = get( 'action' );
-        $quantum_modules = new QuantumModulesView($this);
+        $quantum_modules = new QuantumModulesView( $this );
         switch ( $refs ) {
             default:
             case 'public':
@@ -284,7 +285,7 @@ class UserFieldsQuantum extends QuantumActions {
                                 $modal .= closemodal();
                                 add_to_footer( $modal );
                             }
-                            $content = $quantum_modules->viewModules('public');
+                            $content = $quantum_modules->viewModules( 'public' );
                             
                             break;
                         case 'field_edit':
@@ -307,7 +308,7 @@ class UserFieldsQuantum extends QuantumActions {
                                 $title = "Edit Category";
                             }
                             $modal = openmodal( 'cat', "<h4 class='m-0'>$title</h4>", [ 'static' => TRUE ] );
-                            $modal .= $this->quantum_category_form();
+                        $modal .= $this->quantumCategoryForm();
                             $modal .= closemodal();
                             add_to_footer( $modal );
                             break;
@@ -332,7 +333,7 @@ class UserFieldsQuantum extends QuantumActions {
                 if ( $action == 'new' ) {
                     add_breadcrumb( [ 'title' => 'Manage Preference User Fields', 'link' => ADMIN.'user_fields.php'.fusion_get_aidlink().'&amp;ref=preferences&amp;action=new' ] );
     
-                    $content = $quantum_modules->viewModules('preferences');
+                    $content = $quantum_modules->viewModules( 'preferences' );
                 }
                 break;
             case 'security':
@@ -341,7 +342,7 @@ class UserFieldsQuantum extends QuantumActions {
                 if ( $action == 'new' ) {
                     add_breadcrumb( [ 'title' => 'Manage Security User Fields', 'link' => ADMIN.'user_fields.php'.fusion_get_aidlink().'&amp;ref=security&amp;action=new' ] );
     
-                    $content = $quantum_modules->viewModules('security');
+                    $content = $quantum_modules->viewModules( 'security' );
                 }
                 break;
         }
@@ -418,7 +419,7 @@ class UserFieldsQuantum extends QuantumActions {
         $cond
         ORDER BY root.field_cat_order ASC, cat.field_cat_order ASC, field.field_order ASC
         ";
-
+    
         $result = dbquery( $sql, $param );
     
         if ( $this->field_max_rows = dbrows( $result ) ) {
@@ -583,9 +584,9 @@ class UserFieldsQuantum extends QuantumActions {
                             $item_counter = count( $this->fields[ $cat_id ] ) - 1;
     
                             foreach ( $this->fields[ $cat_id ] as $arr => $field_data ) {
-    
+        
                                 $field_output = $this->displayFields( $field_data, $this->callback_data, $this->method, [ 'inline' => TRUE, 'show_title' => 1, 'hide_value' => 1 ] );
-    
+        
                                 $move_link = "<span class='text-lighter'>".$this->locale['move_up']."</span> &middot; ";
                                 if ( $k != 0 ) {
                                     $move_link = "<a href='".FUSION_SELF.$aidlink."&amp;action=fmu&amp;parent_id=".$field_data['field_cat']."&amp;field_id=".$field_data['field_id']."&amp;order=".( $field_data['field_order'] - 1 )."'>".$this->locale['move_up']."</a> &middot; ";
@@ -604,7 +605,7 @@ class UserFieldsQuantum extends QuantumActions {
                                 //if ( !$item_id ) {
                                 //    $item_id = $current_field_id ?: 0;
                                 //}
-    
+        
                                 $field_html .= "<div class='".grid_row()."'>\n<div class='".grid_column_size( 100, 70 )."'>\n";
                                 $field_html .= $field_output;
                                 $field_html .= "</div><div class='".grid_column_size( 100, 30 )."'>\n";
@@ -727,9 +728,9 @@ class UserFieldsQuantum extends QuantumActions {
      * @return string
      * @throws \ReflectionException
      */
-    public function quantum_category_form() {
+    private function quantumCategoryForm() {
         $aidlink = fusion_get_aidlink();
-        $this->locale = fusion_get_locale();
+        $locale = fusion_get_locale();
         $this->debug = FALSE;
         
         add_to_jquery( "$('#field_parent').val() == '0' ? $('#page_settings').show() : $('#page_settings').hide(); $('#field_parent').bind('change', function() { $(this).val() == '0' ? $('#page_settings').show() : $('#page_settings').hide()});" );
@@ -738,8 +739,8 @@ class UserFieldsQuantum extends QuantumActions {
         $cat_id = get( 'cat_id', FILTER_VALIDATE_INT );
         
         if ( $action == 'cat_edit' && $cat_id && self::validate_fieldCat( $cat_id ) ) {
-            
-            $result = dbquery( "SELECT * FROM ".DB_USER_FIELD_CATS." WHERE field_cat_id='$cat_id'" );
+    
+            $result = dbquery( "SELECT * FROM ".DB_USER_FIELD_CATS." WHERE field_cat_id=:cid", [ ':cid' => (int)$cat_id ] );
             if ( dbrows( $result ) ) {
                 $this->field_cat_data = dbarray( $result );
             } else {
@@ -748,145 +749,9 @@ class UserFieldsQuantum extends QuantumActions {
             }
         }
         
-        if ( post( 'save_cat' ) ) {
-            
-            $this->field_cat_data = [
-                'field_cat_id'    => sanitizer( 'field_cat_id', '', 'field_cat_id' ),
-                'field_cat_name'  => sanitizer( [ 'field_cat_name' ], '', 'field_cat_name', TRUE ),
-                'field_parent'    => sanitizer( 'field_parent', '', 'field_parent' ),
-                'field_cat_order' => sanitizer( 'field_cat_order', '', 'field_cat_order' ),
-                'field_cat_db'    => '',
-                'field_cat_index' => '',
-                'field_cat_class' => '',
-            ];
-            // only if root then need to sanitize
-            $old_data = [
-                "field_cat_db" => "users"
-            ];
-            
-            $result = dbquery( "SELECT * FROM ".DB_USER_FIELD_CATS." WHERE field_cat_id='".$this->field_cat_data['field_cat_id']."'" );
-            
-            if ( dbrows( $result ) > 0 ) {
-                $old_data = dbarray( $result );
-            }
-            
-            if ( $this->field_cat_data['field_parent'] == 0 ) {
-                
-                $this->field_cat_data['field_cat_db'] = form_sanitizer( $_POST['field_cat_db'], 'users', 'field_cat_db' );
-                $this->field_cat_data['field_cat_index'] = form_sanitizer( $_POST['field_cat_index'], '', 'field_cat_index' );
-                $this->field_cat_data['field_cat_class'] = form_sanitizer( $_POST['field_cat_class'], '', 'field_cat_class' );
-                // Improvised to code jquery chained selector
-                if ( !column_exists( $this->field_cat_data['field_cat_db'], $this->field_cat_data['field_cat_index'] ) ) {
-                    \Defender::stop();
-                    addNotice( "danger", "Your table must be a valid table. Your column must be a column of a user id in that table." );
-                }
-    
-            }
-            
-            if ( $this->field_cat_data['field_cat_order'] == 0 ) {
-                
-                $this->field_cat_data['field_cat_order'] = dbresult(
-                        dbquery( "SELECT MAX(field_cat_order)
-                                 FROM ".DB_USER_FIELD_CATS."
-                                 WHERE field_parent='".$this->field_cat_data['field_parent']."'"
-                        ), 0 ) + 1;
-            }
-            
-            // shuffle between save and update
-            if ( self::validate_fieldCat( $this->field_cat_data['field_cat_id'] ) ) {
-                
-                dbquery_order(
-                    DB_USER_FIELD_CATS, $this->field_cat_data['field_cat_order'],
-                    'field_cat_order',
-                    $this->field_cat_data['field_cat_id'], 'field_cat_id',
-                    $this->field_cat_data['field_parent'], 'field_parent', FALSE, FALSE, 'update'
-                );
-    
-    
-                //print_p( $this->locale['fields_0661'] );
-                //print_p( $this->field_cat_data );
-    
-                if ( fusion_safe() ) {
-                    if ( !empty( $old_data['field_cat_db'] ) or $old_data['field_cat_db'] !== "users" ) {
-            
-                        if ( !empty( $old_data['field_cat_db'] ) && !empty( $old_data['field_cat_index'] ) ) {
-                            // CONDITION: HAVE A PREVIOUS TABLE SET
-                            if ( !empty( $this->field_cat_data['field_cat_db'] ) ) {
-                                // new demands a table insertion, checks if same or not.. if different.
-                                if ( $this->field_cat_data['field_cat_db'] !== $old_data['field_cat_db'] ) {
-                                    // But the current table is different than the previous one
-                                    // - build the new one, move the column, drop the old one.
-                                    self::build_table( $this->field_cat_data['field_cat_db'], $this->field_cat_data['field_cat_index'] );
-                                    self::transfer_table( $old_data['field_cat_db'], $this->field_cat_data['field_cat_db'] );
-                                    self::drop_table( $old_data['field_cat_db'] );
-                        
-                                } else {
-                                    if ( $old_data['field_cat_index'] !== $this->field_cat_data['field_cat_index'] ) {
-                                        self::rename_column( $this->field_cat_data['field_cat_db'], $old_data['field_cat_index'], $this->field_cat_data['field_cat_index'], "MEDIUMINT(8) NOT NULL DEFAULT '0'" );
-                                    }
-                        
-                                }
-                    
-                            } else if ( empty( $this->field_cat_data['field_cat_db'] ) ) {
-                                self::drop_table( $this->field_cat_data['field_cat_db'] );
-                            }
-                
-                        } else if ( !empty( $this->field_cat_data['field_cat_index'] ) && !empty( $this->field_cat_data['field_cat_db'] ) ) {
-                
-                            self::build_table( $this->field_cat_data['field_cat_db'],
-                                $this->field_cat_data['field_cat_index'] );
-                
-                        }
-            
-                        dbquery_insert( DB_USER_FIELD_CATS, $this->field_cat_data, 'update' );
-            
-                        addNotice( 'success', $this->locale['field_0207'] );
-                    }
-                    redirect( FUSION_SELF.$aidlink );
-                }
-    
-            } else {
-                
-                dbquery_order(
-                    DB_USER_FIELD_CATS,
-                    $this->field_cat_data['field_cat_order'],
-                    'field_cat_order',
-                    $this->field_cat_data['field_cat_id'],
-                    'field_cat_id',
-                    $this->field_cat_data['field_parent'],
-                    'field_parent',
-                    TRUE,
-                    'field_cat_name',
-                    'save'
-                );
-                
-                if ( !$this->debug && fusion_safe() ) {
-                    
-                    if ( !empty( $this->field_cat_data['field_cat_index'] ) &&
-                        !empty( $this->field_cat_data['field_cat_db'] ) &&
-                        $this->field_cat_data['field_cat_db'] !== 'users'
-                    ) {
-    
-                        self::build_table( $this->field_cat_data['field_cat_db'], $this->field_cat_data['field_cat_index'] );
-                    }
-                    
-                    dbquery_insert( DB_USER_FIELD_CATS, $this->field_cat_data, 'save' );
-                    
-                    addNotice( 'success', $this->locale['field_0208'] );
-                    
-                    redirect( FUSION_SELF.$aidlink );
-    
-                } else {
-                    
-                    if ( $this->debug ) {
-                        print_p( $this->locale['fields_0662'] );
-                        print_p( $this->field_cat_data );
-                    }
-                }
-            }
-        }
+        $this->updateCategory();
         
-        $html = openform( 'cat_form', 'post' );
+        $html = openform( 'quantumCategoryFrm', 'post' );
         $html .= self::quantum_multilocale_fields( 'field_cat_name', $this->locale['fields_0430'], $this->field_cat_data['field_cat_name'], [ 'required' => 1 ] );
         // cannot move if there are siblings
         if ( $cat_id && isset( $this->field_cat_index[ $cat_id ] ) ) {
@@ -899,18 +764,24 @@ class UserFieldsQuantum extends QuantumActions {
                     $cat_list[] = $id;
                 }
             }
-            $html .= form_select_tree( 'field_parent', $this->locale['fields_0431'], $this->field_cat_data['field_parent'],
+            $html .= form_select( 'field_parent', $this->locale['fields_0431'], $this->field_cat_data['field_parent'],
                 [
+                    'db'           => DB_USER_FIELD_CATS,
+                    'id_col'       => 'field_cat_id',
+                    'cat_col'      => 'field_parent',
+                    'title_col'    => 'field_cat_name',
                     'parent_value' => $this->locale['fields_0432'],
-                    'disable_opts' => $cat_list
-                ], DB_USER_FIELD_CATS, 'field_cat_name', 'field_cat_id', 'field_parent' );
+                    'optgroup'     => TRUE,
+                    'disable_opts' => $cat_list,
+                    'select_alt'   => TRUE,
+                ] );
         }
         
         $html .= form_text( 'field_cat_order', $this->locale['fields_0433'], $this->field_cat_data['field_cat_order'], [ 'type' => 'number', 'inner_width' => '100px' ] );
         $html .= form_hidden( 'field_cat_id', '', $this->field_cat_data['field_cat_id'], [ 'number' => 1 ] );
         $html .= form_hidden( 'add_cat', '', 'add_cat' );
         // root settings
-        $html .= "<div id='page_settings' class='list-group-item m-t-20'>\n";
+        $html .= "<div id='page_settings' class='m-t-20'>\n";
         
         global $db_name;
         $tableList = [];
@@ -918,28 +789,30 @@ class UserFieldsQuantum extends QuantumActions {
         WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA='".$db_name."'" );
         if ( dbrows( $show_tables ) > 0 ) {
             while ( $schData = dbarray( $show_tables ) ) {
-                $table_name = str_replace( strtolower( DB_PREFIX ), '', $schData['TABLE_NAME'] );
+                $table_name = str_replace( DB_PREFIX, '', $schData['TABLE_NAME'] );
                 $tableList[ $table_name ] = $table_name;
             }
         }
         
+        $html .= '<div class="m-b-20">'.$this->locale['fields_0111'].'<br/><small class="m-b-20">'.$this->locale['fields_0112'].'</small></div>';
+        
         $html .= form_select( 'field_cat_db', sprintf( $this->locale['fields_0434'], " db_prefix_ " ),
             $this->field_cat_data['field_cat_db'], [
                 'placeholder' => $this->locale['fields_0663'],
-                "required"    => TRUE,
                 "inline"      => FALSE,
-                "deactivate"  => FALSE, //$this->field_cat_data['field_cat_db'] ? TRUE : FALSE,
-                "ext_tip"     => $this->locale['fields_0111'],
+                //"deactivate"  => FALSE, //$this->field_cat_data['field_cat_db'] ? TRUE : FALSE,
+                'select_alt'  => TRUE,
                 "options"     => $tableList
             ] );
-        $html .= "<div class='text-smaller m-b-10'>".$this->locale['fields_0112']."</div>\n";
+        $html .= "<div class='text-smaller m-b-10'>".$this->locale['fields_0113']."</div>\n";
+        
         $html .= form_text( 'field_cat_index', $this->locale['fields_0435'], $this->field_cat_data['field_cat_index'],
             [
                 'placeholder' => 'user_id',
-                "required"    => TRUE,
+                "required"    => FALSE,
                 "inline"      => FALSE
             ] );
-        $html .= "<div class='text-smaller m-b-10'>".$this->locale['fields_0113']."</div>\n";
+        
         $html .= form_text( 'field_cat_class', $this->locale['fields_0436'], $this->field_cat_data['field_cat_class'],
             [
                 'placeholder' => $this->locale['fields_0437'],
@@ -1055,9 +928,10 @@ class UserFieldsQuantum extends QuantumActions {
     private function quantum_dynamics_form() {
         
         $aidlink = fusion_get_aidlink();
-        
+        $action = get( 'action' );
+        $field_id = get( 'field_id', FILTER_VALIDATE_INT );
+    
         $this->field_data['field_type'] = get( 'add_field' );
-        
         $this->field_data['field_config'] = [
             'field_max_b'              => 1000000,
             'field_upload_type'        => 'file',
@@ -1076,94 +950,87 @@ class UserFieldsQuantum extends QuantumActions {
             'field_thumb2_w'           => 768,
             'field_delete_original'    => 0
         ];
-        
-        $action = get( 'action' );
-        $field_id = get( 'field_id', FILTER_VALIDATE_INT );
-        
         if ( $action == 'field_edit' && $field_id ) {
-            
             if ( $this->validate_field( $field_id ) ) {
-                
                 $this->field_data = dbarray( dbquery( "SELECT * FROM ".DB_USER_FIELDS." WHERE field_id=:fid", [ ':fid' => (int)$field_id ] ) );
-                
                 if ( $this->field_data['field_type'] == 'upload' ) {
                     $this->field_data['field_config'] = fusion_decode( $this->field_data['field_config'] );
                     //print_p( $this->field_data );
                 }
-    
             } else {
-                
                 redirect( FUSION_SELF.$aidlink );
             }
         }
-        
-        $this->field_data['field_type'] = isset( $_POST['add_field'] ) ? form_sanitizer( $_POST['add_field'], '' ) : $this->field_data['field_type'];
-        
-        if ( post( 'save_field' ) ) {
-            
-            $add_field = get( 'add_field' );
-            
-            $this->field_data = [
-                'field_type'         => $add_field ? $add_field : $this->field_data['field_type'],
-                'field_id'           => sanitizer( 'field_id', '0', 'field_id' ),
-                'field_title'        => form_sanitizer( $_POST['field_title'], '', 'field_title', TRUE ),
-                'field_name'         => sanitizer( 'field_name', '', 'field_name' ),
-                'field_cat'          => sanitizer( 'field_cat', '0', 'field_cat' ),
-                'field_options'      => sanitizer( 'field_options', '', 'field_options' ),
-                'field_default'      => sanitizer( 'field_default', '', 'field_default' ),
-                'field_error'        => sanitizer( 'field_error', '', 'field_error' ),
-                'field_required'     => isset( $_POST['field_required'] ) ? 1 : 0,
-                'field_log'          => isset( $_POST['field_log'] ) ? 1 : 0,
-                'field_registration' => isset( $_POST['field_registration'] ) ? 1 : 0,
-                'field_order'        => sanitizer( 'field_order', '0', 'field_order' ),
-                'field_section'      => 'public'
-            ];
-            
-            $this->field_data['field_name'] = str_replace( ' ', '_', $this->field_data['field_name'] ); // make sure no space.
-            
-            if ( $this->field_data['field_type'] == 'upload' ) {
-                
-                $max_b = isset( $_POST['field_max_b'] ) ? form_sanitizer( $_POST['field_max_b'], '', 'field_max_b' ) : 150000;
-                $calc = isset( $_POST['field_calc'] ) ? form_sanitizer( $_POST['field_calc'], '', 'field_calc' ) : 1;
-                $this->field_data['field_upload_type'] = isset( $_POST['field_upload_type'] ) ? form_sanitizer( $_POST['field_upload_type'], '', 'field_upload_type' ) : '';
-                if ( !in_array( $this->field_data['field_upload_type'], [ 'file', 'image' ] ) ) {
-                    fusion_stop();
-                    addNotice( 'danger', $this->locale['fields_0108'] );
-                } else {
-                    $this->field_data['field_config'] = [
-                        'field_upload_type'        => $this->field_data['field_upload_type'],
-                        'field_max_b'              => isset( $_POST['field_max_b'] ) && isset( $_POST['field_calc'] ) ? $max_b * $calc : $this->field_data['field_max_b'],
-                        'field_upload_path'        => isset( $_POST['field_upload_path'] ) ? form_sanitizer( $_POST['field_upload_path'], '', 'field_upload_path' ) : '',
-                        'field_valid_file_ext'     => isset( $_POST['field_valid_file_ext'] ) && $this->field_data['field_upload_type'] == 'file' ? form_sanitizer( $_POST['field_valid_file_ext'], '', 'field_valid_file_ext' ) : '',
-                        'field_valid_image_ext'    => isset( $_POST['field_valid_image_ext'] ) && $this->field_data['field_upload_type'] == 'image' ? form_sanitizer( $_POST['field_valid_image_ext'], '', 'field_valid_image_ext' ) : '',
-                        'field_image_max_w'        => isset( $_POST['field_image_max_w'] ) && $this->field_data['field_upload_type'] == 'image' ? form_sanitizer( $_POST['field_image_max_w'], '', 'field_image_max_w' ) : '',
-                        'field_image_max_h'        => isset( $_POST['field_image_max_h'] ) && $this->field_data['field_upload_type'] == 'image' ? form_sanitizer( $_POST['field_image_max_h'], '', 'field_image_max_h' ) : '',
-                        'field_thumbnail'          => isset( $_POST['field_thumbnail'] ) ? form_sanitizer( $_POST['field_thumbnail'], 0, 'field_thumbnail' ) : '',
-                        'field_thumb_upload_path'  => isset( $_POST['field_thumb_upload_path'] ) && $this->field_data['field_upload_type'] == 'image' && isset( $this->field_data['field_thumbnail'] ) ? form_sanitizer( $_POST['field_thumb_upload_path'], '', 'field_thumb_upload_path' ) : '',
-                        'field_thumb_w'            => isset( $_POST['field_thumb_w'] ) && $this->field_data['field_upload_type'] == 'image' && isset( $this->field_data['field_thumbnail'] ) ? form_sanitizer( $_POST['field_thumb_w'], '', 'field_thumb_w' ) : '',
-                        'field_thumb_h'            => isset( $_POST['field_thumb_h'] ) && $this->field_data['field_upload_type'] == 'image' && isset( $this->field_data['field_thumbnail'] ) ? form_sanitizer( $_POST['field_thumb_h'], '', 'field_thumb_h' ) : '',
-                        'field_thumbnail_2'        => isset( $_POST['field_thumbnail_2'] ) ? 1 : isset( $_POST['field_id'] ) ? 0 : $this->field_data['field_thumbnail_2'],
-                        'field_thumb2_upload_path' => isset( $_POST['field_thumb2_upload_path'] ) && $this->field_data['field_upload_type'] == 'image' && isset( $this->field_data['field_thumbnail_2'] ) ? form_sanitizer( $_POST['field_thumb2_upload_path'], '', 'field_thumb2_upload_path' ) : '',
-                        'field_thumb2_w'           => isset( $_POST['field_thumb2_w'] ) && $this->field_data['field_upload_type'] == 'image' && isset( $this->field_data['field_thumbnail_2'] ) ? form_sanitizer( $_POST['field_thumb2_w'], '', 'field_thumb2_w' ) : '',
-                        'field_thumb2_h'           => isset( $_POST['field_thumb2_h'] ) && $this->field_data['field_upload_type'] == 'image' && isset( $this->field_data['field_thumbnail_2'] ) ? form_sanitizer( $_POST['field_thumb2_h'], '', 'field_thumb2_h' ) : '',
-                        'field_delete_original'    => isset( $_POST['field_delete_original'] ) && $this->field_data['field_upload_type'] == 'image' ? 1 : 0
-                    ];
-                }
-            }
-            
-            if ( !$this->field_data['field_order'] ) {
-                $this->field_data['field_order'] = dbresult( dbquery( "SELECT MAX(field_order) FROM ".DB_USER_FIELDS." WHERE field_cat=:cat_id", [ ':cat_id' => $this->field_data['field_cat'] ] ), 0 ) + 1;
-            }
-            
-            if ( fusion_safe() ) {
-                if ( !empty( $this->field_data['field_config'] ) ) {
-                    $this->field_data['field_config'] = fusion_encode( $this->field_data['field_config'] );
     
-                }
+        //if ( post( 'save_field' ) ) {
+        //
+        //    $add_field = get( 'add_field' );
+        //
+        //    $this->field_data = [
+        //        'field_type'         => $add_field ? $add_field : $this->field_data['field_type'],
+        //        'field_id'           => sanitizer( 'field_id', '0', 'field_id' ),
+        //        'field_title'        => form_sanitizer( $_POST['field_title'], '', 'field_title', TRUE ),
+        //        'field_name'         => sanitizer( 'field_name', '', 'field_name' ),
+        //        'field_cat'          => sanitizer( 'field_cat', '0', 'field_cat' ),
+        //        'field_options'      => sanitizer( 'field_options', '', 'field_options' ),
+        //        'field_default'      => sanitizer( 'field_default', '', 'field_default' ),
+        //        'field_error'        => sanitizer( 'field_error', '', 'field_error' ),
+        //        'field_required'     => isset( $_POST['field_required'] ) ? 1 : 0,
+        //        'field_log'          => isset( $_POST['field_log'] ) ? 1 : 0,
+        //        'field_registration' => isset( $_POST['field_registration'] ) ? 1 : 0,
+        //        'field_order'        => sanitizer( 'field_order', '0', 'field_order' ),
+        //        'field_section'      => 'public'
+        //    ];
+        //
+        //    $this->field_data['field_name'] = str_replace( ' ', '_', $this->field_data['field_name'] ); // make sure no space.
+        //
+        //    if ( $this->field_data['field_type'] == 'upload' ) {
+        //
+        //        $max_b = isset( $_POST['field_max_b'] ) ? form_sanitizer( $_POST['field_max_b'], '', 'field_max_b' ) : 150000;
+        //        $calc = isset( $_POST['field_calc'] ) ? form_sanitizer( $_POST['field_calc'], '', 'field_calc' ) : 1;
+        //        $this->field_data['field_upload_type'] = isset( $_POST['field_upload_type'] ) ? form_sanitizer( $_POST['field_upload_type'], '', 'field_upload_type' ) : '';
+        //        if ( !in_array( $this->field_data['field_upload_type'], [ 'file', 'image' ] ) ) {
+        //            fusion_stop();
+        //            addNotice( 'danger', $this->locale['fields_0108'] );
+        //        } else {
+        //            $this->field_data['field_config'] = [
+        //                'field_upload_type'        => $this->field_data['field_upload_type'],
+        //                'field_max_b'              => isset( $_POST['field_max_b'] ) && isset( $_POST['field_calc'] ) ? $max_b * $calc : $this->field_data['field_max_b'],
+        //                'field_upload_path'        => isset( $_POST['field_upload_path'] ) ? form_sanitizer( $_POST['field_upload_path'], '', 'field_upload_path' ) : '',
+        //                'field_valid_file_ext'     => isset( $_POST['field_valid_file_ext'] ) && $this->field_data['field_upload_type'] == 'file' ? form_sanitizer( $_POST['field_valid_file_ext'], '', 'field_valid_file_ext' ) : '',
+        //                'field_valid_image_ext'    => isset( $_POST['field_valid_image_ext'] ) && $this->field_data['field_upload_type'] == 'image' ? form_sanitizer( $_POST['field_valid_image_ext'], '', 'field_valid_image_ext' ) : '',
+        //                'field_image_max_w'        => isset( $_POST['field_image_max_w'] ) && $this->field_data['field_upload_type'] == 'image' ? form_sanitizer( $_POST['field_image_max_w'], '', 'field_image_max_w' ) : '',
+        //                'field_image_max_h'        => isset( $_POST['field_image_max_h'] ) && $this->field_data['field_upload_type'] == 'image' ? form_sanitizer( $_POST['field_image_max_h'], '', 'field_image_max_h' ) : '',
+        //                'field_thumbnail'          => isset( $_POST['field_thumbnail'] ) ? form_sanitizer( $_POST['field_thumbnail'], 0, 'field_thumbnail' ) : '',
+        //                'field_thumb_upload_path'  => isset( $_POST['field_thumb_upload_path'] ) && $this->field_data['field_upload_type'] == 'image' && isset( $this->field_data['field_thumbnail'] ) ? form_sanitizer( $_POST['field_thumb_upload_path'], '', 'field_thumb_upload_path' ) : '',
+        //                'field_thumb_w'            => isset( $_POST['field_thumb_w'] ) && $this->field_data['field_upload_type'] == 'image' && isset( $this->field_data['field_thumbnail'] ) ? form_sanitizer( $_POST['field_thumb_w'], '', 'field_thumb_w' ) : '',
+        //                'field_thumb_h'            => isset( $_POST['field_thumb_h'] ) && $this->field_data['field_upload_type'] == 'image' && isset( $this->field_data['field_thumbnail'] ) ? form_sanitizer( $_POST['field_thumb_h'], '', 'field_thumb_h' ) : '',
+        //                'field_thumbnail_2'        => isset( $_POST['field_thumbnail_2'] ) ? 1 : isset( $_POST['field_id'] ) ? 0 : $this->field_data['field_thumbnail_2'],
+        //                'field_thumb2_upload_path' => isset( $_POST['field_thumb2_upload_path'] ) && $this->field_data['field_upload_type'] == 'image' && isset( $this->field_data['field_thumbnail_2'] ) ? form_sanitizer( $_POST['field_thumb2_upload_path'], '', 'field_thumb2_upload_path' ) : '',
+        //                'field_thumb2_w'           => isset( $_POST['field_thumb2_w'] ) && $this->field_data['field_upload_type'] == 'image' && isset( $this->field_data['field_thumbnail_2'] ) ? form_sanitizer( $_POST['field_thumb2_w'], '', 'field_thumb2_w' ) : '',
+        //                'field_thumb2_h'           => isset( $_POST['field_thumb2_h'] ) && $this->field_data['field_upload_type'] == 'image' && isset( $this->field_data['field_thumbnail_2'] ) ? form_sanitizer( $_POST['field_thumb2_h'], '', 'field_thumb2_h' ) : '',
+        //                'field_delete_original'    => isset( $_POST['field_delete_original'] ) && $this->field_data['field_upload_type'] == 'image' ? 1 : 0
+        //            ];
+        //        }
+        //    }
+        //
+        //    if ( !$this->field_data['field_order'] ) {
+        //        $this->field_data['field_order'] = dbresult( dbquery( "SELECT MAX(field_order) FROM ".DB_USER_FIELDS." WHERE field_cat=:cat_id", [ ':cat_id' => $this->field_data['field_cat'] ] ), 0 ) + 1;
+        //    }
+        //
+        //    if ( fusion_safe() ) {
+        //        if ( !empty( $this->field_data['field_config'] ) ) {
+        //            $this->field_data['field_config'] = fusion_encode( $this->field_data['field_config'] );
+        //
+        //        }
+        //
+        //        $this->updateFields( $this->field_data, 'dynamics' ); // will redirect and refresh config
+        //    }
+        //
+        //}
     
-                $this->updateFields( $this->field_data, 'dynamics' ); // will redirect and refresh config
-            }
-    
+        if ( $data = $this->saveFields( $this->field_data['field_type'] ) ) {
+            $this->field_data = $data;
         }
         
         $html = openform( 'fieldform', 'post' );
@@ -1403,7 +1270,7 @@ class UserFieldsQuantum extends QuantumActions {
         return 1048576;
     }
     
-
+    
     public function quantum_insert( array $data = [] ) {
         $quantum_fields = [];
         $infinity_ref = [];
