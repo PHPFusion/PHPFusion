@@ -1329,7 +1329,7 @@ if ( !function_exists( "tab_active" )
                 }
             }
             $html = "<div class='nav-wrapper".( $wrapper_class ? " ".$wrapper_class : '' )."'>\n";
-            $html .= "<ul id='$tabId' class='nav nav-tabs".( $class ? " ".$class : '' )."'>\n";
+            $html .= "<ul id='$tabId' class='nav ".( $class ? " ".$class : ' nav-tabs' )."'>\n";
             foreach ( $tab_title['title'] as $arr => $v ) {
                 $v_title = $v;
                 $tab_id = $tab_title['id'][ $arr ];
