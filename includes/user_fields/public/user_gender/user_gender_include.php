@@ -7,6 +7,11 @@
 | Filename: user_gender_include.php
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
+| Credits for Icons: gender icons
+| Author: https://www.flaticon.com/authors/freepik
+| Website: https://www.flaticon.com
+| Icon made by Freepik from www.flaticon.com
++--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
 | modify it under the terms of this license which you
@@ -49,13 +54,13 @@ $locale['uf_gender_title'] = [
 for ($i = 0; $i < count($locale['uf_gender_title']); $i++) {
     switch ($gen_set) {
         case 3:
-            $value = "<img src='".INCLUDES."user_fields/public/user_gender/images/".$locale['uf_img'][$gen_set][$i].".png' style='width: 16px;' alt='".$locale['uf_gender_title'][$i]."' title='".$locale['uf_gender_title'][$i]."'/>";
+            $value = "<img src='".INCLUDES."user_fields/public/user_gender/images/".$locale['uf_img'][ $gen_set ][ $i ].".svg' style='width: 20px;' alt='".$locale['uf_gender_title'][ $i ]."' title='".$locale['uf_gender_title'][ $i ]."'/>";
             break;
         case 1:
             $value = "<i class='".$locale['uf_img'][$gen_set][$i]." fa-fw fa-lg m-r-10'></i>".$locale['uf_gender_title'][$i];
             break;
         case 2:
-            $value = "<img src='".INCLUDES."user_fields/public/user_gender/images/".$locale['uf_img'][$gen_set][$i].".png' style='width: 16px;' alt='".$locale['uf_gender_title'][$i]."' title='".$locale['uf_gender_title'][$i]."'/> ".$locale['uf_gender_title'][$i];
+            $value = "<img src='".INCLUDES."user_fields/public/user_gender/images/".$locale['uf_img'][ $gen_set ][ $i ].".svg' style='width: 20px;' alt='".$locale['uf_gender_title'][ $i ]."' title='".$locale['uf_gender_title'][ $i ]."'/> ".$locale['uf_gender_title'][ $i ];
             break;
         default:
             $value = $locale['uf_gender_title'][$i];
