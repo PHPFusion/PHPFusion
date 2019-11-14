@@ -17,6 +17,7 @@
 +--------------------------------------------------------*/
 
 use PHPFusion\Sessions;
+use PHPFusion\UserFieldsQuantum;
 
 require_once __DIR__.'/../maincore.php';
 require_once THEMES.'templates/admin_header.php';
@@ -52,14 +53,14 @@ if (post('clear_cache')) {
 if (post('savesettings')) {
     // Save settings after validation
     $inputData = [
-        'captcha'               => sanitizer('captcha', '', 'captcha'),
-        'privacy_policy'        => sanitizer( 'privacy_policy', '', 'privacy_policy' ),
-        'allow_php_exe'         => sanitizer('allow_php_exe', 0, 'allow_php_exe'),
-        'flood_interval'        => sanitizer('flood_interval', 15, 'flood_interval'),
-        'flood_autoban'         => sanitizer('flood_autoban', 0, 'flood_autoban'),
-        'maintenance_level'     => sanitizer('maintenance_level', 102, 'maintenance_level'),
-        'maintenance'           => sanitizer('maintenance', 0, 'maintenance'),
-        'maintenance_message'   => descript(addslashes(post('maintenance_message'))),
+        'captcha'             => sanitizer('captcha', '', 'captcha'),
+        'privacy_policy'      => form_sanitizer( $_POST['privacy_policy'], '', 'privacy_policy', TRUE ),
+        'allow_php_exe'       => sanitizer('allow_php_exe', 0, 'allow_php_exe'),
+        'flood_interval'      => sanitizer('flood_interval', 15, 'flood_interval'),
+        'flood_autoban'       => sanitizer('flood_autoban', 0, 'flood_autoban'),
+        'maintenance_level'   => sanitizer('maintenance_level', 102, 'maintenance_level'),
+        'maintenance'         => sanitizer('maintenance', 0, 'maintenance'),
+        'maintenance_message' => descript(addslashes(post('maintenance_message'))),
         'bad_words_enabled'     => sanitizer('bad_words_enabled', 0, 'bad_words_enabled'),
         'bad_words'             => post( 'bad_words' ),
         'bad_word_replace'      => sanitizer('bad_word_replace', '', 'bad_word_replace'),
@@ -163,7 +164,7 @@ echo form_select('maintenance', $locale['657'], $settings['maintenance'], [
 echo form_textarea('maintenance_message', $locale['658'], stripslashes($settings['maintenance_message']), ['autosize' => TRUE, 'html' => !fusion_get_settings('tinymce_enabled') ? TRUE : FALSE]);
 closeside();
 openside('');
-echo \PHPFusion\UserFieldsQuantum::quantum_multilocale_fields('privacy_policy', $locale['820'], $settings['privacy_policy'], [
+echo UserFieldsQuantum::quantum_multilocale_fields( 'privacy_policy', $locale['820'], $settings['privacy_policy'], [
     'autosize'  => 1,
     'form_name' => 'settingsform',
     'html'      => !fusion_get_settings('tinymce_enabled') ? TRUE : FALSE,
