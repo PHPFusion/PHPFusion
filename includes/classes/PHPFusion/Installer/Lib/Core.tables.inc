@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-function get_core_tables($localeset) {
+function get_core_tables( $localeset ) {
     /*
      * Modeled for compositing table sql comparison for upgrade/reinstall/and install friendly
      * rather than maintaining files after files
@@ -578,25 +578,25 @@ function get_core_tables($localeset) {
             'length' => 30,
         ],
         'user_firstname' => [
-            'type' => 'VARCHAR',
+            'type'   => 'VARCHAR',
             'length' => 70,
         ],
-        'user_lastname' => [
-            'type' => 'VARCHAR',
+        'user_lastname'  => [
+            'type'   => 'VARCHAR',
             'length' => 70,
         ],
         'user_email'     => [
             'type'   => 'VARCHAR',
             'length' => 100,
         ],
-        'user_language' => [
-            'type' => 'VARCHAR',
+        'user_language'  => [
+            'type'   => 'VARCHAR',
             'length' => 70,
         ],
-        'user_status' => [
-            'type' => 'SMALLINT',
+        'user_status'    => [
+            'type'   => 'SMALLINT',
             'length' => 3,
-            'key' => 2,
+            'key'    => 2,
         ],
         'user_datestamp' => [
             'type'     => 'INT',
@@ -672,29 +672,6 @@ function get_core_tables($localeset) {
             'type'   => 'VARCHAR',
             'length' => 50,
         ] //template_language VARCHAR(50) NOT NULL,
-    ];
-    $table_package['login_connectors'] = [
-        'login_name'     => [
-            'type'           => 'VARCHAR',
-            'length'         => 100,
-            'auto_increment' => FALSE,
-            'key'            => 1,
-            'default'        => '0',
-            'unsigned'       => FALSE,
-        ], //login_name VARCHAR(100) NOT NULL DEFAULT '0',
-        'login_type'     => [
-            'type'    => 'VARCHAR',
-            'length'  => 10,
-            'default' => '0'
-        ], //login_type VARCHAR(10) NOT NULL DEFAULT '0',
-        'login_status'   => [
-            'type'    => 'TINYINT',
-            'length'  => 1,
-            'default' => '0'
-        ], //login_status TINYINT(1) NOT NULL DEFAULT 0,
-        'login_settings' => [
-            'type' => 'TEXT'
-        ] //login_settings text NOT NULL,
     ];
     $table_package['ratings'] = [
         'rating_id'        => [
@@ -1297,29 +1274,29 @@ function get_core_tables($localeset) {
         ]
     ];
     // Social Relationships Table
-    $table_package['user_social'] = [
-        'social_id'           => [
-            'type'           => 'BIGINT',
-            'length'         => 20,
-            'auto_increment' => TRUE,
-            'key'            => 1,
-            'unsigned'       => TRUE
+    $table_package['user_relations'] = [
+        'user_a'             => [
+            'type'     => 'BIGINT',
+            'length'   => 20,
+            'unsigned' => TRUE,
+            'key'      => 2,
         ],
-        'social_from_user_id' => [
-            'type'   => 'BIGINT',
-            'length' => 20,
-            'key'    => 2,
+        'user_b'             => [
+            'type'     => 'BIGINT',
+            'length'   => 20,
+            'unsigned' => TRUE,
+            'key'      => 2,
         ],
-        'social_to_user_id'   => [
-            'type'   => 'BIGINT',
-            'length' => 20,
-            'key'    => 2,
+        'relation_status'    => [
+            'type'     => 'TINYINT',
+            'length'   => 1,
+            'unsigned' => TRUE,
         ],
-        'social_status'       => [
+        'relation_status'    => [
             'type'   => 'TINYINT',
-            'length' => 1
+            'length' => 3
         ],
-        'social_datestamp'    => [
+        'relation_datestamp' => [
             'type'     => 'INT',
             'length'   => 10,
             'unsigned' => TRUE,
@@ -1447,45 +1424,45 @@ function get_core_tables($localeset) {
         ], //userlog_timestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
     ];
     $table_package['users'] = [
-        'user_id'              => [
+        'user_id'          => [
             'type'           => 'MEDIUMINT',
             'length'         => 8,
             'auto_increment' => TRUE,
             'key'            => 1, //PRIMARY KEY (user_id),
             'unsigned'       => TRUE,
         ], // user_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-        'user_name'            => [
+        'user_name'        => [
             'type'      => 'VARCHAR',
             'length'    => 30,
             'key'       => 2, //KEY user_name (user_name),
             'full_text' => TRUE, // FULLTEXT (user_name ASC)
         ],
-        'user_display' => [
-            'type' => 'TINYINT',
+        'user_display'     => [
+            'type'   => 'TINYINT',
             'length' => 1,
         ],
         'user_displayname' => [
-            'type' => 'VARCHAR',
+            'type'   => 'VARCHAR',
             'length' => 70,
         ],
-        'user_firstname' => [
-            'type' => 'VARCHAR',
+        'user_firstname'   => [
+            'type'   => 'VARCHAR',
             'length' => 70,
         ],
-        'user_lastname' => [
-            'type' => 'VARCHAR',
+        'user_lastname'    => [
+            'type'   => 'VARCHAR',
             'length' => 70,
         ],
-        'user_algo'            => [
+        'user_algo'        => [
             'type'    => 'VARCHAR',
             'length'  => 10,
             'default' => 'sha256'
         ], //user_algo VARCHAR(10) NOT NULL DEFAULT 'sha256',
-        'user_salt'            => [
+        'user_salt'        => [
             'type'   => 'VARCHAR',
             'length' => 50,
         ], //user_salt VARCHAR(40) NOT NULL DEFAULT '',
-        'user_password'        => [
+        'user_password'    => [
             'type'   => 'VARCHAR',
             'length' => 64,
         ], //user_password VARCHAR(64) NOT NULL DEFAULT '',
@@ -1669,7 +1646,7 @@ function get_core_tables($localeset) {
             'type' => 'TEXT'
         ]
     ];
-
+    
     /*
     $table_package['user_notify'] = [
         'notice_id' => [
@@ -1711,6 +1688,6 @@ function get_core_tables($localeset) {
         ]
     ];
     */
-
+    
     return $table_package;
 }
