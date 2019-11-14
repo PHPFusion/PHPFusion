@@ -15,6 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
+use PHPFusion\Sessions;
+
 require_once __DIR__.'/../maincore.php';
 require_once THEMES.'templates/admin_header.php';
 pageAccess('S9');
@@ -36,7 +39,7 @@ if ($temp = opendir(INCLUDES."captchas/")) {
 
 if (post('clear_cache')) {
     if ($settings['database_sessions']) {
-        $session = \PHPFusion\Sessions::getInstance(COOKIE_PREFIX.'session');
+        $session = Sessions::getInstance( COOKIE_PREFIX.'session' );
         $session->_purge();
     } else {
         // Where system has been disabled and instance could not be found, invoke manually.
@@ -50,7 +53,7 @@ if (post('savesettings')) {
     // Save settings after validation
     $inputData = [
         'captcha'               => sanitizer('captcha', '', 'captcha'),
-        'privacy_policy'        => sanitizer('privacy_policy', '', 'privacy_policy', TRUE),
+        'privacy_policy'        => sanitizer( 'privacy_policy', '', 'privacy_policy' ),
         'allow_php_exe'         => sanitizer('allow_php_exe', 0, 'allow_php_exe'),
         'flood_interval'        => sanitizer('flood_interval', 15, 'flood_interval'),
         'flood_autoban'         => sanitizer('flood_autoban', 0, 'flood_autoban'),
@@ -58,9 +61,9 @@ if (post('savesettings')) {
         'maintenance'           => sanitizer('maintenance', 0, 'maintenance'),
         'maintenance_message'   => descript(addslashes(post('maintenance_message'))),
         'bad_words_enabled'     => sanitizer('bad_words_enabled', 0, 'bad_words_enabled'),
-        'bad_words'             => stripinput(post('bad_words')),
+        'bad_words'             => post( 'bad_words' ),
         'bad_word_replace'      => sanitizer('bad_word_replace', '', 'bad_word_replace'),
-        'user_name_ban'         => stripinput('user_name_ban'),
+        'user_name_ban'         => post( 'user_name_ban' ),
         'database_sessions'     => sanitizer('database_sessions', '', 'database_sessions'),
         'form_tokens'           => sanitizer('form_tokens', '', 'form_tokens'),
         'gateway'               => sanitizer('gateway', 0, 'gateway'),
