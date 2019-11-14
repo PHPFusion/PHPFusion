@@ -57,5 +57,6 @@ define("DB_USER_SOCIAL", DB_PREFIX."user_social");
 define("DB_USER_GROUPS", DB_PREFIX."user_groups");
 define("DB_USER_LOG", DB_PREFIX."user_log");
 define("DB_USERS", DB_PREFIX."users");
+define( "DB_USER_RELATIONS", DB_PREFIX."user_relations" );
 define("DB_THEME", DB_PREFIX."theme");
 define("DB_TAGS", DB_PREFIX."tags");

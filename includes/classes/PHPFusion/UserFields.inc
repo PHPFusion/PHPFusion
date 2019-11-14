@@ -153,7 +153,7 @@ class UserFields extends UserFieldsQuantum {
      */
     public function addOutputPage( $key, $title, $file ) {
         $_ref = get( 'profile_page' );
-
+    
         self::$output_page[ $key ] = [
             'id'    => $key,
             'title' => $title,
