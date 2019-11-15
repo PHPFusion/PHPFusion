@@ -13,6 +13,8 @@ class ProfileOutput {
     
     private $userFields;
     
+    private $userRelation;
+    
     public $show_admin_options = FALSE;
     
     public $profile_id = 0;
@@ -40,6 +42,7 @@ class ProfileOutput {
     private $method = 'display';
     
     private $registration = FALSE;
+    
     
     /**
      * ProfileOutput constructor.
@@ -136,16 +139,19 @@ class ProfileOutput {
         // Not own
         if ( iMEMBER && !iPROFILE ) {
     
+            // Enable PHP Listener
             $this->requestAction();
             
             $this->info['buttons'] = [
                 'user_pm_title' => $locale['u043'],
                 'user_pm_link'  => BASEDIR."messages.php?msg_send=".$this->user_data['user_id']
             ];
+    
             $this->info['relations_button'] = openform( 'relationsfrm', 'post' ).$this->showRelationButton().closeform();
         }
         
         if ( $this->userFields->checkModAccess() ) {
+    
             $aidlink = fusion_get_aidlink();
             $this->info['user_admin'] = [
                 'user_edit_title'     => $locale['edit'],
@@ -164,9 +170,19 @@ class ProfileOutput {
         }
     }
     
-    private function getRelationRequest() {
-        $request_type = [ 'friend_request', 'accept_request', 'cancel_request', 'block_user', 'unblock_user', 'unfriend_request' ];
-        foreach ( $request_type as $type ) {
+    private $request_type = [ 'friend_request', 'accept_request', 'cancel_request', 'block_user', 'unblock_user', 'unfriend_request' ];
+    
+    public function getRequestType() {
+        return $this->request_type;
+    }
+    
+    /**
+     * Request Actions Listener
+     *
+     * @return array
+     */
+    public function detectRequest() {
+        foreach ( $this->request_type as $type ) {
             if ( $value = post( $type, FILTER_VALIDATE_INT ) ) {
                 return [
                     'friend_id'    => $value,
@@ -177,16 +193,19 @@ class ProfileOutput {
         return [];
     }
     
+    /**
+     * Request Action Execution
+     */
     public function requestAction() {
         if ( iMEMBER ) {
             $user_id = fusion_get_userdata( 'user_id' );
-            $request = $this->getRelationRequest();
+            $request = $this->detectRequest();
             if ( !empty( $request['request_type'] ) && !empty( $request['friend_id'] ) ) {
                 $friend_id = $request['friend_id'];
                 switch ( $request['request_type'] ) {
                     case 'friend_request':
                         if ( $this->userRelation->friendRequest( $user_id, $friend_id ) ) {
-                            addNotice( 'success', 'You have requested to be friend with '.$this->user_data['user_name'] );
+                            addNotice( 'success', 'You have requested to be friends with '.$this->user_data['user_name'] );
                             redirect( FUSION_REQUEST );
                         }
                         break;
@@ -234,7 +253,7 @@ class ProfileOutput {
                 if ( $row['relation_action'] === fusion_get_userdata( 'user_id' ) ) {
                     // Show, "Friend request sent" button. Show options to cancel the friend request.
                     return
-                        form_button( 'friend_request', 'Friend Request Sent', $this->user_data['user_id'], [ 'class' => 'btn-primary', 'deactivate' => TRUE ] ).
+                        form_button( 'friend_request', 'Friend Request Sent', $this->user_data['user_id'], [ 'class' => 'btn-primary', 'type' => 'button', 'deactivate' => TRUE ] ).
                         form_button( 'cancel_request', 'Cancel Request', $this->user_data['user_id'], [ 'class' => 'btn-default' ] );
     
                 } else if ( $row['relation_action'] === $this->user_data['user_id'] ) {
