@@ -23,7 +23,7 @@
 
         // Create global element references
         this.button = null;
-        this.requestUrl = THEMES + 'FusionTheme/themepack/fusion/ajax/relations.ajax.php';
+        this.requestUrl = INCLUDES + 'requests/relations.ajax.php';
 
         // Define option defaults
         let options = {
