@@ -48,6 +48,7 @@ class ProfileOutput {
      */
     public function __construct( UserFields $userFields ) {
         $this->userFields = $userFields;
+        $this->userRelation = new UserRelations();
     }
     
     /**
@@ -61,7 +62,6 @@ class ProfileOutput {
     private function setInfo() {
         
         $locale = fusion_get_locale();
-    
         // current user is the profile owner.
         define( 'iPROFILE', fusion_get_userdata( "user_id" ) == $this->user_data['user_id'] ? TRUE : FALSE );
         
@@ -135,6 +135,9 @@ class ProfileOutput {
         
         // Not own
         if ( iMEMBER && !iPROFILE ) {
+    
+            $this->requestAction();
+            
             $this->info['buttons'] = [
                 'user_pm_title' => $locale['u043'],
                 'user_pm_link'  => BASEDIR."messages.php?msg_send=".$this->user_data['user_id']
@@ -159,23 +162,60 @@ class ProfileOutput {
             ];
             
         }
-        
+    }
+    
+    public function requestAction() {
+        if ( iMEMBER ) {
+            $user_id = fusion_get_userdata( 'user_id' );
+            if ( $friend_id = post( 'friend_request', FILTER_VALIDATE_INT ) ) {
+                if ( $this->userRelation->friendRequest( $user_id, $friend_id ) ) {
+                    addNotice( 'success', 'You have requested to be friend with '.$this->user_data['user_name'] );
+                    redirect( FUSION_REQUEST );
+                }
+            } else if ( $friend_id = post( 'accept_request', FILTER_VALIDATE_INT ) ) {
+                if ( $this->userRelation->acceptFriendRequest( $user_id, $friend_id ) ) {
+                    addNotice( 'success', 'You are now friends with '.$this->user_data['user_name'] );
+                    //redirect( FUSION_REQUEST );
+                }
+            } else if ( $friend_id = post( 'cancel_request', FILTER_VALIDATE_INT ) ) {
+                if ( $this->userRelation->cancelFriendRequest( $user_id, $friend_id ) ) {
+                    addNotice( 'success', 'Your friendship request with '.$this->user_data['user_name'].' has been cancelled' );
+                    redirect( FUSION_REQUEST );
+                }
+            } else if ( $friend_id = post( 'block_user', FILTER_VALIDATE_INT ) ) {
+                if ( $this->userRelation->blockRequest( $user_id, $friend_id ) ) {
+                    addNotice( 'success', $this->user_data['user_name'].' is now added to your blocked list' );
+                    redirect( FUSION_REQUEST );
+                }
+            } else if ( $friend_id = post( 'unblock_user', FILTER_VALIDATE_INT ) ) {
+                if ( $this->userRelation->unblockRequest( $user_id, $friend_id ) ) {
+                    addNotice( 'success', $this->user_data['user_name'].' is removed from your blocked list' );
+                    redirect( FUSION_REQUEST );
+                }
+            } else if ( $friend_id = post( 'unfriend_request', FILTER_VALIDATE_INT ) ) {
+                if ( $this->userRelation->unfriendRequest( $user_id, $friend_id ) ) {
+                    addNotice( 'success', $this->user_data['user_name'].' is no longer your friend' );
+                    redirect( FUSION_REQUEST );
+                }
+            }
+        }
     }
     
     /**
      * @return string
      */
     private function showRelationButton() {
-        $relation = new UserRelations();
-        $row = $relation->getRelation( $this->user_data['user_id'] );
+    
+        $row = $this->userRelation->getRelation( $this->user_data['user_id'] );
         switch ( $row['relation_status'] ) {
             case 0:
-                if ( $row['relation_action'] === $this->user_data['user_id'] ) {
+                if ( $row['relation_action'] === fusion_get_userdata( 'user_id' ) ) {
                     // Show, "Friend request sent" button. Show options to cancel the friend request.
                     return
                         form_button( 'friend_request', 'Friend Request Sent', $this->user_data['user_id'], [ 'class' => 'btn-primary', 'deactivate' => TRUE ] ).
                         form_button( 'cancel_request', 'Cancel Request', $this->user_data['user_id'], [ 'class' => 'btn-default' ] );
-                } else if ( $row['action_user_id'] === $this->user_data['user_id'] ) {
+        
+                } else if ( $row['relation_action'] === $this->user_data['user_id'] ) {
                     // Show, "Accept Friend request" button. Show options to block and reject friend request.
                     return form_button( 'accept_request', 'Accept Friend Request', $this->user_data['user_id'], [ 'class' => 'btn-default' ] );
                 }

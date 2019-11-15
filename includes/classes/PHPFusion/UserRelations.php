@@ -3,7 +3,6 @@ namespace PHPFusion;
 
 class UserRelations {
     
-    
     private static $friend_list = [];
     private static $requested_list = [];
     private static $requestor_list = [];
@@ -11,6 +10,7 @@ class UserRelations {
     public function cacheRelations() {
         // cache
     }
+    
     
     public function getUserRelations( $key = NULL ) {
         $relations = [
@@ -27,25 +27,94 @@ class UserRelations {
      *
      * @param int $request_user
      * @param int $target_user
-     * @param int $status
-     * @param int $user_action
      *
      * @return int
      */
-    public function friendRequest( int $request_user, int $target_user, int $status, int $user_action ) {
-        $action = [
-                'relation_status'    => 0,
-                'relation_action'    => $request_user,
-                'relation_datestamp' => TIME,
-            ] + $this->setUserRequest( $request_user, $target_user );
-        dbquery( "INSERT INTO ".DB_USER_RELATIONS." ('user_one','user_two','relation_status','relation_action', 'relation_datestamp') VALUES (:index1, :index2, :index3, :index4, :index5)", [
-            ':index1' => $action['user_a'],
-            ':index2' => $action['user_b'],
-            ':index3' => $action['relation_status'],
-            ':index4' => $action['relation_action'],
-            ':index5' => $action['relation_datestamp']
-        ] );
-        return dblastid();
+    public function friendRequest( int $request_user, int $target_user ) {
+        $action_param = $this->setUserRequest( $request_user, $target_user );
+        if ( !dbcount( "(user_a)", DB_USER_RELATIONS, "`user_a`=:user_a AND `user_b`=:user_b", $action_param ) ) {
+            dbquery( "INSERT INTO ".DB_USER_RELATIONS." (`user_a`,`user_b`,`relation_status`,`relation_action`, `relation_datestamp`) VALUES (:user_a, :user_b, :status, :action, :time)", [
+                    ':status' => 0,
+                    ':action' => $request_user,
+                    ':time'   => TIME,
+                ] + $action_param );
+            
+            return TRUE;
+        }
+        return FALSE;
+    }
+    
+    /**
+     * Cancels sent Friend Request
+     *
+     * @param int $request_user
+     * @param int $target_user
+     *
+     * @return bool
+     */
+    public function cancelFriendRequest( int $request_user, int $target_user ) {
+        $action_param = $this->setUserRequest( $request_user, $target_user );
+        if ( dbcount( "(user_a)", DB_USER_RELATIONS, "`user_a`=:user_a AND `user_b`=:user_b AND `relation_status`=0", $action_param ) ) {
+            dbquery( "DELETE FROM ".DB_USER_RELATIONS." WHERE `user_a`=:user_a AND `user_b`=:user_b", $action_param );
+            return TRUE;
+        }
+        return FALSE;
+    }
+    
+    /**
+     * Unfriend Request
+     *
+     * @param int $request_user
+     * @param int $target_user
+     *
+     * @return bool
+     */
+    public function unfriendRequest( int $request_user, int $target_user ) {
+        $action_param = $this->setUserRequest( $request_user, $target_user );
+        if ( dbcount( "(user_a)", DB_USER_RELATIONS, "`user_a`=:user_a AND `user_b`=:user_b AND `relation_status`=1", $action_param ) ) {
+            dbquery( "DELETE FROM ".DB_USER_RELATIONS." WHERE `user_a`=:user_a AND `user_b`=:user_b", $action_param );
+            return TRUE;
+        }
+        return FALSE;
+    }
+    
+    
+    /**
+     * Request to Block User
+     *
+     * @param int $request_user
+     * @param int $target_user
+     *
+     * @return bool
+     */
+    public function blockRequest( int $request_user, int $target_user ) {
+        $action_param = $this->setUserRequest( $request_user, $target_user );
+        if ( !dbcount( "(user_a)", DB_USER_RELATIONS, "user_a=:user_a AND user_b=:user_b AND relation_status=0", $action_param ) ) {
+            dbquery( "INSERT INTO ".DB_USER_RELATIONS." (`user_a`, `user_b`, `relation_action`, `relation_status`, `relation_datestamp`) VALUES (:user_a, :user_b, :action, :status, :time)", [
+                    ':status' => 3,
+                    ':time'   => TIME,
+                    ':action' => $request_user
+                ] + $action_param );
+            return TRUE;
+        }
+        return FALSE;
+    }
+    
+    /**
+     * Request to Unblock User
+     *
+     * @param int $request_user
+     * @param int $target_user
+     *
+     * @return bool
+     */
+    public function unblockRequest( int $request_user, int $target_user ) {
+        $action_param = $this->setUserRequest( $request_user, $target_user );
+        if ( dbcount( "(user_a)", DB_USER_RELATIONS, "`user_a`=:user_a AND `user_b`=:user_b AND `relation_status`=3", $action_param ) ) {
+            dbquery( "DELETE FROM ".DB_USER_RELATIONS." WHERE `user_a`=:user_a AND `user_b`=:user_b AND relation_status=3", $action_param );
+            return TRUE;
+        }
+        return FALSE;
     }
     
     /**
@@ -57,13 +126,13 @@ class UserRelations {
      * @return mixed
      */
     public function setUserRequest( int $user_a, int $user_b ) {
-        $user['user_a'] = $user_a;
-        $user['user_b'] = $user_b;
+        $user[':user_a'] = $user_a;
+        $user[':user_b'] = $user_b;
         if ( $user_a > $user_b ) {
-            $user['user_a'] = $user_b;
-            $user['user_b'] = $user_a;
+            $user[':user_a'] = $user_b;
+            $user[':user_b'] = $user_a;
         }
-        if ( isnum( $user['user_a'] ) && isnum( $user['user_b'] ) ) {
+        if ( isnum( $user[':user_a'] ) && isnum( $user[':user_b'] ) ) {
             return $user;
         }
         return [];
@@ -77,23 +146,15 @@ class UserRelations {
      *
      * @return bool
      */
-    public function friendAccept( int $accept_user, int $target_user ) {
-        $action = [
-                'relation_status'    => 1,
-                'relation_action'    => $accept_user,
-                'relation_datestamp' => TIME,
-            ] + $this->setUserRequest( $accept_user, $target_user );
-        
-        if ( dbcount( "(user_a)", DB_USER_RELATIONS, "user_a=:index1 AND user_b=:index2 AND relation_status=0", [
-            ':index1' => $action['user_a'],
-            ':index2' => $action['user_b']
-        ] ) ) {
-            dbquery( "UPDATE ".DB_USER_RELATIONS." SET 'relation_status'=:index1,'relation_action' =:index2 WHERE user_a=:index3 AND user_b=:index4", [
-                ':index1' => $action['relation_status'],
-                ':index2' => $action['relation_action'],
-                ':index3' => $action['user_a'],
-                ':index4' => $action['user_b']
-            ] );
+    public function acceptFriendRequest( int $accept_user, int $target_user ) {
+        $action_param = $this->setUserRequest( $accept_user, $target_user );
+        if ( dbcount( "(user_a)", DB_USER_RELATIONS, "user_a=:user_a AND user_b=:user_b AND relation_status=0", $action_param ) ) {
+            dbquery( "UPDATE ".DB_USER_RELATIONS." SET `relation_status`=:status,`relation_action`=:action, `relation_datestamp`=:time WHERE `user_a`=:user_a AND `user_b`=:user_b AND `relation_status`=0",
+                [
+                    ':status' => 1,
+                    ':action' => $accept_user,
+                    ':time'   => TIME,
+                ] + $action_param );
             return TRUE;
         }
         return FALSE;
@@ -203,11 +264,8 @@ class UserRelations {
      */
     public function getRelation( $user_id ) {
         if ( iMEMBER ) {
-            $action = $this->setUserRequest( fusion_get_userdata( 'user_id' ), $user_id );
-            $result = dbquery( "SELECT * FROM ".DB_USER_RELATIONS." WHERE user_a=:index1 AND user_b=:index2", [
-                ':index1' => $action['user_a'],
-                ':index2' => $action['user_b']
-            ] );
+            $action_param = $this->setUserRequest( fusion_get_userdata( 'user_id' ), $user_id );
+            $result = dbquery( "SELECT * FROM ".DB_USER_RELATIONS." WHERE user_a=:user_a AND user_b=:user_b", $action_param);
             if ( dbrows( $result ) ) {
                 $data = dbarray( $result );
                 return $data;

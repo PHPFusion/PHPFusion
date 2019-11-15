@@ -105,10 +105,6 @@ class UserFields extends UserFieldsQuantum {
         $this->aidlink = get( 'aid' ) && iADMIN && checkrights( 'M' ) ? fusion_get_aidlink() : '';
     }
     
-    public function profile_aidlink() {
-        return $this->aidlink;
-    }
-    
     /**
      * Check whether a user field is available/installed
      *
