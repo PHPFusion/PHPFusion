@@ -274,5 +274,4 @@ class UserRelations {
         return NULL;
     }
     
-    
 }

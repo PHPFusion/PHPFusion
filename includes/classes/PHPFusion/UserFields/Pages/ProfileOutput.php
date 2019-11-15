@@ -164,38 +164,60 @@ class ProfileOutput {
         }
     }
     
+    private function getRelationRequest() {
+        $request_type = [ 'friend_request', 'accept_request', 'cancel_request', 'block_user', 'unblock_user', 'unfriend_request' ];
+        foreach ( $request_type as $type ) {
+            if ( $value = post( $type, FILTER_VALIDATE_INT ) ) {
+                return [
+                    'friend_id'    => $value,
+                    'request_type' => $type
+                ];
+            }
+        }
+        return [];
+    }
+    
     public function requestAction() {
         if ( iMEMBER ) {
             $user_id = fusion_get_userdata( 'user_id' );
-            if ( $friend_id = post( 'friend_request', FILTER_VALIDATE_INT ) ) {
-                if ( $this->userRelation->friendRequest( $user_id, $friend_id ) ) {
-                    addNotice( 'success', 'You have requested to be friend with '.$this->user_data['user_name'] );
-                    redirect( FUSION_REQUEST );
-                }
-            } else if ( $friend_id = post( 'accept_request', FILTER_VALIDATE_INT ) ) {
-                if ( $this->userRelation->acceptFriendRequest( $user_id, $friend_id ) ) {
-                    addNotice( 'success', 'You are now friends with '.$this->user_data['user_name'] );
-                    //redirect( FUSION_REQUEST );
-                }
-            } else if ( $friend_id = post( 'cancel_request', FILTER_VALIDATE_INT ) ) {
-                if ( $this->userRelation->cancelFriendRequest( $user_id, $friend_id ) ) {
-                    addNotice( 'success', 'Your friendship request with '.$this->user_data['user_name'].' has been cancelled' );
-                    redirect( FUSION_REQUEST );
-                }
-            } else if ( $friend_id = post( 'block_user', FILTER_VALIDATE_INT ) ) {
-                if ( $this->userRelation->blockRequest( $user_id, $friend_id ) ) {
-                    addNotice( 'success', $this->user_data['user_name'].' is now added to your blocked list' );
-                    redirect( FUSION_REQUEST );
-                }
-            } else if ( $friend_id = post( 'unblock_user', FILTER_VALIDATE_INT ) ) {
-                if ( $this->userRelation->unblockRequest( $user_id, $friend_id ) ) {
-                    addNotice( 'success', $this->user_data['user_name'].' is removed from your blocked list' );
-                    redirect( FUSION_REQUEST );
-                }
-            } else if ( $friend_id = post( 'unfriend_request', FILTER_VALIDATE_INT ) ) {
-                if ( $this->userRelation->unfriendRequest( $user_id, $friend_id ) ) {
-                    addNotice( 'success', $this->user_data['user_name'].' is no longer your friend' );
-                    redirect( FUSION_REQUEST );
+            $request = $this->getRelationRequest();
+            if ( !empty( $request['request_type'] ) && !empty( $request['friend_id'] ) ) {
+                $friend_id = $request['friend_id'];
+                switch ( $request['request_type'] ) {
+                    case 'friend_request':
+                        if ( $this->userRelation->friendRequest( $user_id, $friend_id ) ) {
+                            addNotice( 'success', 'You have requested to be friend with '.$this->user_data['user_name'] );
+                            redirect( FUSION_REQUEST );
+                        }
+                        break;
+                    case 'accept_request':
+                        if ( $this->userRelation->acceptFriendRequest( $user_id, $friend_id ) ) {
+                            addNotice( 'success', 'You are now friends with '.$this->user_data['user_name'] );
+                            redirect( FUSION_REQUEST );
+                        }
+                        break;
+                    case 'cancel_request':
+                        if ( $this->userRelation->cancelFriendRequest( $user_id, $friend_id ) ) {
+                            addNotice( 'success', 'Your friendship request with '.$this->user_data['user_name'].' has been cancelled' );
+                            redirect( FUSION_REQUEST );
+                        }
+                        break;
+                    case 'block_user':
+                        if ( $this->userRelation->blockRequest( $user_id, $friend_id ) ) {
+                            addNotice( 'success', $this->user_data['user_name'].' is now added to your blocked list' );
+                            redirect( FUSION_REQUEST );
+                        }
+                        break;
+                    case 'unblock_user':
+                        if ( $this->userRelation->unblockRequest( $user_id, $friend_id ) ) {
+                            addNotice( 'success', $this->user_data['user_name'].' is removed from your blocked list' );
+                            redirect( FUSION_REQUEST );
+                        }
+                    case 'unfriend_request':
+                        if ( $this->userRelation->unfriendRequest( $user_id, $friend_id ) ) {
+                            addNotice( 'success', $this->user_data['user_name'].' is no longer your friend' );
+                            redirect( FUSION_REQUEST );
+                        }
                 }
             }
         }
@@ -214,7 +236,7 @@ class ProfileOutput {
                     return
                         form_button( 'friend_request', 'Friend Request Sent', $this->user_data['user_id'], [ 'class' => 'btn-primary', 'deactivate' => TRUE ] ).
                         form_button( 'cancel_request', 'Cancel Request', $this->user_data['user_id'], [ 'class' => 'btn-default' ] );
-        
+    
                 } else if ( $row['relation_action'] === $this->user_data['user_id'] ) {
                     // Show, "Accept Friend request" button. Show options to block and reject friend request.
                     return form_button( 'accept_request', 'Accept Friend Request', $this->user_data['user_id'], [ 'class' => 'btn-default' ] );
