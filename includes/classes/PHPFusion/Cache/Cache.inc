@@ -45,20 +45,37 @@ class Cache {
     /**
      * Cache constructor.
      *
+     * @param null $cache_storage
+     *
      * @throws CacheException
      */
-    public function __construct() {
+    public function __construct($cache_storage = NULL) {
+        if (!empty($cache_storage)) {
+            $driver = $cache_storage;
+        } else {
+            $cache_config = $this->getCacheConfig();
+            $driver = $cache_config['storage'];
+        }
+
+        $this->cache_storage = ucfirst($driver).'Cache';
+
+        $this->init();
+    }
+
+    /**
+     * @throws CacheException
+     */
+    public function init() {
         $cache_config = $this->getCacheConfig();
 
-        if (empty($cache_config['storage'])) {
+        if (empty($this->cache_storage)) {
             throw new CacheException('Can\'t find cache storage in config.');
         }
 
-        $path = CLASSES.'PHPFusion/Cache/Storage/'.ucfirst($cache_config['storage']).'Cache.inc';
+        $path = CLASSES.'PHPFusion/Cache/Storage/'.$this->cache_storage.'.inc';
 
         if (file_exists($path)) {
-            $class = '\\PHPFusion\\Cache\\Storage\\'.ucfirst($cache_config['storage']).'Cache';
-            $this->cache_storage = ucfirst($cache_config['storage']).'Cache';
+            $class = '\\PHPFusion\\Cache\\Storage\\'.$this->cache_storage;
             $this->cache = new $class($cache_config);
         } else {
             throw new CacheException('Cache file '.$path.' not found');
@@ -67,7 +84,6 @@ class Cache {
 
     /**
      * @return mixed|Cache
-     * @throws CacheException
      */
     public static function getInstance() {
         if (!self::$instance) {
