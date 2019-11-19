@@ -105,11 +105,21 @@ if (isset($_POST['save_download'])) {
     /** Bugs with having Link and File together -- File will take precedence **/
     if (fusion_safe() && !empty($_FILES['download_file']['name']) && is_uploaded_file($_FILES['download_file']['tmp_name'])) {
         $upload = form_sanitizer($_FILES['download_file'], '', 'download_file');
-        if (empty($upload['error'])) {
-            $data['download_file'] = !empty($upload['target_file']) ? $upload['target_file'] : !empty($upload['name']) ? $upload['name'] : '';
+        if (isset($upload['error']) && $upload['error'] == 0) {
+            
+            $data['download_file'] = '';
+            
+            if (!empty($upload['target_file'])) {
+                $data['download_file'] = $upload['target_file'];
+            }
+            if (!empty($upload['name'])) {
+                $data['download_file'] = $upload['name'];
+            }
+            
             if (isset($_POST['calc_upload'])) {
                 $data['download_filesize'] = parsebytesize($_FILES['download_file']['size']);
             }
+            
         }
     } else if (!empty($_POST['download_url']) && empty($data['download_file'])) {
         $data['download_url'] = form_sanitizer($_POST['download_url'], "", "download_url");

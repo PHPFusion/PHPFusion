@@ -15,14 +15,14 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-defined('IN_FUSION') || exit;
+defined( 'IN_FUSION' ) || exit;
 
-$locale = fusion_get_locale("", LOCALE.LOCALESET."setup.php");
+$locale = fusion_get_locale( "", LOCALE.LOCALESET."setup.php" );
 
 // Infusion general information
 $inf_title = $locale['downloads']['title'];
 $inf_description = $locale['downloads']['description'];
-$inf_version = "2.0";
+$inf_version = "2.1";
 $inf_developer = "PHP Fusion Development Team";
 $inf_email = "info@php-fusion.co.uk";
 $inf_weburl = "https://www.php-fusion.co.uk";
@@ -68,7 +68,7 @@ $inf_newtable[] = DB_DOWNLOAD_CATS." (
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 // Insert panel
-$inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction, panel_languages) VALUES ('".$locale['setup_3326']."', 'latest_downloads_panel', '', '1', '5', 'file', '0', '1', '1', '', '3', '".fusion_get_settings('enabled_languages')."')";
+$inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction, panel_languages) VALUES ('".$locale['setup_3326']."', 'latest_downloads_panel', '', '1', '5', 'file', '0', '1', '1', '', '3', '".fusion_get_settings( 'enabled_languages' )."')";
 
 // Insert settings
 $settings = [
@@ -84,10 +84,11 @@ $settings = [
     'download_pagination'          => 15,
     'download_allow_submission'    => 1,
     'download_screenshot_required' => 1,
-    'download_extended_required'   => 1
+    'download_extended_required'   => 1,
+    'download_auto_approve'        => 0
 ];
 
-foreach ($settings as $name => $value) {
+foreach ( $settings as $name => $value ) {
     $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('".$name."', '".$value."', '".$inf_folder."')";
 }
 
@@ -98,12 +99,12 @@ $inf_mlt[] = [
 ];
 
 // Multilanguage links
-$enabled_languages = makefilelist(LOCALE, ".|..", TRUE, "folders");
-if (!empty($enabled_languages)) {
-    foreach ($enabled_languages as $language) {
+$enabled_languages = makefilelist( LOCALE, ".|..", TRUE, "folders" );
+if ( !empty( $enabled_languages ) ) {
+    foreach ( $enabled_languages as $language ) {
         include LOCALE.$language."/setup.php";
-
-        $mlt_adminpanel[$language][] = [
+        
+        $mlt_adminpanel[ $language ][] = [
             "rights"   => "D",
             "image"    => $inf_image,
             "title"    => $locale['setup_3010'],
@@ -111,16 +112,16 @@ if (!empty($enabled_languages)) {
             "page"     => 1,
             'language' => $language
         ];
-
+        
         // Add
-        $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3302']."', 'infusions/downloads/downloads.php', '0', '2', '0', '2', '1', '".$language."')";
-        $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3314']."', 'submit.php?stype=d', ".USER_LEVEL_MEMBER.", '1', '0', '22', '1', '".$language."')";
-
+        $mlt_insertdbrow[ $language ][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3302']."', 'infusions/downloads/downloads.php', '0', '2', '0', '2', '1', '".$language."')";
+        $mlt_insertdbrow[ $language ][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3314']."', 'submit.php?stype=d', ".USER_LEVEL_MEMBER.", '1', '0', '22', '1', '".$language."')";
+        
         // Delete
-        $mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='infusions/downloads/downloads.php' AND link_language='".$language."'";
-        $mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=d' AND link_language='".$language."'";
-        $mlt_deldbrow[$language][] = DB_DOWNLOAD_CATS." WHERE download_cat_language='".$language."'";
-        $mlt_deldbrow[$language][] = DB_ADMIN." WHERE admin_rights='D' AND admin_language='".$language."'";
+        $mlt_deldbrow[ $language ][] = DB_SITE_LINKS." WHERE link_url='infusions/downloads/downloads.php' AND link_language='".$language."'";
+        $mlt_deldbrow[ $language ][] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=d' AND link_language='".$language."'";
+        $mlt_deldbrow[ $language ][] = DB_DOWNLOAD_CATS." WHERE download_cat_language='".$language."'";
+        $mlt_deldbrow[ $language ][] = DB_ADMIN." WHERE admin_rights='D' AND admin_language='".$language."'";
     }
 } else {
     $inf_adminpanel[] = [
@@ -131,7 +132,7 @@ if (!empty($enabled_languages)) {
         "page"     => 1,
         'language' => LANGUAGE
     ];
-
+    
     $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES('".$locale['setup_3302']."', 'infusions/downloads/downloads.php', '0', '2', '0', '2', '1', '".LANGUAGE."')";
     $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3314']."', 'submit.php?stype=d', ".USER_LEVEL_MEMBER.", '1', '0', '22', '1', '".LANGUAGE."')";
 }

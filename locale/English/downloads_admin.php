@@ -47,6 +47,7 @@ $locale['download_0060'] = "Delete Submission";
 $locale['download_0061'] = "Publish Submission";
 $locale['download_0062'] = "Downloads submission has been deleted";
 $locale['download_0063'] = "Downloads submission has been published";
+$locale['download_0064'] = "Auto approve submissions?";
 $locale['download_0100'] = "Downloads added";
 $locale['download_0101'] = "Downloads updated";
 $locale['download_0102'] = "Downloads deleted";
