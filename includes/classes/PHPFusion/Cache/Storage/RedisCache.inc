@@ -34,7 +34,7 @@ class RedisCache implements ICache {
     /**
      * RedisCache constructor.
      *
-     * @param $config
+     * @param array $config
      *
      * @throws CacheException
      */
@@ -71,7 +71,7 @@ class RedisCache implements ICache {
      *
      * @param string $key cache key
      * @param mixed  $data
-     * @param mixed  $seconds
+     * @param int    $seconds
      */
     public function set($key, $data, $seconds = NULL) {
         if ($seconds !== NULL) {

@@ -33,7 +33,7 @@ class FileCache implements ICache {
     /**
      * FileCache constructor.
      *
-     * @param $config
+     * @param array $config
      */
     public function __construct($config) {
         $this->path = $config['path'];
@@ -48,7 +48,7 @@ class FileCache implements ICache {
      *
      * @param string $key cache key
      * @param mixed  $data
-     * @param mixed  $seconds
+     * @param int    $seconds
      */
     public function set($key, $data, $seconds = NULL) {
         $data = serialize($data);

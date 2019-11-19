@@ -34,7 +34,7 @@ class MemcacheCache implements ICache {
     /**
      * MemcacheCache constructor.
      *
-     * @param $config
+     * @param array $config
      *
      * @throws CacheException
      */
@@ -78,7 +78,7 @@ class MemcacheCache implements ICache {
      *
      * @param string $key cache key
      * @param mixed  $data
-     * @param mixed  $seconds
+     * @param int    $seconds
      */
     public function set($key, $data, $seconds = NULL) {
         if ($seconds !== NULL) {

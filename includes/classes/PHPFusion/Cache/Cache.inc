@@ -45,7 +45,7 @@ class Cache {
     /**
      * Cache constructor.
      *
-     * @param null $cache_storage
+     * @param string $cache_storage
      *
      * @throws CacheException
      */
@@ -134,7 +134,7 @@ class Cache {
      *
      * @param string $key cache key
      * @param mixed  $data
-     * @param mixed  $seconds
+     * @param int    $seconds
      */
     public function set($key, $data, $seconds = NULL) {
         $this->cache->set($key, $data, $seconds);

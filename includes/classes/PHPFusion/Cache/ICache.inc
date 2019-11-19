@@ -23,7 +23,7 @@ interface ICache {
      *
      * @param string $key cache key
      * @param mixed  $data
-     * @param mixed  $seconds
+     * @param int    $seconds
      */
     public function set($key, $data, $seconds);
 
