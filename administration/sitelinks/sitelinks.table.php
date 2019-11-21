@@ -205,10 +205,10 @@ class SiteLinks_Table implements TableSDK {
         $locale = fusion_get_locale();
 
         return [
-            'link_id'         => [
-                'title'  => $locale['SL_0073'],
-                'format' => '<i class="pointer handle fas fa-arrows"></i>'
-            ],
+            //'link_id'         => [
+            //    'title'  => $locale['SL_0073'],
+            //    'format' => '<i class="pointer handle fas fa-arrows"></i>'
+            //],
             'link_name'       => [
                 'title'       => $locale['SL_0050'],
                 'delete_link' => TRUE,
