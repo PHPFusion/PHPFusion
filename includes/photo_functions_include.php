@@ -101,12 +101,12 @@ function createsquarethumbnail($filetype, $origfile, $thumbfile, $new_size) {
 
 // returns the image name.
 function image_exists($dir, $image) {
-    $i = 1;
+    $counter = 1;
     $image_name = substr($image, 0, strrpos($image, "."));
     $image_ext = strrchr($image, ".");
     while (file_exists($dir.$image)) {
-        $image = $image_name."_".$i.$image_ext;
-        $i++;
+        $image = $image_name."_".$counter.$image_ext;
+        $counter++;
     }
 
     return $image;

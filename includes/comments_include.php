@@ -18,12 +18,14 @@
 defined('IN_FUSION') || exit;
 
 /**
- * @param            $comment_type      A
- * @param            $comment_db        DB_ARTICLES
- * @param            $comment_col       article_id
- * @param            $comment_item_id   $data['article_id']
- * @param            $clink             link to article page
- * @param bool|FALSE $ratings           FALSE
+ * Show comments form
+ *
+ * @param      $comment_type    -   A
+ * @param      $comment_db      -   DB_ARTICLES
+ * @param      $comment_col     -   article_id
+ * @param      $comment_item_id -   $data['article_id']
+ * @param      $clink           -   link to article page ends with &amp;
+ * @param bool $ratings         -   FALSE
  */
 function showcomments($comment_type, $comment_db, $comment_col, $comment_item_id, $clink, $ratings = FALSE) {
     $html = PHPFusion\Feedback\Comments::getInstance(
@@ -36,6 +38,7 @@ function showcomments($comment_type, $comment_db, $comment_col, $comment_item_id
             'comment_echo'          => FALSE,
             'comment_allow_subject' => FALSE,
             'comment_allow_ratings' => $ratings
-        ], '_'.$comment_type.$comment_item_id)->showComments();
+        ] )->showComments();
+    
     echo $html;
 }

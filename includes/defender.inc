@@ -575,8 +575,8 @@ class Defender {
     }
 
     public function fileSanitizer($key, $default = '', $input_name = FALSE) {
-
-        $upload = $this->form_sanitizer($_FILES[$key], $default, $input_name);
+    
+        $upload = $this->formSanitizer( $_FILES[ $key ], $default, $input_name );
         if (isset($upload['error']) && $upload['error'] == 0) {
             return $upload;
         }
@@ -634,7 +634,7 @@ class Defender {
      * @param $notice - Show custom notice message on validation errors
      */
     public static function stop($notice = '') {
-        debug_print_backtrace();
+        //debug_print_backtrace();
         if (!defined('FUSION_NULL')) {
             define('FUSION_NULL', TRUE);
             if ($notice) {
@@ -690,7 +690,13 @@ function sanitizer($value, $default = '', $input_name = FALSE, $is_multiLang = F
     return Defender::getInstance()->sanitizer($value, $default, $input_name, $is_multiLang);
 }
 
-
+/**
+ * @param        $value
+ * @param string $default
+ * @param bool   $input_name
+ *
+ * @return array|string
+ */
 function file_sanitizer($value, $default = '', $input_name = FALSE) {
 
     return defender::getInstance()->fileSanitizer($value, $default, $input_name);

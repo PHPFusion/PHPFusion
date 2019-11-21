@@ -6,13 +6,16 @@ class UserRelations {
     private static $friend_list = [];
     private static $requested_list = [];
     private static $requestor_list = [];
+    private static $follower_list = [];
     
-    public function cacheRelations() {
-        // cache
-    }
-    
-    
-    public function getUserRelations( $key = NULL ) {
+    /**
+     * Get relations status key/options
+     *
+     * @param null $key
+     *
+     * @return array|mixed|null
+     */
+    public function getUserRelationStatus( $key = NULL ) {
         $relations = [
             0 => 'Pending',
             1 => 'Accepted',
@@ -169,7 +172,7 @@ class UserRelations {
      *
      * @return bool
      */
-    public function checkUserFriendship( $user_a, $user_b ) {
+    public function checkUserFriendship( int $user_a, int $user_b ) {
         $action = $this->setUserRequest( $user_a, $user_b );
         return dbcount( "(user_a)", DB_USER_RELATIONS, "user_a=:index1 AND user_b=:index2 AND relation_status=1", [
             ':index1' => $action['user_a'],
@@ -185,7 +188,7 @@ class UserRelations {
      *
      * @return mixed
      */
-    public function getUserFriends( $user_id ) {
+    public function getUserFriends( int $user_id ) {
         
         if ( empty( self::$friend_list[ $user_id ] ) ) {
             $result = dbquery( "SElECT IF('user_a=:index3', 'user_b', 'user_a') 'user_id', relation_datestamp FROM ".DB_USER_RELATIONS." WHERE ('user_a'=:index1 OR 'user_b'=:index2) AND relation_status=1", [
@@ -202,6 +205,63 @@ class UserRelations {
         
         return self::$friend_list[ $user_id ];
     }
+    
+    /**
+     * Followers List
+     * Retrieve all the user's followers. Provide a user id
+     *
+     * @param int $user_id
+     *
+     * @return mixed
+     */
+    public function getUserFollowers( int $user_id ) {
+        if ( empty( self::$follower_list[ $user_id ] ) ) {
+            $param = [
+                ':user_a' => (int)$user_id,
+                ':user_b' => (int)$user_id,
+                ':action' => (int)$user_id,
+            ];
+            $result = dbquery( "SELECT IF(`user_a`=$user_id, `user_b`, `user_a`) 'user_id', relation_datestamp FROM ".DB_USER_RELATIONS." WHERE (`user_a`=:user_a OR `user_b`=:user_b) AND (`relation_status`=0 OR `relation_status`=1) AND `relation_action` != :action ORDER BY `relation_datestamp` DESC", $param );
+            if ( dbrows( $result ) ) {
+                while ( $data = dbarray( $result ) ) {
+                    self::$follower_list[ $user_id ][] = $data;
+                }
+                return self::$follower_list[ $user_id ];
+            }
+        }
+        
+        return [];
+    }
+    
+    private static $following_list = [];
+    
+    /**
+     * Following List
+     * Retrieve all the user's followers. Provide a user id
+     *
+     * @param int $user_id
+     *
+     * @return mixed
+     */
+    public function getUserFollowing( int $user_id ) {
+        if ( empty( self::$following_list[ $user_id ] ) ) {
+            $param = [
+                ':user_a' => (int)$user_id,
+                ':user_b' => (int)$user_id,
+                ':action' => (int)$user_id,
+            ];
+            $result = dbquery( "SELECT IF(`user_a`=$user_id, `user_b`, `user_a`) 'user_id', relation_datestamp FROM ".DB_USER_RELATIONS." WHERE (`user_a`=:user_a OR `user_b`=:user_b) AND (`relation_status`=0 OR `relation_status`=1) AND `relation_action`=:action ORDER BY `relation_datestamp` DESC", $param );
+            if ( dbrows( $result ) ) {
+                while ( $data = dbarray( $result ) ) {
+                    self::$following_list[ $user_id ][] = $data;
+                }
+                return self::$following_list[ $user_id ];
+            }
+        }
+        
+        return [];
+    }
+    
     
     /**
      * Pending Request List
@@ -265,7 +325,7 @@ class UserRelations {
     public function getRelation( $user_id ) {
         if ( iMEMBER ) {
             $action_param = $this->setUserRequest( fusion_get_userdata( 'user_id' ), $user_id );
-            $result = dbquery( "SELECT * FROM ".DB_USER_RELATIONS." WHERE user_a=:user_a AND user_b=:user_b", $action_param);
+            $result = dbquery( "SELECT * FROM ".DB_USER_RELATIONS." WHERE user_a=:user_a AND user_b=:user_b", $action_param );
             if ( dbrows( $result ) ) {
                 $data = dbarray( $result );
                 return $data;
