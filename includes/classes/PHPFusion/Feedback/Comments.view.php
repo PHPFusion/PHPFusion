@@ -15,178 +15,144 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!function_exists('display_comments_ui')) {
-    function display_comments_ui() {
-        ?>
-        <h4>{%comment_title%}</h4>
-        <div id='comments'>
-            <div id='{%comment_form_container_id%}' class='comments-header'>{%comment_count%}</div>
-            {%comments_form%}
-            <div id='{%comment_container_id%}'>
-                {%comments_listing%}
-            </div>
-        </div>
-        <?php
+
+use PHPFusion\Template;
+
+if ( !function_exists( 'display_comments_ui' ) ) {
+    function display_comments_ui( $info ) {
+        $tpl = Template::getInstance( 'comments' );
+        $tpl->set_template( __DIR__.'/comments.html' );
+        $tpl->set_tag( 'comment_title', $info['comment_title'] );
+        $tpl->set_tag( 'comment_form_container_id', $info['comment_form_container_id'] );
+        $tpl->set_tag( 'comment_count', $info['comment_count'] );
+        $tpl->set_tag( 'comments_form', $info['comments_form'] );
+        $tpl->set_tag( 'comment_container_id', $info['comment_container_id'] );
+        $tpl->set_tag( 'comments_listing', $info['comments_listing'] );
+        
+        return $tpl->get_output();
     }
 }
 /**
  * Comments UI
  */
-if (!function_exists('display_comments_section')) {
-    /**
-     * Show comments
-     *
-     * @param       $c_data
-     * @param       $c_info
-     * @param array $options
-     */
-    function display_comments_section($c_data, $c_info, array $options = []) {
-        ?>
-        <!---comments-->
-        <div class='comments-panel'>
-            {%comment_ratings%}
-            <div class='comments overflow-hide'>
-                {%comments%}
-            </div>
-        </div><!---//comments-->
-        <?php
+if ( !function_exists( 'display_comments_section' ) ) {
+    
+    function display_comments_section( $info ) {
+        $tpl = Template::getInstance( 'comments-section' );
+        $tpl->set_template( __DIR__.'/comments-section.html' );
+        $tpl->set_tag( 'comment_ratings', $info['comment_ratings'] );
+        $tpl->set_tag( 'comments', $info['comments'] );
+        
+        return $tpl->get_output();
     }
 }
 
 /**
  * Comment Wrapper {%comments%}
  */
-if (!function_exists('display_comments_listing')) {
-    function display_comments_listing() {
-        ?>
-        <ul class='comments clearfix list-style-none'>
-            {%comments_list%}
-        </ul>
-        <div class='clearfix'>
-            <span class='pull-right'>{%comments_admin_link%}</span>
-            <div class='overflow-hide'>
-                {%comments_page%}
-            </div>
-        </div>
-        <?php
+if ( !function_exists( 'display_comments_listing' ) ) {
+    function display_comments_listing( $info ) {
+        $tpl = Template::getInstance( 'comments-list' );
+        $tpl->set_template( __DIR__.'/comments-list.html' );
+        $tpl->set_tag( 'comments_list', $info['comments_list'] );
+        $tpl->set_tag( 'comments_page', $info['comments_page'] );
+        $tpl->set_tag( 'comments_admin_link', $info['comments_admin_link'] );
+        
+        return $tpl->get_output();
     }
 }
-/**
- * No comments text container
- */
-if (!function_exists('display_no_comments')) {
-    function display_no_comments() {
-        ?>
-        <li>
-            {%comments_undefined_text%}
-        </li>
-        <?php
-    }
-}
+
 /**
  * Single Comment List {%comments_lists%}
  */
-if (!function_exists('display_comments_list')) {
+if ( !function_exists( 'display_comments_list' ) ) {
+    
     /**
      * @param array $info
+     *
+     * @return string
      */
-    function display_comments_list($info = []) {
-        ?>
-        <li id='{%comment_list_id%}' class='m-b-15'>
-            <?php if (fusion_get_settings('comments_avatar')) : ?>
-                <div class='pull-left text-center m-r-15'>{%user_avatar%}</div>
-            <?php endif ?>
-            <div class='overflow-hide'>
-                <div class='comment_name display-inline-block m-r-10'>{%user_name%}
-                </div>
-                <?php if ($info['comment_ratings']) : ?>{%comment_ratings%}<?php endif; ?>
-                <?php if ($info['comment_subject']) : ?>
-                    <div class='comment_title'><!--comment_subject-->{%comment_subject%}
-                        <!--//comment_subject--></div><?php endif; ?>
-                <div class='comment_message'><!--comment_message-->{%comment_message%}<!--//comment_message--></div>
-                <div>
-                    <small><?php
-                        echo !empty($info['reply_link']) ? '{%comment_reply_link%}' : '';
-                        echo !empty($info['edit_link']) ? ' &middot; {%comment_edit_link%}' : '';
-                        echo !empty($info['delete_link']) ? ' &middot; {%comment_delete_link%}' : ''; ?>
-                        - <span class='comment_date'>{%comment_date%}</span></small>
-                </div>
-                {%comment_reply_form%}
-                <ul class='sub_comments list-style-none'>
-                    {%comment_sub_comments%}
-                </ul>
-            </div>
-        </li>
-        <?php
+    function display_comments_list( $info = [] ) {
+        $tpl = Template::getInstance( 'comments-list-item' );
+        $tpl->set_template( __DIR__.'/comment-list-item.html' );
+        $tpl->set_tag( 'comment_id', $info['comment_id'] );
+        $tpl->set_tag( 'user_name', $info['user_name'] );
+        $tpl->set_tag( 'comment_ratings', $info['comment_ratings'] );
+        $tpl->set_tag( 'comment_message', $info['comment_message'] );
+        $tpl->set_tag( 'comment_date', $info['comment_date'] );
+        $tpl->set_tag( 'comment_reply_form', $info['comment_reply_form'] );
+        if ( $info['user_avatar'] )
+            $tpl->set_block( 'comment_avatar', [ 'avatar' => $info['user_avatar'] ] );
+        if ( $info['comment_subject'] )
+            $tpl->set_block( 'comment_subject', [ 'subject' => $info['comment_subject'] ] );
+        //comment_action
+        if ( $info['comment_reply_link'] )
+            $tpl->set_block( 'comment_action', [ 'link' => $info['comment_reply_link'] ] );
+        if ( $info['comment_edit_link'] )
+            $tpl->set_block( 'comment_action', [ 'link' => $info['comment_edit_link'] ] );
+        if ( $info['comment_delete_link'] )
+            $tpl->set_block( 'comment_action', [ 'link' => $info['comment_delete_link'] ] );
+        if ( $info['comment_reply_form'] )
+            $tpl->set_block( 'comment_reply_form', [ 'reply_form' => $info['comment_reply_form'] ] );
+        if ( $info['comment_sub_comments'] )
+            $tpl->set_block( 'comment_sub_comments', [ 'sub_comments' => $info['comment_sub_comments'] ] );
+        
+        return $tpl->get_output();
     }
 }
 
 /**
  * The comment reply form HTML
  */
-if (!function_exists('display_comments_reply_form')) {
+if ( !function_exists( 'display_comments_reply_form' ) ) {
     function display_comments_reply_form() {
         ?>
-        <div class='comments_reply_form'>
-            {%comment_name%}
-            {%comment_message%}
-            {%comment_captcha%}
-            {%comment_post%}
-        </div>
+	    <div class='comments_reply_form'>
+		    {%comment_name%}
+		    {%comment_message%}
+		    {%comment_captcha%}
+		    {%comment_post%}
+	    </div>
         <?php
     }
 }
 
-if (!function_exists('display_comments_form')) {
+if ( !function_exists( 'display_comments_form' ) ) {
     /**
      * Comment Form
      *
-     * @param       $comment_type
-     * @param       $clink
-     * @param       $comment_item_id
-     * @param       $_CAPTCHA_HIDE_INPUT
-     * @param array $options
+     * @param $info
+     *
+     * @return string
      */
-    function display_comments_form($comment_type, $clink, $comment_item_id, $_CAPTCHA_HIDE_INPUT, array $options = []) {
-        ?>
-        <div class='comments-form-panel'>
-            <div class='comments-form-header'><h4>{%comment_form_title%}</h4></div>
-            <div class='comments-form'>
-                <?php if (fusion_get_settings('comments_avatar')) : ?>
-                    <div class='pull-left m-r-15 m-t-5'>
-                        {%user_avatar%}
-                    </div>
-                <?php endif; ?>
-                <div class='overflow-hide p-5'>
-                    <a id='{%comment_form_id%}' name='edit_comment'></a>
-                    {%comment_name_input%}
-                    {%comment_subject_input%}
-                    {%comments_ratings_input%}
-                    {%comment_message_input%}
-                    {%comments_captcha_input%}
-                    {%comment_post%}
-                </div>
-            </div>
-        </div>
-        <?php
+    function display_comments_form( $info ) {
+        $tpl = Template::getInstance( 'comments-form' );
+        $tpl->set_template( __DIR__.'/comments-form.html' );
+        $tpl->set_tag( 'openform', $info['openform'] );
+        $tpl->set_tag( 'closeform', $info['closeform'] );
+        $tpl->set_tag( 'comment_form_title', $info['title'] );
+        $tpl->set_tag( 'comment_name_input', $info['name_input'] );
+        $tpl->set_tag( 'comment_subject_input', $info['subject_input'] );
+        $tpl->set_tag( 'comments_ratings_input', $info['ratings_input'] );
+        $tpl->set_tag( 'comment_message_input', $info['comment_input'] );
+        $tpl->set_tag( 'comments_captcha_input', $info['captcha_input'] );
+        $tpl->set_tag( 'comment_post', $info['post_button'] );
+        if ( fusion_get_settings( 'comments_avatar' ) ) {
+            $tpl->set_block( 'avatar', [ 'user_avatar' => $info['user_avatar'] ] );
+        }
+        
+        return $tpl->get_output();
     }
 }
 
-if (!function_exists('display_comments_ratings')) {
-    function display_comments_ratings($info = []) {
-        ?>
-        <div class="ratings overflow-hide m-b-10">
-            <div class="well">
-                <div class="row">
-                    <div class="col-xs-12 col-xs-6">
-                        {%stars%}
-                        <span class='text-lighter m-l-5'>{%reviews%}</span>
-                    </div>
-
-                    <div class="col-xs-12 col-xs-6">{%ratings%}</div>
-                </div>
-            </div>
-            {%ratings_remove_button%}
-        </div><?php
+if ( !function_exists( 'display_comments_ratings' ) ) {
+    function display_comments_ratings( $info = [] ) {
+        $tpl = Template::getInstance( 'ratings' );
+        $tpl->set_template( __DIR__.'/ratings.html' );
+        $tpl->set_tag( 'stars', $info['stars'] );
+        $tpl->set_tag( 'reviews', $info['reviews'] );
+        $tpl->set_tag( 'ratings', $info['ratings'] );
+        $tpl->set_tag( 'ratings_remove_button', $info['remove_ratings'] );
+        return $tpl->get_output();
     }
 }
