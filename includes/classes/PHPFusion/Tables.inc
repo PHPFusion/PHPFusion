@@ -266,14 +266,13 @@ class Tables {
         }
     
         if ( get( 's' ) && !empty( $this->table_props['search_col'] ) ) {
-            $this->search_text = stripinput( $_GET['s'] );
+            $this->search_text = get( 's' );
             //@todo: support two or three columns
             if ( is_array( $this->table_props['search_col'] ) ) {
-                $var_output = [];
-                foreach ( $this->table_props['search_col'] as $column_name ) {
-                    $var_output[] = $column_name." LIKE '$this->search_text%'";
-                }
-                $search = "WHERE ".implode( ' OR ', $var_output );
+                // Notes: For Full Text searching, but impossible to define here unless introduce methods to check whether columns are TEXT or not.
+                // $search = "WHERE MATCH(".implode( ',', $this->table_props['search_col'] ).") AGAINST ('$this->search_text' IN BOOLEAN MODE)";
+                $search = "WHERE CONCAT(' ',".implode( ',', $this->table_props['search_col'] ).") LIKE '%$this->search_text%'";
+                
             } else {
                 $search = "WHERE ".$this->table_props['search_col']." LIKE '%$this->search_text%'";
             }
@@ -712,8 +711,8 @@ class Tables {
      */
     private function displayCustom() {
     
-        $html = "<div id='".$this->table_props['table_id']."-custom-box' class='list-group-item m-b-15' style='display:none;'>";
-        $html .= "<div class='p-l-15 strong'>Columns</div>";
+        $html = "<div id='".$this->table_props['table_id']."-custom-box' class='list-group-item m-b-15 m-t-15' style='display:none;'>";
+        $html .= "<div class='p-l-15 control-label strong'>Show Columns</div>";
         // get all the data column.
         $html .= "<div class='p-l-15'>";
         $html .= form_checkbox( 'custom_column[]', '', implode( ',', $this->custom_columns_value ), [
@@ -723,16 +722,17 @@ class Tables {
             'options'        => $this->custom_columns_options
         ] );
         $html .= "</div>";
-        //$html .= "<div class='p-l-15 m-b-10 strong'>Pagination</div>";
+        $html .= "<div class='p-l-15 m-b-10'>";
         $html .= form_text( 'custom_limit', 'Number of items per page:', $this->query['limit'], [
-            'inline'      => TRUE,
-            'inner_width' => '80px',
+            'inline'      => FALSE,
+            'inner_width' => '50px',
             'class'       => 'm-b-10',
             'deactivate'  => ( $this->query['true_limit'] === TRUE ? TRUE : FALSE ),
         ] );
-        //$html .= "<div class='p-l-15 m-b-20'>";
+        $html .= "</div>";
+
         $html .= form_button( 'apply_custom', 'Apply Filter', 'apply_custom', [ 'class' => 'btn-primary m-l-15' ] );
-        //$html .= "</div>";
+
         $html .= "</div>";
     
         return (string)$html;
@@ -988,7 +988,7 @@ class Tables {
                 foreach ( $enabled_languages as $lang ) {
                     $lang_val = strtolower( $lang );
                     $active_class = ( $cur_language && $cur_language == $lang_val ) ? " class='strong'" : '';
-                    $_filter[] = "<a href='".clean_request( 'language='.$lang_val, [ 'language' ], FALSE )."'$active_class><small>$lang</small></a>\n | ";
+                    $_filter[] = "<a href='".clean_request( 'language='.$lang_val, [ 'language' ], FALSE )."'$active_class><small>$lang</small></a>\n";
                 }
                 $link_filters['language'] = " | <small>Language:</small> ".implode( ' ', $_filter );
                 array_push( $link_filter_keys, 'language' );
@@ -1179,7 +1179,7 @@ class Tables {
         // Show custom table properties
         $html .= $this->displayCustom();
     
-        $html .= "<table class='fusion-table ".( $this->table_props['table_class'] ? ' '.$this->table_props['table_class'] : 'table' )."'>\n";
+        $html .= "<table class='fusion-table ".( $this->table_props['table_class'] ? ' '.$this->table_props['table_class'] : 'table m-t-10' )."'>\n";
         // head
         $html .= "<thead>\n";
         $html .= "<tr>\n$check_all_col\n".$header."\n</tr>\n";
