@@ -203,11 +203,11 @@ class CommentListing {
         if ( $this->comment->getParams( 'comment_allow_reply' ) && ( get( 'comment_reply', FILTER_VALIDATE_INT ) == $row['comment_id'] ) && $this->can_post ) {
             
             $this->comment_data['comment_cat'] = $row['comment_id'];
-            
-            if ( $this->jquery_enabled === TRUE ) {
-                $reply_form .= "<div id='comments_reply_spinner-".$row['comment_id']."' class='spinner text-center m-b-20' style='display:none'><i class='fa fa-circle-o-notch fa-spin fa-3x'></i></div>";
-                $reply_form .= "<div id='comments_reply_container-".$row['comment_id']."' class='comments_reply_container' ".( isset( $_GET['comment_reply'] ) && $_GET['comment_reply'] == $row['comment_id'] ? "" : "style='display:none;'" ).">";
-            }
+    
+            //if ( $this->jquery_enabled === TRUE ) {
+            //    $reply_form .= "<div id='comments_reply_spinner-".$row['comment_id']."' class='spinner text-center m-b-20' style='display:none'><i class='fa fa-circle-o-notch fa-spin fa-3x'></i></div>";
+            //    $reply_form .= "<div id='comments_reply_container-".$row['comment_id']."' class='comments_reply_container' ".( isset( $_GET['comment_reply'] ) && $_GET['comment_reply'] == $row['comment_id'] ? "" : "style='display:none;'" ).">";
+            //}
             
             $_CAPTCHA_HTML = '';
             if ( iGUEST && ( !isset( $_CAPTCHA_HIDE_INPUT ) || ( isset( $_CAPTCHA_HIDE_INPUT ) && !$_CAPTCHA_HIDE_INPUT ) ) ) {
@@ -233,10 +233,9 @@ class CommentListing {
                 $_CAPTCHA_HTML .= '</div>';
                 $_CAPTCHA_HTML .= '</div>';
             }
-            
-            $reply_form .= openform( 'comments_reply_frm-'.$row['comment_id'], 'post', self::format_clink( $this->comment->getParams( 'clink' ) ), [
+    
+            $reply_form .= openform( 'comments_reply_frm-'.$row['comment_id'], 'post', $this->comment->format_clink( $this->comment->getParams( 'clink' ) ), [
                     'class'      => 'comments_reply_form m-t-20 m-b-20',
-                    'remote_url' => $this->jquery_enabled === TRUE ? fusion_get_settings( 'site_path' ).'includes/classes/PHPFusion/Feedback/Comments.ajax.php' : ''
                 ]
             );
             
@@ -271,14 +270,14 @@ class CommentListing {
             $reply_form .= form_hidden( "comment_cat", "", $this->comment_data['comment_cat'], [ 'input_id' => 'comment_cat-'.$row['comment_id'] ] );
             $reply_form .= form_hidden( 'comment_item_type', '', $this->comment->getParams( 'comment_item_type' ), [ 'input_id' => 'comment_item_type-'.$row['comment_id'] ] );
             $reply_form .= form_hidden( 'comment_item_id', '', $this->comment->getParams( 'comment_item_id' ), [ 'input_id' => 'comment_item_id-'.$row['comment_id'] ] );
-            if ( $this->jquery_enabled ) {
-                $reply_form .= form_hidden( "comment_key", '', $this->comment->getParams( 'comment_key' ), [ 'input_id' => 'comment_key-'.$row['comment_id'] ] );
-                $reply_form .= form_hidden( 'comment_options', '', \Defender::serialize( $this->comment->getParams() ), [ 'input_id' => 'comment_options-'.$row['comment_id'] ] );
-            }
+            //if ( $this->jquery_enabled ) {
+            //    $reply_form .= form_hidden( "comment_key", '', $this->comment->getParams( 'comment_key' ), [ 'input_id' => 'comment_key-'.$row['comment_id'] ] );
+            //    $reply_form .= form_hidden( 'comment_options', '', \Defender::serialize( $this->comment->getParams() ), [ 'input_id' => 'comment_options-'.$row['comment_id'] ] );
+            //}
             $reply_form .= closeform();
-            if ( $this->jquery_enabled === TRUE ) {
-                $reply_form .= "</div>";
-            }
+            //if ( $this->jquery_enabled === TRUE ) {
+            //    $reply_form .= "</div>";
+            //}
             
         }
         
