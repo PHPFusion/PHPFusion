@@ -350,8 +350,8 @@ class Form {
                 $on_label = $options['toggle_text'][0];
                 $off_label = $options['toggle_text'][1];
             }
-            
-            $label_class = [];
+    
+            $label_class[] = 'control-label';
             $label_class[] = $options['class'];
             $prepend = "";
             $append = "";
