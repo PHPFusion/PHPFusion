@@ -19,7 +19,6 @@ class CommentListing {
     
     public function __construct( Comments $comment ) {
         $this->comment = $comment;
-        form_fileinput();
         $this->comments_per_page = fusion_get_settings( 'comments_per_page' );
         $this->can_post = ( iMEMBER || fusion_get_settings( 'guestposts' ) ? TRUE : FALSE );
         $this->comments_avatar = fusion_get_settings( 'comments_avatar' );
