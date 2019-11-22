@@ -26,7 +26,7 @@ class CommentListing {
     
     public function getInfo() {
         $info['comments'] = '<p class="text-center">'.fusion_get_locale( 'c101' ).'</p>';
-        if ( $this->get_Comments() ) {
+        if ( $this->getComments() ) {
             $info = [
                 'comment_count'   => ( $this->comment->getParams( 'comment_count' ) ? $this->c_arr['c_info']['comments_count'] : 0 ),
                 'comment_ratings' => $this->getRatingsOutput(),
@@ -39,7 +39,7 @@ class CommentListing {
     
     // Build C_info and C_Con
     
-    private function get_Comments() {
+    private function getComments() {
         
         $settings = fusion_get_settings();
         
@@ -52,7 +52,6 @@ class CommentListing {
             $c_link = $this->comment->getParams( 'clink' ).( stristr( $this->comment->getParams( 'clink' ), '?' ) ? "&amp;" : '?' );
             
             $this->c_arr['c_info']['comments_count'] = format_word( 0, $locale['fmt_comment'] );
-            
             $this->c_arr['c_info']['total_comments'] = dbcount( "('comment_id')", DB_COMMENTS, "comment_item_id=:comment_item_id AND comment_type=:comment_item_type AND comment_hidden=:comment_hidden",
                 [
                     ':comment_item_id'   => $this->comment->getParams( 'comment_item_id' ),
@@ -70,17 +69,9 @@ class CommentListing {
                 ] );
             
             if ( $root_rows ) {
-                
-                $c_start_key = 'c_start_'.$this->comment->getParams( 'comment_key' );
-                
-                $this->c_start = ( get( $c_start_key, FILTER_VALIDATE_INT ) ?: 0 );
-                
-                if ( fusion_get_settings( 'comments_sorting' ) == 'ASC' ) {
-                    // Only applicable if sorting is Ascending. If descending, the default $c_start is always 0 as latest.
-                    if ( !$this->c_start && $root_rows > $this->comments_per_page ) {
-                        $this->c_start = ( ceil( $root_rows / $this->comments_per_page ) - 1 ) * $this->comments_per_page;
-                    }
-                }
+    
+                // generate c_start
+                $this->setRowStart( $root_rows );
                 
                 $comment_query = "SELECT tcm.*
                     FROM ".DB_COMMENTS." tcm
@@ -106,9 +97,10 @@ class CommentListing {
                 $query = dbquery( $comment_query, $comment_bind );
                 
                 if ( dbrows( $query ) ) {
+    
                     if ( $root_rows > $this->comments_per_page ) {
                         // The $c_rows is different than
-                        $this->c_arr['c_info']['c_makepagenav'] = makepagenav( $this->c_start, $this->comments_per_page, $root_rows, 3, $c_link, $c_start_key );
+                        $this->c_arr['c_info']['c_makepagenav'] = makepagenav( $this->c_start, $this->comments_per_page, $root_rows, 3, $c_link, $this->getRowStartKey() );
                     }
                     
                     if ( iADMIN && checkrights( 'C' ) ) {
@@ -136,6 +128,21 @@ class CommentListing {
         }
         
         return FALSE;
+    }
+    
+    private function getRowStartKey() {
+        return 'c_start_'.$this->comment->getParams( 'comment_key' );
+    }
+    
+    private function setRowStart( $total_rows ) {
+        $this->c_start = ( get( $this->getRowStartKey(), FILTER_VALIDATE_INT ) ?: 0 );
+        if ( fusion_get_settings( 'comments_sorting' ) == 'ASC' ) {
+            // Only applicable if sorting is Ascending. If descending, the default $c_start is always 0 as latest.
+            if ( !$this->c_start && $total_rows > $this->comments_per_page ) {
+                $this->c_start = ( ceil( $total_rows / $this->comments_per_page ) - 1 ) * $this->comments_per_page;
+            }
+        }
+        return $this->c_start;
     }
     
     /*
@@ -235,7 +242,7 @@ class CommentListing {
             }
     
             $reply_form .= openform( 'comments_reply_frm-'.$row['comment_id'], 'post', $this->comment->format_clink( $this->comment->getParams( 'clink' ) ), [
-                    'class'      => 'comments_reply_form m-t-20 m-b-20',
+                    'class' => 'comments_reply_form m-t-20 m-b-20',
                 ]
             );
             

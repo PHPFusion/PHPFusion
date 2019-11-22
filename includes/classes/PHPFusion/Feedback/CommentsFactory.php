@@ -51,20 +51,13 @@ abstract class CommentsFactory {
     ];
     protected $userdata = [];
     protected $postLink = '';
-    protected $comments_per_page = 0;
     protected $jquery = FALSE;
     
     public function __construct() {
-        
         $this->jquery = FALSE; //fusion_get_settings('comments_jquery') ? TRUE : FALSE;
-        
         $this->userdata = fusion_get_userdata();
-        
         $this->postLink = FUSION_SELF.( FUSION_QUERY ? "?".FUSION_QUERY : "" );
         $this->postLink = preg_replace( "^(&amp;|\?)c_action=(edit|delete)&amp;comment_id=\d*^", "", $this->postLink );
-        
-        // Comments Per Page
-        
     }
     
     public function getCommentHash() {
