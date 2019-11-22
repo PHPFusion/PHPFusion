@@ -17,27 +17,29 @@
 +--------------------------------------------------------*/
 require_once INCLUDES."mimetypes_include.php";
 $locale = fusion_get_locale();
-if ( isset( $_POST['savesettings'] ) ) {
+
+if ( post( 'savesettings' ) ) {
     // redo this part
     $StoreArray = [
-        "download_max_b"               => form_sanitizer( $_POST['calc_b'], 512000, "calc_b" ) * form_sanitizer( $_POST['calc_c'], 1, "calc_c" ),
-        "download_types"               => form_sanitizer( $_POST['download_types'], '.pdf,.gif,.jpg,.png,.zip,.rar,.tar,.bz2,.7z', "download_types" ),
-        "download_screen_max_w"        => form_sanitizer( $_POST['download_screen_max_w'], 1024, "download_screen_max_w" ),
-        "download_screen_max_h"        => form_sanitizer( $_POST['download_screen_max_h'], 768, "download_screen_max_h" ),
-        "download_screen_max_b"        => form_sanitizer( $_POST['calc_bb'], 153600, "calc_bb" ) * form_sanitizer( $_POST['calc_cc'], 1, "calc_cc" ),
-        "download_thumb_max_h"         => form_sanitizer( $_POST['download_thumb_max_h'], 100, 'download_thumb_max_h' ),
-        "download_thumb_max_w"         => form_sanitizer( $_POST['download_thumb_max_w'], 100, 'download_thumb_max_w' ),
-        "download_screenshot"          => form_sanitizer( $_POST['download_screenshot'], 0, 'download_screenshot' ),
-        "download_stats"               => form_sanitizer( $_POST['download_stats'], 0, 'download_stats' ),
-        "download_pagination"          => form_sanitizer( $_POST['download_pagination'], 15, 'download_pagination' ),
-        "download_allow_submission"    => form_sanitizer( $_POST['download_allow_submission'], 0, "download_allow_submission" ),
-        "download_screenshot_required" => isset( $_POST['download_screenshot_required'] ) ? 1 : 0,
-        "download_extended_required"   => isset( $_POST['download_extended_required'] ) ? 1 : 0,
+        "download_max_b"               => sanitizer( 'calc_b', 512000, "calc_b" ) * sanitizer( 'calc_c', 1, "calc_c" ),
+        "download_types"               => sanitizer( 'download_types', '.pdf,.gif,.jpg,.png,.zip,.rar,.tar,.bz2,.7z', "download_types" ),
+        "download_screen_max_w"        => sanitizer( 'download_screen_max_w', 1024, "download_screen_max_w" ),
+        "download_screen_max_h"        => sanitizer( 'download_screen_max_h', 768, "download_screen_max_h" ),
+        "download_screen_max_b"        => sanitizer( 'calc_bb', 153600, "calc_bb" ) * sanitizer( 'calc_cc', 1, "calc_cc" ),
+        "download_thumb_max_h"         => sanitizer( 'download_thumb_max_h', 100, 'download_thumb_max_h' ),
+        "download_thumb_max_w"         => sanitizer( 'download_thumb_max_w', 100, 'download_thumb_max_w' ),
+        "download_screenshot"          => sanitizer( 'download_screenshot', 0, 'download_screenshot' ),
+        "download_stats"               => sanitizer( 'download_stats', 0, 'download_stats' ),
+        "download_pagination"          => sanitizer( 'download_pagination', 15, 'download_pagination' ),
+        "download_allow_submission"    => sanitizer( 'download_allow_submission', 0, "download_allow_submission" ),
+        "download_screenshot_required" => sanitizer( 'download_screenshot_required', 0, 'download_screenshot_required' ),
+        "download_extended_required"   => sanitizer( 'download_extended_required', 0, 'download_extended_required' ),
+        'download_auto_approve'        => sanitizer( 'download_auto_approve', 0, 'download_auto_approve' )
     ];
     if ( fusion_safe() ) {
         foreach ( $StoreArray as $key => $value ) {
             $result = NULL;
-            if ( \Defender::safe() ) {
+            if ( fusion_safe() ) {
                 $Array = [ "settings_name" => $key, "settings_value" => $value, "settings_inf" => "downloads" ];
                 dbquery_insert( DB_SETTINGS_INF, $Array, 'update', [ "primary_key" => "settings_name" ] );
             }
@@ -160,10 +162,10 @@ echo "<div class='display-block overflow-hide'>
 </div>";
 closeside();
 openside( '' );
-echo form_select( 'download_allow_submission', $locale['download_0046'], $dl_settings['download_allow_submission'], [ 'inline' => TRUE, 'options' => [ $locale['disable'], $locale['enable'] ] ] );
-echo form_checkbox( 'download_auto_approve', $locale['download_0064'], $dl_settings['download_auto_approve'], [ 'inline' => TRUE ] );
-echo form_checkbox( 'download_screenshot_required', $locale['download_0047'], $dl_settings['download_screenshot_required'], [ 'inline' => TRUE ] );
-echo form_checkbox( 'download_extended_required', $locale['download_0048'], $dl_settings['download_extended_required'], [ 'inline' => TRUE ] );
+echo form_select( 'download_allow_submission', $locale['download_0046'], $dl_settings['download_allow_submission'], [ 'inline' => TRUE, 'options' => [ $locale['disable'], $locale['enable'] ], 'reverse_label' => TRUE ] );
+echo form_checkbox( 'download_auto_approve', $locale['download_0064'], $dl_settings['download_auto_approve'], [ 'inline' => TRUE, 'reverse_label' => TRUE ] );
+echo form_checkbox( 'download_screenshot_required', $locale['download_0047'], $dl_settings['download_screenshot_required'], [ 'inline' => TRUE, 'reverse_label' => TRUE ] );
+echo form_checkbox( 'download_extended_required', $locale['download_0048'], $dl_settings['download_extended_required'], [ 'inline' => TRUE, 'reverse_label' => TRUE ] );
 closeside();
 
 
