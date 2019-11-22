@@ -106,14 +106,12 @@ if ( !function_exists( 'display_comments_list' ) ) {
  */
 if ( !function_exists( 'display_comments_reply_form' ) ) {
     function display_comments_reply_form() {
-        ?>
-	    <div class='comments_reply_form'>
-		    {%comment_name%}
-		    {%comment_message%}
-		    {%comment_captcha%}
-		    {%comment_post%}
-	    </div>
-        <?php
+        $tpl = Template::getInstance( 'comments-replyform' );
+        $tpl->set_template( __DIR__.'/comments-replyform.html' );
+        $tpl->set_tag( 'comment_name' );
+        $tpl->set_tag( 'comment_message' );
+        $tpl->set_tag( 'comment_captcha' );
+        $tpl->set_tag( 'comment_post' );
     }
 }
 
