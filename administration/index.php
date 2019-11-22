@@ -384,7 +384,7 @@ class AdminIndex {
                     if ( checkrights( $_idata['admin_rights'] ) && $_idata['admin_link'] != "reserved" ) {
                         // Current locale file have the admin title definitions paired by admin_rights.
                         if ( $_idata['admin_page'] !== 5 ) {
-                            $_idata['admin_title'] = isset( $locale[ $_idata['admin_rights'] ] ) ? fusion_get_locale( $_idata['admin_rights'] ) : $_idata['admin_title'];
+                            $_idata['admin_title'] = ( fusion_get_locale( $_idata['admin_rights'] ) ?: $_idata['admin_title'] );
                         }
                         $admin_icons['data'][] = $_idata;
                     }
