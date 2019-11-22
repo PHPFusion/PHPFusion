@@ -105,6 +105,27 @@ spl_autoload_register( function ( $className ) {
     }
 } );
 
+// Load administration classes
+spl_autoload_register( function ( $className ) {
+    if ( stristr( $className, 'PHPFusion\\Administration' ) ) {
+        //print_p($className);
+        $className = str_replace( 'PHPFusion\\Administration\\', '', $className );
+        $className = str_replace( '\\', DIRECTORY_SEPARATOR, $className );
+        $className = strtolower( $className );
+        //print_P($className);
+        $fullPath = ADMIN.$className.'.php';
+        //print_p($fullPath);
+        if ( is_file( $fullPath ) ) {
+            require $fullPath;
+        }
+        $className = str_replace( '_', '-', $className );
+        $fullPath = ADMIN.$className.'.php';
+        if ( is_file( $fullPath ) ) {
+            require_once $fullPath;
+        }
+    }
+} );
+
 /**
  * Get path of config.php
  *
