@@ -60,7 +60,7 @@ if (defined('NEWS_EXIST')) {
         }
 
         if (!empty(Search_Engine::get_param('search_param'))) {
-            $rows = dbcount("(news_id)", DB_NEWS, (multilang_table("NS") ? "news_language='".LANGUAGE."' AND " : "").groupaccess('news_visibility')." AND ".Search_Engine::search_conditions('news')." AND (news_start='0'||news_start<=NOW()) AND (news_end='0'||news_end>=NOW()) ".$date_search, Search_Engine::get_param('search_param'));
+            $rows = dbcount("(news_id)", DB_NEWS, (multilang_table("NS") ? in_group('news_language', LANGUAGE)." AND " : "").groupaccess('news_visibility')." AND ".Search_Engine::search_conditions('news')." AND (news_start='0'||news_start<=NOW()) AND (news_end='0'||news_end>=NOW()) ".$date_search, Search_Engine::get_param('search_param'));
         } else {
             $rows = 0;
         }
@@ -74,7 +74,7 @@ if (defined('NEWS_EXIST')) {
                 LEFT JOIN ".DB_USERS." tu ON tn.news_name=tu.user_id
                 LEFT JOIN ".DB_NEWS_CATS." nc ON tn.news_cat=nc.news_cat_id
                 LEFT JOIN ".DB_NEWS_IMAGES." ni ON ni.news_id=tn.news_id AND tn.news_image_front_default=ni.news_image_id
-                ".(multilang_table("NS") ? "WHERE tn.news_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('news_visibility')."
+                ".(multilang_table("NS") ? "WHERE ".in_group('tn.news_language', LANGUAGE)." AND " : "WHERE ").groupaccess('news_visibility')."
                 AND (news_start='0'||news_start<=NOW())
                 AND (news_end='0'||news_end>=NOW()) AND ".Search_Engine::search_conditions('news').$date_search.$sortby.$limit
                 , Search_Engine::get_param('search_param')

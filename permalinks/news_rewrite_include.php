@@ -42,6 +42,7 @@ $pattern = [
     "news/%news_id%/%news_title%"                                            => "infusions/news/news.php?readmore=%news_id%",
     "news/%news_id%/%news_title%#comments"                                   => "infusions/news/news.php?readmore=%news_id%#comments",
     "news/%news_id%/%news_title%#postrating"                                 => "infusions/news/news.php?readmore=%news_id%#postrating",
+    "news/%news_id%-%rowstart%/%news_title%"                                 => "infusions/news/news.php?readmore=%news_id%&amp;rowstart=%rowstart%",
     "news/comments-reply-%comment_cat%/%news_id%/%news_title%"               => "infusions/news/news.php?readmore=%news_id%&amp;comment_reply=%comment_cat%",
     "news/comments-reply-%comment_cat%/%news_id%/%news_title%#c%comment_id%" => "infusions/news/news.php?readmore=%news_id%&amp;comment_reply=%comment_cat%#c%comment_id%",
     "news/comments-%c_start%/%news_id%/%news_title%"                         => "infusions/news/news.php?readmore=%news_id%&amp;c_start=%c_start%",

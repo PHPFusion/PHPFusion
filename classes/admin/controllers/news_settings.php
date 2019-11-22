@@ -58,7 +58,7 @@ class NewsSettingsAdmin extends NewsAdminModel {
                 "news_photo_max_b"            => form_sanitizer($_POST['calc_b'], 2097152, 'calc_b') * form_sanitizer($_POST['calc_c'], 1, 'calc_c'),
                 "news_file_types"             => form_sanitizer($_POST['news_file_types'], '.pdf,.gif,.jpg,.png,.svg,.zip,.rar,.tar,.bz2,.7z', "news_file_types"),
             ];
-            if (\defender::safe()) {
+            if (fusion_safe()) {
                 foreach ($inputArray as $settings_name => $settings_value) {
                     $inputSettings = [
                         "settings_name" => $settings_name, "settings_value" => $settings_value, "settings_inf" => "news",

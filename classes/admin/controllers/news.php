@@ -38,9 +38,10 @@ class NewsAdmin extends NewsAdminModel {
     }
 
     public function displayNewsAdmin() {
-        if (isset($_POST['cancel']))
+        $refs = get('ref');
+        if (post('cancel'))
             redirect(FUSION_SELF.fusion_get_aidlink());
-        if (isset($_GET['ref']) && $_GET['ref'] == 'news_form') {
+        if ($refs == 'news_form') {
             $this->display_news_form();
         } else {
             $this->display_news_listing();
@@ -93,7 +94,7 @@ class NewsAdmin extends NewsAdminModel {
                 $this->news_data['news_breaks'] = isset($_POST['news_breaks']) ? "y" : "n";
             }
 
-            if (\defender::safe()) {
+            if (fusion_safe()) {
                 if ($this->news_data['news_id']) {
                     // update news gallery default if exist
                     if (!empty($_POST['news_image_full_default'])) {
@@ -215,7 +216,7 @@ class NewsAdmin extends NewsAdminModel {
         $news_settings = self::get_news_settings();
 
         $news_cat_opts = [];
-        $query = "SELECT news_cat_id, news_cat_name FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."'" : '')." ORDER BY news_cat_name";
+        $query = "SELECT news_cat_id, news_cat_name FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? "WHERE ".in_group('news_cat_language', LANGUAGE) : '')." ORDER BY news_cat_name";
         $result = dbquery($query);
         $news_cat_opts['0'] = self::$locale['news_0202'];
         if (dbrows($result)) {
@@ -326,7 +327,7 @@ class NewsAdmin extends NewsAdminModel {
                 'inner_width'  => '100%',
                 'inline'       => TRUE,
                 'parent_value' => self::$locale['news_0202'],
-                'query'        => (multilang_table('NS') ? "WHERE news_cat_language='".LANGUAGE."'" : '')
+                'query'        => (multilang_table('NS') ? "WHERE ".in_group('news_cat_language', LANGUAGE) : '')
             ],
             DB_NEWS_CATS, 'news_cat_name', 'news_cat_id', 'news_cat_parent'
         );
@@ -339,11 +340,13 @@ class NewsAdmin extends NewsAdminModel {
             ]
         );
         if (multilang_table('NS')) {
-            echo form_select('news_language', self::$locale['language'], $this->news_data['news_language'], [
+            echo form_select('news_language[]', self::$locale['language'], $this->news_data['news_language'], [
                 'options'     => fusion_get_enabled_languages(),
                 'placeholder' => self::$locale['choose'],
                 'inner_width' => '100%',
                 'inline'      => TRUE,
+                'multiple'    => TRUE,
+                'delimeter'   => '.'
             ]);
         } else {
             echo form_hidden('news_language', '', $this->news_data['news_language']);
@@ -549,7 +552,7 @@ class NewsAdmin extends NewsAdminModel {
                 if ($failed_upload) {
                     addNotice("warning", sprintf(self::$locale['news_0269'], $failed_upload));
                 }
-                if (\defender::safe()) {
+                if (fusion_safe()) {
                     redirect(FUSION_REQUEST);
                 }
             }
@@ -712,7 +715,7 @@ class NewsAdmin extends NewsAdminModel {
             if (!empty($input)) {
                 foreach ($input as $news_id) {
                     // check input table
-                    if (dbcount("('news_id')", DB_NEWS, "news_id='".intval($news_id)."'") && \defender::safe()) {
+                    if (dbcount("('news_id')", DB_NEWS, "news_id='".intval($news_id)."'") && fusion_safe()) {
 
                         switch ($_POST['table_action']) {
                             case "publish":
@@ -796,12 +799,6 @@ class NewsAdmin extends NewsAdminModel {
             ];
         }
 
-        if (!empty($_POST['news_language'])) {
-            $search_string['news_language'] = [
-                "input" => form_sanitizer($_POST['news_language'], "", "news_language"), "operator" => "="
-            ];
-        }
-
         if (!empty($_POST['news_author'])) {
             $search_string['news_name'] = [
                 "input" => form_sanitizer($_POST['news_author'], "", "news_author"), "operator" => "="
@@ -832,12 +829,11 @@ class NewsAdmin extends NewsAdminModel {
         FROM ".DB_NEWS." n
         INNER JOIN ".DB_USERS." u on u.user_id=n.news_name
         LEFT JOIN ".DB_NEWS_CATS." nc ON nc.news_cat_id=n.news_cat
-        WHERE news_language=:language $sql_condition
+        WHERE ".in_group('n.news_language', LANGUAGE)." $sql_condition
         GROUP BY n.news_id
         ORDER BY n.news_datestamp DESC
         LIMIT $rowstart, $limit
         ";
-        $sql_params[':language'] = LANGUAGE;
         $result2 = dbquery($news_query, $sql_params);
         $news_rows = dbrows($result2);
 
@@ -876,7 +872,6 @@ class NewsAdmin extends NewsAdminModel {
                 "news_status"     => !empty($_POST['news_status']) ? form_sanitizer($_POST['news_status'], "", "news_status") : "",
                 "news_category"   => !empty($_POST['news_category']) ? form_sanitizer($_POST['news_category'], "", "news_category") : "",
                 "news_visibility" => !empty($_POST['news_visibility']) ? form_sanitizer($_POST['news_visibility'], "", "news_visibility") : "",
-                "news_language"   => !empty($_POST['news_language']) ? form_sanitizer($_POST['news_language'], "", "news_language") : "",
                 "news_author"     => !empty($_POST['news_author']) ? form_sanitizer($_POST['news_author'], "", "news_author") : "",
             ];
             $filter_empty = TRUE;
@@ -917,7 +912,7 @@ class NewsAdmin extends NewsAdminModel {
                 }
             });
             // Select change
-            $('#news_status, #news_visibility, #news_category, #news_language, #news_author, #news_display').bind('change', function(e){
+            $('#news_status, #news_visibility, #news_category, #news_author, #news_display').bind('change', function(e){
                 $(this).closest('form').submit();
             });
             ");
@@ -946,11 +941,6 @@ class NewsAdmin extends NewsAdminModel {
                 }
             }
             echo form_select("news_category", "", $filter_values['news_category'], ["allowclear" => TRUE, "placeholder" => "- ".self::$locale['news_0248']." -", "options" => $news_cats_opts]);
-            echo "</div>\n";
-            echo "<div class='display-inline-block'>\n";
-            $language_opts = [0 => self::$locale['news_0249']];
-            $language_opts += fusion_get_enabled_languages();
-            echo form_select("news_language", "", $filter_values['news_language'], ["allowclear" => TRUE, "placeholder" => "- ".self::$locale['news_0250']." -", "options" => $language_opts]);
             echo "</div>\n";
             echo "<div class='display-inline-block'>\n";
             $author_opts = [0 => self::$locale['news_0251']];
@@ -1018,9 +1008,8 @@ class NewsAdmin extends NewsAdminModel {
                     <th class="strong min"><?php echo self::$locale['draft'] ?></th>
                     <th class="strong"><?php echo self::$locale['global_073'] ?></th>
                     <th class="strong"><?php echo self::$locale['news_0009'] ?></th>
-                    <th class="strong"><?php echo self::$locale['news_0142'] ?></th>
+                    <th class="strong"><?php echo self::$locale['global_050'] ?></th>
                     <th class="strong"><?php echo self::$locale['actions'] ?></th>
-                    <th class="strong min">ID</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -1046,12 +1035,11 @@ class NewsAdmin extends NewsAdminModel {
                                 <a href="<?php echo FUSION_SELF.fusion_get_aidlink()."&amp;action=delete&amp;news_id=".$data['news_id'] ?>" onclick="return confirm('<?php echo self::$locale['news_0281']; ?>')"><?php echo self::$locale['delete'] ?>
                                 </a>
                             </td>
-                            <td><?php echo $data['news_id'] ?></td>
                         </tr>
                     <?php
                     endwhile;
                 else: ?>
-                    <tr><td colspan="11" class="text-center"><strong><?php echo self::$locale['news_0109'] ?></strong></td></tr>
+                    <tr><td colspan="10" class="text-center"><strong><?php echo self::$locale['news_0109'] ?></strong></td></tr>
                 <?php endif; ?>
                 </tbody>
             </table>

@@ -110,7 +110,7 @@ abstract class News extends NewsServer {
         ];
         $result = dbquery("SELECT news_cat_id, news_cat_name, news_cat_parent, news_cat_image, news_cat_visibility
         FROM ".DB_NEWS_CATS."
-        ".(multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."' AND " : "WHERE ")." news_cat_draft=0 ORDER BY news_cat_sticky DESC, news_cat_id ASC");
+        ".(multilang_table("NS") ? "WHERE ".in_group('news_cat_language', LANGUAGE)." AND " : "WHERE ")." news_cat_draft=0 ORDER BY news_cat_sticky DESC, news_cat_id ASC");
         if (dbrows($result) > 0) {
             while ($data = dbarray($result)) {
                 $id = $data['news_cat_id'];
@@ -181,7 +181,7 @@ abstract class News extends NewsServer {
             LEFT JOIN ".DB_NEWS_IMAGES." AS ni ON ni.news_id=n.news_id AND ".(!empty($_GET['readmore']) ? "n.news_image_full_default=ni.news_image_id" : "n.news_image_front_default=ni.news_image_id")."
             LEFT JOIN ".DB_USERS." AS nu ON n.news_name=nu.user_id
             LEFT JOIN ".DB_NEWS_CATS." AS nc ON n.news_cat=nc.news_cat_id
-            ".(multilang_table("NS") ? "WHERE news_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('news_visibility')." AND (news_start='0'||news_start<='".TIME."')
+            ".(multilang_table("NS") ? "WHERE ".in_group('news_language', LANGUAGE)." AND " : "WHERE ").groupaccess('news_visibility')." AND (news_start='0'||news_start<='".TIME."')
             AND (news_end='0'||news_end>='".TIME."') AND news_draft='0'
             ".(!empty($filters['condition']) ? "AND ".$filters['condition'] : '')."
             GROUP BY ".(!empty($filters['group_by']) ? $filters['group_by'] : 'news_id')."
@@ -409,9 +409,8 @@ abstract class News extends NewsServer {
             $news_sum_rating = 0;
             $news_count_votes = 0;
             if ($data['news_allow_ratings']) {
-                $ratings = $data['news_sum_rating'];
-                $news_count_votes = $data['news_count_votes'];
-                $news_sum_rating = $data['news_sum_rating'];
+                $news_count_votes = !empty($data['news_count_votes']) ? $data['news_count_votes'] : 0;
+                $news_sum_rating = !empty($data['news_sum_rating']) ? $data['news_sum_rating'] : 0;
             }
 
             $info = [
@@ -485,7 +484,7 @@ abstract class News extends NewsServer {
         $info = array_merge_recursive($info, self::get_NewsCategory());
 
         // Filtered by Category ID.
-        $result = dbquery("SELECT * FROM ".DB_NEWS_CATS." WHERE ".(multilang_table("NS") ? "news_cat_language='".LANGUAGE."' AND " : '')." news_cat_id=:cat_id", [':cat_id' => $news_cat_id]);
+        $result = dbquery("SELECT * FROM ".DB_NEWS_CATS." WHERE ".(multilang_table("NS") ? in_group('news_cat_language', LANGUAGE)." AND " : '')." news_cat_id=:cat_id", [':cat_id' => $news_cat_id]);
 
         $max_news_rows = '';
 

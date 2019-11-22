@@ -40,6 +40,7 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
 
             // Publish the Submissions
             if (isset($_POST['publish']) && (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) || isset($_POST['preview'])) {
+    
                 $result = dbquery("SELECT ts.*, tu.user_id FROM ".DB_SUBMISSIONS." ts INNER JOIN ".DB_USERS." tu ON ts.submit_user=tu.user_id WHERE submit_id=:submit_id", [':submit_id' => $_GET['submit_id']]);
 
                 if (dbrows($result)) {
@@ -86,7 +87,7 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                         $this->news_data['news_breaks'] = "n";
                     }
 
-                    if (\defender::safe()) {
+                    if (fusion_safe()) {
 
                         if (!empty($_FILES['featured_image'])) { // when files is uploaded.
                             $upload = form_sanitizer($_FILES['featured_image'], '', 'featured_image');
@@ -128,7 +129,7 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                             $preview->display_preview();
 
                             dbquery("UPDATE ".DB_SUBMISSIONS." SET submit_criteria=:config WHERE submit_id=:submit_id", [
-                                ':config'    => \defender::encode($this->news_data),
+                                ':config'    => \Defender::encode($this->news_data),
                                 ':submit_id' => $_GET['submit_id']
                             ]);
 
@@ -204,7 +205,7 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
 
                 $data = dbarray($result);
 
-                $submit_criteria = \defender::decode($data['submit_criteria']);
+                $submit_criteria = \Defender::decode($data['submit_criteria']);
                 $submit_criteria += $default_criteria;
 
                 $this->news_data = [
@@ -250,7 +251,7 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                 echo "</div>\n";
 
                 $news_cat_opts = [];
-                $query = "SELECT news_cat_id, news_cat_name FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."'" : '')." ORDER BY news_cat_name";
+                $query = "SELECT news_cat_id, news_cat_name FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? "WHERE ".in_group('news_cat_language', LANGUAGE) : '')." ORDER BY news_cat_name";
                 $result = dbquery($query);
                 $news_cat_opts['0'] = self::$locale['news_0202'];
                 if (dbrows($result)) {
@@ -322,7 +323,7 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                                     'inner_width'  => '100%',
                                     'inline'       => TRUE,
                                     'parent_value' => self::$locale['news_0202'],
-                                    'query'        => (multilang_table('NS') ? "WHERE news_cat_language='".LANGUAGE."'" : '')
+                                    'query'        => (multilang_table('NS') ? "WHERE ".in_group('news_cat_language', LANGUAGE) : '')
                                 ],
                                 DB_NEWS_CATS, 'news_cat_name', 'news_cat_id', 'news_cat_parent'
                             ).
@@ -336,11 +337,13 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                             );
 
                         if (multilang_table('NS')) {
-                            echo form_select('news_language', self::$locale['language'], $this->news_data['news_language'], [
+                            echo form_select('news_language[]', self::$locale['language'], $this->news_data['news_language'], [
                                 'options'     => fusion_get_enabled_languages(),
                                 'placeholder' => self::$locale['choose'],
                                 'inner_width' => '100%',
                                 'inline'      => TRUE,
+                                'multiple'    => TRUE,
+                                'delimeter'   => '.'
                             ]);
                         } else {
                             echo form_hidden('news_language', '', $this->news_data['news_language']);
@@ -494,7 +497,7 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                 echo "</thead>\n";
                 echo "<tbody>\n";
                 while ($data = dbarray($result)) {
-                    $submit_criteria = \defender::decode($data['submit_criteria']);
+                    $submit_criteria = \Defender::decode($data['submit_criteria']);
                     echo "<tr>\n";
                     echo "<td>".$data['submit_id']."</td>\n";
                     echo "<td><a href='".clean_request("submit_id=".$data['submit_id'], ['section', 'aid'], TRUE)."'>".$submit_criteria['news_subject']."</a></td>\n";
@@ -577,7 +580,7 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                 if ($failed_upload) {
                     addNotice("warning", sprintf(self::$locale['news_0269'], $failed_upload));
                 }
-                if (\defender::safe()) {
+                if (fusion_safe()) {
                     redirect(FUSION_REQUEST);
                 }
             }

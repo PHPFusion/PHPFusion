@@ -36,7 +36,7 @@ class OpenGraphNews extends OpenGraph {
                 $data_img = dbarray($result_img);
                 $info['image'] = $settings['siteurl'].'infusions/news/images/thumbs/'.$data_img['news_image_t1'];
             } else {
-                $info['image'] = $settings['siteurl'].'images/favicons/mstile-150x150.png';
+                $info['image'] = defined('THEME_ICON') ? THEME_ICON.'mstile-150x150.png' : $settings['siteurl'].'images/favicons/mstile-150x150.png';
             }
         }
 
@@ -59,7 +59,7 @@ class OpenGraphNews extends OpenGraph {
             if (!empty($data['news_cat_image'])) {
                 $info['image'] = $settings['siteurl'].'infusions/news/news_cats/'.$data['news_cat_image'];
             } else {
-                $info['image'] = $settings['siteurl'].'images/favicons/mstile-150x150.png';
+                $info['image'] = defined('THEME_ICON') ? THEME_ICON.'mstile-150x150.png' : $settings['siteurl'].'images/favicons/mstile-150x150.png';
             }
         }
 
