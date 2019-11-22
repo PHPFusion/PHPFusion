@@ -36,7 +36,7 @@ class WeblinksAdminModel extends WeblinksServer {
         'weblink_visibility'  => 0,
         'weblink_status'      => 0,
         'weblink_count'       => 0,
-        'weblink_language'    => LANGUAGE,
+        'weblink_language'    => LANGUAGE
     ];
 
     public static function get_WeblinkAdminLocale() {

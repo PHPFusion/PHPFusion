@@ -29,25 +29,26 @@ class WeblinksAdminView extends WeblinksAdminModel {
         $this->locale = self::get_WeblinkAdminLocale();
 
         // Back and Check Section
-        if (isset($_GET['section']) && $_GET['section'] == "back") {
-            redirect(clean_request('', ['ref', 'section', 'weblink_id', 'action', 'cat_id', 'weblink_cat_id', 'submit_id'], FALSE));
+        $section = get( 'section' );
+        if ( $section && $section == "back") {
+            redirect( clean_request( '', [ 'ref', 'section', 'weblink_id', 'action', 'cat_id', 'weblink_cat_id', 'submit_id' ], FALSE ) );
         }
-        $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $this->allowed_pages) ? $_GET['section'] : $this->allowed_pages[0];
+        $section = isset( $section ) && in_array( $section, $this->allowed_pages ) ? $section : $this->allowed_pages[0];
 
         // Handle Breadcrumbs and Titles
         $weblinkTitle = $this->locale['WLS_0001'];
         $weblinkCatTitle = $this->locale['WLS_0004'];
-        BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink(), 'title' => $weblinkTitle]);
+        BreadCrumbs::getInstance()->addBreadCrumb( [ 'link' => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink(), 'title' => $weblinkTitle ] );
 
         // Sitetitle
-        add_to_title($this->locale['WLS_0001']);
+        add_to_title( $this->locale['WLS_0001'] );
 
-        if ($submissions = dbcount('(submit_id)', DB_SUBMISSIONS, "submit_type='l'")) {
-            addNotice("info", sprintf($this->locale['WLS_0063'], format_word($submissions, $this->locale['fmt_submission'])));
+        if ( $submissions = dbcount( '(submit_id)', DB_SUBMISSIONS, "submit_type = 'l'" ) ) {
+            addNotice( "info", sprintf( $this->locale['WLS_0063'], format_word( $submissions, $this->locale['fmt_submission'] ) ) );
         }
 
         // Handle Tabs
-        if (!empty($_GET['ref']) || isset($_GET['submit_id'])) {
+        if ( get( 'ref' ) || get( 'submit_id' ) ) {
             $master_title['title'][] = $this->locale['back'];
             $master_title['id'][] = "back";
             $master_title['icon'][] = "fa fa-fw fa-arrow-left";
@@ -66,10 +67,10 @@ class WeblinksAdminView extends WeblinksAdminModel {
         $master_title['icon'][] = "fa fa-fw fa-cogs";
 
         // Display Content
-        opentable($this->locale['WLS_0001']);
+        opentable( $this->locale['WLS_0001'] );
 
-        echo opentab($master_title, $_GET['section'], "weblinks_admin", TRUE, "nav-tabs m-b-15", "section", ['ref', 'rowstart', 'submit_id']);
-        switch ($_GET['section']) {
+        echo opentab( $master_title, $section, "weblinks_admin", TRUE, "nav-tabs m-b-15", "section", [ 'ref', 'rowstart', 'submit_id', 'weblink_display', 'weblink_id' ] );
+        switch ( $section ) {
             case "weblinks_category":
                 WeblinksCategoryAdmin::getInstance()->displayWeblinksAdmin();
                 break;
