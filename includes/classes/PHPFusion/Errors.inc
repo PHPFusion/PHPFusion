@@ -80,7 +80,7 @@ class Errors {
             redirect(fusion_get_settings("siteurl").$source_redirection_path);
         }
 
-        $result = dbquery("SELECT * FROM ".DB_ERRORS." ORDER BY error_timestamp DESC LIMIT ".$this->rowstart.",20");
+        $result = dbquery("SELECT * FROM ".DB_ERRORS." ORDER BY error_timestamp DESC LIMIT :rowstart,20", [':rowstart' => $this->rowstart]);
         while ($data = dbarray($result)) {
             $this->errors[$data['error_id']] = $data;
         }
