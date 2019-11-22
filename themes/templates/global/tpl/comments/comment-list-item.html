@@ -1,31 +1,34 @@
 <!---comment-{%comment_id%}--->
-<li class='m-b-15' id='{%comment_id%}'>
+<li class="m-b-15 display-flex-row" id="{%comment_id%}">
 	{comment_avatar.{
-	<div class='pull-left text-center m-r-15'>{%avatar%}</div>
+	<div class="comment-item-avatar">{%avatar%}</div>
 	}}
-	<div class='overflow-hide'>
-		<div class='comment_name display-inline-block m-r-10'>{%user_name%}</div>
-		{%comment_ratings%}
-		{comment_subject.{
-		<div class='comment_title'><!--comment_subject-->{%subject%}<!--//comment_subject--></div>
-		}}
-		<div class='comment_message'><!--comment_message-->{%comment_message%}<!--//comment_message--></div>
-		<div>
-			<small>
-				<span class='comment_date'>{%comment_date%}</span>
-				{comment_action.{
-				&middot; {%link%}
-				}}
-			</small>
+	<div class="comment-item {[col(100)]}">
+		<div class="comment-item-body">
+			<span class="comment-name">{%user_name%}</span>
+			{%comment_ratings%}
+			{comment_subject.{
+			<div class="comment-title"><!--comment_subject-->{%subject%}<!--//comment_subject--></div>
+			}}
+			<div class="comment-message"><!--comment_message-->{%comment_message%}<!--//comment_message--></div>
+			<div>
+				<small>
+					<span class="comment-date">{%comment_date%}</span>
+					{comment_action.{
+					&middot; {%link%}
+					}}
+				</small>
+			</div>
+			{comment_reply_form.{
+			{%reply_form%}
+			}}
 		</div>
-		{comment_reply_form.{
-		{%reply_form%}
-		}}
 		{comment_sub_comments.{
-		<ul class='sub_comments list-style-none'>
+		<ul class="sub-comments list-style-none spacer-sm">
 			{%sub_comments%}
 		</ul>
 		}}
 	</div>
+
 </li>
 <!---//comment-{%comment_id%}--->

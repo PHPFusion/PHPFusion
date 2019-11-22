@@ -1,12 +1,12 @@
 <div class="comments-form-panel">
 	<div class="comments-form-header"><h4>{%comment_form_title%}</h4></div>
-	<div class="comments-form">
+	<div class="comments-form display-flex-row">
 		{avatar.{
-		<div class="pull-left m-r-15 m-t-5">
+		<div class="m-t-5">
 			{%user_avatar%}
 		</div>
 		}}
-		<div class="overflow-hide p-5">
+		<div class="display-flex-column {[col(100)]}">
 			{%openform%}
 			<a id="{%comment_form_id%}" name="edit_comment"></a>
 			{%comment_name_input%}

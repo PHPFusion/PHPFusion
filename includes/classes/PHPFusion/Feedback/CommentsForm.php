@@ -68,12 +68,13 @@ class CommentsForm {
                     'comment_input' => form_textarea( ( $this->data['comment_cat'] ? 'comment_message_reply' : 'comment_message' ), '', $this->data['comment_message'],
                         [
                             'input_id'     => "$this->hash-comment_message",
-                            'required'     => 1,
+                            'required'     => TRUE,
                             'autosize'     => TRUE,
                             'form_name'    => 'inputform',
-                            "tinymce"      => "simple",
-                            'wordcount'    => TRUE,
+                            'wordcount'    => FALSE,
+                            'placeholder'  => $locale['c108'],
                             'type'         => ( $this->comment->getParams( 'comment_bbcode' ) ? 'bbcode' : ( $this->comment->getParams( 'comment_tinymce' ) ? 'tinymce' : 'text' ) ),
+                            "tinymce"      => "simple",
                             'tinymce_skin' => $this->comment->getParams( 'comment_tinymce_skin' )
                         ]
                     ),
