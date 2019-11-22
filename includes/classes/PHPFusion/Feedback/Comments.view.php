@@ -21,7 +21,7 @@ use PHPFusion\Template;
 if ( !function_exists( 'display_comments_ui' ) ) {
     function display_comments_ui( $info ) {
         $tpl = Template::getInstance( 'comments' );
-        $tpl->set_template( __DIR__.'/comments.html' );
+        $tpl->set_template( THEMES.'templates/global/tpl/comments/comments.html' );
         $tpl->set_tag( 'comment_title', $info['comment_title'] );
         $tpl->set_tag( 'comment_form_container_id', $info['comment_form_container_id'] );
         $tpl->set_tag( 'comment_count', $info['comment_count'] );
@@ -39,7 +39,7 @@ if ( !function_exists( 'display_comments_section' ) ) {
     
     function display_comments_section( $info ) {
         $tpl = Template::getInstance( 'comments-section' );
-        $tpl->set_template( __DIR__.'/comments-section.html' );
+        $tpl->set_template( THEMES.'templates/global/tpl/comments/comments-section.html' );
         $tpl->set_tag( 'comment_ratings', $info['comment_ratings'] );
         $tpl->set_tag( 'comments', $info['comments'] );
         
@@ -53,7 +53,7 @@ if ( !function_exists( 'display_comments_section' ) ) {
 if ( !function_exists( 'display_comments_listing' ) ) {
     function display_comments_listing( $info ) {
         $tpl = Template::getInstance( 'comments-list' );
-        $tpl->set_template( __DIR__.'/comments-list.html' );
+        $tpl->set_template( THEMES.'templates/global/tpl/comments/comments-list.html' );
         $tpl->set_tag( 'comments_list', $info['comments_list'] );
         $tpl->set_tag( 'comments_page', $info['comments_page'] );
         $tpl->set_tag( 'comments_admin_link', $info['comments_admin_link'] );
@@ -74,7 +74,7 @@ if ( !function_exists( 'display_comments_list' ) ) {
      */
     function display_comments_list( $info = [] ) {
         $tpl = Template::getInstance( 'comments-list-item' );
-        $tpl->set_template( __DIR__.'/comment-list-item.html' );
+        $tpl->set_template( THEMES.'templates/global/tpl/comments/comment-list-item.html' );
         $tpl->set_tag( 'comment_id', $info['comment_id'] );
         $tpl->set_tag( 'user_name', $info['user_name'] );
         $tpl->set_tag( 'comment_ratings', $info['comment_ratings'] );
@@ -107,7 +107,7 @@ if ( !function_exists( 'display_comments_list' ) ) {
 if ( !function_exists( 'display_comments_reply_form' ) ) {
     function display_comments_reply_form() {
         $tpl = Template::getInstance( 'comments-replyform' );
-        $tpl->set_template( __DIR__.'/comments-replyform.html' );
+        $tpl->set_template( THEMES.'templates/global/tpl/comments/comments-replyform.html' );
         $tpl->set_tag( 'comment_name' );
         $tpl->set_tag( 'comment_message' );
         $tpl->set_tag( 'comment_captcha' );
@@ -125,7 +125,7 @@ if ( !function_exists( 'display_comments_form' ) ) {
      */
     function display_comments_form( $info ) {
         $tpl = Template::getInstance( 'comments-form' );
-        $tpl->set_template( __DIR__.'/comments-form.html' );
+        $tpl->set_template( THEMES.'templates/global/tpl/comments/comments-form.html' );
         $tpl->set_tag( 'openform', $info['openform'] );
         $tpl->set_tag( 'closeform', $info['closeform'] );
         $tpl->set_tag( 'comment_form_title', $info['title'] );
@@ -146,7 +146,7 @@ if ( !function_exists( 'display_comments_form' ) ) {
 if ( !function_exists( 'display_comments_ratings' ) ) {
     function display_comments_ratings( $info = [] ) {
         $tpl = Template::getInstance( 'ratings' );
-        $tpl->set_template( __DIR__.'/ratings.html' );
+        $tpl->set_template( THEMES.'templates/global/tpl/comments/ratings.html' );
         $tpl->set_tag( 'stars', $info['stars'] );
         $tpl->set_tag( 'reviews', $info['reviews'] );
         $tpl->set_tag( 'ratings', $info['ratings'] );
