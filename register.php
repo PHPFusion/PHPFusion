@@ -74,31 +74,8 @@ if ($settings['gateway'] == 1 && session_get('validated') == 'TRUE' || $settings
         }
 
     } else {
-
-        $userFields = new PHPFusion\UserFields();
-        $userFields->post_name = "register";
-        $userFields->post_value = $locale['u101'];
-        $userFields->display_validation = $settings['display_validation'];
-        $userFields->display_terms = $settings['enable_terms'];
-        $userFields->plugin_folder = [INCLUDES."user_fields/", INFUSIONS];
-        $userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
-        $userFields->show_admin_password = FALSE;
-        $userFields->skip_password = TRUE;
-        $userFields->registration = TRUE;
-        $userFields->inline_field = FALSE;
-
-        $userInput = new PHPFusion\UserFieldsInput();
-        $userInput->validation = $settings['display_validation'];
-        $userInput->email_verification = $settings['email_verification'];
-        $userInput->admin_activation = $settings['admin_activation'];
-        $userInput->hide_user_email = TRUE; // make settings for this.
-        $userInput->skip_password = TRUE;
-        $userInput->registration = TRUE;
-        $userInput->post_name = 'register';
-        $userInput->redirect_uri = BASEDIR.$settings['opening_page'];
-        $userInput->saveInsert();
-
-        echo $userFields->registration();
+        $userFields = \PHPFusion\UserFields::getInstance();
+        echo display_register_form( $userFields->registerInfo() );
     }
 }
 

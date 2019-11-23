@@ -18,7 +18,6 @@
 +--------------------------------------------------------*/
 namespace PHPFusion;
 
-use Exception;
 use PHPFusion\UserFields\Pages\ProfileInput;
 use PHPFusion\UserFields\Pages\ProfileOutput;
 use ReflectionException;
@@ -256,16 +255,42 @@ class UserFields extends UserFieldsQuantum {
         return ( checkrights( 'M' ) && fusion_get_userdata( 'user_level' ) <= USER_LEVEL_ADMIN && $this->profile_id != '1' || iSUPERADMIN ) ? TRUE : FALSE;
     }
     
-    /**
-     * Show Registration Form
-     * Registration    user-register-form
-     *
-     * @return string|void
-     * @throws Exception
-     */
-    public function registration() {
-        $this->setInputInfo();
-        return display_register_form( $this->info );
+    
+    public function registerInfo() {
+        if ( iMEMBER ) {
+            redirect( BASEDIR.fusion_get_settings( 'opening_page' ) );
+        }
+        $settings = fusion_get_settings();
+        
+        $userProfile = new ProfileInput( $this );
+        // Preconfigured behavior
+        $userProfile->form_name = 'registerFrm';
+        $userProfile->post_name = 'register';
+        $userProfile->post_value = fusion_get_locale( 'u105' );
+        $userProfile->user_data = fusion_get_userdata();
+        $userProfile->user_name_change = fusion_get_settings( 'userNameChange' );
+        $userProfile->skip_password = TRUE;
+        $userProfile->registration = TRUE;
+        $userProfile->display_terms = TRUE;
+        $userProfile->display_validation = $settings['display_validation'];;
+        $userProfile->inline_field = FALSE;
+        
+        // // The input class
+        $userInput = new UserFieldsInput();
+        $userInput->post_name = 'register';
+        $userInput->registration = TRUE;
+        $userInput->skip_password = TRUE;
+        $userInput->user_name_change = TRUE;
+        $userInput->verifyNewEmail = TRUE;
+        $userInput->user_data = [];
+        $userInput->hide_user_email = TRUE; // make settings for this.
+        $userInput->admin_activation = $settings['admin_activation'];
+        $userInput->email_verification = $settings['email_verification'];
+        $userInput->validation = $settings['display_validation'];
+        $userInput->redirect_uri = BASEDIR.$settings['opening_page'];
+        $userInput->saveInsert();
+        
+        return $userProfile->getInfo();
     }
     
     /**

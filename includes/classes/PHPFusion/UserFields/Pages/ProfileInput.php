@@ -118,6 +118,7 @@ class ProfileInput {
      * @throws ReflectionException
      */
     private function registrationInfo() {
+    
         $class = new Public_Profile( $this->userFields );
         
         // Can remove all these, as we do DI approach
@@ -125,7 +126,7 @@ class ProfileInput {
         $class->form_name = $this->form_name;
         $class->post_name = $this->post_name;
         $class->user_name_change = TRUE;
-        $class->registration = $this->registration;
+        $class->registration = TRUE;
         $class->is_admin_panel = $this->is_admin_panel;
         $class->display_validation = $this->display_validation;
         $class->display_terms = $this->display_terms;
@@ -137,12 +138,14 @@ class ProfileInput {
         $class = new Account_Profile();
         $class->user_data = $this->user_data;
         $class->is_admin_panel = $this->is_admin_panel;
-        $class->registration = $this->registration;
+        $class->registration = TRUE;
         $class->post_name = $this->post_name;
         $class->user_name_change = TRUE;
         $class->inline_field = $this->inline_field;
-        
-        return $class->get_info();
+    
+        $this->info = array_merge( $this->info, $class->inputInfo() );
+    
+        return $this->info;
     }
     
     /**
