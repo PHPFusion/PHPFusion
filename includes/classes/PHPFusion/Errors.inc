@@ -75,7 +75,7 @@ class Errors {
             redirect(fusion_get_settings("siteurl").$source_redirection_path);
         }
 
-        $result = dbquery("SELECT * FROM ".DB_ERRORS." ORDER BY error_timestamp DESC LIMIT ".$this->rowstart.",20");
+        $result = dbquery("SELECT * FROM ".DB_ERRORS." ORDER BY error_timestamp DESC LIMIT :rowstart,20", [':rowstart' => $this->rowstart]);
         while ($data = dbarray($result)) {
             $this->errors[$data['error_id']] = $data;
         }
@@ -517,7 +517,7 @@ class Errors {
                 $.ajax({
                     url: '".FUSION_ROOT.ADMIN."includes/error_logs_updater.php',
                     dataType: 'json',
-                    method : 'GET',                    
+                    method : 'GET',
                     data: sendData,
                     success: function(e) {
                         //console.log(e);
@@ -532,7 +532,7 @@ class Errors {
                              $('tr#err_rmd-'+e.fusion_error_id).remove();
                         }
                     },
-                    error : function(e) {                        
+                    error : function(e) {
                         console.log('Fail to load Error Logs Update');
                     }
                 });
