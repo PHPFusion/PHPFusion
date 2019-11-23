@@ -19,7 +19,7 @@ $options = [
 // add_to_footer($modal_2);
 echo "<style>.selectize-dropdown { z-index: 99999 !important; position:absolute !important;}</style>";
 
-echo '<div class="'.grid_container().'">';
+// echo '<div class="'.grid_container().'">';
 // // Normal dropdown -- OK
 echo form_select('selectize', 'Selectize Plugin', '2', ['select_alt' => TRUE, 'options' => $options]);
 // // Tags dropdown -- OK
@@ -71,6 +71,6 @@ echo form_select('user_id', 'Select User', '', [
 ]);
 
 
-echo '</div>';
+// echo '</div>';
 
 require_once THEMES.'templates/footer.php';
