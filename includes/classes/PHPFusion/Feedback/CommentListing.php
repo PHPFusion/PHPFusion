@@ -435,38 +435,40 @@ class CommentListing {
         $locale = fusion_get_locale();
         $comments_html = '';
         //print_p(debug_backtrace());
-        foreach ( $c_data[ $index ] as $comments_id => $data ) {
-            $data['comment_ratings'] = '';
-            if ( fusion_get_settings( 'ratings_enabled' ) && $this->comment->getParams( 'comment_allow_ratings' ) ) {
-                $data['comment_ratings'] .= "<p class='ratings'>\n";
-                $remainder = 5 - (int)$data['ratings'];
-                for ( $i = 1; $i <= $data['ratings']; $i++ ) {
-                    $data['comment_ratings'] .= "<i class='fa fa-star text-warning'></i>\n";
-                }
-                if ( $remainder ) {
-                    for ( $i = 1; $i <= $remainder; $i++ ) {
-                        $data['comment_ratings'] .= "<i class='fa fa-star-o text-lighter'></i>\n";
+        if ( !empty( $c_data[ $index ] ) ) {
+            foreach ( $c_data[ $index ] as $comments_id => $data ) {
+                $data['comment_ratings'] = '';
+                if ( fusion_get_settings( 'ratings_enabled' ) && $this->comment->getParams( 'comment_allow_ratings' ) ) {
+                    $data['comment_ratings'] .= "<p class='ratings'>\n";
+                    $remainder = 5 - (int)$data['ratings'];
+                    for ( $i = 1; $i <= $data['ratings']; $i++ ) {
+                        $data['comment_ratings'] .= "<i class='fa fa-star text-warning'></i>\n";
                     }
+                    if ( $remainder ) {
+                        for ( $i = 1; $i <= $remainder; $i++ ) {
+                            $data['comment_ratings'] .= "<i class='fa fa-star-o text-lighter'></i>\n";
+                        }
+                    }
+                    $data['comment_ratings'] .= "</p>\n";
                 }
-                $data['comment_ratings'] .= "</p>\n";
+                $data_api = \Defender::encode( $options );
+                $info = [
+                    'comment_id'           => 'c'.$data['comment_id'],
+                    'user_avatar'          => ( $this->comments_avatar ? $data['user_avatar'] : '' ),
+                    'user_name'            => $data['comment_name'],
+                    'comment_ratings'      => $data['comment_ratings'],
+                    'comment_subject'      => $data['comment_subject'],
+                    'comment_message'      => $data['comment_message'],
+                    'comment_date'         => $data['comment_datestamp'],
+                    'comment_reply_link'   => ( $data['reply_link'] ? "<a href='".$data['reply_link']."' class='comments-reply display-inline' data-id='$comments_id'>".$locale['c112']."</a>" : '' ),
+                    'comment_edit_link'    => ( $data['edit_link'] ? "<a href='".$data['edit_link']['link']."' class='edit-comment display-inline' data-id='".$data['comment_id']."' data-api='$data_api' data-key='".$this->comment->getParams( 'comment_key' )."'>".$data['edit_link']['name']."</a>" : '' ),
+                    'comment_delete_link'  => ( $data['delete_link'] ? "<a href='".$data['delete_link']['link']."' class='delete-comment display-inline' data-id='".$data['comment_id']."' data-api='$data_api' data-type='".$options['comment_item_type']."' data-item='".$options['comment_item_id']."' data-key='".$this->comment->getParams( 'comment_key' )."'>".$data['delete_link']['name']."</a>" : '' ),
+                    'comment_reply_form'   => ( $data['reply_form'] ?: '' ),
+                    'comment_sub_comments' => ( isset( $c_data[ $data['comment_id'] ] ) ? $this->displayComments( $c_data, $data['comment_id'], $options ) : '' ),
+                    'comment_marker'       => $data['i']
+                ];
+                $comments_html .= display_comments_list( $info );
             }
-            $data_api = \Defender::encode( $options );
-            $info = [
-                'comment_id'           => 'c'.$data['comment_id'],
-                'user_avatar'          => ( $this->comments_avatar ? $data['user_avatar'] : '' ),
-                'user_name'            => $data['comment_name'],
-                'comment_ratings'      => $data['comment_ratings'],
-                'comment_subject'      => $data['comment_subject'],
-                'comment_message'      => $data['comment_message'],
-                'comment_date'         => $data['comment_datestamp'],
-                'comment_reply_link'   => ( $data['reply_link'] ? "<a href='".$data['reply_link']."' class='comments-reply display-inline' data-id='$comments_id'>".$locale['c112']."</a>" : '' ),
-                'comment_edit_link'    => ( $data['edit_link'] ? "<a href='".$data['edit_link']['link']."' class='edit-comment display-inline' data-id='".$data['comment_id']."' data-api='$data_api' data-key='".$this->comment->getParams( 'comment_key' )."'>".$data['edit_link']['name']."</a>" : '' ),
-                'comment_delete_link'  => ( $data['delete_link'] ? "<a href='".$data['delete_link']['link']."' class='delete-comment display-inline' data-id='".$data['comment_id']."' data-api='$data_api' data-type='".$options['comment_item_type']."' data-item='".$options['comment_item_id']."' data-key='".$this->comment->getParams( 'comment_key' )."'>".$data['delete_link']['name']."</a>" : '' ),
-                'comment_reply_form'   => ( $data['reply_form'] ?: '' ),
-                'comment_sub_comments' => ( isset( $c_data[ $data['comment_id'] ] ) ? $this->displayComments( $c_data, $data['comment_id'], $options ) : '' ),
-                'comment_marker'       => $data['i']
-            ];
-            $comments_html .= display_comments_list( $info );
         }
         
         return (string)$comments_html;
