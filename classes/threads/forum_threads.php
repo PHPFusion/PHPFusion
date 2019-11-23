@@ -18,7 +18,6 @@
 
 namespace PHPFusion\Infusions\Forum\Classes\Threads;
 
-use PHPFusion\Feedback\Comments;
 use PHPFusion\Infusions\Forum\Classes\Forum_Moderator;
 use PHPFusion\Infusions\Forum\Classes\Forum_Server;
 use PHPFusion\Infusions\Forum\Classes\Post\Quick_Reply;
@@ -596,16 +595,18 @@ class Forum_Threads extends Forum_Server {
             }
         
             if ( $this->thread_data['forum_allow_comments'] ) {
-                add_to_jquery( "
-                $('.comment-link').bind('click', function(e) {
+                // Forum Comments JS
+                $forum_comment_js = /** @lang JavaScript */
+                    "$('.comment-link').bind('click', function(e) {
                     e.preventDefault();
                     let target = $(this).data('target');
-                    console.log(target);
+                    //console.log(target); //FO202966
                     if (target) {
-                        $('#'+target).closest('.comments-form').show();
+                        $('#'+target+' > .comments-form-panel > .comments-form').show();
                     }
                 });
-                " );
+                ";
+                add_to_jquery( $forum_comment_js );
             }
         
             // get post_count, lastpost_id, first_post_id.
@@ -670,9 +671,9 @@ class Forum_Threads extends Forum_Server {
                         'link'  => INFUSIONS."forum/postify.php?post=off&amp;forum_id=".$this->thread_data['forum_id']."&amp;thread_id=".$this->thread_data['thread_id'],
                         'title' => $locale['forum_0174']
                     ];
-                
+    
                 } else {
-                
+    
                     $this->thread_info['buttons']['notify'] = [
                         'link'  => INFUSIONS."forum/postify.php?post=on&amp;forum_id=".$this->thread_data['forum_id']."&amp;thread_id=".$this->thread_data['thread_id'],
                         'title' => $locale['forum_0175']
@@ -751,13 +752,13 @@ class Forum_Threads extends Forum_Server {
         
             // Thread mod form
             if ( iMOD ) {
-            
+    
                 $this->moderator()->setForumID( $this->thread_data['forum_id'] );
-            
+    
                 $this->moderator()->setThreadId( $this->thread_data['thread_id'] );
                 
                 $this->moderator()->doModActions();
-            
+    
                 /**
                  * Thread moderation form template
                  */
@@ -769,7 +770,7 @@ class Forum_Threads extends Forum_Server {
                     $this->thread_data['thread_sticky'] ? "nonsticky" : "sticky" => $this->thread_data['thread_sticky'] ? $locale['forum_0205'] : $locale['forum_0204'],
                     'move'                                                       => $locale['forum_0206']
                 ];
-            
+    
                 // New Mod form Parts (Andromeda)
                 $this->thread_info['mod_form_parts']['openform'] = openform( 'moderator_menu', 'post', $this->thread_info['form_action'] ).form_hidden( 'delete_item_post', '', '' );
                 $this->thread_info['mod_form_parts']['button_group'] = "<div class='btn-group m-r-10'>\n
@@ -789,7 +790,7 @@ class Forum_Threads extends Forum_Server {
                 ] );
                 $this->thread_info['mod_form_parts']['go_button'] = form_button( 'go', $locale['forum_0208'], $locale['forum_0208'], [ 'class' => 'btn-default m-0' ] );
                 $this->thread_info['mod_form_parts']['closeform'] = closeform();
-            
+    
                 // Reconstruct the mod bar
                 $this->thread_info['mod_form'] =
                     $this->thread_info['mod_form_parts']['openform']."
@@ -803,7 +804,7 @@ class Forum_Threads extends Forum_Server {
                     $this->thread_info['mod_form_parts']['move_button'].
                     $this->thread_info['mod_form_parts']['delete_button'].
                     $this->thread_info['mod_form_parts']['closeform'];
-            
+    
                 // Mod form jquery codes
                 add_to_jquery( "
                 $('#check_all').bind('click', function() {
@@ -1105,13 +1106,13 @@ class Forum_Threads extends Forum_Server {
                         if ( $update_forum_lastpost ) {
                             // find all parents and update them
                             $list_of_forums = get_all_parent( dbquery_tree( DB_FORUMS, 'forum_id', 'forum_cat' ), $this->thread_data['forum_id'] );
-                        
+    
                             if ( !empty( $list_of_forums ) ) {
                                 foreach ( $list_of_forums as $fid ) {
                                     dbquery( "UPDATE ".DB_FORUMS." SET forum_lastpost='".$post_data['post_datestamp']."', forum_postcount=forum_postcount+1, forum_lastpostid='".$post_data['post_id']."', forum_lastuser='".$post_data['post_author']."' WHERE forum_id='".$fid."'" );
                                 }
                             }
-                        
+    
                             // update current forum
                             dbquery( "UPDATE ".DB_FORUMS." SET forum_lastpost='".$post_data['post_datestamp']."', forum_postcount=forum_postcount+1, forum_lastpostid='".$post_data['post_id']."', forum_lastuser='".$post_data['post_author']."' WHERE forum_id='".$this->thread_data['forum_id']."'" );
                             // update current thread
@@ -1753,21 +1754,22 @@ class Forum_Threads extends Forum_Server {
         
         require_once FORUM.'classes/forum_comments.php';
         require_once INCLUDES.'comments_include.php';
-        
-        return Comments::getInstance( [
-            'comment_item_type'     => 'FO',
-            'comment_db'            => DB_FORUM_POSTS,
-            'comment_col'           => 'post_id',
-            'comment_item_id'       => $post_id,
-            'comment_marker'        => $post_marker,
-            'clink'                 => FORUM.'viewthread.php?thread_id='.$thread_id,
-            'comment_echo'          => FALSE,
-            'comment_allow_subject' => FALSE,
-            'comment_allow_ratings' => FALSE,
-            'comment_form_template' => 'forum_comments',
-            'comment_ui_template'   => 'forum_comments_ui',
-        ], '_FO'.$post_id
-        )->showComments();
+        return showcomments( 'FO', DB_FORUM_POSTS, 'post_id', $post_id, FORUM.'viewthread.php?thread_id='.$thread_id, FALSE, $post_marker, FALSE );
+    
+        //return Comments::getInstance( [
+        //    'comment_item_type'     => 'FO',
+        //    'comment_db'            => DB_FORUM_POSTS,
+        //    'comment_col'           => 'post_id',
+        //    'comment_item_id'       => $post_id,
+        //    'comment_marker'        => $post_marker,
+        //    'clink'                 => FORUM.'viewthread.php?thread_id='.$thread_id,
+        //    'comment_echo'          => FALSE,
+        //    'comment_allow_subject' => FALSE,
+        //    'comment_allow_ratings' => FALSE,
+        //    //'comment_form_template' => 'forum_comments', // this need to override too.
+        //    //'comment_ui_template'   => 'forum_comments_ui', // this need to override
+        //], '_FO'.$post_id
+        //)->showComments();
         
     }
     
