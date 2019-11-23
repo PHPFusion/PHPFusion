@@ -20,14 +20,14 @@ defined( 'IN_FUSION' ) || exit;
 /**
  * Show comments form
  *
- * @param        $comment_type
- * @param        $comment_db
- * @param        $comment_col
- * @param        $comment_item_id
- * @param        $clink
- * @param bool   $ratings
- * @param string $post_marker
- * @param bool   $echo
+ * @param        $comment_type    'A'
+ * @param        $comment_db      'DB_ARTICLES'
+ * @param        $comment_col     'article_id'
+ * @param        $comment_item_id '$data['article_id']'
+ * @param        $clink           'BASEDIR.'infusions/articles/articles.php?article_id='.$data['article_id']'
+ * @param bool   $ratings         TRUE/FALSE
+ * @param string $post_marker     '1.1' (optional)
+ * @param bool   $echo            TRUE/FALSE
  *
  * @return string
  */
