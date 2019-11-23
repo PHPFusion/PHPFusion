@@ -105,13 +105,17 @@ if ( !function_exists( 'display_comments_list' ) ) {
  * The comment reply form HTML
  */
 if ( !function_exists( 'display_comments_reply_form' ) ) {
-    function display_comments_reply_form() {
+    function display_comments_reply_form( $info ) {
         $tpl = Template::getInstance( 'comments-replyform' );
         $tpl->set_template( THEMES.'templates/global/tpl/comments/comments-replyform.html' );
-        $tpl->set_tag( 'comment_name' );
-        $tpl->set_tag( 'comment_message' );
-        $tpl->set_tag( 'comment_captcha' );
-        $tpl->set_tag( 'comment_post' );
+        $tpl->set_tag( 'openform', $info['openform'] );
+        $tpl->set_tag( 'comment_name', $info['comment_name'] );
+        $tpl->set_tag( 'comment_message', $info['comment_message'] );
+        $tpl->set_tag( 'comment_captcha', $info['comment_captcha'] );
+        $tpl->set_tag( 'comment_post', $info['comment_post'] );
+        $tpl->set_tag( 'closeform', $info['closeform'] );
+        return $tpl->get_output();
+        
     }
 }
 

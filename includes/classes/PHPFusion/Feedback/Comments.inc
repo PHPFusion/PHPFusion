@@ -70,8 +70,8 @@ class Comments extends CommentsFactory {
             $info = [
                 'comment_title'             => $this->getParams( 'comment_title' ),
                 'comment_count'             => $comment_info['comment_count'],
-                'comment_container_id'      => $this->getParams( 'comment_key' ),
-                'comment_form_container_id' => $this->getParams( 'comment_key' ).'_commentsfrm',
+                'comment_container_id'      => $this->getParams( 'comment_item_type' ).$this->getParams( 'comment_item_id' ),
+                'comment_form_container_id' => $this->getParams( 'comment_item_type' ).$this->getParams( 'comment_item_id' ).'_commentsfrm',
                 'comments_listing'          => display_comments_section( [
                     'comments'        => $comment_info['comments'],
                     'comment_ratings' => $comment_info['comment_ratings']
