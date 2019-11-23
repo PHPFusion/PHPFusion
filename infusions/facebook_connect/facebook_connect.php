@@ -41,7 +41,7 @@ class Facebook_Connect {
                 'default_graph_version' => 'v2.10',
                 //'persistent_data_handler' => 'session',
             ]);
-            $this->fb_uid = fusion_get_userdata('user_facebook');
+            $this->fb_uid = fusion_get_userdata( 'user_facebook_id' );
             $section = get('section');
             if ($section) {
                 $this->section = $section;
@@ -71,7 +71,7 @@ class Facebook_Connect {
     private function disconnectUser() {
         
         if (fusion_get_userdata('user_password')) {
-            dbquery("UPDATE ".DB_USERS." SET user_facebook='' WHERE user_id=:uid", [ ':uid' => (int)fusion_get_userdata('user_id')]);
+            dbquery( "UPDATE ".DB_USERS." SET user_facebook_id='' WHERE user_id=:uid", [ ':uid' => (int)fusion_get_userdata( 'user_id' ) ] );
             session_remove('facebook_access_token');
             // unset($_SESSION['facebook_access_token']);
             addNotice('success', 'Facebook has been disconnected.');
@@ -144,9 +144,9 @@ class Facebook_Connect {
             fclose($fp);
             $userProp['user_avatar'] = $img;
         }
-        
-        if (empty($user['user_facebook'])) {
-            $userProp['user_facebook'] = $fbUserData['oauth_uid'];
+    
+        if ( empty( $user['user_facebook_id'] ) ) {
+            $userProp['user_facebook_id'] = $fbUserData['oauth_uid'];
         }
         
         
@@ -155,7 +155,7 @@ class Facebook_Connect {
             if (iMEMBER && $user['user_id']) {
                 // Connecting from User Profile Edit.
                 $userProp['user_id'] = $user['user_id'];
-                if (!dbcount("(user_id)", DB_USERS, 'user_facebook=:fb_uid', [':fb_uid' => $userProp['user_facebook']])) {
+                if ( !dbcount( "(user_id)", DB_USERS, 'user_facebook_id=:fb_uid', [ ':fb_uid' => $userProp['user_facebook_id'] ] ) ) {
                     // check FB
                     // make sure $userProp doesn't contain any email address.
                     dbquery_insert(DB_USERS, $userProp, 'update');
@@ -166,10 +166,10 @@ class Facebook_Connect {
                 redirect(BASEDIR.'edit_profile.php?section='.$this->section);
             } else {
                 // check if can login or not.
-                if (dbcount("(user_id)", DB_USERS, "user_facebook=:fb_id", [':fb_id' => $userProp['user_facebook']])) {
+                if ( dbcount( "(user_id)", DB_USERS, "user_facebook_id=:fb_id", [ ':fb_id' => $userProp['user_facebook_id'] ] ) ) {
                     // existing users
                     $opening_page = fusion_get_settings('opening_page');
-                    $user_id = dbresult(dbquery("SELECT user_id FROM ".DB_USERS." WHERE user_facebook=:fb_uid", [':fb_uid' => $userProp['user_facebook']]), 0);
+                    $user_id = dbresult( dbquery( "SELECT user_id FROM ".DB_USERS." WHERE user_facebook_id=:fb_uid", [ ':fb_uid' => $userProp['user_facebook_id'] ] ), 0 );
                     $login = Authenticate::loginUser($user_id);
                     if ($login) {
                         redirect(BASEDIR.$opening_page);
@@ -210,16 +210,16 @@ class Facebook_Connect {
                 $new_user_info = [
                     'user_name'      => $userProp['user_name'],
                     'user_firstname' => $fbUserProfile['first_name'],
-                    'user_lastname'  => $fbUserProfile['last_name'],
-                    'user_email'     => $userProp['user_email'],
-                    'user_datestamp' => TIME,
-                    'user_ip'        => USER_IP,
-                    'user_ip_type'   => USER_IP_TYPE,
-                    'user_language'  => LANGUAGE,
-                    'user_status'    => $admin_activation ? 2 : 0,
-                    'user_salt'      => $passAuth->getNewRandomSalt(),
-                    'user_algo'      => fusion_get_settings('password_algorithm'),
-                    'user_facebook'  => $fbUserProfile['id']
+                    'user_lastname'    => $fbUserProfile['last_name'],
+                    'user_email'       => $userProp['user_email'],
+                    'user_datestamp'   => TIME,
+                    'user_ip'          => USER_IP,
+                    'user_ip_type'     => USER_IP_TYPE,
+                    'user_language'    => LANGUAGE,
+                    'user_status'      => $admin_activation ? 2 : 0,
+                    'user_salt'        => $passAuth->getNewRandomSalt(),
+                    'user_algo'        => fusion_get_settings('password_algorithm'),
+                    'user_facebook_id' => $fbUserProfile['id']
                 ];
                 
                 if ($email_verification) {
@@ -255,11 +255,11 @@ class Facebook_Connect {
             } else {
                 
                 // A user found with that id
-                $user_id = dbresult(dbquery("SELECT user_id FROM ".DB_USERS." WHERE user_email=:email AND user_facebook =''", [':email' => $userProp['user_email']]), 0);
+                $user_id = dbresult( dbquery( "SELECT user_id FROM ".DB_USERS." WHERE user_email=:email AND user_facebook_id =''", [ ':email' => $userProp['user_email'] ] ), 0 );
                 if ($user_id) {
-                    dbquery("UPDATE ".DB_USERS." SET user_facebook=:fb_uid WHERE user_id=:uid", [
+                    dbquery( "UPDATE ".DB_USERS." SET user_facebook_id=:fb_uid WHERE user_id=:uid", [
                         ':uid'    => (int)$user_id,
-                        ':fb_uid' => $userProp['user_facebook']
+                        ':fb_uid' => $userProp['user_facebook_id']
                     ]);
                     $login = Authenticate::loginUser($user_id);
                     if ($login) {

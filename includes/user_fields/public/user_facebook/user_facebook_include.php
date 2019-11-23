@@ -16,8 +16,6 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-use PHPFusion\Infusions\Facebook_Connect\Facebook_Connect;
-
 defined('IN_FUSION') || exit;
 
 $locale = fusion_get_locale('', __DIR__.'/locale/'.LANGUAGE.'.php');
@@ -26,17 +24,13 @@ $icon = "<img src='".INCLUDES."user_fields/public/user_facebook/images/facebook.
 // Display user field input
 if ($profile_method == "input") {
     
-    // Do not enable this one, the value for user_facebook is REAL FACEBOOK ID
-    //$user_fields = form_text('user_facebook', $locale['uf_facebook'], $field_value, [
-    //    'inline'      => TRUE,
-    //    'placeholder' => $locale['uf_facebook_placeholder'],
-    //    'error_text'  => $locale['uf_facebook_error'],
-    //    'label_icon'  => $icon,
-    //] + $options);
+    $user_fields = form_text( 'user_facebook', $locale['uf_facebook'], $field_value, [
+            'inline'      => TRUE,
+            'placeholder' => $locale['uf_facebook_placeholder'],
+            'error_text'  => $locale['uf_facebook_error'],
+            'label_icon'  => $icon,
+        ] + $options );
     
-    $fb = new Facebook_Connect();
-    $user_fields = $fb->displayField( $field_value, $options );
-
     // Display in profile
 } else if ($profile_method == "display") {
 
