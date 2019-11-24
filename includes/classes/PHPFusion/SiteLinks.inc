@@ -519,17 +519,12 @@ class SiteLinks {
         $tpl->set_tag('nav_class_secondary', $options['nav_class_secondary']);
 
         if ($options['container'] || $options['container_fluid']) {
-
             if ($options['container']) {
-
                 $tpl->set_block('open_container', ['class' => 'container']);
                 $tpl->set_block('close_container', ['class' => 'container']);
-
             } else {
-
                 $tpl->set_block('open_container', ['class' => 'container-fluid']);
                 $tpl->set_block('close_container', ['class' => 'container-fluid']);
-
             }
         }
 
@@ -561,7 +556,6 @@ class SiteLinks {
         $tpl->set_locale($locale);
 
         return $tpl->get_output();
-
     }
 
     private function cacheSiteLinks() {

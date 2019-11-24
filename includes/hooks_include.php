@@ -84,18 +84,18 @@ function fusion_apply_hook($name) {
 }
 
 /**
- * This one will return output from running the hooks.
+ * This one will return output from running all available hooks added under the same namespace in one go and return array.
  *
  * @param $name
  *
- * @return mixed
+ * @return array
  */
 function fusion_filter_hook($name) {
     return call_user_func_array( [ Hooks::get_instances( $name ), 'filter_hook' ], func_get_args() );
 }
 
 /**
- * Returns only the current hook
+ * If hook add once, and only intended to be used once, use this function.
  *
  * @param $name
  *
@@ -104,3 +104,15 @@ function fusion_filter_hook($name) {
 function fusion_filter_current_hook($name) {
     return call_user_func_array( [ Hooks::get_instances( $name ), 'filter_hook_once' ], func_get_args() );
 }
+
+/**
+ * If hook add once, and intended to be used multiple times, use this function.
+ *
+ * @param $name
+ *
+ * @return mixed
+ */
+function fusion_repeat_current_hook( $name ) {
+    return call_user_func_array( [ Hooks::get_instances( $name ), 'repeat_hook_once' ], func_get_args() );
+}
+

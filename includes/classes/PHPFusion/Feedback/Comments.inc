@@ -56,7 +56,6 @@ class Comments extends CommentsFactory {
      */
     public function showComments() {
     
-    
         if ( fusion_get_settings( 'comments_enabled' ) == TRUE ) {
         
             $this->commentUpdate();
@@ -331,8 +330,8 @@ class Comments extends CommentsFactory {
                     if ( $comment_data['comment_name'] && $comment_data['comment_message'] ) {
                         
                         require_once INCLUDES."flood_include.php";
-                        
-                        if ( !flood_control( "comment_datestamp", DB_COMMENTS, "comment_ip='".USER_IP."'" ) ) {
+    
+                        if ( !flood_control( "comment_datestamp", DB_COMMENTS, "comment_ip=:uips", [ ':uipds' => USER_IP ] ) ) {
                             
                             $comment_id = dbquery_insert( DB_COMMENTS, $comment_data, 'save' );
                             
@@ -355,7 +354,6 @@ class Comments extends CommentsFactory {
                             if ( !$this->jquery_enabled ) {
                                 redirect( self::format_clink( $this->getParams( 'clink' ) )."&amp;c_start=".$c_start."#c".$comment_id );
                             }
-                            
                         }
                     }
                 }
@@ -417,7 +415,7 @@ class Comments extends CommentsFactory {
                     'comment_key' : $(this).data('key'),
                     };
                     console.log(formData);
-                    var sendData = $.param(formData);
+                    let sendData = $.param(formData);
                     $.ajax({
                         url: '".FUSION_ROOT.CLASSES."PHPFusion/Feedback/Comments.ajax.php?action=delete',
                         type: 'POST',

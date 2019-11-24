@@ -239,7 +239,45 @@ final class Hooks {
         }
         return '';
     }
-
+    
+    /**
+     * Run the hook filter, can be used multiple times within a loop to get the parse.
+     *
+     * @param $filter_name
+     *
+     * @return mixed|string
+     * @throws \Exception
+     */
+    public function repeat_current_hook( $filter_name ) {
+        $function_args = func_get_args();
+        $current_hook = $this->get_hook( $filter_name );
+        if ( !empty( $current_hook ) ) {
+            foreach ( $current_hook as $hook ) {
+                if ( function_exists( $hook['function'] ) ) {
+                    $args = ( !empty( $hook['default_args'] ) ? $hook['default_args'] : [] );
+                    if ( count( $function_args ) > 1 ) {
+                        unset( $function_args[0] );
+                        $args = $function_args;
+                    }
+                    if ( $hook['accepted_args'] ) {
+                        if ( $hook['accepted_args'] < ( count( $function_args ) - 1 ) ) {
+                            throw new \Exception( "Too many arguments during executing the $filter_name hook" );
+                        }
+                    }
+                    $output = call_user_func_array( $hook['function'], $args );
+                    
+                    // remove the hook
+                    //$this->remove_hook( $filter_name, $hook['function'], $hook['que'] );
+                    
+                    if ( !empty( $output ) ) {
+                        return $output;
+                    }
+                }
+            }
+        }
+        return '';
+    }
+    
     /**
      * Run the hooks by $filter_name and $args parameters
      * This filter must only run once in application.
@@ -271,6 +309,19 @@ final class Hooks {
 
         return (string)$output;
     }
+    
+    /**
+     * @param $filter_name
+     *
+     * @return string
+     */
+    public function repeat_hook_once( $filter_name ) {
+        
+        $output = call_user_func_array( [ $this, 'repeat_current_hook' ], func_get_args() );
+        
+        return (string)$output;
+    }
+    
 
     public function apply_all_hook() {
 

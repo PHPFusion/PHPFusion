@@ -14,7 +14,7 @@
  * @return FALSE|int
  * @throws Exception
  */
-function fusion_add_activity($user_id, $visibility, $item_type, $action, $item_id = 0, $subject, $content, $date) {
+function fusion_add_activity( $user_id, $visibility, $item_type, $action, $item_id = 0, $subject, $content, $date ) {
     /**
      * Documentation
      * Table column and data
@@ -36,29 +36,43 @@ function fusion_add_activity($user_id, $visibility, $item_type, $action, $item_i
         'action_item_type'  => $item_type,
         'action_type'       => $action,
         'action_item_id'    => $item_id,
-        'action_subject'    => stripinput($subject),
-        'action_content'    => stripinput($content),
+        'action_subject'    => stripinput( $subject ),
+        'action_content'    => stripinput( $content ),
         'action_datestamp'  => $date
     ];
     //http://php-fusion.test/infusions/forum/viewthread.php?thread_id=38663
-
-    if (!isnum($user_id)) {
-        throw new \Exception('User ID is not an integer');
+    
+    if ( !isnum( $user_id ) ) {
+        throw new \Exception( 'User ID is not an integer' );
     }
-    if (!isnum($visibility)) {
-        throw new \Exception('Visibility is not an integer');
+    if ( !isnum( $visibility ) ) {
+        throw new \Exception( 'Visibility is not an integer' );
     }
-    if (!isnum($item_id)) {
-        throw new \Exception('Item id is not an integer');
+    if ( !isnum( $item_id ) ) {
+        throw new \Exception( 'Item id is not an integer' );
     }
-
-    return dbquery_insert(DB_USER_ACTIVITY, $data, 'save', ['keep_session' => TRUE]);
+    
+    return dbquery_insert( DB_USER_ACTIVITY, $data, 'save', [ 'keep_session' => TRUE ] );
 }
 
-function fusion_get_activity_title($data) {
-    return fusion_filter_current_hook('profile_activity_title', $data);
+/**
+ * Parse activity title
+ *
+ * @param $data
+ *
+ * @return mixed
+ */
+function fusion_get_activity_title( $data ) {
+    return fusion_repeat_current_hook( 'profile_activity_title', $data );
 }
 
-function fusion_get_activity_content($data) {
-    return fusion_filter_current_hook('profile_activity_content', $data);
+/**
+ * Parse activity content description
+ *
+ * @param $data
+ *
+ * @return mixed
+ */
+function fusion_get_activity_content( $data ) {
+    return fusion_repeat_current_hook( 'profile_activity_content', $data );
 }

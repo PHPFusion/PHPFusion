@@ -89,8 +89,9 @@ class CommentsForm {
                 ];
             }
         }
+
         return [
-            'message' => $locale['c105']
+            'message' => ( $this->comment->getParams( 'comment_form_message' ) ?: $locale['c105'] )
         ];
     }
     

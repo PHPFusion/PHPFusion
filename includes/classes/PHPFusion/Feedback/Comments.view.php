@@ -128,22 +128,27 @@ if ( !function_exists( 'display_comments_form' ) ) {
      * @return string
      */
     function display_comments_form( $info ) {
-        $tpl = Template::getInstance( 'comments-form' );
-        $tpl->set_template( THEMES.'templates/global/tpl/comments/comments-form.html' );
-        $tpl->set_tag( 'openform', $info['openform'] );
-        $tpl->set_tag( 'closeform', $info['closeform'] );
-        $tpl->set_tag( 'comment_form_title', $info['title'] );
-        $tpl->set_tag( 'comment_name_input', $info['name_input'] );
-        $tpl->set_tag( 'comment_subject_input', $info['subject_input'] );
-        $tpl->set_tag( 'comments_ratings_input', $info['ratings_input'] );
-        $tpl->set_tag( 'comment_message_input', $info['comment_input'] );
-        $tpl->set_tag( 'comments_captcha_input', $info['captcha_input'] );
-        $tpl->set_tag( 'comment_post', $info['post_button'] );
-        if ( fusion_get_settings( 'comments_avatar' ) ) {
-            $tpl->set_block( 'avatar', [ 'user_avatar' => $info['user_avatar'] ] );
+    
+        if ( !empty( $info['openform'] ) ) {
+            $tpl = Template::getInstance( 'comments-form' );
+            $tpl->set_template( THEMES.'templates/global/tpl/comments/comments-form.html' );
+            $tpl->set_tag( 'openform', $info['openform'] );
+            $tpl->set_tag( 'closeform', $info['closeform'] );
+            $tpl->set_tag( 'comment_form_title', $info['title'] );
+            $tpl->set_tag( 'comment_name_input', $info['name_input'] );
+            $tpl->set_tag( 'comment_subject_input', $info['subject_input'] );
+            $tpl->set_tag( 'comments_ratings_input', $info['ratings_input'] );
+            $tpl->set_tag( 'comment_message_input', $info['comment_input'] );
+            $tpl->set_tag( 'comments_captcha_input', $info['captcha_input'] );
+            $tpl->set_tag( 'comment_post', $info['post_button'] );
+            if ( fusion_get_settings( 'comments_avatar' ) ) {
+                $tpl->set_block( 'avatar', [ 'user_avatar' => $info['user_avatar'] ] );
+            }
+            return $tpl->get_output();
         }
+        return $info['message'];
         
-        return $tpl->get_output();
+        
     }
 }
 
