@@ -1,8 +1,9 @@
-<h4>{%comment_title%}</h4>
-<div id='comments'>
-	<div class='comments-header' id='{%comment_form_container_id%}'>{%comment_count%}</div>
+<div class="comments" id="{%comment_container_id%}">
+	<div class="comments-header">
+		<h4>{%comment_title%} {%comment_count%}</h4>
+	</div>
 	{%comments_form%}
-	<div id='{%comment_container_id%}'>
+	<div>
 		{%comments_listing%}
 	</div>
 </div>

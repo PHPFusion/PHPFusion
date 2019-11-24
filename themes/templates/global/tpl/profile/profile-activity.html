@@ -9,8 +9,13 @@
 	<div class="spacer-md">
 		{activity_item.{
 		<div class="list-group-item clearfix">
-			<div class="pull-left m-r-15" style="width:80px; text-align: center">{%avatar%}</div>
-			<div class="overflow-hide">{%title%}<br/><span>{%content%}</span></div>
+			<div class="display-flex-row">
+				<div style="width:100px; text-align: center">{%avatar%}</div>
+				<div class="activity-content" style="width:100%;">
+					<h4 class="m-0">{%title%}</h4>
+					<div class="content">{%content%}</div>
+				</div>
+			</div>
 		</div>
 		}}
 		{%no_item%}

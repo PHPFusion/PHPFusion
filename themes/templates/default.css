@@ -26,115 +26,115 @@
 
 /* positioning - these works on containers that has display:absolute or display:fixed only  */
 .top-0 {
-	top: 0 !important;
+	top: 0;
 }
 
 .top-5 {
-	top: 5px !important;
+	top: 5px;
 }
 
 .top-10 {
-	top: 10px !important;
+	top: 10px;
 }
 
 .top-20 {
-	top: 20px !important;
+	top: 20px;
 }
 
 .top-30 {
-	top: 30px !important;
+	top: 30px;
 }
 
 .top-40 {
-	top: 40px !important;
+	top: 40px;
 }
 
 .top-50 {
-	top: 50px !important;
+	top: 50px;
 }
 
 .bottom-0 {
-	bottom: 0 !important;
+	bottom: 0;
 }
 
 .bottom-5 {
-	bottom: 5px !important;
+	bottom: 5px;
 }
 
 .bottom-10 {
-	bottom: 10px !important;
+	bottom: 10px;
 }
 
 .bottom-20 {
-	bottom: 20px !important;
+	bottom: 20px;
 }
 
 .bottom-30 {
-	bottom: 30px !important;
+	bottom: 30px;
 }
 
 .bottom-40 {
-	bottom: 40px !important;
+	bottom: 40px;
 }
 
 .bottom-50 {
-	bottom: 50px !important;
+	bottom: 50px;
 }
 
 .left-0 {
-	left: 0 !important;
+	left: 0;
 }
 
 .left-10 {
-	left: 10px !important;
+	left: 10px;
 }
 
 .left-15 {
-	left: 15px !important;
+	left: 15px;
 }
 
 .left-20 {
-	left: 20px !important;
+	left: 20px;
 }
 
 .left-30 {
-	left: 30px !important;
+	left: 30px;
 }
 
 .left-40 {
-	left: 40px !important;
+	left: 40px;
 }
 
 .left-50 {
-	left: 50px !important;
+	left: 50px;
 }
 
 .right-0 {
-	right: 0 !important;
+	right: 0;
 }
 
 .right-10 {
-	right: 10px !important;
+	right: 10px;
 }
 
 .right-15 {
-	right: 15px !important;
+	right: 15px;
 }
 
 .right-20 {
-	right: 20px !important;
+	right: 20px;
 }
 
 .right-30 {
-	right: 30px !important;
+	right: 30px;
 }
 
 .right-40 {
-	right: 40px !important;
+	right: 40px;
 }
 
 .right-50 {
-	right: 50px !important;
+	right: 50px;
 }
 
 /** Alignments */
@@ -238,17 +238,17 @@ Grids
 }
 
 .align-top, .vt {
-	vertical-align: top !important;
+	vertical-align: top;
 	display: table-cell;
 }
 
 .align-middle, .va {
-	vertical-align: middle !important;
+	vertical-align: middle;
 	display: table-cell;
 }
 
 .align-bottom, .vb {
-	vertical-align: bottom !important;
+	vertical-align: bottom;
 	display: table-cell;
 }
 
@@ -291,260 +291,260 @@ Grids
 }
 
 .m-0 {
-	margin: 0 !important;
+	margin: 0;
 }
 
 .m-1 {
-	margin: 1px !important;
+	margin: 1px;
 }
 
 .m-2 {
-	margin: 2px !important;
+	margin: 2px;
 }
 
 .m-3 {
-	margin: 3px !important;
+	margin: 3px;
 }
 
 .m-5 {
-	margin: 5px !important;
+	margin: 5px;
 }
 
 .m-10 {
-	margin: 10px !important;
+	margin: 10px;
 }
 
 .m-b-a {
-	margin-bottom: auto !important;
+	margin-bottom: auto;
 }
 
 .m-b-0 {
-	margin-bottom: 0 !important;
+	margin-bottom: 0;
 }
 
 .m-b-5 {
-	margin-bottom: 5px !important;
+	margin-bottom: 5px;
 }
 
 .m-b-10 {
-	margin-bottom: 10px !important;
+	margin-bottom: 10px;
 }
 
 .m-b-15 {
-	margin-bottom: 15px !important;
+	margin-bottom: 15px;
 }
 
 .m-b-20 {
-	margin-bottom: 20px !important;
+	margin-bottom: 20px;
 }
 
 .m-b-50 {
-	margin-bottom: 50px !important;
+	margin-bottom: 50px;
 }
 
 .m-t-a {
-	margin-top: auto !important;
+	margin-top: auto;
 }
 
 .m-t-0 {
-	margin-top: 0 !important;
+	margin-top: 0;
 }
 
 .m-t-3 {
-	margin-top: 3px !important;
+	margin-top: 3px;
 }
 
 .m-t-5 {
-	margin-top: 5px !important;
+	margin-top: 5px;
 }
 
 .m-t-10 {
-	margin-top: 10px !important;
+	margin-top: 10px;
 }
 
 .m-t-15 {
-	margin-top: 15px !important;
+	margin-top: 15px;
 }
 
 .m-t-20 {
-	margin-top: 20px !important;
+	margin-top: 20px;
 }
 
 .m-t-30 {
-	margin-top: 30px !important;
+	margin-top: 30px;
 }
 
 .m-l-a {
-	margin-left: auto !important;
+	margin-left: auto;
 }
 
 .m-l-0 {
-	margin-left: 0 !important;
+	margin-left: 0;
 }
 
 .m-l-5 {
-	margin-left: 5px !important;
+	margin-left: 5px;
 }
 
 .m-l-10 {
-	margin-left: 10px !important;
+	margin-left: 10px;
 }
 
 .m-l-15 {
-	margin-left: 15px !important;
+	margin-left: 15px;
 }
 
 .m-l-20 {
-	margin-left: 20px !important;
+	margin-left: 20px;
 }
 
 .m-l-30 {
-	margin-left: 30px !important;
+	margin-left: 30px;
 }
 
 .m-r-a {
-	margin-right: auto !important;
+	margin-right: auto;
 }
 
 .m-r-0 {
-	margin-right: 0 !important;
+	margin-right: 0;
 }
 
 .m-r-5 {
-	margin-right: 5px !important;
+	margin-right: 5px;
 }
 
 .m-r-10 {
-	margin-right: 10px !important;
+	margin-right: 10px;
 }
 
 .m-r-15 {
-	margin-right: 15px !important;
+	margin-right: 15px;
 }
 
 .m-r-20 {
-	margin-right: 20px !important;
+	margin-right: 20px;
 }
 
 .m-r-30 {
-	margin-right: 30px !important;
+	margin-right: 30px;
 }
 
 .m-auto {
-	margin: 0 auto !important;
+	margin: 0 auto;
 }
 
 .m-l--15 {
-	margin-left: -15px !important;
+	margin-left: -15px;
 }
 
 .m-r--15 {
-	margin-right: -15px !important;
+	margin-right: -15px;
 }
 
 /*padding family*/
 .p-0 {
-	padding: 0 !important;
+	padding: 0;
 }
 
 .p-5 {
-	padding: 5px !important;
+	padding: 5px;
 }
 
 .p-10 {
-	padding: 10px !important;
+	padding: 10px;
 }
 
 .p-15 {
-	padding: 15px !important;
+	padding: 15px;
 }
 
 .p-20 {
-	padding: 20px !important;
+	padding: 20px;
 }
 
 .p-25 {
-	padding: 25px !important;
+	padding: 25px;
 }
 
 .p-t-0 {
-	padding-top: 0 !important;
+	padding-top: 0;
 }
 
 .p-t-5 {
-	padding-top: 5px !important;
+	padding-top: 5px;
 }
 
 .p-t-10 {
-	padding-top: 10px !important;
+	padding-top: 10px;
 }
 
 .p-t-15 {
-	padding-top: 15px !important;
+	padding-top: 15px;
 }
 
 .p-t-20 {
-	padding-top: 20px !important;
+	padding-top: 20px;
 }
 
 .p-l-0 {
-	padding-left: 0 !important;
+	padding-left: 0;
 }
 
 .p-l-5 {
-	padding-left: 5px !important;
+	padding-left: 5px;
 }
 
 .p-l-10 {
-	padding-left: 10px !important;
+	padding-left: 10px;
 }
 
 .p-l-15 {
-	padding-left: 15px !important;
+	padding-left: 15px;
 }
 
 .p-l-20 {
-	padding-left: 20px !important;
+	padding-left: 20px;
 }
 
 .p-r-0 {
-	padding-right: 0 !important;
+	padding-right: 0;
 }
 
 .p-r-5 {
-	padding-right: 5px !important;
+	padding-right: 5px;
 }
 
 .p-r-10 {
-	padding-right: 10px !important;
+	padding-right: 10px;
 }
 
 .p-r-15 {
-	padding-right: 15px !important;
+	padding-right: 15px;
 }
 
 .p-r-20 {
-	padding-right: 20px !important;
+	padding-right: 20px;
 }
 
 .p-b-0 {
-	padding-bottom: 0 !important;
+	padding-bottom: 0;
 }
 
 .p-b-5 {
-	padding-bottom: 5px !important;
+	padding-bottom: 5px;
 }
 
 .p-b-10 {
-	padding-bottom: 10px !important;
+	padding-bottom: 10px;
 }
 
 .p-b-15 {
-	padding-bottom: 15px !important;
+	padding-bottom: 15px;
 }
 
 .p-b-20 {
-	padding-bottom: 20px !important;
+	padding-bottom: 20px;
 }
 
 /* display family */
@@ -650,20 +650,20 @@ Grids
 }
 
 .no-shadow {
-	-webkit-box-shadow: none !important;
-	-moz-box-shadow: none !important;
-	box-shadow: none !important;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none;
 }
 
 /* borders */
 .bbr-0 {
-	-webkit-border-radius: 0 !important;
-	-moz-border-radius: 0 !important;
-	border-radius: 0 !important;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
 }
 
 .no-border, .br-0 {
-	border: 0 !important;
+	border: 0;
 }
 
 .br-l-0 {
@@ -684,15 +684,15 @@ Grids
 
 /* text family */
 .text-white {
-	color: #FFF !important;
+	color: #FFF;
 }
 
 .text-dark {
-	color: #333 !important;
+	color: #333;
 }
 
 .text-black {
-	color: #444 !important;
+	color: #444;
 }
 
 .text-lighter {
@@ -704,26 +704,26 @@ Grids
 }
 
 .text-bigger {
-	font-size: 110% !important;
+	font-size: 110%;
 }
 
 .text-smaller {
-	font-size: 85% !important;
+	font-size: 85%;
 }
 
 .text-bold, .font-bold, .strong {
-	font-weight: bold !important;
+	font-weight: bold;
 }
 
 .text-light, .font-light {
-	font-weight: 300 !important;
+	font-weight: 300;
 }
 
 .text-normal, .font-normal {
-	font-weight: normal !important;
-	text-transform: none !important;
-	text-decoration: none !important;
-	color: inherit !important;
+	font-weight: normal;
+	text-transform: none;
+	text-decoration: none;
+	color: inherit;
 }
 
 .text-active {
@@ -757,9 +757,9 @@ Grids
 /* image family*/
 .img-center {
 	display: inline-block;
-	position: relative !important;
-	left: 100% !important;
-	margin-left: -200% !important;
+	position: relative;
+	left: 100%;
+	margin-left: -200%;
 }
 
 .thumb > img {
@@ -776,12 +776,12 @@ Grids
 }
 
 .pdisabled {
-	background-color: rgb(252, 248, 227) !important;
-	border-color: rgb(250, 235, 204) !important;
+	background-color: rgb(252, 248, 227);
+	border-color: rgb(250, 235, 204);
 }
 
 .pdisabled > .handle > a {
-	color: rgb(138, 109, 59) !important;
+	color: rgb(138, 109, 59);
 }
 
 .blur {
@@ -795,7 +795,7 @@ Grids
 
 /*borders*/
 .no-border {
-	border: 0 !important;
+	border: 0;
 }
 
 .bordered {
@@ -816,10 +816,10 @@ ul {
 
 /* resets panelfor accordion */
 li.panel {
-	-webkit-box-shadow: none !important;
-	-moz-box-shadow: none !important;
-	box-shadow: none !important;
-	margin-bottom: 0 !important;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none;
+	margin-bottom: 0;
 	background: none;
 	border: 0;
 }
@@ -834,27 +834,27 @@ ul > li {
 }
 
 .icon-xs {
-	font-size: 16px !important;
+	font-size: 16px;
 	width: 16px;
 }
 
 .icon-sm {
-	font-size: 32px !important;
+	font-size: 32px;
 	width: 32px;
 }
 
 .icon-md {
-	font-size: 48px !important;
+	font-size: 48px;
 	width: 48px;
 }
 
 .icon-lg {
-	font-size: 128px !important;
+	font-size: 128px;
 	width: 128px;
 }
 
 .icon-xl {
-	font-size: 256px !important;
+	font-size: 256px;
 	width: 256px;
 }
 
@@ -925,8 +925,8 @@ ul > li {
  * Select2
  */
 .select2-input {
-	color: #999 !important;
-	border: none !important;
+	color: #999;
+	border: none;
 }
 
 .select2-offscreen {
@@ -934,7 +934,7 @@ ul > li {
 }
 
 .tbl {
-	display: table-cell !important;
+	display: table-cell;
 }
 
 .required {
@@ -996,7 +996,7 @@ dl, dt, dd {
 }
 
 .form-inline > .form-group {
-	width: auto !important;
+	width: auto;
 }
 
 table {
@@ -1042,8 +1042,8 @@ th.min, td.min {
 }
 
 .image-wrap.cropfix {
-	max-width: 100% !important;
-	margin: 0 !important;
+	max-width: 100%;
+	margin: 0;
 }
 
 .word-break {
@@ -1066,7 +1066,7 @@ th.min, td.min {
 
 .sl > li img, .side > li img {
 	width: 19px;
-	margin-right: 8px !important;
+	margin-right: 8px;
 }
 
 .HTML-img:hover ul.dropdown-menu {
@@ -1107,11 +1107,11 @@ th.min, td.min {
 
 /** Backgrounds ***/
 .clearBg {
-	background-color: transparent !important;
+	background-color: transparent;
 }
 
 .whiteBg {
-	background-color: #fff !important;
+	background-color: #fff;
 }
 
 /* File-input for Dynamics */
@@ -1121,7 +1121,7 @@ th.min, td.min {
 }
 
 .file-preview-frame {
-	display: block !important;
+	display: block;
 }
 
 .panel > .file-preview {
@@ -1167,7 +1167,7 @@ th.min, td.min {
 }
 
 .file-input .panel-body {
-	padding: 0 10px 10px !important;
+	padding: 0 10px 10px;
 }
 
 .file-input .krajee-default.file-preview-frame .kv-file-content {
@@ -1177,9 +1177,9 @@ th.min, td.min {
 
 .file-input .file-preview-frame:hover,
 .file-input .file-preview-frame:focus {
-	-webkit-box-shadow: none !important;
-	box-shadow: none !important;
-	border: 0 !important;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	border: 0;
 }
 
 .comments-form-panel, .comments-panel {
@@ -1277,8 +1277,8 @@ th.min, td.min {
 }
 
 .forum.label-member {
-	background-color: #2185D0 !important;
-	border-color: #2185D0 !important;
+	background-color: #2185D0;
+	border-color: #2185D0;
 }
 
 /* Textarea Dynamics */
@@ -1527,7 +1527,7 @@ table.fusion-table tr th.check-col {
 	}
 
 	table.fusion-table tr th.check-col {
-		display: block !important;
+		display: block;
 	}
 
 	table.fusion-table tr th:nth-child(2) {
@@ -1535,7 +1535,7 @@ table.fusion-table tr th.check-col {
 	}
 
 	table.fusion-table td.has-actions {
-		display: block !important;
+		display: block;
 		width: 100%;
 		height: auto;
 		min-height: 55px;
@@ -1570,7 +1570,7 @@ table.fusion-table tr th.check-col {
 	}
 
 	table.fusion-table tr.expanded td:not(.hidden) {
-		display: block !important;
+		display: block;
 	}
 
 	table.fusion-table .expanded .has-actions > button.toggle-row:before {
@@ -1676,7 +1676,7 @@ admin forms
 #site-links {
 	list-style: none;
 	min-height: 20px;
-	height: auto !important;
+	height: auto;
 }
 
 #site-links li {
@@ -1705,7 +1705,7 @@ admin forms
 #panel-side5,
 #panel-side6 {
 	list-style: none;
-	height: auto !important;
+	height: auto;
 }
 
 #panel-side1 li,
@@ -1731,11 +1731,11 @@ html[dir="rtl"] body {
 }
 
 html[dir="rtl"] .pull-left {
-	float: right !important;
+	float: right;
 }
 
 html[dir="rtl"] .pull-right {
-	float: left !important;
+	float: left;
 }
 
 html[dir="rtl"] .center-x {
