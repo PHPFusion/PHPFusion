@@ -164,7 +164,7 @@ foreach ($configs as $table => $config) {
         continue;
     }
 
-    $contents[$table]['colwidth'] = floor(12 / $items_count);
+    $contents[$table]['colwidth'] = $items_count !== 1 ? floor(12 / $items_count) : 4;
     $data = [];
     $count = 1;
 
