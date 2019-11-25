@@ -97,7 +97,7 @@ class UserFieldsInput {
         if ( $user_hash == $this->user_data['user_password'] ) {
             return TRUE;
         }
-
+    
         fusion_stop();
         return FALSE;
     }
@@ -687,6 +687,8 @@ class UserFieldsInput {
         $field_name = $this->registration === TRUE ? 'user_name_reg' : 'user_name';
         $username = sanitizer( $field_name, '', $field_name );
         // check only if old user name is different than current user name
+        $default['user_name'] = '';
+        $this->user_data += $default;
         if ( !empty( $username ) && $username != $this->user_data['user_name'] ) {
             $uban = explode( ',', $settings['user_name_ban'] );
             if ( !preg_check( "/^[-0-9A-Z_@\s]+$/i", $username ) ) {
@@ -1028,6 +1030,8 @@ class UserFieldsInput {
     private function validateEmail() {
         $settings = fusion_get_settings();
         $new_user_email = sanitizer( 'user_email', '', 'user_email' );
+        $default['user_email'] = '';
+        $this->user_data += $default;
         // To change email address old user email must be different than current one
         if ( !empty( $new_user_email ) && $new_user_email != $this->user_data['user_email'] ) {
             // Start password check
@@ -1062,7 +1066,7 @@ class UserFieldsInput {
                         ":email like replace(if (blacklist_email like '%@%' or blacklist_email like '%\\%%', blacklist_email, concat('%@', blacklist_email)), '_', '\\_')",
                         [ ':email' => $new_user_email ] ) ) {
                         // this email blacklisted.
-                        Defender::stop();
+                        fusion_stop();
                         Defender::setInputError( 'user_email' );
                         Defender::setErrorText( 'user_email', $this->locale['u124'] );
                     } else {

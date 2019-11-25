@@ -1331,6 +1331,9 @@ class UserFieldsQuantum extends QuantumActions {
             if ( $callback_data == TRUE ) {
                 $output_fields[ $db ] = $this->callback_data;
             }
+    
+            $default['user_id'] = 0;
+            $this->callback_data += $default;
             
             foreach ( $field as $arr => $field_data ) {
                 

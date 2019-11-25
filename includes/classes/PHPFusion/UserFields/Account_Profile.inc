@@ -58,11 +58,11 @@ class Account_Profile extends UserFieldsQuantum {
                 'name'   => 'Account Security',
             ];
         }
-
+    
         // only happens on Front End only
         $info['current_section'] = $current_section;
         $info['section_title'] = isset( $info[ $current_section ] ) ? $info[ $current_section ] : 'Account Settings';
-
+    
         switch ( $current_section ) {
             default:
             case 'account':
@@ -195,8 +195,10 @@ class Account_Profile extends UserFieldsQuantum {
             $info['username_openform'] = openform( 'username_frm', 'post' );
             $info['username_closeform'] = closeform();
             $info['user_name'] = form_text( 'user_name', 'User Name', $this->user_data['user_name'], [ 'required' => TRUE, 'deactivate' => $deactivate_user, 'inline' => $this->inline_field ] );
-            $info['update_user_name'] = form_button( $this->post_name.'_username', "Update User Name", $this->post_name.'_username', [ 'class' => btn - primary, 'deactivate' => $this->user_name_change ? FALSE : TRUE ] );
+            $info['update_user_name'] = form_button( $this->post_name.'_username', "Update User Name", $this->post_name.'_username', [ 'class' => 'btn-primary', 'deactivate' => $this->user_name_change ? FALSE : TRUE ] );
         }
+        $default['user_email'] = '';
+        $this->user_data += $default;
         $user_email = post( 'user_email' ) ?: $this->user_data['user_email'];
         $info['user_email'] = form_text( 'user_email', $locale['u128'], $user_email, [
                 'type'       => 'email',
