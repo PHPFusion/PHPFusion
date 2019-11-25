@@ -1366,7 +1366,7 @@ class Forum_Threads extends Forum_Server {
                 $pid = $pdata['post_id'];
                 $pdata['post_reported'] = ( in_array( $pid, $post_rep ) ? 1 : 0 );
                 if ( $pdata['post_reported'] ) {
-                    $pdata['post_report_id'] = dbresult( dbquery( "SELECT report_id FROM ".DB_FORUM_REPORTS." WHERE post_id=:pid", [ ":pid" => intval( $pid ) ] ), 0 );
+                    $pdata['post_report_id'] = dbresult( dbquery( "SELECT report_id FROM ".DB_FORUM_REPORTS." WHERE report_post_id=:pid", [ ":pid" => (int)$pid ] ), 0 );
                 }
                 
                 // Format Post Message
