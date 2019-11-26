@@ -36,7 +36,7 @@ if (defined('FORUM_EXIST')) {
     LEFT JOIN ".DB_FORUM_THREADS." t ON f.forum_id = t.forum_id
     LEFT JOIN ".DB_USERS." u ON t.thread_lastuser = u.user_id
     ".(multilang_table("FO") ? "WHERE ".in_group('f.forum_language', LANGUAGE)." AND" : "WHERE")." ".groupaccess('f.forum_access')." AND f.forum_type!='1' AND f.forum_type!='3' AND t.thread_hidden='0'
-    GROUP BY t.thread_id ORDER BY t.thread_lastpost DESC LIMIT ".$$numofthreads);
+    GROUP BY t.thread_id ORDER BY t.thread_lastpost DESC LIMIT ".$numofthreads);
 
     if (dbrows($result)) {
         opentable($locale['global_040']);
