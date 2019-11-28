@@ -222,7 +222,7 @@ if (iMEMBER && valid_language($userdata['user_language'])) {
     $current_user_language = $userdata['user_language'];
 } else {
     $langData = dbarray(dbquery('SELECT * FROM '.DB_LANGUAGE_SESSIONS.' WHERE user_ip=:ip', [':ip' => USER_IP]));
-    $current_user_language = ($langData['user_language'] ?: fusion_get_settings('locale'));
+    $current_user_language = (!empty($langData['user_language']) ? $langData['user_language']: fusion_get_settings('locale'));
 }
 $language_opts = fusion_get_enabled_languages();
 $enabled_languages = array_keys($language_opts);

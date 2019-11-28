@@ -21,7 +21,7 @@ use PHPFusion\UserFieldsQuantum;
 
 require_once __DIR__.'/../maincore.php';
 require_once THEMES.'templates/admin_header.php';
-pageAccess('S9');
+pageAccess('S12');
 
 $settings = fusion_get_settings();
 

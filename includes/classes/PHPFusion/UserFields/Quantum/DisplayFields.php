@@ -10,9 +10,9 @@ use PHPFusion\UserFieldsQuantum;
  * @package PHPFusion\UserFields\Quantum
  */
 class DisplayFields {
-    
+
     private $class = NULL;
-    
+
     /**
      * DisplayFields constructor.
      *
@@ -21,7 +21,7 @@ class DisplayFields {
     public function __construct( UserFieldsQuantum $class ) {
         $this->class = $class;
     }
-    
+
     /**
      * Display fields for each fieldDB record entry
      *
@@ -64,20 +64,20 @@ class DisplayFields {
      * @throws \ReflectionException
      */
     public function displayFields( array $data, $callback_data, $method = 'input', array $options = [] ) {
-        
+
         unset( $callback_data['user_algo'] );
         unset( $callback_data['user_salt'] );
         unset( $callback_data['user_password'] );
         unset( $callback_data['user_admin_algo'] );
         unset( $callback_data['user_admin_salt'] );
         unset( $callback_data['user_admin_password'] );
-        
+
         $data += [
             'field_required' => TRUE,
             'field_error'    => '',
             'field_default'  => ''
         ];
-        
+
         $default_options = [
             'hide_value'  => FALSE,
             'encrypt'     => FALSE,
@@ -89,17 +89,17 @@ class DisplayFields {
             'placeholder' => $data['field_default'],
             'debug'       => FALSE
         ];
-        
+
         $options += $default_options;
-        
+
         // Sets callback data automatically.
         $option_list = $data['field_options'] ? explode( ',', $data['field_options'] ) : [];
-        
+
         // Format Callback Data
         $field_value = $this->getFieldValue( $callback_data, $data['field_name'], $options['hide_value'] );
-        
+
         $field_label = $options['show_title'] ? fusion_parse_locale( $data['field_title'] ).':' : '';
-        
+
         switch ( $data['field_type'] ) {
             case 'file':
                 return $this->displayModule( $method, $field_value, $callback_data, $options );
@@ -157,10 +157,10 @@ class DisplayFields {
                 return $this->displayToggle( $method, $data['field_title'], $data['field_name'], $field_label, $field_value, $options );
                 break;
         }
-    
+
         return '';
     }
-    
+
     /**
      * @param $callback_data
      * @param $field_name
@@ -178,34 +178,33 @@ class DisplayFields {
         }
         return '';
     }
-    
+
     /**
      * @param       $profile_method
      * @param       $field_value
      * @param       $user_data
      * @param       $options
-     * @param array $user_fields
      *
      * @return array|string
      */
     private function displayModule( $profile_method, $field_value, $user_data, $options ) {
-        
-        if ( file_exists( $options['field_file'] ) ) {
-            
+
+        if ( !empty( $options['field_file'] ) && file_exists( $options['field_file'] ) ) {
+
             $user_fields = '';
             include $options['field_file'];
-            
+
             if ( $profile_method == 'input' ) {
                 return $user_fields;
             }
-            
+
             if ( $profile_method == 'display' && !empty( $user_fields['value'] ) ) {
                 return $user_fields;
             }
             return '';
         }
     }
-    
+
     /**
      * @param $method
      * @param $field_title
@@ -228,7 +227,7 @@ class DisplayFields {
         }
         return '';
     }
-    
+
     /**
      * @param $method
      * @param $field_title
@@ -251,7 +250,7 @@ class DisplayFields {
         }
         return '';
     }
-    
+
     /**
      * @param $method
      * @param $field_title
@@ -275,7 +274,7 @@ class DisplayFields {
         }
         return '';
     }
-    
+
     /**
      * @param $method
      * @param $field_title
@@ -298,8 +297,8 @@ class DisplayFields {
         }
         return '';
     }
-    
-    
+
+
     /**
      * @param $method
      * @param $field_title
@@ -313,21 +312,21 @@ class DisplayFields {
      */
     private function displaySelect( $method, $field_title, $field_name, $field_label, $field_value, $options ) {
         if ( $method == 'input' ) {
-            
+
             return form_select( $field_name, fusion_parse_locale( $field_label ), $field_value, $options + [
                     'select_alt' => TRUE,
                     'options'    => $options['options']
                 ] );
-            
+
         } else if ( $method == 'display' && $field_value ) {
-            
+
             return [
                 'title' => fusion_parse_locale( $field_title ),
                 'value' => !empty( $options['options'][ $field_value ] ) ? $options['options'][ $field_value ] : $field_value,
             ];
         }
     }
-    
+
     /**
      * @param $method
      * @param $field_title
@@ -351,7 +350,7 @@ class DisplayFields {
         }
         return '';
     }
-    
+
     /**
      * Display Toggle Field
      *
@@ -379,7 +378,7 @@ class DisplayFields {
         }
         return '';
     }
-    
+
     /**
      * @param $method
      * @param $field_title
@@ -402,7 +401,7 @@ class DisplayFields {
         }
         return '';
     }
-    
+
     /**
      * @param $method
      * @param $field_title
@@ -425,7 +424,7 @@ class DisplayFields {
         }
         return '';
     }
-    
+
     /**
      * @param $method
      * @param $field_title
@@ -448,5 +447,5 @@ class DisplayFields {
         }
         return '';
     }
-    
+
 }

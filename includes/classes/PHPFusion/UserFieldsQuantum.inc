@@ -75,18 +75,18 @@ class UserFieldsQuantum extends QuantumActions {
     protected $callback_data = [];
     // callback on the structure - use getters
     protected $fields = []; // maybe can mix with enabled_fields.
-    
+
     // debug mode
     protected $debug = FALSE;
-    
+
     // System Internals
     private $input_page = 1;
     private $field_max_rows = 0;
     private $locale = [];
-    
+
     protected $page = [];
     private $enabled_fields = [];
-    
+
     public $registration = FALSE;  // True for turning the output to show only registration fields
     /** Setters */
     private $field_data = [
@@ -114,17 +114,17 @@ class UserFieldsQuantum extends QuantumActions {
         'field_cat_class' => '',
     ];
     private $output_fields = [];
-    
+
     private static $available_field_info = [];
-    
+
     private static $module_list_var = [];
-    
+
     private static $modules = [];
-    
+
     public function __construct() {
         self::$helper = new QuantumHelper();
     }
-    
+
     /**
      * Returns all the installed modules
      *
@@ -133,7 +133,7 @@ class UserFieldsQuantum extends QuantumActions {
     public function getModules() {
         return self::$modules;
     }
-    
+
     /**
      * Returns only ROOT category
      *
@@ -142,7 +142,7 @@ class UserFieldsQuantum extends QuantumActions {
     public function getPageList() {
         return $this->page_list;
     }
-    
+
     /**
      * Returns modules not installed within the system
      *
@@ -151,7 +151,7 @@ class UserFieldsQuantum extends QuantumActions {
     public function getAvailableFieldInfo() {
         return self::$available_field_info;
     }
-    
+
     /**
      * Load all the modules variables
      */
@@ -161,7 +161,7 @@ class UserFieldsQuantum extends QuantumActions {
         self::$available_field_info = $quantum->getAvailableModulesInfo();
         self::$modules = $quantum->getLoadedModules();
     }
-    
+
     /**
      * `input` renders field.
      * `display` renders data
@@ -171,7 +171,7 @@ class UserFieldsQuantum extends QuantumActions {
     public function setMethod( $method ) {
         $this->method = $method;
     }
-    
+
     /**
      * Set Quantum system locale
      *
@@ -180,7 +180,7 @@ class UserFieldsQuantum extends QuantumActions {
     public function setLocale( $locale ) {
         $this->locale = $locale;
     }
-    
+
     /**
      * Give your Quantum based system a name. Will add to breadcrumbs if available.
      *
@@ -189,9 +189,9 @@ class UserFieldsQuantum extends QuantumActions {
     public function setTitle( $value ) {
         $this->title = $value;
     }
-    
+
     ### Getters ####
-    
+
     /**
      * Additional data-id referencing.
      * $userdata for instance.
@@ -201,7 +201,7 @@ class UserFieldsQuantum extends QuantumActions {
     public function setCallbackData( $callback_data ) {
         $this->callback_data = $callback_data;
     }
-    
+
     /**
      * The internal admin rights by a user to use this system.
      * if specified, to lock down to certain user rights.
@@ -211,7 +211,7 @@ class UserFieldsQuantum extends QuantumActions {
     public function setAdminRights( $admin_rights ) {
         $this->admin_rights = $admin_rights;
     }
-    
+
     /**
      * Returns ALL Categories
      *
@@ -220,7 +220,7 @@ class UserFieldsQuantum extends QuantumActions {
     public function getCatList() {
         return $this->cat_list;
     }
-    
+
     /**
      * Get results from running load_structure
      *
@@ -231,40 +231,40 @@ class UserFieldsQuantum extends QuantumActions {
     public function getFields( $key = NULL ) {
         return ( isset( $this->fields[ $key ] ) ) ? (array)$this->fields[ $key ] : (array)$this->fields;
     }
-    
+
     ### Loaders ####
     /* Read into serialized field label and returns the value */
-    
+
     public function displayQuantumAdmin() {
         define( 'IN_QUANTUM', TRUE );
-        
+
         pageAccess( $this->admin_rights );
-    
+
         $this->loadUserFields(); // return fields
-        
+
         $this->cacheModulePlugins();
-        
+
         $refs = get( 'ref' );
-    
+
         $refs = $refs && in_array( $refs, [ 'preferences', 'security' ] ) ? $refs : 'public';
-        
+
         $this->is_admin_panel = TRUE;
-        
+
         if ( $this->title ) {
             add_breadcrumb( [ 'link' => ADMIN.'user_fields.php'.fusion_get_aidlink(), 'title' => $this->title ] );
             add_to_title( $this->title.' | ' );
         }
-        
+
         if ( $this->method == 'input' ) {
-            
+
             $this->loadUserFieldCats(); // return cat
-            
+
             $this->doAction();
         }
-        
+
         $this->view( $refs );
     }
-    
+
     private function view( $refs ) {
         $action = get( 'action' );
         $quantum_modules = new QuantumModulesView( $this );
@@ -286,7 +286,7 @@ class UserFieldsQuantum extends QuantumActions {
                                 add_to_footer( $modal );
                             }
                             $content = $quantum_modules->viewModules( 'public' );
-                            
+
                             break;
                         case 'field_edit':
                             $field_id = get( 'field_id', FILTER_VALIDATE_INT );
@@ -332,7 +332,7 @@ class UserFieldsQuantum extends QuantumActions {
                 $content = $this->viewPreferenceAdmin();
                 if ( $action == 'new' ) {
                     add_breadcrumb( [ 'title' => 'Manage Preference User Fields', 'link' => ADMIN.'user_fields.php'.fusion_get_aidlink().'&amp;ref=preferences&amp;action=new' ] );
-    
+
                     $content = $quantum_modules->viewModules( 'preferences' );
                 }
                 break;
@@ -341,18 +341,18 @@ class UserFieldsQuantum extends QuantumActions {
                 $content = $this->viewSecurityAdmin();
                 if ( $action == 'new' ) {
                     add_breadcrumb( [ 'title' => 'Manage Security User Fields', 'link' => ADMIN.'user_fields.php'.fusion_get_aidlink().'&amp;ref=security&amp;action=new' ] );
-    
+
                     $content = $quantum_modules->viewModules( 'security' );
                 }
                 break;
         }
-        
+
         opentable( $this->title );
         echo $content;
         closetable();
     }
-    
-    
+
+
     public function setPluginFolder( $folder ) {
         if ( !$folder ) {
             $folder = get( 'section' );
@@ -362,21 +362,21 @@ class UserFieldsQuantum extends QuantumActions {
         }
         $folder = $folder && in_array( $folder, [ 'preferences', 'security' ] ) ? $folder : 'public';
         $this->plugin_folder = [ INCLUDES.'user_fields/'.$folder.'/', INFUSIONS ];
-        
+
         return $folder;
     }
-    
+
     /**
      * Type can be common, preference, security
      *
      * @param string $folder
      */
     public function loadUserFields( $folder = '' ) {
-    
+
         $folder = $this->setPluginFolder( $folder );
-        
+
         $this->page = dbquery_tree_full( DB_USER_FIELD_CATS, "field_cat_id", "field_parent", "ORDER BY field_cat_order ASC" );
-        
+
         $param = [];
         $cond = '';
         if ( $folder === 'public' ) {
@@ -411,7 +411,7 @@ class UserFieldsQuantum extends QuantumActions {
                 $param += [ ':type00' => 'preferences' ];
                 break;
         }
-    
+
         $sql = "SELECT field.*, cat.field_cat_id, cat.field_cat_name, cat.field_parent, cat.field_cat_class, root.field_cat_id 'page_id', root.field_cat_name 'page_name', root.field_cat_db, root.field_cat_index
         FROM ".DB_USER_FIELDS." field
         LEFT JOIN ".DB_USER_FIELD_CATS." cat ON (cat.field_cat_id = field.field_cat)
@@ -419,16 +419,16 @@ class UserFieldsQuantum extends QuantumActions {
         $cond
         ORDER BY root.field_cat_order ASC, cat.field_cat_order ASC, field.field_order ASC
         ";
-    
+
         $result = dbquery( $sql, $param );
-    
+
         if ( $this->field_max_rows = dbrows( $result ) ) {
             while ( $data = dbarray( $result ) ) {
                 $this->fields[ $data['field_cat'] ][ $data['field_id'] ] = $data;
             }
         }
     }
-    
+
     /**
      * Logs the user actions
      *
@@ -454,7 +454,7 @@ class UserFieldsQuantum extends QuantumActions {
             }
         }
     }
-    
+
     public function getEnabledFields() {
         if ( empty( $this->enabled_fields ) ) {
             $result = dbquery( "SELECT field_id, field_name, field_cat, field_required, field_log, field_registration, field_order, field_type, field_cat_name
@@ -468,10 +468,10 @@ class UserFieldsQuantum extends QuantumActions {
                 }
             }
         }
-        
+
         return $this->enabled_fields;
     }
-    
+
     /**
      * Public Profile Field Admin
      *
@@ -484,13 +484,13 @@ class UserFieldsQuantum extends QuantumActions {
         $active = '';
         $new_button = "<a class='btn btn-default m-r-10' href='".ADMIN."user_fields.php".fusion_get_aidlink()."&amp;ref=public&amp;action=new'>Add New Field</a>";
         $new_button .= "<a class='btn btn-default' href='".ADMIN."user_fields.php".fusion_get_aidlink()."&amp;ref=public&amp;action=new_cat'>".$this->locale['fields_0311']."</a>";
-        
+
         $html = "<h4 class='display-inline-block m-r-10'>Public User Fields</h4>\n$new_button<hr/>\n";
-        
+
         $current_field_id = get( 'field_id', FILTER_VALIDATE_INT );
         $current_module_id = get( 'module_id', FILTER_VALIDATE_INT );
         $cat_id = get( 'cat_id', FILTER_VALIDATE_INT );
-        
+
         if ( !empty( $this->page[0] ) ) {
             $tab_title = [];
             foreach ( $this->page[0] as $page_id => $page_data ) {
@@ -499,10 +499,10 @@ class UserFieldsQuantum extends QuantumActions {
                 $tab_title['icon'][ $page_id ] = $page_data['field_cat_class'];
                 $active = ( $cat_id && $page_id == $cat_id ) ? $page_id : '';
             }
-            
+
             if ( $current_field_id || $current_module_id ) {
                 $_fields = flatten_array( $this->fields );
-                
+
                 foreach ( $_fields as $fData ) {
                     if ( $current_field_id ) {
                         if ( $fData['field_id'] == $current_field_id ) {
@@ -521,13 +521,13 @@ class UserFieldsQuantum extends QuantumActions {
             }
             reset( $tab_title['title'] );
             $default_active = key( $tab_title['title'] );
-            
+
             // Tab
             $tab_active = tab_active( $tab_title, ( $active ? $active : $default_active ) );
             $html .= opentab( $tab_title, $tab_active, 'uftab', FALSE, '', '', [], TRUE );
-            
+
             foreach ( $this->page[0] as $page_id => $page_details ) {
-                
+
                 $html .= opentabbody( $tab_title['title'][ $page_id ], $tab_title['id'][ $page_id ], $tab_active );
                 // load all categories here.
                 //if ( $this->debug ) {
@@ -539,7 +539,7 @@ class UserFieldsQuantum extends QuantumActions {
                 //    }
                 //    $html .= "</div>\n";
                 //}
-                
+
                 // Edit/Delete Category Administration
                 $html .= "<div class='clearfix'>\n";
                 $html .= "<div class='pull-right'>\n";
@@ -549,7 +549,7 @@ class UserFieldsQuantum extends QuantumActions {
                 $html .= "</div>\n";
                 $html .= "</div>\n";
                 $html .= "</div>\n";
-    
+
                 $cat_html = "<div class='text-center'><h4>".$this->locale['fields_0102'].fusion_parse_locale( $page_details['field_cat_name'] )."</h4></div>\n";
                 if ( isset( $this->page[ $page_id ] ) ) {
                     $rowcount = 0;
@@ -575,18 +575,18 @@ class UserFieldsQuantum extends QuantumActions {
                         $cat_html .= "<a class='text-danger' href='".FUSION_SELF.$aidlink."&amp;action=cat_delete&amp;cat_id=".$cat_id."'>".$this->locale['delete']."</a>";
                         $cat_html .= "</div>\n";
                         $cat_html .= "</div>\n<div class='list-group-item'>\n";
-                        
+
                         // print all fields.
                         $field_html = "There are no fields";
                         if ( isset( $this->fields[ $cat_id ] ) ) {
                             $k = 0;
                             $field_html = '';
                             $item_counter = count( $this->fields[ $cat_id ] ) - 1;
-    
+
                             foreach ( $this->fields[ $cat_id ] as $arr => $field_data ) {
-        
+
                                 $field_output = $this->displayFields( $field_data, $this->callback_data, $this->method, [ 'inline' => TRUE, 'show_title' => 1, 'hide_value' => 1 ] );
-        
+
                                 $move_link = "<span class='text-lighter'>".$this->locale['move_up']."</span> &middot; ";
                                 if ( $k != 0 ) {
                                     $move_link = "<a href='".FUSION_SELF.$aidlink."&amp;action=fmu&amp;parent_id=".$field_data['field_cat']."&amp;field_id=".$field_data['field_id']."&amp;order=".( $field_data['field_order'] - 1 )."'>".$this->locale['move_up']."</a> &middot; ";
@@ -599,13 +599,13 @@ class UserFieldsQuantum extends QuantumActions {
                                 if ( $field_data['field_type'] == 'file' ) {
                                     $edit_link = "<a href='".FUSION_SELF.$aidlink."&amp;action=module_edit&amp;module_id=".$field_data['field_id']."&amp;ref=public'>".$this->locale['edit']."</a> &middot; ";
                                 }
-                                
+
                                 //Fields - Move down/Move Up - Edit - Delete
                                 //$item_id = $current_module_id ?: 0;
                                 //if ( !$item_id ) {
                                 //    $item_id = $current_field_id ?: 0;
                                 //}
-        
+
                                 $field_html .= "<div class='".grid_row()."'>\n<div class='".grid_column_size( 100, 70 )."'>\n";
                                 $field_html .= $field_output;
                                 $field_html .= "</div><div class='".grid_column_size( 100, 30 )."'>\n";
@@ -623,7 +623,7 @@ class UserFieldsQuantum extends QuantumActions {
                     }
                     $cat_html .= "</div>\n";
                 }
-    
+
                 $html .= $cat_html;
                 $html .= closetabbody();
             }
@@ -631,23 +631,23 @@ class UserFieldsQuantum extends QuantumActions {
         } else {
             $html .= "<div class='well text-center'>".$this->locale['fields_0103']."</div>\n";
         }
-        
+
         return (string)$html;
     }
-    
+
     private function viewPreferenceAdmin() {
         $new_button = "<a class='btn btn-default' href='".ADMIN."user_fields.php".fusion_get_aidlink()."&amp;ref=preferences&amp;action=new'>Add New</a>";
         $table = new Tables( new Preference(), FALSE );
         return $new_button.$table->displayTable();
     }
-    
+
     private function viewSecurityAdmin() {
         $new_button = "<a class='btn btn-default' href='".ADMIN."user_fields.php".fusion_get_aidlink()."&amp;ref=security&amp;action=new'>Add New</a>";
         $table = new Tables( new Security(), FALSE );
         return $new_button.$table->displayTable();
     }
-    
-    
+
+
     /**
      * Display fields for each fieldDB record entry
      *
@@ -691,17 +691,17 @@ class UserFieldsQuantum extends QuantumActions {
      */
     public function displayFields( array $data, $callback_data, $method = 'input', array $options = [] ) {
         $fields = new DisplayFields( $this );
-        if ( $data['field_type'] == 'file' ) {
+        if ( $data['field_type'] == 'file' && !empty( self::$module_list_var[ $data['field_name'] ]['include'] ) ) {
             $options['field_file'] = self::$module_list_var[ $data['field_name'] ]['include'];
         }
         return $fields->displayFields( $data, $callback_data, $method, $options );
     }
-    
+
     /**
      * @return array
      */
     public function get_dynamics_type() {
-        
+
         return [
             'file'        => $this->locale['fields_0500'],
             'textbox'     => $this->locale['fields_0501'],
@@ -721,7 +721,7 @@ class UserFieldsQuantum extends QuantumActions {
             'url'         => $this->locale['fields_0515'],
         ];
     }
-    
+
     /**
      * Category form input
      *
@@ -731,12 +731,12 @@ class UserFieldsQuantum extends QuantumActions {
     private function quantumCategoryForm() {
         $aidlink = fusion_get_aidlink();
         add_to_jquery( "$('#field_parent').val() == '0' ? $('#page_settings').show() : $('#page_settings').hide(); $('#field_parent').bind('change', function() { $(this).val() == '0' ? $('#page_settings').show() : $('#page_settings').hide()});" );
-        
+
         $action = get( 'action' );
         $cat_id = get( 'cat_id', FILTER_VALIDATE_INT );
-        
+
         if ( $action == 'cat_edit' && $cat_id && self::validate_fieldCat( $cat_id ) ) {
-    
+
             $result = dbquery( "SELECT * FROM ".DB_USER_FIELD_CATS." WHERE field_cat_id=:cid", [ ':cid' => (int)$cat_id ] );
             if ( dbrows( $result ) ) {
                 $this->field_cat_data = dbarray( $result );
@@ -745,18 +745,18 @@ class UserFieldsQuantum extends QuantumActions {
                 redirect( FUSION_SELF.$aidlink );
             }
         }
-    
+
         if ( $data = $this->updateCategory() ) {
             $this->field_cat_data = $data;
         }
-        
+
         $html = openform( 'quantumCategoryFrm', 'post' );
         $html .= self::quantum_multilocale_fields( 'field_cat_name', $this->locale['fields_0430'], $this->field_cat_data['field_cat_name'], [ 'required' => 1 ] );
         // cannot move if there are siblings
         if ( $cat_id && isset( $this->field_cat_index[ $cat_id ] ) ) {
             $html .= form_hidden( 'field_parent', '', $this->field_cat_data['field_parent'] );
         } else {
-            
+
             $cat_list[] = get( 'cat_id', FILTER_VALIDATE_INT );
             if ( !empty( $this->cat_list ) ) {
                 foreach ( $this->cat_list as $id => $value ) {
@@ -775,13 +775,13 @@ class UserFieldsQuantum extends QuantumActions {
                     'select_alt'   => TRUE,
                 ] );
         }
-        
+
         $html .= form_text( 'field_cat_order', $this->locale['fields_0433'], $this->field_cat_data['field_cat_order'], [ 'type' => 'number', 'inner_width' => '100px' ] );
         $html .= form_hidden( 'field_cat_id', '', $this->field_cat_data['field_cat_id'], [ 'number' => 1 ] );
         $html .= form_hidden( 'add_cat', '', 'add_cat' );
         // root settings
         $html .= "<div id='page_settings' class='m-t-20'>\n";
-        
+
         global $db_name;
         $tableList = [];
         $show_tables = dbquery( "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES
@@ -792,9 +792,9 @@ class UserFieldsQuantum extends QuantumActions {
                 $tableList[ $table_name ] = $table_name;
             }
         }
-        
+
         $html .= '<div class="m-b-20">'.$this->locale['fields_0111'].'<br/><small class="m-b-20">'.$this->locale['fields_0112'].'</small></div>';
-        
+
         $html .= form_select( 'field_cat_db', sprintf( $this->locale['fields_0434'], " db_prefix_ " ),
             $this->field_cat_data['field_cat_db'], [
                 'placeholder' => $this->locale['fields_0663'],
@@ -804,14 +804,14 @@ class UserFieldsQuantum extends QuantumActions {
                 "options"     => $tableList
             ] );
         $html .= "<div class='text-smaller m-b-10'>".$this->locale['fields_0113']."</div>\n";
-        
+
         $html .= form_text( 'field_cat_index', $this->locale['fields_0435'], $this->field_cat_data['field_cat_index'],
             [
                 'placeholder' => 'user_id',
                 "required"    => FALSE,
                 "inline"      => FALSE
             ] );
-        
+
         $html .= form_text( 'field_cat_class', $this->locale['fields_0436'], $this->field_cat_data['field_cat_class'],
             [
                 'placeholder' => $this->locale['fields_0437'],
@@ -823,10 +823,10 @@ class UserFieldsQuantum extends QuantumActions {
         $html .= form_button( 'save_cat', $this->locale['fields_0318'], 'save_cat', [ 'class' => 'm-r-10 btn-primary' ] );
         $html .= "<a href='".ADMIN."user_fields.php".fusion_get_aidlink()."&amp;ref=public'>".$this->locale['cancel']."</a>";
         $html .= closeform();
-        
+
         return (string)$html;
     }
-    
+
     /**
      * Multiple locale fields input
      *
@@ -880,9 +880,9 @@ class UserFieldsQuantum extends QuantumActions {
                     isset( $input_value[ $lang ] ) ? $input_value[ $lang ] : '', $options );
             }
         }
-        
+
         $html .= $main_html.$sub_html;
-        
+
         if ( count( $language_opts ) > 1 ) {
             $html .= "<div class='dropdown m-b-15'>\n";
             $html .= "<button id='lang_dropdown' data-toggle='dropdown' class='dropdown-toggle btn btn-sm btn-default' type='button'>".$locale['add_language']." <span class='caret'></span></button>\n";
@@ -919,17 +919,17 @@ class UserFieldsQuantum extends QuantumActions {
         }
         $html .= "</div>\n";
         $html .= "</div>\n";
-        
+
         return $html;
     }
-    
+
     /** The master form for Adding or Editing Dynamic Fields */
     private function quantum_dynamics_form() {
-        
+
         $aidlink = fusion_get_aidlink();
         $action = get( 'action' );
         $field_id = get( 'field_id', FILTER_VALIDATE_INT );
-    
+
         $this->field_data['field_type'] = get( 'add_field' );
         $this->field_data['field_config'] = [
             'field_max_b'              => 1000000,
@@ -960,7 +960,7 @@ class UserFieldsQuantum extends QuantumActions {
                 redirect( FUSION_SELF.$aidlink );
             }
         }
-    
+
         //if ( post( 'save_field' ) ) {
         //
         //    $add_field = get( 'add_field' );
@@ -1027,13 +1027,13 @@ class UserFieldsQuantum extends QuantumActions {
         //    }
         //
         //}
-    
+
         if ( $data = $this->saveFields( $this->field_data['field_type'] ) ) {
             $this->field_data = $data;
         }
-        
+
         $html = openform( 'fieldform', 'post' );
-        
+
         $disable_opts = [];
         foreach ( $this->page_list as $index => $v ) {
             $disable_opts[] = $index;
@@ -1056,9 +1056,9 @@ class UserFieldsQuantum extends QuantumActions {
             'select_alt'   => TRUE,
             'parse_label'  => TRUE,
         ] );
-        
+
         $html .= self::quantum_multilocale_fields( 'field_title', $this->locale['fields_0451'], $this->field_data['field_title'], [ 'required' => 1 ] );
-        
+
         $html .= form_text( 'field_name', $this->locale['fields_0453'], $this->field_data['field_name'],
             [
                 'placeholder' => $this->locale['fields_0454'],
@@ -1247,10 +1247,10 @@ class UserFieldsQuantum extends QuantumActions {
         $html .= form_button( 'save_field', $this->locale['fields_0488'], 'save', [ 'class' => 'btn-sm btn-primary m-r-10' ] );
         $html .= "<a href='".ADMIN."user_fields.php".fusion_get_aidlink()."&amp;ref=public'>".$this->locale['cancel']."</a>";
         $html .= closeform();
-        
+
         return (string)$html;
     }
-    
+
     /*
      * Calculation of Byte
      */
@@ -1265,11 +1265,11 @@ class UserFieldsQuantum extends QuantumActions {
                 return $byte;
             }
         }
-        
+
         return 1048576;
     }
-    
-    
+
+
     public function quantum_insert( array $data = [] ) {
         $quantum_fields = [];
         $infinity_ref = [];
@@ -1311,7 +1311,7 @@ class UserFieldsQuantum extends QuantumActions {
             }
         }
     }
-    
+
     /**
      * Return sanitized post values of input fields
      *
@@ -1324,36 +1324,36 @@ class UserFieldsQuantum extends QuantumActions {
      */
     public function sanitizeUserFields( $db, $primary_key, $callback_data = FALSE ) {
         $output_fields = [];
-        
+
         if ( !empty( $this->fields ) ) {
             $field = flatten_array( $this->fields );
-            
+
             if ( $callback_data == TRUE ) {
                 $output_fields[ $db ] = $this->callback_data;
             }
-    
+
             $default['user_id'] = 0;
             $this->callback_data += $default;
-            
+
             foreach ( $field as $arr => $field_data ) {
-                
+
                 $target_database = $field_data['field_cat_db'] ? DB_PREFIX.$field_data['field_cat_db'] : $db;
-                
+
                 $col_name = $field_data['field_cat_index'] ? $field_data['field_cat_index'] : $primary_key;
                 // Automate index value
                 $output_fields[ $target_database ][ $col_name ] = $this->callback_data['user_id'];
-                
+
                 $output_fields[ $target_database ][ $field_data['field_name'] ] = sanitizer( $field_data['field_name'], $field_data['field_default'], $field_data['field_name'] );
             }
         }
-        
+
         $this->output_fields = $output_fields;
-        
+
         return $this->output_fields;
     }
-    
+
     public function getUserFieldDescription( $data ) {
-        
+
         $user_field_api_version = '';
         $user_field_image = '';
         $user_field_name = '';
@@ -1364,10 +1364,10 @@ class UserFieldsQuantum extends QuantumActions {
                 include self::$module_list_var[ $data[':field_name'] ]['var'];
             }
         }
-        
+
         return "<strong class='m-0'>".$data[':field_title']."</strong><br/>".$user_field_desc."<div class='m-0'>by <i>$user_field_author</i> | Version: $user_field_api_version</div>";
-        
+
     }
-    
+
 }
 
