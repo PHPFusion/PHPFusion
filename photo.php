@@ -120,7 +120,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
         }
 
         $image2 = FALSE;
-        if (file_exists($cop) && strtolower(pathinfo($cop, PATHINFO_EXTENSION)) === 'png' && !empty($gallery_settings['photo_watermark'])) {
+        if ((file_exists($cop) && strtolower(pathinfo($cop, PATHINFO_EXTENSION)) === 'png') && !empty($gallery_settings['photo_watermark'])) {
             $image_dim_x = ImagesX($image);
             $image_dim_y = ImagesY($image);
             $copyright = ImageCreateFromPNG($cop);
@@ -173,9 +173,9 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
                 $color2 = ImageColorAllocate(($image2 ? $image2 : $image), $colors2['r'], $colors2['g'], $colors2['b']);
                 $color3 = ImageColorAllocate(($image2 ? $image2 : $image), $colors3['r'], $colors3['g'], $colors3['b']);
                 //move text y
-                $mty1 = ($thumb_h ? $thumb_h : $image_dim_y) - ($thumb_h ? 40 : 50);
-                $mty2 = ($thumb_h ? $thumb_h : $image_dim_y) - ($thumb_h ? 25 : 35);
-                $mty3 = ($thumb_h ? $thumb_h : $image_dim_y) - ($thumb_h ? 15 : 20);
+                $mty1 = ($thumb_h ? $thumb_h : $image_dim_y) - ($thumb_h ? 40 : 50) - 25;
+                $mty2 = ($thumb_h ? $thumb_h : $image_dim_y) - ($thumb_h ? 25 : 35) - 20;
+                $mty3 = ($thumb_h ? $thumb_h : $image_dim_y) - ($thumb_h ? 15 : 20) - 15;
                 $album_title = str_replace("\r", "", $data['album_title']);
                 $album_title = str_replace("\n", "", $album_title);
                 $album_title = preg_replace("[\[(.*?)\]]", "", $album_title);
@@ -197,24 +197,26 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
                 $album_title_font_size = !isset($_GET['full']) ? 3 : 5;
                 $album_descr_font_size = !isset($_GET['full']) ? 1 : 3;
                 $photo_title_font_size = !isset($_GET['full']) ? 1 : 3;
+
+                $fontfile = dirname(__FILE__).'/font/NotoSansRegular.ttf';
                 //album title
-                ImageString(($image2 ? $image2 : $image), $album_title_font_size, 10, $mty1 - 1, $album_title, $black);
-                ImageString(($image2 ? $image2 : $image), $album_title_font_size, 10, $mty1 + 1, $album_title, $black);
-                ImageString(($image2 ? $image2 : $image), $album_title_font_size, 9, $mty1, $album_title, $black);
-                ImageString(($image2 ? $image2 : $image), $album_title_font_size, 11, $mty1, $album_title, $black);
-                ImageString(($image2 ? $image2 : $image), $album_title_font_size, 10, $mty1, $album_title, $color1);
+                imagettftext(($image2 ? $image2 : $image), $album_title_font_size + 10, 0, 10 + 10, $mty1 - 1, $black, $fontfile, $album_title);
+                imagettftext(($image2 ? $image2 : $image), $album_title_font_size + 10, 0, 10 + 10, $mty1 + 1, $black, $fontfile, $album_title);
+                imagettftext(($image2 ? $image2 : $image), $album_title_font_size + 10, 0, 10 + 9, $mty1, $black, $fontfile, $album_title);
+                imagettftext(($image2 ? $image2 : $image), $album_title_font_size + 10, 0, 10 + 11, $mty1, $black, $fontfile, $album_title);
+                imagettftext(($image2 ? $image2 : $image), $album_title_font_size + 10, 0, 10 + 10, $mty1, $color1, $fontfile, $album_title);
                 //album info
-                ImageString(($image2 ? $image2 : $image), $album_descr_font_size, 10, $mty2 - 1, $album_description, $black);
-                ImageString(($image2 ? $image2 : $image), $album_descr_font_size, 10, $mty2 + 1, $album_description, $black);
-                ImageString(($image2 ? $image2 : $image), $album_descr_font_size, 9, $mty2, $album_description, $black);
-                ImageString(($image2 ? $image2 : $image), $album_descr_font_size, 11, $mty2, $album_description, $black);
-                ImageString(($image2 ? $image2 : $image), $album_descr_font_size, 10, $mty2, $album_description, $color2);
+                imagettftext(($image2 ? $image2 : $image), $album_descr_font_size + 10, 0, 10 + 10, $mty2 - 1, $black, $fontfile,$album_description);
+                imagettftext(($image2 ? $image2 : $image), $album_descr_font_size + 10, 0, 10 + 10, $mty2 + 1, $black, $fontfile, $album_description);
+                imagettftext(($image2 ? $image2 : $image), $album_descr_font_size + 10, 0, 10 + 9, $mty2, $black, $fontfile, $album_description);
+                imagettftext(($image2 ? $image2 : $image), $album_descr_font_size + 10, 0, 10 + 11, $mty2, $black, $fontfile, $album_description);
+                imagettftext(($image2 ? $image2 : $image), $album_descr_font_size + 10, 0, 10 + 10, $mty2, $color2, $fontfile, $album_description);
                 //photo name
-                ImageString(($image2 ? $image2 : $image), $photo_title_font_size, 10, $mty3 - 1, $photo_title, $black);
-                ImageString(($image2 ? $image2 : $image), $photo_title_font_size, 10, $mty3 + 1, $photo_title, $black);
-                ImageString(($image2 ? $image2 : $image), $photo_title_font_size, 9, $mty3, $photo_title, $black);
-                ImageString(($image2 ? $image2 : $image), $photo_title_font_size, 11, $mty3, $photo_title, $black);
-                ImageString(($image2 ? $image2 : $image), $photo_title_font_size, 10, $mty3, $photo_title, $color3);
+                imagettftext(($image2 ? $image2 : $image), $photo_title_font_size + 10, 0, 10 + 10, $mty3 - 1, $black, $fontfile, $photo_title);
+                imagettftext(($image2 ? $image2 : $image), $photo_title_font_size + 10, 0, 10 + 10, $mty3 + 1, $black, $fontfile, $photo_title);
+                imagettftext(($image2 ? $image2 : $image), $photo_title_font_size + 10, 0, 10 + 9, $mty3, $black, $fontfile, $photo_title);
+                imagettftext(($image2 ? $image2 : $image), $photo_title_font_size + 10, 0, 10 + 11, $mty3, $black, $fontfile, $photo_title);
+                imagettftext(($image2 ? $image2 : $image), $photo_title_font_size + 10, 0, 10 + 10, $mty3, $color3, $fontfile, $photo_title);
             }
         }
         //create image
