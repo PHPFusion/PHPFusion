@@ -18,7 +18,7 @@
 require_once __DIR__.'/../maincore.php';
 require_once THEMES.'templates/admin_header.php';
 
-pageAccess('S9');
+pageAccess('S12');
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/settings.php');
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'settings_security.php'.fusion_get_aidlink(), 'title' => $locale['security_settings']]);
 $available_captchas = [];
