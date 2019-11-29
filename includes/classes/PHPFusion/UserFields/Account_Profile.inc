@@ -89,7 +89,7 @@ class Account_Profile extends UserFieldsQuantum {
         
         $info['user_location'] = form_location( 'user_location', 'Choose your location to help us show you custom content from your area.', $this->user_data['user_location'], [ 'inline' => FALSE ] );
     
-        $info['update_preference_button'] = form_button( $this->post_name.'_pref', 'Update Preferences', $this->post_name.'_pref', [ 'class' => btn - primary ] );
+        $info['update_preference_button'] = form_button( $this->post_name.'_pref', 'Update Preferences', $this->post_name.'_pref', [ 'class' => 'btn-primary' ] );
         
         $info['pm_notify'] = form_checkbox( 'pm_email_notify', $locale['621'], $this->user_data['user_pm_email_notify'], [
                 'options' => [

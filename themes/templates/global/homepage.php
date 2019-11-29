@@ -76,49 +76,46 @@ if (!function_exists('display_home')) {
                 }
             }
         ');
-
+        $html = '';
+    
+        // This is display_home_no_item function
+        if ( empty( $info ) ) {
+            $locale = fusion_get_locale();
+            $html .= fusion_get_function( 'opentable', $locale['home_0100'] );
+            $html .= $locale['home_0101'];
+            $html .= fusion_get_function( 'closetable' );
+            return $html;
+        }
+        
         foreach ($info as $content) {
             $colwidth = $content['colwidth'];
-            opentable($content['blockTitle']);
+            $html .= fusion_get_function( 'opentable', $content['blockTitle'] );
             if ($colwidth) {
-                echo '<div class="row">';
+                $html .= '<div class="row">';
                 foreach ($content['data'] as $data) {
-                    echo '<div class="col-xs-12 col-sm-'.$colwidth.' col-md-'.$colwidth.' col-lg-'.$colwidth.' content clearfix">';
-                        echo '<div class="item">';
-
+                    $html .= '<div class="col-xs-12 col-sm-'.$colwidth.' col-md-'.$colwidth.' col-lg-'.$colwidth.' content clearfix">';
+                    $html .= '<div class="item">';
                             if (!empty($data['image'])) {
-                                echo '<figure class="thumb">';
-                                    echo '<a href="'.$data['url'].'">';
-                                        echo '<img style="max-height: 120px;" class="img-responsive" src="'.$data['image'].'" alt="'.$data['title'].'"/>';
-                                    echo '</a>';
-                                echo '</figure>';
+                                $html .= '<figure class="thumb">';
+                                $html .= '<a href="'.$data['url'].'">';
+                                $html .= '<img style="max-height: 120px;" class="img-responsive" src="'.$data['image'].'" alt="'.$data['title'].'"/>';
+                                $html .= '</a>';
+                                $html .= '</figure>';
                             }
-
-                            echo '<div class="post">';
-                                echo '<h4><a href="'.$data['url'].'">'.$data['title'].'</a></h4>';
-                                echo '<div class="small m-b-10 overflow-hide">'.$data['meta'].'</div>';
-                                echo '<div class="overflow-hide hidden-xs">'.nl2br(trim_text(strip_tags($data['content']), 200)).'</div>';
-                            echo '</div>';
-                        echo '</div>';
-                    echo '</div>';
+                    $html .= '<div class="post">';
+                    $html .= '<h4><a href="'.$data['url'].'">'.$data['title'].'</a></h4>';
+                    $html .= '<div class="small m-b-10 overflow-hide">'.$data['meta'].'</div>';
+                    $html .= '<div class="overflow-hide hidden-xs">'.nl2br( trim_text( strip_tags( $data['content'] ), 200 ) ).'</div>';
+                    $html .= '</div>';
+                    $html .= '</div>';
+                    $html .= '</div>';
                 }
-                echo '</div>';
+                $html .= '</div>';
             } else {
-                echo $content['norecord'];
+                $html .= $content['norecord'];
             }
-            closetable();
+            $html .= fusion_get_function( 'closetable' );
         }
-    }
-}
-
-/**
- * Show that no module have been installed
- */
-if (!function_exists('display_no_item')) {
-    function display_no_item() {
-        $locale = fusion_get_locale();
-        opentable($locale['home_0100']);
-        echo $locale['home_0101'];
-        closetable();
+        return $html;
     }
 }

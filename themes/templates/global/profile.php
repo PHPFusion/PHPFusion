@@ -16,6 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
+use PHPFusion\SiteLinks;
 use PHPFusion\Template;
 
 defined('IN_FUSION') || exit;
@@ -110,15 +111,27 @@ if (!function_exists('display_profile_form')) {
         $tpl->set_template(__DIR__.'/tpl/edit_profile.html');
 
         $current_page = $info['current_page'];
-
-        foreach ($info['pages'] as $page_id => $pages) {
-
-            $tpl->set_block('page_tab', [
-                "title" => $pages['title'],
-                "link"  => BASEDIR.'edit_profile.php?ref='.$page_id,
-                'class' => $pages['active'] ? ' class="active"' : ''
-            ]);
+    
+        $page_arr = [];
+        foreach ( $info['pages'] as $page_key => $page ) {
+            $page_arr[0][ $page_key ] = [
+                'link_id'     => $page_key,
+                'link_name'   => $page['title'],
+                'link_active' => $page['active'],
+                'link_url'    => BASEDIR.'edit_profile.php?ref='.$page_key
+            ];
         }
+    
+        $tpl->set_tag( 'profile_nav', SiteLinks::setSubLinks( [
+            'id'            => 'profile-link-menu',
+            'callback_data' => $page_arr,
+            'navbar_class'  => 'navbar-default',
+            'container'     => TRUE,
+            'show_banner'   => TRUE,
+            'show_header'   => TRUE,
+            'custom_banner' => '<h4>Profile & Settings</h4>',
+        ] )->showSubLinks() );
+        
 
         $tpl->set_tag("openform", "");
         $tpl->set_tag("closeform", "");
@@ -136,9 +149,73 @@ if (!function_exists('display_profile_form')) {
         switch ($current_page) {
             default:
                 if ($info['custom_page'] === TRUE) {
+                    // Add navigation menu
+    
+                    // Set menu
+                    $section_a = '';
+                    if ( !empty( $info['section'] ) ) {
+                        $ctpl = Template::getInstance( 'profile-menu' );
+                        $ctpl->set_text( '<ul class="list-group menu">
+                        {section_link.{
+                        <li class="list-group-item{%class_active%}" role="listitem"><a href="{%link%}" title="{%title%}">{%title%}</a></li>
+                        }}
+                        </ul>' );
+                        $counter = 0;
+                        $section = get( 'section' );
+                        foreach ( $info['section']['title'] as $kid => $title ) {
+                            $id = $info['section']['id'][ $kid ];
+            
+                            $active = $section == $id || !$section && $counter == 0 ? TRUE : FALSE;
+            
+                            $ctpl->set_block( 'section_link', [
+                                'title'        => $title,
+                                'link'         => BASEDIR.'edit_profile.php?ref='.get( 'ref' ).'&amp;section='.$id,
+                                'class'        => $active ? ' class="active"' : '',
+                                'class_active' => $active ? ' active' : '',
+                            ] );
+                            $counter++;
+                        }
+                        $section_a = $ctpl->get_output();
+                    }
+                    $section_b = '';
+                    if ( !empty( $info['section_nav'] ) ) {
+        
+                        $ctpl = Template::getInstance( 'profile-menu' );
+                        $ctpl->set_text( '
+                        <ul class="list-group menu">
+                        {section_link.{
+                        <li class="list-group-item{%class_active%}" role="listitem"><a href="{%link%}" title="{%title%}">{%title%}</a></li>
+                        }}
+                        </ul>' );
+        
+                        $counter = 0;
+                        $sref = get( 'sref' );
+                        $ref = get( 'ref' );
+                        $section = get( 'section' );
+        
+                        foreach ( $info['section_nav']['title'] as $kid => $title ) {
+                            $id = $info['section_nav']['id'][ $kid ];
+                            $active = $sref == $id || !$sref && $counter == 0 ? TRUE : FALSE;
+                            $ctpl->set_block( 'section_link', [
+                                'title'        => $title,
+                                'link'         => BASEDIR.'edit_profile.php?ref='.$ref.'&amp;section='.$section.'&amp;sref='.$id,
+                                'class'        => $active ? ' class="active"' : '',
+                                'class_active' => $active ? ' active' : '',
+                            ] );
+                            $counter++;
+                        }
+                        $section_b = $ctpl->get_output();
+                    }
+                    // Set menu
+                    if ( $section_a || $section_b ) {
+                        $tpl->set_block( 'menu', [ 'content' => $section_a.$section_b ] );
+                    }
+                    
                     // Set content
                     $tpl->set_block('content', ['page_content' => $info['page_content']]);
+    
                     if (!empty($info['section'])) $tab = $info['section'];
+    
                     break;
                 }
             case 'pu_profile': // public profile.
@@ -161,7 +238,7 @@ if (!function_exists('display_profile_form')) {
                         "post_button"           => $info['button'],
                         "user_reputation_field" => $info['user_reputation'],
                         "captcha_field"         => $info['validate'],
-                        "hash_field"            => $info['user_hash']
+                        "hash_field"            => $info['user_password_verify']
                     ]);
                 } else {
                     if (!empty($info['user_fields'])) {
@@ -172,7 +249,7 @@ if (!function_exists('display_profile_form')) {
                             "user_password"     => $info['user_password'],
                             "post_button"       => $info['button'],
                             "captcha_field"     => $info['validate'],
-                            "hash_field"        => $info['user_hash']
+                            "hash_field"        => $info['user_password_verify']
                         ]);
                     } else {
                         $tpl->set_block("no_fields", []);

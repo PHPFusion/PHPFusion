@@ -91,14 +91,11 @@ spl_autoload_register( function ( $className ) {
         $className = strtolower( $className );
         //print_P($className);
         $fullPath = BASEDIR.'infusions/'.$className.'.php';
-        //print_p($fullPath);
         if ( is_file( $fullPath ) ) {
             require $fullPath;
         }
-        
         $className = str_replace( '_', '-', $className );
         $fullPath = BASEDIR.'infusions'.DIRECTORY_SEPARATOR.$className.'.php';
-        
         if ( is_file( $fullPath ) ) {
             require_once $fullPath;
         }
