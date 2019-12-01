@@ -1545,8 +1545,8 @@ class Forum_Viewer {
         $html->set_tag('forum_message_field', $info['message_field']);
 
         $html->set_tag('forum_edit_reason_field', $info['edit_reason_field']);
-
-        $html->set_tag('forum_poll_form', $info['poll_form']);
+    
+        //$html->set_tag('forum_poll_form', $info['poll_form']);
 
         $html->set_tag("delete", $info['delete_field']);
 
