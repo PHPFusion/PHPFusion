@@ -1673,3 +1673,26 @@ if ( !function_exists( 'social_media_links' ) ) {
         return $html;
     }
 }
+
+/**
+ * Function to search for minimized assets file
+ *
+ * @param $file_path
+ *
+ * @return string
+ */
+function min_file( $file_path ) {
+    $file_info = pathinfo( $file_path );
+    if ( isset( $file_info['dirname'] ) && isset( $file_info['basename'] ) && isset( $file_info['extension'] ) && isset( $file_info['filename'] ) ) {
+        $file = $file_info['dirname'].DIRECTORY_SEPARATOR.$file_info['basename'];
+        $min_file = $file_info['dirname'].DIRECTORY_SEPARATOR.$file_info['filename'].'.min.'.$file_info['extension'];
+        // if dev mode is on, always use base.
+        if ( fusion_get_settings( 'devmode' ) ) {
+            return $file_info['dirname'].DIRECTORY_SEPARATOR.$file_info['basename'];
+        }
+        // serve the optimized file.
+        return ( file_exists( $min_file ) ? $min_file : $file );
+    }
+    
+    return $file_path;
+}

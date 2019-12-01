@@ -15,6 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
+use PHPFusion\Admins;
+
 defined('IN_FUSION') || exit;
 
 define("ADMIN_PANEL", TRUE);
@@ -48,8 +51,8 @@ if (iMEMBER) {
     );
 }
 
-\PHPFusion\Admins::getInstance()->setAdmin();
-\PHPFusion\Admins::getInstance()->setAdminBreadcrumbs();
+Admins::getInstance()->setAdmin();
+Admins::getInstance()->setAdminBreadcrumbs();
 
 ob_start();
 
