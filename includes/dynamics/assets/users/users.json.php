@@ -17,10 +17,11 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'../../../../../maincore.php';
+require_once INCLUDES.'ajax_include.php';
 
 $user_opts = [];
 
-$q = isset($_GET['q']) ? stripinput($_GET['q']) : '';
+$q = get( 'q' );
 // since search is on user_name.
 $result = dbquery("SELECT user_id, user_name, user_avatar, user_level, MATCH(user_name) AGAINST (:Q1) 'score'
     FROM ".DB_USERS." WHERE ".(blacklist('user_id') ? blacklist('user_id').' AND' : '')." user_status=:status AND

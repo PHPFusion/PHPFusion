@@ -1064,12 +1064,11 @@ class Tables {
         $end_row = '';
     
         if ( $this->table_props['show_count'] === TRUE || $this->quick_fields ) {
-            $start_row = "<div class='display-flex-row'>\n";
+            $start_row = "<div class='display-flex-row spacer-xs'>\n";
             $end_row = "</div>\n";
         }
     
         $html .= $start_row;
-    
     
         if ( $this->table_props['delete_link'] === TRUE || !empty( $this->table_props['action_filters'] ) ) {
             $html .= "<div class='display-inline-block pull-left m-r-15'>\n";
@@ -1093,7 +1092,7 @@ class Tables {
                     'filter_actions', '', '', [
                         'inline'      => TRUE,
                         'inner_width' => '200px',
-                        'class'       => 'm-0 display-inline-block pull-left',
+                        'class'       => 'm-0 m-b-0 display-inline-block pull-left',
                         'optgroup'    => TRUE,
                         'options'     => $actions_options,
                         'stacked'     => form_button(
@@ -1109,12 +1108,11 @@ class Tables {
         if ( !empty( $this->table_props['dropdown_filters'] ) ) {
         
             $html .= "<div class='display-inline-block'>";
-        
-            $html .= openform( 'filterfrm', 'post', FUSION_REQUEST );
+    
+            $html .= openform( 'filterfrm', 'post', FUSION_REQUEST, [ 'class' => 'display-flex-row' ] );
         
             if ( !empty( $this->table_props['dropdown_filters'] ) ) {
                 foreach ( $this->table_props['dropdown_filters'] as $filter_name => $filter_prop ) {
-                
                     switch ( $filter_prop['type'] ) {
                         default:
                         case 'array_in':
@@ -1481,7 +1479,7 @@ class Tables {
             $date_active = isset( $_GET[ $column_name.'-date_year' ] ) && isset( $_GET[ $column_name.'-date_month' ] ) ? $_GET[ $column_name.'-date_year' ]."_".$_GET[ $column_name.'-date_month' ] : '';
             $html = form_select(
                 $column_name, '', $date_active, [
-                    'class'       => 'display-inline-block m-r-10',
+                    'class'       => 'display-inline-block m-b-0 m-r-10',
                     //'allowclear'  => TRUE,
                     'inner_width' => '190px',
                     'width'       => '190px',
@@ -1519,7 +1517,7 @@ class Tables {
             $column_name, '', $value, [
                 'inner_width' => '200px',
                 'width'       => '200px',
-                'class'       => 'display-inline-block m-r-10',
+                'class'       => 'display-inline-block m-r-10 m-b-0',
                 'options'     => $options,
             ]
         );
