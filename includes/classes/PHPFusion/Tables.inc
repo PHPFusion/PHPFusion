@@ -712,26 +712,23 @@ class Tables {
     private function displayCustom() {
     
         $html = "<div id='".$this->table_props['table_id']."-custom-box' class='list-group-item m-b-15 m-t-15' style='display:none;'>";
-        $html .= "<div class='p-l-15 control-label strong'>Show Columns</div>";
         // get all the data column.
-        $html .= "<div class='p-l-15'>";
-        $html .= form_checkbox( 'custom_column[]', '', implode( ',', $this->custom_columns_value ), [
-            'multiple'       => TRUE,
-            'inline'         => FALSE,
+    
+        $html .= form_checkbox( 'custom_column[]', 'Show Table Columns', implode( ',', $this->custom_columns_value ), [
+                'inline'     => TRUE,
             'inline_options' => TRUE,
             'options'        => $this->custom_columns_options
-        ] );
-        $html .= "</div>";
-        $html .= "<div class='p-l-15 m-b-10'>";
+            ] ).'<hr/>';
+        
+        
         $html .= form_text( 'custom_limit', 'Number of items per page:', $this->query['limit'], [
-            'inline'      => FALSE,
+            'inline'      => TRUE,
             'inner_width' => '50px',
-            'class'       => 'm-b-10',
             'deactivate'  => ( $this->query['true_limit'] === TRUE ? TRUE : FALSE ),
         ] );
-        $html .= "</div>";
-
-        $html .= form_button( 'apply_custom', 'Apply Filter', 'apply_custom', [ 'class' => 'btn-primary m-l-15' ] );
+    
+    
+        $html .= form_button( 'apply_custom', 'Apply Filter', 'apply_custom', [ 'class' => 'btn-primary' ] );
 
         $html .= "</div>";
     
@@ -1067,7 +1064,7 @@ class Tables {
         $end_row = '';
     
         if ( $this->table_props['show_count'] === TRUE || $this->quick_fields ) {
-            $start_row = "<div style='display:flex; flex-direction:row; justify-content: flex-start; width:100%;'>\n";
+            $start_row = "<div class='display-flex-row'>\n";
             $end_row = "</div>\n";
         }
     
@@ -1100,7 +1097,7 @@ class Tables {
                         'optgroup'    => TRUE,
                         'options'     => $actions_options,
                         'stacked'     => form_button(
-                                'apply_filter', 'Apply', 'apply_filter', [ 'class' => 'btn-sm btn-default' ]
+                                'apply_filter', 'Apply', 'apply_filter', [ 'class' => 'btn-sm btn-default m-l-10' ]
                             ).form_hidden(
                                 'filter_ids', '', ''
                             )
@@ -1145,12 +1142,7 @@ class Tables {
     
         $html .= "<div style='margin-left:auto;'>";
         // Show customization toggle
-        $html .= "<small class='m-t-5 m-l-5'><a data-target='custom-box' class='pointer custom-table' data-table='".$this->table_props['table_id']."'>Customise Options <span class='caret'></span></a></small>";
-    
-        // Show row counter
-        if ( $this->table_props['show_count'] === TRUE ) {
-            $html .= "<small class='m-t-5'>".format_word( $this->maxRows, "item|items", [ 'html' => FALSE, 'format_num' => TRUE ] )."</small>\n";
-        }
+        $html .= "<a data-target='custom-box' class='btn btn-default custom-table' style='margin-right:0;' data-table='".$this->table_props['table_id']."'>Customise Options <span class='caret'></span></a>";
         $html .= "</div>";
         
         $html .= $end_row;
@@ -1159,7 +1151,7 @@ class Tables {
         $check_all_col_2 = '';
     
         if ( $this->table_props['edit_link'] or $this->table_props['delete_link'] ) {
-            $check_all_col = "<th class='min'>".form_checkbox( 'chk_all', '', '', [ 'class' => 'm-b-0' ] )."</th>\n";
+            $check_all_col = "<th class='min'>".form_checkbox( 'chk_all', '', '', [ 'class' => 'm-0' ] )."</th>\n";
             $check_all_col_2 = "<th>".form_checkbox( 'chk_all2', '', '', [ 'class' => 'm-b-0' ] )."</th>\n";
         }
     
@@ -1175,10 +1167,13 @@ class Tables {
     
         $html .= openform( 'table_frm', 'post', FORM_REQUEST );
         $html .= form_hidden( 'table_action', '', '' );
-        
         // Show custom table properties
         $html .= $this->displayCustom();
     
+        // Show row counter
+        if ( $this->table_props['show_count'] === TRUE ) {
+            $html .= "<small class='m-t-5'>".format_word( $this->maxRows, "item|items", [ 'html' => FALSE, 'format_num' => TRUE ] )."</small>\n";
+        }
         $html .= "<table class='fusion-table ".( $this->table_props['table_class'] ? ' '.$this->table_props['table_class'] : 'table m-t-10' )."'>\n";
         // head
         $html .= "<thead>\n";
