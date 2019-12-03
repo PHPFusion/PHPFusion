@@ -69,16 +69,16 @@ if ( $settings['fontawesome'] || defined( 'FONTAWESOME' ) ) {
     echo "<link rel='stylesheet' href='".$_includes."fonts/font-awesome-5/css/v4-shims.min.css'>\n";
 }
 
+// Theme CSS
+$theme_css_file = min_file( THEME.'styles.css' );
+echo "<link rel='stylesheet' href='".$theme_css_file."?v=".filemtime( $theme_css_file )."' crossorigin='anonymous'>\n";
+
 // Default CSS styling which applies to all themes but can be overriden
 if ( !defined( 'NO_DEFAULT_CSS' ) ) {
     $default_css_file = min_file( $_themes.'templates/default.css' );
     echo "<link rel='stylesheet' href='$default_css_file?v=".filemtime( $default_css_file )."'>\n";
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/PHPFusion/font.min.css'>\n";
 }
-
-// Theme CSS
-$theme_css_file = min_file( THEME.'styles.css' );
-echo "<link rel='stylesheet' href='".$theme_css_file."?v=".filemtime( $theme_css_file )."' crossorigin='anonymous'>\n";
 
 // Atom Engine
 $user_theme = fusion_get_userdata( 'user_theme' );

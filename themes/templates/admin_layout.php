@@ -50,16 +50,16 @@ if ( $settings['fontawesome'] || defined( 'FONTAWESOME' ) ) {
     echo "<link rel='stylesheet' href='".$_includes."fonts/font-awesome-5/css/v4-shims.min.css'>\n";
 }
 
+
+// Admin Panel Theme CSS
+$admin_css_file = min_file( THEMES.'admin_themes'.DIRECTORY_SEPARATOR.$settings['admin_theme'].DIRECTORY_SEPARATOR.'acp_styles.css' );
+echo "<link rel='stylesheet' href='".$admin_css_file."?v=".filemtime( $admin_css_file )."'>\n";
 // Default CSS styling which applies to all themes but can be overriden
 if ( !defined( 'NO_DEFAULT_CSS' ) ) {
     $default_css_file = min_file( $_themes.'templates/default.css' );
     echo "<link rel='stylesheet' href='$default_css_file?v=".filemtime( $default_css_file )."'>\n";
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/PHPFusion/font.min.css'>\n";
 }
-
-// Admin Panel Theme CSS
-$admin_css_file = min_file( THEMES.'admin_themes'.DIRECTORY_SEPARATOR.$settings['admin_theme'].DIRECTORY_SEPARATOR.'acp_styles.css' );
-echo "<link rel='stylesheet' href='".$admin_css_file."?v=".filemtime( $admin_css_file )."'>\n";
 
 echo render_favicons( defined( 'THEME_ICON' ) ? THEME_ICON : IMAGES.'favicons/' );
 
