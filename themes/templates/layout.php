@@ -59,7 +59,7 @@ if ( isset( $fusion_steam ) ) {
     $fusion_steam->run();
     fusion_apply_hook( 'start_boiler' );
 }
-
+Dynamics::getInstance()->getHeaders();
 if ( $settings['entypo'] || defined( 'ENTYPO' ) ) {
     echo "<link rel='stylesheet' href='".$_includes."fonts/entypo/entypo.min.css'>\n";
 }

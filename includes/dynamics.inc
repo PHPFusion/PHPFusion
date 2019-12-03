@@ -26,6 +26,7 @@
 class Dynamics {
 
     private static $instance = NULL;
+    private static $css_files = [];
 
     private function __construct() {
     }
@@ -38,6 +39,17 @@ class Dynamics {
 
         return self::$instance;
     }
+    
+    public function getHeaders() {
+        foreach ( self::$css_files as $file_path ) {
+            echo "<link href='$file_path' rel='stylesheet'>";
+        }
+    }
+    
+    public function addToHeaders( $path ) {
+        self::$css_files[] = $path;
+    }
+   
 
     private function __load_dynamic_components() {
         $dynamic_folder = makefilelist(DYNAMICS.'includes/', '.|..|.htaccess|index.php|._DS_Store|.tmp', TRUE, 'files');
@@ -50,8 +62,9 @@ class Dynamics {
 
         if (!defined("SELECT2")) {
             define("SELECT2", TRUE);
+            $this->addToHeaders( DYNAMICS."assets/select2/select2.min.css" );
+            
             add_to_footer("<script src='".fusion_get_settings('siteurl')."includes/dynamics/assets/select2/select2.min.js'></script>");
-            add_to_head("<link href='".DYNAMICS."assets/select2/select2.min.css' rel='stylesheet' />");
             $select2_locale = fusion_get_locale("select2");
             $select2_locale_path = DYNAMICS."assets/select2/select2_locale_".$select2_locale.".js";
             if (file_exists($select2_locale_path)) {
@@ -60,9 +73,9 @@ class Dynamics {
         }
         if (!defined("SELECTIZE")) {
             define('SELECTIZE', true);
+            $this->addToHeaders( DYNAMICS."assets/selectize/css/selectize.default.min.css" );
             add_to_footer("<script src='".fusion_get_settings('siteurl')."includes/dynamics/assets/selectize/js/es5.min.js'></script>");
             add_to_footer("<script src='".fusion_get_settings('siteurl')."includes/dynamics/assets/selectize/js/standalone/selectize.min.js'></script>");
-            add_to_head("<link href='".DYNAMICS."assets/selectize/css/selectize.default.min.css' rel='stylesheet'/>");
             // locale?
         }
     }

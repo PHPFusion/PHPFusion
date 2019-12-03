@@ -18,7 +18,9 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-function form_geo($input_name, $label, $input_value = FALSE, array $options = []) {
+use PHPFusion\Geomap;
+
+function form_geo( $input_name, $label, $input_value = FALSE, array $options = [] ) {
     global $fusion_steam;
 
     $locale = fusion_get_locale();
@@ -84,7 +86,7 @@ function form_geo($input_name, $label, $input_value = FALSE, array $options = []
 
     $options['error_class'] = "";
     for ($i = 0; $i <= 5; $i++) {
-        if (\Defender::inputHasError($input_name.'-'.$validation_key[$i])) {
+        if ( Defender::inputHasError( $input_name.'-'.$validation_key[ $i ] ) ) {
             $options['error_class'] = "has-error ";
             addNotice("danger", "<strong>$title</strong> - ".$error_key[$i]);
         }
@@ -138,8 +140,7 @@ function form_geo($input_name, $label, $input_value = FALSE, array $options = []
 
     // Country
     // Deprecate this method to MY etc.
-    $country_options = \PHPFusion\Geomap::get_Country();
-
+    $country_options = Geomap::get_Country();
     $array = [];
     foreach ($countries as $arv => $countryname) { // outputs: key, value, class - in order
         $country_key = str_replace(" ", "-", $countryname);
@@ -198,8 +199,8 @@ function form_geo($input_name, $label, $input_value = FALSE, array $options = []
         'error_text_5' => $options['error_text_5'],
         'error_text_6' => $options['error_text_6']
     ];
-
-    \Defender::getInstance()->add_field_session($config);
+    
+    Defender::getInstance()->add_field_session( $config );
 
     static $flag_function = NULL;
     $flag_plugin = '';
@@ -245,36 +246,36 @@ function form_geo($input_name, $label, $input_value = FALSE, array $options = []
     }
 
     // make this into a function object.
-    add_to_jquery("            
-    $('#$input_id-country').select2({        
-        $flag_plugin        
+    add_to_jquery( "
+    $('#$input_id-country').select2({
+        $flag_plugin
         placeholder: '".$locale['sel_country']." ".($options['required'] == 1 ? '*' : '')."'
         
     });
     
     $('#$input_id-state').select2({
         data: $state_default,
-        allowClear: false,        
+        allowClear: false,
         //placeholder: '".$locale['sel_state']." ".($options['required'] == 1 ? '*' : '')."'
-    });    
+    });
     
     $('#$input_id-state').select2('val', '$state_default_selected');
     
     // on change event.
-    $('body').on('change', '#$input_id-country', function(){        
-        var ce_id = $(this).val();        
+    $('body').on('change', '#$input_id-country', function(){
+        var ce_id = $(this).val();
         $.ajax({
             url: '".fusion_get_settings('site_path')."includes/dynamics/assets/geo/states.geo.php',
             type: 'GET',
             data: { id : ce_id },
             dataType: 'json',
-            success: function(data) {                    
+            success: function(data) {
                 $('#".$input_id."-state').select2({
                     placeholder: '".$locale['sel_state']." ".($options['required'] == 1 ? '*' : '')."',
                     allowClear: false,
                     data : data
-                });                                
-                $('#$input_id-state').select2('val', data[1]['id']);                
+                });
+                $('#$input_id-state').select2('val', data[1]['id']);
             },
             error : function() {
                 console.log('Error fetching region results');
@@ -346,10 +347,10 @@ function form_location($input_name, $label = '', $input_value = FALSE, array $op
     $length = "minimumInputLength: 1,";
 
     $error_class = "";
-    if (\Defender::inputHasError($input_name)) {
+    if ( Defender::inputHasError( $input_name ) ) {
         $error_class = "has-error ";
         if (!empty($options['error_text'])) {
-            $new_error_text = \Defender::getErrorText($input_name);
+            $new_error_text = Defender::getErrorText( $input_name );
             if (!empty($new_error_text)) {
                 $options['error_text'] = $new_error_text;
             }
@@ -442,14 +443,14 @@ function form_location($input_name, $label = '', $input_value = FALSE, array $op
     if ($options['deactivate']) {
         $html .= form_hidden($input_name, "", $input_value, ["input_id" => $options['input_id']]);
     }
-
-    $html .= \Defender::inputHasError($input_name) ? "<div class='input-error".((!$options['inline']) ? " display-block" : "")."'><div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div></div>" : '';
+    
+    $html .= Defender::inputHasError( $input_name ) ? "<div class='input-error".( ( !$options['inline'] ) ? " display-block" : "" )."'><div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div></div>" : '';
 
     $html .= ($options['inline'] && $label) ? "</div>\n" : "";
 
     $html .= "</div>\n";
-
-    \Defender::add_field_session([
+    
+    Defender::add_field_session( [
         'input_name'     => $input_name,
         'type'           => 'textbox',
         'title'          => trim($title, '[]'),
@@ -532,8 +533,8 @@ function state_search($country_iso) {
              return $states_array;
          }
     }*/
-
-    $states = \PHPFusion\Geomap::get_StatesOpts($country_iso);
+    
+    $states = Geomap::get_StatesOpts( $country_iso );
     $array[] = ['id' => 'other', 'text' => fusion_get_locale('other_states')];
     if (!empty($states)) {
         foreach ($states as $key => $val) {

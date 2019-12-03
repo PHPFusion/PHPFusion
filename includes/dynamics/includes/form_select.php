@@ -693,9 +693,9 @@ function form_user_select( $input_name, $label = "", $input_value = FALSE, array
     $html .= $options['inline'] ? "</div>\n" : '';
     
     $html .= "</div>\n";
-    $root_prefix = fusion_get_settings( "site_seo" ) == 1 ? fusion_get_settings( 'siteurl' )."includes/" : INCLUDES;
-    $root_img = fusion_get_settings( "site_seo" ) == 1 && !defined( 'ADMIN_PANEL' ) ? fusion_get_settings( 'siteurl' ) : '';
     
+    $root_prefix = ( fusion_get_settings( "site_seo" ) == 1 ? fusion_get_settings( 'siteurl' )."includes/" : INCLUDES );
+    $root_img = ( fusion_get_settings( "site_seo" ) == 1 && !defined( 'ADMIN_PANEL' ) ? fusion_get_settings( 'siteurl' ) : '' );
     $path = $options['file'] ? $options['file'] : $root_prefix."dynamics/assets/users/users.json.php".( $options['allow_self'] ? "?allow_self=true" : "" );
     
     if ( !empty( $input_value ) ) {

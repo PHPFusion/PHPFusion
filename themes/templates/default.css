@@ -598,6 +598,7 @@ Grids
 	-webkit-flex-direction: row;
 	-ms-flex-direction: row;
 	flex-direction: row;
+	align-items: center;
 }
 
 .display-flex-column {
@@ -612,9 +613,25 @@ Grids
 	flex-direction: column;
 }
 
+.display-flex-row .aligned-start {
+	align-items: flex-start;
+}
+
+.display-flex-row .aligned-end {
+	align-items: flex-end;
+}
+
 .display-flex-column > div,
 .display-flex-row > div {
 	padding: 0 15px;
+}
+
+.display-flex-row > div:first-of-type {
+	padding-left: 0;
+}
+
+.display-flex-row > div:last-of-type {
+	padding-right: 0;
 }
 
 .display-flex-row.space-between {

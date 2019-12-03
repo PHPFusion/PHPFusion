@@ -40,7 +40,7 @@ if ( isset( $fusion_steam ) ) {
     $fusion_steam->run();
     fusion_apply_hook( 'start_boiler' );
 }
-
+Dynamics::getInstance()->getHeaders();
 if ( $settings['entypo'] || defined( 'ENTYPO' ) ) {
     echo "<link rel='stylesheet' href='".$_includes."fonts/entypo/entypo.min.css'>\n";
 }
@@ -96,9 +96,7 @@ if ( !check_admin_pass( '' ) ) {
 
 // Output lines added with add_to_footer()
 echo $fusion_page_footer_tags;
-
 echo "<script src='".$_includes."jquery/holder/holder.min.js'></script>\n";
-
 // Output lines added with add_to_jquery()
 if ( !empty( $fusion_jquery_tags ) ) {
     $js = $fusion_jquery_tags;
@@ -108,7 +106,6 @@ if ( !empty( $fusion_jquery_tags ) ) {
     }
     echo "<script>$(function(){".$js."});</script>\n";
 }
-
 // Uncomment to guide your theme development
 if ( fusion_get_settings( 'devmode' ) ) {
     echo "<script src='".INCLUDES."jscripts".DIRECTORY_SEPARATOR."html-inspector.js'></script><script>HTMLInspector.inspect()</script>\n";
