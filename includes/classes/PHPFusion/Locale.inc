@@ -206,7 +206,7 @@ class Locale {
         ];
         
         if ( !empty( $translated_countries[ $country ] ) ) {
-            return $translated_countries[ $country ];
+            return $country." (".$translated_countries[ $country ].")";
         } else {
             return $country;
         }
