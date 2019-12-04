@@ -922,15 +922,15 @@ function session_get($key) {
  * @return mixed
  */
 function session_remove($key) {
-
     if (is_array($key)) {
         $temp = &$_SESSION;
+        $counter = 1;
         foreach ($key as $nkey) {
-            if (!is_array($temp[$nkey])) {
+            if ( $counter == count( $key ) ) {
                 unset($temp[$nkey]);
-            } else {
-                $temp = &$temp[$nkey];
             }
+            $temp = &$temp[ $nkey ];
+            $counter++;
         }
         $session = &$temp;
 
