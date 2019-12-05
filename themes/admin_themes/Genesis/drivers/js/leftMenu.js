@@ -42,11 +42,11 @@ $('.main_content_overlay').bind('click', function (e) {
 });
 
 // Hover on dropdowns
-$('li.dropdown').hover(
-    function (e) {
-        $(this).addClass('open');
-    },
-    function (e) {
-        $(this).removeClass('open');
-    }
-);
+// $('li.dropdown').hover(
+//     function (e) {
+//         $(this).addClass('open');
+//     },
+//     function (e) {
+//         $(this).removeClass('open');
+//     }
+// );

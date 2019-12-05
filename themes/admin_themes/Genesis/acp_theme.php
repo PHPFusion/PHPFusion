@@ -15,25 +15,29 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
+use Genesis\Viewer\adminPanel;
+
 require_once THEMES."admin_themes/Genesis/autoloader.php";
 
 define('BOOTSTRAP', TRUE);
 define('FONTAWESOME', TRUE);
+add_to_head( "<link rel=\"stylesheet\" href=\"https://pro.fontawesome.com/releases/v5.11.2/css/all.css\" integrity=\"sha384-zrnmn8R8KkWl12rAZFt4yKjxplaDaT7/EUkKm7AovijfrQItFWR7O/JJn4DAa/gx\" crossorigin=\"anonymous\">" );
 
 function opentable($title, $class = FALSE) {
-    \Genesis\Viewer\adminPanel::opentable($title, $class);
+    adminPanel::opentable( $title, $class );
 }
 
 function closetable($title = FALSE, $class = FALSE) {
-    \Genesis\Viewer\adminPanel::closetable($title, $class);
+    adminPanel::closetable( $title, $class );
 }
 
 function openside($title = FALSE, $class = FALSE) {
-    \Genesis\Viewer\adminPanel::openside($title, $class);
+    adminPanel::openside( $title, $class );
 }
 
 function closeside($title = FALSE, $class = FALSE) {
-    \Genesis\Viewer\adminPanel::closeside($title, $class);
+    adminPanel::closeside( $title, $class );
 }
 
 function render_admin_login() {
