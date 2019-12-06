@@ -248,11 +248,7 @@ if (iMEMBER && valid_language($userdata['user_language'])) {
     $current_lang = $userdata['user_language'];
 } else {
     $data = dbarray(dbquery("SELECT * FROM ".DB_LANGUAGE_SESSIONS." WHERE user_ip='".USER_IP."'"));
-    if ($data['user_language']) {
-        $current_lang = $data['user_language'];
-    } else {
-        $current_lang = $settings['locale'];
-    }
+    $current_lang = !empty($langData['user_language']) ? $data['user_language'] : $settings['locale'];
 }
 
 // Check if definitions have been set, if not set the default language to system language
