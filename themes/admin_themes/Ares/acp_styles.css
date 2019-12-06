@@ -874,7 +874,6 @@ a:focus {
     border-color: #dca7a7;
 }
 
-select,
 .select2-container {
     width: 100% !important;
 }
@@ -895,4 +894,9 @@ select,
 
 .select2-results .select2-highlighted table {
     color: #616161;
+}
+
+.form-control {
+    width: auto;
+    display: inline-block;
 }
