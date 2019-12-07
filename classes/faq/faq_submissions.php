@@ -113,7 +113,7 @@ class FaqSubmissions extends FaqServer {
                             'autosize'  => TRUE,
                             'form_name' => 'submit_form'
                         ]),
-                    'faq_cat_id'     => form_select('faq_cat_id', $this->locale['faq_0252'], $faq_data['faq_cat_id'],
+                    'faq_cat_id'     => form_select('faq_cat_id', $this->locale['faq_0252'], $criteriaArray['faq_cat_id'],
                         [
                             'inner_width' => '250px',
                             'inline'      => TRUE,
