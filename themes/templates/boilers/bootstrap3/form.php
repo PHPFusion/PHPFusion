@@ -218,13 +218,23 @@ class Form {
         ';
         
         //print_p($options);
+        if ( \Defender::inputHasError( $input_name ) ) {
+            $wrapper_class[] = "has-error ";
+            if ( !empty( $options['error_text'] ) ) {
+                $new_error_text = \Defender::getErrorText( $input_name );
+                if ( !empty( $new_error_text ) ) {
+                    $options['error_text'] = $new_error_text;
+                }
+                //addNotice("danger", "<strong>$title</strong> - ".$options['error_text']);
+            }
+        }
         
         $tpl = Template::getInstance( 'field-'.$options['input_id'] );
         
         $tpl->set_text( $template );
         
         $tpl->set_tag( 'style', '' );
-        
+    
         if ( $options['type'] == 'button' ) {
             
             $tpl->set_text( $button_template );
@@ -288,22 +298,8 @@ class Form {
             // calculate all possible class
             $wrapper_class[] = $options['type'] == 'radio' ? 'radio' : 'checkbox';
             $wrapper_class[] = $options['class'];
-            if ( $options['toggle'] ) {
-                $wrapper_class[] = 'is-bootstrap-switch';
-            }
             if ( $options['inline'] ) {
                 $wrapper_class[] = 'display-block overflow-hide';
-            }
-            
-            if ( \Defender::inputHasError( $input_name ) ) {
-                $wrapper_class[] = "has-error ";
-                if ( !empty( $options['error_text'] ) ) {
-                    $new_error_text = \Defender::getErrorText( $input_name );
-                    if ( !empty( $new_error_text ) ) {
-                        $options['error_text'] = $new_error_text;
-                    }
-                    //addNotice("danger", "<strong>$title</strong> - ".$options['error_text']);
-                }
             }
             
             $tpl->set_tag( "input_class", implode( ' ', $wrapper_class ) );
@@ -419,8 +415,8 @@ class Form {
                     if ( $options['inner_width'] ) {
                         $inner_width = " style='width: ".$options['inner_width']." '";
                     }
-        
-                    $checkbox .= "<div".( $options['inline_options'] ? ' class="display-inline-block m-r-5"' : '' ).">\n";
+    
+                    $checkbox .= "<div class='".( $options['inline_options'] ? 'display-inline-block m-r-5' : 'm-b-10' )."'>\n";
                     $checkbox .= "<label class='m-r-20' data-label='$key' for='".$options['input_id']."-$key'$inner_width>";
                     $checkbox .= "<input id='".$options['input_id']."-$key' name='$input_name' value='$key' type='".$options['type']."' $checked />\n";
                     $checkbox .= $value;
@@ -432,6 +428,7 @@ class Form {
                     $checkbox .= "</div>\n";
                 }
             }
+        
             //print_P($checkbox);
             $tpl->set_tag( 'label', $label );
             $tpl->set_tag( 'label_class', '' );

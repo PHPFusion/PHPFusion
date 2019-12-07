@@ -84,11 +84,9 @@ if ($settings['bootstrap'] || defined('BOOTSTRAP')) {
     echo "<meta name='viewport' content='width=device-width, initial-scale=1.0'>\n";
     echo "<link rel='stylesheet' href='".THEMES."templates/boilers/bootstrap3/css/bootstrap.min.css'>\n";
     echo "<link rel='stylesheet' href='".THEMES."templates/boilers/bootstrap3/css/bootstrap-submenu.min.css'>\n";
-
     if ($locale['text-direction'] == 'rtl') {
         echo "<link rel='stylesheet' href='".THEMES."templates/boilers/bootstrap3/css/bootstrap-rtl.min.css'>";
     }
-
     $user_theme = fusion_get_userdata('user_theme');
     $theme_name = $user_theme !== 'Default' ? $user_theme : $settings['theme'];
     $theme_data = dbarray(dbquery("SELECT theme_file FROM ".DB_THEME." WHERE theme_name='".$theme_name."' AND theme_active='1'"));
