@@ -1115,18 +1115,18 @@ class ForumAdminView extends ForumAdminInterface {
             $has_fa = fusion_get_settings("fontawesome") ? TRUE : FALSE;
 
             $type_icon = [
-                '1' => $has_entypo ? 'entypo entypo-folder' : $has_fa ? 'fa fa-folder fa-fw fa-2x' : "",
-                '2' => $has_entypo ? 'entypo entypo-message' : $has_fa ? 'fa fa-comment-o fa-fw fa-2x' : "",
-                '3' => $has_entypo ? 'entypo entypo-link' : $has_fa ? 'fa fa-external-link fa-fw fa-2x' : "",
-                '4' => $has_entypo ? 'entypo entypo-info-circled' : $has_fa ? 'fa fa-lightbulb-o fa-fw fa-2x' : ""
+                '1' => ($has_entypo ? 'entypo entypo-folder' : $has_fa) ? 'fa fa-folder fa-fw fa-2x' : "",
+                '2' => ($has_entypo ? 'entypo entypo-message' : $has_fa) ? 'fa fa-comment-o fa-fw fa-2x' : "",
+                '3' => ($has_entypo ? 'entypo entypo-link' : $has_fa) ? 'fa fa-external-link fa-fw fa-2x' : "",
+                '4' => ($has_entypo ? 'entypo entypo-info-circled' : $has_fa) ? 'fa fa-lightbulb-o fa-fw fa-2x' : ""
             ];
 
             $ui_label = [
-                "move_up"         => $has_entypo ? "<i class='entypo entypo-arrow-up m-r-10'></i>" : $has_fa ? "<i class='fa fa-arrow-up fa-lg m-r-10'></i>" : self::$locale['forum_046'],
-                "move_down"       => $has_entypo ? "<i class='entypo entypo-arrow-down m-r-10'></i>" : $has_fa ? "<i class='fa fa-arrow-down fa-lg m-r-10'></i>" : self::$locale['forum_045'],
-                "edit_permission" => $has_entypo ? "<i class='entypo entypo-eye m-r-10'></i>" : $has_fa ? "<i class='fa fa-eye fa-lg m-r-10'></i>" : self::$locale['forum_029'],
-                "edit"            => $has_entypo ? "<i class='entypo entypo-cog m-r-10'></i>" : $has_fa ? "<i class='fa fa-cog fa-lg m-r-10'></i>" : self::$locale['forum_002'],
-                "delete"          => $has_entypo ? "<i class='entypo entypo-trash m-r-10'></i>" : $has_fa ? "<i class='fa fa-trash-o fa-lg m-r-10'></i>" : self::$locale['forum_049'],
+                "move_up"         => ($has_entypo ? "<i class='entypo entypo-arrow-up m-r-10'></i>" : $has_fa) ? "<i class='fa fa-arrow-up fa-lg m-r-10'></i>" : self::$locale['forum_046'],
+                "move_down"       => ($has_entypo ? "<i class='entypo entypo-arrow-down m-r-10'></i>" : $has_fa) ? "<i class='fa fa-arrow-down fa-lg m-r-10'></i>" : self::$locale['forum_045'],
+                "edit_permission" => ($has_entypo ? "<i class='entypo entypo-eye m-r-10'></i>" : $has_fa) ? "<i class='fa fa-eye fa-lg m-r-10'></i>" : self::$locale['forum_029'],
+                "edit"            => ($has_entypo ? "<i class='entypo entypo-cog m-r-10'></i>" : $has_fa) ? "<i class='fa fa-cog fa-lg m-r-10'></i>" : self::$locale['forum_002'],
+                "delete"          => ($has_entypo ? "<i class='entypo entypo-trash m-r-10'></i>" : $has_fa) ? "<i class='fa fa-trash-o fa-lg m-r-10'></i>" : self::$locale['forum_049'],
             ];
 
             $i = 1;
