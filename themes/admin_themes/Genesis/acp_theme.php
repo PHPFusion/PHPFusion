@@ -22,7 +22,6 @@ require_once THEMES."admin_themes/Genesis/autoloader.php";
 
 define('BOOTSTRAP', TRUE);
 define('FONTAWESOME', TRUE);
-add_to_head( "<link rel=\"stylesheet\" href=\"https://pro.fontawesome.com/releases/v5.11.2/css/all.css\" integrity=\"sha384-zrnmn8R8KkWl12rAZFt4yKjxplaDaT7/EUkKm7AovijfrQItFWR7O/JJn4DAa/gx\" crossorigin=\"anonymous\">" );
 
 function opentable($title, $class = FALSE) {
     adminPanel::opentable( $title, $class );
