@@ -328,14 +328,13 @@ class Tables {
         $filter_cond = [];
         if ( !empty( $this->table_props['link_filters'] ) ) {
             foreach ( $this->table_props['link_filters'] as $key => $filters ) {
-                if ( !empty( $_GET[ $key ] ) ) { // we are getting unpublished
+                if ( get( $key ) ) { // we are getting unpublished
                     $filter_val = array_flip( array_map( 'strtolower', $filters['options'] ) );
                     $get_val = strtolower( get( $key ) );
                     if ( isset( $filter_val[ $get_val ] ) ) {
                         if ( strlen( $filter_val[ $get_val ] ) ) {
                             $filter_cond[] = "$key='".$filter_val[ $get_val ]."'";
                         }
-                    
                     }
                 }
             }
@@ -349,6 +348,8 @@ class Tables {
                 $filter_keys = get( $key );
                 switch ( $filters['type'] ) {
                     default:
+                    case 'actions':
+                        break;
                     case 'array':
                     case 'array_in':
                         // done.
@@ -396,6 +397,7 @@ class Tables {
     
         $get_order = get( 'order' ); // asc or desc
     
+        // Order column
         if ( $get_orderby && $get_order && isset( $order_check[ $get_order ] ) && !empty( $this->table_props['order_col'] ) ) {
         
             $sort = $order_check[ $get_order ];
@@ -406,12 +408,13 @@ class Tables {
             
                 $orderby = $ordering[ $get_orderby ]." ".$sort.", ";
             }
-        
+    
         } else if ( !empty( $this->query['order'] ) ) {
             
             $orderby = $this->query['order'].", ";
         }
     
+        // Default conditions
         $conditions = ( !empty( $this->query['conditions'] ) ? "{CONDITIONS_PREFIX} ".$this->query['conditions'] : '' );
         
         $count_conditions = strtr(
@@ -443,8 +446,6 @@ class Tables {
             "SELECT base.* {SELECT} FROM {TABLE} {SEARCH} {CONDITIONS} {GROUP} ORDER BY {ORDER_BY} {ID} {ORDER_SORTING} {LIMIT}";
     
         if ( $this->query['id'] && $this->query['parent'] ) {
-            
-            
             $sql_query = strtr(
                 $sql_statement, [
                     '{TABLE}'         => $sql_table,
