@@ -91,7 +91,7 @@ if ($gll_settings['gallery_allow_submission']) {
             echo "<div class='alert alert-info m-b-20 submission-guidelines'>".str_replace('[SITENAME]', fusion_get_settings('sitename'), $locale['gallery_0107'])."</div>\n";
             echo form_select('album_id', $locale['photo_0003'], '', ["options" => $opts, "inline" => TRUE]);
             echo form_text('photo_title', $locale['photo_0001'], '', ['required' => TRUE, "inline" => TRUE]);
-            echo form_select('photo_keywords', $locale['photo_0005'], $data['photo_keywords'], [
+            echo form_select('photo_keywords', $locale['photo_0005'], '', [
                 'placeholder' => $locale['album_0006'],
                 'inline'      => TRUE,
                 'multiple'    => TRUE,
