@@ -636,7 +636,7 @@ class adminPanel extends resource {
         <?php
         if ( !empty( $title ) ) :
             // checks if there are any tags in $title, if no, append h5 tag
-            $cur_title = "<h5>$title</h5>";
+            $cur_title = $title;
             if ( str_ireplace( [ '<h1>', '<h2>', '<h3>', '<h4>', '<h5>', '<h6>', '<div>', '<p>' ], '', $title ) != $title ) {
                 $cur_title = $title;
             }

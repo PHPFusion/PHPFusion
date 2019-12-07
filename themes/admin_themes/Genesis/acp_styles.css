@@ -1,17 +1,16 @@
 /* Globals */
-@import url('https://fonts.googleapis.com/css?family=Roboto:500,700&display=swap');
-
+@import url('https://fonts.googleapis.com/css?family=Rubik:400,700&display=swap');
 html, body, #tinymce body, .form-control {
 	/*font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";*/
-	font-family: "Roboto", "Helvetica Neue", Helvetica, "Cera Pro", Arial, sans-serif;
+	font-family: Rubik, Avenir Next, Helvetica Neue, sans-serif;
 	/*font-family: "Ubuntu", -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;*/
-	font-size: 17px;
+	font-size: 16px;
 	-webkit-font-smoothing: subpixel-antialiased;
 }
 
 :root {
-	--app-menu-width: 300px;
-	--sub-menu-width: 290px;
+	--app-menu-width: 230px;
+	--sub-menu-width: 250px;
 	--menu-background: #0F1921;
 	--menu-alt-background: #1C2B36;
 	--body-color: #fff;
@@ -43,6 +42,8 @@ html, body, #tinymce body, .form-control {
 body {
 	overflow-x: hidden;
 	color: var(--default-color);
+	font-size: 16px;
+	line-height: 24px;
 }
 
 .brand {
@@ -246,7 +247,7 @@ a:focus {
 #devlpr .left_menu h4.php-fusion {
 	font-size: 34px;
 	color: #fff;
-	margin: 17px 20px;
+	margin: 16px 20px;
 }
 
 #devlpr .apps {
@@ -413,7 +414,7 @@ a:focus {
 
 #devlpr .app_menu .app_list li {
 	height: 55px;
-	padding: 1px 30px 0 16px;
+	padding: 1px 10px 0 16px;
 	position: relative;
 	-webkit-transition: background .2s;
 	-o-transition: background .2s;
@@ -431,7 +432,7 @@ a:focus {
 
 #devlpr .apps-lists {
 	position: relative;
-	padding: 10px 20px 10px 3px;
+	padding: 5px 20px 10px 3px;
 	display: flex;
 	flex-direction: row;
 	align-items: center;
@@ -443,7 +444,7 @@ a:focus {
 }
 
 #devlpr .admin-ico {
-	font-size: 17px;
+	font-size: 16px;
 }
 
 #devlpr .sub_menu ul > li > ul > li:hover > a,
@@ -510,7 +511,7 @@ a:focus {
 #devlpr .sub_menu .submenu-header h4 {
 	color: #fff;
 	margin: 0;
-	font-size: 35px;
+	font-size: 25px;
 }
 
 #devlpr .sub_menu nav > ul > li {
@@ -521,14 +522,15 @@ a:focus {
 #devlpr .sub_menu nav > ul > li > a {
 	display: block;
 	width: 100%;
-	color: #fff;
+	color: var(--default-color);
 	font-weight: 400;
-	padding: 22px 37px !important;
+	padding: 10px 25px !important;
+	transition: color, 0.3s;
+	font-size: 15px;
 }
 
 #devlpr .sub_menu nav ul > li.active > a {
 	color: #fff;
-	font-weight: 600;
 }
 
 #devlpr .sub_menu nav > ul > li.active > a:hover,
@@ -538,10 +540,9 @@ a:focus {
 	color: #fff;
 	text-decoration: none;
 }
-
 #devlpr .sub_menu nav > ul > li > a:hover,
 #devlpr .sub_menu nav > ul > li > a:focus {
-	color: #0088cc;
+	color: #fff;
 	background: none;
 	outline: none;
 	box-shadow: none;
@@ -555,6 +556,9 @@ a:focus {
 	margin-bottom: -20px;
 }
 
+#devlpr .sub_menu nav > ul > li i {
+	font-size: 19px;
+}
 #devlpr .sub_menu ul.collapse {
 	list-style: none;
 	background-color: rgba(0, 0, 0, .3);
@@ -583,7 +587,7 @@ a:focus {
 #devlpr .sub_menu ul > li > ul > li > a {
 	color: rgba(255, 255, 255, .7);
 	display: block;
-	padding: 15px 10px;
+	padding: 10px;
 	font-weight: 400;
 }
 
@@ -700,7 +704,7 @@ a:focus {
 /* main section */
 #devlpr #main_content.content {
 	position: relative;
-	margin-left: 76px;
+	margin-left: 75px;
 	background-color: transparent;
 	min-height: 100vh;
 	padding-top: 45px;
@@ -795,8 +799,9 @@ a:focus {
 
 #devlpr #main_content > header > nav .input-group-addon,
 #devlpr #main_content > header > nav .form-control {
-	padding: 15px;
-	font-size: 17px;
+	padding: 13px;
+	font-size: 16px;
+	border-width: 2px;
 }
 
 #devlpr #main_content > header > nav .form-control {
@@ -849,6 +854,7 @@ a:focus {
 	display: flex;
 	flex-direction: row;
 	justify-content: space-around;
+	align-items: center;
 }
 
 #devlpr #main_content > header ul.nav.nav-tabs {
@@ -859,7 +865,7 @@ a:focus {
 
 #devlpr #main_content > header ul.nav.nav-tabs > li a {
 	padding: 37px 15px 37px 0;
-	font-size: 17px;
+	font-size: 16px;
 	margin-right: 10px;
 	background: none;
 	text-transform: uppercase;
@@ -963,7 +969,7 @@ a:focus {
 
 #devlpr #main_content > header .dropdown-menu > li > a {
 	color: var(--default-color);
-	font-size: 17px;
+	font-size: 16px;
 }
 
 #devlpr #main_content > header .dropdown-menu > li > a:hover,
@@ -1074,7 +1080,7 @@ a:focus {
 }
 
 #devlpr #main_content .content header > h3 {
-	font-size: 60px;
+	font-size: 45px;
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
@@ -1084,7 +1090,7 @@ a:focus {
 	margin-left: auto;
 	padding: 9px 18px;
 	font-weight: 600;
-	font-size: 17px;
+	font-size: 16px;
 	border: 2px solid var(--primary-color);
 }
 
@@ -1123,15 +1129,16 @@ a:focus {
 
 #devlpr #main_content .app_aside_head {
 	border-bottom: 1px solid #D5DCE6;
+	background: rgb(250, 249, 251);
+	text-transform: uppercase;
+	color: var(--dark-color);
+	font-size: 14px;
+	font-weight: 600;
 }
 
-#devlpr #main_content .app_aside_head h5 {
-	color: #7F8FA4;
-}
 
 #devlpr #main_content .app_aside_body, #devlpr #main_content .app_aside_head {
 	padding: 15px;
-	background: #FFF;
 	display: block;
 }
 
@@ -1175,8 +1182,8 @@ a:focus {
 	font-weight: 500;
 	text-align: center;
 	font-size: 16px;
-	padding: 11px 45px;
-	height: 47px;
+	padding: 11px 15px;
+	height: 43px;
 }
 
 .btn > i {
@@ -1289,7 +1296,7 @@ a:focus {
 	padding: 10px 25px;
 	display: flex;
 	align-items: center;
-	font-size: 17px;
+	font-size: 16px;
 	font-weight: 400;
 }
 
@@ -1377,7 +1384,7 @@ input[type="button"].btn-block {
 .btn.btn-default:focus,
 .btn.btn-default.disabled,
 .btn.btn-default[disabled] {
-	background-color: var(--body-color) !important;
+	background-color: var(--info-bg-color) !important;
 	border: 2px solid var(--primary-link-color) !important;
 	color: var(--primary-link-color) !important;
 	box-shadow: none;
@@ -1682,11 +1689,15 @@ input[type="submit"].btn.btn-mini {
 	-moz-border-radius-bottomright: 6px;
 }
 
+.btn-group .active > .btn,
 .btn-group > .btn:hover,
 .btn-group > .btn:focus,
 .btn-group > .btn:active,
 .btn-group > .btn.active {
 	z-index: 2;
+	border-color: var(--primary-color);
+	background-color: var(--info-bg-color);
+	color: var(--primary-color);
 }
 
 .btn-group .dropdown-toggle:active,
@@ -2005,22 +2016,31 @@ Alerts
 	box-shadow: 0 1px 1px rgba(0, 0, 0, .04);
 }
 
+#devlpr #main_content .fusion-table > tfoot > tr > th,
 #devlpr #main_content .fusion-table > thead > tr > th {
 	vertical-align: middle;
 	border-bottom: 1px solid #ddd;
 	color: var(--dark-color);
+	text-transform: uppercase;
+	font-size: 13px;
+	font-weight: 300;
+	padding-top: 12px;
+	padding-bottom: 12px;
 }
 
 #devlpr #main_content .fusion-table td {
 	border-top: 0;
+	background: #fff;
 }
 
 #devlpr #main_content .content .bootstrap-datetimepicker-widget.dropdown-menu table {
 	border: 0;
 }
 
-#devlpr #main_content .content table thead {
-	background-color: #fff;
+#devlpr #main_content .content table thead,
+#devlpr #main_content .content table tfoot {
+	background: rgb(250, 249, 251);
+	border-bottom: 1px solid rgb(209, 202, 216);
 }
 
 table thead > tr:first-child > td:first-child {
@@ -2049,7 +2069,7 @@ table > tr:not(:last-child) > thead th {
 }
 
 table:not(.table-striped) tbody tr:nth-child(odd) {
-	background: #f9f9f9;
+	background: #fff;
 }
 
 table:not(.table-striped) tbody tr:nth-child(even) {
@@ -2318,12 +2338,14 @@ code, kbd {
 .input-group-addon.prepend {
 	border-radius: 999px 0 0 999px;
 	border-right: 0;
+	border-width: 2px;
 }
 
 .input-group-addon.append {
 	border-radius: 0 999px 999px 0;
 	border-left: 0;
 	margin-right: 0;
+	border-width: 2px;
 }
 
 .input-group-addon i {
@@ -3120,54 +3142,17 @@ div.mce-edit-area {
 	padding-left: 0 !important;
 }
 
+.radio {
+	margin-bottom: 25px;
+}
 .radio > .control-label,
 .checkbox > .control-label {
-	padding-left: 30px;
 	font-weight: 600;
 	color: var(--dark-color);
 	display: flex;
 	align-items: center;
 }
 
-
-input[type=checkbox]:checked:before {
-	float: left;
-	display: inline-block;
-	vertical-align: middle;
-	width: 16px;
-	font: 400 16px/1 "Glyphicons Halflings";
-	speak: none;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	outline: none;
-}
-
-input[type=checkbox]:checked:before {
-	content: "\e013";
-	margin: -1px 0 0 0;
-	color: #1e8cbe;
-	outline: none;
-}
-
-input[type=radio] {
-	-webkit-border-radius: 50%;
-	-moz-border-radius: 50%;
-	border-radius: 50%;
-}
-
-input[type=radio]:checked:before {
-	content: "";
-	background-color: #1e8cbe;
-	-webkit-border-radius: 50%;
-	-moz-border-radius: 50%;
-	border-radius: 50%;
-	width: 10px;
-	height: 10px;
-	outline: none;
-	position: absolute;
-	left: 2px;
-	top: 2px;
-}
 
 .input-error {
 	margin: 5px 0;
@@ -3213,6 +3198,11 @@ input[type=radio]:checked:before {
 	font-size: 12px;
 }
 
+.radio > .control-label .col-lg-3,
+.checkbox > .control-label .col-lg-3,
+.control-label.col-lg-3 {
+	padding-left: 0;
+}
 .control-label,
 input[type=text],
 input[type=email],
@@ -3275,7 +3265,7 @@ html[dir="rtl"] #devlpr .left_menu h2 {
 }
 
 html[dir="rtl"] #devlpr .app_menu header {
-	margin-right: -17px;
+	margin-right: -16px;
 }
 
 html[dir="rtl"] #devlpr .app_menu header h3 {
@@ -3791,8 +3781,8 @@ Select2
 	border: 2px solid var(--border-color) !important;
 	background: transparent;
 	background-image: none !important;
-	font-size: 17px;
-	line-height: 17px;
+	font-size: 16px;
+	line-height: 16px;
 	height: 47px !important;
 	padding: 8px 15px 8px !important;
 }
@@ -3829,7 +3819,7 @@ Select2
 }
 
 .select2-results {
-	font-size: 17px;
+	font-size: 16px;
 }
 
 .select2-results .select2-highlighted {
