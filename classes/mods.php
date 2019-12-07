@@ -273,7 +273,7 @@ class Moderator {
                 dbquery("UPDATE ".DB_FORUM_POSTS." SET post_datestamp=:time WHERE post_id=:post_id", [':time' => TIME, ':post_id' => $data['post_id']]);
 
                 // update the thread last post timestamp
-                dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost=:time, thread_lastpostid=:post_id, thread_lastuser=post_author WHERE thread_id=:thread_id",
+                dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost=:time, thread_lastpostid=:post_id, thread_lastuser=:post_author WHERE thread_id=:thread_id",
                     [
                         ':time'        => TIME,
                         ':post_id'     => $data['post_id'],
