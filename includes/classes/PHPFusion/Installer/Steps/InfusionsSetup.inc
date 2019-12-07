@@ -68,7 +68,7 @@ class InstallerInfusions extends Install_Core {
                     define("LOCALESET", $userdata['user_language']."/");
                 } else {
                     $data = dbarray(dbquery("SELECT * FROM ".DB_LANGUAGE_SESSIONS." WHERE user_ip='".USER_IP."'"));
-                    if ($data['user_language']) {
+                    if (!empty($data['user_language'])) {
                         define("LANGUAGE", $data['user_language']);
                         define("LOCALESET", $data['user_language']."/");
                     }
