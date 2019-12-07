@@ -858,6 +858,7 @@ function dbquery_insert( $table, $inputdata, $mode, array $options = [] ) {
             $values[] = '(`'.implode( '`,`', $input_data_arr ).'`)';
         }
         $columns = array_intersect_key( array_flip( $columns ), array_flip( $table_data[ $table ]['columns'] ) );
+        $columns = array_flip( $columns );
         foreach ( $columns as $column_key_names ) {
             $column_keys[] = $column_key_names.'=VALUES('.$column_key_names.')';
         }
