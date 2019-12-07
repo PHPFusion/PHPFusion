@@ -106,7 +106,7 @@ if (isset($_POST['save_download'])) {
     if (\defender::safe() && !empty($_FILES['download_file']['name']) && is_uploaded_file($_FILES['download_file']['tmp_name'])) {
         $upload = form_sanitizer($_FILES['download_file'], '', 'download_file');
         if (empty($upload['error'])) {
-            $data['download_file'] = !empty($upload['target_file']) ? $upload['target_file'] : !empty($upload['name']) ? $upload['name'] : '';
+            $data['download_file'] = (!empty($upload['target_file']) ? $upload['target_file'] : !empty($upload['name'])) ? $upload['name'] : '';
             if (isset($_POST['calc_upload'])) {
                 $data['download_filesize'] = parsebytesize($_FILES['download_file']['size']);
             }
