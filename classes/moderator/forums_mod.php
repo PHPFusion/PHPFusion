@@ -26,10 +26,11 @@ class Forums_Mod {
             if ($thread_count) {
 
                 list($forum_id, $post_id, $user_id, $lastpost, $post_count) = dbarraynum(dbquery("
-                SELECT p.forum_id, p.post_id, p.post_author, p.post_datestamp, COUNT(p.post_id) 'post_count'                  
+                SELECT p.forum_id, p.post_id, p.post_author, p.post_datestamp, COUNT(p.post_id) 'post_count'            
                 FROM ".DB_FORUM_POSTS." p  
-                INNER JOIN ".DB_FORUM_THREADS." t ON p.thread_id=t.thread_id 
-                WHERE p.forum_id=:fid AND t.thread_hidden=0 AND p.post_hidden=0 
+                INNER JOIN ".DB_FORUMS." fo ON p.forum_id=fo.forum_id
+                WHERE p.forum_id=:fid AND p.post_hidden=0 
+                GROUP BY p.post_id
                 ORDER BY p.post_datestamp DESC LIMIT 1", [':fid' => (int)$forum_id]));
 
                 dbquery("UPDATE ".DB_FORUMS." SET forum_lastpostid=:pid, forum_lastpost=:time, forum_postcount=:pcount, forum_threadcount=:tcount, forum_lastuser=:aid WHERE forum_id=:fid", [

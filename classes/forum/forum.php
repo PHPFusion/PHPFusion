@@ -27,21 +27,21 @@ use PHPFusion\Infusions\Forum\Classes\Forum_Server;
  * @package PHPFusion\Forums
  */
 class Forum extends Forum_Server {
-    
+
     /**
      * Forum Data
      *
      * @var array
      */
     private $forum_info = [];
-    
+
     /**
      * @return array
      */
     public function getForumInfo() {
         return $this->forum_info;
     }
-    
+
     /**
      * @param $key
      *
@@ -77,18 +77,18 @@ class Forum extends Forum_Server {
                             INNER JOIN ".DB_FORUM_ATTACHMENTS." a ON a.thread_id=t.thread_id
                             WHERE ".( multilang_table( "FO" ) ? in_group( 'tf.forum_language', LANGUAGE )." AND " : "" ).groupaccess( 'tf.forum_access' )." AND
                             tf.forum_type=4 AND t.thread_bounty=1 AND t.thread_answered=0 AND t.thread_locked=0 AND t.thread_hidden=0 GROUP BY a.thread_id" ), 0 ),
-    
+
                     'bounty' => dbcount( "(thread_id)", DB_FORUM_THREADS." t INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id", ( multilang_table( "FO" ) ? in_group( 'tf.forum_language', LANGUAGE )." AND " : "" )." tf.forum_type=4
                     AND t.thread_bounty=1 AND t.thread_answered=0 AND t.thread_locked=0 AND t.thread_hidden=0 AND ".groupaccess( "tf.forum_access" ) ),
-    
+
                     'poll' => dbcount( "(thread_id)", DB_FORUM_THREADS." t INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id", ( multilang_table( "FO" ) ? in_group( 'tf.forum_language', LANGUAGE )." AND " : "" )." tf.forum_type=4 AND t.thread_bounty=1 AND t.thread_locked=0 AND t.thread_answered=0 AND t.thread_poll=1 AND t.thread_hidden=0 AND ".groupaccess( "tf.forum_access" ) ),
                 ];
                 break;
         }
-        
+
         return NULL;
     }
-    
+
     /**
      * Get section in forum
      *
@@ -99,7 +99,7 @@ class Forum extends Forum_Server {
         $section = $section && in_array( $section, [ 'participated', 'latest', 'tracked', 'sticky', 'unanswered', 'unsolved', 'people', 'moderator' ] ) ? $section : '';
         return $section;
     }
-    
+
     public function getForumSection() {
         $locale = fusion_get_locale();
         return [
@@ -169,13 +169,13 @@ class Forum extends Forum_Server {
                 ]
             ],
         ];
-        
+
     }
-    
-    
+
+
     private $forum_id = 0;
     private $is_viewforum = FALSE;
-    
+
     private function checkViewForum() {
         $this->is_viewforum = isset( $_GET['viewforum'] ) ? TRUE : FALSE;
         $this->forum_id = get( 'forum_id', FILTER_VALIDATE_INT );
@@ -184,7 +184,7 @@ class Forum extends Forum_Server {
         }
         return $this->is_viewforum;
     }
-    
+
     private function legacyPanelRedirect() {
         if ( stristr( server( 'PHP_SELF' ), 'forum_id' ) ) {
             switch ( $this->getCurrentSection() ) {
@@ -199,28 +199,28 @@ class Forum extends Forum_Server {
             }
         }
     }
-    
+
     private function loadXML() {
         if ( file_exists( INFUSIONS.'rss_feeds_panel/feeds/rss_forums.php' ) ) {
             add_to_head( '<link rel="alternate" type="application/rss+xml" title="'.fusion_get_locale( 'forum_0000' ).' - RSS Feed" href="'.fusion_get_settings( 'siteurl' ).'infusions/rss_feeds_panel/feeds/rss_forums.php"/>' );
         }
     }
-    
+
     /**
      * Executes forum
      */
     public function setForumInfo() {
-        
+
         $forum_settings = self::get_forum_settings();
         $userdata = fusion_get_userdata();
         $locale = fusion_get_locale();
-        
+
         // security boot due to insufficient access level
         $this->checkViewForum();
-        
+
         // legacy version panel support
         $this->legacyPanelRedirect();
-        
+
         $this->forum_info = [
             'link'             => FORUM,
             'forum_id'         => get( 'forum_id', FILTER_VALIDATE_INT ),
@@ -235,49 +235,49 @@ class Forum extends Forum_Server {
             'section'          => $this->getCurrentSection(),
             'new_topic_link'   => [ 'link' => FORUM.'newthread.php', 'title' => $locale['forum_0057'] ],
         ];
-        
+
         // Rss panel feed support
         $this->loadXML();
-        
+
         add_to_title( $locale['global_200'].$locale['forum_0000'] );
-        
+
         add_breadcrumb( [ 'link' => FORUM."index.php", "title" => $locale['forum_0000'] ] );
-        
+
         $forum_sections = $this->getForumSection();
-        
+
         if ( isset( $forum_sections[ $this->forum_info['section'] ] ) ) {
-            
+
             $this->loadSection( $forum_sections[ $this->forum_info['section'] ] );
-            
+
             return $this;
         }
-        
+
         if ( $this->is_viewforum ) {
-            
+
             $viewforum = new viewForum( $this );
-            
+
             $this->forum_info = $viewforum->getForumViewInfo();
-            
+
             return $this;
-            
+
         }
-        
+
         // Categories
         $this->forum_info['forums'] = self::get_forums();
-        
+
         return $this;
-        
+
     }
-    
+
     private function loadSection( $value ) {
         $locale = fusion_get_locale();
         add_to_title( $locale['global_201'].$value['title'] );
         add_breadcrumb( $value['breadcrumbs'] );
         set_meta( "description", $value['description'] );
-        
+
         include FORUM_SECTIONS.$this->forum_info['section'].'.php';
     }
-    
+
     /**
      * Get the forum structure
      *
@@ -286,13 +286,13 @@ class Forum extends Forum_Server {
      * @return array
      */
     public static function get_forums( $forum_id = FALSE ) {
-        
+
         $forum_settings = self::get_forum_settings();
-        
+
         $locale = fusion_get_locale();
-        
+
         $index = [];
-        
+
         $row = [
             'forum_new_status'       => '',
             'last_post'              => '',
@@ -321,10 +321,10 @@ class Forum extends Forum_Server {
             ':forum_id01' => intval( $forum_id ),
             ':branch_id'  => intval( $branch_id )
         ] );
-        
+
         while ( $data = dbarray( $query ) and checkgroup( $data['forum_access'] ) ) {
             $newStatus = '';
-            
+
             $lastPostInfo = [
                 'avatar'       => '',
                 'avatar_sm'    => '',
@@ -335,16 +335,19 @@ class Forum extends Forum_Server {
                 'thread_link'  => '',
                 'post_link'    => ''
             ];
-            
+
             if ( $data['forum_type'] > 1 && $data['forum_lastpost'] ) {
-                
+
                 $user = fusion_get_user( $data['thread_lastuser'] );
-                $data['user_id'] = $user['user_id'];
-                $data['user_name'] = $user['user_name'];
-                $data['user_status'] = $user['user_status'];
-                $data['user_avatar'] = $user['user_avatar'];
-                $data['user_level'] = $user['user_level'];
-                
+
+                if ( !empty( $user['user_id'] ) ) {
+                    $data['user_id'] = $user['user_id'];
+                    $data['user_name'] = $user['user_name'];
+                    $data['user_status'] = $user['user_status'];
+                    $data['user_avatar'] = $user['user_avatar'];
+                    $data['user_level'] = $user['user_level'];
+                }
+
                 $lastPostInfo = [
                     'avatar'         => $forum_settings['forum_last_post_avatar'] ? display_avatar( $data, '45px', '', '', 'img-circle' ) : '',
                     'avatar_sm'      => $forum_settings['forum_last_post_avatar'] ? display_avatar( $data, '24px', '', '', 'img-circle' ) : '',
@@ -357,14 +360,14 @@ class Forum extends Forum_Server {
                     'post_link'      => INFUSIONS."forum/viewthread.php?thread_id=".$data['thread_id']."&amp;pid=".$data['thread_lastpostid']."#post_".$data['thread_lastpostid'],
                     'link_title'     => $data['forum_name'],
                 ];
-                
+
                 // Calculate Forum New Status
                 if ( check_thread_new_status( $data['forum_id'], $data['thread_lastpost'], $data['thread_lastuser'] ) ) {
                     $newStatus = "<span class='forum-new-icon'><i title='".$locale['forum_0260']."' class='".self::getForumIcons( 'new' )."'></i></span>";
                 }
-                
+
             }
-            
+
             // Icons
             switch ( $data['forum_type'] ) {
                 case '1':
@@ -387,7 +390,7 @@ class Forum extends Forum_Server {
                     $forum_icon = "";
                     $forum_icon_lg = "";
             }
-            
+
             $row = array_merge( $row, $data, [
                 "forum_moderators"       => Forum_Moderator::displayForumMods( $data['forum_mods'] ),
                 "forum_new_status"       => $newStatus,
@@ -402,9 +405,9 @@ class Forum extends Forum_Server {
                 "forum_icon"             => $forum_icon,
                 "forum_icon_lg"          => $forum_icon_lg,
             ] );
-            
+
             $row["forum_image"] = ( $row['forum_image'] && file_exists( FORUM."images/".$row['forum_image'] ) ) ? $row['forum_image'] : '';
-            
+
             $thisref = &$refs[ $data['forum_id'] ];
             $thisref = $row;
             if ( $data['forum_cat'] == 0 ) {
@@ -413,11 +416,11 @@ class Forum extends Forum_Server {
                 $refs[ $data['forum_cat'] ]['child'][ $data['forum_id'] ] = &$thisref;
             }
         }
-        
+
         return (array)$index;
     }
-    
-    
+
+
     /**
      * @param $forum_data
      *
@@ -432,11 +435,11 @@ class Forum extends Forum_Server {
         $this->forum_info['permissions']['can_create_poll'] = ( $forum_data['forum_allow_poll'] == TRUE && ( iMOD || ( checkgroup( $forum_data['forum_poll'] ) && $forum_data['forum_lock'] == FALSE ) ) ? TRUE : FALSE );
         $this->forum_info['permissions']['can_upload_attach'] = ( $forum_data['forum_allow_attach'] == TRUE && ( iMOD || checkgroup( $forum_data['forum_attach'] ) ) ? TRUE : FALSE );
         $this->forum_info['permissions']['can_download_attach'] = ( iMOD || ( $forum_data['forum_allow_attach'] == TRUE && checkgroup( $forum_data['forum_attach_download'] ) ) ? TRUE : FALSE );
-        
-        
+
+
         return $this->forum_info;
     }
-    
+
     /**
      * Get the relevant permissions of the current forum permission configuration
      *
@@ -449,11 +452,11 @@ class Forum extends Forum_Server {
             if ( isset( $this->forum_info['permissions'][ $key ] ) ) {
                 return $this->forum_info['permissions'][ $key ];
             }
-            
+
             return $this->forum_info['permissions'];
         }
-        
+
         return NULL;
     }
-    
+
 }
