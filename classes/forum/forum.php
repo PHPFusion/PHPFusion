@@ -660,11 +660,13 @@ class Forum extends ForumServer {
 
             if ($data['forum_type'] > 1 && $data['forum_lastpost']) {
                 $user = fusion_get_user($data['thread_lastuser']);
-                $data['user_id'] = $user['user_id'];
-                $data['user_name'] = $user['user_name'];
-                $data['user_status'] = $user['user_status'];
-                $data['user_avatar'] = $user['user_avatar'];
-                $data['user_level'] = $user['user_level'];
+                if (!empty($user['user_id'])) {
+                    $data['user_id'] = $user['user_id'];
+                    $data['user_name'] = $user['user_name'];
+                    $data['user_status'] = $user['user_status'];
+                    $data['user_avatar'] = $user['user_avatar'];
+                    $data['user_level'] = $user['user_level'];
+                }
 
                 $lastPostInfo = [
                     'avatar'       => $forum_settings['forum_last_post_avatar'] ? display_avatar($data, '30px', '', '', 'img-rounded') : '',

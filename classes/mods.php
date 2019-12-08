@@ -430,9 +430,11 @@ class Moderator {
             if ($remaining_threads_count) {
                 $result = dbquery("SELECT p.forum_id, p.post_id, p.post_author, p.post_datestamp,
                             COUNT(p.post_id) AS post_count FROM ".DB_FORUM_POSTS." p
-                            INNER JOIN ".DB_FORUM_THREADS." t ON p.thread_id=t.thread_id
-                            WHERE p.forum_id='".$this->forum_id."' AND t.thread_hidden='0' AND p.post_hidden='0'
+                            INNER JOIN ".DB_FORUMS." fo ON p.forum_id=fo.forum_id
+                            WHERE p.forum_id='".(int)$this->forum_id."' AND p.post_hidden='0' 
+                            GROUP BY p.post_id
                             ORDER BY p.post_datestamp DESC LIMIT 1");
+
                 if (dbrows($result) > 0) {
                     $pdata = dbarray($result); // yielded LAST post
                     dbquery("UPDATE ".DB_FORUMS." SET
