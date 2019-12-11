@@ -598,6 +598,9 @@ Grids
 	-webkit-flex-direction: row;
 	-ms-flex-direction: row;
 	flex-direction: row;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	-webkit-align-items: center;
 	align-items: center;
 }
 
@@ -614,10 +617,16 @@ Grids
 }
 
 .display-flex-row .aligned-start {
+	-webkit-box-align: start;
+	-ms-flex-align: start;
+	-webkit-align-items: flex-start;
 	align-items: flex-start;
 }
 
 .display-flex-row .aligned-end {
+	-webkit-box-align: end;
+	-ms-flex-align: end;
+	-webkit-align-items: flex-end;
 	align-items: flex-end;
 }
 
@@ -635,19 +644,34 @@ Grids
 }
 
 .display-flex-row.space-between {
+	-webkit-box-pack: justify;
+	-ms-flex-pack: justify;
+	-webkit-justify-content: space-between;
 	justify-content: space-between;
 	justify-items: normal;
 }
 
 .display-flex-row.flex-start {
+	-webkit-box-pack: start;
+	-ms-flex-pack: start;
+	-webkit-justify-content: flex-start;
 	justify-content: flex-start;
 	justify-items: flex-start;
+	-webkit-box-align: start;
+	-ms-flex-align: start;
+	-webkit-align-items: flex-start;
 	align-items: flex-start;
 }
 
 .display-flex-row.flex-end {
+	-webkit-box-pack: end;
+	-ms-flex-pack: end;
+	-webkit-justify-content: flex-end;
 	justify-content: flex-end;
 	justify-items: flex-end;
+	-webkit-box-align: end;
+	-ms-flex-align: end;
+	-webkit-align-items: flex-end;
 	align-items: flex-end;
 }
 
@@ -1461,8 +1485,6 @@ table.fusion-table td.has-actions {
 	min-width: 200px;
 	position: relative;
 	clear: both;
-	display: block;
-
 }
 
 .order-caret-up:after,
