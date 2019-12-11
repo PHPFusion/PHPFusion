@@ -29,7 +29,7 @@ if (!function_exists('display_register_form')) {
      * @return string
      */
     function display_register_form(array $info = []) {
-    
+
         $tpl = Template::getInstance( 'user-register-form' );
         $tpl->set_locale(fusion_get_locale());
         $tpl->set_css(THEMES.'templates/global/css/profile.css');
@@ -104,14 +104,14 @@ if (!function_exists('display_profile_form')) {
     function display_profile_form(array $info = []) {
 
         add_to_head("<link href='".THEMES."templates/global/css/profile.css' rel='stylesheet'/>");
-    
+
         $tpl = Template::getInstance( 'user-profile-form' );
         $tpl->set_locale(fusion_get_locale());
 
         $tpl->set_template(__DIR__.'/tpl/edit_profile.html');
 
         $current_page = $info['current_page'];
-    
+
         $page_arr = [];
         foreach ( $info['pages'] as $page_key => $page ) {
             $page_arr[0][ $page_key ] = [
@@ -121,17 +121,16 @@ if (!function_exists('display_profile_form')) {
                 'link_url'    => BASEDIR.'edit_profile.php?ref='.$page_key
             ];
         }
-    
+
         $tpl->set_tag( 'profile_nav', SiteLinks::setSubLinks( [
             'id'            => 'profile-link-menu',
             'callback_data' => $page_arr,
             'navbar_class'  => 'navbar-default',
-            'container'     => TRUE,
             'show_banner'   => TRUE,
             'show_header'   => TRUE,
-            'custom_banner' => '<h4>Profile & Settings</h4>',
+            'custom_banner' => 'Profile & Settings',
         ] )->showSubLinks() );
-        
+
 
         $tpl->set_tag("openform", "");
         $tpl->set_tag("closeform", "");
@@ -150,7 +149,7 @@ if (!function_exists('display_profile_form')) {
             default:
                 if ($info['custom_page'] === TRUE) {
                     // Add navigation menu
-    
+
                     // Set menu
                     $section_a = '';
                     if ( !empty( $info['section'] ) ) {
@@ -164,9 +163,9 @@ if (!function_exists('display_profile_form')) {
                         $section = get( 'section' );
                         foreach ( $info['section']['title'] as $kid => $title ) {
                             $id = $info['section']['id'][ $kid ];
-            
+
                             $active = $section == $id || !$section && $counter == 0 ? TRUE : FALSE;
-            
+
                             $ctpl->set_block( 'section_link', [
                                 'title'        => $title,
                                 'link'         => BASEDIR.'edit_profile.php?ref='.get( 'ref' ).'&amp;section='.$id,
@@ -179,7 +178,7 @@ if (!function_exists('display_profile_form')) {
                     }
                     $section_b = '';
                     if ( !empty( $info['section_nav'] ) ) {
-        
+
                         $ctpl = Template::getInstance( 'profile-menu' );
                         $ctpl->set_text( '
                         <ul class="list-group menu">
@@ -187,12 +186,12 @@ if (!function_exists('display_profile_form')) {
                         <li class="list-group-item{%class_active%}" role="listitem"><a href="{%link%}" title="{%title%}">{%title%}</a></li>
                         }}
                         </ul>' );
-        
+
                         $counter = 0;
                         $sref = get( 'sref' );
                         $ref = get( 'ref' );
                         $section = get( 'section' );
-        
+
                         foreach ( $info['section_nav']['title'] as $kid => $title ) {
                             $id = $info['section_nav']['id'][ $kid ];
                             $active = $sref == $id || !$sref && $counter == 0 ? TRUE : FALSE;
@@ -210,12 +209,12 @@ if (!function_exists('display_profile_form')) {
                     if ( $section_a || $section_b ) {
                         $tpl->set_block( 'menu', [ 'content' => $section_a.$section_b ] );
                     }
-                    
+
                     // Set content
                     $tpl->set_block('content', ['page_content' => $info['page_content']]);
-    
+
                     if (!empty($info['section'])) $tab = $info['section'];
-    
+
                     break;
                 }
             case 'pu_profile': // public profile.
@@ -442,7 +441,7 @@ if (!function_exists('display_profile')) {
         $locale = fusion_get_locale();
 
         add_to_head("<link href='".THEMES."templates/global/css/profile.css' rel='stylesheet'/>" );
-    
+
         $tpl = Template::getInstance( 'profile');
 
         $tpl->set_template(__DIR__.'/tpl/user_profile.html');
@@ -591,7 +590,7 @@ if (!function_exists('display_profile')) {
 if ( !function_exists( 'display_public_profile' ) ) {
     function display_public_profile( $info) {
         $locale = fusion_get_locale();
-        
+
         $tpl = Template::getInstance( 'user-profile');
         $tpl->set_template(__DIR__.'/tpl/profile/profile.html');
         $tpl->set_locale($locale);
@@ -606,7 +605,7 @@ if ( !function_exists( 'display_public_profile' ) ) {
 
             // first we need to identify the wrapper
             foreach ($info['user_field'] as $catID => $categoryData ) {
-    
+
                 $tpl2 = Template::getInstance( 'user-profile-fields');
 
                 $tpl2->set_template(__DIR__.'/tpl/profile/profile-fields.html');
@@ -669,7 +668,7 @@ if ( !function_exists( 'display_public_profile' ) ) {
 
 if (!function_exists('display_profile_groups')) {
     function display_profile_groups($info ) {
-    
+
         $tpl = Template::getInstance( "user-groups");
 
         $tpl->set_template(__DIR__."/tpl/profile/profile-groups.html");
@@ -712,8 +711,8 @@ if (!function_exists('display_profile_activity')) {
         if ( $info['pagenav'] ) {
             $tpl->set_block( 'page_nav', [ 'content' => $info['pagenav'] ] );
         }
-    
+
         return $tpl->get_output();
-    
+
     }
 }

@@ -1864,7 +1864,7 @@ input[type="checkbox"]:disabled:checked:after,
     position: relative;
     display: block;
     margin-top: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 5px !important;
 }
 
 .radio label,
@@ -3990,6 +3990,10 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 
 .nav-tabs .dropdown-menu {
     margin-top: 0;
+}
+
+.nav-wrapper .nav-tabs {
+    margin-bottom: 20px;
 }
 
 .nav-pills > li {
