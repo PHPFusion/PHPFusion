@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-namespace PHPFusion\Blog;
+namespace PHPFusion\Infusions\Blog\Classes;
 
 use PHPFusion\Feedback\Comments;
 

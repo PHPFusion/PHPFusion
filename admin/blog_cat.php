@@ -40,7 +40,7 @@ $data = [
     "blog_cat_image"    => "",
     "blog_cat_language" => LANGUAGE,
 ];
-$formAction = FUSION_REQUEST;
+
 $formTitle = $locale['blog_0409'];
 // if edit, override $data
 if (isset($_POST['save_cat'])) {
@@ -88,13 +88,13 @@ if (isset($_POST['save_cat'])) {
         redirect(clean_request("", ["action"], FALSE));
     }
 }
-\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $formTitle]);
+add_breadcrumb( [ 'link' => FUSION_REQUEST, 'title' => $formTitle ] );
 
-echo '<div class="m-t-10">';
+
 echo '<h2>'.$formTitle.'</h2>';
 
-echo openform("addcat", "post", $formAction);
-openside("");
+echo openform( "addcat", "post" );
+openside( '' );
 echo form_hidden("blog_cat_id", "", $data['blog_cat_id']);
 echo form_text("blog_cat_name", $locale['blog_0530'], $data['blog_cat_name'], [
     "required"   => TRUE,
@@ -149,8 +149,6 @@ if ($rows != 0) {
 } else {
     echo "<div class='well text-center'>".$locale['blog_0461']."</div>\n";
 }
-
-echo '</div>';
 
 function getblogCatPath($item_id) {
     $full_path = "";
