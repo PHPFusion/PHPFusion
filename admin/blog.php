@@ -109,9 +109,9 @@ if (isset($_POST['save']) or isset($_POST['preview'])) {
                 $data['blog_ialign'] = (isset($_POST['blog_ialign']) ? form_sanitizer($_POST['blog_ialign'], "pull-left", "blog_ialign") : "pull-left");
             }
         } else { // when files not uploaded. but there should be exist check.
-            $data['blog_image'] = (isset($_POST['blog_image']) ? $_POST['blog_image'] : "");
-            $data['blog_image_t1'] = (isset($_POST['blog_image_t1']) ? $_POST['blog_image_t1'] : "");
-            $data['blog_image_t2'] = (isset($_POST['blog_image_t2']) ? $_POST['blog_image_t2'] : "");
+            $data['blog_image'] =  post('blog_image');
+            $data['blog_image_t1'] = post('blog_image_t1');
+            $data['blog_image_t2'] = post('blog_image_t2');
             $data['blog_ialign'] = (isset($_POST['blog_ialign']) ? form_sanitizer($_POST['blog_ialign'], "pull-left", "blog_ialign") : "pull-left");
         }
 
