@@ -169,7 +169,7 @@ if (!defined('DISABLE_HOME_MODULES')) {
             continue;
         }
 
-        $contents[$table]['colwidth'] = $items_count !== 1 ? floor(12 / $items_count) : 4;
+        $contents[$table]['colwidth'] = 4;
         $data = [];
         $count = 1;
 
