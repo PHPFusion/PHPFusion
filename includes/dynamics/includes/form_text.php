@@ -103,7 +103,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         'data'               => [],
         'append_html'        => '',
         'censor_words'       => TRUE,
-
+        'password_toggle'    => TRUE
     ];
 
     $options += $default_options;
@@ -172,22 +172,23 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
             break;
         case "password":
             $input_type = "password";
-            static $password_toggle = '';
-            if (!$password_toggle) {
-                $password_toggle = TRUE;
-                $pwd_locale = fusion_get_locale("password_strength");
-                $path = DYNAMICS."assets/password/lang/$pwd_locale.js";
-                if (file_exists($path)) {
-                    $path = DYNAMICS."assets/password/lang/$pwd_locale.js";
-                } else {
-                    $path = DYNAMICS."assets/password/lang/en.js";
-                }
-                PHPFusion\OutputHandler::addToFooter("<script type='text/javascript' src='$path'></script>");
-                PHPFusion\OutputHandler::addToFooter("<script type='text/javascript' src='".DYNAMICS."assets/password/pwtoggle.min.js'></script>");
-            }
             // Incompatible with password meter strength due to jquery appending layout.
             // @todo: Fix pwstrength.js
-            if ($options['password_strength'] == FALSE) {
+            if ($options['password_toggle'] == TRUE && $options['password_strength'] == FALSE) {
+                static $password_toggle = '';
+                if (!$password_toggle) {
+                    $password_toggle = TRUE;
+                    $pwd_locale = fusion_get_locale("password_strength");
+                    $path = DYNAMICS."assets/password/lang/$pwd_locale.js";
+                    if (file_exists($path)) {
+                        $path = DYNAMICS."assets/password/lang/$pwd_locale.js";
+                    } else {
+                        $path = DYNAMICS."assets/password/lang/en.js";
+                    }
+                    PHPFusion\OutputHandler::addToFooter("<script type='text/javascript' src='$path'></script>");
+                    PHPFusion\OutputHandler::addToFooter("<script type='text/javascript' src='".DYNAMICS."assets/password/pwtoggle.min.js'></script>");
+                }
+
                 $options['append_button'] = TRUE;
                 $options['append_type'] = "button";
                 $options['append_form_value'] = 'show';
