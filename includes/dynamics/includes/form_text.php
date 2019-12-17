@@ -103,11 +103,12 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         'data'               => [],
         'append_html'        => '',
         'censor_words'       => TRUE,
-        'min' => '',
-        'max' => '',
-        'step' => '',
-        'error_class' => '',
-        'options_data' => []
+        'min'                => '',
+        'max'                => '',
+        'step'               => '',
+        'error_class'        => '',
+        'options_data'       => [],
+        'password_toggle'    => TRUE
     ];
     $options += $default_options;
 
@@ -172,38 +173,39 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         case "password":
             $options['error_text'] = empty($options['error_text']) ? $locale['error_input_password'] : $options['error_text'];
 
-            static $password_toggle = '';
-            if (!$password_toggle) {
-                $password_toggle = TRUE;
-                $pwd_locale = fusion_get_locale("password_strength");
-                $password_dir = DYNAMICS."assets".DIRECTORY_SEPARATOR."password".DIRECTORY_SEPARATOR."lang".DIRECTORY_SEPARATOR;
-                $path = $password_dir.'en.js';
-                $pwd_locale_path = $password_dir.$pwd_locale.'.js';
-                if (is_file($pwd_locale_path)) {
-                    $path = $pwd_locale_path;
-                }
-                PHPFusion\OutputHandler::addToFooter("<script type='text/javascript' src='$path'></script>");
-                PHPFusion\OutputHandler::addToFooter("<script type='text/javascript' src='".DYNAMICS."assets/password/pwtoggle.min.js'></script>");
-            }
             // Incompatible with password meter strength due to jquery appending layout.
             // @todo: Fix pwstrength.js
 
-        if (!$options['password_strength']) {
-            $options['append_button'] = TRUE;
-            $options['append_type'] = "button";
-            $options['append_form_value'] = 'show';
-            $options['append_class'] = 'btn-default';
-            $options['append_value'] = $locale['show'];
-            $options['append_button_name'] = $options['input_id'].'_pwdToggle';
-            $options['append_button_id'] = $options['input_id'].'_pwdToggle';
-            add_to_jquery("
-            $('#".$options['input_id']."_pwdToggle').bind('click', function(e) {
-                togglePasswordInput('".$options['input_id']."_pwdToggle', '".$options['input_id']."');
-            });
-            ");
-        } else {
-            $options['type'] = 'text';
-        }
+            if ($options['password_toggle'] == TRUE && !$options['password_strength']) {
+                static $password_toggle = '';
+                if (!$password_toggle) {
+                    $password_toggle = TRUE;
+                    $pwd_locale = fusion_get_locale("password_strength");
+                    $password_dir = DYNAMICS."assets".DIRECTORY_SEPARATOR."password".DIRECTORY_SEPARATOR."lang".DIRECTORY_SEPARATOR;
+                    $path = $password_dir.'en.js';
+                    $pwd_locale_path = $password_dir.$pwd_locale.'.js';
+                    if (is_file($pwd_locale_path)) {
+                        $path = $pwd_locale_path;
+                    }
+                    PHPFusion\OutputHandler::addToFooter("<script type='text/javascript' src='$path'></script>");
+                    PHPFusion\OutputHandler::addToFooter("<script type='text/javascript' src='".DYNAMICS."assets/password/pwtoggle.min.js'></script>");
+                }
+
+                $options['append_button'] = TRUE;
+                $options['append_type'] = "button";
+                $options['append_form_value'] = 'show';
+                $options['append_class'] = 'btn-default';
+                $options['append_value'] = $locale['show'];
+                $options['append_button_name'] = $options['input_id'].'_pwdToggle';
+                $options['append_button_id'] = $options['input_id'].'_pwdToggle';
+                add_to_jquery("
+                $('#".$options['input_id']."_pwdToggle').bind('click', function(e) {
+                    togglePasswordInput('".$options['input_id']."_pwdToggle', '".$options['input_id']."');
+                });
+                ");
+            } else {
+                $options['type'] = 'text';
+            }
         break;
     }
 
