@@ -51,7 +51,7 @@ if ( count( $languages ) > 1 ) {
         include LOCALE.$language_folder.'/global.php';
         echo '<link rel="alternate" hreflang="'.$locale['xml_lang'].'" href="'.$settings['siteurl'].$settings['opening_page'].'?lang='.$language_folder.'">';
     }
-    
+
     echo "<link rel='alternate' hreflang='x-default' href='".$settings['siteurl']."'>\n";
 }
 
@@ -77,6 +77,9 @@ echo "<link rel='stylesheet' href='".$theme_css_file."?v=".filemtime( $theme_css
 if ( !defined( 'NO_DEFAULT_CSS' ) ) {
     $default_css_file = min_file( $_themes.'templates/default.css' );
     echo "<link rel='stylesheet' href='$default_css_file?v=".filemtime( $default_css_file )."'>\n";
+}
+
+if (!defined('PF_FONT') || (defined('PF_FONT') && PF_FONT == TRUE)) {
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/PHPFusion/font.min.css'>\n";
 }
 
@@ -115,11 +118,11 @@ if ( iADMIN ) {
     if ( iSUPERADMIN && file_exists( BASEDIR.'install.php' ) && $settings['devmode'] == 0 && !defined( "DEVMODE" ) ) {
         addNotice( 'danger', $locale['global_198'], 'all' );
     }
-    
+
     if ( $settings['maintenance'] ) {
         addNotice( 'warning maintenance-alert', $locale['global_190'], 'all' );
     }
-    
+
     if ( !fusion_get_userdata( 'user_admin_password' ) ) {
         addNotice( 'warning', str_replace( [ "[LINK]", "[/LINK]" ], [ "<a href='".BASEDIR."edit_profile.php'>", "</a>" ], $locale['global_199'] ), 'all' );
     }
