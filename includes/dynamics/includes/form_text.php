@@ -172,20 +172,22 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
             break;
         case "password":
             $input_type = "password";
+
+            $pwd_locale = fusion_get_locale("password_strength");
+            $path = DYNAMICS."assets/password/lang/$pwd_locale.js";
+            if (file_exists($path)) {
+                $path = DYNAMICS."assets/password/lang/$pwd_locale.js";
+            } else {
+                $path = DYNAMICS."assets/password/lang/en.js";
+            }
+            PHPFusion\OutputHandler::addToFooter("<script type='text/javascript' src='$path'></script>");
+
             // Incompatible with password meter strength due to jquery appending layout.
             // @todo: Fix pwstrength.js
             if ($options['password_toggle'] == TRUE && $options['password_strength'] == FALSE) {
                 static $password_toggle = '';
                 if (!$password_toggle) {
                     $password_toggle = TRUE;
-                    $pwd_locale = fusion_get_locale("password_strength");
-                    $path = DYNAMICS."assets/password/lang/$pwd_locale.js";
-                    if (file_exists($path)) {
-                        $path = DYNAMICS."assets/password/lang/$pwd_locale.js";
-                    } else {
-                        $path = DYNAMICS."assets/password/lang/en.js";
-                    }
-                    PHPFusion\OutputHandler::addToFooter("<script type='text/javascript' src='$path'></script>");
                     PHPFusion\OutputHandler::addToFooter("<script type='text/javascript' src='".DYNAMICS."assets/password/pwtoggle.min.js'></script>");
                 }
 
