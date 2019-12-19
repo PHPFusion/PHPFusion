@@ -211,8 +211,10 @@ class UserFieldsInput {
 
         $this->_userName = "";
         if (isset($_POST['user_name'])) {
-            $this->_userName = form_sanitizer($_POST['user_name'], "", "user_name");
-            if (!empty($this->_userName) && $this->_userName != $this->userData['user_name']) {
+            $this->_userName = !empty($_POST['user_name']) ? form_sanitizer($_POST['user_name'], "", "user_name") : '';
+            $this->userData['user_name'] = !empty($this->userData['user_name']) ? $this->userData['user_name'] : '';
+
+            if ($this->_userName != $this->userData['user_name']) {
 
                 if (!preg_check("/^[-0-9A-Z_@\s]+$/i", $this->_userName)) {
                     // Check for invalid characters
@@ -489,8 +491,9 @@ class UserFieldsInput {
 
         $this->data['user_hide_email'] = !empty($_POST['user_hide_email']) && $_POST['user_hide_email'] == 1 ? 1 : 0;
         $this->_userEmail = isset($_POST['user_email']) ? form_sanitizer($_POST['user_email'], "", "user_email") : "";
+        $this->userData['user_email'] = !empty($this->userData['user_email']) ? $this->userData['user_email'] : '';
 
-        if (!empty($this->_userEmail) && $this->_userEmail != $this->userData['user_email']) {
+        if ($this->_userEmail != $this->userData['user_email']) {
             // override the requirements of password to change email address of a member in admin panel
             if (defined('ADMIN_PANEL') && (iADMIN && checkrights('M'))) {
                 $this->_isValidCurrentPassword = TRUE; // changing an email in administration panel
