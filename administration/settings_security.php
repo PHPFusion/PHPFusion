@@ -140,7 +140,7 @@ echo form_select('maintenance', $locale['657'], $settings['maintenance'], [
     'width'       => '100%',
     'inner_width' => '100%'
 ]);
-echo form_textarea('maintenance_message', $locale['658'], stripslashes($settings['maintenance_message']), ['autosize' => TRUE, 'html' => !fusion_get_settings('tinymce_enabled') ? TRUE : FALSE]);
+echo form_textarea('maintenance_message', $locale['658'], stripslashes($settings['maintenance_message']), ['autosize' => TRUE, 'html' => !fusion_get_settings('tinymce_enabled') ? TRUE : FALSE, 'form_name' => 'settingsform']);
 closeside();
 openside('');
 echo \PHPFusion\QuantumFields::quantum_multilocale_fields('privacy_policy', $locale['820'], $settings['privacy_policy'], [
