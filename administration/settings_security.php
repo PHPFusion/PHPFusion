@@ -161,7 +161,7 @@ echo form_select('maintenance', $locale['657'], $settings['maintenance'], [
     'width'       => '100%',
     'inner_width' => '100%'
 ]);
-echo form_textarea('maintenance_message', $locale['658'], stripslashes($settings['maintenance_message']), ['autosize' => TRUE, 'html' => !fusion_get_settings('tinymce_enabled') ? TRUE : FALSE]);
+echo form_textarea('maintenance_message', $locale['658'], stripslashes($settings['maintenance_message']), ['autosize' => TRUE, 'html' => !fusion_get_settings('tinymce_enabled') ? TRUE : FALSE, 'form_name' => 'settingsform']);
 closeside();
 openside('');
 echo UserFieldsQuantum::quantum_multilocale_fields( 'privacy_policy', $locale['820'], $settings['privacy_policy'], [
@@ -321,7 +321,7 @@ function recaptcha(val) {
         $('#grecaptcha3').slideUp('slow');
         $('#grecaptcha2').slideDown('slow');
     }
-    
+
     if (val == 'grecaptcha') {
         $('#grecaptcha2').slideDown('slow');
         $('#grecaptcha3').slideUp('slow');
@@ -329,7 +329,7 @@ function recaptcha(val) {
         $('#grecaptcha2').slideUp('slow');
         $('#grecaptcha3').slideDown('slow');
     }
-    
+
     if (val == 'grecaptcha' || val == 'grecaptcha3') {
         $('#extDiv').slideDown('slow');
     } else {
