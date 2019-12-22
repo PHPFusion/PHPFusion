@@ -413,9 +413,7 @@ class Authenticate {
     }
 
     public static function getEmptyUserData() {
-        global $settings;
-
-        return ["user_level" => 0, "user_rights" => "", "user_groups" => "", "user_theme" => $settings['theme']];
+        return ["user_level" => 0, "user_rights" => "", "user_groups" => "", "user_theme" => 'Default'];
     }
 
     public static function setLastVisitCookie() {
