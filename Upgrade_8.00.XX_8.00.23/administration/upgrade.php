@@ -72,7 +72,7 @@ if (str_replace(".", "", $settings['version']) < "80022") {
         }
 
         // Set a new version
-        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='8.00.22' WHERE settings_name='version'");
+        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='8.00.23' WHERE settings_name='version'");
         redirect(FUSION_SELF.$aidlink."&amp;upgrade_ok");
     }
 

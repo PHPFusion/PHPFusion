@@ -28,7 +28,7 @@ See readme for better instructions
 Explanation of Coding styles
 
 ```
-Procedural at all times, never walk away from the KISS principle. 
+Procedural at all times, never walk away from the KISS principle.
 Any codes that are more complex that excusable will be reverted.
 The goal is to make PHP-Fusion 8 a pure procedural version.
 ```
