@@ -99,25 +99,23 @@ if ( $profile_method == "input" ) {
       "Pacific/Auckland": "Auckland, Wellington",
       "Pacific/Tongatapu": "Nuku\'alofa"
     }', TRUE );
-    
+
     $timezone_array = [];
-    
+
     foreach ( $timezones_json as $zone => $zone_city ) {
         $date = new DateTime( NULL, new DateTimeZone( $zone ) );
         $offset = $date->getOffset() / 3600;
         $timezone_array[ $zone ] = '(GMT'.( $offset < 0 ? $offset : '+'.$offset ).') '.$zone_city;
     }
-    
-    $default_options = [
-        'inline'      => FALSE,
+
+    $options = [
+        'inline'      => TRUE,
         'width'       => '100%',
         'inner_width' => '100%',
         'options'     => $timezone_array,
-        'select_alt'  => TRUE,
-    ];
-    
-    $options += $default_options;
-    
+        'select_alt'  => TRUE
+    ] + $options;
+
     $user_fields = form_select( 'user_timezone', $locale['uf_timezone'], $field_value, $options );
     // Display in profile
 } else if ( $profile_method == "display" ) {
@@ -125,7 +123,7 @@ if ( $profile_method == "input" ) {
         $date = new DateTime( NULL, new DateTimeZone( $field_value ) );
         $offset = $date->getOffset() / 3600;
         $field_value = 'GMT'.( $offset < 0 ? $offset : '+'.$offset );
-        
+
         $user_fields = [
             'title' => $locale['uf_timezone'],
             'value' => $field_value

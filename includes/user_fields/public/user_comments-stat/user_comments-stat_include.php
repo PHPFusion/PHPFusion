@@ -15,18 +15,18 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-defined('IN_FUSION') || exit;
+defined( 'IN_FUSION' ) || exit;
 
-$locale = fusion_get_locale('', __DIR__.'/locale/'.LANGUAGE.'.php');
+$locale = fusion_get_locale( '', __DIR__.'/locale/'.LANGUAGE.'.php' );
 
-if ($profile_method == "input") {
+if ( $profile_method == "input" ) {
     $user_fields = '';
-    if (defined('ADMIN_PANEL')) {
+    if ( defined( 'ADMIN_PANEL' ) ) {
         $user_fields = "<div class='well m-t-5 text-center'>".$locale['uf_comments-stat']."</div>";
     }
-} else if ($profile_method == "display") {
+} else if ( $profile_method == "display" ) {
     $user_fields = [
         'title' => $locale['uf_comments-stat'],
-        'value' => number_format(dbcount("(comment_id)", DB_COMMENTS, "comment_name='".intval($_GET['lookup'])."'")).""
+        'value' => number_format( dbcount( "(comment_id)", DB_COMMENTS, "comment_name = :cname", [ ':cname' => (int)get( 'lookup' ) ] ) ).""
     ];
 }

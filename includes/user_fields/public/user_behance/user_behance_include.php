@@ -15,27 +15,28 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-defined('IN_FUSION') || exit;
+defined( 'IN_FUSION' ) || exit;
 
-$locale = fusion_get_locale('', __DIR__.'/locale/'.LANGUAGE.'.php');
+$locale = fusion_get_locale( '', __DIR__.'/locale/'.LANGUAGE.'.php' );
 
-$icon = "<img src='".INCLUDES."user_fields/public/user_behance/images/behance.svg' title='Behance' alt='Behance'/>";
+$icon = "<img src='".INCLUDES."user_fields/public/user_behance/images/behance.svg' title='".$locale['uf_behance']."' alt='".$locale['uf_behance']."'/>";
 // Display user field input
-if ($profile_method == "input") {
+if ( $profile_method == "input" ) {
     $options = [
-            'inline'      => TRUE,
-            'max_length'  => 20,
-            'error_text'  => $locale['uf_behance_error'],
-            'placeholder' => $locale['uf_behance_id'],
-            'label_icon'  => $icon,
-        ] + $options;
-    $user_fields = form_text('user_behance', $locale['uf_behance'], $field_value, $options);
+        'inline'      => TRUE,
+        'max_length'  => 20,
+        'error_text'  => $locale['uf_behance_error'],
+        'placeholder' => $locale['uf_behance_id'],
+        'label_icon'  => $icon
+    ] + $options;
+    $user_fields = form_text( 'user_behance', $locale['uf_behance'], $field_value, $options );
     // Display in profile
-} else if ($profile_method == "display") {
+} else if ( $profile_method == "display" ) {
     $link = '';
-    if ($field_value) {
-        $link = !preg_match("@^http(s)?\:\/\/@i", $field_value) ? "https://www.behance.net/".$field_value : $field_value;
-        $field_value = (fusion_get_settings('index_url_userweb') ? "" : "<!--noindex-->")."<a href='".$link."' title='".$field_value."' ".(fusion_get_settings('index_url_userweb') ? "" : "rel='nofollow noopener noreferrer' ")."target='_blank'>".$locale['uf_behance_desc']."</a>".(fusion_get_settings('index_url_userweb') ? "" : "<!--/noindex-->");
+    $index_userweb = fusion_get_settings( 'index_url_userweb' );
+    if ( $field_value ) {
+        $link = !preg_match( "@^http(s)?\:\/\/@i", $field_value ) ? "https://www.behance.net/".$field_value : $field_value;
+        $field_value = ( $index_userweb ? '' : "<!--noindex-->")."<a href='".$link."' title='".$field_value."' ".( $index_userweb ? '' : "rel='nofollow noopener noreferrer' ")."target='_blank'>".$locale['uf_behance_desc']."</a>".( $index_userweb ? '' : "<!--/noindex-->" );
     }
     $user_fields = [
         'icon'  => $icon,

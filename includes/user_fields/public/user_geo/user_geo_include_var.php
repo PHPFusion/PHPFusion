@@ -15,8 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-defined('IN_FUSION') || exit;
-$locale = fusion_get_locale('', __DIR__.'/locale/'.LANGUAGE.'.php');
+defined( 'IN_FUSION' ) || exit;
+$locale = fusion_get_locale( '', __DIR__.'/locale/'.LANGUAGE.'.php' );
 // Version of the user fields api
 $user_field_api_version = "1.02.00";
 $user_field_name = $locale['uf_geo'];

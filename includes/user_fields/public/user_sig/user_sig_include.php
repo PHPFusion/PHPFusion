@@ -15,21 +15,24 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-defined('IN_FUSION') || exit;
+defined( 'IN_FUSION' ) || exit;
 
-$locale = fusion_get_locale('', __DIR__.'/locale/'.LANGUAGE.'.php');
+$locale = fusion_get_locale( '', __DIR__.'/locale/'.LANGUAGE.'.php' );
 
 // Display user field input
-if ($profile_method == "input") {
+if ( $profile_method == "input" ) {
     require_once INCLUDES."bbcode_include.php";
 
-    $options += ["bbcode" => TRUE, "inline" => TRUE, 'form_name' => 'userfieldsform'];
+    $options = [
+        'bbcode'    => TRUE,
+        'inline'    => TRUE,
+        'form_name' => 'userfieldsform'
+    ] + $options;
+    $user_fields = form_textarea( 'user_sig', $locale['uf_sig'], $field_value, $options );
 
-    $user_fields = form_textarea('user_sig', $locale['uf_sig'], $field_value, $options);
-
-} else if ($profile_method == "display") {
+} else if ( $profile_method == "display" ) {
     $user_fields = [
         'title' => $locale['uf_sig'],
-        'value' => $field_value ? nl2br(parseubb(parsesmileys($field_value))) : fusion_get_locale('na')
+        'value' => $field_value ? nl2br( parseubb( parsesmileys( $field_value ) ) ) : fusion_get_locale( 'na' )
     ];
 }

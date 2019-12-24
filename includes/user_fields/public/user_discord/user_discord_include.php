@@ -15,24 +15,24 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-defined('IN_FUSION') || exit;
+defined( 'IN_FUSION' ) || exit;
 
-$locale = fusion_get_locale('', __DIR__.'/locale/'.LANGUAGE.'.php');
+$locale = fusion_get_locale( '', __DIR__.'/locale/'.LANGUAGE.'.php' );
 
-$icon = "<img class='icon-xs' src='".INCLUDES."user_fields/public/user_discord/images/discord.svg' title='Discord' alt='Discord'/>";
+$icon = "<img class='icon-xs' src='".INCLUDES."user_fields/public/user_discord/images/discord.svg' title='".$locale['uf_discord']."' alt='".$locale['uf_discord']."'/>";
 // Display user field input
-if ($profile_method == "input") {
+if ( $profile_method == "input" ) {
     $options = [
-            'inline'           => TRUE,
-            'error_text'       => $locale['uf_discord_error'],
-            'regex_error_text' => $locale['uf_discord_error_1'],
-            'placeholder'      => $locale['uf_discord'],
-            'prepend' => TRUE,
-            'prepend_value'       => $icon
-        ] + $options;
-    $user_fields = form_text('user_discord', $locale['uf_discord'], $field_value, $options);
+        'inline'           => TRUE,
+        'error_text'       => $locale['uf_discord_error'],
+        'regex_error_text' => $locale['uf_discord_error_1'],
+        'placeholder'      => $locale['uf_discord'],
+        'prepend'          => TRUE,
+        'prepend_value'    => $icon
+    ] + $options;
+    $user_fields = form_text( 'user_discord', $locale['uf_discord'], $field_value, $options );
     // Display in profile
-} else if ($profile_method == "display") {
+} else if ( $profile_method == "display" ) {
     $user_fields = [
         'icon'  => $icon,
         'title' => $locale['uf_discord'],

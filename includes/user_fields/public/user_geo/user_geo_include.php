@@ -15,21 +15,21 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-defined('IN_FUSION') || exit;
+defined( 'IN_FUSION' ) || exit;
 
-$locale = fusion_get_locale('', __DIR__.'/locale/'.LANGUAGE.'.php');
+$locale = fusion_get_locale( '', __DIR__.'/locale/'.LANGUAGE.'.php' );
 
 // Display user field input
-if ($profile_method == "input") {
-    $options += ['inline' => TRUE];
-    $user_fields = form_geo('user_geo', $locale['uf_geo'], $field_value, $options);
-} else if ($profile_method == "display") {
-    if ($field_value) {
-        $address = explode('|', $field_value);
-        !empty($address[2]) ? $address[2] = translate_country_names($address[2]) : "";
-        $field_value = implode("<br>", $address);
+if ( $profile_method == "input" ) {
+    $options = [ 'inline' => TRUE ] + $options;
+    $user_fields = form_geo( 'user_geo', $locale['uf_geo'], $field_value, $options );
+} else if ( $profile_method == "display" ) {
+    if ( $field_value ) {
+        $address = explode( '|', $field_value );
+        !empty( $address[2] ) ? $address[2] = translate_country_names( $address[2] ) : '';
+        $field_value = implode( "<br>", $address );
     } else {
-        $field_value = fusion_get_locale('na');
+        $field_value = fusion_get_locale( 'na' );
     }
     $user_fields = [
         'title' => $locale['uf_geo'],
