@@ -798,9 +798,12 @@ function hide_email($email, $title = "", $subject = "") {
             $MailIndexes .= chr($index);
         }
 
+        $id = 'e'.rand(1, 99999999);
+
         $MailIndexes = str_replace("\\", "\\\\", $MailIndexes);
         $MailIndexes = str_replace("\"", "\\\"", $MailIndexes);
-        $res = "<script type='text/javascript'>";
+        $res = "<span id='".$id."'></span>";
+        $res .= "<script type='text/javascript'>";
         $res .= "ML=\"".str_replace("<", "xxxx", $MailLettersEnc)."\";";
         $res .= "MI=\"".str_replace("<", "xxxx", $MailIndexes)."\";";
         $res .= "ML=ML.replace(/xxxx/g, '<');";
@@ -808,7 +811,7 @@ function hide_email($email, $title = "", $subject = "") {
         $res .= "OT=\"\";";
         $res .= "for(j=0;j < MI.length;j++){";
         $res .= "OT+=ML.charAt(MI.charCodeAt(j)-48);";
-        $res .= "}document.write(OT);";
+        $res .= "}var e=document.getElementById('".$id."');e.innerHTML += OT;";
         $res .= "</script>";
 
         return $res;
