@@ -346,6 +346,12 @@ class Forum extends Forum_Server {
                     $data['user_status'] = $user['user_status'];
                     $data['user_avatar'] = $user['user_avatar'];
                     $data['user_level'] = $user['user_level'];
+                }  else {
+                    $data['user_id'] = 0;
+                    $data['user_name'] = '';
+                    $data['user_status'] = 0;
+                    $data['user_avatar'] = '';
+                    $data['user_level'] = '';
                 }
 
                 $lastPostInfo = [
