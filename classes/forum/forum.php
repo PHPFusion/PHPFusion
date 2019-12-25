@@ -660,12 +660,19 @@ class Forum extends ForumServer {
 
             if ($data['forum_type'] > 1 && $data['forum_lastpost']) {
                 $user = fusion_get_user($data['thread_lastuser']);
+
                 if (!empty($user['user_id'])) {
                     $data['user_id'] = $user['user_id'];
                     $data['user_name'] = $user['user_name'];
                     $data['user_status'] = $user['user_status'];
                     $data['user_avatar'] = $user['user_avatar'];
                     $data['user_level'] = $user['user_level'];
+                } else {
+                    $data['user_id'] = 0;
+                    $data['user_name'] = '';
+                    $data['user_status'] = 0;
+                    $data['user_avatar'] = '';
+                    $data['user_level'] = '';
                 }
 
                 $lastPostInfo = [
