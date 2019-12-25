@@ -386,7 +386,7 @@ class UserFields extends QuantumFields {
         if (!empty($this->info['user_field'])) {
             foreach ($this->info['user_field'] as $catID => $fieldData) {
                 if (!empty($fieldData['title'])) {
-                    $user_fields .= $fieldData['title'];
+                    $user_fields .= form_para($fieldData['title'], 'fieldcat'.$catID);
                 }
                 if (!empty($fieldData['fields'])) {
                     foreach ($fieldData['fields'] as $_id => $_fields) {
@@ -457,8 +457,7 @@ class UserFields extends QuantumFields {
         $locale = fusion_get_locale();
         $_CAPTCHA_HIDE_INPUT = FALSE;
         include INCLUDES."captchas/".fusion_get_settings("captcha")."/captcha_display.php";
-        $html = "<hr>\n";
-        $html .= "<div class='form-group m-t-20'>\n";
+        $html = "<div class='form-group m-t-20'>\n";
         if (!$_CAPTCHA_HIDE_INPUT) {
             $html .= "<label for='captcha_code' class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0'>\n".$locale['u190']." <span class='required'>*</span></label>\n";
         }
