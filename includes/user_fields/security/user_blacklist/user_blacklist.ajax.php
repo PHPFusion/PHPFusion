@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 require_once __DIR__."../../../maincore.php";
 
-$locale = fusion_get_locale( "", LOCALE.LOCALESET."user_fields/user_blacklist.php" );
+$locale = fusion_get_locale( '', __DIR__.'/locale/'.LANGUAGE.'.php' );
 
 $user_id = post( 'user_id' );
 $userid = fusion_get_userdata( 'user_id' );
