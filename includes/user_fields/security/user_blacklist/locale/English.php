@@ -12,3 +12,5 @@ $locale['uf_blacklist_004'] = "User %s have been removed from your blacklist.";
 $locale['uf_blacklist_005'] = "The user was not blacklisted.";
 $locale['uf_blacklist_006'] = "No user found.";
 $locale['uf_blacklist_007'] = "Not available.";
+$locale['uf_blacklist_008'] = "Blocked User";
+$locale['uf_blacklist_009'] = "User Blocked";

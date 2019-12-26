@@ -17,77 +17,85 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
-$locale = fusion_get_locale('', __DIR__.'/locale/'.LANGUAGE.'.php');
-
-if (!function_exists('show_blacklist')) {
-    function show_blacklist($data) {
-        global $locale;
-        echo "<div class='alert alert-info display-none' id='ignore-message'></div>\n";
-        if (is_array($data) && count($data) > 0) {
-            foreach ($data as $id) {
-                $result = dbquery("SELECT user_id, user_name, user_status, user_avatar FROM ".DB_USERS." WHERE user_id='$id' ORDER BY user_id ASC");
-                if (dbrows($result) > 0) {
-                    while ($data = dbarray($result)) {
-                        echo "<div id='".$data['user_id']."-user-list' class='panel panel-default'>\n<div class='panel-body'>\n";
-                        echo "<button type='button' value='".$data['user_id']."' class='unblock pull-right m-t-5 btn btn-sm btn-primary'>".$locale['uf_blacklist_001']."</button>\n";
-                        echo "<div class='pull-left m-r-10'>".display_avatar($data, '50px')."</div>\n";
-                        echo "<div class='clearfix'>".profile_link($data['user_id'], $data['user_name'], $data['user_status'])."<br/>\n";
-                        echo "<span class='text-lighter'>".$locale['uf_blacklist_002']."</span>\n";
-                        echo "</div>\n";
-                        echo "</div>\n</div>\n";
-                    }
-                }
-            }
-        }
-
-        add_to_jquery("
-            $('.unblock').bind('click', function(e) {
-            var user_id = $(this).val();
-            $.ajax({
-                type: 'POST',
-                url: '".INCLUDES."user_fields/user_blacklist.ajax.php',
-                data: { user_id : user_id },
-                dataType: 'html',
-                success: function(data) {
-                    alert(data);
-                    $('#'+user_id+'-user-list').addClass('display-none');
-                    $('#ignore-message').html(data).removeClass('display-none');
-                },
-                error: function() {
-                    alert('".$locale['uf_blacklist_desc']."');
-                }
-                });
-            });
-        ");
-    }
-}
-
 // Display user field input
 if ($profile_method == "input") {
-    if (isset($user_data['user_blacklist']) && $user_data['user_blacklist']) {
-        $user_blacklist = $user_data['user_blacklist'];
-    } else {
-        $user_blacklist = "";
+    $user_fields = '';
+    if (defined('ADMIN_PANEL')) {
+        $user_fields = "<div class='well m-t-5 text-center'>".$locale['uf_blacklist']."</div>";
     }
 
     // Display in profile
-} else if ($profile_method == "display") {
-    //Are we not missing something here?
-} else if ($profile_method == "validate_insert" || $profile_method == "validate_update") {
-    $user_blacklist = '';
-    $userdata = $this->userData;
-    $userdata_blacklist = isset($userdata) && array_key_exists('user_blacklist', $userdata) ? explode('.', $userdata['user_blacklist']) : [];
-    if (count($userdata_blacklist) && isset($_POST['user_blacklist']) && isnum($_POST['user_blacklist']) && !in_array($_POST['user_blacklist'],
-            $userdata_blacklist)
-    ) {
-        $userdata_blacklist[] = $_POST['user_blacklist'];
-        $userdata_blacklist = implode('.', $userdata_blacklist);
-    } else if (isset($_POST['user_blacklist']) && isnum($_POST['user_blacklist'])) {
-        $userdata_blacklist = $userdata['user_blacklist'];
+} else if ( $profile_method == "display" ) {
+    $text = '';
+    $lookup = get( 'lookup' );
+    $userdat = fusion_get_userdata();
+    $sendblacklist = post( 'send_blacklist' );
+
+    $userdata_blacklist = explode( '.', $field_value );
+    $iblacklist = explode( '.', $userdat['user_blacklist'] );
+
+    if ( in_array( $userdat['user_id'], $userdata_blacklist ) ) {
+        redirect( BASEDIR.'index.php' );
     }
-    if ($userdata_blacklist != 0 || $this->_isNotRequired("user_blacklist")) {
-        $this->_setDBValue("user_blacklist", $userdata_blacklist);
-    } else {
-        $this->_setError("user_blacklist", $locale['uf_blacklist_error'], TRUE);
+
+    if ( iMEMBER && !empty( $sendblacklist ) && ( $userdat['user_id'] != $lookup ) ) {
+        if ( !in_array( $lookup, $userdata_blacklist ) ) {
+            $userdat['user_blacklist'] = $lookup.( empty( $userdat['user_blacklist'] ) ? '' : '.' ).$userdat['user_blacklist'];
+
+            dbquery_insert( DB_USERS, $userdat, 'update' );
+            $field_value = $userdat['user_blacklist'];
+            addNotice( 'success', $locale['uf_blacklist_009'] );
+        }
     }
+
+    if ( iMEMBER ) {
+        if ( !in_array( $lookup, $iblacklist ) && ( $userdat['user_id'] != $lookup ) ) {
+            $action_url = FUSION_SELF.( FUSION_QUERY ? "?".FUSION_QUERY : "" );
+            $text .= openform( 'black_form', 'post', $action_url );
+            $text .= form_button( 'send_blacklist', $locale['uf_blacklist_008'], $locale['uf_blacklist_008'], [ 'class' => 'btn-danger' ] );
+            $text .= closeform();
+        }
+    }
+
+    if ( is_array( $userdata_blacklist ) && count( $userdata_blacklist ) > 0  && ( $userdat['user_id'] == $lookup ) ) {
+        foreach ( $userdata_blacklist as $blackid ) {
+            $result = dbquery("SELECT user_id, user_name, user_status, user_avatar FROM ".DB_USERS." WHERE user_id = :userid ORDER BY user_id ASC", [ ':userid' => $blackid ] );
+            if ( dbrows( $result ) > 0 ) {
+                while ( $data = dbarray( $result ) ) {
+                    $text .= "<div id='".$data['user_id']."-user-list'>\n<div class='panel-body'>\n";
+                    $text .= "<button type='button' value='".$data['user_id']."' class='unblock pull-right m-t-5 btn btn-sm btn-primary'>".$locale['uf_blacklist_001']."</button>\n";
+                    $text .= "<div class='pull-left m-r-10'>".display_avatar($data, '50px', '', TRUE, 'img-rounded')."</div>\n";
+                    $text .= "<div class='clearfix'>".profile_link($data['user_id'], $data['user_name'], $data['user_status'])."<br/>\n";
+                    $text .= "<span class='text-lighter'>".$locale['uf_blacklist_002']."</span>\n";
+                    $text .= "</div>\n";
+                    $text .= "</div>\n</div>\n";
+                }
+            }
+        }
+    }
+
+    $user_fields = [
+        'title' => $locale['uf_blacklist'],
+        'value' => $userdata_blacklist ? $text : ''
+    ];
+
+    add_to_jquery( "
+        $('.unblock').bind('click', function(e) {
+        var user_id = $(this).val();
+        $.ajax({
+            type: 'POST',
+            url: '".INCLUDES."user_fields/user_blacklist.ajax.php',
+            data: { user_id : user_id },
+            dataType: 'html',
+            success: function(data) {
+                alert(data);
+                $('#'+user_id+'-user-list').addClass('display-none');
+                $('#ignore-message').html(data).removeClass('display-none');
+            },
+            error: function() {
+                alert('".$locale['uf_blacklist_desc']."');
+            }
+            });
+        });
+    " );
 }
