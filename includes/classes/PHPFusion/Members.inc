@@ -91,8 +91,8 @@ class Members {
     // condition filters
 
     public function display_members() {
-		global $settings;
-		
+         $settings = fusion_get_settings();
+
         if (iMEMBER) {
             $search_form = openform('searchform', 'get', $settings['site_seo'] ? PERMALINK_CURRENT_PATH : FUSION_REQUEST);
             $search_form .= "<div class='display-inline-block pull-left m-r-10'>\n";
