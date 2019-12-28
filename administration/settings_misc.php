@@ -32,7 +32,6 @@ if (isset($_POST['savesettings'])) {
         'smtp_username'          => form_sanitizer($_POST['smtp_username'], '', 'smtp_username'),
         'smtp_password'          => form_sanitizer($_POST['smtp_password'], '', 'smtp_password'),
         'thumb_compression'      => form_sanitizer($_POST['thumb_compression'], '0', 'thumb_compression'),
-        'mime_check'             => form_sanitizer($_POST['mime_check'], '0', 'mime_check'),
         'guestposts'             => form_sanitizer($_POST['guestposts'], '0', 'guestposts'),
         'comments_enabled'       => form_sanitizer($_POST['comments_enabled'], '0', 'comments_enabled'),
         'comments_per_page'      => form_sanitizer($_POST['comments_per_page'], '10', 'comments_per_page'),
@@ -136,10 +135,6 @@ openside('');
 $gd_opts = ['gd1' => $locale['607'], 'gd2' => $locale['608']];
 echo form_select('thumb_compression', $locale['606'], $settings['thumb_compression'], [
     'options' => $gd_opts,
-    'width'   => '100%'
-]);
-echo form_select('mime_check', $locale['699f'], $settings['mime_check'], [
-    'options' => $choice_arr,
     'width'   => '100%'
 ]);
 echo form_select('guestposts', $locale['655'], $settings['guestposts'], [

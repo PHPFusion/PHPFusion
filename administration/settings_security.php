@@ -61,7 +61,8 @@ if (isset($_POST['savesettings'])) {
         'user_name_ban'       => stripinput($_POST['user_name_ban']),
         'database_sessions'   => form_sanitizer($_POST['database_sessions'], '', 'database_sessions'),
         'form_tokens'         => form_sanitizer($_POST['form_tokens'], '', 'form_tokens'),
-        'gateway'             => form_sanitizer($_POST['gateway'], 0, 'gateway')
+        'gateway'             => form_sanitizer($_POST['gateway'], 0, 'gateway'),
+        'mime_check'          => form_sanitizer($_POST['mime_check'], '0', 'mime_check'),
     ];
 
     // Validate extra fields
@@ -202,6 +203,14 @@ echo form_select('recaptcha_type', $locale['grecaptcha_0103'], $settings['recapt
 ]);
 echo "</div>\n</div>\n";
 echo "</div>\n";
+closeside();
+
+openside('');
+echo form_select('mime_check', $locale['699f'], $settings['mime_check'], [
+    'options'     => $yes_no_array,
+    'width'       => '100%',
+    'inner_width' => '100%'
+]);
 closeside();
 
 openside('');
