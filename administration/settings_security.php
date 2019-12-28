@@ -70,6 +70,7 @@ if (post('savesettings')) {
         'gateway'               => sanitizer('gateway', 0, 'gateway'),
         'error_logging_enabled' => sanitizer('error_logging_enabled', 0, 'error_logging_enabled'),
         'error_logging_method'  => sanitizer('error_logging_method', '', 'error_logging_method'),
+        'mime_check'            => form_sanitizer($_POST['mime_check'], '0', 'mime_check'),
     ];
 
     // Validate extra fields
@@ -262,6 +263,14 @@ echo '</div>';
 
 echo "</div>\n</div>\n";
 echo "</div>\n";
+closeside();
+
+openside('');
+echo form_select('mime_check', $locale['699f'], $settings['mime_check'], [
+    'options'     => $yes_no_array,
+    'width'       => '100%',
+    'inner_width' => '100%'
+]);
 closeside();
 
 openside('');
