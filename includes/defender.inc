@@ -714,7 +714,7 @@ function get( $key = NULL, $type = FILTER_DEFAULT, $flags = '' ) {
 
     if ( $flags == FILTER_VALIDATE_INT ) {
 
-        if ( isset( $_GET[$key] ) && isnum( $_GET[$key] ) && $_GET[$key] < PHP_INT_MAX) {
+        if ( isset( $_GET[$key] ) && isnum( $_GET[$key] ) && ( $_GET[$key] > PHP_INT_MAX ) ) {
             return (int)$_GET[$key];
         }
 
@@ -747,7 +747,7 @@ function post( $key, $type = FILTER_DEFAULT, $flags = '' ) {
 
         if ( is_array( $key ) ) {
             $input_ref = $key;
-            unset( $input_ref[0] );
+            unset($input_ref[0]);
 
             // Get the value of the filtered post value using the $key array as map
             return array_reduce(
@@ -765,7 +765,7 @@ function post( $key, $type = FILTER_DEFAULT, $flags = '' ) {
 
     if ( $flags == FILTER_VALIDATE_INT ) {
 
-        if ( isset( $_POST[$key] ) && isnum( $_POST[$key] ) && $_POST[$key] < PHP_INT_MAX) {
+        if ( isset( $_POST[$key] ) && isnum( $_POST[$key] ) && ( $_POST[$key] > PHP_INT_MAX ) ) {
 
             return (int)$_POST[$key];
         }
