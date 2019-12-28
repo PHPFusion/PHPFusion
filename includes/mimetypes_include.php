@@ -20,39 +20,16 @@ defined('IN_FUSION') || exit;
 if (!function_exists('mimeTypes')) {
     function mimeTypes() {
         /*-------------------------------------------------------+
-        | Taken From CodeIgniter 3.0 Dev Branch, 2013.06.26
-        | https://github.com/EllisLab/CodeIgniter/blob/develop/application/config/mimes.php
-        | Licensed under the Academic Free License version 3.0
-        | http://opensource.org/licenses/AFL-3.0
+        | Taken From CodeIgniter 3.1.11 Dev Branch, 2019.12.28
+        | https://github.com/bcit-ci/CodeIgniter/blob/develop/application/config/mimes.php
+        | Licensed under the MIT License
+        | https://opensource.org/licenses/MIT
         +--------------------------------------------------------*/
         return [
-            'hqx'   => [
-                'application/mac-binhex40',
-                'application/mac-binhex',
-                'application/x-binhex40',
-                'application/x-mac-binhex40'
-            ],
+            'hqx'   => ['application/mac-binhex40', 'application/mac-binhex', 'application/x-binhex40', 'application/x-mac-binhex40'],
             'cpt'   => 'application/mac-compactpro',
-            'csv'   => [
-                'text/x-comma-separated-values',
-                'text/comma-separated-values',
-                'application/octet-stream',
-                'application/vnd.ms-excel',
-                'application/x-csv',
-                'text/x-csv',
-                'text/csv',
-                'application/csv',
-                'application/excel',
-                'application/vnd.msexcel',
-                'text/plain'
-            ],
-            'bin'   => [
-                'application/macbinary',
-                'application/mac-binary',
-                'application/octet-stream',
-                'application/x-binary',
-                'application/x-macbinary'
-            ],
+            'csv'   => ['text/x-comma-separated-values', 'text/comma-separated-values', 'application/octet-stream', 'application/vnd.ms-excel', 'application/x-csv', 'text/x-csv', 'text/csv', 'application/csv', 'application/excel', 'application/vnd.msexcel', 'text/plain'],
+            'bin'   => ['application/macbinary', 'application/mac-binary', 'application/octet-stream', 'application/x-binary', 'application/x-macbinary'],
             'dms'   => 'application/octet-stream',
             'lha'   => 'application/octet-stream',
             'lzh'   => 'application/octet-stream',
@@ -63,38 +40,16 @@ if (!function_exists('mimeTypes')) {
             'sea'   => 'application/octet-stream',
             'dll'   => 'application/octet-stream',
             'oda'   => 'application/oda',
-            'pdf'   => [
-                'application/pdf',
-                'application/force-download',
-                'application/x-download',
-                'binary/octet-stream'
-            ],
+            'pdf'   => ['application/pdf', 'application/force-download', 'application/x-download', 'binary/octet-stream'],
             'ai'    => ['application/pdf', 'application/postscript'],
             'eps'   => 'application/postscript',
             'ps'    => 'application/postscript',
             'smi'   => 'application/smil',
             'smil'  => 'application/smil',
             'mif'   => 'application/vnd.mif',
-            'xls'   => [
-                'application/vnd.ms-excel',
-                'application/msexcel',
-                'application/x-msexcel',
-                'application/x-ms-excel',
-                'application/x-excel',
-                'application/x-dos_ms_excel',
-                'application/xls',
-                'application/x-xls',
-                'application/excel',
-                'application/download',
-                'application/vnd.ms-office',
-                'application/msword'
-            ],
-            'ppt'   => ['application/powerpoint', 'application/vnd.ms-powerpoint'],
-            'pptx'  => [
-                'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-                'application/x-zip',
-                'application/zip'
-            ],
+            'xls'   => ['application/vnd.ms-excel', 'application/msexcel', 'application/x-msexcel', 'application/x-ms-excel', 'application/x-excel', 'application/x-dos_ms_excel', 'application/xls', 'application/x-xls', 'application/excel', 'application/download', 'application/vnd.ms-office', 'application/msword'],
+            'ppt'   => ['application/powerpoint', 'application/vnd.ms-powerpoint', 'application/vnd.ms-office', 'application/msword'],
+            'pptx'  => ['application/vnd.openxmlformats-officedocument.presentationml.presentation', 'application/x-zip', 'application/zip'],
             'wbxml' => 'application/wbxml',
             'wmlc'  => 'application/wmlc',
             'dcr'   => 'application/x-director',
@@ -104,14 +59,7 @@ if (!function_exists('mimeTypes')) {
             'gtar'  => 'application/x-gtar',
             'gz'    => 'application/x-gzip',
             'gzip'  => 'application/x-gzip',
-            'php'   => [
-                'application/x-httpd-php',
-                'application/php',
-                'application/x-php',
-                'text/php',
-                'text/x-php',
-                'application/x-httpd-php-source'
-            ],
+            'php'   => ['application/x-httpd-php', 'application/php', 'application/x-php', 'text/php', 'text/x-php', 'application/x-httpd-php-source'],
             'php4'  => 'application/x-httpd-php',
             'php3'  => 'application/x-httpd-php',
             'phtml' => 'application/x-httpd-php',
@@ -121,22 +69,11 @@ if (!function_exists('mimeTypes')) {
             'sit'   => 'application/x-stuffit',
             'tar'   => 'application/x-tar',
             'tgz'   => ['application/x-tar', 'application/x-gzip-compressed'],
+            'z'     => 'application/x-compress',
             'xhtml' => 'application/xhtml+xml',
             'xht'   => 'application/xhtml+xml',
-            'zip'   => [
-                'application/x-zip',
-                'application/zip',
-                'application/x-zip-compressed',
-                'application/s-compressed',
-                'multipart/x-zip',
-                'application/octet-stream'
-            ],
-            'rar'   => [
-                'application/x-rar',
-                'application/rar',
-                'application/x-rar-compressed',
-                'application/octet-stream'
-            ],
+            'zip'   => ['application/x-zip', 'application/zip', 'application/x-zip-compressed', 'application/s-compressed', 'multipart/x-zip'],
+            'rar'   => ['application/x-rar', 'application/rar', 'application/x-rar-compressed'],
             'mid'   => 'audio/midi',
             'midi'  => 'audio/midi',
             'mpga'  => 'audio/mpeg',
@@ -151,11 +88,19 @@ if (!function_exists('mimeTypes')) {
             'ra'    => 'audio/x-realaudio',
             'rv'    => 'video/vnd.rn-realvideo',
             'wav'   => ['audio/x-wav', 'audio/wave', 'audio/wav'],
-            'bmp'   => ['image/bmp', 'image/x-windows-bmp'],
+            'bmp'   => ['image/bmp', 'image/x-bmp', 'image/x-bitmap', 'image/x-xbitmap', 'image/x-win-bitmap', 'image/x-windows-bmp', 'image/ms-bmp', 'image/x-ms-bmp', 'application/bmp', 'application/x-bmp', 'application/x-win-bitmap'],
             'gif'   => 'image/gif',
             'jpeg'  => ['image/jpeg', 'image/pjpeg'],
             'jpg'   => ['image/jpeg', 'image/pjpeg'],
             'jpe'   => ['image/jpeg', 'image/pjpeg'],
+            'jp2'   => ['image/jp2', 'video/mj2', 'image/jpx', 'image/jpm'],
+            'j2k'   => ['image/jp2', 'video/mj2', 'image/jpx', 'image/jpm'],
+            'jpf'   => ['image/jp2', 'video/mj2', 'image/jpx', 'image/jpm'],
+            'jpg2'  => ['image/jp2', 'video/mj2', 'image/jpx', 'image/jpm'],
+            'jpx'   => ['image/jp2', 'video/mj2', 'image/jpx', 'image/jpm'],
+            'jpm'   => ['image/jp2', 'video/mj2', 'image/jpx', 'image/jpm'],
+            'mj2'   => ['image/jp2', 'video/mj2', 'image/jpx', 'image/jpm'],
+            'mjp2'  => ['image/jp2', 'video/mj2', 'image/jpx', 'image/jpm'],
             'png'   => ['image/png', 'image/x-png'],
             'tiff'  => 'image/tiff',
             'tif'   => 'image/tiff',
@@ -178,25 +123,10 @@ if (!function_exists('mimeTypes')) {
             'avi'   => ['video/x-msvideo', 'video/msvideo', 'video/avi', 'application/x-troff-msvideo'],
             'movie' => 'video/x-sgi-movie',
             'doc'   => ['application/msword', 'application/vnd.ms-office'],
-            'docx'  => [
-                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                'application/zip',
-                'application/msword',
-                'application/x-zip'
-            ],
+            'docx'  => ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/zip', 'application/msword', 'application/x-zip'],
             'dot'   => ['application/msword', 'application/vnd.ms-office'],
-            'dotx'  => [
-                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                'application/zip',
-                'application/msword'
-            ],
-            'xlsx'  => [
-                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                'application/zip',
-                'application/vnd.ms-excel',
-                'application/msword',
-                'application/x-zip'
-            ],
+            'dotx'  => ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/zip', 'application/msword'],
+            'xlsx'  => ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/zip', 'application/vnd.ms-excel', 'application/msword', 'application/x-zip'],
             'word'  => ['application/msword', 'application/octet-stream'],
             'xl'    => 'application/excel',
             'eml'   => 'message/rfc822',
@@ -220,12 +150,13 @@ if (!function_exists('mimeTypes')) {
             'rsa'   => 'application/x-pkcs7',
             'cer'   => ['application/pkix-cert', 'application/x-x509-ca-cert'],
             '3g2'   => 'video/3gpp2',
-            '3gp'   => 'video/3gp',
+            '3gp'   => ['video/3gp', 'video/3gpp'],
             'mp4'   => 'video/mp4',
             'm4a'   => 'audio/x-m4a',
-            'f4v'   => 'video/mp4',
+            'f4v'   => ['video/mp4', 'video/x-f4v'],
+            'flv'   => 'video/x-flv',
             'webm'  => 'video/webm',
-            'aac'   => 'audio/x-acc',
+            'aac'   => ['audio/x-aac', 'audio/aac'],
             'm4u'   => 'application/vnd.mpegurl',
             'm3u'   => 'text/plain',
             'xspf'  => 'application/xspf+xml',
@@ -234,34 +165,38 @@ if (!function_exists('mimeTypes')) {
             'au'    => 'audio/x-au',
             'ac3'   => 'audio/ac3',
             'flac'  => 'audio/x-flac',
-            'ogg'   => 'audio/ogg',
+            'ogg'   => ['audio/ogg', 'video/ogg', 'application/ogg'],
             'kmz'   => ['application/vnd.google-earth.kmz', 'application/zip', 'application/x-zip'],
             'kml'   => ['application/vnd.google-earth.kml+xml', 'application/xml', 'text/xml'],
             'ics'   => 'text/calendar',
+            'ical'  => 'text/calendar',
             'zsh'   => 'text/x-scriptzsh',
-            '7zip'  => [
-                'application/x-compressed',
-                'application/x-zip-compressed',
-                'application/zip',
-                'multipart/x-zip',
-                'application/octet-stream'
-            ],
-            'cdr'   => [
-                'application/cdr',
-                'application/coreldraw',
-                'application/x-cdr',
-                'application/x-coreldraw',
-                'image/cdr',
-                'image/x-cdr',
-                'zz-application/zz-winassoc-cdr'
-            ],
+            '7z'    => ['application/x-7z-compressed', 'application/x-compressed', 'application/x-zip-compressed', 'application/zip', 'multipart/x-zip'],
+            '7zip'  => ['application/x-7z-compressed', 'application/x-compressed', 'application/x-zip-compressed', 'application/zip', 'multipart/x-zip'],
+            'cdr'   => ['application/cdr', 'application/coreldraw', 'application/x-cdr', 'application/x-coreldraw', 'image/cdr', 'image/x-cdr', 'zz-application/zz-winassoc-cdr'],
             'wma'   => ['audio/x-ms-wma', 'video/x-ms-asf'],
-            'jar'   => [
-                'application/java-archive',
-                'application/x-java-application',
-                'application/x-jar',
-                'application/x-compressed'
-            ]
+            'jar'   => ['application/java-archive', 'application/x-java-application', 'application/x-jar', 'application/x-compressed'],
+            'svg'   => ['image/svg+xml', 'application/xml', 'text/xml'],
+            'vcf'   => 'text/x-vcard',
+            'srt'   => ['text/srt', 'text/plain'],
+            'vtt'   => ['text/vtt', 'text/plain'],
+            'ico'   => ['image/x-icon', 'image/x-ico', 'image/vnd.microsoft.icon'],
+            'odc'   => 'application/vnd.oasis.opendocument.chart',
+            'otc'   => 'application/vnd.oasis.opendocument.chart-template',
+            'odf'   => 'application/vnd.oasis.opendocument.formula',
+            'otf'   => 'application/vnd.oasis.opendocument.formula-template',
+            'odg'   => 'application/vnd.oasis.opendocument.graphics',
+            'otg'   => 'application/vnd.oasis.opendocument.graphics-template',
+            'odi'   => 'application/vnd.oasis.opendocument.image',
+            'oti'   => 'application/vnd.oasis.opendocument.image-template',
+            'odp'   => 'application/vnd.oasis.opendocument.presentation',
+            'otp'   => 'application/vnd.oasis.opendocument.presentation-template',
+            'ods'   => 'application/vnd.oasis.opendocument.spreadsheet',
+            'ots'   => 'application/vnd.oasis.opendocument.spreadsheet-template',
+            'odt'   => 'application/vnd.oasis.opendocument.text',
+            'odm'   => 'application/vnd.oasis.opendocument.text-master',
+            'ott'   => 'application/vnd.oasis.opendocument.text-template',
+            'oth'   => 'application/vnd.oasis.opendocument.text-web'
         ];
     }
 }

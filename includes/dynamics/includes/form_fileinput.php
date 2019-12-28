@@ -28,12 +28,12 @@
  */
 function form_fileinput( $input_name, $label = '', $input_value = FALSE, array $options = [] ) {
     $locale = fusion_get_locale();
-    
+
     $title = $label ? stripinput( $label ) : ucfirst( strtolower( str_replace( "_", " ", $input_name ) ) );
     $input_name = ( isset( $input_name ) && ( !empty( $input_name ) ) ) ? stripinput( $input_name ) : "";
-    
+
     $template_choices = [ 'classic', 'modern', 'thumbnail', 'avatar', 'button' ];
-    
+
     $default_options = [
         'input_id'                => $input_name,
         'upload_path'             => IMAGES,
@@ -90,21 +90,21 @@ function form_fileinput( $input_name, $label = '', $input_value = FALSE, array $
         "croppie_box_width"       => 300, // 300 px default
         "croppie_box_height"      => 300,
     ];
-    
+
     $options += $default_options;
-    
+
     if ( !is_dir( $options['upload_path'] ) && !$options['jsonurl'] ) {
         $options['upload_path'] = IMAGES;
     }
-    
+
     $options['thumbnail_folder'] = rtrim( $options['thumbnail_folder'], "/" );
-    
+
     if ( !in_array( $options['template'], $template_choices ) ) {
         $options['template'] = "classic";
     }
-    
+
     $options['input_id'] = trim( str_replace( "[", "-", $options['input_id'] ), "]" );
-    
+
     $error_class = "";
     if ( \Defender::inputHasError( $input_name ) ) {
         $error_class = "has-error ";
@@ -116,7 +116,7 @@ function form_fileinput( $input_name, $label = '', $input_value = FALSE, array $
             addNotice( "danger", "<strong>$title</strong> - ".$options['error_text'] );
         }
     }
-    
+
     // default max file size
     $format = '';
     $browseLabel = $locale['df_300'];
@@ -140,14 +140,14 @@ function form_fileinput( $input_name, $label = '', $input_value = FALSE, array $
     if ( $options['button_text'] ) {
         $browseLabel = $options['button_text'];
     }
-    
+
     $html = "<div id='".$options['input_id']."-field' class='form-group ".( $options['inline'] ? 'display-block overflow-hide ' : '' ).$error_class.$options['class']."' ".( $options['width'] ? "style='width: ".$options['width']." !important;'" : '' ).">\n";
     $html .= ( $label ) ? "<label class='control-label ".( $options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3" : '' )."' for='".$options['input_id']."'>".$label.( $options['required'] ? "<span class='required'>&nbsp;*</span>" : '' )."
     ".( $options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '' )."
     </label>\n" : '';
     $html .= ( $options['inline'] ) ? "<div class='col-xs-12 ".( $label ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12" )."'>\n" : "";
     $html .= "<input type='file'".( $options['krajee_disabled'] == TRUE ? " class='form-control' " : "" ).( $format ? " accept='".$format."'" : '' )." name='".$input_name."' id='".$options['input_id']."' style='width:".$options['width']."' ".( $options['deactivate'] ? 'readonly' : '' )." ".( $options['multiple'] ? "multiple='1'" : '' )." />\n";
-    
+
     // Croppie
     if ( $options['croppie'] === TRUE ) {
         if ( !defined( "CROPPIE_JS" ) ) {
@@ -163,7 +163,7 @@ function form_fileinput( $input_name, $label = '', $input_value = FALSE, array $
         $html .= form_hidden( "bottom_x", "Bottom X", "" );
         $html .= form_hidden( "bottom_y", "Bottom Y", "" );
         $html .= form_hidden( "upload_zoom", "Zoom Point", "" );
-        
+
         $crop_options = [
             'enableResize' => ( $options['croppie_resize'] ? TRUE : FALSE ),
             'enableExif'   => TRUE,
@@ -180,7 +180,7 @@ function form_fileinput( $input_name, $label = '', $input_value = FALSE, array $
                 ]
             ];
         }
-        
+
         if ( $options['croppie_box_width'] && $options['croppie_box_height'] ) {
             $crop_boundary = [
                 'boundary' => [
@@ -189,7 +189,7 @@ function form_fileinput( $input_name, $label = '', $input_value = FALSE, array $
                 ]
             ];
         }
-        
+
         $croppie_settings = json_encode( $crop_options + $crop_viewport + $crop_boundary );
         add_to_jquery( /** @lang JavaScript 1.6 */ "
         function runCroppie() {
@@ -268,10 +268,10 @@ function form_fileinput( $input_name, $label = '', $input_value = FALSE, array $
 	 runCroppie();
     " );
     }
-    
+
     $html .= $options['ext_tip'] ? "<span class='tip'><i>".$options['ext_tip']."</i></span><br/>" : "";
     $html .= ( \Defender::inputHasError( $input_name ) ) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : '';
-    
+
     // Inserts Media Selector
     // Draw the framework first
     if ( $options['media'] == TRUE ) {
@@ -310,13 +310,13 @@ function form_fileinput( $input_name, $label = '', $input_value = FALSE, array $
             " );
         }
         $html .= ( \Defender::inputHasError( $input_name."-mediaSelector" ) ) ? "<div id='".$options['input_id']."-mediaSelector' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
-        
+
         $html .= "</div>\n";
         $html .= "</div>\n";
     }
     $html .= ( $options['inline'] ) ? "</div>\n" : "";
     $html .= "</div>\n";
-    
+
     \Defender::add_field_session(
         [
             'input_name'       => trim( $input_name, '[]' ),
@@ -348,8 +348,8 @@ function form_fileinput( $input_name, $label = '', $input_value = FALSE, array $
             'replace_upload'   => $options['replace_upload'],
         ]
     );
-    
-    
+
+
     if ( $options['krajee_disabled'] === FALSE ) {
         $browseLabel = $options['placeholder'] ?: $browseLabel;
         $value = "";
@@ -364,9 +364,9 @@ function form_fileinput( $input_name, $label = '', $input_value = FALSE, array $
             }
             $value = json_encode( $value );
         }
-        
+
         $lang = file_exists( DYNAMICS.'assets/fileinput/js/locales/'.$locale['short_lang_name'].'.js' ) ? 'language: "'.$locale['short_lang_name'].'",' : '';
-        
+
         $extra_data_js = "";
         if ( $options['form_id'] && $options['jsonurl'] ) {
             $extra_data_js = "
@@ -395,7 +395,7 @@ function form_fileinput( $input_name, $label = '', $input_value = FALSE, array $
                 ]
             );
         }
-        
+
         switch ( $options['template'] ) {
             case "classic":
                 add_to_jquery( "
@@ -540,22 +540,22 @@ function form_fileinput( $input_name, $label = '', $input_value = FALSE, array $
                 " );
                 break;
         }
-        
+
         if ( !defined( 'form_fileinput' ) ) {
             add_to_head( "<link href='".DYNAMICS."assets/fileinput/css/fileinput.min.css' media='all' rel='stylesheet' type='text/css' />" );
             if ( $locale['text-direction'] == 'rtl' ) {
                 add_to_head( "<link href='".DYNAMICS."assets/fileinput/css/fileinput-rtl.min.css' media='all' rel='stylesheet' type='text/css' />" );
             }
             add_to_footer( "<script src='".DYNAMICS."assets/fileinput/js/fileinput.min.js' type='text/javascript'></script>" );
-            
+
             if ( file_exists( DYNAMICS.'assets/fileinput/js/locales/'.$locale['short_lang_name'].'.js' ) ) {
                 add_to_footer( "<script src='".DYNAMICS."assets/fileinput/js/locales/".$locale['short_lang_name'].".js' type='text/javascript'></script>" );
                 //$lang = 'language: "'.$locale['short_lang_name'].'",';
             }
             define( 'form_fileinput', TRUE );
         }
-        
+
     }
-    
+
     return (string)$html;
 }

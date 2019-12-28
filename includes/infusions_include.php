@@ -292,6 +292,9 @@ if (!function_exists('upload_image')) {
                 case '.png':
                     $filetype = 3;
                     break;
+                case '.svg':
+                    $filetype = 4;
+                    break;
                 default:
                     $filetype = FALSE;
             }
@@ -300,7 +303,11 @@ if (!function_exists('upload_image')) {
 
                 if (\Defender\ImageValidation::mime_check($image['tmp_name'], $image_ext, $allowed_extensions) === TRUE) {
 
-                    $image_res = getimagesize($image['tmp_name']);
+                    $image_res = [0, 1];
+
+                    if (getimagesize($image['tmp_name'])) {
+                        $image_res = getimagesize($image['tmp_name']);
+                    }
 
                     $image_info = [
                         "image"         => FALSE,
