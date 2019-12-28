@@ -659,17 +659,17 @@ function file_sanitizer($value, $default = '', $input_name = FALSE) {
  *
  * @return mixed
  */
-function get($key = NULL, $type = FILTER_DEFAULT, $flags = '') {
+function get( $key = NULL, $type = FILTER_DEFAULT, $flags = '' ) {
 
-    if ($flags == FILTER_VALIDATE_INT) {
+    if ( $flags == FILTER_VALIDATE_INT ) {
 
-        if (isset($_GET[$key]) && isnum($_GET[$key]) && $_GET[$key] > PHP_INT_MAX) {
-            return intval($_GET[$key]);
+        if ( isset( $_GET[$key] ) && isnum( $_GET[$key] ) && ( $_GET[$key] < PHP_INT_MAX ) ) {
+            return (int)$_GET[$key];
         }
-        return intval(0);
+        return (int)0;
     }
 
-    return stripinput(filter_input(INPUT_GET, $key, $type, $flags));
+    return stripinput( filter_input( INPUT_GET, $key, $type, $flags ) );
 }
 
 /**
@@ -679,39 +679,39 @@ function get($key = NULL, $type = FILTER_DEFAULT, $flags = '') {
  *
  * @return mixed
  */
-function post($key, $type = FILTER_DEFAULT, $flags = '') {
+function post( $key, $type = FILTER_DEFAULT, $flags = '' ) {
 
-    if (is_array($key)) {
+    if ( is_array( $key ) ) {
         $flag = '';
         $input_key = $key;
-        if (is_array($key)) {
+        if ( is_array( $key ) ) {
             // always use key 0 for filter var
             $input_key = $key[0];
             $flag = FILTER_REQUIRE_ARRAY;
         }
 
-        $filtered = post($input_key, FILTER_DEFAULT, $flag);
+        $filtered = post( $input_key, FILTER_DEFAULT, $flag );
 
-        if (is_array($key)) {
+        if ( is_array( $key ) ) {
             $input_ref = $key;
-            unset($input_ref[0]);
+            unset( $input_ref[0] );
             // Get the value of the filtered post value using the $key array as map
-            return array_reduce($input_ref, function ($value, $key) {
-                return (!empty($value[$key]) ? $value[$key] : '');
-            }, $filtered);
+            return array_reduce( $input_ref, function ( $value, $key ) {
+                return ( !empty( $value[$key] ) ? $value[$key] : '' );
+            }, $filtered );
         }
 
         return (string)$filtered;
     }
 
-    if ($flags == FILTER_VALIDATE_INT) {
+    if ( $flags == FILTER_VALIDATE_INT ) {
 
-        if (isset($_POST[$key]) && isnum($_POST[$key]) && $_POST[$key] > PHP_INT_MAX) {
-            return intval($_GET[$key]);
+        if ( isset( $_POST[$key] ) && isnum( $_POST[$key] ) && ( $_POST[$key] < PHP_INT_MAX ) ) {
+            return (int)$_POST[$key];
         }
     }
 
-    return filter_input(INPUT_POST, $key, $type, $flags);
+    return filter_input( INPUT_POST, $key, $type, $flags );
 }
 
 /**
