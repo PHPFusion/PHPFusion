@@ -106,20 +106,20 @@ if (isset($_POST['save_download'])) {
     if (fusion_safe() && !empty($_FILES['download_file']['name']) && is_uploaded_file($_FILES['download_file']['tmp_name'])) {
         $upload = form_sanitizer($_FILES['download_file'], '', 'download_file');
         if (isset($upload['error']) && $upload['error'] == 0) {
-            
+
             $data['download_file'] = '';
-            
+
             if (!empty($upload['target_file'])) {
                 $data['download_file'] = $upload['target_file'];
             }
             if (!empty($upload['name'])) {
                 $data['download_file'] = $upload['name'];
             }
-            
+
             if (isset($_POST['calc_upload'])) {
                 $data['download_filesize'] = parsebytesize($_FILES['download_file']['size']);
             }
-            
+
         }
     } else if (!empty($_POST['download_url']) && empty($data['download_file'])) {
         $data['download_url'] = form_sanitizer($_POST['download_url'], "", "download_url");
@@ -209,7 +209,7 @@ if ($dl_settings['download_screenshot']) {
         echo form_hidden('download_image_thumb', '', $data['download_image_thumb']);
         echo "</div>\n</div>\n";
     } else {
-        require_once INCLUDES."mimetypes_include.php";
+        //require_once INCLUDES."mimetypes_include.php";
         $file_options = [
             'upload_path'      => DOWNLOADS."images/",
             'max_width'        => $dl_settings['download_screen_max_w'],
@@ -223,7 +223,7 @@ if ($dl_settings['download_screenshot']) {
             'thumbnail_w'      => $dl_settings['download_thumb_max_w'],
             'thumbnail_h'      => $dl_settings['download_thumb_max_h'],
             'thumbnail2'       => 0,
-            'valid_ext'        => implode('.', array_keys(img_mimeTypes())),
+            //'valid_ext'        => implode('.', array_keys(img_mimeTypes())),
             "width"            => "100%",
             "template"         => "thumbnail",
             'ext_tip'          => sprintf($locale['download_0219'], parsebytesize($dl_settings['download_screen_max_b']), str_replace(',', ' ', ".jpg,.gif,.png"), $dl_settings['download_screen_max_w'], $dl_settings['download_screen_max_h'])
