@@ -663,10 +663,10 @@ function get( $key = NULL, $type = FILTER_DEFAULT, $flags = '' ) {
 
     if ( $flags == FILTER_VALIDATE_INT ) {
 
-        if ( isset( $_GET[$key] ) && isnum( $_GET[$key] ) && ( $_GET[$key] < PHP_INT_MAX ) ) {
-            return (int)$_GET[$key];
+        if ( isset( $_GET[$key] ) && isnum( $_GET[$key] ) && ( $_GET[$key] > PHP_INT_MAX ) ) {
+            return intval( $_GET[$key] );
         }
-        return (int)0;
+        return intval( 0 );
     }
 
     return stripinput( filter_input( INPUT_GET, $key, $type, $flags ) );
@@ -706,8 +706,8 @@ function post( $key, $type = FILTER_DEFAULT, $flags = '' ) {
 
     if ( $flags == FILTER_VALIDATE_INT ) {
 
-        if ( isset( $_POST[$key] ) && isnum( $_POST[$key] ) && ( $_POST[$key] < PHP_INT_MAX ) ) {
-            return (int)$_POST[$key];
+        if ( isset( $_POST[$key] ) && isnum( $_POST[$key] ) && ( $_POST[$key] > PHP_INT_MAX ) ) {
+            return intval( $_POST[$key] );
         }
     }
 
