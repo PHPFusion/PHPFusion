@@ -199,7 +199,7 @@ if ($dl_settings['download_screenshot']) {
         echo form_hidden('download_image_thumb', '', $data['download_image_thumb']);
         echo "</div>\n</div>\n";
     } else {
-        require_once INCLUDES."mimetypes_include.php";
+        //require_once INCLUDES."mimetypes_include.php";
         $file_options = [
             'upload_path'      => DOWNLOADS."images/",
             'max_width'        => $dl_settings['download_screen_max_w'],
@@ -213,7 +213,7 @@ if ($dl_settings['download_screenshot']) {
             'thumbnail_w'      => $dl_settings['download_thumb_max_w'],
             'thumbnail_h'      => $dl_settings['download_thumb_max_h'],
             'thumbnail2'       => 0,
-            'valid_ext'        => implode('.', array_keys(img_mimeTypes())),
+            //'valid_ext'        => implode('.', array_keys(img_mimeTypes())),
             "width"            => "100%",
             "template"         => "thumbnail",
             'ext_tip'          => sprintf($locale['download_0219'], parsebytesize($dl_settings['download_screen_max_b']), str_replace(',', ' ', ".jpg,.gif,.png"), $dl_settings['download_screen_max_w'], $dl_settings['download_screen_max_h'])
