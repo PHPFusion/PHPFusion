@@ -34,7 +34,6 @@ if (post('savesettings')) {
         'smtp_username'          => sanitizer('smtp_username', '', 'smtp_username'),
         'smtp_password'          => sanitizer('smtp_password', '', 'smtp_password'),
         'thumb_compression'      => sanitizer('thumb_compression', '0', 'thumb_compression'),
-        'mime_check'             => sanitizer('mime_check', '0', 'mime_check'),
         'guestposts'             => sanitizer('guestposts', '0', 'guestposts'),
         'comments_enabled'       => sanitizer('comments_enabled', '0', 'comments_enabled'),
         'comments_per_page'      => sanitizer('comments_per_page', '10', 'comments_per_page'),
@@ -140,10 +139,6 @@ openside('');
 $gd_opts = ['gd1' => $locale['607'], 'gd2' => $locale['608']];
 echo form_select('thumb_compression', $locale['606'], $settings['thumb_compression'], [
     'options' => $gd_opts,
-    'width'   => '100%'
-]);
-echo form_select('mime_check', $locale['699f'], $settings['mime_check'], [
-    'options' => $choice_arr,
     'width'   => '100%'
 ]);
 echo form_select('guestposts', $locale['655'], $settings['guestposts'], [
