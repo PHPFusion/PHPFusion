@@ -139,7 +139,7 @@ if (!function_exists('infusion_exists')) {
      */
     function infusion_exists($infusion_folder) {
         // get the whole thing is faster maybe
-        static $infusions_installed = array();
+        static $infusions_installed = [];
         if (empty($infusions_installed)) {
             $result = dbquery("SELECT inf_folder FROM ".DB_INFUSIONS);
             if (dbrows($result)) {
@@ -183,11 +183,11 @@ if (!function_exists('send_pm')) {
     /**
      * Send PM to a user or group
      *
-     * @param        $to - Recepient Either group_id or user_id
-     * @param        $from - Sender's user id
-     * @param        $subject - Message subject
-     * @param        $message - Message body
-     * @param string $smileys - use smileys or not
+     * @param        $to       - Recepient Either group_id or user_id
+     * @param        $from     - Sender's user id
+     * @param        $subject  - Message subject
+     * @param        $message  - Message body
+     * @param string $smileys  - use smileys or not
      * @param bool   $to_group - set to true if sending to the entire user group's members
      */
     function send_pm($to, $from, $subject, $message, $smileys = "y", $to_group = FALSE) {
@@ -264,18 +264,24 @@ if (!function_exists('upload_image')) {
 
     function upload_image($source_image, $target_name = "", $target_folder = IMAGES, $target_width = "1800", $target_height = "1600", $max_size = "150000", $delete_original = FALSE, $thumb1 = TRUE, $thumb2 = TRUE, $thumb1_ratio = 0, $thumb1_folder = IMAGES, $thumb1_suffix = "_t1", $thumb1_width = "100", $thumb1_height = "100", $thumb2_ratio = 0, $thumb2_folder = IMAGES, $thumb2_suffix = "_t2", $thumb2_width = "400", $thumb2_height = "300", $query = "", array $allowed_extensions = ['.jpg', '.jpeg', '.png', '.png', '.svg', '.gif', '.bmp'], $replace_upload = FALSE) {
 
+        $settings = fusion_get_settings();
+
         if (strlen($target_folder) > 0 && substr($target_folder, -1) !== '/') {
             $target_folder .= '/';
         }
 
         if (is_uploaded_file($_FILES[$source_image]['tmp_name'])) {
+
             $image = $_FILES[$source_image];
+
             if ($target_name != "" && !preg_match("/[^a-zA-Z0-9_-]/", $target_name)) {
                 $image_name = $target_name;
             } else {
                 $image_name = stripfilename(substr($image['name'], 0, strrpos($image['name'], ".")));
             }
+
             $image_ext = strtolower(strrchr($image['name'], "."));
+
             switch ($image_ext) {
                 case '.gif':
                     $filetype = 1;
@@ -286,111 +292,121 @@ if (!function_exists('upload_image')) {
                 case '.png':
                     $filetype = 3;
                     break;
+                case '.svg':
+                    $filetype = 4;
+                    break;
                 default:
                     $filetype = FALSE;
             }
 
-            // need to run file_exist. @ supress will not work anymore.
             if ($image['size']) {
 
-                $image_res = @getimagesize($image['tmp_name']);
+                if (\defender\ImageValidation::mime_check($image['tmp_name'], $image_ext, $allowed_extensions) === TRUE) {
 
-                $image_info = [
-                    'image'         => FALSE,
-                    "target_folder" => $target_folder,
-                    "valid_ext"     => $allowed_extensions,
-                    "max_size"      => $max_size,
-                    'image_name'    => $image_name.$image_ext,
-                    'image_ext'     => $image_ext,
-                    'image_size'    => $image['size'],
-                    'image_width'   => $image_res[0],
-                    'image_height'  => $image_res[1],
-                    'thumb1'        => FALSE,
-                    'thumb1_name'   => '',
-                    'thumb2'        => FALSE,
-                    'thumb2_name'   => '',
-                    'error'         => 0,
-                    'query'         => $query,
-                ];
+                    $image_res = [0, 1];
 
-                if ($image['size'] > $max_size) {
-                    // Invalid file size
-                    $image_info['error'] = 1;
-                } else if (!verify_image($image['tmp_name'])) {
-                    // Failed payload scan
-                    $image_info['error'] = 2;
-                } else if (fusion_get_settings('mime_check') && \Defender\ImageValidation::mime_check($image['tmp_name'], $image_ext, $allowed_extensions) === FALSE) {
-                    // Failed extension checks
-                    $image_info['error'] = 5;
-                } else if ($image_res[0] > $target_width || $image_res[1] > $target_height) {
-                    // Invalid image resolution
-                    $image_info['error'] = 3;
+                    if (getimagesize($image['tmp_name'])) {
+                        $image_res = getimagesize($image['tmp_name']);
+                    }
+
+                    $image_info = [
+                        "image"         => FALSE,
+                        "target_folder" => $target_folder,
+                        "valid_ext"     => $allowed_extensions,
+                        "max_size"      => $max_size,
+                        'image_name'    => $image_name.$image_ext,
+                        'image_ext'     => $image_ext,
+                        'image_size'    => $image['size'],
+                        'image_width'   => $image_res[0],
+                        'image_height'  => $image_res[1],
+                        'thumb1'        => FALSE,
+                        'thumb1_name'   => '',
+                        'thumb2'        => FALSE,
+                        'thumb2_name'   => '',
+                        'error'         => 0,
+                        'query'         => $query,
+                    ];
+
+                    if ($image['size'] > $max_size) {
+                        // Invalid file size
+                        $image_info['error'] = 1;
+                    } else if ($settings['mime_check'] && !verify_image($image['tmp_name'])) {
+                        // Failed payload scan
+                        $image_info['error'] = 2;
+                    } else if ($image_res[0] > $target_width || $image_res[1] > $target_height) {
+                        // Invalid image resolution
+                        $image_info['error'] = 3;
+                    } else {
+                        if (!file_exists($target_folder)) {
+                            mkdir($target_folder, 0755);
+                        }
+                        $image_name_full = ($replace_upload ? $image_name.$image_ext : filename_exists($target_folder, $image_name.$image_ext));
+                        $image_name = substr($image_name_full, 0, strrpos($image_name_full, "."));
+                        $image_info['image_name'] = $image_name_full;
+                        $image_info['image'] = TRUE;
+                        move_uploaded_file($image['tmp_name'], $target_folder.$image_name_full);
+                        if (function_exists("chmod")) {
+                            chmod($target_folder.$image_name_full, 0755);
+                        }
+                        if ($query && !dbquery($query)) {
+                            // Invalid query string
+                            $image_info['error'] = 4;
+                            unlink($target_folder.$image_name_full);
+                        } else if ($thumb1 || $thumb2) {
+                            require_once INCLUDES."photo_functions_include.php";
+                            $noThumb = FALSE;
+                            if ($thumb1) {
+                                if ($image_res[0] <= $thumb1_width && $image_res[1] <= $thumb1_height) {
+                                    $noThumb = TRUE;
+                                    $image_info['thumb1_name'] = $image_info['image_name'];
+                                    $image_info['thumb1'] = FALSE;
+                                } else {
+                                    if (!file_exists($thumb1_folder)) {
+                                        mkdir($thumb1_folder, 0755, TRUE);
+                                    }
+                                    $image_name_t1 = filename_exists($thumb1_folder, $image_name.$thumb1_suffix.$image_ext);
+                                    $image_info['thumb1_name'] = $image_name_t1;
+                                    $image_info['thumb1'] = TRUE;
+                                    if ($thumb1_ratio == 0) {
+                                        createthumbnail($filetype, $target_folder.$image_name_full, $thumb1_folder.$image_name_t1, $thumb1_width,
+                                            $thumb1_height);
+                                    } else {
+                                        createsquarethumbnail($filetype, $target_folder.$image_name_full, $thumb1_folder.$image_name_t1, $thumb1_width);
+                                    }
+                                }
+                            }
+                            if ($thumb2) {
+                                if ($image_res[0] < $thumb2_width && $image_res[1] < $thumb2_height) {
+                                    $noThumb = TRUE;
+                                    $image_info['thumb2_name'] = $image_info['image_name'];
+                                    $image_info['thumb2'] = FALSE;
+                                } else {
+                                    if (!file_exists($thumb2_folder)) {
+                                        mkdir($thumb2_folder, 0755, TRUE);
+                                    }
+                                    $image_name_t2 = ($replace_upload ? $image_name.$thumb2_suffix.$image_ext : filename_exists($thumb2_folder, $image_name.$thumb2_suffix.$image_ext));
+                                    $image_info['thumb2_name'] = $image_name_t2;
+                                    $image_info['thumb2'] = TRUE;
+                                    if ($thumb2_ratio == 0) {
+                                        createthumbnail($filetype, $target_folder.$image_name_full, $thumb2_folder.$image_name_t2, $thumb2_width,
+                                            $thumb2_height);
+                                    } else {
+                                        createsquarethumbnail($filetype, $target_folder.$image_name_full, $thumb2_folder.$image_name_t2, $thumb2_width);
+                                    }
+                                }
+                            }
+                            if ($delete_original && !$noThumb) {
+                                if (file_exists($target_folder.$image_name_full)) {
+                                    unlink($target_folder.$image_name_full);
+                                }
+                                $image_info['image'] = FALSE;
+                            }
+                        }
+                    }
                 } else {
-                    if (!file_exists($target_folder)) {
-                        mkdir($target_folder, 0755);
-                    }
-                    $image_name_full = ($replace_upload ? $image_name.$image_ext : filename_exists($target_folder, $image_name.$image_ext));
-                    $image_name = substr($image_name_full, 0, strrpos($image_name_full, "."));
-                    $image_info['image_name'] = $image_name_full;
-                    $image_info['image'] = TRUE;
-                    move_uploaded_file($image['tmp_name'], $target_folder.$image_name_full);
-                    if (function_exists("chmod")) {
-                        chmod($target_folder.$image_name_full, 0755);
-                    }
-                    if ($query && !dbquery($query)) {
-                        // Invalid query string
-                        $image_info['error'] = 4;
-                        unlink($target_folder.$image_name_full);
-                    } else if ($thumb1 || $thumb2) {
-                        require_once INCLUDES."photo_functions_include.php";
-                        $noThumb = FALSE;
-                        if ($thumb1) {
-                            if ($image_res[0] <= $thumb1_width && $image_res[1] <= $thumb1_height) {
-                                $noThumb = TRUE;
-                                $image_info['thumb1_name'] = $image_info['image_name'];
-                                $image_info['thumb1'] = FALSE;
-                            } else {
-                                if (!file_exists($thumb1_folder)) {
-                                    mkdir($thumb1_folder, 0755, TRUE);
-                                }
-                                $image_name_t1 = filename_exists($thumb1_folder, $image_name.$thumb1_suffix.$image_ext);
-                                $image_info['thumb1_name'] = $image_name_t1;
-                                $image_info['thumb1'] = TRUE;
-                                if ($thumb1_ratio == 0) {
-                                    createthumbnail($filetype, $target_folder.$image_name_full, $thumb1_folder.$image_name_t1, $thumb1_width,
-                                        $thumb1_height);
-                                } else {
-                                    createsquarethumbnail($filetype, $target_folder.$image_name_full, $thumb1_folder.$image_name_t1, $thumb1_width);
-                                }
-                            }
-                        }
-                        if ($thumb2) {
-                            if ($image_res[0] < $thumb2_width && $image_res[1] < $thumb2_height) {
-                                $noThumb = TRUE;
-                                $image_info['thumb2_name'] = $image_info['image_name'];
-                                $image_info['thumb2'] = FALSE;
-                            } else {
-                                if (!file_exists($thumb2_folder)) {
-                                    mkdir($thumb2_folder, 0755, TRUE);
-                                }
-                                $image_name_t2 = ($replace_upload ? $image_name.$thumb2_suffix.$image_ext : filename_exists($thumb2_folder, $image_name.$thumb2_suffix.$image_ext));
-                                $image_info['thumb2_name'] = $image_name_t2;
-                                $image_info['thumb2'] = TRUE;
-                                if ($thumb2_ratio == 0) {
-                                    createthumbnail($filetype, $target_folder.$image_name_full, $thumb2_folder.$image_name_t2, $thumb2_width,
-                                        $thumb2_height);
-                                } else {
-                                    createsquarethumbnail($filetype, $target_folder.$image_name_full, $thumb2_folder.$image_name_t2, $thumb2_width);
-                                }
-                            }
-                        }
-                        if ($delete_original && !$noThumb) {
-                            if (file_exists($target_folder.$image_name_full)) {
-                                unlink($target_folder.$image_name_full);
-                            }
-                            $image_info['image'] = FALSE;
-                        }
-                    }
+
+                    // Invalid mime check
+                    $image_info = ["error" => 5];
                 }
             } else {
                 // The image is invalid
@@ -401,7 +417,7 @@ if (!function_exists('upload_image')) {
             $image_info = ["error" => 5];
         }
 
-        return $image_info;
+        return (array)$image_info;
     }
 }
 
