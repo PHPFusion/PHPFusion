@@ -59,6 +59,25 @@ class ForumThreads extends ForumServer {
         $userdata['user_id'] = !empty($userdata['user_id']) ? (int)intval($userdata['user_id']) : 0;
         $lastVisited = defined('LASTVISITED') ? LASTVISITED : TIME;
 
+        $type_array = [
+            'all'         => '',
+            'discussions' => '',
+            'attachments' => '',
+            'poll'        => '',
+            'solved'      => '',
+            'unsolved'    => '',
+        ];
+        $type = ( isset($_GET['type'] ) && isset($type_array[$_GET['type']]) ? $_GET['type'] : '');
+
+        $join = '';
+        if ( $type = 'attachments' ) {
+            $join = "LEFT JOIN ".DB_FORUM_ATTACHMENTS." a on a.thread_id = t.thread_id";
+        } else if ( $type = 'poll' ) {
+            $join = "LEFT JOIN ".DB_FORUM_POSTS." p1 ON p1.thread_id=t.thread_id AND tf.forum_id=p1.forum_id
+            LEFT JOIN ".DB_FORUM_POLLS." p ON p.thread_id = t.thread_id
+            LEFT JOIN ".DB_FORUM_VOTES." v ON v.thread_id = t.thread_id AND p1.post_id = v.post_id";
+        }
+
         //print_p($filter);
         /**
          * Get threads with filter conditions (XSS prevention)
@@ -68,15 +87,11 @@ class ForumThreads extends ForumServer {
          *
          */
         $thread_query = $filter['count_query'] ?: "
-        SELECT count(a.attach_id) 'attach_count',
-        a.attach_id
-        FROM ".DB_FORUMS." tf
-        INNER JOIN ".DB_FORUM_THREADS." t ON tf.forum_id=t.forum_id
-        LEFT JOIN ".DB_FORUM_POSTS." p1 ON p1.thread_id=t.thread_id AND tf.forum_id=p1.forum_id
-        LEFT JOIN ".DB_FORUM_POLLS." p ON p.thread_id = t.thread_id
-        LEFT JOIN ".DB_FORUM_VOTES." v ON v.thread_id = t.thread_id AND p1.post_id = v.post_id
-        LEFT JOIN ".DB_FORUM_ATTACHMENTS." a on a.thread_id = t.thread_id
-        WHERE ".($forum_id ? " tf.forum_id='".intval($forum_id)."' AND " : "")." t.thread_hidden='0' AND ".groupaccess('tf.forum_access')."
+        SELECT count(t.thread_id) 'thread_count',
+        t.thread_id
+        FROM ".DB_FORUM_THREADS." t
+        INNER JOIN ".DB_FORUMS." tf ON t.forum_id=tf.forum_id " . $join . "
+        WHERE ".($forum_id ? " t.forum_id='".intval($forum_id)."' AND " : "")." t.thread_hidden='0' AND ".groupaccess('tf.forum_access')."
         ".(isset($filter['condition']) ? $filter['condition'] : '')." GROUP BY t.thread_id";
 
         if (!empty($filter['debug'])) {
