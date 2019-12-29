@@ -67,12 +67,13 @@ class ForumThreads extends ForumServer {
             'solved'      => '',
             'unsolved'    => '',
         ];
-        $type = ( isset($_GET['type'] ) && isset($type_array[$_GET['type']]) ? $_GET['type'] : '');
+
+        $type = (isset($_GET['type']) && isset($type_array[$_GET['type']]) ? $_GET['type'] : '');
 
         $join = '';
-        if ( $type = 'attachments' ) {
+        if ($type = 'attachments') {
             $join = "LEFT JOIN ".DB_FORUM_ATTACHMENTS." a on a.thread_id = t.thread_id";
-        } else if ( $type = 'poll' ) {
+        } else if ($type = 'poll') {
             $join = "LEFT JOIN ".DB_FORUM_POSTS." p1 ON p1.thread_id=t.thread_id AND tf.forum_id=p1.forum_id
             LEFT JOIN ".DB_FORUM_POLLS." p ON p.thread_id = t.thread_id
             LEFT JOIN ".DB_FORUM_VOTES." v ON v.thread_id = t.thread_id AND p1.post_id = v.post_id";
@@ -90,7 +91,7 @@ class ForumThreads extends ForumServer {
         SELECT count(t.thread_id) 'thread_count',
         t.thread_id
         FROM ".DB_FORUM_THREADS." t
-        INNER JOIN ".DB_FORUMS." tf ON t.forum_id=tf.forum_id " . $join . "
+        INNER JOIN ".DB_FORUMS." tf ON t.forum_id=tf.forum_id ".$join."
         WHERE ".($forum_id ? " t.forum_id='".intval($forum_id)."' AND " : "")." t.thread_hidden='0' AND ".groupaccess('tf.forum_access')."
         ".(isset($filter['condition']) ? $filter['condition'] : '')." GROUP BY t.thread_id";
 
@@ -617,7 +618,7 @@ class ForumThreads extends ForumServer {
      * @return array
      */
     private static function get_thread_stats($thread_id) {
-        list($array['post_count'], $array['last_post_id'], $array['first_post_id']) = dbarraynum(dbquery("SELECT COUNT(post_id), MAX(post_id), MIN(post_id) FROM ".DB_FORUM_POSTS." WHERE thread_id='".intval($thread_id)."' AND post_hidden='0' GROUP BY thread_id"));
+        [$array['post_count'], $array['last_post_id'], $array['first_post_id']] = dbarraynum(dbquery("SELECT COUNT(post_id), MAX(post_id), MIN(post_id) FROM ".DB_FORUM_POSTS." WHERE thread_id='".intval($thread_id)."' AND post_hidden='0' GROUP BY thread_id"));
         if (!$array['post_count']) {
             redirect(FORUM.'index.php');
         } // exit no.2
@@ -1241,7 +1242,7 @@ class ForumThreads extends ForumServer {
                     } else {
                         $edit_reason .= $locale['user_na'];
                     }
-                    $edit_reason .=" ".$locale['forum_0167']." ".showdate("forumdate", $pdata['post_edittime']).", ".timer($pdata['post_edittime']);
+                    $edit_reason .= " ".$locale['forum_0167']." ".showdate("forumdate", $pdata['post_edittime']).", ".timer($pdata['post_edittime']);
                     if ($pdata['post_editreason'] && iMEMBER) {
                         $edit_reason .= " - <a id='reason_pid_".$pdata['post_id']."' rel='".$pdata['post_id']."' class='reason_button pointer' data-target='reason_div_pid_".$pdata['post_id']."'>";
                         $edit_reason .= "<strong>".$locale['forum_0165']."</strong>";
