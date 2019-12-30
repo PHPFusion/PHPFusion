@@ -32,7 +32,7 @@ class ShoutBox {
         'shout_ip'        => '',
         'shout_ip_type'   => '4',
         'shout_hidden'    => '',
-        'shout_language'  => LANGUAGE,
+        'shout_language'  => LANGUAGE
     ];
     private static $default_params = [
         'sbform_name' => 'sbform',
@@ -112,7 +112,7 @@ class ShoutBox {
                 'shout_name'     => !empty($sb_name) ? $sb_name : fusion_get_userdata("user_id"),
                 'shout_message'  => form_sanitizer($_POST['shout_message'], '', 'shout_message'),
                 'shout_hidden'   => $shout_group,
-                'shout_language' => form_sanitizer($_POST['shout_language'], LANGUAGE, "shout_language"),
+                'shout_language' => form_sanitizer($_POST['shout_language'], LANGUAGE, "shout_language")
             ];
 
             if (empty($this->data['shout_id'])) {
@@ -120,7 +120,7 @@ class ShoutBox {
                     'shout_datestamp' => time(),
                     'shout_ip'        => USER_IP,
                     'shout_ip_type'   => USER_IP_TYPE,
-                    'shout_hidden'    => $shout_group,
+                    'shout_hidden'    => $shout_group
                 ];
             }
 
@@ -144,7 +144,7 @@ class ShoutBox {
             $inputArray = [
                 'visible_shouts' => form_sanitizer($_POST['visible_shouts'], 5, "visible_shouts"),
                 'guest_shouts'   => form_sanitizer($_POST['guest_shouts'], 0, "guest_shouts"),
-                'hidden_shouts'  => form_sanitizer($_POST['hidden_shouts'], 0, "hidden_shouts"),
+                'hidden_shouts'  => form_sanitizer($_POST['hidden_shouts'], 0, "hidden_shouts")
             ];
 
             if (\defender::safe()) {
@@ -241,7 +241,7 @@ class ShoutBox {
 
     public function settings_Form() {
 
-        add_to_jquery("$('#sb_delete_old').bind('click', function() { confirm('".self::$locale['SB_warning_shouts']."'); });");
+        add_to_jquery("$('#sb_delete_old').bind('click', function() { return confirm('".self::$locale['SB_warning_shouts']."'); });");
         echo openform('shoutbox', 'post', $this->postLink);
 
         echo '<div class="row">';
@@ -293,7 +293,7 @@ class ShoutBox {
                 'wordcount'    => TRUE,
                 'maxlength'    => '200',
                 'type'         => 'bbcode',
-                'input_bbcode' => 'smiley|b|u|url|color',
+                'input_bbcode' => 'smiley|b|u|url|color'
             ]);
 
             if (iGUEST && (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_HIDE_INPUT))) {
@@ -364,7 +364,7 @@ class ShoutBox {
         if ($rows > 0) {
             echo openform('sb_form', 'post', $this->postLink."&amp;section=shoutbox&amp;s_action=delete_select");
             echo "<div class='list-group'>\n";
-            add_to_jquery("$('.shoutbox-delete-btn').bind('click', function() { confirm('".self::$locale['SB_warning_shout']."'); });");
+            add_to_jquery("$('.shoutbox-delete-btn').bind('click', function() { return confirm('".self::$locale['SB_warning_shout']."'); });");
 
             while ($data = dbarray($result)) {
                 $online = !empty($data['user_lastvisit']) ? "<span style='color:#5CB85C'> <i class='".($data['user_lastvisit'] >= time() - 300 ? "fa fa-circle" : "fa fa-circle-thin")."'></i></span>" : '';
@@ -417,7 +417,7 @@ class ShoutBox {
         $rows = dbrows($result);
 
         if ($rows > 0) {
-            add_to_jquery("$('.shoutbox-delete-btn').bind('click', function() { confirm('".self::$locale['SB_warning_shout']."'); });");
+            add_to_jquery("$('.shoutbox-delete-btn').bind('click', function() { return confirm('".self::$locale['SB_warning_shout']."'); });");
 
             while ($data = dbarray($result)) {
                 echo "<div class='display-block shoutboxwrapper clearfix'>\n";
@@ -500,7 +500,7 @@ class ShoutBox {
         self::$default_params = [
             'sbform_name' => 'sbpanel',
             'sb_db'       => '?rowstart',
-            'sb_limit'    => self::$limit,
+            'sb_limit'    => self::$limit
         ];
 
         openside(self::$locale['SB_title']);
@@ -512,7 +512,7 @@ class ShoutBox {
         self::$default_params = [
             'sbform_name' => 'sarchive',
             'sb_db'       => '?rows',
-            'sb_limit'    => self::$arch_limit,
+            'sb_limit'    => self::$arch_limit
         ];
 
         openside(self::$locale['SB_archive']);
