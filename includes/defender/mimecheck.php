@@ -101,8 +101,8 @@ class ImageValidation {
      * Check for alteration of file extensions to prevent unwanted payload executions
      * https://securelist.com/blog/virus-watch/74297/png-embedded-malicious-payload-hidden-in-a-png-file/
      *
-     * @param $file_src - the tmp src file
-     * @param $file_ext - the current tmp src file extensions
+     * @param $file_src  - the tmp src file
+     * @param $file_ext  - the current tmp src file extensions
      * @param $valid_ext - all accepted file extensions
      *
      * @return bool
@@ -117,13 +117,13 @@ class ImageValidation {
             foreach ($valid_ext as $ext) {
                 $ext = strtolower(ltrim($ext, '.'));
                 if (isset($mime_types[$ext])) {
-                    $check_type[$ext] = $mime_types[$ext];
+                    $check_type[$ext][] = $mime_types[$ext];
                 }
             }
             $check_ext = strtolower(ltrim($file_ext, '.'));
             if (!empty($check_type[$check_ext])) {
                 if (is_array($check_type[$check_ext])) {
-                    if (in_array($type, $check_type[$check_ext])) {
+                    if (self::in_array_r($type, $check_type[$check_ext])) {
                         return TRUE;
                     }
                 }
@@ -134,6 +134,16 @@ class ImageValidation {
          * Abort mimecheck because the webserver does not have this extension.
          */
         return TRUE;
+    }
+
+    private static function in_array_r($needle, $haystack, $strict = FALSE) {
+        foreach ($haystack as $item) {
+            if (($strict ? $item === $needle : $item == $needle) || (is_array($item) && self::in_array_r($needle, $item, $strict))) {
+                return TRUE;
+            }
+        }
+
+        return FALSE;
     }
 }
 

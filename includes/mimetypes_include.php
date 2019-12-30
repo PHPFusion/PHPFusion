@@ -176,7 +176,7 @@ if (!function_exists('mimeTypes')) {
             'cdr'   => ['application/cdr', 'application/coreldraw', 'application/x-cdr', 'application/x-coreldraw', 'image/cdr', 'image/x-cdr', 'zz-application/zz-winassoc-cdr'],
             'wma'   => ['audio/x-ms-wma', 'video/x-ms-asf'],
             'jar'   => ['application/java-archive', 'application/x-java-application', 'application/x-jar', 'application/x-compressed'],
-            'svg'   => ['image/svg+xml', 'application/xml', 'text/xml'],
+            'svg'   => ['image/svg', 'image/svg+xml', 'application/xml', 'text/xml'],
             'vcf'   => 'text/x-vcard',
             'srt'   => ['text/srt', 'text/plain'],
             'vtt'   => ['text/vtt', 'text/plain'],
@@ -212,6 +212,20 @@ if (!function_exists('img_mimeTypes')) {
             'tif'  => 'image/tif',
             'bmp'  => 'image/x-ms-bmp',
             'ico'  => 'image/x-icon'
+        ];
+    }
+}
+if (!function_exists('video_mimeTypes')) {
+    function video_mimeTypes() {
+        return [
+            'mpeg' => 'video/mpeg',
+            'mpg'  => 'video/mpeg',
+            'avi'  => 'video/avi',
+            '3gp'  => 'video/3gp',
+            'mp4'  => 'video/mp4',
+            'flv'  => 'video/x-flv',
+            'webm' => 'video/webm',
+            'ogg'  => 'video/ogg'
         ];
     }
 }
