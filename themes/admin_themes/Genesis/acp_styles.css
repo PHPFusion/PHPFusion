@@ -394,9 +394,7 @@ a:focus {
 	box-shadow: inset 1px 0 0 #222933;
 	overflow-y: auto;
 	padding-bottom: 50px;
-	height: -webkit-calc(100vh - 25px);
-	height: -moz-calc(100vh - 25px);
-	height: calc(100vh - 25px);
+	height:100vh;
 }
 
 #devlpr .app_menu h4 {
@@ -855,17 +853,6 @@ a:focus {
 	height: 47px;
 }
 
-#devlpr #main_content > header > nav .input-group-addon:first-of-type {
-	padding-left: 30px;
-	padding-right: 0;
-}
-
-#devlpr #main_content > header > nav .input-group-addon:last-of-type {
-	padding-right: 30px;
-	padding-left: 15px;
-}
-
-
 #devlpr #main_content > header.mm-collapsed {
 	width: -webkit-calc(100vw - var(--sub-menu-width) - 70px);
 	width: -moz-calc(100vw - var(--sub-menu-width) - 70px);
@@ -1011,8 +998,12 @@ a:focus {
 #devlpr .head-title {
 	color: #fff;
 	padding-top: 10px;
-	display: inline-block;
+	display: block;
 	float: left;
+}
+#devlpr .head-title h4 {
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 #devlpr #main_content > header ul.dropdown-menu {
@@ -1716,9 +1707,8 @@ input[type="submit"].btn.btn-mini {
 	-moz-border-radius: 0;
 	border-radius: 0;
 }
-
-.btn-group > .btn + .btn {
-	margin-left: -1px;
+.btn-group .btn+.btn, .btn-group .btn+.btn-group, .btn-group .btn-group+.btn, .btn-group .btn-group+.btn-group {
+	margin-left:-3px;
 }
 
 .btn-group > .btn,
@@ -2414,12 +2404,8 @@ code, kbd {
 }
 
 .input-group > .form-control {
-	border-left: 0;
-	border-right: 0;
-}
-
-.input-group > .form-control:first-child {
-	border-left: 1px solid var(--border-color);
+	border-left-width: 0;
+	border-right-width: 0;
 }
 
 .input-group-addon {
@@ -2428,6 +2414,19 @@ code, kbd {
 	color: var(--dark-color);
 	font-weight: 600;
 }
+
+.input-group > .form-control:first-child {
+	padding-left: 30px;
+	padding-right: 0;
+	border-left-width:2px;
+}
+
+.input-group > .form-control:last-child {
+	padding-right: 30px;
+	padding-left: 15px;
+	border-right-width:2px;
+}
+
 
 .input-group .form-control:focus {
 	border-color: var(--border-color);
@@ -3225,34 +3224,6 @@ div.mce-edit-area {
 	margin-top: -1px;
 }
 
-.checkbox input[type="radio"],
-.checkbox input[type="checkbox"] {
-	border: 1px solid #b4b9be;
-	background: #fff;
-	color: var(--dark-color);
-	clear: none;
-	cursor: pointer;
-	display: inline-block;
-	line-height: 0;
-	height: 16px;
-	top: 0;
-	margin: 2px 0;
-	outline: none !important;
-	padding: 0 !important;
-	text-align: center;
-	vertical-align: middle;
-	width: 18px;
-	min-width: 18px;
-	-webkit-appearance: none;
-	-webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, .1);
-	-moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, .1);
-	box-shadow: inset 0 1px 2px rgba(0, 0, 0, .1);
-	-webkit-transition: .05s border-color ease-in-out;
-	-o-transition: .05s border-color ease-in-out;
-	-moz-transition: .05s border-color ease-in-out;
-	transition: .05s border-color ease-in-out;
-	margin-left: -30px;
-}
 
 .p-l-0 {
 	padding-left: 0 !important;
@@ -3265,14 +3236,6 @@ div.mce-edit-area {
 .checkbox > .control-label {
 	font-weight: 600;
 	color: var(--dark-color);
-	display: -webkit-box;
-	display: -ms-flexbox;
-	display: -webkit-flex;
-	display: flex;
-	-webkit-box-align: center;
-	-ms-flex-align: center;
-	-webkit-align-items: center;
-	align-items: center;
 }
 
 
@@ -3452,7 +3415,15 @@ html[dir="rtl"] #devlpr .app_menu .app_list li a div.app_icon {
 	left: inherit !important;
 	right: 30px;
 }
-
+@media (max-width: 1500px) {
+	.head-title h4 {
+		width: 150px;
+		white-space: nowrap;
+	}
+	#devlpr .sub_menu .submenu-header {
+		height:74px;
+	}
+}
 @media (min-width: 250px) and (max-width: 1024px) {
 
 	html[dir="rtl"] #devlpr .app_menu {
