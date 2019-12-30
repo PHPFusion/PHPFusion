@@ -88,7 +88,7 @@ if ($rows) {
         echo "</table></div>";
 
     if ($rows > 20) {
-        echo "<div class='text-center'>".makepagenav($_GET['rowstart'], 2, $rows, 3, INFUSIONS."forum_threads_list_panel/my_threads.php?")."</div>\n";
+        echo "<div class='text-center'>".makepagenav($_GET['rowstart'], 20, $rows, 3, INFUSIONS."forum_threads_list_panel/my_threads.php?")."</div>\n";
     }
 } else {
     echo "<div class='text-center'>".$locale['global_053']."</div>\n";
