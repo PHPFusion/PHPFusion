@@ -144,12 +144,20 @@ echo form_select('maintenance', $locale['657'], $settings['maintenance'], [
 echo form_textarea('maintenance_message', $locale['658'], stripslashes($settings['maintenance_message']), ['autosize' => TRUE, 'html' => !fusion_get_settings('tinymce_enabled') ? TRUE : FALSE, 'form_name' => 'settingsform']);
 closeside();
 openside('');
-echo \PHPFusion\QuantumFields::quantum_multilocale_fields('privacy_policy', $locale['820'], $settings['privacy_policy'], [
-    'autosize'  => 1,
-    'form_name' => 'settingsform',
-    'html'      => !fusion_get_settings('tinymce_enabled') ? TRUE : FALSE,
-    'function'  => 'form_textarea'
-]);
+if (count(fusion_get_enabled_languages()) <= 1) {
+    echo \PHPFusion\QuantumFields::quantum_multilocale_fields('privacy_policy', $locale['820'], $settings['privacy_policy'], [
+        'autosize'  => 1,
+        'form_name' => 'settingsform',
+        'html'      => !fusion_get_settings('tinymce_enabled') ? TRUE : FALSE,
+        'function'  => 'form_textarea'
+    ]);
+} else {
+    echo form_textarea('privacy_policy', $locale['820'], $settings['privacy_policy'], [
+        'autosize'  => 1,
+        'form_name' => 'settingsform',
+        'html'      => !fusion_get_settings('tinymce_enabled') ? TRUE : FALSE
+    ]);
+}
 closeside();
 
 echo "</div><div class='col-xs-12 col-sm-4'>\n";
