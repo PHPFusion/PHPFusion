@@ -18,7 +18,7 @@
 defined('IN_FUSION') || exit;
 
 /**
- * Experimental Anti Bot Gateway that combine multiple methods to prevent auto bots.
+ * Anti Bot Gateway that combine multiple methods to prevent auto bots.
  */
 require_once "constants_include.php";
 require_once "functions_include.php";
