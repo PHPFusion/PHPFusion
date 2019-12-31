@@ -277,8 +277,11 @@ class Members_Display extends Members_Admin {
         $table_subheader = "<th></th><th colspan='2' class='col-xs-2'>".self::$locale['ME_410']."</th><th class='min'>".self::$locale['ME_411']."</th>\n<th>".self::$locale['ME_427']."</th>\n<th class='min'>".self::$locale['ME_412']."</th>";
 
         foreach ($selected_fields as $column) {
-            $table_subheader .= "<th>".$tLocale[$column]."</th>\n";
+            if (!empty($tLocale[$column])) {
+                $table_subheader .= "<th>".$tLocale[$column]."</th>\n";
+            }
         }
+
         $table_subheader = "<tr>$table_subheader</tr>\n";
         $table_footer = "<tr><th class='p-10 min' colspan='5'>".form_checkbox('check_all', self::$locale['ME_414'], '', ['class' => 'm-b-0', 'reverse_label' => TRUE])."</th><th colspan='$detail_span' class='text-right'>$page_nav</th></tr>\n";
         $list_result = "<tr>\n<td colspan='".(count($selected_fields) + 5)."' class='text-center'>".self::$locale['ME_405']."</td>\n</tr>\n";
