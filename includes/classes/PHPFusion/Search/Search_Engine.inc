@@ -468,7 +468,9 @@ class Search_Engine extends Search_Model {
         echo "</div>\n";
         echo "</div>\n";
 
-        //echo self::$navigation_result;
+        if (self::get_param('stype') != "all") {
+            echo self::$navigation_result;
+        }
     }
 
     /**
