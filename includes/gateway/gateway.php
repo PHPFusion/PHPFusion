@@ -42,19 +42,36 @@ if (!isset($_POST['gateway_submit']) && !isset($_POST['register'])) {
     $a = rand(11, 20);
     $b = rand(1, 10);
 
-    if ($a > 15) {
+    $method = 2; // 0 words, 1 numbers, 2 both
+
+    if ($method == 0) {
         $antibot = intval($a + $b);
         $multiplier = "+";
         $reply_method = $locale['gateway_062'];
         $a = convertNumberToWord($a);
         $antibot = convertNumberToWord($antibot);
         $_SESSION["antibot"] = strtolower($antibot);
-    } else {
+    } else if ($method == 1) {
         $antibot = intval($a - $b);
         $multiplier = "-";
         $reply_method = $locale['gateway_063'];
         $_SESSION["antibot"] = intval($antibot);
         $b = convertNumberToWord($b);
+    } else {
+        if ($a > 15) {
+            $antibot = intval($a + $b);
+            $multiplier = "+";
+            $reply_method = $locale['gateway_062'];
+            $a = convertNumberToWord($a);
+            $antibot = convertNumberToWord($antibot);
+            $_SESSION["antibot"] = strtolower($antibot);
+        } else {
+            $antibot = intval($a - $b);
+            $multiplier = "-";
+            $reply_method = $locale['gateway_063'];
+            $_SESSION["antibot"] = intval($antibot);
+            $b = convertNumberToWord($b);
+        }
     }
 
     $a = str_rot47($a);
@@ -88,13 +105,13 @@ if (!isset($_POST['gateway_submit']) && !isset($_POST['register'])) {
     </script>');
 
     $info = [
-        'showform'          => TRUE,
+        'showform'         => TRUE,
         'gateway_question' => '<span id="gateway_question"></span>',
-        'openform'          => openform('Fusion_Gateway', 'post', 'register.php', ['class' => 'm-t-20']),
-        'closeform'         => closeform(),
-        'hiddeninput'       => form_hidden($honeypot_array[3], "", ""),
-        'textinput'         => form_text('gateway_answer', "", "", ['error_text' => $locale['gateway_064'], 'required' => 1]),
-        'button'            => form_button('gateway_submit', $locale['gateway_065'], $locale['gateway_065'], ['class' => 'btn-primary m-t-10']),
+        'openform'         => openform('Fusion_Gateway', 'post', 'register.php', ['class' => 'm-t-20']),
+        'closeform'        => closeform(),
+        'hiddeninput'      => form_hidden($honeypot_array[3], "", ""),
+        'textinput'        => form_text('gateway_answer', "", "", ['error_text' => $locale['gateway_064'], 'required' => 1]),
+        'button'           => form_button('gateway_submit', $locale['gateway_065'], $locale['gateway_065'], ['class' => 'btn-primary m-t-10']),
     ];
 }
 
@@ -113,7 +130,7 @@ if (isset($_POST['gateway_answer'])) {
         if (isset($_SESSION["antibot"])) {
             if ($_SESSION["antibot"] == $antibot) {
                 $_SESSION["validated"] = "True";
-				redirect(BASEDIR."register.php");
+                redirect(BASEDIR."register.php");
             } else {
                 $info['incorrect_answer'] = TRUE;
             }

@@ -32,9 +32,9 @@ if ($settings['gateway'] == 1) {
 	if (empty($_SESSION["validated"])) {
 		$_SESSION['validated'] = 'False';
 	}
-	
+
 	if (isset($_SESSION["validated"]) && $_SESSION['validated'] !== 'True') {
-        require_once BASEDIR."gateway/gateway.php";
+        require_once INCLUDES."gateway/gateway.php";
 	}
 }
 
