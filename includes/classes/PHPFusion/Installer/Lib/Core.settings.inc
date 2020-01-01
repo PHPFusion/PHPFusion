@@ -521,6 +521,10 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'settings_value' => 1
             ],
             [
+                'settings_name'  => 'gateway_method',
+                'settings_value' => 2
+            ],
+            [
                 'settings_name'  => 'devmode',
                 'settings_value' => 0
             ]
