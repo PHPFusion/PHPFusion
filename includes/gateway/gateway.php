@@ -42,7 +42,7 @@ if (!isset($_POST['gateway_submit']) && !isset($_POST['register'])) {
     $a = rand(11, 20);
     $b = rand(1, 10);
 
-    $method = 2; // 0 words, 1 numbers, 2 both
+    $method = fusion_get_settings('gateway_method'); // 0 words, 1 numbers, 2 both
 
     if ($method == 0) {
         $antibot = intval($a + $b);

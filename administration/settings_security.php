@@ -62,6 +62,7 @@ if (isset($_POST['savesettings'])) {
         'database_sessions'   => form_sanitizer($_POST['database_sessions'], '', 'database_sessions'),
         'form_tokens'         => form_sanitizer($_POST['form_tokens'], '', 'form_tokens'),
         'gateway'             => form_sanitizer($_POST['gateway'], 0, 'gateway'),
+        'gateway_method'      => form_sanitizer($_POST['gateway_method'], 0, 'gateway_method'),
         'mime_check'          => form_sanitizer($_POST['mime_check'], '0', 'mime_check'),
     ];
 
@@ -227,6 +228,16 @@ echo form_select('gateway', $locale['security_010'], $settings['gateway'], [
     'width'       => '100%',
     'inner_width' => '100%'
 ]);
+echo form_select('gateway_method', $locale['security_011'], $settings['gateway_method'], [
+    'options'     => [
+        0 => $locale['security_012'],
+        1 => $locale['security_013'],
+        2 => $locale['security_014']
+    ],
+    'width'       => '100%',
+    'inner_width' => '100%'
+]);
+
 closeside();
 
 openside('');
