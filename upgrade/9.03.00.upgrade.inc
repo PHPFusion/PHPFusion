@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+$locale = fusion_get_locale("", LOCALE.LOCALESET."setup.php");
 $settings = fusion_get_settings();
 
 $update_settings_tbl = [
