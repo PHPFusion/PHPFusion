@@ -62,7 +62,7 @@ while ($data = dbarray($result)) {
     $isset_rights = array_flip($current_rights);
     $remove_rights = ["AC", "DC", "NC", "WC", "S5", "S8", "S11", "S13", "SU"];
     foreach ($remove_rights as $key => $remove) {
-        if (in_array($remove, $isset_rights) && isset($current_rights[$isset_rights[$remove]])) {
+        if (isset($isset_rights[$remove]) && in_array($remove, $isset_rights) && isset($current_rights[$isset_rights[$remove]])) {
             unset($current_rights[$isset_rights[$remove]]);
         }
     }
