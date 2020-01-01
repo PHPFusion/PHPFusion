@@ -47,32 +47,8 @@ if (str_replace(".", "", $settings['version']) < "80022") {
         echo "<input type='hidden' name='stage' value='2'>\n";
         echo "<input type='submit' name='upgrade' value='".$locale['400']."' class='button'><br /><br />\n";
     } else if (isset($_POST['upgrade']) && isset($_POST['stage']) && $_POST['stage'] == 2) {
-        $result = dbquery("INSERT INTO ".DB_SETTINGS." (settings_name, settings_value) VALUES ('number_delimiter', '.')");
-        $result = dbquery("INSERT INTO ".DB_SETTINGS." (settings_name, settings_value) VALUES ('thousands_separator', ',')");
-
-        // Convert the Database to utf8mb4
-        $result = dbquery("SELECT @@character_set_database as charset, @@collation_database as collation;");
-
-        while ($db = dbarray($result)) {
-            if ($db['charset'] == 'utf8' || $db['charset'] !== 'utf8mb4') {
-                dbquery("SET NAMES 'utf8mb4'");
-            }
-
-            if ($db['collation'] == 'utf8_general_ci' || $db['collation'] !== 'utf8mb4_general_ci') {
-                dbquery("ALTER DATABASE ".$db_name." CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
-            }
-        }
-
-        $result = dbquery("SHOW TABLES");
-
-        while ($table = dbarraynum($result)) {
-            if (preg_match("/^".DB_PREFIX."/i", $table[0])) {
-                dbquery("ALTER TABLE ".$table[0]." CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
-            }
-        }
-
         // Set a new version
-        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='8.00.23' WHERE settings_name='version'");
+        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='8.00.24' WHERE settings_name='version'");
         redirect(FUSION_SELF.$aidlink."&amp;upgrade_ok");
     }
 
