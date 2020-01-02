@@ -146,7 +146,7 @@ function form_fileinput( $input_name, $label = '', $input_value = FALSE, array $
     ".( $options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '' )."
     </label>\n" : '';
     $html .= ( $options['inline'] ) ? "<div class='col-xs-12 ".( $label ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12" )."'>\n" : "";
-    $html .= "<input type='file'".( $options['krajee_disabled'] == TRUE ? " class='form-control' " : "" ).( $format ? " accept='".$format."'" : '' )." name='".$input_name."' id='".$options['input_id']."' style='width:".$options['width']."' ".( $options['deactivate'] ? 'readonly' : '' )." ".( $options['multiple'] ? "multiple='1'" : '' )." />\n";
+    $html .= "<input type='file'".( $options['krajee_disabled'] == TRUE ? " class='form-control' " : "" ).( $format ? " accept='".$format."'" : '' )." name='".$input_name."' id='".$options['input_id']."' style='width:".$options['width']."' ".( $options['deactivate'] ? 'readonly' : '' )." ".($options['required'] ? 'required="required"' : '')." ".( $options['multiple'] ? "multiple='1'" : '' )." />\n";
 
     // Croppie
     if ( $options['croppie'] === TRUE ) {
@@ -196,11 +196,11 @@ function form_fileinput( $input_name, $label = '', $input_value = FALSE, array $
             var uploadCrop = $('#".$options['input_id']."-croppie').croppie($croppie_settings).hide();
 
 		    function readFile(input) {
- 			    
+
  			    if (input.files && input.files[0]) {
-                    
+
                     var reader = new FileReader();
-                    
+
                     reader.onload = function (e) {
                         $('#".$options['input_id']."-croppie').addClass('ready');
                         uploadCrop.croppie('bind', {
@@ -209,15 +209,15 @@ function form_fileinput( $input_name, $label = '', $input_value = FALSE, array $
                             console.log('jQuery bind complete');
                         });
                     }
-                    
+
                     reader.readAsDataURL(input.files[0]);
-                    
+
                     $('.file-input').hide();
-                    
+
                     uploadCrop.show();
-                    
+
 	            } else {
-	            
+
 		            swal(\"Sorry - you're browser doesn't support the FileReader API\");
 		        }
 		    }

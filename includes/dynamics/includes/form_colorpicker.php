@@ -71,7 +71,7 @@ function form_colorpicker($input_name, $label = '', $input_value = '', array $op
     </label>\n" : '';
     $html .= $options['inline'] ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
     $html .= "<div id='$input_id' ".($options['width'] ? "style='width: ".$options['width']."'" : '')." class='input-group colorpicker-component bscp colorpicker-element m-b-10' data-color='$input_value' data-color-format='".$options['format']."'>";
-    $html .= "<input type='text' name='$input_name' class='form-control ".$options['class']."' id='".$input_id."' value='$input_value' data-color-format='".$options['format']."'".($options['placeholder'] ? " placeholder='".$options['placeholder']."'" : '')." style='width:".($options['inner_width'] ? $options['inner_width'] : $default_options['inner_width']).";'".($options['deactivate'] ? " readonly" : "").">";
+    $html .= "<input type='text' name='$input_name' class='form-control ".$options['class']."' id='".$input_id."' value='$input_value' data-color-format='".$options['format']."'".($options['placeholder'] ? " placeholder='".$options['placeholder']."'" : '')." style='width:".($options['inner_width'] ? $options['inner_width'] : $default_options['inner_width']).";'".($options['deactivate'] ? " readonly" : "").($options['required'] ? ' required="required"' : '').">";
     $html .= "<span class='input-group-addon'>";
     $html .= "<i style='background: rgba(255,255,255,1);'></i>";
     $html .= "</span></div>";
