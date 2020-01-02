@@ -248,7 +248,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         $html .= "<span class='input-group-addon' id='".$options['prepend_id']."'>".$options['prepend_value']."</span>\n";
     }
 
-    $html .= "<input type='".$input_type."' data-type='".$input_type."' ".(!empty($options_data) ? implode(' ', $options_data) : '')." ".$min.$max.$step."class='form-control textbox ".($options['inner_class'] ? " ".$options['inner_class']." " : '')."' ".($options['inner_width'] ? "style='width:".$options['inner_width'].";'" : '').$max_length." name='".$input_name."' id='".$options['input_id']."' value='".$input_value."'".($options['placeholder'] ? " placeholder='".$options['placeholder']."' " : '')."".($options['autocomplete_off'] ? " autocomplete='off'" : '')." ".($options['deactivate'] ? 'readonly' : '').">";
+    $html .= "<input type='".$input_type."' data-type='".$input_type."' ".(!empty($options_data) ? implode(' ', $options_data) : '')." ".$min.$max.$step."class='form-control textbox ".($options['inner_class'] ? " ".$options['inner_class']." " : '')."' ".($options['inner_width'] ? "style='width:".$options['inner_width'].";'" : '').$max_length." name='".$input_name."' id='".$options['input_id']."' value='".$input_value."'".($options['placeholder'] ? " placeholder='".$options['placeholder']."' " : '')."".($options['autocomplete_off'] ? " autocomplete='off'" : '')." ".($options['deactivate'] ? 'readonly' : '')." ".($options['required'] ? 'required="required"' : '').">";
 
     $html .= $options['password_strength'] == TRUE ? '<div class="pwstrength_viewport_progress"></div>' : '';
 
