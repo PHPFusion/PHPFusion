@@ -1065,8 +1065,8 @@ class Tables {
         $end_row = '';
 
         if ( $this->table_props['show_count'] === TRUE || $this->quick_fields ) {
-            $start_row = "<div class='display-flex-row spacer-xs'>\n";
-            $end_row = "</div>\n";
+            $start_row = "<div class='display-block'><div class='display-flex-row spacer-xs'>\n";
+            $end_row = "</div>\n</div>\n";
         }
 
         $html .= $start_row;

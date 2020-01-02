@@ -110,8 +110,9 @@ class UserFieldsInput {
         $this->_method = "validate_insert";
     
         if ( post( $this->post_name ) ) {
+    
+            $this->user_data += $this->_setEmptyFields();
             
-            $data = $this->_setEmptyFields();
             // Set Core Fields.
             $data['user_name'] = $this->validateUserName();
             $data['user_email'] = $this->validateEmail();
@@ -1031,6 +1032,7 @@ class UserFieldsInput {
         $settings = fusion_get_settings();
         $new_user_email = sanitizer( 'user_email', '', 'user_email' );
         $default['user_email'] = '';
+        $default['user_id'] = 0;
         $this->user_data += $default;
         // To change email address old user email must be different than current one
         if ( !empty( $new_user_email ) && $new_user_email != $this->user_data['user_email'] ) {

@@ -282,7 +282,7 @@ class UserFields extends UserFieldsQuantum {
         $userInput->skip_password = TRUE;
         $userInput->user_name_change = TRUE;
         $userInput->verifyNewEmail = TRUE;
-        $userInput->user_data = [];
+        $userInput->user_data = fusion_get_userdata();
         $userInput->hide_user_email = TRUE; // make settings for this.
         $userInput->admin_activation = $settings['admin_activation'];
         $userInput->email_verification = $settings['email_verification'];
