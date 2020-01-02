@@ -97,9 +97,8 @@ echo render_favicons( defined( 'THEME_ICON' ) ? THEME_ICON : IMAGES.'favicons/' 
 if ( function_exists( "get_head_tags" ) ) {
     echo get_head_tags();
 }
-
+echo "<script>const SITE_PATH = '".$settings['site_path']."';const CDN = '".CDN."';const BASEDIR = document.location.origin + SITE_PATH;</script>\n";
 echo "<script src='".$_includes."jquery/jquery.min.js'></script>\n";
-echo "<script>const SITE_PATH = '".$settings['site_path']."';const CDN = '".CDN."';</script>\n";
 echo "<script defer src='".$_includes."jscripts/jscript.min.js?v=".filemtime( $_includes.'jscripts/jscript.min.js' )."'></script>\n";
 echo "</head>\n";
 

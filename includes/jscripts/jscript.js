@@ -14,7 +14,7 @@
  | copyright header is strictly prohibited without
  | written permission from the original author(s).
  +--------------------------------------------------------*/
-const BASEDIR = document.location.origin + SITE_PATH;
+// const BASEDIR = document.location.origin + SITE_PATH;
 const INFUSIONS = BASEDIR + "infusions/";
 const INCLUDES = BASEDIR + "includes/";
 const IMAGES = BASEDIR + "images/";
