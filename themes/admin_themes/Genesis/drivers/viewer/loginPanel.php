@@ -25,7 +25,7 @@ class loginPanel extends resource {
     function __construct() {
 
         parent::__construct();
-
+    
         $locale = self::get_locale();
 
         $aidlink = self::get_aidlink();
@@ -38,9 +38,7 @@ class loginPanel extends resource {
             <div class="login_bg">
                 <div class="login_wrapper">
                     <div class="login_logo">
-                        <img alt="<?php echo fusion_get_settings("sitename") ?>"
-                             src="<?php echo IMAGES."php-fusion-logo.png" ?>"/>
-                        <h2>Genesis</h2>
+	                    <a href="<?php echo BASEDIR.fusion_get_settings( 'opening_page' ) ?>"><img alt="<?php echo fusion_get_settings( "sitename" ) ?>" class="spacer-xs" src="<?php fusion_get_settings( 'banner' ) ?>" style="max-width:200px;"/></a>
                         <h3><?php echo $locale['280'] ?></strong></h3>
                     </div>
                     <div class="login_panel">

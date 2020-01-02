@@ -394,7 +394,7 @@ a:focus {
 	box-shadow: inset 1px 0 0 #222933;
 	overflow-y: auto;
 	padding-bottom: 50px;
-	height:100vh;
+	height: 100vh;
 }
 
 #devlpr .app_menu h4 {
@@ -1001,6 +1001,7 @@ a:focus {
 	display: block;
 	float: left;
 }
+
 #devlpr .head-title h4 {
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -1707,8 +1708,9 @@ input[type="submit"].btn.btn-mini {
 	-moz-border-radius: 0;
 	border-radius: 0;
 }
-.btn-group .btn+.btn, .btn-group .btn+.btn-group, .btn-group .btn-group+.btn, .btn-group .btn-group+.btn-group {
-	margin-left:-3px;
+
+.btn-group .btn + .btn, .btn-group .btn + .btn-group, .btn-group .btn-group + .btn, .btn-group .btn-group + .btn-group {
+	margin-left: -3px;
 }
 
 .btn-group > .btn,
@@ -2418,13 +2420,13 @@ code, kbd {
 .input-group > .form-control:first-child {
 	padding-left: 30px;
 	padding-right: 0;
-	border-left-width:2px;
+	border-left-width: 2px;
 }
 
 .input-group > .form-control:last-child {
 	padding-right: 30px;
 	padding-left: 15px;
-	border-right-width:2px;
+	border-right-width: 2px;
 }
 
 
@@ -3415,13 +3417,15 @@ html[dir="rtl"] #devlpr .app_menu .app_list li a div.app_icon {
 	left: inherit !important;
 	right: 30px;
 }
+
 @media (max-width: 1500px) {
 	.head-title h4 {
 		width: 150px;
 		white-space: nowrap;
 	}
+
 	#devlpr .sub_menu .submenu-header {
-		height:74px;
+		height: 74px;
 	}
 }
 @media (min-width: 250px) and (max-width: 1024px) {
