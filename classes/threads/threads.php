@@ -68,12 +68,10 @@ class ForumThreads extends ForumServer {
             'unsolved'    => '',
         ];
 
-        $type = (isset($_GET['type']) && isset($type_array[$_GET['type']]) ? $_GET['type'] : '');
-
         $join = '';
-        if ($type = 'attachments') {
+        if (isset($_GET['type']) && isset($type_array[$_GET['type']]) && $_GET['type'] == 'attachments') {
             $join = "LEFT JOIN ".DB_FORUM_ATTACHMENTS." a on a.thread_id = t.thread_id";
-        } else if ($type = 'poll') {
+        } else if (isset($_GET['type']) && isset($type_array[$_GET['type']]) && $_GET['type'] == 'poll') {
             $join = "LEFT JOIN ".DB_FORUM_POSTS." p1 ON p1.thread_id=t.thread_id AND tf.forum_id=p1.forum_id
             LEFT JOIN ".DB_FORUM_POLLS." p ON p.thread_id = t.thread_id
             LEFT JOIN ".DB_FORUM_VOTES." v ON v.thread_id = t.thread_id AND p1.post_id = v.post_id";
@@ -618,7 +616,7 @@ class ForumThreads extends ForumServer {
      * @return array
      */
     private static function get_thread_stats($thread_id) {
-        [$array['post_count'], $array['last_post_id'], $array['first_post_id']] = dbarraynum(dbquery("SELECT COUNT(post_id), MAX(post_id), MIN(post_id) FROM ".DB_FORUM_POSTS." WHERE thread_id='".intval($thread_id)."' AND post_hidden='0' GROUP BY thread_id"));
+        list($array['post_count'], $array['last_post_id'], $array['first_post_id']) = dbarraynum(dbquery("SELECT COUNT(post_id), MAX(post_id), MIN(post_id) FROM ".DB_FORUM_POSTS." WHERE thread_id='".intval($thread_id)."' AND post_hidden='0' GROUP BY thread_id"));
         if (!$array['post_count']) {
             redirect(FORUM.'index.php');
         } // exit no.2
