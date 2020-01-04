@@ -154,8 +154,8 @@ class Defender {
     public function get_current_field_session( $input_name = '' ) {
 
         if ( $input_name && isset( $_SESSION['form_fields'][ self::pageHash() ][ $input_name ] ) ) {
-            //return $_SESSION['form_fields'][self::pageHash()][$input_name];
-            return session( [ 'form_fields', self::pageHash(), $input_name ] );
+            return $_SESSION['form_fields'][self::pageHash()][$input_name];
+            //return session( [ 'form_fields', self::pageHash(), $input_name ] );
         } else {
             if ( $input_name ) {
                 return 'The session for this field is not found';
@@ -163,7 +163,7 @@ class Defender {
                 //return $_SESSION['form_fields'];
                 return $_SESSION['form_fields'][ self::pageHash() ];
 
-                return session( [ 'form_fields', self::pageHash() ] );
+                //return session( [ 'form_fields', self::pageHash() ] );
             }
         }
     }
@@ -345,7 +345,7 @@ class Defender {
      *
      * @return bool
      */
-    public function safe() {
+    public static function safe() {
 
         if ( !defined( 'FUSION_NULL' ) ) {
             return TRUE;
@@ -1013,7 +1013,6 @@ function fusion_decrypt( $value, $password ) {
     return Defender::decrypt_string( $value, $password );
 }
 
-
 require_once __DIR__.'/defender/validation.php';
-require_once __DIR__.'/defender/csrftoken.php';
+require_once __DIR__.'/defender/token.php';
 require_once __DIR__.'/defender/mimecheck.php';

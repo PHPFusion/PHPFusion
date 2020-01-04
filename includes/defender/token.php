@@ -58,10 +58,7 @@ class Token extends \defender {
      */
     private $error = FALSE;
 
-
     public function __construct() {
-
-        parent::__construct();
 
         $locale = fusion_get_locale();
         // Validate the Token When POST is not Empty Automatically
