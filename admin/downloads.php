@@ -258,7 +258,7 @@ if (!empty($data['download_file'])) {
 } else {
     $file_options = [
         "class"       => "m-t-10",
-        "required"    => TRUE,
+        //"required"    => TRUE,
         "width"       => "100%",
         "upload_path" => DOWNLOADS."files/",
         "max_byte"    => $dl_settings['download_max_b'],
@@ -276,7 +276,8 @@ echo closetabbody();
 echo opentabbody($tab_title['title'][1], 'dll', $tab_active);
 if (empty($data['download_file'])) {
     echo form_text('download_url', $locale['download_0206'], $data['download_url'], [
-        "required"    => TRUE,
+        //"required"    => TRUE,
+        'type'        => 'url',
         "class"       => "m-t-10",
         "inline"      => TRUE,
         "placeholder" => "http://",
