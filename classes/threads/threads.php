@@ -59,19 +59,8 @@ class ForumThreads extends ForumServer {
         $userdata['user_id'] = !empty($userdata['user_id']) ? (int)intval($userdata['user_id']) : 0;
         $lastVisited = defined('LASTVISITED') ? LASTVISITED : TIME;
 
-        $type_array = [
-            'all'         => '',
-            'discussions' => '',
-            'attachments' => '',
-            'poll'        => '',
-            'solved'      => '',
-            'unsolved'    => '',
-        ];
-
         $join = '';
-        if (isset($_GET['type']) && isset($type_array[$_GET['type']]) && $_GET['type'] == 'attachments') {
-            $join = "LEFT JOIN ".DB_FORUM_ATTACHMENTS." a on a.thread_id = t.thread_id";
-        } else if (isset($_GET['type']) && isset($type_array[$_GET['type']]) && $_GET['type'] == 'poll') {
+        if (isset($_GET['type']) && $_GET['type'] == 'poll') {
             $join = "LEFT JOIN ".DB_FORUM_POSTS." p1 ON p1.thread_id=t.thread_id AND tf.forum_id=p1.forum_id
             LEFT JOIN ".DB_FORUM_POLLS." p ON p.thread_id = t.thread_id
             LEFT JOIN ".DB_FORUM_VOTES." v ON v.thread_id = t.thread_id AND p1.post_id = v.post_id";
@@ -89,7 +78,9 @@ class ForumThreads extends ForumServer {
         SELECT count(t.thread_id) 'thread_count',
         t.thread_id
         FROM ".DB_FORUM_THREADS." t
-        INNER JOIN ".DB_FORUMS." tf ON t.forum_id=tf.forum_id ".$join."
+        INNER JOIN ".DB_FORUMS." tf ON t.forum_id=tf.forum_id 
+        LEFT JOIN ".DB_FORUM_ATTACHMENTS." a on a.thread_id = t.thread_id
+        ".$join."
         WHERE ".($forum_id ? " t.forum_id='".intval($forum_id)."' AND " : "")." t.thread_hidden='0' AND ".groupaccess('tf.forum_access')."
         ".(isset($filter['condition']) ? $filter['condition'] : '')." GROUP BY t.thread_id";
 
