@@ -838,7 +838,7 @@ class UserFieldsInput {
         $this->_newUserPassword = self::_getPasswordInput( 'user_password1' );
         $this->_newUserPassword2 = self::_getPasswordInput( 'user_password2' );
     
-        if ( $this->is_admin_panel || ( post( 'update_profile_password' ) ) ) {
+        if ( ( $this->is_admin_panel || ( post( $this->post_name.'_password' ) ) ) && $this->_userPassword ) {
             
             if ( !fusion_get_userdata( 'user_password' ) ) {
                 $skip_pass = TRUE;
@@ -871,7 +871,7 @@ class UserFieldsInput {
                             $this->_newUserPasswordHash = $passAuth->getNewHash();
                             $this->_newUserPasswordAlgo = $passAuth->getNewAlgo();
                             $this->_newUserPasswordSalt = $passAuth->getNewSalt();
-            
+    
                             $user_algo = $this->_newUserPasswordAlgo;
                             $user_salt = $this->_newUserPasswordSalt;
                             $user_password = $this->_newUserPasswordHash;
@@ -880,7 +880,7 @@ class UserFieldsInput {
                             //if (!defined('ADMIN_PANEL') && !$this->skip_password) {
                             //Authenticate::setUserCookie($this->user_data['user_id'], $passAuth->getNewSalt(), $passAuth->getNewAlgo(), FALSE);
                             //}
-            
+    
                             break;
                         case 1:
                             // New Password equal old password
@@ -947,9 +947,9 @@ class UserFieldsInput {
             
                 if ( !$this->is_admin_panel ) {
                     addNotice( $notice_class, $notice_message );
+                    redirect( FUSION_REQUEST );
                 }
-            
-                redirect( FUSION_REQUEST );
+                
             }
         }
     }
@@ -983,12 +983,12 @@ class UserFieldsInput {
         $user_admin_salt = '';
         $notice_message = '';
         $notice_class = '';
-        
-        if ( $this->_getPasswordInput( "user_admin_password" ) && ( post( $this->post_name.'_password' ) ) ) { // if submit current admin password
-            
-            $this->_userAdminPassword = $this->_getPasswordInput( "user_admin_password" ); // var1
-            $this->_newUserAdminPassword = $this->_getPasswordInput( "user_admin_password1" ); // var2
-            $this->_newUserAdminPassword2 = $this->_getPasswordInput( "user_admin_password2" ); // var3
+    
+        $this->_userAdminPassword = $this->_getPasswordInput( "user_admin_password" ); // var1
+        $this->_newUserAdminPassword = $this->_getPasswordInput( "user_admin_password1" ); // var2
+        $this->_newUserAdminPassword2 = $this->_getPasswordInput( "user_admin_password2" ); // var3
+    
+        if ( ( $this->is_admin_panel || ( post( $this->post_name.'_password' ) ) && $this->_userAdminPassword ) ) { // if submit current admin password
             
             $adminpassAuth = new PasswordAuth();
             
@@ -1016,7 +1016,7 @@ class UserFieldsInput {
                 // authenticated. now do the integrity check
                 $_isValidNewPassword = $adminpassAuth->isValidNewPassword();
                 switch ( $_isValidNewPassword ) {
-                    case '0':
+                    case 0:
                         // New password is valid
                         $user_admin_password = $adminpassAuth->getNewHash();
                         $user_admin_salt = $adminpassAuth->getNewSalt();
@@ -1024,7 +1024,7 @@ class UserFieldsInput {
                         $notice_class = "success";
                         $notice_message = "Your new admin password has been updated successfully.";
                         break;
-                    case '1':
+                    case 1:
                         // new password is old password
                         fusion_stop();
                         Defender::setInputError( 'user_admin_password' );
@@ -1034,7 +1034,7 @@ class UserFieldsInput {
                         $notice_class = "danger";
                         $notice_message = $this->locale['u144'].$this->locale['u146'].$this->locale['u133'];
                         break;
-                    case '2':
+                    case 2:
                         // The two new passwords are not identical
                         fusion_stop();
                         Defender::setInputError( 'user_admin_password1' );
@@ -1044,7 +1044,7 @@ class UserFieldsInput {
                         $notice_class = "danger";
                         $notice_message = $this->locale['u144'].$this->locale['u148a'];
                         break;
-                    case '3':
+                    case 3:
                         // New password contains invalid chars / symbols
                         fusion_stop();
                         Defender::setInputError( 'user_admin_password1' );
@@ -1062,12 +1062,13 @@ class UserFieldsInput {
             }
             
             if ( fusion_safe() ) {
-                dbquery( "UPDATE `".DB_USERS."` SET user_admin_algo=:ua_algo, user_admin_password=:ua_passwd, user_admin_salt=:ua_salt WHERE user_id=:uid", [
+                dbquery( "UPDATE ".DB_USERS." SET user_admin_algo=:ua_algo, user_admin_password=:ua_passwd, user_admin_salt=:ua_salt WHERE user_id=:uid", [
                     ':uid'       => $this->user_data['user_id'],
                     ':ua_algo'   => $user_admin_algo,
                     ':ua_salt'   => $user_admin_salt,
                     ':ua_passwd' => $user_admin_password
                 ] );
+    
                 // changing password by member
                 $settings = fusion_get_settings();
                 include INCLUDES."sendmail_include.php";
@@ -1102,6 +1103,7 @@ class UserFieldsInput {
             }
             
         } else {
+        
             // check db only - admin cannot save profile page without password
             if ( iADMIN && checkrights( 'M' ) ) {
                 $require_valid_password = $this->user_data['user_admin_password'] ? TRUE : FALSE;
