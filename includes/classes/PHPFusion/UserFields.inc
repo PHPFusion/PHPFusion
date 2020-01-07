@@ -303,6 +303,7 @@ class UserFields extends UserFieldsQuantum {
     public function editProfileInfo() {
         
         if ( !iMEMBER ) {
+            addNotice( 'info', 'Please sign into your account to view your profile page settings page.', 'all' );
             redirect( BASEDIR.fusion_get_settings( 'opening_page' ) );
         }
         

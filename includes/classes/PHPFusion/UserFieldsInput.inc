@@ -562,10 +562,15 @@ class UserFieldsInput {
     
     private function updateSecurity() {
         $this->updateUserName();
+    
         $this->updatePass();
+    
         $this->updateAdminPass();
+    
         $this->updateEmail();
+    
         $this->closeAccount();
+    
         // Security - added level security
         //if ( post( $this->post_name.'_block' ) || post( $this->post_name.'_unblock' ) ) {
         //    $this->update_user_blacklist();
@@ -607,10 +612,14 @@ class UserFieldsInput {
      * @throws \Exception
      */
     private function updateSettings() {
-        if ( $this->section == 'preferences' ) {
-            $this->updatePreference();
-        } else if ( $this->section == 'acc_settings' ) {
-            $this->updateSecurity();
+        switch ( $this->section ) {
+            default:
+            case 'public':
+                $this->updateSecurity();
+                break;
+            case 'preferences':
+                $this->updatePreference();
+                break;
         }
     }
     
@@ -821,22 +830,20 @@ class UserFieldsInput {
      * Handle User Password Input and Validation
      */
     private function updatePass() {
-        $user_salt = '';
-        $user_algo = '';
-        $user_password = '';
-        $notice_class = '';
-        $notice_message = '';
+    
+        $settings = fusion_get_settings();
+        
         // method - validate_update
         $this->_userPassword = self::_getPasswordInput( 'user_password' );
         $this->_newUserPassword = self::_getPasswordInput( 'user_password1' );
         $this->_newUserPassword2 = self::_getPasswordInput( 'user_password2' );
-        if ( $this->is_admin_panel || ( post( $this->post_name.'_password' ) ) ) {
+    
+        if ( $this->is_admin_panel || ( post( 'update_profile_password' ) ) ) {
+            
             if ( !fusion_get_userdata( 'user_password' ) ) {
                 $skip_pass = TRUE;
             }
-            /**
-             * Validation of Password
-             */
+        
             $passAuth = new PasswordAuth();
             $passAuth->inputPassword = $this->_userPassword;
             $passAuth->inputNewPassword = $this->_newUserPassword;
@@ -844,36 +851,38 @@ class UserFieldsInput {
             $passAuth->currentPasswordHash = $this->user_data['user_password'];
             $passAuth->currentAlgo = $this->user_data['user_algo'];
             $passAuth->currentSalt = $this->user_data['user_salt'];
-    
-            if ( $this->is_admin_panel or $passAuth->isValidCurrentPassword() or isset( $skip_pass ) ) {
+        
+            $notice_class = 'danger';
+            $notice_message = $this->locale['u149'];
+        
+            if ( $this->is_admin_panel || $passAuth->isValidCurrentPassword() || isset( $skip_pass ) ) {
                 
                 // Just for validation purposes for example email change
                 $this->_isValidCurrentPassword = 1;
-        
+            
                 // Change new password
                 if ( !empty( $this->_newUserPassword ) ) {
                     
                     $_isValidNewPassword = $passAuth->isValidNewPassword();
     
                     switch ( $_isValidNewPassword ) {
-                        case '0':
+                        case 0:
                             // New password is valid
                             $this->_newUserPasswordHash = $passAuth->getNewHash();
                             $this->_newUserPasswordAlgo = $passAuth->getNewAlgo();
                             $this->_newUserPasswordSalt = $passAuth->getNewSalt();
-    
+            
                             $user_algo = $this->_newUserPasswordAlgo;
                             $user_salt = $this->_newUserPasswordSalt;
                             $user_password = $this->_newUserPasswordHash;
                             $notice_class = "success";
-                            $notice_message = "Your new password has been updated successfully.";
-    
+                            $notice_message = str_replace( "USER_NAME", $this->user_data['user_name'], $this->locale['global_458'] );
                             //if (!defined('ADMIN_PANEL') && !$this->skip_password) {
                             //Authenticate::setUserCookie($this->user_data['user_id'], $passAuth->getNewSalt(), $passAuth->getNewAlgo(), FALSE);
                             //}
-    
+            
                             break;
-                        case '1':
+                        case 1:
                             // New Password equal old password
                             fusion_stop();
                             Defender::setInputError( 'user_password' );
@@ -883,7 +892,7 @@ class UserFieldsInput {
                             $notice_class = 'danger';
                             $notice_message = $this->locale['u133'];
                             break;
-                        case '2':
+                        case 2:
                             // The two new passwords are not identical
                             fusion_stop();
                             Defender::setInputError( 'user_password1' );
@@ -893,7 +902,7 @@ class UserFieldsInput {
                             $notice_class = 'danger';
                             $notice_message = $this->locale['u148'];
                             break;
-                        case '3':
+                        case 3:
                             // New password contains invalid chars / symbols
                             fusion_stop();
                             Defender::setInputError( 'user_password1' );
@@ -903,57 +912,69 @@ class UserFieldsInput {
                             break;
                     }
                 }
-        
+            
             } else {
-        
-                Defender::stop();
+            
+                fusion_stop();
                 Defender::setInputError( 'user_password' );
                 Defender::setErrorText( 'user_password', $this->locale['u149'] );
-                $notice_class = 'danger';
-                $notice_message = $this->locale['u149'];
+            
             }
-            if ( fusion_safe() ) {
-                dbquery( "UPDATE `".DB_USERS."` SET user_salt=:u_salt, user_algo=:u_algo, user_password=:u_passwd WHERE user_id=:uid", [
+        
+            if ( fusion_safe() && isset( $user_salt ) && isset( $user_algo ) && isset( $user_password ) ) {
+            
+                $pass_param = [
                     ':u_salt'   => $user_salt,
                     ':u_algo'   => $user_algo,
                     ':u_passwd' => $user_password,
                     ':uid'      => $this->user_data['user_id']
-                ] );
+                ];
+            
+                dbquery( "UPDATE ".DB_USERS." SET user_salt=:u_salt, user_algo=:u_algo, user_password=:u_passwd WHERE user_id=:uid", $pass_param );
                 
                 include INCLUDES."sendmail_include.php";
-    
-                addNotice( "success", str_replace( "USER_NAME", $this->user_data['user_name'], $this->locale['global_458'] ) );
-                $settings = fusion_get_settings();
+                $subject = str_replace( "[SITENAME]", $settings['sitename'], $this->locale['global_456'] );
                 $input = [
                     "mailname" => $this->user_data['user_name'],
                     "email"    => $this->user_data['user_email'],
-                    "subject"  => str_replace( "[SITENAME]", $settings['sitename'], $this->locale['global_456'] ),
-                    "message"  => str_replace(
-                        [
-                            "[SITENAME]",
-                            "[SITEUSERNAME]",
-                            "USER_NAME",
-                            "[PASSWORD]"
-                        ],
-                        [
-                            $settings['sitename'],
-                            $settings['siteusername'],
-                            $this->user_data['user_name'],
-                            $this->_newUserPassword,
-                        ],
-                        $this->locale['global_457']
-                    )
+                    "subject"  => $subject,
+                    "message"  => $this->getEmailTemplate( 'password_change' ), // Deprecates Global_457
                 ];
-                if ( !sendemail( $input['mailname'], $input['email'], $settings['siteusername'], $settings['siteemail'], $input['subject'],
-                    $input['message'] ) ) {
+            
+                if ( !sendemail( $input['mailname'], $input['email'], $settings['siteusername'], $settings['siteemail'], $input['subject'], $input['message'], 'html' ) ) {
                     addNotice( 'warning', str_replace( "USER_NAME", $this->user_data['user_name'], $this->locale['global_459'] ) );
                 }
+            
                 if ( !$this->is_admin_panel ) {
                     addNotice( $notice_class, $notice_message );
                 }
+            
+                redirect( FUSION_REQUEST );
             }
         }
+    }
     
+    private function getEmailTemplate( $type ) {
+        $settings = fusion_get_settings();
+        switch ( $type ) {
+            default:
+                fusion_stop();
+                break;
+            case 'password_change':
+                $tpl = Template::getInstance( 'passchange-email' );
+                $tpl->set_template( THEMES.'templates/global/email/password_change.html' );
+                $tpl->set_tag( 'subject', $this->subject );
+                $tpl->set_tag( 'site_logo', $settings['siteurl'].'/images/icon.png' );
+                $tpl->set_tag( 'site_name', $this->user_data['user_name'] );
+                $tpl->set_tag( 'user_name', $this->user_data['user_name'] );
+                $tpl->set_tag( 'user_email', $this->user_data['user_email'] );
+                $tpl->set_tag( 'new_user_password', $this->_newUserPassword ); // when the password is {%fuck%} then how?
+                $tpl->set_tag( 'site_url', $settings['siteurl'] );
+                $tpl->set_tag( 'site_name', $settings['sitename'] );
+                return $tpl->get_output();
+                break;
+        }
+        return '';
     }
     
     private function updateAdminPass() {
