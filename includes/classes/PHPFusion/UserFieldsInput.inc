@@ -168,9 +168,6 @@ class UserFieldsInput {
             return TRUE;
         }
     
-        print_p( 'User Hash : '.$this->user_data['user_password'] );
-        print_p( 'Posted Hash: '.$user_hash );
-        
         fusion_stop();
         return FALSE;
     }
