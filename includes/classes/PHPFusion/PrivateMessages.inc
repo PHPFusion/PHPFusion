@@ -358,7 +358,7 @@ class PrivateMessages {
                         'link'           => BASEDIR."messages.php?folder=".$_GET['folder']."&amp;msg_read=".$data['message_id'],
                         'name'           => $data['message_subject'],
                         'message_header' => "<strong>".$this->locale['462'].":</strong> ".$data['message_subject'],
-                        'message_text'   => $data['message_smileys'] == "y" ? parseubb(parsesmileys($data['message_message'])) : parseubb($data['message_message']),
+                        'message_text'   => $data['message_smileys'] == "y" ? nl2br(parseubb(parsesmileys($data['message_message']))) : nl2br(parseubb($data['message_message'])),
                     ];
                     $this->info['items'][$data['message_id']] = $data;
                 }
@@ -407,7 +407,7 @@ class PrivateMessages {
                 'link'           => BASEDIR."messages.php?folder=".$_GET['folder']."&amp;msg_read=".$data['message_id'],
                 'name'           => $data['message_subject'],
                 'message_header' => "<strong>".$this->locale['462'].":</strong> ".$data['message_subject'],
-                'message_text'   => $data['message_smileys'] == "y" ? parseubb(parsesmileys($data['message_message'])) : parseubb($data['message_message'])
+                'message_text'   => $data['message_smileys'] == "y" ? nl2br(parseubb(parsesmileys($data['message_message']))) : nl2br(parseubb($data['message_message']))
             ];
 
             $this->info['items'][$data['message_id']] = $data;
