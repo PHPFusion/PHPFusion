@@ -82,6 +82,76 @@ class UserFieldsInput {
     }
     
     /**
+     * Upload Avatar Method
+     *
+     * @return bool
+     * @throws \Exception
+     */
+    public function uploadAvatar() {
+        
+        $settings['avatar_studio'] = TRUE; // temporary value until we can do user center
+        //print_P($_POST);
+        if ( post( 'form_id' ) == 'avatar_studio_frm' && $this->checkUserHash() ) {
+            
+            if ( file_uploaded( 'uav_input' ) ) {
+                
+                $avatar = file_sanitizer( 'uav_input', '', 'uav_input' );
+                
+                if ( isset( $avatar['error'] ) && $avatar['error'] == 0 ) {
+                    // success in uploading.
+                    if ( !empty( $avatar['image_name'] ) ) {
+                        // delete the old avatar from the database
+                        if ( is_file( BASEDIR.'images/avatars/'.$this->user_data['user_avatar'] ) ) {
+                            unlink( BASEDIR.'images/avatars/'.$this->user_data['user_avatar'] );
+                        }
+                        
+                        dbquery( "UPDATE ".DB_USERS." SET user_avatar=:filename WHERE user_id=:uid", [
+                            ':filename' => $avatar['image_name'],
+                            ':uid'      => $this->user_data['user_id']
+                        ] );
+                        
+                        addNotice( 'success', 'Your avatar has been updated' );
+                    }
+                }
+                
+                redirect( FUSION_REQUEST );
+                
+            } else if ( $settings['avatar_studio'] == 1 ) {
+                // avatar studio functions
+                $avatar = sanitizer( 'avatar_studio', '', 'avatar_studio' );
+                if ( is_file( BASEDIR.'images/avatars/studio/'.$avatar ) ) {
+                    
+                    require_once INCLUDES.'photo_functions_include.php';
+                    
+                    // delete the old avatar from the database
+                    if ( is_file( BASEDIR.'images/avatars/'.$this->user_data['user_avatar'] ) ) {
+                        unlink( BASEDIR.'images/avatars/'.$this->user_data['user_avatar'] );
+                    }
+                    
+                    $image_name = stripfilename( substr( $avatar, 0, strrpos( $avatar, "." ) ) );
+                    if ( $avatar != "" && !preg_match( "/[^a-zA-Z0-9_-]/", $avatar ) ) {
+                        $image_name = $avatar;
+                    }
+                    $image_ext = strtolower( strrchr( $avatar, '.' ) );
+                    $avatar_filename = filename_exists( BASEDIR.'images/avatars/', $image_name.$image_ext );
+                    
+                    copy( BASEDIR.'images/avatars/studio/'.$avatar, BASEDIR.'images/avatars/'.$avatar_filename );
+                    
+                    dbquery( "UPDATE ".DB_USERS." SET user_avatar=:filename WHERE user_id=:uid", [
+                        ':filename' => $avatar_filename,
+                        ':uid'      => $this->user_data['user_id']
+                    ] );
+                    addNotice( 'success', 'Your avatar has been updated' );
+                    redirect( FUSION_REQUEST );
+                }
+            }
+            
+        }
+        
+        return FALSE;
+    }
+    
+    /**
      * Checks user password integrity
      * Requires POST of 'user_password_verify'
      *
@@ -98,6 +168,9 @@ class UserFieldsInput {
             return TRUE;
         }
     
+        print_p( 'User Hash : '.$this->user_data['user_password'] );
+        print_p( 'Posted Hash: '.$user_hash );
+        
         fusion_stop();
         return FALSE;
     }
@@ -110,7 +183,7 @@ class UserFieldsInput {
         $this->_method = "validate_insert";
     
         if ( post( $this->post_name ) ) {
-    
+        
             $this->user_data += $this->_setEmptyFields();
             
             // Set Core Fields.
@@ -601,9 +674,10 @@ class UserFieldsInput {
     
         $userFields = new UserFields();
         $current_page = $userFields->getCurrentInputPage();
-        
         switch ( $current_page ) {
+            default:
             case 'pu_profile':
+                $this->uploadAvatar();
                 $this->updatePublic();
                 break;
             case 'se_profile':
