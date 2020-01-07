@@ -101,7 +101,7 @@ class Functions {
                 $img_w = $size [0];
                 $img_h = $size [1];
             }
-            $res = "<a target='_blank' href='".INFUSIONS."forum/attachments/".$file."' rel='attach_".$rel."' title='".$file."'><img class='img-thumbnail' src='".INFUSIONS."forum/attachments/".$file."' alt='".$file."' style='border:none; width:".$img_w."px; height:".$img_h."px;' /></a>\n";
+            $res = "<a target='_blank' href='".INFUSIONS."forum/attachments/".$file."' rel='attach_".$rel."' title='".$file."'><img src='".INFUSIONS."forum/attachments/".$file."' alt='".$file."' style='border:none; width:".$img_w."px; height:".$img_h."px;' /></a>\n";
         } else {
             $res = fusion_get_locale('forum_0188');
         }
