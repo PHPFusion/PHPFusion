@@ -56,14 +56,21 @@ echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-8'>\n";
 openside('');
 echo form_select('enable_terms', $locale['558'], $settings['enable_terms'], ['options' => $opts]);
-echo \PHPFusion\QuantumFields::quantum_multilocale_fields('license_agreement', $locale['559'], $settings['license_agreement'], [
-    'form_name' => 'settingsform',
-    'input_id'  => 'enable_license_agreement',
-    'autosize'  => !fusion_get_settings('tinymce_enabled') ? FALSE : TRUE,
-    'type'      => (fusion_get_settings('tinymce_enabled') ? 'tinymce' : 'html'),
-    'function'  => 'form_textarea'
-]);
-
+if (count(fusion_get_enabled_languages()) <= 1) {
+    echo \PHPFusion\QuantumFields::quantum_multilocale_fields('license_agreement', $locale['559'], $settings['license_agreement'], [
+        'form_name' => 'settingsform',
+        'input_id'  => 'enable_license_agreement',
+        'autosize'  => !fusion_get_settings('tinymce_enabled') ? FALSE : TRUE,
+        'type'      => (fusion_get_settings('tinymce_enabled') ? 'tinymce' : 'html'),
+        'function'  => 'form_textarea'
+    ]);
+} else {
+    echo form_textarea('license_agreement', $locale['559'], $settings['license_agreement'], [
+        'form_name' => 'settingsform',
+        'autosize'  => !fusion_get_settings('tinymce_enabled') ? FALSE : TRUE,
+        'html'      => !fusion_get_settings('tinymce_enabled') ? TRUE : FALSE
+    ]);
+}
 closeside();
 echo "</div><div class='col-xs-12 col-sm-4'>\n";
 openside('');
