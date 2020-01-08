@@ -64,10 +64,6 @@ class Poll {
      * @var array
      */
     private static $locale = [];
-    /**
-     * @var \defender|null
-     */
-    private $defender = NULL;
 
     /**
      * Object
@@ -75,7 +71,6 @@ class Poll {
      * @param array $thread_info
      */
     public function __construct(array $thread_info) {
-        $this->defender = \defender::getInstance();
         self::$locale = fusion_get_locale('', FORUM_LOCALE);
         self::set_poll_permissions($thread_info['permissions']);
         self::set_thread_data($thread_info['thread']);
@@ -371,8 +366,6 @@ class Poll {
 
         $locale = self::$locale;
 
-        $defender = $this->defender;
-
         $html = '';
 
         if (self::get_poll_permissions("can_access") && $thread_data['thread_poll'] == TRUE) {
@@ -418,7 +411,7 @@ class Poll {
 
                             $pollInput['poll_option_id'] = stripinput($_POST['poll_option']);
 
-                            if ($defender::safe()) {
+                            if (\defender::safe()) {
 
                                 dbquery(
                                     "UPDATE ".DB_FORUM_POLL_OPTIONS." SET forum_poll_option_votes=forum_poll_option_votes+1 WHERE thread_id='".intval(
@@ -514,9 +507,9 @@ class Poll {
                                     'title'  => $poll_option['forum_poll_option_text'],
                                     'output' => $option_votes,
                                 ];
-                                // $html .= progress_bar(self::$poll_info['content'][$i]['output'], self::$poll_info['content'][$i]['title'], '', '10px');
+
                                 $html .= progress_bar(
-                                    self::$poll_info['content'][$i]['output'], self::$poll_info['content'][$i]['title'],
+                                    self::$poll_info['content'][$i]['output'], self::$poll_info['content'][$i]['title'].' ['.$poll_option['forum_poll_option_votes'].'/'.$poll['forum_poll_votes'].']',
                                     ['height' => '10px']
                                 );
                             }
