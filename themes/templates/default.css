@@ -1555,6 +1555,35 @@ table.fusion-table tr th.check-col {
 		width: 35px;
 	}
 
+	table.fusion-table td {
+		display: none;
+	}
+
+	/*
+	Labels
+	 */
+	table.fusion-table td:not(.has-actions)::before {
+		position: absolute;
+		left: 10px;
+		display: block;
+		overflow: hidden;
+		width: 32%;
+		content: attr(data-colname);
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
+
+	table.fusion-table td.has-actions {
+		border-top: 1px solid #ddd !important; /*do not remove !important */
+	}
+
+	table.fusion-table td:not(.has-actions) {
+		position: relative;
+		clear: both;
+		width: auto !important;
+		overflow: hidden;
+		padding-left: 35%;
+	}
 	table.fusion-table tr:not(.inline-edit-column) > td {
 		display: block;
 		position: relative;
@@ -1608,6 +1637,9 @@ table.fusion-table tr th.check-col {
 		display: none;
 	}
 
+	table.fusion-table tr.expanded td:not(.has-row-actions) {
+		border: 0;
+	}
 	table.fusion-table tr.expanded td:not(.hidden) {
 		display: block;
 	}
