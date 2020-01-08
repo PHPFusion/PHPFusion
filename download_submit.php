@@ -186,7 +186,7 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
             $file_options = [
                 "class"       => "m-10 p-10",
                 "inline"      => TRUE,
-                "required"    => TRUE,
+                //"required"    => TRUE,
                 "upload_path" => DOWNLOADS."submissions/",
                 "max_byte"    => $dl_settings['download_max_b'],
                 'valid_ext'   => $dl_settings['download_types'],
@@ -208,7 +208,7 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
                 "class"       => "m-10 p-10",
                 "error_text"  => $locale['download_0116'],
                 "inline"      => TRUE,
-                "required"    => TRUE,
+                //"required"    => TRUE,
                 "placeholder" => "http://"
             ]);
             echo closetabbody();
