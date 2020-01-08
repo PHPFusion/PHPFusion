@@ -1218,8 +1218,8 @@ class Tables {
                 if ( $this->table_props['edit_link'] or $this->table_props['delete_link'] ) {
                     $checkbox_col = "<td class='check-col'>\n".form_checkbox( "id[]", '', '', ['input_id' => 'id-'.$id, 'value' => $id, 'class' => 'm-b-10' ] )."</td>\n";
                 }
-
-                $html .= "<tr id='entry-row-".$id."'>\n$checkbox_col\n";
+    
+                $html .= "<tr id='entry-row-".$id."' class='inline-edit-column'>\n$checkbox_col\n";
 
                 $tableData = new TableData( $this );
 
