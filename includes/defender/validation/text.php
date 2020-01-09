@@ -16,11 +16,13 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
+use Defender\Validation;
+
 /**
  * Class Text
  * Validates Text Input
  */
-class Text extends \Defender\Validation {
+class Text extends Validation {
     
     /**
      * validate and sanitize a text
@@ -45,8 +47,8 @@ class Text extends \Defender\Validation {
                 if ( self::$inputConfig['max_length'] ) {
                     // Input max length needs a value.
                     if ( !preg_check( "^([.\\s\\S]{".self::$inputConfig['min_length'].",".self::$inputConfig['max_length']."})$^", $val ) ) {
-                        \Defender::stop();
-                        \Defender::setInputError( self::$inputName );
+                        Defender::stop();
+                        Defender::setInputError( self::$inputName );
                         return self::$inputDefault;
                     }
                 }
@@ -62,8 +64,8 @@ class Text extends \Defender\Validation {
         } else {
             if ( self::$inputConfig['max_length'] ) {
                 if ( !preg_check( "^([.\\s\\S]{".self::$inputConfig['min_length'].",".self::$inputConfig['max_length']."})$^", self::$inputValue ) ) {
-                    \Defender::stop();
-                    \Defender::setInputError( self::$inputName );
+                    Defender::stop();
+                    Defender::setInputError( self::$inputName );
                     return FALSE;
                 }
             }
@@ -73,7 +75,7 @@ class Text extends \Defender\Validation {
             }
         }
         if ( self::$inputConfig['required'] && !$value ) {
-            \Defender::setInputError( self::$inputName );
+            Defender::setInputError( self::$inputName );
         }
         if ( self::$inputConfig['safemode'] && !preg_check( "/^[-0-9A-Z_@\s]+$/i", $value ) ) {
             return FALSE;
@@ -92,8 +94,8 @@ class Text extends \Defender\Validation {
         
         // add min length, add max length, add strong password into roadmaps.
         if ( self::$inputConfig['required'] && !self::$inputValue ) {
-            \Defender::stop();
-            \Defender::setInputError( self::$inputName );
+            Defender::stop();
+            Defender::setInputError( self::$inputName );
         }
         if ( preg_match( "/^[0-9A-Z@!#$%&\/\(\)=\-_?+\*\.,:;\<\>`]{".self::$inputConfig['min_length'].",".self::$inputConfig['max_length']."}$/i",
             self::$inputValue ) ) {
@@ -112,10 +114,10 @@ class Text extends \Defender\Validation {
      */
     protected function verify_email() {
         if ( self::$inputConfig['required'] && !self::$inputValue ) {
-            \Defender::stop();
-            \Defender::setInputError( self::$inputName );
+            fusion_stop();
+            Defender::setInputError( self::$inputName );
         }
-        if ( filter_var( self::$input_value, FILTER_VALIDATE_EMAIL ) ) {
+        if ( filter_var( self::$inputValue, FILTER_VALIDATE_EMAIL ) ) {
             return self::$inputValue;
         }
         return FALSE;

@@ -1577,7 +1577,11 @@ table.fusion-table tr th.check-col {
 		border-top: 1px solid #ddd !important; /*do not remove !important */
 	}
 
-	table.fusion-table td:not(.has-actions) {
+	table.fusion-table td.check-col {
+		width: 1%;
+	}
+
+	table.fusion-table td:not(.has-actions):not(.check-col) {
 		position: relative;
 		clear: both;
 		width: auto !important;

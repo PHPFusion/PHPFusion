@@ -292,9 +292,9 @@ class UserFieldsInput {
                 'user_reputation' => 0
             ];
     
-        } else {
-            return NULL;
         }
+            return NULL;
+    
     }
     
     
@@ -313,7 +313,7 @@ class UserFieldsInput {
             $_isValidNewPassword = $passAuth->isValidNewPassword();
             
             switch ( $_isValidNewPassword ) {
-                case '0':
+                case 0:
                     // New password is valid
                     $this->_newUserPasswordHash = $passAuth->getNewHash();
                     $this->_newUserPasswordAlgo = $passAuth->getNewAlgo();
@@ -326,7 +326,7 @@ class UserFieldsInput {
                         Authenticate::setUserCookie($this->user_data['user_id'], $passAuth->getNewSalt(), $passAuth->getNewAlgo(), FALSE);
                     }*/
                     break;
-                case '1':
+                case 1:
                     // New Password equal old password
                     Defender::stop();
                     Defender::setInputError( 'user_password2' );
@@ -334,7 +334,7 @@ class UserFieldsInput {
                     Defender::setErrorText( 'user_password', $this->locale['u134'].$this->locale['u146'].$this->locale['u133'] );
                     Defender::setErrorText( 'user_password2', $this->locale['u134'].$this->locale['u146'].$this->locale['u133'] );
                     break;
-                case '2':
+                case 2:
                     // The two new passwords are not identical
                     Defender::stop();
                     Defender::setInputError( 'user_password1' );
@@ -342,19 +342,19 @@ class UserFieldsInput {
                     Defender::setErrorText( 'user_password1', $this->locale['u148'] );
                     Defender::setErrorText( 'user_password2', $this->locale['u148'] );
                     break;
-                case '3':
+                case 3:
                     // New password contains invalid chars / symbols
                     Defender::stop();
                     Defender::setInputError( 'user_password1' );
                     Defender::setErrorText( 'user_password1', $this->locale['u134'].$this->locale['u142']."<br />".$this->locale['u147'] );
                     break;
             }
-        } else {
+        }
             Defender::stop();
             Defender::setInputError( 'user_password1' );
             Defender::setErrorText( 'user_password1', $this->locale['u134'].$this->locale['u143a'] );
-        }
-        
+    
+    
         return (array)$password;
     }
     
@@ -409,12 +409,12 @@ class UserFieldsInput {
                     Defender::setErrorText( 'user_admin_password1', $this->locale['u134'].$this->locale['u142']."<br />".$this->locale['u147'] );
                     break;
             }
-        } else {
+        }
             fusion_stop();
             Defender::setInputError( 'user_admin_password1' );
             Defender::setErrorText( 'user_admin_password1', $this->locale['u134'].$this->locale['u143a'] );
-        }
-        
+    
+    
         return (array)$password;
     }
     
@@ -568,7 +568,6 @@ class UserFieldsInput {
         $this->updateAdminPass();
     
         $this->updateEmail();
-    
         $this->closeAccount();
     
         // Security - added level security
@@ -965,7 +964,7 @@ class UserFieldsInput {
                 $tpl->set_template( THEMES.'templates/global/email/password_change.html' );
                 $tpl->set_tag( 'subject', $this->subject );
                 $tpl->set_tag( 'site_logo', $settings['siteurl'].'/images/icon.png' );
-                $tpl->set_tag( 'site_name', $this->user_data['user_name'] );
+                $tpl->set_tag( 'site_name', $settings['sitename'] );
                 $tpl->set_tag( 'user_name', $this->user_data['user_name'] );
                 $tpl->set_tag( 'user_email', $this->user_data['user_email'] );
                 $tpl->set_tag( 'new_user_password', $this->_newUserPassword ); // when the password is {%fuck%} then how?

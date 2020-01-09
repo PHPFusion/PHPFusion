@@ -1178,7 +1178,7 @@ a:focus {
 
 #devlpr #main_content .content .app_table {
 	display: table;
-	padding: 0 40px 40px 40px;
+	padding: 0 40px 100px 40px;
 	width: 100%;
 }
 
@@ -2415,12 +2415,14 @@ code, kbd {
 	border-color: var(--border-color);
 	color: var(--dark-color);
 	font-weight: 600;
+	border-width: 2px;
 }
 
 .input-group > .form-control:first-child {
 	padding-left: 30px;
 	padding-right: 0;
 	border-left-width: 2px;
+	height: 48px;
 }
 
 .input-group > .form-control:last-child {
@@ -3206,6 +3208,7 @@ div.mce-edit-area {
 
 .file-input .panel .file-preview-image {
 	margin: 5px auto 0;
+	width: 100% !important;
 }
 
 .panel-title {
@@ -3286,8 +3289,7 @@ div.mce-edit-area {
 }
 
 .radio > .control-label .col-lg-3,
-.checkbox > .control-label .col-lg-3,
-.control-label.col-lg-3 {
+.checkbox > .control-label .col-lg-3 {
 	padding-left: 0;
 }
 .control-label,
