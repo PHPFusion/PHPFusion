@@ -1124,7 +1124,7 @@ class ForumThreads extends ForumServer {
                     if ($forum_settings['forum_ranks']) {
                         $pdata['user_rank'] = iMOD ? self::show_forum_rank($pdata['user_posts'], 104, $pdata['user_groups']) : self::show_forum_rank($pdata['user_posts'], $pdata['user_level'], $pdata['user_groups']);
                     } else {
-                        $pdata['user_rank'] = iMOD ? $locale['userf1'] : getuserlevel($pdata['user_level']);
+                        $pdata['user_rank'] = getuserlevel($pdata['user_level']);
                     }
                 }
 
