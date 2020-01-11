@@ -178,8 +178,11 @@ function antiflood_countaccess() {
     }
     
     $control[ USER_IP ]["c"] = 1;
-    if ( time() - $control[ USER_IP ]["t"] < CONTROL_REQ_TIMEOUT ) {
-        $control[ USER_IP ]["c"]++;
+    
+    if ( isset( $control[ USER_IP ]['t'] ) ) {
+        if ( time() - $control[ USER_IP ]["t"] < CONTROL_REQ_TIMEOUT ) {
+            $control[ USER_IP ]["c"]++;
+        }
     }
     
     $control[USER_IP]["t"] = time();

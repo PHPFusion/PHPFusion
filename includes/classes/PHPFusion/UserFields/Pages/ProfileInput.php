@@ -21,7 +21,6 @@ class ProfileInput {
     private $userFields;
     private $method = 'input';
     private $info = [];
-    public $is_admin_panel = FALSE;
     
     public function __construct( UserFields $userFields ) {
         $this->userFields = $userFields;
@@ -47,6 +46,18 @@ class ProfileInput {
     private function setInfo() {
         $this->method = 'input';
     
+        if ( !isset( $this->user_data['user_joined'] ) ) {
+            $this->user_data['user_joined'] = showdate( 'longdate', TIME );
+        }
+    
+        if ( !isset( $this->user_data['user_email'] ) ) {
+            $this->user_data['user_email'] = '';
+        }
+    
+        if ( !isset( $this->user_data['user_password'] ) ) {
+            $this->user_data['user_password'] = '';
+        }
+        
         // user id
         $this->info = [
             'register'             => $this->registration,

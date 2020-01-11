@@ -233,7 +233,9 @@ class Facebook_Connect {
                     $new_user_info['user_info'] = base64_encode(serialize($new_user_info));
                     $new_user_info['user_code'] = $user_code;
                     dbquery_insert(DB_NEW_USERS, $new_user_info, 'save', ['key' => 'primary_key', 'no_unique' => TRUE]);
-                    $this->sendFbEmail($userProp['user_firstname'], $userProp['user_email']);
+    
+                    $this->sendFbEmail( $new_user_info['user_firstname'], $new_user_info['user_email'] );
+                    
                     exit;
                 } else {
                     // Save the user information
