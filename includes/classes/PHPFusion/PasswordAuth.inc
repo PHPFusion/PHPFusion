@@ -111,7 +111,7 @@ class PasswordAuth {
     // Checks if new password input is valid
 
     private function _isValidPasswordInput() {
-        if (preg_match("/^[0-9A-Z@<>\[\]!#$%&\/\(\)=\-_?+\*\.,:~;\{\}]{8,64}$/i", $this->inputNewPassword)) {
+        if ( preg_match( "/^[0-9A-Z@<>\[\]!|#$%&\/\(\)=\-_?+\*\.,:~;\{\}]{8,64}$/i", $this->inputNewPassword ) ) {
             return TRUE;
         } else {
             return FALSE;

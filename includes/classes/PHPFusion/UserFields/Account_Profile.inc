@@ -292,7 +292,7 @@ class Account_Profile extends UserFieldsQuantum {
                 'error_text'       => $locale['u133'],
                 'required'         => $this->admin_mode ? FALSE : TRUE
             ] );
-            $info['user_password'] .= "<div class='clearfix text-right m-b-20 p-r-15'>".form_button( 'gen_user_passwd', "Generate Password", "", [
+            $info['user_password'] .= "<div class='clearfix text-right m-b-20'>".form_button( 'gen_user_passwd', "Generate Password", "", [
                     'type'  => 'button',
                     'class' => "btn-default spacer-sm m-b-0",
                     'icon'  => 'fas fa-key',

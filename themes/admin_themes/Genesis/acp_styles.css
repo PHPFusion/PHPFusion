@@ -1650,6 +1650,10 @@ input[type="submit"].btn.btn-mini {
 	-moz-border-radius: 0;
 	border-radius: 0;
 	outline: none !important;
+	padding: 0;
+	line-height: 1.5;
+	height: auto;
+	margin-right: 10px;
 }
 
 .btn-link:hover,

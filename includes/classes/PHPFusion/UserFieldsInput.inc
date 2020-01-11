@@ -185,13 +185,21 @@ class UserFieldsInput {
             
             // Set Core Fields.
             $data['user_name'] = $this->validateUserName();
-            $data['user_email'] = $this->validateEmail();
-            $data += $this->validate_user_password();
         
+            $data['user_email'] = $this->validateEmail();
+        
+            $data += $this->validateNewPassword();
+            
             $quantum = new UserFieldsQuantum();
+        
+            $quantum->registration = TRUE;
+            
             $quantum->loadUserFields();
+        
             $quantum->loadUserFieldCats();
+        
             $quantum->setCallbackData( $this->data );
+        
             $fields_input = $quantum->sanitizeUserFields( DB_USERS, 'user_id' );
             if ( !empty( $fields_input ) ) {
                 foreach ( $fields_input as $table_name => $fields_array ) {
@@ -206,20 +214,25 @@ class UserFieldsInput {
             if ( fusion_safe() ) {
             
                 if ( $this->email_verification === TRUE && $this->is_admin_panel === FALSE ) {
+                
                     $this->sendVerificationEmail();
+                
                 } else {
-                    $this->create_user_account( $data );
-                    if ( $this->auto_login === TRUE ) {
+                
+                    $this->createUserAccount( $data );
+                
+                    if ( $this->auto_login ) {
                         switch ( fusion_get_settings( "login_method" ) ) {
-                            case "2" :
+                            case 2 :
                                 $authenticate_id = 'user_name';
                                 break;
-                            case "1" :
+                            case 1 :
                                 $authenticate_id = 'user_email';
                                 break;
                             default:
                                 $authenticate_id = 'user_name';
                         }
+                    
                         new Authenticate( $data[ $authenticate_id ], self::_getPasswordInput( 'user_password1' ), TRUE );
                     }
                 }
@@ -234,9 +247,9 @@ class UserFieldsInput {
      *
      * @param $data
      *
-     * @throws \PHPMailer\PHPMailer\Exception
+     * @throws \Exception
      */
-    private function create_user_account( $data ) {
+    private function createUserAccount( $data ) {
         $settings = fusion_get_settings();
         
         dbquery_insert( DB_USERS, $data, 'save' );
@@ -293,32 +306,40 @@ class UserFieldsInput {
             ];
     
         }
-            return NULL;
-    
+        return NULL;
+        
     }
     
     
-    private function validate_user_password() {
+    private function validateNewPassword() {
         $password = [
             'user_password' => '',
             'user_salt'     => '',
             'user_algo'     => '',
         ];
+        
         $this->_newUserPassword = self::_getPasswordInput( 'user_password1' );
+        
         $this->_newUserPassword2 = self::_getPasswordInput( 'user_password2' );
+        
         if ( !empty( $this->_newUserPassword ) ) {
+            
             $passAuth = new PasswordAuth();
+            
             $passAuth->inputNewPassword = $this->_newUserPassword;
+            
             $passAuth->inputNewPassword2 = $this->_newUserPassword2;
+            
             $_isValidNewPassword = $passAuth->isValidNewPassword();
             
             switch ( $_isValidNewPassword ) {
+                
                 case 0:
                     // New password is valid
                     $this->_newUserPasswordHash = $passAuth->getNewHash();
                     $this->_newUserPasswordAlgo = $passAuth->getNewAlgo();
                     $this->_newUserPasswordSalt = $passAuth->getNewSalt();
-    
+                    
                     $password['user_algo'] = $this->_newUserPasswordAlgo;
                     $password['user_salt'] = $this->_newUserPasswordSalt;
                     $password['user_password'] = $this->_newUserPasswordHash;
@@ -328,7 +349,7 @@ class UserFieldsInput {
                     break;
                 case 1:
                     // New Password equal old password
-                    Defender::stop();
+                    fusion_stop();
                     Defender::setInputError( 'user_password2' );
                     Defender::setInputError( 'user_password2' );
                     Defender::setErrorText( 'user_password', $this->locale['u134'].$this->locale['u146'].$this->locale['u133'] );
@@ -336,7 +357,7 @@ class UserFieldsInput {
                     break;
                 case 2:
                     // The two new passwords are not identical
-                    Defender::stop();
+                    fusion_stop();
                     Defender::setInputError( 'user_password1' );
                     Defender::setInputError( 'user_password2' );
                     Defender::setErrorText( 'user_password1', $this->locale['u148'] );
@@ -344,17 +365,17 @@ class UserFieldsInput {
                     break;
                 case 3:
                     // New password contains invalid chars / symbols
-                    Defender::stop();
+                    fusion_stop();
                     Defender::setInputError( 'user_password1' );
                     Defender::setErrorText( 'user_password1', $this->locale['u134'].$this->locale['u142']."<br />".$this->locale['u147'] );
                     break;
             }
-        }
-            Defender::stop();
+        } else {
+            fusion_stop();
             Defender::setInputError( 'user_password1' );
             Defender::setErrorText( 'user_password1', $this->locale['u134'].$this->locale['u143a'] );
-    
-    
+        }
+        
         return (array)$password;
     }
     
@@ -373,12 +394,12 @@ class UserFieldsInput {
             $_isValidNewPassword = $passAuth->isValidNewPassword();
             
             switch ( $_isValidNewPassword ) {
-                case '0':
+                case 0:
                     // New password is valid
                     $this->_newUserPasswordHash = $passAuth->getNewHash();
                     $this->_newUserPasswordAlgo = $passAuth->getNewAlgo();
                     $this->_newUserPasswordSalt = $passAuth->getNewSalt();
-    
+        
                     $password['user_admin_algo'] = $this->_newUserPasswordAlgo;
                     $password['user_admin_salt'] = $this->_newUserPasswordSalt;
                     $password['user_admin_password'] = $this->_newUserPasswordHash;
@@ -386,7 +407,7 @@ class UserFieldsInput {
                         Authenticate::setUserCookie($this->user_data['user_id'], $passAuth->getNewSalt(), $passAuth->getNewAlgo(), FALSE);
                     }*/
                     break;
-                case '1':
+                case 1:
                     // New Password equal old password
                     fusion_stop();
                     Defender::setInputError( 'user_admin_password2' );
@@ -394,7 +415,7 @@ class UserFieldsInput {
                     Defender::setErrorText( 'user_admin_password', $this->locale['u134'].$this->locale['u146'].$this->locale['u133'] );
                     Defender::setErrorText( 'user_admin_password2', $this->locale['u134'].$this->locale['u146'].$this->locale['u133'] );
                     break;
-                case '2':
+                case 2:
                     // The two new passwords are not identical
                     fusion_stop();
                     Defender::setInputError( 'user_admin_password1' );
@@ -402,18 +423,18 @@ class UserFieldsInput {
                     Defender::setErrorText( 'user_admin_password1', $this->locale['u148'] );
                     Defender::setErrorText( 'user_admin_password2', $this->locale['u148'] );
                     break;
-                case '3':
+                case 3:
                     // New password contains invalid chars / symbols
                     fusion_stop();
                     Defender::setInputError( 'user_admin_password1' );
                     Defender::setErrorText( 'user_admin_password1', $this->locale['u134'].$this->locale['u142']."<br />".$this->locale['u147'] );
                     break;
             }
-        }
+        } else {
             fusion_stop();
             Defender::setInputError( 'user_admin_password1' );
             Defender::setErrorText( 'user_admin_password1', $this->locale['u134'].$this->locale['u143a'] );
-    
+        }
     
         return (array)$password;
     }
