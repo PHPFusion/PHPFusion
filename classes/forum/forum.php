@@ -228,8 +228,9 @@ class Forum extends ForumServer {
                             case 'subforums':
                                 // Get Subforum data
                                 if ($this->forum_info['subforum_count']) {
-                                    $select_column = "SELECT * FROM ".DB_FORUMS;
-                                    $select_cond = (multilang_table("FO") ? " WHERE ".in_group('forum_language', LANGUAGE)." AND " : " WHERE ")." ".groupaccess('forum_access')." AND forum_cat=:forum_id";
+                                    $select_column = "SELECT f.*, t.* FROM ".DB_FORUMS." as  f ";
+                                    $select_column .= "LEFT JOIN ".DB_FORUM_THREADS." t ON f.forum_id = t.forum_id";
+                                    $select_cond = (multilang_table("FO") ? " WHERE ".in_group('f.forum_language', LANGUAGE)." AND " : " WHERE ")." ".groupaccess('f.forum_access')." AND f.forum_cat=:forum_id";
                                     $child_sql = $select_column.$select_cond;
                                     $child_param = [
                                         ':forum_id' => $this->forum_info['forum_id'],
@@ -306,24 +307,26 @@ class Forum extends ForumServer {
                                                 'thread_link'  => '',
                                                 'post_link'    => '',
                                             ];
-                                            if ($forum_settings['forum_show_lastpost']) {
+
+                                            if ($forum_settings['forum_show_lastpost'] == 1) {
                                                 if (!empty($row['forum_lastpostid'])) {
 
                                                     // as first_post_datestamp
-                                                    $last_post_sql = "SELECT post_message FROM ".DB_FORUMS." WHERE forum_id=:forum_id ORDER BY post_datestamp DESC";
-                                                    $last_post_param = [':forum_id' => $row['forum_lastpostid']];
+                                                    $last_post_sql = "SELECT post_message FROM ".DB_FORUM_POSTS." WHERE post_id=:post_id ORDER BY post_datestamp DESC";
+                                                    $last_post_param = [':post_id' => $row['forum_lastpostid']];
                                                     $post_result = dbquery($last_post_sql, $last_post_param);
-                                                    if (dbrows($post_result)) {
+
+                                                    if (dbrows($post_result) > 0) {
 
                                                         // Get the current forum last user
-                                                        $last_user = fusion_get_user($forum_data['forum_lastuser']);
+                                                        $last_user = fusion_get_user($row['forum_lastuser']);
                                                         $post_data = dbarray($post_result);
 
                                                         $last_post = [
                                                             'avatar'       => '',
                                                             'avatar_src'   => $last_user['user_avatar'] && file_exists(IMAGES.'avatars/'.$last_user['user_avatar']) && !is_dir(IMAGES.'avatars/'.$last_user['user_avatar']) ? IMAGES.'avatars/'.$last_user['user_avatar'] : '',
                                                             'message'      => trim_text(parseubb(parsesmileys($post_data['post_message'])), 100),
-                                                            'profile_link' => profile_link($last_user['forum_lastuser'], $last_user['user_name'], $last_user['user_status']),
+                                                            'profile_link' => profile_link($row['forum_lastuser'], $last_user['user_name'], $last_user['user_status']),
                                                             'time'         => timer($row['forum_lastpost']),
                                                             'date'         => showdate("forumdate", $row['forum_lastpost']),
                                                             'thread_link'  => INFUSIONS."forum/viewthread.php?thread_id=".$row['thread_id'],
