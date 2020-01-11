@@ -74,9 +74,10 @@ if ( !$with_secret ) {
 
 if ( $profile_method == "input" ) {
     $options = [
-        'type'       => 'radio',
-        'error_text' => $locale['uf_gender_error'],
-        'options'    => $locale['uf_gender_title_img']
+            'type'           => 'radio',
+            'error_text'     => $locale['uf_gender_error'],
+            'options'        => $locale['uf_gender_title_img'],
+            'inline_options' => TRUE,
     ] + $options;
 
     $user_fields = $input_type( 'user_gender', $locale['uf_gender'], $field_value, $options );

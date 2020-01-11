@@ -41,7 +41,7 @@ class Form {
         
         if ( $label ) {
             $control_label = [
-                'label_grid'     => ( $is_inline ? ' {[col(100,100,20,20)]}' : ' display-block' ),
+                'label_grid'     => ( $is_inline ? ' {[col(100,20,20,20)]}' : ' display-block' ),
                 'label_icon'     => ( $options['label_icon'] ) ?: '',
                 'label_text'     => $label,
                 'label_required' => $options['required'] ? '<span class="required">*</span>' : '',
@@ -305,7 +305,7 @@ class Form {
             $tpl->set_tag( "input_class", implode( ' ', $wrapper_class ) );
             
             if ( $options['inline'] ) {
-                $tpl->set_tag( 'label_class', ' '.grid_column_size( 100, 100, 25, 25 ) );
+                $tpl->set_tag( 'label_class', ' '.grid_column_size( 100, 20, 20, 20 ) );
             }
             
             $tpl->set_tag( 'data_value', ( !empty( $input_value ) ? 1 : 0 ) );
@@ -385,9 +385,9 @@ class Form {
                 $checkbox = '';
     
                 if ( $options['inline'] ) {
-                    
-                    $class_a = grid_column_size( 100, 100, 75, 75 );
-                    $class_b = grid_column_size( 100, 100, 25, 25 );
+    
+                    $class_a = grid_column_size( 100, 80, 80, 80 );
+                    $class_b = grid_column_size( 100, 20, 20, 20 );
                     
                     $col_a = $class_a;
                     $col_b = $class_b;
