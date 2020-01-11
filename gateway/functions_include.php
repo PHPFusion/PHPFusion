@@ -19,6 +19,103 @@ defined('IN_FUSION') || exit;
 
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'gateway.php');
 
+function get_gateway_info() {
+    
+    $locale = fusion_get_locale();
+    
+    function gateway_answer() {
+        
+        if ( post( 'gateway_answer' ) ) {
+            // Terminate and ban all excessive access attempts
+            antiflood_countaccess();
+            
+            $honeypot = session_get( 'honeypot' );
+            
+            if ( check_post( $honeypot ) && !post( $honeypot ) ) {
+                $antibot = stripinput( strtolower( post( 'gateway_answer' ) ) );
+                $antibot_session = session_get( 'antibot' );
+                if ( $antibot_session == $antibot ) {
+                    session_add( 'validated', 'TRUE' );
+                    redirect( BASEDIR.'register.php' );
+                }
+            }
+            
+            return TRUE;
+        }
+        
+        return FALSE;
+    }
+    
+    $answer_status = gateway_answer();
+    
+    $info = [
+        'showform'         => TRUE,
+        'incorrect_answer' => $answer_status
+    ];
+    
+    session_add( 'validated', 'FALSE' );
+    
+    if ( !post( 'gateway_submit' ) && !post( 'register' ) ) {
+        
+        // Get some numbers up. Always keep an odd number to void 10-10 etc.
+        $a = rand( 11, 20 );
+        $b = rand( 1, 10 );
+        
+        if ( $a > 15 ) {
+            $antibot = (int)( $a + $b );
+            $multiplier = "+";
+            $reply_method = $locale['gateway_062'];
+            $a = convertNumberToWord( $a );
+            $antibot = strtolower( convertNumberToWord( $antibot ) );
+        } else {
+            $antibot = (int)( $a - $b );
+            $multiplier = "-";
+            $reply_method = $locale['gateway_063'];
+            $b = convertNumberToWord( $b );
+        }
+        
+        session_add( 'antibot', $antibot );
+        
+        $a = str_rot47( $a );
+        $b = str_rot47( $b );
+        
+        echo "<noscript>".$locale['gateway_052']."</noscript>";
+        // Just add fields to random
+        $honeypot_array = [ $locale['gateway_053'], $locale['gateway_054'], $locale['gateway_055'], $locale['gateway_056'], $locale['gateway_057'], $locale['gateway_058'], $locale['gateway_059'] ];
+        shuffle( $honeypot_array );
+        //$_SESSION["honeypot"] = $honeypot_array[3];
+        session_add( 'honeypot', $honeypot_array[3] );
+        // Try this and we see, Rot47 Encryption etc..
+        add_to_footer( '<script>
+        function decode(x) {
+            let s = "";
+            for (let i = 0; i < x.length; i++) {
+                let j = x.charCodeAt(i);
+                if ((j >= 33) && (j <= 126)) {
+                    s += String.fromCharCode(33 + ((j + 14) % 94));
+                } else {
+                    s += String.fromCharCode(j);
+                }
+            }
+            return s;
+        }
+        $("#gateway_question").append("'.$locale['gateway_060'].' " + decode("'.$a.'") + " '.$multiplier.' " + decode("'.$b.'") + " '.$locale['gateway_061'].' '.$reply_method.'");
+    </script>' );
+        $info = [
+            'showform'         => TRUE,
+            'incorrect_answer' => $answer_status,
+            'gateway_question' => '<span id="gateway_question"></span>',
+            'openform'         => openform( 'Fusion_Gateway', 'post', 'register.php', [ 'class' => 'm-t-20' ] ),
+            'closeform'        => closeform(),
+            'hiddeninput'      => form_hidden( $honeypot_array[3], "", "" ),
+            'textinput'        => form_text( 'gateway_answer', "", "", [ 'error_text' => $locale['gateway_064'], 'required' => TRUE ] ),
+            'button'           => form_button( 'gateway_submit', $locale['gateway_065'], $locale['gateway_065'], [ 'class' => 'btn-primary btn-block m-t-10' ] ),
+        ];
+    }
+    
+    return $info;
+}
+
 function convertNumberToWord($num = FALSE) {
     global $locale;
 
@@ -70,36 +167,21 @@ if (!function_exists('str_rot47')) {
     }
 }
 
-if (file_exists(CONTROL_LOCK_FILE)) {
-    if (time() - filemtime(CONTROL_LOCK_FILE) > CONTROL_BAN_TIME) {
-        // this user has complete his punishment
-        unlink(CONTROL_LOCK_FILE);
-    } else {
-        redirect(BASEDIR."error.php?code=401");
-        touch(CONTROL_LOCK_FILE);
-        die;
-    }
-}
-
 function antiflood_countaccess() {
     // counting requests and last access time
     $control = [];
-
+    // read control file
     if (file_exists(CONTROL_DB)) {
         $fh = fopen(CONTROL_DB, "r");
         $control = array_merge($control, unserialize(fread($fh, filesize(CONTROL_DB))));
         fclose($fh);
     }
-
-    if (isset($control[USER_IP])) {
-        if (time() - $control[USER_IP]["t"] < CONTROL_REQ_TIMEOUT) {
-            $control[USER_IP]["c"]++;
-        } else {
-            $control[USER_IP]["c"] = 1;
-        }
-    } else {
-        $control[USER_IP]["c"] = 1;
+    
+    $control[ USER_IP ]["c"] = 1;
+    if ( time() - $control[ USER_IP ]["t"] < CONTROL_REQ_TIMEOUT ) {
+        $control[ USER_IP ]["c"]++;
     }
+    
     $control[USER_IP]["t"] = time();
 
     if ($control[USER_IP]["c"] >= CONTROL_MAX_REQUESTS) {

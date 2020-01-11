@@ -1,0 +1,18 @@
+<div class="{[container]}">
+	{%opentable%}
+	{gateway_form.{
+	{%openform%}{%hidden_input%}{%question%}{%text_input%}{%button%}{%closeform%}
+	}}
+	{gateway_error.{
+	<div class="well text-center">
+		<h3>{[gateway_068]}</h3>
+	</div>
+	}}
+	{gateway_invalid.{
+	<div class="well text-center">
+		<h3>{[gateway_066]}</h3>
+		<a class="text-center btn btn-info spacer-xs" href="{%register_link%}">{[gateway_067]}</a>
+	</div>
+	}}
+	{%closetable%}
+</div>
