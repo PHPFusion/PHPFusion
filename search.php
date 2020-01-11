@@ -270,7 +270,7 @@ function search_navigation($rows) {
 $composevars = "method=".$_REQUEST['method']."&amp;datelimit=".$_REQUEST['datelimit']."&amp;fields=".$_REQUEST['fields']."&amp;sort=".$_REQUEST['sort']."&amp;order=".$_REQUEST['order']."&amp;chars=".$_REQUEST['chars']."&amp;forum_id=".$_REQUEST['forum_id']."&amp;";
 
 $memory_limit = str_replace("m", "", strtolower(ini_get("memory_limit"))) * 1024 * 1024;
-$memory_limit = !isnum($memory_limit) ? 8 * 1024 * 1024 : $memory_limit < 8 * 1024 * 1024 ? 8 * 1024 * 1024 : $memory_limit;
+$memory_limit = (!isnum($memory_limit) ? 8 * 1024 * 1024 : $memory_limit < 8 * 1024 * 1024) ? 8 * 1024 * 1024 : $memory_limit;
 $memory_limit = $memory_limit - ceil($memory_limit / 4);
 $global_string_count = 0;
 $site_search_count = 0;
