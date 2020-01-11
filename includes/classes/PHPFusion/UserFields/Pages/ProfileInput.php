@@ -21,6 +21,7 @@ class ProfileInput {
     private $userFields;
     private $method = 'input';
     private $info = [];
+    public $is_admin_panel = FALSE;
     
     public function __construct( UserFields $userFields ) {
         $this->userFields = $userFields;
@@ -127,7 +128,8 @@ class ProfileInput {
         $class->post_name = $this->post_name;
         $class->user_name_change = TRUE;
         $class->registration = TRUE;
-        $class->is_admin_panel = $this->is_admin_panel;
+        //$class->is_admin_panel = $this->is_admin_panel;
+        $class->is_admin_panel = $this->userFields->is_admin_panel;
         $class->display_validation = $this->display_validation;
         $class->display_terms = $this->display_terms;
         $class->inline_field = $this->inline_field;
@@ -137,7 +139,8 @@ class ProfileInput {
         // Edit Profile Fields
         $class = new Account_Profile();
         $class->user_data = $this->user_data;
-        $class->is_admin_panel = $this->is_admin_panel;
+        //$class->is_admin_panel = $this->is_admin_panel;
+        $class->is_admin_panel = $this->userFields->is_admin_panel;
         $class->registration = TRUE;
         $class->post_name = $this->post_name;
         $class->user_name_change = TRUE;

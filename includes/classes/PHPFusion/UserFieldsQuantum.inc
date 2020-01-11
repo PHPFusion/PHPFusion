@@ -33,7 +33,7 @@ class UserFieldsQuantum extends QuantumActions {
      * Set the Quantum System Fields Page Title
      */
     protected $title = '';
-    protected $is_admin_panel = FALSE;
+    public $is_admin_panel = FALSE;
     protected static $helper;
     /**
      * Set the admin rights to Quantum Fields Admin
