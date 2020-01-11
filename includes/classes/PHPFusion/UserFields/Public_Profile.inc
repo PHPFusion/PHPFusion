@@ -120,8 +120,9 @@ class Public_Profile extends UserFieldsQuantum {
         
                 $section_title = $this->get_section_title( $cat_id );
         
-                $info['user_fields'] .= "<h4>".$section_title."</h4>";
-        
+                //$info['user_fields'] .= "<h4>".$section_title."</h4>";
+                $field_title = "<h4>".$section_title."</h4>";
+                
                 $field_output = '';
         
                 if ( !empty( $field_rows ) ) {
@@ -141,18 +142,24 @@ class Public_Profile extends UserFieldsQuantum {
                 
                         $output = $this->displayFields( $fields, $this->user_data, $this->method, $options );
                 
-                        $info['user_fields'] .= $output;
-                
+                        //$info['user_fields'] .= $output;
                         $field_output .= $output;
                     }
                 }
-                $info['fields'][ $cat_id ] = [
-                    'title'  => $section_title,
-                    'fields' => $field_output
-                ];
+        
+                // Only show field category if there are input fields
+                if ( !empty( $field_output ) ) {
+            
+                    $info['user_fields'] .= $field_title.$field_output;
+            
+                    $info['fields'][ $cat_id ] = [
+                        'title'  => $section_title,
+                        'fields' => $field_output
+                    ];
+                }
             }
+  
             return $info;
-    
         }
     
         // This is registration
@@ -247,8 +254,8 @@ class Public_Profile extends UserFieldsQuantum {
         ];
     
         $info['user_avatar'] = '<div class="form-group clearfix">';
-        $info['user_avatar'] .= '<label for="uav" class="control-label '.grid_column_size( 100, 40, 20 ).'">'.$this->locale['u185'].':</label>';
-        $info['user_avatar'] .= '<div class="'.grid_column_size( 100, 40, 30 ).'">';
+        $info['user_avatar'] .= '<label for="uav" class="control-label '.grid_column_size( 100, 20, 20, 20 ).'">'.$this->locale['u185'].':</label>';
+        $info['user_avatar'] .= '<div class="'.grid_column_size( 100, 80, 80, 80 ).'">';
         $info['user_avatar'] .= display_avatar( $this->user_data, '70px', FALSE, '', 'img-circle' ).'<a href="#uav" class="open-uav m-l-15">Change</a>';
         $info['user_avatar'] .= '</div></div>';
     
@@ -304,8 +311,6 @@ class Public_Profile extends UserFieldsQuantum {
         add_to_footer( $modal );
     
         return $info['user_avatar'];
-    
-    
     }
     
     /**

@@ -173,21 +173,15 @@ class ProfileInput {
         // info output
         switch ( $this->info['current_page'] ) {
             default:
-                
                 if ( isset( $this->info['pages'][ $this->info['current_page'] ]['file'] ) && is_file( $this->info['pages'][ $this->info['current_page'] ]['file'] ) ) {
                     
                     return $this->loadCustomPage();
                     
                 } else {
-                    
                     redirect( BASEDIR.'edit_profile.php' );
                 }
-                
-                
                 break;
-            
             case 'pu_profile':
-                
                 $class = new Public_Profile();
                 $class->user_data = $this->user_data;
                 $class->form_name = $this->post_name;

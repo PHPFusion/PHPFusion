@@ -29,6 +29,7 @@ use ReflectionException;
  */
 class UserFields extends UserFieldsQuantum {
     
+    private $total_groups = 0;
     private $profile_id = 0;
     public $display_terms = 0;
     public $display_validation = 0;
@@ -38,7 +39,6 @@ class UserFields extends UserFieldsQuantum {
     public $post_name;
     public $post_value;
     public $inline_field = TRUE;
-    
     public $show_admin_password = TRUE;
     public $skip_password = FALSE;
     public $registration = FALSE;
@@ -63,14 +63,9 @@ class UserFields extends UserFieldsQuantum {
     public $debug = FALSE;
     public $method;
     public $user_name_change = FALSE;
-    
     private static $pages = [];
-    
     protected static $input_page = [];
-    
     protected static $output_page = [];
-    
-    
     protected $info = [
         'terms'               => '',
         'validate'            => '',
@@ -79,9 +74,7 @@ class UserFields extends UserFieldsQuantum {
     ];
     
     public $options = [];
-    
     private static $instance = NULL;
-    
     private $aidlink = '';
     
     /**
@@ -193,7 +186,11 @@ class UserFields extends UserFieldsQuantum {
         return $refs && isset( $all_pages[ $refs ] ) ? $refs : 'pu_profile';
     }
     
-    
+    /**
+     * @param $profile_id
+     *
+     * @return mixed|string
+     */
     public function getCurrentOutputPage( $profile_id ) {
         $all_pages = $this->getOutputPages( $profile_id );
         $refs = get( "profile_page" );
@@ -274,8 +271,8 @@ class UserFields extends UserFieldsQuantum {
         $userProfile->display_terms = TRUE;
         $userProfile->display_validation = $settings['display_validation'];;
         $userProfile->inline_field = FALSE;
-        
-        // // The input class
+    
+        // The input class
         $userInput = new UserFieldsInput();
         $userInput->post_name = 'register';
         $userInput->registration = TRUE;
@@ -407,12 +404,7 @@ class UserFields extends UserFieldsQuantum {
         }
         
         return (array)$profile_user;
-        
     }
-    
-    
-    private $total_groups = 0;
-    
     
     /**
      * Get User Data of the current page.

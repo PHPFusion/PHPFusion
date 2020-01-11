@@ -23,13 +23,13 @@ $icon = "<img class='icon-xs' src='".INCLUDES."user_fields/public/user_discord/i
 // Display user field input
 if ( $profile_method == "input" ) {
     $options = [
-        'inline'           => TRUE,
-        'error_text'       => $locale['uf_discord_error'],
-        'regex_error_text' => $locale['uf_discord_error_1'],
-        'placeholder'      => $locale['uf_discord'],
-        'prepend'          => TRUE,
-        'prepend_value'    => $icon
+            'inline'           => TRUE,
+            'error_text'       => $locale['uf_discord_error'],
+            'regex_error_text' => $locale['uf_discord_error_1'],
+            'placeholder'      => $locale['uf_discord'],
+            'label_icon'       => $icon
     ] + $options;
+    
     $user_fields = form_text( 'user_discord', $locale['uf_discord'], $field_value, $options );
     // Display in profile
 } else if ( $profile_method == "display" ) {

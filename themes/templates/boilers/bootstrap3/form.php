@@ -190,7 +190,7 @@ class Form {
         //print_p($options);
         // support inline if there are multiple options only.
         $template = '
-        <div id="{%input_id%}-field" class="{%input_class%} clearfix">
+        <div id="{%input_id%}-field" class="form-group {%input_class%} clearfix">
             <label {%label_class%}for="{%input_id%}" data-checked="{%data_value%}"{%style%}>
             {%pre_checkbox%}
             {%label%}
