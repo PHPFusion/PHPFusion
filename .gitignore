@@ -10,7 +10,7 @@ config-copy.php
 /nfusions/news/news_cats/
 /includes/header_includes.php
 /includes/footer_includes.php
-gateway/flood/
+includes/gateway/flood/
 images/thumbs/
 fusion_error_log.log
 vendor
