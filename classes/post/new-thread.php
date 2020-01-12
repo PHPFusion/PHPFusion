@@ -134,7 +134,7 @@ class New_Thread extends Forum_Server {
                             'max_length'  => 255,
                             'placeholder' => $locale['forum_0604a'],
                             'inline'      => TRUE,
-                            'required'    => TRUE
+                            //'required'    => TRUE
                         ]);
                         for ($i = 1; $i <= count($option_data); $i++) {
                             $poll_field['poll_field'] .= form_text("poll_options[$i]", sprintf($locale['forum_0606'], $i),
@@ -142,7 +142,7 @@ class New_Thread extends Forum_Server {
                                     'max_length'  => 255,
                                     'placeholder' => $locale['forum_0605'],
                                     'inline'      => TRUE,
-                                    'required'    => $i <= 2 ? TRUE : FALSE
+                                    //'required'    => $i <= 2 ? TRUE : FALSE
                                 ]);
                         }
                         $poll_field['poll_field'] .= "<div class='col-xs-12 col-sm-offset-3'>\n";
