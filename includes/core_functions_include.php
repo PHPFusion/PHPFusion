@@ -328,17 +328,21 @@ function stripinput($text) {
  * @return string
  */
 function strip_scripts($value) {
-    $dom_document = new DOMDocument();
-    $dom_document->loadHTML($value);
-    $script = $dom_document->getElementsByTagName('script');
-    $remove = [];
-    foreach ($script as $item) {
-        $remove[] = $item;
+    if (!empty($value)) {
+        $dom_document = new DOMDocument();
+        $dom_document->loadHTML($value);
+        $script = $dom_document->getElementsByTagName('script');
+        $remove = [];
+        foreach ($script as $item) {
+            $remove[] = $item;
+        }
+        foreach ($remove as $item) {
+            $item->parentNode->removeChild($item);
+        }
+        return $dom_document->saveHTML();
     }
-    foreach ($remove as $item) {
-        $item->parentNode->removeChild($item);
-    }
-    return $dom_document->saveHTML();
+
+    return NULL;
 }
 
 /**
