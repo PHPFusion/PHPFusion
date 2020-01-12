@@ -1460,6 +1460,7 @@ if (isset($_POST['step']) && $_POST['step'] == "6") {
             $result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('normalize_seo', '0')");
             $result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('debug_seo', '0')");
             $result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('gateway', '1')");
+            $result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('gateway_method', '2')");
             $result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('sitebanner', 'images/php-fusion-logo.png')");
             $result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('sitebanner1', '')");
             $result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('sitebanner2', '')");

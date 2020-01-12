@@ -51,6 +51,10 @@ if (isset($_POST['savesettings'])) {
     if (!$result) {
         $error = 1;
     }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['gateway_method']) ? $_POST['gateway_method'] : "1")."' WHERE settings_name='gateway_method'");
+    if (!$result) {
+        $error = 1;
+    }
     $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['flood_interval']) ? $_POST['flood_interval'] : "15")."' WHERE settings_name='flood_interval'");
     if (!$result) {
         $error = 1;
@@ -128,6 +132,13 @@ echo "<td width='50%' class='tbl'>".$locale['699h']."</td>\n";
 echo "<td width='50%' class='tbl'><select name='gateway' class='textbox'>\n";
 echo "<option value='1'".($settings['gateway'] == "1" ? " selected='selected'" : "").">".$locale['518']."</option>\n";
 echo "<option value='0'".($settings['gateway'] == "0" ? " selected='selected'" : "").">".$locale['519']."</option>\n";
+echo "</select></td>\n";
+echo "</tr><tr>\n";
+echo "<td width='50%' class='tbl'>".$locale['699ha']."</td>\n";
+echo "<td width='50%' class='tbl'><select name='gateway_method' class='textbox'>\n";
+echo "<option value='0'".($settings['gateway_method'] == "0" ? " selected='selected'" : "").">".$locale['699hb']."</option>\n";
+echo "<option value='1'".($settings['gateway_method'] == "1" ? " selected='selected'" : "").">".$locale['699hc']."</option>\n";
+echo "<option value='2'".($settings['gateway_method'] == "2" ? " selected='selected'" : "").">".$locale['699hd']."</option>\n";
 echo "</select></td>\n";
 echo "</tr><tr>\n";
 echo "<td width='50%' class='tbl'>".$locale['699g']."</td>\n";

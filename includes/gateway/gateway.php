@@ -44,19 +44,35 @@ if (!isset($_POST['gateway_submit']) && !isset($_POST['Register']) && isset($_SE
     $a = rand(11, 20);
     $b = rand(1, 10);
 
-    if ($a > 15) {
+    $method = fusion_get_settings('gateway_method'); // 0 words, 1 numbers, 2 both
+    if ($method == 0) {
         $antibot = intval($a + $b);
         $multiplier = "+";
         $reply_method = $locale['gateway_062'];
         $a = convertNumberToWord($a);
         $antibot = convertNumberToWord($antibot);
         $_SESSION["antibot"] = strtolower($antibot);
-    } else {
+    } else if ($method == 1) {
         $antibot = intval($a - $b);
         $multiplier = "-";
         $reply_method = $locale['gateway_063'];
         $_SESSION["antibot"] = intval($antibot);
         $b = convertNumberToWord($b);
+    } else {
+        if ($a > 15) {
+            $antibot = intval($a + $b);
+            $multiplier = "+";
+            $reply_method = $locale['gateway_062'];
+            $a = convertNumberToWord($a);
+            $antibot = convertNumberToWord($antibot);
+            $_SESSION["antibot"] = strtolower($antibot);
+        } else {
+            $antibot = intval($a - $b);
+            $multiplier = "-";
+            $reply_method = $locale['gateway_063'];
+            $_SESSION["antibot"] = intval($antibot);
+            $b = convertNumberToWord($b);
+        }
     }
 
     $a = str_rot47($a);
@@ -112,7 +128,7 @@ if (isset($_POST['gateway_answer'])) {
     }
 
     $_SESSION["validated"] = "False";
-	
+
     if (isset($_POST["$honeypot"]) && $_POST["$honeypot"] == "") {
         $antibot = stripinput(strtolower($_POST["gateway_answer"]));
 
@@ -123,6 +139,6 @@ if (isset($_POST['gateway_answer'])) {
                 echo "<div class='well text-center'><h3>".$locale['gateway_066']."</h3></div>";
                 echo "<input type='button' value='".$locale['gateway_067']."' class='".($settings['bootstrap'] || defined('BOOTSTRAP') ? 'text-center btn btn-info spacer-xs' : 'button')."' onclick=\"location='".BASEDIR."register.php'\">";
             }
-        } 
+        }
     }
 }

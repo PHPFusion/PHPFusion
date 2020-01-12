@@ -202,8 +202,13 @@ $locale['699e'] = "Email";
 $locale['699f'] = "General";
 $locale['699g'] = "Check uploaded files for MIME type?";
 $locale['699h'] = "Enable Registration Gateway?";
+$locale['699ha'] = "GateWay Method";
+$locale['699hb'] = "Words";
+$locale['699hc'] = "Numbers";
+$locale['699hd'] = "Both";
 $locale['699i'] = "Number Delimiter";
 $locale['699j'] = "Thousands separator";
+
 // Private Message Settings
 $locale['700'] = "Private Messages";
 $locale['701'] = "Inbox message limit:";

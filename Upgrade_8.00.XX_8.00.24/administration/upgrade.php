@@ -39,7 +39,7 @@ if (isset($_GET['upgrade_ok'])) {
 }
 
 echo "<form name='upgradeform' method='post' action='".FUSION_SELF.$aidlink."'>\n";
-if (str_replace(".", "", $settings['version']) < "80022") {
+if (str_replace(".", "", $settings['version']) < "80024") {
     if (!isset($_POST['stage'])) {
         echo "<div class='well'>\n";
         echo sprintf($locale['500'], $locale['504'])."<br />\n".$locale['501']."\n";
@@ -47,6 +47,8 @@ if (str_replace(".", "", $settings['version']) < "80022") {
         echo "<input type='hidden' name='stage' value='2'>\n";
         echo "<input type='submit' name='upgrade' value='".$locale['400']."' class='button'><br /><br />\n";
     } else if (isset($_POST['upgrade']) && isset($_POST['stage']) && $_POST['stage'] == 2) {
+        $result = dbquery("INSERT INTO ".DB_SETTINGS."settings (settings_name, settings_value) VALUES ('gateway_method', '2')");
+
         // Set a new version
         $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='8.00.24' WHERE settings_name='version'");
         redirect(FUSION_SELF.$aidlink."&amp;upgrade_ok");
