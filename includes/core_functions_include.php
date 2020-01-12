@@ -330,7 +330,7 @@ function stripinput($text) {
 function strip_scripts($value) {
     if (!empty($value)) {
         $dom_document = new DOMDocument();
-        $dom_document->loadHTML($value);
+        $dom_document->loadHTML(mb_convert_encoding($value, 'HTML-ENTITIES', 'UTF-8'));
         $script = $dom_document->getElementsByTagName('script');
         $remove = [];
         foreach ($script as $item) {
