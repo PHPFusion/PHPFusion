@@ -35,7 +35,9 @@ $insert_settings_tbl = [
     'error_logging_method'  => 'database',
     'recaptcha_score'       => '0.5',
     'number_delimiter'      => '.',
-    'thousands_separator'   => ','
+    'thousands_separator'   => ',',
+    'cache_server'          => '',
+    'gateway_method'        => 2
 ];
 
 foreach ($insert_settings_tbl as $key => $value) {
