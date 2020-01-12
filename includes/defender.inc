@@ -733,6 +733,35 @@ function check_post( $key ) {
  */
 function get( $key = NULL, $type = FILTER_DEFAULT, $flags = '' ) {
     
+    if ( is_array( $key ) ) {
+        $flag = '';
+        $input_key = $key;
+        if ( is_array( $key ) ) {
+            // always use key 0 for filter var
+            $input_key = $key[0];
+            $flag = FILTER_REQUIRE_ARRAY;
+        }
+        
+        $filtered = get( $input_key, FILTER_DEFAULT, $flag );
+        
+        if ( is_array( $key ) ) {
+            $input_ref = $key;
+            unset( $input_ref[0] );
+            
+            // Get the value of the filtered post value using the $key array as map
+            return array_reduce(
+                $input_ref,
+                function ( $value, $key ) {
+                    
+                    return ( !empty( $value[ $key ] ) ? $value[ $key ] : '' );
+                },
+                $filtered
+            );
+        }
+        
+        return (string)stripinput( $filtered );
+    }
+    
     if ( $flags == FILTER_VALIDATE_INT ) {
         
         if ( isset( $_GET[$key] ) && isnum( $_GET[$key] ) && ( $_GET[$key] > PHP_INT_MAX ) ) {
@@ -780,8 +809,8 @@ function post( $key, $type = FILTER_DEFAULT, $flags = '' ) {
                 $filtered
             );
         }
-        
-        return (string)$filtered;
+    
+        return (string)stripinput( $filtered );
     }
     
     if ( $flags == FILTER_VALIDATE_INT ) {

@@ -135,7 +135,10 @@ if ( function_exists( "render_page" ) ) {
 echo $fusion_page_footer_tags;
 
 echo "<script src='".$_includes."jquery/holder/holder.min.js'></script>\n";
-echo "<script src='".$_includes."jquery/jquery-ui.min.js'></script>\n";
+
+// Rebuild a version where jquery-ui does not conflict with bootstrap tooltip
+//echo "<script src='".$_includes."jquery/jquery-ui.min.js'></script>\n";
+
 // Output lines added with add_to_jquery()
 if ( !empty( $fusion_jquery_tags ) ) {
     $js = $fusion_jquery_tags;
@@ -148,7 +151,7 @@ if ( !empty( $fusion_jquery_tags ) ) {
 
 // Uncomment to guide your theme development
 if ( fusion_get_settings( 'devmode' ) ) {
-    echo "<script src='".INCLUDES."jscripts".DIRECTORY_SEPARATOR."html-inspector.js'></script><script>HTMLInspector.inspect()</script>\n";
+    //echo "<script src='".INCLUDES."jscripts".DIRECTORY_SEPARATOR."html-inspector.js'></script><script>HTMLInspector.inspect()</script>\n";
 }
 echo "</body>\n";
 echo "</html>";
