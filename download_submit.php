@@ -38,9 +38,9 @@ if ( iMEMBER && $dl_settings['download_allow_submission'] ) {
         "download_homepage"          => "",
         "download_copyright"         => "",
     ];
-    
+
     if ( isset( $_POST['submit_download'] ) ) {
-        
+
         $criteriaArray = [
             'download_title'             => form_sanitizer( $_POST['download_title'], '', 'download_title' ),
             'download_keywords'          => form_sanitizer( $_POST['download_keywords'], '', 'download_keywords' ),
@@ -57,15 +57,15 @@ if ( iMEMBER && $dl_settings['download_allow_submission'] ) {
             'download_image'             => '',
             'download_image_thumb'       => ''
         ];
-        
+
         /**
          * Download File Section
          */
         if ( fusion_safe() && !empty( $_FILES['download_file']['name'] ) && is_uploaded_file( $_FILES['download_file']['tmp_name'] ) ) {
-            
+
             $upload = form_sanitizer( $_FILES['download_file'], '', 'download_file' );
             $criteriaArray['download_filesize'] = parsebytesize( $_FILES['download_file']['size'] );
-            
+
             if ( empty( $upload['error'] ) && !empty( $_FILES['download_file']['size'] ) ) {
                 // might be image, might be file
                 if ( !empty( $upload['image_name'] ) ) {
@@ -93,24 +93,24 @@ if ( iMEMBER && $dl_settings['download_allow_submission'] ) {
                 unset( $upload );
             }
         } else {
-            
+
             if ( $dl_settings['download_screenshot_required'] ) {
                 \Defender::stop();
                 \Defender::setInputError( "download_image" );
             }
         }
-        
+
         if ( Defender::safe() ) {
-            
+
             // Auto approve the submission
             if ( $dl_settings['download_auto_approve'] ) {
-                
+
                 $criteriaArray['download_id'] = 0;
                 $criteriaArray['download_allow_comments'] = 1;
                 $criteriaArray['download_allow_ratings'] = 1;
                 $criteriaArray['download_visibility'] = USER_LEVEL_PUBLIC;
                 $criteriaArray['download_datestamp'] = time();
-                
+
                 // move files
                 if ( !empty( $criteriaArray['download_file'] ) && file_exists( DOWNLOADS."submissions/".$criteriaArray['download_file'] ) ) {
                     $dest = DOWNLOADS."files/";
@@ -120,7 +120,7 @@ if ( iMEMBER && $dl_settings['download_allow_submission'] ) {
                     chmod( $dest.$criteriaArray['download_file'], 0644 );
                     unlink( DOWNLOADS."submissions/".$temp_file );
                 }
-                
+
                 // move images
                 if ( !empty( $criteriaArray['download_image'] ) && file_exists( DOWNLOADS."submissions/images/".$criteriaArray['download_image'] ) ) {
                     $dest = DOWNLOADS."images/";
@@ -130,7 +130,7 @@ if ( iMEMBER && $dl_settings['download_allow_submission'] ) {
                     chmod( $dest.$criteriaArray['download_image'], 0644 );
                     unlink( DOWNLOADS."submissions/images/".$temp_file );
                 }
-                
+
                 // move thumbnail
                 if ( !empty( $criteriaArray['download_image_thumb'] ) && file_exists( DOWNLOADS."submissions/images/".$criteriaArray['download_image_thumb'] ) ) {
                     $dest = DOWNLOADS."images/";
@@ -140,12 +140,12 @@ if ( iMEMBER && $dl_settings['download_allow_submission'] ) {
                     chmod( $dest.$criteriaArray['download_image_thumb'], 0644 );
                     unlink( DOWNLOADS."submissions/images/".$temp_file );
                 }
-                
+
                 dbquery_insert( DB_DOWNLOADS, $criteriaArray, 'save' );
                 addNotice( 'success', $locale['download_0042'] );
                 redirect( clean_request( "submitted=d", [ "stype" ], TRUE ) );
             }
-            
+
             $inputArray = [
                 'submit_type'      => 'd',
                 'submit_user'      => $userdata['user_id'],
@@ -157,7 +157,7 @@ if ( iMEMBER && $dl_settings['download_allow_submission'] ) {
             redirect( clean_request( "submitted=d", [ "stype" ], TRUE ) );
         }
     }
-    
+
     if ( isset( $_GET['submitted'] ) && $_GET['submitted'] == "d" ) {
         echo "<div class='well text-center'><p><strong>".$locale['download_0042']."</strong></p>";
         echo "<p><a href='".BASEDIR."submit.php?stype=d'>".$locale['download_0043']."</a></p>";
@@ -192,7 +192,7 @@ if ( iMEMBER && $dl_settings['download_allow_submission'] ) {
                 'tags'        => 1,
                 'multiple'    => 1
             ] );
-            
+
             $textArea_opts_short = [
                 "required"   => TRUE,
                 "type"       => 'bbcode',
@@ -209,14 +209,14 @@ if ( iMEMBER && $dl_settings['download_allow_submission'] ) {
                 "form_name"  => "submit_form",
                 'path'       => IMAGES_D
             ];
-            
+
             echo form_textarea( 'download_description_short', $locale['download_0202'], $criteriaArray['download_description_short'], $textArea_opts_short );
-            
+
             $textArea_opts['required'] = $dl_settings['download_extended_required'] ? TRUE : FALSE;
             $textArea_opts['error_text'] = $locale['download_0201'];
-            
+
             echo form_textarea( 'download_description', $locale['download_0202a'], $criteriaArray['download_description'], $textArea_opts );
-            
+
             echo "<div class='row m-l-0 m-r-0 m-b-20'>\n";
             echo "<div class='col-xs-12 col-sm-3 p-l-0'>\n&nbsp;";
             echo "</div>\n";
@@ -237,7 +237,7 @@ if ( iMEMBER && $dl_settings['download_allow_submission'] ) {
             $file_options = [
                 "class"       => "m-10 p-10",
                 "inline"      => TRUE,
-                "required"    => TRUE,
+                //"required"    => TRUE,
                 "upload_path" => DOWNLOADS."submissions/",
                 "max_byte"    => $dl_settings['download_max_b'],
                 'valid_ext'   => $dl_settings['download_types'],
@@ -259,7 +259,7 @@ if ( iMEMBER && $dl_settings['download_allow_submission'] ) {
                 "class"       => "m-10 p-10",
                 "error_text"  => $locale['download_0116'],
                 "inline"      => TRUE,
-                "required"    => TRUE,
+                //"required"    => TRUE,
                 "placeholder" => "http://"
             ] );
             echo closetabbody();
@@ -288,34 +288,34 @@ if ( iMEMBER && $dl_settings['download_allow_submission'] ) {
                 ];
                 echo form_fileinput( 'download_image', $locale['download_0220'], '', $screenshot_options );
             }
-            
+
             echo "<div class='text-right m-b-10'>\n<small>\n";
-            
+
             echo sprintf( $locale['download_0219'],
                     parsebytesize( $dl_settings['download_screen_max_b'] ),
                     str_replace( ',', ' ', ".jpg,.gif,.png" ),
                     $dl_settings['download_screen_max_w'],
                     $dl_settings['download_screen_max_h'] )."\n";
             echo "</small>\n</div>\n";
-            
+
             echo form_text( 'download_license', $locale['download_0208'], $criteriaArray['download_license'], [ "inline" => TRUE ] );
-            
+
             echo form_text( 'download_os', $locale['download_0209'], $criteriaArray['download_os'], [ "inline" => TRUE ] );
-            
+
             echo form_text( 'download_version', $locale['download_0210'], $criteriaArray['download_version'], [ "inline" => TRUE ] );
-            
+
             echo form_text( 'download_homepage', $locale['download_0221'], $criteriaArray['download_homepage'], [ "inline" => TRUE ] );
-            
+
             echo form_text( 'download_copyright', $locale['download_0222'], $criteriaArray['download_copyright'], [ "inline" => TRUE ] );
-            
+
             echo form_hidden( 'calc_upload', '', '1' );
-            
+
             echo "</div>\n</div>\n";
-            
+
             echo form_button( 'submit_download', $locale['download_0041'], $locale['download_0041'], [ 'class' => 'btn-success', 'icon' => 'fa fa-hdd-o' ] );
-            
+
             echo closeform();
-            
+
         } else {
             echo "<div class='well text-center'>".$locale['download_0249']."<br /><br />\n</div>\n";
         }
