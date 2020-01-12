@@ -18,15 +18,13 @@
 
 namespace PHPFusion;
 
-use Defender\Token;
-
 /**
  * Class Admin
  * This class is called in templates/admin_header.php
  * Determine how to we set variables on 3rd party script
  */
 class Admins {
-    
+
     private static $instance = NULL;
     private static $admin_pages = [];
     private static $locale = [];
@@ -105,19 +103,19 @@ class Admins {
     private $link_type = [];
     private $submit_data = [];
     private $folder_permissions = [];
-    
+
     public function __construct() {
         self::$locale = self::getAdminLocale();
     }
-    
+
     public static function getAdminLocale() {
         if ( empty( self::$locale ) ) {
             self::$locale = fusion_get_locale( '', LOCALE.LOCALESET.'admin/main.php' );
         }
-        
+
         return self::$locale;
     }
-    
+
     /**
      * Add instance
      *
@@ -127,17 +125,17 @@ class Admins {
         if ( empty( self::$instance ) ) {
             self::$instance = new static();
         }
-    
+
         return self::$instance;
     }
-    
+
     public function setCache( $form_id, $form_type, $cache_time = 36000 ) {
         // set one instance of cache
         echo "<script>
 
         </script>";
     }
-    
+
     /**
      * @param       $form_id
      * @param       $form_type
@@ -148,10 +146,10 @@ class Admins {
      */
     public function renderCache( $form_id, $form_type, $item_id, array $field_names ) {
         $html = "";
-        
+
         return $html;
     }
-    
+
     /**
      * Cache the Current Field Inputs within Login session.
      *
@@ -258,21 +256,21 @@ class Admins {
             // not to pass prefix xhr for security reason.
             add_to_jquery( "setTimeout( function(e) { UpdateAdminCache() }, $cache_time);" );
         }
-        
+
         $html = "";
         if ( !empty( $_SESSION['form_cache'][ $form_id ][ $form_type ][ $item_id ] ) ) {
-            
+
             $html .= "<label class='list-group-item text-normal spacer-xs p-15 m-b-10'>".self::$locale['290']." <a href='".clean_request( 'autosave=view', [ 'autosave' ], FALSE )."'>".self::$locale['291']."</a></label>";
-            
+
             if ( isset( $_GET['autosave'] ) && $_GET['autosave'] == 'view' ) {
-                
+
                 $html .= "<div id='rev-window'>\n";
                 $html .= fusion_get_function( 'openside', "<h4><i class='fas fa-thumbtack m-r-10'></i>".self::$locale['292']."</h4>" );
                 $session = html_entity_decode( $_SESSION['form_cache'][ $form_id ][ $form_type ][ $item_id ] );
                 parse_str( $session, $data );
                 unset( $data['form_id'] );
                 unset( $data['fusion_token'] );
-                
+
                 $html .= "<dl id='restore_results' class='dl-horizontal'>\n";
                 $fill_js = "";
                 foreach ( $data as $field_name => $value ) {
@@ -305,14 +303,14 @@ class Admins {
             " );
             }
         }
-        
+
         return $html;
     }
-    
+
     public function setAdmin() {
         if ( !defined( 'IN_SETUP' ) ) {
             self::$admin_pages = $this->getAdminPages();
-            
+
             $this->admin_sections = array_filter( array_merge( [
                     0 => self::$locale['ac00'],
                     1 => self::$locale['ac01'],
@@ -322,13 +320,13 @@ class Admins {
                     5 => self::$locale['ac05'],
                 ], $this->admin_sections )
             );
-            
+
             $this->admin_sections = array_values( $this->admin_sections );
-            
+
             $this->current_page = $this->_currentPage();
         }
     }
-    
+
     /**
      * @return array
      */
@@ -348,10 +346,10 @@ class Admins {
                 }
             }
         }
-    
+
         return (array)self::$admin_pages + self::$public_pages;
     }
-    
+
     /**
      * Build a return that always synchronize with the DB_ADMIN url.
      */
@@ -365,10 +363,10 @@ class Admins {
                 $path = '../'.$path_info['dirname'].'/'.$path_info['filename'].'.php';
             }
         }
-    
+
         return $path;
     }
-    
+
     /**
      * @param $page          - 0-5 is core section pages. 6 and above are free to use.
      * @param $section_title - Section title
@@ -379,13 +377,13 @@ class Admins {
         $this->admin_section_icons[ $page ] = $icons;
         self::$admin_pages[ $page ] = [];
     }
-    
+
     public function setAdminBreadcrumbs() {
         add_breadcrumb( [
             'link'  => ADMIN.'index.php'.fusion_get_aidlink().'&amp;pagenum=0',
             'title' => self::$locale['ac10']
         ] );
-        
+
         $acTab = ( isset( $_GET['pagenum'] ) && isnum( $_GET['pagenum'] ) ) ? $_GET['pagenum'] : $this->_isActive();
         if ( $acTab != 0 && $acTab <= 5 ) {
             add_breadcrumb( [
@@ -394,7 +392,7 @@ class Admins {
             ] );
         }
     }
-    
+
     /**
      * Determine which section is currently active.
      *
@@ -415,17 +413,17 @@ class Admins {
                 }
             }
         }
-    
+
         return '0';
     }
-    
+
     /**
      * @return array
      */
     public function getAdminPageIcons() {
         return $this->admin_page_icons;
     }
-    
+
     /**
      * @param $rights
      * @param $icons
@@ -433,11 +431,11 @@ class Admins {
     public function setAdminPageIcons( $rights, $icons ) {
         $this->admin_page_icons[ $rights ] = $icons;
     }
-    
+
     public function getLinkType( $type = NULL ) {
         return ( $type !== NULL ? ( isset( $this->link_type[ $type ] ) ? $this->link_type[ $type ] : NULL ) : $this->link_type );
     }
-    
+
     /**
      * @param $type - link prefix
      * @param $link - link url
@@ -445,7 +443,7 @@ class Admins {
     public function setLinkType( $type, $link ) {
         $this->link_type[ $type ] = $link;
     }
-    
+
     /**
      * Get Submit Type
      *
@@ -456,7 +454,7 @@ class Admins {
     public function getSubmitType( $type = NULL ) {
         return ( $type !== NULL ? ( isset( $this->submit_type[ $type ] ) ? $this->submit_type[ $type ] : NULL ) : $this->submit_type );
     }
-    
+
     /**
      * @param $type  - submissions prefix
      * @param $title - title
@@ -464,11 +462,11 @@ class Admins {
     public function setSubmitType( $type, $title ) {
         $this->submit_type[ $type ] = $title;
     }
-    
+
     public function getSubmitData( $type = NULL ) {
         return ( $type !== NULL ? ( isset( $this->submit_data[ $type ] ) ? $this->submit_data[ $type ] : NULL ) : $this->submit_data );
     }
-    
+
     /**
      * @param $type    - submissions prefix
      * @param $options - array(infusion_name, link, submit_link, submit_locale, title,admin_link)
@@ -476,11 +474,11 @@ class Admins {
     public function setSubmitData( $type, array $options = [] ) {
         defined( strtoupper( $options['infusion_name'] ).'_EXIST' ) ? $this->submit_data[ $type ] = $options : NULL;
     }
-    
+
     public function getSubmitLink( $type = NULL ) {
         return ( $type !== NULL ? ( isset( $this->submit_link[ $type ] ) ? $this->submit_link[ $type ] : NULL ) : $this->submit_link );
     }
-    
+
     /**
      * @param string $link Admin submission url
      * @param string $type Submissions stype prefix
@@ -488,11 +486,11 @@ class Admins {
     public function setSubmitLink( $type, $link ) {
         $this->submit_link[ $type ] = $link;
     }
-    
+
     public function getCommentType( $type = NULL ) {
         return ( $type !== NULL ? ( isset( $this->comment_type[ $type ] ) ? $this->comment_type[ $type ] : NULL ) : $this->comment_type );
     }
-    
+
     /**
      * @param string type  comment prefix
      * @param string title title
@@ -500,7 +498,7 @@ class Admins {
     public function setCommentType( $type, $title ) {
         $this->comment_type[ $type ] = $title;
     }
-    
+
     /**
      * @param null $type
      *
@@ -509,7 +507,7 @@ class Admins {
     public function getFolderPermissions( $type = NULL ) {
         return ( $type !== NULL ? ( isset( $this->folder_permissions[ $type ] ) ? $this->folder_permissions[ $type ] : NULL ) : $this->folder_permissions );
     }
-    
+
     /**
      * @param string $type    infusion_name
      * @param array  $options array(image_folder => TRUE or FALSE)
@@ -517,21 +515,21 @@ class Admins {
     public function setFolderPermissions( $type, array $options = [] ) {
         defined( strtoupper( $type ).'_EXIST' ) ? $this->folder_permissions[ $type ] = $options : NULL;
     }
-    
+
     /**
      * @return array
      */
     public function getAdminPageLink() {
         return $this->admin_page_link;
     }
-    
+
     /**
      * @return mixed
      */
     public function getCurrentPage() {
         return $this->current_page;
     }
-    
+
     /**
      * Displays vertical collapsible administration navigation
      *
@@ -542,46 +540,46 @@ class Admins {
     public function vertical_admin_nav( $image_icon = FALSE ) {
         return $this->verticalAdminNav( $image_icon );
     }
-    
+
     public function verticalAdminNav( $image_icon = FALSE ) {
         $aidlink = fusion_get_aidlink();
         $admin_sections = self::getAdminSections();
         $admin_pages = self::getAdminPages();
-        
+
         add_to_jquery( '$("[data-toggle=collapse]").click(function () {$(this).find(".adl-drop i").toggleClass("fa-angle-left fa-angle-down");});' );
-        
+
         $html = "<ul id='adl' class='admin-vertical-link'>\n";
-        
+
         foreach ( $admin_sections as $i => $section_name ) {
             $active = ( ( isset( $_GET['pagenum'] ) && $_GET['pagenum'] == $i ) || ( !isset( $_GET['pagenum'] ) && $this->_isActive() == $i ) ) ? TRUE : FALSE;
-            
+
             $html .= "<li class='".( $active ? 'active panel' : 'panel' )."' >\n";
-            
+
             if ( !empty( $admin_pages[ $i ] ) && is_array( $admin_pages[ $i ] ) ) {
                 $html .= "<a class='adl-link ".( $active ? '' : 'collapsed' )."' data-parent='#adl' data-toggle='collapse' href='#adl-$i'>".$this->getAdminSectionIcons( $i )." <span class='adl-section-name'>".$section_name.( $i > 4 ? " <span class='badge'>".count( $admin_pages[ $i ] )."</span>" : "" )."</span> ".( $i > 0 ? "<span class='adl-drop pull-right'><i class='fa fa-angle-".( $active ? "left" : "down" )."'></i></span>" : '' )."</a>\n";
                 $html .= "<ul id='adl-$i' class='admin-submenu collapse ".( $active ? 'in' : '' )."'>\n";
-                
+
                 foreach ( $admin_pages[ $i ] as $key => $data ) {
                     $title = $data['admin_title'];
                     if ( $data['admin_page'] !== 5 ) {
                         $title = isset( self::$locale[ $data['admin_rights'] ] ) ? self::$locale[ $data['admin_rights'] ] : $title;
                     }
-                    
+
                     $secondary_active = $data['admin_link'] == $this->_currentPage() ? TRUE : FALSE;
                     $icons = ( $image_icon === TRUE ) ? "<img class='admin-image' src='".get_image( "ac_".$data['admin_rights'] )."' alt='$title'/>" : $this->getAdminIcons( $data['admin_rights'] );
-                    
+
                     if ( !empty( $admin_pages[ $data['admin_rights'] ] ) ) {
                         if ( checkrights( $data['admin_rights'] ) ) {
                             $html .= "<li".( $secondary_active ? " class='active'" : '' )." class='sub_pages'>";
                             $html .= "<a class='adl-link' data-toggle='collapse' href='#adl-sub-$key'>".$icons." <span class='adl-submenu-title'>".$title."</span> <span class='adl-drop pull-right'><i class='fa fa-angle-".( $secondary_active ? 'left' : 'down' )."'></i></span></a>";
                             $html .= "<ul id='adl-sub-$key' class='admin-subpages collapse".( $secondary_active ? ' in' : '' )."'>";
-                            
+
                             foreach ( $admin_pages[ $data['admin_rights'] ] as $sub_key => $sub_page ) {
                                 if ( !empty( $admin_pages[ $sub_page['admin_rights'] ] ) ) {
                                     $html .= "<li".( $secondary_active ? " class='active'" : '' )." class='sub_sub_pages'>";
                                     $html .= "<a class='adl-link' data-toggle='collapse' href='#adl-sub-sub-$key'><span class='adl-submenu-title'>".$sub_page['admin_title']."</span> <span class='adl-drop pull-right'><i class='fa fa-angle-".( $secondary_active ? 'left' : 'down' )."'></i></span></a>";
                                     $html .= "<ul id='adl-sub-sub-$key' class='admin-subpages collapse".( $secondary_active ? ' in' : '' )."'>";
-                                    
+
                                     foreach ( $admin_pages[ $sub_page['admin_rights'] ] as $subsub_key => $subsub_page ) {
                                         $html .= "<li class='m-l-10'><a href='".$subsub_page['admin_link']."'><span class='adl-submenu-title'>".$subsub_page['admin_title']."</span></a></li>";
                                     }
@@ -591,35 +589,35 @@ class Admins {
                                     $html .= "<li><a href='".$sub_page['admin_link']."'><span class='adl-submenu-title'>".$sub_page['admin_title']."</span></a></li>";
                                 }
                             }
-                            
+
                             $html .= "</ul>\n";
                             $html .= "</li>";
                         }
                     } else {
                         $html .= checkrights( $data['admin_rights'] ) ? "<li".( $secondary_active ? " class='active'" : '' )."><a href='".ADMIN.$data['admin_link'].$aidlink."'>".$icons." <span class='adl-submenu-title'>".$title."</span></a></li>\n" : "";
                     }
-                    
+
                 }
-                
+
                 $html .= "</ul>\n";
             } else {
                 $html .= "<a class='adl-link' href='".ADMIN."index.php".$aidlink."&amp;pagenum=0'>".$this->getAdminSectionIcons( $i )." <span class='adl-section-name'>".$section_name."</span></a>\n";
             }
             $html .= "</li>\n";
         }
-        
+
         $html .= "</ul>\n";
-        
+
         return (string)$html;
     }
-    
+
     /**
      * @return array
      */
     public function getAdminSections() {
         return $this->admin_sections;
     }
-    
+
     /**
      * @param $page_number
      *
@@ -628,15 +626,15 @@ class Admins {
     public function get_admin_section_icons( $page_number ) {
         return $this->getAdminSectionIcons( $page_number );
     }
-    
+
     public function getAdminSectionIcons( $page_number ) {
         if ( !empty( $this->admin_section_icons[ $page_number ] ) && $this->admin_section_icons[ $page_number ] ) {
             return $this->admin_section_icons[ $page_number ];
         }
-        
+
         return FALSE;
     }
-    
+
     /**
      * Replace admin page icons
      *
@@ -648,7 +646,7 @@ class Admins {
             $this->admin_section_icons[ $page ] = $icons;
         }
     }
-    
+
     /**
      * Get the administration page icons
      *
@@ -659,16 +657,16 @@ class Admins {
     public function get_admin_icons( $admin_rights ) {
         return $this->getAdminIcons( $admin_rights );
     }
-    
+
     public function getAdminIcons( $admin_rights ) {
         if ( !empty( $this->admin_page_icons[ $admin_rights ] ) ) {
-            
+
             return (string)$this->admin_page_icons[ $admin_rights ];
         }
-        
+
         return '';
     }
-    
+
     /**
      * Displays horizontal administration navigation
      *
@@ -679,7 +677,7 @@ class Admins {
     public function horizontal_admin_nav( $icon_only = FALSE ) {
         return $this->horizontalAdminNav( $icon_only );
     }
-    
+
     public function horizontalAdminNav( $icon_only = FALSE ) {
         $aidlink = fusion_get_aidlink();
         $html = "<ul class='admin-horizontal-link'>\n";
@@ -689,10 +687,10 @@ class Admins {
             $html .= "<li ".( $active ? "class='active'" : '' )."><a title='".$section_name."' href='".ADMIN.$aidlink."&amp;pagenum=$i'>".$this->getAdminSectionIcons( $i ).$admin_text."</a></li>\n";
         }
         $html .= "</ul>\n";
-        
+
         return $html;
     }
-    
+
     /**
      * @param string $page Use number to add child to sub-section and admin_rights to sub-pages
      * @param string $title
@@ -719,7 +717,7 @@ class Admins {
             'admin_active' => $active,
         ];
     }
-    
+
     public function getPublicPages() {
         return self::$public_pages;
     }

@@ -19,7 +19,7 @@ defined( 'IN_FUSION' ) || exit;
 
 $locale = fusion_get_locale( '', __DIR__.'/locale/'.LANGUAGE.'.php' );
 
-$icon = "<img class='icon-xs' src='".INCLUDES."user_fields/public/user_github/images/github.svg' title='".$locale['uf_github']."' alt='".$locale['uf_github']."'/>";
+$icon = "<img src='".INCLUDES."user_fields/public/user_github/images/github.svg' title='".$locale['uf_github']."' alt='".$locale['uf_github']."'/>";
 // Display user field input
 if ( $profile_method == "input" ) {
     $options = [

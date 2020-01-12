@@ -4,14 +4,14 @@ namespace PHPFusion\UserFields\Quantum;
 use PHPFusion\UserFieldsQuantum;
 
 class QuantumModulesView {
-    
+
     protected $cat_list = [];
     protected $page_list = [];
     private $available_field_info = [];
     private $modules = [];
     private $class;
-    
-    
+
+
     public function __construct( UserFieldsQuantum $class ) {
         $this->class = $class;
         $this->cat_list = $this->class->getCatList();
@@ -19,7 +19,7 @@ class QuantumModulesView {
         $this->page_list = $this->class->getPageList();
         $this->available_field_info = $this->class->getAvailableFieldInfo();
     }
-    
+
     /**
      * @param string $folder
      *
@@ -42,13 +42,13 @@ class QuantumModulesView {
         }
         // modules
         if ( !empty( $this->modules ) ) {
-    
+
             $no_modules = '';
-    
+
             $this->doModuleAction( $folder );
-    
+
             $pf_html .= '<div class="row equal-height">';
-            
+
             foreach ( $this->modules as $module_name => $module_data ) {
                 $button = "<a class='btn btn-default' href='".clean_request( "install=".$module_name, [ 'install', 'uninstall' ], FALSE )."'>Install</a>";
                 if ( !in_array( $module_name, array_keys( $this->available_field_info ) ) ) {
@@ -58,7 +58,7 @@ class QuantumModulesView {
                 if ( $module_data['module_image'] ) {
                     $image = "<img src='".$module_data['module_image']."' class='icon img-responsive' style='margin:15px auto; max-height:48px;'>";
                 }
-    
+
                 $pf_html .= '<div class="m-b-15 '.grid_column_size( 100, 50, 33, 25 ).'">
                 <div class="list-group-item text-center display-flex-column">'.$image.'
                 <h4 class="strong">'.$module_data['user_field_name'].'</h4>
@@ -67,14 +67,14 @@ class QuantumModulesView {
                 </div>
                 </div>';
             }
-    
+
             $pf_html .= '</div>';
         }
         $pf_html .= $no_modules;
-    
+
         return (string)$pf_html;
     }
-    
+
     /**
      * Do module installation
      *
@@ -85,22 +85,22 @@ class QuantumModulesView {
     private function doModuleAction( $folder ) {
         // 1 click uninstall modules
         if ( $install = get( 'install' ) ) {
-            
+
             if ( $folder == 'public' ) {
-                
+
                 $modal = openmodal( 'modadd', "<h4 class='m-0'>Add User Fields Module</h4>" );
                 $modal .= $this->viewModulesForm();
                 $modal .= closemodal();
                 add_to_footer( $modal );
-                
+
             } else {
                 // Install for preferences and security
                 if ( isset( $this->modules[ $install ] ) ) {
-                    
+
                     if ( in_array( $install, array_keys( $this->available_field_info ) ) ) {
-                        
+
                         $module_data = $this->modules[ $install ];
-                        
+
                         $module = [
                             'field_id'           => 0,
                             'field_title'        => $module_data['user_field_name'],
@@ -116,7 +116,7 @@ class QuantumModulesView {
                             'field_config'       => 0,
                             'field_section'      => $folder
                         ];
-                        
+
                         $module['field_order'] = dbresult( dbquery( "SELECT COUNT(field_id) FROM ".DB_USER_FIELDS." WHERE field_type=:type AND field_cat=:cat_id", [ ':cat_id' => $module['field_cat'], ':type' => $folder ] ), 0 ) + 1;
                         if ( $this->class->updateFields( $module, 'module', DB_USERS, $this->modules ) ) {
                             redirect( clean_request( '', [ 'install' ], FALSE ) );
@@ -125,7 +125,7 @@ class QuantumModulesView {
                 }
             }
         } else if ( $uninstall = get( 'uninstall' ) ) {
-            
+
             if ( isset( $this->modules[ $uninstall ] ) ) {
                 $module = $this->modules[ $uninstall ];
                 $field_id = (int)dbresult( dbquery( "SELECT field_id FROM ".DB_USER_FIELDS." WHERE field_name=:name AND field_type=:file AND field_section=:folder", [
@@ -138,9 +138,9 @@ class QuantumModulesView {
                 }
             }
         }
-        
+
     }
-    
+
     /** Modules Form */
     public function viewModulesForm() {
         $locale = fusion_get_locale();
@@ -160,22 +160,21 @@ class QuantumModulesView {
                 redirect( FUSION_SELF.$aidlink );
             }
         }
-        
+
         if ( isset( $this->modules[ $install_plugin ] ) ) {
-            
+
             $plugin_data = $this->modules[ $install_plugin ];
-            
+
             // 1 click Install Modules
             if ( post( 'enable' ) ) {
-                
+
                 $accepted_type = [
                     'public'      => 'file',
                     'preferences' => 'file',
                     'security'    => 'file'
                 ];
-                
+
                 if ( isset( $accepted_type[ $ref_module ] ) ) {
-                    
                     $field_data = [
                         'add_module'         => sanitizer( 'add_module' ) ?: $field_data['field_name'],
                         'field_type'         => $accepted_type[ $ref_module ],
@@ -195,17 +194,17 @@ class QuantumModulesView {
                     if ( !$field_data['field_order'] ) {
                         $field_data['field_order'] = dbresult( dbquery( "SELECT MAX(field_order) FROM ".DB_USER_FIELDS." WHERE field_cat=:cat_id", [ ':cat_id' => $field_data['field_cat'] ] ), 0 ) + 1;
                     }
-    
+
                     $this->class->updateFields( $field_data, 'module', '', $this->modules );
                 }
             }
-    
+
             $field_data['add_module'] = $field_data['field_name'];
-            
+
             if ( post( 'add_module' ) ) {
                 $field_data['add_module'] = sanitizer( 'add_module', '', 'add_module' );
             }
-            
+
             $html = openform( 'fieldform', 'post' );
             $html .= "<div><strong>".$plugin_data['user_field_name']."</strong></div>\n";
             if ( !empty( $plugin_data['user_field_desc'] ) ) {
@@ -253,14 +252,14 @@ class QuantumModulesView {
             }
             $html .= $action_link;
             $html .= closeform();
-            
+
             return (string)$html;
-    
+
         }
-    
+
         addNotice( 'danger', $locale['fields_0109'] );
         redirect( ADMIN.'user_fields.php'.$aidlink.'&amp;ref=public&amp;action=new' );
-        
+
     }
-    
+
 }

@@ -85,13 +85,21 @@ class Settings_Registration {
             0 => $this->locale['disable'],
             1 => $this->locale['enable'],
         ]]);
-        echo \PHPFusion\UserFieldsQuantum::quantum_multilocale_fields('license_agreement', $this->locale['559'], $this->settings['license_agreement'], [
-            'form_name' => 'registrationfrm',
-            'input_id'  => 'enable_license_agreement',
-            'autosize'  => !$this->settings['tinymce_enabled'] ? FALSE : TRUE,
-            'type'      => ($this->settings['tinymce_enabled'] ? 'tinymce' : 'html'),
-            'function'  => 'form_textarea'
-        ]);
+        if (count(fusion_get_enabled_languages()) <= 1) {
+            echo \PHPFusion\UserFieldsQuantum::quantum_multilocale_fields('license_agreement', $this->locale['559'], $this->settings['license_agreement'], [
+                'form_name' => 'settingsform',
+                'input_id'  => 'enable_license_agreement',
+                'autosize'  => !fusion_get_settings('tinymce_enabled') ? FALSE : TRUE,
+                'type'      => (fusion_get_settings('tinymce_enabled') ? 'tinymce' : 'html'),
+                'function'  => 'form_textarea'
+            ]);
+        } else {
+            echo form_textarea('license_agreement', $this->locale['559'], $this->settings['license_agreement'], [
+                'form_name' => 'settingsform',
+                'autosize'  => !fusion_get_settings('tinymce_enabled') ? FALSE : TRUE,
+                'html'      => !fusion_get_settings('tinymce_enabled') ? TRUE : FALSE
+            ]);
+        }
         echo form_button('savesettings', $this->locale['750'], $this->locale['750'], ['class' => 'btn-success']);
         echo closeform();
         closetable();

@@ -40,7 +40,7 @@ if ($temp = opendir(INCLUDES."captchas/")) {
 
 if (post('clear_cache')) {
     if ($settings['database_sessions']) {
-        $session = Sessions::getInstance( COOKIE_PREFIX.'session' );
+        $session = Sessions::getInstance(COOKIE_PREFIX.'session');
         $session->_purge();
     } else {
         // Where system has been disabled and instance could not be found, invoke manually.
@@ -53,21 +53,22 @@ if (post('clear_cache')) {
 if (post('savesettings')) {
     // Save settings after validation
     $inputData = [
-        'captcha'             => sanitizer('captcha', '', 'captcha'),
-        'privacy_policy'      => form_sanitizer( $_POST['privacy_policy'], '', 'privacy_policy', TRUE ),
-        'allow_php_exe'       => sanitizer('allow_php_exe', 0, 'allow_php_exe'),
-        'flood_interval'      => sanitizer('flood_interval', 15, 'flood_interval'),
-        'flood_autoban'       => sanitizer('flood_autoban', 0, 'flood_autoban'),
-        'maintenance_level'   => sanitizer('maintenance_level', 102, 'maintenance_level'),
-        'maintenance'         => sanitizer('maintenance', 0, 'maintenance'),
-        'maintenance_message' => descript(addslashes(post('maintenance_message'))),
+        'captcha'               => sanitizer('captcha', '', 'captcha'),
+        'privacy_policy'        => form_sanitizer($_POST['privacy_policy'], '', 'privacy_policy', TRUE),
+        'allow_php_exe'         => sanitizer('allow_php_exe', 0, 'allow_php_exe'),
+        'flood_interval'        => sanitizer('flood_interval', 15, 'flood_interval'),
+        'flood_autoban'         => sanitizer('flood_autoban', 0, 'flood_autoban'),
+        'maintenance_level'     => sanitizer('maintenance_level', 102, 'maintenance_level'),
+        'maintenance'           => sanitizer('maintenance', 0, 'maintenance'),
+        'maintenance_message'   => descript(addslashes(post('maintenance_message'))),
         'bad_words_enabled'     => sanitizer('bad_words_enabled', 0, 'bad_words_enabled'),
-        'bad_words'             => post( 'bad_words' ),
+        'bad_words'             => post('bad_words'),
         'bad_word_replace'      => sanitizer('bad_word_replace', '', 'bad_word_replace'),
-        'user_name_ban'         => post( 'user_name_ban' ),
+        'user_name_ban'         => post('user_name_ban'),
         'database_sessions'     => sanitizer('database_sessions', '', 'database_sessions'),
         'form_tokens'           => sanitizer('form_tokens', '', 'form_tokens'),
         'gateway'               => sanitizer('gateway', 0, 'gateway'),
+        'gateway_method'        => form_sanitizer($_POST['gateway_method'], 0, 'gateway_method'),
         'error_logging_enabled' => sanitizer('error_logging_enabled', 0, 'error_logging_enabled'),
         'error_logging_method'  => sanitizer('error_logging_method', '', 'error_logging_method'),
         'mime_check'            => form_sanitizer($_POST['mime_check'], '0', 'mime_check'),
@@ -166,7 +167,7 @@ echo form_textarea('maintenance_message', $locale['658'], stripslashes($settings
 closeside();
 openside('');
 if (count(fusion_get_enabled_languages()) <= 1) {
-    echo \PHPFusion\QuantumFields::quantum_multilocale_fields('privacy_policy', $locale['820'], $settings['privacy_policy'], [
+    echo \PHPFusion\UserFieldsQuantum::quantum_multilocale_fields('privacy_policy', $locale['820'], $settings['privacy_policy'], [
         'autosize'  => 1,
         'form_name' => 'settingsform',
         'html'      => !fusion_get_settings('tinymce_enabled') ? TRUE : FALSE,
@@ -284,6 +285,16 @@ closeside();
 openside('');
 echo form_select('gateway', $locale['security_010'], $settings['gateway'], [
     'options'     => $yes_no_array,
+    'width'       => '100%',
+    'inner_width' => '100%'
+]);
+
+echo form_select('gateway_method', $locale['security_010a'], $settings['gateway_method'], [
+    'options'     => [
+        0 => $locale['security_010b'],
+        1 => $locale['security_010c'],
+        2 => $locale['security_010d']
+    ],
     'width'       => '100%',
     'inner_width' => '100%'
 ]);

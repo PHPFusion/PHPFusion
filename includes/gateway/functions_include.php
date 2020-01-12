@@ -20,17 +20,17 @@ defined('IN_FUSION') || exit;
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'gateway.php');
 
 function get_gateway_info() {
-    
+
     $locale = fusion_get_locale();
-    
+
     function gateway_answer() {
-        
+
         if ( post( 'gateway_answer' ) ) {
             // Terminate and ban all excessive access attempts
             antiflood_countaccess();
-            
+
             $honeypot = session_get( 'honeypot' );
-            
+
             if ( check_post( $honeypot ) && !post( $honeypot ) ) {
                 $antibot = stripinput( strtolower( post( 'gateway_answer' ) ) );
                 $antibot_session = session_get( 'antibot' );
@@ -39,46 +39,61 @@ function get_gateway_info() {
                     redirect( BASEDIR.'register.php' );
                 }
             }
-            
+
             return TRUE;
         }
-        
+
         return FALSE;
     }
-    
+
     $answer_status = gateway_answer();
-    
+
     $info = [
         'showform'         => TRUE,
         'incorrect_answer' => $answer_status
     ];
-    
+
     session_add( 'validated', 'FALSE' );
-    
+
     if ( !post( 'gateway_submit' ) && !post( 'register' ) ) {
-        
+
         // Get some numbers up. Always keep an odd number to void 10-10 etc.
         $a = rand( 11, 20 );
         $b = rand( 1, 10 );
-        
-        if ( $a > 15 ) {
+
+        $method = fusion_get_settings('gateway_method'); // 0 words, 1 numbers, 2 both
+
+        if ($method == 0) {
             $antibot = (int)( $a + $b );
             $multiplier = "+";
             $reply_method = $locale['gateway_062'];
             $a = convertNumberToWord( $a );
             $antibot = strtolower( convertNumberToWord( $antibot ) );
-        } else {
+        } else if ($method == 1) {
             $antibot = (int)( $a - $b );
             $multiplier = "-";
             $reply_method = $locale['gateway_063'];
             $b = convertNumberToWord( $b );
+        } else {
+            if ( $a > 15 ) {
+                $antibot = (int)( $a + $b );
+                $multiplier = "+";
+                $reply_method = $locale['gateway_062'];
+                $a = convertNumberToWord( $a );
+                $antibot = strtolower( convertNumberToWord( $antibot ) );
+            } else {
+                $antibot = (int)( $a - $b );
+                $multiplier = "-";
+                $reply_method = $locale['gateway_063'];
+                $b = convertNumberToWord( $b );
+            }
         }
-        
+
         session_add( 'antibot', $antibot );
-        
+
         $a = str_rot47( $a );
         $b = str_rot47( $b );
-        
+
         echo "<noscript>".$locale['gateway_052']."</noscript>";
         // Just add fields to random
         $honeypot_array = [ $locale['gateway_053'], $locale['gateway_054'], $locale['gateway_055'], $locale['gateway_056'], $locale['gateway_057'], $locale['gateway_058'], $locale['gateway_059'] ];
@@ -112,7 +127,7 @@ function get_gateway_info() {
             'button'           => form_button( 'gateway_submit', $locale['gateway_065'], $locale['gateway_065'], [ 'class' => 'btn-primary btn-block m-t-10' ] ),
         ];
     }
-    
+
     return $info;
 }
 
@@ -176,15 +191,15 @@ function antiflood_countaccess() {
         $control = array_merge($control, unserialize(fread($fh, filesize(CONTROL_DB))));
         fclose($fh);
     }
-    
+
     $control[ USER_IP ]["c"] = 1;
-    
+
     if ( isset( $control[ USER_IP ]['t'] ) ) {
         if ( time() - $control[ USER_IP ]["t"] < CONTROL_REQ_TIMEOUT ) {
             $control[ USER_IP ]["c"]++;
         }
     }
-    
+
     $control[USER_IP]["t"] = time();
 
     if ($control[USER_IP]["c"] >= CONTROL_MAX_REQUESTS) {
