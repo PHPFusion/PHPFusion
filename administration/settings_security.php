@@ -50,11 +50,13 @@ if (post('clear_cache')) {
     redirect(FUSION_REQUEST);
 }
 
+$is_multilang = count(fusion_get_enabled_languages()) > 1 ? TRUE : FALSE;
+
 if (post('savesettings')) {
     // Save settings after validation
     $inputData = [
         'captcha'               => sanitizer('captcha', '', 'captcha'),
-        'privacy_policy'        => form_sanitizer($_POST['privacy_policy'], '', 'privacy_policy', TRUE),
+        'privacy_policy'        => form_sanitizer($_POST['privacy_policy'], '', 'privacy_policy', $is_multilang),
         'allow_php_exe'         => sanitizer('allow_php_exe', 0, 'allow_php_exe'),
         'flood_interval'        => sanitizer('flood_interval', 15, 'flood_interval'),
         'flood_autoban'         => sanitizer('flood_autoban', 0, 'flood_autoban'),
@@ -166,7 +168,7 @@ echo form_select('maintenance', $locale['657'], $settings['maintenance'], [
 echo form_textarea('maintenance_message', $locale['658'], stripslashes($settings['maintenance_message']), ['autosize' => TRUE, 'html' => !fusion_get_settings('tinymce_enabled') ? TRUE : FALSE, 'form_name' => 'settingsform']);
 closeside();
 openside('');
-if (count(fusion_get_enabled_languages()) <= 1) {
+if ($is_multilang == TRUE) {
     echo \PHPFusion\UserFieldsQuantum::quantum_multilocale_fields('privacy_policy', $locale['820'], $settings['privacy_policy'], [
         'autosize'  => 1,
         'form_name' => 'settingsform',
