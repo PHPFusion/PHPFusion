@@ -346,7 +346,7 @@ class Authenticate {
 	public static function getEmptyUserData() {
 		global $settings;
 
-		return array("user_level" => 0, "user_rights" => "", "user_groups" => "", "user_theme" => $settings['theme']);
+		return array("user_level" => 0, "user_rights" => "", "user_groups" => "", "user_theme" => !empty($settings['theme']) ? $settings['theme'] : 'Default');
 	}
 
 	// Set user theme
