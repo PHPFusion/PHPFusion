@@ -23,10 +23,12 @@ $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/settings.php");
 
 $settings = fusion_get_settings();
 
+$is_multilang = count(fusion_get_enabled_languages()) > 1 ? TRUE : FALSE;
+
 if (isset($_POST['savesettings'])) {
     $inputData = [
         'login_method'        => form_sanitizer($_POST['login_method'], '0', 'login_method'),
-        'license_agreement'   => form_sanitizer($_POST['license_agreement'], '', 'license_agreement', TRUE),
+        'license_agreement'   => form_sanitizer($_POST['license_agreement'], '', 'license_agreement', $is_multilang),
         'enable_registration' => form_sanitizer($_POST['enable_registration'], '0', 'enable_registration'),
         'email_verification'  => form_sanitizer($_POST['email_verification'], '0', 'email_verification'),
         'admin_activation'    => form_sanitizer($_POST['admin_activation'], '0', 'admin_activation'),
@@ -56,7 +58,7 @@ echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-8'>\n";
 openside('');
 echo form_select('enable_terms', $locale['558'], $settings['enable_terms'], ['options' => $opts]);
-if (count(fusion_get_enabled_languages()) <= 1) {
+if ($is_multilang == TRUE) {
     echo \PHPFusion\QuantumFields::quantum_multilocale_fields('license_agreement', $locale['559'], $settings['license_agreement'], [
         'form_name' => 'settingsform',
         'input_id'  => 'enable_license_agreement',
