@@ -133,6 +133,17 @@ class Locale {
                 break;
             case 'Czech':
             case 'Slovak':
+                if ($count == 1) {
+                    $form = 0;
+                } else if (in_array($count, [2, 3, 4])) {
+                    $form = 1;
+                } else {
+                    $form = 2;
+                }
+
+                $words_array = explode("|", $words);
+                $result = $words_array[$form];
+                break;
             case 'Russian':
             case 'Ukranian':
                 $fcount = $count % 100;
