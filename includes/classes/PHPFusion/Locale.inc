@@ -28,11 +28,11 @@ namespace PHPFusion;
  * @package PHPFusion
  */
 class Locale {
-    
+
     private static $locale_file = [];
     private static $locale = [];
     private static $instances = NULL;
-    
+
     /**
      * Get locale instance by key
      *
@@ -44,10 +44,10 @@ class Locale {
         if ( !isset( self::$instances[ $key ] ) ) {
             self::$instances[ $key ] = new static();
         }
-        
+
         return self::$instances[ $key ];
     }
-    
+
     /**
      * Includes a locale file and logs a trace
      *
@@ -55,19 +55,19 @@ class Locale {
      */
     public static function load_locale_file( $filename ) {
         $locale = [];
-        
+
         if ( file_exists( $filename ) ) {
             include $filename;
         }
-        
+
         self::$locale = $locale + self::$locale;
         self::$locale_file[ $filename ] = debug_backtrace();
     }
-    
+
     public static function get_loaded_files() {
         return self::$locale_file;
     }
-    
+
     /**
      * Iinclude a new locale file
      *
@@ -86,14 +86,14 @@ class Locale {
             }
         }
     }
-    
+
     public function getLocale( $key = NULL ) {
         //self::$use_count++;
         //print_p(microtime(TRUE)-START_TIME);
         //print_p(self::$use_count);
         return empty( $key ) ? self::$locale : ( isset( self::$locale[ $key ] ) ? self::$locale[ $key ] : '' );
     }
-    
+
     /**
      * @param       $count
      * @param       $words
@@ -118,13 +118,13 @@ class Locale {
             'language'      => LANGUAGE,
             'format_num'    => TRUE,
         ];
-        
+
         $options += $default_options;
-        
+
         if ( empty( $count ) ) {
             $count = (int)"0";
         }
-        
+
         // Format the result
         switch ( $options['language'] ) {
             case 'English':
@@ -137,13 +137,24 @@ class Locale {
                 break;
             case 'Czech':
             case 'Slovak':
+                if ($count == 1) {
+                    $form = 0;
+                } else if (in_array($count, [2, 3, 4])) {
+                    $form = 1;
+                } else {
+                    $form = 2;
+                }
+
+                $words_array = explode("|", $words);
+                $result = $words_array[$form];
+                break;
             case 'Russian':
             case 'Ukranian':
                 $fcount = $count % 100;
                 $a = $fcount % 10;
                 $b = floor( $fcount / 10 );
                 $form = 2;
-    
+
                 if ( $b != 1 ) {
                     if ( $a == 1 ) {
                         $form = 0;
@@ -151,7 +162,7 @@ class Locale {
                         $form = 1;
                     }
                 }
-    
+
                 $words_array = explode( "|", $words );
                 $result = $words_array[ $form ];
                 break;
@@ -159,7 +170,7 @@ class Locale {
                 $words_array = explode( "|", $words );
                 $result = $words_array[0];
         }
-        
+
         if ( $options['add_count'] ) {
             if ( $options['html'] && !empty( $options['html_template'] ) ) {
                 return strtr( $options['html_template'],
@@ -172,10 +183,10 @@ class Locale {
                 return ( $options['format_num'] === TRUE ? number_format( $count ) : $count ).' '.$result;
             }
         }
-        
+
         return $result;
     }
-    
+
     /**
      * Given English as base, find out the localized version
      *
@@ -204,14 +215,14 @@ class Locale {
             "The Netherlands" => "Nederland",
             "Ukraine"         => "Україна",
         ];
-        
+
         if ( !empty( $translated_countries[ $country ] ) ) {
             return $country." (".$translated_countries[ $country ].")";
         } else {
             return $country;
         }
     }
-    
+
     /**
      * Attempt to translate Locale Folder Name into Localized language
      * or return the locale folder name by default.
@@ -248,10 +259,10 @@ class Locale {
             "Turkish"             => "Türkçe",
             "Ukrainian"           => "Українська",
         ];
-        
+
         return $key === NULL ? $translated_langs : ( isset( $translated_langs[ $key ] ) ? $translated_langs[ $key ] : $key );
     }
-    
+
     /**
      * ISO-639 translator
      *
@@ -405,12 +416,12 @@ class Locale {
             'zh' => 'Chinese',
             'zu' => 'Zulu',
         ];
-        
+
         $iso_codes = array_flip( $language_codes );
         if ( $iso_to_lang ) {
             return $key === NULL ? $language_codes : ( isset( $language_codes[ $key ] ) ? self::translate_lang_names( $language_codes[ $key ] ) : NULL );
         }
-        
+
         return $key === NULL ? array_flip( $iso_codes ) : ( isset( $iso_codes[ $key ] ) ? $iso_codes[ $key ] : NULL );
     }
 }
