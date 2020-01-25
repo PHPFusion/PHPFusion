@@ -30,6 +30,8 @@ add_handler('replaceDir');
 
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'error.php');
 
+$info = [];
+
 $default = [
     'title'     => $locale['errunk'],
     'image_src' => IMAGES."error/unknown.png",
