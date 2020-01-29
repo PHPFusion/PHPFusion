@@ -102,6 +102,9 @@ if (!function_exists('display_blog_item')) {
             echo "<img class='img-responsive' src='".$data['blog_image_link']."' alt='".$data['blog_subject']."' style='padding:5px; max-height:".$blog_settings['blog_photo_h']."px; overflow:hidden;' />
             </a>";
         }
+
+        echo $data['blog_blog'];
+        echo '<br>';
         echo $data['blog_extended'];
 
         if (!empty($data['blog_nav'])) {
