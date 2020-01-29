@@ -70,9 +70,28 @@ class Postify_Edit extends Forum_Postify {
 
             add_breadcrumb(['link' => FUSION_REQUEST, 'title' => self::$locale['forum_0508']]);
 
+            $inf_settings = get_settings('forum');
+            $thread_rowstart = '';
+            $thread_posts = dbquery("SELECT p.post_id, p.forum_id, p.thread_id, t.thread_postcount
+                            FROM ".DB_FORUM_POSTS." p
+                            LEFT JOIN ".DB_FORUM_THREADS." t ON p.thread_id=t.thread_id
+                            WHERE p.forum_id='".$forum_id."' AND p.thread_id='".$thread_id."' AND thread_hidden='0' AND post_hidden='0'
+                            ORDER BY post_datestamp ASC");
+            if (dbrows($thread_posts)) {
+                if (!empty($inf_settings['posts_per_page'])) {
+                    $counter = 1;
+                    while ($thread_post_data = dbarray($thread_posts)) {
+                        if ($thread_post_data['post_id'] == $_GET['post_id']) {
+                            $thread_rowstart = $inf_settings['posts_per_page'] * floor(($counter - 1) / $inf_settings['posts_per_page']);
+                            $thread_rowstart = "&amp;rowstart=".$thread_rowstart;
+                        }
+                        $counter++;
+                    }
+                }
+            }
 
             if ($post_id && $thread_id) {
-                redirect($settings['siteurl'].'infusions/forum/viewthread.php?thread_id='.$thread_id.'&amp;pid='.$post_id.'#post_'.$post_id, 3);
+                redirect($settings['siteurl'].'infusions/forum/viewthread.php?thread_id='.$thread_id.$thread_rowstart.'&amp;pid='.$post_id.'#post_'.$post_id, 3);
             } else {
                 redirect($settings['siteurl'].'infusions/forum/index.php?viewforum&amp;forum_id='.$forum_id, 3);
             }
@@ -82,7 +101,7 @@ class Postify_Edit extends Forum_Postify {
             $description = $this->get_postify_error_message() ?: self::$locale['forum_0547'];
 
             if ($post_id && $thread_id) {
-                $link[] = ['url' => $settings['siteurl'].'infusions/forum/viewthread.php?thread_id='.$thread_id.'&amp;pid='.$post_id.'#post_'.$post_id, 'title' => self::$locale['forum_0548']];
+                $link[] = ['url' => $settings['siteurl'].'infusions/forum/viewthread.php?thread_id='.$thread_id.$thread_rowstart.'&amp;pid='.$post_id.'#post_'.$post_id, 'title' => self::$locale['forum_0548']];
             } else {
                 $link[] = ['url' => $settings['siteurl'].'infusions/forum/viewthread.php?thread_id='.$thread_id, 'title' => self::$locale['forum_0548']];
             }
