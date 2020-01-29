@@ -183,6 +183,8 @@ if (!function_exists("render_article_item")) {
 
             <div class="article-article text-dark m-t-20 m-b-20">
                 <p>
+                    <?php echo $data['article_snippet']; ?>
+                    <br>
                     <?php echo $data['article_article']; ?>
                 </p>
             </div>
