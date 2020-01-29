@@ -237,6 +237,8 @@ class Blog extends Core {
                         echo '</a>';
                     }
 
+                    echo $data['blog_blog'];
+                    echo '<br>';
                     echo $data['blog_extended'];
                 echo '</div>';
 
