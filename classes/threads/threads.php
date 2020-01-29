@@ -78,7 +78,7 @@ class ForumThreads extends ForumServer {
         SELECT count(t.thread_id) 'thread_count',
         t.thread_id
         FROM ".DB_FORUM_THREADS." t
-        INNER JOIN ".DB_FORUMS." tf ON t.forum_id=tf.forum_id 
+        INNER JOIN ".DB_FORUMS." tf ON t.forum_id=tf.forum_id
         LEFT JOIN ".DB_FORUM_ATTACHMENTS." a on a.thread_id = t.thread_id
         ".$join."
         WHERE ".($forum_id ? " t.forum_id='".intval($forum_id)."' AND " : "")." t.thread_hidden='0' AND ".groupaccess('tf.forum_access')."
@@ -715,6 +715,10 @@ class ForumThreads extends ForumServer {
                             $post_data['post_message'] = $last_message['post_message']."\n\n".$locale['forum_0640']." ".showdate("longdate",
                                     time()).":\n".$post_data['post_message'];
                             dbquery_insert(DB_FORUM_POSTS, $post_data, 'update', ['primary_key' => 'post_id']);
+
+                            dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".time()."', forum_postcount=forum_postcount+1, forum_lastpostid='".$post_data['post_id']."', forum_lastuser='".$post_data['post_author']."' WHERE forum_id='".$this->thread_data['forum_id']."'");
+                            // update current thread
+                            dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost='".time()."', thread_lastpostid='".$post_data['post_id']."', thread_postcount=thread_postcount+1, thread_lastuser='".$post_data['post_author']."' WHERE thread_id='".$this->thread_data['thread_id']."'");
                         } else {
                             $update_forum_lastpost = TRUE;
                             dbquery_insert(DB_FORUM_POSTS, $post_data, 'save', ['primary_key' => 'post_id']);
