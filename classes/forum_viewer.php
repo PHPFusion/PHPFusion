@@ -638,51 +638,11 @@ class Forum_Viewer {
             'ascending'  => $locale['forum_0231']
         ];
 
-
-        $tpl = '
-        <div class="clearfix">
-        {time_filter.{
-        <div class="pull-left">
-        {[forum_0388]}
-        <div class="forum-filter dropdown">
-        <button class="btn btn-sm btn-default {%time_active%} dropdown-toggle" data-toggle="dropdown">
-        <strong>{%time%}</strong><span class="caret m-l-5"></span>
-        </button>
-        <ul class="dropdown-menu">{%time_filter%}</ul>
-        </div>
-        </div>
-        }}
-        <div class="pull-left">
-        {sort_filter.{
-        {[forum_0225]}
-        <div class="forum-filter dropdown">
-        <button class="btn btn-sm btn-default {%sort_active%} dropdown-toggle" data-toggle="dropdown">
-        <strong>{%sort%}</strong>
-        <span class="caret m-l-5"></span>
-        </button>
-        <ul class="dropdown-menu dropdown-menu-right">{%sort_filter%}</ul>
-        </div>
-        }}
-        {order_filter.{
-        <div class="forum-filter dropdown">
-        <button class="btn btn-sm btn-default {%order_active%} dropdown-toggle" data-toggle="dropdown">
-        <strong>{%order%}</strong><span class="caret m-l-5"></span>
-        </button>
-        <ul class="dropdown-menu dropdown-menu-right">{%order_filter%}</ul>
-        </div>
-        }}
-        </div>
-        {reset_filter.{
-        <div class="pull-right">
-        <a href="{%reset_link%}" class="btn btn-sm btn-default"><i class="fas fa-times-circle"></i> Reset</a>
-        </div>
-        }}
-        </div>';
-
         $html = Template::getInstance('forum-filter');
-        $html->set_text($tpl);
-        $html->set_locale($locale);
+    
+        $html->set_template( __DIR__.'/../templates/forum_filter.html' );
 
+        $html->set_locale($locale);
 
         if (!empty($info['filter']['time'])) {
             $get_time = get('time');

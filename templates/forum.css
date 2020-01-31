@@ -668,7 +668,7 @@ a.answer_unchecked:focus {
 PHP-Fusion 9 Core Template Forum CSS
 */
 .forum-title {
-    text-transform: uppercase !important;
+	text-transform: uppercase;
     font-weight: 700;
     margin-bottom: 15px;
 }
