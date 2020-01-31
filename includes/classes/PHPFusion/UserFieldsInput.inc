@@ -399,7 +399,7 @@ class UserFieldsInput {
                     $this->_newUserPasswordHash = $passAuth->getNewHash();
                     $this->_newUserPasswordAlgo = $passAuth->getNewAlgo();
                     $this->_newUserPasswordSalt = $passAuth->getNewSalt();
-        
+    
                     $password['user_admin_algo'] = $this->_newUserPasswordAlgo;
                     $password['user_admin_salt'] = $this->_newUserPasswordSalt;
                     $password['user_admin_password'] = $this->_newUserPasswordHash;
@@ -583,11 +583,8 @@ class UserFieldsInput {
     
     private function updateSecurity() {
         $this->updateUserName();
-    
         $this->updatePass();
-    
         $this->updateAdminPass();
-    
         $this->updateEmail();
         $this->closeAccount();
     
@@ -1007,12 +1004,15 @@ class UserFieldsInput {
         $this->_userAdminPassword = $this->_getPasswordInput( "user_admin_password" ); // var1
         $this->_newUserAdminPassword = $this->_getPasswordInput( "user_admin_password1" ); // var2
         $this->_newUserAdminPassword2 = $this->_getPasswordInput( "user_admin_password2" ); // var3
-    
+        /*
+         *  [user_admin_password] => asdasdasdasdsadas
+    [user_admin_password2] => asdasdsadasassdadas
+    [update_profile_password] => update_profile_password
+         */
         if ( ( $this->is_admin_panel || ( post( $this->post_name.'_password' ) ) && $this->_userAdminPassword ) ) { // if submit current admin password
             
             $adminpassAuth = new PasswordAuth();
-            
-            if ( !$this->user_data['user_admin_password'] && !$this->user_data['user_admin_salt'] ) {
+            if ( !$this->user_data['user_admin_password'] ) {
                 // New Admin
                 $adminpassAuth->inputPassword = 'fake';
                 $adminpassAuth->inputNewPassword = $this->_userAdminPassword;
@@ -1123,9 +1123,9 @@ class UserFieldsInput {
             }
             
         } else {
-        
+    
             // check db only - admin cannot save profile page without password
-            if ( iADMIN && checkrights( 'M' ) ) {
+            if ( iADMIN && checkrights( 'M' ) && $this->is_admin_panel ) {
                 $require_valid_password = $this->user_data['user_admin_password'] ? TRUE : FALSE;
                 if ( !$require_valid_password ) {
                     fusion_stop();

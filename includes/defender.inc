@@ -176,7 +176,7 @@ class Defender {
     static function sanitize_array( $array ) {
         
         foreach ( $array as $name => $value ) {
-            $array[ stripinput( $name ) ] = trim( censorwords( stripinput( $value ) ) );
+            $array[ stripinput( $name ) ] = trim( stripinput( $value ) );
         }
         
         return (array)$array;
@@ -437,7 +437,7 @@ class Defender {
             return array_reduce(
                 $input_ref,
                 function ( $value, $key ) {
-        
+    
                     return ( !empty( $value[ $key ] ) ? $value[ $key ] : '' );
                 },
                 $filtered
@@ -552,7 +552,7 @@ class Defender {
                     if ( intval( $value ) ) {
                         return stripinput( $value ); // numbers
                     } else {
-                        return censorwords( stripinput( trim( preg_replace( '/ +/i', ' ', $value ) ) ) );
+                        return stripinput( trim( preg_replace( '/ +/i', ' ', $value ) ) );
                     }
                 } else {
                     $secured = [];
@@ -560,7 +560,7 @@ class Defender {
                         if ( (int)$unsecured ) {
                             $secured[] = stripinput( $unsecured ); // numbers
                         } else {
-                            $secured[] = censorwords( stripinput( trim( preg_replace( '/ +/i', ' ', $unsecured ) ) ) );
+                            $secured[] = stripinput( trim( preg_replace( '/ +/i', ' ', $unsecured ) ) );
                         }
                     }
                     
@@ -611,9 +611,9 @@ class Defender {
                 if ( empty( $this->field_value ) && ( $this->field_config['type'] !== 'number' ) ) {
                     return $this->field_default;
                 }
-        
+    
                 return Validation::getValidated();
-        
+    
             } else {
                 self::stop();
                 $locale['type_unknown'] = '%s: has an unknown type set'; // to be moved
@@ -677,7 +677,7 @@ function form_sanitizer( $value, $default = '', $input_name = FALSE, $is_multiLa
  * Verify and Sanitize Inputs with input_name
  * A more secured method
  *
- * @param        $value
+ * @param        $value     iinput_name
  * @param string $default
  * @param bool   $input_name
  * @param bool   $is_multiLang
@@ -686,12 +686,24 @@ function form_sanitizer( $value, $default = '', $input_name = FALSE, $is_multiLa
  * @throws Exception
  */
 function sanitizer( $value, $default = '', $input_name = FALSE, $is_multiLang = FALSE ) {
-    
     return Defender::getInstance()->sanitizer( $value, $default, $input_name, $is_multiLang );
 }
 
 /**
- * @param        $value
+ * Sanitizes an array
+ *
+ * @param array $array
+ *
+ * @return array
+ */
+function sanitize_array( $array = [] ) {
+    return Defender::sanitize_array( $array );
+}
+
+/**
+ * File sanitize by input_name
+ *
+ * @param        $value     input_name
  * @param string $default
  * @param bool   $input_name
  *
@@ -699,7 +711,7 @@ function sanitizer( $value, $default = '', $input_name = FALSE, $is_multiLang = 
  */
 function file_sanitizer( $value, $default = '', $input_name = FALSE ) {
     
-    return defender::getInstance()->fileSanitizer( $value, $default, $input_name );
+    return Defender::getInstance()->fileSanitizer( $value, $default, $input_name );
 }
 
 /**
@@ -763,8 +775,8 @@ function get( $key = NULL, $type = FILTER_DEFAULT, $flags = '' ) {
     }
     
     if ( $flags == FILTER_VALIDATE_INT ) {
-        
-        if ( isset( $_GET[$key] ) && isnum( $_GET[$key] ) && ( $_GET[$key] > PHP_INT_MAX ) ) {
+    
+        if ( isset( $_GET[ $key ] ) && isnum( $_GET[ $key ] ) && ( $_GET[ $key ] > PHP_INT_MAX ) ) {
             return (int)$_GET[ $key ];
         }
         
@@ -776,7 +788,9 @@ function get( $key = NULL, $type = FILTER_DEFAULT, $flags = '' ) {
 
 
 /**
- * @param     $key
+ * Sanitizes $_POST by name
+ *
+ * @param     $key  input_name
  * @param int $type
  * @param     $flags
  *
@@ -784,16 +798,16 @@ function get( $key = NULL, $type = FILTER_DEFAULT, $flags = '' ) {
  */
 function post( $key, $type = FILTER_DEFAULT, $flags = '' ) {
     
+    $flag = '';
     if ( is_array( $key ) ) {
-        $flag = '';
-        $input_key = $key;
+        $post_key = $key;
         if ( is_array( $key ) ) {
             // always use key 0 for filter var
-            $input_key = $key[0];
+            $post_key = $key[0];
             $flag = FILTER_REQUIRE_ARRAY;
         }
         
-        $filtered = post( $input_key, FILTER_DEFAULT, $flag );
+        $filtered = post( $post_key, FILTER_DEFAULT, $flag );
         
         if ( is_array( $key ) ) {
             $input_ref = $key;
@@ -809,13 +823,13 @@ function post( $key, $type = FILTER_DEFAULT, $flags = '' ) {
                 $filtered
             );
         }
-    
+        
         return (string)stripinput( $filtered );
     }
     
     if ( $flags == FILTER_VALIDATE_INT ) {
-        
-        if ( isset( $_POST[$key] ) && isnum( $_POST[$key] ) && ( $_POST[$key] > PHP_INT_MAX ) ) {
+    
+        if ( isset( $_POST[ $key ] ) && isnum( $_POST[ $key ] ) && ( $_POST[ $key ] > PHP_INT_MAX ) ) {
             
             return (int)$_POST[ $key ];
         }
@@ -826,6 +840,8 @@ function post( $key, $type = FILTER_DEFAULT, $flags = '' ) {
 
 
 /**
+ * Sanitizes input
+ *
  * @param $key
  *
  * @return array
@@ -837,6 +853,8 @@ function post_array( $key ) {
 
 
 /**
+ * Gets server array
+ *
  * @param     $key
  * @param int $type
  *
@@ -849,7 +867,9 @@ function server( $key, $type = FILTER_DEFAULT ) {
 
 
 /**
- * @param $key
+ * Checks if a file is uploaded during upload post event
+ *
+ * @param $key  input name
  *
  * @return bool
  */
@@ -885,7 +905,7 @@ function environment( $key, $type = FILTER_DEFAULT ) {
 
 
 /***
- * Sets a cookie
+ * Sets a $_COOKIE
  *
  * @param string $key
  * @param int    $type
@@ -899,7 +919,7 @@ function cookie( string $key, $type = FILTER_DEFAULT ) {
 
 
 /**
- * Remove a cookie
+ * Remove a $_COOKIE
  *
  * @param string $key
  *
@@ -914,7 +934,7 @@ function cookie_remove( string $key ) {
 
 
 /**
- * Cleans curent session
+ * Cleans curent $_SESSION
  */
 function session_clean() {
     
@@ -923,6 +943,8 @@ function session_clean() {
 
 
 /**
+ * Add a value to $_SESSION
+ *
  * @param $key
  * @param $value
  *
@@ -947,6 +969,8 @@ function session_add( $key, $value ) {
 
 
 /**
+ * Get session
+ *
  * @param $key
  *
  * @return null
@@ -994,6 +1018,8 @@ function session_remove( $key ) {
 
 
 /**
+ * Converts an array/string to string
+ *
  * @param $value
  *
  * @return string
@@ -1005,6 +1031,8 @@ function fusion_encode( $value ) {
 
 
 /**
+ * Converts string to array/string
+ *
  * @param $value
  *
  * @return mixed
@@ -1014,17 +1042,19 @@ function fusion_decode( $value ) {
     return Defender::decode( $value );
 }
 
-
+/**
+ * Checks if fusion is safe to proceed next step
+ *
+ * @return bool
+ */
 function fusion_safe() {
-    
     return Defender::getInstance()->safe();
 }
 
 
 /**
- * @return bool
+ *
  */
-
 function fusion_stop() {
     
     return Defender::getInstance()->stop();
@@ -1032,6 +1062,8 @@ function fusion_stop() {
 
 
 /**
+ * Decrypt a string
+ *
  * @param $value
  * @param $password
  *
@@ -1040,6 +1072,18 @@ function fusion_stop() {
 function fusion_decrypt( $value, $password ) {
     
     return Defender::decrypt_string( $value, $password );
+}
+
+/**
+ * Encrypts a string
+ *
+ * @param $value
+ * @param $password
+ *
+ * @return string
+ */
+function fusion_encrypt( $value, $password ) {
+    return Defender::encrypt_string( $value, $password );
 }
 
 

@@ -21,10 +21,9 @@ $locale = fusion_get_locale( '', __DIR__.'/locale/'.LANGUAGE.'.php' );
 
 // Display user field input
 if ( $profile_method == "input" ) {
+    $user_birthDate = date( 'Y-m-d', strtotime( 'today' ) );
     if ( isset( $field_value ) && $field_value != "1900-01-01" ) {
         $user_birthDate = date( 'Y-m-d', strtotime( $field_value ) );
-    } else {
-        $user_birthDate = date( 'Y-m-d', strtotime( 'today' ) );
     }
     $options = [
         'inline'          => TRUE,
@@ -38,6 +37,12 @@ if ( $profile_method == "input" ) {
 
     // Display in profile
 } else if ( $profile_method == "display" ) {
+    
+    $user_fields = [
+        'title' => $locale['uf_birthdate'],
+        'value' => $locale['na']
+    ];
+    
     if ( $field_value != "1900-01-01" ) {
         $user_birthDate = explode( "-", $field_value );
         $lastday = mktime( 0, 0, 0, $user_birthDate[1], $user_birthDate[2], $user_birthDate[0] );
@@ -45,10 +50,6 @@ if ( $profile_method == "input" ) {
             'title' => $locale['uf_birthdate'],
             'value' => showdate( $locale['uf_birthdate_date'], $lastday )
         ];
-    } else {
-        $user_fields = [
-            'title' => $locale['uf_birthdate'],
-            'value' => $locale['na']
-        ];
     }
+    
 }
