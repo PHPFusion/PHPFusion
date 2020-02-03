@@ -231,11 +231,11 @@ class PDOMySQL extends AbstractDatabaseDriver {
                          * Inserted to solve the issue of the ignored charset in the connection string.
                          * DO NOT REMOVE THE CHARSET FROM THE CONNECTION STRING. That is still needed!
                          */
-                        PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES '.$options['charset'].', sql_mode=ALLOW_INVALID_DATES'
+                        PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES '.$options['charset'].', sql_mode=ALLOW_INVALID_DATES',
                     ]
                 );
                 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, FALSE);
+                $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, TRUE);
                 $pdo->setAttribute(PDO::ATTR_PERSISTENT, FALSE);
             } catch (PDOException $error) {
                 //$file = debug_print_backtrace();
