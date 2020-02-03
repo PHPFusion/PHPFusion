@@ -42,7 +42,7 @@ function get_microtime() {
 function fusion_get_currency( $iso = NULL, $description = TRUE ) {
     static $__currency = [];
     $currency_symbol = [];
-    
+
     if ( empty( $locale['charset'] ) ) {
         // Do not use $__currency and $iso in these 2 files
         include LOCALE.LOCALESET."global.php";
@@ -87,7 +87,7 @@ function fusion_get_currency( $iso = NULL, $description = TRUE ) {
             $__currency[ $country_iso ] = $description ? $c_text." ($c_symbol)" : $c_symbol;
         }
     }
-    
+
     return $iso === NULL ? $__currency : ( isset( $currency_symbol[ $iso ] ) ? $currency_symbol[ $iso ] : NULL );
 }
 
@@ -105,7 +105,7 @@ function theme_exists( $theme ) {
     if ( $theme == "Default" ) {
         $theme = fusion_get_settings( 'theme' );
     }
-    
+
     return is_string( $theme ) and preg_match( "/^([a-z0-9_-]){2,50}$/i",
             $theme ) and file_exists( THEMES.$theme."/theme.php" ) and file_exists( THEMES.$theme."/styles.css" );
 }
@@ -126,31 +126,31 @@ function set_theme( $theme ) {
     }
     if ( theme_exists( $theme ) ) {
         define( "THEME", THEMES.( $theme == "Default" ? fusion_get_settings( 'theme' ) : $theme )."/" );
-        
+
         return;
     }
     foreach ( new GlobIterator( THEMES.'*' ) as $dir ) {
         if ( $dir->isDir() and theme_exists( $dir->getBasename() ) ) {
             define( "THEME", $dir->getPathname()."/" );
-            
+
             return;
         }
     }
     // Don't stop if we are in admin panel since we use different themes now
     $no_theme_message = str_replace( "[SITE_EMAIL]", fusion_get_settings( "siteemail" ), $locale['global_301'] );
-    
+
     if ( preg_match( "/\/administration\//i", $_SERVER['PHP_SELF'] ) ) {
-        
+
         addNotice( 'danger', "<strong>".$theme." - ".$locale['global_300'].".</strong><br /><br />\n".$no_theme_message );
-        
+
     } else {
-        
+
         echo "<strong>".$theme." - ".$locale['global_300'].".</strong><br /><br />\n";
-        
+
         echo $no_theme_message;
-        
+
         die();
-        
+
     }
 }
 
@@ -220,13 +220,13 @@ function set_status_header( $code = 200 ) {
     if ( headers_sent() ) {
         return FALSE;
     }
-    
+
     $protocol = $_SERVER['SERVER_PROTOCOL'];
-    
+
     if ( 'HTTP/1.1' != $protocol && 'HTTP/1.0' != $protocol ) {
         $protocol = 'HTTP/1.0';
     }
-    
+
     $desc = [
         100 => 'Continue',
         101 => 'Switching Protocols',
@@ -280,11 +280,11 @@ function set_status_header( $code = 200 ) {
         507 => 'Insufficient Storage',
         510 => 'Not Extended'
     ];
-    
+
     $desc = isset( $desc[ $code ] ) ? $desc[ $code ] : '';
-    
+
     header( "$protocol $code $desc" );
-    
+
     return TRUE;
 }
 
@@ -298,7 +298,7 @@ function set_status_header( $code = 200 ) {
 function cleanurl( $url ) {
     $bad_entities = [ "&", "\"", "'", '\"', "\'", "<", ">", "", "", "*" ];
     $safe_entities = [ "&amp;", "", "", "", "", "", "", "", "", "" ];
-    
+
     return str_replace( $bad_entities, $safe_entities, $url );
 }
 
@@ -316,7 +316,7 @@ function stripinput( $text ) {
     foreach ( $text as $i => $item ) {
         $text[ $i ] = stripinput( $item );
     }
-    
+
     return $text;
 }
 
@@ -342,7 +342,7 @@ function strip_scripts( $value ) {
         $text = $dom_document->saveHTML();
         return descript( $text );
     }
-    
+
     return NULL;
 }
 
@@ -356,7 +356,7 @@ function strip_scripts( $value ) {
 function stripget( $check_url ) {
     if ( !is_array( $check_url ) ) {
         $check_url = str_replace( [ "\"", "\'" ], [ "", "" ], urldecode( $check_url ) );
-        
+
         return (bool)preg_match( "/<[^<>]+>/i", $check_url );
     }
     foreach ( $check_url as $key => $value ) {
@@ -364,7 +364,7 @@ function stripget( $check_url ) {
             return TRUE;
         }
     }
-    
+
     return FALSE;
 }
 
@@ -381,7 +381,7 @@ function stripfilename( $filename ) {
         '/[^a-z0-9_-]|^\W/i' => '',
         '/([_-])\1+/'        => '$1'
     ];
-    
+
     return preg_replace( array_keys( $patterns ), $patterns, strtolower( $filename ) ) ?: (string)time();
 }
 
@@ -396,7 +396,7 @@ function stripslash( $text ) {
     if ( QUOTES_GPC ) {
         $text = stripslashes( $text );
     }
-    
+
     return $text;
 }
 
@@ -413,7 +413,7 @@ function addslash( $text ) {
     } else {
         $text = addslashes( $text );
     }
-    
+
     return $text;
 }
 
@@ -440,7 +440,7 @@ function trimlink( $text, $length ) {
     if ( strlen( $text ) > $length ) {
         $text = mb_substr( $text, 0, ( $length - 3 ), mb_detect_encoding( $text ) )."...";
     }
-    
+
     return $text;
 }
 
@@ -476,12 +476,12 @@ function trim_text( $str, $length = FALSE ) {
         $spacetest = substr( "$str", $i, 1 );
         if ( $spacetest == " " ) {
             $spaceok = substr( "$str", 0, $i );
-            
+
             return ( $spaceok."..." );
             break;
         }
     }
-    
+
     return ( $str );
 }
 
@@ -544,38 +544,38 @@ function preg_check( $expression, $value ) {
  * @return string
  */
 function clean_request( $request_addition = '', array $filter_array = [], $keep_filtered = TRUE ) {
-    
+
     $fusion_query = [];
-    
+
     if ( fusion_get_settings( "site_seo" ) && defined( 'IN_PERMALINK' ) && !isset( $_GET['aid'] ) ) {
         global $filepath;
-        
+
         $url['path'] = $filepath;
         if ( !empty( $_GET ) ) {
             $fusion_query = $_GET;
         }
     } else {
-        
+
         $url = ( (array)parse_url( htmlspecialchars_decode( $_SERVER['REQUEST_URI'] ) ) ) + [
                 'path'  => '',
                 'query' => ''
             ];
-        
+
         if ( $url['query'] ) {
             parse_str( $url['query'], $fusion_query ); // this is original.
         }
     }
-    
+
     if ( $keep_filtered ) {
         $fusion_query = array_intersect_key( $fusion_query, array_flip( $filter_array ) );
     } else {
         $fusion_query = array_diff_key( $fusion_query, array_flip( $filter_array ) );
     }
-    
+
     if ( $request_addition ) {
-        
+
         $request_addition_array = [];
-        
+
         if ( is_array( $request_addition ) ) {
             $fusion_query = $fusion_query + $request_addition;
         } else {
@@ -583,10 +583,10 @@ function clean_request( $request_addition = '', array $filter_array = [], $keep_
             $fusion_query = $fusion_query + $request_addition_array;
         }
     }
-    
+
     $prefix = $fusion_query ? '?' : '';
     $query = $url['path'].$prefix.http_build_query( $fusion_query, 'flags_', '&amp;' );
-    
+
     return (string)$query;
 }
 
@@ -652,7 +652,7 @@ function fusion_parse_user( $user_name, $tooltip = "" ) {
     $text = preg_replace_callback( "#$user_regex#im", function ( $user_name ) use ( $tooltip ) {
         return render_user_tags( $user_name, $tooltip );
     }, $user_name );
-    
+
     return $text;
 }
 
@@ -670,7 +670,7 @@ function cache_bbcode() {
             $bbcode_cache[] = $data['bbcode_name'];
         }
     }
-    
+
     return (array)$bbcode_cache;
 }
 
@@ -685,7 +685,7 @@ function cache_bbcode() {
  */
 function parse_imageDir( $data, $prefix_ = "" ) {
     $str = str_replace( "../", "", $data );
-    
+
     return (string)$prefix_ ? str_replace( "images/", $prefix_, $str ) : str_replace( "images/", IMAGES, $str );
 }
 
@@ -711,7 +711,7 @@ function parse_textarea( $text, $smileys = TRUE, $bbcode = TRUE, $decode = TRUE,
     $text = fusion_parse_user( $text );
     $text = $add_line_breaks ? nl2br( $text ) : $text;
     $text = $descript == TRUE ? descript( $text ) : $text;
-    
+
     return (string)$text;
 }
 
@@ -726,7 +726,7 @@ function parse_textarea( $text, $smileys = TRUE, $bbcode = TRUE, $decode = TRUE,
 function parseubb( $text, $selected = "" ) {
     $bbcode_cache = cache_bbcode();
     $sel_bbcodes = [];
-    
+
     if ( $selected ) {
         $sel_bbcodes = explode( "|", $selected );
     }
@@ -741,9 +741,9 @@ function parseubb( $text, $selected = "" ) {
             \PHPFusion\Locale::setLocale( $locale_file );
         }
     }
-    
+
     $locale = fusion_get_locale();
-    
+
     foreach ( $bbcode_cache as $bbcode ) {
         if ( $selected && in_array( $bbcode, $sel_bbcodes ) ) {
             if ( file_exists( INCLUDES."bbcodes/".$bbcode."_bbcode_include.php" ) ) {
@@ -755,9 +755,9 @@ function parseubb( $text, $selected = "" ) {
             }
         }
     }
-    
+
     $text = descript( $text, FALSE );
-    
+
     return $text;
 }
 
@@ -779,13 +779,13 @@ function hide_email( $email, $title = "", $subject = "" ) {
         for ( $i = 0; $i < strlen( $email ); $i++ ) {
             $enc_email .= '&#'.ord( $email[ $i ] ).';';
         }
-        
+
         $MailLink = "<a href='mailto:".$enc_email;
         if ( $subject != "" ) {
             $MailLink .= "?subject=".urlencode( $subject );
         }
         $MailLink .= "'>".( $title ? $title : $enc_email )."</a>";
-        
+
         $MailLetters = "";
         for ( $i = 0; $i < strlen( $MailLink ); $i++ ) {
             $l = substr( $MailLink, $i, 1 );
@@ -802,9 +802,9 @@ function hide_email( $email, $title = "", $subject = "" ) {
             $index += 48;
             $MailIndexes .= chr( $index );
         }
-        
+
         $id = 'e'.rand( 1, 99999999 );
-        
+
         $MailIndexes = str_replace( "\\", "\\\\", $MailIndexes );
         $MailIndexes = str_replace( "\"", "\\\"", $MailIndexes );
         $res = "<span id='".$id."'></span>";
@@ -818,7 +818,7 @@ function hide_email( $email, $title = "", $subject = "" ) {
         $res .= "OT+=ML.charAt(MI.charCodeAt(j)-48);";
         $res .= "}var e=document.getElementById('".$id."');e.innerHTML += OT;";
         $res .= "</script>";
-        
+
         return $res;
     } else {
         return $email;
@@ -839,7 +839,7 @@ function formatcode( $text ) {
         $text
     );
     $text = preg_replace( "/^ {1}/m", "&nbsp;", $text );
-    
+
     return $text;
 }
 
@@ -882,7 +882,7 @@ function highlight_words( $word, $subject ) {
                 $subject );
         }
     }
-    
+
     return $subject;
 }
 
@@ -915,7 +915,7 @@ function descript( $text, $striptags = TRUE ) {
                 "", $text, -1, $count );
         } while ( $count );
     }
-    
+
     return preg_replace( array_keys( $patterns ), $patterns, $text );
 }
 
@@ -945,7 +945,7 @@ function verify_image( $file ) {
             return FALSE;
         }
     }
-    
+
     return TRUE;
 }
 
@@ -965,7 +965,7 @@ function censorwords( $text ) {
         $words = preg_replace( "/\\s+/", "|", $words );
         $text = preg_replace( "/".$words."/si", $settings['bad_word_replace'], $text );
     }
-    
+
     return $text;
 }
 
@@ -985,7 +985,7 @@ function getuserlevel( $userlevel ) {
         USER_LEVEL_ADMIN       => $locale['user2'],
         USER_LEVEL_SUPER_ADMIN => $locale['user3']
     ];
-    
+
     return isset( $userlevels[ $userlevel ] ) ? $userlevels[ $userlevel ] : NULL;
 }
 
@@ -1000,7 +1000,7 @@ function getuserlevel( $userlevel ) {
  */
 function getuserstatus( $userstatus ) {
     $locale = fusion_get_locale();
-    
+
     return ( $userstatus >= 0 and $userstatus <= 8 ) ? $locale[ 'status'.$userstatus ] : NULL;
 }
 
@@ -1100,7 +1100,7 @@ function checkusergroup( $group, $user_level, $user_groups ) {
     } else if ( $user_level == USER_LEVEL_MEMBER && $group && in_array( $group, explode( '.', $user_groups ) ) ) {
         return TRUE;
     }
-    
+
     return FALSE;
 }
 
@@ -1118,7 +1118,7 @@ function cache_groups() {
             $groups_cache[] = $data;
         }
     }
-    
+
     return $groups_cache;
 }
 
@@ -1142,7 +1142,7 @@ function getusergroups() {
         $group_icon = !empty( $group['group_icon'] ) ? $group['group_icon'] : '';
         array_push( $groups_array, [ $group['group_id'], $group['group_name'], $group['group_description'], $group_icon ] );
     }
-    
+
     return $groups_array;
 }
 
@@ -1158,14 +1158,14 @@ function getusergroups() {
  *
  */
 function getgroupname( $group_id, $return_desc = FALSE, $return_icon = FALSE ) {
-    
+
     foreach ( getusergroups() as $group ) {
-        
+
         if ( $group_id == $group[0] ) {
             return ( $return_desc ? ( $group[2] ?: '-' ) : ( !empty( $group[3] ) && $return_icon ? "<i class='".$group[3]."'></i> " : "" ).$group[1] );
         }
     }
-    
+
     return FALSE;
 }
 
@@ -1179,7 +1179,7 @@ function fusion_get_groups() {
     foreach ( getusergroups() as $groups ) {
         $visibility_opts[ $groups[0] ] = $groups[1];
     }
-    
+
     return $visibility_opts;
 }
 
@@ -1195,7 +1195,7 @@ function users_groupaccess( $field ) {
     if ( preg_match( "(^\.{$field}$|\.{$field}\.|\.{$field}$)", fusion_get_userdata( 'user_groups' ) ) ) {
         return TRUE;
     }
-    
+
     return FALSE;
 }
 
@@ -1220,7 +1220,7 @@ function groupaccess( $field ) {
     if ( iUSER_GROUPS != "" && !iSUPERADMIN ) {
         $res = "(".$res." OR $field='".str_replace( ".", "' OR $field='", iUSER_GROUPS )."')";
     }
-    
+
     return $res;
 }
 
@@ -1252,7 +1252,7 @@ function blacklist( $field ) {
             $i++;
         }
         $sql .= $sql ? ")" : ' 1=1 ';
-        
+
         return "$sql";
     } else {
         return "";
@@ -1269,7 +1269,7 @@ function blacklist( $field ) {
  *
  */
 function user_blacklisted( $user_id ) {
-    
+
     return in_array( 'user_blacklist', fieldgenerator( DB_USERS ) ) and in_array( $user_id, explode( '.', fusion_get_userdata( 'user_blacklist' ) ) );
 }
 
@@ -1286,17 +1286,17 @@ function user_blacklisted( $user_id ) {
  */
 function makefilelist( $folder, $filter = '', $sort = TRUE, $type = "files", $ext_filter = "" ) {
     $res = [];
-    
+
     $default_filters = '.|..|.DS_Store';
     if ( $filter === FALSE ) {
         $filter = $default_filters;
     }
-    
+
     $filter = explode( "|", $filter );
     if ( $type == "files" && !empty( $ext_filter ) ) {
         $ext_filter = explode( "|", strtolower( $ext_filter ) );
     }
-    
+
     if ( file_exists( $folder ) ) {
         $temp = opendir( $folder );
         while ( $file = readdir( $temp ) ) {
@@ -1329,7 +1329,7 @@ function makefilelist( $folder, $filter = '', $sort = TRUE, $type = "files", $ex
         ] );
         setError( 2, $error_log, debug_backtrace()[1]['file'], debug_backtrace()[1]['line'], '' );
     }
-    
+
     return $res;
 }
 
@@ -1347,7 +1347,7 @@ function makefileopts( array $files, $selected = "" ) {
         $sel = ( $selected == $file ? " selected='selected'" : "" );
         $res .= "<option value='".$file."' $sel>".$file."</option>\n";
     }
-    
+
     return $res;
 }
 
@@ -1368,7 +1368,7 @@ function makefileopts( array $files, $selected = "" ) {
  *
  */
 function makepagenav( $start, $count, $total, $range = 0, $link = "", $getname = "rowstart", $button = FALSE ) {
-    
+
     $locale = fusion_get_locale();
     /* Bootstrap may be disabled in theme (see Gillette for example) without settings change in DB.
        In such case this function will not work properly.
@@ -1390,7 +1390,7 @@ function makepagenav( $start, $count, $total, $range = 0, $link = "", $getname =
         $tpl_lastpage = "<a class='pagenavlink' data-value='%d' href='%s=%d'>%s</a>\n";
         $tpl_button = "<a class='pagenavlink' data-value='%d' href='%s=%d'>%s</a>\n";
     }
-    
+
     if ( $link == '' ) {
         $link = FUSION_SELF."?";
         if ( fusion_get_settings( "site_seo" ) && defined( 'IN_PERMALINK' ) ) {
@@ -1446,7 +1446,7 @@ function makepagenav( $start, $count, $total, $range = 0, $link = "", $getname =
             $res .= sprintf( $tpl_lastpage, ( $pg_cnt - 1 ) * $count, $link.$getname, ( $pg_cnt - 1 ) * $count, $pg_cnt );
         }
     }
-    
+
     return sprintf( $tpl_global, "<small class='m-r-10'><span>".$locale['global_092']."</span> ".$cur_page.$locale['global_093'].$pg_cnt."</small> ", $res );
 }
 
@@ -1461,7 +1461,7 @@ function makepagenav( $start, $count, $total, $range = 0, $link = "", $getname =
  */
 function infinite_scroll( $scroll_url, $rowstart = 0, $total_count = 0, $getname = 'rowstart', $additional_http_query = '' ) {
     $locale = fusion_get_locale();
-    
+
     add_to_jquery( "
         var count = $rowstart+1;
         $(window).scroll(function(){
@@ -1486,7 +1486,7 @@ function infinite_scroll( $scroll_url, $rowstart = 0, $total_count = 0, $getname
           return false;
         }
     " );
-    
+
     return "
     <div id='scroll_target'></div>
     <div class='infiniteLoader panel panel-default' style='display:none;'><div class='panel-body text-center'>".$locale['loading']."</div></div>
@@ -1505,9 +1505,9 @@ function infinite_scroll( $scroll_url, $rowstart = 0, $total_count = 0, $getname
  * @param string $key        key for breadcrumb instance
  */
 function make_page_breadcrumbs( $tree_index, $tree_full, $id_col, $title_col, $getname = "rownav", $key = 'default' ) {
-    
+
     $_GET[ $getname ] = !empty( $_GET[ $getname ] ) && isnum( $_GET[ $getname ] ) ? $_GET[ $getname ] : 0;
-    
+
     // Recursive fatal protection
     if ( !function_exists( 'breadcrumb_page_arrays' ) ) {
         function breadcrumb_page_arrays( $tree_index, $tree_full, $id_col, $title_col, $getname, $id ) {
@@ -1522,17 +1522,17 @@ function make_page_breadcrumbs( $tree_index, $tree_full, $id_col, $title_col, $g
                     return $crumb;
                 }
                 $crumb_1 = breadcrumb_page_arrays( $tree_index, $tree_full, $id_col, $title_col, $getname, get_parent( $tree_index, $id ) );
-                
+
                 if ( !empty( $crumb_1 ) ) {
                     $crumb = array_merge_recursive( $crumb, $crumb_1 );
                 }
-                
+
             }
-            
+
             return $crumb;
         }
     }
-    
+
     // then we make a infinity recursive function to loop/break it out.
     $crumb = breadcrumb_page_arrays( $tree_index, $tree_full, $id_col, $title_col, $getname, $_GET[ $getname ] );
     // then we sort in reverse.
@@ -1570,7 +1570,7 @@ function make_page_breadcrumbs( $tree_index, $tree_full, $id_col, $title_col, $g
  */
 function showdate( $format, $val, $options = [] ) {
     $userdata = fusion_get_userdata();
-    
+
     if ( isset( $options['tz_override'] ) ) {
         $tz_client = $options['tz_override'];
     } else {
@@ -1580,30 +1580,30 @@ function showdate( $format, $val, $options = [] ) {
             $tz_client = fusion_get_settings( 'timeoffset' );
         }
     }
-    
+
     if ( empty( $tz_client ) ) {
         $tz_client = 'Europe/London';
     }
-    
+
     $client_dtz = new DateTimeZone( $tz_client );
     $client_dt = new DateTime( 'now', $client_dtz );
     $offset = $client_dtz->getOffset( $client_dt );
-    
+
     if ( !empty( $val ) ) {
         if ( in_array( $format, [ 'shortdate', 'longdate', 'forumdate', 'newsdate' ] ) ) {
             $format = fusion_get_settings( $format );
             $offset = intval( $val ) + $offset;
-            
+
             return strftime( $format, $offset );
         } else {
             $offset = intval( $val ) + $offset;
-            
+
             return strftime( $format, $offset );
         }
     } else {
         $format = fusion_get_settings( $format );
         $offset = intval( TIME ) + $offset;
-        
+
         return strftime( $format, $offset );
     }
 }
@@ -1621,14 +1621,14 @@ function showdate( $format, $val, $options = [] ) {
  */
 function parsebytesize( $size, $digits = 2, $dir = FALSE ) {
     $locale = fusion_get_locale();
-    
+
     $kb = 1024;
     $mb = 1024 * $kb;
     $gb = 1024 * $mb;
     $tb = 1024 * $gb;
-    
+
     $size = ( empty( $size ) ) ? "0" : $size;
-    
+
     if ( ( $size == 0 ) && ( $dir ) ) {
         return "0 ".$locale['global_460'];
     } else if ( $size < $kb ) {
@@ -1659,7 +1659,7 @@ function profile_link( $user_id, $user_name, $user_status, $class = "profile-lin
     $locale = fusion_get_locale();
     $settings = fusion_get_settings();
     $class = ( $class ? "class='$class'" : "" );
-    
+
     if ( ( in_array( $user_status, [
                 0,
                 3,
@@ -1672,7 +1672,7 @@ function profile_link( $user_id, $user_name, $user_status, $class = "profile-lin
     } else {
         $link = $user_name;
     }
-    
+
     return $link;
 }
 
@@ -1696,7 +1696,7 @@ function print_p( $array, $modal = FALSE, $print = TRUE ) {
         $modal .= "</pre>\n";
         $modal .= closemodal();
         PHPFusion\OutputHandler::addToFooter( $modal );
-        
+
         return FALSE;
     }
     if ( $print == TRUE ) {
@@ -1704,7 +1704,7 @@ function print_p( $array, $modal = FALSE, $print = TRUE ) {
         echo $debug;
         echo "</pre>\n";
     }
-    
+
     return $debug;
 }
 
@@ -1725,7 +1725,7 @@ function fusion_get_settings( $key = NULL ) {
             $settings[ $data['settings_name'] ] = $data['settings_value'];
         }
     }
-    
+
     return $key === NULL ? $settings : ( isset( $settings[ $key ] ) ? $settings[ $key ] : NULL );
 }
 
@@ -1743,7 +1743,7 @@ function fusion_get_locale( $key = NULL, $include_file = '' ) {
     if ( $include_file ) {
         $locale::setLocale( $include_file );
     }
-    
+
     return $locale->getLocale( $key );
 }
 
@@ -1757,7 +1757,7 @@ function fusion_get_locale( $key = NULL, $include_file = '' ) {
 function fusion_get_username( $user_id ) {
     $result = NULL;
     $result = ( dbresult( dbquery( "SELECT user_name FROM ".DB_USERS." WHERE user_id='".intval( $user_id )."'" ), 0 ) );
-    
+
     return ( $result !== NULL ) ? $result : fusion_get_locale( "na" );
 }
 
@@ -1782,7 +1782,7 @@ function fusion_get_userdata( $key = NULL ) {
             "user_groups" => "",
             "user_theme"  => fusion_get_settings( "theme" ),
         ];
-    
+
     return $key === NULL ? $userdata : ( isset( $userdata[ $key ] ) ? $userdata[ $key ] : NULL );
 }
 
@@ -1796,7 +1796,7 @@ function fusion_get_userdata( $key = NULL ) {
  */
 function fusion_get_user( $user_id, $key = NULL ) {
     global $performance_test;
-    
+
     static $user = [];
     if ( !isset( $user[ $user_id ] ) && isnum( $user_id ) ) {
         $user[ $user_id ] = dbarray( dbquery( "SELECT * FROM ".DB_USERS." WHERE user_id='".intval( $user_id )."'" ) );
@@ -1806,7 +1806,7 @@ function fusion_get_user( $user_id, $key = NULL ) {
     if ( !isset( $user[ $user_id ] ) ) {
         return NULL;
     }
-    
+
     return $key === NULL ? $user[ $user_id ] : ( isset( $user[ $user_id ][ $key ] ) ? $user[ $user_id ][ $key ] : NULL );
 }
 
@@ -1820,7 +1820,7 @@ function fusion_get_aidlink() {
     if ( defined( 'iADMIN' ) && iADMIN && defined( 'iAUTH' ) ) {
         $aidlink = '?aid='.iAUTH;
     }
-    
+
     return (string)$aidlink;
 }
 
@@ -1931,7 +1931,7 @@ function get_available_languages_list( $selected_language = "" ) {
         $label = str_replace( '_', ' ', $language );
         $res .= "<option value='".$language."' $sel>".$label."</option>\n";
     }
-    
+
     return $res;
 }
 
@@ -1954,7 +1954,7 @@ function fusion_get_language_switch() {
             ];
         }
     }
-    
+
     return (array)$language_switch;
 }
 
@@ -2017,7 +2017,7 @@ function fusion_detect_installation() {
     if ( !is_file( $config_path ) or !filesize( $config_path ) ) {
         fusion_run_installer();
     }
-    
+
     return $config_path;
 }
 
@@ -2030,7 +2030,7 @@ function fusion_detect_installation() {
 function fusion_get_enabled_languages() {
     $settings = fusion_get_settings();
     static $enabled_languages = NULL;
-    
+
     if ( $enabled_languages === NULL ) {
         if ( isset( $settings['enabled_languages'] ) ) {
             $values = explode( '.', $settings['enabled_languages'] );
@@ -2039,7 +2039,7 @@ function fusion_get_enabled_languages() {
             }
         }
     }
-    
+
     return (array)$enabled_languages;
 }
 
@@ -2051,7 +2051,7 @@ function fusion_get_detected_language() {
             $detected_languages[ $language_name ] = translate_lang_names( $language_name );
         }
     }
-    
+
     return (array)$detected_languages;
 }
 
@@ -2085,7 +2085,7 @@ function save_user_log( $user_id, $column_name, $new_value, $old_value ) {
  */
 function jsminify( $code ) {
     $minifier = new \PHPFusion\Minify\JS( $code );
-    
+
     return $minifier->minify();
 }
 
@@ -2112,7 +2112,7 @@ function write_file( $file, $data, $flags = NULL ) {
     if ( function_exists( 'opcache_invalidate' ) ) {
         \opcache_invalidate( $file, TRUE );
     }
-    
+
     return $bytes;
 }
 
@@ -2130,6 +2130,6 @@ function calculate_byte( $total_bit ) {
             return (int)$byte;
         }
     }
-    
+
     return 1048576;
 }
