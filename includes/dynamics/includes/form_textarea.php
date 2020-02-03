@@ -374,6 +374,8 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                 'text' : text,
                 'editor' : format,
                 'url' : '".$_SERVER['REQUEST_URI']."',
+                'form_id' : 'prw-".$options['form_name']."',
+                'fusion_token' : '".fusion_get_token( "prw-".$options['form_name'], 30 )."'
             };
             var sendData = form.serialize() + '&' + $.param(data);
             $.ajax({
