@@ -17,7 +17,6 @@
 +--------------------------------------------------------*/
 
 use PHPFusion\Infusions\Blog\Classes\BlogList;
-use PHPFusion\OutputHandler;
 
 $locale = fusion_get_locale();
 $userdata = fusion_get_userdata();
@@ -35,13 +34,13 @@ if ( post( 'save' ) or post( 'save_and_close' ) or post( 'preview' ) ) {
     $blog_blog = "";
     if ( $blog_blog = post( 'blog_blog' ) ) {
         $blog_blog = str_replace( "src='".str_replace( "../", "", IMAGES_B ), "src='".IMAGES_B, ( fusion_get_settings( "allow_php_exe" ) ? htmlspecialchars( $blog_blog ) : $blog_blog ) );
-        $blog_blog = strip_scripts( $blog_blog );
+        $blog_blog = descript( $blog_blog );
     }
     
     $blog_extended = "";
     if ( $blog_extended = post( 'blog_extended' ) ) {
         $blog_extended = str_replace( "src='".str_replace( "../", "", IMAGES_B ), "src='".IMAGES_B, ( fusion_get_settings( "allow_php_exe" ) ? htmlspecialchars( $blog_extended ) : $blog_extended ) );
-        $blog_extended = strip_scripts( $blog_extended );
+        $blog_extended = descript( $blog_extended );
     }
     
     $data = [
@@ -73,7 +72,7 @@ if ( post( 'save' ) or post( 'save_and_close' ) or post( 'preview' ) ) {
             $modal .= $blog_extended;
             $modal .= "</div>\n";
             $modal .= closemodal();
-            OutputHandler::addToFooter( $modal );
+            add_to_footer( $modal );
         }
         
     } else {
