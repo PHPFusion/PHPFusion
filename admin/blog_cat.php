@@ -52,8 +52,8 @@ if (isset($_POST['save_cat'])) {
         "blog_cat_language" => form_sanitizer($_POST['blog_cat_language'], LANGUAGE, "blog_cat_language"),
     ];
     $categoryNameCheck = [
-        "when_updating" => "blog_cat_name='".$inputArray['blog_cat_name']."' and blog_cat_id !='".$inputArray['blog_cat_id']."' ".(multilang_table("BL") ? "and blog_cat_language = '".LANGUAGE."'" : ""),
-        "when_saving"   => "blog_cat_name='".$inputArray['blog_cat_name']."' ".(multilang_table("BL") ? "and blog_cat_language = '".LANGUAGE."'" : ""),
+        "when_updating" => "blog_cat_name='".$inputArray['blog_cat_name']."' and blog_cat_id !='".$inputArray['blog_cat_id']."' ".(multilang_table("BL") ? "and ".in_group('blog_cat_language', LANGUAGE) : ""),
+        "when_saving"   => "blog_cat_name='".$inputArray['blog_cat_name']."' ".(multilang_table("BL") ? "and ".in_group('blog_cat_language', LANGUAGE) : ""),
     ];
     if (Defender::safe()) {
         // check category name is unique when updating
@@ -78,7 +78,7 @@ if (isset($_POST['save_cat'])) {
         }
     }
 } else if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
-    $result = dbquery("SELECT blog_cat_id, blog_cat_name, blog_cat_parent, blog_cat_image, blog_cat_language FROM ".DB_BLOG_CATS." ".(multilang_table("BL") ? "WHERE blog_cat_language='".LANGUAGE."' AND" : "WHERE")." blog_cat_id='".intval($_GET['cat_id'])."'");
+    $result = dbquery("SELECT blog_cat_id, blog_cat_name, blog_cat_parent, blog_cat_image, blog_cat_language FROM ".DB_BLOG_CATS." ".(multilang_table("BL") ? "WHERE ".in_group('blog_cat_language', LANGUAGE)." AND" : "WHERE")." blog_cat_id='".intval($_GET['cat_id'])."'");
     if (dbrows($result)) {
         $data = dbarray($result);
         $data['blog_cat_hidden'] = [$data['blog_cat_id']];
@@ -105,13 +105,15 @@ echo form_select_tree("blog_cat_parent", $locale['blog_0533'], $data['blog_cat_p
     "inline"        => TRUE,
     "disable_opts"  => $data['blog_cat_hidden'],
     "hide_disabled" => TRUE,
-    "query"         => (multilang_table("BL") ? "WHERE blog_cat_language='".LANGUAGE."'" : "")
+    "query"         => (multilang_table("BL") ? "WHERE ".in_group('blog_cat_language', LANGUAGE) : "")
 ], DB_BLOG_CATS, "blog_cat_name", "blog_cat_id", "blog_cat_parent");
 if (multilang_table("BL")) {
-    echo form_select("blog_cat_language", $locale['global_ML100'], $data['blog_cat_language'], [
+    echo form_select("blog_cat_language[]", $locale['global_ML100'], $data['blog_cat_language'], [
         "inline"      => TRUE,
         "options"     => fusion_get_enabled_languages(),
-        "placeholder" => $locale['choose']
+        "placeholder" => $locale['choose'],
+        'multiple'    => TRUE,
+        'delimeter'   => '.'
     ]);
 } else {
     echo form_hidden("blog_cat_language", "", $data['blog_cat_language']);
@@ -127,7 +129,7 @@ echo "<div class='overflow-hide'>";
 echo "<div class='pull-right'><a class='btn btn-primary' href='".ADMIN."images.php".$aidlink."&amp;ifolder=imagesbc'>".$locale['blog_0536']."</a><br /><br />\n</div>\n";
 echo "<h4>".$locale['blog_0407']."</h4>\n";
 echo "</div>";
-$result = dbquery("SELECT blog_cat_id, blog_cat_name FROM ".DB_BLOG_CATS." ".(multilang_table("BL") ? "WHERE blog_cat_language='".LANGUAGE."'" : "")." ORDER BY blog_cat_name");
+$result = dbquery("SELECT blog_cat_id, blog_cat_name FROM ".DB_BLOG_CATS." ".(multilang_table("BL") ? "WHERE ".in_group('blog_cat_language', LANGUAGE) : "")." ORDER BY blog_cat_name");
 $rows = dbrows($result);
 if ($rows != 0) {
     echo "<div class='row equal-height'>";
@@ -153,7 +155,7 @@ echo '</div>';
 function getblogCatPath($item_id) {
     $full_path = "";
     while ($item_id > 0) {
-        $result = dbquery("SELECT blog_cat_id, blog_cat_name, blog_cat_parent FROM ".DB_BLOG_CATS." WHERE blog_cat_id='$item_id'".(multilang_table("BL") ? " AND blog_cat_language='".LANGUAGE."'" : ""));
+        $result = dbquery("SELECT blog_cat_id, blog_cat_name, blog_cat_parent FROM ".DB_BLOG_CATS." WHERE blog_cat_id='$item_id'".(multilang_table("BL") ? " AND ".in_group('blog_cat_language', LANGUAGE) : ""));
         if (dbrows($result)) {
             $data = dbarray($result);
             if ($full_path) {

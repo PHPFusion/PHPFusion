@@ -47,6 +47,7 @@ $pattern = [
     "blog/%blog_id%/%blog_title%#comments"                                   => "infusions/blog/blog.php?readmore=%blog_id%%hash_stop%#comments",
     "blog/%blog_id%/%blog_title%#ratings"                                    => "infusions/blog/blog.php?readmore=%blog_id%%hash_stop%#ratings",
     "blog/%blog_id%/%blog_title%/category/%blog_cat_id%"                     => "infusions/blog/blog.php?readmore=%blog_id%&amp;cat_id=%blog_cat_id%",
+    "blog/%blog_id%-%rowstart%/%blog_title%"                                 => "infusions/blog/blog.php?readmore=%blog_id%&amp;rowstart=%rowstart%",
     "blog/comments-%c_start%/%blog_id%/%blog_title%"                         => "infusions/blog/blog.php?readmore=%blog_id%&amp;c_start=%c_start%",
     "blog/comments-%c_start%/%blog_id%/%blog_title%#%comment_id%"            => "infusions/blog/blog.php?readmore=%blog_id%&amp;c_start=%c_start%%hash_stop%#%comment_id%",
     "blog/filter/%filter_type%"                                              => "infusions/blog/blog.php?type=%filter_type%",

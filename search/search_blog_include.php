@@ -57,7 +57,7 @@ if (defined('BLOG_EXIST')) {
 
         if (!empty(Search_Engine::get_param('search_param'))) {
             $query = "SELECT blog_id FROM ".DB_BLOG."
-            ".(multilang_table('BL') ? "WHERE blog_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('blog_visibility')."
+            ".(multilang_table('BL') ? "WHERE ".in_group('blog_language', LANGUAGE)." AND " : "WHERE ").groupaccess('blog_visibility')."
             AND ".Search_Engine::search_conditions('blog')." AND (blog_start='0'||blog_start<=NOW())".$date_search;
             $result = dbquery($query, Search_Engine::get_param('search_param'));
             $rows = dbrows($result);
@@ -72,7 +72,7 @@ if (defined('BLOG_EXIST')) {
             SELECT tn.*, tu.user_id, tu.user_name, tu.user_status, tu.user_avatar, tu.user_joined, tu.user_level
             FROM ".DB_BLOG." tn
             LEFT JOIN ".DB_USERS." tu ON tn.blog_name=tu.user_id
-            ".(multilang_table("BL") ? "WHERE tn.blog_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('blog_visibility')."
+            ".(multilang_table("BL") ? "WHERE ".in_group('tn.blog_language', LANGUAGE)." AND " : "WHERE ").groupaccess('blog_visibility')."
             AND (blog_start='0'||blog_start<=NOW()) AND (blog_end='0'||blog_end>=NOW()) AND ".Search_Engine::search_conditions('blog')." ".$date_search.$sortby.$limit;
 
             $result = dbquery($query, Search_Engine::get_param('search_param'));

@@ -87,7 +87,7 @@ class Functions {
      */
     public static function get_blogCatsData() {
         $data = dbquery_tree_full(DB_BLOG_CATS, 'blog_cat_id', 'blog_cat_parent',
-            "".(multilang_table("BL") ? "WHERE blog_cat_language='".LANGUAGE."'" : '')."");
+            "".(multilang_table("BL") ? "WHERE ".in_group('blog_cat_language', LANGUAGE) : '')."");
         foreach ($data as $index => $cat_data) {
             foreach ($cat_data as $blog_cat_id => $cat) {
                 $data[$index][$blog_cat_id]['blog_cat_link'] = "<a href='".INFUSIONS."blog/blog.php?cat_id=".$cat['blog_cat_id']."'>".$cat['blog_cat_name']."</a>";
@@ -105,7 +105,7 @@ class Functions {
      * @return bool|string
      */
     public static function validate_blog($id) {
-        if (!empty($id) && isnum($id)) {
+        if (isset($id) && isnum($id)) {
             return (int)dbcount("('blog_id')", DB_BLOG, "blog_id='".intval($id)."'");
         }
 

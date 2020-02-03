@@ -33,7 +33,7 @@ class OpenGraphBlogs extends OpenGraph {
             if (!empty($data['blog_image_t1'])) {
                 $info['image'] = $settings['siteurl'].'infusions/blog/images/thumbs/'.$data['blog_image_t1'];
             } else {
-                $info['image'] = $settings['siteurl'].'images/favicons/mstile-150x150.png';
+                $info['image'] = defined('THEME_ICON') ? THEME_ICON.'mstile-150x150.png' : $settings['siteurl'].'images/favicons/mstile-150x150.png';
             }
         }
 
@@ -55,7 +55,7 @@ class OpenGraphBlogs extends OpenGraph {
             if (!empty($data['blog_cat_image'])) {
                 $info['image'] = $settings['siteurl'].'infusions/blog/blog_cats/'.$data['blog_cat_image'];
             } else {
-                $info['image'] = $settings['siteurl'].'images/favicons/mstile-150x150.png';
+                $info['image'] = defined('THEME_ICON') ? THEME_ICON.'mstile-150x150.png' : $settings['siteurl'].'images/favicons/mstile-150x150.png';
             }
         }
 
