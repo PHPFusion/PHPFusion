@@ -57,35 +57,39 @@ class Errors {
     const E_STRICT = 2048;
 
     public function __construct() {
-
-        $this->error_status = filter_input(INPUT_POST, 'error_status', FILTER_VALIDATE_INT, ['min_range' => 0, 'max_range' => 2]);
-
-        $this->posted_error_id = filter_input(INPUT_POST, 'error_id', FILTER_VALIDATE_INT);
-
-        $this->delete_status = filter_input(INPUT_POST, 'delete_status', FILTER_VALIDATE_INT, ['min_range' => 0, 'max_range' => 2]);
-
-        $this->rowstart = filter_input(INPUT_GET, 'rowstart', FILTER_VALIDATE_INT) ?: 0;
-
-        $this->error_id = filter_input(INPUT_GET, 'error_id', FILTER_VALIDATE_INT);
-
-        if (isnum($this->error_status) && $this->posted_error_id) {
+    
+        $this->error_status = (int)descript( post( 'error_status', FILTER_VALIDATE_INT ) );
+    
+        $this->posted_error_id = (int)descript( post( 'error_id', FILTER_VALIDATE_INT ) );
+    
+        $this->delete_status = (int)descript( post( 'delete_status', FILTER_VALIDATE_INT ) );
+    
+        $this->rowstart = (int)get( 'rowstart', FILTER_VALIDATE_INT );
+    
+        $this->error_id = (int)get( 'error_id', FILTER_VALIDATE_INT );
+    
+        if ( check_post( 'error_status' ) && check_post( 'error_id' ) ) {
             dbquery("UPDATE ".DB_ERRORS." SET error_status='".$this->error_status."' WHERE error_id='".$this->posted_error_id."'");
             $source_redirection_path = preg_replace("~".fusion_get_settings("site_path")."~", "", FUSION_REQUEST, 1);
             redirect(fusion_get_settings("siteurl").$source_redirection_path);
         }
-
-        if (isset($_POST['delete_entries']) && isnum($this->delete_status)) {
-            dbquery("DELETE FROM ".DB_ERRORS." WHERE error_status='".$_POST['delete_status']."'");
+    
+        if ( check_post( 'delete_entries' ) ) {
+            dbquery( "DELETE FROM ".DB_ERRORS." WHERE error_status=:status", [ ':status' => (int)$this->delete_status ] );
             $source_redirection_path = preg_replace("~".fusion_get_settings("site_path")."~", "", FUSION_REQUEST, 1);
             redirect(fusion_get_settings("siteurl").$source_redirection_path);
         }
 
         $result = dbquery("SELECT * FROM ".DB_ERRORS." ORDER BY error_timestamp DESC LIMIT :rowstart,20", [':rowstart' => $this->rowstart]);
         while ($data = dbarray($result)) {
+            // Sanitizes callback
+            foreach ( $data as $key => $value ) {
+                $data[ $key ] = descript( stripinput( $value ) );
+            }
             $this->errors[$data['error_id']] = $data;
         }
-
-        $this->rows = $this->errors ? dbcount('(error_id)', DB_ERRORS) : 0;
+    
+        $this->rows = (int)( $this->errors ? dbcount( '(error_id)', DB_ERRORS ) : 0 );
     }
 
     public static function getInstance($key = 'default') {
@@ -131,11 +135,11 @@ class Errors {
                 '".$userdata['user_level']."', '".USER_IP."', '".USER_IP_TYPE."',
                 '0', '".time()."'
             )", [
-                ':level'   => $error_level,
-                ':message' => $error_message,
-                ':file'    => $error_file,
+                ':level'   => descript( stripinput( $error_level ) ),
+                ':message' => descript( stripinput( $error_message ) ),
+                ':file'    => descript( stripinput( $error_file ) ),
                 ':page'    => FUSION_REQUEST,
-                ':line'    => $error_line,
+                ':line'    => descript( stripinput( $error_line ) ),
             ]);
             $errorId = $db->getLastId();
         } else {
@@ -149,11 +153,11 @@ class Errors {
         if ($showLiveError) {
             $this->new_errors[$errorId] = [
                 "error_id"        => $errorId,
-                "error_level"     => $error_level,
-                "error_file"      => $error_file,
-                "error_line"      => $error_line,
+                "error_level"     => descript( stripinput( $error_level ) ),
+                "error_file"      => descript( stripinput( $error_file ) ),
+                "error_line"      => descript( stripinput( $error_line ) ),
                 "error_page"      => FUSION_REQUEST,
-                "error_message"   => $error_message,
+                "error_message"   => descript( stripinput( $error_message ) ),
                 "error_timestamp" => time(),
                 "error_status"    => 0,
             ];
@@ -489,9 +493,9 @@ class Errors {
 
         return FALSE;
     }
-
-    private static function errorjs() {
-        if (checkrights("ERRO") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] == iAUTH) {
+    
+    private function errorjs() {
+        if ( checkrights( "ERRO" ) || !defined( "iAUTH" ) || !check_get( 'aid' ) || get( 'aid' ) == iAUTH ) {
             // Show the "Apply"-button only when javascript is disabled"
             add_to_jquery("
             $('a#footer_debug').bind('click', function(e) {
@@ -548,7 +552,9 @@ class Errors {
 
         $error_message = [
             'time' => !empty($error_message['time']) ? $error_message['time'] : time(),
-            'text' => !empty($error_message['text']) ? $error_message['text'] : $locale['na'],];
+            'text' => !empty( $error_message['text'] ) ? $error_message['text'] : $locale['na']
+        ];
+        
         $source_code = explode("\n", str_replace(["\r\n", "\r"], "\n", $source_code));
         $line_count = $starting_line;
         $formatted_code = "";
