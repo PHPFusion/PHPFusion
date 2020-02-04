@@ -15,11 +15,15 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
+use PHPFusion\Panels;
+use PHPFusion\Rewrite\Permalinks;
+
 defined('IN_FUSION') || exit;
 
 require_once INCLUDES."footer_includes.php";
 
-\PHPFusion\Panels::getInstance()->getSitePanel();
+Panels::getInstance()->getSitePanel();
 
 define("CONTENT", ob_get_clean()); //ob_start() called in header.php
 
@@ -43,11 +47,9 @@ if (ob_get_length() !== FALSE) {
 // Do the final output manipulation
 $output = handle_output($output);
 // Search in output and replace normal links with SEF links
-if (!isset($_GET['aid'])) {
-    if (fusion_get_settings('site_seo')) {
-        \PHPFusion\Rewrite\Permalinks::getPermalinkInstance()->handle_url_routing($output);
-        $output = \PHPFusion\Rewrite\Permalinks::getPermalinkInstance()->getOutput($output);
-    }
+if ( !check_get( 'aid' ) && fusion_get_settings( 'site_seo' ) ) {
+    Permalinks::getPermalinkInstance()->handle_url_routing( $output );
+    $output = Permalinks::getPermalinkInstance()->getOutput( $output );
 }
 if (isset($permalink)) {
     unset($permalink);
