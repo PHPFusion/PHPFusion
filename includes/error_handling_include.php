@@ -48,6 +48,7 @@ function set_error( $error_level, $error_message, $error_file, $error_line, $err
     } else {
         write_error( $error_message, $error_file, $error_line );
     }
+    
 }
 
 /**
