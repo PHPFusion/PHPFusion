@@ -57,23 +57,23 @@ class Errors {
     const E_STRICT = 2048;
 
     public function __construct() {
-    
+
         $this->error_status = (int)descript( post( 'error_status', FILTER_VALIDATE_INT ) );
-    
+
         $this->posted_error_id = (int)descript( post( 'error_id', FILTER_VALIDATE_INT ) );
-    
+
         $this->delete_status = (int)descript( post( 'delete_status', FILTER_VALIDATE_INT ) );
-    
+
         $this->rowstart = (int)get( 'rowstart', FILTER_VALIDATE_INT );
-    
+
         $this->error_id = (int)get( 'error_id', FILTER_VALIDATE_INT );
-    
+
         if ( check_post( 'error_status' ) && check_post( 'error_id' ) ) {
             dbquery("UPDATE ".DB_ERRORS." SET error_status='".$this->error_status."' WHERE error_id='".$this->posted_error_id."'");
             $source_redirection_path = preg_replace("~".fusion_get_settings("site_path")."~", "", FUSION_REQUEST, 1);
             redirect(fusion_get_settings("siteurl").$source_redirection_path);
         }
-    
+
         if ( check_post( 'delete_entries' ) ) {
             dbquery( "DELETE FROM ".DB_ERRORS." WHERE error_status=:status", [ ':status' => (int)$this->delete_status ] );
             $source_redirection_path = preg_replace("~".fusion_get_settings("site_path")."~", "", FUSION_REQUEST, 1);
@@ -88,7 +88,7 @@ class Errors {
             }
             $this->errors[$data['error_id']] = $data;
         }
-    
+
         $this->rows = (int)( $this->errors ? dbcount( '(error_id)', DB_ERRORS ) : 0 );
     }
 
@@ -493,7 +493,7 @@ class Errors {
 
         return FALSE;
     }
-    
+
     private function errorjs() {
         if ( checkrights( "ERRO" ) || !defined( "iAUTH" ) || !check_get( 'aid' ) || get( 'aid' ) == iAUTH ) {
             // Show the "Apply"-button only when javascript is disabled"
@@ -554,7 +554,7 @@ class Errors {
             'time' => !empty($error_message['time']) ? $error_message['time'] : time(),
             'text' => !empty( $error_message['text'] ) ? $error_message['text'] : $locale['na']
         ];
-        
+
         $source_code = explode("\n", str_replace(["\r\n", "\r"], "\n", $source_code));
         $line_count = $starting_line;
         $formatted_code = "";
