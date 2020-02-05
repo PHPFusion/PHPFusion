@@ -21,12 +21,12 @@ require_once THEMES."templates/render_functions.php";
 
 echo "<div class='preview-response clearfix p-20'>\n";
 if ( fusion_safe() ) {
-    
+
     $locale = fusion_get_locale();
     $text = descript( post( 'text' ) );
     $editor = post( 'editor' );
     $mode = post( 'mode' );
-    
+
     // Set get_image paths based on URI. This is ajax request file. It doesn't return a standard BASEDIR.
     $prefix_ = "";
     if ( !fusion_get_settings( "site_seo" ) && check_post( 'url' ) ) {
