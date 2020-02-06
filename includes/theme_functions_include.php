@@ -35,7 +35,7 @@ function get_fusion_steam( $component = 'Layout' ) {
     if ( empty( $fusion_steam ) ) {
         $fusion_steam = new Steam();
     }
-    
+
     return (object)$fusion_steam->load( $component );
 }
 
@@ -47,7 +47,7 @@ function get_fusion_steam( $component = 'Layout' ) {
  */
 function grid_row() {
     $layout = get_fusion_steam( 'Layout' );
-    
+
     return (string)$layout->getRowClass();
 }
 
@@ -64,7 +64,7 @@ function grid_row() {
  */
 function grid_column_size( $mobile = 100, $tablet = 0, $laptop = 0, $desktop = 0 ) {
     $layout = get_fusion_steam( 'Layout' );
-    
+
     return (string)$layout->getColumnClass( [ $mobile, $tablet, $laptop, $desktop ], FALSE );
 }
 
@@ -76,7 +76,7 @@ function grid_column_size( $mobile = 100, $tablet = 0, $laptop = 0, $desktop = 0
  */
 function grid_container() {
     $layout = get_fusion_steam( 'Layout' );
-    
+
     return (string)$layout->getContainerClass();
 }
 
@@ -95,7 +95,7 @@ function showrendertime( $queries = TRUE ) {
         $res = showBenchmark();
         $res .= " | ";
         $res .= ( $queries ? ucfirst( $locale['global_173'] ).": ".$mysql_queries_count." | " : '' );
-        
+
         return $res;
     } else {
         return "";
@@ -145,7 +145,7 @@ function showBenchmark( $show_sql_performance = FALSE, $performance_threshold = 
                                         }
                                     }
                                 }
-                                
+
                                 $debug_param = "";
                                 if ( !empty( $debug_backtrace['args'][1] ) ) {
                                     if ( is_array( $debug_backtrace['args'][1] ) ) {
@@ -160,7 +160,7 @@ function showBenchmark( $show_sql_performance = FALSE, $performance_threshold = 
                                 }
                                 $highlighted_query .= "Statement::: <code>$debug_line</code><br/>Parameters::: <code>".( $debug_param ?: "--" )."</code><br/>";
                             }
-                            
+
                         }
                         $highlighted_query .= "</div>\n";
                     }
@@ -191,7 +191,7 @@ function showBenchmark( $show_sql_performance = FALSE, $performance_threshold = 
         $previous_render = array_values( array_slice( $_SESSION['performance'], -2, 1, TRUE ) );
         $diff = (float)$render_time - ( !empty( $previous_render ) ? (float)$previous_render[0] : 0 );
     }
-    
+
     return sprintf( $locale['global_172'], $render_time )." | ".sprintf( $locale['global_175'], $average_speed." ($diff)" );
 }
 
@@ -199,7 +199,7 @@ function showMemoryUsage() {
     $locale = fusion_get_locale();
     $memory_allocated = parsebytesize( memory_get_peak_usage( TRUE ) );
     $memory_used = parsebytesize( memory_get_peak_usage( FALSE ) );
-    
+
     return $locale['global_174'].": ".$memory_used."/".$memory_allocated;
 }
 
@@ -208,7 +208,7 @@ function showcopyright( $class = "", $nobreak = FALSE ) {
     $res = "Powered by <a href='https://www.php-fusion.co.uk'".$link_class.">PHP-Fusion</a> Copyright &copy; ".date( "Y" )." PHP-Fusion Inc";
     $res .= ( $nobreak ? "&nbsp;" : "<br />\n" );
     $res .= "Released as free software without warranties under <a href='https://www.gnu.org/licenses/agpl-3.0.html'".$link_class." target='_blank'>GNU Affero GPL</a> v3.\n";
-    
+
     return $res;
 }
 
@@ -221,7 +221,7 @@ function showcounter() {
     if ( $settings['visitorcounter_enabled'] ) {
         return "<!--counter-->".number_format( $settings['counter'], 0, $settings['number_delimiter'], $settings['thousands_separator'] )." ".( $settings['counter'] == 1 ? $locale['global_170'] : $locale['global_171'] );
     }
-    
+
     return '';
 }
 
@@ -234,7 +234,7 @@ function showprivacypolicy() {
         $modal .= closemodal();
         add_to_footer( $modal );
     }
-    
+
     return $html;
 }
 
@@ -247,7 +247,7 @@ if ( !function_exists( 'get_theme_settings' ) ) {
             while ( $set_data = dbarray( $set_result ) ) {
                 $settings_arr[ $set_data['settings_name'] ] = $set_data['settings_value'];
             }
-            
+
             return $settings_arr;
         } else {
             return FALSE;
@@ -258,7 +258,7 @@ if ( !function_exists( 'get_theme_settings' ) ) {
 if ( !function_exists( "check_panel_status" ) ) {
     function check_panel_status( $side ) {
         $settings = fusion_get_settings();
-        
+
         $exclude_list = "";
         if ( $side == "left" ) {
             if ( $settings['exclude_left'] != "" ) {
@@ -304,7 +304,7 @@ if ( !function_exists( "check_panel_status" ) ) {
                 $exclude_list = explode( "\r\n", $settings['exclude_user4'] );
             }
         }
-        
+
         if ( is_array( $exclude_list ) ) {
             if ( fusion_get_settings( 'site_seo' ) ) {
                 $params = http_build_query( PHPFusion\Rewrite\Router::getRouterInstance()->get_FileParams() );
@@ -313,17 +313,17 @@ if ( !function_exists( "check_panel_status" ) ) {
             } else {
                 $script_url = explode( "/", $_SERVER['PHP_SELF'] );
             }
-            
+
             $url_count = count( $script_url );
             $base_url_count = substr_count( BASEDIR, "../" ) + ( fusion_get_settings( 'site_seo' ) ? ( $url_count - 1 ) : 1 );
-            
+
             $match_url = "";
             while ( $base_url_count != 0 ) {
                 $current = $url_count - $base_url_count;
                 $match_url .= "/".$script_url[ $current ];
                 $base_url_count--;
             }
-            
+
             return ( in_array( $match_url, $exclude_list ) ) ? FALSE : TRUE;
         } else {
             return TRUE;
@@ -341,7 +341,7 @@ if ( !function_exists( "check_panel_status" ) ) {
 function fusion_sort_table( $table_id ) {
     add_to_footer( "<script type='text/javascript' src='".INCLUDES."jquery/tablesorter/jquery.tablesorter.min.js'></script>\n" );
     add_to_jquery( "$('#".$table_id."').tablesorter();" );
-    
+
     return "tablesorter";
 }
 
@@ -369,7 +369,7 @@ if ( !function_exists( "alert" ) ) {
             'class'   => $options['class'],
             'content' => $title,
         ] );
-        
+
         return (string)$alert_tpl->get_output();
     }
 }
@@ -398,7 +398,7 @@ if ( !function_exists( "label" ) ) {
         $label_tpl->set_tag( 'class', " ".$options['class'] );
         $label_tpl->set_tag( 'label', $label );
         $label_tpl->set_tag( 'icon', $options['icon'] );
-        
+
         return (string)$label_tpl->get_output();
     }
 }
@@ -429,20 +429,20 @@ if ( !function_exists( "badge" ) ) {
         $badge->set_tag( 'class', " ".$options['class'] );
         $badge->set_tag( 'label', $label );
         $badge->set_tag( 'icon', $options['icon'] );
-        
+
         return (string)$badge->get_output();
     }
 }
 
 if ( !function_exists( "openmodal" ) && !function_exists( "closemodal" ) && !function_exists( "modalfooter" ) ) {
-    
+
     /**
      * To get the best results for Modal z-index overlay, try :
      * ob_start();
      * ... insert and echo ...
      * add_to_footer(ob_get_contents()).ob_end_clean();
      */
-    
+
     /**
      * Generate modal
      *
@@ -461,14 +461,14 @@ if ( !function_exists( "openmodal" ) && !function_exists( "closemodal" ) && !fun
             "static"       => FALSE,
             "hidden"       => FALSE,
         ];
-        
+
         $options += $default_options;
-        
+
         $modal_trigger = "";
         if ( !empty( $options['button_id'] ) || !empty( $options['button_class'] ) ) {
             $modal_trigger = !empty( $options['button_id'] ) ? "#".$options['button_id'] : ".".$options['button_class'];
         }
-        
+
         if ( $options['static'] && !empty( $modal_trigger ) ) {
             add_to_jquery( "$('".$modal_trigger."').bind('click', function(e){ $('#".$id."-Modal').modal({backdrop: 'static', keyboard: false}).modal('show'); e.preventDefault(); });" );
         } else if ( $options['static'] && empty( $options['button_id'] ) ) {
@@ -500,10 +500,10 @@ if ( !function_exists( "openmodal" ) && !function_exists( "closemodal" ) && !fun
             }
         }
         $modal->set_block( "modal_openbody" );
-        
+
         return (string)$modal->get_output();
     }
-    
+
     /**
      * Adds a modal footer in between openmodal and closemodal.
      *
@@ -527,10 +527,10 @@ if ( !function_exists( "openmodal" ) && !function_exists( "closemodal" ) && !fun
                 "class" => "btn-default pull-right",
             ] ) : "" )
         ] );
-        
+
         return (string)$modal->get_output();
     }
-    
+
     /**
      * Close the modal
      *
@@ -541,7 +541,7 @@ if ( !function_exists( "openmodal" ) && !function_exists( "closemodal" ) && !fun
         $modal = Template::getInstance( 'modal' );
         $modal->set_template( $modal_template );
         $modal->set_block( "modal_close" );
-        
+
         return (string)$modal->get_output();
     }
 }
@@ -570,16 +570,16 @@ if ( !function_exists( "progress_bar" ) ) {
             "hide_marker"    => FALSE,
             "progress_class" => "",
         ];
-        
+
         $options += $default_options;
-        
+
         $r = [
             1 => 4,
             2 => 3,
             3 => 2,
             4 => 1,
         ];
-        
+
         $master_tpl = Template::getInstance( 'progress_chart' );
         $master_tpl->set_text( "
         {pbar.{
@@ -590,9 +590,9 @@ if ( !function_exists( "progress_bar" ) ) {
         if ( is_array( $num ) ) {
             foreach ( $num as $i => $cnum ) {
                 $ctitle = ( is_array( $title ) ? $title[ $i ] : $title );
-                
+
                 $tpl = Template::getInstance( 'progress_bar-'.$i );
-                
+
                 $tpl->set_template( $progressbar_template );
                 $int = intval( $cnum );
                 if ( $options['disabled'] == TRUE ) {
@@ -615,10 +615,10 @@ if ( !function_exists( "progress_bar" ) ) {
                         // Undefined offset:0 in implementation.
                         $progress_calc = ( isset( $r[ $progress_calc ] ) ? $r[ $progress_calc ] : 1 );
                     }
-                    
+
                     $block_name = "progress_".$progress_calc;
                 }
-                
+
                 $tpl->set_block( $block_name, [
                     "class"          => ( $options['class'] ? " ".$options['class'] : "" ),
                     "progress_class" => $options['progress_class'],
@@ -627,12 +627,12 @@ if ( !function_exists( "progress_bar" ) ) {
                     "num"            => ( $options['hide_marker'] === FALSE ? $cnum."%" : "" ),
                     "int"            => "$int%"
                 ] );
-                
+
                 $master_tpl->set_block( "pbar", [ "content" => $tpl->get_output() ] );
             }
-            
+
         } else {
-            
+
             $tpl = Template::getInstance( 'progress_bar' );
             $tpl->set_template( $progressbar_template );
             $int = (int)$num;
@@ -641,16 +641,16 @@ if ( !function_exists( "progress_bar" ) ) {
             } else {
                 $num = $num > 0 ? $num : 0;
             }
-            
+
             if ( $options['hide_info'] === FALSE ) {
                 $tpl->set_block( "progress_info", [
                     "title" => $title,
                     "num"   => $num."%",
                 ] );
             }
-            
+
             $block_name = ( $options['progress_class'] ? "progress_custom" : '' );
-            
+
             if ( empty( $block_name ) ) {
                 // Automatic class selection
                 // calculate 100 to the max of 4 options
@@ -658,7 +658,7 @@ if ( !function_exists( "progress_bar" ) ) {
                 if ( $options['reverse'] === TRUE && isset( $r[ $progress_calc ] ) ) {
                     $progress_calc = $r[ $progress_calc ];
                 }
-                
+
                 $block_name = "progress_".$progress_calc;
             }
             $tpl->set_block( $block_name, [
@@ -669,12 +669,12 @@ if ( !function_exists( "progress_bar" ) ) {
                 "num"            => ( $options['hide_marker'] === FALSE ? $num."%" : "" ),
                 "int"            => "$int%"
             ] );
-            
+
             $master_tpl->set_block( "pbar", [ "content" => $tpl->get_output() ] );
         }
-        
+
         return (string)$master_tpl->get_output();
-        
+
     }
 }
 
@@ -683,19 +683,30 @@ if ( !function_exists( "showbanners" ) ) {
      * Displays the system settings banner
      */
     function showbanners( $display = "" ) {
+        $settings = fusion_get_settings();
+
         ob_start();
         if ( $display == 2 ) {
-            if ( fusion_get_settings( "sitebanner2" ) ) {
-                eval( "?>".stripslashes( fusion_get_settings( "sitebanner2" ) )."<?php " );
+            if ( $settings['sitebanner2'] ) {
+                if ( $settings['allow_php_exe'] ) {
+                    eval( "?>".stripslashes( $settings['sitebanner2'] )."<?php " );
+                } else {
+                    echo stripslashes( $settings['sitebanner2'] );
+                }
             }
         } else {
-            if ( fusion_get_settings( "sitebanner1" ) ) {
-                eval( "?>".stripslashes( fusion_get_settings( "sitebanner1" ) )."<?php " );
+            if ( $settings['sitebanner1'] ) {
+                if ( $settings['allow_php_exe'] ) {
+                    eval( "?>".stripslashes($settings['sitebanner1'] )."<?php " );
+                } else {
+                    echo stripslashes( $settings['sitebanner1'] );
+                }
             }
         }
+
         $output = ob_get_contents();
         ob_end_clean();
-        
+
         return $output;
     }
 }
@@ -725,10 +736,10 @@ if ( !function_exists( "showsublinks" ) ) {
             'seperator'    => $sep,
             'navbar_class' => $class,
         ];
-        
+
         return SiteLinks::setSubLinks( $options )->showSubLinks();
     }
-    
+
 }
 
 if ( !function_exists( "showsubdate" ) ) {
@@ -744,7 +755,7 @@ if ( !function_exists( "newsposter" ) ) {
         $res = THEME_BULLET." <span ".$link_class.">".profile_link( $info['user_id'], $info['user_name'], $info['user_status'] )."</span> ";
         $res .= $locale['global_071'].showdate( "newsdate", $info['news_date'] );
         $res .= $info['news_ext'] == "y" || $info['news_allow_comments'] ? $sep."\n" : "\n";
-        
+
         return "<!--news_poster-->".$res;
     }
 }
@@ -764,7 +775,7 @@ if ( !function_exists( "newsopts" ) ) {
             $res .= $info['news_reads'].$locale['global_074']."\n ".$sep;
         }
         $res .= "<a href='print.php?type=N&amp;item_id=".$info['news_id']."'><img src='".get_image( "printer" )."' alt='".$locale['global_075']."' style='vertical-align:middle;border:0;' /></a>\n";
-        
+
         return "<!--news_opts-->".$res;
     }
 }
@@ -780,7 +791,7 @@ if ( !function_exists( "newscat" ) ) {
         } else {
             $res .= "<a href='news_cats.php?cat_id=0' ".$link_class.">".$locale['global_080']."</a>";
         }
-        
+
         return "<!--news_cat-->".$res." $sep ";
     }
 }
@@ -792,7 +803,7 @@ if ( !function_exists( "articleposter" ) ) {
         $res = THEME_BULLET." ".$locale['global_070']."<span ".$link_class.">".profile_link( $info['user_id'], $info['user_name'], $info['user_status'] )."</span>\n";
         $res .= $locale['global_071'].showdate( "newsdate", $info['article_date'] );
         $res .= ( $info['article_allow_comments'] && fusion_get_settings( 'comments_enabled' ) == "1" ? $sep."\n" : "\n" );
-        
+
         return "<!--article_poster-->".$res;
     }
 }
@@ -806,7 +817,7 @@ if ( !function_exists( "articleopts" ) ) {
         }
         $res .= $info['article_reads'].$locale['global_074']." ".$sep."\n";
         $res .= "<a href='print.php?type=A&amp;item_id=".$info['article_id']."'><img src='".get_image( "printer" )."' alt='".$locale['global_075']."' style='vertical-align:middle;border:0;' /></a>\n";
-        
+
         return "<!--article_opts-->".$res;
     }
 }
@@ -822,7 +833,7 @@ if ( !function_exists( "articlecat" ) ) {
         } else {
             $res .= "<a href='articles.php?cat_id=0' ".$link_class.">".$locale['global_080']."</a>";
         }
-        
+
         return "<!--article_cat-->".$res." $sep ";
     }
 }
@@ -840,7 +851,7 @@ if ( !function_exists( "itemoptions" ) ) {
                 $res .= "<!--article_admin_opts--> &middot; <a href='".INFUSIONS."articles/articles_admin.php".fusion_get_aidlink()."&amp;action=edit&amp;article_id=".$item_id."'><img src='".get_image( "edit" )."' alt='".$locale['global_076']."' title='".$locale['global_076']."' style='vertical-align:middle;border:0;' /></a>\n";
             }
         }
-        
+
         return $res;
     }
 }
@@ -855,7 +866,7 @@ if ( !function_exists( "panelbutton" ) ) {
                 $state = "on";
             }
         }
-        
+
         return "<img src='".get_image( "panel_".( $state == "on" ? "off" : "on" ) )."' id='b_".$bname."' class='panelbutton' alt='' onclick=\"flipBox('".$bname."')\" />";
     }
 }
@@ -870,7 +881,7 @@ if ( !function_exists( "panelstate" ) ) {
                 $state = "on";
             }
         }
-        
+
         return "<$element id='box_".$bname."'".( $state == "off" ? " style='display:none'" : "" ).">\n";
     }
 }
@@ -929,24 +940,24 @@ if ( !function_exists( 'display_avatar' ) ) {
         if ( empty( $userdata ) ) {
             $userdata = [];
         }
-        
+
         $userdata += [
             'user_id'     => 0,
             'user_name'   => '',
             'user_avatar' => '',
             'user_status' => ''
         ];
-        
+
         if ( !$userdata['user_id'] ) {
             $userdata['user_id'] = 1;
         }
-        
+
         $link = fusion_get_settings( 'hide_userprofiles' ) == TRUE ? ( iMEMBER ? $link : FALSE ) : $link;
         $class = ( $class ) ? "class='$class'" : '';
-        
+
         $hasAvatar = $userdata['user_avatar'] && file_exists( IMAGES."avatars/".$userdata['user_avatar'] ) && $userdata['user_status'] != '5' && $userdata['user_status'] != '6';
         $name = !empty( $userdata['user_name'] ) ? $userdata['user_name'] : 'Guest';
-        
+
         if ( $hasAvatar ) {
             $user_avatar = fusion_get_settings( 'siteurl' )."images/avatars/".$userdata['user_avatar'];
             $imgTpl = "<img class='avatar img-responsive $img_class' alt='".$name."' data-pin-nopin='true' style='display:inline; width:$size; max-height:$size;' src='%s'>";
@@ -964,7 +975,7 @@ if ( !function_exists( 'display_avatar' ) ) {
                 $img = '<div class="display-inline-block va avatar '.$img_class.'" style="width:'.$size.';max-height:'.$size.';"><svg viewBox="0 0 '.$size_int.' '.$size_int.'" preserveAspectRatio="xMidYMid meet"><rect fill="#'.$color.'" stroke-width="0" y="0" x="0" width="'.$size.'" height="'.$size.'"/><text class="m-t-5" font-size="'.( $size_int - 5 ).'" fill="#'.$font_color.'" x="50%" y="50%" text-anchor="middle" dy="0.325em">'.$first_char.'</text></svg></div>';
             }
         }
-        
+
         return $link ? sprintf( "<a $class title='".$userdata['user_name']."' href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'>%s</a>", $img ) : $img;
     }
 }
@@ -974,11 +985,11 @@ function stringToColorCode( $text ) {
     $spec = 3; // integer between 2-10, determines how unique each color will be
     $hash = sha1( md5( sha1( $text ) ) );
     $colors = [];
-    
+
     for ( $i = 0; $i < 3; $i++ ) {
         $colors[ $i ] = max( [ round( ( ( hexdec( substr( $hash, $spec * $i, $spec ) ) ) / hexdec( str_pad( '', $spec, 'F' ) ) ) * 255 ), $min_brightness ] );
     }
-    
+
     if ( $min_brightness > 0 ) {
         while ( array_sum( $colors ) / 3 < $min_brightness ) {
             for ( $i = 0; $i < 3; $i++ ) {
@@ -986,12 +997,12 @@ function stringToColorCode( $text ) {
             }
         }
     }
-    
+
     $output = '';
     for ( $i = 0; $i < 3; $i++ ) {
         $output .= str_pad( dechex( $colors[ $i ] ), 2, 0, STR_PAD_LEFT );
     }
-    
+
     return $output;
 }
 
@@ -1000,7 +1011,7 @@ function get_brightness( $hex ) {
     $r = hexdec( substr( $hex, 0, 2 ) );
     $g = hexdec( substr( $hex, 2, 2 ) );
     $b = hexdec( substr( $hex, 4, 2 ) );
-    
+
     return ( ( $r * 299 ) + ( $g * 587 ) + ( $b * 114 ) ) / 1000;
 }
 
@@ -1019,7 +1030,7 @@ if ( !function_exists( 'colorbox' ) ) {
         } else {
             $class = ( !empty( $class ) ? " class='$class' " : '' );
         }
-        
+
         return "<a target='_blank' href='$img_path' title='$img_title' rel='colorbox'>".( $as_text ? $img_title : "<img src='$img_path'".$class."alt='$img_title'/>" )."</a>";
     }
 }
@@ -1069,7 +1080,7 @@ if ( !function_exists( "thumbnail" ) ) {
             add_to_head( "<script type='text/javascript' src='".INCLUDES."jquery/colorbox/jquery.colorbox.js'></script>" );
             add_to_jquery( "$('.colorbox').colorbox({width: '75%', height: '75%'});" );
         }
-        
+
         return $html;
     }
 }
@@ -1081,7 +1092,7 @@ if ( !function_exists( "lorem_ipsum" ) ) {
         $text .= "<p>Ut vulputate mauris in facilisis euismod. Ut id libero vitae neque laoreet placerat a id mi. Integer ornare risus placerat, interdum nisi sed, commodo ligula. Integer at ipsum id magna blandit volutpat. Sed euismod mi odio, vitae molestie diam ornare quis. Aenean id ligula finibus, convallis risus a, scelerisque tellus. Morbi quis pretium lectus. In convallis hendrerit sem. Vestibulum sed ultricies massa, ut tempus risus. Nunc aliquam at tellus quis lobortis. In hac habitasse platea dictumst. Vestibulum maximus, nibh at tristique viverra, eros felis ultrices nunc, et efficitur nunc augue a orci. Phasellus et metus mauris. Morbi ut ex ut urna tincidunt varius eu id diam. Aenean vestibulum risus sed augue vulputate, a luctus ligula laoreet.</p>\n";
         $text .= "<p>Nam tempor sodales mi nec ullamcorper. Mauris tristique ligula augue, et lobortis turpis dictum vitae. Aliquam leo massa, posuere ac aliquet quis, ultricies eu elit. Etiam et justo et nulla cursus iaculis vel quis dolor. Phasellus viverra cursus metus quis luctus. Nulla massa turpis, porttitor vitae orci sed, laoreet consequat urna. Etiam congue turpis ac metus facilisis pretium. Nam auctor mi et auctor malesuada. Mauris blandit nulla quis ligula cursus, ut ullamcorper dui posuere. Fusce sed urna id quam finibus blandit tempus eu tellus. Vestibulum semper diam id ante iaculis iaculis.</p>\n";
         $text .= "<p>Fusce suscipit maximus neque, sed consectetur elit hendrerit at. Sed luctus mi in ex auctor mollis. Suspendisse ac elementum tellus, ut malesuada purus. Mauris condimentum elit at dolor eleifend iaculis. Aenean eget faucibus mauris. Pellentesque fermentum mattis imperdiet. Donec mattis nisi id faucibus finibus. Vivamus in eleifend lorem, vel dictum nisl. Morbi ut mollis arcu.</p>\n";
-        
+
         return trim_text( $text, $length );
     }
 }
@@ -1120,11 +1131,11 @@ if ( !function_exists( "timer" ) ) {
                 $answer = round( $calc );
                 //	$string = ($answer > 1) ? $timer_b[$arr] : $unit;
                 $string = \PHPFusion\Locale::format_word( $answer, $unit, [ 'add_count' => FALSE ] );
-                
+
                 return "<abbr class='atooltip' data-toggle='tooltip' data-placement='top' title='".showdate( 'longdate', $updated )."'>".$answer." ".$string." ".$locale['ago']."</abbr>";
             }
         }
-        
+
         return NULL;
     }
 }
@@ -1133,7 +1144,7 @@ if ( !function_exists( "days_current_month" ) ) {
     function days_current_month() {
         $year = showdate( "%Y", time() );
         $month = showdate( "%m", time() );
-    
+
         return $month == 2 ? ( $year % 4 ? 28 : ( $year % 100 ? 29 : ( $year % 400 ? 28 : 29 ) ) ) : ( ( $month - 1 ) % 7 % 2 ? 30 : 31 );
     }
 }
@@ -1169,14 +1180,14 @@ if ( !function_exists( "countdown" ) ) {
             if ( $calc >= 1 ) {
                 $answer = round( $calc );
                 $string = ( $answer > 1 ) ? $timer_b[ $arr ] : $unit;
-                
+
                 return "<abbr class='atooltip' data-toggle='tooltip' data-placement='top' title='~".showdate( 'newsdate', $updated + time() )."'>$answer ".$string."</abbr>";
             }
         }
         if ( !isset( $answer ) ) {
             return "<abbr class='atooltip' data-toggle='tooltip' data-placement='top' title='".showdate( 'newsdate', time() )."'>".$locale['now']."</abbr>";
         }
-        
+
         return NULL;
     }
 }
@@ -1198,7 +1209,7 @@ if ( !function_exists( "opencollapse" )
     function opencollapse( $id ) {
         return "<div class='panel-group' id='".$id."' role='tablist' aria-multiselectable='true'>\n";
     }
-    
+
     function opencollapsebody( $title, $unique_id, $grouping_id, $active = 0, $class = FALSE ) {
         $html = "<div class='panel panel-default'>\n";
         $html .= "<div class='panel-heading clearfix'>\n";
@@ -1207,31 +1218,31 @@ if ( !function_exists( "opencollapse" )
         $html .= "</div>\n";
         $html .= "</div>\n";
         $html .= "<div ".collapse_footer_link( $grouping_id, $unique_id, $active ).">\n"; // body.
-        
+
         return $html;
     }
-    
+
     function closecollapsebody() {
         $html = "</div>\n"; // panel container
         $html .= "</div>\n"; // panel default
-        
+
         return $html;
     }
-    
+
     function collapse_header_link( $id, $title, $active, $class = '' ) {
         $active = ( $active ) ? '' : 'collapsed';
         $title_id_cc = preg_replace( '/[^A-Z0-9-]+/i', "-", $title );
-        
+
         return "class='$class $active' data-toggle='collapse' data-parent='#".$id."' href='#".$title_id_cc."-".$id."' aria-expanded='true' aria-controls='".$title_id_cc."-".$id."'";
     }
-    
+
     function collapse_footer_link( $id, $title, $active, $class = '' ) {
         $active = ( $active ) ? 'in' : '';
         $title_id_cc = preg_replace( '/[^A-Z0-9-]+/i', "-", $title );
-        
+
         return "id='".$title_id_cc."-".$id."' class='panel-collapse collapse ".$active." ".$class."' role='tabpanel' aria-labelledby='headingOne'";
     }
-    
+
     function closecollapse() {
         return "</div>\n";
     }
@@ -1243,9 +1254,9 @@ if ( !function_exists( "tab_active" )
     && !function_exists( "closetabbody" )
     && !function_exists( "closetab" )
 ) {
-    
+
     class FusionTabs {
-    
+
         private $id = '';
         private $remember = FALSE;
         private $cookie_prefix = 'tab_js';
@@ -1253,24 +1264,24 @@ if ( !function_exists( "tab_active" )
         private $tab_info = [];
         private $link_mode = FALSE;
         private static $instance = NULL;
-    
+
         /**
          * @param string $id
          *
          * @return FusionTabs|null
          */
         public static function getInstance( $id = 'default' ) {
-    
+
             if ( !self::$instance ) {
                 self::$instance = new FusionTabs;
             }
-    
+
             return self::$instance;
         }
-    
+
         public function __construct() {
         }
-    
+
         /**
          * @param      $array
          * @param      $default_active
@@ -1283,7 +1294,7 @@ if ( !function_exists( "tab_active" )
                 $section = get( $getname ) ?: $default_active;
                 //$section = isset($_GET[$getname]) && $_GET[$getname] ? $_GET[$getname] : $default_active;
                 $count = count( $array['title'] );
-    
+
                 if ( $count > 0 ) {
                     for ( $tabCount = 0; $tabCount < $count; $tabCount++ ) {
                         $tab_id = $array['id'][ $tabCount ];
@@ -1292,32 +1303,32 @@ if ( !function_exists( "tab_active" )
                         }
                     }
                 }
-    
+
                 return $default_active;
             }
             return $array['id'][ $default_active ];
         }
-    
+
         /**
          * @param $boolean
          */
         public function setRemember( $boolean ) {
             $this->remember = $boolean;
         }
-    
+
         /**
          * @param $tabId
          */
         public function removeRemember( $tabId ) {
             cookie_remove( $this->cookie_prefix.'-'.$tabId );
         }
-    
+
         public function opentab( $tab_title, $link_active_arrkey, $tabId, $link = FALSE, $class = FALSE, $getname = 'section', array $cleanup_GET = [], $wrapper_class = NULL ) {
             $this->id = $tabId;
             $this->cookie_name = $this->cookie_prefix.'-'.$tabId;
             $this->tab_info = $tab_title;
             $this->link_mode = $link;
-        
+
             $getArray = [ $getname ];
             if ( !empty( $cleanup_GET ) ) {
                 $getArray = array_merge_recursive( $cleanup_GET, $getArray );
@@ -1354,7 +1365,7 @@ if ( !function_exists( "tab_active" )
                     define( 'JS_COOKIES', TRUE );
                     add_to_footer( '<script type="text/javascript" src="'.INCLUDES.'jquery/jquery.cookie.js"></script>' );
                 }
-    
+
                 add_to_jquery( "
                 $('#".$tabId." > li').on('click', function() {
                 var cookieName = '".$this->cookie_name."';
@@ -1367,10 +1378,10 @@ if ( !function_exists( "tab_active" )
                 }
                 " );
             }
-        
+
             return (string)$html;
         }
-    
+
         /**
          * @param      $id
          * @param bool $link_active_arrkey
@@ -1388,7 +1399,7 @@ if ( !function_exists( "tab_active" )
                     }
                 }
             }
-    
+
             $status = ( $link_active_arrkey == $id ? " in active" : '' );
             if ( get( $key ) && $this->link_mode ) {
                 $status = '';
@@ -1396,10 +1407,10 @@ if ( !function_exists( "tab_active" )
                     $status = 'in active';
                 }
             }
-    
+
             return "<div class='tab-pane fade".$status."' id='".$id."'>\n";
         }
-    
+
         public function closetab( array $options = [] ) {
             $locale = fusion_get_locale();
             $default_options = [
@@ -1419,18 +1430,18 @@ if ( !function_exists( "tab_active" )
             " );
                 echo "<div class='clearfix'>\n".$prevBtn.$nextBtn."</div>\n";
             }
-        
+
             return "</div>\n</div>\n";
         }
-    
+
         public function closetabbody() {
             return "</div>\n";
         }
-    
+
     }
-    
+
     $fusion_tabs = new FusionTabs();
-    
+
     /**
      * Current Tab Active Selector
      *
@@ -1444,7 +1455,7 @@ if ( !function_exists( "tab_active" )
     function tab_active( $array, $default_active, $getname = FALSE ) {
         return FusionTabs::tabActive( $array, $default_active, $getname );
     }
-    
+
     /**
      * Render Tab Links
      *
@@ -1478,10 +1489,10 @@ if ( !function_exists( "tab_active" )
         if ( $remember ) {
             $fusion_tabs->setRemember( TRUE );
         }
-        
+
         return $fusion_tabs->opentab( $tab_title, $link_active_arrkey, $id, $link, $class, $getname, $cleanup_GET, $remember );
     }
-    
+
     /**
      * @param string $tab_title deprecated, however this function is replaceable, and the params are accessible.
      * @param        $tab_id
@@ -1493,19 +1504,19 @@ if ( !function_exists( "tab_active" )
      */
     function opentabbody( $tab_title, $tab_id, $link_active_arrkey = FALSE, $link = FALSE, $key = FALSE ) {
         $fusion_tabs = FusionTabs::getInstance();
-        
+
         return $fusion_tabs->opentabbody( $tab_id, $link_active_arrkey, $key );
     }
-    
+
     function closetabbody() {
         $fusion_tabs = FusionTabs::getInstance();
-        
+
         return $fusion_tabs->closetabbody();
     }
-    
+
     function closetab( array $options = [] ) {
         $fusion_tabs = FusionTabs::getInstance();
-        
+
         return $fusion_tabs->closetab( $options );
     }
 }
@@ -1532,7 +1543,7 @@ if ( !function_exists( "display_ratings" ) ) {
         if ( $total_votes > 0 ) {
             $answer = $start_link."<i title='".$locale['ratings']."' class='fa fa-star-o m-l-0'></i>".$str.$end_link;
         }
-        
+
         return $answer;
     }
 }
@@ -1558,7 +1569,7 @@ if ( !function_exists( "display_comments" ) ) {
         } else {
             $start_link = strtr( $start_link, [ '{%title%}' => "title='".sprintf( $locale['global_089'], $locale['global_077'] )."'" ] );
         }
-        
+
         return $start_link.$str.$end_link;
     }
 }
@@ -1601,11 +1612,11 @@ if ( !function_exists( 'social_media_links' ) ) {
             'linkedin' => TRUE,
             'class'    => ''
         ];
-        
+
         $options += $default;
-        
+
         $services = [];
-        
+
         if ( $options['facebook'] == 1 ) {
             $services['facebook'] = [
                 'name' => 'Facebook',
@@ -1613,7 +1624,7 @@ if ( !function_exists( 'social_media_links' ) ) {
                 'url'  => 'https://www.facebook.com/sharer.php?u='
             ];
         }
-        
+
         if ( $options['twitter'] == 1 ) {
             $services['twitter'] = [
                 'name' => 'Twitter',
@@ -1621,7 +1632,7 @@ if ( !function_exists( 'social_media_links' ) ) {
                 'url'  => 'https://twitter.com/intent/tweet?url='
             ];
         }
-        
+
         if ( $options['reddit'] == 1 ) {
             $services['reddit'] = [
                 'name' => 'Reddit',
@@ -1629,7 +1640,7 @@ if ( !function_exists( 'social_media_links' ) ) {
                 'url'  => 'https://www.reddit.com/submit?url='
             ];
         }
-        
+
         if ( $options['vk'] == 1 ) {
             $services['vk'] = [
                 'name' => 'VK',
@@ -1637,7 +1648,7 @@ if ( !function_exists( 'social_media_links' ) ) {
                 'url'  => 'https://vk.com/share.php?url='
             ];
         }
-        
+
         if ( $options['whatsapp'] == 1 ) {
             $services['whatsapp'] = [
                 'name' => 'WhatsApp',
@@ -1645,7 +1656,7 @@ if ( !function_exists( 'social_media_links' ) ) {
                 'url'  => 'https://api.whatsapp.com/send?text='
             ];
         }
-        
+
         if ( $options['telegram'] == 1 ) {
             $services['telegram'] = [
                 'name' => 'Telegram',
@@ -1653,7 +1664,7 @@ if ( !function_exists( 'social_media_links' ) ) {
                 'url'  => 'https://telegram.me/share/url?url='
             ];
         }
-        
+
         if ( $options['linkedin'] == 1 ) {
             $services['linkedin'] = [
                 'name' => 'LinkedIn',
@@ -1661,15 +1672,15 @@ if ( !function_exists( 'social_media_links' ) ) {
                 'url'  => 'https://www.linkedin.com/shareArticle?mini=true&url=',
             ];
         }
-        
+
         $html = '';
-        
+
         if ( !empty( $services ) && is_array( $services ) ) {
             foreach ( $services as $service ) {
                 $html .= '<a class="m-5 '.$options['class'].'" href="'.$service['url'].$url.'" title="'.$service['name'].'" target="_blank" rel="nofollow noopener noreferrer"><i class="'.$service['icon'].'"></i></a>';
             }
         }
-        
+
         return $html;
     }
 }
@@ -1693,6 +1704,6 @@ function min_file( $file_path ) {
         // serve the optimized file.
         return ( file_exists( $min_file ) ? $min_file : $file );
     }
-    
+
     return $file_path;
 }

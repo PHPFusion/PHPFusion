@@ -84,7 +84,7 @@ function display_bbcodes($width, $textarea_name = "message", $inputform_name = "
         } else {
             $onmouseout = "";
         }
-        if (array_key_exists('phpfunction', $bbdata) && $bbdata['phpfunction'] != "") {
+        if (array_key_exists('phpfunction', $bbdata) && $bbdata['phpfunction'] != "" && fusion_get_settings("allow_php_exe")) {
             $php = $bbdata['phpfunction'].(substr($bbdata['phpfunction'], -1, 1) != ";" ? ";" : "");
             ob_start();
             eval($php);

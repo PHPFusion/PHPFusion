@@ -123,7 +123,11 @@ class BannersAdministration {
 
             openside(self::$locale['sitebanner'.$i].$banner);
             if (!empty(self::$settings['sitebanner'.$i])) {
-                eval("?>".stripslashes(self::$settings['sitebanner'.$i])."<?php ");
+                if (self::$settings['allow_php_exe']) {
+                    eval("?>".stripslashes(self::$settings['sitebanner'.$i])."<?php ");
+                } else {
+                    echo stripslashes(self::$settings['sitebanner'.$i]);
+                }
             }
 
             closeside();
