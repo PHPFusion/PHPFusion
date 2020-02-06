@@ -38,7 +38,7 @@ class Errors {
     private $error_id = '';
     private $errors = [];
     private $new_errors = [];
-    
+
     /*
      * Severity when set Error Level
      */
@@ -55,52 +55,52 @@ class Errors {
     const E_USER_NOTICE = 1024;
     const E_ALL = 2047;
     const E_STRICT = 2048;
-    
+
     public function __construct() {
-        
+
         self::$locale = fusion_get_locale( '', [ LOCALE.LOCALESET.'admin/errors.php', LOCALE.LOCALESET.'errors.php' ] );
-        
+
         $this->error_status = (int)descript( post( 'error_status', FILTER_VALIDATE_INT ) );
-        
+
         $this->posted_error_id = (int)descript( post( 'error_id', FILTER_VALIDATE_INT ) );
-        
+
         $this->delete_status = (int)descript( post( 'delete_status', FILTER_VALIDATE_INT ) );
-        
+
         $this->rowstart = (int)get( 'rowstart', FILTER_VALIDATE_INT );
-        
+
         $this->error_id = (int)get( 'error_id', FILTER_VALIDATE_INT );
-        
+
         if ( check_post( 'error_status' ) && check_post( 'error_id' ) ) {
-            
+
             dbquery( "UPDATE ".DB_ERRORS." SET error_status='".$this->error_status."' WHERE error_id=:eid", [ ':eid' => (int)$this->posted_error_id ] );
-            
+
             $source_redirection_path = preg_replace( "~".fusion_get_settings( "site_path" )."~", "", FUSION_REQUEST, 1 );
-            
+
             redirect( fusion_get_settings( "siteurl" ).$source_redirection_path );
         }
-        
+
         if ( check_post( 'delete_entries' ) ) {
-            
+
             dbquery( "DELETE FROM ".DB_ERRORS." WHERE error_status=:status", [ ':status' => (int)$this->delete_status ] );
-            
+
             $source_redirection_path = preg_replace( "~".fusion_get_settings( "site_path" )."~", "", FUSION_REQUEST, 1 );
-            
+
             redirect( fusion_get_settings( "siteurl" ).$source_redirection_path );
         }
-        
+
         $result = dbquery( "SELECT * FROM ".DB_ERRORS." ORDER BY error_timestamp DESC LIMIT :rowstart,20", [ ':rowstart' => (int)$this->rowstart ] );
         while ( $data = dbarray( $result ) ) {
             // Sanitizes callback
             foreach ( $data as $key => $value ) {
                 $data[ $key ] = descript( stripslashes( $value ) );
             }
-            
+
             $this->errors[ $data['error_id'] ] = $data;
         }
-        
+
         $this->rows = (int)( $this->errors ? dbcount( '(error_id)', DB_ERRORS ) : 0 );
     }
-    
+
     /**
      * Get an instance by key
      *
@@ -112,10 +112,10 @@ class Errors {
         if ( !isset( self::$instances[ $key ] ) ) {
             self::$instances[ $key ] = new static();
         }
-        
+
         return self::$instances[ $key ];
     }
-    
+
     /**
      * Custom error handler for PHP processor
      *
@@ -127,9 +127,9 @@ class Errors {
     public function setError( $error_level, $error_message, $error_file, $error_line ) {
         $userdata = fusion_get_userdata();
         $showLiveError = TRUE; // directly show error - push to another instance
-        
+
         $db = DatabaseFactory::getConnection();
-        
+
         $result = $db->query(
             "SELECT error_id, error_status FROM ".DB_ERRORS."
             WHERE error_file = :file AND error_line = :line AND error_status != '1' AND error_page = :page
@@ -138,9 +138,9 @@ class Errors {
             ':page' => FUSION_REQUEST,
             ':line' => $error_line,
         ] );
-        
+
         if ( $db->countRows( $result ) == 0 ) {
-            
+
             $db->query( "INSERT INTO ".DB_ERRORS." (
                 error_level, error_message, error_file, error_line, error_page,
                 error_user_level, error_user_ip, error_user_ip_type, error_status, error_timestamp
@@ -156,18 +156,18 @@ class Errors {
                 ':line'    => $error_line,
             ] );
             $errorId = $db->getLastId();
-            
+
         } else {
-            
+
             $data = $db->fetchAssoc( $result );
-            
+
             $errorId = $data['error_id'];
-            
+
             if ( $data['error_status'] == 2 ) {
                 $showLiveError = FALSE;
             }
         }
-        
+
         if ( $showLiveError ) {
             $this->new_errors[ $errorId ] = [
                 "error_id"        => $errorId,
@@ -181,11 +181,11 @@ class Errors {
             ];
         }
     }
-    
+
     private function showErrorRows( $data ) {
         $locale = self::$locale;
         $link_title = $this->getMaxFolders( $data['error_file'], 1 );
-        
+
         $html = "<tr id='rmd-".$data['error_id']."'>";
         $html .= "<td class='word-break' style='text-align:left;'>";
         $html .= "<a data-toggle='collapse' data-target='#err_rmd-".$data['error_id']."' class='accordion-toggle strong' title='".$locale['show']."' style='font-size:15px;'>".$link_title."</a><br/>\n";
@@ -193,13 +193,13 @@ class Errors {
         $html .= "<strong>".$locale['ERROR_415']." ".$data['error_line']."</strong><br/>\n";
         $html .= "<small>".timer( $data['error_timestamp'] )."</small>\n";
         $html .= "</td>\n<td>\n";
-        
+
         $html .= "<div class='btn-group'>\n";
         $html .= "<a class='btn btn-default ' href='".ADMIN."errors.php".fusion_get_aidlink()."&amp;rowstart=".$this->rowstart."&amp;error_id=".$data['error_id']."#file' target='new_window'><i class='fa fa-eye m-0'></i></a>\n";
         $html .= "<button class='btn btn-default  copy-error' data-clipboard-target='#error-".$data['error_id']."'><i class='fa fa-copy m-0'></i></button>\n";
         $html .= "</div>\n";
         $html .= "</td>\n";
-        
+
         $html .= "<td id='ecmd_".$data['error_id']."' style='white-space:nowrap;'>\n";
         $html .= "<a data-id='".$data['error_id']."' data-type='0' class='btn ".( $data['error_status'] == 0 ? 'active' : '' )." e_status_0 button btn-default  move_error_log'>".$locale['ERROR_450']."</a>\n";
         $html .= "<a data-id='".$data['error_id']."' data-type='1' class='btn ".( $data['error_status'] == 1 ? 'active' : '' )." e_status_1 button btn-default  move_error_log'>".$locale['ERROR_451']."</a>\n";
@@ -213,7 +213,7 @@ class Errors {
         $html .= "<div class='alert alert-info'>\n";
         $html .= strtr( $data['error_message'], [ '#' => '<br/>#' ] )."</div>\n";
         $html .= "</td></tr>\n";
-        
+
         $html .= '<textarea style="width:.1px;height:.1px;border:0;padding:0;" id="error-'.$data['error_id'].'">';
         $html .= 'File: '.$link_title.PHP_EOL;
         $html .= 'Page: '.$data['error_page'].PHP_EOL;
@@ -222,23 +222,23 @@ class Errors {
         $html .= '</textarea>';
         return $html;
     }
-    
+
     /**
      * Administration Console
      */
     public function display_administration() {
         $aidlink = fusion_get_aidlink();
-    
+
         $locale = self::$locale;
-    
+
         define( "NO_DEBUGGER", TRUE );
-    
+
         $_GET['rowstart'] = isset( $_GET['rowstart'] ) && isnum( $_GET['rowstart'] ) ? $_GET['rowstart'] : 0;
-        
+
         $tab_title['title'][] = $locale['ERROR_460'];
         $tab_title['id'][] = 'errors-list';
         $tab_title['icon'][] = 'fa fa-bug m-r-10';
-    
+
         if ( $this->error_id ) {
             $tab_title['title'][] = $locale['ERROR_461'];
             $tab_title['id'][] = 'error-file';
@@ -248,18 +248,18 @@ class Errors {
             $tab_title['icon'][] = 'fa fa-stethoscope m-r-10';
         }
         $tab_active = tab_active( $tab_title, $this->error_id ? 1 : 0 );
-    
+
         BreadCrumbs::getInstance()->addBreadCrumb( [ 'link' => ADMIN."errors.php".$aidlink, 'title' => $locale['ERROR_400'] ] );
-    
+
         opentable( $locale['ERROR_400'] );
-    
+
         echo opentab( $tab_title, $tab_active, 'error_tab' );
         echo opentabbody( $tab_title['title'][0], $tab_title['id'][0], $tab_active );
-        
+
         echo "<div class='m-t-20'>".$this->getErrorLogs()."</div>";
-    
+
         echo closetabbody();
-    
+
         if ( $this->error_id ) {
             // dump 1 and 2
             add_to_head( "<link rel='stylesheet' href='".THEMES."templates/errors.css' type='text/css' media='all' />" );
@@ -268,21 +268,21 @@ class Errors {
             if ( !$data ) {
                 redirect( FUSION_SELF.$aidlink );
             }
-        
+
             $thisFileContent = is_file( $data['error_file'] ) ? file( $data['error_file'] ) : [];
-        
+
             $line_start = max( $data['error_line'] - 10, 1 );
-        
+
             $line_end = min( $data['error_line'] + 10, count( $thisFileContent ) );
-        
+
             $output = implode( "", array_slice( $thisFileContent, $line_start - 1, $line_end - $line_start + 1 ) );
-            
+
             $pageFilePath = BASEDIR.$data['error_page'];
-        
+
             $pageContent = is_file( $pageFilePath ) ? file_get_contents( $pageFilePath ) : '';
-        
+
             add_to_jquery( "$('#error_status_sel').bind('change', function(e){this.form.submit();});" );
-        
+
             echo opentabbody( $tab_title['title'][1], $tab_title['id'][1], $tab_active ); ?>
 
 		    <div class='m-t-20'>
@@ -371,12 +371,12 @@ class Errors {
             <?php
             echo closetabbody();
         }
-    
+
         echo closetab();
         closetable();
     }
-    
-    
+
+
     /**
      * @return string
      * @throws \ReflectionException
@@ -384,10 +384,10 @@ class Errors {
     private function getErrorLogs() {
         $aidlink = fusion_get_aidlink();
         $locale = self::$locale;
-    
+
         add_to_footer( '<script src="'.INCLUDES.'jscripts/clipboard.min.js"></script>' );
         add_to_jquery( 'new ClipboardJS(".copy-error");' );
-        
+
         // Use clean request for absolute escape from SEO converging form path
         $html = openform( 'error_logform', 'post', clean_request( '', [], FALSE ) );
         $html .= '<div class="text-center well m-t-5 m-b-5">';
@@ -398,7 +398,7 @@ class Errors {
         $html .= "</div>\n";
         $html .= "</div>\n";
         $html .= closeform();
-    
+
         if ( !empty( $this->errors ) or !empty( $this->new_errors ) ) {
             $html .= "<div class='table-responsive'><table id='error_logs_table' class='table center'>";
             $html .= "<tr>";
@@ -406,21 +406,21 @@ class Errors {
             $html .= "<th class='col-xs-2'>".$locale['ERROR_462']."</th>";
             $html .= "<th class='col-xs-4'>".$locale['ERROR_414']."</th>\n";
             $html .= "</tr>\n";
-        
+
             if ( !empty( $this->new_errors ) ) {
                 foreach ( $this->new_errors as $i => $data ) {
                     $html .= $this->showErrorRows( $data );
                 }
             }
-        
+
             if ( !empty( $this->errors ) ) {
                 foreach ( $this->errors as $i => $data ) {
                     $html .= $this->showErrorRows( $data );
                 }
             }
-        
+
             $html .= "</table>\n</div>";
-        
+
             if ( $this->rows > 20 ) {
                 $html .= "<div class='m-t-10 text-center'>\n";
                 $html .= makepagenav( $this->rowstart, 20, $this->rows, 3, ADMIN."errors.php".$aidlink."&amp;" );
@@ -430,20 +430,20 @@ class Errors {
             $html .= "<div class='text-center well'>".$locale['ERROR_418']."</div>\n";
         }
         $this->errorjs();
-    
+
         return $html;
     }
-    
+
     private function getErrorLogTypes() {
         $locale = self::$locale;
-        
+
         return [
             '0' => $locale['ERROR_450'],
             '1' => $locale['ERROR_451'],
             '2' => $locale['ERROR_452']
         ];
     }
-    
+
     private function getMaxFolders( $url, $level = 2 ) {
         $return = "";
         $tmpUrlArr = explode( "/", $url );
@@ -455,11 +455,11 @@ class Errors {
         } else {
             $return = implode( "/", $tmpUrlArr );
         }
-        
+
         return $return;
     }
-    
-    
+
+
     private function getErrorTypes( $type ) {
         $locale = self::$locale;
         $error_types = [
@@ -480,10 +480,10 @@ class Errors {
         if ( isset( $error_types[ $type ] ) ) {
             return $error_types[ $type ][1];
         }
-        
+
         return FALSE;
     }
-    
+
     private function errorjs() {
         if ( checkrights( "ERRO" ) || !defined( "iAUTH" ) || !isset( $_GET['aid'] ) || $_GET['aid'] == iAUTH ) {
             // Show the "Apply"-button only when javascript is disabled"
@@ -532,14 +532,14 @@ class Errors {
         " );
         }
     }
-    
+
     private function printCode( $source_code, $starting_line, $error_line = "", array $error_message = [] ) {
         $locale = fusion_get_locale();
-        
+
         if ( is_array( $source_code ) ) {
             return FALSE;
         }
-        
+
         $error_message = [
             'time' => !empty( $error_message['time'] ) ? $error_message['time'] : time(),
             'text' => !empty( $error_message['text'] ) ? $error_message['text'] : $locale['na'], ];
@@ -570,10 +570,10 @@ class Errors {
             }
             $line_count++;
         }
-        
+
         return "<table class='err_tbl-border center' cellspacing='0' cellpadding='0'>".$formatted_code."</table>";
     }
-    
+
     private function codeWrap( $code, $maxLength = 150 ) {
         $lines = explode( "\n", $code );
         $count = count( $lines );
@@ -581,10 +581,10 @@ class Errors {
             preg_match( '`^\s*`', $code, $matches );
             $lines[ $i ] = wordwrap( $lines[ $i ], $maxLength, "\n$matches[0]\t", TRUE );
         }
-        
+
         return implode( "\n", $lines );
     }
-    
+
     /** Use this function to show error logs */
     public function showFooterErrors() {
         $locale = self::$locale;
@@ -601,13 +601,13 @@ class Errors {
             $html .= "<span class='badge m-l-10'>L: ".count( $this->errors )."</span>\n";
             $html .= "<span class='badge m-l-10'>N: ".count( $this->new_errors )."</span>\n";
             $html .= "</div>\n";
-        
+
             $cHtml = openmodal( 'tbody', $locale['ERROR_464'], [ 'class' => 'modal-lg modal-center zindex-boost', 'button_id' => 'footer_debug' ] );
             $cHtml .= $this->getErrorLogs();
             $cHtml .= closemodal();
             add_to_footer( $cHtml );
         }
-    
+
         return $html;
     }
 }
