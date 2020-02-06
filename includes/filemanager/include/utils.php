@@ -845,8 +845,8 @@ function image_check_memory_usage($img, $max_breedte, $max_hoogte)
             }
 
             $image_properties = getimagesize($img);
-            $image_width = $image_properties[0];
-            $image_height = $image_properties[1];
+            $image_width = !empty($image_properties[0]) ? $image_properties[0] : 0;
+            $image_height = !empty($image_properties[1]) ? $image_properties[1] : 0;
             if (isset($image_properties['bits'])) {
                 $image_bits = $image_properties['bits'];
             } else {

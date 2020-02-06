@@ -48,7 +48,7 @@ if ( post( 'clear_cache' ) ) {
 $is_multilang = count( fusion_get_enabled_languages() ) > 1 ? TRUE : FALSE;
 
 if ( post( 'savesettings' ) ) {
-    
+
     // Save settings after validation
     $inputData = [
         'captcha'               => sanitizer( 'captcha', '', 'captcha' ),
@@ -71,7 +71,7 @@ if ( post( 'savesettings' ) ) {
         'error_logging_method'  => sanitizer( 'error_logging_method', '', 'error_logging_method' ),
         'mime_check'            => sanitizer( 'mime_check', '0', 'mime_check' ),
     ];
-    
+
     // Validate extra fields
     if ( $inputData['captcha'] == 'grecaptcha' || $inputData['captcha'] == 'grecaptcha3' ) {
         // appends captcha settings
@@ -79,22 +79,22 @@ if ( post( 'savesettings' ) ) {
             'recaptcha_public'  => sanitizer( 'recaptcha_public', '', 'recaptcha_public' ),
             'recaptcha_private' => sanitizer( 'recaptcha_private', '', 'recaptcha_private' )
         ];
-        
+
         if ( $inputData['captcha'] == 'grecaptcha' ) {
             $inputData += [
                 'recaptcha_theme' => sanitizer( 'recaptcha_theme', '', 'recaptcha_theme' ),
                 'recaptcha_type'  => sanitizer( 'recaptcha_type', '', 'recaptcha_type' )
             ];
         }
-        
+
         if ( $inputData['captcha'] == 'grecaptcha3' ) {
             $inputData += [
                 'recaptcha_score' => sanitizer( 'recaptcha_score', '', 'recaptcha_score' )
             ];
         }
     }
-    
-    
+
+
     if ( fusion_safe() ) {
         foreach ( $inputData as $settings_name => $settings_value ) {
             dbquery( "UPDATE ".DB_SETTINGS." SET settings_value=:settings_value WHERE settings_name=:settings_name", [
@@ -102,7 +102,7 @@ if ( post( 'savesettings' ) ) {
                 ':settings_name'  => $settings_name
             ] );
         }
-        
+
         addNotice( 'success', $locale['900'] );
         redirect( FUSION_REQUEST );
     } else {
@@ -113,7 +113,7 @@ if ( post( 'savesettings' ) ) {
         // Why captcha errors here -- move to Proper place.
         addNotice( 'danger', $locale['900'] );
     }
-    
+
 }
 
 $yes_no_array = [ '1' => $locale['yes'], '0' => $locale['no'] ];

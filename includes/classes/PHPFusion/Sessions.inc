@@ -31,15 +31,15 @@ use PHPFusion\Database\DatabaseFactory;
  * @package PHPFusion
  */
 class Sessions {
-    
+
     private static $_sess = NULL;
     private static $db_info = [];
     private static $_sess_key = 'sessions';
     private $_sess_db = NULL;
-    
+
     private function __construct() {
     }
-    
+
     /**
      *  Get an instance by key
      *
@@ -53,17 +53,17 @@ class Sessions {
         if ( empty( self::$_sess[ $handlers ] ) ) {
             self::$_sess[ $handlers ] = new static();
         }
-        
+
         return self::$_sess[ $handlers ];
     }
-    
+
     /**
      * Methods to fetch the ID from the session.
      */
     public function getId() {
         return session_id();
     }
-    
+
     /**
      * Set db configuration values
      *
@@ -83,10 +83,10 @@ class Sessions {
             'db_name' => $db_name,
             'db_port' => $db_port,
         ];
-        
+
         return $this;
     }
-    
+
     /**
      * The _open() and _close() functions are closely related. These are used to open the session data store and close it, respectively.
      * If you are storing sessions in the filesystem, these functions open and close files
@@ -100,10 +100,10 @@ class Sessions {
             DatabaseFactory::getConnection( self::$_sess_key );
             return TRUE;
         }
-    
+
         return FALSE;
     }
-    
+
     /**
      * @param bool $halt_on_error
      *
@@ -127,19 +127,19 @@ class Sessions {
                 die( "<strong>Unable to select MySQL database</strong><br />".$e->getCode()." : ".$e->getMessage() );
             }
         }
-        
+
         return [
             'connection_success'  => $connection_success,
             'dbselection_success' => $dbselection_success
         ];
     }
-    
+
     public function _close() {
         DatabaseFactory::getConnection( self::$_sess_key )->close();
-        
+
         return TRUE;
     }
-    
+
     /**
      * Read and fetches the data from a session
      * The _read() function is called whenever PHP needs to read the session data.
@@ -164,10 +164,10 @@ class Sessions {
             $rows = DatabaseFactory::getConnection( self::$_sess_key )->fetchAssoc( $result );
             return $rows['session_data'];
         }
-        
+
         return '';
     }
-    
+
     /**
      * Write a session
      *
@@ -192,10 +192,10 @@ class Sessions {
         if ( DatabaseFactory::getConnection( self::$_sess_key )->query( $query, $parameters ) ) {
             return TRUE;
         }
-        
+
         return FALSE;
     }
-    
+
     /**
      * Destroys a session
      *
@@ -212,17 +212,17 @@ class Sessions {
         ] );
         $query = "DELETE FROM ".DB_SESSIONS." WHERE session_id=:name";
         DatabaseFactory::getConnection( self::$_sess_key )->query( $query, $parameters );
-        
+
         return TRUE;
     }
-    
+
     public function _purge() {
         $query = "TRUNCATE ".DB_SESSIONS;
         DatabaseFactory::getConnection( self::$_sess_key )->query( $query );
-        
+
         return TRUE;
     }
-    
+
     /**
      * Clear the session gc
      *
@@ -248,12 +248,12 @@ class Sessions {
             ':old' => (int)$old,
         ] );
         $query = "DELETE FROM ".DB_SESSIONS." WHERE session_start < :old";
-        
+
         DatabaseFactory::getConnection( self::$_sess_key )->query( $query, $parameters );
-        
+
         return TRUE;
     }
-    
+
     public function remote_cache( $path ) {
         echo "<script>
         function timedRefresh(timeoutPeriod) {
@@ -273,8 +273,8 @@ class Sessions {
         UpdateCache();
         </script>";
     }
-    
+
     private function __clone() {
     }
-    
+
 }

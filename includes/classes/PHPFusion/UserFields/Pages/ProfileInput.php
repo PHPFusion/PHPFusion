@@ -7,7 +7,7 @@ use PHPFusion\UserFields\Public_Profile;
 use ReflectionException;
 
 class ProfileInput {
-    
+
     public $skip_password = FALSE;
     public $registration = FALSE;
     public $user_name_change = FALSE;
@@ -21,11 +21,11 @@ class ProfileInput {
     private $userFields;
     private $method = 'input';
     private $info = [];
-    
+
     public function __construct( UserFields $userFields ) {
         $this->userFields = $userFields;
     }
-    
+
     /**
      * Info for Edit Profile and Registration
      *
@@ -36,7 +36,7 @@ class ProfileInput {
         $this->setInfo();
         return (array)$this->info;
     }
-    
+
     /**
      * Input data for Edit Profile and Registration Page
      *
@@ -45,19 +45,19 @@ class ProfileInput {
      */
     private function setInfo() {
         $this->method = 'input';
-    
+
         if ( !isset( $this->user_data['user_joined'] ) ) {
             $this->user_data['user_joined'] = showdate( 'longdate', TIME );
         }
-    
+
         if ( !isset( $this->user_data['user_email'] ) ) {
             $this->user_data['user_email'] = '';
         }
-    
+
         if ( !isset( $this->user_data['user_password'] ) ) {
             $this->user_data['user_password'] = '';
         }
-        
+
         // user id
         $this->info = [
             'register'             => $this->registration,
@@ -84,21 +84,21 @@ class ProfileInput {
             'button'               => $this->renderButton(),
             'user_password_verify' => ( iADMIN && checkrights( 'M' ) && defined( 'IN_ADMIN' ) ) ? '' : form_hidden( 'user_password_verify', '', $this->user_data['user_password'] )
         ];
-        
+
         $this->info['current_page'] = $this->userFields->getCurrentInputPage();
-        
+
         if ( $this->registration ) {
-            
+
             $this->info = array_merge( $this->info, $this->registrationInfo() );
-            
+
         } else {
-            
+
             $this->info = array_merge( $this->info, $this->editProfileInfo() );
         }
-        
+
         return (array)$this->info;
     }
-    
+
     private function getUserId() {
         $user_id = get( 'lookup', FILTER_VALIDATE_INT ) ?: fusion_get_userdata( 'user_id' );
         if ( $this->registration ) {
@@ -106,14 +106,14 @@ class ProfileInput {
         }
         return $user_id;
     }
-    
+
     /**
      * Display button post button
      *
      * @return string
      */
     private function renderButton() {
-        
+
         $disabled = $this->display_terms ? TRUE : FALSE;
         $html = ( !$this->skip_password ) ? form_hidden( 'user_hash', '', $this->user_data['user_password'] ) : '';
         $html .= form_button( $this->post_name, $this->post_value, $this->post_value,
@@ -121,18 +121,18 @@ class ProfileInput {
                 "deactivate" => $disabled,
                 "class"      => 'btn-primary'
             ] );
-        
+
         return (string)$html;
     }
-    
+
     /**
      * @return array
      * @throws ReflectionException
      */
     private function registrationInfo() {
-    
+
         $class = new Public_Profile( $this->userFields );
-        
+
         // Can remove all these, as we do DI approach
         $class->user_data = $this->user_data;
         $class->form_name = $this->form_name;
@@ -144,9 +144,9 @@ class ProfileInput {
         $class->display_validation = $this->display_validation;
         $class->display_terms = $this->display_terms;
         $class->inline_field = $this->inline_field;
-        
+
         $this->info = array_merge( $this->info, $class->inputInfo() );
-        
+
         // Edit Profile Fields
         $class = new Account_Profile();
         $class->user_data = $this->user_data;
@@ -156,12 +156,12 @@ class ProfileInput {
         $class->post_name = $this->post_name;
         $class->user_name_change = TRUE;
         $class->inline_field = $this->inline_field;
-    
+
         $this->info = array_merge( $this->info, $class->inputInfo() );
-    
+
         return $this->info;
     }
-    
+
     /**
      * @return array
      * @throws ReflectionException
@@ -169,7 +169,7 @@ class ProfileInput {
     private function editProfileInfo() {
         $settings = fusion_get_settings();
         $locale = fusion_get_locale();
-        
+
         // Notice to tell that there are email pending for verification.
         if ( $settings['email_verification'] ) {
             $result = dbquery( "SELECT user_email FROM ".DB_EMAIL_VERIFY." WHERE user_id=:selfid", [
@@ -180,14 +180,14 @@ class ProfileInput {
                 addNotice( 'info', sprintf( $locale['u200'], $data['user_email'] )."\n<br />\n".$locale['u201'] );
             }
         }
-        
+
         // info output
         switch ( $this->info['current_page'] ) {
             default:
                 if ( isset( $this->info['pages'][ $this->info['current_page'] ]['file'] ) && is_file( $this->info['pages'][ $this->info['current_page'] ]['file'] ) ) {
-                    
+
                     return $this->loadCustomPage();
-                    
+
                 } else {
                     redirect( BASEDIR.'edit_profile.php' );
                 }
@@ -204,9 +204,9 @@ class ProfileInput {
                 $this->info['user_hash'] = form_hidden( 'user_hash', '', $this->user_data['user_password'] );
                 return $class->inputInfo();
                 break;
-            
+
             case 'se_profile':
-                
+
                 $class = new Account_Profile();
                 $class->user_data = $this->user_data;
                 $class->registration = $this->registration;
@@ -214,18 +214,18 @@ class ProfileInput {
                 $class->user_name_change = $this->user_name_change;
                 $class->show_admin_password = ( iADMIN ? TRUE : FALSE );
                 $class->inline_field = $this->inline_field;
-                
+
                 return $class->inputInfo();
                 break;
         }
     }
-    
+
     /**
      * @return array
      */
     private function loadCustomPage() {
         $locale = fusion_get_locale();
-        
+
         $this->info['custom_page'] = TRUE;
         $this->info['title'] = $this->info['pages'][ $this->info['current_page'] ]['title'];
         $this->info['page_content'] = 'There are no page content yet.';
@@ -234,9 +234,9 @@ class ProfileInput {
         $user_fields_section = [];
         $user_fields_title = '';
         //$default_section = 'default';
-        
+
         include $this->info['pages'][ $this->info['current_page'] ]['file'];
-        
+
         if ( $user_fields ) {
             // Title info
             if ( $user_fields_title ) {
@@ -259,7 +259,7 @@ class ProfileInput {
         }
         // Custom title
         add_to_title( $locale['global_201'].$this->info['title'] );
-        
+
         return $this->info;
     }
 }

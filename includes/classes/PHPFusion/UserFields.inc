@@ -28,7 +28,7 @@ use ReflectionException;
  * @package PHPFusion
  */
 class UserFields extends UserFieldsQuantum {
-    
+
     private $total_groups = 0;
     private $profile_id = 0;
     public $display_terms = 0;
@@ -72,11 +72,11 @@ class UserFields extends UserFieldsQuantum {
         'user_avatar'         => '',
         'user_admin_password' => '',
     ];
-    
+
     public $options = [];
     private static $instance = NULL;
     private $aidlink = '';
-    
+
     /**
      * Get a user field instance
      *
@@ -88,7 +88,7 @@ class UserFields extends UserFieldsQuantum {
         }
         return self::$instance;
     }
-    
+
     /**
      * UserFields constructor.
      * Note: leave constructor blank
@@ -96,7 +96,7 @@ class UserFields extends UserFieldsQuantum {
     public function __construct() {
         $this->aidlink = get( 'aid' ) && iADMIN && checkrights( 'M' ) ? fusion_get_aidlink() : '';
     }
-    
+
     /**
      * Check whether a user field is available/installed
      *
@@ -114,7 +114,7 @@ class UserFields extends UserFieldsQuantum {
         }
         return in_array( $field_name, $list ) ? TRUE : FALSE;
     }
-    
+
     /**
      * Custom add files into the edit profile page.
      *
@@ -131,7 +131,7 @@ class UserFields extends UserFieldsQuantum {
             'active' => $_ref == 'key' ? TRUE : FALSE,
         ];
     }
-    
+
     /**
      * Add profile view output page
      *
@@ -141,7 +141,7 @@ class UserFields extends UserFieldsQuantum {
      */
     public function addOutputPage( $key, $title, $file ) {
         $_ref = get( 'profile_page' );
-    
+
         self::$output_page[ $key ] = [
             'id'    => $key,
             'title' => $title,
@@ -149,7 +149,7 @@ class UserFields extends UserFieldsQuantum {
             'class' => $_ref == $key ? TRUE : FALSE,
         ];
     }
-    
+
     /**
      * Edit profile view sections
      *
@@ -171,10 +171,10 @@ class UserFields extends UserFieldsQuantum {
             }
             self::$pages = $profile_page;
         }
-        
+
         return (array)self::$pages;
     }
-    
+
     /**
      * Current page - pu_profile , pu_security, pu_prefs etc. this is for edit profile only.
      *
@@ -185,7 +185,7 @@ class UserFields extends UserFieldsQuantum {
         $refs = get( 'ref' );
         return $refs && isset( $all_pages[ $refs ] ) ? $refs : 'pu_profile';
     }
-    
+
     /**
      * @param $profile_id
      *
@@ -196,7 +196,7 @@ class UserFields extends UserFieldsQuantum {
         $refs = get( "profile_page" );
         return $refs && isset( $all_pages[ $refs ] ) ? $refs : 'profile';
     }
-    
+
     /**
      * @param $profile_id
      *
@@ -204,12 +204,12 @@ class UserFields extends UserFieldsQuantum {
      */
     public function getOutputPages( $profile_id ) {
         static $profile_page = [];
-        
+
         if ( empty( $profile_page ) ) {
             $get_page = get( 'profile_page' );
             $active_class = ' class="active"';
             // Core pages
-            
+
             $profile_page = [
                 'activity' => [ 'id'    => 'activity',
                                 'title' => 'User Activity',
@@ -220,7 +220,7 @@ class UserFields extends UserFieldsQuantum {
                                 'title' => 'User Profile',
                                 //'link'  => BASEDIR.'profile.php?lookup='.$profile_id.'&amp;profile_page=profile',
                                 'class' => $get_page == 'profile' ? $active_class : ""
-                
+
                 ],
                 'friends'  => [ 'id'    => 'friends',
                                 'title' => 'User Friends',
@@ -233,32 +233,32 @@ class UserFields extends UserFieldsQuantum {
                                 'class' => $get_page == 'groups' ? $active_class : ""
                 ]
             ];
-            
+
             $profile_page = array_merge( $profile_page, self::$output_page );
-            
+
             $output_pages_keys = array_keys( $profile_page );
             foreach ( $output_pages_keys as $key ) {
                 $profile_page[ $key ]['link'] = BASEDIR.'profile.php?lookup='.$profile_id.'&amp;profile_page='.$key;
             }
-            
+
         }
         return (array)$profile_page;
     }
-    
+
     /**
      * @return bool
      */
     public function checkModAccess() {
         return ( checkrights( 'M' ) && fusion_get_userdata( 'user_level' ) <= USER_LEVEL_ADMIN && $this->profile_id != '1' || iSUPERADMIN ) ? TRUE : FALSE;
     }
-    
-    
+
+
     public function registerInfo() {
         if ( iMEMBER ) {
             redirect( BASEDIR.fusion_get_settings( 'opening_page' ) );
         }
         $settings = fusion_get_settings();
-        
+
         $userProfile = new ProfileInput( $this );
         // Preconfigured behavior
         $userProfile->form_name = 'registerFrm';
@@ -271,7 +271,7 @@ class UserFields extends UserFieldsQuantum {
         $userProfile->display_terms = TRUE;
         $userProfile->display_validation = $settings['display_validation'];;
         $userProfile->inline_field = FALSE;
-    
+
         // The input class
         $userInput = new UserFieldsInput();
         $userInput->post_name = 'register';
@@ -286,10 +286,10 @@ class UserFields extends UserFieldsQuantum {
         $userInput->validation = $settings['display_validation'];
         $userInput->redirect_uri = BASEDIR.$settings['opening_page'];
         $userInput->saveInsert();
-        
+
         return $userProfile->getInfo();
     }
-    
+
     /**
      * CHECK 1 - OK
      * Edit Profile Info
@@ -298,12 +298,12 @@ class UserFields extends UserFieldsQuantum {
      * @throws ReflectionException
      */
     public function editProfileInfo() {
-        
+
         if ( !iMEMBER ) {
             addNotice( 'info', 'Please sign into your account to view your profile page settings page.', 'all' );
             redirect( BASEDIR.fusion_get_settings( 'opening_page' ) );
         }
-        
+
         $userProfile = new ProfileInput( $this );
         // Preconfigured behavior
         $userProfile->form_name = 'editProfileFrm';
@@ -325,24 +325,24 @@ class UserFields extends UserFieldsQuantum {
         $userInput->verifyNewEmail = TRUE;
         $userInput->user_data = fusion_get_userdata();
         $userInput->saveUpdate();
-        
+
         return $userProfile->getInfo();
-        
+
     }
-    
+
     /**
      * @param $profile_id
      *
      * @return mixed
      */
     public function profileInfo( $profile_id ) {
-        
+
         if ( !defined( 'ADMIN_PANEL' ) ) {
             if ( !iMEMBER && fusion_get_settings( 'hide_userprofiles' ) == 1 ) {
                 redirect( BASEDIR."index.php" );
             }
         }
-        
+
         $userProfile = new ProfileOutput( $this );
         // This will redirect if profile_id is invalid
         $userProfile->user_data = $this->getProfileData( $profile_id );
@@ -357,11 +357,11 @@ class UserFields extends UserFieldsQuantum {
         $userProfile->display_terms = FALSE;
         $userProfile->display_validation = FALSE;
         $userProfile->inline_field = TRUE;
-        
+
         return $userProfile->getInfo();
-        
+
     }
-    
+
     /**
      * @param $profile_id
      *
@@ -369,7 +369,7 @@ class UserFields extends UserFieldsQuantum {
      */
     private function getProfileData( $profile_id ) {
         static $profile_user = [];
-        
+
         if ( empty( $profile_user ) ) {
             $user_status = " AND (user_status='0' OR user_status='3' OR user_status='7')";
             if ( iADMIN ) {
@@ -384,28 +384,28 @@ class UserFields extends UserFieldsQuantum {
                 ':uid' => (int)$profile_id
             ] );
             if ( dbrows( $result ) ) {
-    
+
                 $profile_user = dbarray( $result );
-    
+
                 if ( empty( $profile_user['user_avatar'] ) && !file_exists( IMAGES."avatars/".$profile_user['user_avatar'] ) ) {
                     $profile_user['user_avatar'] = get_image( 'noavatar' );
                 }
-    
+
                 unset( $profile_user['user_algo'] );
                 unset( $profile_user['user_salt'] );
                 unset( $profile_user['user_password'] );
                 unset( $profile_user['user_admin_algo'] );
                 unset( $profile_user['user_admin_salt'] );
                 unset( $profile_user['user_admin_password'] );
-                
+
             } else {
                 redirect( BASEDIR."index.php" );
             }
         }
-        
+
         return (array)$profile_user;
     }
-    
+
     /**
      * Get User Data of the current page.
      *
@@ -418,8 +418,8 @@ class UserFields extends UserFieldsQuantum {
         if ( empty( $userData ) ) {
             $userData = $this->user_data;
         }
-        
+
         return $key === NULL ? $userData : ( isset( $userData[ $key ] ) ? $userData[ $key ] : NULL );
     }
-    
+
 }

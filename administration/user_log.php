@@ -24,27 +24,27 @@ $user_log->view();
 require_once THEMES.'templates/footer.php';
 
 class UserLogAdmin {
-    
+
     private $dbOrder = "ORDER BY userlog_timestamp DESC";
-    
+
     private $dbWhere = '';
-    
+
     private $dbWhereCount = '';
-    
+
     private $orderby = "userlog_timestamp";
-    
+
     private $expr = "DESC";
-    
+
     private $userField = "";
-    
+
     private $orderbyArray = [];
-    
+
     private $exprArray = [];
-    
+
     private $getString = '';
-    
+
     private $locale = [];
-    
+
     private function getRowstart() {
         $rowstart = get( 'rowstart', FILTER_VALIDATE_INT );
         if ( !$rowstart ) {
@@ -52,78 +52,78 @@ class UserLogAdmin {
         }
         return $rowstart;
     }
-    
-    
+
+
     public function __construct() {
         pageAccess( 'UL' );
         $this->locale = fusion_get_locale( '', LOCALE.LOCALESET."admin/user_log.php" );
     }
-    
-    
+
+
     public function setFilterInfo() {
         // Set default values
         $user = '';
-        
+
         $this->getString = fusion_get_aidlink();
-        
+
         $this->orderbyArray = [
             'userlog_timestamp' => $this->locale['UL_002'],
             'user_name'         => $this->locale['UL_003'],
             'userlog_field'     => $this->locale['UL_004']
         ];
-        
+
         $this->exprArray = [ "DESC" => $this->locale['UL_019'], "ASC" => $this->locale['UL_018'] ];
-        
+
         if ( check_post( 'orderby' ) && in_array( post( 'orderby' ), $this->orderbyArray ) ) {
-            
+
             $orderby = sanitizer( 'orderby', 'DESC', 'orderby' );
-            
+
             $this->dbOrder = "ORDER BY ".$orderby;
-            
+
             if ( check_post( 'expr' ) && in_array( post( 'expr' ), $this->exprArray ) ) {
-                
+
                 $expr = sanitizer( 'expr', '', 'expr' );
-                
+
                 $this->dbOrder .= " ".$expr;
             }
-            
+
             if ( check_post( 'user' ) ) {
-                
+
                 $user = sanitizer( 'user', '', 'user' );
-                
+
                 if ( isnum( $user ) ) {
-                    
+
                     $this->dbWhere = "userlog_user_id='".$user."'";
-                    
+
                 } else if ( $user != "" ) {
-                    
+
                     $user = trim( stripinput( $user ) );
-                    
+
                     $this->dbWhere = "user_name LIKE '".$user."%'";
                 }
             }
-            
-            
+
+
             if ( check_post( 'userField' ) && post( 'userField' ) != "---" && post( 'userField' ) != "" ) {
-                
+
                 $this->userField = trim( stripinput( post( 'userField' ) ) );
                 $this->dbWhere .= ( $this->dbWhere != "" ? " AND userlog_field='".$this->userField."'" : "userlog_field='".$this->userField."'" );
             }
-            
+
             $this->dbWhereCount = $this->dbWhere;
-            
+
             $this->dbWhere = ( $this->dbWhere != "" ? "WHERE ".$this->dbWhere : "" );
-            
+
             // build get string
             $this->getString .= "&amp;orderby=".$orderby."&amp;expr=".$this->expr."&amp;user=".$user."&amp;userField=".$this->userField;
-            
+
         }
-        
+
     }
-    
+
     private function logAction() {
         if ( check_post( 'log_id' ) ) {
-            
+
             if ( check_post( 'table_action' ) ) {
                 $input = explode( ",", sanitizer( 'log_id', "", "log_id" ) );
                 if ( !empty( $input ) ) {
@@ -132,16 +132,16 @@ class UserLogAdmin {
                     }
                 }
             }
-            
+
             addNotice( 'info', $this->locale['UL_006'] );
             redirect( clean_request( '', [ 'delete' ], FALSE ) );
         }
         return FALSE;
     }
-    
+
     private function dayDelete() {
         if ( post( 'daydelete', FILTER_VALIDATE_INT ) ) {
-            
+
             $delete = sanitizer( 'daydelete', 0, 'daydelete' );
             $bind = [
                 ':timer' => TIME - $delete * 24 * 60 * 60,
@@ -152,7 +152,7 @@ class UserLogAdmin {
         }
         return FALSE;
     }
-    
+
     private function delete() {
         if ( $delete = post( 'delete', FILTER_VALIDATE_INT ) ) {
             dbquery( "DELETE FROM ".DB_USER_LOG." WHERE userlog_id=:delete", [ ':delete' => (int)$delete ] );
@@ -161,7 +161,7 @@ class UserLogAdmin {
         }
         return FALSE;
     }
-    
+
     private function userFieldOptions() {
         $options['user_name'] = $this->locale['UL_003'];
         $options['user_email'] = $this->locale['UL_007'];
@@ -171,20 +171,20 @@ class UserLogAdmin {
                 $options[ $data['field_name'] ] = $data['field_title'];
             }
         }
-        
+
         return $options;
     }
-    
+
     public function view() {
-        
+
         $this->setFilterInfo();
-        
+
         if ( !$this->logAction() && !$this->dayDelete() && !$this->delete() ) {
-            
+
             add_breadcrumb( [ 'link' => ADMIN.'administrators.php'.fusion_get_aidlink(), 'title' => $this->locale['UL_001'] ] );
-            
+
             opentable( $this->locale['UL_001'] );
-            
+
             openside();
             echo openform( 'userlog_search', 'post', FUSION_REQUEST );
             echo form_hidden( 'aid', '', iAUTH );
@@ -217,23 +217,23 @@ class UserLogAdmin {
             echo form_button( 'submit', $this->locale['UL_011'], $this->locale['UL_011'], [ 'class' => 'btn-primary' ] );
             echo closeform();
             closeside();
-            
+
             // at least validate token.
-            
+
             if ( fusion_safe() ) {
                 $rowstart = (int)$this->getRowstart();
-                
+
                 $result = dbquery( "SELECT SQL_CALC_FOUND_ROWS userlog_id, userlog_user_id, userlog_field, userlog_value_old, userlog_value_new, userlog_timestamp, user_name, user_status
                    FROM ".DB_USER_LOG."
                    LEFT JOIN ".DB_USERS." ON userlog_user_id=user_id
                    ".$this->dbWhere."
                    ".$this->dbOrder."
                    LIMIT $rowstart,20" );
-                
+
                 $rows = dbresult( dbquery( "SELECT FOUND_ROWS()" ), 0 );
-                
+
                 if ( dbrows( $result ) ) {
-                    
+
                     echo "<div class='table-responsive'><table id='log-table' class='table table-striped'>\n";
                     echo "<thead>\n<tr>\n";
                     echo "<th></th>\n";
@@ -244,7 +244,7 @@ class UserLogAdmin {
                     echo "<th style='width: 160px;'>".$this->locale['UL_013']."</th>\n";
                     echo "<th style='width: 160px;'>".$this->locale['UL_014']."</th>\n";
                     echo "</tr>\n</thead>\n";
-                    
+
                     echo "<tbody>\n";
                     echo openform( 'userlog_table', 'post', FUSION_REQUEST );
                     echo form_hidden( 'table_action', '', '' );
@@ -259,7 +259,7 @@ class UserLogAdmin {
                         echo "<td><a href='".FUSION_SELF.$this->getString."&amp;delete=".$data['userlog_id']."'>".$this->locale['delete']."</a></td>\n";
                         echo "</tr>\n";
                     }
-                    
+
                     echo "</tbody>\n";
                     echo "</table>\n</div>";
                     echo "<div class='clearfix display-block'>\n";
@@ -278,17 +278,17 @@ class UserLogAdmin {
                         }
                     });
                     " );
-                    
+
                 } else {
                     echo "<div class='well text-center'>".$this->locale['UL_015']."</div>\n";
                 }
-                
+
                 if ( $rows > 20 ) {
                     echo "<div class='m-t-5 text-center'>\n".makepagenav( $rowstart, 20, $rows, 3, FUSION_SELF.$this->getString."&amp;" )."\n</div>\n";
                 }
-                
+
             }
-            
+
             openside( '', 'm-t-20' );
             echo openform( 'userlog_delete', 'post', FUSION_REQUEST );
             echo form_text( 'daydelete', $this->locale['UL_016'], '', [
@@ -300,7 +300,7 @@ class UserLogAdmin {
             echo form_button( 'submit', $this->locale['UL_011'], $this->locale['UL_011'], [ 'class' => 'btn-primary' ] );
             echo closeform();
             closeside();
-            
+
             closetable();
         }
     }

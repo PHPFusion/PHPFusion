@@ -39,7 +39,7 @@ function set_error( $error_level, $error_message, $error_file, $error_line, $err
     $error_file = stripinput( $error_file );
     $error_line = stripinput( $error_line );
     $error_context = descript( stripinput( $error_context ) );
-    
+
     if ( fusion_get_settings( 'error_logging_method' ) == 'database' ) {
         $errors = PHPFusion\Errors::getInstance();
         if ( method_exists( $errors, "setError" ) ) {
@@ -48,7 +48,7 @@ function set_error( $error_level, $error_message, $error_file, $error_line, $err
     } else {
         write_error( $error_message, $error_file, $error_line );
     }
-    
+
 }
 
 /**
@@ -81,22 +81,22 @@ function write_error( $error_message, $error_file, $error_line ) {
     $error_message = stripinput( $error_message );
     $error_file = stripinput( $error_file );
     $error_line = stripinput( $error_line );
-    
+
     $file = BASEDIR.'fusion_error_log.log';
-    
+
     if ( !file_exists( $file ) ) {
         touch( $file );
     }
-    
+
     $error = file_get_contents( $file );
     $error .= '[LONG_DATE] [ERROR_MESSAGE] in [ERROR_FILE] on line [ERROR_LINE]'.PHP_EOL;
-    
+
     $error = strtr( $error, [
         'LONG_DATE'       => date( 'd-M-Y H:i:s', time() ),
         '[ERROR_MESSAGE]' => $error_message,
         '[ERROR_FILE]'    => $error_file,
         '[ERROR_LINE]'    => $error_line
     ] );
-    
+
     write_file( $file, $error );
 }
