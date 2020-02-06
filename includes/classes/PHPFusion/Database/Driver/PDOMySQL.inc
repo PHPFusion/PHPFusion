@@ -24,32 +24,33 @@ use PHPFusion\Database\AbstractDatabaseDriver;
 use PHPFusion\Database\Exception\SelectionException;
 
 class PDOMySQL extends AbstractDatabaseDriver {
-
+    
     private static $paramTypeMap = [
         self::PARAM_INT  => PDO::PARAM_INT,
         self::PARAM_BOOL => PDO::PARAM_BOOL,
         self::PARAM_STR  => PDO::PARAM_STR,
         self::PARAM_NULL => PDO::PARAM_NULL
     ];
+    
     /**
      * @var \PDO
      */
     private $connection = NULL;
-
+    
     /**
      * Close the connection
      */
     public function close() {
         $this->connection = NULL;
     }
-
+    
     /**
      * @return bool TRUE if the connection is alive
      */
     public function isConnected() {
         return $this->connection instanceof PDO;
     }
-
+    
     /**
      * Send a database query
      *
@@ -65,14 +66,14 @@ class PDOMySQL extends AbstractDatabaseDriver {
                 $result->bindValue($key, $parameter, self::$paramTypeMap[self::getParameterType($parameter)]);
             }
             $result->execute();
-
+    
             return $result;
         } catch (PDOException $e) {
             trigger_error("Query Error: ".$query."<br/>Stack Trace: ".$e->getTraceAsString()."<br/>Error Nature: ".$e->getMessage(), E_USER_NOTICE);
             return FALSE;
         }
     }
-
+    
     /**
      * Count the number of rows in a table filtered by conditions
      *
@@ -87,10 +88,10 @@ class PDOMySQL extends AbstractDatabaseDriver {
         $cond = ($conditions ? " WHERE ".$conditions : "");
         $sql = "SELECT COUNT".$field." FROM ".$table.$cond;
         $statement = $this->query($sql, $parameters);
-
+    
         return $statement ? $statement->fetchColumn() : FALSE;
     }
-
+    
     /**
      * Fetch the first column of a specific row
      *
@@ -108,10 +109,10 @@ class PDOMySQL extends AbstractDatabaseDriver {
             //returns false when an error occurs
             return $statement->fetchColumn();
         }
-
+    
         return NULL;
     }
-
+    
     /**
      * Count the number of affected rows by the given query
      *
@@ -123,10 +124,10 @@ class PDOMySQL extends AbstractDatabaseDriver {
         if ($statement !== FALSE) {
             return $statement->rowCount();
         }
-
+    
         return NULL;
     }
-
+    
     /**
      * Count the number of affected columns by the given query
      *
@@ -138,10 +139,10 @@ class PDOMySQL extends AbstractDatabaseDriver {
         if ($statement !== FALSE) {
             return $statement->columnCount();
         }
-
+    
         return NULL;
     }
-
+    
     /**
      * Fetch one row as an associative array
      *
@@ -154,10 +155,10 @@ class PDOMySQL extends AbstractDatabaseDriver {
             $statement->setFetchMode(PDO::FETCH_ASSOC);
             return $statement->fetch();
         }
-
+    
         return NULL;
     }
-
+    
     /**
      * Fetch one row as a numeric array
      *
@@ -168,13 +169,13 @@ class PDOMySQL extends AbstractDatabaseDriver {
     public function fetchRow($statement) {
         if ($statement !== FALSE) {
             $statement->setFetchMode(PDO::FETCH_NUM);
-
+    
             return $statement->fetch();
         }
-
+    
         return NULL;
     }
-
+    
     /**
      * Get the last inserted auto increment id
      *
@@ -183,7 +184,7 @@ class PDOMySQL extends AbstractDatabaseDriver {
     public function getLastId() {
         return (int)$this->connection->lastInsertId();
     }
-
+    
     /**
      * Implementation of \PDO::quote()
      *
@@ -196,7 +197,7 @@ class PDOMySQL extends AbstractDatabaseDriver {
     public function quote($value) {
         return $this->connection->quote($value);
     }
-
+    
     /**
      * Get the database server version
      *
@@ -205,7 +206,7 @@ class PDOMySQL extends AbstractDatabaseDriver {
     public function getServerVersion() {
         return $this->connection->getAttribute(PDO::ATTR_SERVER_VERSION);
     }
-
+    
     /**
      * Connect to the database
      *
@@ -223,7 +224,7 @@ class PDOMySQL extends AbstractDatabaseDriver {
                 'charset' => 'utf8',
                 'port'    => 3306
             ];
-
+    
             try {
                 $pdo = $this->connection = new PDO("mysql:host=".$host.";dbname=".$db.";port=".$options['port'].";charset=".$options['charset'], $user, $pass,
                     [
@@ -245,5 +246,5 @@ class PDOMySQL extends AbstractDatabaseDriver {
             }
         }
     }
-
+    
 }
