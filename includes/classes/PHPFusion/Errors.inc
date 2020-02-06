@@ -209,7 +209,7 @@ class Errors {
         $html .= "</tr>\n";
         /* Toggle Info */
         $html .= "<tr class='collapse' id='err_rmd-".$data['error_id']."'><td colspan='4' class='hiddenRow no-border'>\n";
-        $html .= "<p><strong>".$locale['ERROR_454']."</strong> : ".$this->get_errorTypes( $data['error_level'] )."</p>";
+        $html .= "<p><strong>".$locale['ERROR_454']."</strong> : ".$this->getErrorTypes( $data['error_level'] )."</p>";
         $html .= "<div class='alert alert-info'>\n";
         $html .= strtr( $data['error_message'], [ '#' => '<br/>#' ] )."</div>\n";
         $html .= "</td></tr>\n";
@@ -321,7 +321,7 @@ class Errors {
                     echo form_hidden( 'error_id', '', $data['error_id'] );
                     echo form_select( 'error_status', $locale['mark_as'], $data['error_status'], [
                         'inline'  => TRUE,
-                        'options' => self::get_logTypes()
+                        'options' => $this->getErrorLogTypes()
                     ] );
                     echo closeform();
                     ?>
@@ -338,7 +338,7 @@ class Errors {
 						    </td>
 					    </tr>
 					    <tr>
-						    <td colspan='4'><?php echo self::printCode( $output, $line_start, $data['error_line'], [
+						    <td colspan='4'><?php echo $this->printCode( $output, $line_start, $data['error_line'], [
                                     'time' => $data['error_timestamp'],
                                     'text' => $data['error_message']
                                 ] ) ?></td>
@@ -362,7 +362,7 @@ class Errors {
 						    </td>
 					    </tr>
 					    <tr>
-						    <td><?php echo self::printCode( $pageContent, "1" ) ?></td>
+						    <td><?php echo $this->printCode( $pageContent, "1" ) ?></td>
 					    </tr>
 				    </table>
 			    </div>
@@ -393,7 +393,7 @@ class Errors {
         $html .= '<div class="text-center well m-t-5 m-b-5">';
         $html .= "<div class='display-inline-block text-right m-r-10'>".$locale['ERROR_440']."</div>\n";
         $html .= "<div class='display-inline-block'>\n";
-        $html .= form_select( 'delete_status', '', '', [ 'allowclear' => TRUE, 'options' => self::get_logTypes(), 'inline' => TRUE ] );
+        $html .= form_select( 'delete_status', '', '', [ 'allowclear' => TRUE, 'options' => $this->getErrorLogTypes(), 'inline' => TRUE ] );
         $html .= form_button( 'delete_entries', $locale['ERROR_453'], $locale['ERROR_453'], [ 'class' => 'm-l-10 btn-primary btn-sm' ] );
         $html .= "</div>\n";
         $html .= "</div>\n";
@@ -434,7 +434,7 @@ class Errors {
         return $html;
     }
     
-    private static function get_logTypes() {
+    private function getErrorLogTypes() {
         $locale = self::$locale;
         
         return [
@@ -444,7 +444,7 @@ class Errors {
         ];
     }
     
-    private static function getMaxFolders( $url, $level = 2 ) {
+    private function getMaxFolders( $url, $level = 2 ) {
         $return = "";
         $tmpUrlArr = explode( "/", $url );
         if ( count( $tmpUrlArr ) > $level ) {
@@ -460,7 +460,7 @@ class Errors {
     }
     
     
-    private static function get_errorTypes( $type ) {
+    private function getErrorTypes( $type ) {
         $locale = self::$locale;
         $error_types = [
             self::E_ERROR           => [ "E_ERROR", $locale['E_ERROR'] ],
@@ -484,7 +484,7 @@ class Errors {
         return FALSE;
     }
     
-    private static function errorjs() {
+    private function errorjs() {
         if ( checkrights( "ERRO" ) || !defined( "iAUTH" ) || !isset( $_GET['aid'] ) || $_GET['aid'] == iAUTH ) {
             // Show the "Apply"-button only when javascript is disabled"
             add_to_jquery( "
@@ -533,7 +533,7 @@ class Errors {
         }
     }
     
-    private static function printCode( $source_code, $starting_line, $error_line = "", array $error_message = [] ) {
+    private function printCode( $source_code, $starting_line, $error_line = "", array $error_message = [] ) {
         $locale = fusion_get_locale();
         
         if ( is_array( $source_code ) ) {
@@ -548,7 +548,7 @@ class Errors {
         $formatted_code = "";
         $error_message = "<div class='panel panel-default m-10'><div class='panel-heading'><i class='fa fa-bug'></i> Line ".$error_line." -- ".timer( $error_message['time'] )."</div><div class='panel-body strong required'>".$error_message['text']."</div>\n";
         foreach ( $source_code as $code_line ) {
-            $code_line = self::codeWrap( $code_line, 145 );
+            $code_line = $this->codeWrap( $code_line, 145 );
             $line_class = ( $line_count == $error_line ? "err_tbl-error-line" : "err_tbl1" );
             $formatted_code .= "<tr>\n<td class='err_tbl2' style='text-align:right;width:1%;'>".$line_count."</td>\n";
             if ( preg_match( '#<\?(php)?[^[:graph:]]#', $code_line ) ) {
@@ -574,7 +574,7 @@ class Errors {
         return "<table class='err_tbl-border center' cellspacing='0' cellpadding='0'>".$formatted_code."</table>";
     }
     
-    private static function codeWrap( $code, $maxLength = 150 ) {
+    private function codeWrap( $code, $maxLength = 150 ) {
         $lines = explode( "\n", $code );
         $count = count( $lines );
         for ( $i = 0; $i < $count; ++$i ) {
