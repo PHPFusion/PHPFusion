@@ -175,7 +175,7 @@ class Errors {
                 "error_file"      => $error_file,
                 "error_line"      => $error_line,
                 "error_page"      => FUSION_REQUEST,
-                "error_message"   => descript( $error_message ),
+                "error_message"   => descript( stripslashes( $error_message ) ),
                 "error_timestamp" => time(),
                 "error_status"    => 0,
             ];
