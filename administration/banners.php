@@ -20,13 +20,13 @@ require_once THEMES.'templates/admin_header.php';
 pageAccess('SB');
 
 class BannersAdministration {
-    private static $banner_settings = [];
+    private static $settings = [];
     private static $instance = NULL;
     private static $locale = [];
 
     public function __construct() {
         self::$locale = fusion_get_locale("", LOCALE.LOCALESET."admin/banners.php");
-        self::$banner_settings = fusion_get_settings();
+        self::$settings = fusion_get_settings();
         $_GET['action'] = isset($_GET['action']) ? $_GET['action'] : '';
 
         switch ($_GET['action']) {
@@ -71,8 +71,8 @@ class BannersAdministration {
 
         if (isset($_POST['save_banners'])) {
             $settings_main = [
-                'sitebanner1' => isset($_POST['sitebanner1']) ? descript(addslashes($_POST['sitebanner1'])) : self::$banner_settings['sitebanner1'],
-                'sitebanner2' => isset($_POST['sitebanner2']) ? descript(addslashes($_POST['sitebanner2'])) : self::$banner_settings['sitebanner2'],
+                'sitebanner1' => isset($_POST['sitebanner1']) ? descript(addslashes($_POST['sitebanner1'])) : self::$settings['sitebanner1'],
+                'sitebanner2' => isset($_POST['sitebanner2']) ? descript(addslashes($_POST['sitebanner2'])) : self::$settings['sitebanner2'],
             ];
 
             if (\defender::safe()) {
@@ -87,8 +87,8 @@ class BannersAdministration {
 
         if (isset($_GET['action']) && $_GET['action'] == 'delete') {
             $settings_main = [
-                'sitebanner1' => isset($_GET['banner_id']) && $_GET['banner_id'] == 'sitebanner1' ? '' : self::$banner_settings['sitebanner1'],
-                'sitebanner2' => isset($_GET['banner_id']) && $_GET['banner_id'] == 'sitebanner2' ? '' : self::$banner_settings['sitebanner2'],
+                'sitebanner1' => isset($_GET['banner_id']) && $_GET['banner_id'] == 'sitebanner1' ? '' : self::$settings['sitebanner1'],
+                'sitebanner2' => isset($_GET['banner_id']) && $_GET['banner_id'] == 'sitebanner2' ? '' : self::$settings['sitebanner2'],
             ];
 
             if (\defender::safe()) {
@@ -145,14 +145,19 @@ class BannersAdministration {
 
     public function list_banner() {
         $aidlink = fusion_get_aidlink();
+
         echo openform('bannerform', 'post', FUSION_SELF.$aidlink."&amp;section=banners_form");
         $banner1 = "<div class='pull-right btn-group'>";
         $banner1 .= "<a class='btn btn-default btn-sm' href='".FUSION_SELF.$aidlink."&amp;ref=banners_form&amp;section=banners_form&amp;action=edit&amp;banner_id=sitebanner1'><i class='fa fa-edit fa-fw'></i> ".self::$locale['edit']."</a>";
         $banner1 .= "<a class='btn btn-danger btn-sm' href='".FUSION_SELF.$aidlink."&amp;section=banners_list&amp;action=delete&amp;banner_id=sitebanner1' onclick=\"return confirm('".self::$locale['BN_015']."');\"><i class='fa fa-trash fa-fw'></i> ".self::$locale['delete']."</a>";
         $banner1 .= "</div>\n";
         openside(self::$locale['sitebanner1'].$banner1);
-        if (!empty(self::$banner_settings['sitebanner1'])) {
-            eval("?>".stripslashes(fusion_get_settings("sitebanner1"))."<?php ");
+        if (!empty(self::$settings['sitebanner1'])) {
+            if (self::$settings['allow_php_exe']) {
+                eval("?>".stripslashes(self::$settings['sitebanner1'])."<?php ");
+            } else {
+                echo stripslashes(self::$settings['sitebanner1']);
+            }
         }
         closeside();
         $banner2 = "<div class='pull-right btn-group'>";
@@ -160,8 +165,12 @@ class BannersAdministration {
         $banner2 .= "<a class='btn btn-danger btn-sm' href='".FUSION_SELF.$aidlink."&amp;section=banners_list&amp;action=delete&amp;banner_id=sitebanner2' onclick=\"return confirm('".self::$locale['BN_015']."');\"><i class='fa fa-trash fa-fw'></i> ".self::$locale['delete']."</a>";
         $banner2 .= "</div>\n";
         openside(self::$locale['sitebanner2'].$banner2);
-        if (!empty(self::$banner_settings['sitebanner2'])) {
-            eval("?>".stripslashes(fusion_get_settings("sitebanner2"))."<?php ");
+        if (!empty(self::$settings['sitebanner2'])) {
+            if (self::$settings['allow_php_exe']) {
+                eval("?>".stripslashes(self::$settings['sitebanner2'])."<?php ");
+            } else {
+                echo stripslashes(self::$settings['sitebanner2']);
+            }
         }
         closeside();
         echo closeform();
@@ -170,10 +179,10 @@ class BannersAdministration {
     public function bannerForm() {
         openside('');
         echo openform('banner_form', 'post', FUSION_SELF.fusion_get_aidlink()."&amp;section=banners_list&amp;action=edit", ['enctype' => TRUE]);
-        echo form_textarea($_GET['banner_id'], self::$locale[$_GET['banner_id']], stripslashes(fusion_get_settings($_GET['banner_id'])), [
+        echo form_textarea($_GET['banner_id'], self::$locale[$_GET['banner_id']], stripslashes(self::$settings[$_GET['banner_id']]), [
             'preview'   => TRUE,
-            'type'      => fusion_get_settings('tinymce_enabled') ? 'tinymce' : 'html',
-            'tinymce'   => fusion_get_settings('tinymce_enabled') && iADMIN ? 'advanced' : 'simple',
+            'type'      => self::$settings['tinymce_enabled'] ? 'tinymce' : 'html',
+            'tinymce'   => self::$settings['tinymce_enabled'] && iADMIN ? 'advanced' : 'simple',
             'autosize'  => TRUE,
             'form_name' => 'banner_form',
             'wordcount' => TRUE,

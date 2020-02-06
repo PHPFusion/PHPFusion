@@ -527,14 +527,24 @@ if (!function_exists("showbanners")) {
      * Displays the system settings banner
      */
     function showbanners($display = "") {
+        $settings = fusion_get_settings();
+
         ob_start();
         if ($display == 2) {
-            if (fusion_get_settings("sitebanner2")) {
-                eval("?>".stripslashes(fusion_get_settings("sitebanner2"))."<?php ");
+            if ($settings['sitebanner2']) {
+                if ($settings['allow_php_exe']) {
+                    eval("?>".stripslashes($settings['sitebanner2'])."<?php ");
+                } else {
+                    echo stripslashes($settings['sitebanner2']);
+                }
             }
         } else {
-            if (fusion_get_settings("sitebanner1")) {
-                eval("?>".stripslashes(fusion_get_settings("sitebanner1"))."<?php ");
+            if ($settings['sitebanner1']) {
+                if ($settings['allow_php_exe']) {
+                    eval("?>".stripslashes($settings['sitebanner1'])."<?php ");
+                } else {
+                    echo stripslashes($settings['sitebanner1']);
+                }
             }
         }
         $output = ob_get_contents();
