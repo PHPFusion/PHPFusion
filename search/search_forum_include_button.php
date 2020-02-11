@@ -24,21 +24,19 @@ defined('IN_FUSION') || exit;
 if (defined('FORUM_EXIST')) {
     $form_elements = &$form_elements;
     $radio_button = &$radio_button;
-    $bind = [
-        ':cat'      => '0',
-    ];
-    $fresult = "
-            SELECT f.forum_id, f.forum_name, f2.forum_name 'forum_cat_name'
-            FROM ".DB_FORUMS." f
-            INNER JOIN ".DB_FORUMS." f2 ON f.forum_cat=f2.forum_id
-            ".(multilang_table('FO') ? "WHERE ".in_group('f.forum_language', LANGUAGE)." AND " : 'WHERE ').groupaccess('f.forum_access')."
-            AND f.forum_cat!=:cat ORDER BY f2.forum_order ASC, f.forum_order ASC
-            ";
-    $result = dbquery($fresult, $bind);
+
+    $result = dbquery("
+        SELECT forum_id, forum_name
+        FROM ".DB_FORUMS."
+        ".(multilang_table('FO') ? "WHERE ".in_group('forum_language', LANGUAGE)." AND " : 'WHERE ').groupaccess('forum_access')."
+    ");
 
     $flist = ['0' => fusion_get_locale('f401', INFUSIONS."forum/locale/".LOCALESET."search/forum.php")];
-    while ($data2 = dbarray($result)) {
-        $flist[$data2['forum_id']] = trimlink($data2['forum_name'], 20);
+
+    if (dbrows($result) > 0) {
+        while ($data2 = dbarray($result)) {
+            $flist[$data2['forum_id']] = trimlink($data2['forum_name'], 20);
+        }
     }
 
     $form_elements += [
