@@ -144,7 +144,9 @@ class InstallerDbSetup extends Install_Core {
              * Do not allow -
              */
             foreach (self::$connection as $key => $value) {
-                self::$connection[$key] = str_replace('-', '_', $value);
+                if ($key !== 'db_host') {
+                    self::$connection[$key] = str_replace('-', '_', $value);
+                }
             }
             // Force underscore for these two values
             self::$connection['db_prefix'] = rtrim(self::$connection['db_prefix'], '_').'_';
