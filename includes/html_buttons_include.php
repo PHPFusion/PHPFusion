@@ -25,11 +25,11 @@ defined( 'IN_FUSION' ) || exit;
  * @return string
  */
 function getcolorname( $id ) {
-    
+
     $locale = fusion_get_locale( "", LOCALE.LOCALESET."colors.php" );
-    
+
     $id = "{$locale['color_'.$id]}";
-    
+
     return $id;
 }
 
@@ -44,11 +44,11 @@ function getcolorname( $id ) {
  * @return string
  */
 function display_html( $formname, $textarea, $html = TRUE, $colors = FALSE, $images = FALSE, $folder = "" ) {
-    
+
     $locale = fusion_get_locale( "", [ LOCALE.LOCALESET."colors.php", LOCALE.LOCALESET."admin/html_buttons.php" ] );
-    
-    add_to_footer( "<script src='".INCLUDES."jscripts/fusion-editor.js'></script>" );
-    
+
+    //add_to_footer( "<script src='".INCLUDES."jscripts/fusion-editor.js'></script>" );
+
     $res = "";
     if ( $html ) {
         $res .= "<div class='btn-group'>\n";
@@ -59,21 +59,21 @@ function display_html( $formname, $textarea, $html = TRUE, $colors = FALSE, $ima
         $res .= "<button type='button' value='blockquote' title='".$locale['html_004']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;blockquote&gt;', '&lt;/blockquote&gt;', '".$formname."');\"><i class='fa fa-quote-right'></i></button>\n";
         $res .= "<button type='button' value='hr' title='".$locale['html_005']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;hr/&gt;', '', '".$formname."');\"><i class='fa fa-arrows-alt-h'></i></button>\n";
         $res .= "</div>\n";
-        
+
         $res .= "<div class='btn-group'>\n";
         $res .= "<button type='button' value='pagebreak' title='".$locale['html_016']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;!--PAGEBREAK--&gt;', '', '".$formname."');\"><i class='fa fa-minus'></i></button>\n";
         $res .= fusion_get_settings( "allow_php_exe" ) || defined( 'ALLOW_PHP' ) ? "<button type='button' class='btn btn-sm btn-default button m-b-10' value='&lt;?php?&gt;' title='PHP' onclick=\"addText('".$textarea."', '&lt;?php\\n', '\\n?&gt;', '".$formname."');\"><i class='fab fa-php'></i></button>\n" : "";
         $res .= "<button type='button' class='btn btn-sm btn-default button m-b-10' value='&lt;p&gt;' title='".$locale['html_018']."' onclick=\"addText('".$textarea."', '&lt;p&gt;', '&lt;/p&gt;', '".$formname."');\"><i class='fa fa-paragraph'></i></button>\n";
         $res .= "<button type='button' class='btn btn-default btn-sm button m-b-10' value='&lt;br /&gt;' title='".$locale['html_020']."' onclick=\"insertText('".$textarea."', '&lt;br /&gt;', '".$formname."');\">&lt;br /&gt;</button>\n";
         $res .= "</div>\n";
-        
+
         $res .= "<div class='btn-group'>\n";
         $res .= "<button type='button' value='left' title='".$locale['html_006']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;p style=\'text-align:left;\'&gt;', '&lt;/p&gt;', '".$formname."');\"><i class='fa fa-align-left'></i></button>\n";
         $res .= "<button type='button' value='center' title='".$locale['html_007']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;p style=\'text-align:center;\'&gt;', '&lt;/p&gt;', '".$formname."');\"><i class='fa fa-align-center'></i></button>\n";
         $res .= "<button type='button' value='right' title='".$locale['html_008']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;p style=\'text-align:right;\'&gt;', '&lt;/p&gt;', '".$formname."');\"><i class='fa fa-align-right'></i></button>\n";
         $res .= "<button type='button' value='justify' title='".$locale['html_009']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;p style=\'text-align:justify;\'&gt;', '&lt;/p&gt;', '".$formname."');\"><i class='fa fa-align-justify'></i></button>\n";
         $res .= "</div>\n";
-        
+
         $res .= "<div class='btn-group'>\n";
         $res .= "<button type='button' value='link' title='".$locale['html_010']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;a href=\'', '\' target=\'_blank\'>Link&lt;/a&gt;', '".$formname."');\"><i class='fa fa-link'></i></button>\n";
         //$res .= "<button type='button' value='img' title='".$locale['html_011']."' class='btn btn-sm btn-default m-b-10 dropdown-toggle button' data-toggle='dropdown' onclick=\"addText('".$textarea."', '&lt;img src=\'".str_replace("../", "", $folder)."', '\' style=\'margin:5px\' alt=\'\' align=\'left\' /&gt;', '".$formname."');\"><i class='fa fa-picture-o'></i></button>\n";
@@ -82,7 +82,7 @@ function display_html( $formname, $textarea, $html = TRUE, $colors = FALSE, $ima
         $res .= "<button type='button' value='small2' title='".$locale['html_014']."' class='btn btn-sm  btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;span class=\'small2\'&gt;', '&lt;/span&gt;', '".$formname."');\">small2</button>\n";
         $res .= "<button type='button' value='alt' title='".$locale['html_015']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;span class=\'alt\'&gt;', '&lt;/span&gt;', '".$formname."');\">alt</button>\n";
         $res .= "</div>\n";
-        
+
         if ( $colors ) {
             $res .= "<div class='btn-group'>\n";
             $res .= "<button title='".$locale['html_017']."' class='btn btn-sm btn-default m-b-10 button dropdown-toggle' data-toggle='dropdown'><i class='fa fa-tint m-r-5'></i> <span class='caret'></span></button>\n";
@@ -142,8 +142,8 @@ function display_html( $formname, $textarea, $html = TRUE, $colors = FALSE, $ima
             $res .= "</ul>\n";
             $res .= "</div>\n";
         }
-        
-        
+
+
         $res .= "<div class='btn-group'>\n";
         //$res .= "<button type='button' title='".$locale['html_018']."' class='btn btn-sm btn-default m-b-10 button strong' onclick=\"addText('".$textarea."', '&lt;p&gt;', '&lt;/p&gt;', '".$formname."');\">".$locale['html_018']."</button>\n";
         $res .= "<button title='".$locale['html_019']."' class='dropdown-toggle btn btn-sm btn-default m-b-10 button' data-toggle='dropdown'><i class='glyphicon glyphicon-header'></i><span class='caret'></span></button>\n";
@@ -156,10 +156,10 @@ function display_html( $formname, $textarea, $html = TRUE, $colors = FALSE, $ima
         $res .= "<li>\n<a value='H6' class='pointer' onclick=\"addText('".$textarea."', '&lt;h6&gt;', '&lt;/h6&gt;', '".$formname."');\"><span class='strong' style='font-size:9px; font-family: Georgia, \"Times New Roman\", Times, serif !important;'>Heading 6</span></a>\n</li>\n";
         $res .= "</ul>\n";
         $res .= "</div>\n";
-        
+
         if ( iADMIN ) {
             $options = [];
-            
+
             if ( $images && $folder ) {
                 if ( is_array( $folder ) ) {
                     foreach ( $folder as $dir ) {
@@ -182,7 +182,7 @@ function display_html( $formname, $textarea, $html = TRUE, $colors = FALSE, $ima
                         }
                     }
                 }
-                
+
                 $res .= form_select( $textarea.'-insertimage', '', '',
                     [
                         'options'     => $options,
@@ -193,7 +193,7 @@ function display_html( $formname, $textarea, $html = TRUE, $colors = FALSE, $ima
 
                     ]
                 );
-                
+
                 add_to_jquery( "
                     $('#$textarea-insertimage').bind('change', function(e){
                         insertText('$textarea', '<img src=\"".fusion_get_settings( 'siteurl' )."'+$(this).val()+'\" alt=\"\" class=\"img-responsive\"/>', '$formname');
@@ -203,6 +203,6 @@ function display_html( $formname, $textarea, $html = TRUE, $colors = FALSE, $ima
             }
         }
     }
-    
+
     return $res;
 }
