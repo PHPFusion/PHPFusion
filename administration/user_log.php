@@ -98,7 +98,7 @@ if (isset($_POST['daydelete']) && isnum($_POST['daydelete'])) {
 }
 
 if (isset($_GET['delete']) && isnum($_GET['delete'])) {
-    $result = dbquery("DELETE FROM ".DB_USER_LOG." WHERE userlog_id=:delete", [':delete' => isnum($_GET['delete'])]);
+    $result = dbquery("DELETE FROM ".DB_USER_LOG." WHERE userlog_id=:delete", [':delete' => $_GET['delete']]);
     addNotice('info', $locale['UL_006']);
     redirect(clean_request('', ['delete'], FALSE));
 }
