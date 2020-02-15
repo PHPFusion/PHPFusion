@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: 9.03.30.upgrade.inc
+| Filename: 9.03.40.upgrade.inc
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -18,7 +18,7 @@
 $settings = fusion_get_settings();
 
 $update_settings_tbl = [
-    'version' => '9.03.30'
+    'version' => '9.03.40'
 ];
 
 foreach ($update_settings_tbl as $key => $value) {
