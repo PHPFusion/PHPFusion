@@ -55,7 +55,7 @@ class InstallerDbSetup extends Install_Core {
         $content .= "<hr/>\n";
 
         $content .= renderNotices(getNotices());
-        $content .= form_text('db_host', self::$locale['setup_1202'], self::$connection['db_host'], [
+        $content .= form_text('db_host', self::$locale['setup_1202'], !empty(self::$connection['db_host']) ? self::$connection['db_host'] : 'localhost', [
             'inline'      => TRUE,
             'required'    => TRUE,
             'placeholder' => self::$locale['setup_1225']
