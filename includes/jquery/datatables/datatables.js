@@ -1,3 +1,22 @@
+/*******************************************************************************
+ * -------------------------------------------------------+
+ * | PHP-Fusion Content Management System
+ * | Copyright (C) PHP-Fusion Inc
+ * | https://www.php-fusion.co.uk/
+ * +--------------------------------------------------------+
+ * | Filename:
+ * | Author:
+ * +--------------------------------------------------------+
+ * | This program is released as free software under the
+ * | Affero GPL license. You can redistribute it and/or
+ * | modify it under the terms of this license which you
+ * | can read by viewing the included agpl.txt or online
+ * | at www.gnu.org/licenses/agpl.html. Removal of this
+ * | copyright header is strictly prohibited without
+ * | written permission from the original author(s).
+ * +--------------------------------------------------------
+ ******************************************************************************/
+
 /*
  * This combined file was created by the DataTables downloader builder:
  *   https://datatables.net/download
@@ -12,25 +31,6 @@
 
 /*! DataTables 1.10.20
  * ©2008-2019 SpryMedia Ltd - datatables.net/license
- */
-
-/**
- * @summary     DataTables
- * @description Paginate, search and order HTML tables
- * @version     1.10.20
- * @file        jquery.dataTables.js
- * @author      SpryMedia Ltd
- * @contact     www.datatables.net
- * @copyright   Copyright 2008-2019 SpryMedia Ltd.
- *
- * This source file is free software, available under the following license:
- *   MIT license - http://datatables.net/license
- *
- * This source file is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE. See the license files for details.
- *
- * For details please refer to: http://www.datatables.net
  */
 
 /*jslint evil: true, undef: true, browser: true */
@@ -2155,7 +2155,7 @@
         var i, ien, j, jen, k, ken;
         var col, cell, detectedType, cache;
 
-        // For each column, spin over the 
+        // For each column, spin over the
         for (i = 0, ien = columns.length; i < ien; i++) {
             col = columns[i];
             cache = [];
@@ -4169,7 +4169,7 @@
 			 * word order. We also want double quoted text to be preserved, so word
 			 * order is important - a la google. So this is what we want to
 			 * generate:
-			 * 
+			 *
 			 * ^(?=.*?\bone\b)(?=.*?\btwo three\b)(?=.*?\bfour\b).*$
 			 */
             var a = $.map(search.match(/"[^"]+"|[^ ]+/g) || [''], function (word) {
@@ -5313,7 +5313,7 @@
                 .append(tmpTable)
                 .appendTo(tableContainer);
 
-            // When scrolling (X or Y) we want to set the width of the table as 
+            // When scrolling (X or Y) we want to set the width of the table as
             // appropriate. However, when not scrolling leave the table width as it
             // is. This results in slightly different, but I think correct behaviour
             if (scrollX && scrollXInner) {
@@ -14221,7 +14221,7 @@
 
     // Filter formatting functions. See model.ext.ofnSearch for information about
     // what is required from these methods.
-    // 
+    //
     // Note that additional search methods are added for the html numbers and
     // html formatted numbers by `_addNumericSort()` when we know what the decimal
     // place is
@@ -14985,7 +14985,7 @@
         };
 
         // IE9 throws an 'unknown error' if document.activeElement is used
-        // inside an iframe or frame. 
+        // inside an iframe or frame.
         var activeEl;
 
         try {

@@ -1,3 +1,22 @@
+/*******************************************************************************
+ * -------------------------------------------------------+
+ * | PHP-Fusion Content Management System
+ * | Copyright (C) PHP-Fusion Inc
+ * | https://www.php-fusion.co.uk/
+ * +--------------------------------------------------------+
+ * | Filename:
+ * | Author:
+ * +--------------------------------------------------------+
+ * | This program is released as free software under the
+ * | Affero GPL license. You can redistribute it and/or
+ * | modify it under the terms of this license which you
+ * | can read by viewing the included agpl.txt or online
+ * | at www.gnu.org/licenses/agpl.html. Removal of this
+ * | copyright header is strictly prohibited without
+ * | written permission from the original author(s).
+ * +--------------------------------------------------------
+ ******************************************************************************/
+
 /*! Buttons for DataTables 1.6.1
  * ©2016-2019 SpryMedia Ltd - datatables.net/license
  */
@@ -999,7 +1018,7 @@
                 }
 
                 // Right alignment is enabled on a class, e.g. bootstrap:
-                // $.fn.dataTable.Buttons.defaults.dom.collection.className += " dropdown-menu-right"; 
+                // $.fn.dataTable.Buttons.defaults.dom.collection.className += " dropdown-menu-right";
                 if (display.hasClass(options.rightAlignClassName) || options.align === 'button-right') {
                     display.css('left', hostPosition.left + hostNode.outerWidth() - collectionWidth);
                 }

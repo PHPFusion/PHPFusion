@@ -1,3 +1,22 @@
+/*******************************************************************************
+ * -------------------------------------------------------+
+ * | PHP-Fusion Content Management System
+ * | Copyright (C) PHP-Fusion Inc
+ * | https://www.php-fusion.co.uk/
+ * +--------------------------------------------------------+
+ * | Filename:
+ * | Author:
+ * +--------------------------------------------------------+
+ * | This program is released as free software under the
+ * | Affero GPL license. You can redistribute it and/or
+ * | modify it under the terms of this license which you
+ * | can read by viewing the included agpl.txt or online
+ * | at www.gnu.org/licenses/agpl.html. Removal of this
+ * | copyright header is strictly prohibited without
+ * | written permission from the original author(s).
+ * +--------------------------------------------------------
+ ******************************************************************************/
+
 /*! DataTables Bootstrap 4 integration
  * ©2011-2017 SpryMedia Ltd - datatables.net/license
  */
@@ -154,7 +173,7 @@
         };
 
         // IE9 throws an 'unknown error' if document.activeElement is used
-        // inside an iframe or frame. 
+        // inside an iframe or frame.
         var activeEl;
 
         try {

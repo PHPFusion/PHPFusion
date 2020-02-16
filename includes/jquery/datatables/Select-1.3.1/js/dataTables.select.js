@@ -1,3 +1,22 @@
+/*******************************************************************************
+ * -------------------------------------------------------+
+ * | PHP-Fusion Content Management System
+ * | Copyright (C) PHP-Fusion Inc
+ * | https://www.php-fusion.co.uk/
+ * +--------------------------------------------------------+
+ * | Filename:
+ * | Author:
+ * +--------------------------------------------------------+
+ * | This program is released as free software under the
+ * | Affero GPL license. You can redistribute it and/or
+ * | modify it under the terms of this license which you
+ * | can read by viewing the included agpl.txt or online
+ * | at www.gnu.org/licenses/agpl.html. Removal of this
+ * | copyright header is strictly prohibited without
+ * | written permission from the original author(s).
+ * +--------------------------------------------------------
+ ******************************************************************************/
+
 /*! Select for DataTables 1.3.1
  * 2015-2019 SpryMedia Ltd - datatables.net/license/mit
  */
@@ -144,14 +163,14 @@
     };
 
     /*
-    
+
     Select is a collection of API methods, event handlers, event emitters and
     buttons (for the `Buttons` extension) for DataTables. It provides the following
     features, with an overview of how they are implemented:
-    
+
     ## Selection of rows, columns and cells. Whether an item is selected or not is
        stored in:
-    
+
     * rows: a `_select_selected` property which contains a boolean value of the
       DataTables' `aoData` object for each row
     * columns: a `_select_selected` property which contains a boolean value of the
@@ -159,29 +178,29 @@
     * cells: a `_selected_cells` property which contains an array of boolean values
       of the `aoData` object for each row. The array is the same length as the
       columns array, with each element of it representing a cell.
-    
+
     This method of using boolean flags allows Select to operate when nodes have not
     been created for rows / cells (DataTables' defer rendering feature).
-    
+
     ## API methods
-    
+
     A range of API methods are available for triggering selection and de-selection
     of rows. Methods are also available to configure the selection events that can
     be triggered by an end user (such as which items are to be selected). To a large
     extent, these of API methods *is* Select. It is basically a collection of helper
     functions that can be used to select items in a DataTable.
-    
+
     Configuration of select is held in the object `_select` which is attached to the
     DataTables settings object on initialisation. Select being available on a table
     is not optional when Select is loaded, but its default is for selection only to
     be available via the API - so the end user wouldn't be able to select rows
     without additional configuration.
-    
+
     The `_select` object contains the following properties:
-    
+
     ```
     {
-        items:string       - Can be `rows`, `columns` or `cells`. Defines what item 
+        items:string       - Can be `rows`, `columns` or `cells`. Defines what item
                              will be selected if the user is allowed to activate row
                              selection using the mouse.
         style:string       - Can be `none`, `single`, `multi` or `os`. Defines the
@@ -194,17 +213,17 @@
                              information elements
     }
     ```
-    
+
     In addition to the API methods, Select also extends the DataTables selector
     options for rows, columns and cells adding a `selected` option to the selector
     options object, allowing the developer to select only selected items or
     unselected items.
-    
+
     ## Mouse selection of items
-    
+
     Clicking on items can be used to select items. This is done by a simple event
     handler that will select the items using the API methods.
-    
+
      */
 
 
@@ -519,7 +538,7 @@
         // Row callback so that classes can be added to rows and cells if the item
         // was selected before the element was created. This will happen with the
         // `deferRender` option enabled.
-        // 
+        //
         // This method of attaching to `aoRowCreatedCallback` is a hack until
         // DataTables has proper events for row manipulation If you are reviewing
         // this code to create your own plug-ins, please do not do this!
