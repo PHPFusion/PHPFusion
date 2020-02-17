@@ -533,6 +533,10 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'settings_value' => 0
             ],
             [
+                'settings_name'  => 'update_checker',
+                'settings_value' => 1
+            ],
+            [
                 'settings_name'  => 'error_logging_enabled',
                 'settings_value' => 1
             ],

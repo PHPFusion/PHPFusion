@@ -27,6 +27,26 @@ $admin_images = TRUE;
 $admin = new AdminIndex();
 list( $members, $articles, $blog, $download, $forum, $photos, $news, $weblinks, $comments_type, $submit_type, $submit_link, $submit_data, $link_type, $global_infusions, $global_comments, $global_ratings, $global_submissions, $admin_icons, $upgrade_info ) = $admin->getAdminGlobals();
 
+// Update checker
+if ($settings['update_checker'] == 1) {
+    function get_http_response_code($url) {
+        $headers = get_headers($url);
+        return substr($headers[0], 9, 3);
+    }
+
+    $url = 'https://www.php-fusion.co.uk/updates/910.txt';
+    if (get_http_response_code($url) == 200) {
+        $file = @file_get_contents($url);
+        $array = explode("\n", $file);
+        $version = $array[0];
+
+        if (version_compare($version, $settings['version'], '>')) {
+            addNotice('info', str_replace(['[LINK]', '[/LINK]', '[VERSION]'], ['<a href="'.$array[1].'" target="_blank">', '</a>', $version], $locale['new_update_avalaible']));
+        }
+    }
+}
+
+
 render_admin_dashboard();
 
 require_once THEMES.'templates/footer.php';

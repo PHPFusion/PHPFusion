@@ -31,6 +31,8 @@ foreach ($update_settings_tbl as $key => $value) {
 }
 
 $insert_settings_tbl = [
+    'devmode'               => 0,
+    'update_checker'        => 1,
     'error_logging_enabled' => 1,
     'error_logging_method'  => 'database',
     'recaptcha_score'       => '0.5',
