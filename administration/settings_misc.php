@@ -44,6 +44,7 @@ if (isset($_POST['savesettings'])) {
         'index_url_userweb'      => form_sanitizer($_POST['index_url_userweb'], '0', 'index_url_userweb'),
         'create_og_tags'         => form_sanitizer($_POST['create_og_tags'], '0', 'create_og_tags'),
         'devmode'                => form_sanitizer($_POST['devmode'], '0', 'devmode'),
+        'update_checker'         => form_sanitizer($_POST['update_checker'], '0', 'update_checker')
     ];
 
     if (\defender::safe()) {
@@ -167,6 +168,13 @@ closeside();
 
 openside('');
 echo form_select('devmode', $locale['609'], $settings['devmode'], [
+    'options' => $choice_arr,
+    'width'   => '100%'
+]);
+closeside();
+
+openside('');
+echo form_select('update_checker', $locale['610'], $settings['update_checker'], [
     'options' => $choice_arr,
     'width'   => '100%'
 ]);

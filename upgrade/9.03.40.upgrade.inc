@@ -26,3 +26,13 @@ foreach ($update_settings_tbl as $key => $value) {
         $inf_updatedbrow[] = DB_SETTINGS." SET settings_value='$value' WHERE settings_name='$key'";
     }
 }
+
+$insert_settings_tbl = [
+    'update_checker' => 1
+];
+
+foreach ($insert_settings_tbl as $key => $value) {
+    if (!isset($settings[$key])) {
+        $inf_insertdbrow[] = DB_SETTINGS." (settings_name, settings_value) VALUES ('$key', '$value')";
+    }
+}
