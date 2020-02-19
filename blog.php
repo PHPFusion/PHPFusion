@@ -346,16 +346,18 @@ if (isset($_GET['readmore'])) {
         $catFilter = "and blog_cat =''";
         if (!empty($_GET['cat_id'])) {
 
-            $res = dbarray(dbquery("SELECT blog_cat_id, blog_cat_name FROM ".DB_BLOG_CATS." WHERE ".(multilang_column('BL') ? in_group('blog_cat_language', LANGUAGE)." AND " : '')." blog_cat_id=:blog_cat_id", [':blog_cat_id' => intval($_GET['cat_id'])]));
-            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
-                'link'  => INFUSIONS."blog/blog.php?cat_id=".intval($_GET['cat_id']),
-                'title' => $res['blog_cat_name']
-            ]);
+            $res = dbquery("SELECT blog_cat_id, blog_cat_name FROM ".DB_BLOG_CATS." WHERE ".(multilang_column('BL') ? in_group('blog_cat_language', LANGUAGE)." AND " : '')." blog_cat_id=:blog_cat_id", [':blog_cat_id' => intval($_GET['cat_id'])]);
+            if (dbrows($res) > 0) {
+                $res = dbarray($res);
+                \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
+                    'link'  => INFUSIONS."blog/blog.php?cat_id=".intval($_GET['cat_id']),
+                    'title' => $res['blog_cat_name']
+                ]);
 
-            add_to_title($locale['global_201'].$res['blog_cat_name']);
-            $info['blog_title'] = $res['blog_cat_name'];
-            $catFilter = "and ".in_group("blog_cat", intval($_GET['cat_id']));
-
+                add_to_title($locale['global_201'].$res['blog_cat_name']);
+                $info['blog_title'] = $res['blog_cat_name'];
+                $catFilter = "and ".in_group("blog_cat", intval($_GET['cat_id']));
+            }
         } else {
 
             // Uncategorized blog
