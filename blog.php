@@ -346,8 +346,9 @@ if (isset($_GET['readmore'])) {
         $catFilter = "and blog_cat =''";
         if (!empty($_GET['cat_id'])) {
 
-            $res = dbarray(dbquery("SELECT blog_cat_id, blog_cat_name FROM ".DB_BLOG_CATS." WHERE ".(multilang_column('BL') ? in_group('blog_cat_language', LANGUAGE)." AND " : '')." blog_cat_id=:blog_cat_id", [':blog_cat_id' => intval($_GET['cat_id'])]));
+            $res = dbquery("SELECT blog_cat_id, blog_cat_name FROM ".DB_BLOG_CATS." WHERE ".(multilang_column('BL') ? in_group('blog_cat_language', LANGUAGE)." AND " : '')." blog_cat_id=:blog_cat_id", [':blog_cat_id' => intval($_GET['cat_id'])]);
             if (dbrows($res) > 0) {
+                $res = dbarray($res);
                 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                     'link'  => INFUSIONS."blog/blog.php?cat_id=".intval($_GET['cat_id']),
                     'title' => $res['blog_cat_name']
