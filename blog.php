@@ -270,8 +270,8 @@ if (isset($_GET['readmore'])) {
             $info['blog_title'] = $item['blog_subject'];
             $info['blog_updated'] = $locale['global_049']." ".timer($item['blog_datestamp']);
 
-            $item['blog_show_comments'] = \PHPFusion\Blog\Functions::get_blog_comments($item);
-            $item['blog_show_ratings'] = \PHPFusion\Blog\Functions::get_blog_ratings($item);
+            $item['blog_show_comments'] = PHPFusion\Infusions\Blog\Classes\Functions::get_blog_comments($item);
+            $item['blog_show_ratings'] = PHPFusion\Infusions\Blog\Classes\Functions::get_blog_ratings($item);
 
             $info['blog_item'] = $item;
 
@@ -589,7 +589,7 @@ require_once THEMES.'templates/footer.php';
  * @return array
  */
 function get_blogCatsData() {
-    return \PHPFusion\Blog\Functions::get_blogCatsData();
+    return PHPFusion\Infusions\Blog\Classes\Functions::get_blogCatsData();
 }
 
 /**
@@ -598,7 +598,7 @@ function get_blogCatsData() {
  * @return array
  */
 function get_blogCatsIndex() {
-    return PHPFusion\Blog\Functions::get_blogCatsIndex();
+    return PHPFusion\Infusions\Blog\Classes\Functions::get_blogCatsIndex();
 }
 
 /**
@@ -609,7 +609,7 @@ function get_blogCatsIndex() {
  * @return int
  */
 function validate_blog($blog_id) {
-    return PHPFusion\Blog\Functions::validate_blog($blog_id);
+    return PHPFusion\Infusions\Blog\Classes\Functions::validate_blog($blog_id);
 }
 
 /**
@@ -620,7 +620,7 @@ function validate_blog($blog_id) {
  * @return int
  */
 function validate_blogCats($blog_cat_id) {
-    return PHPFusion\Blog\Functions::validate_blogCat($blog_cat_id);
+    return PHPFusion\Infusions\Blog\Classes\Functions::validate_blogCat($blog_cat_id);
 }
 
 /**
@@ -634,5 +634,5 @@ function validate_blogCats($blog_cat_id) {
  * @return bool|string
  */
 function get_blog_image_path($image, $thumb1, $thumb2, $hires = FALSE) {
-    return \PHPFusion\Blog\Functions::get_blog_image_path($image, $thumb1, $thumb2, $hires);
+    return PHPFusion\Infusions\Blog\Classes\Functions::get_blog_image_path($image, $thumb1, $thumb2, $hires);
 }
