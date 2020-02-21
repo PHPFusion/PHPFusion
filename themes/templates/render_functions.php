@@ -134,3 +134,49 @@ if (!function_exists('render_user_tags')) {
         return $m[0];
     }
 }
+
+/**
+ * Load Twig Template Engine
+ * @param string $path
+ * @param bool   $debug
+ *
+ * @return \Twig\Environment
+ */
+function twig_init($path = THEME.'/twig', $debug = FALSE) {
+    $loader = new \Twig\Loader\FilesystemLoader($path);
+    $twig = new \Twig\Environment($loader, [
+        'cache' => BASEDIR.'/cache',
+        'debug' => $debug
+    ]);
+
+    if ($debug == TRUE) {
+        $twig->addExtension(new \Twig\Extension\DebugExtension());
+    }
+
+    // {{ get_function('function_name', arg1, arg2) }}
+    $get_function = new \Twig\TwigFunction('get_function', function ($function) {
+        $args = func_get_args();
+        array_shift($args);
+        call_user_func_array($function, $args);
+    });
+
+    $twig->addFunction($get_function);
+
+    // {{ openside('Title') }}
+    $openside = new \Twig\TwigFunction('openside', function () {
+        $args = func_get_args();
+        call_user_func_array('openside', $args);
+    });
+
+    $twig->addFunction($openside);
+
+    // {{ closeside() }}
+    $closeside = new \Twig\TwigFunction('closeside', function () {
+        $args = func_get_args();
+        call_user_func_array('closeside', $args);
+    });
+
+    $twig->addFunction($closeside);
+
+    return $twig;
+}
