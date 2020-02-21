@@ -14,6 +14,5 @@ includes/gateway/flood/
 images/thumbs/
 fusion_error_log.log
 cache
-vendor
 composer.lock
 /home.php
