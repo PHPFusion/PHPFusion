@@ -2399,3 +2399,24 @@ function calculate_byte($total_bit) {
 
     return 1048576;
 }
+
+/**
+ * Load Twig Template Engine
+ * @param string $path
+ * @param bool   $debug
+ *
+ * @return \Twig\Environment
+ */
+function twig_init($path = THEME.'/twig', $debug = FALSE) {
+    $loader = new \Twig\Loader\FilesystemLoader($path);
+    $twig = new \Twig\Environment($loader, [
+        'cache' => BASEDIR.'/cache',
+        'debug' => $debug
+    ]);
+
+    if ($debug == TRUE) {
+        $twig->addExtension(new \Twig\Extension\DebugExtension());
+    }
+
+    return $twig;
+}

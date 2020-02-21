@@ -1,0 +1,51 @@
+<div class="news-header">
+    <h1>{{ data.blog_subject }}</h1>
+    {{ breadcrumbs|raw }}
+</div>
+
+<div class="card clearfix">
+    <div class="row">
+        <div class="col-xs-12 col-sm-9">
+            <div class="clearfix m-b-20">
+                <div class="pull-right">
+                    {% if data.admin_link is not null %}
+                        <div class="btn-group">
+                            <a href="{{ data.admin_link.print_link }}" class="btn btn-primary btn-sm" title="{{ locale.print }}" target="_blank"><i class="fa fa-print"></i></a>
+                            <a href="{{ data.admin_link.edit }}" class="btn btn-warning btn-sm" title="{{ locale.edit }}"><i class="fa fa-pencil"></i></a>
+                            <a href="{{ data.admin_link.delete }}" class="btn btn-danger btn-sm" title="{{ locale.delete }}"><i class="fa fa-trash"></i></a>
+                        </div>
+                    {% else %}
+                        <a class="btn btn-primary btn-circle btn-sm" href="{{ data.admin_link.print_link }}" title="{{ locale.print }}" target="_blank"><i class="fa fa-print"></i></a>
+                    {% endif %}
+                </div>
+                <div class="overflow-hide">
+                    {{ data.blog_post_author|raw }}
+                    {{ data.blog_post_time|raw }}
+                    {{ data.cats|raw }}
+                </div>
+            </div>
+            <div class="clearfix">
+                {% if data.blog_image %}
+                    <a class="m-10 {{ data.blog_ialign }} blog-image-overlay" href="{{ data.blog_image_link }}">
+                        <img class="img-responsive" src="{{ data.blog_image_link }}" alt="{{ data.blog_subject }}" style="padding: 5px;overflow: hidden;">
+                    </a>
+                {% endif %}
+
+                {{ data.blog_blog|raw }}
+                <br>
+                {{ data.blog_extended|raw }}
+
+                {% if data.blog_nav is not null %}
+                    <div class="clearfix m-b-20">{{ data.blog_nav }}</div>
+                {% endif %}
+
+                {{ data.blog_show_comments|raw }}
+                {{ data.blog_show_ratings|raw }}
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-3">
+            W.I.P.
+        </div>
+    </div>
+</div>

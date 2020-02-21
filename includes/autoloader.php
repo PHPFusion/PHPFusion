@@ -24,13 +24,13 @@ spl_autoload_register( function ( $className ) {
     $path = str_replace( '\\', DIRECTORY_SEPARATOR, $className );
     $fullPath_INC = $baseDir.$path.'.inc';
     $fullPath_PHP = $baseDir.$path.'.php';
-    
+
     if ( is_file( $fullPath_INC ) ) {
         require_once $fullPath_INC;
     } else if ( is_file( $fullPath_PHP ) ) {
         require_once $fullPath_PHP;
     }
-    
+
     $baseDir = __DIR__.'/';
     $fullPath = $baseDir.$path.'.inc';
     $fullPath_lc = strtolower( $fullPath );
@@ -45,7 +45,7 @@ spl_autoload_register( function ( $className ) {
     } else if ( is_file( $fullPath2_lc ) ) {
         require_once $fullPath2_lc;
     }
-    
+
 } );
 
 /*
@@ -142,7 +142,7 @@ function fusion_get_config( $max_level = 7 ) {
         }
         $config_path = file_exists( $basedir."config.php" ) ? $basedir."config.php" : NULL;
     }
-    
+
     return $config_path;
 }
 
@@ -164,9 +164,10 @@ $cdn = fusion_get_settings( 'cache_server' ) ? fusion_get_settings( 'cache_serve
 define( 'CDN', $cdn );
 
 require_once __DIR__.'/core_constants_include.php';
-require_once __DIR__."/sqlhandler.inc.php";
-require_once __DIR__."/translate_include.php";
-require_once __DIR__."/output_handling_include.php";
-require_once __DIR__."/notify.inc";
-require_once __DIR__."/defender.inc";
+require_once __DIR__.'/sqlhandler.inc.php';
+require_once __DIR__.'/translate_include.php';
+require_once __DIR__.'/output_handling_include.php';
+require_once __DIR__.'/notify.inc';
+require_once __DIR__.'/defender.inc';
 require_once __DIR__.'/hooks_include.php';
+require_once BASEDIR.'vendor/autoload.php';

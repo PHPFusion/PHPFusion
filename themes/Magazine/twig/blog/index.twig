@@ -1,0 +1,100 @@
+<div class="news-header">
+    <h1>{{ locale.blog_1000 }}</h1>
+    {{ breadcrumbs|raw }}
+</div>
+
+<div class="card">
+    {% if blogitems is not null %}
+        <div class="clearfix m-b-20">
+            <span class="m-r-10">
+                <strong class="text-dark">{{ locale.show }}: </strong>
+                {% for filter in filters %}
+                    <a href="{{ filter.link }}" class="display-inline m-r-10{{ (filter.active == 1) ? ' text-dark' : '' }}">{{ filter.title }}</a>
+                {% endfor %}
+            </span>
+
+            {% if categories is not null %}
+                <div class="dropdown display-inline m-r-20">
+                    <a href="#" id="blog-cats" data-toggle="dropdown">{{ locale.blog_1003 }} <span class="caret"></span></a>
+                    <ul class="dropdown-menu" aria-labelledby="blog-cats">
+                        {% for id, data in categories.0 %}
+                            <li{{ (get.cat_id == id) ? ' class="active"' : '' }}><a href="{{ constant('INFUSIONS') }}blog/blog.php?cat_id={{ id }}">{{ data.blog_cat_name }}</a></li>
+
+                            {% if id != 0 and categories != 0 %}
+                                {% for sub_cats in categories %}
+                                    {% for sub_cat_id, sub_cat_data in sub_cats %}
+                                        {% if sub_cat_data.blog_cat_parent is not null and sub_cat_data.blog_cat_parent == id %}
+                                            <li{{ (get.cat_id == sub_cat_id) ? ' class="active"' : '' }}><a href="{{ constant('INFUSIONS') }}blog/blog.php?cat_id={{ sub_cat_id }}">{{ sub_cat_data.blog_cat_name }}</a></li>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            {% if authors is not null %}
+                <div class="dropdown display-inline m-r-20">
+                    <a href="#" id="blog-authors" data-toggle="dropdown">{{ locale.blog_1005 }} <span class="caret"></span></a>
+                    <ul class="dropdown-menu" aria-labelledby="blog-authors">
+                        {% for id, data in authors %}
+                            <li{{ (data.active) ? ' class="active"' : '' }}><a href="{{ data.link }}">{{ data.title }} <span class="badge m-l-10">{{ data.count }}</span></a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            {% if archive is not null %}
+                <div class="dropdown display-inline">
+                    <a href="#" id="blog-archive" class="dropdown-toggle" data-toggle="dropdown" data-submenu>{{ locale.blog_1004 }} <span class="caret"></span></a>
+                    <ul class="dropdown-menu" aria-labelledby="blog-archive">
+                        {% for year, data in archive %}
+                            <li class="{{ (get.archive == year) ? 'active strong ' : '' }}dropdown-submenu">
+                                <a class="{{ (year == 'now'|date('Y')) ? 'text-dark ' : '' }}dropdown-toggle" data-toggle="dropdown" href="#">{{ year }}</a>
+                                <ul class="dropdown-menu">
+                                    {% for a_data in data %}
+                                        <li{{ (a_data.active) ? ' class="active string"' : '' }}><a href="{{ a_data.link|raw }}">{{ a_data.title }} <span class="badge">{{ a_data.count }}</span></a></li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="row equal-height">
+            {% for id, data in blogitems %}
+                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 m-b-20">
+                    <div class="post-item">
+                        <a href="{{ data.blog_link }}" class="thumb overflow-hide">
+                            <img class="img-responsive" src="{{ data.image }}" alt="{{ data.blog_subject }}">
+                            <div class="cats">{{ data.cats|raw }}</div>
+                        </a>
+                        <div class="author float">{{ data.avatar|raw }}</div>
+
+                        <div class="post-meta">
+                            <h4 class="title m-t-0"><a href="{{ data.blog_link }}">{{ data.blog_subject }}</a></h4>
+                            <p>{{ data.blog_blog }}</p>
+                            {{ data.blog_readmore_link|raw }}
+                        </div>
+
+                        <div class="post-info text-center p-5 p-t-10 p-b-10" style="border-top: 1px solid #e0e0e0;">
+                            {{ data.comments|raw }}
+                            {{ data.ratings|raw }}
+                            {{ data.reads|raw }}
+                            {{ data.time|raw }}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        {% if blog_nav is not null%}
+            <div class="text-center m-t-10">{{ blog_nav|raw }}</div>
+        {% endif %}
+    {% else %}
+        <div class="text-center">{{ locale.blog_3000 }}</div>
+    {% endif %}
+</div>
