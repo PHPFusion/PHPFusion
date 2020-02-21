@@ -602,7 +602,7 @@ class Errors {
             $html .= "<span class='badge m-l-10'>N: ".count( $this->new_errors )."</span>\n";
             $html .= "</div>\n";
 
-            $cHtml = openmodal( 'tbody', $locale['ERROR_464'], [ 'class' => 'modal-lg modal-center zindex-boost', 'button_id' => 'footer_debug' ] );
+            $cHtml = openmodal( 'tbody', $locale['ERROR_464'], [ 'class_dialog' => 'modal-lg modal-center zindex-boost', 'button_id' => 'footer_debug' ] );
             $cHtml .= $this->getErrorLogs();
             $cHtml .= closemodal();
             add_to_footer( $cHtml );
