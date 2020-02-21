@@ -86,7 +86,7 @@ class Blog extends Core {
             'blog_nav'    => $info['blog_nav']
         ];
 
-        echo $twig->render('blog/index.twig', $tpl);
+        echo $twig->render('bootstrap3/blog/index.twig', $tpl);
     }
 
     public static function display_blog_item($info) {
@@ -128,6 +128,6 @@ class Blog extends Core {
             'archive'     => $info['blog_archive']
         ];
 
-        echo $twig->render('blog/item.twig', $tpl);
+        echo $twig->render('bootstrap3/blog/item.twig', $tpl);
     }
 }

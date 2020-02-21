@@ -2418,5 +2418,30 @@ function twig_init($path = THEME.'/twig', $debug = FALSE) {
         $twig->addExtension(new \Twig\Extension\DebugExtension());
     }
 
+    // {{ get_function('function_name', arg1, arg2) }}
+    $get_function = new \Twig\TwigFunction('get_function', function ($function) {
+        $args = func_get_args();
+        array_shift($args);
+        call_user_func_array($function, $args);
+    });
+
+    $twig->addFunction($get_function);
+
+    // {{ openside('Title') }}
+    $openside = new \Twig\TwigFunction('openside', function () {
+        $args = func_get_args();
+        call_user_func_array('openside', $args);
+    });
+
+    $twig->addFunction($openside);
+
+    // {{ closeside() }}
+    $closeside = new \Twig\TwigFunction('closeside', function () {
+        $args = func_get_args();
+        call_user_func_array('closeside', $args);
+    });
+
+    $twig->addFunction($closeside);
+
     return $twig;
 }

@@ -45,7 +45,17 @@
         </div>
 
         <div class="col-xs-12 col-sm-3">
-            W.I.P.
+            <ul class="list-style-none">
+                {% for filter in filters %}
+                    <li><a href="{{ filter.link }}" class="display-inline{{ (filter.active == 1) ? ' text-dark' : '' }}">{{ filter.title }}</a></li>
+                {% endfor %}
+            </ul>
+
+            {% if categories is not null %}
+                {{ openside('<i class="fa fa-list"></i> ' ~ locale.blog_1003, 'shadow p-t-0') }}
+                W.I.P.
+                {{ closeside() }}
+            {% endif %}
         </div>
     </div>
 </div>
