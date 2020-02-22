@@ -69,7 +69,8 @@ $info = [
     'blog_last_updated'     => 0,
     'blog_max_rows'         => 0,
     'blog_rows'             => 0,
-    'blog_nav'              => ''
+    'blog_nav'              => '',
+    'blog_item'             => NULL
 ];
 
 $info['allowed_filters'] = [
@@ -84,7 +85,7 @@ if (fusion_get_settings('ratings_enabled') == 1) {
     $info['allowed_filters']['rating'] = $locale['blog_2003'];
 }
 
-$info['blog_categories'][0][0] = [
+$info['blog_categories'][0] = [
     'blog_cat_id'       => 0,
     'blog_cat_parent'   => 0,
     'blog_cat_name'     => $locale['global_080'],
@@ -180,9 +181,19 @@ if (isset($_GET['readmore'])) {
                 'blog_blog'          => preg_replace("/<!?--\s*pagebreak\s*-->/i", "", $item['blog_blog']),
                 'print_link'         => BASEDIR."print.php?type=B&amp;item_id=".$item['blog_id'],
                 'blog_post_author'   => display_avatar($item, '25px', '', TRUE, 'img-rounded m-r-5').profile_link($item['user_id'], $item['user_name'], $item['user_status']),
-                'blog_category_link' => "",
+                'blog_categories'    => [],
+                'blog_category_link' => '',
                 'blog_post_time'     => $locale['global_049']." ".timer($item['blog_datestamp']),
                 'blog_nav'           => ''
+            ];
+
+            $item['blog_categories'][0] = [
+                'blog_cat_id'       => 0,
+                'blog_cat_parent'   => 0,
+                'blog_cat_name'     => $locale['global_080'],
+                'blog_cat_image'    => '',
+                'blog_cat_language' => LANGUAGE,
+                'blog_cat_link'     => "<a href='".INFUSIONS."blog/blog.php?cat_id=0&amp;filter=false'>".$locale['global_080']."</a>"
             ];
 
             $item['blog_blog'] = parse_textarea($item['blog_blog'], FALSE, FALSE, TRUE, FALSE, $item['blog_breaks'] == "y" ? TRUE : FALSE);
@@ -208,6 +219,7 @@ if (isset($_GET['readmore'])) {
                 if ($rows2 > 0) {
                     $i = 1;
                     while ($catData = dbarray($result2)) {
+                        $item['blog_categories'][] = $catData;
                         $item['blog_category_link'] .= "<a href='".INFUSIONS."blog/blog.php?cat_id=".$catData['blog_cat_id']."'>".$catData['blog_cat_name']."</a>";
                         $item['blog_category_link'] .= $i == $rows2 ? "" : ", ";
                         $i++;
@@ -358,8 +370,7 @@ if (isset($_GET['readmore'])) {
                 $info['blog_title'] = $res['blog_cat_name'];
                 $catFilter = "and ".in_group("blog_cat", intval($_GET['cat_id']));
             }
-        } else {
-
+        } else if (get('cat_id') == 0) {
             // Uncategorized blog
             \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                 'link'  => INFUSIONS."blog/blog.php?cat_id=".intval($_GET['cat_id']),
@@ -489,10 +500,11 @@ if (isset($_GET['readmore'])) {
 
             $cdata = [
                 'blog_ialign'            => $data['blog_ialign'] == 'center' ? 'clearfix' : $data['blog_ialign'],
-                'blog_anchor'            => "<a name='blog_".$data['blog_id']."' id='blog_".$data['blog_id']."'></a>",
+                'blog_anchor'            => "<a href='#' id='blog_".$data['blog_id']."'></a>",
                 'blog_blog'              => preg_replace("/<!?--\s*pagebreak\s*-->/i", "", $blog_blog),
                 'blog_extended'          => preg_replace("/<!?--\s*pagebreak\s*-->/i", "", $blog_extended),
                 'blog_link'              => INFUSIONS."blog/blog.php?readmore=".$data['blog_id'],
+                'blog_categories'        => [],
                 'blog_category_link'     => "",
                 'blog_readmore_link'     => "<a href='".INFUSIONS."blog/blog.php?readmore=".$data['blog_id']."'>".$locale['blog_1006']."</a>",
                 'blog_subject'           => stripslashes($data['blog_subject']),
@@ -507,6 +519,7 @@ if (isset($_GET['readmore'])) {
                 'blog_user_avatar'       => display_avatar($data, '35px', '', TRUE, 'img-rounded'),
                 'blog_user_link'         => profile_link($data['user_id'], $data['user_name'], $data['user_status'], 'strong'),
             ];
+
             // refetch category per item and parse as string
             if (!empty($data['blog_cat'])) {
                 $blog_cat = str_replace(".", ",", $data['blog_cat']);
@@ -515,12 +528,24 @@ if (isset($_GET['readmore'])) {
                 if ($rows2 > 0) {
                     $i = 1;
                     while ($catData = dbarray($result2)) {
+                        $cdata['blog_categories'][$i] = $catData;
                         $cdata['blog_category_link'] .= "<a href='".INFUSIONS."blog/blog.php?cat_id=".$catData['blog_cat_id']."'>".$catData['blog_cat_name']."</a>";
                         $cdata['blog_category_link'] .= $i == $rows2 ? "" : ", ";
                         $cdata['blog_cat_image'] = $catData['blog_cat_image'];
                         $i++;
                     }
                 }
+            }
+
+            if ($data['blog_cat'] == 0) {
+                $cdata['blog_categories'][0] = [
+                    'blog_cat_id'       => 0,
+                    'blog_cat_parent'   => 0,
+                    'blog_cat_name'     => $locale['global_080'],
+                    'blog_cat_image'    => '',
+                    'blog_cat_language' => LANGUAGE,
+                    'blog_cat_link'     => "<a href='".INFUSIONS."blog/blog.php?cat_id=0&amp;filter=false'>".$locale['global_080']."</a>"
+                ];
             }
 
             $data = array_merge($data, $cdata);

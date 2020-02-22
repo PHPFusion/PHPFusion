@@ -88,13 +88,26 @@ class Functions {
     public static function get_blogCatsData() {
         $data = dbquery_tree_full(DB_BLOG_CATS, 'blog_cat_id', 'blog_cat_parent',
             "".(multilang_table("BL") ? "WHERE ".in_group('blog_cat_language', LANGUAGE) : '')."");
-        foreach ($data as $index => $cat_data) {
-            foreach ($cat_data as $blog_cat_id => $cat) {
-                $data[$index][$blog_cat_id]['blog_cat_link'] = "<a href='".INFUSIONS."blog/blog.php?cat_id=".$cat['blog_cat_id']."'>".$cat['blog_cat_name']."</a>";
+
+        $categories = [];
+
+        foreach ($data[0] as $id => $cat_data) {
+            $categories[$id] = $cat_data;
+            $categories[$id]['blog_cat_link'] = "<a href='".INFUSIONS."blog/blog.php?cat_id=".$cat_data['blog_cat_id']."'>".$cat_data['blog_cat_name']."</a>";
+
+            if ($id != 0 && $data != 0) {
+                foreach ($data as $sub_cats_id => $sub_cats) {
+                    foreach ($sub_cats as $sub_cat_id => $sub_cat_data) {
+                        if (!empty($sub_cat_data['blog_cat_parent']) && $sub_cat_data['blog_cat_parent'] == $id) {
+                            $categories[$id]['sub'][$sub_cat_id] = $sub_cat_data;
+                            $categories[$id]['sub'][$sub_cat_id]['blog_cat_link'] = "<a href='".INFUSIONS."blog/blog.php?cat_id=".$cat_data['blog_cat_id']."'>".$cat_data['blog_cat_name']."</a>";
+                        }
+                    }
+                }
             }
         }
 
-        return $data;
+        return $categories;
     }
 
     /**

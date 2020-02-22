@@ -30,19 +30,19 @@ if ( fusion_get_settings( 'tinymce_enabled' ) != 1 ) {
 }
 
 if ( post( 'save' ) or post( 'save_and_close' ) or post( 'preview' ) ) {
-    
+
     $blog_blog = "";
     if ( $blog_blog = post( 'blog_blog' ) ) {
         $blog_blog = str_replace( "src='".str_replace( "../", "", IMAGES_B ), "src='".IMAGES_B, ( fusion_get_settings( "allow_php_exe" ) ? htmlspecialchars( $blog_blog ) : $blog_blog ) );
         $blog_blog = descript( $blog_blog );
     }
-    
+
     $blog_extended = "";
     if ( $blog_extended = post( 'blog_extended' ) ) {
         $blog_extended = str_replace( "src='".str_replace( "../", "", IMAGES_B ), "src='".IMAGES_B, ( fusion_get_settings( "allow_php_exe" ) ? htmlspecialchars( $blog_extended ) : $blog_extended ) );
         $blog_extended = descript( $blog_extended );
     }
-    
+
     $data = [
         'blog_id'             => sanitizer( 'blog_id', 0, 'blog_id' ),
         'blog_subject'        => sanitizer( 'blog_subject', '', 'blog_subject' ),
@@ -63,7 +63,7 @@ if ( post( 'save' ) or post( 'save_and_close' ) or post( 'preview' ) ) {
         'blog_language'       => sanitizer( 'blog_language', '', 'blog_language' ),
         'blog_datestamp'      => sanitizer( 'blog_datestamp', '', 'blog_datestamp' ),
     ];
-    
+
     if ( post( 'preview' ) ) {
         if ( fusion_safe() ) {
             $modal = openmodal( 'blog_preview', $locale['blog_0141']." - ".$data['blog_subject'] );
@@ -74,9 +74,9 @@ if ( post( 'save' ) or post( 'save_and_close' ) or post( 'preview' ) ) {
             $modal .= closemodal();
             add_to_footer( $modal );
         }
-        
+
     } else {
-        
+
         if ( file_uploaded( 'blog_image' ) ) {
             //if ( isset( $_FILES['blog_image'] ) ) { // when files is uploaded.
             $upload = file_sanitizer( 'blog_image', '', 'blog_image' );
@@ -88,14 +88,14 @@ if ( post( 'save' ) or post( 'save_and_close' ) or post( 'preview' ) ) {
                 $data['blog_ialign'] = ( isset( $_POST['blog_ialign'] ) ? form_sanitizer( $_POST['blog_ialign'], "pull-left", "blog_ialign" ) : "pull-left" );
             }
         } else { // when files not uploaded. but there should be exist check.
-            
+
             $data['blog_image'] = post( 'blog_image' );
             $data['blog_image_t1'] = post( 'blog_image_t1' );
             $data['blog_image_t2'] = post( 'blog_image_t2' );
             $data['blog_ialign'] = sanitizer( 'blog_ialign', 'pull-left', 'blog_ialign' );
-            
+
         }
-        
+
         if ( $data['blog_sticky'] == "1" ) {
             $result = dbquery( "UPDATE ".DB_BLOG." SET blog_sticky='0' WHERE blog_sticky='1'" );
         } // reset other sticky
@@ -114,30 +114,30 @@ if ( post( 'save' ) or post( 'save_and_close' ) or post( 'preview' ) ) {
                 unlink( IMAGES_B_T.$data['blog_image_t2'] );
             }
         }
-        
+
         if ( fusion_safe() ) {
             if ( dbcount( "('blog_id')", DB_BLOG, "blog_id='".$data['blog_id']."'" ) ) {
                 dbquery_insert( DB_BLOG, $data, 'update' );
                 addNotice( 'success', $locale['blog_0411'] );
                 redirect( FUSION_SELF.$aidlink );
             }
-            
+
             $data['blog_name'] = $userdata['user_id'];
             dbquery_insert( DB_BLOG, $data, 'save' );
             addNotice( 'success', $locale['blog_0410'] );
-            
+
             if ( post( 'save_and_close' ) ) {
                 redirect( FUSION_SELF.$aidlink );
+            } else {
+                redirect( FUSION_REQUEST );
             }
-            
-            redirect( FUSION_REQUEST );
         }
     }
 }
 
 // The Form
 if ( $data = getBlogData() ) {
-    
+
     echo openform( 'inputform', 'post', FORM_REQUEST, [ 'enctype' => TRUE ] );
     echo "<div class='row'>\n";
     echo "<div class='col-xs-12 col-sm-12 col-md-7 col-lg-8'>\n";
@@ -179,7 +179,7 @@ if ( $data = getBlogData() ) {
     echo "</div>\n";
     echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4'>\n";
     openside( '' );
-    
+
     echo form_select( 'blog_cat[]', $locale['blog_0423'], $data['blog_cat'], [
             'options'     => $blog_cat_opts,
             "width"       => "100%",
@@ -188,14 +188,14 @@ if ( $data = getBlogData() ) {
             'multiple'    => TRUE,
         ]
     );
-    
+
     echo form_select( 'blog_visibility', $locale['blog_0430'], $data['blog_visibility'], [
         'options'     => fusion_get_groups(),
         'placeholder' => $locale['choose'],
         'width'       => '100%',
         "inline"      => TRUE,
     ] );
-    
+
     if ( multilang_table( "BL" ) ) {
         echo form_select( 'blog_language[]', $locale['global_ML100'], $data['blog_language'], [
             'options'     => fusion_get_enabled_languages(),
@@ -208,12 +208,12 @@ if ( $data = getBlogData() ) {
     } else {
         echo form_hidden( 'blog_language', '', $data['blog_language'] );
     }
-    
+
     echo form_button( 'cancel', $locale['cancel'], $locale['cancel'], [ 'class' => 'btn-default m-r-10', 'icon' => 'fa fa-times' ] );
     echo form_button( 'save', $locale['blog_0437'], $locale['blog_0437'], [ 'class' => 'btn-success', 'icon' => 'fa fa-hdd-o' ] );
     closeside();
     echo "</div>\n</div>\n";
-    
+
     $snippetSettings = [
         'required'    => TRUE,
         'preview'     => TRUE,
@@ -227,7 +227,7 @@ if ( $data = getBlogData() ) {
         $snippetSettings = [ 'required' => TRUE, 'type' => 'tinymce', 'tinymce' => 'advanced' ];
     }
     echo form_textarea( 'blog_blog', $locale['blog_0425'], $data['blog_blog'], $snippetSettings );
-    
+
     $extendedSettings = [];
     if ( !fusion_get_settings( 'tinymce_enabled' ) ) {
         $extendedSettings = [
@@ -313,7 +313,7 @@ if ( $data = getBlogData() ) {
         } else {
             $sys = $locale['ratings'];
         }
-        
+
         echo "<div class='well'>".sprintf( $locale['blog_0149'], "<strong>$sys</strong>" )."</div>\n";
     }
     echo "<label><input type='checkbox' name='blog_allow_comments' value='yes' onclick='SetRatings();' ".( $data['blog_allow_comments'] ? "checked='checked'" : "" )." /> ".$locale['blog_0434']."</label><br/>";
@@ -325,7 +325,7 @@ if ( $data = getBlogData() ) {
     echo form_button( 'preview', $locale['blog_0141'], $locale['blog_0141'], [ 'class' => 'm-l-5 btn-primary', 'icon' => 'fa fa-eye' ] );
     echo form_button( 'cancel', $locale['cancel'], 'cancel' );
     echo closeform();
-    
+
 }
 /**
  * Get blog form data
@@ -353,7 +353,7 @@ function getBlogData() {
         'blog_image'          => '',
         'blog_ialign'         => 'pull-left',
     ];
-    
+
     $action = get( 'action' );
     $aidlink = fusion_get_aidlink();
     $blog_edit_id = post( 'blog_id', FILTER_VALIDATE_INT );
