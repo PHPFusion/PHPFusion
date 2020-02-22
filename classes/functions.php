@@ -107,6 +107,15 @@ class Functions {
             }
         }
 
+        $categories[0] = [
+            'blog_cat_id'       => 0,
+            'blog_cat_parent'   => 0,
+            'blog_cat_name'     => fusion_get_locale('global_080'),
+            'blog_cat_image'    => '',
+            'blog_cat_language' => LANGUAGE,
+            'blog_cat_link'     => "<a href='".INFUSIONS."blog/blog.php?cat_id=0&amp;filter=false'>".fusion_get_locale('global_080')."</a>"
+        ];
+
         return $categories;
     }
 
@@ -210,7 +219,7 @@ class Functions {
                     'comment_allow_post'    => TRUE,
                     'comment_once'          => FALSE,
                     'comment_allow_ratings' => FALSE,
-                ], 'blog_comments'
+                ]
             )->showComments();
         }
 

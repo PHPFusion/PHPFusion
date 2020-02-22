@@ -85,15 +85,6 @@ if (fusion_get_settings('ratings_enabled') == 1) {
     $info['allowed_filters']['rating'] = $locale['blog_2003'];
 }
 
-$info['blog_categories'][0] = [
-    'blog_cat_id'       => 0,
-    'blog_cat_parent'   => 0,
-    'blog_cat_name'     => $locale['global_080'],
-    'blog_cat_image'    => '',
-    'blog_cat_language' => LANGUAGE,
-    'blog_cat_link'     => "<a href='".INFUSIONS."blog/blog.php?cat_id=0&amp;filter=false'>".$locale['global_080']."</a>"
-];
-
 // controller: make filter types
 $filter = array_keys($info['allowed_filters']);
 $_GET['type'] = isset($_GET['type']) && in_array($_GET['type'], array_keys($info['allowed_filters'])) ? stripinput($_GET['type']) : '';
@@ -370,7 +361,7 @@ if (isset($_GET['readmore'])) {
                 $info['blog_title'] = $res['blog_cat_name'];
                 $catFilter = "and ".in_group("blog_cat", intval($_GET['cat_id']));
             }
-        } else if (get('cat_id') == 0) {
+        } else {
             // Uncategorized blog
             \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                 'link'  => INFUSIONS."blog/blog.php?cat_id=".intval($_GET['cat_id']),
@@ -378,6 +369,7 @@ if (isset($_GET['readmore'])) {
             ]);
             add_to_title($locale['global_201'].$locale['global_080']);
             $info['blog_title'] = $locale['global_080'];
+            $catFilter = "and blog_cat = 0";
         }
 
         if (isset($_GET['type']) && isset($info['allowed_filters'][$_GET['type']])) {
