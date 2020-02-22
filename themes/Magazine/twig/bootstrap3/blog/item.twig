@@ -21,7 +21,10 @@
                 <div class="overflow-hide">
                     {{ data.blog_post_author|raw }}
                     {{ data.blog_post_time|raw }}
-                    {{ data.cats|raw }}
+
+                    {% for cat in data.blog_categories %}
+                        <a href="{{ constant('INFUSIONS') }}blog/blog.php?cat_id={{ cat.blog_cat_id }}" class="badge m-l-5">{{ cat.blog_cat_name }}</a>
+                    {% endfor %}
                 </div>
             </div>
             <div class="clearfix">
@@ -53,7 +56,44 @@
 
             {% if categories is not null %}
                 {{ openside('<i class="fa fa-list"></i> ' ~ locale.blog_1003, 'shadow p-t-0') }}
-                W.I.P.
+                    <ul class="list-style-none">
+                        {% for id, cat in categories %}
+                            <li{{ (get.cat_id == id) ? ' class="active"' : '' }}><a href="{{ constant('INFUSIONS') }}blog/blog.php?cat_id={{ id }}">{{ cat.blog_cat_name }}</a></li>
+
+                            {% if cat.sub is not null %}
+                                {% for sub_cat_id, sub_cat_data in cat.sub %}
+                                    <li{{ (get.cat_id == sub_cat_id) ? ' class="active"' : '' }}><a href="{{ constant('INFUSIONS') }}blog/blog.php?cat_id={{ sub_cat_id }}">{{ sub_cat_data.blog_cat_name }}</a></li>
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                {{ closeside() }}
+            {% endif %}
+
+            {% if authors is not null %}
+                {{ openside('<i class="fa fa-users"></i> ' ~ locale.blog_1005, 'shadow p-t-0') }}
+                    <ul class="list-style-none">
+                        {% for id, data in authors %}
+                            <li{{ (data.active) ? ' class="active"' : '' }}><a href="{{ data.link }}">{{ data.title }} <span class="badge m-l-10">{{ data.count }}</span></a></li>
+                        {% endfor %}
+                    </ul>
+                {{ closeside() }}
+            {% endif %}
+
+            {% if archive is not null %}
+                {{ openside('<i class="fa fa-calendar"></i> ' ~ locale.blog_1004, 'shadow p-t-0') }}
+                    <ul class="list-style-none">
+                        {% for year, data in archive %}
+                            <li>
+                                <a class="{{ (year == 'now'|date('Y')) ? 'text-dark ' : '' }}{{ (archive == year) ? 'strong' : '' }}" data-toggle="collapse" data-parent="#blogarchive" href="#blog-{{ year }}">{{ year }}</a>
+                                <ul id="blog-{{ year }}" class="collapse m-l-15{{ (archive == year) ? ' in' : '' }}">
+                                    {% for a_data in data %}
+                                        <li{{ (a_data.active) ? ' class="active string"' : '' }}><a href="{{ a_data.link|raw }}">{{ a_data.title }} <span class="badge">{{ a_data.count }}</span></a></li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                        {% endfor %}
+                    </ul>
                 {{ closeside() }}
             {% endif %}
         </div>

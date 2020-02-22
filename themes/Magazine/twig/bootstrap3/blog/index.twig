@@ -17,16 +17,12 @@
                 <div class="dropdown display-inline m-r-20">
                     <a href="#" id="blog-cats" data-toggle="dropdown">{{ locale.blog_1003 }} <span class="caret"></span></a>
                     <ul class="dropdown-menu" aria-labelledby="blog-cats">
-                        {% for id, data in categories.0 %}
-                            <li{{ (get.cat_id == id) ? ' class="active"' : '' }}><a href="{{ constant('INFUSIONS') }}blog/blog.php?cat_id={{ id }}">{{ data.blog_cat_name }}</a></li>
+                        {% for id, cat in categories %}
+                            <li{{ (get.cat_id == id) ? ' class="active"' : '' }}><a href="{{ constant('INFUSIONS') }}blog/blog.php?cat_id={{ id }}">{{ cat.blog_cat_name }}</a></li>
 
-                            {% if id != 0 and categories != 0 %}
-                                {% for sub_cats in categories %}
-                                    {% for sub_cat_id, sub_cat_data in sub_cats %}
-                                        {% if sub_cat_data.blog_cat_parent is not null and sub_cat_data.blog_cat_parent == id %}
-                                            <li{{ (get.cat_id == sub_cat_id) ? ' class="active"' : '' }}><a href="{{ constant('INFUSIONS') }}blog/blog.php?cat_id={{ sub_cat_id }}">{{ sub_cat_data.blog_cat_name }}</a></li>
-                                        {% endif %}
-                                    {% endfor %}
+                            {% if cat.sub is not null %}
+                                {% for sub_cat_id, sub_cat_data in cat.sub %}
+                                    <li{{ (get.cat_id == sub_cat_id) ? ' class="active"' : '' }}><a href="{{ constant('INFUSIONS') }}blog/blog.php?cat_id={{ sub_cat_id }}">{{ sub_cat_data.blog_cat_name }}</a></li>
                                 {% endfor %}
                             {% endif %}
                         {% endfor %}
@@ -70,7 +66,11 @@
                     <div class="post-item">
                         <a href="{{ data.blog_link }}" class="thumb overflow-hide">
                             <img class="img-responsive" src="{{ data.image }}" alt="{{ data.blog_subject }}">
-                            <div class="cats">{{ data.cats|raw }}</div>
+                            <div class="cats">
+                                {% for cat in data.blog_categories %}
+                                    <a href="{{ constant('INFUSIONS') }}blog/blog.php?cat_id={{ cat.blog_cat_id }}" class="badge m-l-5">{{ cat.blog_cat_name }}</a>
+                                {% endfor %}
+                            </div>
                         </a>
                         <div class="author float">{{ data.avatar|raw }}</div>
 

@@ -55,11 +55,6 @@ class Blog extends Core {
                     $info['blog_item'][$id]['image'] = get_image('imagenotfound');
                 }
 
-                $cats = explode(', ', $data['blog_category_link']);
-                foreach ($cats as $cat) {
-                    $info['blog_item'][$id]['cats'] = str_replace('<a href=', '<a class="badge m-l-5" href=', $cat);
-                }
-
                 $info['blog_item'][$id]['avatar'] = display_avatar($data, '40px', '', TRUE, 'img-circle');
 
                 if (fusion_get_settings('comments_enabled') && $data['blog_allow_comments']) {
@@ -70,11 +65,10 @@ class Blog extends Core {
                 }
                 $info['blog_item'][$id]['reads'] = ' &middot; <span><i class="fa fa-eye"></i> '.$data['blog_reads'].'</span> &middot; ';
                 $info['blog_item'][$id]['time'] = timer($data['blog_datestamp']);
-
             }
         }
 
-        $tpl = [
+        $context = [
             'get'         => ['cat_id' => get('cat_id'), 'archive' => get('archive')],
             'locale'      => fusion_get_locale(),
             'breadcrumbs' => render_breadcrumbs(),
@@ -86,38 +80,13 @@ class Blog extends Core {
             'blog_nav'    => $info['blog_nav']
         ];
 
-        echo $twig->render('bootstrap3/blog/index.twig', $tpl);
+        echo $twig->render('bootstrap3/blog/index.twig', $context);
     }
 
     public static function display_blog_item($info) {
-        add_to_head('<link rel="stylesheet" type="text/css" href="'.INCLUDES.'jquery/colorbox/colorbox.css"/>');
-        add_to_head('<script type="text/javascript" src="'.INCLUDES.'jquery/colorbox/jquery.colorbox.js"></script>');
-        add_to_jquery('$(".blog-image-overlay").colorbox({
-            transition: "elasic",
-            height: "100%",
-            width: "100%",
-            maxWidth: "98%",
-            maxHeight: "98%",
-            scrolling: false,
-            overlayClose: true,
-            close: false,
-            photo: true,
-            onComplete: function(result) {
-                $("#colorbox").live("click", function() {
-                    $(this).unbind("click");
-                    $.fn.colorbox.close();
-                });
-            }
-        });');
+        $twig = twig_init();
 
-        $twig = twig_init(THEME.'twig', TRUE);
-
-        $cats = explode(', ', $info['blog_item']['blog_category_link']);
-        foreach ($cats as $cat) {
-            $info['blog_item']['cats'] = str_replace('<a href=', '<a class="badge m-l-5" href=', $cat);
-        }
-
-        $tpl = [
+        $context = [
             'get'         => ['cat_id' => get('cat_id'), 'archive' => get('archive')],
             'locale'      => fusion_get_locale(),
             'breadcrumbs' => render_breadcrumbs(),
@@ -128,6 +97,6 @@ class Blog extends Core {
             'archive'     => $info['blog_archive']
         ];
 
-        echo $twig->render('bootstrap3/blog/item.twig', $tpl);
+        echo $twig->render('bootstrap3/blog/item.twig', $context);
     }
 }
