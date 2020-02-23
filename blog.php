@@ -26,7 +26,7 @@ $locale = fusion_get_locale('', BLOG_LOCALE);
 
 require_once THEMES.'templates/header.php';
 require_once INCLUDES."infusions_include.php";
-require_once INFUSIONS."blog/classes/Functions.php";
+require_once INFUSIONS."blog/classes/functions.php";
 require_once INFUSIONS."blog/classes/OpenGraphBlogs.php";
 require_once INFUSIONS."blog/templates/blog.php";
 require_once INCLUDES."infusions_include.php";
@@ -70,7 +70,9 @@ $info = [
     'blog_max_rows'         => 0,
     'blog_rows'             => 0,
     'blog_nav'              => '',
-    'blog_item'             => NULL
+    'blog_item'             => NULL,
+    'blog_author'           => NULL,
+    'blog_archive'          => NULL
 ];
 
 $info['allowed_filters'] = [
