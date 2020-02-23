@@ -1813,3 +1813,37 @@ function min_file($file_path) {
 
     return $file_path;
 }
+
+/**
+ * @param string $template_name
+ *
+ * @return string
+ */
+function get_template($template_name) {
+    return Template::getTemplate($template_name);
+}
+
+/**
+ * @param string $template_name
+ * @param string $path
+ */
+function set_template($template_name, $path) {
+    Template::setTemplate($template_name, $path);
+}
+
+/**
+ * @param string $template_path
+ *
+ * @return string
+ */
+function get_template_path($template_path) {
+    return Template::getTemplatePath($template_path);
+}
+
+/**
+ * @param string $template_path
+ * @param string $path
+ */
+function set_template_path($template_path, $path) {
+    Template::setTemplatePath($template_path, $path);
+}

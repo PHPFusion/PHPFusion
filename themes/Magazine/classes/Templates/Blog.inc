@@ -84,7 +84,12 @@ class Blog extends Core {
     }
 
     public static function display_blog_item($info) {
-        $twig = twig_init();
+        if (!empty(get_template_path('blogtpl'))) {
+            $path = get_template_path('blogtpl');
+        } else {
+            $path = THEME.'twig';
+        }
+        $twig = twig_init($path);
 
         $context = [
             'get'         => ['cat_id' => get('cat_id'), 'archive' => get('archive')],
@@ -97,6 +102,12 @@ class Blog extends Core {
             'archive'     => $info['blog_archive']
         ];
 
-        echo $twig->render('bootstrap3/blog/item.twig', $context);
+        if (!empty(get_template('blog_item'))) {
+            $path = get_template('blog_item');
+        } else {
+            $path = 'bootstrap3/blog/item.twig';
+        }
+
+        echo $twig->render($path, $context);
     }
 }

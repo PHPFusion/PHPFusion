@@ -38,6 +38,8 @@ class Template {
     private $raw_block = [];
     private $raw_tag = [];
     private static $block_count = [];
+    private static $template_name = [];
+    private static $templatepath = [];
 
     private function __construct() {
     }
@@ -467,4 +469,37 @@ class Template {
         }
     }
 
+    /**
+     * @param string $template_name
+     *
+     * @return string
+     */
+    public static function getTemplate($template_name) {
+        return isset(self::$template_name[$template_name]) ? self::$template_name[$template_name] : '';
+    }
+
+    /**
+     * @param string $template_name
+     * @param string $path
+     */
+    public static function setTemplate($template_name, $path) {
+        self::$template_name[$template_name] = $path;
+    }
+
+    /**
+     * @param string $templatepath
+     *
+     * @return string
+     */
+    public static function getTemplatePath($templatepath) {
+        return isset(self::$templatepath[$templatepath]) ? self::$templatepath[$templatepath] : '';
+    }
+
+    /**
+     * @param string $templatepath
+     * @param string $path
+     */
+    public static function setTemplatePath($templatepath, $path) {
+        self::$templatepath[$templatepath] = $path;
+    }
 }
