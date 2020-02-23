@@ -37,7 +37,7 @@ class Blog extends Core {
     }
 
     private static function display_blog_index($info) {
-        $twig = twig_init();
+        $twig = twig_init(THEME.'twig');
 
         add_to_jquery('$("#blog-archive").submenupicker();');
 
@@ -84,12 +84,7 @@ class Blog extends Core {
     }
 
     public static function display_blog_item($info) {
-        if (!empty(get_template_path('blogtpl'))) {
-            $path = get_template_path('blogtpl');
-        } else {
-            $path = THEME.'twig';
-        }
-        $twig = twig_init($path);
+        $twig = twig_init(THEME.'twig');
 
         $context = [
             'get'         => ['cat_id' => get('cat_id'), 'archive' => get('archive')],
@@ -102,12 +97,6 @@ class Blog extends Core {
             'archive'     => $info['blog_archive']
         ];
 
-        if (!empty(get_template('blog_item'))) {
-            $path = get_template('blog_item');
-        } else {
-            $path = 'bootstrap3/blog/item.twig';
-        }
-
-        echo $twig->render($path, $context);
+        echo $twig->render('bootstrap3/blog/item.twig', $context);
     }
 }

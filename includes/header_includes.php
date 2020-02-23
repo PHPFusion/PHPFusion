@@ -15,4 +15,3 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 //Add your custom include files for the header here
-add_to_head("<link rel=\"stylesheet\" href=\"https://pro.fontawesome.com/releases/v5.12.0/css/all.css\" integrity=\"sha384-ekOryaXPbeCpWQNxMwSWVvQ0+1VrStoPJq54shlYhR8HzQgig1v5fas6YgOqLoKz\" crossorigin=\"anonymous\">");
