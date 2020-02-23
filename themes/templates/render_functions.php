@@ -145,7 +145,7 @@ if (!function_exists('render_user_tags')) {
 function twig_init($path = THEME.'twig', $debug = FALSE) {
     $loader = new \Twig\Loader\FilesystemLoader($path);
     $twig = new \Twig\Environment($loader, [
-        'cache' => BASEDIR.'cache',
+        'cache' => BASEDIR.'cache/twig',
         'debug' => $debug
     ]);
 
