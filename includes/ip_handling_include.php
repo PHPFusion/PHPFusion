@@ -73,6 +73,6 @@ if (strpos(FUSION_IP, ".")) {
     $check_value .= "$'";
 }
 if (dbcount("(blacklist_id)", DB_BLACKLIST, $check_value)) {
-    redirect("http://www.google.com/");
+    redirect("https://www.php-fusion.co.uk/");
 }
 unset($check_value);

@@ -155,7 +155,7 @@ class Defender {
 
         if ( $input_name && isset( $_SESSION['form_fields'][ self::pageHash() ][ $input_name ] ) ) {
             //return $_SESSION['form_fields'][self::pageHash()][$input_name];
-            return session_get( [ 'form_fields', self::pageHash(), $input_name ] );
+            return session(['form_fields', self::pageHash(), $input_name]);
         } else {
             if ( $input_name ) {
                 return 'The session for this field is not found';
@@ -163,7 +163,7 @@ class Defender {
                 //return $_SESSION['form_fields'];
                 return $_SESSION['form_fields'][ self::pageHash() ];
 
-                return session_get( [ 'form_fields', self::pageHash() ] );
+                return session(['form_fields', self::pageHash()]);
             }
         }
     }
@@ -362,6 +362,8 @@ class Defender {
         $_SESSION['honeypots'][ self::pageHash() ][ $array['honeypot'] ] = $array;
     }
 
+    /** @noinspection PhpInconsistentReturnPointsInspection */
+
     /**
      * @param string $honeypot
      *
@@ -479,7 +481,7 @@ class Defender {
                     }
                 }
 
-                if ( $this->field_config['required'] && ( !$value[ LANGUAGE ] ) ) {
+                if (!empty($this->field_config['required']) && (!$value[LANGUAGE])) {
 
                     self::stop();
                     $iname = $input_name.'['.LANGUAGE.']';
@@ -574,7 +576,7 @@ class Defender {
 
     public function fileSanitizer( $key, $default = '', $input_name = FALSE ) {
 
-        $upload = (array) $this->formSanitizer( $_FILES[ $key ], $default, $input_name );
+        $upload = $this->formSanitizer($_FILES[$key], $default, $input_name);
         if ( isset( $upload['error'] ) && $upload['error'] == 0 ) {
             return $upload;
         }
@@ -626,13 +628,14 @@ class Defender {
     }
 
     /**
-     * Send an Unsafe Signal acorss all PHP-Fusion Components
-     * This will automatically halt on all important execution without exiting.
+     * Sends a system error declaration.
      *
-     * @param $notice - Show custom notice message on validation errors
+     * @param string $notice
+     *
+     * @return null
      */
-    public static function stop( $notice = '' ) {
-        //debug_print_backtrace();
+    public static function stop( $notice = '') {
+        //    debug_print_backtrace();
         if ( !defined( 'FUSION_NULL' ) ) {
             define( 'FUSION_NULL', TRUE );
             if ( $notice ) {
@@ -645,6 +648,7 @@ class Defender {
             }
             //addNotice('danger', '<strong>'.fusion_get_locale('error_request', LOCALE.LOCALESET.'defender.php').'</strong>');
         }
+        return NULL;
     }
 
     public static function setInputError( $input_name ) {
@@ -675,7 +679,7 @@ function form_sanitizer( $value, $default = '', $input_name = FALSE, $is_multiLa
  * Verify and Sanitize Inputs with input_name
  * A more secured method
  *
- * @param string $value input_name
+ * @param        $value     iinput_name
  * @param string $default
  * @param bool   $input_name
  * @param bool   $is_multiLang
@@ -701,7 +705,7 @@ function sanitize_array( $array = [] ) {
 /**
  * File sanitize by input_name
  *
- * @param string $value input_name
+ * @param        $value     input_name
  * @param string $default
  * @param bool   $input_name
  *
@@ -788,9 +792,9 @@ function get( $key = NULL, $type = FILTER_DEFAULT, $flags = '' ) {
 /**
  * Sanitizes $_POST by name
  *
- * @param string $key  input_name
- * @param int    $type
- * @param        $flags
+ * @param     $key  input_name
+ * @param int $type
+ * @param     $flags
  *
  * @return mixed
  */
@@ -867,7 +871,7 @@ function server( $key, $type = FILTER_DEFAULT ) {
 /**
  * Checks if a file is uploaded during upload post event
  *
- * @param string $key input name
+ * @param $key  input name
  *
  * @return bool
  */
@@ -1004,8 +1008,9 @@ function session_remove( $key ) {
             $temp = &$temp[ $nkey ];
             $counter++;
         }
+        $session = &$temp;
 
-        return $temp;
+        return $session;
     }
 
     unset( $_SESSION[ $key ] );
@@ -1053,7 +1058,7 @@ function fusion_safe() {
  *
  */
 function fusion_stop() {
-    Defender::getInstance()->stop();
+    return Defender::getInstance()->stop();
 }
 
 
@@ -1081,6 +1086,7 @@ function fusion_decrypt( $value, $password ) {
 function fusion_encrypt( $value, $password ) {
     return Defender::encrypt_string( $value, $password );
 }
+
 
 require_once __DIR__.'/defender/validation.php';
 require_once __DIR__.'/defender/csrftoken.php';
