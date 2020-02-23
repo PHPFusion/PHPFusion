@@ -1,0 +1,27 @@
+{% for content in info %}
+    <h2>{{ content.blockTitle }}</h2>
+
+    {% if content.data is not null %}
+        <div class="row">
+            {% for data in content.data %}
+                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 content clearfix">
+                    <div class="post-item">
+                        {% if data.image is not null %}
+                            <a href="{{ data.url }}" class="thumb overflow-hide">
+                                <img class="img-responsive" src="{{ data.image }}" alt="{{ data.title }}">
+                            </a>
+                        {% endif %}
+
+                        <div class="post-meta">
+                            <h4 class="title"><a href="{{ data.url }}">{{ data.title }}</a></h4>
+                            <div class="small m-b-10 overflow-hide">{{ data.meta|raw }}</div>
+                            <div class="overflow-hide hidden-xs">{{ data.content }}</div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        {{ content.norecord }}
+    {% endif %}
+{% endfor %}

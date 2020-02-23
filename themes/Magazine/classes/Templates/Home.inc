@@ -21,33 +21,16 @@ use Magazine\Core;
 
 class Home extends Core {
     public static function display_home($info) {
+        $twig = twig_init(THEME.'twig');
+
         foreach ($info as $db_id => $content) {
-            $colwidth = $content['colwidth'];
-            echo '<h2>'.$content['blockTitle'].'</h2>';
-            if ($colwidth) {
-                echo '<div class="row">';
-                foreach ($content['data'] as $data) {
-                    echo '<div class="col-xs-12 col-sm-'.$colwidth.' col-md-'.$colwidth.' col-lg-'.$colwidth.' content clearfix">';
-                        echo '<div class="post-item">';
-
-                            if (!empty($data['image'])) {
-                                echo '<a href="'.$data['url'].'" class="thumb overflow-hide">';
-                                    echo '<img class="img-responsive" src="'.$data['image'].'" alt="'.$data['title'].'"/>';
-                                echo '</a>';
-                            }
-
-                            echo '<div class="post-meta">';
-                                echo '<h4 class="title"><a href="'.$data['url'].'">'.$data['title'].'</a></h4>';
-                                echo '<div class="small m-b-10 overflow-hide">'.$data['meta'].'</div>';
-                                echo '<div class="overflow-hide hidden-xs">'.nl2br(trim_text(strip_tags($data['content']), 200)).'</div>';
-                            echo '</div>';
-                        echo '</div>';
-                    echo '</div>';
+            if (!empty($content['data'])) {
+                foreach ($content['data'] as $id => $data) {
+                    $info[$db_id]['data'][$id]['content'] = nl2br(trim_text(strip_tags($data['content']), 200));
                 }
-                echo '</div>';
-            } else {
-                echo $content['norecord'];
             }
         }
+
+        echo $twig->render('bootstrap3/home.twig', ['info' => $info]);
     }
 }
