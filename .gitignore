@@ -16,3 +16,4 @@ fusion_error_log.log
 cache
 composer.lock
 /home.php
+includes/header_includes.php
