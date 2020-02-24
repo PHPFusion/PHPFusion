@@ -42,7 +42,7 @@ function getcolorname( $id ) {
  */
 function display_html( $formname, $textarea, $html = TRUE, $colors = FALSE, $images = FALSE, $folder = "" ) {
     $locale = fusion_get_locale( "", [ LOCALE.LOCALESET."colors.php", LOCALE.LOCALESET."admin/html_buttons.php" ] );
-    add_to_footer("<script src='".INCLUDES."jscripts/fusion-editor.js'></script>");
+    //add_to_footer("<script src='".INCLUDES."jscripts/fusion-editor.js'></script>");
 
     $res = "";
     if ( $html ) {
