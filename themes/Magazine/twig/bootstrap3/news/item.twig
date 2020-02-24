@@ -1,0 +1,115 @@
+<div class="news-header">
+    <h1>{{ data.news_subject }}</h1>
+    {{ breadcrumbs|raw }}
+</div>
+<div class="card">
+    <div class="row">
+        <div class="col-xs-12 col-sm-9">
+            <div class="overflow-hide">
+                {% if data.news_image_src is not null %}
+                    <a href="{{ data.image }}" class="news-image-overlay">
+                        <img class="img-responsive {{ data.image_align }} m-r-10" style="width: {{ data.image_width }};" src="{{ data.image }}" alt="{{ data.news_subject }}">
+                    </a>
+                {% endif %}
+
+                <div><b>{{ data.news_news|raw }}</b></div>
+                <br>
+                {{ data.news_extended|raw }}
+
+                {% if data.news_pagenav is not null %}
+                    <div class="text-center m-10">{{ data.news_pagenav|raw }}</div>
+                {% endif %}
+
+                {% if data.news_gallery is not null %}
+                    <hr/>
+                    <h3>{{ locale.news_0019 }}</h3>
+
+                    <div class="overflow-hide m-b-20">
+                        {% for data in data.news_gallery %}
+                            <div class="pull-left overflow-hide" style="width: 250px; height: 120px;">{{ data.image|raw }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                {% if social_links is not null %}
+                    <div class="text-center clearfix">
+                        <div class="m-r-5 display-inline">{{ social_links|raw }}</div>
+                    </div>
+                {% endif %}
+
+                <div class="well text-center m-t-10 m-b-0">
+                    <span class="m-l-10"><i class="fa fa-user"></i> {{ data.profile_link|raw }}</span>
+                    <span class="m-l-10"><i class="fa fa-calendar"></i> {{ data.date|raw }}</span>
+                    <span class="m-l-10"><i class="fa fa-eye"></i> {{ data.reads }}</span>
+
+                    {% if data.comments is not null %}
+                        <span class="m-l-10"><i class="fa fa-comments-o"></i> {{ data.comments|raw }}</span>
+                    {% endif %}
+
+                    {% if data.ratings is not null %}
+                        <span class="m-l-10">{{ data.ratings|raw }}</span>
+                    {% endif %}
+                </div>
+
+                {% if data.news_show_comments is not null %}
+                    <div class="card">{{ data.news_show_comments|raw }}</div>
+                {% endif %}
+
+                {% if data.news_show_ratings is not null %}
+                    <div class="card">{{ data.news_show_ratings|raw }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-3">
+            {% if data.news_admin_actions is not null %}
+                <div class="btn-group">
+                    <a href="{{ data.print_link }}" class="btn btn-primary btn-sm" title="{{ locale.print }}" target="_blank"><i class="fa fa-print"></i></a>
+                    <a href="{{ data.news_admin_actions.edit.link }}" class="btn btn-warning btn-sm" title="{{ locale.edit }}"><i class="fa fa-pencil"></i></a>
+                    <a href="{{ data.news_admin_actions.delete.link }}" class="btn btn-danger btn-sm" title="{{ locale.delete }}"><i class="fa fa-trash"></i></a>
+                </div>
+            {% else %}
+                <a class="btn btn-primary btn-sm" href="{{ data.print_link }}" title="{{ locale.print }}" target="_blank"><i class="fa fa-print"></i></a>
+            {% endif %}
+
+            <ul class="list-style-none m-t-10">
+                {% for filter in filters %}
+                    <li><a href="{{ filter.link|raw }}" class="display-inline{{ (filter.active == 1) ? ' text-dark' : '' }}">{{ filter.title }}</a></li>
+                {% endfor %}
+            </ul>
+
+            {% if categories is not null %}
+                {{ openside('<i class="fa fa-list"></i> ' ~ locale.news_0009, 'shadow p-t-0 m-t-10') }}
+                <ul class="list-style-none">
+                    {% for cat in categories %}
+                        <li{{ (cat.active == 1) ? ' class="active"' : '' }}><a href="{{ cat.link }}">{{ cat.name }}</a></li>
+
+                        {% if cat.sub is not null %}
+                            {% for sub_cat_id, sub_cat_data in cat.sub %}
+                                <li{{ (get.cat_id == sub_cat_id) ? ' class="active"' : '' }}><a href="{{ sub_cat_data.link }}">{{ sub_cat_data.name }}</a></li>
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+                {{ closeside() }}
+            {% endif %}
+
+            {% if popular_news is not null %}
+                {{ openside(locale.MG_102, 'shadow popular-items m-t-10') }}
+                    {% for item in popular_news %}
+                        <div class="item clearfix">
+                            <a class="text-dark title display-block" href="{{ item.link }}">{{ item.image|raw }}</a>
+
+                            <div class="item-content">
+                                <a class="text-dark title display-block" href="{{ item.link }}"><b>{{ item.name }}</b></a>
+                                {{ item.date }} |
+                                <a href="{{ item.category_link }}">{{ item.category_name }}</a>
+                                <div><i class="fa fa-eye"></i> {{ item.reads }}</div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {{ closeside() }}
+            {% endif %}
+        </div>
+    </div>
+</div>

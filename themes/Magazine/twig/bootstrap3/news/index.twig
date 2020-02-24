@@ -1,0 +1,64 @@
+<div class="news-header">
+    <h1>{{ locale.news_0004 }}</h1>
+    {{ breadcrumbs|raw }}
+</div>
+
+<div class="card">
+    {% if newsitems is not null %}
+        <div class="clearfix">
+            <span class="m-r-10">
+                <strong class="text-dark">{{ locale.show }}: </strong>
+                {% for filter in filters %}
+                    <a href="{{ filter.link }}" class="display-inline m-r-10{{ (filter.active == 1) ? ' text-dark' : '' }}">{{ filter.title }}</a>
+                {% endfor %}
+            </span>
+
+            {% if categories is not null %}
+                <div class="dropdown display-inline m-r-20">
+                    <a href="#" id="news-cats" data-toggle="dropdown">{{ locale.news_0009 }} <span class="caret"></span></a>
+                    <ul class="dropdown-menu" aria-labelledby="news-cats">
+                        {% for cat in categories %}
+                            <li{{ (cat.active == 1) ? ' class="active"' : '' }}><a href="{{ cat.link }}">{{ cat.name }}</a></li>
+
+                            {% if cat.sub is not null %}
+                                {% for sub_cat_data in cat.sub %}
+                                    <li{{ (sub_cat_data.active == 1) ? ' class="active"' : '' }}><a href="{{ sub_cat_data.link }}">{{ sub_cat_data.name }}</a></li>
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="row equal-height">
+            {% for id, data in newsitems %}
+                {% set link = constant('INFUSIONS') ~ 'news/news.php?readmore=' ~ data.news_id %}
+
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 m-t-15">
+                    <article class="post-item">
+                        <a href="{{ link }}" class="thumb overflow-hide">
+                            <img class="img-responsive" src="{{ data.image }}" alt="{{ data.news_subject }}"/>
+                        </a>
+                        <div class="post-meta clearfix">
+                            <div class="post-info">
+                                {{ data.date }}
+                                &middot; <a href="{{ link }}">{{ data.news_cat_name }}</a>
+                            </div>
+                            <h2 class="title m-t-0"><a href="{{ link }}">{{ data.news_subject }}</a></h2>
+                            <p>{{ data.text }}</p>
+                            <div class="author">{{ locale.by|capitalize }} {{ data.profile_link|raw }}</div>
+                            <a href="{{ link }}" class="readmore">{{ locale.MG_101 }}</a>
+                        </div>
+                    </article>
+                </div>
+            {% endfor %}
+        </div>
+
+        {% if news_nav is not null%}
+            <div class="text-center m-t-10">{{ news_nav|raw }}</div>
+        {% endif %}
+    {% else %}
+        <div class="text-center">{{ locale.news_0005 }}</div>
+    {% endif %}
+</div>
