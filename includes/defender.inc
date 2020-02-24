@@ -155,7 +155,7 @@ class Defender {
 
         if ( $input_name && isset( $_SESSION['form_fields'][ self::pageHash() ][ $input_name ] ) ) {
             //return $_SESSION['form_fields'][self::pageHash()][$input_name];
-            return session(['form_fields', self::pageHash(), $input_name]);
+            return session_get(['form_fields', self::pageHash(), $input_name]);
         } else {
             if ( $input_name ) {
                 return 'The session for this field is not found';
@@ -163,7 +163,7 @@ class Defender {
                 //return $_SESSION['form_fields'];
                 return $_SESSION['form_fields'][ self::pageHash() ];
 
-                return session(['form_fields', self::pageHash()]);
+                return session_get(['form_fields', self::pageHash()]);
             }
         }
     }
@@ -361,8 +361,6 @@ class Defender {
 
         $_SESSION['honeypots'][ self::pageHash() ][ $array['honeypot'] ] = $array;
     }
-
-    /** @noinspection PhpInconsistentReturnPointsInspection */
 
     /**
      * @param string $honeypot
@@ -576,7 +574,7 @@ class Defender {
 
     public function fileSanitizer( $key, $default = '', $input_name = FALSE ) {
 
-        $upload = $this->formSanitizer($_FILES[$key], $default, $input_name);
+        $upload = (array) $this->formSanitizer($_FILES[$key], $default, $input_name);
         if ( isset( $upload['error'] ) && $upload['error'] == 0 ) {
             return $upload;
         }
@@ -679,7 +677,7 @@ function form_sanitizer( $value, $default = '', $input_name = FALSE, $is_multiLa
  * Verify and Sanitize Inputs with input_name
  * A more secured method
  *
- * @param        $value     iinput_name
+ * @param mixed  $value input_name
  * @param string $default
  * @param bool   $input_name
  * @param bool   $is_multiLang
@@ -705,7 +703,7 @@ function sanitize_array( $array = [] ) {
 /**
  * File sanitize by input_name
  *
- * @param        $value     input_name
+ * @param string $value input_name
  * @param string $default
  * @param bool   $input_name
  *
@@ -792,7 +790,7 @@ function get( $key = NULL, $type = FILTER_DEFAULT, $flags = '' ) {
 /**
  * Sanitizes $_POST by name
  *
- * @param     $key  input_name
+ * @param string $key input_name
  * @param int $type
  * @param     $flags
  *
@@ -871,7 +869,7 @@ function server( $key, $type = FILTER_DEFAULT ) {
 /**
  * Checks if a file is uploaded during upload post event
  *
- * @param $key  input name
+ * @param mixed $key input name
  *
  * @return bool
  */
