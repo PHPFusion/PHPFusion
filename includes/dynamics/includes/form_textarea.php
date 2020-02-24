@@ -120,7 +120,10 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         $tinymce_list = json_encode($tinymce_list);
         $tinymce_smiley_vars = "";
         if (!defined('tinymce')) {
-            add_to_footer("<script type='text/javascript' src='".INCLUDES."jscripts/tinymce/tinymce.min.js'></script>");
+
+            add_to_footer("<script src='".INCLUDES."jscripts/tinymce5/tinymce.min.js'>");
+            //add_to_footer("<script type='text/javascript' src='".INCLUDES."jscripts/tinymce/tinymce.min.js'></script>");
+
             define('tinymce', TRUE);
             // PHP-Fusion Parse Cache Smileys
             $smileys = cache_smileys();
@@ -204,7 +207,15 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                 ");
                 break;
             case 'simple':
-                add_to_jquery("
+                $tinymce_settings = [
+                    'selector' => 'textarea#'.$options['input_id'],
+                ];
+
+                $tinymce_settings = json_encode($tinymce_settings);
+
+
+                add_to_jquery("tinymce.init($tinymce_settings);");
+                /*add_to_jquery("
                     tinymce.init({
                     selector: '#".$options['input_id']."',
                     inline: ".($options['inline_editing'] == TRUE ? "true" : "false").",
@@ -249,7 +260,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                 $('#inject').bind('click', function () {
                     tinyMCE.activeEditor.execCommand(\"mceInsertContent\", true, '[b]I am injecting in stuff..[/b]');
                     });
-                ");
+                ");*/
                 break;
             case 'default':
                 add_to_jquery("
@@ -281,6 +292,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                 ");
                 break;
         }
+
     } else {
 
         if ($options['tab']) {

@@ -21,6 +21,7 @@ use Defender\ImageValidation;
 use PHPFusion\Authenticate;
 use PHPFusion\Installer\Infusion_Core;
 use PHPFusion\OutputHandler;
+use PHPFusion\Sessions;
 use PHPFusion\Steam;
 
 if (preg_match("/maincore.php/i", $_SERVER['PHP_SELF'])) {
@@ -64,7 +65,7 @@ session_name(COOKIE_PREFIX.'session');
 // Start DB session.
 if (!empty($settings['database_sessions'])) {
     // Establish secondary mySQL database connection for session caches
-    $handler = \PHPFusion\Sessions::getInstance(COOKIE_PREFIX.'session')->setConfig($db_host, $db_user, $db_pass, $db_name, !empty($db_port) ? $db_port : 3306);
+    $handler = Sessions::getInstance(COOKIE_PREFIX.'session')->setConfig($db_host, $db_user, $db_pass, $db_name, !empty($db_port) ? $db_port : 3306);
     session_set_save_handler(
         [$handler, '_open'],
         [$handler, '_close'],

@@ -774,7 +774,7 @@ function fieldgenerator( $db ) {
  *
  * @param string $table
  * @param array  $inputdata
- * @param string $mode save|update|delete
+ * @param string $mode save|update|delete|multi_update
  * @param array  $options
  *                     Options:
  *                     bool debug If TRUE, do nothing, just show the SQL. FALSE by default

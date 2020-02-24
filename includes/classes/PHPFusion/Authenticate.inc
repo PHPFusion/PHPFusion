@@ -92,9 +92,9 @@ class Authenticate {
                         WHERE user_id='".$user['user_id']."'");
                 }
                 if ($user['user_status'] == 0 && $user['user_actiontime'] == 0) {
-                        Authenticate::setUserCookie($user['user_id'], $user['user_salt'], $user['user_algo'], $remember, TRUE);
-                        Authenticate::_setUserTheme($user);
-                        $this->_userData = $user;
+                    Authenticate::setUserCookie($user['user_id'], $user['user_salt'], $user['user_algo'], $remember, TRUE);
+                    Authenticate::_setUserTheme($user);
+                    $this->_userData = $user;
                 } else {
                     require_once INCLUDES."suspend_include.php";
                     require_once INCLUDES."sendmail_include.php";
@@ -213,7 +213,7 @@ class Authenticate {
 
     public static function setAdminLogin() {
         $locale = fusion_get_locale();
-        if (isset($_GET['logout'])) {
+        if (check_get('logout')) {
             self::expireAdminCookie();
             $user = fusion_get_userdata("user_id");
             session_destroy();
@@ -221,19 +221,19 @@ class Authenticate {
                 redirect(BASEDIR."index.php");
             }
         }
-        if (isset($_POST['admin_password'])) {
-            $admin_password = form_sanitizer($_POST['admin_password'], '', 'admin_password');
+        if ($admin_password = post('admin_password')) {
             if (Authenticate::validateAuthAdmin($admin_password)) {
                 if (Authenticate::setAdminCookie($admin_password)) {
-                    unset($_SESSION['notices']);
+                    session_remove('notices');
                     redirect(FUSION_REQUEST);
                 } else {
-                    addNotice("danger", $locale['cookie_error'], $locale['cookie_error_description']);
+                    addNotice("danger", $locale['cookie_error'].$locale['cookie_error_description']);
                 }
             } else {
-                addNotice("danger", $locale['password_invalid'], $locale['password_invalid_description']);
+                addNotice("danger", $locale['password_invalid'].$locale['password_invalid_description']);
             }
         }
+
         if (defined('ADMIN_PANEL') && !isset($_COOKIE[COOKIE_PREFIX."admin"])) {
             setNotice("danger", $locale['cookie_title'], $locale['cookie_description']);
         }
@@ -245,37 +245,64 @@ class Authenticate {
         Authenticate::_setCookie(COOKIE_ADMIN, '', time() - 1209600, COOKIE_PATH, COOKIE_DOMAIN, FALSE, TRUE);
     }
 
-    // Checks or sets the lastvisit cookie
-
+    /**
+     * Checks or sets the lastvisit cookie
+     *
+     * @param string $pass
+     *
+     * @return bool
+     */
     public static function validateAuthAdmin($pass = "") {
         $userdata = fusion_get_userdata();
         $locale = fusion_get_locale();
         if (iADMIN) {
+            // Validate a provided password
+            if ($pass) {
+                $result = dbquery("SELECT user_admin_algo, user_admin_salt, user_admin_password FROM ".DB_USERS."
+                    WHERE user_id=:uid AND user_level < :member AND  user_status=:status AND user_actiontime=:actiontime
+                    LIMIT 1", [
+                    ':uid'        => (int)$userdata['user_id'],
+                    ':member'     => USER_LEVEL_MEMBER,
+                    ':status'     => 0,
+                    ':actiontime' => 0,
+                ]);
+                if (dbrows($result)) {
+                    $user = dbarray($result);
+                    $inputHash = ($user['user_admin_algo'] != 'md5' ? hash_hmac($user['user_admin_algo'], $pass, $user['user_admin_salt']) : md5(md5($pass)));
+                    if ($inputHash == $user['user_admin_password']) {
+                        return TRUE;
+                    }
+                }
+                return FALSE;
+            }
+
             // Validate existing admin cookie
-            if ($pass == '' && isset($_COOKIE[COOKIE_ADMIN]) && $_COOKIE[COOKIE_ADMIN] != "") {
-                $cookieDataArr = explode(".", $_COOKIE[COOKIE_ADMIN]);
+            if ($cookie = cookie(COOKIE_ADMIN)) {
+                $cookieDataArr = explode('.', $cookie);
                 if (count($cookieDataArr) == 3) {
                     list($userID, $cookieExpiration, $cookieHash) = $cookieDataArr;
                     if ($cookieExpiration > time() && $userID == $userdata['user_id']) {
-                        $result = dbquery("SELECT user_admin_algo, user_admin_salt FROM ".DB_USERS."
-                            WHERE user_id='".(isnum($userID) ? $userID : 0)."' AND user_level < ".USER_LEVEL_MEMBER." AND  user_status='0' AND user_actiontime='0'
-                            LIMIT 1");
-                        if (dbrows($result) == 1) {
+                        $result = dbquery("SELECT user_admin_algo, user_admin_salt FROM ".DB_USERS."  WHERE user_id=:uid AND user_level < :member AND  user_status=:status AND user_actiontime=:actiontime LIMIT 1", [
+                            ':uid'        => (isnum($userID) ? $userID : 0),
+                            ':member'     => USER_LEVEL_MEMBER,
+                            ':status'     => 0,
+                            ':actiontime' => 0,
+                        ]);
+                        if (dbrows($result)) {
                             $user = dbarray($result);
                             $key = hash_hmac($user['user_admin_algo'], $userID.$cookieExpiration, $user['user_admin_salt']);
                             $hash = hash_hmac($user['user_admin_algo'], $userID.$cookieExpiration, $key);
                             if ($cookieHash == $hash) {
                                 $error = FALSE;
-
+                                $aid = session_get('aid');
                                 /**
                                  * New 2nd factor session authentication
                                  */
-                                if (empty($_SESSION['aid'])) {
+                                if (empty($aid)) {
                                     return FALSE;
                                 } else {
                                     $password_algo = fusion_get_settings("password_algorithm");
-
-                                    $token_data = explode(".", $_SESSION['aid']);
+                                    $token_data = explode(".", $aid);
                                     // check if the token has the correct format
                                     if (count($token_data) == 3) {
                                         list($tuser_id, $token_time, $hash) = $token_data;
@@ -300,7 +327,7 @@ class Authenticate {
                                     }
                                     // Check if any error was set
                                     if ($error !== FALSE) {
-                                        \Defender::stop();
+                                        fusion_stop();
                                         addNotice("warning", $error);
 
                                         return FALSE;
@@ -312,18 +339,7 @@ class Authenticate {
                         }
                     }
                 }
-                // Validate a provided password
-            } else if ($pass != "") {
-                $result = dbquery("SELECT user_admin_algo, user_admin_salt, user_admin_password FROM ".DB_USERS."
-                    WHERE user_id='".$userdata['user_id']."' AND user_level < ".USER_LEVEL_MEMBER." AND  user_status='0' AND user_actiontime='0'
-                    LIMIT 1");
-                if (dbrows($result) == 1) {
-                    $user = dbarray($result);
-                    $inputHash = ($user['user_admin_algo'] != 'md5' ? hash_hmac($user['user_admin_algo'], $pass, $user['user_admin_salt']) : md5(md5($pass)));
-                    if ($inputHash == $user['user_admin_password']) {
-                        return TRUE;
-                    }
-                }
+                return FALSE;
             }
         }
 

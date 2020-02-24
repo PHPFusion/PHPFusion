@@ -17,6 +17,10 @@
 +--------------------------------------------------------*/
 
 use PHPFusion\BreadCrumbs;
+use Twig\Environment;
+use Twig\Extension\DebugExtension;
+use Twig\Loader\FilesystemLoader;
+use Twig\TwigFunction;
 
 defined('IN_FUSION') || exit;
 
@@ -137,24 +141,26 @@ if (!function_exists('render_user_tags')) {
 
 /**
  * Load Twig Template Engine
+ *
  * @param string $path
  * @param bool   $debug
  *
- * @return \Twig\Environment
+ * @return Environment
  */
 function twig_init($path = THEME.'twig', $debug = FALSE) {
-    $loader = new \Twig\Loader\FilesystemLoader($path);
-    $twig = new \Twig\Environment($loader, [
+    $loader = new FilesystemLoader($path);
+
+    $twig = new Environment($loader, [
         'cache' => BASEDIR.'cache/twig',
         'debug' => $debug
     ]);
 
     if ($debug == TRUE) {
-        $twig->addExtension(new \Twig\Extension\DebugExtension());
+        $twig->addExtension(new DebugExtension());
     }
 
     // {{ get_function('function_name', arg1, arg2) }}
-    $get_function = new \Twig\TwigFunction('get_function', function ($function) {
+    $get_function = new TwigFunction('get_function', function ($function) {
         $args = func_get_args();
         array_shift($args);
         call_user_func_array($function, $args);
@@ -163,7 +169,7 @@ function twig_init($path = THEME.'twig', $debug = FALSE) {
     $twig->addFunction($get_function);
 
     // {{ openside('Title') }}
-    $openside = new \Twig\TwigFunction('openside', function () {
+    $openside = new TwigFunction('openside', function () {
         $args = func_get_args();
         call_user_func_array('openside', $args);
     });
@@ -171,7 +177,7 @@ function twig_init($path = THEME.'twig', $debug = FALSE) {
     $twig->addFunction($openside);
 
     // {{ closeside() }}
-    $closeside = new \Twig\TwigFunction('closeside', function () {
+    $closeside = new TwigFunction('closeside', function () {
         $args = func_get_args();
         call_user_func_array('closeside', $args);
     });
