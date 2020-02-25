@@ -151,7 +151,7 @@ function twig_init($path = THEME.'twig', $debug = FALSE) {
     $loader = new FilesystemLoader($path);
 
     $twig = new Environment($loader, [
-        'cache' => server('DOCUMENT_ROOT').'cache/twig',
+        'cache' => BASEDIR.'cache/twig',
         'debug' => $debug
     ]);
 
