@@ -13,7 +13,7 @@ config-copy.php
 includes/gateway/flood/
 images/thumbs/
 fusion_error_log.log
-cache
+/cache
 composer.lock
 /home.php
 includes/header_includes.php

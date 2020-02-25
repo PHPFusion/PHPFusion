@@ -98,6 +98,8 @@ class Console_Core extends Install_Core {
      * @return string
      */
     public function getLayout() {
+        \Dynamics::getInstance()->getHeaders();
+
         $html = "<!DOCTYPE html>\n";
         $html .= "<html lang='".self::$locale['setup_0011']."' dir='".self::$locale['setup_0012a']."'>\n";
         $html .= "<head>\n";
