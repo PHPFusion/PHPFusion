@@ -159,11 +159,19 @@ function twig_init($path = THEME.'twig', $debug = FALSE) {
         $twig->addExtension(new DebugExtension());
     }
 
-    // {{ get_function('function_name', arg1, arg2) }}
-    $get_function = new TwigFunction('get_function', function ($function) {
+    // {{ get_function('function_name', TRUE, arg1, arg2) }}
+    $get_function = new TwigFunction('get_function', function ($function, $return = FALSE) {
         $args = func_get_args();
         array_shift($args);
-        call_user_func_array($function, $args);
+        array_shift($args);
+
+        if ($return == TRUE) {
+            return call_user_func_array($function, $args);
+        } else {
+            call_user_func_array($function, $args);
+        }
+
+        return NULL;
     });
 
     $twig->addFunction($get_function);

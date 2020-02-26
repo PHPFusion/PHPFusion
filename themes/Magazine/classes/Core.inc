@@ -26,7 +26,7 @@ class Core {
         'notices'       => TRUE
     ];
 
-    protected static function GetParam($name = NULL) {
+    protected static function getParam($name = NULL) {
         if (isset(self::$options[$name])) {
             return self::$options[$name];
         }
@@ -34,7 +34,7 @@ class Core {
         return NULL;
     }
 
-    public static function SetParam($name, $value) {
+    public static function setParam($name, $value) {
         self::$options[$name] = $value;
     }
 }

@@ -1,0 +1,30 @@
+<ul class="nav navbar-nav navbar-right secondary m-r-0">
+    {% set basedir = constant('BASEDIR') %}
+
+    {% if languages|length > 1 %}
+        {% set language = constant('LANGUAGE') %}
+
+        <li class="dropdown language-switcher">
+            <a href="#" class="dropdown-toggle pointer" data-toggle="dropdown" title="{{ language }}">
+                <i class="fa fa-globe"></i>
+                <img src="{{ basedir }}locale/{{ language }}/{{ language }}-s.png" alt="{{ current_lang }}">
+                <span class="caret"></span>
+            </a>
+
+            <ul class="dropdown-menu">
+                {% for language_folder, language_name in languages %}
+                    {% set language_link = get_function('clean_request', TRUE, 'lang=' ~ language_folder, ['lang'], FALSE) %}
+
+                    <li>
+                        <a class="display-block" href="{{ language_link|raw }}">
+                            <img class="m-r-5" src="{{ basedir }}locale/{{ language_folder }}/{{ language_folder }}-s.png" alt="{{ language_folder }}"/>
+                            {{ language_name }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </li>
+    {% endif %}
+
+    {{ html|raw }}
+</ul>

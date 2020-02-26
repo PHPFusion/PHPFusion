@@ -32,7 +32,7 @@ class Auth extends Core {
         Panels::getInstance(TRUE)->hide_panel('U_CENTER');
         Panels::getInstance(TRUE)->hide_panel('L_CENTER');
         Panels::getInstance(TRUE)->hide_panel('BL_CENTER');
-        self::SetParam('notices', FALSE);
+        self::setParam('notices', FALSE);
 
         $twig = twig_init(THEME.'twig');
 
@@ -76,7 +76,7 @@ class Auth extends Core {
         Panels::getInstance(TRUE)->hide_panel('U_CENTER');
         Panels::getInstance(TRUE)->hide_panel('L_CENTER');
         Panels::getInstance(TRUE)->hide_panel('BL_CENTER');
-        self::SetParam('notices', FALSE);
+        self::setParam('notices', FALSE);
 
         $twig = twig_init(THEME.'twig');
 
@@ -128,7 +128,7 @@ class Auth extends Core {
         Panels::getInstance(TRUE)->hide_panel('U_CENTER');
         Panels::getInstance(TRUE)->hide_panel('L_CENTER');
         Panels::getInstance(TRUE)->hide_panel('BL_CENTER');
-        self::SetParam('notices', FALSE);
+        self::setParam('notices', FALSE);
 
         $twig = twig_init(THEME.'twig');
 
@@ -151,7 +151,7 @@ class Auth extends Core {
         Panels::getInstance(TRUE)->hide_panel('L_CENTER');
         Panels::getInstance(TRUE)->hide_panel('BL_CENTER');
 
-        $twig = twig_init(THEME.'twig', true);
+        $twig = twig_init(THEME.'twig');
 
         $context = [
             'session' => ['validated' => session_get('validated')],
