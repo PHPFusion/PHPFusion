@@ -56,34 +56,34 @@ function closeside() {
     echo '</div>';
 }
 
-function render_main_blog($info) {
-    Magazine\Templates\Blog::render_main_blog($info);
-}
-
-function display_home($info) {
-    Magazine\Templates\Home::display_home($info);
-}
-
 function display_loginform($info) {
-    Magazine\Templates\Login::LoginForm($info);
+    Magazine\Templates\Auth::loginForm($info);
 }
 
 function display_register_form($info) {
-    Magazine\Templates\Login::RegisterForm($info);
+    Magazine\Templates\Auth::registerForm($info);
 }
 
 function display_lostpassword($content) {
-    Magazine\Templates\Login::Lostpassword($content);
+    Magazine\Templates\Auth::lostPassword($content);
 }
 
 function display_gateway($info) {
-    Magazine\Templates\Login::FusionGateway($info);
+    Magazine\Templates\Auth::fusionGateway($info);
+}
+
+function render_main_blog($info) {
+    Magazine\Templates\Blog::renderMainBlog($info);
+}
+
+function display_home($info) {
+    Magazine\Templates\Home::displayHome($info);
 }
 
 function display_main_news($info) {
-    Magazine\Templates\News::display_main_news($info);
+    Magazine\Templates\News::displayMainNews($info);
 }
 
 function render_news_item($info) {
-    Magazine\Templates\News::render_news_item($info);
+    Magazine\Templates\News::renderNewsItem($info);
 }

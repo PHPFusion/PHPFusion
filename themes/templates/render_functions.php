@@ -184,5 +184,21 @@ function twig_init($path = THEME.'twig', $debug = FALSE) {
 
     $twig->addFunction($closeside);
 
+    // {{ opentable('Title') }}
+    $opentable = new TwigFunction('opentable', function () {
+        $args = func_get_args();
+        call_user_func_array('opentable', $args);
+    });
+
+    $twig->addFunction($opentable);
+
+    // {{ closetable() }}
+    $closetable = new TwigFunction('closetable', function () {
+        $args = func_get_args();
+        call_user_func_array('closetable', $args);
+    });
+
+    $twig->addFunction($closetable);
+
     return $twig;
 }

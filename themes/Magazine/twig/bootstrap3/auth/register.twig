@@ -1,0 +1,32 @@
+<div class="panel panel-default" style="max-width: 650px; margin: 30px auto;">
+    <div class="panel-heading" style="background: #fff;">
+        <h3 class="panel-title"><strong>{{ locale.global_107 }}</strong></h3>
+    </div>
+
+    <div class="panel-body">
+        {{ notices }}
+
+        {{ open_tab|raw }}
+
+        {% if no_uf %}
+            <div class="text-white text-center">{{ locale.uf_108 }}</div>
+        {% else %}
+            {{ info.openform|raw }}
+            {{ info.user_name|raw }}
+            {{ info.user_email|raw }}
+            {{ info.user_hide_email|raw }}
+            {{ info.user_avatar|raw }}
+            {{ info.user_password|raw }}
+            {% if constant('iADMIN') %}
+                {{ info.user_admin_password|raw }}
+            {% endif %}
+            {{ ufs|raw }}
+            {{ info.validate|raw }}
+            {{ info.terms|raw }}
+            {{ info.button|raw }}
+            {{ info.closeform|raw }}
+        {% endif %}
+
+        {{ close_tab|raw }}
+    </div>
+</div>

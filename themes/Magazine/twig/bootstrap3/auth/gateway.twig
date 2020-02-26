@@ -1,0 +1,21 @@
+<div style="max-width: 500px; margin: 30px auto;">
+    {{ opentable(locale.gateway_069) }}
+
+    {% if info.showform == true %}
+        {{ info.openform|raw }}
+        {{ info.hiddeninput|raw }}
+        <h3>{{ info.gateway_question|raw }}</h3>
+        {{ info.textinput|raw }}
+        {{ info.button|raw }}
+        {{ info.closeform|raw }}
+    {% elseif not session.validated %}
+        <div class="well text-center"><h3 class="m-0">{{ locale.gateway_068 }}</h3></div>
+    {% endif %}
+
+    {% if info.incorrect_answer == true %}
+        <div class="well text-center"><h3 class="m-0">{{ locale.gateway_066|raw }}</h3></div>
+        <input type="button" value="{{ locale.gateway_067 }}" class="text-center btn btn-info spacer-xs" onclick="location='{{ constant('BASEDIR') }}register.php'">
+    {% endif %}
+
+    {{ closetable() }}
+</div>

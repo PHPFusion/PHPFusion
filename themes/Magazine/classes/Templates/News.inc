@@ -23,7 +23,7 @@ use \PHPFusion\OutputHandler;
 use \PHPFusion\Panels;
 
 class News extends Core {
-    public static function display_main_news($info) {
+    public static function displayMainNews($info) {
         Panels::getInstance(TRUE)->hide_panel('RIGHT');
         Panels::getInstance(TRUE)->hide_panel('LEFT');
         Panels::getInstance(TRUE)->hide_panel('AU_CENTER');
@@ -55,7 +55,7 @@ class News extends Core {
         echo $twig->render('bootstrap3/news/index.twig', $context);
     }
 
-    public static function render_news_item($info) {
+    public static function renderNewsItem($info) {
         $theme_settings = get_theme_settings('Magazine');
 
         Panels::getInstance(TRUE)->hide_panel('RIGHT');

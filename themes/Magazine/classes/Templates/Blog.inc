@@ -21,7 +21,7 @@ use Magazine\Core;
 use \PHPFusion\Panels;
 
 class Blog extends Core {
-    public static function render_main_blog($info) {
+    public static function renderMainBlog($info) {
         Panels::getInstance(TRUE)->hide_panel('RIGHT');
         Panels::getInstance(TRUE)->hide_panel('LEFT');
         Panels::getInstance(TRUE)->hide_panel('AU_CENTER');
@@ -30,13 +30,13 @@ class Blog extends Core {
         Panels::getInstance(TRUE)->hide_panel('BL_CENTER');
 
         if (isset($_GET['readmore']) && !empty($info['blog_item'])) {
-            self::display_blog_item($info);
+            self::displayBlogItem($info);
         } else {
-            self::display_blog_index($info);
+            self::displayBlogIndex($info);
         }
     }
 
-    private static function display_blog_index($info) {
+    private static function displayBlogIndex($info) {
         $twig = twig_init(THEME.'twig');
 
         add_to_jquery('$("#blog-archive").submenupicker();');
@@ -83,7 +83,7 @@ class Blog extends Core {
         echo $twig->render('bootstrap3/blog/index.twig', $context);
     }
 
-    public static function display_blog_item($info) {
+    public static function displayBlogItem($info) {
         $twig = twig_init(THEME.'twig');
 
         $context = [

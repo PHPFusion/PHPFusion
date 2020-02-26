@@ -20,7 +20,7 @@ namespace Magazine\Templates;
 use Magazine\Core;
 
 class Home extends Core {
-    public static function display_home($info) {
+    public static function displayHome($info) {
         $twig = twig_init(THEME.'twig');
 
         foreach ($info as $db_id => $content) {

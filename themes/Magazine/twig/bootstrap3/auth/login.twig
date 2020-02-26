@@ -1,0 +1,37 @@
+<div class="panel panel-default" style="max-width: 500px; margin: 30px auto;">
+    <div class="panel-heading" style="background: #fff;">
+        <h3 class="panel-title"><strong>{{ locale.global_100 }}</strong></h3>
+
+        {% if not constant('iMEMBER') %}
+            <div class="pull-right" style="margin-top: -20px;">{{ info.forgot_password_link|raw }}</div>
+        {% endif %}
+    </div>
+
+    <div class="panel-body">
+        {{ notices }}
+
+        {% if constant('iMEMBER') %}
+            <h3 class="text-center">{{ userdata.user_name }}</h3>
+            <div class="text-center">
+                {% for item in links %}
+                    <a href="{{ item.link }}">{{ item.title }}</a><br>
+                {% endfor %}
+            </div>
+        {% else %}
+            {{ info.open_form|raw }}
+            {{ info.user_name|raw }}
+            {{ info.user_pass|raw }}
+            {{ info.remember_me|raw }}
+            {{ info.login_button|raw }}
+            <div class="display-block text-center m-t-10">{{ info.registration_link|raw }}</div>
+            {{ info.close_form|raw }}
+
+            {% if info.connect_buttons %}
+                <hr>
+                {% for btn in info.connect_buttons %}
+                    {{ btn|raw }}
+                {% endfor %}
+            {% endif %}
+        {% endif %}
+    </div>
+</div>
