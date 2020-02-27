@@ -26,5 +26,35 @@
         </li>
     {% endif %}
 
-    {{ html|raw }}
+    <li id="user-info" class="dropdown">
+        <a href="#" id="user-menu" class="dropdown-toggle" data-toggle="dropdown">{{ name }} <span class="caret"></span></a>
+
+        {% if constant('iMEMBER') %}
+            <ul class="dropdown-menu" aria-labelledby="user-menu" style="min-width: 180px;">
+                {% for item in menu %}
+                    {% if item.divider %}
+                        <li role="separator" class="divider"></li>
+                    {% else %}
+                        <li><a href="{{ item.link }}"><i class="m-r-5 {{ item.icon }}"></i> {{ item.title }}</a></li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        {% else %}
+            <ul class="dropdown-menu login-menu" aria-labelledby="user-menu">
+                <li>
+                    {{ menu.openform|raw }}
+                    {{ menu.name|raw }}
+                    {{ menu.pass|raw }}
+                    {{ menu.remember|raw }}
+                    {{ menu.button|raw }}
+                    {{ menu.closeform|raw }}
+                </li>
+                <li>{{ menu.lostpassword|raw }}</li>
+
+                {% if settings.enable_registration == 1 %}
+                    <li>{{ menu.register|raw }}</li>
+                {% endif %}
+            </ul>
+        {% endif %}
+    </li>
 </ul>

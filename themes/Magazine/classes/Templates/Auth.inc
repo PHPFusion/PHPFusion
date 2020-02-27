@@ -38,8 +38,8 @@ class Auth extends Core {
 
         $links = [];
         if (iMEMBER) {
-            $adminlink = NULL;
-            if (iADMIN && (iUSER_RIGHTS != '' || iUSER_RIGHTS != 'C')) {
+            $adminlink = [];
+            if (iADMIN) {
                 $adminlink = ['link' => ADMIN.'index.php'.fusion_get_aidlink(), 'title' => $locale['global_123']];
             }
 

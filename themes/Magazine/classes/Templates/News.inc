@@ -65,7 +65,7 @@ class News extends Core {
         Panels::getInstance(TRUE)->hide_panel('L_CENTER');
         Panels::getInstance(TRUE)->hide_panel('BL_CENTER');
 
-        $twig = twig_init(THEME.'twig', true);
+        $twig = twig_init(THEME.'twig');
 
         OutputHandler::addToHead('<link rel="stylesheet" type="text/css" href="'.INCLUDES.'jquery/colorbox/colorbox.css"/>');
         OutputHandler::addToFooter('<script type="text/javascript" src="'.INCLUDES.'jquery/colorbox/jquery.colorbox.js"></script>');
