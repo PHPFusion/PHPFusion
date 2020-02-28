@@ -50,7 +50,7 @@ if (str_replace(".", "", $settings['version']) < "80024") {
         $result = dbquery("INSERT INTO ".DB_SETTINGS."settings (settings_name, settings_value) VALUES ('gateway_method', '2')");
 
         // Set a new version
-        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='8.00.24' WHERE settings_name='version'");
+        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='8.00.30' WHERE settings_name='version'");
         redirect(FUSION_SELF.$aidlink."&amp;upgrade_ok");
     }
 

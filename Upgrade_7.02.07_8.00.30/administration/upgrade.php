@@ -16,6 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
+$current_version = '8.00.30';
 if (!checkrights("U") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
     redirect("../index.php");
 }
@@ -737,7 +738,7 @@ if (str_replace(".", "", $settings['version']) < "80022") {
                     dbquery("UPDATE ".DB_CUSTOM_PAGES." SET page_language ='".$settings['locale']."'");
 
                     // Set the new version
-                    dbquery("UPDATE ".DB_SETTINGS." SET settings_value='8.00.24' WHERE settings_name='version'");
+                    dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$current_version."' WHERE settings_name='version'");
 
                     redirect(FUSION_SELF.$aidlink."&amp;upgrade_ok");
                 }
