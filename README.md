@@ -1,7 +1,7 @@
 PHP-Fusion Babylon
 ---
 
-This is the development of PHP-Fusion Version 9.10.XX, code name Babylon.
+This is the development of PHP-Fusion Version 10.00.XX, code name Babylon.
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/3702a8fcb1214628bc7c721340d775d8)](https://www.codacy.com/app/FrederickChan/PHP-Fusion?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=php-fusion/PHP-Fusion&amp;utm_campaign=Badge_Grade)
 
@@ -82,26 +82,26 @@ Please observe the new naming convention system, as we will be refactoring the e
 
 **File Name:** file-name.php or file_name.php are accepted.
 
-**Function Name:** some_function() {} using snake case 
+**Function Name:** some_function() {} using snake case
 
 **Class Name:** Some_Class {} using camel case where the first letter is an Uppercase and if file is separated with a - to be represented with a _ underscore in the class name.
 
 **Class Method Name:** public someFunction() {} using pascal case where the first letter is a Lowercase.
 
-**Other Notes on File Naming:** 
+**Other Notes on File Naming:**
 
 On PSR4 autoloaders issues, we'll do both - , _ and implement strict strtolower on filenames with a common goal to support all files in the PHP-Fusion project scope.
 Further update will follow as we observe the growth of the project.
 
 You can still run .inc but those will not be supported by PHP-Fusion Autoloader anymore. A custom autoloader will be needed from your end.
 
-The file name must be in all small caps, not .inc but .php extension. 
+The file name must be in all small caps, not .inc but .php extension.
 
 Just in case, in some rare scenarios, that if the files are already existing public url files, **please do not refactor the file name**. You must create a new file and put up a 301 on the old file and redirect it to the new one. This will prevent users losing page rank on live sites.
 
 If you want special identifiers for a subset of class file, you can have them renamed as file-name.classname.php
 
-**Special Note Regarding Function Naming:** 
+**Special Note Regarding Function Naming:**
 
 When the function/method does something, point it out as a prefix. A normal convention is to add a verb in front of the function name like 'do, get, set, define, etc'. Implementation example is such as 'doSomeFunction(), setSomeInfo(), defineConstant(), etc'.
 
