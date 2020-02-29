@@ -36,7 +36,11 @@ if (dbrows($cp_result)) {
     opentable($cp_data['page_title']);
     if (checkgroup($cp_data['page_access'])) {
         ob_start();
-        eval("?>".stripslashes($cp_data['page_content'])."<?php ");
+        if (fusion_get_settings('allow_php_exe')) {
+            eval("?>".stripslashes($cp_data['page_content'])."<?php ");
+        } else {
+            echo stripslashes($cp_data['page_content']);
+        }
         $custompage = ob_get_contents();
         ob_end_clean();
         $custompage = preg_split("/<!?--\s*pagebreak\s*-->/i", $custompage);

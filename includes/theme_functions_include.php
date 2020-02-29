@@ -211,14 +211,22 @@ function showbanners($display = "") {
     ob_start();
     if ($display == 2) {
         if ($settings['sitebanner2']) {
-            eval("?>".stripslashes($settings['sitebanner2'])."<?php ");
+            if (fusion_get_settings('allow_php_exe')) {
+                eval("?>".stripslashes($settings['sitebanner2'])."<?php ");
+            } else {
+                echo stripslashes($settings['sitebanner2']);
+            }
         }
     } else {
         if ($display == "" && $settings['sitebanner2']) {
             eval("?><div style='float: right;'>".stripslashes($settings['sitebanner2'])."</div>\n<?php ");
         }
         if ($settings['sitebanner1']) {
-            eval("?>".stripslashes($settings['sitebanner1'])."\n<?php ");
+            if (fusion_get_settings('allow_php_exe')) {
+                eval("?>".stripslashes($settings['sitebanner1'])."<?php ");
+            } else {
+                echo stripslashes($settings['sitebanner1']);
+            }
         } else if ($settings['sitebanner']) {
             echo "<a href='".$settings['siteurl']."'><img src='".BASEDIR.$settings['sitebanner']."' alt='".$settings['sitename']."' style='border: 0;' /></a>\n";
         } else {

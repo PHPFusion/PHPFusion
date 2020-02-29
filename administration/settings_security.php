@@ -106,6 +106,10 @@ if (isset($_POST['savesettings'])) {
         if (!$result) {
             $error = 1;
         }
+        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['allow_php_exe'])."' WHERE settings_name='allow_php_exe'");
+        if (!$result) {
+            $error = 1;
+        }
     }
     redirect(FUSION_SELF.$aidlink."&error=".$error);
 }
@@ -147,6 +151,13 @@ echo "<option value='1'".($settings['mime_check'] == "1" ? " selected='selected'
 echo "<option value='0'".($settings['mime_check'] == "0" ? " selected='selected'" : "").">".$locale['519']."</option>\n";
 echo "</select></td>\n";
 echo "</tr><tr>\n";
+echo "<td width='50%' class='tbl'>".$locale['settings_100']."</td>\n";
+echo "<td width='50%' class='tbl'><select name='allow_php_exe' class='textbox'>\n";
+echo "<option value='1'".($settings['allow_php_exe'] == "1" ? " selected='selected'" : "").">".$locale['518']."</option>\n";
+echo "<option value='0'".($settings['allow_php_exe'] == "0" ? " selected='selected'" : "").">".$locale['519']."</option>\n";
+echo "</select></td>\n";
+echo "</tr><tr>\n";
+
 echo "<td class='tbl2' align='center' colspan='2'>".$locale['692']."</td>\n";
 echo "</tr>\n<tr>\n";
 echo "<td width='50%' class='tbl'>";

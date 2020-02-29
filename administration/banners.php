@@ -68,7 +68,11 @@ if (isset($_POST['save_banners'])) {
     echo "<h3 class='m-b-20'>".$locale['851']."</h3>\n";
 
     if (isset($_POST['preview_banners']) && $sitebanner1) {
-        eval("?><div class='list-group-item m-b-10'>".$sitebanner1."</div><?php ");
+        if (fusion_get_settings('allow_php_exe')) {
+            eval("?><div class='list-group-item m-b-10'>".$sitebanner1."</div><?php ");
+        } else {
+            echo "<div class='list-group-item m-b-10'>".$sitebanner1."</div>";
+        }
     }
 
     echo "<form name='settingsform' method='post' action='".FUSION_REQUEST."'>\n";
@@ -84,7 +88,11 @@ if (isset($_POST['save_banners'])) {
     echo "<h3 class='m-b-20'>".$locale['852']."</h3>\n";
 
     if (isset($_POST['preview_banners']) && $sitebanner2) {
-        eval("?><div class='list-group-item  m-b-10'>".$sitebanner2."</div><?php ");
+        if (fusion_get_settings('allow_php_exe')) {
+            eval("?><div class='list-group-item m-b-10'>".$sitebanner2."</div><?php ");
+        } else {
+            echo "<div class='list-group-item m-b-10'>".$sitebanner2."</div>";
+        }
     }
 
     echo "<textarea name='sitebanner2' cols='50' rows='5' class='textbox' style='width:450px'>".phpentities($sitebanner2)."</textarea>\n";

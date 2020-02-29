@@ -175,7 +175,11 @@ if (isset($_POST['save'])) {
             if ($panel_type == "file") {
                 @include INFUSIONS.$panel_filename."/".$panel_filename.".php";
             } else {
-                eval($panel_content);
+                if (fusion_get_settings('allow_php_exe')) {
+                    eval($panel_content);
+                } else {
+                    echo $panel_content;
+                }
             }
             $panel_content = phpentities($panel_content);
             closetable();

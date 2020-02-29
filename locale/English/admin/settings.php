@@ -209,6 +209,8 @@ $locale['699hd'] = "Both";
 $locale['699i'] = "Number Delimiter";
 $locale['699j'] = "Thousands separator";
 
+$locale['settings_100'] = "Allow PHP Execution";
+
 // Private Message Settings
 $locale['700'] = "Private Messages";
 $locale['701'] = "Inbox message limit:";

@@ -117,7 +117,11 @@ if (isset($_POST['save'])) {
         $ratings = isset($_POST['page_ratings']) ? " checked='checked'" : "";
         if (check_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "")) {
             opentable($page_title);
-            eval("?>".$page_content."<?php ");
+            if (fusion_get_settings('allow_php_exe')) {
+                eval("?>".$page_content."<?php ");
+            } else {
+                echo $page_content;
+            }
             closetable();
             set_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "");
         } else {
