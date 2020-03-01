@@ -49,6 +49,7 @@ if (str_replace(".", "", $settings['version']) < "80024") {
     } else if (isset($_POST['upgrade']) && isset($_POST['stage']) && $_POST['stage'] == 2) {
         $result = dbquery("INSERT INTO ".DB_SETTINGS."settings (settings_name, settings_value) VALUES ('gateway_method', '2')");
         $result = dbquery("INSERT INTO ".DB_SETTINGS."settings (settings_name, settings_value) VALUES ('allow_php_exe', '0')");
+        $result = dbquery("INSERT INTO ".DB_SETTINGS."settings (settings_name, settings_value) VALUES ('update_checker', '1')");
 
         // Set a new version
         $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='8.00.30' WHERE settings_name='version'");

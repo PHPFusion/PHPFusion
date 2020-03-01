@@ -28,7 +28,7 @@ function render_admin_dashboard() {
 }
 
 function render_dashboard() {
-    global $locale, $members, $forum, $download, $news, $blog, $articles, $weblinks, $photos, $global_comments, $global_ratings, $global_submissions, $link_type, $submit_data, $submit_type, $comments_type, $infusions_count, $global_infusions, $aidlink, $settings;
+    global $locale, $members, $forum, $download, $news, $blog, $articles, $weblinks, $photos, $global_comments, $global_ratings, $global_submissions, $link_type, $submit_data, $submit_type, $comments_type, $infusions_count, $global_infusions, $aidlink, $settings, $new_update;
 
     $mobile = '12';
     $tablet = '6';
@@ -64,6 +64,10 @@ function render_dashboard() {
         'C'  => $settings['siteurl']."viewpage.php?page_id=%s",
         'PH' => $settings['siteurl']."photogallery.php?photo_id=%s",
     ];
+
+    if ($new_update) {
+        echo '<div class="alert alert-info">'.$new_update.'</div>';
+    }
 
     opentable($locale['250']);
 

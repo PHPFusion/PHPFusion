@@ -19,7 +19,7 @@ namespace AdminLTE;
 
 class Dashboard {
     private static function RenderDashboard() {
-        global $locale, $members, $forum, $download, $news, $articles, $weblinks, $photos, $global_comments, $global_ratings, $global_submissions, $link_type, $submit_data, $submit_type, $comments_type, $infusions_count, $global_infusions, $aidlink, $settings;
+        global $locale, $members, $forum, $download, $news, $articles, $weblinks, $photos, $global_comments, $global_ratings, $global_submissions, $link_type, $submit_data, $submit_type, $comments_type, $infusions_count, $global_infusions, $aidlink, $settings, $new_update;
 
         // comments, ratings, submission types
         $comments_type = [
@@ -50,6 +50,10 @@ class Dashboard {
             'C'  => $settings['siteurl']."viewpage.php?page_id=%s",
             'PH' => $settings['siteurl']."photogallery.php?photo_id=%s",
         ];
+
+        if ($new_update) {
+            echo '<div class="alert alert-info" style="border-radius:0;">'.$new_update.'</div>';
+        }
 
         opentable($locale['250'], '', FALSE);
             $mobile  = 12;

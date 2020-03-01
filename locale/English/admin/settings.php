@@ -210,6 +210,7 @@ $locale['699i'] = "Number Delimiter";
 $locale['699j'] = "Thousands separator";
 
 $locale['settings_100'] = "Allow PHP Execution";
+$locale['settings_101'] = "Update checker";
 
 // Private Message Settings
 $locale['700'] = "Private Messages";

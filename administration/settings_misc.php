@@ -100,6 +100,10 @@ if (isset($_POST['savesettings'])) {
     if (!$result) {
         $error = 1;
     }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['update_checker']) ? $_POST['update_checker'] : "0")."' WHERE settings_name='update_checker'");
+    if (!$result) {
+        $error = 1;
+    }
 
     redirect(FUSION_SELF.$aidlink."&error=".$error);
 }
@@ -193,6 +197,12 @@ echo "<td width='50%' class='tbl'>".$locale['699j']."</td>\n";
 echo "<td width='50%' class='tbl'><select name='thousands_separator' class='textbox'>\n";
 echo "<option value='.'".($settings['thousands_separator'] == "." ? " selected='selected'" : "").">.</option>\n";
 echo "<option value=','".($settings['thousands_separator'] == "," ? " selected='selected'" : "").">,</option>\n";
+echo "</select></td>\n";
+echo "</tr>\n<tr>\n";
+echo "<td width='50%' class='tbl'>".$locale['settings_101']."</td>\n";
+echo "<td width='50%' class='tbl'><select name='update_checker' class='textbox'>\n";
+echo "<option value='1'".($settings['update_checker'] == "1" ? " selected='selected'" : "").">".$locale['518']."</option>\n";
+echo "<option value='0'".($settings['update_checker'] == "0" ? " selected='selected'" : "").">".$locale['519']."</option>\n";
 echo "</select></td>\n";
 echo "</tr>\n<tr>\n";
 echo "<td align='center' colspan='2' class='tbl'><br />\n";

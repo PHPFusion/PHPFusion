@@ -664,6 +664,12 @@ if (str_replace(".", "", $settings['version']) < "80022") {
                     $result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('number_delimiter', '.')");
                     $result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('thousands_separator', ',')");
 
+                    // Allow PHP exe (eval)
+                    $result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('allow_php_exe', '0')");
+
+                    // Updates
+                    $result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('update_checker', '1')");
+
                     // Update admin icons
                     $new_icon_array = [
                         "APWR" => "admin_pass.png",
