@@ -34,7 +34,7 @@ if ($settings['update_checker'] == 1) {
         return substr($headers[0], 9, 3);
     }
 
-    $url = 'https://www.php-fusion.co.uk/updates/910.txt';
+    $url = 'https://www.php-fusion.co.uk/updates/10.txt';
     if (get_http_response_code($url) == 200) {
         $file = @file_get_contents($url);
         $array = explode("\n", $file);
