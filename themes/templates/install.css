@@ -17,7 +17,11 @@ body {
 }
 
 body.upgrade {
-    background-color: #696f7b;
+    background-color: #0a4480;
+}
+
+body.upgrade .left-side > div {
+    background-color: #052341;
 }
 
 a {
@@ -107,6 +111,11 @@ a:active {
     color: #4A4A4A;
 }
 
+.left-side,
+.content {
+    padding: 0;
+}
+
 .buttons {
     padding-top: 20px;
     position: absolute;
@@ -147,8 +156,6 @@ input[type="checkbox"]:checked:before {
     border-left-width: 0;
     -webkit-transform: rotate(45deg);
     -ms-transform: rotate(45deg);
-    -o-transform: rotate(45deg);
-    -moz-transform: rotate(45deg);
     transform: rotate(45deg);
 }
 
