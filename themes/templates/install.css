@@ -17,7 +17,11 @@ body {
 }
 
 body.upgrade {
-    background-color: #696f7b;
+    background-color: #0a4480;
+}
+
+body.upgrade .left-side > div {
+    background-color: #052341;
 }
 
 a {
