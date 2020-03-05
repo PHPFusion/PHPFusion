@@ -185,7 +185,7 @@ class Infusion_Core {
                             if (!empty($table_query)) {
                                 if (is_array($table_query)) {
                                     foreach ($table_query as $sql_query) {
-                                        // print_p($sql_query);
+                                        print_p($sql_query);
                                         dbquery($sql_query);
                                     }
                                 } else {
@@ -213,13 +213,11 @@ class Infusion_Core {
                 }
 
                 if ($error === FALSE) {
-
                     if (dbcount("(inf_title)", DB_INFUSIONS, "inf_folder='".self::$inf['folder']."'")) {
                         dbquery("DELETE FROM ".DB_INFUSIONS." WHERE inf_folder='".self::$inf['folder']."'");
                     }
                     addNotice("success", sprintf(self::$locale['423'], self::$inf['title']));
                     dbquery("INSERT INTO ".DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".self::$inf['title']."', '".self::$inf['folder']."', '".self::$inf['version']."')");
-
                     redirect(FUSION_REQUEST);
                 }
             }

@@ -55,8 +55,8 @@ class InstallerInfusions extends Install_Core {
                 // Get enabled language settings
                 //$enabled_languages = array_keys(fusion_get_enabled_languages());
                 // If language change is initiated and if the selected language is valid
-                if (isset($_GET['lang']) && valid_language($_GET['lang'])) {
-                    $lang = stripinput($_GET['lang']);
+                if (get('lang') && valid_language(get('lang'))) {
+                    $lang = stripinput(get('lang'));
                     set_language($lang);
                     $redirectPath = clean_request("", ["lang"], FALSE);
                     redirect($redirectPath);
@@ -67,7 +67,7 @@ class InstallerInfusions extends Install_Core {
                     define("LANGUAGE", $userdata['user_language']);
                     define("LOCALESET", $userdata['user_language']."/");
                 } else {
-                    $data = dbarray(dbquery("SELECT * FROM ".DB_LANGUAGE_SESSIONS." WHERE user_ip='".USER_IP."'"));
+                    $data = dbarray(dbquery("SELECT * FROM ".DB_LANGUAGE_SESSIONS." WHERE user_ip=:ip", [':ip' => USER_IP]));
                     if (!empty($data['user_language'])) {
                         define("LANGUAGE", $data['user_language']);
                         define("LOCALESET", $data['user_language']."/");

@@ -211,20 +211,20 @@ class Batch_Core extends Install_Core {
                     self::$localeset = LANGUAGE;
 
                     foreach ($inf_folder as $folder) {
-    
+
                         $inf_include = INFUSIONS.$folder."/infusion.php";
-    
+
                         $inf_title = '';
                         $inf_newtable = [];
                         $inf_altertable = [];
                         $inf_droptable = [];
                         $inf_adminpanel = [];
                         $inf_sitelink = [];
-                        
+
                         if (file_exists($inf_include)) {
-    
+
                             include $inf_include;
-    
+
                             if (!empty($inf)) {
                                 foreach ($inf as self::$table_name => self::$table_cols) {
                                     if ($upgrade === TRUE && infusion_exists($folder) || $upgrade === FALSE) {
@@ -617,9 +617,11 @@ class Batch_Core extends Install_Core {
             }
 
         }
-
+        // fix table name duplicate when using contants
+        $table_name = self::$connection['db_prefix'].self::$table_name;
+        $table_name = self::$table_name;
         return strtr(self::CREATE_TABLE_STATEMENT, [
-            '{%table%}'      => self::$connection['db_prefix'].self::$table_name,
+            '{%table%}'      => $table_name,
             '{%table_attr%}' => implode(', ', $line),
             '{%collation%}'  => Batch_Core::FUSION_TABLE_COLLATION
         ]);
