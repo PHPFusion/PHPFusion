@@ -246,7 +246,8 @@ class Admins {
 
                 $html .= "<div id='rev-window'>\n";
                 $html .= fusion_get_function('openside', "<h4><i class='fas fa-thumbtack m-r-10'></i>".self::$locale['292']."</h4>");
-                $session = html_entity_decode($_SESSION['form_cache'][$form_id][$form_type][$item_id]);
+                $session = htmlspecialchars_decode($_SESSION['form_cache'][$form_id][$form_type][$item_id]);
+                $session = str_replace('&#039;', "'", $session);
                 parse_str($session, $data);
                 unset($data['form_id']);
                 unset($data['fusion_token']);
