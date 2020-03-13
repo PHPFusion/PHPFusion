@@ -26,6 +26,7 @@ echo "<meta name='description' content='".$settings['description']."'/>\n";
 echo "<meta name='url' content='".$settings['siteurl']."'/>\n";
 echo "<meta name='keywords' content='".$settings['keywords']."'/>\n";
 echo "<meta name='image' content='".$settings['siteurl'].$settings['sitebanner']."'/>\n";
+echo "<link rel='canonical' href='https://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']."'>\n";
 
 if (fusion_get_enabled_languages() > 1) {
     echo "<link rel='alternate' hreflang='x-default' href='".$settings['siteurl']."'/>\n";
