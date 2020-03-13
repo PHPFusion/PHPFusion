@@ -43,7 +43,8 @@ echo "<meta name='description' content='".$settings['description']."'>\n";
 echo "<meta name='url' content='".$settings['siteurl']."'>\n";
 echo "<meta name='keywords' content='".$settings['keywords']."'>\n";
 echo "<meta name='image' content='".$settings['siteurl'].$settings['sitebanner']."'>\n";
-echo "<link rel='canonical' href='".$settings['siteurl']."'>";
+$is_https = (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1) || isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https');
+echo "<link rel='canonical' href='http".($is_https ? 's' : '')."://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']."'>\n";
 
 $languages = fusion_get_enabled_languages();
 if ( count( $languages ) > 1 ) {
