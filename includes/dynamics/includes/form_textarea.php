@@ -117,7 +117,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         if (!defined('tinymce')) {
             add_to_head('<script src="'.INCLUDES.'jquery/jquery-ui.min.js"></script>');
             add_to_head('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.min.css">');
-            add_to_head('<script src="'.INCLUDES.'eLfinder/js/elfinder.min.js"></script>');
+            add_to_head('<script src="'.INCLUDES.'elFinder/js/elfinder.min.js"></script>');
             add_to_head('<link rel="stylesheet" href="'.INCLUDES.'elFinder/css/elfinder.min.css">');
             add_to_head('<link rel="stylesheet" href="'.INCLUDES.'elFinder/css/theme.css">');
             add_to_head("<script src='".INCLUDES."jscripts/tinymce/tinymce.min.js'></script>");
