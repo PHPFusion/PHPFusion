@@ -1,0 +1,10 @@
+{
+  "name": "Material Light",
+  "cssurls": "https://cdn.jsdelivr.net/gh/RobiNN1/elFinder-Material-Theme/Material/css/theme-light.min.css",
+  "author": "Róbert Kelčák {RobiNN}",
+  "email": "",
+  "license": "MIT",
+  "link": "https://github.com/RobiNN1/elFinder-Material-Theme",
+  "image": "https://raw.githubusercontent.com/RobiNN1/elFinder-Material-Theme/master/.github/img/preview-light.png",
+  "description": "Material Light Theme for elFinder."
+}

@@ -115,7 +115,25 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         $tinymce_list = json_encode($tinymce_list);
         $tinymce_smiley_vars = "";
         if (!defined('tinymce')) {
-            add_to_footer("<script type='text/javascript' src='".INCLUDES."jscripts/tinymce/tinymce.min.js'></script>");
+            add_to_head('<script src="'.INCLUDES.'jquery/jquery-ui.min.js"></script>');
+            add_to_head('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.min.css">');
+            add_to_head('<script src="'.INCLUDES.'eLfinder/js/elfinder.min.js"></script>');
+            add_to_head('<link rel="stylesheet" href="'.INCLUDES.'elFinder/css/elfinder.min.css">');
+            add_to_head('<link rel="stylesheet" href="'.INCLUDES.'elFinder/css/theme.css">');
+            add_to_head("<script src='".INCLUDES."jscripts/tinymce/tinymce.min.js'></script>");
+            add_to_head("<script src='".INCLUDES."elFinder/js//tinymceElfinder.min.js'></script>");
+
+            add_to_jquery('
+                const mceElf = new tinymceElfinder({
+                    // connector URL (Set your connector)
+                    url: "'.fusion_get_settings('siteurl').'includes/elFinder/php/connector.php",
+                    // upload target folder hash for this tinyMCE
+                    uploadTargetHash: "l1_lw", // Hash value on elFinder of writable folder
+                    // elFinder dialog node id
+                    nodeId: "elfinder" // Any ID you decide
+                });
+            ');
+
             define('tinymce', TRUE);
             // PHP-Fusion Parse Cache Smileys
             $smileys = cache_smileys();
@@ -151,6 +169,10 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
             case 'advanced':
                 add_to_jquery("
                     tinymce.init({
+                    file_picker_callback : mceElf.browser,
+                    images_upload_handler: mceElf.uploadHandler,
+                    relative_urls: false,
+                    remove_script_host: false,
                     selector: '#".$options['input_id']."',
                     inline: ".($options['inline_editing'] == TRUE ? "true" : "false").",
                     theme: '".$options['tinymce_theme']."',
@@ -201,6 +223,10 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
             case 'simple':
                 add_to_jquery("
                     tinymce.init({
+                    file_picker_callback : mceElf.browser,
+                    images_upload_handler: mceElf.uploadHandler,
+                    relative_urls: false,
+                    remove_script_host: false,
                     selector: '#".$options['input_id']."',
                     inline: ".($options['inline_editing'] == TRUE ? "true" : "false").",
                     theme: '".$options['tinymce_theme']."',
@@ -249,6 +275,10 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
             case 'default':
                 add_to_jquery("
                     tinymce.init({
+                    file_picker_callback : mceElf.browser,
+                    images_upload_handler: mceElf.uploadHandler,
+                    relative_urls: false,
+                    remove_script_host: false,
                     selector: '#".$options['input_id']."',
                     inline: ".($options['inline_editing'] == TRUE ? "true" : "false").",
                     content_css: '".$options['tinymce_css']."',
