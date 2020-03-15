@@ -17,19 +17,22 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
+$settings = fusion_get_settings();
+$userdata = fusion_get_userdata();
+
 // Check if Maintenance is Enabled
-$user_level = fusion_get_userdata("user_level");
-if (fusion_get_settings("maintenance") == "1") {
-    if (fusion_get_settings("maintenance_level") < $user_level or empty($user_level)) {
-        if (fusion_get_settings("site_seo")) {
-            redirect(FUSION_ROOT.BASEDIR."maintenance.php");
-        } else {
-            redirect(BASEDIR."maintenance.php");
-        }
+if ($settings['maintenance'] == "1" &&
+    ((iMEMBER && $settings['maintenance_level'] == USER_LEVEL_MEMBER && $userdata['user_id'] != "1") ||
+    ($settings['maintenance_level'] < $userdata['user_level']))
+) {
+    if ($settings['site_seo']) {
+        redirect(FUSION_ROOT.BASEDIR."maintenance.php");
+    } else {
+        redirect(BASEDIR."maintenance.php");
     }
 }
 
-if (fusion_get_settings("site_seo")) {
+if ($settings['site_seo']) {
     $permalink = \PHPFusion\Rewrite\Permalinks::getPermalinkInstance();
 }
 
@@ -40,12 +43,12 @@ require_once INCLUDES."theme_functions_include.php";
 require_once THEMES."templates/render_functions.php";
 
 $o_param = [
-    ':user_id'   => (iMEMBER ? fusion_get_userdata('user_id') : 0),
+    ':user_id'   => (iMEMBER ? $userdata['user_id'] : 0),
     ':online_ip' => USER_IP,
 ];
 // Online users database -- to core level whether panel is on or not
 if (dbcount("(online_user)", DB_ONLINE, "online_user=:user_id AND online_ip=:online_ip", $o_param)) {
-    dbquery("UPDATE ".DB_ONLINE." SET online_lastactive='".TIME."', online_ip='".USER_IP."' WHERE ".(iMEMBER ? "online_user='".fusion_get_userdata('user_id')."'" : "online_user='0' AND online_ip='".USER_IP."'"));
+    dbquery("UPDATE ".DB_ONLINE." SET online_lastactive='".TIME."', online_ip='".USER_IP."' WHERE ".(iMEMBER ? "online_user='".$userdata['user_id']."'" : "online_user='0' AND online_ip='".USER_IP."'"));
 } else {
     dbquery("INSERT INTO ".DB_ONLINE." (online_user, online_ip, online_ip_type, online_lastactive) VALUES ('".$o_param[':user_id']."', '".USER_IP."', '".USER_IP_TYPE."', '".TIME."')");
 }
@@ -57,7 +60,7 @@ if (iMEMBER) {
             ':time'    => TIME,
             ':ip'      => USER_IP,
             ':ip_type' => USER_IP_TYPE,
-            ':user_id' => fusion_get_userdata('user_id')
+            ':user_id' => $userdata['user_id']
         ]
     );
 }
