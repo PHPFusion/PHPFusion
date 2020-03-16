@@ -43,40 +43,40 @@ if ( fusion_safe() ) {
         case 'html':
             $text = htmlspecialchars( $text );
             $text = parsesmileys( nl2br( html_entity_decode( stripslashes( $text ) ) ) );
-            if ( $mode == 'admin' ) {
+            /*if ( $mode == 'admin' ) {
                 $images = str_replace( '../../../', '', IMAGES );
                 $text = str_replace( IMAGES, $images, $text );
                 if ( defined( 'IMAGES_N' ) ) {
                     $text = str_replace( IMAGES_N, $images, $text );
                 }
                 $text = parse_imageDir( $text, $prefix_."images/" );
-            }
+            }*/
             echo nl2br( html_entity_decode( $text, ENT_QUOTES, $locale['charset'] ) ) ?: "<p class='text-center'>".$locale['nopreview']."</p>\n";
             break;
         case 'bbcode':
             $text = htmlspecialchars( $text );
             $text = parseubb( parsesmileys( $text ) );
-            if ( $mode == 'admin' ) {
+            /*if ( $mode == 'admin' ) {
                 $images = str_replace( '../../../', '', IMAGES );
                 $text = str_replace( IMAGES, $images, $text );
                 if ( defined( 'IMAGES_N' ) ) {
                     $text = str_replace( IMAGES_N, $images, $text );
                 }
                 $text = parse_imageDir( $text, $prefix_."images/" );
-            }
+            }*/
             echo nl2br( html_entity_decode( $text, ENT_QUOTES, $locale['charset'] ) ) ?: "<p class='text-center'>".$locale['nopreview']."</p>\n";
             break;
         default:
             $text = htmlspecialchars( $text );
             $text = parsesmileys( $text );
-            if ( $mode == 'admin' ) {
+            /*if ( $mode == 'admin' ) {
                 $images = str_replace( '../../../', '', IMAGES );
                 $text = str_replace( IMAGES, $images, $text );
                 if ( defined( 'IMAGES_N' ) ) {
                     $text = str_replace( IMAGES_N, $images, $text );
                 }
-            }
-            echo parse_imageDir( nl2br( html_entity_decode( $text, ENT_QUOTES, $locale['charset'] ) ) ) ?: "<p class='text-center'>".$locale['nopreview']."</p>\n";
+            }*/
+            echo nl2br( html_entity_decode( $text, ENT_QUOTES, $locale['charset'] ) ) ?: "<p class='text-center'>".$locale['nopreview']."</p>\n";
     }
 } else {
     echo 'Your session has expired. Please refresh page.';
