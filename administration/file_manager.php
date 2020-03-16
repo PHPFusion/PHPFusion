@@ -21,65 +21,48 @@ if (!checkrights('FM') || !defined('iAUTH') || !isset($_GET['aid']) || $_GET['ai
 require_once THEMES.'templates/admin_header.php';
 include LOCALE.LOCALESET.'admin/image_uploads.php';
 
-$afolder = '';
-
-if (isset($_GET['status'])) {
-    if ($_GET['status'] == 'del') {
-        $title = $locale['400'];
-        $message = '<strong>'.$locale['401'].'</strong>';
-    } else if ($_GET['status'] == 'upn') {
-        $title = $locale['420'];
-        $message = '<strong>'.$locale['425'].'</strong>';
-    } else if ($_GET['status'] == 'upy') {
-        $title = $locale['420'];
-        $message = "<img src='".$afolder.stripinput($_GET['img'])."' alt='".stripinput($_GET['img'])."' /><br /><br /><strong>".$locale['426']."</strong>";
-    }
-    opentable($title);
-    echo "<div style='text-align:center'>'.$message.'</div>\n";
-    closetable();
-}
-
-if (isset($_GET['del']) && in_array($_GET['del'], $image_list)) {
-    unlink($afolder.stripinput($_GET['del']));
-    if ($settings['tinymce_enabled'] == 1) {
-        include INCLUDES.'buildlist.php';
-    }
-    redirect(FUSION_SELF.$aidlink.'&status=del&ifolder='.$_GET['ifolder']);
-} else if (isset($_POST['uploadimage'])) {
-
-    $error = '';
-
-    $image_types = [
-        '.gif',
-        '.GIF',
-        '.jpeg',
-        '.JPEG',
-        '.jpg',
-        '.JPG',
-        '.png',
-        '.PNG'
-    ];
-
-    $imgext = strrchr(strtolower($_FILES['myfile']['name']), '.');
-    $imgname = stripfilename(strtolower(substr($_FILES['myfile']['name'], 0, strrpos($_FILES['myfile']['name'], '.'))));
-    $imgsize = $_FILES['myfile']['size'];
-    $imgtemp = $_FILES['myfile']['tmp_name'];
-    if (!in_array($imgext, $image_types)) {
-        redirect(FUSION_SELF.$aidlink.'&status=upn&ifolder='.$_GET['ifolder']);
-    } else if (is_uploaded_file($imgtemp)) {
-        move_uploaded_file($imgtemp, $afolder.$imgname.$imgext);
-        @chmod($afolder.$imgname.$imgext, 0644);
-        if ($settings['tinymce_enabled'] == 1) {
-            include INCLUDES.'buildlist.php';
-        }
-        redirect(FUSION_SELF.$aidlink.'&status=upy&ifolder='.$_GET['ifolder'].'&img='.$imgname.$imgext);
-    }
-}
-
 opentable($locale['100']);
-echo "<div class='row' style='margin:0px;'><div class='col-sm-12 col-md-12 col-lg-12' style='padding:0px; margin-bottom:-20px;'>\n";
-echo "<iframe style='width:100%; height:700px; border:0px;' src='".INCLUDES."filemanager/dialog.php?type=0&amp;fldr=".IMAGES."'></iframe>\n";
-echo '</div></div>';
+add_to_head('<script src="'.INCLUDES.'jquery/jquery-ui.min.js"></script>');
+add_to_head('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.min.css">');
+add_to_head('<script src="'.INCLUDES.'elFinder/js/elfinder.min.js"></script>');
+add_to_head('<link rel="stylesheet" href="'.INCLUDES.'elFinder/css/elfinder.min.css">');
+add_to_head('<link rel="stylesheet" href="'.INCLUDES.'elFinder/css/theme.css">');
+
+$lang = '';
+if (file_exists(INCLUDES.'elFinder/js/i18n/elFinder.'.$locale['filemanager'].'.js')) {
+    $lang = ',lang: "'.$locale['filemanager'].'"';
+}
+
+add_to_jquery('
+var elfinder_path = "//" + window.location.host + window.location.pathname.replace(/[\\\/][^\\\/]*$/, "") + "/";
+$("#elfinder").elfinder({
+    baseUrl: elfinder_path.replace("administration", "includes/elFinder"),
+    url: elfinder_path.replace("administration", "includes/elFinder") + "php/connector.php"
+    '.$lang.',
+    themes: {
+        "material-light": "themes/manifests/material-light.json",
+        "material": "themes/manifests/material-default.json",
+        "material-gray": "themes/manifests/material-gray.json"
+    },
+    ui: ["toolbar", "tree", "path", "stat"],
+    uiOptions: {
+        toolbar: [
+            ["home", "back", "forward", "up", "reload"],
+            ["mkdir", "mkfile", "upload"],
+            ["open"],
+            ["copy", "cut", "paste", "rm", "empty"],
+            ["duplicate", "rename", "edit", "resize", "chmod"],
+            ["quicklook", "info"],
+            ["extract", "archive"],
+            ["search"],
+            ["view", "sort"],
+            ["preference", "help"]
+        ]
+    }
+});
+');
+
+echo '<div id="elfinder"></div>';
 closetable();
 
 require_once THEMES."templates/footer.php";

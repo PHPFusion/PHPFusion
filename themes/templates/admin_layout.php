@@ -75,68 +75,98 @@ echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery.min.js'></sc
 echo "<script type='text/javascript' src='".INCLUDES."jscripts/jscript.min.js'></script>\n";
 
 if ($settings['tinymce_enabled'] == 1) {
+    echo '<script src="'.INCLUDES.'jquery/jquery-ui.min.js"></script>';
+    echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.min.css">';
+    echo '<script src="'.INCLUDES.'elFinder/js/elfinder.min.js"></script>';
+    echo '<link rel="stylesheet" href="'.INCLUDES.'elFinder/css/elfinder.min.css">';
+    echo '<link rel="stylesheet" href="'.INCLUDES.'elFinder/css/theme.css">';
+    echo "<script src='".INCLUDES."jscripts/tinymce/tinymce.min.js'></script>";
+    echo "<script src='".INCLUDES."elFinder/js//tinymceElfinder.min.js'></script>";
+
     echo "<style type='text/css'>.mceIframeContainer iframe{width:100%!important;background-color: #000;}</style>\n";
-    echo "<script language='javascript' type='text/javascript' src='".INCLUDES."jscripts/tinymce/tinymce.min.js'></script>\n
-    <script type='text/javascript'>
-
-    function advanced() {
-        tinymce.init({
-            selector: 'textarea',
-            resize: 'both',
-            height: 300,
-            theme: 'modern',
-            branding: false,
-            language:'".$locale['tinymce']."',
-            plugins: [
-                'advlist autolink lists link image charmap print preview hr anchor pagebreak',
-                'searchreplace wordcount visualblocks visualchars code fullscreen',
-                'insertdatetime media nonbreaking save table contextmenu directionality',
-                'emoticons template paste textcolor colorpicker textpattern imagetools codesample toc help importcss'
-            ],
-            toolbar1: 'undo redo | styleselect formatselect fontselect fontsizeselect removeformat',
-            toolbar2: 'cut copy paste | bold underline italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent',
-            toolbar3: 'link unlink anchor | hr | responsivefilemanager | image media | forecolor backcolor charmap emoticons | codesample | code | preview fullpage | fullscreen',
-            menubar: 'edit insert view format table',
-            image_advtab: true,
-            relative_urls : false,
-            remove_script_host : false,
-            document_base_url : '".$settings['siteurl']."',
-            content_css: [
-                '".(file_exists(THEME."editor.css") ? $settings['siteurl']."themes/".$settings['theme']."/editor.css" : $settings['siteurl']."themes/".$settings['theme']."/styles.css")."',
-            ],
-            content_style: 'body.mceDefBody {background:#".(IsSet($settings['tinymce_bgcolor']) ? $settings['tinymce_bgcolor'] : "FFFFFF").";}',
-            body_class: 'mceDefBody',
-            external_filemanager_path: '".$settings['siteurl']."includes/filemanager/',
-            external_plugins: { 'filemanager' : '".$settings['siteurl']."includes/filemanager/plugin.min.js'}
+    echo "<script type='text/javascript'>
+        const mceElf = new tinymceElfinder({
+            // connector URL (Set your connector)
+            url: '".fusion_get_settings('siteurl')."includes/elFinder/php/connector.php',
+            // upload target folder hash for this tinyMCE
+            uploadTargetHash: 'l1_lw', // Hash value on elFinder of writable folder
+            // elFinder dialog node id
+            nodeId: 'elfinder', // Any ID you decide
+                ui: ['toolbar', 'tree', 'path', 'stat'],
+                uiOptions: {
+                    toolbar: [
+                        ['home', 'back', 'forward', 'up', 'reload'],
+                        ['mkdir', 'mkfile', 'upload'],
+                        ['open'],
+                        ['copy', 'cut', 'paste', 'rm', 'empty'],
+                        ['duplicate', 'rename', 'edit', 'resize', 'chmod'],
+                        ['quicklook', 'info'],
+                        ['extract', 'archive'],
+                        ['search'],
+                        ['view', 'sort'],
+                        ['preference', 'help']
+                    ]
+                }
         });
-    }
 
-    function simple() {
-        tinymce.init({
-            selector: 'textarea',
-            height: 200,
-            menubar: false,
-            branding: false,
-            plugins: [
-                'advlist autolink lists link image charmap print preview anchor',
-                'searchreplace visualblocks code fullscreen',
-                'insertdatetime media table contextmenu paste code'
-            ],
-            toolbar: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
-            content_css: [
-                '".(file_exists(THEME."editor.css") ? $settings['siteurl']."themes/".$settings['theme']."/editor.css" : $settings['siteurl']."themes/".$settings['theme']."/styles.css")."',
-            ],
-            content_style: 'body.mceDefBody {background:#".(IsSet($settings['tinymce_bgcolor']) ? $settings['tinymce_bgcolor'] : "FFFFFF").";}',
-            body_class: 'mceDefBody'
-        });
-    }
+        function advanced() {
+            tinymce.init({
+                file_picker_callback : mceElf.browser,
+                images_upload_handler: mceElf.uploadHandler,
+                selector: 'textarea',
+                resize: 'both',
+                height: 300,
+                theme: 'modern',
+                branding: false,
+                language:'".$locale['tinymce']."',
+                plugins: [
+                    'advlist autolink lists link image charmap print preview hr anchor pagebreak',
+                    'searchreplace wordcount visualblocks visualchars code fullscreen',
+                    'insertdatetime media nonbreaking save table contextmenu directionality',
+                    'emoticons template paste textcolor colorpicker textpattern imagetools codesample toc help importcss'
+                ],
+                toolbar1: 'undo redo | styleselect formatselect fontselect fontsizeselect removeformat',
+                toolbar2: 'cut copy paste | bold underline italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent',
+                toolbar3: 'link unlink anchor | hr | responsivefilemanager | image media | forecolor backcolor charmap emoticons | codesample | code | preview fullpage | fullscreen',
+                menubar: 'edit insert view format table',
+                image_advtab: true,
+                relative_urls : false,
+                remove_script_host : false,
+                document_base_url : '".$settings['siteurl']."',
+                content_css: [
+                    '".(file_exists(THEME."editor.css") ? $settings['siteurl']."themes/".$settings['theme']."/editor.css" : $settings['siteurl']."themes/".$settings['theme']."/styles.css")."',
+                ],
+                content_style: 'body.mceDefBody {background:#".(IsSet($settings['tinymce_bgcolor']) ? $settings['tinymce_bgcolor'] : "FFFFFF").";}',
+                body_class: 'mceDefBody',
+            });
+        }
 
-    function toggleEditor(id) {
-        if (!tinyMCE.get(id))
-            tinyMCE.execCommand('mceAddControl', false, id);
-        else
-            tinyMCE.execCommand('mceRemoveControl', false, id);
-    }
+        function simple() {
+            tinymce.init({
+                selector: 'textarea',
+                height: 200,
+                menubar: false,
+                branding: false,
+                plugins: [
+                    'advlist autolink lists link image charmap print preview anchor',
+                    'searchreplace visualblocks code fullscreen',
+                    'insertdatetime media table contextmenu paste code'
+                ],
+                toolbar: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+                content_css: [
+                    '".(file_exists(THEME."editor.css") ? $settings['siteurl']."themes/".$settings['theme']."/editor.css" : $settings['siteurl']."themes/".$settings['theme']."/styles.css")."',
+                ],
+                content_style: 'body.mceDefBody {background:#".(IsSet($settings['tinymce_bgcolor']) ? $settings['tinymce_bgcolor'] : "FFFFFF").";}',
+                body_class: 'mceDefBody'
+            });
+        }
+
+        function toggleEditor(id) {
+            if (!tinyMCE.get(id))
+                tinyMCE.execCommand('mceAddControl', false, id);
+            else
+                tinyMCE.execCommand('mceRemoveControl', false, id);
+        }
     </script>\n";
 }
 echo "</head>";

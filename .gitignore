@@ -7,6 +7,6 @@
 config.php
 .DS_Store
 includes/gateway/flood/
-images/thumbs/
+.tmb
 _config.php
 _htaccess

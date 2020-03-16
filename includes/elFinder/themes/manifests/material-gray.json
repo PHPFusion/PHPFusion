@@ -1,0 +1,10 @@
+{
+  "name": "Material Gray",
+  "cssurls": "https://cdn.jsdelivr.net/gh/RobiNN1/elFinder-Material-Theme/Material/css/theme-gray.min.css",
+  "author": "Róbert Kelčák {RobiNN}",
+  "email": "",
+  "license": "MIT",
+  "link": "https://github.com/RobiNN1/elFinder-Material-Theme",
+  "image": "https://raw.githubusercontent.com/RobiNN1/elFinder-Material-Theme/master/.github/img/preview-gray.png",
+  "description": "Material Gray Theme for elFinder."
+}

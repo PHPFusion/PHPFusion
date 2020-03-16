@@ -6,7 +6,7 @@
  * @locale region      ISO-3166 (2 Alpha numeric) - https://www.iso.org/obp/ui/#search
  * @locale tinymce     refer to path includes/jscripts/tinymce/langs/{value}.js
  * @locale phpmailer   refer to path includes/classes/PHPMailer/language/phpmailer.lang-{value}.php
- * @locale filemanager refer to path includes/filemanager/lang/{value}.php
+ * @locale filemanager refer to path includes/elFinder/js/i18n/{value}.js
  * @package locale/English
  */
 
