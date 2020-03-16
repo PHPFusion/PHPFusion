@@ -4,4 +4,4 @@
 *.db
 .DS_Store
 *.config
-/.github/
+.tmb
