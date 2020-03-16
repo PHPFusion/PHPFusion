@@ -302,7 +302,7 @@ echo form_textarea('download_description', $locale['download_0202a'], $data['dow
     "no_resize"   => TRUE,
     "form_name"   => "inputform",
     "type"        => fusion_get_settings("tinymce_enabled") ? "tinymce" : "html",
-    "tinymce"     => fusion_get_settings("tinymce_enabled") ? "simple" : "",
+    "tinymce"     => "advanced",
     "autosize"    => fusion_get_settings("tinymce_enabled") ? FALSE : TRUE,
     "preview"     => fusion_get_settings("tinymce_enabled") ? FALSE : TRUE,
     "placeholder" => $locale['download_0201'],

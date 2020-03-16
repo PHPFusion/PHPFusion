@@ -204,6 +204,7 @@ if ( iMEMBER && $dl_settings['download_allow_submission'] ) {
                 "required"   => TRUE,
                 "type"       => fusion_get_settings( "tinymce_enabled" ) ? "tinymce" : "html",
                 "tinymce"    => fusion_get_settings( "tinymce_enabled" ) && iADMIN ? "advanced" : "simple",
+                'tinymce_image' => FALSE,
                 "autosize"   => TRUE,
                 "error_text" => $locale['download_0112'],
                 "form_name"  => "submit_form",
