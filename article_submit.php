@@ -133,14 +133,14 @@ if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_status='1' AND ".g
                 $articleSnippetSettings = [
                     'required'   => TRUE,
                     'type'       => 'bbcode',
-                    'tinymce'    => 'advanced',
                     'error_text' => $locale['article_0271'],
                     'path'       => IMAGES_A
                 ];
                 $articleExtendedSettings = [
                     'required'   => ($articleSettings['article_extended_required'] ? TRUE : FALSE),
-                    'type'       => 'tinymce',
-                    'tinymce'    => 'advanced',
+                    'type'      => fusion_get_settings('tinymce_enabled') ? 'tinymce' : 'html',
+                    'tinymce'   => fusion_get_settings('tinymce_enabled') && iADMIN ? 'advanced' : 'simple',
+                    'tinymce_image' => FALSE,
                     'error_text' => $locale['article_0272'],
                     'path'       => IMAGES_A
                 ];
