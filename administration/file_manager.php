@@ -26,9 +26,46 @@ add_to_title($locale['100']);
 
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'file_manager.php'.fusion_get_aidlink(), 'title' => $locale['100']]);
 opentable($locale['100']);
-echo '<div class="embed-responsive embed-responsive-16by9">';
-echo '<iframe class="embed-responsive-item" src="'.INCLUDES.'filemanager/dialog.php"></iframe>';
-echo '</div>';
+add_to_head('<script src="'.INCLUDES.'jquery/jquery-ui.min.js"></script>');
+add_to_head('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.min.css">');
+add_to_head('<script src="'.INCLUDES.'elFinder/js/elfinder.min.js"></script>');
+add_to_head('<link rel="stylesheet" href="'.INCLUDES.'elFinder/css/elfinder.min.css">');
+add_to_head('<link rel="stylesheet" href="'.INCLUDES.'elFinder/css/theme.css">');
+
+$lang = '';
+if (file_exists(INCLUDES.'elFinder/js/i18n/elFinder.'.$locale['filemanager'].'.js')) {
+    $lang = ',lang: "'.$locale['filemanager'].'"';
+}
+
+add_to_jquery('
+$("#elfinder").elfinder({
+    baseUrl: "'.fusion_get_settings('siteurl').'includes/elFinder/",
+    url: "'.fusion_get_settings('siteurl').'includes/elFinder/php/connector.php'.fusion_get_aidlink().'"
+    '.$lang.',
+    themes: {
+        "material-light": "themes/manifests/material-light.json",
+        "material": "themes/manifests/material-default.json",
+        "material-gray": "themes/manifests/material-gray.json"
+    },
+    ui: ["toolbar", "tree", "path", "stat"],
+    uiOptions: {
+        toolbar: [
+            ["home", "back", "forward", "up", "reload"],
+            ["mkdir", "mkfile", "upload"],
+            ["open"],
+            ["copy", "cut", "paste", "rm", "empty"],
+            ["duplicate", "rename", "edit", "resize", "chmod"],
+            ["quicklook", "info"],
+            ["extract", "archive"],
+            ["search"],
+            ["view", "sort"],
+            ["preference", "help"]
+        ]
+    }
+});
+');
+
+echo '<div id="elfinder"></div>';
 closetable();
 
 require_once THEMES.'templates/footer.php';
