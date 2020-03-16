@@ -337,6 +337,7 @@ if (!function_exists('display_blog_submit')) {
                     "required"  => TRUE,
                     "type"      => fusion_get_settings("tinymce_enabled") ? "tinymce" : "html",
                     "tinymce"   => fusion_get_settings("tinymce_enabled") && iADMIN ? "advanced" : "simple",
+                    'tinymce_image' => FALSE,
                     "autosize"  => TRUE,
                     "form_name" => "submit_form",
                     'path'      => IMAGES_B
