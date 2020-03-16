@@ -187,6 +187,7 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
                     'required'  => TRUE,
                     'type'      => fusion_get_settings('tinymce_enabled') ? 'tinymce' : 'html',
                     'tinymce'   => fusion_get_settings('tinymce_enabled') && iADMIN ? 'advanced' : 'simple',
+                    'tinymce_image' => FALSE,
                     'autosize'  => TRUE,
                     'form_name' => 'submit_form',
                     'path'      => IMAGES_N
@@ -197,6 +198,7 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
                     'required'  => $news_settings['news_extended_required'] ? TRUE : FALSE,
                     'type'      => fusion_get_settings('tinymce_enabled') ? 'tinymce' : 'html',
                     'tinymce'   => fusion_get_settings('tinymce_enabled') && iADMIN ? 'advanced' : 'simple',
+                    'tinymce_image' => FALSE,
                     'autosize'  => TRUE,
                     'form_name' => 'submit_form',
                     'path'      => IMAGES_N
