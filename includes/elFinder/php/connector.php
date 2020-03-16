@@ -52,26 +52,76 @@ function access($attr, $path, $data, $volume) {
         ? !($attr == 'read' || $attr == 'write') : NULL;
 }
 
-$path = isset($_GET['path']) ? $_GET['path'] : 'images';
+$default = [
+    'driver'        => 'LocalFileSystem', // driver for accessing file system (REQUIRED)
+    'winHashFix'    => DIRECTORY_SEPARATOR !== '/', // to make hash same to Linux one on windows too
+    'accessControl' => 'access',
+    'uploadDeny'    => ['all'], // All Mimetypes not allowed to upload
+    'uploadAllow'   => ['image/jpg', 'image/jpeg', 'image/gif', 'image/png', 'image/tiff', 'image/tif', 'image/x-ms-bmp', 'image/x-icon', 'image/svg', 'image/svg+xml', 'application/xml', 'text/xml'], // Mimetype `image` allowed to upload
+    'uploadOrder'   => ['deny', 'allow'], // allowed Mimetype `image only
+    'tmbPath'       => '.tmb',
+    'quarantine'    => '.tmb'
+];
 
 // Documentation for connector options:
 // https://github.com/Studio-42/elFinder/wiki/Connector-configuration-options
+
+$root_images = [
+    'path'  => IMAGES,
+    'URL'   => fusion_get_settings('siteurl').'images/',
+    'alias' => 'root_images'
+];
+
+if (defined('ARTICLES_EXIST')) {
+    $article_images = [
+        'path'  => IMAGES_A,
+        'URL'   => fusion_get_settings('siteurl').'infusions/articles/images/',
+        'alias' => 'articles'
+    ];
+}
+
+if (defined('BLOG_EXIST')) {
+    $blog_images = [
+        'path'  => IMAGES_B,
+        'URL'   => fusion_get_settings('siteurl').'infusions/blog/images/',
+        'alias' => 'blog'
+    ];
+}
+
+if (defined('DOWNLOADS_EXIST')) {
+    $download_images = [
+        'path'  => IMAGES_D,
+        'URL'   => fusion_get_settings('siteurl').'infusions/download/images/',
+        'alias' => 'downloads'
+    ];
+}
+
+if (defined('GALLERY_EXIST')) {
+    $download_images = [
+        'path'  => IMAGES_G,
+        'URL'   => fusion_get_settings('siteurl').'infusions/gallery/photos/',
+        'alias' => 'gallery'
+    ];
+}
+
+if (defined('NEWS_EXIST')) {
+    $news_images = [
+        'path'  => IMAGES_N,
+        'URL'   => fusion_get_settings('siteurl').'infusions/news/images/',
+        'alias' => 'news'
+    ];
+}
+
 $opts = [
     //'debug' => true,
     'roots' => [
         // Items volume
-        [
-            'driver'        => 'LocalFileSystem', // driver for accessing file system (REQUIRED)
-            'path'          => BASEDIR.$path.'/', // path to files (REQUIRED)
-            'URL'           => fusion_get_settings('siteurl').$path.'/', // URL to files (REQUIRED)
-            'winHashFix'    => DIRECTORY_SEPARATOR !== '/', // to make hash same to Linux one on windows too
-            'accessControl' => 'access',
-            'uploadDeny'    => ['all'], // All Mimetypes not allowed to upload
-            'uploadAllow'   => ['image/jpg', 'image/jpeg', 'image/gif', 'image/png', 'image/tiff', 'image/tif', 'image/x-ms-bmp', 'image/x-icon', 'image/svg', 'image/svg+xml', 'application/xml', 'text/xml'], // Mimetype `image` allowed to upload
-            'uploadOrder'   => ['deny', 'allow'], // allowed Mimetype `image only
-            'tmbPath'       => '.tmb',
-            'quarantine'    => '.tmb',
-        ],
+        array_merge($root_images, $default),
+        is_array($article_images) ? array_merge($article_images, $default) : NULL,
+        is_array($blog_images) ? array_merge($blog_images, $default) : NULL,
+        is_array($download_images) ? array_merge($download_images, $default) : NULL,
+        is_array($news_images) ? array_merge($news_images, $default) : NULL,
+
     ]
 ];
 

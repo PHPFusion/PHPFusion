@@ -55,7 +55,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         'form_name'           => 'input_form',
         'tinymce'             => 'simple',
         'tinymce_css'         => '',
-        'tinymce_image'       => FALSE, // Turns on or off the image selection feature in TinyMCE
+        'tinymce_image'       => TRUE, // Turns on or off the image selection feature in TinyMCE
         'no_resize'           => FALSE,
         'autosize'            => FALSE,
         'bbcode'              => FALSE,
@@ -179,13 +179,19 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                 ";
             }
         }
+
+        $images = '';
+
+        if ($options['tinymce_image']) {
+            $images = "file_picker_callback : mceElf.browser, images_upload_handler: mceElf.uploadHandler,";
+        }
+
         // Mode switching for TinyMCE
         switch ($options['tinymce']) {
             case 'advanced':
                 add_to_jquery("
                     tinymce.init({
-                    file_picker_callback : mceElf.browser,
-                    images_upload_handler: mceElf.uploadHandler,
+                    ".$images."
                     relative_urls: false,
                     remove_script_host: false,
                     selector: '#".$options['input_id']."',
@@ -261,7 +267,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                     width: '100%',
                     height: 100,
                     image_advtab: true,
-                    toolbar1: 'undo redo | bold italic underline | emoticons | visualblocks | bullist numlist blockquote | hr ".($options['tinymce_image'] ? " image " : "")." media | fullscreen ".($options['inline_editing'] ? " save " : "")." | code',
+                    toolbar1: 'undo redo | bold italic underline | emoticons | visualblocks | bullist numlist blockquote | hr ".($options['tinymce_image'] ? " image " : "")." | fullscreen ".($options['inline_editing'] ? " save " : "")." | code',
                     language: '".$locale['tinymce']."',
                     directionality : '".$locale['text-direction']."',
                     ".($options['tinymce_forced_root'] ? "forced_root_block: ''," : '')."
