@@ -110,6 +110,7 @@ class FaqSubmissions extends FaqServer {
                             'required'  => TRUE,
                             'type'      => fusion_get_settings('tinymce_enabled') ? 'tinymce' : 'html',
                             'tinymce'   => fusion_get_settings('tinymce_enabled') && iADMIN ? 'advanced' : 'simple',
+                            'tinymce_image' => FALSE,
                             'autosize'  => TRUE,
                             'form_name' => 'submit_form'
                         ]),
