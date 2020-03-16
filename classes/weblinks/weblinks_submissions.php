@@ -138,6 +138,7 @@ class WeblinksSubmissions extends WeblinksServer {
                             'required'  => self::$weblink_settings['links_extended_required'] ? TRUE : FALSE,
                             'type'      => fusion_get_settings( 'tinymce_enabled' ) ? 'tinymce' : 'html',
                             'tinymce'   => fusion_get_settings( 'tinymce_enabled' ) && iADMIN ? 'advanced' : 'simple',
+                            'tinymce_image' => FALSE,
                             'autosize'  => TRUE,
                             'form_name' => 'submit_form',
                         ] ),
