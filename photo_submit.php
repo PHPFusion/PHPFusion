@@ -124,8 +124,6 @@ if ($gll_settings['gallery_allow_submission']) {
             echo "<div class='m-b-10 col-xs-12 col-sm-9 col-sm-offset-3'>".sprintf($locale['album_0010'], parsebytesize($gll_settings['photo_max_b']), $gll_settings['gallery_file_types'], $gll_settings['photo_max_w'], $gll_settings['photo_max_h'])."</div>\n";
             $textArea_opts = [
                 'required'  => $gll_settings['gallery_extended_required'] ? TRUE : FALSE,
-                'type'      => fusion_get_settings('tinymce_enabled') ? 'tinymce' : 'html',
-                'tinymce'   => fusion_get_settings('tinymce_enabled') && iADMIN ? 'advanced' : 'simple',
                 'autosize'  => TRUE,
                 'form_name' => 'submit_form',
             ];
