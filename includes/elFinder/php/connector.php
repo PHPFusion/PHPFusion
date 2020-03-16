@@ -46,10 +46,9 @@ require_once __DIR__.'/../../../maincore.php';
  * @return bool|null
  **/
 function access($attr, $path, $data, $volume) {
-    return strpos(basename($path), '.') === 1 ||
-    strpos(basename($path), '.tmb') === 0 ||
-    strpos(basename($path), '.quarantine') === 0 ||
-    strpos(basename($path), 'index.php') === 0
+    return strpos(basename($path), '.') === 0 ||
+    strpos(basename($path), 'index.php') === 0 ||
+    strpos(basename($path), 'imagelist.js') === 0
         ? !($attr == 'read' || $attr == 'write') : NULL;
 }
 

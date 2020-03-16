@@ -48,6 +48,21 @@ $("#elfinder").elfinder({
         "material": "themes/manifests/material-default.json",
         "material-gray": "themes/manifests/material-gray.json"
     },
+    ui: ["toolbar", "tree", "path", "stat"],
+    uiOptions: {
+        toolbar: [
+            ["home", "back", "forward", "up", "reload"],
+            ["mkdir", "mkfile", "upload"],
+            ["open"],
+            ["copy", "cut", "paste", "rm", "empty"],
+            ["duplicate", "rename", "edit", "resize", "chmod"],
+            ["quicklook", "info"],
+            ["extract", "archive"],
+            ["search"],
+            ["view", "sort"],
+            ["preference", "help"]
+        ]
+    }
 });
 ');
 

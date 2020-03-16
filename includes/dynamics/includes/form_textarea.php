@@ -130,7 +130,22 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                     // upload target folder hash for this tinyMCE
                     uploadTargetHash: "l1_lw", // Hash value on elFinder of writable folder
                     // elFinder dialog node id
-                    nodeId: "elfinder" // Any ID you decide
+                    nodeId: "elfinder", // Any ID you decide
+                        ui: ["toolbar", "tree", "path", "stat"],
+                        uiOptions: {
+                            toolbar: [
+                                ["home", "back", "forward", "up", "reload"],
+                                ["mkdir", "mkfile", "upload"],
+                                ["open"],
+                                ["copy", "cut", "paste", "rm", "empty"],
+                                ["duplicate", "rename", "edit", "resize", "chmod"],
+                                ["quicklook", "info"],
+                                ["extract", "archive"],
+                                ["search"],
+                                ["view", "sort"],
+                                ["preference", "help"]
+                            ]
+                        }
                 });
             ');
 
