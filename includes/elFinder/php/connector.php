@@ -1,4 +1,10 @@
 <?php
+require_once __DIR__.'/../../../maincore.php';
+
+if (!defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
+    exit;
+}
+
 error_reporting(0); // Set E_ALL for debuging
 
 // // Optional exec path settings (Default is called with command name only)
@@ -31,8 +37,6 @@ require './autoload.php';
 
 // // Enable FTP connector netmount
 elFinder::$netDrivers['ftp'] = 'FTP';
-
-require_once __DIR__.'/../../../maincore.php';
 
 /**
  * Simple function to demonstrate how to control file access using "accessControl" callback.

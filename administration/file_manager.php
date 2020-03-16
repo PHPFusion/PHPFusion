@@ -36,8 +36,8 @@ if (file_exists(INCLUDES.'elFinder/js/i18n/elFinder.'.$locale['filemanager'].'.j
 add_to_jquery('
 var elfinder_path = "//" + window.location.host + window.location.pathname.replace(/[\\\/][^\\\/]*$/, "") + "/";
 $("#elfinder").elfinder({
-    baseUrl: elfinder_path.replace("administration", "includes/elFinder"),
-    url: elfinder_path.replace("administration", "includes/elFinder") + "php/connector.php"
+    baseUrl: "'.fusion_get_settings('siteurl').'includes/elFinder/",
+    url: "'.fusion_get_settings('siteurl').'includes/elFinder/php/connector.php'.fusion_get_aidlink().'"
     '.$lang.',
     themes: {
         "material-light": "themes/manifests/material-light.json",

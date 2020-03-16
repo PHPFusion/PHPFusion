@@ -87,7 +87,7 @@ if ($settings['tinymce_enabled'] == 1) {
     echo "<script type='text/javascript'>
         const mceElf = new tinymceElfinder({
             // connector URL (Set your connector)
-            url: '".fusion_get_settings('siteurl')."includes/elFinder/php/connector.php',
+            url: '".fusion_get_settings('siteurl')."includes/elFinder/php/connector.php".fusion_get_aidlink()."',
             // upload target folder hash for this tinyMCE
             uploadTargetHash: 'l1_lw', // Hash value on elFinder of writable folder
             // elFinder dialog node id
