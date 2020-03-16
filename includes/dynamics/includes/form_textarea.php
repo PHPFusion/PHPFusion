@@ -190,7 +190,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         switch ($options['tinymce']) {
             case 'advanced':
                 add_to_jquery("
-                    tinymce.init({
+                tinymce.init({
                     ".$images."
                     relative_urls: false,
                     remove_script_host: false,
@@ -238,14 +238,13 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                         // auto smileys parsing
                         ".$tinymce_smiley_vars."
                     }
-                    });
+                });
                 ");
                 break;
             case 'simple':
                 add_to_jquery("
-                    tinymce.init({
-                    file_picker_callback : mceElf.browser,
-                    images_upload_handler: mceElf.uploadHandler,
+                tinymce.init({
+                    ".$images."
                     relative_urls: false,
                     remove_script_host: false,
                     selector: '#".$options['input_id']."',
@@ -273,7 +272,6 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                     ".($options['tinymce_forced_root'] ? "forced_root_block: ''," : '')."
                     object_resizing: ".($options['autosize'] ? "false" : "true").",
                     resize: ".($options['autosize'] ? "false" : "true").",
-                    relative_urls: false,
                     setup: function(ed) {
                         // add tabkey listener
                         ed.on('keydown', function(event) {
@@ -286,18 +284,17 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                         // auto smileys parsing
                         ".$tinymce_smiley_vars."
                     }
-                    });
+                });
 
                 $('#inject').bind('click', function () {
                     tinyMCE.activeEditor.execCommand(\"mceInsertContent\", true, '[b]I am injecting in stuff..[/b]');
-                    });
+                });
                 ");
                 break;
             case 'default':
                 add_to_jquery("
-                    tinymce.init({
-                    file_picker_callback : mceElf.browser,
-                    images_upload_handler: mceElf.uploadHandler,
+                tinymce.init({
+                    ".$images."
                     relative_urls: false,
                     remove_script_host: false,
                     selector: '#".$options['input_id']."',
@@ -323,7 +320,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                         // auto smileys parsing
                         ".$tinymce_smiley_vars."
                     }
-                    });
+                });
                 ");
                 break;
         }
