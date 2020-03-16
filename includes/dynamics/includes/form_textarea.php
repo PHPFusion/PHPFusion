@@ -121,12 +121,12 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
             add_to_head('<link rel="stylesheet" href="'.INCLUDES.'elFinder/css/elfinder.min.css">');
             add_to_head('<link rel="stylesheet" href="'.INCLUDES.'elFinder/css/theme.css">');
             add_to_head("<script src='".INCLUDES."jscripts/tinymce/tinymce.min.js'></script>");
-            add_to_head("<script src='".INCLUDES."elFinder/js//tinymceElfinder.min.js'></script>");
+            add_to_head("<script src='".INCLUDES."elFinder/js/tinymceElfinder.min.js'></script>");
 
             add_to_jquery('
                 const mceElf = new tinymceElfinder({
                     // connector URL (Set your connector)
-                    url: "'.fusion_get_settings('siteurl').'includes/elFinder/php/connector.php",
+                    url: "'.fusion_get_settings('siteurl').'includes/elFinder/php/connector.php'.fusion_get_aidlink().'",
                     // upload target folder hash for this tinyMCE
                     uploadTargetHash: "l1_lw", // Hash value on elFinder of writable folder
                     // elFinder dialog node id
