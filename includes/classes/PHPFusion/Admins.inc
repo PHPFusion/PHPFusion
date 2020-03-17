@@ -266,7 +266,8 @@ class Admins {
 
                 $html .= "<div id='rev-window'>\n";
                 $html .= fusion_get_function( 'openside', "<h4><i class='fas fa-thumbtack m-r-10'></i>".self::$locale['292']."</h4>" );
-                $session = html_entity_decode( $_SESSION['form_cache'][ $form_id ][ $form_type ][ $item_id ] );
+                $session = htmlspecialchars_decode( $_SESSION['form_cache'][ $form_id ][ $form_type ][ $item_id ] );
+                $session = str_replace('&#039;', "'", $session);
                 parse_str( $session, $data );
                 unset( $data['form_id'] );
                 unset( $data['fusion_token'] );
@@ -276,7 +277,9 @@ class Admins {
                 foreach ( $data as $field_name => $value ) {
                     if ( isset( $callback_fields[ $field_name ] ) ) {
                         $html .= "<dt>".$callback_fields[ $field_name ]."</dt>\n";
-                        $html .= "<dd class='m-b-15'><samp>".nl2br( html_entity_decode( $value ) )."</samp>".form_hidden( 's_'.$field_name, '', $value )."</dd>\n";
+                        $html .= "<dd class='m-b-15'><samp>";
+                        $html .= nl2br(html_entity_decode($value));
+                        $html .= "</samp>".form_hidden('s_'.$field_name, '', str_replace("'", '&#039;', $value))."</dd>\n";
                         $fill_js .= "
                             var c = $('#s_$field_name').val();
                             $('#".$field_name."').val(c);
