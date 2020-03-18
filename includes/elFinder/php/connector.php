@@ -56,26 +56,35 @@ function access($attr, $path, $data, $volume) {
         ? !($attr == 'read' || $attr == 'write') : NULL;
 }
 
-$path = isset($_GET['path']) ? $_GET['path'] : 'images';
+$site_url = fusion_get_settings('siteurl');
+
+$default = [
+    'driver'        => 'LocalFileSystem', // driver for accessing file system (REQUIRED)
+    'winHashFix'    => DIRECTORY_SEPARATOR !== '/', // to make hash same to Linux one on windows too
+    'accessControl' => 'access',
+    'uploadDeny'    => ['all'], // All Mimetypes not allowed to upload
+    'uploadAllow'   => ['image/jpg', 'image/jpeg', 'image/gif', 'image/png', 'image/tiff', 'image/tif', 'image/x-ms-bmp', 'image/x-icon', 'image/svg', 'image/svg+xml', 'application/xml', 'text/xml'], // Mimetype `image` allowed to upload
+    'uploadOrder'   => ['deny', 'allow'], // allowed Mimetype `image only
+    'tmbPath'       => BASEDIR.'cache/.tmb',
+    'tmbURL'        => $site_url.'cache/.tmb',
+    'quarantine'    => BASEDIR.'cache/.tmb'
+];
 
 // Documentation for connector options:
 // https://github.com/Studio-42/elFinder/wiki/Connector-configuration-options
+
+$root_images = [
+    'path'  => IMAGES,
+    'URL'   => $site_url.'images/',
+    'alias' => 'root_images'
+];
+
+
 $opts = [
     //'debug' => true,
     'roots' => [
         // Items volume
-        [
-            'driver'        => 'LocalFileSystem', // driver for accessing file system (REQUIRED)
-            'path'          => BASEDIR.$path.'/', // path to files (REQUIRED)
-            'URL'           => fusion_get_settings('siteurl').$path.'/', // URL to files (REQUIRED)
-            'winHashFix'    => DIRECTORY_SEPARATOR !== '/', // to make hash same to Linux one on windows too
-            'accessControl' => 'access',
-            'uploadDeny'    => ['all'], // All Mimetypes not allowed to upload
-            'uploadAllow'   => ['image/jpg', 'image/jpeg', 'image/gif', 'image/png', 'image/tiff', 'image/tif', 'image/x-ms-bmp', 'image/x-icon', 'image/svg', 'image/svg+xml', 'application/xml', 'text/xml'], // Mimetype `image` allowed to upload
-            'uploadOrder'   => ['deny', 'allow'], // allowed Mimetype `image only
-            'tmbPath'       => '.tmb',
-            'quarantine'    => '.tmb',
-        ],
+        array_merge($root_images, $default)
     ]
 ];
 
