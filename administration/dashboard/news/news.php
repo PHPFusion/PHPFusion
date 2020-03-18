@@ -47,6 +47,9 @@ function display_news_widget() {
         $sql = /** @lang sql */
             "SELECT news_id, news_subject, news_news, news_datestamp FROM ".DB_NEWS." WHERE".$cond."news_name=:uid AND news_draft=1 ORDER BY news_datestamp DESC";
         $result = dbquery($sql, $param);
+
+        $content = [];
+
         if (dbrows($result)) {
             while ($data = dbarray($result)) {
                 $edit_link = INFUSIONS.'news/news_admin.php'.$aid.'&amp;action=edit&amp;ref=news_form&amp;news_id='.$data['news_id'];

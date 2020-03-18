@@ -17,6 +17,7 @@
 +--------------------------------------------------------*/
 
 use PHPFusion\Admins;
+use PHPFusion\Steam;
 
 defined('IN_FUSION') || exit;
 
@@ -29,15 +30,19 @@ if ($settings['maintenance'] == "1" && ((iMEMBER && $settings['maintenance_level
     redirect(BASEDIR."maintenance.php");
 }
 
+require_once INCLUDES."breadcrumbs.php";
+require_once INCLUDES."header_includes.php";
+require_once INCLUDES."theme_functions_include.php";
+
 if (preg_match("/^([a-z0-9_-]){2,50}$/i", $settings['admin_theme']) && file_exists(THEMES."admin_themes/".$settings['admin_theme']."/acp_theme.php")) {
     require_once THEMES."admin_themes/".$settings['admin_theme']."/acp_theme.php";
 } else {
     die('WARNING: Invalid Admin Panel Theme'); // TODO: improve this
 }
 
-require_once INCLUDES."breadcrumbs.php";
-require_once INCLUDES."header_includes.php";
-require_once INCLUDES."theme_functions_include.php";
+$fusion_steam = Steam::getInstance();
+$fusion_steam->run();
+
 require_once THEMES."templates/render_functions.php";
 
 if (iMEMBER) {

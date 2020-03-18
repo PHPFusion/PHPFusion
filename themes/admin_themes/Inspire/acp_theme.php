@@ -41,13 +41,13 @@ function closeside() {
     return Inspire\AdminPanel::closeside();
 }
 
-function opensidex($title = '', array $links = [], array $options = []) {
+/*function opensidex($title = '', array $links = [], array $options = []) {
     return Inspire\AdminPanel::opensidex($title, $links, $options);
 }
 
 function closesidex($title = '') {
     return Inspire\AdminPanel::closesidex($title);
-}
+}*/
 
 function render_admin_login() {
     return Inspire\Controller::Instance(FALSE)->do_login_panel();
@@ -219,7 +219,7 @@ add_to_footer("<script src='".INCLUDES."jquery/jquery.cookie.js'></script>");
 <script src="js/plugins/toastr/toastr.min.js"></script>
  */
 
-require_once INCLUDES.'theme_functions_include.php';
+//require_once INCLUDES.'theme_functions_include.php';
 
 spl_autoload_register(function ($className) {
     $autoload_register_paths = [
