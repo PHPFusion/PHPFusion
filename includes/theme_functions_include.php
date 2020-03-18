@@ -585,6 +585,14 @@ if (!function_exists("badge")) {
 }
 
 /**
+ * Set a default boilerplate
+ * @param $value
+ */
+function set_theme_boilerplate($value) {
+    Steam::getInstance()->setBoilerPlate($value);
+}
+
+/**
  * Get template paths for the current boilerplate
  *
  * @return mixed

@@ -27,6 +27,8 @@ class Steam {
 
     private static $instance = NULL;
 
+    private static $default_boilerplate = 'Bootstrap4';
+
     private $boilers = '';
 
     private $boiler_path = ''; // Default boiler
@@ -49,7 +51,7 @@ class Steam {
     public static function getInstance() {
         if (empty(self::$instance)) {
             self::$instance = new static();
-            self::$instance->setBoilerPlate(fusion_get_settings('boilerplate'));
+            self::$instance->setBoilerPlate(self::$default_boilerplate);
         }
 
         return self::$instance;

@@ -1,9 +1,8 @@
 <?php
 
 use PHPFusion\SiteLinks;
-use PHPFusion\Steam;
 
-Steam::getInstance()->setBoilerPlate('bootstrap4');
+set_theme_boilerplate('bootstrap4');
 
 function render_page($license = '') {
 
