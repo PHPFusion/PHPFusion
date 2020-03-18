@@ -1,6 +1,12 @@
 <div class="background-cover"></div>
 <div id="wrap">
     <header class="header" itemscope itemtype="https://schema.org/WPHeader">
+{#        <div class="user-panel">#}
+{#            {% if admin_login_link %}#}
+{#                <a href="{{ admin_login_link }}">Login to Admin Panel</a>#}
+{#            {% endif %}#}
+{#        </div>#}
+
         {{ top_navigation|raw }}
     </header>
     <div class="banner">

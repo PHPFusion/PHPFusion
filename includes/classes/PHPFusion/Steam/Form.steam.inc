@@ -1,18 +1,18 @@
 <?php
 namespace PHPFusion\Steam;
 
-class Form {
+use PHPFusion\Steam;
 
-    private $steam; // pass the steam here.
+class Form {
 
     /**
      * Blocks constructor.
      *
      * @param \PHPFusion\Steam $steam
      */
-    public function __construct(\PHPFusion\Steam $steam) {
-        $this->steam = $steam;
-        require_once $this->steam->getBoilerPath().DIRECTORY_SEPARATOR.'form.php';
+    public function __construct() {
+        $steam = Steam::getInstance();
+        require_once $steam->getBoilerPath().DIRECTORY_SEPARATOR.'form.php';
     }
 
     public function input($input_name, $label, $input_value, $options) {

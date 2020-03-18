@@ -1,5 +1,7 @@
 <?php
 namespace PHPFusion\Steam;
+use PHPFusion\Steam;
+
 /**
  * Class Blocks
  * Render a cross framework HTML blocks.
@@ -9,12 +11,10 @@ class Layout {
     private $steam; // pass the steam here.
 
     /**
-     * Blocks constructor.
-     *
-     * @param \PHPFusion\Steam $steam
+     * Layout constructor.
      */
-    public function __construct(\PHPFusion\Steam $steam) {
-        $this->steam = $steam;
+    public function __construct() {
+        $this->steam = Steam::getInstance();
         require_once $this->steam->getBoilerPath().DIRECTORY_SEPARATOR."grid.php";
     }
 

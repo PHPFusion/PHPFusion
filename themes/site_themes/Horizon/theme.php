@@ -2,7 +2,7 @@
 
 use PHPFusion\SiteLinks;
 
-set_theme_boilerplate('bootstrap4');
+boilerplate_set_default('bootstrap4');
 
 function render_page($license = '') {
 
@@ -10,13 +10,16 @@ function render_page($license = '') {
     $settings = fusion_get_settings();
     $menu_options = [
         //'container_fluid'   => TRUE,
+        'searchbar' => TRUE,
+        'navbar_class' => 'navbar-expand-lg navbar-dark bg-dark navbar-light',
         'show_banner'    => FALSE,
         'container'      => TRUE,
         'header_content' => '<a class="navbar-brand" href="'.BASEDIR.$settings['opening_page'].'"><img src="'.BASEDIR.$settings['sitebanner'].'" alt="'.$settings['sitename'].'" class="img-responsive"/></a>',
         'grouping'       => TRUE,
         'links_per_page' => 10,
+        'class'          => 'bg-dark',
         //'html_pre_content'  => $this->userMenu(),
-        'show_header'    => TRUE
+        'show_header'    => TRUE,
     ];
 
     $content = ['sm' => 12, 'md' => 12, 'lg' => 12];
@@ -40,30 +43,30 @@ function render_page($license = '') {
     }
 
     $theme_info = [
-        'top_navigation' => SiteLinks::setSubLinks($menu_options)->showSubLinks(),
-
+        'top_navigation'   => SiteLinks::setSubLinks($menu_options)->showSubLinks(),
         //'locale'        => fusion_get_locale(),
-        'settings'       => $settings,
+        'settings'         => $settings,
         //'themesettings' => get_theme_settings('Horizon'),
         //'mainmenu'      => $sublinks,
         //'getparam'      => ['container' => $this->getParam('container')],
         //'banner1'       => showbanners(1),
         //'banner2'       => showbanners(2),
-        'ifleft'         => $ifLeft,
-        'left'           => $left,
-        'content'        => $content,
-        'notices'        => renderNotices(getNotices(['all', FUSION_SELF])),
-        'ifright'        => $ifRight,
-        'right'          => $right,
+        'ifleft'           => $ifLeft,
+        'left'             => $left,
+        'content'          => $content,
+        'notices'          => renderNotices(getNotices(['all', FUSION_SELF])),
+        'ifright'          => $ifRight,
+        'right'            => $right,
         //'right_content' => $this->getParam('right_content'),
         //'right_const'   => ($this->getParam('right') == TRUE && defined('RIGHT') && RIGHT) ? RIGHT : '',
         //'errors'        => showFooterErrors(),
-        'footer_text'    => nl2br(parse_textarea($settings['footer'], FALSE, TRUE)),
-        'copyright'      => showcopyright('', TRUE).showprivacypolicy(),
-        'ifrendertime'   => ($settings['rendertime_enabled'] == 1 || $settings['rendertime_enabled'] == 2) ? TRUE : FALSE,
-        'rendertime'     => showrendertime(),
-        'memoryusage'    => showMemoryUsage(),
-        'counter'        => showcounter()
+        'footer_text'      => nl2br(parse_textarea($settings['footer'], FALSE, TRUE)),
+        'copyright'        => showcopyright('', TRUE).showprivacypolicy(),
+        'ifrendertime'     => ($settings['rendertime_enabled'] == 1 || $settings['rendertime_enabled'] == 2) ? TRUE : FALSE,
+        'rendertime'       => showrendertime(),
+        'memoryusage'      => showMemoryUsage(),
+        'counter'          => showcounter(),
+        'admin_login_link' => (iADMIN ? ADMIN.'index.php'.fusion_get_aidlink() : '')
     ];
     //print_p($theme_info);
     return fusion_render($theme_path, 'theme.twig', $theme_info, TRUE);

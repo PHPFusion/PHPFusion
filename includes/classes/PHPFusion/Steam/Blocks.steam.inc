@@ -1,5 +1,7 @@
 <?php
 namespace PHPFusion\Steam;
+use PHPFusion\Steam;
+
 /**
  * Class Blocks
  * Render a cross framework HTML blocks.
@@ -10,11 +12,9 @@ class Blocks {
 
     /**
      * Blocks constructor.
-     *
-     * @param \PHPFusion\Steam $steam
      */
-    public function __construct(\PHPFusion\Steam $steam) {
-        $this->steam = $steam;
+    public function __construct() {
+        $this->steam = Steam::getInstance();
     }
 
     public function box(array $options) {

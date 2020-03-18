@@ -9,7 +9,28 @@
 }
 
 header .navbar-brand img {
-    max-width: 200px;
+    max-width: 150px;
+}
+
+.header, .bg-dark {
+    background-color: #272930 !important;
+}
+
+.navbar.bg-dark ul.nav.navbar-nav > li > a {
+    color: #FFF;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 18px;
+    padding: 6px 8px 7px;
+    margin-top: 27px;
+    display: inline-block;
+}
+
+.navbar.bg-dark ul.nav.navbar-nav > li > a {
+    -moz-transition: border .20s linear,color .20s linear,background-color .20s linear;
+    -webkit-transition: border .20s linear,color .20s linear,background-color .20s linear;
+    -o-transition: border .20s linear,color .20s linear,background-color .20s linear;
+    transition: border .20s linear,color .20s linear,background-color .20s linear;
 }
 
 .horizon-container {
@@ -17,3 +38,4 @@ header .navbar-brand img {
     margin-right: auto;
     margin-left: auto;
 }
+

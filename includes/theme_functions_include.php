@@ -588,7 +588,7 @@ if (!function_exists("badge")) {
  * Set a default boilerplate
  * @param $value
  */
-function set_theme_boilerplate($value) {
+function boilerplate_set_default($value) {
     Steam::getInstance()->setBoilerPlate($value);
 }
 
@@ -598,7 +598,7 @@ function set_theme_boilerplate($value) {
  * @return mixed
  * @throws Exception
  */
-function get_boiler_files() {
+function boilerplate_get_files() {
     return Steam::getInstance()->getBoilerFiles();
 }
 
@@ -620,7 +620,7 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
      * @return string
      */
     function openmodal($id, $title, $options = []) {
-        $template_file = get_boiler_files();
+        $template_file = boilerplate_get_files();
 
         $default_options = [
             "class"        => "",
@@ -683,7 +683,7 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
      */
     function modalfooter($content = "", $dismiss = FALSE) {
         $locale = fusion_get_locale();
-        $template_file = get_boiler_files();
+        $template_file = boilerplate_get_files();
         $modal = Template::getInstance('modal');
         $modal->set_template($template_file['modal']);
         $modal->set_block("modal_closebody");
@@ -706,7 +706,7 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
      * @return string
      */
     function closemodal() {
-        $template_file = get_boiler_files();
+        $template_file = boilerplate_get_files();
         $modal = Template::getInstance('modal');
         $modal->set_template($template_file['modal']);
         $modal->set_block("modal_close");
@@ -730,7 +730,7 @@ if (!function_exists("progress_bar")) {
      * @return string
      */
     function progress_bar($num, $title = FALSE, array $options = []) {
-        $template = get_boiler_files();
+        $template = boilerplate_get_files();
 
         $default_options = [
             "class"          => "",

@@ -46,7 +46,44 @@ class SiteLinks {
      *
      */
     private static $instances = [];
+
     private static $id = '';
+
+    private static $default_options = [
+        'id'                   => self::MenuDefaultID,
+        'container'            => FALSE,
+        'container_fluid'      => FALSE,
+        'responsive'           => TRUE,
+        'navbar_class'         => 'navbar-expand-lg navbar-light bg-light',
+        'nav_class'            => '',
+        'additional_nav_class' => '',
+        'item_class'           => '', // $class
+        'locale'               => [],
+        'separator'            => '', // $sep
+        'links_per_page'       => '',
+        'grouping'             => '',
+        'show_banner'          => FALSE,
+        'show_header'          => FALSE,
+        'custom_header'        => '',
+        'header_content'       => '',
+        'custom_banner'        => '',
+        'custom_banner_link'   => '',
+        'language_switcher'    => FALSE,
+        'searchbar'            => FALSE,
+        'search_icon'          => 'fa fa-search',
+        'search_btn_class'     => 'btn-primary',
+        'caret_icon'           => 'caret',
+        'callback_data'        => '',
+        'additional_data'      => '',
+        'link_position'        => [2, 3],
+        'html_content'         => '',
+        'affix_top'            => '',                   // Adds affix from top offset
+        'affix_bottom'         => '',                   // Adds affix from bottom offset
+        'html_pre_content'     => '',
+        'html_post_content'    => '',
+        'nav_class_primary'    => '',
+        'nav_class_secondary'  => '',
+    ];
 
     private static $primary_cache_data = [];
 
@@ -174,52 +211,14 @@ class SiteLinks {
 
     /**
      * Calling the SiteLinks instance with Custom Parameters
-     *
      * @param array $options
      *
-     * @return static
+     * @return mixed
+     * @throws \Exception
      */
     public static function setSubLinks(array $options = []) {
-        /*
-         * If set an ID, it will re-run the class to create a new object again.
-         */
-        $default_options = [
-            'id'                   => self::MenuDefaultID,
-            'container'            => FALSE,
-            'container_fluid'      => FALSE,
-            'responsive'           => TRUE,
-            'navbar_class'         => 'navbar-default',
-            'nav_class'            => '',
-            'additional_nav_class' => '',
-            'item_class'           => '', // $class
-            'locale'               => [],
-            'separator'            => '', // $sep
-            'links_per_page'       => '',
-            'grouping'             => '',
-            'show_banner'          => FALSE,
-            'show_header'          => FALSE,
-            'custom_header'        => '',
-            'header_content'       => '',
-            'custom_banner'        => '',
-            'custom_banner_link'   => '',
-            'language_switcher'    => FALSE,
-            'searchbar'            => FALSE,
-            'search_icon'          => 'fa fa-search',
-            'search_btn_class'     => 'btn-primary',
-            'caret_icon'           => 'caret',
-            'callback_data'        => '',
-            'additional_data'      => '',
-            'link_position'        => [2, 3],
-            'html_content'         => '',
-            'affix_top'            => '',                   // Adds affix from top offset
-            'affix_bottom'         => '',                   // Adds affix from bottom offset
-            'html_pre_content'     => '',
-            'html_post_content'    => '',
-            'nav_class_primary'    => '',
-            'nav_class_secondary'  => '',
-        ];
 
-        $options += $default_options;
+        $options += self::$default_options;
 
         if (!isset(self::$instances[$options['id']]->menu_options)) {
 
@@ -450,14 +449,16 @@ class SiteLinks {
 
         $searchbar_dropdown = '';
         if ($options['searchbar']) {
+            // Add in a new default search form.
             // LI first
             $nav_li = Template::getInstance('nav_li_no_link');
             $nav_li->set_template(self::$nav_li_path);
             $nav_li->set_block('nav_li_no_link', [
-                'content'    => openform('searchform', 'post', FUSION_ROOT.BASEDIR.'search.php?stype=all',
+                'content'    => openform('searchform', 'post', FUSION_ROOT.BASEDIR.'search.php?stype='.$settings['default_search'],
                         [
                             'class'      => 'm-b-10',
-                            'remote_url' => $settings['site_path'].'search.php'
+                            'inline' => TRUE,
+                            //'remote_url' => $settings['site_path'].'search.php'
                         ]
                     ).form_text('stext', '', '',
                         [
@@ -473,26 +474,27 @@ class SiteLinks {
                     ).closeform(),
                 'link_class' => ''
             ]);
+            $searchbar_dropdown = $nav_li->get_output();
 
-            $searchbar_tpl = Template::getInstance('searchbar_li');
-            $ss = [
-                'title'               => $locale['search'],
-                'link'                => '#',
-                'content'             => '<i class="'.$options['search_icon'].'"></i>',
-                'caret_class'         => $options['caret_icon'],
-                'dropdown_menu_class' => ' dropdown-menu-right',
-                'item'                => $nav_li->get_output(),
-                'first_item_link'     => '',
-                'li_class'            => '',
-                'link_class'          => '',
-                'link_target'         => '',
-                'tab_index'           => '',
-                'dropdown_menu_id'    => '',
-                'submenu'             => ''
-            ];
-            $searchbar_tpl->set_block('nav_li_dropdown', $ss);
-            $searchbar_tpl->set_template(self::$nav_li_dropdown_path);
-            $searchbar_dropdown = $searchbar_tpl->get_output();
+            //$searchbar_tpl = Template::getInstance('searchbar_li');
+            //$ss = [
+            //    'title'               => $locale['search'],
+            //    'link'                => '#',
+            //    'content'             => '<i class="'.$options['search_icon'].'"></i>',
+            //    'caret_class'         => $options['caret_icon'],
+            //    'dropdown_menu_class' => ' dropdown-menu-right',
+            //    'item'                => $nav_li->get_output(),
+            //    'first_item_link'     => '',
+            //    'li_class'            => '',
+            //    'link_class'          => '',
+            //    'link_target'         => '',
+            //    'tab_index'           => '',
+            //    'dropdown_menu_id'    => '',
+            //    'submenu'             => ''
+            //];
+            //$searchbar_tpl->set_block('nav_li_dropdown', $ss);
+            //$searchbar_tpl->set_template(self::$nav_li_dropdown_path);
+            //$searchbar_dropdown = $searchbar_tpl->get_output();
         }
 
         $primary_links = $this->showMenuLinks(0, $options['callback_data']);
@@ -606,11 +608,11 @@ class SiteLinks {
 
     /**
      * Recursion loop of data for navigational menu
-     *
-     * @param $id - 0 as default
-     * @param $data
+     * @param int   $id
+     * @param array $data
      *
      * @return string
+     * @throws \Exception
      */
     private function showMenuLinks($id = 0, $data = []) {
         $options = self::getMenuParam();
@@ -649,11 +651,8 @@ class SiteLinks {
 
                 // Calculate link class
                 if ($link_data['link_disabled']) {
-
                     $li_class[] = "disabled";
-
                 } else {
-
                     if (!empty($link_data['link_li_class']))
                         $li_class[] = $link_data['link_li_class'];
 
@@ -675,7 +674,6 @@ class SiteLinks {
 
                     // Data would have not inherited all default param.
                     $link_data['link_active'] = $this->checkLinkActive($link_data['link_id'], $link_data['link_url'], $data);
-
                 }
 
                 if ($link_data['link_name'] != "---" && $link_data['link_name'] != "===") {
@@ -933,7 +931,7 @@ class SiteLinks {
      * @throws \Exception
      */
     private static function getBoilerFiles() {
-        $boiler_files = get_boiler_files();
+        $boiler_files = boilerplate_get_files();
         if (!empty($boiler_files)) {
             list(self::$nav_path, self::$nav_li_path, self::$nav_li_link_path, self::$nav_li_dropdown_path, self::$nav_divider_path) = array_values($boiler_files['nav']);
         }
