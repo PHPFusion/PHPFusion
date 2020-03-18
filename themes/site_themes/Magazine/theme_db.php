@@ -18,10 +18,10 @@
 defined('IN_FUSION') || exit;
 
 if (!defined('MG_LOCALE')) {
-    if (file_exists(THEMES.'Magazine/locale/'.LANGUAGE.'.php')) {
-        define('MG_LOCALE', THEMES.'Magazine/locale/'.LANGUAGE.'.php');
+    if (file_exists(SITE_THEMES.'Magazine/locale/'.LANGUAGE.'.php')) {
+        define('MG_LOCALE', SITE_THEMES.'Magazine/locale/'.LANGUAGE.'.php');
     } else {
-        define('MG_LOCALE', THEMES.'Magazine/locale/English.php');
+        define('MG_LOCALE', SITE_THEMES.'Magazine/locale/English.php');
     }
 }
 

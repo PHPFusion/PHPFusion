@@ -613,6 +613,8 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
      * @return string
      */
     function openmodal($id, $title, $options = []) {
+        $template_file = get_boiler_files();
+
         $default_options = [
             "class"        => "",
             "class_dialog" => "",

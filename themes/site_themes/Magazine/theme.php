@@ -15,6 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
+use PHPFusion\Steam;
+
 defined('IN_FUSION') || exit;
 
 require_once INCLUDES.'theme_functions_include.php';
@@ -24,11 +27,14 @@ define('THEME_BULLET', '&middot;');
 define('BOOTSTRAP', TRUE);
 define('FONTAWESOME', TRUE);
 
+$fusion_steam = new Steam('bootstrap3');
+$fusion_steam->run();
+
 if (!defined('MG_LOCALE')) {
-    if (file_exists(THEMES.'Magazine/locale/'.LANGUAGE.'.php')) {
-        define('MG_LOCALE', THEMES.'Magazine/locale/'.LANGUAGE.'.php');
+    if (file_exists(SITE_THEMES.'Magazine/locale/'.LANGUAGE.'.php')) {
+        define('MG_LOCALE', SITE_THEMES.'Magazine/locale/'.LANGUAGE.'.php');
     } else {
-        define('MG_LOCALE', THEMES.'Magazine/locale/English.php');
+        define('MG_LOCALE', SITE_THEMES.'Magazine/locale/English.php');
     }
 }
 
