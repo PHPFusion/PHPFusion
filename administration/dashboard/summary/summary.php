@@ -170,10 +170,8 @@ function display_summary_widget() {
     if ($content === FALSE) {
         $tpl->set_block('li_na');
     }
+    $tpl->set_tag('opensidex', fusion_get_function("opensidex", "Site Summary"));
+    $tpl->set_tag('closesidex', fusion_get_function("closesidex", ""));
 
-    $html = fusion_get_function("open_sidex", "Site Summary");
-    $html .= $tpl->get_output();
-    $html .= fusion_get_function("close_sidex");
-
-    return (string) $html;
+    return $tpl->get_output();
 }

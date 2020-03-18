@@ -1,0 +1,22 @@
+<div id="news">
+    {{ opensidex('News Quick Draft')|raw }}
+    {{ form.openform|raw }}
+    {{ form.news_subject|raw }}
+    {{ form.news_news|raw }}
+    {{ form.submit|raw }}
+    {{ form.closeform|raw }}
+    {% if content %}
+        <h3 class="spacer-sm">Your Recent Drafts</h3>
+        <ul class="block news-block">
+            {% for news in content %}
+                <li>
+                    <a href="{{ news.link }}">{{ news.subject }}</a><small>{{ news.date }}</small><br/>{{ news.text }}
+                </li>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        {{ no_content }}
+    {% endif %}
+    {{ closesidex()|raw }}
+</div>

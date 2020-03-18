@@ -1,0 +1,30 @@
+<div id="ratings">
+    {{ opensidex(title)|raw }}
+    <ul class="block">
+        {% if rating_items %}
+            {% for rating in rating_items %}
+                <li id="{{ rating.rating_id }}">
+                    <div class="feed-element">
+                        <a class="pull-left m-r-10">
+                            {{ rating.avatar|raw }}
+                        </a>
+                        <div class="overflow-hide">
+                            <small class="pull-right">{{ rating.date|raw }}</small>
+                            <strong>{{ rating.profile_link|raw }} rated in {{ rating.name|raw }}</strong><br/>
+                            {{ rating.comments }}
+                            <div class="comment-actions text-muted">
+                                <a title="{{ locale.274 }}" href="{{ rating.manage_rating_link }}">{{ locale.manage }}</a> |
+                                <a title="{{ locale.275 }}" href="{{ rating.edit_rating_link }}">{{ locale.edit }}</a> |
+                                <a title="{{ locale.276 }}" href="{{ rating.delete_rating_link }}" class="text-danger">{{ locale.delete }}</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+            {% endfor %}
+        {% else %}
+            <li>{{ no_ratings }}</li>
+        {% endif %}
+    </ul>
+    {{ closesidex(footer)|raw }}
+</div>

@@ -1,0 +1,29 @@
+<div id="comments">
+    {{ opensidex(title)|raw }}
+    <ul class="block row-list" style="margin:-10px 0;">
+        {% if comment_items %}
+            {% for comment in comment_items %}
+                <li id="{{ comment.comment_id }}">
+                    <div class="feed-element">
+                        <a class="pull-left m-r-10">
+                            {{ comment.avatar|raw }}
+                        </a>
+                        <div class="overflow-hide">
+                            <small class="pull-right">{{ comment.date|raw }}</small>
+                            <strong>{{ comment.profile_link|raw }} commented in {{ comment.name|raw }}</strong><br/>
+                            {{ comment.comments }}
+                            <div class="comment-actions text-muted">
+                                <a title="{{ locale.274 }}" href="{{ comment.manage_comment_link }}">{{ locale.manage }}</a> |
+                                <a title="{{ locale.275 }}" href="{{ comment.edit_comment_link }}">{{ locale.edit }}</a> |
+                                <a title="{{ locale.276 }}" href="{{ comment.delete_comment_link }}" class="text-danger">{{ locale.delete }}</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            {% endfor %}
+        {% else %}
+            <li>{{ no_comment }}</li>
+        {% endif %}
+    </ul>
+    {{ closesidex(footer)|raw }}
+</div>

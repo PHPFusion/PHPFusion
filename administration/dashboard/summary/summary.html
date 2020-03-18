@@ -1,20 +1,25 @@
-<ul class="block">
-    {li.{
-    <li class="clearfix spacer-xs">
-        <div class="pull-right"><small>{%stat_icons%}</small></div>
-        <div class="pull-left m-r-10">{%icon%}</div>
-        <div><strong>{%title%}</strong></div>
-        <div class="overflow-hide">
-            <div class="pull-left text-lighter m-r-10" style="width:100px; text-overflow: ellipsis"><small>{%date%}</small></div>
+<div id="summary">
+    {%opensidex%}
+    <ul class="block">
+        {li.{
+        <li class="clearfix spacer-xs">
+            <div class="pull-right"><small>{%stat_icons%}</small></div>
+            <div class="pull-left m-r-10">{%icon%}</div>
+            <div><strong>{%title%}</strong></div>
             <div class="overflow-hide">
-                {%text%}
+                <div class="pull-left text-lighter m-r-10" style="width:100px; text-overflow: ellipsis">
+                    <small>{%date%}</small></div>
+                <div class="overflow-hide">
+                    {%text%}
+                </div>
             </div>
-        </div>
-    </li>
-    }}
-    {li_na.{
-    <li class="clearfix text-center">
-        There are no site activity now.
-    </li>
-    }}
-</ul>
+        </li>
+        }}
+        {li_na.{
+        <li class="clearfix text-center">
+            There are no site activity now.
+        </li>
+        }}
+    </ul>
+    {%closesidex%}
+</div>
