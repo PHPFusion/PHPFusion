@@ -53,6 +53,25 @@ function fusion_license($public_key, $password) {
 }
 
 /**
+ * cURL method to get any contents for Apache that does not support SSL
+ *
+ * @param $url
+ *
+ * @return bool|string
+ */
+function fusion_get_contents($url) {
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+    $data = curl_exec($ch);
+    curl_close($ch);
+    return $data;
+}
+
+
+/**
  * Current microtime as float to calculate script start/end time
  *
  * @return float
@@ -1023,6 +1042,10 @@ function highlight_words($word, $subject) {
  * @return string
  */
 function descript($text, $striptags = TRUE) {
+    if (is_array($text)) {
+        return $text;
+    }
+
     // Convert problematic ascii characters to their true values
     $patterns = [
         '#(&\#x)([0-9A-F]+);*#si'                                                                                                       => '',
@@ -1155,18 +1178,19 @@ function checkrights($right) {
  */
 function pageAccess($rights, $debug = FALSE) {
     $error = [];
+    $aid = get('aid');
     if ($debug) {
         print_p('Admin Panel mode');
     }
     if (!defined('iAUTH')) {
         $error[] = 'iAuth error';
     }
-    if (!isset($_GET['aid'])) {
+    if (!$aid) {
         $error[] = 'Aid link error';
     }
-    if (iADMIN && !empty($_GET['aid'])) {
-        if ($_GET['aid'] != iAUTH) {
-            $error[] = 'Aidlink mismatch. '.iAUTH.' != '.$_GET['aid']."<br/>";
+    if (iADMIN && $aid) {
+        if ($aid != iAUTH) {
+            $error[] = 'Aidlink mismatch. '.iAUTH.' != $aid<br/>';
             $error[] .= USER_IP;
         }
     } else {
@@ -2184,10 +2208,8 @@ function valid_language($lang, $file_check = FALSE) {
  * @param string $selected_language
  *
  * @return string
- * @todo rename it from get_available_languages_list to a more proper name
- *
  */
-function get_available_languages_list($selected_language = "") {
+function get_language_opts($selected_language = "") {
     $enabled_languages = fusion_get_enabled_languages();
     $res = "";
     foreach ($enabled_languages as $language) {
@@ -2206,15 +2228,16 @@ function get_available_languages_list($selected_language = "") {
  */
 function fusion_get_language_switch() {
     static $language_switch = [];
-    if (empty($language_link)) {
+    if (empty($language_switch)) {
         $enabled_languages = fusion_get_enabled_languages();
         foreach ($enabled_languages as $language => $language_name) {
-            $link = clean_request('lang='.$language, ['lang'], FALSE);
             $language_switch[$language] = [
-                "language_name"   => $language_name,
-                "language_icon_s" => BASEDIR."locale/$language/$language-s.png",
-                "language_icon"   => BASEDIR."locale/$language/$language.png",
-                "language_link"   => $link,
+                "language_name"       => $language_name,
+                "language_translated" => translate_lang_names($language_name),
+                "language_icon_s"     => BASEDIR."locale/$language/$language-s.png",
+                "language_icon"       => BASEDIR."locale/$language/$language.png",
+                "language_link"       => clean_request('lang='.$language, ['lang'], FALSE),
+                "language_active"     => (LANGUAGE == $language ? TRUE : FALSE),
             ];
         }
     }
@@ -2398,4 +2421,36 @@ function calculate_byte($total_bit) {
     }
 
     return 1048576;
+}
+
+/**
+ * Authenticate the current user with fusion cookie format param
+ *
+ * @param $user_cookie
+ *
+ * @return bool
+ * @throws Exception
+ */
+function fusion_authenticate_user($user_cookie) {
+    $auth = explode('.', $user_cookie);
+    if (count($auth) == 3) {
+        list($userID, $cookieExpiration, $cookieHash) = $auth;
+        if ($cookieExpiration > TIME) {
+            $result = dbquery("SELECT * FROM ".DB_USERS." WHERE user_id='".(isnum($userID) ? $userID : 0)."' AND user_status='0' AND user_actiontime='0' LIMIT 1");
+            if (dbrows($result) == 1) {
+                $user = dbarray($result);
+                // definition
+                set_user_level();
+
+                $key = hash_hmac($user['user_algo'], $userID.$cookieExpiration, $user['user_salt']);
+                $hash = hash_hmac($user['user_algo'], $userID.$cookieExpiration, $key);
+                if ($cookieHash == $hash) {
+                    return $userID;
+                }
+                return FALSE;
+            }
+        }
+    }
+
+    return FALSE;
 }
