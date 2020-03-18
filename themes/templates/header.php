@@ -17,6 +17,7 @@
 +--------------------------------------------------------*/
 
 use PHPFusion\Rewrite\Permalinks;
+use PHPFusion\Steam;
 
 defined('IN_FUSION') || exit;
 
@@ -24,9 +25,7 @@ $settings = fusion_get_settings();
 $userdata = fusion_get_userdata();
 
 // Check if Maintenance is Enabled
-if ($settings['maintenance'] == "1" &&
-    ((iMEMBER && $settings['maintenance_level'] == USER_LEVEL_MEMBER && $userdata['user_id'] != "1") ||
-    ($settings['maintenance_level'] < $userdata['user_level']))
+if ($settings['maintenance'] == "1" && ((iMEMBER && $settings['maintenance_level'] == USER_LEVEL_MEMBER && $userdata['user_id'] != "1") || ($settings['maintenance_level'] < $userdata['user_level']))
 ) {
     if ($settings['site_seo']) {
         redirect(FUSION_ROOT.BASEDIR."maintenance.php");
@@ -42,6 +41,10 @@ if (fusion_get_settings("site_seo")) {
 require_once INCLUDES."breadcrumbs.php";
 require_once INCLUDES."header_includes.php";
 require_once THEME."theme.php";
+
+$fusion_steam = Steam::getInstance();
+$fusion_steam->run();
+
 require_once INCLUDES."theme_functions_include.php";
 require_once THEMES."templates/render_functions.php";
 

@@ -30,7 +30,7 @@ class Blocks {
 
         $options += $default;
 
-        $path = $this->steam->get_BoilerPath()."html".DIRECTORY_SEPARATOR."panel.html";
+        $path = $this->steam->getBoilerPath()."html".DIRECTORY_SEPARATOR."panel.html";
 
         $tpl = \PHPFusion\Template::getInstance('box');
 
@@ -62,7 +62,7 @@ class Blocks {
     }
 
     public function code($title, $value, $save = '') {
-        $path = $this->steam->get_BoilerPath()."html".DIRECTORY_SEPARATOR."code.html";
+        $path = $this->steam->getBoilerPath()."html".DIRECTORY_SEPARATOR."code.html";
         $tpl = \PHPFusion\Template::getInstance('box');
         $tpl->set_template($path);
         $tpl->set_tag('title', $title);

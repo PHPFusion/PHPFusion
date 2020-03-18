@@ -1,15 +1,14 @@
 <?php
 
 use PHPFusion\SiteLinks;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
+use PHPFusion\Steam;
+
+Steam::getInstance()->setBoilerPlate('bootstrap4');
 
 function render_page($license = '') {
+
     $theme_path = THEME.'templates/';
-
     $settings = fusion_get_settings();
-
     $menu_options = [
         //'container_fluid'   => TRUE,
         'show_banner'    => FALSE,

@@ -591,8 +591,7 @@ if (!function_exists("badge")) {
  * @throws Exception
  */
 function get_boiler_files() {
-    global $fusion_steam;
-    return $fusion_steam->getBoilerFiles();
+    return Steam::getInstance()->getBoilerFiles();
 }
 
 if (!function_exists("openmodal") && !function_exists("closemodal") && !function_exists("modalfooter")) {

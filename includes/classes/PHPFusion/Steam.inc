@@ -25,48 +25,54 @@ namespace PHPFusion;
  */
 class Steam {
 
-    private static $boiler_path = NULL; // Default boiler
+    private static $instance = NULL;
+
+    private $boilers = '';
+
+    private $boiler_path = ''; // Default boiler
+
     private static $boiler_files = [];
-    private $boilers = 'bootstrap3';
+
+    private function __clone() {
+    }
+
+    private function __sleep() {
+    }
+
+    private function __wakeup() {
+    }
 
     /**
-     * Steam constructor.
-     *
-     * @param string $boilers
+     * Steam instance
+     * @return static|null
      */
-    public function __construct() {
-        $boilerplate = fusion_get_settings('boilerplate');
-        $this->boilers = $boilerplate;
-        self::$boiler_path = THEMES."boilerplates".DIRECTORY_SEPARATOR.$boilerplate.DIRECTORY_SEPARATOR;
+    public static function getInstance() {
+        if (empty(self::$instance)) {
+            self::$instance = new static();
+            self::$instance->setBoilerPlate(fusion_get_settings('boilerplate'));
+        }
+
+        return self::$instance;
     }
 
     public function setBoilerPlate($boilerplate) {
         $this->boilers = $boilerplate;
-        self::$boiler_path = THEMES."boilerplates".DIRECTORY_SEPARATOR.$boilerplate.DIRECTORY_SEPARATOR;
+        $this->boiler_path = THEMES."boilerplates".DIRECTORY_SEPARATOR.$boilerplate.DIRECTORY_SEPARATOR;
     }
 
     /**
      * @return null|string
      */
-    public function get_BoilerPath() {
-        return self::$boiler_path;
-    }
-
-    /**
-     * Override boilers
-     *
-     * @param $boilers
-     */
-    public function set_boiler($boilers) {
-        $this->boilers = $boilers;
+    public function getBoilerPath() {
+        return $this->boiler_path;
     }
 
     /**
      * Run the boiler
      */
     public function run() {
-        require_once self::$boiler_path."package.php";
-
+        $package_path = $this->getBoilerPath().'package.php';
+        require_once $package_path;
         $this->setBoilerFiles();
     }
 

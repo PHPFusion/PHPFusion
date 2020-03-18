@@ -12,7 +12,7 @@ class Form {
      */
     public function __construct(\PHPFusion\Steam $steam) {
         $this->steam = $steam;
-        require_once $this->steam->get_BoilerPath().DIRECTORY_SEPARATOR.'form.php';
+        require_once $this->steam->getBoilerPath().DIRECTORY_SEPARATOR.'form.php';
     }
 
     public function input($input_name, $label, $input_value, $options) {

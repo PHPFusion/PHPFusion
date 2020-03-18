@@ -18,6 +18,7 @@
 
 use PHPFusion\Panels;
 use PHPFusion\Rewrite\Permalinks;
+use PHPFusion\Steam;
 
 defined('IN_FUSION') || exit;
 

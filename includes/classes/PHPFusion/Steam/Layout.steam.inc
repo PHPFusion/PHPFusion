@@ -15,7 +15,7 @@ class Layout {
      */
     public function __construct(\PHPFusion\Steam $steam) {
         $this->steam = $steam;
-        require_once $this->steam->get_BoilerPath().DIRECTORY_SEPARATOR."grid.php";
+        require_once $this->steam->getBoilerPath().DIRECTORY_SEPARATOR."grid.php";
     }
 
     public function getRowClass() {

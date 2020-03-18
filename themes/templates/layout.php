@@ -56,9 +56,7 @@ if (count($languages) > 1) {
     echo "<link rel='alternate' hreflang='x-default' href='".$settings['siteurl']."'>\n";
 }
 
-if (isset($fusion_steam)) {
-    fusion_apply_hook('fusion_boiler_header');
-}
+fusion_apply_hook('fusion_boiler_header');
 
 Dynamics::getInstance()->getHeaders();
 if ($settings['entypo'] || defined('ENTYPO')) {
