@@ -25,16 +25,21 @@ namespace PHPFusion;
  */
 class Steam {
 
-    private $boilers = 'bootstrap3'; // Default boiler
-    private static $boiler_path = NULL;
+    private static $boiler_path = NULL; // Default boiler
+    private static $boiler_files = [];
+    private $boilers = 'bootstrap3';
 
-    public function __construct($boilers ='') {
-
+    /**
+     * Steam constructor.
+     *
+     * @param string $boilers
+     */
+    public function __construct($boilers = '') {
         // we will need a default framework selector in fusion_get_settings('boiler') which value can be hosted as 'semantic', 'foundation', 'bootstrap3', 'bootstrap4'
         // drop $settings['bootstrap']
         if ($boilers) {
             $this->boilers = $boilers;
-            self::$boiler_path = THEMES."templates".DIRECTORY_SEPARATOR."boilers".DIRECTORY_SEPARATOR.$boilers.DIRECTORY_SEPARATOR;
+            self::$boiler_path = THEMES."boilerplates".DIRECTORY_SEPARATOR.$boilers.DIRECTORY_SEPARATOR;
         }
 
     }
@@ -48,6 +53,7 @@ class Steam {
 
     /**
      * Override boilers
+     *
      * @param $boilers
      */
     public function set_boiler($boilers) {
@@ -59,11 +65,25 @@ class Steam {
      */
     public function run() {
         require_once self::$boiler_path."package.php";
+
+        $this->setBoilerFiles();
     }
 
+    /**
+     *
+     */
+    private function setBoilerFiles() {
+        if (empty(self::$boiler_files)) {
+            $package_files = fusion_filter_hook('fusion_boiler_paths');
+            if (!empty($package_files[0])) {
+                self::$boiler_files = $package_files[0];
+            }
+        }
+    }
 
     /**
      * Get the current boiler
+     *
      * @return string
      */
     public function get_boiler() {
@@ -83,18 +103,26 @@ class Steam {
         require_once $file;
         $input_class = new \ReflectionClass('PHPFusion\\Steam\\'.$command_name);
 
-        return (object) $input_class->newInstance($this);
+        return (object)$input_class->newInstance($this);
     }
 
     /**
      * Render the output from the template
+     *
      * @param Template $tpl
      *
      * @return string
      */
 
     public function render(Template $tpl) {
-        return (string) $tpl->get_output();
+        return (string)$tpl->get_output();
+    }
+
+    /**
+     * @return array
+     */
+    public function getBoilerFiles() {
+        return self::$boiler_files;
     }
 
 }

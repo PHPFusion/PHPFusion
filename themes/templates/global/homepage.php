@@ -20,6 +20,7 @@
  */
 if (!function_exists('display_home')) {
     function display_home($info) {
+
         add_to_css('
             figure {
                 margin: 0;
@@ -77,7 +78,6 @@ if (!function_exists('display_home')) {
             }
         ');
         $html = '';
-    
         // This is display_home_no_item function
         if ( empty( $info ) ) {
             $locale = fusion_get_locale();
@@ -86,7 +86,6 @@ if (!function_exists('display_home')) {
             $html .= fusion_get_function( 'closetable' );
             return $html;
         }
-        
         foreach ($info as $content) {
             $colwidth = $content['colwidth'];
             $html .= fusion_get_function( 'opentable', $content['blockTitle'] );

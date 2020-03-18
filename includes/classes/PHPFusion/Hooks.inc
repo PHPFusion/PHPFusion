@@ -112,7 +112,7 @@ final class Hooks {
      * @return bool
      */
     public function remove_hook( $filter_name, $function = '', $que ) {
-        
+
         if ( $function ) {
             if ( isset( $this->hooks[ $que ][ $filter_name ] ) ) {
                 foreach ( $this->hooks[ $que ][ $filter_name ] as $key => $hooks ) {
@@ -120,15 +120,15 @@ final class Hooks {
                         unset( $this->hooks[ $que ][ $filter_name ][ $key ] );
                         if ( empty( $this->hooks[ $que ][ $filter_name ] ) )
                             unset( $this->hooks[ $que ][ $filter_name ] );
-                        
+
                         return TRUE;
                     }
                 }
             }
         }
-        
+
         unset( $this->hooks[ $que ][ $filter_name ] );
-        
+
         return TRUE;
     }
 
@@ -156,20 +156,19 @@ final class Hooks {
      *
      * @throws \Exception
      */
-    public function apply_hook($filter_name) {
+    public function apply_hook($filter_name, $remove_after_access = TRUE) {
 
         $function_args = func_get_args();
-
         $current_hook = $this->get_hook($filter_name);
-        //print_p($function_args);
-        //print_p($current_hook);
 
         if (!empty($current_hook)) {
 
             foreach ($current_hook as $hook) {
 
                 // prevent the current hook from being called twice, executed or not, else crash
-                $this->remove_hook($filter_name, $hook['function'], $hook['que']);
+                if ($remove_after_access) {
+                    $this->remove_hook($filter_name, $hook['function'], $hook['que']);
+                }
 
                 if (function_exists($hook['function'])) {
 
@@ -227,10 +226,10 @@ final class Hooks {
                         }
                     }
                     $output = call_user_func_array($hook['function'], $args);
-    
+
                     // remove the hook
                     $this->remove_hook( $filter_name, $hook['function'], $hook['que'] );
-                    
+
                     if (!empty($output)) {
                         return $output;
                     }
@@ -239,7 +238,7 @@ final class Hooks {
         }
         return '';
     }
-    
+
     /**
      * Run the hook filter, can be used multiple times within a loop to get the parse.
      *
@@ -265,10 +264,8 @@ final class Hooks {
                         }
                     }
                     $output = call_user_func_array( $hook['function'], $args );
-                    
                     // remove the hook
                     //$this->remove_hook( $filter_name, $hook['function'], $hook['que'] );
-                    
                     if ( !empty( $output ) ) {
                         return $output;
                     }
@@ -277,7 +274,7 @@ final class Hooks {
         }
         return '';
     }
-    
+
     /**
      * Run the hooks by $filter_name and $args parameters
      * This filter must only run once in application.
@@ -309,19 +306,18 @@ final class Hooks {
 
         return (string)$output;
     }
-    
+
     /**
      * @param $filter_name
      *
      * @return string
      */
-    public function repeat_hook_once( $filter_name ) {
-        
+    public function filter_hook_repeat($filter_name) {
         $output = call_user_func_array( [ $this, 'repeat_current_hook' ], func_get_args() );
-        
+
         return (string)$output;
     }
-    
+
 
     public function apply_all_hook() {
 

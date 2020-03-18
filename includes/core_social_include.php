@@ -41,7 +41,7 @@ function fusion_add_activity( $user_id, $visibility, $item_type, $action, $item_
         'action_datestamp'  => $date
     ];
     //http://php-fusion.test/infusions/forum/viewthread.php?thread_id=38663
-    
+
     if ( !isnum( $user_id ) ) {
         throw new \Exception( 'User ID is not an integer' );
     }
@@ -51,7 +51,7 @@ function fusion_add_activity( $user_id, $visibility, $item_type, $action, $item_
     if ( !isnum( $item_id ) ) {
         throw new \Exception( 'Item id is not an integer' );
     }
-    
+
     return dbquery_insert( DB_USER_ACTIVITY, $data, 'save', [ 'keep_session' => TRUE ] );
 }
 
@@ -63,7 +63,7 @@ function fusion_add_activity( $user_id, $visibility, $item_type, $action, $item_
  * @return mixed
  */
 function fusion_get_activity_title( $data ) {
-    return fusion_repeat_current_hook( 'profile_activity_title', $data );
+    return fusion_repeat_hook('profile_activity_title', $data);
 }
 
 /**
@@ -74,5 +74,5 @@ function fusion_get_activity_title( $data ) {
  * @return mixed
  */
 function fusion_get_activity_content( $data ) {
-    return fusion_repeat_current_hook( 'profile_activity_content', $data );
+    return fusion_repeat_hook('profile_activity_content', $data);
 }

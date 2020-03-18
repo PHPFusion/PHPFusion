@@ -28,6 +28,8 @@ use PHPFusion\Rewrite\Router;
  */
 class SiteLinks {
 
+    const MenuDefaultID = 'DefaultMenu';
+    protected static $position_opts = [];
     /**
      * @param string $sep
      * @param string $class
@@ -44,11 +46,6 @@ class SiteLinks {
      *
      */
     private static $instances = [];
-
-    const MenuDefaultID = 'DefaultMenu';
-
-    protected static $position_opts = [];
-
     private static $id = '';
 
     private static $primary_cache_data = [];
@@ -56,20 +53,11 @@ class SiteLinks {
     private static $optional_cache_data = [];
 
     private static $current_url = "";
-
-
-    /**
-     * @param string $id
-     *
-     * @return SiteLinks
-     */
-    public static function getInstance($id = self::MenuDefaultID) {
-        self::$id = $id;
-        if (!isset(self::$instances[$id])) {
-            self::$instances[$id] = new static();
-        }
-        return self::$instances[$id];
-    }
+    private static $nav_path;
+    private static $nav_li_path;
+    private static $nav_li_link_path;
+    private static $nav_li_dropdown_path;
+    private static $nav_divider_path;
 
     /**
      * Get Site Links Position Options
@@ -186,6 +174,7 @@ class SiteLinks {
 
     /**
      * Calling the SiteLinks instance with Custom Parameters
+     *
      * @param array $options
      *
      * @return static
@@ -231,7 +220,6 @@ class SiteLinks {
         ];
 
         $options += $default_options;
-        //print_p($options);
 
         if (!isset(self::$instances[$options['id']]->menu_options)) {
 
@@ -324,34 +312,18 @@ class SiteLinks {
     }
 
     /**
-     * Add a link to primary menu
+     * @param string $id
      *
-     * @param int        $link_id
-     * @param string     $link_name
-     * @param int        $link_cat
-     * @param string     $link_url
-     * @param string     $link_icon
-     * @param bool|FALSE $link_active
-     * @param bool|FALSE $link_title
-     * @param bool|FALSE $link_disabled
-     * @param bool|FALSE $link_window
-     * @param string     $link_class
-     * @param bool|FALSE $link_content
+     * @return mixed
+     * @throws \Exception
      */
-    public function addMenuLink($link_id = 0, $link_name = '', $link_cat = 0, $link_url = '', $link_icon = '', $link_active = FALSE, $link_title = FALSE, $link_disabled = FALSE, $link_window = FALSE, $link_class = '', $link_content = FALSE) {
-        self::$primary_cache_data[self::$id][$link_cat][$link_id] = [
-            'link_id'       => $link_id,
-            'link_name'     => $link_name,
-            'link_cat'      => $link_cat,
-            'link_url'      => $link_url,
-            'link_icon'     => $link_icon,
-            'link_active'   => $link_active,
-            'link_title'    => $link_title,
-            'link_disabled' => $link_disabled,
-            'link_window'   => $link_window,
-            'link_class'    => $link_class,
-            'link_content'  => $link_content,
-        ];
+    public static function getInstance($id = self::MenuDefaultID) {
+        self::$id = $id;
+        if (!isset(self::$instances[$id])) {
+            self::$instances[$id] = new static();
+            self::getBoilerFiles();
+        }
+        return self::$instances[$id];
     }
 
     /**
@@ -397,7 +369,39 @@ class SiteLinks {
         return self::$instances[self::$id]->menu_options;
     }
 
+    /**
+     * Add a link to primary menu
+     *
+     * @param int        $link_id
+     * @param string     $link_name
+     * @param int        $link_cat
+     * @param string     $link_url
+     * @param string     $link_icon
+     * @param bool|FALSE $link_active
+     * @param bool|FALSE $link_title
+     * @param bool|FALSE $link_disabled
+     * @param bool|FALSE $link_window
+     * @param string     $link_class
+     * @param bool|FALSE $link_content
+     */
+    public function addMenuLink($link_id = 0, $link_name = '', $link_cat = 0, $link_url = '', $link_icon = '', $link_active = FALSE, $link_title = FALSE, $link_disabled = FALSE, $link_window = FALSE, $link_class = '', $link_content = FALSE) {
+        self::$primary_cache_data[self::$id][$link_cat][$link_id] = [
+            'link_id'       => $link_id,
+            'link_name'     => $link_name,
+            'link_cat'      => $link_cat,
+            'link_url'      => $link_url,
+            'link_icon'     => $link_icon,
+            'link_active'   => $link_active,
+            'link_title'    => $link_title,
+            'link_disabled' => $link_disabled,
+            'link_window'   => $link_window,
+            'link_class'    => $link_class,
+            'link_content'  => $link_content,
+        ];
+    }
+
     public function showSubLinks() {
+
         $settings = fusion_get_settings();
 
         $this->cacheSiteLinks();
@@ -408,11 +412,6 @@ class SiteLinks {
         if (empty($options['id'])) {
             $options['id'] = self::MenuDefaultID;
         }
-
-        $bootstrap3_nav_li_dropdown = THEMES.'templates/boilers/bootstrap3/html/navbar/nav_li_dropdown.html';
-        $bootstrap3_nav_li_link = THEMES.'templates/boilers/bootstrap3/html/navbar/nav_li_link.html';
-        $bootstrap3_nav_li_no_link = THEMES.'templates/boilers/bootstrap3/html/navbar/nav_li_no_link.html';
-        $bootstrap3_nav = THEMES.'templates/boilers/bootstrap3/html/navbar/navbar.html';
 
         // Secondary menu
         $language_dropdown = '';
@@ -429,7 +428,7 @@ class SiteLinks {
                             'title' => '<img alt="'.$langData['language_name'].'" class="m-r-5" src="'.$langData['language_icon_s'].'"/> '.$langData['language_name'],
                         ]);
                     }
-                    $nav_li_link->set_template($bootstrap3_nav_li_link);
+                    $nav_li_link->set_template(self::$nav_li_link_path);
                     $language_items = $nav_li_link->get_output();
 
                     $language_li_dropdown_tpl = Template::getInstance('language_switch_li');
@@ -443,7 +442,7 @@ class SiteLinks {
                         'first_item_link'     => '',
                     ];
                     $language_li_dropdown_tpl->set_block('nav_li_dropdown', $ss);
-                    $language_li_dropdown_tpl->set_template($bootstrap3_nav_li_dropdown);
+                    $language_li_dropdown_tpl->set_template(self::$nav_li_dropdown_path);
                     $language_dropdown = $language_li_dropdown_tpl->get_output();
                 }
             }
@@ -453,7 +452,7 @@ class SiteLinks {
         if ($options['searchbar']) {
             // LI first
             $nav_li = Template::getInstance('nav_li_no_link');
-            $nav_li->set_template($bootstrap3_nav_li_no_link);
+            $nav_li->set_template(self::$nav_li_path);
             $nav_li->set_block('nav_li_no_link', [
                 'content'    => openform('searchform', 'post', FUSION_ROOT.BASEDIR.'search.php?stype=all',
                         [
@@ -492,32 +491,25 @@ class SiteLinks {
                 'submenu'             => ''
             ];
             $searchbar_tpl->set_block('nav_li_dropdown', $ss);
-            $searchbar_tpl->set_template($bootstrap3_nav_li_dropdown);
+            $searchbar_tpl->set_template(self::$nav_li_dropdown_path);
             $searchbar_dropdown = $searchbar_tpl->get_output();
         }
 
         $primary_links = $this->showMenuLinks(0, $options['callback_data']);
-
         $secondary_links = $this->showMenuLinks(0, $options['additional_data']);
 
         $tpl = Template::getInstance($options['id']);
-
+        $tpl->set_template(self::$nav_path);
+        $tpl->set_locale($locale);
         $tpl->set_tag('navbar_id', $options['id']);
-
         $tpl->set_tag('responsive_class', 'menu');
-
         if ($options['responsive'] === TRUE) {
             $tpl->set_tag('responsive_class', 'navbar-collapse collapse');
         }
-
         $tpl->set_tag('navbar_class', $options['navbar_class']);
-
         $tpl->set_tag('affix', self::getaffix());
-
         $tpl->set_tag('nav_class_primary', $options['nav_class_primary']);
-
         $tpl->set_tag('nav_class_secondary', $options['nav_class_secondary']);
-
         if ($options['container'] || $options['container_fluid']) {
             if ($options['container']) {
                 $tpl->set_block('open_container', ['class' => 'container']);
@@ -552,10 +544,9 @@ class SiteLinks {
             $tpl->set_block('menu_alt', ['menu_alt_item' => $secondary_links.$language_dropdown.$searchbar_dropdown]);
         }
 
-        $tpl->set_template($bootstrap3_nav);
-        $tpl->set_locale($locale);
+        $output = $tpl->get_output();
 
-        return $tpl->get_output();
+        return $output;
     }
 
     private function cacheSiteLinks() {
@@ -622,15 +613,11 @@ class SiteLinks {
      * @return string
      */
     private function showMenuLinks($id = 0, $data = []) {
-
         $options = self::getMenuParam();
 
         $settings = fusion_get_settings();
+
         $template_settings = [];
-        $bootstrap3_nav_li_dropdown = THEMES.'templates/boilers/bootstrap3/html/navbar/nav_li_dropdown.html';
-        $bootstrap3_nav_li_link = THEMES.'templates/boilers/bootstrap3/html/navbar/nav_li_link.html';
-        $bootstrap3_nav_li_no_link = THEMES.'templates/boilers/bootstrap3/html/navbar/nav_li_no_link.html';
-        $bootstrap3_nav_li_divider = THEMES.'templates/boilers/bootstrap3/html/navbar/nav_li_divider.html';
 
         $res = '';
         if (!empty($data[$id])) {
@@ -721,42 +708,29 @@ class SiteLinks {
                     if (isset($data[$link_id])) {
 
                         // Child Item
-
-                        $template_path = $bootstrap3_nav_li_dropdown;
-
+                        $template_path = self::$nav_li_dropdown_path;
                         $template_obj = 'nav_li_dropdown';
-
                         $has_child = TRUE;
 
                         $tab_index = !empty($id) ? " tabindex='0'" : '';
 
                         $l_1 = " class='dropdown-toggle".(!empty($link_data['link_class']) ? " ".$link_data['link_class'] : '')."' data-toggle='dropdown' ";
-
                         $l_1 .= (empty($id) && $has_child ? "data-submenu " : '');
 
                         $li_class[] = (!empty($id) ? "dropdown-submenu" : "dropdown");
-
                         $li_class = array_filter($li_class);
 
                         $li_content = ($link_data['link_icon'] ? "<i class='".$link_data['link_icon']."'></i>" : "");
-
                         $li_content .= $link_data['link_name'];
 
                         $first_item_link = '';
                         if (!empty($link_data['link_url']) and $link_data['link_url'] !== "#") {
-
                             $first_item_link .= "<li".(!$itemlink ? " class='no-link'" : '').">\n".self::getMenuParam('seperator');
-
                             $first_item_link .= ($itemlink ? "<a href='".$itemlink."' ".$link_target.">\n" : '');
-
                             $first_item_link .= (!empty($link_data['link_icon']) ? "<i class='".$link_data['link_icon']." m-r-5'></i>\n" : "");
-
                             $first_item_link .= $link_data['link_name'];
-
                             $first_item_link .= ($itemlink ? "\n</a>\n" : '');
-
                             $first_item_link .= "</li>\n";
-
                         }
 
                         $template_settings = [
@@ -782,11 +756,9 @@ class SiteLinks {
                         $link_class = (!empty($link_data['link_class']) ? " class='".$link_data['link_class']."'" : '');
 
                         $li_content = $link_data['link_icon'] ? "<i class='".$link_data['link_icon']."'></i>" : "";
-
                         $li_content .= $link_data['link_name'];
 
-                        $template_path = $bootstrap3_nav_li_no_link;
-
+                        $template_path = self::$nav_li_path;
                         $template_obj = 'nav_li_no_link';
 
                         $template_settings = [
@@ -796,8 +768,7 @@ class SiteLinks {
 
                         if (!empty($itemlink)) {
 
-                            $template_path = $bootstrap3_nav_li_link;
-
+                            $template_path = self::$nav_li_link_path;
                             $template_obj = 'nav_li_link';
 
                             $template_settings = [
@@ -809,9 +780,8 @@ class SiteLinks {
 
                         }
                     }
-
                 } else {
-                    $template_path = $bootstrap3_nav_li_divider;
+                    $template_path = self::$nav_divider_path;
                     $template_obj = 'nav_li_divider';
                 }
 
@@ -956,6 +926,18 @@ class SiteLinks {
         }
 
         return (string)$html;
+    }
+
+    /**
+     * @return mixed
+     * @throws \Exception
+     */
+    private static function getBoilerFiles() {
+        $boiler_files = get_boiler_files();
+        if (!empty($boiler_files)) {
+            list(self::$nav_path, self::$nav_li_path, self::$nav_li_link_path, self::$nav_li_dropdown_path, self::$nav_divider_path) = array_values($boiler_files['nav']);
+        }
+        return $boiler_files;
     }
 
 }

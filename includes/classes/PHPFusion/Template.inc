@@ -27,28 +27,30 @@ class Template {
     const DefaultID = 'Default';
 
     private static $instance = NULL;
+    private static $key = '';
+    private static $locale_list = [];
+    private static $block_count = [];
+    private static $template_name = [];
+    private static $templatepath = [];
+    private static $registered_templates = [];
+    private static $reegistered_stylesheet = [];
+    /**
+     * Boilerplate conversion in HTML using tags.
+     */
+    private static $short_code_instance = [];
     private $template = '';
     private $locale = [];
     private $block = [];
     private $block_render = [];
     private $block_source = [];
     private $tag = [];
-    private static $key = '';
-    private static $locale_list = [];
     private $raw_block = [];
     private $raw_tag = [];
-    private static $block_count = [];
-    private static $template_name = [];
-    private static $templatepath = [];
+    private $template_path = '';
+    private $css_path = '';
+    private $helper = [];
 
     private function __construct() {
-    }
-
-    private function __clone() {
-    }
-
-    public function get_template_path() {
-        return $this->template_path;
     }
 
     /**
@@ -67,6 +69,44 @@ class Template {
 
     public static function set_key($key) {
         self::$key = $key;
+    }
+
+    /**
+     * @param string $template_name
+     *
+     * @return string
+     */
+    public static function getTemplate($template_name) {
+        return isset(self::$template_name[$template_name]) ? self::$template_name[$template_name] : '';
+    }
+
+    /**
+     * @param string $template_name
+     * @param string $path
+     */
+    public static function setTemplate($template_name, $path) {
+        self::$template_name[$template_name] = $path;
+    }
+
+    /**
+     * @param string $templatepath
+     *
+     * @return string
+     */
+    public static function getTemplatePath($templatepath) {
+        return isset(self::$templatepath[$templatepath]) ? self::$templatepath[$templatepath] : '';
+    }
+
+    /**
+     * @param string $templatepath
+     * @param string $path
+     */
+    public static function setTemplatePath($templatepath, $path) {
+        self::$templatepath[$templatepath] = $path;
+    }
+
+    public function get_template_path() {
+        return $this->template_path;
     }
 
     /**
@@ -99,16 +139,48 @@ class Template {
     }
 
     /**
+     * Sets a tag to string conversion
+     *
+     * @param string $html_tag {%tag%} in html file is 'tag'
+     * @param string $value    the value of the string
+     */
+    public function set_tag($html_tag, $value) {
+        $this->tag['{%'.$html_tag.'%}'] = $value;
+        $this->raw_tag[$html_tag] = $value;
+        $this->helper[self::$key]['Tag:'.$html_tag] = $value;
+    }
+
+    /**
      * @return array
      */
     public function get_block() {
         return $this->block;
     }
 
-    private static $registered_templates = [];
-    private static $reegistered_stylesheet = [];
-    private $template_path = '';
-    private $css_path = '';
+    /**
+     * Sets to repeat on a subitem defined in the HTML markup  - {block_id.{<subitem_html>}}
+     * This function adds a subitem for every set_block used
+     *
+     * @param string $block_id The name of the unique block id
+     * @param array  $value    The replacements sets
+     */
+    public function set_block($block_id, array $value = []) {
+        $filtered_value = [];
+        foreach ($value as $tag => $val) {
+            $filtered_value['{%'.$tag.'%}'] = $val;
+        }
+        $this->block[$block_id][] = $filtered_value;
+        $this->raw_block[$block_id][] = $value;
+
+        if (!empty($value)) {
+            $var_output = '<table class="table">';
+            foreach ($value as $key => $var) {
+                $var_output .= "<tr><td><strong>$key</strong></td><td>$var</td></tr>";
+            }
+            $var_output .= '</table>';
+            $this->helper[self::$key]['<span class="label label-info strong">Block</span> '.$block_id] = $var_output;
+        }
+    }
 
     public function register_template($template_file_path) {
         self::$registered_templates[self::$key] = $template_file_path;
@@ -132,14 +204,19 @@ class Template {
         if (is_file($template_file_path)) {
             @include $template_file_path;
             $this->helper[self::$key] = [
-                'template_id' => self::$key,
+                'template_id'  => self::$key,
                 'template_src' => $template_file_path
             ];
         } else {
-            print_p(ob_start().debug_print_backtrace().ob_get_clean(), 1);
+            $message = 'Cannot find the file -- '.$template_file_path.' -- for -- '.self::$key;
+            if (empty($template_file_path)) {
+                $message = 'Template file path is empty for -- '.self::$key.' -- " object';
+            }
+            throw new \Exception($message, E_USER_NOTICE);
         }
 
         $this->template = ob_get_clean();
+        //print_P($this->template);
     }
 
     public function set_css($css_file_path) {
@@ -171,30 +248,8 @@ class Template {
         $this->locale = $locales;
     }
 
-    /**
-     * Sets to repeat on a subitem defined in the HTML markup  - {block_id.{<subitem_html>}}
-     * This function adds a subitem for every set_block used
-     *
-     * @param string $block_id The name of the unique block id
-     * @param array  $value    The replacements sets
-     */
-    public function set_block($block_id, array $value = []) {
-        $filtered_value = [];
-        foreach ($value as $tag => $val) {
-            $filtered_value['{%'.$tag.'%}'] = $val;
-        }
-        $this->block[$block_id][] = $filtered_value;
-        $this->raw_block[$block_id][] = $value;
-
-        if (!empty($value)) {
-            $var_output = '<table class="table">';
-            foreach($value as $key => $var) {
-                $var_output .= "<tr><td><strong>$key</strong></td><td>$var</td></tr>";
-            }
-            $var_output .= '</table>';
-            $this->helper[self::$key]['<span class="label label-info strong">Block</span> '. $block_id] = $var_output;
-        }
-    }
+    // Do another class for this
+    // No need to localize
 
     /**
      * Fetches an entire block of tags
@@ -239,18 +294,6 @@ class Template {
     }
 
     /**
-     * Sets a tag to string conversion
-     *
-     * @param string $html_tag {%tag%} in html file is 'tag'
-     * @param string $value    the value of the string
-     */
-    public function set_tag($html_tag, $value) {
-        $this->tag['{%'.$html_tag.'%}'] = $value;
-        $this->raw_tag[$html_tag] = $value;
-        $this->helper[self::$key]['Tag:'. $html_tag] = $value;
-    }
-
-    /**
      * Fetches a tag
      *
      * @param null $html_tag
@@ -259,29 +302,6 @@ class Template {
      */
     public function fetch_tag($html_tag = NULL) {
         return $html_tag === NULL ? $this->raw_tag : (isset($this->raw_tag[$html_tag]) ? $this->raw_tag[$html_tag] : NULL);
-    }
-
-    /**
-     * Locale Replacement with Template Macro
-     * Macro Pattern - {[locale_keys]}
-     * Recursively parse array into an array
-     *
-     * @param $array
-     *
-     * @return array
-     */
-    private function assign_template_locales($array) {
-        if (!empty($array)) {
-            foreach ($array as $key => $value) {
-                if (is_array($value)) {
-                    self::$locale_list = array_merge(self::$locale_list, $this->assign_template_locales($value));
-                } else {
-                    self::$locale_list["{[$key]}"] = $value ? nl2br($value) : "";
-                }
-            }
-        }
-
-        return (array)self::$locale_list;
     }
 
     /**
@@ -369,28 +389,28 @@ class Template {
         return (string)trim($this->template);
     }
 
-    private $helper = [];
-
-    // Do another class for this
-    // No need to localize
-    public function displayHelper($key = NULL) {
-        if (!empty($this->helper)) {
-            foreach($this->helper as $instance => $value) {
-                echo "<table class='table'>\n";
-                echo "<tr><th colspan='2' class='strong'>Template Instance Generated : $instance</th></tr>";
-                foreach($value as $v1 => $v2) {
-                    echo "<tr><td>$v1</td><td>$v2</td></tr>";
+    /**
+     * Locale Replacement with Template Macro
+     * Macro Pattern - {[locale_keys]}
+     * Recursively parse array into an array
+     *
+     * @param $array
+     *
+     * @return array
+     */
+    private function assign_template_locales($array) {
+        if (!empty($array)) {
+            foreach ($array as $key => $value) {
+                if (is_array($value)) {
+                    self::$locale_list = array_merge(self::$locale_list, $this->assign_template_locales($value));
+                } else {
+                    self::$locale_list["{[$key]}"] = $value ? nl2br($value) : "";
                 }
-                echo "</table>";
             }
         }
+
+        return (array)self::$locale_list;
     }
-
-
-    /**
-     * Boilerplate conversion in HTML using tags.
-     */
-    private static $short_code_instance = [];
 
     private function parseShortCodes() {
         //debug_print_backtrace();
@@ -421,7 +441,7 @@ class Template {
                         if (!empty($function[0][2])) {
                             $func_param = $function[0][2];
                         }
-                        switch($func_call) {
+                        switch ($func_call) {
                             case 'opentable':
                                 $shortcode_cache[$preg_results[0]] = $box_class->opentable($func_param);
                                 break;
@@ -438,7 +458,7 @@ class Template {
 
                     } else {
 
-                        switch($preg_results[1]) {
+                        switch ($preg_results[1]) {
                             default:
                                 break;
                             case 'container':
@@ -449,10 +469,10 @@ class Template {
                             case 'row_class': // Grid row class values
                                 $shortcode_cache[$preg_results[0]] = $layout_class->getRowClass();
                                 break;
-                            case (stristr($preg_results[1], 'col') ? true : false):
-                            case (stristr($preg_results[1], 'column') ? true : false):
-                            case (stristr($preg_results[1], 'column_class') ? true : false):
-                                if ((preg_match('/[-.\w]+[\d]/', $preg_results[1]) ? true : false)): // column class - values must contain `column_class(100)`
+                            case (stristr($preg_results[1], 'col') ? TRUE : FALSE):
+                            case (stristr($preg_results[1], 'column') ? TRUE : FALSE):
+                            case (stristr($preg_results[1], 'column_class') ? TRUE : FALSE):
+                                if ((preg_match('/[-.\w]+[\d]/', $preg_results[1]) ? TRUE : FALSE)): // column class - values must contain `column_class(100)`
                                     preg_match_all('/[-.\w]+[\d]/', $preg_results[1], $percent);
                                     if (!empty($percent[0])) {
                                         $shortcode_cache[$preg_results[0]] = $layout_class->getColumnClass($percent[0]);
@@ -469,37 +489,19 @@ class Template {
         }
     }
 
-    /**
-     * @param string $template_name
-     *
-     * @return string
-     */
-    public static function getTemplate($template_name) {
-        return isset(self::$template_name[$template_name]) ? self::$template_name[$template_name] : '';
+    public function displayHelper($key = NULL) {
+        if (!empty($this->helper)) {
+            foreach ($this->helper as $instance => $value) {
+                echo "<table class='table'>\n";
+                echo "<tr><th colspan='2' class='strong'>Template Instance Generated : $instance</th></tr>";
+                foreach ($value as $v1 => $v2) {
+                    echo "<tr><td>$v1</td><td>$v2</td></tr>";
+                }
+                echo "</table>";
+            }
+        }
     }
 
-    /**
-     * @param string $template_name
-     * @param string $path
-     */
-    public static function setTemplate($template_name, $path) {
-        self::$template_name[$template_name] = $path;
-    }
-
-    /**
-     * @param string $templatepath
-     *
-     * @return string
-     */
-    public static function getTemplatePath($templatepath) {
-        return isset(self::$templatepath[$templatepath]) ? self::$templatepath[$templatepath] : '';
-    }
-
-    /**
-     * @param string $templatepath
-     * @param string $path
-     */
-    public static function setTemplatePath($templatepath, $path) {
-        self::$templatepath[$templatepath] = $path;
+    private function __clone() {
     }
 }

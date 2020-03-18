@@ -157,8 +157,7 @@ function theme_exists($theme) {
         $theme = fusion_get_settings('theme');
     }
 
-    return is_string($theme) and preg_match("/^([a-z0-9_-]){2,50}$/i",
-            $theme) and file_exists(THEMES.$theme."/theme.php") and file_exists(THEMES.$theme."/styles.css");
+    return is_string($theme) and preg_match("/^([a-z0-9_-]){2,50}$/i", $theme) and file_exists(SITE_THEMES.$theme."/theme.php") and file_exists(SITE_THEMES.$theme."/styles.css");
 }
 
 /**
@@ -176,11 +175,10 @@ function set_theme($theme) {
         return;
     }
     if (theme_exists($theme)) {
-        define("THEME", THEMES.($theme == "Default" ? fusion_get_settings('theme') : $theme)."/");
-
+        define("THEME", SITE_THEMES.($theme == "Default" ? fusion_get_settings('theme') : $theme)."/");
         return;
     }
-    foreach (new GlobIterator(THEMES.'*') as $dir) {
+    foreach (new GlobIterator(SITE_THEMES.'*') as $dir) {
         if ($dir->isDir() and theme_exists($dir->getBasename())) {
             define("THEME", $dir->getPathname()."/");
 
@@ -189,19 +187,12 @@ function set_theme($theme) {
     }
     // Don't stop if we are in admin panel since we use different themes now
     $no_theme_message = str_replace("[SITE_EMAIL]", fusion_get_settings("siteemail"), $locale['global_301']);
-
     if (preg_match("/\/administration\//i", $_SERVER['PHP_SELF'])) {
-
         addNotice('danger', "<strong>".$theme." - ".$locale['global_300'].".</strong><br /><br />\n".$no_theme_message);
-
     } else {
-
         echo "<strong>".$theme." - ".$locale['global_300'].".</strong><br /><br />\n";
-
         echo $no_theme_message;
-
         die();
-
     }
 }
 

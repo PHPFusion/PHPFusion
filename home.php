@@ -24,7 +24,7 @@ require_once THEMES.'templates/global/homepage.php';
 
 add_to_title($locale['home']);
 
-\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['title' => $locale['home'], 'link' => BASEDIR.'home.php']);
+add_breadcrumb(['title' => $locale['home'], 'link' => BASEDIR.'home.php']);
 
 $contents = [];
 

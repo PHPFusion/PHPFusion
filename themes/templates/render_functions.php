@@ -211,6 +211,7 @@ function twig_init($path = THEME.'twig', $debug = FALSE) {
         'display_avatar'      => new TwigFunction('display_avatar', function () {
             return call_user_func_array('display_avatar', func_get_args());
         }),
+
     ];
 
     foreach ($twig_register_functions as $key => $function) {
@@ -253,9 +254,9 @@ if (!function_exists('opensidex')) {
      *
      * @param $title
      */
-    function opensidex($title) {
+    function opensidex($value) {
         echo '<div class="sidex list-group">';
-        echo '<div class="title list-group-item"><strong>'.$title.'</strong><span class="pull-right"><span class="caret"></span></span></div>';
+        echo '<div class="title list-group-item"><strong>'.$value.'</strong><span class="pull-right"><span class="caret"></span></span></div>';
         echo '<div class="body list-group-item">';
 
         if (!defined('sidex_js')) {
@@ -276,10 +277,10 @@ if (!function_exists('opensidex')) {
 }
 
 if (!function_exists('closesidex')) {
-    function closesidex($title = '') {
+    function closesidex($value = '') {
         echo '</div>';
-        if ($title) {
-            echo '<div class="list-group-item">'.$title.'</div>';
+        if ($value) {
+            echo '<div class="list-group-item">'.$value.'</div>';
         }
         echo '</div>';
     }
@@ -287,5 +288,38 @@ if (!function_exists('closesidex')) {
 
 if (!function_exists('tablebreak')) {
     echo "</div><div class='list-group-item'>";
+}
+
+if (!function_exists('openside')) {
+    function openside($value = '') {
+        echo '<div class="panel panel-default">';
+        if ($value) {
+            echo '<div class="panel-heading">'.$value.'</div>';
+        }
+        echo '<div class="panel-body">';
+    }
+}
+
+if (!function_exists('closeside')) {
+    function closeside($value = '') {
+        if ($value) {
+            echo '<div class="panel-footer">'.$value.'</div>';
+        }
+        echo '</div>';
+    }
+}
+
+if (!function_exists('opentable')) {
+    function opentable($value = '') {
+        echo '<div class="table">';
+        if ($value) {
+            echo '<h3>'.$value.'</h3>';
+        }
+    }
+}
+
+if (!function_exists('closetable')) {
+    function closetable($value = '') {
+    }
 }
 

@@ -312,7 +312,8 @@ $fusion_css_tags = &OutputHandler::$cssTags;
 // Get installed infusions
 $fusion_infusions = fusion_get_infusions();
 
-$fusion_steam = new Steam('bootstrap3'); // use bootstrap 3
+$fusion_steam = new Steam('bootstrap4'); // use bootstrap 3
+$fusion_steam->run();
 
 // Set theme using $_GET as well.
 // Set theme
@@ -324,6 +325,7 @@ if ($userdata['user_level'] == USER_LEVEL_SUPER_ADMIN && isset($_GET['themes']) 
     dbquery_insert(DB_USERS, $newUserTheme, "update");
     redirect(clean_request("", ["themes"], FALSE));
 }
+
 set_theme(empty($userdata['user_theme']) ? fusion_get_settings("theme") : $userdata['user_theme']);
 
 /**

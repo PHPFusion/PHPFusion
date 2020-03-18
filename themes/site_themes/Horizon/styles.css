@@ -1,0 +1,19 @@
+.header {
+    line-height: 85px;
+    height: 85px;
+    overflow: visible;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+header .navbar-brand img {
+    max-width: 200px;
+}
+
+.horizon-container {
+    width: 1170px;
+    margin-right: auto;
+    margin-left: auto;
+}

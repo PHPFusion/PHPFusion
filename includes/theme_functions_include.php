@@ -584,8 +584,18 @@ if (!function_exists("badge")) {
     }
 }
 
-if (!function_exists("openmodal") && !function_exists("closemodal") && !function_exists("modalfooter")) {
+/**
+ * Get template paths for the current boilerplate
+ *
+ * @return mixed
+ * @throws Exception
+ */
+function get_boiler_files() {
+    global $fusion_steam;
+    return $fusion_steam->getBoilerFiles();
+}
 
+if (!function_exists("openmodal") && !function_exists("closemodal") && !function_exists("modalfooter")) {
     /**
      * To get the best results for Modal z-index overlay, try :
      * ob_start();
@@ -630,10 +640,10 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
                 add_to_jquery("$('#".$id."-Modal').modal('show');");
             }
         }
-        $modal_template = THEMES.'templates/boilers/bootstrap3/html/modal.html';
+
         $modal = Template::getInstance('modal');
         $modal->set_locale(['close' => fusion_get_locale('close')]);
-        $modal->set_template($modal_template);
+        $modal->set_template($template_file['modal']);
         $modal->set_block("modal_open", [
             'modal_id'           => $id,
             'modal_class'        => " ".$options['class'],
@@ -664,9 +674,9 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
      */
     function modalfooter($content = "", $dismiss = FALSE) {
         $locale = fusion_get_locale();
-        $modal_template = THEMES.'templates/boilers/bootstrap3/html/modal.html';
+        $template_file = get_boiler_files();
         $modal = Template::getInstance('modal');
-        $modal->set_template($modal_template);
+        $modal->set_template($template_file['modal']);
         $modal->set_block("modal_closebody");
         $modal->set_block("modal_footer", [
             "content" => $content,
@@ -687,9 +697,9 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
      * @return string
      */
     function closemodal() {
-        $modal_template = THEMES.'templates/boilers/bootstrap3/html/modal.html';
+        $template_file = get_boiler_files();
         $modal = Template::getInstance('modal');
-        $modal->set_template($modal_template);
+        $modal->set_template($template_file['modal']);
         $modal->set_block("modal_close");
 
         return (string)$modal->get_output();
@@ -711,6 +721,8 @@ if (!function_exists("progress_bar")) {
      * @return string
      */
     function progress_bar($num, $title = FALSE, array $options = []) {
+        $template = get_boiler_files();
+
         $default_options = [
             "class"          => "",
             "height"         => "",
@@ -736,14 +748,14 @@ if (!function_exists("progress_bar")) {
             {%content%}
         }}
         ");
-        $progressbar_template = THEMES.'templates/boilers/bootstrap3/html/progress.html';
+
         if (is_array($num)) {
             foreach ($num as $i => $cnum) {
                 $ctitle = (is_array($title) ? $title[$i] : $title);
 
                 $tpl = Template::getInstance('progress_bar-'.$i);
 
-                $tpl->set_template($progressbar_template);
+                $tpl->set_template($template['progress']);
                 $int = intval($cnum);
                 if ($options['disabled'] == TRUE) {
                     $cnum = "&#x221e;";
@@ -784,7 +796,7 @@ if (!function_exists("progress_bar")) {
         } else {
 
             $tpl = Template::getInstance('progress_bar');
-            $tpl->set_template($progressbar_template);
+            $tpl->set_template($template['progress']);
             $int = (int)$num;
             if ($options['disabled'] == TRUE) {
                 $num = "&#x221e;";

@@ -57,9 +57,9 @@ if (count($languages) > 1) {
 }
 
 if (isset($fusion_steam)) {
-    $fusion_steam->run();
-    fusion_apply_hook('start_boiler');
+    fusion_apply_hook('fusion_boiler_header');
 }
+
 Dynamics::getInstance()->getHeaders();
 if ($settings['entypo'] || defined('ENTYPO')) {
     echo "<link rel='stylesheet' href='".$_includes."fonts/entypo/entypo.min.css'>\n";
@@ -129,7 +129,7 @@ if (iADMIN) {
 }
 
 if (function_exists("render_page")) {
-    render_page(); // by here, header and footer already closed
+    echo render_page(); // by here, header and footer already closed
 }
 
 // Output lines added with add_to_footer()
