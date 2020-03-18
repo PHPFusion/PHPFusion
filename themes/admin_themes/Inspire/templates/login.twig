@@ -1,0 +1,29 @@
+<body class="gray-bg">
+<div class="middle-box loginscreen animated fadeInDown">
+    <div>
+        <div class="text-center">
+            <a href="{{ fusion_get_settings('opening_page') }}">
+                <img alt="{{ fusion_get_settings('sitename') }}" class="spacer-xs" src="{{ BASEDIR }}{{ fusion_get_settings('sitebanner') }}" style="max-width:200px;"/>
+            </a>
+            {#            <h1 class="logo-name">IN+</h1>            #}
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                {{ form.openform|raw }}
+                {{ form.admin_password|raw }}
+                <div class="display-flex-row">
+                    {{ form.admin_remember|raw }}
+                    <div class="m-l-a">
+                        {{ form.submit|raw }}
+                    </div>
+                </div>
+                {{ form.closeform|raw }}
+            </div>
+        </div>
+        <div class="back">
+            <a href="{{ BASEDIR }}{{ fusion_get_settings('opening_page') }}"><i class="fas fa-arrow-left m-r-10"></i>Back to {{ fusion_get_settings('sitename') }}
+            </a>
+        </div>
+    </div>
+</div>
+</body>

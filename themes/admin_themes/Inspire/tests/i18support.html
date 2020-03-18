@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>INSPINIA | i18 support</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <link href="css/animate.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+
+
+</head>
+
+<body>
+
+<div id="wrapper">
+
+    <nav class="navbar-default navbar-static-side" role="navigation">
+        <div class="sidebar-collapse">
+            <ul class="nav metismenu" id="side-menu">
+                <li class="nav-header">
+                    <div class="dropdown profile-element">
+                        <img alt="image" class="rounded-circle" src="img/profile_small.jpg"/>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <span class="block m-t-xs font-bold">David Williams</span>
+                            <span class="text-muted text-xs block">Art Director <b class="caret"></b></span>
+                        </a>
+                        <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                            <li><a class="dropdown-item" href="profile.html">Profile</a></li>
+                            <li><a class="dropdown-item" href="contacts.html">Contacts</a></li>
+                            <li><a class="dropdown-item" href="mailbox.html">Mailbox</a></li>
+                            <li class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="login.html">Logout</a></li>
+                        </ul>
+                    </div>
+                    <div class="logo-element">
+                        IN+
+                    </div>
+                </li>
+                <li>
+                    <a href="index.html"><i class="fa fa-th-large"></i>
+                        <span class="nav-label" data-i18n="nav.dashboard">Dashboards</span>
+                        <span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li><a href="index.html">Dashboard v.1</a></li>
+                        <li><a href="dashboard_2.html">Dashboard v.2</a></li>
+                        <li><a href="dashboard_3.html">Dashboard v.3</a></li>
+                        <li><a href="dashboard_4_1.html">Dashboard v.4</a></li>
+                        <li><a href="dashboard_5.html">Dashboard v.5 </a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="layouts.html"><i class="fa fa-diamond"></i>
+                        <span class="nav-label" data-i18n="nav.layouts">Layouts</span></a>
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-bar-chart-o"></i>
+                        <span class="nav-label" data-i18n="nav.graphs">Graphs</span><span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li><a href="graph_flot.html">Flot Charts</a></li>
+                        <li><a href="graph_morris.html">Morris.js Charts</a></li>
+                        <li><a href="graph_rickshaw.html">Rickshaw Charts</a></li>
+                        <li><a href="graph_chartjs.html">Chart.js</a></li>
+                        <li><a href="graph_chartist.html">Chartist</a></li>
+                        <li><a href="c3.html">c3 charts</a></li>
+                        <li><a href="graph_peity.html">Peity Charts</a></li>
+                        <li><a href="graph_sparkline.html">Sparkline Charts</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="mailbox.html"><i class="fa fa-envelope"></i>
+                        <span class="nav-label" data-i18n="nav.mailbox">Mailbox </span><span class="label label-warning float-right">16/24</span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li><a href="mailbox.html">Inbox</a></li>
+                        <li><a href="mail_detail.html">Email view</a></li>
+                        <li><a href="mail_compose.html">Compose email</a></li>
+                        <li><a href="email_template.html">Email templates</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="metrics.html"><i class="fa fa-pie-chart"></i>
+                        <span class="nav-label" data-i18n="nav.metrics">Metrics</span> </a>
+                </li>
+                <li>
+                    <a href="widgets.html"><i class="fa fa-flask"></i>
+                        <span class="nav-label" data-i18n="nav.widgets">Widgets</span></a>
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-edit"></i>
+                        <span class="nav-label" data-i18n="nav.forms">Forms</span><span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li><a href="form_basic.html">Basic form</a></li>
+                        <li><a href="form_advanced.html">Advanced Plugins</a></li>
+                        <li><a href="form_wizard.html">Wizard</a></li>
+                        <li><a href="form_file_upload.html">File Upload</a></li>
+                        <li><a href="form_editors.html">Text Editor</a></li>
+                        <li><a href="form_autocomplete.html">Autocomplete</a></li>
+                        <li><a href="form_markdown.html">Markdown</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-desktop"></i>
+                        <span class="nav-label" data-i18n="nav.appviews">App Views</span>
+                        <span class="float-right label label-primary">SPECIAL</span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li><a href="contacts.html">Contacts</a></li>
+                        <li><a href="profile.html">Profile</a></li>
+                        <li><a href="profile_2.html">Profile v.2</a></li>
+                        <li><a href="contacts_2.html">Contacts v.2</a></li>
+                        <li><a href="projects.html">Projects</a></li>
+                        <li><a href="project_detail.html">Project detail</a></li>
+                        <li><a href="activity_stream.html">Activity stream</a></li>
+                        <li><a href="teams_board.html">Teams board</a></li>
+                        <li><a href="social_feed.html">Social feed</a></li>
+                        <li><a href="clients.html">Clients</a></li>
+                        <li><a href="full_height.html">Outlook view</a></li>
+                        <li><a href="vote_list.html">Vote list</a></li>
+                        <li><a href="file_manager.html">File manager</a></li>
+                        <li><a href="calendar.html">Calendar</a></li>
+                        <li><a href="issue_tracker.html">Issue tracker</a></li>
+                        <li><a href="blog.html">Blog</a></li>
+                        <li><a href="article.html">Article</a></li>
+                        <li><a href="faq.html">FAQ</a></li>
+                        <li><a href="timeline.html">Timeline</a></li>
+                        <li><a href="pin_board.html">Pin board</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-files-o"></i>
+                        <span class="nav-label" data-i18n="nav.otherpages">Other Pages</span><span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li><a href="search_results.html">Search results</a></li>
+                        <li><a href="lockscreen.html">Lockscreen</a></li>
+                        <li><a href="invoice.html">Invoice</a></li>
+                        <li><a href="login.html">Login</a></li>
+                        <li><a href="login_two_columns.html">Login v.2</a></li>
+                        <li><a href="forgot_password.html">Forget password</a></li>
+                        <li><a href="register.html">Register</a></li>
+                        <li><a href="404.html">404 Page</a></li>
+                        <li><a href="500.html">500 Page</a></li>
+                        <li><a href="empty_page.html">Empty page</a></li>
+                    </ul>
+                </li>
+                <li class="active">
+                    <a href="#"><i class="fa fa-globe"></i>
+                        <span class="nav-label" data-i18n="nav.miscellaneous">Miscellaneous</span><span class="label label-info float-right">NEW</span></a>
+                    <ul class="nav nav-second-level">
+                        <li><a href="toastr_notifications.html">Notification</a></li>
+                        <li><a href="nestable_list.html">Nestable list</a></li>
+                        <li><a href="agile_board.html">Agile board</a></li>
+                        <li><a href="timeline_2.html">Timeline v.2</a></li>
+                        <li><a href="diff.html">Diff</a></li>
+                        <li><a href="pdf_viewer.html">PDF viewer</a></li>
+                        <li class="active"><a href="i18support.html">i18 support</a></li>
+                        <li><a href="sweetalert.html">Sweet alert</a></li>
+                        <li><a href="idle_timer.html">Idle timer</a></li>
+                        <li><a href="truncate.html">Truncate</a></li>
+                        <li><a href="password_meter.html">Password meter</a></li>
+                        <li><a href="spinners.html">Spinners</a></li>
+                        <li><a href="spinners_usage.html">Spinners usage</a></li>
+                        <li><a href="tinycon.html">Live favicon</a></li>
+                        <li><a href="google_maps.html">Google maps</a></li>
+                        <li><a href="datamaps.html">Datamaps</a></li>
+                        <li><a href="social_buttons.html">Social buttons</a></li>
+                        <li><a href="code_editor.html">Code editor</a></li>
+                        <li><a href="modal_window.html">Modal window</a></li>
+                        <li><a href="clipboard.html">Clipboard</a></li>
+                        <li><a href="text_spinners.html">Text spinners</a></li>
+                        <li><a href="forum_main.html">Forum view</a></li>
+                        <li><a href="validation.html">Validation</a></li>
+                        <li><a href="tree_view.html">Tree view</a></li>
+                        <li><a href="loading_buttons.html">Loading buttons</a></li>
+                        <li><a href="chat_view.html">Chat view</a></li>
+                        <li><a href="masonry.html">Masonry</a></li>
+                        <li><a href="tour.html">Tour</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-flask"></i>
+                        <span class="nav-label" data-i18n="nav.uielements">UI Elements</span><span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li><a href="typography.html">Typography</a></li>
+                        <li><a href="icons.html">Icons</a></li>
+                        <li><a href="draggable_panels.html">Draggable Panels</a></li>
+                        <li><a href="resizeable_panels.html">Resizeable Panels</a></li>
+                        <li><a href="buttons.html">Buttons</a></li>
+                        <li><a href="video.html">Video</a></li>
+                        <li><a href="tabs_panels.html">Panels</a></li>
+                        <li><a href="tabs.html">Tabs</a></li>
+                        <li><a href="notifications.html">Notifications & Tooltips</a></li>
+                        <li><a href="helper_classes.html">Helper css classes</a></li>
+                        <li><a href="badges_labels.html">Badges, Labels, Progress</a></li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="grid_options.html"><i class="fa fa-laptop"></i>
+                        <span class="nav-label" data-i18n="nav.gridoptions">Grid options</span></a>
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-table"></i> <span class="nav-label" data-i18n="nav.tables">Tables</span><span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li><a href="table_basic.html">Static Tables</a></li>
+                        <li><a href="table_data_tables.html">Data Tables</a></li>
+                        <li><a href="table_foo_table.html">Foo Tables</a></li>
+                        <li><a href="jq_grid.html">jqGrid</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-shopping-cart"></i>
+                        <span class="nav-label" data-i18n="nav.ecommerce">E-commerce</span><span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li><a href="ecommerce_products_grid.html">Products grid</a></li>
+                        <li><a href="ecommerce_product_list.html">Products list</a></li>
+                        <li><a href="ecommerce_product.html">Product edit</a></li>
+                        <li><a href="ecommerce_product_detail.html">Product detail</a></li>
+                        <li><a href="ecommerce-cart.html">Cart</a></li>
+                        <li><a href="ecommerce-orders.html">Orders</a></li>
+                        <li><a href="ecommerce_payments.html">Credit Card form</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-picture-o"></i>
+                        <span class="nav-label" data-i18n="nav.gallery">Gallery</span><span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li><a href="basic_gallery.html">Lightbox Gallery</a></li>
+                        <li><a href="slick_carousel.html">Slick Carousel</a></li>
+                        <li><a href="carousel.html">Bootstrap Carousel</a></li>
+
+                    </ul>
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-sitemap"></i>
+                        <span class="nav-label" data-i18n="nav.menulevels">Menu Levels </span><span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li>
+                            <a href="#">Third Level <span class="fa arrow"></span></a>
+                            <ul class="nav nav-third-level">
+                                <li>
+                                    <a href="#">Third Level Item</a>
+                                </li>
+                                <li>
+                                    <a href="#">Third Level Item</a>
+                                </li>
+                                <li>
+                                    <a href="#">Third Level Item</a>
+                                </li>
+
+                            </ul>
+                        </li>
+                        <li><a href="#">Second Level Item</a></li>
+                        <li>
+                            <a href="#">Second Level Item</a></li>
+                        <li>
+                            <a href="#">Second Level Item</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="css_animation.html"><i class="fa fa-magic"></i>
+                        <span class="nav-label" data-i18n="nav.animations">CSS Animations </span><span class="label label-info float-right">62</span></a>
+                </li>
+                <li class="landing_link">
+                    <a href="landing.html" target="_blank"><i class="fa fa-star"></i>
+                        <span class="nav-label" data-i18n="nav.landing">Landing Page</span>
+                        <span class="label label-warning float-right">NEW</span></a>
+                </li>
+                <li class="special_link">
+                    <a href="package.html"><i class="fa fa-database"></i>
+                        <span class="nav-label" data-i18n="nav.package">Package</span></a>
+                </li>
+            </ul>
+
+        </div>
+    </nav>
+
+    <div class="gray-bg" id="page-wrapper">
+        <div class="row border-bottom">
+            <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                <div class="navbar-header">
+                    <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i>
+                    </a>
+                    <form action="search_results.html" class="navbar-form-custom" role="search">
+                        <div class="form-group">
+                            <input class="form-control" id="top-search" name="top-search" placeholder="Search for something..." type="text">
+                        </div>
+                    </form>
+                </div>
+                <ul class="nav navbar-top-links navbar-right">
+
+                    <li>
+                        <span class="m-r-sm text-muted welcome-message" data-i18n="topnav.welcometext">Welcome to INSPINIA+ Admin Theme.</span>
+                    </li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+                            <i class="fa fa-envelope"></i> <span class="label label-warning">16</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-messages">
+                            <li>
+                                <div class="dropdown-messages-box">
+                                    <a class="dropdown-item float-left" href="profile.html">
+                                        <img alt="image" class="rounded-circle" src="img/a7.jpg">
+                                    </a>
+                                    <div class="media-body">
+                                        <small class="float-right">46h ago</small>
+                                        <strong>Mike Loreipsum</strong> started following <strong>Monica Smith</strong>.
+                                        <br>
+                                        <small class="text-muted">3 days ago at 7:58 pm - 10.06.2014</small>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="dropdown-divider"></li>
+                            <li>
+                                <div class="dropdown-messages-box">
+                                    <a class="dropdown-item float-left" href="profile.html">
+                                        <img alt="image" class="rounded-circle" src="img/a4.jpg">
+                                    </a>
+                                    <div class="media-body ">
+                                        <small class="float-right text-navy">5h ago</small>
+                                        <strong>Chris Johnatan Overtunk</strong> started following
+                                        <strong>Monica Smith</strong>. <br>
+                                        <small class="text-muted">Yesterday 1:21 pm - 11.06.2014</small>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="dropdown-divider"></li>
+                            <li>
+                                <div class="dropdown-messages-box">
+                                    <a class="dropdown-item float-left" href="profile.html">
+                                        <img alt="image" class="rounded-circle" src="img/profile.jpg">
+                                    </a>
+                                    <div class="media-body ">
+                                        <small class="float-right">23h ago</small>
+                                        <strong>Monica Smith</strong> love <strong>Kim Smith</strong>. <br>
+                                        <small class="text-muted">2 days ago at 2:30 am - 11.06.2014</small>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="dropdown-divider"></li>
+                            <li>
+                                <div class="text-center link-block">
+                                    <a class="dropdown-item" href="mailbox.html">
+                                        <i class="fa fa-envelope"></i> <strong>Read All Messages</strong>
+                                    </a>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+                            <i class="fa fa-bell"></i> <span class="label label-primary">8</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-alerts">
+                            <li>
+                                <a class="dropdown-item" href="mailbox.html">
+                                    <div>
+                                        <i class="fa fa-envelope fa-fw"></i> You have 16 messages
+                                        <span class="float-right text-muted small">4 minutes ago</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item" href="profile.html">
+                                    <div>
+                                        <i class="fa fa-twitter fa-fw"></i> 3 New Followers
+                                        <span class="float-right text-muted small">12 minutes ago</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item" href="grid_options.html">
+                                    <div>
+                                        <i class="fa fa-upload fa-fw"></i> Server Rebooted
+                                        <span class="float-right text-muted small">4 minutes ago</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="dropdown-divider"></li>
+                            <li>
+                                <div class="text-center link-block">
+                                    <a class="dropdown-item" href="notifications.html">
+                                        <strong>See All Alerts</strong>
+                                        <i class="fa fa-angle-right"></i>
+                                    </a>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+
+
+                    <li>
+                        <a href="login.html">
+                            <i class="fa fa-sign-out"></i> <span data-i18n="topnav.logout">Log out</span>
+                        </a>
+                    </li>
+                </ul>
+
+            </nav>
+        </div>
+        <div class="row wrapper border-bottom white-bg page-heading">
+            <div class="col-lg-10">
+                <h2>i18 support</h2>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="index.html">Home</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a>Miscellaneous</a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        <strong>i18 support</strong>
+                    </li>
+                </ol>
+            </div>
+            <div class="col-lg-2">
+
+            </div>
+        </div>
+        <div class="wrapper wrapper-content  animated fadeInRight">
+            <div class="row">
+
+                <div class="col-lg-8">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>i18next</h5>
+                        </div>
+
+                        <div class="ibox-content">
+
+
+                            <p>
+                                <strong>i18next</strong> is a full-featured i18n javascript library for translating your webapplication.
+                            </p>
+
+                            <h4>
+                                Example demo text
+                            </h4>
+                            <div class="i18container">
+                                <span data-i18n="demo.text1"></span>
+                            </div>
+
+                            <h5>
+                                You can change the language of demo text as well as the menu with simple function fire on buttons click. Try it:
+                            </h5>
+
+
+                            <a class="btn btn-white set_en active"><img src="img/flags/16/United-States.png"> EN</a>
+                            <a class="btn btn-white set_es"><img src="img/flags/16/Spain.png"> ES</a>
+
+
+                        </div>
+                    </div>
+
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>i18next configuration</h5>
+                        </div>
+
+                        <div class="ibox-content">
+
+
+                            <h3>Step 1</h3>
+                            <p>
+                                To add i18 support for your app you need to define what text you would like to translate. The best way to define your text is to store it in external json file.
+                                For example:
+                            </p>
+                            <strong>
+                                Each language you should have own json file!
+                            </strong>
+
+                            <div class="row">
+
+                                <div class="col-md-6">
+                                    <h5>en.json</h5>
+                                    <pre>
+
+  "app":
+    "name": "INSPINIA 2.4"
+  },
+  "nav":
+    "dashboard": "Dashboards",
+    "graphs": "Graphs",
+    "mailbox": "Mailbox",
+  },
+}</pre>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5>es.json</h5>
+                                    <pre>
+
+  "app":
+    "name": "INSPINIA 2.4"
+  },
+  "nav":
+    "dashboard": "Salpicadero",
+    "graphs": "Gráficos",
+    "mailbox": "El correo",
+  },
+}</pre>
+                                </div>
+
+                            </div>
+
+                            <h3>Step 2</h3>
+                            <p>
+                                Next you need to add html indicators in all place you want to use i18.
+                            </p>
+                            <pre>
+&lt;div id="i18_links"&gt;
+    &lt;span data-i18n="nav.dashboard"&gt; &lt;/span&gt;
+    &lt;span data-i18n="nav.graphs"&gt; &lt;/span&gt;
+    &lt;span data-i18n="nav.mailbox"&gt; &lt;/span&gt;
+&lt;/div&gt;
+</pre>
+
+                            <h3>Step 3</h3>
+                            <p>
+                                Next you need to initialise the i18next plugin:
+                                <br>
+                                <span class="small">
+                                json files are located in /locales folder.
+                            </span>
+                            </p>
+
+                            <pre>
+$.i18n.init(
+    resGetPath: 'locales/__lng__.json',
+    load: 'unspecific',
+    fallbackLng: false,
+    lng: 'en'
+}, function (t)
+    $('.i18_links').i18n();
+});</pre>
+
+                            <h3>Step 4</h3>
+                            <p>
+                                After that if you want to change the language you just need to add buttons and fire the i18n.setLng() function.
+                            </p>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h4>
+                                        HTML markup
+                                    </h4>
+                                    <pre>
+&lt;a class="btn btn-white set_en"&gt; Set EN language&lt;/a&gt;
+
+&lt;a class="btn btn-white set_es"&gt; Set ES language&lt;/a&gt;</pre>
+                                </div>
+                                <div class="col-md-6">
+                                    <h4>
+                                        Javascript code
+                                    </h4>
+                                    <pre>
+$('.set_en').on('click', function ()
+    i18n.setLng('en', function()
+        $('.i18_links').i18n();
+    });
+});
+
+$('.set_es').on('click', function ()
+    i18n.setLng('es', function()
+        $('.i18_links').i18n();
+    });
+});</pre>
+
+                                </div>
+                            </div>
+
+                            <p>
+                                More info about specific function and configuration options you can find on
+                                <a href="http://i18next.github.io/i18next/" target="_blank"> official i18next documentation.</a>
+                            </p>
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-lg-4">
+                    <div class="ibox">
+                        <div class="ibox-title">
+                            <h5>250 flags</h5>
+                        </div>
+                        <div class="ibox-content text-center">
+                            <p>
+                                Set of the 780 flag icons for all countries. All flags are avalible with 16x16, 32x32 and 64x64 size.
+                            </p>
+                            <div class="flags">
+                                <img alt="flag" src="img/flags/32/Abkhazia.png">
+                                <img alt="flag" src="img/flags/32/Afghanistan.png">
+                                <img alt="flag" src="img/flags/32/Aland.png">
+                                <img alt="flag" src="img/flags/32/Albania.png">
+                                <img alt="flag" src="img/flags/32/Algeria.png">
+                                <img alt="flag" src="img/flags/32/American-Samoa.png">
+                                <img alt="flag" src="img/flags/32/Andorra.png">
+                                <img alt="flag" src="img/flags/32/Angola.png">
+                                <img alt="flag" src="img/flags/32/Anguilla.png">
+                                <img alt="flag" src="img/flags/32/Antarctica.png">
+                                <img alt="flag" src="img/flags/32/Antigua-and-Barbuda.png">
+                                <img alt="flag" src="img/flags/32/Argentina.png">
+                                <img alt="flag" src="img/flags/32/Armenia.png">
+                                <img alt="flag" src="img/flags/32/Aruba.png">
+                                <img alt="flag" src="img/flags/32/Australia.png">
+                                <img alt="flag" src="img/flags/32/Austria.png">
+                                <img alt="flag" src="img/flags/32/Azerbaijan.png">
+                                <img alt="flag" src="img/flags/32/Bahamas.png">
+                                <img alt="flag" src="img/flags/32/Bahrain.png">
+                                <img alt="flag" src="img/flags/32/Bangladesh.png">
+                                <img alt="flag" src="img/flags/32/Barbados.png">
+                                <img alt="flag" src="img/flags/32/Basque-Country.png">
+                                <img alt="flag" src="img/flags/32/Belarus.png">
+                                <img alt="flag" src="img/flags/32/Belgium.png">
+                                <img alt="flag" src="img/flags/32/Belize.png">
+                                <img alt="flag" src="img/flags/32/Benin.png">
+                                <img alt="flag" src="img/flags/32/Bermuda.png">
+                                <img alt="flag" src="img/flags/32/Bhutan.png">
+                                <img alt="flag" src="img/flags/32/Bolivia.png">
+                                <img alt="flag" src="img/flags/32/Bosnia-and-Herzegovina.png">
+                                <img alt="flag" src="img/flags/32/Botswana.png">
+                                <img alt="flag" src="img/flags/32/Brazil.png">
+                                <img alt="flag" src="img/flags/32/British-Antarctic-Territory.png">
+                                <img alt="flag" src="img/flags/32/British-Virgin-Islands.png">
+                                <img alt="flag" src="img/flags/32/Brunei.png">
+                                <img alt="flag" src="img/flags/32/Bulgaria.png">
+                                <img alt="flag" src="img/flags/32/Burkina-Faso.png">
+                                <img alt="flag" src="img/flags/32/Burundi.png">
+                                <img alt="flag" src="img/flags/32/Cambodia.png">
+                                <img alt="flag" src="img/flags/32/Cameroon.png">
+                                <img alt="flag" src="img/flags/32/Canada.png">
+                                <img alt="flag" src="img/flags/32/Canary-Islands.png">
+                                <img alt="flag" src="img/flags/32/Cape-Verde.png">
+                                <img alt="flag" src="img/flags/32/Cayman-Islands.png">
+                                <img alt="flag" src="img/flags/32/Central-African-Republic.png">
+                                <img alt="flag" src="img/flags/32/Chad.png">
+                                <img alt="flag" src="img/flags/32/Chile.png">
+                                <img alt="flag" src="img/flags/32/China.png">
+                                <img alt="flag" src="img/flags/32/Christmas-Island.png">
+                                <img alt="flag" src="img/flags/32/Cocos-Keeling-Islands.png">
+                                <img alt="flag" src="img/flags/32/Colombia.png">
+                                <img alt="flag" src="img/flags/32/Commonwealth.png">
+                                <img alt="flag" src="img/flags/32/Comoros.png">
+                                <img alt="flag" src="img/flags/32/Cook-Islands.png">
+                                <img alt="flag" src="img/flags/32/Costa-Rica.png">
+                                <img alt="flag" src="img/flags/32/Cote-dIvoire.png">
+                                <img alt="flag" src="img/flags/32/Croatia.png">
+                                <img alt="flag" src="img/flags/32/Cuba.png">
+                                <img alt="flag" src="img/flags/32/Curacao.png">
+                                <img alt="flag" src="img/flags/32/Cyprus.png">
+                                <img alt="flag" src="img/flags/32/Czech-Republic.png">
+                                <img alt="flag" src="img/flags/32/Democratic-Republic-of-the-Congo.png">
+                                <img alt="flag" src="img/flags/32/Denmark.png">
+                                <img alt="flag" src="img/flags/32/Djibouti.png">
+                                <img alt="flag" src="img/flags/32/Dominica.png">
+                                <img alt="flag" src="img/flags/32/Dominican-Republic.png">
+                                <img alt="flag" src="img/flags/32/East-Timor.png">
+                                <img alt="flag" src="img/flags/32/Ecuador.png">
+                                <img alt="flag" src="img/flags/32/Egypt.png">
+                                <img alt="flag" src="img/flags/32/El-Salvador.png">
+                                <img alt="flag" src="img/flags/32/England.png">
+                                <img alt="flag" src="img/flags/32/Equatorial-Guinea.png">
+                                <img alt="flag" src="img/flags/32/Eritrea.png">
+                                <img alt="flag" src="img/flags/32/Estonia.png">
+                                <img alt="flag" src="img/flags/32/Ethiopia.png">
+                                <img alt="flag" src="img/flags/32/European-Union.png">
+                                <img alt="flag" src="img/flags/32/Falkland-Islands.png">
+                                <img alt="flag" src="img/flags/32/Faroes.png">
+                                <img alt="flag" src="img/flags/32/Fiji.png">
+                                <img alt="flag" src="img/flags/32/Finland.png">
+                                <img alt="flag" src="img/flags/32/France.png">
+                                <img alt="flag" src="img/flags/32/French-Polynesia.png">
+                                <img alt="flag" src="img/flags/32/French-Southern-Territories.png">
+                                <img alt="flag" src="img/flags/32/Gabon.png">
+                                <img alt="flag" src="img/flags/32/Gambia.png">
+                                <img alt="flag" src="img/flags/32/Georgia.png">
+                                <img alt="flag" src="img/flags/32/Germany.png">
+                                <img alt="flag" src="img/flags/32/Ghana.png">
+                                <img alt="flag" src="img/flags/32/Gibraltar.png">
+                                <img alt="flag" src="img/flags/32/GoSquared.png">
+                                <img alt="flag" src="img/flags/32/Greece.png">
+                                <img alt="flag" src="img/flags/32/Greenland.png">
+                                <img alt="flag" src="img/flags/32/Grenada.png">
+                                <img alt="flag" src="img/flags/32/Guam.png">
+                                <img alt="flag" src="img/flags/32/Guatemala.png">
+                                <img alt="flag" src="img/flags/32/Guernsey.png">
+                                <img alt="flag" src="img/flags/32/Guinea-Bissau.png">
+                                <img alt="flag" src="img/flags/32/Guinea.png">
+                                <img alt="flag" src="img/flags/32/Guyana.png">
+                                <img alt="flag" src="img/flags/32/Haiti.png">
+                                <img alt="flag" src="img/flags/32/Honduras.png">
+                                <img alt="flag" src="img/flags/32/Hong-Kong.png">
+                                <img alt="flag" src="img/flags/32/Hungary.png">
+                                <img alt="flag" src="img/flags/32/Iceland.png">
+                                <img alt="flag" src="img/flags/32/India.png">
+                                <img alt="flag" src="img/flags/32/Indonesia.png">
+                                <img alt="flag" src="img/flags/32/Iran.png">
+                                <img alt="flag" src="img/flags/32/Iraq.png">
+                                <img alt="flag" src="img/flags/32/Ireland.png">
+                                <img alt="flag" src="img/flags/32/Isle-of-Man.png">
+                                <img alt="flag" src="img/flags/32/Israel.png">
+                                <img alt="flag" src="img/flags/32/Italy.png">
+                                <img alt="flag" src="img/flags/32/Jamaica.png">
+                                <img alt="flag" src="img/flags/32/Japan.png">
+                                <img alt="flag" src="img/flags/32/Jersey.png">
+                                <img alt="flag" src="img/flags/32/Jordan.png">
+                                <img alt="flag" src="img/flags/32/Kazakhstan.png">
+                                <img alt="flag" src="img/flags/32/Kenya.png">
+                                <img alt="flag" src="img/flags/32/Kiribati.png">
+                                <img alt="flag" src="img/flags/32/Kosovo.png">
+                                <img alt="flag" src="img/flags/32/Kuwait.png">
+                                <img alt="flag" src="img/flags/32/Kyrgyzstan.png">
+                                <img alt="flag" src="img/flags/32/Laos.png">
+                                <img alt="flag" src="img/flags/32/Latvia.png">
+                                <img alt="flag" src="img/flags/32/Lebanon.png">
+                                <img alt="flag" src="img/flags/32/Lesotho.png">
+                                <img alt="flag" src="img/flags/32/Liberia.png">
+                                <img alt="flag" src="img/flags/32/Libya.png">
+                                <img alt="flag" src="img/flags/32/Liechtenstein.png">
+                                <img alt="flag" src="img/flags/32/Lithuania.png">
+                                <img alt="flag" src="img/flags/32/Luxembourg.png">
+                                <img alt="flag" src="img/flags/32/Macau.png">
+                                <img alt="flag" src="img/flags/32/Macedonia.png">
+                                <img alt="flag" src="img/flags/32/Madagascar.png">
+                                <img alt="flag" src="img/flags/32/Malawi.png">
+                                <img alt="flag" src="img/flags/32/Malaysia.png">
+                                <img alt="flag" src="img/flags/32/Maldives.png">
+                                <img alt="flag" src="img/flags/32/Mali.png">
+                                <img alt="flag" src="img/flags/32/Malta.png">
+                                <img alt="flag" src="img/flags/32/Mars.png">
+                                <img alt="flag" src="img/flags/32/Marshall-Islands.png">
+                                <img alt="flag" src="img/flags/32/Martinique.png">
+                                <img alt="flag" src="img/flags/32/Mauritania.png">
+                                <img alt="flag" src="img/flags/32/Mauritius.png">
+                                <img alt="flag" src="img/flags/32/Mayotte.png">
+                                <img alt="flag" src="img/flags/32/Mexico.png">
+                                <img alt="flag" src="img/flags/32/Micronesia.png">
+                                <img alt="flag" src="img/flags/32/Moldova.png">
+                                <img alt="flag" src="img/flags/32/Monaco.png">
+                                <img alt="flag" src="img/flags/32/Mongolia.png">
+                                <img alt="flag" src="img/flags/32/Montenegro.png">
+                                <img alt="flag" src="img/flags/32/Montserrat.png">
+                                <img alt="flag" src="img/flags/32/Morocco.png">
+                                <img alt="flag" src="img/flags/32/Mozambique.png">
+                                <img alt="flag" src="img/flags/32/Myanmar.png">
+                                <img alt="flag" src="img/flags/32/NATO.png">
+                                <img alt="flag" src="img/flags/32/Nagorno-Karabakh.png">
+                                <img alt="flag" src="img/flags/32/Namibia.png">
+                                <img alt="flag" src="img/flags/32/Nauru.png">
+                                <img alt="flag" src="img/flags/32/Nepal.png">
+                                <img alt="flag" src="img/flags/32/Netherlands-Antilles.png">
+                                <img alt="flag" src="img/flags/32/Netherlands.png">
+                                <img alt="flag" src="img/flags/32/New-Caledonia.png">
+                                <img alt="flag" src="img/flags/32/New-Zealand.png">
+                                <img alt="flag" src="img/flags/32/Nicaragua.png">
+                                <img alt="flag" src="img/flags/32/Niger.png">
+                                <img alt="flag" src="img/flags/32/Nigeria.png">
+                                <img alt="flag" src="img/flags/32/Niue.png">
+                                <img alt="flag" src="img/flags/32/Norfolk-Island.png">
+                                <img alt="flag" src="img/flags/32/North-Korea.png">
+                                <img alt="flag" src="img/flags/32/Northern-Cyprus.png">
+                                <img alt="flag" src="img/flags/32/Northern-Mariana-Islands.png">
+                                <img alt="flag" src="img/flags/32/Norway.png">
+                                <img alt="flag" src="img/flags/32/Olympics.png">
+                                <img alt="flag" src="img/flags/32/Oman.png">
+                                <img alt="flag" src="img/flags/32/Pakistan.png">
+                                <img alt="flag" src="img/flags/32/Palau.png">
+                                <img alt="flag" src="img/flags/32/Palestine.png">
+                                <img alt="flag" src="img/flags/32/Panama.png">
+                                <img alt="flag" src="img/flags/32/Papua-New-Guinea.png">
+                                <img alt="flag" src="img/flags/32/Paraguay.png">
+                                <img alt="flag" src="img/flags/32/Peru.png">
+                                <img alt="flag" src="img/flags/32/Philippines.png">
+                                <img alt="flag" src="img/flags/32/Pitcairn-Islands.png">
+                                <img alt="flag" src="img/flags/32/Poland.png">
+                                <img alt="flag" src="img/flags/32/Portugal.png">
+                                <img alt="flag" src="img/flags/32/Puerto-Rico.png">
+                                <img alt="flag" src="img/flags/32/Qatar.png">
+                                <img alt="flag" src="img/flags/32/Red-Cross.png">
+                                <img alt="flag" src="img/flags/32/Republic-of-the-Congo.png">
+                                <img alt="flag" src="img/flags/32/Romania.png">
+                                <img alt="flag" src="img/flags/32/Russia.png">
+                                <img alt="flag" src="img/flags/32/Rwanda.png">
+                                <img alt="flag" src="img/flags/32/Saint-Barthelemy.png">
+                                <img alt="flag" src="img/flags/32/Saint-Helena.png">
+                                <img alt="flag" src="img/flags/32/Saint-Kitts-and-Nevis.png">
+                                <img alt="flag" src="img/flags/32/Saint-Lucia.png">
+                                <img alt="flag" src="img/flags/32/Saint-Martin.png">
+                                <img alt="flag" src="img/flags/32/Saint-Vincent-and-the-Grenadines.png">
+                                <img alt="flag" src="img/flags/32/Samoa.png">
+                                <img alt="flag" src="img/flags/32/San-Marino.png">
+                                <img alt="flag" src="img/flags/32/Sao-Tome-and-Principe.png">
+                                <img alt="flag" src="img/flags/32/Saudi-Arabia.png">
+                                <img alt="flag" src="img/flags/32/Scotland.png">
+                                <img alt="flag" src="img/flags/32/Senegal.png">
+                                <img alt="flag" src="img/flags/32/Serbia.png">
+                                <img alt="flag" src="img/flags/32/Seychelles.png">
+                                <img alt="flag" src="img/flags/32/Sierra-Leone.png">
+                                <img alt="flag" src="img/flags/32/Singapore.png">
+                                <img alt="flag" src="img/flags/32/Slovakia.png">
+                                <img alt="flag" src="img/flags/32/Slovenia.png">
+                                <img alt="flag" src="img/flags/32/Solomon-Islands.png">
+                                <img alt="flag" src="img/flags/32/Somalia.png">
+                                <img alt="flag" src="img/flags/32/Somaliland.png">
+                                <img alt="flag" src="img/flags/32/South-Africa.png">
+                                <img alt="flag" src="img/flags/32/South-Georgia-and-the-South-Sandwich-Islands.png">
+                                <img alt="flag" src="img/flags/32/South-Korea.png">
+                                <img alt="flag" src="img/flags/32/South-Ossetia.png">
+                                <img alt="flag" src="img/flags/32/South-Sudan.png">
+                                <img alt="flag" src="img/flags/32/Spain.png">
+                                <img alt="flag" src="img/flags/32/Sri-Lanka.png">
+                                <img alt="flag" src="img/flags/32/Sudan.png">
+                                <img alt="flag" src="img/flags/32/Suriname.png">
+                                <img alt="flag" src="img/flags/32/Swaziland.png">
+                                <img alt="flag" src="img/flags/32/Sweden.png">
+                                <img alt="flag" src="img/flags/32/Switzerland.png">
+                                <img alt="flag" src="img/flags/32/Syria.png">
+                                <img alt="flag" src="img/flags/32/Taiwan.png">
+                                <img alt="flag" src="img/flags/32/Tajikistan.png">
+                                <img alt="flag" src="img/flags/32/Tanzania.png">
+                                <img alt="flag" src="img/flags/32/Thailand.png">
+                                <img alt="flag" src="img/flags/32/Togo.png">
+                                <img alt="flag" src="img/flags/32/Tokelau.png">
+                                <img alt="flag" src="img/flags/32/Tonga.png">
+                                <img alt="flag" src="img/flags/32/Trinidad-and-Tobago.png">
+                                <img alt="flag" src="img/flags/32/Tunisia.png">
+                                <img alt="flag" src="img/flags/32/Turkey.png">
+                                <img alt="flag" src="img/flags/32/Turkmenistan.png">
+                                <img alt="flag" src="img/flags/32/Turks-and-Caicos-Islands.png">
+                                <img alt="flag" src="img/flags/32/Tuvalu.png">
+                                <img alt="flag" src="img/flags/32/US-Virgin-Islands.png">
+                                <img alt="flag" src="img/flags/32/Uganda.png">
+                                <img alt="flag" src="img/flags/32/Ukraine.png">
+                                <img alt="flag" src="img/flags/32/United-Arab-Emirates.png">
+                                <img alt="flag" src="img/flags/32/United-Kingdom.png">
+                                <img alt="flag" src="img/flags/32/United-Nations.png">
+                                <img alt="flag" src="img/flags/32/United-States.png">
+                                <img alt="flag" src="img/flags/32/Unknown.png">
+                                <img alt="flag" src="img/flags/32/Uruguay.png">
+                                <img alt="flag" src="img/flags/32/Uzbekistan.png">
+                                <img alt="flag" src="img/flags/32/Vanuatu.png">
+                                <img alt="flag" src="img/flags/32/Vatican-City.png">
+                                <img alt="flag" src="img/flags/32/Venezuela.png">
+                                <img alt="flag" src="img/flags/32/Vietnam.png">
+                                <img alt="flag" src="img/flags/32/Wales.png">
+                                <img alt="flag" src="img/flags/32/Wallis-And-Futuna.png">
+                                <img alt="flag" src="img/flags/32/Western-Sahara.png">
+                                <img alt="flag" src="img/flags/32/Yemen.png">
+                                <img alt="flag" src="img/flags/32/Zambia.png">
+                                <img alt="flag" src="img/flags/32/Zimbabwe.png">
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <div class="float-right">
+                10GB of <strong>250GB</strong> Free.
+            </div>
+            <div>
+                <strong>Copyright</strong> Example Company &copy; 2014-2018
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- Mainly scripts -->
+<script src="js/jquery-3.1.1.min.js"></script>
+<script src="js/popper.min.js"></script>
+<script src="js/bootstrap.js"></script>
+<script src="js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="js/inspinia.js"></script>
+<script src="js/plugins/pace/pace.min.js"></script>
+
+<!-- i18next -->
+<script src="js/plugins/i18next/i18next.min.js"></script>
+
+<script>
+
+    $(document).ready(function () {
+
+        $.i18n.init({
+            resGetPath: 'locales/__lng__.json',
+            load: 'unspecific',
+            fallbackLng: false,
+            lng: 'en'
+        }, function (t) {
+            $('.i18container').i18n();
+            $('#side-menu').i18n();
+            $('.navbar-top-links').i18n();
+        });
+
+        $('.set_en').on('click', function () {
+            i18n.setLng('en', function () {
+                $('.i18container').i18n();
+                $('#side-menu').i18n();
+                $('.navbar-top-links').i18n();
+
+                $('.set_en').addClass('active');
+                $('.set_es').removeClass('active');
+            });
+        });
+
+        $('.set_es').on('click', function () {
+            i18n.setLng('es', function () {
+                $('.i18container').i18n();
+                $('#side-menu').i18n();
+                $('.navbar-top-links').i18n();
+
+                $('.set_es').addClass('active');
+                $('.set_en').removeClass('active');
+            });
+        })
+
+    });
+
+</script>
+
+</body>
+
+</html>

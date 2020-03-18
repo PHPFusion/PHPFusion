@@ -1,0 +1,35 @@
+<div class="opentable">
+    <div class="navbar navbar-subheader">
+        <div class="container">
+            <div class="navbar-main">
+                <div class="navbar-title">
+                    <h3>{{ title }}</h3>
+                </div>
+                <div class="navbar-seperator"></div>
+                <div class="breadcrumb-wrapper">
+                    {{ breadcrumbs|raw }}
+                </div>
+            </div>
+            <div class="m-l-a admin-actions" style="align-self: center" aria-label="Admin Helpers" role="button">
+                {% if links %}
+                    {% for link in links %}
+                        <a href="{{ link.link|raw }}" class="btn btn-default">{{ link.title|raw }}</a>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% if links %}
+        <div class="admin-helper">
+            <ul class="helper-content">
+                {% for link in links %}
+                    <li id="{{ link.id }}" class="helper-options {{ link.class }}" style="display:none;">
+                        {{ link.content|raw }}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+    <div class="content">
+
+

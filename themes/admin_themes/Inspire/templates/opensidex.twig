@@ -1,0 +1,33 @@
+<aside class="side-panel">
+    {% if (title or options) %}
+        <div class="head{{ is_sidex ? " sidex" : "" }}">
+            {% if title %}
+                <div class="head-label">
+                    <h3 class="title">{{ title }}
+                        <span class="pull-right m-l-10">{{ is_sidex ? '<i class="panel-caret fas fa-caret-up"></i>' : "" }}</span>
+                    </h3>
+                </div>
+            {% endif %}
+            {% if options %}
+                <div class="head-toolbar">
+                    {% if links %}
+                        <ul class="nav {{ options.link_class }}" role="tablist">
+                            {% for link in links %}
+                                {% set active = 'false' %}
+                                {% set active_class = '' %}
+                                {% if link.active %}
+                                    {% set active = 'true' %}
+                                    {% set active_class = ' active' %}
+                                {% endif %}
+                                <li class="nav-item{{ active_class }}" role="presentation">
+                                    <a class="nav-link" aria-controls="{{ title }}" data-toggle="tab" href="#profile" role="tab" aria-selected="{{ active }}">{{ link.title }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
+    <div class="body">
+
