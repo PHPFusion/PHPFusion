@@ -31,13 +31,13 @@ function bootstrap3() {
 function change_to_bs3_twig() {
     return [
         'nav'      => [
-            'nav_path'        => BOILERPLATES.'bootstrap4/html/navbar/navbar.html',
-            'nav_li_no_link'  => BOILERPLATES.'bootstrap4/html/navbar/nav_li_no_link.html',
-            'nav_li_link'     => BOILERPLATES.'bootstrap4/html/navbar/nav_li_link.html',
-            'nav_li_dropdown' => BOILERPLATES.'bootstrap4/html/navbar/nav_li_dropdown.html',
-            'nav_divider'     => BOILERPLATES.'bootstrap4/html/navbar/nav_li_divider.html',
+            'nav_path'        => BOILERPLATES.'bootstrap3/html/navbar/navbar.html',
+            'nav_li_no_link'  => BOILERPLATES.'bootstrap3/html/navbar/nav_li_no_link.html',
+            'nav_li_link'     => BOILERPLATES.'bootstrap3/html/navbar/nav_li_link.html',
+            'nav_li_dropdown' => BOILERPLATES.'bootstrap3/html/navbar/nav_li_dropdown.html',
+            'nav_divider'     => BOILERPLATES.'bootstrap3/html/navbar/nav_li_divider.html',
         ],
-        'modal'    => BOILERPLATES.'bootstrap4/html/modal.html',
-        'progress' => BOILERPLATES.'bootstrap4/html/progress.html'
+        'modal'    => BOILERPLATES.'bootstrap3/html/modal.html',
+        'progress' => BOILERPLATES.'bootstrap3/html/progress.html'
     ];
 }

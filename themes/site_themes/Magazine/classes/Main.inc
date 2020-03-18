@@ -30,6 +30,7 @@ class Main extends Core {
         $menu_options = [
             'id'                => 'main-menu',
             'nav_class_primary' => 'nav navbar-nav navbar-right primary',
+            'navbar_class'      => 'navbar-default',
             'container_fluid'   => TRUE,
             'header_content'    => '<a class="navbar-brand" href="'.BASEDIR.$settings['opening_page'].'"><img src="'.BASEDIR.$settings['sitebanner'].'" alt="'.$settings['sitename'].'" class="img-responsive"/></a>',
             'grouping'          => TRUE,
