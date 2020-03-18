@@ -56,6 +56,8 @@ function access($attr, $path, $data, $volume) {
         ? !($attr == 'read' || $attr == 'write') : NULL;
 }
 
+$site_url = fusion_get_settings('siteurl');
+
 $default = [
     'driver'        => 'LocalFileSystem', // driver for accessing file system (REQUIRED)
     'winHashFix'    => DIRECTORY_SEPARATOR !== '/', // to make hash same to Linux one on windows too
@@ -63,8 +65,9 @@ $default = [
     'uploadDeny'    => ['all'], // All Mimetypes not allowed to upload
     'uploadAllow'   => ['image/jpg', 'image/jpeg', 'image/gif', 'image/png', 'image/tiff', 'image/tif', 'image/x-ms-bmp', 'image/x-icon', 'image/svg', 'image/svg+xml', 'application/xml', 'text/xml'], // Mimetype `image` allowed to upload
     'uploadOrder'   => ['deny', 'allow'], // allowed Mimetype `image only
-    'tmbPath'       => '.tmb',
-    'quarantine'    => '.tmb'
+    'tmbPath'       => BASEDIR.'cache/.tmb',
+    'tmbURL'        => $site_url.'cache/.tmb',
+    'quarantine'    => BASEDIR.'cache/.tmb'
 ];
 
 // Documentation for connector options:
@@ -72,14 +75,14 @@ $default = [
 
 $root_images = [
     'path'  => IMAGES,
-    'URL'   => fusion_get_settings('siteurl').'images/',
+    'URL'   => $site_url.'images/',
     'alias' => 'root_images'
 ];
 
 if (defined('ARTICLES_EXIST')) {
     $article_images = [
         'path'  => IMAGES_A,
-        'URL'   => fusion_get_settings('siteurl').'infusions/articles/images/',
+        'URL'   => $site_url.'infusions/articles/images/',
         'alias' => 'articles'
     ];
 }
@@ -87,7 +90,7 @@ if (defined('ARTICLES_EXIST')) {
 if (defined('BLOG_EXIST')) {
     $blog_images = [
         'path'  => IMAGES_B,
-        'URL'   => fusion_get_settings('siteurl').'infusions/blog/images/',
+        'URL'   => $site_url.'infusions/blog/images/',
         'alias' => 'blog'
     ];
 }
@@ -95,7 +98,7 @@ if (defined('BLOG_EXIST')) {
 if (defined('DOWNLOADS_EXIST')) {
     $download_images = [
         'path'  => IMAGES_D,
-        'URL'   => fusion_get_settings('siteurl').'infusions/download/images/',
+        'URL'   => $site_url.'infusions/download/images/',
         'alias' => 'downloads'
     ];
 }
@@ -103,7 +106,7 @@ if (defined('DOWNLOADS_EXIST')) {
 if (defined('GALLERY_EXIST')) {
     $download_images = [
         'path'  => IMAGES_G,
-        'URL'   => fusion_get_settings('siteurl').'infusions/gallery/photos/',
+        'URL'   => $site_url.'infusions/gallery/photos/',
         'alias' => 'gallery'
     ];
 }
@@ -111,7 +114,7 @@ if (defined('GALLERY_EXIST')) {
 if (defined('NEWS_EXIST')) {
     $news_images = [
         'path'  => IMAGES_N,
-        'URL'   => fusion_get_settings('siteurl').'infusions/news/images/',
+        'URL'   => $site_url.'infusions/news/images/',
         'alias' => 'news'
     ];
 }
