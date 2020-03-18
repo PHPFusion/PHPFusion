@@ -312,7 +312,7 @@ $fusion_css_tags = &OutputHandler::$cssTags;
 // Get installed infusions
 $fusion_infusions = fusion_get_infusions();
 
-$fusion_steam = new Steam('bootstrap4'); // use bootstrap 3
+$fusion_steam = new Steam(); // use bootstrap 3
 $fusion_steam->run();
 
 // Set theme using $_GET as well.

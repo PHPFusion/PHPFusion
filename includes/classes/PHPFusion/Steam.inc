@@ -34,14 +34,15 @@ class Steam {
      *
      * @param string $boilers
      */
-    public function __construct($boilers = '') {
-        // we will need a default framework selector in fusion_get_settings('boiler') which value can be hosted as 'semantic', 'foundation', 'bootstrap3', 'bootstrap4'
-        // drop $settings['bootstrap']
-        if ($boilers) {
-            $this->boilers = $boilers;
-            self::$boiler_path = THEMES."boilerplates".DIRECTORY_SEPARATOR.$boilers.DIRECTORY_SEPARATOR;
-        }
+    public function __construct() {
+        $boilerplate = fusion_get_settings('boilerplate');
+        $this->boilers = $boilerplate;
+        self::$boiler_path = THEMES."boilerplates".DIRECTORY_SEPARATOR.$boilerplate.DIRECTORY_SEPARATOR;
+    }
 
+    public function setBoilerPlate($boilerplate) {
+        $this->boilers = $boilerplate;
+        self::$boiler_path = THEMES."boilerplates".DIRECTORY_SEPARATOR.$boilerplate.DIRECTORY_SEPARATOR;
     }
 
     /**
