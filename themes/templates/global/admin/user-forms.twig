@@ -1,0 +1,46 @@
+{{ form.openform|raw }}
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading"><strong>User Identity</strong></div>
+            <div class="panel-body">
+                <div class="form-group">
+                    {{ form.user_name|raw }}
+                    {{ form.user_firstname|raw }}
+                    {{ form.user_lastname|raw }}
+                    {{ form.user_displayname|raw }}
+                    {{ form.user_display|raw }}
+                    {{ form.user_level|raw }}
+                    <div class="col-xs-12 col-sm-offset-3 m-b-5">
+                        {{ form.password_generator|raw }}
+                    </div>
+                    {{ form.user_password|raw }}
+                    {{ form.user_avatar|raw }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading"><strong>Email and Notifications</strong></div>
+            <div class="panel-body">
+                {{ form.user_email|raw }}
+                {{ form.user_hide_email|raw }}
+                {{ form.email_notification|raw }}
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading"><strong>Miscellaneous</strong></div>
+            <div class="panel-body">
+                {{ form.user_birthdate|raw }}
+                {{ form.user_location|raw }}
+                {{ form.user_language|raw }}
+                {{ form.user_bio|raw }}
+            </div>
+        </div>
+    </div>
+</div>
+{{ form.cancel|raw }}
+{{ form.submit|raw }}
+{{ form.remove|raw }}
+{{ form.closeform|raw }}

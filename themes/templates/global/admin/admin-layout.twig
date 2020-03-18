@@ -1,0 +1,30 @@
+{{ opentable(title) }}
+<div class="p-15 p-t-0">
+    {{ description }}
+</div>
+<div class="spacer-sm">
+    {{ form.openform|raw }}
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-6">
+            {% if left %}
+                {%  for field in left %}
+                    {{ field|raw }}
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-6">
+            {% if right %}
+                {%  for field in right %}
+                    {{ field|raw }}
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+    <div class="clearfix">
+        <div class="col-xs-12">
+            {{ form.submit|raw }}
+        </div>
+    </div>
+    {{ form.closeform|raw }}
+</div>
+{{ closetable() }}
