@@ -208,23 +208,36 @@ if ($login_post && $user_name_post && $user_pass_post) {
     $userdata = Authenticate::validateAuthUser();
 }
 
+set_user_level();
+
 // User level, Admin Rights & User Group definitions
-define("iGUEST", $userdata['user_level'] == USER_LEVEL_PUBLIC ? 1 : 0);
-define("iMEMBER", $userdata['user_level'] <= USER_LEVEL_MEMBER ? 1 : 0);
-define("iADMIN", $userdata['user_level'] <= USER_LEVEL_ADMIN ? 1 : 0);
-define("iSUPERADMIN", $userdata['user_level'] == USER_LEVEL_SUPER_ADMIN ? 1 : 0);
-define("iUSER", $userdata['user_level']);
-define("iUSER_RIGHTS", $userdata['user_rights']);
-define("iUSER_GROUPS", substr($userdata['user_groups'], 1));
+function set_user_level() {
+    $userdata = fusion_get_userdata();
+    if (!defined('iGUEST')) {
+        define("iGUEST", $userdata['user_level'] == USER_LEVEL_PUBLIC ? 1 : 0);
+        define("iMEMBER", $userdata['user_level'] <= USER_LEVEL_MEMBER ? 1 : 0);
+        define("iADMIN", $userdata['user_level'] <= USER_LEVEL_ADMIN ? 1 : 0);
+        define("iSUPERADMIN", $userdata['user_level'] == USER_LEVEL_SUPER_ADMIN ? 1 : 0);
+        define("iUSER", $userdata['user_level']);
+        define("iUSER_RIGHTS", $userdata['user_rights']);
+        define("iUSER_GROUPS", substr($userdata['user_groups'], 1));
+    }
+}
+
+function get_current_site_language() {
+    $userdata = fusion_get_userdata();
+    static $current_user_language = [];
+    if (iMEMBER && valid_language($userdata['user_language'])) {
+        $current_user_language = $userdata['user_language'];
+    } else {
+        $langData = dbarray(dbquery('SELECT * FROM '.DB_LANGUAGE_SESSIONS.' WHERE user_ip=:ip', [':ip' => USER_IP]));
+        $current_user_language = (!empty($langData['user_language']) ? $langData['user_language'] : fusion_get_settings('locale'));
+    }
+    return $current_user_language;
+}
 
 // Main language detection procedure
-static $current_user_language = [];
-if (iMEMBER && valid_language($userdata['user_language'])) {
-    $current_user_language = $userdata['user_language'];
-} else {
-    $langData = dbarray(dbquery('SELECT * FROM '.DB_LANGUAGE_SESSIONS.' WHERE user_ip=:ip', [':ip' => USER_IP]));
-    $current_user_language = (!empty($langData['user_language']) ? $langData['user_language']: fusion_get_settings('locale'));
-}
+$current_user_language = get_current_site_language();
 $language_opts = fusion_get_enabled_languages();
 $enabled_languages = array_keys($language_opts);
 

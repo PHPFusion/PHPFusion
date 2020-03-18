@@ -104,7 +104,7 @@ if (!function_exists('render_user_tags')) {
     /**
      * The callback function for fusion_parse_user()
      *
-     * @param string $m The message
+     * @param string $m       The message
      * @param string $tooltip The tooltip string
      *
      * @return string
@@ -176,37 +176,116 @@ function twig_init($path = THEME.'twig', $debug = FALSE) {
 
     $twig->addFunction($get_function);
 
-    // {{ openside('Title') }}
-    $openside = new TwigFunction('openside', function () {
-        $args = func_get_args();
-        call_user_func_array('openside', $args);
-    });
+    // Evolve this further
+    $twig_register_functions = [
+        'openside'            => new TwigFunction('openside', function () {
+            return call_user_func_array('openside', func_get_args());
+        }),
+        'closeside'           => new TwigFunction('closeside', function () {
+            return call_user_func_array('closeside', func_get_args());
+        }),
+        'opentable'           => new TwigFunction('opentable', function () {
+            return call_user_func_array('opentable', func_get_args());
+        }),
+        'closetable'          => new TwigFunction('closetable', function () {
+            return call_user_func_array('closetable', func_get_args());
+        }),
+        'opensidex'           => new TwigFunction('opensidex', function () {
+            return call_user_func_array('opensidex', func_get_args());
+        }),
+        'closesidex'          => new TwigFunction('closesidex', function () {
+            return call_user_func_array('closesidex', func_get_args());
+        }),
+        'print_p'             => new TwigFunction('print_p', function () {
+            return call_user_func_array('closesidex', func_get_args());
+        }),
+        'fusion_get_userdata' => new TwigFunction('fusion_get_userdata', function () {
+            return call_user_func_array('fusion_get_userdata', func_get_args());
+        }),
+        'fusion_get_settings' => new TwigFunction('fusion_get_settings', function () {
+            return call_user_func_array('fusion_get_settings', func_get_args());
+        }),
+        'fusion_get_locale'   => new TwigFunction('fusion_get_locale', function () {
+            return call_user_func_array('fusion_get_locale', func_get_args());
+        }),
+        'display_avatar'      => new TwigFunction('display_avatar', function () {
+            return call_user_func_array('display_avatar', func_get_args());
+        }),
+    ];
 
-    $twig->addFunction($openside);
-
-    // {{ closeside() }}
-    $closeside = new TwigFunction('closeside', function () {
-        $args = func_get_args();
-        call_user_func_array('closeside', $args);
-    });
-
-    $twig->addFunction($closeside);
-
-    // {{ opentable('Title') }}
-    $opentable = new TwigFunction('opentable', function () {
-        $args = func_get_args();
-        call_user_func_array('opentable', $args);
-    });
-
-    $twig->addFunction($opentable);
-
-    // {{ closetable() }}
-    $closetable = new TwigFunction('closetable', function () {
-        $args = func_get_args();
-        call_user_func_array('closetable', $args);
-    });
-
-    $twig->addFunction($closetable);
+    foreach ($twig_register_functions as $key => $function) {
+        if (function_exists($key)) {
+            $twig->addFunction($function);
+        }
+    }
 
     return $twig;
 }
+
+/**
+ * Function to render using twig normal output
+ *
+ * @param string $dir_path
+ * @param string $file_path
+ * @param array  $info
+ * @param bool   $debug
+ *
+ * @return string
+ * @throws \Twig\Error\LoaderError
+ * @throws \Twig\Error\RuntimeError
+ * @throws \Twig\Error\SyntaxError
+ */
+function fusion_render($dir_path = THEMES.'templates/', $file_path = '', array $info = [], $debug = FALSE) {
+    $twig = twig_init($dir_path, $debug);
+    // adding constants into Twig
+    if ($fusion_constants = get_defined_constants()) {
+        foreach ($fusion_constants as $key => $value) {
+            $info[$key] = $value;
+        }
+    }
+    return $twig->render($file_path, $info);
+}
+
+// Add compatibility mode function
+if (!function_exists('opensidex')) {
+    /**
+     * Template boiler using Bootstrap 3
+     *
+     * @param $title
+     */
+    function opensidex($title) {
+        echo '<div class="sidex list-group">';
+        echo '<div class="title list-group-item"><strong>'.$title.'</strong><span class="pull-right"><span class="caret"></span></span></div>';
+        echo '<div class="body list-group-item">';
+
+        if (!defined('sidex_js')) {
+            define('sidex_js', TRUE);
+            add_to_jquery(/** @lang JavaScript */ "
+            $('body').on('click', '.sidex > .title', function(e) {
+                let sidexBody = $(this).siblings('.body');
+                sidexBody.toggleClass('display-none');
+                if (sidexBody.is(':hidden')) {
+                    $(this).closest('div').find('.pull-right').addClass('dropup');
+                } else {
+                    $(this).closest('div').find('.pull-right').removeClass('dropup');
+                }
+            });
+            ");
+        }
+    }
+}
+
+if (!function_exists('closesidex')) {
+    function closesidex($title = '') {
+        echo '</div>';
+        if ($title) {
+            echo '<div class="list-group-item">'.$title.'</div>';
+        }
+        echo '</div>';
+    }
+}
+
+if (!function_exists('tablebreak')) {
+    echo "</div><div class='list-group-item'>";
+}
+

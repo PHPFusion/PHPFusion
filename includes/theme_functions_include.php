@@ -137,12 +137,16 @@ function grid_container() {
  * @return mixed
  */
 function fusion_table($table_id, array $options = []) {
+
     $table_config = '';
     $default_options = [
         'remote_file' => '',
         'boilerplate' => 'bootstrap3', // @todo: implement boilerplate switch functions
         'cdnurl'      => fusion_get_settings('siteurl'),
-        'page_length' => 0
+        'page_length' => 0,
+        'debug'       => FALSE,
+        'ajax'        => FALSE,
+        'ajax_data'   => [],
     ];
 
     $options += $default_options;
@@ -152,17 +156,37 @@ function fusion_table($table_id, array $options = []) {
 
     // Ajax handling script
     if ($options['remote_file']) {
+        $file_output = fusion_get_contents($options['remote_file']);
+        if ($options['debug']) {
+            print_p($file_output);
+        }
 
-        if ($file_output = file_get_contents($options['remote_file'])) {
+        $options['datatable_config']['processing'] = TRUE;
+        $options['datatable_confgi']['serverSide'] = TRUE;
+        $options['datatable_config']['ajax'] = $options['remote_file'];
+        if (!empty($options['ajax_data']) && is_array($options['ajax_data'])) {
+            $options['datatable_config']['ajax'] = [
+                'url'     => $options['remote_file'],
+                'method'  => 'GET',
+                'dataSrc' => 'data',
+                'data'    => $options['ajax_data'],
+                //'success' => 'function(e) { console.log("success"); console.log(e) }',
+                //'error'   => 'function(e) { console.log("Error"); console.log(e) }'
+            ];
+        }
+
+        if (!empty($file_output)) {
             if (isJson($file_output)) {
                 $output_array = json_decode($file_output, TRUE);
+                if ($options['debug']) {
+                    print_p($output_array);
+                }
                 if (!empty($output_array['data'])) {
                     $column_key = array_keys(reset($output_array['data']));
                     if (!empty($column_key)) {
                         foreach ($column_key as $column) {
                             $options['datatable_config']['columns'][] = ['data' => $column];
                         }
-                        $options['datatable_config']['ajax'] = $options['remote_file'];
                     }
                 } else {
                     set_error(E_USER_NOTICE, 'Datatable parameter is incorrect. Output must contain "data" key', $options['remote_file'], 0, 'Fusion Table API Error');
@@ -172,7 +196,12 @@ function fusion_table($table_id, array $options = []) {
     }
 
     if (!empty($options['datatable_config'])) {
-        $table_config = json_encode($options['datatable_config']);
+        $table_config = json_encode($options['datatable_config'], JSON_PRETTY_PRINT);
+        if ($options['debug']) {
+            print_P($options['datatable_config']);
+            print_P($table_config);
+        }
+
     }
 
     if (!defined('FUSION_DATATABLES')) {
@@ -181,6 +210,7 @@ function fusion_table($table_id, array $options = []) {
         add_to_head("<link rel='stylesheet' href='$css_url'>");
         add_to_footer("<script src='".rtrim($options['cdnurl'], '/')."/includes/jquery/datatables/datatables.min.js'></script>");
     }
+
 
     add_to_jquery(/** @lang JavaScript */ "$('#$table_id').DataTable($table_config);");
     return $table_id;
@@ -198,7 +228,21 @@ function showrendertime($queries = TRUE) {
     $db_connection = DatabaseFactory::getConnection('default');
     $mysql_queries_count = $db_connection::getGlobalQueryCount();
     if (fusion_get_settings('rendertime_enabled') == 1 || (fusion_get_settings('rendertime_enabled') == 2 && iADMIN)) {
-        $res = showBenchmark();
+        $debug_opts = [];
+        $debug_sql = FALSE;
+        $benchmark_opts = [
+            'threshold' => .1,
+            'filters'   => FALSE
+        ];
+        if (defined('FUSION_SQL_DEBUG')) {
+            if (is_array(FUSION_SQL_DEBUG)) {
+                $debug_sql = TRUE;
+                $debug_opts = FUSION_SQL_DEBUG;
+            }
+        }
+        $debug_opts += $benchmark_opts;
+
+        $res = showBenchmark($debug_sql, $debug_opts['threshold'], $debug_opts['filters']);
         $res .= " | ";
         $res .= ($queries ? ucfirst($locale['global_173']).": ".$mysql_queries_count." | " : '');
 

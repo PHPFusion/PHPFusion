@@ -107,8 +107,8 @@ if ( !empty( $fusion_jquery_tags ) ) {
     echo "<script>$(function(){".$js."});</script>\n";
 }
 // Uncomment to guide your theme development
-if ( fusion_get_settings( 'devmode' ) ) {
-    echo "<script src='".INCLUDES."jscripts".DIRECTORY_SEPARATOR."html-inspector.js'></script><script>HTMLInspector.inspect()</script>\n";
-}
+//if ( fusion_get_settings( 'devmode' ) ) {
+//    echo "<script src='".INCLUDES."jscripts".DIRECTORY_SEPARATOR."html-inspector.js'></script><script>HTMLInspector.inspect()</script>\n";
+//}
 echo "</body>\n";
 echo "</html>";

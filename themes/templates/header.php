@@ -15,6 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
+use PHPFusion\Rewrite\Permalinks;
+
 defined('IN_FUSION') || exit;
 
 $settings = fusion_get_settings();
@@ -32,8 +35,8 @@ if ($settings['maintenance'] == "1" &&
     }
 }
 
-if ($settings['site_seo']) {
-    $permalink = \PHPFusion\Rewrite\Permalinks::getPermalinkInstance();
+if (fusion_get_settings("site_seo")) {
+    $permalink = Permalinks::getPermalinkInstance();
 }
 
 require_once INCLUDES."breadcrumbs.php";

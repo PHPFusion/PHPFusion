@@ -256,39 +256,15 @@ class Authenticate {
         $userdata = fusion_get_userdata();
         $locale = fusion_get_locale();
         if (iADMIN) {
-            // Validate a provided password
-            if ($pass) {
-                $result = dbquery("SELECT user_admin_algo, user_admin_salt, user_admin_password FROM ".DB_USERS."
-                    WHERE user_id=:uid AND user_level < :member AND  user_status=:status AND user_actiontime=:actiontime
-                    LIMIT 1", [
-                    ':uid'        => (int)$userdata['user_id'],
-                    ':member'     => USER_LEVEL_MEMBER,
-                    ':status'     => 0,
-                    ':actiontime' => 0,
-                ]);
-                if (dbrows($result)) {
-                    $user = dbarray($result);
-                    $inputHash = ($user['user_admin_algo'] != 'md5' ? hash_hmac($user['user_admin_algo'], $pass, $user['user_admin_salt']) : md5(md5($pass)));
-                    if ($inputHash == $user['user_admin_password']) {
-                        return TRUE;
-                    }
-                }
-                return FALSE;
-            }
-
             // Validate existing admin cookie
-            if ($cookie = cookie(COOKIE_ADMIN)) {
-                $cookieDataArr = explode('.', $cookie);
+            if ($pass == '' && isset($_COOKIE[COOKIE_ADMIN]) && $_COOKIE[COOKIE_ADMIN] != "") {
+                $cookieDataArr = explode(".", $_COOKIE[COOKIE_ADMIN]);
                 if (count($cookieDataArr) == 3) {
                     list($userID, $cookieExpiration, $cookieHash) = $cookieDataArr;
-                    if ($cookieExpiration > time() && $userID == $userdata['user_id']) {
-                        $result = dbquery("SELECT user_admin_algo, user_admin_salt FROM ".DB_USERS."  WHERE user_id=:uid AND user_level < :member AND  user_status=:status AND user_actiontime=:actiontime LIMIT 1", [
-                            ':uid'        => (isnum($userID) ? $userID : 0),
-                            ':member'     => USER_LEVEL_MEMBER,
-                            ':status'     => 0,
-                            ':actiontime' => 0,
-                        ]);
-                        if (dbrows($result)) {
+                    $is_valid_admin = (($userID == $userdata['user_id'] || iSUPERADMIN && session_get('fusion_login_as')) ? TRUE : FALSE);
+                    if ($cookieExpiration > time() && $is_valid_admin === TRUE) {
+                        $result = dbquery("SELECT user_admin_algo, user_admin_salt FROM ".DB_USERS." WHERE user_id='".(isnum($userID) ? $userID : 0)."' AND user_level < ".USER_LEVEL_MEMBER." AND  user_status='0' AND user_actiontime='0' LIMIT 1");
+                        if (dbrows($result) == 1) {
                             $user = dbarray($result);
                             $key = hash_hmac($user['user_admin_algo'], $userID.$cookieExpiration, $user['user_admin_salt']);
                             $hash = hash_hmac($user['user_admin_algo'], $userID.$cookieExpiration, $key);
@@ -339,7 +315,18 @@ class Authenticate {
                         }
                     }
                 }
-                return FALSE;
+                // Validate a provided password
+            } else if ($pass != "") {
+                $result = dbquery("SELECT user_admin_algo, user_admin_salt, user_admin_password FROM ".DB_USERS."
+                    WHERE user_id='".$userdata['user_id']."' AND user_level < ".USER_LEVEL_MEMBER." AND  user_status='0' AND user_actiontime='0'
+                    LIMIT 1");
+                if (dbrows($result) == 1) {
+                    $user = dbarray($result);
+                    $inputHash = ($user['user_admin_algo'] != 'md5' ? hash_hmac($user['user_admin_algo'], $pass, $user['user_admin_salt']) : md5(md5($pass)));
+                    if ($inputHash == $user['user_admin_password']) {
+                        return TRUE;
+                    }
+                }
             }
         }
 
@@ -376,6 +363,7 @@ class Authenticate {
 
     // Checks and sets the admin last visit cookie
     public static function validateAuthUser() {
+        // loginas add
         if (defined('COOKIE_USER') && isset($_COOKIE[COOKIE_USER]) && $_COOKIE[COOKIE_USER] != "") {
             $cookieDataArr = explode(".", $_COOKIE[COOKIE_USER]);
             if (count($cookieDataArr) == 3) {
@@ -390,6 +378,12 @@ class Authenticate {
                         $key = hash_hmac($user['user_algo'], $userID.$cookieExpiration, $user['user_salt']);
                         $hash = hash_hmac($user['user_algo'], $userID.$cookieExpiration, $key);
                         if ($cookieHash == $hash) {
+                            if ($user['user_level'] == -103) {
+                                if ($login_as_user = session_get('fusion_login_as')) {
+                                    $user = fusion_get_user($login_as_user);
+                                    $user['user_level'] = -103;
+                                }
+                            }
                             return $user;
                         } else {
                             // Cookie has been tampered with!
