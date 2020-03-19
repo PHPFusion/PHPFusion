@@ -20,6 +20,9 @@ class AdminPanel extends Helper {
         $rendertime_enabled = fusion_get_settings("rendertime_enabled") ? TRUE : FALSE;
         $footer_arr = [];
         if ($rendertime_enabled) {
+
+            self::$locale['copyright'] = '';
+
             $footer_arr = [
                 'render_time'  => showrendertime(),
                 'memory_usage' => showMemoryUsage(),

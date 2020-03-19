@@ -312,8 +312,6 @@ $fusion_css_tags = &OutputHandler::$cssTags;
 // Get installed infusions
 $fusion_infusions = fusion_get_infusions();
 
-$fusion_steam = Steam::getInstance();
-
 // Set theme using $_GET as well.
 // Set theme
 if ($userdata['user_level'] == USER_LEVEL_SUPER_ADMIN && isset($_GET['themes']) && theme_exists($_GET['themes'])) {
