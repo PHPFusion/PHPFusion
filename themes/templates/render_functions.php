@@ -211,7 +211,9 @@ function twig_init($path = THEME.'twig', $debug = FALSE) {
         'display_avatar'      => new TwigFunction('display_avatar', function () {
             return call_user_func_array('display_avatar', func_get_args());
         }),
-
+        'whitespace'          => new TwigFunction('whitespace', function () {
+            return call_user_func_array('whitespace', func_get_args());
+        })
     ];
 
     foreach ($twig_register_functions as $key => $function) {
@@ -221,6 +223,20 @@ function twig_init($path = THEME.'twig', $debug = FALSE) {
     }
 
     return $twig;
+}
+
+/**
+ * Adds a whitespace if value is present
+ *
+ * @param $value
+ *
+ * @return string
+ */
+function whitespace($value) {
+    if ($value) {
+        return " ".$value;
+    }
+    return "";
 }
 
 /**

@@ -4,39 +4,50 @@ use PHPFusion\Template;
 
 class Form {
 
+    public static function form_input($input_name, $label, $input_value, $options) {
+        // WIP
+        //
+        $info = [
+            'input_name'  => $input_name,
+            'label'       => $label,
+            'input_value' => $input_value,
+            'options'     => $options,
+        ];
+        //print_p($info);
+
+        $input_block = fusion_render(BOILERPLATES.'bootstrap4/html/', 'form-input.twig', $info, TRUE);
+
+        return $input_block;
+    }
+
     /**
-     * Renders form input
-     *
      * @param $input_name
      * @param $label
      * @param $input_value
      * @param $options
      *
      * @return string
+     * @throws Exception
      */
-    public static function form_input($input_name, $label, $input_value, $options) {
+    private static function form_input_deprecate($input_name, $label, $input_value, $options) {
 
-        $tpl = Template::getInstance('field-'.$options['input_id']);
-        $tpl->set_template(__DIR__.DIRECTORY_SEPARATOR.'html'.DIRECTORY_SEPARATOR.'form_input.html');
-        $tpl->set_tag("input_name", $input_name);
-
-        // input id
-        $tpl->set_tag("input_name", $input_name);
-        $tpl->set_tag("input_id", $options['input_id']);
-        $tpl->set_tag("input_type", $options['type']);
         // form-group css class
         $grp_class = ($options['class'] ? ' '.$options['class'] : '');
         $grp_class .= ($options['inline'] ? ' clearfix' : '');
-        $grp_class .= (!empty($options['icon']) ? ' has-feedback' : '');
-        $grp_class .= ($options['error_class'] ? ' '.$options['error_class'] : '');
 
-        $tpl->set_tag("group_class", $grp_class);
+        // Bootstrap 4 doesn't have this - ?
+        //$grp_class .= (!empty($options['icon']) ? ' has-feedback' : '');
+
+        // Validation needs to be done via JS in Fusion X
+        //$grp_class .= ($options['error_class'] ? ' '.$options['error_class'] : '');
+        //
+        //$tpl->set_tag("group_class", $grp_class);
 
         // form-group css style
-        $grp_inline = ($options['width'] && !$label ? ' style="width: '.$options['width'].'"' : '');
-        $tpl->set_tag("group_inline_css", $grp_inline);
+        //$grp_inline = ($options['width'] && !$label ? ' style="width: '.$options['width'].'"' : '');
+        //$tpl->set_tag("group_inline_css", $grp_inline);
 
-        $is_inline = $options['inline'] && $label ? TRUE : FALSE;
+        //$is_inline = $options['inline'] && $label ? TRUE : FALSE;
         // i want it false, then no need to push a grid.
 
         if ($label) {
