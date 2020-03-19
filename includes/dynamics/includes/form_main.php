@@ -90,3 +90,13 @@ function clean_input_name($value) {
     $re = '/(\[\d+\])/';
     return (string)preg_replace($re, '', $value);
 }
+
+/**
+ * Check whether this input has error
+ * @param $input_name
+ *
+ * @return bool
+ */
+function input_has_error($input_name) {
+    return Defender::inputHasError($input_name);
+}
