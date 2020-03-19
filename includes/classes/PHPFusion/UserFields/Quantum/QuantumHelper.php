@@ -1,11 +1,27 @@
 <?php
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: QuantumHelper.php
+| Author: PHP-Fusion Development Team
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 namespace PHPFusion\UserFields\Quantum;
 /**
  * Helper class for analytical functions
  * Class QuantumHelper
  */
 class QuantumHelper {
-    
+
     /**
      * Parse the correct label language. Requires serialized $value.
      *
@@ -22,7 +38,7 @@ class QuantumHelper {
             return (string)$value;
         }
     }
-    
+
     public static function isSerialized( $value, &$result = NULL ) {
         // Bit of a give away this one
         if ( !is_string( $value ) ) {
@@ -33,7 +49,7 @@ class QuantumHelper {
         // FALSE, eliminate that possibility.
         if ( 'b:0;' === $value ) {
             $result = FALSE;
-            
+
             return TRUE;
         }
         $length = strlen( $value );
@@ -82,25 +98,25 @@ class QuantumHelper {
         }
         if ( ( $result = @unserialize( $value ) ) === FALSE ) {
             $result = NULL;
-            
+
             return FALSE;
         }
-        
+
         return TRUE;
     }
-    
-    
+
+
     ### Setters ###
-    
+
     public static function fusion_getlocale( $data, $input_name ) {
         $language_opts = fusion_get_enabled_languages();
-        
+
         if ( post( $input_name ) ) {
-            
+
             return self::serialize_fields( $input_name );
-            
+
         } else {
-            
+
             if ( isset( $data[ $input_name ] ) ) {
                 if ( self::is_serialized( $data[ $input_name ] ) ) {
                     return unserialize( $data[ $input_name ] );
@@ -109,7 +125,7 @@ class QuantumHelper {
                     foreach ( $language_opts as $lang ) {
                         $value[ $lang ] = $data[ $input_name ];
                     }
-                    
+
                     return $value;
                 }
             } else {
@@ -117,7 +133,7 @@ class QuantumHelper {
             }
         }
     }
-    
+
     /**
      * Short serialization function.
      *
@@ -133,11 +149,11 @@ class QuantumHelper {
             foreach ( $post_input as $language => $value ) {
                 $field_var[ $language ] = sanitizer( $value );
             }
-            
+
             return serialize( $field_var );
         }
-        
+
         return FALSE;
     }
-    
+
 }

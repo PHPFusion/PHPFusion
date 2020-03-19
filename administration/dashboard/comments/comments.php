@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: administration/dashboard/comments/comments.php
+| Filename: comments.php
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -22,9 +22,6 @@ defined('IN_FUSION') || exit;
  * Widget to display comments latest activity
  *
  * @return string
- * @throws \Twig\Error\LoaderError
- * @throws \Twig\Error\RuntimeError
- * @throws \Twig\Error\SyntaxError
  */
 function display_comments_widget() {
     global $global_comments, $link_type, $comments_type;
@@ -44,24 +41,19 @@ function display_comments_widget() {
                 'comment_id'           => $comment_data['comment_id'],
                 'avatar'               => display_avatar($comment_data, "50px", '', '', 'img-circle'),
                 'date'                 => timer($comment_data['comment_datestamp']),
-                'manage_comments_link' => ADMIN."comments.php".$aidlink."&amp;ctype=".$comment_data['comment_type']."&amp;comment_item_id=".$comment_data['comment_item_id'],
-                'edit_comments_link'   => ADMIN."comments.php".$aidlink."&amp;action=edit&amp;comment_id=".$comment_data['comment_id']."&amp;ctype=".$comment_data['comment_type']."&amp;comment_item_id=".$comment_data['comment_item_id'],
-                'delete_comments_link' => ADMIN.'comments.php'.$aidlink.'&amp;action=delete&amp;comment_id='.$comment_data['comment_id'].'&amp;ctype='.$comment_data['comment_type'].'&amp;comment_item_id='.$comment_data['comment_item_id'],
+                'manage_comment_link' => ADMIN."comments.php".$aidlink."&ctype=".$comment_data['comment_type']."&comment_item_id=".$comment_data['comment_item_id'],
+                'edit_comment_link'   => ADMIN."comments.php".$aidlink."&action=edit&comment_id=".$comment_data['comment_id']."&ctype=".$comment_data['comment_type']."&comment_item_id=".$comment_data['comment_item_id'],
+                'delete_comment_link' => ADMIN.'comments.php'.$aidlink.'&action=delete&comment_id='.$comment_data['comment_id'].'&ctype='.$comment_data['comment_type'].'&comment_item_id='.$comment_data['comment_item_id'],
                 'profile_link'         => (!empty($comment_data['user_id']) ? profile_link($comment_data['user_id'], $comment_data['user_name'], $comment_data['user_status']) : $comment_data['comment_name']),
                 'name'                 => strtr($comment_item_url, ["{%item%}" => $comment_item_name]),
                 'comments'             => parse_textarea($comments, TRUE, FALSE),
             ];
         }
-
-        //if (isset($global_comments['comments_nav'])) {
-        //$tpl->set_tag('li_nav', $global_comments['comments_nav']);
-        //}
     } else {
         $info['no_comment'] = $global_comments['nodata'];
     }
     $info['title'] = $locale['277']." - ".format_num($global_comments['rows']);
     $info['footer'] = '<div><a href="">All</a> | <a href="">Mine</a> | <a href="">Pending</a> | <a href="">Approved</a> | <a href="">Trash</a></div>';
 
-    return fusion_render(ADMIN.'/dashboard/comments/', 'comments.twig', $info, TRUE);
-
+    return fusion_render(ADMIN.'dashboard/comments/', 'comments.twig', $info, TRUE);
 }

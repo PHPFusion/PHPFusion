@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: administration/dashboard/summary/summary.php
+| Filename: news.php
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -18,7 +18,6 @@
 defined('IN_FUSION') || exit;
 
 function display_news_widget() {
-
     if (infusion_exists('news') && checkrights('N')) {
         $uid = (int)fusion_get_userdata('user_id');
         $aid = fusion_get_aidlink();
@@ -52,7 +51,7 @@ function display_news_widget() {
 
         if (dbrows($result)) {
             while ($data = dbarray($result)) {
-                $edit_link = INFUSIONS.'news/news_admin.php'.$aid.'&amp;action=edit&amp;ref=news_form&amp;news_id='.$data['news_id'];
+                $edit_link = INFUSIONS.'news/news_admin.php'.$aid.'&action=edit&ref=news_form&news_id='.$data['news_id'];
                 $content[] = [
                     'link'    => $edit_link,
                     'subject' => $data['news_subject'],

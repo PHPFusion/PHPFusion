@@ -11,7 +11,7 @@
                         <div class="overflow-hide">
                             <small class="pull-right">{{ comment.date|raw }}</small>
                             <strong>{{ comment.profile_link|raw }} commented in {{ comment.name|raw }}</strong><br/>
-                            {{ comment.comments }}
+                            {{ comment.comments|raw }}
                             <div class="comment-actions text-muted">
                                 <a title="{{ locale.274 }}" href="{{ comment.manage_comment_link }}">{{ locale.manage }}</a> |
                                 <a title="{{ locale.275 }}" href="{{ comment.edit_comment_link }}">{{ locale.edit }}</a> |

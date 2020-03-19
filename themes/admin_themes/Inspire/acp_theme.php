@@ -1,8 +1,8 @@
 <?php
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
-| Copyright (C) 2002 - 2013 Nick Jones
-| http://www.php-fusion.co.uk/
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: acp_theme.php
 | Author: Frederick Chan (deviance)
@@ -50,11 +50,11 @@ function closesidex($title = '') {
 }*/
 
 function render_admin_login() {
-    return Inspire\Controller::Instance(FALSE)->do_login_panel();
+    Inspire\Controller::Instance(FALSE)->do_login_panel();
 }
 
 function render_admin_panel() {
-    return Inspire\Controller::Instance(FALSE)->do_admin_panel();
+    Inspire\Controller::Instance(FALSE)->do_admin_panel();
 }
 
 function render_admin_dashboard() {
@@ -62,7 +62,6 @@ function render_admin_dashboard() {
 }
 
 /* Main Scripts */
-add_to_footer("<script src='".INSPIRE."templates/assets/js/popper.min.js'></script>");
 add_to_footer("<script src='".INSPIRE."templates/assets/js/plugins/metisMenu/jquery.metisMenu.js'></script>");
 add_to_footer("<script src='".INSPIRE."templates/assets/js/plugins/slimscroll/jquery.slimscroll.min.js'></script>");
 add_to_footer("<script src='".INSPIRE."templates/assets/js/plugins/feathericons/feather.min.js'></script>");

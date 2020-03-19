@@ -6,7 +6,6 @@
 +--------------------------------------------------------+
 | Filename: Event.inc
 | Author: Frederick MC Chan
-| Version: PHP-Fusion 9.1
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or

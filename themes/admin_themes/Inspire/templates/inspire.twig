@@ -24,7 +24,7 @@
                 </li>
                 {% for section in sections %}
                     <li {{ section.active_class|raw }}>
-                        <a {{ section.href_src|raw }}>{{ feathercon(section.icon, 'sm')|raw }}</i>
+                        <a {{ section.href_src|raw }}><i>{{ feathercon(section.icon, 'sm')|raw }}</i>
                             <span class="nav-label">{{ section.section_name }}</span>
                             {% if section.pages %}
                                 <span class="fa arrow"></span>
@@ -63,7 +63,7 @@
                         <ul class="dropdown-menu">
                             {% for section in sections %}
                                 <li {{ section.active_class|raw }}>
-                                    <a {{ section.href_src|raw }}>{{ feathercon(section.icon, 'sm m-r-10')|raw }}</i>
+                                    <a {{ section.href_src|raw }}><i>{{ feathercon(section.icon, 'sm m-r-10')|raw }}</i>
                                         <span class="nav-label">{{ section.section_name }}</span></a>
                                 </li>
                             {% endfor %}
@@ -86,7 +86,7 @@
                         <li>
                             <div class="dropdown-messages-box">
                                 <a class="dropdown-item float-left" href="profile.html">
-                                    <img alt="image" class="rounded-circle" src="img/a7.jpg">
+{#                                    <img alt="image" class="rounded-circle" src="img/a7.jpg">#}
                                 </a>
                                 <div class="media-body">
                                     <small class="float-right">46h ago</small>
@@ -100,7 +100,7 @@
                         <li>
                             <div class="dropdown-messages-box">
                                 <a class="dropdown-item float-left" href="profile.html">
-                                    <img alt="image" class="rounded-circle" src="img/a4.jpg">
+{#                                    <img alt="image" class="rounded-circle" src="img/a4.jpg">#}
                                 </a>
                                 <div class="media-body ">
                                     <small class="float-right text-navy">5h ago</small>
@@ -114,7 +114,7 @@
                         <li>
                             <div class="dropdown-messages-box">
                                 <a class="dropdown-item float-left" href="profile.html">
-                                    <img alt="image" class="rounded-circle" src="img/profile.jpg">
+{#                                    <img alt="image" class="rounded-circle" src="img/profile.jpg">#}
                                 </a>
                                 <div class="media-body ">
                                     <small class="float-right">23h ago</small>
@@ -164,7 +164,7 @@
                         <li>
                             <div class="dropdown-messages-box">
                                 <a class="dropdown-item float-left" href="profile.html">
-                                    <img alt="image" class="rounded-circle" src="img/a7.jpg">
+{#                                    <img alt="image" class="rounded-circle" src="img/a7.jpg">#}
                                 </a>
                                 <div class="media-body">
                                     <small class="float-right">46h ago</small>
@@ -178,7 +178,7 @@
                         <li>
                             <div class="dropdown-messages-box">
                                 <a class="dropdown-item float-left" href="profile.html">
-                                    <img alt="image" class="rounded-circle" src="img/a4.jpg">
+{#                                    <img alt="image" class="rounded-circle" src="img/a4.jpg">#}
                                 </a>
                                 <div class="media-body ">
                                     <small class="float-right text-navy">5h ago</small>
@@ -192,7 +192,7 @@
                         <li>
                             <div class="dropdown-messages-box">
                                 <a class="dropdown-item float-left" href="profile.html">
-                                    <img alt="image" class="rounded-circle" src="img/profile.jpg">
+{#                                    <img alt="image" class="rounded-circle" src="img/profile.jpg">#}
                                 </a>
                                 <div class="media-body ">
                                     <small class="float-right">23h ago</small>
@@ -229,7 +229,7 @@
             </div>
         </div>
     </div>
-    <div class="small-chat-box fadeInRight animated">
+    {#<div class="small-chat-box fadeInRight animated">
         <div class="heading" draggable="true">
             <small class="chat-date float-right">
                 02.19.2015
@@ -304,13 +304,13 @@
                 </button> </span></div>
         </div>
 
-    </div>
-    <div id="small-chat">
-        <span class="badge badge-warning float-right">5</span>
-        <a class="open-small-chat" href="">
-            <i class="fa fa-comments"></i>
-        </a>
-    </div>
+    </div>#}
+{#    <div id="small-chat">#}
+{#        <span class="badge badge-warning float-right">5</span>#}
+{#        <a class="open-small-chat" href="">#}
+{#            <i class="fa fa-comments"></i>#}
+{#        </a>#}
+{#    </div>#}
     <div id="right-sidebar" class="animated">
         <div class="sidebar-container">
 
@@ -337,11 +337,10 @@
                     </div>
 
                     <div>
-
                         <div class="sidebar-message">
                             <a href="#">
                                 <div class="float-left text-center">
-                                    <img alt="image" class="rounded-circle message-avatar" src="img/a1.jpg">
+{#                                    <img alt="image" class="rounded-circle message-avatar" src="img/a1.jpg">#}
 
                                     <div class="m-t-xs">
                                         <i class="fa fa-star text-warning"></i>
@@ -356,104 +355,7 @@
                                 </div>
                             </a>
                         </div>
-                        <div class="sidebar-message">
-                            <a href="#">
-                                <div class="float-left text-center">
-                                    <img alt="image" class="rounded-circle message-avatar" src="img/a2.jpg">
-                                </div>
-                                <div class="media-body">
-                                    The point of using Lorem Ipsum is that it has a more-or-less normal.
-                                    <br>
-                                    <small class="text-muted">Yesterday 2:45 pm</small>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="sidebar-message">
-                            <a href="#">
-                                <div class="float-left text-center">
-                                    <img alt="image" class="rounded-circle message-avatar" src="img/a3.jpg">
 
-                                    <div class="m-t-xs">
-                                        <i class="fa fa-star text-warning"></i>
-                                        <i class="fa fa-star text-warning"></i>
-                                        <i class="fa fa-star text-warning"></i>
-                                    </div>
-                                </div>
-                                <div class="media-body">
-                                    Mevolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
-                                    <br>
-                                    <small class="text-muted">Yesterday 1:10 pm</small>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="sidebar-message">
-                            <a href="#">
-                                <div class="float-left text-center">
-                                    <img alt="image" class="rounded-circle message-avatar" src="img/a4.jpg">
-                                </div>
-
-                                <div class="media-body">
-                                    Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the
-                                    <br>
-                                    <small class="text-muted">Monday 8:37 pm</small>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="sidebar-message">
-                            <a href="#">
-                                <div class="float-left text-center">
-                                    <img alt="image" class="rounded-circle message-avatar" src="img/a8.jpg">
-                                </div>
-                                <div class="media-body">
-
-                                    All the Lorem Ipsum generators on the Internet tend to repeat.
-                                    <br>
-                                    <small class="text-muted">Today 4:21 pm</small>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="sidebar-message">
-                            <a href="#">
-                                <div class="float-left text-center">
-                                    <img alt="image" class="rounded-circle message-avatar" src="img/a7.jpg">
-                                </div>
-                                <div class="media-body">
-                                    Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
-                                    <br>
-                                    <small class="text-muted">Yesterday 2:45 pm</small>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="sidebar-message">
-                            <a href="#">
-                                <div class="float-left text-center">
-                                    <img alt="image" class="rounded-circle message-avatar" src="img/a3.jpg">
-
-                                    <div class="m-t-xs">
-                                        <i class="fa fa-star text-warning"></i>
-                                        <i class="fa fa-star text-warning"></i>
-                                        <i class="fa fa-star text-warning"></i>
-                                    </div>
-                                </div>
-                                <div class="media-body">
-                                    The standard chunk of Lorem Ipsum used since the 1500s is reproduced below.
-                                    <br>
-                                    <small class="text-muted">Yesterday 1:10 pm</small>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="sidebar-message">
-                            <a href="#">
-                                <div class="float-left text-center">
-                                    <img alt="image" class="rounded-circle message-avatar" src="img/a4.jpg">
-                                </div>
-                                <div class="media-body">
-                                    Uncover many web sites still in their infancy. Various versions have.
-                                    <br>
-                                    <small class="text-muted">Monday 8:37 pm</small>
-                                </div>
-                            </a>
-                        </div>
                     </div>
 
                 </div>

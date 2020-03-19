@@ -401,6 +401,7 @@ $locale['show'] = "Show";
 $locale['actions'] = "Actions";
 $locale['language'] = "Language";
 $locale['loading'] = "Loading...";
+$locale['manage'] = "Manage";
 // Persons & Identifiers
 $locale['you'] = "You";
 $locale['me'] = "Me";

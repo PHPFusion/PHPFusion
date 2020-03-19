@@ -10,8 +10,7 @@
         <ul class="block news-block">
             {% for news in content %}
                 <li>
-                    <a href="{{ news.link }}">{{ news.subject }}</a><small>{{ news.date }}</small><br/>{{ news.text }}
-                </li>
+                    <a href="{{ news.link }}">{{ news.subject }}</a> <small>{{ news.date }}</small><br/>{{ news.text }}
                 </li>
             {% endfor %}
         </ul>

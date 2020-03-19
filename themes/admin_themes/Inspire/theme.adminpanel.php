@@ -1,4 +1,20 @@
 <?php
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: theme.adminpanel.php
+| Author: Frederick Chan (deviance)
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 namespace Inspire;
 
 use PHPFusion\Admins;
@@ -63,7 +79,7 @@ class AdminPanel extends Helper {
     private function showSections() {
         $aidlink = fusion_get_aidlink();
         $sections = $this->admins->getAdminSections();
-        $pages = $this->admins->getAdminPages();
+        //$pages = $this->admins->getAdminPages();
         $section_count = count($sections);
         $nav = [];
         $pagenum = get('pagenum', FILTER_VALIDATE_INT); // when there is a filter icon.
@@ -75,7 +91,7 @@ class AdminPanel extends Helper {
         $this->admins->setAdminSectionIcons(3, 'sliders'); // System Admin
         $this->admins->setAdminSectionIcons(4, 'settings'); // Settings
         $this->admins->setAdminSectionIcons(5, 'box'); // Infusions
-        $count = 0;
+        //$count = 0;
         foreach ($sections as $i => $section_name) :
 
             $pages = $this->cacheAdminPages($i);
@@ -497,7 +513,7 @@ class AdminPanel extends Helper {
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right" role="menu">
                         <?php
-                        $u_drop_links = resource::get_udrop();
+                        $u_drop_links = Helper::get_udrop();
                         if (!empty($u_drop_links)) {
                             foreach ($u_drop_links as $link => $title) {
                                 if ($link == "---") {

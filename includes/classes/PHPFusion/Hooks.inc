@@ -4,7 +4,7 @@
 | Copyright (C) 2002 - 2013 Nick Jones
 | http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: hooks.inc
+| Filename: Hooks.inc
 | Author: Frederick Chan (Deviance)
 +--------------------------------------------------------+
 | This program is released as free software under the

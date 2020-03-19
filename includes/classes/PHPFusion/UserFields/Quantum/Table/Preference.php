@@ -1,11 +1,27 @@
 <?php
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: Prefference.php
+| Author: PHP-Fusion Development Team
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 namespace PHPFusion\UserFields\Quantum\Table;
 
 use PHPFusion\Interfaces\TableSDK;
 use SqlHandler;
 
 class Preference implements TableSDK {
-    
+
     public function data() {
         return [
             'table'      => DB_USER_FIELDS,
@@ -15,7 +31,7 @@ class Preference implements TableSDK {
             'limit'      => 24,
         ];
     }
-    
+
     public function properties() {
         return [
             'table_id'     => 'uf-preference-table',
@@ -25,7 +41,7 @@ class Preference implements TableSDK {
             'order_col'    => [ 'field_title' => 'title', 'field_order' => 'order' ],
         ];
     }
-    
+
     public function column() {
         return [
             'field_title' => [
@@ -45,7 +61,7 @@ class Preference implements TableSDK {
             ],
         ];
     }
-    
+
     /**
      * @return array
      */
@@ -55,7 +71,7 @@ class Preference implements TableSDK {
             'field_order' => [ 'label' => 'Field Order', 'function' => 'form_textarea' ],
         ];
     }
-    
+
     public function bulkDelete( $data ) {
         if ( fusion_safe() ) {
             if ( column_exists( DB_USERS, $data['field_name'] ) ) {
@@ -63,5 +79,5 @@ class Preference implements TableSDK {
             }
         }
     }
-    
+
 }

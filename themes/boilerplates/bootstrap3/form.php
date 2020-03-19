@@ -1,9 +1,24 @@
 <?php
-
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: form.php
+| Author: PHP-Fusion Development Team
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 use PHPFusion\Template;
 
 class Form {
-    
+
     /**
      * Renders form input
      *
@@ -15,11 +30,11 @@ class Form {
      * @return string
      */
     public static function form_input( $input_name, $label, $input_value, $options ) {
-        
+
         $tpl = Template::getInstance( 'field-'.$options['input_id'] );
         $tpl->set_template( __DIR__.DIRECTORY_SEPARATOR.'html'.DIRECTORY_SEPARATOR.'form_input.html' );
         $tpl->set_tag( "input_name", $input_name );
-        
+
         // input id
         $tpl->set_tag( "input_name", $input_name );
         $tpl->set_tag( "input_id", $options['input_id'] );
@@ -29,16 +44,16 @@ class Form {
         $grp_class .= ( $options['inline'] ? ' clearfix' : '' );
         $grp_class .= ( !empty( $options['icon'] ) ? ' has-feedback' : '' );
         $grp_class .= ( $options['error_class'] ? ' '.$options['error_class'] : '' );
-        
+
         $tpl->set_tag( "group_class", $grp_class );
-        
+
         // form-group css style
         $grp_inline = ( $options['width'] && !$label ? ' style="width: '.$options['width'].'"' : '' );
         $tpl->set_tag( "group_inline_css", $grp_inline );
-        
+
         $is_inline = $options['inline'] && $label ? TRUE : FALSE;
         // i want it false, then no need to push a grid.
-        
+
         if ( $label ) {
             $control_label = [
                 'label_grid'     => ( $is_inline ? ' {[col(100,20,20,20)]}' : ' display-block' ),
@@ -49,15 +64,15 @@ class Form {
             ];
             $tpl->set_block( 'control_label', $control_label );
         }
-        
+
         if ( $is_inline ) {
             $tpl->set_block( 'inline_start' );
             $tpl->set_block( 'inline_end' );
         }
-        
+
         $is_text_type = ( in_array( $options['type'], [ 'text', 'number', 'email', 'url', 'password' ] ) ? TRUE : FALSE );
         $is_grouped = FALSE;
-        
+
         if ( $is_text_type ) {
             $is_grouped = ( $options['append_button'] || $options['prepend_button'] || $options['append_value'] || $options['prepend_value'] ) ? TRUE : FALSE;
             if ( $is_grouped ) {
@@ -85,7 +100,7 @@ class Form {
                     'prepend_text' => $options['prepend_value'],
                 ] );
             }
-            
+
             if ( $is_append_button ) {
                 $tpl->set_block( 'input_append_button', [
                     'prepend_id'    => $options['append_button_id'],
@@ -118,15 +133,15 @@ class Form {
                 'required'     => $options['required'] ? ' required' : '',
                 'pwstrength'   => $options['password_strength'] ? '<div class="pwstrength_viewport_progress"></div>' : '' // do this for external plugin
             ] );
-            
+
             if ( $options['feedback_icon'] && $options['icon'] ) {
                 $tpl->set_block( "feedback", [
                     'icon' => $options['icon']
                 ] );
             }
-            
+
         } else if ( $options['type'] == 'dropdown' ) {
-            
+
             $config = [
                 'input_name'     => $input_name,
                 'input_id'       => $options['input_id'],
@@ -142,23 +157,23 @@ class Form {
                 'required_input' => $options['dropdown_required_input'],
                 'required'       => $options['required'] ? ' required' : '',
             ];
-            
+
             $tpl->set_block( 'input_dropdown', $config );
-            
+
         } else if ( $options['type'] == 'custom' ) {
             $tpl->set_block( 'input_custom', [
                 'input_field' => $options['input_field']
             ] );
         }
-        
-        
+
+
         if ( $options['stacked'] ) {
             $tpl->set_block( "stacked", [ 'content' => $options['stacked'] ] );
         }
         if ( $options['ext_tip'] ) {
             $tpl->set_block( "tip", [ 'tip_text' => $options['ext_tip'] ] );
         }
-        
+
         if ( \Defender::inputHasError( $input_name ) ) {
             $tpl->set_block( "error_message", [
                 'error_class' => ( !$is_inline or $is_grouped ? ' display-block' : '' ),
@@ -166,14 +181,14 @@ class Form {
                 'error_text'  => $options['error_text']
             ] );
         }
-        
+
         if ( !empty( $options['append_html'] ) ) {
             $tpl->set_block( "append_html", [ 'content' => $options['append_html'] ] );
         }
-        
+
         return $tpl->get_output();
     }
-    
+
     /**
      * Checkbox, Radio, Toggle Switch, Toggle Button
      *
@@ -186,7 +201,7 @@ class Form {
      * @throws ReflectionException
      */
     public static function form_checkbox( $input_name, $label, $input_value, $options ) {
-    
+
         //print_p($options);
         // support inline if there are multiple options only.
         $template = '
@@ -209,14 +224,14 @@ class Form {
             }}
         </div>
         ';
-        
+
         $button_template = '
         <span class="button-checkbox">
         <button type="button" class="btn btn-{%button_class%} {%class%}" data-color="{%button_class%}">'.$label.'</button>
         <input name="{%input_name%}" id="{%input_id%}" type="checkbox" value="{%input_value%}" class="hidden">
         </span>
         ';
-        
+
         //print_p($options);
         if ( \Defender::inputHasError( $input_name ) ) {
             $wrapper_class[] = "has-error ";
@@ -228,15 +243,15 @@ class Form {
                 //addNotice("danger", "<strong>$title</strong> - ".$options['error_text']);
             }
         }
-        
+
         $tpl = Template::getInstance( 'field-'.$options['input_id'] );
-        
+
         $tpl->set_text( $template );
-        
+
         $tpl->set_tag( 'style', '' );
-    
+
         if ( $options['type'] == 'button' ) {
-            
+
             $tpl->set_text( $button_template );
             $tpl->set_tag( 'button_class', $options['button_class'] );
             $tpl->set_tag( 'class', $options['class'] );
@@ -292,28 +307,28 @@ class Form {
         });
         " );
             }
-            
+
         } else {
-            
+
             // calculate all possible class
             $wrapper_class[] = $options['type'] == 'radio' ? 'radio' : 'checkbox';
             $wrapper_class[] = $options['class'];
             if ( $options['inline'] ) {
                 $wrapper_class[] = 'display-block overflow-hide';
             }
-            
+
             $tpl->set_tag( "input_class", implode( ' ', $wrapper_class ) );
-            
+
             if ( $options['inline'] ) {
                 $tpl->set_tag( 'label_class', ' '.grid_column_size( 100, 20, 20, 20 ) );
             }
-            
+
             $tpl->set_tag( 'data_value', ( !empty( $input_value ) ? 1 : 0 ) );
-            
+
             if ( $options['inner_width'] ) {
                 $tpl->set_tag( 'style', " style='width:".$options['inner_width']."'" );
             }
-            
+
             if ( !empty( $label ) ) {
                 if ( $options['required'] ) {
                     $label = $label.'<span class="required">&nbsp;*</span>';
@@ -322,11 +337,11 @@ class Form {
                     $label = $label.'<i class="pointer fa fa-question-circle text-lighter" title="{%title%}"></i>';
                 }
             }
-            
+
             if ( !empty( $options['ext_tip'] ) ) {
                 $tpl->set_block( 'ext_tip', [ 'tip_text' => $options['ext_tip'] ] );
             }
-            
+
             if ( \Defender::inputHasError( $input_name ) ) {
                 $tpl->set_block( "error_message", [
                     'error_class' => ( !$options['inline'] ? ' display-block' : '' ),
@@ -334,19 +349,19 @@ class Form {
                     'error_text'  => $options['error_text']
                 ] );
             }
-            
+
             if ( $options['stacked'] ) {
                 $tpl->set_block( 'stacked', $options['stacked'] );
             }
-            
+
             $on_label = $options['toggle_text'][1];
             $off_label = $options['toggle_text'][0];
-            
+
             if ( $options['keyflip'] ) {
                 $on_label = $options['toggle_text'][0];
                 $off_label = $options['toggle_text'][1];
             }
-    
+
             $label_class[] = 'control-label';
             $label_class[] = $options['class'];
             $prepend = "";
@@ -356,14 +371,14 @@ class Form {
                 $prepend = "<span class='m-t-5 m-l-30'>";
                 $append = "</span>";
             }
-            
-            
+
+
             $checkbox = $prepend."<input id='".$options['input_id']."' ".( $options['toggle'] ? "data-on-text='".$on_label."' data-off-text='".$off_label."'" : "" )." name='$input_name' value='".$options['value']."' type='".$options['type']."'".( $options['onclick'] ? ' onclick="'.$options['onclick'].'"' : '' ).( $input_value == $options['value'] ? ' checked' : '' ).( $options['deactivate'] ? ' disabled' : '' ).">".$append;
-            
+
             if ( !empty( $options['options'] ) && is_array( $options['options'] ) ) {
                 $options['toggle'] = FALSE; // force toggle to be false if options existed
                 $default_checked = FALSE;
-                
+
                 if ( !empty( $input_value ) ) {
                     if ( is_array( $input_value ) ) {
                         $option_value = $input_value;
@@ -381,26 +396,26 @@ class Form {
                         $input_value[ $key ] = isset( $option_value[ $key ] ) ? ( !empty( $options['options_value'][ $key ] ) ? $options['options_value'][ $key ] : 1 ) : 0;
                     }
                 }
-                
+
                 $checkbox = '';
-    
+
                 if ( $options['inline'] ) {
-    
+
                     $class_a = grid_column_size( 100, 80, 80, 80 );
                     $class_b = grid_column_size( 100, 20, 20, 20 );
-                    
+
                     $col_a = $class_a;
                     $col_b = $class_b;
                     if ( $options['reverse_label'] ) {
                         $col_a = $class_b;
                         $col_b = $class_a;
                     }
-                    
+
                     $checkbox .= "<div class='$col_a'>\n";
                     $label = "<div class='$col_b'>$label</div>";
                     $label_class[] = 'display-block';
                 }
-    
+
                 foreach ( $options['options'] as $key => $value ) {
                     if ( $options['deactivate_key'] !== NULL && $options['deactivate_key'] == $key ) {
                         $checkbox .= form_hidden( $input_name, '', $key );
@@ -415,7 +430,7 @@ class Form {
                     if ( $options['inner_width'] ) {
                         $inner_width = " style='width: ".$options['inner_width']." '";
                     }
-    
+
                     $checkbox .= "<div class='".( $options['inline_options'] ? 'display-inline-block m-r-5' : 'm-b-10' )."'>\n";
                     $checkbox .= "<label class='m-r-20' data-label='$key' for='".$options['input_id']."-$key'$inner_width>";
                     $checkbox .= "<input id='".$options['input_id']."-$key' name='$input_name' value='$key' type='".$options['type']."' $checked />\n";
@@ -423,19 +438,19 @@ class Form {
                     $checkbox .= "</label>\n";
                     $checkbox .= "</div>\n";
                 }
-    
+
                 if ( $options['inline'] ) {
                     $checkbox .= "</div>\n";
                 }
             }
-        
+
             //print_P($checkbox);
             $tpl->set_tag( 'label', $label );
             $tpl->set_tag( 'label_class', '' );
             if ( !empty( $label_class ) ) {
                 $tpl->set_tag( 'label_class', 'class="'.implode( ' ', $label_class ).'" ' );
             }
-            
+
             $tpl->set_tag( 'post_checkbox', $checkbox );
             $tpl->set_tag( 'pre_checkbox', '' );
             if ( $options['reverse_label'] ) {
@@ -443,11 +458,11 @@ class Form {
                 $tpl->set_tag( 'pre_checkbox', $checkbox );
             }
         }
-        
+
         $tpl->set_tag( "input_name", $input_name );
         $tpl->set_tag( "input_id", $options['input_id'] );
         $tpl->set_tag( "input_type", $options['type'] );
-        
+
         return $tpl->get_output();
     }
 }

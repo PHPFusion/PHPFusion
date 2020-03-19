@@ -1,33 +1,47 @@
 <?php
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: CategoryMeta.php
+| Author: PHP-Fusion Development Team
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 namespace PHPFusion\Form;
 
-use Defender\Token;
-
 class CategoryMeta {
-    
+
     private static $instance = NULL;
-    
+
     private $factory = NULL;
-    
+
     public static function getInstance( FormFactory $factory ) {
         if ( empty( self::$instance ) ) {
             self::$instance = new self( $factory );
         }
-        
+
         return self::$instance;
     }
-    
+
     public function __construct( FormFactory $factory ) {
         if ( $factory instanceof FormFactory ) {
             $this->factory = $factory;
         }
     }
-    
+
     public function displayMeta() {
         $_category = $this->factory->categories;
-        
+
         if ( !empty( $_category ) ) {
-            
+
             $category_default_data = [
                 'db'               => '', // database
                 'id_col'           => '', // id column
@@ -42,9 +56,9 @@ class CategoryMeta {
                 'parent_title_col' => '',
                 'select_alt'       => TRUE,
             ];
-            
+
             $_category += $category_default_data;
-            
+
             $tab['title'][] = 'All Categories';
             $tab['id'][] = 'adminc_1';
             $tab['title'][] = 'Most Used';
@@ -53,20 +67,20 @@ class CategoryMeta {
             $html = opentab( $tab, $tab_active, 'admin_ctab', FALSE, 'tab-sm m-t-10' );
             $html .= opentabbody( $tab['title'][0], $tab['id'][0], $tab_active );
             $html .= "<div id='admin_category_list' style='max-height:200px; overflow-y:scroll;'>\n";
-            
+
             $cat_options = [];
             if ( $_category['no_root'] === FALSE ) {
                 $cat_options[0] = "Uncategorized";
             }
-            
+
             $id_col = [
                 $_category['id_col'],
                 $_category['cat_col'],
                 $_category['title_col'],
             ];
-            
+
             $sql = $_category['custom_query'];
-            
+
             if ( empty( $sql ) ) {
                 // Is a Callback when PRI_KEY Id is not empty
                 $is_edit = !empty( $this->factory->data[ $_category['id_col'] ] ) ? $this->factory->data[ $_category['id_col'] ] : FALSE;
@@ -76,9 +90,9 @@ class CategoryMeta {
                     '`{DB}`'    => $_category['db'],
                     '`{ORDER}`' => $_category['title_col'].' ASC'
                 ] );
-                
+
             }
-            
+
             $result = dbquery( $sql );
             if ( dbrows( $result ) ) {
                 while ( $data = dbarray( $result ) ) {
@@ -86,10 +100,10 @@ class CategoryMeta {
                     $cat_options[ $key ] = $data [ $_category['title_col'] ];
                 }
             }
-            
+
             // The value is similar to $this->factory->data[$_category['id_col']]) // from data() SDK method
             $category_value = $this->factory->field_value( 'category' ); // Fetch from fields() SDK method
-            
+
             if ( !empty( $cat_options ) ) {
                 if ( $_category['multiple'] === TRUE ) {
                     $html .= form_checkbox( 'category[]', '', $category_value, [
@@ -116,11 +130,11 @@ class CategoryMeta {
             <div id="ui_cat_select">'.form_select( 'ui_cat_parent', '', '', $_category ).'</div>
             '.form_button( 'save_new_ui_cat', 'Add New Category <span class="fa fa-clock-o fa-spin" style="display: none;"></span>', 'save_category', [ 'type' => 'button' ] ).'
             </div>';
-            
+
             $encoded = json_encode( $_category );
-            
+
             add_to_jquery( "admin_cat_meta_ui.ajaxCall('".fusion_get_token( 'ui-category' )."', $encoded)" );
-            
+
             return (string)$html;
         }
     }

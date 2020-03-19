@@ -1,13 +1,29 @@
 <?php
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: UserRelations.php
+| Author: PHP-Fusion Development Team
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 namespace PHPFusion;
 
 class UserRelations {
-    
+
     private static $friend_list = [];
     private static $requested_list = [];
     private static $requestor_list = [];
     private static $follower_list = [];
-    
+
     /**
      * Get relations status key/options
      *
@@ -24,7 +40,7 @@ class UserRelations {
         ];
         return $key === NULL ? $relations : ( isset( $relations[ $key ] ) ? $relations[ $key ] : NULL );
     }
-    
+
     /**
      * Sending Friend Request
      *
@@ -41,12 +57,12 @@ class UserRelations {
                     ':action' => $request_user,
                     ':time'   => TIME,
                 ] + $action_param );
-            
+
             return TRUE;
         }
         return FALSE;
     }
-    
+
     /**
      * Cancels sent Friend Request
      *
@@ -63,7 +79,7 @@ class UserRelations {
         }
         return FALSE;
     }
-    
+
     /**
      * Unfriend Request
      *
@@ -80,8 +96,8 @@ class UserRelations {
         }
         return FALSE;
     }
-    
-    
+
+
     /**
      * Request to Block User
      *
@@ -102,7 +118,7 @@ class UserRelations {
         }
         return FALSE;
     }
-    
+
     /**
      * Request to Unblock User
      *
@@ -119,7 +135,7 @@ class UserRelations {
         }
         return FALSE;
     }
-    
+
     /**
      * Always make sure that user_a value is smaller than user_b
      *
@@ -140,7 +156,7 @@ class UserRelations {
         }
         return [];
     }
-    
+
     /**
      * Accepting Friend Request
      *
@@ -162,7 +178,7 @@ class UserRelations {
         }
         return FALSE;
     }
-    
+
     /**
      * Check that these 2 users are friends
      * If the result returns a row, then the user are friends.
@@ -179,7 +195,7 @@ class UserRelations {
             ':index2' => $action['user_b']
         ] );
     }
-    
+
     /**
      * Friends List
      * Retrieve all the user's friends. Just provide a user id
@@ -189,7 +205,7 @@ class UserRelations {
      * @return mixed
      */
     public function getUserFriends( int $user_id ) {
-        
+
         if ( empty( self::$friend_list[ $user_id ] ) ) {
             $result = dbquery( "SElECT IF('user_a=:index3', 'user_b', 'user_a') 'user_id', relation_datestamp FROM ".DB_USER_RELATIONS." WHERE ('user_a'=:index1 OR 'user_b'=:index2) AND relation_status=1", [
                 ':index1' => $user_id,
@@ -202,10 +218,10 @@ class UserRelations {
                 }
             }
         }
-        
+
         return self::$friend_list[ $user_id ];
     }
-    
+
     /**
      * Followers List
      * Retrieve all the user's followers. Provide a user id
@@ -229,12 +245,12 @@ class UserRelations {
                 return self::$follower_list[ $user_id ];
             }
         }
-        
+
         return [];
     }
-    
+
     private static $following_list = [];
-    
+
     /**
      * Following List
      * Retrieve all the user's followers. Provide a user id
@@ -258,11 +274,11 @@ class UserRelations {
                 return self::$following_list[ $user_id ];
             }
         }
-        
+
         return [];
     }
-    
-    
+
+
     /**
      * Pending Request List
      * Retrieve all the user request for the user from other users
@@ -285,10 +301,10 @@ class UserRelations {
                 }
             }
         }
-        
+
         return self::$requested_list[ $user_id ];
     }
-    
+
     /**
      * Request sent by the user
      * Retrieve all the requests
@@ -311,10 +327,10 @@ class UserRelations {
                 }
             }
         }
-        
+
         return self::$requestor_list[ $user_id ];
     }
-    
+
     /**
      * Get Friendship Data with the targetted $user_id
      *
@@ -333,5 +349,5 @@ class UserRelations {
         }
         return NULL;
     }
-    
+
 }

@@ -1,10 +1,10 @@
 <?php
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
-| Copyright (C) 2002 - 2013 Nick Jones
-| http://www.php-fusion.co.uk/
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: adminDashboard.php
+| Filename: theme.viewer.php
 | Author: Frederick Chan (deviance)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -15,11 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 namespace Inspire;
-
-use Genesis\Model\resource;
-use PHPFusion\Admins;
 
 /**
  * Class Viewer
@@ -37,11 +33,11 @@ class Viewer extends Helper {
         global $members, $global_submissions,  $infusions_count, $global_infusions, $submit_data, $upgrade_info;
         $locale = fusion_get_locale();
         $aidlink = fusion_get_aidlink();
-        $userdata = fusion_get_userdata();
-        $settings = fusion_get_settings();
+        //$userdata = fusion_get_userdata();
+        //$settings = fusion_get_settings();
 
         opentable($locale['250']);
-        new \AdminDashboard();
+        new \PHPFusion\Administration\AdminDashboard();
 
         $panels = array(
             'registered'   => array('link' => '', 'title' => 251),

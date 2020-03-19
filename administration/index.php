@@ -16,11 +16,10 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-use PHPFusion\Administration\Classes\AdminIndex;
+use \PHPFusion\Administration\AdminIndex;
 
 require_once __DIR__.'/../maincore.php';
 require_once THEMES.'templates/admin_header.php';
-require_once ADMIN.'/dashboard/AdminDashboard.php';
 
 $admin_images = TRUE;
 

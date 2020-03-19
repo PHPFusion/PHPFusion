@@ -1,10 +1,10 @@
 <?php
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
-| Copyright (C) 2002 - 2013 Nick Jones
-| http://www.php-fusion.co.uk/
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: resource.php
+| Filename: theme.helper.php
 | Author: Frederick Chan (deviance)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -15,7 +15,6 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 namespace Inspire;
 
 use PHPFusion\Admins;

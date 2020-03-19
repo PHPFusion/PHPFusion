@@ -1,4 +1,20 @@
 <?php
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: user-list.php
+| Author: PHP-Fusion Development Team
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 namespace PHPFusion\Administration\Members;
 
 /**
@@ -43,12 +59,12 @@ class UserList implements \PHPFusion\Interfaces\TableSDK {
      */
     public function data() {
         return [
-            'debug'                    => FALSE,
-            'table'                    => DB_USERS,
-            'id'                       => 'user_id',
-            'limit'                    => 24,
-            'image_folder'             => IMAGES.'avatars'.DIRECTORY_SEPARATOR,
-            'image_field'              => 'user_avatar',
+            'debug'        => FALSE,
+            'table'        => DB_USERS,
+            'id'           => 'user_id',
+            'limit'        => 24,
+            'image_folder' => IMAGES.'avatars'.DIRECTORY_SEPARATOR,
+            'image_field'  => 'user_avatar',
             // this method will work as well, but the bulkDelete function is much better option without using reflection class
             //'delete_function_callback' => ['Administration\\Members\\Users\\User_List', 'deleteUser', ADMIN.'members/users/user_list.table.php']
         ];
@@ -105,15 +121,15 @@ class UserList implements \PHPFusion\Interfaces\TableSDK {
             'search_label'     => 'Search User',
             'date_col'         => 'user_lastvisit',
             'order_col'        => [
-                'user_id' => 'id',
-                'user_email' => 'email',
-                'user_level' => 'level',
-                'user_status' => 'status',
-                'user_joined' => 'joined',
-                'user_lastvisit' => 'lastvisit',
+                'user_id'         => 'id',
+                'user_email'      => 'email',
+                'user_level'      => 'level',
+                'user_status'     => 'status',
+                'user_joined'     => 'joined',
+                'user_lastvisit'  => 'lastvisit',
                 'user_hide_email' => 'email',
-                'user_ip' => 'ip',
-                'user_groups' => 'groups'
+                'user_ip'         => 'ip',
+                'user_groups'     => 'groups'
             ],
             'updated_message'  => 'User have been updated',
             'deleted_message'  => 'User have been deleted',
@@ -160,7 +176,7 @@ class UserList implements \PHPFusion\Interfaces\TableSDK {
         // Find all user fields
         // @todo: Extend it to all database as per UFv1.2 data model.
         $user_fields = [];
-        $result = dbquery( "SELECT child.field_cat_id FROM ".DB_USER_FIELD_CATS." root LEFT JOIN ".DB_USER_FIELD_CATS." child ON child.field_parent=root.field_cat_id
+        $result = dbquery("SELECT child.field_cat_id FROM ".DB_USER_FIELD_CATS." root LEFT JOIN ".DB_USER_FIELD_CATS." child ON child.field_parent=root.field_cat_id
         WHERE root.field_parent=0 AND root.field_cat_db='users' GROUP BY child.field_cat_id");
         if (dbrows($result)) {
             $rows = [];
@@ -170,7 +186,7 @@ class UserList implements \PHPFusion\Interfaces\TableSDK {
             $cresult = dbquery("SELECT  field_title, field_name, field_type FROM ".DB_USER_FIELDS." WHERE field_cat IN (".implode(',', $rows).")");
             if (dbrows($cresult)) {
                 while ($cdata = dbarray($cresult)) {
-                    $user_fields[ $cdata['field_name'] ]['title'] = fusion_parse_locale( $cdata['field_title'] );
+                    $user_fields[$cdata['field_name']]['title'] = fusion_parse_locale($cdata['field_title']);
                     $user_fields[$cdata['field_name']]['visibility'] = FALSE;
                 }
             }
@@ -194,7 +210,7 @@ class UserList implements \PHPFusion\Interfaces\TableSDK {
                     'class'   => 'width-15',
                     'options' => fusion_get_groups(),
                 ],
-                'user_status'    => [
+                'user_status'     => [
                     'title'      => $locale['ME_427'],
                     'callback'   => ['Members_Administration', 'checkUserStatus'],
                     'visibility' => TRUE,
@@ -543,5 +559,6 @@ class UserList implements \PHPFusion\Interfaces\TableSDK {
     }
 
 }
+
 require_once(__DIR__.'/../../includes/sendmail_include.php');
 require_once(__DIR__.'/../../includes/suspend_include.php');

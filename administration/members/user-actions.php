@@ -1,4 +1,20 @@
 <?php
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: user-actions.php
+| Author: PHP-Fusion Development Team
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 namespace PHPFusion\Administration\Members;
 /**
  * Class Members_Action
@@ -110,6 +126,7 @@ class UserActions extends UserList {
 
     /**
      * Set a user id
+     *
      * @param array $value
      */
     public function set_userID(array $value = []) {
@@ -124,6 +141,7 @@ class UserActions extends UserList {
 
     /**
      * Set an action for this user class - 1 for ban, etc
+     *
      * @param $value
      */
     public function set_action($value) {
@@ -132,6 +150,7 @@ class UserActions extends UserList {
 
     /**
      * Set an abort link
+     *
      * @param $value
      */
     public function setCancelLink($value) {
@@ -140,6 +159,7 @@ class UserActions extends UserList {
 
     /**
      * Checks user status against action map check value
+     *
      * @param $var1
      * @param $var2
      * @param $case
@@ -175,7 +195,7 @@ class UserActions extends UserList {
         $form = '';
         $users_list = '';
         if (post('cancel')) {
-            redirect( $this->cancel_link ?: FUSION_REQUEST );
+            redirect($this->cancel_link ?: FUSION_REQUEST);
         }
 
         // Cache affected users
@@ -296,7 +316,7 @@ class UserActions extends UserList {
 
         } else {
             // addNotice('danger', $locale['ME_430']);
-            redirect( clean_request('', ['step', 'uid', 'user_id'], FALSE) );
+            redirect(clean_request('', ['step', 'uid', 'user_id'], FALSE));
         }
     }
 

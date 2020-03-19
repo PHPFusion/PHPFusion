@@ -1,5 +1,21 @@
 <?php
-namespace PHPFusion\Administration\Classes;
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: AdminIndex.php
+| Author: PHP-Fusion Development Team
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
+namespace PHPFusion\Administration;
 
 use PHPFusion\Admins;
 use PHPFusion\Installer\Batch_Core;
@@ -8,53 +24,53 @@ use PHPFusion\Installer\Batch_Core;
  * Class AdminIndex
  */
 class AdminIndex {
-    
+
     private $admin_query = [];
-    
+
     public function __construct() {
         $this->checkAuthorization();
         $this->getAdminQueries();
         // Set administration locale
         fusion_get_locale( '', LOCALE.LOCALESET.'admin/main.php' );
     }
-    
+
     private function checkAuthorization() {
         $aidlink = get( 'aid' );
         if ( !iADMIN || fusion_get_userdata( 'user_rights' ) == "" || !defined( "iAUTH" ) || !$aidlink || $aidlink != iAUTH ) {
             redirect( "../index.php" );
         }
     }
-    
+
     private function getAdminQueries() {
         $a_query = [];
         if ( defined( 'ARTICLES_EXIST' ) ) {
             $a_query['article'] = "(SELECT COUNT(article_id) FROM ".DB_PREFIX."articles) AS article_items,(SELECT COUNT(comment_id) FROM ".DB_COMMENTS." WHERE comment_type='A') AS article_comments, (SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='a') AS article_submissions";
         }
-        
+
         if ( defined( 'BLOG_EXIST' ) ) {
             $a_query['blog'] = "(SELECT COUNT(blog_id) FROM ".DB_PREFIX."blog) AS blog_items,(SELECT COUNT(comment_id) FROM ".DB_COMMENTS." WHERE comment_type='B') AS blog_comments, (SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='b') AS blog_submissions";
         }
-        
+
         if ( defined( 'DOWNLOADS_EXIST' ) ) {
             $a_query['downloads'] = "(SELECT COUNT(download_id) FROM ".DB_PREFIX."downloads) AS download_items,(SELECT COUNT(comment_id) FROM ".DB_COMMENTS." WHERE comment_type='D') AS download_comments,(SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='d') AS download_submissions";
         }
-        
+
         if ( defined( 'FORUM_EXIST' ) ) {
             $a_query['forum'] = "(SELECT COUNT(forum_id) FROM ".DB_PREFIX."forums) AS forums,(SELECT COUNT(thread_id) FROM ".DB_PREFIX."forum_threads) AS threads,(SELECT COUNT(post_id) FROM ".DB_PREFIX."forum_posts) AS posts,(SELECT COUNT(user_id) FROM ".DB_USERS." WHERE user_posts > '0') AS user_posts";
         }
-        
+
         if ( defined( 'GALLERY_EXIST' ) ) {
             $a_query['gallery'] = "(SELECT COUNT(photo_id) FROM ".DB_PREFIX."photos) AS photo_items, (SELECT COUNT(comment_id) FROM ".DB_COMMENTS." WHERE comment_type='P') AS photo_comments, (SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='p') AS photo_submissions";
         }
-        
+
         if ( defined( 'NEWS_EXIST' ) ) {
             $a_query['news'] = "(SELECT COUNT(news_id) FROM ".DB_PREFIX."news) AS news_items,(SELECT COUNT(comment_id) FROM ".DB_COMMENTS." WHERE comment_type='N') AS news_comments,(SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='n') AS news_submissions";
         }
-        
+
         if ( defined( 'WEBLINKS_EXIST' ) ) {
             $a_query['weblinks'] = "(SELECT COUNT(weblink_id) FROM ".DB_PREFIX."weblinks) AS weblink_items,(SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='l') AS weblink_submissions";
         }
-        
+
         if ( fusion_get_settings( 'enable_deactivation' ) ) {
             $a_query['user'] = "(SELECT COUNT(user_id) FROM ".DB_USERS." WHERE user_status=8) AS members_inactive";
         }
@@ -66,12 +82,12 @@ class AdminIndex {
             (SELECT COUNT(user_id) FROM ".DB_USERS." WHERE user_status=4) AS members_security_ban,
             (SELECT COUNT(user_id) FROM ".DB_USERS." WHERE user_status=5) AS members_canceled
         ";
-        
+
         $this->admin_query = dbarray( dbquery( $query ) );
     }
-    
+
     // Private methods
-    
+
     public function getAdminGlobals() {
         return [
             $this->getMembers(),
@@ -95,7 +111,7 @@ class AdminIndex {
             $this->getUpgrades(),
         ];
     }
-    
+
     private function getMembers() {
         return [
             'registered'   => $this->admin_query['members_registered'],
@@ -105,7 +121,7 @@ class AdminIndex {
             'inactive'     => fusion_get_settings( 'enable_deactivation' ) ? $this->admin_query['members_inactive'] : 0
         ];
     }
-    
+
     private function getArticles() {
         $info = [
             'article' => '',
@@ -119,7 +135,7 @@ class AdminIndex {
         }
         return $info;
     }
-    
+
     private function getBlog() {
         $info = [
             'blog'    => '',
@@ -133,7 +149,7 @@ class AdminIndex {
         }
         return $info;
     }
-    
+
     private function getDownloads() {
         $info = [
             'download' => '',
@@ -147,7 +163,7 @@ class AdminIndex {
         }
         return $info;
     }
-    
+
     private function getForums() {
         $info = [
             'count'  => '',
@@ -163,7 +179,7 @@ class AdminIndex {
         }
         return $info;
     }
-    
+
     private function getGallery() {
         $info = [
             'photo'   => '',
@@ -177,7 +193,7 @@ class AdminIndex {
         }
         return $info;
     }
-    
+
     private function getNews() {
         $info = [
             'news'    => '',
@@ -191,7 +207,7 @@ class AdminIndex {
         }
         return $info;
     }
-    
+
     private function getWeblinks() {
         $info = [
             'weblink' => '',
@@ -203,7 +219,7 @@ class AdminIndex {
         }
         return $info;
     }
-    
+
     private function getCommentType() {
         $locale = fusion_get_locale();
         $comments_type = [
@@ -213,25 +229,25 @@ class AdminIndex {
         $comments_type += Admins::getInstance()->getCommentType();
         return $comments_type;
     }
-    
+
     private function getSubmitType() {
         $submit_type = [];
         $submit_type += Admins::getInstance()->getSubmitType();
         return $submit_type;
     }
-    
+
     private function getSubmitLink() {
         $submit_link = [];
         $submit_link += Admins::getInstance()->getSubmitLink();
         return $submit_link;
     }
-    
+
     private function getSubmitData() {
         $submit_data = [];
         $submit_data += Admins::getInstance()->getSubmitData();
         return $submit_data;
     }
-    
+
     private function getLinkType() {
         $settings = fusion_get_settings();
         $link_type = [
@@ -241,14 +257,14 @@ class AdminIndex {
         $link_type += Admins::getInstance()->getLinkType();
         return $link_type;
     }
-    
+
     /**
      * Infusions count
      *
      * @return array
      */
     private function getInfusions() {
-        
+
         $infusions_count = dbcount( "(inf_id)", DB_INFUSIONS );
         $global_infusions = [];
         if ( $infusions_count ) {
@@ -261,37 +277,37 @@ class AdminIndex {
         }
         return $global_infusions;
     }
-    
+
     private function getLatestComments() {
         // Latest Comments
         $global_comments = [
             'data' => [],
             'rows' => dbcount( "('comment_id')", DB_COMMENTS )
         ];
-        
+
         $rowstart = get( 'c_rowstart', FILTER_VALIDATE_INT );
         $rowstart = (int)( $rowstart <= $global_comments['rows'] ? $rowstart : 0 );
-        
+
         $comments_result = dbquery( "SELECT c.*, u.user_id, u.user_name, u.user_status, u.user_avatar FROM ".DB_COMMENTS." c INNER JOIN ".DB_USERS." u on u.user_id=c.comment_name ORDER BY comment_datestamp DESC LIMIT $rowstart, 5" );
-        
+
         if ( dbrows( $comments_result ) ) {
-            
+
             while ( $_comdata = dbarray( $comments_result ) ) {
                 $global_comments['data'][] = $_comdata;
             }
-            
+
             if ( $global_comments['rows'] > 10 ) {
                 $global_comments['comments_nav'] = makepagenav( $rowstart, 10, $global_comments['rows'], 2, FUSION_SELF.fusion_get_aidlink().'&amp;pagenum=0&amp;', 'c_rowstart' );
             }
-            
+
             return $global_comments;
         }
-        
+
         $global_comments['nodata'] = fusion_get_locale( '254c' );
-        
+
         return $global_comments;
     }
-    
+
     private function getLatestRatings() {
         $global_ratings = [
             'data' => [],
@@ -299,26 +315,26 @@ class AdminIndex {
         ];
         $rowstart = get( 'r_rowstart', FILTER_VALIDATE_INT );
         $rowstart = (int)( $rowstart <= $global_ratings['rows'] ? $rowstart : 0 );
-        
+
         $result = dbquery( "SELECT r.*, u.user_id, u.user_name, u.user_status, u.user_avatar FROM ".DB_RATINGS." r INNER JOIN ".DB_USERS." u on u.user_id=r.rating_user ORDER BY rating_datestamp DESC LIMIT $rowstart, 5" );
         if ( dbrows( $result ) ) {
-            
+
             while ( $_ratdata = dbarray( $result ) ) {
                 $global_ratings['data'][] = $_ratdata;
             }
-            
+
             if ( $global_ratings['rows'] > 10 ) {
                 $global_ratings['ratings_nav'] = makepagenav( $rowstart, 10, $global_ratings['rows'], 2, FUSION_SELF.fusion_get_aidlink().'&amp;pagenum=0&amp;', 'r_rowstart' );
             }
-            
+
             return $global_ratings;
         }
-        
+
         $global_ratings['nodata'] = fusion_get_locale( '254b' );
-        
+
         return $global_ratings;
     }
-    
+
     private function getLatestSubmissions() {
         // Latest Submissions
         $global_submissions = [
@@ -338,10 +354,10 @@ class AdminIndex {
             return $global_submissions;
         }
         $global_submissions['nodata'] = fusion_get_locale( '254a' );
-        
+
         return $global_submissions;
     }
-    
+
     private function getAdminIcons() {
         $pagenum = get( 'pagenum', FILTER_VALIDATE_INT );
         $pagenum = (int)( $pagenum ?: 0 );
@@ -367,10 +383,10 @@ class AdminIndex {
         }
         return $admin_icons;
     }
-    
+
     private function getUpgrades() {
         Batch_Core::getInstance()->batchInfusions( TRUE );
         return Batch_Core::getInstance()->getUpgradeNotice();
     }
-    
+
 }

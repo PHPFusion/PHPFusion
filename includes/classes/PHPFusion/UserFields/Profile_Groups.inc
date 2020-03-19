@@ -1,4 +1,20 @@
 <?php
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: Profile_Groups.inc
+| Author: PHP-Fusion Development Team
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 namespace PHPFusion\UserFields;
 
 use PHPFusion\UserGroups;
@@ -12,14 +28,14 @@ class Profile_Groups {
         $this->profile_id = $profile_id;
         $this->user_data = $user_data;
     }
-    
+
     /**
      * @return bool
      */
     private function groupModeratorAccess() {
         return ( checkrights( "UG" ) && fusion_get_userdata( "user_level" ) <= USER_LEVEL_ADMIN && $this->profile_id != '1' || iSUPERADMIN ) ? TRUE : FALSE;
     }
-    
+
     public function showGroupProfile() {
         $group_admin = [];
         $aidlink = fusion_get_aidlink();
@@ -81,6 +97,6 @@ class Profile_Groups {
 
         return $info;
     }
-    
-    
+
+
 }

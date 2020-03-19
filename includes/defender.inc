@@ -790,7 +790,7 @@ function get( $key = NULL, $type = FILTER_DEFAULT, $flags = '' ) {
 /**
  * Sanitizes $_POST by name
  *
- * @param string $key input_name
+ * @param mixed $key input_name
  * @param int $type
  * @param     $flags
  *

@@ -1,11 +1,26 @@
 <?php
-
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: Account_Profile.inc
+| Author: PHP-Fusion Development Team
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 namespace PHPFusion\UserFields;
 
 use PHPFusion\UserFieldsQuantum;
 
 class Account_Profile extends UserFieldsQuantum {
-    
+
     public $post_name;
     public $inline_field = TRUE;
     public $admin_mode = FALSE;
@@ -14,7 +29,7 @@ class Account_Profile extends UserFieldsQuantum {
     public $show_admin_password = FALSE;
     public $user_data = [];
     public $is_admin_panel = FALSE;
-    
+
     private function cacheSecurityPlugins() {
         static $security_fields = [];
         if ( dbcount( "(field_id)", DB_USER_FIELDS, "field_section='security'" ) ) {
@@ -27,13 +42,13 @@ class Account_Profile extends UserFieldsQuantum {
         }
         return $security_fields;
     }
-    
+
     public function inputInfo() {
-        
+
         $current_section = get( 'section' );
         $current_section = $this->setPluginFolder( $current_section );
         $this->loadUserFields( $current_section );
-        
+
         $info['section'] = [
             'public'      => [
                 'id'     => 'public',
@@ -48,7 +63,7 @@ class Account_Profile extends UserFieldsQuantum {
                 'name'   => 'Account Preferences',
             ]
         ];
-    
+
         $security_fields = $this->cacheSecurityPlugins();
         if ( !empty( $security_fields ) ) {
             $info['section']['security'] = [
@@ -58,11 +73,11 @@ class Account_Profile extends UserFieldsQuantum {
                 'name'   => 'Account Security',
             ];
         }
-    
+
         // only happens on Front End only
         $info['current_section'] = $current_section;
         $info['section_title'] = isset( $info[ $current_section ] ) ? $info[ $current_section ] : 'Account Settings';
-    
+
         switch ( $current_section ) {
             default:
             case 'account':
@@ -74,9 +89,9 @@ class Account_Profile extends UserFieldsQuantum {
             case 'security':
                 return $info + $this->accountSecurity();
         }
-        
+
     }
-    
+
     // Language, Currency, Location, Region + Fields
     private function accountPrefs() {
         $locale = fusion_get_locale( '', [ LOCALE.LOCALESET."messages.php" ] );
@@ -86,11 +101,11 @@ class Account_Profile extends UserFieldsQuantum {
             'class'   => 'btn-stacked'
         ] );
         $info['language'] = "You are viewing the site in English (US)";
-        
+
         $info['user_location'] = form_location( 'user_location', 'Choose your location to help us show you custom content from your area.', $this->user_data['user_location'], [ 'inline' => FALSE ] );
-    
+
         $info['update_preference_button'] = form_button( $this->post_name.'_pref', 'Update Preferences', $this->post_name.'_pref', [ 'class' => 'btn-primary' ] );
-        
+
         $info['pm_notify'] = form_checkbox( 'pm_email_notify', $locale['621'], $this->user_data['user_pm_email_notify'], [
                 'options' => [
                     '0' => $locale['520'],
@@ -112,16 +127,16 @@ class Account_Profile extends UserFieldsQuantum {
                 ],
             ]
         );
-        
+
         // load modules
         $this->cacheModulePlugins();
-    
+
         $user_fields = $this->getFields();
-    
+
         if ( !empty( $user_fields ) ) {
             $user_fields = flatten_array( $user_fields );
             foreach ( $user_fields as $field ) {
-                
+
                 $user_field = $this->displayFields( $field, $this->user_data, $this->method );
                 $row = [
                     'title' => fusion_parse_locale( $field['field_title'] ),
@@ -130,18 +145,18 @@ class Account_Profile extends UserFieldsQuantum {
                 $info['user_fields'][] = $row;
             }
         }
-        
+
         return (array)$info;
     }
-    
+
     private function accountSecurity() {
-        
+
         $info['user_lastvisit'] = showdate( 'longdate', $this->user_data['user_lastvisit'] );
-    
+
         $info['update_security_button'] = form_button( $this->post_name.'_security', 'Update Security', $this->post_name.'_security', [ 'class' => btn - primary ] );
-        
+
         $info['user_block'] = form_user_select( "user_block", "Block users", "", [ "stacked" => form_button( $this->post_name."_block", "Block", $this->post_name."_block" ) ] );
-        
+
         $blocked_users = '';
         if ( !empty( $this->user_data['user_block'] ) ) {
             $buid = ltrim( str_replace( ".", ",", $this->user_data['user_block'] ), "," );
@@ -156,7 +171,7 @@ class Account_Profile extends UserFieldsQuantum {
             }
         }
         $info['user_block_content'] = "<ul class='list'>$blocked_users</ul>";
-        
+
         $security_plugins = $this->cacheSecurityPlugins();
         if ( !empty( $security_plugins ) ) {
             // now we need to load these stuff.
@@ -171,10 +186,10 @@ class Account_Profile extends UserFieldsQuantum {
                 ];
             }
         }
-        
+
         return (array)$info;
     }
-    
+
     /**
      * GET: acc_settings
      *
@@ -182,15 +197,15 @@ class Account_Profile extends UserFieldsQuantum {
      * @throws \ReflectionException
      */
     private function accountSettings() {
-        
+
         $locale = fusion_get_locale();
-        
+
         if ( $this->registration === TRUE ) {
             $input_value = post( 'user_name_reg' );
             $info['user_name'] = form_text( 'user_name_reg', 'User Name', $input_value, [ 'required' => TRUE, 'deactivate' => FALSE, 'inline' => FALSE ] );
-            
+
         } else {
-            
+
             $deactivate_user = $this->user_name_change ? FALSE : TRUE;
             $info['username_openform'] = openform( 'username_frm', 'post' );
             $info['username_closeform'] = closeform();
@@ -208,7 +223,7 @@ class Account_Profile extends UserFieldsQuantum {
                 'error_text' => $locale['u126']
             ]
         );
-        
+
         add_to_jquery( "
             // Generate a password string
             function randString(id){
@@ -251,7 +266,7 @@ class Account_Profile extends UserFieldsQuantum {
                 $('#'+field).focus();
             });
         " );
-        
+
         // only in personal edit profile
         if ( $this->registration === FALSE && $this->is_admin_panel === FALSE ) {
             $info['user_email_openform'] = openform( 'useremail_frm', 'post', FUSION_REQUEST );
@@ -262,14 +277,14 @@ class Account_Profile extends UserFieldsQuantum {
             $info['user_close_message'] = form_textarea( 'user_close_message', 'Please help us improve by telling us why you are leaving', '', [ 'placeholder' => '(Optional)', 'inline' => FALSE ] );
             $info['user_close_button'] = form_button( $this->post_name.'_close', 'Close Account', $this->post_name.'_close', [ 'class' => 'btn-primary' ] );
         }
-        
+
         $info = $this->get_user_password() + $this->get_admin_password() + $info;
-        
+
         return (array)$info;
-        
+
     }
-    
-    
+
+
     private function get_user_password() {
         $locale = fusion_get_locale();
         if ( $this->registration === TRUE ) {
@@ -345,14 +360,14 @@ class Account_Profile extends UserFieldsQuantum {
         }
         return $info;
     }
-    
+
     private function get_admin_password() {
         $locale = fusion_get_locale();
         $info = [];
         if ( $this->registration === TRUE ) {
-            
+
             $input_value = post( 'user_admin_password1' );
-            
+
             $info['user_admin_password'] = form_text( 'user_admin_password1', $locale['u144'], $input_value, [
                     'type'             => 'password',
                     'autocomplete_off' => FALSE,
@@ -379,15 +394,15 @@ class Account_Profile extends UserFieldsQuantum {
                     ]
                 ] )."</div>\n";
             $info['user_admin_password_notice'] = "<p>To update user admin password, enter a new password <a class='field_focus' data-focus='user_admin_password1' href='#'>new admin password field</a>. <strong>This action will override current user password.</strong></p>";
-            
+
         } else {
-            
+
             if ( iADMIN ) {
                 //                $info['user_admin_password'] = "<h4>".$locale['u131']."</h4>\n<br/>";
                 $info['user_admin_password_notice'] = "<p>To update user admin password, enter a new password <a class='field_focus' data-focus='user_admin_password1' href='#'>new admin password field</a>. <strong>This action will override current user password.</strong></p>";
-                
+
                 if ( $this->user_data['user_admin_password'] ) {
-                    
+
                     // This is for changing password
                     $info['user_admin_password'] = form_text( 'user_admin_password', $locale['u144a'], '', [
                             'type'             => 'password',
@@ -413,7 +428,7 @@ class Account_Profile extends UserFieldsQuantum {
                         ]
                     );
                 } else {
-                    
+
                     // This is just setting new password off blank records
                     $info['user_admin_password'] = form_text( 'user_admin_password', $locale['u144'], '', [
                             'type'             => 'password',
@@ -424,7 +439,7 @@ class Account_Profile extends UserFieldsQuantum {
                         ]
                     );
                 }
-                
+
                 $info['user_admin_password'] .= form_text( 'user_admin_password2', $locale['u145'], '', [
                     'class'            => 'm-b-0',
                     'type'             => 'password',
@@ -444,8 +459,8 @@ class Account_Profile extends UserFieldsQuantum {
                     ] )."</div>\n";
             }
         }
-        
+
         return $info;
     }
-    
+
 }
