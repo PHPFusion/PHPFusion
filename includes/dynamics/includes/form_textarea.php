@@ -120,8 +120,8 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         $tinymce_list = json_encode($tinymce_list);
         $tinymce_smiley_vars = "";
         if (!defined('tinymce')) {
-            add_to_head('<script src="'.INCLUDES.'jquery/jquery-ui.min.js"></script>');
-            add_to_head('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.min.css">');
+            add_to_head('<script src="'.INCLUDES.'jquery/jquery-ui/jquery-ui.min.js"></script>');
+            add_to_head('<link rel="stylesheet" href="'.INCLUDES.'jquery/jquery-ui/jquery-ui.min.css">');
             add_to_head('<script src="'.INCLUDES.'elFinder/js/elfinder.min.js"></script>');
             add_to_head('<link rel="stylesheet" href="'.INCLUDES.'elFinder/css/elfinder.min.css">');
             add_to_head('<link rel="stylesheet" href="'.INCLUDES.'elFinder/css/theme.css">');

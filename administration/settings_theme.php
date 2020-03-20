@@ -47,7 +47,7 @@ if (post('savesettings')) {
     }
 }
 
-$theme_files = makefilelist(THEMES, ".|..|templates|admin_themes", TRUE, "folders");
+$theme_files = makefilelist(THEMES.'site_themes/', ".|..|templates|admin_themes", TRUE, "folders");
 
 $admin_theme_files = makefilelist(THEMES."admin_themes/", ".|..", TRUE, "folders");
 
