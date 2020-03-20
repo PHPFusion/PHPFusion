@@ -37,11 +37,11 @@ if (fusion_get_enabled_languages() > 1) {
 if ($settings['bootstrap'] || defined('BOOTSTRAP')) {
     echo "<meta http-equiv='X-UA-Compatible' content='IE=edge'/>\n";
     echo "<meta name='viewport' content='width=device-width, initial-scale=1.0'/>\n";
-    echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/bootstrap.min.css' type='text/css'/>\n";
-    echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/bootstrap-submenu.min.css' type='text/css'/>\n";
+    echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/css/bootstrap.min.css' type='text/css'/>\n";
+    echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/css/bootstrap-submenu.min.css' type='text/css'/>\n";
 
     if ($locale['text-direction'] == 'rtl') {
-        echo "<link href='".INCLUDES."bootstrap/bootstrap-rtl.min.css' rel='stylesheet' media='screen'/>\n";
+        echo "<link href='".INCLUDES."bootstrap/css/bootstrap-rtl.min.css' rel='stylesheet' media='screen'/>\n";
     }
 }
 
@@ -94,12 +94,12 @@ if (function_exists("render_page")) {
 
 // Load Bootstrap javascript
 if ($settings['bootstrap'] || defined('BOOTSTRAP')) {
-    echo "<script type='text/javascript' src='".INCLUDES."bootstrap/bootstrap.min.js'></script>\n";
-    echo "<script type='text/javascript' src='".INCLUDES."bootstrap/bootstrap-submenu.min.js'></script>\n";
+    echo "<script type='text/javascript' src='".INCLUDES."bootstrap/js/bootstrap.min.js'></script>\n";
+    echo "<script type='text/javascript' src='".INCLUDES."bootstrap/js/bootstrap-submenu.min.js'></script>\n";
 }
 
 echo "<script type='text/javascript' src='".INCLUDES."jquery/admin-scripts.js'></script>\n";
-echo "<script type='text/javascript' src='".INCLUDES."jquery/holder/holder.min.js'></script>\n";
+echo "<script type='text/javascript' src='".INCLUDES."jquery/holder.min.js'></script>\n";
 
 // Output lines added with add_to_footer()
 echo $fusion_page_footer_tags;

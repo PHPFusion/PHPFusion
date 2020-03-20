@@ -69,11 +69,11 @@ echo "<meta name='image' content='".fusion_get_settings('siteurl').fusion_get_se
 if ($settings['bootstrap'] || defined('BOOTSTRAP')) {
     echo "<meta http-equiv='X-UA-Compatible' content='IE=edge'/>\n";
     echo "<meta name='viewport' content='width=device-width, initial-scale=1.0'/>\n";
-    echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/bootstrap.min.css' type='text/css'/>\n";
-    echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/bootstrap-submenu.min.css' type='text/css'/>\n";
+    echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/css/bootstrap.min.css' type='text/css'/>\n";
+    echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/css/bootstrap-submenu.min.css' type='text/css'/>\n";
 
     if ($locale['text-direction'] == 'rtl') {
-        echo "<link href='".INCLUDES."bootstrap/bootstrap-rtl.min.css' rel='stylesheet' media='screen'/>\n";
+        echo "<link href='".INCLUDES."bootstrap/css/bootstrap-rtl.min.css' rel='stylesheet' media='screen'/>\n";
     }
 }
 

@@ -22,8 +22,8 @@ require_once THEMES.'templates/admin_header.php';
 include LOCALE.LOCALESET.'admin/image_uploads.php';
 
 opentable($locale['100']);
-add_to_head('<script src="'.INCLUDES.'jquery/jquery-ui.min.js"></script>');
-add_to_head('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.min.css">');
+add_to_head('<script src="'.INCLUDES.'jquery/jquery-ui/jquery-ui.min.js"></script>');
+add_to_head('<link rel="stylesheet" href="'.INCLUDES.'jquery/jquery-ui/jquery-ui.min.css">');
 add_to_head('<script src="'.INCLUDES.'elFinder/js/elfinder.min.js"></script>');
 add_to_head('<link rel="stylesheet" href="'.INCLUDES.'elFinder/css/elfinder.min.css">');
 add_to_head('<link rel="stylesheet" href="'.INCLUDES.'elFinder/css/theme.css">');
