@@ -1,34 +1,150 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">Navbar</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+{#Header#}
+{% set navbar_header = '' %}
+{% if banner and banner_position and banner_link %}
+    {% set navbar_header = '<a class="navbar-brand'~whitespace(banner_position)~whitespace(banner_class)~'" href="'~banner_link~'"><img src="'~banner~'" alt="'~banner_title~'"></a>'~header_content %}
+{% endif %}
+
+{#Affix Option#}
+{% set affix = '' %}
+{% if affix_top or affix_bottom %}
+    {% set affix = ' data-spy="affix"' %}
+    {% if affix_top %}
+        {% set affix = affix ~ ' data-offset-top="'~affix_top~'"' %}
+    {% endif %}
+    {% if affix_bottom %}
+        {% set affix = affix ~ ' data-offset-bottom="'~affix_bottom~'"' %}
+    {% endif %}
+{% endif %}
+
+{#Container Class#}
+{% set openContainer = '' %}
+{% set closeContainer = '' %}
+{% if container %}
+    {% set openContainer = '<div class="container">' %}
+    {% set closeContainer = '</div>' %}
+{% elseif (container_fluid) %}
+    {% set openContainer = '<div class="container-fluid">' %}
+    {% set closeContainer = '</div>' %}
+{% endif %}
+
+{#Recursive list function#}
+{% macro menu_links(links, index = 0) %}
+    {% import _self as macros %}
+    {% for link in links[index] %}
+        {# where this has a child item#}
+        {% if links[link.link_id] %}
+            {% set listClass = link.link_cat > 0 ? 'dropdown-submenu' : 'nav-item dropdown' %}
+            {% set aClass = link.link_cat > 0 ? 'dropdown-item' : 'nav-link' %}
+            {% set linkWindow = link.link_window == 1 ? 'target="_blank" ' : '' %}
+            <li class="{{ listClass }}">
+                <a class="{{ aClass }} dropdown-toggle" href="{{ link.link_url }}" id="{{ link.link_id }}Dropdown"{{ whitespace(linkWindow) }} role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ link.link_name }}</a>
+                <ul class="dropdown-menu" aria-labelledby="{{ link.link_id }}Dropdown">
+                    {{ macros.menu_links(links, link.link_id) }}
+                </ul>
+            </li>
+        {% elseif link.link_cat >0 %}
+            {#where this is a subitem#}
+            <a class="dropdown-item" href="#">{{ link.link_name }}</a>
+        {% else %}
+            {#where this is a top level item#}
+            <li><a class="nav-link" href="{{ link.link_url }}">{{ link.link_name }}</a></li>
+        {% endif %}
+    {% endfor %}
+{% endmacro %}
+
+<nav id="{{ id }}" class="navbar{{ whitespace(navbar_class) }}" role="navigation" {{ affix|raw }}>
+    {{ openContainer|raw }}
+    {{ navbar_header|raw }}
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#{{ navbar_id }}_menu" aria-controls="{{ navbar_id }}_menu" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Dropdown
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">Action</a>
-                    <a class="dropdown-item" href="#">Another action</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Something else here</a>
-                </div>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-            </li>
+    <div class="collapse navbar-collapse{{ whitespace(responsive_class) }}" id="{{ navbar_id }}_menu">
+        {{ html_pre_content|raw }}
+        <ul class="navbar-nav mr-auto{{ whitespace(nav_class_primary) }}">
+            {{ _self.menu_links(items) }}
+            {#            <li class="nav-item">#}
+            {#                <a class="nav-link" href="#">Link</a>#}
+            {#            </li>#}
+            {#            <li class="nav-item dropdown">#}
+            {#                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">#}
+            {#                    Dropdown#}
+            {#                </a>#}
+            {#                <div class="dropdown-menu" aria-labelledby="navbarDropdown">#}
+            {#                    <a class="dropdown-item" href="#">Action</a>#}
+            {#                    <a class="dropdown-item" href="#">Another action</a>#}
+            {#                    <div class="dropdown-divider"></div>#}
+            {#                    <a class="dropdown-item" href="#">Something else here</a>#}
+            {#                </div>#}
+            {#            </li>#}
+            {#            <li class="nav-item">#}
+            {#                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>#}
+            {#            </li>#}
         </ul>
-        <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
+        {{ html_content|raw }}
+        {{ search|raw }}
+        {% if language or additional_data %}
+            <ul class="navbar-nav navbar-right{{ whitespace(nav_secondary_class) }}">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Link</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Dropdown
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                </li>
+            </ul>
+        {% endif %}
+        {#        <form class="form-inline my-2 my-lg-0">#}
+        {#            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">#}
+        {#            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>#}
+        {#        </form>#}
+        {{ html_post_content }}
     </div>
+    {{ closeContainer|raw }}
 </nav>
+
+{#bootstrap submenu-mods#}
+{{ add_to_jquery("
+$('.dropdown-menu a.dropdown-toggle').on('click', function (e) {
+    if (!$(this).next().hasClass('show')) {
+        $(this).parents('.dropdown-menu').first().find('.show').removeClass('show');
+    }
+    var $subMenu = $(this).next('.dropdown-menu');
+    $subMenu.toggleClass('show');
+    $(this).parents('li.nav-item.dropdown.show').on('hidden.bs.dropdown', function (e) {
+        $('.dropdown-submenu .show').removeClass('show');
+    });
+    return false;
+});
+") }}
+
+{{ add_to_css("
+.dropdown-submenu {
+        position: relative;
+    }
+
+    .dropdown-submenu a::after {
+        transform: rotate(-90deg);
+        position: absolute;
+        right: 6px;
+        top: .8em;
+    }
+    .dropdown-submenu .dropdown-menu {
+        top: 0;
+        left: 100%;
+        margin-left: .1rem;
+        margin-right: .1rem;
+    }
+") }}

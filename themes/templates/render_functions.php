@@ -197,7 +197,7 @@ function twig_init($path = THEME.'twig', $debug = FALSE) {
             return call_user_func_array('closesidex', func_get_args());
         }),
         'print_p'             => new TwigFunction('print_p', function () {
-            return call_user_func_array('closesidex', func_get_args());
+            return call_user_func_array('print_p', func_get_args());
         }),
         'fusion_get_userdata' => new TwigFunction('fusion_get_userdata', function () {
             return call_user_func_array('fusion_get_userdata', func_get_args());
@@ -213,7 +213,16 @@ function twig_init($path = THEME.'twig', $debug = FALSE) {
         }),
         'whitespace'          => new TwigFunction('whitespace', function () {
             return call_user_func_array('whitespace', func_get_args());
-        })
+        }),
+        'add_to_jquery'       => new TwigFunction('add_to_jquery', function () {
+            call_user_func_array('add_to_jquery', func_get_args());
+        }),
+        'add_to_footer'       => new TwigFunction('add_to_footer', function () {
+            call_user_func_array('add_to_footer', func_get_args());
+        }),
+        'add_to_css'       => new TwigFunction('add_to_css', function () {
+            call_user_func_array('add_to_css', func_get_args());
+        }),
     ];
 
     foreach ($twig_register_functions as $key => $function) {
@@ -260,7 +269,10 @@ function fusion_render($dir_path = THEMES.'templates/', $file_path = '', array $
             $info[$key] = $value;
         }
     }
-    return $twig->render($file_path, $info);
+    $output = $twig->render($file_path, $info);
+    $output = trim(preg_replace('/\s\s+/', '', $output));
+
+    return $output;
 }
 
 // Add compatibility mode function

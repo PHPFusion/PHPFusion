@@ -29,7 +29,43 @@ use PHPFusion\Rewrite\Router;
 class SiteLinks {
 
     const MenuDefaultID = 'DefaultMenu';
+
     protected static $position_opts = [];
+
+    private static $default_options = [
+        'id'                   => self::MenuDefaultID,
+        'container'            => FALSE,
+        'container_fluid'      => FALSE,
+        'responsive'           => TRUE,
+        'navbar_class'         => 'navbar-expand-lg navbar-light bg-light',
+        'nav_class'            => '',
+        'additional_nav_class' => '',
+        'item_class'           => '', // $class
+        'separator'            => '', // $sep
+        'links_per_page'       => '',
+        'grouping'             => '',
+        'show_banner'          => TRUE,
+        'show_header'          => TRUE,
+        'custom_header'        => '',
+        'header_content'       => '',
+        'custom_banner'        => '',
+        'custom_banner_link'   => '',
+        'language'             => '',
+        'searchbar'            => FALSE,
+        'search_icon'          => 'fa fa-search',
+        'search_btn_class'     => 'btn-primary',
+        'caret_icon'           => 'caret',
+        //'callback_data'        => '',
+        'additional_data'      => '',
+        'link_position'        => [2, 3],
+        'html_content'         => '',
+        'affix_top'            => '',                   // Adds affix from top offset
+        'affix_bottom'         => '',                   // Adds affix from bottom offset
+        'html_pre_content'     => '',
+        'html_post_content'    => '',
+        'nav_class_primary'    => '',
+        'nav_class_secondary'  => '',
+    ];
     /**
      * @param string $sep
      * @param string $class
@@ -49,52 +85,11 @@ class SiteLinks {
 
     private static $id = '';
 
-    private static $default_options = [
-        'id'                   => self::MenuDefaultID,
-        'container'            => FALSE,
-        'container_fluid'      => FALSE,
-        'responsive'           => TRUE,
-        'navbar_class'         => 'navbar-expand-lg navbar-light bg-light',
-        'nav_class'            => '',
-        'additional_nav_class' => '',
-        'item_class'           => '', // $class
-        'locale'               => [],
-        'separator'            => '', // $sep
-        'links_per_page'       => '',
-        'grouping'             => '',
-        'show_banner'          => FALSE,
-        'show_header'          => FALSE,
-        'custom_header'        => '',
-        'header_content'       => '',
-        'custom_banner'        => '',
-        'custom_banner_link'   => '',
-        'language_switcher'    => FALSE,
-        'searchbar'            => FALSE,
-        'search_icon'          => 'fa fa-search',
-        'search_btn_class'     => 'btn-primary',
-        'caret_icon'           => 'caret',
-        'callback_data'        => '',
-        'additional_data'      => '',
-        'link_position'        => [2, 3],
-        'html_content'         => '',
-        'affix_top'            => '',                   // Adds affix from top offset
-        'affix_bottom'         => '',                   // Adds affix from bottom offset
-        'html_pre_content'     => '',
-        'html_post_content'    => '',
-        'nav_class_primary'    => '',
-        'nav_class_secondary'  => '',
-    ];
-
     private static $primary_cache_data = [];
 
     private static $optional_cache_data = [];
 
     private static $current_url = "";
-    private static $nav_path;
-    private static $nav_li_path;
-    private static $nav_li_link_path;
-    private static $nav_li_dropdown_path;
-    private static $nav_divider_path;
 
     /**
      * Get Site Links Position Options
@@ -113,24 +108,6 @@ class SiteLinks {
         }
 
         return (array)self::$position_opts;
-    }
-
-    /**
-     * Get Sitelinks SQL Row
-     *
-     * @param $id
-     *
-     * @return array|bool
-     */
-    public static function get_SiteLinks($id) {
-        $data = [];
-        $link_query = "SELECT * FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_id='$id'";
-        $result = dbquery($link_query);
-        if (dbrows($result) > 0) {
-            $data = dbarray($result);
-        }
-
-        return $data;
     }
 
     /**
@@ -158,43 +135,6 @@ class SiteLinks {
     }
 
     /**
-     * Link ID validation
-     *
-     * @param $link_id
-     *
-     * @return bool|string
-     */
-    public static function verify_SiteLinks($link_id) {
-        if (isnum($link_id)) {
-            return dbcount("(link_id)", DB_SITE_LINKS, "link_id='".intval($link_id)."'");
-        }
-
-        return FALSE;
-    }
-
-    /**
-     * SQL Delete Site Link Action
-     *
-     * @param $link_id
-     *
-     * @return bool|mixed|null|resource
-     */
-    public static function delete_SiteLinks($link_id) {
-        $result = NULL;
-        if (isnum($link_id)) {
-            $data = dbarray(dbquery("SELECT link_order FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_id='".$_GET['link_id']."'"));
-            $result = dbquery("UPDATE ".DB_SITE_LINKS." SET link_order=link_order-1 ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_order>'".$data['link_order']."'");
-            if ($result) {
-                $result = dbquery("DELETE FROM ".DB_SITE_LINKS." WHERE link_id='".$_GET['link_id']."'");
-            }
-
-            return $result;
-        }
-
-        return $result;
-    }
-
-    /**
      * Get Group Array
      *
      * @return array
@@ -211,51 +151,60 @@ class SiteLinks {
 
     /**
      * Calling the SiteLinks instance with Custom Parameters
+     *
      * @param array $options
      *
      * @return mixed
      * @throws \Exception
      */
     public static function setSubLinks(array $options = []) {
-
         $options += self::$default_options;
+        $instance = self::getInstance($options['id']);
 
-        if (!isset(self::$instances[$options['id']]->menu_options)) {
-
+        if (!isset($instance->menu_options)) {
             $settings = fusion_get_settings();
+            // System link settings
+            $link_settings = [
+                'start_page'     => $instance->getStartPage(),
+                'links_per_page' => $settings['links_per_page'],
+                'links_grouping' => $settings['links_grouping'],
+                'items'          => $options['callback_data'] !== FALSE ? $instance->fetchSiteLinks(['link_position' => $options['link_position']]) : []
+            ];
+            $options += $link_settings;
 
-            $options['locale'] += fusion_get_locale();
-
-            if (!$options['links_per_page'])
-                $options['links_per_page'] = $settings['links_per_page'];
-
-            if (empty($options['grouping']))
-                $options['grouping'] = $settings['links_grouping'];
-
-            if (empty($options['callback_data']) && $options['callback_data'] !== FALSE)
-                $options['callback_data'] = self::get_SiteLinksData(['link_position' => $options['link_position']]);
-
-            $options['banner'] = $settings['sitebanner'] && $options['show_banner'] == TRUE ? "<img src='".BASEDIR.$settings['sitebanner']."' alt='".$settings['sitename']."'/>" : $settings['sitename'];
-
-            $pageInfo = pathinfo(server('REQUEST_URI'));
-            $start_page = $pageInfo['dirname'] !== "/" ? ltrim($pageInfo['dirname'], "/")."/" : "";
-            $site_path = ltrim($settings['site_path'], "/");
-            $start_page = str_replace([$site_path, '\/'], ['', ''], $start_page);
-            $start_page .= $pageInfo['basename'];
-
-            if ($settings['site_seo'] && defined('IN_PERMALINK') && get("aid") === NULL) {
-                $filepath = Router::getRouterInstance()->getFilePath();
-                $start_page = $filepath;
-            }
-
-            $options['start_page'] = $start_page;
-
-            self::$instances[$options['id']] = self::getInstance($options['id']);
-            self::$id = $options['id'];
-            self::$instances[$options['id']]->menu_options = $options;
+            $instance->id = $options['id'];
+            $instance->menu_options = $options;
         }
 
-        return self::$instances[$options['id']];
+        return $instance;
+
+    }
+
+    /**
+     * @param string $id
+     *
+     * @return SiteLinks
+     */
+    private static function getInstance($id = self::MenuDefaultID) {
+        self::$id = $id;
+        if (empty(self::$instances[$id])) {
+            self::$instances[$id] = new static();
+        }
+        return self::$instances[$id];
+    }
+
+    private function getStartPage() {
+        $settings = fusion_get_settings();
+        if ($settings['site_seo'] && defined('IN_PERMALINK') && get("aid") === NULL) {
+            return Router::getRouterInstance()->getFilePath();
+        }
+        $pageInfo = pathinfo(server('REQUEST_URI'));
+        $site_path = ltrim($settings['site_path'], "/");
+        $start_page = $pageInfo['dirname'] !== "/" ? ltrim($pageInfo['dirname'], "/")."/" : "";
+        $start_page = str_replace([$site_path, '\/'], ['', ''], $start_page);
+        $start_page .= $pageInfo['basename'];
+
+        return $start_page;
     }
 
     /**
@@ -270,12 +219,9 @@ class SiteLinks {
      *
      * @return array
      */
-    public static function get_SiteLinksData(array $options = []) {
+    public static function fetchSiteLinks(array $options = []) {
         $default_position = [2, 3];
 
-        /*
-         * $options['link_position'] - accepts either string or array
-         */
         $link_position = '';
         if (!empty($options['link_position'])) {
             $link_position = $options['link_position'];
@@ -308,21 +254,6 @@ class SiteLinks {
         }
 
         return (array)dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat", "", $query_replace);
-    }
-
-    /**
-     * @param string $id
-     *
-     * @return mixed
-     * @throws \Exception
-     */
-    public static function getInstance($id = self::MenuDefaultID) {
-        self::$id = $id;
-        if (!isset(self::$instances[$id])) {
-            self::$instances[$id] = new static();
-            self::getBoilerFiles();
-        }
-        return self::$instances[$id];
     }
 
     /**
@@ -360,12 +291,24 @@ class SiteLinks {
         self::$instances[self::$id]->menu_options[$key] = (is_bool($value)) ? $value : self::getMenuParam($key).$value;
     }
 
-    public static function getMenuParam($key = FALSE) {
+    private static function getMenuParam($key = FALSE) {
         if ($key) {
             return (isset(self::$instances[self::$id]->menu_options[$key])) ? self::$instances[self::$id]->menu_options[$key] : NULL;
         }
 
         return self::$instances[self::$id]->menu_options;
+    }
+
+    /**
+     * @return mixed
+     * @throws \Exception
+     */
+    private static function getBoilerFiles() {
+        $boiler_files = boilerplate_get_files();
+        if (!empty($boiler_files)) {
+            list(self::$nav_path, self::$nav_li_path, self::$nav_li_link_path, self::$nav_li_dropdown_path, self::$nav_divider_path) = array_values($boiler_files['nav']);
+        }
+        return $boiler_files;
     }
 
     /**
@@ -400,155 +343,16 @@ class SiteLinks {
     }
 
     public function showSubLinks() {
-
-        $settings = fusion_get_settings();
-
         $this->cacheSiteLinks();
-
         $options = self::getMenuParam();
-        $locale = $options['locale'];
+        $options['language'] = $this->getLanguage($options);
+        $options['search'] = $this->getSearch($options);
+        $options['callback_data'] = $this->parseLinks(0, 'callback_data');
+        $options['additional_data'] = $this->parseLinks(0, 'additional_data');
+        //print_P($options);
+        $fusion_steam = Steam::getInstance();
 
-        if (empty($options['id'])) {
-            $options['id'] = self::MenuDefaultID;
-        }
-
-        // Secondary menu
-        $language_dropdown = '';
-        if ($options['language_switcher'] === TRUE) {
-            if (count(fusion_get_enabled_languages()) > 1) {
-                $language_switch = fusion_get_language_switch();
-                $current_language = $language_switch[LANGUAGE];
-                // Build the LI first.
-                if (!empty($language_switch)) {
-                    $nav_li_link = Template::getInstance('nav_li_link');
-                    foreach ($language_switch as $folder => $langData) {
-                        $nav_li_link->set_block('nav_li_link', [
-                            'link'  => $langData['language_link'],
-                            'title' => '<img alt="'.$langData['language_name'].'" class="m-r-5" src="'.$langData['language_icon_s'].'"/> '.$langData['language_name'],
-                        ]);
-                    }
-                    $nav_li_link->set_template(self::$nav_li_link_path);
-                    $language_items = $nav_li_link->get_output();
-
-                    $language_li_dropdown_tpl = Template::getInstance('language_switch_li');
-                    $ss = [
-                        'title'               => translate_lang_names(LANGUAGE),
-                        'link'                => '#',
-                        'content'             => '<img src="'.$current_language["language_icon_s"].'">',
-                        'caret_class'         => $options['caret_icon'],
-                        'dropdown_menu_class' => ' dropdown-menu-right',
-                        'item'                => $language_items,
-                        'first_item_link'     => '',
-                    ];
-                    $language_li_dropdown_tpl->set_block('nav_li_dropdown', $ss);
-                    $language_li_dropdown_tpl->set_template(self::$nav_li_dropdown_path);
-                    $language_dropdown = $language_li_dropdown_tpl->get_output();
-                }
-            }
-        }
-
-        $searchbar_dropdown = '';
-        if ($options['searchbar']) {
-            // Add in a new default search form.
-            // LI first
-            $nav_li = Template::getInstance('nav_li_no_link');
-            $nav_li->set_template(self::$nav_li_path);
-            $nav_li->set_block('nav_li_no_link', [
-                'content'    => openform('searchform', 'post', FUSION_ROOT.BASEDIR.'search.php?stype='.$settings['default_search'],
-                        [
-                            'class'      => 'm-b-10',
-                            'inline' => TRUE,
-                            //'remote_url' => $settings['site_path'].'search.php'
-                        ]
-                    ).form_text('stext', '', '',
-                        [
-                            'placeholder'        => $locale['search'],
-                            'append_button'      => TRUE,
-                            'append_type'        => "submit",
-                            "append_form_value"  => $locale['search'],
-                            "append_value"       => "<i class='".$options['search_icon']."'></i> ".$locale['search'],
-                            "append_button_name" => "search",
-                            "append_class"       => $options['search_btn_class'],
-                            'class'              => 'm-0',
-                        ]
-                    ).closeform(),
-                'link_class' => ''
-            ]);
-            $searchbar_dropdown = $nav_li->get_output();
-
-            //$searchbar_tpl = Template::getInstance('searchbar_li');
-            //$ss = [
-            //    'title'               => $locale['search'],
-            //    'link'                => '#',
-            //    'content'             => '<i class="'.$options['search_icon'].'"></i>',
-            //    'caret_class'         => $options['caret_icon'],
-            //    'dropdown_menu_class' => ' dropdown-menu-right',
-            //    'item'                => $nav_li->get_output(),
-            //    'first_item_link'     => '',
-            //    'li_class'            => '',
-            //    'link_class'          => '',
-            //    'link_target'         => '',
-            //    'tab_index'           => '',
-            //    'dropdown_menu_id'    => '',
-            //    'submenu'             => ''
-            //];
-            //$searchbar_tpl->set_block('nav_li_dropdown', $ss);
-            //$searchbar_tpl->set_template(self::$nav_li_dropdown_path);
-            //$searchbar_dropdown = $searchbar_tpl->get_output();
-        }
-
-        $primary_links = $this->showMenuLinks(0, $options['callback_data']);
-        $secondary_links = $this->showMenuLinks(0, $options['additional_data']);
-
-        $tpl = Template::getInstance($options['id']);
-        $tpl->set_template(self::$nav_path);
-        $tpl->set_locale($locale);
-        $tpl->set_tag('navbar_id', $options['id']);
-        $tpl->set_tag('responsive_class', 'menu');
-        if ($options['responsive'] === TRUE) {
-            $tpl->set_tag('responsive_class', 'navbar-collapse collapse');
-        }
-        $tpl->set_tag('navbar_class', $options['navbar_class']);
-        $tpl->set_tag('affix', self::getaffix());
-        $tpl->set_tag('nav_class_primary', $options['nav_class_primary']);
-        $tpl->set_tag('nav_class_secondary', $options['nav_class_secondary']);
-        if ($options['container'] || $options['container_fluid']) {
-            if ($options['container']) {
-                $tpl->set_block('open_container', ['class' => 'container']);
-                $tpl->set_block('close_container', ['class' => 'container']);
-            } else {
-                $tpl->set_block('open_container', ['class' => 'container-fluid']);
-                $tpl->set_block('close_container', ['class' => 'container-fluid']);
-            }
-        }
-
-        if ($options['show_header']) {
-            $banner = ($options['show_banner'] ? ($options['custom_banner'] ? $options['custom_banner'] : $settings['sitebanner']) : '');
-            $header_settings = [
-                'id'              => $options['id'].'_menu',
-                'header_content'  => $options['header_content'],
-                'banner_link'     => $options['custom_banner_link'] ?: BASEDIR.$settings['opening_page'],
-                'banner'          => $banner,
-                'banner_position' => $settings['logoposition_xs']." ".$settings['logoposition_sm']." ".$settings['logoposition_md']." ".$settings['logoposition_lg'],
-                'banner_class'    => !empty($options['banner_class']) ? $options['banner_class'] : ''
-            ];
-
-            $tpl->set_block('navbar_header', $header_settings);
-
-        }
-
-        $tpl->set_tag('custom_header', $options['custom_header']);
-        $tpl->set_tag('html_content', $options['html_content']);
-        $tpl->set_tag('html_pre_content', $options['html_pre_content']);
-        $tpl->set_tag('html_post_content', $options['html_post_content']);
-        $tpl->set_tag('menu_item', $primary_links);
-        if (!empty($language_dropdown) || !empty($searchbar_dropdown) || !empty($secondary_links)) {
-            $tpl->set_block('menu_alt', ['menu_alt_item' => $secondary_links.$language_dropdown.$searchbar_dropdown]);
-        }
-
-        $output = $tpl->get_output();
-
-        return $output;
+        return $fusion_steam->load('Navigation')->render($options);
     }
 
     private function cacheSiteLinks() {
@@ -557,13 +361,16 @@ class SiteLinks {
 
         $callback_data = $options['callback_data'];
         $primary_cache = (isset(self::$primary_cache_data[self::$id]) ? self::$primary_cache_data[self::$id] : []);
+
         if (!empty($options['callback_data']) && is_array($callback_data)) {
             self::replaceMenuParam('callback_data', array_replace_recursive($callback_data, $primary_cache));
         } else {
             self::replaceMenuParam('callback_data', $primary_cache);
         }
+
         $callback_data = $options['additional_data'];
         $secondary_cache = (isset(self::$optional_cache_data[self::$id]) ? self::$optional_cache_data[self::$id] : []);
+
         if (!empty($callback_data && is_array($callback_data))) {
             self::replaceMenuParam('additional_data', array_replace_recursive($callback_data, $secondary_cache));
         } else {
@@ -572,13 +379,11 @@ class SiteLinks {
 
         // Change hierarchy data when grouping is activated
         if ($options['grouping']) {
-
             // Fetch the latest callback data changes
             $callback_data = self::getMenuParam('callback_data');
-
             if (isset($callback_data[0])) {
                 if (count($callback_data[0]) > $options['links_per_page']) {
-                    $more_index = 9 * 10000000;
+                    $more_index = 9 * 1000;
                     $base_data = $callback_data[0];
                     $data[$more_index] = array_slice($base_data, $options['links_per_page'], 9, TRUE);
                     $data[0] = array_slice($base_data, 0, $options['links_per_page'], TRUE);
@@ -606,24 +411,76 @@ class SiteLinks {
         self::$instances[self::$id]->menu_options[$key] = $value;
     }
 
-    /**
-     * Recursion loop of data for navigational menu
-     * @param int   $id
-     * @param array $data
-     *
-     * @return string
-     * @throws \Exception
-     */
-    private function showMenuLinks($id = 0, $data = []) {
-        $options = self::getMenuParam();
+    private function getLanguage($info) {
+        // Secondary menu
+        if ($info['language_switcher'] === TRUE) {
+            if (count(fusion_get_enabled_languages()) > 1) {
 
+                $language_switch = fusion_get_language_switch();
+                $language_opts = [];
+                $current_language = $language_switch[LANGUAGE];
+
+                if (!empty($language_switch)) {
+
+                    foreach ($language_switch as $lang_folder => $lang_data) {
+                        $language_opts[$lang_folder] = [
+                            'link'  => $lang_data['language_link'],
+                            'title' => $lang_data['language_name'],
+                            'image' => '<img alt="'.$lang_data['language_name'].'" class="m-r-5" src="'.$lang_data['language_icon_s'].'"/>'
+                        ];
+                    }
+
+                    return [
+                        'title'           => translate_lang_names(LANGUAGE),
+                        'link'            => '#',
+                        'content'         => '<img src="'.$current_language["language_icon_s"].'">',
+                        'caret_class'     => $info['caret_icon'],
+                        'item'            => $language_opts,
+                        'first_item_link' => '',
+                    ];
+
+                }
+                return [];
+            }
+            return [];
+        }
+        return [];
+    }
+
+    private function getSearch($info) {
+        $locale = fusion_get_locale();
         $settings = fusion_get_settings();
+        if ($info['searchbar']) {
+            // Add in a new default search form.
+            // LI first
+            return openform('searchform', 'post', FUSION_ROOT.BASEDIR.'search.php?stype='.$settings['default_search'],
+                    [
+                        'inline' => TRUE,
+                        //'remote_url' => $settings['site_path'].'search.php'
+                    ]
+                ).form_text('stext', '', '',
+                    [
+                        'placeholder'        => $locale['search'],
+                        'append_button'      => TRUE,
+                        'append_type'        => "submit",
+                        "append_form_value"  => $locale['search'],
+                        "append_value"       => "<i class='".$info['search_icon']."' title='".$locale['search']."'></i>",
+                        "append_button_name" => "search",
+                        "append_class"       => $info['search_btn_class'],
+                        'class'              => 'm-0',
+                    ]
+                ).closeform();
+        }
+        return '';
+    }
 
-        $template_settings = [];
+    private function parseLinks($id = 0, $key = 'callback_data') {
+        $options = self::getMenuParam();
+        $settings = fusion_get_settings();
+        $data = $options[$key];
 
-        $res = '';
         if (!empty($data[$id])) {
-            $i = 0;
+
             $default_link_data = [
                 "link_id"       => 0,
                 "link_name"     => "",
@@ -632,185 +489,167 @@ class SiteLinks {
                 "link_icon"     => "",
                 "link_li_class" => "",
                 "link_class"    => "",
-                "link_active"   => '',
+                "link_active"   => "",
                 "link_title"    => FALSE, // true to add dropdown-header class to li.
                 "link_disabled" => FALSE, // true to disable link
                 "link_window"   => FALSE,
                 "link_content"  => FALSE, // true to make link_name as HTML content
             ];
+            $counter = 0;
 
             foreach ($data[$id] as $link_id => $link_data) {
 
-                $tpl = Template::getInstance('link_item');
-
-                $li_class = [];
-
                 $link_data += $default_link_data;
 
-                $link_data['link_name'] = $settings['link_bbcode'] ? parsesmileys(parseubb($link_data['link_name'])) : $link_data['link_name'];
+                // get link title in formatted bbcode
+                $link_name = ($settings['link_bbcode'] ? parsesmileys(parseubb($link_data['link_name'])) : $link_data['link_name']);
+                // check whether the link is active.
+                $link_active = $this->checkLinkActive($link_data['link_id'], $link_data['link_url'], $data); // Data would have not inherited all default param.
 
-                // Calculate link class
-                if ($link_data['link_disabled']) {
-                    $li_class[] = "disabled";
-                } else {
-                    if (!empty($link_data['link_li_class']))
-                        $li_class[] = $link_data['link_li_class'];
+                $link_disabled = ($link_data['link_disabled'] ? TRUE : FALSE);
 
-                    if (!empty($options['item_class']))
-                        $li_class[] = $options['item_class'];
+                $link_url = $this->getLinkUrl();
 
-                    if (empty($link_data['link_url']))
-                        $li_class[] = "no-link";
+                $link_class = $this->getLinkClass($link_data, $options, $counter);
 
-                    if ($link_data['link_title'] == TRUE)
-                        $li_class[] = "dropdown-header";
-                }
+                $data[$id][$link_id] = [
+                        'link_name'     => $link_name,
+                        'link_active'   => $link_active,
+                        'link_disabled' => $link_disabled,
+                        'link_url'      => $link_url,
+                        'link_class'    => $link_class,
+                    ] + $link_data;
 
-                /*
-                 * Attempt to calculate a relative link
-                 * Taking into account that current start page does not match
-                 */
-                if ($link_data['link_active'] == FALSE) {
+                $counter++;
 
-                    // Data would have not inherited all default param.
-                    $link_data['link_active'] = $this->checkLinkActive($link_data['link_id'], $link_data['link_url'], $data);
-                }
+                //if ($link_data['link_name'] != "---" && $link_data['link_name'] != "===") {
+                //
+                //    $link_target = ($link_data['link_window'] == "1" ? " target='_blank'" : '');
+                //
 
-                if ($link_data['link_name'] != "---" && $link_data['link_name'] != "===") {
-
-                    $link_target = ($link_data['link_window'] == "1" ? " target='_blank'" : '');
-
-                    if ($i == 0 && $id > 0) {
-                        $li_class[] = "first-link";
-                    }
-
-                    if ($link_data['link_active'] === TRUE) {
-                        $li_class[] = "current-link active";
-                    }
-
-                    $itemlink = '';
-
-                    if (!empty($link_data['link_url'])) {
-
-                        $link_data['link_url'] = str_replace('{%aidlink%}', fusion_get_aidlink(), $link_data['link_url']);
-
-                        $itemlink = BASEDIR.$link_data['link_url'];
-
-                        // if link has site protocol
-                        if (preg_match("!^(ht|f)tp(s)?://!i", $link_data['link_url']) or (BASEDIR !== '' && stristr($link_data['link_url'], BASEDIR))) {
-                            $itemlink = $link_data['link_url'];
-                        }
-
-                    }
-
-                    if (isset($data[$link_id])) {
-
-                        // Child Item
-                        $template_path = self::$nav_li_dropdown_path;
-                        $template_obj = 'nav_li_dropdown';
-                        $has_child = TRUE;
-
-                        $tab_index = !empty($id) ? " tabindex='0'" : '';
-
-                        $l_1 = " class='dropdown-toggle".(!empty($link_data['link_class']) ? " ".$link_data['link_class'] : '')."' data-toggle='dropdown' ";
-                        $l_1 .= (empty($id) && $has_child ? "data-submenu " : '');
-
-                        $li_class[] = (!empty($id) ? "dropdown-submenu" : "dropdown");
-                        $li_class = array_filter($li_class);
-
-                        $li_content = ($link_data['link_icon'] ? "<i class='".$link_data['link_icon']."'></i>" : "");
-                        $li_content .= $link_data['link_name'];
-
-                        $first_item_link = '';
-                        if (!empty($link_data['link_url']) and $link_data['link_url'] !== "#") {
-                            $first_item_link .= "<li".(!$itemlink ? " class='no-link'" : '').">\n".self::getMenuParam('seperator');
-                            $first_item_link .= ($itemlink ? "<a href='".$itemlink."' ".$link_target.">\n" : '');
-                            $first_item_link .= (!empty($link_data['link_icon']) ? "<i class='".$link_data['link_icon']." m-r-5'></i>\n" : "");
-                            $first_item_link .= $link_data['link_name'];
-                            $first_item_link .= ($itemlink ? "\n</a>\n" : '');
-                            $first_item_link .= "</li>\n";
-                        }
-
-                        $template_settings = [
-                            'li_class'            => (!empty($li_class) ? 'class="'.implode(" ", $li_class).'"' : ''),
-                            'link_class'          => $l_1,
-                            'link'                => $itemlink,
-                            'title'               => $link_data['link_name'],
-                            'link_target'         => $link_target,
-                            'tab_index'           => $tab_index,
-                            'content'             => $li_content,
-                            'caret_class'         => $options['caret_icon'],
-                            'dropdown_menu_id'    => 'menu-'.$link_data['link_id'],
-                            'dropdown_menu_class' => '',
-                            'first_item_link'     => $first_item_link,
-                            'submenu'             => 'data-submenu',
-                            'item'                => $this->showMenuLinks($link_data['link_id'], $data)
-                        ];
-
-                    } else {
-
-                        $li_class = (!empty($li_class)) ? " class='".implode(" ", $li_class)."'" : "";
-
-                        $link_class = (!empty($link_data['link_class']) ? " class='".$link_data['link_class']."'" : '');
-
-                        $li_content = $link_data['link_icon'] ? "<i class='".$link_data['link_icon']."'></i>" : "";
-                        $li_content .= $link_data['link_name'];
-
-                        $template_path = self::$nav_li_path;
-                        $template_obj = 'nav_li_no_link';
-
-                        $template_settings = [
-                            'link_class' => $link_class,
-                            'content'    => $li_content,
-                        ];
-
-                        if (!empty($itemlink)) {
-
-                            $template_path = self::$nav_li_link_path;
-                            $template_obj = 'nav_li_link';
-
-                            $template_settings = [
-                                'li_class'   => $li_class,
-                                'link_class' => $link_class,
-                                'link'       => $itemlink,
-                                'title'      => $li_content,
-                            ];
-
-                        }
-                    }
-                } else {
-                    $template_path = self::$nav_divider_path;
-                    $template_obj = 'nav_li_divider';
-                }
-
-                $tpl->set_template($template_path);
-                $tpl->set_block($template_obj, $template_settings);
-                $res .= $tpl->get_output();
-
-                $i++;
+                //    $itemlink = '';
+                //
+                //
+                //
+                //    if (isset($data[$link_id])) {
+                //
+                //        // Child Item
+                //        $template_path = self::$nav_li_dropdown_path;
+                //        $template_obj = 'nav_li_dropdown';
+                //        $has_child = TRUE;
+                //
+                //        $tab_index = !empty($id) ? " tabindex='0'" : '';
+                //
+                //        $l_1 = " class='dropdown-toggle".(!empty($link_data['link_class']) ? " ".$link_data['link_class'] : '')."' data-toggle='dropdown' ";
+                //        $l_1 .= (empty($id) && $has_child ? "data-submenu " : '');
+                //
+                //        $li_class[] = (!empty($id) ? "dropdown-submenu" : "dropdown");
+                //        $li_class = array_filter($li_class);
+                //
+                //        $li_content = ($link_data['link_icon'] ? "<i class='".$link_data['link_icon']."'></i>" : "");
+                //        $li_content .= $link_data['link_name'];
+                //
+                //        $first_item_link = '';
+                //        if (!empty($link_data['link_url']) and $link_data['link_url'] !== "#") {
+                //            $first_item_link .= "<li".(!$itemlink ? " class='no-link'" : '').">\n".self::getMenuParam('seperator');
+                //            $first_item_link .= ($itemlink ? "<a href='".$itemlink."' ".$link_target.">\n" : '');
+                //            $first_item_link .= (!empty($link_data['link_icon']) ? "<i class='".$link_data['link_icon']." m-r-5'></i>\n" : "");
+                //            $first_item_link .= $link_data['link_name'];
+                //            $first_item_link .= ($itemlink ? "\n</a>\n" : '');
+                //            $first_item_link .= "</li>\n";
+                //        }
+                //
+                //        $template_settings = [
+                //            'li_class'            => (!empty($li_class) ? 'class="'.implode(" ", $li_class).'"' : ''),
+                //            'link_class'          => $l_1,
+                //            'link'                => $itemlink,
+                //            'title'               => $link_data['link_name'],
+                //            'link_target'         => $link_target,
+                //            'tab_index'           => $tab_index,
+                //            'content'             => $li_content,
+                //            'caret_class'         => $options['caret_icon'],
+                //            'dropdown_menu_id'    => 'menu-'.$link_data['link_id'],
+                //            'dropdown_menu_class' => '',
+                //            'first_item_link'     => $first_item_link,
+                //            'submenu'             => 'data-submenu',
+                //            'item'                => $this->showMenuLinks($link_data['link_id'], $data)
+                //        ];
+                //
+                //    } else {
+                //
+                //        $li_class = (!empty($li_class)) ? " class='".implode(" ", $li_class)."'" : "";
+                //
+                //        $link_class = (!empty($link_data['link_class']) ? " class='".$link_data['link_class']."'" : '');
+                //
+                //        $li_content = $link_data['link_icon'] ? "<i class='".$link_data['link_icon']."'></i>" : "";
+                //
+                //        $li_content .= $link_data['link_name'];
+                //
+                //        $template_path = self::$nav_li_path;
+                //
+                //        $template_obj = 'nav_li_no_link';
+                //
+                //        $template_settings = [
+                //            'link_class' => $link_class,
+                //            'content'    => $li_content,
+                //        ];
+                //
+                //        if (!empty($itemlink)) {
+                //
+                //            $template_path = self::$nav_li_link_path;
+                //            $template_obj = 'nav_li_link';
+                //
+                //            $template_settings = [
+                //                'li_class'   => $li_class,
+                //                'link_class' => $link_class,
+                //                'link'       => $itemlink,
+                //                'title'      => $li_content,
+                //            ];
+                //
+                //        }
+                //    }
+                //} else {
+                //    $template_path = self::$nav_divider_path;
+                //    $template_obj = 'nav_li_divider';
+                //}
+                //$tpl->set_template($template_path);
+                //$tpl->set_block($template_obj, $template_settings);
+                //$res .= $tpl->get_output();
+                //
+                //$i++;
             }
+            return $data;
         }
 
-        return $res;
+        return [];
     }
 
+    /**
+     * Attempt to calculate a relative link
+     * Taking into account that current start page does not match
+     *
+     * @param $link_id
+     * @param $link_url
+     * @param $data
+     *
+     * @return bool
+     */
     private function checkLinkActive($link_id, $link_url, $data) {
-
-        $current_url = $this->get_currentURL();
-
+        $current_url = $this->getCurrentPage();
         if (!empty($link_url) && $link_url != '#') {
             if (defined('IN_PERMALINK')) {
                 if (Router::getRouterInstance()->getFilePath() == $link_url) {
                     return TRUE;
                 }
-            } else {
-                // format the link
-                $data_link_url = str_replace("index.php", "", $link_url);
-                if ($data_link_url == $current_url) {
-                    return TRUE;
-                }
             }
-            // Find the link_active by comparing with the current page request
+
+            // compares to current url
+            $data_link_url = str_replace("index.php", "", $link_url);
+            if ($data_link_url == $current_url) {
+                return TRUE;
+            }
+
+            // compares page requests
             if (!empty($_GET)) {
                 // check which is active.
                 $link_ref = explode("?", $link_url);
@@ -830,12 +669,11 @@ class SiteLinks {
 
         if (self::getMenuParam("start_page") !== $link_url) {
             // Find the link_active by checking child active. (Parent must also be active)
-            $child_links = $this->get_SubLinks_URL($data, $link_id);
-
+            $child_links = $this->getChildPages($data, $link_id);
             if (!empty($child_links)) {
                 foreach ($child_links as $child_link_url) {
                     if ($child_link_url != '#') {
-                        $data_link_url = str_replace("index.php", "", $child_link_url);
+                        $data_link_url = str_replace("index.php", '', $child_link_url);
                         if ($data_link_url == $current_url) {
                             return TRUE;
                         }
@@ -859,7 +697,6 @@ class SiteLinks {
                 }
             }
         }
-
         return FALSE;
     }
 
@@ -868,7 +705,7 @@ class SiteLinks {
      *
      * @return string
      */
-    private function get_currentURL() {
+    private function getCurrentPage() {
         if (empty(self::$current_url)) {
             $current_url = ltrim(htmlspecialchars_decode(server('REQUEST_URI')), '/');
             $site_path = fusion_get_settings('site_path');
@@ -893,7 +730,7 @@ class SiteLinks {
      *
      * @return array
      */
-    private function get_SubLinks_URL($data, $link_id) {
+    private function getChildPages($data, $link_id) {
         $linkRef = [];
         if (isset($data[$link_id])) {
             foreach ($data[$link_id] as $link) {
@@ -909,33 +746,47 @@ class SiteLinks {
         return (array)$linkRef;
     }
 
-    /**
-     * @return string
-     */
-    private function getaffix() {
-        $options = self::getMenuParam();
-        $html = '';
-        if ($options['affix_top'] && isnum($options['affix_top']) or $options['affix_bottom'] && isnum($options['affix_bottom'])) {
-            $html = " data-spy='affix'";
-            if ($options['affix_top'])
-                $html .= " data-offset-top='".$options['affix_top']."'";
-            if ($options['affix_bottom'])
-                $html .= " data-offset-bottom='".$options['affix_bottom']."'";
+    private function getLinkUrl() {
+        if (!empty($link_data['link_url'])) {
+            $link_data['link_url'] = str_replace('{%aidlink%}', fusion_get_aidlink(), $link_data['link_url']);
+            $itemlink = BASEDIR.$link_data['link_url'];
+            // if link has site protocol
+            if (preg_match("!^(ht|f)tp(s)?://!i", $link_data['link_url']) or (BASEDIR !== '' && stristr($link_data['link_url'], BASEDIR))) {
+                $itemlink = $link_data['link_url'];
+            }
+            return $itemlink;
         }
-
-        return (string)$html;
+        return '';
     }
 
-    /**
-     * @return mixed
-     * @throws \Exception
-     */
-    private static function getBoilerFiles() {
-        $boiler_files = boilerplate_get_files();
-        if (!empty($boiler_files)) {
-            list(self::$nav_path, self::$nav_li_path, self::$nav_li_link_path, self::$nav_li_dropdown_path, self::$nav_divider_path) = array_values($boiler_files['nav']);
+    private function getLinkClass($link_data, $options, $counter) {
+
+        if ($link_data['link_disabled']) {
+            return 'disabled';
         }
-        return $boiler_files;
+        if ($link_data['link_title']) {
+            return 'dropdown-header';
+        }
+
+        $li_class[] = $link_data['link_li_class'];
+        $li_class[] = $options['item_class'];
+
+        if ($link_data['link_name'] != "---" && $link_data['link_name'] != "===") {
+
+            if (!$counter && !$link_data['link_cat']) {
+                $li_class[] = 'first-link';
+            }
+
+            if ($link_data['link_active']) {
+                $li_class[] = 'current-link active';
+            }
+
+            if (empty($link_data['link_url'])) {
+                $li_class[] = 'no-link';
+            }
+        }
+
+        return array_filter($li_class);
     }
 
 }
