@@ -231,7 +231,7 @@ function user_profile_page() {
                     //print_p($field_value);
 
                     $field_replacement = str_replace('user_', 'uf_', $field_value['field_name']);
-                    $title = $locale[$field_replacement];
+                    $title = !empty($locale[$field_replacement]) ? $locale[$field_replacement] : '';
                     if ($field_value['field_name'] == 'user_forum-stat') {
                         $value = number_format($user_data['user_posts']);
                     } else if ($field_value['field_name'] == 'user_comments-stat') {

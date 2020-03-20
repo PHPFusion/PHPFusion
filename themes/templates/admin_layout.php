@@ -29,10 +29,10 @@ echo "<meta name='googlebot' content='noarchive'/>";
 if ($settings['bootstrap'] || defined('BOOTSTRAP')) {
     echo "<meta http-equiv='X-UA-Compatible' content='IE=edge'/>\n";
     echo "<meta name='viewport' content='width=device-width, initial-scale=1.0'/>\n";
-    echo "<link href='".INCLUDES."bootstrap/bootstrap.min.css' rel='stylesheet' media='screen'/>";
+    echo "<link href='".INCLUDES."bootstrap/css/bootstrap.min.css' rel='stylesheet' media='screen'/>";
 
     if ($locale['text-direction'] == 'rtl') {
-        echo "<link href='".INCLUDES."bootstrap/bootstrap-rtl.min.css' rel='stylesheet' media='screen'/>";
+        echo "<link href='".INCLUDES."bootstrap/css/bootstrap-rtl.min.css' rel='stylesheet' media='screen'/>";
     }
 }
 
@@ -75,8 +75,8 @@ echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery.min.js'></sc
 echo "<script type='text/javascript' src='".INCLUDES."jscripts/jscript.min.js'></script>\n";
 
 if ($settings['tinymce_enabled'] == 1) {
-    echo '<script src="'.INCLUDES.'jquery/jquery-ui.min.js"></script>';
-    echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.min.css">';
+    echo '<script src="'.INCLUDES.'jquery/jquery-ui/jquery-ui.min.js"></script>';
+    echo '<link rel="stylesheet" href="'.INCLUDES.'jquery/jquery-ui/jquery-ui.min.css">';
     echo '<script src="'.INCLUDES.'elFinder/js/elfinder.min.js"></script>';
     echo '<link rel="stylesheet" href="'.INCLUDES.'elFinder/css/elfinder.min.css">';
     echo '<link rel="stylesheet" href="'.INCLUDES.'elFinder/css/theme.css">';
@@ -196,11 +196,11 @@ if (!check_admin_pass('') && !stristr($_SERVER['PHP_SELF'], $settings['site_path
 
 // Load Bootstrap javascript
 if ($settings['bootstrap'] || defined('BOOTSTRAP')) {
-    echo "<script type='text/javascript' src='".INCLUDES."bootstrap/bootstrap.min.js'></script>\n";
+    echo "<script type='text/javascript' src='".INCLUDES."bootstrap/js/bootstrap.min.js'></script>\n";
 }
 
 echo "<script type='text/javascript' src='".INCLUDES."jquery/admin-scripts.js'></script>\n";
-echo "<script type='text/javascript' src='".INCLUDES."jquery/holder/holder.min.js'></script>\n";
+echo "<script type='text/javascript' src='".INCLUDES."jquery/holder.min.js'></script>\n";
 
 // Output lines added with add_to_footer()
 echo $fusion_page_footer_tags;
