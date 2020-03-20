@@ -16,6 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
+$current_version = '8.00.40';
 if (!checkrights("U") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
     redirect("../index.php");
 }
@@ -48,7 +49,7 @@ if (str_replace(".", "", $settings['version']) < "80024") {
         echo "<input type='submit' name='upgrade' value='".$locale['400']."' class='button'><br /><br />\n";
     } else if (isset($_POST['upgrade']) && isset($_POST['stage']) && $_POST['stage'] == 2) {
         // Set a new version
-        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='8.00.40' WHERE settings_name='version'");
+        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$current_version."' WHERE settings_name='version'");
         redirect(FUSION_SELF.$aidlink."&amp;upgrade_ok");
     }
 
