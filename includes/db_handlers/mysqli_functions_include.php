@@ -31,11 +31,6 @@ function db_lastid() {
     return $db_connect->insert_id;
 }
 
-function db_affrows() {
-    global $db_connect;
-    return $db_connect->affected_rows;
-}
-
 function dbquery($query) {
     global $db_connect, $mysql_queries_count, $mysql_queries_time;
     $mysql_queries_count++;
@@ -227,10 +222,5 @@ if (!function_exists("mysql_close")) {
     function mysql_close($dummy = "") {
         dbclose();
         return TRUE;
-    }
-}
-if (!function_exists("mysql_affected_rows")) {
-    function mysql_affected_rows($dummy = "") {
-        return db_affrows();
     }
 }

@@ -204,16 +204,6 @@ function dbnew_result($res, $row, $field = 0) {
     return $datarow[$field];
 }
 
-function db_affrows() {
-    global $pdo;
-
-    if ($pdo !== FALSE) {
-        return $pdo->rowCount();
-    }
-
-    return NULL;
-}
-
 // new added functions
 function db_server_info() {
     return dbconnection()->getAttribute(constant("PDO::ATTR_SERVER_VERSION"));
@@ -294,11 +284,6 @@ if (!function_exists("mysql_close")) {
     function mysql_close($dummy = "") {
         dbclose();
         return TRUE;
-    }
-}
-if (!function_exists("mysql_affected_rows")) {
-    function mysql_affected_rows($dummy = "") {
-        return db_affrows();
     }
 }
 if (!function_exists("mysql_field_name")) {

@@ -60,7 +60,8 @@ if ((!isset($_POST['prune_forum'])) && (isset($_GET['action']) && $_GET['action'
             }
         }
         $result = dbquery("DELETE FROM ".DB_POSTS." WHERE forum_id='".$_GET['forum_id']."' AND post_datestamp < '".$prune_time."'");
-        echo $locale['609'].db_affrows()."<br />";
+		$deleted_posts = dbrows($result);
+        echo $locale['609'].$deleted_posts."<br />";
         echo $locale['610'].$delattach."<br />";
         $result = dbquery("SELECT thread_id,thread_lastpost FROM ".DB_THREADS." WHERE  forum_id='".$_GET['forum_id']."' AND thread_lastpost < '".$prune_time."'");
         if (dbrows($result)) {
@@ -68,7 +69,10 @@ if ((!isset($_POST['prune_forum'])) && (isset($_GET['action']) && $_GET['action'
                 $result2 = dbquery("DELETE FROM ".DB_THREAD_NOTIFY." WHERE thread_id='".$data['thread_id']."'");
             }
         }
-        $result = dbquery("DELETE FROM ".DB_THREADS." WHERE forum_id='".$_GET['forum_id']."' AND  thread_lastpost < '".$prune_time."'");
+        
+		$result = dbquery("DELETE FROM ".DB_THREADS." WHERE forum_id='".$_GET['forum_id']."' AND  thread_lastpost < '".$prune_time."'");
+		$deleted_threads = dbrows($result);
+		
         $result = dbquery("SELECT thread_lastpost, thread_lastuser FROM ".DB_THREADS." WHERE forum_id='".$_GET['forum_id']."' ORDER BY thread_lastpost DESC LIMIT 0,1");
         if (dbrows($result)) {
             $data = dbarray($result);
@@ -76,7 +80,8 @@ if ((!isset($_POST['prune_forum'])) && (isset($_GET['action']) && $_GET['action'
         } else {
             $result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='0', forum_lastuser='0' WHERE forum_id='".$_GET['forum_id']."'");
         }
-        echo $locale['611'].db_affrows()."\n</div>";
+
+        echo $locale['611'].$deleted_threads."\n</div>";
 
         $result = dbquery(
             "SELECT COUNT(post_id) AS postcount, thread_id FROM ".DB_POSTS."
