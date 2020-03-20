@@ -74,10 +74,8 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
      * Delete a Weblink Submission
      */
     private function DeleteSubmission() {
-        $delete_submission = filter_input(INPUT_POST, 'delete_submission', FILTER_DEFAULT);
-
-        if (!empty($delete_submission)) {
-            dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id = :submitid AND submit_type = :submittype", [':submitid' => (int)$delete_submission, ':submittype' => 'l']);
+        if (isset($_POST['delete_submission'])) {
+            dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id = :submitid AND submit_type = :submittype", [':submitid' => (int)$_GET['submit_id'], ':submittype' => 'l']);
             addNotice('success', $this->locale['WLS_0061']);
             redirect(clean_request('', ['submit_id'], FALSE));
         }
@@ -223,7 +221,6 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
                 echo form_datepicker('weblink_datestamp', $this->locale['WLS_0103'], $this->inputArray['weblink_datestamp'], [
                     'inner_width' => '100%'
                 ]);
-                self::displayFormButtons("formstart", FALSE);
                 closeside();
 
                 ?>
