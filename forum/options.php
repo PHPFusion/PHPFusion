@@ -112,7 +112,7 @@ if (isset($_GET['step']) && $_GET['step'] == "renew") {
         $threads_count = dbcount("(forum_id)", DB_THREADS, "forum_id='".$_GET['forum_id']."'") - 1;
         $result = dbquery("DELETE FROM ".DB_POSTS." WHERE thread_id='".$_GET['thread_id']."'");
 
-        $del_posts = db_affrows();
+        $del_posts = dbrows($result);
 
         $result = dbquery("DELETE FROM ".DB_THREADS." WHERE thread_id='".$_GET['thread_id']."'");
         $result = dbquery("DELETE FROM ".DB_THREAD_NOTIFY." WHERE thread_id='".$_GET['thread_id']."'");
