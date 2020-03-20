@@ -79,7 +79,7 @@ $root_images = [
     'alias' => 'root_images'
 ];
 
-if (defined('ARTICLES_EXIST')) {
+if (defined('ARTICLES_EXIST') && checkrights('A')) {
     $article_images = [
         'path'  => IMAGES_A,
         'URL'   => $site_url.'infusions/articles/images/',
@@ -87,7 +87,7 @@ if (defined('ARTICLES_EXIST')) {
     ];
 }
 
-if (defined('BLOG_EXIST')) {
+if (defined('BLOG_EXIST') && checkrights('BLOG')) {
     $blog_images = [
         'path'  => IMAGES_B,
         'URL'   => $site_url.'infusions/blog/images/',
@@ -95,7 +95,7 @@ if (defined('BLOG_EXIST')) {
     ];
 }
 
-if (defined('DOWNLOADS_EXIST')) {
+if (defined('DOWNLOADS_EXIST') && checkrights('D')) {
     $download_images = [
         'path'  => IMAGES_D,
         'URL'   => $site_url.'infusions/download/images/',
@@ -103,7 +103,7 @@ if (defined('DOWNLOADS_EXIST')) {
     ];
 }
 
-if (defined('GALLERY_EXIST')) {
+if (defined('GALLERY_EXIST') && checkrights('PH')) {
     $download_images = [
         'path'  => IMAGES_G,
         'URL'   => $site_url.'infusions/gallery/photos/',
@@ -111,7 +111,7 @@ if (defined('GALLERY_EXIST')) {
     ];
 }
 
-if (defined('NEWS_EXIST')) {
+if (defined('NEWS_EXIST') && checkrights('N')) {
     $news_images = [
         'path'  => IMAGES_N,
         'URL'   => $site_url.'infusions/news/images/',

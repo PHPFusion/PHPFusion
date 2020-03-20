@@ -144,7 +144,7 @@ function display_html($formname, $textarea, $html = TRUE, $colors = FALSE, $imag
 
         $res .= "<div class='btn-group'>\n";
         //$res .= "<button type='button' title='".$locale['html_018']."' class='btn btn-sm btn-default m-b-10 button strong' onclick=\"addText('".$textarea."', '&lt;p&gt;', '&lt;/p&gt;', '".$formname."');\">".$locale['html_018']."</button>\n";
-        $res .= "<button title='".$locale['html_019']."' class='dropdown-toggle btn btn-sm btn-default m-b-10 button' data-toggle='dropdown'><i class='glyphicon glyphicon-header'></i><span class='caret'></span></button>\n";
+        $res .= "<button title='".$locale['html_019']."' class='dropdown-toggle btn btn-sm btn-default m-b-10 button' data-toggle='dropdown'><i class='fa fa-heading'></i><span class='caret'></span></button>\n";
         $res .= "<ul class='dropdown-menu' style='width:190px;'>\n";
         $res .= "<li>\n<a value='H1' class='pointer' onclick=\"addText('".$textarea."', '&lt;h1&gt;', '&lt;/h1&gt;', '".$formname."');\"><span class='strong' style='font-size:24px; font-family: Georgia, \"Times New Roman\", Times, serif !important;'>Heading 1</span></a>\n</li>\n";
         $res .= "<li>\n<a value='H2' class='pointer' onclick=\"addText('".$textarea."', '&lt;h2&gt;', '&lt;/h2&gt;', '".$formname."');\"><span class='strong' style='font-size:19.5px; font-family: Georgia, \"Times New Roman\", Times, serif !important;'>Heading 2</span></a>\n</li>\n";

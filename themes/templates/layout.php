@@ -136,7 +136,7 @@ if ($settings['bootstrap'] || defined('BOOTSTRAP')) {
     echo "<script src='".INCLUDES."bootstrap/js/bootstrap-submenu.min.js'></script>\n";
 }
 
-echo "<script src='".INCLUDES."jquery/holder/holder.min.js'></script>\n";
+echo "<script src='".INCLUDES."jquery/holder.min.js'></script>\n";
 
 // Output lines added with add_to_footer()
 echo $fusion_page_footer_tags;
