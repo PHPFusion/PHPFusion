@@ -299,9 +299,9 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
     private function displayFormButtons($unique_id, $breaker = TRUE) {
         ?>
         <div class="m-t-20">
-            <?php echo form_button('preview_submission', $this->locale['preview'], $this->locale['preview'], ['class' => 'btn-default', 'icon' => 'fa fa-fw fa-eye', 'input-id' => 'preview_submission-'.$unique_id.'']); ?>
-            <?php echo form_button('publish_submission', $this->locale['publish'], $this->locale['publish'], ['class' => 'btn-success m-r-10', 'icon' => 'fa fa-fw fa-hdd-o', 'input-id' => 'publish_submission-'.$unique_id.'']); ?>
-            <?php echo form_button('delete_submission', $this->locale['delete'], $this->locale['delete'], ['class' => 'btn-danger', 'icon' => 'fa fa-fw fa-trash', 'input-id' => 'delete_submission-'.$unique_id.'']); ?>
+            <?php echo form_button('preview_submission', $this->locale['preview'], $this->locale['preview'], ['class' => 'btn-default', 'icon' => 'fa fa-fw fa-eye', 'input_id' => 'preview_submission-'.$unique_id.'']); ?>
+            <?php echo form_button('publish_submission', $this->locale['publish'], $this->locale['publish'], ['class' => 'btn-success m-r-10', 'icon' => 'fa fa-fw fa-hdd-o', 'input_id' => 'publish_submission-'.$unique_id.'']); ?>
+            <?php echo form_button('delete_submission', $this->locale['delete'], $this->locale['delete'], ['class' => 'btn-danger', 'icon' => 'fa fa-fw fa-trash', 'input_id' => 'delete_submission-'.$unique_id.'']); ?>
         </div>
         <?php if ($breaker) { ?>
             <hr/><?php } ?>
