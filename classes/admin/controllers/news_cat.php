@@ -190,8 +190,8 @@ class NewsCategoryAdmin extends NewsAdminModel {
                 echo form_checkbox("news_cat_draft", self::$locale['news_0306'], $data['news_cat_draft'], ["reverse_label" => TRUE]);
                 echo form_checkbox("news_cat_sticky", self::$locale['news_0307'], $data['news_cat_sticky'],
                     ["reverse_label" => TRUE]);
-                echo form_button("cancel", self::$locale['cancel'], self::$locale['cancel'], ["class" => "btn-default", 'icon' => 'fa fa-times']);
-                echo form_button("save_cat", self::$locale['news_0302'], self::$locale['news_0302'], ["class" => "btn-success m-l-10", 'icon' => 'fa fa-hdd-o']);
+                echo form_button("cancel", self::$locale['cancel'], self::$locale['cancel'], ['input_id' => 'cancel-btn', "class" => "btn-default", 'icon' => 'fa fa-times']);
+                echo form_button("save_cat", self::$locale['news_0302'], self::$locale['news_0302'], ['input_id' => 'save-btn', "class" => "btn-success m-l-10", 'icon' => 'fa fa-hdd-o']);
                 echo form_button("save_cat_and_close", self::$locale['save_and_close'], self::$locale['save_and_close'],
                     ["class" => "btn-primary", 'icon' => 'fa fa-hdd-o']);
                 closeside();

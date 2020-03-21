@@ -474,7 +474,7 @@ class NewsAdmin extends NewsAdminModel {
      * @param $unique_id
      */
     private function display_newsButtons($unique_id) {
-        echo form_button('preview', self::$locale['preview'], self::$locale['preview'], ['class' => 'btn-default m-r-10', 'icon' => 'fa fa-eye']);
+        echo form_button('preview', self::$locale['preview'], self::$locale['preview'], ['input_id' => 'preview-'.$unique_id, 'class' => 'btn-default m-r-10', 'icon' => 'fa fa-eye']);
         echo form_button('cancel', self::$locale['cancel'], self::$locale['cancel'],
             ['class' => 'btn-default m-r-10', 'input_id' => 'cancel-'.$unique_id, 'icon' => 'fa fa-times']);
         echo form_button('save', self::$locale['news_0241'], self::$locale['news_0241'],
@@ -1020,7 +1020,7 @@ class NewsAdmin extends NewsAdminModel {
                         $cat_edit_link = FUSION_SELF.fusion_get_aidlink()."&amp;action=edit&amp;ref=news_category&amp;cat_id=".$data['news_cat_id'];
                         ?>
                         <tr>
-                            <td class="hidden-xs"><?php echo form_checkbox("news_id[]", "", "", ["value" => $data['news_id'], "class" => 'm-0']) ?></td>
+                            <td class="hidden-xs"><?php echo form_checkbox("news_id[]", "", "", ['input_id' => 'news'.$data['news_id'], "value" => $data['news_id'], "class" => 'm-0']) ?></td>
                             <td><a class="text-dark" href="<?php echo $edit_link ?>"><?php echo $data['news_subject'] ?></a></td>
                             <td><a class="text-dark" href="<?php echo $cat_edit_link ?>"><?php echo $data['news_cat_name'] ?></a></td>
                             <td><?php echo getgroupname($data['news_visibility']) ?></td>
