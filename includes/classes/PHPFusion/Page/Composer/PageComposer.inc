@@ -57,8 +57,8 @@ class PageComposer extends PageAdmin {
         echo opentab($composerTab, self::getComposerMode(), 'composer_tab', TRUE, 'nav-tabs m-t-10', 'composer_tab');
 
         echo "<div class='m-t-10'>";
-        echo form_button('save', self::$locale['page_0320'], self::$locale['page_0320'], ['class' => 'btn-success m-r-10', 'icon' => 'fa fa-hdd-o']);
-        echo form_button('save_and_close', self::$locale['save_and_close'], self::$locale['save_and_close'], ['class' => 'btn-primary m-r-10', 'icon' => 'fa fa-hdd-o']);
+        echo form_button('save', self::$locale['page_0320'], self::$locale['page_0320'], ['input_id' => 'save-btn', 'class' => 'btn-success m-r-10', 'icon' => 'fa fa-hdd-o']);
+        echo form_button('save_and_close', self::$locale['save_and_close'], self::$locale['save_and_close'], ['input_id' => 'save-close-btn', 'class' => 'btn-primary m-r-10', 'icon' => 'fa fa-hdd-o']);
         if (self::$is_editing) {
             echo form_button('cancel', self::$locale['cancel'], self::$locale['cancel'], ['class' => 'btn-default m-r-10', 'icon' => 'fa fa-times']);
             echo "<a class='btn btn-default' target='_blank' href='".BASEDIR."viewpage.php?page_id=".self::$data['page_id']."'><i class='fa fa-eye'></i> ".self::$locale['view']."</a>";
