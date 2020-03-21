@@ -23,7 +23,7 @@ class Navbar {
 
         if ($info['show_header']) {
             if ($info['show_banner']) {
-                $info['banner'] = ($info['show_banner'] ? ($info['custom_banner'] ? $info['custom_banner'] : $settings['sitebanner']) : '');
+                $info['banner'] = ($info['show_banner'] ? ($info['custom_banner'] ? $info['custom_banner'] : BASEDIR.$settings['sitebanner']) : '');
                 $info['banner_title'] = $settings['sitename'];
                 $info['banner_link'] = $info['custom_banner_link'] ?: BASEDIR.$settings['opening_page'];
                 $info['banner_position'] = $info['logoposition_xs']." ".$info['logoposition_sm']." ".$info['logoposition_md']." ".$info['logoposition_lg'];

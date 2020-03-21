@@ -11,8 +11,8 @@ function render_page($license = '') {
     $horizon_menu_options = [
         //'container_fluid'   => TRUE,
         'container'      => TRUE,
-        'searchbar' => TRUE,
-        'navbar_class' => 'navbar-expand-lg navbar-dark bg-dark navbar-light',
+        'searchbar'      => TRUE,
+        'navbar_class'   => 'navbar-expand-lg navbar-dark bg-dark navbar-light',
         'show_banner'    => TRUE,
         //'header_content' => '<a class="navbar-brand" href="'.BASEDIR.$settings['opening_page'].'"><img src="'.BASEDIR.$settings['sitebanner'].'" alt="'.$settings['sitename'].'" class="img-responsive"/></a>',
         'grouping'       => TRUE,
