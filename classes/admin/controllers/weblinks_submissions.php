@@ -243,12 +243,12 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
         echo form_button( 'publish_submission', $this->locale['publish'], $this->locale['publish'], [
             'class'    => "btn-success m-r-10",
             'icon'     => "fa fa-fw fa-hdd-o",
-            'input-id' => "publish_submission-".$unique_id
+            'input_id' => "publish_submission-".$unique_id
         ] );
         echo form_button( 'delete_submission', $this->locale['delete'], $this->locale['delete'], [
             'class'    => "btn-danger m-r-10",
             'icon'     => "fa fa-fw fa-trash",
-            'input-id' => "delete_submission-".$unique_id
+            'input_id' => "delete_submission-".$unique_id
         ] );
         echo "</div>";
         if ( $breaker ) {
