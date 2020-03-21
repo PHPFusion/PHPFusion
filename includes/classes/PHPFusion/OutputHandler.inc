@@ -76,7 +76,7 @@ class OutputHandler {
      * @param string $addition
      */
     public static function addToTitle($addition = "") {
-        self::$pageTitle .= $addition;
+        self::$pageTitle .= preg_replace("/".fusion_get_locale('global_200')."/", ' ', $addition, 1);
     }
 
     /**
