@@ -186,13 +186,13 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 echo $locale['download_0204'];
                 echo "</div>\n";
                 echo form_textarea('download_description', $locale['download_0202a'], $callback_data['download_description'], [
-                    "no_resize"   => fusion_get_settings("tinymce_enabled") ? FALSE : TRUE,
-                    "form_name"   => "publish_download",
-                    "html"        => fusion_get_settings("tinymce_enabled") ? FALSE : TRUE,
-                    "autosize"    => fusion_get_settings("tinymce_enabled") ? FALSE : TRUE,
-                    "preview"     => fusion_get_settings("tinymce_enabled") ? FALSE : TRUE,
-                    "placeholder" => $locale['download_0201'],
-                    'path'        => IMAGES_D
+                    "type"       => fusion_get_settings("tinymce_enabled") ? "tinymce" : "html",
+                    "tinymce"    => fusion_get_settings("tinymce_enabled") && iADMIN ? "advanced" : "simple",
+                    'tinymce_image' => FALSE,
+                    "autosize"   => TRUE,
+                    "error_text" => $locale['download_0112'],
+                    "form_name"  => "publish_download",
+                    'path'       => IMAGES_D
                 ]);
                 echo "</div>\n<div class='col-xs-12 col-sm-4'>\n";
                 // start package
@@ -262,8 +262,8 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 echo form_text('download_filesize', $locale['download_0211'], $callback_data['download_filesize'], ['inline' => 1]);
                 closeside();
                 echo "</div>\n</div>\n"; // end row.
-                echo form_button('publish', $locale['download_0061'], $locale['download_0061'], ['class' => 'btn-success m-r-10', 'icon' => 'fa fa-hdd-o']);
-                echo form_button('delete', $locale['download_0060'], $locale['download_0060'], ['class' => 'btn-danger', 'icon' => 'fa fa-trash']);
+                echo form_button('publish', $locale['download_0061'], $locale['download_0061'], ['input_id' => 'publish-btn', 'class' => 'btn-success m-r-10', 'icon' => 'fa fa-hdd-o']);
+                echo form_button('delete', $locale['download_0060'], $locale['download_0060'], ['input_id' => 'delete-btn', 'class' => 'btn-danger', 'icon' => 'fa fa-trash']);
                 echo closeform();
             }
         }
