@@ -19,11 +19,13 @@ class Navigation {
     }
 
     public function render($info) {
-        return \Navbar::showSubLinks($info);
+        $nav = new \Navbar();
+        return $nav->showSubLinks($info);
     }
 
     public function search($info) {
-        return \Navbar::getSearch($info);
+        $nav = new \Navbar();
+        return $nav->getSearch($info);
     }
 
 }

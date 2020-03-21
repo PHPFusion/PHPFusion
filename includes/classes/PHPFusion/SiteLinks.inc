@@ -50,7 +50,7 @@ class SiteLinks {
         'header_content'       => '',
         'custom_banner'        => '',
         'custom_banner_link'   => '',
-        'language'             => [],
+        'language_switcher'             => [],
         'searchbar'            => FALSE,
         'search_icon'          => 'fas fa-search',
         'search_btn_class'     => 'btn-primary',
@@ -65,6 +65,7 @@ class SiteLinks {
         'nav_class_primary'    => '',
         'nav_class_secondary'  => '',
         'login'                => FALSE,
+        'callback_data'        => ''
     ];
     /**
      * @param string $sep
@@ -174,7 +175,7 @@ class SiteLinks {
             ];
             $options += $link_settings;
 
-            $instance->id = $options['id'];
+            self::$id = $options['id'];
             $instance->menu_options = $options;
         }
 
