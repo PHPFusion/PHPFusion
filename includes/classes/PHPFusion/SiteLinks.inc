@@ -55,7 +55,6 @@ class SiteLinks {
         'search_icon'          => 'fas fa-search',
         'search_btn_class'     => 'btn-primary',
         'caret_icon'           => 'caret',
-        'callback_data'        => '',
         'additional_data'      => '',
         'link_position'        => [2, 3],
         'html_content'         => '',
@@ -169,7 +168,7 @@ class SiteLinks {
                 'start_page'     => $instance->getStartPage(),
                 'links_per_page' => $settings['links_per_page'],
                 'links_grouping' => $settings['links_grouping'],
-                'items'          => $options['callback_data'] !== FALSE ? $instance->fetchSiteLinks(['link_position' => $options['link_position']]) : []
+                'callback_data'  => $options['callback_data'] !== FALSE ? $instance->fetchSiteLinks(['link_position' => $options['link_position']]) : []
             ];
             $options += $link_settings;
 
@@ -194,6 +193,9 @@ class SiteLinks {
         return self::$instances[$id];
     }
 
+    /**
+     * @return mixed|string
+     */
     private function getStartPage() {
         $settings = fusion_get_settings();
         if ($settings['site_seo'] && defined('IN_PERMALINK') && get("aid") === NULL) {
@@ -288,17 +290,13 @@ class SiteLinks {
         ];
     }
 
+    /**
+     * @param $key
+     * @param $value
+     */
     public static function setMenuParam($key, $value) {
         //self::$instances[self::$id]->menu_options[$key] = (is_bool($value)) ? $value : self::getMenuParam($key).$value;
         self::$instances[self::$id]->menu_options[$key] = $value; //(is_bool($value) ? $value : self::getMenuParam($key).$value);
-    }
-
-    private static function getMenuParam($key = FALSE) {
-        if ($key) {
-            return (isset(self::$instances[self::$id]->menu_options[$key])) ? self::$instances[self::$id]->menu_options[$key] : NULL;
-        }
-
-        return self::$instances[self::$id]->menu_options;
     }
 
     /**
@@ -344,6 +342,10 @@ class SiteLinks {
         ];
     }
 
+    /**
+     * @return mixed
+     * @throws \ReflectionException
+     */
     public function showSubLinks() {
         $this->cacheSiteLinks();
         $options = self::getMenuParam();
@@ -356,6 +358,9 @@ class SiteLinks {
         return $fusion_steam->load('Navigation')->render($options);
     }
 
+    /**
+     * Load sitelinks default data
+     */
     private function cacheSiteLinks() {
 
         $options = self::getMenuParam();
@@ -408,10 +413,32 @@ class SiteLinks {
         }
     }
 
+    /**
+     * @param bool $key
+     *
+     * @return |null
+     */
+    private static function getMenuParam($key = FALSE) {
+        if ($key) {
+            return (isset(self::$instances[self::$id]->menu_options[$key])) ? self::$instances[self::$id]->menu_options[$key] : NULL;
+        }
+
+        return self::$instances[self::$id]->menu_options;
+    }
+
+    /**
+     * @param $key
+     * @param $value
+     */
     private function replaceMenuParam($key, $value) {
         self::$instances[self::$id]->menu_options[$key] = $value;
     }
 
+    /**
+     * @param $info
+     *
+     * @return array
+     */
     private function getLanguage($info) {
         // Secondary menu
         if ($info['language_switcher'] === TRUE) {
@@ -448,6 +475,12 @@ class SiteLinks {
         return [];
     }
 
+    /**
+     * @param int    $id
+     * @param string $key
+     *
+     * @return array
+     */
     private function parseLinks($id = 0, $key = 'callback_data') {
         $options = self::getMenuParam();
         $settings = fusion_get_settings();
@@ -472,9 +505,7 @@ class SiteLinks {
             $counter = 0;
 
             foreach ($data[$id] as $link_id => $link_data) {
-
                 $link_data += $default_link_data;
-
                 // get link title in formatted bbcode
                 $link_name = ($settings['link_bbcode'] ? parsesmileys(parseubb($link_data['link_name'])) : $link_data['link_name']);
                 // check whether the link is active.
@@ -482,7 +513,7 @@ class SiteLinks {
 
                 $link_disabled = ($link_data['link_disabled'] ? TRUE : FALSE);
 
-                $link_url = $this->getLinkUrl();
+                $link_url = $this->getLinkUrl($link_data);
 
                 $link_class = $this->getLinkClass($link_data, $options, $counter);
 
@@ -495,102 +526,6 @@ class SiteLinks {
                     ] + $link_data;
 
                 $counter++;
-
-                //if ($link_data['link_name'] != "---" && $link_data['link_name'] != "===") {
-                //
-                //    $link_target = ($link_data['link_window'] == "1" ? " target='_blank'" : '');
-                //
-
-                //    $itemlink = '';
-                //
-                //
-                //
-                //    if (isset($data[$link_id])) {
-                //
-                //        // Child Item
-                //        $template_path = self::$nav_li_dropdown_path;
-                //        $template_obj = 'nav_li_dropdown';
-                //        $has_child = TRUE;
-                //
-                //        $tab_index = !empty($id) ? " tabindex='0'" : '';
-                //
-                //        $l_1 = " class='dropdown-toggle".(!empty($link_data['link_class']) ? " ".$link_data['link_class'] : '')."' data-toggle='dropdown' ";
-                //        $l_1 .= (empty($id) && $has_child ? "data-submenu " : '');
-                //
-                //        $li_class[] = (!empty($id) ? "dropdown-submenu" : "dropdown");
-                //        $li_class = array_filter($li_class);
-                //
-                //        $li_content = ($link_data['link_icon'] ? "<i class='".$link_data['link_icon']."'></i>" : "");
-                //        $li_content .= $link_data['link_name'];
-                //
-                //        $first_item_link = '';
-                //        if (!empty($link_data['link_url']) and $link_data['link_url'] !== "#") {
-                //            $first_item_link .= "<li".(!$itemlink ? " class='no-link'" : '').">\n".self::getMenuParam('seperator');
-                //            $first_item_link .= ($itemlink ? "<a href='".$itemlink."' ".$link_target.">\n" : '');
-                //            $first_item_link .= (!empty($link_data['link_icon']) ? "<i class='".$link_data['link_icon']." m-r-5'></i>\n" : "");
-                //            $first_item_link .= $link_data['link_name'];
-                //            $first_item_link .= ($itemlink ? "\n</a>\n" : '');
-                //            $first_item_link .= "</li>\n";
-                //        }
-                //
-                //        $template_settings = [
-                //            'li_class'            => (!empty($li_class) ? 'class="'.implode(" ", $li_class).'"' : ''),
-                //            'link_class'          => $l_1,
-                //            'link'                => $itemlink,
-                //            'title'               => $link_data['link_name'],
-                //            'link_target'         => $link_target,
-                //            'tab_index'           => $tab_index,
-                //            'content'             => $li_content,
-                //            'caret_class'         => $options['caret_icon'],
-                //            'dropdown_menu_id'    => 'menu-'.$link_data['link_id'],
-                //            'dropdown_menu_class' => '',
-                //            'first_item_link'     => $first_item_link,
-                //            'submenu'             => 'data-submenu',
-                //            'item'                => $this->showMenuLinks($link_data['link_id'], $data)
-                //        ];
-                //
-                //    } else {
-                //
-                //        $li_class = (!empty($li_class)) ? " class='".implode(" ", $li_class)."'" : "";
-                //
-                //        $link_class = (!empty($link_data['link_class']) ? " class='".$link_data['link_class']."'" : '');
-                //
-                //        $li_content = $link_data['link_icon'] ? "<i class='".$link_data['link_icon']."'></i>" : "";
-                //
-                //        $li_content .= $link_data['link_name'];
-                //
-                //        $template_path = self::$nav_li_path;
-                //
-                //        $template_obj = 'nav_li_no_link';
-                //
-                //        $template_settings = [
-                //            'link_class' => $link_class,
-                //            'content'    => $li_content,
-                //        ];
-                //
-                //        if (!empty($itemlink)) {
-                //
-                //            $template_path = self::$nav_li_link_path;
-                //            $template_obj = 'nav_li_link';
-                //
-                //            $template_settings = [
-                //                'li_class'   => $li_class,
-                //                'link_class' => $link_class,
-                //                'link'       => $itemlink,
-                //                'title'      => $li_content,
-                //            ];
-                //
-                //        }
-                //    }
-                //} else {
-                //    $template_path = self::$nav_divider_path;
-                //    $template_obj = 'nav_li_divider';
-                //}
-                //$tpl->set_template($template_path);
-                //$tpl->set_block($template_obj, $template_settings);
-                //$res .= $tpl->get_output();
-                //
-                //$i++;
             }
             return $data;
         }
@@ -617,9 +552,12 @@ class SiteLinks {
                 }
             }
 
-            // compares to current url
-            $data_link_url = str_replace("index.php", "", $link_url);
-            if ($data_link_url == $current_url) {
+            // if link is index.php and current url is opening page
+            if ($link_url == 'index.php' && $current_url == fusion_get_settings('opening_page')) {
+                return TRUE;
+            }
+
+            if (str_replace("index.php", "", $link_url) == $current_url) {
                 return TRUE;
             }
 
@@ -647,8 +585,7 @@ class SiteLinks {
             if (!empty($child_links)) {
                 foreach ($child_links as $child_link_url) {
                     if ($child_link_url != '#') {
-                        $data_link_url = str_replace("index.php", '', $child_link_url);
-                        if ($data_link_url == $current_url) {
+                        if (str_replace("index.php", '', $child_link_url) == $current_url) {
                             return TRUE;
                         }
                         // Find the link_active by comparing with the current page request
@@ -711,7 +648,7 @@ class SiteLinks {
                 if (isset($link['link_url'])) {
                     $linkRef[$link['link_id']] = $link['link_url'];
                     if (isset($data[$link['link_id']])) {
-                        $linkRef = array_merge_recursive($linkRef, $this->get_SubLinks_URL($data, $link['link_id']));
+                        $linkRef = array_merge_recursive($linkRef, $this->getChildPages($data, $link['link_id']));
                     }
                 }
             }
@@ -720,7 +657,12 @@ class SiteLinks {
         return (array)$linkRef;
     }
 
-    private function getLinkUrl() {
+    /**
+     * @param $link_data
+     *
+     * @return mixed|string
+     */
+    private function getLinkUrl($link_data) {
         if (!empty($link_data['link_url'])) {
             $link_data['link_url'] = str_replace('{%aidlink%}', fusion_get_aidlink(), $link_data['link_url']);
             $itemlink = BASEDIR.$link_data['link_url'];
@@ -733,6 +675,13 @@ class SiteLinks {
         return '';
     }
 
+    /**
+     * @param $link_data
+     * @param $options
+     * @param $counter
+     *
+     * @return array|string
+     */
     private function getLinkClass($link_data, $options, $counter) {
 
         if ($link_data['link_disabled']) {

@@ -8,12 +8,11 @@ use PHPFusion\Steam;
  */
 class Navbar {
 
-    const Default_ID = 'DefaultMenu';
-
     /**
      * @param $info
      *
      * @return string
+     * @throws ReflectionException
      * @throws \Twig\Error\LoaderError
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
@@ -30,7 +29,6 @@ class Navbar {
                 $info['banner_class'] = (!empty($info['banner_class']) ? $info['banner_class'] : '');
             }
         }
-
         $info['search'] = Steam::getInstance()->load('Navigation')->search($info);
         if (!$info['navbar_class']) {
             $info['navbar_class'] = 'navbar-expand-lg navbar-light bg-light';

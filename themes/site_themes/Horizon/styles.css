@@ -5,27 +5,31 @@
     top: 0;
     left: 0;
     width: 100%;
+    display: flex;
+    flex-direction: row;
 }
 
 header .navbar-brand img {
-    max-width: 150px;
+    max-width: 170px;
 }
-
 .header, .bg-dark {
     background-color: #272930 !important;
+    display: flex;
+    align-self: center;
+    width: 100%;
 }
-
-.navbar.bg-dark ul.nav.navbar-nav > li > a {
+.navbar-dark ul.navbar-nav .nav-link {
     color: #FFF;
-    font-weight: 700;
-    font-size: 14px;
-    line-height: 18px;
     padding: 6px 8px 7px;
-    margin-top: 27px;
-    display: inline-block;
+}
+.navbar-dark ul.navbar-nav .nav-link:hover {
+    background-color: #1a1c21;
+}
+.navbar-dark ul.navbar-nav .active .nav-link {
+    font-weight: 700;
 }
 
-.navbar.bg-dark ul.nav.navbar-nav > li > a {
+.navbar-dark ul.navbar-nav .nav-link {
     -moz-transition: border .20s linear,color .20s linear,background-color .20s linear;
     -webkit-transition: border .20s linear,color .20s linear,background-color .20s linear;
     -o-transition: border .20s linear,color .20s linear,background-color .20s linear;

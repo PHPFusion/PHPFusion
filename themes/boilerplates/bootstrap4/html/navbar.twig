@@ -32,11 +32,17 @@
     {% import _self as macros %}
     {% for link in links[index] %}
         {# where this has a child item#}
+        {% set linkActive = '' %}
+        {% if link.link_active %}
+            {% set linkActive = 'active' %}
+        {% endif %}
+
         {% if links[link.link_id] %}
             {% set listClass = link.link_cat > 0 ? 'dropdown-submenu' : 'nav-item dropdown' %}
             {% set aClass = link.link_cat > 0 ? 'dropdown-item' : 'nav-link' %}
             {% set linkWindow = link.link_window == 1 ? 'target="_blank" ' : '' %}
-            <li class="{{ listClass }}">
+
+            <li class="{{ listClass }}{{ whitespace(linkActive) }}">
                 <a class="{{ aClass }} dropdown-toggle" href="{{ link.link_url }}" id="{{ link.link_id }}Dropdown"{{ whitespace(linkWindow) }} role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ link.link_name }}</a>
                 <ul class="dropdown-menu" aria-labelledby="{{ link.link_id }}Dropdown">
                     {{ macros.menu_links(links, link.link_id) }}
@@ -47,7 +53,7 @@
             <a class="dropdown-item" href="#">{{ link.link_name }}</a>
         {% else %}
             {#where this is a top level item#}
-            <li><a class="nav-link" href="{{ link.link_url }}">{{ link.link_name }}</a></li>
+            <li class="nav-item{{ whitespace(linkActive) }}"><a class="nav-link" href="{{ link.link_url }}">{{ link.link_name }}</a></li>
         {% endif %}
     {% endfor %}
 {% endmacro %}
@@ -61,11 +67,11 @@
     <div class="collapse navbar-collapse{{ whitespace(responsive_class) }}" id="{{ navbar_id }}_menu">
         {{ html_pre_content|raw }}
         <ul class="navbar-nav mr-auto{{ whitespace(nav_class_primary) }}">
-            {{ _self.menu_links(items) }}
+            {{ _self.menu_links(callback_data) }}
         </ul>
         {{ html_content|raw }}
         {{ search|raw }}
-        {% if language or additional_data %}
+        {% if language or login or additional_data %}
             <ul class="navbar-nav navbar-right{{ whitespace(nav_secondary_class) }}">
                 <li class="nav-item active">
                     <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
