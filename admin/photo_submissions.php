@@ -16,9 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 pageAccess("PH");
-if (fusion_get_settings("tinymce_enabled")) {
-    echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";
-}
+
 $locale = fusion_get_locale();
 
 if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
