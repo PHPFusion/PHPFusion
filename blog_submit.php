@@ -55,7 +55,7 @@ if (iMEMBER && $blog_settings['blog_allow_submission']) {
             if (isset($_FILES['blog_image'])) {
                 $upload = form_sanitizer($_FILES['blog_image'], '', 'blog_image');
                 if (!empty($upload)) {
-                    $criteriaArray['blog_image'] = $upgload['image_name'];
+                    $criteriaArray['blog_image'] = $upload['image_name'];
                     $criteriaArray['blog_image_t1'] = $upload['thumb1_name'];
                     $criteriaArray['blog_image_t2'] = $upload['thumb2_name'];
                     $criteriaArray['blog_ialign'] = (isset($_POST['blog_ialign']) ? form_sanitizer($_POST['blog_ialign'], "pull-left",

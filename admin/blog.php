@@ -342,7 +342,7 @@ echo "<label><input type='checkbox' name='blog_allow_comments' value='yes' oncli
 echo "<label><input type='checkbox' name='blog_allow_ratings' value='yes' ".($data['blog_allow_ratings'] ? "checked='checked'" : "")."/> ".$locale['blog_0435']."</label>";
 closeside();
 echo "</div>\n</div>\n";
-echo form_button('save', $locale['blog_0437'], $locale['blog_0437'], ['class' => 'btn-success', 'icon' => 'fa fa-hdd-o']);
-echo form_button('preview', $locale['blog_0141'], $locale['blog_0141'], ['class' => 'm-l-5 btn-primary', 'icon' => 'fa fa-eye']);
+echo form_button('save', $locale['blog_0437'], $locale['blog_0437'], ['input_id' => 'save_bottombtn', 'class' => 'btn-success', 'icon' => 'fa fa-hdd-o']);
+echo form_button('preview', $locale['blog_0141'], $locale['blog_0141'], ['input_id' => 'preview-bottombtn', 'class' => 'm-l-5 btn-primary', 'icon' => 'fa fa-eye']);
 echo closeform();
 echo "</div>\n";
