@@ -8,16 +8,16 @@ function render_page($license = '') {
 
     $theme_path = THEME.'templates/';
     $settings = fusion_get_settings();
-    $menu_options = [
+    $horizon_menu_options = [
         //'container_fluid'   => TRUE,
+        'container'      => TRUE,
         'searchbar' => TRUE,
         'navbar_class' => 'navbar-expand-lg navbar-dark bg-dark navbar-light',
         'show_banner'    => TRUE,
-        'container'      => TRUE,
         //'header_content' => '<a class="navbar-brand" href="'.BASEDIR.$settings['opening_page'].'"><img src="'.BASEDIR.$settings['sitebanner'].'" alt="'.$settings['sitename'].'" class="img-responsive"/></a>',
         'grouping'       => TRUE,
         'links_per_page' => 10,
-        'class'          => 'bg-dark',
+        //'class'          => 'bg-dark',
         //'html_pre_content'  => $this->userMenu(),
         'show_header'    => TRUE,
     ];
@@ -43,7 +43,7 @@ function render_page($license = '') {
     }
 
     $theme_info = [
-        'top_navigation'   => SiteLinks::setSubLinks($menu_options)->showSubLinks(),
+        'top_navigation'   => SiteLinks::setSubLinks($horizon_menu_options)->showSubLinks(),
         //'locale'        => fusion_get_locale(),
         'settings'         => $settings,
         //'themesettings' => get_theme_settings('Horizon'),

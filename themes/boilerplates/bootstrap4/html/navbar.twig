@@ -62,23 +62,6 @@
         {{ html_pre_content|raw }}
         <ul class="navbar-nav mr-auto{{ whitespace(nav_class_primary) }}">
             {{ _self.menu_links(items) }}
-            {#            <li class="nav-item">#}
-            {#                <a class="nav-link" href="#">Link</a>#}
-            {#            </li>#}
-            {#            <li class="nav-item dropdown">#}
-            {#                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">#}
-            {#                    Dropdown#}
-            {#                </a>#}
-            {#                <div class="dropdown-menu" aria-labelledby="navbarDropdown">#}
-            {#                    <a class="dropdown-item" href="#">Action</a>#}
-            {#                    <a class="dropdown-item" href="#">Another action</a>#}
-            {#                    <div class="dropdown-divider"></div>#}
-            {#                    <a class="dropdown-item" href="#">Something else here</a>#}
-            {#                </div>#}
-            {#            </li>#}
-            {#            <li class="nav-item">#}
-            {#                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>#}
-            {#            </li>#}
         </ul>
         {{ html_content|raw }}
         {{ search|raw }}
@@ -106,35 +89,29 @@
                 </li>
             </ul>
         {% endif %}
-        {#        <form class="form-inline my-2 my-lg-0">#}
-        {#            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">#}
-        {#            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>#}
-        {#        </form>#}
         {{ html_post_content }}
     </div>
     {{ closeContainer|raw }}
 </nav>
 
 {#bootstrap submenu-mods#}
-{{ add_to_jquery("
-$('.dropdown-menu a.dropdown-toggle').on('click', function (e) {
-    if (!$(this).next().hasClass('show')) {
-        $(this).parents('.dropdown-menu').first().find('.show').removeClass('show');
-    }
-    var $subMenu = $(this).next('.dropdown-menu');
-    $subMenu.toggleClass('show');
-    $(this).parents('li.nav-item.dropdown.show').on('hidden.bs.dropdown', function (e) {
-        $('.dropdown-submenu .show').removeClass('show');
+<script>
+    $('.dropdown-menu a.dropdown-toggle').on('click', function (e) {
+        if (!$(this).next().hasClass('show')) {
+            $(this).parents('.dropdown-menu').first().find('.show').removeClass('show');
+        }
+        var $subMenu = $(this).next('.dropdown-menu');
+        $subMenu.toggleClass('show');
+        $(this).parents('li.nav-item.dropdown.show').on('hidden.bs.dropdown', function (e) {
+            $('.dropdown-submenu .show').removeClass('show');
+        });
+        return false;
     });
-    return false;
-});
-") }}
-
-{{ add_to_css("
-.dropdown-submenu {
+</script>
+<style>
+    .dropdown-submenu {
         position: relative;
     }
-
     .dropdown-submenu a::after {
         transform: rotate(-90deg);
         position: absolute;
@@ -147,4 +124,4 @@ $('.dropdown-menu a.dropdown-toggle').on('click', function (e) {
         margin-left: .1rem;
         margin-right: .1rem;
     }
-") }}
+</style>

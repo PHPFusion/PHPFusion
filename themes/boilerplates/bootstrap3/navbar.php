@@ -8,19 +8,17 @@ use PHPFusion\Steam;
  */
 class Navbar {
 
-    const Default_ID = 'DefaultMenu';
-
     /**
      * @param $info
      *
      * @return string
+     * @throws ReflectionException
      * @throws \Twig\Error\LoaderError
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
     public function showSubLinks($info) {
         $settings = fusion_get_settings();
-
         if ($info['show_header']) {
             if ($info['show_banner']) {
                 $info['banner'] = ($info['show_banner'] ? ($info['custom_banner'] ? $info['custom_banner'] : $settings['sitebanner']) : '');
@@ -30,18 +28,17 @@ class Navbar {
                 $info['banner_class'] = (!empty($info['banner_class']) ? $info['banner_class'] : '');
             }
         }
-
-        $info['search'] = Steam::getInstance()->load('Navigation')->search($info);
+        $info['search'] = $info['search'] = Steam::getInstance()->load('Navigation')->search($info);
         if (!$info['navbar_class']) {
-            $info['navbar_class'] = 'navbar-expand-lg navbar-light bg-light';
+            $info['navbar_class'] = 'navbar-default';
         }
-        $info['responsive_class'] = ($info['responsive'] ? 'navbar-collapse collapse' : 'menu');
-        ksort($info);
+        $info['responsive_class'] = ($info['responsive'] ? 'navbar-collapse' : 'menu');
 
-        return fusion_render(BOILERPLATES.'bootstrap4/html/', 'navbar.twig', $info, TRUE);
+        ksort($info);
+        return fusion_render(BOILERPLATES.'bootstrap3/html/', 'navbar.twig', $info, TRUE);
     }
 
-    public static function getSearch($info) {
+    public function getSearch($info) {
         $locale = fusion_get_locale();
         $settings = fusion_get_settings();
         if ($info['searchbar']) {
@@ -50,6 +47,7 @@ class Navbar {
             return openform('searchform', 'post', FUSION_ROOT.BASEDIR.'search.php?stype='.$settings['default_search'],
                     [
                         'inline' => TRUE,
+                        'class'  => 'navbar-form navbar-left'
                         //'remote_url' => $settings['site_path'].'search.php'
                     ]
                 ).form_text('stext', '', '',

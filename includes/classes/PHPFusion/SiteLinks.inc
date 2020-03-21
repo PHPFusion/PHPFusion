@@ -37,7 +37,7 @@ class SiteLinks {
         'container'            => FALSE,
         'container_fluid'      => FALSE,
         'responsive'           => TRUE,
-        'navbar_class'         => 'navbar-expand-lg navbar-light bg-light',
+        'navbar_class'         => '',
         'nav_class'            => '',
         'additional_nav_class' => '',
         'item_class'           => '', // $class
@@ -52,10 +52,10 @@ class SiteLinks {
         'custom_banner_link'   => '',
         'language'             => '',
         'searchbar'            => FALSE,
-        'search_icon'          => 'fa fa-search',
+        'search_icon'          => 'fas fa-search',
         'search_btn_class'     => 'btn-primary',
         'caret_icon'           => 'caret',
-        //'callback_data'        => '',
+        'callback_data'        => '',
         'additional_data'      => '',
         'link_position'        => [2, 3],
         'html_content'         => '',
@@ -159,6 +159,7 @@ class SiteLinks {
      */
     public static function setSubLinks(array $options = []) {
         $options += self::$default_options;
+
         $instance = self::getInstance($options['id']);
 
         if (!isset($instance->menu_options)) {
@@ -288,7 +289,8 @@ class SiteLinks {
     }
 
     public static function setMenuParam($key, $value) {
-        self::$instances[self::$id]->menu_options[$key] = (is_bool($value)) ? $value : self::getMenuParam($key).$value;
+        //self::$instances[self::$id]->menu_options[$key] = (is_bool($value)) ? $value : self::getMenuParam($key).$value;
+        self::$instances[self::$id]->menu_options[$key] = $value; //(is_bool($value) ? $value : self::getMenuParam($key).$value);
     }
 
     private static function getMenuParam($key = FALSE) {
@@ -346,7 +348,6 @@ class SiteLinks {
         $this->cacheSiteLinks();
         $options = self::getMenuParam();
         $options['language'] = $this->getLanguage($options);
-        $options['search'] = $this->getSearch($options);
         $options['callback_data'] = $this->parseLinks(0, 'callback_data');
         $options['additional_data'] = $this->parseLinks(0, 'additional_data');
         //print_P($options);
@@ -445,33 +446,6 @@ class SiteLinks {
             return [];
         }
         return [];
-    }
-
-    private function getSearch($info) {
-        $locale = fusion_get_locale();
-        $settings = fusion_get_settings();
-        if ($info['searchbar']) {
-            // Add in a new default search form.
-            // LI first
-            return openform('searchform', 'post', FUSION_ROOT.BASEDIR.'search.php?stype='.$settings['default_search'],
-                    [
-                        'inline' => TRUE,
-                        //'remote_url' => $settings['site_path'].'search.php'
-                    ]
-                ).form_text('stext', '', '',
-                    [
-                        'placeholder'        => $locale['search'],
-                        'append_button'      => TRUE,
-                        'append_type'        => "submit",
-                        "append_form_value"  => $locale['search'],
-                        "append_value"       => "<i class='".$info['search_icon']."' title='".$locale['search']."'></i>",
-                        "append_button_name" => "search",
-                        "append_class"       => $info['search_btn_class'],
-                        'class'              => 'm-0',
-                    ]
-                ).closeform();
-        }
-        return '';
     }
 
     private function parseLinks($id = 0, $key = 'callback_data') {

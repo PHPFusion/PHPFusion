@@ -22,5 +22,9 @@ class Navigation {
         return \Navbar::showSubLinks($info);
     }
 
+    public function search($info) {
+        return \Navbar::getSearch($info);
+    }
+
 }
 
