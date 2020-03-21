@@ -27,21 +27,21 @@ use PHPFusion\OpenGraphNews;
  */
 class NewsView extends News {
     public function display_news() {
-
-        if (isset($_GET['readmore'])) {
-            if (isnum($_GET['readmore'])) {
-                $info = $this->set_NewsItemInfo($_GET['readmore']);
+    
+        if ( check_get( 'readmore' ) ) {
+            if ( $readmore = get( 'readmore', FILTER_VALIDATE_INT ) ) {
+                $info = $this->set_NewsItemInfo( $readmore );
                 render_news_item($info);
-                OpenGraphNews::ogNews($_GET['readmore']);
+                OpenGraphNews::ogNews( $readmore );
             } else {
                 redirect(INFUSIONS.'news/news.php');
             }
-        } else if (isset($_GET['cat_id'])) {
+        } else if ( check_get( 'cat_id' ) ) {
             // Category Result
-            if (isnum($_GET['cat_id'])) {
-                $info = $this->set_NewsCatInfo($_GET['cat_id']);
+            if ( $cat_id = get( 'cat_id', FILTER_VALIDATE_INT ) ) {
+                $info = $this->set_NewsCatInfo( $cat_id );
                 display_main_news($info);
-                OpenGraphNews::ogNewsCat($_GET['cat_id']);
+                OpenGraphNews::ogNewsCat( $cat_id );
             } else {
                 redirect(INFUSIONS.'news/news.php');
             }
