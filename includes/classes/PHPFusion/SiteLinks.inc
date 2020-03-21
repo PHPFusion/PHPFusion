@@ -50,7 +50,7 @@ class SiteLinks {
         'header_content'       => '',
         'custom_banner'        => '',
         'custom_banner_link'   => '',
-        'language'             => '',
+        'language'             => [],
         'searchbar'            => FALSE,
         'search_icon'          => 'fas fa-search',
         'search_btn_class'     => 'btn-primary',
@@ -64,6 +64,7 @@ class SiteLinks {
         'html_post_content'    => '',
         'nav_class_primary'    => '',
         'nav_class_secondary'  => '',
+        'login'                => FALSE,
     ];
     /**
      * @param string $sep
@@ -124,8 +125,9 @@ class SiteLinks {
             if (!$url) {
                 $url = FUSION_FILELINK;
             }
-            $result = dbquery("SELECT * FROM ".DB_SITE_LINKS." WHERE link_url='".$url."' AND link_language='".LANGUAGE."'");
-            if (dbrows($result) > 0) {
+            $language_cond = (multilang_table("SL") ? " AND link_language='".LANGUAGE."'" : '');
+            $result = dbquery("SELECT * FROM ".DB_SITE_LINKS." WHERE link_url='".$url."'".$language_cond);
+            if (dbrows($result)) {
                 $data = dbarray($result);
             }
         }
@@ -443,30 +445,25 @@ class SiteLinks {
         // Secondary menu
         if ($info['language_switcher'] === TRUE) {
             if (count(fusion_get_enabled_languages()) > 1) {
-
                 $language_switch = fusion_get_language_switch();
                 $language_opts = [];
                 $current_language = $language_switch[LANGUAGE];
-
                 if (!empty($language_switch)) {
-
                     foreach ($language_switch as $lang_folder => $lang_data) {
                         $language_opts[$lang_folder] = [
                             'link'  => $lang_data['language_link'],
                             'title' => $lang_data['language_name'],
-                            'image' => '<img alt="'.$lang_data['language_name'].'" class="m-r-5" src="'.$lang_data['language_icon_s'].'"/>'
+                            'image' => '<img class="language-icon" alt="'.$lang_data['language_name'].'" src="'.$lang_data['language_icon'].'"/>'
                         ];
                     }
 
                     return [
-                        'title'           => translate_lang_names(LANGUAGE),
-                        'link'            => '#',
-                        'content'         => '<img src="'.$current_language["language_icon_s"].'">',
-                        'caret_class'     => $info['caret_icon'],
-                        'item'            => $language_opts,
-                        'first_item_link' => '',
+                        'title'       => translate_lang_names(LANGUAGE),
+                        'link'        => '#',
+                        'image'     => '<img class="language-icon" src="'.$current_language["language_icon"].'">',
+                        'caret_class' => $info['caret_icon'],
+                        'options'     => $language_opts,
                     ];
-
                 }
                 return [];
             }
@@ -510,11 +507,8 @@ class SiteLinks {
                 $link_name = ($settings['link_bbcode'] ? parsesmileys(parseubb($link_data['link_name'])) : $link_data['link_name']);
                 // check whether the link is active.
                 $link_active = $this->checkLinkActive($link_data['link_id'], $link_data['link_url'], $data); // Data would have not inherited all default param.
-
                 $link_disabled = ($link_data['link_disabled'] ? TRUE : FALSE);
-
                 $link_url = $this->getLinkUrl($link_data);
-
                 $link_class = $this->getLinkClass($link_data, $options, $counter);
 
                 $data[$id][$link_id] = [

@@ -28,7 +28,11 @@ header .navbar-brand img {
 .navbar-dark ul.navbar-nav .active .nav-link {
     font-weight: 700;
 }
-
+.navbar-dark .language-icon {
+    width:24px;
+    height:24px;
+    margin-right:5px;
+}
 .navbar-dark ul.navbar-nav .nav-link {
     -moz-transition: border .20s linear,color .20s linear,background-color .20s linear;
     -webkit-transition: border .20s linear,color .20s linear,background-color .20s linear;

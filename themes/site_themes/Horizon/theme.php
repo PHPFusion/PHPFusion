@@ -10,16 +10,18 @@ function render_page($license = '') {
     $settings = fusion_get_settings();
     $horizon_menu_options = [
         //'container_fluid'   => TRUE,
-        'container'      => TRUE,
-        'searchbar'      => TRUE,
-        'navbar_class'   => 'navbar-expand-lg navbar-dark bg-dark navbar-light',
-        'show_banner'    => TRUE,
+        'container'         => TRUE,
+        'searchbar'         => TRUE,
+        'navbar_class'      => 'navbar-expand-lg navbar-dark bg-dark navbar-light',
+        'show_banner'       => TRUE,
+        'login'             => TRUE,
+        'language_switcher' => TRUE,
         //'header_content' => '<a class="navbar-brand" href="'.BASEDIR.$settings['opening_page'].'"><img src="'.BASEDIR.$settings['sitebanner'].'" alt="'.$settings['sitename'].'" class="img-responsive"/></a>',
-        'grouping'       => TRUE,
-        'links_per_page' => 10,
+        'grouping'          => TRUE,
+        'links_per_page'    => 10,
         //'class'          => 'bg-dark',
         //'html_pre_content'  => $this->userMenu(),
-        'show_header'    => TRUE,
+        'show_header'       => TRUE,
     ];
 
     $content = ['sm' => 12, 'md' => 12, 'lg' => 12];

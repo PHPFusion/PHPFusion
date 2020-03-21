@@ -2225,8 +2225,7 @@ function fusion_get_language_switch() {
             $language_switch[$language] = [
                 "language_name"       => $language_name,
                 "language_translated" => translate_lang_names($language_name),
-                "language_icon_s"     => BASEDIR."locale/$language/$language-s.png",
-                "language_icon"       => BASEDIR."locale/$language/$language.png",
+                "language_icon"       => BASEDIR."locale/$language/icon.svg",
                 "language_link"       => clean_request('lang='.$language, ['lang'], FALSE),
                 "language_active"     => (LANGUAGE == $language ? TRUE : FALSE),
             ];

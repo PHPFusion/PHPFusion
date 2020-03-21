@@ -53,7 +53,8 @@
             <a class="dropdown-item" href="#">{{ link.link_name }}</a>
         {% else %}
             {#where this is a top level item#}
-            <li class="nav-item{{ whitespace(linkActive) }}"><a class="nav-link" href="{{ link.link_url }}">{{ link.link_name }}</a></li>
+            <li class="nav-item{{ whitespace(linkActive) }}">
+                <a class="nav-link" href="{{ link.link_url }}">{{ link.link_name }}</a></li>
         {% endif %}
     {% endfor %}
 {% endmacro %}
@@ -71,29 +72,54 @@
         </ul>
         {{ html_content|raw }}
         {{ search|raw }}
-        {% if language or login or additional_data %}
-            <ul class="navbar-nav navbar-right{{ whitespace(nav_secondary_class) }}">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Link</a>
-                </li>
+        {% if additional_data or language %}
+            <ul class="navbar-nav navbar-right ml-auto {{ whitespace(nav_secondary_class) }}">
+                {#                language options#}
+                {% if language %}
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Dropdown
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarLanguage" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <div class="display-inline">
+                            <span>{{ language.image|raw }}</span>
+                            <span class="overflow-hide">{{ language.title }}</span>
+                        </div>
                     </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Something else here</a>
+                    <div class="dropdown-menu">
+                        {% for lang in language.options %}
+                            <a class="dropdown-item" href="{{ lang.link }}">
+                                <div class="flex-row">
+                                    <span>{{ lang.image|raw }}</span>
+                                    <span class="overflow-hide">{{ lang.title }}</span>
+                                </div>
+                            </a>
+                        {% endfor %}
                     </div>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-                </li>
+                {% endif %}
+{#                <li class="nav-item dropdown">#}
+{#                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">#}
+{#                        Dropdown#}
+{#                    </a>#}
+{#                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">#}
+{#                        <a class="dropdown-item" href="#">Action</a>#}
+{#                        <a class="dropdown-item" href="#">Another action</a>#}
+{#                        <div class="dropdown-divider"></div>#}
+{#                        <a class="dropdown-item" href="#">Something else here</a>#}
+{#                    </div>#}
+{#                </li>#}
+{#                <li class="nav-item">#}
+{#                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>#}
+{#                </li>#}
             </ul>
+        {% endif %}
+        {% if login %}
+            <span class="navbar-text ml-auto">
+                {% if logout %}
+                    <a class="btn-default" href="{{ logout.link }}">{{ logout.title }}</a>
+                {% else %}
+                    <a class="btn btn-primary mr-3 strong" href="{{ login.link }}">{{ login.title }}</a>
+                    <a class="btn btn-secondary strong" href="{{ register.link }}">{{ register.title }}</a>
+                {% endif %}
+            </span>
         {% endif %}
         {{ html_post_content }}
     </div>
@@ -118,12 +144,14 @@
     .dropdown-submenu {
         position: relative;
     }
+
     .dropdown-submenu a::after {
         transform: rotate(-90deg);
         position: absolute;
         right: 6px;
         top: .8em;
     }
+
     .dropdown-submenu .dropdown-menu {
         top: 0;
         left: 100%;
