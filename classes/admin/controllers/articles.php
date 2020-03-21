@@ -192,6 +192,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
                 'error_text' => $this->locale['article_0271'],
                 'path'       => IMAGES_A,
                 'rows'       => '20',
+                'form_name'  => 'articleform'
             ];
             $articleExtendedSettings = [
                 'required'   => ($this->articleSettings['article_extended_required'] ? TRUE : FALSE),
@@ -200,6 +201,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
                 'error_text' => $this->locale['article_0272'],
                 'path'       => IMAGES_A,
                 'rows'       => '20',
+                'form_name'  => 'articleform'
             ];
         }
 
@@ -328,17 +330,17 @@ class ArticlesAdmin extends ArticlesAdminModel {
         echo form_button('cancel', $this->locale['cancel'], $this->locale['cancel'], [
             'class'    => 'btn-sm btn-default',
             'icon'     => 'fa fa-times',
-            'input-id' => 'cancel-'.$unique_id
+            'input_id' => 'cancel-'.$unique_id
         ]);
         echo form_button('save', $this->locale['save'], $this->locale['save'], [
             'class'    => 'btn-sm btn-success',
             'icon'     => 'fa fa-hdd-o',
-            'input-id' => 'save-'.$unique_id
+            'input_id' => 'save-'.$unique_id
         ]);
         echo form_button('save_and_close', $this->locale['save_and_close'], $this->locale['save_and_close'], [
             'class'    => 'btn-sm btn-primary',
             'icon'     => 'fa fa-floppy-o',
-            'input-id' => 'save_and_close-'.$unique_id
+            'input_id' => 'save_and_close-'.$unique_id
         ]);
     }
 
@@ -606,7 +608,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
                         $delete_link = clean_request("section=article&ref=article_form&action=delete&article_id=".$data['article_id'], ['section', 'ref', 'action', 'article_id'], FALSE);
                         ?>
                         <tr data-id="<?php echo $data['article_id']; ?>">
-                            <td class="hidden-xs"><?php echo form_checkbox('article_id[]', '', '', ['value' => $data['article_id'], 'class' => 'm-0']) ?></td>
+                            <td class="hidden-xs"><?php echo form_checkbox('article_id[]', '', '', ['input_id' => 'article'.$data['article_id'], 'value' => $data['article_id'], 'class' => 'm-0']) ?></td>
                             <td><span class="text-dark"><?php echo $data['article_subject']; ?></span></td>
                             <td>
                                 <a class="text-dark" href="<?php echo $cat_edit_link ?>"><?php echo $data['article_cat_name']; ?></a>

@@ -156,7 +156,7 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
                 'autosize'    => TRUE,
                 'placeholder' => $this->locale['article_0254'],
                 'error_text'  => $this->locale['article_0271'],
-                'form_name'   => 'articleform',
+                'form_name'   => 'submissionform',
                 'wordcount'   => TRUE,
                 'path'        => IMAGES_A
             ];
@@ -167,7 +167,7 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
                 'autosize'    => TRUE,
                 'placeholder' => $this->locale['article_0253'],
                 'error_text'  => $this->locale['article_0272'],
-                'form_name'   => 'articleform',
+                'form_name'   => 'submissionform',
                 'wordcount'   => TRUE,
                 'path'        => IMAGES_A
             ];
@@ -177,14 +177,16 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
                 'type'       => 'bbcode',
                 'tinymce'    => 'advanced',
                 'error_text' => $this->locale['article_0271'],
-                'path'       => IMAGES_A
+                'path'       => IMAGES_A,
+                'form_name'  => 'submissionform'
             ];
             $articleExtendedSettings = [
                 'required'   => ($this->articleSettings['article_extended_required'] ? TRUE : FALSE),
                 'type'       => 'tinymce',
                 'tinymce'    => 'advanced',
                 'error_text' => $this->locale['article_0272'],
-                'path'       => IMAGES_A
+                'path'       => IMAGES_A,
+                'form_name'  => 'submissionform'
             ];
         }
 
@@ -330,17 +332,17 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
         echo form_button('preview_submission', $this->locale['preview'], $this->locale['preview'], [
             'class'    => 'btn-default btn-sm',
             'icon'     => 'fa fa-eye',
-            'input-id' => 'preview_submission-'.$unique_id
+            'input_id' => 'preview_submission-'.$unique_id
         ]);
         echo form_button('publish_submission', $this->locale['article_0352'], $this->locale['article_0352'], [
             'class'    => 'btn-success btn-sm m-l-5',
             'icon'     => 'fa fa-hdd-o',
-            'input-id' => 'publish_submission-'.$unique_id
+            'input_id' => 'publish_submission-'.$unique_id
         ]);
         echo form_button('delete_submission', $this->locale['delete'], $this->locale['delete'], [
             'class'    => 'btn-danger btn-sm m-l-5',
             'icon'     => 'fa fa-trash',
-            'input-id' => 'delete_submission-'.$unique_id
+            'input_id' => 'delete_submission-'.$unique_id
         ]);
     }
 
