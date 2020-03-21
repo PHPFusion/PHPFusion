@@ -274,7 +274,7 @@ class AdminPanel extends Helper {
         if ($class) {
             $class = " ".$class;
         }
-        return '<svg class="feather'.$class.'"><use xlink:href="../themes/admin_themes/Inspire/templates/assets/img/feather-sprite.svg#'.$value.'"></use></svg>';
+        return '<svg class="feather'.$class.'"><use xlink:href="'.THEMES.'admin_themes/Inspire/templates/assets/img/feather-sprite.svg#'.$value.'"></use></svg>';
     }
 
     public static function closetable() {
