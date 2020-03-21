@@ -358,7 +358,8 @@ echo "</div>\n</div>\n"; // end row.
 echo "<div class='m-t-20'>\n";
 echo form_button('save_download', $locale['download_0212'], $locale['download_0212'], [
     'class' => 'btn-success m-r-10',
-    'icon'  => 'fa fa-check-square-o'
+    'icon'  => 'fa fa-check-square-o',
+    'input_id' => 'save-btn'
 ]);
 if (isset($_GET['action']) && $_GET['action'] == "edit") {
     echo "<button type='reset' name='reset' value='".$locale['cancel']."' class='button btn btn-default' onclick=\"location.href='".FUSION_SELF.$aidlink."';\"/>".$locale['cancel']."</button>";
