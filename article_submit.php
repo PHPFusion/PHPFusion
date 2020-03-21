@@ -135,7 +135,8 @@ if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_status='1' AND ".g
                     'required'   => TRUE,
                     'type'       => 'bbcode',
                     'error_text' => $locale['article_0271'],
-                    'path'       => IMAGES_A
+                    'path'       => IMAGES_A,
+                    'form_name'  => 'submissionform'
                 ];
                 $articleExtendedSettings = [
                     'required'   => ($articleSettings['article_extended_required'] ? TRUE : FALSE),
@@ -143,7 +144,8 @@ if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_status='1' AND ".g
                     'tinymce'   => fusion_get_settings('tinymce_enabled') && iADMIN ? 'advanced' : 'simple',
                     'tinymce_image' => FALSE,
                     'error_text' => $locale['article_0272'],
-                    'path'       => IMAGES_A
+                    'path'       => IMAGES_A,
+                    'form_name'  => 'submissionform'
                 ];
             }
 
