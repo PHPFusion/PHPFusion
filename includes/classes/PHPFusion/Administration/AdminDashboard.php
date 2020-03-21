@@ -55,7 +55,7 @@ class AdminDashboard {
             'top_widget'      => $this->getWidget('top')
         ];
         $locale = fusion_get_locale();
-        add_to_footer("<script src='".INCLUDES."jquery/jquery-ui.min.js'></script>");
+        add_to_footer("<script src='".INCLUDES."jquery/jquery-ui/jquery-ui.min.js'></script>");
         opentable($locale['250'], [
             [
                 'id'      => 'screen-options',
@@ -170,7 +170,7 @@ class AdminDashboard {
                     'column_3' : col_3_setup,
                     'column_4' : col_4_setup,
                     }, function(data) {
-                        console.log(data);  
+                        console.log(data);
                     }
                  });
 
@@ -250,7 +250,7 @@ class AdminDashboard {
         // on check.
         $('#active_widget-field input').bind('change', function(e) {
             let widgetStatus = $(this).is(':checked');
-            let widgetName = $(this).val();            
+            let widgetName = $(this).val();
         });
         ");
 

@@ -15,7 +15,7 @@ class Navigation {
      */
     public function __construct() {
         $steam = Steam::getInstance();
-        require_once $steam->getBoilerPath().DIRECTORY_SEPARATOR.'navbar.php';
+        require_once $steam->getBoilerPath().'navbar.php';
     }
 
     public function render($info) {

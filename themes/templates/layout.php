@@ -133,10 +133,7 @@ if (function_exists("render_page")) {
 // Output lines added with add_to_footer()
 echo $fusion_page_footer_tags;
 
-echo "<script src='".$_includes."jquery/holder/holder.min.js'></script>\n";
-
-// Rebuild a version where jquery-ui does not conflict with bootstrap tooltip
-//echo "<script src='".$_includes."jquery/jquery-ui.min.js'></script>\n";
+echo "<script src='".$_includes."jquery/holder.min.js'></script>\n";
 
 // Output lines added with add_to_jquery()
 if (!empty($fusion_jquery_tags)) {

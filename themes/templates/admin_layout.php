@@ -95,7 +95,7 @@ if ( !check_admin_pass( '' ) ) {
 
 // Output lines added with add_to_footer()
 echo $fusion_page_footer_tags;
-echo "<script src='".$_includes."jquery/holder/holder.min.js'></script>\n";
+echo "<script src='".$_includes."jquery/holder.min.js'></script>\n";
 // Output lines added with add_to_jquery()
 if ( !empty( $fusion_jquery_tags ) ) {
     $js = $fusion_jquery_tags;

@@ -94,7 +94,7 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
                 break;
         }
 
-        add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/jquery-ui.min.js'></script>");
+        add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/jquery-ui/jquery-ui.min.js'></script>");
 
         add_to_jquery("
         $('#site-links').sortable({
