@@ -313,34 +313,36 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
             closeside();
             echo "</div></div>\n";
             $snippetSettings = [
-                "required"    => TRUE,
-                "preview"     => TRUE,
-                "html"        => TRUE,
-                "autosize"    => TRUE,
-                "placeholder" => $locale['blog_0425a'],
-                "form_name"   => "inputform",
+                'required'    => TRUE,
+                'preview'     => TRUE,
+                'html'        => TRUE,
+                'autosize'    => TRUE,
+                'placeholder' => $locale['blog_0425a'],
+                'form_name'   => 'inputform',
                 'path'        => IMAGES_B
             ];
-            if (fusion_get_settings("tinymce_enabled")) {
-                $snippetSettings = ["required" => TRUE];
+            if (fusion_get_settings('tinymce_enabled')) {
+                $snippetSettings = ['required' => TRUE, 'type' => 'tinymce', 'tinymce' => 'advanced'];
             }
             echo form_textarea('blog_blog', $locale['blog_0425'], $callback_data['blog_blog'], $snippetSettings);
 
             $extendedSettings = [];
-            if (!fusion_get_settings("tinymce_enabled")) {
+            if (!fusion_get_settings('tinymce_enabled')) {
                 $extendedSettings = [
-                    "preview"     => TRUE,
-                    "html"        => TRUE,
-                    "autosize"    => TRUE,
-                    "placeholder" => $locale['blog_0426b'],
-                    "form_name"   => "inputform",
+                    'preview'     => TRUE,
+                    'html'        => TRUE,
+                    'autosize'    => TRUE,
+                    'placeholder' => $locale['blog_0426b'],
+                    'form_name'   => 'inputform',
                     'path'        => IMAGES_B
                 ];
+            } else {
+                $extendedSettings = ['type' => 'tinymce', 'tinymce' => 'advanced', 'path' => IMAGES_B];
             }
             echo form_textarea('blog_extended', $locale['blog_0426'], $callback_data['blog_extended'], $extendedSettings);
-            echo form_button('preview', $locale['blog_0141'], $locale['blog_0141'], ['class' => 'btn-default m-r-5', 'icon' => 'fa fa-eye']);
-            echo form_button('publish', $locale['blog_0134'], $locale['blog_0134'], ['class' => 'btn-success m-r-5', 'icon' => 'fa fa-hdd-o']);
-            echo form_button('delete', $locale['blog_0135'], $locale['blog_0135'], ['class' => 'btn-danger', 'icon' => 'fa fa-trash']);
+            echo form_button('preview', $locale['blog_0141'], $locale['blog_0141'], ['input_id' => 'preview-btn', 'class' => 'btn-default m-r-5', 'icon' => 'fa fa-eye']);
+            echo form_button('publish', $locale['blog_0134'], $locale['blog_0134'], ['input_id' => 'publish-btn', 'class' => 'btn-success m-r-5', 'icon' => 'fa fa-hdd-o']);
+            echo form_button('delete', $locale['blog_0135'], $locale['blog_0135'], ['input_id' => 'delete-btn', 'class' => 'btn-danger', 'icon' => 'fa fa-trash']);
             echo closeform();
         }
     }
