@@ -92,7 +92,7 @@ class Errors {
         while ( $data = dbarray( $result ) ) {
             // Sanitizes callback
             foreach ( $data as $key => $value ) {
-                $data[ $key ] = descript( stripslashes( $value ) );
+                $data[ $key ] = descript( $value );
             }
 
             $this->errors[ $data['error_id'] ] = $data;
