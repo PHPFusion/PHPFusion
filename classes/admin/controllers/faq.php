@@ -349,9 +349,9 @@ class FaqAdmin extends FaqAdminModel {
     private function display_faqButtons($unique_id, $breaker = TRUE) {
         ?>
         <div class="m-t-20">
-            <?php echo form_button("cancel", $this->locale['cancel'], $this->locale['cancel'], ["class" => "btn-default btn-sm", "icon" => "fa fa-times", "input-id" => "cancel-".$unique_id.""]); ?>
-            <?php echo form_button("save", $this->locale['save'], $this->locale['save'], ["class" => "btn-success btn-sm m-l-5", "icon" => "fa fa-hdd-o", "input-id" => "save-".$unique_id.""]); ?>
-            <?php echo form_button("save_and_close", $this->locale['save_and_close'], $this->locale['save_and_close'], ["class" => "btn-primary btn-sm m-l-5", "icon" => "fa fa-floppy-o", "input-id" => "save_and_close-".$unique_id.""]); ?>
+            <?php echo form_button("cancel", $this->locale['cancel'], $this->locale['cancel'], ["class" => "btn-default btn-sm", "icon" => "fa fa-times", "input_id" => "cancel-".$unique_id.""]); ?>
+            <?php echo form_button("save", $this->locale['save'], $this->locale['save'], ["class" => "btn-success btn-sm m-l-5", "icon" => "fa fa-hdd-o", "input_id" => "save-".$unique_id.""]); ?>
+            <?php echo form_button("save_and_close", $this->locale['save_and_close'], $this->locale['save_and_close'], ["class" => "btn-primary btn-sm m-l-5", "icon" => "fa fa-floppy-o", "input_id" => "save_and_close-".$unique_id.""]); ?>
         </div>
         <?php if ($breaker) { ?>
             <hr/><?php } ?>
@@ -602,7 +602,7 @@ class FaqAdmin extends FaqAdminModel {
                 $delete_link = clean_request("section=faq&ref=faq_form&action=delete&faq_id=".$cdata['faq_id'], $_trash, FALSE);
                 $cat_edit_link = clean_request('section=faq&ref=faq_cat_form&action=edit&cat_id='.$cdata['faq_cat_id'], $_trash, FALSE);
                 echo "<tr data-id='".$cdata['faq_cat_id']."'>
-                        <td class='hidden-xs'>".form_checkbox("faq_id[]", "", "", ["value" => $cdata['faq_id'], "class" => "m-0"])."</td>
+                        <td class='hidden-xs'>".form_checkbox("faq_id[]", "", "", ['input_id' => 'faq'.$cdata['faq_id'], "value" => $cdata['faq_id'], "class" => "m-0"])."</td>
                         <td><a href='$edit_link'>".$cdata['faq_question']."</a></td>
                         <td>".($cdata['faq_status'] ? $this->locale['no'] : $this->locale['yes'])."</td>
                         <td>".($cdata['faq_cat_id'] ? "<a href='$cat_edit_link'>" : "").$cdata['faq_cat_name'].($cdata['faq_cat_id'] ? "</a>" : "")."</td>
