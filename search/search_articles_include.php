@@ -81,6 +81,8 @@ if (defined('ARTICLES_EXIST')) {
 
             $search_result = '';
             while ($data = dbarray($result)) {
+                $data['article_snippet'] = strip_tags(htmlspecialchars_decode($data['article_snippet']));
+                $data['article_article'] = strip_tags(htmlspecialchars_decode($data['article_article']));
                 $text_all = Search_Engine::search_striphtmlbbcodes($data['article_snippet']." ".$data['article_article']);
                 $text_frag = Search_Engine::search_textfrag($text_all);
                 $subj_c = Search_Engine::search_stringscount($data['article_subject']);
