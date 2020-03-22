@@ -80,6 +80,8 @@ if (defined('BLOG_EXIST')) {
             $search_result = '';
 
             while ($data = dbarray($result)) {
+                $data['blog_blog'] = strip_tags(htmlspecialchars_decode($data['blog_blog']));
+                $data['blog_extended'] = strip_tags(htmlspecialchars_decode($data['blog_extended']));
                 $text_all = $data['blog_blog']." ".$data['blog_extended'];
                 $text_all = Search_Engine::search_striphtmlbbcodes($text_all);
                 $text_frag = Search_Engine::search_textfrag($text_all);
