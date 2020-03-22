@@ -128,7 +128,7 @@ if (iADMIN) {
 
 if (function_exists("render_page")) {
     if (iADMIN) {
-        require_once TEMPLATES.'admin_bar.php';
+        //require_once TEMPLATES.'admin_bar.php';
     }
     echo render_page(); // by here, header and footer already closed
 }

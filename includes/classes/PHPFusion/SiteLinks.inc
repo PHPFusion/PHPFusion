@@ -50,7 +50,7 @@ class SiteLinks {
         'header_content'       => '',
         'custom_banner'        => '',
         'custom_banner_link'   => '',
-        'language_switcher'             => [],
+        'language'             => [],
         'searchbar'            => FALSE,
         'search_icon'          => 'fas fa-search',
         'search_btn_class'     => 'btn-primary',
@@ -65,7 +65,6 @@ class SiteLinks {
         'nav_class_primary'    => '',
         'nav_class_secondary'  => '',
         'login'                => FALSE,
-        'callback_data'        => ''
     ];
     /**
      * @param string $sep
@@ -153,9 +152,11 @@ class SiteLinks {
 
     /**
      * Calling the SiteLinks instance with Custom Parameters
+     *
      * @param array $options
      *
-     * @return SiteLinks
+     * @return mixed
+     * @throws \Exception
      */
     public static function setSubLinks(array $options = []) {
         $options += self::$default_options;
@@ -173,7 +174,7 @@ class SiteLinks {
             ];
             $options += $link_settings;
 
-            self::$id = $options['id'];
+            $instance->id = $options['id'];
             $instance->menu_options = $options;
         }
 

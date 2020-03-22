@@ -19,5 +19,4 @@ $menu_options = [
         ]
     ]
 ];
-echo 'Admin bar goes here';
 echo SiteLinks::setSubLinks($menu_options)->showSubLinks();

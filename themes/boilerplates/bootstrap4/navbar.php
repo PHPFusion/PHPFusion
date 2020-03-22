@@ -85,7 +85,6 @@ class Navbar {
             }
         }
 
-        //print_P($info);
         ksort($info);
 
         return fusion_render(BOILERPLATES.'bootstrap4/html/', 'navbar.twig', $info, TRUE);
