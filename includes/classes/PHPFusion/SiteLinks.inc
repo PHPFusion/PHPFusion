@@ -152,11 +152,9 @@ class SiteLinks {
 
     /**
      * Calling the SiteLinks instance with Custom Parameters
-     *
      * @param array $options
      *
-     * @return mixed
-     * @throws \Exception
+     * @return SiteLinks
      */
     public static function setSubLinks(array $options = []) {
         $options += self::$default_options;
@@ -350,12 +348,12 @@ class SiteLinks {
     public function showSubLinks() {
         $this->cacheSiteLinks();
         $options = self::getMenuParam();
+
         $options['language'] = $this->getLanguage($options);
         $options['callback_data'] = $this->parseLinks(0, 'callback_data');
         $options['additional_data'] = $this->parseLinks(0, 'additional_data');
-        //print_P($options);
-        $fusion_steam = Steam::getInstance();
 
+        $fusion_steam = Steam::getInstance();
         return $fusion_steam->load('Navigation')->render($options);
     }
 

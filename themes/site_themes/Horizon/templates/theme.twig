@@ -101,7 +101,9 @@
                 <i class="fas fa-angle-up fa-lg"></i>
             </a>
             <div class="container">
-                {{ showcopyright()|raw }}
+                {{ copyright|raw }}
+                {{ whitespace(rendertime)|raw }}<br/>
+                {{ whitespace(memoryusage)|raw }}
             </div>
         </div>
     </footer>

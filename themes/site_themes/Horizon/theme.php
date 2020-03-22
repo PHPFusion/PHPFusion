@@ -64,11 +64,10 @@ function render_page($license = '') {
         //'errors'        => showFooterErrors(),
         'footer_text'      => nl2br(parse_textarea($settings['footer'], FALSE, TRUE)),
         'copyright'        => showcopyright('', TRUE).showprivacypolicy(),
-        'ifrendertime'     => ($settings['rendertime_enabled'] == 1 || $settings['rendertime_enabled'] == 2) ? TRUE : FALSE,
-        'rendertime'       => showrendertime(),
+        'rendertime'    => ($settings['rendertime_enabled'] == 1 || $settings['rendertime_enabled'] == 2) ? showrendertime() : '',
         'memoryusage'      => showMemoryUsage(),
         'counter'          => showcounter(),
-        'admin_login_link' => (iADMIN ? ADMIN.'index.php'.fusion_get_aidlink() : '')
+        //'admin_login_link' => (iADMIN ? ADMIN.'index.php'.fusion_get_aidlink() : ''),
     ];
     //print_p($theme_info);
     return fusion_render($theme_path, 'theme.twig', $theme_info, TRUE);
