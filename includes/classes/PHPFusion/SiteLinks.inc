@@ -173,8 +173,7 @@ class SiteLinks {
                 'callback_data'  => $options['callback_data'] !== FALSE ? $instance->fetchSiteLinks(['link_position' => $options['link_position']]) : []
             ];
             $options += $link_settings;
-
-            $instance->id = $options['id'];
+            //$instance->id = $options['id'];
             $instance->menu_options = $options;
         }
 
@@ -188,10 +187,10 @@ class SiteLinks {
      * @return SiteLinks
      */
     private static function getInstance($id = self::MenuDefaultID) {
-        self::$id = $id;
         if (empty(self::$instances[$id])) {
             self::$instances[$id] = new static();
         }
+        self::$id = $id;
         return self::$instances[$id];
     }
 
