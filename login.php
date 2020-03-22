@@ -23,7 +23,9 @@ add_to_title($locale['global_200'].$locale['global_100']);
 add_to_meta("keywords", $locale['global_100']);
 $settings = fusion_get_settings();
 $info = [];
+
 if (!iMEMBER) {
+    // do login
     if (isset($_GET['error']) && isnum($_GET['error'])) {
         if (isset($_GET['redirect']) && strpos(urldecode($_GET['redirect']), "/") === 0) {
             $action_url = cleanurl(urldecode($_GET['redirect']));
@@ -82,6 +84,7 @@ if (!iMEMBER) {
                 addNotice('danger', $locale['error_input_password']);
         }
     }
+
     switch ($settings['login_method']) {
         case "2" :
             $placeholder = $locale['global_101c'];
@@ -125,5 +128,6 @@ if (!iMEMBER) {
         'form_action'          => $post_url,
     ];
 }
+
 display_loginform($info);
 require_once THEMES.'templates/footer.php';

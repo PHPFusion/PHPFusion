@@ -63,6 +63,12 @@ class Navbar {
         $info['responsive_class'] = ($info['responsive'] ? 'navbar-collapse collapse' : 'menu');
         if ($info['login']) {
             if (iMEMBER) {
+                if (iADMIN) {
+                    $info['admin'] = [
+                        'link' => ADMIN.'index.php'.fusion_get_aidlink(),
+                        'title' => $locale['global_123']
+                    ];
+                }
                 $info['logout'] = [
                     'link'  => clean_request('logout=yes', ['logout'], FALSE),
                     'title' => $locale['logout']

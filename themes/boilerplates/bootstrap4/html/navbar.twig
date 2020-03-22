@@ -114,7 +114,10 @@
         {% if login %}
             <span class="navbar-text ml-auto">
                 {% if logout %}
-                    <a class="btn-default" href="{{ logout.link }}">{{ logout.title }}</a>
+                    {% if admin %}
+                        <a class="btn btn-dark mr-3" href="{{ admin.link }}">{{ admin.title }}</a>
+                    {% endif %}
+                    <a class="btn btn-secondary" href="{{ logout.link }}">{{ logout.title }}</a>
                 {% else %}
                     <a class="btn btn-primary mr-3 strong" href="{{ login.link }}">{{ login.title }}</a>
                     <a class="btn btn-secondary strong" href="{{ register.link }}">{{ register.title }}</a>

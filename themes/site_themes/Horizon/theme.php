@@ -74,4 +74,3 @@ function render_page($license = '') {
     return fusion_render($theme_path, 'theme.twig', $theme_info, TRUE);
 }
 
-

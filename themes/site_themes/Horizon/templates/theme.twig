@@ -1,31 +1,109 @@
 <div class="background-cover"></div>
 <div id="wrap">
-    <header class="header" itemscope itemtype="https://schema.org/WPHeader">
-{#        <div class="user-panel">#}
-{#            {% if admin_login_link %}#}
-{#                <a href="{{ admin_login_link }}">Login to Admin Panel</a>#}
-{#            {% endif %}#}
-{#        </div>#}
+    <div class="header-dark">
+        <header class="header" itemscope itemtype="https://schema.org/WPHeader">
+            {{ top_navigation|raw }}
+        </header>
+    </div>
 
-        {{ top_navigation|raw }}
-    </header>
     <div class="banner">
-        <div class="horizon-container">
-            {{ BANNER|raw }}
-        </div>
-    </div>
-    <div class="horizon-content">
-        {{ CONTENT|raw }}
-    </div>
-    <footer class="horizon-footer">
-        <div class="clearfix">
-            <div class="top-footer">
-                <div class="horizon-container">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-7">
+                    <h3 class="mb-4"><strong>No borders, just horizons!</strong></h3>
+                    <span>
+                    PHPFusion helps bring people together with different perspectives to understand each other better and to empower everyone to share their knowledge.<br/>
+                        When your inner vision opens, a new horizon will expand.
+                    </span>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-5">
+                    {% if not iMEMBER %}
+                        <div class="float-md-right">
+                            <a class="btn btn-primary strong mt-2" href="{{ BASEDIR }}login.php">Create a New Account</a>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
-            <div class="bottom-footer">
-                <div class="horizon-container">
+        </div>
+        <div class="poster">
+            {% if BANNER %}
+                {{ BANNER|raw }}
+            {% else %}
+                <div style="background: url({{ IMAGES~'horizon-2.jpg' }}) no-repeat center center;background-size:cover;display:block; height:100%;"></div>
+            {% endif %}
+        </div>
+
+    </div>
+    <div class="horizon-content">
+        <div class="container">
+            {{ CONTENT|raw }}
+        </div>
+    </div>
+    <footer class="horizon-footer">
+        <div class="container">
+            <div class="top-footer">
+
+                <div class="row">
+                    <div class="col-xs-12 col-md-4">
+                        <div class="clearfix brand">
+                            <img src="{{ IMAGES }}php-fusion-icon.png" class="icon">
+                            <div class="overflow-hide">
+                                <div class="text-sm">
+                                    PHPFusion X is an open source project and helps you establish your community based website and connect with other people.
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-8">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-sm-6 col-md-3">
+                                <h6 class="mb-3">About Us</h6>
+                                <ul class="block">
+                                    <li><a href="">Replace with Sitelinks</a></li>
+                                    <li><a href="">Replace with Sitelinks</a></li>
+                                    <li><a href="">Replace with Sitelinks</a></li>
+                                    <li><a href="">Replace with Sitelinks</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-sm-6 col-md-3">
+                                <h6 class="mb-3">About Us</h6>
+                                <ul class="block">
+                                    <li><a href="">Replace with Sitelinks</a></li>
+                                    <li><a href="">Replace with Sitelinks</a></li>
+                                    <li><a href="">Replace with Sitelinks</a></li>
+                                    <li><a href="">Replace with Sitelinks</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-sm-6 col-md-3">
+                                <h6 class="mb-3">About Us</h6>
+                                <ul class="block">
+                                    <li><a href="">Replace with Sitelinks</a></li>
+                                    <li><a href="">Replace with Sitelinks</a></li>
+                                    <li><a href="">Replace with Sitelinks</a></li>
+                                    <li><a href="">Replace with Sitelinks</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-sm-6 col-md-3">
+                                <h6 class="mb-3">About Us</h6>
+                                <ul class="block">
+                                    <li><a href="">Replace with Sitelinks</a></li>
+                                    <li><a href="">Replace with Sitelinks</a></li>
+                                    <li><a href="">Replace with Sitelinks</a></li>
+                                    <li><a href="">Replace with Sitelinks</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+            </div>
+        </div>
+        <div class="copyright-footer">
+            <a href="#wrap" class="btn btn-primary btn-to-top">
+                <i class="fas fa-angle-up fa-lg"></i>
+            </a>
+            <div class="container">
+                {{ showcopyright()|raw }}
             </div>
         </div>
     </footer>

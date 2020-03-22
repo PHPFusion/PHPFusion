@@ -223,6 +223,9 @@ function twig_init($path = THEME.'twig', $debug = FALSE) {
         'add_to_css'       => new TwigFunction('add_to_css', function () {
             call_user_func_array('add_to_css', func_get_args());
         }),
+        'showcopyright' => new TwigFunction('showcopyright', function() {
+            return call_user_func_array('showcopyright', func_get_args());
+        })
     ];
 
     foreach ($twig_register_functions as $key => $function) {

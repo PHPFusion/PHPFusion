@@ -1,5 +1,13 @@
+body {
+    background:#F2F2F2;
+    color:#707885;
+}
+.header-dark {
+    position: relative;
+    height:85px;
+}
 .header {
-    height: 85px;
+    height: 100%;
     overflow: visible;
     position: absolute;
     top: 0;
@@ -12,8 +20,9 @@
 header .navbar-brand img {
     max-width: 170px;
 }
+footer,
 .header, .bg-dark {
-    background-color: #272930 !important;
+    background-color: #1A1C21 !important;
     display: flex;
     align-self: center;
     width: 100%;
@@ -31,7 +40,7 @@ header .navbar-brand img {
 .navbar-dark .language-icon {
     width:24px;
     height:24px;
-    margin-right:5px;
+    margin-right:7px;
 }
 .navbar-dark ul.navbar-nav .nav-link {
     -moz-transition: border .20s linear,color .20s linear,background-color .20s linear;
@@ -39,10 +48,81 @@ header .navbar-brand img {
     -o-transition: border .20s linear,color .20s linear,background-color .20s linear;
     transition: border .20s linear,color .20s linear,background-color .20s linear;
 }
+.banner {
+    padding:20px 0;
+    height:235px;
+    position: relative;
+    display: flex;
+}
+.banner .container {
+    position:relative;
+    z-index: 1;
+    color:#fff;
+    display: flex;
+    align-items: center;
+    align-self: center;
+}
+.banner h3,
+.banner span {
+    display: inline-block;
+}
+.banner .poster {
+    position: absolute;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+}
+@media (max-width: 978px) {
+    .container {
+        padding:0;
+    }
+}
+footer {
+    padding:100px 0 0;
+    color:#7c7f85;
+    display: block;
+}
+footer .top-footer {
+    padding-bottom:40px;
+}
+footer .brand {
+    margin-top:30px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    justify-items: center;
+    font-size:0.9rem;
+}
+footer .brand > div {
 
-.horizon-container {
-    width: 1170px;
-    margin-right: auto;
-    margin-left: auto;
+}
+footer .icon {
+    width:52px;
+    height:52px;
+    margin-right:20px;
 }
 
+footer h6 {
+    color:#fff;
+    font-weight: 700;
+}
+
+footer a {
+    color:#7c7f85;
+    font-size:0.9rem;
+}
+footer a:hover {
+    color: var(--primary);
+}
+footer .copyright-footer {
+    border-top:1px solid #262a34;
+    font-size:0.9rem;
+    padding:30px 0;
+    text-align: center;
+}
+.btn-to-top {
+    position: absolute;
+    right:30px;
+}
