@@ -44,29 +44,35 @@ function render_page($license = '') {
         $ifRight = TRUE;
     }
 
+    $showbanner = FALSE;
+    if (BASEDIR.$settings['opening_page'] == FUSION_SELF) {
+        $showbanner = TRUE;
+    }
+
     $theme_info = [
-        'top_navigation'   => SiteLinks::setSubLinks($horizon_menu_options)->showSubLinks(),
+        'top_navigation' => SiteLinks::setSubLinks($horizon_menu_options)->showSubLinks(),
+        'showbanner'     => $showbanner,
         //'locale'        => fusion_get_locale(),
-        'settings'         => $settings,
+        'settings'       => $settings,
         //'themesettings' => get_theme_settings('Horizon'),
         //'mainmenu'      => $sublinks,
         //'getparam'      => ['container' => $this->getParam('container')],
         //'banner1'       => showbanners(1),
         //'banner2'       => showbanners(2),
-        'ifleft'           => $ifLeft,
-        'left'             => $left,
-        'content'          => $content,
-        'notices'          => renderNotices(getNotices(['all', FUSION_SELF])),
-        'ifright'          => $ifRight,
-        'right'            => $right,
+        'ifleft'         => $ifLeft,
+        'left'           => $left,
+        'content'        => $content,
+        'notices'        => renderNotices(getNotices(['all', FUSION_SELF])),
+        'ifright'        => $ifRight,
+        'right'          => $right,
         //'right_content' => $this->getParam('right_content'),
         //'right_const'   => ($this->getParam('right') == TRUE && defined('RIGHT') && RIGHT) ? RIGHT : '',
         //'errors'        => showFooterErrors(),
-        'footer_text'      => nl2br(parse_textarea($settings['footer'], FALSE, TRUE)),
-        'copyright'        => showcopyright('', TRUE).showprivacypolicy(),
-        'rendertime'    => ($settings['rendertime_enabled'] == 1 || $settings['rendertime_enabled'] == 2) ? showrendertime() : '',
-        'memoryusage'      => showMemoryUsage(),
-        'counter'          => showcounter(),
+        'footer_text'    => nl2br(parse_textarea($settings['footer'], FALSE, TRUE)),
+        'copyright'      => showcopyright('', TRUE).showprivacypolicy(),
+        'rendertime'     => ($settings['rendertime_enabled'] == 1 || $settings['rendertime_enabled'] == 2) ? showrendertime() : '',
+        'memoryusage'    => showMemoryUsage(),
+        'counter'        => showcounter(),
         //'admin_login_link' => (iADMIN ? ADMIN.'index.php'.fusion_get_aidlink() : ''),
     ];
     //print_p($theme_info);

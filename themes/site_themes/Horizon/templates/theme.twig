@@ -5,6 +5,7 @@
             {{ top_navigation|raw }}
         </header>
     </div>
+    {% if showbanner %}
     <div class="banner">
         <div class="container">
             <div class="row">
@@ -32,6 +33,7 @@
             {% endif %}
         </div>
     </div>
+    {% endif %}
     <div class="horizon-content">
         <div class="container">
             {{ CONTENT|raw }}
