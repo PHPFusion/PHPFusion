@@ -153,11 +153,9 @@ class SiteLinks {
 
     /**
      * Calling the SiteLinks instance with Custom Parameters
-     *
      * @param array $options
      *
-     * @return mixed
-     * @throws \Exception
+     * @return SiteLinks
      */
     public static function setSubLinks(array $options = []) {
         $options += self::$default_options;
