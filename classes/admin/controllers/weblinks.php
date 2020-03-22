@@ -154,7 +154,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
 
                 // Textarea Settings
                 if (!fusion_get_settings("tinymce_enabled")) {
-                    $sxtended_settings = [
+                    $extended_settings = [
                         'required'    => ($this->weblinksSettings['links_extended_required'] ? TRUE : FALSE),
                         'preview'     => TRUE,
                         'html'        => TRUE,
@@ -165,15 +165,14 @@ class WeblinksAdmin extends WeblinksAdminModel {
                         "wordcount"   => TRUE
                     ];
                 } else {
-                    $sxtended_settings = [
+                    $extended_settings = [
                         'required'   => ($this->weblinksSettings['links_extended_required'] ? TRUE : FALSE),
                         'type'       => "tinymce",
                         'tinymce'    => "advanced",
                         'error_text' => $this->locale['WLS_0270']];
                 }
 
-
-                echo form_textarea('weblink_description', $this->locale['WLS_0254'], $this->weblink_data['weblink_description'], $sxtended_settings);
+                echo form_textarea('weblink_description', $this->locale['WLS_0254'], $this->weblink_data['weblink_description'], $extended_settings);
                 ?>
             </div>
 
