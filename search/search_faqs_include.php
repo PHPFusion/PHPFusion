@@ -64,6 +64,7 @@ if (defined('FAQ_EXIST')) {
             $search_result = '';
 
             while ($data = dbarray($result)) {
+                $data['faq_answer'] = strip_tags(htmlspecialchars_decode($data['faq_answer']));
                 $text_all = $data['faq_answer'];
                 $text_all = Search_Engine::search_striphtmlbbcodes($text_all);
                 $text_frag = Search_Engine::search_textfrag($text_all);
