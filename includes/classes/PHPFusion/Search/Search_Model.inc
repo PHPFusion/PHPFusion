@@ -244,7 +244,11 @@ abstract class Search_Model {
 
     public static function search_textfrag($text) {
         if (Search_Engine::get_param('chars') != 0) {
-            $text = nl2br(stripslashes(substr($text, 0, Search_Engine::get_param('chars'))."..."));
+            if (function_exists('mb_substr')) {
+                $text = nl2br(stripslashes(mb_substr($text, 0, Search_Engine::get_param('chars'), 'utf-8')."..."));
+            } else {
+                $text = nl2br(stripslashes(substr($text, 0, Search_Engine::get_param('chars'))."..."));
+            }
         } else {
             $text = nl2br(stripslashes($text));
         }
