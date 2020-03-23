@@ -15,7 +15,26 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
+use PHPFusion\SiteLinks;
+
 defined('IN_FUSION') || exit;
+
+function display_news_menu($info) {
+    $link_configuration = [
+        'id'                => 'newsMenu',
+        'show_header'       => FALSE,
+        'nav_class_primary' => 'flex-column',
+        'responsive'        => FALSE,
+        'callback_data'     => FALSE,
+    ];
+    $sitelinks = SiteLinks::setSubLinks($link_configuration);
+    foreach ($info['news_categories'] as $ncat) {
+        $sitelinks->addMenuLink($ncat['id'], $ncat['name'], $ncat['parent'], $ncat['link'], $ncat['icon']);
+    }
+
+    add_to_panel('News', $sitelinks->showSubLinks(), 'LEFT', iGUEST, 1);
+}
 
 if (!function_exists('display_main_news')) {
     /**
@@ -24,8 +43,11 @@ if (!function_exists('display_main_news')) {
      * @param $info
      */
     function display_main_news($info) {
-        $news_settings = \PHPFusion\News\NewsServer::get_news_settings();
-        $locale = fusion_get_locale();
+        // sitelinks menu
+        display_news_menu($info);
+
+        echo fusion_render(INFUSIONS.'news/templates/html/', 'news-home.twig', [], TRUE);
+        return '';
 
         add_to_head("<link href='".INFUSIONS."news/templates/html/news.css' rel='stylesheet'/>\n");
         add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/jquery.cookie.js'></script>");

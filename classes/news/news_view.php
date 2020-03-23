@@ -27,7 +27,7 @@ use PHPFusion\OpenGraphNews;
  */
 class NewsView extends News {
     public function display_news() {
-    
+
         if ( check_get( 'readmore' ) ) {
             if ( $readmore = get( 'readmore', FILTER_VALIDATE_INT ) ) {
                 $info = $this->set_NewsItemInfo( $readmore );
