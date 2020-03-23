@@ -35,6 +35,8 @@ if (!function_exists('render_downloads')) {
         if (isset($_GET['download_id']) && !empty($info['download_item'])) {
             $data = $info['download_item'];
 
+            echo '<div class="download-item">';
+
             echo "<div class='clearfix'>\n";
             echo "<div class='btn-group pull-right m-t-15'>";
             if ($data['admin_link']) {
@@ -117,7 +119,10 @@ if (!function_exists('render_downloads')) {
 
             echo $data['download_show_comments'];
             echo $data['download_allow_ratings'] ? "<a id='rate'>\n</a>\n".$data['download_show_ratings'] : '';
+
+            echo '</div>';
         } else {
+            echo '<div class="downloads-index">';
             if (!empty($info['download_cat_description'])) {
                 echo "<div class='display-block'>\n";
                 echo $info['download_cat_description'];
@@ -125,11 +130,11 @@ if (!function_exists('render_downloads')) {
             }
 
             echo "<!--pre_download_cat-->\n";
-            echo "<div class='list-group'>\n";
+            echo "<div class='list-group downloads-index'>\n";
             if (!empty($info['download_item'])) {
                 foreach ($info['download_item'] as $download_id => $data) {
                     $download_title = $data['download_title'];
-                    echo "<div class='list-group-item clearfix'>\n";
+                    echo "<div class='list-group-item clearfix download-index-item'>\n";
                     echo "<div class='pull-right'>\n";
 
                     if ($dl_settings['download_stats']) {
@@ -172,6 +177,7 @@ if (!function_exists('render_downloads')) {
             }
             echo "</div>\n";
             echo "<!--sub_download_cat-->";
+            echo '</div>';
         }
 
         closetable();
