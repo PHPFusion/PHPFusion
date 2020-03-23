@@ -66,21 +66,29 @@ class Uri extends \Defender\Validation {
      */
     protected static function validateURL($url) {
         if (function_exists('curl_version')) {
-            $fp = curl_init($url);
-            curl_setopt($fp, CURLOPT_TIMEOUT, 20);
-            curl_setopt($fp, CURLOPT_FAILONERROR, TRUE);
-            curl_setopt($fp, CURLOPT_REFERER, $url);
-            curl_setopt($fp, CURLOPT_RETURNTRANSFER, TRUE);
-            curl_setopt($fp, CURLOPT_USERAGENT, 'Googlebot/2.1 (+http://www.google.com/bot.html)');
-            curl_setopt($fp, CURLOPT_SSL_VERIFYPEER, FALSE);
-            curl_exec($fp);
-            if (curl_errno($fp) != 0) {
-                curl_close($fp);
-                return FALSE;
-            } else {
-                curl_close($fp);
+            $ch = curl_init($url);
+
+            curl_setopt_array($ch, [
+                CURLOPT_TIMEOUT        => 20,
+                CURLOPT_FOLLOWLOCATION => TRUE,
+                CURLOPT_NOBODY         => TRUE,
+                CURLOPT_HEADER         => FALSE,
+                CURLOPT_RETURNTRANSFER => FALSE,
+                CURLOPT_SSL_VERIFYHOST => FALSE,
+                CURLOPT_SSL_VERIFYPEER => FALSE
+            ]);
+
+            curl_exec($ch);
+
+            $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+            if ($http_code == 200) {
                 return $url;
+            } else {
+                return FALSE;
             }
+
+            curl_close($ch);
         } else if (filter_var($url, FILTER_VALIDATE_URL)) {
             return $url;
         } else if (preg_match("/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i", $url)) {
