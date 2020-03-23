@@ -49,84 +49,38 @@ class Panels {
     private static $panel_id = 0;
     private static $available_panels = [];
 
-    public static function getInstance($set_info = TRUE, $panel_id = 0) {
-        if (self::$panel_instance === NULL) {
-            self::$panel_instance = new static();
-            if ($set_info) {
-                self::cachePanels();
-            }
-        }
-
-        if ($panel_id) {
-            self::$panel_id = 1;
-        }
-
-        return self::$panel_instance;
-    }
-
-    /**
-     * Cache panels
-     *
-     * @return array
-     */
-    public static function cachePanels() {
-        $panel_query = "SELECT * FROM ".DB_PANELS." WHERE panel_status=:panel_status ORDER BY panel_side ASC, panel_order ASC";
-        $param = [
-            ':panel_status' => 1,
-        ];
-        $p_result = dbquery($panel_query, $param);
-
-        if (dbrows($p_result)) {
-            $panel_side = 0;
-            $panel_order = 0;
-            while ($panel_data = dbarray($p_result)) {
-                if ($panel_data['panel_side'] !== $panel_side) {
-                    $panel_data['panel_order'] = 0;
-                }
-                $panel_side = $panel_data['panel_side'];
-                $panel_order = $panel_order + 1;
-                $panel_data['panel_order'] = $panel_order;
-                if (multilang_table('PN')) {
-                    $p_langs = explode('.', $panel_data['panel_languages']);
-                    if (checkgroup($panel_data['panel_access']) && in_array(LANGUAGE, $p_langs)) {
-                        self::$panels_cache[$panel_data['panel_side']][$panel_data['panel_order']] = $panel_data;
-                    }
-                } else {
-                    if (checkgroup($panel_data['panel_access'])) {
-                        self::$panels_cache[$panel_data['panel_side']][$panel_data['panel_order']] = $panel_data;
-                    }
-                }
-            }
-        }
-
-        return (array)self::$panels_cache;
-    }
-
     /**
      * Add Panel to List of Panels to be cached
+     * @param     $panel_name
+     * @param     $panel_content
+     * @param     $panel_side
+     * @param     $panel_access
+     * @param int $panel_order
      *
-     * @param $panel_name
-     * @param $panel_content
-     * @param $panel_side
-     * @param $panel_access
-     * @param $panel_order
+     * @return bool
      */
     public static function addPanel($panel_name, $panel_content, $panel_side, $panel_access, $panel_order = 0) {
+        foreach (self::$panel_name as $p_key => $p_side) {
+            if ($p_side['name'] == $panel_side) {
+                self::$panels_cache[$p_key+1][$panel_order] = [
+                    'panel_id'          => str_replace(" ", "_", $panel_name).'-'.$panel_side,
+                    'panel_content'     => $panel_content,
+                    'panel_side'        => $p_key+1,
+                    'panel_filename'    => '',
+                    'panel_type'        => 'custom',
+                    'panel_access'      => $panel_access,
+                    'panel_status'      => 1,
+                    'panel_display'     => 1,
+                    'panel_url_list'    => '',
+                    'panel_restriction' => 3,
+                    'panel_languages'   => implode('.', fusion_get_enabled_languages()),
+                    'panel_order'       => $panel_order,
+                ];
 
-        self::$panels_cache[$panel_side][] = [
-            'panel_id'          => str_replace(" ", "_", $panel_name).'-'.$panel_side,
-            'panel_content'     => $panel_content,
-            'panel_side'        => $panel_side,
-            'panel_filename'    => '',
-            'panel_type'        => 'custom',
-            'panel_access'      => $panel_access,
-            'panel_status'      => 1,
-            'panel_display'     => 1,
-            'panel_url_list'    => '',
-            'panel_restriction' => 3,
-            'panel_languages'   => implode('.', fusion_get_enabled_languages()),
-            'panel_order'       => $panel_order,
-        ];
+                return TRUE;
+            }
+        }
+        return FALSE;
     }
 
     /**
@@ -456,5 +410,58 @@ class Panels {
         $pattern = preg_quote($pattern, '/');
         $pattern = str_replace('\*', '.*', $pattern);
         return preg_match('/^'.$pattern.'$/i', $source);
+    }
+
+    public static function getInstance($set_info = TRUE, $panel_id = 0) {
+        if (self::$panel_instance === NULL) {
+            self::$panel_instance = new static();
+            if ($set_info) {
+                self::cachePanels();
+            }
+        }
+
+        if ($panel_id) {
+            self::$panel_id = 1;
+        }
+
+        return self::$panel_instance;
+    }
+
+    /**
+     * Cache panels
+     *
+     * @return array
+     */
+    public static function cachePanels() {
+        $panel_query = "SELECT * FROM ".DB_PANELS." WHERE panel_status=:panel_status ORDER BY panel_side ASC, panel_order ASC";
+        $param = [
+            ':panel_status' => 1,
+        ];
+        $p_result = dbquery($panel_query, $param);
+
+        if (dbrows($p_result)) {
+            $panel_side = 0;
+            $panel_order = 0;
+            while ($panel_data = dbarray($p_result)) {
+                if ($panel_data['panel_side'] !== $panel_side) {
+                    $panel_data['panel_order'] = 0;
+                }
+                $panel_side = $panel_data['panel_side'];
+                $panel_order = $panel_order + 1;
+                $panel_data['panel_order'] = $panel_order;
+                if (multilang_table('PN')) {
+                    $p_langs = explode('.', $panel_data['panel_languages']);
+                    if (checkgroup($panel_data['panel_access']) && in_array(LANGUAGE, $p_langs)) {
+                        self::$panels_cache[$panel_data['panel_side']][$panel_data['panel_order']] = $panel_data;
+                    }
+                } else {
+                    if (checkgroup($panel_data['panel_access'])) {
+                        self::$panels_cache[$panel_data['panel_side']][$panel_data['panel_order']] = $panel_data;
+                    }
+                }
+            }
+        }
+
+        return (array)self::$panels_cache;
     }
 }

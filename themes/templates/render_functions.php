@@ -17,6 +17,7 @@
 +--------------------------------------------------------*/
 
 use PHPFusion\BreadCrumbs;
+use PHPFusion\Panels;
 use Twig\Environment;
 use Twig\Extension\DebugExtension;
 use Twig\Loader\FilesystemLoader;
@@ -225,6 +226,9 @@ function twig_init($path = THEME.'twig', $debug = FALSE) {
         }),
         'showcopyright' => new TwigFunction('showcopyright', function() {
             return call_user_func_array('showcopyright', func_get_args());
+        }),
+        'lorem_ipsum' => new TwigFunction('lorem_ipsum', function() {
+            return strip_tags(call_user_func_array('lorem_ipsum', func_get_args()));
         })
     ];
 
@@ -273,7 +277,9 @@ function fusion_render($dir_path = THEMES.'templates/', $file_path = '', array $
         }
     }
     $output = $twig->render($file_path, $info);
-    $output = trim(preg_replace('/\s\s+/', '', $output));
+    if (!fusion_get_settings('devmode')) {
+        $output = trim(preg_replace('/\s\s+/', '', $output));
+    }
 
     return $output;
 }
@@ -354,3 +360,34 @@ if (!function_exists('closetable')) {
     }
 }
 
+/**
+ * Hide all the panels on current screen
+ */
+function hide_all_panels() {
+    Panels::getInstance(TRUE)->hide_panel('RIGHT');
+    Panels::getInstance(TRUE)->hide_panel('LEFT');
+    Panels::getInstance(TRUE)->hide_panel('AU_CENTER');
+    Panels::getInstance(TRUE)->hide_panel('U_CENTER');
+    Panels::getInstance(TRUE)->hide_panel('L_CENTER');
+    Panels::getInstance(TRUE)->hide_panel('BL_CENTER');
+}
+
+/**
+ * Hide a single panel section
+ * @param $side
+ */
+function hide_panel($side) {
+    Panels::getInstance(TRUE)->hide_panel($side);
+}
+
+/**
+ * Add a panel to panel section
+ * @param $panel_name
+ * @param $panel_content
+ * @param $panel_side
+ * @param $panel_access
+ * @param $panel_order
+ */
+function add_to_panel($panel_name, $panel_content, $panel_side, $panel_access, $panel_order) {
+    Panels::getInstance()->addPanel($panel_name, $panel_content, $panel_side, $panel_access, $panel_order);
+}

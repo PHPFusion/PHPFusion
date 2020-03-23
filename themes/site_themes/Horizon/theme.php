@@ -24,24 +24,22 @@ function render_page($license = '') {
         'show_header'       => TRUE,
     ];
 
-    $content = ['sm' => 12, 'md' => 12, 'lg' => 12];
-    $left = ['sm' => 3, 'md' => 2, 'lg' => 2];
-    $right = ['sm' => 3, 'md' => 2, 'lg' => 2];
-    $ifLeft = FALSE;
-    $ifRight = FALSE;
+    $content = ['sm' => 12, 'md' => 12, 'lg' => 12, 'xl' => 12];
+    $left = ['sm' => 3, 'md' => 2, 'lg' => 2, 'xl' => 2];
+    $right = ['sm' => 3, 'md' => 2, 'lg' => 2, 'xl' => 2];
 
     if (defined('LEFT') && LEFT) {
         $content['sm'] = $content['sm'] - $left['sm'];
         $content['md'] = $content['md'] - $left['md'];
         $content['lg'] = $content['lg'] - $left['lg'];
-        $ifLeft = TRUE;
+        $content['xl'] = $content['xl'] - $left['xl'];
     }
 
     if (defined('RIGHT') && RIGHT) {
         $content['sm'] = $content['sm'] - $right['sm'];
         $content['md'] = $content['md'] - $right['md'];
         $content['lg'] = $content['lg'] - $right['lg'];
-        $ifRight = TRUE;
+        $content['xl'] = $content['xl'] - $right['xl'];
     }
 
     $showbanner = FALSE;
@@ -54,17 +52,15 @@ function render_page($license = '') {
         'showbanner'     => $showbanner,
         //'locale'        => fusion_get_locale(),
         'settings'       => $settings,
+        'notices'        => renderNotices(getNotices(['all', FUSION_SELF])),
         //'themesettings' => get_theme_settings('Horizon'),
         //'mainmenu'      => $sublinks,
         //'getparam'      => ['container' => $this->getParam('container')],
         //'banner1'       => showbanners(1),
         //'banner2'       => showbanners(2),
-        'ifleft'         => $ifLeft,
-        'left'           => $left,
-        'content'        => $content,
-        'notices'        => renderNotices(getNotices(['all', FUSION_SELF])),
-        'ifright'        => $ifRight,
-        'right'          => $right,
+        'content_grid'   => $content, // content css
+        'left_grid'      => $left,
+        'right_grid'     => $right,
         //'right_content' => $this->getParam('right_content'),
         //'right_const'   => ($this->getParam('right') == TRUE && defined('RIGHT') && RIGHT) ? RIGHT : '',
         //'errors'        => showFooterErrors(),
@@ -79,3 +75,13 @@ function render_page($license = '') {
     return fusion_render($theme_path, 'theme.twig', $theme_info, TRUE);
 }
 
+function openside($title, $image='') {
+    echo fusion_render(THEME.'templates/', 'open-side.twig', [
+        'title' => $title,
+        'image' => $image,
+    ], fusion_get_settings('devmode'));
+}
+
+function closeside() {
+    echo fusion_render(THEME.'templates/', 'close-side.twig', [],FALSE);
+}

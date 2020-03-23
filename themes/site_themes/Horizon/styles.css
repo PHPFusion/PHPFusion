@@ -1,6 +1,5 @@
 body {
     background:#F2F2F2;
-    color:#707885;
 }
 .header-dark {
     position: relative;
@@ -113,6 +112,8 @@ footer a {
     color:#7c7f85;
     font-size:0.9rem;
 }
+a.profile-link:hover,
+a.profile-link:focus,
 footer a:hover {
     color: var(--primary);
 }
@@ -125,4 +126,26 @@ footer .copyright-footer {
 .btn-to-top {
     position: absolute;
     right:30px;
+}
+a.profile-link {
+    color: #7c7f85;
+    font-weight:700;
+    font-size:0.85rem;
+}
+.horizon-content .content {
+    background:#fff;
+    border-left:1px solid #ddd;
+    border-right:1px solid #ddd;
+    padding-left:20px;
+    padding-right:20px;
+    height:100%;
+}
+.horizon-content .contentLeft {
+    font-size:.95rem;
+}
+#newsMenu {
+    margin-top:15px;
+}
+#newsMenu li a {
+    font-weight: 700;
 }

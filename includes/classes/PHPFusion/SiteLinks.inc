@@ -171,7 +171,7 @@ class SiteLinks {
                 'callback_data'  => $options['callback_data'] !== FALSE ? $instance->fetchSiteLinks(['link_position' => $options['link_position']]) : []
             ];
             $options += $link_settings;
-            //$instance->id = $options['id'];
+
             $instance->menu_options = $options;
         }
 
@@ -352,7 +352,6 @@ class SiteLinks {
         $options['language'] = $this->getLanguage($options);
         $options['callback_data'] = $this->parseLinks(0, 'callback_data');
         $options['additional_data'] = $this->parseLinks(0, 'additional_data');
-
         $fusion_steam = Steam::getInstance();
         return $fusion_steam->load('Navigation')->render($options);
     }

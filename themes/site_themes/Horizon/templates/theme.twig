@@ -6,37 +6,53 @@
         </header>
     </div>
     {% if showbanner %}
-    <div class="banner">
-        <div class="container">
-            <div class="row">
-                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-7">
-                    <h3 class="mb-4"><strong>No borders, just horizons!</strong></h3>
-                    <span>
+        <div class="banner">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-8 col-lg-7">
+                        <h3 class="mb-4"><strong>No borders, just horizons!</strong></h3>
+                        <span>
                     PHPFusion helps bring people together with different perspectives to understand each other better and to empower everyone to share their knowledge.<br/>
                         When your inner vision opens, a new horizon will expand.
                     </span>
-                </div>
-                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-5">
-                    {% if not iMEMBER %}
-                        <div class="float-md-right">
-                            <a class="btn btn-primary strong mt-2" href="{{ BASEDIR }}login.php">Create a New Account</a>
-                        </div>
-                    {% endif %}
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-5">
+                        {% if not iMEMBER %}
+                            <div class="float-md-right">
+                                <a class="btn btn-primary strong mt-2" href="{{ BASEDIR }}login.php">Create a New Account</a>
+                            </div>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
+            <div class="poster">
+                {% if BANNER %}
+                    {{ BANNER|raw }}
+                {% else %}
+                    <div style="background: url({{ IMAGES~'horizon-2.jpg' }}) no-repeat center center;background-size:cover;display:block; height:100%;"></div>
+                {% endif %}
+            </div>
         </div>
-        <div class="poster">
-            {% if BANNER %}
-                {{ BANNER|raw }}
-            {% else %}
-                <div style="background: url({{ IMAGES~'horizon-2.jpg' }}) no-repeat center center;background-size:cover;display:block; height:100%;"></div>
-            {% endif %}
-        </div>
-    </div>
     {% endif %}
     <div class="horizon-content">
         <div class="container">
-            {{ CONTENT|raw }}
+            <div class="row">
+                {% if LEFT %}
+                    <section class="col-xs-{{ left_grid.xs }} col-sm-{{ left_grid.sm }} col-md-{{ left_grid.md }} col-lg-{{ left_grid.lg }} col-xs-{{ left_gird.xl }}">
+                        {{ LEFT|raw }}
+                    </section>
+                {% endif %}
+                <section class="col-xs-{{ content_grid.xs }} col-sm-{{ content_grid.sm}} col-md-{{ content_grid.md}} col-lg-{{ content_grid.lg}} col-xs-{{ content_grid.xl }}">
+                    <div class="content">
+                        {{ CONTENT|raw }}
+                    </div>
+                </section>
+                {% if RIGHT %}
+                    <section class="col-xs-{{ left_grid.xs }} col-sm-{{ left_grid.sm }} col-md-{{ left_grid.md }} col-lg-{{ left_grid.lg }} col-xs-{{ left_gird.xl }}">
+                        {{ RIGHT|raw }}
+                    </section>
+                {% endif %}
+            </div>
         </div>
     </div>
     <footer class="horizon-footer">
