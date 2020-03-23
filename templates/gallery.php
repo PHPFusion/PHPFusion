@@ -22,6 +22,7 @@ if (!function_exists("render_gallery")) {
         $locale = fusion_get_locale();
         echo render_breadcrumbs();
         opentable($locale['gallery_400']);
+        echo '<div class="gallery-index">';
         if (!empty($info['page_nav'])) {
             echo $info['page_nav'];
         }
@@ -53,7 +54,7 @@ if (!function_exists("render_gallery")) {
 
             echo "<div class='row m-t-20 m-b-20'>\n";
             foreach ($info['item'] as $data) {
-                echo "<div class='col-xs-12 col-sm-6 col-md-4 col-lg-3'>\n";
+                echo "<div class='col-xs-12 col-sm-6 col-md-4 col-lg-3 gallery-index-item'>\n";
                 render_photoAlbum($data);
                 echo "</div>\n";
             }
@@ -64,6 +65,7 @@ if (!function_exists("render_gallery")) {
         if (!empty($info['page_nav'])) {
             echo $info['page_nav'];
         }
+        echo '</div>';
         closetable();
     }
 }
@@ -92,6 +94,7 @@ if (!function_exists('render_photo_album')) {
 
         opentable($info['album_title']);
         echo "<!--pre_album_info-->\n";
+        echo '<div class="gallery-item">';
 
         if (!empty($info['album_stats']) || !empty($info['album_description'])) {
             echo "<div class='clearfix well'>\n";
@@ -164,6 +167,7 @@ if (!function_exists('render_photo_album')) {
         if (isset($info['page_nav'])) {
             echo $info['page_nav'];
         }
+        echo '</div>';
         closetable();
     }
 }
