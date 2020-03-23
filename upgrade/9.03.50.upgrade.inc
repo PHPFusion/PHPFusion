@@ -27,12 +27,19 @@ foreach ($update_settings_tbl as $key => $value) {
     }
 }
 
-/*$insert_settings_tbl = [
-    '' => ''
-];
-
-foreach ($insert_settings_tbl as $key => $value) {
-    if (!isset($settings[$key])) {
-        $inf_insertdbrow[] = DB_SETTINGS." (settings_name, settings_value) VALUES ('$key', '$value')";
+function rrmdir($dir) {
+    if (is_dir($dir)) {
+        $objects = scandir($dir);
+        foreach ($objects as $object) {
+            if ($object != '.' && $object != '..') {
+                if (filetype($dir.'/'.$object) == 'dir')
+                    rrmdir($dir.'/'.$object);
+                else unlink($dir.'/'.$object);
+            }
+        }
+        reset($objects);
+        rmdir($dir);
     }
-}*/
+}
+
+rrmdir(INCLUDES.'filemanager');
