@@ -30,6 +30,7 @@ if (!function_exists("display_main_articles")) {
         opentable($locale['article_0000']);
         echo render_breadcrumbs();
 
+        echo '<div class="articles-index">';
         if (is_array($info['article_categories']) && !empty($info['article_categories'])) {
             ?>
             <div class="panel panel-default panel-articles-header">
@@ -113,6 +114,7 @@ if (!function_exists("display_main_articles")) {
         } else {
             echo "<div class='well text-center'>".$locale['article_0060']."</div>";
         }
+        echo '</div>';
         closetable();
     }
 }
@@ -128,7 +130,7 @@ if (!function_exists("render_article")) {
     function render_article($subject, $article, $info) {
         $locale = fusion_get_locale();
         ?>
-        <article class="panel panel-default clearfix" style="min-height: 150px;">
+        <article class="panel panel-default clearfix article-index-item" style="min-height: 150px;">
             <div class="panel-body">
                 <h4 class="article-title panel-title">
                     <a href="<?php echo INFUSIONS."articles/articles.php?article_id=".$info['article_id']; ?>" class="text-dark strong"><?php echo $subject; ?></a>
