@@ -159,7 +159,7 @@ class Sessions {
         $names = (string)$name;
         $query = "SELECT session_data FROM ".DB_SESSIONS." WHERE session_id = :name";
         $parameters = [':name' => $names];
-        $result = DatabaseFactory::getConnection(self::$_sess_key)->query($query, $parameters);
+        $result = dbquery($query, $parameters);
         if (DatabaseFactory::getConnection(self::$_sess_key)->countRows($result)) {
             $rows = DatabaseFactory::getConnection(self::$_sess_key)->fetchAssoc($result);
             return $rows['session_data'];
@@ -189,7 +189,7 @@ class Sessions {
             ':data'   => $data,
         ];
         $query = "REPLACE INTO ".DB_SESSIONS." VALUES (:name, :access, :data)";
-        if (DatabaseFactory::getConnection(self::$_sess_key)->query($query, $parameters)) {
+        if (dbquery($query, $parameters)) {
             return TRUE;
         }
 
@@ -211,14 +211,14 @@ class Sessions {
             ':name' => $name,
         ];
         $query = "DELETE FROM ".DB_SESSIONS." WHERE session_id=:name";
-        DatabaseFactory::getConnection(self::$_sess_key)->query($query, $parameters);
+        dbquery($query, $parameters);
 
         return TRUE;
     }
 
     public function _purge() {
         $query = "DELETE FROM ".DB_SESSIONS;
-        DatabaseFactory::getConnection(self::$_sess_key)->query($query);
+        dbquery($query);
 
         return TRUE;
     }
@@ -249,7 +249,7 @@ class Sessions {
         ];
         $query = "DELETE FROM ".DB_SESSIONS." WHERE session_start < :old";
 
-        DatabaseFactory::getConnection(self::$_sess_key)->query($query, $parameters);
+        dbquery($query, $parameters);
 
         return TRUE;
     }
