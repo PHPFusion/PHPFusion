@@ -9,8 +9,8 @@ function render_page($license = '') {
     $theme_path = THEME.'templates/';
     $settings = fusion_get_settings();
     $horizon_menu_options = [
-        //'container_fluid'   => TRUE,
-        'container'         => TRUE,
+        'container_fluid'   => TRUE,
+        //'container'         => TRUE,
         'searchbar'         => TRUE,
         'navbar_class'      => 'navbar-expand-lg navbar-dark bg-dark navbar-light',
         'show_banner'       => TRUE,
@@ -25,8 +25,8 @@ function render_page($license = '') {
     ];
 
     $content = ['sm' => 12, 'md' => 12, 'lg' => 12, 'xl' => 12];
-    $left = ['sm' => 3, 'md' => 2, 'lg' => 2, 'xl' => 2];
-    $right = ['sm' => 3, 'md' => 2, 'lg' => 2, 'xl' => 2];
+    $left = ['sm' => 3, 'md' => 3, 'lg' => 2, 'xl' => 2];
+    $right = ['sm' => 3, 'md' => 3, 'lg' => 2, 'xl' => 2];
 
     if (defined('LEFT') && LEFT) {
         $content['sm'] = $content['sm'] - $left['sm'];
