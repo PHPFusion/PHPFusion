@@ -168,10 +168,13 @@ class Forum extends ForumServer {
                     $this->forum_info['post_count'] = dbcount("(post_id)", DB_FORUM_POSTS, "forum_id=:forum_id", [':forum_id' => $this->forum_info['forum_id']]);
                     $this->forum_info['forum_postcount_word'] = format_word($this->forum_info['post_count'], $locale['fmt_post']);
 
-                    if (!empty($forum_data['forum_description']))
-                        set_meta('description', $forum_data['forum_description']);
-                    if (!empty($forum_data['forum_meta']))
-                        set_meta('keywords', $forum_data['forum_meta']);
+                    $this->forum_info['forum_description'] = nl2br(parseubb(parsesmileys($this->forum_info['forum_description'])));
+                    $this->forum_info['forum_rules'] = nl2br(parseubb(parsesmileys($this->forum_info['forum_rules'])));
+
+                    if (!empty($this->forum_info['forum_description']))
+                        set_meta('description', $this->forum_info['forum_description']);
+                    if (!empty($this->forum_info['forum_meta']))
+                        set_meta('keywords', $this->forum_info['forum_meta']);
 
                     /**
                      * Set Max Rows - XSS
