@@ -348,18 +348,15 @@ class WeblinksAdmin extends WeblinksAdminModel {
             }
         }
 
-        //$default_display = 16;
-        $limit = 16; //$default_display;
-        $limits = filter_input(INPUT_POST, 'weblink_display', FILTER_VALIDATE_INT) || filter_input(INPUT_GET, 'weblink_display', FILTER_VALIDATE_INT);
-        if (!empty($limits)) {
-            $limit = $limits;
+        $limit = 16;
+        if ((!empty($_POST['weblink_display']) && isnum($_POST['weblink_display'])) || (!empty($_GET['weblink_display']) && isnum($_GET['weblink_display']))) {
+            $limit = (!empty($_POST['weblink_display']) ? $_POST['weblink_display'] : $_GET['weblink_display']);
         }
 
-        $max_rows = dbcount("(weblink_id)", DB_WEBLINKS);
+        $max_rows = dbcount("(news_id)", DB_NEWS);
         $rowstart = 0;
-        if (!empty($limits)) {
-            $row_start = filter_input(INPUT_GET, 'rowstart', FILTER_VALIDATE_INT);
-            $rowstart = (!empty($row_start) && $row_start <= $max_rows ? $row_start : 0);
+        if (!isset($_POST['weblink_display'])) {
+            $rowstart = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $max_rows ? $_GET['rowstart'] : 0);
         }
 
         // Query
