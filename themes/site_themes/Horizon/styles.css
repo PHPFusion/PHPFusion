@@ -84,7 +84,6 @@ footer .brand {
     align-items: center;
     justify-content: center;
     justify-items: center;
-    font-size: 0.9rem;
 }
 
 footer .brand > div {
@@ -104,7 +103,6 @@ footer h6 {
 
 footer a {
     color: #7c7f85;
-    font-size: 0.9rem;
 }
 
 a.profile-link:hover,
