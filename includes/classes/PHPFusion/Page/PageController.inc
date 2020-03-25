@@ -107,7 +107,7 @@ class PageController extends PageModel {
     protected static function set_PageInfo($page_id) {
         $locale = fusion_get_locale("", LOCALE.LOCALESET."custom_pages.php");
 
-        $page_id = ((!empty($page_id)) ? intval($page_id) : isset($_GET['page_id']) && isnum($_GET['page_id']) ? intval($_GET['page_id']) : 0);
+        $page_id = (((!empty($page_id)) ? intval($page_id) : isset($_GET['page_id']) && isnum($_GET['page_id'])) ? intval($_GET['page_id']) : 0);
 
         self::$info['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? $_GET['rowstart'] : 0;
 
