@@ -17,6 +17,8 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
+use PHPFusion\Steam;
+
 /**
  * Generates a text input
  * Generates the HTML for a textbox or password input
@@ -27,7 +29,6 @@
  * @param array  $options       Various options
  *
  * @return mixed
- * @throws ReflectionException
  *
  * To add an inline button (set prepend or append - respectively)
  * register these options accordingly into the function
@@ -133,13 +134,13 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
     }
 
     // This is bootstrap only???
-    if (\Defender::inputHasError($input_name)) {
+    if (Defender::inputHasError($input_name)) {
         $options['error_class'] = " has-error";
 
         // print_p($input_name);
         // print_p($new_error_text);
         if (!empty($options['error_text'])) {
-            $new_error_text = \Defender::getErrorText($input_name);
+            $new_error_text = Defender::getErrorText($input_name);
             if (!empty($new_error_text)) {
                 $options['error_text'] = $new_error_text;
             }
@@ -289,7 +290,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         'censor_words'   => $options['censor_words']
     ];
 
-    \Defender::add_field_session($config);
+    Defender::add_field_session($config);
 
     if ($options['autocomplete_off']) {
         // Delay by 20ms and reset values.
@@ -300,7 +301,11 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
     }
 
     //return (string)$html;
-    $fusion_steam = new \PHPFusion\Steam('bootstrap3');
-    return $fusion_steam->load('Form')->input($input_name, $label, $input_value, $options);
-
+    $fusion_steam = Steam::getInstance();
+     try {
+         return    $fusion_steam->load('Form')->input($input_name, $label, $input_value, $options);
+    } catch (Exception $e) {
+         set_error(E_USER_NOTICE, $e->getMessage(), $e->getFile(), $e->getLine(), 'form_text');
+     }
+    return '';
 }

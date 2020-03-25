@@ -20,13 +20,13 @@ use PHPFusion\Steam;
 
 /**
  * Checkbox Input
+ *
  * @param        $input_name
  * @param string $label
  * @param string $input_value
  * @param array  $options
  *
  * @return string
- * @throws ReflectionException
  */
 function form_checkbox($input_name, $label = '', $input_value = '0', array $options = []) {
 
@@ -56,7 +56,7 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
         'reverse_label'  => FALSE,
         'deactivate_key' => NULL,
         'onclick'        => '',
-        'stacked' => '',
+        'stacked'        => '',
     ];
 
     $options += $default_options;
@@ -64,8 +64,8 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
     $title = $label ?: ucfirst(strtolower(str_replace('_', ' ', $input_name)));
 
     $options['input_id'] = trim(str_replace("[", "-", $options['input_id']), "]");
-    
-    Defender::add_field_session( [
+
+    Defender::add_field_session([
         'input_name' => clean_input_name($input_name),
         'title'      => clean_input_name($title),
         'id'         => $options['input_id'],
@@ -75,11 +75,11 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
         'error_text' => $options['error_text'],
         'delimiter'  => $options['delimiter'],
     ]);
-    
-    if ( Defender::inputHasError( $input_name ) ) {
+
+    if (Defender::inputHasError($input_name)) {
         // $error_class = "has-error ";
         if (!empty($options['error_text'])) {
-            $new_error_text = Defender::getErrorText( $input_name );
+            $new_error_text = Defender::getErrorText($input_name);
             if (!empty($new_error_text)) {
                 $options['error_text'] = $new_error_text;
             }
@@ -115,9 +115,12 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
     //         }
     //     }
     // }
-    
-    $fusion_steam = new Steam( 'bootstrap3' );
-    $html = $fusion_steam->load('Form')->checkbox($input_name, $label, $input_value, $options);
 
-    return (string)$html;
+    $fusion_steam = Steam::getInstance();
+    try {
+        return $fusion_steam->load('Form')->checkbox($input_name, $label, $input_value, $options);
+    } catch (Exception $e) {
+        set_error(E_USER_NOTICE, $e->getMessage(), $e->getFile(), $e->getLine(), 'form_text');
+    }
+    return '';
 }
