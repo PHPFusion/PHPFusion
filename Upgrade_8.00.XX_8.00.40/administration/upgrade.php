@@ -40,7 +40,7 @@ if (isset($_GET['upgrade_ok'])) {
 }
 
 echo "<form name='upgradeform' method='post' action='".FUSION_SELF.$aidlink."'>\n";
-if (str_replace(".", "", $settings['version']) < "80024") {
+if ($settings['version'] < $current_version) {
     if (!isset($_POST['stage'])) {
         echo "<div class='well'>\n";
         echo sprintf($locale['500'], $locale['504'])."<br />\n".$locale['501']."\n";
@@ -50,6 +50,20 @@ if (str_replace(".", "", $settings['version']) < "80024") {
     } else if (isset($_POST['upgrade']) && isset($_POST['stage']) && $_POST['stage'] == 2) {
         // Set a new version
         $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$current_version."' WHERE settings_name='version'");
+
+        $insert_settings_tbl = [
+            'gateway_method' => '2',
+            'allow_php_exe'  => '0',
+            'update_checker' => '1'
+        ];
+
+        foreach ($insert_settings_tbl as $key => $value) {
+            if (!isset($settings[$key])) {
+                $result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('$key', '$value')");
+            }
+        }
+
+        rrmdir(INCLUDES.'filemanager');
         redirect(FUSION_SELF.$aidlink."&amp;upgrade_ok");
     }
 
@@ -59,5 +73,25 @@ if (str_replace(".", "", $settings['version']) < "80024") {
 
 echo "</form>\n</div>\n";
 closetable();
+
+/**
+ * Remove folder and all files/subdirectories
+ *
+ * @param string $dir
+ */
+function rrmdir($dir) {
+    if (is_dir($dir)) {
+        $objects = scandir($dir);
+        foreach ($objects as $object) {
+            if ($object != '.' && $object != '..') {
+                if (filetype($dir.'/'.$object) == 'dir')
+                    rrmdir($dir.'/'.$object);
+                else unlink($dir.'/'.$object);
+            }
+        }
+        reset($objects);
+        rmdir($dir);
+    }
+}
 
 require_once THEMES."templates/footer.php";

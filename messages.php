@@ -229,6 +229,7 @@ if (isset($_POST['send_message'])) {
     if (!$error) {
         $cdata = dbarray(dbquery("SELECT COUNT(message_id) AS outbox_count, MIN(message_id) AS last_message FROM ".DB_MESSAGES." WHERE message_to='".$userdata['user_id']."' AND message_folder='1' GROUP BY message_to"));
         if ($my_settings['pm_save_sent']) {
+            $cdata['outbox_count'] = !empty($cdata['outbox_count']) ? $cdata['outbox_count'] : 0;
             if ($msg_settings['pm_sentbox'] != "0" && ($cdata['outbox_count'] + 1) > $msg_settings['pm_sentbox']) {
                 $result = dbquery("DELETE FROM ".DB_MESSAGES." WHERE message_id='".$cdata['last_message']."' AND message_to='".$userdata['user_id']."'");
             }

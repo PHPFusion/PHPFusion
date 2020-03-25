@@ -1458,4 +1458,24 @@ function flatten_array($result) {
     return call_user_func_array('array_merge', $result);
 }
 
+/**
+ * Remove folder and all files/subdirectories
+ *
+ * @param string $dir
+ */
+function rrmdir($dir) {
+    if (is_dir($dir)) {
+        $objects = scandir($dir);
+        foreach ($objects as $object) {
+            if ($object != '.' && $object != '..') {
+                if (filetype($dir.'/'.$object) == 'dir')
+                    rrmdir($dir.'/'.$object);
+                else unlink($dir.'/'.$object);
+            }
+        }
+        reset($objects);
+        rmdir($dir);
+    }
+}
+
 include INCLUDES."system_images.php";
