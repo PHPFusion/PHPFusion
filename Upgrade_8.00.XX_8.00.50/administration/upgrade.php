@@ -28,6 +28,28 @@ if (file_exists(LOCALE.LOCALESET."admin/upgrade.php")) {
     include LOCALE."English/admin/upgrade.php";
 }
 
+/**
+ * Remove folder and all files/subdirectories
+ *
+ * @param string $dir
+ */
+if (!function_exists('rrmdir')) {
+	function rrmdir($dir) {
+		if (is_dir($dir)) {
+			$objects = scandir($dir);
+			foreach ($objects as $object) {
+				if ($object != '.' && $object != '..') {
+					if (filetype($dir.'/'.$object) == 'dir')
+						rrmdir($dir.'/'.$object);
+					else unlink($dir.'/'.$object);
+				}
+			}
+			reset($objects);
+			rmdir($dir);
+		}
+	}
+}
+
 opentable($locale['400']);
 
 echo "<div style='text-align:center' class='text-center' ><br />\n";
@@ -73,25 +95,5 @@ if ($settings['version'] < $current_version) {
 
 echo "</form>\n</div>\n";
 closetable();
-
-/**
- * Remove folder and all files/subdirectories
- *
- * @param string $dir
- */
-function rrmdir($dir) {
-    if (is_dir($dir)) {
-        $objects = scandir($dir);
-        foreach ($objects as $object) {
-            if ($object != '.' && $object != '..') {
-                if (filetype($dir.'/'.$object) == 'dir')
-                    rrmdir($dir.'/'.$object);
-                else unlink($dir.'/'.$object);
-            }
-        }
-        reset($objects);
-        rmdir($dir);
-    }
-}
 
 require_once THEMES."templates/footer.php";
