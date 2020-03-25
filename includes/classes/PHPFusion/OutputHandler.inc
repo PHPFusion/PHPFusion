@@ -53,7 +53,7 @@ class OutputHandler {
      *
      * @var string[]
      */
-    private static $pageMeta = [];
+    public static $pageMeta = [];
     /**
      * PHP code to execute using eval replace anything in the output
      *
@@ -133,8 +133,8 @@ class OutputHandler {
     /**
      * Replace something in the output using regexp
      *
-     * @param string $target Regexp pattern without delimiters
-     * @param string $replace The new content
+     * @param string $target    Regexp pattern without delimiters
+     * @param string $replace   The new content
      * @param string $modifiers Regexp modifiers
      */
     public static function replaceInOutput($target, $replace, $modifiers = "") {
@@ -187,11 +187,11 @@ class OutputHandler {
     /**
      * Execute the output handlers
      *
-     * @global array $locale
-     *
      * @param string $output
      *
      * @return string
+     * @global array $locale
+     *
      */
     public static function handleOutput($output) {
         $locale = fusion_get_locale();
@@ -213,15 +213,13 @@ class OutputHandler {
         }
 
         if (self::$pageTitle != $settings['sitename']) {
-            $output = preg_replace("#<title>.*</title>#i",
-                "<title>".self::$pageTitle.(self::$pageTitle ? $locale['global_200'] : '').$settings['sitename']."</title>",
-                $output, 1);
+            $output = preg_replace("#<title>.*</title>#i", "<title>".self::$pageTitle.(self::$pageTitle ? $locale['global_200'] : '').$settings['sitename']."</title>", $output, 1);
         }
 
         if (!empty(self::$pageMeta)) {
             foreach (self::$pageMeta as $name => $content) {
-                $output = preg_replace("#<meta (http-equiv|name)='$name' content='.*' />#i", "<meta \\1='".$name."' content='".$content."' />",
-                    $output, 1);
+                $regex = "/<meta (http-equiv|name)=\'".$name."\' content=\'(.*?)\'>/mi";
+                $output = preg_replace("$regex", "<meta \\1='".$name."' content='".$content."' />", $output, 1);
             }
         }
 

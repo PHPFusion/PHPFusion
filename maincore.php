@@ -309,6 +309,8 @@ $fusion_jquery_tags = &OutputHandler::$jqueryTags;
 
 $fusion_css_tags = &OutputHandler::$cssTags;
 
+$fusion_meta_tags = &OutputHandler::$pageMeta;
+
 // Get installed infusions
 $fusion_infusions = fusion_get_infusions();
 
