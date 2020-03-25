@@ -34,14 +34,8 @@ function bootstrap4() {
         ?>
         <?php if ($text_direction == 'rtl') : ?>
             <link rel="stylesheet" href="<?php echo $boilerplate.'bootstrap4/css/bootstrap-rtl.min.css' ?>">
-        <?php endif; ?>
-        <?php if ($settings['devmode']) : ?>
-            <link rel="stylesheet" href="<?php echo $boilerplate.'bootstrap4/css/bootstrap.min.css.map' ?>">
-            <?php add_to_footer('<script src="'.$boilerplate.'bootstrap4/js/bootstrap.bundle.min.js.map"></script>'); ?>
-            <?php if ($text_direction == 'rtl') : ?>
-                <link rel="stylesheet" href="<?php echo $boilerplate.'bootstrap4/css/bootstrap-rtl.css.map' ?>">
-            <?php endif ?>
         <?php endif;
+
     }
 }
 

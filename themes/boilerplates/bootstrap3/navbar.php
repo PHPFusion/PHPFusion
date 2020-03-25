@@ -32,8 +32,7 @@ class Navbar {
         if (!$info['navbar_class']) {
             $info['navbar_class'] = 'navbar-default';
         }
-        $info['responsive_class'] = ($info['responsive'] ? 'navbar-collapse' : 'menu');
-
+        $info['responsive_class'] = ($info['responsive'] ? 'collapse navbar-collapse' : 'menu');
         ksort($info);
         return fusion_render(BOILERPLATES.'bootstrap3/html/', 'navbar.twig', $info, TRUE);
     }

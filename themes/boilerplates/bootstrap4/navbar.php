@@ -84,8 +84,10 @@ class Navbar {
                 ];
             }
         }
-
         ksort($info);
+        if ($info['debug']) {
+            print_P($info);
+        }
 
         return fusion_render(BOILERPLATES.'bootstrap4/html/', 'navbar.twig', $info, TRUE);
     }

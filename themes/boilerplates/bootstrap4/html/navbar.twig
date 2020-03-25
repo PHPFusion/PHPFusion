@@ -1,7 +1,9 @@
 {#Header#}
 {% set navbar_header = '' %}
 {% if banner and banner_position and banner_link %}
-    {% set navbar_header = '<a class="navbar-brand'~whitespace(banner_position)~whitespace(banner_class)~'" href="'~banner_link~'"><img src="'~banner~'" alt="'~banner_title~'"></a>'~header_content %}
+    {% set navbar_header = '<a class="navbar-brand'~whitespace(banner_position)~whitespace(banner_class)~'" href="'~banner_link~'">
+    <img src="'~banner~'" alt="'~banner_title~'">
+    </a>' %}
 {% endif %}
 
 {#Affix Option#}
@@ -43,18 +45,27 @@
             {% set linkWindow = link.link_window == 1 ? 'target="_blank" ' : '' %}
 
             <li class="{{ listClass }}{{ whitespace(linkActive) }}">
-                <a class="{{ aClass }} dropdown-toggle" href="{{ link.link_url }}" id="{{ link.link_id }}Dropdown"{{ whitespace(linkWindow) }} role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ link.link_name }}</a>
+                <a class="{{ aClass }} dropdown-toggle" href="{{ link.link_url }}" id="{{ link.link_id }}Dropdown"{{ whitespace(linkWindow) }} role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ link.link_name|raw }}</a>
                 <ul class="dropdown-menu" aria-labelledby="{{ link.link_id }}Dropdown">
                     {{ macros.menu_links(links, link.link_id) }}
                 </ul>
             </li>
         {% elseif link.link_cat >0 %}
             {#where this is a subitem#}
-            <a class="dropdown-item" href="#">{{ link.link_name }}</a>
+            <a class="dropdown-item" href="#">{{ link.link_name|raw }}</a>
         {% else %}
             {#where this is a top level item#}
+            {% if link.link_url %}
             <li class="nav-item{{ whitespace(linkActive) }}">
-                <a class="nav-link" href="{{ link.link_url }}">{{ link.link_name }}</a></li>
+                <a class="nav-link" href="{{ link.link_url }}">{{ link.link_name|raw }}</a>
+            </li>
+            {% elseif link.link_name == '---' or link.link_name == '===' %}
+                <li class="divider"></li>
+           {% else %}
+                <li class="nav-item{{ whitespace(activeLinkClass)|raw }}">
+                    {{ whitespace(icon)|raw }}{{ link.link_name|raw }}{{ whitespace(activeSpan)|raw }}
+                </li>
+            {% endif %}
         {% endif %}
     {% endfor %}
 {% endmacro %}
@@ -66,46 +77,29 @@
 
 <nav id="{{ id }}" class="navbar{{ whitespace(navbar_class) }}{{ whitespace(respClass) }}" role="navigation" {{ affix|raw }}>
     {{ openContainer|raw }}
-
-    {{ navbar_header|raw }}
+    {% if navbar_header %}
+        {{ navbar_header|raw }}
+    {% elseif header_content %}
+    {{ header_content|raw }}
+    {% endif %}
+    {% if responsive %}
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#{{ id }}_menu" aria-controls="{{ id }}_menu" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-    {#    {% if login or search %}#}
-    {#        <span class="navbar-text ml-auto">#}
-    {#                {{ search|raw }}#}
-    {#
-    {#            </span>#}
-    {#    {% endif %}#}
-
-    <div class="navbar-collapse collapse{{ whitespace(responsive_class) }}" id="{{ id }}_menu">
+    {% endif %}
+    <div class="{{ whitespace(responsive_class) }}" id="{{ id }}_menu">
         {{ html_pre_content|raw }}
         <ul class="navbar-nav mr-auto{{ whitespace(nav_class_primary) }}">
             {{ _self.menu_links(callback_data) }}
         </ul>
         {{ html_content|raw }}
         {% if additional_data or language %}
-            <ul class="navbar-nav navbar-right ml-auto {{ whitespace(nav_secondary_class) }}">
-                {#                language options#}
-
-                {#                <li class="nav-item dropdown">#}
-                {#                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">#}
-                {#                        Dropdown#}
-                {#                    </a>#}
-                {#                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">#}
-                {#                        <a class="dropdown-item" href="#">Action</a>#}
-                {#                        <a class="dropdown-item" href="#">Another action</a>#}
-                {#                        <div class="dropdown-divider"></div>#}
-                {#                        <a class="dropdown-item" href="#">Something else here</a>#}
-                {#                    </div>#}
-                {#                </li>#}
-                {#                <li class="nav-item">#}
-                {#                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>#}
-                {#                </li>#}
+            <ul class="navbar-nav navbar-right ml-auto{{ whitespace(nav_class_secondary) }}">
+                {{ _self.menu_links(additional_data) }}
             </ul>
         {% endif %}
         {% if login or search or language %}
-            <span class="navbar-text ml-auto d-inline-flex w-100 justify-content-end">
+            <span class="navbar-text ml-auto d-inline-flex justify-content-end">
                 {{ search|raw }}
                 {% if language %}
                     <div class="nav-item dropdown ml-2">
@@ -137,7 +131,7 @@
                 {% endif %}
             </span>
         {% endif %}
-        {{ html_post_content }}
+        {{ html_post_content|raw }}
     </div>
 
 

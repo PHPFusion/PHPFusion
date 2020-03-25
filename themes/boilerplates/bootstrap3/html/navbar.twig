@@ -35,7 +35,6 @@
             {% set activeLinkClass = 'class="active"' %}
             {% set activeSpan = '<span class="sr-only">(current)</span>' %}
             {% set icon = links.link_icon ? '<i class="{{ link.icon }}"></i>' %}
-
         {% endif %}
         {# where this has a child item#}
         {% if links[link.link_id] %}
@@ -43,20 +42,29 @@
             {% set linkWindow = link.link_window == 1 ? 'target="_blank" ' : '' %}
             {% set topCaret = link.link_cat > 0 ? '' : '<span class="caret"></span>' %}
             <li class="{{ listClass }}">
-                <a class="dropdown-toggle" data-toggle="dropdown" data-submenu href="{{ link.link_url }}" id="{{ link.link_id }}Dropdown"{{ whitespace(linkWindow) }} role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" tabindex="0">{{ whitespace(icon)|raw }}{{ link.link_name }}{{ whitespace(topCaret)|raw }}</a>
+                <a class="dropdown-toggle" data-toggle="dropdown" data-submenu href="{{ link.link_url }}" id="{{ link.link_id }}Dropdown"{{ whitespace(linkWindow) }} role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" tabindex="0">{{ whitespace(icon)|raw }}{{ link.link_name|raw }}{{ whitespace(topCaret)|raw }}</a>
                 <ul class="dropdown-menu" aria-labelledby="{{ link.link_id }}Dropdown">
                     {{ macros.menu_links(links, link.link_id) }}
                 </ul>
             </li>
         {% else %}
             {#where this is a top level item#}
-            <li{{ activeLinkClass|raw }}>
-                <a href="{{ link.link_url }}">{{ whitespace(icon)|raw }}{{ link.link_name }}{{ whitespace(activeSpan)|raw }}</a></li>
+            {% if link.link_url %}
+                <li{{ whitespace(activeLinkClass)|raw }}>
+                    <a href="{{ link.link_url }}">{{ whitespace(icon)|raw }}{{ link.link_name|raw }}{{ whitespace(activeSpan)|raw }}</a>
+                </li>
+            {% elseif link.link_name == '---' or link.link_name == '===' %}
+                <li class="divider"></li>
+            {% else %}
+                <li{{ whitespace(activeLinkClass)|raw }}>
+                    {{ whitespace(icon)|raw }}{{ link.link_name|raw }}{{ whitespace(activeSpan)|raw }}
+                </li>
+            {% endif %}
         {% endif %}
     {% endfor %}
 {% endmacro %}
 
-<nav class="navbar{{ whitespace(navbar_class) }}" role="navigation" {{ affix|raw }}>
+<nav id="{{ id }}" class="navbar{{ whitespace(navbar_class) }}" role="navigation" {{ affix|raw }}>
     {{ openContainer|raw }}
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
@@ -67,31 +75,13 @@
             <span class="icon-bar"></span>
         </button>
         {{ navbar_header|raw }}
+        {{ custom_banner|raw }}
     </div>
     <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse{{ whitespace(responsive_class) }}" id="{{ id }}_menu">
+    <div class="{{ whitespace(responsive_class) }}" id="{{ id }}_menu">
         {{ html_pre_content|raw }}
         <ul class="nav navbar-nav{{ whitespace(nav_class_primary) }}">
-            {{ _self.menu_links(items) }}
-            <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" data-submenu="" href="home.php" aria-expanded="true">Home <span class="caret"></span></a>
-                <ul id="menu-1" class="dropdown-menu">
-                    <li>
-                        <a href="home.php">
-                            Home
-                        </a>
-                    </li>
-                    <li class="dropdown-submenu"><a class="dropdown-toggle" data-toggle="dropdown" href="home.php" tabindex="0">Home A </a>
-                        <ul id="menu-7" class="dropdown-menu">
-                            <li>
-                                <a href="home.php">
-                                    Home A
-                                </a>
-                            </li>
-                            <li class="first-link current-link active"><a href="home.php">Home B </a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
+            {{ _self.menu_links(callback_data) }}
         </ul>
         {#            <ul class="nav navbar-nav">#}
         {#                <li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>#}
@@ -113,20 +103,9 @@
         {{ search|raw }}
         {% if language or additional_data %}
             <ul class="nav navbar-nav navbar-right{{ whitespace(nav_secondary_class) }}">
-                <li><a href="#">Link</a></li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown
-                        <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">Action</a></li>
-                        <li><a href="#">Another action</a></li>
-                        <li><a href="#">Something else here</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><a href="#">Separated link</a></li>
-                    </ul>
-                </li>
             </ul>
         {% endif %}
+        {{ html_post_content|raw }}
     </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
 </nav>
