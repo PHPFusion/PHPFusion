@@ -70,7 +70,7 @@ function form_name($input_name, $label = "", $input_value = FALSE, array $option
     $html .= "</div>\n";
 
     $html .= "<div class='col-xs-12 col-sm-4 col-md-4 col-lg-4 m-b-10'>\n";
-    $html .= "<input type='text' name='".$input_name."[]' class='form-control textbox' id='".$options['input_id']."-lastname' value='".$input_value['1']."' placeholder='".$locale['last_name']." ".($options['required'] ? '*' : '')."' ".($options['deactivate'] == "1" ? "readonly" : '')." ".($options['required'] ? 'required="required"' : '')." />\n";
+    $html .= "<input type='text' name='".$input_name."[]' class='form-control textbox' id='".$options['input_id']."-lastname' value='".$input_value['1']."' placeholder='".$locale['last_name']." ".($options['required'] ? '*' : '')."' ".($options['deactivate'] == "1" ? "readonly" : '')." />\n";
     $html .= ($options['required'] == 1 && \Defender::inputHasError($input_name[1])) || \Defender::inputHasError($input_name[1]) ? "<div id='".$options['input_id']."-lastname-help' class='label label-danger p-5 display-inline-block'>".$options['error_text_2']."</div>" : "";
     $html .= "</div>\n";
 
