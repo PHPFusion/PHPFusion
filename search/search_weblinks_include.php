@@ -81,6 +81,7 @@ if (defined('WEBLINKS_EXIST')) {
 
             $search_result = '';
             while ($data = dbarray($result)) {
+                $data['weblink_description'] = strip_tags(htmlspecialchars_decode($data['weblink_description']));
                 $new = "";
                 $timeoffset = timezone_offset_get(timezone_open($settings['timeoffset']), new \DateTime());
                 if ($data['weblink_datestamp'] + 604800 > time() + ($timeoffset * 3600)) {
