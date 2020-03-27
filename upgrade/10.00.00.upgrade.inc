@@ -38,7 +38,7 @@ $insert_settings_tbl = [
     'recaptcha_score'       => '0.5',
     'number_delimiter'      => '.',
     'thousands_separator'   => ',',
-    'cache_server'          => '',
+    //'cache_server'          => '',
     'gateway_method'        => 2
 ];
 
@@ -64,3 +64,5 @@ if (db_exists(DB_PREFIX.'login_connectors')) {
         login_settings TEXT NOT NULL
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
 }
+
+rrmdir(INCLUDES.'filemanager');

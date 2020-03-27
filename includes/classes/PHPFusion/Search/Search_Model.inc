@@ -155,7 +155,7 @@ abstract class Search_Model {
 
                     $infusions = makefilelist(INFUSIONS, ".|..|index.php", TRUE, "folders");
                     if (!empty($infusions)) {
-                        foreach($infusions as $infusions_to_check) {
+                        foreach ($infusions as $infusions_to_check) {
                             if (is_dir(INFUSIONS.$infusions_to_check.'/search/')) {
                                 $search_files = makefilelist(INFUSIONS.$infusions_to_check.'/search/', ".|..|index.php", TRUE, "files");
 
@@ -244,7 +244,11 @@ abstract class Search_Model {
 
     public static function search_textfrag($text) {
         if (Search_Engine::get_param('chars') != 0) {
-            $text = nl2br(stripslashes(substr($text, 0, Search_Engine::get_param('chars'))."..."));
+            if (function_exists('mb_substr')) {
+                $text = nl2br(stripslashes(mb_substr($text, 0, Search_Engine::get_param('chars'), 'utf-8')."..."));
+            } else {
+                $text = nl2br(stripslashes(substr($text, 0, Search_Engine::get_param('chars'))."..."));
+            }
         } else {
             $text = nl2br(stripslashes($text));
         }
@@ -292,15 +296,17 @@ abstract class Search_Model {
 
             // remove duplicate query
             $reverse_array = [];
-            foreach(self::$conditions[$field_module] as $field_name => $sql_conditions) {
+            foreach (self::$conditions[$field_module] as $field_name => $sql_conditions) {
                 if (!empty($sql_conditions)) {
-                    foreach($sql_conditions as $conditions) {
+                    foreach ($sql_conditions as $conditions) {
                         $reverse_array[$field_name][$conditions] = $conditions;
                     }
                 }
             }
 
-            $sql = "(".implode(' || ', array_map(function ($field_var) { return implode('', $field_var); }, $reverse_array)).")";
+            $sql = "(".implode(' || ', array_map(function ($field_var) {
+                    return implode('', $field_var);
+                }, $reverse_array)).")";
 
             return $sql;
 

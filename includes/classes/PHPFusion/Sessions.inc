@@ -47,14 +47,14 @@ class Sessions {
      *
      * @return static
      */
-    public static function getInstance( $handler ) {
+    public static function getInstance($handler) {
         $handlers = (string)$handler;
         // this one can use a token.
-        if ( empty( self::$_sess[ $handlers ] ) ) {
-            self::$_sess[ $handlers ] = new static();
+        if (empty(self::$_sess[$handlers])) {
+            self::$_sess[$handlers] = new static();
         }
 
-        return self::$_sess[ $handlers ];
+        return self::$_sess[$handlers];
     }
 
     /**
@@ -75,7 +75,7 @@ class Sessions {
      *
      * @return $this
      */
-    public function setConfig( $db_host, $db_user, $db_pass, $db_name, $db_port = 3306 ) {
+    public function setConfig($db_host, $db_user, $db_pass, $db_name, $db_port = 3306) {
         self::$db_info = [
             'db_host' => $db_host,
             'db_user' => $db_user,
@@ -96,8 +96,8 @@ class Sessions {
      */
     public function _open() {
         $this->_sess_db = $this->connection();
-        if ( $this->_sess_db['dbselection_success'] && $this->_sess_db['connection_success'] ) {
-            DatabaseFactory::getConnection( self::$_sess_key );
+        if ($this->_sess_db['dbselection_success'] && $this->_sess_db['connection_success']) {
+            DatabaseFactory::getConnection(self::$_sess_key);
             return TRUE;
         }
 
@@ -109,22 +109,22 @@ class Sessions {
      *
      * @return array
      */
-    private function connection( $halt_on_error = FALSE ) {
+    private function connection($halt_on_error = FALSE) {
         $connection_success = TRUE;
         $dbselection_success = TRUE;
         try {
-            DatabaseFactory::connect( self::$db_info['db_host'], self::$db_info['db_user'], self::$db_info['db_pass'], self::$db_info['db_name'], [
-                'debug'        => DatabaseFactory::isDebug( self::$_sess_key ),
+            DatabaseFactory::connect(self::$db_info['db_host'], self::$db_info['db_user'], self::$db_info['db_pass'], self::$db_info['db_name'], [
+                'debug'        => DatabaseFactory::isDebug(self::$_sess_key),
                 'connectionid' => self::$_sess_key,
                 'port'         => self::$db_info['db_port']
-            ] );
-        } catch ( \Exception $e ) {
+            ]);
+        } catch (\Exception $e) {
             $connection_success = $e instanceof Database\Exception\SelectionException;
             $dbselection_success = FALSE;
-            if ( $halt_on_error and !$connection_success ) {
-                die( "<strong>Unable to establish connection to MySQL</strong><br />".$e->getCode()." : ".$e->getMessage() );
-            } else if ( $halt_on_error ) {
-                die( "<strong>Unable to select MySQL database</strong><br />".$e->getCode()." : ".$e->getMessage() );
+            if ($halt_on_error and !$connection_success) {
+                die("<strong>Unable to establish connection to MySQL</strong><br />".$e->getCode()." : ".$e->getMessage());
+            } else if ($halt_on_error) {
+                die("<strong>Unable to select MySQL database</strong><br />".$e->getCode()." : ".$e->getMessage());
             }
         }
 
@@ -135,7 +135,7 @@ class Sessions {
     }
 
     public function _close() {
-        DatabaseFactory::getConnection( self::$_sess_key )->close();
+        DatabaseFactory::getConnection(self::$_sess_key)->close();
 
         return TRUE;
     }
@@ -155,13 +155,13 @@ class Sessions {
      *
      * @return string
      */
-    public function _read( $name ) {
+    public function _read($name) {
         $names = (string)$name;
         $query = "SELECT session_data FROM ".DB_SESSIONS." WHERE session_id = :name";
-        $parameters = sanitize_array( [ ':name' => $names ] );
-        $result = DatabaseFactory::getConnection( self::$_sess_key )->query( $query, $parameters );
-        if ( DatabaseFactory::getConnection( self::$_sess_key )->countRows( $result ) ) {
-            $rows = DatabaseFactory::getConnection( self::$_sess_key )->fetchAssoc( $result );
+        $parameters = sanitize_array([':name' => $names]);
+        $result = dbquery($query, $parameters);
+        if (DatabaseFactory::getConnection(self::$_sess_key)->countRows($result)) {
+            $rows = DatabaseFactory::getConnection(self::$_sess_key)->fetchAssoc($result);
             return $rows['session_data'];
         }
 
@@ -182,14 +182,14 @@ class Sessions {
      *
      * @return mixed
      */
-    public function _write( $name, $data ) {
-        $parameters = sanitize_array( [
+    public function _write($name, $data) {
+        $parameters = sanitize_array([
             ':name'   => $name,
             ':access' => TIME,
             ':data'   => $data,
-        ] );
+        ]);
         $query = "REPLACE INTO ".DB_SESSIONS." VALUES (:name, :access, :data)";
-        if ( DatabaseFactory::getConnection( self::$_sess_key )->query( $query, $parameters ) ) {
+        if (dbquery($query, $parameters)) {
             return TRUE;
         }
 
@@ -206,19 +206,19 @@ class Sessions {
      *
      * @return mixed
      */
-    public function _destroy( $name ) {
-        $parameters = sanitize_array( [
+    public function _destroy($name) {
+        $parameters = sanitize_array([
             ':name' => $name,
-        ] );
+        ]);
         $query = "DELETE FROM ".DB_SESSIONS." WHERE session_id=:name";
-        DatabaseFactory::getConnection( self::$_sess_key )->query( $query, $parameters );
+        dbquery($query, $parameters);
 
         return TRUE;
     }
 
     public function _purge() {
         $query = "TRUNCATE ".DB_SESSIONS;
-        DatabaseFactory::getConnection( self::$_sess_key )->query( $query );
+        dbquery($query);
 
         return TRUE;
     }
@@ -242,19 +242,19 @@ class Sessions {
      *
      * @return mixed
      */
-    public function _clean( $max ) {
+    public function _clean($max) {
         $old = TIME - $max;
-        $parameters = sanitize_array( [
+        $parameters = sanitize_array([
             ':old' => (int)$old,
-        ] );
+        ]);
         $query = "DELETE FROM ".DB_SESSIONS." WHERE session_start < :old";
 
-        DatabaseFactory::getConnection( self::$_sess_key )->query( $query, $parameters );
+        dbquery($query, $parameters);
 
         return TRUE;
     }
 
-    public function remote_cache( $path ) {
+    public function remote_cache($path) {
         echo "<script>
         function timedRefresh(timeoutPeriod) {
             setTimeout(UpdateCache,timeoutPeriod);
@@ -263,7 +263,7 @@ class Sessions {
             // get the latest state of the 3 fields
             let ttl = 36000;
             $.ajax({
-            url: '".fusion_get_settings( 'site_path' )."$path',
+            url: '".fusion_get_settings('site_path')."$path',
             type: 'post',
             success: function () {
                 timedRefresh(ttl);

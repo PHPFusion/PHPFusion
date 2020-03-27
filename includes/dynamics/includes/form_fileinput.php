@@ -196,11 +196,11 @@ function form_fileinput( $input_name, $label = '', $input_value = FALSE, array $
             var uploadCrop = $('#".$options['input_id']."-croppie').croppie($croppie_settings).hide();
 
 		    function readFile(input) {
- 			    
+
  			    if (input.files && input.files[0]) {
-                    
+
                     var reader = new FileReader();
-                    
+
                     reader.onload = function (e) {
                         $('#".$options['input_id']."-croppie').addClass('ready');
                         uploadCrop.croppie('bind', {
@@ -209,15 +209,15 @@ function form_fileinput( $input_name, $label = '', $input_value = FALSE, array $
                             console.log('jQuery bind complete');
                         });
                     }
-                    
+
                     reader.readAsDataURL(input.files[0]);
-                    
+
                     $('.file-input').hide();
-                    
+
                     uploadCrop.show();
-                    
+
 	            } else {
-	            
+
 		            swal(\"Sorry - you're browser doesn't support the FileReader API\");
 		        }
 		    }
