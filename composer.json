@@ -18,7 +18,8 @@
   "require": {
     "twig/twig": "^2.0",
     "ext-json": "*",
-    "ext-openssl": "*"
+    "ext-openssl": "*",
+    "ext-curl": "*"
   },
   "config": {
     "vendor-dir": "includes/vendor"
