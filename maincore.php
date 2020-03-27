@@ -281,12 +281,25 @@ if ($userdata['user_level'] == USER_LEVEL_SUPER_ADMIN && isset($_GET['themes']) 
 }
 set_theme(empty($userdata['user_theme']) ? fusion_get_settings("theme") : $userdata['user_theme']);
 
+function convert_accented_characters($text) {
+   $text = trim($text);
+   $search = ['Ç','ç','Ğ','ğ','ı','i','İ','Ö','ö','Ş','ş','Ü','ü'];
+   $replace = ['C','C','G','G','I','I','I','O','O','S','S','U','U'];
+   $new_text = str_replace($search,$replace,$text);
+   return $new_text;
+}
+
 $result = dbquery("SELECT inf_folder FROM ".DB_INFUSIONS);
 if (dbrows($result)) {
     while ($data = dbarray($result)) {
         if (file_exists(INFUSIONS.$data['inf_folder'])) {
-            define(strtoupper($data['inf_folder']).'_EXIST', TRUE);
-            define(strtoupper($data['inf_folder']).'_EXISTS', TRUE);
+            if(!function_exists('mb_strtoupper')){
+                define(strtoupper(convert_accented_characters($data['inf_folder'])).'_EXIST', TRUE);
+                define(strtoupper(convert_accented_characters($data['inf_folder'])).'_EXISTS', TRUE);
+            }else{
+                define(mb_strtoupper($data['inf_folder']).'_EXIST', TRUE);
+                define(mb_strtoupper($data['inf_folder']).'_EXISTS', TRUE);
+            }
         }
     }
 }
