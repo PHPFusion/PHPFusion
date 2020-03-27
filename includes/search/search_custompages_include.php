@@ -67,17 +67,14 @@ if (Search_Engine::get_param('stype') == 'custompages' || Search_Engine::get_par
             $result = dbquery($query.$sortby.$limit, Search_Engine::get_param('search_param'));
 
             $search_result = '';
-
             while ($data = dbarray($result)) {
-
                 $search_result = '';
-
+                $data['page_content'] = strip_tags(htmlspecialchars_decode($data['page_content']));
                 $text_all = stripslashes($data['page_content']);
-
                 if (fusion_get_settings('allow_php_exe') === TRUE) {
                     ob_start();
                     eval ("?>".$text_all."<?php ");
-                    $text_all = ob_get_clean();
+                    $text_all = ob_get_contents();
                     ob_end_clean();
                 }
 
@@ -97,6 +94,7 @@ if (Search_Engine::get_param('stype') == 'custompages' || Search_Engine::get_par
                         '{%item_description%}'     => $desc,
                         '{%item_search_criteria%}' => '',
                         '{%item_search_context%}'  => $criteria
+
                     ]
                 );
 
