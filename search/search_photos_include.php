@@ -95,6 +95,7 @@ if (defined('GALLERY_EXIST')) {
                 } else {
                     $new = "";
                 }
+                $data['photo_description'] = strip_tags(htmlspecialchars_decode($data['photo_description']));
                 $text_all = $data['photo_description'];
                 $text_all = Search_Engine::search_striphtmlbbcodes($text_all);
                 $text_frag = Search_Engine::search_textfrag($text_all);
