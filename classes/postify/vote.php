@@ -92,7 +92,7 @@ class Postify_Vote extends Forum_Postify {
                             case 'voteup':
                                 if ($user_rep >= self::$forum_settings['points_to_upvote']) {
                                     $vote = dbarray($vote_result);
-                                    if (dbrows($vote_result) || (!empty($vote['voter_id']) && $vote['voter_id'] !== $user_id)) {
+                                    if (!empty($vote['vote_points']) && $vote['vote_points'] !== '-1') {
                                         // I have voted, I'm removing my vote
                                         dbquery("DELETE FROM ".DB_FORUM_VOTES." WHERE vote_id=:vote_id", [':vote_id' => $vote['vote_id']]);
                                         // Remove log points
@@ -108,7 +108,7 @@ class Postify_Vote extends Forum_Postify {
                                         $d['vote_points'] = 1;
                                         $d['points_gain'] = self::$forum_settings['upvote_points'];
 
-                                        if (isset($vote['voter_id']) && $vote['voter_id'] == $user_id) {
+                                        if (!empty($vote['vote_points']) && $vote['vote_points'] == '-1') {
                                             dbquery("UPDATE ".DB_FORUM_VOTES." SET vote_points=:points WHERE vote_id=:voteid AND vote_user=:myid", [
                                                 ':voteid' => $vote['vote_id'],
                                                 ':points' => $d['vote_points'],
@@ -141,7 +141,7 @@ class Postify_Vote extends Forum_Postify {
                             case 'votedown':
                                 if ($user_rep >= self::$forum_settings['points_to_downvote'] && $thread_data['post_author'] !== $user_id) {
                                     $vote = dbarray($vote_result);
-                                    if (dbrows($vote_result) || (!empty($vote['voter_id']) && $vote['voter_id'] !== $user_id)) {
+                                    if (!empty($vote['vote_points']) && $vote['vote_points'] !== '1') {
                                         // I have voted, I'm removing my vote
                                         dbquery("DELETE FROM ".DB_FORUM_VOTES." WHERE vote_id=:vote_id", [':vote_id' => $vote['vote_id']]);
                                         // Remove log points
@@ -157,7 +157,7 @@ class Postify_Vote extends Forum_Postify {
                                         $d['vote_points'] = -1;
                                         $d['points_gain'] = -self::$forum_settings['downvote_points'];
 
-                                        if (isset($vote['voter_id']) && $vote['voter_id'] == $user_id) {
+                                        if (!empty($vote['vote_points']) && $vote['vote_points'] == '1') {
                                             dbquery("UPDATE ".DB_FORUM_VOTES." SET vote_points=:points WHERE vote_id=:voteid AND vote_user=:myid", [
                                                 ':voteid' => $vote['vote_id'],
                                                 ':points' => $d['vote_points'],
