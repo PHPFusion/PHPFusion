@@ -92,7 +92,7 @@ class Postify_Vote extends Forum_Postify {
                             case 'voteup':
                                 if ($user_rep >= self::$forum_settings['points_to_upvote']) {
                                     $vote = dbarray($vote_result);
-                                    if (dbrows($vote_result) || (isset($vote['user_id']) && $vote['user_id'] == $user_id)) {
+                                    if (dbrows($vote_result) || (!empty($vote['voter_id']) && $vote['voter_id'] !== $user_id)) {
                                         // I have voted, I'm removing my vote
                                         dbquery("DELETE FROM ".DB_FORUM_VOTES." WHERE vote_id=:vote_id", [':vote_id' => $vote['vote_id']]);
                                         // Remove log points
@@ -141,7 +141,7 @@ class Postify_Vote extends Forum_Postify {
                             case 'votedown':
                                 if ($user_rep >= self::$forum_settings['points_to_downvote'] && $thread_data['post_author'] !== $user_id) {
                                     $vote = dbarray($vote_result);
-                                    if (dbrows($vote_result) || (isset($vote['user_id']) && $vote['user_id'] == $user_id)) {
+                                    if (dbrows($vote_result) || (!empty($vote['voter_id']) && $vote['voter_id'] !== $user_id)) {
                                         // I have voted, I'm removing my vote
                                         dbquery("DELETE FROM ".DB_FORUM_VOTES." WHERE vote_id=:vote_id", [':vote_id' => $vote['vote_id']]);
                                         // Remove log points
@@ -152,7 +152,6 @@ class Postify_Vote extends Forum_Postify {
                                             ':points'         => self::$forum_settings['downvote_points']
                                         ]);
                                         addNotice('success', self::$locale['forum_0517'], 'viewthread.php');
-
                                     } else {
                                         // I have not yet voted, I'm downvoting.
                                         $d['vote_points'] = -1;
