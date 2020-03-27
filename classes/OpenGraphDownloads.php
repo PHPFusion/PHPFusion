@@ -22,7 +22,7 @@ class OpenGraphDownloads extends OpenGraph {
         $settings = fusion_get_settings();
         $info = [];
 
-        $result = dbquery("SELECT `download_title`, `download_description_short`, `download_keywords`, `download_image_thumb` FROM `".DB_DOWNLOADS."` WHERE `download_id` = :download", [':download' => $download_id]);
+        $result = dbquery("SELECT download_title, download_description_short, download_keywords, download_image_thumb FROM ".DB_DOWNLOADS." WHERE download_id = :download", [':download' => $download_id]);
         if (dbrows($result)) {
             $data = dbarray($result);
             $info['url'] = $settings['siteurl'].'infusions/downloads/downloads.php?download_id='.$download_id;
@@ -30,7 +30,7 @@ class OpenGraphDownloads extends OpenGraph {
             $info['title'] = $data['download_title'].' - '.$settings['sitename'];
             $info['description'] = $data['download_description_short'] ? fusion_first_words(strip_tags(html_entity_decode($data['download_description_short'])), 50) : $settings['description'];
             $info['type'] = 'article';
-            if (!empty($data['download_image_thumb'])) {
+            if (!empty($data['download_image_thumb']) && file_exists(IMAGES_D.$data['download_image_thumb'])) {
                 $info['image'] = $settings['siteurl'].'infusions/downloads/images/'.$data['download_image_thumb'];
             } else {
                 $info['image'] = defined('THEME_ICON') ? THEME_ICON.'mstile-150x150.png' : $settings['siteurl'].'images/favicons/mstile-150x150.png';
