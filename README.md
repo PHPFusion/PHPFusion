@@ -32,7 +32,25 @@ PHP-Fusion Official Developer Discord Channel - https://discord.gg/CGSYU8r
 
 Those who are active on PHP-Fusion Development is encouraged to join.
 
-Less.js support
+Gulp.js and BrowserSync Enabled in Development
+===
+This technology is available to the community to be implemented to allow developers to have node.js push changes to screen without the need to refresh (F5).
+
+**Quick Guide**
+In your ***root folder***, run in terminal these command to install SASS, GULP and BrowserSync in your local development environment.
+```
+npm install --save-dev gulp gulp-saas browser-sync
+```
+
+Next, included in root folder is a gulpfile.js. Edit that file and change the values of just the ``proxyURL`` to match your local environment. (i.e. "localhost/babylon" )
+That's it, edit any php, css, sass, twig code in your IDE or code editor, your browser will be configured to auto refresh as changes are saved.
+
+Now, to run it, open terminal again, type in the following to start the service and a new browser will pop up to localhost:3000, as a mirror to your current site.
+```
+gulp watch
+``` 
+
+Less.js & Scss support
 ===
 By default Fusion will have these declared.
 - Theme CSS
@@ -51,11 +69,11 @@ Then run the following command in terminal. (Windows Powershell for Windows or T
 
 - Install LESS.js, type in this command to :
 ```
-npm install -g less
+npm install --save-dev less
 ```
 - Install css minifier, type in this command:
 ```
-npm install -g less-plugin-clean-cssnpm install -g less-plugin-clean-css
+npm install -save-dev less-plugin-clean-css
 ```
 
 The requirements of the theme now is a less.js file, a css file and a map file for debugging purposes. 
