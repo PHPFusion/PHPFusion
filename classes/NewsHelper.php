@@ -13,6 +13,7 @@ class NewsHelper {
             'rowstart'  => 0,
             'limit'     => 0,
             'condition' => '',
+            'select'    => '',
             'group_by'  => '',
             'order_by'  => '',
         ];
@@ -32,25 +33,26 @@ class NewsHelper {
         $filter_conds[] = "(news_start='0'||news_start<='".time()."') AND (news_end='0'||news_end>='".time()."')";
         $filter_conds[] = "news_draft=0";
 
-        $max_rows = dbcount("(news_id)", DB_NEWS, ($filters['condition'] ?: implode(' AND ', $filter_conds)));
+        $select_conds = (($filters['select']) ? $filters['select'].',' : '');
+
+        $max_rows = dbcount("(news_id)", DB_NEWS." n", ($filters['condition'] ?: implode(' AND ', $filter_conds)));
         $rowstart = (int)$filters['rowstart'];
         if ($rowstart > $max_rows) {
             $rowstart = $max_rows;
         }
 
-        $query = "SELECT n.*, nc.*, nu.user_id, nu.user_name, nu.user_status, nu.user_avatar , nu.user_level, nu.user_joined, 
-       ($sql_sum) 'news_sum_rating', 
-       ($sql_count) 'news_count_votes', 
-            (SELECT COUNT(ncc.comment_id) FROM ".DB_COMMENTS." ncc WHERE ncc.comment_item_id = n.news_id AND ncc.comment_type = 'N' AND ncc.comment_hidden = '0') 'count_comment', 
-            ni.news_image, ni.news_image_t1, ni.news_image_t2 
-            FROM ".DB_NEWS." n
-            LEFT JOIN ".DB_NEWS_IMAGES." ni ON ni.news_id=n.news_id AND ".(check_get('readmore') ? "n.news_image_full_default=ni.news_image_id" : "n.news_image_front_default=ni.news_image_id")."
-            LEFT JOIN ".DB_USERS." nu ON n.news_name=nu.user_id
-            LEFT JOIN ".DB_NEWS_CATS." nc ON n.news_cat=nc.news_cat_id
-            WHERE ".($filters['condition'] ? $filters['condition'] : implode(' AND ', $filter_conds))."                        
-            GROUP BY ".(!empty($filters['group_by']) ? $filters['group_by'] : 'news_id')."
-            ORDER BY ".(!empty($filters['order_by']) ? $filters['order_by'].',' : '')." news_sticky DESC, ".$cat_filter['order']."
-            LIMIT $rowstart, $limit";
+        $query = "SELECT n.*, nc.*, nu.user_id, nu.user_name, nu.user_status, nu.user_avatar , nu.user_level, nu.user_joined, ($sql_sum) 'news_sum_rating', ($sql_count) 'news_count_votes', 
+        (SELECT COUNT(ncc.comment_id) FROM ".DB_COMMENTS." ncc WHERE ncc.comment_item_id = n.news_id AND ncc.comment_type = 'N' AND ncc.comment_hidden = '0') 'count_comment',
+        $select_conds             
+        ni.news_image, ni.news_image_t1, ni.news_image_t2 
+        FROM ".DB_NEWS." n
+        LEFT JOIN ".DB_NEWS_IMAGES." ni ON ni.news_id=n.news_id AND ".(check_get('readmore') ? "n.news_image_full_default=ni.news_image_id" : "n.news_image_front_default=ni.news_image_id")."
+        LEFT JOIN ".DB_USERS." nu ON n.news_name=nu.user_id
+        LEFT JOIN ".DB_NEWS_CATS." nc ON n.news_cat=nc.news_cat_id
+        WHERE ".($filters['condition'] ? $filters['condition'] : implode(' AND ', $filter_conds))."                        
+        GROUP BY ".(!empty($filters['group_by']) ? $filters['group_by'] : 'news_id')."
+        ORDER BY ".(!empty($filters['order_by']) ? $filters['order_by'].',' : '')." news_sticky DESC, ".$cat_filter['order']."
+        LIMIT $rowstart, $limit";
         $result = dbquery($query);
 
         return [
@@ -60,7 +62,7 @@ class NewsHelper {
             'rowstart' => (int)$rowstart,
             'max_rows' => (int)$max_rows,
             'limit'    => (int)$limit,
-            'filters' => $filters
+            'filters'  => $filters
         ];
 
     }

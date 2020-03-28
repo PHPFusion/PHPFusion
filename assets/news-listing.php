@@ -1,26 +1,39 @@
 <?php
-
 use PHPFusion\Infusions\News\Classes\NewsHelper;
 
 require_once __DIR__.'/../../../maincore.php';
 
 $draw = post('draw');
-
 $row_start = post('start');
 // rows display per page
 $rows_per_page = post('length');
 // column index
 $column_index = post(['order', 0, 'column']);
 // column name
-$column_name = post(['order', $column_index, 'data']);
+$column_name = news_filter_column_name($column_index);
+//post(['order', $column_index, 'data'])
+
 // asc or desc
 $column_sort_order = post(['order', 0, 'dir']);
 // search value
-$search_value = post(['search', 'value']);
+$select_cond = '';
+$select_order = '';
+if ($search_value = post(['search', 'value'])) {
+    // news subject conditions in fulltext search
+    $select_cond = "(match(n.news_subject) AGAINST ('$search_value' IN BOOLEAN MODE)) 'score'";
+    $search_cond[] = "(match(n.news_subject) AGAINST ('$search_value' IN BOOLEAN MODE))";
+    $select_order = 'score DESC, ';
+}
 
 // build conditions by custom filters
 if ($search_by_status = post('status', FILTER_VALIDATE_INT)) {
-    $search_cond[] = "news_status='$search_by_status'";
+    switch($search_by_status) {
+        case 1: // draft only
+            $search_cond[] = "n.news_draft=1";
+        case 2: // sticky only
+            $search_cond[] = "n.news_sticky=1";
+        default:
+    }
 }
 if ($search_by_visibility = post('visibility', FILTER_VALIDATE_INT)) {
     $search_cond[] = "news_visibility='$search_by_visibility' AND ".groupaccess('news_visibility');
@@ -46,9 +59,10 @@ if (fusion_authenticate_user(get('auth_token'))) {
     $news_query = $news_query->getNewsQuery([
         'rowstart'  => (int)$row_start,
         'limit'     => (int)$rows_per_page,
-        'condition' => (!empty($search_cond) ? implode(" AND ", $search_cond) : ''),
+        'condition' => (!empty($search_cond) ? implode(" AND ", array_filter($search_cond)) : ''),
         'group_by'  => '',
-        'order_by'  => '',
+        'select' => $select_cond,
+        'order_by'  => $select_order.$column_name.' '.strtoupper($column_sort_order),
     ]);
 
     $result = $news_query['result'];
@@ -62,7 +76,10 @@ if (fusion_authenticate_user(get('auth_token'))) {
             }
 
             $news[] = [
-                'subject'  => $data['news_subject'],
+                'subject'  => "<a class='strong' href='".INFUSIONS."news/news_admin.php".fusion_get_aidlink()."&amp;section=news&amp;action=edit&amp;id=".$data['news_id']."'>".$data['news_subject']."</a><div class='table-actions'>
+<a href='".INFUSIONS."news/news_admin.php".fusion_get_aidlink()."&amp;section=news&amp;action=edit&amp;id=".$data['news_id']."'>Edit</a> |
+<a onclick='confirm(\"Are you sure you want to delete this news?\"); return false;' href='".INFUSIONS."news/news_admin.php".fusion_get_aidlink()."&amp;section=news&amp;action=delete&amp;id=".$data['news_id']."'>Delete</a> |
+<a target='_blank' href='".INFUSIONS."news/news.php?readmore=".$data['news_id']."'>View</a></div>",
                 'draft'    => $data['news_draft'],
                 'sticky'   => $data['news_sticky'],
                 'category' => $category,
@@ -75,8 +92,6 @@ if (fusion_authenticate_user(get('auth_token'))) {
                 'id'       => $data['news_id']
             ];
         }
-    } else {
-        set_error(E_USER_NOTICE, 'Failed check on news table listing', 'news_admin.php', '0', 'Ajax Error');
     }
 }
 
@@ -90,3 +105,20 @@ $response = [
 ];
 
 echo json_encode($response, JSON_PRETTY_PRINT);
+
+function news_filter_column_name($value) {
+    $array = [
+        '0'  => 'news_subject',
+        '1'  => 'news_draft',
+        '2'  => 'news_sticky',
+        '3'  => 'news_cat',
+        '4'  => 'news_name',
+        '5'  => 'news_visibility',
+        '6'  => 'news_datestamp',
+        '7'  => 'news_start',
+        '8'  => 'news_end',
+        '9'  => 'news_reads',
+        '10' => 'news_id',
+    ];
+    return (isset($array[$value]) ? $array[$value] : 'news_subject');
+}

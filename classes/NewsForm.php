@@ -711,7 +711,7 @@ class NewsForm extends NewsAdminModel {
         $id = fusion_table('fusionNewsAdmin', [
             'remote_file'  => fusion_get_settings('siteurl').'infusions/news/assets/news-listing.php?auth_token='.$cookie,
             'ajax'         => TRUE,
-            'ajax_filters' => ['status', 'visibility'],
+            'ajax_filters' => ['status', 'visibility', 'category', 'language', 'author'],
             'debug'        => false,
         ]);
 
@@ -735,7 +735,7 @@ class NewsForm extends NewsAdminModel {
 
         echo "<h1 class='text-dark'>News Listing</h1><hr/>";
 
-        echo "<table id='$id' class='table'>";
+        echo "<table id='$id' class='table table-striped'>";
         echo "<thead><tr>";
         echo "<th>News Subject</th>";
         echo "<th>Draft</th>";
@@ -778,11 +778,12 @@ class NewsForm extends NewsAdminModel {
     }
 
     private function displayScreenOptions() {
-        $html = "<h2>Custom Filtering Options</h2>";
-        $html .= form_select('status', 'Status', '', [
+
+        $html = form_select('status', 'Status', '', [
             'options'    => [
-                'draft'  => 'Draft',
-                'sticky' => 'Sticky'
+                    0 => 'All',
+                    1 => 'Draft Only',
+                    2 => 'Sticky Only',
             ],
             'select_alt' => TRUE,
             'inline'     => TRUE,
@@ -799,19 +800,21 @@ class NewsForm extends NewsAdminModel {
             'title_col'  => 'news_cat_name',
             'select_alt' => TRUE,
             'inline'     => TRUE,
+            'no_root' => FALSE,
+            'parent_value' => 'All Category',
         ]);
         $html .= form_select('language', 'Language', '', [
             'options'    => fusion_get_enabled_languages(),
             'inline'     => TRUE,
             'select_alt' => TRUE,
         ]);
+        $users = [0 => 'Everyone'] + fusion_get_all_user();
         $html .= form_select('author', 'Author', '', [
-            'db'         => DB_USERS,
-            'id_col'     => 'user_id',
-            'title_col'  => 'user_name',
+            'options' => $users,
             'inline'     => TRUE,
             'select_alt' => TRUE,
         ]);
+
         return $html;
     }
 
