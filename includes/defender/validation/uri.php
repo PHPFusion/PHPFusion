@@ -64,35 +64,44 @@ class Uri extends \Defender\Validation {
      * @return bool
      */
     protected static function validateURL($url) {
-        if (function_exists('curl_version')) {
-            $ch = curl_init($url);
-
-            curl_setopt_array($ch, [
-                CURLOPT_TIMEOUT        => 20,
-                CURLOPT_FOLLOWLOCATION => TRUE,
-                CURLOPT_NOBODY         => TRUE,
-                CURLOPT_HEADER         => FALSE,
-                CURLOPT_RETURNTRANSFER => FALSE,
-                CURLOPT_SSL_VERIFYHOST => FALSE,
-                CURLOPT_SSL_VERIFYPEER => FALSE
-            ]);
-
-            curl_exec($ch);
-
-            $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-            if ($http_code == 200) {
-                return $url;
-            } else {
-                return FALSE;
-            }
-
-            curl_close($ch);
-        } else if (filter_var($url, FILTER_VALIDATE_URL)) {
-            return $url;
-        } else if (preg_match("/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i", $url)) {
-            return $url;
+        $result = FALSE;
+        if (preg_match("/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i", $url)) {
+            $result = TRUE;
         }
+        if ($loaded = fusion_get_contents($url)) {
+            $result = TRUE;
+        }
+        return $result;
+
+        //if (function_exists('curl_version')) {
+        //    $ch = curl_init($url);
+        //
+        //    curl_setopt_array($ch, [
+        //        CURLOPT_TIMEOUT        => 20,
+        //        CURLOPT_FOLLOWLOCATION => TRUE,
+        //        CURLOPT_NOBODY         => TRUE,
+        //        CURLOPT_HEADER         => FALSE,
+        //        CURLOPT_RETURNTRANSFER => FALSE,
+        //        CURLOPT_SSL_VERIFYHOST => FALSE,
+        //        CURLOPT_SSL_VERIFYPEER => FALSE
+        //    ]);
+        //
+        //    curl_exec($ch);
+        //
+        //    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        //
+        //    if ($http_code == 200) {
+        //        return $url;
+        //    } else {
+        //        return FALSE;
+        //    }
+        //
+        //    curl_close($ch);
+        //} else if (filter_var($url, FILTER_VALIDATE_URL)) {
+        //    return $url;
+        //} else if (preg_match("/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i", $url)) {
+        //    return $url;
+        //}
 
         return FALSE;
     }
