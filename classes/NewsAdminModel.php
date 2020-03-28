@@ -15,13 +15,13 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-namespace PHPFusion\News;
+namespace PHPFusion\Infusions\News\Classes;
 /**
  * Class NewsAdminModel
  *
  * @package PHPFusion\News
  */
-class NewsAdminModel extends NewsServer {
+class NewsAdminModel {
 
     /**
      * @var array
@@ -70,6 +70,8 @@ class NewsAdminModel extends NewsServer {
         'news_image_thumb_t2'  => '',
         'news_image_datestamp' => TIME,
     ];
+
+
 
     /**
      * Get the admin locale

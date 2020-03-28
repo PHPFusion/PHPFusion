@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-namespace PHPFusion\News;
+namespace PHPFusion\Infusions\News\Classes;
 
 use PHPFusion\BreadCrumbs;
 
@@ -25,7 +25,7 @@ use PHPFusion\BreadCrumbs;
  *
  * @package PHPFusion\News
  */
-class NewsAdminView extends NewsAdminModel {
+class NewsAdmin extends NewsAdminModel {
 
     private $allowed_pages = ["news", "news_category", "news_form", "submissions", "settings"];
 
@@ -41,10 +41,8 @@ class NewsAdminView extends NewsAdminModel {
         }
 
         $locale = self::get_newsAdminLocale();
-
         $section = in_array($section, $this->allowed_pages) ? $section : $this->allowed_pages[0];
-
-        BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS."news/news_admin.php".fusion_get_aidlink(), 'title' => $locale['news_0001']]);
+        add_breadcrumb(['link' => INFUSIONS."news/news_admin.php".fusion_get_aidlink(), 'title' => $locale['news_0001']]);
 
         add_to_title($locale['news_0001']);
 
@@ -82,20 +80,19 @@ class NewsAdminView extends NewsAdminModel {
         if ($section) {
             switch ($section) {
                 case "news_category":
-                    BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $news_cat_title]);
+                    add_breadcrumb(['link' => FUSION_REQUEST, 'title' => $news_cat_title]);
                     break;
                 case "settings":
-                    BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['news_0004']]);
+                    add_breadcrumb(['link' => FUSION_REQUEST, 'title' => $locale['news_0004']]);
                     break;
                 case "submissions":
-                    BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['news_0023']]);
+                    add_breadcrumb(['link' => FUSION_REQUEST, 'title' => $locale['news_0023']]);
                     break;
                 default:
             }
         }
 
         $edit = ($action == 'edit' && $news_get_cat_id) ? TRUE : FALSE;
-
         if ($submissions = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='n'")) {
             addNotice("info", sprintf($locale['news_0137'], format_word($submissions, $locale['fmt_submission'])));
         }
@@ -111,9 +108,8 @@ class NewsAdminView extends NewsAdminModel {
         $tab['title'][] = $locale['news_0004'];
         $tab['id'][] = 'settings';
         $tab['icon'][] = 'fa fa-cogs m-r-5';
+        $menu = opentab($tab, $section, 'news_admin', TRUE, '', 'section');
 
-        opentable($locale['news_0001']);
-        echo opentab($tab, $section, 'news_admin', TRUE, '', 'section');
         switch ($section) {
             case 'news_category':
                 NewsCategoryAdmin::getInstance()->displayNewsAdmin();
@@ -125,10 +121,13 @@ class NewsAdminView extends NewsAdminModel {
                 NewsSubmissionsAdmin::getInstance()->displayNewsAdmin();
                 break;
             default:
-                NewsAdmin::getInstance()->displayNewsAdmin();
+                $admin = new NewsForm();
+                $admin->title = $locale['news_0001'];
+                $admin->menu = $menu;
+                $admin->displayNewsAdmin();
+
         }
-        echo closetab();
-        closetable();
+
     }
 
 }
