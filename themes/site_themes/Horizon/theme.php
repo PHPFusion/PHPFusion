@@ -2,6 +2,8 @@
 
 use PHPFusion\SiteLinks;
 
+define('THEME_BULLET', '&middot;');
+
 boilerplate_set_default('bootstrap4');
 
 function render_page($license = '') {
