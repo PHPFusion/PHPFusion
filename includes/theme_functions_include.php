@@ -223,43 +223,6 @@ function fusion_table($table_id, array $options = []) {
         add_to_footer("<script src='".rtrim($options['cdnurl'], '/')."/includes/jquery/datatables/datatables.min.js'></script>");
     }
 
-    /*
-     * $(document).ready(function(){
-  var dataTable = $('#empTable').DataTable({
-    'processing': true, // ok
-    'serverSide': true, // ok.
-    'serverMethod': 'post', // ok.
-    //'searching': false, // Remove default Search Control
-    'ajax': {
-       'url':'ajaxfile.php',
-       'data': function(data){
-          // Read values
-          var gender = $('#searchByGender').val();
-          var name = $('#searchByName').val();
-
-          // Append to data
-          data.searchByGender = gender;
-          data.searchByName = name;
-       }
-    },
-    'columns': [
-       { data: 'emp_name' },
-       { data: 'email' },
-       { data: 'gender' },
-       { data: 'salary' },
-       { data: 'city' },
-    ]
-  });
-
-  $('#searchByName').keyup(function(){
-    dataTable.draw();
-  });
-
-  $('#searchByGender').change(function(){
-    dataTable.draw();
-  });
-});
-     */
     if ($options['debug']) {
         print_p($js_config_script);
     }
