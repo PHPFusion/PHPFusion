@@ -289,43 +289,6 @@ class News extends NewsHelper {
     }
 
     /**
-     * Sql filter between $_GET['type']
-     * most commented
-     * most recent news
-     * most rated
-     */
-    protected static function check_NewsFilter() {
-        // allowable filter type
-        $filter = ['recent', 'comment', 'rating'];
-        $type = get('type');
-        if (in_array($type, $filter)) {
-            $cat_filter['order'] = 'news_datestamp DESC';
-            if ($type == 'recent') {
-                // order by datestamp.
-                $cat_filter['order'] = 'news_datestamp DESC';
-            } else if ($type == 'comment') {
-                // order by comment_count
-                $cat_filter = [
-                    'order' => 'count_comment DESC',
-                    //'count' => 'COUNT(td.comment_item_id) AS count_comment,',
-                    //'join'  => "LEFT JOIN ".DB_COMMENTS." td ON td.comment_item_id = tn.news_id AND td.comment_type='N' AND td.comment_hidden='0'",
-                ];
-            } else if ($type == 'rating') {
-                // order by download_title
-                $cat_filter = [
-                    'order' => 'news_sum_rating DESC',
-                    //'count' => 'IF(SUM(tr.rating_vote)>0, SUM(tr.rating_vote), 0) AS sum_rating, COUNT(tr.rating_item_id) AS count_votes,',
-                    //'join'  => "LEFT JOIN ".DB_RATINGS." tr ON tr.rating_item_id = tn.news_id AND tr.rating_type='N'",
-                ];
-            }
-        } else {
-            $cat_filter['order'] = 'news_datestamp DESC';
-        }
-
-        return $cat_filter;
-    }
-
-    /**
      * Parse MVC Data output
      *
      * @param array $data - dbarray of newsQuery()

@@ -712,7 +712,7 @@ class NewsForm extends NewsAdminModel {
             'remote_file'  => fusion_get_settings('siteurl').'infusions/news/assets/news-listing.php?auth_token='.$cookie,
             'ajax'         => TRUE,
             'ajax_filters' => ['status', 'visibility'],
-            'debug'        => TRUE,
+            'debug'        => false,
         ]);
 
         opentable($this->title, [
