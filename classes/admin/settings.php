@@ -86,12 +86,10 @@ class ForumAdminSettings extends ForumAdminInterface {
             ];
             if (fusion_safe()) {
                 foreach ($inputArray as $settings_name => $settings_value) {
-                    $inputSettings = [
-                        "settings_name"  => $settings_name,
-                        "settings_value" => $settings_value,
-                        "settings_inf"   => "forum",
-                    ];
-                    dbquery_insert(DB_SETTINGS_INF, $inputSettings, "update", ["primary_key" => "settings_name"]);
+                    dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value=:settings_value WHERE settings_name=:settings_name", [
+                        ':settings_value' => $settings_value,
+                        ':settings_name'  => $settings_name
+                    ]);
                 }
                 addNotice('success', self::$locale['900']);
                 redirect(FUSION_SELF.fusion_get_aidlink().'&section=fs');
