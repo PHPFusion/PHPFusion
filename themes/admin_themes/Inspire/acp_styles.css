@@ -21868,4 +21868,10 @@ body.md-skin {
     }
 }
 
+div.dataTables_paginate ul.pagination {
+    display: flex;
+    float: right;
+}
+
+
 @import url('animation.min.css');

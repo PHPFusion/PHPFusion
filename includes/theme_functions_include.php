@@ -137,7 +137,8 @@ function grid_container() {
  * @return mixed
  */
 function fusion_table($table_id, array $options = []) {
-
+    $js_event_function = '';
+    $js_config_script = '';
     $table_config = '';
     $default_options = [
         'remote_file'   => '',
@@ -197,11 +198,19 @@ function fusion_table($table_id, array $options = []) {
 
         $filters = "";
         $js_filter_function = "";
+
+        $fields_doms = [];
         if ($options['ajax'] && !empty($options['ajax_filters'])) {
             foreach ($options['ajax_filters'] as $field_id) {
+                $field_doms[] = "#".$field_id;
                 $filters .= "data.".$field_id."= $('#".$field_id."').val();";
+
             }
             $js_filter_function = "data: function(data) { $filters }";
+
+            $js_event_function = "$('body').on('keyup change', '".implode(', ', $fields_doms)."', function(e) {
+            ".$table_id."Table.draw();
+            });";
         }
 
         $js_config_script = str_replace("<data_filters>", $js_filter_function, $js_config_script);
@@ -254,7 +263,8 @@ function fusion_table($table_id, array $options = []) {
     if ($options['debug']) {
         print_p($js_config_script);
     }
-    add_to_jquery(/** @lang JavaScript */ "$('#$table_id').DataTable($js_config_script);");
+    add_to_jquery(/** @lang JavaScript */ "let ".$table_id."Table = $('#$table_id').DataTable($js_config_script);$js_event_function");
+
     return $table_id;
 }
 
