@@ -22,6 +22,31 @@
  */
 class Uri extends \Defender\Validation {
     /**
+     * Verify Paths within CMS
+     *
+     * @return bool|string
+     */
+    public function verify_path() {
+        if (self::$inputConfig['required'] && !self::$inputValue) {
+            \Defender::stop();
+            \Defender::setInputError(self::$inputName);
+        }
+        if (file_exists(self::$inputConfig['path'].self::$inputValue) && is_file(self::$inputConfig['path'].self::$inputValue)) {
+            return self::$inputValue;
+        }
+
+        return FALSE;
+    }
+
+    /**
+     * Validate URL
+     *
+     * @param $url
+     *
+     * @return bool
+     */
+
+    /**
      * Checks if is a valid URL
      * require path.
      * returns str the input or bool FALSE if check fails
@@ -57,38 +82,19 @@ class Uri extends \Defender\Validation {
     }
 
     /**
-     * Validate URL
-     *
      * @param $url
      *
-     * @return bool
+     * @return bool|string
      */
     protected static function validateURL($url) {
         $result = FALSE;
         if ($loaded = fusion_get_contents($url)) {
-            return $url;
+            return (string)$url;
         } else if (filter_var($url, FILTER_VALIDATE_URL)) {
-            return $url;
+            return (string)$url;
         } else if (preg_match("/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i", $url)) {
-            return $url;
+            return (string)$url;
         }
         return $result;
-    }
-
-    /**
-     * Verify Paths within CMS
-     *
-     * @return bool|string
-     */
-    public function verify_path() {
-        if (self::$inputConfig['required'] && !self::$inputValue) {
-            \Defender::stop();
-            \Defender::setInputError(self::$inputName);
-        }
-        if (file_exists(self::$inputConfig['path'].self::$inputValue) && is_file(self::$inputConfig['path'].self::$inputValue)) {
-            return self::$inputValue;
-        }
-
-        return FALSE;
     }
 }
