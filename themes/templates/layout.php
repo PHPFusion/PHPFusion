@@ -69,8 +69,11 @@ if ($settings['fontawesome'] || defined('FONTAWESOME')) {
 }
 
 // Theme CSS
-$theme_css_file = min_file(THEME.'styles.css');
-echo "<link rel='stylesheet' href='".$theme_css_file."?v=".filemtime($theme_css_file)."' crossorigin='anonymous'>\n";
+if (file_exists(THEME.'styles.css')) {
+    $theme_css_file = min_file(THEME.'styles.css');
+    echo "<link rel='stylesheet' href='".$theme_css_file."?v=".filemtime($theme_css_file)."' crossorigin='anonymous'>\n";
+}
+
 
 // Default CSS styling which applies to all themes but can be overriden
 if (!defined('NO_DEFAULT_CSS')) {

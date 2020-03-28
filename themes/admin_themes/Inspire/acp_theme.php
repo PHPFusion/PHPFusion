@@ -23,7 +23,8 @@ define('FONTAWESOME', TRUE);
 ini_set('display_errors', 1);
 define("THEME_BODY", '<body class="fixed-sidebar">');
 
-boilerplate_set_default('bootstrap3');
+set_boilerplate('bootstrap3');
+add_to_footer("<script src='".ADMIN_THEMES."Inspire/assets/inspire.min.js'></script>");
 
 function opentable($title = '', $class = FALSE) {
     return Inspire\AdminPanel::opentable($title, $class);

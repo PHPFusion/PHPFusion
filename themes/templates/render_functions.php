@@ -212,6 +212,21 @@ function twig_init($path = THEME.'twig', $debug = FALSE) {
         'display_avatar'      => new TwigFunction('display_avatar', function () {
             return call_user_func_array('display_avatar', func_get_args());
         }),
+        'profile_link'        => new TwigFunction('profile_link', function () {
+            return call_user_func_array('profile_link', func_get_args());
+        }),
+        'format_word'         => new TwigFunction('format_word', function () {
+            return call_user_func_array('format_word', func_get_args());
+        }),
+        'countdown'           => new TwigFunction('countdown', function () {
+            return call_user_func_array('countdown', func_get_args());
+        }),
+        'timer'               => new TwigFunction('timer', function () {
+            return call_user_func_array('timer', func_get_args());
+        }),
+        'showdate'            => new TwigFunction('showdate', function () {
+            return call_user_func_array('showdate', func_get_args());
+        }),
         'whitespace'          => new TwigFunction('whitespace', function () {
             return call_user_func_array('whitespace', func_get_args());
         }),
@@ -221,13 +236,13 @@ function twig_init($path = THEME.'twig', $debug = FALSE) {
         'add_to_footer'       => new TwigFunction('add_to_footer', function () {
             call_user_func_array('add_to_footer', func_get_args());
         }),
-        'add_to_css'       => new TwigFunction('add_to_css', function () {
+        'add_to_css'          => new TwigFunction('add_to_css', function () {
             call_user_func_array('add_to_css', func_get_args());
         }),
-        'showcopyright' => new TwigFunction('showcopyright', function() {
+        'showcopyright'       => new TwigFunction('showcopyright', function () {
             return call_user_func_array('showcopyright', func_get_args());
         }),
-        'lorem_ipsum' => new TwigFunction('lorem_ipsum', function() {
+        'lorem_ipsum'         => new TwigFunction('lorem_ipsum', function () {
             return strip_tags(call_user_func_array('lorem_ipsum', func_get_args()));
         })
     ];
@@ -374,6 +389,7 @@ function hide_all_panels() {
 
 /**
  * Hide a single panel section
+ *
  * @param $side
  */
 function hide_panel($side) {
@@ -382,6 +398,7 @@ function hide_panel($side) {
 
 /**
  * Add a panel to panel section
+ *
  * @param $panel_name
  * @param $panel_content
  * @param $panel_side

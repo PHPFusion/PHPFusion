@@ -20,9 +20,9 @@ defined('IN_FUSION') || exit;
 function get_rowstart($key, $max_limit) {
     $rowstart = get($key, FILTER_VALIDATE_INT);
     if ($rowstart <= $max_limit) {
-        return $rowstart;
+        return (int)$rowstart;
     }
-    return 0;
+    return (int)0;
 }
 
 // Protect filename from uploader by renaming file.

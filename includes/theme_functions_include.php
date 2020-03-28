@@ -140,13 +140,18 @@ function fusion_table($table_id, array $options = []) {
 
     $table_config = '';
     $default_options = [
-        'remote_file' => '',
-        'boilerplate' => 'bootstrap3', // @todo: implement boilerplate switch functions
-        'cdnurl'      => fusion_get_settings('siteurl'),
-        'page_length' => 0,
-        'debug'       => FALSE,
-        'ajax'        => FALSE,
-        'ajax_data'   => [],
+        'remote_file'   => '',
+        'boilerplate'   => 'bootstrap3', // @todo: implement boilerplate switch functions
+        'cdnurl'        => fusion_get_settings('siteurl'),
+        'page_length'   => 0,
+        'debug'         => FALSE,
+        'reponse_debug' => FALSE,
+        'ajax'          => FALSE,
+        'ajax_debug'    => FALSE,
+        // filter input name on the page if extra filters are used
+        'ajax_filters'  => [],
+        // not functional yet
+        'ajax_data'     => [],
     ];
 
     $options += $default_options;
@@ -157,35 +162,19 @@ function fusion_table($table_id, array $options = []) {
     // Ajax handling script
     if ($options['remote_file']) {
         $file_output = fusion_get_contents($options['remote_file']);
-        if ($options['debug']) {
-            print_p($file_output);
-        }
-
-        $options['datatable_config']['processing'] = TRUE;
-        $options['datatable_confgi']['serverSide'] = TRUE;
-        $options['datatable_config']['ajax'] = $options['remote_file'];
-        if (!empty($options['ajax_data']) && is_array($options['ajax_data'])) {
-            $options['datatable_config']['ajax'] = [
-                'url'     => $options['remote_file'],
-                'method'  => 'GET',
-                'dataSrc' => 'data',
-                'data'    => $options['ajax_data'],
-                //'success' => 'function(e) { console.log("success"); console.log(e) }',
-                //'error'   => 'function(e) { console.log("Error"); console.log(e) }'
-            ];
-        }
-
+        // generates data.columns
         if (!empty($file_output)) {
             if (isJson($file_output)) {
                 $output_array = json_decode($file_output, TRUE);
-                if ($options['debug']) {
+                if ($options['reponse_debug']) {
                     print_p($output_array);
                 }
+                // Column
                 if (!empty($output_array['data'])) {
                     $column_key = array_keys(reset($output_array['data']));
                     if (!empty($column_key)) {
                         foreach ($column_key as $column) {
-                            $options['datatable_config']['columns'][] = ['data' => $column];
+                            $options['columns'][] = ['data' => $column];
                         }
                     }
                 } else {
@@ -193,15 +182,29 @@ function fusion_table($table_id, array $options = []) {
                 }
             }
         }
-    }
 
-    if (!empty($options['datatable_config'])) {
-        $table_config = json_encode($options['datatable_config'], JSON_PRETTY_PRINT);
-        if ($options['debug']) {
-            print_P($options['datatable_config']);
-            print_P($table_config);
+        $js_config_script = "{
+            'processing' : true,
+            'serverSide' : true,
+            'serverMethod' : 'POST',
+            'searching' : false,
+            'ajax' : {
+                url : '".$options['remote_file']."',
+                <data_filters>               
+            },
+            'columns' : ".json_encode($options['columns'])."
+        }";
+
+        $filters = "";
+        $js_filter_function = "";
+        if ($options['ajax'] && !empty($options['ajax_filters'])) {
+            foreach ($options['ajax_filters'] as $field_id) {
+                $filters .= "data.".$field_id."= $('#".$field_id."').val();";
+            }
+            $js_filter_function = "data: function(data) { $filters }";
         }
 
+        $js_config_script = str_replace("<data_filters>", $js_filter_function, $js_config_script);
     }
 
     if (!defined('FUSION_DATATABLES')) {
@@ -211,8 +214,47 @@ function fusion_table($table_id, array $options = []) {
         add_to_footer("<script src='".rtrim($options['cdnurl'], '/')."/includes/jquery/datatables/datatables.min.js'></script>");
     }
 
+    /*
+     * $(document).ready(function(){
+  var dataTable = $('#empTable').DataTable({
+    'processing': true, // ok
+    'serverSide': true, // ok.
+    'serverMethod': 'post', // ok.
+    //'searching': false, // Remove default Search Control
+    'ajax': {
+       'url':'ajaxfile.php',
+       'data': function(data){
+          // Read values
+          var gender = $('#searchByGender').val();
+          var name = $('#searchByName').val();
 
-    add_to_jquery(/** @lang JavaScript */ "$('#$table_id').DataTable($table_config);");
+          // Append to data
+          data.searchByGender = gender;
+          data.searchByName = name;
+       }
+    },
+    'columns': [
+       { data: 'emp_name' },
+       { data: 'email' },
+       { data: 'gender' },
+       { data: 'salary' },
+       { data: 'city' },
+    ]
+  });
+
+  $('#searchByName').keyup(function(){
+    dataTable.draw();
+  });
+
+  $('#searchByGender').change(function(){
+    dataTable.draw();
+  });
+});
+     */
+    if ($options['debug']) {
+        print_p($js_config_script);
+    }
+    add_to_jquery(/** @lang JavaScript */ "$('#$table_id').DataTable($js_config_script);");
     return $table_id;
 }
 
@@ -586,9 +628,10 @@ if (!function_exists("badge")) {
 
 /**
  * Set a default boilerplate
+ *
  * @param $value
  */
-function boilerplate_set_default($value) {
+function set_boilerplate($value) {
     Steam::getInstance()->setBoilerPlate($value);
 }
 

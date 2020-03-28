@@ -1,32 +1,51 @@
 const gulp = require('gulp');
-const sass = require('gulp-sass');
 const browserSync = require('browser-sync').create();
 const proxyUrl = 'https://babylon.test';
-let rootDir = './';
-// compile scss into css
-function style() {
-    // 1. where is the scss file
-    return gulp.src(rootDir + 'themes/site_themes/**/scss/*.scss')
-    // 2. pass that file through the sass compiler
-        .pipe(sass())
-        // 3. save the compiled css to css compile.
-        .pipe(rename, function(path){
-            path.dirname += "/../css";
-        })
-        .pipe(gulp.dest(rootDir)) // @todo later fix back to same theme folder
-        .pipe(browserSync.reload({stream:true}));
-}
+//let rootDir = './';
 
-// trigger the
-exports.style = style;
+const
+    // source folders for development
+    dir = {
+        admin_theme_dir: 'themes/admin_themes/',
+        theme_dir: 'themes/site_themes/',
+        infusion_dir : 'infusions/',
+        jquery_dir: 'includes/jquery',
+        jscripts_dir: 'includes/jscripts',
+    };
+
 
 // Start BrowserSync
-function watch() {
+function watchBrowser() {
     browserSync.init({
-        proxy: proxyUrl
+        proxy: proxyUrl,
+        notify: false,
+        https: {
+            key: 'cert/cert.key',
+            cert: 'cert/cert.crt'
+        }
     });
-    gulp.watch('./themes/site_themes/**/scss/*.scss', style);
-    gulp.watch('./*').on('change', browserSync.reload);
+    // watch twig files
+    gulp.watch(dir.admin_theme_dir +'**/templates/*.twig').on('change', browserSync.reload);
+    gulp.watch(dir.theme_dir +'**/templates/*.twig').on('change', browserSync.reload);
+    gulp.watch(dir.infusion_dir +'**/templates/*.twig').on('change', browserSync.reload);
+    // watch php files
+    gulp.watch(dir.admin_theme_dir +'**/*.php').on('change', browserSync.reload);
+    gulp.watch(dir.theme_dir +'**/*.php').on('change', browserSync.reload);
+    gulp.watch(dir.infusion_dir +'**/*.php').on('change', browserSync.reload);
+    // watch less files
+    gulp.watch(dir.admin_theme_dir +'**/less/*.less').on('change', browserSync.reload);
+    gulp.watch(dir.theme_dir +'**/less/*.less').on('change', browserSync.reload);
+    gulp.watch(dir.infusion_dir +'**/less/*.less').on('change', browserSync.reload);
+    // watch html files
+    gulp.watch(dir.admin_theme_dir +'**/templates/*.html').on('change', browserSync.reload);
+    gulp.watch(dir.theme_dir +'**/templates/*.html').on('change', browserSync.reload);
+    gulp.watch(dir.infusion_dir +'**/templates/*.html').on('change', browserSync.reload);
+    // watch js files
+    gulp.watch(dir.admin_theme_dir +'**/js/*.js').on('change', browserSync.reload);
+    gulp.watch(dir.theme_dir +'**/js/*.js').on('change', browserSync.reload);
+    gulp.watch(dir.infusion_dir +'**/js/*.js').on('change', browserSync.reload);
+    // watch project jquery files
+    gulp.watch(dir.jquery_dir +'**/*.js').on('change', browserSync.reload);
 }
 
-exports.watch = watch;
+exports.watch = watchBrowser;

@@ -24,7 +24,7 @@ define('THEME_BULLET', '&middot;');
 define('BOOTSTRAP', TRUE);
 define('FONTAWESOME', TRUE);
 
-boilerplate_set_default('bootstrap3');
+set_boilerplate('bootstrap3');
 
 if (!defined('MG_LOCALE')) {
     if (file_exists(SITE_THEMES.'Magazine/locale/'.LANGUAGE.'.php')) {
