@@ -211,7 +211,8 @@ class Errors {
         $html .= "<tr class='collapse' id='err_rmd-".$data['error_id']."'><td colspan='4' class='hiddenRow no-border'>\n";
         $html .= "<p><strong>".$locale['ERROR_454']."</strong> : ".$this->getErrorTypes( $data['error_level'] )."</p>";
         $html .= "<div class='alert alert-info'>\n";
-        $html .= strtr( $data['error_message'], [ '#' => '<br/>#' ] )."</div>\n";
+        $html .= nl2br(strip_tags(html_entity_decode(strtr( $data['error_message'], [ '#' => '<br/>#' ] ))));
+        $html .= "</div>\n";
         $html .= "</td></tr>\n";
 
         $html .= '<textarea style="width:.1px;height:.1px;border:0;padding:0;" id="error-'.$data['error_id'].'">';
