@@ -32,14 +32,6 @@ if (fusion_authenticate_user(get('auth_token'))) {
 
     ]);
 
-    $news_filter_sql = "SELECT n.*, u.user_id, u.user_name, u.user_status, nc.news_cat_id, nc.news_cat_name
-    FROM ".DB_NEWS." n
-    LEFT JOIN ".DB_USERS." u
-    LEFT JOIN ".DB_NEWS_CATS." nc ON nc.news_cat_ 
-        
-    ";
-
-
     $result = dbquery("SELECT n.*, 
         u.user_id, u.user_name, u.user_status,
         nc.news_cat_id, nc.news_cat_name
