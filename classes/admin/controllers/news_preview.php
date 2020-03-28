@@ -62,7 +62,7 @@ class News_Preview extends News {
         }
     }
 
-    public static function get_PreviewInfo() {
+    public function getPreviewInfo() {
         $data = $_GET;
 
         if (empty($data)) {
@@ -80,8 +80,8 @@ class News_Preview extends News {
             'news_filter'   => [],
             'news_category' => [],
         ];
-        $info = array_merge_recursive($default_info, self::get_NewsFilter());
-        $info = array_merge_recursive($info, self::get_NewsCategory());
+        $info = array_merge_recursive($default_info, $this->getNewsFilter());
+        $info = array_merge_recursive($info, $this->getNewsCategory());
 
         if (!empty($data['news_image_full_default'])) {
             $photo_result = dbquery("SELECT * FROM ".DB_NEWS_IMAGES." WHERE news_image_id=:image_id", [':image_id' => $data['news_image_full_default']]);

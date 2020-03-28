@@ -17,16 +17,36 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-use PHPFusion\News\NewsServer;
-
+use PHPFusion\Infusions\News\Classes\News;
+use PHPFusion\OpenGraphNews;
 require_once __DIR__.'/../../maincore.php';
 if (!defined('NEWS_EXIST')) {
     redirect(BASEDIR."error.php?code=404");
 }
 require_once THEMES.'templates/header.php';
-require_once INCLUDES."infusions_include.php";
-require_once INFUSIONS."news/infusion_db.php";
-require_once NEWS_CLASS."autoloader.php";
 require_once INFUSIONS."news/templates/news.php";
-NewsServer::news()->display_news();
+
+if (check_get('readmore')) {
+    if ($readmore = get('readmore', FILTER_VALIDATE_INT)) {
+        $info = $this->set_NewsItemInfo($readmore);
+        render_news_item($info);
+        OpenGraphNews::ogNews($readmore);
+    } else {
+        redirect(INFUSIONS.'news/news.php');
+    }
+} else if (check_get('cat_id')) {
+    // Category Result
+    if ($cat_id = get('cat_id', FILTER_VALIDATE_INT)) {
+        $info = $this->set_NewsCatInfo($cat_id);
+        display_main_news($info);
+        OpenGraphNews::ogNewsCat($cat_id);
+    } else {
+        redirect(INFUSIONS.'news/news.php');
+    }
+} else {
+    // All Results
+    $news = new News();
+    display_main_news($news->getNewsInfo());
+}
+
 require_once THEMES.'templates/footer.php';

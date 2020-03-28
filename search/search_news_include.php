@@ -83,7 +83,8 @@ if (defined('NEWS_EXIST')) {
             $search_result = '';
 
             while ($data = dbarray($result)) {
-
+                $data['news_news'] = strip_tags(htmlspecialchars_decode($data['news_news']));
+                $data['news_extended'] = strip_tags(htmlspecialchars_decode($data['news_extended']));
                 $text_all = $data['news_news']." ".$data['news_extended'];
                 $text_all = Search_Engine::search_striphtmlbbcodes($text_all);
                 $text_frag = Search_Engine::search_textfrag($text_all);

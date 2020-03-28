@@ -16,14 +16,19 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-namespace PHPFusion\News;
-
-use PHPFusion\Admins;
-
-class NewsAdmin extends NewsAdminModel {
+namespace PHPFusion\Infusions\News\Classes;
+/**
+ * Class NewsForm
+ *
+ * @package PHPFusion\Infusions\News\Classes
+ */
+class NewsForm extends NewsAdminModel {
 
     private static $instance = NULL;
-    private static $locale = [];
+
+    public $title = '';
+    public $menu = '';
+
     private $form_action = FUSION_REQUEST;
     private $news_data = [];
     private $data = [];
@@ -33,7 +38,6 @@ class NewsAdmin extends NewsAdminModel {
         if (self::$instance == NULL) {
             self::$instance = new static();
         }
-        self::$locale = self::get_newsAdminLocale();
         return self::$instance;
     }
 
@@ -44,7 +48,7 @@ class NewsAdmin extends NewsAdminModel {
         if ($refs == 'news_form') {
             $this->display_news_form();
         } else {
-            $this->display_news_listing();
+            $this->newsListing();
             $this->clear_unattached_image();
         }
     }
@@ -213,7 +217,7 @@ class NewsAdmin extends NewsAdminModel {
     }
 
     private function newsContent_form() {
-        $news_settings = self::get_news_settings();
+        $news_settings = get_settings('news');
 
         $news_cat_opts = [];
         $query = "SELECT news_cat_id, news_cat_name FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? "WHERE ".in_group('news_cat_language', LANGUAGE) : '')." ORDER BY news_cat_name";
@@ -700,6 +704,122 @@ class NewsAdmin extends NewsAdminModel {
     }
 
     /**
+     *News listing
+     */
+    private function newsListing() {
+        $cookie = cookie(COOKIE_PREFIX.'user');
+        $id = fusion_table('fusionNewsAdmin', [
+            'remote_file'  => fusion_get_settings('siteurl').'infusions/news/assets/news-listing.php?auth_token='.$cookie,
+            'ajax'         => TRUE,
+            'ajax_filters' => ['status', 'visibility'],
+            'debug'        => TRUE,
+        ]);
+
+        opentable($this->title, [
+            [
+                'id'      => 'screen-options',
+                'title'   => 'Screen Options <span class="screen-caret fas fa-caret-down"></span>',
+                'link'    => '#screen-options',
+                'content' => $this->displayScreenOptions(),
+                //'class'   => '',
+                'class'   => 'active'
+            ],
+            [
+                'id'      => 'screen-help',
+                'title'   => 'Screen Help <span class="screen-caret fas fa-caret-down"></span>',
+                'link'    => '#screen-help',
+                'content' => $this->displayScreenHelper(),
+                //'class' => 'active'
+            ]
+        ]);
+
+        echo "<h1 class='text-dark'>News Listing</h1><hr/>";
+
+        echo "<table id='$id' class='table'>";
+        echo "<thead><tr>";
+        echo "<th>News Subject</th>";
+        echo "<th>Draft</th>";
+        echo "<th>Sticky</th>";
+        echo "<th>Category</th>";
+        echo "<th>Author</th>";
+        echo "<th>Visibility</th>";
+        echo "<th>Posted</th>";
+        echo "<th>Start Date</th>";
+        echo "<th>End Date</th>";
+        echo "<th>Reads</th>";
+        echo "<th>Id</th>";
+        echo "</tr></thead>";
+        echo "<tbody></tbody>";
+        echo "</table>";
+
+        /*
+         *  'subject'  => $data['news_subject'],
+                    'draft'    => $data['news_draft'],
+                    'category' => $data['news_cat_name'],
+                    'access'   => getgroupname($data['news_visibility']),
+                    'reads'    => $data['news_reads'],
+                    'poster'   => profile_link($data['user_id'], $data['user_name'], $data['user_status']),
+                    'date'     => showdate('longdate', $data['news_datestamp']),
+                    'start'    => $data['news_start'],
+                    'stop'     => $data['news_end'],
+                    'id'       => $data['news_id']
+         */
+
+
+        /*
+         *   'remote_file' => '',
+        'boilerplate' => 'bootstrap3', // @todo: implement boilerplate switch functions
+        'cdnurl'      => fusion_get_settings('siteurl'),
+        'page_length' => 0,
+        'debug'       => FALSE,
+        'ajax'        => FALSE,
+        'ajax_data'   => [],
+         */
+    }
+
+    private function displayScreenOptions() {
+        $html = "<h2>Custom Filtering Options</h2>";
+        $html .= form_select('status', 'Status', '', [
+            'options'    => [
+                'draft'  => 'Draft',
+                'sticky' => 'Sticky'
+            ],
+            'select_alt' => TRUE,
+            'inline'     => TRUE,
+        ]);
+        $html .= form_select('visibility', 'Visibility', '', [
+            'options'    => fusion_get_groups(),
+            'select_alt' => TRUE,
+            'inline'     => TRUE,
+        ]);
+        $html .= form_select('category', 'Category', '', [
+            'db'         => DB_NEWS_CATS,
+            'id_col'     => 'news_cat_id',
+            'cat_col'    => 'news_cat_parent',
+            'title_col'  => 'news_cat_name',
+            'select_alt' => TRUE,
+            'inline'     => TRUE,
+        ]);
+        $html .= form_select('language', 'Language', '', [
+            'options'    => fusion_get_enabled_languages(),
+            'inline'     => TRUE,
+            'select_alt' => TRUE,
+        ]);
+        $html .= form_select('author', 'Author', '', [
+            'db'         => DB_USERS,
+            'id_col'     => 'user_id',
+            'title_col'  => 'user_name',
+            'inline'     => TRUE,
+            'select_alt' => TRUE,
+        ]);
+        return $html;
+    }
+
+    private function displayScreenHelper() {
+
+    }
+
+    /**
      * Displays News Listing
      */
     private function display_news_listing() {
@@ -1022,14 +1142,24 @@ class NewsAdmin extends NewsAdminModel {
                         ?>
                         <tr>
                             <td class="hidden-xs"><?php echo form_checkbox("news_id[]", "", "", ['input_id' => 'news'.$data['news_id'], "value" => $data['news_id'], "class" => 'm-0']) ?></td>
-                            <td><a class="text-dark" href="<?php echo $edit_link ?>"><?php echo $data['news_subject'] ?></a></td>
-                            <td><a class="text-dark" href="<?php echo $cat_edit_link ?>"><?php echo $data['news_cat_name'] ?></a></td>
+                            <td>
+                                <a class="text-dark" href="<?php echo $edit_link ?>"><?php echo $data['news_subject'] ?></a>
+                            </td>
+                            <td>
+                                <a class="text-dark" href="<?php echo $cat_edit_link ?>"><?php echo $data['news_cat_name'] ?></a>
+                            </td>
                             <td><?php echo getgroupname($data['news_visibility']) ?></td>
-                            <td><span class="badge"><?php echo $data['news_sticky'] ? self::$locale['yes'] : self::$locale['no'] ?></span></td>
-                            <td><span class="badge"><?php echo $data['news_draft'] ? self::$locale['yes'] : self::$locale['no'] ?></span></td>
+                            <td>
+                                <span class="badge"><?php echo $data['news_sticky'] ? self::$locale['yes'] : self::$locale['no'] ?></span>
+                            </td>
+                            <td>
+                                <span class="badge"><?php echo $data['news_draft'] ? self::$locale['yes'] : self::$locale['no'] ?></span>
+                            </td>
                             <td><?php echo format_word(isset($comment_rows[$data['news_id']]) ? $comment_rows[$data['news_id']] : 0, self::$locale['fmt_comment']) ?></td>
                             <td><?php echo format_word(isset($image_rows[$data['news_id']]) ? $image_rows[$data['news_id']] : 0, self::$locale['fmt_photo']) ?></td>
-                            <td><div class="overflow-hide"><?php echo profile_link($data['user_id'], $data['user_name'], $data['user_status']) ?></div></td>
+                            <td>
+                                <div class="overflow-hide"><?php echo profile_link($data['user_id'], $data['user_name'], $data['user_status']) ?></div>
+                            </td>
                             <td>
                                 <a href="<?php echo $edit_link ?>"><?php echo self::$locale['edit'] ?></a> &middot;
                                 <a href="<?php echo FUSION_SELF.fusion_get_aidlink()."&amp;action=delete&amp;news_id=".$data['news_id'] ?>" onclick="return confirm('<?php echo self::$locale['news_0281']; ?>')"><?php echo self::$locale['delete'] ?>
@@ -1039,7 +1169,10 @@ class NewsAdmin extends NewsAdminModel {
                     <?php
                     endwhile;
                 else: ?>
-                    <tr><td colspan="10" class="text-center"><strong><?php echo self::$locale['news_0109'] ?></strong></td></tr>
+                    <tr>
+                        <td colspan="10" class="text-center"><strong><?php echo self::$locale['news_0109'] ?></strong>
+                        </td>
+                    </tr>
                 <?php endif; ?>
                 </tbody>
             </table>

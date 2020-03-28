@@ -15,22 +15,53 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
+use PHPFusion\News\NewsServer;
+use PHPFusion\SiteLinks;
+use PHPFusion\Template;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
+
 defined('IN_FUSION') || exit;
+
+function display_news_menu($info) {
+    $link_configuration = [
+        'id'                => 'newsMenu',
+        'show_header'       => FALSE,
+        'nav_class_primary' => 'flex-column',
+        'responsive'        => FALSE,
+        'callback_data'     => FALSE,
+    ];
+    $sitelinks = SiteLinks::setSubLinks($link_configuration);
+    foreach ($info['news_categories'] as $ncat) {
+        $sitelinks->addMenuLink($ncat['id'], $ncat['name'], $ncat['parent'], $ncat['link'], $ncat['icon']);
+    }
+    add_to_panel('News', $sitelinks->showSubLinks(), 'LEFT', iGUEST, 1);
+}
 
 if (!function_exists('display_main_news')) {
     /**
      * News Main Page Template
-     *
      * @param $info
+     *
+     * @return string
+     * @throws ReflectionException
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     function display_main_news($info) {
-        $news_settings = \PHPFusion\News\NewsServer::get_news_settings();
-        $locale = fusion_get_locale();
+        // sitelinks menu
+        display_news_menu($info);
+
+        echo fusion_render(INFUSIONS.'news/templates/html/', 'news-home.twig', [], TRUE);
+        return '';
 
         add_to_head("<link href='".INFUSIONS."news/templates/html/news.css' rel='stylesheet'/>\n");
         add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/jquery.cookie.js'></script>");
 
-        $tpl = \PHPFusion\Template::getInstance('news');
+        $tpl = Template::getInstance('news');
         $tpl->set_template(__DIR__.'/html/news.html');
         $tpl->set_locale(fusion_get_locale());
         $tpl->set_tag('opentable', fusion_get_function('opentable', $locale['news_0004']));
@@ -90,7 +121,7 @@ if (!function_exists('display_main_news')) {
                         if ($x === 6) {
                             $x_logic = FALSE;
                         }
-                        $ntpl = \PHPFusion\Template::getInstance('news_item');
+                        $ntpl = Template::getInstance('news_item');
                         $ntpl->set_template(__DIR__.'/html/news_item.html');
                         $ntpl->set_locale(fusion_get_locale());
                         $block_name = ($x_logic === TRUE ? 'news_item_lg' : 'news_item_sm');
@@ -103,7 +134,7 @@ if (!function_exists('display_main_news')) {
                 $i++;
             }
         } else {
-            $ntpl = \PHPFusion\Template::getInstance('news_item');
+            $ntpl = Template::getInstance('news_item');
             $ntpl->set_template(__DIR__.'/html/news_item.html');
             $ntpl->set_locale(fusion_get_locale());
             $ntpl->set_block('no_news', []);
@@ -160,7 +191,7 @@ if (!function_exists('display_main_news')) {
             }
         }
 
-        $tpl->set_tag('menu', \PHPFusion\SiteLinks::setSubLinks([
+        $tpl->set_tag('menu', SiteLinks::setSubLinks([
             'id'              => 'news-nav',
             'navbar_class'    => 'navbar-default',
             'locale'          => fusion_get_locale(),
@@ -184,7 +215,7 @@ if (!function_exists('render_news_item')) {
     function render_news_item($info) {
 
         $locale = fusion_get_locale();
-        $news_settings = \PHPFusion\News\NewsServer::get_news_settings();
+        $news_settings = NewsServer::get_news_settings();
         $data = $info['news_item'];
 
         add_to_head("<link rel='stylesheet' href='".INFUSIONS."news/templates/html/news.css' type='text/css'>");
