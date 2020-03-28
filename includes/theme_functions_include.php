@@ -133,13 +133,16 @@ function grid_container() {
  *
  * @param       $table_id
  * @param array $options
+ * Note: option remote_file must be defined for this plugin to work
  *
  * @return mixed
  */
 function fusion_table($table_id, array $options = []) {
-    $js_event_function = '';
-    $js_config_script = '';
-    $table_config = '';
+    $js_event_function = "";
+    $js_config_script = "";
+    $filters = "";
+    $js_filter_function = "";
+
     $default_options = [
         'remote_file'   => '',
         'boilerplate'   => 'bootstrap3', // @todo: implement boilerplate switch functions
@@ -185,19 +188,17 @@ function fusion_table($table_id, array $options = []) {
         }
 
         $js_config_script = "{
+            'responsive' :true,
             'processing' : true,
             'serverSide' : true,
             'serverMethod' : 'POST',
-            'searching' : false,
+            'searching' : true,
             'ajax' : {
                 url : '".$options['remote_file']."',
                 <data_filters>               
             },
             'columns' : ".json_encode($options['columns'])."
         }";
-
-        $filters = "";
-        $js_filter_function = "";
 
         $fields_doms = [];
         if ($options['ajax'] && !empty($options['ajax_filters'])) {

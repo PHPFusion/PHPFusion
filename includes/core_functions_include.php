@@ -2074,6 +2074,21 @@ function fusion_get_user($user_id, $key = NULL) {
 }
 
 /**
+ * Get all users
+ * @return array
+ */
+function fusion_get_all_user() {
+    static $user = [];
+    if (empty($user)) {
+        $result = dbquery("SELECT user_id, user_name FROM ".DB_USERS);
+        while ($data = dbarray($result)) {
+            $user[$data['user_id']] = $data['user_name'];
+        }
+    }
+    return $user;
+}
+
+/**
  * Get Aidlink
  *
  * @return string
