@@ -66,10 +66,10 @@ class Uri extends \Defender\Validation {
     protected static function validateURL($url) {
         $result = FALSE;
         if (preg_match("/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i", $url)) {
-            $result = TRUE;
+            $result = $url;
         }
         if ($loaded = fusion_get_contents($url)) {
-            $result = TRUE;
+            $result = $url;
         }
         return $result;
 
@@ -103,7 +103,6 @@ class Uri extends \Defender\Validation {
         //    return $url;
         //}
 
-        return FALSE;
     }
 
     /**
