@@ -867,7 +867,7 @@ function multilang_table($table) {
  *            SELECT * FROM ".DB." WHERE ".in_group(language, 'BL')."
  */
 function in_group($column_name, $value, $delim = '.') {
-    return "$column_name REGEXP \"(^|$delim)$value($delim|$)\" ";
+    return "$column_name REGEXP \"[[:<:]]($value)[[:>:]]\" ";
 }
 
 /**
