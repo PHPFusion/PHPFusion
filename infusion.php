@@ -123,7 +123,7 @@ if (!empty($enabled_languages)) {
             "image"    => $inf_image,
             "title"    => $locale['setup_3018'],
             "panel"    => "news_admin.php",
-            "page"     => 1,
+            "page"     => 0,
             'language' => $language
         ];
 
@@ -160,10 +160,9 @@ if (!empty($enabled_languages)) {
         "image"    => $inf_image,
         "title"    => $locale['setup_3018'],
         "panel"    => "news_admin.php",
-        "page"     => 1,
+        "page"     => 0,
         'language' => LANGUAGE
     ];
-
     $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES('".$locale['setup_3205']."', 'infusions/".$inf_folder."/news.php', '0', '2', '0', '2', '1', '".LANGUAGE."')";
     $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3311']."', 'submit.php?stype=n', ".USER_LEVEL_MEMBER.", '1', '0', '25', '1', '".LANGUAGE."')";
 }

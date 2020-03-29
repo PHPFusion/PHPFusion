@@ -15,6 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
+use PHPFusion\Admins;
+
 defined('IN_FUSION') || exit;
 
 if (!defined("IMAGES_N")) {
@@ -57,15 +60,34 @@ if (!defined("NEWS_CLASS")) {
 }
 
 // Admin Settings
-\PHPFusion\Admins::getInstance()->setAdminPageIcons("N", "<i class='admin-ico fa fa-fw fa-newspaper-o'></i>");
-\PHPFusion\Admins::getInstance()->setAdminPageIcons("NC", "<i class='admin-ico fa fa-fw fa-newspaper-o'></i>");
-\PHPFusion\Admins::getInstance()->setAdminPageIcons("S8", "<i class='admin-ico fa fa-fw fa-newspaper-o'></i>");
-\PHPFusion\Admins::getInstance()->setCommentType('N', fusion_get_locale('N', LOCALE.LOCALESET."admin/main.php"));
-\PHPFusion\Admins::getInstance()->setLinkType('N', fusion_get_settings("siteurl")."infusions/news/news.php?readmore=%s");
+function news_admin_prop() {
+    $aidlink = fusion_get_aidlink();
+    $admin = Admins::getInstance();
+    $news_admin_link = INFUSIONS.'news/news_admin.php'.$aidlink;
+
+    // Admin Icons
+    $admin->setAdminPageIcons("N", "layers");
+
+    // Admin pages
+    $admin->addAdminPage('N', 'Listing', 'N', $news_admin_link, 'fas fa-newspaper');
+    $admin->addAdminPage('N', 'Add News', 'N__1', $news_admin_link);
+    $admin->addAdminPage('N', 'Categories', 'N__2', $news_admin_link);
+    $admin->addAdminPage('N', 'Series', 'N__3', $news_admin_link);
+    $admin->addAdminPage('N', 'Tags', 'N__4', $news_admin_link);
+    $admin->addAdminPage('N', 'Galleries', 'N__5', $news_admin_link);
+    $admin->addAdminPage('N', 'Settings', 'N__6', $news_admin_link);
+
+    // for dashboard registration
+    $admin->setCommentType('N', fusion_get_locale('N', LOCALE.LOCALESET."admin/main.php"));
+    $admin->setLinkType('N', fusion_get_settings("siteurl")."infusions/news/news.php?readmore=%s");
+}
+
+fusion_add_hook('admin_pages', 'news_admin_prop');
+
 
 $inf_settings = get_settings('news');
 if (!empty($inf_settings['news_allow_submission']) && $inf_settings['news_allow_submission']) {
-    \PHPFusion\Admins::getInstance()->setSubmitData('n', [
+    Admins::getInstance()->setSubmitData('n', [
         'infusion_name' => 'news',
         'link'          => INFUSIONS."news/news_submit.php",
         'submit_link'   => "submit.php?stype=n",
@@ -75,7 +97,7 @@ if (!empty($inf_settings['news_allow_submission']) && $inf_settings['news_allow_
     ]);
 }
 
-\PHPFusion\Admins::getInstance()->setFolderPermissions('news', [
+Admins::getInstance()->setFolderPermissions('news', [
     'infusions/news/images/'        => TRUE,
     'infusions/news/images/thumbs/' => TRUE
 ]);
