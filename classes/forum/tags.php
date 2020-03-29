@@ -306,9 +306,9 @@ class ThreadTags extends ForumServer {
         return (array)$info;
     }
 
-    public function cache_tags() {
+    public function cache_tags($order = 'tag_title ASC') {
 
-        $tag_query = "SELECT * FROM ".DB_FORUM_TAGS." WHERE tag_status=:tag_status ".(multilang_table("FO") ? "AND ".in_group('tag_language', LANGUAGE) : "")." ORDER BY tag_title ASC";
+        $tag_query = "SELECT * FROM ".DB_FORUM_TAGS." WHERE tag_status=:tag_status ".(multilang_table("FO") ? "AND ".in_group('tag_language', LANGUAGE) : "")." ORDER BY ".$order;
         $tag_param = [':tag_status' => 1];
         $tag_result = dbquery($tag_query, $tag_param);
 
