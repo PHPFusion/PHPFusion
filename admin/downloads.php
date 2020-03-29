@@ -46,8 +46,8 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['dow
     $result = dbquery("SELECT download_file, download_image, download_image_thumb FROM ".DB_DOWNLOADS." WHERE download_id='".$_GET['download_id']."'");
     if (dbrows($result)) {
         $data = dbarray($result);
-        if (!empty($data['download_file']) && file_exists(DOWNLOADS.$data['download_file'])) {
-            @unlink(DOWNLOADS.$data['download_file']);
+        if (!empty($data['download_file']) && file_exists(DOWNLOADS.'files/'.$data['download_file'])) {
+            @unlink(DOWNLOADS.'files/'.$data['download_file']);
         }
         if (!empty($data['download_image']) && file_exists(DOWNLOADS."images/".$data['download_image'])) {
             @unlink(DOWNLOADS."images/".$data['download_image']);
