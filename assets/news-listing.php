@@ -1,4 +1,5 @@
 <?php
+
 use PHPFusion\Infusions\News\Classes\NewsHelper;
 
 require_once __DIR__.'/../../../maincore.php';
@@ -12,9 +13,14 @@ $column_index = post(['order', 0, 'column']);
 // column name
 $column_name = news_filter_column_name($column_index);
 //post(['order', $column_index, 'data'])
-
 // asc or desc
 $column_sort_order = post(['order', 0, 'dir']);
+
+if (!$column_name) {
+    $column_name = 'news_id';
+    $column_sort_order = 'DESC';
+}
+
 // search value
 $select_cond = '';
 $select_order = '';
@@ -27,7 +33,7 @@ if ($search_value = post(['search', 'value'])) {
 
 // build conditions by custom filters
 if ($search_by_status = post('status', FILTER_VALIDATE_INT)) {
-    switch($search_by_status) {
+    switch ($search_by_status) {
         case 1: // draft only
             $search_cond[] = "n.news_draft=1";
         case 2: // sticky only
@@ -61,7 +67,7 @@ if (fusion_authenticate_user(get('auth_token'))) {
         'limit'     => (int)$rows_per_page,
         'condition' => (!empty($search_cond) ? implode(" AND ", array_filter($search_cond)) : ''),
         'group_by'  => '',
-        'select' => $select_cond,
+        'select'    => $select_cond,
         'order_by'  => $select_order.$column_name.' '.strtoupper($column_sort_order),
     ]);
 
@@ -120,5 +126,5 @@ function news_filter_column_name($value) {
         '9'  => 'news_reads',
         '10' => 'news_id',
     ];
-    return (isset($array[$value]) ? $array[$value] : 'news_subject');
+    return (isset($array[$value]) ? $array[$value] : '');
 }
