@@ -91,16 +91,17 @@ class AdminPanel extends Helper {
         $this->admins->setAdminSectionIcons(3, 'sliders'); // System Admin
         $this->admins->setAdminSectionIcons(4, 'settings'); // Settings
         $this->admins->setAdminSectionIcons(5, 'box'); // Infusions
+
         //$count = 0;
-        foreach ($sections as $i => $section_name) :
+        // Core sections
+        foreach ($sections as $i => $section_name) {
+            if ($i == 5) break;
 
             $pages = $this->cacheAdminPages($i);
-
             $i_active = FALSE;
             if ($pagenum) {
                 $i_active = $pagenum == $i ? TRUE : FALSE;
             }
-
             $active_class = ($i_active || (!$pagenum && $this->_isActive() == $i) && !check_get('inspired') ? 'class="active"' : '');
             $is_menu_action = $i + 1 == $section_count ? TRUE : FALSE;
             $has_page = isset($pages[$i]) ? TRUE : FALSE;
@@ -120,7 +121,28 @@ class AdminPanel extends Helper {
                 'icon'         => $this->admins->getAdminSectionIcons($i),
                 'pages'        => $pages,
             ];
-        endforeach;
+        }
+
+        $infusions = $this->cacheAdminPages(5);
+        foreach($infusions as $inf_rights => $infusion) {
+            $active_class = ((!$pagenum && $this->_isActive() == $inf_rights) || $infusion['admin_active'] && !check_get('inspired') ? 'class="active"' : '');
+            $has_page = isset($pages[$inf_rights]) ? TRUE : FALSE;
+            $href_src = '';
+            if ($has_page) {
+                $href_src = "data-load=\"$inf_rights\"";
+            }
+            $nav[$inf_rights] = [
+                'active_class' => $active_class,
+                'has_page'     => $has_page,
+                'href_src'     => $href_src,
+                'section_name' => $infusion['admin_title'],
+                'menu_action'  => ' menu-action ',
+                'icon'         => $this->admins->getAdminIcons($inf_rights),
+                'pages'        => $this->cacheAdminPages($inf_rights),
+            ];
+        }
+
+
 
         $nav += $this->getThemeSections();
 
@@ -136,16 +158,19 @@ class AdminPanel extends Helper {
         $current_pages = [];
         if (!empty($pages[$key]) && is_array($pages[$key])) {
             $page_array = $pages[$key];
-            //print_p($page_array);
             foreach ($page_array as $page_index => $data) {
-                //print_p($data);
-                if (checkrights($data['admin_rights'])) {
+                $rights = $data['admin_rights'];
+                $pos = strpos($data['admin_rights'], '__');
+                if ($pos) {
+                   $rights = substr($data['admin_rights'], 0, $pos);
+                }
+                if (checkrights($rights)) {
                     $data['admin_active'] = ($data['admin_link'] == $is_current_page ? ' class="active"' : '');
                     if ($data['admin_page'] !== 5) {
                         $data['admin_title'] = isset($locale[$data['admin_rights']]) ? $locale[$data['admin_rights']] : $data['admin_title'];
                     }
                     $data['admin_link'] = ADMIN.$data['admin_link'].$aidlink;
-                    $data['admin_image'] = $this->get_admin_icons("ac_".$data['admin_rights']);
+                    $data['admin_image'] = $this->getAdminIcons('ac_'.$data['admin_rights']);
                     $current_pages[$data['admin_rights']] = $data;
                 }
             }

@@ -33,6 +33,7 @@ if ($settings['maintenance'] == "1" && ((iMEMBER && $settings['maintenance_level
 require_once INCLUDES."breadcrumbs.php";
 require_once INCLUDES."header_includes.php";
 require_once INCLUDES."theme_functions_include.php";
+fusion_apply_hook('admin_pages');
 
 if (preg_match("/^([a-z0-9_-]){2,50}$/i", $settings['admin_theme']) && file_exists(THEMES."admin_themes/".$settings['admin_theme']."/acp_theme.php")) {
     require_once THEMES."admin_themes/".$settings['admin_theme']."/acp_theme.php";
@@ -42,6 +43,7 @@ if (preg_match("/^([a-z0-9_-]){2,50}$/i", $settings['admin_theme']) && file_exis
 
 $fusion_steam = Steam::getInstance();
 $fusion_steam->run();
+
 
 require_once THEMES."templates/render_functions.php";
 
