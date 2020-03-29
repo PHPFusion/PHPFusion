@@ -70,19 +70,20 @@ class Uri extends \Defender\Validation {
 
             curl_setopt_array($ch, [
                 CURLOPT_TIMEOUT        => 20,
-                CURLOPT_FOLLOWLOCATION => TRUE,
-                CURLOPT_NOBODY         => TRUE,
-                CURLOPT_HEADER         => FALSE,
-                CURLOPT_RETURNTRANSFER => FALSE,
-                CURLOPT_SSL_VERIFYHOST => FALSE,
-                CURLOPT_SSL_VERIFYPEER => FALSE
+                CURLOPT_FOLLOWLOCATION => 1,
+                CURLOPT_NOBODY         => 1,
+                CURLOPT_HEADER         => 0,
+                CURLOPT_RETURNTRANSFER => 0,
+                CURLOPT_SSL_VERIFYHOST => 0,
+                CURLOPT_SSL_VERIFYPEER => 0
             ]);
 
             curl_exec($ch);
 
             $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $allowed_http = array_flip([301, 302, 200]);
 
-            if ($http_code == 200) {
+            if (isset($allowed_http[$http_code])) {
                 return $url;
             } else {
                 return FALSE;
