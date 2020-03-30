@@ -353,7 +353,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
             $limit = (!empty($_POST['weblink_display']) ? $_POST['weblink_display'] : $_GET['weblink_display']);
         }
 
-        $max_rows = dbcount("(news_id)", DB_NEWS);
+        $max_rows = dbcount("(weblink_id)", DB_WEBLINKS);
         $rowstart = 0;
         if (!isset($_POST['weblink_display'])) {
             $rowstart = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $max_rows ? $_GET['rowstart'] : 0);
