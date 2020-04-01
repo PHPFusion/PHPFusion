@@ -1,0 +1,56 @@
+
+/* DATATABLES */
+table.dataTable thead .sorting,
+table.dataTable thead .sorting_asc:after,
+table.dataTable thead .sorting_desc,
+table.dataTable thead .sorting_asc_disabled,
+table.dataTable thead .sorting_desc_disabled {
+    background: transparent;
+}
+
+.dataTables_wrapper {
+    padding-bottom: 30px;
+}
+
+.dataTables_length {
+    float: left;
+}
+
+.dataTables_filter label {
+    margin-right: 5px;
+}
+
+.html5buttons {
+    float: right;
+}
+
+.html5buttons a {
+    border: 1px solid #e7eaec;
+    background: #fff;
+    color: #676a6c;
+    box-shadow: none;
+    padding: 6px 8px;
+    font-size: 12px;
+}
+
+.html5buttons a:hover,
+.html5buttons a:focus:active {
+    background-color: #eee;
+    color: inherit;
+    border-color: #d2d2d2;
+}
+
+div.dt-button-info {
+    z-index: 100;
+}
+
+@media (max-width: 768px) {
+    .html5buttons {
+        float: none;
+        margin-top: 10px;
+    }
+
+    .dataTables_length {
+        float: none;
+    }
+}

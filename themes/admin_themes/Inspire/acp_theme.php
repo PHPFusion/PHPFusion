@@ -22,8 +22,9 @@ define('BOOTSTRAP', TRUE);
 define('FONTAWESOME', TRUE);
 ini_set('display_errors', 1);
 define("THEME_BODY", '<body class="fixed-sidebar">');
+set_boilerplate('bootstrap4');
+//set_boilerplate('bootstrap3');
 
-set_boilerplate('bootstrap3');
 add_to_footer("<script src='".ADMIN_THEMES."Inspire/assets/inspire.min.js'></script>");
 
 function opentable($title = '', $class = FALSE) {
@@ -42,13 +43,12 @@ function closeside() {
     return Inspire\AdminPanel::closeside();
 }
 
-/*function opensidex($title = '', array $links = [], array $options = []) {
-    return Inspire\AdminPanel::opensidex($title, $links, $options);
-}
-
-function closesidex($title = '') {
-    return Inspire\AdminPanel::closesidex($title);
-}*/
+//function opensidex($title = '', array $links = [], array $options = []) {
+//    return Inspire\AdminPanel::opensidex($title, $links, $options);
+//}
+//function closesidex($title = '') {
+//    return Inspire\AdminPanel::closesidex($title);
+//}
 
 function render_admin_login() {
     Inspire\Controller::Instance(FALSE)->do_login_panel();

@@ -1,0 +1,222 @@
+
+@-webkit-keyframes mbar {
+    0% {
+        left: -35%;
+        right: 100%;
+    }
+    60% {
+        left: 100%;
+        right: -90%;
+    }
+    to {
+        left: 100%;
+        right: -35%;
+    }
+}
+@keyframes mbar {
+    0% {
+        left: -35%;
+        right: 100%;
+    }
+    60% {
+        left: 100%;
+        right: -90%;
+    }
+    to {
+        left: 100%;
+        right: -35%;
+    }
+}
+@-webkit-keyframes m_s {
+    0% {
+        left: -200%;
+        right: 100%;
+    }
+    60% {
+        left: 107%;
+        right: -8%;
+    }
+    to {
+        left: 107%;
+        right: -8%;
+    }
+}
+@keyframes m_s {
+    0% {
+        left: -200%;
+        right: 100%;
+    }
+    60% {
+        left: 107%;
+        right: -8%;
+    }
+    to {
+        left: 107%;
+        right: -8%;
+    }
+}
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(0, 172, 240, 0.8);
+    }
+    70% {
+        box-shadow: 0 0 0 10px transparent;
+    }
+    to {
+        box-shadow: 0 0 0 0 transparent;
+    }
+}
+@-webkit-keyframes bubble {
+    0%,
+    30% {
+        opacity: 0;
+    }
+    31% {
+        opacity: 1;
+    }
+    59% {
+        opacity: 1;
+    }
+    60%,
+    to {
+        opacity: 0;
+    }
+}
+@keyframes bubble {
+    0%,
+    30% {
+        opacity: 0;
+    }
+    31% {
+        opacity: 1;
+    }
+    59% {
+        opacity: 1;
+    }
+    60%,
+    to {
+        opacity: 0;
+    }
+}
+@-webkit-keyframes sark {
+    0% {
+        transform: rotate(-10deg) translate(245px, 46px);
+    }
+    30% {
+        transform: rotate(-13deg) translate(-329px, -80px);
+    }
+    60% {
+        transform: rotate(-13deg) translate(-329px, -80px);
+    }
+    to {
+        transform: rotate(-26deg) translate(-887px, -80px);
+    }
+}
+@keyframes sark {
+    0% {
+        transform: rotate(-10deg) translate(245px, 46px);
+    }
+    30% {
+        transform: rotate(-13deg) translate(-329px, -80px);
+    }
+    60% {
+        transform: rotate(-13deg) translate(-329px, -80px);
+    }
+    to {
+        transform: rotate(-26deg) translate(-887px, -80px);
+    }
+}
+@-webkit-keyframes boatanim {
+    0% {
+        transform: rotate(-10deg) translate(95px, -14px);
+    }
+    50% {
+        transform: rotate(5deg) translate(-65px, -14px);
+    }
+    to {
+        transform: rotate(-10deg) translate(95px, -14px);
+    }
+}
+@keyframes boatanim {
+    0% {
+        transform: rotate(-10deg) translate(95px, -14px);
+    }
+    50% {
+        transform: rotate(5deg) translate(-65px, -14px);
+    }
+    to {
+        transform: rotate(-10deg) translate(95px, -14px);
+    }
+}
+@-webkit-keyframes sunwawe {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+@keyframes sunwawe {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+@-webkit-keyframes sparcle {
+    0% {
+        opacity: 0.5;
+    }
+    50% {
+        opacity: 0;
+    }
+}
+@keyframes sparcle {
+    0% {
+        opacity: 0.5;
+    }
+    50% {
+        opacity: 0;
+    }
+}
+.loader-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    z-index: 1035;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+.loader-bg .loader-track {
+    position: relative;
+    height: 3px;
+    display: block;
+    width: 100%;
+    overflow: hidden;
+}
+.loader-bg .loader-track .loader-fill:after,
+.loader-bg .loader-track .loader-fill:before {
+    content: "";
+    background: #fff;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    will-change: left, right;
+}
+.loader-bg .loader-track .loader-fill:before {
+    -webkit-animation: mbar 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
+    animation: mbar 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
+}
+.loader-bg .loader-track .loader-fill:after {
+    -webkit-animation: m_s 2.1s cubic-bezier(0.165, 0.84, 0.44, 1) infinite;
+    animation: m_s 2.1s cubic-bezier(0.165, 0.84, 0.44, 1) infinite;
+    -webkit-animation-delay: 1.15s;
+    animation-delay: 1.15s;
+}

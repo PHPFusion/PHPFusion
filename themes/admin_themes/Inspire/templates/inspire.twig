@@ -23,8 +23,8 @@
                     </div>
                 </li>
                 {% for section in sections %}
-                    <li {{ section.active_class|raw }}>
-                        <a {{ section.href_src|raw }}><i>{{ feathercon(section.icon, 'sm')|raw }}</i>
+                    <li class="nav-link{{ whitespace(section.active_class)|raw }}">
+                        <a class="nav-item"{{ whitespace(section.href_src)|raw }}><i>{{ feathercon(section.icon, 'sm')|raw }}</i>
                             <span class="nav-label">{{ section.section_name }}</span>
                             {% if section.pages %}
                                 <span class="fa arrow"></span>
@@ -34,7 +34,7 @@
                             <ul class="nav nav-second-level">
                                 {% for pages in section.pages %}
                                     <li{{ pages.admin_active|raw }}>
-                                        <a href="{{ pages.admin_link }}">{{ pages.admin_title }}</a></li>
+                                        <a class="nav-item" href="{{ pages.admin_link }}">{{ pages.admin_title }}</a></li>
                                 {% endfor %}
                             </ul>
                         {% endif %}

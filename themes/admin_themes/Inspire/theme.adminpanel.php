@@ -95,14 +95,15 @@ class AdminPanel extends Helper {
         //$count = 0;
         // Core sections
         foreach ($sections as $i => $section_name) {
-            if ($i == 5) break;
+            if ($i == 5)
+                break;
 
             $pages = $this->cacheAdminPages($i);
             $i_active = FALSE;
             if ($pagenum) {
                 $i_active = $pagenum == $i ? TRUE : FALSE;
             }
-            $active_class = ($i_active || (!$pagenum && $this->_isActive() == $i) && !check_get('inspired') ? 'class="active"' : '');
+            $active_class = ($i_active || (!$pagenum && $this->_isActive() == $i) && !check_get('inspired') ? 'active' : '');
             $is_menu_action = $i + 1 == $section_count ? TRUE : FALSE;
             $has_page = isset($pages[$i]) ? TRUE : FALSE;
             $href_src = "";
@@ -124,7 +125,7 @@ class AdminPanel extends Helper {
         }
 
         $infusions = $this->cacheAdminPages(5);
-        foreach($infusions as $inf_rights => $infusion) {
+        foreach ($infusions as $inf_rights => $infusion) {
             $active_class = ((!$pagenum && $this->_isActive() == $inf_rights) || $infusion['admin_active'] && !check_get('inspired') ? 'class="active"' : '');
             $has_page = isset($pages[$inf_rights]) ? TRUE : FALSE;
             $href_src = '';
@@ -141,7 +142,6 @@ class AdminPanel extends Helper {
                 'pages'        => $this->cacheAdminPages($inf_rights),
             ];
         }
-
 
 
         $nav += $this->getThemeSections();
@@ -162,7 +162,7 @@ class AdminPanel extends Helper {
                 $rights = $data['admin_rights'];
                 $pos = strpos($data['admin_rights'], '__');
                 if ($pos) {
-                   $rights = substr($data['admin_rights'], 0, $pos);
+                    $rights = substr($data['admin_rights'], 0, $pos);
                 }
                 if (checkrights($rights)) {
                     $data['admin_active'] = ($data['admin_link'] == $is_current_page ? ' class="active"' : '');
@@ -320,9 +320,8 @@ class AdminPanel extends Helper {
     }
 
     public static function closeside() {
-        ?>
-        </div></aside>
-        <?php
+        echo fusion_render(INSPIRE.'templates', 'closesidex.twig');
+        //echo "</div></aside>";
     }
 
     public static function opensidex($title = FALSE, array $links = [], array $options = []) {

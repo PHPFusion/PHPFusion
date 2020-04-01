@@ -3,9 +3,9 @@
         <div class="head{{ is_sidex ? " sidex" : "" }}">
             {% if title %}
                 <div class="head-label">
-                    <h3 class="title">{{ title }}
+                    <div class="title">{{ title|raw }}
                         <span class="pull-right m-l-10">{{ is_sidex ? '<i class="panel-caret fas fa-caret-up"></i>' : "" }}</span>
-                    </h3>
+                    </div>
                 </div>
             {% endif %}
             {% if options %}
