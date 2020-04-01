@@ -149,11 +149,10 @@ class News extends NewsHelper {
 
         $info = array_merge_recursive($info, $this->getNewsFilter(), $this->getNewsCategory(), $this->getNewsItem());
 
-        if ($info['news_total_rows'] > $news_settings['news_pagination']) {
-            $info['rowstart'] = get_rowstart('rowstart', $info['news_total_rows']);
+        if ($info['max_rows'] > $news_settings['news_pagination']) {
             $type_start = check_get('type') ? 'type='.get('type').'&amp;' : '';
             $cat_start = check_get('cat_id') ? 'cat_id='.get('cat_id', FILTER_VALIDATE_INT).'&amp;' : '';
-            $info['news_nav'] = makepagenav($info['rowstart'], $news_settings['news_pagination'], $info['news_total_rows'], 3, INFUSIONS.'news/news.php?'.$cat_start.$type_start);
+            $info['news_nav'] = makepagenav($info['rowstart'], $news_settings['news_pagination'], $info['max_rows'], 3, INFUSIONS.'news/news.php?'.$cat_start.$type_start);
         }
 
         $this->info = $info;
@@ -258,33 +257,20 @@ class News extends NewsHelper {
      * @return array
      */
     public function getNewsItem($filter = []) {
-
-        $info['news_total_rows'] = dbcount("(news_id)", DB_NEWS, groupaccess('news_visibility')." AND (news_start='0'||news_start<='".time()."') AND (news_end='0'||news_end>='".time()."') AND news_draft='0'");
-
-        if ($info['news_total_rows']) {
-
-            $filter['rowstart'] = get_rowstart('rowstart', $info['news_total_rows']);
-
-            $result = dbquery($this->getNewsQuery($filter));
-
-            $info['news_item_rows'] = dbrows($result);
-
-            if ($info['news_item_rows'] > 0) {
-                $news_count = 0;
-                $news_info = [];
-
-                while ($data = dbarray($result)) {
-                    $news_count++;
-                    if ($news_count == 1) {
-                        $info['news_last_updated'] = showdate('newsdate', $data['news_datestamp']);
-                    }
-                    $newsData = self::get_NewsData($data);
-                    $news_info[$news_count] = $newsData;
+        $info = $this->getNewsQuery($filter);
+        if ($info['rows']) {
+            $news_count = 0;
+            $news_info = [];
+            while ($data = dbarray($info['result'])) {
+                $news_count++;
+                if ($news_count == 1) {
+                    $info['news_last_updated'] = showdate('newsdate', $data['news_datestamp']);
                 }
-                $info['news_items'] = $news_info;
+                $newsData = self::get_NewsData($data);
+                $news_info[$news_count] = $newsData;
             }
+            $info['news_items'] = $news_info;
         }
-
         return (array)$info;
     }
 
