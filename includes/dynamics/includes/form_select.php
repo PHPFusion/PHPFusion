@@ -17,6 +17,8 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
+use PHPFusion\Steam;
+
 /**
  * Select2 dynamics plugin version 3.5 (stable)
  *
@@ -476,13 +478,56 @@ function form_select( $input_name, $label = "", $input_value, array $options = [
         }
     }
 
-
     if ( $options['required'] ) {
         $options['dropdown_required_input'] = "<input class='req' id='dummy-".$options['input_id']."' type='hidden'>"; // for jscheck
     }
 
+    if (!$options['select2_disabled']) {
+
+    }
+
     // Initialize Select2
-    if ( $options['select2_disabled'] === FALSE && $options['select_alt'] === FALSE ) {
+    // Initialize Selectize
+    if ($options['select_alt'] === TRUE ) {
+        $js['sortField'] = "id";
+        $js['allowEmptyOption'] = (boolean)$options['allowclear'];
+        $js['placeholder'] = (string)$options['placeholder'];
+        if ( $options['tags'] ) {
+            // if that is tags, do not include a text field.
+            // $js['create'] = "function(input){return{value:input,text:input}}";
+            $js['create'] = TRUE;
+            $js['createOnBlur'] = TRUE;
+            $js['delimiter'] = $options['delimiter'];
+            $js['persist'] = FALSE;
+
+            $options['input_field'] = "<input ".( $options['required'] ? "class='req'" : '' )." type='text' name='$input_name' id='".$options['input_id']."' value='".$input_value."' style='".( $options['width'] ? "width: ".$options['inner_width']."" : '' )."'/>";
+        }
+        if ( $options['multiple'] ) {
+            $js['maxItems'] = $options['max_select'];
+            $multiple_values = json_encode( $input_value );
+        }
+        if ( !empty( $options['disable_opts'] ) ) {
+            $js['plugins'] = [
+                'disable_options' => [
+                    'disableOptions' => $options['disable_opts']
+                ]
+            ];
+        }
+
+        $js = json_encode( $js, JSON_PRETTY_PRINT );
+
+        add_to_jquery( "let select_".$options['input_id']." = $('#".$options['input_id']."').selectize({$js});" );
+
+        if ( isset( $multiple_values ) ) {
+            add_to_jquery( "
+            let selectize = select_".$options['input_id']."[0].selectize;
+            selectize.setValue($multiple_values);
+            " );
+        }
+
+
+        add_to_head( "<style>.modal-body {overflow: visible!important;} .modal-content{overflow: visible!important;}</style>" );
+    } else {
 
         // Select 2 Multiple requires hidden DOM.
         if ( $options['jsonmode'] === FALSE ) {
@@ -547,52 +592,7 @@ function form_select( $input_name, $label = "", $input_value, array $options = [
             add_to_jquery( "$('#".$options['input_id']."').select2('val', [$vals]);" );
         }
 
-
     }
-
-
-    // Initialize Selectize
-    if ( $options['select2_disabled'] === FALSE && $options['select_alt'] === TRUE ) {
-        $js['sortField'] = "id";
-        $js['allowEmptyOption'] = (boolean)$options['allowclear'];
-        $js['placeholder'] = (string)$options['placeholder'];
-        if ( $options['tags'] ) {
-            // if that is tags, do not include a text field.
-            // $js['create'] = "function(input){return{value:input,text:input}}";
-            $js['create'] = TRUE;
-            $js['createOnBlur'] = TRUE;
-            $js['delimiter'] = $options['delimiter'];
-            $js['persist'] = FALSE;
-
-            $options['input_field'] = "<input ".( $options['required'] ? "class='req'" : '' )." type='text' name='$input_name' id='".$options['input_id']."' value='".$input_value."' style='".( $options['width'] ? "width: ".$options['inner_width']."" : '' )."'/>";
-        }
-        if ( $options['multiple'] ) {
-            $js['maxItems'] = $options['max_select'];
-            $multiple_values = json_encode( $input_value );
-        }
-        if ( !empty( $options['disable_opts'] ) ) {
-            $js['plugins'] = [
-                'disable_options' => [
-                    'disableOptions' => $options['disable_opts']
-                ]
-            ];
-        }
-
-        $js = json_encode( $js, JSON_PRETTY_PRINT );
-
-        add_to_jquery( "let select_".$options['input_id']." = $('#".$options['input_id']."').selectize({$js});" );
-
-        if ( isset( $multiple_values ) ) {
-            add_to_jquery( "
-            let selectize = select_".$options['input_id']."[0].selectize;
-            selectize.setValue($multiple_values);
-            " );
-        }
-
-
-        add_to_head( "<style>.modal-body {overflow: visible!important;} .modal-content{overflow: visible!important;}</style>" );
-    }
-
 
     $config = [
         'input_name'     => clean_input_name( $input_name ),
@@ -609,8 +609,7 @@ function form_select( $input_name, $label = "", $input_value, array $options = [
     ];
 
     \Defender::add_field_session( $config );
-
-    $fusion_steam = new \PHPFusion\Steam( 'bootstrap3' );
+    $fusion_steam = Steam::getInstance();
     try {
         return $fusion_steam->load( 'Form' )->input( $input_name, $label, $input_value, $options );
     } catch (Exception $e) {

@@ -19,6 +19,9 @@
 use PHPFusion\BreadCrumbs;
 use PHPFusion\Panels;
 use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 use Twig\Extension\DebugExtension;
 use Twig\Loader\FilesystemLoader;
 use Twig\TwigFunction;
@@ -279,9 +282,6 @@ function whitespace($value) {
  * @param bool   $debug
  *
  * @return string
- * @throws \Twig\Error\LoaderError
- * @throws \Twig\Error\RuntimeError
- * @throws \Twig\Error\SyntaxError
  */
 function fusion_render($dir_path = THEMES.'templates/', $file_path = '', array $info = [], $debug = FALSE) {
     $twig = twig_init($dir_path, $debug);
@@ -291,9 +291,21 @@ function fusion_render($dir_path = THEMES.'templates/', $file_path = '', array $
             $info[$key] = $value;
         }
     }
-    $output = $twig->render($file_path, $info);
-    if (!fusion_get_settings('devmode')) {
+    $settings['devmode'] = true;
+    if ($settings['devmode']) {
+        $output = $twig->render($file_path, $info);
         $output = trim(preg_replace('/\s\s+/', '', $output));
+        return $output;
+    }
+
+    try {
+        $output = $twig->render($file_path, $info);
+    } catch (LoaderError $e) {
+        set_error(E_USER_NOTICE, $e->getMessage(), $e->getFile(), $e->getLine(), $e->getCode());
+    } catch (RuntimeError $e) {
+        set_error(E_USER_NOTICE, $e->getMessage(), $e->getFile(), $e->getLine(), $e->getCode());
+    } catch (SyntaxError $e) {
+        set_error(E_USER_NOTICE, $e->getMessage(), $e->getFile(), $e->getLine(), $e->getCode());
     }
 
     return $output;
@@ -407,4 +419,31 @@ function hide_panel($side) {
  */
 function add_to_panel($panel_name, $panel_content, $panel_side, $panel_access, $panel_order) {
     Panels::getInstance()->addPanel($panel_name, $panel_content, $panel_side, $panel_access, $panel_order);
+}
+
+if (!function_exists('opensidex')) {
+    function opensidex($title, $state = "on") {
+        echo '<div class="sidex list-group">';
+        echo '<div class="title list-group-item pointer"><strong>'.$title.'</strong><span class="pull-right"><span class="caret"></span></span></div>';
+        echo '<div class="body list-group-item">';
+        if (!defined('sidex_js')) {
+            define('sidex_js', TRUE);
+            add_to_jquery("
+            $('body').on('click', '.sidex > .title', function(e) {
+                let sidexBody = $(this).siblings('.body');
+                sidexBody.toggleClass('display-none');
+                if (sidexBody.is(':hidden')) {
+                    $(this).closest('div').find('.pull-right').addClass('dropup');
+                } else {
+                    $(this).closest('div').find('.pull-right').removeClass('dropup');
+                }
+            });
+            ");
+        }
+    }
+}
+if (!function_exists('closesidex')) {
+    function closesidex() {
+        echo '</div></div>';
+    }
 }

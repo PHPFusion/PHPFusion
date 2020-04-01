@@ -1,18 +1,24 @@
 {% set readonlyText = options.deactivate ? " form-control-plaintext" : " form-control" %}
-
 {% set inputTip = options.ext_tip ? '<small id="'~options.input_id~'Help" class="form-text text-muted">'~options.ext_tip~'</small>' : '' %}
-
 {% set accessibilityText = label and options.ext_tip ? 'aria-describedby="'~options.input_id~'Help"' : "" %}
-
 {% set requiredMarker = options.required ?  '<span class="required">*</span>' : '' %}
+{% set inputLabel = label ? '<label for="'~options.input_id~'" class="col-form-label col-sm-3'~whitespace(options.label_class)~'">'~label~whitespace(requiredMarker)~'</label>' : '' %}
 
-{% set inputLabel = label ? '<label for="'~input_id~'" class="col-sm-2 col-form-label">'~label~whitespace(requiredMarker)~'</label>' : '' %}
+{#Group Sizing for prepend and append#}
+{% if options.group_size %}
+    {% set options = options|merge({'group_size': 'input-group-'~options.group_size }) %}
+{% endif %}
+
+{#inline options#}
+{% if options.inline %}
+    {% set options = options|merge({'class': 'display-flex-row'~whitespace(options.class)}) %}
+{% endif %}
 
 {#Prepend Values#}
 {% if options.prepend %}
     {% if options.prepend_buton %}
         {% set prependButtonClass = options.prepend_class ?: 'btn-outline-secondary' %}
-        {% set inputPppendValue = '<button name="'~options.prepend_button_name~'" class="btn'~whitespace(prependButtonClass)~'" type="button" id="'~options.prepend_id~'" value="'~options.prepend_form_value~'" type="'~options.prepend_type~'">'~options.prepend_value~'</button>' %}
+        {% set inputPrependValue = '<button name="'~options.prepend_button_name~'" class="btn'~whitespace(prependButtonClass)~'" type="button" id="'~options.prepend_id~'" value="'~options.prepend_form_value~'" type="'~options.prepend_type~'">'~options.prepend_value~'</button>' %}
     {% else %}
         {% set inputPrependValue = '<span class="input-group-text">'~options.prepend_value~'</span>' %}
     {% endif %}
@@ -27,11 +33,11 @@
 {% elseif options.append_value %}
     {% set inputAppendValue = '<span class="input-group-text">'~options.append_value~'</span>' %}
 {% endif %}
-{% set inputAppend = '<div class="input-group-append">'~inputAppendValue~'</div>' %}
+{#{% set inputAppend = '<div class="input-group-append">'~inputAppendValue~'</div>' %}#}
 
 {#Input Group#}
 {% if inputPrepend or inputAppend %}
-{#    'group_width' => ($options['width'] ? ' style="width:'.$options['width'].'"' : '')#}
+    {#    'group_width' => ($options['width'] ? ' style="width:'.$options['width'].'"' : '')#}
     {% set inputGroupSize = options.group_size ? 'input-group-'~options.group_size : '' %}
     {% set groupClass = options.group_size ? "input-group-"~whitespace(inputGroupSize) : '' %}
     {% set openformgroup = '<div class="input-group'~whitespace(groupclass)~'">' %}
@@ -43,23 +49,22 @@
     {% set inputField = '<input type="'~options.type~'"'~whitespace(options.readonly)~' name="'~input_name~'" class="'~readonlyText~whitespace(input_class)~'" id="'~options.input_id~'" value="'~input_value~'" placeholder="'~options.placeholder~'"'~accessibilityText~whitespace(options.input_data)~whitespace(options.min)~whitespace(options.max)~whitespace(options.step)~whitespace(options.max_length)~whitespace(options.autocomplete)~whitespace(options.inner_width)~whitespace(options.required)~'>' %}
 {% elseif options.type == 'dropdown' %}
     {#    Select#}
-    {% set inputField = '<select class="'~input_class~'" id="" name="'~input_name~'"'~whitespace(options.readonly)~whitespace(options.onchange)~whitespace(options.multiple)~whitespace(options.required)~' style="width:'~options.inner_width~'">'~allowclear~parent_opts~options.options~'</select>' %}
+    {% set inputField = '<select class="'~options.inner_class~'" id="'~options.input_id~'" name="'~input_name~'"'~whitespace(options.readonly)~whitespace(options.onchange)~whitespace(options.multiple)~whitespace(options.required)~' style="width:'~options.inner_width~'">'~allowclear|raw~parent_opts|raw~options.options_options|raw~'</select>' %}
 {% endif %}
 
 {#Generated Output#}
-<div class="form-group{{ whitespace(form_group_class) }}">
+<div class="form-group{{ whitespace(options.class) }}{{ whitespace(options.group_size) }}">
+    {{ inputLabel|raw }}
     {{ openformgroup|raw }}
     {{ inputPrepend|raw }}
     {% if options.inline|raw %}
-        {{ label|raw }}
-        <div class="col-sm-10">
+        {{ inputField|raw }}
+        {{ inputTip|raw }}
+    {% else %}
+        <div class="col-xl-10 p-r-0">
             {{ inputField|raw }}
             {{ inputTip|raw }}
         </div>
-    {% else %}
-        {{ label|raw }}
-        {{ inputField|raw }}
-        {{ inputTip|raw }}
     {% endif %}
     {{ inputAppend|raw }}
     {{ closeformgroup|raw }}

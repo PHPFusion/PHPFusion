@@ -29,9 +29,7 @@ class Form {
             'options'     => $options,
             'error'       => input_has_error($input_name)
         ];
-        //print_p($info);
 
-        // check in inspector, no need to print.
         return fusion_render(BOILERPLATES.'bootstrap4/html/', 'form-input.twig', $info, TRUE);
     }
 

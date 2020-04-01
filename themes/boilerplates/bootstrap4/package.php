@@ -29,9 +29,9 @@ function bootstrap4() {
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="<?php echo $boilerplate.'bootstrap4/css/bootstrap.min.css' ?>">
-        <?php add_to_footer('<script src="'.$boilerplate.'bootstrap4/js/bootstrap.bundle.min.js"></script>');
-        add_to_jquery("Popper.Defaults.modifiers.computeStyle.gpuAcceleration = false;"); // Will be fixed in Bootstrap 4.1 - https://github.com/twbs/bootstrap/pull/24092
-        ?>
+        <?php add_to_footer('<script src="'.$boilerplate.'bootstrap4/js/popper.min.js"></script>'); ?>
+        <?php add_to_footer('<script src="'.$boilerplate.'bootstrap4/js/bootstrap.bundle.min.js"></script>'); ?>
+        <?Php add_to_jquery("Popper.Defaults.modifiers.computeStyle.gpuAcceleration = false;"); // Will be fixed in Bootstrap 4.1 - https://github.com/twbs/bootstrap/pull/24092?>
         <?php if ($text_direction == 'rtl') : ?>
             <link rel="stylesheet" href="<?php echo $boilerplate.'bootstrap4/css/bootstrap-rtl.min.css' ?>">
         <?php endif;
