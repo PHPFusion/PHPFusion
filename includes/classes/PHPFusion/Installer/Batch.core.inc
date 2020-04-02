@@ -619,7 +619,7 @@ class Batch_Core extends Install_Core {
         }
         // fix table name duplicate when using contants
         $table_name = self::$connection['db_prefix'].self::$table_name;
-        $table_name = self::$table_name;
+        //$table_name = self::$table_name;
         return strtr(self::CREATE_TABLE_STATEMENT, [
             '{%table%}'      => $table_name,
             '{%table_attr%}' => implode(', ', $line),
