@@ -22,39 +22,14 @@
  */
 class Uri extends \Defender\Validation {
     /**
-     * Verify Paths within CMS
-     *
-     * @return bool|string
-     */
-    public function verify_path() {
-        if (self::$inputConfig['required'] && !self::$inputValue) {
-            \Defender::stop();
-            \Defender::setInputError(self::$inputName);
-        }
-        if (file_exists(self::$inputConfig['path'].self::$inputValue) && is_file(self::$inputConfig['path'].self::$inputValue)) {
-            return self::$inputValue;
-        }
-
-        return FALSE;
-    }
-
-    /**
-     * Validate URL
-     *
-     * @param $url
-     *
-     * @return bool
-     */
-
-    /**
      * Checks if is a valid URL
      * require path.
      * returns str the input or bool FALSE if check fails
      */
     protected function verify_URL() {
         if (self::$inputConfig['required'] && !self::$inputValue) {
-            \Defender::stop();
-            \Defender::setInputError(self::$inputName);
+            \defender::stop();
+            \defender::setInputError(self::$inputName);
         }
 
         if (self::$inputValue) {
@@ -81,20 +56,63 @@ class Uri extends \Defender\Validation {
         return FALSE;
     }
 
+
     /**
+     * Validate URL
+     *
      * @param $url
+     *
+     * @return bool
+     */
+    protected static function validateURL($url) {
+        if (function_exists('curl_version')) {
+            $ch = curl_init($url);
+
+            curl_setopt_array($ch, [
+                CURLOPT_TIMEOUT        => 20,
+                CURLOPT_FOLLOWLOCATION => 1,
+                CURLOPT_NOBODY         => 1,
+                CURLOPT_HEADER         => 0,
+                CURLOPT_RETURNTRANSFER => 0,
+                CURLOPT_SSL_VERIFYHOST => 0,
+                CURLOPT_SSL_VERIFYPEER => 0
+            ]);
+
+            curl_exec($ch);
+
+            $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $allowed_http = array_flip([301, 302, 200]);
+
+            if (isset($allowed_http[$http_code])) {
+                return $url;
+            } else {
+                return FALSE;
+            }
+
+            curl_close($ch);
+        } else if (filter_var($url, FILTER_VALIDATE_URL)) {
+            return $url;
+        } else if (preg_match("/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i", $url)) {
+            return $url;
+        }
+
+        return FALSE;
+    }
+
+    /**
+     * Verify Paths within CMS
      *
      * @return bool|string
      */
-    protected static function validateURL($url) {
-        $result = FALSE;
-        if ($loaded = fusion_get_contents($url)) {
-            return (string)$url;
-        } else if (filter_var($url, FILTER_VALIDATE_URL)) {
-            return (string)$url;
-        } else if (preg_match("/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i", $url)) {
-            return (string)$url;
+    public function verify_path() {
+        if (self::$inputConfig['required'] && !self::$inputValue) {
+            \defender::stop();
+            \defender::setInputError(self::$inputName);
         }
-        return $result;
+        if (file_exists(self::$inputConfig['path'].self::$inputValue) && is_file(self::$inputConfig['path'].self::$inputValue)) {
+            return self::$inputValue;
+        }
+
+        return FALSE;
     }
 }
