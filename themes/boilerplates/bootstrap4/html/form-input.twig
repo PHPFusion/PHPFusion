@@ -2,7 +2,7 @@
 {% set inputTip = options.ext_tip ? '<small id="'~options.input_id~'Help" class="form-text text-muted">'~options.ext_tip~'</small>' : '' %}
 {% set accessibilityText = label and options.ext_tip ? 'aria-describedby="'~options.input_id~'Help"' : "" %}
 {% set requiredMarker = options.required ?  '<span class="required">*</span>' : '' %}
-{% set inputLabel = label ? '<label for="'~options.input_id~'" class="col-form-label col-sm-3'~whitespace(options.label_class)~'">'~label~whitespace(requiredMarker)~'</label>' : '' %}
+{% set inputLabel = label ? '<label for="'~options.input_id~'" class="'~((not options.inline) ? 'col-form-label col-sm-3' : '')~''~whitespace(options.label_class)~'">'~label~whitespace(requiredMarker)~'</label>' : '' %}
 
 {#Group Sizing for prepend and append#}
 {% if options.group_size %}
@@ -53,11 +53,11 @@
 {% endif %}
 
 {#Generated Output#}
-<div class="form-group{{ whitespace(options.class) }}{{ whitespace(options.group_size) }}">
+<div class="form-group{{ whitespace(options.class) }}~{{ whitespace(options.group_size) }}">
     {{ inputLabel|raw }}
     {{ openformgroup|raw }}
     {{ inputPrepend|raw }}
-    {% if options.inline|raw %}
+    {% if options.inline %}
         {{ inputField|raw }}
         {{ inputTip|raw }}
     {% else %}
