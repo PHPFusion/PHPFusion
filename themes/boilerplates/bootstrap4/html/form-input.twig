@@ -44,20 +44,20 @@
     {% set closeformgroup = '</div>' %}
 {% endif %}
 
-{% if options.type == 'text' or options.type == 'password' or options.type =='number' or options.type=='email' %}
-    {#    Text, Password, Number, Email #}
-    {% set inputField = '<input type="'~options.type~'"'~whitespace(options.readonly)~' name="'~input_name~'" class="'~readonlyText~whitespace(input_class)~'" id="'~options.input_id~'" value="'~input_value~'" placeholder="'~options.placeholder~'"'~accessibilityText~whitespace(options.input_data)~whitespace(options.min)~whitespace(options.max)~whitespace(options.step)~whitespace(options.max_length)~whitespace(options.autocomplete)~whitespace(options.inner_width)~whitespace(options.required)~'>' %}
-{% elseif options.type == 'dropdown' %}
-    {#    Select#}
+{% if options.type == 'dropdown' %}
+    {#Select#}
     {% set inputField = '<select class="'~options.inner_class~'" id="'~options.input_id~'" name="'~input_name~'"'~whitespace(options.readonly)~whitespace(options.onchange)~whitespace(options.multiple)~whitespace(options.required)~' style="width:'~options.inner_width~'">'~allowclear|raw~parent_opts|raw~options.options_options|raw~'</select>' %}
+{% else %}
+    {#Text, Password, Number, Email #}
+    {% set inputField = '<input type="'~options.type~'"'~whitespace(options.readonly)~' name="'~input_name~'" class="'~readonlyText~whitespace(input_class)~'" id="'~options.input_id~'" value="'~input_value~'" placeholder="'~options.placeholder~'"'~accessibilityText~whitespace(options.input_data)~whitespace(options.min)~whitespace(options.max)~whitespace(options.step)~whitespace(options.max_length)~whitespace(options.autocomplete)~whitespace(options.inner_width)~whitespace(options.required)~'>' %}
 {% endif %}
 
 {#Generated Output#}
-<div class="form-group{{ whitespace(options.class) }}~{{ whitespace(options.group_size) }}">
+<div class="form-group{{ whitespace(options.class) }}{{ whitespace(options.group_size) }}">
     {{ inputLabel|raw }}
     {{ openformgroup|raw }}
     {{ inputPrepend|raw }}
-    {% if options.inline %}
+    {% if options.inline|raw %}
         {{ inputField|raw }}
         {{ inputTip|raw }}
     {% else %}
