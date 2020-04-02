@@ -98,8 +98,9 @@ class Console_Core extends Install_Core {
      * @return string
      */
     public function getLayout() {
+        require_once INCLUDES.'theme_functions_include.php';
+        \set_boilerplate('bootstrap3');
         \Dynamics::getInstance()->getHeaders();
-
         $html = "<!DOCTYPE html>\n";
         $html .= "<html lang='".self::$locale['setup_0011']."' dir='".self::$locale['setup_0012a']."'>\n";
         $html .= "<head>\n";
@@ -109,11 +110,11 @@ class Console_Core extends Install_Core {
         $html .= "<meta http-equiv='X-UA-Compatible' content='IE=edge'>\n";
         $html .= "<meta name='viewport' content='width=device-width, initial-scale=1.0'>\n";
         $html .= "<script src='".INCLUDES."jquery/jquery.min.js'></script>\n";
-        $html .= "<script src='".THEMES."templates/boilers/bootstrap3/js/bootstrap.min.js'></script>\n";
+        $html .= "<script src='".THEMES."boilerplates/bootstrap3/js/bootstrap.min.js'></script>\n";
         $html .= "<link rel='stylesheet' href='".THEMES."templates/default.min.css?v=".filemtime(THEMES.'templates/default.min.css')."'>\n";
-        $html .= "<link rel='stylesheet' href='".THEMES."templates/boilers/bootstrap3/css/bootstrap.min.css'>\n";
+        $html .= "<link rel='stylesheet' href='".THEMES."boilerplates/bootstrap3/css/bootstrap.min.css'>\n";
         if (self::$locale['setup_0012a'] == 'rtl') {
-            $html .= "<link rel='stylesheet' href='".THEMES."templates/boilers/bootstrap3/css/bootstrap-rtl.min.css'>";
+            $html .= "<link rel='stylesheet' href='".THEMES."boilerplates/bootstrap3/css/bootstrap-rtl.min.css'>";
         }
         $html .= "<link rel='stylesheet' href='".THEMES."templates/install.min.css?v=".filemtime(THEMES.'templates/install.min.css')."'>\n";
         $html .= "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-5/css/all.min.css'>\n";

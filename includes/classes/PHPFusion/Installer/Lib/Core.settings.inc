@@ -134,11 +134,11 @@ function get_table_rows($table_name, $localeset = 'English') {
             ],
             [
                 'settings_name'  => 'theme',
-                'settings_value' => 'Magazine'
+                'settings_value' => 'Horizon'
             ],
             [
                 'settings_name'  => 'admin_theme',
-                'settings_value' => 'Genesis'
+                'settings_value' => 'Inspire'
             ],
             [
                 'settings_name'  => 'default_search',
