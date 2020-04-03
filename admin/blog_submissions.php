@@ -294,8 +294,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                     'placeholder' => $locale['choose'],
                     'width'       => '100%',
                     "inline"      => TRUE,
-                    'multiple'    => TRUE,
-                    'delimeter'   => '.'
+                    'multiple'    => TRUE
                 ]);
             } else {
                 echo form_hidden('blog_language', '', $callback_data['blog_language']);

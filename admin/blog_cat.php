@@ -112,8 +112,7 @@ if (multilang_table("BL")) {
         "inline"      => TRUE,
         "options"     => fusion_get_enabled_languages(),
         "placeholder" => $locale['choose'],
-        'multiple'    => TRUE,
-        'delimeter'   => '.'
+        'multiple'    => TRUE
     ]);
 } else {
     echo form_hidden("blog_cat_language", "", $data['blog_cat_language']);
