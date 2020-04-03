@@ -171,8 +171,7 @@ echo form_select('album_access', $locale['album_0007'], $data['album_access'], [
 ]);
 echo form_select('album_language[]', $locale['album_0008'], $data['album_language'], [
     'options'   => fusion_get_enabled_languages(),
-    'multiple'  => TRUE,
-    'delimeter' => '.'
+    'multiple'  => TRUE
 ]);
 echo form_select("album_keywords", $locale['album_0005'], $data['album_keywords'], [
     'max_length'  => 320,
