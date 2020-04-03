@@ -621,114 +621,37 @@ function boilerplate_get_files() {
 
 if (!function_exists("openmodal") && !function_exists("closemodal") && !function_exists("modalfooter")) {
     /**
-     * To get the best results for Modal z-index overlay, try :
-     * ob_start();
-     * ... insert and echo ...
-     * add_to_footer(ob_get_contents()).ob_end_clean();
-     */
-
-    /**
      * Generate modal
-     *
-     * @param       $id    - unique CSS id
-     * @param       $title - modal title
+     * @param       $id
+     * @param       $title
      * @param array $options
      *
-     * @return string
+     * @return mixed
+     * @throws ReflectionException
      */
     function openmodal($id, $title, $options = []) {
-        $template_file = boilerplate_get_files();
-
-        $default_options = [
-            "class"        => "",
-            "class_dialog" => "",
-            "button_id"    => "",
-            "button_class" => "",
-            "static"       => FALSE,
-            "hidden"       => FALSE,
-        ];
-
-        $options += $default_options;
-
-        $modal_trigger = "";
-        if (!empty($options['button_id']) || !empty($options['button_class'])) {
-            $modal_trigger = !empty($options['button_id']) ? "#".$options['button_id'] : ".".$options['button_class'];
-        }
-
-        if ($options['static'] && !empty($modal_trigger)) {
-            add_to_jquery("$('".$modal_trigger."').bind('click', function(e){ $('#".$id."-Modal').modal({backdrop: 'static', keyboard: false}).modal('show'); e.preventDefault(); });");
-        } else if ($options['static'] && empty($options['button_id'])) {
-            add_to_jquery("$('#".$id."-Modal').modal({	backdrop: 'static',	keyboard: false }).modal('show');");
-        } else if ($modal_trigger && empty($options['static'])) {
-            add_to_jquery("$('".$modal_trigger."').bind('click', function(e){ $('#".$id."-Modal').modal('show'); e.preventDefault(); });");
-        } else {
-            if (empty($options['hidden'])) {
-                add_to_jquery("$('#".$id."-Modal').modal('show');");
-            }
-        }
-
-        $modal = Template::getInstance('modal');
-        $modal->set_locale(['close' => fusion_get_locale('close')]);
-        $modal->set_template($template_file['modal']);
-        $modal->set_block("modal_open", [
-            'modal_id'           => $id,
-            'modal_class'        => " ".$options['class'],
-            'modal_dialog_class' => " ".$options['class_dialog']
-        ]);
-        if (!empty($title) || $options['static'] === FALSE) {
-            $modal->set_block("modal_open_header");
-            $modal->set_block("modal_close_header");
-            if (!empty($title)) {
-                $modal->set_block("modal_header", ["title" => $title]);
-            }
-            if ($options['static'] === FALSE) {
-                $modal->set_block("modal_dismiss");
-            }
-        }
-        $modal->set_block("modal_openbody");
-
-        return (string)$modal->get_output();
+        return Steam::getInstance()->load('Modal')->openmodal($id, $title, $options);
     }
 
     /**
      * Adds a modal footer in between openmodal and closemodal.
+     * @param string $content
+     * @param bool|FALSE   $dismiss
      *
-     * @param            $content
-     * @param bool|FALSE $dismiss
-     *
-     * @return string
+     * @return mixed
+     * @throws ReflectionException
      */
     function modalfooter($content = "", $dismiss = FALSE) {
-        $locale = fusion_get_locale();
-        $template_file = boilerplate_get_files();
-        $modal = Template::getInstance('modal');
-        $modal->set_template($template_file['modal']);
-        $modal->set_block("modal_closebody");
-        $modal->set_block("modal_footer", [
-            "content" => $content,
-            "dismiss" => ($dismiss == TRUE ? form_button("dismiss-f", $locale['close'], $locale['close'], [
-                "data"  => [
-                    "dismiss" => "modal",
-                ],
-                "class" => "btn-default pull-right",
-            ]) : "")
-        ]);
-
-        return (string)$modal->get_output();
+        return Steam::getInstance()->load('Modal')->openmodal($id, $title, $options);
     }
 
     /**
      * Close the modal
-     *
-     * @return string
+     * @return mixed
+     * @throws ReflectionException
      */
     function closemodal() {
-        $template_file = boilerplate_get_files();
-        $modal = Template::getInstance('modal');
-        $modal->set_template($template_file['modal']);
-        $modal->set_block("modal_close");
-
-        return (string)$modal->get_output();
+        return Steam::getInstance()->load('Modal')->closemodal();
     }
 }
 
@@ -1074,34 +997,6 @@ if (!function_exists("panelstate")) {
     }
 }
 
-if (!function_exists('opensidex')) {
-    function opensidex($title, $state = "on") {
-        echo '<div class="sidex list-group">';
-        echo '<div class="title list-group-item pointer"><strong>'.$title.'</strong><span class="pull-right"><span class="caret"></span></span></div>';
-        echo '<div class="body list-group-item">';
-        if (!defined('sidex_js')) {
-            define('sidex_js', TRUE);
-            add_to_jquery("
-            $('body').on('click', '.sidex > .title', function(e) {
-                let sidexBody = $(this).siblings('.body');
-                sidexBody.toggleClass('display-none');
-                if (sidexBody.is(':hidden')) {
-                    $(this).closest('div').find('.pull-right').addClass('dropup');
-                } else {
-                    $(this).closest('div').find('.pull-right').removeClass('dropup');
-                }
-            });
-            ");
-        }
-    }
-}
-
-if (!function_exists('closesidex')) {
-    function closesidex() {
-        echo '</div></div>';
-    }
-}
-
 if (!function_exists('tablebreak')) {
     function tablebreak() {
         return TRUE;
@@ -1418,14 +1313,18 @@ if (!function_exists("opencollapse")
     }
 
     function collapse_header_link($id, $title, $active, $class = '') {
-        $active = ($active) ? '' : 'collapsed';
+        $active = ($active) ? '' : 'collapsed'; // this is bs3
         $title_id_cc = preg_replace('/[^A-Z0-9-]+/i', "-", $title);
 
-        return "class='$class $active' data-toggle='collapse' data-parent='#".$id."' href='#".$title_id_cc."-".$id."' aria-expanded='true' aria-controls='".$title_id_cc."-".$id."'";
+        return "class='display-block $class $active' data-toggle='collapse' data-parent='#".$id."' href='#".$title_id_cc."-".$id."' aria-expanded='true' aria-controls='".$title_id_cc."-".$id."'";
     }
 
     function collapse_footer_link($id, $title, $active, $class = '') {
         $active = ($active) ? 'in' : '';
+        $steam = Steam::getInstance();
+        if ($steam->get_boiler() == 'bootstrap4') {
+            $active = ($active) ? 'show' : '';
+        }
         $title_id_cc = preg_replace('/[^A-Z0-9-]+/i', "-", $title);
 
         return "id='".$title_id_cc."-".$id."' class='panel-collapse collapse ".$active." ".$class."' role='tabpanel' aria-labelledby='headingOne'";

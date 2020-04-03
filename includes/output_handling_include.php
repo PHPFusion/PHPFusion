@@ -110,7 +110,8 @@ function handle_output($output) {
 /**
  * Add javascript source code to the output
  *
- * @param string $tag
+ * @param string $tag @lang
+ * @lang JavaScript
  */
 function add_to_jquery($tag = "") {
     OutputHandler::addToJQuery($tag);
