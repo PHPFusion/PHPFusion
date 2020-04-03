@@ -349,8 +349,7 @@ class NewsForm extends NewsAdminModel {
                 'placeholder' => self::$locale['choose'],
                 'inner_width' => '100%',
                 'inline'      => TRUE,
-                'multiple'    => TRUE,
-                'delimeter'   => '.'
+                'multiple'    => TRUE
             ]);
         } else {
             echo form_hidden('news_language', '', $this->news_data['news_language']);

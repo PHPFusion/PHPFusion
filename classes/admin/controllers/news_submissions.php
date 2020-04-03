@@ -40,7 +40,7 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
 
             // Publish the Submissions
             if (isset($_POST['publish']) && (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) || isset($_POST['preview'])) {
-    
+
                 $result = dbquery("SELECT ts.*, tu.user_id FROM ".DB_SUBMISSIONS." ts INNER JOIN ".DB_USERS." tu ON ts.submit_user=tu.user_id WHERE submit_id=:submit_id", [':submit_id' => $_GET['submit_id']]);
 
                 if (dbrows($result)) {
@@ -342,8 +342,7 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                                 'placeholder' => self::$locale['choose'],
                                 'inner_width' => '100%',
                                 'inline'      => TRUE,
-                                'multiple'    => TRUE,
-                                'delimeter'   => '.'
+                                'multiple'    => TRUE
                             ]);
                         } else {
                             echo form_hidden('news_language', '', $this->news_data['news_language']);

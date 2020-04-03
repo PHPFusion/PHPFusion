@@ -128,8 +128,7 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
                     'placeholder' => $locale['choose'],
                     'width'       => '250px',
                     'inline'      => TRUE,
-                    'multiple'    => TRUE,
-                    'delimeter'   => '.'
+                    'multiple'    => TRUE
                 ]) : form_hidden('news_language', '', $criteriaArray['news_language'])),
             'news_keywords_field'    => form_select('news_keywords', $locale['news_0205'], $criteriaArray['news_keywords'],
                 [
