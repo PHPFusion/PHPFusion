@@ -168,8 +168,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
             'options'     => $language_opts,
             'placeholder' => $locale['choose'],
             'width'       => '100%',
-            'multiple'    => TRUE,
-            'delimeter'   => '.'
+            'multiple'    => TRUE
         ]);
     } else {
         echo form_hidden('download_cat_language', '', $data['download_cat_language']);
