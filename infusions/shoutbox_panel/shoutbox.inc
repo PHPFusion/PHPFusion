@@ -319,8 +319,7 @@ class ShoutBox {
                     "inner_width" => "100%",
                     'required'    => TRUE,
                     'options'     => fusion_get_enabled_languages(),
-                    'multiple'    => TRUE,
-                    'delimeter'   => '.'
+                    'multiple'    => TRUE
                 ]);
             } else {
                 echo form_hidden('shout_language', '', $this->data['shout_language']);
