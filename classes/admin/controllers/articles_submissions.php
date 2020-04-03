@@ -278,8 +278,7 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
                         'placeholder' => $this->locale['choose'],
                         'inner_width' => '100%',
                         'options'     => fusion_get_enabled_languages(),
-                        'multiple'    => TRUE,
-                        'delimeter'   => '.'
+                        'multiple'    => TRUE
                     ]);
                 } else {
                     echo form_hidden('article_language', '', $this->inputArray['article_language']);

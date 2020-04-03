@@ -192,8 +192,7 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
                             'inline'      => TRUE,
                             'options'     => fusion_get_enabled_languages(),
                             'placeholder' => $this->locale['choose'],
-                            'multiple'    => TRUE,
-                            'delimeter'   => '.'
+                            'multiple'    => TRUE
                         ]);
                     } else {
                         echo form_hidden('article_cat_language', '', $data['article_cat_language']);
