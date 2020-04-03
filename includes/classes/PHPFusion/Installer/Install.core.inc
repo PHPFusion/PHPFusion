@@ -315,7 +315,7 @@ class Install_Core extends Infusion_Core {
     }
 
     public static function createRandomPrefix($length = 5) {
-        $chars = ["abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ", "123456789"];
+        $chars = ["abcdefghijklmnpqrstuvwxyz", "123456789"];
         $count = [(strlen($chars[0]) - 1), (strlen($chars[1]) - 1)];
         $prefix = "";
         for ($i = 0; $i < $length; $i++) {
