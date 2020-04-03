@@ -93,8 +93,7 @@ class ForumAdminTags extends ForumAdminInterface {
                 'inline'      => FALSE,
                 'options'     => $language_opts,
                 'placeholder' => self::$locale['choose'],
-                'multiple'    => TRUE,
-                'delimeter'   => '.'
+                'multiple'    => TRUE
              ]);
 
         } else {
