@@ -274,8 +274,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
                 'placeholder' => $this->locale['choose'],
                 'inner_width' => '100%',
                 'inline'      => TRUE,
-                'multiple'    => TRUE,
-                'delimeter'   => '.'
+                'multiple'    => TRUE
             ]);
         } else {
             echo form_hidden('article_language', '', $this->article_data['article_language']);

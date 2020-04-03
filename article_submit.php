@@ -184,8 +184,7 @@ if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_status='1' AND ".g
                     'placeholder' => $locale['choose'],
                     'inner_width' => '100%',
                     'inline'      => TRUE,
-                    'multiple'    => TRUE,
-                    'delimeter'   => '.'
+                    'multiple'    => TRUE
                 ]);
             } else {
                 echo form_hidden('article_language', '', $criteriaArray['article_language']);
