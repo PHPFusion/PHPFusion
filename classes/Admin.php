@@ -898,8 +898,7 @@ class Admin extends ForumServer {
 
             form_select('forum_language[]', $locale['forum_010'], $this->data['forum_language'], [
                 "options"   => $language_opts,
-                'multiple'  => TRUE,
-                'delimeter' => '.'
+                'multiple'  => TRUE
             ]).
 
             form_text('forum_order', $locale['forum_043'], $this->data['forum_order'], ['number' => 1]).
