@@ -105,8 +105,7 @@ class FaqAdmin extends FaqAdminModel {
                 'options'     => fusion_get_enabled_languages(),
                 'inline'      => TRUE,
                 'placeholder' => $this->locale['choose'],
-                'multiple'    => TRUE,
-                'delimeter'   => '.'
+                'multiple'    => TRUE
             ]);
         } else {
             echo form_hidden('cat_language', '', LANGUAGE);
@@ -313,8 +312,7 @@ class FaqAdmin extends FaqAdminModel {
                         'placeholder' => $this->locale['choose'],
                         'inner_width' => '100%',
                         'inline'      => TRUE,
-                        'multiple'    => TRUE,
-                        'delimeter'   => '.'
+                        'multiple'    => TRUE
                     ]);
                 } else {
                     echo form_hidden('faq_language', '', $this->faq_data['faq_language']);
