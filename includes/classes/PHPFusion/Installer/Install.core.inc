@@ -19,6 +19,7 @@ namespace PHPFusion\Installer;
 
 use PHPFusion\Installer\Steps\InstallerPermissions;
 use PHPFusion\OutputHandler;
+use PHPFusion\Steam;
 use PHPFusion\Steps\InstallerAdminSetup;
 use PHPFusion\Steps\InstallerDbSetup;
 use PHPFusion\Steps\InstallerInfusions;
@@ -315,7 +316,7 @@ class Install_Core extends Infusion_Core {
     }
 
     public static function createRandomPrefix($length = 5) {
-        $chars = ["abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ", "123456789"];
+        $chars = ["abcdefghijklmnpqrstuvwxyz", "123456789"];
         $count = [(strlen($chars[0]) - 1), (strlen($chars[1]) - 1)];
         $prefix = "";
         for ($i = 0; $i < $length; $i++) {
@@ -327,6 +328,9 @@ class Install_Core extends Infusion_Core {
     }
 
     public function install_phpfusion() {
+        $fusion_steam = Steam::getInstance();
+        $fusion_steam->setBoilerPlate('bootstrap3');
+        $fusion_steam->run();
         $current_content = $this->get_InstallerContent();
         $content = Console_Core::getConsoleInstance()->getView($current_content);
         echo strtr(Console_Core::getConsoleInstance()->getLayout(), ['{%content%}' => $content]);

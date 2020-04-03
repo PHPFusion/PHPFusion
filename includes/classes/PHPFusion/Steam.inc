@@ -27,7 +27,7 @@ class Steam {
 
     private static $instance = NULL;
 
-    private static $default_boilerplate = 'Bootstrap4';
+    private static $default_boilerplate = 'bootstrap4';
 
     private $boilers = '';
 

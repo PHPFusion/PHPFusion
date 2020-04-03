@@ -171,3 +171,4 @@ require_once __DIR__.'/notify.inc';
 require_once __DIR__.'/defender.inc';
 require_once __DIR__.'/hooks_include.php';
 require_once __DIR__.'/vendor/autoload.php';
+require_once __DIR__.'/twig_includes.php';

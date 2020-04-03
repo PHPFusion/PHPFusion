@@ -98,9 +98,6 @@ class Console_Core extends Install_Core {
      * @return string
      */
     public function getLayout() {
-        require_once INCLUDES.'theme_functions_include.php';
-        \set_boilerplate('bootstrap3');
-        \Dynamics::getInstance()->getHeaders();
         $html = "<!DOCTYPE html>\n";
         $html .= "<html lang='".self::$locale['setup_0011']."' dir='".self::$locale['setup_0012a']."'>\n";
         $html .= "<head>\n";
@@ -120,6 +117,10 @@ class Console_Core extends Install_Core {
         $html .= "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-5/css/all.min.css'>\n";
         $html .= "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-5/css/v4-shims.min.css'>\n";
         $html .= OutputHandler::$pageHeadTags;
+        ob_start();
+        \Dynamics::getInstance()->getHeaders();
+        $html .= ob_get_contents();
+        ob_end_clean();
         $html .= "</head>\n<body".(isset($_GET['upgrade']) ? " class='upgrade'" : '').">\n";
         $html .= "{%content%}";
         $fusion_jquery_tags = OutputHandler::$jqueryTags;
