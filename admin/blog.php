@@ -202,8 +202,7 @@ if ( $data = getBlogData() ) {
             'placeholder' => $locale['choose'],
             'width'       => '100%',
             "inline"      => TRUE,
-            'multiple'    => TRUE,
-            'delimeter'   => '.'
+            'multiple'    => TRUE
         ] );
     } else {
         echo form_hidden( 'blog_language', '', $data['blog_language'] );

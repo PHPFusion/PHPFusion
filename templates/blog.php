@@ -276,8 +276,7 @@ if (!function_exists('display_blog_submit')) {
                         "placeholder" => $locale['choose'],
                         "width"       => "250px",
                         "inline"      => TRUE,
-                        'multiple'    => TRUE,
-                        'delimeter'   => '.'
+                        'multiple'    => TRUE
                     ]);
                 } else {
                     echo form_hidden('blog_language', '', $criteriaArray['blog_language']);

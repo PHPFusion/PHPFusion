@@ -150,8 +150,7 @@ echo form_select('blog_file_types', $locale['blog_961'], $blog_settings['blog_fi
         'placeholder' => $locale['choose'],
         'multiple'    => TRUE,
         'tags'        => TRUE,
-        'width'       => '100%',
-        'delimiter'   => '|'
+        'width'       => '100%'
     ]);
 closeside();
 echo "</div></div>\n";
