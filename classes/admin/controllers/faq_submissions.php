@@ -248,8 +248,7 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
                             'placeholder' => $this->locale['choose'],
                             'inner_width' => '100%',
                             'options'     => fusion_get_enabled_languages(),
-                            'multiple'    => TRUE,
-                            'delimeter'   => '.'
+                            'multiple'    => TRUE
                         ]);
                 } else {
                     echo form_hidden('faq_language', "", $this->inputArray['faq_language']);

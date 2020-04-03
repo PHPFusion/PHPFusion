@@ -126,8 +126,7 @@ class FaqSubmissions extends FaqServer {
                             'placeholder' => $this->locale['choose'],
                             'width'       => '250px',
                             'inline'      => TRUE,
-                            'multiple'    => TRUE,
-                            'delimeter'   => '.'
+                            'multiple'    => TRUE
                         ]) : form_hidden('faq_language', '', $criteriaArray['faq_language'])),
                     'faq_submit'     => form_button('submit_link', $this->locale['submit'], $this->locale['submit'], ['class' => 'btn-success', 'icon' => 'fa fa-fw fa-hdd-o']),
                     'criteria_array' => $criteriaArray
