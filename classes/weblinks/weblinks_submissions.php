@@ -131,8 +131,7 @@ class WeblinksSubmissions extends WeblinksServer {
                             'placeholder' => $this->locale['choose'],
                             'width'       => '250px',
                             'inline'      => TRUE,
-                            'multiple'    => TRUE,
-                            'delimeter'   => '.'
+                            'multiple'    => TRUE
                         ]) : form_hidden('weblink_language', '', $criteriaArray['weblink_language'])),
                     'weblink_description' => form_textarea('weblink_description', $this->locale['WLS_0254'], $criteriaArray['weblink_description'],
                         [

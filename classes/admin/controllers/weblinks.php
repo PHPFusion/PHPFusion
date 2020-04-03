@@ -198,8 +198,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
                     echo form_select('weblink_language[]', $this->locale['language'], $this->weblink_data['weblink_language'], [
                         'options'     => fusion_get_enabled_languages(),
                         'placeholder' => $this->locale['choose'],
-                        'multiple'    => TRUE,
-                        'delimeter'   => '.'
+                        'multiple'    => TRUE
                     ]);
                 } else {
                     echo form_hidden('weblink_language', '', $this->weblink_data['weblink_language']);

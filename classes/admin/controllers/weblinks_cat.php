@@ -171,8 +171,7 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
                 'inner_width' => '100%',
                 'options'     => fusion_get_enabled_languages(),
                 'placeholder' => $this->locale['choose'],
-                'multiple'    => TRUE,
-                'delimeter'   => '.'
+                'multiple'    => TRUE
             ]);
         } else {
             echo form_hidden('weblink_cat_language', '', $data['weblink_cat_language']);
