@@ -230,8 +230,7 @@ class NewsSettingsAdmin extends NewsAdminModel {
                 'multiple'    => TRUE,
                 'tags'        => TRUE,
                 'width'       => '100%',
-                'inner_width' => '100%',
-                'delimiter'   => '|'
+                'inner_width' => '100%'
             ]);
         echo closeside();
 

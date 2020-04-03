@@ -180,8 +180,7 @@ class NewsCategoryAdmin extends NewsAdminModel {
                         "inline"      => TRUE,
                         "options"     => fusion_get_enabled_languages(),
                         "placeholder" => self::$locale['choose'],
-                        'multiple'    => TRUE,
-                        'delimeter'   => '.'
+                        'multiple'    => TRUE
                     ]);
                 } else {
                     echo form_hidden("news_cat_language", "", $data['news_cat_language']);
