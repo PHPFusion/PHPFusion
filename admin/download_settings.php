@@ -180,8 +180,7 @@ echo form_select('download_types[]', $locale['download_932'], $dl_settings['down
     'placeholder' => $locale['choose'],
     'multiple'    => TRUE,
     'tags'        => TRUE,
-    'width'       => '100%',
-    'delimiter'   => '|'
+    'width'       => '100%'
 ]);
 
 closeside();
