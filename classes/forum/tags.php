@@ -318,7 +318,7 @@ class ThreadTags extends ForumServer {
                 $data['tag_link'] = FORUM."tags.php?tag_id=".$data['tag_id'];
                 $data['tag_active'] = (isset($_GET['viewtags']) && isset($_GET['tag_id']) && $_GET['tag_id'] == $data['tag_id'] ? TRUE : FALSE);
                 $this->tag_info['tags'][$data['tag_id']] = $data;
-                $thread_query = "SELECT * FROM ".DB_FORUM_THREADS." WHERE ".in_group('thread_tags', $data['tag_id'])." ORDER BY thread_lastpost DESC LIMIT 1";
+                $thread_query = "SELECT * FROM ".DB_FORUM_THREADS." WHERE ".in_group('thread_tags', $data['tag_id'], '.')." ORDER BY thread_lastpost DESC LIMIT 1";
                 $thread_result = dbquery($thread_query);
                 $thread_rows = dbrows($thread_result);
                 if ($thread_rows > 0) {

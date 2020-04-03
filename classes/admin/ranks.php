@@ -146,8 +146,7 @@ class ForumAdminRanks extends ForumAdminInterface {
                     'inline'      => TRUE,
                     'options'     => $language_opts,
                     'placeholder' => self::$locale['choose'],
-                    'multiple'    => TRUE,
-                    'delimeter'   => '.'
+                    'multiple'    => TRUE
                 ]);
 
         } else {
