@@ -253,8 +253,7 @@ echo form_select('gallery_file_types', $locale['gallery_0217'], $gll_settings['g
         'multiple'    => TRUE,
         'tags'        => TRUE,
         'width'       => '100%',
-        'inner_width' => '100%',
-        'delimiter'   => '|'
+        'inner_width' => '100%'
     ]);
 closeside();
 echo "</div>\n</div>\n";
