@@ -435,7 +435,6 @@ class SitelinksAdmin {
         }
         ");
 
-
         function normal_links() {
             echo openform('customlinksFrm', 'post', FORM_REQUEST, ['class' => 'form-horizontal']);
             echo form_text('link_name', 'Link Name', '', ['required' => TRUE, 'inline' => TRUE]).
@@ -445,7 +444,6 @@ class SitelinksAdmin {
             echo "</div>";
             echo closeform();
         }
-
         ?>
         <div class="list-group-item my-4">
             <?php echo openform('menufrm', 'post', FORM_REQUEST, ['inline' => TRUE]) ?>
@@ -494,13 +492,36 @@ class SitelinksAdmin {
                         </div>
                     </div>
                 </div>
-                <?php closeside(); ?>
+                <?php closeside();?>
             </div>
         </div>
         <?php
         echo "<script src='".INCLUDES."jscripts/admin-post.js'></script>";
         echo "<script>
-        adminpost.request('customlinksFrm', '".cookie(COOKIE_PREFIX.'user')."', 'SL', 'add_menu_action');
+         // bootstrap added list
+         $(document).on('click', 'a[data-toggle=\"collapse\"]', function(e) {
+            let target = $(this).attr('href');            
+            $(target).collapse('toggle');
+        });
+
+        $(document).on('submit', 'form#customlinksFrm', function (e) {
+            e.preventDefault();
+            adminpost.request('customlinksFrm', '".cookie(COOKIE_PREFIX.'user')."', 'SL', 'add-links')
+            .then(function(posts) {
+               //console.log('Success!', posts);                                   
+               //$('.sortable').append('<div class=\"list\">' + posts.responseText +'</div>');
+               /*
+               return {
+                    title: post.title.toUpperCase(),
+                    content: post.body,
+                    date: post.date
+                }
+                */
+            })
+            .catch(function (error) {
+		        console.log('Something went wrong', error);
+	        });            
+        });                
         </script>";
         return '';
 

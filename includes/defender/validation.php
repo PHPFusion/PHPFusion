@@ -17,6 +17,8 @@
 +--------------------------------------------------------*/
 namespace Defender;
 
+use ReflectionClass;
+
 abstract class Validation {
     protected static $inputName = '';
     protected static $inputValue;
@@ -71,7 +73,7 @@ abstract class Validation {
     public static function getValidated() {
         if (!isset(self::$validate_instance[self::$inputName])) {
             if (class_exists(strtoupper(self::$validation_rules_assigned[self::$inputConfig['type']][0]))) {
-                $class = new \ReflectionClass(strtoupper(self::$validation_rules_assigned[self::$inputConfig['type']][0]));
+                $class = new ReflectionClass(strtoupper(self::$validation_rules_assigned[self::$inputConfig['type']][0]));
                 self::$validate_instance[self::$inputName] = $class->newInstance();
             }
         }

@@ -2,41 +2,54 @@
 /** Load maincore and dependencies */
 require_once(__DIR__.'/../../maincore.php');
 /** no cache headers */
-require_once(INCLUDES.'ajax_include.php');
+//require_once(INCLUDES.'ajax_include.php');
 
 define('FUSION_AJAX', TRUE);
 header('Content-Type: text/html; charset=utf-8');
 header('X-Robots-Tag: noindex');
 
-/** Defines the core acceptable actions in tandem with the user access rights */
-$core_accepted_args = [
-    'SL' => [
-        'add_menu_items'
-    ]
-];
+/** If token no error */
+if (fusion_safe()) {
 
-$current_action = str_replace('-', '_', get('action'));
+    /** Defines the core acceptable actions in tandem with the user access rights */
+    $core_accepted_args = array(
+        'SL' => array('add_links')
+    );
+    $allowable_action = flatten_array($core_accepted_args);
+    $hook = post('action_hook');
+    /** @var $current_action - function name for hooks must work on underscore */
+    $current_action = str_replace('-', '_', $hook);
+    /** @var $acp_hook_file - The hook file must use hyphens as spacer and all lowercase */
+    $acp_hook_file = str_replace('_', '-', $hook);
 
-if (in_array($current_action, flatten_array($core_accepted_args))) {
-    require_once(__DIR__.'/action/'.$current_rights.'.php');
-    /** load the action into the hook */
-    fusion_add_hook('fusion_'.$current_action);
-}
-
-$current_rights = post('rights');
-$user_token = post('token');
-
-/** Authenticate user with administrator token where the user token must be encrypted with site secret key. */
-/** @var $auth */
-if ($auth = fusion_authenticate_user($user_token)) {
-    if (iADMIN && checkrights($current_rights)) {
-        if (isset($core_accepted_args[$current_rights])) {
-            /** Generates the output in json format */
-            //echo fusion_filter_hook('fusion_'.$current_action, post(array_keys($_POST)));
-            echo json_encode($_POST);
+    if (in_array($current_action, $allowable_action)) {
+        require_once(__DIR__.'/action/'.$acp_hook_file.'.php');
+        /** load the action into the hook */
+        fusion_add_hook('fusion_acp_action', $current_action);
+        /** check for post rights and token **/
+        $current_rights = get('rights');
+        $user_token = get('token');
+        /** Authenticate user with administrator token where the user token must be encrypted with site secret key. */
+        /** @var $auth - the user auth data */
+        try {
+            if ($auth = fusion_authenticate_user($user_token)) {
+                if (iADMIN && checkrights($current_rights)) {
+                    if (isset($core_accepted_args[$current_rights])) {
+                        $filter = fusion_filter_hook('fusion_acp_action', $_POST);
+                        //print_P($filter);
+                        //echo json_encode($_POST);
+                    }
+                } else {
+                    //print_p('You need to login as admin to perform this action');
+                    die('You need to login as admin to perform this action');
+                }
+            }
+        } catch (Exception $e) {
+            die('Could not authenticate user');
         }
     } else {
-        die('You need to login as admin to perform this action');
+        die('Action is not allowable');
     }
 }
-//die();
+/** Exit the code */
+die();
