@@ -2,7 +2,7 @@
 {% set inputTip = options.ext_tip ? '<small id="'~options.input_id~'Help" class="form-text text-muted">'~options.ext_tip~'</small>' : '' %}
 {% set accessibilityText = label and options.ext_tip ? 'aria-describedby="'~options.input_id~'Help"' : "" %}
 {% set requiredMarker = options.required ?  '<span class="required">*</span>' : '' %}
-{% set inputLabel = label ? '<label for="'~options.input_id~'" class="col-form-label col-sm-3'~whitespace(options.label_class)~'">'~label~whitespace(requiredMarker)~'</label>' : '' %}
+{% set inputLabel = label ? '<label for="'~options.input_id~'" class="'~((not options.inline) ? 'col-form-label col-sm-3' : '')~''~whitespace(options.label_class)~'">'~label~whitespace(requiredMarker)~'</label>' : '' %}
 
 {#Group Sizing for prepend and append#}
 {% if options.group_size %}
@@ -44,12 +44,12 @@
     {% set closeformgroup = '</div>' %}
 {% endif %}
 
-{% if options.type == 'text' or options.type == 'password' or options.type =='number' or options.type=='email' %}
-    {#    Text, Password, Number, Email #}
-    {% set inputField = '<input type="'~options.type~'"'~whitespace(options.readonly)~' name="'~input_name~'" class="'~readonlyText~whitespace(input_class)~'" id="'~options.input_id~'" value="'~input_value~'" placeholder="'~options.placeholder~'"'~accessibilityText~whitespace(options.input_data)~whitespace(options.min)~whitespace(options.max)~whitespace(options.step)~whitespace(options.max_length)~whitespace(options.autocomplete)~whitespace(options.inner_width)~whitespace(options.required)~'>' %}
-{% elseif options.type == 'dropdown' %}
-    {#    Select#}
+{% if options.type == 'dropdown' %}
+    {#Select#}
     {% set inputField = '<select class="'~options.inner_class~'" id="'~options.input_id~'" name="'~input_name~'"'~whitespace(options.readonly)~whitespace(options.onchange)~whitespace(options.multiple)~whitespace(options.required)~' style="width:'~options.inner_width~'">'~allowclear|raw~parent_opts|raw~options.options_options|raw~'</select>' %}
+{% else %}
+    {#Text, Password, Number, Email #}
+    {% set inputField = '<input type="'~options.type~'"'~whitespace(options.readonly)~' name="'~input_name~'" class="'~readonlyText~whitespace(input_class)~'" id="'~options.input_id~'" value="'~input_value~'" placeholder="'~options.placeholder~'"'~accessibilityText~whitespace(options.input_data)~whitespace(options.min)~whitespace(options.max)~whitespace(options.step)~whitespace(options.max_length)~whitespace(options.autocomplete)~whitespace(options.inner_width)~whitespace(options.required)~'>' %}
 {% endif %}
 
 {#Generated Output#}

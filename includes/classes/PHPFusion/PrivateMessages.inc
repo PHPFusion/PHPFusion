@@ -501,7 +501,7 @@ class PrivateMessages {
         if ($this->msg_read) {
 
             // this is the read menu.
-            $html = openform('actionform', 'post', FUSION_REQUEST);
+            $html = openform('actionform', 'post', FORM_REQUEST);
             $html .= form_hidden('selectedPM', '', intval($this->msg_read));
             $html .= "<div class='btn-group display-inline-block m-r-10'>\n";
             if ($this->folder == "archive") {
@@ -515,7 +515,7 @@ class PrivateMessages {
         } else {
 
             add_to_footer("<script src='".INCLUDES."jscripts/pm.js'></script>");
-            $html = openform('actionform', 'post', FUSION_REQUEST);
+            $html = openform('actionform', 'post', FORM_REQUEST);
             $html .= form_hidden('selectedPM', '', '');
             $html .= "<div class='dropdown display-inline-block m-r-10'>
                 <a href='#' data-toggle='dropdown' class='btn btn-default btn-sm dropdown-toggle'><i id='chkv' class='fa fa-square-o'></i><span class='caret m-l-5'></span></a>
@@ -723,7 +723,7 @@ class PrivateMessages {
                 }
             }
             addNotice('success', $this->locale['490']);
-            redirect(clean_request('', ['folder'], TRUE));
+            redirect(BASEDIR.'messages.php');
         }
     }
 

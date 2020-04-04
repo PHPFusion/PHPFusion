@@ -982,8 +982,8 @@ function multilang_table($table) {
  * Example: language column contains '.BL.NS.NC.NG'
  *            SELECT * FROM ".DB." WHERE ".in_group(language, 'BL')."
  */
-function in_group($column_name, $value, $delim = '.') {
-    return "$column_name REGEXP \"(^|$delim)$value($delim|$)\" ";
+function in_group($column_name, $value, $delim = ',') {
+    return "CONCAT('$delim', $column_name, '$delim') LIKE '%$delim$value$delim%' ";
 }
 
 /**

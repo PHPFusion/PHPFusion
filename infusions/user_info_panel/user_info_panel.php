@@ -138,12 +138,14 @@ class User_Info {
                 'login_closeform'      => closeform(),
                 'login_name_input'     => form_text('user_name', $this->locale['global_101'], '', [
                     'placeholder' => $placeholder,
-                    'required'    => 1
+                    'required'    => 1,
+                    'inline'      => 1
                 ]),
                 'login_pass_input'     => form_text('user_pass', $this->locale['global_102'], '', [
                     'placeholder' => $this->locale['global_102'],
                     'type'        => 'password',
-                    'required'    => 1
+                    'required'    => 1,
+                    'inline'      => 1
                 ]),
                 'login_remember_input' => form_checkbox('remember_me', $this->locale['global_103'], '', ['value' => 'y']),
                 'login_submit'         => form_button('login', $this->locale['global_104'], 'login', ['class' => 'm-t-20 m-b-20 btn-block btn-primary']),

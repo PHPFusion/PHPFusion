@@ -31,8 +31,8 @@ use PHPFusion\UserFields\Quantum\QuantumHelper;
  * Checks for license data to php-fusion.co.uk for validation of license
  * User will need this in future to use the Remote update and Plugins download and updates from marketplace.
  *
- * @param $public_key   Registered site issued public key
- * @param $password     Your user password in Php-fusion.co.uk
+ * @param string $public_key Registered site issued public key
+ * @param string $password   Your user password in Php-fusion.co.uk
  *
  * @return mixed
  */
@@ -2075,6 +2075,7 @@ function fusion_get_user($user_id, $key = NULL) {
 
 /**
  * Get all users
+ *
  * @return array
  */
 function fusion_get_all_user() {
@@ -2254,8 +2255,6 @@ function fusion_get_language_switch() {
  * Language switcher function
  *
  * @param bool $icon
- *
- * @throws ReflectionException
  */
 function lang_switcher($icon = TRUE) {
     $locale = fusion_get_locale();
@@ -2439,7 +2438,7 @@ function calculate_byte($total_bit) {
 function fusion_authenticate_user($user_cookie) {
     $auth = explode('.', $user_cookie);
     if (count($auth) == 3) {
-        list($userID, $cookieExpiration, $cookieHash) = $auth;
+        [$userID, $cookieExpiration, $cookieHash] = $auth;
         if ($cookieExpiration > TIME) {
             $result = dbquery("SELECT * FROM ".DB_USERS." WHERE user_id='".(isnum($userID) ? $userID : 0)."' AND user_status='0' AND user_actiontime='0' LIMIT 1");
             if (dbrows($result) == 1) {
