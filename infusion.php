@@ -295,8 +295,17 @@ if (function_exists("fusion_get_enabled_languages")) {
 
 if (!empty($enabled_languages)) {
     foreach ($enabled_languages as $language) {
-        include LOCALE.$language."/setup.php";
-        include FORUM.'locale/'.$language.'/forum_tags.php';
+        if (file_exists(LOCALE.$language.'/setup.php')) {
+            include LOCALE.$language.'/setup.php';
+        } else {
+            include LOCALE.'English/setup.php';
+        }
+
+        if (file_exists(FORUM.'locale/'.$language.'/forum_tags.php')) {
+            include FORUM.'locale/'.$language.'/forum_tags.php';
+        } else {
+            include FORUM.'locale/English/forum_tags.php';
+        }
 
         $mlt_adminpanel[$language][] = [
             "rights"   => "F",
