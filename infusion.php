@@ -101,7 +101,11 @@ $inf_mlt[] = [
 $enabled_languages = makefilelist(LOCALE, ".|..", TRUE, "folders");
 if (!empty($enabled_languages)) {
     foreach ($enabled_languages as $language) {
-        include LOCALE.$language."/setup.php";
+        if (file_exists(LOCALE.$language.'/setup.php')) {
+            include LOCALE.$language.'/setup.php';
+        } else {
+            include LOCALE.'English/setup.php';
+        }
 
         $mlt_adminpanel[$language][] = [
             "rights"   => "D",
