@@ -102,8 +102,12 @@ $inf_mlt[] = [
 $enabled_languages = makefilelist( LOCALE, ".|..", TRUE, "folders" );
 if ( !empty( $enabled_languages ) ) {
     foreach ( $enabled_languages as $language ) {
-        include LOCALE.$language."/setup.php";
-        
+        if (file_exists(LOCALE.$language.'/setup.php')) {
+            include LOCALE.$language.'/setup.php';
+        } else {
+            include LOCALE.'English/setup.php';
+        }
+
         $mlt_adminpanel[ $language ][] = [
             "rights"   => "D",
             "image"    => $inf_image,
@@ -112,11 +116,11 @@ if ( !empty( $enabled_languages ) ) {
             "page"     => 1,
             'language' => $language
         ];
-        
+
         // Add
         $mlt_insertdbrow[ $language ][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3302']."', 'infusions/downloads/downloads.php', '0', '2', '0', '2', '1', '".$language."')";
         $mlt_insertdbrow[ $language ][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3314']."', 'submit.php?stype=d', ".USER_LEVEL_MEMBER.", '1', '0', '22', '1', '".$language."')";
-        
+
         // Delete
         $mlt_deldbrow[ $language ][] = DB_SITE_LINKS." WHERE link_url='infusions/downloads/downloads.php' AND link_language='".$language."'";
         $mlt_deldbrow[ $language ][] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=d' AND link_language='".$language."'";
@@ -132,7 +136,7 @@ if ( !empty( $enabled_languages ) ) {
         "page"     => 1,
         'language' => LANGUAGE
     ];
-    
+
     $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES('".$locale['setup_3302']."', 'infusions/downloads/downloads.php', '0', '2', '0', '2', '1', '".LANGUAGE."')";
     $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3314']."', 'submit.php?stype=d', ".USER_LEVEL_MEMBER.", '1', '0', '22', '1', '".LANGUAGE."')";
 }
