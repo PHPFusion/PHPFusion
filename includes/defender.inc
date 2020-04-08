@@ -329,7 +329,7 @@ class Defender {
             return session_get(['form_fields', self::pageHash(), $input_name]);
         } else {
             if ($input_name) {
-                return 'The session for this field is not found';
+                return FALSE;
             } else {
                 //return $_SESSION['form_fields'];
                 return $_SESSION['form_fields'][self::pageHash()];
@@ -457,14 +457,12 @@ class Defender {
      * @throws Exception
      */
     public function formSanitizer($value, $default = '', $input_name = FALSE, $is_multiLang = FALSE) {
-
         $val = [];
         $page_hash = self::pageHash();
 
         if ($input_name) {
 
             if ($is_multiLang) {
-                die();
                 $language = array_keys(fusion_get_enabled_languages());
                 foreach ($language as $lang) {
                     $iname = $input_name.'['.$lang.']';
@@ -480,7 +478,7 @@ class Defender {
                 }
                 if (!empty($this->field_config['required']) && (!$value[LANGUAGE])) {
 
-                    self::stop();
+                    fusion_stop();
                     $iname = $input_name.'['.LANGUAGE.']';
                     self::setInputError($iname);
 
@@ -519,7 +517,7 @@ class Defender {
                         (is_callable($callback) && !$callback($secured))
                     ) {
 
-                        self::stop();
+                        fusion_stop();
                         self::setInputError($input_name);
 
                         // Add regex error message.

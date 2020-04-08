@@ -259,8 +259,7 @@ function get_shortdate_opts($input_name, $input_value) {
         'custom'    => '<span style="width:200px;float:none;display:inline-block">'.fusion_get_locale('471').'</span>'.form_text($input_name, '', $input_value, ['class' => 'm-l-10 pull-right']),
     ];
     add_to_jquery("
-    $('#$input_name').on('focus', function(e) {
-        console.log('oi');
+    $('#$input_name').on('focus', function(e) {        
         $(this).closest('.radio').find('input[type=\"radio\"]').prop('checked', true);
     });
     ");
@@ -281,8 +280,7 @@ function get_longdate_opts($input_name, $input_value) {
     ];
 
     add_to_jquery("
-    $('#$input_name').on('focus', function(e) {
-        console.log('oi');
+    $('#$input_name').on('focus', function(e) {        
         $(this).closest('.radio').find('input[type=\"radio\"]').prop('checked', true);
     });
     ");

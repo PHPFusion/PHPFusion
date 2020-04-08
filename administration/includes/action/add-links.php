@@ -6,11 +6,11 @@ function add_links($data) {
     $time  = time();
     echo opencollapse($time);
     echo opencollapsebody($data['link_name'], $time.'m', $time);
-    echo form_text('link_url', 'URL', $data['link_url']);
-    echo form_text('link_name', 'Name', $data['link_name']);
-    echo form_text('link_title', 'Title Attribute', '', []);
-    echo form_checkbox('link_window', 'Open link in a new tab', '', ['type'=>'checkbox', 'reverse_label'=>TRUE]);
-    echo form_text('link_description', 'Description', '', ['ext_tip'=>'The description will be displayed in the menu if the current theme supports it.']);
+    echo form_text('_url', 'URL', $data['link_url']);
+    echo form_text('_name', 'Name', $data['link_name']);
+    echo form_text('_title', 'Title Attribute', '', []);
+    echo form_checkbox('_window', 'Open link in a new tab', '', ['type'=>'checkbox', 'reverse_label'=>TRUE]);
+    echo form_text('_description', 'Description', '', ['ext_tip'=>'The description will be displayed in the menu if the current theme supports it.']);
     echo "<a href='' class='remove_link text-danger' data-id='".$time."_menu'>Remove</a> | ";
     echo closecollapsebody();
     echo closecollapse();

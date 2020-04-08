@@ -437,8 +437,8 @@ class SitelinksAdmin {
 
         function normal_links() {
             echo openform('customlinksFrm', 'post', FORM_REQUEST, ['class' => 'form-horizontal']);
-            echo form_text('link_name', 'Link Name', '', ['required' => TRUE, 'inline' => TRUE]).
-                form_text('link_url', 'Link URL', '', ['required' => FALSE, 'inline' => TRUE]);
+            echo form_text('link_name', 'Link Name', '', ['required' => TRUE, 'inline' => FALSE]).
+                form_text('link_url', 'Link URL', '', ['required' => FALSE, 'inline' => FALSE]);
             echo "<div class='text-right'>";
             echo form_button('link_add', 'Add to Navigation', '', ['class' => 'btn-primary btn-outline']);
             echo "</div>";
@@ -460,7 +460,7 @@ class SitelinksAdmin {
             <?php echo closeform() ?>
         </div>
         <div class="row">
-            <div class="col-12 col-xl-2">
+            <div class="col-12 col-lg-3 col-xl-2">
                 <h2>Add menu items</h2>
                 <?php
                 echo opencollapse('menu-switch');
@@ -471,7 +471,7 @@ class SitelinksAdmin {
                 echo closecollapsebody().closecollapse();
                 ?>
             </div>
-            <div class="col-12 col-xl-10">
+            <div class="col-12 col-lg-9 col-xl-10">
                 <h2>Menu management</h2>
                 <?php openside(form_text('', '', '', ['placeholder' => 'Menu name', 'required' => TRUE, 'inline' => TRUE, 'class' => 'm-t-10 align-self-center'])); ?>
                 Drag each item into the order you prefer. Click the arrow on the right of the item to reveal additional configuration options.
@@ -479,12 +479,12 @@ class SitelinksAdmin {
                     <div class="sortable col-xs-12 col-sm-6 col-lg-2">
                         <div class="list">
                             <?php echo opencollapse('menu-item-1').opencollapsebody('Link text', 'menu-item-1-item', 'menu-item-1').
-                                form_text('link_url', 'URL', '', ['input_id' => 'mi-1-link_url', 'inline' => TRUE]).
-                                form_text('link_name', 'Link Name', '', ['input_id' => 'mi-1-link_name']).
-                                form_text('link_title', 'Title Attribute', '', ['input_id' => 'mi-1-link_title']).
-                                form_checkbox('link_window', 'Open link in a new tab', '', ['reverse_label' => TRUE, 'type' => 'checkbox']).
-                                form_text('link_class', 'CSS Classes (optional)', '').
-                                form_textarea('link_description', 'Description', '', ['ext_tip' => 'The description will be displayed in the menu if the current theme supports it.']);
+                                form_text('_url', 'URL', '', ['input_id' => 'mi-1-link_url', 'inline' => TRUE]).
+                                form_text('_name', 'Link Name', '', ['input_id' => 'mi-1-link_name']).
+                                form_text('_title', 'Title Attribute', '', ['input_id' => 'mi-1-link_title']).
+                                form_checkbox('_window', 'Open link in a new tab', '', ['reverse_label' => TRUE, 'type' => 'checkbox']).
+                                form_text('_class', 'CSS Classes (optional)', '').
+                                form_textarea('_description', 'Description', '', ['ext_tip' => 'The description will be displayed in the menu if the current theme supports it.']);
                             ?>
                             <a href="" class="text-danger">Remove</a> | <a href="" class="text-primary">Cancel</a>
                             <?php
@@ -506,9 +506,9 @@ class SitelinksAdmin {
 
         $(document).on('submit', 'form#customlinksFrm', function (e) {
             e.preventDefault();
-            adminpost.request('customlinksFrm', '".cookie(COOKIE_PREFIX.'user')."', 'SL', 'add-links')
+            let request = adminpost.request('customlinksFrm', '".cookie(COOKIE_PREFIX.'user')."', 'SL', 'add-links');
             .then(function(posts) {
-               //console.log('Success!', posts);                                   
+               console.log('Success!', posts);                                   
                //$('.sortable').append('<div class=\"list\">' + posts.responseText +'</div>');
                /*
                return {
