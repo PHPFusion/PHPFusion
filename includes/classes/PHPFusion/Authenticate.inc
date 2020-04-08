@@ -25,7 +25,7 @@ if (!empty($settings)) {
         $domain_server[] = (strstr($settings['site_host'], "www.") ? substr($settings['site_host'], 3) : $settings['site_host']);
         $domain_server = array_unique(array_filter($domain_server));
         foreach ($domain_server as $server_name) {
-            if ($_SERVER['SERVER_NAME'] === $server_name) {
+            if (server('SERVER_NAME') === $server_name) {
                 define("COOKIE_DOMAIN", $server_name);
             }
         }
@@ -40,6 +40,11 @@ if (!empty($settings)) {
     define("COOKIE_LASTVISIT", COOKIE_PREFIX."lastvisit");
 }
 
+/**
+ * Class Authenticate
+ *
+ * @package PHPFusion
+ */
 class Authenticate {
 
     private static $authenticate_url = "";
@@ -51,13 +56,14 @@ class Authenticate {
     ];
 
     public function __construct($inputUserName, $inputPassword, $remember, $authentication_url = FALSE) {
-
         if ($authentication_url) {
             self::$authenticate_url = $authentication_url;
         }
 
         $this->_authenticate($inputUserName, $inputPassword, $remember);
     }
+
+    // Get user data when authenticating in user
 
     private function _authenticate($inputUserName, $inputPassword, $remember) {
         $locale = fusion_get_locale();
@@ -73,7 +79,7 @@ class Authenticate {
                 break;
         }
         $result = dbquery("SELECT * FROM ".DB_USERS." WHERE ".$where."='".$inputUserName."' LIMIT 1");
-        if (dbrows($result) == 1) {
+        if (dbrows($result) === 1) {
             $user = dbarray($result);
             // Initialize password auth
             $passAuth = new PasswordAuth();
@@ -211,6 +217,8 @@ class Authenticate {
         }
     }
 
+    // Log out authenticated user
+
     public static function setAdminLogin() {
         $locale = fusion_get_locale();
         if (check_get('logout')) {
@@ -227,10 +235,10 @@ class Authenticate {
                     session_remove('notices');
                     redirect(FUSION_REQUEST);
                 } else {
-                    addNotice("danger", $locale['cookie_error'].$locale['cookie_error_description']);
+                    addNotice("danger", $locale['cookie_error'], $locale['cookie_error_description']);
                 }
             } else {
-                addNotice("danger", $locale['password_invalid'].$locale['password_invalid_description']);
+                addNotice("danger", $locale['password_invalid'], $locale['password_invalid_description']);
             }
         }
 
@@ -239,7 +247,7 @@ class Authenticate {
         }
     }
 
-    // Log out authenticated user
+    // Checks or sets the lastvisit cookie
 
     public static function expireAdminCookie() {
         Authenticate::_setCookie(COOKIE_ADMIN, '', time() - 1209600, COOKIE_PATH, COOKIE_DOMAIN, FALSE, TRUE);
@@ -361,7 +369,11 @@ class Authenticate {
         return FALSE;
     }
 
-    // Checks and sets the admin last visit cookie
+    /**
+     * Checks and set user login session cookie
+     *
+     * @return array|null
+     */
     public static function validateAuthUser() {
         // loginas add
         if (defined('COOKIE_USER') && isset($_COOKIE[COOKIE_USER]) && $_COOKIE[COOKIE_USER] != "") {
@@ -371,20 +383,19 @@ class Authenticate {
                 if ($cookieExpiration > TIME) {
                     // must update user_salt
                     $result = dbquery("SELECT * FROM ".DB_USERS." WHERE user_id='".(isnum($userID) ? $userID : 0)."' AND user_status='0' AND user_actiontime='0' LIMIT 1");
-                    if (dbrows($result) == 1) {
+                    if (dbrows($result) === 1) {
                         $user = dbarray($result);
                         Authenticate::_setUserTheme($user);
-                        // From Version 7 to Version 9, Ported Database has this problem - where user_salt has problem entering
                         $key = hash_hmac($user['user_algo'], $userID.$cookieExpiration, $user['user_salt']);
                         $hash = hash_hmac($user['user_algo'], $userID.$cookieExpiration, $key);
-                        if ($cookieHash == $hash) {
+                        if ($cookieHash === $hash) {
                             if ($user['user_level'] == -103) {
                                 if ($login_as_user = session_get('fusion_login_as')) {
                                     $user = fusion_get_user($login_as_user);
                                     $user['user_level'] = -103;
                                 }
                             }
-                            return $user;
+                            return (array)$user;
                         } else {
                             // Cookie has been tampered with!
                             return Authenticate::logOut();

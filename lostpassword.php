@@ -17,6 +17,8 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/maincore.php';
 require_once THEMES.'templates/header.php';
+require_once TEMPLATES."global/lost-password.php";
+
 if (iMEMBER) {
     redirect(BASEDIR.'index.php');
 }
@@ -26,30 +28,19 @@ add_to_title($locale['global_200'].$locale['400']);
 
 ob_start();
 $obj = new PHPFusion\LostPassword();
-if (isset($_GET['user_email']) && isset($_GET['account'])) {
-    $obj->checkPasswordRequest($_GET['user_email'], $_GET['account']);
-    $obj->displayOutput();
-} else if (isset($_POST['send_password'])) {
-    $obj->sendPasswordRequest($_POST['email']);
-    $obj->displayOutput();
+if (check_get("user_email") && check_get("account")) {
+    $email = get("user_email");
+    $account = get("account");
+    $obj->checkPasswordRequest($email, $account);
+} else if ($send_pass = post("send_password")) {
+    $obj->sendPasswordRequest($send_pass);
 } else {
     $obj->renderInputForm();
-    $obj->displayOutput();
 }
+
+$obj->displayOutput();
 $content = ob_get_contents();
 ob_end_clean();
 
-if (!function_exists("display_lostpassword")) {
-    function display_lostpassword($content) {
-        $locale = fusion_get_locale();
-
-        opentable($locale['400']);
-        echo $content;
-        closetable();
-    }
-}
-
-
 display_lostpassword($content);
-
 require_once THEMES.'templates/footer.php';

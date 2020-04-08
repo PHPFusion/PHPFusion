@@ -197,8 +197,6 @@ if ($login_post && $user_name_post && $user_pass_post) {
         $userdata = $auth->getUserData();
         unset($auth, $_POST['user_name'], $_POST['user_pass']);
         redirect(FUSION_REQUEST);
-    } else {
-        addNotice("danger", "CSRF Token not validated");
     }
 } else if (get("logout") == "yes") {
     $userdata = Authenticate::logOut();
@@ -230,8 +228,8 @@ function get_current_site_language() {
     if (iMEMBER && valid_language($userdata['user_language'])) {
         $current_user_language = $userdata['user_language'];
     } else {
-        $langData = dbarray(dbquery('SELECT * FROM '.DB_LANGUAGE_SESSIONS.' WHERE user_ip=:ip', [':ip' => USER_IP]));
-        $current_user_language = (!empty($langData['user_language']) ? $langData['user_language'] : fusion_get_settings('locale'));
+        $lang = dbarray(dbquery('SELECT * FROM '.DB_LANGUAGE_SESSIONS.' WHERE user_ip=:iuip', array(":iuip" => USER_IP)));
+        $current_user_language = (!empty($lang["user_language"]) ? $lang["user_language"]: fusion_get_settings("locale"));
     }
     return $current_user_language;
 }

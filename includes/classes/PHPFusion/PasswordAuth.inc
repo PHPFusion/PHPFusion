@@ -17,6 +17,11 @@
 +--------------------------------------------------------*/
 namespace PHPFusion;
 
+/**
+ * Class PasswordAuth
+ *
+ * @package PHPFusion
+ */
 class PasswordAuth {
     public $currentAlgo = "";
     public $currentSalt = "";
@@ -47,7 +52,6 @@ class PasswordAuth {
     }
 
     // Checks if new password is valid
-
     private function _hashPassword($password, $algorithm, $salt) {
         if ($algorithm != "md5") {
             return hash_hmac($algorithm, $password, $salt);
@@ -57,21 +61,18 @@ class PasswordAuth {
     }
 
     // Get new password algorithem
-
     protected function _setNewHash($password) {
         $this->_newSalt = $this->getNewRandomSalt();
         $this->_newPasswordHash = $this->_hashPassword($password, $this->_newAlgo, $this->_newSalt);
     }
 
     // Get new password salt
-    
-    public function getNewRandomSalt( $length = 12 ) {
-        return sha1( $this->getNewPassword( $length ) );
+    public function getNewRandomSalt($length = 12) {
+        return sha1($this->getNewPassword($length));
     }
 
     // Get new password hash
-    
-    public function getNewPassword( $length = 12 ) {
+    public function getNewPassword($length = 12) {
         $chars = ["abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ", "123456789", "@!#$%&/()=-_?+*.,:;"];
         $count = [(strlen($chars[0]) - 1), (strlen($chars[1]) - 1), (strlen($chars[2]) - 1)];
         if ($length > 64) {
@@ -111,7 +112,7 @@ class PasswordAuth {
     // Checks if new password input is valid
 
     private function _isValidPasswordInput() {
-        if ( preg_match( "/^[0-9A-Z@<>\[\]!|#$%&\/\(\)=\-_?+\*\.,:~;\{\}]{8,64}$/i", $this->inputNewPassword ) ) {
+        if (preg_match("/^[0-9A-Z@<>\[\]!|#$%&\/\(\)=\-_?+\*\.,:~;\{\}]{8,64}$/i", $this->inputNewPassword)) {
             return TRUE;
         } else {
             return FALSE;
@@ -135,4 +136,5 @@ class PasswordAuth {
     public function getNewHash() {
         return $this->_newPasswordHash;
     }
+
 }

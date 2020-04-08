@@ -18,7 +18,6 @@
 
 use PHPFusion\Panels;
 use PHPFusion\Rewrite\Permalinks;
-use PHPFusion\Steam;
 
 defined('IN_FUSION') || exit;
 
@@ -29,6 +28,10 @@ Panels::getInstance()->getSitePanel();
 define("CONTENT", ob_get_clean()); //ob_start() called in header.php
 
 require_once __DIR__.'/cron.php';
+
+/** Fix passwords */
+require_once INCLUDES.'password-include.php';
+auto_fix_passwords();
 
 if (!isset($fusion_jquery_tags)) {
     $fusion_jquery_tags = '';
