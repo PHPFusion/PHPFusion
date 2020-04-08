@@ -56,7 +56,7 @@ $threads = \PHPFusion\Forums\ForumServer::thread(FALSE)->get_forum_thread(0,
 
         "query" => "SELECT p.forum_id, p.thread_id, p.post_id, p.thread_id 'thread_id', p.forum_id 'forum_id',
         t.thread_subject, t.thread_author, t.thread_lastuser, t.thread_lastpost, t.thread_lastpostid, t.thread_postcount,
-        t.thread_locked, t.thread_sticky, t.thread_poll, t.thread_postcount, t.thread_views,
+        t.thread_locked, t.thread_sticky, t.thread_poll, t.thread_postcount, t.thread_views, t.thread_tags,
         tf.forum_name, tf.forum_access, tf.forum_type
         FROM ".DB_FORUMS." tf
         INNER JOIN ".DB_FORUM_POSTS." p ON p.forum_id=tf.forum_id
