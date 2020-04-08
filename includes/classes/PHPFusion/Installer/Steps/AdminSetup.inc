@@ -120,6 +120,7 @@ class InstallerAdminSetup extends Install_Core {
             $content .= "<h4 class='title'>".self::$locale['setup_1500']."</h4><p>".self::$locale['setup_1501']."</p\n";
             $content .= "<hr/>\n";
             $content .= form_hidden('transfer', '', '1');
+            $content .= form_hidden('user_rights', '', self::$userData['user_rights']);
             $content .= form_text('user_name', self::$locale['setup_1504'], self::$userData['user_name'],
                 [
                     'required'       => TRUE,
@@ -168,7 +169,7 @@ class InstallerAdminSetup extends Install_Core {
             'password2'           => stripinput(filter_input(INPUT_POST, 'password2')),
             'admin_password1'     => stripinput(filter_input(INPUT_POST, 'admin_password1')),
             'admin_password2'     => stripinput(filter_input(INPUT_POST, 'admin_password2')),
-            'user_rights'         => self::USER_RIGHTS_SA,
+            'user_rights'         => isset($_POST['transfer']) ? stripinput(filter_input(INPUT_POST, 'user_rights')) : self::USER_RIGHTS_SA,
             'user_hide_email'     => 1,
             'user_timezone'       => stripinput(filter_input(INPUT_POST, 'user_timezone')),
             'user_joined'         => TIME,

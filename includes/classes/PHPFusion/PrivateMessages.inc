@@ -267,7 +267,7 @@ class PrivateMessages {
             if ($to <= USER_LEVEL_MEMBER && $to >= USER_LEVEL_SUPER_ADMIN) { // -101, -102, -103 only
                 $result = dbquery("SELECT user_id FROM ".DB_USERS." WHERE user_level <=:level AND user_status=:status", [':level' => $to, ':status' => '0']);
             } else {
-                $result = dbquery("SELECT user_id FROM ".DB_USERS." WHERE ".in_group("user_groups", $to)." AND user_status='0'");
+                $result = dbquery("SELECT user_id FROM ".DB_USERS." WHERE ".in_group("user_groups", $to, '.')." AND user_status='0'");
             }
             if (dbrows($result) > 0) {
 
