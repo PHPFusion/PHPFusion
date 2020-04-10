@@ -504,20 +504,28 @@ class SitelinksAdmin {
             $(target).collapse('toggle');
         });
 
+         // on click of submit button for this form.
         $(document).on('submit', 'form#customlinksFrm', function (e) {
+            // prevent php submit
             e.preventDefault();  
-            let submitCustomLinks = new FusionPost('customlinksFrm', '".cookie(COOKIE_PREFIX.'user')."', 'SL', 'add-links');            
+            /** Constructor for JS post */
+            let submitCustomLinks = new FusionPost('customlinksFrm', '".cookie(COOKIE_PREFIX.'user')."', 'SL', 'add-links');
+            /** Do a submit for sanitization */
             submitCustomLinks.submit()
+            /** when submit is possible, do the php hook - init Ajax request */
             .then(function(response){
-                console.log(response);
+                //console.log(response);
                 return submitCustomLinks.return();                
-            }).then(function(xhr){
-                console.log(xhr);
+            })
+            /** We will get our hook response output */
+            .then(function(xhr){
+                //console.log(xhr);
                 let item = xhr['responseText'];
                 $('.sortable').append('<div class=\"list\">' + item +'</div>');
                 // use the helper function for cleaning up the form
                 submitCustomLinks.bs4Success();
             })
+            /** When sanitization fails */
             .catch(function(error){
                 // you can do a popper here or something depending on what you need.
                 console.log('Something went wrong', error);                
