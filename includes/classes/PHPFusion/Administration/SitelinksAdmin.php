@@ -435,12 +435,12 @@ class SitelinksAdmin {
         }
         ");
 
-        function normal_links() {
+        function custmon_links() {
             echo openform('customlinksFrm', 'post', FORM_REQUEST, ['class' => 'form-horizontal']);
             echo form_text('link_name', 'Link Name', '', ['required' => TRUE, 'inline' => FALSE]).
                 form_text('link_url', 'Link URL', '', ['required' => FALSE, 'inline' => FALSE]);
             echo "<div class='text-right'>";
-            echo form_button('link_add', 'Add to Navigation', '', ['class' => 'btn-primary btn-outline']);
+            echo form_button('link_add', 'Add to Navigation', '', ['class' => 'btn-primary']);
             echo "</div>";
             echo closeform();
         }
@@ -467,7 +467,7 @@ class SitelinksAdmin {
                 echo opencollapsebody('News', 'menu-news', 'menu-switch', FALSE);
                 echo closecollapsebody();
                 echo opencollapsebody('Custom Links', 'menu-1', 'menu-switch', TRUE);
-                echo normal_links();
+                echo custmon_links();
                 echo closecollapsebody().closecollapse();
                 ?>
             </div>
@@ -524,6 +524,7 @@ class SitelinksAdmin {
                 $('.sortable').append('<div class=\"list\">' + item +'</div>');
                 // use the helper function for cleaning up the form
                 submitCustomLinks.bs4Success();
+                // do a popper
             })
             /** When sanitization fails */
             .catch(function(error){

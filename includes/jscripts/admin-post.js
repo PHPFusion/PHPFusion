@@ -13,7 +13,8 @@ let FusionPost = function (form_id, token, rights, php_hook) {
     let button = form.querySelectorAll('button[type="submit"]')[0];
     let buttonText = button.innerHTML;
     let formData = new FormData(form);
-    formData.append('action_hook', php_hook);
+    //let formData = new FormData(form);
+    //formData.append('action_hook', php_hook);
 
     // Display the key/value pairs. A loop.
     let error_message = '';
@@ -27,6 +28,8 @@ let FusionPost = function (form_id, token, rights, php_hook) {
      */
     this.submit = function () {
         return new Promise(function (resolve, reject) {
+            formData = new FormData(form);
+            formData.append('action_hook', php_hook);
 
             // honeypot is not implemented yet.
             let formlength = -3; // omit form_id and form_token and form_honeypot.
@@ -39,9 +42,15 @@ let FusionPost = function (form_id, token, rights, php_hook) {
                 if (formValues[0] !== 'form_id' && formValues[0] !== 'fusion_token') {
                     _sanitizer(formData.get('form_id'), formData.get('fusion_token'), formValues[0], formValues[1])
                         .then(function (posts) {
+
                             const {responseText} = posts;
+                            console.log(responseText);
+
                             return JSON.parse(responseText);
                         }).then(function (jsonResponse) {
+
+                            // console.log(jsonResponse);
+
                         /** use indexer access for all response array */
                         input_names.push(jsonResponse["input_name"]);
                         input_values.push(jsonResponse["input_value"]);
@@ -50,20 +59,25 @@ let FusionPost = function (form_id, token, rights, php_hook) {
                             /** add input errors */
                             input_errors.push(jsonResponse["input_name"]);
 
-                            if (!jsonResponse["error_message"]) {
+                            error_message = jsonResponse["error_message"];
+                            if (!error_message) {
                                 // need to localize this text here.
                                 error_message = 'Please fill in this field.';
                             }
+
                             /** Append error tags */
-                            let error_tag = document.createElement('div');
-                            error_tag.innerHTML = error_message;
-                            error_tag.classList.add('invalid-feedback');
                             let input_name = form.querySelectorAll('input[name="' + formValues[0] + '"]')[0];
-                            input_name.classList.add('is-invalid');
-                            if (input_name.nextSibling) {
-                                input_name.parentNode.insertBefore(error_tag, input_name.nextSibling);
-                            } else {
-                                input_name.parentNode.appendChild(error_tag);
+                            if (input_name) {
+                                let error_tag = document.createElement('div');
+                                error_tag.innerHTML = error_message;
+                                error_tag.classList.add('invalid-feedback');
+                                input_name.classList.add('is-invalid');
+                                // add label
+                                if (!input_name.nextSibling) {
+                                    input_name.parentNode.appendChild(error_tag);
+                                    //input_name.parentNode.insertBefore(error_tag, input_name.nextSibling);
+                                }
+                                input_errors.length = 0;
                             }
 
                             reject({
@@ -133,13 +147,15 @@ let FusionPost = function (form_id, token, rights, php_hook) {
      */
     this.bs4Success = function() {
         // clean up all .invalid-feedback divs
-        document.querySelectorAll('.invalid-feedback').forEach(el => el.remove());
+        form.querySelectorAll('.invalid-feedback').forEach(el => el.remove());
         // remove all the is-invalid in form-control class.
-        document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+        form.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+        // clear the form fields.
+        form.querySelectorAll('input, select').forEach(el => el.value = '');
+        // append a new token to the form
+
         // reset the button back to original text
         button.innerHTML = buttonText;
-
-
     };
 
     /**

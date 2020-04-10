@@ -25,18 +25,26 @@ try {
         );
         $defender::add_field_session($config);
     }
-    // pageHash problem.
-    $input_value = form_sanitizer($input_value, "", $input_name, $multilang); // fails to return the value. also fails to return error text
-
-    //print_p("inputvalue for ".$input_name." is ".$input_value); // ok, field also recorded value.
-    //print_p(); // ok field session exists
-    //print_p($defender->get_current_field_session());
 
     if (fusion_safe()) {
-        echo json_encode(array("input_name" => $input_name, "input_value" => $input_value, "error" => FALSE, "error_message" => "", "config" => $defender->get_current_field_session($input_name)));
+        $input_value = form_sanitizer($input_value, "", $input_name, $multilang); // fails to return the value. also fails to return error text
+        //print_p("inputvalue for ".$input_name." is ".$input_value); // ok, field also recorded value.
+        //print_p(); // ok field session exists
+        //print_p($defender->get_current_field_session());
+        if (fusion_safe()) {
+            echo json_encode(array("input_name" => $input_name, "input_value" => $input_value, "error" => FALSE, "error_message" => "", "config" => $defender->get_current_field_session($input_name)));
+        } else {
+            $error_message = '';
+            if ($defender::getErrorText($input_name)) {
+                $error_message = $defender::getErrorText($input_name);
+            }
+
+            echo json_encode(array("input_name" => $input_name, "input_value" => $input_value, "error" => TRUE, "error_message" => $error_message, "config" => $defender->get_current_field_session($input_name)));
+        }
     } else {
-        echo json_encode(array("input_name" => $input_name, "input_value" => $input_value, "error" => TRUE, "error_message" => $defender::getErrorText($input_name), "config" => $defender->get_current_field_session($input_name)));
+        echo json_encode(array("input_name" => $input_name, "input_value" => $input_value, "error" => TRUE, "error_message" => 'CSRF Token Error', "config" => $defender->get_current_field_session($input_name)));
     }
+
 } catch (Exception $e) {
     echo json_encode(array("input_name" => $input_name, "input_value" => $input_value, "error" => TRUE, "error_message" => $e->getMessage()));
 }
