@@ -505,24 +505,26 @@ class SitelinksAdmin {
         });
 
         $(document).on('submit', 'form#customlinksFrm', function (e) {
-            e.preventDefault();
-            let request = adminpost.request('customlinksFrm', '".cookie(COOKIE_PREFIX.'user')."', 'SL', 'add-links');
-            .then(function(posts) {
-               console.log('Success!', posts);                                   
-               //$('.sortable').append('<div class=\"list\">' + posts.responseText +'</div>');
-               /*
-               return {
-                    title: post.title.toUpperCase(),
-                    content: post.body,
-                    date: post.date
-                }
-                */
+            e.preventDefault();  
+            let submitCustomLinks = new FusionPost('customlinksFrm', '".cookie(COOKIE_PREFIX.'user')."', 'SL', 'add-links');            
+            submitCustomLinks.submit()
+            .then(function(response){
+                console.log(response);
+                return submitCustomLinks.return();                
+            }).then(function(xhr){
+                console.log(xhr);
+                let item = xhr['responseText'];
+                $('.sortable').append('<div class=\"list\">' + item +'</div>');
+                // use the helper function for cleaning up the form
+                submitCustomLinks.bs4Success();
             })
-            .catch(function (error) {
-		        console.log('Something went wrong', error);
-	        });            
+            .catch(function(error){
+                // you can do a popper here or something depending on what you need.
+                console.log('Something went wrong', error);                
+            });                      
         });                
         </script>";
+
         return '';
 
         //$visibility = self::get_LinkVisibility();

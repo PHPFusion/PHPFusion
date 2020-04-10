@@ -52,39 +52,39 @@ function watchBrowser() {
             cert: 'cert/cert.crt'
         }
     });
+
+    gulp.watch(dir.jquery_dir +'**/*.js').on('change', browserSync.reload);
+    gulp.watch(dir.jscripts_dir +'**/*.js').on('change', browserSync.reload);
+
     // watch twig files
-    gulp.watch(dir.jscripts_dir +'**/*.js', yuicompress());
+    //gulp.watch(dir.jscripts_dir +'**/*.js', yuicompress());
+    //gulp.watch(dir.jscripts_dir +'**/*.js').on('change', browserSync.reload);
+    gulp.watch(dir.admin_theme_dir +'**/*.php').on('change', browserSync.reload);
     gulp.watch(dir.admin_theme_dir +'**/templates/*.twig').on('change', browserSync.reload);
-    gulp.watch(dir.admin_theme_dir +'**/templates/*.twig').on('change', browserSync.reload);
+    gulp.watch(dir.admin_theme_dir +'**/less/*.less').on('change', browserSync.reload);
+    gulp.watch(dir.admin_theme_dir +'**/templates/*.html').on('change', browserSync.reload);
+    gulp.watch(dir.admin_theme_dir +'**/js/*.js').on('change', browserSync.reload);
     //gulp.watch(dir.admin_theme_dir +'**/templates/*.twig', lessc);//.on('change', browserSync.reload);
-    gulp.watch(dir.theme_dir +'**/templates/**/*.twig').on('change', browserSync.reload);
-    gulp.watch(dir.theme_dir +'**/templates/*.twig').on('change', browserSync.reload);
-    gulp.watch(dir.infusion_dir +'**/templates/*.twig').on('change', browserSync.reload);
 
     // fusion infusions theme dir
     gulp.watch(dir.theme_dir +'**/fusion/templates/*.twig').on('change', browserSync.reload);
-    // fusion theme less file
-    gulp.watch(dir.theme_dir +'/*.less').on('change', browserSync.reload);
+    gulp.watch(dir.theme_dir +'**/js/*.js').on('change', browserSync.reload);
+    //gulp.watch(dir.theme_dir +'**/templates/**/*.twig').on('change', browserSync.reload);
+    gulp.watch(dir.theme_dir +'**/templates/*.twig').on('change', browserSync.reload);
+    gulp.watch(dir.theme_dir +'**/templates/*.html').on('change', browserSync.reload);
+    //gulp.watch(dir.theme_dir +'/*.less').on('change', browserSync.reload);
+    gulp.watch(dir.theme_dir +'**/less/*.less').on('change', browserSync.reload);
     gulp.watch(dir.theme_dir +'/**/*.less').on('change', browserSync.reload);
-
-    // watch php files
-    gulp.watch(dir.admin_theme_dir +'**/*.php').on('change', browserSync.reload);
     gulp.watch(dir.theme_dir +'**/*.php').on('change', browserSync.reload);
+
+    /** Infusion watcher */
     gulp.watch(dir.infusion_dir +'**/*.php').on('change', browserSync.reload);
     // watch less files
-    gulp.watch(dir.admin_theme_dir +'**/less/*.less').on('change', browserSync.reload);
-    gulp.watch(dir.theme_dir +'**/less/*.less').on('change', browserSync.reload);
     gulp.watch(dir.infusion_dir +'**/less/*.less').on('change', browserSync.reload);
-    // watch html files
-    gulp.watch(dir.admin_theme_dir +'**/templates/*.html').on('change', browserSync.reload);
-    gulp.watch(dir.theme_dir +'**/templates/*.html').on('change', browserSync.reload);
+    gulp.watch(dir.infusion_dir +'**/templates/*.twig').on('change', browserSync.reload);
     gulp.watch(dir.infusion_dir +'**/templates/*.html').on('change', browserSync.reload);
-    // watch js files
-    gulp.watch(dir.admin_theme_dir +'**/js/*.js').on('change', browserSync.reload);
-    gulp.watch(dir.theme_dir +'**/js/*.js').on('change', browserSync.reload);
     gulp.watch(dir.infusion_dir +'**/js/*.js').on('change', browserSync.reload);
-    // watch project jquery files
-    gulp.watch(dir.jquery_dir +'**/*.js').on('change', browserSync.reload);
+
 }
 
 exports.watch = watchBrowser;
