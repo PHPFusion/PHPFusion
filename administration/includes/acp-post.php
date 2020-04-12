@@ -13,7 +13,7 @@ if (fusion_safe()) {
 
     /** Defines the core acceptable actions in tandem with the user access rights */
     $core_accepted_args = array(
-        'SL' => array('add_links')
+        'SL' => array("add_links", "update_links", "remove_links", "update_menu")
     );
     $allowable_action = flatten_array($core_accepted_args);
     $hook = post('action_hook');

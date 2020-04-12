@@ -27,31 +27,41 @@
     background-color: #fff;
     border: 1px solid transparent;
     border-radius: 4px;
-}
 
-.panel-heading {
-    color: white;
-    padding: 10px 15px;
-    border-bottom: 1px solid transparent;
-    border-top-left-radius: 3px;
-    border-top-right-radius: 3px;
-}
+    .panel-heading {
+        color: white;
+        padding: 10px 15px;
+        border-bottom: 1px solid transparent;
+        border-top-left-radius: 3px;
+        border-top-right-radius: 3px;
+    }
 
-.panel-footer {
-    padding: 10px 15px;
-    border-top: 1px solid #e7eaec;
-    border-bottom-right-radius: 3px;
-    border-bottom-left-radius: 3px;
-}
-
-.panel-default > .panel-heading {
-    color: #333;
-    background-color: #f5f5f5;
-    border-color: #e7eaec;
+    .panel-footer {
+        padding: 10px 15px;
+        border-top: 1px solid #e7eaec;
+        border-bottom-right-radius: 3px;
+        border-bottom-left-radius: 3px;
+    }
 }
 
 .panel-default {
-    border-color: #e7eaec;
+    border-color: #ddd;
+
+    & > .panel-heading {
+        border-bottom: 1px solid #ddd;
+    }
+
+    & > .panel-footer {
+        border-top: 1px solid #ddd;
+    }
+
+    & > .panel-heading,
+    & > .panel-footer {
+        color: #333;
+        background-color: #f5f5f5;
+        border-top: 1px solid #fff;
+    }
+
 }
 
 .panel-group .panel + .panel {
@@ -63,17 +73,35 @@
     border-radius: 4px;
 
     & .panel-heading {
-        background: #fff;
+        background: #fafafa;
+        padding:0;
         color: #222;
 
         & a {
+            padding:10px 15px;
             color: #222;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 600;
+            position: relative;
+
+            &:after {
+                font-size:10px;
+                color:#72777C;
+                position: absolute;
+                right: 10px;
+                z-index: 1;
+                content: "▲";
+                top: calc(50% - 6px);
+            }
+            &:after {
+                content: "▼";
+            }
+
         }
     }
+
     & .panel-heading:hover {
-        background:#F7F7F7;
+        background: #F7F7F7;
     }
 
     & .panel-collapse {

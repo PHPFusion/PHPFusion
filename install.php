@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-define('BASEDIR', '');
+const BASEDIR = __DIR__;
 define("IN_FUSION", true);
 require_once __DIR__.'/includes/autoloader.php';
 // Start the installer

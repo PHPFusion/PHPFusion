@@ -244,7 +244,7 @@ class SitelinksAdmin {
                 "link_order"      => form_sanitizer($_POST['link_order'], '', 'link_order'),
                 "link_window"     => form_sanitizer(isset($_POST['link_window']) && $_POST['link_window'] == 1 ? 1 : 0, 0, 'link_window')
             ];
-            if ($this->data['link_position'] > 3) {
+            if ($this->data['link_position']> 3) {
                 $this->data['link_position'] = form_sanitizer($_POST['link_position_id'], 3, 'link_position_id');
             }
 
@@ -315,7 +315,7 @@ class SitelinksAdmin {
         ]);
 
         // There will be a trick to manipulate the situation here
-        if ($this->data['link_position'] > 3) {
+        if ($this->data['link_position']> 3) {
             $this->data['link_position_id'] = $this->data['link_position'];
             $this->data['link_position'] = 4;
         }
@@ -385,68 +385,160 @@ class SitelinksAdmin {
     }
 
     private function display() {
-        $this->settings = fusion_get_settings();
-        // need to boil the grid
-        add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/jquery-ui/jquery-ui.min.js'></script>");
-        add_to_jquery("
-        $('#site-links').sortable({
-            handle : '.handle',
-            placeholder: 'state-highlight',
-            connectWith: '.connected',
-            scroll: true,
-            axis: 'y',
-            update: function () {
-                var ul = $(this),
-                order = ul.sortable('serialize'),
-                i = 0;
-                $.ajax({
-                    url: '".ADMIN."includes/site_links_updater.php".$this->aidlink."',
-                    type: 'GET',
-                    dataType: 'json',
-                    data : order,
-                    success: function(e) {
-                        console.log(e);
-                        if (e.status == 200) {
-                        alert('".fusion_get_locale('SL_0016', LOCALE.LOCALESET."admin/sitelinks.php")."');
-
-                        ul.find('.num').each(function(i) {
-                        $(this).text(i+1);
-                        });
-                        ul.find('li').removeClass('tbl2').removeClass('tbl1');
-                        ul.find('li:odd').addClass('tbl2');
-                        ul.find('li:even').addClass('tbl1');
-                        window.setTimeout('closeDiv();',2500);
-                        }
-                    },
-                    error: function(result) {
-                        alert('".fusion_get_locale('error_preview', LOCALE.LOCALESET."admin/html_buttons.php")."'
-                        + '\\n".fusion_get_locale('error_preview_text', LOCALE.LOCALESET."admin/html_buttons.php")."');
-                    }
-                });
+        /** Private methods */
+        /** Custom links menu */
+        function custom_links() {
+            $menu_id = get('link_position', FILTER_VALIDATE_INT);
+            if (!$menu_id) {
+                $menu_id = 1;
             }
-        });
-
-        function checkLinkPosition(val) {
-            if (val == 4) {
-                $('#link_position_id').prop('disabled', false).show();
-            } else {
-                $('#link_position_id').prop('disabled', true).hide();
-            }
-        }
-        ");
-
-        function custmon_links() {
             echo openform('customlinksFrm', 'post', FORM_REQUEST, ['class' => 'form-horizontal']);
             echo form_text('link_name', 'Link Name', '', ['required' => TRUE, 'inline' => FALSE]).
-                form_text('link_url', 'Link URL', '', ['required' => FALSE, 'inline' => FALSE]);
+                form_text('link_url', 'Link URL', '', ['required' => FALSE, 'inline' => FALSE]).
+                form_hidden('link_position', '', $menu_id, ['required' => FALSE, 'inline' => FALSE]);
             echo "<div class='text-right'>";
-            echo form_button('link_add', 'Add to Navigation', '', ['class' => 'btn-primary']);
+            echo form_button('link_add', 'Add to Navigation', "", ['class' => 'btn-primary']);
             echo "</div>";
             echo closeform();
         }
+
+        // custom links form
+        function link_form($data) {
+            $link_id = $data["link_id"];
+            echo opencollapse($link_id);
+            echo opencollapsebody($data["link_name"], $link_id."m", $link_id);
+            echo openform("_form", "post", FORM_REQUEST, array("form_id" => "_form_".$link_id));
+            switch ($data["link_type"]) {
+                case "link":
+                default:
+                    echo form_hidden("_type", "", "links", array("input_id" => "_type_".$link_id));
+                    echo form_text("_url", "URL", $data["link_url"], array("input_id" => "_url_".$link_id, "required" => TRUE));
+                    echo form_text("_name", "Name", $data["link_name"], array("input_id" => "_name_".$link_id, "required" => TRUE));
+                    echo form_text("_title", "Title Attribute", $data["link_title"], array("input_id" => "_title_".$link_id, "required" => TRUE));
+                    echo form_textarea("_description", "Description", $data["link_description"], array("input_id" => "_description_".$link_id, "ext_tip" => "The description will be displayed in the menu if the current theme supports it."));
+            }
+            echo form_hidden("_position", "", $data["link_position"], array("input_id" => "_position_".$link_id));
+            echo form_hidden("_id", "", $link_id, array("input_id" => "_lid_".$link_id));
+            echo form_text("_icon", "Icon Class", $data["link_icon"], array("input_id" => "_icon_".$link_id));
+            echo form_checkbox("_window", "Open link in a new tab", $data["link_window"], array("input_id" => "_window_".$link_id, "type" => "checkbox", "reverse_label" => TRUE));
+            echo form_select("_visibility", "Visibility", $data["link_visibility"], array("input_id" => "_visibility_".$link_id, "options" => fusion_get_groups()));
+            echo form_checkbox("_status", "Status", $data["link_status"], array("input_id" => "_status_".$link_id, "type" => "radio", "options" => get_status_opts()));
+            echo '<a href="#" class="remove_link text-danger" data-id="'.$link_id.'_menu">Remove</a>';
+            echo form_button("save_link", "Save Link", "save_link", array("input_id" => "_save_".$link_id, "class" => "btn-primary"));
+            echo closeform();
+            echo closecollapsebody();
+            echo closecollapse();
+        }
+
+        /**
+         * @param int $menu_id
+         */
+        function show_menu_list($menu_id = 1) {
+            add_to_footer("<script src='".INCLUDES."jquery/jquery-ui/jquery-ui.min.js'></script>");
+            add_to_footer("<script src='".INCLUDES."jquery/jquery-ui/jquery.mjs.nestedSortable.js'></script>");
+            add_to_footer("<script src='".INCLUDES."jquery/sitelinks-sortable.js'></script>");
+
+            function recurse_list($result, $index = 0) {
+                /** check if have results */
+                if (isset($result[$index])) {
+                    if (!$index) {
+                        /** only run once in the root level */
+                        echo '<ol class="sortable ui-sortable" style="list-style:none;margin:0;padding:0;">';
+                    }
+                    /** Loop through current level
+                     *
+                     * @var  $link_id-  link_id
+                     * @var  $link   -  link data
+                     */
+                    foreach ($result[$index] as $link_id => $link) {
+                        echo '<li id="menuItem_'.$link['link_id'].'" style="cursor:pointer;">';
+                        echo '<div>';
+                        link_form($link);
+                        echo '</div>';
+                        if (isset($result[$link_id])) {
+                            echo '<ol style="list-style:none;">';
+                            recurse_list($result, $link_id);
+                            echo '</ol>';
+                        }
+                        echo '</li>';
+                    }
+                    if (!$index) {
+                        echo '</ol>';
+                        // Update the link
+                        $cookie = cookie(COOKIE_PREFIX.'user');
+                        add_to_jquery(/** @lang JavaScript */ "
+                        /** change links properties event handler */    
+                        $(document).on('click', 'button[name=\"save_link\"]', function(e){
+                            e.preventDefault();
+                            let form = $(this).closest('form');
+                            let form_id = form.prop('id');                            
+                            // admin post...
+                            let links = new FusionPost(form_id, '$cookie', 'SL', 'update-links');
+                            links.submit()
+                                .then(function(response){
+                                    return links.return();
+                                })
+                                .then(function(xhr){
+                                    let response = JSON.parse(xhr['responseText']);
+                                    if (response['status'] === true && response['target']) {
+                                        $('#'+response['target']).removeClass('show');
+                                        // do a popper.js confirmation
+                                    }                                     
+                                })
+                                .catch(function(error){
+                                    console.log('Something went wrong', error);
+                                });
+                    
+                        });
+                        /** change the title as we change the lin name */
+                        
+                                  
+                        ");
+                    }
+                }
+            }
+
+            if (isnum($menu_id)) {
+                $result_tree = dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat", "WHERE link_position=$menu_id ORDER BY link_order ASC");
+                recurse_list($result_tree);
+            }
+
+            // Sort link form
+            echo openform("sortlinks_form", "post", FORM_REQUEST);
+            echo form_hidden("link_menu", "", "");
+            echo form_hidden("link_sort", "", "");
+            echo form_button("save_menu", "Save Menu", "save_menu", ["class" => "btn-primary"]);
+            echo closeform();
+
+            // Update the menu
+            $cookie = cookie(COOKIE_PREFIX.'user');
+            add_to_jquery(/** @lang JavaScript */ "
+            $(document).on('click', 'button[name=\"save_menu\"]', function(e){
+                e.preventDefault();
+                let form = $(this).closest('form');
+                let form_id = form.prop('id');                            
+                // admin post...
+                let menu_action = new FusionPost(form_id, '$cookie', 'SL', 'update-menu');
+                menu_action.submit()
+                    .then(function(response){
+                        return menu_action.return();
+                    })
+                    .then(function(xhr){
+                        let response = xhr['responseText'];
+                        console.log(response);
+                        // do a popper.js confirmation                    
+                    })
+                    .catch(function(error){
+                        console.log('Something went wrong', error);
+                    });
+        
+            });
+            ");
+        }
         ?>
+
         <div class="list-group-item my-4">
-            <?php echo openform('menufrm', 'post', FORM_REQUEST, ['inline' => TRUE]) ?>
+            <?php echo openform('menufrm', 'post', FORM_REQUEST, ['inline' => TRUE, 'max_tokens' => 50]) ?>
             <?php echo form_select('menu', 'Select a menu to edit:', '', [
                     'options'     => SiteLinks::get_SiteLinksPosition(),
                     'select_alt'  => TRUE,
@@ -460,14 +552,14 @@ class SitelinksAdmin {
             <?php echo closeform() ?>
         </div>
         <div class="row">
-            <div class="col-12 col-lg-3 col-xl-2">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 col-xl-2">
                 <h2>Add menu items</h2>
                 <?php
                 echo opencollapse('menu-switch');
                 echo opencollapsebody('News', 'menu-news', 'menu-switch', FALSE);
                 echo closecollapsebody();
                 echo opencollapsebody('Custom Links', 'menu-1', 'menu-switch', TRUE);
-                echo custmon_links();
+                custom_links();
                 echo closecollapsebody().closecollapse();
                 ?>
             </div>
@@ -476,73 +568,100 @@ class SitelinksAdmin {
                 <?php openside(form_text('', '', '', ['placeholder' => 'Menu name', 'required' => TRUE, 'inline' => TRUE, 'class' => 'm-t-10 align-self-center'])); ?>
                 Drag each item into the order you prefer. Click the arrow on the right of the item to reveal additional configuration options.
                 <div class="row">
-                    <div class="sortable col-xs-12 col-sm-6 col-lg-2">
-                        <div class="list">
-                            <?php echo opencollapse('menu-item-1').opencollapsebody('Link text', 'menu-item-1-item', 'menu-item-1').
-                                form_text('_url', 'URL', '', ['input_id' => 'mi-1-link_url', 'inline' => TRUE]).
-                                form_text('_name', 'Link Name', '', ['input_id' => 'mi-1-link_name']).
-                                form_text('_title', 'Title Attribute', '', ['input_id' => 'mi-1-link_title']).
-                                form_checkbox('_window', 'Open link in a new tab', '', ['reverse_label' => TRUE, 'type' => 'checkbox']).
-                                form_text('_class', 'CSS Classes (optional)', '').
-                                form_textarea('_description', 'Description', '', ['ext_tip' => 'The description will be displayed in the menu if the current theme supports it.']);
-                            ?>
-                            <a href="" class="text-danger">Remove</a> | <a href="" class="text-primary">Cancel</a>
-                            <?php
-                            echo closecollapsebody().closecollapse(); ?>
+                    <div class="sortable col-xs-12 col-sm-6 col-lg-4 col-xl-3">
+                        <div class="list" style="margin:20px 0;">
+                            <?php echo show_menu_list() ?>
                         </div>
                     </div>
                 </div>
-                <?php closeside();?>
+                <?php closeside(); ?>
             </div>
         </div>
+
+        <script>$('.toast').toast('show');</script>
+        <div aria-live="polite" aria-atomic="true" style="position: relative; min-height: 200px;">
+            <!-- Position it -->
+            <div style="position: absolute; top: 0; right: 0;">
+
+                <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-header">
+                        <img src="..." class="rounded mr-2" alt="...">
+                        <strong class="mr-auto">Bootstrap</strong>
+                        <small>11 mins ago</small>
+                        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="toast-body">
+                        Hello, world! This is a toast message.
+                    </div>
+                </div>
+
+                <!-- Then put toasts within -->
+                <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-header">
+                        <img src="..." class="rounded mr-2" alt="...">
+                        <strong class="mr-auto">Bootstrap</strong>
+                        <small class="text-muted">just now</small>
+                        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="toast-body">
+                        See? Just like this.
+                    </div>
+                </div>
+
+                <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-header">
+                        <img src="..." class="rounded mr-2" alt="...">
+                        <strong class="mr-auto">Bootstrap</strong>
+                        <small class="text-muted">2 seconds ago</small>
+                        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="toast-body">
+                        Heads up, toasts will stack automatically
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <?php
         echo "<script src='".INCLUDES."jscripts/admin-post.js'></script>";
         echo "<script>
-         // bootstrap added list
-         $(document).on('click', 'a[data-toggle=\"collapse\"]', function(e) {
-            let target = $(this).attr('href');            
-            $(target).collapse('toggle');
-        });
-
-         // on click of submit button for this form.
-        $(document).on('submit', 'form#customlinksFrm', function (e) {
-            // prevent php submit
-            e.preventDefault();  
-            /** Constructor for JS post */
-            let submitCustomLinks = new FusionPost('customlinksFrm', '".cookie(COOKIE_PREFIX.'user')."', 'SL', 'add-links');
+            // bootstrap added list
+            $(document).on('submit', 'form#customlinksFrm', function (e) {
+                // prevent php submit
+                e.preventDefault();
+                /** Constructor for JS post */
+                let submitCustomLinks = new FusionPost('customlinksFrm', '".cookie(COOKIE_PREFIX.'user')."', 'SL', 'add-links');
             /** Do a submit for sanitization */
             submitCustomLinks.submit()
-            /** when submit is possible, do the php hook - init Ajax request */
-            .then(function(response){
+            /** when submit is possible, do the php hook-init Ajax request */
+            .then(function (response){
                 //console.log(response);
-                return submitCustomLinks.return();                
+                return submitCustomLinks.return ();
             })
             /** We will get our hook response output */
-            .then(function(xhr){
+            .then(function (xhr){
                 //console.log(xhr);
                 let item = xhr['responseText'];
-                $('.sortable').append('<div class=\"list\">' + item +'</div>');
+                $('ol.sortable').append(item);
                 // use the helper function for cleaning up the form
                 submitCustomLinks.bs4Success();
                 // do a popper
             })
             /** When sanitization fails */
-            .catch(function(error){
-                // you can do a popper here or something depending on what you need.
-                console.log('Something went wrong', error);                
-            });                      
-        });                
-        </script>";
+            .catch(function (error){
+                    // you can do a popper here or something depending on what you need.
+                    console.log('Something went wrong', error);
+                });
+        });
+        </script> ";
 
         return '';
-
-        //$visibility = self::get_LinkVisibility();
-        //$position_opts = self::get_SiteLinksPosition();
-        //$allowed_actions = array_flip(["publish", "unpublish", "move", "move_confirm", "delete"]);
-
-        if (isset($_POST['link_clear'])) {
-            redirect(FUSION_SELF.$this->aidlink);
-        }
 
         // custom table action
         if (isset($_POST['table_action']) && isset($allowed_actions[$_POST['table_action']])) {
@@ -553,10 +672,10 @@ class SitelinksAdmin {
                     // find all links except all the selected link_ids
                     $link_ids = implode(',', $input);
                     $available_query = "SELECT * FROM ".DB_SITE_LINKS."
-                    ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_id NOT IN ($link_ids) ORDER BY link_name";
+                    ".(multilang_table("SL") ? "WHERE link_language = '".LANGUAGE."' AND " : "WHERE")." link_id NOT IN($link_ids) ORDER BY link_name";
                     $list_query = dbquery($available_query);
                     $res = '';
-                    if (dbrows($list_query) > 0) {
+                    if (dbrows($list_query)> 0) {
                         $list[0] = $this->locale['SL_0032'];
                         while ($lData = dbarray($list_query)) {
                             if (!stristr($lData['link_name'], '-')) {
@@ -587,18 +706,18 @@ class SitelinksAdmin {
                         if (self::verify_sitelinks($link_id) && fusion_safe()) {
                             switch ($_POST['table_action']) {
                                 case "publish":
-                                    dbquery("UPDATE ".DB_SITE_LINKS." SET link_status='1' WHERE link_id='".intval($link_id)."'");
+                                    dbquery("UPDATE ".DB_SITE_LINKS." SET link_status = '1' WHERE link_id = '".intval($link_id)."'");
                                     break;
                                 case "unpublish":
-                                    dbquery("UPDATE ".DB_SITE_LINKS." SET link_status='0' WHERE link_id='".intval($link_id)."'");
+                                    dbquery("UPDATE ".DB_SITE_LINKS." SET link_status = '0' WHERE link_id = '".intval($link_id)."'");
                                     break;
                                 case "move_confirm":
                                     // pop a model up
                                     $link_move_to = (isset($_POST['move_to_id']) ? form_sanitizer($_POST['move_to_id'], 0, 'move_to_id') : 0);
-                                    dbquery("UPDATE ".DB_SITE_LINKS." SET link_cat='$link_move_to' WHERE link_id='".intval($link_id)."'");
+                                    dbquery("UPDATE ".DB_SITE_LINKS." SET link_cat = '$link_move_to' WHERE link_id = '".intval($link_id)."'");
                                     break;
                                 case "delete":
-                                    dbquery("DELETE FROM  ".DB_SITE_LINKS." WHERE link_id='".intval($link_id)."'");
+                                    dbquery("DELETE FROM  ".DB_SITE_LINKS." WHERE link_id = '".intval($link_id)."'");
                                     break;
                                 default:
                                     redirect(FUSION_SELF.$this->aidlink);
@@ -621,13 +740,13 @@ class SitelinksAdmin {
             $search_string['link_name'] = ["input" => form_sanitizer($_POST['link_name'], "", "link_name"), "operator" => "LIKE"];
         }
         if (!empty($_POST['link_status']) && isnum($_POST['link_status'])) {
-            $search_string['link_status'] = ["input" => form_sanitizer($_POST['link_status'], 0, 'link_status'), "operator" => "="];
+            $search_string['link_status'] = ["input" => form_sanitizer($_POST['link_status'], 0, 'link_status'), "operator" => " = "];
         }
         if (!empty($_POST['link_visibility'])) {
-            $search_string['link_visibility'] = ["input" => form_sanitizer($_POST['link_visibility'], iGUEST, "link_visibility"), "operator" => "="];
+            $search_string['link_visibility'] = ["input" => form_sanitizer($_POST['link_visibility'], iGUEST, "link_visibility"), "operator" => " = "];
         }
         if (!empty($_POST['link_position'])) {
-            $search_string['link_position'] = ["input" => form_sanitizer($_POST['link_position'], 0, "link_position"), "operator" => "="];
+            $search_string['link_position'] = ["input" => form_sanitizer($_POST['link_position'], 0, "link_position"), "operator" => " = "];
         }
         if (isset($_POST['link_cat']) && isnum($_POST['link_cat'])) {
             $search_string['link_cat'] = ['input' => form_sanitizer($_POST['link_cat'], 0, 'link_cat'), 'operator' => '='];
@@ -638,7 +757,7 @@ class SitelinksAdmin {
             foreach ($search_string as $key => $values) {
                 if ($sql_condition)
                     $sql_condition .= ' AND ';
-                $sql_condition .= "`$key` ".$values['operator'].($values['operator'] == "LIKE" ? "'%" : "'").$values['input'].($values['operator'] == "LIKE" ? "%'" : "'");
+                $sql_condition .= "`$key` ".$values['operator'].($values['operator'] == "LIKE" ? "'%" : "'").$values['input'].($values['operator'] == "LIKE" ? " % '" : "'");
             }
         }
 
@@ -663,12 +782,12 @@ class SitelinksAdmin {
 
         $link_rows = dbrows($result);
 
-        echo "<div class='m-t-15'>\n";
+        echo " < div class='m-t-15'> \n";
         echo openform("link_filter", "post", FUSION_REQUEST);
-        echo "<div class='clearfix'>\n";
-        echo "<div class='pull-right'>\n";
-        echo "<a class='btn btn-success btn-sm m-r-10' href='".clean_request("ref=link_form", ["ref"], FALSE)."' >".$this->locale['SL_0010']."</a>\n";
-        echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('publish', '#table_action', '#link_table');\"><i class='fa fa-check fa-fw'></i> ".$this->locale['publish']."</a>\n";
+        echo " < div class='clearfix'> \n";
+        echo " < div class='pull-right'> \n";
+        echo " < a class='btn btn-success btn-sm m-r-10' href = '".clean_request("ref=link_form", ["ref"], FALSE)."'> ".$this->locale['SL_0010']."</a> \n";
+        echo " < a class='btn btn-default btn-sm m-r-10' onclick = \"run_admin('publish', '#table_action', '#link_table');\"><i class='fa fa-check fa-fw'></i> ".$this->locale['publish']."</a>\n";
         echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('unpublish', '#table_action', '#link_table');\"><i class='fa fa-ban fa-fw'></i> ".$this->locale['unpublish']."</a>\n";
         echo "<a class='btn pointer btn-default btn-sm m-r-10' onclick=\"run_admin('move', '#table_action', '#link_table');\"><i class='fa fa-hand-grab-o fa-fw'></i> ".$this->locale['move']."</a>\n";
         echo "<a class='btn btn-danger btn-sm m-r-10' onclick=\"run_admin('delete', '#table_action', '#link_table');\"><i class='fa fa-trash-o fa-fw'></i> ".$this->locale['delete']."</a>\n";
@@ -748,7 +867,7 @@ class SitelinksAdmin {
 
         $pos_result = dbquery("SELECT link_position FROM ".DB_SITE_LINKS." GROUP BY link_position");
         $link_position = [];
-        if (dbrows($pos_result) > 0) {
+        if (dbrows($pos_result)> 0) {
             while ($posData = dbarray($pos_result)) {
                 $link_position[$posData['link_position']] = $this->locale['custom']." ID #".$posData['link_position'];
                 if (isset($position_opts[$posData['link_position']]) && $posData['link_position'] < 4) {
@@ -768,9 +887,9 @@ class SitelinksAdmin {
         $cat_result = dbquery("SELECT sl.link_cat, sl2.link_id, sl2.link_name
           FROM ".DB_SITE_LINKS." sl
           INNER JOIN ".DB_SITE_LINKS." sl2 ON sl.link_cat=sl2.link_id
-          ".(multilang_table("SL") ? "WHERE sl.link_language='".LANGUAGE."' AND " : "WHERE ")."sl.link_cat > 0 GROUP BY sl.link_cat ORDER BY link_name ASC
+          ".(multilang_table("SL") ? "WHERE sl.link_language='".LANGUAGE."' AND " : "WHERE ")."sl.link_cat> 0 GROUP BY sl.link_cat ORDER BY link_name ASC
         ");
-        if (dbrows($cat_result) > 0) {
+        if (dbrows($cat_result)> 0) {
             while ($cdata = dbarray($cat_result)) {
                 $link_cat_opts[$cdata['link_id']] = $cdata['link_name'];
             }
@@ -806,7 +925,7 @@ class SitelinksAdmin {
             ]
         );
         echo "</div>\n";
-        if ($max_rows > $link_rows) {
+        if ($max_rows> $link_rows) {
             echo "<div class='display-inline-block pull-right'>\n";
             echo makepagenav($rowstart, $limit, $max_rows, 3, FUSION_SELF.$this->aidlink.(isset($_GET['link_cat']) && isnum($_GET['link_cat']) ? "&amp;link_cat=".intval($_GET['link_cat'])."&amp;" : '')."news_display=$limit&amp;");
             echo "</div>\n";
@@ -851,7 +970,7 @@ class SitelinksAdmin {
                 "link_visibility" => form_sanitizer($_POST['link_visibility'], "", "link_visibility"),
                 "link_window"     => isset($_POST['link_window']) ? TRUE : FALSE,
             ];
-            if ($this->data['link_position'] > 3) {
+            if ($this->data['link_position']> 3) {
                 $this->data['link_position'] = form_sanitizer($_POST['link_position_id'], 3, 'link_position_id');
             }
             if (fusion_safe()) {
@@ -935,7 +1054,7 @@ class SitelinksAdmin {
 
         echo "<tbody id='site-links' class='connected'>\n";
 
-        if ($link_rows > 0) {
+        if ($link_rows> 0) {
             $i = 0;
             while ($data = dbarray($result)) {
 
@@ -1014,7 +1133,7 @@ class SitelinksAdmin {
                         $('#sl_status').select2('val', e.link_status);
                         // switch to custom
                         $('#sl-link_position').select2('val', e.link_position);
-                        if (e.link_position > 3) {
+                        if (e.link_position> 3) {
                             checkLinkPosition(e.link_position);
                             $('#link_position_id').val(e.link_position_id);
                         }
@@ -1024,7 +1143,7 @@ class SitelinksAdmin {
                         $('#sl_language').select2('val', e.link_language);
                         $('#sl_visibility').select2('val', e.link_visibility);
                         var length = e.link_window;
-                        if (e.link_window > 0) { $('#sl_window').attr('checked', true);	} else { $('#sl_window').attr('checked', false); }
+                        if (e.link_window> 0) { $('#sl_window').attr('checked', true);	} else { $('#sl_window').attr('checked', false); }
                     },
                     error : function(e) {
                         console.log(e);
@@ -1041,4 +1160,4 @@ class SitelinksAdmin {
 
     }
 
-}
+    }

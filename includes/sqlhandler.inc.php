@@ -910,7 +910,6 @@ function dbquery_insert($table, $inputdata, $mode, array $options = []) {
         }
         $sanitized_input[] = "`$name` = '$value'";
     }
-
     if (!isset($sqlPatterns[$mode])) {
         die();
     }
@@ -944,9 +943,7 @@ function dbquery_insert($table, $inputdata, $mode, array $options = []) {
         }
         return ($mode === 'save') ? dblastid() : 0;
     }
-    print_p($where);
-    print_p($sanitized_input);
-    print_p($sql);
+
 }
 
 /**

@@ -49,30 +49,32 @@
 
 .form-control:focus,
 .single-line:focus {
-    border-color: #1ab394;
+    border-color: var(--link);
+    box-shadow: 0 0 0 1px var(--link);
+    outline: 2px solid transparent;
 }
 
 .has-success .form-control,
 .has-success .form-control:focus {
-    border-color: #1ab394;
+    border-color: var(--success-color);
 }
 
 .has-warning .form-control,
 .has-warning .form-control:focus {
-    border-color: #f8ac59;
+    border-color: var(--warning-color);
 }
 
 .has-error .form-control,
 .has-error .form-control:focus {
-    border-color: #ed5565;
+    border-color: var(--danger-color);
 }
 
 .has-success .control-label {
-    color: #1ab394;
+    color: var(--success-color);
 }
 
 .has-warning .control-label {
-    color: #f8ac59;
+    color:var(--warning-color);
 }
 
 .has-error .control-label {

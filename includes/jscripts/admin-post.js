@@ -28,7 +28,7 @@ let FusionPost = function (form_id, token, rights, php_hook) {
      */
     this.submit = function () {
         return new Promise(function (resolve, reject) {
-            formData = new FormData(form);
+            //formData = new FormData(form);
             formData.append('action_hook', php_hook);
 
             // honeypot is not implemented yet.
@@ -40,20 +40,20 @@ let FusionPost = function (form_id, token, rights, php_hook) {
             for (let formValues of formData.entries()) {
                 /** not form_id and fusion_token */
                 if (formValues[0] !== 'form_id' && formValues[0] !== 'fusion_token') {
-                    _sanitizer(formData.get('form_id'), formData.get('fusion_token'), formValues[0], formValues[1])
+                    let _form_id =  formData.get('form_id');
+                    let _form_token = formData.get('fusion_token');
+                    _sanitizer(_form_id, _form_token, formValues[0], formValues[1])
                         .then(function (posts) {
-
                             const {responseText} = posts;
-                            console.log(responseText);
-
+                            //console.log(responseText);
                             return JSON.parse(responseText);
                         }).then(function (jsonResponse) {
-
                             // console.log(jsonResponse);
 
                         /** use indexer access for all response array */
                         input_names.push(jsonResponse["input_name"]);
                         input_values.push(jsonResponse["input_value"]);
+
                         /** perform live error validation */
                         if (jsonResponse["error"]) {
                             /** add input errors */
@@ -150,8 +150,12 @@ let FusionPost = function (form_id, token, rights, php_hook) {
         form.querySelectorAll('.invalid-feedback').forEach(el => el.remove());
         // remove all the is-invalid in form-control class.
         form.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
-        // clear the form fields.
-        form.querySelectorAll('input, select').forEach(el => el.value = '');
+        // clear the form fields except for hidden type
+        form.querySelectorAll('input, select').forEach(function(el){
+            if (el.name !== "form_id" && el.name !=="fusion_token") {
+                el.value = "";
+            }
+        });
         // append a new token to the form
 
         // reset the button back to original text

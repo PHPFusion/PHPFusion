@@ -28,7 +28,11 @@ define("THEMES", BASEDIR."themes/");
 define("BOILERPLATES", BASEDIR."themes/boilerplates/");
 define("SITE_THEMES", BASEDIR."themes/site_themes/");
 define("ADMIN_THEMES", BASEDIR."themes/admin_themes/");
-define("TEMPLATES", BASEDIR."themes/templates/");
+
+// @todo convert them all to these...
+//define("TEMPLATES", BASEDIR."themes/templates/");
+const TEMPLATES = BASEDIR."themes".DIRECTORY_SEPARATOR."templates".DIRECTORY_SEPARATOR;
+
 define("DB_HANDLERS", BASEDIR."includes/db_handlers/");
 define("FUSION_IP", !empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR']);
 define("QUOTES_GPC", (ini_get('magic_quotes_gpc') ? TRUE : FALSE));

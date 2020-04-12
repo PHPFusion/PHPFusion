@@ -25,7 +25,7 @@
  */
 function renderNotices($notices) {
     $messages = "";
-
+    // need to migrate to boiler support since this has HTML
     foreach ($notices as $status => $notice) {
         if ($status == "success") {
             // Success messages can be auto closed
@@ -67,9 +67,9 @@ function hasNotice($key = FUSION_SELF) {
  * Retrievs all notices
  * Retrievs all notices for the group identified by the key provided
  *
- * @param string|array $key the key(s) identifying a group or more holding notices, by default the page name in which the notice was set
+ * @param string|array $key    the key(s) identifying a group or more holding notices, by default the page name in which the notice was set
  * @param boolean      $delete whether to delete or keep a notice message after it was accessed. This only works if the notice
- * was set or added while having $removeAfterAccess set to FALSE
+ *                             was set or added while having $removeAfterAccess set to FALSE
  *
  * @return array the notices for the group identified by the provided key
  */
@@ -111,21 +111,32 @@ function remove_notice($key = ['all', FUSION_SELF, FUSION_REQUEST]) {
  * Adds a notice message
  * Adds a notice message to the group identified by the key provided
  *
- * @param string  $status the status of the message
- * @param string  $value the message
- * @param string  $key the key identifying a group holding notices, by default the page name in which the notice was set
+ * @param string  $status            the status of the message
+ * @param string  $value             the message
+ * @param string  $key               the key identifying a group holding notices, by default the page name in which the notice was set
  * @param boolean $removeAfterAccess whether the notice should be automatically removed after it was displayed once,
- * if set to FALSE when getNotices() is called you have the option to keep the notice even after it was accesed
+ *                                   if set to FALSE when getNotices() is called you have the option to keep the notice even after it was accesed
  */
 function addNotice($status, $value, $key = FUSION_SELF, $removeAfterAccess = TRUE) {
     $type = $removeAfterAccess ? 'once' : 'persist';
     if (is_array($value)) {
-        $return = "<ol style='list-style: decimal'>\n";
-        foreach ($value as $text) {
-            $return .= "<li>".$text."</li>";
+        // Extend to multiple properties api to support Toast
+        if (isset($value['toast'])) {
+            $default = [
+                "title"       => "",
+                "description" => "",
+                "time"        => timer(time()),
+                "image"       => "",
+            ];
+            $value += $default;
+        } else {
+            $return = "<ol style='list-style: decimal;'>\n";
+            foreach ($value as $text) {
+                $return .= "<li>".$text."</li>";
+            }
+            $return .= "</ol>\n";
+            $value = $return;
         }
-        $return .= "</ol>\n";
-        $value = $return;
     }
 
     if (!isset($_SESSION['notices'][$type][$key][$status])) {
@@ -141,11 +152,11 @@ function addNotice($status, $value, $key = FUSION_SELF, $removeAfterAccess = TRU
  * Sets a notice message
  * Sets a notice message for the whole group identified by the key provided, this will overwrite any other notices previously set
  *
- * @param string  $status the status of the message
- * @param string  $value the message
- * @param string  $key the key identifying a group holding notices, by default the page name in which the notice was set
+ * @param string  $status            the status of the message
+ * @param string  $value             the message
+ * @param string  $key               the key identifying a group holding notices, by default the page name in which the notice was set
  * @param boolean $removeAfterAccess whether the notice should be automatically removed after it was displayed once.
- * If set to FALSE when getNotices() is called you have the option to keep the notice even after it was accesed.
+ *                                   If set to FALSE when getNotices() is called you have the option to keep the notice even after it was accesed.
  */
 function setNotice($status, $value, $key = FUSION_SELF, $removeAfterAccess = TRUE) {
     $type = $removeAfterAccess ? 'once' : 'persist';

@@ -622,6 +622,7 @@ function boilerplate_get_files() {
 if (!function_exists("openmodal") && !function_exists("closemodal") && !function_exists("modalfooter")) {
     /**
      * Generate modal
+     *
      * @param       $id
      * @param       $title
      * @param array $options
@@ -635,8 +636,9 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
 
     /**
      * Adds a modal footer in between openmodal and closemodal.
-     * @param string $content
-     * @param bool|FALSE   $dismiss
+     *
+     * @param string     $content
+     * @param bool|FALSE $dismiss
      *
      * @return mixed
      * @throws ReflectionException
@@ -647,6 +649,7 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
 
     /**
      * Close the modal
+     *
      * @return mixed
      * @throws ReflectionException
      */
@@ -1827,4 +1830,23 @@ function get_template_path($template_path) {
  */
 function set_template_path($template_path, $path) {
     Template::setTemplatePath($template_path, $path);
+}
+
+/**
+ * @param array $options
+ * @param array $replacements
+ *
+ * @return array
+ */
+function get_status_opts(array $options = array(), array $replacements = array()) {
+    $locale = fusion_get_locale();
+    $default_statuses = array(
+        0 => $locale["disable"],
+        1 => $locale["enable"],
+    );
+    $options += $default_statuses;
+    if (!empty($replacements)) {
+        $options = $replacements;
+    }
+    return $options;
 }
