@@ -15,6 +15,20 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
+use PHPFusion\Steam;
+
+/**
+ * @param $notices
+ *
+ * @return string
+ * @throws ReflectionException
+ * @deprecated
+ */
+function renderNotices($notices) {
+    return render_notices($notices);
+}
+
 /**
  * Renders notices
  * Formats and renders notices
@@ -22,25 +36,10 @@
  * @param array $notices the array contaning notices
  *
  * @return string the notices formatted as HTML
+ * @throws ReflectionException
  */
-function renderNotices($notices) {
-    $messages = "";
-    // need to migrate to boiler support since this has HTML
-    foreach ($notices as $status => $notice) {
-        if ($status == "success") {
-            // Success messages can be auto closed
-            $messages .= "<div id='close-message'>\n";
-        }
-        $messages .= "<div class='admin-message alert alert-".$status." alert-dismissible' role='alert'>";
-        $messages .= "<div class='admin-message-body'><button type='button' class='close' data-dismiss='alert'><span aria-hidden='true'>&times;</span></button>";
-        $messages .= implode("<br/>", $notice);
-        $messages .= "</div>\n</div>\n";
-        if ($status == "success") {
-            $messages .= "</div>\n";
-        }
-    }
-
-    return (string)$messages;
+function render_notices($notices) {
+    return Steam::getInstance()->load('Alerts')->render($notices);
 }
 
 /**
@@ -64,6 +63,17 @@ function hasNotice($key = FUSION_SELF) {
 }
 
 /**
+ * @param string $key
+ * @param bool   $delete
+ *
+ * @return array
+ * @deprecated
+ */
+function getNotices($key = FUSION_SELF, $delete = TRUE) {
+    return get_notices($key, $delete);
+}
+
+/**
  * Retrievs all notices
  * Retrievs all notices for the group identified by the key provided
  *
@@ -73,7 +83,7 @@ function hasNotice($key = FUSION_SELF) {
  *
  * @return array the notices for the group identified by the provided key
  */
-function getNotices($key = FUSION_SELF, $delete = TRUE) {
+function get_notices($key = FUSION_SELF, $delete = TRUE) {
     $key = is_array($key) ? $key : [$key]; // key can be arrays or a string
     $notices = [];
     if (!empty($_SESSION['notices'])) {
@@ -93,7 +103,6 @@ function getNotices($key = FUSION_SELF, $delete = TRUE) {
     return (array)$notices;
 }
 
-
 function remove_notice($key = ['all', FUSION_SELF, FUSION_REQUEST]) {
     $key = is_array($key) ? $key : [$key]; // key can be arrays or a string
     if (!empty($_SESSION['notices'])) {
@@ -108,16 +117,30 @@ function remove_notice($key = ['all', FUSION_SELF, FUSION_REQUEST]) {
 }
 
 /**
+ * This function will be deprecated in the coming patches.
+ *
+ * @param        $status
+ * @param        $value
+ * @param string $key
+ * @param bool   $removeAfterAccess
+ *
+ * @deprecated
+ */
+function addNotice($status, $value, $key = FUSION_SELF, $removeAfterAccess = TRUE) {
+    add_notice($status, $value, $key, $removeAfterAccess);
+}
+
+/**
  * Adds a notice message
  * Adds a notice message to the group identified by the key provided
  *
- * @param string  $status            the status of the message
- * @param string  $value             the message
- * @param string  $key               the key identifying a group holding notices, by default the page name in which the notice was set
- * @param boolean $removeAfterAccess whether the notice should be automatically removed after it was displayed once,
- *                                   if set to FALSE when getNotices() is called you have the option to keep the notice even after it was accesed
+ * @param string       $status            the status of the message
+ * @param string|array $value             the message
+ * @param string       $key               the key identifying a group holding notices, by default the page name in which the notice was set
+ * @param boolean      $removeAfterAccess whether the notice should be automatically removed after it was displayed once,
+ *                                        if set to FALSE when getNotices() is called you have the option to keep the notice even after it was accesed
  */
-function addNotice($status, $value, $key = FUSION_SELF, $removeAfterAccess = TRUE) {
+function add_notice($status, $value, $key = FUSION_SELF, $removeAfterAccess = TRUE) {
     $type = $removeAfterAccess ? 'once' : 'persist';
     if (is_array($value)) {
         // Extend to multiple properties api to support Toast
@@ -127,6 +150,7 @@ function addNotice($status, $value, $key = FUSION_SELF, $removeAfterAccess = TRU
                 "description" => "",
                 "time"        => timer(time()),
                 "image"       => "",
+                "class"       => $status,
             ];
             $value += $default;
         } else {

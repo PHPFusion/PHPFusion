@@ -244,7 +244,7 @@ class SitelinksAdmin {
                 "link_order"      => form_sanitizer($_POST['link_order'], '', 'link_order'),
                 "link_window"     => form_sanitizer(isset($_POST['link_window']) && $_POST['link_window'] == 1 ? 1 : 0, 0, 'link_window')
             ];
-            if ($this->data['link_position']> 3) {
+            if ($this->data['link_position'] > 3) {
                 $this->data['link_position'] = form_sanitizer($_POST['link_position_id'], 3, 'link_position_id');
             }
 
@@ -315,7 +315,7 @@ class SitelinksAdmin {
         ]);
 
         // There will be a trick to manipulate the situation here
-        if ($this->data['link_position']> 3) {
+        if ($this->data['link_position'] > 3) {
             $this->data['link_position_id'] = $this->data['link_position'];
             $this->data['link_position'] = 4;
         }
@@ -447,8 +447,8 @@ class SitelinksAdmin {
                     }
                     /** Loop through current level
                      *
-                     * @var  $link_id-  link_id
-                     * @var  $link   -  link data
+                     * @var  $link_id -  link_id
+                     * @var  $link    -  link data
                      */
                     foreach ($result[$index] as $link_id => $link) {
                         echo '<li id="menuItem_'.$link['link_id'].'" style="cursor:pointer;">';
@@ -535,6 +535,7 @@ class SitelinksAdmin {
             });
             ");
         }
+
         ?>
 
         <div class="list-group-item my-4">
@@ -578,57 +579,15 @@ class SitelinksAdmin {
             </div>
         </div>
 
-        <script>$('.toast').toast('show');</script>
-        <div aria-live="polite" aria-atomic="true" style="position: relative; min-height: 200px;">
-            <!-- Position it -->
-            <div style="position: absolute; top: 0; right: 0;">
-
-                <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-                    <div class="toast-header">
-                        <img src="..." class="rounded mr-2" alt="...">
-                        <strong class="mr-auto">Bootstrap</strong>
-                        <small>11 mins ago</small>
-                        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="toast-body">
-                        Hello, world! This is a toast message.
-                    </div>
-                </div>
-
-                <!-- Then put toasts within -->
-                <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-                    <div class="toast-header">
-                        <img src="..." class="rounded mr-2" alt="...">
-                        <strong class="mr-auto">Bootstrap</strong>
-                        <small class="text-muted">just now</small>
-                        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="toast-body">
-                        See? Just like this.
-                    </div>
-                </div>
-
-                <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-                    <div class="toast-header">
-                        <img src="..." class="rounded mr-2" alt="...">
-                        <strong class="mr-auto">Bootstrap</strong>
-                        <small class="text-muted">2 seconds ago</small>
-                        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="toast-body">
-                        Heads up, toasts will stack automatically
-                    </div>
-                </div>
-            </div>
-        </div>
-
+        <!-- Position it -->
         <?php
+        add_notice("success", array(
+            "toast"       => TRUE,
+            "title"       => "Site Links",
+            "description" => "The links are updated successfully.",
+            "icon"        => "fas fa-link",
+        ));
+
         echo "<script src='".INCLUDES."jscripts/admin-post.js'></script>";
         echo "<script>
             // bootstrap added list
@@ -675,7 +634,7 @@ class SitelinksAdmin {
                     ".(multilang_table("SL") ? "WHERE link_language = '".LANGUAGE."' AND " : "WHERE")." link_id NOT IN($link_ids) ORDER BY link_name";
                     $list_query = dbquery($available_query);
                     $res = '';
-                    if (dbrows($list_query)> 0) {
+                    if (dbrows($list_query) > 0) {
                         $list[0] = $this->locale['SL_0032'];
                         while ($lData = dbarray($list_query)) {
                             if (!stristr($lData['link_name'], '-')) {
@@ -867,7 +826,7 @@ class SitelinksAdmin {
 
         $pos_result = dbquery("SELECT link_position FROM ".DB_SITE_LINKS." GROUP BY link_position");
         $link_position = [];
-        if (dbrows($pos_result)> 0) {
+        if (dbrows($pos_result) > 0) {
             while ($posData = dbarray($pos_result)) {
                 $link_position[$posData['link_position']] = $this->locale['custom']." ID #".$posData['link_position'];
                 if (isset($position_opts[$posData['link_position']]) && $posData['link_position'] < 4) {
@@ -889,7 +848,7 @@ class SitelinksAdmin {
           INNER JOIN ".DB_SITE_LINKS." sl2 ON sl.link_cat=sl2.link_id
           ".(multilang_table("SL") ? "WHERE sl.link_language='".LANGUAGE."' AND " : "WHERE ")."sl.link_cat> 0 GROUP BY sl.link_cat ORDER BY link_name ASC
         ");
-        if (dbrows($cat_result)> 0) {
+        if (dbrows($cat_result) > 0) {
             while ($cdata = dbarray($cat_result)) {
                 $link_cat_opts[$cdata['link_id']] = $cdata['link_name'];
             }
@@ -925,7 +884,7 @@ class SitelinksAdmin {
             ]
         );
         echo "</div>\n";
-        if ($max_rows> $link_rows) {
+        if ($max_rows > $link_rows) {
             echo "<div class='display-inline-block pull-right'>\n";
             echo makepagenav($rowstart, $limit, $max_rows, 3, FUSION_SELF.$this->aidlink.(isset($_GET['link_cat']) && isnum($_GET['link_cat']) ? "&amp;link_cat=".intval($_GET['link_cat'])."&amp;" : '')."news_display=$limit&amp;");
             echo "</div>\n";
@@ -970,7 +929,7 @@ class SitelinksAdmin {
                 "link_visibility" => form_sanitizer($_POST['link_visibility'], "", "link_visibility"),
                 "link_window"     => isset($_POST['link_window']) ? TRUE : FALSE,
             ];
-            if ($this->data['link_position']> 3) {
+            if ($this->data['link_position'] > 3) {
                 $this->data['link_position'] = form_sanitizer($_POST['link_position_id'], 3, 'link_position_id');
             }
             if (fusion_safe()) {
@@ -1054,7 +1013,7 @@ class SitelinksAdmin {
 
         echo "<tbody id='site-links' class='connected'>\n";
 
-        if ($link_rows> 0) {
+        if ($link_rows > 0) {
             $i = 0;
             while ($data = dbarray($result)) {
 
@@ -1160,4 +1119,4 @@ class SitelinksAdmin {
 
     }
 
-    }
+}

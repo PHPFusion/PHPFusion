@@ -218,9 +218,9 @@
                 </li>
             </ul>
         </nav>
-
-        <div style="padding-bottom: 70px;">{{ content|raw }}</div>
-
+        <div style="padding-bottom: 70px;">
+            <div class="toast-wrapper" style="position: absolute; top: 70px; right: 20px;z-index:9999;">{{ notices|raw }}</div>
+            {{ content|raw }}</div>
         <div class="footer">
             <div class="float-right">
                 {{ errors|raw }}

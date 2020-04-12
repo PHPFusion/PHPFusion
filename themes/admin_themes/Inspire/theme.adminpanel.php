@@ -31,14 +31,14 @@ class AdminPanel extends Helper {
 
     public function __construct() {
         parent::__construct();
-        $notices = getNotices();
+        $notices =render_notices(get_notices());
+        //print_P($notices);
+
         $this->admins = Admins::getInstance();
         $rendertime_enabled = fusion_get_settings("rendertime_enabled") ? TRUE : FALSE;
         $footer_arr = [];
         if ($rendertime_enabled) {
-
             self::$locale['copyright'] = '';
-
             $footer_arr = [
                 'render_time'  => showrendertime(),
                 'memory_usage' => showMemoryUsage(),
@@ -47,7 +47,7 @@ class AdminPanel extends Helper {
         }
         $info = [
             'userdata'        => $this->userdata(),
-            'notices'         => renderNotices($notices),
+            'notices'         => $notices,
             'copyright'       => showcopyright('', TRUE),
             'errors'          => showFooterErrors(),
             'footer'          => $footer_arr,
