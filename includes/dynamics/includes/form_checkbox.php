@@ -83,44 +83,38 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
             if (!empty($new_error_text)) {
                 $options['error_text'] = $new_error_text;
             }
-            addNotice("danger", "<strong>$title</strong> - ".$options['error_text']);
+            add_notice("danger", "<strong>$title</strong> - ".$options['error_text']);
         }
     }
 
-    // $on_label = $options['toggle_text'][1];
-    // $off_label = $options['toggle_text'][0];
-    // if ($options['keyflip']) {
-    //     $on_label = $options['toggle_text'][0];
-    //     $off_label = $options['toggle_text'][1];
-    // }
-    //
-    // if (!empty($options['options']) && is_array($options['options'])) {
-    //
-    //     $options['toggle'] = FALSE; // force toggle to be false if options existed
-    //
-    //     if (!empty($input_value)) {
-    //
-    //         $option_value = array_flip(explode($options['delimiter'], (string)$input_value)); // require key to value
-    //
-    //     }
-    //
-    //     // for checkbox only
-    //     // if there are options, and i want the options to be having input value.
-    //     // options_value
-    //     if ($options['type'] == 'checkbox' && count($options['options']) > 1) {
-    //         $input_value = [];
-    //         $default_checked = empty($option_value) ? TRUE : FALSE;
-    //         foreach (array_keys($options['options']) as $key) {
-    //             $input_value[$key] = isset($option_value[$key]) ? (!empty($options['options_value'][$key]) ? $options['options_value'][$key] : 1) : 0;
-    //         }
-    //     }
-    // }
-
-    $fusion_steam = Steam::getInstance();
-    try {
-        return $fusion_steam->load('Form')->checkbox($input_name, $label, $input_value, $options);
-    } catch (Exception $e) {
-        set_error(E_USER_NOTICE, $e->getMessage(), $e->getFile(), $e->getLine(), 'form_text');
+    $options["option_labels"] = array(
+        "on"  => $options['toggle_text'][1],
+        "off" => $options['toggle_text'][0]
+    );
+    if ($options['keyflip']) {
+        $options["options_labels"] = array(
+            "on"  => $options['toggle_text'][0],
+            "off" => $options['toggle_text'][1]
+        );
     }
-    return '';
+
+    if (!empty($options['options']) && is_array($options['options'])) {
+        $options['toggle'] = FALSE; // force toggle to be false if options existed
+        if (!empty($input_value)) {
+            $option_value = array_flip(explode($options['delimiter'], (string)$input_value)); // require key to value
+        }
+
+        // for checkbox only
+        // if there are options, and i want the options to be having input value.
+        // options_value
+        if ($options['type'] == 'checkbox' && count($options['options']) > 1) {
+            $input_value = array();
+            $options['default_checked'] = empty($option_value) ? TRUE : FALSE;
+            foreach (array_keys($options['options']) as $key) {
+                $input_value[$key] = isset($option_value[$key]) ? (!empty($options['options_value'][$key]) ? $options['options_value'][$key] : 1) : 0;
+            }
+        }
+    }
+
+    return Steam::getInstance()->load('Form')->checkbox($input_name, $label, $input_value, $options);
 }

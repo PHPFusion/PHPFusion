@@ -1,0 +1,22 @@
+
+{#Generated Output#}
+<div class="form-group clearfix{{ whitespace(options.class) }}{{ whitespace(options.group_size) }}">
+    {{ inputLabel|raw }}
+    {{ openformgroup|raw }}
+    {% if options.inline %}
+    <div class="{{ containerClass }} float-left">
+        {% endif %}
+        {{ inputPrepend|raw }}
+        {% if options.inline|raw %}
+            {{ inputField|raw }}
+            {{ inputTip|raw }}
+        {% else %}
+            {{ inputField|raw }}
+            {{ inputTip|raw }}
+        {% endif %}
+        {{ inputAppend|raw }}
+        {% if options.inline %}
+    </div>
+    {% endif %}
+    {{ closeformgroup|raw }}
+</div>

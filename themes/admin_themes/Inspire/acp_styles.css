@@ -484,6 +484,9 @@ img.circle-border {
   -webkit-box-direction: normal;
       -ms-flex-direction: row;
           flex-direction: row;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 .breadcrumb .breadcrumb-separator {
   display: -webkit-box;
@@ -4601,6 +4604,11 @@ body.md-skin {
   -webkit-box-align: stretch;
   -ms-flex-align: stretch;
   align-items: stretch;
+}
+@media (min-width: 1025px) {
+  .side-panel {
+    height: calc(100% - 20px);
+  }
 }
 .side-panel .head .head-toolbar .nav {
   display: -webkit-box;
@@ -10107,7 +10115,6 @@ header h3 {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  padding-top: 12px;
 }
 .nav > li > a {
   text-align: left;

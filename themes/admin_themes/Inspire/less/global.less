@@ -576,6 +576,7 @@ img.circle-border {
     padding-left: 15px;
     display: flex;
     flex-direction: row;
+    align-items: center;
 }
 
 .breadcrumb .breadcrumb-separator {
@@ -5549,6 +5550,12 @@ body.md-skin {
     -webkit-box-align: stretch;
     -ms-flex-align: stretch;
     align-items: stretch;
+}
+
+@media (min-width: 1025px) {
+    .side-panel {
+        height: calc(100% - 20px);
+    }
 }
 
 .side-panel .head .head-toolbar .nav {
@@ -11670,7 +11677,6 @@ header h3 {
 
 .opentable .home-link {
     display: flex;
-    padding-top: 12px;
 }
 
 .nav {

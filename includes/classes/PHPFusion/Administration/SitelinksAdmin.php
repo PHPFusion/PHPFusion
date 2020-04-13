@@ -82,40 +82,8 @@ class SitelinksAdmin {
 
     public function admin() {
         pageAccess("SL");
-
-        // move to construct
-        $this->cancel_action = check_post('cancel');
-
-        if ($this->cancel_action) {
-            redirect(FUSION_SELF.$this->aidlink);
-        }
-
-
-        //$link_index = dbquery_tree(DB_SITE_LINKS, "link_id", "link_cat");
-        //$link_data = dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat");
-        //make_page_breadcrumbs($link_index, $link_data, "link_id", "link_name", "link_cat");
-
         opentable($this->locale['SL_0012']);
-        ?>
-        <h1 class='m-0'>Sitelinks</h1>
-        <?php
-        echo "<div class='display-flex-row' style='align-content:center; padding-bottom:25px;'></div>";
-        if (isset($_GET['section']) && $_GET['section'] == "settings") {
-            $this->display_sitelinks_settings();
-        } else {
-            if (isset($_GET['ref'])) {
-                switch ($_GET['ref']) {
-                    case "link_form":
-                        $this->display_sitelinks_form();
-                        break;
-                    default:
-                        $this->display_sitelinks_list();
-                }
-            }
-        }
-
         $this->display();
-
         closetable();
     }
 
