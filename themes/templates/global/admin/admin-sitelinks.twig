@@ -1,0 +1,29 @@
+<div class="list-group-item my-4">
+    {{ menu_form|raw }}
+</div>
+<div class="row">
+    <div class="col-12 col-md-6 col-lg-3 col-xl-3">
+        <h2>Add menu items</h2>
+        {{ menu_forms|raw }}
+    </div>
+    <div class="col-12 col-md-6 col-lg-9 col-xl-9">
+        <h2>Menu management</h2>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                {{ menu_heading|raw }}
+            </div>
+            <div class="panel-body">
+                Drag each item into the order you prefer. Click the arrow on the right of the item to reveal additional configuration options.
+                div class="row">
+                <div class="col-12">
+                    <div class="list" style="margin:20px 0;">
+                        {{ menu_list|raw }}
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer">
+                {{ menu_footer|raw }}
+            </div>
+        </div>
+    </div>
+</div>

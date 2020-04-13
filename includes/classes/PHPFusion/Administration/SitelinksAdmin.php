@@ -227,18 +227,22 @@ class SitelinksAdmin {
     private function display() {
 
         /** Custom links menu */
+
         /**
          * @param $link_position
+         *
+         * @return string
          */
         function custom_links($link_position) {
-            echo openform('customlinksFrm', 'post', FORM_REQUEST, ['class' => 'form-horizontal']);
-            echo form_text('link_name', 'Link Name', '', ['required' => TRUE, 'inline' => FALSE]).
+            $html = openform('customlinksFrm', 'post', FORM_REQUEST, ['class' => 'form-horizontal']);
+            $html .= form_text('link_name', 'Link Name', '', ['required' => TRUE, 'inline' => FALSE]).
                 form_text('link_url', 'Link URL', '', ['required' => FALSE, 'inline' => FALSE]).
                 form_hidden('link_position', '', $link_position, ['required' => FALSE, 'inline' => FALSE]);
-            echo "<div class='text-right'>";
-            echo form_button('link_add', 'Add to Navigation', "", ['class' => 'btn-primary']);
-            echo "</div>";
-            echo closeform();
+            $html .= "<div class='text-right'>";
+            $html .= form_button('link_add', 'Add to Navigation', "", ['class' => 'btn-primary']);
+            $html .= "</div>";
+            $html .= closeform();
+            return $html;
         }
 
         // custom links form
@@ -260,7 +264,7 @@ class SitelinksAdmin {
             echo form_hidden("_id", "", $link_id, array("input_id" => "_lid_".$link_id));
             echo form_text("_icon", "Icon Class", $data["link_icon"], array("input_id" => "_icon_".$link_id));
             echo form_checkbox("_window", "Open link in a new tab", $data["link_window"], array("input_id" => "_window_".$link_id, "type" => "checkbox", "reverse_label" => TRUE));
-            echo form_select("_visibility", "Visibility", $data["link_visibility"], array("input_id" => "_visibility_".$link_id, "options" => fusion_get_groups(), "select_alt"=>TRUE));
+            echo form_select("_visibility", "Visibility", $data["link_visibility"], array("input_id" => "_visibility_".$link_id, "options" => fusion_get_groups(), "select_alt" => TRUE));
             echo form_checkbox("_status", "Status", $data["link_status"], array("input_id" => "_status_".$link_id, "type" => "radio", "options" => get_status_opts()));
             echo '<a href="#" class="remove_link text-danger" data-id="'.$link_id.'_menu">Remove</a>';
             echo form_button("save_link", "Save Link", "save_link", array("input_id" => "_save_".$link_id, "class" => "btn-primary"));
@@ -269,10 +273,26 @@ class SitelinksAdmin {
             echo closecollapse();
         }
 
+        function menu_forms($menu_id) {
+            $html = opencollapse('menu-switch');
+            $html .= opencollapsebody('News', 'menu-news', 'menu-switch', FALSE);
+            $html .= closecollapsebody();
+            $html .= opencollapsebody('Custom Links', 'menu-1', 'menu-switch', TRUE);
+            $html .= custom_links($menu_id);
+            $html .= closecollapsebody().closecollapse();
+            return $html;
+        }
+
+        function menu_heading() {
+            return form_text('menu_name', 'Menu Name', '', ['placeholder' => 'Menu name', 'required' => TRUE, 'inline' => TRUE, 'class' => 'm-t-10 align-self-center col-12 col-xl-6 pl-0']);
+        }
+
         /**
          * @param $link_tree
+         *
+         * @return false|string
          */
-        function show_menu_list($link_tree) {
+        function menu_list($link_tree) {
             add_to_footer("<script src='".INCLUDES."jquery/jquery-ui/jquery-ui.min.js'></script>");
             add_to_footer("<script src='".INCLUDES."jquery/jquery-ui/jquery.mjs.nestedSortable.js'></script>");
             add_to_footer("<script src='".INCLUDES."jquery/sitelinks-sortable.js'></script>");
@@ -347,8 +367,9 @@ class SitelinksAdmin {
                     }
                 }
             }
+            ob_start();
             recurse_list($link_tree);
-
+            return ob_get_clean();
         }
 
         /**
@@ -356,37 +377,38 @@ class SitelinksAdmin {
          *
          * @return string
          */
-        function show_menu_footer($link_tree) {
+        function menu_footer($link_tree) {
             // Sort link form
             if (!empty($link_tree)) {
-                $html = openform("sortlinks_form", "post", FORM_REQUEST, array("class"=>"spacer-xs display-block"));
+                $html = openform("sortlinks_form", "post", FORM_REQUEST, array("inline"=>TRUE, "class" => "spacer-xs"));
                 $html .= form_hidden("link_menu", "", "");
                 $html .= form_hidden("link_sort", "", "");
-                $html .= form_button("save_menu", "Save Menu", "save_menu", ["class" => "btn-primary float-right"]);
+                $html .= form_button("save_menu", "Save Menu", "save_menu", ["class" => "btn-primary ml-a"]);
                 $html .= closeform();
+
                 // Save menu
                 $cookie = cookie(COOKIE_PREFIX.'user');
                 add_to_jquery(/** @lang JavaScript */ "
-            $(document).on('click', 'button[name=\"save_menu\"]', function(e){
-                e.preventDefault();
-                let form = $(this).closest('form');
-                let form_id = form.prop('id');                            
-                // admin post...
-                let menu_action = new FusionPost(form_id, '$cookie', 'SL', 'update-menu');
-                menu_action.submit()
-                    .then(function(response){
-                        return menu_action.return();
-                    })
-                    .then(function(xhr){
-                        let response = xhr['responseText'];
-                        console.log(response);
-                        // do a popper.js confirmation                    
-                    })
-                    .catch(function(error){
-                        console.log('Something went wrong', error);
-                    });
-            });
-            ");
+                $(document).on('click', 'button[name=\"save_menu\"]', function(e){
+                    e.preventDefault();
+                    let form = $(this).closest('form');
+                    let form_id = form.prop('id');                            
+                    // admin post...
+                    let menu_action = new FusionPost(form_id, '$cookie', 'SL', 'update-menu');
+                    menu_action.submit()
+                        .then(function(response){
+                            return menu_action.return();
+                        })
+                        .then(function(xhr){
+                            let response = xhr['responseText'];
+                            console.log(response);
+                            // do a popper.js confirmation                    
+                        })
+                        .catch(function(error){
+                            console.log('Something went wrong', error);
+                        });
+                });
+                ");
                 return $html;
             }
             return '';
@@ -397,48 +419,28 @@ class SitelinksAdmin {
             $menu_id = 1;
         }
         $link_tree = dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat", "WHERE link_position=$menu_id ORDER BY link_order ASC");
-        ?>
-        <div class="list-group-item my-4">
-            <?php echo openform('menufrm', 'post', FORM_REQUEST, ['inline' => TRUE, 'max_tokens' => 50]) ?>
-            <?php echo form_select('menu', 'Select a menu to edit:', '', [
+        // twig the fuck out of this one.
+
+        $info = array(
+            "menu_form"     => openform('menufrm', 'post', FORM_REQUEST, array("inline"=>TRUE))
+                .form_select('menu', 'Select a menu to edit:', '', [
                     'options'     => SiteLinks::get_SiteLinksPosition(),
                     'select_alt'  => TRUE,
                     'inline'      => TRUE,
                     'class'       => 'mr-3',
-                    'label_class' => 'col-lg-4'
+                    'label_class' => 'col-lg-4',
                 ])
-                .form_button('select_menu', 'Select', 'select_menu', ['class' => 'btn-primary mr-3'])
-                .'<div> or <a href="">Create a new menu.</a></div>'
-            ?>
-            <?php echo closeform() ?>
-        </div>
-        <div class="row">
-            <div class="col-12 col-md-6 col-lg-3 col-xl-3">
-                <h2>Add menu items</h2>
-                <?php
-                echo opencollapse('menu-switch');
-                echo opencollapsebody('News', 'menu-news', 'menu-switch', FALSE);
-                echo closecollapsebody();
-                echo opencollapsebody('Custom Links', 'menu-1', 'menu-switch', TRUE);
-                custom_links($menu_id);
-                echo closecollapsebody().closecollapse();
-                ?>
-            </div>
-            <div class="col-12 col-md-6 col-lg-9 col-xl-9">
-                <h2>Menu management</h2>
-                <?php openside(form_text('', '', '', ['placeholder' => 'Menu name', 'required' => TRUE, 'inline' => TRUE, 'class' => 'm-t-10 align-self-center'])); ?>
-                Drag each item into the order you prefer. Click the arrow on the right of the item to reveal additional configuration options.
-                <div class="row">
-                    <div class="col-12">
-                        <div class="list" style="margin:20px 0;">
-                            <?php echo show_menu_list($link_tree) ?>
-                        </div>
-                    </div>
-                </div>
-                <?php closeside(show_menu_footer($link_tree)) ?>
-            </div>
-        </div>
-        <?php
+                .form_button('select_menu', 'Select', 'select_menu', ['class' => 'btn-primary mr-3']).
+                ' <a href="'.clean_request("action=new", array("action"), FALSE).'">Create new menu</a>'
+                .closeform(),
+            "menu_forms"   => menu_forms($menu_id),
+            "menu_heading" => menu_heading(),
+            "menu_list"    => menu_list($link_tree),
+            "menu_footer"  => menu_footer($link_tree),
+        );
+
+        echo fusion_render(ADMIN_TEMPLATES, "admin-sitelinks.twig", $info, TRUE);
+
         $add_success = json_encode(array(
             "toast"       => TRUE,
             "title"       => "Site Links",
