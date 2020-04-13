@@ -63,7 +63,7 @@ function profile_link($user_id, $user_name, $user_status, $class = "profile-link
  *
  * @return string
  */
-function fusion_profile_link($user_id) {
+function profile_path($user_id) {
     $userdata = fusion_get_user($user_id);
     if ($userdata['user_name']) {
         return profile_link($userdata['user_id'], $userdata['user_name'], $userdata['user_status']);
@@ -234,7 +234,6 @@ function fusion_table($table_id, array $options = []) {
 
 /**
  * Show PHP-Fusion Performance
- *
  * @param bool $queries
  *
  * @return string
@@ -269,11 +268,10 @@ function showrendertime($queries = TRUE) {
 }
 
 /**
- * Developer tools only (Translations not Required)
- *
- * @param bool   $show_sql_performance  Turn on or off
- * @param string $performance_threshold The query time
- * @param bool   $filter_results        Show only those with problems
+ *  Developer tools only (Translations not Required)
+ * @param bool   $show_sql_performance
+ * @param string $performance_threshold
+ * @param bool   $filter_results
  *
  * @return string
  */
@@ -628,7 +626,6 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
      * @param array $options
      *
      * @return mixed
-     * @throws ReflectionException
      */
     function openmodal($id, $title, $options = []) {
         return Steam::getInstance()->load('Modal')->openmodal($id, $title, $options);
@@ -641,17 +638,15 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
      * @param bool|FALSE $dismiss
      *
      * @return mixed
-     * @throws ReflectionException
      */
     function modalfooter($content = "", $dismiss = FALSE) {
-        return Steam::getInstance()->load('Modal')->openmodal($id, $title, $options);
+        return Steam::getInstance()->load('Modal')->modalfooter($content, $dismiss);
     }
 
     /**
      * Close the modal
      *
      * @return mixed
-     * @throws ReflectionException
      */
     function closemodal() {
         return Steam::getInstance()->load('Modal')->closemodal();
@@ -1319,7 +1314,7 @@ if (!function_exists("opencollapse")
         $active = ($active) ? '' : 'collapsed'; // this is bs3
         $title_id_cc = preg_replace('/[^A-Z0-9-]+/i', "-", $title);
 
-        return "class='display-block $class $active' data-toggle='collapse' data-parent='#".$id."' href='#".$title_id_cc."-".$id."' aria-expanded='true' aria-controls='".$title_id_cc."-".$id."'";
+        return "class='display-block collapse-title $class $active' data-toggle='collapse' data-parent='#".$id."' href='#".$title_id_cc."-".$id."' aria-expanded='true' aria-controls='".$title_id_cc."-".$id."'";
     }
 
     function collapse_footer_link($id, $title, $active, $class = '') {

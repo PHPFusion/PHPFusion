@@ -36,10 +36,14 @@ function renderNotices($notices) {
  * @param array $notices the array contaning notices
  *
  * @return string the notices formatted as HTML
- * @throws ReflectionException
  */
 function render_notices($notices) {
-    return Steam::getInstance()->load('Alerts')->render($notices);
+    try {
+        return Steam::getInstance()->load('Alerts')->render($notices);
+    } catch (ReflectionException $e) {
+        set_error(E_USER_NOTICE, $e->getMessage(), $e->getFile(), $e->getLine(), "render_notices");
+    }
+    return "";
 }
 
 /**

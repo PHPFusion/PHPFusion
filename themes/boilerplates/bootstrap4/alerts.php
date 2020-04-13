@@ -36,8 +36,9 @@ class Alerts {
         }
 
         add_to_jquery(/** @lang JavaScript */ "
-        $('.toast').toast({'delay':3000});
-        $('.toast').toast('show');");
+        let toastDom = $('.toast');
+        toastDom.toast({'delay':3000});
+        toastDom.toast('show');");
 
         return (string)$messages;
     }

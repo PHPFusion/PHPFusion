@@ -39,8 +39,8 @@ function openside($title = '', array $links = [], array $options = []) {
     return Inspire\AdminPanel::openside($title, $links, $options);
 }
 
-function closeside() {
-    return Inspire\AdminPanel::closeside();
+function closeside($footer = '') {
+    return Inspire\AdminPanel::closeside($footer);
 }
 
 //function opensidex($title = '', array $links = [], array $options = []) {

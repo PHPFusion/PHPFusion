@@ -28,24 +28,13 @@ class Steam {
     private static $instance = NULL;
 
     private static $default_boilerplate = 'bootstrap4';
-
-    private $boilers = '';
-
-    private $boiler_path = ''; // Default boiler
-
     private static $boiler_files = [];
-
-    private function __clone() {
-    }
-
-    private function __sleep() {
-    }
-
-    private function __wakeup() {
-    }
+    private $boilers = ''; // Default boiler
+private $boiler_path = '';
 
     /**
      * Steam instance
+     *
      * @return static|null
      */
     public static function getInstance() {
@@ -63,19 +52,19 @@ class Steam {
     }
 
     /**
-     * @return null|string
-     */
-    public function getBoilerPath() {
-        return $this->boiler_path;
-    }
-
-    /**
      * Run the boiler
      */
     public function run() {
         $package_path = $this->getBoilerPath().'package.php';
         require_once $package_path;
         $this->setBoilerFiles();
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getBoilerPath() {
+        return $this->boiler_path;
     }
 
     /**
@@ -103,16 +92,18 @@ class Steam {
      * @param $command
      *
      * @return object
-     * @throws \ReflectionException
      */
     public function load($command) {
         $command_name = strtolower($command);
         $command_name = ucfirst($command_name);
-        $file = __DIR__.DIRECTORY_SEPARATOR.'Steam'.DIRECTORY_SEPARATOR.$command_name.'.steam.inc';
-        require_once $file;
-        $input_class = new \ReflectionClass('PHPFusion\\Steam\\'.$command_name);
-
-        return (object)$input_class->newInstance($this);
+        require_once(__DIR__.DIRECTORY_SEPARATOR."Steam".DIRECTORY_SEPARATOR.$command_name.".steam.inc");
+        try {
+            $input_class = new \ReflectionClass('PHPFusion\\Steam\\'.$command_name);
+            return (object)$input_class->newInstance($this);
+        } catch (\ReflectionException $e) {
+            set_error(E_USER_NOTICE, $e->getMessage(), $e->getFile(), $e->getLine(), 'Boilerplate Error');
+        }
+        return NULL;
     }
 
     /**
@@ -132,6 +123,15 @@ class Steam {
      */
     public function getBoilerFiles() {
         return self::$boiler_files;
+    }
+
+    private function __clone() {
+    }
+
+    private function __sleep() {
+    }
+
+    private function __wakeup() {
     }
 
 }

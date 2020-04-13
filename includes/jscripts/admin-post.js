@@ -156,10 +156,57 @@ let FusionPost = function (form_id, token, rights, php_hook) {
                 el.value = "";
             }
         });
-        // append a new token to the form
-
         // reset the button back to original text
-        button.innerHTML = buttonText;
+        this.resetButton();
+    };
+
+    this.resetButton = function() {
+        console.log(button);
+        button.textContent = buttonText;
+    };
+
+    /**
+     * Shows notifications
+     * @param status
+     * @param notices
+     */
+    this.showNotice = function(status, notices) {
+        /** Finds toast wrapper if exists */
+        let wrapper = document.getElementsByClassName("toast-wrapper")[0];
+        let requesturl = SITE_PATH + "administration/includes/notices.php";
+        let request = new XMLHttpRequest();
+
+        request.onreadystatechange = function () {
+            // Only run if the request is complete
+            if (request.readyState !== 4) return;
+            // Process the response
+            if (request.status >= 200 && request.status < 300) {
+                // If successful
+                if (wrapper) {
+                    wrapper.insertAdjacentHTML("beforeend", request.responseText);
+                    let toastDom = $('.toast');
+                    toastDom.toast({'delay':3000});
+                    toastDom.toast('show');
+                }
+
+            } else {
+                // If failed
+                console.log(request.statusText);
+            }
+        };
+
+        function formatParams( status, notices ){
+            let params = {...{status: status},...notices };
+            return "?" + Object
+                .keys(params)
+                .map(function(key){
+                    return key+"="+encodeURIComponent(params[key])
+                })
+                .join("&")
+        }
+
+        request.open('GET', requesturl+formatParams(status, notices), true);
+        request.send(formData);
     };
 
     /**

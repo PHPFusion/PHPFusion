@@ -31,7 +31,7 @@ class AdminPanel extends Helper {
 
     public function __construct() {
         parent::__construct();
-        $notices =render_notices(get_notices());
+        $notices = render_notices(get_notices());
         //print_P($notices);
 
         $this->admins = Admins::getInstance();
@@ -260,7 +260,7 @@ class AdminPanel extends Helper {
     }
 
     public static function getInstance() {
-        return self;
+        return new static;
     }
 
     public static function opentable($title, $links = []) {
@@ -268,11 +268,11 @@ class AdminPanel extends Helper {
         $breadcrumbs->setLastClickable(TRUE);
         $title = strip_tags($title);
         if (!self::$opentablecount) {
-            echo fusion_render(INSPIRE.'templates/', 'opentable.twig', [
+            echo fusion_render(INSPIRE.'templates/', 'opentable.twig', array(
                 'title'       => $title,
                 'breadcrumbs' => self::renderBreadcrumbs($breadcrumbs->toArray()),
                 'links'       => $links,
-            ], TRUE);
+            ), TRUE);
             self::$opentablecount++;
         }
         return '';
@@ -281,10 +281,10 @@ class AdminPanel extends Helper {
 
     private static function renderBreadcrumbs($array) {
         $twig = twig_init(INSPIRE.'templates/', TRUE);
-        return $twig->render('breadcrumbs.twig', [
+        return $twig->render('breadcrumbs.twig', array(
             'home_icon'   => self::featherCon('home', 'sm'),
             'breadcrumbs' => $array
-        ]);
+        ));
     }
 
     /**
@@ -312,16 +312,15 @@ class AdminPanel extends Helper {
         ];
         $options += $default_options;
 
-        echo fusion_render(INSPIRE.'templates', 'opensidex.twig', [
+        echo fusion_render(INSPIRE.'templates', 'opensidex.twig', array(
             'title'   => $title,
             'links'   => $links,
             'options' => $options,
-        ], TRUE);
+        ), TRUE);
     }
 
-    public static function closeside() {
-        echo fusion_render(INSPIRE.'templates', 'closesidex.twig');
-        //echo "</div></aside>";
+    public static function closeside($footer = '') {
+        echo fusion_render(INSPIRE.'templates', 'closesidex.twig', array('content' => $footer));
     }
 
     public static function opensidex($title = FALSE, array $links = [], array $options = []) {
