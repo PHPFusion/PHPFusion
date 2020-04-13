@@ -6,7 +6,6 @@ use PHPFusion\SiteLinks;
 class SitelinksAdmin {
 
     private static $instance = NULL;
-    private static $default_display = 16;
     private $data = [
         'link_id'          => 0,
         'link_name'        => '',
@@ -91,13 +90,6 @@ class SitelinksAdmin {
             redirect(FUSION_SELF.$this->aidlink);
         }
 
-        $master_title['title'][] = $this->getTitle();
-        $master_title['id'][] = "links";
-        $master_title['icon'][] = '';
-
-        $master_title['title'][] = $this->locale['SL_0041'];
-        $master_title['id'][] = "settings";
-        $master_title['icon'][] = '';
 
         //$link_index = dbquery_tree(DB_SITE_LINKS, "link_id", "link_cat");
         //$link_data = dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat");
@@ -108,7 +100,6 @@ class SitelinksAdmin {
         <h1 class='m-0'>Sitelinks</h1>
         <?php
         echo "<div class='display-flex-row' style='align-content:center; padding-bottom:25px;'></div>";
-        echo opentab($master_title, (isset($_GET['section']) ? $_GET['section'] : "links"), 'link', TRUE);
         if (isset($_GET['section']) && $_GET['section'] == "settings") {
             $this->display_sitelinks_settings();
         } else {
@@ -124,7 +115,7 @@ class SitelinksAdmin {
         }
 
         $this->display();
-        echo closetab();
+
         closetable();
     }
 
@@ -145,9 +136,7 @@ class SitelinksAdmin {
         add_to_title($this->locale['SL_0041']);
 
         $settings = fusion_get_settings();
-        if (!isset($settings['link_bbcode'])) {
-            dbquery("INSERT INTO ".DB_SETTINGS." (`settings_name`, `settings_value`) VALUES ('link_bbcode', '0')");
-        }
+
 
         $settings = [
             "links_per_page" => fusion_get_settings("links_per_page"),
@@ -170,58 +159,6 @@ class SitelinksAdmin {
                 redirect(FUSION_REQUEST);
             }
         }
-
-        echo openform("sitelinks_settings", "post", FUSION_REQUEST, ["class" => "m-t-20 m-b-20"]);
-
-        echo "<div class='well'>\n";
-        echo $this->locale['SL_0042'];
-        echo "</div>\n";
-
-        echo form_checkbox('link_bbcode', $this->locale['SL_0063'], $settings['link_bbcode'], [
-            'options' => [
-                '0' => $this->locale['no'],
-                1   => $this->locale['yes']
-            ],
-            'type'    => 'radio',
-            'inline'  => TRUE,
-        ]);
-
-        echo "<div class='row'>\n<div class='col-xs-12 col-sm-3'><strong>".$this->locale['SL_0046']."</strong><br/>".$this->locale['SL_0047']."</div>";
-        echo "<div class='col-xs-12 col-sm-9'>\n";
-        echo form_checkbox("links_grouping", "", $settings['links_grouping'],
-            [
-                "options" => [
-                    0 => $this->locale['SL_0048'],
-                    1 => $this->locale['SL_0049']
-                ],
-                "type"    => "radio",
-                "inline"  => TRUE,
-                "width"   => "250px",
-            ]
-        );
-        echo "</div>\n</div>\n";
-
-
-        echo "<div id='lpp' class='row' ".($settings['links_grouping'] == FALSE ? "style='display:none'" : "").">\n<div class='col-xs-12 col-sm-3'><strong>".$this->locale['SL_0043']."</strong><br/>".$this->locale['SL_0044']."</div>";
-        echo "<div class='col-xs-12 col-sm-9'>\n";
-        echo form_text("links_per_page", $this->locale['SL_0045'], $settings['links_per_page'],
-            [
-                "type"     => "number",
-                "inline"   => FALSE,
-                "width"    => "250px",
-                "required" => TRUE,
-            ]
-        );
-        echo "</div>\n</div>\n";
-        add_to_jquery("
-        var lpp = $('#lpp');
-        $('#links_grouping-0').bind('click', function(e){ lpp.slideUp(); });
-        $('#links_grouping-1').bind('click', function(e){ lpp.slideDown(); });
-        ");
-
-        echo form_button('save_settings', $this->locale['save_changes'], $this->locale['save_changes'],
-            ['class' => 'btn-primary']);
-        echo closeform();
     }
 
     private function display() {
@@ -367,6 +304,7 @@ class SitelinksAdmin {
                     }
                 }
             }
+
             ob_start();
             recurse_list($link_tree);
             return ob_get_clean();
@@ -374,25 +312,63 @@ class SitelinksAdmin {
 
         /**
          * @param $link_tree
+         * @param $settings
          *
          * @return string
          */
-        function menu_footer($link_tree) {
+        function menu_footer($link_tree, $settings) {
             // Sort link form
+            $locale = fusion_get_locale();
+
             if (!empty($link_tree)) {
-                $html = openform("sortlinks_form", "post", FORM_REQUEST, array("inline"=>TRUE, "class" => "spacer-xs"));
+
+                $html = openform("sortlinks_form", "post", FORM_REQUEST, array("inline" => FALSE, "class" => "spacer-xs"));
                 $html .= form_hidden("link_menu", "", "");
                 $html .= form_hidden("link_sort", "", "");
+                $html .= form_checkbox('link_bbcode', $locale['SL_0063'], $settings['links_bbcode'], [
+                    'options' => get_status_opts(array()),
+                    'type'    => 'radio',
+                    'inline'  => TRUE,
+                    'ext_tip' => $locale['SL_0047']
+                ]);
+                $html .= form_checkbox("links_grouping", $locale['SL_0046'], $settings['links_grouping'],
+                    [
+                        "options" => get_status_opts(array(), array(
+                            0 => $locale['SL_0048'],
+                            1 => $locale['SL_0049']
+                        )),
+                        "type"    => "radio",
+                        "inline"  => TRUE,
+                        "width"   => "250px",
+                    ]
+                );
+                $html .= '<div id="lpp" class="row" '.($settings["links_grouping"] === FALSE ? 'style="display:none"' : '').'><div class="col-12">';
+                $html .= form_text("links_per_page", $locale['SL_0043'], $settings['links_per_page'],
+                    [
+                        "type"        => "number",
+                        "inline"      => TRUE,
+                        "inner_width" => "200ppx",
+                        //"width"    => "250px",
+                        "required"    => TRUE,
+                        "placeholder" => $locale['SL_0045'],
+                        "ext_tip"     => $locale['SL_0044']
+                    ]
+                );
+                $html .= '</div></div>';
                 $html .= form_button("save_menu", "Save Menu", "save_menu", ["class" => "btn-primary ml-a"]);
                 $html .= closeform();
 
                 // Save menu
                 $cookie = cookie(COOKIE_PREFIX.'user');
                 add_to_jquery(/** @lang JavaScript */ "
+                 let lpp = $('#lpp');
+                    $('#links_grouping-0').bind('click', function(e){ lpp.slideUp(); });
+                    $('#links_grouping-1').bind('click', function(e){ lpp.slideDown(); });
+                
                 $(document).on('click', 'button[name=\"save_menu\"]', function(e){
                     e.preventDefault();
                     let form = $(this).closest('form');
-                    let form_id = form.prop('id');                            
+                    let form_id = form.prop('id');
                     // admin post...
                     let menu_action = new FusionPost(form_id, '$cookie', 'SL', 'update-menu');
                     menu_action.submit()
@@ -402,7 +378,7 @@ class SitelinksAdmin {
                         .then(function(xhr){
                             let response = xhr['responseText'];
                             console.log(response);
-                            // do a popper.js confirmation                    
+                            // do a popper.js confirmation
                         })
                         .catch(function(error){
                             console.log('Something went wrong', error);
@@ -419,10 +395,9 @@ class SitelinksAdmin {
             $menu_id = 1;
         }
         $link_tree = dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat", "WHERE link_position=$menu_id ORDER BY link_order ASC");
-        // twig the fuck out of this one.
 
         $info = array(
-            "menu_form"     => openform('menufrm', 'post', FORM_REQUEST, array("inline"=>TRUE))
+            "menu_form"    => openform('menufrm', 'post', FORM_REQUEST, array("inline" => TRUE))
                 .form_select('menu', 'Select a menu to edit:', '', [
                     'options'     => SiteLinks::get_SiteLinksPosition(),
                     'select_alt'  => TRUE,
@@ -436,7 +411,7 @@ class SitelinksAdmin {
             "menu_forms"   => menu_forms($menu_id),
             "menu_heading" => menu_heading(),
             "menu_list"    => menu_list($link_tree),
-            "menu_footer"  => menu_footer($link_tree),
+            "menu_footer"  => menu_footer($link_tree, SiteLinks::getSettings($menu_id)),
         );
 
         echo fusion_render(ADMIN_TEMPLATES, "admin-sitelinks.twig", $info, TRUE);

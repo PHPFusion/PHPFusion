@@ -14,14 +14,17 @@
             </div>
             <div class="panel-body">
                 Drag each item into the order you prefer. Click the arrow on the right of the item to reveal additional configuration options.
-                div class="row">
-                <div class="col-12">
-                    <div class="list" style="margin:20px 0;">
-                        {{ menu_list|raw }}
+                <div class="row">
+                    <div class="col-12">
+                        <div class="list" style="margin:20px 0;">
+                            {{ menu_list|raw }}
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="panel-footer">
+                <h3>{{ fusion_get_locale('SL_0041') }}</h3>
+                {{ fusion_get_locale('SL_0042') }}
                 {{ menu_footer|raw }}
             </div>
         </div>

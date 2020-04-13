@@ -112,6 +112,63 @@ class SiteLinks {
     }
 
     /**
+     * @param $menu_id
+     *
+     * @return array
+     */
+    public static function getSettings($menu_id) {
+        $settings = fusion_get_settings();
+        $menu_settings = array(
+            "menu_name"      => "",
+            "links_per_page" => 0,
+            "links_grouping" => 0,
+            "links_bbcode"   => 0,
+        );
+
+        if (isnum($menu_id)) {
+            switch ($menu_id) {
+                case 1:
+                case 2:
+                case 3:
+                    /** Import a blank menu settings */
+                    if (!isset($settings["links_bbcode_".$menu_id])) {
+                        // create them
+                        $settings = array(
+                            "links_bbcode_".$menu_id   => (int)0,
+                            "links_grouping_".$menu_id => (int)1,
+                            "links_per_page_".$menu_id => (int)8,
+                        );
+                        dbquery_update_settings($settings);
+                        add_notice("info", "System health check performed.");
+                        redirect(FUSION_REQUEST);
+                    }
+
+                    $menu_settings = array(
+                        "links_per_page" => $settings["links_bbcode_".$menu_id],
+                        "links_grouping" => $settings["links_grouping_".$menu_id],
+                        "links_bbcode"   => $settings["links_bbcode_".$menu_id],
+                    );
+                    break;
+                default:
+
+                    // on other numbers, recall from site_menus
+                    $result = dbquery("SELECT menu_name, menu_bbcode, menu_grouping, menu_links_per_page FROM ".DB_SITE_MENUS." WHERE menu_id=:mid", [":mid" => $menu_id]);
+                    if (dbrows($result)) {
+                        $mdata = dbarray($result);
+                        $menu_settings = array(
+                            "menu_name"      => $mdata["menu_name"],
+                            "links_per_page" => $mdata["menu_links_per_page"],
+                            "links_grouping" => $mdata["menu_grouping"],
+                            "links_bbcode"   => $mdata["menu_bbcode"],
+                        );
+                    }
+            }
+        }
+
+        return $menu_settings;
+    }
+
+    /**
      * Given a matching URL, fetch Sitelinks data
      *
      * @param string $url - url to match (link_url) column
