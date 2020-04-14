@@ -21,7 +21,6 @@ $locale["SL_0026"] = "Navigation panel and Sub-header";
 $locale["SL_0027"] = "Sub-header only";
 $locale["SL_0028"] = "Open link in new window";
 $locale["SL_0029"] = "Link Category";
-$locale["SL_0029"] = "Link Category";
 $locale["SL_0030"] = "Link Icon";
 $locale["SL_0031"] = "Link Status";
 $locale["SL_0032"] = "No Parent";
