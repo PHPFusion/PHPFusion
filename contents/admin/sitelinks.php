@@ -5,8 +5,6 @@ namespace PHPFusion\Administration;
  *
  * @package PHPFusion\Administration
  * @todo
- *      Delete links and action script
- *          Create new menu
  *          Toast to follow screen
  *
  */
@@ -23,6 +21,9 @@ class Sitelinks {
     private function __construct() {
     }
 
+    /**
+     * @return static|null
+     */
     public static function getInstance() {
         if (empty(self::$instance)) {
             self::$instance = new static();
@@ -31,16 +32,22 @@ class Sitelinks {
         return self::$instance;
     }
 
+    /**
+     * Public method for display
+     */
     public function admin() {
         $this->aidlink = fusion_get_aidlink();
         $this->locale = fusion_get_locale("", LOCALE.LOCALESET."admin/sitelinks.php");
         pageAccess("SL");
         opentable($this->locale['SL_0012']);
-        $this->display();
+        $this->_admin();
         closetable();
     }
 
-    private function display() {
+    /**
+     * Private method for display
+     */
+    private function _admin() {
         $this->upgrade();
 
         if (get("action") == "new") {
@@ -63,7 +70,6 @@ class Sitelinks {
             $link_tree = dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat", "WHERE link_position='".$this->menu_id."' ORDER BY link_order ASC");
             $menu_data = \PHPFusion\SiteLinks::getSettings($this->menu_id);
         }
-
 
         $info = array(
             "menu_form"    => $this->menu_selector(),
@@ -115,6 +121,9 @@ class Sitelinks {
         </script>";
     }
 
+    /**
+     * @throws \Exception
+     */
     public function upgrade() {
         // update all core id ones.
         dbquery("UPDATE ".DB_SITE_LINKS." SET link_position='M1' WHERE link_position='1'");
@@ -153,6 +162,9 @@ class Sitelinks {
         dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='links_per_page'");
     }
 
+    /**
+     * @return string
+     */
     private function menu_selector() {
         if (check_post('menu')) {
             $menu = post("menu");
@@ -173,6 +185,11 @@ class Sitelinks {
             .closeform();
     }
 
+    /**
+     * @param $menu_id
+     *
+     * @return string
+     */
     private function menu_forms($menu_id) {
         $html = opencollapse('menu-switch');
         $html .= opencollapsebody('News', 'menu-news', 'menu-switch', FALSE);
@@ -200,6 +217,11 @@ class Sitelinks {
         return $html;
     }
 
+    /**
+     * @param $settings
+     *
+     * @return mixed
+     */
     private function menu_heading($settings) {
         return form_text("menu_name", "Menu Name", $settings["menu_name"], array(
             "placeholder" => "Menu name",
@@ -334,7 +356,6 @@ class Sitelinks {
     private function menu_footer($link_tree, $settings) {
         // Sort link form
         $locale = fusion_get_locale();
-
 
         $html = openform("sortlinks_form", "post", FORM_REQUEST, array("inline" => FALSE, "class" => "spacer-xs"));
         $html .= form_hidden("links_sort", "", "");
