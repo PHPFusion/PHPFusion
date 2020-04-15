@@ -46,6 +46,12 @@ class Sitelinks {
         if (get("action") == "new") {
             $this->menu_id = 0;
             $link_tree = array();
+            $menu_data = array(
+                "menu_name" => "",
+                "links_bbcode" => "",
+                "links_grouping" => FALSE,
+                "links_per_page" => 8
+            );
         } else {
             if (check_get("menu")) {
                 $menu = get("menu");
@@ -55,9 +61,9 @@ class Sitelinks {
             }
             $this->menu_id = get('menu', FILTER_VALIDATE_INT) ?: $this->menu_id;
             $link_tree = dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat", "WHERE link_position='".$this->menu_id."' ORDER BY link_order ASC");
+            $menu_data = \PHPFusion\SiteLinks::getSettings($this->menu_id);
         }
 
-        $menu_data = \PHPFusion\SiteLinks::getSettings($this->menu_id);
 
         $info = array(
             "menu_form"    => $this->menu_selector(),
@@ -195,14 +201,13 @@ class Sitelinks {
     }
 
     private function menu_heading($settings) {
-
         return form_text("menu_name", "Menu Name", $settings["menu_name"], array(
             "placeholder" => "Menu name",
             "required"    => TRUE,
             "inline"      => TRUE,
             "class"       => "m-t-10 align-self-center col-12 col-xl-6 pl-0",
             "inner_width" => "300px",
-            "deactivate"  => in_array($this->menu_id, array("M1", "M2", "M3")) ? TRUE : FALSE
+            "deactivate"  => ($this->menu_id && in_array($this->menu_id, array("M1", "M2", "M3")) ? TRUE : FALSE)
         ));
     }
 
@@ -329,66 +334,69 @@ class Sitelinks {
     private function menu_footer($link_tree, $settings) {
         // Sort link form
         $locale = fusion_get_locale();
-        if (!empty($link_tree)) {
 
-            $html = openform("sortlinks_form", "post", FORM_REQUEST, array("inline" => FALSE, "class" => "spacer-xs"));
-            $html .= form_hidden("links_sort", "", "");
-            $html .= form_hidden("links_menu", "", $this->menu_id);
-            $html .= form_hidden("links_menu_name", "", "");
-            $html .= form_checkbox("links_bbcode", $locale["SL_0063"], $settings["links_bbcode"], array(
-                "options" => get_status_opts(array()),
+
+        $html = openform("sortlinks_form", "post", FORM_REQUEST, array("inline" => FALSE, "class" => "spacer-xs"));
+        $html .= form_hidden("links_sort", "", "");
+        $html .= form_hidden("links_menu", "", $this->menu_id);
+        $html .= form_hidden("links_menu_name", "", "");
+        $html .= form_checkbox("links_bbcode", $locale["SL_0063"], $settings["links_bbcode"], array(
+            "options" => get_status_opts(array()),
+            "type"    => "radio",
+            "inline"  => TRUE,
+            "ext_tip" => $locale["SL_0047"]
+        ));
+        $html .= form_checkbox("links_grouping", $locale["SL_0046"], $settings["links_grouping"],
+            array(
+                "options" => get_status_opts(array(), array(
+                    0 => $locale["SL_0048"],
+                    1 => $locale["SL_0049"]
+                )),
                 "type"    => "radio",
                 "inline"  => TRUE,
-                "ext_tip" => $locale["SL_0047"]
-            ));
-            $html .= form_checkbox("links_grouping", $locale["SL_0046"], $settings["links_grouping"],
-                array(
-                    "options" => get_status_opts(array(), array(
-                        0 => $locale["SL_0048"],
-                        1 => $locale["SL_0049"]
-                    )),
-                    "type"    => "radio",
-                    "inline"  => TRUE,
-                    "width"   => "250px",
-                )
-            );
-            $html .= '<div id="lpp" class="row" '.($settings["links_grouping"] === FALSE ? 'style="display:none"' : "").'><div class="col-12">';
-            $html .= form_text("links_per_page", $locale["SL_0043"], $settings["links_per_page"],
-                array(
-                    "type"        => "number",
-                    "inline"      => TRUE,
-                    "inner_width" => "200px",
-                    //"width"    => "250px",
-                    "required"    => TRUE,
-                    "placeholder" => $locale["SL_0045"],
-                    "ext_tip"     => $locale["SL_0044"]
-                )
-            );
-            $html .= "</div></div>";
-            $html .= form_button("save_menu", "Save Menu", "save_menu", ["class" => "btn-primary ml-a"]);
-            $html .= closeform();
+                "width"   => "250px",
+            )
+        );
+        $html .= '<div id="lpp" class="row" '.(!$settings["links_grouping"] ? 'style="display:none"' : "").'><div class="col-12">';
+        $html .= form_text("links_per_page", $locale["SL_0043"], $settings["links_per_page"],
+            array(
+                "type"        => "number",
+                "inline"      => TRUE,
+                "inner_width" => "200px",
+                //"width"    => "250px",
+                "required"    => TRUE,
+                "placeholder" => $locale["SL_0045"],
+                "ext_tip"     => $locale["SL_0044"]
+            )
+        );
+        $html .= "</div></div>";
+        $html .= form_button("save_menu", "Save Menu", "save_menu", ["class" => "btn-primary ml-a"]);
+        $html .= closeform();
 
-            // Save menu
-            $cookie = cookie(COOKIE_PREFIX."user");
-            $add_success = json_encode(array(
-                "toast"       => TRUE,
-                "title"       => "Site Links",
-                "description" => "Menu has been updated successfully.",
-                "icon"        => "fas fa-link",
-            ));
-            $remove_success = json_encode(array(
-                "toast"       => TRUE,
-                "title"       => "Site Links",
-                "description" => "Link has been removed successfully.",
-                "icon"        => "fas fa-link",
-            ));
+        // Save menu
+        $cookie = cookie(COOKIE_PREFIX."user");
+        $add_success = json_encode(array(
+            "toast"       => TRUE,
+            "title"       => "Site Links",
+            "description" => "Menu has been updated successfully.",
+            "icon"        => "fas fa-link",
+        ));
+        $remove_success = json_encode(array(
+            "toast"       => TRUE,
+            "title"       => "Site Links",
+            "description" => "Link has been removed successfully.",
+            "icon"        => "fas fa-link",
+        ));
 
-            add_to_jquery(/** @lang JavaScript */ "
+        add_to_jquery(/** @lang JavaScript */ "
                 let lpp = $('#lpp');
+                if ( $('#links_grouping').val()) {
+                    lpp.show();
+                }
+                                
                 $('#links_grouping-0').bind('click', function(e){ lpp.slideUp(); });
                 $('#links_grouping-1').bind('click', function(e){ lpp.slideDown(); });
-                
-                
+                                
                 /** Remove link from menu */
                 $(document).on('click', 'a[data-action=\"remove\"]', function(e) {
                     e.preventDefault();
@@ -432,9 +440,9 @@ class Sitelinks {
                         });
                 });
                 ");
-            return $html;
-        }
-        return '';
+        return $html;
+
+
     }
 
 }
