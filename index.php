@@ -37,7 +37,7 @@ if ($settings['site_seo'] && !isset($_GET['aid'])) {
             } else {
                 if (!empty($filepath)) {
                     if ($filepath == "index.php") {
-                        redirect(BASEDIR.$settings['opening_page']);
+                        redirect(BASEDIR.$settings['opening_page'], FALSE, FALSE, 301);
                     } else {
                         require_once $filepath;
                     }
@@ -62,7 +62,7 @@ if ($settings['site_seo'] && !isset($_GET['aid'])) {
         }
     }
 } else {
-    redirect(BASEDIR.$settings['opening_page']);
+    redirect(BASEDIR.$settings['opening_page'], FALSE, FALSE, 301);
 }
 
 dbclose();
