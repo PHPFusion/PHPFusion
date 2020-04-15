@@ -41,9 +41,24 @@ class Sitelinks {
     }
 
     private function display() {
-        $this->menu_id = get('link_position', FILTER_VALIDATE_INT) ?: $this->menu_id;
+        $this->upgrade();
+
+        if (get("action") == "new") {
+            $this->menu_id = 0;
+            $link_tree = array();
+        } else {
+            if (check_get("menu")) {
+                $menu = get("menu");
+                if (in_array($menu, array("M1", "M2", "M3"))) {
+                    $this->menu_id = $menu;
+                }
+            }
+            $this->menu_id = get('menu', FILTER_VALIDATE_INT) ?: $this->menu_id;
+            $link_tree = dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat", "WHERE link_position='".$this->menu_id."' ORDER BY link_order ASC");
+        }
+
         $menu_data = \PHPFusion\SiteLinks::getSettings($this->menu_id);
-        $link_tree = dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat", "WHERE link_position='".$this->menu_id."' ORDER BY link_order ASC");
+
         $info = array(
             "menu_form"    => $this->menu_selector(),
             "menu_forms"   => $this->menu_forms($this->menu_id),
@@ -94,9 +109,47 @@ class Sitelinks {
         </script>";
     }
 
+    public function upgrade() {
+        // update all core id ones.
+        dbquery("UPDATE ".DB_SITE_LINKS." SET link_position='M1' WHERE link_position='1'");
+        dbquery("UPDATE ".DB_SITE_LINKS." SET link_position='M2' WHERE link_position='2'");
+        dbquery("UPDATE ".DB_SITE_LINKS." SET link_position='M3' WHERE link_position='3'");
+        // for these results, create new menu
+        $result = dbquery("SELECT * FROM ".DB_SITE_LINKS." WHERE link_position > 3 GROUP BY link_position");
+        if (dbrows($result)) {
+            while ($data = dbarray($result)) {
+                $settings_array = array(
+                    "menu_id"             => 0,
+                    "menu_bbcode"         => FALSE,
+                    "menu_grouping"       => FALSE,
+                    "menu_links_per_page" => 8
+                );
+                $id = dbquery_insert(DB_SITE_MENUS, $settings_array, "save");
+                // now update all the links
+                dbquery("UPDATE ".DB_SITE_LINKS." SET link_position='$id' WHERE link_position='".$data["link_position"]."'");
+            }
+        }
+        $settings = fusion_get_settings();
+        $new_positions = array("M1", "M2", "M3");
+        foreach ($new_positions as $values) {
+            if (!isset($settings["links_grouping_".$values])) {
+                $settings_array = array(
+                    "links_bbcode_".$values   => FALSE,
+                    "links_grouping_".$values => FALSE,
+                    "links_per_page_".$values => 8
+                );
+                dbquery_update_settings($settings_array);
+            }
+        }
+    }
+
     private function menu_selector() {
+        if (check_post('menu')) {
+            $menu = post("menu");
+            redirect(ADMIN."site_links.php".fusion_get_aidlink()."&amp;menu=$menu");
+        }
         return openform("menufrm", "post", FORM_REQUEST, array("inline" => TRUE))
-            .form_select("menu", "Select a menu to edit:", '', [
+            .form_select("menu", "Select a menu to edit:", get("menu"), [
                 "options"         => \PHPFusion\SiteLinks::get_SiteLinksPosition(),
                 "select_alt"      => TRUE,
                 "inline"          => TRUE,
