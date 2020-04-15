@@ -37,7 +37,7 @@ class Viewer extends Helper {
         //$settings = fusion_get_settings();
 
         opentable($locale['250']);
-        new \PHPFusion\Administration\AdminDashboard();
+        new \PHPFusion\Administration\dashboard();
 
         $panels = array(
             'registered'   => array('link' => '', 'title' => 251),

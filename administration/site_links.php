@@ -15,14 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
-use PHPFusion\Administration\SitelinksAdmin;
-
-require_once __DIR__.'/../maincore.php';
-
-require_once THEMES.'templates/admin_header.php';
-SitelinksAdmin::getInstance()->admin();
-
-//SiteLinks_Admin::Administration()->display_administration_form();
-
-require_once THEMES.'templates/footer.php';
+require_once __DIR__."/../maincore.php";
+require_once TEMPLATES."admin_header.php";
+PHPFusion\Administration\Sitelinks::getInstance()->admin();
+require_once TEMPLATES."footer.php";

@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Administration;
 
-class Comments {
+class comments {
     private static $instance = NULL;
     private static $rows = 0;
     private $aidlink = '';
@@ -98,7 +98,7 @@ class Comments {
 
     public static function getInstance() {
         if (empty(self::$instance)) {
-            self::$instance = new Comments();
+            self::$instance = new comments();
         }
 
         self::$rows = dbcount("(comment_id)", DB_COMMENTS, (!empty($_GET['ctype']) ? "comment_type='".$_GET['ctype']."'" : '').(!empty($_GET['comment_item_id']) ? " AND comment_item_id=".$_GET['comment_item_id']."" : ''));

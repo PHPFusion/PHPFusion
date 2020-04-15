@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Administration;
 
-class AdminDashboard {
+class Dashboard {
 
 
     private $storage_value = [];

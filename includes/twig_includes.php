@@ -175,7 +175,7 @@ function fusion_render($dir_path = THEMES.'templates/', $file_path = '', array $
     $settings['devmode'] = TRUE;
     if ($settings['devmode']) {
         $output = $twig->render($file_path, $info);
-        $output = trim(preg_replace('/\s\s+/', '', $output));
+        //$output = trim(preg_replace('/\s\s+/', '', $output));
         return $output;
     }
 

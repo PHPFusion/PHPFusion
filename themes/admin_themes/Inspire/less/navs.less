@@ -1,3 +1,71 @@
+/* Global Navs */
+.nav {
+    & > li {
+        &:hover > a > svg {
+            opacity: 1;
+        }
+    }
+
+    & > li > a {
+        text-align: left;
+        font-weight: 400;
+        font-size: 15px;
+        margin: 0;
+        border-radius: 0.25rem;
+        position: relative;
+        color: #eee;
+        display: flex;
+        align-content: center;
+        align-items: center;
+        padding: 10px 15px;
+
+        i {
+            margin-right: 6px;
+        }
+    }
+
+    & > li > a > svg {
+        margin-right: 10px;
+        opacity: 0.5;
+        transition: 0.3s opacity ease-in-out;
+    }
+
+    & > li.active > a {
+        color: #ffffff;
+    }
+
+    .open > a {
+        background: #fff;
+
+        &:hover,
+        &:focus {
+            background: #fff;
+        }
+    }
+
+    &.navbar-right {
+        li > a {
+
+            color: #999c9e;
+
+        }
+    }
+
+    &.nav-second-level {
+        &.collapse[style] {
+            height: auto !important;
+        }
+
+        & > li {
+            &.active {
+                border: none;
+            }
+        }
+    }
+}
+
+
+/* variations*/
 .nav.metismenu {
     & .nav-header {
         font-size: 15px;
@@ -105,13 +173,21 @@
     color: #1cc09f;
 }
 
-.nav.nav-second-level > li.active {
-    border: none;
+
+.navbar-default .nav > li > ul > li > a {
+    font-size: 14px;
+    color: var(--nav-level-color);
 }
 
-.nav.nav-second-level.collapse[style] {
-    height: auto !important;
+.navbar-default .nav > li.active > a {
+    color: #fff;
 }
+
+
+.navbar {
+    border: 0;
+}
+
 
 /*
 Subheader
@@ -130,7 +206,7 @@ Subheader
     /* left: 220px; */
     margin: 0 -15px 25px;
     border-bottom: 1px solid var(--border);
-    align-content:center;
+    align-content: center;
 }
 
 .navbar.navbar-subheader .container {
@@ -281,4 +357,67 @@ Subheader
     display: flex;
     align-self: flex-end;
     margin-left: auto;
+}
+
+
+.dropdown-menu {
+    border: medium none;
+    border-radius: 3px;
+    box-shadow: 0 0 3px rgba(86, 96, 117, 0.7);
+    display: none;
+    float: left;
+    font-size: 12px;
+    left: 0;
+    list-style: none outside none;
+    padding: 0;
+    position: absolute;
+    text-shadow: none;
+    top: 100%;
+    z-index: 1000;
+}
+
+.dropdown-menu > li > a {
+    border-radius: 3px;
+    color: inherit;
+    line-height: 25px;
+    margin: 4px;
+    text-align: left;
+    font-weight: normal;
+    display: block;
+    padding: 3px 20px;
+}
+
+.dropdown-menu > li > a:focus,
+.dropdown-menu > li > a:hover {
+    color: #262626;
+    text-decoration: none;
+    background-color: #f5f5f5;
+}
+
+.dropdown-menu > .active > a,
+.dropdown-menu > .active > a:focus,
+.dropdown-menu > .active > a:hover {
+    color: #fff;
+    text-decoration: none;
+    background-color: #1ab394;
+    outline: 0;
+}
+
+.dropdown-menu > li > a.font-bold {
+    font-weight: 600;
+}
+
+.dropdown-messages,
+.dropdown-alerts {
+    padding: 10px 10px 10px 10px;
+}
+
+.dropdown-messages li a,
+.dropdown-alerts li a {
+    font-size: 12px;
+}
+
+.dropdown-messages li em,
+.dropdown-alerts li em {
+    font-size: 10px;
 }

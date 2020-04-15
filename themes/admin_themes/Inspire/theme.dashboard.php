@@ -17,8 +17,6 @@
 +--------------------------------------------------------*/
 namespace Inspire;
 
-use PHPFusion\Administration\AdminDashboard;
-
 /**
  * Class adminDashboard
  *
@@ -28,7 +26,7 @@ class Dashboard extends Helper {
 
     public function adminDashboard() {
         // all these shouldn't be in the theme.
-        $dashboard = new AdminDashboard();
+        $dashboard = new \PHPFusion\Administration\Dashboard();
         $dashboard->showWidget();
     }
 

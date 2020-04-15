@@ -23,7 +23,7 @@ use PHPFusion\Installer\Batch_Core;
 /**
  * Class AdminIndex
  */
-class AdminIndex {
+class Admin {
 
     private $admin_query = [];
 

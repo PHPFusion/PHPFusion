@@ -16,18 +16,19 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-use PHPFusion\Template;
 
 class Form {
 
     public static function form_input($input_name, $label, $input_value, $options) {
+
         $info = array(
             "input_name"  => $input_name,
             "label"       => $label,
-            "Input_value" => $input_value,
+            "input_value" => $input_value,
             "options"     => $options,
             "error"       => input_has_error($input_name)
         );
+
         return fusion_render(BOILERPLATES.'bootstrap4/html/', 'form-input.twig', $info, TRUE);
     }
 
@@ -68,10 +69,10 @@ class Form {
             if (!defined('btn-checkbox-js')) {
                 define('btn-checkbox-js', TRUE);
 
-                add_to_jquery("
+                add_to_jquery(/** @lang JavaScript */ "
         	$('.button-checkbox').each(function () {
             // Settings
-            var widget = $(this),
+            let widget = $(this),
             button = widget.find('button'),
             checkbox = widget.find('input:checkbox'),
             color = button.data('color'),
@@ -94,7 +95,7 @@ class Form {
         });
         // Actions
         function updateDisplay() {
-            var isChecked = checkbox.is(':checked');
+            let isChecked = checkbox.is(':checked');
             // Set the button's state
             button.data('state', (isChecked) ? \"on\" : \"off\");
             // Set the button's icon
@@ -110,7 +111,7 @@ class Form {
         function init() {
             updateDisplay();
             // Inject the icon if applicable
-            if (button.find('.state-icon').length == 0) {
+            if (button.find('.state-icon').length === 0) {
                 button.prepend('<i class=\"state-icon ' + settings[button.data('state')].icon + ' \"></i>');
             }
         }

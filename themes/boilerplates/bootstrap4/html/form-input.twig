@@ -1,4 +1,4 @@
-{% set readonlyText = options.deactivate ? " form-control-plain text" : " form-control" %}
+{% set readonlyText = options.deactivate ? " form-control-plaintext" : " form-control" %}
 {% set inputTip = options.ext_tip ? '<small id="'~options.input_id~'Help" class="form-text text-muted">'~options.ext_tip~'</small>' : '' %}
 {% set accessibilityText = label and options.ext_tip ? 'aria-describedby="'~options.input_id~'Help"' : "" %}
 
@@ -42,7 +42,27 @@
     {% set required = 'required' %}
     {% set requiredMarker = '<span class="required">*</span>' %}
 {% endif %}
-{% set inputLabel = label ? '<label for="'~options.input_id~'" class="'~((not options.inline) ? 'col-form-label' : 'control-label col-sm-3 float-left')~''~whitespace(options.label_class)~'">'~label~whitespace(requiredMarker)~'</label>' : '' %}
+
+{#Label class#}
+{% set labelClass = '' %}
+{% if options.label_class %}
+    {% set labelClass = options.label_class %}
+{% elseif (options.inline) %}
+    {#        default class if inline#}
+    {% set labelClass = 'col-sm-12 col-md-3' %}
+{% endif %}
+
+{% set inputLabel = label ? '<label for="'~options.input_id~'" class="'~((options.inline) ? 'col-form-label' : 'control-label')~whitespace(labelClass)~'">'~label~whitespace(requiredMarker)~'</label>' : '' %}
+
+{#Form group class#}
+{% set class = whitespace(options.class) %}
+{% if options.inline %}
+    {% set class = whitespace(options.class)~' row' %}
+    {% set containerClass = 'col-sm-12 col-md-9' %}
+    {% if options.container_class %}
+        {% set containerClass = options.container_class %}
+    {% endif %}
+{% endif %}
 
 {% if options.type == "checkbox" or options.type == "toggle" or options.type == "radio" %}
     {% if options.default_checked and key is empty %}
@@ -56,11 +76,10 @@
 
 {% if options.type == 'dropdown' %}
     {#Select#}
-    {% set containerClass = 'col-sm-5' %}
-    {% set inputField = '<select class="'~options.inner_class~'" id="'~options.input_id~'" name="'~input_name~'"'~whitespace(options.readonly)~whitespace(options.onchange)~whitespace(options.multiple)~whitespace(options.required)~' style="max-width:'~options.inner_width~' !important;">'~allowclear|raw~parent_opts|raw~options.options_options|raw~'</select>' %}
 
-{#{% elseif options.type == 'checkbox' %}#}
-{#    {% set containerClass = 'col-sm-9' %}#}
+    {% set inputField = '<select class="'~options.inner_class~'" id="'~options.input_id~'" name="'~input_name~'"'~whitespace(options.readonly)~whitespace(options.onchange)~whitespace(options.multiple)~whitespace(options.required)~' style="width:'~options.inner_width~' !important;">'~allowclear|raw~parent_opts|raw~options.options_options|raw~'</select>' %}
+
+    {#{% elseif options.type == 'checkbox' %}#}
 
 {% elseif options.type == 'button' %}
     {% set noLabel = true %}
@@ -72,11 +91,10 @@
     {% set inputField = '<div class="custom-control custom-switch"><input type="checkbox" class="custom-control-input" id="'~options.input_id~'" value="'~options.value~'" data-on-text="'~options.on_label~'" data-off-text="'~options.off_label~'"'~whitespace(checked)~'><label class="custom-control-label" for="'~options.input_id~'">'~options.label~'</label></div>' %}
 
 {% elseif options.type == 'checkbox' %}
-    {% set containerClass = 'col-sm-9' %}
     {% set inputField = '' %}
     {% for key, label in options.options %}
         {% set onClick = options.onclick ? 'onclick="'~options.onclick~'"' : '' %}
-{#        $checked .= ($input_value == $key || $default_checked && $key == FALSE ? ' checked' : '');#}
+        {#        $checked .= ($input_value == $key || $default_checked && $key == FALSE ? ' checked' : '');#}
 
         {#        $checked = ($options['deactivate'] || $options['deactivate_key'] === $key ? 'disabled' : '')#}
         {#        if ($options['type'] == 'checkbox' && count($options['options']) > 1) {#}
@@ -101,7 +119,6 @@
     {% endfor %}
 
 {% elseif options.type == 'radio' %}
-    {% set containerClass = 'col-sm-9' %}
     {% set inputField = '' %}
     {% for key, label in options.options %}
         {% set onClick = options.onclick ? 'onclick="'~options.onclick~'"' : '' %}
@@ -130,16 +147,18 @@
     {% endfor %}
 {% else %}
     {#Text, Password, Number, Email #}
-    {% set containerClass = 'col-sm-9' %}
-    {% set inputField = '<input type="'~options.type~'"'~whitespace(options.readonly)~' name="'~input_name~'" class="'~readonlyText~whitespace(input_class)~'" id="'~options.input_id~'" value="'~input_value~'" placeholder="'~options.placeholder~'"'~accessibilityText~whitespace(options.input_data)~whitespace(options.min)~whitespace(options.max)~whitespace(options.step)~whitespace(options.max_length)~whitespace(options.autocomplete)~' style="max-width:'~options.inner_width~'!important;"'~whitespace(required)~'>' %}
+    {% if options.deactivate %}
+        {% set readOnly = 'readonly' %}
+    {% endif %}
+    {% set inputField = '<input type="'~options.type~'"'~whitespace(readOnly)~' name="'~input_name~'" class="'~readonlyText~whitespace(input_class)~'" id="'~options.input_id~'" value="'~input_value~'" placeholder="'~options.placeholder~'"'~accessibilityText~whitespace(options.input_data)~whitespace(options.min)~whitespace(options.max)~whitespace(options.step)~whitespace(options.max_length)~whitespace(options.autocomplete)~' style="max-width:'~options.inner_width~'!important;"'~whitespace(required)~'>' %}
 {% endif %}
 
 {#Generated Output#}
-<div class="form-group clearfix{{ whitespace(options.class) }}{{ whitespace(options.group_size) }}">
+<div class="form-group{{ whitespace(class) }}{{ whitespace(options.group_size) }}">
     {{ inputLabel|raw }}
     {{ openformgroup|raw }}
     {% if options.inline %}
-    <div class="{{ containerClass }} float-left">
+    <div class="{{ containerClass }}">
         {% endif %}
         {{ inputPrepend|raw }}
         {% if options.inline|raw %}

@@ -27,10 +27,10 @@ class Steam {
 
     private static $instance = NULL;
 
-    private static $default_boilerplate = 'bootstrap4';
+    private static $default_boilerplate = "bootstrap4";
     private static $boiler_files = [];
-    private $boilers = ''; // Default boiler
-private $boiler_path = '';
+    private $boilers = ""; // Default boiler
+    private $boiler_path = "";
 
     /**
      * Steam instance
@@ -55,7 +55,7 @@ private $boiler_path = '';
      * Run the boiler
      */
     public function run() {
-        $package_path = $this->getBoilerPath().'package.php';
+        $package_path = $this->getBoilerPath()."package.php";
         require_once $package_path;
         $this->setBoilerFiles();
     }
@@ -72,7 +72,7 @@ private $boiler_path = '';
      */
     private function setBoilerFiles() {
         if (empty(self::$boiler_files)) {
-            $package_files = fusion_filter_hook('fusion_boiler_paths');
+            $package_files = fusion_filter_hook("fusion_boiler_paths");
             if (!empty($package_files[0])) {
                 self::$boiler_files = $package_files[0];
             }
@@ -98,10 +98,10 @@ private $boiler_path = '';
         $command_name = ucfirst($command_name);
         require_once(__DIR__.DIRECTORY_SEPARATOR."Steam".DIRECTORY_SEPARATOR.$command_name.".steam.inc");
         try {
-            $input_class = new \ReflectionClass('PHPFusion\\Steam\\'.$command_name);
+            $input_class = new \ReflectionClass("PHPFusion\\Steam\\".$command_name);
             return (object)$input_class->newInstance($this);
         } catch (\ReflectionException $e) {
-            set_error(E_USER_NOTICE, $e->getMessage(), $e->getFile(), $e->getLine(), 'Boilerplate Error');
+            set_error(E_USER_NOTICE, $e->getMessage(), $e->getFile(), $e->getLine(), "Boilerplate Error");
         }
         return NULL;
     }

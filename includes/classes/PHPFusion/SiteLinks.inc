@@ -91,6 +91,56 @@ class SiteLinks {
     private static $optional_cache_data = [];
 
     private static $current_url = "";
+    private static $menu_settings = array();
+
+    /**
+     * @param $menu_id
+     *
+     * @return array
+     */
+    public static function getSettings($menu_id) {
+        if (empty(self::$menu_settings[$menu_id])) {
+            $settings = fusion_get_settings();
+            self::$menu_settings[$menu_id] = array(
+                "menu_name"      => "",
+                "links_per_page" => 0,
+                "links_grouping" => 0,
+                "links_bbcode"   => 0,
+            );
+            $positions = self::get_SiteLinksPosition();
+            //print_P($settings);
+            switch ($menu_id) {
+                case "M1":
+                case "M2":
+                case "M3":
+                    /** Import a blank menu settings */
+                    self::$menu_settings[$menu_id] = array(
+                        "menu_name"      => $positions[$menu_id],
+                        "links_per_page" => $settings["links_per_page_".$menu_id],
+                        "links_grouping" => $settings["links_grouping_".$menu_id],
+                        "links_bbcode"   => $settings["links_bbcode_".$menu_id],
+                    );
+                    break;
+                default:
+                    if (is_numeric($menu_id)) {
+                        // on other numbers, recall from site_menus
+                        $result = dbquery("SELECT menu_name, menu_bbcode, menu_grouping, menu_links_per_page FROM ".DB_SITE_MENUS." WHERE menu_id=:mid", [":mid" => $menu_id]);
+                        if (dbrows($result)) {
+                            $mdata = dbarray($result);
+                            self::$menu_settings[$menu_id] = array(
+                                "menu_name"      => $mdata["menu_name"],
+                                "links_per_page" => $mdata["menu_links_per_page"],
+                                "links_grouping" => $mdata["menu_grouping"],
+                                "links_bbcode"   => $mdata["menu_bbcode"],
+                            );
+                        }
+                    }
+            }
+        }
+
+
+        return self::$menu_settings[$menu_id];
+    }
 
     /**
      * Get Site Links Position Options
@@ -101,71 +151,13 @@ class SiteLinks {
         $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/sitelinks.php");
         if (empty(self::$position_opts)) {
             self::$position_opts = [
-                '1' => $locale['SL_0025'], // only css navigational panel
-                '2' => $locale['SL_0026'], // both
-                '3' => $locale['SL_0027'], // subheader
-                '4' => $locale['custom']." ID",
+                "M1" => $locale["SL_0025"], // only css navigational panel
+                "M2" => $locale["SL_0026"], // both
+                "M3" => $locale["SL_0027"], // subheader
             ];
         }
 
         return (array)self::$position_opts;
-    }
-
-    /**
-     * @param $menu_id
-     *
-     * @return array
-     */
-    public static function getSettings($menu_id) {
-        $settings = fusion_get_settings();
-        $menu_settings = array(
-            "menu_name"      => "",
-            "links_per_page" => 0,
-            "links_grouping" => 0,
-            "links_bbcode"   => 0,
-        );
-
-        if (isnum($menu_id)) {
-            switch ($menu_id) {
-                case 1:
-                case 2:
-                case 3:
-                    /** Import a blank menu settings */
-                    if (!isset($settings["links_bbcode_".$menu_id])) {
-                        // create them
-                        $settings = array(
-                            "links_bbcode_".$menu_id   => (int)0,
-                            "links_grouping_".$menu_id => (int)1,
-                            "links_per_page_".$menu_id => (int)8,
-                        );
-                        dbquery_update_settings($settings);
-                        add_notice("info", "System health check performed.");
-                        redirect(FUSION_REQUEST);
-                    }
-
-                    $menu_settings = array(
-                        "links_per_page" => $settings["links_bbcode_".$menu_id],
-                        "links_grouping" => $settings["links_grouping_".$menu_id],
-                        "links_bbcode"   => $settings["links_bbcode_".$menu_id],
-                    );
-                    break;
-                default:
-
-                    // on other numbers, recall from site_menus
-                    $result = dbquery("SELECT menu_name, menu_bbcode, menu_grouping, menu_links_per_page FROM ".DB_SITE_MENUS." WHERE menu_id=:mid", [":mid" => $menu_id]);
-                    if (dbrows($result)) {
-                        $mdata = dbarray($result);
-                        $menu_settings = array(
-                            "menu_name"      => $mdata["menu_name"],
-                            "links_per_page" => $mdata["menu_links_per_page"],
-                            "links_grouping" => $mdata["menu_grouping"],
-                            "links_bbcode"   => $mdata["menu_bbcode"],
-                        );
-                    }
-            }
-        }
-
-        return $menu_settings;
     }
 
     /**

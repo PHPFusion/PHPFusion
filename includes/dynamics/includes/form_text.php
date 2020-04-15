@@ -23,10 +23,10 @@ use PHPFusion\Steam;
  * Generates a text input
  * Generates the HTML for a textbox or password input
  *
- * @param string $input_name    Name of the input, by default it's also used as the ID for the input
- * @param string $label     The label text
- * @param string $input_value   The value to be display in the input, usually a value from DB prev. saved
- * @param array  $options       Various options
+ * @param string $input_name  Name of the input, by default it's also used as the ID for the input
+ * @param string $label       The label text
+ * @param string $input_value The value to be display in the input, usually a value from DB prev. saved
+ * @param array  $options     Various options
  *
  * @return mixed
  *
@@ -45,8 +45,6 @@ use PHPFusion\Steam;
  *
  */
 function form_text($input_name, $label = "", $input_value = "", array $options = []) {
-
-
     $locale = fusion_get_locale();
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 
@@ -209,7 +207,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
             } else {
                 $options['type'] = 'text';
             }
-        break;
+            break;
     }
 
     if ($options['regex']) {
@@ -239,7 +237,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
             ");
         }
 
-    } elseif ($options['safemode']) {
+    } else if ($options['safemode']) {
         $options['error_text'] = empty($options['error_text']) ? $locale['error_input_safemode'] : $options['error_text'];
     }
 
@@ -300,12 +298,5 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         ");
     }
 
-    //return (string)$html;
-    $fusion_steam = Steam::getInstance();
-     try {
-         return    $fusion_steam->load('Form')->input($input_name, $label, $input_value, $options);
-    } catch (Exception $e) {
-         set_error(E_USER_NOTICE, $e->getMessage(), $e->getFile(), $e->getLine(), 'form_text');
-     }
-    return '';
+    return Steam::getInstance()->load('Form')->input($input_name, $label, $input_value, $options);
 }

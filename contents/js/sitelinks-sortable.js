@@ -25,7 +25,7 @@ $().ready(function(){
             // console.log($(this));
             let hiered = $('ol.sortable').nestedSortable('serialize', {startDepthCount: 0});
             // update the sort links
-            $('#sortlinks_form #link_sort').val(hiered);
+            $('#sortlinks_form #links_sort').val(hiered);
             //console.log('updated');
         }
     });

@@ -4,11 +4,12 @@
  * @param token
  * @param rights
  * @param php_hook
+ * @param data
  * @constructor
  */
-let FusionPost = function (form_id, token, rights, php_hook) {
+let FusionPost = function (form_id, token, rights, php_hook, data) {
 
-    let requesturl = SITE_PATH + 'administration/includes/acp-post.php?token=' + token + '&rights=' + rights;
+    let requesturl = SITE_PATH + 'contents/controller/acp-post.php?token=' + token + '&rights=' + rights;
     let form = document.getElementById(form_id);
     let button = form.querySelectorAll('button[type="submit"]')[0];
     let buttonText = button.innerHTML;
@@ -187,6 +188,9 @@ let FusionPost = function (form_id, token, rights, php_hook) {
                     let toastDom = $('.toast');
                     toastDom.toast({'delay':3000});
                     toastDom.toast('show');
+                    $('body').on('hidden.bs.toast', '.toast', function () {
+                        $(this).remove();
+                    });
                 }
 
             } else {
@@ -222,7 +226,7 @@ let FusionPost = function (form_id, token, rights, php_hook) {
      * @private
      */
     let _sanitizer = function (form_id, fusion_token, input_name, input_value, default_value = '', input_multilang = false) {
-        let requesturl = SITE_PATH + 'administration/includes/sanitize.php';
+        let requesturl = SITE_PATH + 'contents/controller/sanitize.php';
         // Display the values
         // for (var value of formData.values()) {
         //     console.log(value);

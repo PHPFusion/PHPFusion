@@ -28,7 +28,7 @@ class Form {
      */
     public function __construct() {
         $steam = Steam::getInstance();
-        require_once $steam->getBoilerPath().DIRECTORY_SEPARATOR.'form.php';
+        require_once $steam->getBoilerPath().DIRECTORY_SEPARATOR."form.php";
     }
 
     public function input($input_name, $label, $input_value, $options) {

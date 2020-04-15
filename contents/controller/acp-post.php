@@ -7,7 +7,7 @@ require_once(__DIR__.'/../../maincore.php');
 define('FUSION_AJAX', TRUE);
 header('Content-Type: text/html; charset=utf-8');
 header('X-Robots-Tag: noindex');
-
+// maybe i can get a cookie.
 /** If token no error */
 if (fusion_safe()) {
 
@@ -23,12 +23,15 @@ if (fusion_safe()) {
     $acp_hook_file = str_replace('_', '-', $hook);
 
     if (in_array($current_action, $allowable_action)) {
-        require_once(__DIR__.'/action/'.$acp_hook_file.'.php');
+        require_once(__DIR__.'/../actions/'.$acp_hook_file.'.php');
         /** load the action into the hook */
         fusion_add_hook('fusion_acp_action', $current_action);
         /** check for post rights and token **/
         $current_rights = get('rights');
         $user_token = get('token');
+        if (!check_get('token')) {
+            $user_token = cookie(COOKIE_PREFIX.'user');
+        }
         /** Authenticate user with administrator token where the user token must be encrypted with site secret key. */
         /** @var $auth - the user auth data */
         try {

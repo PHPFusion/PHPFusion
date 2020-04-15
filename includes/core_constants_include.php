@@ -28,6 +28,9 @@ define("THEMES", BASEDIR."themes/");
 define("BOILERPLATES", BASEDIR."themes/boilerplates/");
 define("SITE_THEMES", BASEDIR."themes/site_themes/");
 
+const CONTENTS = BASEDIR."contents".DIRECTORY_SEPARATOR;
+const ADMIN_CONTENTS = CONTENTS.DIRECTORY_SEPARATOR."admin".DIRECTORY_SEPARATOR;
+
 // @todo convert them all to these...
 const TEMPLATES = BASEDIR."themes".DIRECTORY_SEPARATOR."templates".DIRECTORY_SEPARATOR;
 const ADMIN_THEMES = BASEDIR."themes".DIRECTORY_SEPARATOR."admin_themes".DIRECTORY_SEPARATOR;
