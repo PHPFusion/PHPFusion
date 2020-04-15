@@ -141,6 +141,10 @@ class Sitelinks {
                 dbquery_update_settings($settings_array);
             }
         }
+        // remove old settings
+        dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='links_grouping'");
+        dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='links_bbcode'");
+        dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='links_per_page'");
     }
 
     private function menu_selector() {
