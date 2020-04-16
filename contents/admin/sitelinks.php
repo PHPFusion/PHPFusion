@@ -32,24 +32,12 @@ class Sitelinks {
         return self::$instance;
     }
 
-    private function getLocaleTemporaryFunction() {
-        $locale["SL_0100"] = "Manage Site Links";
-        $locale["SL_0101"] = "Upgrade Error";
-        $locale["SL_0102"] = "Site Links";
-
-        $locale["SL_0200"] = "Menu has been removed.";
-        $locale["SL_0201"] = "A new menu has been added.";
-        $locale["SL_0202"] = "Menu ID is not defined.";
-        return $locale;
-    }
-
     /**
      * Public method for display
      */
     public function admin() {
         $this->aidlink = fusion_get_aidlink();
-        $this->locale = $this->getLocaleTemporaryFunction();
-        //$this->locale = fusion_get_locale("", LOCALE.LOCALESET."admin/sitelinks.php");
+        $this->locale = fusion_get_locale("", LOCALE.LOCALESET."admin/sitelinks.php");
         pageAccess("SL");
         opentable($this->locale['SL_0100']);
         $this->_admin();
@@ -67,7 +55,7 @@ class Sitelinks {
         }
 
         if (check_get("status")) {
-            switch(get("status")) {
+            switch (get("status")) {
                 case "menu_rm":
                     add_notice("success", $this->locale["SL_0200"]);
                     break;
@@ -117,38 +105,32 @@ class Sitelinks {
         $add_success = json_encode(array(
             "toast"       => TRUE,
             "title"       => $this->locale["SL_0102"],
-            "description" => "The links are added successfully.",
+            "description" => $this->locale["SL_0103"],
             "icon"        => "fas fa-link",
         ));
         $new_fail = json_encode(array(
             "toast"       => TRUE,
             "title"       => $this->locale["SL_0102"],
-            "description" => "Somethign went wrong with the menu creation.",
+            "description" => $this->locale["SL_0104"],
             "icon"        => "fas fa-link",
         ));
         $update_success = json_encode(array(
             "toast"       => TRUE,
             "title"       => $this->locale["SL_0102"],
-            "description" => "The links are updated successfully.",
+            "description" => $this->locale["SL_0105"],
             "icon"        => "fas fa-link",
         ));
         $remove_success = json_encode(array(
             "toast"       => TRUE,
             "title"       => $this->locale["SL_0102"],
-            "description" => "Link has been removed successfully.",
+            "description" => $this->locale["SL_0106"],
             "icon"        => "fas fa-link",
         ));
 
         $menu_update_success = json_encode(array(
             "toast"       => TRUE,
             "title"       => $this->locale["SL_0102"],
-            "description" => "Menu has been updated successfully.",
-            "icon"        => "fas fa-link",
-        ));
-        $menu_remove_success = json_encode(array(
-            "toast"       => TRUE,
-            "title"       => $this->locale["SL_0102"],
-            "description" => "Menu has been removed successfully.",
+            "description" => $this->locale["SL_0107"],
             "icon"        => "fas fa-link",
         ));
 
@@ -197,13 +179,12 @@ class Sitelinks {
                     // you can do a popper here or something depending on what you need.
                     console.log('Something went wrong', error);
                     newMenu.showNotice('danger', $new_fail);          
-                });         
-                
+                });                         
             });
             
             $(document).on('click', 'a[data-action=\"remove_menu\"]', function(e) {
                 e.preventDefault();
-                if (confirm('This action will remove menu and all links in the menu. Continue?')) {
+                if (confirm('".$this->locale["SL_0108"]."')) {
                     let form_id = $(this).closest('form').attr('id');                                                
                     let menuAction = new FusionPost(form_id, '$cookie', 'SL', 'remove-menu');
                      menuAction.submit()
@@ -397,8 +378,9 @@ class Sitelinks {
             $menu = post("menu");
             redirect(ADMIN."site_links.php".fusion_get_aidlink()."&amp;menu=$menu");
         }
+
         return openform("menufrm", "post", FORM_REQUEST, array("inline" => TRUE))
-            .form_select("menu", "Select a menu to edit:", get("menu"), [
+            .form_select("menu", $this->locale["SL_0300"], get("menu"), [
                 "options"         => \PHPFusion\SiteLinks::get_SiteLinksPosition(),
                 "select_alt"      => TRUE,
                 "inline"          => TRUE,
@@ -407,8 +389,8 @@ class Sitelinks {
                 "label_class"     => "text-nowrap col-sm-4",
                 "container_class" => "col-sm-6"
             ])
-            .form_button("select_menu", "Select", "select_menu", array("class" => "btn-primary mr-3")).
-            ' <a data-action="new" href="'.clean_request("action=new", array("action"), FALSE).'">Create new menu</a>'
+            .form_button("select_menu", $this->locale["SL_0301"], "select_menu", array("class" => "btn-primary mr-3")).
+            ' <a data-action="new" href="'.clean_request("action=new", array("action"), FALSE).'">'.$this->locale["SL_0302"].'</a>'
             .closeform();
     }
 
@@ -421,13 +403,13 @@ class Sitelinks {
         $html = opencollapse('menu-switch');
         $html .= opencollapsebody('News', 'menu-news', 'menu-switch', FALSE);
         $html .= closecollapsebody();
-        $html .= opencollapsebody('Custom Links', 'menu-1', 'menu-switch', TRUE);
+        $html .= opencollapsebody($this->locale["SL_0303"], 'menu-1', 'menu-switch', TRUE);
         $html .= openform('customlinksFrm', 'post', FORM_REQUEST, ['class' => 'form-horizontal']);
-        $html .= form_text('link_name', 'Link Name', '', ['required' => TRUE, 'inline' => FALSE]);
-        $html .= form_text('link_url', 'Link URL', '', ['required' => FALSE, 'inline' => FALSE]);
+        $html .= form_text('link_name', $this->locale["SL_0304"], '', ['required' => TRUE, 'inline' => FALSE]);
+        $html .= form_text('link_url', $this->locale["SL_0305"], '', ['required' => FALSE, 'inline' => FALSE]);
         $html .= form_hidden('link_position', '', $menu_id, ['required' => FALSE, 'inline' => FALSE]);
         $html .= "<div class='text-right'>";
-        $html .= form_button('link_add', 'Add to Navigation', "", ['class' => 'btn-primary']);
+        $html .= form_button('link_add', $this->locale["SL_0306"], "", ['class' => 'btn-primary']);
         $html .= "</div>";
         $html .= closeform();
         $html .= closecollapsebody().closecollapse();
@@ -441,8 +423,8 @@ class Sitelinks {
      * @return mixed
      */
     private function menu_heading($settings) {
-        return form_text("menu_name", "Menu Name", $settings["menu_name"], array(
-            "placeholder" => "Menu name",
+        return form_text("menu_name", $this->locale["SL_0307"], $settings["menu_name"], array(
+            "placeholder" => $this->locale["SL_0307"],
             "required"    => TRUE,
             "inline"      => TRUE,
             "class"       => "m-t-10 align-self-center col-12 col-xl-6 pl-0",
@@ -450,6 +432,56 @@ class Sitelinks {
             "deactivate"  => ($this->menu_id && in_array($this->menu_id, array("M1", "M2", "M3")) ? TRUE : FALSE)
         ));
 
+    }
+
+    private function getLinkForm($data) {
+        $link_id = $data["link_id"];
+        echo opencollapse($link_id);
+        echo opencollapsebody($data["link_name"], $link_id."m", $link_id);
+        echo openform("_form", "post", FORM_REQUEST, array("form_id" => "_form_".$link_id));
+        switch ($data["link_type"]) {
+            case "link":
+            default:
+                echo form_hidden("_type", "", "links", array("input_id" => "_type_".$link_id));
+                echo form_text("_url", $this->locale["SL_0305"], $data["link_url"], array("input_id" => "_url_".$link_id, "required" => FALSE));
+                echo form_text("_name", $this->locale["SL_0304"], $data["link_name"], array("input_id" => "_name_".$link_id, "required" => TRUE));
+                echo form_text("_title", $this->locale["SL_0308"], $data["link_title"], array("input_id" => "_title_".$link_id, "required" => FALSE));
+                echo form_textarea("_description", $this->locale["SL_0309"], $data["link_description"], array("input_id" => "_description_".$link_id, "ext_tip" => "The description will be displayed in the menu if the current theme supports it."));
+        }
+        echo form_hidden("_position", "", $data["link_position"], array("input_id" => "_position_".$link_id));
+        echo form_hidden("_id", "", $link_id, array("input_id" => "_lid_".$link_id));
+        echo form_text("_icon", $this->locale["SL_0310"], $data["link_icon"], array("input_id" => "_icon_".$link_id));
+        echo form_checkbox("_window", $this->locale["SL_0311"], $data["link_window"], array("input_id" => "_window_".$link_id, "type" => "checkbox", "reverse_label" => TRUE));
+        echo form_select("_visibility", $this->locale["SL_0312"], $data["link_visibility"], array("input_id" => "_visibility_".$link_id, "options" => fusion_get_groups(), "select_alt" => TRUE));
+        echo form_checkbox("_status", $this->locale["SL_0313"], $data["link_status"], array("input_id" => "_status_".$link_id, "type" => "radio", "options" => get_status_opts()));
+        echo '<a href="#" class="remove_link text-danger" data-id="'.$link_id.'" data-action="remove">'.$this->locale["SL_0314"].'</a>';
+        echo form_button("save_link", $this->locale["SL_0315"], "save_link", array("input_id" => "_save_".$link_id, "class" => "btn-primary"));
+        echo closeform();
+        echo closecollapsebody();
+        echo closecollapse();
+    }
+
+    private function recurseList($result, $index = 0) {
+        /** check if have results */
+        if (isset($result[$index])) {
+            /** Loop through current level
+             *
+             * @var  $link_id -  link_id
+             * @var  $link    -  link data
+             */
+            foreach ($result[$index] as $link_id => $link) {
+                echo '<li id="menuItem_'.$link['link_id'].'" style="cursor:pointer;">';
+                echo '<div style="max-width:400px;">';
+                $this->getLinkForm($link);
+                echo '</div>';
+                if (isset($result[$link_id])) {
+                    echo '<ol style="list-style:none;">';
+                    $this->recurseList($result, $link_id);
+                    echo '</ol>';
+                }
+                echo '</li>';
+            }
+        }
     }
 
     /**
@@ -461,61 +493,11 @@ class Sitelinks {
         add_to_footer("<script src='".INCLUDES."jquery/jquery-ui/jquery-ui.min.js'></script>");
         add_to_footer("<script src='".INCLUDES."jquery/jquery-ui/jquery.mjs.nestedSortable.js'></script>");
         add_to_footer("<script src='".CONTENTS."js/sitelinks-sortable.js'></script>");
-
-        function link_form($data) {
-            $link_id = $data["link_id"];
-            echo opencollapse($link_id);
-            echo opencollapsebody($data["link_name"], $link_id."m", $link_id);
-            echo openform("_form", "post", FORM_REQUEST, array("form_id" => "_form_".$link_id));
-            switch ($data["link_type"]) {
-                case "link":
-                default:
-                    echo form_hidden("_type", "", "links", array("input_id" => "_type_".$link_id));
-                    echo form_text("_url", "URL", $data["link_url"], array("input_id" => "_url_".$link_id, "required" => FALSE));
-                    echo form_text("_name", "Name", $data["link_name"], array("input_id" => "_name_".$link_id, "required" => TRUE));
-                    echo form_text("_title", "Title Attribute", $data["link_title"], array("input_id" => "_title_".$link_id, "required" => FALSE));
-                    echo form_textarea("_description", "Description", $data["link_description"], array("input_id" => "_description_".$link_id, "ext_tip" => "The description will be displayed in the menu if the current theme supports it."));
-            }
-            echo form_hidden("_position", "", $data["link_position"], array("input_id" => "_position_".$link_id));
-            echo form_hidden("_id", "", $link_id, array("input_id" => "_lid_".$link_id));
-            echo form_text("_icon", "Icon Class", $data["link_icon"], array("input_id" => "_icon_".$link_id));
-            echo form_checkbox("_window", "Open link in a new tab", $data["link_window"], array("input_id" => "_window_".$link_id, "type" => "checkbox", "reverse_label" => TRUE));
-            echo form_select("_visibility", "Visibility", $data["link_visibility"], array("input_id" => "_visibility_".$link_id, "options" => fusion_get_groups(), "select_alt" => TRUE));
-            echo form_checkbox("_status", "Status", $data["link_status"], array("input_id" => "_status_".$link_id, "type" => "radio", "options" => get_status_opts()));
-            echo '<a href="#" class="remove_link text-danger" data-id="'.$link_id.'" data-action="remove">Remove</a>';
-            echo form_button("save_link", "Save Link", "save_link", array("input_id" => "_save_".$link_id, "class" => "btn-primary"));
-            echo closeform();
-            echo closecollapsebody();
-            echo closecollapse();
-        }
-
-        function recurse_list($result, $index = 0) {
-            /** check if have results */
-            if (isset($result[$index])) {
-                /** Loop through current level
-                 *
-                 * @var  $link_id -  link_id
-                 * @var  $link    -  link data
-                 */
-                foreach ($result[$index] as $link_id => $link) {
-                    echo '<li id="menuItem_'.$link['link_id'].'" style="cursor:pointer;">';
-                    echo '<div style="max-width:400px;">';
-                    link_form($link);
-                    echo '</div>';
-                    if (isset($result[$link_id])) {
-                        echo '<ol style="list-style:none;">';
-                        recurse_list($result, $link_id);
-                        echo '</ol>';
-                    }
-                    echo '</li>';
-                }
-            }
-        }
-
         ob_start();
         echo '<ol class="sortable ui-sortable" style="list-style:none;margin:0;padding:0;">';
-        recurse_list($link_tree);
+        $this->recurseList($link_tree);
         echo '</ol>';
+
         return ob_get_clean();
     }
 
@@ -528,22 +510,21 @@ class Sitelinks {
     private function menu_footer($link_tree, $settings) {
         // Sort link form
         $locale = fusion_get_locale();
-
         $html = openform("sortlinks_form", "post", FORM_REQUEST, array("inline" => FALSE, "class" => "spacer-xs"));
         $html .= form_hidden("links_sort", "", "");
         $html .= form_hidden("links_menu", "", $this->menu_id);
         $html .= form_hidden("links_menu_name", "", "");
-        $html .= form_checkbox("links_bbcode", $locale["SL_0063"], $settings["links_bbcode"], array(
+        $html .= form_checkbox("links_bbcode", $this->locale["SL_0316"], $settings["links_bbcode"], array(
             "options" => get_status_opts(array()),
             "type"    => "radio",
             "inline"  => TRUE,
             "ext_tip" => $locale["SL_0047"]
         ));
-        $html .= form_checkbox("links_grouping", $locale["SL_0046"], $settings["links_grouping"],
+        $html .= form_checkbox("links_grouping", $this->locale["SL_0317"], $settings["links_grouping"],
             array(
                 "options" => get_status_opts(array(), array(
-                    0 => $locale["SL_0048"],
-                    1 => $locale["SL_0049"]
+                    0 => $this->locale["SL_0318"],
+                    1 => $this->locale["SL_0319"]
                 )),
                 "type"    => "radio",
                 "inline"  => TRUE,
@@ -551,7 +532,7 @@ class Sitelinks {
             )
         );
         $html .= '<div id="lpp" class="row" '.(!$settings["links_grouping"] ? 'style="display:none"' : "").'><div class="col-12">';
-        $html .= form_text("links_per_page", $locale["SL_0043"], $settings["links_per_page"],
+        $html .= form_text("links_per_page", $this->locale["SL_0320"], $settings["links_per_page"],
             array(
                 "type"        => "number",
                 "inline"      => TRUE,
@@ -564,9 +545,9 @@ class Sitelinks {
         );
         $html .= "</div></div>";
         if (isnum($this->menu_id)) {
-            $html .= '<a class="text-danger btn btn-link" data-id="'.$this->menu_id.'" data-action="remove_menu">Remove</a>';
+            $html .= '<a class="text-danger btn btn-link" data-id="'.$this->menu_id.'" data-action="remove_menu">'.$this->locale["SL_0314"].'</a>';
         }
-        $html .= form_button("save_menu", "Save Menu", "save_menu", ["class" => "btn-primary ml-a"]);
+        $html .= form_button("save_menu", $this->locale["SL_0321"], "save_menu", ["class" => "btn-primary ml-a"]);
         $html .= closeform();
 
         return $html;
