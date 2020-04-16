@@ -18,26 +18,18 @@
 
 use PHPFusion\Admins;
 
-defined('IN_FUSION') || exit;
+(defined('IN_FUSION') || exit);
 
-if (!defined("IMAGES_N")) {
-    define("IMAGES_N", INFUSIONS."news/images/");
-}
-if (!defined("IMAGES_N_T")) {
-    define("IMAGES_N_T", INFUSIONS."news/images/thumbs/");
-}
-if (!defined("IMAGES_NC")) {
-    define("IMAGES_NC", INFUSIONS."news/news_cats/");
-}
-if (!defined("DB_NEWS")) {
-    define("DB_NEWS", DB_PREFIX."news");
-}
-if (!defined("DB_NEWS_CATS")) {
-    define("DB_NEWS_CATS", DB_PREFIX."news_cats");
-}
-if (!defined("DB_NEWS_IMAGES")) {
-    define("DB_NEWS_IMAGES", DB_PREFIX."news_gallery");
-}
+/** File path const */
+const IMAGES_N = INFUSIONS."news".DIRECTORY_SEPARATOR."images".DIRECTORY_SEPARATOR;
+const IMAGES_N_T = INFUSIONS."news".DIRECTORY_SEPARATOR."images".DIRECTORY_SEPARATOR."thumbs".DIRECTORY_SEPARATOR;
+const IMAGES_NC = INFUSIONS."news".DIRECTORY_SEPARATOR."news_cats".DIRECTORY_SEPARATOR;
+const NEWS_CLASS = INFUSIONS."news".DIRECTORY_SEPARATOR."classes".DIRECTORY_SEPARATOR;
+
+/** Database const */
+const DB_NEWS = DB_PREFIX."news";
+const DB_NEWS_CATS = DB_PREFIX."news_cats";
+const DB_NEWS_IMAGES = DB_PREFIX."news_gallery";
 
 if (!defined("NEWS_LOCALE")) {
     if (file_exists(INFUSIONS."news/locale/".LOCALESET."news.php")) {
@@ -53,10 +45,6 @@ if (!defined("NEWS_ADMIN_LOCALE")) {
     } else {
         define("NEWS_ADMIN_LOCALE", INFUSIONS."news/locale/English/news_admin.php");
     }
-}
-
-if (!defined("NEWS_CLASS")) {
-    define("NEWS_CLASS", INFUSIONS."news/classes/");
 }
 
 // Admin Settings
@@ -81,8 +69,17 @@ function news_admin_prop() {
     $admin->setCommentType('N', fusion_get_locale('N', LOCALE.LOCALESET."admin/main.php"));
     $admin->setLinkType('N', fusion_get_settings("siteurl")."infusions/news/news.php?readmore=%s");
 }
-
 fusion_add_hook('admin_pages', 'news_admin_prop');
+
+// return array of information for sitelinks menu
+function news_sitelinks_menu() {
+    return array();
+}
+function news_sitelinks_item() {
+    return array();
+}
+fusion_add_hook("admin_sitelinks_menu", "news_sitelinks_menu");
+fusion_add_hook("admin_sitelinks_item", "news_sitelinks_item");
 
 
 $inf_settings = get_settings('news');
