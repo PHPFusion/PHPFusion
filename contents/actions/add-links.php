@@ -22,6 +22,7 @@ function add_links($data) {
         echo openform("_form", "post", FORM_REQUEST, array("form_id" => "_form_".$link_id));
         echo form_hidden("_type", "", "");
         echo form_hidden("_id", "", $link_id);
+        echo form_hidden("_language", "", LANGUAGE);
         echo form_hidden("_position", "", $data["link_position"]);
         echo form_text("_url", "URL", $data["link_url"], array("input_id" => "_url_".$link_id, "required" => FALSE));
         echo form_text("_name", "Name", $data["link_name"], array("input_id" => "_name_".$link_id, "required" => TRUE));

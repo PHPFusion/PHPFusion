@@ -102,9 +102,33 @@ class Sitelinks {
             "description" => "Somethign went wrong with the menu creation.",
             "icon"        => "fas fa-link",
         ));
+        $update_success = json_encode(array(
+            "toast"       => TRUE,
+            "title"       => "Site Links",
+            "description" => "The links are updated successfully.",
+            "icon"        => "fas fa-link",
+        ));
+        $remove_success = json_encode(array(
+            "toast"       => TRUE,
+            "title"       => "Site Links",
+            "description" => "Link has been removed successfully.",
+            "icon"        => "fas fa-link",
+        ));
+
+        $menu_update_success = json_encode(array(
+            "toast"       => TRUE,
+            "title"       => "Site Links",
+            "description" => "Menu has been updated successfully.",
+            "icon"        => "fas fa-link",
+        ));
+
+
+        // Update link
+        $cookie = cookie(COOKIE_PREFIX.'user');
+
         echo "<script src='".CONTENTS."js/admin-post.js'></script>";
         echo "<script>
-            // Create new menu
+            /** Create new menu link */            
             $(document).on('click', 'a[data-action=\"new\"]', function(e) {
                 // generate new menu
                 e.preventDefault();
@@ -147,7 +171,7 @@ class Sitelinks {
                 
             });
             
-            // Add links list
+            /** Add links list */
             $(document).on('submit', 'form#customlinksFrm', function (e) {
                 // prevent php submit
                 e.preventDefault();
@@ -159,15 +183,16 @@ class Sitelinks {
             .then(function (response){
                 //console.log(response);
                 return submitCustomLinks.return ();
-            })
-            
+            })            
             /** We will get our hook response output */
             .then(function (xhr){
                 //console.log(xhr);
                 let item = xhr['responseText'];
-                $('ol.sortable').append(item);
-                // use the helper function for cleaning up the form
-                submitCustomLinks.bs4Success();
+                $('ol.sortable').append(item);                
+                $('#link_name').val('');
+                $('#link_url').val('');
+                
+                submitCustomLinks.resetButton();
                 // do a popper
                 submitCustomLinks.showNotice('success', $add_success);
             })
@@ -177,6 +202,91 @@ class Sitelinks {
                     console.log('Something went wrong', error);
                 });
         });
+                        
+            /** Update site links */    
+            $(document).on('click', 'button[name=\"save_link\"]', function(e){
+                e.preventDefault();
+                let form = $(this).closest('form');
+                let form_id = form.prop('id');                            
+                // admin post...
+                let links = new FusionPost(form_id, '$cookie', 'SL', 'update-links');
+                links.submit()
+                .then(function(response){
+                    return links.return();
+                })
+                .then(function(xhr){
+                    let response = JSON.parse(xhr['responseText']);
+                    if (response['status'] === true && response['target']) {
+                        $('#'+response['target']).removeClass('show');
+                        // trigger toast
+                        links.showNotice('success', $update_success);
+                        // now trigger the toast
+                        links.resetButton();
+                        
+                    }                                     
+                })
+                .catch(function(error){
+                    console.log('Something went wrong', error);
+                });
+            });
+            
+            /** Title changes on keyup */
+            $(document).on('keyup input paste', 'input[name=\"_name\"]', function(e) {
+                let panelTitle = $(this).closest('.panel-default').find('.collapse-title');
+                panelTitle.text($(this).val());
+            });
+            /** Links per page Event */
+            let lpp = $('#lpp');
+            if ( $('#links_grouping').val()) {
+                lpp.show();
+            }                                
+            $('#links_grouping-0').bind('click', function(e){ lpp.slideUp(); });
+            $('#links_grouping-1').bind('click', function(e){ lpp.slideDown(); });
+                                
+            /** Remove link from menu */
+            $(document).on('click', 'a[data-action=\"remove\"]', function(e) {
+                e.preventDefault();
+                let form_id = $(this).closest('form').attr('id');
+                let link_id = $(this).data('id');
+                let link_action = new FusionPost(form_id, '$cookie', 'SL', 'remove-links');
+                 link_action.submit()
+                 .then(function(response){
+                     return link_action.return();
+                 })
+                 .then(function(xhr){
+                    let response = xhr['responseText'];                    
+                    // menuItem_121
+                    $('#menuItem_'+link_id).remove();
+                    link_action.showNotice('success', $remove_success);
+                 })
+                 .catch(function(error){
+                        console.log('Something went wrong', error);
+                 });
+            });
+                
+            /** Save menu */
+            $(document).on('click', 'button[name=\"save_menu\"]', function(e){
+                e.preventDefault();
+                let form = $(this).closest('form');
+                let form_id = form.prop('id');
+                let menu_name = $('#menu_name').val();
+                $('#links_menu_name').val( menu_name );
+                // admin post...
+                let menuAction = new FusionPost(form_id, '$cookie', 'SL', 'update-menu');
+                menuAction.submit()
+                    .then(function(response){
+                        return menuAction.return();
+                    })
+                    .then(function(xhr){
+                        let response = xhr['responseText'];
+                        //console.log(response);
+                        menuAction.resetButton();
+                        menuAction.showNotice('success', $menu_update_success)                                                        
+                    })
+                    .catch(function(error){
+                        console.log('Something went wrong', error);
+                    });
+            });
         </script>";
     }
 
@@ -330,7 +440,6 @@ class Sitelinks {
         function recurse_list($result, $index = 0) {
             /** check if have results */
             if (isset($result[$index])) {
-
                 /** Loop through current level
                  *
                  * @var  $link_id -  link_id
@@ -347,52 +456,6 @@ class Sitelinks {
                         echo '</ol>';
                     }
                     echo '</li>';
-                }
-                if (!$index) {
-                    //echo '</ol>';
-                    // Update the link
-                    $update_success = json_encode(array(
-                        "toast"       => TRUE,
-                        "title"       => "Site Links",
-                        "description" => "The links are updated successfully.",
-                        "icon"        => "fas fa-link",
-                    ));
-
-                    // Update link
-                    $cookie = cookie(COOKIE_PREFIX.'user');
-                    add_to_jquery(/** @lang JavaScript */ "
-                        /** Update site links */    
-                        $(document).on('click', 'button[name=\"save_link\"]', function(e){
-                            e.preventDefault();
-                            let form = $(this).closest('form');
-                            let form_id = form.prop('id');                            
-                            // admin post...
-                            let links = new FusionPost(form_id, '$cookie', 'SL', 'update-links');
-                            links.submit()
-                                .then(function(response){
-                                    return links.return();
-                                })
-                                .then(function(xhr){
-                                    let response = JSON.parse(xhr['responseText']);
-                                    if (response['status'] === true && response['target']) {
-                                        $('#'+response['target']).removeClass('show');
-                                        // trigger toast
-                                        links.showNotice('success', $update_success);
-                                        // now trigger the toast
-                                        links.resetButton();
-                                        
-                                    }                                     
-                                })
-                                .catch(function(error){
-                                    console.log('Something went wrong', error);
-                                });
-                        });
-                        /** Title changes on keyup */
-                        $(document).on('keyup input paste', 'input[name=\"_name\"]', function(e) {
-                            let panelTitle = $(this).closest('.panel-default').find('.collapse-title');
-                            panelTitle.text($(this).val());
-                        });
-                        ");
                 }
             }
         }
@@ -451,75 +514,6 @@ class Sitelinks {
         $html .= form_button("save_menu", "Save Menu", "save_menu", ["class" => "btn-primary ml-a"]);
         $html .= closeform();
 
-        // Save menu
-        $cookie = cookie(COOKIE_PREFIX."user");
-        $add_success = json_encode(array(
-            "toast"       => TRUE,
-            "title"       => "Site Links",
-            "description" => "Menu has been updated successfully.",
-            "icon"        => "fas fa-link",
-        ));
-        $remove_success = json_encode(array(
-            "toast"       => TRUE,
-            "title"       => "Site Links",
-            "description" => "Link has been removed successfully.",
-            "icon"        => "fas fa-link",
-        ));
-
-        add_to_jquery(/** @lang JavaScript */ "
-                let lpp = $('#lpp');
-                if ( $('#links_grouping').val()) {
-                    lpp.show();
-                }
-                                
-                $('#links_grouping-0').bind('click', function(e){ lpp.slideUp(); });
-                $('#links_grouping-1').bind('click', function(e){ lpp.slideDown(); });
-                                
-                /** Remove link from menu */
-                $(document).on('click', 'a[data-action=\"remove\"]', function(e) {
-                    e.preventDefault();
-                    let form_id = $(this).closest('form').attr('id');
-                    let link_id = $(this).data('id');
-                    let link_action = new FusionPost(form_id, '$cookie', 'SL', 'remove-links');
-                     link_action.submit()
-                     .then(function(response){
-                         return link_action.return();
-                     })
-                     .then(function(xhr){
-                        let response = xhr['responseText'];
-                        console.log(response);
-                        // menuItem_121
-                        $('#menuItem_'+link_id).remove();
-                        link_action.showNotice('success', $remove_success);
-                     })
-                     .catch(function(error){
-                            console.log('Something went wrong', error);
-                     });
-                });
-                
-                /** Save menu */
-                $(document).on('click', 'button[name=\"save_menu\"]', function(e){
-                    e.preventDefault();
-                    let form = $(this).closest('form');
-                    let form_id = form.prop('id');
-                    let menu_name = $('#menu_name').val();
-                    $('#links_menu_name').val( menu_name );
-                    // admin post...
-                    let menu_action = new FusionPost(form_id, '$cookie', 'SL', 'update-menu');
-                    menu_action.submit()
-                        .then(function(response){
-                            return menu_action.return();
-                        })
-                        .then(function(xhr){
-                            let response = xhr['responseText'];
-                            //console.log(response);
-                            menu_action.showNotice('success', $add_success)                                                        
-                        })
-                        .catch(function(error){
-                            console.log('Something went wrong', error);
-                        });
-                });
-                ");
         return $html;
     }
 }
