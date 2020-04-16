@@ -53,5 +53,6 @@ function update_menu($data) {
     }
 
     echo json_encode(array("menu_id" => $menu_id));
+    die();
 
 }

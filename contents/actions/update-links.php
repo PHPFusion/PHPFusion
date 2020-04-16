@@ -24,4 +24,5 @@ function update_links($data) {
         $status = TRUE;
     }
     echo json_encode(array("status" => $status, "target" => $target));
+    die();
 }

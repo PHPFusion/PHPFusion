@@ -27,4 +27,5 @@ function remove_links($data) {
         $error_status = FALSE;
     }
     echo json_encode(array("error" => $error_status));
+    die();
 }

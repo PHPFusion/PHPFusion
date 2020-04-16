@@ -44,4 +44,5 @@ function add_links($data) {
     } else {
         echo '<li id="error"><div class="well"><strong>Erorr in creating a link</strong></li>';
     }
+    die();
 }

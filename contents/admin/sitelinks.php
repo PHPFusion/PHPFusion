@@ -54,6 +54,18 @@ class Sitelinks {
             set_error(E_USER_NOTICE, $e->getMessage(), $e->getFile(), $e->getLine(), "Upgrade Error");
         }
 
+        if (check_get("status")) {
+            switch(get("status")) {
+                case "menu_rm":
+                    add_notice("success", "Menu has been removed.");
+                    break;
+                case "menu_add":
+                    add_notice("success", "A new menu has been added.");
+                    break;
+            }
+            redirect(clean_request("", ["status"], FALSE));
+        }
+
         if (get("action") == "new") {
             $this->menu_id = 0;
             $link_tree = array();
@@ -121,6 +133,12 @@ class Sitelinks {
             "description" => "Menu has been updated successfully.",
             "icon"        => "fas fa-link",
         ));
+        $menu_remove_success = json_encode(array(
+            "toast"       => TRUE,
+            "title"       => "Site Links",
+            "description" => "Menu has been removed successfully.",
+            "icon"        => "fas fa-link",
+        ));
 
 
         // Update link
@@ -159,7 +177,7 @@ class Sitelinks {
                   let item = JSON.parse(xhr['responseText']);                           
                   if (item['menu_id']) {
                     // redirect to new url
-                    document.location.href= '".ADMIN."site_links.php".fusion_get_aidlink()."&menu='+item['menu_id'];                        
+                    document.location.href= '".ADMIN."site_links.php".fusion_get_aidlink()."&menu='+item['menu_id']+'&status=menu_add';                        
                   }                         
                 })  
              /** When sanitization fails */
@@ -171,6 +189,28 @@ class Sitelinks {
                 
             });
             
+            $(document).on('click', 'a[data-action=\"remove_menu\"]', function(e) {
+                e.preventDefault();
+                if (confirm('This action will remove menu and all links in the menu. Continue?')) {
+                    let form_id = $(this).closest('form').attr('id');                                                
+                    let menuAction = new FusionPost(form_id, '$cookie', 'SL', 'remove-menu');
+                     menuAction.submit()
+                     .then(function(response){
+                         return menuAction.return();
+                     })
+                     .then(function(xhr){
+                        let response = JSON.parse(xhr['responseText']);   
+                        if (response['status'] === 'Success') {
+                            document.location.href= '".ADMIN."site_links.php".fusion_get_aidlink()."&status=menu_rm';    
+                        }                                                             
+                     })
+                     .catch(function(error){
+                            console.log('Something went wrong', error);
+                     });
+                }
+                return FALSE;                                
+            });
+
             /** Add links list */
             $(document).on('submit', 'form#customlinksFrm', function (e) {
                 // prevent php submit
@@ -183,15 +223,15 @@ class Sitelinks {
             .then(function (response){
                 //console.log(response);
                 return submitCustomLinks.return ();
-            })            
+            })
             /** We will get our hook response output */
             .then(function (xhr){
                 //console.log(xhr);
                 let item = xhr['responseText'];
-                $('ol.sortable').append(item);                
+                $('ol.sortable').append(item);
                 $('#link_name').val('');
                 $('#link_url').val('');
-                
+
                 submitCustomLinks.resetButton();
                 // do a popper
                 submitCustomLinks.showNotice('success', $add_success);
@@ -202,12 +242,12 @@ class Sitelinks {
                     console.log('Something went wrong', error);
                 });
         });
-                        
-            /** Update site links */    
+
+            /** Update site links */
             $(document).on('click', 'button[name=\"save_link\"]', function(e){
                 e.preventDefault();
                 let form = $(this).closest('form');
-                let form_id = form.prop('id');                            
+                let form_id = form.prop('id');
                 // admin post...
                 let links = new FusionPost(form_id, '$cookie', 'SL', 'update-links');
                 links.submit()
@@ -222,14 +262,14 @@ class Sitelinks {
                         links.showNotice('success', $update_success);
                         // now trigger the toast
                         links.resetButton();
-                        
-                    }                                     
+
+                    }
                 })
                 .catch(function(error){
                     console.log('Something went wrong', error);
                 });
             });
-            
+
             /** Title changes on keyup */
             $(document).on('keyup input paste', 'input[name=\"_name\"]', function(e) {
                 let panelTitle = $(this).closest('.panel-default').find('.collapse-title');
@@ -239,10 +279,10 @@ class Sitelinks {
             let lpp = $('#lpp');
             if ( $('#links_grouping').val()) {
                 lpp.show();
-            }                                
+            }
             $('#links_grouping-0').bind('click', function(e){ lpp.slideUp(); });
             $('#links_grouping-1').bind('click', function(e){ lpp.slideDown(); });
-                                
+
             /** Remove link from menu */
             $(document).on('click', 'a[data-action=\"remove\"]', function(e) {
                 e.preventDefault();
@@ -254,7 +294,7 @@ class Sitelinks {
                      return link_action.return();
                  })
                  .then(function(xhr){
-                    let response = xhr['responseText'];                    
+                    let response = xhr['responseText'];
                     // menuItem_121
                     $('#menuItem_'+link_id).remove();
                     link_action.showNotice('success', $remove_success);
@@ -263,7 +303,7 @@ class Sitelinks {
                         console.log('Something went wrong', error);
                  });
             });
-                
+
             /** Save menu */
             $(document).on('click', 'button[name=\"save_menu\"]', function(e){
                 e.preventDefault();
@@ -281,7 +321,7 @@ class Sitelinks {
                         let response = xhr['responseText'];
                         //console.log(response);
                         menuAction.resetButton();
-                        menuAction.showNotice('success', $menu_update_success)                                                        
+                        menuAction.showNotice('success', $menu_update_success)
                     })
                     .catch(function(error){
                         console.log('Something went wrong', error);
@@ -511,6 +551,9 @@ class Sitelinks {
             )
         );
         $html .= "</div></div>";
+        if (isnum($this->menu_id)) {
+            $html .= '<a class="text-danger btn btn-link" data-id="'.$this->menu_id.'" data-action="remove_menu">Remove</a>';
+        }
         $html .= form_button("save_menu", "Save Menu", "save_menu", ["class" => "btn-primary ml-a"]);
         $html .= closeform();
 
