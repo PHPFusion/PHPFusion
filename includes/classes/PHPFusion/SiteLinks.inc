@@ -155,6 +155,12 @@ class SiteLinks {
                 "M2" => $locale["SL_0026"], // both
                 "M3" => $locale["SL_0027"], // subheader
             ];
+            $result  = dbquery("SELECT menu_id, IF(menu_name !='', menu_name, CONCAT('Custom menu ', '#', menu_id)) menu_name FROM ".DB_SITE_MENUS." ORDER BY menu_id");
+            if (dbrows($result)) {
+                while ($data = dbarray($result)) {
+                    self::$position_opts[$data["menu_id"]] = $data["menu_name"];
+                }
+            }
         }
 
         return (array)self::$position_opts;

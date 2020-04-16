@@ -1,4 +1,4 @@
-{% set readonlyText = options.deactivate ? " form-control-plaintext" : " form-control" %}
+{#{% set readonlyText = options.deactivate ? " form-control-plaintext" : " form-control" %}#}
 {% set inputTip = options.ext_tip ? '<small id="'~options.input_id~'Help" class="form-text text-muted">'~options.ext_tip~'</small>' : '' %}
 {% set accessibilityText = label and options.ext_tip ? 'aria-describedby="'~options.input_id~'Help"' : "" %}
 
@@ -150,7 +150,7 @@
     {% if options.deactivate %}
         {% set readOnly = 'readonly' %}
     {% endif %}
-    {% set inputField = '<input type="'~options.type~'"'~whitespace(readOnly)~' name="'~input_name~'" class="'~readonlyText~whitespace(input_class)~'" id="'~options.input_id~'" value="'~input_value~'" placeholder="'~options.placeholder~'"'~accessibilityText~whitespace(options.input_data)~whitespace(options.min)~whitespace(options.max)~whitespace(options.step)~whitespace(options.max_length)~whitespace(options.autocomplete)~' style="max-width:'~options.inner_width~'!important;"'~whitespace(required)~'>' %}
+    {% set inputField = '<input type="'~options.type~'"'~whitespace(readOnly)~' name="'~input_name~'" class="form-control'~whitespace(input_class)~'" id="'~options.input_id~'" value="'~input_value~'" placeholder="'~options.placeholder~'"'~accessibilityText~whitespace(options.input_data)~whitespace(options.min)~whitespace(options.max)~whitespace(options.step)~whitespace(options.max_length)~whitespace(options.autocomplete)~' style="max-width:'~options.inner_width~'!important;"'~whitespace(required)~'>' %}
 {% endif %}
 
 {#Generated Output#}

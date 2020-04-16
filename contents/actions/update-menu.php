@@ -2,10 +2,13 @@
 (defined("IN_FUSION") || exit);
 
 function update_menu($data) {
+
+    $menu_id = $data["links_menu"];
+
     if (in_array($data['links_menu'], array("M1", "M2", "M3")) ? TRUE : FALSE) {
         // update or create this if missing
         $menu_settings = array(
-            "links_bbcode_".$data['links_menu'] => $data['links_bbcode'],
+            "links_bbcode_".$data['links_menu']   => $data['links_bbcode'],
             "links_grouping_".$data['links_menu'] => $data['links_grouping'],
             "links_per_page_".$data['links_menu'] => $data['links_per_page'],
         );
@@ -30,7 +33,7 @@ function update_menu($data) {
             "menu_grouping"       => $data['links_grouping'],
             "menu_links_per_page" => $data['links_per_page'],
         );
-        dbquery_insert(DB_SITE_MENUS, $menu_settings, "save");
+        $menu_id = dbquery_insert(DB_SITE_MENUS, $menu_settings, "save");
     }
 
     /** Update category and sort order */
@@ -48,5 +51,7 @@ function update_menu($data) {
             $order++;
         }
     }
+
+    echo json_encode(array("menu_id" => $menu_id));
 
 }

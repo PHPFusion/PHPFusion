@@ -48,14 +48,18 @@ class Sitelinks {
      * Private method for display
      */
     private function _admin() {
-        $this->upgrade();
+        try {
+            $this->upgrade();
+        } catch (\Exception $e) {
+            set_error(E_USER_NOTICE, $e->getMessage(), $e->getFile(), $e->getLine(), "Upgrade Error");
+        }
 
         if (get("action") == "new") {
             $this->menu_id = 0;
             $link_tree = array();
             $menu_data = array(
-                "menu_name" => "",
-                "links_bbcode" => "",
+                "menu_name"      => "",
+                "links_bbcode"   => "",
                 "links_grouping" => FALSE,
                 "links_per_page" => 8
             );
@@ -64,6 +68,11 @@ class Sitelinks {
                 $menu = get("menu");
                 if (in_array($menu, array("M1", "M2", "M3"))) {
                     $this->menu_id = $menu;
+                } else {
+                    if (!dbcount("(menu_id)", DB_SITE_MENUS, "menu_id=:mid", [":mid" => (int)$menu])) {
+                        add_notice("danger", "Menu ID is not defined.");
+                        redirect(ADMIN."site_links.php".fusion_get_aidlink());
+                    }
                 }
             }
             $this->menu_id = get('menu', FILTER_VALIDATE_INT) ?: $this->menu_id;
@@ -87,8 +96,57 @@ class Sitelinks {
             "description" => "The links are added successfully.",
             "icon"        => "fas fa-link",
         ));
+        $new_fail = json_encode(array(
+            "toast"       => TRUE,
+            "title"       => "Site Links",
+            "description" => "Somethign went wrong with the menu creation.",
+            "icon"        => "fas fa-link",
+        ));
         echo "<script src='".CONTENTS."js/admin-post.js'></script>";
         echo "<script>
+            // Create new menu
+            $(document).on('click', 'a[data-action=\"new\"]', function(e) {
+                // generate new menu
+                e.preventDefault();
+                // clear sortable list.
+                $('.sortable').html('');
+                // reset menu title
+                $('#links_menu').val(0);
+                // reset menu heading textbox
+                $('#menu_name').prop('readonly', false).prop('disabled', false).val('');
+                // reset menu name
+                $('#links_menu_name').val('');       
+                // set bbcode settings to 0
+                $('#links_bbcode-0').prop('checked', true); 
+                // set grouping settings to 0
+                $('#links_grouping-0').prop('checked', true);
+                // hide links per page
+                $('#lpp').hide();
+                // set links per page to 8
+                $('#links_per_page').val(8);
+                
+                /** Constructor for JS post */
+                let newMenu = new FusionPost('sortlinks_form', '".cookie(COOKIE_PREFIX.'user')."', 'SL', 'update-menu');
+                newMenu.submit()
+                .then(function(response){
+                    return newMenu.return();
+                })
+                .then(function(xhr){
+                  let item = JSON.parse(xhr['responseText']);                           
+                  if (item['menu_id']) {
+                    // redirect to new url
+                    document.location.href= '".ADMIN."site_links.php".fusion_get_aidlink()."&menu='+item['menu_id'];                        
+                  }                         
+                })  
+             /** When sanitization fails */
+            .catch(function (error){
+                    // you can do a popper here or something depending on what you need.
+                    console.log('Something went wrong', error);
+                    newMenu.showNotice('danger', $new_fail);          
+                });         
+                
+            });
+            
             // Add links list
             $(document).on('submit', 'form#customlinksFrm', function (e) {
                 // prevent php submit
@@ -102,6 +160,7 @@ class Sitelinks {
                 //console.log(response);
                 return submitCustomLinks.return ();
             })
+            
             /** We will get our hook response output */
             .then(function (xhr){
                 //console.log(xhr);
@@ -133,15 +192,21 @@ class Sitelinks {
         $result = dbquery("SELECT * FROM ".DB_SITE_LINKS." WHERE link_position > 3 GROUP BY link_position");
         if (dbrows($result)) {
             while ($data = dbarray($result)) {
-                $settings_array = array(
-                    "menu_id"             => 0,
-                    "menu_bbcode"         => FALSE,
-                    "menu_grouping"       => FALSE,
-                    "menu_links_per_page" => 8
-                );
-                $id = dbquery_insert(DB_SITE_MENUS, $settings_array, "save");
-                // now update all the links
-                dbquery("UPDATE ".DB_SITE_LINKS." SET link_position='$id' WHERE link_position='".$data["link_position"]."'");
+                /** Create a menu for this link_position if does not exist */
+                if (!dbcount("(menu_id)", DB_SITE_MENUS, "menu_id=:pos", array(":pos" => $data["link_position"]))) {
+                    $settings_array = array(
+                        "menu_id"             => 0,
+                        "menu_bbcode"         => FALSE,
+                        "menu_grouping"       => FALSE,
+                        "menu_links_per_page" => 8
+                    );
+                    $id = dbquery_insert(DB_SITE_MENUS, $settings_array, "save");
+                    // now update all the links
+                    dbquery("UPDATE ".DB_SITE_LINKS." SET link_position=:new WHERE link_position=:pos", array(
+                        ":new" => (int)$id,
+                        ":pos" => (int)$data["link_position"]
+                    ));
+                }
             }
         }
         $settings = fusion_get_settings();
@@ -181,7 +246,7 @@ class Sitelinks {
                 "container_class" => "col-sm-6"
             ])
             .form_button("select_menu", "Select", "select_menu", array("class" => "btn-primary mr-3")).
-            ' <a href="'.clean_request("action=new", array("action"), FALSE).'">Create new menu</a>'
+            ' <a data-action="new" href="'.clean_request("action=new", array("action"), FALSE).'">Create new menu</a>'
             .closeform();
     }
 
@@ -195,25 +260,16 @@ class Sitelinks {
         $html .= opencollapsebody('News', 'menu-news', 'menu-switch', FALSE);
         $html .= closecollapsebody();
         $html .= opencollapsebody('Custom Links', 'menu-1', 'menu-switch', TRUE);
-        $html .= $this->custom_links($menu_id);
-        $html .= closecollapsebody().closecollapse();
-        return $html;
-    }
-
-    /**
-     * @param $link_position
-     *
-     * @return string
-     */
-    private function custom_links($link_position) {
-        $html = openform('customlinksFrm', 'post', FORM_REQUEST, ['class' => 'form-horizontal']);
-        $html .= form_text('link_name', 'Link Name', '', ['required' => TRUE, 'inline' => FALSE]).
-            form_text('link_url', 'Link URL', '', ['required' => FALSE, 'inline' => FALSE]).
-            form_hidden('link_position', '', $link_position, ['required' => FALSE, 'inline' => FALSE]);
+        $html .= openform('customlinksFrm', 'post', FORM_REQUEST, ['class' => 'form-horizontal']);
+        $html .= form_text('link_name', 'Link Name', '', ['required' => TRUE, 'inline' => FALSE]);
+        $html .= form_text('link_url', 'Link URL', '', ['required' => FALSE, 'inline' => FALSE]);
+        $html .= form_hidden('link_position', '', $menu_id, ['required' => FALSE, 'inline' => FALSE]);
         $html .= "<div class='text-right'>";
         $html .= form_button('link_add', 'Add to Navigation', "", ['class' => 'btn-primary']);
         $html .= "</div>";
         $html .= closeform();
+        $html .= closecollapsebody().closecollapse();
+
         return $html;
     }
 
@@ -231,6 +287,7 @@ class Sitelinks {
             "inner_width" => "300px",
             "deactivate"  => ($this->menu_id && in_array($this->menu_id, array("M1", "M2", "M3")) ? TRUE : FALSE)
         ));
+
     }
 
     /**
@@ -273,10 +330,7 @@ class Sitelinks {
         function recurse_list($result, $index = 0) {
             /** check if have results */
             if (isset($result[$index])) {
-                if (!$index) {
-                    /** only run once in the root level */
-                    echo '<ol class="sortable ui-sortable" style="list-style:none;margin:0;padding:0;">';
-                }
+
                 /** Loop through current level
                  *
                  * @var  $link_id -  link_id
@@ -295,7 +349,7 @@ class Sitelinks {
                     echo '</li>';
                 }
                 if (!$index) {
-                    echo '</ol>';
+                    //echo '</ol>';
                     // Update the link
                     $update_success = json_encode(array(
                         "toast"       => TRUE,
@@ -304,6 +358,7 @@ class Sitelinks {
                         "icon"        => "fas fa-link",
                     ));
 
+                    // Update link
                     $cookie = cookie(COOKIE_PREFIX.'user');
                     add_to_jquery(/** @lang JavaScript */ "
                         /** Update site links */    
@@ -343,7 +398,9 @@ class Sitelinks {
         }
 
         ob_start();
+        echo '<ol class="sortable ui-sortable" style="list-style:none;margin:0;padding:0;">';
         recurse_list($link_tree);
+        echo '</ol>';
         return ob_get_clean();
     }
 
@@ -445,6 +502,8 @@ class Sitelinks {
                     e.preventDefault();
                     let form = $(this).closest('form');
                     let form_id = form.prop('id');
+                    let menu_name = $('#menu_name').val();
+                    $('#links_menu_name').val( menu_name );
                     // admin post...
                     let menu_action = new FusionPost(form_id, '$cookie', 'SL', 'update-menu');
                     menu_action.submit()
@@ -462,8 +521,5 @@ class Sitelinks {
                 });
                 ");
         return $html;
-
-
     }
-
 }

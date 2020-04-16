@@ -162,7 +162,6 @@ let FusionPost = function (form_id, token, rights, php_hook, data) {
     };
 
     this.resetButton = function() {
-        console.log(button);
         button.textContent = buttonText;
     };
 
