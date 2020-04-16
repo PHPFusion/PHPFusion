@@ -32,14 +32,26 @@ class Sitelinks {
         return self::$instance;
     }
 
+    private function getLocaleTemporaryFunction() {
+        $locale["SL_0100"] = "Manage Site Links";
+        $locale["SL_0101"] = "Upgrade Error";
+        $locale["SL_0102"] = "Site Links";
+
+        $locale["SL_0200"] = "Menu has been removed.";
+        $locale["SL_0201"] = "A new menu has been added.";
+        $locale["SL_0202"] = "Menu ID is not defined.";
+        return $locale;
+    }
+
     /**
      * Public method for display
      */
     public function admin() {
         $this->aidlink = fusion_get_aidlink();
-        $this->locale = fusion_get_locale("", LOCALE.LOCALESET."admin/sitelinks.php");
+        $this->locale = $this->getLocaleTemporaryFunction();
+        //$this->locale = fusion_get_locale("", LOCALE.LOCALESET."admin/sitelinks.php");
         pageAccess("SL");
-        opentable($this->locale['SL_0012']);
+        opentable($this->locale['SL_0100']);
         $this->_admin();
         closetable();
     }
@@ -51,16 +63,16 @@ class Sitelinks {
         try {
             $this->upgrade();
         } catch (\Exception $e) {
-            set_error(E_USER_NOTICE, $e->getMessage(), $e->getFile(), $e->getLine(), "Upgrade Error");
+            set_error(E_USER_NOTICE, $e->getMessage(), $e->getFile(), $e->getLine(), $this->locale["SL_0101"]);
         }
 
         if (check_get("status")) {
             switch(get("status")) {
                 case "menu_rm":
-                    add_notice("success", "Menu has been removed.");
+                    add_notice("success", $this->locale["SL_0200"]);
                     break;
                 case "menu_add":
-                    add_notice("success", "A new menu has been added.");
+                    add_notice("success", $this->locale["SL_0201"]);
                     break;
             }
             redirect(clean_request("", ["status"], FALSE));
@@ -82,7 +94,7 @@ class Sitelinks {
                     $this->menu_id = $menu;
                 } else {
                     if (!dbcount("(menu_id)", DB_SITE_MENUS, "menu_id=:mid", [":mid" => (int)$menu])) {
-                        add_notice("danger", "Menu ID is not defined.");
+                        add_notice("danger", $this->locale["SL_0202"]);
                         redirect(ADMIN."site_links.php".fusion_get_aidlink());
                     }
                 }
@@ -104,38 +116,38 @@ class Sitelinks {
 
         $add_success = json_encode(array(
             "toast"       => TRUE,
-            "title"       => "Site Links",
+            "title"       => $this->locale["SL_0102"],
             "description" => "The links are added successfully.",
             "icon"        => "fas fa-link",
         ));
         $new_fail = json_encode(array(
             "toast"       => TRUE,
-            "title"       => "Site Links",
+            "title"       => $this->locale["SL_0102"],
             "description" => "Somethign went wrong with the menu creation.",
             "icon"        => "fas fa-link",
         ));
         $update_success = json_encode(array(
             "toast"       => TRUE,
-            "title"       => "Site Links",
+            "title"       => $this->locale["SL_0102"],
             "description" => "The links are updated successfully.",
             "icon"        => "fas fa-link",
         ));
         $remove_success = json_encode(array(
             "toast"       => TRUE,
-            "title"       => "Site Links",
+            "title"       => $this->locale["SL_0102"],
             "description" => "Link has been removed successfully.",
             "icon"        => "fas fa-link",
         ));
 
         $menu_update_success = json_encode(array(
             "toast"       => TRUE,
-            "title"       => "Site Links",
+            "title"       => $this->locale["SL_0102"],
             "description" => "Menu has been updated successfully.",
             "icon"        => "fas fa-link",
         ));
         $menu_remove_success = json_encode(array(
             "toast"       => TRUE,
-            "title"       => "Site Links",
+            "title"       => $this->locale["SL_0102"],
             "description" => "Menu has been removed successfully.",
             "icon"        => "fas fa-link",
         ));
