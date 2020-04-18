@@ -167,7 +167,7 @@ class ForumAdminTags extends ForumAdminInterface {
                 'tag_title'       => form_sanitizer($_POST['tag_title'], '', 'tag_title'),
                 'tag_color'       => form_sanitizer($_POST['tag_color'], '', 'tag_color'),
                 'tag_description' => form_sanitizer($_POST['tag_description'], '', 'tag_description'),
-                'tag_status'      => isset($_POST['tag_status']) ? 1 : 0,
+                'tag_status'      => form_sanitizer($_POST['tag_status'], '', 'tag_status'),
                 'tag_language'    => form_sanitizer($_POST['tag_language'], LANGUAGE, 'tag_language'),
             ];
 
