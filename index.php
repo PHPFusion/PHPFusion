@@ -45,6 +45,7 @@ if ($settings['site_seo'] && !isset($_GET['aid'])) {
                 } else {
                     if ($_SERVER['REQUEST_URI'] == $settings['site_path'].$settings['opening_page']
                         or $_SERVER['REQUEST_URI'] == $settings['site_path']."index.php"
+                        or $router->removeParam($_SERVER['REQUEST_URI']) == "/"
                         or $_SERVER['REQUEST_URI'] == $settings['site_path']
                     ) {
                         redirect(BASEDIR.$settings['opening_page'], FALSE, FALSE, 301);
