@@ -146,7 +146,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
 
                 echo form_text( 'weblink_url', $this->locale['WLS_0253'], $this->weblink_data['weblink_url'], [
                     'required'    => TRUE,
-                    'type'        => 'url',
+                    'type'        => 'text',
                     'placeholder' => 'http://'
                 ] );
 
