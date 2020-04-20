@@ -895,28 +895,32 @@ function highlight_words($word, $subject) {
  * @return string
  */
 function descript($text, $striptags = TRUE) {
-    // Convert problematic ascii characters to their true values
-    $patterns = [
-        '#(&\#x)([0-9A-F]+);*#si'                                                                                                       => '',
-        '#(<[^>]+[/\"\'\s])(onmouseover|onmousedown|onmouseup|onmouseout|onmousemove|onclick|ondblclick|onfocus|onload|xmlns)[^>]*>#iU' => '>',
-        '#([a-z]*)=([\`\'\"]*)script:#iU'                                                                                               => '$1=$2nojscript...',
-        '#([a-z]*)=([\`\'\"]*)javascript:#iU'                                                                                           => '$1=$2nojavascript...',
-        '#([a-z]*)=([\'\"]*)vbscript:#iU'                                                                                               => '$1=$2novbscript...',
-        '#(<[^>]+)style=([\`\'\"]*).*expression\([^>]*>#iU'                                                                             => "$1>",
-        '#(<[^>]+)style=([\`\'\"]*).*behaviour\([^>]*>#iU'                                                                              => "$1>"
-    ];
-    foreach (array_merge(['(', ')', ':'], range('A', 'Z'), range('a', 'z')) as $chr) {
-        $patterns["#(&\#)(0*".ord($chr)."+);*#si"] = $chr;
-    }
-    if ($striptags) {
-        do {
-            $count = 0;
-            $text = preg_replace('#</*(applet|meta|xml|blink|link|style|script|embed|object|iframe|frame|frameset|ilayer|layer|bgsound|title|base)[^>]*>#i',
-                "", $text, -1, $count);
-        } while ($count);
-    }
+    if (!defined('DISABLE_DESCRIPT')) {
+        // Convert problematic ascii characters to their true values
+        $patterns = [
+            '#(&\#x)([0-9A-F]+);*#si'                                                                                                       => '',
+            '#(<[^>]+[/\"\'\s])(onmouseover|onmousedown|onmouseup|onmouseout|onmousemove|onclick|ondblclick|onfocus|onload|xmlns)[^>]*>#iU' => '>',
+            '#([a-z]*)=([\`\'\"]*)script:#iU'                                                                                               => '$1=$2nojscript...',
+            '#([a-z]*)=([\`\'\"]*)javascript:#iU'                                                                                           => '$1=$2nojavascript...',
+            '#([a-z]*)=([\'\"]*)vbscript:#iU'                                                                                               => '$1=$2novbscript...',
+            '#(<[^>]+)style=([\`\'\"]*).*expression\([^>]*>#iU'                                                                             => "$1>",
+            '#(<[^>]+)style=([\`\'\"]*).*behaviour\([^>]*>#iU'                                                                              => "$1>"
+        ];
+        foreach (array_merge(['(', ')', ':'], range('A', 'Z'), range('a', 'z')) as $chr) {
+            $patterns["#(&\#)(0*".ord($chr)."+);*#si"] = $chr;
+        }
+        if ($striptags) {
+            do {
+                $count = 0;
+                $text = preg_replace('#</*(applet|meta|xml|blink|link|style|script|embed|object|iframe|frame|frameset|ilayer|layer|bgsound|title|base)[^>]*>#i',
+                    "", $text, -1, $count);
+            } while ($count);
+        }
 
-    return preg_replace(array_keys($patterns), $patterns, $text);
+        return preg_replace(array_keys($patterns), $patterns, $text);
+    } else {
+        return $text;
+    }
 }
 
 /**
