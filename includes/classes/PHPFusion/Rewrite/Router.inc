@@ -68,7 +68,7 @@ class Router extends RewriteDriver {
         $this->requesturi = rtrim(urldecode($this->removeParam(PERMALINK_CURRENT_PATH)), '/');
     }
 
-    private function removeParam($urlValue) {
+    public function removeParam($urlValue) {
         $urlArray = explode('?', $urlValue);
         if (isset($urlArray)) {
             return $urlArray[0];
