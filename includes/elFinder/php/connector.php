@@ -63,7 +63,7 @@ $default = [
     'winHashFix'    => DIRECTORY_SEPARATOR !== '/', // to make hash same to Linux one on windows too
     'accessControl' => 'access',
     'uploadDeny'    => ['all'], // All Mimetypes not allowed to upload
-    'uploadAllow'   => ['image/jpg', 'image/jpeg', 'image/gif', 'image/png', 'image/tiff', 'image/tif', 'image/x-ms-bmp', 'image/x-icon', 'image/svg', 'image/svg+xml', 'application/xml', 'text/xml'], // Mimetype `image` allowed to upload
+    'uploadAllow'   => ['image/jpg', 'image/jpeg', 'image/gif', 'image/png', 'image/tiff', 'image/tif', 'image/x-ms-bmp', 'image/webp', 'image/x-icon', 'image/svg', 'image/svg+xml', 'application/xml', 'text/xml'], // Mimetype `image` allowed to upload
     'uploadOrder'   => ['deny', 'allow'], // allowed Mimetype `image only
     'tmbPath'       => BASEDIR.'cache/.tmb',
     'tmbURL'        => $site_url.'cache/.tmb',

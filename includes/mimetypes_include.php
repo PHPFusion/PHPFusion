@@ -196,7 +196,8 @@ if (!function_exists('mimeTypes')) {
             'odt'   => 'application/vnd.oasis.opendocument.text',
             'odm'   => 'application/vnd.oasis.opendocument.text-master',
             'ott'   => 'application/vnd.oasis.opendocument.text-template',
-            'oth'   => 'application/vnd.oasis.opendocument.text-web'
+            'oth'   => 'application/vnd.oasis.opendocument.text-web',
+            'webp'  => 'image/webp'
         ];
     }
 }
@@ -211,7 +212,8 @@ if (!function_exists('img_mimeTypes')) {
             'tiff' => 'image/tiff',
             'tif'  => 'image/tif',
             'bmp'  => 'image/x-ms-bmp',
-            'ico'  => 'image/x-icon'
+            'ico'  => 'image/x-icon',
+            'webp' => 'image/webp'
         ];
     }
 }

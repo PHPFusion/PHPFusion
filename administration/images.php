@@ -252,7 +252,8 @@ class ImagesAdministration {
         if (isset($_GET['view']) && in_array($_GET['view'], $this->data['image_list'])) {
             echo "<div class='text-center m-t-20'>\n";
             $image_ext = strrchr($this->data['afolder'].stripinput($_GET['view']), ".");
-            if (in_array($image_ext, [".gif", ".GIF", ".ico", ".jpg", ".JPG", ".jpeg", ".JPEG", ".png", ".PNG", ".svg", ".SVG"])) {
+
+            if (in_array(strtolower($image_ext), [".gif", ".ico", ".jpg", ".jpeg", ".png", ".svg", ".webp"])) {
                 echo "<img class='img-responsive img-thumbnail' src='".$this->data['afolder'].stripinput($_GET['view'])."' title='".stripinput($_GET['view'])."' alt='".stripinput($_GET['view'])."'/><br /><br />\n";
             } else {
                 echo "<div class='alert alert-info text-center'>".self::$locale['441']."</div>\n";
@@ -326,13 +327,16 @@ class ImagesAdministration {
         echo form_fileinput("myfile", self::$locale['421'], "", [
             'upload_path' => $this->data['afolder'],
             'type'        => 'image',
-            'valid_ext'   => '.jpg,.png,.PNG,.JPG,.JPEG,.gif,.GIF,.bmp,.BMP,.svg,.SVG,.tiff,.TIFF',
+            'valid_ext'   => '.jpg,.jpeg,.png,.gif,.bmp,.svg,.tiff,.webp',
             'max_width'   => $this->data['folders'][$_GET['ifolder']]['fileinp']['max_width'],
             'max_height'  => $this->data['folders'][$_GET['ifolder']]['fileinp']['max_height'],
             'max_byte'    => $this->data['folders'][$_GET['ifolder']]['fileinp']['max_byte'],
             'required'    => TRUE
         ]);
-        echo "<div class='small m-b-10'>".sprintf(self::$locale['425'], parsebytesize($this->data['folders'][$_GET['ifolder']]['fileinp']['max_byte']))."</div>\n";
+
+        $ext = str_replace('.jpg,.JPG,.png,.PNG,.JPEG,.gif,.GIF,.bmp,.BMP,.svg,.SVG,.tiff,.TIFF', '.jpg,.jpeg,.png,.gif,.bmp,.svg,.tiff,.webp', self::$locale['425']);
+
+        echo "<div class='small m-b-10'>".sprintf($ext, parsebytesize($this->data['folders'][$_GET['ifolder']]['fileinp']['max_byte']))."</div>\n";
 
         echo form_button('uploadimage', self::$locale['420'], self::$locale['420'], ['class' => 'btn-primary']);
         echo closeform();
