@@ -258,6 +258,8 @@ class Upload extends \Defender\Validation {
                             $filetype = 2;
                         } else if ($image_ext == ".png") {
                             $filetype = 3;
+                        } else if ($image_ext == ".webp") {
+                            $filetype = 4;
                         } else {
                             $filetype = FALSE;
                         }
