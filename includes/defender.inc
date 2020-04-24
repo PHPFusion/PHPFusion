@@ -720,6 +720,9 @@ function file_sanitizer($value, $default = '', $input_name = FALSE) {
  * @return bool
  */
 function check_get($key) {
+    if (is_array($key)) {
+        return (!empty(array_reduce($key, function($carry, $item){return (!empty($carry[$item]) ? $carry[$item] : '');}, $_GET)) ? TRUE : FALSE);
+    }
     return (isset($_GET[$key]) ? TRUE : FALSE);
 }
 
@@ -731,6 +734,9 @@ function check_get($key) {
  * @return bool
  */
 function check_post($key) {
+    if (is_array($key)) {
+        return (!empty(array_reduce($key, function($carry, $item){return (!empty($carry[$item]) ? $carry[$item] : '');}, $_POST)) ? TRUE : FALSE);
+    }
     return (isset($_POST[$key]) ? TRUE : FALSE);
 }
 
