@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: preview.ajax.php
-| Author: Frederick MC CHan (Chan)
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,35 +15,27 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 require_once __DIR__."../../../../../maincore.php";
 require_once THEMES."templates/render_functions.php";
-
 echo "<div class='preview-response clearfix p-20'>\n";
-if ( fusion_safe() ) {
-
+if (fusion_safe()) {
     $locale = fusion_get_locale();
-    $text = descript( post( 'text' ) );
-    $editor = post( 'editor' );
-    $mode = post( 'mode' );
-
+    $text = descript(post('text'));
+    $editor = post('editor');
+    $mode = post('mode');
     // Set get_image paths based on URI. This is ajax request file. It doesn't return a standard BASEDIR.
     $prefix_ = "";
-    if ( !fusion_get_settings( "site_seo" ) && check_post( 'url' ) ) {
-        $url = post( 'url' );
-        $uri = pathinfo( $url );
-        $count = substr( $url, -1 ) == "/" ? substr_count( $uri['dirname'], "/" ) : substr_count( $uri['dirname'], "/" ) - 1;
-        $prefix_ = str_repeat( "../", ( $count >= 0 ) ? $count : 0 );
-        foreach ( cache_smileys() as $smiley ) {
-            $smiley_path = fusion_get_settings( 'siteurl' )."images/smiley/".$smiley['smiley_image'];
-            set_image( "smiley_".$smiley['smiley_text'], $smiley_path );
+    if (!fusion_get_settings("site_seo") && check_post('url')) {
+        $url = post('url');
+        $uri = pathinfo($url);
+        $count = substr($url, -1) == "/" ? substr_count($uri['dirname'], "/") : substr_count($uri['dirname'], "/") - 1;
+        $prefix_ = str_repeat("../", ($count >= 0) ? $count : 0);
+        foreach (cache_smileys() as $smiley) {
+            $smiley_path = fusion_get_settings('siteurl')."images/smiley/".$smiley['smiley_image'];
+            set_image("smiley_".$smiley['smiley_text'], $smiley_path);
         }
     }
-    switch ( $editor ) {
-        case 'html':
-            $text = htmlspecialchars( $text );
-            $text = parsesmileys( nl2br( html_entity_decode( stripslashes( $text ) ) ) );
-            /*if ( $mode == 'admin' ) {
+    /*if ( $mode == 'admin' ) {
                 $images = str_replace( '../../../', '', IMAGES );
                 $text = str_replace( IMAGES, $images, $text );
                 if ( defined( 'IMAGES_N' ) ) {
@@ -51,33 +43,20 @@ if ( fusion_safe() ) {
                 }
                 $text = parse_imageDir( $text, $prefix_."images/" );
             }*/
-            echo nl2br( html_entity_decode( $text, ENT_QUOTES, $locale['charset'] ) ) ?: "<p class='text-center'>".$locale['nopreview']."</p>\n";
+
+    switch ($editor) {
+        case "html":
+            $text = parse_text($text, TRUE, FALSE, TRUE, FALSE, TRUE, TRUE);
             break;
-        case 'bbcode':
-            $text = htmlspecialchars( $text );
-            $text = parseubb( parsesmileys( $text ) );
-            /*if ( $mode == 'admin' ) {
-                $images = str_replace( '../../../', '', IMAGES );
-                $text = str_replace( IMAGES, $images, $text );
-                if ( defined( 'IMAGES_N' ) ) {
-                    $text = str_replace( IMAGES_N, $images, $text );
-                }
-                $text = parse_imageDir( $text, $prefix_."images/" );
-            }*/
-            echo nl2br( html_entity_decode( $text, ENT_QUOTES, $locale['charset'] ) ) ?: "<p class='text-center'>".$locale['nopreview']."</p>\n";
+        case "bbcode":
+            $text = parse_text($text, TRUE, TRUE, TRUE, FALSE, TRUE, TRUE);
             break;
         default:
-            $text = htmlspecialchars( $text );
-            $text = parsesmileys( $text );
-            /*if ( $mode == 'admin' ) {
-                $images = str_replace( '../../../', '', IMAGES );
-                $text = str_replace( IMAGES, $images, $text );
-                if ( defined( 'IMAGES_N' ) ) {
-                    $text = str_replace( IMAGES_N, $images, $text );
-                }
-            }*/
-            echo nl2br( html_entity_decode( $text, ENT_QUOTES, $locale['charset'] ) ) ?: "<p class='text-center'>".$locale['nopreview']."</p>\n";
+            $text = parse_text($text, TRUE, FALSE, TRUE, FALSE, TRUE, TRUE);
     }
+
+    echo $text ?: "<p class='text-center'>".$locale['nopreview']."</p>\n";
+
 } else {
     echo 'Your session has expired. Please refresh page.';
 }
