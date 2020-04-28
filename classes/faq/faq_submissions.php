@@ -55,12 +55,16 @@ class FaqSubmissions extends FaqServer {
 
         if (dbcount("(faq_cat_id)", DB_FAQ_CATS, (multilang_table("FQ") ? in_group('faq_cat_language', LANGUAGE) : ""))) {
             // Save
-            if (isset($_POST['submit_link'])) {
-                $submit_info['faq_question'] = parse_textarea($_POST['faq_question']);
+            if (check_post("submit_link")) {
+                $question = post("faq_question");
+                $answer = post("faq_answer");
+
+                $submit_info['faq_question'] = parse_text($question);
+                $submit_info['faq_answer'] = parse_text($answer);
                 $criteriaArray = [
                     'faq_cat_id'   => form_sanitizer($_POST['faq_cat_id'], 0, 'faq_cat_id'),
                     'faq_question' => form_sanitizer($submit_info['faq_question'], '', 'faq_question'),
-                    'faq_answer'   => form_sanitizer($_POST['faq_answer'], '', 'faq_answer'),
+                    'faq_answer'   => form_sanitizer($submit_info["faq_answer"], '', 'faq_answer'),
                     'faq_language' => form_sanitizer($_POST['faq_language'], LANGUAGE, 'faq_language'),
                     'faq_status'   => 1
                 ];
@@ -73,12 +77,12 @@ class FaqSubmissions extends FaqServer {
                         'submit_criteria'  => \Defender::encode($criteriaArray)
                     ];
                     dbquery_insert(DB_SUBMISSIONS, $inputArray, 'save');
-                    addNotice('success', $this->locale['faq_0910']);
+                    add_notice('success', $this->locale['faq_0910']);
                     redirect(clean_request('submitted=q', ['stype'], TRUE));
                 }
             }
 
-            if (isset($_GET['submitted']) && $_GET['submitted'] == "q") {
+            if (get("submitted") === "q") {
                 $info['confirm'] = [
                     'title'       => $this->locale['faq_0911'],
                     'submit_link' => "<a href='".BASEDIR."submit.php?stype=q'>".$this->locale['faq_0912']."</a>",
