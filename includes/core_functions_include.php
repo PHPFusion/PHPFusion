@@ -823,6 +823,7 @@ function parse_text(string $value, $parse_smileys = TRUE, $parse_bbcode = TRUE, 
     }
     if ($descript === TRUE) {
         $value = descript($value);
+        $value = strip_scripts($value);
     }
 
     return (string)$value;

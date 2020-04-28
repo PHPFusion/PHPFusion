@@ -19,7 +19,8 @@
     "twig/twig": "^2.0",
     "ext-json": "*",
     "ext-openssl": "*",
-    "ext-curl": "*"
+    "ext-curl": "*",
+    "ext-dom": "*"
   },
   "config": {
     "vendor-dir": "includes/vendor"
