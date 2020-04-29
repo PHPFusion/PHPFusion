@@ -28,8 +28,6 @@ class Members {
 
     private static $instance = NULL;
 
-    private static $default_condition = '';
-
     private static $locale = [];
 
     private static $max_rows = 0;
@@ -84,8 +82,8 @@ class Members {
             if ($set_info) {
                 self::$locale = fusion_get_locale('', LOCALE.LOCALESET."members.php");
                 add_to_title(self::$locale['global_200'].self::$locale['MEMB_000'].SiteLinks::get_current_SiteLinks("", "link_name"));
-                // get all params
-                //self::$max_rows = dbcount("(user_id)", DB_USERS, (iADMIN ? "user_status>='0'" : "user_status='0'").self::getFilters());
+
+                /** @var max_rows maximum allowable rows under current filter */
                 self::$max_rows = self::$instance->getMemberRows();
             }
         }
