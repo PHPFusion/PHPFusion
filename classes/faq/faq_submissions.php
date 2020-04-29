@@ -55,22 +55,26 @@ class FaqSubmissions extends FaqServer {
 
         if (dbcount("(faq_cat_id)", DB_FAQ_CATS, (multilang_table("FQ") ? in_group('faq_cat_language', LANGUAGE) : ""))) {
             // Save
-            if (isset($_POST['submit_link'])) {
-                $submit_info['faq_question'] = parse_textarea($_POST['faq_question']);
+            if (check_post("submit_link")) {
+                $question = post("faq_question");
+                $answer = post("faq_answer");
+
+                $submit_info['faq_question'] = parse_textarea($question);
+                $submit_info['faq_answer'] = parse_textarea($answer);
                 $criteriaArray = [
                     'faq_cat_id'   => form_sanitizer($_POST['faq_cat_id'], 0, 'faq_cat_id'),
                     'faq_question' => form_sanitizer($submit_info['faq_question'], '', 'faq_question'),
-                    'faq_answer'   => form_sanitizer($_POST['faq_answer'], '', 'faq_answer'),
+                    'faq_answer'   => form_sanitizer($submit_info["faq_answer"], '', 'faq_answer'),
                     'faq_language' => form_sanitizer($_POST['faq_language'], LANGUAGE, 'faq_language'),
                     'faq_status'   => 1
                 ];
                 // Save
-                if (\defender::safe()) {
+                if (fusion_safe()) {
                     $inputArray = [
                         'submit_type'      => 'q',
                         'submit_user'      => fusion_get_userdata('user_id'),
                         'submit_datestamp' => TIME,
-                        'submit_criteria'  => \defender::encode($criteriaArray)
+                        'submit_criteria'  => \Defender::encode($criteriaArray)
                     ];
                     dbquery_insert(DB_SUBMISSIONS, $inputArray, 'save');
                     addNotice('success', $this->locale['faq_0910']);
@@ -78,7 +82,7 @@ class FaqSubmissions extends FaqServer {
                 }
             }
 
-            if (isset($_GET['submitted']) && $_GET['submitted'] == "q") {
+            if (get("submitted") === "q") {
                 $info['confirm'] = [
                     'title'       => $this->locale['faq_0911'],
                     'submit_link' => "<a href='".BASEDIR."submit.php?stype=q'>".$this->locale['faq_0912']."</a>",
@@ -88,7 +92,6 @@ class FaqSubmissions extends FaqServer {
                 return (array)$info;
             } else {
                 $options = [];
-                $faq_data = [];
                 $faq_result = dbquery("SELECT faq_cat_id, faq_cat_name FROM ".DB_FAQ_CATS.(multilang_table("FQ") ? " WHERE ".in_group('faq_cat_language', LANGUAGE) : "")." ORDER BY faq_cat_name ASC");
                 if (dbrows($faq_result)) {
                     $options[0] = $this->locale['faq_0010'];
@@ -107,12 +110,12 @@ class FaqSubmissions extends FaqServer {
                         ]),
                     'faq_answer'     => form_textarea('faq_answer', $this->locale['faq_0251'], $criteriaArray['faq_answer'],
                         [
-                            'required'  => TRUE,
-                            'type'      => fusion_get_settings('tinymce_enabled') ? 'tinymce' : 'html',
-                            'tinymce'   => fusion_get_settings('tinymce_enabled') && iADMIN ? 'advanced' : 'simple',
+                            'required'      => TRUE,
+                            'type'          => fusion_get_settings('tinymce_enabled') ? 'tinymce' : 'html',
+                            'tinymce'       => fusion_get_settings('tinymce_enabled') && iADMIN ? 'advanced' : 'simple',
                             'tinymce_image' => FALSE,
-                            'autosize'  => TRUE,
-                            'form_name' => 'submit_form'
+                            'autosize'      => TRUE,
+                            'form_name'     => 'submit_form'
                         ]),
                     'faq_cat_id'     => form_select('faq_cat_id', $this->locale['faq_0252'], $criteriaArray['faq_cat_id'],
                         [
