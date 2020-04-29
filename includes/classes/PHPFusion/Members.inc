@@ -57,8 +57,9 @@ class Members {
                 $this->sortby = $sortby;
             }
         }
+
         if ($orderby = get("orderby")) {
-            if (in_array($orderby, ["active", "registered", "name"])) {
+            if (in_array($orderby, array("active", "registered", "name"))) {
                 $this->orderby = $orderby;
             }
         }
@@ -90,6 +91,59 @@ class Members {
         }
 
         return self::$instance;
+    }
+
+    /**
+     * @return int
+     */
+    private function getMemberRows() {
+        $result = dbquery("SELECT u.user_id ".$this->getSelectors()." 
+        FROM ".DB_USERS." u ".$this->getJoins()."
+        WHERE ".(iADMIN ? "u.user_status>='0'" : "u.user_status='0'")."
+        ".$this->getConditions()." GROUP BY ".$this->getGroupBy()."
+        ");
+
+        return (int)dbrows($result);
+    }
+
+    private function getSelectors() {
+        if (!empty(self::$filters["select"])) {
+            return ", ".self::$filters["select"];
+        }
+        return "";
+    }
+
+    private function getJoins() {
+        if (!empty(self::$filters["join"])) {
+            return self::$filters["join"];
+        }
+        return "";
+    }
+
+    private function getConditions() {
+        if (!empty(self::$filters["condition"])) {
+            return " AND ".self::$filters["condition"];
+        }
+        return self::getFilters();
+    }
+
+    /**
+     * @return string
+     */
+    private function getFilters() {
+        // alpha select condition
+        $default_condition = ($this->sortby == "all" ? "" : " AND user_name !=''");
+        if ($this->search_text != "all") {
+            return " AND user_name LIKE '".$this->search_text."%'";
+        }
+        return $default_condition;
+    }
+
+    private function getGroupBy() {
+        if (!empty(self::$filters["group_by"])) {
+            return self::$filters["group_by"];
+        }
+        return "u.user_id";
     }
 
     /**
@@ -160,7 +214,7 @@ class Members {
                 'rows'          => self::$max_rows,
                 'search_form'   => $search_form,
                 "search_table"  => $search_table,
-                "no_result" => self::$locale['MEMB_018'].(isset($this->search_text) ? form_sanitizer($this->search_text, '', 'search_text') : $this->sortby)
+                "no_result"     => self::$locale['MEMB_018'].(isset($this->search_text) ? form_sanitizer($this->search_text, '', 'search_text') : $this->sortby)
             );
 
             if (self::$max_rows > 0) {
@@ -230,32 +284,6 @@ class Members {
         return NULL;
     }
 
-
-    /**
-     * @return int
-     */
-    private function getMemberRows() {
-        $result = dbquery("SELECT u.user_id ".$this->getSelectors()." 
-        FROM ".DB_USERS." u ".$this->getJoins()."
-        WHERE ".(iADMIN ? "u.user_status>='0'" : "u.user_status='0'")."
-        ".$this->getConditions()." GROUP BY ".$this->getGroupBy()."
-        ");
-
-        return (int)dbrows($result);
-    }
-
-    /**
-     * @return string
-     */
-    private function getFilters() {
-        // alpha select condition
-        $default_condition = ($this->sortby == "all" ? "" : " AND user_name !=''");
-        if ($this->search_text != "all") {
-            return " AND user_name LIKE '".$this->search_text."%'";
-        }
-        return $default_condition;
-    }
-
     protected function getMembers() {
         $query = "
         SELECT u.user_id, u.user_name, u.user_status, u.user_level, u.user_groups, u.user_language, u.user_joined, u.user_avatar, u.user_lastvisit ".$this->getSelectors()."
@@ -265,41 +293,6 @@ class Members {
         ";
 
         return dbquery($query);
-    }
-
-    private function getLimit() {
-        if (!empty(self::$filters["limit"])) {
-            return self::$filters["limit"];
-        }
-        return 24;
-    }
-
-    private function getJoins() {
-        if (!empty(self::$filters["join"])) {
-            return self::$filters["join"];
-        }
-        return "";
-    }
-
-    private function getGroupBy() {
-        if (!empty(self::$filters["group_by"])) {
-            return self::$filters["group_by"];
-        }
-        return "u.user_id";
-    }
-
-    private function getConditions() {
-        if (!empty(self::$filters["condition"])) {
-            return " AND ".self::$filters["condition"];
-        }
-        return self::getFilters();
-    }
-
-    private function getSelectors() {
-        if (!empty(self::$filters["select"])) {
-            return ", ".self::$filters["select"];
-        }
-        return "";
     }
 
     private function getOrderBy() {
@@ -325,6 +318,13 @@ class Members {
         }
 
         return $this->default_sorting;
+    }
+
+    private function getLimit() {
+        if (!empty(self::$filters["limit"])) {
+            return self::$filters["limit"];
+        }
+        return 24;
     }
 
     /**
