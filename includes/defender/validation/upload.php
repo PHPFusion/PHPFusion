@@ -24,53 +24,52 @@ use Defender\Validation;
  * Handles file or image uploads validation
  */
 class Upload extends Validation {
-    
+
     private function in_array_insensitive( $needle, $haystack ) {
         $needle = strtolower( $needle );
         foreach ( $haystack as $k => $v ) {
             $haystack[ $k ] = strtolower( $v );
         }
-        
+
         return in_array( $needle, $haystack );
     }
-    
-    /** @noinspection PhpInconsistentReturnPointsInspection */
+
     protected function verify_file_upload() {
         $locale = fusion_get_locale();
         //require_once INCLUDES."infusions_include.php";
-    
+
         if ( self::$inputConfig['multiple'] ) {
-        
+
             if ( !empty( $_FILES[ self::$inputConfig['input_name'] ]['name'] ) ) {
-            
+
                 if ( self::$inputConfig['max_count'] < count( $_FILES[ self::$inputConfig['input_name'] ]['name'] ) ) {
                     fusion_stop();
                     $upload = [ 'error' => 1 ];
                     addNotice( 'danger', $locale['df_424'] );
                     Defender::setInputError( self::$inputName );
-                
+
                     return $upload;
-                
+
                 }
-            
+
                 $upload['error'] = 0;
                 for ( $i = 0; $i <= count( $_FILES[ self::$inputConfig['input_name'] ]['name'] ) - 1; $i++ ) {
-                
+
                     $upload['error'] = 0;
-                
+
                     if ( ( self::$inputConfig['max_count'] == $i ) ) {
                         break;
                     }
-                
+
                     $source_file = self::$inputConfig['input_name'];
                     $target_file = $_FILES[ self::$inputConfig['input_name'] ]['name'][ $i ];
                     $target_folder = self::$inputConfig['path'];
                     $valid_ext = self::$inputConfig['valid_ext'];
                     $max_size = self::$inputConfig['max_byte'];
                     $query = '';
-                
+
                     if ( is_uploaded_file( $_FILES[ $source_file ]['tmp_name'][ $i ] ) ) {
-                    
+
                         /*
                          * Preparation
                          */
@@ -82,7 +81,7 @@ class Upload extends Validation {
                             fusion_stop();
                             addNotice( 'warning', 'Fusion Dynamics invalid accepted extension format. Please use either | or ,' );
                         }
-                    
+
                         $file = $_FILES[ $source_file ];
                         $file_type = $file['type'][ $i ];
                         if ( $target_file == "" || preg_match( "/[^a-zA-Z0-9_-]/", $target_file ) ) {
@@ -103,8 +102,8 @@ class Upload extends Validation {
                             "error"          => 0,
                             "replace_upload" => self::$inputConfig['replace_upload']
                         ];
-                    
-                    
+
+
                         if ( $file['size'][ $i ] > $max_size ) {
                             // Maximum file size exceeded
                             $upload['error'] = 1;
@@ -128,7 +127,7 @@ class Upload extends Validation {
                                 }
                             }
                         }
-                    
+
                         if ( $upload['error'] !== 0 ) {
                             if ( file_exists( $file_dest.$target_file.$file_ext ) ) {
                                 unlink( $file_dest.$target_file.$file_ext );
@@ -169,18 +168,18 @@ class Upload extends Validation {
                         }
                     }
                 }
-                
+
                 return $upload;
             }
-        
+
             return [];
-        
+
         }
-    
+
         if ( !empty( $_FILES[ self::$inputConfig['input_name'] ]['name'] ) && is_uploaded_file( $_FILES[ self::$inputConfig['input_name'] ]['tmp_name'] ) && fusion_safe() ) {
-        
+
             $upload = upload_file( self::$inputConfig['input_name'], $_FILES[ self::$inputConfig['input_name'] ]['name'], self::$inputConfig['path'], self::$inputConfig['valid_ext'], self::$inputConfig['max_byte'], '', self::$inputConfig['replace_upload'] );
-        
+
             if ( $upload['error'] != 0 ) {
                 $defender = Defender::getInstance();
                 switch ( $upload['error'] ) {
@@ -204,15 +203,15 @@ class Upload extends Validation {
                         fusion_stop();
                 }
             }
-        
+
             return $upload;
-        
+
         }
-    
+
         return [];
-        
+
     }
-    
+
     /**
      * Verify Image Upload
      *
@@ -220,9 +219,9 @@ class Upload extends Validation {
      */
     protected
     function verify_image_upload() {
-        
+
         if ( self::$inputConfig['multiple'] ) {
-            
+
             $target_folder = self::$inputConfig['path'];
             $target_width = self::$inputConfig['max_width'];
             $target_height = self::$inputConfig['max_height'];
@@ -241,7 +240,7 @@ class Upload extends Validation {
             $thumb2_width = self::$inputConfig['thumbnail2_w'];
             $thumb2_height = self::$inputConfig['thumbnail2_h'];
             $query = '';
-            
+
             if ( !empty( $_FILES[ self::$inputConfig['input_name'] ]['name'] ) && is_uploaded_file( $_FILES[ self::$inputConfig['input_name'] ]['tmp_name'][0] ) && fusion_safe() ) {
                 $result = [];
                 for ( $i = 0; $i <= count( $_FILES[ self::$inputConfig['input_name'] ]['name'] ) - 1; $i++ ) {
@@ -253,7 +252,7 @@ class Upload extends Validation {
                         } else {
                             $image_name = stripfilename( substr( $image['name'][ $i ], 0, strrpos( $image['name'][ $i ], "." ) ) );
                         }
-                        
+
                         $image_ext = strtolower( strrchr( $image['name'][ $i ], "." ) );
                         $image_res = [];
                         if ( filesize( $image['tmp_name'][ $i ] ) > 10 && @getimagesize( $image['tmp_name'][ $i ] ) ) {
@@ -281,6 +280,8 @@ class Upload extends Validation {
                             $filetype = 2;
                         } else if ( $image_ext == ".png" ) {
                             $filetype = 3;
+                        } else if ($image_ext == ".webp") {
+                            $filetype = 4;
                         } else {
                             $filetype = FALSE;
                         }
@@ -335,7 +336,7 @@ class Upload extends Validation {
                                         }
                                     }
                                 }
-                                
+
                                 if ( $thumb2 ) {
                                     if ( $image_res[0] < $thumb2_width && $image_res[1] < $thumb2_height ) {
                                         $noThumb = TRUE;
@@ -373,14 +374,14 @@ class Upload extends Validation {
                 } // end for
                 return $result;
             }
-            
+
             return [];
-            
+
         }
-        
+
         // Single file upload
         if ( !empty( $_FILES[ self::$inputConfig['input_name'] ]['name'] ) && file_uploaded( self::$inputConfig['input_name'] ) && fusion_safe() ) {
-            
+
             $upload = upload_image(
                 self::$inputConfig['input_name'], // src image
                 $_FILES[ self::$inputConfig['input_name'] ]['name'], // target name
@@ -405,26 +406,26 @@ class Upload extends Validation {
                 explode( ',', self::$inputConfig['valid_ext'] ),
                 self::$inputConfig['replace_upload']
             );
-            
+
             if ( $upload['error'] != 0 ) {
                 $this->setErrorNotices( $upload['error'] );
             }
-            
+
             return $upload;
-            
+
         }
-        
+
         return [];
-        
+
     }
-    
-    
+
+
     private function setErrorNotices( $error_code ) {
         $locale = fusion_get_locale();
-        
+
         $defender = Defender::getInstance();
         fusion_stop();
-        
+
         switch ( $error_code ) {
             case 1: // Invalid file size
                 addNotice( 'danger', sprintf( $locale['df_416'], parsebytesize( self::$inputConfig['max_byte'] ) ) );

@@ -300,7 +300,7 @@ if (!function_exists('upload_image')) {
                 case '.png':
                     $filetype = 3;
                     break;
-                case '.svg':
+                case '.webp':
                     $filetype = 4;
                     break;
                 default:

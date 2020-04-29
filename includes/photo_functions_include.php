@@ -26,7 +26,10 @@ function createthumbnail($filetype, $origfile, $thumbfile, $new_w, $new_h) {
         $origimage = imagecreatefromjpeg($origfile);
     } else if ($filetype == 3) {
         $origimage = imagecreatefrompng($origfile);
+    } else if ($filetype == 4) {
+        $origimage = imagecreatefromwebp($origfile);
     }
+
     $old_x = imagesx($origimage);
     $old_y = imagesy($origimage);
     $ratio_x = $old_x / $new_w;
@@ -49,14 +52,19 @@ function createthumbnail($filetype, $origfile, $thumbfile, $new_w, $new_h) {
         }
         imagecopyresampled($thumbimage, $origimage, 0, 0, 0, 0, $thumb_w, $thumb_h, $old_x, $old_y);
     }
+
     touch($thumbfile);
+
     if ($filetype == 1) {
         imagegif($thumbimage, $thumbfile);
     } else if ($filetype == 2) {
         imagejpeg($thumbimage, $thumbfile, 100);
     } else if ($filetype == 3) {
         imagepng($thumbimage, $thumbfile, 9, PNG_ALL_FILTERS);
+    } else if ($filetype == 4) {
+        imagewebp($thumbimage, $thumbfile);
     }
+
     imagedestroy($origimage);
     imagedestroy($thumbimage);
 }
@@ -70,7 +78,10 @@ function createsquarethumbnail($filetype, $origfile, $thumbfile, $new_size) {
         $origimage = imagecreatefromjpeg($origfile);
     } else if ($filetype == 3) {
         $origimage = imagecreatefrompng($origfile);
+    }else if ($filetype == 4) {
+        $origimage = imagecreatefromwebp($origfile);
     }
+
     $old_x = imagesx($origimage);
     $old_y = imagesy($origimage);
     $x = 0;
@@ -94,19 +105,22 @@ function createsquarethumbnail($filetype, $origfile, $thumbfile, $new_size) {
         imagejpeg($new_image, $thumbfile, 100);
     } else if ($filetype == 3) {
         imagepng($new_image, $thumbfile, 9, PNG_ALL_FILTERS);
+    } else if ($filetype == 4) {
+        imagewebp($new_image, $thumbfile);
     }
+
     imagedestroy($origimage);
     imagedestroy($new_image);
 }
 
 // returns the image name.
 function image_exists($dir, $image) {
-    $counter = 1;
+    $i = 1;
     $image_name = substr($image, 0, strrpos($image, "."));
     $image_ext = strrchr($image, ".");
     while (file_exists($dir.$image)) {
-        $image = $image_name."_".$counter.$image_ext;
-        $counter++;
+        $image = $image_name."_".$i.$image_ext;
+        $i++;
     }
 
     return $image;
@@ -121,7 +135,6 @@ function image_exists($dir, $image) {
  * Courtesy of : drpain.webster.org.za @ php.net
  */
 function exif($imagePath) {
-    global $locale;
     error_reporting(0); // turn off everything. most of Photoshop images are unsupported.
     // Check if the variable is set and if the file itself exists before continuing
     if ((isset($imagePath)) and (file_exists($imagePath)) and !is_dir($imagePath)) {
@@ -130,7 +143,7 @@ function exif($imagePath) {
         $exif_ifd0 = @exif_read_data($imagePath, 'IFD0', 0);
         $exif_exif = @exif_read_data($imagePath, 'EXIF', 0);
         //error control
-        $notFound = $locale['na'];
+        $notFound = fusion_get_locale('na');
         // Make
         if (isset($exif_ifd0['Make'])) {
             $camMake = $exif_ifd0['Make'];
@@ -198,7 +211,7 @@ function copy_file($source, $destination) {
     $upload['name'] = '';
     $upload['error'] = TRUE;
     function getimg($url) {
-        $headers[] = 'Accept: image/gif, image/x-bitmap, image/jpeg, image/pjpeg';
+        $headers[] = 'Accept: image/gif, image/x-bitmap, image/jpeg, image/pjpeg, image/png, image/webp';
         $headers[] = 'Connection: Keep-Alive';
         $headers[] = 'Content-type: application/x-www-form-urlencoded;charset=UTF-8';
         $user_agent = 'php';
