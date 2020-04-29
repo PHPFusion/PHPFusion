@@ -260,7 +260,7 @@ class Members {
         $query = "
         SELECT u.user_id, u.user_name, u.user_status, u.user_level, u.user_groups, u.user_language, u.user_joined, u.user_avatar, u.user_lastvisit ".$this->getSelectors()."
         FROM ".DB_USERS." u ".$this->getJoins()."
-        WHERE ".(iADMIN ? "u.user_status>='0'" : "u.user_status='0'").self::$default_condition."
+        WHERE ".(iADMIN ? "u.user_status>='0'" : "u.user_status='0'")."
         ".$this->getConditions()." GROUP BY ".$this->getGroupBy()." ORDER BY ".$this->getOrderBy()." LIMIT ".(int)$this->rowstart.",".$this->getLimit()."
         ";
 
