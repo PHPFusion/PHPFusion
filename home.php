@@ -36,11 +36,12 @@ if (!defined('DISABLE_HOME_MODULES')) {
     if (defined('DB_NEWS')) {
         $configs[DB_NEWS] = [
             'select'              => "SELECT
-            ns.news_id as id, ns.news_subject as title, ns.news_news as content,
+            ns.news_id as id, ns.news_subject as title, ns.news_news as content, ns.news_reads as views,
             ns.news_datestamp as datestamp, us.user_id, us.user_name,
             us.user_status, nc.news_cat_id as cat_id, nc.news_cat_name as cat_name,
             ni.news_image as image,
             ni.news_image_t1 as image_thumb,
+            ni.news_image_t2 as image_thumb2,
             nc.news_cat_image as cat_image,
             count(c1.comment_id) as comment_count,
             count(r1.rating_id) as rating_count
@@ -69,7 +70,7 @@ if (!defined('DISABLE_HOME_MODULES')) {
     if (defined('DB_ARTICLES')) {
         $configs[DB_ARTICLES] = [
             'select'              => "SELECT
-            ar.article_id as id, ar.article_subject as title, ar.article_snippet as content,
+            ar.article_id as id, ar.article_subject as title, ar.article_snippet as content, ar.article_reads as views,
             ar.article_datestamp as datestamp, ac.article_cat_id as cat_id, ac.article_cat_name as cat_name,
             us.user_id, us.user_name, us.user_status
             FROM ".DB_ARTICLES." as ar
@@ -91,11 +92,12 @@ if (!defined('DISABLE_HOME_MODULES')) {
     if (defined('DB_BLOG')) {
         $configs[DB_BLOG] = [
             'select'              => "SELECT
-            bl.blog_id as id, bl.blog_subject as title, bl.blog_blog as content,
+            bl.blog_id as id, bl.blog_subject as title, bl.blog_blog as content, bl.blog_reads as views,
             bl.blog_datestamp as datestamp, us.user_id, us.user_name,
             us.user_status, bc.blog_cat_id as cat_id, bc.blog_cat_name as cat_name,
             bl.blog_image as image,
             bl.blog_image_t1 as image_thumb,
+            bl.blog_image_t2 as image_thumb2,
             bc.blog_cat_image as cat_image,
             count(c1.comment_id) as comment_count,
             count(r1.rating_id) as rating_count
@@ -148,7 +150,6 @@ if (!defined('DISABLE_HOME_MODULES')) {
         ];
     }
 
-
     foreach ($configs as $table => $config) {
         if (!db_exists($table)) {
             continue;
@@ -186,10 +187,12 @@ if (!defined('DISABLE_HOME_MODULES')) {
                 'cat'       => $cat,
                 'url'       => strtr($config['contentLinkPattern'], $pairs),
                 'title'     => $row['title'],
+                'author'    => profile_link($row['user_id'], $row['user_name'], $row['user_status']),
                 'meta'      => $locale['home_0105'].profile_link($row['user_id'], $row['user_name'], $row['user_status'])." ".showdate('shortdate', $row['datestamp']).$locale['home_0106'].$cat,
                 'content'   => parse_textarea($row['content']),
                 'datestamp' => $row['datestamp'],
                 'cat_name'  => $row['cat_name'],
+                'views'     => !empty($row['views']) ? $row['views'] : ''
             ];
 
             if (defined('DB_NEWS') && $table == DB_NEWS) {
@@ -203,6 +206,8 @@ if (!defined('DISABLE_HOME_MODULES')) {
                     if ($row['image'] || $row['cat_image']) {
                         if ($row['image_thumb'] && file_exists(INFUSIONS."news/images/thumbs/".$row['image_thumb'])) {
                             $data[$count]['image'] = INFUSIONS."news/images/thumbs/".$row['image_thumb'];
+                        } else if ($row['image_thumb2'] && file_exists(INFUSIONS."news/images/thumbs/".$row['image_thumb2'])) {
+                            $data[$count]['image'] = INFUSIONS."news/images/thumbs/".$row['image_thumb2'];
                         } else if ($row['image'] && file_exists(INFUSIONS."news/images/".$row['image'])) {
                             $data[$count]['image'] = INFUSIONS."news/images/".$row['image'];
                         } else if ($row['cat_image']) {
@@ -218,6 +223,8 @@ if (!defined('DISABLE_HOME_MODULES')) {
                 if ($row['image'] || $row['cat_image']) {
                     if ($row['image_thumb'] && file_exists(INFUSIONS."blog/images/thumbs/".$row['image_thumb'])) {
                         $data[$count]['image'] = INFUSIONS."blog/images/thumbs/".$row['image_thumb'];
+                    } else if ($row['image_thumb2'] && file_exists(INFUSIONS."blog/images/thumbs/".$row['image_thumb2'])) {
+                        $data[$count]['image'] = INFUSIONS."blog/images/thumbs/".$row['image_thumb2'];
                     } else if ($row['image'] && file_exists(INFUSIONS."blog/images/".$row['image'])) {
                         $data[$count]['image'] = INFUSIONS."blog/images/".$row['image'];
                     } else if ($row['cat_image']) {
