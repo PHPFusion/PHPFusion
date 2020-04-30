@@ -339,17 +339,18 @@ function strip_scripts($value) {
  * @return boolean TRUE if the URL is not secure
  */
 function stripget($check_url) {
-    if (!is_array($check_url)) {
+    if (is_array($check_url)) {
+        foreach ($check_url as $value) {
+            if (stripget($value) == TRUE) {
+                return TRUE;
+            }
+        }
+    } else {
         $check_url = str_replace(["\"", "\'"], ["", ""], urldecode($check_url));
-
-        return (bool)preg_match("/<[^<>]+>/i", $check_url);
-    }
-    foreach ($check_url as $key => $value) {
-        if (stripget($key)) {
+        if (preg_match("/<[^<>]+>/i", $check_url)) {
             return TRUE;
         }
     }
-
     return FALSE;
 }
 
