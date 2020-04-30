@@ -18,7 +18,8 @@
 defined('IN_FUSION') || exit;
 
 if (preg_match_all('#\[code(=(.*?))?\](.*?)\[/code\]#si', $text) ||
-    preg_match_all('#````(.*?)````#si', $text) ||
+    preg_match_all('#```(.*?)```#si', $text) ||
+    preg_match_all('#`(.*?)`#si', $text) ||
     preg_match_all('#\[php\](.*?)\[/php\]#si', $text) ||
     preg_match_all('#\[geshi=(.*?)\](.*?)\[/geshi\]#si', $text)
 ) {
@@ -69,19 +70,20 @@ if (preg_match_all('#\[code(=(.*?))?\](.*?)\[/code\]#si', $text) ||
     );
 
     /*
-     * Adds a rule to ```` (markdown) to translate to <code>
+     * Adds a rule to ``` (markdown) to translate to <code>
      */
-    $mcode_count = substr_count($text, "````"); // obtained
+    $mcode_count = substr_count($text, "```"); // obtained
     if ($mcode_count) {
         for ($i = 0; $i < $mcode_count; $i++) {
             $text = preg_replace_callback(
-                "#````(.*?)````#si",
+                "#```(.*?)```#si",
                 function ($m) use (&$i) {
                     return "<pre><code class='language-php'>".formatcode($m['1'])."</code></pre>";
                 }, $text);
         }
     }
 
+    $text = preg_replace("#`(.*?)`#si", '<code>\\1</code>', $text);
     $text = preg_replace("#\[php\](.*?)\[/php\]#si", "<pre><code class='language-php'>".formatcode('\\1')."</code></pre>", $text);
     $text = preg_replace("#\[geshi=(.*?)\](.*?)\[/geshi\]#si", "<pre><code class='language-php'>".formatcode('\\2')."</code></pre>", $text);
 }
