@@ -343,7 +343,7 @@ class Forum_Threads extends Forum_Server {
                             'sticky' => $threads['thread_sticky'] ? "<i class='".self::getForumIcons( 'sticky' )."' title='".$locale['forum_0103']."'></i>" : '',
                             'poll'   => $threads['thread_poll'] ? "<i class='".self::getForumIcons( 'poll' )."' title='".$locale['forum_0314']."'></i>" : '',
                             'hot'    => $threads['thread_postcount'] >= 20 ? "<i class='".self::getForumIcons( 'hot' )."' title='".$locale['forum_0311']."'></i>" : '',
-                            'reads'  => $threads['thread_views'] >= 20 ? "<i class='".self::getForumIcons( 'reads' )."' title='".$locale['forum_0311']."'></i>" : '',
+                            'reads'  => $threads['thread_views'] >= 100 ? "<i class='".self::getForumIcons( 'reads' )."' title='".$locale['forum_0311']."'></i>" : '',
                             'attach' => $threads['attach_count'] > 0 ? "<i class='".self::getForumIcons( 'image' )."' title='".$locale['forum_0312']."'></i>" : '',
                             'icon'   => $icon,
                         ],
