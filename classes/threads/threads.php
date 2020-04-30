@@ -216,7 +216,7 @@ class ForumThreads extends ForumServer {
                             'sticky' => $threads['thread_sticky'] ? "<i class='".self::get_forumIcons('sticky')."' title='".$locale['forum_0103']."'></i>" : '',
                             'poll'   => $threads['thread_poll'] ? "<i class='".self::get_forumIcons('poll')."' title='".$locale['forum_0314']."'></i>" : '',
                             'hot'    => $threads['thread_postcount'] >= 20 ? "<i class='".self::get_forumIcons('hot')."' title='".$locale['forum_0311']."'></i>" : '',
-                            'reads'  => $threads['thread_views'] >= 20 ? "<i class='".self::get_forumIcons('reads')."' title='".$locale['forum_0311']."'></i>" : '',
+                            'reads'  => $threads['thread_views'] >= 100 ? "<i class='".self::get_forumIcons('reads')."' title='".$locale['forum_0311']."'></i>" : '',
                             'attach' => $threads['attach_count'] > 0 ? "<i class='".self::get_forumIcons('image')."' title='".$locale['forum_0312']."'></i>" : '',
                             'icon'   => $icon,
                         ],
