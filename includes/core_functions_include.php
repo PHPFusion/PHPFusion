@@ -289,6 +289,17 @@ function set_status_header($code = 200) {
 }
 
 /**
+ * Get HTTP response code
+ * @param $url
+ *
+ * @return false|string
+ */
+function get_http_response_code($url) {
+    $headers = get_headers($url);
+    return substr($headers[0], 9, 3);
+}
+
+/**
  * Clean URL Function, prevents entities in server globals
  *
  * @param string $url

@@ -265,11 +265,6 @@ if (isset($_GET['pagenum']) && isnum($_GET['pagenum'])) {
 
 // Update checker
 if ($settings['update_checker'] == 1) {
-    function get_http_response_code($url) {
-        $headers = get_headers($url);
-        return substr($headers[0], 9, 3);
-    }
-
     $url = 'https://www.php-fusion.co.uk/updates/9.txt';
     if (get_http_response_code($url) == 200) {
         $file = @file_get_contents($url);
