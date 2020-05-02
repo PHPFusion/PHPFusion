@@ -18,10 +18,19 @@
 defined('IN_FUSION') || exit;
 
 if (post('g-recaptcha-response')) {
-    $reCaptcha = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.fusion_get_settings('recaptcha_private').'&response='.post('g-recaptcha-response').'&remoteip='.$_SERVER['REMOTE_ADDR']);
-    $resp = json_decode($reCaptcha);
+    $context = stream_context_create([
+        'http' => [
+            'header'   => "Content-type: application/x-www-form-urlencoded\r\n",
+            'method'   => 'POST',
+            'content'  => http_build_query([
+                'secret'   => fusion_get_settings('recaptcha_private'),
+                'response' => post('g-recaptcha-response')
+            ]),
+            'remoteip' => $_SERVER['REMOTE_ADDR']
+        ]
+    ]);
 
-    if ($resp->success && $resp->score >= fusion_get_settings('recaptcha_score')) {
+    if ($resp['success'] === TRUE && $resp['score'] >= fusion_get_settings('recaptcha_score')) {
         $_CAPTCHA_IS_VALID = TRUE;
     }
 }
