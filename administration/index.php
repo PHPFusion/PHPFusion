@@ -34,11 +34,6 @@ list( $members, $articles, $blog, $download, $forum, $photos, $news, $weblinks, 
 
 // Update checker
 if ($settings['update_checker'] == 1) {
-    function get_http_response_code($url) {
-        $headers = get_headers($url);
-        return substr($headers[0], 9, 3);
-    }
-
     $url = 'https://www.php-fusion.co.uk/updates/10.txt';
     if (get_http_response_code($url) == 200) {
         $file = @file_get_contents($url);
