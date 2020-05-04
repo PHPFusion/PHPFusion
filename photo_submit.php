@@ -36,7 +36,7 @@ if ($gll_settings['gallery_allow_submission']) {
             'album_id'          => form_sanitizer($_POST['album_id'], 0, 'album_id'),
             'photo_title'       => form_sanitizer($_POST['photo_title'], '', 'photo_title'),
             'photo_keywords'    => form_sanitizer($_POST['photo_keywords'], '', 'photo_keywords'),
-            'photo_description' => form_sanitizer($_POST['photo_description'], '', 'photo_description'),
+            'photo_description' => form_sanitizer(descript($_POST['photo_description']), '', 'photo_description'),
             'photo_filename'    => '',
             'photo_thumb1'      => '',
             'photo_thumb2'      => '',
