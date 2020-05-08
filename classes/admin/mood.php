@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-namespace PHPFusion\Infusions\Forums\Admin;
+namespace PHPFusion\Infusions\Forum\Admin;
 
 use PHPFusion\Interfaces\TableSDK;
 use PHPFusion\Tables;
@@ -150,7 +150,7 @@ class Mood extends AdminInterface {
 /**
  * Class Mood_List
  *
- * @package PHPFusion\Forums\Admin
+ * @package PHPFusion\Infusions\Forum\Admin
  */
 class Mood_List implements TableSDK {
 

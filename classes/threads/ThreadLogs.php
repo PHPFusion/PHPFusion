@@ -1,7 +1,7 @@
 <?php
 namespace PHPFusion\Infusions\Forum\Classes\Threads;
 
-class Thread_Logs {
+class ThreadLogs {
 
     private $thread_id = 0;
     private $post_id = 0;
@@ -26,7 +26,7 @@ class Thread_Logs {
             $arr = array_flip($arr);
             if (!isset($arr[$key])) {
                 // Debugging purposes, no need to translate.
-                throw new Exception('Item type is invalid');
+                throw new \Exception('Item type is invalid');
             }
         }
 
@@ -72,7 +72,7 @@ class Thread_Logs {
      * @param $new
      *
      * @return bool|FALSE|int
-     * @throws Exception
+     * @throws \Exception
      */
     public function doLogAction($item_type, $old, $new) {
 

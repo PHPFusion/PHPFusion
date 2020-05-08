@@ -58,9 +58,9 @@ if (!empty($response['join_terms'])) {
 }
 
 //print_p($response['search']);
-$count_q = "SELECT t.thread_id                  
+$count_q = "SELECT t.thread_id
             FROM ".DB_FORUM_THREADS." t
-            INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id ".$response['join']."                       
+            INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id ".$response['join']."
             ".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND " : "WHERE ")." t.thread_hidden='0' ".$response['search']." AND ".groupaccess('tf.forum_access')." GROUP BY t.thread_id";
 $select_q = "SELECT t.thread_id, t.thread_subject, t.thread_author, t.thread_lastuser, t.thread_lastpost,
             t.thread_lastpostid, t.thread_postcount, t.thread_locked, t.thread_sticky, t.thread_poll, t.thread_postcount, t.thread_views,
@@ -72,7 +72,7 @@ $select_q = "SELECT t.thread_id, t.thread_subject, t.thread_author, t.thread_las
             ".$response['search']."
             GROUP BY t.thread_id ORDER BY t.thread_lastpost DESC";
 
-$thread_obj = \PHPFusion\Forums\ForumServer::thread(FALSE);
+$thread_obj = \PHPFusion\Infusions\Forum\ForumServer::thread(FALSE);
 $info = $thread_obj->get_forum_thread($forum_id, array("count_query" => $count_q, "query"=> $select_q));
 $response['info'] = array_merge_recursive($response['info'], $info);
 

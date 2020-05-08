@@ -15,12 +15,12 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-namespace PHPFusion\Forums\Admin;
+namespace PHPFusion\Infusions\Forum\Admin;
 
 use PHPFusion\Admins;
 use PHPFusion\Tables;
 
-class ForumAdminView extends ForumAdminInterface {
+class ForumAdminView extends AdminInterface {
 
     /**
      * todo: forum answering via ranks.. assign groups points.

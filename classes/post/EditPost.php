@@ -17,19 +17,19 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Infusions\Forum\Classes\Post;
 
-use PHPFusion\Infusions\Forum\Classes\Threads\Thread_Logs;
-use PHPFusion\Infusions\Forum\Classes\Threads\View_Thread;
+use PHPFusion\Infusions\Forum\Classes\Threads\ThreadLogs;
+use PHPFusion\Infusions\Forum\Classes\Threads\ViewThread;
 
-class Edit_Post {
+class EditPost {
 
     private $viewer = NULL;
 
     /**
      * Edit_Post constructor.
      *
-     * @param View_Thread $obj
+     * @param ViewThread $obj
      */
-    public function __construct(View_Thread $obj) {
+    public function __construct(ViewThread $obj) {
         $this->viewer = $obj;
     }
 
@@ -161,7 +161,7 @@ class Edit_Post {
                             if ($is_first_post) {
 
                                 // Log thread actions
-                                $thread_logs = new Thread_Logs($thread_data['thread_id']);
+                                $thread_logs = new ThreadLogs($thread_data['thread_id']);
 
                                 $thread_logs->doLogAction('subject', $thread_data['thread_subject'], $thread_subject);
 
@@ -307,8 +307,7 @@ class Edit_Post {
                                 'input_id'  => 'thread-edit-form',
                                 'bbcode'    => TRUE,
                                 'height'    => '500px',
-                                'grippie'   => TRUE,
-                                'tab' => TRUE,
+                                'grippie'   => TRUE
                             ]),
                         // happens only in EDIT
                         'delete_field'      => form_checkbox('delete', $locale['forum_0624'], "", ['class' => 'm-b-10', 'type' => 'button', 'button_class' => 'btn-danger']),

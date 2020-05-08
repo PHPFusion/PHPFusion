@@ -168,7 +168,7 @@ class Summary  {
                             // count the total threads with this tag.
                             $tag_total_thread_count[$tag_id] = dbcount("(thread_id)", DB_FORUM_THREADS, in_group('thread_tags', $tag_id, '.'));
                             // fetch the tag data
-                            $t_result = dbquery("SELECT * FROM ".DB_FORUM_TAGS." WHERE tag_id=:tid AND tag_status=1", [':tid'=>$tag_id]);
+                            $t_result = dbquery("SELECT * FROM ".DB_FORUM_TAGS." WHERE tag_id=:tid AND tag_status=1", [':tid' => $tag_id]);
                             if (dbrows($t_result)) {
                                 $t_data = dbarray($t_result);
                                 $t_data['thread_count'] = $tag_total_thread_count[$t_data['tag_id']];

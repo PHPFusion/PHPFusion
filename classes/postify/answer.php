@@ -25,7 +25,7 @@ use PHPFusion\Infusions\Forum\Classes\ForumPostify;
  * Class Postify_Answer
  *
  * @status  Stable
- * @package PHPFusion\Forums\Postify
+ * @package PHPFusion\Infusions\Forum\Postify
  */
 class PostifyAnswer extends ForumPostify {
 

@@ -23,13 +23,12 @@ use PHPFusion\Infusions\Forum\Classes\ForumServer;
 /**
  * Class ForumMood
  *
- * @package PHPFusion\Forums\Threads
+ * @package PHPFusion\Infusions\Forum\Threads
  */
 class ForumMood extends ForumServer {
 
     private static $mood_cache = [];
     public $info = [];
-    private $post_data = [];
     private $post_id = 0;
     private $post_author = 0;
 
@@ -41,7 +40,7 @@ class ForumMood extends ForumServer {
      * @return $this
      */
     public function set_PostData($post_data) {
-        $this->post_data = $post_data;
+        $post_data1 = $post_data;
         $this->post_id = $post_data['post_id'];
         $this->post_author = $post_data['post_author'];
         return $this;

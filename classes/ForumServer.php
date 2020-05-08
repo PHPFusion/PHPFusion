@@ -113,13 +113,12 @@ abstract class ForumServer {
     /**
      * @param string $type
      *
-     * @return array
      */
     public static function getForumIcons($type = '') {
         if (isset(self::$forum_icons[$type])) {
             return self::$forum_icons[$type];
         }
-        redirect();
+        redirect(FUSION_SELF);
         return self::$forum_icons;
     }
 
@@ -353,7 +352,7 @@ abstract class ForumServer {
         if ( $info['rows'] > 0) {
             // need to throw moderator as an object
             while ($data = dbarray($result)) {
-                $data['moderators'] = Forum_Moderator::parse_forum_mods( $data['forum_mods']);
+                $data['moderators'] = ForumModerator::displayForumMods($data['forum_mods']);
                 $info['item'][ $data['thread_id']] = $data;
             }
         }

@@ -109,7 +109,7 @@ class NewThread extends ForumServer {
                         if (post('add_poll') or post('add_poll_option')) {
                             $pollData['forum_poll_length'] = count($option_data);
                             // calculate poll lengths
-                            $poll_options = \Defender::getInstance()->filterPostArray(['poll_options']);
+                            $poll_options = (array)\Defender::getInstance()->filterPostArray(['poll_options']);
                             if (!empty($poll_options)) {
                                 foreach ($poll_options as $i => $value) {
                                     $option_data[$i] = form_sanitizer($value, '', "poll_options[$i]");
@@ -306,8 +306,7 @@ class NewThread extends ForumServer {
                                 'required'    => 1,
                                 'placeholder' => $locale['forum_2001'],
                                 'error_text'  => '',
-                                'class'       => 'm-t-20 m-b-20',
-                                'class'       => 'form-group-lg',
+                                'class'       => 'm-t-20 m-b-20 form-group-lg',
                             ]),
                         'tags_field'        => form_select('thread_tags[]', "", $thread_data['thread_tags'],
                             [
@@ -323,7 +322,6 @@ class NewThread extends ForumServer {
                             'preview'     => FALSE,
                             'form_name'   => 'input_form',
                             'type'        => 'bbcode',
-                            'height'      => '300px',
                             'placeholder' => $locale['forum_0601'],
                             'bbcode'      => TRUE,
                             'height'      => '500px',
@@ -454,7 +452,7 @@ class NewThread extends ForumServer {
 
                     if (!flood_control('post_datestamp', DB_FORUM_POSTS, "post_author='".$userdata['user_id']."'")) {
 
-                        if (Forum_Server::verify_forum($thread_data['forum_id'])) {
+                        if (ForumServer::verify_forum($thread_data['forum_id'])) {
 
                             $forum_data = dbarray(dbquery("SELECT f.*, f2.forum_name AS forum_cat_name
                             FROM ".DB_FORUMS." f
@@ -609,7 +607,6 @@ class NewThread extends ForumServer {
                         'preview'     => FALSE,
                         'form_name'   => 'input_form',
                         'type'        => 'bbcode',
-                        'height'      => '300px',
                         'placeholder' => $locale['forum_0601'],
                         'bbcode'      => TRUE,
                         'height'      => '500px',

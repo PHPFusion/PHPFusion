@@ -15,12 +15,12 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-namespace PHPFusion\Forums\Admin;
+namespace PHPFusion\Infusions\Forum\Admin;
 
 use PHPFusion\Interfaces\TableSDK;
 use PHPFusion\Tables;
 
-class ForumAdminTags extends ForumAdminInterface {
+class ForumAdminTags extends AdminInterface {
 
     protected $data = [
         'tag_id'          => 0,
@@ -163,7 +163,7 @@ class ForumAdminTags extends ForumAdminInterface {
 /**
  * Class Tags_List
  *
- * @package PHPFusion\Forums\Admin
+ * @package PHPFusion\Infusions\Forum\Admin
  */
 class Tags_List implements TableSDK {
 

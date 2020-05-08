@@ -15,10 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-namespace PHPFusion\Forums\Admin;
+namespace PHPFusion\Infusions\Forum\Admin;
 
 use PHPFusion\Infusions\Forum\Classes\ForumServer;
-use PHPFusion\Infusions\Forums\Admin\AdminInterface;
 use PHPFusion\Interfaces\TableSDK;
 use PHPFusion\Tables;
 
@@ -224,7 +223,7 @@ class Ranks extends AdminInterface {
 /**
  * Class Rank_Table
  *
- * @package PHPFusion\Forums\Admin
+ * @package PHPFusion\Infusions\Forum\Admin
  */
 class Rank_Table implements TableSDK {
     /**

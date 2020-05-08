@@ -24,7 +24,7 @@ use PHPFusion\Infusions\Forum\Classes\ForumPostify;
  *
  * @status  Stable
  *
- * @package PHPFusion\Forums\Postify
+ * @package PHPFusion\Infusions\Forum\Postify
  */
 class PostifyAward extends ForumPostify {
 

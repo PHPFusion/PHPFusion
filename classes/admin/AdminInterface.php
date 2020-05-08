@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-namespace PHPFusion\Infusions\Forums\Admin;
+namespace PHPFusion\Infusions\Forum\Admin;
 
 // This is being extended by viewer
 // A model file
@@ -47,7 +47,7 @@ abstract class AdminInterface extends ForumServer {
     public static function viewRank() {
         if ( empty( self::$admin_rank_instance ) ) {
             self::setLocale();
-            self::$admin_rank_instance = new ForumAdminRanks();
+            self::$admin_rank_instance = new Ranks();
         }
 
         return self::$admin_rank_instance;
@@ -66,7 +66,7 @@ abstract class AdminInterface extends ForumServer {
     public static function viewMood() {
         if ( empty( self::$mood_instance ) ) {
             self::setLocale();
-            self::$mood_instance = new ForumAdminMood();
+            self::$mood_instance = new Mood();
         }
 
         return self::$mood_instance;

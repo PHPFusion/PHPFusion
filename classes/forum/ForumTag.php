@@ -52,7 +52,7 @@ class ForumTag extends ForumServer {
         if ($tag_id) {
             $tag_query = "SELECT * FROM ".DB_FORUM_TAGS." WHERE tag_status=1 AND tag_id=:tgid ".(multilang_table("FO") ? "AND ".in_group('tag_language', LANGUAGE) : '');
             $tag_result = dbquery($tag_query, [
-                ':tgid' => (int) $tag_id,
+                ':tgid' => (int)$tag_id,
             ]);
             if (dbrows($tag_result)) {
                 $data = dbarray($tag_result);

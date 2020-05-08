@@ -23,7 +23,7 @@ use PHPFusion\Infusions\Forum\Classes\ForumPostify;
  * Vote Up and Down on Q&A Forum Type
  * Class Postify_vote
  *
- * @package PHPFusion\Forums\Postify
+ * @package PHPFusion\Infusions\Forum\Postify
  */
 class PostifyVote extends ForumPostify {
 

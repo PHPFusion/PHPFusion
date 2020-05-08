@@ -72,7 +72,7 @@ $select_q = "SELECT t.thread_id, t.thread_subject, t.thread_author, t.thread_las
             ".$response['search']."
             GROUP BY t.thread_id ORDER BY t.thread_lastpost DESC";
 
-$thread_obj = \PHPFusion\Forums\ForumServer::thread(FALSE);
+$thread_obj = \PHPFusion\Infusions\Forum\ForumServer::thread(FALSE);
 $info = $thread_obj->getThreadInfo($forum_id, array("count_query" => $count_q, "query" => $select_q));
 $response['info'] = array_merge_recursive($response['info'], $info);
 

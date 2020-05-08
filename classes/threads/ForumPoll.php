@@ -21,7 +21,7 @@ namespace PHPFusion\Infusions\Forum\Classes\Threads;
 /**
  * Class Poll
  *
- * @package PHPFusion\Forums\Threads
+ * @package PHPFusion\Infusions\Forum\Threads
  */
 class ForumPoll {
 

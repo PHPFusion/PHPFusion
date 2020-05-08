@@ -15,16 +15,16 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-namespace PHPFusion\Forums\Admin;
+namespace PHPFusion\Infusions\Forum\Admin;
 
 use PHPFusion\Locale;
 
 /**
  * Class ForumAdminSettings
  *
- * @package PHPFusion\Forums\Admin
+ * @package PHPFusion\Infusions\Forum\Admin
  */
-class ForumAdminSettings extends ForumAdminInterface {
+class ForumAdminSettings extends AdminInterface {
 
     private function recountUserPost() {
         if (post('recount_user_post')) {

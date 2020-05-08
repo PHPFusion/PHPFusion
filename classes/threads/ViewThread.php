@@ -20,7 +20,7 @@ namespace PHPFusion\Infusions\Forum\Classes\Threads;
 
 use PHPFusion\httpdownload;
 use PHPFusion\Infusions\Forum\Classes\ForumServer;
-use PHPFusion\Infusions\Forum\Classes\Post\Edit_Post;
+use PHPFusion\Infusions\Forum\Classes\Post\EditPost;
 
 require_once THEMES."templates/header.php";
 require_once INCLUDES."infusions_include.php";
@@ -28,8 +28,6 @@ require_once INFUSIONS."forum/forum_include.php";
 include INFUSIONS."forum/templates.php";
 
 class ViewThread extends ForumServer {
-
-    private $thread_data = [];
 
     public function __construct() {
     }
@@ -47,24 +45,24 @@ class ViewThread extends ForumServer {
             switch ($action) {
                 case 'editpoll':
                     // Template
-                    $poll = new Forum_Poll($info);
+                    $poll = new ForumPoll($info);
 
                     return $poll::render_poll_form(TRUE);
                     break;
                 case 'deletepoll':
                     // Action
-                    $poll = new Forum_Poll($info);
+                    $poll = new ForumPoll($info);
                     $poll->delete_poll();
                     break;
                 case 'newpoll':
                     // Template
-                    $poll = new Forum_Poll($info);
+                    $poll = new ForumPoll($info);
 
                     return $poll::render_poll_form();
                     break;
                 case 'edit':
                     // Template
-                    $edit_form = new Edit_Post($this);
+                    $edit_form = new EditPost($this);
 
                     return $edit_form->render_edit_form();
                     break;
@@ -72,18 +70,18 @@ class ViewThread extends ForumServer {
                     return $this->threadReplyForm();
                     break;
                 case 'award':
-                    $bounty = new Forum_Bounty($info);
+                    $bounty = new ForumBounty($info);
                     $bounty->award_bounty();
                     break;
                 case 'newbounty':
                     // Template
-                    $bounty = new Forum_Bounty($info);
+                    $bounty = new ForumBounty($info);
 
                     return $bounty->render_bounty_form();
                     break;
                 case 'editbounty':
                     // Template
-                    $bounty = new Forum_Bounty($info);
+                    $bounty = new ForumBounty($info);
 
                     return $bounty->render_bounty_form(TRUE);
                     break;
@@ -168,7 +166,7 @@ class ViewThread extends ForumServer {
         $locale = fusion_get_locale();
         $userdata = fusion_get_userdata();
 
-        $this->thread_data = $thread_info['thread'];
+        $thread_data1 = $thread_info['thread'];
 
         if ((!iMOD or !iSUPERADMIN) && $thread_data['thread_locked']) {
             addNotice("danger", $locale['forum_0277']);
@@ -193,7 +191,7 @@ class ViewThread extends ForumServer {
             (int)$post_id = get('post_id', FILTER_VALIDATE_INT);
             $post_data = [
                 'post_id'         => 0,
-                'post_cat'        => $post_id && $this->thread_data['thread_firstpostid'] !== $post_id ? $post_id : 0,
+                'post_cat'        => $post_id && $thread_data1['thread_firstpostid'] !== $post_id ? $post_id : 0,
                 'forum_id'        => $thread_info['thread']['forum_id'],
                 'thread_id'       => $thread_info['thread']['thread_id'],
                 'post_author'     => $userdata['user_id'],
@@ -372,8 +370,7 @@ class ViewThread extends ForumServer {
                     'required'    => 1,
                     'placeholder' => $locale['forum_2001'],
                     'error_text'  => '',
-                    'class'       => 'm-t-20 m-b-20',
-                    'class'       => 'form-group-lg',
+                    'class'       => 'm-t-20 m-b-20 form-group-lg',
                 ]),
                 "message_field"     => form_textarea('post_message', $locale['forum_0601'], $post_data['post_message'],
                     [
