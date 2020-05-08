@@ -1,6 +1,6 @@
 <?php
 
-use PHPFusion\Infusions\Facebook_Connect\Facebook_Connect;
+use PHPFusion\Infusions\Facebook_Connect\FacebookConnect;
 
 $locale_file = include INFUSIONS."facebook_connect/locale/English.php";
 if (file_exists(INFUSIONS."facebook_connect/locale/".LANGUAGE.".php")) {
@@ -15,14 +15,14 @@ if (infusion_exists('facebook_connect')) {
         function display_facebook_button() {
             $locale = fusion_get_locale('', [FBC_LOCALE]);
             add_to_head('<link rel="stylesheet" href="'.INFUSIONS.'facebook_connect/button.css">');
-            $fb = new Facebook_Connect();
+            $fb = new FacebookConnect();
             $login_url = $fb->getLoginButtonUrl();
             return (string)'<a href="'.$login_url.'" class="btn btn-block btn-fb"><i class="fab fa-facebook-f fa-fw"></i>Login with Facebook</a>';
         }
     }
 
     function facebook_connect() {
-        $fb = new Facebook_Connect();
+        $fb = new FacebookConnect();
         if (get('connect') == 'facebook') {
             $fb->doAuthenticate();
         }

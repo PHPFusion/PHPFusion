@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-use PHPFusion\Infusions\Facebook_Connect\Facebook_Connect;
+use PHPFusion\Infusions\Facebook_Connect\FacebookConnect;
 
 defined( 'IN_FUSION' ) || exit;
 
@@ -25,13 +25,13 @@ $locale = fusion_get_locale( '', __DIR__.'/locale/'.LANGUAGE.'.php' );
 $icon = "<img src='".INCLUDES."user_fields/public/user_facebook/images/facebook.svg' title='Facebook' alt='Facebook'/>";
 // Display user field input
 if ( $profile_method == "input" ) {
-    
-    $fb = new Facebook_Connect();
+
+    $fb = new FacebookConnect();
     $user_fields = $fb->displayField( $field_value, $options );
-    
+
     // Display in profile
 } else if ( $profile_method == "display" ) {
-    
+
     $user_fields = [];
     //$user_fields = [
     //    'icon'  => $icon,
@@ -40,5 +40,5 @@ if ( $profile_method == "input" ) {
     //    'title' => $locale['uf_facebook'],
     //    'value' => $field_value ?: ''
     //];
-    
+
 }
