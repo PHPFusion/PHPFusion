@@ -32,7 +32,7 @@ class Main extends Core {
             'nav_class_primary' => 'nav navbar-nav navbar-right primary',
             'navbar_class'      => 'navbar-default',
             'container_fluid'   => TRUE,
-            'header_content'    => '<a class="navbar-brand" href="'.BASEDIR.$settings['opening_page'].'"><img src="'.BASEDIR.$settings['sitebanner'].'" alt="'.$settings['sitename'].'" class="img-responsive"/></a>',
+            //'header_content'    => '<a class="navbar-brand" href="'.BASEDIR.$settings['opening_page'].'"><img src="'.BASEDIR.$settings['sitebanner'].'" alt="'.$settings['sitename'].'" class="img-responsive"/></a>',
             'grouping'          => TRUE,
             'links_per_page'    => 10,
             'html_pre_content'  => $this->userMenu(),

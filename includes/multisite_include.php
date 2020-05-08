@@ -32,7 +32,6 @@ define("DB_FLOOD_CONTROL", DB_PREFIX."flood_control");
 define("DB_INFUSIONS", DB_PREFIX."infusions");
 define("DB_LANGUAGE_TABLES", DB_PREFIX."mlt_tables");
 define("DB_LANGUAGE_SESSIONS", DB_PREFIX."language_sessions");
-define("DB_LOGIN", DB_PREFIX."login_connectors");
 define("DB_MESSAGES", DB_PREFIX."messages");
 define("DB_NEW_USERS", DB_PREFIX."new_users");
 define("DB_ONLINE", DB_PREFIX."online");

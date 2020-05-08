@@ -56,13 +56,4 @@ if (!column_exists('users', 'user_yahoo')) {
     $inf_dropcol[] = ['table' => DB_USERS, 'column' => 'user_yahoo'];
 }
 
-if (db_exists(DB_PREFIX.'login_connectors')) {
-    $inf_newtable[] = DB_LOGIN." (
-        login_name VARCHAR(100) NOT NULL DEFAULT '0',
-        login_type VARCHAR(10) NOT NULL DEFAULT '0',
-        login_status TINYINT(1) NOT NULL DEFAULT '0',
-        login_settings TEXT NOT NULL
-    ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
-}
-
 rrmdir(INCLUDES.'filemanager');

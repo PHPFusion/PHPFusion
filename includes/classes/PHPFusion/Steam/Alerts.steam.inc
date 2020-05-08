@@ -33,7 +33,7 @@ class Alerts {
      */
     public function __construct() {
         $steam = Steam::getInstance();
-        require_once $steam->getBoilerPath().DIRECTORY_SEPARATOR.'alerts.php';
+        require_once $steam->getBoilerPath().'alerts.php';
     }
 
     public function render($notices) {

@@ -6,9 +6,9 @@
             <span>
             {% if crumb.link %}
                 {% if count == 1 %}
-                    <a title="{{ crumb.title }}" href="{{ crumb.link }}" class="{{ crumb.class }}">{{ home_icon|raw }}</a>
+                    <a title="{{ crumb.title }}" href="{{ crumb.link|raw }}" class="{{ crumb.class }}">{{ home_icon|raw }}</a>
                 {% else %}
-                    <a title="{{ crumb.title }}" href="{{ crumb.link }}" class="{{ crumb.class }}">{{ crumb.title }}</a>
+                    <a title="{{ crumb.title }}" href="{{ crumb.link|raw }}" class="{{ crumb.class }}">{{ crumb.title }}</a>
                 {% endif %}
 
             {% else %}

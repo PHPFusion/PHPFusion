@@ -1,0 +1,18 @@
+<div class="toast {{class}}" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+        {% if image %}
+        <img src="{{image}}" class="rounded mr-2" alt="{{title}}">
+        {% endif %}
+        {% if icon %}
+            <i class="{{ icon }} mr-2" title="{{ title }}"></i>
+        {% endif %}
+        <strong class="mr-auto">{{title}}</strong>
+        <small>{{timer}}</small>
+        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="toast-body">
+       {{description}}
+    </div>
+</div>

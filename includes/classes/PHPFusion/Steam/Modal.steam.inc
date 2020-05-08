@@ -17,7 +17,7 @@ class Modal {
      */
     public function __construct() {
         $this->steam = Steam::getInstance();
-        require_once $this->steam->getBoilerPath().DIRECTORY_SEPARATOR."modal.php";
+        require_once $this->steam->getBoilerPath()."modal.php";
     }
 
     /**

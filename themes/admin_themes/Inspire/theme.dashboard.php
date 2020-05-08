@@ -36,7 +36,7 @@ class Dashboard extends Helper {
         $aidlink = self::get_aidlink();
         $locale = fusion_get_locale();
         //add_to_head('<link href="'.THEME.'templates/css/autogrid.css" rel="stylesheet" />');
-        opentable($locale['admin_apps']);
+        opentable('Apps');
         echo "<div class='row'>\n";
         if (count($admin_icons['data']) > 0) {
             foreach ($admin_icons['data'] as $i => $data) {

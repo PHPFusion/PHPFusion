@@ -15,14 +15,14 @@
     <div class="modal-dialog modal-dialog-centered {{ class_dialog }}" role="document">
         <div class="modal-content">
             {% if title %}
-            <div class="modal-header">
-                <h5 class="modal-title">{{ title }}</h5>
-                {% if dismissable == 1 %}
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                {% endif %}
-            </div>
+                <div class="modal-header">
+                    {% if dismissable == 1 %}
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    {% endif %}
+                    <h5 class="modal-title">{{ title }}</h5>
+                </div>
             {% endif %}
 
             <div class="modal-body">
