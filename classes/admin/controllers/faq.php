@@ -171,7 +171,7 @@ class FaqAdmin extends FaqAdminModel {
             // Check posted Informations
             $faq_answer = '';
             if ($_POST['faq_answer']) {
-                $faq_answer = fusion_get_settings("allow_php_exe") ? htmlspecialchars($_POST['faq_answer']) : stripslashes($_POST['faq_answer']);
+                $faq_answer = fusion_get_settings("allow_php_exe") ? htmlspecialchars(descript($_POST['faq_answer'])) : stripslashes(descript($_POST['faq_answer']));
             }
 
             $this->faq_data = [
