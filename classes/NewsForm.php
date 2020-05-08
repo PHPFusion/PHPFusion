@@ -63,13 +63,13 @@ class NewsForm extends NewsAdminModel {
             $news_news = '';
             if ($_POST['news_news']) {
                 $news_news = str_replace("src='".str_replace('../', '', IMAGES_N), "src='".IMAGES_N,
-                    (fusion_get_settings('allow_php_exe') ? htmlspecialchars($_POST['news_news']) : $_POST['news_news']));
+                    (fusion_get_settings('allow_php_exe') ? htmlspecialchars(descript($_POST['news_news'])) : descript($_POST['news_news'])));
             }
 
             $news_extended = '';
             if ($_POST['news_extended']) {
                 $news_extended = str_replace("src='".str_replace('../', '', IMAGES_N), "src='".IMAGES_N,
-                    (fusion_get_settings('allow_php_exe') ? htmlspecialchars($_POST['news_extended']) : $_POST['news_extended']));
+                    (fusion_get_settings('allow_php_exe') ? htmlspecialchars(descript($_POST['news_extended'])) : descript($_POST['news_extended'])));
             }
 
             $this->news_data = [

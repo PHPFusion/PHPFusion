@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-namespace PHPFusion\News;
+namespace PHPFusion\Infusions\News\Classes;
 
 use PHPFusion\BreadCrumbs;
 

@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-use PHPFusion\News\News_Preview;
+use PHPFusion\Infusions\News\Classes\News_Preview;
 
 require_once __DIR__.'/../../../../maincore.php';
 require_once THEMES.'templates/header.php';

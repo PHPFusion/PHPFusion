@@ -85,8 +85,8 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
         $criteriaArray = [
             'news_subject'     => form_sanitizer($_POST['news_subject'], '', 'news_subject'),
             'news_cat'         => form_sanitizer($_POST['news_cat'], '', 'news_cat'),
-            'news_news'        => form_sanitizer($_POST['news_news'], '', 'news_news'),
-            'news_extended'    => form_sanitizer($_POST['news_extended'], '', 'news_extended'),
+            'news_news'        => form_sanitizer(descript($_POST['news_news']), '', 'news_news'),
+            'news_extended'    => form_sanitizer(descript($_POST['news_extended']), '', 'news_extended'),
             'news_language'    => form_sanitizer($_POST['news_language'], '', 'news_language'),
             'news_keywords'    => form_sanitizer($_POST['news_keywords'], '', 'news_keywords'),
             'news_image_align' => !empty($_POST['news_image_align']) ? form_sanitizer($_POST['news_image_align'], '', 'news_image_align') : "",

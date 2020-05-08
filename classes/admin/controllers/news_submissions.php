@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-namespace PHPFusion\News;
+namespace PHPFusion\Infusions\News\Classes;
 
 class NewsSubmissionsAdmin extends NewsAdminModel {
     private static $instance = NULL;
@@ -49,14 +49,12 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
 
                     $news_news = '';
                     if ($_POST['news_news']) {
-                        $news_news = str_replace("src='".str_replace('../', '', IMAGES_N), "src='".IMAGES_N,
-                            (fusion_get_settings('allow_php_exe') ? htmlspecialchars($_POST['news_news']) : stripslashes($_POST['news_news'])));
+                        $news_news = str_replace("src='".str_replace('../', '', IMAGES_N), "src='".IMAGES_N, stripslashes(descript($_POST['news_news'])));
                     }
 
                     $news_extended = '';
                     if ($_POST['news_extended']) {
-                        $news_extended = str_replace("src='".str_replace('../', '', IMAGES_N), "src='".IMAGES_N,
-                            (fusion_get_settings('allow_php_exe') ? htmlspecialchars($_POST['news_extended']) : stripslashes($_POST['news_extended'])));
+                        $news_extended = str_replace("src='".str_replace('../', '', IMAGES_N), "src='".IMAGES_N, stripslashes(descript($_POST['news_extended'])));
                     }
 
                     $this->news_data = [
@@ -223,8 +221,8 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                     'news_language'            => $submit_criteria['news_language'],
                     'news_subject'             => $submit_criteria['news_subject'],
                     'news_cat'                 => $submit_criteria['news_cat'],
-                    'news_news'                => phpentities(stripslashes($submit_criteria['news_news'])),
-                    'news_extended'            => phpentities(stripslashes($submit_criteria['news_extended'])),
+                    'news_news'                => phpentities(stripslashes(parse_text($submit_criteria['news_news']))),
+                    'news_extended'            => phpentities(stripslashes(parse_text($submit_criteria['news_extended']))),
                     'news_breaks'              => fusion_get_settings('tinyce_enabled') ? TRUE : FALSE,
                     'news_name'                => $data['user_id'],
                     'news_allow_comments'      => 0,
