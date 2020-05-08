@@ -185,7 +185,10 @@ class Errors {
     private function showErrorRows($data) {
         $locale = self::$locale;
         $link_title = $this->getMaxFolders($data['error_file'], 1);
-        $data['error_message'] = str_replace('&#039;', "'", $data['error_message']);
+        $data['error_message'] = strtr($data['error_message'], [
+                '&#039;' => "'",
+                '&#092;' => '\\',
+        ]);
 
         $html = "<tr id='rmd-".$data['error_id']."'>";
         $html .= "<td class='word-break' style='text-align:left;'>";
