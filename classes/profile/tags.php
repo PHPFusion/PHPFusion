@@ -1,7 +1,7 @@
 <?php
 namespace PHPFusion\Infusions\Forum\Classes\Profile;
 
-use PHPFusion\Infusions\Forum\Classes\Forum_Profile;
+use PHPFusion\Infusions\Forum\Classes\ForumProfile;
 use PHPFusion\Template;
 
 /**
@@ -9,7 +9,7 @@ use PHPFusion\Template;
  *
  * @package PHPFusion\Infusions\Forum\Classes\Profile
  */
-class Tags  {
+class Tags {
 
     private $profile_url = '';
 
@@ -29,9 +29,9 @@ class Tags  {
      * Summary constructor.
      * Lock implementation method
      *
-     * @param Forum_Profile $obj
+     * @param ForumProfile $obj
      */
-    public function __construct(Forum_Profile $obj) {
+    public function __construct(ForumProfile $obj) {
 
         $this->profile_url = $obj->getProfileUrl().'ref=questions&amp;';
 
@@ -65,7 +65,7 @@ class Tags  {
 
         $sql = $this->class->getSQL('tags-latest');
 
-        $ctpl->set_tag('row_count', format_word($max_count, 'question|questions') );
+        $ctpl->set_tag('row_count', format_word($max_count, 'question|questions'));
 
         $result = dbquery($sql);
 
@@ -75,13 +75,13 @@ class Tags  {
         while ($data = dbarray($result)) {
             $thread_tags = explode('.', $data['thread_tags']);
             if (!empty($thread_tags)) {
-                foreach($thread_tags as $tag_id) {
+                foreach ($thread_tags as $tag_id) {
                     // fetch the information about this tag
                     $tag_involve_count[$tag_id] = isset($tag_involve_count[$tag_id]) ? $tag_involve_count[$tag_id] + 1 : 1;
                     // get the tag info once.
                     if (!isset($tag_total_thread_count[$tag_id])) {
                         // count the total threads with this tag.
-                        $tag_total_thread_count[$tag_id] = dbcount("(thread_id)", DB_FORUM_THREADS, in_group('thread_tags', $tag_id, '.'));
+                        $tag_total_thread_count[$tag_id] = dbcount("(thread_id)", DB_FORUM_THREADS, in_group('thread_tags', $tag_id));
                         // fetch the tag data
                         $t_result = dbquery("SELECT * FROM ".DB_FORUM_TAGS." WHERE tag_id=:tid AND tag_status=1", [':tid' => $tag_id]);
                         if (dbrows($t_result)) {
@@ -98,7 +98,7 @@ class Tags  {
         $ctpl->set_tag('tag_count', format_word(0, 'tag|tags'));
         if (!empty($tags)) {
             // the sum of tags
-            $ctpl->set_tag('tag_count', format_word( count($tags), 'tag|tags') );
+            $ctpl->set_tag('tag_count', format_word(count($tags), 'tag|tags'));
             foreach ($tags as $tag_id => $tag_data) {
                 // now push the info into template
                 //http://php-fusion.test/infusions/forum/tags.php?tag_id=2

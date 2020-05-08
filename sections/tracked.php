@@ -15,6 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
+use PHPFusion\Infusions\Forum\Classes\ForumServer;
+
 if (!iMEMBER) {
     redirect(FORUM.'index.php');
 }
@@ -29,13 +32,13 @@ if (isset($_GET['delete_track']) && isnum($_GET['delete_track']) && dbcount("(th
 $this->forum_info['title'] = $locale['global_056'];
 $this->forum_info['description'] = "The threads that you are currently tracking.";
 $this->forum_info['link'] = FORUM;
-$this->forum_info['filter'] = \PHPFusion\Infusions\Forum\Classes\Forum_Server::filter()->get_FilterInfo();
+$this->forum_info['filter'] = ForumServer::filter()->get_FilterInfo();
 
-$filter = \PHPFusion\Infusions\Forum\Classes\Forum_Server::filter()->get_filterSQL();
+$filter = ForumServer::filter()->get_filterSQL();
 
 $base_condition = "tn.notify_user='".$userdata['user_id']."' AND t.thread_hidden='0' AND ".groupaccess('tf.forum_access');
 
-$threads = \PHPFusion\Infusions\Forum\Classes\Forum_Server::thread(FALSE)->getThreadInfo(0,
+$threads = ForumServer::thread(FALSE)->getThreadInfo(0,
     [
         'count_query' => "SELECT tn.thread_id
         FROM ".DB_FORUM_THREAD_NOTIFY." tn

@@ -16,17 +16,17 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-use PHPFusion\Infusions\Forum\Classes\Forum_Server;
+use PHPFusion\Infusions\Forum\Classes\ForumServer;
 
 $userdata = fusion_get_userdata();
 $locale = fusion_get_locale();
 $this->forum_info['title'] = $locale['global_021'];
 $this->forum_info['description'] = "The latest threads in the community forum.";
 $this->forum_info['link'] = FORUM;
-$this->forum_info['filter'] = Forum_Server::filter()->get_FilterInfo();
-$filter = Forum_Server::filter()->get_filterSQL();
+$this->forum_info['filter'] = ForumServer::filter()->get_FilterInfo();
+$filter = ForumServer::filter()->get_filterSQL();
 
-$threads = Forum_Server::thread( FALSE )->getThreadInfo( 0,
+$threads = ForumServer::thread( FALSE )->getThreadInfo( 0,
     [
         "count_query" => "SELECT t.thread_id
         FROM ".DB_FORUM_THREADS." t

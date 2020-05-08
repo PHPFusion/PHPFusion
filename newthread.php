@@ -15,7 +15,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-use PHPFusion\Infusions\Forum\Classes\Forum_Server;
+use PHPFusion\Infusions\Forum\Classes\ForumServer;
 
 require_once __DIR__.'/../../maincore.php';
 if (!defined('FORUM_EXIST')) {
@@ -25,7 +25,7 @@ require_once THEMES."templates/header.php";
 require_once INFUSIONS."forum/forum_include.php";
 require_once INFUSIONS."forum/templates.php";
 fusion_get_locale("", [FORUM_LOCALE, FORUM_TAGS_LOCALE]);
-$info = Forum_Server::newThread()->getInfo();
+$info = ForumServer::newThread()->getInfo();
 echo display_forum_postform($info);
 
 require_once THEMES."templates/footer.php";

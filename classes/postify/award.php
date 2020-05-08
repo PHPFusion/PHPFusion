@@ -17,8 +17,8 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Infusions\Forum\Classes\Postify;
 
-use PHPFusion\BreadCrumbs;
-use PHPFusion\Infusions\Forum\Classes\Forum_Postify;
+use PHPFusion\Infusions\Forum\Classes\ForumPostify;
+
 /**
  * Class Postify_Award
  *
@@ -26,10 +26,10 @@ use PHPFusion\Infusions\Forum\Classes\Forum_Postify;
  *
  * @package PHPFusion\Forums\Postify
  */
-class Postify_Award extends Forum_Postify {
+class PostifyAward extends ForumPostify {
 
     public function execute() {
-        BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => self::$locale['forum_4107']]);
+        add_breadcrumb(array('link' => FUSION_REQUEST, 'title' => self::$locale['forum_4107']));
         $thread_data = dbarray(dbquery("SELECT thread_id, forum_id, thread_lastpostid, thread_postcount, thread_subject FROM
         ".DB_FORUM_THREADS." WHERE thread_id=:thread_id", [':thread_id' => $_GET['thread_id']]));
         if (!empty($thread_data)) {

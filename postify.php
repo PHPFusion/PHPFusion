@@ -15,6 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
+use PHPFusion\Infusions\Forum\Classes\ForumServer;
+
 require_once __DIR__.'/../../maincore.php';
 if (!defined('FORUM_EXIST')) {
     redirect(BASEDIR."error.php?code=404");
@@ -26,6 +29,6 @@ require_once INFUSIONS."forum/templates.php";
 
 fusion_get_locale("", [FORUM_LOCALE, FORUM_TAGS_LOCALE]);
 
-echo \PHPFusion\Infusions\Forum\Classes\Forum_Server::postify()->do_postify();
+echo ForumServer::postify()->do_postify();
 
 require_once THEMES."templates/footer.php";

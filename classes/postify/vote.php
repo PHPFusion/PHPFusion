@@ -15,15 +15,17 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-use PHPFusion\Infusions\Forum\Classes\Forum_Moderator;
-use PHPFusion\Infusions\Forum\Classes\Forum_Postify;
+namespace PHPFusion\Infusions\Forum\Classes\Postify;
+
+use PHPFusion\Infusions\Forum\Classes\ForumModerator;
+use PHPFusion\Infusions\Forum\Classes\ForumPostify;
 /**
  * Vote Up and Down on Q&A Forum Type
  * Class Postify_vote
  *
  * @package PHPFusion\Forums\Postify
  */
-class Postify_Vote extends Forum_Postify {
+class PostifyVote extends ForumPostify {
 
     public function execute() {
 
@@ -46,11 +48,13 @@ class Postify_Vote extends Forum_Postify {
                 ':pid'    => $post_id,
             ]
         ));
-
         if (!empty($thread_data)) {
-            Forum_Moderator::setForumMods($thread_data);
+
+            ForumModerator::setForumMods($thread_data);
+
             // i can upvote as many post but each post only once.
             $thread_data['thread_link'] = fusion_get_settings('siteurl')."infusions/forum/viewthread.php?forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']."&pid=".$thread_data['thread_lastpostid']."#post_".$thread_data['thread_lastpostid'];
+
             $forum_index = dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat');
 
             if ($this->checkForumAccess($forum_index, $_GET['forum_id'], $_GET['thread_id'])) {
@@ -71,7 +75,7 @@ class Postify_Vote extends Forum_Postify {
                     if ($thread_data['post_author'] !== $user_id ) {
 
                         $vote_query = "
-                        SELECT v.*, r.*
+                        SELECT v.vote_id, r.rep_id
                         FROM ".DB_FORUM_VOTES." v
                         INNER JOIN ".DB_FORUM_USER_REP." r ON v.post_id=r.post_id AND v.vote_user=r.voter_id
                         WHERE v.vote_user=:my_id AND v.post_id=:post_id
@@ -82,15 +86,15 @@ class Postify_Vote extends Forum_Postify {
                             ':post_id' => $thread_data['post_id']
                         ];
 
-                        $vote_result = dbquery($vote_query, $vote_bind);
-
                         $vote_type = get('post');
 
                         switch ($vote_type) {
                             case 'voteup':
+
                                 if ($user_rep >= self::$forum_settings['points_to_upvote']) {
-                                    $vote = dbarray($vote_result);
-                                    if (!empty($vote['vote_points']) && $vote['vote_points'] !== '-1') {
+                                    $vote_result = dbquery($vote_query, $vote_bind);
+                                    if (dbrows($vote_result)) {
+                                        $vote = dbarray($vote_result);
                                         // I have voted, I'm removing my vote
                                         dbquery("DELETE FROM ".DB_FORUM_VOTES." WHERE vote_id=:vote_id", [':vote_id' => $vote['vote_id']]);
                                         // Remove log points
@@ -105,29 +109,8 @@ class Postify_Vote extends Forum_Postify {
                                         // I have not yet voted, I'm upvoting.
                                         $d['vote_points'] = 1;
                                         $d['points_gain'] = self::$forum_settings['upvote_points'];
-
-                                        if (!empty($vote['vote_points']) && $vote['vote_points'] == '-1') {
-                                            dbquery("UPDATE ".DB_FORUM_VOTES." SET vote_points=:points WHERE vote_id=:voteid AND vote_user=:myid", [
-                                                ':voteid' => $vote['vote_id'],
-                                                ':points' => $d['vote_points'],
-                                                ':myid'   => $user_id
-                                            ]);
-
-                                            dbquery("UPDATE ".DB_FORUM_USER_REP." SET points_gain=:points WHERE rep_id=:repid AND voter_id=:myid", [
-                                                ':repid'  => $vote['rep_id'],
-                                                ':points' => $d['points_gain'],
-                                                ':myid'   => $user_id
-                                            ]);
-                                        } else {
-                                            dbquery_insert(DB_FORUM_VOTES, $d, 'save');
-                                            dbquery_insert(DB_FORUM_USER_REP, $d, 'save');
-                                        }
-
-                                        dbquery("UPDATE ".DB_USERS." SET user_reputation=user_reputation+:points WHERE user_id=:post_author_id", [
-                                            ':post_author_id' => $thread_data['post_author'],
-                                            ':points'         => self::$forum_settings['upvote_points']
-                                        ]);
-
+                                        dbquery_insert(DB_FORUM_VOTES, $d, 'save');
+                                        dbquery_insert(DB_FORUM_USER_REP, $d, 'save');
                                         addNotice('success', self::$locale['forum_0516'], 'viewthread.php');
                                     }
                                     redirect(self::$default_redirect_link);
@@ -137,9 +120,13 @@ class Postify_Vote extends Forum_Postify {
                                 break;
 
                             case 'votedown':
+
                                 if ($user_rep >= self::$forum_settings['points_to_downvote'] && $thread_data['post_author'] !== $user_id) {
-                                    $vote = dbarray($vote_result);
-                                    if (!empty($vote['vote_points']) && $vote['vote_points'] !== '1') {
+
+                                    $vote_result = dbquery($vote_query, $vote_bind);
+
+                                    if (dbrows($vote_result)) {
+                                        $vote = dbarray($vote_result);
                                         // I have voted, I'm removing my vote
                                         dbquery("DELETE FROM ".DB_FORUM_VOTES." WHERE vote_id=:vote_id", [':vote_id' => $vote['vote_id']]);
                                         // Remove log points
@@ -150,33 +137,13 @@ class Postify_Vote extends Forum_Postify {
                                             ':points'         => self::$forum_settings['downvote_points']
                                         ]);
                                         addNotice('success', self::$locale['forum_0517'], 'viewthread.php');
+
                                     } else {
                                         // I have not yet voted, I'm downvoting.
                                         $d['vote_points'] = -1;
                                         $d['points_gain'] = -self::$forum_settings['downvote_points'];
-
-                                        if (!empty($vote['vote_points']) && $vote['vote_points'] == '1') {
-                                            dbquery("UPDATE ".DB_FORUM_VOTES." SET vote_points=:points WHERE vote_id=:voteid AND vote_user=:myid", [
-                                                ':voteid' => $vote['vote_id'],
-                                                ':points' => $d['vote_points'],
-                                                ':myid'   => $user_id
-                                            ]);
-
-                                            dbquery("UPDATE ".DB_FORUM_USER_REP." SET points_gain=:points WHERE rep_id=:repid AND voter_id=:myid", [
-                                                ':repid'  => $vote['rep_id'],
-                                                ':points' => $d['points_gain'],
-                                                ':myid'   => $user_id
-                                            ]);
-                                        } else {
-                                            dbquery_insert(DB_FORUM_VOTES, $d, 'save');
-                                            dbquery_insert(DB_FORUM_USER_REP, $d, 'save');
-                                        }
-
-                                        dbquery("UPDATE ".DB_USERS." SET user_reputation=user_reputation-:points WHERE user_id=:post_author_id", [
-                                            ':post_author_id' => $thread_data['post_author'],
-                                            ':points'         => self::$forum_settings['downvote_points']
-                                        ]);
-
+                                        dbquery_insert(DB_FORUM_VOTES, $d, 'save');
+                                        dbquery_insert(DB_FORUM_USER_REP, $d, 'save');
                                         addNotice('success', self::$locale['forum_0518'], 'viewthread.php');
                                     }
                                     redirect(self::$default_redirect_link);

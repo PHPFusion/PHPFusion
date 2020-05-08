@@ -17,11 +17,12 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Forums\Admin;
 
-use PHPFusion\Infusions\Forum\Classes\Forum_Server;
+use PHPFusion\Infusions\Forum\Classes\ForumServer;
+use PHPFusion\Infusions\Forums\Admin\AdminInterface;
 use PHPFusion\Interfaces\TableSDK;
 use PHPFusion\Tables;
 
-class ForumAdminRanks extends ForumAdminInterface {
+class Ranks extends AdminInterface {
 
     protected $data = [
         'rank_id'            => 0,
@@ -389,7 +390,7 @@ class Rank_Table implements TableSDK {
      * @return string
      */
     public function getRankImage($data) {
-        $ranks = Forum_Server::get_forum_rank($data[':rank_posts'], $data[':rank_apply'], $data[':rank_apply']);
+        $ranks = ForumServer::get_forum_rank($data[':rank_posts'], $data[':rank_apply'], $data[':rank_apply']);
         return "<img src='".$ranks['rank_image_src']."'>";
     }
 

@@ -1,7 +1,7 @@
 <?php
 namespace PHPFusion\Infusions\Forum\Classes\Profile;
 
-use PHPFusion\Infusions\Forum\Classes\Forum_Profile;
+use PHPFusion\Infusions\Forum\Classes\ForumProfile;
 use PHPFusion\Template;
 
 /**
@@ -9,7 +9,7 @@ use PHPFusion\Template;
  *
  * @package PHPFusion\Infusions\Forum\Classes\Profile
  */
-class Answer  {
+class Answer {
 
     private $profile_url = '';
 
@@ -28,29 +28,29 @@ class Answer  {
      * Summary constructor.
      * Lock implementation method
      *
-     * @param Forum_Profile $obj
+     * @param ForumProfile $obj
      */
-    public function __construct(Forum_Profile $obj) {
+    public function __construct(ForumProfile $obj) {
 
         $this->profile_url = $obj->getProfileUrl().'ref=answers&amp;';
         $this->self_noun = $obj->self_noun;
 
         $type = get('type');
         $this->nav_tabs = [
-            'votes' => [
-                'link' => $this->profile_url.'type=votes',
+            'votes'    => [
+                'link'  => $this->profile_url.'type=votes',
                 'title' => 'Votes',
-                'sql' => 'answer-votes'
+                'sql'   => 'answer-votes'
             ],
             'activity' => [
-                'link' => $this->profile_url.'type=activity',
+                'link'  => $this->profile_url.'type=activity',
                 'title' => 'Activity',
-                'sql' => 'answer-activity',
+                'sql'   => 'answer-activity',
             ],
-            'latest' => [
-                'link' => $this->profile_url.'type=latest',
+            'latest'   => [
+                'link'  => $this->profile_url.'type=latest',
                 'title' => 'All',
-                'sql' => 'answer-latest'
+                'sql'   => 'answer-latest'
             ],
         ];
 
@@ -88,13 +88,13 @@ class Answer  {
         $sql = $this->class->getSQL($this->nav_sql);
 
         $i = 0;
-        foreach($this->nav_tabs as $key => $tabs) {
+        foreach ($this->nav_tabs as $key => $tabs) {
             $tabs['class'] = $this->nav_active == $key ? ' class="active"' : '';
             $ctpl->set_block('nav_tabs', $tabs);
             $i++;
         }
 
-        $ctpl->set_tag('row_count', format_word($max_count, 'answer|answers') );
+        $ctpl->set_tag('row_count', format_word($max_count, 'answer|answers'));
 
         $result = dbquery($sql);
 
@@ -112,7 +112,7 @@ class Answer  {
                 $ctpl->set_block('thread_item', $data);
             }
             if ($max_count > $row_count) {
-                $ctpl->set_block('page_nav',['nav'=> makepagenav($rowstart, $limit, $max_count, 3, $this->profile_url) ]);
+                $ctpl->set_block('page_nav', ['nav' => makepagenav($rowstart, $limit, $max_count, 3, $this->profile_url)]);
             }
         } else {
             $ctpl->set_block('no_thread_item', ['message' => $this->self_noun.' have not answered any question.']);

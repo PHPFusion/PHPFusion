@@ -17,8 +17,7 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Infusions\Forum\Classes\Postify;
 
-use PHPFusion\BreadCrumbs;
-use PHPFusion\Infusions\Forum\Classes\Forum_Postify;
+use PHPFusion\Infusions\Forum\Classes\ForumPostify;
 /**
  * Forum Reply
  * Class Postify_Reply
@@ -27,35 +26,31 @@ use PHPFusion\Infusions\Forum\Classes\Forum_Postify;
  *
  * @package PHPFusion\Forums\Postify
  */
-class Postify_Reply extends Forum_Postify {
+class PostifyReply extends ForumPostify {
 
     public function execute() {
 
         $settings = fusion_get_settings();
 
         add_to_title(self::$locale['global_201'].self::$locale['forum_0360']);
+        add_breadcrumb(array('link' => FUSION_REQUEST, 'title' => self::$locale['forum_0360']));
+        $thread_id = get("thread_id", FILTER_VALIDATE_INT);
+        if (!$thread_id) {
+            throw new \Exception('$_GET[ thread_id ] is blank, and not passed! Please report this.');
+        }
 
-        BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => self::$locale['forum_0360']]);
-
-        $thread_data = dbarray(dbquery("SELECT thread_id, forum_id, thread_lastpostid, thread_postcount, thread_subject FROM ".DB_FORUM_THREADS." WHERE thread_id=:thread_id", [':thread_id' => $_GET['thread_id']]));
-
-        $thread_data['thread_link'] = fusion_get_settings('siteurl')."infusions/forum/viewthread.php?thread_id=".$thread_data['thread_id']."&pid=".$thread_data['thread_lastpostid']."#post_".$thread_data['thread_lastpostid'];
-
+        $thread_data = dbarray(dbquery("SELECT thread_id, forum_id, thread_lastpostid, thread_postcount, thread_subject FROM ".DB_FORUM_THREADS." WHERE thread_id=:thread_id", [':thread_id' =>$thread_id]));
+        $thread_data['thread_link'] = fusion_get_settings('siteurl')."infusions/forum/viewthread.php?forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']."&pid=".$thread_data['thread_lastpostid']."#post_".$thread_data['thread_lastpostid'];
         if (get('error', FILTER_VALIDATE_INT) < 2) {
-
-            $thread_id = get('thread_id', FILTER_VALIDATE_INT);
-
             if (!get('post_id', FILTER_VALIDATE_INT)) {
                 throw new \Exception('$_GET[ post_id ] is blank, and not passed! Please report this.');
             }
-
-            if (self::$forum_settings['thread_notify'] && $thread_id) {
+            if (self::$forum_settings['thread_notify']) {
                 // Find all users to notify
                 $notify_query = "SELECT tn.*, tu.user_id, tu.user_name, tu.user_email, tu.user_level, tu.user_groups
                 FROM ".DB_FORUM_THREAD_NOTIFY." tn
                 LEFT JOIN ".DB_USERS." tu ON tn.notify_user=tu.user_id
                 WHERE thread_id=:thread_id AND notify_user !=:my_id AND notify_status=:status GROUP BY tn.notify_user";
-
                 $notify_bind = [
                     ':thread_id' => (int) $thread_id,
                     ':my_id'     => fusion_get_userdata('user_id'),
@@ -63,12 +58,9 @@ class Postify_Reply extends Forum_Postify {
                 ];
 
                 $notify_result = dbquery($notify_query, $notify_bind);
-
                 if (dbrows($notify_result)) {
-
                     $forum_index = dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat');
                     require_once INCLUDES.'sendmail_include.php';
-
                     $template_result = dbquery("SELECT template_key, template_active FROM ".DB_EMAIL_TEMPLATES." WHERE template_key='POST' LIMIT 1");
                     if (dbrows($template_result) > 0) {
                         $template_data = dbarray($template_result);
@@ -112,7 +104,6 @@ class Postify_Reply extends Forum_Postify {
             }
 
             $thread_last_page = rowstart_count($thread_data['thread_postcount'], self::$forum_settings['posts_per_page'], 3);
-
             $redirect_add = '';
             if ($thread_last_page) {
                 $redirect_add = '&amp;rowstart='.$thread_last_page;

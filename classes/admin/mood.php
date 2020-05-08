@@ -15,13 +15,13 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-namespace PHPFusion\Forums\Admin;
+namespace PHPFusion\Infusions\Forums\Admin;
 
 use PHPFusion\Interfaces\TableSDK;
 use PHPFusion\Tables;
 use PHPFusion\UserFieldsQuantum;
 
-class ForumAdminMood extends ForumAdminInterface {
+class Mood extends AdminInterface {
     /**
      * Forum mood data
      *

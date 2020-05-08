@@ -17,9 +17,9 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Infusions\Forum\Classes\Postify;
 
-use PHPFusion\BreadCrumbs;
-use PHPFusion\Infusions\Forum\Classes\Forum_Moderator;
-use PHPFusion\Infusions\Forum\Classes\Forum_Postify;
+
+use PHPFusion\Infusions\Forum\Classes\ForumModerator;
+use PHPFusion\Infusions\Forum\Classes\ForumPostify;
 
 /**
  * Class Postify_Answer
@@ -27,7 +27,7 @@ use PHPFusion\Infusions\Forum\Classes\Forum_Postify;
  * @status  Stable
  * @package PHPFusion\Forums\Postify
  */
-class Postify_Answer extends Forum_Postify {
+class PostifyAnswer extends ForumPostify {
 
     public function execute() {
         // no need for permissions.
@@ -46,7 +46,7 @@ class Postify_Answer extends Forum_Postify {
         );
         if (!empty($thread_data)) {
 
-            Forum_Moderator::setForumMods($thread_data);
+            ForumModerator::setForumMods($thread_data);
 
             $title = '';
             $description = '';

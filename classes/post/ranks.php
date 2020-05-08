@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Infusions\Forum\Classes\Post;
 
-use PHPFusion\Infusions\Forum\Classes\Forum_Server;
+use PHPFusion\Infusions\Forum\Classes\ForumServer;
 
-class ForumRanks extends Forum_Server {
+class ForumRanks extends ForumServer {
 }

@@ -3,7 +3,7 @@
  * Forum Page Control Layout and Viewer.
  */
 
-use PHPFusion\Infusions\Forum\Classes\Forum_Viewer;
+use PHPFusion\Infusions\Forum\Classes\ForumViewer;
 
 if (!function_exists('render_forum')) {
     /**
@@ -12,7 +12,7 @@ if (!function_exists('render_forum')) {
      * @return string
      */
     function render_forum($info) {
-        return Forum_Viewer::getInstance()->render_forum( $info );
+        return ForumViewer::getInstance()->render_forum( $info );
     }
 }
 
@@ -25,7 +25,7 @@ if (!function_exists('render_forum')) {
  */
 if (!function_exists('render_viewforum')) {
     function render_viewforum($info) {
-        return Forum_Viewer::getInstance()->viewforum( $info );
+        return ForumViewer::getInstance()->viewforum( $info );
     }
 }
 
@@ -40,7 +40,7 @@ if (!function_exists('render_thread')) {
      * @return string
      */
     function render_thread($info) {
-        return Forum_Viewer::getInstance()->render_thread( $info );
+        return ForumViewer::getInstance()->render_thread( $info );
     }
 }
 
@@ -55,7 +55,7 @@ if (!function_exists("display_quick_reply")) {
      * @return string
      */
     function display_quick_reply($info) {
-        return Forum_Viewer::getInstance()->displayQuickReply( $info );
+        return ForumViewer::getInstance()->displayQuickReply( $info );
     }
 }
 
@@ -70,7 +70,7 @@ if (!function_exists("display_forum_pollform")) {
      * @return string
      */
     function display_forum_pollform($info) {
-        return Forum_Viewer::getInstance()->display_forum_pollform( $info );
+        return ForumViewer::getInstance()->display_forum_pollform( $info );
     }
 }
 
@@ -83,7 +83,7 @@ if (!function_exists('render_postify')) {
      * @param $info
      */
     function render_postify($info) {
-        echo Forum_Viewer::getInstance()->render_postify( $info );
+        echo ForumViewer::getInstance()->render_postify( $info );
     }
 }
 
@@ -93,7 +93,7 @@ if (!function_exists('render_postify')) {
  */
 if (!function_exists("display_forum_postform")) {
     function display_forum_postform($info) {
-        return Forum_Viewer::getInstance()->display_forum_postform( $info );
+        return ForumViewer::getInstance()->display_forum_postform( $info );
     }
 }
 
@@ -103,7 +103,7 @@ if (!function_exists("display_forum_postform")) {
  */
 if (!function_exists('display_forum_bountyform')) {
     function display_forum_bountyform($info) {
-        return Forum_Viewer::getInstance()->display_forum_bountyform( $info );
+        return ForumViewer::getInstance()->display_forum_bountyform( $info );
     }
 }
 
@@ -113,7 +113,7 @@ if (!function_exists('display_forum_bountyform')) {
  */
 if (!function_exists("display_forum_tags")) {
     function display_forum_tags($info) {
-        return Forum_Viewer::getInstance()->display_forum_tags( $info );
+        return ForumViewer::getInstance()->display_forum_tags( $info );
     }
 }
 
@@ -123,14 +123,14 @@ if (!function_exists("display_forum_tags")) {
  */
 if (!function_exists('forum_subforums_item')) {
     function forum_subforums_item($info) {
-        return Forum_Viewer::getInstance()->forum_subforums_item( $info );
+        return ForumViewer::getInstance()->forum_subforums_item( $info );
     }
 }
 
 /* Forum Filter */
 if (!function_exists('forum_filter')) {
     function forum_filter($info) {
-        return Forum_Viewer::getInstance()->forum_filter( $info );
+        return ForumViewer::getInstance()->forum_filter( $info );
     }
 }
 

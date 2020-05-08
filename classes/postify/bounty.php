@@ -19,6 +19,7 @@ namespace PHPFusion\Infusions\Forum\Classes\Postify;
 
 use PHPFusion\BreadCrumbs;
 use PHPFusion\Infusions\Forum\Classes\Forum_Postify;
+use PHPFusion\Infusions\Forum\Classes\ForumPostify;
 
 /**
  * Class Postify_Bounty
@@ -27,10 +28,10 @@ use PHPFusion\Infusions\Forum\Classes\Forum_Postify;
  *
  * @package PHPFusion\Forums\Postify
  */
-class Postify_Bounty extends Forum_Postify {
+class PostifyBounty extends ForumPostify {
 
     public function execute() {
-        BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => self::$locale['forum_0399']]);
+        add_breadcrumb(array('link' => FUSION_REQUEST, 'title' => self::$locale['forum_0399']));
         $thread_data = dbarray(dbquery("SELECT thread_id, forum_id, thread_lastpostid, thread_postcount, thread_subject FROM ".DB_FORUM_THREADS." WHERE thread_id=:thread_id", [':thread_id' => $_GET['thread_id']]));
         if (!empty($thread_data)) {
             $thread_data['thread_link'] = fusion_get_settings('siteurl')."infusions/forum/viewthread.php?forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']."&pid=".$thread_data['thread_lastpostid']."#post_".$thread_data['thread_lastpostid'];

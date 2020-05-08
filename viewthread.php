@@ -16,14 +16,15 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-use PHPFusion\Infusions\Forum\Classes\Threads\View_Thread;
+
+use PHPFusion\Infusions\Forum\Classes\Threads\ViewThread;
 
 require_once __DIR__.'/../../maincore.php';
 if (!defined('FORUM_EXIST')) {
     redirect(BASEDIR."error.php?code=404");
 }
 
-$thread = new View_Thread();
+$thread = new ViewThread();
 echo $thread->display_thread();
 
 require_once THEMES."templates/footer.php";

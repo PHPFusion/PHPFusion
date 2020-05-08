@@ -15,16 +15,19 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
+use PHPFusion\Infusions\Forum\Classes\ForumServer;
+
 $locale = fusion_get_locale();
 
 $this->forum_info['title'] = $locale['global_027'];
 $this->forum_info['description'] = "The threads in the community forum that nobody has responded yet.";
 $this->forum_info['link'] = FORUM;
-$this->forum_info['filter'] = \PHPFusion\Infusions\Forum\Classes\Forum_Server::filter()->get_FilterInfo();
+$this->forum_info['filter'] = ForumServer::filter()->get_FilterInfo();
 
-$filter = \PHPFusion\Infusions\Forum\Classes\Forum_Server::filter()->get_filterSQL();
+$filter = ForumServer::filter()->get_filterSQL();
 $base_condition = (multilang_table("FO") ? in_group('tf.forum_language', LANGUAGE)." AND " : "")." t.thread_postcount='1' AND t.thread_locked='0' AND t.thread_hidden='0' AND ".groupaccess('tf.forum_access');
-$threads = \PHPFusion\Infusions\Forum\Classes\Forum_Server::thread(FALSE)->getThreadInfo(0,
+$threads = ForumServer::thread(FALSE)->getThreadInfo(0,
     [
         "count_query" => "SELECT t.thread_id ".$filter['select']."
         FROM ".DB_FORUM_THREADS." t

@@ -1,7 +1,7 @@
 <?php
 namespace PHPFusion\Infusions\Forum\Classes\Profile;
 
-use PHPFusion\Infusions\Forum\Classes\Forum_Profile;
+use PHPFusion\Infusions\Forum\Classes\ForumProfile;
 use PHPFusion\Template;
 
 /**
@@ -31,9 +31,9 @@ class Reputation  {
      * Summary constructor.
      * Lock implementation method
      *
-     * @param Forum_Profile $obj
+     * @param ForumProfile $obj
      */
-    public function __construct(Forum_Profile $obj) {
+    public function __construct(ForumProfile $obj) {
 
         $this->profile_url = $obj->getProfileUrl().'ref=reputation&amp;';
         $type = get('type');

@@ -17,8 +17,9 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Infusions\Forum\Classes\Postify;
 
-use PHPFusion\BreadCrumbs;
-use PHPFusion\Infusions\Forum\Classes\Forum_Postify;
+
+use PHPFusion\Infusions\Forum\Classes\ForumPostify;
+
 /**
  * Forum Edit Reply
  * Class Postify_Reply
@@ -27,10 +28,10 @@ use PHPFusion\Infusions\Forum\Classes\Forum_Postify;
  *
  * @package PHPFusion\Forums\Postify
  */
-class Postify_Editpoll extends Forum_Postify {
+class PostifyEditpoll extends ForumPostify {
     public function execute() {
         add_to_title(self::$locale['global_201'].self::$locale['forum_0612']);
-        BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => self::$locale['forum_0612']]);
+        add_breadcrumb(array('link' => FUSION_REQUEST, 'title' => self::$locale['forum_0612']));
         render_postify([
             'title'       => self::$locale['forum_0612'],
             'error'       => $this->get_postify_error_message(),

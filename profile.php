@@ -3,12 +3,13 @@
  * Babylon user profile forum extensions
  */
 
-use PHPFusion\Infusions\Forum\Classes\Forum_Profile;
+use PHPFusion\Infusions\Forum\Classes\ForumProfile;
+use PHPFusion\UserFields\Pages\ProfileOutput;
 
 defined('IN_FUSION') || exit;
 
-function display_forum_profile( \PHPFusion\UserFields\Pages\ProfileOutput $profile ) {
-    
+function display_forum_profile(ProfileOutput $profile) {
+
     $locale['forum_ufp_100'] = 'Summary';
     $locale['forum_ufp_101'] = 'Answers';
     $locale['forum_ufp_102'] = 'Questions';
@@ -21,10 +22,10 @@ function display_forum_profile( \PHPFusion\UserFields\Pages\ProfileOutput $profi
     $locale['forum_ufp_112'] = 'Latest';
     $locale['forum_ufp_113'] = 'post';
     $locale['forum_ufp_114'] = 'posts';
-    
-    $profile = new Forum_Profile( $profile->profile_id, $locale );
+
+    $profile = new ForumProfile($profile->profile_id, $locale);
     return $profile->viewUserProfile();
 }
 
-fusion_add_hook( 'fusion_profile_page', 'display_forum_profile' );
+fusion_add_hook('fusion_profile_page', 'display_forum_profile');
 

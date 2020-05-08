@@ -16,10 +16,14 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
+use PHPFusion\Infusions\Forum\Classes\Forum\Forum;
 use PHPFusion\Infusions\Forum\Classes\Forum_Moderator;
 use PHPFusion\Infusions\Forum\Classes\Forum_Server;
 use PHPFusion\Infusions\Forum\Classes\ForumFunctions;
+use PHPFusion\Infusions\Forum\Classes\ForumModerator;
+use PHPFusion\Infusions\Forum\Classes\ForumServer;
 use PHPFusion\Infusions\Forum\Classes\Threads\Forum_Threads;
+use PHPFusion\Infusions\Forum\Classes\Threads\ForumThreads;
 
 defined('IN_FUSION') || exit;
 
@@ -44,28 +48,28 @@ function display_image_attach($file, $width = 50, $height = 50, $rel = "") {
 }
 
 function set_forum_mods($info) {
-    Forum_Moderator::setForumMods( $info );
+    ForumModerator::setForumMods( $info );
 }
 
 function verify_forum($forum_id) {
-    return Forum_Server::verify_forum( $forum_id );
+    return ForumServer::verify_forum( $forum_id );
 }
 
 function verify_post($post_id) {
-    return Forum_Server::verify_post( $post_id );
+    return ForumServer::verify_post( $post_id );
 }
 
 function verify_thread($thread_id) {
-    return Forum_Server::verify_thread( $thread_id );
+    return ForumServer::verify_thread( $thread_id );
 }
 
 function get_thread($thread_id) {
-    $thread = new Forum_Threads;
+    $thread = new ForumThreads();
     return $thread->getThreadInfo($thread_id);
 }
 
 function get_thread_stats($thread_id) {
-    return Forum_Threads::getStats( $thread_id );
+    return ForumThreads::getStats( $thread_id );
 }
 
 /**
@@ -138,15 +142,15 @@ function set_forum_votes($info, $points = 0) {
 }
 
 function display_forum_mods($forum_mods) {
-    return Forum_Moderator::displayForumMods( $forum_mods );
+    return ForumModerator::displayForumMods( $forum_mods );
 }
 
 function get_recent_topics($forum_id = 0) {
-    return Forum_Server::getRecentTopics( $forum_id );
+    return ForumServer::getRecentTopics( $forum_id );
 }
 
 function set_forum_icons(array $icons = []) {
-    Forum_Server::setForumIcons( $icons );
+    ForumServer::setForumIcons( $icons );
 }
 
 function get_forum($forum_id = 0, $forum_branch = 0) {
@@ -154,15 +158,15 @@ function get_forum($forum_id = 0, $forum_branch = 0) {
 }
 
 function get_forum_icons($type = '') {
-    return Forum_Server::getForumIcons( $type );
+    return ForumServer::getForumIcons( $type );
 }
 
 function get_forum_template($key = NULL) {
-    return Forum_Server::getForumTemplate( $key );
+    return ForumServer::getForumTemplate( $key );
 }
 
 function get_forum_settings($key = NULL) {
-    return Forum_Server::get_forum_settings( $key );
+    return ForumServer::get_forum_settings( $key );
 }
 
 function parse_attach($message) {
