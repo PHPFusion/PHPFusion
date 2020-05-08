@@ -195,7 +195,7 @@ function fusion_table($table_id, array $options = []) {
             'searching' : true,
             'ajax' : {
                 url : '".$options['remote_file']."',
-                <data_filters>               
+                <data_filters>
             },
             'columns' : ".json_encode($options['columns'])."
         }";
@@ -521,7 +521,7 @@ if (!function_exists("alert")) {
     function alert($title, array $options = []) {
         add_to_jquery("$('div.alert a').addClass('alert-link');");
         $alert_tpl = Template::getInstance('alert');
-        $default_alert_tpl = THEMES.'templates/boilers/bootstrap3/html/alert.html';
+        $default_alert_tpl = THEMES.'boilerplates/bootstrap3/html/alert.html';
         $alert_tpl->set_template($default_alert_tpl);
         $default_options = [
             "class"   => "alert-danger",
@@ -556,7 +556,7 @@ if (!function_exists("label")) {
         if (!empty($options['icon'])) {
             $options['icon'] = '<i class="'.$options['icon'].'"></i>';
         }
-        $label_template = THEMES.'templates/boilers/bootstrap3/html/label.html';
+        $label_template = THEMES.'boilerplates/bootstrap3/html/label.html';
         $label_tpl = Template::getInstance('label');
         $label_tpl->set_template($label_template);
         $label_tpl->set_tag('class', " ".$options['class']);
@@ -587,7 +587,7 @@ if (!function_exists("badge")) {
         if (!empty($options['icon'])) {
             $options['icon'] = '<i class="'.$options['icon'].'"></i>';
         }
-        $badge_template = THEMES.'templates/boilers/bootstrap3/html/badge.html';
+        $badge_template = THEMES.'boilerplates/bootstrap3/html/badge.html';
         $badge = Template::getInstance('badge');
         $badge->set_template($badge_template);
         $badge->set_tag('class', " ".$options['class']);

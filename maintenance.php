@@ -82,10 +82,10 @@ echo "<meta name='image' content='".$settings['siteurl'].$settings['sitebanner']
 if ($settings['bootstrap'] || defined('BOOTSTRAP')) {
     echo "<meta http-equiv='X-UA-Compatible' content='IE=edge'>\n";
     echo "<meta name='viewport' content='width=device-width, initial-scale=1.0'>\n";
-    echo "<link rel='stylesheet' href='".THEMES."templates/boilers/bootstrap3/css/bootstrap.min.css'>\n";
-    echo "<link rel='stylesheet' href='".THEMES."templates/boilers/bootstrap3/css/bootstrap-submenu.min.css'>\n";
+    echo "<link rel='stylesheet' href='".THEMES."boilerplates/bootstrap3/css/bootstrap.min.css'>\n";
+    echo "<link rel='stylesheet' href='".THEMES."boilerplates/bootstrap3/css/bootstrap-submenu.min.css'>\n";
     if ($locale['text-direction'] == 'rtl') {
-        echo "<link rel='stylesheet' href='".THEMES."templates/boilers/bootstrap3/css/bootstrap-rtl.min.css'>";
+        echo "<link rel='stylesheet' href='".THEMES."boilerplates/bootstrap3/css/bootstrap-rtl.min.css'>";
     }
     $user_theme = fusion_get_userdata('user_theme');
     $theme_name = $user_theme !== 'Default' ? $user_theme : $settings['theme'];
@@ -126,7 +126,7 @@ if (!empty($fusion_jquery_tags)) {
 }
 
 if ($settings['bootstrap'] || defined('BOOTSTRAP')) {
-    echo "<script src='".THEMES."templates/boilers/bootstrap3/js/bootstrap.min.js'></script>\n";
+    echo "<script src='".THEMES."boilerplates/bootstrap3/js/bootstrap.min.js'></script>\n";
 }
 echo "</body>\n";
 echo "</html>";

@@ -180,7 +180,7 @@ class Atom {
         if (!empty($this->theme_data)) {
             add_to_head("<link href='".THEMES.$this->theme_data['theme_file']."' rel='stylesheet' media='screen' />\n");
         } else {
-            add_to_head("<link href='".THEMES."templates/boilers/bootstrap3/bootstrap.css' rel='stylesheet' media='screen' />\n");
+            add_to_head("<link href='".THEMES."boilerplates/bootstrap3/bootstrap.css' rel='stylesheet' media='screen' />\n");
         }
     }
 

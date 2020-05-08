@@ -59,7 +59,7 @@ class Layout {
         );
         $options += $default;
         $tpl = \PHPFusion\Template::getInstance('grid');
-        $tpl->set_template(THEMES.'templates/boilers/'.$this->steam->get_boiler().'/html/grid.html');
+        $tpl->set_template(THEMES.'boilerplates/'.$this->steam->get_boiler().'/html/grid.html');
         foreach($options as $grid) {
             if (empty($grid['class'])) {
                 switch($this->steam->get_boiler()) {
