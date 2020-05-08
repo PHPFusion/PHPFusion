@@ -1142,10 +1142,12 @@ if (!function_exists("tab_active")
                         $link_url = clean_request($getname.'='.$tab_id.(defined('ADMIN_PANEL') ? "&aid=".$_GET['aid'] : ""), $getArray, FALSE);
                     }
                     $html .= ($link_active_arrkey == $tab_id) ? "<li class='active'>\n" : "<li>\n";
+                    $active_link = defined('BOOTSTRAP4') && ($link_active_arrkey == $tab_id) ? ' active' : '';
                 } else {
                     $html .= ($link_active_arrkey == "".$tab_id) ? "<li class='active'>\n" : "<li>\n";
+                    $active_link = defined('BOOTSTRAP4') && ($link_active_arrkey == "".$tab_id) ? ' active' : '';
                 }
-                $html .= "<a class='pointer' ".(!$link ? "id='tab-".$tab_id."' data-toggle='tab' data-target='#".$tab_id."'" : "href='$link_url'")." role='tab'>\n".($icon ? "<i class='".$icon."'></i>" : '')." ".$v_title." </a>\n";
+                $html .= "<a class='pointer".$active_link."' ".(!$link ? "id='tab-".$tab_id."' data-toggle='tab' data-target='#".$tab_id."'" : "href='$link_url'")." role='tab'>\n".($icon ? "<i class='".$icon."'></i>" : '')." ".$v_title." </a>\n";
                 $html .= "</li>\n";
             }
             $html .= "</ul>\n";
