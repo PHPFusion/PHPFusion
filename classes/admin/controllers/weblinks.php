@@ -90,7 +90,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
                 'weblink_name'        => sanitizer( 'weblink_name', '', 'weblink_name' ),
                 'weblink_cat'         => sanitizer( 'weblink_cat', 0, 'weblink_cat' ),
                 'weblink_url'         => sanitizer( 'weblink_url', '', 'weblink_url' ),
-                'weblink_description' => sanitizer( 'weblink_description', '', 'weblink_description' ),
+                'weblink_description' => form_sanitizer(descript(filter_input(INPUT_POST, 'weblink_description', FILTER_DEFAULT)), '', 'weblink_description'),
                 'weblink_datestamp'   => sanitizer( 'weblink_datestamp', '', 'weblink_datestamp' ),
                 'weblink_visibility'  => sanitizer( 'weblink_visibility', 0, 'weblink_visibility' ),
                 'weblink_status'      => sanitizer( 'weblink_status', 0, 'weblink_status' ),

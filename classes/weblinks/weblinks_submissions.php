@@ -66,7 +66,7 @@ class WeblinksSubmissions extends WeblinksServer {
             // Save
             if ( post( 'submit_link' ) ) {
 
-                $description = nl2br( parseubb( stripinput( sanitizer( 'weblink_description', '', 'weblink_description' ) ) ) );
+                $description = stripinput(descript(filter_input(INPUT_POST, 'weblink_description', FILTER_DEFAULT)));
 
                 $criteriaArray = [
                     'weblink_cat'         => sanitizer( 'weblink_cat', 0, 'weblink_cat'),
