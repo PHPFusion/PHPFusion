@@ -88,12 +88,24 @@ spl_autoload_register(function ($className) {
         //print_p($className);
         $className = str_replace('PHPFusion\\Infusions\\', '', $className);
         $className = str_replace('\\', DIRECTORY_SEPARATOR, $className);
+        $fullPath = BASEDIR.'infusions/'.$className.'.php';
+        $baseName = basename($fullPath);
+        $path_dir = strtolower(str_replace($baseName, "", $fullPath)).$baseName;
+
+        /** All folders must be lowercase and only the filename is camelcase */
+        if (is_file($path_dir)) {
+            require_once $path_dir;
+        }
+        /** All folders and filename must be lowecase */
         $className = strtolower($className);
-        //print_P($className);
         $fullPath = BASEDIR.'infusions/'.$className.'.php';
         if (is_file($fullPath)) {
-            require $fullPath;
+            require_once $fullPath;
         }
+        /**
+         * Class name with _ must have corresponding - file name in lowercase
+         * i.e. Fusion_Theme , class filename: fusion-theme.php
+         */
         $className = str_replace('_', '-', $className);
         $fullPath = BASEDIR.'infusions'.DIRECTORY_SEPARATOR.$className.'.php';
         if (is_file($fullPath)) {
