@@ -100,7 +100,6 @@ class ForumTag extends ForumServer {
     }
 
     public function cache_tags($order = 'tag_title ASC') {
-
         $tag_query = "SELECT * FROM ".DB_FORUM_TAGS." WHERE tag_status=:tag_status ".(multilang_table("FO") ? "AND ".in_group('tag_language', LANGUAGE) : "")." ORDER BY ".$order;
         $tag_param = [':tag_status' => 1];
         $tag_result = dbquery($tag_query, $tag_param);
@@ -114,7 +113,7 @@ class ForumTag extends ForumServer {
                 $this->tag_info['tags'][$data['tag_id']] = $data;
 
                 // this should not be required to optimize thread performance. its only required on the front tag page. make a new subquery there.
-                $thread_query = "SELECT thread_id, thread_author FROM ".DB_FORUM_THREADS." WHERE ".in_group('thread_tags', $data['tag_id'])." ORDER BY thread_lastpost DESC LIMIT 1";
+                $thread_query = "SELECT thread_id, thread_author FROM ".DB_FORUM_THREADS." WHERE ".in_group('thread_tags', $data['tag_id'], '.')." ORDER BY thread_lastpost DESC LIMIT 1";
                 $thread_result = dbquery($thread_query);
                 $thread_rows = dbrows($thread_result);
 

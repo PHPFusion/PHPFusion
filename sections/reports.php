@@ -72,7 +72,7 @@ if ($rid) {
                     AND f.report_id='".intval($rid)."'
                     GROUP BY f.post_id";
     $query = "SELECT  f.post_id 'report_post_id', t.thread_id, t.thread_subject, t.thread_author, t.thread_lastuser, t.thread_lastpost, t.thread_lastpostid,
-            t.thread_postcount, t.thread_locked, t.thread_sticky, t.thread_poll, t.thread_postcount, t.thread_views,
+            t.thread_postcount, t.thread_locked, t.thread_sticky, t.thread_poll, t.thread_postcount, t.thread_views, t.thread_tags,
             t.forum_id 'forum_id', tf.*, f.*, p.post_id, p.post_message, p.post_smileys,
             COUNT(pv.forum_vote_user_id) 'poll_voted',
             IF (n.thread_id > 0, 1 , 0) 'user_tracked'
