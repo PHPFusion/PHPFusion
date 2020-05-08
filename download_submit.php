@@ -42,8 +42,8 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
         $criteriaArray = [
             'download_title'             => form_sanitizer($_POST['download_title'], '', 'download_title'),
             'download_keywords'          => form_sanitizer($_POST['download_keywords'], '', 'download_keywords'),
-            'download_description'       => form_sanitizer($_POST['download_description'], '', 'download_description'),
-            'download_description_short' => form_sanitizer($_POST['download_description_short'], '', 'download_description_short'),
+            'download_description'       => form_sanitizer(descript($_POST['download_description']), '', 'download_description'),
+            'download_description_short' => form_sanitizer(descript($_POST['download_description_short']), '', 'download_description_short'),
             'download_cat'               => form_sanitizer($_POST['download_cat'], '0', 'download_cat'),
             'download_homepage'          => form_sanitizer($_POST['download_homepage'], '', 'download_homepage'),
             'download_license'           => form_sanitizer($_POST['download_license'], '', 'download_license'),

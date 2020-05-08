@@ -99,7 +99,7 @@ $filter = array_keys($info['allowed_filters']);
 $_GET['type'] = isset($_GET['type']) && in_array($_GET['type'],
     array_keys($info['allowed_filters'])) ? $_GET['type'] : '';
 foreach ($info['allowed_filters'] as $type => $filter_name) {
-    $filter_link = INFUSIONS."downloads/downloads.php?".(isset($_GET['cat_id']) ? "cat_id=".$_GET['cat_id']."&amp;" : '').(isset($_GET['archive']) ? "archive=".$_GET['archive']."&amp;" : '')."type=".$type;
+    $filter_link = INFUSIONS."downloads/downloads.php?".(isset($_GET['cat_id']) ? "cat_id=".(int) $_GET['cat_id']."&amp;" : '').(isset($_GET['archive']) ? "archive=".$_GET['archive']."&amp;" : '')."type=".$type;
     $active = isset($_GET['type']) && $_GET['type'] == $type ? 1 : 0;
     $info['download_filter'][$type] = ['title' => $filter_name, 'link' => $filter_link, 'active' => $active];
     unset($filter_link);
