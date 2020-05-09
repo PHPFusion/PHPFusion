@@ -1211,7 +1211,7 @@ class Forum_List implements \PHPFusion\Interfaces\TableSDK {
             ],
             'forum_image'       => [
                 'title'       => 'Image',
-                'callback'    => [ 'PHPFusion\\Forums\\Admin\\ForumAdminView', 'check_forum_image' ],
+                'callback'    => [ 'PHPFusion\\Infusions\\Forum\\Classes\\Admin\\ForumAdminView', 'check_forum_image' ],
                 'title_class' => 'text-center',
                 'value_class' => 'text-center',
                 'visibility'  => TRUE,
