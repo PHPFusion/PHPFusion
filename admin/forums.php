@@ -15,13 +15,15 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
+use PHPFusion\Infusions\Forum\Classes\Admin\ForumAdminView;
+
 require_once __DIR__."/../../../maincore.php";
 if (!defined('FORUM_EXIST')) {
     redirect(BASEDIR."error.php?code=404");
 }
-require_once THEMES.'templates/admin_header.php';
-require_once INCLUDES.'infusions_include.php';
-require_once INCLUDES.'photo_functions_include.php';
-
-\PHPFusion\Infusions\Forum\Admin\ForumAdminView::view()->display_forum_admin();
-require_once THEMES.'templates/footer.php';
+require_once TEMPLATES."admin_header.php";
+require_once INCLUDES."infusions_include.php";
+require_once INCLUDES."photo_functions_include.php";
+ForumAdminView::view()->display_forum_admin();
+require_once TEMPLATES."footer.php";

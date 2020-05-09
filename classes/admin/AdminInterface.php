@@ -15,12 +15,15 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-namespace PHPFusion\Infusions\Forum\Admin;
+namespace PHPFusion\Infusions\Forum\Classes\Admin;
 
-// This is being extended by viewer
-// A model file
 use PHPFusion\Infusions\Forum\Classes\ForumServer;
 
+/**
+ * Class AdminInterface
+ *
+ * @package PHPFusion\Infusions\Forum\Classes\Admin
+ */
 abstract class AdminInterface extends ForumServer {
     public static $admin_instance = NULL;
     public static $admin_rank_instance = NULL;

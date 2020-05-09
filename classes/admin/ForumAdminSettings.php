@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-namespace PHPFusion\Infusions\Forum\Admin;
+namespace PHPFusion\Infusions\Forum\Classes\Admin;
 
 use PHPFusion\Locale;
 
