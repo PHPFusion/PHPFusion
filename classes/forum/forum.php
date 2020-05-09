@@ -313,6 +313,21 @@ class Forum extends ForumServer {
 
                                             if ($forum_settings['forum_show_lastpost'] == 1) {
                                                 if (!empty($row['forum_lastpostid'])) {
+                                                    $last_user = fusion_get_user($row['forum_lastuser']);
+
+                                                    if (!empty($last_user['user_id'])) {
+                                                        $row['user_id'] = $last_user['user_id'];
+                                                        $row['user_name'] = $last_user['user_name'];
+                                                        $row['user_status'] = $last_user['user_status'];
+                                                        $row['user_avatar'] = $last_user['user_avatar'];
+                                                        $row['user_level'] = $last_user['user_level'];
+                                                    } else {
+                                                        $row['user_id'] = 0;
+                                                        $row['user_name'] = '';
+                                                        $row['user_status'] = 0;
+                                                        $row['user_avatar'] = '';
+                                                        $row['user_level'] = '';
+                                                    }
 
                                                     // as first_post_datestamp
                                                     $last_post_sql = "SELECT post_message FROM ".DB_FORUM_POSTS." WHERE post_id=:post_id ORDER BY post_datestamp DESC";
@@ -322,11 +337,10 @@ class Forum extends ForumServer {
                                                     if (dbrows($post_result) > 0) {
 
                                                         // Get the current forum last user
-                                                        $last_user = fusion_get_user($row['forum_lastuser']);
+
                                                         $post_data = dbarray($post_result);
 
                                                         $last_post = [
-                                                            'avatar'       => '',
                                                             'avatar_src'   => $last_user['user_avatar'] && file_exists(IMAGES.'avatars/'.$last_user['user_avatar']) && !is_dir(IMAGES.'avatars/'.$last_user['user_avatar']) ? IMAGES.'avatars/'.$last_user['user_avatar'] : '',
                                                             'message'      => trim_text(parseubb(parsesmileys($post_data['post_message'])), 100),
                                                             'profile_link' => profile_link($row['forum_lastuser'], $last_user['user_name'], $last_user['user_status']),
@@ -338,6 +352,7 @@ class Forum extends ForumServer {
                                                         if ($forum_settings['forum_last_post_avatar']) {
                                                             $last_post['avatar'] = display_avatar($last_user, '30px', '', '', 'img-rounded');
                                                         }
+
                                                         $lastPostInfo = $last_post;
                                                     }
                                                 }
