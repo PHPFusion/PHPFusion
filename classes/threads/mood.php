@@ -210,8 +210,8 @@ class Forum_Mood extends ForumServer {
 
             foreach ($mood_cache as $mood_id => $mood_data) {
                 //jQuery data model for ajax
-                $html .= form_hidden('post_author', '', $this->post_author);
-                $html .= form_hidden('post_id', '', $this->post_id);
+                $html .= form_hidden('post_author', '', $this->post_author, ['input_id' => 'post_author'.$this->post_id]);
+                $html .= form_hidden('post_id', '', $this->post_id, ['input_id' => 'post_id'.$this->post_id]);
 
                 if (!$this->mood_exists($my_id, $mood_id, $this->post_id)) {
                     // Post Button
