@@ -28,8 +28,9 @@ if (preg_match_all('#\[code(=(.*?))?\](.*?)\[/code\]#si', $text) ||
 
     $text = preg_replace_callback(
         "#\[code(=(?P<lang>.*?))?\](?P<code>.*?)\[/code\]#si",
-        function ($m) use (&$i) {
+        function ($m) {
             global $pid;
+            static $i = 0;
 
             $data = [];
 
@@ -39,20 +40,18 @@ if (preg_match_all('#\[code(=(.*?))?\](.*?)\[/code\]#si', $text) ||
             if (isset($_GET['thread_id'])) {
                 if (preg_match("/\/forum\//i", FUSION_REQUEST)) {
                     $result = dbquery("SELECT p.post_id, t.thread_id
-                    FROM ".DB_FORUM_POSTS." p
-                    INNER JOIN ".DB_FORUM_THREADS." t ON t.thread_id = p.thread_id
-                    WHERE p.thread_id='".intval($_GET['thread_id'])."' AND p.post_id ='".intval($pid)."' AND post_hidden='0'
-                ");
+                        FROM ".DB_FORUM_POSTS." p
+                        INNER JOIN ".DB_FORUM_THREADS." t ON t.thread_id = p.thread_id
+                        WHERE p.thread_id='".intval($_GET['thread_id'])."' AND p.post_id ='".intval($pid)."' AND post_hidden='0'
+                    ");
 
                     $data = dbarray($result);
                 }
             }
 
             $locale = fusion_get_locale();
-            if (preg_match("/\/forum\//i",
-                    FUSION_REQUEST) && isset($_GET['thread_id']) && (isset($data['post_id']) && isnum($data['post_id']))
-            ) { // this one rely on global.
-                $code_save = '<a class="pull-right m-t-0 btn btn-sm btn-default" href="'.INCLUDES.'bbcodes/code_bbcode_save.php?thread_id='.$_GET['thread_id'].'&amp;post_id='.$data['post_id'].'&amp;code_id='.$i.'"><i class="fa fa-download"></i> '.$locale['bb_code_save'].'</a>&nbsp;&nbsp;';
+            if (preg_match("/\/forum\//i", FUSION_REQUEST) && isset($_GET['thread_id']) && (isset($data['post_id']) && isnum($data['post_id']))) { // this one rely on global.
+                $code_save = '<a class="pull-right m-t-0 btn btn-sm btn-default" href="'.INCLUDES.'bbcodes/code_bbcode_save.php?thread_id='.$_GET['thread_id'].'&amp;post_id='.$data['post_id'].'&amp;code_id='.$i.'"><i class="fa fa-download"></i> '.$locale['bb_code_save'].'</a>';
             } else {
                 $code_save = '';
             }
