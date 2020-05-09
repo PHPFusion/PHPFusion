@@ -27,7 +27,8 @@ if (preg_match_all('#\[code(=(.*?))?\](.*?)\[/code\]#si', $text) ||
 ) {
     $text = preg_replace_callback(
         "#\[code(=(?P<lang>.*?))?\](?P<code>.*?)\[/code\]#si",
-        function ($m) use (&$i) {
+        function ($m) {
+            static $i = 0;
             $locale = fusion_get_locale();
             $pid = get('pid', FILTER_VALIDATE_INT);
             $tid = get('thread_id', FILTER_VALIDATE_INT);
@@ -43,7 +44,7 @@ if (preg_match_all('#\[code(=(.*?))?\](.*?)\[/code\]#si', $text) ||
                     ':pid' => (int) $pid
                     ]);
                     $data = dbarray($result);
-                    $code_save = '<a class="pull-right text-dark text-uppercase small" href="'.INCLUDES.'bbcodes/code_bbcode_save.php?thread_id='.$data['thread_id'].'&amp;post_id='.$data['post_id'].'&amp;code_id='.$i.'">Download</a>&nbsp;&nbsp;';
+                    $code_save = '<a class="pull-right text-dark text-uppercase small" href="'.INCLUDES.'bbcodes/code_bbcode_save.php?thread_id='.$data['thread_id'].'&amp;post_id='.$data['post_id'].'&amp;code_id='.$i.'">'.$locale['bb_code_save'].'</a>';
                 }
             }
             $i++;
