@@ -133,11 +133,6 @@ class Install_Core extends Infusion_Core {
             session_start();
 
             define('IN_SETUP', TRUE);
-
-            require_once BASEDIR.'includes/dynamics.inc';
-            require_once BASEDIR.'includes/autoloader.php';
-            \Dynamics::getInstance();
-
             self::installer_step();
             self::verify_requirements();
 
@@ -152,6 +147,9 @@ class Install_Core extends Infusion_Core {
             define("LOCALESET", LANGUAGE."/");
             self::$locale = fusion_get_locale('', [LOCALE.LOCALESET."global.php", LOCALE.LOCALESET."setup.php"]);
             self::$locale_files = fusion_get_detected_language();
+
+            require __DIR__.'/../../../dynamics.inc';
+            \Dynamics::getInstance();
 
             self::detect_upgrade();
 
@@ -432,10 +430,11 @@ class Install_Core extends Infusion_Core {
  * Debug the steps in each here
  * @Dependencies on Install.core.inc
  */
-require(__DIR__.'/Requirements.core.inc');
-require(__DIR__.'/Steps/Introduction.inc');
-require(__DIR__.'/Steps/Permissions.inc');
-require(__DIR__.'/Steps/DatabaseSetup.inc');
-require(__DIR__.'/Steps/AdminSetup.inc');
-require(__DIR__.'/Steps/InfusionsSetup.inc');
-require(__DIR__.'/Steps/Complete.inc');
+require_once(__DIR__.'/Requirements.core.inc');
+require_once(__DIR__.'/Steps/Introduction.inc');
+require_once(__DIR__.'/Steps/Permissions.inc');
+require_once(__DIR__.'/Steps/DatabaseSetup.inc');
+require_once(__DIR__.'/Steps/AdminSetup.inc');
+require_once(__DIR__.'/Steps/InfusionsSetup.inc');
+require_once(__DIR__.'/Steps/Complete.inc');
+require_once (__DIR__.'/../../../error_handling_include.php');
