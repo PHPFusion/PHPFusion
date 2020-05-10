@@ -57,7 +57,6 @@ if (!function_exists('display_blog_item')) {
         add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/colorbox/jquery.colorbox.js'></script>");
         add_to_jquery('
             $(".blog-image-overlay").colorbox({
-                transition: "elasic",
                 height:"100%",
                 width:"100%",
                 maxWidth:"98%",
