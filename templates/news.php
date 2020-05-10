@@ -224,7 +224,6 @@ if (!function_exists('render_news_item')) {
         add_to_footer('<script type="text/javascript">'.jsminify('
             $(document).ready(function() {
                 $(".news-image-overlay").colorbox({
-                    transition: "elasic",
                     height:"100%",
                     width:"100%",
                     maxWidth:"98%",
