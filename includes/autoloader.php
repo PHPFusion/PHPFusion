@@ -94,23 +94,28 @@ spl_autoload_register(function ($className) {
 
         /** All folders must be lowercase and only the filename is camelcase */
         if (is_file($path_dir)) {
+            $class_loaded[$className] = TRUE;
             require_once $path_dir;
         }
-        /** All folders and filename must be lowecase */
-        $className = strtolower($className);
-        $fullPath = BASEDIR.'infusions/'.$className.'.php';
-        if (is_file($fullPath)) {
-            require_once $fullPath;
+
+        if (!isset($class_loaded[$className])) {
+            /** All folders and filename must be lowecase */
+            $className = strtolower($className);
+            $fullPath = BASEDIR.'infusions/'.$className.'.php';
+            if (is_file($fullPath)) {
+                require_once $fullPath;
+            }
+            /**
+             * Class name with _ must have corresponding - file name in lowercase
+             * i.e. Fusion_Theme , class filename: fusion-theme.php
+             */
+            $className = str_replace('_', '-', $className);
+            $fullPath = BASEDIR.'infusions'.DIRECTORY_SEPARATOR.$className.'.php';
+            if (is_file($fullPath)) {
+                require_once $fullPath;
+            }
         }
-        /**
-         * Class name with _ must have corresponding - file name in lowercase
-         * i.e. Fusion_Theme , class filename: fusion-theme.php
-         */
-        $className = str_replace('_', '-', $className);
-        $fullPath = BASEDIR.'infusions'.DIRECTORY_SEPARATOR.$className.'.php';
-        if (is_file($fullPath)) {
-            require_once $fullPath;
-        }
+
     }
 });
 

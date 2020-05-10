@@ -46,15 +46,16 @@ use PHPFusion\Steam;
  */
 function form_text($input_name, $label = "", $input_value = "", array $options = []) {
     $locale = fusion_get_locale();
-    $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 
     $id = trim(str_replace("[", '', $input_name), "]");
+    $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 
     $valid_types = [
         'text', 'number', 'password', 'email', 'url', 'color', 'date', 'datetime', 'datetime-local', 'month', 'range', 'search', 'tel', 'time', 'week'
     ];
 
     $default_options = [
+        "title" => "",
         'type'               => 'text',
         'required'           => FALSE,
         'label_icon'         => '',
@@ -80,6 +81,8 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         'autocomplete_off'   => FALSE,
         'tip'                => '',
         'ext_tip'            => '',
+
+        'append_id'          => "p-".$id."-append",
         'append_button'      => '',
         'append_value'       => '',
         'append_form_value'  => '',
@@ -87,7 +90,6 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         'append_class'       => 'btn-default',
         'append_type'        => 'submit',
         'prepend_id'         => "p-".$id."-prepend",
-        'append_id'          => "p-".$id."-append",
         'prepend_button'     => '',
         'prepend_value'      => '',
         'prepend_form_value' => '',
@@ -115,6 +117,10 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
     $options['type'] = in_array($options['type'], $valid_types) ? $options['type'] : 'text';
 
     $options['input_id'] = trim(str_replace("[", '', $options['input_id']), "]");
+
+    if (!$options["title"]) {
+        $options["title"] = $title;
+    }
 
     $options += [
         'append_button_name'  => !empty($options['append_button_name']) ? $options['append_button_name'] : "p-submit-".$options['input_id'],
@@ -275,7 +281,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
     // Add input settings in the SESSION
     $config = [
         'input_name'     => $input_name,
-        'title'          => trim($title, '[]'),
+        'title'          => $options["title"],
         'id'             => $options['input_id'],
         'type'           => $options['type'],
         'required'       => $options['required'],

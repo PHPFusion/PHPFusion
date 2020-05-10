@@ -38,12 +38,7 @@ function renderNotices($notices) {
  * @return string the notices formatted as HTML
  */
 function render_notices($notices) {
-    try {
-        return Steam::getInstance()->load('Alerts')->render($notices);
-    } catch (ReflectionException $e) {
-        set_error(E_USER_NOTICE, $e->getMessage(), $e->getFile(), $e->getLine(), "render_notices");
-    }
-    return "";
+    return Steam::getInstance()->load('Alerts')->render($notices);
 }
 
 /**
@@ -88,16 +83,27 @@ function getNotices($key = FUSION_SELF, $delete = TRUE) {
  * @return array the notices for the group identified by the provided key
  */
 function get_notices($key = FUSION_SELF, $delete = TRUE) {
-    $key = is_array($key) ? $key : [$key]; // key can be arrays or a string
-    $notices = [];
+    $key = is_array($key) ? $key : array($key); // key can be arrays or a string
+    $notices = array();
+
     if (!empty($_SESSION['notices'])) {
         foreach ($_SESSION['notices'] as $type => $keys) {
-            foreach ($key as $thiskey) {
-                if (isset($keys[$thiskey])) {
+            if (count($key) === 1 AND in_array("all", $key)) {
+                foreach(array_keys($keys) as $thiskey) {
                     $notices = array_merge_recursive($notices, $keys[$thiskey]);
                     if (!fusion_get_settings('site_seo') && !defined('IN_PERMALINK')) {
                         if ($delete)
                             $_SESSION['notices'][$type][$thiskey] = [];
+                    }
+                }
+            } else {
+                foreach ($key as $thiskey) {
+                    if (isset($keys[$thiskey])) {
+                        $notices = array_merge_recursive($notices, $keys[$thiskey]);
+                        if (!fusion_get_settings('site_seo') && !defined('IN_PERMALINK')) {
+                            if ($delete)
+                                $_SESSION['notices'][$type][$thiskey] = [];
+                        }
                     }
                 }
             }

@@ -188,7 +188,7 @@ function set_theme($theme) {
     // Don't stop if we are in admin panel since we use different themes now
     $no_theme_message = str_replace("[SITE_EMAIL]", fusion_get_settings("siteemail"), $locale['global_301']);
     if (preg_match("/\/administration\//i", $_SERVER['PHP_SELF'])) {
-        addNotice('danger', "<strong>".$theme." - ".$locale['global_300'].".</strong><br /><br />\n".$no_theme_message);
+        add_notice('danger', "<strong>".$theme." - ".$locale['global_300'].".</strong><br /><br />\n".$no_theme_message);
     } else {
         echo "<strong>".$theme." - ".$locale['global_300'].".</strong><br /><br />\n";
         echo $no_theme_message;
@@ -354,17 +354,6 @@ function set_status_header($code = 200) {
 }
 
 /**
- * Get HTTP response code
- * @param $url
- *
- * @return false|string
- */
-function get_http_response_code($url) {
-    $headers = get_headers($url);
-    return substr($headers[0], 9, 3);
-}
-
-/**
  * Clean URL Function, prevents entities in server globals
  *
  * @param string $url
@@ -410,7 +399,22 @@ function stripinput($text = "") {
  * @return string
  */
 function strip_scripts($value) {
-    return preg_replace('#<script(.*?)>(.*?)</script>#is', '', $value);
+    if (!empty($value)) {
+        $dom_document = new DOMDocument();
+        $dom_document->loadHTML(mb_convert_encoding($value, 'HTML-ENTITIES', 'UTF-8'));
+        $script = $dom_document->getElementsByTagName('script');
+        $remove = [];
+        foreach ($script as $item) {
+            $remove[] = $item;
+        }
+        foreach ($remove as $item) {
+            $item->parentNode->removeChild($item);
+        }
+
+        return descript($dom_document->saveHTML());
+    }
+
+    return NULL;
 }
 
 /**
@@ -421,18 +425,17 @@ function strip_scripts($value) {
  * @return boolean TRUE if the URL is not secure
  */
 function stripget($check_url) {
-    if (is_array($check_url)) {
-        foreach ($check_url as $value) {
-            if (stripget($value) == TRUE) {
-                return TRUE;
-            }
-        }
-    } else {
+    if (!is_array($check_url)) {
         $check_url = str_replace(["\"", "\'"], ["", ""], urldecode($check_url));
-        if (preg_match("/<[^<>]+>/i", $check_url)) {
+
+        return (bool)preg_match("/<[^<>]+>/i", $check_url);
+    }
+    foreach ($check_url as $key => $value) {
+        if (stripget($key)) {
             return TRUE;
         }
     }
+
     return FALSE;
 }
 
@@ -820,7 +823,6 @@ function parse_text(string $value, $parse_smileys = TRUE, $parse_bbcode = TRUE, 
     }
     if ($descript === TRUE) {
         $value = descript($value);
-        $value = strip_scripts($value);
     }
 
     return (string)$value;
@@ -1061,34 +1063,38 @@ function highlight_words($word, $subject) {
  * @return string
  */
 function descript($text, $striptags = TRUE) {
-    if (is_array($text)) {
+    if (!defined('DISABLE_DESCRIPT')) {
+        if (is_array($text)) {
+            return $text;
+        }
+        // Convert problematic ascii characters to their true values
+        $patterns = [
+            '#(&\#x)([0-9A-F]+);*#si'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               => '',
+            '#(<[^>]+[\"\'\s])((onafterprint|onbeforeprint|onbeforeunload|onerror|onhashchange|onload|onmessage|onoffline|ononline|onpagehide|onpageshow|onpopstate|onresize|onstorage|onunload|onblur|onchange|oncontextmenu|onfocus|oninput|oninvalid|onreset|onsearch|onselect|onsubmit|onkeydown|onkeypress|onkeyup|onclick|ondblclick|onmousedown|onmousemove|onmouseup|onmousewheel|onwheel|ondrag|ondragend|ondragenter|ondragleave|ondragover|ondragstart|ondrop|onscroll|oncopy|oncut|onpaste|onabort|oncanplay|oncanplaythrough|oncuechange|ondurationchange|onemptied|onended|onerror|onloadeddata|onloadedmetadata|onloadstart|onpause|onplay|onplaying|onprogress|onratechange|onseeked|onseeking|onstalled|onsuspend|ontimeupdate|onvolumechange|onwaiting|ontoggle|xmlns)[^>]*>)#is' => "$1>",
+            '#([a-z]*)=([\`\'\"]*)script:#iU'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       => '$1=$2nojscript...',
+            '#([a-z]*)=([\`\'\"]*)javascript:#iU'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   => '$1=$2nojavascript...',
+            '#([a-z]*)=([\'\"]*)vbscript:#iU'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       => '$1=$2novbscript...',
+            '#(<[^>]+)style=([\`\'\"]*).*expression\([^>]*>#iU'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     => "$1>",
+            '#(<[^>]+)style=([\`\'\"]*).*behaviour\([^>]*>#iU'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      => "$1>"
+        ];
+
+        foreach (array_merge(['(', ')', ':'], range('A', 'Z'), range('a', 'z')) as $chr) {
+            $patterns["#(&\#)(0*".ord($chr)."+);*#si"] = $chr;
+        }
+
+        if ($striptags) {
+            do {
+                $count = 0;
+                $text = preg_replace('#</*(applet|meta|xml|blink|link|style|script|embed|object|iframe|frame|frameset|ilayer|layer|bgsound|title|base)[^>]*>#i',
+                    "", $text, -1, $count);
+            } while ($count);
+        }
+
+        return preg_replace(array_keys($patterns), $patterns, $text);
+
+    } else {
         return $text;
     }
-
-    // Convert problematic ascii characters to their true values
-    $patterns = [
-        '#(&\#x)([0-9A-F]+);*#si'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                => '',
-        '#(<[^>]+[\"\'\s])*((onafterprint|onbeforeprint|onbeforeunload|onerror|onhashchange|onload|onmessage|onoffline|ononline|onpagehide|onpageshow|onpopstate|onresize|onstorage|onunload|onblur|onchange|oncontextmenu|onfocus|oninput|oninvalid|onreset|onsearch|onselect|onsubmit|onkeydown|onkeypress|onkeyup|onclick|ondblclick|onmousedown|onmousemove|onmouseup|onmousewheel|onwheel|ondrag|ondragend|ondragenter|ondragleave|ondragover|ondragstart|ondrop|onscroll|oncopy|oncut|onpaste|onabort|oncanplay|oncanplaythrough|oncuechange|ondurationchange|onemptied|onended|onerror|onloadeddata|onloadedmetadata|onloadstart|onpause|onplay|onplaying|onprogress|onratechange|onseeked|onseeking|onstalled|onsuspend|ontimeupdate|onvolumechange|onwaiting|ontoggle|xmlns)[^>]*>)#is' => "$1>",
-        '#([a-z]*)=([\`\'\"]*)script:#iU'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        => '$1=$2nojscript...',
-        '#([a-z]*)=([\`\'\"]*)javascript:#iU'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    => '$1=$2nojavascript...',
-        '#([a-z]*)=([\'\"]*)vbscript:#iU'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        => '$1=$2novbscript...',
-        '#(<[^>]+)style=([\`\'\"]*).*expression\([^>]*>#iU'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      => "$1>",
-        '#(<[^>]+)style=([\`\'\"]*).*behaviour\([^>]*>#iU'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       => "$1>"
-    ];
-
-    foreach (array_merge(['(', ')', ':'], range('A', 'Z'), range('a', 'z')) as $chr) {
-        $patterns["#(&\#)(0*".ord($chr)."+);*#si"] = $chr;
-    }
-
-    if ($striptags) {
-        do {
-            $count = 0;
-            $iframe = !defined('ENABLE_IFRAME') ? 'embed|object|iframe|' : '';
-            $text = preg_replace('#</*(applet|meta|xml|blink|link|style|script|'.$iframe.'frame|frameset|ilayer|layer|bgsound|title|base)[^>]*>#i', "", $text, -1, $count);
-        } while ($count);
-    }
-
-    return preg_replace(array_keys($patterns), $patterns, $text);
 }
 
 /**
@@ -1941,13 +1947,14 @@ function parsebytesize($size, $digits = 2, $dir = FALSE) {
 function print_p($array, $modal = FALSE, $print = TRUE, $default_visibility = '0') {
 
     if (checkgroup($default_visibility)) {
-
-        //debug_print_backtrace();
-
+        //
+        //static $count = 0;
+        //if (!$count) {
+        //    debug_print_backtrace();
+        //    $count = 1;
+        //}
         ob_start();
-
         echo htmlspecialchars(print_r($array, TRUE), ENT_QUOTES, 'utf-8');
-
         $debug = ob_get_clean();
 
         if ($modal == TRUE) {

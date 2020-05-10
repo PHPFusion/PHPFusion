@@ -23,7 +23,8 @@ class Alerts {
         // need to migrate to boiler support since this has HTML
         foreach ($notices as $status => $notice) {
             if (count($notice) > 0) {
-                foreach($notice as $toast) {
+                foreach ($notice as $toast) {
+                    $info['status'] = $status;
                     if (isset($toast["toast"])) {
                         $template = "toast.twig";
                         $info = $toast;
@@ -31,12 +32,12 @@ class Alerts {
                         $template = "alert.twig";
                         $info["message"] = $toast;
                     }
-                    $messages .= fusion_render(__DIR__."/html/", $template, $info, true);
-                    //print_P($messages);
+                    $messages .= fusion_render(__DIR__."/html/", $template, $info, FALSE);
                 }
             } else {
+                $notice["status"] = $status;
                 $template = (isset($notice["toast"]) ? "toast.twig" : "alert.twig");
-                $messages .= fusion_render(__DIR__."/html/", $template, $notice, true);
+                $messages .= fusion_render(__DIR__."/html/", $template, $notice, FALSE);
             }
         }
 

@@ -1,0 +1,5 @@
+{% if status == "success" %}
+    <div class='alert site-alert alert-dismissable alert-{{status}}'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>{{ message|raw }}</div>
+{% else %}
+    <div class="alert site-alert alert-{{ status}}">{{message|raw}}</div>
+{% endif %}

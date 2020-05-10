@@ -32,32 +32,33 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
 
     $locale = fusion_get_locale('', LOCALE.LOCALESET.'global.php');
 
-    $default_options = [
-        'input_id'       => $input_name,
-        'inline'         => FALSE,
-        'inline_options' => FALSE,
-        'required'       => FALSE,
-        'deactivate'     => FALSE,
-        'class'          => '',
-        'button_class'   => 'btn-default', // default, success, danger, warning, info
-        'type'           => 'checkbox',
-        'toggle'         => FALSE,
-        'toggle_text'    => [$locale['no'], $locale['yes']],
-        'options'        => [],
-        'options_value'  => [],
-        'delimiter'      => ',',
-        'safemode'       => FALSE,
-        'keyflip'        => FALSE,
-        'error_text'     => $locale['error_input_checkbox'],
-        'value'          => 1,
-        'tip'            => '',
-        'ext_tip'        => '',
-        'inner_width'    => '',
-        'reverse_label'  => FALSE,
-        'deactivate_key' => NULL,
-        'onclick'        => '',
-        'stacked'        => '',
-    ];
+    $default_options = array(
+        "input_id"        => $input_name,
+        "inline"          => FALSE,
+        "inline_options"  => FALSE,
+        "required"        => FALSE,
+        "deactivate"      => FALSE,
+        "class"           => "",
+        "button_class"    => "btn-default", // default, success, danger, warning, info
+        "type"            => "checkbox",
+        "default_checked" => TRUE,
+        "toggle"          => FALSE,
+        "toggle_text"     => [$locale["no"], $locale["yes"]],
+        "options"         => [],
+        "options_value"   => [],
+        "delimiter"       => ",",
+        "safemode"        => FALSE,
+        "keyflip"         => FALSE,
+        "error_text"      => $locale["error_input_checkbox"],
+        "value"           => 1,
+        "tip"             => "",
+        "ext_tip"         => "",
+        "inner_width"     => "",
+        "reverse_label"   => FALSE,
+        "deactivate_key"  => NULL,
+        "onclick"         => "",
+        "stacked"         => "",
+    );
 
     $options += $default_options;
 
@@ -100,20 +101,19 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
 
     if (!empty($options['options']) && is_array($options['options'])) {
         $options['toggle'] = FALSE; // force toggle to be false if options existed
-        if (!empty($input_value) && !is_array($input_value)) {
-            $option_value = array_flip(explode($options['delimiter'], (string)$input_value)); // require key to value
+        if (!empty($input_value)) {
+            if (is_array($input_value)) {
+                $option_value = array_flip($input_value);
+                //$option_value = array_flip(explode($options['delimiter'], (string)$input_value)); // require key to value
+            } else {
+                $option_value = array_flip(explode($options['delimiter'], (string)$input_value)); // require key to value
+            }
         }
 
         // for checkbox only
         // if there are options, and i want the options to be having input value.
         // options_value
-        if ($options['type'] == 'checkbox' && count($options['options']) > 1) {
-            $input_value = array();
-            $options['default_checked'] = empty($option_value) ? TRUE : FALSE;
-            foreach (array_keys($options['options']) as $key) {
-                $input_value[$key] = isset($option_value[$key]) ? (!empty($options['options_value'][$key]) ? $options['options_value'][$key] : 1) : 0;
-            }
-        }
+
     }
 
     return Steam::getInstance()->load('Form')->checkbox($input_name, $label, $input_value, $options);
