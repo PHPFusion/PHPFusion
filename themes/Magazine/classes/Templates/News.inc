@@ -138,7 +138,6 @@ class News extends Core {
         OutputHandler::addToFooter('<script type="text/javascript" src="'.INCLUDES.'jquery/colorbox/jquery.colorbox.js"></script>');
         OutputHandler::addToJQuery('
             $(".news-image-overlay").colorbox({
-                transition: "elasic",
                 height: "100%",
                 width: "100%",
                 maxWidth: "95%",
