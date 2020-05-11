@@ -76,12 +76,15 @@ class ViewForum extends ForumServer {
 
             $this->forum_info['forum_postcount_word'] = format_word($this->forum_info['post_count'], $locale['fmt_post']);
 
-            if (!empty($forum_data['forum_description'])) {
-                set_meta('description', $forum_data['forum_description']);
+            $this->forum_info['forum_description'] = nl2br(parseubb(parsesmileys($this->forum_info['forum_description'])));
+            $this->forum_info['forum_rules'] = nl2br(parseubb(parsesmileys($this->forum_info['forum_rules'])));
+
+            if (!empty($this->forum_info['forum_description'])) {
+                set_meta('description', $this->forum_info['forum_description']);
             }
 
-            if (!empty($forum_data['forum_meta'])) {
-                set_meta('keywords', $forum_data['forum_meta']);
+            if (!empty($this->forum_info['forum_meta'])) {
+                set_meta('keywords', $this->forum_info['forum_meta']);
             }
 
             // Generate New thread link
@@ -242,7 +245,7 @@ class ViewForum extends ForumServer {
 
                                 $_row = array_merge($row_array, $row, [
                                     "forum_type"             => $row['forum_type'],
-                                    "forum_moderators"       => Forum_Moderator::parse_forum_mods($row['forum_mods']), //// display forum moderators per forum.
+                                    "forum_moderators"       => ForumModerator::displayForumMods($row['forum_mods']), //// display forum moderators per forum.
                                     "forum_new_status"       => $newStatus,
                                     "forum_link"             => [
                                         "link"  => FORUM."index.php?viewforum&amp;forum_id=".$row['forum_id'],

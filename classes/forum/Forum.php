@@ -24,7 +24,7 @@ use PHPFusion\Infusions\Forum\Classes\ForumServer;
 /**
  * Class Forum
  *
- * @package PHPFusion\Forums
+ * @package PHPFusion\Infusions\Forum
  */
 class Forum extends ForumServer {
 
@@ -34,7 +34,6 @@ class Forum extends ForumServer {
      * @var array
      */
     private $forum_info = [];
-    private $forum_id = 0;
     private $is_viewforum = FALSE;
 
     /**
@@ -152,8 +151,8 @@ class Forum extends ForumServer {
     private function checkViewForum() {
 
         $this->is_viewforum = isset($_GET['viewforum']) ? TRUE : FALSE;
-        $this->forum_id = get('forum_id', FILTER_VALIDATE_INT);
-        if ($this->is_viewforum && !$this->forum_id) {
+        $forum_id = get('forum_id', FILTER_VALIDATE_INT);
+        if ($this->is_viewforum && !$forum_id) {
             redirect(FORUM.'index.php');
         }
         return $this->is_viewforum;

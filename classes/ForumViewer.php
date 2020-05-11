@@ -223,7 +223,7 @@ class ForumViewer {
         }
         $menu_config = [
             'id'                 => 'forum-menu',
-            'container'          => FALSE,
+            'container_fluid'    => TRUE,
             'navbar_class'       => 'navbar-forum',
             'language_switcher'  => FALSE,
             'searchbar'          => FALSE,
@@ -231,10 +231,10 @@ class ForumViewer {
             'callback_data'      => $this->forum_nav_callback,
             'grouping'           => FALSE,
             'links_per_page'     => FALSE,
-            'show_banner'        => TRUE,
+            'show_banner'        => FALSE,
             'show_header'        => TRUE,
-            'custom_banner_link' => FORUM.'index.php',
-            'custom_banner'      => '<h4>'.$locale['forum_0000'].'</h4>',
+            //'custom_banner_link' => FORUM.'index.php',
+            //'custom_banner'      => '<h4>'.$locale['forum_0000'].'</h4>',
             //'html_content'      => openform('forum_searchFrm', 'post', FUSION_REQUEST, ["class" => "pull-right"]).form_text("forum_search", "", "", ["placeholder" => "Search...", "class" => "m-0 center-y", "feedback_icon" => TRUE, "icon" => "fas fa-search text-dark"]).closeform(),
         ];
 
@@ -273,7 +273,7 @@ class ForumViewer {
         $locale = fusion_get_locale();
         $aidlink = fusion_get_aidlink();
         $settings = fusion_get_settings();
-        $forum_settings = Forum_Server::get_forum_settings();
+        $forum_settings = ForumServer::get_forum_settings();
         $file_path = get_forum_template('forum_post');
         $html = Template::getInstance( 'forum-post' );
         $html->set_template($file_path);

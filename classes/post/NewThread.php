@@ -109,7 +109,7 @@ class NewThread extends ForumServer {
                         if (post('add_poll') or post('add_poll_option')) {
                             $pollData['forum_poll_length'] = count($option_data);
                             // calculate poll lengths
-                            $poll_options = \Defender::getInstance()->filterPostArray(['poll_options']);
+                            $poll_options = (array)\Defender::getInstance()->filterPostArray(['poll_options']);
                             if (!empty($poll_options)) {
                                 foreach ($poll_options as $i => $value) {
                                     $option_data[$i] = form_sanitizer($value, '', "poll_options[$i]");
@@ -134,7 +134,7 @@ class NewThread extends ForumServer {
                             'max_length'  => 255,
                             'placeholder' => $locale['forum_0604a'],
                             'inline'      => TRUE,
-                            'required'    => TRUE
+                            //'required'    => TRUE
                         ]);
                         for ($i = 1; $i <= count($option_data); $i++) {
                             $poll_field['poll_field'] .= form_text("poll_options[$i]", sprintf($locale['forum_0606'], $i),
@@ -142,7 +142,7 @@ class NewThread extends ForumServer {
                                     'max_length'  => 255,
                                     'placeholder' => $locale['forum_0605'],
                                     'inline'      => TRUE,
-                                    'required'    => $i <= 2 ? TRUE : FALSE
+                                    //'required'    => $i <= 2 ? TRUE : FALSE
                                 ]);
                         }
                         $poll_field['poll_field'] .= "<div class='col-xs-12 col-sm-offset-3'>\n";
@@ -306,8 +306,7 @@ class NewThread extends ForumServer {
                                 'required'    => 1,
                                 'placeholder' => $locale['forum_2001'],
                                 'error_text'  => '',
-                                'class'       => 'm-t-20 m-b-20',
-                                'class'       => 'form-group-lg',
+                                'class'       => 'm-t-20 m-b-20 form-group-lg',
                             ]),
                         'tags_field'        => form_select('thread_tags[]', "", $thread_data['thread_tags'],
                             [
@@ -326,7 +325,6 @@ class NewThread extends ForumServer {
                             'height'      => '300px',
                             'placeholder' => $locale['forum_0601'],
                             'bbcode'      => TRUE,
-                            'height'      => '500px',
                             'grippie'     => TRUE,
                             'tab'         => TRUE,
                         ]),
@@ -612,7 +610,6 @@ class NewThread extends ForumServer {
                         'height'      => '300px',
                         'placeholder' => $locale['forum_0601'],
                         'bbcode'      => TRUE,
-                        'height'      => '500px',
                         'grippie'     => TRUE,
                         'tab'         => TRUE,
                     ]),

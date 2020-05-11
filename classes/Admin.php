@@ -21,7 +21,7 @@ namespace PHPFusion\Infusions\Forum\Classes;
  * Forum Administration Console and functions
  * Class Admin
  *
- * @package PHPFusion\Forums
+ * @package PHPFusion\Infusions\Forum
  */
 class Admin extends ForumServer {
     /**
@@ -114,7 +114,7 @@ class Admin extends ForumServer {
 
                 addnotice('success', $locale['forum_notice_10']);
 
-                if (\Defender::safe()) {
+                if (fusion_safe()) {
                     redirect(FUSION_SELF.$aidlink.$this->ext);
                 }
 
@@ -320,7 +320,7 @@ class Admin extends ForumServer {
                         0) + 1;
             }
 
-            if (\Defender::safe()) {
+            if (fusion_safe()) {
 
                 if ($this->verify_forum($this->data['forum_id'])) {
 
@@ -792,7 +792,7 @@ class Admin extends ForumServer {
                 $res = TRUE;
             }
         }
-        if ($res == TRUE or (isset($_POST['save_forum']) && !\Defender::safe()) or
+        if ($res == TRUE or (isset($_POST['save_forum']) && !fusion_safe()) or
             isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['forum_id']) && isnum($_GET['forum_id'])
         ) {
 

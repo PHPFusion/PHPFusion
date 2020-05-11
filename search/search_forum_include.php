@@ -98,6 +98,7 @@ if (defined('FORUM_EXIST')) {
             $search_result = '';
 
             while ($data = dbarray($result)) {
+                $data['post_message'] = strip_tags(htmlspecialchars_decode($data['post_message']));
 
                 $text_all = Search_Engine::search_striphtmlbbcodes(iADMIN ? $data['post_message'] : preg_replace("#\[hide\](.*)\[/hide\]#si", '', $data['post_message']));
                 $text_frag = Search_Engine::search_textfrag($text_all);

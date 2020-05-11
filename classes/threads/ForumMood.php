@@ -23,13 +23,12 @@ use PHPFusion\Infusions\Forum\Classes\ForumServer;
 /**
  * Class ForumMood
  *
- * @package PHPFusion\Forums\Threads
+ * @package PHPFusion\Infusions\Forum\Threads
  */
 class ForumMood extends ForumServer {
 
     private static $mood_cache = [];
     public $info = [];
-    private $post_data = [];
     private $post_id = 0;
     private $post_author = 0;
 
@@ -41,7 +40,7 @@ class ForumMood extends ForumServer {
      * @return $this
      */
     public function set_PostData($post_data) {
-        $this->post_data = $post_data;
+        $post_data1 = $post_data;
         $this->post_id = $post_data['post_id'];
         $this->post_author = $post_data['post_author'];
         return $this;
@@ -213,8 +212,8 @@ class ForumMood extends ForumServer {
             $html .= openform('mood_form-'.$this->post_id, 'post', FUSION_REQUEST."#post_".$this->post_id, ["class" => "display-inline-block"]);
             foreach ($mood_cache as $mood_id => $mood_data) {
                 //jQuery data model for ajax
-                $html .= form_hidden('post_author', '', $this->post_author);
-                $html .= form_hidden('post_id', '', $this->post_id);
+                $html .= form_hidden('post_author', '', $this->post_author, ['input_id' => 'post_author'.$this->post_id]);
+                $html .= form_hidden('post_id', '', $this->post_id, ['input_id' => 'post_id'.$this->post_id]);
                 if (!$this->mood_exists($my_id, $mood_id, $this->post_id)) {
                     // Post Button
                     $html .= form_button("post_mood", fusion_parse_locale($mood_data['mood_name']), $mood_id, [

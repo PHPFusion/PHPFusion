@@ -23,7 +23,7 @@ use PHPFusion\Infusions\Forum\Classes\ForumServer;
 /**
  * Class ForumMood
  *
- * @package PHPFusion\Forums\Threads
+ * @package PHPFusion\Infusions\Forum\Threads
  */
 class ForumBounty extends ForumServer {
 

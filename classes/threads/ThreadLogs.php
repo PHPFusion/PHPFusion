@@ -26,7 +26,7 @@ class ThreadLogs {
             $arr = array_flip($arr);
             if (!isset($arr[$key])) {
                 // Debugging purposes, no need to translate.
-                throw new Exception('Item type is invalid');
+                throw new \Exception('Item type is invalid');
             }
         }
 

@@ -25,7 +25,7 @@ use PHPFusion\Infusions\Forum\Classes\Moderator\ThreadMod;
  * Class Moderator
  * Forum Moderation Controller
  *
- * @package PHPFusion\Forums
+ * @package PHPFusion\Infusions\Forum
  */
 class ForumModerator {
 
