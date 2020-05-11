@@ -354,6 +354,18 @@ function set_status_header($code = 200) {
 }
 
 /**
+ * Get HTTP response code
+ *
+ * @param $url
+ *
+ * @return false|string
+ */
+function get_http_response_code($url) {
+    $headers = get_headers($url);
+    return substr($headers[0], 9, 3);
+}
+
+/**
  * Clean URL Function, prevents entities in server globals
  *
  * @param string $url
@@ -399,22 +411,7 @@ function stripinput($text = "") {
  * @return string
  */
 function strip_scripts($value) {
-    if (!empty($value)) {
-        $dom_document = new DOMDocument();
-        $dom_document->loadHTML(mb_convert_encoding($value, 'HTML-ENTITIES', 'UTF-8'));
-        $script = $dom_document->getElementsByTagName('script');
-        $remove = [];
-        foreach ($script as $item) {
-            $remove[] = $item;
-        }
-        foreach ($remove as $item) {
-            $item->parentNode->removeChild($item);
-        }
-
-        return descript($dom_document->saveHTML());
-    }
-
-    return NULL;
+    return preg_replace('#<script(.*?)>(.*?)</script>#is', '', $value);
 }
 
 /**
@@ -425,17 +422,18 @@ function strip_scripts($value) {
  * @return boolean TRUE if the URL is not secure
  */
 function stripget($check_url) {
-    if (!is_array($check_url)) {
+    if (is_array($check_url)) {
+        foreach ($check_url as $value) {
+            if (stripget($value) == TRUE) {
+                return TRUE;
+            }
+        }
+    } else {
         $check_url = str_replace(["\"", "\'"], ["", ""], urldecode($check_url));
-
-        return (bool)preg_match("/<[^<>]+>/i", $check_url);
-    }
-    foreach ($check_url as $key => $value) {
-        if (stripget($key)) {
+        if (preg_match("/<[^<>]+>/i", $check_url)) {
             return TRUE;
         }
     }
-
     return FALSE;
 }
 
@@ -1063,38 +1061,34 @@ function highlight_words($word, $subject) {
  * @return string
  */
 function descript($text, $striptags = TRUE) {
-    if (!defined('DISABLE_DESCRIPT')) {
-        if (is_array($text)) {
-            return $text;
-        }
-        // Convert problematic ascii characters to their true values
-        $patterns = [
-            '#(&\#x)([0-9A-F]+);*#si'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               => '',
-            '#(<[^>]+[\"\'\s])((onafterprint|onbeforeprint|onbeforeunload|onerror|onhashchange|onload|onmessage|onoffline|ononline|onpagehide|onpageshow|onpopstate|onresize|onstorage|onunload|onblur|onchange|oncontextmenu|onfocus|oninput|oninvalid|onreset|onsearch|onselect|onsubmit|onkeydown|onkeypress|onkeyup|onclick|ondblclick|onmousedown|onmousemove|onmouseup|onmousewheel|onwheel|ondrag|ondragend|ondragenter|ondragleave|ondragover|ondragstart|ondrop|onscroll|oncopy|oncut|onpaste|onabort|oncanplay|oncanplaythrough|oncuechange|ondurationchange|onemptied|onended|onerror|onloadeddata|onloadedmetadata|onloadstart|onpause|onplay|onplaying|onprogress|onratechange|onseeked|onseeking|onstalled|onsuspend|ontimeupdate|onvolumechange|onwaiting|ontoggle|xmlns)[^>]*>)#is' => "$1>",
-            '#([a-z]*)=([\`\'\"]*)script:#iU'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       => '$1=$2nojscript...',
-            '#([a-z]*)=([\`\'\"]*)javascript:#iU'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   => '$1=$2nojavascript...',
-            '#([a-z]*)=([\'\"]*)vbscript:#iU'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       => '$1=$2novbscript...',
-            '#(<[^>]+)style=([\`\'\"]*).*expression\([^>]*>#iU'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     => "$1>",
-            '#(<[^>]+)style=([\`\'\"]*).*behaviour\([^>]*>#iU'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      => "$1>"
-        ];
-
-        foreach (array_merge(['(', ')', ':'], range('A', 'Z'), range('a', 'z')) as $chr) {
-            $patterns["#(&\#)(0*".ord($chr)."+);*#si"] = $chr;
-        }
-
-        if ($striptags) {
-            do {
-                $count = 0;
-                $text = preg_replace('#</*(applet|meta|xml|blink|link|style|script|embed|object|iframe|frame|frameset|ilayer|layer|bgsound|title|base)[^>]*>#i',
-                    "", $text, -1, $count);
-            } while ($count);
-        }
-
-        return preg_replace(array_keys($patterns), $patterns, $text);
-
-    } else {
+    if (is_array($text)) {
         return $text;
     }
+    // Convert problematic ascii characters to their true values
+    $patterns = [
+        '#(&\#x)([0-9A-F]+);*#si'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               => '',
+        '#(<[^>]+[\"\'\s])*((onafterprint|onbeforeprint|onbeforeunload|onerror|onhashchange|onload|onmessage|onoffline|ononline|onpagehide|onpageshow|onpopstate|onresize|onstorage|onunload|onblur|onchange|oncontextmenu|onfocus|oninput|oninvalid|onreset|onsearch|onselect|onsubmit|onkeydown|onkeypress|onkeyup|onclick|ondblclick|onmousedown|onmousemove|onmouseup|onmousewheel|onwheel|ondrag|ondragend|ondragenter|ondragleave|ondragover|ondragstart|ondrop|onscroll|oncopy|oncut|onpaste|onabort|oncanplay|oncanplaythrough|oncuechange|ondurationchange|onemptied|onended|onerror|onloadeddata|onloadedmetadata|onloadstart|onpause|onplay|onplaying|onprogress|onratechange|onseeked|onseeking|onstalled|onsuspend|ontimeupdate|onvolumechange|onwaiting|ontoggle|xmlns)[^>]*>)#is' => "$1>",
+        '#([a-z]*)=([\`\'\"]*)script:#iU'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       => '$1=$2nojscript...',
+        '#([a-z]*)=([\`\'\"]*)javascript:#iU'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   => '$1=$2nojavascript...',
+        '#([a-z]*)=([\'\"]*)vbscript:#iU'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       => '$1=$2novbscript...',
+        '#(<[^>]+)style=([\`\'\"]*).*expression\([^>]*>#iU'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     => "$1>",
+        '#(<[^>]+)style=([\`\'\"]*).*behaviour\([^>]*>#iU'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      => "$1>"
+    ];
+
+    foreach (array_merge(['(', ')', ':'], range('A', 'Z'), range('a', 'z')) as $chr) {
+        $patterns["#(&\#)(0*".ord($chr)."+);*#si"] = $chr;
+    }
+
+    if ($striptags) {
+        do {
+            $count = 0;
+            $iframe = !defined('ENABLE_IFRAME') ? 'embed|object|iframe|' : '';
+            $text = preg_replace('#</*(applet|meta|xml|blink|link|style|script|'.$iframe.'frame|frameset|ilayer|layer|bgsound|title|base)[^>]*>#i',
+                "", $text, -1, $count);
+        } while ($count);
+    }
+
+    return preg_replace(array_keys($patterns), $patterns, $text);
 }
 
 /**
