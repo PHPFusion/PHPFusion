@@ -78,7 +78,7 @@ class MemberPoll {
             $this->data = [
                 'poll_id'         => !empty($_GET['poll_id']) ? form_sanitizer($_GET['poll_id'], 0, 'poll_id') : 0,
                 'poll_title'      => form_sanitizer($_POST['poll_title'], '', 'poll_title', TRUE),
-                'poll_opt'        => serialize($poll_option),
+                'poll_opt'        => descript(serialize($poll_option)),
                 'poll_visibility' => form_sanitizer($_POST['poll_visibility'], 0, 'poll_visibility'),
                 'poll_started'    => form_sanitizer($_POST['poll_started'], 0, 'poll_started'),
                 'poll_ended'      => (isset($_POST['poll_ended']) ? form_sanitizer($_POST['poll_ended'], 0, 'poll_ended') : 0)
@@ -377,7 +377,7 @@ class MemberPoll {
         echo form_hidden('opt_count', '', $opt_count);
         echo "<div class='row'>\n";
         echo "<div class='col-xs-12 col-sm-6 col-md-8 col-lg-9'>\n";
-        echo \PHPFusion\QuantumFields::quantum_multilocale_fields('poll_title', self::$locale['POLL_045'], $this->data['poll_title'], [
+        echo \PHPFusion\UserFieldsQuantum::quantum_multilocale_fields('poll_title', self::$locale['POLL_045'], $this->data['poll_title'], [
             'required' => TRUE, 'inline' => FALSE, 'placeholder' => self::$locale['POLL_069'], 'inner_width' => '100%']);
 
         echo "<div class='panel panel-default'>\n";
@@ -385,7 +385,7 @@ class MemberPoll {
         $i = 1;
         foreach ($this->data['poll_opt'] as $im1 => $data1) {
             $nam = "poll_opt_$im1";
-            echo \PHPFusion\QuantumFields::quantum_multilocale_fields($nam, self::$locale['POLL_046'].' '.$im1, $data1, [
+            echo \PHPFusion\UserFieldsQuantum::quantum_multilocale_fields($nam, self::$locale['POLL_046'].' '.$im1, $data1, [
                 'required' => TRUE, 'inline' => TRUE, 'placeholder' => self::$locale['POLL_070']
             ]);
             echo($i < $opt_count ? "<hr/>\n" : '');
