@@ -358,8 +358,8 @@ function get_hkey($db, $id_col, $cat_col, $current_id) {
         }
     } else {
         // predict current row.
-        $rows = dbarray(dbquery("SELECT MAX($id_col) as row FROM ".$db));
-        $rows = !empty($rows['row']) ? $rows['row'] : 0;
+        $rows = dbarray(dbquery("SELECT MAX($id_col) as num FROM ".$db));
+        $rows = !empty($rows['num']) ? $rows['num'] : 0;
         $hkey = $rows + 1;
     }
 
