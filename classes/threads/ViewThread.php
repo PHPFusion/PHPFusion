@@ -29,6 +29,8 @@ include INFUSIONS."forum/templates.php";
 
 class ViewThread extends ForumServer {
 
+    private $thread_data = [];
+
     public function __construct() {
     }
 
@@ -166,7 +168,7 @@ class ViewThread extends ForumServer {
         $locale = fusion_get_locale();
         $userdata = fusion_get_userdata();
 
-        $thread_data1 = $thread_info['thread'];
+        $this->thread_data = $thread_info['thread'];
 
         if ((!iMOD or !iSUPERADMIN) && $thread_data['thread_locked']) {
             addNotice("danger", $locale['forum_0277']);
@@ -191,7 +193,7 @@ class ViewThread extends ForumServer {
             (int)$post_id = get('post_id', FILTER_VALIDATE_INT);
             $post_data = [
                 'post_id'         => 0,
-                'post_cat'        => $post_id && $thread_data1['thread_firstpostid'] !== $post_id ? $post_id : 0,
+                'post_cat'        => $post_id && $this->thread_data['thread_firstpostid'] !== $post_id ? $post_id : 0,
                 'forum_id'        => $thread_info['thread']['forum_id'],
                 'thread_id'       => $thread_info['thread']['thread_id'],
                 'post_author'     => $userdata['user_id'],
@@ -370,7 +372,8 @@ class ViewThread extends ForumServer {
                     'required'    => 1,
                     'placeholder' => $locale['forum_2001'],
                     'error_text'  => '',
-                    'class'       => 'm-t-20 m-b-20 form-group-lg',
+                    'class'       => 'm-t-20 m-b-20',
+                    'class'       => 'form-group-lg',
                 ]),
                 "message_field"     => form_textarea('post_message', $locale['forum_0601'], $post_data['post_message'],
                     [

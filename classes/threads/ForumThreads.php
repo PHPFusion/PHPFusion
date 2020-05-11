@@ -26,7 +26,7 @@ use PHPFusion\Infusions\Forum\Classes\Post\QuickReply;
  * Class ForumThreads
  * Forum threads functions
  *
- * @package PHPFusion\Infusions\Forum\Threads
+ * @package PHPFusion\Forums\Threads
  */
 class ForumThreads extends ForumServer {
 
@@ -377,7 +377,7 @@ class ForumThreads extends ForumServer {
                             'sticky' => $threads['thread_sticky'] ? "<i class='".self::getForumIcons('sticky')."' title='".$locale['forum_0103']."'></i>" : '',
                             'poll'   => $threads['thread_poll'] ? "<i class='".self::getForumIcons('poll')."' title='".$locale['forum_0314']."'></i>" : '',
                             'hot'    => $threads['thread_postcount'] >= 20 ? "<i class='".self::getForumIcons('hot')."' title='".$locale['forum_0311']."'></i>" : '',
-                            'reads'  => $threads['thread_views'] >= 100 ? "<i class='".self::getForumIcons('reads')."' title='".$locale['forum_0311']."'></i>" : '',
+                            'reads'  => $threads['thread_views'] >= 20 ? "<i class='".self::getForumIcons('reads')."' title='".$locale['forum_0311']."'></i>" : '',
                             'attach' => $threads['attach_count'] > 0 ? "<i class='".self::getForumIcons('image')."' title='".$locale['forum_0312']."'></i>" : '',
                             'icon'   => $icon,
                         ],
@@ -725,7 +725,8 @@ class ForumThreads extends ForumServer {
                     'inner_width' => '230px',
                     'allowclear'  => TRUE,
                     'class'       => 'm-0',
-                    'inline'      => TRUE
+                    'inline'      => TRUE,
+                    "select_alt" => TRUE,
                 ]);
                 $this->thread_info['mod_form_parts']['go_button'] = form_button('go', $locale['forum_0208'], $locale['forum_0208'], ['class' => 'btn-default m-0']);
                 $this->thread_info['mod_form_parts']['closeform'] = closeform();
@@ -1748,7 +1749,7 @@ class ForumThreads extends ForumServer {
 
     private function postComments($thread_id, $post_id, $post_marker) {
 
-        require_once FORUM.'classes/ForumComments.php';
+        require_once FORUM.'classes/forum_comments.php';
         require_once INCLUDES.'comments_include.php';
         return showcomments('FO', DB_FORUM_POSTS, 'post_id', $post_id, FORUM.'viewthread.php?thread_id='.$thread_id, FALSE, $post_marker, FALSE);
 

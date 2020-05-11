@@ -1,6 +1,8 @@
 <?php
 namespace PHPFusion\Infusions\Forum\Classes\Moderator;
 
+
+
 use PHPFusion\Infusions\Forum\Classes\ForumModerator;
 
 class ForumMod {

@@ -22,7 +22,7 @@ use PHPFusion\Infusions\Forum\Classes\ForumPostify;
  * Class Postify_Newpoll
  *
  * @status  Stable
- * @package PHPFusion\Infusions\Forum\Postify
+ * @package PHPFusion\Forums\Postify
  */
 class PostifyNewpoll extends ForumPostify {
 

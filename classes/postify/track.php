@@ -25,7 +25,7 @@ use PHPFusion\Infusions\Forum\Classes\ForumPostify;
  *
  * @status  stable
  *
- * @package PHPFusion\Infusions\Forum\Postify
+ * @package PHPFusion\Forums\Postify
  *
  */
 class PostifyTrack extends ForumPostify {

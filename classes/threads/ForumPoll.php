@@ -21,7 +21,7 @@ namespace PHPFusion\Infusions\Forum\Classes\Threads;
 /**
  * Class Poll
  *
- * @package PHPFusion\Infusions\Forum\Threads
+ * @package PHPFusion\Forums\Threads
  */
 class ForumPoll {
 
@@ -392,7 +392,7 @@ class ForumPoll {
                                     'title'  => $poll_option['forum_poll_option_text'],
                                     'output' => $option_votes,
                                 ];
-                                $html .= progress_bar(self::$poll_info['content'][$i]['output'], self::$poll_info['content'][$i]['title'].' ['.$poll_option['forum_poll_option_votes'].'/'.$poll['forum_poll_votes'].']', ["height" => "10px", "hide_marker" => TRUE]);
+                                $html .= progress_bar(self::$poll_info['content'][$i]['output'], self::$poll_info['content'][$i]['title'], ["height" => "10px", "hide_marker" => TRUE]);
                             }
                             $i++;
                         }

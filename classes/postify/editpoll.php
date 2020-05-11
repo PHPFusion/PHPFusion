@@ -26,7 +26,7 @@ use PHPFusion\Infusions\Forum\Classes\ForumPostify;
  *
  * @status  Stable
  *
- * @package PHPFusion\Infusions\Forum\Postify
+ * @package PHPFusion\Forums\Postify
  */
 class PostifyEditpoll extends ForumPostify {
     public function execute() {

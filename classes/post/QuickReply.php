@@ -203,7 +203,7 @@ class QuickReply extends ForumServer {
                         'preview'     => TRUE,
                         'form_name'   => $form_name,
                         'height'      => '150px',
-                        'class'       => 'm-b-20',
+                        'class'       => 'm-b-0',
                         'bbcode'      => TRUE,
                         'grippie'     => TRUE,
                         'tab'         => TRUE,

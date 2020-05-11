@@ -28,7 +28,7 @@ require_once INFUSIONS."forum/forum_include.php";
 require_once INFUSIONS."forum/templates.php";
 
 \PHPFusion\Locale::setLocale(FORUM_LOCALE);
-echo render_forum(ForumServer::forum()->getForumInfo() );
+echo render_forum(ForumServer::forum()->getForumInfo());
 
 //showBenchmark(TRUE); //0.374
 require_once THEMES."templates/footer.php";

@@ -197,10 +197,10 @@ class Reputation  {
 
                     $ctpl->set_block('reputation_item', ['content'=>$rep_html]);
                 }
-                /*if ($max_count > $row_count) {
+                if ($max_count > $row_count) {
                     // this needs to be chunked and recounted.
                     //$ctpl->set_block('page_nav',['nav'=> makepagenav($rowstart, $limit, $max_count, 3, $this->profile_url) ]);
-                }*/
+                }
             } else {
                 $ctpl->set_block('no_thread_item', ['message' => $this->self_noun.' have no reputation changes.']);
             }

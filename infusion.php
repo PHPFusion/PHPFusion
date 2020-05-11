@@ -15,10 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
-use PHPFusion\Admins;
-
 defined('IN_FUSION') || exit;
+
 
 //@todo: ALTER TABLE `xxxx_forum_posts` ADD FULLTEXT(`post_message`); on new infusion API
 
@@ -39,9 +37,9 @@ $inf_folder = 'forum';
 $inf_image = 'forums.svg';
 
 // Moderator Discussions
-Admins::getInstance()->setAdminPageIcons("FR", "<i class='admin-ico fas fa-comment-alt fa-fw'></i>");
-Admins::getInstance()->setCommentType("FR", $locale['forum_0667']);
-Admins::getInstance()->setLinkType("FR", fusion_get_settings("siteurl")."infusions/forum/index.php?ref=news/news.php?readmore=moderator&amp;id=%s");
+\PHPFusion\Admins::getInstance()->setAdminPageIcons("FR", "<i class='admin-ico fas fa-comment-alt fa-fw'></i>");
+\PHPFusion\Admins::getInstance()->setCommentType("FR", $locale['forum_0667']);
+\PHPFusion\Admins::getInstance()->setLinkType("FR", fusion_get_settings("siteurl")."infusions/forum/index.php?ref=news/news.php?readmore=moderator&amp;id=%s");
 
 // Create tables
 $inf[DB_FORUM_ATTACHMENTS] = [
@@ -58,43 +56,57 @@ $inf[DB_FORUM_ATTACHMENTS] = [
     'attach_size'    => ['type' => 'INT', 'length' => 20, 'unsigned' => TRUE],
     'attach_count'   => ['type' => 'INT', 'length' => 10, 'unsigned' => TRUE],
 ];
-$inf[DB_FORUM_VOTES] = array(
-    "vote_id"        => array("type" => "BIGINT", "length" => 20, "unsigned" => TRUE, "key" => 1, "auto_increment" => TRUE),
-    "forum_id"       => array("type" => "BIGINT", "length" => 20, "unsigned" => TRUE, "key" => 2),
-    "thread_id"      => array("type" => "BIGINT", "length" => 20, "unsigned" => TRUE, "key" => 2),
-    "post_id"        => array("type" => "BIGINT", "length" => 20, "unsigned" => TRUE, "key" => 2),
-    "vote_user"      => array("type" => "BIGINT", "length" => 20, "unsigned" => TRUE, "key" => 2),
-    "vote_points"    => array("type" => "DECIMAL", "length" => "(3,0)", "default" => "0"),
-    "vote_datestamp" => array("type" => "INT", "length" => "10", "unsigned" => TRUE, "default" => "0"),
-);
-$inf[DB_FORUM_RANKS] = array(
-    "rank_id"       => array("type" => "BIGINT", "length" => 20, "unsigned" => TRUE, "key" => 1, "auto_increment" => TRUE),
-    "rank_title"    => array("type" => "VARCHAR", "length" => 100),
-    "rank_image"    => array("type" => "VARCHAR", "length" => 100),
-    "rank_posts"    => array("type" => "INT", "length" => 10, "unsigned" => TRUE),
-    "rank_type"     => array("type" => "TINYINT", "length" => 1, "unsigned" => TRUE),
-    "rank_apply"    => array("type" => "TINYINT", "length" => 4, "default" => USER_LEVEL_MEMBER),
-    "rank_language" => array("type" => "VARCHAR", "length" => 75, "default" => LANGUAGE),
-);
-$inf[DB_FORUM_POLL_OPTIONS] = array(
-    "thread_id"               => array("type" => "BIGINT", "length" => 20, "unsigned" => TRUE, "key" => 2),
-    "forum_poll_option_id"    => array("type" => "SMALLINT", "length" => 5, "unsigned" => TRUE, "key" => 2),
-    "forum_poll_option_text"  => array("type" => "VARCHAR", "length" => 150),
-    "forum_poll_option_votes" => array("type" => "SMALLINT", "length" => 5, "unsigned" => TRUE),
-);
-$inf[DB_FORUM_POLL_VOTERS] = array(
-    "thread_id"               => array("type" => "BIGINT", "length" => 20, "unsigned" => TRUE, "key" => 2),
-    "forum_vote_user_id"      => array("type" => "BIGINT", "length" => 20, "unsigned" => TRUE, "key" => 2),
-    "forum_vote_user_ip"      => array("type" => "VARCHAR", "length" => 45),
-    "forum_vote_user_ip_type" => array("type" => "TINYINT", "length" => 1, "unsigned" => TRUE, "default" => 4),
-);
-$inf[DB_FORUM_POLLS] = array(
-    "thread_id"         => array("type" => "BIGINT", "length" => 20, "unsigned" => TRUE, "key" => 2),
-    "forum_poll_title"  => array("type" => "VARCHAR", "length" => 250),
-    "forum_poll_start"  => array("type" => "INT", "length" => 10, "unsigned" => TRUE),
-    "forum_poll_length" => array("type" => "INT", "length" => 10, "unsigned" => TRUE),
-    "forum_poll_votes"  => array("type" => "SMALLINT", "length" => 5, "unsigned" => TRUE),
-);
+
+$inf_newtable[] = DB_FORUM_VOTES." (
+    vote_id MEDIUMINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+    forum_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    thread_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    post_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    vote_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    vote_points DECIMAL(3,0) NOT NULL DEFAULT '0',
+    vote_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    PRIMARY KEY (vote_id),
+    KEY forum_id (forum_id),
+    KEY thread_id (thread_id),
+    KEY post_id (post_id)
+) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+
+$inf_newtable[] = DB_FORUM_RANKS." (
+    rank_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+    rank_title VARCHAR(100) NOT NULL DEFAULT '',
+    rank_image VARCHAR(100) NOT NULL DEFAULT '',
+    rank_posts iNT(10) UNSIGNED NOT NULL DEFAULT '0',
+    rank_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+    rank_apply TINYINT(4) DEFAULT ".USER_LEVEL_MEMBER.",
+    rank_language VARCHAR(50) NOT NULL DEFAULT '".LANGUAGE."',
+    PRIMARY KEY (rank_id)
+) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+
+$inf_newtable[] = DB_FORUM_POLL_OPTIONS." (
+    thread_id MEDIUMINT(8) unsigned NOT NULL,
+    forum_poll_option_id SMALLINT(5) UNSIGNED NOT NULL,
+    forum_poll_option_text VARCHAR(150) NOT NULL,
+    forum_poll_option_votes SMALLINT(5) UNSIGNED NOT NULL,
+    KEY thread_id (thread_id)
+) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+
+$inf_newtable[] = DB_FORUM_POLL_VOTERS." (
+    thread_id MEDIUMINT(8) UNSIGNED NOT NULL,
+    forum_vote_user_id MEDIUMINT(8) UNSIGNED NOT NULL,
+    forum_vote_user_ip VARCHAR(45) NOT NULL,
+    forum_vote_user_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
+    KEY thread_id (thread_id),
+    KEY forum_vote_user_id (forum_vote_user_id)
+) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+
+$inf_newtable[] = DB_FORUM_POLLS." (
+    thread_id MEDIUMINT(8) UNSIGNED NOT NULL,
+    forum_poll_title VARCHAR(250) NOT NULL,
+    forum_poll_start INT(10) UNSIGNED DEFAULT NULL,
+    forum_poll_length iNT(10) UNSIGNED NOT NULL,
+    forum_poll_votes SMALLINT(5) unsigned NOT NULL,
+    KEY thread_id (thread_id)
+) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 $inf[DB_FORUMS] = [
     'forum_id'               => ['type' => 'BIGINT', 'length' => 20, 'unsigned' => TRUE, 'key' => 1, 'auto_increment' => TRUE],
@@ -151,131 +163,149 @@ $inf[DB_FORUM_POSTS] = [
     'post_answer'     => ['type' => 'TINYINT', 'length' => 1],
 ];
 
-$inf[DB_FORUM_THREADS] = array(
-    "forum_id"                  => array("type" => "BIGINT", "length" => 20, "unsigned" => TRUE, "key" => 2),
-    "thread_id"                 => array("type" => "BIGINT", "length" => 20, "unsigned" => TRUE, "key" => 2),
-    "thread_tags"               => array("type" => "TEXT"),
-    "thread_subject"            => array("type" => "TEXT"),
-    "thread_author"             => array("type" => "BIGINT", "length" => 20, "unsigned" => TRUE, "key" => 2),
-    "thread_views"              => array("type" => "MEDIUMINT", "length" => 8, "unsigned" => TRUE, "key" => 2),
-    "thread_lastpost"           => array("type" => "INT", "length" => 10, "unsigned" => TRUE, "key" => 2),
-    "thread_lastpostid"         => array("type" => "BIGINT", "length" => 20, "unsigned" => TRUE, "key" => 2),
-    "thread_lastuser"           => array("type" => "BIGINT", "length" => 20, "unsigned" => TRUE, "key" => 2),
-    "thread_postcount"          => array("type" => "SMALLINT", "length" => 5, "unsigned" => TRUE, "key" => 2),
-    "thread_poll"               => array("type" => "TINYINT", "length" => 1, "unsigned" => TRUE, "key" => 2),
-    "thread_sticky"             => array("type" => "TINYINT", "length" => 1, "unsigned" => TRUE, "key" => 2),
-    "thread_answered"           => array("type" => "TINYINT", "length" => 1, "unsigned" => TRUE, "key" => 2),
-    "thread_locked"             => array("type" => "TINYINT", "length" => 1, "unsigned" => TRUE, "key" => 2),
-    "thread_hidden"             => array("type" => "TINYINT", "length" => 1, "unsigned" => TRUE, "key" => 2),
-    "thread_bounty"             => array("type" => "TINYINT", "length" => 1, "unsigned" => TRUE, "key" => 2),
-    "thread_bounty_description" => array("type" => "TEXT"),
-    "thread_bounty_start"       => array("type" => "INT", "length" => 10, "unsigned" => TRUE),
-    "thread_bounty_user"        => array("type" => "BIGINT", "length" => 20, "unsigned" => TRUE),
-);
+$inf_newtable[] = DB_FORUM_THREADS." (
+    forum_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    thread_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+    thread_tags TEXT NOT NULL,
+    thread_subject VARCHAR(100) NOT NULL DEFAULT '',
+    thread_author MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    thread_views MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    thread_lastpost INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    thread_lastpostid MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    thread_lastuser MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    thread_postcount SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+    thread_poll TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+    thread_sticky TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+    thread_answered TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+    thread_bounty SMALLINT(8) NOT NULL,
+    thread_bounty_description TEXT NOT NULL,
+    thread_bounty_start INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    thread_bounty_user MEDIUMINT(11) UNSIGNED NOT NULL DEFAULT '0',
+    thread_locked TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+    thread_hidden TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+    PRIMARY KEY (thread_id),
+    KEY forum_id (forum_id),
+    KEY thread_postcount (thread_postcount),
+    KEY thread_lastpost (thread_lastpost),
+    KEY thread_views (thread_views),
+    FULLTEXT (thread_subject)
+) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
-$inf[DB_FORUM_THREAD_NOTIFY] = array(
-    "thread_id"        => array("type" => "BIGINT", "length" => 20, "unsigned" => TRUE, "key" => 2),
-    "notify_datestamp" => array("type" => "INT", "length" => 10, "unsigned" => TRUE, "key" => 2),
-    "notify_user"      => array("type" => "BIGINT", "length" => 20, "unsigned" => TRUE, "key" => 2),
-    "notify_status"    => array("type" => "TINYINT", "length" => 1, "unsigned" => TRUE, "default" => 1),
-);
+$inf_newtable[] = DB_FORUM_THREAD_NOTIFY." (
+    thread_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    notify_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    notify_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    notify_status tinyint(1) UNSIGNED NOT NULL DEFAULT '1',
+    KEY notify_datestamp (notify_datestamp)
+) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
-$inf[DB_FORUM_TAGS] = array(
-    "tag_id"          => array("type" => "BIGINT", "length" => 20, "unsigned" => TRUE, "key" => 1, "auto_increment" => TRUE),
-    "tag_title"       => array("type" => "VARCHAR", "length" => 200),
-    "tag_description" => array("type" => "VARCHAR", "length" => 250),
-    "tag_color"       => array("type" => "VARCHAR", "length" => 20),
-    "tag_status"      => array("type" => "TINYINT", "length" => 1, "key" => 2),
-    "tag_language"    => array("type" => "VARCHAR", "length" => 75, "default" => LANGUAGE, "key" => 2),
-);
-$inf[DB_FORUM_REPORTS] = array(
-    "report_id"          => array("type" => "BIGINT", "length" => 20, "unsigned" => TRUE, "key" => 1, "auto_increment" => TRUE),
-    "report_post_id"     => array("type" => "BIGINT", "length" => 20, "unsigned" => TRUE, "key" => 2),
-    "report_user"        => array("type" => "BIGINT", "length" => 20, "unsigned" => TRUE, "key" => 2),
-    "report_comment"     => array("type" => "TEXT"),
-    "report_mod_comment" => array("type" => "TEXT"),
-    "report_status"      => array("type" => "TINYINT", "length" => 1, "unsigned" => TRUE, "key" => 2),
-    "report_datestamp"   => array("type" => "INT", "length" => 10, "unsigned" => TRUE, "key" => 2),
-    "report_updated"     => array("type" => "INT", "length" => 10, "unsigned" => TRUE, "key" => 2),
-    "report_archive"     => array("type" => "TEXT"),
-);
+$inf_newtable[] = DB_FORUM_TAGS." (
+    tag_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+    tag_title VARCHAR(100) NOT NULL DEFAULT '',
+    tag_description VARCHAR(250) NOT NULL DEFAULT '',
+    tag_color VARCHAR(20) NOT NULL DEFAULT '',
+    tag_status SMALLINT(1) NOT NULL DEFAULT '0',
+    tag_language VARCHAR(100) NOT NULL DEFAULT '".LANGUAGE."',
+    PRIMARY KEY (tag_id)
+) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
-$inf[DB_FORUM_USER_REP] = array(
-    "rep_id"      => array("type" => "BIGINT", "length" => 20, "unsigned" => TRUE, "key" => 1, "auto_increment" => TRUE),
-    "rep_answer"  => array("type" => "TINYINT", "length" => 1, "unsigned" => TRUE, "key" => 2),
-    "post_id"     => array("type" => "BIGINT", "length" => 20, "unsigned" => TRUE, "key" => 2),
-    "thread_id"   => array("type" => "BIGINT", "length" => 20, "unsigned" => TRUE, "key" => 2),
-    "forum_id"    => array("type" => "BIGINT", "length" => 20, "unsigned" => TRUE, "key" => 2),
-    "points_gain" => array("type" => "SMALLINT", "length" => 5, "unsigned" => TRUE, "key" => 2),
-    "voter_id"    => array("type" => "BIGINT", "length" => 20, "unsigned" => TRUE, "key" => 2),
-    "user_id"     => array("type" => "BIGINT", "length" => 20, "unsigned" => TRUE, "key" => 2),
-    "datestamp"   => array("type" => "INT", "length" => 10, "unsigned" => TRUE, "key" => 2),
-);
+$inf_newtable[] = DB_FORUM_REPORTS." (
+    report_id MEDIUMINT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+    report_post_id MEDIUMINT(11) UNSIGNED NOT NULL DEFAULT '0',
+    report_user MEDIUMINT(11) UNSIGNED NOT NULL DEFAULT '0',
+    report_comment TEXT NOT NULL,
+    report_mod_comment TEXT NOT NULL,
+    report_status SMALLINT(1) NOT NULL DEFAULT '0',
+    report_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    report_updated INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    report_archive TEXT NOT NULL,
+    PRIMARY KEY (report_id)
+) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
-$inf[DB_FORUM_MOODS] = array(
-    "mood_id"          => array("type" => "BIGINT", "length" => 20, "unsigned" => TRUE, "key" => 1, "auto_increment" => TRUE),
-    "mood_name"        => array("type" => "TEXT"),
-    "mood_description" => array("type" => "TEXT"),
-    "mood_icon"        => array("type" => "VARCHAR", "length" => 50),
-    "mood_notify"      => array("type" => "SMALLINT", "length" => 4, "default" => USER_LEVEL_MEMBER),
-    "mood_access"      => array("type" => "SMALLINT", "length" => 4, "default" => USER_LEVEL_MEMBER),
-    "mood_status"      => array("type" => "TINYINT", "length" => 1, "unsigned" => TRUE, "key" => 2)
-);
+$inf_newtable[] = DB_FORUM_USER_REP." (
+    rep_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+    rep_answer TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+    post_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    thread_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    forum_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    points_gain SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+    voter_id SMALLINT(1) UNSIGNED NOT NULL DEFAULT '0',
+    user_id MEDIUMINT(11) UNSIGNED NOT NULL DEFAULT '0',
+    datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    PRIMARY KEY (rep_id),
+    KEY post_id (post_id, user_id, voter_id)
+) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
-$inf[DB_FORUM_POST_NOTIFY] = array(
-    "post_id"          => array("type" => "BIGINT", "length" => 20, "unsigned" => TRUE, "key" => 1, "auto_increment" => TRUE),
-    "notify_mood_id"   => array("type" => "BIGINT", "length" => 20, "unsigned" => TRUE, "key" => 2),
-    "notify_datestamp" => array("type" => "INT", "length" => 10, "unsigned" => TRUE, "key" => 2),
-    "notify_user"      => array("type" => "BIGINT", "length" => 20, "unsigned" => TRUE, "key" => 2),
-    "notify_sender"    => array("type" => "BIGINT", "length" => 20, "unsigned" => TRUE, "key" => 2),
-    "notify_status"    => array("type" => "TINYINT", "length" => 1, "unsigned" => TRUE, "key" => 2),
-);
+$inf_newtable[] = DB_FORUM_MOODS." (
+    mood_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+    mood_name TEXT NOT NULL,
+    mood_description TEXT NOT NULL,
+    mood_icon VARCHAR(50) NOT NULL DEFAULT '',
+    mood_notify SMALLINT(4) NOT NULL DEFAULT ".USER_LEVEL_MEMBER.",
+    mood_access SMALLINT(4) NOT NULL DEFAULT ".USER_LEVEL_MEMBER.",
+    mood_status SMALLINT(1) NOT NULL DEFAULT '0',
+    PRIMARY KEY (mood_id)
+) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
-$inf[DB_FORUM_THREAD_LOGS] = array(
-    "thread_log_id" => array("type" => "BIGINT", "length" => 20, "unsigned" => TRUE, "key" => 1, "auto_increment" => TRUE),
-    "thread_id"     => array("type" => "BIGINT", "length" => 20, "unsigned" => TRUE, "key" => 2),
-    "post_id"       => array("type" => "BIGINT", "length" => 20, "unsigned" => TRUE, "key" => 2),
+$inf_newtable[] = DB_FORUM_POST_NOTIFY." (
+    post_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    notify_mood_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    notify_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    notify_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    notify_sender MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    notify_status tinyint(1) UNSIGNED NOT NULL DEFAULT '1',
+    KEY notify_datestamp (notify_datestamp)
+) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
-    "thread_log_action"     => array("type" => "SMALLINT", "length" => 5, "unsigned" => TRUE, "key" => 2),
-    "thread_log_item_type"  => array("type" => "SMALLINT", "length" => 5, "unsigned" => TRUE, "key" => 2),
-    "thread_log_new_value"  => array("type" => "VARCHAR", "length" => 70),
-    "thread_log_old_value"  => array("type" => "VARCHAR", "length" => 70),
-    "thread_log_user"       => array("type" => "BIGINT", "length" => 20, "unsigned" => TRUE, "key" => 2),
-    "thread_log_visibility" => array("type" => "SMALLINT", "length" => 5, "key" => 2),
-    "thread_log_datestamp"  => array("type" => "INT", "length" => 10, "unsigned" => TRUE, "key" => 2),
-);
+// Logging of an action on the thread or post.
+$inf_newtable[] = DB_FORUM_THREAD_LOGS." (
+    thread_log_id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+    thread_id BIGINT(20) UNSIGNED NOT NULL DEFAULT '0',
+    post_id BIGINT(20) UNSIGNED NOT NULL DEFAULT '0',
+    thread_log_action SMALLINT(5) UNSIGNED NOT NULL,
+    thread_log_item_type SMALLINT(5) UNSIGNED NOT NULL,
+    thread_log_new_value VARCHAR(70) NOT NULL,
+    thread_log_old_value VARCHAR(70) NOT NULL,
+    thread_log_user BIGINT(20) UNSIGNED NOT NULL,
+    thread_log_visibility SMALLINT(5) UNSIGNED NOT NULL,
+    thread_log_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    KEY thread_id (thread_id),
+    KEY post_id (post_id),
+    PRIMARY KEY (thread_log_id)
+) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+
 
 if (!column_exists('users', 'user_reputation')) {
     $inf_altertable[] = DB_USERS." ADD user_reputation INT(10) UNSIGNED NOT NULL AFTER user_status";
 }
 
 // Insert Forum Settings
-$settings = array(
-    "forum_ips"                  => USER_LEVEL_SUPER_ADMIN,
-    "forum_attachmax"            => 1048576,
-    "forum_attachmax_count"      => 5,
-    "forum_attachtypes"          => ".PDF,.GIF,.JPG,.JPEG,.PNG,.ZIP,.RAR,.TAR,.GZIP,.BZ2,.7Z",
-    "thread_notify"              => 1,
-    "forum_ranks"                => 1,
-    "forum_edit_lock"            => 0,
-    "forum_edit_timelimit"       => 0,
-    "popular_threads_timeframe"  => 604800,
-    "forum_last_posts_reply"     => 1,
-    "forum_last_post_avatar"     => 1,
-    "forum_editpost_to_lastpost" => 1,
-    "threads_per_page"           => 20,
-    "posts_per_page"             => 20,
-    "numofthreads"               => 16,
-    "forum_rank_style"           => 0,
-    "upvote_points"              => 2,
-    "downvote_points"            => 1,
-    "answering_points"           => 15,
-    "points_to_upvote"           => 100,
-    "points_to_downvote"         => 100,
-    "forum_show_lastpost"        => 1,
-    "forum_enabled_userfields"   => 0,
-    "forum_show_reputation"      => 1
-);
+$settings = [
+    'forum_ips'                  => USER_LEVEL_SUPER_ADMIN,
+    'forum_attachmax'            => 1048576,
+    'forum_attachmax_count'      => 5,
+    'forum_attachtypes'          => '.pdf,.gif,.jpg,.png,.zip,.rar,.tar,.bz2,.7z',
+    'thread_notify'              => 1,
+    'forum_ranks'                => 1,
+    'forum_edit_lock'            => 0,
+    'forum_edit_timelimit'       => 0,
+    'popular_threads_timeframe'  => 604800,
+    'forum_last_posts_reply'     => 1,
+    'forum_last_post_avatar'     => 1,
+    'forum_editpost_to_lastpost' => 1,
+    'threads_per_page'           => 20,
+    'posts_per_page'             => 20,
+    'numofthreads'               => 16,
+    'forum_rank_style'           => 0,
+    'upvote_points'              => 2,
+    'downvote_points'            => 1,
+    'answering_points'           => 15,
+    'points_to_upvote'           => 100,
+    'points_to_downvote'         => 100,
+    'forum_show_lastpost'        => 1,
+    'forum_enabled_userfields'   => 0,
+    'forum_show_reputation'      => 1
+];
 
 foreach ($settings as $name => $value) {
     $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('".$name."', '".$value."', '".$inf_folder."')";
@@ -299,11 +329,7 @@ $inf_mlt[] = [
 $enabled_languages = makefilelist(LOCALE, ".|..", TRUE, "folders");
 if (!empty($enabled_languages)) {
     foreach ($enabled_languages as $language) {
-        if (file_exists(LOCALE.$language.'/setup.php')) {
-            include LOCALE.$language.'/setup.php';
-        } else {
-            include LOCALE.'English/setup.php';
-        }
+        include LOCALE.$language."/setup.php";
 
         if (file_exists(FORUM.'locale/'.$language.'/forum_tags.php')) {
             include FORUM.'locale/'.$language.'/forum_tags.php';

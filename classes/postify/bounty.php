@@ -17,6 +17,8 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Infusions\Forum\Classes\Postify;
 
+use PHPFusion\BreadCrumbs;
+use PHPFusion\Infusions\Forum\Classes\Forum_Postify;
 use PHPFusion\Infusions\Forum\Classes\ForumPostify;
 
 /**
@@ -24,7 +26,7 @@ use PHPFusion\Infusions\Forum\Classes\ForumPostify;
  *
  * @status  Stable
  *
- * @package PHPFusion\Infusions\Forum\Postify
+ * @package PHPFusion\Forums\Postify
  */
 class PostifyBounty extends ForumPostify {
 

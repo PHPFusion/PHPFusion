@@ -18,10 +18,12 @@
 
 use PHPFusion\Infusions\Forum\Classes\ForumModerator;
 use PHPFusion\Infusions\Forum\Classes\ForumServer;
+use PHPFusion\Infusions\Forum\Classes\Moderator\ForumMod;
 
 $userdata = fusion_get_userdata();
 $locale = fusion_get_locale();
-ForumModerator::setForumMods(array("forum_mods" => ""));
+$forum_moderator = new ForumModerator();
+$forum_moderator::setForumMods(array("forum_mods"=>""));
 if (!iMOD) {
     redirect(FORUM."index.php");
 }
@@ -33,12 +35,12 @@ $closed_reports = dbcount("(report_id)", DB_FORUM_REPORTS, "report_status=1");
 $this->forum_info['section_links'] = [
     "active" => [
         "title" => "Active Reports",
-        "link"  => FORUM."index.php?section=moderator&amp;type=active",
+        "link"  => FORUM."index.php?section=reports&amp;type=active",
         "count" => $open_reports ? format_num($open_reports) : "",
     ],
     "closed" => [
         "title" => "Closed Reports",
-        "link"  => FORUM."index.php?section=moderator&amp;type=closed",
+        "link"  => FORUM."index.php?section=reports&amp;type=closed",
         "count" => $closed_reports ? format_num($closed_reports) : "",
     ],
 ];
@@ -72,7 +74,7 @@ if ($rid) {
                     AND f.report_id='".intval($rid)."'
                     GROUP BY f.post_id";
     $query = "SELECT  f.post_id 'report_post_id', t.thread_id, t.thread_subject, t.thread_author, t.thread_lastuser, t.thread_lastpost, t.thread_lastpostid,
-            t.thread_postcount, t.thread_locked, t.thread_sticky, t.thread_poll, t.thread_postcount, t.thread_views, t.thread_tags,
+            t.thread_postcount, t.thread_locked, t.thread_sticky, t.thread_poll, t.thread_postcount, t.thread_views,
             t.forum_id 'forum_id', tf.*, f.*, p.post_id, p.post_message, p.post_smileys,
             COUNT(pv.forum_vote_user_id) 'poll_voted',
             IF (n.thread_id > 0, 1 , 0) 'user_tracked'
@@ -92,48 +94,49 @@ if ($rid) {
     }
     $count_query = "SELECT f.report_id
                     FROM ".DB_FORUM_REPORTS." f
-                    INNER JOIN ".DB_FORUM_POSTS." p ON f.post_id=p.post_id
+                    INNER JOIN ".DB_FORUM_POSTS." p ON f.report_post_id=p.post_id
                     INNER JOIN ".DB_FORUM_THREADS." t ON p.thread_id=t.thread_id
                     INNER JOIN ".DB_FORUMS." tf ON p.forum_id = tf.forum_id
                     ".(multilang_table("FO") ? "WHERE ".in_group('tf.forum_language', LANGUAGE)." AND " : "WHERE ").groupaccess('tf.forum_access')."
                     AND f.report_status='$status'
-                    GROUP BY f.post_id";
+                    GROUP BY f.report_post_id";
+
     $query = "SELECT t.thread_id, t.thread_subject, t.thread_author, t.thread_lastuser, t.thread_lastpost, t.thread_lastpostid,
             t.thread_postcount, t.thread_locked, t.thread_sticky, t.thread_poll, t.thread_postcount, t.thread_views,
             t.forum_id 'forum_id', tf.*, f.*, p.post_id, p.post_message, p.post_smileys,
             COUNT(pv.forum_vote_user_id) 'poll_voted',
             IF (n.thread_id > 0, 1 , 0) 'user_tracked'
             FROM ".DB_FORUM_REPORTS." f
-            INNER JOIN ".DB_FORUM_POSTS." p ON f.post_id=p.post_id
+            INNER JOIN ".DB_FORUM_POSTS." p ON f.report_post_id=p.post_id
             INNER JOIN ".DB_FORUM_THREADS." t ON p.thread_id=t.thread_id
             INNER JOIN ".DB_FORUMS." tf ON p.forum_id = tf.forum_id
             LEFT JOIN ".DB_FORUM_POLL_VOTERS." pv ON pv.thread_id = t.thread_id AND pv.forum_vote_user_id='".$userdata['user_id']."' AND t.thread_poll=1
             LEFT JOIN ".DB_FORUM_THREAD_NOTIFY." n ON n.thread_id = t.thread_id AND n.notify_user = '".$userdata['user_id']."'
             ".(multilang_table("FO") ? "WHERE ".in_group('tf.forum_language', LANGUAGE)." AND " : "WHERE ").groupaccess('tf.forum_access')."
-            AND f.report_status='$status' GROUP BY f.post_id ORDER BY f.report_datestamp DESC";
+            AND f.report_status='$status' GROUP BY f.report_post_id ORDER BY f.report_datestamp DESC";
 }
 
-$threads = \PHPFusion\Infusions\Forum\Classes\Forum_Server::thread(FALSE)->getThreadInfo(0, ["item_id" => "report_id", "count_query" => $count_query, "query" => $query]);
+$threads = ForumServer::thread(FALSE)->getThreadInfo(0, ["item_id" => "report_id", "count_query" => $count_query, "query" => $query]);
 $this->forum_info = array_merge_recursive($this->forum_info, $threads);
 
 if ($rid) {
     if (!empty($this->forum_info['threads']['item'][$rid])) {
         $rdata = $this->forum_info['threads']['item'][$rid];
 
-        $forum_threads = \PHPFusion\Infusions\Forum\Classes\Forum_Server::thread(FALSE);
+        $forum_threads = ForumServer::thread(FALSE);
         $pdata = $forum_threads->getThreadPost(0, $rdata['report_post_id']);
         $post = $pdata['post_items'][$rdata['report_post_id']];
 
         if (!empty($_POST)) {
             if (isset($_POST['close_report'])) {
                 dbquery("UPDATE ".DB_FORUM_REPORTS." SET report_status=1 WHERE report_id=:rid", [':rid' => intval($rid)]);
-                addNotice("success", "Report has been closed");
+                add_notice("success", "Report has been closed");
             } elseif (isset($_POST['delete_report'])) {
                 dbquery("DELETE FROM ".DB_FORUM_REPORTS." WHERE report_id=:rid", [':rid' => intval($rid)]);
-                addNotice("success", "Report has been deleted");
+                add_notice("success", "Report has been deleted");
             } elseif (isset($_POST['open_report'])) {
                 dbquery("UPDATE ".DB_FORUM_REPORTS." SET report_status=0 WHERE report_id=:rid", [':rid' => intval($rid)]);
-                addNotice("success", "Report has been reopened");
+                add_notice("success", "Report has been reopened");
             } elseif (isset($_POST['close_delete'])) {
                 $post_param = [":pid" => $post['post_id']];
                 $remove_mood = "DELETE FROM ".DB_FORUM_POST_NOTIFY." WHERE post_id=:pid";
@@ -183,14 +186,16 @@ if ($rid) {
                     $thread_count = TRUE;
                 }
                 // Update Forum
-                \PHPFusion\Infusions\Forum\Classes\Forum_Moderator::refresh_forum($post['forum_id']);
+                $forum_mods = new ForumMod($forum_moderator);
+                $forum_mods->refreshForums();
+
                 dbquery("DELETE FROM ".DB_FORUM_REPORTS." WHERE report_id=:rid", [':rid' => intval($rid)]);
-                addNotice('success', $locale['success-DP001']);
+                add_notice('success', $locale['success-DP001']);
                 redirect(clean_request("", ["rid"], FALSE));
             } elseif (isset($_POST['close_lock'])) {
                 dbquery("UPDATE ".DB_FORUM_POSTS." SET post_locked=1 WHERE post_id=:pid", [":pid" => $post['post_id']]);
                 dbquery("UPDATE ".DB_FORUM_REPORTS." SET report_status=1 WHERE report_id=:rid", [':rid' => intval($rid)]);
-                addNotice("success", "Post has been locked and user can no longer edit the post.");
+                add_notice("success", "Post has been locked and user can no longer edit the post.");
             }
             redirect(FUSION_REQUEST);
         }
@@ -204,7 +209,7 @@ if ($rid) {
         ];
         $this->forum_info['report_id'] = $rdata['report_id'];
         $this->forum_info['report_status'] = $report_status[$rdata['report_status']];
-        $this->forum_info['report_comment'] = parse_textarea($rdata['report_comment']);
+        $this->forum_info['report_comment'] = parse_text($rdata['report_comment']);
         $this->forum_info['report_date'] = showdate("forumdate", $rdata['report_datestamp']);
         $this->forum_info['report_updated_date'] = showdate("forumdate", $rdata['report_updated']);
         $this->forum_info['report_time'] = timer($rdata['report_datestamp']);

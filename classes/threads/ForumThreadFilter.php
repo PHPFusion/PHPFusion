@@ -32,6 +32,7 @@ class ForumThreadFilter {
     ];
 
     public function set_filterInfo() {
+
         $locale = fusion_get_locale();
 
         $time_array = [

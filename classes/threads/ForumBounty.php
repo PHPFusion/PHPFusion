@@ -23,7 +23,7 @@ use PHPFusion\Infusions\Forum\Classes\ForumServer;
 /**
  * Class ForumMood
  *
- * @package PHPFusion\Infusions\Forum\Threads
+ * @package PHPFusion\Forums\Threads
  */
 class ForumBounty extends ForumServer {
 
@@ -126,6 +126,7 @@ class ForumBounty extends ForumServer {
      * @param bool $edit
      *
      * @return string
+     * @throws \ReflectionException
      */
     public function render_bounty_form($edit = FALSE) {
         $bounty_description = '';

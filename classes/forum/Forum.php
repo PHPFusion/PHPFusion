@@ -24,7 +24,7 @@ use PHPFusion\Infusions\Forum\Classes\ForumServer;
 /**
  * Class Forum
  *
- * @package PHPFusion\Infusions\Forum
+ * @package PHPFusion\Forums
  */
 class Forum extends ForumServer {
 
@@ -34,6 +34,7 @@ class Forum extends ForumServer {
      * @var array
      */
     private $forum_info = [];
+    private $forum_id = 0;
     private $is_viewforum = FALSE;
 
     /**
@@ -126,11 +127,8 @@ class Forum extends ForumServer {
         add_breadcrumb(['link' => FORUM."index.php", "title" => $locale['forum_0000']]);
 
         $forum_sections = $this->getForumSection();
-
         if (isset($forum_sections[$this->forum_info['section']])) {
-
             $this->loadSection($forum_sections[$this->forum_info['section']]);
-
             return $this;
         }
 
@@ -152,9 +150,10 @@ class Forum extends ForumServer {
     }
 
     private function checkViewForum() {
+
         $this->is_viewforum = isset($_GET['viewforum']) ? TRUE : FALSE;
-        $forum_id = get('forum_id', FILTER_VALIDATE_INT);
-        if ($this->is_viewforum && !$forum_id) {
+        $this->forum_id = get('forum_id', FILTER_VALIDATE_INT);
+        if ($this->is_viewforum && !$this->forum_id) {
             redirect(FORUM.'index.php');
         }
         return $this->is_viewforum;
@@ -182,7 +181,7 @@ class Forum extends ForumServer {
      */
     public function getCurrentSection() {
         $section = get('section');
-        $section = $section && in_array($section, ['participated', 'latest', 'tracked', 'sticky', 'unanswered', 'unsolved', 'people', 'moderator']) ? $section : '';
+        $section = $section && in_array($section, ['participated', 'latest', 'tracked', 'sticky', 'unanswered', 'unsolved', 'people', 'reports']) ? $section : '';
         return $section;
     }
 
@@ -243,11 +242,11 @@ class Forum extends ForumServer {
                     'title' => $locale['global_028'],
                 ]
             ],
-            'moderator'    => [
+            'reports'    => [
                 'title'       => 'Reports',
                 'description' => 'Forum Reports',
                 'breadcrumbs' => [
-                    'link'  => FORUM."index.php?section=moderator",
+                    'link'  => FORUM."index.php?section=reports",
                     'title' => 'Reports'
                 ]
             ],
@@ -270,9 +269,7 @@ class Forum extends ForumServer {
         add_breadcrumb($value['breadcrumbs']);
         set_meta("description", $value['description']);
 
-        if (file_exists(FORUM_SECTIONS.$this->forum_info['section'].'.php')) {
-            include FORUM_SECTIONS.$this->forum_info['section'].'.php';
-        }
+        include FORUM_SECTIONS.$this->forum_info['section'].'.php';
     }
 
     /**

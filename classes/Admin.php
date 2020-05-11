@@ -16,12 +16,12 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 namespace PHPFusion\Infusions\Forum\Classes;
-use PHPFusion\BreadCrumbs;
+
 /**
  * Forum Administration Console and functions
  * Class Admin
  *
- * @package PHPFusion\Infusions\Forum
+ * @package PHPFusion\Forums
  */
 class Admin extends ForumServer {
     /**
@@ -114,7 +114,7 @@ class Admin extends ForumServer {
 
                 addnotice('success', $locale['forum_notice_10']);
 
-                if (fusion_safe()) {
+                if (\Defender::safe()) {
                     redirect(FUSION_SELF.$aidlink.$this->ext);
                 }
 
@@ -320,7 +320,7 @@ class Admin extends ForumServer {
                         0) + 1;
             }
 
-            if (fusion_safe()) {
+            if (\Defender::safe()) {
 
                 if ($this->verify_forum($this->data['forum_id'])) {
 
@@ -792,7 +792,7 @@ class Admin extends ForumServer {
                 $res = TRUE;
             }
         }
-        if ($res == TRUE or (isset($_POST['save_forum']) && !fusion_safe()) or
+        if ($res == TRUE or (isset($_POST['save_forum']) && !\Defender::safe()) or
             isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['forum_id']) && isnum($_GET['forum_id'])
         ) {
 

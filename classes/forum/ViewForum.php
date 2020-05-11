@@ -242,7 +242,7 @@ class ViewForum extends ForumServer {
 
                                 $_row = array_merge($row_array, $row, [
                                     "forum_type"             => $row['forum_type'],
-                                    "forum_moderators"       => ForumModerator::displayForumMods($row['forum_mods']), //// display forum moderators per forum.
+                                    "forum_moderators"       => Forum_Moderator::parse_forum_mods($row['forum_mods']), //// display forum moderators per forum.
                                     "forum_new_status"       => $newStatus,
                                     "forum_link"             => [
                                         "link"  => FORUM."index.php?viewforum&amp;forum_id=".$row['forum_id'],

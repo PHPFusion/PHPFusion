@@ -164,11 +164,8 @@ class EditPost {
                                 $thread_logs = new ThreadLogs($thread_data['thread_id']);
 
                                 $thread_logs->doLogAction('subject', $thread_data['thread_subject'], $thread_subject);
-
                                 $thread_logs->doLogAction('tags', $thread_data['thread_tags'], $thread_tags);
-
                                 $thread_logs->doLogAction('lock', $thread_data['thread_locked'], $post_data['post_locked']);
-
                                 $thread_logs->doLogAction('sticky', $thread_data['thread_locked'], $post_data['post_locked']);
 
                                 $thread_data['thread_tags'] = $thread_tags;
@@ -307,7 +304,8 @@ class EditPost {
                                 'input_id'  => 'thread-edit-form',
                                 'bbcode'    => TRUE,
                                 'height'    => '500px',
-                                'grippie'   => TRUE
+                                'grippie'   => TRUE,
+                                'tab' => TRUE,
                             ]),
                         // happens only in EDIT
                         'delete_field'      => form_checkbox('delete', $locale['forum_0624'], "", ['class' => 'm-b-10', 'type' => 'button', 'button_class' => 'btn-danger']),

@@ -25,7 +25,7 @@ use PHPFusion\Infusions\Forum\Classes\ForumPostify;
  *
  * @Status  Stable
  *
- * @package PHPFusion\Infusions\Forum\Postify
+ * @package PHPFusion\Forums\Postify
  */
 class PostifyDeletepoll extends ForumPostify {
 
