@@ -344,15 +344,15 @@ class Rank_Table implements TableSDK {
             ],
             'rank_apply' => [
                 'title'    => $this->locale['forum_rank_431'],
-                'callback' => ['PHPFusion\\Forums\\Admin\\Rank_Table', 'getRankApply'],
+                'callback' => ['PHPFusion\\Infusions\\Forum\\Classes\\Admin\\Rank_Table', 'getRankApply'],
             ],
             'rank_image' => [
                 'title'    => $this->locale['forum_rank_432'],
-                'callback' => ['PHPFusion\\Forums\\Admin\\Rank_Table', 'getRankImage'],
+                'callback' => ['PHPFusion\\Infusions\\Forum\\Classes\\Admin\\Rank_Table', 'getRankImage'],
             ],
             'rank_type'  => [
                 'title'    => $this->locale['forum_rank_438'],
-                'callback' => ['PHPFusion\\Forums\\Admin\\Rank_Table', 'getRankType'],
+                'callback' => ['PHPFusion\\Infusions\\Forum\\Classes\\Admin\\Rank_Table', 'getRankType'],
             ]
         ];
 

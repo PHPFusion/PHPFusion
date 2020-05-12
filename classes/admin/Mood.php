@@ -251,7 +251,7 @@ class Mood_List implements TableSDK {
             ],
             'mood_description' => [
                 'title'    => $this->locale['forum_108'],
-                'callback' => ['PHPFusion\\Forums\\Admin\\Mood_list', 'getMoodDescription'],
+                'callback' => ['PHPFusion\\Infusions\\Forum\\Classes\\Admin\\Mood_List', 'getMoodDescription'],
             ],
             'mood_icon'        => [
                 'title' => $this->locale['forum_109'],
@@ -263,11 +263,11 @@ class Mood_List implements TableSDK {
             ],
             'mood_notify'      => [
                 'title'    => $this->locale['forum_110'],
-                'callback' => ['PHPFusion\\Forums\\Admin\\Mood_list', 'getGroupName1'],
+                'callback' => ['PHPFusion\\Infusions\\Forum\\Classes\\Admin\\Mood_List', 'getGroupName1'],
             ],
             'mood_access'      => [
                 'title'    => $this->locale['forum_111'],
-                'callback' => ['PHPFusion\\Forums\\Admin\\Mood_list', 'getGroupName2'],
+                'callback' => ['PHPFusion\\Infusions\\Forum\\Classes\\Admin\\Mood_List', 'getGroupName2'],
             ]
         ];
     }
