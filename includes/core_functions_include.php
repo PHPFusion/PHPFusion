@@ -1709,7 +1709,7 @@ function print_p($array, $modal = FALSE, $print = TRUE) {
     $debug = ob_get_clean();
     if ($modal == TRUE) {
         $modal = openmodal('Debug', 'Debug');
-        $modal .= "<pre style='white-space:pre-wrap !important;'>";
+        $modal .= "<pre class='printp' style='white-space:pre-wrap !important;'>";
         $modal .= $debug;
         $modal .= "</pre>\n";
         $modal .= closemodal();
@@ -1718,7 +1718,7 @@ function print_p($array, $modal = FALSE, $print = TRUE) {
         return FALSE;
     }
     if ($print == TRUE) {
-        echo "<pre style='white-space:pre-wrap !important;'>";
+        echo "<pre class='printp' style='white-space:pre-wrap !important;'>";
         echo $debug;
         echo "</pre>\n";
     }
