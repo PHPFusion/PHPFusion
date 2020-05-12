@@ -1953,7 +1953,7 @@ function print_p($array, $modal = FALSE, $print = TRUE, $default_visibility = '0
 
         if ($modal == TRUE) {
             $modal = openmodal('Debug', 'Debug');
-            $modal .= "<pre style='white-space:pre-wrap !important;'>";
+            $modal .= "<pre class='printp' style='white-space:pre-wrap !important;'>";
             $modal .= $debug;
             $modal .= "</pre>\n";
             $modal .= closemodal();
@@ -1962,7 +1962,7 @@ function print_p($array, $modal = FALSE, $print = TRUE, $default_visibility = '0
             return FALSE;
         }
         if ($print == TRUE) {
-            echo "<pre style='white-space:pre-wrap !important;'>";
+            echo "<pre class='printp' style='white-space:pre-wrap !important;'>";
             echo $debug;
             echo "</pre>\n";
         }
