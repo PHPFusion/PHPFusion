@@ -26,10 +26,7 @@ use PHPFusion\QuantumFields;
  * @package PHPFusion\Forums\Threads
  */
 class Forum_Mood extends ForumServer {
-
-    private static $mood_cache = [];
     public $info = [];
-    private $post_data = [];
     private $post_id = 0;
     private $post_author = 0;
 
@@ -41,7 +38,6 @@ class Forum_Mood extends ForumServer {
      * @return $this
      */
     public function set_PostData($post_data) {
-        $this->post_data = $post_data;
         $this->post_id = $post_data['post_id'];
         $this->post_author = $post_data['post_author'];
         return $this;
@@ -117,79 +113,68 @@ class Forum_Mood extends ForumServer {
         // whether any user has reacted to this post
         $locale = fusion_get_locale("", [FORUM_ADMIN_LOCALE, FORUM_LOCALE]);
 
-        $last_datestamp = [];
-        $mood_description = [];
-        $mood_user = [];
-        $mood_icon = [];
+        $mood_users = [];
+        $moods = [];
 
         $mood_cache = $this->cache_mood();
 
         // Get the types of buttons
         $response_query = "SELECT pn.* FROM ".DB_POST_NOTIFY." pn WHERE post_id='".$this->post_id."' ORDER BY pn.notify_mood_id ASC, pn.post_id ASC";
-
         $response_result = dbquery($response_query);
 
         if (dbrows($response_result) > 0) {
-
             while ($m_data = dbarray($response_result)) {
-                $icon = isset($mood_cache[$m_data['notify_mood_id']]['mood_icon']) ? $mood_cache[$m_data['notify_mood_id']]['mood_icon'] : "fa fa-question fa-fw";
-                $mood_icon[$m_data['notify_mood_id']] = "<i class='$icon'></i>";
-                $description = isset($mood_cache[$m_data['notify_mood_id']]['mood_description']) ? $mood_cache[$m_data['notify_mood_id']]['mood_description'] : $locale['forum_0529'];
-                $mood_description[$m_data['notify_mood_id']] = $description;
                 if ($user = fusion_get_user($m_data['notify_sender'])) {
-                    $user_list[$m_data['notify_mood_id']][$user['user_id']] = profile_link($user['user_id'], $user['user_name'], $user['user_status'], 'mood_sender');
+                    $m_data['profile_link'] = profile_link($user['user_id'], $user['user_name'], $user['user_status'], 'mood_sender');
                 }
-                $last_datestamp[$m_data['notify_mood_id']] = $m_data['notify_datestamp'];
+
+                $mood_users[] = $m_data;
             }
 
-            $my_id = fusion_get_userdata('user_id');
-            if (!empty($user_list)) {
-                foreach ($user_list as $mood_id => $short_list) {
-                    if (isset($short_list[$my_id])) {
-                        unset($short_list[$my_id]);
-                        $short_list[0] = $locale['you'];
+            foreach ($mood_cache as $id => $data) {
+                $mood = [];
+                foreach ($mood_users as $data2) {
+                    if ($id == $data2['notify_mood_id']) {
+                        $mood[] = $data2;
                     }
-                    if (count($short_list) > 3) {
-                        $count = (count($short_list) - 3)." ".$locale['forum_0530'];
-                        $short_list = array_slice($short_list, 0, 3);
-                        $short_list[] = $count;
-                    }
-                    ksort($short_list);
-                    $mood_user[$mood_id] = implode(', ', $short_list);
+                }
+
+                $moods[$id] = $data;
+                $moods[$id]['users'] = $mood;
+            }
+
+            $users = '';
+            foreach ($moods as $id => $data) {
+                if (!empty($data['users'])) {
+                    $users .= '<div class="mood_users" title="'.$data['mood_name'].'">';
+                        $users .= '<i class="'.$data['mood_icon'].' fa-fw"></i> ';
+                        $users .= implode(', ', array_map(function ($user) { return $user['profile_link']; }, $data['users']));
+                    $users .= '</div>';
                 }
             }
 
-
-            $output_message = "";
-            foreach ($mood_description as $mood_id => $mood_output) {
-                $senders = $mood_user[$mood_id];
-                $output_message .= sprintf(
-                        $locale['forum_0528'],
-                        $mood_icon[$mood_id],
-                        $senders,
-                        $mood_output,
-                        timer($last_datestamp[$mood_id]))."
-                        <br/>";
-            }
+            $count = format_word(count($mood_users), $locale['fmt_user']);
+            $output_message = '<div><a data-toggle="collapse" href="#moods'.$this->post_id.'">'.$count.' '.$locale['forum_0528'].' <span class="caret"></span></a><div id="moods'.$this->post_id.'" class="moods collapse">'.$users.'</div></div>';
 
             return (string)$output_message;
         }
+
+        return NULL;
     }
 
-    public static function cache_mood() {
-        if (empty(self::$mood_cache)) {
-            $cache_query = "SELECT * FROM ".DB_FORUM_MOODS." m WHERE ".groupaccess('mood_access')." AND mood_status=1";
-            $cache_result = dbquery($cache_query);
-            if (dbrows($cache_result) > 0) {
-                while ($data = dbarray($cache_result)) {
-                    $data['mood_name'] = QuantumFields::parse_label($data['mood_name']);
-                    $data['mood_description'] = QuantumFields::parse_label($data['mood_description']);
-                    self::$mood_cache[$data['mood_id']] = $data;
-                }
+    public function cache_mood() {
+        $mood_cache = [];
+        $cache_result = dbquery("SELECT * FROM ".DB_FORUM_MOODS." WHERE ".groupaccess('mood_access')." AND mood_status=1");
+        if (dbrows($cache_result) > 0) {
+            while ($data = dbarray($cache_result)) {
+                $data['mood_name'] = QuantumFields::parse_label($data['mood_name']);
+                $data['mood_description'] = QuantumFields::parse_label($data['mood_description']);
+                $data['mood_icon'] = !empty($data['mood_icon']) ? $data['mood_icon'] : 'fa fa-question';
+                $mood_cache[$data['mood_id']] = $data;
             }
         }
 
-        return self::$mood_cache;
+        return $mood_cache;
     }
 
     /**
@@ -210,21 +195,21 @@ class Forum_Mood extends ForumServer {
 
             foreach ($mood_cache as $mood_id => $mood_data) {
                 //jQuery data model for ajax
-                $html .= form_hidden('post_author', '', $this->post_author, ['input_id' => 'post_author'.$this->post_id]);
-                $html .= form_hidden('post_id', '', $this->post_id, ['input_id' => 'post_id'.$this->post_id]);
+                $html .= form_hidden('post_author', '', $this->post_author, ['input_id' => 'post_author'.$mood_id.$this->post_id]);
+                $html .= form_hidden('post_id', '', $this->post_id, ['input_id' => 'post_id'.$mood_id.$this->post_id]);
 
                 if (!$this->mood_exists($my_id, $mood_id, $this->post_id)) {
                     // Post Button
                     $html .=
                         "<button name='post_mood' id='".$this->post_id."-$mood_id' class='btn btn-sm btn-default m-r-5' data-mood='$mood_id' data-post='$this->post_id' value='".$mood_id."'>".
-                        (!empty($mood_data['mood_icon']) ? "<i class='".$mood_data['mood_icon']."'></i>" : "").
+                        (!empty($mood_data['mood_icon']) ? "<i class='".$mood_data['mood_icon']."'></i> " : "").
                         QuantumFields::parse_label($mood_data['mood_name']).
                         "</button>";
                 } else {
                     // Unpost Button
                     $html .=
                         "<button name='unpost_mood' id='".$this->post_id."-$mood_id' class='btn btn-sm btn-default active m-r-5' data-mood='$mood_id' data-post='$this->post_id' value='".$mood_id."'>".
-                        (!empty($mood_data['mood_icon']) ? "<i class='".$mood_data['mood_icon']."'></i>" : "").
+                        (!empty($mood_data['mood_icon']) ? "<i class='".$mood_data['mood_icon']."'></i> " : "").
                         QuantumFields::parse_label($mood_data['mood_name']).
                         "</button>";
                 }
