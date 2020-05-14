@@ -28,7 +28,7 @@ if (isset($_POST['save_template'])) {
         'template_key'          => form_sanitizer($_POST['template_key'], '', 'template_key'),
         'template_format'       => form_sanitizer($_POST['template_format'], '', 'template_format'),
         'template_subject'      => form_sanitizer($_POST['template_subject'], '', 'template_subject'),
-        'template_content'      => form_sanitizer($_POST['template_content'], '', 'template_content'),
+        'template_content'      => form_sanitizer(descript($_POST['template_content']), '', 'template_content'),
         'template_active'       => form_sanitizer($_POST['template_active'], '', 'template_active'),
         'template_sender_name'  => form_sanitizer($_POST['template_sender_name'], '', 'template_sender_name'),
         'template_sender_email' => form_sanitizer($_POST['template_sender_email'], '', 'template_sender_email'),
@@ -44,7 +44,7 @@ if (isset($_POST['save_template'])) {
         'template_key'          => form_sanitizer($_POST['template_key'], '', 'template_key'),
         'template_format'       => form_sanitizer($_POST['template_format'], '', 'template_format'),
         'template_subject'      => form_sanitizer($_POST['template_subject'], '', 'template_subject'),
-        'template_content'      => form_sanitizer($_POST['template_content'], '', 'template_content'),
+        'template_content'      => form_sanitizer(descript($_POST['template_content']), '', 'template_content'),
         'template_active'       => form_sanitizer($_POST['template_active'], '', 'template_active'),
         'template_sender_name'  => form_sanitizer($_POST['template_sender_name'], '', 'template_sender_name'),
         'template_sender_email' => form_sanitizer($_POST['template_sender_email'], '', 'template_sender_email'),
@@ -267,9 +267,9 @@ echo form_select('insertimage', '', '', [
 ]);
 echo "</div>\n";
 closeside();
-echo form_button('save_template', $locale['save'], $locale['save'], ['class' => 'btn-primary']);
-echo form_button('test_template', $locale['MAIL_023'], $locale['MAIL_023'], ['class' => 'btn-default']);
-echo form_button('reset', $locale['MAIL_024'], $locale['MAIL_024'], ['class' => 'btn-default']);
+echo form_button('save_template', $locale['save'], $locale['save'], ['class' => 'btn-primary', 'input_id' => 'save_template2']);
+echo form_button('test_template', $locale['MAIL_023'], $locale['MAIL_023'], ['class' => 'btn-default', 'input_id' => 'test_template2']);
+echo form_button('reset', $locale['MAIL_024'], $locale['MAIL_024'], ['class' => 'btn-default', 'input_id' => 'reset2']);
 
 echo closeform();
 echo closetabbody();

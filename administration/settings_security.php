@@ -50,7 +50,7 @@ if (isset($_POST['savesettings'])) {
     // Save settings after validation
     $inputData = [
         'captcha'             => form_sanitizer($_POST['captcha'], '', 'captcha'),
-        'privacy_policy'      => form_sanitizer($_POST['privacy_policy'], '', 'privacy_policy', $is_multilang),
+        'privacy_policy'      => form_sanitizer(descript($_POST['privacy_policy']), '', 'privacy_policy', $is_multilang),
         'allow_php_exe'       => form_sanitizer($_POST['allow_php_exe'], 0, 'allow_php_exe'),
         'flood_interval'      => form_sanitizer($_POST['flood_interval'], 15, 'flood_interval'),
         'flood_autoban'       => form_sanitizer($_POST['flood_autoban'], 0, 'flood_autoban'),
