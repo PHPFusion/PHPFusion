@@ -290,6 +290,7 @@ function set_status_header($code = 200) {
 
 /**
  * Get HTTP response code
+ *
  * @param $url
  *
  * @return false|string
@@ -934,7 +935,46 @@ function descript($text, $striptags = TRUE) {
         } while ($count);
     }
 
-    return preg_replace(array_keys($patterns), $patterns, $text);
+    $text = preg_replace(array_keys($patterns), $patterns, $text);
+    $text = filter_xss($text);
+
+    return $text;
+}
+
+/**
+ * Filter XSS
+ *
+ * Based on https://github.com/JBlond/PHP-XSS-Filter
+ *
+ * @param $input
+ *
+ * @return string
+ */
+function filter_xss($input) {
+    $string = html_entity_decode($input, ENT_NOQUOTES, 'UTF-8');
+    $preg_patterns = [
+        // Fix &entity\n
+        '!(&#0+[0-9]+)!'                                                                                                                                                                                => '$1;',
+        '/(&#*\w+)[\x00-\x20]+;/u'                                                                                                                                                                      => '$1;>',
+        '/(&#x*[0-9A-F]+);*/iu'                                                                                                                                                                         => '$1;',
+        //any attribute starting with "on" or xml name space
+        '#(<[^>]+?[\x00-\x20"\'])(?:on|xmlns)[^>]*+>#iu'                                                                                                                                                => '$1>',
+        //javascript: and VB script: protocols
+        '#([a-z]*)[\x00-\x20]*=[\x00-\x20]*([`\'"]*)[\x00-\x20]*j[\x00-\x20]*a[\x00-\x20]*v[\x00-\x20]*a[\x00-\x20]*s[\x00-\x20]*c[\x00-\x20]*r[\x00-\x20]*i[\x00-\x20]*p[\x00-\x20]*t[\x00-\x20]*:#iu' => '$1=$2nojavascript...',
+        '#([a-z]*)[\x00-\x20]*=([\'"]*)[\x00-\x20]*v[\x00-\x20]*b[\x00-\x20]*s[\x00-\x20]*c[\x00-\x20]*r[\x00-\x20]*i[\x00-\x20]*p[\x00-\x20]*t[\x00-\x20]*:#iu'                                        => '$1=$2novbscript...',
+        '#([a-z]*)[\x00-\x20]*=([\'"]*)[\x00-\x20]*-moz-binding[\x00-\x20]*:#u'                                                                                                                         => '$1=$2nomozbinding...',
+        // Only works in IE: <span style="width: expression(alert('Ping!'));"></span>
+        '#(<[^>]+?)style[\x00-\x20]*=[\x00-\x20]*[`\'"]*.*?expression[\x00-\x20]*\([^>]*+>#i'                                                                                                           => '$1>',
+        '#(<[^>]+?)style[\x00-\x20]*=[\x00-\x20]*[`\'"]*.*?s[\x00-\x20]*c[\x00-\x20]*r[\x00-\x20]*i[\x00-\x20]*p[\x00-\x20]*t[\x00-\x20]*:*[^>]*+>#iu'                                                  => '$1>',
+        // namespace elements
+        '#</*\w+:\w[^>]*+>#i'                                                                                                                                                                           => ''
+    ];
+
+    foreach ($preg_patterns as $pattern => $replacement) {
+        $string = preg_replace($pattern, $replacement, $string);
+    }
+
+    return $string;
 }
 
 /**
