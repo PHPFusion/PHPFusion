@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: Authenticate.inc
-| Author: Hans Kristian Flaatten (Starefossen)
+| Author: PHPFusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -81,17 +81,17 @@ class Authenticate {
             $passAuth->inputPassword = $inputPassword;
             // Check if input password is valid
             if ($passAuth->isValidCurrentPassword(TRUE)) {
-                if ($settings['multiple_logins'] != 1) {
+                if (!$settings['multiple_logins']) {
                     $user['user_algo'] = $passAuth->getNewAlgo();
                     $user['user_salt'] = $passAuth->getNewSalt();
                     $user['user_password'] = $passAuth->getNewHash();
-                    dbquery("UPDATE ".DB_USERS."
-                        SET user_algo='".$user['user_algo']."', user_salt='".$user['user_salt']."', user_password='".$user['user_password']."'
-                        WHERE user_id='".$user['user_id']."'");
+                    dbquery("UPDATE ".DB_USERS." SET user_algo='".$user['user_algo']."', user_salt='".$user['user_salt']."', user_password='".$user['user_password']."' WHERE user_id='".$user['user_id']."'");
                 }
+
                 if ($user['user_status'] == 0 && $user['user_actiontime'] == 0) {
-                    Authenticate::setUserCookie($user['user_id'], $user['user_salt'], $user['user_algo'], $remember, true);
+                    Authenticate::setUserCookie($user['user_id'], $user['user_salt'], $user['user_algo'], $remember, TRUE);
                     Authenticate::_setUserTheme($user);
+                    Authenticate::storeUserNewHash($passAuth, $user["user_id"]);
                     $this->_userData = $user;
                 } else {
                     require_once INCLUDES."suspend_include.php";
@@ -149,7 +149,6 @@ class Authenticate {
         }
     }
 
-    /* Admin Login Authentication */
     // Set user Cookie
     public static function _setCookie($cookieName, $cookieContent, $cookieExpiration, $cookiePath, $cookieDomain, $secure = FALSE, $httpOnly = FALSE) {
         if (version_compare(PHP_VERSION, '5.2.0', '>=')) {
@@ -194,8 +193,6 @@ class Authenticate {
         return $return;
     }
 
-    // Validate authenticated user
-
     public static function _setUserTheme($user) {
         if ($user['user_level'] == USER_LEVEL_SUPER_ADMIN) {
             return $user['user_level'];
@@ -207,6 +204,18 @@ class Authenticate {
             return NULL;
         } else {
             return NULL;
+        }
+    }
+
+    // Validate authenticated user
+
+    private static function storeUserNewHash(PasswordAuth $passAuth, $user_id) {
+        if ($passAuth->isValidCurrentPassword(TRUE)) {
+            $data["user_algo"] = $passAuth->getNewAlgo();
+            $data["user_salt"] = $passAuth->getNewSalt();
+            $data["user_password"] = $passAuth->getNewHash();
+            $data["user_id"] = $user_id;
+            session_add("logout_hash", $data);
         }
     }
 
@@ -313,9 +322,7 @@ class Authenticate {
                 }
                 // Validate a provided password
             } else if ($pass != "") {
-                $result = dbquery("SELECT user_admin_algo, user_admin_salt, user_admin_password FROM ".DB_USERS."
-                    WHERE user_id='".$userdata['user_id']."' AND user_level < ".USER_LEVEL_MEMBER." AND  user_status='0' AND user_actiontime='0'
-                    LIMIT 1");
+                $result = dbquery("SELECT user_admin_algo, user_admin_salt, user_admin_password FROM ".DB_USERS." WHERE user_id='".$userdata['user_id']."' AND user_level < ".USER_LEVEL_MEMBER." AND  user_status='0' AND user_actiontime='0' LIMIT 1");
                 if (dbrows($result) == 1) {
                     $user = dbarray($result);
                     $inputHash = ($user['user_admin_algo'] != 'md5' ? hash_hmac($user['user_admin_algo'], $pass, $user['user_admin_salt']) : md5(md5($pass)));
@@ -344,9 +351,7 @@ class Authenticate {
                     $userdata['user_admin_algo'] = $passAuth->getNewAlgo();
                     $userdata['user_admin_salt'] = $passAuth->getNewSalt();
                     $userdata['user_admin_password'] = $passAuth->getNewHash();
-                    dbquery("UPDATE ".DB_USERS."
-                    SET user_admin_algo='".$userdata['user_admin_algo']."', user_admin_salt='".$userdata['user_admin_salt']."', user_admin_password='".$userdata['user_admin_password']."'
-                    WHERE user_id='".$userdata['user_id']."'");
+                    dbquery("UPDATE ".DB_USERS." SET user_admin_algo='".$userdata['user_admin_algo']."', user_admin_salt='".$userdata['user_admin_salt']."', user_admin_password='".$userdata['user_admin_password']."' WHERE user_id='".$userdata['user_id']."'");
                 }
                 Authenticate::setUserCookie($userdata['user_id'], $userdata['user_admin_salt'], $userdata['user_admin_algo'], FALSE, FALSE);
 
@@ -372,7 +377,7 @@ class Authenticate {
                         // From Version 7 to Version 9, Ported Database has this problem - where user_salt has problem entering
                         $key = hash_hmac($user['user_algo'], $userID.$cookieExpiration, $user['user_salt']);
                         $hash = hash_hmac($user['user_algo'], $userID.$cookieExpiration, $key);
-                        if ($cookieHash == $hash) {
+                        if ($cookieHash === $hash) {
                             return $user;
                         } else {
                             // Cookie has been tampered with!
@@ -401,12 +406,24 @@ class Authenticate {
         }
     }
 
-    // Get Loging Redirect Url
+    // Logout user
     public static function logOut() {
+
+        $logout_hash = session_get("logout_hash");
+        if (!empty($logout_hash) && count($logout_hash) == 4) {
+            $new_salt = $logout_hash["user_salt"];
+            $new_password = $logout_hash["user_password"];
+            $new_algo = $logout_hash["user_algo"];
+            $user_id = $logout_hash["user_id"];
+            $sql = "UPDATE ".DB_USERS." SET user_salt='$new_salt', user_password='$new_password', user_algo='$new_algo' WHERE user_id=$user_id";
+            dbquery($sql);
+        }
+
         dbquery("DELETE FROM ".DB_ONLINE." WHERE online_ip='".USER_IP."'");
-        //header("P3P: CP='NOI ADM DEV PSAi COM NAV OUR OTRo STP IND DEM'");
-        Authenticate::_setCookie(COOKIE_USER, "", time() - 1209600, COOKIE_PATH, COOKIE_DOMAIN, FALSE, TRUE);
+        // Expires cookie
         Authenticate::_setCookie(COOKIE_LASTVISIT, "", time() - 1209600, COOKIE_PATH, COOKIE_DOMAIN, FALSE, TRUE);
+        Authenticate::_setCookie(COOKIE_USER, "", time() - 1209600, COOKIE_PATH, COOKIE_DOMAIN, FALSE, TRUE);
+
         session_destroy();
 
         return Authenticate::getEmptyUserData();
@@ -425,26 +442,27 @@ class Authenticate {
     }
 
     public static function setLastVisitCookie() {
-        global $userdata;
+
         $guest_lastvisit = time() - 3600;
         $update_threads = FALSE;
         $set_cookie = TRUE;
         $cookie_exists = isset($_COOKIE[COOKIE_LASTVISIT]) && isnum($_COOKIE[COOKIE_LASTVISIT]) ? TRUE : FALSE;
         if (iMEMBER) {
+            $last_visited = fusion_get_userdata("user_lastvisit");
+            $id = fusion_get_userdata("user_id");
+            $update_threads = TRUE;
+            $lastvisit = $last_visited;
             if ($cookie_exists) {
-                if ($_COOKIE[COOKIE_LASTVISIT] > $userdata['user_lastvisit']) {
+                if ($_COOKIE[COOKIE_LASTVISIT] > $last_visited) {
                     $update_threads = TRUE;
-                    $lastvisit = $userdata['user_lastvisit'];
+                    $lastvisit = $last_visited;
                 } else {
                     $set_cookie = FALSE;
                     $lastvisit = $_COOKIE[COOKIE_LASTVISIT];
                 }
-            } else {
-                $update_threads = TRUE;
-                $lastvisit = $userdata['user_lastvisit'];
             }
             if ($update_threads) {
-                dbquery("UPDATE ".DB_USERS." SET user_threads='' WHERE user_id='".$userdata['user_id']."'");
+                dbquery("UPDATE ".DB_USERS." SET user_threads='' WHERE user_id=$id");
             }
         } else {
             if ($cookie_exists) {
@@ -463,6 +481,13 @@ class Authenticate {
         }
 
         return $lastvisit;
+    }
+
+    public static function setVisitorCounter() {
+        if (!isset($_COOKIE[COOKIE_PREFIX.'visited'])) {
+            $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value=settings_value+1 WHERE settings_name='counter'");
+            setcookie(COOKIE_PREFIX."visited", "yes", time() + 31536000, "/", "", "0");
+        }
     }
 
     public function getUserData() {

@@ -16,7 +16,11 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
+use Defender\ImageValidation;
+use Defender\Token;
 use PHPFusion\Authenticate;
+use PHPFusion\Installer\Infusion_core;
+use PHPFusion\OutputHandler;
 
 // Uncomment to see server errors without modifying php.ini
 ini_set('display_errors', '1');
@@ -38,8 +42,17 @@ if (stripget($_GET)) {
 
 // Establish mySQL database connection
 dbconnect($db_host, $db_user, $db_pass, $db_name, !empty($db_port) ? $db_port : 3306);
+
 // Fetch the settings from the database
 $settings = fusion_get_settings();
+
+// Request Variables
+$_get_lang = get("lang");
+$_get_logout = get("logout");
+$_check_post_login = check_post("login");
+$_check_post_username = check_post("user_name");
+$_check_post_pass = check_post("user_pass");
+$_check_post_remember = check_post("remember_me");
 
 // Settings dependent functions
 date_default_timezone_set('UTC');
@@ -172,14 +185,13 @@ define("START_PAGE", substr(preg_replace("#(&amp;|\?)(s_action=edit&amp;shout_id
 /**
  * Login / Logout / Revalidate
  */
-if (isset($_POST['login']) && isset($_POST['user_name']) && isset($_POST['user_pass'])) {
-    if (\defender::safe()) {
-        $auth = new Authenticate($_POST['user_name'], $_POST['user_pass'], (isset($_POST['remember_me']) ? TRUE : FALSE));
+if ($_check_post_login && $_check_post_username && $_check_post_pass) {
+    if (fusion_safe()) {
+        $auth = new Authenticate(post("user_name"), post("user_pass"), $_check_post_remember);
         $userdata = $auth->getUserData();
-        unset($auth, $_POST['user_name'], $_POST['user_pass']);
         redirect(FUSION_REQUEST);
     }
-} else if (isset($_GET['logout']) && $_GET['logout'] == "yes") {
+} else if ($_get_logout === "yes") {
     $userdata = Authenticate::logOut();
     $request = clean_request('', ['logout'], FALSE);
     redirect($request);
@@ -202,14 +214,14 @@ if (iMEMBER && valid_language($userdata['user_language'])) {
     $current_user_language = $userdata['user_language'];
 } else {
     $langData = dbarray(dbquery('SELECT * FROM '.DB_LANGUAGE_SESSIONS.' WHERE user_ip=:ip', [':ip' => USER_IP]));
-    $current_user_language = (!empty($langData['user_language']) ? $langData['user_language']: fusion_get_settings('locale'));
+    $current_user_language = (!empty($langData['user_language']) ? $langData['user_language'] : fusion_get_settings('locale'));
 }
 $language_opts = fusion_get_enabled_languages();
 $enabled_languages = array_keys($language_opts);
 
 // If language change is initiated and if the selected language is valid
-if (isset($_GET['lang']) && isset($_GET['lang']) != "" && file_exists(LOCALE.$_GET['lang']."/global.php") && in_array($_GET['lang'], $enabled_languages)) {
-    $current_user_language = stripinput($_GET['lang']);
+if ($_get_lang && file_exists(LOCALE.+$_get_lang."/global.php") && in_array($_get_lang, $enabled_languages)) {
+    $current_user_language = stripinput($_get_lang);
     set_language($current_user_language);
 } else {
     if (count($enabled_languages) > 1) {
@@ -233,10 +245,10 @@ require_once INCLUDES."error_handling_include.php";
 $defender = defender::getInstance();
 
 if (!defined('FUSION_ALLOW_REMOTE')) {
-    new \Defender\Token();
+    new Token();
 }
 
-\Defender\ImageValidation::ValidateExtensions();
+ImageValidation::ValidateExtensions();
 
 // Define aidlink
 if (iADMIN) {
@@ -252,22 +264,16 @@ if (iADMIN) {
 }
 
 // PHP-Fusion user cookie functions
-if (!isset($_COOKIE[COOKIE_PREFIX.'visited'])) {
-    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value=settings_value+1 WHERE settings_name='counter'");
-    setcookie(COOKIE_PREFIX."visited", "yes", time() + 31536000, "/", "", "0");
-}
-
-//$lastvisited = Authenticate::setLastVisitCookie();
-//define('LASTVISITED', Authenticate::setLastVisitCookie());
+Authenticate::setVisitorCounter();
 
 // Set admin login procedures
 Authenticate::setAdminLogin();
 
 $fusion_dynamics = Dynamics::getInstance();
-$fusion_page_head_tags = &\PHPFusion\OutputHandler::$pageHeadTags;
-$fusion_page_footer_tags = &\PHPFusion\OutputHandler::$pageFooterTags;
-$fusion_jquery_tags = &\PHPFusion\OutputHandler::$jqueryTags;
-$fusion_css_tags = &\PHPFusion\OutputHandler::$cssTags;
+$fusion_page_head_tags = &OutputHandler::$pageHeadTags;
+$fusion_page_footer_tags = &OutputHandler::$pageFooterTags;
+$fusion_jquery_tags = &OutputHandler::$jqueryTags;
+$fusion_css_tags = &OutputHandler::$cssTags;
 
 // Set theme using $_GET as well.
 // Set theme
@@ -295,4 +301,4 @@ if (dbrows($result)) {
  * Reduction of 0.04 seconds in performance.
  * We can use manually include the configuration if needed.
  */
-\PHPFusion\Installer\Infusion_core::load_Configuration();
+Infusion_core::load_Configuration();
