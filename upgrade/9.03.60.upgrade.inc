@@ -26,3 +26,5 @@ foreach ($update_settings_tbl as $key => $value) {
         $inf_updatedbrow[] = DB_SETTINGS." SET settings_value='$value' WHERE settings_name='$key'";
     }
 }
+
+$inf_altertable[] = DB_USERS." ADD user_session VARCHAR(150) NOT NULL DEFAULT '' AFTER user_actiontime";
