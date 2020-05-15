@@ -713,16 +713,16 @@ function parse_textarea(string $value, $parse_smileys = TRUE, $parse_bbcode = TR
     if ($parse_smileys) {
         $value = parsesmileys($value);
     }
+    if ($descript === TRUE) {
+        $value = descript($value);
+        $value = strip_scripts($value);
+    }
     if ($parse_bbcode) {
         $value = parseubb($value);
     }
     $value = fusion_parse_user($value);
     if ($add_line_breaks === TRUE) {
         $value = nl2br($value);
-    }
-    if ($descript === TRUE) {
-        $value = descript($value);
-        $value = strip_scripts($value);
     }
 
     return (string)$value;
