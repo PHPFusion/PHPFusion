@@ -21,40 +21,40 @@ function get_core_tables($localeset) {
      * rather than maintaining files after files
      */
     $table_package['admin'] = [
-        'admin_id'     => [
+        'admin_id'       => [
             'type'           => 'MEDIUMINT',
             'length'         => 8,
             'auto_increment' => TRUE,
             'key'            => 1, //PRIMARY KEY (admin_id)
             'unsigned'       => TRUE,
         ], //admin_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-        'admin_rights' => [
+        'admin_rights'   => [
             'type'   => 'CHAR',
             'length' => 4
         ], //admin_rights CHAR(4) NOT NULL DEFAULT '',
-        'admin_image'  => [
+        'admin_image'    => [
             'type'   => 'VARCHAR',
             'length' => 50
         ], //admin_image VARCHAR(50) NOT NULL DEFAULT '',
-        'admin_title'  => [
+        'admin_title'    => [
             'type'   => 'VARCHAR',
             'length' => 50
         ], //admin_title VARCHAR(50) NOT NULL DEFAULT '',
-        'admin_link'   => [
+        'admin_link'     => [
             'type'    => 'VARCHAR',
             'length'  => 100,
             'default' => 'reserved',
         ], //admin_link VARCHAR(100) NOT NULL DEFAULT 'reserved',
-        'admin_page'   => [
+        'admin_page'     => [
             'type'     => 'TINYINT',
             'length'   => 1,
             'default'  => 1,
             'unsigned' => TRUE,
         ], //admin_page TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
-        'admin_language'   => [
-            'type'     => 'VARCHAR',
-            'length'   => 50,
-            'default'  => $localeset,
+        'admin_language' => [
+            'type'    => 'VARCHAR',
+            'length'  => 50,
+            'default' => $localeset,
         ], //admin_language VARCHAR(50) NOT NULL DEFAULT '".$localeset."',
     ];
     $table_package['mlt_tables'] = [
@@ -1373,6 +1373,10 @@ function get_core_tables($localeset) {
             'length'   => 10,
             'unsigned' => TRUE
         ], //user_actiontime INT(10) UNSIGNED NOT NULL DEFAULT '0',
+        'user_session'         => [
+            'type'   => 'VARCHAR',
+            'length' => 150,
+        ],
         'user_theme'           => [
             'type'    => 'VARCHAR',
             'length'  => 100,

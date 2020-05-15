@@ -23,7 +23,7 @@ if (!empty($settings['domain_server'])) {
     $domain_server = explode("|", $settings['domain_server']);
     $domain_server[] = (strstr($settings['site_host'], "www.") ? substr($settings['site_host'], 3) : $settings['site_host']);
     $domain_server = array_unique(array_filter($domain_server));
-    foreach($domain_server as $server_name) {
+    foreach ($domain_server as $server_name) {
         if ($_SERVER['SERVER_NAME'] === $server_name) {
             define("COOKIE_DOMAIN", $server_name);
         }
@@ -91,7 +91,7 @@ class Authenticate {
                 if ($user['user_status'] == 0 && $user['user_actiontime'] == 0) {
                     Authenticate::setUserCookie($user['user_id'], $user['user_salt'], $user['user_algo'], $remember, TRUE);
                     Authenticate::_setUserTheme($user);
-                    Authenticate::storeUserNewHash($passAuth, $user["user_id"]);
+                    Authenticate::storeUserSession($passAuth, $user["user_id"]);
                     $this->_userData = $user;
                 } else {
                     require_once INCLUDES."suspend_include.php";
@@ -162,13 +162,13 @@ class Authenticate {
      * Get the redirection url
      * If there is a new authentication url, error request will not valid
      *
-     * @todo: use addNotice('') instead of going for errorId
-     *
      * @param        $errorId
      * @param string $userStatus
      * @param string $userId
      *
      * @return string
+     * @todo: use addNotice('') instead of going for errorId
+     *
      */
     public static function getRedirectUrl($errorId, $userStatus = "", $userId = "") {
         global $_SERVER;
@@ -207,30 +207,23 @@ class Authenticate {
         }
     }
 
-    // Validate authenticated user
-
-    private static function storeUserNewHash(PasswordAuth $passAuth, $user_id) {
+    private static function storeUserSession(PasswordAuth $passAuth, $user_id) {
         if ($passAuth->isValidCurrentPassword(TRUE)) {
-            $data["user_algo"] = $passAuth->getNewAlgo();
-            $data["user_salt"] = $passAuth->getNewSalt();
-            $data["user_password"] = $passAuth->getNewHash();
-            $data["user_id"] = $user_id;
-            session_add("logout_hash", $data);
+            $session = $passAuth->getNewSalt().".".$passAuth->getNewHash();
+            dbquery("UPDATE ".DB_USERS." SET user_session='$session' WHERE user_id=$user_id");
         }
     }
 
     public static function setAdminLogin() {
         $locale = fusion_get_locale();
-        if (isset($_GET['logout'])) {
-            self::expireAdminCookie();
-            $user = fusion_get_userdata("user_id");
-            session_destroy();
-            if (!empty($user)) {
-                redirect(BASEDIR."index.php");
-            }
+
+        if (check_get("logout")) {
+            self::logOut();
+            redirect(BASEDIR."index.php");
         }
-        if (isset($_POST['admin_password'])) {
-            $admin_password = form_sanitizer($_POST['admin_password'], '', 'admin_password');
+
+        if (check_post("admin_password")) {
+            $admin_password = sanitizer('admin_password', '', 'admin_password');
             if (Authenticate::validateAuthAdmin($admin_password)) {
                 if (Authenticate::setAdminCookie($admin_password)) {
                     unset($_SESSION['notices']);
@@ -254,7 +247,6 @@ class Authenticate {
     }
 
     // Checks or sets the lastvisit cookie
-
     public static function validateAuthAdmin($pass = "") {
         $userdata = fusion_get_userdata();
         $locale = fusion_get_locale();
@@ -274,45 +266,41 @@ class Authenticate {
                             $hash = hash_hmac($user['user_admin_algo'], $userID.$cookieExpiration, $key);
                             if ($cookieHash == $hash) {
                                 $error = FALSE;
-
-                                /**
-                                 * New 2nd factor session authentication
-                                 */
-                                if (empty($_SESSION['aid'])) {
+                                $aid = session_get("aid");
+                                if (!$aid) {
                                     return FALSE;
+                                }
+
+                                $password_algo = fusion_get_settings("password_algorithm");
+                                $token_data = explode(".", $_SESSION['aid']);
+                                // check if the token has the correct format
+                                if (count($token_data) == 3) {
+                                    list($tuser_id, $token_time, $hash) = $token_data;
+                                    $user_id = (iMEMBER ? $userdata['user_id'] : 0);
+                                    $algo = $password_algo;
+                                    $key = $userdata['user_id'].$token_time.iAUTH.SECRET_KEY;
+                                    $salt = md5($userdata['user_admin_salt'].SECRET_KEY_SALT);
+                                    // check if the logged user has the same ID as the one in token
+                                    if ($tuser_id != $user_id) {
+                                        $error = $locale['token_error_4'];
+                                        // make sure the token datestamp is a number
+                                    } else if (!isnum($token_time)) {
+                                        $error = $locale['token_error_5'];
+                                        // check if the hash is valid
+                                    } else if ($hash != hash_hmac($algo, $key, $salt)) {
+                                        $error = $locale['token_error_7'];
+                                        // check if a post wasn't made too fast. Set $post_time to 0 for instant. Go for System Settings later.
+                                    }
                                 } else {
-                                    $password_algo = fusion_get_settings("password_algorithm");
+                                    // token format is incorrect
+                                    $error = $locale['token_error_8'];
+                                }
+                                // Check if any error was set
+                                if ($error !== FALSE) {
+                                    \defender::stop();
+                                    addNotice("warning", $error);
 
-                                    $token_data = explode(".", $_SESSION['aid']);
-                                    // check if the token has the correct format
-                                    if (count($token_data) == 3) {
-                                        list($tuser_id, $token_time, $hash) = $token_data;
-                                        $user_id = (iMEMBER ? $userdata['user_id'] : 0);
-                                        $algo = $password_algo;
-                                        $key = $userdata['user_id'].$token_time.iAUTH.SECRET_KEY;
-                                        $salt = md5($userdata['user_admin_salt'].SECRET_KEY_SALT);
-                                        // check if the logged user has the same ID as the one in token
-                                        if ($tuser_id != $user_id) {
-                                            $error = $locale['token_error_4'];
-                                            // make sure the token datestamp is a number
-                                        } else if (!isnum($token_time)) {
-                                            $error = $locale['token_error_5'];
-                                            // check if the hash is valid
-                                        } else if ($hash != hash_hmac($algo, $key, $salt)) {
-                                            $error = $locale['token_error_7'];
-                                            // check if a post wasn't made too fast. Set $post_time to 0 for instant. Go for System Settings later.
-                                        }
-                                    } else {
-                                        // token format is incorrect
-                                        $error = $locale['token_error_8'];
-                                    }
-                                    // Check if any error was set
-                                    if ($error !== FALSE) {
-                                        \defender::stop();
-                                        addNotice("warning", $error);
-
-                                        return FALSE;
-                                    }
+                                    return FALSE;
                                 }
 
                                 return TRUE;
@@ -374,6 +362,11 @@ class Authenticate {
                     if (dbrows($result) == 1) {
                         $user = dbarray($result);
                         Authenticate::_setUserTheme($user);
+                        if (!$user["user_session"]) {
+                            // here we need to add a notice
+                            addNotice("danger", fusion_get_locale("global_183"));
+                            redirect(BASEDIR.fusion_get_settings("opening_page"));
+                        }
                         // From Version 7 to Version 9, Ported Database has this problem - where user_salt has problem entering
                         $key = hash_hmac($user['user_algo'], $userID.$cookieExpiration, $user['user_salt']);
                         $hash = hash_hmac($user['user_algo'], $userID.$cookieExpiration, $key);
@@ -409,15 +402,23 @@ class Authenticate {
     // Logout user
     public static function logOut() {
 
-        $logout_hash = session_get("logout_hash");
-        if (!empty($logout_hash) && count($logout_hash) == 4) {
-            $new_salt = $logout_hash["user_salt"];
-            $new_password = $logout_hash["user_password"];
-            $new_algo = $logout_hash["user_algo"];
-            $user_id = $logout_hash["user_id"];
-            $sql = "UPDATE ".DB_USERS." SET user_salt='$new_salt', user_password='$new_password', user_algo='$new_algo' WHERE user_id=$user_id";
-            dbquery($sql);
+        if (defined('COOKIE_USER') && isset($_COOKIE[COOKIE_USER]) && $_COOKIE[COOKIE_USER] != "") {
+            $cookieDataArr = explode(".", $_COOKIE[COOKIE_USER]);
+            if (count($cookieDataArr) == 3) {
+                list($userID, $cookieExpiration, $cookieHash) = $cookieDataArr;
+                $session_token = fusion_get_user($userID, "user_session");
+                // if cookie has expired, we need to reset immediately
+                if (!empty($session_token)) {
+                    $session_token = explode(".", $session_token);
+                    if (count($session_token) === 2) {
+                        $sql = "UPDATE ".DB_USERS." SET user_salt='".$session_token[0]."', user_password='".$session_token[1]."', user_session='' WHERE user_id=$userID";
+                        dbquery($sql);
+                    }
+                }
+            }
         }
+
+        self::expireAdminCookie();
 
         dbquery("DELETE FROM ".DB_ONLINE." WHERE online_ip='".USER_IP."'");
         // Expires cookie
