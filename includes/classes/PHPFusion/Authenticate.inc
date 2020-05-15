@@ -365,7 +365,7 @@ class Authenticate {
                         if (!$user["user_session"]) {
                             // here we need to add a notice
                             addNotice("danger", fusion_get_locale("global_183"));
-                            redirect(BASEDIR.fusion_get_settings("opening_page"));
+                            self::logOut();
                         }
                         // From Version 7 to Version 9, Ported Database has this problem - where user_salt has problem entering
                         $key = hash_hmac($user['user_algo'], $userID.$cookieExpiration, $user['user_salt']);
