@@ -43,7 +43,7 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
             $weblink_status = filter_input(INPUT_POST, 'weblink_status', FILTER_VALIDATE_INT);
             $this->inputArray = [
                 'weblink_name'        => form_sanitizer(filter_input(INPUT_POST, 'weblink_name', FILTER_DEFAULT), '', 'weblink_name'),
-                'weblink_description' => form_sanitizer(descript(filter_input(INPUT_POST, 'weblink_description', FILTER_DEFAULT)), "", "weblink_description"),
+                'weblink_description' => form_sanitizer(filter_input(INPUT_POST, 'weblink_description', FILTER_DEFAULT), "", "weblink_description"),
                 'weblink_url'         => form_sanitizer(filter_input(INPUT_POST, 'weblink_url', FILTER_DEFAULT), "", 'weblink_url'),
                 'weblink_cat'         => form_sanitizer(filter_input(INPUT_POST, 'weblink_cat', FILTER_VALIDATE_INT), 0, 'weblink_cat'),
                 'weblink_datestamp'   => form_sanitizer(filter_input(INPUT_POST, 'weblink_datestamp', FILTER_DEFAULT), time(), 'weblink_datestamp'),

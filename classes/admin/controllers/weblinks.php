@@ -92,7 +92,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
                 'weblink_name'        => form_sanitizer(filter_input(INPUT_POST, 'weblink_name', FILTER_DEFAULT), '', 'weblink_name'),
                 'weblink_cat'         => form_sanitizer(filter_input(INPUT_POST, 'weblink_cat', FILTER_VALIDATE_INT), 0, 'weblink_cat'),
                 'weblink_url'         => form_sanitizer(filter_input(INPUT_POST, 'weblink_url', FILTER_DEFAULT), '', 'weblink_url'),
-                'weblink_description' => form_sanitizer(descript(filter_input(INPUT_POST, 'weblink_description', FILTER_DEFAULT)), '', 'weblink_description'),
+                'weblink_description' => form_sanitizer(filter_input(INPUT_POST, 'weblink_description', FILTER_DEFAULT), '', 'weblink_description'),
                 'weblink_datestamp'   => form_sanitizer(filter_input(INPUT_POST, 'weblink_datestamp', FILTER_DEFAULT), '', 'weblink_datestamp'),
                 'weblink_visibility'  => form_sanitizer(filter_input(INPUT_POST, 'weblink_visibility', FILTER_VALIDATE_INT), 0, 'weblink_visibility'),
                 'weblink_status'      => !empty($weblink_status) ? $weblink_status : '0',
