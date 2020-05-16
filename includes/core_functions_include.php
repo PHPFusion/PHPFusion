@@ -333,17 +333,6 @@ function stripinput($text) {
 }
 
 /**
- * Strips all <script> tags
- *
- * @param $value
- *
- * @return string
- */
-function strip_scripts($value) {
-    return preg_replace('#<script(.*?)>(.*?)</script>#is', '', $value);
-}
-
-/**
  * Prevent any possible XSS attacks via $_GET
  *
  * @param string $check_url
@@ -715,7 +704,6 @@ function parse_textarea(string $value, $parse_smileys = TRUE, $parse_bbcode = TR
     }
     if ($descript === TRUE) {
         $value = descript($value);
-        $value = strip_scripts($value);
     }
     if ($parse_bbcode) {
         $value = parseubb($value);
@@ -912,15 +900,16 @@ function descript($text, $striptags = TRUE) {
         return $text;
     }
 
+    $text = preg_replace('/&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-f]{1,6});/i', '', htmlspecialchars_decode($text));
     // Convert problematic ascii characters to their true values
     $patterns = [
-        '#(&\#x)([0-9A-F]+);*#si'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                => '',
-        '#(<[^>]+[\"\'\s])*((onafterprint|onbeforeprint|onbeforeunload|onerror|onhashchange|onload|onmessage|onoffline|ononline|onpagehide|onpageshow|onpopstate|onresize|onstorage|onunload|onblur|onchange|oncontextmenu|onfocus|oninput|oninvalid|onreset|onsearch|onselect|onsubmit|onkeydown|onkeypress|onkeyup|onclick|ondblclick|onmousedown|onmousemove|onmouseup|onmousewheel|onwheel|ondrag|ondragend|ondragenter|ondragleave|ondragover|ondragstart|ondrop|onscroll|oncopy|oncut|onpaste|onabort|oncanplay|oncanplaythrough|oncuechange|ondurationchange|onemptied|onended|onerror|onloadeddata|onloadedmetadata|onloadstart|onpause|onplay|onplaying|onprogress|onratechange|onseeked|onseeking|onstalled|onsuspend|ontimeupdate|onvolumechange|onwaiting|ontoggle|xmlns)[^>]*>)#is' => "$1>",
-        '#([a-z]*)=([\`\'\"]*)script:#iU'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        => '$1=$2nojscript...',
-        '#([a-z]*)=([\`\'\"]*)javascript:#iU'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    => '$1=$2nojavascript...',
-        '#([a-z]*)=([\'\"]*)vbscript:#iU'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        => '$1=$2novbscript...',
-        '#(<[^>]+)style=([\`\'\"]*).*expression\([^>]*>#iU'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      => "$1>",
-        '#(<[^>]+)style=([\`\'\"]*).*behaviour\([^>]*>#iU'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       => "$1>"
+        '#(&\#x)([0-9A-F]+);*#si'                           => '',
+        '#(<[^>]+[\"\'\s])*((on|xmlns)[^>]*>)#is'           => "$1>",
+        '#([a-z]*)=([\`\'\"]*)script:#iU'                   => '$1=$2nojscript...',
+        '#([a-z]*)=([\`\'\"]*)javascript:#iU'               => '$1=$2nojavascript...',
+        '#([a-z]*)=([\'\"]*)vbscript:#iU'                   => '$1=$2novbscript...',
+        '#(<[^>]+)style=([\`\'\"]*).*expression\([^>]*>#iU' => "$1>",
+        '#(<[^>]+)style=([\`\'\"]*).*behaviour\([^>]*>#iU'  => "$1>"
     ];
 
     foreach (array_merge(['(', ')', ':'], range('A', 'Z'), range('a', 'z')) as $chr) {
@@ -936,22 +925,7 @@ function descript($text, $striptags = TRUE) {
     }
 
     $text = preg_replace(array_keys($patterns), $patterns, $text);
-    $text = filter_xss($text);
 
-    return $text;
-}
-
-/**
- * Filter XSS
- *
- * Based on https://github.com/JBlond/PHP-XSS-Filter
- *
- * @param $input
- *
- * @return string
- */
-function filter_xss($input) {
-    $string = html_entity_decode($input, ENT_NOQUOTES, 'UTF-8');
     $preg_patterns = [
         // Fix &entity\n
         '!(&#0+[0-9]+)!'                                                                                                                                                                                => '$1;',
@@ -967,14 +941,15 @@ function filter_xss($input) {
         '#(<[^>]+?)style[\x00-\x20]*=[\x00-\x20]*[`\'"]*.*?expression[\x00-\x20]*\([^>]*+>#i'                                                                                                           => '$1>',
         '#(<[^>]+?)style[\x00-\x20]*=[\x00-\x20]*[`\'"]*.*?s[\x00-\x20]*c[\x00-\x20]*r[\x00-\x20]*i[\x00-\x20]*p[\x00-\x20]*t[\x00-\x20]*:*[^>]*+>#iu'                                                  => '$1>',
         // namespace elements
-        '#</*\w+:\w[^>]*+>#i'                                                                                                                                                                           => ''
+        '#</*\w+:\w[^>]*+>#i'                                                                                                                                                                           => '',
+        '#<script(.*?)>(.*?)</script>#is' => ''
     ];
 
     foreach ($preg_patterns as $pattern => $replacement) {
-        $string = preg_replace($pattern, $replacement, $string);
+        $text = preg_replace($pattern, $replacement, $text);
     }
 
-    return $string;
+    return $text;
 }
 
 /**
