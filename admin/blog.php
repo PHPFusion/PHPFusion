@@ -60,13 +60,11 @@ if (isset($_POST['save']) or isset($_POST['preview'])) {
     $blog_blog = "";
     if ($_POST['blog_blog']) {
         $blog_blog = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, (fusion_get_settings("allow_php_exe") ? htmlspecialchars($_POST['blog_blog']) : $_POST['blog_blog']));
-        $blog_blog = descript( $blog_blog );
     }
 
     $blog_extended = "";
     if ($_POST['blog_extended']) {
         $blog_extended = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, (fusion_get_settings("allow_php_exe") ? htmlspecialchars($_POST['blog_extended']) : $_POST['blog_extended']));
-        $blog_extended = descript( $blog_extended );
     }
 
     $data = [
