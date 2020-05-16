@@ -48,12 +48,12 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
 
                     $news_news = '';
                     if ($_POST['news_news']) {
-                        $news_news = str_replace("src='".str_replace('../', '', IMAGES_N), "src='".IMAGES_N, stripslashes(descript($_POST['news_news'])));
+                        $news_news = str_replace("src='".str_replace('../', '', IMAGES_N), "src='".IMAGES_N, stripslashes($_POST['news_news']));
                     }
 
                     $news_extended = '';
                     if ($_POST['news_extended']) {
-                        $news_extended = str_replace("src='".str_replace('../', '', IMAGES_N), "src='".IMAGES_N, stripslashes(descript($_POST['news_extended'])));
+                        $news_extended = str_replace("src='".str_replace('../', '', IMAGES_N), "src='".IMAGES_N, stripslashes($_POST['news_extended']));
                     }
 
                     $this->news_data = [
