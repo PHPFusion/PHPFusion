@@ -54,7 +54,10 @@ $inf_newtable[] = DB_DOWNLOADS." (
     download_allow_comments TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
     download_allow_ratings TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
     PRIMARY KEY (download_id),
-    KEY download_datestamp (download_datestamp)
+    KEY download_user (download_user),
+    KEY download_cat (download_cat),
+    KEY download_count (download_count),
+    KEY download_datestamp (download_datestamp)        
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 $inf_newtable[] = DB_DOWNLOAD_CATS." (
@@ -64,7 +67,8 @@ $inf_newtable[] = DB_DOWNLOAD_CATS." (
     download_cat_description TEXT NOT NULL,
     download_cat_sorting VARCHAR(50) NOT NULL DEFAULT 'download_title ASC',
     download_cat_language VARCHAR(50) NOT NULL DEFAULT '".LANGUAGE."',
-    PRIMARY KEY (download_cat_id)
+    PRIMARY KEY (download_cat_id),
+    KEY download_cat_parent (download_cat_parent)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 // Insert panel

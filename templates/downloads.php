@@ -15,6 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
+use PHPFusion\Panels;
+
 defined('IN_FUSION') || exit;
 
 if (!function_exists('render_downloads')) {
@@ -27,12 +30,10 @@ if (!function_exists('render_downloads')) {
         global $dl_settings;
 
         $locale = fusion_get_locale();
-
         opentable($locale['download_1000']);
-
         echo render_breadcrumbs();
 
-        if (isset($_GET['download_id']) && !empty($info['download_item'])) {
+        if ($info["get"]["download_id"] && !empty($info['download_item'])) {
             $data = $info['download_item'];
 
             echo '<div class="download-item">';
@@ -112,7 +113,7 @@ if (!function_exists('render_downloads')) {
                 echo "<h4>".$locale['download_1019']."</h4>";
                 echo "<div class='well'>\n";
                 echo "<div class='overflow-hide'>\n";
-                echo nl2br(parse_textarea($data['download_description'], TRUE, TRUE, FALSE));
+                echo parse_text($data['download_description'], TRUE, TRUE, FALSE, INFUSIONS."downloads/images/", TRUE, TRUE);
                 echo "</div>\n";
                 echo "</div>\n";
             }
@@ -182,7 +183,7 @@ if (!function_exists('render_downloads')) {
 
         closetable();
 
-        \PHPFusion\Panels::addPanel('download_menu_panel', display_download_menu($info), \PHPFusion\Panels::PANEL_RIGHT, iGUEST, 0);
+        Panels::addPanel('download_menu_panel', display_download_menu($info), Panels::PANEL_RIGHT, iGUEST, 0);
     }
 }
 
@@ -195,17 +196,18 @@ if (!function_exists('display_download_menu')) {
      * @return string
      */
     function display_download_menu($info) {
+
         $locale = fusion_get_locale();
         // Download Category Menu
-        function display_DownloadCats($info, $cat_id = 0, $level = 0) {
+        function display_DownloadCats($info, $get, $cat_id = 0, $level = 0) {
             $html = '';
             if (!empty($info[$cat_id])) {
                 foreach ($info[$cat_id] as $download_cat_id => $cdata) {
-                    $active = (!empty($_GET['cat_id']) && $_GET['cat_id'] == $download_cat_id) ? TRUE : FALSE;
+                    $active = ($get == $download_cat_id ? TRUE : FALSE);
                     $html .= "<li ".($active ? "class='active strong'" : '')." >".str_repeat('&nbsp;', $level)." ".$cdata['download_cat_link'];
                     if (!empty($info[$download_cat_id])) {
                         $html .= "<ul class='block'>\n";
-                        $html .= display_DownloadCats($info, $download_cat_id, $level + 1);
+                        $html .= display_DownloadCats($info, $get, $download_cat_id, $level + 1);
                         $html .= "</ul>\n";
                     }
                     $html .= "</li>\n";
@@ -220,12 +222,12 @@ if (!function_exists('display_download_menu')) {
         echo "<ul class='spacer-sm block'>\n";
         echo "<li><a title='".$locale['download_1001']."' href='".DOWNLOADS."downloads.php'>".$locale['download_1001']."</a></li>\n";
         foreach ($info['download_filter'] as $filter_key => $filter) {
-            echo "<li ".(isset($_GET['type']) && $_GET['type'] == $filter_key ? "class='active strong'" : '')." ><a href='".$filter['link']."'>".$filter['title']."</a></li>\n";
+            echo "<li ".($info["get"]["type"] == $filter_key ? "class='active strong'" : '')." ><a href='".$filter['link']."'>".$filter['title']."</a></li>\n";
         }
         echo "</ul>\n";
         openside($locale['download_1003']);
         echo "<ul class='block'>\n";
-        $download_cat_menu = display_DownloadCats($info['download_categories']);
+        $download_cat_menu = display_DownloadCats($info['download_categories'], $info["get"]["cat_id"]);
         if (!empty($download_cat_menu)) {
             echo $download_cat_menu;
         } else {
