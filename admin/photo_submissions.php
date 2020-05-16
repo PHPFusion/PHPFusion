@@ -36,7 +36,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 "photo_id"             => 0,
                 "photo_title"          => form_sanitizer($_POST['photo_title'], "", "photo_title"),
                 "album_id"             => form_sanitizer($_POST['album_id'], "", "album_id"),
-                "photo_description"    => form_sanitizer(descript($_POST['photo_description']), "", "photo_description"),
+                "photo_description"    => form_sanitizer($_POST['photo_description'], "", "photo_description"),
                 "photo_keywords"       => form_sanitizer($_POST['photo_keywords'], "", "photo_keywords"),
                 "photo_order"          => form_sanitizer($_POST['photo_order'], "", "photo_order"),
                 "photo_datestamp"      => $data['submit_datestamp'],

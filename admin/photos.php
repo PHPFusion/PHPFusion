@@ -61,7 +61,7 @@ function photo_form() {
                 'photo_id'             => form_sanitizer($_POST['photo_id'], '', 'photo_id'),
                 'photo_title'          => form_sanitizer($_POST['photo_title'], '', 'photo_title'),
                 'album_id'             => form_sanitizer($_POST['album_id'], '', 'album_id'),
-                'photo_description'    => form_sanitizer(descript($_POST['photo_description']), '', 'photo_description'),
+                'photo_description'    => form_sanitizer($_POST['photo_description'], '', 'photo_description'),
                 'photo_keywords'       => form_sanitizer($_POST['photo_keywords'], '', 'photo_keywords'),
                 'photo_order'          => form_sanitizer($_POST['photo_order'], '', 'photo_order'),
                 'photo_datestamp'      => form_sanitizer($_POST['photo_datestamp'], '', 'photo_datestamp'),
