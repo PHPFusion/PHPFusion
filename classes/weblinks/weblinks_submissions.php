@@ -67,12 +67,10 @@ class WeblinksSubmissions extends WeblinksServer {
             $submit_link = filter_input(INPUT_POST, 'submit_link', FILTER_DEFAULT);
             if (!empty($submit_link)) {
 
-                $description = stripinput(filter_input(INPUT_POST, 'weblink_description', FILTER_DEFAULT));
-
                 $criteriaArray = [
                     'weblink_cat'         => form_sanitizer(filter_input(INPUT_POST, 'weblink_cat', FILTER_VALIDATE_INT), 0, 'weblink_cat'),
                     'weblink_name'        => form_sanitizer(filter_input(INPUT_POST, 'weblink_name', FILTER_DEFAULT), '', 'weblink_name'),
-                    'weblink_description' => form_sanitizer($description, '', 'weblink_description'),
+                    'weblink_description' => form_sanitizer(filter_input(INPUT_POST, 'weblink_description', FILTER_DEFAULT), '', 'weblink_description'),
                     'weblink_url'         => form_sanitizer(filter_input(INPUT_POST, 'weblink_url', FILTER_DEFAULT), '', 'weblink_url'),
                     'weblink_language'    => form_sanitizer(filter_input(INPUT_POST, 'weblink_language', FILTER_DEFAULT), LANGUAGE, 'weblink_language'),
                 ];
@@ -135,12 +133,12 @@ class WeblinksSubmissions extends WeblinksServer {
                         ]) : form_hidden('weblink_language', '', $criteriaArray['weblink_language'])),
                     'weblink_description' => form_textarea('weblink_description', $this->locale['WLS_0254'], $criteriaArray['weblink_description'],
                         [
-                            'required'  => self::$weblink_settings['links_extended_required'] ? TRUE : FALSE,
-                            'type'      => fusion_get_settings('tinymce_enabled') ? 'tinymce' : 'html',
-                            'tinymce'   => fusion_get_settings('tinymce_enabled') && iADMIN ? 'advanced' : 'simple',
+                            'required'      => self::$weblink_settings['links_extended_required'] ? TRUE : FALSE,
+                            'type'          => fusion_get_settings('tinymce_enabled') ? 'tinymce' : 'html',
+                            'tinymce'       => fusion_get_settings('tinymce_enabled') && iADMIN ? 'advanced' : 'simple',
                             'tinymce_image' => FALSE,
-                            'autosize'  => TRUE,
-                            'form_name' => 'submit_form',
+                            'autosize'      => TRUE,
+                            'form_name'     => 'submit_form',
                         ]),
                     'weblink_submit'      => form_button('submit_link', $this->locale['submit'], $this->locale['submit'], ['class' => 'btn-success', 'icon' => 'fa fa-fw fa-hdd-o'])
 
