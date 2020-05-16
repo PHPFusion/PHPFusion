@@ -71,8 +71,8 @@ class BannersAdministration {
 
         if (isset($_POST['save_banners'])) {
             $settings_main = [
-                'sitebanner1' => isset($_POST['sitebanner1']) ? descript(addslashes($_POST['sitebanner1'])) : self::$settings['sitebanner1'],
-                'sitebanner2' => isset($_POST['sitebanner2']) ? descript(addslashes($_POST['sitebanner2'])) : self::$settings['sitebanner2'],
+                'sitebanner1' => sanitizer('sitebanner1', '', 'sitebanner1'),
+                'sitebanner2' => sanitizer('sitebanner2', '', 'sitebanner2'),
             ];
 
             if (\defender::safe()) {

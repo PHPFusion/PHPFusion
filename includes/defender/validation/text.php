@@ -35,6 +35,7 @@ class Text extends \Defender\Validation {
             'min_length'   => 1,
             'max_length'   => '',
             'censor_words' => TRUE,
+            'descript'     => TRUE
         ];
 
         self::$inputConfig += $default_length;
@@ -54,6 +55,9 @@ class Text extends \Defender\Validation {
                 if (self::$inputConfig['censor_words']) {
                     $value = censorwords($value);
                 }
+                if (self::$inputConfig['descript']) {
+                    $value = descript($value);
+                }
                 $vars[] = $value;
             }
             // set options for checking on delimiter, and default is pipe (json,serialized val)
@@ -70,6 +74,9 @@ class Text extends \Defender\Validation {
             $value = stripinput(trim(preg_replace("/ +/i", " ", self::$inputValue)));
             if (self::$inputConfig['censor_words']) {
                 $value = censorwords($value);
+            }
+            if (self::$inputConfig['descript']) {
+                $value = descript($value);
             }
         }
         if (self::$inputConfig['required'] && !$value) {

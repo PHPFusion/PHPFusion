@@ -28,7 +28,7 @@ $is_multilang = count(fusion_get_enabled_languages()) > 1 ? TRUE : FALSE;
 if (isset($_POST['savesettings'])) {
     $inputData = [
         'login_method'        => form_sanitizer($_POST['login_method'], '0', 'login_method'),
-        'license_agreement'   => form_sanitizer(descript($_POST['license_agreement']), '', 'license_agreement', $is_multilang),
+        'license_agreement'   => form_sanitizer($_POST['license_agreement'], '', 'license_agreement', $is_multilang),
         'enable_registration' => form_sanitizer($_POST['enable_registration'], '0', 'enable_registration'),
         'email_verification'  => form_sanitizer($_POST['email_verification'], '0', 'email_verification'),
         'admin_activation'    => form_sanitizer($_POST['admin_activation'], '0', 'admin_activation'),

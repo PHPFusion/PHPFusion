@@ -73,6 +73,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         'tinymce_spellcheck'  => TRUE,
         'rows'                => 5,
         'censor_words'        => TRUE,
+        'descript'            => TRUE
     ];
 
     $options += $default_options;
@@ -487,6 +488,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         'safemode'     => $options['safemode'],
         'error_text'   => $options['error_text'],
         'censor_words' => $options['censor_words'],
+        'descript'     => $options['descript']
     ]);
 
     return $html;

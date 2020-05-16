@@ -103,7 +103,8 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         'data'               => [],
         'append_html'        => '',
         'censor_words'       => TRUE,
-        'password_toggle'    => TRUE
+        'password_toggle'    => TRUE,
+        'descript'           => TRUE
     ];
 
     $options += $default_options;
@@ -293,7 +294,8 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         'delimiter'      => $options['delimiter'],
         'min_length'     => $options['min_length'],
         'max_length'     => $options['max_length'],
-        'censor_words'   => $options['censor_words']
+        'censor_words'   => $options['censor_words'],
+        'descript'       => $options['descript']
     ]);
 
     // This should affect all number inputs by type, not by ID

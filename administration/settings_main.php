@@ -119,12 +119,12 @@ $settings = fusion_get_settings();
 // Saving settings
 if (isset($_POST['savesettings'])) {
     $inputData = [
-        'siteintro'       => descript(addslashes($_POST['siteintro'])),
+        'siteintro'       => form_sanitizer(addslashes($_POST['siteintro']), '', 'siteintro'),
         'sitename'        => form_sanitizer($_POST['sitename'], '', 'sitename'),
         'sitebanner'      => form_sanitizer($_POST['sitebanner'], '', 'sitebanner'),
         'siteemail'       => form_sanitizer($_POST['siteemail'], '', 'siteemail'),
         'siteusername'    => form_sanitizer($_POST['siteusername'], '', 'siteusername'),
-        'footer'          => descript(addslashes($_POST['footer'])),
+        'footer'          => form_sanitizer(addslashes($_POST['footer']), '', 'footer'),
         'site_protocol'   => form_sanitizer($_POST['site_protocol'], '', 'site_protocol'),
         'site_host'       => form_sanitizer($_POST['site_host'], '', 'site_host'),
         'site_path'       => form_sanitizer($_POST['site_path'], '', 'site_path'),

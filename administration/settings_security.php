@@ -50,13 +50,13 @@ if (isset($_POST['savesettings'])) {
     // Save settings after validation
     $inputData = [
         'captcha'             => form_sanitizer($_POST['captcha'], '', 'captcha'),
-        'privacy_policy'      => form_sanitizer(descript($_POST['privacy_policy']), '', 'privacy_policy', $is_multilang),
+        'privacy_policy'      => form_sanitizer($_POST['privacy_policy'], '', 'privacy_policy', $is_multilang),
         'allow_php_exe'       => form_sanitizer($_POST['allow_php_exe'], 0, 'allow_php_exe'),
         'flood_interval'      => form_sanitizer($_POST['flood_interval'], 15, 'flood_interval'),
         'flood_autoban'       => form_sanitizer($_POST['flood_autoban'], 0, 'flood_autoban'),
         'maintenance_level'   => form_sanitizer($_POST['maintenance_level'], 102, 'maintenance_level'),
         'maintenance'         => form_sanitizer($_POST['maintenance'], 0, 'maintenance'),
-        'maintenance_message' => descript(addslashes($_POST['maintenance_message'])),
+        'maintenance_message' => form_sanitizer($_POST['maintenance_message'], '', 'maintenance_message'),
         'bad_words_enabled'   => form_sanitizer($_POST['bad_words_enabled'], 0, 'bad_words_enabled'),
         'bad_words'           => stripinput($_POST['bad_words']),
         'bad_word_replace'    => form_sanitizer($_POST['bad_word_replace'], '', 'bad_word_replace'),
