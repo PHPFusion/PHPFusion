@@ -40,12 +40,12 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
             // Check posted Informations
             $article_snippet = "";
             if ($_POST['article_snippet']) {
-                $article_snippet = str_replace("src='".str_replace("../", "", IMAGES_A), "src='".IMAGES_A, descript($_POST['article_snippet']));
+                $article_snippet = str_replace("src='".str_replace("../", "", IMAGES_A), "src='".IMAGES_A, $_POST['article_snippet']);
             }
 
             $article_article = "";
             if ($_POST['article_article']) {
-                $article_article = str_replace("src='".str_replace("../", "", IMAGES_A), "src='".IMAGES_A, stripslashes(descript($_POST['article_article'])));
+                $article_article = str_replace("src='".str_replace("../", "", IMAGES_A), "src='".IMAGES_A, stripslashes($_POST['article_article']));
             }
 
             $this->inputArray = [
