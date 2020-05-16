@@ -22,7 +22,7 @@ $locale = fusion_get_locale("", LOCALE.LOCALESET."setup.php");
 // Infusion general information
 $inf_title = $locale['downloads']['title'];
 $inf_description = $locale['downloads']['description'];
-$inf_version = "1.1";
+$inf_version = "1.1.1";
 $inf_developer = "PHP Fusion Development Team";
 $inf_email = "info@php-fusion.co.uk";
 $inf_weburl = "https://www.php-fusion.co.uk";
@@ -70,6 +70,7 @@ $inf_newtable[] = DB_DOWNLOAD_CATS." (
     PRIMARY KEY (download_cat_id),
     KEY download_cat_parent (download_cat_parent)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+
 
 // Insert panel
 $inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction, panel_languages) VALUES ('".$locale['setup_3326']."', 'latest_downloads_panel', '', '1', '5', 'file', '0', '1', '1', '', '3', '".fusion_get_settings('enabled_languages')."')";
