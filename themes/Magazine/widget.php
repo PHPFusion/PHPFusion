@@ -43,9 +43,9 @@ if (isset($_POST['save_settings'])) {
 
 echo openform('main_settings', 'post', FUSION_REQUEST);
 openside('');
-echo form_text('github_url', $locale['MG_202'], $settings['github_url'], ['type' => 'url', 'inline' => TRUE]);
-echo form_text('facebook_url', $locale['MG_203'], $settings['facebook_url'], ['type' => 'url', 'inline' => TRUE]);
-echo form_text('twitter_url', $locale['MG_204'], $settings['twitter_url'], ['type' => 'url', 'inline' => TRUE]);
+echo form_text('github_url', $locale['MG_202'], $settings['github_url'], ['inline' => TRUE]);
+echo form_text('facebook_url', $locale['MG_203'], $settings['facebook_url'], ['inline' => TRUE]);
+echo form_text('twitter_url', $locale['MG_204'], $settings['twitter_url'], ['inline' => TRUE]);
 closeside();
 
 echo form_button('save_settings', $locale['save_changes'], 'save', ['class' => 'btn-primary']);

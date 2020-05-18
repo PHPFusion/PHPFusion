@@ -621,7 +621,8 @@ function displaysmileys($textarea, $form = "inputform") {
             $smileys .= "<br />\n";
         }
         $i++;
-        $smileys .= "<img style='width:20px;height:20px;' src='".get_image("smiley_".$smiley['smiley_text'])."' alt='".$smiley['smiley_text']."' title='".$smiley['smiley_text']."' onclick=\"insertText('".$textarea."', '".$smiley['smiley_code']."', '".$form."');\" />\n";
+        $img = get_image("smiley_".$smiley['smiley_text']);
+        $smileys .= "<img style='width:20px;height:20px;' src='".$img."' alt='".$smiley['smiley_text']."' title='".$smiley['smiley_text']."' onclick=\"insertText('".$textarea."', '".$smiley['smiley_code']."', '".$form."');\" />\n";
     }
     return $smileys;
 }
@@ -693,7 +694,6 @@ function parse_textarea(string $value, $parse_smileys = TRUE, $parse_bbcode = TR
     $charset = fusion_get_locale("charset");
     $value = stripslashes($value);
     if ($decode === TRUE) {
-        /** @var $value - decoded from double encoding */
         $value = html_entity_decode(html_entity_decode($value, ENT_QUOTES, $charset));
     }
     if ($default_image_folder) {
@@ -702,15 +702,16 @@ function parse_textarea(string $value, $parse_smileys = TRUE, $parse_bbcode = TR
     if ($parse_smileys) {
         $value = parsesmileys($value);
     }
-    if ($descript === TRUE) {
-        $value = descript($value);
-    }
     if ($parse_bbcode) {
         $value = parseubb($value);
     }
     $value = fusion_parse_user($value);
     if ($add_line_breaks === TRUE) {
         $value = nl2br($value);
+    }
+    if ($descript === TRUE) {
+        $value = descript($value);
+        $value = htmlspecialchars_decode($value);
     }
 
     return (string)$value;
@@ -900,11 +901,20 @@ function descript($text, $striptags = TRUE) {
         return $text;
     }
 
+
     $text = preg_replace('/&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-f]{1,6});/i', '', htmlspecialchars_decode($text));
+
+    $on_attr = 'onafterprint|onbeforeprint|onbeforeunload|onerror|onhashchange|onload|onmessage|onoffline|ononline|onpagehide|onpageshow|onpopstate|'.
+        'onresize|onstorage|onunload|onblur|onchange|oncontextmenu|onfocus|oninput|oninvalid|onreset|onsearch|onselect|onsubmit|onkeydown|onkeypress|'.
+        'onkeyup|onclick|ondblclick|onmousedown|onmousemove|onmouseup|onmousewheel|onwheel|ondrag|ondragend|ondragenter|ondragleave|ondragover|'.
+        'ondragstart|ondrop|onscroll|oncopy|oncut|onpaste|onabort|oncanplay|oncanplaythrough|oncuechange|ondurationchange|onemptied|onended|onerror|'.
+        'onloadeddata|onloadedmetadata|onloadstart|onpause|onplay|onplaying|onprogress|onratechange|onseeked|onseeking|onstalled|onsuspend|ontimeupdate|'.
+        'onvolumechange|onwaiting|ontoggle';
+
     // Convert problematic ascii characters to their true values
     $patterns = [
         '#(&\#x)([0-9A-F]+);*#si'                           => '',
-        '#(<[^>]+[\"\'\s])*((on|xmlns)[^>]*>)#is'           => "$1>",
+        '#(<[^>]+[\"\'\s])*(('.$on_attr.'|xmlns)[^>]*>)#is' => "$1>",
         '#([a-z]*)=([\`\'\"]*)script:#iU'                   => '$1=$2nojscript...',
         '#([a-z]*)=([\`\'\"]*)javascript:#iU'               => '$1=$2nojavascript...',
         '#([a-z]*)=([\'\"]*)vbscript:#iU'                   => '$1=$2novbscript...',
@@ -949,7 +959,7 @@ function descript($text, $striptags = TRUE) {
         $text = preg_replace($pattern, $replacement, $text);
     }
 
-    return $text;
+    return htmlspecialchars($text);
 }
 
 /**
