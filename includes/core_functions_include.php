@@ -726,6 +726,8 @@ function parse_textarea(string $value, $parse_smileys = TRUE, $parse_bbcode = TR
  * @return string
  */
 function parseubb($text, $selected = "") {
+    $text = descript($text, FALSE);
+
     $bbcode_cache = cache_bbcode();
     $sel_bbcodes = [];
 
@@ -757,8 +759,6 @@ function parseubb($text, $selected = "") {
             }
         }
     }
-
-    $text = descript($text, FALSE);
 
     return $text;
 }
