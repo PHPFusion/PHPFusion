@@ -693,25 +693,25 @@ function parse_imageDir($data, $prefix_ = "") {
 function parse_textarea(string $value, $parse_smileys = TRUE, $parse_bbcode = TRUE, $decode = TRUE, $default_image_folder = IMAGES, $add_line_breaks = FALSE, $descript = TRUE) {
     $charset = fusion_get_locale("charset");
     $value = stripslashes($value);
-    if ($decode === TRUE) {
-        $value = html_entity_decode(html_entity_decode($value, ENT_QUOTES, $charset));
+    if ($descript === TRUE) {
+        $value = descript($value);
+        $value = htmlspecialchars_decode($value);
     }
     if ($default_image_folder) {
         $value = parse_imageDir($value, $default_image_folder);
     }
-    if ($parse_smileys) {
-        $value = parsesmileys($value);
-    }
     if ($parse_bbcode) {
         $value = parseubb($value);
+    }
+    if ($parse_smileys) {
+        $value = parsesmileys($value);
     }
     $value = fusion_parse_user($value);
     if ($add_line_breaks === TRUE) {
         $value = nl2br($value);
     }
-    if ($descript === TRUE) {
-        $value = descript($value);
-        $value = htmlspecialchars_decode($value);
+    if ($decode === TRUE) {
+        $value = html_entity_decode(html_entity_decode($value, ENT_QUOTES, $charset));
     }
 
     return (string)$value;
@@ -929,8 +929,9 @@ function descript($text, $striptags = TRUE) {
     if ($striptags) {
         do {
             $count = 0;
-            $iframe = !defined('ENABLE_IFRAME') ? 'embed|object|iframe|' : '';
-            $text = preg_replace('#</*(applet|meta|xml|blink|link|style|script|'.$iframe.'frame|frameset|ilayer|layer|bgsound|title|base)[^>]*>#i', "", $text, -1, $count);
+            //$iframe = !defined('ENABLE_IFRAME') ? 'embed|iframe|' : '';
+            $iframe = '';
+            $text = preg_replace('#</*(applet|meta|xml|blink|link|style|script|object|'.$iframe.'frame|frameset|ilayer|layer|bgsound|title|base)[^>]*>#i', "", $text, -1, $count);
         } while ($count);
     }
 
