@@ -901,8 +901,8 @@ function descript($text, $striptags = TRUE) {
         return $text;
     }
 
-
-    $text = preg_replace('/&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-f]{1,6});/i', '', htmlspecialchars_decode($text));
+    $text = html_entity_decode($text, ENT_QUOTES, fusion_get_locale('charset'));
+    $text = preg_replace('/&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-f]{1,6});/i', '', $text);
 
     $on_attr = 'onafterprint|onbeforeprint|onbeforeunload|onerror|onhashchange|onload|onmessage|onoffline|ononline|onpagehide|onpageshow|onpopstate|'.
         'onresize|onstorage|onunload|onblur|onchange|oncontextmenu|onfocus|oninput|oninvalid|onreset|onsearch|onselect|onsubmit|onkeydown|onkeypress|'.
