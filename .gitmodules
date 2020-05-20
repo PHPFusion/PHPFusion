@@ -1,32 +1,32 @@
 [submodule "infusions/articles"]
 	path = infusions/articles
 	url = https://github.com/php-fusion/ci-Articles.git
-	branch = master
+	branch = Babylon
 [submodule "infusions/blog"]
 	path = infusions/blog
 	url = https://github.com/php-fusion/ci-Blog.git
-	branch = master
+	branch = Babylon
 [submodule "infusions/downloads"]
 	path = infusions/downloads
 	url = https://github.com/php-fusion/ci-Downloads.git
-	branch = master
+	branch = Babylon
 [submodule "infusions/faq"]
 	path = infusions/faq
 	url = https://github.com/php-fusion/ci-Faq.git
-	branch = master
+	branch = Babylon
 [submodule "infusions/forum"]
 	path = infusions/forum
 	url = https://github.com/php-fusion/ci-Forum.git
-	branch = master
+	branch = Babylon
 [submodule "infusions/gallery"]
 	path = infusions/gallery
 	url = https://github.com/php-fusion/ci-Gallery.git
-	branch = master
+	branch = Babylon
 [submodule "infusions/news"]
 	path = infusions/news
 	url = https://github.com/php-fusion/ci-News.git
-	branch = master
+	branch = Babylon
 [submodule "infusions/weblinks"]
 	path = infusions/weblinks
 	url = https://github.com/php-fusion/ci-Weblinks.git
-	branch = master
+	branch = Babylon
