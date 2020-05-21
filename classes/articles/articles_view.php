@@ -34,10 +34,14 @@ class ArticlesView extends Articles {
             OpenGraphArticles::ogArticle($_GET['article_id']);
 
             // Display Category
-        } else if (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
-            $info = $this->set_ArticlesCatInfo($_GET['cat_id']);
-            display_main_articles($info);
-            OpenGraphArticles::ogArticleCat($_GET['cat_id']);
+        } else if (isset($_GET['cat_id'])) {
+            if (isnum($_GET['cat_id'])) {
+                $info = $this->set_ArticlesCatInfo($_GET['cat_id']);
+                display_main_articles($info);
+                OpenGraphArticles::ogArticleCat($_GET['cat_id']);
+            } else {
+                redirect(INFUSIONS.'articles/articles.php');
+            }
         } else {
             // Display Overview
             $info = $this->set_ArticlesInfo();
