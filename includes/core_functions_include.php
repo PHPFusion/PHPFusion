@@ -914,7 +914,7 @@ function descript($text, $striptags = TRUE) {
     // Convert problematic ascii characters to their true values
     $patterns = [
         '#(&\#x)([0-9A-F]+);*#si'                           => '',
-        '#(<[^>]+[\"\'\s])*(('.$on_attr.'|xmlns)[^>]*>)#is' => "$1>",
+        '#(<[^>]+[\"\'\s])*(('.$on_attr.'|xmlns)[^>]*)#is' => "$1>",
         '#([a-z]*)=([\`\'\"]*)script:#iU'                   => '$1=$2nojscript...',
         '#([a-z]*)=([\`\'\"]*)javascript:#iU'               => '$1=$2nojavascript...',
         '#([a-z]*)=([\'\"]*)vbscript:#iU'                   => '$1=$2novbscript...',
@@ -953,14 +953,14 @@ function descript($text, $striptags = TRUE) {
         '#(<[^>]+?)style[\x00-\x20]*=[\x00-\x20]*[`\'"]*.*?s[\x00-\x20]*c[\x00-\x20]*r[\x00-\x20]*i[\x00-\x20]*p[\x00-\x20]*t[\x00-\x20]*:*[^>]*+>#iu'                                                  => '$1>',
         // namespace elements
         '#</*\w+:\w[^>]*+>#i'                                                                                                                                                                           => '',
-        '#<script(.*?)>(.*?)</script>#is' => ''
+        '#<script(.*?)>(.*?)</script>#is'                                                                                                                                                               => ''
     ];
 
     foreach ($preg_patterns as $pattern => $replacement) {
         $text = preg_replace($pattern, $replacement, $text);
     }
 
-    return htmlspecialchars($text);
+    return htmlspecialchars($text, ENT_QUOTES, 'UTF-8', FALSE);
 }
 
 /**
