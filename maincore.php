@@ -235,6 +235,9 @@ if (!defined('LOCALESET'))
     define('LOCALESET', $current_user_language.'/');
 
 \PHPFusion\Locale::setLocale(LOCALE.LOCALESET.'global.php');
+$setlocale = empty(fusion_get_locale('setlocale')) ? 'en_GB' : '';
+$win = explode('_', $setlocale);
+setlocale(LC_ALL, $setlocale.'.UTF-8', $win[0]);
 
 // IP address functions
 include INCLUDES."ip_handling_include.php";
