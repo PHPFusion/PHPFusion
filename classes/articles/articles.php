@@ -227,7 +227,7 @@ abstract class Articles extends ArticlesServer {
             $pagecount = 1;
 
             // Article Texts
-            $data['article_snippet'] = parse_textarea($data['article_snippet'], TRUE, TRUE, TRUE, FALSE, $data['article_breaks'] == "y" ? TRUE : FALSE);
+            $data['article_snippet'] = parse_textarea($data['article_snippet'], TRUE, TRUE, FALSE, FALSE, $data['article_breaks'] == "y" ? TRUE : FALSE);
             $data['article_article'] = parse_textarea($data['article_article'], TRUE, TRUE, TRUE, FALSE, $data['article_breaks'] == "y" ? TRUE : FALSE);
 
             $articleText = preg_replace("/<!?--\s*pagebreak\s*-->/i", "", $data['article_snippet']);
