@@ -722,11 +722,14 @@ function parse_textarea(string $value, $parse_smileys = TRUE, $parse_bbcode = TR
  *
  * @param        $text
  * @param string $selected - The names of the required bbcodes to parse, separated by "|"
+ * @param bool   $descript
  *
  * @return string
  */
-function parseubb($text, $selected = "") {
-    $text = descript($text, FALSE);
+function parseubb($text, $selected = "", $descript = TRUE) {
+    if ($descript) {
+        $text = descript($text, FALSE);
+    }
 
     $bbcode_cache = cache_bbcode();
     $sel_bbcodes = [];
@@ -889,14 +892,15 @@ function highlight_words($word, $subject) {
 }
 
 /**
- * This function sanitize news & article submissions
+ * This function sanitize text
  *
  * @param string  $text
  * @param boolean $striptags FALSE if you don't want to remove html tags. TRUE by default
+ * @param bool    $strip_scripts
  *
  * @return string
  */
-function descript($text, $striptags = TRUE) {
+function descript($text, $striptags = TRUE, $strip_scripts = TRUE) {
     if (is_array($text)) {
         return $text;
     }
@@ -914,7 +918,7 @@ function descript($text, $striptags = TRUE) {
     // Convert problematic ascii characters to their true values
     $patterns = [
         '#(&\#x)([0-9A-F]+);*#si'                           => '',
-        '#(<[^>]+[\"\'\s])*(('.$on_attr.'|xmlns)[^>]*)#is' => "$1>",
+        '#(<[^>]+[\"\'\s])*(('.$on_attr.'|xmlns)[^>]*)#is'  => "$1>",
         '#([a-z]*)=([\`\'\"]*)script:#iU'                   => '$1=$2nojscript...',
         '#([a-z]*)=([\`\'\"]*)javascript:#iU'               => '$1=$2nojavascript...',
         '#([a-z]*)=([\'\"]*)vbscript:#iU'                   => '$1=$2novbscript...',
@@ -952,9 +956,14 @@ function descript($text, $striptags = TRUE) {
         '#(<[^>]+?)style[\x00-\x20]*=[\x00-\x20]*[`\'"]*.*?expression[\x00-\x20]*\([^>]*+>#i'                                                                                                           => '$1>',
         '#(<[^>]+?)style[\x00-\x20]*=[\x00-\x20]*[`\'"]*.*?s[\x00-\x20]*c[\x00-\x20]*r[\x00-\x20]*i[\x00-\x20]*p[\x00-\x20]*t[\x00-\x20]*:*[^>]*+>#iu'                                                  => '$1>',
         // namespace elements
-        '#</*\w+:\w[^>]*+>#i'                                                                                                                                                                           => '',
-        '#<script(.*?)>(.*?)</script>#is'                                                                                                                                                               => ''
+        '#</*\w+:\w[^>]*+>#i'                                                                                                                                                                           => ''
     ];
+
+    if ($strip_scripts) {
+        $preg_patterns += [
+            '#<script(.*?)>(.*?)</script>#is' => ''
+        ];
+    }
 
     foreach ($preg_patterns as $pattern => $replacement) {
         $text = preg_replace($pattern, $replacement, $text);
