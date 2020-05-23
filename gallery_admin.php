@@ -194,7 +194,7 @@ function gallery_photo_listing() {
 
         echo "<h2><strong>\n".$album_data['album_title']."</strong></h2>\n";
 
-        echo "<strong>".$locale['album_0003']."</strong> ".$album_data['album_description'];
+        echo "<strong>".$locale['album_0003']."</strong> ".parse_textarea($album_data['album_description'], FALSE, TRUE, FALSE);
 
         echo "<div class='clearfix m-t-10'>\n";
         echo "<div class='pull-right text-right col-xs-6 col-sm-6'>".sprintf($locale['gallery_0019'], $rows, $photoRows)."</div>\n";
