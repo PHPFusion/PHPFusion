@@ -592,7 +592,7 @@ class PanelsAdministration {
         echo "<div id='panel_url_list-grp'>\n";
         echo form_textarea('panel_url_list', self::$locale['462'], $this->data['panel_url_list'], [
             'inline'   => FALSE,
-            'descript' => $settings['allow_php_exe']
+            'descript' => fusion_get_settings('allow_php_exe') == 1 ? 1 : 0
             //'required' => TRUE
         ]);
         echo "<div class='text-smaller'>".self::$locale['463']." <br />

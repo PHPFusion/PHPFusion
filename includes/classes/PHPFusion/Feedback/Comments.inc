@@ -1181,7 +1181,7 @@ class Comments {
                 "comment_datestamp" => showdate('longdate', $row['comment_datestamp']),
                 "comment_time"      => timer($row['comment_datestamp']),
                 "comment_subject"   => $row['comment_subject'],
-                "comment_message"   => nl2br(parseubb(parsesmileys($row['comment_message']))),
+                "comment_message"   => nl2br(parse_textarea($row['comment_message'], TRUE, TRUE, FALSE)),
                 "comment_name"      => isnum($row['comment_name']) ? profile_link($row['comment_name'], $row['user_name'], $row['user_status']) : $row['comment_name']
             ] + $actions;
 
