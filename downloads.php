@@ -174,8 +174,8 @@ if ($_get_download_id) {
             include INCLUDES."ratings_include.php";
             $data = dbarray($result);
 
-            $data['download_description_short'] = nl2br(parse_text($data['download_description_short']));
-            $data['download_description'] = nl2br(parse_text($data['download_description'], FALSE, FALSE, TRUE, FALSE));
+            $data['download_description_short'] = nl2br(parse_textarea($data['download_description_short'], TRUE, TRUE, FALSE));
+            $data['download_description'] = nl2br(parse_textarea($data['download_description'], FALSE, FALSE, TRUE, FALSE));
             $data['download_file_link'] = INFUSIONS."downloads/downloads.php?file_id=".$data['download_id'];
             $data['download_post_author'] = display_avatar($data, '25px', '', TRUE, 'img-rounded m-r-5').profile_link($data['user_id'], $data['user_name'], $data['user_status']);
             $data['download_post_cat'] = $locale['in']." <a href='".INFUSIONS."downloads/downloads.php?cat_id=".$data['download_cat_id']."'>".$data['download_cat_name']."</a>";

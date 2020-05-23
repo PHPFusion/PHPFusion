@@ -113,7 +113,7 @@ if (!function_exists('render_downloads')) {
                 echo "<h4>".$locale['download_1019']."</h4>";
                 echo "<div class='well'>\n";
                 echo "<div class='overflow-hide'>\n";
-                echo parse_text($data['download_description'], TRUE, TRUE, FALSE, INFUSIONS."downloads/images/", TRUE, TRUE);
+                echo $data['download_description'];
                 echo "</div>\n";
                 echo "</div>\n";
             }
