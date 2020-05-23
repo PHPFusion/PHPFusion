@@ -46,7 +46,8 @@ class QuickReply extends ForumServer {
                         'required'    => TRUE,
                         'preview'     => TRUE,
                         'form_name'   => 'quick_reply_form',
-                        'height'      => '250px'
+                        'height'      => '250px',
+                        'descript'    => FALSE
                     ]),
                 'button'  => form_button('post_quick_reply', $locale['forum_0172'], $locale['forum_0172'], ['class' => 'btn-primary']),
                 'options' => $options_field

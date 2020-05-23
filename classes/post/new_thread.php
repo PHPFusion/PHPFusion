@@ -654,7 +654,8 @@ class NewThread extends ForumServer {
                         'preview'   => 1,
                         'form_name' => 'input_form',
                         'bbcode'    => 1,
-                        'height'    => '300px'
+                        'height'    => '300px',
+                        'descript'  => FALSE
                     ]),
                     'attachment_field'  => "",
                     'poll_form'         => "",
