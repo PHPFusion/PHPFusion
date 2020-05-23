@@ -464,52 +464,34 @@ class PrivateMessages {
      */
     private function set_action_menu() {
         if (isset($_GET['msg_read'])) {
-            // this is the read menu.
-            $html = openform('actionform', 'post', FORM_REQUEST);
-            $html .= form_hidden('selectedPM', '', intval($_GET['msg_read']));
-            $html .= "<div class='btn-group display-inline-block m-r-10'>\n";
-            if ($_GET['folder'] == "archive") {
-                $html .= form_button('unarchive_pm', $this->locale['413'], 'unarchive_pm', ['icon' => 'fa fa-unlock']);
-            } else if ($_GET['folder'] == "inbox") {
-                $html .= form_button('archive_pm', $this->locale['412'], 'archive_pm', ['icon' => 'fa fa-lock']);
-            }
-            $html .= form_button('delete_pm', $this->locale['416'], 'delete_pm', ['icon' => 'fa fa-trash-o', 'class' => 'btn-danger']);
-            $html .= "</div>\n";
-            $html .= closeform();
+            $this->info['actions_form'] = [
+                'openform'  => openform('actionform', 'post', FORM_REQUEST).form_hidden('selectedPM', '', intval($_GET['msg_read'])),
+                'unlockbtn' => form_button('unarchive_pm', $this->locale['413'], 'unarchive_pm', ['icon' => 'fa fa-unlock']),
+                'lockbtn'   => form_button('archive_pm', $this->locale['412'], 'archive_pm', ['icon' => 'fa fa-lock']),
+                'deletebtn' => form_button('delete_pm', $this->locale['416'], 'delete_pm', ['icon' => 'fa fa-trash-o', 'class' => 'btn-danger']),
+                'closeform' => closeform()
+            ];
         } else {
             add_to_footer("<script src='".INCLUDES."jscripts/pm.js'></script>");
-            $html = openform('actionform', 'post', FORM_REQUEST);
-            $html .= form_hidden('selectedPM', '', '');
-            $html .= "<div class='dropdown display-inline-block m-r-10'>
-                <a href='#' data-toggle='dropdown' class='btn btn-default btn-sm dropdown-toggle'><i id='chkv' class='fa fa-square-o'></i><span class='caret m-l-5'></span></a>
-                <ul class='dropdown-menu'>
-                    <li><a id='check_all_pm' data-action='check' class='pointer'>".$this->locale['418']."</a></li>
-                    <li><a id='check_unread_pm' data-action='check' class='pointer'>".$this->locale['415']."</a></li>
-                    <li><a id='check_read_pm' data-action='check' class='pointer'>".$this->locale['414']."</a></li>
-                </ul>
-            </div>";
-            $html .= "<div class='btn-group display-inline-block m-r-10'>\n";
-            if ($_GET['folder'] == 'archive') {
-                $html .= form_button('unarchive_pm', $this->locale['413'], 'unarchive_pm', ['class' => 'btn-sm btn-default', 'icon' => 'fa fa-unlock']);
-            } else if ($_GET['folder'] !== 'outbox') {
-                $html .= form_button('archive_pm', $this->locale['412'], 'archive_pm', ['class' => 'btn-sm btn-default', 'icon' => 'fa fa-lock']);
-            }
-            $html .= form_button('delete_pm', $this->locale['416'], 'delete_pm', ['class' => 'btn-sm btn-danger', 'icon' => 'fa fa-trash-o']);
-            $html .= "</div>\n";
-            $html .= "<div class='dropdown display-inline-block m-r-10'>
-                <a href='#' data-toggle='dropdown' class='btn btn-default btn-sm dropdown-toggle'>".$this->locale['444']."&hellip; <span class='caret'></span></a>
-                <ul class='dropdown-menu'>
-                    <li>".form_button('mark', $this->locale['493'], 'mark_all', ['input_id' => 'mark_all', 'class' => 'btn-link btn-block align-left'])."</li>
-                    <li>".form_button('mark', $this->locale['494'], 'mark_read', ['input_id' => 'mark_read', 'class' => 'btn-link btn-block align-left'])."</li>
-                    <li>".form_button('mark', $this->locale['495'], 'mark_unread', ['input_id' => 'mark_unread', 'class' => 'btn-link btn-block align-left'])."</li>
-                    <li>".form_button('mark', $this->locale['496'], 'unmark_all', ['input_id' => 'unmark_all', 'class' => 'btn-link btn-block align-left'])."</li>
-                </ul>
-            </div>\n";
-            $html .= closeform();
+            $this->info['actions_form'] = [
+                'openform'    => openform('actionform', 'post', FORM_REQUEST).form_hidden('selectedPM', '', ''),
+                'check'       => [
+                    'check_all_pm'    => $this->locale['418'],
+                    'check_unread_pm' => $this->locale['415'],
+                    'check_read_pm'   => $this->locale['414']
+                ],
+                'unlockbtn'   => form_button('unarchive_pm', $this->locale['413'], 'unarchive_pm', ['class' => 'btn-sm btn-default', 'icon' => 'fa fa-unlock']),
+                'lockbtn'     => form_button('archive_pm', $this->locale['412'], 'archive_pm', ['class' => 'btn-sm btn-default', 'icon' => 'fa fa-lock']),
+                'deletebtn'   => form_button('delete_pm', $this->locale['416'], 'delete_pm', ['class' => 'btn-sm btn-danger', 'icon' => 'fa fa-trash-o']),
+                'mark_all'    => form_button('mark', $this->locale['493'], 'mark_all', ['input_id' => 'mark_all', 'class' => 'btn-link btn-block align-left']),
+                'mark_read'   => form_button('mark', $this->locale['494'], 'mark_read', ['input_id' => 'mark_read', 'class' => 'btn-link btn-block align-left']),
+                'mark_unread' => form_button('mark', $this->locale['495'], 'mark_unread', ['input_id' => 'mark_unread', 'class' => 'btn-link btn-block align-left']),
+                'unmark_all'  => form_button('mark', $this->locale['496'], 'unmark_all', ['input_id' => 'unmark_all', 'class' => 'btn-link btn-block align-left']),
+                'closeform'   => closeform()
+            ];
         }
 
-        $this->info['actions_form'] = $html;
-
+        return NULL;
     }
 
     /**

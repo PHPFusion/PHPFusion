@@ -65,7 +65,20 @@ if (!function_exists('display_inbox')) {
                     $tpl->set_block('compose_button', $info['button']['new']);
 
                     $data = $info['items'][$_GET['msg_read']];
-                    $tpl->set_block('actions', ['form' => $info['actions_form']]);
+
+                    $form = $info['actions_form']['openform'];
+                    $form .= "<div class='btn-group display-inline-block m-r-10'>\n";
+                    if ($_GET['folder'] == 'archive') {
+                        $form .= $info['actions_form']['unlockbtn'];
+                    } else if ($_GET['folder'] == "inbox") {
+                        $form .= $info['actions_form']['lockbtn'];
+                    }
+                    $form .= $info['actions_form']['deletebtn'];
+                    $form .= "</div>\n";
+
+                    $form .= $info['actions_form']['closeform'];
+
+                    $tpl->set_block('actions', ['form' => $form]);
 
                     $tpl->set_block('mail_read', [
                         'title'        => $data['message']['message_header'],
@@ -135,7 +148,40 @@ if (!function_exists('display_inbox')) {
                     } else {
                         $unread->set_block('no_item', ['text' => $locale['471']]);
                     }
-                    $tpl->set_block('actions', ['form' => $info['actions_form']]);
+
+                    $form = $info['actions_form']['openform'];
+
+                    $form .= "<div class='dropdown display-inline-block m-r-10'>
+                        <a href='#' data-toggle='dropdown' class='btn btn-default btn-sm dropdown-toggle'><i id='chkv' class='fa fa-square-o'></i><span class='caret m-l-5'></span></a>
+                        <ul class='dropdown-menu'>";
+                            foreach ($info['actions_form']['check'] as $id => $title) {
+                                $form .= "<li><a id='".$id."' data-action='check' class='pointer'>".$title."</a></li>";
+                            }
+                        $form .= "</ul>
+                    </div>";
+
+                    $form .= "<div class='btn-group display-inline-block m-r-10'>\n";
+                    if ($_GET['folder'] == 'archive') {
+                        $form .= $info['actions_form']['unlockbtn'];
+                    } else if ($_GET['folder'] !== 'outbox') {
+                        $form .= $info['actions_form']['lockbtn'];
+                    }
+                    $form .= $info['actions_form']['deletebtn'];
+                    $form .= "</div>\n";
+
+                    $form .= "<div class='dropdown display-inline-block m-r-10'>
+                        <a href='#' data-toggle='dropdown' class='btn btn-default btn-sm dropdown-toggle'>".$locale['444']."&hellip; <span class='caret'></span></a>
+                        <ul class='dropdown-menu'>
+                            <li>".$info['actions_form']['mark_all']."</li>
+                            <li>".$info['actions_form']['mark_read']."</li>
+                            <li>".$info['actions_form']['mark_unread']."</li>
+                            <li>".$info['actions_form']['unmark_all']."</li>
+                        </ul>
+                    </div>\n";
+
+                    $form .= $info['actions_form']['closeform'];
+
+                    $tpl->set_block('actions', ['form' => $form]);
                     $tpl->set_block('mailbox', [
                             'unread_content' => $unread->get_output(),
                             'read_content'   => $read->get_output()
