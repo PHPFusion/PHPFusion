@@ -151,12 +151,12 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 $blog_blog = "";
                 if ($_POST['blog_blog']) {
                     $blog_blog = phpentities(stripslash($_POST['blog_blog']));
-                    $blog_blog = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, stripslash(descript($_POST['blog_blog'])));
+                    $blog_blog = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, stripslash($_POST['blog_blog']));
                 }
                 $blog_extended = "";
                 if ($_POST['blog_extended']) {
                     $blog_extended = phpentities(stripslash($_POST['blog_extended']));
-                    $blog_extended = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, stripslash(descript($_POST['blog_extended'])));
+                    $blog_extended = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, stripslash($_POST['blog_extended']));
                 }
                 $callback_data = [
                     "blog_subject"    => form_sanitizer($_POST['blog_subject'], '', 'blog_subject'),

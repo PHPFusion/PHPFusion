@@ -36,12 +36,10 @@ if (iMEMBER && $blog_settings['blog_allow_submission']) {
         $blog_blog = "";
         if ($_POST['blog_blog']) {
             $blog_blog = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, parseubb(stripslashes($_POST['blog_blog'])));
-            $blog_blog = parse_textarea($blog_blog);
         }
         $blog_extended = "";
         if ($_POST['blog_body']) {
             $blog_extended = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, parseubb(stripslashes($_POST['blog_body'])));
-            $blog_extended = parse_textarea($blog_extended);
         }
         $criteriaArray = [
             "blog_subject"  => form_sanitizer($_POST['blog_subject'], "", "blog_subject"),
@@ -85,12 +83,10 @@ if (iMEMBER && $blog_settings['blog_allow_submission']) {
         $blog_blog = "";
         if ($_POST['blog_blog']) {
             $blog_blog = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, parseubb(stripslashes($_POST['blog_blog'])));
-            $blog_blog = parse_textarea($blog_blog);
         }
         $blog_body = "";
         if ($_POST['blog_body']) {
             $blog_body = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, parseubb(stripslashes($_POST['blog_body'])));
-            $blog_body = parse_textarea($blog_body);
         }
         $criteriaArray = [
             "blog_subject"  => form_sanitizer($_POST['blog_subject'], "", "blog_subject"),
