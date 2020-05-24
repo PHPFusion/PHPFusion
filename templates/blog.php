@@ -79,6 +79,8 @@ if (!function_exists('display_blog_item')) {
 
         $data = $info['blog_item'];
 
+        echo '<div class="blog-item">';
+
         echo "<div class='clearfix'>
                 <div class='btn-group pull-right'>
                 <a class='btn btn-default btn-sm' href='".$data['print_link']."' target='_blank'><i class='fa fa-print'></i> ".$locale['print']."</a>";
@@ -112,6 +114,9 @@ if (!function_exists('display_blog_item')) {
 
         echo $data['blog_allow_comments'] ? "<hr/>".$data['blog_show_comments'] : '';
         echo $data['blog_allow_ratings'] ? "<hr/>".$data['blog_show_ratings'] : '';
+
+        echo '</div>';
+
         $str = ob_get_contents();
         ob_end_clean();
 
@@ -124,11 +129,12 @@ if (!function_exists('display_blog_index')) {
         add_to_head("<link rel='stylesheet' href='".INFUSIONS."blog/templates/css/blog.css' type='text/css'>");
         $locale = fusion_get_locale();
         ob_start();
+        echo '<div class="blog-index">';
         if (!empty($info['blog_item'])) {
             foreach ($info['blog_item'] as $blog_id => $data) {
                 echo (isset($_GET['cat_id'])) ? "<!--pre_blog_cat_idx-->\n" : "<!--blog_prepost_".$blog_id."-->\n";
                 echo "
-                    <div class='clearfix m-b-20'>
+                    <div class='clearfix m-b-20 blog-index-item'>
                         <div class='row'>
                             <div class='col-xs-12 col-sm-3'>
                                 <div class='pull-left m-r-5'>".$data['blog_user_avatar']."</div>
@@ -163,6 +169,7 @@ if (!function_exists('display_blog_index')) {
         } else {
             echo "<div class='well text-center'>".$locale['blog_3000']."</div>\n";
         }
+        echo '</div>';
         $str = ob_get_contents();
         ob_end_clean();
 
