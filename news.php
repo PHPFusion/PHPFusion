@@ -18,7 +18,8 @@
 +--------------------------------------------------------*/
 
 use PHPFusion\Infusions\News\Classes\News;
-use PHPFusion\OpenGraphNews;
+use PHPFusion\Infusions\News\Classes\News\OpenGraphNews;
+
 require_once __DIR__.'/../../maincore.php';
 if (!defined('NEWS_EXIST')) {
     redirect(BASEDIR."error.php?code=404");
@@ -26,9 +27,11 @@ if (!defined('NEWS_EXIST')) {
 require_once THEMES.'templates/header.php';
 require_once INFUSIONS."news/templates/news.php";
 
+$getinfo = new News;
+
 if (check_get('readmore')) {
     if ($readmore = get('readmore', FILTER_VALIDATE_INT)) {
-        $info = $this->set_NewsItemInfo($readmore);
+        $info = $getinfo->set_NewsItemInfo($readmore);
         render_news_item($info);
         OpenGraphNews::ogNews($readmore);
     } else {
@@ -37,7 +40,7 @@ if (check_get('readmore')) {
 } else if (check_get('cat_id')) {
     // Category Result
     if ($cat_id = get('cat_id', FILTER_VALIDATE_INT)) {
-        $info = $this->set_NewsCatInfo($cat_id);
+        $info = $getinfo->set_NewsCatInfo($cat_id);
         display_main_news($info);
         OpenGraphNews::ogNewsCat($cat_id);
     } else {

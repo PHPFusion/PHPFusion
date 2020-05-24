@@ -15,9 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-namespace PHPFusion;
+namespace PHPFusion\Infusions\News\Classes\News;
 
-class OpenGraphNews extends OpenGraph {
+class OpenGraphNews extends \PHPFusion\OpenGraph {
     public static function ogNews($news_id = 0) {
         $settings = fusion_get_settings();
         $info = [];

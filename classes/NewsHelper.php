@@ -51,7 +51,7 @@ class NewsHelper {
         LEFT JOIN ".DB_NEWS_CATS." nc ON n.news_cat=nc.news_cat_id
         WHERE ".($filters['condition'] ? $filters['condition'] : implode(' AND ', $filter_conds))."                        
         GROUP BY ".(!empty($filters['group_by']) ? $filters['group_by'] : 'news_id')."
-        ORDER BY ".(!empty($filters['order_by']) ? $filters['order_by'].',' : '')." news_sticky DESC".($cat_filter['order'] ? ", ".$cat_filter['order'] : '')."
+        ORDER BY ".(!empty($filters['order_by']) ? $filters['order_by'].',' : '')." news_sticky DESC".(!empty($cat_filter['order']) ? ", ".$cat_filter['order'] : '')."
         LIMIT $rowstart, $limit";
         $result = dbquery($query);
 
@@ -104,4 +104,11 @@ class NewsHelper {
         return $cat_filter;
     }
 
+    public static function get_news_settings($key = NULL) {
+        if (empty($news_settings)) {
+            $news_settings = get_settings("news");
+        }
+
+        return $key === NULL ? $news_settings : (isset($news_settings[$key]) ? $news_settings[$key] : NULL);
+    }
 }

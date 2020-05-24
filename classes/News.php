@@ -564,7 +564,7 @@ class News extends NewsHelper {
         }
 
         // then we make a infinity recursive function to loop/break it out.
-        $crumb = breadcrumb_arrays($news_cat_index, $_GET['cat_id']);
+        $crumb = breadcrumb_arrays($news_cat_index, get('cat_id'));
         $title_count = !empty($crumb['title']) && is_array($crumb['title']) ? count($crumb['title']) > 1 : 0;
         // then we sort in reverse.
         if ($title_count) {
@@ -599,15 +599,14 @@ class News extends NewsHelper {
             'title' => $locale['news_0004']
         ]);
 
-        $result = dbquery(
-            $this->getNewsQuery(
-                [
-                    'condition' => 'n.news_id='.intval($news_id),
-                    'limit'     => '1',
-                    'rowstart'  => get('rowstart', FILTER_VALIDATE_INT)
-                ]
-            )
+        $query = $this->getNewsQuery(
+            [
+                'condition' => 'n.news_id='.intval($news_id),
+                'limit'     => '1',
+                'rowstart'  => get('rowstart', FILTER_VALIDATE_INT)
+            ]
         );
+        $result = dbquery($query['query']);
 
         if (dbrows($result)) {
             $data = dbarray($result);

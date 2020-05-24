@@ -16,6 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
+use PHPFusion\Infusions\News\Classes\NewsHelper;
 use PHPFusion\News\NewsServer;
 use PHPFusion\SiteLinks;
 use PHPFusion\Template;
@@ -35,7 +36,7 @@ function display_news_menu($info) {
     ];
     $sitelinks = SiteLinks::setSubLinks($link_configuration);
     foreach ($info['news_categories'] as $ncat) {
-        $sitelinks->addMenuLink($ncat['id'], $ncat['name'], $ncat['parent'], $ncat['link'], $ncat['icon']);
+        $sitelinks->addMenuLink($ncat['id'], $ncat['name'], !empty($ncat['parent']) ? $ncat['parent'] : '', $ncat['link'], !empty($ncat['icon']) ? $ncat['icon'] : '');
     }
     add_to_panel('News', $sitelinks->showSubLinks(), 'LEFT', iGUEST, 1);
 }
@@ -53,7 +54,7 @@ if (!function_exists('display_main_news')) {
      */
     function display_main_news($info) {
         // sitelinks menu
-        display_news_menu($info);
+        //display_news_menu($info);
 
         echo fusion_render(INFUSIONS.'news/templates/html/', 'news-home.twig', [], TRUE);
         return '';
@@ -215,7 +216,7 @@ if (!function_exists('render_news_item')) {
     function render_news_item($info) {
 
         $locale = fusion_get_locale();
-        $news_settings = NewsServer::get_news_settings();
+        $news_settings = NewsHelper::get_news_settings();
         $data = $info['news_item'];
 
         add_to_head("<link rel='stylesheet' href='".INFUSIONS."news/templates/html/news.css' type='text/css'>");
