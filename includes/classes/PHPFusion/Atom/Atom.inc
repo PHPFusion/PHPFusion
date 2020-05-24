@@ -178,7 +178,7 @@ class Atom {
 
     public function infuse_theme() {
         if (!empty($this->theme_data)) {
-            add_to_head("<link href='".THEMES.$this->theme_data['theme_file']."' rel='stylesheet' media='screen' />\n");
+            add_to_head("<link href='".SITE_THEMES.$this->theme_data['theme_file']."' rel='stylesheet' media='screen' />\n");
         } else {
             add_to_head("<link href='".THEMES."boilerplates/bootstrap3/bootstrap.css' rel='stylesheet' media='screen' />\n");
         }
@@ -203,17 +203,17 @@ class Atom {
             ':theme_name' => $this->theme_name,
         ]);
 
-        if (file_exists(THEMES.$this->theme_name.$theme_dbfile)) { // new 9.00
-            include THEMES.$this->theme_name.$theme_dbfile;
+        if (file_exists(SITE_THEMES.$this->theme_name.$theme_dbfile)) { // new 9.00
+            include SITE_THEMES.$this->theme_name.$theme_dbfile;
             $data = [
                 'theme_name'        => !empty($theme_title) ? $theme_title : $data['theme_name'],
-                'theme_screenshot'  => isset($theme_screenshot) && file_exists(THEMES.$this->theme_name."/".$theme_screenshot) ? THEMES.$this->theme_name."/".$theme_screenshot : IMAGES.'imagenotfound.jpg',
+                'theme_screenshot'  => isset($theme_screenshot) && file_exists(SITE_THEMES.$this->theme_name."/".$theme_screenshot) ? SITE_THEMES.$this->theme_name."/".$theme_screenshot : IMAGES.'imagenotfound.jpg',
                 'theme_author'      => !empty($theme_author) ? $theme_author : $data['theme_author'],
                 'theme_web'         => !empty($theme_web) ? $theme_web : $data['theme_web'],
                 'theme_license'     => !empty($theme_license) ? $theme_license : $data['theme_license'],
                 'theme_version'     => !empty($theme_version) ? $theme_version : $data['theme_version'],
                 'theme_description' => !empty($theme_description) ? $theme_description : $data['theme_description'],
-                'theme_widgets'     => file_exists(THEMES.$this->theme_name.'/widget.php') ? TRUE : FALSE
+                'theme_widgets'     => file_exists(SITE_THEMES.$this->theme_name.'/widget.php') ? TRUE : FALSE
             ];
         }
 
@@ -298,7 +298,7 @@ class Atom {
         $locale = fusion_get_locale();
         if (Admin::theme_widget_exists($this->theme_name)) {
             echo "<div class='m-t-20 m-b-20'>\n";
-            require_once THEMES.$this->theme_name."/theme_db.php";
+            require_once SITE_THEMES.$this->theme_name."/theme_db.php";
             /**
              * Infuse Widget Action
              */
@@ -379,7 +379,7 @@ class Atom {
                 ");
                 echo $html;
                 echo "<!---start widget form--->\n";
-                include THEMES.$this->theme_name."/widget.php";
+                include SITE_THEMES.$this->theme_name."/widget.php";
                 echo "<!---end widget form--->\n";
             }
             echo "</div>\n";
@@ -521,8 +521,8 @@ class Atom {
                         $data['theme_active'] = 1;
                         $data['theme_config'] = addslashes(serialize($this->data));
                         if (!$this->debug && $data['theme_file']) {
-                            if (file_exists(THEMES.$old_file) && !is_dir(THEMES.$old_file)) {
-                                unlink(THEMES.$old_file);
+                            if (file_exists(SITE_THEMES.$old_file) && !is_dir(SITE_THEMES.$old_file)) {
+                                unlink(SITE_THEMES.$old_file);
                             }
                             dbquery_insert(DB_THEME, $data, 'update');
                             if (fusion_safe()) {
@@ -564,9 +564,9 @@ class Atom {
 
         $locale = fusion_get_locale();
         $inputFile = CLASSES."PHPFusion/Atom/less/atom.less";
-        $outputFolder = THEMES.$this->target_folder."/";
-        $outputFile = THEMES.$this->target_folder."/fusion_".$this->target_folder."_".time().".css";
-        $returnFile = str_replace(THEMES, '', $outputFile);
+        $outputFolder = SITE_THEMES.$this->target_folder."/";
+        $outputFile = SITE_THEMES.$this->target_folder."/fusion_".$this->target_folder."_".time().".css";
+        $returnFile = str_replace(SITE_THEMES, '', $outputFile);
         $options = ['output' => $outputFile, 'compress' => $this->compress,];
         $this->set_less_variables();
 

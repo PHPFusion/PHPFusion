@@ -45,7 +45,7 @@ class Admin {
      * @return bool
      */
     static function theme_widget_exists($theme_name) {
-        return (is_dir(THEMES.$theme_name) && file_exists(THEMES.$theme_name."/widget.php")) ? TRUE : FALSE;
+        return (is_dir(SITE_THEMES.$theme_name) && file_exists(SITE_THEMES.$theme_name."/widget.php")) ? TRUE : FALSE;
     }
 
     /**
@@ -94,8 +94,8 @@ class Admin {
 
                     $theme_name = stripinput($_GET['theme']);
                     $file = dbarray(dbquery("SELECT theme_file FROM ".DB_THEME." WHERE theme_name='".$theme_name."' AND theme_id='".intval($_GET['delete_preset'])."'"));
-                    if (file_exists(THEMES.$file['theme_file'])) {
-                        unlink(THEMES.$file['theme_file']);
+                    if (file_exists(SITE_THEMES.$file['theme_file'])) {
+                        unlink(SITE_THEMES.$file['theme_file']);
                     }
 
                     dbquery("DELETE FROM ".DB_THEME." WHERE theme_id='".intval($_GET['delete_preset'])."'");
@@ -147,7 +147,7 @@ class Admin {
      * @return bool
      */
     public static function verify_theme($theme_name) {
-        return (is_dir(THEMES.$theme_name) && file_exists(THEMES.$theme_name."/theme.php") && file_exists(THEMES.$theme_name."/styles.css") && fusion_get_settings('theme') == $theme_name) ? TRUE : FALSE;
+        return (is_dir(SITE_THEMES.$theme_name) && file_exists(SITE_THEMES.$theme_name."/theme.php") && file_exists(SITE_THEMES.$theme_name."/styles.css") && fusion_get_settings('theme') == $theme_name) ? TRUE : FALSE;
     }
 
     public static function display_theme_list() {
@@ -164,35 +164,35 @@ class Admin {
             }
         }
         $data = [];
-        $_dir = makefilelist(THEMES, ".|..|templates|admin_themes", TRUE, "folders");
+        $_dir = makefilelist(SITE_THEMES, ".|..|templates|admin_themes", TRUE, "folders");
         foreach ($_dir as $folder) {
             $theme_dbfile = '/theme_db.php';
             $status = $settings['theme'] == $folder ? 1 : 0;
-            if (file_exists(THEMES.$folder.$theme_dbfile)) {
+            if (file_exists(SITE_THEMES.$folder.$theme_dbfile)) {
                 // 9.00 compatible theme.
                 $theme_folder = '';
-                include_once THEMES.$folder.$theme_dbfile;
+                include_once SITE_THEMES.$folder.$theme_dbfile;
                 $data[$status][$folder] = [
-                    'readme'      => !empty($theme_readme) && file_exists(THEMES.$theme_folder."/".$theme_readme) ? THEMES.$theme_folder."/".$theme_readme : '',
-                    'folder'      => isset($theme_folder) && file_exists(THEMES.$theme_folder.'/theme.php') ? THEMES.$theme_folder : '',
-                    'screenshot'  => isset($theme_screenshot) && file_exists(THEMES.$theme_folder."/".$theme_screenshot) ? THEMES.$theme_folder."/".$theme_screenshot : IMAGES.'imagenotfound.jpg',
+                    'readme'      => !empty($theme_readme) && file_exists(SITE_THEMES.$theme_folder."/".$theme_readme) ? SITE_THEMES.$theme_folder."/".$theme_readme : '',
+                    'folder'      => isset($theme_folder) && file_exists(SITE_THEMES.$theme_folder.'/theme.php') ? SITE_THEMES.$theme_folder : '',
+                    'screenshot'  => isset($theme_screenshot) && file_exists(SITE_THEMES.$theme_folder."/".$theme_screenshot) ? SITE_THEMES.$theme_folder."/".$theme_screenshot : IMAGES.'imagenotfound.jpg',
                     'title'       => isset($theme_title) ? $theme_title : '',
                     'web'         => isset($theme_web) ? $theme_web : '',
                     'author'      => isset($theme_author) ? $theme_author : '',
                     'license'     => isset($theme_license) ? $theme_license : '',
                     'version'     => isset($theme_version) ? $theme_version : '',
                     'description' => isset($theme_description) ? $theme_description : '',
-                    'widgets'     => file_exists(THEMES.$theme_folder.'/widget.php') ? TRUE : FALSE
+                    'widgets'     => file_exists(SITE_THEMES.$theme_folder.'/widget.php') ? TRUE : FALSE
                 ];
             } else {
                 // older legacy theme.
-                if (file_exists(THEMES.$folder.'/theme.php')) {
+                if (file_exists(SITE_THEMES.$folder.'/theme.php')) {
                     $theme_screenshot = '/screenshot.jpg';
                     $data[$status][$folder] = [
                         'readme'      => '',
-                        'folder'      => THEMES.$folder,
+                        'folder'      => SITE_THEMES.$folder,
                         'title'       => $folder,
-                        'screenshot'  => file_exists(THEMES.$folder.$theme_screenshot) ? THEMES.$folder.$theme_screenshot : IMAGES.'imagenotfound.jpg',
+                        'screenshot'  => file_exists(SITE_THEMES.$folder.$theme_screenshot) ? SITE_THEMES.$folder.$theme_screenshot : IMAGES.'imagenotfound.jpg',
                         'author'      => '',
                         'license'     => '',
                         'version'     => '',
@@ -266,7 +266,7 @@ class Admin {
      * @return bool
      */
     static function theme_installable($theme_name) {
-        return (is_dir(THEMES.$theme_name) && file_exists(THEMES.$theme_name."/theme.php") && file_exists(THEMES.$theme_name."/styles.css") && fusion_get_settings('theme') !== $theme_name) ? TRUE : FALSE;
+        return (is_dir(SITE_THEMES.$theme_name) && file_exists(SITE_THEMES.$theme_name."/theme.php") && file_exists(SITE_THEMES.$theme_name."/styles.css") && fusion_get_settings('theme') !== $theme_name) ? TRUE : FALSE;
     }
 
     public static function theme_uploader() {
@@ -276,7 +276,7 @@ class Admin {
         if (isset($_POST['upload'])) {
             require_once INCLUDES."infusions_include.php";
             $src_file = 'theme_files';
-            $target_folder = THEMES;
+            $target_folder = SITE_THEMES;
             $valid_ext = ',.zip';
             $max_size = 5 * 1000 * 1000;
             $upload = upload_file($src_file, '', $target_folder, $valid_ext, $max_size);
