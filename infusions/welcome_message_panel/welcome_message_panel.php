@@ -20,5 +20,5 @@ defined('IN_FUSION') || exit;
 $locale = fusion_get_locale();
 
 opentable($locale['global_035']);
-echo stripslashes(nl2br(fusion_get_settings('siteintro')));
+echo htmlspecialchars_decode(stripslashes(nl2br(fusion_get_settings('siteintro'))));
 closetable();

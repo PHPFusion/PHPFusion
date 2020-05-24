@@ -42,7 +42,7 @@ class Settings_Registration {
 
             $inputData = [
                 'login_method'        => sanitizer('login_method', '0', 'login_method'),
-                'license_agreement'   => form_sanitizer(descript($_POST['license_agreement']), '', 'license_agreement', $is_multilang),
+                'license_agreement'   => form_sanitizer($_POST['license_agreement'], '', 'license_agreement', $is_multilang),
                 'enable_registration' => sanitizer('enable_registration', '0', 'enable_registration'),
                 'email_verification'  => (post('email_verification') ? 1 : 0),
                 'admin_activation'    => (post('admin_activation') ? 1 : 0),

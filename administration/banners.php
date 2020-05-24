@@ -79,8 +79,8 @@ class BannersAdministration {
 
         if (post('save_banners')) {
             $settings_main = [
-                'sitebanner1' => post('sitebanner1') ? descript(addslashes(post('sitebanner1'))) : self::$settings['sitebanner1'],
-                'sitebanner2' => post('sitebanner2') ? descript(addslashes(post('sitebanner2'))) : self::$settings['sitebanner2'],
+                'sitebanner1' => sanitizer('sitebanner1', '', 'sitebanner1'),
+                'sitebanner2' => sanitizer('sitebanner2', '', 'sitebanner2')
             ];
 
             if (fusion_safe()) {
@@ -115,7 +115,7 @@ class BannersAdministration {
         }
 
         echo openform('bannersfrm', 'post');
-        for ($i=1; $i<3; $i++) {
+        for ($i = 1; $i < 3; $i++) {
             $banner = "<div class='pull-right btn-group'>";
             $banner .= "<a class='btn btn-default btn-sm' href='".FUSION_SELF.$aidlink."&amp;ref=banners_form&amp;section=banners_form&amp;action=edit&amp;banner_id=sitebanner".$i."'><i class='fa fa-edit fa-fw'></i> ".self::$locale['edit']."</a>";
             $banner .= "<a class='btn btn-danger btn-sm' href='".FUSION_SELF.$aidlink."&amp;section=banners_list&amp;action=delete&amp;banner_id=sitebanner".$i."' onclick=\"return confirm('".self::$locale['BN_015']."');\"><i class='fa fa-trash fa-fw'></i> ".self::$locale['delete']."</a>";

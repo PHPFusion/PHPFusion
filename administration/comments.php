@@ -221,8 +221,8 @@ class CommentsAdministration {
                         'profile'     => $data['user_name'] ? profile_link($data['comment_name'], $data['user_name'], $data['user_status']) : $data['comment_name'],
                         'date'        => $this->locale['global_071'].showdate("longdate", $data['comment_datestamp']),
                         'ip'          => "<span class='label label-default m-l-10'>".$this->locale['432']." ".$data['comment_ip']."</span>",
-                        'subject'     => !empty($data['comment_subject']) ? "<div class='m-t-10'>".nl2br(parseubb(parsesmileys($data['comment_subject'])))."</div>\n" : "",
-                        'messages'    => "<div class='m-t-10'>".nl2br(parseubb(parsesmileys($data['comment_message'])))."</div>\n",
+                        'subject'     => !empty($data['comment_subject']) ? "<div class='m-t-10'>".$data['comment_subject']."</div>\n" : "",
+                        'messages'    => "<div class='m-t-10'>".nl2br(parse_textarea($data['comment_message'], TRUE, TRUE, FALSE))."</div>\n",
                     ];
                 }
             }

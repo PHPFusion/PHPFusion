@@ -404,17 +404,6 @@ function stripinput($text = "") {
 }
 
 /**
- * Strips all <script> tags
- *
- * @param $value
- *
- * @return string
- */
-function strip_scripts($value) {
-    return preg_replace('#<script(.*?)>(.*?)</script>#is', '', $value);
-}
-
-/**
  * Prevent any possible XSS attacks via $_GET
  *
  * @param string $check_url
@@ -715,7 +704,8 @@ function displaysmileys($textarea, $form = "inputform") {
             $smileys .= "<br />\n";
         }
         $i++;
-        $smileys .= "<img style='width:20px;height:20px;' src='".get_image("smiley_".$smiley['smiley_text'])."' alt='".$smiley['smiley_text']."' title='".$smiley['smiley_text']."' onclick=\"insertText('".$textarea."', '".$smiley['smiley_code']."', '".$form."');\" />\n";
+        $img = get_image("smiley_".$smiley['smiley_text']);
+        $smileys .= "<img style='width:20px;height:20px;' src='".$img."' alt='".$smiley['smiley_text']."' title='".$smiley['smiley_text']."' onclick=\"insertText('".$textarea."', '".$smiley['smiley_code']."', '".$form."');\" />\n";
     }
     return $smileys;
 }
@@ -802,25 +792,25 @@ function parse_textarea($text, $smileys = TRUE, $bbcode = TRUE, $decode = TRUE, 
 function parse_text(string $value, $parse_smileys = TRUE, $parse_bbcode = TRUE, $decode = TRUE, $default_image_folder = IMAGES, $add_line_breaks = FALSE, $descript = TRUE) {
     $charset = fusion_get_locale("charset");
     $value = stripslashes($value);
-    if ($decode === TRUE) {
-        /** @var $value - decoded from double encoding */
-        $value = html_entity_decode(html_entity_decode($value, ENT_QUOTES, $charset));
+    if ($descript === TRUE) {
+        $value = descript($value);
+        $value = htmlspecialchars_decode($value);
     }
     if ($default_image_folder) {
         $value = parse_imageDir($value, $default_image_folder);
     }
-    if ($parse_smileys) {
-        $value = parsesmileys($value);
-    }
     if ($parse_bbcode) {
         $value = parseubb($value);
+    }
+    if ($parse_smileys) {
+        $value = parsesmileys($value);
     }
     $value = fusion_parse_user($value);
     if ($add_line_breaks === TRUE) {
         $value = nl2br($value);
     }
-    if ($descript === TRUE) {
-        $value = descript($value);
+    if ($decode === TRUE) {
+        $value = html_entity_decode(html_entity_decode($value, ENT_QUOTES, $charset));
     }
 
     return (string)$value;
@@ -831,10 +821,15 @@ function parse_text(string $value, $parse_smileys = TRUE, $parse_bbcode = TRUE, 
  *
  * @param        $text
  * @param string $selected - The names of the required bbcodes to parse, separated by "|"
+ * @param bool   $descript
  *
  * @return string
  */
-function parseubb($text, $selected = "") {
+function parseubb($text, $selected = "", $descript = TRUE) {
+    if ($descript) {
+        $text = descript($text, FALSE);
+    }
+
     $bbcode_cache = cache_bbcode();
     $sel_bbcodes = [];
 
@@ -866,8 +861,6 @@ function parseubb($text, $selected = "") {
             }
         }
     }
-
-    $text = descript($text, FALSE);
 
     return $text;
 }
@@ -1053,27 +1046,38 @@ function highlight_words($word, $subject) {
 }
 
 /**
- * This function sanitize news & article submissions
+ * This function sanitize text
  *
  * @param string  $text
  * @param boolean $striptags FALSE if you don't want to remove html tags. TRUE by default
+ * @param bool    $strip_scripts
  *
  * @return string
  */
-function descript($text, $striptags = TRUE) {
+function descript($text, $striptags = TRUE, $strip_scripts = TRUE) {
     if (is_array($text)) {
         return $text;
     }
 
+    $text = html_entity_decode($text, ENT_QUOTES, fusion_get_locale('charset'));
+    $text = preg_replace('/&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-f]{1,6});/i', '', $text);
+
+    $on_attr = 'onafterprint|onbeforeprint|onbeforeunload|onerror|onhashchange|onload|onmessage|onoffline|ononline|onpagehide|onpageshow|onpopstate|'.
+        'onresize|onstorage|onunload|onblur|onchange|oncontextmenu|onfocus|oninput|oninvalid|onreset|onsearch|onselect|onsubmit|onkeydown|onkeypress|'.
+        'onkeyup|onclick|ondblclick|onmousedown|onmousemove|onmouseup|onmousewheel|onwheel|ondrag|ondragend|ondragenter|ondragleave|ondragover|'.
+        'ondragstart|ondrop|onscroll|oncopy|oncut|onpaste|onabort|oncanplay|oncanplaythrough|oncuechange|ondurationchange|onemptied|onended|onerror|'.
+        'onloadeddata|onloadedmetadata|onloadstart|onpause|onplay|onplaying|onprogress|onratechange|onseeked|onseeking|onstalled|onsuspend|ontimeupdate|'.
+        'onvolumechange|onwaiting|ontoggle';
+
     // Convert problematic ascii characters to their true values
     $patterns = [
-        '#(&\#x)([0-9A-F]+);*#si'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                => '',
-        '#(<[^>]+[\"\'\s])*((onafterprint|onbeforeprint|onbeforeunload|onerror|onhashchange|onload|onmessage|onoffline|ononline|onpagehide|onpageshow|onpopstate|onresize|onstorage|onunload|onblur|onchange|oncontextmenu|onfocus|oninput|oninvalid|onreset|onsearch|onselect|onsubmit|onkeydown|onkeypress|onkeyup|onclick|ondblclick|onmousedown|onmousemove|onmouseup|onmousewheel|onwheel|ondrag|ondragend|ondragenter|ondragleave|ondragover|ondragstart|ondrop|onscroll|oncopy|oncut|onpaste|onabort|oncanplay|oncanplaythrough|oncuechange|ondurationchange|onemptied|onended|onerror|onloadeddata|onloadedmetadata|onloadstart|onpause|onplay|onplaying|onprogress|onratechange|onseeked|onseeking|onstalled|onsuspend|ontimeupdate|onvolumechange|onwaiting|ontoggle|xmlns)[^>]*>)#is' => "$1>",
-        '#([a-z]*)=([\`\'\"]*)script:#iU'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        => '$1=$2nojscript...',
-        '#([a-z]*)=([\`\'\"]*)javascript:#iU'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    => '$1=$2nojavascript...',
-        '#([a-z]*)=([\'\"]*)vbscript:#iU'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        => '$1=$2novbscript...',
-        '#(<[^>]+)style=([\`\'\"]*).*expression\([^>]*>#iU'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      => "$1>",
-        '#(<[^>]+)style=([\`\'\"]*).*behaviour\([^>]*>#iU'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       => "$1>"
+        '#(&\#x)([0-9A-F]+);*#si'                           => '',
+        '#(<[^>]+[\"\'\s])*(('.$on_attr.'|xmlns)[^>]*)#is'  => "$1>",
+        '#([a-z]*)=([\`\'\"]*)script:#iU'                   => '$1=$2nojscript...',
+        '#([a-z]*)=([\`\'\"]*)javascript:#iU'               => '$1=$2nojavascript...',
+        '#([a-z]*)=([\'\"]*)vbscript:#iU'                   => '$1=$2novbscript...',
+        '#(<[^>]+)style=([\`\'\"]*).*expression\([^>]*>#iU' => "$1>",
+        '#(<[^>]+)style=([\`\'\"]*).*behaviour\([^>]*>#iU'  => "$1>"
     ];
 
     foreach (array_merge(['(', ')', ':'], range('A', 'Z'), range('a', 'z')) as $chr) {
@@ -1083,28 +1087,14 @@ function descript($text, $striptags = TRUE) {
     if ($striptags) {
         do {
             $count = 0;
-            $iframe = !defined('ENABLE_IFRAME') ? 'embed|object|iframe|' : '';
-            $text = preg_replace('#</*(applet|meta|xml|blink|link|style|script|'.$iframe.'frame|frameset|ilayer|layer|bgsound|title|base)[^>]*>#i', "", $text, -1, $count);
+            //$iframe = !defined('ENABLE_IFRAME') ? 'embed|iframe|' : '';
+            $iframe = '';
+            $text = preg_replace('#</*(applet|meta|xml|blink|link|style|script|object|'.$iframe.'frame|frameset|ilayer|layer|bgsound|title|base)[^>]*>#i', "", $text, -1, $count);
         } while ($count);
     }
 
     $text = preg_replace(array_keys($patterns), $patterns, $text);
-    $text = filter_xss($text);
 
-    return $text;
-}
-
-/**
- * Filter XSS
- *
- * Based on https://github.com/JBlond/PHP-XSS-Filter
- *
- * @param $input
- *
- * @return string
- */
-function filter_xss($input) {
-    $string = html_entity_decode($input, ENT_NOQUOTES, 'UTF-8');
     $preg_patterns = [
         // Fix &entity\n
         '!(&#0+[0-9]+)!'                                                                                                                                                                                => '$1;',
@@ -1123,11 +1113,17 @@ function filter_xss($input) {
         '#</*\w+:\w[^>]*+>#i'                                                                                                                                                                           => ''
     ];
 
-    foreach ($preg_patterns as $pattern => $replacement) {
-        $string = preg_replace($pattern, $replacement, $string);
+    if ($strip_scripts) {
+        $preg_patterns += [
+            '#<script(.*?)>(.*?)</script>#is' => ''
+        ];
     }
 
-    return $string;
+    foreach ($preg_patterns as $pattern => $replacement) {
+        $text = preg_replace($pattern, $replacement, $text);
+    }
+
+    return htmlspecialchars($text, ENT_QUOTES, 'UTF-8', FALSE);
 }
 
 /**

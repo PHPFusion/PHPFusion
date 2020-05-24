@@ -591,7 +591,7 @@ class PanelsAdministration {
         ]);
         echo "<div id='panel_url_list-grp'>\n";
         echo form_textarea('panel_url_list', self::$locale['462'], $this->data['panel_url_list'], [
-            'inline'   => FALSE,
+            'inline' => FALSE,
             //'required' => TRUE
         ]);
         echo "<div class='text-smaller'>".self::$locale['463']." <br />
@@ -615,10 +615,11 @@ class PanelsAdministration {
 
         echo "<div id='pgrp'>\n";
         echo form_textarea('panel_content', self::$locale['455'], $this->data['panel_content'], [
-            'html'      => fusion_get_settings("allow_php_exe") ? FALSE : TRUE,
+            'html'      => $settings['allow_php_exe'] ? FALSE : TRUE,
             'form_name' => 'panel_form',
             'autosize'  => TRUE,
-            'preview'   => fusion_get_settings("allow_php_exe") ? FALSE : TRUE,
+            'preview'   => $settings['allow_php_exe'] ? FALSE : TRUE,
+            'descript'  => $settings['allow_php_exe'] ? FALSE : TRUE
         ]);
         echo "</div>\n";
 

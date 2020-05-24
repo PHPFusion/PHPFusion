@@ -936,107 +936,107 @@ function get_core_tables($localeset) {
         ], //settings_theme VARCHAR(200) NOT NULL DEFAULT "",
     ];
     // New in Babylon
-    $table_package["site_menus"] = array(
-        "menu_id"             => array(
+    $table_package["site_menus"] = [
+        "menu_id"             => [
             "type"           => "MEDIUMINT",
             "length"         => 11,
             "auto_increment" => TRUE,
             "key"            => 1,
             "unsigned"       => TRUE,
-        ),
-        "menu_name"           => array(
+        ],
+        "menu_name"           => [
             "type"   => "VARCHAR",
             "length" => 100,
-        ),
-        "menu_bbcode"         => array(
+        ],
+        "menu_bbcode"         => [
             "type"     => "TINYINT",
             "length"   => 1,
             "default"  => 0,
             "unsigned" => TRUE,
-        ),
-        "menu_grouping"       => array(
+        ],
+        "menu_grouping"       => [
             "type"     => "TINYINT",
             "length"   => 1,
             "default"  => 0,
             "unsigned" => TRUE,
-        ),
-        "menu_links_per_page" => array(
+        ],
+        "menu_links_per_page" => [
             "type"     => "SMALLINT",
             "length"   => 5,
             "default"  => 0,
             "unsigned" => TRUE,
-        )
-    );
-    $table_package["site_links"] = array(
-        "link_id"       => array(
+        ]
+    ];
+    $table_package["site_links"] = [
+        "link_id"       => [
             "type"           => "BIGINT",
             "length"         => 20,
             "auto_increment" => TRUE,
             "key"            => 1, //PRIMARY KEY (link_id)
             "unsigned"       => TRUE,
-        ),
-        "link_position" => array(
+        ],
+        "link_position" => [
             "type"     => "TINYINT",
             "length"   => 1,
             "unsigned" => TRUE,
             "default"  => 1
-        ),
-        "link_cat"      => array(
+        ],
+        "link_cat"      => [
             "type"     => "BIGINT",
             "length"   => 20,
             "unsigned" => TRUE,
-        ),
-        "link_type"     => array(
+        ],
+        "link_type"     => [
             "type"   => "VARCHAR",
             "length" => 10
-        ),
+        ],
 
-        "link_name"        => array(
+        "link_name"        => [
             "type"   => "VARCHAR",
             "length" => 100,
-        ),
-        "link_title"       => array(
+        ],
+        "link_title"       => [
             "type"   => "VARCHAR",
             "length" => 100
-        ),
-        "link_description" => array(
+        ],
+        "link_description" => [
             "type" => "TEXT"
-        ),
-        "link_url"         => array(
+        ],
+        "link_url"         => [
             "type"   => "VARCHAR",
             "length" => 200,
-        ),
-        "link_icon"        => array(
+        ],
+        "link_icon"        => [
             "type"   => "VARCHAR",
             "length" => 100,
-        ),
-        "link_visibility"  => array(
+        ],
+        "link_visibility"  => [
             "type"    => "TINYINT",
             "length"  => 4,
             "default" => 0
-        ),
-        "link_status"      => array(
+        ],
+        "link_status"      => [
             "type"     => "TINYINT",
             "length"   => 1,
             "unsigned" => TRUE,
             "default"  => 0
-        ),
-        "link_window"      => array(
+        ],
+        "link_window"      => [
             "type"     => "TINYINT",
             "length"   => 1,
             "unsigned" => TRUE,
-        ),
-        "link_order"       => array(
+        ],
+        "link_order"       => [
             "type"     => "SMALLINT",
             "length"   => 2,
             "unsigned" => TRUE
-        ),
-        "link_language"    => array(
+        ],
+        "link_language"    => [
             "type"    => "VARCHAR",
             "length"  => 50,
             "default" => $localeset
-        )
-    );
+        ]
+    ];
 
     $table_package["smileys"] = [
         "smiley_id"    => [
@@ -1618,6 +1618,10 @@ function get_core_tables($localeset) {
             "length"   => 10,
             "unsigned" => TRUE
         ], //user_actiontime INT(10) UNSIGNED NOT NULL DEFAULT "0",
+        'user_session'         => [
+            'type'   => 'VARCHAR',
+            'length' => 150,
+        ],
         "user_theme"           => [
             "type"    => "VARCHAR",
             "length"  => 100,

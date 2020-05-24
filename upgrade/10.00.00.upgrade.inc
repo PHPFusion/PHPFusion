@@ -48,11 +48,15 @@ foreach ($insert_settings_tbl as $key => $value) {
     }
 }
 
-if (!column_exists('users', 'user_aim')) {
+if (!column_exists('users', 'user_session')) {
+    $inf_altertable[] = DB_USERS." ADD user_session VARCHAR(150) NOT NULL DEFAULT '' AFTER user_actiontime";
+}
+
+if (column_exists('users', 'user_aim')) {
     $inf_dropcol[] = ['table' => DB_USERS, 'column' => 'user_aim'];
 }
 
-if (!column_exists('users', 'user_yahoo')) {
+if (column_exists('users', 'user_yahoo')) {
     $inf_dropcol[] = ['table' => DB_USERS, 'column' => 'user_yahoo'];
 }
 

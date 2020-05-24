@@ -52,13 +52,13 @@ if (post('savesettings')) {
     // Save settings after validation
     $inputData = [
         'captcha'               => sanitizer('captcha', '', 'captcha'),
-        'privacy_policy'        => form_sanitizer(descript(post('privacy_policy')), '', 'privacy_policy', $is_multilang),
+        'privacy_policy'        => form_sanitizer($_POST['privacy_policy'], '', 'privacy_policy', $is_multilang),
         'allow_php_exe'         => sanitizer('allow_php_exe', 0, 'allow_php_exe'),
         'flood_interval'        => sanitizer('flood_interval', 15, 'flood_interval'),
         'flood_autoban'         => sanitizer('flood_autoban', 0, 'flood_autoban'),
         'maintenance_level'     => sanitizer('maintenance_level', 102, 'maintenance_level'),
         'maintenance'           => sanitizer('maintenance', 0, 'maintenance'),
-        'maintenance_message'   => descript(addslashes(post('maintenance_message'))),
+        'maintenance_message'   => form_sanitizer($_POST['maintenance_message'], '', 'maintenance_message'),
         'bad_words_enabled'     => sanitizer('bad_words_enabled', 0, 'bad_words_enabled'),
         'bad_words'             => addslashes(post('bad_words')),
         'bad_word_replace'      => sanitizer('bad_word_replace', '', 'bad_word_replace'),

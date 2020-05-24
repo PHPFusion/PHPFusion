@@ -1,5 +1,5 @@
 <?php
-setlocale(LC_ALL, "en_GB.UTF-8"); // Linux Server (Windows may differ)
+$locale['setlocale'] = "en_GB"; // https://www.php.net/manual/en/function.setlocale.php
 $locale['charset'] = "utf-8"; // ISO 639-1 - http://www.loc.gov/standards/iso639-2/php/code_list.php
 $locale['region'] = "GB"; // ISO-3166 (2 Alpha numeric) - https://www.iso.org/obp/ui/#search
 $locale['xml_lang'] = "en";
@@ -250,6 +250,9 @@ $locale['global_176'] = "Privacy Policy";
 $locale['global_180'] = "Admin Home";
 $locale['global_181'] = "Return to Site";
 $locale['global_182'] = "Admin Password not entered or incorrect.";
+$locale['global_183'] = "Your login session has expired. Please login again.";
+// Do not add anything within global_183-190. To be reserved for code verification development.
+
 // Miscellaneous
 $locale['global_190'] = "Maintenance Mode Activated";
 $locale['global_191'] = "Your IP address is currently blacklisted.";

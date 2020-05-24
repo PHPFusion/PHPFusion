@@ -71,9 +71,9 @@ if (isset($_GET['type'])) {
                 FROM ".DB_ARTICLES." ta
                 INNER JOIN ".DB_ARTICLE_CATS." tac ON ta.article_cat=tac.article_cat_id
                 LEFT JOIN ".DB_USERS." tu ON ta.article_name=tu.user_id
-                WHERE ta.article_id='".intval($item_id)."' AND ta.article_draft='0' AND tac.article_cat_status='1' AND ".groupaccess("ta.article_visibility")." AND ".groupaccess("tac.article_cat_visibility")."
+                WHERE ta.article_id=:item_id AND ta.article_draft='0' AND tac.article_cat_status='1' AND ".groupaccess("ta.article_visibility")." AND ".groupaccess("tac.article_cat_visibility")."
                 LIMIT 0,1
-            ");
+            ", [':item_id' => intval($item_id)]);
             $res = FALSE;
             if (dbrows($result)) {
                 $data = dbarray($result);
@@ -97,8 +97,8 @@ if (isset($_GET['type'])) {
             $result = dbquery("SELECT tn.blog_subject, tn.blog_blog, tn.blog_extended, tn.blog_breaks, tn.blog_datestamp, tn.blog_visibility, tu.user_id, tu.user_name, tu.user_status
                 FROM ".DB_BLOG." tn
                 LEFT JOIN ".DB_USERS." tu ON tn.blog_name=tu.user_id
-                WHERE blog_id='".intval($item_id)."' AND blog_draft='0'
-            ");
+                WHERE blog_id=:item_id AND blog_draft='0'
+            ", [':item_id' => intval($item_id)]);
             $res = FALSE;
             if (dbrows($result) != 0) {
                 $data = dbarray($result);
@@ -135,9 +135,9 @@ if (isset($_GET['type'])) {
             $result = dbquery("SELECT ta.faq_question, ta.faq_answer, ta.faq_breaks, ta.faq_datestamp, tu.user_id, tu.user_name, tu.user_status
                 FROM ".DB_FAQS." ta
                 LEFT JOIN ".DB_USERS." tu ON ta.faq_name=tu.user_id
-                WHERE ta.faq_id='".intval($item_id)."' AND ta.faq_status='1' AND ".groupaccess("ta.faq_visibility")."
+                WHERE ta.faq_id=:item_id AND ta.faq_status='1' AND ".groupaccess("ta.faq_visibility")."
                 LIMIT 0,1
-            ");
+            ", [':item_id' => intval($item_id)]);
             $res = FALSE;
             if (dbrows($result)) {
                 $data = dbarray($result);
@@ -167,7 +167,7 @@ if (isset($_GET['type'])) {
                 INNER JOIN ".DB_FORUMS." ff ON ff.forum_id = ft.forum_id
                 INNER JOIN ".DB_USERS." fu ON fu.user_id = fp.post_author
                 LEFT JOIN ".DB_USERS." fe ON fe.user_id = fp.post_edituser
-                WHERE ft.thread_id='".intval($item_id)."' AND fp.post_id = ".$_GET['post']);
+                WHERE ft.thread_id=:item_id AND fp.post_id=:post_id ", [':item_id' => intval($item_id), ':post_id' => (int)$_GET['post']]);
                 $res = FALSE;
                 if (dbrows($result)) {
                     $data = dbarray($result);
@@ -176,7 +176,7 @@ if (isset($_GET['type'])) {
                         echo $locale['500']." <strong>".$settings['sitename']." :: ".$data['thread_subject']."</strong><hr /><br />\n";
                         echo "<div style='margin-left:20px'>\n";
                         echo "<div style='float:left'>".$locale['501'].$data['user_name'].$locale['502'].showdate("forumdate", $data['post_datestamp'])."</div><div style='float:right'>#".$_GET['nr']."</div><div style='float:none;clear:both'></div><hr />\n";
-                        echo parse_textarea($data['post_message']);
+                        echo parse_textarea($data['post_message'], TRUE, TRUE, FALSE);
                         if ($data['edit_name'] != "") {
                             echo "<div style='margin-left:20px'>\n<hr />\n";
                             echo $locale['503'].$data['edit_name'].$locale['502'].showdate("forumdate", $data['post_edittime']);
@@ -202,9 +202,9 @@ if (isset($_GET['type'])) {
                 INNER JOIN ".DB_FORUMS." ff ON ff.forum_id = ft.forum_id
                 INNER JOIN ".DB_USERS." fu ON fu.user_id = fp.post_author
                 LEFT JOIN ".DB_USERS." fe ON fe.user_id = fp.post_edituser
-                WHERE ft.thread_id='".intval($item_id)."'
+                WHERE ft.thread_id=:item_id
                 ORDER BY fp.post_datestamp
-                LIMIT ".$_GET['rowstart'].",$posts_per_page");
+                LIMIT ".$_GET['rowstart'].",$posts_per_page", [':item_id' => intval($item_id)]);
                 $res = FALSE;
                 $i = 0;
                 if (dbrows($result)) {
@@ -216,7 +216,7 @@ if (isset($_GET['type'])) {
                             }
                             echo "<div style='margin-left:20px'>\n";
                             echo "<div style='float:left'>".$locale['501'].$data['user_name'].$locale['502'].showdate("forumdate", $data['post_datestamp'])."</div><div style='float:right'>#".($i + 1)."</div><div style='float:none;clear:both'></div><hr />\n";
-                            echo parse_textarea($data['post_message']);
+                            echo parse_textarea($data['post_message'], TRUE, TRUE, FALSE);
                             if ($data['edit_name'] != '') {
                                 echo "<div style='margin-left:20px'>\n<hr />\n";
                                 echo $locale['503'].$data['edit_name'].$locale['502'].showdate("forumdate", $data['post_edittime']);
@@ -241,7 +241,7 @@ if (isset($_GET['type'])) {
             tu.user_id, tu.user_name, tu.user_status
             FROM ".DB_NEWS." tn
             LEFT JOIN ".DB_USERS." tu ON tn.news_name=tu.user_id
-            WHERE news_id='".intval($item_id)."' AND news_draft='0'");
+            WHERE news_id=:item_id AND news_draft='0'", [':item_id' => intval($item_id)]);
             $res = FALSE;
             if (dbrows($result) != 0) {
                 $data = dbarray($result);
@@ -275,14 +275,14 @@ if (isset($_GET['type'])) {
             if ($settings['enable_terms'] == 1) {
                 echo "<strong>".$settings['sitename']." ".$locale['600']."</strong><br />\n";
                 echo "<small>".$locale['601']." ".ucfirst(showdate("longdate", $settings['license_lastupdate']))."<small>\n";
-                echo "<hr />".parse_textarea( fusion_parse_locale( $settings['license_agreement'] ) )."\n";
+                echo "<hr />".parse_textarea(fusion_parse_locale($settings['license_agreement']))."\n";
             } else {
                 redirect($settings['opening_page']);
             }
             break;
         case "P":
             echo "<strong>".$settings['sitename']." ".$locale['700']."</strong><br />\n";
-            echo "<hr />".parse_textarea( fusion_parse_locale( $settings['privacy_policy'] ) )."\n";
+            echo "<hr />".parse_textarea(fusion_parse_locale($settings['privacy_policy']))."\n";
             break;
     }
 } else {

@@ -22,7 +22,6 @@ use PHPFusion\Authenticate;
 use PHPFusion\Installer\Infusion_Core;
 use PHPFusion\OutputHandler;
 use PHPFusion\Sessions;
-use PHPFusion\Steam;
 
 if (preg_match("/maincore.php/i", $_SERVER['PHP_SELF'])) {
     die();
@@ -43,6 +42,14 @@ if (stripget($_GET)) {
 dbconnect($db_host, $db_user, $db_pass, $db_name, !empty($db_port) ? $db_port : 3306);
 // Fetch the settings from the database
 $settings = fusion_get_settings();
+
+// Request Variables
+$_get_lang = get("lang");
+$_get_logout = get("logout");
+$_check_post_login = check_post("login");
+$_check_post_username = check_post("user_name");
+$_check_post_pass = check_post("user_pass");
+$_check_post_remember = check_post("remember_me");
 
 if ($settings['error_logging_enabled'] == 1) {
     ini_set('display_errors', '1');
@@ -95,12 +102,12 @@ ob_start();
 
 // Sanitise $_SERVER globals
 $php_self = $_SERVER['PHP_SELF'] = server('PHP_SELF');
-$_SERVER['QUERY_STRING'] = server('QUERY_STRING')?: '';
-$_SERVER['REQUEST_URI'] = server('REQUEST_URI')?:'';
+$_SERVER['QUERY_STRING'] = server('QUERY_STRING') ?: '';
+$_SERVER['REQUEST_URI'] = server('REQUEST_URI') ?: '';
 
 // If form could not be posted, check this might be culprit over bad hosting env during peak traffics.
 //if (!empty($_SERVER['REQUEST_URI'])) {
-  //  $_SERVER['REQUEST_URI'] = str_replace('//', '/', $_SERVER['REQUEST_URI']);
+//  $_SERVER['REQUEST_URI'] = str_replace('//', '/', $_SERVER['REQUEST_URI']);
 //}
 
 $PHP_SELF = cleanurl($_SERVER['PHP_SELF']);
@@ -187,18 +194,14 @@ define("START_PAGE", substr(preg_replace("#(&amp;|\?)(s_action=edit&amp;shout_id
 /**
  * Login / Logout / Revalidate
  */
-$login_post = post("login");
-$user_name_post = post("user_name");
-$user_pass_post = post("user_pass");
-if ($login_post && $user_name_post && $user_pass_post) {
+if ($_check_post_login && $_check_post_username && $_check_post_pass) {
     if (fusion_safe()) {
-        $remember_me = post('remember_me') ? TRUE : FALSE;
-        $auth = new Authenticate($user_name_post, $user_pass_post, $remember_me);
+        $auth = new Authenticate(post("user_name"), post("user_pass"), $_check_post_remember);
         $userdata = $auth->getUserData();
         unset($auth, $_POST['user_name'], $_POST['user_pass']);
         redirect(FUSION_REQUEST);
     }
-} else if (get("logout") == "yes") {
+} else if ($_get_logout === "yes") {
     $userdata = Authenticate::logOut();
     $request = clean_request('', ['logout'], FALSE);
     redirect($request);
@@ -224,12 +227,11 @@ function set_user_level() {
 
 function get_current_site_language() {
     $userdata = fusion_get_userdata();
-    static $current_user_language = [];
     if (iMEMBER && valid_language($userdata['user_language'])) {
         $current_user_language = $userdata['user_language'];
     } else {
-        $lang = dbarray(dbquery('SELECT * FROM '.DB_LANGUAGE_SESSIONS.' WHERE user_ip=:iuip', array(":iuip" => USER_IP)));
-        $current_user_language = (!empty($lang["user_language"]) ? $lang["user_language"]: fusion_get_settings("locale"));
+        $lang = dbarray(dbquery('SELECT * FROM '.DB_LANGUAGE_SESSIONS.' WHERE user_ip=:iuip', [":iuip" => USER_IP]));
+        $current_user_language = (!empty($lang["user_language"]) ? $lang["user_language"] : fusion_get_settings("locale"));
     }
     return $current_user_language;
 }
@@ -240,9 +242,8 @@ $language_opts = fusion_get_enabled_languages();
 $enabled_languages = array_keys($language_opts);
 
 // If language change is initiated and if the selected language is valid
-$lang_switch = get('lang');
-if ($lang_switch && file_exists(LOCALE.$lang_switch."/global.php") && in_array($lang_switch, $enabled_languages)) {
-    $current_user_language = stripinput($lang_switch);
+if ($_get_lang && file_exists(LOCALE.+$_get_lang."/global.php") && in_array($_get_lang, $enabled_languages)) {
+    $current_user_language = stripinput($_get_lang);
     set_language($current_user_language);
 } else {
     if (count($enabled_languages) > 1) {
@@ -256,6 +257,9 @@ if (!defined('LOCALESET'))
     define('LOCALESET', $current_user_language.'/');
 
 \PHPFusion\Locale::setLocale(LOCALE.LOCALESET.'global.php');
+$setlocale = empty(fusion_get_locale('setlocale')) ? 'en_GB' : '';
+$win = explode('_', $setlocale);
+setlocale(LC_ALL, $setlocale.'.UTF-8', $win[0]);
 
 // IP address functions
 include INCLUDES."ip_handling_include.php";
@@ -285,28 +289,16 @@ if (iADMIN) {
 }
 
 // PHP-Fusion user cookie functions
-if (!isset($_COOKIE[COOKIE_PREFIX.'visited'])) {
-    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value=settings_value+1 WHERE settings_name='counter'");
-    setcookie(COOKIE_PREFIX."visited", "yes", time() + 31536000, "/", "", "0");
-}
-
-//$lastvisited = Authenticate::setLastVisitCookie();
-
-//define('LASTVISITED', Authenticate::setLastVisitCookie());
+Authenticate::setVisitorCounter();
 
 // Set admin login procedures
 Authenticate::setAdminLogin();
 
 $fusion_dynamics = Dynamics::getInstance();
-
 $fusion_page_head_tags = &OutputHandler::$pageHeadTags;
-
 $fusion_page_footer_tags = &OutputHandler::$pageFooterTags;
-
 $fusion_jquery_tags = &OutputHandler::$jqueryTags;
-
 $fusion_css_tags = &OutputHandler::$cssTags;
-
 $fusion_meta_tags = &OutputHandler::$pageMeta;
 
 // Get installed infusions

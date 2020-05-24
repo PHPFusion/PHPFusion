@@ -2,7 +2,7 @@
 namespace PHPFusion\Feedback;
 
 class CommentListing {
-    
+
     private $comment;
     private $c_start = 0;
     private $can_post = FALSE;
@@ -16,14 +16,14 @@ class CommentListing {
         ]
     ];
     private $comment_data = [];
-    
+
     public function __construct( Comments $comment ) {
         $this->comment = $comment;
         $this->comments_per_page = fusion_get_settings( 'comments_per_page' );
         $this->can_post = ( iMEMBER || fusion_get_settings( 'guestposts' ) ? TRUE : FALSE );
         $this->comments_avatar = fusion_get_settings( 'comments_avatar' );
     }
-    
+
     public function getInfo() {
         $info['comments'] = '<p class="text-center">'.fusion_get_locale( 'c101' ).'</p>';
         if ( $this->getComments() ) {
@@ -36,20 +36,20 @@ class CommentListing {
         }
         return $info;
     }
-    
+
     // Build C_info and C_Con
     private function getComments() {
-        
+
         $settings = fusion_get_settings();
-        
+
         if ( $settings['comments_enabled'] ) {
-            
+
             $this->setEmptyCommentData(); // $comment_data
-            
+
             $locale = fusion_get_locale();
-            
+
             $c_link = $this->comment->getParams( 'clink' ).( stristr( $this->comment->getParams( 'clink' ), '?' ) ? "&amp;" : '?' );
-            
+
             $this->c_arr['c_info']['comments_count'] = format_word( 0, $locale['fmt_comment'] );
             $this->c_arr['c_info']['total_comments'] = dbcount( "('comment_id')", DB_COMMENTS, "comment_item_id=:comment_item_id AND comment_type=:comment_item_type AND comment_hidden=:comment_hidden",
                 [
@@ -58,7 +58,7 @@ class CommentListing {
                     ':comment_hidden'    => 0
                 ]
             );
-            
+
             $root_rows = (int)dbcount( "(comment_id)", DB_COMMENTS, "comment_item_id=:comment_item_id AND comment_type=:comment_item_type AND comment_cat=:zero AND comment_hidden=:zero2",
                 [
                     ':comment_item_type' => $this->comment->getParams( 'comment_item_type' ),
@@ -66,17 +66,17 @@ class CommentListing {
                     ':zero'              => 0,
                     ':zero2'             => 0,
                 ] );
-            
+
             if ( $root_rows ) {
-    
+
                 // generate c_start
                 $this->setRowStart( $root_rows );
-                
+
                 $comment_query = "SELECT tcm.*
                                 FROM ".DB_COMMENTS." tcm
                                 WHERE comment_item_id=:cid AND comment_type=:cit AND comment_hidden=:hide AND comment_cat = 0
                                 ORDER BY comment_id ASC, comment_datestamp ".$settings['comments_sorting'].", comment_cat ASC LIMIT $this->c_start, $this->comments_per_page";
-                
+
                 if ( $settings['ratings_enabled'] && $this->comment->getParams( 'comment_allow_ratings' ) ) {
                     $comment_query = "SELECT tcm.*, tcr.rating_vote 'ratings'
                                 FROM ".DB_COMMENTS." tcm
@@ -84,50 +84,50 @@ class CommentListing {
                                 WHERE comment_item_id=:cid AND comment_type=:cit AND comment_hidden=:hide AND comment_cat=0
                                 ORDER BY comment_id ASC, comment_datestamp ".$settings['comments_sorting'].", comment_cat ASC LIMIT $this->c_start, $this->comments_per_page";
                 }
-                
+
                 $comment_bind = [
                     ':cid'  => $this->comment->getParams( 'comment_item_id' ),
                     ':cit'  => $this->comment->getParams( 'comment_item_type' ),
                     ':hide' => 0
                 ];
-                
+
                 $query = dbquery( $comment_query, $comment_bind );
-                
+
                 if ( dbrows( $query ) ) {
-    
+
                     if ( $root_rows > $this->comments_per_page ) {
                         // The $c_rows is different than
                         $this->c_arr['c_info']['c_makepagenav'] = makepagenav( $this->c_start, $this->comments_per_page, $root_rows, 3, $c_link, $this->getRowStartKey() );
                     }
-                    
+
                     if ( iADMIN && checkrights( 'C' ) ) {
                         $this->c_arr['c_info']['admin_link'] = "<!--comment_admin-->\n";
                         $this->c_arr['c_info']['admin_link'] .= "<a href='".ADMIN."comments.php".fusion_get_aidlink()."&amp;ctype=".$this->comment->getParams( 'comment_item_type' )."&amp;comment_item_id=".$this->comment->getParams( 'comment_item_id' )."'>".$locale['c106']."</a>";
                     }
-                    
+
                     $counter = ( $settings['comments_sorting'] == "ASC" ? $this->c_start + 1 : $root_rows - $this->c_start );
-                    
+
                     while ( $row = dbarray( $query ) ) {
                         // build C_con
                         $this->setCommentsData( $row, $counter );
                         $settings['comments_sorting'] == "ASC" ? $counter++ : $counter--;
                     }
-                    
+
                     $this->c_arr['c_info']['comments_per_page'] = $this->comments_per_page;
                     $this->c_arr['c_info']['comments_count'] = format_word( number_format( $this->c_arr['c_info']['total_comments'], 0 ), $locale['fmt_comment'] );
                 }
             }
-            
+
             return TRUE;
         }
-        
+
         return FALSE;
     }
-    
+
     private function getRowStartKey() {
         return 'c_start_'.$this->comment->getParams( 'comment_key' );
     }
-    
+
     private function setRowStart( $total_rows ) {
         $this->c_start = ( get( $this->getRowStartKey(), FILTER_VALIDATE_INT ) ?: 0 );
         if ( fusion_get_settings( 'comments_sorting' ) == 'ASC' ) {
@@ -138,14 +138,14 @@ class CommentListing {
         }
         return $this->c_start;
     }
-    
+
     /*
     * Parse Comment Results - build c_con
     */
     private function setCommentsData( $row, $counter, $indent = 0 ) {
         $locale = fusion_get_locale();
         $settings = fusion_get_settings();
-        
+
         $garray = [];
         if ( !isnum( $row['comment_name'] ) ) {
             $garray = [
@@ -155,20 +155,20 @@ class CommentListing {
                 'user_status' => 0,
             ];
         }
-        
+
         $row = array_merge_recursive( $row, isnum( $row['comment_name'] ) ? fusion_get_user( $row['comment_name'] ) : $garray );
-        
+
         $actions = [
             'edit_link'   => '',
             'delete_link' => '',
             'edit_dell'   => ''
         ];
-        
+
         if ( ( iADMIN && checkrights( "C" ) ) || ( iMEMBER && $row['comment_name'] == $this->userdata['user_id'] && isset( $row['user_name'] ) ) ) {
             $edit_link = $this->comment->getParams( 'clink' )."&amp;c_action=edit&amp;comment_id=".$row['comment_id']."#edit_comment"; //clean_request('c_action=edit&comment_id='.$row['comment_id'], array('c_action', 'comment_id'),FALSE)."#edit_comment";
             $delete_link = $this->comment->getParams( 'clink' )."&amp;c_action=delete&amp;comment_id=".$row['comment_id']; //clean_request('c_action=delete&comment_id='.$row['comment_id'], array('c_action', 'comment_id'), FALSE);
             $data_api = \Defender::serialize( $this->comment->getParams() );
-            
+
             $comment_actions = "
                             <!---comment_actions-->
                             <div class='btn-group'>
@@ -183,11 +183,11 @@ class CommentListing {
                 "edit_dell"   => $comment_actions
             ];
         }
-        
+
         // Basic numeric comment marker
         $comment_marker = $this->comment->getParams( 'comment_marker' );
         $comment_marker = $comment_marker ? $comment_marker.'.'.$counter : $counter;
-        
+
         // formats $row
         $row = [
                 "comment_id"        => $row['comment_id'],
@@ -206,10 +206,10 @@ class CommentListing {
                 "comment_datestamp" => showdate( 'longdate', $row['comment_datestamp'] ),
                 "comment_time"      => timer( $row['comment_datestamp'] ),
                 "comment_subject"   => $row['comment_subject'],
-                "comment_message"   => nl2br( parseubb( parsesmileys( $row['comment_message'] ) ) ),
+                "comment_message"   => nl2br(parse_textarea($row['comment_message'], TRUE, TRUE, FALSE)),
                 "comment_name"      => isnum( $row['comment_name'] ) ? profile_link( $row['comment_name'], $row['user_name'], $row['user_status'] ) : $row['comment_name']
             ] + $actions;
-        
+
         // can limit and use a show more comments.
         $c_result = dbquery( "SELECT * FROM ".DB_COMMENTS." WHERE comment_cat=:comment_cat", [ ':comment_cat' => $row['comment_id'] ] );
         if ( dbrows( $c_result ) ) {
@@ -219,19 +219,19 @@ class CommentListing {
             while ( $c_rows = dbarray( $c_result ) ) {
                 // sub replies
                 $this->setCommentsData( $c_rows, $sub_counter, $indent + 1 );
-                
+
                 $sub_counter = explode( '.', $sub_counter );
                 $settings['comments_sorting'] == "ASC" ? $sub_counter[ $indent + 1 ]++ : $sub_counter[ $indent + 1 ]--;
                 $sub_counter = implode( '.', $sub_counter );
             }
         }
-        
+
         $id = $row['comment_id'];
         $parent_id = $row['comment_cat'] === NULL ? "0" : $row['comment_cat'];
         $data[ $id ] = $row;
         $this->c_arr['c_con'][ $parent_id ][ $id ] = $row;
     }
-    
+
     private function setEmptyCommentData() {
         $this->comment_data = [
             'comment_id'        => ( get( 'comment_id', FILTER_VALIDATE_INT ) ?: 0 ),
@@ -247,15 +247,15 @@ class CommentListing {
             'comment_hidden'    => 0,
         ];
     }
-    
+
     private function getCommentsCaptcha( int $comment_id ) {
         if ( iGUEST && ( !isset( $_CAPTCHA_HIDE_INPUT ) || ( isset( $_CAPTCHA_HIDE_INPUT ) && !$_CAPTCHA_HIDE_INPUT ) ) ) {
             $locale = fusion_get_locale();
-            
+
             $_CAPTCHA_HIDE_INPUT = FALSE;
-            
+
             include INCLUDES.'captchas/'.fusion_get_settings( 'captcha' ).'/captcha_display.php';
-            
+
             $_CAPTCHA_HTML = '<div class="'.grid_row().'">';
             $_CAPTCHA_HTML .= '<div class="'.grid_column_size( 100, 67, 50 ).'">';
             $_CAPTCHA_HTML .= display_captcha( [
@@ -264,7 +264,7 @@ class CommentListing {
                 'input_id'   => 'reply_captcha_code_'.$this->comment->getParams( 'comment_key' ),
                 'image_id'   => 'reply_captcha_image_'.$this->comment->getParams( 'comment_key' )
             ] );
-            
+
             $_CAPTCHA_HTML .= '</div>';
             $_CAPTCHA_HTML .= '<div class="'.grid_column_size( 100, 33, 50 ).'">';
             if ( !$_CAPTCHA_HIDE_INPUT ) {
@@ -272,12 +272,12 @@ class CommentListing {
             }
             $_CAPTCHA_HTML .= '</div>';
             $_CAPTCHA_HTML .= '</div>';
-            
+
             return $_CAPTCHA_HTML;
         }
         return '';
     }
-    
+
     private function showCommentsReplyForm( $row ) {
         // Reply Form
         if ( $this->comment->getParams( 'comment_allow_reply' ) && ( get( 'comment_reply', FILTER_VALIDATE_INT ) == $row['comment_id'] ) && $this->can_post ) {
@@ -310,9 +310,9 @@ class CommentListing {
                 ),
                 'closeform'       => closeform()
             ];
-            
+
             return display_comments_reply_form( $reply_form_info );
-            
+
             //if ( $this->jquery_enabled ) {
             //    $reply_form .= form_hidden( "comment_key", '', $this->comment->getParams( 'comment_key' ), [ 'input_id' => 'comment_key-'.$row['comment_id'] ] );
             //    $reply_form .= form_hidden( 'comment_options', '', \Defender::serialize( $this->comment->getParams() ), [ 'input_id' => 'comment_options-'.$row['comment_id'] ] );
@@ -321,10 +321,10 @@ class CommentListing {
             //    $reply_form .= "</div>";
             //}
         }
-        
+
         return '';
     }
-    
+
     private function getCommentNameInput( $row ) {
         return ( iGUEST ? form_text( 'comment_name', fusion_get_locale( 'c104' ), $this->comment_data['comment_name'],
             [
@@ -334,13 +334,13 @@ class CommentListing {
             ]
         ) : '' );
     }
-    
+
     private function getRatingsOutput() {
-        
+
         if ( fusion_get_settings( 'ratings_enabled' ) && $this->comment->getParams( 'comment_allow_ratings' ) ) {
-            
+
             if ( $this->getCommentRatings() ) {
-                
+
                 $locale = fusion_get_locale();
                 $stars = '';
                 $ratings = '';
@@ -351,15 +351,15 @@ class CommentListing {
                     $ratings .= '<div>';
                     $bal = 5 - $i;
                     $ratings .= "<div class='display-inline-block m-r-5'>\n";
-                    
+
                     for ( $x = 1; $x <= $i; $x++ ) {
                         $ratings .= "<i class='fa fa-star text-warning'></i>\n";
                     }
-                    
+
                     for ( $b = 1; $b <= $bal; $b++ ) {
                         $ratings .= "<i class='fa fa-star-o text-lighter'></i>\n";
                     }
-                    
+
                     $ratings .= "<span class='text-lighter m-l-5 m-r-5'>(".( $this->c_arr['c_info']['ratings_count'][ $i ] ?: 0 ).")</span>";
                     $ratings .= "</div>\n<div class='display-inline-block m-l-5' style='width:50%;'>\n";
                     $progress_num = $this->c_arr['c_info']['ratings_count'][ $i ] == 0 ? 0 : round( ( ( $this->c_arr['c_info']['ratings_count'][ $i ] / $this->c_arr['c_info']['ratings_count']['total'] ) * 100 ), 1 );
@@ -367,22 +367,22 @@ class CommentListing {
                     $ratings .= "</div>\n";
                     $ratings .= '</div>';
                 }
-                
+
                 $info = [
                     'stars'          => $stars,
                     'reviews'        => format_word( $this->c_arr['c_info']['ratings_count']['total'], $locale['fmt_review'] ),
                     'ratings'        => $ratings,
                     'remove_ratings' => $this->c_arr['c_info']['ratings_remove_form'] ?: ''
                 ];
-                
+
                 return display_comments_ratings( $info );
-                
+
             }
         }
-        
+
         return '';
     }
-    
+
     private function getCommentRatings() {
         if ( $this->comment->getParams( 'comment_allow_ratings' ) ) {
             $r_query = "SELECT COUNT(rating_id) 'total', IF(avg(rating_vote), avg(rating_vote), 0) 'avg', SUM(IF(rating_vote='5', 1, 0)) '5', SUM(IF(rating_vote='4', 1, 0)) '4', SUM(IF(rating_vote='3', 1, 0)) '3', SUM(IF(rating_vote='2', 1, 0)) '2', SUM(IF(rating_vote='1', 1, 0)) '1'
@@ -404,12 +404,12 @@ class CommentListing {
             }
             $this->c_arr['c_info']['ratings_count'] = dbarray( $query );
             $this->c_arr['c_info']['ratings_remove_form'] = $removal_form;
-            
+
             return TRUE;
         }
         return FALSE;
     }
-    
+
     private function getCommentLists() {
         // @bug: Split the array into page chunks. [0] for page 1, [1] for page 2
         // Display comments
@@ -418,10 +418,10 @@ class CommentListing {
             'comments_list'       => $this->displayComments( $this->c_arr['c_con'], 0, $this->comment->getParams() ),
             'comments_admin_link' => $this->c_arr['c_info']['admin_link']
         ];
-        
+
         return display_comments_listing( $info );
     }
-    
+
     /**
      * Comments Listing
      *
@@ -470,8 +470,8 @@ class CommentListing {
                 $comments_html .= display_comments_list( $info );
             }
         }
-        
+
         return (string)$comments_html;
     }
-    
+
 }

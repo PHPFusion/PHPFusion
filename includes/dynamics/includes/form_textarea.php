@@ -73,9 +73,10 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         'tinymce_spellcheck'  => TRUE,
         'rows'                => 5,
         'censor_words'        => TRUE,
-        'post_attach' => FALSE,
-        'grippie' => FALSE,
-        'tab' => FALSE,
+        'descript'            => TRUE,
+        'post_attach'         => FALSE,
+        'grippie'             => FALSE,
+        'tab'                 => FALSE,
     ];
 
     $options += $default_options;
@@ -476,7 +477,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                 'url' : '".$_SERVER['REQUEST_URI']."',
                 'post_attach' : '".($options['post_attach'] ? TRUE : FALSE)."',
                 'form_id' : 'prw-".$options['form_name']."',
-                'fusion_token' : '".fusion_get_token( "prw-".$options['form_name'], 30 )."'
+                'fusion_token' : '".fusion_get_token("prw-".$options['form_name'], 30)."'
             };
             var sendData = form.serialize() + '&' + $.param(data);
             $.ajax({
@@ -544,6 +545,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         'safemode'     => $options['safemode'],
         'error_text'   => $options['error_text'],
         'censor_words' => $options['censor_words'],
+        'descript'     => $options['descript']
     ]);
 
     return $html;

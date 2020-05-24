@@ -55,7 +55,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
     ];
 
     $default_options = [
-        "title" => "",
+        "title"              => "",
         'type'               => 'text',
         'required'           => FALSE,
         'label_icon'         => '',
@@ -81,7 +81,6 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         'autocomplete_off'   => FALSE,
         'tip'                => '',
         'ext_tip'            => '',
-
         'append_id'          => "p-".$id."-append",
         'append_button'      => '',
         'append_value'       => '',
@@ -109,7 +108,8 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         'step'               => '',
         'error_class'        => '',
         'options_data'       => [],
-        'password_toggle'    => TRUE
+        'password_toggle'    => TRUE,
+        'descript'           => TRUE
     ];
     $options += $default_options;
 
@@ -291,7 +291,8 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         'delimiter'      => $options['delimiter'],
         'min_length'     => $options['min_length'],
         'max_length'     => $options['max_len'],
-        'censor_words'   => $options['censor_words']
+        'censor_words'   => $options['censor_words'],
+        'descript'       => $options['descript']
     ];
 
     Defender::add_field_session($config);
