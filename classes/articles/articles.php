@@ -80,7 +80,7 @@ abstract class Articles extends ArticlesServer {
         }
 
         foreach ($array['allowed_filters'] as $type => $filter_name) {
-            $filter_link = INFUSIONS."articles/articles.php?".(isset($_GET['cat_id']) ? "cat_id=".$_GET['cat_id']."&amp;" : "")."type=".$type;
+            $filter_link = INFUSIONS."articles/articles.php?".(get('cat_id', FILTER_VALIDATE_INT) ? "cat_id=".$_GET['cat_id']."&amp;" : "")."type=".$type;
             $array['article_filter'][$filter_link] = $filter_name;
             unset($filter_link);
         }
@@ -227,7 +227,7 @@ abstract class Articles extends ArticlesServer {
             $pagecount = 1;
 
             // Article Texts
-            $data['article_snippet'] = parse_textarea($data['article_snippet'], TRUE, TRUE, TRUE, FALSE, $data['article_breaks'] == "y" ? TRUE : FALSE);
+            $data['article_snippet'] = parse_textarea($data['article_snippet'], TRUE, TRUE, FALSE, FALSE, $data['article_breaks'] == "y" ? TRUE : FALSE);
             $data['article_article'] = parse_textarea($data['article_article'], TRUE, TRUE, TRUE, FALSE, $data['article_breaks'] == "y" ? TRUE : FALSE);
 
             $articleText = preg_replace("/<!?--\s*pagebreak\s*-->/i", "", $data['article_snippet']);

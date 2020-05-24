@@ -101,7 +101,7 @@ if (!function_exists("display_main_articles")) {
 
                 if ($info['article_total_rows'] > $articles_settings['article_pagination']) {
                     $type_start = isset($_GET['type']) ? "type=".$_GET['type']."&amp;" : "";
-                    $cat_start = isset($_GET['cat_id']) ? "cat_id=".$_GET['cat_id']."&amp;" : ""; ?>
+                    $cat_start = get('cat_id', FILTER_VALIDATE_INT) ? "cat_id=".$_GET['cat_id']."&amp;" : ""; ?>
                     <div class="text-center m-t-10 m-b-10">
                         <?php echo makepagenav($_GET['rowstart'], $articles_settings['article_pagination'], $info['article_total_rows'], 3, INFUSIONS."articles/articles.php?".$cat_start.$type_start); ?>
                     </div>
