@@ -1382,7 +1382,7 @@ class ForumThreads extends ForumServer {
 
                 // Format Post Message
                 $post_message = empty($pdata['post_smileys']) ? parsesmileys($pdata['post_message']) : $pdata['post_message'];
-                $post_message = nl2br(parseubb($post_message));
+                $post_message = nl2br(parseubb($post_message, '', FALSE));
                 $post_message = parse_attach($post_message);
                 if (isset($_GET['highlight'])) {
                     $post_message = "<div class='search_result'>".$post_message."</div>\n";

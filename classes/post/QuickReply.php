@@ -29,6 +29,7 @@ class QuickReply extends ForumServer {
 
     /**
      * Forum Reply Text Box
+     *
      * @param       $info
      * @param array $options
      *
@@ -60,7 +61,7 @@ class QuickReply extends ForumServer {
 
         $quote = get('quote', FILTER_VALIDATE_INT);
         if ($quote) {
-            $result = dbquery("SELECT post_id, post_message FROM ".DB_FORUM_POSTS." WHERE post_id=:pid", [':pid' => (int) $quote]);
+            $result = dbquery("SELECT post_id, post_message FROM ".DB_FORUM_POSTS." WHERE post_id=:pid", [':pid' => (int)$quote]);
             if (dbrows($result)) {
                 $quotedata = dbarray($result);
                 $post_id = $quotedata['post_id'];
@@ -193,22 +194,23 @@ class QuickReply extends ForumServer {
             'openform'    => openform($form_name, 'post', $options['remote_url'], $remote_param).form_hidden('post_cat', '', $post_id),
             'description' => $locale['forum_0168'],
             'attachments' => (array)$attachments,
-            'header' => $box_header,
+            'header'      => $box_header,
             'field'       => [
                 'message'     => form_textarea("post_message", '', $post_message,
-                    [
-                        'input_id'    => $textarea_id,
-                        'placeholder' => $locale['forum_0601']."...",
-                        'required'    => TRUE,
-                        'preview'     => TRUE,
-                        'form_name'   => $form_name,
-                        'height'      => '150px',
-                        'class'       => 'm-b-20',
-                        'bbcode'      => TRUE,
-                        'grippie'     => TRUE,
-                        'tab'         => TRUE,
-                        'post_attach' => TRUE,
-                    ]).form_hidden('post_cat', '', $post_reply, ['type'=>'number']),
+                        [
+                            'input_id'    => $textarea_id,
+                            'placeholder' => $locale['forum_0601']."...",
+                            'required'    => TRUE,
+                            'preview'     => TRUE,
+                            'form_name'   => $form_name,
+                            'height'      => '250px',
+                            'descript'    => FALSE,
+                            'class'       => 'm-b-20',
+                            'bbcode'      => TRUE,
+                            'grippie'     => TRUE,
+                            'tab'         => TRUE,
+                            'post_attach' => TRUE,
+                        ]).form_hidden('post_cat', '', $post_reply, ['type' => 'number']),
                 'button'      => form_button('post_quick_reply', $locale['forum_0172'], $locale['forum_0172'], ['class' => 'btn-primary']),
                 'options'     => $options_field,
                 'file_upload' => $file_upload

@@ -379,6 +379,7 @@ class ViewThread extends ForumServer {
                         'form_name' => 'input_form',
                         'bbcode'    => TRUE,
                         'height'    => '500px',
+                        'descript'  => FALSE,
                         'grippie'   => TRUE,
                         'tab'       => TRUE,
                     ]),

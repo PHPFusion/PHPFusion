@@ -327,7 +327,7 @@ $locale['forum_1102'] = '%s changed %s to %s';
 $locale['forum_1103'] = '%s deleted %s';
 
 
-$locale['forum_2000'] = "Thread topic :";
+$locale['forum_2000'] = "Thread topic: ";
 $locale['forum_2001'] = "Type the thread title here";
 $locale['forum_2002'] = "Re:";
 $locale['forum_2010'] = "Cast Vote";
