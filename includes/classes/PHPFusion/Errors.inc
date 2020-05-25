@@ -196,16 +196,16 @@ class Errors {
         $html .= "</td>\n<td>\n";
 
         $html .= "<div class='btn-group'>\n";
-        $html .= "<a class='btn btn-default ' href='".ADMIN."errors.php".fusion_get_aidlink()."&amp;rowstart=".$this->rowstart."&amp;error_id=".$data['error_id']."#file' target='new_window'><i class='fa fa-eye m-0'></i></a>\n";
-        $html .= "<button class='btn btn-default  copy-error' data-clipboard-target='#error-".$data['error_id']."'><i class='fa fa-copy m-0'></i></button>\n";
+        $html .= "<a class='btn btn-sm btn-default ' href='".ADMIN."errors.php".fusion_get_aidlink()."&amp;rowstart=".$this->rowstart."&amp;error_id=".$data['error_id']."#file' target='new_window'><i class='fa fa-eye m-0'></i></a>\n";
+        $html .= "<button class='btn btn-sm btn-default copy-error' data-clipboard-target='#error-".$data['error_id']."'><i class='fa fa-copy m-0'></i></button>\n";
         $html .= "</div>\n";
         $html .= "</td>\n";
 
         $html .= "<td id='ecmd_".$data['error_id']."' style='white-space:nowrap;'>\n";
-        $html .= "<a data-id='".$data['error_id']."' data-type='0' class='btn ".($data['error_status'] == 0 ? 'active' : '')." e_status_0 button btn-default  move_error_log'>".$locale['ERROR_450']."</a>\n";
-        $html .= "<a data-id='".$data['error_id']."' data-type='1' class='btn ".($data['error_status'] == 1 ? 'active' : '')." e_status_1 button btn-default  move_error_log'>".$locale['ERROR_451']."</a>\n";
-        $html .= "<a data-id='".$data['error_id']."' data-type='2' class='btn ".($data['error_status'] == 2 ? 'active' : '')." e_status_2 button btn-default  move_error_log'>".$locale['ERROR_452']."</a>\n";
-        $html .= "<a data-id='".$data['error_id']."' data-type='999' class='btn e_status_999 button btn-default  move_error_log'>".$locale['delete']."</a>\n";
+        $html .= "<a data-id='".$data['error_id']."' data-type='0' class='btn btn-sm".($data['error_status'] == 0 ? ' active' : '')." e_status_0 button btn-default  move_error_log'>".$locale['ERROR_450']."</a>\n";
+        $html .= "<a data-id='".$data['error_id']."' data-type='1' class='btn btn-sm".($data['error_status'] == 1 ? ' active' : '')." e_status_1 button btn-default  move_error_log'>".$locale['ERROR_451']."</a>\n";
+        $html .= "<a data-id='".$data['error_id']."' data-type='2' class='btn btn-sm".($data['error_status'] == 2 ? ' active' : '')." e_status_2 button btn-default  move_error_log'>".$locale['ERROR_452']."</a>\n";
+        $html .= "<a data-id='".$data['error_id']."' data-type='999' class='btn btn-sm e_status_999 button btn-default  move_error_log'>".$locale['delete']."</a>\n";
         $html .= "</td>\n";
         $html .= "</tr>\n";
         /* Toggle Info */
@@ -603,7 +603,7 @@ class Errors {
             $html .= "<span class='badge m-l-10'>N: ".count($this->new_errors)."</span>\n";
             $html .= "</div>\n";
 
-            $cHtml = openmodal('tbody', $locale['ERROR_464'], ['class' => 'modal-lg modal-center zindex-boost', 'button_id' => 'footer_debug']);
+            $cHtml = openmodal('tbody', $locale['ERROR_464'], ['class' => 'modal-lg modal-center zindex-boost errorlogmodal', 'button_id' => 'footer_debug']);
             $cHtml .= $this->getErrorLogs();
             $cHtml .= closemodal();
             add_to_footer($cHtml);
