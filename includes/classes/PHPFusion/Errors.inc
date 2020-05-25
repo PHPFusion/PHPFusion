@@ -209,17 +209,17 @@ class Errors {
         $html .= "</td>\n";
         $html .= "</tr>\n";
         /* Toggle Info */
+        $error_message = strtr(htmlspecialchars_decode(stripslashes($data['error_message'])), ['#' => '<br/>#']);
         $html .= "<tr class='collapse' id='err_rmd-".$data['error_id']."'><td colspan='4' class='hiddenRow no-border'>\n";
         $html .= "<p><strong>".$locale['ERROR_454']."</strong> : ".$this->getErrorTypes($data['error_level'])."</p>";
-        $html .= "<div class='alert alert-info'>\n";
-        $html .= strtr($data['error_message'], ['#' => '<br/>#'])."</div>\n";
+        $html .= "<div class='alert alert-info'>".$error_message."</div>\n";
         $html .= "</td></tr>\n";
 
         $html .= '<textarea style="width:.1px;height:.1px;border:0;padding:0;" id="error-'.$data['error_id'].'">';
         $html .= 'File: '.$link_title.PHP_EOL;
         $html .= 'Page: '.$data['error_page'].PHP_EOL;
         $html .= 'Line: '.$data['error_line'].PHP_EOL;
-        $html .= 'Error message: '.strtr($data['error_message'], ['#' => '<br/>#']);
+        $html .= 'Error message: '.$error_message;
         $html .= '</textarea>';
         return $html;
     }
