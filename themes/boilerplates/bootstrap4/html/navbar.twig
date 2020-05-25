@@ -47,6 +47,7 @@
             <li class="{{ listClass }}{{ whitespace(linkActive) }}">
                 <a class="{{ aClass }} dropdown-toggle" href="{{ link.link_url }}" id="{{ link.link_id }}Dropdown"{{ whitespace(linkWindow) }} role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ link.link_name|raw }}</a>
                 <ul class="dropdown-menu" aria-labelledby="{{ link.link_id }}Dropdown">
+                    <li><a href="{{ link.link_url }}">{{ whitespace(icon)|raw }}{{ link.link_name|raw }}{{ whitespace(activeSpan)|raw }}</a></li>
                     {{ macros.menu_links(links, link.link_id) }}
                 </ul>
             </li>
