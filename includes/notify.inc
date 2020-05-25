@@ -18,16 +18,6 @@
 
 use PHPFusion\Steam;
 
-/**
- * @param $notices
- *
- * @return string
- * @throws ReflectionException
- * @deprecated
- */
-function renderNotices($notices) {
-    return render_notices($notices);
-}
 
 /**
  * Renders notices
@@ -59,17 +49,6 @@ function hasNotice($key = FUSION_SELF) {
     }
 
     return FALSE;
-}
-
-/**
- * @param string $key
- * @param bool   $delete
- *
- * @return array
- * @deprecated
- */
-function getNotices($key = FUSION_SELF, $delete = TRUE) {
-    return get_notices($key, $delete);
 }
 
 /**
@@ -124,20 +103,6 @@ function remove_notice($key = ['all', FUSION_SELF, FUSION_REQUEST]) {
             }
         }
     }
-}
-
-/**
- * This function will be deprecated in the coming patches.
- *
- * @param        $status
- * @param        $value
- * @param string $key
- * @param bool   $removeAfterAccess
- *
- * @deprecated
- */
-function addNotice($status, $value, $key = FUSION_SELF, $removeAfterAccess = TRUE) {
-    add_notice($status, $value, $key, $removeAfterAccess);
 }
 
 /**

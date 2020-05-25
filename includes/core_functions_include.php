@@ -72,16 +72,6 @@ function fusion_get_contents($url) {
 
 
 /**
- * Current microtime as float to calculate script start/end time
- *
- * @return float
- * @deprecated since version 9.00, use microtime(TRUE) instead
- */
-function get_microtime() {
-    return microtime(TRUE);
-}
-
-/**
  * Get currency symbol by using a 3-letter ISO 4217 currency code
  * Note that if INTL pecl package is not installed, signs will degrade to ISO4217 code itself
  *
@@ -758,22 +748,6 @@ function parse_imageDir($data, $prefix_ = "") {
     $str = str_replace("../", "", $data);
 
     return (string)$prefix_ ? str_replace("images/", $prefix_, $str) : str_replace("images/", IMAGES, $str);
-}
-
-/**
- * @param        $text
- * @param bool   $smileys
- * @param bool   $bbcode
- * @param bool   $decode
- * @param string $default_image_folder
- * @param bool   $add_line_breaks
- * @param bool   $descript
- *
- * @return string
- * @deprecated
- */
-function parse_textarea($text, $smileys = TRUE, $bbcode = TRUE, $decode = TRUE, $default_image_folder = IMAGES, $add_line_breaks = FALSE, $descript = TRUE) {
-    return (string)parse_text($text, $smileys, $bbcode, $decode, $default_image_folder, $add_line_breaks, $descript);
 }
 
 /**
