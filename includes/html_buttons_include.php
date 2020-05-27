@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-defined( 'IN_FUSION' ) || exit;
+defined('IN_FUSION') || exit;
 
 /**
  * Get the color name
@@ -24,8 +24,8 @@ defined( 'IN_FUSION' ) || exit;
  *
  * @return string
  */
-function getcolorname( $id ) {
-    $locale = fusion_get_locale( "", LOCALE.LOCALESET."colors.php" );
+function getcolorname($id) {
+    $locale = fusion_get_locale("", LOCALE.LOCALESET."colors.php");
     $id = "{$locale['color_'.$id]}";
     return $id;
 }
@@ -40,12 +40,12 @@ function getcolorname( $id ) {
  *
  * @return string
  */
-function display_html( $formname, $textarea, $html = TRUE, $colors = FALSE, $images = FALSE, $folder = "" ) {
-    $locale = fusion_get_locale( "", [ LOCALE.LOCALESET."colors.php", LOCALE.LOCALESET."admin/html_buttons.php" ] );
+function display_html($formname, $textarea, $html = TRUE, $colors = FALSE, $images = FALSE, $folder = "") {
+    $locale = fusion_get_locale("", [LOCALE.LOCALESET."colors.php", LOCALE.LOCALESET."admin/html_buttons.php"]);
     //add_to_footer("<script src='".INCLUDES."jscripts/fusion-editor.js'></script>");
 
     $res = "";
-    if ( $html ) {
+    if ($html) {
         $res .= "<div class='btn-group'>\n";
         $res .= "<button type='button' value='b' title='".$locale['html_000']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;b&gt;', '&lt;/b&gt;', '".$formname."');\"><i class='fa fa-bold'></i></button>\n";
         $res .= "<button type='button' value='i' title='".$locale['html_001']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;i&gt;', '&lt;/i&gt;', '".$formname."');\"><i class='fa fa-italic'></i></button>\n";
@@ -57,7 +57,7 @@ function display_html( $formname, $textarea, $html = TRUE, $colors = FALSE, $ima
 
         $res .= "<div class='btn-group'>\n";
         $res .= "<button type='button' value='pagebreak' title='".$locale['html_016']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;!--PAGEBREAK--&gt;', '', '".$formname."');\"><i class='fa fa-minus'></i></button>\n";
-        $res .= fusion_get_settings( "allow_php_exe" ) || defined( 'ALLOW_PHP' ) ? "<button type='button' class='btn btn-sm btn-default button m-b-10' value='&lt;?php?&gt;' title='PHP' onclick=\"addText('".$textarea."', '&lt;?php\\n', '\\n?&gt;', '".$formname."');\"><i class='fab fa-php'></i></button>\n" : "";
+        $res .= fusion_get_settings("allow_php_exe") || defined('ALLOW_PHP') ? "<button type='button' class='btn btn-sm btn-default button m-b-10' value='&lt;?php?&gt;' title='PHP' onclick=\"addText('".$textarea."', '&lt;?php\\n', '\\n?&gt;', '".$formname."');\"><i class='fab fa-php'></i></button>\n" : "";
         $res .= "<button type='button' class='btn btn-sm btn-default button m-b-10' value='&lt;p&gt;' title='".$locale['html_018']."' onclick=\"addText('".$textarea."', '&lt;p&gt;', '&lt;/p&gt;', '".$formname."');\"><i class='fa fa-paragraph'></i></button>\n";
         $res .= "<button type='button' class='btn btn-default btn-sm button m-b-10' value='&lt;br /&gt;' title='".$locale['html_020']."' onclick=\"insertText('".$textarea."', '&lt;br /&gt;', '".$formname."');\">&lt;br /&gt;</button>\n";
         $res .= "</div>\n";
@@ -78,7 +78,9 @@ function display_html( $formname, $textarea, $html = TRUE, $colors = FALSE, $ima
         $res .= "<button type='button' value='alt' title='".$locale['html_015']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;span class=\'alt\'&gt;', '&lt;/span&gt;', '".$formname."');\">alt</button>\n";
         $res .= "</div>\n";
 
-        if ( $colors ) {
+        $res .= "<button type='button' value='code' title='code' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;code&gt;', '&lt;/code&gt;', '".$formname."');\"><i class='fa fa-code'></i></button>\n";
+
+        if ($colors) {
             $res .= "<div class='btn-group'>\n";
             $res .= "<button title='".$locale['html_017']."' class='btn btn-sm btn-default m-b-10 button dropdown-toggle' data-toggle='dropdown'><i class='fa fa-tint m-r-5'></i> <span class='caret'></span></button>\n";
             $res .= "<ul class='dropdown-menu' style='width:190px;'>\n";
@@ -152,33 +154,33 @@ function display_html( $formname, $textarea, $html = TRUE, $colors = FALSE, $ima
         $res .= "</ul>\n";
         $res .= "</div>\n";
 
-        if ( iADMIN ) {
+        if (iADMIN) {
             $options = [];
 
-            if ( $images && $folder ) {
-                if ( is_array( $folder ) ) {
-                    foreach ( $folder as $dir ) {
-                        if ( file_exists( $dir ) ) {
-                            $file_list = makefilelist( $dir, '.|..|index.php', TRUE, 'files', 'js|psd|rar|zip|7s|_DS_STORE|doc|docx|docs|md|php' );
-                            if ( !empty( $file_list ) ) {
-                                foreach ( $file_list as $file ) {
-                                    $options[ str_replace( '../', '', $dir ).$file ] = $file;
+            if ($images && $folder) {
+                if (is_array($folder)) {
+                    foreach ($folder as $dir) {
+                        if (file_exists($dir)) {
+                            $file_list = makefilelist($dir, '.|..|index.php', TRUE, 'files', 'js|psd|rar|zip|7s|_DS_STORE|doc|docx|docs|md|php');
+                            if (!empty($file_list)) {
+                                foreach ($file_list as $file) {
+                                    $options[str_replace('../', '', $dir).$file] = $file;
                                 }
                             }
                         }
                     }
                 } else {
-                    if ( file_exists( $folder ) ) {
-                        $file_list = makefilelist( $folder, '.|..|index.php', TRUE, 'files', 'js|psd|rar|zip|7s|_DS_STORE|doc|docx|docs|md|php' );
-                        if ( !empty( $file_list ) ) {
-                            foreach ( $file_list as $file ) {
-                                $options[ str_replace( '../', '', $folder ).$file ] = $file;
+                    if (file_exists($folder)) {
+                        $file_list = makefilelist($folder, '.|..|index.php', TRUE, 'files', 'js|psd|rar|zip|7s|_DS_STORE|doc|docx|docs|md|php');
+                        if (!empty($file_list)) {
+                            foreach ($file_list as $file) {
+                                $options[str_replace('../', '', $folder).$file] = $file;
                             }
                         }
                     }
                 }
 
-                $res .= form_select( $textarea.'-insertimage', '', '',
+                $res .= form_select($textarea.'-insertimage', '', '',
                     [
                         'options'     => $options,
                         'placeholder' => $locale['html_011'],
@@ -189,12 +191,12 @@ function display_html( $formname, $textarea, $html = TRUE, $colors = FALSE, $ima
                     ]
                 );
 
-                add_to_jquery( "
+                add_to_jquery("
                     $('#$textarea-insertimage').bind('change', function(e){
-                        insertText('$textarea', '<img src=\"".fusion_get_settings( 'siteurl' )."'+$(this).val()+'\" alt=\"\" class=\"img-responsive\"/>', '$formname');
+                        insertText('$textarea', '<img src=\"".fusion_get_settings('siteurl')."'+$(this).val()+'\" alt=\"\" class=\"img-responsive\"/>', '$formname');
                         $(this).select2('val', '');
                     });
-            " );
+            ");
             }
         }
     }

@@ -785,6 +785,7 @@ function parse_text(string $value, $parse_smileys = TRUE, $parse_bbcode = TRUE, 
     }
     if ($decode === TRUE) {
         $value = html_entity_decode(html_entity_decode($value, ENT_QUOTES, $charset));
+        $value = encode_code($value);
     }
 
     return (string)$value;
@@ -901,6 +902,31 @@ function hide_email($email, $title = "", $subject = "") {
     } else {
         return $email;
     }
+}
+
+/**
+ * Encode and format code inside <code> tag
+ *
+ * @param $text
+ *
+ * @return string
+ */
+function encode_code($text) {
+    preg_match_all("#<code>(.*?)</code>#is", $text, $codes);
+    $replace = [];
+    foreach ($codes[1] as $key => $codeblock) {
+        $replace[$key] = htmlentities($codeblock, ENT_QUOTES, "UTF-8", FALSE);
+    }
+    unset($key, $codeblock);
+
+    foreach ($codes[0] as $key => $replacer) {
+        $code = str_replace('&lt;br /&gt;', '', $replace[$key]);
+        $code = formatcode($code);
+        $text = str_replace($replacer, '<pre><code class="language-php">'.$code.'</code></pre>', $text);
+    }
+    unset($key, $replacer, $replace);
+
+    return $text;
 }
 
 /**
