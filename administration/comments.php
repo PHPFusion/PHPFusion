@@ -26,6 +26,7 @@ class CommentsAdministration {
     private $aidlink = '';
     private $locale = [];
     private $commentType = [];
+    private static $ctype;
 
     private function __construct() {
 
@@ -34,7 +35,9 @@ class CommentsAdministration {
         $this->locale = fusion_get_locale("", LOCALE.LOCALESET."admin/comments.php");
         $_GET['action'] = isset($_GET['action']) ? $_GET['action'] : '';
         $this->commentType = \PHPFusion\Admins::getInstance()->getCommentType();
-        $_GET['ctype'] = isset($_GET['ctype']) ? $_GET['ctype'] : key($this->commentType);
+
+        self::$ctype = get('ctype', FILTER_SANITIZE_STRING);
+        self::$ctype = in_array(self::$ctype, array_keys($this->commentType)) ? self::$ctype : key($this->commentType);
 
         if (isset($_GET['action'])) {
             switch ($_GET['action']) {
@@ -64,7 +67,7 @@ class CommentsAdministration {
             self::$instance = new CommentsAdministration();
         }
 
-        self::$rows = dbcount("(comment_id)", DB_COMMENTS, (!empty($_GET['ctype']) ? "comment_type='".$_GET['ctype']."'" : '').(!empty($_GET['comment_item_id']) ? " AND comment_item_id=".$_GET['comment_item_id']."" : ''));
+        self::$rows = dbcount("(comment_id)", DB_COMMENTS, (!empty(self::$ctype) ? "comment_type='".self::$ctype."'" : '').(!empty($_GET['comment_item_id']) ? " AND comment_item_id=".$_GET['comment_item_id']."" : ''));
         $_GET['rowstart'] = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= self::$rows) ? $_GET['rowstart'] : 0;
         return self::$instance;
     }
@@ -143,15 +146,15 @@ class CommentsAdministration {
         $text = "<div class='text-center well'>\n";
         $text .= "<div class='btn-group'>\n";
         foreach ($this->commentType as $key => $value) {
-            $text .= "<a class='btn btn-default".($_GET['ctype'] == $key ? ' active' : '')."' href='".FUSION_SELF.$this->aidlink."&amp;ctype=$key'>".$value."</a>\n";
+            $text .= "<a class='btn btn-default".(self::$ctype == $key ? ' active' : '')."' href='".FUSION_SELF.$this->aidlink."&amp;ctype=$key'>".$value."</a>\n";
         }
         $text .= "</div>\n</div>\n";
         return $text;
     }
 
     protected static function get_NavQuery() {
-        $condition = (!empty($_GET['ctype']) ? "WHERE c.comment_type='".$_GET['ctype']."'" : '');
-        $query = "SELECT
+        $condition = (!empty(self::$ctype) ? "WHERE c.comment_type='".self::$ctype."'" : '');
+        return "SELECT
             c.comment_id, c.comment_item_id, c.comment_name, c.comment_subject, c.comment_message, c.comment_datestamp, c.comment_ip, c.comment_type,
             u.user_id, u.user_name, u.user_status
             FROM ".DB_COMMENTS." AS c
@@ -159,13 +162,12 @@ class CommentsAdministration {
             $condition
             ORDER BY c.comment_datestamp ASC
             ";
-        return $query;
 
     }
 
     protected static function get_CommentsQuery() {
         $limit = 20;
-        $ctype = !empty($_GET['ctype']) ? "WHERE c.comment_type='".$_GET['ctype']."'" : '';
+        $ctype = !empty(self::$ctype) ? "WHERE c.comment_type='".self::$ctype."'" : '';
         $comment_item_id = !empty($_GET['comment_item_id']) ? " AND c.comment_item_id=".$_GET['comment_item_id']."" : '';
         $comment_id = !empty($_GET['comment_id']) ? " AND c.comment_id=".$_GET['comment_id']."" : '';
 
@@ -190,7 +192,7 @@ class CommentsAdministration {
         $result = '';
         $navresult = '';
 
-        if (!empty($_GET['ctype'])) {
+        if (!empty(self::$ctype)) {
             $result = dbquery(self::get_CommentsQuery());
             $row = dbrows($result);
             $navresult = dbquery(self::get_NavQuery());
@@ -198,10 +200,10 @@ class CommentsAdministration {
         }
 
         $info = [
-            'table_name' => \PHPFusion\Admins::getInstance()->getCommentType($_GET['ctype'])." ".$this->locale['401'],
+            'table_name' => \PHPFusion\Admins::getInstance()->getCommentType(self::$ctype)." ".$this->locale['401'],
             'buttons'    => $this->comments_Button(),
             'no_data'    => (!$row) ? "<div class='alert alert-info text-center'>".$this->locale['434']."</div>\n" : '',
-            'page_nav'   => '<div class="m-t-5 m-b-5">'.makepagenav($_GET['rowstart'], 20, self::$rows, 3, FUSION_SELF.fusion_get_aidlink()."&amp;ctype=".$_GET['ctype'].(!empty($_GET['comment_item_id']) ? "&amp;comment_item_id=".$_GET['comment_item_id'] : '')."&amp;").'</div>'
+            'page_nav'   => '<div class="m-t-5 m-b-5">'.makepagenav($_GET['rowstart'], 20, self::$rows, 3, FUSION_SELF.fusion_get_aidlink()."&amp;ctype=".self::$ctype.(!empty($_GET['comment_item_id']) ? "&amp;comment_item_id=".$_GET['comment_item_id'] : '')."&amp;").'</div>'
         ];
 
         if (self::$rows > 0) {
@@ -215,9 +217,9 @@ class CommentsAdministration {
 
                 while ($data = dbarray($result)) {
                     $info['data'][] = [
-                        'edit_link'   => FUSION_SELF.fusion_get_aidlink()."&amp;section=comments_edit&amp;ctype=".$_GET['ctype']."&amp;comment_id=".$data['comment_id'].(!empty($_GET['comment_item_id']) ? "&amp;comment_item_id=".$_GET['comment_item_id'] : ''),
-                        'del_link'    => FUSION_SELF.fusion_get_aidlink()."&amp;section=comments_view&amp;ctype=".$_GET['ctype']."&amp;action=delete&amp;comment_id=".$data['comment_id']."' onclick=\"return confirm('".$this->locale['433']."');\"",
-                        'delban_link' => FUSION_SELF.fusion_get_aidlink()."&amp;section=comments_view&amp;ctype=".$_GET['ctype']."&amp;action=delban&amp;comment_id=".$data['comment_id']."' onclick=\"return confirm('".$this->locale['435']."');\"",
+                        'edit_link'   => FUSION_SELF.fusion_get_aidlink()."&amp;section=comments_edit&amp;ctype=".self::$ctype."&amp;comment_id=".$data['comment_id'].(!empty($_GET['comment_item_id']) ? "&amp;comment_item_id=".$_GET['comment_item_id'] : ''),
+                        'del_link'    => FUSION_SELF.fusion_get_aidlink()."&amp;section=comments_view&amp;ctype=".self::$ctype."&amp;action=delete&amp;comment_id=".$data['comment_id']."' onclick=\"return confirm('".$this->locale['433']."');\"",
+                        'delban_link' => FUSION_SELF.fusion_get_aidlink()."&amp;section=comments_view&amp;ctype=".self::$ctype."&amp;action=delban&amp;comment_id=".$data['comment_id']."' onclick=\"return confirm('".$this->locale['435']."');\"",
                         'profile'     => $data['user_name'] ? profile_link($data['comment_name'], $data['user_name'], $data['user_status']) : $data['comment_name'],
                         'date'        => $this->locale['global_071'].showdate("longdate", $data['comment_datestamp']),
                         'ip'          => "<span class='label label-default m-l-10'>".$this->locale['432']." ".$data['comment_ip']."</span>",
