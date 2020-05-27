@@ -81,6 +81,8 @@ function display_html($formname, $textarea, $html = TRUE, $colors = FALSE, $imag
         $res .= "<button type='button' value='alt' title='".$locale['html_015']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;span class=\'alt\'&gt;', '&lt;/span&gt;', '".$formname."');\">alt</button>\n";
         $res .= "</div>\n";
 
+        $res .= "<button type='button' value='code' title='".$locale['html_015']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;code&gt;', '&lt;/code&gt;', '".$formname."');\"><i class='fa fa-code'></i></button>\n";
+
         if ($colors) {
             $res .= "<div class='btn-group'>\n";
             $res .= "<button title='".$locale['html_017']."' class='btn btn-sm btn-default m-b-10 button dropdown-toggle' data-toggle='dropdown'><i class='fa fa-tint m-r-5'></i> <span class='caret'></span></button>\n";
@@ -140,7 +142,6 @@ function display_html($formname, $textarea, $html = TRUE, $colors = FALSE, $imag
             $res .= "</ul>\n";
             $res .= "</div>\n";
         }
-
 
         $res .= "<div class='btn-group'>\n";
         //$res .= "<button type='button' title='".$locale['html_018']."' class='btn btn-sm btn-default m-b-10 button strong' onclick=\"addText('".$textarea."', '&lt;p&gt;', '&lt;/p&gt;', '".$formname."');\">".$locale['html_018']."</button>\n";
