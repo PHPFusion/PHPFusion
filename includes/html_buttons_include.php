@@ -81,7 +81,7 @@ function display_html($formname, $textarea, $html = TRUE, $colors = FALSE, $imag
         $res .= "<button type='button' value='alt' title='".$locale['html_015']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;span class=\'alt\'&gt;', '&lt;/span&gt;', '".$formname."');\">alt</button>\n";
         $res .= "</div>\n";
 
-        $res .= "<button type='button' value='code' title='".$locale['html_015']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;code&gt;', '&lt;/code&gt;', '".$formname."');\"><i class='fa fa-code'></i></button>\n";
+        $res .= "<button type='button' value='code' title='code' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;code&gt;', '&lt;/code&gt;', '".$formname."');\"><i class='fa fa-code'></i></button>\n";
 
         if ($colors) {
             $res .= "<div class='btn-group'>\n";
