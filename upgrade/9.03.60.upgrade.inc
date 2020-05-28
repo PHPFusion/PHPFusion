@@ -27,4 +27,6 @@ foreach ($update_settings_tbl as $key => $value) {
     }
 }
 
-$inf_altertable[] = DB_USERS." ADD user_session VARCHAR(150) NOT NULL DEFAULT '' AFTER user_actiontime";
+if (!column_exists('users', 'user_session')) {
+    $inf_altertable[] = DB_USERS." ADD user_session VARCHAR(150) NOT NULL DEFAULT '' AFTER user_actiontime";
+}
