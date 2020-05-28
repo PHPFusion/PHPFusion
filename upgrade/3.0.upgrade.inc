@@ -22,6 +22,7 @@ $inf_altertable[] = DB_FORUM_VOTES." ADD INDEX forum_id (forum_id), ADD INDEX th
 $inf_altertable[] = DB_FORUM_POLL_VOTERS." DROP INDEX thread_id, ADD INDEX thread_id (thread_id), ADD INDEX forum_vote_user_id (forum_vote_user_id);";
 $inf_altertable[] = DB_FORUMS." ADD INDEX forum_cat (forum_cat);";
 $inf_altertable[] = DB_FORUM_THREADS." ADD INDEX forum_id (forum_id);";
+$inf_altertable[] = DB_FORUM_THREADS." ADD forum_show_postcount TINYINT(1) NOT NULL DEFAULT '0';";
 
 if (db_exists(DB_PREFIX.'forum_reports')) {
     $inf_newtable[] = DB_FORUM_REPORTS." (

@@ -63,7 +63,8 @@ class Admin extends ForumServer {
         'forum_merge'              => 0,
         'forum_language'           => LANGUAGE,
         'forum_meta'               => '',
-        'forum_alias'              => ''
+        'forum_alias'              => '',
+        'forum_show_postcount'     => 1
     ];
 
     public function __construct() {
@@ -230,28 +231,29 @@ class Admin extends ForumServer {
 
         if (isset($_POST['save_forum'])) {
             $this->data = [
-                'forum_id'           => form_sanitizer($_POST['forum_id'], 0, 'forum_id'),
-                'forum_name'         => form_sanitizer($_POST['forum_name'], '', 'forum_name'),
-                'forum_description'  => form_sanitizer($_POST['forum_description'], '', 'forum_description'),
-                'forum_cat'          => form_sanitizer($_POST['forum_cat'], 0, 'forum_cat'),
-                'forum_type'         => form_sanitizer($_POST['forum_type'], '', 'forum_type'),
-                'forum_language'     => form_sanitizer($_POST['forum_language'], '', 'forum_language'),
-                'forum_alias'        => form_sanitizer($_POST['forum_alias'], '', 'forum_alias'),
-                'forum_meta'         => form_sanitizer($_POST['forum_meta'], '', 'forum_meta'),
-                'forum_rules'        => form_sanitizer($_POST['forum_rules'], '', 'forum_rules'),
-                'forum_image_enable' => isset($_POST['forum_image_enable']) ? 1 : 0,
-                'forum_merge'        => isset($_POST['forum_merge']) ? 1 : 0,
-                'forum_allow_attach' => isset($_POST['forum_allow_attach']) ? 1 : 0,
-                'forum_quick_edit'   => isset($_POST['forum_quick_edit']) ? 1 : 0,
-                'forum_allow_poll'   => isset($_POST['forum_allow_poll']) ? 1 : 0,
-                'forum_poll'         => USER_LEVEL_MEMBER,
-                'forum_users'        => isset($_POST['forum_users']) ? 1 : 0,
-                'forum_lock'         => isset($_POST['forum_lock']) ? 1 : 0,
-                'forum_permissions'  => isset($_POST['forum_permissions']) ? form_sanitizer($_POST['forum_permissions'], 0, 'forum_permissions') : 0,
-                'forum_order'        => isset($_POST['forum_order']) ? form_sanitizer($_POST['forum_order']) : '',
-                'forum_branch'       => get_hkey(DB_FORUMS, 'forum_id', 'forum_cat', $this->data['forum_cat']),
-                'forum_image'        => '',
-                'forum_mods'         => "",
+                'forum_id'             => form_sanitizer($_POST['forum_id'], 0, 'forum_id'),
+                'forum_name'           => form_sanitizer($_POST['forum_name'], '', 'forum_name'),
+                'forum_description'    => form_sanitizer($_POST['forum_description'], '', 'forum_description'),
+                'forum_cat'            => form_sanitizer($_POST['forum_cat'], 0, 'forum_cat'),
+                'forum_type'           => form_sanitizer($_POST['forum_type'], '', 'forum_type'),
+                'forum_language'       => form_sanitizer($_POST['forum_language'], '', 'forum_language'),
+                'forum_alias'          => form_sanitizer($_POST['forum_alias'], '', 'forum_alias'),
+                'forum_meta'           => form_sanitizer($_POST['forum_meta'], '', 'forum_meta'),
+                'forum_rules'          => form_sanitizer($_POST['forum_rules'], '', 'forum_rules'),
+                'forum_image_enable'   => isset($_POST['forum_image_enable']) ? 1 : 0,
+                'forum_merge'          => isset($_POST['forum_merge']) ? 1 : 0,
+                'forum_allow_attach'   => isset($_POST['forum_allow_attach']) ? 1 : 0,
+                'forum_quick_edit'     => isset($_POST['forum_quick_edit']) ? 1 : 0,
+                'forum_allow_poll'     => isset($_POST['forum_allow_poll']) ? 1 : 0,
+                'forum_poll'           => USER_LEVEL_MEMBER,
+                'forum_users'          => isset($_POST['forum_users']) ? 1 : 0,
+                'forum_lock'           => isset($_POST['forum_lock']) ? 1 : 0,
+                'forum_permissions'    => isset($_POST['forum_permissions']) ? form_sanitizer($_POST['forum_permissions'], 0, 'forum_permissions') : 0,
+                'forum_order'          => isset($_POST['forum_order']) ? form_sanitizer($_POST['forum_order']) : '',
+                'forum_branch'         => get_hkey(DB_FORUMS, 'forum_id', 'forum_cat', $this->data['forum_cat']),
+                'forum_image'          => '',
+                'forum_mods'           => "",
+                'forum_show_postcount' => isset($_POST['forum_show_postcount']) ? 1 : 0,
             ];
             $this->data['forum_alias'] = $this->data['forum_alias'] ? str_replace(' ', '-', $this->data['forum_alias']) : '';
             // Checks for unique forum alias
@@ -997,6 +999,9 @@ class Admin extends ForumServer {
                 "reverse_label" => TRUE,
             ]).
             form_checkbox('forum_allow_poll', $locale['forum_022'], $this->data['forum_allow_poll'], [
+                "reverse_label" => TRUE,
+            ]).
+            form_checkbox('forum_show_postcount', $locale['forum_145'], $this->data['forum_show_postcount'], [
                 "reverse_label" => TRUE,
             ]).
             form_hidden('forum_id', '', $this->data['forum_id']).

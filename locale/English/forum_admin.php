@@ -151,6 +151,7 @@ $locale['forum_141'] = "Notifications";
 $locale['forum_142'] = "Post File & Image Attachments";
 $locale['forum_143'] = "Post Behaviour Configurations";
 $locale['forum_144'] = "Enable forum post comments";
+$locale['forum_145'] = "Show post count";
 
 $locale['forum_150'] = "<strong>Enable user fields in detailed forum posts.</strong>  User Fields are custom user information that can be managed in the [LINK]user fields administration[/LINK]";
 $locale['forum_151'] = "There are no user fields defined in this category.";

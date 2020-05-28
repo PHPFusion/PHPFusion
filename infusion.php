@@ -143,6 +143,7 @@ $inf[DB_FORUMS] = [
     'forum_lastpost'         => ['type' => 'INT', 'length' => 10, 'unsigned' => TRUE, 'key' => 2],
     'forum_postcount'        => ['type' => 'MEDIUMINT', 'length' => 10, 'unsigned' => TRUE],
     'forum_threadcount'      => ['type' => 'MEDIUMINT', 'length' => 10, 'unsigned' => TRUE],
+    'forum_show_postcount'   => ['type' => 'TINYINT', 'length' => 1],
 ];
 $inf[DB_FORUM_POSTS] = [
     'forum_id'        => ['type' => 'BIGINT', 'length' => 20, 'unsigned' => TRUE, 'key' => 2],

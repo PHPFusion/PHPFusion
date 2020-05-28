@@ -63,6 +63,7 @@ class ForumAdminView extends AdminInterface {
         'forum_language'           => LANGUAGE,
         'forum_meta'               => '',
         'forum_alias'              => '',
+        'forum_show_postcount'     => 1
     ];
 
     private $forum_id = 0;
@@ -214,8 +215,9 @@ class ForumAdminView extends AdminInterface {
                 'forum_branch'         => get_hkey( DB_FORUMS, 'forum_id', 'forum_cat', $this->data['forum_cat'] ),
                 'forum_image'          => '',
                 'forum_mods'           => '',
+                'forum_show_postcount' => post( 'forum_show_postcount' ) ? 1 : 0,
             ];
-            //define('STOP_REDIRECT',true);
+            define('STOP_REDIRECT',true);
             //print_p($this->data);
 
             $this->data['forum_alias'] = $this->data['forum_alias'] ? str_replace( ' ', '-',
@@ -938,6 +940,10 @@ class ForumAdminView extends AdminInterface {
                     'class'         => 'm-0'
                 ] ).
                 form_checkbox( 'forum_allow_poll', self::$locale['forum_022'], $this->data['forum_allow_poll'], [
+                    "reverse_label" => TRUE,
+                    'class'         => 'm-0'
+                ] ).
+                form_checkbox( 'forum_show_postcount', self::$locale['forum_145'], $this->data['forum_show_postcount'], [
                     "reverse_label" => TRUE,
                     'class'         => 'm-0'
                 ] ).
