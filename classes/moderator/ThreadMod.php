@@ -393,14 +393,21 @@ class ThreadMod {
                 dbquery("UPDATE ".DB_FORUM_POSTS."  SET forum_id=:nfid WHERE thread_id=:tid", [':nfid' => $new_forum_id, ':tid' => $thread_id]);
 
                 $bestForumLastThread = dbarray(dbquery("SELECT * FROM ".DB_FORUM_THREADS." WHERE forum_id='".$forum_id."' ORDER BY thread_lastpost DESC LIMIT 1"));
+
                 dbquery("UPDATE ".DB_FORUMS." SET
-                            forum_postcount=forum_postcount-".$cur_thread_posts.",
+                            forum_postcount=forum_postcount-:forum_postcount,
                             forum_threadcount=forum_threadcount-1,
-                            forum_lastpost='".$bestForumLastThread['thread_lastpost']."',
-                            forum_lastpostid = '".$bestForumLastThread['thread_lastpostid']."',
-                            forum_lastuser='".$bestForumLastThread['thread_lastuser']."'
-                            WHERE forum_id=".$forum_id
-                );
+                            forum_lastpost=:thread_lastpost,
+                            forum_lastpostid=:thread_lastpostid,
+                            forum_lastuser=:thread_lastuser
+                            WHERE forum_id=:forum_id"
+                    ,[
+                        ':forum_postcount'   => (int)$cur_thread_posts,
+                        ':thread_lastpost'   => !empty($bestForumLastThread['thread_lastpost']) ? (int)$bestForumLastThread['thread_lastpost'] : 0,
+                        ':thread_lastpostid' => !empty($bestForumLastThread['thread_lastpostid']) ? (int)$bestForumLastThread['thread_lastpostid'] : 0,
+                        ':thread_lastuser'   => !empty($bestForumLastThread['thread_lastuser']) ? (int)$bestForumLastThread['thread_lastuser'] : 0,
+                        ':forum_id'          => (int)$forum_id
+                    ]);
 
                 addNotice('success', $locale['forum_0752']);
             }
