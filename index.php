@@ -48,7 +48,13 @@ if ($settings['site_seo'] && !isset($_GET['aid'])) {
                         or $router->removeParam($_SERVER['REQUEST_URI']) == "/"
                         or $_SERVER['REQUEST_URI'] == $settings['site_path']
                     ) {
-                        redirect(BASEDIR.$settings['opening_page'], FALSE, FALSE, 301);
+                        if (file_exists(BASEDIR.'homepage.php')) {
+                            require_once THEMES.'templates/header.php';
+                            require_once BASEDIR.'homepage.php';
+                            require_once THEMES.'templates/footer.php';
+                        } else {
+                            redirect(BASEDIR.$settings['opening_page'], FALSE, FALSE, 301);
+                        }
                     } else {
                         $router->setPathtofile("error.php");
                         $params = [
@@ -64,5 +70,11 @@ if ($settings['site_seo'] && !isset($_GET['aid'])) {
         }
     }
 } else {
-    redirect(BASEDIR.$settings['opening_page'], FALSE, FALSE, 301);
+    if (file_exists(BASEDIR.'homepage.php')) {
+        require_once THEMES.'templates/header.php';
+        require_once BASEDIR.'homepage.php';
+        require_once THEMES.'templates/footer.php';
+    } else {
+        redirect(BASEDIR.$settings['opening_page'], FALSE, FALSE, 301);
+    }
 }
