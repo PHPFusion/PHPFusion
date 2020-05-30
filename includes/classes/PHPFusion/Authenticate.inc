@@ -364,7 +364,7 @@ class Authenticate {
                         Authenticate::_setUserTheme($user);
                         if (!$user["user_session"]) {
                             // here we need to add a notice
-                            addNotice("danger", fusion_get_locale("global_183"));
+                            addNotice("danger", fusion_get_locale("global_183", LOCALE.fusion_get_settings('locale').'/global.php'));
                             self::logOut();
                         }
                         // From Version 7 to Version 9, Ported Database has this problem - where user_salt has problem entering
@@ -425,7 +425,7 @@ class Authenticate {
         Authenticate::_setCookie(COOKIE_LASTVISIT, "", time() - 1209600, COOKIE_PATH, COOKIE_DOMAIN, FALSE, TRUE);
         Authenticate::_setCookie(COOKIE_USER, "", time() - 1209600, COOKIE_PATH, COOKIE_DOMAIN, FALSE, TRUE);
 
-        session_destroy();
+        @session_destroy();
 
         return Authenticate::getEmptyUserData();
     }
