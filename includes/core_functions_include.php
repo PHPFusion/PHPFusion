@@ -296,6 +296,13 @@ function set_status_header($code = 200) {
  * @return false|string
  */
 function get_http_response_code($url) {
+    stream_context_set_default([
+        'ssl' => [
+            'verify_peer'      => FALSE,
+            'verify_peer_name' => FALSE
+        ],
+    ]);
+
     $headers = get_headers($url);
     return substr($headers[0], 9, 3);
 }
