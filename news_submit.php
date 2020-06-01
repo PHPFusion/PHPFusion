@@ -93,10 +93,10 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
         ];
         if (\defender::safe() && isset($_POST['preview_news'])) {
             $footer = openmodal("news_preview", "<i class='fa fa-eye fa-lg m-r-10'></i> ".$locale['preview'].": ".$criteriaArray['news_subject']);
-            $footer .= nl2br(parse_textarea($criteriaArray['news_news']));
+            $footer .= parse_textarea($criteriaArray['news_news'], FALSE, FALSE, TRUE, IMAGES_N, TRUE);
             if ($criteriaArray['news_extended']) {
                 $footer .= "<hr class='m-t-20 m-b-20'>\n";
-                $footer .= nl2br(parse_textarea($criteriaArray['news_extended']));
+                $footer .= parse_textarea($criteriaArray['news_extended'], FALSE, FALSE, TRUE, IMAGES_N, TRUE);
             }
             $footer .= closemodal();
             add_to_footer($footer);
