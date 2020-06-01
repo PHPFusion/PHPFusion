@@ -41,7 +41,7 @@ if (fusion_safe()) {
             $text = parse_textarea($text, TRUE, FALSE, TRUE, FALSE, TRUE, TRUE);
             break;
         case "bbcode":
-            $text = parse_textarea($text, TRUE, TRUE, TRUE, FALSE, TRUE, TRUE);
+            $text = parse_textarea($text, TRUE, TRUE, FALSE, FALSE, TRUE, TRUE);
             break;
         default:
             $text = parse_textarea($text, TRUE, FALSE, TRUE, FALSE, TRUE, TRUE);
