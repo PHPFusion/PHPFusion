@@ -43,22 +43,11 @@ if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_status='1' AND ".g
         }
 
         if (isset($_POST['submit_article']) || isset($_POST['preview_article'])) {
-            // Check posted Informations
-            $article_snippet = "";
-            if ($_POST['article_snippet']) {
-                $article_snippet = parse_textarea($_POST['article_snippet']);
-            }
-
-            $article_article = "";
-            if ($_POST['article_article']) {
-                $article_article = parse_textarea($_POST['article_article']);
-            }
-
             $criteriaArray = [
                 'article_subject'  => form_sanitizer($_POST['article_subject'], '', 'article_subject'),
                 'article_cat'      => form_sanitizer($_POST['article_cat'], 0, 'article_cat'),
-                'article_snippet'  => form_sanitizer($article_snippet, '', 'article_snippet'),
-                'article_article'  => form_sanitizer($article_article, '', 'article_article'),
+                'article_snippet'  => form_sanitizer($_POST['article_snippet'], '', 'article_snippet'),
+                'article_article'  => form_sanitizer($_POST['article_article'], '', 'article_article'),
                 'article_keywords' => form_sanitizer($_POST['article_keywords'], '', 'article_keywords'),
                 'article_language' => form_sanitizer($_POST['article_language'], LANGUAGE, 'article_language'),
             ];
@@ -79,10 +68,10 @@ if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_status='1' AND ".g
             // Display
             if (\defender::safe() && isset($_POST['preview_article'])) {
                 $footer = openmodal("article_preview", "<i class='fa fa-eye fa-lg m-r-10'></i> ".$locale['preview'].": ".$criteriaArray['article_subject']);
-                $footer .= nl2br(parse_textarea($article_snippet));
+                $footer .= parse_textarea($_POST['article_snippet'], TRUE, TRUE, FALSE, NULL, TRUE);
                 if ($criteriaArray['article_article']) {
                     $footer .= "<hr class='m-t-20 m-b-20'>\n";
-                    $footer .= nl2br(parse_textarea($article_article));
+                    $footer .= parse_textarea($_POST['article_article'], FALSE, FALSE, TRUE, IMAGES_A, TRUE);
                 }
                 $footer .= closemodal();
                 add_to_footer($footer);
