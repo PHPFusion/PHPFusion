@@ -45,7 +45,7 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
 
             $article_article = "";
             if ($_POST['article_article']) {
-                $article_article = str_replace("src='".str_replace("../", "", IMAGES_A), "src='".IMAGES_A, stripslashes($_POST['article_article']));
+                $article_article = str_replace("src='".str_replace("../", "", IMAGES_A), "src='".IMAGES_A, $_POST['article_article']);
             }
 
             $this->inputArray = [
@@ -84,10 +84,11 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
                 // Preview Submission
                 if (isset($_POST['preview_submission'])) {
                     $footer = openmodal("article_preview", "<i class='fa fa-eye fa-lg m-r-10'></i> ".$this->locale['preview'].": ".$this->inputArray['article_subject']);
-                    echo($this->inputArray['article_breaks'] == "n" ? parse_textarea($this->inputArray['article_snippet']) : nl2br(parse_textarea($this->inputArray['article_snippet'])));
+                    $footer .= parse_textarea($this->inputArray['article_snippet'], TRUE, TRUE, FALSE, NULL, $this->inputArray['article_breaks'] == "y");
+
                     if ($this->inputArray['article_article']) {
                         $footer .= "<hr class='m-t-20 m-b-20'>\n";
-                        $footer .= ($this->inputArray['article_breaks'] == "n" ? parse_textarea($this->inputArray['article_article']) : nl2br(parse_textarea($this->inputArray['article_article'])));
+                        $footer .= parse_textarea($this->inputArray['article_article'], FALSE, FALSE, TRUE, IMAGES_A, $this->inputArray['article_breaks'] == "y");
                     }
                     $footer .= closemodal();
                     add_to_footer($footer);
@@ -121,7 +122,7 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
             $data = dbarray($result);
 
             $submit_criteria = \defender::decode($data['submit_criteria']);
-            $returnInformations = [
+            return [
                 'article_subject'        => $submit_criteria['article_subject'],
                 'article_snippet'        => phpentities(stripslashes($submit_criteria['article_snippet'])),
                 'article_article'        => phpentities(stripslashes($submit_criteria['article_article'])),
@@ -136,7 +137,6 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
                 'article_allow_comments' => 0,
                 'article_allow_ratings'  => 0
             ];
-            return $returnInformations;
         } else {
             redirect(clean_request('', [], FALSE));
             return NULL;
