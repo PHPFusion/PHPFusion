@@ -225,7 +225,7 @@ class FaqAdmin extends FaqAdminModel {
             WHERE ".(!empty($filters['where']) ? $filters['where'] : "").
             (!empty($filters['sql_condition']) ? $filters['sql_condition'] : "")."
             GROUP BY ac.faq_id
-            ORDER BY ac.faq_cat_id ASC, ac.faq_id ASC
+            ORDER BY ac.faq_datestamp DESC
             ".(!empty($filters['limit']) ? $filters['limit'] : "")."
         ");
 
@@ -500,9 +500,9 @@ class FaqAdmin extends FaqAdminModel {
             echo "<a class='btn btn-success btn-sm' href='".clean_request('ref=faq_form', ['ref'], FALSE)."'><i class='fa fa-plus'></i> ".$this->locale['faq_0003']."</a>\n";
         }
         echo "<a class='m-l-5 btn btn-primary btn-sm' href='".clean_request('ref=faq_cat_form', ['ref'], FALSE)."'><i class='fa fa-plus'></i> ".$this->locale['faq_0119']."</a>
-            <a class='m-l-5 btn btn-default btn-sm hidden-xs' onclick=\"run_admin('publish', '#table_action', '#faq_table');\"><i class='fa fa-check'></i>".$this->locale['publish']."</a>
-            <a class='m-l-5 btn btn-default btn-sm hidden-xs' onclick=\"run_admin('unpublish', '#table_action', '#faq_table');\"><i class='fa fa-ban'></i>".$this->locale['unpublish']."</a>
-            <a class='m-l-5 btn btn-danger btn-sm hidden-xs' onclick=\"run_admin('delete', '#table_action', '#faq_table');\"><i class='fa fa-trash-o'></i>".$this->locale['delete']."</a>
+            <a class='m-l-5 btn btn-default btn-sm hidden-xs' onclick=\"run_admin('publish', '#table_action', '#faq_table');\"><i class='fa fa-check'></i> ".$this->locale['publish']."</a>
+            <a class='m-l-5 btn btn-default btn-sm hidden-xs' onclick=\"run_admin('unpublish', '#table_action', '#faq_table');\"><i class='fa fa-ban'></i> ".$this->locale['unpublish']."</a>
+            <a class='m-l-5 btn btn-danger btn-sm hidden-xs' onclick=\"run_admin('delete', '#table_action', '#faq_table');\"><i class='fa fa-trash-o'></i> ".$this->locale['delete']."</a>
         </div><div class='display-inline-block pull-left m-r-10'>
         ".form_text('faq_answer', '', $filter_values['faq_answer'], [
                 'placeholder'       => $this->locale['faq_0120'],
