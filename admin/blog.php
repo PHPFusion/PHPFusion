@@ -50,7 +50,7 @@ $data = [
 ];
 
 if (fusion_get_settings('tinymce_enabled') != 1) {
-    $data['blog_breaks'] = isset($_POST['line_breaks']) ? "y" : "n";
+    $data['blog_breaks'] = isset($_POST['blog_breaks']) ? "y" : "n";
 } else {
     $data['blog_breaks'] = "n";
 }
@@ -59,12 +59,12 @@ if (isset($_POST['save']) or isset($_POST['preview'])) {
 
     $blog_blog = "";
     if ($_POST['blog_blog']) {
-        $blog_blog = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, (fusion_get_settings("allow_php_exe") ? htmlspecialchars($_POST['blog_blog']) : $_POST['blog_blog']));
+        $blog_blog = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, $_POST['blog_blog']);
     }
 
     $blog_extended = "";
     if ($_POST['blog_extended']) {
-        $blog_extended = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, (fusion_get_settings("allow_php_exe") ? htmlspecialchars($_POST['blog_extended']) : $_POST['blog_extended']));
+        $blog_extended = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, $_POST['blog_extended']);
     }
 
     $data = [
@@ -81,7 +81,7 @@ if (isset($_POST['save']) or isset($_POST['preview'])) {
         'blog_visibility'     => form_sanitizer($_POST['blog_visibility'], 0, 'blog_visibility'),
         'blog_draft'          => isset($_POST['blog_draft']) ? "1" : "0",
         'blog_sticky'         => isset($_POST['blog_sticky']) ? "1" : "0",
-        "blog_breaks"         => isset($_POST['line_breaks']) ? 'y' : 'n',
+        'blog_breaks'         => isset($_POST['blog_breaks']) ? 'y' : 'n',
         'blog_allow_comments' => isset($_POST['blog_allow_comments']) ? "1" : "0",
         'blog_allow_ratings'  => isset($_POST['blog_allow_ratings']) ? "1" : "0",
         'blog_language'       => form_sanitizer($_POST['blog_language'], '', 'blog_language'),
@@ -91,12 +91,13 @@ if (isset($_POST['save']) or isset($_POST['preview'])) {
     if (isset($_POST['preview']) && \defender::safe()) {
         $modal = openmodal('blog_preview', $locale['blog_0141']." - ".$data['blog_subject']);
         $modal .= "<div class='m-b-20'>\n";
-        $modal .= "";
-        $modal .= "<div class='well'><p><strong>".$locale['blog_0425']."</strong></p>".$blog_blog."</div>";
-        $modal .= $blog_extended;
+        $modal .= "<div class='well'><p><strong>".$locale['blog_0425']."</strong></p>";
+        $modal .= parse_textarea($blog_blog, FALSE, FALSE, TRUE, IMAGES_B, $data['blog_breaks'] == 'y');
+        $modal .= "</div>";
+        $modal .= parse_textarea($blog_extended, FALSE, FALSE, TRUE, IMAGES_B, $data['blog_breaks'] == 'y');
         $modal .= "</div>\n";
         $modal .= closemodal();
-        add_to_footer( $modal );
+        add_to_footer($modal);
 
     } else {
 
@@ -109,7 +110,7 @@ if (isset($_POST['save']) or isset($_POST['preview'])) {
                 $data['blog_ialign'] = (isset($_POST['blog_ialign']) ? form_sanitizer($_POST['blog_ialign'], "pull-left", "blog_ialign") : "pull-left");
             }
         } else { // when files not uploaded. but there should be exist check.
-            $data['blog_image'] =  post('blog_image');
+            $data['blog_image'] = post('blog_image');
             $data['blog_image_t1'] = post('blog_image_t1');
             $data['blog_image_t2'] = post('blog_image_t2');
             $data['blog_ialign'] = (isset($_POST['blog_ialign']) ? form_sanitizer($_POST['blog_ialign'], "pull-left", "blog_ialign") : "pull-left");
@@ -315,10 +316,23 @@ if ($data['blog_image'] != "" && $data['blog_image_t1'] != "") {
 }
 closeside();
 openside('');
-echo "<label><input type='checkbox' name='blog_draft' value='yes' ".($data['blog_draft'] ? "checked='checked'" : "")."/> ".$locale['blog_0431']."</label><br />\n";
-echo "<label><input type='checkbox' name='blog_sticky' value='yes' ".($data['blog_sticky'] ? "checked='checked'" : "")."/> ".$locale['blog_0432']."</label><br />\n";
+
+echo form_checkbox('blog_draft', $locale['blog_0431'], $data['blog_draft'], [
+    'reverse_label' => TRUE,
+    'class'         => 'm-b-0'
+]);
+
+echo form_checkbox('blog_sticky', $locale['blog_0432'], $data['blog_sticky'], [
+    'reverse_label' => TRUE,
+    'class'         => 'm-b-0'
+]);
+
 if (fusion_get_settings("tinymce_enabled") != 1) {
-    echo "<label><input type='checkbox' name='line_breaks' value='yes' ".($data['blog_breaks'] ? "checked='checked'" : "")."/> ".$locale['blog_0433']."</label><br />\n";
+    echo form_checkbox('blog_breaks', $locale['blog_0433'], $data['blog_breaks'], [
+        'value'         => 'y',
+        'reverse_label' => TRUE,
+        'class'         => 'm-b-0'
+    ]);
 }
 closeside();
 echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4'>\n";
@@ -335,8 +349,17 @@ if (!fusion_get_settings("comments_enabled") || !fusion_get_settings("ratings_en
 
     echo "<div class='well'>".sprintf($locale['blog_0149'], "<strong>$sys</strong>")."</div>\n";
 }
-echo "<label><input type='checkbox' name='blog_allow_comments' value='yes' onclick='SetRatings();' ".($data['blog_allow_comments'] ? "checked='checked'" : "")." /> ".$locale['blog_0434']."</label><br/>";
-echo "<label><input type='checkbox' name='blog_allow_ratings' value='yes' ".($data['blog_allow_ratings'] ? "checked='checked'" : "")."/> ".$locale['blog_0435']."</label>";
+
+echo form_checkbox('blog_allow_comments', $locale['blog_0434'], $data['blog_allow_comments'], [
+    'reverse_label' => TRUE,
+    'class'         => 'm-b-0'
+]);
+
+echo form_checkbox('blog_allow_ratings', $locale['blog_0435'], $data['blog_allow_ratings'], [
+    'reverse_label' => TRUE,
+    'class'         => 'm-b-0'
+]);
+
 closeside();
 echo "</div>\n</div>\n";
 echo form_button('save', $locale['blog_0437'], $locale['blog_0437'], ['input_id' => 'save_bottombtn', 'class' => 'btn-success', 'icon' => 'fa fa-hdd-o']);
