@@ -100,12 +100,12 @@ class ArticlesAdmin extends ArticlesAdminModel {
             // Check posted Informations
             $article_snippet = "";
             if ($_POST['article_snippet']) {
-                $article_snippet = str_replace("src='".str_replace("../", "", IMAGES_A), "src='".IMAGES_A, (fusion_get_settings("allow_php_exe") ? htmlspecialchars($_POST['article_snippet']) : $_POST['article_snippet']));
+                $article_snippet = str_replace("src='".str_replace("../", "", IMAGES_A), "src='".IMAGES_A, $_POST['article_snippet']);
             }
 
             $article_article = "";
             if ($_POST['article_article']) {
-                $article_article = str_replace("src='".str_replace("../", "", IMAGES_A), "src='".IMAGES_A, (fusion_get_settings("allow_php_exe") ? htmlspecialchars($_POST['article_article']) : $_POST['article_article']));
+                $article_article = str_replace("src='".str_replace("../", "", IMAGES_A), "src='".IMAGES_A, $_POST['article_article']);
             }
 
             $this->article_data = [
