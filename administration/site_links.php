@@ -271,7 +271,7 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
     private function display_sitelinks_form() {
         fusion_confirm_exit();
 
-        if (isset($_POST['savelink'])) {
+        if (isset($_POST['savelink']) || isset($_POST['save_and_close'])) {
 
             $this->data = [
                 "link_id"         => form_sanitizer($_POST['link_id'], 0, 'link_id'),
@@ -325,7 +325,12 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
                     // New link will not have child
                     addNotice("success", $this->locale['SL_0015']);
                 }
-                redirect(clean_request("link_cat=".$this->data['link_cat'], ['ref'], FALSE));
+
+                if (isset($_POST['save_and_close'])) {
+                    redirect(clean_request("link_cat=".$this->data['link_cat'], ['ref'], FALSE));
+                } else {
+                    redirect(FUSION_REQUEST);
+                }
             }
         }
 
@@ -416,9 +421,13 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
         echo form_checkbox('link_window', $this->locale['SL_0028'], $this->data['link_window']);
         echo "</div>\n";
         echo "</div>\n";
-        echo form_button('savelink', $this->locale['SL_0040'], $this->locale['SL_0040'],
-            ['class' => 'btn-primary m-r-10', 'input_id' => 'savelink_2']);
         echo form_button("cancel", $this->locale['cancel'], "cancel", ['input_id' => 'cancel2']);
+        echo form_button('savelink', $this->locale['SL_0040'], $this->locale['SL_0040'],
+            ['class' => 'btn-success m-r-10', 'input_id' => 'savelink_2']);
+        echo form_button('save_and_close', $this->locale['save_and_close'], $this->locale['save_and_close'], [
+            'class' => 'btn-sm btn-primary',
+            'icon'  => 'fa fa-floppy-o'
+        ]);
         echo closeform();
         echo "</div>\n";
     }
