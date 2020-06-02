@@ -56,15 +56,10 @@ class FaqSubmissions extends FaqServer {
         if (dbcount("(faq_cat_id)", DB_FAQ_CATS, (multilang_table("FQ") ? in_group('faq_cat_language', LANGUAGE) : ""))) {
             // Save
             if (check_post("submit_link")) {
-                $question = post("faq_question");
-                $answer = post("faq_answer");
-
-                $submit_info['faq_question'] = parse_text($question);
-                $submit_info['faq_answer'] = parse_text($answer);
                 $criteriaArray = [
                     'faq_cat_id'   => form_sanitizer($_POST['faq_cat_id'], 0, 'faq_cat_id'),
-                    'faq_question' => form_sanitizer($submit_info['faq_question'], '', 'faq_question'),
-                    'faq_answer'   => form_sanitizer($submit_info["faq_answer"], '', 'faq_answer'),
+                    'faq_question' => form_sanitizer(post("faq_question"), '', 'faq_question'),
+                    'faq_answer'   => form_sanitizer(post("faq_answer"), '', 'faq_answer'),
                     'faq_language' => form_sanitizer($_POST['faq_language'], LANGUAGE, 'faq_language'),
                     'faq_status'   => 1
                 ];

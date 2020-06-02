@@ -140,7 +140,7 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
                     $footer = openmodal("faq_preview", "<i class='fa fa-eye fa-lg m-r-10'></i> ".$this->locale['preview'].": ".$SaveinputArray['faq_question']);
                     if ($SaveinputArray['faq_answer']) {
                         $footer .= "<hr class='m-t-20 m-b-20'>\n";
-                        $footer .= ($SaveinputArray['faq_breaks'] == "n" ? parse_textarea($SaveinputArray['faq_answer']) : nl2br(parse_textarea($SaveinputArray['faq_answer'])));
+                        $footer .= parse_textarea($SaveinputArray['faq_answer'], FALSE, FALSE, TRUE, NULL, $SaveinputArray['faq_breaks'] == "y");;
                     }
                     $footer .= closemodal();
                     add_to_footer($footer);
