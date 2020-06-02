@@ -49,7 +49,7 @@ if (fusion_safe()) {
             $text = parse_text($text, TRUE, FALSE, TRUE, FALSE, TRUE, TRUE);
             break;
         case "bbcode":
-            $text = parse_text($text, TRUE, TRUE, TRUE, FALSE, TRUE, TRUE);
+            $text = parse_text($text, TRUE, TRUE, FALSE, FALSE, TRUE, TRUE);
             break;
         default:
             $text = parse_text($text, TRUE, FALSE, TRUE, FALSE, TRUE, TRUE);

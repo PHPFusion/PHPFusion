@@ -377,7 +377,7 @@ class Authenticate {
                         Authenticate::_setUserTheme($user);
                         if (!$user["user_session"]) {
                             // here we need to add a notice
-                            addNotice("danger", fusion_get_locale("global_183"));
+                            addNotice("danger", fusion_get_locale("global_183", LOCALE.fusion_get_settings('locale').'/global.php'));
                             self::logOut();
                         }
                         $key = hash_hmac($user['user_algo'], $userID.$cookieExpiration, $user['user_salt']);
@@ -445,7 +445,6 @@ class Authenticate {
         if (session_id()) {
             session_destroy();
         }
-
 
         return Authenticate::getEmptyUserData();
     }

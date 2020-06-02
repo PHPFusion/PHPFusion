@@ -242,7 +242,7 @@ $language_opts = fusion_get_enabled_languages();
 $enabled_languages = array_keys($language_opts);
 
 // If language change is initiated and if the selected language is valid
-if ($_get_lang && file_exists(LOCALE.+$_get_lang."/global.php") && in_array($_get_lang, $enabled_languages)) {
+if ($_get_lang && file_exists(LOCALE.$_get_lang."/global.php") && in_array($_get_lang, $enabled_languages)) {
     $current_user_language = stripinput($_get_lang);
     set_language($current_user_language);
 } else {
