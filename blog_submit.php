@@ -35,11 +35,11 @@ if (iMEMBER && $blog_settings['blog_allow_submission']) {
     if (isset($_POST['submit_blog'])) {
         $blog_blog = "";
         if ($_POST['blog_blog']) {
-            $blog_blog = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, parseubb(stripslashes($_POST['blog_blog'])));
+            $blog_blog = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, stripslashes($_POST['blog_blog']));
         }
         $blog_extended = "";
         if ($_POST['blog_body']) {
-            $blog_extended = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, parseubb(stripslashes($_POST['blog_body'])));
+            $blog_extended = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, stripslashes($_POST['blog_body']));
         }
         $criteriaArray = [
             "blog_subject"  => form_sanitizer($_POST['blog_subject'], "", "blog_subject"),
@@ -82,11 +82,11 @@ if (iMEMBER && $blog_settings['blog_allow_submission']) {
         /* lost data after preview */
         $blog_blog = "";
         if ($_POST['blog_blog']) {
-            $blog_blog = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, parseubb(stripslashes($_POST['blog_blog'])));
+            $blog_blog = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, stripslashes($_POST['blog_blog']));
         }
         $blog_body = "";
         if ($_POST['blog_body']) {
-            $blog_body = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, parseubb(stripslashes($_POST['blog_body'])));
+            $blog_body = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, stripslashes($_POST['blog_body']));
         }
         $criteriaArray = [
             "blog_subject"  => form_sanitizer($_POST['blog_subject'], "", "blog_subject"),
@@ -104,10 +104,10 @@ if (iMEMBER && $blog_settings['blog_allow_submission']) {
     $criteriaArray['submitted'] = FALSE;
     if (fusion_safe() && isset($_POST['preview_blog'])) {
         $footer = openmodal("blog_preview", "<i class='fa fa-eye fa-lg m-r-10'></i> ".$locale['preview'].": ".$criteriaArray['blog_subject']);
-        $footer .= nl2br(parse_textarea($criteriaArray['blog_blog']));
+        $footer .= nl2br(parse_textarea($criteriaArray['blog_blog'], FALSE, FALSE));
         if ($criteriaArray['blog_body']) {
             $footer .= "<hr class='m-t-20 m-b-20'>\n";
-            $footer .= nl2br(parse_textarea($criteriaArray['blog_body']));
+            $footer .= nl2br(parse_textarea($criteriaArray['blog_body'], FALSE, FALSE));
         }
         $footer .= closemodal();
         add_to_footer($footer);

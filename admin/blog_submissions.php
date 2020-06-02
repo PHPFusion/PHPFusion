@@ -22,7 +22,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
     if (isset($_POST['publish']) && (isset($_GET['submit_id']) && isnum($_GET['submit_id']))) {
         $result = dbquery("SELECT ts.*, tu.user_id, tu.user_name FROM ".DB_SUBMISSIONS." ts
             LEFT JOIN ".DB_USERS." tu ON ts.submit_user=tu.user_id
-            WHERE submit_id='".$_GET['submit_id']."'");
+            WHERE submit_id=:id", [':id' => intval($_GET['submit_id'])]);
         if (dbrows($result)) {
             $data = dbarray($result);
             $data = [
@@ -123,7 +123,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
             ts.submit_datestamp, ts.submit_criteria, tu.user_id, tu.user_name, tu.user_avatar, tu.user_status
             FROM ".DB_SUBMISSIONS." ts
             LEFT JOIN ".DB_USERS." tu ON ts.submit_user=tu.user_id
-            WHERE submit_type='b' order by submit_datestamp desc");
+            WHERE submit_type='b' AND submit_id=:id order by submit_datestamp desc", [':id' => intval($_GET['submit_id'])]);
         if (dbrows($result) > 0) {
             $data = dbarray($result);
             $submit_criteria = unserialize($data['submit_criteria']);
@@ -144,7 +144,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 "blog_cat"        => $submit_criteria['blog_cat'],
                 "blog_blog"       => phpentities(stripslashes(descript($submit_criteria['blog_blog']))),
                 "blog_extended"   => phpentities(stripslashes(descript($submit_criteria['blog_body']))),
-                "blog_breaks"     => fusion_get_settings("tinyce_enabled") ? TRUE : FALSE,
+                "blog_breaks"     => fusion_get_settings("tinyce_enabled"),
             ];
             add_to_title($locale['global_200'].$locale['global_201'].$callback_data['blog_subject']."?");
             if (isset($_POST['preview'])) {
@@ -168,8 +168,8 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                     "blog_start"      => (isset($_POST['blog_start']) && $_POST['blog_start']) ? $_POST['blog_start'] : '',
                     "blog_end"        => (isset($_POST['blog_end']) && $_POST['blog_end']) ? $_POST['blog_end'] : '',
                     "blog_visibility" => isnum($_POST['blog_visibility']) ? $_POST['blog_visibility'] : "0",
-                    "blog_draft"      => isset($_POST['blog_draft']) ? TRUE : FALSE,
-                    "blog_sticky"     => isset($_POST['blog_sticky']) ? TRUE : FALSE,
+                    "blog_draft"      => isset($_POST['blog_draft']),
+                    "blog_sticky"     => isset($_POST['blog_sticky']),
                     "blog_datestamp"  => $callback_data['blog_datestamp'], // pull from db.
                     "blog_ialign"     => isset($_POST['blog_ialign']) ? $_POST['blog_ialign'] : '',
                     "blog_image"      => isset($_POST['blog_image']) ? $_POST['blog_image'] : '',
@@ -187,10 +187,10 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 if (fusion_safe()) {
                     echo openmodal('blog_preview', $locale['blog_0141']);
                     echo "<h3>".$callback_data['blog_subject']."</h3>\n";
-                    echo $callback_data['blog_blog'];
+                    echo parse_textarea($callback_data['blog_blog'], FALSE, FALSE, TRUE);
                     echo "<hr/>\n";
                     if (isset($callback_data['blog_extended'])) {
-                        echo $callback_data['blog_extended'];
+                        echo parse_textarea($callback_data['blog_extended'], FALSE, FALSE, TRUE);
                     }
                     echo closemodal();
                 }

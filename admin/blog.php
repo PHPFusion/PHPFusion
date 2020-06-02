@@ -26,19 +26,19 @@ $blog_cat_opts = [0 => $locale['blog_0424']] + $blog_list->getBlogCat();
 $data['blog_breaks'] = "n";
 
 if (fusion_get_settings('tinymce_enabled') != 1) {
-    $data['blog_breaks'] = isset($_POST['line_breaks']) ? "y" : "n";
+    $data['blog_breaks'] = isset($_POST['blog_breaks']) ? "y" : "n";
 }
 
 if (post('save') or post('save_and_close') or post('preview')) {
 
     $blog_blog = "";
     if ($blog_blog = post('blog_blog')) {
-        $blog_blog = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, (fusion_get_settings("allow_php_exe") ? htmlspecialchars($blog_blog) : $blog_blog));
+        $blog_blog = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, $_POST['blog_blog']);
     }
 
     $blog_extended = "";
     if ($blog_extended = post('blog_extended')) {
-        $blog_extended = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, (fusion_get_settings("allow_php_exe") ? htmlspecialchars($blog_extended) : $blog_extended));
+        $blog_extended = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, $_POST['blog_extended']);
     }
 
     $data = [
@@ -55,7 +55,7 @@ if (post('save') or post('save_and_close') or post('preview')) {
         'blog_visibility'     => sanitizer('blog_visibility', 0, 'blog_visibility'),
         'blog_draft'          => (int)(post('blog_draft') ? 1 : 0),
         'blog_sticky'         => (int)(post('blog_sticky') ? 1 : 0),
-        "blog_breaks"         => (post('line_breaks') ? 'y' : 'n'),
+        'blog_breaks'         => (post('blog_breaks') ? 'y' : 'n'),
         'blog_allow_comments' => (int)(post('blog_allow_comments') ? 1 : 0),
         'blog_allow_ratings'  => (int)(post('blog_allow_ratings') ? 1 : 0),
         'blog_language'       => sanitizer('blog_language', '', 'blog_language'),
@@ -66,8 +66,10 @@ if (post('save') or post('save_and_close') or post('preview')) {
         if (fusion_safe()) {
             $modal = openmodal('blog_preview', $locale['blog_0141']." - ".$data['blog_subject']);
             $modal .= "<div class='m-b-20'>\n";
-            $modal .= "<div class='well'><p><strong>".$locale['blog_0425']."</strong></p>".$blog_blog."</div>";
-            $modal .= $blog_extended;
+            $modal .= "<div class='well'><p><strong>".$locale['blog_0425']."</strong></p>";
+            $modal .= parse_textarea($blog_blog, FALSE, FALSE, TRUE, IMAGES_B, $data['blog_breaks'] == 'y');
+            $modal .= "</div>";
+            $modal .= parse_textarea($blog_extended, FALSE, FALSE, TRUE, IMAGES_B, $data['blog_breaks'] == 'y');
             $modal .= "</div>\n";
             $modal .= closemodal();
             add_to_footer($modal);
@@ -293,10 +295,22 @@ if ($data = getBlogData()) {
     }
     closeside();
     openside('');
-    echo "<label><input type='checkbox' name='blog_draft' value='yes' ".($data['blog_draft'] ? "checked='checked'" : "")."/> ".$locale['blog_0431']."</label><br />\n";
-    echo "<label><input type='checkbox' name='blog_sticky' value='yes' ".($data['blog_sticky'] ? "checked='checked'" : "")."/> ".$locale['blog_0432']."</label><br />\n";
+    echo form_checkbox('blog_draft', $locale['blog_0431'], $data['blog_draft'], [
+        'reverse_label' => TRUE,
+        'class'         => 'm-b-0'
+    ]);
+
+    echo form_checkbox('blog_sticky', $locale['blog_0432'], $data['blog_sticky'], [
+        'reverse_label' => TRUE,
+        'class'         => 'm-b-0'
+    ]);
+
     if (fusion_get_settings("tinymce_enabled") != 1) {
-        echo "<label><input type='checkbox' name='line_breaks' value='yes' ".($data['blog_breaks'] ? "checked='checked'" : "")."/> ".$locale['blog_0433']."</label><br />\n";
+        echo form_checkbox('blog_breaks', $locale['blog_0433'], $data['blog_breaks'], [
+            'value'         => 'y',
+            'reverse_label' => TRUE,
+            'class'         => 'm-b-0'
+        ]);
     }
     closeside();
     echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4'>\n";
@@ -313,8 +327,15 @@ if ($data = getBlogData()) {
 
         echo "<div class='well'>".sprintf($locale['blog_0149'], "<strong>$sys</strong>")."</div>\n";
     }
-    echo "<label><input type='checkbox' name='blog_allow_comments' value='yes' onclick='SetRatings();' ".($data['blog_allow_comments'] ? "checked='checked'" : "")." /> ".$locale['blog_0434']."</label><br/>";
-    echo "<label><input type='checkbox' name='blog_allow_ratings' value='yes' ".($data['blog_allow_ratings'] ? "checked='checked'" : "")."/> ".$locale['blog_0435']."</label>";
+    echo form_checkbox('blog_allow_comments', $locale['blog_0434'], $data['blog_allow_comments'], [
+        'reverse_label' => TRUE,
+        'class'         => 'm-b-0'
+    ]);
+
+    echo form_checkbox('blog_allow_ratings', $locale['blog_0435'], $data['blog_allow_ratings'], [
+        'reverse_label' => TRUE,
+        'class'         => 'm-b-0'
+    ]);
     closeside();
     echo "</div>\n</div>\n";
     echo form_button('save', $locale['blog_0437'], $locale['blog_0437'], ['class' => 'btn-success', 'icon' => 'fa fa-hdd-o']);
