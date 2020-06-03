@@ -257,7 +257,7 @@ if (!defined('LOCALESET'))
     define('LOCALESET', $current_user_language.'/');
 
 \PHPFusion\Locale::setLocale(LOCALE.LOCALESET.'global.php');
-$setlocale = empty(fusion_get_locale('setlocale')) ? 'en_GB' : '';
+$setlocale = empty(fusion_get_locale('setlocale')) ? 'en_GB' : fusion_get_locale('setlocale');
 $win = explode('_', $setlocale);
 setlocale(LC_ALL, $setlocale.'.UTF-8', $win[0]);
 
