@@ -156,7 +156,7 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
         make_page_breadcrumbs($link_index, $link_data, "link_id", "link_name", "link_cat");
 
         opentable($this->locale['SL_0012']);
-        echo opentab($master_title, (isset($_GET['section']) ? $_GET['section'] : "links"), 'link', TRUE);
+        echo opentab($master_title, (isset($_GET['section']) ? $_GET['section'] : "links"), 'link', TRUE, "", "section", ['ref', 'action', 'link_id', 'link_cat']);
         if (isset($_GET['section']) && $_GET['section'] == "settings") {
             $this->display_sitelinks_settings();
         } else {
@@ -327,7 +327,7 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
                 }
 
                 if (isset($_POST['save_and_close'])) {
-                    redirect(clean_request("link_cat=".$this->data['link_cat'], ['ref'], FALSE));
+                    redirect(clean_request("link_cat=".$this->data['link_cat'], ['ref', 'action', 'link_id'], FALSE));
                 } else {
                     redirect(FUSION_REQUEST);
                 }
