@@ -32,8 +32,7 @@ if ($settings['site_seo'] && !isset($_GET['aid'])) {
         if (isset($_GET['lang']) && valid_language($_GET['lang'])) {
             $lang = stripinput($_GET['lang']);
             set_language($lang);
-            $redirectPath = clean_request("", ["lang"], FALSE);
-            redirect($redirectPath, FALSE, FALSE, 301);
+            redirect(BASEDIR.$settings['opening_page'], FALSE, FALSE, 301);
         } else {
             if (isset($_GET['logout']) && $_GET['logout'] == "yes") {
                 $userdata = Authenticate::logOut();
