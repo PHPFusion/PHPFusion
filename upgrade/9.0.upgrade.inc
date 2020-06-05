@@ -114,7 +114,6 @@ if (db_exists(DB_SETTINGS)) {
         'bootstrap'         => 1,
         'entypo'            => 0,
         'fontawesome'       => 1,
-        'comments_jquery'   => 1,
         'allow_php_exe'     => 0,
         'privacy_policy'    => '',
         'create_og_tags'    => 1,

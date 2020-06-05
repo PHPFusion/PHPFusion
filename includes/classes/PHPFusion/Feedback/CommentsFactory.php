@@ -2,9 +2,9 @@
 namespace PHPFusion\Feedback;
 
 abstract class CommentsFactory {
-    
+
     protected static $instance = NULL;
-    
+
     /**
      * @var array
      * comment_item_type -
@@ -53,26 +53,25 @@ abstract class CommentsFactory {
     protected $userdata = [];
     protected $postLink = '';
     protected $jquery = FALSE;
-    
+
     public function __construct() {
-        $this->jquery = FALSE; //fusion_get_settings('comments_jquery') ? TRUE : FALSE;
         $this->userdata = fusion_get_userdata();
         $this->postLink = FUSION_SELF.( FUSION_QUERY ? "?".FUSION_QUERY : "" );
         $this->postLink = preg_replace( "^(&amp;|\?)c_action=(edit|delete)&amp;comment_id=\d*^", "", $this->postLink );
     }
-    
+
     public function getCommentHash() {
         return sha1( $this->params['comment_item_type'].'.'.$this->params['comment_item_id'].'.'.time() );
     }
-    
+
     public function getCCId() {
         return $this->params['comment_item_id'];
     }
-    
+
     public function getCCType() {
         return $this->params['comment_item_type'];
     }
-    
+
     /**
      * Get Comment Object Parameter
      *
@@ -84,10 +83,10 @@ abstract class CommentsFactory {
         if ( $key !== NULL ) {
             return isset( $this->params[ $key ] ) ? $this->params[ $key ] : NULL;
         }
-        
+
         return $this->params;
     }
-    
+
     /**
      * Set Comment Object Parameters
      *
@@ -96,7 +95,7 @@ abstract class CommentsFactory {
     protected function setParams( array $params = [] ) {
         $this->params = $params;
     }
-    
+
     /**
      * Replace Comment Object Parameter
      *
@@ -108,6 +107,6 @@ abstract class CommentsFactory {
             $this->params[ $param ] = $value;
         }
     }
-    
-    
+
+
 }
