@@ -66,7 +66,7 @@ class DbBackupAdministration {
         global $db_name, $db_prefix, $db_driver, $pdo_enabled;
         if (isset($_POST['btn_create_backup'])) {
             ini_set('max_execution_time', 0);
-            if (function_exists('set_time_limit')) {
+            if (!ini_get('safe_mode')) {
                 set_time_limit(600);
             }
 
