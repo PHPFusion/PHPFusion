@@ -60,6 +60,12 @@ function write_htaccess() {
     $htc .= "    deny from all".PHP_EOL;
     $htc .= "</Files>".PHP_EOL.PHP_EOL;
 
+    $htc .= "# Secure .twig files".PHP_EOL;
+    $htc .= "<Files *.twig>".PHP_EOL;
+    $htc .= "    Order allow,deny".PHP_EOL;
+    $htc .= "    deny from all".PHP_EOL;
+    $htc .= "</Files>".PHP_EOL.PHP_EOL;
+
     // Error pages
     $htc .= "ErrorDocument 400 ".$site_path."error.php?code=400".PHP_EOL;
     $htc .= "ErrorDocument 401 ".$site_path."error.php?code=401".PHP_EOL;
