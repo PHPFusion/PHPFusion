@@ -66,7 +66,10 @@ class DbBackupAdministration {
         global $db_name, $db_prefix, $db_driver, $pdo_enabled;
         if (isset($_POST['btn_create_backup'])) {
             ini_set('max_execution_time', 0);
-            set_time_limit(600);
+            if (function_exists('set_time_limit')) {
+                set_time_limit(600);
+            }
+
             if (!check_admin_pass(isset($_POST['user_admin_password']) ? form_sanitizer($_POST['user_admin_password'], '', 'user_admin_password') : "")) {
                 Defender::stop();
             }
