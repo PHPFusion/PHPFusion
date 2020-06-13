@@ -384,7 +384,10 @@ class elFinderVolumeFTP extends elFinderVolumeDriver
             $lastyear = date('Y') - 1;
         }
 
-        $info = preg_split("/\s+/", $raw, 9);
+        $info = preg_split("/\s+/", $raw, 8);
+        if (isset($info[7])) {
+        	list($info[7], $info[8]) = explode(' ', $info[7], 2);
+        }
         $stat = array();
 
         if (!isset($this->ftpOsUnix)) {
