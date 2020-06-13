@@ -16,6 +16,8 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
+use PHPFusion\Admins;
+
 add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/jquery.cookie.js'></script>");
 
 // Dashboard template
@@ -422,7 +424,7 @@ function admin_nav($style = FALSE) {
 
         $html = "<ul class='admin-horizontal-link'>\n";
         for ($i = 0; $i < 6; $i++) {
-            $active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && admin_active() == $i) ? 1 : 0;
+            $active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && Admins::getInstance()->_isActive() == $i) ? 1 : 0;
             $html .= "<li class='".($active ? 'active panel' : 'panel')."' >\n";
             $html .= "<li><a href='".ADMIN.$aidlink."&amp;pagenum=$i' alt='".$locale['ac0'.$i]."'><i class='".$admin_icon[$i]."'></i> <span class='hidden-xs hidden-sm hidden-md'>".$locale['ac0'.$i]."</a></span></li>\n";
         }
@@ -431,7 +433,7 @@ function admin_nav($style = FALSE) {
         $html = "<ul id='adl' class='admin-vertical-link'>\n";
         for ($i = 0; $i < 6; $i++) {
             $result = dbquery("SELECT * FROM ".DB_ADMIN." WHERE admin_page='".$i."' AND admin_link !='reserved' ORDER BY admin_title ASC");
-            $active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && admin_active() == $i) ? 1 : 0;
+            $active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && Admins::getInstance()->_isActive() == $i) ? 1 : 0;
 
             $html .= "<li class='".($active ? 'active panel' : 'panel')."' >\n";
             if ($i == 0) {
@@ -477,33 +479,8 @@ function closetable() {
     echo "</div>\n</div>\n";
 }
 
-function admin_active() {
-    $pages = [1 => FALSE, 2 => FALSE, 3 => FALSE, 4 => FALSE, 5 => FALSE];
-    $index_link = FALSE;
-
-    $result = dbquery("SELECT admin_title, admin_page, admin_rights, admin_link FROM ".DB_ADMIN." ORDER BY admin_page DESC, admin_title ASC");
-    $rows = dbrows($result);
-    $admin_url = [];
-    while ($data = dbarray($result)) {
-        if ($data['admin_link'] != "reserved" && checkrights($data['admin_rights'])) {
-            $admin_pages[$data['admin_page']][$data['admin_title']] = $data['admin_link'];
-        }
-    }
-
-    foreach ($admin_pages as $key => $data) {
-        if (in_array(FUSION_SELF, $data)) {
-            return $key;
-        }
-    }
-    return '0';
-}
-
 function render_admin_login() {
     global $locale, $aidlink, $userdata, $settings;
-
-    $admin_password = '';
-    $login_error = "";
-    $form_action = "";
 
     add_to_head("<link rel='stylesheet' href='".THEMES."admin_themes/Venus/admin_login.css' type='text/css' />");
     echo "<section class='login-bg'>\n";

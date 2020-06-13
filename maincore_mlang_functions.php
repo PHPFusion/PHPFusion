@@ -74,7 +74,7 @@ function get_available_languages_list($selected_language = "") {
 }
 
 // Create a selection list of possible languages in array
-function get_available_languages_array($language_list = "") {
+function get_available_languages_array($language_list = []) {
     global $enabled_languages;
     $res = "";
     for ($i = 0; $i < sizeof($language_list); $i++) {

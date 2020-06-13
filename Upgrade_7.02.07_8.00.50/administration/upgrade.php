@@ -122,7 +122,6 @@ if (str_replace(".", "", $settings['version']) < "80022") {
                     $content .= "<input type='hidden' name='stage' value='3'>\n";
                     $content .= "<br /><input type='submit' name='write_htaccess' value='Continue' class='button btn btn-primary pull-right'><br /><br />\n";
                     $content .= "</div>\n";
-                    break;
                 } else {
                     // create a new .htaccess file
                     $htc = "# Force utf-8 charset".PHP_EOL;
@@ -167,6 +166,7 @@ if (str_replace(".", "", $settings['version']) < "80022") {
                         echo "<div class='alert alert-success'>The contents of .htaccess were updated</div>";
                     }
                 }
+                break;
             case 4:
                 $content .= "<div class='panel panel-default display-inline-block' style='margin-top:10px; padding: 8px; text-align:left;'>\n";
                 $content .= "<p class='p-15'>Several changes will be made to the database. <br />

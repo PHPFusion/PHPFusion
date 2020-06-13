@@ -175,7 +175,7 @@ class AdminPanel {
     private function MainSidebar() {
         $locale = fusion_get_locale();
         $userdata = fusion_get_userdata();
-        $useronline = $userdata['user_lastvisit'] >= time() - 900 ? TRUE : FALSE;
+        $useronline = $userdata['user_lastvisit'] >= time() - 900;
 
         $this->SearchAjax();
 
@@ -253,7 +253,7 @@ class AdminPanel {
 
         echo '<ul id="adl" class="sidebar-menu" data-widget="tree">';
             foreach ($admin_sections as $i => $section_name) {
-                $active = ((isset($_GET['pagenum']) && $_GET['pagenum'] == $i) || (!isset($_GET['pagenum']) && Admins::getInstance()->_isActive() == $i)) ? TRUE : FALSE;
+                $active = ((isset($_GET['pagenum']) && $_GET['pagenum'] == $i) || (!isset($_GET['pagenum']) && Admins::getInstance()->_isActive() == $i));
 
                 if (!empty($admin_pages[$i])) {
                     echo '<li class="treeview'.($active ? ' active' : '').'">';
@@ -267,7 +267,7 @@ class AdminPanel {
                         echo '<ul class="treeview-menu">';
                             foreach ($admin_pages[$i] as $key => $data) {
                                 if (checkrights($data['admin_rights'])) {
-                                    $sub_active = $data['admin_link'] == Admins::getInstance()->_currentPage() ? TRUE : FALSE;
+                                    $sub_active = $data['admin_link'] == Admins::getInstance()->_currentPage();
 
                                     $title = $data['admin_title'];
                                     if ($data['admin_page'] !== 5) {
@@ -464,10 +464,6 @@ class AdminPanel {
             }
         }
 
-        return self::$messages;
-    }
-
-    public static function GetMessages() {
         return self::$messages;
     }
 

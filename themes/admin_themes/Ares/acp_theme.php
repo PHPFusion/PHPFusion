@@ -33,16 +33,8 @@ define('BOOTSTRAP', TRUE);
 define('ENTYPO', TRUE);
 define('FONTAWESOME', TRUE);
 
-define("IS_V9", (version_compare(fusion_get_settings('version'), '8.0', (strpos(fusion_get_settings('version'), '9.') === 0 ? '>' : '<'))) ? TRUE : FALSE);
-
-if (IS_V9) {
-    if (!check_admin_pass('')) {
-        define('THEME_BODY', '<body class="login-page">');
-    }
-} else {
-    if (!check_admin_pass('') && !stristr($_SERVER['PHP_SELF'], $settings['site_path'].'infusions')) {
-        define('THEME_BODY', '<body class="login-page">');
-    }
+if (!check_admin_pass('') && !stristr($_SERVER['PHP_SELF'], $settings['site_path'].'infusions')) {
+    define('THEME_BODY', '<body class="login-page">');
 }
 
 function render_admin_panel() {
@@ -88,17 +80,11 @@ function closetable() {
     echo $html;
 }
 
-if (!IS_V9) {
-    \PHPFusion\OutputHandler::addHandler(function ($output = '') {
-        return strtr($output, [
-            'class=\'textbox' => 'class=\'textbox form-control m-t-5 m-b-5',
-            'class="textbox'  => 'class="textbox form-control m-t-5 m-b-5',
-            'class=\'button'  => 'class=\'button btn btn-default',
-            'class="button'   => 'class="button btn btn-default'
-        ]);
-    });
-} else {
-    if (fusion_get_settings('version') === '9.0') {
-        \PHPFusion\Admins::getInstance()->setAdminBreadcrumbs();
-    }
-}
+\PHPFusion\OutputHandler::addHandler(function ($output = '') {
+    return strtr($output, [
+        'class=\'textbox' => 'class=\'textbox form-control m-t-5 m-b-5',
+        'class="textbox'  => 'class="textbox form-control m-t-5 m-b-5',
+        'class=\'button'  => 'class=\'button btn btn-default',
+        'class="button'   => 'class="button btn btn-default'
+    ]);
+});

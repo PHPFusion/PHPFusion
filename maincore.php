@@ -157,7 +157,6 @@ $forum_rank_cache = "";
 $forum_mod_rank_cache = "";
 $locale = [];
 
-
 // Calculate ROOT path for Permalinks
 $current_path = html_entity_decode($_SERVER['REQUEST_URI']);
 if (isset($settings['site_path']) && strcmp($settings['site_path'], "/") != 0) {
@@ -211,7 +210,7 @@ require_once CLASSES."Authenticate.class.php";
 
 // Log in user
 if (isset($_POST['login']) && isset($_POST['user_name']) && isset($_POST['user_pass'])) {
-    $auth = new Authenticate($_POST['user_name'], $_POST['user_pass'], (isset($_POST['remember_me']) ? TRUE : FALSE));
+    $auth = new Authenticate($_POST['user_name'], $_POST['user_pass'], (isset($_POST['remember_me'])));
     $userdata = $auth->getUserData();
     unset($auth, $_POST['user_name'], $_POST['user_pass']);
 } else if (isset($_GET['logout']) && $_GET['logout'] == "yes") {
@@ -280,6 +279,8 @@ require_once INCLUDES."error_handling_include.php";
 
 // Load the Global language file
 include LOCALE.LOCALESET."global.php";
+$setlocale = empty($locale['setlocale']) ? 'en_GB' : $locale['setlocale'];
+setlocale(LC_ALL, $setlocale.'.UTF-8');
 
 if (iADMIN) {
     define("iAUTH", substr(md5($userdata['user_password'].USER_IP), 16, 16));
@@ -361,14 +362,14 @@ function check_admin_pass($password) {
 
 }
 
-function set_status_header( $code = 200 ) {
-    if ( headers_sent() ) {
+function set_status_header($code = 200) {
+    if (headers_sent()) {
         return FALSE;
     }
 
     $protocol = $_SERVER['SERVER_PROTOCOL'];
 
-    if ( 'HTTP/1.1' != $protocol && 'HTTP/1.0' != $protocol ) {
+    if ('HTTP/1.1' != $protocol && 'HTTP/1.0' != $protocol) {
         $protocol = 'HTTP/1.0';
     }
 
@@ -426,25 +427,25 @@ function set_status_header( $code = 200 ) {
         510 => 'Not Extended'
     ];
 
-    $desc = isset( $desc[ $code ] ) ? $desc[ $code ] : '';
+    $desc = isset($desc[$code]) ? $desc[$code] : '';
 
-    header( "$protocol $code $desc" );
+    header("$protocol $code $desc");
 
     return TRUE;
 }
 
-function redirect( $location, $delay = FALSE, $script = FALSE, $code = 200 ) {
-    if ( !defined( 'STOP_REDIRECT' ) ) {
-        if ( isnum( $delay ) ) {
+function redirect($location, $delay = FALSE, $script = FALSE, $code = 200) {
+    if (!defined('STOP_REDIRECT')) {
+        if (isnum($delay)) {
             $ref = "<meta http-equiv='refresh' content='$delay; url=".$location."' />";
-            add_to_head( $ref );
+            add_to_head($ref);
         } else {
-            if ( $script == FALSE && !headers_sent() ) {
-                set_status_header( $code );
-                header( "Location: ".str_replace( "&amp;", "&", $location ) );
+            if ($script == FALSE && !headers_sent()) {
+                set_status_header($code);
+                header("Location: ".str_replace("&amp;", "&", $location));
                 exit;
             } else {
-                echo "<script type='text/javascript'>document.location.href='".str_replace( "&amp;", "&", $location )."'</script>\n";
+                echo "<script type='text/javascript'>document.location.href='".str_replace("&amp;", "&", $location)."'</script>\n";
                 exit;
             }
         }
@@ -835,7 +836,7 @@ if ($settings['mime_check'] == "1") {
     // Checking file types of the uploaded file with known mime types list to prevent uploading unwanted files
     if (isset($_FILES) && count($_FILES)) {
         require_once INCLUDES."mimetypes_include.php";
-        $mime_types = mimeTypes();
+        $mime_types = (array)mimeTypes();
         foreach ($_FILES as $each) {
             if (isset($each['name']) && strlen($each['tmp_name'])) {
                 $file_info = pathinfo($each['name']);
@@ -1243,10 +1244,9 @@ function fusion_get_aidlink() {
 
 function fusion_parse_user($user_name, $tooltip = "") {
     $user_regex = '@[-0-9A-Z_\.]{1,50}';
-    $text = preg_replace_callback("#$user_regex#im", function ($user_name) use ($tooltip) {
+    return preg_replace_callback("#$user_regex#im", function ($user_name) use ($tooltip) {
         return render_user_tags($user_name, $tooltip);
     }, $user_name);
-    return $text;
 }
 
 function fusion_get_userdata($key = NULL) {
@@ -1457,7 +1457,7 @@ function infusion_exists($infusion_folder) {
             }
         }
     }
-    return (boolean)(isset($infusions_installed[$infusion_folder])) ? TRUE : FALSE;
+    return (boolean)(isset($infusions_installed[$infusion_folder]));
 }
 
 function db_exists($table) {
@@ -1514,7 +1514,7 @@ function column_exists($table, $column, $add_prefix = TRUE) {
         $table_config[$table] = array_flip(fieldgenerator($table));
     }
 
-    return (isset($table_config[$table][$column]) ? TRUE : FALSE);
+    return (isset($table_config[$table][$column]));
 }
 
 /**

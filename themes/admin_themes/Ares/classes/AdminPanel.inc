@@ -53,7 +53,7 @@ class AdminPanel {
                                 $html .= '<ul class="dropdown-menu">';
                                     $i = 0;
                                     foreach ($sections as $section_name) {
-                                        $active = ((isset($_GET['pagenum']) && $this->pagenum === $i) || (!$this->pagenum && Admins::getInstance()->_isActive() === $i)) ? TRUE : FALSE;
+                                        $active = ((isset($_GET['pagenum']) && $this->pagenum === $i) || (!$this->pagenum && Admins::getInstance()->_isActive() === $i));
                                         $html .= '<li'.($active ? ' class="active"' : '').'><a href="'.ADMIN.'index.php'.$aidlink.'&amp;pagenum='.$i.'">'.Admins::getInstance()->get_admin_section_icons($i).' '.$section_name.'</a></li>';
                                         $i++;
                                     }
@@ -80,7 +80,6 @@ class AdminPanel {
                                 $html .= '<li><a href="'.BASEDIR.'edit_profile.php"><i class="fa fa-pencil fa-fw"></i> '.$locale['UM080'].'</a></li>';
                                 $html .= '<li><a href="'.BASEDIR.'profile.php?lookup='.$userdata['user_id'].'"><i class="fa fa-eye fa-fw"></i> '.$locale['view'].' '.$locale['profile'].'</a></li>';
                                 $html .= '<li class="divider"></li>';
-                                $html .= IS_V9 ? '<li><a href="'.FUSION_REQUEST.'&amp;logout"><i class="fa fa-sign-out fa-fw"></i> '.$locale['admin-logout'].'</a></li>' : '';
                                 $html .= '<li><a href="'.BASEDIR.'index.php?logout=yes"><i class="fa fa-sign-out fa-fw"></i> '.$locale['logout'].'</a></li>';
                             $html .= '</ul>';
                         $html .= '</li>';
@@ -117,7 +116,7 @@ class AdminPanel {
                 $admin_pages = Admins::getInstance()->getAdminPages();
 
                 foreach ($admin_sections as $i => $section_name) {
-                    $active = ((isset($_GET['pagenum']) && $this->pagenum === $i) || (!$this->pagenum && Admins::getInstance()->_isActive() === $i)) ? TRUE : FALSE;
+                    $active = ((isset($_GET['pagenum']) && $this->pagenum === $i) || (!$this->pagenum && Admins::getInstance()->_isActive() === $i));
 
                     if (!empty($admin_pages[$i])) {
                         $html .= '<li class="ares-mitem dropdown'.($active ? ' active' : '').'">';
@@ -129,7 +128,7 @@ class AdminPanel {
                             $html .= '<ul class="collapse'.($active ? ' in' : '').'" id="aresnavsection'.$i.'">';
                                 foreach ($admin_pages[$i] as $key => $data) {
                                     if (checkrights($data['admin_rights'])) {
-                                        $sub_active = $data['admin_link'] == Admins::getInstance()->_currentPage() ? TRUE : FALSE;
+                                        $sub_active = $data['admin_link'] == Admins::getInstance()->_currentPage();
 
                                         $title = $data['admin_title'];
                                         if ($data['admin_page'] !== 5) {
@@ -179,16 +178,10 @@ class AdminPanel {
             $html .= '</div>';
 
             $html .= '<footer class="p-15">';
-                if (function_exists('showFooterErrors')) {
-                    $html .= showFooterErrors();
-                } else {
-                    if (!IS_V9) {
-                        global $_errorHandler;
+                global $_errorHandler;
 
-                        if (iADMIN && checkrights('ERRO') && count($_errorHandler) > 0) {
-                            $html .= '<div>'.str_replace('[ERROR_LOG_URL]', ADMIN.'errors.php'.fusion_get_aidlink(), $locale['err_101']).'</div>';
-                        }
-                    }
+                if (iADMIN && checkrights('ERRO') && count($_errorHandler) > 0) {
+                    $html .= '<div>'.str_replace('[ERROR_LOG_URL]', ADMIN.'errors.php'.fusion_get_aidlink(), $locale['err_101']).'</div>';
                 }
 
                 if (fusion_get_settings('rendertime_enabled')) {
