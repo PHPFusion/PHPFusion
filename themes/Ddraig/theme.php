@@ -347,7 +347,7 @@ function opentable($title, $custom_class = "", $info = [], $type = "") {
     }
 
     //Wrapp panel in div with class based on panel name
-    $class = $p_data['panel_filename'];
+    $class = !empty($p_data['panel_filename']) ? $p_data['panel_filename'] : '';
     if ($class == "" && $custom_class == "") {
         //Panel with no custom class and no panel name file
         $class = "panel";
