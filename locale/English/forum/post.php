@@ -81,13 +81,8 @@ $locale['531'] = "Search Keyword(s)";
 $locale['532'] = "Search";
 // Forum Notification Email
 $locale['550'] = "Thread Reply Notification - {THREAD_SUBJECT}";
-$locale['551'] = "Hello {USERNAME},
-
-A reply has been posted in the forum thread '{THREAD_SUBJECT}' which you are tracking at ".$settings['sitename'].". You can use the following link to view the reply:
-
-{THREAD_URL}
-
-If you no longer wish to watch this thread you can click the 'Stop tracking this thread' link located at the top of the thread.
-
-Regards,
-".$settings['siteusername'].".";
+$locale['551'] = "Hello {USERNAME},\r\n
+A reply has been posted in the forum thread '{THREAD_SUBJECT}' which you are tracking at [SITENAME] You can use the following link to view the reply:\r\n
+{THREAD_URL}\r\n
+If you no longer wish to watch this thread you can click the 'Stop tracking this thread' link located at the top of the thread.\r\n
+Regards,<br/>\r\n[SITEUSERNAME]";

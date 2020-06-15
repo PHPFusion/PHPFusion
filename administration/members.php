@@ -16,7 +16,9 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
-if (!checkrights("M") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {redirect("../index.php");}
+if (!checkrights("M") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
+    redirect("../index.php");
+}
 
 require_once THEMES."templates/admin_header.php";
 require_once INCLUDES."suspend_include.php";
@@ -78,17 +80,19 @@ if (isset($_POST['cancel'])) {
 
         $result = dbquery(
             "SELECT user_id, user_name, user_email, user_password FROM ".DB_USERS."
-			WHERE user_level<'103' AND user_lastvisit<'".$time_overdue."' AND user_actiontime='0' AND user_status='0'
-			LIMIT 0,50"
+            WHERE user_level<'103' AND user_lastvisit<'".$time_overdue."' AND user_actiontime='0' AND user_status='0'
+            LIMIT 0,50"
         );
 
         while ($data = dbarray($result)) {
             $code = md5($response_required.$data['user_password']);
-            $message = str_replace("[CODE]", $code, $locale['email_deactivate_message']);
-            $message = str_replace("[USER_NAME]", $data['user_name'], $message);
-            $message = str_replace("[USER_ID]", $data['user_id'], $message);
+            $message = str_replace(
+                ["[CODE]", "[USER_NAME]", "[USER_ID]", '[DEACTIVATION_PERIOD]', '[SITENAME]', '[REACTIVATION_LINK]', '[SITEUSERNAME]'],
+                [$code, $data['user_name'], $data['user_id'], $settings['deactivation_period'], $settings['sitename'], $settings['siteurl'].'reactivate.php?user_id='.$data['user_id'].'&code='.$code, $settings['siteusername']],
+                $locale['email_deactivate_message']
+            );
 
-            if (sendemail($data['user_name'], $data['user_email'], $settings['siteusername'], $settings['siteemail'], $locale['email_deactivate_subject'], $message)) {
+            if (sendemail($data['user_name'], $data['user_email'], $settings['siteusername'], $settings['siteemail'], $locale['email_deactivate_subject'].$settings['sitename'], $message)) {
                 $result2 = dbquery("UPDATE ".DB_USERS." SET user_status='7', user_actiontime='".$response_required."' WHERE user_id='".$data['user_id']."'");
                 suspend_log($data['user_id'], 7, $locale['621']);
             }
@@ -332,9 +336,12 @@ if (isset($_POST['cancel'])) {
             } else {
                 $result = dbquery("UPDATE ".DB_USERS." SET user_status='1', user_actiontime='0' WHERE user_id='".$user_id."'");
                 suspend_log($user_id, 1, stripinput($_POST['ban_reason']));
-                $message = str_replace("[USER_NAME]", $udata['user_name'], $locale['email_ban_message']);
-                $message = str_replace("[REASON]", stripinput($_POST['ban_reason']), $message);
-                sendemail($udata['user_name'], $udata['user_email'], $settings['siteusername'], $settings['siteemail'], $locale['email_ban_subject'], $message);
+                $message = str_replace(
+                    ["[USER_NAME]", "[REASON]", '[SITENAME]', '[ADMIN_USERNAME]', '[SITENAME]', '[SITEUSERNAME]'],
+                    [$udata['user_name'], stripinput($_POST['ban_reason']), $settings['sitename'], $userdata['user_name'], $settings['siteemail'], $settings['siteusername']],
+                    $locale['email_ban_message']
+                );
+                sendemail($udata['user_name'], $udata['user_email'], $settings['siteusername'], $settings['siteemail'], str_replace('[SITENAME]', $settings['sitename'], $locale['email_ban_subject']), $message);
                 redirect(USER_MANAGEMENT_SELF."&status=bad");
             }
         } else {
@@ -371,7 +378,7 @@ if (isset($_POST['cancel'])) {
         $result = dbquery("UPDATE ".DB_USERS." SET user_status='0', user_actiontime='0' WHERE user_id='".$user_id."'");
         suspend_log($user_id, 2);
         $subject = $locale['email_activate_subject'].$settings['sitename'];
-        $message = str_replace("[USER_NAME]", $udata['user_name'], $locale['email_activate_message']);
+        $message = str_replace(["[USER_NAME]", "[SITENAME]", "[SITEUSERNAME]"], [$udata['user_name'], $settings['sitename'], $settings['siteusername']], $locale['email_activate_message']);
         sendemail($udata['user_name'], $udata['user_email'], $settings['siteusername'], $settings['siteemail'], $subject, $message);
         redirect(USER_MANAGEMENT_SELF."&status=aok");
     } else {
@@ -394,10 +401,12 @@ if (isset($_POST['cancel'])) {
                 $actiontime = (isset($_POST['suspend_duration']) && isnum($_POST['suspend_duration']) ? $_POST['suspend_duration'] * 86400 : 864000) + time();
                 $result = dbquery("UPDATE ".DB_USERS." SET user_status='3', user_actiontime='$actiontime' WHERE user_id='".$user_id."'");
                 suspend_log($user_id, 3, stripinput($_POST['suspend_reason']));
-                $message = str_replace("[USER_NAME]", $udata['user_name'], $locale['email_suspend_message']);
-                $message = str_replace("[DATE]", showdate('longdate', $actiontime), $message);
-                $message = str_replace("[REASON]", stripinput($_POST['suspend_reason']), $message);
-                sendemail($udata['user_name'], $udata['user_email'], $settings['siteusername'], $settings['siteemail'], $locale['email_suspend_subject'], $message);
+                $message = str_replace(
+                    ["[USER_NAME]", "[DATE]", "[REASON]", '[SITENAME]', '[ADMIN_USERNAME]', '[SITEUSERNAME]'],
+                    [$udata['user_name'],  showdate('longdate', $actiontime), stripinput($_POST['suspend_reason']), $settings['sitename'], $userdata['user_name'], $settings['siteusername']],
+                    $locale['email_suspend_message']
+                );
+                sendemail($udata['user_name'], $udata['user_email'], $settings['siteusername'], $settings['siteemail'], str_replace('[SITENAME]', $settings['sitename'], $locale['email_suspend_subject']), $message);
                 redirect(USER_MANAGEMENT_SELF."&status=sad");
             }
         } else {
@@ -446,8 +455,12 @@ if (isset($_POST['cancel'])) {
             } else {
                 $result = dbquery("UPDATE ".DB_USERS." SET user_status='4', user_actiontime='0' WHERE user_id='".$user_id."'");
                 suspend_log($user_id, 4, stripinput($_POST['sban_reason']));
-                $message = str_replace("[USER_NAME]", $udata['user_name'], $locale['email_secban_message']);
-                sendemail($udata['user_name'], $data['user_email'], $settings['siteusername'], $settings['siteemail'], $locale['email_secban_subject'], $message);
+                $message = str_replace(
+                    ["[USER_NAME]", '[SITENAME]', '[ADMIN_USERNAME]', '[SITEUSERNAME]'],
+                    [$udata['user_name'], $settings['sitename'], $userdata['user_name'], $settings['siteusername']],
+                    $locale['email_secban_message']
+                );
+                sendemail($udata['user_name'], $data['user_email'], $settings['siteusername'], $settings['siteemail'], str_replace('[SITENAME]', $settings['sitename'], $locale['email_secban_subject']), $message);
                 redirect(USER_MANAGEMENT_SELF."&status=sbad");
             }
         } else {
@@ -520,9 +533,11 @@ if (isset($_POST['cancel'])) {
             require_once INCLUDES."sendmail_include.php";
 
             $code = md5($response_required.$data['user_password']);
-            $message = str_replace("[CODE]", $code, $locale['email_deactivate_message']);
-            $message = str_replace("[USER_NAME]", $data['user_name'], $message);
-            $message = str_replace("[USER_ID]", $data['user_id'], $message);
+            $message = str_replace(
+                ["[CODE]", "[USER_NAME]", "[USER_ID]", '[DEACTIVATION_PERIOD]', '[SITENAME]', '[REACTIVATION_LINK]', '[SITEUSERNAME]'],
+                [$code, $data['user_name'], $data['user_id'], $settings['deactivation_period'], $settings['sitename'], $settings['siteurl'].'reactivate.php?user_id='.$data['user_id'].'&code='.$code, $settings['siteusername']],
+                $locale['email_deactivate_message']
+            );
 
             if (sendemail($data['user_name'], $data['user_email'], $settings['siteusername'], $settings['siteemail'], $locale['email_deactivate_subject'], $message)) {
                 $result = dbquery("UPDATE ".DB_USERS." SET user_status='7', user_actiontime='".$response_required."' WHERE user_id='".$user_id."'");

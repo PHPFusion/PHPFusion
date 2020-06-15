@@ -102,7 +102,7 @@ for ($i = 0; $i < $c_available - 1; $i++) {
 }
 sort($radio_button);
 
-opentable($locale['400']);
+opentable(str_replace('[SITENAME]', $settings['sitename'], $locale['400']));
 
 // maybe rewrite with jQuery
 $search_js = "<script type='text/javascript'>\n/*<![CDATA[*/\n";

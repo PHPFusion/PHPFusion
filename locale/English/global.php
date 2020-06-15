@@ -162,8 +162,8 @@ $locale['global_101c'] = "Enter Email or Username";
 $locale['global_102'] = "Password";
 $locale['global_103'] = "Stay signed in";
 $locale['global_104'] = "Sign In";
-$locale['global_105'] = "Not a member yet? <br /><a href='".BASEDIR."register.php'>Click here</a> to register.";
-$locale['global_106'] = "Forgotten your password?<br />Request a new one <a href='".BASEDIR."lostpassword.php' class='side'>here</a>.";
+$locale['global_105'] = "Not a member yet? [LINK]Click here[/LINK] to register.";
+$locale['global_106'] = "[LINK]Forgot Password?[/LINK]";
 $locale['global_107'] = "Register";
 $locale['global_108'] = "Lost password";
 $locale['global_109'] = "Sign Up";
@@ -201,8 +201,8 @@ $locale['UM061b'] = "Username or Email";
 $locale['UM062'] = "Password";
 $locale['UM063'] = "Remember me on this computer";
 $locale['UM064'] = "Login";
-$locale['UM065'] = "Not a member yet?<br /><a href='".BASEDIR."register.php' class='side'>Click here</a> to register.";
-$locale['UM066'] = "Forgotten your password?<br />Request a new one <a href='".BASEDIR."lostpassword.php' class='side'>here</a>.";
+$locale['UM065'] = "Not a member yet? [LINK]Click here[/LINK] to register.";
+$locale['UM066'] = "Forgotten your password?<br/>[LINK]Request a new one[/LINK].";
 $locale['UM067'] = "(not recommended on public or shared computer)";
 $locale['UM080'] = "Edit Profile";
 $locale['UM081'] = "Private Messages";
@@ -257,10 +257,9 @@ $locale['global_193'] = "Could not set document cookie. Please make sure you hav
 $locale['global_194'] = "This account is currently suspended.";
 $locale['global_195'] = "This account has not been activated.";
 $locale['global_196'] = "Invalid username or password.";
-$locale['global_197'] = "Please wait while we transfer you...<br /><br />
-[ <a href='index.php'>Or click here if you do not wish to wait</a> ]";
+$locale['global_197'] = "Please wait while we transfer you...<br/>[ [LINK]Or click here if you do not wish to wait[/LINK] ]";
 $locale['global_198'] = "WARNING: INSTALLER DETECTED, PLEASE DELETE THE SETUP.PHP FILE IMMEDIATELY.";
-$locale['global_199'] = "<strong>Warning:</strong> admin password not set, click <a href='".BASEDIR."edit_profile.php'>Edit Profile</a> to set it.";
+$locale['global_199'] = "WARNING: admin password not set, click [LINK]Edit Profile[/LINK] to set it.";
 //Titles
 $locale['global_200'] = " - ";
 $locale['global_201'] = ": ";

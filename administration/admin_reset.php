@@ -85,12 +85,47 @@ if (isset($_POST['reset_admins']) && isset($_POST['reset_message']) && isset($_P
                     $locale['409']
                 );
 
+                $message = str_replace(
+                    [
+                        "[SITEURL]",
+                        "[USER_NAME]",
+                        "[NEW_PASS]",
+                        "[NEW_ADMIN_PASS]",
+                        "[ADMIN]",
+                        "[RESET_MESSAGE]"
+                    ],
+                    [
+                        "<a href='".$settings['siteurl']."'>".$settings['sitename']."</a>",
+                        $data['user_name'],
+                        $newLoginPass,
+                        $newAdminPass,
+                        $userdata['user_name'],
+                        $reset_message
+                    ], $locale['409']);
+
                 $loginPassIsReset = ($loginPass->isValidNewPassword() === 0 ? TRUE : FALSE);
             } else {
                 $message = str_replace(
                     ["[USER_NAME]", "[NEW_ADMIN_PASS]", "[ADMIN]", "[RESET_MESSAGE]"],
                     [$data['user_name'], $newAdminPass, $userdata['user_name'], $reset_message],
                     $locale['408']
+                );
+
+                $message = str_replace(
+                    [
+                        "[SITEURL]",
+                        "[USER_NAME]",
+                        "[NEW_ADMIN_PASS]",
+                        "[ADMIN]",
+                        "[RESET_MESSAGE]"
+                    ],
+                    [
+                        "<a href='".$settings['siteurl']."'>".$settings['sitename']."</a>",
+                        $data['user_name'],
+                        $newAdminPass,
+                        $userdata['user_name'],
+                        $reset_message
+                    ], $locale['408']
                 );
 
                 $loginPassIsReset = TRUE;

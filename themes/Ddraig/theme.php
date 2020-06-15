@@ -176,7 +176,7 @@ function render_page($license = FALSE) {
     //Show warning if Theme Control Panel is not infused and user has access to Infusions
     if (TCPINFUSED == 0 && checkrights("I")) {
         //Render the warning
-        replace_in_output("<!--error_handler-->", "<!--error_handler-->".$locale['tcp_warning']);
+        replace_in_output("<!--error_handler-->", "<!--error_handler--><div class='admin-message tcp-warn'><span id=\'tcp-warn\'></span>".str_replace(['[link]', '[/link]'], ["<a href='".ADMIN."infusions.php".(isset($aidlink) ? $aidlink : "")."'>", '</a>'], $locale['tcp_warning'])."</div>");
         //Message close script
         add_to_footer("<script type='text/javascript'>
     $(document).ready(function() {

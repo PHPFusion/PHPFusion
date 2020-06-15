@@ -96,16 +96,16 @@ $locale['u149a'] = "Your Current Admin Password was not specified or is invalid.
 $locale['u149b'] = "Your Current Login Password was not specified or is invalid.<br />You can't set your admin password without your correct login password.";
 // Email actiation
 $locale['u150'] = "Your registration is almost complete, you will receive an email containing your login details along with a link to verify your account. <br /> Remember to check your spam mail folder if you do not receive a confirmation email.";
-$locale['u151'] = "Welcome to ".$settings['sitename'];
-$locale['u152'] = "Hello USER_NAME,\n
-Welcome to ".$settings['sitename'].". Here are your login details:\n
-Username: USER_NAME
-Password: USER_PASSWORD\n
-Please activate your account via the following link: ACTIVATION_LINK\n\n
-Regards,
-".$settings['sitename'];
+$locale['u151'] = "Welcome to ";
+$locale['u152'] = "Hello USER_NAME,<br/>\r\n
+Welcome to SITENAME. Here are your login details:<br/>\r\n
+Username: USER_NAME<br/>\r\n
+Password: USER_PASSWORD<br/>\r\n
+Please activate your account via the following link: ACTIVATION_LINK<br/>\r\n
+Regards,<br/>\r\n
+SITEUSERNAME";
 $locale['u153'] = "Activation email could not be sent.";
-$locale['u154'] = "Please <a href='".BASEDIR."contact.php'>contact</a> the Site Administrator.";
+$locale['u154'] = "Please [LINK]contact[/LINK] the Site Administrator.";
 $locale['u155'] = "Activate Account";
 $locale['u156'] = "Please type in your current password to change your email.";
 // Success / Fail
@@ -124,9 +124,9 @@ $locale['u172'] = "Member successfully added.";
 $locale['u173'] = "Back to User Management.";
 $locale['u174'] = "Add another member.";
 // Avatar upload
-$locale['u180'] = "Your avatar exceeded file size allowed, the limit is ".parsebytesize($settings['avatar_filesize']).".";
+$locale['u180'] = "Your avatar exceeded file size allowed, the limit is [LIMIT].";
 $locale['u181'] = "Your avatar appears to be an unsupported image type, supported image types are jpg, png and gif.";
-$locale['u182'] = "Your avatar exceeded ".$settings['avatar_width']."x".$settings['avatar_height']." pixels.";
+$locale['u182'] = "Your avatar exceeded [WIDTH]x[HEIGHT] pixels.";
 $locale['u183'] = "Your avatar was not uploaded correctly.";
 $locale['u184'] = "Max. file size: %s / Max. size: %ux%u pixels";
 $locale['u185'] = "Avatar";
@@ -136,18 +136,18 @@ $locale['u187'] = "Delete";
 $locale['u190'] = "Validation Code";
 $locale['u191'] = "Enter Validation Code";
 $locale['u192'] = "Terms of Agreement";
-$locale['u193'] = "I have read the <a href='".BASEDIR."print.php?type=T' target='_blank'>Terms of Agreement</a> and I agree with them.";
+$locale['u193'] = "I have read the [LINK]Terms of Agreement[/LINK] and I agree with them.";
 $locale['u194'] = "Incorrect validation code.";
 $locale['u195'] = "Captcha code can not be left empty.";
 // E-mail Change Confirmation
 $locale['u200'] = "A verify email has been sent to your new email address (%s).";
 $locale['u201'] = "Your email address will be changed when you click the link in the mail.";
-$locale['u202'] = "E-mail address verify - ".$settings['sitename'];
-$locale['u203'] = "Hello [USER_NAME],\n
-Someone set this email address in his account on our site.\n
-If you realy want to change your email address to this one please click the following link:\n
-[EMAIL_VERIFY_LINK]\n
-Note: you have to be logged in to proceed.\n
+$locale['u202'] = "E-mail address verify - [SITENAME]";
+$locale['u203'] = "Hello [USER_NAME],<br/>\r\n
+Someone set this email address in his account on our site.<br/>\r\n
+If you really want to change your email address to this one please click the following link:<br/>\r\n
+[EMAIL_VERIFY_LINK]<br/>\r\n
+Note: you have to be logged in to proceed.<br/>\r\n
 Regards,
-".$settings['siteusername']."
-".$settings['sitename'];
+[SITEUSERNAME]<br/>\r\n
+[SITENAME]";

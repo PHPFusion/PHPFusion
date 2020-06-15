@@ -6,10 +6,7 @@ $locale['latest_weblinks'] = "Latest Weblinks";
 $locale['no_links'] = "No links";
 $locale['scroll_top'] = "Scroll to top";
 
-$locale['tcp_warning'] = "<div class=\'admin-message tcp-warn\'>\n
-<span id=\'tcp-warn\'></span><strong>Warning:</strong> the Theme Control Panel has not been infused yet.\n
-<br />To infuse it go to infusions by <a href=\'".ADMIN."infusions.php".(isset($aidlink) ? $aidlink : "")."\'>clicking here</a>.\n
-</div>";
+$locale['tcp_warning'] = "<strong>Warning:</strong> the Theme Control Panel has not been infused yet.<br/>To infuse it go to infusions by [link]clicking here[/link].";
 
 //forums
 $locale['sticky'] = "Pinned";

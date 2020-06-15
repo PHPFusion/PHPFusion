@@ -83,7 +83,9 @@ if (isset($_POST['sendmessage'])) {
     }
 } else {
     opentable($locale['400']);
-    echo $locale['401']."<br /><br />\n";
+    echo $site_email = hide_email($settings['siteemail']);
+    echo str_replace(["[PM_LINK]", "[SITE_EMAIL]"], ["<a href='messages.php?msg_send=1'>".$locale['global_121']."</a>", $site_email], $locale['CT_401']);
+    echo "<br /><br />\n";
     echo "<form name='userform' method='post' action='".BASEDIR."contact.php'>\n";
     echo "<table cellpadding='0' cellspacing='0' class='center'>\n<tr>\n";
     echo "<td width='100' class='tbl'>".$locale['402']."</td>\n";

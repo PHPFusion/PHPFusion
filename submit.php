@@ -43,7 +43,7 @@ if ($_GET['stype'] == "l") {
             opentable($locale['400']);
             echo "<div style='text-align:center'><br />\n".$locale['410']."<br /><br />\n";
             echo "<a href='submit.php?stype=l'>".$locale['411']."</a><br /><br />\n";
-            echo "<a href='index.php'>".$locale['412']."</a><br /><br />\n</div>\n";
+            echo "<a href='index.php'>".str_replace('[SITENAME]', $settings['sitename'], $locale['412'])."</a><br /><br />\n</div>\n";
             closetable();
         }
     } else {
@@ -123,7 +123,7 @@ if ($_GET['stype'] == "l") {
         }
         add_to_title($locale['global_200'].$locale['450']);
         opentable($locale['450']);
-        echo "<div class='submission-guidelines'>".$locale['470']."</div>\n";
+        echo "<div class='submission-guidelines'>".str_replace('[SITENAME]', $settings['sitename'], $locale['470'])."</div>\n";
         echo "<form name='submit_form' method='post' action='".BASEDIR."submit.php?stype=n' onsubmit='return validateNews(this);'>\n";
         echo "<table cellpadding='0' cellspacing='0' class='center'>\n<tr>\n";
         echo "<td class='tbl'>".$locale['471']."<span style='color:#ff0000'>*</span></td>\n";
@@ -197,7 +197,7 @@ if ($_GET['stype'] == "l") {
         }
         add_to_title($locale['global_200'].$locale['450b']);
         opentable($locale['450b']);
-        echo "<div class='submission-guidelines'>".$locale['470b']."</div>\n";
+        echo "<div class='submission-guidelines'>".str_replace('[SITENAME]', $settings['sitename'], $locale['470b'])."</div>\n";
         echo "<form name='submit_form' method='post' action='".BASEDIR."submit.php?stype=b' onsubmit='return validateBlog(this);'>\n";
         echo "<table cellpadding='0' cellspacing='0' class='center'>\n<tr>\n";
         echo "<td class='tbl'>".$locale['471b']."<span style='color:#ff0000'>*</span></td>\n";
@@ -270,7 +270,7 @@ if ($_GET['stype'] == "l") {
                 }
                 $cat_list .= "<option value='".$data['article_cat_id']."'".$sel.">".$data['article_cat_name']."</option>\n";
             }
-            echo "<div class='submission-guidelines'>".$locale['520']."</div>\n";
+            echo "<div class='submission-guidelines'>".str_replace('[SITENAME]', $settings['sitename'], $locale['520'])."</div>\n";
             echo "<form name='submit_form' method='post' action='".BASEDIR."submit.php?stype=a' onsubmit='return validateArticle(this);'>\n";
             echo "<table cellpadding='0' cellspacing='0' class='center'>\n<tr>\n";
             echo "<td width='100' class='tbl'>".$locale['521']."</td>\n";
@@ -366,7 +366,7 @@ if ($_GET['stype'] == "l") {
         if (dbrows($result)) {
             while ($data = dbarray($result))
                 $opts .= "<option value='".$data['album_id']."'>".$data['album_title']."</option>\n";
-            echo "<div class='submission-guidelines'>".$locale['620']."</div>\n";
+            echo "<div class='submission-guidelines'>".str_replace('[SITENAME]', $settings['sitename'], $locale['620'])."</div>\n";
             echo "<form name='submit_form' method='post' action='".BASEDIR."submit.php?stype=p' enctype='multipart/form-data' onsubmit='return validatePhoto(this);'>\n";
             echo "<table cellpadding='0' cellspacing='0' class='center'>\n<tr>\n";
             echo "<td class='tbl'>".$locale['621']."<span style='color:#ff0000'>*</span></td>\n";
@@ -544,7 +544,7 @@ if ($_GET['stype'] == "l") {
         if (dbrows($result)) {
             while ($data = dbarray($result))
                 $opts .= "<option value='".$data['download_cat_id']."'>".$data['download_cat_name']."</option>\n";
-            echo "<div class='submission-guidelines'>".$locale['680']."</div>\n";
+            echo "<div class='submission-guidelines'>".str_replace('[SITENAME]', $settings['sitename'], $locale['680'])."</div>\n";
             echo "<form name='submit_form' method='post' action='".BASEDIR."submit.php?stype=d' enctype='multipart/form-data' onsubmit='return validateDownload(this);'>\n";
             echo "<table cellpadding='0' cellspacing='0' class='center' style='width:500px;'>\n<tr>\n";
             echo "<td class='tbl1' style='width:80px;'>".$locale['681']."<span style='color:#ff0000'>*</span></td>\n";

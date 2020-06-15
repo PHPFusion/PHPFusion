@@ -128,9 +128,10 @@ if (iMEMBER) {
     echo "<input type='submit' name='login' value='".$locale['global_104']."' class='button' /><br />\n";
     echo "<br /></form>\n";
     if ($settings['enable_registration']) {
-        echo "".$locale['global_105']."<br /><br />\n";
+        echo str_replace(['[LINK]', '[/LINK]'], ["<a href='".BASEDIR."register.php'>", "</a>"], $locale['global_105']);
+        echo "<br /><br />\n";
     }
-    echo $locale['global_106'];
+    echo str_replace(['[LINK]', '[/LINK]'], ["<a href='".BASEDIR."lostpassword.php'>", "</a>"], $locale['global_106']);
     echo "<br /><br /></div>\n";
 }
 closetable();

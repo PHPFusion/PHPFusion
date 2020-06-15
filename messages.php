@@ -134,8 +134,11 @@ if (isset($_POST['send_message'])) {
                 while ($data = dbarray($result)) {
                     if ($data['user_id'] != $userdata['user_id']) {
                         $result2 = dbquery("INSERT INTO ".DB_MESSAGES." (message_to, message_from, message_subject, message_message, message_smileys, message_read, message_datestamp, message_folder) VALUES('".$data['user_id']."','".$userdata['user_id']."','".$subject."','".$message."','".$smileys."','0','".time()."','0')");
-                        $message_content = str_replace("[SUBJECT]", $subject, $locale['626']);
-                        $message_content = str_replace("[USER]", $userdata['user_name'], $message_content);
+                        $message_content = str_replace(
+                            ["[USER]", "[SUBJECT]", '[SITENAME]', '[LINK]', '[/LINK]'],
+                            [$userdata['user_name'], $subject, $settings['sitename'], "<a href='".$settings['siteurl']."messages.php'>", "</a>"],
+                            $locale['626']
+                        );
                         $send_email = isset($data['pm_email_notify']) ? $data['pm_email_notify'] : $msg_settings['pm_email_notify'];
                         if ($send_email == "1") {
                             $template_result = dbquery("SELECT template_key, template_active FROM ".DB_EMAIL_TEMPLATES." WHERE template_key='PM' LIMIT 1");
@@ -144,10 +147,10 @@ if (isset($_POST['send_message'])) {
                                 if ($template_data['template_active'] == "1") {
                                     sendemail_template("PM", $subject, trimlink($message, 150), $userdata['user_name'], $data['user_name'], "", $data['user_email']);
                                 } else {
-                                    sendemail($data['user_name'], $data['user_email'], $settings['siteusername'], $settings['siteemail'], $locale['625'], $data['user_name'].$message_content);
+                                    sendemail($data['user_name'], $data['user_email'], $settings['siteusername'], $settings['siteemail'], str_replace('[SITENAME]', $settings['sitename'], $locale['625']), $data['user_name'].$message_content);
                                 }
                             } else {
-                                sendemail($data['user_name'], $data['user_email'], $settings['siteusername'], $settings['siteemail'], $locale['625'], $data['user_name'].$message_content);
+                                sendemail($data['user_name'], $data['user_email'], $settings['siteusername'], $settings['siteemail'], str_replace('[SITENAME]', $settings['sitename'], $locale['625']), $data['user_name'].$message_content);
                             }
                         }
                     }
@@ -163,8 +166,11 @@ if (isset($_POST['send_message'])) {
                 while ($data = dbarray($result)) {
                     if ($data['user_id'] != $userdata['user_id']) {
                         $result2 = dbquery("INSERT INTO ".DB_MESSAGES." (message_to, message_from, message_subject, message_message, message_smileys, message_read, message_datestamp, message_folder) VALUES('".$data['user_id']."','".$userdata['user_id']."','".$subject."','".$message."','".$smileys."','0','".time()."','0')");
-                        $message_content = str_replace("[SUBJECT]", $subject, $locale['626']);
-                        $message_content = str_replace("[USER]", $userdata['user_name'], $message_content);
+                        $message_content = str_replace(
+                            ["[USER]", "[SUBJECT]", '[SITENAME]', '[LINK]', '[/LINK]'],
+                            [$userdata['user_name'], $subject, $settings['sitename'], "<a href='".$settings['siteurl']."messages.php'>", "</a>"],
+                            $locale['626']
+                        );
                         $send_email = isset($data['pm_email_notify']) ? $data['pm_email_notify'] : $msg_settings['pm_email_notify'];
                         if ($send_email == "1") {
                             $template_result = dbquery("SELECT template_key, template_active FROM ".DB_EMAIL_TEMPLATES." WHERE template_key='PM' LIMIT 1");
@@ -173,10 +179,10 @@ if (isset($_POST['send_message'])) {
                                 if ($template_data['template_active'] == "1") {
                                     sendemail_template("PM", $subject, trimlink($message, 150), $userdata['user_name'], $data['user_name'], "", $data['user_email']);
                                 } else {
-                                    sendemail($data['user_name'], $data['user_email'], $settings['siteusername'], $settings['siteemail'], $locale['625'], $data['user_name'].$message_content);
+                                    sendemail($data['user_name'], $data['user_email'], $settings['siteusername'], $settings['siteemail'], str_replace('[SITENAME]', $settings['sitename'], $locale['625']), $data['user_name'].$message_content);
                                 }
                             } else {
-                                sendemail($data['user_name'], $data['user_email'], $settings['siteusername'], $settings['siteemail'], $locale['625'], $data['user_name'].$message_content);
+                                sendemail($data['user_name'], $data['user_email'], $settings['siteusername'], $settings['siteemail'], str_replace('[SITENAME]', $settings['sitename'], $locale['625']), $data['user_name'].$message_content);
                             }
                         }
                     }
@@ -201,18 +207,21 @@ if (isset($_POST['send_message'])) {
                         $result = dbquery("INSERT INTO ".DB_MESSAGES." (message_to, message_from, message_subject, message_message, message_smileys, message_read, message_datestamp, message_folder) VALUES('".$data['user_id']."','".$userdata['user_id']."','".$subject."','".$message."','".$smileys."','0','".time()."','0')");
                         $send_email = isset($data['pm_email_notify']) ? $data['pm_email_notify'] : $msg_settings['pm_email_notify'];
                         if ($send_email == "1") {
-                            $message_content = str_replace("[SUBJECT]", $subject, $locale['626']);
-                            $message_content = str_replace("[USER]", $userdata['user_name'], $message_content);
+                            $message_content = str_replace(
+                                ["[USER]", "[SUBJECT]", '[SITENAME]', '[LINK]', '[/LINK]'],
+                                [$userdata['user_name'], $subject, $settings['sitename'], "<a href='".$settings['siteurl']."messages.php'>", "</a>"],
+                                $locale['626']
+                            );
                             $template_result = dbquery("SELECT template_key, template_active FROM ".DB_EMAIL_TEMPLATES." WHERE template_key='PM' LIMIT 1");
                             if (dbrows($template_result)) {
                                 $template_data = dbarray($template_result);
                                 if ($template_data['template_active'] == "1") {
                                     sendemail_template("PM", $subject, trimlink($message, 150), $userdata['user_name'], $data['user_name'], "", $data['user_email']);
                                 } else {
-                                    sendemail($data['user_name'], $data['user_email'], $settings['siteusername'], $settings['siteemail'], $locale['625'], $data['user_name'].$message_content);
+                                    sendemail($data['user_name'], $data['user_email'], $settings['siteusername'], $settings['siteemail'], str_replace('[SITENAME]', $settings['sitename'], $locale['625']), $data['user_name'].$message_content);
                                 }
                             } else {
-                                sendemail($data['user_name'], $data['user_email'], $settings['siteusername'], $settings['siteemail'], $locale['625'], $data['user_name'].$message_content);
+                                sendemail($data['user_name'], $data['user_email'], $settings['siteusername'], $settings['siteemail'], str_replace('[SITENAME]', $settings['sitename'], $locale['625']), $data['user_name'].$message_content);
                             }
                         }
                     } else {

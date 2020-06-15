@@ -391,7 +391,7 @@ function user_profile_page() {
             if (iMEMBER) {
                 $html .= "<div class='well text-center'>\n ".$user_data['user_name']." ".$locale['ax8_27']."</div>\n";
             } else {
-                $html .= "<div class='well text-center'>\n ".$locale['ax8_28']."</div>\n";
+                $html .= "<div class='well text-center'>\n ".str_replace(['[link]', '[/link]'], ['<a href="'.BASEDIR.'login.php">', '</a>'], $locale['ax8_28'])."</div>\n";
             }
 
         }

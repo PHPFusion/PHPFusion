@@ -140,9 +140,12 @@ if (iMEMBER) {
         echo "</form>\n<br />\n";
 
         if ($settings['enable_registration']) {
-            echo $locale['global_105']."<br /><br />\n";
+            echo str_replace(['[LINK]', '[/LINK]'], ["<a href='".BASEDIR."register.php'>", "</a>"], $locale['global_105']);
+            echo "<br /><br />\n";
         }
-        echo $locale['global_106']."\n</div>\n";
+
+        echo str_replace(['[LINK]', '[/LINK]'], ["<a href='".BASEDIR."lostpassword.php'>", "</a>"], $locale['global_106']);
+        echo "</div>";
         closeside();
     }
 }

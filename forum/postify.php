@@ -142,10 +142,12 @@ if (($_GET['post'] == "on" || $_GET['post'] == "off") && $settings['thread_notif
                     } else {
                         while ($data = dbarray($result)) {
                             if ($data2['forum_access'] == 0 || in_array($data2['forum_access'], explode(".", $data['user_level'].".".$data['user_groups']))) {
-                                $message_el1 = ["{USERNAME}", "{THREAD_SUBJECT}", "{THREAD_URL}"];
-                                $message_el2 = [$data['user_name'], $data2['thread_subject'], $link];
                                 $message_subject = str_replace("{THREAD_SUBJECT}", $data2['thread_subject'], $locale['550']);
-                                $message_content = str_replace($message_el1, $message_el2, $locale['551']);
+                                $message_content = str_replace(
+                                    ["{USERNAME}", "{THREAD_SUBJECT}", "{THREAD_URL}", '[SITENAME]', '[SITEUSERNAME]'],
+                                    [$data['user_name'], $data2['thread_subject'], $link, $settings['sitename'], $settings['siteusername']],
+                                    $locale['551']
+                                );
                                 sendemail($data['user_name'], $data['user_email'], $settings['siteusername'], $settings['siteemail'], $message_subject, $message_content);
                             }
                         }
@@ -153,10 +155,12 @@ if (($_GET['post'] == "on" || $_GET['post'] == "off") && $settings['thread_notif
                 } else {
                     while ($data = dbarray($result)) {
                         if ($data2['forum_access'] == 0 || in_array($data2['forum_access'], explode(".", $data['user_level'].".".$data['user_groups']))) {
-                            $message_el1 = ["{USERNAME}", "{THREAD_SUBJECT}", "{THREAD_URL}"];
-                            $message_el2 = [$data['user_name'], $data2['thread_subject'], $link];
                             $message_subject = str_replace("{THREAD_SUBJECT}", $data2['thread_subject'], $locale['550']);
-                            $message_content = str_replace($message_el1, $message_el2, $locale['551']);
+                            $message_content = str_replace(
+                                ["{USERNAME}", "{THREAD_SUBJECT}", "{THREAD_URL}", '[SITENAME]', '[SITEUSERNAME]'],
+                                [$data['user_name'], $data2['thread_subject'], $link, $settings['sitename'], $settings['siteusername']],
+                                $locale['551']
+                            );
                             sendemail($data['user_name'], $data['user_email'], $settings['siteusername'], $settings['siteemail'], $message_subject, $message_content);
                         }
                     }

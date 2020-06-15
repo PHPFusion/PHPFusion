@@ -43,7 +43,7 @@ if ($user_name == "" || $user_email == "") {
         if ($user_name != $user_data['user_name']) {
             $result = dbquery("SELECT user_name FROM ".DB_USERS." WHERE user_name='".$user_name."'");
             if (dbrows($result)) {
-                $error = $locale['453']."<br />\n";
+                $error = str_replace('[user_name]', (isset($_POST['user_name']) ? $_POST['user_name'] : ""), $locale['453'])."<br />\n";
             }
         }
     } else {
@@ -54,7 +54,7 @@ if ($user_name == "" || $user_email == "") {
         if ($user_email != $user_data['user_email']) {
             $result = dbquery("SELECT user_email FROM ".DB_USERS." WHERE user_email='".$user_email."'");
             if (dbrows($result) != 0) {
-                $error = $locale['455']."<br />\n";
+                $error = str_replace('[user_email]', (isset($_POST['user_email']) ? $_POST['user_email'] : ""), $locale['455'])."<br />\n";
             }
         }
     } else {

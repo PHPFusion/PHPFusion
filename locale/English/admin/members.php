@@ -55,9 +55,9 @@ $locale['440'] = "Save Changes";
 $locale['450'] = "Cannot edit primary administrator.";
 $locale['451'] = "You must specify a user name and email address.";
 $locale['452'] = "User name contains invalid characters.";
-$locale['453'] = "The user name ".(isset($_POST['user_name']) ? $_POST['user_name'] : "")." is in use.";
+$locale['453'] = "The user name [user_name] is in use.";
 $locale['454'] = "Invalid email address.";
-$locale['455'] = "The email address ".(isset($_POST['user_email']) ? $_POST['user_email'] : "")." is in use.";
+$locale['455'] = "The email address [user_email] is in use.";
 $locale['456'] = "New Passwords do not match.";
 $locale['457'] = "Invalid password, use alpha numeric characters only.<br />
 Password must be a minimum of 6 characters long.";

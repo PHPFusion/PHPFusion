@@ -63,3 +63,4 @@ $locale['pm'] = "Private Messages";
 $locale['logged'] = "Logged in as ";
 $locale['version'] = "Version ";
 $locale['browse'] = "Browse ...";
+$locale['or'] = "or";

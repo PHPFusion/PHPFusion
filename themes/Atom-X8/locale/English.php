@@ -27,7 +27,7 @@ $locale['ax8_24'] = 'Three weeks ago';
 $locale['ax8_25'] = 'A month ago';
 $locale['ax8_26'] = "'s Latest Activities";
 $locale['ax8_27'] = 'has no activities yet.';
-$locale['ax8_28'] = 'You do not have permissions to view this. Please register or <a href=\'".BASEDIR."login.php\'>login</a> to view user\'s latest activities.';
+$locale['ax8_28'] = 'You do not have permissions to view this. Please register or [link]login[/link] to view user\'s latest activities.';
 $locale['ax8_29'] = "'s Profile Page";
 $locale['ax8_30'] = 'Links of Interest';
 $locale['ax8_31'] = 'Private Messages';

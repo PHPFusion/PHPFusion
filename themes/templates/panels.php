@@ -30,7 +30,7 @@ if (iADMIN && !defined("ADMIN_PANEL")) {
     if ($settings['maintenance'])
         $ad_mess[] = $locale['global_190'];
     if (!$userdata['user_admin_password'])
-        $ad_mess[] = $locale['global_199'];
+        $ad_mess[] = str_replace(["[LINK]", "[/LINK]"], ["<a href='".BASEDIR."edit_profile.php'>", "</a>"], $locale['global_199']);
     if (!empty($ad_mess)) {
         $admin_mess .= "<div class='alert alert-warning admin-message m-t-15'>";
         foreach ($ad_mess as $message) {

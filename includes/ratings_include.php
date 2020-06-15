@@ -42,7 +42,11 @@ function showratings($rating_type, $rating_item_id, $rating_link) {
 
         opentable($locale['r100']);
         if (!iMEMBER) {
-            echo "<div style='text-align:center'>".$locale['r104']."</div>\n";
+            $message = str_replace("[RATING_ACTION]", "<a href='".BASEDIR."login.php'>".$locale['login']."</a>", $locale['r104']);
+            if ($settings['enable_registration'] == TRUE) {
+                $message = str_replace("[RATING_ACTION]", "<a href='".BASEDIR."login.php'>".$locale['login']."</a> ".$locale['or']." <a href='".BASEDIR."register.php'>".$locale['register']."</a>", $locale['r104']);
+            }
+            echo "<div style='text-align:center'>".$message."</div>\n";
         } else if (isset($d_rating['rating_vote'])) {
             echo "<div style='text-align:center'>\n";
             echo "<form name='removerating' method='post' action='".$rating_link."'>\n";

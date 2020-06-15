@@ -157,7 +157,7 @@ class UserFields {
 
         $this->html .= "<tr>\n<td class='tbl'>".$locale['u192']."<span style='color:#ff0000'>*</span></td>\n";
         $this->html .= "<td class='tbl'><input type='checkbox' id='agreement' name='agreement' value='1' onclick='checkagreement()' />\n";
-        $this->html .= "<span class='small'><label for='agreement'>".$locale['u193']."</label></span>\n";
+        $this->html .= "<span class='small'><label for='agreement'>".str_replace(['[LINK]', '[/LINK]'], ["<a href='".BASEDIR."print.php?type=T' id='license_agreement'>", "</a>"], $locale['u193'])."</label></span>\n";
         $this->html .= "</td>\n</tr>\n";
 
         $this->javaScriptOther .= "	function checkagreement() {\n";
