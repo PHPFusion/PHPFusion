@@ -69,7 +69,7 @@ function printCode($source_code, $starting_line, $error_line = "") {
             $formatted_code .= "<td class='".$line_class."'>".preg_replace('#(&lt;\?php&nbsp;)+#', '', str_replace(['<code>', '</code>'], '', highlight_string('<?php '.$code_line, TRUE)))."</td>\n</tr>\n";
         }
     }
-    return "<table class='err_tbl-border center' cellspacing='0' cellpadding='0'>".$formatted_code."</table>";
+    return "<table class='err_tbl-border center' style='width:100%;' cellspacing='0' cellpadding='0'>".$formatted_code."</table>";
 }
 
 if (isset($_POST['error_status']) && isnum($_POST['error_status'])
@@ -96,9 +96,10 @@ if ($rows != 0) {
         "SELECT * FROM ".DB_ERRORS." ORDER BY error_timestamp DESC
         LIMIT ".$_GET['rowstart'].",20"
     );
-    echo "<a name='top'></a>\n<table cellpadding='0' cellspacing='1' class='tbl-border center' style='width:90%;'>\n";
+    echo "<a name='top'></a>\n<table cellpadding='0' cellspacing='1' class='tbl-border center table-striped'>\n";
+    echo '<thead>';
     echo "<tr>\n";
-    echo "<td class='tbl1' colspan='4' style='text-align:center;'>";
+    echo "<th class='tbl1' colspan='4' style='text-align:center;'>";
     echo "<form name='delete_form' action='".FUSION_SELF.$aidlink."' method='post'>";
     echo "".$locale['440']." <select name='delete_status' class='textbox'>";
     echo "<option>---</option>\n";
@@ -107,22 +108,24 @@ if ($rows != 0) {
     echo "<option value='2'>".$locale['452']."</option>\n";
     echo "</select>\n<input type='submit' class='button' name='delete_entries' value='".$locale['453']."' style='margin-left:5px;' />";
     echo "</form>\n";
-    echo "</td>\n";
+    echo "</th>\n";
     echo "</tr>\n<tr>\n";
-    echo "<td class='tbl2' style='font-weight:bold;'>".$locale['410']."</td>\n";
-    echo "<td class='tbl2' style='font-weight:bold;width:5%;'>".$locale['413']."</td>\n";
-    echo "<td class='tbl2' style='text-align:center;width:5%;font-weight:bold;'>".$locale['414']."</td>\n";
+    echo "<th class='tbl2' style='font-weight:bold;'>".$locale['410']."</th>\n";
+    echo "<th class='tbl2' style='font-weight:bold;width:5%;'>".$locale['413']."</th>\n";
+    echo "<th class='tbl2' style='text-align:center;width:5%;font-weight:bold;'>".$locale['414']."</th>\n";
     echo "</tr>\n";
+    echo '</thead>';
+    echo '<tbody>';
     while ($data = dbarray($result)) {
         $row_color = ($i % 2 == 0 ? "tbl1" : "tbl2");
         echo "<tr>\n";
-        echo "<td class='".$row_color."'>\n";
+        echo "<td class='p-5 ".$row_color."'>\n";
         echo "<a href='".FUSION_SELF.$aidlink."&amp;rowstart=".$_GET['rowstart']."&amp;error_id=".$data['error_id']."#file' title='".$data['error_file']."'>";
         echo getMaxFolders($data['error_file'], 2)."</a><br />\n";
-        echo "<span class='small2'>".$data['error_message']." ".$locale['415']." ".$data['error_line']."</span>";
+        echo "<span class='small2'>".htmlspecialchars_decode(descript($data['error_message']))." ".$locale['415']." ".$data['error_line']."</span>";
         echo "</td>\n";
-        echo "<td class='".$row_color."' style='white-space:nowrap;'>".showdate("longdate", $data['error_timestamp'])."</td>\n";
-        echo "<td class='".$row_color."' style='white-space:nowrap;'>\n";
+        echo "<td class='p-5 ".$row_color."' style='white-space:nowrap;'>".showdate("longdate", $data['error_timestamp'])."</td>\n";
+        echo "<td class='p-5 ".$row_color."' style='white-space:nowrap;'>\n";
         echo "<form action='".FUSION_SELF.$aidlink."&amp;rowstart=".$_GET['rowstart']."' method='post'>";
         echo "<input type='hidden' name='error_id' value='".$data['error_id']."' />";
         echo "<select name='error_status' class='textbox' onchange='this.form.submit();'>";
@@ -134,6 +137,7 @@ if ($rows != 0) {
         echo "</tr>\n";
         $i++;
     }
+    echo '</tbody>';
     echo "</table>\n";
 } else {
     echo "<div style='text-align:center'><br />\n".$locale['418']."<br /><br />\n</div>\n";
@@ -150,7 +154,8 @@ if (isset($_GET['error_id']) && isnum($_GET['error_id'])) {
     }
 
     $data = dbarray($result);
-    $thisFileContent = file($data['error_file']);
+    $error_file = htmlspecialchars_decode($data['error_file']);
+    $thisFileContent = is_file($error_file) ? file($error_file) : [];
     $line_start = "";
     $line_end = "";
     if (isset($data['error_line']) && isnum($data['error_line'])) {
@@ -159,7 +164,7 @@ if (isset($_GET['error_id']) && isnum($_GET['error_id'])) {
         $line_start = 1;
     }
     if (isset($data['error_line']) && isnum($data['error_line'])) {
-        if (is_array($thisFileContent) && ($data['error_line'] + 10) <= count($thisFileContent)) {
+        if (($data['error_line'] + 10) <= count($thisFileContent)) {
             $line_end = $data['error_line'] + 10;
         } else {
             $line_end = count($thisFileContent);
@@ -173,7 +178,7 @@ if (isset($_GET['error_id']) && isnum($_GET['error_id'])) {
         $output .= $thisFileContent[$i];
     }
 
-    echo "<table cellpadding='0' cellspacing='1' class='tbl-border center' style='border-collapse:collapse;width:90%;'>\n";
+    echo "<table cellpadding='0' cellspacing='1' class='tbl-border center' style='border-collapse:collapse;'>\n";
     echo "<tr>\n";
     echo "<td colspan='4' class='tbl2'><a name='file'></a>\n<strong>".$locale['420']."</strong></td>\n";
     echo "</tr>\n<tr>\n";
