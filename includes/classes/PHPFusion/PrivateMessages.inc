@@ -221,10 +221,10 @@ class PrivateMessages {
                                         if ($template_data['template_active'] == "1") {
                                             sendemail_template("PM", $subject, trimlink($message, 150), $userdata['user_name'], $data['user_name'], "", $data['user_email']);
                                         } else {
-                                            sendemail($data['user_name'], $data['user_email'], fusion_get_settings("siteusername"), fusion_get_settings("siteemail"), $locale['625'], $data['user_name'].$message_content);
+                                            sendemail($data['user_name'], $data['user_email'], fusion_get_settings("siteusername"), fusion_get_settings("siteemail"),  str_replace('[SITENAME]', fusion_get_settings('sitename'), $locale['625']), $data['user_name'].$message_content);
                                         }
                                     } else {
-                                        sendemail($data['user_name'], $data['user_email'], fusion_get_settings("siteusername"), fusion_get_settings("siteemail"), $locale['625'], $data['user_name'].$message_content);
+                                        sendemail($data['user_name'], $data['user_email'], fusion_get_settings("siteusername"), fusion_get_settings("siteemail"),  str_replace('[SITENAME]', fusion_get_settings('sitename'), $locale['625']), $data['user_name'].$message_content);
                                     }
                                 }
                             } else {
@@ -420,7 +420,7 @@ class PrivateMessages {
         $sql_condition = "message_to=:uid AND message_id=:mid AND ".$query[$this->folder][1];
         $sql_param = [':uid' => fusion_get_userdata('user_id'), ':mid' => intval($this->msg_read)];
 
-        $result = dbquery("SELECT m.*, u.user_id, u.user_name, u.user_status, u.user_avatar, u.user_level 
+        $result = dbquery("SELECT m.*, u.user_id, u.user_name, u.user_status, u.user_avatar, u.user_level
         FROM $sql_table WHERE $sql_condition GROUP BY message_id ORDER BY m.message_datestamp DESC", $sql_param);
 
         if ($this->info['rows'] = dbrows($result)) {
