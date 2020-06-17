@@ -221,10 +221,10 @@ class PrivateMessages {
                                         if ($template_data['template_active'] == "1") {
                                             sendemail_template("PM", $subject, trimlink($message, 150), $userdata['user_name'], $data['user_name'], "", $data['user_email']);
                                         } else {
-                                            sendemail($data['user_name'], $data['user_email'], fusion_get_settings("siteusername"), fusion_get_settings("siteemail"), $locale['625'], $data['user_name'].$message_content);
+                                            sendemail($data['user_name'], $data['user_email'], fusion_get_settings("siteusername"), fusion_get_settings("siteemail"), str_replace('[SITENAME]', fusion_get_settings('sitename'), $locale['625']), $data['user_name'].$message_content);
                                         }
                                     } else {
-                                        sendemail($data['user_name'], $data['user_email'], fusion_get_settings("siteusername"), fusion_get_settings("siteemail"), $locale['625'], $data['user_name'].$message_content);
+                                        sendemail($data['user_name'], $data['user_email'], fusion_get_settings("siteusername"), fusion_get_settings("siteemail"), str_replace('[SITENAME]', fusion_get_settings('sitename'), $locale['625']), $data['user_name'].$message_content);
                                     }
                                 }
                             } else {
