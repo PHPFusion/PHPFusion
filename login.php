@@ -78,7 +78,7 @@ if (iMEMBER) {
                                 WHERE suspended_user='".$id."'
                                 ORDER BY suspend_date DESC  LIMIT 1"
                             ));
-                            echo $locale['global_406']."<br /><br />".$data['suspend_reason'];
+                            echo $locale['global_406']."<br /><br />".(!empty($data['suspend_reason']) ? $data['suspend_reason'] : '');
                             break;
                         case 2:
                             echo $locale['global_195'];
