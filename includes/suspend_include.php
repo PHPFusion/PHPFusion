@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-include LOCALE.LOCALESET."admin/members_include.php";
+include LOCALE.(defined('LOCALESET') ? LOCALESET : 'English/')."admin/members_include.php";
 
 $time_overdue = time() - (86400 * $settings['deactivation_period']);
 $response_required = time() + (86400 * $settings['deactivation_response']);
