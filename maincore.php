@@ -753,40 +753,81 @@ function highlight_words($word, $subject) {
     return $subject;
 }
 
-
-// This function sanitises news & article submissions
-function descript($text, $striptags = TRUE) {
-    // Convert problematic ascii characters to their true values
-    $search = ["40", "41", "58", "65", "66", "67", "68", "69", "70",
-               "71", "72", "73", "74", "75", "76", "77", "78", "79", "80", "81",
-               "82", "83", "84", "85", "86", "87", "88", "89", "90", "97", "98",
-               "99", "100", "101", "102", "103", "104", "105", "106", "107",
-               "108", "109", "110", "111", "112", "113", "114", "115", "116",
-               "117", "118", "119", "120", "121", "122"
-    ];
-    $replace = ["(", ")", ":", "a", "b", "c", "d", "e", "f", "g", "h",
-                "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u",
-                "v", "w", "x", "y", "z", "a", "b", "c", "d", "e", "f", "g", "h",
-                "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u",
-                "v", "w", "x", "y", "z"
-    ];
-    $entities = count($search);
-    for ($i = 0; $i < $entities; $i++) {
-        $text = preg_replace("#(&\#)(0*".$search[$i]."+);*#si", $replace[$i], $text);
+/**
+ * This function sanitize text
+ *
+ * @param string  $text
+ * @param boolean $striptags FALSE if you don't want to remove html tags. TRUE by default
+ * @param bool    $strip_scripts
+ *
+ * @return string
+ */
+function descript($text, $striptags = TRUE, $strip_scripts = TRUE) {
+    if (is_array($text)) {
+        return $text;
     }
-    $text = preg_replace('#(&\#x)([0-9A-F]+);*#si', "", $text);
-    $text = preg_replace('#(<[^>]+[/\"\'\s])(onmouseover|onmousedown|onmouseup|onmouseout|onmousemove|onclick|ondblclick|onfocus|onload|xmlns)[^>]*>#iU', ">", $text);
-    $text = preg_replace('#([a-z]*)=([\`\'\"]*)script:#iU', '$1=$2nojscript...', $text);
-    $text = preg_replace('#([a-z]*)=([\`\'\"]*)javascript:#iU', '$1=$2nojavascript...', $text);
-    $text = preg_replace('#([a-z]*)=([\'\"]*)vbscript:#iU', '$1=$2novbscript...', $text);
-    $text = preg_replace('#(<[^>]+)style=([\`\'\"]*).*expression\([^>]*>#iU', "$1>", $text);
-    $text = preg_replace('#(<[^>]+)style=([\`\'\"]*).*behaviour\([^>]*>#iU', "$1>", $text);
+
+    $on_attr = 'onafterprint|onbeforeprint|onbeforeunload|onerror|onhashchange|onload|onmessage|onoffline|ononline|onpagehide|onpageshow|onpopstate|'.
+        'onresize|onstorage|onunload|onblur|onchange|oncontextmenu|onfocus|oninput|oninvalid|onreset|onsearch|onselect|onsubmit|onkeydown|onkeypress|'.
+        'onkeyup|onclick|ondblclick|onmousedown|onmousemove|onmouseup|onmousewheel|onwheel|ondrag|ondragend|ondragenter|ondragleave|ondragover|'.
+        'ondragstart|ondrop|onscroll|oncopy|oncut|onpaste|onabort|oncanplay|oncanplaythrough|oncuechange|ondurationchange|onemptied|onended|onerror|'.
+        'onloadeddata|onloadedmetadata|onloadstart|onpause|onplay|onplaying|onprogress|onratechange|onseeked|onseeking|onstalled|onsuspend|ontimeupdate|'.
+        'onvolumechange|onwaiting|ontoggle';
+
+    // Convert problematic ascii characters to their true values
+    $patterns = [
+        '#(&\#x)([0-9A-F]+);*#si'                           => '',
+        '#(<[^>]+[\"\'\s])*(('.$on_attr.'|xmlns)[^>]*)#is'  => "$1>",
+        '#([a-z]*)=([\`\'\"]*)script:#iU'                   => '$1=$2nojscript...',
+        '#([a-z]*)=([\`\'\"]*)javascript:#iU'               => '$1=$2nojavascript...',
+        '#([a-z]*)=([\'\"]*)vbscript:#iU'                   => '$1=$2novbscript...',
+        '#(<[^>]+)style=([\`\'\"]*).*expression\([^>]*>#iU' => "$1>",
+        '#(<[^>]+)style=([\`\'\"]*).*behaviour\([^>]*>#iU'  => "$1>"
+    ];
+
+    foreach (array_merge(['(', ')', ':'], range('A', 'Z'), range('a', 'z')) as $chr) {
+        $patterns["#(&\#)(0*".ord($chr)."+);*#si"] = $chr;
+    }
+
     if ($striptags) {
         do {
-            $thistext = $text;
-            $text = preg_replace('#</*(applet|meta|xml|blink|link|style|script|embed|object|iframe|frame|frameset|ilayer|layer|bgsound|title|base)[^>]*>#i', "", $text);
-        } while ($thistext != $text);
+            $count = 0;
+            //$iframe = !defined('ENABLE_IFRAME') ? 'embed|iframe|' : '';
+            $iframe = '';
+            $text = preg_replace('#</*(applet|meta|xml|blink|link|style|script|object|'.$iframe.'frame|frameset|ilayer|layer|bgsound|title|base)[^>]*>#i', "", $text, -1, $count);
+        } while ($count);
     }
+
+    $text = preg_replace(array_keys($patterns), $patterns, $text);
+
+    $preg_patterns = [
+        // Fix &entity\n
+        '!(&#0+[0-9]+)!'                                                                                                                                                                                => '$1;',
+        '/(&#*\w+)[\x00-\x20]+;/u'                                                                                                                                                                      => '$1;>',
+        '/(&#x*[0-9A-F]+);*/iu'                                                                                                                                                                         => '$1;',
+        //any attribute starting with "on" or xml name space
+        '#(<[^>]+?[\x00-\x20"\'])(?:on|xmlns)[^>]*+>#iu'                                                                                                                                                => '$1>',
+        //javascript: and VB script: protocols
+        '#([a-z]*)[\x00-\x20]*=[\x00-\x20]*([`\'"]*)[\x00-\x20]*j[\x00-\x20]*a[\x00-\x20]*v[\x00-\x20]*a[\x00-\x20]*s[\x00-\x20]*c[\x00-\x20]*r[\x00-\x20]*i[\x00-\x20]*p[\x00-\x20]*t[\x00-\x20]*:#iu' => '$1=$2nojavascript...',
+        '#([a-z]*)[\x00-\x20]*=([\'"]*)[\x00-\x20]*v[\x00-\x20]*b[\x00-\x20]*s[\x00-\x20]*c[\x00-\x20]*r[\x00-\x20]*i[\x00-\x20]*p[\x00-\x20]*t[\x00-\x20]*:#iu'                                        => '$1=$2novbscript...',
+        '#([a-z]*)[\x00-\x20]*=([\'"]*)[\x00-\x20]*-moz-binding[\x00-\x20]*:#u'                                                                                                                         => '$1=$2nomozbinding...',
+        // Only works in IE: <span style="width: expression(alert('Ping!'));"></span>
+        '#(<[^>]+?)style[\x00-\x20]*=[\x00-\x20]*[`\'"]*.*?expression[\x00-\x20]*\([^>]*+>#i'                                                                                                           => '$1>',
+        '#(<[^>]+?)style[\x00-\x20]*=[\x00-\x20]*[`\'"]*.*?s[\x00-\x20]*c[\x00-\x20]*r[\x00-\x20]*i[\x00-\x20]*p[\x00-\x20]*t[\x00-\x20]*:*[^>]*+>#iu'                                                  => '$1>',
+        // namespace elements
+        '#</*\w+:\w[^>]*+>#i'                                                                                                                                                                           => ''
+    ];
+
+    if ($strip_scripts) {
+        $preg_patterns += [
+            '#<script(.*?)>(.*?)</script>#is' => ''
+        ];
+    }
+
+    foreach ($preg_patterns as $pattern => $replacement) {
+        $text = preg_replace($pattern, $replacement, $text);
+    }
+
     return $text;
 }
 
