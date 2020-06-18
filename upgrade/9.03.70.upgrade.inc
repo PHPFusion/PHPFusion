@@ -26,3 +26,7 @@ foreach ($update_settings_tbl as $key => $value) {
         $inf_updatedbrow[] = DB_SETTINGS." SET settings_value='$value' WHERE settings_name='$key'";
     }
 }
+
+if (file_exists(INCLUDES.'classes/PHPFusion/Feedback/Comments.ajax.php')) {
+    unlink(INCLUDES.'classes/PHPFusion/Feedback/Comments.ajax.php');
+}
