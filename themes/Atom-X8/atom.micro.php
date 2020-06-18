@@ -72,7 +72,7 @@ function atom_micro($iLeft, $iRight) {
 
     // Render output replacement
     foreach ($atom_templates as $file => $template) {
-        if (preg_match("/".$file."/i", $_SERVER['PHP_SELF']) && (!defined('ADMIN_PANEL'))) {
+        if (($_SERVER['PHP_SELF'] !== '/edit_profile.php') && preg_match("/".$file."/i", $_SERVER['PHP_SELF']) && (!defined('ADMIN_PANEL'))) {
             if (file_exists($template['file'])) {
                 include $template['file'];
                 $atom = TRUE;
