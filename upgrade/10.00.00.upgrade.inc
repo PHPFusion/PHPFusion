@@ -61,3 +61,7 @@ if (column_exists('users', 'user_yahoo')) {
 }
 
 rrmdir(INCLUDES.'filemanager');
+
+if (file_exists(INCLUDES.'classes/PHPFusion/Feedback/Comments.ajax.php')) {
+    unlink(INCLUDES.'classes/PHPFusion/Feedback/Comments.ajax.php');
+}
