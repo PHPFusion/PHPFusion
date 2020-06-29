@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: translate_include.php
-| Author: Robert Gaudyn (Wooya)
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -25,4 +25,24 @@ function translate_lang_names($language) {
 
 function translate_country_names($country) {
     return PHPFusion\Locale::translate_country_names($country);
+}
+
+/**
+ * Returns a string of quantitative sentence from an array
+ *
+ * @param array $words
+ *
+ * @return string - orange, banana and apples
+ */
+function format_sentence(array $words) {
+    if (!empty($words)) {
+        $string = $words[0];
+        $array_count = count($words);
+        if ($array_count > 1) {
+            $partial = array_slice($words, 0, $array_count - 1);
+            $string = implode(", ", $partial)." ".fusion_get_locale("and")." ".$words[$array_count - 1];
+        }
+        return $string;
+    }
+    return (string)"";
 }
