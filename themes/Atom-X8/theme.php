@@ -58,35 +58,6 @@ define("SUBNAV", TRUE);
 
 function render_page($license = FALSE) {
     global $settings, $main_style, $locale, $userdata;
-
-    add_to_head("<link rel='stylesheet' type='text/css' href='".THEME."colorbox.css'>");
-    add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/colorbox/jquery.colorbox.js'></script>");
-    add_to_footer('<script type="text/javascript">
-    $(document).ready(function() {
-        $(".downloadolay").colorbox({iframe:true,height:"100%",width:"100%",maxWidth:"560px",maxHeight:"170px",scrolling:false,overlayClose:false,transition:"elastic"});
-
-        $(".newsoverlay").colorbox({
-            transition: "elasic",
-            height:"100%",
-            width:"100%",
-            maxWidth:"98%",
-            maxHeight:"98%",
-            scrolling:false,
-            overlayClose:true,
-            close:false,
-            photo:true,
-            onComplete: function(result) {
-                $("#colorbox").live("click", function(){
-                $(this).unbind("click");
-                $.fn.colorbox.close();
-                });
-            },
-            onLoad: function () {
-            }
-       });
-    });
-    </script>');
-
     // Start Theme
     echo "<section id='topnav'>\n";
     echo "<div class='container'>\n";
