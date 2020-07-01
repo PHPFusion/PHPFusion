@@ -51,7 +51,7 @@ $result = dbquery(
 	LEFT JOIN ".DB_THREADS." t ON f.forum_id = t.forum_id AND f.forum_lastpost=t.thread_lastpost
 	LEFT JOIN ".DB_USERS." u ON f.forum_lastuser = u.user_id
 	".(multilang_table("FO") ? "WHERE f2.forum_language='".LANGUAGE."' AND" : "WHERE")." ".$catWhere." ".groupaccess('f.forum_access')." AND f.forum_cat!='0'
-	GROUP BY forum_id ORDER BY f2.forum_order ASC, f.forum_order ASC, t.thread_lastpost DESC"
+	GROUP BY forum_id, thread_id ORDER BY f2.forum_order ASC, f.forum_order ASC, t.thread_lastpost DESC"
 );
 
 $i = 0;
