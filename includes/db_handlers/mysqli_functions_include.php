@@ -118,8 +118,7 @@ function dbconnect($db_host, $db_user, $db_pass, $db_name, $db_port = 3306) {
     global $db_connect;
 
     // Create connection
-    $db_connect = new mysqli($db_host, $db_user, $db_pass, $db_name, $db_port);
-    unset($db_host, $db_port, $db_user, $db_pass);
+    $db_connect = dbconnection(new \mysqli($db_host, $db_user, $db_pass, $db_name, $db_port));
 
     // Check connection
     if ($db_connect->connect_error) {

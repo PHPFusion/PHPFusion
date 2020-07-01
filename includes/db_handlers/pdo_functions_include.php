@@ -55,14 +55,14 @@ function dbquery($query, $print = FALSE) {
 /**
  * Count the number of rows in a table filtered by conditions
  *
- * @global int   $mysql_queries_count
- * @global array $mysql_queries_time
- *
  * @param string $field      Parenthesized field name
  * @param string $table      Table name
  * @param string $conditions conditions after "where"
  *
  * @return boolean
+ * @global int   $mysql_queries_count
+ * @global array $mysql_queries_time
+ *
  */
 function dbcount($field, $table, $conditions = "") {
     $cond = ($conditions ? " WHERE ".$conditions : "");
@@ -103,7 +103,7 @@ function dbresult($statement, $row) {
  * @return int
  */
 function dbrows($statement) {
-    if ($statement !== FALSE && $statement !==NULL) {
+    if ($statement !== FALSE && $statement !== NULL) {
         return $statement->rowCount();
     }
     return NULL;
@@ -138,11 +138,11 @@ function dbarraynum($statement) {
 /**
  * Connect to the database
  *
- * @param string  $db_host
- * @param string  $db_user
- * @param string  $db_pass
- * @param string  $db_name
- * @param int     $db_port
+ * @param string $db_host
+ * @param string $db_user
+ * @param string $db_pass
+ * @param string $db_name
+ * @param int    $db_port
  */
 function dbconnect($db_host, $db_user, $db_pass, $db_name, $db_port = 3306) {
     $db_connect = TRUE;
