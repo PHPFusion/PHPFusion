@@ -23,10 +23,9 @@ class AdminPanel {
     private $pagenum;
 
     public function __construct() {
+        global $settings, $userdata;
         $locale = fusion_get_locale('', ARS_LOCALE);
         $aidlink = fusion_get_aidlink();
-        $settings = fusion_get_settings();
-        $userdata = fusion_get_userdata();
 
         add_to_footer('<script src="'.ARS.'js/scripts.min.js"></script>');
 

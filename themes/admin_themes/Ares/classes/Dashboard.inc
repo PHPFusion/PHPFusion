@@ -31,41 +31,11 @@ class Dashboard {
     }
 
     private function RenderDashboard() {
-        global $members, $forum, $download, $news, $articles, $weblinks, $photos, $global_comments, $global_ratings, $global_submissions, $link_type, $submit_data, $submit_type, $comments_type, $aidlink, $settings, $new_update;
+        global $members, $forum, $download, $news, $articles, $weblinks, $photos,
+               $global_comments, $global_ratings, $global_submissions, $link_type, $submit_type, $comments_type, $new_update, $settings;
 
         $locale = fusion_get_locale('', ARS_LOCALE);
         $aidlink = fusion_get_aidlink();
-        $settings = fusion_get_settings();
-
-        // comments, ratings, submission types
-        $comments_type = [
-            'N'  => $locale['269'],
-            'D'  => $locale['268'],
-            'P'  => $locale['272'],
-            'A'  => $locale['270'],
-            'B'  => $locale['269b'],
-            'C'  => $locale['272a'],
-            'PH' => $locale['261'],
-        ];
-
-        $submit_type = [
-            'n' => $locale['269'],
-            'd' => $locale['268'],
-            'p' => $locale['272'],
-            'a' => $locale['270'],
-            'l' => $locale['271'],
-            'b' => $locale['269b'],
-        ];
-
-        $link_type = [
-            'N'  => $settings['siteurl']."news.php?readmore=%s",
-            'D'  => $settings['siteurl']."downloads.php?download_id=%s",
-            'P'  => $settings['siteurl']."photogallery.php?photo_id=%s",
-            'A'  => $settings['siteurl']."articles.php?article_id=%s",
-            'B'  => $settings['siteurl']."blog.php?readmore=%s",
-            'C'  => $settings['siteurl']."viewpage.php?page_id=%s",
-            'PH' => $settings['siteurl']."photogallery.php?photo_id=%s",
-        ];
 
         $html = '';
         $html .= '<h3 class="dashboard-title">'.$locale['ac10'].'</h3>';
@@ -290,14 +260,14 @@ class Dashboard {
         $html .= '<div id="submissions">';
             $html .= fusion_get_function('openside', '<strong class="text-uppercase">'.$locale['279'].'</strong><span class="pull-right badge">'.number_format($global_submissions['rows']).'</span>');
                 if (count($global_submissions['data']) > 0) {
-                    foreach ($global_submissions['data'] as $i => $submit_date) {
-                        $review_link = sprintf($submit_data[$submit_date['submit_type']]['admin_link'], $submit_date['submit_id']);
+                    foreach ($global_submissions['data'] as $i => $submit_data) {
+                        $review_link = ADMIN.'submissions.php'.$aidlink.'&action=2&t='.$submit_data['submit_type'].'&submit_id='.$submit_data['submit_id'];
 
                         $html .= '<div data-id="'.$i.'" class="clearfix p-b-10'.($i > 0 ? ' p-t-10' : '').'"'.($i > 0 ? ' style="border-top: 1px solid #ddd;"' : '').'>';
-                        $html .= '<div class="pull-left display-inline-block m-t-5 m-b-0">'.display_avatar($submit_date, '25px', '', FALSE, 'img-circle m-r-5').'</div>';
-                        $html .= '<strong>'.profile_link($submit_date['user_id'], $submit_date['user_name'], $submit_date['user_status']).' </strong>';
-                        $html .= $locale['273b'].' <strong>'.$submit_data[$submit_date['submit_type']]['submit_locale'].'</strong> ';
-                        $html .= timer($submit_date['submit_datestamp']);
+                        $html .= '<div class="pull-left display-inline-block m-t-5 m-b-0">'.display_avatar($submit_data, '25px', '', FALSE, 'img-circle m-r-5').'</div>';
+                        $html .= '<strong>'.profile_link($submit_data['user_id'], $submit_data['user_name'], $submit_data['user_status']).' </strong>';
+                        $html .= $locale['273b'].' <strong>'.$submit_type[$submit_data['submit_type']].'</strong> ';
+                        $html .= timer($submit_data['submit_datestamp']);
                         if (!empty($review_link)) {
                             $html .= '<a class="btn btn-sm btn-default m-l-10 pull-right" href="'.$review_link.'">'.$locale['286'].'</a>';
                         }
