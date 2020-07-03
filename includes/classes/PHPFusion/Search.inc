@@ -115,7 +115,7 @@ class Search extends Search_Engine {
      */
     public static function render_search_item($new_window = FALSE) {
         if (function_exists('render_search_item')) {
-            return (string)self::render_search_item($new_window);
+            return (string)render_search_item($new_window);
         }
         return "
         <!---results-->
