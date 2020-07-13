@@ -118,7 +118,7 @@ abstract class Faq extends FaqServer {
 
         if (dbrows($result)) {
             while ($data = dbarray($result)) {
-                $data['faq_answer'] = parse_textarea($data['faq_answer'], FALSE, FALSE, TRUE, FALSE, $data['faq_breaks'] == 'y' ? TRUE : FALSE);
+                $data['faq_answer'] = parse_text($data['faq_answer'], FALSE, FALSE, TRUE, FALSE, $data['faq_breaks'] == 'y' ? TRUE : FALSE);
                 $info['faq_items'][$data['faq_id']] = $data;
                 $info['faq_items'][$data['faq_id']]['print']['title'] = self::$locale['print'];
                 $info['faq_items'][$data['faq_id']]['print']['link'] = BASEDIR."print.php?type=FQ&amp;item_id=".$data['faq_id'];

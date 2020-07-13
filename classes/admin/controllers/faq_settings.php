@@ -53,11 +53,11 @@ class FaqSettingsAdmin extends FaqAdminModel {
                 ];
                 dbquery_insert(DB_SETTINGS_INF, $inputSettings, 'update', ['primary_key' => 'settings_name']);
             }
-            addNotice('success', $this->locale['900']);
+            add_notice('success', $this->locale['900']);
             redirect(FUSION_REQUEST);
         }
 
-        addNotice('danger', $this->locale['901']);
+        add_notice('danger', $this->locale['901']);
         self::$faq_settings = $inputArray;
     }
 

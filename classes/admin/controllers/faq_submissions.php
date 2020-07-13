@@ -94,7 +94,7 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
     private function handleDeleteSubmission() {
         if (isset($_POST['delete_submission'])) {
             dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id=:submitid AND submit_type=:submittype", [':submitid' => $_GET['submit_id'], ':submittype' => 'q']);
-            addNotice('success', $this->locale['faq_0062']);
+            add_notice('success', $this->locale['faq_0062']);
             redirect(clean_request('', ['submit_id'], FALSE));
         }
     }
@@ -131,7 +131,7 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
                 if (isset($_POST['publish_submission'])) {
                     dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id=:submitid AND submit_type=:submittype", [':submitid' => $_GET['submit_id'], ':submittype' => 'q']);
                     dbquery_insert(DB_FAQS, $SaveinputArray, 'save');
-                    addNotice('success', ($SaveinputArray['faq_status'] ? $this->locale['faq_0060'] : $this->locale['faq_0061']));
+                    add_notice('success', ($SaveinputArray['faq_status'] ? $this->locale['faq_0060'] : $this->locale['faq_0061']));
                     redirect(clean_request('', ['submit_id'], FALSE));
                 }
 
@@ -140,7 +140,7 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
                     $footer = openmodal("faq_preview", "<i class='fa fa-eye fa-lg m-r-10'></i> ".$this->locale['preview'].": ".$SaveinputArray['faq_question']);
                     if ($SaveinputArray['faq_answer']) {
                         $footer .= "<hr class='m-t-20 m-b-20'>\n";
-                        $footer .= parse_textarea($SaveinputArray['faq_answer'], FALSE, FALSE, TRUE, NULL, $SaveinputArray['faq_breaks'] == "y");;
+                        $footer .= parse_text($SaveinputArray['faq_answer'], FALSE, FALSE, TRUE, NULL, $SaveinputArray['faq_breaks'] == "y");;
                     }
                     $footer .= closemodal();
                     add_to_footer($footer);
