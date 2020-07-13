@@ -75,7 +75,7 @@ if (iMEMBER && $blog_settings['blog_allow_submission']) {
                 "submit_criteria"  => addslashes(serialize($criteriaArray))
             ];
             dbquery_insert(DB_SUBMISSIONS, $inputArray, "save");
-            addNotice("success", $locale['blog_0701']);
+            add_notice("success", $locale['blog_0701']);
             redirect(clean_request("submitted=b", ["stype"], TRUE));
         }
     } else if (isset($_POST['preview_blog'])) {
@@ -104,10 +104,10 @@ if (iMEMBER && $blog_settings['blog_allow_submission']) {
     $criteriaArray['submitted'] = FALSE;
     if (fusion_safe() && isset($_POST['preview_blog'])) {
         $footer = openmodal("blog_preview", "<i class='fa fa-eye fa-lg m-r-10'></i> ".$locale['preview'].": ".$criteriaArray['blog_subject']);
-        $footer .= nl2br(parse_textarea($criteriaArray['blog_blog'], FALSE, FALSE));
+        $footer .= nl2br(parse_text($criteriaArray['blog_blog'], FALSE, FALSE));
         if ($criteriaArray['blog_body']) {
             $footer .= "<hr class='m-t-20 m-b-20'>\n";
-            $footer .= nl2br(parse_textarea($criteriaArray['blog_body'], FALSE, FALSE));
+            $footer .= nl2br(parse_text($criteriaArray['blog_body'], FALSE, FALSE));
         }
         $footer .= closemodal();
         add_to_footer($footer);

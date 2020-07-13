@@ -67,9 +67,9 @@ if (post('save') or post('save_and_close') or post('preview')) {
             $modal = openmodal('blog_preview', $locale['blog_0141']." - ".$data['blog_subject']);
             $modal .= "<div class='m-b-20'>\n";
             $modal .= "<div class='well'><p><strong>".$locale['blog_0425']."</strong></p>";
-            $modal .= parse_textarea($blog_blog, FALSE, FALSE, TRUE, IMAGES_B, $data['blog_breaks'] == 'y');
+            $modal .= parse_text($blog_blog, FALSE, FALSE, TRUE, IMAGES_B, $data['blog_breaks'] == 'y');
             $modal .= "</div>";
-            $modal .= parse_textarea($blog_extended, FALSE, FALSE, TRUE, IMAGES_B, $data['blog_breaks'] == 'y');
+            $modal .= parse_text($blog_extended, FALSE, FALSE, TRUE, IMAGES_B, $data['blog_breaks'] == 'y');
             $modal .= "</div>\n";
             $modal .= closemodal();
             add_to_footer($modal);
@@ -118,13 +118,13 @@ if (post('save') or post('save_and_close') or post('preview')) {
         if (fusion_safe()) {
             if (dbcount("('blog_id')", DB_BLOG, "blog_id='".$data['blog_id']."'")) {
                 dbquery_insert(DB_BLOG, $data, 'update');
-                addNotice('success', $locale['blog_0411']);
+                add_notice('success', $locale['blog_0411']);
                 redirect(FUSION_SELF.$aidlink);
             }
 
             $data['blog_name'] = $userdata['user_id'];
             dbquery_insert(DB_BLOG, $data, 'save');
-            addNotice('success', $locale['blog_0410']);
+            add_notice('success', $locale['blog_0410']);
 
             if (post('save_and_close')) {
                 redirect(FUSION_SELF.$aidlink);

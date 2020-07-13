@@ -86,9 +86,9 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 dbquery_insert(DB_BLOG, $data, "save");
                 $result = dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id='".$_GET['submit_id']."'");
                 if ($data['blog_draft']) {
-                    addNotice("success", $locale['blog_0147']);
+                    add_notice("success", $locale['blog_0147']);
                 } else {
-                    addNotice("success", $locale['blog_0146']);
+                    add_notice("success", $locale['blog_0146']);
                 }
                 redirect(clean_request("", ["submit_id"], FALSE));
             }
@@ -115,7 +115,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 unlink(IMAGES_B_T.$submit_criteria['blog_image_t2']);
             }
             $result = dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id='".intval($_GET['submit_id'])."'");
-            addNotice("success", $locale['blog_0145']);
+            add_notice("success", $locale['blog_0145']);
         }
         redirect(clean_request("", ["submit_id"], FALSE));
     } else {
@@ -187,10 +187,10 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 if (fusion_safe()) {
                     echo openmodal('blog_preview', $locale['blog_0141']);
                     echo "<h3>".$callback_data['blog_subject']."</h3>\n";
-                    echo parse_textarea($callback_data['blog_blog'], FALSE, FALSE, TRUE);
+                    echo parse_text($callback_data['blog_blog'], FALSE, FALSE, TRUE);
                     echo "<hr/>\n";
                     if (isset($callback_data['blog_extended'])) {
-                        echo parse_textarea($callback_data['blog_extended'], FALSE, FALSE, TRUE);
+                        echo parse_text($callback_data['blog_extended'], FALSE, FALSE, TRUE);
                     }
                     echo closemodal();
                 }

@@ -189,8 +189,8 @@ if (isset($_GET['readmore'])) {
                 'blog_cat_link'     => "<a href='".INFUSIONS."blog/blog.php?cat_id=0&amp;filter=false'>".$locale['global_080']."</a>"
             ];
 
-            $item['blog_blog'] = parse_textarea($item['blog_blog'], FALSE, FALSE, TRUE, FALSE, $item['blog_breaks'] == "y" ? TRUE : FALSE);
-            $item['blog_extended'] = parse_textarea($item['blog_extended'], FALSE, FALSE, TRUE, FALSE, $item['blog_breaks'] == "y" ? TRUE : FALSE);
+            $item['blog_blog'] = parse_text($item['blog_blog'], FALSE, FALSE, TRUE, FALSE, $item['blog_breaks'] == "y" ? TRUE : FALSE);
+            $item['blog_extended'] = parse_text($item['blog_extended'], FALSE, FALSE, TRUE, FALSE, $item['blog_breaks'] == "y" ? TRUE : FALSE);
 
             $item['blog_image_link'] = '';
             $item['blog_thumb_1_link'] = '';
@@ -489,8 +489,8 @@ if (isset($_GET['readmore'])) {
                 $blog_image = "<a href='".INFUSIONS."blog/blog.php?readmore=".$data['blog_id']."'>".thumbnail($lowRes_image_path, '150px')."</a>";
             }
 
-            $blog_blog = parse_textarea($data['blog_blog'], FALSE, FALSE, TRUE, FALSE, $data['blog_breaks'] == 'y' ? TRUE : FALSE);
-            $blog_extended = parse_textarea($data['blog_extended'], FALSE, FALSE, TRUE, FALSE, $data['blog_breaks'] == 'y' ? TRUE : FALSE);
+            $blog_blog = parse_text($data['blog_blog'], FALSE, FALSE, TRUE, FALSE, $data['blog_breaks'] == 'y' ? TRUE : FALSE);
+            $blog_extended = parse_text($data['blog_extended'], FALSE, FALSE, TRUE, FALSE, $data['blog_breaks'] == 'y' ? TRUE : FALSE);
 
             $cdata = [
                 'blog_ialign'            => $data['blog_ialign'] == 'center' ? 'clearfix' : $data['blog_ialign'],
