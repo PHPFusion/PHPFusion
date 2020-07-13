@@ -77,3 +77,17 @@ function getNotices($key = FUSION_SELF, $delete = TRUE) {
 function addNotice($status, $value, $key = FUSION_SELF, $removeAfterAccess = TRUE) {
     add_notice($status, $value, $key, $removeAfterAccess);
 }
+
+/**
+ * Custom Error Handler
+ *
+ * @param $error_level
+ * @param $error_message
+ * @param $error_file
+ * @param $error_line
+ *
+ * @deprecated
+ */
+function setError($error_level, $error_message, $error_file, $error_line) {
+    set_error($error_level, $error_message, $error_file, $error_line);
+}
