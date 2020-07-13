@@ -105,11 +105,11 @@ class WeblinksAdmin extends WeblinksAdminModel {
                 if (dbcount("('weblink_id')", DB_WEBLINKS, "weblink_id = :weblinkid", [':weblinkid' => (int)$this->weblink_data['weblink_id']])) {
                     $this->weblink_data['weblink_datestamp'] = !empty($update_datestamp) ? time() : $this->weblink_data['weblink_datestamp'];
                     dbquery_insert(DB_WEBLINKS, $this->weblink_data, 'update');
-                    addNotice('success', $this->locale['WLS_0031']);
+                    add_notice('success', $this->locale['WLS_0031']);
                     // Create
                 } else {
                     $this->weblink_data['weblink_id'] = dbquery_insert(DB_WEBLINKS, $this->weblink_data, 'save');
-                    addNotice('success', $this->locale['WLS_0030']);
+                    add_notice('success', $this->locale['WLS_0030']);
                 }
 
                 // Redirect
@@ -274,15 +274,15 @@ class WeblinksAdmin extends WeblinksAdminModel {
                         switch (post('table_action')) {
                             case "publish":
                                 dbquery("UPDATE ".DB_WEBLINKS." SET weblink_status = :status WHERE weblink_id = :weblinkid", [':weblinkid' => (int)$weblink_id, ':status' => '1']);
-                                addNotice('success', $this->locale['WLS_0035']);
+                                add_notice('success', $this->locale['WLS_0035']);
                                 break;
                             case "unpublish":
                                 dbquery("UPDATE ".DB_WEBLINKS." SET weblink_status = :status WHERE weblink_id = :weblinkid", [':weblinkid' => (int)$weblink_id, ':status' => '0']);
-                                addNotice('warning', $this->locale['WLS_0036']);
+                                add_notice('warning', $this->locale['WLS_0036']);
                                 break;
                             case "delete":
                                 dbquery("DELETE FROM ".DB_WEBLINKS." WHERE weblink_id = :weblinkid", [':weblinkid' => (int)$weblink_id]);
-                                addNotice('warning', $this->locale['WLS_0032']);
+                                add_notice('warning', $this->locale['WLS_0032']);
                                 break;
                             case "verify":
                                 self::verifyLink($weblink_id);
@@ -294,7 +294,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
                 }
                 redirect(FUSION_REQUEST);
             }
-            addNotice('warning', $this->locale['WLS_0034']);
+            add_notice('warning', $this->locale['WLS_0034']);
             redirect(FUSION_REQUEST);
         }
 
@@ -604,9 +604,9 @@ class WeblinksAdmin extends WeblinksAdminModel {
                 dbquery("UPDATE ".DB_WEBLINKS." SET weblink_status = '0' WHERE weblink_id = :weblinkid", [':weblinkid' => (int)$cdata['weblink_id']]);
                 $i++;
             }
-            addNotice('success', sprintf($this->locale['WLS_0115'], $i));
+            add_notice('success', sprintf($this->locale['WLS_0115'], $i));
             if ($i > 0) {
-                addNotice('success', $this->locale['WLS_0116']);
+                add_notice('success', $this->locale['WLS_0116']);
             }
         }
     }
@@ -620,7 +620,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
 
             if (dbcount("(weblink_id)", DB_WEBLINKS, "weblink_id = :weblinkid", [':weblinkid' => (int)$weblink_id])) {
                 dbquery("DELETE FROM ".DB_WEBLINKS." WHERE weblink_id = :weblinkid", [':weblinkid' => (int)$weblink_id]);
-                addNotice('success', $this->locale['WLS_0032']);
+                add_notice('success', $this->locale['WLS_0032']);
             }
             redirect(clean_request('', ['ref', 'action', 'cat_id'], FALSE));
         }

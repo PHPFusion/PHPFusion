@@ -60,7 +60,7 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
                 if (!empty($publish_submission)) {
                     dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id = :submitid AND submit_type = :submittype", [':submitid' => (int)$this->submit_id, ':submittype' => 'l']);
                     dbquery_insert(DB_WEBLINKS, $this->inputArray, 'save');
-                    addNotice('success', $this->locale['WLS_0060']);
+                    add_notice('success', $this->locale['WLS_0060']);
                     redirect(clean_request('', ['submit_id'], FALSE));
                 }
             }
@@ -75,7 +75,7 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
 
         if (!empty($delete_submission)) {
             dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id = :submitid AND submit_type = :submittype", [':submitid' => (int)$this->submit_id, ':submittype' => 'l']);
-            addNotice('success', $this->locale['WLS_0061']);
+            add_notice('success', $this->locale['WLS_0061']);
             redirect(clean_request('', ['submit_id'], FALSE));
         }
     }

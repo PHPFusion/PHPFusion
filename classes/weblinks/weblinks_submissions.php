@@ -82,7 +82,7 @@ class WeblinksSubmissions extends WeblinksServer {
                         'submit_criteria'  => \Defender::encode($criteriaArray)
                     ];
                     dbquery_insert(DB_SUBMISSIONS, $inputArray, 'save');
-                    addNotice('success', $this->locale['WLS_0910']);
+                    add_notice('success', $this->locale['WLS_0910']);
                     redirect(clean_request('submitted=l', ['stype'], TRUE));
                 }
             }

@@ -52,10 +52,10 @@ class WeblinksSettingsAdmin extends WeblinksAdminModel {
                     ];
                     dbquery_insert( DB_SETTINGS_INF, $inputSettings, 'update', [ 'primary_key' => 'settings_name' ] );
                 }
-                addNotice( 'success', $this->locale['900'] );
+                add_notice( 'success', $this->locale['900'] );
                 redirect( FUSION_REQUEST );
             } else {
-                addNotice( 'danger', $this->locale['901'] );
+                add_notice( 'danger', $this->locale['901'] );
                 $weblink_settings = $inputArray;
             }
         }

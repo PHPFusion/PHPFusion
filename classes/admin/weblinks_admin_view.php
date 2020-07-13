@@ -44,7 +44,7 @@ class WeblinksAdminView extends WeblinksAdminModel {
         add_to_title( $this->locale['WLS_0001'] );
 
         if ( $submissions = dbcount( '(submit_id)', DB_SUBMISSIONS, "submit_type = 'l'" ) ) {
-            addNotice( "info", sprintf( $this->locale['WLS_0063'], format_word( $submissions, $this->locale['fmt_submission'] ) ) );
+            add_notice( "info", sprintf( $this->locale['WLS_0063'], format_word( $submissions, $this->locale['fmt_submission'] ) ) );
         }
 
         // Handle Tabs

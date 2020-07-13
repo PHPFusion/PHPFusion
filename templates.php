@@ -42,7 +42,7 @@ if (!function_exists('display_main_weblinks')) {
                                     'link'        => INFUSIONS."weblinks/weblinks.php?cat_id=".$sub_cat_data['weblink_cat_id'],
                                     'name'        => $sub_cat_data['weblink_cat_name'],
                                     'count'       => $sub_cat_data['weblink_count'],
-                                    'description' => parse_textarea($sub_cat_data['weblink_cat_description'], TRUE, TRUE, FALSE, '', TRUE)
+                                    'description' => parse_text($sub_cat_data['weblink_cat_description'], TRUE, TRUE, FALSE, '', TRUE)
                                 ]);
                             }
                         }
@@ -63,7 +63,7 @@ if (!function_exists('display_main_weblinks')) {
                     'cat_link'        => INFUSIONS."weblinks/weblinks.php?cat_id=".$cat_data['weblink_cat_id'],
                     'cat_name'        => $cat_data['weblink_cat_name'],
                     'cat_count'       => $cat_data['weblink_count'],
-                    'cat_description' => parse_textarea($cat_data['weblink_cat_description'], TRUE, TRUE, FALSE, '', TRUE),
+                    'cat_description' => parse_text($cat_data['weblink_cat_description'], TRUE, TRUE, FALSE, '', TRUE),
                     'sub_categories'  => $sub_cats
                 ]);
             }
