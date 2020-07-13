@@ -78,7 +78,7 @@ class MemberPoll {
             $this->data = [
                 'poll_id'         => !empty($_GET['poll_id']) ? form_sanitizer($_GET['poll_id'], 0, 'poll_id') : 0,
                 'poll_title'      => form_sanitizer($_POST['poll_title'], '', 'poll_title', TRUE),
-                'poll_opt'        => descript(serialize($poll_option)),
+                'poll_opt'        => htmlspecialchars_decode(descript(serialize($poll_option))),
                 'poll_visibility' => form_sanitizer($_POST['poll_visibility'], 0, 'poll_visibility'),
                 'poll_started'    => form_sanitizer($_POST['poll_started'], 0, 'poll_started'),
                 'poll_ended'      => (isset($_POST['poll_ended']) ? form_sanitizer($_POST['poll_ended'], 0, 'poll_ended') : 0)
