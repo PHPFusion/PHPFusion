@@ -44,12 +44,12 @@ if ( post( 'savesettings' ) ) {
                 dbquery_insert( DB_SETTINGS_INF, $Array, 'update', [ "primary_key" => "settings_name" ] );
             }
         }
-        addNotice( 'success', $locale['900'] );
+        add_notice( 'success', $locale['900'] );
     } else {
         // send message your settings was not safe.
-        addNotice( 'danger', $locale['901'] );
-        addNotice( 'danger', $locale['696'] );
-        addNotice( 'danger', $locale['900'] );
+        add_notice( 'danger', $locale['901'] );
+        add_notice( 'danger', $locale['696'] );
+        add_notice( 'danger', $locale['900'] );
     }
     redirect( FUSION_SELF.$aidlink."&amp;section=download_settings" );
 }

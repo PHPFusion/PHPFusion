@@ -57,7 +57,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['dow
         }
         $result = dbquery("DELETE FROM ".DB_DOWNLOADS." WHERE download_id='".$_GET['download_id']."'");
     }
-    addNotice("success", $locale['download_0102']);
+    add_notice("success", $locale['download_0102']);
     redirect(FUSION_SELF.$aidlink."&download_cat_id=".intval($_GET['download_cat_id']));
 }
 
@@ -126,7 +126,7 @@ if (isset($_POST['save_download'])) {
         $data['download_file'] = '';
     } else if (empty($data['download_file']) && empty($data['download_url'])) {
         \Defender::stop();
-        addNotice('danger', $locale['download_0111']);
+        add_notice('danger', $locale['download_0111']);
     }
     /**
      * Image Section
@@ -155,13 +155,13 @@ if (isset($_POST['save_download'])) {
     if (dbcount("(download_id)", DB_DOWNLOADS, "download_id='".$data['download_id']."'")) {
         dbquery_insert(DB_DOWNLOADS, $data, 'update');
         if (fusion_safe()) {
-            addNotice("success", $locale['download_0101']);
+            add_notice("success", $locale['download_0101']);
             redirect(FUSION_SELF.$aidlink);
         }
     } else {
         dbquery_insert(DB_DOWNLOADS, $data, 'save');
         if (fusion_safe()) {
-            addNotice("success", $locale['download_0100']);
+            add_notice("success", $locale['download_0100']);
             redirect(FUSION_SELF.$aidlink);
         }
     }

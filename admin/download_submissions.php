@@ -78,7 +78,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 }
                 dbquery_insert(DB_DOWNLOADS, $callback_data, "save");
                 dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id='".intval($_GET['submit_id'])."'");
-                addNotice("success", $locale['download_0063']);
+                add_notice("success", $locale['download_0063']);
                 redirect(clean_request("", ["submit_id"], FALSE));
             }
         } else {
@@ -105,7 +105,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 unlink(INFUSIONS."downloads/submisisons/".$delCriteria['download_file']);
             }
             $result = dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id='".intval($callback_data['submit_id'])."'");
-            addNotice("success", $locale['download_0062']);
+            add_notice("success", $locale['download_0062']);
         }
         redirect(clean_request("", ["submit_id"], FALSE));
     } else {

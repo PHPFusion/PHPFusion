@@ -71,7 +71,7 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
                     $criteriaArray['download_file'] = $upload['target_file'];
                 } else {
                     \defender::stop();
-                    addNotice('warning', $locale['download_0113']);
+                    add_notice('warning', $locale['download_0113']);
                 }
             }
             unset($upload);
@@ -79,7 +79,7 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
             $criteriaArray['download_url'] = form_sanitizer($_POST['download_url'], '', 'download_url');
         } else if (empty($data['download_file']) && empty($data['download_url'])) {
             \defender::stop();
-            addNotice('danger', $locale['download_0111']);
+            add_notice('danger', $locale['download_0111']);
         }
         // Screenshot submissions
         if (fusion_safe() && !empty($_FILES['download_image']['name']) && is_uploaded_file($_FILES['download_image']['tmp_name'])) {
@@ -103,7 +103,7 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
                 'submit_criteria'  => serialize($criteriaArray)
             ];
             dbquery_insert(DB_SUBMISSIONS, $inputArray, "save");
-            addNotice("success", $locale['download_0042']);
+            add_notice("success", $locale['download_0042']);
             redirect(clean_request("submitted=d", ["stype"], TRUE));
         }
     }

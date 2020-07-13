@@ -188,7 +188,7 @@ function download_listing() {
             echo '</div>';
 
             echo '<div class="clearfix">';
-            $dlText = strip_tags(parse_textarea($data2['download_description_short']));
+            $dlText = strip_tags(parse_text($data2['download_description_short']));
             echo fusion_first_words($dlText, '50');
             echo '</div>';
 
