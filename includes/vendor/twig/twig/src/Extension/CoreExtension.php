@@ -563,11 +563,11 @@ function twig_replace_filter($str, $from)
  */
 function twig_round($value, $precision = 0, $method = 'common')
 {
-    if ('common' == $method) {
+    if ('common' === $method) {
         return round($value, $precision);
     }
 
-    if ('ceil' != $method && 'floor' != $method) {
+    if ('ceil' !== $method && 'floor' !== $method) {
         throw new RuntimeError('The round filter only supports the "common", "ceil", and "floor" methods.');
     }
 
@@ -997,7 +997,7 @@ function twig_spaceless($content)
 
 function twig_convert_encoding($string, $to, $from)
 {
-    if (!function_exists('iconv')) {
+    if (!\function_exists('iconv')) {
         throw new RuntimeError('Unable to convert encoding: required function iconv() does not exist. You should install ext-iconv or symfony/polyfill-iconv.');
     }
 
@@ -1152,7 +1152,7 @@ function twig_to_array($seq, $preserveKeys = true)
 function twig_test_empty($value)
 {
     if ($value instanceof \Countable) {
-        return 0 == \count($value);
+        return 0 === \count($value);
     }
 
     if ($value instanceof \Traversable) {
@@ -1537,6 +1537,10 @@ function twig_array_column($array, $name, $index = null): array
 
 function twig_array_filter($array, $arrow)
 {
+    if (!twig_test_iterable($array)) {
+        throw new RuntimeError(sprintf('The "filter" filter expects an array or "Traversable", got "%s".', \is_object($array) ? \get_class($array) : \gettype($array)));
+    }
+
     if (\is_array($array)) {
         return array_filter($array, $arrow, \ARRAY_FILTER_USE_BOTH);
     }

@@ -30,9 +30,9 @@ use Twig\Source;
  */
 class ModuleNode extends Node
 {
-    public function __construct(Node $body, AbstractExpression $parent = null, Node $blocks, Node $macros, Node $traits, $embeddedTemplates, Source $source)
+    public function __construct(Node $body, ?AbstractExpression $parent, Node $blocks, Node $macros, Node $traits, $embeddedTemplates, Source $source)
     {
-        if (__CLASS__ !== \get_class($this)) {
+        if (__CLASS__ !== static::class) {
             @trigger_error('Overriding '.__CLASS__.' is deprecated since Twig 2.4.0 and the class will be final in 3.0.', E_USER_DEPRECATED);
         }
 

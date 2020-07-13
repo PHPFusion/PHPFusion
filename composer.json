@@ -16,6 +16,7 @@
     }
   ],
   "require": {
+    "php": "^7.0",
     "twig/twig": "^2.0",
     "ext-json": "*",
     "ext-openssl": "*",

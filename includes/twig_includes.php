@@ -172,22 +172,16 @@ function fusion_render($dir_path = THEMES.'templates/', $file_path = '', array $
             $info[$key] = $value;
         }
     }
-    $settings['devmode'] = TRUE;
-    if ($settings['devmode']) {
-        $output = $twig->render($file_path, $info);
-        //$output = trim(preg_replace('/\s\s+/', '', $output));
-        return $output;
-    }
 
     try {
-        $output = $twig->render($file_path, $info);
+        return $twig->render($file_path, $info);
     } catch (LoaderError $e) {
-        set_error(E_USER_NOTICE, $e->getMessage(), $e->getFile(), $e->getLine(), $e->getCode());
+        set_error(E_USER_NOTICE, $e->getMessage(), $e->getFile(), $e->getLine());
     } catch (RuntimeError $e) {
-        set_error(E_USER_NOTICE, $e->getMessage(), $e->getFile(), $e->getLine(), $e->getCode());
+        set_error(E_USER_NOTICE, $e->getMessage(), $e->getFile(), $e->getLine());
     } catch (SyntaxError $e) {
-        set_error(E_USER_NOTICE, $e->getMessage(), $e->getFile(), $e->getLine(), $e->getCode());
+        set_error(E_USER_NOTICE, $e->getMessage(), $e->getFile(), $e->getLine());
     }
 
-    return $output;
+    return NULL;
 }
