@@ -142,7 +142,7 @@ abstract class AdminInterface extends ForumServer {
 
             if ( dbcount( "('forum_id')", DB_FORUMS, $cond ) ) {
                 fusion_stop();
-                addNotice( 'danger', self::$locale['forum_error_7'] );
+                add_notice( 'danger', self::$locale['forum_error_7'] );
 
             } else {
                 return $forum_name;

@@ -129,7 +129,7 @@ if (!empty($info['threads'])) {
                 'author_avatar'         => $cdata['thread_starter']['avatar'],
                 'author_avatar_sm'      => $cdata['thread_starter']['avatar_sm'],
                 'author_profile_link'   => $cdata['thread_starter']['profile_link'],
-                'thread_text'           => parse_textarea($cdata['post_message'], $cdata['post_smileys'], TRUE, FALSE, IMAGES, TRUE),
+                'thread_text'           => parse_text($cdata['post_message'], $cdata['post_smileys'], TRUE, FALSE, IMAGES, TRUE),
                 'thread_snippet'        => trim_text($cdata['post_message'], 80),
                 'thread_attachments'    => $cdata['post_attachments'],
                 'thread_date'           => $cdata['post_date'],

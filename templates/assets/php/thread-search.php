@@ -58,9 +58,9 @@ if (!empty($response['join_terms'])) {
 }
 
 //print_p($response['search']);
-$count_q = "SELECT t.thread_id                  
+$count_q = "SELECT t.thread_id
             FROM ".DB_FORUM_THREADS." t
-            INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id ".$response['join']."                       
+            INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id ".$response['join']."
             ".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND " : "WHERE ")." t.thread_hidden='0' ".$response['search']." AND ".groupaccess('tf.forum_access')." GROUP BY t.thread_id";
 $select_q = "SELECT t.thread_id, t.thread_subject, t.thread_author, t.thread_lastuser, t.thread_lastpost,
             t.thread_lastpostid, t.thread_postcount, t.thread_locked, t.thread_sticky, t.thread_poll, t.thread_postcount, t.thread_views,
@@ -132,7 +132,7 @@ if (!empty($info['threads'])) {
                         'author_avatar'       => $cdata['thread_starter']['avatar'],
                         'author_avatar_sm'    => $cdata['thread_starter']['avatar_sm'],
                         'author_profile_link' => $cdata['thread_starter']['profile_link'],
-                        'thread_text'           => parse_textarea($cdata['post_message'], $cdata['post_smileys'], TRUE, FALSE, IMAGES, TRUE),
+                        'thread_text'           => parse_text($cdata['post_message'], $cdata['post_smileys'], TRUE, FALSE, IMAGES, TRUE),
                         'thread_snippet'        => trim_text($cdata['post_message'], 80),
                         'thread_attachments'    => $cdata['post_attachments'],
                         'thread_date'           => $cdata['post_date'],

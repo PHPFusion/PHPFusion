@@ -513,7 +513,7 @@ class ForumViewer {
                         'author_avatar'         => $cdata['thread_starter']['avatar'],
                         'author_avatar_sm'      => $cdata['thread_starter']['avatar_sm'],
                         'author_profile_link'   => $cdata['thread_starter']['profile_link'],
-                        'thread_text'           => parse_textarea($cdata['post_message'], $cdata['post_smileys'], TRUE, FALSE, IMAGES, TRUE),
+                        'thread_text'           => parse_text($cdata['post_message'], $cdata['post_smileys'], TRUE, FALSE, IMAGES, TRUE),
                         'thread_snippet'        => trim_text($cdata['post_message'], 80),
                         'thread_attachments'    => $cdata['post_attachments'],
                         'thread_date'           => $cdata['post_date'],
@@ -933,7 +933,7 @@ class ForumViewer {
                             'post_timer'   => timer($postData['post_datestamp']),
                             'post_link'    => $locale['forum_0022']." <a href='".$postData['thread_link']['link']."'>".$postData['thread_link']['title']."</a>",
                             'thread_link'  => $locale['forum_0023']." ".$postData['thread_link']['title'],
-                            'post_message' => parse_textarea($postData['post_message'], TRUE, TRUE, TRUE, IMAGES, TRUE),
+                            'post_message' => parse_text($postData['post_message'], TRUE, TRUE, TRUE, IMAGES, TRUE),
                             //'post_link'    => "<a href='".$postData['thread_link']['link']."'>".$locale['forum_0024']."</a>"
                         ]);
                         $i++;

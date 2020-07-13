@@ -302,7 +302,7 @@ class ForumReports {
                                 ":data"    => \Defender::encode($data)
                             ]);
                     }
-                    addNotice("success", "Post moderation has been completed successfully.");
+                    add_notice("success", "Post moderation has been completed successfully.");
                     redirect(clean_request("", ["id"], FALSE));
                 }
             }
@@ -335,7 +335,7 @@ class ForumReports {
             $tpl->set_tag("user_level", getuserlevel($post_user['user_level']));
             $tpl->set_tag("user_post_count", $post_user['user_posts']);
             $tpl->set_tag("user_reputation", $post_user['user_reputation']);
-            $tpl->set_tag("post_message", parse_textarea($post_message, $data['post_smileys'], TRUE, FALSE, IMAGES, TRUE));
+            $tpl->set_tag("post_message", parse_text($post_message, $data['post_smileys'], TRUE, FALSE, IMAGES, TRUE));
             $tpl->set_tag("forum_name", $data['forum_name']);
             $tpl->set_tag("forum_link", FORUM."index.php?viewforum=true&amp;forum_id=".$data['forum_id']);
             $tpl->set_tag("post_url", FORUM."viewthread.php?thread_id=".$data['thread_id']."&amp;pid=".$data['post_id']);
@@ -395,7 +395,7 @@ class ForumReports {
                     'thread_icons'           => implode('', $cdata['thread_icons']),
                     'thread_pages'           => $cdata['thread_pages'],
                     'author_profile_link'    => $cdata['thread_starter']['profile_link'],
-                    'thread_text'            => parse_textarea($cdata['post_message'], $cdata['post_smileys'], TRUE, FALSE, IMAGES, TRUE),
+                    'thread_text'            => parse_text($cdata['post_message'], $cdata['post_smileys'], TRUE, FALSE, IMAGES, TRUE),
                     'thread_attachments'     => $cdata['post_attachments'],
                     'last_activity_time'     => timer($cdata['thread_last']['time']),
                     'last_acitivty_date'     => showdate('forumdate', $cdata['thread_last']['time']),

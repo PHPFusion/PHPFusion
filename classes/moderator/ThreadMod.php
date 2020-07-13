@@ -84,7 +84,7 @@ class ThreadMod {
                     dbquery("DELETE FROM ".DB_USERS."   WHERE user_id=:uid", [':uid'=>(int)$user_id]);
                     $user_data = fusion_get_user($user_id);
                     fusion_filter_current_hook('admin_user_delete', $user_data);
-                    addNotice('success', $user_name.' has been deleted');
+                    add_notice('success', $user_name.' has been deleted');
                 } else {
                     $modal = openmodal('confirmDelete', 'User delete confirmation', ['static'=>TRUE]);
                     $modal .= "<div class='alert alert-danger'><strong><i class='fas fa-exclamation-triangle m-r-10'></i>You are about to delete user:".$user_name." on this site.</strong><br/>";
@@ -95,7 +95,7 @@ class ThreadMod {
                 }
             }
         }else {
-            addNotice('danger', 'You do not have permission to moderate users.');
+            add_notice('danger', 'You do not have permission to moderate users.');
         }
     }
 
@@ -110,7 +110,7 @@ class ThreadMod {
                 $user_class->execute();
             }
         } else {
-            addNotice('danger', 'You do not have permission to moderate users.');
+            add_notice('danger', 'You do not have permission to moderate users.');
         }
     }
 
@@ -195,7 +195,7 @@ class ThreadMod {
 
             if ($response == TRUE) {
 
-                addNotice('success', $locale['forum_0701'], 'all');
+                add_notice('success', $locale['forum_0701'], 'all');
 
                 redirect(FORUM."index.php?viewforum&amp;forum_id=".$this->class->getForumID()."&amp;parent_id=".$this->class->getForumParentID());
 
@@ -409,7 +409,7 @@ class ThreadMod {
                         ':forum_id'          => (int)$forum_id
                     ]);
 
-                addNotice('success', $locale['forum_0752']);
+                add_notice('success', $locale['forum_0752']);
             }
 
             redirect(FORUM."viewthread.php?thread_id=".$thread_id);

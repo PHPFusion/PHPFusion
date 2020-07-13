@@ -169,7 +169,7 @@ class ViewThread extends ForumServer {
         $thread_data1 = $thread_info['thread'];
 
         if ((!iMOD or !iSUPERADMIN) && $thread_data['thread_locked']) {
-            addNotice("danger", $locale['forum_0277']);
+            add_notice("danger", $locale['forum_0277']);
             redirect(FORUM."index.php");
         }
 
@@ -496,7 +496,7 @@ class ViewThread extends ForumServer {
                     $object->download();
                     exit;
                 } else {
-                    addNotice("warning", $locale['forum_0398']);
+                    add_notice("warning", $locale['forum_0398']);
                 }
             }
         }

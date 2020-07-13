@@ -149,19 +149,19 @@ class PostMod {
                     $forum_mods = new Forums_Mod( $this->class );
                     $forum_mods->refreshForums();
 
-                    addNotice( 'success', sprintf( $locale['success-DP001'], count( $sanitized_post_id ) ) );
+                    add_notice( 'success', sprintf( $locale['success-DP001'], count( $sanitized_post_id ) ) );
 
                     if ( $thread_count === FALSE ) { // no remaining thread
-                        addNotice( 'success', $locale['success-DP002'] );
+                        add_notice( 'success', $locale['success-DP002'] );
                         redirect( FORUM."index.php?viewforum&amp;forum_id=".$this->forum_id."&amp;parent_id=".$this->parent_id );
                     }
                     redirect( FORM_REQUEST );
                 } else {
-                    addNotice( 'danger', $locale['error-DP001'] );
+                    add_notice( 'danger', $locale['error-DP001'] );
                     redirect( FORM_REQUEST );
                 }
             } else {
-                addNotice( 'danger', $locale['error-DP001'] );
+                add_notice( 'danger', $locale['error-DP001'] );
                 redirect( FORM_REQUEST );
             }
         }
@@ -245,11 +245,11 @@ class PostMod {
                     add_to_footer( $modal );
 
                 } else {
-                    addNotice( 'danger', $locale['forum_0307'] ); // No post to move
+                    add_notice( 'danger', $locale['forum_0307'] ); // No post to move
                     redirect( FORM_REQUEST );
                 }
             } else {
-                addNotice( 'danger', $locale['forum_0307'] ); // No post to move
+                add_notice( 'danger', $locale['forum_0307'] ); // No post to move
                 redirect( FORM_REQUEST );
             }
         }
@@ -387,7 +387,7 @@ class PostMod {
                     ':ntid' => $move_to_thread_id,
                     ':nfid' => $move_to_forum_id
                 ] ) ) {
-                    addNotice( 'danger', $locale['error-MP001'] );
+                    add_notice( 'danger', $locale['error-MP001'] );
                     redirect( FORM_REQUEST );
                 }
             } else {
@@ -536,17 +536,17 @@ class PostMod {
                 }
 
                 $pid = count( $this->post_id_array ) - 1;
-                addNotice( 'success', 'Posts have been moved', 'all' );
+                add_notice( 'success', 'Posts have been moved', 'all' );
                 redirect( FORUM."viewthread.php?thread_id=".$new_thread_id."&amp;pid=".$this->post_id_array[ $pid ]."#post_".$this->post_id_array[ $pid ] );
 
             } else {
 
-                addNotice( 'danger', $locale['error-MP002'], 'all' );
+                add_notice( 'danger', $locale['error-MP002'], 'all' );
                 redirect( FORM_REQUEST );
 
             }
         } else {
-            addNotice( 'danger', $locale['forum_0307'], 'all' );
+            add_notice( 'danger', $locale['forum_0307'], 'all' );
             redirect( FORM_REQUEST );
         }
     }

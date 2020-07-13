@@ -97,13 +97,13 @@ class ForumPostify extends ForumServer {
                 return $postify->execute();
             } else {
                 if (iMOD) {
-                    addNotice('danger', 'No action taken');
+                    add_notice('danger', 'No action taken');
                     redirect(self::$default_redirect_link);
                 }
             }
         } else {
             if (iMOD) {
-                addNotice('danger', 'No action taken');
+                add_notice('danger', 'No action taken');
                 redirect(self::$default_redirect_link);
             }
         }
@@ -211,7 +211,7 @@ class ForumPostify extends ForumServer {
 
         if ($error < 3) {
             if (!$this->thread_id) {
-                addNotice('danger', 'URL Error');
+                add_notice('danger', 'URL Error');
                 redirect(self::$default_redirect_link);
             }
             $link[] = ['url' => fusion_get_settings('siteurl').'infusions/forum/viewthread.php?thread_id='.$this->thread_id, 'title' => self::$locale['forum_0548']];

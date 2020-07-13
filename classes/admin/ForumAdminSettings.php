@@ -33,7 +33,7 @@ class ForumAdminSettings extends AdminInterface {
                 while ($data = dbarray($result)) {
                     dbquery("UPDATE ".DB_USERS." SET user_posts='".$data['num_posts']."' WHERE user_id='".$data['post_author']."'");
                 }
-                addNotice('success', self::$locale['forum_061']);
+                add_notice('success', self::$locale['forum_061']);
                 redirect(FUSION_REQUEST);
             }
         }
@@ -91,10 +91,10 @@ class ForumAdminSettings extends AdminInterface {
                         ':settings_name'  => $settings_name
                     ]);
                 }
-                addNotice('success', self::$locale['900']);
+                add_notice('success', self::$locale['900']);
                 redirect(FUSION_SELF.fusion_get_aidlink().'&section=fs');
             } else {
-                addNotice("danger", self::$locale['901']);
+                add_notice("danger", self::$locale['901']);
             }
 
         }
@@ -231,10 +231,10 @@ class ForumAdminSettings extends AdminInterface {
                     ];
                     dbquery_insert(DB_SETTINGS_INF, $inputSettings, "update", ["primary_key" => "settings_name"]);
                 }
-                addNotice('success', self::$locale['900']);
+                add_notice('success', self::$locale['900']);
                 redirect(clean_request('section=fs&ref=post', ['ref'], FALSE));
             } else {
-                addNotice("danger", self::$locale['901']);
+                add_notice("danger", self::$locale['901']);
             }
 
         }
@@ -376,7 +376,7 @@ class ForumAdminSettings extends AdminInterface {
                     $result = dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value=:current_uf WHERE settings_name='forum_enabled_userfields' AND settings_inf='forum'", [':current_uf' => $current_uf]);
                 }
                 if (dbrows($result)) {
-                    addNotice('success', self::$locale['900']);
+                    add_notice('success', self::$locale['900']);
                     redirect(FUSION_SELF.fusion_get_aidlink().'&section=fs&ref=ufields');
                 }
             }

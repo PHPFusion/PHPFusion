@@ -69,7 +69,7 @@ class QuickReply extends ForumServer {
                 $form_name = "post_reply_".$post_id;
                 $textarea_id = "post_message_".$post_id;
             } else {
-                addNotice('warning', 'Post to quote could not be found.');
+                add_notice('warning', 'Post to quote could not be found.');
                 redirect(clean_request('', ['quote'], FALSE));
             }
         }

@@ -76,8 +76,8 @@ class ViewForum extends ForumServer {
 
             $this->forum_info['forum_postcount_word'] = format_word($this->forum_info['post_count'], $locale['fmt_post']);
 
-            $this->forum_info['forum_description'] = parse_textarea($this->forum_info['forum_description'], TRUE, TRUE);
-            $this->forum_info['forum_rules'] = parse_textarea($this->forum_info['forum_rules'], TRUE, TRUE);
+            $this->forum_info['forum_description'] = parse_text($this->forum_info['forum_description'], TRUE, TRUE);
+            $this->forum_info['forum_rules'] = parse_text($this->forum_info['forum_rules'], TRUE, TRUE);
 
             if (!empty($this->forum_info['forum_description'])) {
                 set_meta('description', $this->forum_info['forum_description']);

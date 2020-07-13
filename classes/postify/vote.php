@@ -104,7 +104,7 @@ class PostifyVote extends ForumPostify {
                                             ':post_author_id' => $thread_data['post_author'],
                                             ':points'         => self::$forum_settings['upvote_points']
                                         ]);
-                                        addNotice('success', self::$locale['forum_0515'], 'viewthread.php');
+                                        add_notice('success', self::$locale['forum_0515'], 'viewthread.php');
                                     } else {
                                         // I have not yet voted, I'm upvoting.
                                         $d['vote_points'] = 1;
@@ -132,11 +132,11 @@ class PostifyVote extends ForumPostify {
                                             ':points'         => self::$forum_settings['upvote_points']
                                         ]);
 
-                                        addNotice('success', self::$locale['forum_0516'], 'viewthread.php');
+                                        add_notice('success', self::$locale['forum_0516'], 'viewthread.php');
                                     }
                                     redirect(self::$default_redirect_link);
                                 } else {
-                                    addNotice('danger', strtr(self::$locale['forum_0519'], ['{%action%}' => self::$locale['forum_0510'], '{%points%}' => format_word(self::$forum_settings['points_to_upvote'], self::$locale['fmt_points'])]), 'viewthread.php');
+                                    add_notice('danger', strtr(self::$locale['forum_0519'], ['{%action%}' => self::$locale['forum_0510'], '{%points%}' => format_word(self::$forum_settings['points_to_upvote'], self::$locale['fmt_points'])]), 'viewthread.php');
                                 }
                                 break;
 
@@ -153,7 +153,7 @@ class PostifyVote extends ForumPostify {
                                             ':post_author_id' => $thread_data['post_author'],
                                             ':points'         => self::$forum_settings['downvote_points']
                                         ]);
-                                        addNotice('success', self::$locale['forum_0517'], 'viewthread.php');
+                                        add_notice('success', self::$locale['forum_0517'], 'viewthread.php');
                                     } else {
                                         // I have not yet voted, I'm downvoting.
                                         $d['vote_points'] = -1;
@@ -181,37 +181,37 @@ class PostifyVote extends ForumPostify {
                                             ':points'         => self::$forum_settings['downvote_points']
                                         ]);
 
-                                        addNotice('success', self::$locale['forum_0518'], 'viewthread.php');
+                                        add_notice('success', self::$locale['forum_0518'], 'viewthread.php');
                                     }
                                     redirect(self::$default_redirect_link);
 
                                 } else {
-                                    addNotice('danger', strtr(self::$locale['forum_0519'], [
+                                    add_notice('danger', strtr(self::$locale['forum_0519'], [
                                         '{%action%}' => self::$locale['forum_0511'],
                                         '{%points%}' => format_word(self::$forum_settings['points_to_downvote'], self::$locale['fmt_points'])]), 'viewthread.php');
                                 }
                                 break;
                             default:
-                                //addNotice('danger', 'Invalid vote actions');
+                                //add_notice('danger', 'Invalid vote actions');
                                 redirect(FORUM.'index.php');
                         }
                     } else {
                         // you cannot upvote or downvote on your own post.
-                        addNotice('danger', self::$locale['forum_0802'], 'viewthread.php');
+                        add_notice('danger', self::$locale['forum_0802'], 'viewthread.php');
                     }
                 } else {
                     // this one does not exist.
-                    addNotice('danger', self::$locale['forum_0529a'], 'viewthread.php');
+                    add_notice('danger', self::$locale['forum_0529a'], 'viewthread.php');
                 }
                 // print_p(self::$default_redirect_link);
                 redirect(self::$default_redirect_link);
 
             } else {
-                //addNotice('danger', 'You do not have access to this thread.');
+                //add_notice('danger', 'You do not have access to this thread.');
                 redirect(FORUM.'index.php');
             }
         } else {
-            //addNotice('danger', 'Thread does not exist');
+            //add_notice('danger', 'Thread does not exist');
             redirect(FORUM.'index.php');
         }
     }

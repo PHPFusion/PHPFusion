@@ -181,7 +181,7 @@ function forum_activity_content( $data ) {
     if ( $data['action_item_type'] == 'forum' ) {
         switch ( $data['action_type'] ) {
             case 'thread_new':
-                return parse_textarea( $data['action_content'] );
+                return parse_text( $data['action_content'] );
                 break;
         }
     }
@@ -204,7 +204,7 @@ function forum_delete_user( $data ) {
     $threads = dbquery( "SELECT * FROM ".DB_FORUM_THREADS." WHERE thread_lastuser=:uid", $param );
     if ( dbrows( $threads ) ) {
         while ( $thread = dbarray( $threads ) ) {
-            
+
             // Update thread last post author, date and id
             $last_thread_post = dbarray( dbquery( "SELECT post_id, post_author, post_datestamp FROM ".DB_FORUM_POSTS." WHERE thread_id='".$thread['thread_id']."' ORDER BY post_id DESC LIMIT 0,1" ) );
             dbquery( "UPDATE ".DB_FORUM_THREADS." SET thread_lastpost=:thread_lastpost, thread_lastpostid=:thread_lastpostid, thread_lastuser=:thread_lastuser WHERE thread_id=:thread_id",
@@ -214,14 +214,14 @@ function forum_delete_user( $data ) {
                     ':thread_lastuser'   => $last_thread_post['post_author'],
                     ':thread_id'         => $thread['thread_id']
                 ] );
-            
+
             // Update thread posts count
             $posts_count = dbcount( "(post_id)", DB_FORUM_POSTS, "thread_id=:thread_id", [ ':thread_id' => $thread['thread_id'] ] );
             dbquery( "UPDATE ".DB_FORUM_THREADS." SET thread_postcount=:thread_postcount WHERE thread_id=:thread_id", [ ':thread_postcount' => $posts_count, ':thread_id' => $thread['thread_id'] ] );
-            
+
             // Update forum threads count and posts count
             // forum_postcount, forum_threadcount,
-            
+
             // forum_lastuser, forum_lastpostid , forum_lastpost,
             list( $threadcount, $postcount ) = dbarraynum( dbquery( "SELECT COUNT(thread_id), SUM(thread_postcount) FROM ".DB_FORUM_THREADS." WHERE forum_id=:forum_id AND thread_lastuser=:thread_lastuser AND thread_hidden=:thread_hidden", [ ':forum_id' => $thread['forum_id'], ':thread_lastuser' => $user_id, ':thread_hidden' => '0' ] ) );
             if ( isnum( $threadcount ) && isnum( $postcount ) ) {
@@ -233,7 +233,7 @@ function forum_delete_user( $data ) {
                         ':forum_lastuser'    => $user_id
                     ] );
             }
-            
+
         }
     }
     // If thread started by user, delete the thread, and all posts within the thread

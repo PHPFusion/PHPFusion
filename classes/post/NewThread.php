@@ -540,11 +540,11 @@ class NewThread extends ForumServer {
                                     redirect(FORUM."postify.php?post=new&error=0&amp;forum_id=".$post_data['forum_id']."&amp;thread_id=".$post_data['thread_id']);
                                 }
                             } else {
-                                addNotice("danger", $locale['forum_0186']);
+                                add_notice("danger", $locale['forum_0186']);
                             }
                         } else {
 
-                            addNotice("danger", $locale['forum_0187']);
+                            add_notice("danger", $locale['forum_0187']);
 
                             redirect(FORUM."index.php");
                         }
