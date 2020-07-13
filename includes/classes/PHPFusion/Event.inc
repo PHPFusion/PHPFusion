@@ -132,7 +132,7 @@ class Event {
     }
 
     // This will log event and notice.
-    public function add_notice($to, $from, $message, $event_type, $time) {
+    public function addNotice($to, $from, $message, $event_type, $time) {
         $insertArray = [
             'notice_to'        => $to,
             'notice_from'      => $from,
