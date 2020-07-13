@@ -108,7 +108,7 @@ class BreadCrumbs {
             'link'  => '',
             'class' => 'crumb'
         ];
-        //$link['title'] = $link['title']; //trim(parse_textarea($link['title'], TRUE, TRUE, FALSE));
+        //$link['title'] = $link['title']; //trim(parse_text($link['title'], TRUE, TRUE, FALSE));
         if (!empty($link['title']) && !empty($link['link'])) {
             $this->breadcrumbs[] = $link;
         }

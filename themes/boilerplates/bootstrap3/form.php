@@ -240,7 +240,7 @@ class Form {
                 if (!empty($new_error_text)) {
                     $options['error_text'] = $new_error_text;
                 }
-                //addNotice("danger", "<strong>$title</strong> - ".$options['error_text']);
+                //add_notice("danger", "<strong>$title</strong> - ".$options['error_text']);
             }
         }
 

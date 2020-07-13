@@ -54,7 +54,7 @@ class InstallerDbSetup extends Install_Core {
         $content = "<h4 class='title'>".self::$locale['setup_1200']."</h4><p>".self::$locale['setup_1201']."</p>\n";
         $content .= "<hr/>\n";
 
-        $content .= renderNotices(getNotices());
+        $content .= render_notices(get_notices());
         $content .= form_text('db_host', self::$locale['setup_1202'], !empty(self::$connection['db_host']) ? self::$connection['db_host'] : 'localhost', [
             'inline'      => TRUE,
             'required'    => TRUE,
@@ -217,7 +217,7 @@ class InstallerDbSetup extends Install_Core {
                                 /*$message .= $table_name." created<br/>\n";*/
                                 //Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, self::$locale['setup_1600'].$table_name.'...', $result);
                             }
-                            //addNotice("success", $message);
+                            //add_notice("success", $message);
                         } else {
                             print_p('Create:');
                             print_p($to_create);
@@ -238,7 +238,7 @@ class InstallerDbSetup extends Install_Core {
                                         /*$message .= $table_name." altered<br/>\n";*/
                                     }
                                 }
-                                //addNotice("info", $message);
+                                //add_notice("info", $message);
                             }
                         } else {
                             print_p('Alter Column:');
@@ -262,7 +262,7 @@ class InstallerDbSetup extends Install_Core {
                                     }
                                 }
                             }
-                            //addNotice("info", $message);
+                            //add_notice("info", $message);
                         } else {
                             print_p('Add Column:');
                             print_p($to_add_column);
@@ -281,7 +281,7 @@ class InstallerDbSetup extends Install_Core {
                                     //Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, self::$locale['setup_1603'].$table_name.'...', $result);
                                 }
                             }
-                            //addNotice("info", $message);
+                            //add_notice("info", $message);
                         } else {
                             print_p('Insert Rows:');
                             print_p($to_insert_rows);
@@ -325,7 +325,7 @@ class InstallerDbSetup extends Install_Core {
                                         ':version_value' => $filename,
                                         ':version_col'   => 'version'
                                     ]);
-                                    //addNotice('warning', $message);
+                                    //add_notice('warning', $message);
                                 }
                             } else {
                                 print_p('To Upgrade:');
@@ -379,7 +379,7 @@ class InstallerDbSetup extends Install_Core {
             } else {
                 foreach ($validate as $validate_result) {
                     if (!$validate_result['result']) {
-                        addNotice('danger', $validate_result['description']);
+                        add_notice('danger', $validate_result['description']);
                     }
                 }
                 self::installer_step(self::STEP_DB_SETTINGS_FORM);

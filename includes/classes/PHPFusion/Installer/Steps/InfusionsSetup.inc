@@ -98,7 +98,7 @@ class InstallerInfusions extends Install_Core {
                 }
                 closedir($temp);
                 $content .= "<div>\n";
-                $content .= renderNotices(getNotices());
+                $content .= render_notices(get_notices());
 
                 if ($infs) {
                     $content .= "<div class='list-group'>\n";

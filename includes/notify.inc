@@ -113,7 +113,7 @@ function remove_notice($key = ['all', FUSION_SELF, FUSION_REQUEST]) {
  * @param string|array $value             the message
  * @param string       $key               the key identifying a group holding notices, by default the page name in which the notice was set
  * @param boolean      $removeAfterAccess whether the notice should be automatically removed after it was displayed once,
- *                                        if set to FALSE when getNotices() is called you have the option to keep the notice even after it was accesed
+ *                                        if set to FALSE when get_notices() is called you have the option to keep the notice even after it was accesed
  */
 function add_notice($status, $value, $key = FUSION_SELF, $removeAfterAccess = TRUE) {
     $type = $removeAfterAccess ? 'once' : 'persist';
@@ -155,7 +155,7 @@ function add_notice($status, $value, $key = FUSION_SELF, $removeAfterAccess = TR
  * @param string  $value             the message
  * @param string  $key               the key identifying a group holding notices, by default the page name in which the notice was set
  * @param boolean $removeAfterAccess whether the notice should be automatically removed after it was displayed once.
- *                                   If set to FALSE when getNotices() is called you have the option to keep the notice even after it was accesed.
+ *                                   If set to FALSE when get_notices() is called you have the option to keep the notice even after it was accesed.
  */
 function setNotice($status, $value, $key = FUSION_SELF, $removeAfterAccess = TRUE) {
     $type = $removeAfterAccess ? 'once' : 'persist';

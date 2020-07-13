@@ -41,7 +41,7 @@ if (post('clear_cache')) {
         // Where system has been disabled and instance could not be found, invoke manually.
         dbquery("TRUNCATE ".DB_SESSIONS);
     }
-    addNotice('success', $locale['security_007']);
+    add_notice('success', $locale['security_007']);
     redirect(FUSION_REQUEST);
 }
 
@@ -103,15 +103,15 @@ if (post('savesettings')) {
             ]);
         }
 
-        addNotice('success', $locale['900']);
+        add_notice('success', $locale['900']);
         redirect(FUSION_REQUEST);
     } else {
         // Why captcha errors here -- move to Proper place.
-        addNotice('danger', $locale['901']);
+        add_notice('danger', $locale['901']);
         // Why captcha errors here -- move to Proper place.
-        addNotice('danger', $locale['696']);
+        add_notice('danger', $locale['696']);
         // Why captcha errors here -- move to Proper place.
-        addNotice('danger', $locale['900']);
+        add_notice('danger', $locale['900']);
     }
 
 }

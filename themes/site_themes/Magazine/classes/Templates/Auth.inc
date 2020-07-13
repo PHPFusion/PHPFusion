@@ -59,7 +59,7 @@ class Auth extends Core {
             'locale'   => $locale,
             'userdata' => $userdata,
             'settings' => $settings,
-            'notices'  => renderNotices(getNotices(['all', FUSION_SELF])),
+            'notices'  => render_notices(get_notices(['all', FUSION_SELF])),
             'info'     => $info,
             'links'    => $links
         ];
@@ -108,7 +108,7 @@ class Auth extends Core {
 
         $context = [
             'locale'    => $locale,
-            'notices'   => renderNotices(getNotices(['all', FUSION_SELF])),
+            'notices'   => render_notices(get_notices(['all', FUSION_SELF])),
             'info'      => $info,
             'open_tab'  => $open,
             'close_tab' => $close,
@@ -134,7 +134,7 @@ class Auth extends Core {
 
         $context = [
             'locale'  => $locale,
-            'notices' => renderNotices(getNotices(['all', FUSION_SELF])),
+            'notices' => render_notices(get_notices(['all', FUSION_SELF])),
             'content' => $content
         ];
 

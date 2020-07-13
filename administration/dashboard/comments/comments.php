@@ -35,7 +35,7 @@ function display_comments_widget() {
 
             $comment_item_url = (isset($link_type[$comment_data['comment_type']]) ? "<a href='".sprintf($link_type[$comment_data['comment_type']]."'", $comment_data['comment_item_id'])."'>{%item%}</a>" : '{%item%}');
             $comment_item_name = (isset($comments_type[$comment_data['comment_type']])) ? $comments_type[$comment_data['comment_type']] : $locale['global_073b'];
-            $comments = trimlink(strip_tags(parse_textarea($comment_data['comment_message'], FALSE, TRUE)), 70);
+            $comments = trimlink(strip_tags(parse_text($comment_data['comment_message'], FALSE, TRUE)), 70);
             // why not use datatables.
             $info['comment_items'][] = [
                 'comment_id'           => $comment_data['comment_id'],
@@ -46,7 +46,7 @@ function display_comments_widget() {
                 'delete_comment_link' => ADMIN.'comments.php'.$aidlink.'&action=delete&comment_id='.$comment_data['comment_id'].'&ctype='.$comment_data['comment_type'].'&comment_item_id='.$comment_data['comment_item_id'],
                 'profile_link'         => (!empty($comment_data['user_id']) ? profile_link($comment_data['user_id'], $comment_data['user_name'], $comment_data['user_status']) : $comment_data['comment_name']),
                 'name'                 => strtr($comment_item_url, ["{%item%}" => $comment_item_name]),
-                'comments'             => parse_textarea($comments, TRUE, FALSE),
+                'comments'             => parse_text($comments, TRUE, FALSE),
             ];
         }
     } else {

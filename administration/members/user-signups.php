@@ -46,27 +46,27 @@ class UserSignUps implements \PHPFusion\Interfaces\TableSDK {
                 switch ($table_action) {
                     case 'approve':
                         $this->approveUser($email);
-                        addNotice('success', 'All selected users have been approved.');
+                        add_notice('success', 'All selected users have been approved.');
                         break;
                     case 'reject':
                         $this->rejectUser($email);
-                        addNotice('success', 'All selected users have been rejected.');
+                        add_notice('success', 'All selected users have been rejected.');
                         break;
                     case 'review':
                         $this->reviewUser($email);
-                        addNotice('success', 'All selected users have been set for administrator reviews.');
+                        add_notice('success', 'All selected users have been set for administrator reviews.');
                         break;
                     case 'email':
                         $this->resendVerificationEmail($email);
-                        addNotice('success', 'Verification email has been sent to all selected users.');
+                        add_notice('success', 'Verification email has been sent to all selected users.');
                         break;
                     case 'deactivate':
                         $this->deactivateUser($email);
-                        addNotice('success', 'All selected users have been deactivated.');
+                        add_notice('success', 'All selected users have been deactivated.');
                         break;
                     case 'reactivate':
                         $this->reactivateUser($email);
-                        addNotice('success', 'All selected users have been reactivated.');
+                        add_notice('success', 'All selected users have been reactivated.');
                         break;
                 }
             }
@@ -125,7 +125,7 @@ class UserSignUps implements \PHPFusion\Interfaces\TableSDK {
                     '[LINK]'  => "<a href='".BASEDIR."contact.php'><strong>",
                     '[/LINK]' => "</strong></a>"
                 ]);
-                addNotice('warning', $locale['u153']."<br />".$message, 'all');
+                add_notice('warning', $locale['u153']."<br />".$message, 'all');
             }
         }
     }

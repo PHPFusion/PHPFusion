@@ -451,7 +451,6 @@ class Defender {
      * @param string     $default
      * @param bool|FALSE $input_name
      * @param bool|FALSE $is_multiLang
-     * @param string     $page_hash
      *
      * @return string
      * @throws Exception
@@ -522,18 +521,18 @@ class Defender {
 
                         // Add regex error message.
                         if ($secured != '' && $regex && !preg_match('@^'.$regex.'$@i', $secured)) {
-                            addNotice('danger', sprintf(fusion_get_locale('regex_error'), $this->field_config['title']));
+                            add_notice('danger', sprintf(fusion_get_locale('regex_error'), $this->field_config['title']));
                         }
                         // Add a notice
                         if (self::$debug) {
-                            addNotice('warning', '<strong>'.$input_name.':</strong>'.($this->field_config['safemode'] ? ' is in SAFEMODE and the' : '').' check failed');
+                            add_notice('warning', '<strong>'.$input_name.':</strong>'.($this->field_config['safemode'] ? ' is in SAFEMODE and the' : '').' check failed');
                         }
 
                         // Return user's input for correction
                         return $this->field_value;
                     } else {
                         if (self::$debug) {
-                            addNotice('info', $input_name.' = '.(is_array($secured) ? 'array' : $secured));
+                            add_notice('info', $input_name.' = '.(is_array($secured) ? 'array' : $secured));
                         }
 
                         return $secured;
@@ -603,11 +602,11 @@ class Defender {
             } else {
                 self::stop();
                 $locale['type_unknown'] = '%s: has an unknown type set'; // to be moved
-                addNotice('danger', sprintf($locale['type_unknown'], self::$input_name));
+                add_notice('danger', sprintf($locale['type_unknown'], self::$input_name));
             }
         } catch (Exception $e) {
             self::stop();
-            addNotice('danger', $e->getMessage());
+            add_notice('danger', $e->getMessage());
         }
 
         return NULL;
@@ -628,11 +627,11 @@ class Defender {
                 if (function_exists('alert')) {
                     echo alert($notice);
                 } else {
-                    addNotice('danger', $notice);
+                    add_notice('danger', $notice);
                 }
                 define('STOP_REDIRECT', TRUE);
             }
-            //addNotice('danger', '<strong>'.fusion_get_locale('error_request', LOCALE.LOCALESET.'defender.php').'</strong>');
+            //add_notice('danger', '<strong>'.fusion_get_locale('error_request', LOCALE.LOCALESET.'defender.php').'</strong>');
         }
         return NULL;
     }
@@ -721,9 +720,9 @@ function file_sanitizer($value, $default = '', $input_name = FALSE) {
  */
 function check_get($key) {
     if (is_array($key)) {
-        return (!empty(array_reduce($key, function($carry, $item){return (!empty($carry[$item]) ? $carry[$item] : '');}, $_GET)) ? TRUE : FALSE);
+        return (!empty(array_reduce($key, function($carry, $item){return (!empty($carry[$item]) ? $carry[$item] : '');}, $_GET)));
     }
-    return (isset($_GET[$key]) ? TRUE : FALSE);
+    return (isset($_GET[$key]));
 }
 
 /**
@@ -735,9 +734,9 @@ function check_get($key) {
  */
 function check_post($key) {
     if (is_array($key)) {
-        return (!empty(array_reduce($key, function($carry, $item){return (!empty($carry[$item]) ? $carry[$item] : '');}, $_POST)) ? TRUE : FALSE);
+        return (!empty(array_reduce($key, function($carry, $item){return (!empty($carry[$item]) ? $carry[$item] : '');}, $_POST)));
     }
-    return (isset($_POST[$key]) ? TRUE : FALSE);
+    return (isset($_POST[$key]));
 }
 
 /**
@@ -977,7 +976,7 @@ function session_add($key, $value) {
  *
  * @param $key
  *
- * @return null
+ * @return mixed
  */
 function session_get($key) {
 

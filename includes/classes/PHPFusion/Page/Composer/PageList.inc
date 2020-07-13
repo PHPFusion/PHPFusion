@@ -56,10 +56,10 @@ class PageList extends PageAdmin {
                         }
                     }
                 }
-                addNotice('success', self::$locale['page_0402']);
+                add_notice('success', self::$locale['page_0402']);
                 redirect(FUSION_REQUEST);
             }
-            addNotice('warning', self::$locale['page_0442']);
+            add_notice('warning', self::$locale['page_0442']);
             redirect(FUSION_REQUEST);
         }
 

@@ -129,9 +129,9 @@ class Helper {
                 '[LINK]'  => "<a href='".BASEDIR."contact.php'><strong>",
                 '[/LINK]' => "</strong></a>"
             ]);
-            addNotice('warning', $locale['u153']."<br />".$message, 'all');
+            add_notice('warning', $locale['u153']."<br />".$message, 'all');
         } else {
-            addNotice('success', 'A verification email has been sent to '.$user_name.' The account will only be active after email verification.');
+            add_notice('success', 'A verification email has been sent to '.$user_name.' The account will only be active after email verification.');
         }
         if (fusion_safe()) {
             $userInfo = base64_encode(serialize($this->class->user_data));
@@ -143,7 +143,7 @@ class Helper {
     public function sendNewPasswordEmail() {
         $locale = fusion_get_locale();
         include INCLUDES."sendmail_include.php";
-        addNotice("success", str_replace("USER_NAME", $this->class->user_data['user_name'], $locale['global_458']));
+        add_notice("success", str_replace("USER_NAME", $this->class->user_data['user_name'], $locale['global_458']));
         $settings = fusion_get_settings();
         $password = sanitizer('user_password', '', 'user_password');
         $input = [
@@ -168,7 +168,7 @@ class Helper {
         ];
         if (!sendemail($input['mailname'], $input['email'], $settings['siteusername'], $settings['siteemail'], $input['subject'],
             $input['message'])) {
-            addNotice('warning', str_replace("USER_NAME", $this->user_data['user_name'], $this->locale['global_459']));
+            add_notice('warning', str_replace("USER_NAME", $this->user_data['user_name'], $this->locale['global_459']));
         }
     }
 

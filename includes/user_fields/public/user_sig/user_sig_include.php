@@ -33,6 +33,6 @@ if ( $profile_method == "input" ) {
 } else if ( $profile_method == "display" ) {
     $user_fields = [
         'title' => $locale['uf_sig'],
-        'value' => $field_value ? parse_textarea($field_value, TRUE, TRUE, FALSE, NULL, TRUE) : fusion_get_locale('na')
+        'value' => $field_value ? parse_text($field_value, TRUE, TRUE, FALSE, NULL, TRUE) : fusion_get_locale('na')
     ];
 }

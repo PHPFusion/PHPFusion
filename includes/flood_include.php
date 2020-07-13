@@ -52,7 +52,7 @@ function flood_control($field, $table, $where, $debug = FALSE) {
                             dbquery("INSERT INTO ".DB_BLACKLIST." (blacklist_ip, blacklist_ip_type, blacklist_email, blacklist_reason) VALUES ('".USER_IP."', '".USER_IP_TYPE."', '', '".$locale['global_440']."')");
                         }
                     } else {
-                        addNotice('info',
+                        add_notice('info',
                             "DEBUG MESSAGE: Triggered flood control action due to repeated offences. This could've resulted in a ban or suspension");
                     }
 

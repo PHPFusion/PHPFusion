@@ -88,7 +88,7 @@ function form_geo( $input_name, $label, $input_value = FALSE, array $options = [
     for ($i = 0; $i <= 5; $i++) {
         if ( Defender::inputHasError( $input_name.'-'.$validation_key[ $i ] ) ) {
             $options['error_class'] = "has-error ";
-            addNotice("danger", "<strong>$title</strong> - ".$error_key[$i]);
+            add_notice("danger", "<strong>$title</strong> - ".$error_key[$i]);
         }
     }
 
@@ -199,7 +199,7 @@ function form_geo( $input_name, $label, $input_value = FALSE, array $options = [
         'error_text_5' => $options['error_text_5'],
         'error_text_6' => $options['error_text_6']
     ];
-    
+
     Defender::getInstance()->add_field_session( $config );
 
     static $flag_function = NULL;
@@ -250,17 +250,17 @@ function form_geo( $input_name, $label, $input_value = FALSE, array $options = [
     $('#$input_id-country').select2({
         $flag_plugin
         placeholder: '".$locale['sel_country']." ".($options['required'] == 1 ? '*' : '')."'
-        
+
     });
-    
+
     $('#$input_id-state').select2({
         data: $state_default,
         allowClear: false,
         //placeholder: '".$locale['sel_state']." ".($options['required'] == 1 ? '*' : '')."'
     });
-    
+
     $('#$input_id-state').select2('val', '$state_default_selected');
-    
+
     // on change event.
     $('body').on('change', '#$input_id-country', function(){
         var ce_id = $(this).val();
@@ -354,7 +354,7 @@ function form_location($input_name, $label = '', $input_value = FALSE, array $op
             if (!empty($new_error_text)) {
                 $options['error_text'] = $new_error_text;
             }
-            addNotice("danger", "<strong>$title</strong> - ".$options['error_text']);
+            add_notice("danger", "<strong>$title</strong> - ".$options['error_text']);
         }
     }
 
@@ -443,13 +443,13 @@ function form_location($input_name, $label = '', $input_value = FALSE, array $op
     if ($options['deactivate']) {
         $html .= form_hidden($input_name, "", $input_value, ["input_id" => $options['input_id']]);
     }
-    
+
     $html .= Defender::inputHasError( $input_name ) ? "<div class='input-error".( ( !$options['inline'] ) ? " display-block" : "" )."'><div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div></div>" : '';
 
     $html .= ($options['inline'] && $label) ? "</div>\n" : "";
 
     $html .= "</div>\n";
-    
+
     Defender::add_field_session( [
         'input_name'     => $input_name,
         'type'           => 'textbox',
@@ -533,7 +533,7 @@ function state_search($country_iso) {
              return $states_array;
          }
     }*/
-    
+
     $states = Geomap::get_StatesOpts( $country_iso );
     $array[] = ['id' => 'other', 'text' => fusion_get_locale('other_states')];
     if (!empty($states)) {

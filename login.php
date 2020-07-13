@@ -32,16 +32,16 @@ if (!iMEMBER) {
         }
         switch ($_GET['error']) {
             case 1:
-                addNotice("danger", $locale['error_input_username']);
+                add_notice("danger", $locale['error_input_username']);
                 break;
             case 2:
-                addNotice("danger", $locale['global_192']);
+                add_notice("danger", $locale['global_192']);
                 break;
             case 3:
                 if (isset($_COOKIE[COOKIE_PREFIX."user"])) {
                     redirect($action_url);
                 } else {
-                    addNotice("danger", $locale['global_193']);
+                    add_notice("danger", $locale['global_193']);
                 }
                 break;
             case 4:
@@ -54,10 +54,10 @@ if (!iMEMBER) {
                                 FROM ".DB_SUSPENDS."
                                 WHERE suspended_user=:suser
                                 ORDER BY suspend_date DESC  LIMIT 1", [':suser' => $id]));
-                            addNotice("danger", $locale['global_406']." ".$data['suspend_reason']);
+                            add_notice("danger", $locale['global_406']." ".$data['suspend_reason']);
                             break;
                         case 2:
-                            addNotice("danger", $locale['global_195']);
+                            add_notice("danger", $locale['global_195']);
                             break;
                         case 3:
                             $data = dbarray(dbquery("SELECT u.user_actiontime, s.suspend_reason
@@ -65,23 +65,23 @@ if (!iMEMBER) {
                                 LEFT JOIN ".DB_USERS." u ON u.user_id=s.suspended_user
                                 WHERE s.suspended_user=:suser
                                 ORDER BY s.suspend_date DESC LIMIT 1", [':suser' => $id]));
-                            addNotice("danger", $locale['global_407'].showdate('shortdate', $data['user_actiontime']).$locale['global_408']." - ".$data['suspend_reason']);
+                            add_notice("danger", $locale['global_407'].showdate('shortdate', $data['user_actiontime']).$locale['global_408']." - ".$data['suspend_reason']);
                             break;
                         case 4:
-                            addNotice("danger", $locale['global_409']);
+                            add_notice("danger", $locale['global_409']);
                             break;
                         case 5:
-                            addNotice("danger", $locale['global_411']);
+                            add_notice("danger", $locale['global_411']);
                             break;
                         case 6:
-                            addNotice("danger", $locale['global_412']);
+                            add_notice("danger", $locale['global_412']);
                             break;
                     }
                 }
                 break;
                 break;
             case 5:
-                addNotice('danger', $locale['error_input_password']);
+                add_notice('danger', $locale['error_input_password']);
         }
     }
 

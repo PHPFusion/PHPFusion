@@ -69,11 +69,11 @@ class GoogleAuthenticator {
                     'user_google2fa' => (string)$secret,
                 ];
                 dbquery_insert(DB_USERS, $user, 'update');
-                addNotice('success', $locale['uf_gauth_140']);
+                add_notice('success', $locale['uf_gauth_140']);
                 redirect(FUSION_REQUEST);
 
             } else {
-                addNotice('danger', $locale['uf_gauth_141']);
+                add_notice('danger', $locale['uf_gauth_141']);
                 redirect(FUSION_REQUEST);
             }
         }
@@ -90,11 +90,11 @@ class GoogleAuthenticator {
                     'user_google2fa' => '',
                 ];
                 dbquery_insert(DB_USERS, $user, 'update');
-                addNotice('success', $locale['uf_gauth_142']);
+                add_notice('success', $locale['uf_gauth_142']);
                 redirect(FUSION_REQUEST);
             } else {
                 // unsuccessful. try again.
-                addNotice('danger', $locale['uf_gauth_143']);
+                add_notice('danger', $locale['uf_gauth_143']);
                 redirect(FUSION_REQUEST);
             }
         }

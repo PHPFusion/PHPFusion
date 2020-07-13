@@ -39,14 +39,14 @@ class comments {
                 case 'delete':
                     $result = $this->delete_comments($_GET['comment_id']);
                     if ($result) {
-                        addNotice('success', $this->locale['411']);
+                        add_notice('success', $this->locale['411']);
                         redirect(clean_request('', ['section', 'action', 'comment_id'], FALSE));
                     }
                     break;
                 case 'delban':
                     $result = $this->ban_comments($_GET['comment_id']);
                     if ($result) {
-                        addNotice('success', fusion_get_locale('BLS_011', LOCALE.LOCALESET."admin/blacklist.php"));
+                        add_notice('success', fusion_get_locale('BLS_011', LOCALE.LOCALESET."admin/blacklist.php"));
                         redirect(clean_request('', ['section', 'action', 'comment_id'], FALSE));
                     }
                     break;
@@ -202,7 +202,7 @@ class comments {
                 ':CommentMessage' => $comment_message,
                 ':CommentId'      => $_GET['comment_id']
             ]);
-            addNotice('success', $this->locale['410']);
+            add_notice('success', $this->locale['410']);
             redirect(clean_request('', ['section', 'comment_item_id', 'comment_id'], FALSE));
         }
 

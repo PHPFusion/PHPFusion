@@ -128,7 +128,7 @@ class SmileysAdministration {
                 }
                 $messages = self::$locale['SMLY_412'];
             }
-            addNotice( 'warning', $messages );
+            add_notice( 'warning', $messages );
             redirect( clean_request( '', [ 'section=smiley_list', 'aid' ], TRUE ) );
         }
     }
@@ -166,11 +166,11 @@ class SmileysAdministration {
             if ( fusion_safe() ) {
                 if ( $error == "" ) {
                     dbquery_insert( DB_SMILEYS, $this->data, empty( $this->data['smiley_id'] ) ? 'save' : 'update');
-                    addNotice( 'success', empty( $this->data['smiley_id'] ) ? self::$locale['SMLY_410'] : self::$locale['SMLY_411']);
+                    add_notice( 'success', empty( $this->data['smiley_id'] ) ? self::$locale['SMLY_410'] : self::$locale['SMLY_411']);
                     redirect( clean_request( '', [ 'section=smiley_list', 'aid' ], TRUE ) );
 
                 } else {
-                    addNotice( 'danger', $error );
+                    add_notice( 'danger', $error );
 
                 }
             }

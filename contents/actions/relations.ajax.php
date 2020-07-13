@@ -59,7 +59,7 @@ if ( iMEMBER ) {
                 break;
             case 'accept_request':
                 if ( $user_relations->acceptFriendRequest( $user_id, $friend_id ) ) {
-                    addNotice( 'success', 'You are now friends with '.$this->user_data['user_name'] );
+                    add_notice( 'success', 'You are now friends with '.$this->user_data['user_name'] );
                     redirect( FUSION_REQUEST );
                 }
                 break;
@@ -79,24 +79,24 @@ if ( iMEMBER ) {
                 break;
             case 'block_user':
                 if ( $user_relations->blockRequest( $user_id, $friend_id ) ) {
-                    addNotice( 'success', $this->user_data['user_name'].' is now added to your blocked list' );
+                    add_notice( 'success', $this->user_data['user_name'].' is now added to your blocked list' );
                     redirect( FUSION_REQUEST );
                 }
                 break;
             case 'unblock_user':
                 if ( $user_relations->unblockRequest( $user_id, $friend_id ) ) {
-                    addNotice( 'success', $this->user_data['user_name'].' is removed from your blocked list' );
+                    add_notice( 'success', $this->user_data['user_name'].' is removed from your blocked list' );
                     redirect( FUSION_REQUEST );
                 }
             case 'unfriend_request':
                 if ( $user_relations->unfriendRequest( $user_id, $friend_id ) ) {
-                    addNotice( 'success', $this->user_data['user_name'].' is no longer your friend' );
+                    add_notice( 'success', $this->user_data['user_name'].' is no longer your friend' );
                     redirect( FUSION_REQUEST );
                 }
         }
     }
-    
-    
+
+
 }
 
 echo json_encode( $response );

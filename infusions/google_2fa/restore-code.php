@@ -19,13 +19,13 @@ function restore_google2fa() {
             if ($restore_code == $user['user_id'].hash_hmac($user['user_algo'], $user['user_id'].$secret.$secret_key, $salt)) {
                 // restore the account
                 dbquery("UPDATE ".DB_USERS." SET user_status=0 WHERE user_status=5 AND user_id=:uid", [':uid' => (int) $user_id]);
-                addNotice("success", $locale['uf_gauth_130']);
+                add_notice("success", $locale['uf_gauth_130']);
             } else {
-                addNotice("danger", $locale['uf_gauth_131']);
+                add_notice("danger", $locale['uf_gauth_131']);
                 redirect(BASEDIR.fusion_get_settings('opening_page'));
             }
         } else {
-            addNotice("danger", $locale['uf_gauth_132']);
+            add_notice("danger", $locale['uf_gauth_132']);
             redirect(BASEDIR.fusion_get_settings('opening_page'));
         }
     }

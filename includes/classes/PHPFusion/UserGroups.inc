@@ -143,7 +143,7 @@ class UserGroups {
                     'user_groups' => $user_groups.".".$this->info['group_id']
                 ];
                 dbquery_insert(DB_USERS, $userdata, 'update');
-                addNotice("success", "User has been added to group id ".$this->info['group_id']);
+                add_notice("success", "User has been added to group id ".$this->info['group_id']);
                 return TRUE;
             }
         }

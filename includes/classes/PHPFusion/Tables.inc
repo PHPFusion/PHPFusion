@@ -676,7 +676,7 @@ class Tables {
 
             if ( fusion_safe() ) {
                 if ( $this->table_props['deleted_message'] ) {
-                    addNotice( 'success', $this->table_props['deleted_message'] );
+                    add_notice( 'success', $this->table_props['deleted_message'] );
                 }
                 redirect( FUSION_REQUEST );
             }
@@ -777,7 +777,7 @@ class Tables {
                         break;
                 }
             } else {
-                addNotice( 'warning', 'No record has been selected for this table action.' );
+                add_notice( 'warning', 'No record has been selected for this table action.' );
             }
         }
 
@@ -840,7 +840,7 @@ class Tables {
                     if ( is_callable( $this->query['delete_function_callback'] ) ) {
                         $this->query['delete_function_callback']( $del_data );
                     } else {
-                        addNotice( 'warning', 'Function '.$this->query['delete_function_callback'].' is not found' );
+                        add_notice( 'warning', 'Function '.$this->query['delete_function_callback'].' is not found' );
                     }
                 } else {
 
@@ -866,7 +866,7 @@ class Tables {
 
                 $this->bulkDelete( $del_data );
 
-                addNotice( 'success', $this->table_props['deleted_message'] );
+                add_notice( 'success', $this->table_props['deleted_message'] );
                 redirect( clean_request( '', [ $this->table_props['del_key'] ], FALSE ) );
             }
         }
@@ -1218,7 +1218,7 @@ class Tables {
                 if ( $this->table_props['edit_link'] or $this->table_props['delete_link'] ) {
                     $checkbox_col = "<td class='check-col'>\n".form_checkbox( "id[]", '', '', ['input_id' => 'id-'.$id, 'value' => $id, 'class' => 'm-b-10' ] )."</td>\n";
                 }
-    
+
                 $html .= "<tr id='entry-row-".$id."' class='inline-edit-column'>\n$checkbox_col\n";
 
                 $tableData = new TableData( $this );
@@ -1244,7 +1244,7 @@ class Tables {
                         // Strip all bbcode tags
                         if ( !empty( $value ) ) {
                             if ( !empty( $col_data['parse_value'] ) ) {
-                                $value = nl2br( parse_textarea( $value ) );
+                                $value = nl2br( parse_text( $value ) );
                             }
                             $value = strip_bbcodes( $value );
                             $value = strip_tags( $value );

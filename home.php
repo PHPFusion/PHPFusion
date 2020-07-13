@@ -189,7 +189,7 @@ if (!defined('DISABLE_HOME_MODULES')) {
                 'title'     => $row['title'],
                 'author'    => profile_link($row['user_id'], $row['user_name'], $row['user_status']),
                 'meta'      => $locale['home_0105'].profile_link($row['user_id'], $row['user_name'], $row['user_status'])." ".showdate('shortdate', $row['datestamp']).$locale['home_0106'].$cat,
-                'content'   => parse_textarea($row['content']),
+                'content'   => parse_text($row['content']),
                 'datestamp' => $row['datestamp'],
                 'cat_name'  => $row['cat_name'],
                 'views'     => !empty($row['views']) ? $row['views'] : ''

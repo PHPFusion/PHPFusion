@@ -45,7 +45,7 @@ class Upload extends Validation {
                 if ( self::$inputConfig['max_count'] < count( $_FILES[ self::$inputConfig['input_name'] ]['name'] ) ) {
                     fusion_stop();
                     $upload = [ 'error' => 1 ];
-                    addNotice( 'danger', $locale['df_424'] );
+                    add_notice( 'danger', $locale['df_424'] );
                     Defender::setInputError( self::$inputName );
 
                     return $upload;
@@ -79,7 +79,7 @@ class Upload extends Validation {
                             $valid_ext = explode( "|", $valid_ext );
                         } else {
                             fusion_stop();
-                            addNotice( 'warning', 'Fusion Dynamics invalid accepted extension format. Please use either | or ,' );
+                            add_notice( 'warning', 'Fusion Dynamics invalid accepted extension format. Please use either | or ,' );
                         }
 
                         $file = $_FILES[ $source_file ];
@@ -150,19 +150,19 @@ class Upload extends Validation {
                         fusion_stop();
                         switch ( $upload['error'] ) {
                             case 1: // Maximum file size exceeded
-                                addNotice( 'danger', sprintf( $locale['df_416'], parsebytesize( self::$inputConfig['max_byte'] ) ) );
+                                add_notice( 'danger', sprintf( $locale['df_416'], parsebytesize( self::$inputConfig['max_byte'] ) ) );
                                 Defender::setInputError( self::$inputName );
                                 break;
                             case 2: // Invalid File extensions
-                                addNotice( 'danger', sprintf( $locale['df_417'], self::$inputConfig['valid_ext'] ) );
+                                add_notice( 'danger', sprintf( $locale['df_417'], self::$inputConfig['valid_ext'] ) );
                                 Defender::setInputError( self::$inputName );
                                 break;
                             case 3: // Invalid Query String
-                                addNotice( 'danger', $locale['df_422'] );
+                                add_notice( 'danger', $locale['df_422'] );
                                 Defender::setInputError( self::$inputName );
                                 break;
                             case 4: // File not uploaded
-                                addNotice( 'danger', $locale['df_423'] );
+                                add_notice( 'danger', $locale['df_423'] );
                                 Defender::setInputError( self::$inputName );
                                 break;
                         }
@@ -184,19 +184,19 @@ class Upload extends Validation {
                 $defender = Defender::getInstance();
                 switch ( $upload['error'] ) {
                     case 1: // Maximum file size exceeded
-                        addNotice( 'danger', sprintf( $locale['df_416'], parsebytesize( self::$inputConfig['max_byte'] ) ) );
+                        add_notice( 'danger', sprintf( $locale['df_416'], parsebytesize( self::$inputConfig['max_byte'] ) ) );
                         $defender::setInputError( self::$inputName );
                         break;
                     case 2: // Invalid File extensions
-                        addNotice( 'danger', sprintf( $locale['df_417'], self::$inputConfig['valid_ext'] ) );
+                        add_notice( 'danger', sprintf( $locale['df_417'], self::$inputConfig['valid_ext'] ) );
                         $defender::setInputError( self::$inputName );
                         break;
                     case 3: // Invalid Query String
-                        addNotice( 'danger', $locale['df_422'] );
+                        add_notice( 'danger', $locale['df_422'] );
                         $defender::setInputError( self::$inputName );
                         break;
                     case 4: // File not uploaded
-                        addNotice( 'danger', $locale['df_423'] );
+                        add_notice( 'danger', $locale['df_423'] );
                         $defender::setInputError( self::$inputName );
                         break;
                     default:
@@ -428,24 +428,24 @@ class Upload extends Validation {
 
         switch ( $error_code ) {
             case 1: // Invalid file size
-                addNotice( 'danger', sprintf( $locale['df_416'], parsebytesize( self::$inputConfig['max_byte'] ) ) );
+                add_notice( 'danger', sprintf( $locale['df_416'], parsebytesize( self::$inputConfig['max_byte'] ) ) );
                 $defender::setInputError( self::$inputName );
                 break;
             case 2: // Unsupported image type
-                //addNotice('danger', $locale['df_423']);
-                addNotice( 'danger', $locale['error_secure_file'] );
+                //add_notice('danger', $locale['df_423']);
+                add_notice( 'danger', $locale['error_secure_file'] );
                 $defender::setInputError( self::$inputName );
                 break;
             case 3: // Invalid image resolution
-                addNotice( 'danger', sprintf( $locale['df_421'], self::$inputConfig['max_width'], self::$inputConfig['max_height'] ) );
+                add_notice( 'danger', sprintf( $locale['df_421'], self::$inputConfig['max_width'], self::$inputConfig['max_height'] ) );
                 $defender::setInputError( self::$inputName );
                 break;
             case 4: // Invalid query string
-                addNotice( 'danger', $locale['df_422'] );
+                add_notice( 'danger', $locale['df_422'] );
                 $defender::setInputError( self::$inputName );
                 break;
             case 5: // Image not uploaded
-                addNotice( 'danger', sprintf( $locale['df_417'], self::$inputConfig['valid_ext'] ) );
+                add_notice( 'danger', sprintf( $locale['df_417'], self::$inputConfig['valid_ext'] ) );
                 $defender::setInputError( self::$inputName );
                 break;
         }

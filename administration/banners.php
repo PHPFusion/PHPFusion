@@ -86,7 +86,7 @@ class BannersAdministration {
             if (fusion_safe()) {
                 foreach ($settings_main as $settings_key => $settings_value) {
                     dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:value WHERE settings_name=:name", [':value' => $settings_value, ':name' => $settings_key]);
-                    addNotice('success', self::$locale['BN_012']);
+                    add_notice('success', self::$locale['BN_012']);
                 }
 
                 redirect(clean_request('', ['section=banners_list', 'aid'], TRUE));
@@ -96,7 +96,7 @@ class BannersAdministration {
         if (self::$action == 'delete') {
             if (empty(get('banner_id')) or empty(self::$settings[get('banner_id')])) {
                 \Defender::stop();
-                addNotice('danger', self::$locale['BN_014']);
+                add_notice('danger', self::$locale['BN_014']);
                 redirect(clean_request('', ['section=banners_list', 'aid'], TRUE));
             }
 
@@ -109,7 +109,7 @@ class BannersAdministration {
                 foreach ($settings_main as $settings_key => $settings_value) {
                     dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:value WHERE settings_name=:name", [':value' => $settings_value, ':name' => $settings_key]);
                 }
-                addNotice('warning', self::$locale['BN_013']);
+                add_notice('warning', self::$locale['BN_013']);
                 redirect(clean_request('', ['section=banners_list', 'aid'], TRUE));
             }
         }

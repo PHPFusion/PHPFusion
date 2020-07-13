@@ -25,9 +25,9 @@ if (!function_exists("display_maintenance")) {
         $settings = fusion_get_settings();
 
         echo "<section class='maintenance container'>\n";
-        $notices = getNotices();
+        $notices = get_notices();
         if ($notices) {
-            echo renderNotices($notices);
+            echo render_notices($notices);
         }
 
         echo "<div class='m-t-20 jumbotron text-center'>\n";
@@ -35,7 +35,7 @@ if (!function_exists("display_maintenance")) {
         echo "<h3><b>".$settings['sitename']."</b></h3>\n";
 
         if (!empty($settings['maintenance_message'])) {
-            echo parse_textarea($settings['maintenance_message'], TRUE, FALSE, TRUE, IMAGES, TRUE);
+            echo parse_text($settings['maintenance_message'], TRUE, FALSE, TRUE, IMAGES, TRUE);
         }
 
         if (!empty($info)) {

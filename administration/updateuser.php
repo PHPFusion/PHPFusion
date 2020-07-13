@@ -90,7 +90,7 @@ if ($error == "") {
                     @unlink(IMAGES."avatars/".$avatarname);
                     $set_avatar = "";
                     \Defender::stop();
-                    addNotice('danger', fusion_get_locale('error_secure_file'));
+                    add_notice('danger', fusion_get_locale('error_secure_file'));
                 }
             } else {
                 @unlink(IMAGES."avatars/".$avatarname);

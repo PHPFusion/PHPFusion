@@ -32,7 +32,7 @@ function display_news_widget() {
             ];
             if (fusion_safe()) {
                 dbquery_insert(DB_NEWS, $news, 'save');
-                addNotice('success', 'News draft has been posted');
+                add_notice('success', 'News draft has been posted');
                 redirect(FUSION_REQUEST);
             }
         }

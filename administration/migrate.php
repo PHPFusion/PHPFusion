@@ -31,7 +31,7 @@ if (isset($_POST['migrate'])) {
 
     if ($user_primary_id == $user_temp_id || !isnum($user_primary_id) || !isnum($user_temp_id)) {
         \Defender::stop();
-        addNotice('danger', $locale['MIG_101']);
+        add_notice('danger', $locale['MIG_101']);
         redirect(FUSION_REQUEST);
     }
 
@@ -102,10 +102,10 @@ if (isset($_POST['migrate'])) {
                     suspend_log($user_temp_id, '7', $locale['MIG_130']);
                 }
             } else {
-                addNotice('danger', $locale['MIG_131']);
+                add_notice('danger', $locale['MIG_131']);
             }
         } else {
-            addNotice('danger', $locale['MIG_132']);
+            add_notice('danger', $locale['MIG_132']);
         }
     }
 } else {
@@ -244,7 +244,7 @@ function user_posts_migrate($user_primary_id, $user_temp_id, $db, $user_column, 
     if (($rows) > 0) {
         $result = dbquery("UPDATE ".$db." SET $user_column=:primaryid WHERE $user_column=:tempid", [':primaryid' => $user_primary_id, ':tempid' => $user_temp_id]);
         if (!$result) {
-            addNotice('danger', $locale['MIG_200']);
+            add_notice('danger', $locale['MIG_200']);
         } else {
             echo "<div class='well text-center'>".(sprintf($locale['MIG_201'], $rows, $name, $users['user_name'], $p_user['user_name']))."</div>";
         }
@@ -268,7 +268,7 @@ function user_rights_migrate($user_primary_id, $user_temp_id) {
                 if (empty($new_user_rights['0'])) {
                     $result = dbquery("UPDATE ".DB_USERS." SET user_rights=:rights WHERE user_id=:userid", [':rights' => $data['user_rights'], ':userid' => $user_primary_id]);
                     if (!$result) {
-                        addNotice('danger', $locale['MIG_203']);
+                        add_notice('danger', $locale['MIG_203']);
                     } else {
                         echo "<div class='well text-center'>".(sprintf($locale['MIG_204'], count($old_user_rights), $data['user_name'], $cdata['user_name']))."</div>\n";
                     }
@@ -283,7 +283,7 @@ function user_rights_migrate($user_primary_id, $user_temp_id) {
                     $rights = implode($new_rights, '.');
                     $result = dbquery("UPDATE ".DB_USERS." SET user_rights=:rights WHERE user_id=:userid", [':rights' => $rights, ':userid' => $user_primary_id]);
                     if (!$result) {
-                        addNotice('danger', $locale['MIG_203']);
+                        add_notice('danger', $locale['MIG_203']);
                     } else {
                         echo "<div class='well text-center'>".(sprintf($locale['MIG_204'], count($rights_dump), $data['user_name'], $cdata['user_name']))."</div>\n";
                     }
@@ -296,7 +296,7 @@ function user_rights_migrate($user_primary_id, $user_temp_id) {
                 if (empty($new_user_groups['0'])) {
                     $result = dbquery("UPDATE ".DB_USERS." SET user_groups=:groups WHERE user_id=:userid", [':groups' => $data['user_groups'], ':userid' => $user_primary_id]);
                     if (!$result) {
-                        addNotice('danger', $locale['MIG_205']);
+                        add_notice('danger', $locale['MIG_205']);
                     } else {
                         echo "<div class='well text-center'>".(sprintf($locale['MIG_206'], count($old_user_groups), $data['user_name'], $cdata['user_name']))."</div>\n";
                     }
@@ -311,7 +311,7 @@ function user_rights_migrate($user_primary_id, $user_temp_id) {
                     $groups = implode($new_group, '.');
                     $result = dbquery("UPDATE ".DB_USERS." SET user_groups=:groups WHERE user_id=:userid", [':groups' => $groups, ':userid' => $user_primary_id]);
                     if (!$result) {
-                        addNotice('danger', $locale['MIG_205']);
+                        add_notice('danger', $locale['MIG_205']);
                     } else {
                         echo "<div class='well text-center'>".(sprintf($locale['MIG_206'], count($group_dump), $data['user_name'], $cdata['user_name']))."</div>\n";
                     }
@@ -321,18 +321,18 @@ function user_rights_migrate($user_primary_id, $user_temp_id) {
             if ($data['user_level'] > $cdata['user_level']) {
                 $result = dbquery("UPDATE ".DB_USERS." SET user_level=:level WHERE user_id=:userid", [':level' => $data['user_level'], ':userid' => $user_primary_id]);
                 if (!$result) {
-                    addNotice('danger', $locale['MIG_207']);
+                    add_notice('danger', $locale['MIG_207']);
                 } else {
                     echo "<div class='well text-center'>".(sprintf($locale['MIG_208'], $data['user_level'], $data['user_name'], $cdata['user_name']))."</div>\n";
                 }
             } else {
-                addNotice('danger', $locale['MIG_209']);
+                add_notice('danger', $locale['MIG_209']);
             }
         } else {
-            addNotice('danger', $locale['MIG_207'].$user_primary_id);
+            add_notice('danger', $locale['MIG_207'].$user_primary_id);
         }
     } else {
-        addNotice('danger', $locale['MIG_207'].$user_temp_id);
+        add_notice('danger', $locale['MIG_207'].$user_temp_id);
     }
 }
 

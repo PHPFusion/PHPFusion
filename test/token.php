@@ -6,10 +6,10 @@ echo "<div class='".grid_container()."'>";
 
 if ( post( 'test_token' ) ) {
     if ( fusion_safe() ) {
-        addNotice( 'success', 'This token is valid' );
+        add_notice( 'success', 'This token is valid' );
         redirect( FUSION_REQUEST );
     }
-    addNotice( "danger", 'Token is invalid' );
+    add_notice( "danger", 'Token is invalid' );
     redirect( FUSION_REQUEST );
 }
 

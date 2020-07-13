@@ -53,7 +53,7 @@ if (isset($_POST['sendmessage'])) {
         include INCLUDES."captchas/".$settings['captcha']."/captcha_check.php"; // Dynamics need to develop Captcha. Before that, use method 2.
         if (!$_CAPTCHA_IS_VALID) {
             \Defender::stop();
-            addNotice('warning', $locale['CT_424']);
+            add_notice('warning', $locale['CT_424']);
         }
     }
 
@@ -67,24 +67,24 @@ if (isset($_POST['sendmessage'])) {
             if ($template_data['template_active'] == "1") {
                 if (!sendemail_template("CONTACT", $input['subject'], $input['message'], "", $template_data['template_sender_name'], "", $template_data['template_sender_email'], $input['mailname'], $input['email'])) {
                     \Defender::stop();
-                    addNotice('danger', $locale['CT_425']);
+                    add_notice('danger', $locale['CT_425']);
                 }
             } else {
                 if (!sendemail($settings['siteusername'], $settings['siteemail'], $input['mailname'], $input['email'], $input['subject'], $input['message'])) {
                     \Defender::stop();
-                    addNotice('danger', $locale['CT_425']);
+                    add_notice('danger', $locale['CT_425']);
                 }
             }
 
         } else {
             if (!sendemail($settings['siteusername'], $settings['siteemail'], $input['mailname'], $input['email'], $input['subject'], $input['message'])) {
                 \Defender::stop();
-                addNotice('danger', $locale['CT_425']);
+                add_notice('danger', $locale['CT_425']);
             }
         }
 
         if (fusion_safe()) {
-            addNotice('success', $locale['CT_440']);
+            add_notice('success', $locale['CT_440']);
             redirect(BASEDIR.'contact.php');
         }
     }

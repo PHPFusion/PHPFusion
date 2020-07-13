@@ -329,7 +329,7 @@ class Atom {
                     "settings_value" => 1
                 ];
                 dbquery_insert(DB_SETTINGS_THEME, $widgetData, "save");
-                addNotice('success', sprintf($locale['theme_1019'], ucwords($this->theme_name)));
+                add_notice('success', sprintf($locale['theme_1019'], ucwords($this->theme_name)));
                 redirect(FUSION_REQUEST);
             }
             /**
@@ -356,7 +356,7 @@ class Atom {
                         }
                     }
                 }
-                addNotice('success', sprintf($locale['theme_1019b'], ucwords($this->theme_name)));
+                add_notice('success', sprintf($locale['theme_1019b'], ucwords($this->theme_name)));
                 redirect(FUSION_REQUEST);
             }
             if ((isset($theme_newtable) || isset($theme_insertdbrow)) && !dbcount("(settings_name)", DB_SETTINGS_THEME, "settings_theme='".$this->theme_name."'")) {
@@ -526,7 +526,7 @@ class Atom {
                             }
                             dbquery_insert(DB_THEME, $data, 'update');
                             if (fusion_safe()) {
-                                addNotice('success', $locale['theme_success_003']);
+                                add_notice('success', $locale['theme_success_003']);
                                 redirect(clean_request("", ["aid", "action", "theme"], TRUE));
                             }
                         } else {
@@ -542,7 +542,7 @@ class Atom {
                         $data['theme_config'] = addslashes(serialize($this->data));
                         dbquery_insert(DB_THEME, $data, 'save');
                         if (fusion_safe()) {
-                            addNotice('success', $locale['theme_success_004']);
+                            add_notice('success', $locale['theme_success_004']);
                             redirect(clean_request("", ["aid", "action", "theme"], TRUE));
                         }
                     } else {
@@ -599,15 +599,15 @@ class Atom {
             } catch (\Exception $e) {
                 $error_message = $e->getMessage();
                 \Defender::stop();
-                addNotice('danger', $error_message);
+                add_notice('danger', $error_message);
             }
         } else {
             if (!$this->Compiler) {
                 \Defender::stop();
-                addNotice('danger', $locale['theme_error_008']);
+                add_notice('danger', $locale['theme_error_008']);
             } else {
                 \Defender::stop();
-                addNotice('danger', $locale['theme_error_007']);
+                add_notice('danger', $locale['theme_error_007']);
             }
         }
 

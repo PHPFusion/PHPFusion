@@ -110,7 +110,7 @@ class UserFieldsInput {
                             ':uid'      => $this->user_data['user_id']
                         ] );
 
-                        addNotice( 'success', 'Your avatar has been updated' );
+                        add_notice( 'success', 'Your avatar has been updated' );
                     }
                 }
 
@@ -141,7 +141,7 @@ class UserFieldsInput {
                         ':filename' => $avatar_filename,
                         ':uid'      => $this->user_data['user_id']
                     ] );
-                    addNotice( 'success', 'Your avatar has been updated' );
+                    add_notice( 'success', 'Your avatar has been updated' );
                     redirect( FUSION_REQUEST );
                 }
             }
@@ -271,7 +271,7 @@ class UserFieldsInput {
             }
         }
 
-        addNotice( 'success', $message, $this->redirect_uri );
+        add_notice( 'success', $message, $this->redirect_uri );
     }
 
     /**
@@ -492,7 +492,7 @@ class UserFieldsInput {
         $mailbody = str_replace( "[USER_NAME]", $userdata['user_name'], $mailbody );
         $mailSubject = str_replace( "[SITENAME]", $settings['sitename'], $this->locale['u202'] );
         sendemail( $this->_userName, $email, $settings['siteusername'], $settings['siteemail'], $mailSubject, $mailbody );
-        addNotice( 'warning', strtr( $this->locale['u200'], [ '(%s)' => $email ] ) );
+        add_notice( 'warning', strtr( $this->locale['u200'], [ '(%s)' => $email ] ) );
         dbquery( "DELETE FROM ".DB_EMAIL_VERIFY." WHERE user_id='".$this->user_data['user_id']."'" );
         dbquery( "INSERT INTO ".DB_EMAIL_VERIFY." (user_id, user_code, user_email, user_datestamp) VALUES('".$this->user_data['user_id']."', '$user_code', '".$email."', '".TIME."')" );
     }
@@ -506,7 +506,7 @@ class UserFieldsInput {
         if ( $_CAPTCHA_IS_VALID == FALSE ) {
             fusion_stop();
             Defender::setInputError( 'user_captcha' );
-            addNotice( 'danger', $this->locale['u194'] );
+            add_notice( 'danger', $this->locale['u194'] );
         }
     }
 
@@ -533,7 +533,7 @@ class UserFieldsInput {
                 '[LINK]'  => "<a href='".BASEDIR."contact.php'><strong>",
                 '[/LINK]' => "</strong></a>"
             ] );
-            addNotice( 'warning', $this->locale['u153']."<br />".$message, 'all' );
+            add_notice( 'warning', $this->locale['u153']."<br />".$message, 'all' );
         }
         $userInfo = base64_encode( serialize( $this->data ) );
         if ( fusion_safe() ) {
@@ -544,7 +544,7 @@ class UserFieldsInput {
 					" );
 
         }
-        addNotice( 'success', $this->locale['u150'] );
+        add_notice( 'success', $this->locale['u150'] );
     }
 
     /**
@@ -574,7 +574,7 @@ class UserFieldsInput {
                 $data['user_id'] = $this->user_data['user_id'];
                 dbquery_insert( DB_USERS, $data, 'update' );
                 if ( !$this->is_admin_panel ) {
-                    addNotice( 'success', 'Your account preference has been updated successfully' );
+                    add_notice( 'success', 'Your account preference has been updated successfully' );
                     redirect( FUSION_REQUEST );
                 }
             }
@@ -616,7 +616,7 @@ class UserFieldsInput {
                 $data['user_id'] = $this->user_data['user_id'];
                 $quantum->log_user_action( DB_USERS, 'user_id' );
                 dbquery_insert( DB_USERS, $data, 'update' );
-                addNotice( 'success', 'Your profile has been updated successfully.', 'all' );
+                add_notice( 'success', 'Your profile has been updated successfully.', 'all' );
                 redirect( FUSION_REQUEST );
             }
         }
@@ -660,10 +660,10 @@ class UserFieldsInput {
                         ":users" => $userdata['user_block'],
                         ":uid"   => $userdata['user_id']
                     ] );
-                    addNotice( "success", "The selected user has been blocked" );
+                    add_notice( "success", "The selected user has been blocked" );
                 } else {
                     Defender::stop();
-                    addNotice( "danger", "The selected user has already been blocked." );
+                    add_notice( "danger", "The selected user has already been blocked." );
                 }
                 redirect( FUSION_REQUEST );
             }
@@ -678,10 +678,10 @@ class UserFieldsInput {
                         ':users' => $userdata['user_block'],
                         ':uid'   => $userdata['user_id']
                     ] );
-                    addNotice( "success", "The selected user has been unblocked." );
+                    add_notice( "success", "The selected user has been unblocked." );
                 } else {
                     fusion_stop();
-                    addNotice( "danger", "The user does not exist in your block list." );
+                    add_notice( "danger", "The user does not exist in your block list." );
                 }
                 redirect( clean_request( "", [ $this->post_name."_unblock" ], FALSE ) );
             }
@@ -757,7 +757,7 @@ class UserFieldsInput {
                 if ( $data['user_email'] != $userdata['user_email'] ) {
                     $result = dbquery( "SELECT user_email FROM ".DB_USERS." WHERE user_email=:useremail", [ ':useremail' => $data['user_email'] ] );
                     if ( dbrows( $result ) > 0 ) {
-                        addNotice( "danger", $this->locale['u164']."<br />\n".$this->locale['u121'] );
+                        add_notice( "danger", $this->locale['u164']."<br />\n".$this->locale['u121'] );
                     } else {
                         $this->_completeMessage = $this->locale['u169'];
                     }
@@ -804,7 +804,7 @@ class UserFieldsInput {
                 $name_inactive = dbcount( "(user_code)", DB_NEW_USERS, "user_name=':uname'", [ ':uname' => $username ] );
                 if ( $name_active == 0 && $name_inactive == 0 ) {
                     if ( $this->registration === FALSE && $this->is_admin_panel === FALSE ) {
-                        addNotice( 'success', 'Your username has been updated successfully.' );
+                        add_notice( 'success', 'Your username has been updated successfully.' );
                     }
                     return (string)$username;
                 } else {
@@ -833,7 +833,7 @@ class UserFieldsInput {
                 ] );
                 save_user_log( $this->user_data['user_id'], "user_name", $new_username, $this->user_data['user_name'] );
             } else {
-                addNotice( 'danger', "You cannot change your username" );
+                add_notice( 'danger', "You cannot change your username" );
             }
 
             if ( !$this->is_admin_panel ) {
@@ -959,11 +959,11 @@ class UserFieldsInput {
                 ];
 
                 if ( !sendemail( $input['mailname'], $input['email'], $settings['siteusername'], $settings['siteemail'], $input['subject'], $input['message'], 'html' ) ) {
-                    addNotice( 'warning', str_replace( "USER_NAME", $this->user_data['user_name'], $this->locale['global_459'] ) );
+                    add_notice( 'warning', str_replace( "USER_NAME", $this->user_data['user_name'], $this->locale['global_459'] ) );
                 }
 
                 if ( !$this->is_admin_panel ) {
-                    addNotice( $notice_class, $notice_message );
+                    add_notice( $notice_class, $notice_message );
                     redirect( FUSION_REQUEST );
                 }
 
@@ -1092,7 +1092,7 @@ class UserFieldsInput {
                 // changing password by member
                 $settings = fusion_get_settings();
                 include INCLUDES."sendmail_include.php";
-                addNotice( "success", str_replace( "USER_NAME", $this->user_data['user_name'], $this->locale['global_458'] ) );
+                add_notice( "success", str_replace( "USER_NAME", $this->user_data['user_name'], $this->locale['global_458'] ) );
                 $input = [
                     "mailname" => $this->user_data['user_name'],
                     "email"    => $this->user_data['user_email'],
@@ -1114,10 +1114,10 @@ class UserFieldsInput {
                     )
                 ];
                 if ( !sendemail( $input['mailname'], $input['email'], $settings['siteusername'], $settings['siteemail'], $input['subject'], $input['message'] ) ) {
-                    addNotice( 'warning', str_replace( "USER_NAME", $this->user_data['user_name'], $this->locale['global_459'] ) );
+                    add_notice( 'warning', str_replace( "USER_NAME", $this->user_data['user_name'], $this->locale['global_459'] ) );
                 }
                 if ( !$this->is_admin_panel ) {
-                    addNotice( $notice_class, $notice_message );
+                    add_notice( $notice_class, $notice_message );
                     redirect( FUSION_REQUEST );
                 }
             }
@@ -1133,7 +1133,7 @@ class UserFieldsInput {
                     Defender::setErrorText( 'user_admin_password', $this->locale['u149a'] );
                     $notice_class = "danger";
                     $notice_message = $this->locale['u149a'];
-                    addNotice( $notice_class, $notice_message );
+                    add_notice( $notice_class, $notice_message );
                 }
             }
         }
@@ -1225,7 +1225,7 @@ class UserFieldsInput {
                         ':u_email' => $user_email
                     ] );
                     if ( !$this->is_admin_panel ) {
-                        addNotice( "success", "Your email has been updated successfully." );
+                        add_notice( "success", "Your email has been updated successfully." );
                         redirect( FUSION_REQUEST );
                     }
                 }

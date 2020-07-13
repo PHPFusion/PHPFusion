@@ -60,7 +60,7 @@ class ShoutBox {
             case 'delete_select':
                 if (empty($_POST['rights'])) {
                     \Defender::stop();
-                    addNotice('danger', self::$locale['SB_noentries']);
+                    add_notice('danger', self::$locale['SB_noentries']);
                     redirect(clean_request("", ["section=shoutbox", "aid"], TRUE));
                 }
                 self::delete_select($_POST['rights']);
@@ -102,7 +102,7 @@ class ShoutBox {
                 $sb_name = form_sanitizer($_POST['shout_name'], '', 'shout_name');
                 if (!$_CAPTCHA_IS_VALID) {
                     \Defender::stop();
-                    addNotice("danger", self::$locale['SB_warning_validation_code']);
+                    add_notice("danger", self::$locale['SB_warning_validation_code']);
                     redirect(clean_request("section=shoutbox", ["", "aid"], TRUE));
                 }
             }
@@ -128,12 +128,12 @@ class ShoutBox {
             if (!flood_control("shout_datestamp", DB_SHOUTBOX, "shout_name='".$this->data['shout_name']."'")) {
                 if (fusion_safe()) {
                     dbquery_insert(DB_SHOUTBOX, $this->data, empty($this->data['shout_id']) ? "save" : "update");
-                    addNotice("success", empty($this->data['shout_id']) ? self::$locale['SB_shout_added'] : self::$locale['SB_shout_updated']);
+                    add_notice("success", empty($this->data['shout_id']) ? self::$locale['SB_shout_added'] : self::$locale['SB_shout_updated']);
                 }
 
             } else {
                 \Defender::stop();
-                addNotice("danger", sprintf(self::$locale['SB_flood'], fusion_get_settings("flood_interval")));
+                add_notice("danger", sprintf(self::$locale['SB_flood'], fusion_get_settings("flood_interval")));
             }
             defined('ADMIN_PANEL') ?
                 redirect(clean_request("section=shoutbox", ["", "aid"], TRUE)) :
@@ -154,7 +154,7 @@ class ShoutBox {
                     ];
                     dbquery_insert(DB_SETTINGS_INF, $inputSettings, "update", ["primary_key" => "settings_name"]);
                 }
-                addNotice("success", self::$locale['SB_update_ok']);
+                add_notice("success", self::$locale['SB_update_ok']);
                 redirect(clean_request("section=shoutbox_settings", ["", "aid"], TRUE));
             }
         }
@@ -163,7 +163,7 @@ class ShoutBox {
             $deletetime = time() - (intval($_POST['num_days']) * 86400);
             $numrows = dbcount("(shout_id)", DB_SHOUTBOX, "shout_datestamp < '".$deletetime."'");
             dbquery("DELETE FROM ".DB_SHOUTBOX." WHERE shout_datestamp < '".$deletetime."'");
-            addNotice("warning", number_format(intval($numrows))." / ".$_POST['num_days'].self::$locale['SB_delete_old']);
+            add_notice("warning", number_format(intval($numrows))." / ".$_POST['num_days'].self::$locale['SB_delete_old']);
             defined('ADMIN_PANEL') ?
                 redirect(clean_request("section=shoutbox", ["", "aid"], TRUE)) :
                 redirect($this->postLink);
@@ -186,7 +186,7 @@ class ShoutBox {
                 }
             }
 
-            addNotice('success', self::$locale['SB_shout_deleted']);
+            add_notice('success', self::$locale['SB_shout_deleted']);
         }
 
         defined('ADMIN_PANEL') ?
@@ -382,7 +382,7 @@ class ShoutBox {
                 echo "</div>\n";
                 echo '</div>';
                 echo '<div class="col-sm-6">';
-                echo parse_textarea($data['shout_message'], TRUE, TRUE, FALSE);
+                echo parse_text($data['shout_message'], TRUE, TRUE, FALSE);
                 echo '</div>';
                 echo '<div class="col-sm-3">';
                 echo '<div class="btn-group btn-group-sm pull-left m-r-20">';
@@ -439,7 +439,7 @@ class ShoutBox {
                 echo timer($data['shout_datestamp']);
                 echo "</div>\n";
 
-                $shout_message = parse_textarea($data['shout_message'], TRUE, TRUE, FALSE);
+                $shout_message = parse_text($data['shout_message'], TRUE, TRUE, FALSE);
                 echo "<div class='shoutbox overflow-hide'>".$shout_message."</div>\n";
                 echo "</div>\n";
             }

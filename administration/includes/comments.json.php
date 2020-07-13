@@ -35,7 +35,7 @@ if ($user_id = fusion_authenticate_user($auth)) {
             $user = fusion_get_user($data['comment_name']);
             $list[] = [
                 'user'              => display_avatar($user, '30px', 'm-r-10').profile_link($user['user_id'], $user['user_name'], $user['user_status']),
-                'comment'           => parse_textarea($data['comment_message']),
+                'comment'           => parse_text($data['comment_message']),
                 'comment_in'        => $types[$data['comment_type']],
                 'comment_datestamp' => showdate('shortdate', $data['comment_datestamp']).', '.date('j:m', $data['comment_datestamp']),
             ];

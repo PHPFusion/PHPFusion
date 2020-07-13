@@ -131,7 +131,7 @@ class InstallerIntroduction extends Install_Core {
         if (isset($_POST['htaccess'])) {
             require_once(INCLUDES.'htaccess_include.php');
             write_htaccess();
-            addNotice('success', self::$locale['setup_1020']);
+            add_notice('success', self::$locale['setup_1020']);
             $this->installer_step(self::STEP_INTRO);
             redirect(FUSION_SELF."?localeset=".LANGUAGE);
         }
@@ -153,8 +153,8 @@ class InstallerIntroduction extends Install_Core {
             @unlink(BASEDIR.'.htaccess');
             // go back to the installer
             $_SESSION['step'] = self::STEP_INTRO;
-            addNotice('danger', "<strong>".self::$locale['setup_0125']."</strong>");
-            $content .= renderNotices(getNotices());
+            add_notice('danger', "<strong>".self::$locale['setup_0125']."</strong>");
+            $content .= render_notices(get_notices());
             if ($i == count($coretables)) {
                 redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'), 6);
             }
@@ -162,7 +162,7 @@ class InstallerIntroduction extends Install_Core {
             // Exit Installer
             $content .= "<span class='display-block m-t-20 m-b-20'>".self::$locale['setup_1003']."</span>\n";
             $content .= "<hr/>\n";
-            $content .= renderNotices(getNotices());
+            $content .= render_notices(get_notices());
             $content .= form_hidden('localeset', '', LANGUAGE);
             $content .= "<h5 class='title'>".self::$locale['setup_1017']."</h5>\n";
             $content .= "<p>".self::$locale['setup_1018']."</p>\n";

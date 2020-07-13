@@ -741,7 +741,7 @@ class UserFieldsQuantum extends QuantumActions {
             if ( dbrows( $result ) ) {
                 $this->field_cat_data = dbarray( $result );
             } else {
-                addNotice( 'danger', $this->locale['field_0206'] );
+                add_notice( 'danger', $this->locale['field_0206'] );
                 redirect( FUSION_SELF.$aidlink );
             }
         }
@@ -990,7 +990,7 @@ class UserFieldsQuantum extends QuantumActions {
         //        $this->field_data['field_upload_type'] = isset( $_POST['field_upload_type'] ) ? form_sanitizer( $_POST['field_upload_type'], '', 'field_upload_type' ) : '';
         //        if ( !in_array( $this->field_data['field_upload_type'], [ 'file', 'image' ] ) ) {
         //            fusion_stop();
-        //            addNotice( 'danger', $this->locale['fields_0108'] );
+        //            add_notice( 'danger', $this->locale['fields_0108'] );
         //        } else {
         //            $this->field_data['field_config'] = [
         //                'field_upload_type'        => $this->field_data['field_upload_type'],

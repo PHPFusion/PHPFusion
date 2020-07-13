@@ -254,7 +254,7 @@ class Actions extends Members {
                         $u_name[] = $u_data['user_name'];
                     }
 
-                    addNotice('success', sprintf($locale['ME_432'], implode(', ', $u_name), $locale[$this->action_map[$this->action]['a_message']]), 'all');
+                    add_notice('success', sprintf($locale['ME_432'], implode(', ', $u_name), $locale[$this->action_map[$this->action]['a_message']]), 'all');
 
                     redirect(FUSION_REQUEST);
                 }
@@ -298,7 +298,7 @@ class Actions extends Members {
             }
 
         } else {
-            // addNotice('danger', $locale['ME_430']);
+            // add_notice('danger', $locale['ME_430']);
             redirect(clean_request('', ['step', 'uid', 'user_id'], FALSE));
         }
     }

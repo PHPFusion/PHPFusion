@@ -65,14 +65,14 @@ function google_2fa_authenticate() {
                             unset($_SESSION['uid']);
                             unset($_SESSION['secret_code']);
                             unset($_SESSION['auth_attempt'][USER_IP]);
-                            addNotice('success', 'Two factor verification success.', fusion_get_settings('opening_page'));
+                            add_notice('success', 'Two factor verification success.', fusion_get_settings('opening_page'));
                             redirect(BASEDIR.fusion_get_settings('opening_page'));
 
                         } else {
 
                             if (!empty($_SESSION['auth_attempt'][USER_IP])) {
                                 $_SESSION['auth_attempt'][USER_IP] = $_SESSION['auth_attempt'][USER_IP] - 1;
-                                addNotice('danger', str_replace('{D}', $_SESSION['auth_attempt'][USER_IP], $locale['uf_gauth_123']));
+                                add_notice('danger', str_replace('{D}', $_SESSION['auth_attempt'][USER_IP], $locale['uf_gauth_123']));
                             } else {
 
                                 $key = $user_id.$secret.$secret_key;
@@ -82,9 +82,9 @@ function google_2fa_authenticate() {
                                 $restore_link = $settings['siteurl']."/includes/login/google_auth/authentication.php?uid=$user_id&amp;restore_hash=$restore_hash";
 
                                 // ban the user
-                                addNotice("danger", str_replace('{SITE_NAME}', $settings['sitename'], $locale['uf_gauth_120']));
+                                add_notice("danger", str_replace('{SITE_NAME}', $settings['sitename'], $locale['uf_gauth_120']));
                                 $subject = $locale['uf_gauth_121'];
-                                $message = parse_textarea(strtr($locale['uf_gauth_122'], [
+                                $message = parse_text(strtr($locale['uf_gauth_122'], [
                                     '{USERNAME}'     => $user['user_name'],
                                     '{SITENAME}'     => $settings['sitename'],
                                     '{RESTORE_LINK}' => "<a href='$restore_link'>$restore_link</a>",

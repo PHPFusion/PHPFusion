@@ -44,14 +44,14 @@ class CommentsAdministration {
                 case 'delete':
                     $result = $this->delete_comments($_GET['comment_id']);
                     if ($result) {
-                        addNotice('success', $this->locale['411']);
+                        add_notice('success', $this->locale['411']);
                         redirect(clean_request('', ['section', 'action', 'comment_id'], FALSE));
                     }
                     break;
                 case 'delban':
                     $result = $this->ban_comments($_GET['comment_id']);
                     if ($result) {
-                        addNotice('success', fusion_get_locale('BLS_011', LOCALE.LOCALESET."admin/blacklist.php"));
+                        add_notice('success', fusion_get_locale('BLS_011', LOCALE.LOCALESET."admin/blacklist.php"));
                         redirect(clean_request('', ['section', 'action', 'comment_id'], FALSE));
                     }
                     break;
@@ -124,7 +124,7 @@ class CommentsAdministration {
                 ':CommentMessage' => $comment_message,
                 ':CommentId'      => $_GET['comment_id']
             ]);
-            addNotice('success', $this->locale['410']);
+            add_notice('success', $this->locale['410']);
             redirect(clean_request('', ['section', 'comment_item_id', 'comment_id'], FALSE));
         }
 
@@ -224,7 +224,7 @@ class CommentsAdministration {
                         'date'        => $this->locale['global_071'].showdate("longdate", $data['comment_datestamp']),
                         'ip'          => "<span class='label label-default m-l-10'>".$this->locale['432']." ".$data['comment_ip']."</span>",
                         'subject'     => !empty($data['comment_subject']) ? "<div class='m-t-10'>".$data['comment_subject']."</div>\n" : "",
-                        'messages'    => "<div class='m-t-10'>".nl2br(parse_textarea($data['comment_message'], TRUE, TRUE, FALSE))."</div>\n",
+                        'messages'    => "<div class='m-t-10'>".nl2br(parse_text($data['comment_message'], TRUE, TRUE, FALSE))."</div>\n",
                     ];
                 }
             }

@@ -43,14 +43,14 @@ if ( check_post( 'save_settings' ) ) {
             dbquery_insert( DB_SETTINGS, $data, 'update', [ 'primary_key' => 'settings_name' ] );
         }
 
-        addNotice( 'success', $locale['900'] );
+        add_notice( 'success', $locale['900'] );
         redirect( FUSION_REQUEST );
     }
 }
 
 if ( check_post( 'delete-messages' ) ) {
     dbquery( "TRUNCATE TABLE ".DB_MESSAGES );
-    addNotice( 'success', $locale['712'] );
+    add_notice( 'success', $locale['712'] );
     redirect( FUSION_REQUEST );
 }
 

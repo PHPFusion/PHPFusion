@@ -53,7 +53,7 @@ class Date extends \Defender\Validation {
             } else {
                 \Defender::stop();
                 \Defender::setInputError(self::$inputName);
-                addNotice('info', sprintf($locale['df_404'], self::$inputConfig['title']));
+                add_notice('info', sprintf($locale['df_404'], self::$inputConfig['title']));
             }
         }
 

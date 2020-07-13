@@ -193,7 +193,7 @@ abstract class QuantumActions extends SqlHandler {
                     $delete_cat_sql = "DELETE FROM ".DB_USER_FIELD_CATS." WHERE field_cat_id=:cat_id";
                     //  print_p( $delete_cat_sql );
                     dbquery( $delete_cat_sql, [ ':cat_id' => (int)$this->cat_id ] );
-                    addNotice( 'success', fusion_get_locale( 'field_0200' ) );
+                    add_notice( 'success', fusion_get_locale( 'field_0200' ) );
                     redirect( $this->return_url );
 
                 } else {
@@ -278,7 +278,7 @@ abstract class QuantumActions extends SqlHandler {
                         }
                     } else {
                         if ( $this->debug ) {
-                            addNotice( 'info', $locale['fields_0655'].'<br/>'.$locale['fields_0656'] );
+                            add_notice( 'info', $locale['fields_0655'].'<br/>'.$locale['fields_0656'] );
                         } else {
                             redirect( FUSION_SELF.$aidlink );
                         }
@@ -359,7 +359,7 @@ abstract class QuantumActions extends SqlHandler {
     //            }
     //        }
     //
-    //        addNotice( 'success', $locale['field_0200'] );
+    //        add_notice( 'success', $locale['field_0200'] );
     //        redirect( $this->return_url );
     //    }
     //}
@@ -418,12 +418,12 @@ abstract class QuantumActions extends SqlHandler {
                     dbquery( "DELETE FROM ".DB_USER_FIELDS." WHERE field_id='".$data['field_id']."'" );
                 }
 
-                addNotice( 'success', $locale['field_0201'] );
+                add_notice( 'success', $locale['field_0201'] );
                 return TRUE;
             }
 
             //print_p( $locale['field_0202'] );
-            addNotice( 'warning', $locale['field_0202'] );
+            add_notice( 'warning', $locale['field_0202'] );
             return FALSE;
         }
         return FALSE;
@@ -565,7 +565,7 @@ abstract class QuantumActions extends SqlHandler {
                             }
                         } else {
                             fusion_stop();
-                            addNotice( "danger", str_replace( '[OLD_TABLE]', $old_table, $locale['fields_0667'] ).$new_table );
+                            add_notice( "danger", str_replace( '[OLD_TABLE]', $old_table, $locale['fields_0667'] ).$new_table );
                         }
 
                     } else {
@@ -589,7 +589,7 @@ abstract class QuantumActions extends SqlHandler {
                             self::rename_column( $old_table, $oldRows['field_name'], $data['field_name'], $field_attr );
                         } else {
                             fusion_stop();
-                            addNotice( 'danger', sprintf( $locale['fields_0104'], "($new_table)" ) );
+                            add_notice( 'danger', sprintf( $locale['fields_0104'], "($new_table)" ) );
                         }
                     }
 
@@ -613,7 +613,7 @@ abstract class QuantumActions extends SqlHandler {
                 //print_p( $data );
                 if ( fusion_safe() ) {
                     dbquery_insert( DB_USER_FIELDS, $data, 'update' );
-                    addNotice( 'success', $locale['field_0203'] );
+                    add_notice( 'success', $locale['field_0203'] );
 
                     return TRUE;
                 }
@@ -621,7 +621,7 @@ abstract class QuantumActions extends SqlHandler {
 
             fusion_stop();
 
-            addNotice( 'danger', $locale['fields_0105'] );
+            add_notice( 'danger', $locale['fields_0105'] );
 
             return FALSE;
         }
@@ -640,7 +640,7 @@ abstract class QuantumActions extends SqlHandler {
                 }
             } else {
                 fusion_stop();
-                addNotice( 'danger', $locale['fields_0106'] );
+                add_notice( 'danger', $locale['fields_0106'] );
                 return FALSE;
             }
 
@@ -648,7 +648,7 @@ abstract class QuantumActions extends SqlHandler {
             if ( fusion_safe() ) {
                 dbquery( "UPDATE ".DB_USER_FIELDS." SET field_order=field_order+1 WHERE field_order > '".$data['field_order']."' AND field_cat='".$data['field_cat']."'" );
                 dbquery_insert( DB_USER_FIELDS, $data, 'save' );
-                addNotice( 'success', $locale['field_0204'] );
+                add_notice( 'success', $locale['field_0204'] );
                 return TRUE;
             }
             return FALSE;
@@ -671,7 +671,7 @@ abstract class QuantumActions extends SqlHandler {
                 return $cat_data['field_cat_db'] ? DB_PREFIX.$cat_data['field_cat_db'] : DB_USERS;
             } else {
                 fusion_stop();
-                addNotice( 'danger', fusion_get_locale( 'fields_0107' ) );
+                add_notice( 'danger', fusion_get_locale( 'fields_0107' ) );
             }
         }
         return FALSE;
@@ -758,7 +758,7 @@ abstract class QuantumActions extends SqlHandler {
 
                 if ( !in_array( $data['field_upload_type'], [ 'file', 'image' ] ) ) {
                     fusion_stop();
-                    addNotice( 'danger', $locale['fields_0108'] );
+                    add_notice( 'danger', $locale['fields_0108'] );
                 }
             }
 
@@ -806,7 +806,7 @@ abstract class QuantumActions extends SqlHandler {
                 // Improvised to code jquery chained selector
                 if ( !column_exists( $data['field_cat_db'], $data['field_cat_index'] ) ) {
                     fusion_stop();
-                    addNotice( "danger", "Your table must be a valid table. Your column must be a column of a user id in that table." );
+                    add_notice( "danger", "Your table must be a valid table. Your column must be a column of a user id in that table." );
                 }
             }
 
@@ -862,7 +862,7 @@ abstract class QuantumActions extends SqlHandler {
 
                         dbquery_insert( DB_USER_FIELD_CATS, $data, 'update' );
 
-                        addNotice( 'success', fusion_get_locale( 'field_0207' ) );
+                        add_notice( 'success', fusion_get_locale( 'field_0207' ) );
                     }
 
                     redirect( FUSION_SELF.$aidlink );
@@ -891,7 +891,7 @@ abstract class QuantumActions extends SqlHandler {
                     }
 
                     dbquery_insert( DB_USER_FIELD_CATS, $data, 'save' );
-                    addNotice( 'success', fusion_get_locale( 'field_0208' ) );
+                    add_notice( 'success', fusion_get_locale( 'field_0208' ) );
                     redirect( FUSION_SELF.$aidlink );
                 }
             }

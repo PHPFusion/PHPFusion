@@ -91,3 +91,16 @@ function addNotice($status, $value, $key = FUSION_SELF, $removeAfterAccess = TRU
 function setError($error_level, $error_message, $error_file, $error_line) {
     set_error($error_level, $error_message, $error_file, $error_line);
 }
+
+/**
+ * Format spaces and tabs in code bb tags
+ *
+ * @param $text
+ *
+ * @return string
+ *
+ * @deprecated
+ */
+function formatcode($text) {
+    return format_code($text);
+}

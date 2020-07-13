@@ -173,7 +173,7 @@ class Authenticate {
      * @param string $userId
      *
      * @return string
-     * @todo: use addNotice('') instead of going for errorId
+     * @todo: use add_notice('') instead of going for errorId
      *
      */
     public static function getRedirectUrl($errorId, $userStatus = "", $userId = "") {
@@ -233,10 +233,10 @@ class Authenticate {
                     session_remove('notices');
                     redirect(FUSION_REQUEST);
                 } else {
-                    addNotice("danger", $locale['cookie_error'], $locale['cookie_error_description']);
+                    add_notice("danger", $locale['cookie_error'], $locale['cookie_error_description']);
                 }
             } else {
-                addNotice("danger", $locale['password_invalid'], $locale['password_invalid_description']);
+                add_notice("danger", $locale['password_invalid'], $locale['password_invalid_description']);
             }
         }
 
@@ -306,7 +306,7 @@ class Authenticate {
                                 // Check if any error was set
                                 if ($error !== FALSE) {
                                     \defender::stop();
-                                    addNotice("warning", $error);
+                                    add_notice("warning", $error);
 
                                     return FALSE;
                                 }
@@ -377,7 +377,7 @@ class Authenticate {
                         Authenticate::_setUserTheme($user);
                         if (!$user["user_session"]) {
                             // here we need to add a notice
-                            addNotice("danger", fusion_get_locale("global_183", LOCALE.fusion_get_settings('locale').'/global.php'));
+                            add_notice("danger", fusion_get_locale("global_183", LOCALE.fusion_get_settings('locale').'/global.php'));
                             self::logOut();
                         }
                         $key = hash_hmac($user['user_algo'], $userID.$cookieExpiration, $user['user_salt']);

@@ -44,7 +44,7 @@ if (dbrows($inf_result) > 0) {
                 dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$inf_mlt['title']."' WHERE mlt_rights='".$inf_mlt['rights']."'");
             } else {
                 //$defender->stop();
-                addNotice("danger",
+                add_notice("danger",
                     "Error due to incomplete locale translations in infusions folder ".$cdata['inf_folder'].". This infusion does not have the localized title and change is aborted. Please translate setup.php.");
             }
         }
@@ -68,7 +68,7 @@ if (isset($_POST['savesettings'])) {
     // format both to .
     if (empty($inputData['enabled_languages'])) {
         \Defender::stop();
-        addNotice("danger", "You need to enable at least one language");
+        add_notice("danger", "You need to enable at least one language");
     }
 
     if (fusion_safe()) {
@@ -325,11 +325,11 @@ if (isset($_POST['savesettings'])) {
         $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/settings.php');
         $locale += fusion_get_locale('', LOCALE.LOCALESET.'setup.php');
 
-        addNotice('success', $locale['900']);
+        add_notice('success', $locale['900']);
         redirect(FUSION_SELF.$aidlink);
 
     } else {
-        addNotice('success', $locale['901']);
+        add_notice('success', $locale['901']);
     }
 }
 

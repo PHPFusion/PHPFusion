@@ -88,12 +88,12 @@ abstract class Validation {
             } else {
                 \Defender::stop();
                 $locale['type_unset'] = '%s: has no type set of %s'; // to be moved
-                addNotice('danger', sprintf($locale['type_unset'], self::$inputName, $method));
+                add_notice('danger', sprintf($locale['type_unset'], self::$inputName, $method));
             }
         } else {
             \Defender::stop();
             $locale['type_unset'] = '%s: has no validation file'; // to be moved
-            addNotice('danger', sprintf($locale['type_unset'], self::$inputName));
+            add_notice('danger', sprintf($locale['type_unset'], self::$inputName));
         }
 
         return FALSE;

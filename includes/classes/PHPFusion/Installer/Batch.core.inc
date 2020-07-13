@@ -275,7 +275,7 @@ class Batch_Core extends Install_Core {
                                     }
                                 }
                             }
-                            addNotice('success', 'Infusion has been upgraded to the latest version.');
+                            add_notice('success', 'Infusion has been upgraded to the latest version.');
                             redirect(FUSION_REQUEST);
                         }
                     }

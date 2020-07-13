@@ -27,7 +27,7 @@ class Modal {
         $options += array('openmodal' => TRUE, 'id' => $id, 'title' => strip_tags($title)) + $default_options;
 
         if (in_array($options['class'], ['modal-sm', 'modal-md', 'modal-lg'])) {
-            addNotice('warning', 'Modal sizing should be set to class_dialog properties');
+            add_notice('warning', 'Modal sizing should be set to class_dialog properties');
         }
 
         $this->addJquery($options);

@@ -283,7 +283,7 @@ class Facebook_JS {
             } else {
                 if (isset($_POST['facebook_disconnect'])) {
                     dbquery("UPDATE ".DB_USERS." SET user_facebook='' WHERE user_id=:uid", [":uid" => fusion_get_userdata("user_id")]);
-                    addNotice("success", "Facebook has been disconnected from your account");
+                    add_notice("success", "Facebook has been disconnected from your account");
                     redirect(FUSION_REQUEST);
                 }
 
@@ -488,7 +488,7 @@ class Facebook_JS {
                 return "<div class='fb-login-button' $data_attr.$button_size onlogin='fusion_login()'>$button_text</div>\n";
             }
         } else {
-            addNotice("danger", "<strong>Warning: Facebook Plugin Error.</strong> Please configure APP ID and Secret Key", "all");
+            add_notice("danger", "<strong>Warning: Facebook Plugin Error.</strong> Please configure APP ID and Secret Key", "all");
         }
 
         return NULL;

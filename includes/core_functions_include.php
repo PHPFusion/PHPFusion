@@ -63,7 +63,7 @@ function fusion_get_contents($url) {
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+    //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); // PHP 7.1
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
     $data = curl_exec($ch);
     curl_close($ch);
@@ -928,7 +928,7 @@ function encode_code($text) {
 
     foreach ($codes[0] as $key => $replacer) {
         $code = str_replace('&lt;br /&gt;', '', $replace[$key]);
-        $code = formatcode($code);
+        $code = format_code($code);
         $text = str_replace($replacer, '<pre><code class="language-php">'.$code.'</code></pre>', $text);
     }
     unset($key, $replacer, $replace);
@@ -943,7 +943,7 @@ function encode_code($text) {
  *
  * @return string
  */
-function formatcode($text) {
+function format_code($text) {
     $text = str_replace(
         ["  ", "  ", "\t"],
         ["&nbsp; ", " &nbsp;", "&nbsp; &nbsp;"],
@@ -952,17 +952,6 @@ function formatcode($text) {
     $text = preg_replace("/^ {1}/m", "&nbsp;", $text);
 
     return $text;
-}
-
-/**
- * Renamed function for PHP-Fusion 9 and above.
- *
- * @param $text
- *
- * @return string
- */
-function format_code($text) {
-    return formatcode($text);
 }
 
 /**
@@ -1497,7 +1486,6 @@ function blacklist($field) {
  *
  */
 function user_blacklisted($user_id) {
-
     return in_array('user_blacklist', fieldgenerator(DB_USERS)) and in_array($user_id, explode('.', fusion_get_userdata('user_blacklist')));
 }
 
@@ -1553,7 +1541,7 @@ function makefilelist($folder, $filter = '.|..|._DS_Store', $sort = TRUE, $type 
             '{%folder%}'   => $folder,
             '{%function%}' => (!empty($function) ? '<code class=\'m-r-10\'>'.$function.'</code>' : '')
         ]);
-        setError(2, $error_log, debug_backtrace()[1]['file'], debug_backtrace()[1]['line'], '');
+        set_error(2, $error_log, debug_backtrace()[1]['file'], debug_backtrace()[1]['line']);
     }
 
     return $res;
@@ -1696,7 +1684,6 @@ function makepagenav(int $start = 0, int $count = 0, int $total = 0, int $range 
  * @param string $getname
  *
  * @return bool|string
- * @throws ReflectionException
  */
 function makepagepointer(int $start = 0, int $count = 0, int $total = 0, int $range = 0, $link = "", $getname = "rowstart") {
     $locale = fusion_get_locale();
@@ -2114,7 +2101,7 @@ function fusion_get_username($user_id) {
  *
  * @param string $key - The column of one user information
  *
- * @return null
+ * @return mixed
  */
 function fusion_get_userdata($key = NULL) {
     static $userdata = [];
@@ -2316,7 +2303,7 @@ function fusion_get_language_switch() {
                 "language_translated" => translate_lang_names($language_name),
                 "language_icon"       => BASEDIR."locale/$language/icon.svg",
                 "language_link"       => clean_request('lang='.$language, ['lang'], FALSE),
-                "language_active"     => (LANGUAGE == $language ? TRUE : FALSE),
+                "language_active"     => LANGUAGE == $language
             ];
         }
     }
@@ -2511,7 +2498,7 @@ function calculate_byte($total_bit) {
 function fusion_authenticate_user($user_cookie) {
     $auth = explode('.', $user_cookie);
     if (count($auth) == 3) {
-        [$userID, $cookieExpiration, $cookieHash] = $auth;
+        list($userID, $cookieExpiration, $cookieHash) = $auth;
         if ($cookieExpiration > TIME) {
             $result = dbquery("SELECT * FROM ".DB_USERS." WHERE user_id='".(isnum($userID) ? $userID : 0)."' AND user_status='0' AND user_actiontime='0' LIMIT 1");
             if (dbrows($result) == 1) {

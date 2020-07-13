@@ -338,7 +338,7 @@ function showBenchmark($show_sql_performance = FALSE, $performance_threshold = '
         } else {
             $modal_body .= "<h4>Could not get any query logs</h4>";
         }
-        $modal .= parse_textarea($modal_body, FALSE, TRUE, FALSE);
+        $modal .= parse_text($modal_body, FALSE, TRUE, FALSE);
         $modal .= modalfooter("<h4><strong>Total Time Expended in ALL SQL Queries: ".$time." seconds</strong></h4>", FALSE);
         $modal .= closemodal();
         add_to_footer($modal);
@@ -394,7 +394,7 @@ function showprivacypolicy() {
     if (!empty(fusion_get_settings('privacy_policy'))) {
         $html .= "<a href='".BASEDIR."print.php?type=P' id='privacy_policy'>".fusion_get_locale('global_176')."</a>";
         $modal = openmodal('privacy_policy', fusion_get_locale('global_176'), ['button_id' => 'privacy_policy']);
-        $modal .= parse_textarea(fusion_parse_locale(fusion_get_settings('privacy_policy')));
+        $modal .= parse_text(fusion_parse_locale(fusion_get_settings('privacy_policy')));
         $modal .= closemodal();
         add_to_footer($modal);
     }

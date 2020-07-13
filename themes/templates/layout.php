@@ -117,15 +117,15 @@ if (!defined("THEME_BODY")) {
 
 if (iADMIN) {
     if (iSUPERADMIN && file_exists(BASEDIR.'install.php') && $settings['devmode'] == 0 && !defined("DEVMODE")) {
-        addNotice('danger', $locale['global_198'], 'all');
+        add_notice('danger', $locale['global_198'], 'all');
     }
 
     if ($settings['maintenance']) {
-        addNotice('warning maintenance-alert', $locale['global_190'], 'all');
+        add_notice('warning maintenance-alert', $locale['global_190'], 'all');
     }
 
     if (!fusion_get_userdata('user_admin_password') && !session_get('fusion_login_as')) {
-        addNotice('warning', str_replace(["[LINK]", "[/LINK]"], ["<a href='".BASEDIR."edit_profile.php'>", "</a>"], $locale['global_199']), 'all');
+        add_notice('warning', str_replace(["[LINK]", "[/LINK]"], ["<a href='".BASEDIR."edit_profile.php'>", "</a>"], $locale['global_199']), 'all');
     }
 }
 

@@ -467,7 +467,7 @@ class Public_Profile extends UserFieldsQuantum {
         );
 
         $modal = openmodal( 'license_agreement', $this->locale['u192'], [ 'button_id' => 'license_agreement' ] );
-        $modal .= parse_textarea( fusion_parse_locale( fusion_get_settings( 'license_agreement' ) ) );
+        $modal .= parse_text( fusion_parse_locale( fusion_get_settings( 'license_agreement' ) ) );
         $modal_content = '<p class="pull-left">'.$this->locale['u193a'].' '.ucfirst( showdate( 'shortdate', fusion_get_settings( 'license_lastupdate' ) ) ).'</p>';
         $modal_content .= '<button type="button" id="agree" class="btn btn-success" data-dismiss="modal">'.$this->locale['u193b'].'</button>';
         $modal .= modalfooter( $modal_content, TRUE );

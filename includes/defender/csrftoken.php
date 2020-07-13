@@ -111,7 +111,7 @@ class CSRFToken extends Defender {
 						foreach ($token_rings as $key => $token_storage) {
 							if ($token_storage == $_POST['fusion_token']) {
 								$tokens_consumed = $_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']][$key];
-								// addNotice('warning', "Token $tokens_consumed has been consumed", 'all');
+								// add_notice('warning', "Token $tokens_consumed has been consumed", 'all');
 								unset($tokens_consumed);
 								break;
 							}
@@ -152,8 +152,8 @@ class CSRFToken extends Defender {
 			self::stop();
 			$token_notice = FALSE;
 			if ($token_notice === TRUE) {
-				addNotice('danger', $_SERVER['PHP_SELF']);
-				addNotice('danger', $this->error);
+				add_notice('danger', $_SERVER['PHP_SELF']);
+				add_notice('danger', $this->error);
 			}
 		}
 	}

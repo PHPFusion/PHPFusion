@@ -196,7 +196,7 @@ class Comments extends CommentsFactory {
                     include INCLUDES."captchas/".$settings['captcha']."/captcha_check.php";
                     if (!$_CAPTCHA_IS_VALID) {
                         \Defender::stop();
-                        addNotice("danger", $locale['u194']);
+                        add_notice("danger", $locale['u194']);
                     }
                 }
 
@@ -270,7 +270,7 @@ class Comments extends CommentsFactory {
 
                         $c_start = (ceil($c_count / $settings['comments_per_page']) - 1) * $settings['comments_per_page'];
                         if (fusion_safe()) {
-                            addNotice("success", $locale['c114']);
+                            add_notice("success", $locale['c114']);
                             $_c = (isset($c_start) && isnum($c_start) ? $c_start : "");
                             $c_link = $this->getParams('clink');
                             redirect($this->format_clink("$c_link&amp;c_start=$_c"));

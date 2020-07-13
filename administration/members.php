@@ -173,7 +173,7 @@ class Members_Administration {
                         $button = self::$locale['ME_502'].format_word( $inactive, self::$locale['fmt_user'] );
 
                         if ( !$inactive ) {
-                            addNotice( 'success', self::$locale['ME_460'] );
+                            add_notice( 'success', self::$locale['ME_460'] );
                             redirect( FUSION_SELF.$aidlink );
                         }
 
@@ -204,7 +204,7 @@ class Members_Administration {
                                         suspend_log( $data['user_id'], self::USER_DEACTIVATE, self::$locale['ME_468'] );
                                     }
                                 }
-                                addNotice( 'success', sprintf( self::$locale['ME_461'], format_word( $rows, self::$locale['fmt_user'] ) ) );
+                                add_notice( 'success', sprintf( self::$locale['ME_461'], format_word( $rows, self::$locale['fmt_user'] ) ) );
                                 redirect( FUSION_SELF.fusion_get_aidlink() );
                             }
                         }
@@ -215,7 +215,7 @@ class Members_Administration {
                         opentable( self::$locale['ME_462'] );
 
                         if ( $inactive > 50 ) {
-                            addNotice( 'info', sprintf( self::$locale['ME_463'], floor( $inactive / 50 ) ) );
+                            add_notice( 'info', sprintf( self::$locale['ME_463'], floor( $inactive / 50 ) ) );
                         }
 
                         echo "<div>\n";
@@ -301,7 +301,7 @@ class Members_Administration {
 
     private function allowUserEdit() {
         if ( empty( self::$user_data ) || fusion_get_userdata( 'user_level' ) > self::$user_data['user_level'] ) {
-            addNotice( 'danger', 'You are not allowed to edit this user' );
+            add_notice( 'danger', 'You are not allowed to edit this user' );
             redirect( FUSION_SELF.fusion_get_aidlink() );
         }
         return TRUE;

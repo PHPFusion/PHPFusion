@@ -142,7 +142,7 @@ class carouselWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\Pag
             return (string)$html;
         }
 
-        return (string)nl2br(parse_textarea($description));
+        return (string)nl2br(parse_text($description));
     }
 
 }

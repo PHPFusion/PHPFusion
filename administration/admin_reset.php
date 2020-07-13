@@ -20,7 +20,7 @@ pageAccess( 'APWR' );
 require_once THEMES.'templates/admin_header.php';
 
 class AdminPasswordResetAdministration {
-    
+
     private $data = [
         'reset_id'        => 0,
         'reset_admin_id'  => '',
@@ -30,47 +30,47 @@ class AdminPasswordResetAdministration {
         'reset_admins'    => '',
         'reset_reason'    => ''
     ];
-    
+
     public function __construct() {
         $locale = fusion_get_locale( "", LOCALE.LOCALESET."admin/admin_reset.php" );
-        
+
         if ( post( 'reset_id' ) ) {
             $input = explode( ",", sanitizer( 'reset_id', "", "reset_id" ) );
-            
+
             if ( !empty( $input ) ) {
                 foreach ( $input as $reset_id ) {
                     dbquery( "DELETE FROM ".DB_ADMIN_RESETLOG." WHERE reset_id=:resetid", [ ':resetid' => (int)$reset_id ] );
                 }
             }
-            
-            addNotice( 'success', $locale['apw_429'] );
+
+            add_notice( 'success', $locale['apw_429'] );
             redirect( clean_request( '', [ 'section', 'action', 'reset_id' ], FALSE ) );
         }
-        
+
         if ( get( 'action' ) == 'delete' ) {
             if ( $this->verify_admin_reset( get( 'reset_id' ) ) ) {
                 dbquery( "DELETE FROM ".DB_ADMIN_RESETLOG." WHERE reset_id=:resetid", [ ':resetid' => get( 'reset_id' ) ] );
-                addNotice( 'success', $locale['apw_429'] );
+                add_notice( 'success', $locale['apw_429'] );
                 redirect( clean_request( '', [ 'section', 'action', 'reset_id' ], FALSE ) );
             }
         }
-        
+
         add_breadcrumb( [ 'link' => ADMIN.'admin_reset.php'.fusion_get_aidlink(), 'title' => $locale['apw_title'] ] );
         $this->set_adminsdb();
     }
-    
+
     private function verify_admin_reset( $id ) {
         if ( isnum( $id ) ) {
             return dbcount( "(reset_id)", DB_ADMIN_RESETLOG, "reset_id=:id", [ ':id' => (int)$id ] );
         }
-        
+
         return FALSE;
     }
-    
+
     private function set_adminsdb() {
         if ( post( 'reset_admins' ) ) {
             require_once INCLUDES."sendmail_include.php";
-            
+
             $userdata = fusion_get_userdata();
             $reset_message = sanitizer( 'reset_message', '', 'reset_message' );
             $reset_admin = sanitizer( 'reset_admin', '', 'reset_admin' );
@@ -78,7 +78,7 @@ class AdminPasswordResetAdministration {
             $reset_success = [];
             $reset_failed = [];
             $locale = fusion_get_locale();
-            
+
             if ( fusion_safe() ) {
                 $user_sql = ( isnum( $reset_admin ) ? "user_id='".$reset_admin."'" :
                     ( $reset_admin == "all" ? "user_level=".USER_LEVEL_ADMIN." OR user_level=".USER_LEVEL_SUPER_ADMIN :
@@ -86,13 +86,13 @@ class AdminPasswordResetAdministration {
                             ( $reset_admin == "a" ? "user_level=".USER_LEVEL_ADMIN :
                                 ""
                             ) ) ) );
-                
+
                 $result = dbquery( "SELECT user_id, user_password, user_admin_password, user_name, user_email, user_language
                     FROM ".DB_USERS."
                     WHERE ".$user_sql."
                     ORDER BY user_level DESC, user_id"
                 );
-                
+
                 while ( $data = dbarray( $result ) ) {
                     $adminPass = new PasswordAuth();
                     $newAdminPass = $adminPass->getNewPassword();
@@ -103,7 +103,7 @@ class AdminPasswordResetAdministration {
                     $newAdminSalt = $adminPass->getNewSalt();
                     $newAdminPassword = $adminPass->getNewHash();
                     $updat = "user_admin_algo='".$newAdminAlgo."', user_admin_salt='".$newAdminSalt."', user_admin_password='".$newAdminPassword."'";
-                    
+
                     if ( !empty( $reset_login ) ) {
                         $loginPass = new PasswordAuth();
                         $newLoginPass = $loginPass->getNewPassword();
@@ -115,7 +115,7 @@ class AdminPasswordResetAdministration {
                         $new_admin_salt = $loginPass->getNewSalt();
                         $new_admin_password = $loginPass->getNewHash();
                         $updat .= ", user_algo='".$new_admin_algo."', user_salt='".$new_admin_salt."', user_password='".$new_admin_password."'";
-                        
+
                         $message = str_replace(
                             [
                                 "[SITEURL]",
@@ -133,7 +133,7 @@ class AdminPasswordResetAdministration {
                                 $userdata['user_name'],
                                 $reset_message
                             ], fusion_get_locale( 'apw_409', LOCALE.$data['user_language']."/admin/admin_reset.php" ) );
-                        
+
                     } else {
                         $message = str_replace(
                             [
@@ -153,18 +153,18 @@ class AdminPasswordResetAdministration {
                         );
                         $loginPassIsReset = TRUE;
                     }
-                    
+
                     if ( $loginPassIsReset ) {
                         dbquery( "UPDATE ".DB_USERS." SET ".$updat." WHERE user_id='".$data['user_id']."'" );
                     }
-                    
+
                     if ( $loginPassIsReset && $adminPassIsReset && sendemail( $data['user_name'], $data['user_email'], $userdata['user_name'], $userdata['user_email'], $locale['apw_407'].fusion_get_settings( 'sitename' ), $message ) ) {
                         $reset_success[] = [ 'user_id' => $data['user_id'], 'user_name' => $data['user_name'], 'user_email' => $data['user_email'] ];
                     } else {
                         $reset_failed[] = [ 'user_id' => $data['user_id'], 'user_name' => $data['user_name'], 'user_email' => $data['user_email'] ];
                     }
                 }
-                
+
                 $sucess_ids = "";
                 $failed_ids = "";
                 $text = "<div class='table-responsive'><table class='table table-hover table-striped'>\n";
@@ -177,7 +177,7 @@ class AdminPasswordResetAdministration {
                         $text .= "</tr>\n";
                     }
                 }
-                
+
                 if ( !empty( $reset_failed ) ) {
                     foreach ( $reset_failed as $key => $info ) {
                         $failed_ids .= $failed_ids != "" ? ".".$info['user_id'] : $info['user_id'];
@@ -187,13 +187,13 @@ class AdminPasswordResetAdministration {
                         $text .= "</tr>\n";
                     }
                 }
-                
+
                 $text .= "</table>\n</div>";
                 $preview_html = openmodal( 'apw_preview', $locale['apw_410'] );
                 $preview_html .= "<p>".$text."</p>\n";
                 $preview_html .= closemodal();
                 add_to_footer( $preview_html );
-                
+
                 $this->data = [
                     'reset_id'        => 0,
                     'reset_admin_id'  => fusion_get_userdata( 'user_id' ),
@@ -203,29 +203,29 @@ class AdminPasswordResetAdministration {
                     'reset_admins'    => $reset_admin,
                     'reset_reason'    => $reset_message
                 ];
-                
+
                 dbquery_insert( DB_ADMIN_RESETLOG, $this->data, 'save' );
-                addNotice( 'success', $locale['apw_411'] );
+                add_notice( 'success', $locale['apw_411'] );
             }
         }
     }
-    
+
     public function display_admin() {
         $locale = fusion_get_locale();
-        
+
         opentable( $locale['apw_title'] );
         $allowed_section = [ "adminreset_form", "adminreset_list" ];
         $section = get( 'section' );
         $section = $section && in_array( $section, $allowed_section ) ? $section : 'adminreset_list';
-        
+
         $tab_title['title'][] = $locale['apw_415'];
         $tab_title['id'][] = 'adminreset_list';
         $tab_title['icon'][] = "";
-        
+
         $tab_title['title'][] = $locale['apw_title'];
         $tab_title['id'][] = 'adminreset_form';
         $tab_title['icon'][] = "";
-        
+
         echo opentab( $tab_title, $section, 'adminreset_list', TRUE );
         switch ( $section ) {
             case "adminreset_form":
@@ -238,7 +238,7 @@ class AdminPasswordResetAdministration {
         echo closetab();
         closetable();
     }
-    
+
     public function admin_reset_form() {
         $locale = fusion_get_locale();
         fusion_confirm_exit();
@@ -251,37 +251,37 @@ class AdminPasswordResetAdministration {
             'allowclear'  => TRUE,
             'inline'      => TRUE
         ] );
-        
+
         echo form_textarea( 'reset_message', $locale['apw_404'], '', [ 'inline' => TRUE, 'required' => TRUE, 'autosize' => TRUE ] );
         echo form_checkbox( "reset_login", $locale['apw_405'], '', [ "inline" => TRUE ] );
         echo form_button( 'reset_admins', $locale['apw_406'], $locale['apw_406'], [ 'class' => 'btn-primary' ] );
         echo closeform();
         closeside();
     }
-    
+
     private function load_admins() {
         $list = $this->admin_title();
-        
+
         $result = dbquery( "SELECT user_id, user_name, user_level
             FROM ".DB_USERS."
             WHERE user_level<=".USER_LEVEL_ADMIN."
             ORDER BY user_level DESC, user_name"
         );
-        
+
         if ( dbrows( $result ) > 0 ) {
             while ( $data = dbarray( $result ) ) {
                 $list[ $data['user_id'] ] = $data['user_name'];
             }
         }
-        
+
         return (array)$list;
     }
-    
+
     private function admin_title() {
         $locale = fusion_get_locale();
         return [ "all" => $locale['apw_401'], "sa" => $locale['apw_402'], "a" => $locale['apw_403'] ];
     }
-    
+
     private function admin_reset_listing() {
         $all_admin_reset = $this->load_all_admin_reset();
         $locale = fusion_get_locale();
@@ -299,7 +299,7 @@ class AdminPasswordResetAdministration {
             echo "<th><small><strong>".$locale['apw_427']."</strong></small></th>\n";
             echo "</tr></thead>\n";
             echo "<tbody>\n";
-            
+
             foreach ( $all_admin_reset as $info ) {
                 $adm_title = $this->admin_title();
                 $reset_passwords = ( isnum( $info['reset_admins'] ) ? profile_link( $info['user_id_reset'], $info['user_name_reset'], $info['user_status_reset'] ) : $adm_title[ $info['reset_admins'] ] );
@@ -315,7 +315,7 @@ class AdminPasswordResetAdministration {
                 echo "<td><a id='confirm' class='btn btn-danger btn-sm' href='".FUSION_SELF.fusion_get_aidlink()."&amp;section=adminreset_list&amp;action=delete&amp;reset_id=".$info['reset_id']."' onclick=\"return confirm('".$locale['apw_428']."');\"><i class='fa fa-trash'></i> ".$locale['delete']."</a></td>\n";
                 echo "</tr>\n";
             }
-            
+
             echo "</tbody>";
             echo "</table>\n</div>";
             echo "<div class='clearfix display-block'>\n";
@@ -333,7 +333,7 @@ class AdminPasswordResetAdministration {
                         $('#reset-table tbody tr').removeClass('active');
                     }
                 });
-                
+
                 $('input[name^=reset_id]').click(function() {
                     var id = $(this).attr('id');
                     if ($(this).is(':checked')) {
@@ -348,7 +348,7 @@ class AdminPasswordResetAdministration {
         }
         echo '</div>';
     }
-    
+
     private function load_all_admin_reset() {
         $list = [];
         $result = dbquery( "SELECT arl.*, u1.user_status, u1.user_name, u1.user_id, u2.user_name as user_name_reset, u2.user_id as user_id_reset, u2.user_status as user_status_reset
@@ -357,13 +357,13 @@ class AdminPasswordResetAdministration {
             LEFT JOIN ".DB_USERS." u2 ON arl.reset_admins=u2.user_id
             ORDER BY arl.reset_timestamp DESC"
         );
-        
+
         if ( dbrows( $result ) > 0 ) {
             while ( $data = dbarray( $result ) ) {
                 $list[] = $data;
             }
         }
-        
+
         return (array)$list;
     }
 }

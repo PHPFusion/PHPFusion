@@ -48,7 +48,7 @@ if (preg_match_all('#\[code(=(.*?))?\](.*?)\[/code\]#si', $text) ||
                 }
             }
             $i++;
-            $code = formatcode($m['code']);
+            $code = format_code($m['code']);
             $steam = new \PHPFusion\Steam();
             $html = $steam->load('Blocks')->code(
                 $locale['bb_code_code'],
@@ -72,12 +72,12 @@ if (preg_match_all('#\[code(=(.*?))?\](.*?)\[/code\]#si', $text) ||
             $text = preg_replace_callback(
                 "#```(.*?)```#si",
                 function ($m) use (&$i) {
-                    return "<pre><code class='language-php'>".formatcode($m['1'])."</code></pre>";
+                    return "<pre><code class='language-php'>".format_code($m['1'])."</code></pre>";
                 }, $text);
         }
     }
 
     $text = preg_replace("#`(.*?)`#si", '<code>\\1</code>', $text);
-    $text = preg_replace("#\[php\](.*?)\[/php\]#si", "<pre><code class='language-php'>".formatcode('\\1')."</code></pre>", $text);
-    $text = preg_replace("#\[geshi=(.*?)\](.*?)\[/geshi\]#si", "<pre><code class='language-php'>".formatcode('\\2')."</code></pre>", $text);
+    $text = preg_replace("#\[php\](.*?)\[/php\]#si", "<pre><code class='language-php'>".format_code('\\1')."</code></pre>", $text);
+    $text = preg_replace("#\[geshi=(.*?)\](.*?)\[/geshi\]#si", "<pre><code class='language-php'>".format_code('\\2')."</code></pre>", $text);
 }

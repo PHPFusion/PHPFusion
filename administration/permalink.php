@@ -38,7 +38,7 @@ if (function_exists('apache_get_modules') && in_array('mod_rewrite', apache_get_
 }
 define('MOD_REWRITE', $mod_rewrite);
 if (!MOD_REWRITE) {
-    addNotice("info", $locale['rewrite_disabled']);
+    add_notice("info", $locale['rewrite_disabled']);
 }
 
 $settings_seo = [
@@ -131,7 +131,7 @@ if (isset($_POST['savesettings'])) {
     if (fusion_safe()) {
         require_once(INCLUDES.'htaccess_include.php');
         write_htaccess();
-        addNotice('success', $locale['900']);
+        add_notice('success', $locale['900']);
     }
     redirect(clean_request('section=pls', [], FALSE));
 }
@@ -152,9 +152,9 @@ if (isset($_POST['savepermalinks'])) {
             $error = 1;
         }
         if ($error == 0) {
-            addNotice('success', $locale['PL_421']);
+            add_notice('success', $locale['PL_421']);
         } else if ($error == 1) {
-            addNotice('danger', $locale['PL_420']);
+            add_notice('danger', $locale['PL_420']);
         }
     }
     redirect(clean_request('section=pl', ['edit'], FALSE));
@@ -192,12 +192,12 @@ if (isset($_GET['enable']) && !empty($rewrite_registers[$_GET['enable']])) {
             }
         }
         if ($error == 0) {
-            addNotice('success', sprintf($locale['PL_424'], $permalink_name));
+            add_notice('success', sprintf($locale['PL_424'], $permalink_name));
         } else if ($error == 1) {
-            addNotice('danger', $locale['PL_420']);
+            add_notice('danger', $locale['PL_420']);
         }
     } else {
-        addNotice('warning', sprintf($locale['PL_425'], $permalink_name));
+        add_notice('warning', sprintf($locale['PL_425'], $permalink_name));
     }
     redirect(clean_request('', ['enable', 'section'], FALSE));
 } else if (isset($_GET['disable'])) {
@@ -217,7 +217,7 @@ if (isset($_GET['enable']) && !empty($rewrite_registers[$_GET['enable']])) {
 
     $permalink_name = !empty($permalink_name) ? $permalink_name : ucfirst($rewrite_name);
 
-    addNotice('success', sprintf($locale['PL_426'], $permalink_name));
+    add_notice('success', sprintf($locale['PL_426'], $permalink_name));
     redirect(clean_request('', ['disable', 'section'], FALSE));
 } else if (isset($_GET['reinstall']) && !empty($rewrite_registers[$_GET['reinstall']])) {
     /**
@@ -262,9 +262,9 @@ if (isset($_GET['enable']) && !empty($rewrite_registers[$_GET['enable']])) {
         }
     }
     if ($error == 0) {
-        addNotice('success', sprintf($locale['PL_424'], $permalink_name));
+        add_notice('success', sprintf($locale['PL_424'], $permalink_name));
     } else if ($error == 1) {
-        addNotice('danger', $locale['PL_420']);
+        add_notice('danger', $locale['PL_420']);
     }
     redirect(clean_request('', ['reinstall', 'section'], FALSE));
 }
@@ -305,11 +305,11 @@ if (isset($_GET['edit']) && !empty($rewrite_registers[$_GET['edit']])) {
             }
             $edit_name = sprintf($locale['PL_405'], $permalink_name);
         } else {
-            addNotice("danger", sprintf($locale['PL_422'], $permalink_name));
+            add_notice("danger", sprintf($locale['PL_422'], $permalink_name));
             redirect(clean_request('section=pl', ['edit'], FALSE));
         }
     } else {
-        addNotice('danger', $locale['PL_423']);
+        add_notice('danger', $locale['PL_423']);
         redirect(clean_request('section=pl', ['edit'], FALSE));
     }
 } else {

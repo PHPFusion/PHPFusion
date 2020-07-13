@@ -55,7 +55,7 @@ function bbcode_list() {
     $locale = fusion_get_locale( '', LOCALE.LOCALESET.'comments.php' );
     $test_message = '';
     $smileys_checked = 0;
-    
+
     if ( post( 'post_test' ) ) {
         $test_message = sanitizer( 'test_message', '', 'test_message' );
         $smileys_checked = $test_message || preg_match( "#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $test_message ) ? 1 : 0;
@@ -71,7 +71,7 @@ function bbcode_list() {
             closetable();
         }
     }
-    
+
     opentable( $locale['BBCA_401'] );
     echo openform( 'input_form', 'post', FUSION_SELF.fusion_get_aidlink()."&amp;section=bbcode_list" );
     echo form_textarea( 'test_message', $locale['BBCA_418a'], $test_message, [
@@ -79,7 +79,7 @@ function bbcode_list() {
         'error_text' => $locale['BBCA_418b'],
         'type'       => 'bbcode'
     ] );
-    
+
     echo '<div class="row">';
     echo "<div class='col-xs-6 col-md-6 text-right'>\n";
     echo form_checkbox( 'test_smileys', $locale['BBCA_418'], $smileys_checked, [
@@ -93,7 +93,7 @@ function bbcode_list() {
     echo "</div>\n";
     closeform();
     closetable();
-    
+
 }
 
 function bbcode_form() {
@@ -109,23 +109,23 @@ function bbcode_form() {
     $bbcode_id = get( 'bbcode_id', FILTER_VALIDATE_INT );
     $enable = get( 'enable' );
     $disable = get( 'disable', FILTER_VALIDATE_INT );
-    
+
     if ( $action == 'mup' && $bbcode_id && $order ) {
         $result = dbquery( "SELECT bbcode_id FROM ".DB_BBCODES." WHERE bbcode_order=:bbcodeorder", [ ':bbcodeorder' => (int)$order ] );
         $data = dbarray( $result );
-        
+
         dbquery( "UPDATE ".DB_BBCODES." SET bbcode_order=bbcode_order+1 WHERE bbcode_id=:bbcodeid", [ ':bbcodeid' => (int)$data['bbcode_id'] ] );
         dbquery( "UPDATE ".DB_BBCODES." SET bbcode_order=bbcode_order-1 WHERE bbcode_id=:bbcode", [ ':bbcode' => (int)$bbcode_id ] );
-        addNotice( 'info', $locale['BBCA_430'] );
+        add_notice( 'info', $locale['BBCA_430'] );
         redirect( clean_request( '', [ 'section', 'action', 'bbcode_id', 'order' ], FALSE ) );
-        
+
     } else if ( $action == "mdown" && $bbcode_id && $order ) {
         $data = dbarray( dbquery( "SELECT bbcode_id FROM ".DB_BBCODES." WHERE bbcode_order=:bbcodeorder", [ ':bbcodeorder' => (int)$order ] ) );
         dbquery( "UPDATE ".DB_BBCODES." SET bbcode_order=bbcode_order-1 WHERE bbcode_id=:bbcodeid", [ ':bbcodeid' => $data['bbcode_id'] ] );
         dbquery( "UPDATE ".DB_BBCODES." SET bbcode_order=bbcode_order+1 WHERE bbcode_id=:bbcode", [ ':bbcode' => (int)$bbcode_id ] );
-        addNotice( 'info', $locale['BBCA_431'] );
+        add_notice( 'info', $locale['BBCA_431'] );
         redirect( clean_request( '', [ 'section', 'action', 'bbcode_id', 'order' ], FALSE ) );
-        
+
     } else if ( $enable && preg_match( "/^!?([a-z0-9_-]){1,50}$/i", $enable ) && file_exists( INCLUDES."bbcodes/".$enable."_bbcode_include_var.php" ) && file_exists( INCLUDES."bbcodes/".$enable."_bbcode_include.php" )
     ) {
         if ( substr( $enable, 0, 1 ) != '!' ) {
@@ -139,9 +139,9 @@ function bbcode_form() {
             }
             dbquery( "INSERT INTO ".DB_BBCODES." (bbcode_name, bbcode_order) VALUES ('".$enable."', '1')" );
         }
-        addNotice( 'info', $locale['BBCA_432'] );
+        add_notice( 'info', $locale['BBCA_432'] );
         redirect( clean_request( '', [ 'section', 'enable' ], FALSE ) );
-        
+
     } else if ( $disable ) {
         dbquery( "DELETE FROM ".DB_BBCODES." WHERE bbcode_id=:bbcodeid", [ ':bbcodeid' => $disable ] );
         $result = dbquery( "SELECT bbcode_order FROM ".DB_BBCODES." ORDER BY bbcode_order" );
@@ -150,10 +150,10 @@ function bbcode_form() {
             dbquery( "UPDATE ".DB_BBCODES." SET bbcode_order=:norder WHERE bbcode_order=:bbcodeorder", [ ':norder' => $order, ':bbcodeorder' => $data['bbcode_order'] ] );
             $order++;
         }
-        addNotice( 'warning', $locale['BBCA_433'] );
+        add_notice( 'warning', $locale['BBCA_433'] );
         redirect( clean_request( '', [ 'section', 'disable' ], FALSE ) );
     }
-    
+
     $bbcode_folder = makefilelist( INCLUDES."bbcodes/", '.|..|index.php|.js', TRUE, 'files' );
     if ( !empty( $bbcode_folder ) ) {
         foreach ( $bbcode_folder as $bbcode_folders ) {
@@ -163,7 +163,7 @@ function bbcode_form() {
             }
         }
     }
-    
+
     $result = dbquery( "SELECT * FROM ".DB_BBCODES." ORDER BY bbcode_order" );
     sort( $available_bbcodes );
     if ( dbrows( $result ) ) {
@@ -196,7 +196,7 @@ function bbcode_form() {
                 $up_down = "";
             }
             $i++;
-            
+
             $enabled_bbcodes[] = $data['bbcode_name'];
             $check_path = __DIR__.'/../includes/bbcodes/images/';
             $img_path = FUSION_ROOT.fusion_get_settings( 'site_path' ).'includes/bbcodes/images/';
@@ -208,16 +208,16 @@ function bbcode_form() {
                     break;
                 }
             }
-            
+
             if ( file_exists( LOCALE.LOCALESET."bbcodes/".$data['bbcode_name'].".php" ) ) {
                 $locale = fusion_get_locale( '', LOCALE.LOCALESET."bbcodes/".$data['bbcode_name'].".php" );
             } else if ( file_exists( LOCALE."English/bbcodes/".$data['bbcode_name'].".php" ) ) {
                 $locale = fusion_get_locale( '', LOCALE."English/bbcodes/".$data['bbcode_name'].".php" );
             }
-            
+
             if ( file_exists( INCLUDES."bbcodes/".$data['bbcode_name']."_bbcode_include_var.php" ) ) {
                 include INCLUDES."bbcodes/".$data['bbcode_name']."_bbcode_include_var.php";
-                
+
                 echo "<tr>\n";
                 echo "<td>".ucwords( $data['bbcode_name'] )."</td>\n";
                 echo "<td class='text-center'>".$bbcode_image."</td>\n";
@@ -246,14 +246,14 @@ function bbcode_form() {
         echo "<th><strong>".$locale['BBCA_406']."</strong></th>\n";
         echo "<th></th>\n";
         echo "</tr>\n</thead>\n<tbody>\n";
-        
+
         foreach ( $available_bbcodes as $available_bbcode ) {
             $__BBCODE__ = [];
             $check_path = __DIR__.'/../includes/bbcodes/images/';
             $img_path = FUSION_ROOT.fusion_get_settings( 'site_path' ).'includes/bbcodes/images/';
             $bbcode_attr = [ '.svg', '.png', '.gif', '.jpg' ];
             $bbcode_image = '-';
-            
+
             if ( !in_array( $available_bbcode, $enabled_bbcodes ) ) {
                 foreach ( $bbcode_attr as $attr ) {
                     if ( file_exists( $check_path.$available_bbcode.$attr ) ) {
@@ -261,13 +261,13 @@ function bbcode_form() {
                         break;
                     }
                 }
-                
+
                 if ( file_exists( LOCALE.LOCALESET."bbcodes/".$available_bbcode.".php" ) ) {
                     $locale = fusion_get_locale( '', LOCALE.LOCALESET."bbcodes/".$available_bbcode.".php" );
                 } else if ( file_exists( LOCALE."English/bbcodes/".$available_bbcode.".php" ) ) {
                     $locale = fusion_get_locale( '', LOCALE."English/bbcodes/".$available_bbcode.".php" );
                 }
-                
+
                 include INCLUDES."bbcodes/".$available_bbcode."_bbcode_include_var.php";
                 echo "<tr>\n";
                 echo "<td>".ucwords( $available_bbcode )."</td>\n";
@@ -285,7 +285,7 @@ function bbcode_form() {
         echo "<div class='text-center'>".$locale['BBCA_416']."</div>\n";
     }
     closetable();
-    
+
 }
 
 require_once THEMES.'templates/footer.php';

@@ -34,7 +34,7 @@ class LoginPanel extends Helper {
         $aidlink = fusion_get_aidlink();
         $userdata = fusion_get_userdata();
 
-        echo renderNotices(getNotices(['all', FUSION_SELF]));
+        echo render_notices(get_notices(['all', FUSION_SELF]));
         if (!fusion_safe()) {
             setNotice('danger', $locale['global_182']);
         }
@@ -96,11 +96,11 @@ class LoginPanel extends Helper {
                 </header>
                 <div class="content mm-collapsed">
                     <?php
-                    $notices = getNotices();
+                    $notices = get_notices();
                     if (!empty($notices)) :
                         ?>
                         <div class="admin-notices">
-                            <?php echo renderNotices($notices); ?>
+                            <?php echo render_notices($notices); ?>
                         </div>
                     <?php
                     endif;

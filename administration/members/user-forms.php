@@ -125,7 +125,7 @@ class UserForms {
                     $this->helper->sendNewPasswordEmail();
                 }
 
-                addNotice('success', 'User profile has been updated.');
+                add_notice('success', 'User profile has been updated.');
                 redirect(FUSION_REQUEST);
             }
         }
@@ -268,7 +268,7 @@ class UserForms {
               }
               return text;
             }
-        
+
         $('#generate_pass').bind('click', function(e) {
             e.preventDefault();
             $('#user_password').val(randString('generate_pass'));
@@ -317,7 +317,7 @@ class UserForms {
             $this->user_data = $user_data;
             if (fusion_safe()) {
                 dbquery_insert(DB_USERS, $user_data, 'update', ['keep_session' => TRUE]);
-                addNotice('success', 'Profile has been updated.');
+                add_notice('success', 'Profile has been updated.');
                 redirect(FUSION_REQUEST);
             }
         }
@@ -414,7 +414,7 @@ class UserForms {
                     $this->helper->sendNewAccountEmail();
                 } else {
                     dbquery_insert(DB_USERS, $this->user_data, 'save');
-                    addNotice('success', 'User account has been created.');
+                    add_notice('success', 'User account has been created.');
                 }
                 redirect(FUSION_REQUEST);
             }
@@ -486,7 +486,7 @@ class UserForms {
               }
               return text;
             }
-        
+
         $('#generate_pass').bind('click', function(e) {
             e.preventDefault();
             $('#user_password').val(randString('generate_pass'));

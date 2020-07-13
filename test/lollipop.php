@@ -7,9 +7,9 @@ if (post('validate')) {
     include INCLUDES.'captchas/lollipop/captcha_check.php';
 
     if (!$_CAPTCHA_IS_VALID) {
-        addNotice('danger', 'Captcha is invalid');
+        add_notice('danger', 'Captcha is invalid');
     } else {
-        addNotice('success', 'Captcha is validated');
+        add_notice('success', 'Captcha is validated');
     }
 
     if (fusion_safe()) {

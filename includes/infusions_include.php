@@ -215,7 +215,7 @@ if (!function_exists('upload_file')) {
                 $valid_ext = explode("|", $valid_ext);
             } else {
                 \Defender::stop();
-                addNotice('warning', 'Fusion Dynamics invalid accepted extension format. Please use either | or ,');
+                add_notice('warning', 'Fusion Dynamics invalid accepted extension format. Please use either | or ,');
             }
 
             $file = $_FILES[$source_file];

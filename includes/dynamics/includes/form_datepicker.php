@@ -194,7 +194,7 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
             if (!empty($new_error_text)) {
                 $options['error_text'] = $new_error_text;
             }
-            addNotice("danger", "<strong>$title</strong> - ".$options['error_text']);
+            add_notice("danger", "<strong>$title</strong> - ".$options['error_text']);
         }
     }
 

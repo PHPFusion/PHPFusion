@@ -155,10 +155,10 @@ class Forms {
                 }
                 if ($this->user_data['user_id']) {
                     dbquery_insert(DB_USERS, $this->user_data, 'update');
-                    addNotice('success', 'User account has been updated.');
+                    add_notice('success', 'User account has been updated.');
                 } else {
                     dbquery_insert(DB_USERS, $this->user_data, 'save');
-                    addNotice('success', 'User account has been created.');
+                    add_notice('success', 'User account has been created.');
                 }
 
                 redirect(FUSION_REQUEST);
@@ -356,7 +356,7 @@ class Forms {
             $this->user_data = $user_data;
             if (fusion_safe()) {
                 dbquery_insert(DB_USERS, $user_data, 'update', ['keep_session' => TRUE]);
-                addNotice('success', 'Profile has been updated.');
+                add_notice('success', 'Profile has been updated.');
                 redirect(FUSION_REQUEST);
             }
         }

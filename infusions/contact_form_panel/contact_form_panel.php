@@ -48,7 +48,7 @@ if (isset($_POST['sendmessage'])) {
         include INCLUDES.'captchas/'.$settings['captcha'].'/captcha_check.php';
         if ($_CAPTCHA_IS_VALID == FALSE) {
             \Defender::stop();
-            addNotice('warning', $locale['CT_424']);
+            add_notice('warning', $locale['CT_424']);
         }
     }
 
@@ -67,23 +67,23 @@ if (isset($_POST['sendmessage'])) {
             if ($template_data['template_active'] == '1') {
                 if (!sendemail_template('CONTACT', $input['subject'], $input['message'], '', $template_data['template_sender_name'], '', $template_data['template_sender_email'], $input['mailname'], $input['email'])) {
                     \Defender::stop();
-                    addNotice('warning', $locale['CT_425']);
+                    add_notice('warning', $locale['CT_425']);
                 }
             } else {
                 if (!sendemail($settings['siteusername'], $settings['siteemail'], $input['mailname'], $input['email'], $input['subject'], $input['message'])) {
                     \Defender::stop();
-                    addNotice('warning', $locale['CT_425']);
+                    add_notice('warning', $locale['CT_425']);
                 }
             }
         } else {
             if (!sendemail($settings['siteusername'], $settings['siteemail'], $input['mailname'], $input['email'], $input['subject'], $input['message'])) {
                 \Defender::stop();
-                addNotice('warning', $locale['CT_425']);
+                add_notice('warning', $locale['CT_425']);
             }
         }
 
         if (fusion_safe()) {
-            addNotice('warning', $locale['CT_425']);
+            add_notice('warning', $locale['CT_425']);
             redirect(FUSION_SELF);
         }
     }

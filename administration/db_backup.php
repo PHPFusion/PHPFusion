@@ -388,7 +388,7 @@ class DbBackupAdministration {
                         }
                     }
                 }
-                addNotice("success", $this->locale['404']);
+                add_notice("success", $this->locale['404']);
                 redirect(FUSION_SELF.fusion_get_aidlink());
             } else {
                 echo openform("frm_info", "post", clean_request('section=restore_db', ['action', 'section'], FALSE));

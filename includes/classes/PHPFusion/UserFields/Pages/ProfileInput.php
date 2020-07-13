@@ -193,7 +193,7 @@ class ProfileInput {
             ] );
             if ( dbrows( $result ) ) {
                 $data = dbarray( $result );
-                addNotice( 'info', sprintf( $locale['u200'], $data['user_email'] )."\n<br />\n".$locale['u201'] );
+                add_notice( 'info', sprintf( $locale['u200'], $data['user_email'] )."\n<br />\n".$locale['u201'] );
             }
         }
 

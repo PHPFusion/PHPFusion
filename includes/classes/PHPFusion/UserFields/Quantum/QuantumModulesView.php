@@ -172,7 +172,7 @@ class QuantumModulesView {
                 $field_data = dbarray( $result );
                 $install_plugin = $field_data['field_name'];
             } else {
-                addNotice( 'info', $locale['field_0205'] );
+                add_notice( 'info', $locale['field_0205'] );
                 redirect( FUSION_SELF.$aidlink );
             }
         }
@@ -273,7 +273,7 @@ class QuantumModulesView {
 
         }
 
-        addNotice( 'danger', $locale['fields_0109'] );
+        add_notice( 'danger', $locale['fields_0109'] );
         redirect( ADMIN.'user_fields.php'.$aidlink.'&amp;ref=public&amp;action=new' );
 
     }

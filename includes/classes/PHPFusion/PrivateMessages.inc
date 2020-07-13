@@ -233,7 +233,7 @@ class PrivateMessages {
                                     die($locale['700']);
                                 }
                                 \Defender::stop();
-                                addNotice('danger', $locale['628']);
+                                add_notice('danger', $locale['628']);
                             }
                         }
 
@@ -243,7 +243,7 @@ class PrivateMessages {
                             die($locale['701']);
                         }
                         \Defender::stop();
-                        addNotice('danger', $locale['482']);
+                        add_notice('danger', $locale['482']);
                     }
 
                 } else {
@@ -251,7 +251,7 @@ class PrivateMessages {
                     if ($strict) {
                         die($locale['702']);
                     }
-                    addNotice('danger', $locale['482']);
+                    add_notice('danger', $locale['482']);
                 }
 
             } else {
@@ -259,7 +259,7 @@ class PrivateMessages {
                     die($locale['703']);
                 }
                 \Defender::stop();
-                addNotice('danger', sprintf($locale['487'], fusion_get_settings('flood_interval')));
+                add_notice('danger', sprintf($locale['487'], fusion_get_settings('flood_interval')));
             }
 
         } else {
@@ -277,7 +277,7 @@ class PrivateMessages {
 
             } else {
                 \Defender::stop();
-                addNotice('danger', $locale['492']);
+                add_notice('danger', $locale['492']);
             }
         }
     }
@@ -390,7 +390,7 @@ class PrivateMessages {
                         'link'           => BASEDIR."messages.php?folder=".$this->folder."&amp;msg_read=".$data['message_id'],
                         'name'           => $data['message_subject'],
                         'message_header' => "<strong>".$this->locale['462'].":</strong> ".$data['message_subject'],
-                        'message_text'   => parse_textarea($data['message_message'], TRUE, TRUE, FALSE, TRUE, $data['message_smileys'] == "y"),
+                        'message_text'   => parse_text($data['message_message'], TRUE, TRUE, FALSE, TRUE, $data['message_smileys'] == "y"),
                     ];
                     $this->info['items'][$data['message_id']] = $data;
                 }
@@ -437,7 +437,7 @@ class PrivateMessages {
                 'link'           => BASEDIR."messages.php?folder=".$this->folder."&amp;msg_read=".$data['message_id'],
                 'name'           => $data['message_subject'],
                 'message_header' => "<strong>".$this->locale['462'].":</strong> ".$data['message_subject'],
-                'message_text'   => parse_textarea($data['message_message'], TRUE, TRUE, FALSE, TRUE, $data['message_smileys'] == "y")
+                'message_text'   => parse_text($data['message_message'], TRUE, TRUE, FALSE, TRUE, $data['message_smileys'] == "y")
             ];
 
             $this->info['items'][$data['message_id']] = $data;
@@ -472,7 +472,7 @@ class PrivateMessages {
                 'user_pm_save_sent'    => sanitizer('pm_save_sent', 0, 'pm_save_sent'),
             ];
             dbquery_insert(DB_USERS, $data, 'update');
-            addNotice('success', $this->locale['445']);
+            add_notice('success', $this->locale['445']);
             redirect(BASEDIR."messages.php?folder=options");
         }
 
@@ -659,7 +659,7 @@ class PrivateMessages {
                     dbquery_insert(DB_MESSAGES, $moveData, 'update');
                 }
             }
-            addNotice('success', $this->locale['489']);
+            add_notice('success', $this->locale['489']);
             redirect(clean_request('', ['folder'], TRUE));
         }
     }
@@ -681,7 +681,7 @@ class PrivateMessages {
                     dbquery_insert(DB_MESSAGES, $moveData, 'update');
                 }
             }
-            addNotice('success', $this->locale['489b']);
+            add_notice('success', $this->locale['489b']);
             redirect(clean_request('', ['folder'], TRUE));
         }
     }
@@ -701,7 +701,7 @@ class PrivateMessages {
                     dbquery_insert(DB_MESSAGES, $moveData, 'delete');
                 }
             }
-            addNotice('success', $this->locale['490']);
+            add_notice('success', $this->locale['490']);
             redirect(BASEDIR.'messages.php');
         }
     }
@@ -800,7 +800,7 @@ class PrivateMessages {
                 } else {
                     self::send_pm($this->data['to'], $this->data['from'], $this->data['subject'], $this->data['message'], $this->data['smileys'], FALSE);
                 }
-                addNotice('success', $this->locale['491']);
+                add_notice('success', $this->locale['491']);
                 redirect(BASEDIR."messages.php");
             }
         }

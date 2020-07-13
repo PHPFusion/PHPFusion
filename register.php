@@ -63,9 +63,9 @@ if ($settings['gateway'] == 1 && session_get('validated') == 'TRUE' || $settings
             $result = dbquery("DELETE FROM ".DB_NEW_USERS." WHERE user_code=:code LIMIT 1", [':code' => $_GET['code']]);
 
             if ($settings['admin_activation'] == 1) {
-                addNotice("success", $locale['u171']." - ".$locale['u162'], 'all');
+                add_notice("success", $locale['u171']." - ".$locale['u162'], 'all');
             } else {
-                addNotice("success", $locale['u171']." - ".$locale['u161'], 'all');
+                add_notice("success", $locale['u171']." - ".$locale['u161'], 'all');
             }
             redirect($settings['opening_page']);
 

@@ -392,7 +392,7 @@ class TableData {
             if ( is_callable( $method ) ) {
                 $value = call_user_func( $method, $data_replace );
             } else if ( $col_data['debug'] ) {
-                addNotice( "danger", "Callback could not be made" );
+                add_notice( "danger", "Callback could not be made" );
             }
         } else {
             //print_p(get_defined_functions());
@@ -401,7 +401,7 @@ class TableData {
             if ( is_callable( $col_data['callback'] ) ) {
                 $value = $col_data['callback']( $data_replace );
             } else if ( $col_data['debug'] ) {
-                addNotice( "danger", "Callback could not be made" );
+                add_notice( "danger", "Callback could not be made" );
             }
         }
 

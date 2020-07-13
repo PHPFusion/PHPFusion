@@ -203,7 +203,7 @@ class ImagesAdministration {
         if (self::$settings['tinymce_enabled'] == 1) {
             include INCLUDES."buildlist.php";
         }
-        addNotice('warning', self::$locale['401']);
+        add_notice('warning', self::$locale['401']);
         redirect(clean_request("", ["section", "action", "view"], FALSE));
     }
 
@@ -314,7 +314,7 @@ class ImagesAdministration {
                             include INCLUDES."buildlist.php";
                         }
                         if (fusion_safe()) {
-                            addNotice('success', self::$locale['420']);
+                            add_notice('success', self::$locale['420']);
                             redirect(clean_request("", ["section"], FALSE));
                         }
                     }

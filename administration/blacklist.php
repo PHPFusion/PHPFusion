@@ -84,10 +84,10 @@ class BlacklistAdministration {
             if (fusion_safe()) {
                 if (empty($this->data['blacklist_ip']) && empty($this->data['blacklist_email'])) {
                     \Defender::stop();
-                    addNotice('danger', self::$locale['BLS_010']);
+                    add_notice('danger', self::$locale['BLS_010']);
                 } else {
                     dbquery_insert(DB_BLACKLIST, $this->data, empty($this->data['blacklist_id']) ? 'save' : 'update');
-                    addNotice('success', empty($this->data['blacklist_id']) ? self::$locale['BLS_011'] : self::$locale['BLS_012']);
+                    add_notice('success', empty($this->data['blacklist_id']) ? self::$locale['BLS_011'] : self::$locale['BLS_012']);
                     redirect(clean_request('', ['section', 'action', 'blacklist_id'], FALSE));
                 }
             }
@@ -110,7 +110,7 @@ class BlacklistAdministration {
     private static function delete_blacklist($id) {
         if (self::verify_blacklist($id)) {
             dbquery("DELETE FROM ".DB_BLACKLIST." WHERE blacklist_id='".intval($id)."'");
-            addNotice('warning', self::$locale['BLS_013']);
+            add_notice('warning', self::$locale['BLS_013']);
             redirect(clean_request('', ['section', 'action', 'blacklist_id'], FALSE));
         }
     }
@@ -185,13 +185,13 @@ class BlacklistAdministration {
                     if (self::verify_blacklist($blacklist_id) && fusion_safe()) {
                         if ($_POST['table_action'] == 'delete') {
                             self::delete_blacklist($blacklist_id);
-                            addNotice('warning', self::$locale['BLS_013']);
+                            add_notice('warning', self::$locale['BLS_013']);
                         }
                     }
                 }
                 redirect(clean_request('', ['section', 'action', 'blacklist_id'], FALSE));
             }
-            addNotice('warning', self::$locale['BLS_017']);
+            add_notice('warning', self::$locale['BLS_017']);
             redirect(clean_request('', ['section', 'action', 'blacklist_id'], FALSE));
         }
 

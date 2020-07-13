@@ -206,7 +206,7 @@ class FormFactory {
                     }
 
                 } else {
-                    addNotice('danger', 'Error. Primary id field has to be defined.');
+                    add_notice('danger', 'Error. Primary id field has to be defined.');
                 }
             }
         }

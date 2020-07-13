@@ -386,7 +386,7 @@ function form_select($input_name, $label = "", $input_value, array $options = []
             if (!empty($new_error_text)) {
                 $options['error_text'] = $new_error_text;
             }
-            addNotice("danger", "<strong>$title</strong> - ".$options['error_text']);
+            add_notice("danger", "<strong>$title</strong> - ".$options['error_text']);
         }
     }
 
@@ -659,7 +659,7 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
         if (!empty($new_error_text)) {
             $options['error_text'] = $new_error_text;
         }
-        addNotice("danger", "<strong>$title</strong> - ".$options['error_text']);
+        add_notice("danger", "<strong>$title</strong> - ".$options['error_text']);
     }
 
     $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] ? 'display-block overflow-hide ' : '').$error_class.$options['class']."' style='width:".$options['width']."'>\n";
@@ -852,7 +852,7 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
                 if (!empty($new_error_text)) {
                     $options['error_text'] = $new_error_text;
                 }
-                addNotice("danger", "<strong>$title</strong> - ".$options['error_text']);
+                add_notice("danger", "<strong>$title</strong> - ".$options['error_text']);
             }
         }
 

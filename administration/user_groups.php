@@ -65,7 +65,7 @@ class UserGroups {
             case 'user_edit':
                 if (isset($_POST['user_send']) && empty($_POST['user_send'])) {
                     \Defender::stop();
-                    addNotice('danger', self::$locale['GRP_403']);
+                    add_notice('danger', self::$locale['GRP_403']);
                     redirect(clean_request("section=user_group", ["", "aid"], TRUE));
                 }
                 if (isset($_POST['user_send']) && !empty($_POST['user_send'])) {
@@ -79,14 +79,14 @@ class UserGroups {
             case 'user_add':
                 if (empty($_POST['groups_add']) or empty($_GET['group_id'])) {
                     \Defender::stop();
-                    addNotice('danger', self::$locale['GRP_408']);
+                    add_notice('danger', self::$locale['GRP_408']);
                     redirect(clean_request("", ["section=user_form", "aid"], TRUE));
                 }
                 break;
             case 'user_del':
                 if (empty($_POST['group']) or empty($_GET['group_id'])) {
                     \Defender::stop();
-                    addNotice('danger', self::$locale['GRP_408']);
+                    add_notice('danger', self::$locale['GRP_408']);
                     redirect(clean_request("", ["section=user_form", "aid"], TRUE));
                 }
                 break;
@@ -120,7 +120,7 @@ class UserGroups {
 
             if (fusion_safe()) {
                 dbquery_insert(DB_USER_GROUPS, $this->data, empty($this->data['group_id']) ? "save" : "update");
-                addNotice("success", empty($this->data['group_id']) ? self::$locale['GRP_401'] : self::$locale['GRP_400']);
+                add_notice("success", empty($this->data['group_id']) ? self::$locale['GRP_401'] : self::$locale['GRP_400']);
                 redirect(clean_request("section=usergroup", ["", "aid"], TRUE));
             }
         }
@@ -150,10 +150,10 @@ class UserGroups {
 
                     }
 
-                    addNotice("success", sprintf(self::$locale['GRP_410'], implode(', ', $added_user), $group));
+                    add_notice("success", sprintf(self::$locale['GRP_410'], implode(', ', $added_user), $group));
                     redirect(FUSION_REQUEST);
                 } else {
-                    addNotice("danger", "Invalid group");
+                    add_notice("danger", "Invalid group");
                 }
             }
         }
@@ -184,7 +184,7 @@ class UserGroups {
                         }
                     }
 
-                    addNotice("success", sprintf(self::$locale['GRP_411'], implode(', ', $rem_user), $group));
+                    add_notice("success", sprintf(self::$locale['GRP_411'], implode(', ', $rem_user), $group));
 
                     redirect(FUSION_REQUEST);
                 }
@@ -203,7 +203,7 @@ class UserGroups {
                             dbquery_insert(DB_USERS, $data, "update");
                             $i++;
                         }
-                        addNotice("success", sprintf(self::$locale['GRP_411'], $i, $group_name));
+                        add_notice("success", sprintf(self::$locale['GRP_411'], $i, $group_name));
                         redirect(FUSION_REQUEST);
                     }
                 }
@@ -247,10 +247,10 @@ class UserGroups {
     private function delete_group($id) {
         if (self::verify_group($id)) {
             dbquery("DELETE FROM ".DB_USER_GROUPS." WHERE group_id='".intval($id)."'");
-            addNotice('warning', self::$locale['GRP_407']);
+            add_notice('warning', self::$locale['GRP_407']);
             redirect(clean_request("", ["section=usergroup", "aid"], TRUE));
         } else {
-            addNotice('warning', self::$locale['GRP_405']." ".self::$locale['GRP_406']);
+            add_notice('warning', self::$locale['GRP_405']." ".self::$locale['GRP_406']);
             redirect(clean_request("", ["section=usergroup", "aid"], TRUE));
         }
     }

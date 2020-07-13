@@ -35,7 +35,7 @@ if (isset($_POST['save_template'])) {
     ];
     if (fusion_safe()) {
         dbquery_insert(DB_EMAIL_TEMPLATES, $data, "update");
-        addNotice('success', $locale['MAIL_001']);
+        add_notice('success', $locale['MAIL_001']);
         redirect(FUSION_SELF.fusion_get_aidlink()."&amp;template_id=".$data['template_id']);
     }
 } else if (isset($_POST['test_template'])) {
@@ -54,7 +54,7 @@ if (isset($_POST['save_template'])) {
         dbquery_insert(DB_EMAIL_TEMPLATES, $data, 'update');
         sendemail_template($data['template_key'], $locale['MAIL_002'], $locale['MAIL_003'], $locale['MAIL_004'], $locale['MAIL_005'], $locale['MAIL_006'],
             fusion_get_userdata('user_email'), $data['template_sender_name'], $data['template_sender_email']);
-        addNotice('success', sprintf($locale['MAIL_007'], fusion_get_userdata('user_email')));
+        add_notice('success', sprintf($locale['MAIL_007'], fusion_get_userdata('user_email')));
         redirect(FUSION_SELF.fusion_get_aidlink()."&amp;template_id=".$data['template_id']);
     }
 }

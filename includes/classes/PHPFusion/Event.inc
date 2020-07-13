@@ -132,7 +132,7 @@ class Event {
     }
 
     // This will log event and notice.
-    public function addNotice($to, $from, $message, $event_type, $time) {
+    public function add_notice($to, $from, $message, $event_type, $time) {
         $insertArray = [
             'notice_to'        => $to,
             'notice_from'      => $from,
@@ -216,12 +216,12 @@ class Event {
         return "<li>
             <div class='clearfix'>
                 <div class='pull-left m-r-10'>{%avatar%}</div>
-                <div class='overflow-hide'>     
+                <div class='overflow-hide'>
                     <span class='notice-profile'>{%profile_name%}</span>
                     <span class='notice-time'>{%datetime%}</span>
-                    <span class='notice-message'>{%message%}</span>                    
+                    <span class='notice-message'>{%message%}</span>
                 </div>
-            </div>        
+            </div>
         </li>
         ";
     }

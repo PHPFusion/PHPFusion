@@ -30,7 +30,7 @@ class SqlHandler {
             $result = dbquery("ALTER TABLE ".$table_name." ADD ".$new_column_name." ".$field_attributes); // create the new one.
             if (!$result) {
                 fusion_stop();
-                addNotice("danger", "Unable to add column ".$new_column_name." with attributes - ".$field_attributes);
+                add_notice("danger", "Unable to add column ".$new_column_name." with attributes - ".$field_attributes);
             }
         }
     }
@@ -45,7 +45,7 @@ class SqlHandler {
         $result = dbquery("ALTER TABLE ".$table_name." DROP ".$old_column_name);
         if (!$result) {
             \Defender::stop();
-            addNotice("danger", "Unable to drop column ".$old_column_name);
+            add_notice("danger", "Unable to drop column ".$old_column_name);
         }
     }
 
@@ -95,7 +95,7 @@ class SqlHandler {
                 $i++;
             }
             if (!fusion_safe()) {
-                addNotice("danger", "Unable to move all columns from ".$old_table." to " > $new_table);
+                add_notice("danger", "Unable to move all columns from ".$old_table." to " > $new_table);
             }
         }
     }
@@ -113,7 +113,7 @@ class SqlHandler {
             \Defender::stop();
         }
         if (!fusion_safe()) {
-            addNotice("danger", "Unable to drop ".$old_table);
+            add_notice("danger", "Unable to drop ".$old_table);
         }
 
     }
@@ -131,7 +131,7 @@ class SqlHandler {
         $result = dbquery("ALTER TABLE ".$table_name." CHANGE ".$old_column_name." ".$new_column_name." ".$field_attributes);
         if (!$result) {
             \Defender::stop();
-            addNotice("danger", "Unable to alter ".$old_column_name." to ".$new_column_name);
+            add_notice("danger", "Unable to alter ".$old_column_name." to ".$new_column_name);
         }
     }
 
@@ -165,7 +165,7 @@ class SqlHandler {
                 \Defender::stop();
             }
             if (!fusion_safe()) {
-                addNotice("danger", "Cannot move ".$column_name);
+                add_notice("danger", "Cannot move ".$column_name);
             }
         }
     }
@@ -1213,7 +1213,7 @@ function construct_array($string, $string2 = FALSE, $delimiter = FALSE) {
         return $value;
     } else {
         //debug_print_backtrace();
-        addNotice('info', "Debug notice: There is a string injected in construct_array() function!<br/>Please recheck source codes in this page.");
+        add_notice('info', "Debug notice: There is a string injected in construct_array() function!<br/>Please recheck source codes in this page.");
     }
 
     return NULL;

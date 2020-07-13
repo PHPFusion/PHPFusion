@@ -74,10 +74,10 @@ class FacebookConnect {
             dbquery( "UPDATE ".DB_USERS." SET user_facebook_id='' WHERE user_id=:uid", [ ':uid' => (int)fusion_get_userdata( 'user_id' ) ] );
             session_remove('facebook_access_token');
             // unset($_SESSION['facebook_access_token']);
-            addNotice('success', 'Facebook has been disconnected.');
+            add_notice('success', 'Facebook has been disconnected.');
             redirect(BASEDIR.'edit_profile.php?section='.$this->section);
         } else {
-            addNotice('danger', 'You cannot disconnect from Facebook until you have set your password.');
+            add_notice('danger', 'You cannot disconnect from Facebook until you have set your password.');
         }
     }
 
@@ -94,7 +94,7 @@ class FacebookConnect {
             $profileRequest = $this->fb->get('/me?fields=name,first_name,last_name,email,link,gender,locale,picture');
             $fbUserProfile = $profileRequest->getGraphNode()->asArray();
         } catch (FacebookResponseException $e) {
-            addNotice('danger', $e->getMessage());
+            add_notice('danger', $e->getMessage());
             echo 'Graph returned an error: '.$e->getMessage();
             session_destroy();
             // Redirect user back to app login page
@@ -159,9 +159,9 @@ class FacebookConnect {
                     // check FB
                     // make sure $userProp doesn't contain any email address.
                     dbquery_insert(DB_USERS, $userProp, 'update');
-                    addNotice('success', 'Your Facebook account is now connected');
+                    add_notice('success', 'Your Facebook account is now connected');
                 } else {
-                    addNotice('danger', 'This Facebook account was found belonging to another account and cannot be used.');
+                    add_notice('danger', 'This Facebook account was found belonging to another account and cannot be used.');
                 }
                 redirect(BASEDIR.'edit_profile.php?section='.$this->section);
             } else {
@@ -179,7 +179,7 @@ class FacebookConnect {
                     $redirect_to_register = FALSE;
                     if ($redirect_to_register) {
                         // go to registration form with prefill fields.
-                        addNotice('warning', "Work in Progress");
+                        add_notice('warning', "Work in Progress");
                     } else {
                         $this->doRegistration($userProp, $fbUserProfile);
                     }
@@ -242,11 +242,11 @@ class FacebookConnect {
                 }
 
                 if ($admin_activation) {
-                    addNotice('success', 'Your account need to be activated by the administrator before you can login.');
+                    add_notice('success', 'Your account need to be activated by the administrator before you can login.');
 
                 } else if (!empty($userProp['user_id']) && !empty($userProp['user_salt'])) {
                     // log the user in.
-                    addNotice('success', 'A new account has been created for you. You are now login with your Facebook ID.', BASEDIR.$opening_page);
+                    add_notice('success', 'A new account has been created for you. You are now login with your Facebook ID.', BASEDIR.$opening_page);
                     $login = Authenticate::loginUser($userProp['user_id']);
                     if ($login) {
                         redirect(BASEDIR.$opening_page);
@@ -266,7 +266,7 @@ class FacebookConnect {
                         redirect(BASEDIR.$opening_page);
                     }
                 } else {
-                    addNotice('danger', 'Login failed. Your Facebook email address is associated with another account.');
+                    add_notice('danger', 'Login failed. Your Facebook email address is associated with another account.');
                 }
             }
         }
@@ -319,7 +319,7 @@ class FacebookConnect {
         $mailbody = str_replace("[USER_NAME]", $first_name, $mailbody);
         $mailSubject = str_replace("[SITENAME]", $settings['sitename'], $locale['u202']);
         sendemail($first_name, $email, $settings['siteusername'], $settings['siteemail'], $mailSubject, $mailbody);
-        addNotice('success', strtr( $locale['u200'], [ '(%s)' => $email]));
+        add_notice('success', strtr( $locale['u200'], [ '(%s)' => $email]));
         redirect(BASEDIR.'login.php');
     }
 
@@ -432,7 +432,7 @@ class FacebookConnect {
             if (fusion_safe()) {
                 dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value=:s001 WHERE settings_name=:s001a AND settings_inf=:s001b", [':s001' => $settings['fb_app_id'], ':s001a' => 'fb_app_id', ':s001b' => 'facebook_connect']);
                 dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value=:s001 WHERE settings_name=:s001a AND settings_inf=:s001b", [':s001' => $settings['fb_secret'], ':s001a' => 'fb_secret', ':s001b' => 'facebook_connect']);
-                addNotice('success', $locale['fbc_0104']);
+                add_notice('success', $locale['fbc_0104']);
                 redirect(FUSION_REQUEST);
             }
         }

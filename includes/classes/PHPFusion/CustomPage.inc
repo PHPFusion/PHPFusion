@@ -141,7 +141,7 @@ class CustomPage {
                     ob_end_clean();
                     $previewHtml .= $eval;
                 } else {
-                    $previewHtml .= "<p>".nl2br(parse_textarea($_POST['page_content']))."</p>\n";
+                    $previewHtml .= "<p>".nl2br(parse_text($_POST['page_content']))."</p>\n";
                 }
                 $previewHtml .= closemodal();
                 add_to_footer($previewHtml);
@@ -410,7 +410,7 @@ class CustomPage {
                 $result = dbquery("DELETE FROM ".DB_SITE_LINKS." WHERE link_url='viewpage.php?page_id=:pageid", [':pageid' => $page_id]);
             }
             if ($result) {
-                addNotice('success', $locale['413']);
+                add_notice('success', $locale['413']);
                 redirect(FUSION_SELF.$aidlink);
             }
         }
@@ -507,7 +507,7 @@ class CustomPage {
                 dbquery_insert(DB_CUSTOM_PAGES, $data, 'update');
 
                 if (fusion_safe()) {
-                    addNotice('success', $locale['411']);
+                    add_notice('success', $locale['411']);
                     redirect(FUSION_SELF.$aidlink."&amp;pid=".$data['page_id']);
                 }
 
@@ -522,7 +522,7 @@ class CustomPage {
                 }
 
                 if (fusion_safe()) {
-                    addNotice('success', $locale['410']);
+                    add_notice('success', $locale['410']);
                     redirect(FUSION_SELF.$aidlink."&amp;pid=".$data['page_id']);
                 }
             }

@@ -133,7 +133,7 @@ class UserLogAdmin {
                 }
             }
 
-            addNotice( 'info', $this->locale['UL_006'] );
+            add_notice( 'info', $this->locale['UL_006'] );
             redirect( clean_request( '', [ 'delete' ], FALSE ) );
         }
         return FALSE;
@@ -147,7 +147,7 @@ class UserLogAdmin {
                 ':timer' => TIME - $delete * 24 * 60 * 60,
             ];
             dbquery( "DELETE FROM ".DB_USER_LOG." WHERE userlog_timestamp<:timer", $bind );
-            addNotice( 'info', sprintf( $this->locale['UL_005'], $delete ) );
+            add_notice( 'info', sprintf( $this->locale['UL_005'], $delete ) );
             redirect( clean_request( '', [ 'delete' ], FALSE ) );
         }
         return FALSE;
@@ -156,7 +156,7 @@ class UserLogAdmin {
     private function delete() {
         if ( $delete = post( 'delete', FILTER_VALIDATE_INT ) ) {
             dbquery( "DELETE FROM ".DB_USER_LOG." WHERE userlog_id=:delete", [ ':delete' => (int)$delete ] );
-            addNotice( 'info', $this->locale['UL_006'] );
+            add_notice( 'info', $this->locale['UL_006'] );
             redirect( clean_request( '', [ 'delete' ], FALSE ) );
         }
         return FALSE;

@@ -45,7 +45,7 @@ if ($profile_method == "input") {
 
             dbquery_insert( DB_USERS, $userdat, 'update' );
             $field_value = $userdat['user_blacklist'];
-            addNotice( 'success', $locale['uf_blacklist_009'] );
+            add_notice( 'success', $locale['uf_blacklist_009'] );
         }
     }
 

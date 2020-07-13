@@ -59,7 +59,7 @@ class Settings_Registration {
                     ];
                     dbquery_insert(DB_SETTINGS, $data, 'update', ['primary_key' => 'settings_name']);
                 }
-                addNotice('success', $this->locale['900']);
+                add_notice('success', $this->locale['900']);
                 redirect(FUSION_REQUEST);
             }
         }

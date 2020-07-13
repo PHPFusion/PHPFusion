@@ -221,36 +221,36 @@ class ProfileOutput {
                 switch ( $request['request_type'] ) {
                     case 'friend_request':
                         if ( $this->userRelation->friendRequest( $user_id, $friend_id ) ) {
-                            addNotice( 'success', 'You have requested to be friends with '.$this->user_data['user_name'] );
+                            add_notice( 'success', 'You have requested to be friends with '.$this->user_data['user_name'] );
                             redirect( FUSION_REQUEST );
                         }
                         break;
                     case 'accept_request':
                         if ( $this->userRelation->acceptFriendRequest( $user_id, $friend_id ) ) {
-                            addNotice( 'success', 'You are now friends with '.$this->user_data['user_name'] );
+                            add_notice( 'success', 'You are now friends with '.$this->user_data['user_name'] );
                             redirect( FUSION_REQUEST );
                         }
                         break;
                     case 'cancel_request':
                         if ( $this->userRelation->cancelFriendRequest( $user_id, $friend_id ) ) {
-                            addNotice( 'success', 'Your friendship request with '.$this->user_data['user_name'].' has been cancelled' );
+                            add_notice( 'success', 'Your friendship request with '.$this->user_data['user_name'].' has been cancelled' );
                             redirect( FUSION_REQUEST );
                         }
                         break;
                     case 'block_user':
                         if ( $this->userRelation->blockRequest( $user_id, $friend_id ) ) {
-                            addNotice( 'success', $this->user_data['user_name'].' is now added to your blocked list' );
+                            add_notice( 'success', $this->user_data['user_name'].' is now added to your blocked list' );
                             redirect( FUSION_REQUEST );
                         }
                         break;
                     case 'unblock_user':
                         if ( $this->userRelation->unblockRequest( $user_id, $friend_id ) ) {
-                            addNotice( 'success', $this->user_data['user_name'].' is removed from your blocked list' );
+                            add_notice( 'success', $this->user_data['user_name'].' is removed from your blocked list' );
                             redirect( FUSION_REQUEST );
                         }
                     case 'unfriend_request':
                         if ( $this->userRelation->unfriendRequest( $user_id, $friend_id ) ) {
-                            addNotice( 'success', $this->user_data['user_name'].' is no longer your friend' );
+                            add_notice( 'success', $this->user_data['user_name'].' is no longer your friend' );
                             redirect( FUSION_REQUEST );
                         }
                 }
