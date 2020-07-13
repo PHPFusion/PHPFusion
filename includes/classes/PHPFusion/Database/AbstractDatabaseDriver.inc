@@ -98,7 +98,7 @@ abstract class AbstractDatabaseDriver {
         /**
          * Add warning notice for Site Owners - Core Developers only
          */
-        //if (iSUPERADMIN && $count > 30)  addNotice('danger', 'There are too many queries this page. Please reduce it to below 30');
+        //if (iSUPERADMIN && $count > 30)  add_notice('danger', 'There are too many queries this page. Please reduce it to below 30');
         return $count;
     }
 
