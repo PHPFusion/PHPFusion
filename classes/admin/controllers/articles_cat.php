@@ -94,7 +94,7 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
                 if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_id=:articlecatid", [':articlecatid' => $inputArray['article_cat_id']])) {
                     if (!dbcount("(article_cat_id)", DB_ARTICLE_CATS, $categoryNameCheck['when_updating'])) {
                         dbquery_insert(DB_ARTICLE_CATS, $inputArray, 'update');
-                        addNotice('success', $this->locale['article_0041']);
+                        add_notice('success', $this->locale['article_0041']);
 
                         if (isset($_POST['save_cat_and_close'])) {
                             redirect(clean_request('', ['action', 'ref'], FALSE));
@@ -103,14 +103,14 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
                         }
 
                     } else {
-                        addNotice('danger', $this->locale['article_0321']);
+                        add_notice('danger', $this->locale['article_0321']);
                     }
 
                     // Insert
                 } else {
                     if (!dbcount("(article_cat_id)", DB_ARTICLE_CATS, $categoryNameCheck['when_saving'])) {
                         dbquery_insert(DB_ARTICLE_CATS, $inputArray, 'save');
-                        addNotice('success', $this->locale['article_0040']);
+                        add_notice('success', $this->locale['article_0040']);
 
                         if (isset($_POST['save_cat_and_close'])) {
                             redirect(clean_request('', ['action', 'ref'], FALSE));
@@ -118,7 +118,7 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
                             redirect(FUSION_REQUEST);
                         }
                     } else {
-                        addNotice('danger', $this->locale['article_0321']);
+                        add_notice('danger', $this->locale['article_0321']);
                     }
                 }
             }
@@ -137,10 +137,10 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
         } else if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
             if (!dbcount("(article_id)", DB_ARTICLES, "article_cat=:articlecat", [':articlecat' => $_GET['cat_id']]) && !dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_parent=:catparent", [':catparent' => $_GET['cat_id']])) {
                 dbquery("DELETE FROM  ".DB_ARTICLE_CATS." WHERE article_cat_id=:articlecat", [':articlecat' => $_GET['cat_id']]);
-                addNotice('success', $this->locale['article_0042']);
+                add_notice('success', $this->locale['article_0042']);
             } else {
-                addNotice('warning', $this->locale['article_0043']);
-                addNotice('warning', $this->locale['article_0044']);
+                add_notice('warning', $this->locale['article_0043']);
+                add_notice('warning', $this->locale['article_0044']);
             }
             redirect(clean_request('', ['ref', 'action', 'cat_id'], FALSE));
         }
@@ -251,8 +251,8 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
                                 if (!dbcount("(article_id)", DB_ARTICLES, "article_cat=:articlecat", [':articlecat' => $article_cat_id]) && !dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_parent=:catparent", [':catparent' => $article_cat_id])) {
                                     dbquery("DELETE FROM  ".DB_ARTICLE_CATS." WHERE article_cat_id=:articlecatid", [':articlecatid' => intval($article_cat_id)]);
                                 } else {
-                                    addNotice('warning', $this->locale['article_0046']);
-                                    addNotice('warning', $this->locale['article_0044']);
+                                    add_notice('warning', $this->locale['article_0046']);
+                                    add_notice('warning', $this->locale['article_0044']);
                                 }
                                 break;
                             default:
@@ -260,10 +260,10 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
                         }
                     }
                 }
-                addNotice('success', $this->locale['article_0045']);
+                add_notice('success', $this->locale['article_0045']);
                 redirect(FUSION_REQUEST);
             } else {
-                addNotice('warning', $this->locale['article_0048']);
+                add_notice('warning', $this->locale['article_0048']);
                 redirect(FUSION_REQUEST);
             }
         }

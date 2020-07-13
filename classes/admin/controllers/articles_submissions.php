@@ -77,17 +77,17 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
                 if (isset($_POST['publish_submission'])) {
                     dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id=:submitid AND submit_type=:submittype", [':submitid' => $_GET['submit_id'], ':submittype' => 'a']);
                     dbquery_insert(DB_ARTICLES, $this->inputArray, 'save');
-                    addNotice('success', (!$this->inputArray['article_draft'] ? $this->locale['article_0060'] : $this->locale['article_0061']));
+                    add_notice('success', (!$this->inputArray['article_draft'] ? $this->locale['article_0060'] : $this->locale['article_0061']));
                     redirect(clean_request('', ['submit_id'], FALSE));
                 }
 
                 // Preview Submission
                 if (isset($_POST['preview_submission'])) {
                     $footer = openmodal("article_preview", "<i class='fa fa-eye fa-lg m-r-10'></i> ".$this->locale['preview'].": ".$this->inputArray['article_subject']);
-                    $footer .= parse_textarea($this->inputArray['article_snippet'], TRUE, TRUE, FALSE, NULL, $this->inputArray['article_breaks'] == "y");
+                    $footer .= parse_text($this->inputArray['article_snippet'], TRUE, TRUE, FALSE, NULL, $this->inputArray['article_breaks'] == "y");
                     if ($this->inputArray['article_article']) {
                         $footer .= "<hr class='m-t-20 m-b-20'>\n";
-                        $footer .= parse_textarea($this->inputArray['article_article'], FALSE, FALSE, TRUE, IMAGES_A, $this->inputArray['article_breaks'] == "y");
+                        $footer .= parse_text($this->inputArray['article_article'], FALSE, FALSE, TRUE, IMAGES_A, $this->inputArray['article_breaks'] == "y");
                     }
                     $footer .= closemodal();
                     add_to_footer($footer);
@@ -102,7 +102,7 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
     private function handleDeleteSubmission() {
         if (isset($_POST['delete_submission'])) {
             dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id=:submitid AND submit_type=:submittype", [':submitid' => $_GET['submit_id'], ':submittype' => 'a']);
-            addNotice('success', $this->locale['article_0062']);
+            add_notice('success', $this->locale['article_0062']);
             redirect(clean_request('', ['submit_id'], FALSE));
         }
     }

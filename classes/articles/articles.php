@@ -227,8 +227,8 @@ abstract class Articles extends ArticlesServer {
             $pagecount = 1;
 
             // Article Texts
-            $data['article_snippet'] = parse_textarea($data['article_snippet'], TRUE, TRUE, FALSE, NULL, $data['article_breaks'] == "y");
-            $data['article_article'] = parse_textarea($data['article_article'], FALSE, FALSE, TRUE, NULL, $data['article_breaks'] == "y");
+            $data['article_snippet'] = parse_text($data['article_snippet'], TRUE, TRUE, FALSE, NULL, $data['article_breaks'] == "y");
+            $data['article_article'] = parse_text($data['article_article'], FALSE, FALSE, TRUE, NULL, $data['article_breaks'] == "y");
 
             $articleText = preg_replace("/<!?--\s*pagebreak\s*-->/i", "", $data['article_snippet']);
 
@@ -356,7 +356,7 @@ abstract class Articles extends ArticlesServer {
             // build categorial data.
             $info['article_cat_id'] = $data['article_cat_id'];
             $info['article_cat_name'] = $data['article_cat_name'];
-            $info['article_cat_description'] = nl2br(parse_textarea($data['article_cat_description']));
+            $info['article_cat_description'] = nl2br(parse_text($data['article_cat_description']));
             $info['article_cat_language'] = $data['article_cat_language'];
 
             $max_article_rows = dbcount("(article_id)", DB_ARTICLES, "article_cat='".$data['article_cat_id']."' AND ".groupaccess("article_visibility")." AND article_draft='0'");

@@ -62,17 +62,17 @@ if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_status='1' AND ".g
                 ];
 
                 dbquery_insert(DB_SUBMISSIONS, $inputArray, 'save');
-                addNotice('success', $locale['article_0910']);
+                add_notice('success', $locale['article_0910']);
                 redirect(clean_request('submitted=a', ['stype'], TRUE));
             }
 
             // Display
             if (fusion_safe() && isset($_POST['preview_article'])) {
                 $footer = openmodal("article_preview", "<i class='fa fa-eye fa-lg m-r-10'></i> ".$locale['preview'].": ".$criteriaArray['article_subject']);
-                $footer .= parse_textarea($_POST['article_snippet'], TRUE, TRUE, FALSE, NULL, TRUE);
+                $footer .= parse_text($_POST['article_snippet'], TRUE, TRUE, FALSE, NULL, TRUE);
                 if ($criteriaArray['article_article']) {
                     $footer .= "<hr class='m-t-20 m-b-20'>\n";
-                    $footer .= parse_textarea($_POST['article_article'], FALSE, FALSE, TRUE, IMAGES_A, TRUE);
+                    $footer .= parse_text($_POST['article_article'], FALSE, FALSE, TRUE, IMAGES_A, TRUE);
                 }
                 $footer .= closemodal();
                 add_to_footer($footer);
