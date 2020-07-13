@@ -54,10 +54,10 @@ class NewsCategoryAdmin extends NewsAdminModel {
         if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
             $result = dbcount("(news_cat)", DB_NEWS, "news_cat='".$_GET['cat_id']."'") || dbcount("(news_cat_id)", DB_NEWS_CATS, "news_cat_parent='".$_GET['cat_id']."'");
             if (!empty($result)) {
-                addNotice("success", self::$locale['news_0152'].self::$locale['news_0153']);
+                add_notice("success", self::$locale['news_0152'].self::$locale['news_0153']);
             } else {
                 dbquery("DELETE FROM ".DB_NEWS_CATS." WHERE news_cat_id='".$_GET['cat_id']."'");
-                addNotice("success", self::$locale['news_0154']);
+                add_notice("success", self::$locale['news_0154']);
             }
             // FUSION_REQUEST without the "action" gets
             redirect(clean_request("", ["action", "ref", "cat_id"], FALSE));
@@ -103,7 +103,7 @@ class NewsCategoryAdmin extends NewsAdminModel {
                 if (dbcount("(news_cat_id)", DB_NEWS_CATS, "news_cat_id='".$inputArray['news_cat_id']."'")) {
                     if (!dbcount("(news_cat_id)", DB_NEWS_CATS, $categoryNameCheck['when_updating'])) {
                         dbquery_insert(DB_NEWS_CATS, $inputArray, "update");
-                        addNotice("success", self::$locale['news_0151']);
+                        add_notice("success", self::$locale['news_0151']);
 
                         if (isset($_POST['save_cat_and_close'])) {
                             redirect(clean_request("", ["action", "ref"], FALSE));
@@ -112,13 +112,13 @@ class NewsCategoryAdmin extends NewsAdminModel {
                         }
 
                     } else {
-                        addNotice('danger', self::$locale['news_0352']);
+                        add_notice('danger', self::$locale['news_0352']);
                     }
                 } else {
                     // check category name is unique when saving new
                     if (!dbcount("(news_cat_id)", DB_NEWS_CATS, $categoryNameCheck['when_saving'])) {
                         dbquery_insert(DB_NEWS_CATS, $inputArray, "save");
-                        addNotice("success", self::$locale['news_0150']);
+                        add_notice("success", self::$locale['news_0150']);
 
                         if (isset($_POST['save_cat_and_close'])) {
                             redirect(clean_request("", ["action", "ref"], FALSE));
@@ -126,7 +126,7 @@ class NewsCategoryAdmin extends NewsAdminModel {
                             redirect(FUSION_REQUEST);
                         }
                     } else {
-                        addNotice('danger', self::$locale['news_0352']);
+                        add_notice('danger', self::$locale['news_0352']);
                     }
                 }
             }
@@ -259,7 +259,7 @@ class NewsCategoryAdmin extends NewsAdminModel {
                                     }
                                     dbquery("DELETE FROM  ".DB_NEWS_CATS." WHERE news_cat_id='".intval($news_cat_id)."'");
                                 } else {
-                                    addNotice("warning", self::$locale['news_0153']);
+                                    add_notice("warning", self::$locale['news_0153']);
                                 }
                                 break;
                             default:
@@ -268,10 +268,10 @@ class NewsCategoryAdmin extends NewsAdminModel {
                         }
                     }
                 }
-                addNotice("success", self::$locale['news_0151']);
+                add_notice("success", self::$locale['news_0151']);
                 redirect(FUSION_REQUEST);
             }
-            addNotice("warning", self::$locale['news_0155']);
+            add_notice("warning", self::$locale['news_0155']);
             redirect(FUSION_REQUEST);
         }
 

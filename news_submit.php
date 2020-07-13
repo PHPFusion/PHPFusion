@@ -76,7 +76,7 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
             ];
 
             dbquery_insert(DB_SUBMISSIONS, $inputArray, 'save');
-            addNotice('success', $locale['news_0701']);
+            add_notice('success', $locale['news_0701']);
             redirect(clean_request('submitted=n', ['submitted', 'stype'], TRUE));
         }
     }
@@ -93,10 +93,10 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
         ];
         if (fusion_safe() && isset($_POST['preview_news'])) {
             $footer = openmodal("news_preview", "<i class='fa fa-eye fa-lg m-r-10'></i> ".$locale['preview'].": ".$criteriaArray['news_subject']);
-            $footer .= parse_textarea($criteriaArray['news_news'], FALSE, FALSE, TRUE, IMAGES_N, TRUE);
+            $footer .= parse_text($criteriaArray['news_news'], FALSE, FALSE, TRUE, IMAGES_N, TRUE);
             if ($criteriaArray['news_extended']) {
                 $footer .= "<hr class='m-t-20 m-b-20'>\n";
-                $footer .= parse_textarea($criteriaArray['news_extended'], FALSE, FALSE, TRUE, IMAGES_N, TRUE);
+                $footer .= parse_text($criteriaArray['news_extended'], FALSE, FALSE, TRUE, IMAGES_N, TRUE);
             }
             $footer .= closemodal();
             add_to_footer($footer);

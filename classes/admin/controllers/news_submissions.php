@@ -146,9 +146,9 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                             dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id=:submit_id", [':submit_id' => $_GET['submit_id']]);
 
                             if ($this->news_data['news_draft']) {
-                                addNotice('success', self::$locale['news_0147']);
+                                add_notice('success', self::$locale['news_0147']);
                             } else {
-                                addNotice('success', self::$locale['news_0146']);
+                                add_notice('success', self::$locale['news_0146']);
                             }
 
                             redirect(clean_request('', ['submit_id'], FALSE));
@@ -174,7 +174,7 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                 }
                 dbquery("DELETE FROM ".DB_NEWS_IMAGES." WHERE submit_id=:submit_id", $bind);
                 dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id=:submit_id", $bind);
-                addNotice("success", self::$locale['news_0145']);
+                add_notice("success", self::$locale['news_0145']);
                 redirect(clean_request("", ["submit_id"], FALSE));
             }
 
@@ -573,9 +573,9 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                         $failed_upload++;
                     }
                 }
-                addNotice("success", sprintf(self::$locale['news_0268'], $success_upload));
+                add_notice("success", sprintf(self::$locale['news_0268'], $success_upload));
                 if ($failed_upload) {
-                    addNotice("warning", sprintf(self::$locale['news_0269'], $failed_upload));
+                    add_notice("warning", sprintf(self::$locale['news_0269'], $failed_upload));
                 }
                 if (fusion_safe()) {
                     redirect(FUSION_REQUEST);
@@ -599,7 +599,7 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                     unlink(IMAGES_N_T.$data['news_image_t2']);
                 }
                 dbquery_insert(DB_NEWS_IMAGES, $data, 'delete');
-                addNotice('success', self::$locale['news_0104']);
+                add_notice('success', self::$locale['news_0104']);
                 redirect(FUSION_REQUEST);
             }
         }

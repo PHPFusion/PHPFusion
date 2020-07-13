@@ -155,7 +155,7 @@ class NewsForm extends NewsAdminModel {
                     }
                     if (dbcount("('news_id')", DB_NEWS, "news_id='".$this->news_data['news_id']."'")) {
                         dbquery_insert(DB_NEWS, $this->news_data, 'update', ['keep_session' => TRUE]);
-                        addNotice('success', self::$locale['news_0101']);
+                        add_notice('success', self::$locale['news_0101']);
                     } else {
                         $this->data['news_name'] = fusion_get_userdata('user_id');
                         $this->news_data['news_id'] = dbquery_insert(DB_NEWS, $this->news_data, 'save', ['keep_session' => TRUE]);
@@ -168,7 +168,7 @@ class NewsForm extends NewsAdminModel {
                                 ':news_id'       => $this->news_data['news_id']
                             ]);
                         }
-                        addNotice('success', self::$locale['news_0100']);
+                        add_notice('success', self::$locale['news_0100']);
                     }
 
                     if (isset($_POST['save_and_close'])) {
@@ -549,9 +549,9 @@ class NewsForm extends NewsAdminModel {
                         $failed_upload++;
                     }
                 }
-                addNotice("success", sprintf(self::$locale['news_0268'], $success_upload));
+                add_notice("success", sprintf(self::$locale['news_0268'], $success_upload));
                 if ($failed_upload) {
-                    addNotice("warning", sprintf(self::$locale['news_0269'], $failed_upload));
+                    add_notice("warning", sprintf(self::$locale['news_0269'], $failed_upload));
                 }
                 if (fusion_safe()) {
                     redirect(FUSION_REQUEST);
@@ -575,7 +575,7 @@ class NewsForm extends NewsAdminModel {
                     unlink(IMAGES_N_T.$data['news_image_t2']);
                 }
                 dbquery_insert(DB_NEWS_IMAGES, $data, 'delete');
-                addNotice('success', self::$locale['news_0104']);
+                add_notice('success', self::$locale['news_0104']);
                 redirect(FUSION_REQUEST);
             }
         }
@@ -875,10 +875,10 @@ class NewsForm extends NewsAdminModel {
                         }
                     }
                 }
-                addNotice("success", self::$locale['news_0101']);
+                add_notice("success", self::$locale['news_0101']);
                 redirect(FUSION_REQUEST);
             }
-            addNotice("warning", self::$locale['news_0108']);
+            add_notice("warning", self::$locale['news_0108']);
             redirect(FUSION_REQUEST);
         }
 
@@ -1218,7 +1218,7 @@ class NewsForm extends NewsAdminModel {
                 dbquery("DELETE FROM ".DB_COMMENTS."  WHERE comment_item_id='$news_id' and comment_type='N'");
                 dbquery("DELETE FROM ".DB_RATINGS." WHERE rating_item_id='$news_id' and rating_type='N'");
                 dbquery("DELETE FROM ".DB_NEWS." WHERE news_id='$news_id'");
-                addNotice('success', self::$locale['news_0102']);
+                add_notice('success', self::$locale['news_0102']);
 
                 redirect(FUSION_SELF.fusion_get_aidlink());
             } else {

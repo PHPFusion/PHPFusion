@@ -94,7 +94,7 @@ class NewsAdmin extends NewsAdminModel {
 
         $edit = ($action == 'edit' && $news_get_cat_id) ? TRUE : FALSE;
         if ($submissions = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='n'")) {
-            addNotice("info", sprintf($locale['news_0137'], format_word($submissions, $locale['fmt_submission'])));
+            add_notice("info", sprintf($locale['news_0137'], format_word($submissions, $locale['fmt_submission'])));
         }
 
         $tab['title'][] = $news_cat_title;

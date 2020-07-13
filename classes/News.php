@@ -329,8 +329,8 @@ class News extends NewsHelper {
             $news_pagenav = "";
             $pagecount = 1;
 
-            $data['news_news'] = parse_textarea($data['news_news'], TRUE, FALSE, TRUE, FALSE, ($data['news_breaks'] == "y" ? TRUE : FALSE));
-            $data['news_extended'] = parse_textarea($data['news_extended'], TRUE, FALSE, TRUE, FALSE, ($data['news_breaks'] == "y" ? TRUE : FALSE));
+            $data['news_news'] = parse_text($data['news_news'], TRUE, FALSE, TRUE, FALSE, ($data['news_breaks'] == "y" ? TRUE : FALSE));
+            $data['news_extended'] = parse_text($data['news_extended'], TRUE, FALSE, TRUE, FALSE, ($data['news_breaks'] == "y" ? TRUE : FALSE));
 
             $news_news = preg_replace("/<!?--\s*pagebreak\s*-->/i", "", $data['news_news']);
             $news_extended = $data['news_extended'];
