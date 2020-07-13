@@ -113,7 +113,7 @@ function photo_form() {
                     // because we require the photo image must be uploaded.
                     \Defender::stop();
                     \Defender::setInputError("photo_image");
-                    addNotice('danger', $locale['photo_0014']);
+                    add_notice('danger', $locale['photo_0014']);
                 }
             }
             if (fusion_safe()) {
@@ -121,13 +121,13 @@ function photo_form() {
                     // update album
                     dbquery_order(DB_PHOTOS, $data['photo_order'], 'photo_order', $data['photo_id'], 'photo_id', FALSE, FALSE, FALSE, '', 'update');
                     dbquery_insert(DB_PHOTOS, $data, 'update');
-                    addNotice('success', $locale['photo_0015']);
+                    add_notice('success', $locale['photo_0015']);
                     redirect(clean_request('album_id='.$data['album_id'], ['ref', 'action', 'album_id', 'photo_id', 'section'], FALSE));
                 } else {
                     // create album
                     dbquery_order(DB_PHOTOS, $data['photo_order'], 'photo_order', 0, "photo_id", FALSE, FALSE, FALSE, '', 'save');
                     dbquery_insert(DB_PHOTOS, $data, 'save');
-                    addNotice('success', $locale['photo_0016']);
+                    add_notice('success', $locale['photo_0016']);
                     redirect(clean_request('album_id='.$data['album_id'], ['ref', 'action', 'album_id', 'photo_id', 'section'], FALSE));
                 }
             }
@@ -291,9 +291,9 @@ function mass_photo_form() {
                             $failed_upload++;
                         }
                     }
-                    addNotice('success', sprintf($locale['photo_0021'], $success_upload));
+                    add_notice('success', sprintf($locale['photo_0021'], $success_upload));
                     if ($failed_upload) {
-                        addNotice('warning', sprintf($locale['photo_0021a'], $failed_upload));
+                        add_notice('warning', sprintf($locale['photo_0021a'], $failed_upload));
                     }
                     redirect(clean_request('album_id='.$data['album_id'], ['ref', 'action', 'album_id', 'photo_id', 'section'], FALSE));
                 }

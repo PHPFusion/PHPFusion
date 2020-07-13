@@ -88,14 +88,14 @@ if (isset($_POST['save_album'])) {
             $result = dbquery_order(DB_PHOTO_ALBUMS, $data['album_order'], 'album_order', $data['album_id'], 'album_id', FALSE, FALSE, TRUE,
                 'album_language', 'update');
             dbquery_insert(DB_PHOTO_ALBUMS, $data, 'update');
-            addNotice('success', $locale['album_0013']);
+            add_notice('success', $locale['album_0013']);
             redirect(FUSION_REQUEST);
         } else {
             // create album
             $result = dbquery_order(DB_PHOTO_ALBUMS, $data['album_order'], 'album_order', 0, "album_id", FALSE, FALSE, TRUE, 'album_language',
                 'save');
             dbquery_insert(DB_PHOTO_ALBUMS, $data, 'save');
-            addNotice('success', $locale['album_0014']);
+            add_notice('success', $locale['album_0014']);
             redirect(FUSION_REQUEST);
         }
     }

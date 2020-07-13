@@ -77,10 +77,10 @@ if (isset($_POST['delete_watermarks'])) {
                 ];
                 dbquery_insert(DB_SETTINGS_INF, $inputSettings, 'update', ['primary_key' => 'settings_name']);
             }
-            addNotice('success', $locale['900']);
+            add_notice('success', $locale['900']);
             redirect(FUSION_REQUEST);
         } else {
-            addNotice('danger', $locale['901']);
+            add_notice('danger', $locale['901']);
         }
     }
 }

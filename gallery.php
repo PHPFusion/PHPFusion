@@ -135,7 +135,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
             ];
         }
         $info += [
-            'photo_description' => $data['photo_description'] ? nl2br(parse_textarea($data['photo_description'], FALSE, TRUE, FALSE, FALSE)) : '',
+            'photo_description' => $data['photo_description'] ? nl2br(parse_text($data['photo_description'], FALSE, TRUE, FALSE, FALSE)) : '',
             'photo_byte'        => parsebytesize($gallery_settings['photo_watermark'] ? filesize(IMAGES_G.$data['photo_filename']) : filesize(IMAGES_G.$data['photo_filename'])),
             'photo_comment'     => $data['photo_allow_comments'] ? number_format($data['count_comment']) : 0,
             'photo_ratings'     => $data['photo_allow_ratings'] && $data['count_votes'] > 0 ? number_format(ceil($data['sum_rating'] / $data['count_votes'])) : '0'
@@ -221,7 +221,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
                     ORDER BY photo_datestamp DESC LIMIT 1", [':albumid' => intval($_GET['album_id'])]));
                 $info['album_stats'] = $locale['gallery_422']." ".$info['max_rows']."<br />\n";
                 $info['album_stats'] .= $locale['gallery_423']." ".profile_link($latest_update['user_id'], $latest_update['user_name'], $latest_update['user_status'])." ".$locale['gallery_424']." ".showdate("longdate", $latest_update['photo_datestamp'])."\n";
-                $info['album_description'] = parse_textarea($info['album_description'], FALSE, TRUE, FALSE);
+                $info['album_description'] = parse_text($info['album_description'], FALSE, TRUE, FALSE);
                 $pattern = "SELECT %s(pr.rating_vote) FROM ".DB_RATINGS." AS pr WHERE pr.rating_item_id = p.photo_id AND pr.rating_type = 'P'";
                 $sql_count = sprintf($pattern, 'COUNT');
                 $sql_sum = sprintf($pattern, 'SUM');
@@ -250,7 +250,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
                             ],
                             'image'       => displayPhotoImage($data['photo_id'], $data['photo_filename'], $data['photo_thumb1'], $data['photo_thumb2'], INFUSIONS."gallery/gallery.php?photo_id=".$data['photo_id']),
                             'title'       => ($data['photo_title']) ? $data['photo_title'] : $data['image'],
-                            'description' => ($data['photo_description']) ? nl2br(parse_textarea($data['photo_description'], FALSE, TRUE, FALSE)) : '',
+                            'description' => ($data['photo_description']) ? nl2br(parse_text($data['photo_description'], FALSE, TRUE, FALSE)) : '',
                             'photo_views' => format_word($data['photo_views'], $locale['fmt_views'])
                         ];
                         if (iADMIN && checkrights("PH")) {
@@ -340,7 +340,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
                     INFUSIONS."gallery/gallery.php?album_id=".$data['album_id']);
                 //}
                 $data['title'] = $data['album_title'] ? $data['album_title'] : $locale['gallery_402'];
-                $data['description'] = $data['album_description'] ? nl2br(parse_textarea($data['album_description'])) : '';
+                $data['description'] = $data['album_description'] ? nl2br(parse_text($data['album_description'])) : '';
                 $_photo = dbquery("SELECT pp.photo_user, u.user_id, u.user_name, u.user_status, u.user_avatar
                     FROM ".DB_PHOTOS." AS pp
                     LEFT JOIN ".DB_USERS." AS u on u.user_id=pp.photo_user
