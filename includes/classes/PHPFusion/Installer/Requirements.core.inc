@@ -115,7 +115,7 @@ class Requirements extends Install_Core {
                 'severability' => -5
             ];
         }
-        if (version_compare($phpversion, '5.6.39') < 0) {
+        if (version_compare($phpversion, '7.2.5') < 0) {
             $requirements['php']['title'] = 'PHP';
             $requirements['php']['description'] = self::$locale['setup_0113'];
             $requirements['php']['severability'] = -10;
@@ -245,7 +245,7 @@ class Requirements extends Install_Core {
         $chmod = '';
         foreach ($check_arr as $key => $value) {
             // Override key values
-            $check_arr[$key] = (file_exists($key) && is_writable($key)) or (file_exists($key) && function_exists("chmod") && @chmod($key, 0777) || @chmod($key, 0755) && is_writable($key)) ? TRUE : FALSE;
+            $check_arr[$key] = (file_exists($key) && is_writable($key)) or (file_exists($key) && function_exists("chmod") && @chmod($key, 0777) || @chmod($key, 0755) && is_writable($key));
             if (!$check_arr[$key]) {
                 $requirements['files_check']['sub'][$key] = self::$locale['setup_0136'];
                 $requirements['files_check']['severability'] = -10;

@@ -21,7 +21,8 @@
     "ext-json": "*",
     "ext-openssl": "*",
     "ext-curl": "*",
-    "ext-dom": "*"
+    "ext-dom": "*",
+    "ext-zend-opcache": "*"
   },
   "config": {
     "vendor-dir": "includes/vendor"
