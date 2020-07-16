@@ -60,7 +60,7 @@ $tab['id'][] = "download_settings";
 $tab['icon'][] = "fa fa-cogs";
 
 opentable($locale['download_0001']);
-echo opentab($tab, $_GET['section'], "download_admin", TRUE);
+echo opentab($tab, $_GET['section'], "download_admin", TRUE, "", "section", ['rowstart', 'action', 'download_id', 'cat_id', 'submit_id', 'download_cat_id']);
 
 switch ($_GET['section']) {
     case "download_form":
