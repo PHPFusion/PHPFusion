@@ -20,101 +20,102 @@
  */
 if (!function_exists('display_home')) {
     function display_home($info) {
-
-        add_to_css('
-            figure {
-                margin: 0;
-                padding: 0;
-                border: 0;
-                font: inherit;
-                vertical-align: baseline;
-                display: block;
-            }
-
-            .item {
-                padding: 0;
-                height: inherit;
-            }
-
-            .item .thumb {
-                float: left;
-                height: 120px;
-                overflow: hidden;
-                margin-right: 10px;
-            }
-
-            .item .thumb img {
-                vertical-align: middle;
-                object-fit: contain;
-                width: 100%;
-                max-width: 140px;
-                -webkit-transform: scale(1.5);
-                -ms-transform: scale(1.5);
-                -o-transform: scale(1.5);
-                transform: scale(1.5);
-                margin-top: 10px;
-            }
-
-            @media (min-width: 900px) {
-                .item .thumb {
-                    float: inherit;
-                    height: 150px;
-                    margin-right: inherit;
+        if (!defined('DISABLE_HOME_MODULES')) {
+            add_to_css('
+                figure {
+                    margin: 0;
+                    padding: 0;
+                    border: 0;
+                    font: inherit;
+                    vertical-align: baseline;
+                    display: block;
                 }
+
+                .item {
+                    padding: 0;
+                    height: inherit;
+                }
+
+                .item .thumb {
+                    float: left;
+                    height: 120px;
+                    overflow: hidden;
+                    margin-right: 10px;
+                }
+
                 .item .thumb img {
-                    max-width: 100%;
-                    max-height: 100%;
+                    vertical-align: middle;
+                    object-fit: contain;
+                    width: 100%;
+                    max-width: 140px;
                     -webkit-transform: scale(1.5);
                     -ms-transform: scale(1.5);
                     -o-transform: scale(1.5);
                     transform: scale(1.5);
-                    margin-top: 15px;
+                    margin-top: 10px;
                 }
-                .item .post .meta {
-                    margin: 0;
-                    padding: 3px 0 10px;
-                    font-size: 12px;
+
+                @media (min-width: 900px) {
+                    .item .thumb {
+                        float: inherit;
+                        height: 150px;
+                        margin-right: inherit;
+                    }
+                    .item .thumb img {
+                        max-width: 100%;
+                        max-height: 100%;
+                        -webkit-transform: scale(1.5);
+                        -ms-transform: scale(1.5);
+                        -o-transform: scale(1.5);
+                        transform: scale(1.5);
+                        margin-top: 15px;
+                    }
+                    .item .post .meta {
+                        margin: 0;
+                        padding: 3px 0 10px;
+                        font-size: 12px;
+                    }
                 }
-            }
-        ');
-        $html = '';
-        // This is display_home_no_item function
-        if ( empty( $info ) ) {
-            $locale = fusion_get_locale();
-            $html .= fusion_get_function( 'opentable', $locale['home_0100'] );
-            $html .= $locale['home_0101'];
-            $html .= fusion_get_function( 'closetable' );
-            return $html;
-        }
-        foreach ($info as $content) {
-            $colwidth = $content['colwidth'];
-            $html .= fusion_get_function( 'opentable', $content['blockTitle'] );
-            if ($colwidth) {
-                $html .= '<div class="row">';
-                foreach ($content['data'] as $data) {
-                    $html .= '<div class="col-xs-12 col-sm-'.$colwidth.' col-md-'.$colwidth.' col-lg-'.$colwidth.' content clearfix">';
-                    $html .= '<div class="item">';
-                            if (!empty($data['image'])) {
-                                $html .= '<figure class="thumb">';
-                                $html .= '<a href="'.$data['url'].'">';
-                                $html .= '<img style="max-height: 120px;" class="img-responsive" src="'.$data['image'].'" alt="'.$data['title'].'"/>';
-                                $html .= '</a>';
-                                $html .= '</figure>';
-                            }
-                    $html .= '<div class="post">';
-                    $html .= '<h4><a href="'.$data['url'].'">'.$data['title'].'</a></h4>';
-                    $html .= '<div class="small m-b-10 overflow-hide">'.$data['meta'].'</div>';
-                    $html .= '<div class="overflow-hide hidden-xs">'.nl2br( trim_text( strip_tags( $data['content'] ), 200 ) ).'</div>';
-                    $html .= '</div>';
-                    $html .= '</div>';
-                    $html .= '</div>';
+            ');
+
+            if (!empty($info)) {
+                foreach ($info as $content) {
+                    $colwidth = $content['colwidth'];
+                    opentable($content['blockTitle']);
+                    if ($colwidth) {
+                        echo '<div class="row">';
+                        foreach ($content['data'] as $data) {
+                            echo '<div class="col-xs-12 col-sm-'.$colwidth.' col-md-'.$colwidth.' col-lg-'.$colwidth.' content clearfix">';
+                                echo '<div class="item">';
+
+                                    if (!empty($data['image'])) {
+                                        echo '<figure class="thumb">';
+                                            echo '<a href="'.$data['url'].'">';
+                                                echo '<img style="max-height: 120px;" class="img-responsive" src="'.$data['image'].'" alt="'.$data['title'].'"/>';
+                                            echo '</a>';
+                                        echo '</figure>';
+                                    }
+
+                                    echo '<div class="post">';
+                                        echo '<h4><a href="'.$data['url'].'">'.$data['title'].'</a></h4>';
+                                        echo '<div class="small m-b-10 overflow-hide">'.$data['meta'].'</div>';
+                                        echo '<div class="overflow-hide hidden-xs">'.nl2br(trim_text(strip_tags($data['content']), 200)).'</div>';
+                                    echo '</div>';
+                                echo '</div>';
+                            echo '</div>';
+                        }
+                        echo '</div>';
+                    } else {
+                        echo $content['norecord'];
+                    }
+                    closetable();
                 }
-                $html .= '</div>';
             } else {
-                $html .= $content['norecord'];
+                $locale = fusion_get_locale();
+                opentable($locale['home_0100']);
+                echo $locale['home_0101'];
+                closetable();
             }
-            $html .= fusion_get_function( 'closetable' );
         }
-        return $html;
     }
 }
