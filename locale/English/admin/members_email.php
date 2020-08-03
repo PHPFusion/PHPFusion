@@ -9,11 +9,7 @@ You can now login using your chosen username and password.<br/>\r\nRegards,<br/>
 $locale['email_deactivate_subject'] = "Account reactivation required at ";
 $locale['email_deactivate_message'] = "Hello [USER_NAME],<br/>\r\nIt has been [DEACTIVATION_PERIOD] day(s) since you last logged in at [SITENAME]. Your user has been marked as inactive but all your account details and content remains intact.<br/>\r\n
 To reactivate your account simply click the following link: [REACTIVATION_LINK]<br/>\r\nRegards,<br/>\r\n[SITEUSERNAME]";
-$locale['email_deactivate_message'] = "Hello [USER_NAME],<br/>\r\nIt has been [DEACTIVATION_PERIOD] day(s) since you last logged in at [SITENAME]. Your user has been marked as inactive but all your account details and content remains intact.<br/>\r\n
-To reactivate your account simply click the following link: [REACTIVATION_LINK]<br/>\r\nRegards,<br/>\r\n[SITEUSERNAME]";
 $locale['email_ban_subject'] = "Your account on [SITENAME] has been banned";
-$locale['email_ban_message'] = "Hello [USER_NAME],<br/>\r\nYour account on [SITENAME] has been banned by [ADMIN_USERNAME] because of the following reason:<br/>\r\n
-[REASON]<br/>\r\nIf you want more information about this ban, please, contact the site administrator at [SITENAME].<br/>\r\nRegards,<br/>\r\n[SITEUSERNAME]";
 $locale['email_ban_message'] = "Hello [USER_NAME],<br/>\r\nYour account on [SITENAME] has been banned by [ADMIN_USERNAME] because of the following reason:<br/>\r\n
 [REASON]<br/>\r\nIf you want more information about this ban, please, contact the site administrator at [SITENAME].<br/>\r\nRegards,<br/>\r\n[SITEUSERNAME]";
 $locale['email_secban_subject'] = "Your account on [SITENAME] has been banned";
