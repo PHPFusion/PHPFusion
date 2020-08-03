@@ -276,7 +276,7 @@ function user_profile_page() {
             $('#show-uf').click(function () {
 
                 var text = $(this).text();
-                $('#extra-info').slideDown(400);
+                $('#extra-info').slideToggle(200);
                 if (text == '".$locale['ax8_11']."') {
                     $(this).text('".$locale['ax8_16']."');
                 } else {
