@@ -17,6 +17,8 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
+use \PHPFusion\Admins;
+
 if (!defined("DOWNLOAD_LOCALE")) {
     if (file_exists(INFUSIONS."downloads/locale/".LOCALESET."downloads.php")) {
         define("DOWNLOAD_LOCALE", INFUSIONS."downloads/locale/".LOCALESET."downloads.php");
@@ -47,15 +49,15 @@ if (!defined("DB_DOWNLOADS")) {
 }
 
 // Admin Settings
-\PHPFusion\Admins::getInstance()->setAdminPageIcons("D", "<i class='admin-ico fa fa-fw fa-cloud-download'></i>");
-\PHPFusion\Admins::getInstance()->setAdminPageIcons("DC", "<i class='admin-ico fa fa-fw fa-cloud-download'></i>");
-\PHPFusion\Admins::getInstance()->setAdminPageIcons("S11", "<i class='admin-ico fa fa-fw fa-cloud-download'></i>");
-\PHPFusion\Admins::getInstance()->setCommentType('D', fusion_get_locale('D', LOCALE.LOCALESET."admin/main.php"));
-\PHPFusion\Admins::getInstance()->setLinkType('D', fusion_get_settings("siteurl")."infusions/downloads/downloads.php?download_id=%s");
+Admins::getInstance()->setAdminPageIcons("D", "<i class='admin-ico fa fa-fw fa-cloud-download'></i>");
+Admins::getInstance()->setAdminPageIcons("DC", "<i class='admin-ico fa fa-fw fa-cloud-download'></i>");
+Admins::getInstance()->setAdminPageIcons("S11", "<i class='admin-ico fa fa-fw fa-cloud-download'></i>");
+Admins::getInstance()->setCommentType('D', fusion_get_locale('D', LOCALE.LOCALESET."admin/main.php"));
+Admins::getInstance()->setLinkType('D', fusion_get_settings("siteurl")."infusions/downloads/downloads.php?download_id=%s");
 
 $inf_settings = get_settings('downloads');
 if (!empty($inf_settings['download_allow_submission']) && $inf_settings['download_allow_submission']) {
-    \PHPFusion\Admins::getInstance()->setSubmitData('d', [
+    Admins::getInstance()->setSubmitData('d', [
         'infusion_name' => 'downloads',
         'link'          => INFUSIONS."downloads/download_submit.php",
         'submit_link'   => "submit.php?stype=d",
@@ -65,9 +67,17 @@ if (!empty($inf_settings['download_allow_submission']) && $inf_settings['downloa
     ]);
 }
 
-\PHPFusion\Admins::getInstance()->setFolderPermissions('downloads', [
+Admins::getInstance()->setFolderPermissions('downloads', [
     'infusions/downloads/files/'              => TRUE,
     'infusions/downloads/images/'             => TRUE,
     'infusions/downloads/submissions/'        => TRUE,
     'infusions/downloads/submissions/images/' => TRUE
+]);
+
+Admins::getInstance()->setCustomFolder('D', [
+    [
+        'path'  => IMAGES_D,
+        'URL'   => fusion_get_settings('siteurl').'infusions/download/images/',
+        'alias' => 'downloads'
+    ]
 ]);
