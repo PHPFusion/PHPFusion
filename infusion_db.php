@@ -69,15 +69,18 @@ function news_admin_prop() {
     $admin->setCommentType('N', fusion_get_locale('N', LOCALE.LOCALESET."admin/main.php"));
     $admin->setLinkType('N', fusion_get_settings("siteurl")."infusions/news/news.php?readmore=%s");
 }
+
 fusion_add_hook('admin_pages', 'news_admin_prop');
 
 // return array of information for sitelinks menu
 function news_sitelinks_menu() {
-    return array();
+    return [];
 }
+
 function news_sitelinks_item() {
-    return array();
+    return [];
 }
+
 fusion_add_hook("admin_sitelinks_menu", "news_sitelinks_menu");
 fusion_add_hook("admin_sitelinks_item", "news_sitelinks_item");
 
@@ -97,4 +100,17 @@ if (!empty($inf_settings['news_allow_submission']) && $inf_settings['news_allow_
 Admins::getInstance()->setFolderPermissions('news', [
     'infusions/news/images/'        => TRUE,
     'infusions/news/images/thumbs/' => TRUE
+]);
+
+Admins::getInstance()->setCustomFolder('N', [
+    [
+        'path'  => IMAGES_N,
+        'URL'   => fusion_get_settings('siteurl').'infusions/news/images/',
+        'alias' => 'news'
+    ],
+    [
+        'path'  => IMAGES_NC,
+        'URL'   => fusion_get_settings('siteurl').'infusions/news/news_cats/',
+        'alias' => 'news_cats'
+    ]
 ]);
