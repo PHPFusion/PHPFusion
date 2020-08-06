@@ -62,13 +62,6 @@ if (!defined("DB_FORUMS")) {
     define("DB_FORUMS", DB_PREFIX."forums");
 }
 
-\PHPFusion\Admins::getInstance()->setAdminPageIcons("F", "<i class='admin-ico fa fa-fw fa-comment-o'></i>");
-\PHPFusion\Admins::getInstance()->setAdminPageIcons("FR", "<i class='admin-ico fa fa-fw fa-gavel'></i>");
-\PHPFusion\Admins::getInstance()->setFolderPermissions('forum', [
-    'infusions/forum/attachments/' => TRUE,
-    'infusions/forum/images/'      => TRUE
-]);
-
 if (!defined("FORUM_LOCALE")) {
     if (file_exists(INFUSIONS."forum/locale/".LOCALESET."forum.php")) {
         define("FORUM_LOCALE", INFUSIONS."forum/locale/".LOCALESET."forum.php");
@@ -131,3 +124,18 @@ if (!defined("FORUM_SECTIONS")) {
 if (!defined("FORUM_TEMPLATES")) {
     define("FORUM_TEMPLATES", INFUSIONS."forum/templates/");
 }
+
+\PHPFusion\Admins::getInstance()->setAdminPageIcons("F", "<i class='admin-ico fa fa-fw fa-comment-o'></i>");
+\PHPFusion\Admins::getInstance()->setAdminPageIcons("FR", "<i class='admin-ico fa fa-fw fa-gavel'></i>");
+\PHPFusion\Admins::getInstance()->setFolderPermissions('forum', [
+    'infusions/forum/attachments/' => TRUE,
+    'infusions/forum/images/'      => TRUE
+]);
+
+\PHPFusion\Admins::getInstance()->setCustomFolder('F', [
+    [
+        'path'  => FORUM.'images',
+        'URL'   => fusion_get_settings('siteurl').'infusions/forum/images/',
+        'alias' => 'forum'
+    ]
+]);
