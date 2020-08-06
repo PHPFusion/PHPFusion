@@ -103,6 +103,7 @@ class Admins {
     private $link_type = [];
     private $submit_data = [];
     private $folder_permissions = [];
+    private $customfolders = [];
 
     public function __construct() {
         self::$locale = self::getAdminLocale();
@@ -526,6 +527,25 @@ class Admins {
     }
 
     /**
+     * @param null $rights
+     *
+     * @return array|null
+     */
+    public function getCustomFolders($rights = NULL) {
+        return ($rights !== NULL ? (isset($this->customfolders[$rights]) ? $this->customfolders[$rights] : NULL) : $this->customfolders);
+    }
+
+    /**
+     * A custom folder that appears in the file manager
+     *
+     * @param $rights
+     * @param $options - setCustomFolder('N', [['path' => IMAGES_N, 'URL' => fusion_get_settings('siteurl').'infusions/news/images/', 'alias' => 'news']]);
+     */
+    public function setCustomFolder($rights, $options = []) {
+        $this->customfolders[$rights] = $options;
+    }
+
+    /**
      * @return array
      */
     public function getAdminPageLink() {
@@ -635,6 +655,7 @@ class Admins {
 
     /**
      *Get the administration page icons
+     *
      * @param $admin_rights
      *
      * @return string
@@ -678,8 +699,9 @@ class Admins {
 
     /**
      * @param $admin_rights
-     * @deprecated
+     *
      * @return string
+     * @deprecated
      */
     public function get_admin_icons($admin_rights) {
         return $this->getAdminIcons($admin_rights);
