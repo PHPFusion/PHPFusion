@@ -71,3 +71,16 @@ if (!empty($inf_settings['blog_allow_submission']) && $inf_settings['blog_allow_
     'infusions/blog/images/'        => TRUE,
     'infusions/blog/images/thumbs/' => TRUE
 ]);
+
+\PHPFusion\Admins::getInstance()->setCustomFolder('BLOG', [
+    [
+        'path'  => IMAGES_B,
+        'URL'   => fusion_get_settings('siteurl').'infusions/blog/images/',
+        'alias' => 'blog'
+    ],
+    [
+        'path'  => IMAGES_BC,
+        'URL'   => fusion_get_settings('siteurl').'infusions/blog_cats/',
+        'alias' => 'blog_cats'
+    ]
+]);
