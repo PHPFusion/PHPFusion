@@ -17,6 +17,8 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
+use \PHPFusion\Admins;
+
 // Locales
 if (!defined("ARTICLE_LOCALE")) {
     if (file_exists(INFUSIONS."articles/locale/".LOCALESET."articles.php")) {
@@ -49,14 +51,14 @@ if (!defined("DB_ARTICLES")) {
 }
 
 // Admin Settings
-\PHPFusion\Admins::getInstance()->setAdminPageIcons("A", "<i class='admin-ico fa fa-fw fa-book'></i>");
-\PHPFusion\Admins::getInstance()->setAdminPageIcons("AC", "<i class='admin-ico fa fa-fw fa-book'></i>");
-\PHPFusion\Admins::getInstance()->setCommentType("A", fusion_get_locale("A", LOCALE.LOCALESET."admin/main.php"));
-\PHPFusion\Admins::getInstance()->setLinkType("A", fusion_get_settings("siteurl")."infusions/articles/articles.php?article_id=%s");
+Admins::getInstance()->setAdminPageIcons("A", "<i class='admin-ico fa fa-fw fa-book'></i>");
+Admins::getInstance()->setAdminPageIcons("AC", "<i class='admin-ico fa fa-fw fa-book'></i>");
+Admins::getInstance()->setCommentType("A", fusion_get_locale("A", LOCALE.LOCALESET."admin/main.php"));
+Admins::getInstance()->setLinkType("A", fusion_get_settings("siteurl")."infusions/articles/articles.php?article_id=%s");
 
 $inf_settings = get_settings('articles');
 if (!empty($inf_settings['article_allow_submission']) && $inf_settings['article_allow_submission']) {
-    \PHPFusion\Admins::getInstance()->setSubmitData('a', [
+    Admins::getInstance()->setSubmitData('a', [
         'infusion_name' => 'articles',
         'link'          => INFUSIONS."articles/article_submit.php",
         'submit_link'   => "submit.php?stype=a",
@@ -66,6 +68,14 @@ if (!empty($inf_settings['article_allow_submission']) && $inf_settings['article_
     ]);
 }
 
-\PHPFusion\Admins::getInstance()->setFolderPermissions('articles', [
+Admins::getInstance()->setFolderPermissions('articles', [
     'infusions/articles/images/' => TRUE
+]);
+
+Admins::getInstance()->setCustomFolder('A', [
+    [
+        'path'  => IMAGES_A,
+        'URL'   => fusion_get_settings('siteurl').'infusions/articles/images/',
+        'alias' => 'articles'
+    ]
 ]);
