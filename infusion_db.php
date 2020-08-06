@@ -69,3 +69,11 @@ if (!empty($inf_settings['article_allow_submission']) && $inf_settings['article_
 \PHPFusion\Admins::getInstance()->setFolderPermissions('articles', [
     'infusions/articles/images/' => TRUE
 ]);
+
+\PHPFusion\Admins::getInstance()->setCustomFolder('A', [
+    [
+        'path'  => IMAGES_A,
+        'URL'   => fusion_get_settings('siteurl').'infusions/articles/images/',
+        'alias' => 'articles'
+    ]
+]);
