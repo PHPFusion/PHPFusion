@@ -73,63 +73,28 @@ $default = [
 // Documentation for connector options:
 // https://github.com/Studio-42/elFinder/wiki/Connector-configuration-options
 
-$root_images = [
-    'path'  => IMAGES,
-    'URL'   => $site_url.'images/',
-    'alias' => 'root_images'
-];
-
-if (defined('ARTICLES_EXIST') && checkrights('A')) {
-    $article_images = [
-        'path'  => IMAGES_A,
-        'URL'   => $site_url.'infusions/articles/images/',
-        'alias' => 'articles'
-    ];
-}
-
-if (defined('BLOG_EXIST') && checkrights('BLOG')) {
-    $blog_images = [
-        'path'  => IMAGES_B,
-        'URL'   => $site_url.'infusions/blog/images/',
-        'alias' => 'blog'
-    ];
-}
-
-if (defined('DOWNLOADS_EXIST') && checkrights('D')) {
-    $download_images = [
-        'path'  => IMAGES_D,
-        'URL'   => $site_url.'infusions/download/images/',
-        'alias' => 'downloads'
-    ];
-}
-
-if (defined('GALLERY_EXIST') && checkrights('PH')) {
-    $download_images = [
-        'path'  => IMAGES_G,
-        'URL'   => $site_url.'infusions/gallery/photos/',
-        'alias' => 'gallery'
-    ];
-}
-
-if (defined('NEWS_EXIST') && checkrights('N')) {
-    $news_images = [
-        'path'  => IMAGES_N,
-        'URL'   => $site_url.'infusions/news/images/',
-        'alias' => 'news'
-    ];
-}
-
 $opts = [
     //'debug' => true,
     'roots' => [
         // Items volume
-        array_merge($root_images, $default),
-        !empty($article_images) && is_array($article_images) ? array_merge($article_images, $default) : NULL,
-        !empty($blog_images) && is_array($blog_images) ? array_merge($blog_images, $default) : NULL,
-        !empty($download_images) && is_array($download_images) ? array_merge($download_images, $default) : NULL,
-        !empty($news_images) && is_array($news_images) ? array_merge($news_images, $default) : NULL
+        array_merge([
+            'path'  => IMAGES,
+            'URL'   => $site_url.'images/',
+            'alias' => 'root_images'
+        ], $default),
     ]
 ];
+
+$infusions = \PHPFusion\Admins::getInstance()->getCustomFolders();
+foreach ($infusions as $rights => $infusion) {
+    if (checkrights($rights)) {
+        $folders = [];
+        foreach ($infusion as $folder) {
+            $folders[] = array_merge($folder, $default);
+        }
+        $opts['roots'] = array_merge($opts['roots'], $folders);
+    }
+}
 
 // run elFinder
 $connector = new elFinderConnector(new elFinder($opts));
