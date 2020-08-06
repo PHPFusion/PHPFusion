@@ -104,6 +104,7 @@ class Admins {
     private $link_type = [];
     private $submit_data = [];
     private $folder_permissions = [];
+    private $customfolders = [];
 
     public function __construct() {
         self::$locale = self::getAdminLocale();
@@ -492,6 +493,25 @@ class Admins {
      */
     public function setFolderPermissions($type, array $options = []) {
         defined(strtoupper($type).'_EXIST') ? $this->folder_permissions[$type] = $options : NULL;
+    }
+
+    /**
+     * @param null $rights
+     *
+     * @return array|null
+     */
+    public function getCustomFolders($rights = NULL) {
+        return ($rights !== NULL ? (isset($this->customfolders[$rights]) ? $this->customfolders[$rights] : NULL) : $this->customfolders);
+    }
+
+    /**
+     * A custom folder that appears in the file manager
+     *
+     * @param $rights
+     * @param $options - setCustomFolder('N', [['path' => IMAGES_N, 'URL' => fusion_get_settings('siteurl').'infusions/news/images/', 'alias' => 'news']]);
+     */
+    public function setCustomFolder($rights, $options = []) {
+        $this->customfolders[$rights] = $options;
     }
 
     /**
