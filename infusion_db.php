@@ -17,6 +17,8 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
+use \PHPFusion\Admins;
+
 if (!defined("BLOG_LOCALE")) {
     if (file_exists(INFUSIONS."blog/locale/".LOCALESET."blog.php")) {
         define("BLOG_LOCALE", INFUSIONS."blog/locale/".LOCALESET."blog.php");
@@ -49,15 +51,15 @@ if (!defined("DB_BLOG_CATS")) {
 }
 
 // Admin Settings
-\PHPFusion\Admins::getInstance()->setAdminPageIcons("BLOG", "<i class='admin-ico fa fa-fw fa-graduation-cap'></i>");
-\PHPFusion\Admins::getInstance()->setAdminPageIcons("BLC", "<i class='admin-ico fa fa-fw fa-graduation-cap'></i>");
-\PHPFusion\Admins::getInstance()->setAdminPageIcons("S13", "<i class='admin-ico fa fa-fw fa-graduation-cap'></i>");
-\PHPFusion\Admins::getInstance()->setCommentType('B', fusion_get_locale('BLOG', LOCALE.LOCALESET."admin/main.php"));
-\PHPFusion\Admins::getInstance()->setLinkType('B', fusion_get_settings("siteurl")."infusions/blog/blog.php?readmore=%s");
+Admins::getInstance()->setAdminPageIcons("BLOG", "<i class='admin-ico fa fa-fw fa-graduation-cap'></i>");
+Admins::getInstance()->setAdminPageIcons("BLC", "<i class='admin-ico fa fa-fw fa-graduation-cap'></i>");
+Admins::getInstance()->setAdminPageIcons("S13", "<i class='admin-ico fa fa-fw fa-graduation-cap'></i>");
+Admins::getInstance()->setCommentType('B', fusion_get_locale('BLOG', LOCALE.LOCALESET."admin/main.php"));
+Admins::getInstance()->setLinkType('B', fusion_get_settings("siteurl")."infusions/blog/blog.php?readmore=%s");
 
 $inf_settings = get_settings('blog');
 if (!empty($inf_settings['blog_allow_submission']) && $inf_settings['blog_allow_submission']) {
-    \PHPFusion\Admins::getInstance()->setSubmitData('b', [
+    Admins::getInstance()->setSubmitData('b', [
         'infusion_name' => 'blog',
         'link'          => INFUSIONS."blog/blog_submit.php",
         'submit_link'   => "submit.php?stype=b",
@@ -67,7 +69,20 @@ if (!empty($inf_settings['blog_allow_submission']) && $inf_settings['blog_allow_
     ]);
 }
 
-\PHPFusion\Admins::getInstance()->setFolderPermissions('blog', [
+Admins::getInstance()->setFolderPermissions('blog', [
     'infusions/blog/images/'        => TRUE,
     'infusions/blog/images/thumbs/' => TRUE
+]);
+
+Admins::getInstance()->setCustomFolder('BLOG', [
+    [
+        'path'  => IMAGES_B,
+        'URL'   => fusion_get_settings('siteurl').'infusions/blog/images/',
+        'alias' => 'blog'
+    ],
+    [
+        'path'  => IMAGES_BC,
+        'URL'   => fusion_get_settings('siteurl').'infusions/blog_cats/',
+        'alias' => 'blog_cats'
+    ]
 ]);
