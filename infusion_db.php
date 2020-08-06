@@ -71,3 +71,11 @@ if (!empty($inf_settings['download_allow_submission']) && $inf_settings['downloa
     'infusions/downloads/submissions/'        => TRUE,
     'infusions/downloads/submissions/images/' => TRUE
 ]);
+
+\PHPFusion\Admins::getInstance()->setCustomFolder('D', [
+    [
+        'path'  => IMAGES_D,
+        'URL'   => fusion_get_settings('siteurl').'infusions/download/images/',
+        'alias' => 'downloads'
+    ]
+]);
