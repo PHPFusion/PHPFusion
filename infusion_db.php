@@ -79,3 +79,16 @@ if (!empty($inf_settings['news_allow_submission']) && $inf_settings['news_allow_
     'infusions/news/images/'        => TRUE,
     'infusions/news/images/thumbs/' => TRUE
 ]);
+
+\PHPFusion\Admins::getInstance()->setCustomFolder('N', [
+    [
+        'path'  => IMAGES_N,
+        'URL'   => fusion_get_settings('siteurl').'infusions/news/images/',
+        'alias' => 'news'
+    ],
+    [
+        'path'  => IMAGES_NC,
+        'URL'   => fusion_get_settings('siteurl').'infusions/news/news_cats/',
+        'alias' => 'news_cats'
+    ]
+]);
