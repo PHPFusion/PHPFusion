@@ -76,3 +76,11 @@ if (!empty($inf_settings['gallery_allow_submission']) && $inf_settings['gallery_
     'infusions/gallery/submissions/'        => TRUE,
     'infusions/gallery/submissions/thumbs/' => TRUE
 ]);
+
+\PHPFusion\Admins::getInstance()->setCustomFolder('PH', [
+    [
+        'path'  => IMAGES_G,
+        'URL'   => fusion_get_settings('siteurl').'infusions/gallery/photos/',
+        'alias' => 'gallery'
+    ]
+]);
