@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: OutputHandler.inc
-| Author: Takács Ákos (Rimelek)
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -53,7 +53,7 @@ class OutputHandler {
      *
      * @var string[]
      */
-    public static $pageMeta = [];
+    private static $pageMeta = [];
     /**
      * PHP code to execute using eval replace anything in the output
      *
@@ -218,8 +218,7 @@ class OutputHandler {
 
         if (!empty(self::$pageMeta)) {
             foreach (self::$pageMeta as $name => $content) {
-                $regex = "/<meta (http-equiv|name)=\'".$name."\' content=\'(.*?)\'>/mi";
-                $output = preg_replace("$regex", "<meta \\1='".$name."' content='".$content."' />", $output, 1);
+                $output = preg_replace("#<meta (http-equiv|name)='$name' content='.*'(.*?)>#i", "<meta \\1='".$name."' content='".$content."'>", $output, 1);
             }
         }
 
