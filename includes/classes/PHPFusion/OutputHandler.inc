@@ -133,8 +133,8 @@ class OutputHandler {
     /**
      * Replace something in the output using regexp
      *
-     * @param string $target Regexp pattern without delimiters
-     * @param string $replace The new content
+     * @param string $target    Regexp pattern without delimiters
+     * @param string $replace   The new content
      * @param string $modifiers Regexp modifiers
      */
     public static function replaceInOutput($target, $replace, $modifiers = "") {
@@ -187,11 +187,11 @@ class OutputHandler {
     /**
      * Execute the output handlers
      *
-     * @global array $locale
-     *
      * @param string $output
      *
      * @return string
+     * @global array $locale
+     *
      */
     public static function handleOutput($output) {
         $locale = fusion_get_locale();
@@ -220,8 +220,7 @@ class OutputHandler {
 
         if (!empty(self::$pageMeta)) {
             foreach (self::$pageMeta as $name => $content) {
-                $output = preg_replace("#<meta (http-equiv|name)='$name' content='.*' />#i", "<meta \\1='".$name."' content='".$content."' />",
-                    $output, 1);
+                $output = preg_replace("#<meta (http-equiv|name)='$name' content='.*'(.*?)>#i", "<meta \\1='".$name."' content='".$content."'>", $output, 1);
             }
         }
 
