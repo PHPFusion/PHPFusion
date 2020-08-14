@@ -91,7 +91,7 @@ class OutputHandler {
      */
     public static function addToMeta($name, $addition = "") {
         global $settings;
-		
+
         if (empty(self::$pageMeta)) {
             self::$pageMeta = [
                 'description' => $settings['description'],
@@ -172,11 +172,11 @@ class OutputHandler {
     /**
      * Execute the output handlers
      *
-     * @global array $locale
-     *
      * @param string $output
      *
      * @return string
+     * @global array $locale
+     *
      */
     public static function handleOutput($output) {
 
@@ -194,8 +194,7 @@ class OutputHandler {
 
         if (!empty(self::$pageMeta)) {
             foreach (self::$pageMeta as $name => $content) {
-                $output = preg_replace("#<meta (http-equiv|name)='$name' content='.*' />#i", "<meta \\1='".$name."' content='".$content."' />",
-                    $output, 1);
+                $output = preg_replace("#<meta (http-equiv|name)='$name' content='.*'(.*?)>#i", "<meta \\1='".$name."' content='".$content."'>", $output, 1);
             }
         }
 
