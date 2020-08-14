@@ -207,34 +207,29 @@ function check_panel_status($side) {
 }
 
 function showbanners($display = "") {
-    global $settings;
+    $settings = fusion_get_settings();
+
     ob_start();
     if ($display == 2) {
         if ($settings['sitebanner2']) {
-            if (fusion_get_settings('allow_php_exe')) {
+            if ($settings['allow_php_exe']) {
                 eval("?>".stripslashes($settings['sitebanner2'])."<?php ");
             } else {
                 echo stripslashes($settings['sitebanner2']);
             }
         }
     } else {
-        if ($display == "" && $settings['sitebanner2']) {
-            eval("?><div style='float: right;'>".stripslashes($settings['sitebanner2'])."</div>\n<?php ");
-        }
         if ($settings['sitebanner1']) {
-            if (fusion_get_settings('allow_php_exe')) {
+            if ($settings['allow_php_exe']) {
                 eval("?>".stripslashes($settings['sitebanner1'])."<?php ");
             } else {
                 echo stripslashes($settings['sitebanner1']);
             }
-        } else if ($settings['sitebanner']) {
-            echo "<a href='".$settings['siteurl']."'><img src='".BASEDIR.$settings['sitebanner']."' alt='".$settings['sitename']."' style='border: 0;' /></a>\n";
-        } else {
-            echo "<a href='".$settings['siteurl']."'>".$settings['sitename']."</a>\n";
         }
     }
     $output = ob_get_contents();
     ob_end_clean();
+
     return $output;
 }
 
