@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| https://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: mods.php
 | Author: Chan (Frederick MC Chan)
@@ -431,7 +431,7 @@ class Moderator {
                 $result = dbquery("SELECT p.forum_id, p.post_id, p.post_author, p.post_datestamp,
                             COUNT(p.post_id) AS post_count FROM ".DB_FORUM_POSTS." p
                             INNER JOIN ".DB_FORUMS." fo ON p.forum_id=fo.forum_id
-                            WHERE p.forum_id='".(int)$this->forum_id."' AND p.post_hidden='0' 
+                            WHERE p.forum_id='".(int)$this->forum_id."' AND p.post_hidden='0'
                             GROUP BY p.post_id
                             ORDER BY p.post_datestamp DESC LIMIT 1");
 
