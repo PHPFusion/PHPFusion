@@ -2,10 +2,10 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| https://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: news/templates/submissions.php
-| Author: PHP-Fusion Development Team
+| Author: Core Development Team (coredevs@phpfusion.com)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -22,7 +22,7 @@ if (!function_exists('display_news_no_submissions')) {
 }
 if (!function_exists('display_news_confirm_submissions')) {
     function display_news_confirm_submissions() {
-        return fusion_get_function('opentable', '{%title%}')."        
+        return fusion_get_function('opentable', '{%title%}')."
         <div class='well text-center'>
         <p class='strong'>{%message%}</p>
         <p class='strong'>{%submit_link%}</p>
