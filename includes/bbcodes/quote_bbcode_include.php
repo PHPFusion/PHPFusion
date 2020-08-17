@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| https://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: quote_bbcode_include.php
 | Author: JoiNNN
@@ -49,7 +49,7 @@ jQuery(document).ready(function() {
  * Author: JoiNNN
  *
  * Copyright (c) 2002 - 2012 by Nick Jones
- * Released as free software without warranties under GNU Affero GPL v3. 
+ * Released as free software without warranties under GNU Affero GPL v3.
  */
 
 var quoteColHeight	= 184,			//0 - disables quote collapse

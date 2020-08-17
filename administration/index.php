@@ -2,10 +2,10 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| https://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: index.php
-| Author: PHP-Fusion Development Team
+| Author: Core Development Team (coredevs@phpfusion.com)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -203,7 +203,7 @@ if ($settings['update_checker'] == 1) {
         return substr($headers[0], 9, 3);
     }
 
-    $url = 'https://www.php-fusion.co.uk/updates/8.txt';
+    $url = 'https://www.phpfusion.com/updates/8.txt';
     if (get_http_response_code($url) == 200) {
         $file = @file_get_contents($url);
         $array = explode("\n", $file);

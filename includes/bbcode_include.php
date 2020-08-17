@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| http://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: bbcode_include.php
 | Author: Wooya

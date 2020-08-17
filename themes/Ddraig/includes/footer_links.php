@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| http://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: footer_links.php
 | Author: JoiNNN
@@ -25,7 +25,7 @@ if (!defined("IN_FUSION")) {
 <?php
 echo "<h4>".$locale['latest_news']."</h4><ul>\n";
 $result = dbquery("SELECT news_id, news_subject
-                FROM ".DB_NEWS." 
+                FROM ".DB_NEWS."
                 WHERE ".groupaccess('news_visibility')."
                 AND news_draft='0'
                 ORDER BY news_datestamp DESC LIMIT 5");

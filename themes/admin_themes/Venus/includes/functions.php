@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| https://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: functions.php
 | Author: PHP-Fusion Inc
@@ -547,7 +547,7 @@ function render_admin_panel() {
         echo CONTENT;
         echo "</div>\n";
         echo "<footer>";
-        echo "Venus Admin Theme &copy; ".date("Y")." created by <a href='https://www.php-fusion.co.uk'><strong>PHP-Fusion Inc.</strong></a>\n";
+        echo "Venus Admin Theme &copy; ".date("Y")." created by <a href='https://www.phpfusion.com'><strong>PHP-Fusion Inc.</strong></a>\n";
         echo showcopyright();
 
         if ($settings['rendertime_enabled']) {

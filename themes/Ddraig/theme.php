@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| https://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: theme.php
 | Author: JoiNNN
@@ -123,7 +123,7 @@ function render_page($license = FALSE) {
 
     //Subfooter
     echo "<div id='subfooter'>";
-    echo "<div id='copyright'><div class='flleft'><img width='40' src='".THEME."images/8ight.png' alt='Logo' /></div><div class='flleft' style='width: 40%; padding-left: 10px'>".(!$license ? showcopyright() : "")."<br />Theme designed by <a href='http://www.php-fusion.co.uk'>JoiNNN</a></div>";
+    echo "<div id='copyright'><div class='flleft'><img width='40' src='".THEME."images/8ight.png' alt='Logo' /></div><div class='flleft' style='width: 40%; padding-left: 10px'>".(!$license ? showcopyright() : "")."<br />Theme designed by <a href='http://www.phpfusion.com'>JoiNNN</a></div>";
     echo "<div class='flright alright' style='width: 40%;'>".stripslashes($settings['footer'])."</div></div>";
 
     echo "<div class='subfooter clearfix'>";

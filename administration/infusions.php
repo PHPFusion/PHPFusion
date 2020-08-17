@@ -2,10 +2,10 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| https://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: infusions.php
-| Author: PHP-Fusion Development Team
+| Author: Core Development Team (coredevs@phpfusion.com)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -173,7 +173,7 @@ if (!isset($_POST['infuse']) && !isset($_POST['infusion']) && !isset($_POST['def
     }
 
     echo "<div class='well text-center m-t-10'>\n";
-    echo "<a class='btn btn-block btn-primary' href='https://www.php-fusion.co.uk/infusions/marketplace' title='".$locale['422']."' target='_blank'>".$locale['422']."</a>\n";
+    echo "<a class='btn btn-block btn-primary' href='https://www.phpfusion.com/infusions/marketplace' title='".$locale['422']."' target='_blank'>".$locale['422']."</a>\n";
     echo "</div>\n";
 
     closetable();

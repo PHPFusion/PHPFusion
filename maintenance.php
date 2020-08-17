@@ -2,10 +2,10 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| https://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: maintenance.php
-| Author: PHP-Fusion Development Team
+| Author: Core Development Team (coredevs@phpfusion.com)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -121,7 +121,7 @@ echo "<table cellpadding='0' cellspacing='1' width='80%' class='tbl-border cente
 echo "<td class='tbl2'>\n<div style='text-align:center'><br />\n";
 echo "<img src='".BASEDIR.$settings['sitebanner']."' alt='".$settings['sitename']."' /><br /><br />\n";
 echo stripslashes(nl2br($settings['maintenance_message']))."<br /><br />\n";
-echo "Powered by <a href='http://www.php-fusion.co.uk'>PHP-Fusion</a> &copy; PHP-Fusion Inc<br /><br />\n";
+echo "Powered by <a href='http://www.phpfusion.com'>PHP-Fusion</a> &copy; PHP-Fusion Inc<br /><br />\n";
 echo "</div>\n</td>\n</tr>\n</table>\n";
 
 echo "<div align='center'><br />\n";

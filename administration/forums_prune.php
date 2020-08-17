@@ -2,10 +2,10 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| https://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: forum_prune.php
-| Author: PHP-Fusion Development Team
+| Author: Core Development Team (coredevs@phpfusion.com)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -69,10 +69,10 @@ if ((!isset($_POST['prune_forum'])) && (isset($_GET['action']) && $_GET['action'
                 $result2 = dbquery("DELETE FROM ".DB_THREAD_NOTIFY." WHERE thread_id='".$data['thread_id']."'");
             }
         }
-        
+
 		$result = dbquery("DELETE FROM ".DB_THREADS." WHERE forum_id='".$_GET['forum_id']."' AND  thread_lastpost < '".$prune_time."'");
 		$deleted_threads = dbrows($result);
-		
+
         $result = dbquery("SELECT thread_lastpost, thread_lastuser FROM ".DB_THREADS." WHERE forum_id='".$_GET['forum_id']."' ORDER BY thread_lastpost DESC LIMIT 0,1");
         if (dbrows($result)) {
             $data = dbarray($result);

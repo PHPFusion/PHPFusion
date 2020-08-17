@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| https://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: infusion.php
 | Author: JoiNNN
@@ -33,7 +33,7 @@ $inf_description = "Ddraig Theme Control Panel";
 $inf_version = "1.0";
 $inf_developer = "JoiNNN";
 $inf_email = "Spo0kye@yahoo.com";
-$inf_weburl = "http://www.php-fusion.co.uk";
+$inf_weburl = "http://www.phpfusion.com";
 
 $inf_folder = "ddraig_theme_tcpanel";
 

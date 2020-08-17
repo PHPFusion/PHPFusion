@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| https://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: infusion.php
 | Author: Marcus Gottschalk (MarcusG)
@@ -36,7 +36,7 @@ $inf_description = $locale['SB_desc'];
 $inf_version = "1.00";
 $inf_developer = "PHP Fusion Development Team";
 $inf_email = "";
-$inf_weburl = "https://www.php-fusion.co.uk";
+$inf_weburl = "https://www.phpfusion.com";
 $inf_folder = "shoutbox_panel";
 $inf_image = "shouts.svg";
 

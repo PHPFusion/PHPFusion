@@ -2,7 +2,7 @@
 /*---------------------------------------------------------+
 | PHP-Fusion Content Management System                     |
 | Copyright (C) 2002 - 2010 Nick Jones                     |
-| https://www.php-fusion.co.uk/                            |
+| https://www.phpfusion.com/                            |
 +----------------------------------------------------------+
 |                               /T /I/ /  /   /            |
 |                              / |/ | .-~/.-~/		   	   |
