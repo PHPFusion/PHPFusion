@@ -24,7 +24,7 @@ To sync to this database and not to conflict with your work, please do the follo
 
 #### Testing supported by
 
-<a href="https://www.browserstack.com/" target="_blank"><img width="180px" src="https://www.php-fusion.co.uk/images/logos/Browserstack-logo.svg" alt="BrowserStack"/></a>
+<a href="https://www.browserstack.com/" target="_blank"><img width="180px" src="https://www.phpfusion.com/images/logos/Browserstack-logo.svg" alt="BrowserStack"/></a>
 
 Development Discord
 ---
@@ -48,7 +48,7 @@ That's it, edit any php, css, sass, twig code in your IDE or code editor, your b
 Now, to run it, open terminal again, type in the following to start the service and a new browser will pop up to localhost:3000, as a mirror to your current site.
 ```
 gulp watch
-``` 
+```
 
 Less.js & Scss support
 ===
@@ -57,14 +57,14 @@ By default Fusion will have these declared.
 - (+) Default Fusion Root CSS
 - (+) Bootstrap CSS
 - (+) Template CSS
-- (+) @Import Google Font, etc. 
- 
-When you add multiple system which all have their own predefined rulesets and create dependencies on default css, things will be messy without proper control and hard to mod with. 
-A new solution to handle this is to get supported by dynamic less.js lib for system css management. 
+- (+) @Import Google Font, etc.
+
+When you add multiple system which all have their own predefined rulesets and create dependencies on default css, things will be messy without proper control and hard to mod with.
+A new solution to handle this is to get supported by dynamic less.js lib for system css management.
 
 **To get started with developing your theme with .less css, you will need to install node and npm into your local system to compile .less files to .css files**
 
-If you haven't already, install <a href="https://www.npmjs.com/get-npm">npm</a>. 
+If you haven't already, install <a href="https://www.npmjs.com/get-npm">npm</a>.
 Then run the following command in terminal. (Windows Powershell for Windows or Terminal for Mac/Linux or, whatever system command tools you have)
 
 - Install LESS.js, type in this command to :
@@ -76,7 +76,7 @@ npm install --save-dev less
 npm install -save-dev less-plugin-clean-css
 ```
 
-The requirements of the theme now is a less.js file, a css file and a map file for debugging purposes. 
+The requirements of the theme now is a less.js file, a css file and a map file for debugging purposes.
 You can copy the following code and paste it into your ``render_page()`` function.
 ```
 add_to_footer("<script src='".INCLUDES."jquery/less.min.js'></script>");
@@ -86,11 +86,11 @@ add_to_head("<link rel='stylesheet' href='".THEME."custom.css.map' type='text/cs
 To add extra configurability to your site, the theme **styles.css will not be required of a theme, but will be included if it exists.** This is for backwards compatibility purposes only. If you do not want styles.css, delete that file from your theme folder.
 
 **Working and compiling with CSS Less Preprocessor**
- 
+
 Please refer to the <a href="http://lesscss.org/usage/#command-line-usage-server-side-and-command-line-usage">less.js documentation</a>.
 For IntelliJ users, you can add a Filewatcher to do this automatically for you everytime it saves. <a href="https://www.jetbrains.com/help/phpstorm/transpiling-sass-less-and-scss-to-css.html">Instructions are found here</a>.
 
-If you set it up correctly, web inspector will show you a .less source instead of a .css source. From here on, we will work on an Auto**magic** method to change css output on different templates to optimize page load times. 
+If you set it up correctly, web inspector will show you a .less source instead of a .css source. From here on, we will work on an Auto**magic** method to change css output on different templates to optimize page load times.
 
 New Changes: About Submodules and Git Management of Core Infusions (CI)
 ===

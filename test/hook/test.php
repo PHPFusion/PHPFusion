@@ -36,7 +36,7 @@ if (!empty($output)) {
  * In practical development of PHP-Fusion CMS, it's plugin, it's applications.
  * You can run plugin using hooks, with codes such as this.
  *
- * This is the code i use to 'populate' all infusions notices on Fusion Theme on php-fusion.co.uk
+ * This is the code i use to 'populate' all infusions notices on Fusion Theme on phpfusion.com
  * I do not want to keep the infusions's files under the theme, and had it coded a notices.php in each directory that contain hook functions.
  * The below is how I do it.
  * /

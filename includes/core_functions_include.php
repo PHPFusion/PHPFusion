@@ -2,10 +2,10 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| https://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: includes/core_functions_include.php
-| Author: PHP-Fusion Development Team
+| Author: Core Development Team (coredevs@phpfusion.com)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -28,16 +28,16 @@ use PHPFusion\Rewrite\RewriteDriver;
 use PHPFusion\UserFields\Quantum\QuantumHelper;
 
 /**
- * Checks for license data to php-fusion.co.uk for validation of license
+ * Checks for license data to phpfusion.com for validation of license
  * User will need this in future to use the Remote update and Plugins download and updates from marketplace.
  *
  * @param string $public_key Registered site issued public key
- * @param string $password   Your user password in Php-fusion.co.uk
+ * @param string $password   Your user password in phpfusion.com
  *
  * @return mixed
  */
 function fusion_license($public_key, $password) {
-    $curl = curl_init('https://www.php-fusion.co.uk/infusions/license/api/v1/api.php');
+    $curl = curl_init('https://www.phpfusion.com/infusions/license/api/v1/api.php');
     $curl_post_data = [
         "password" => $password,
         "key"      => $public_key,

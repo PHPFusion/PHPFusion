@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| https://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: ip_handling_include.php
 | Author: Karoly Nagy (Korcsii)
@@ -73,6 +73,6 @@ if (strpos(FUSION_IP, ".")) {
     $check_value .= "$'";
 }
 if (dbcount("(blacklist_id)", DB_BLACKLIST, $check_value)) {
-    redirect("https://www.php-fusion.co.uk/");
+    redirect("https://www.phpfusion.com/");
 }
 unset($check_value);

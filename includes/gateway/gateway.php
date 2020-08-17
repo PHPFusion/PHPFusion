@@ -2,10 +2,10 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| https://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: gateway.php
-| Author: PHP-Fusion Development Team
+| Author: Core Development Team (coredevs@phpfusion.com)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -25,17 +25,17 @@ require_once THEMES.'templates/global/gateway.php';
 
 // No access to registration unless ban time is over
 if ( file_exists( CONTROL_LOCK_FILE ) ) {
-    
+
     if ( time() - filemtime( CONTROL_LOCK_FILE ) > CONTROL_BAN_TIME ) {
         // this user has complete his punishment
         unlink( CONTROL_LOCK_FILE );
-        
+
     } else {
-        
+
         redirect( BASEDIR."error.php?code=401" );
-        
+
         touch( CONTROL_LOCK_FILE );
-        
+
         die;
     }
 }

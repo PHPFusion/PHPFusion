@@ -1,26 +1,10 @@
 <?php
-/*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
-+--------------------------------------------------------+
-| Filename: login/locale/English/login.php
-| Author: PHP-Fusion Development Team
-+--------------------------------------------------------+
-| This program is released as free software under the
-| Affero GPL license. You can redistribute it and/or
-| modify it under the terms of this license which you
-| can read by viewing the included agpl.txt or online
-| at www.gnu.org/licenses/agpl.html. Removal of this
-| copyright header is strictly prohibited without
-| written permission from the original author(s).
-+--------------------------------------------------------*/
 /*
  * Plugins
  */
 $locale['login_000'] = "Social Login Providers";
-$locale['login_001'] = "Allow your visitors to social login and register to your website using their favorite web service. 
-When registering with a social provider, the user's profile is automatically filled with the data retrieved from his social account. 
+$locale['login_001'] = "Allow your visitors to social login and register to your website using their favorite web service.
+When registering with a social provider, the user's profile is automatically filled with the data retrieved from his social account.
 You can decide which social account fields will map with user fields through config variables.";
 
 /*

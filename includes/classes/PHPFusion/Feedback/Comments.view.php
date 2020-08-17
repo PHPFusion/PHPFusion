@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| https://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: PHPFusion/Feedback/Comments.view.php
 | Author: Frederick MC Chan (Chan)
@@ -28,7 +28,7 @@ if ( !function_exists( 'display_comments_ui' ) ) {
         $tpl->set_tag( 'comments_form', $info['comments_form'] );
         $tpl->set_tag( 'comment_container_id', $info['comment_container_id'] );
         $tpl->set_tag( 'comments_listing', $info['comments_listing'] );
-        
+
         return $tpl->get_output();
     }
 }
@@ -36,13 +36,13 @@ if ( !function_exists( 'display_comments_ui' ) ) {
  * Comments UI
  */
 if ( !function_exists( 'display_comments_section' ) ) {
-    
+
     function display_comments_section( $info ) {
         $tpl = Template::getInstance( 'comments-section' );
         $tpl->set_template( THEMES.'templates/global/tpl/comments/comments-section.html' );
         $tpl->set_tag( 'comment_ratings', $info['comment_ratings'] );
         $tpl->set_tag( 'comments', $info['comments'] );
-        
+
         return $tpl->get_output();
     }
 }
@@ -57,7 +57,7 @@ if ( !function_exists( 'display_comments_listing' ) ) {
         $tpl->set_tag( 'comments_list', $info['comments_list'] );
         $tpl->set_tag( 'comments_page', $info['comments_page'] );
         $tpl->set_tag( 'comments_admin_link', $info['comments_admin_link'] );
-        
+
         return $tpl->get_output();
     }
 }
@@ -66,7 +66,7 @@ if ( !function_exists( 'display_comments_listing' ) ) {
  * Single Comment List {%comments_lists%}
  */
 if ( !function_exists( 'display_comments_list' ) ) {
-    
+
     /**
      * @param array $info
      *
@@ -96,7 +96,7 @@ if ( !function_exists( 'display_comments_list' ) ) {
             $tpl->set_block( 'comment_reply_form', [ 'reply_form' => $info['comment_reply_form'] ] );
         if ( $info['comment_sub_comments'] )
             $tpl->set_block( 'comment_sub_comments', [ 'sub_comments' => $info['comment_sub_comments'] ] );
-        
+
         return $tpl->get_output();
     }
 }
@@ -115,7 +115,7 @@ if ( !function_exists( 'display_comments_reply_form' ) ) {
         $tpl->set_tag( 'comment_post', $info['comment_post'] );
         $tpl->set_tag( 'closeform', $info['closeform'] );
         return $tpl->get_output();
-        
+
     }
 }
 
@@ -128,7 +128,7 @@ if ( !function_exists( 'display_comments_form' ) ) {
      * @return string
      */
     function display_comments_form( $info ) {
-    
+
         if ( !empty( $info['openform'] ) ) {
             $tpl = Template::getInstance( 'comments-form' );
             $tpl->set_template( THEMES.'templates/global/tpl/comments/comments-form.html' );
@@ -147,8 +147,8 @@ if ( !function_exists( 'display_comments_form' ) ) {
             return $tpl->get_output();
         }
         return $info['message'];
-        
-        
+
+
     }
 }
 

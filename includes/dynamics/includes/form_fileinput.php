@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| https://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: form_fileinput.php
 | Author: Frederick MC CHan (Chan)
@@ -397,7 +397,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
         $change_js = "";
 
         if ($options['form_id'] && $options['jsonurl']) {
-            $extra_data_js = "uploadAsync: ".($options['async'] ? "true" : "false").",                
+            $extra_data_js = "uploadAsync: ".($options['async'] ? "true" : "false").",
             uploadExtraData: function() {
                 var inputs = $('#".$options['form_id']." :input');
                 let form = $('#".$options["form_id"]."');
@@ -414,7 +414,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
                     return map;
                 }, {});
                 //console.log(values);
-                return values;    
+                return values;
             },
             ";
 
@@ -422,14 +422,14 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
 
             $error_js = ".on('$error_event', function(event, data, msg) {
             ".($options["js_error_handler"] ? $options["js_error_handler"]."(event, data, msg)" : "
-                // directly do the error text                
+                // directly do the error text
                 var form = data.form, files = data.files, extra = data.extra,
                 response = data.response, reader = data.reader;
-                console.log('File batch upload error');                
+                console.log('File batch upload error');
                 // get message
-                alert(response.data.error);         
-               $(this).fileinput('refresh');                       
-            ")."             
+                alert(response.data.error);
+               $(this).fileinput('refresh');
+            ")."
             })";
 
             $success_event = ($options["async"] === "true") ? "fileuploaded" : "filebatchuploadsuccess";
@@ -438,8 +438,8 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
             ".($options["js_success_handler"] ? $options["js_success_handler"]."(event, data, previewId, index)" : "
                 var form = data.form, files = data.files, extra = data.extra,
                 response = data.response, reader = data.reader;
-                console.log('File batch upload success');              
-            ")."            
+                console.log('File batch upload success');
+            ")."
             });
             ";
             $change_event = ($options["multiple"] ? "filebatchselected" : "fileselect");
@@ -551,7 +551,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
                     })".$change_js.$error_js.$success_js.";";
                 break;
             case "thumbnail":
-                $script .= "                
+                $script .= "
                 ".$options["input_id"].".fileinput({
                         allowedFileTypes: ".$type_for_js.",
                         allowedPreviewTypes : ".$type_for_js.",

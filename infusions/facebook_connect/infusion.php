@@ -6,8 +6,8 @@ $inf_title = $locale['fbc_title'];
 $inf_description = $locale['fbc_desc'];
 $inf_version = "1.0";
 $inf_developer = "PHP-Fusion Development Team";
-$inf_email = "management@php-fusion.co.uk";
-$inf_weburl = "php-fusion.co.uk";
+$inf_email = "management@phpfusion.com";
+$inf_weburl = "phpfusion.com";
 $inf_folder = "facebook_connect";
 $inf_image = "facebook.svg";
 

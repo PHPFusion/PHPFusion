@@ -2,10 +2,10 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| https://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: profile.php
-| Author: PHP-Fusion Development Team
+| Author: Core Development Team (coredevs@phpfusion.com)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -26,13 +26,13 @@ if ( $profile_id = get( 'lookup', FILTER_VALIDATE_INT ) ) {
      */
     $userFields = \PHPFusion\UserFields::getInstance();
     echo display_profile( $userFields->profileInfo( $profile_id ) );
-    
+
 } else if ( $group_id = get( 'group_id', FILTER_VALIDATE_INT ) ) {
     /*
      * Show group
      */
     \PHPFusion\UserGroups::getInstance()->setGroup($group_id)->showGroup();
-    
+
 } else {
     redirect(BASEDIR."index.php");
 }

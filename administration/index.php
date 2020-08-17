@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| https://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: index.php
 | Author: Frederick MC Chan (Chan)
@@ -34,7 +34,7 @@ list( $members, $articles, $blog, $download, $forum, $photos, $news, $weblinks, 
 
 // Update checker
 if ($settings['update_checker'] == 1) {
-    $url = 'https://www.php-fusion.co.uk/updates/10.txt';
+    $url = 'https://www.phpfusion.com/updates/10.txt';
     if (get_http_response_code($url) == 200) {
         $file = @file_get_contents($url);
         $array = explode("\n", $file);

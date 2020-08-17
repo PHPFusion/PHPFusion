@@ -2,10 +2,10 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| https://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: AdminForm.inc
-| Author: PHP-Fusion Development Team
+| Author: Core Development Team (coredevs@phpfusion.com)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -413,7 +413,7 @@ class AdminForm {
         }
 
         $fhtml = '';
-    
+
         // Remove
         if (!empty($this->factory->get_remove_prop('name')) &&  !empty($this->factory->data[$this->factory->field['id']['name']])) { // what is the primary column?
 
@@ -423,7 +423,7 @@ class AdminForm {
                 $this->factory->get_remove_prop('options')
             );
         }
-    
+
         // Save
         $fhtml .= form_button($this->factory->get_save_prop('name'),
             $this->factory->get_save_prop('label'),
@@ -431,7 +431,7 @@ class AdminForm {
             $this->factory->get_save_prop('options') ? $this->factory->get_save_prop('options') : []);
 
         $button[] = "#".$this->factory->get_save_prop('name');
-    
+
         // Save and Close
         if (!empty($this->factory->form_properties['back_link'])) {
             $fhtml .= form_button($this->factory->get_save_close_prop('name'),

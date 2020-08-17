@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) 2002 - 2013 Nick Jones
-| http://www.php-fusion.co.uk/
+| http://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: Hooks.inc
 | Author: Frederick Chan (Deviance)

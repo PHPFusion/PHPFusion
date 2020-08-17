@@ -2,10 +2,10 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| https://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: charts_include.php
-| Author: PHP-Fusion Development Team
+| Author: Core Development Team (coredevs@phpfusion.com)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -124,7 +124,7 @@ class Charts {
         $chart_categories = json_encode($this->categories);
         $chart_data = json_encode($this->chart_data, JSON_PRETTY_PRINT);
         $js = "
-        var pfCharts = $('#chart-".$this->chart_id."');        
+        var pfCharts = $('#chart-".$this->chart_id."');
         var chart = new Chart(pfCharts, {
             type: '".$this->type."',
             data: {
@@ -135,7 +135,7 @@ class Charts {
                 responsive : true,
                 maintainAspectRatio: false,
                 title: {
-                    display: ".$this->options['display_title'].", 
+                    display: ".$this->options['display_title'].",
                     text: '".$this->options['title']."',
                 },
                 ";
@@ -145,7 +145,7 @@ class Charts {
                     filler: {
                         propagate: true,
                     }
-                },                                       
+                },
                 ";
         }
         if ($this->type == 'line' || $this->type == 'bar') {

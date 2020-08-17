@@ -2,10 +2,10 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| https://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: infusions.php
-| Author: PHP-Fusion Development Team
+| Author: Core Development Team (coredevs@phpfusion.com)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -111,7 +111,7 @@ class Infusions_Admin {
 
                     $description = $inf['description']."<br/>\n";
                     $description .= "<span class='m-r-5'>".$locale['420']." ".($inf['version'] ? $inf['version'] : '')."</span>";
-                    $description .= ($inf['url'] ? "|<a href='".$inf['url']."' target='_blank'>" : "")." 
+                    $description .= ($inf['url'] ? "|<a href='".$inf['url']."' target='_blank'>" : "")."
                     <span class='m-l-5 m-r-5'>".($inf['developer'] ? $inf['developer'] : $locale['410'])."</span>
                      ".($inf['url'] ? "</a>" : "")."
                      ".($inf['email'] ? "|<a class='m-l-5' href='mailto:".$inf['email']."'>".$locale['409']."</a>" : '');
@@ -139,7 +139,7 @@ class Infusions_Admin {
         }
 
         echo "<div class='alert alert-info'>\n";
-        echo str_replace(['[LINK]', '[/LINK]'], ["<a class='text-underline' href='https://www.php-fusion.co.uk/infusions/marketplace/'' target='_blank'>", "</a>"], $locale['422']);
+        echo str_replace(['[LINK]', '[/LINK]'], ["<a class='text-underline' href='https://www.phpfusion.com/infusions/marketplace/'' target='_blank'>", "</a>"], $locale['422']);
         echo "</div>\n";
         closetable();
 

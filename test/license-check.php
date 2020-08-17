@@ -2,10 +2,10 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| https://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: license-check.php
-| Author: PHP-Fusion Development Team
+| Author: Core Development Team (coredevs@phpfusion.com)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -22,7 +22,7 @@ class LicenseChecker {
 
     public function check_license($password, $public_key) {
         // this is the code from fusion_license(); on Babylon Repository
-        $curl = curl_init('https://www.php-fusion.co.uk/infusions/license/api/v1/api.php');
+        $curl = curl_init('https://www.phpfusion.com/infusions/license/api/v1/api.php');
         $curl_post_data = [
             "password" => $password,
             "key"      => $public_key,

@@ -2,10 +2,10 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| https://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: AdminDashboard.php
-| Author: PHP-Fusion Development Team
+| Author: Core Development Team (coredevs@phpfusion.com)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -80,7 +80,7 @@ class Dashboard {
         $jquery_token = fusion_get_token($jquery_name, 1);
         $path = ADMIN."includes/dashboard_update.php";
 
-        add_to_jquery(/** @lang JavaScript */ "        
+        add_to_jquery(/** @lang JavaScript */ "
         // Sortables
         let col_1 = $('#col1');
         let col_2 = $('#col2');

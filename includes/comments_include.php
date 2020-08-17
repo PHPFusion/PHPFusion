@@ -2,10 +2,10 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| https://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: comments_include.php
-| Author: PHP-Fusion Development Team
+| Author: Core Development Team (coredevs@phpfusion.com)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -44,10 +44,10 @@ function showcomments( $comment_type, $comment_db, $comment_col, $comment_item_i
             'comment_allow_subject' => FALSE,
             'comment_allow_ratings' => $ratings
         ] )->showComments();
-    
+
     if ( $echo ) {
         echo $html;
     }
     return $html;
-    
+
 }

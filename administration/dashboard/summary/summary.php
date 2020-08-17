@@ -2,10 +2,10 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| https://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: summary.php
-| Author: PHP-Fusion Development Team
+| Author: Core Development Team (coredevs@phpfusion.com)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -127,7 +127,7 @@ function display_summary_widget() {
         $info = [
             "stat_icons" => "
             <span class='pull-right m-r-5'>".format_num($weblinks['weblink'])." ".$locale['271']."</span>\n
-            <span class='pull-right m-r-5'><i title='".$locale['254']."' class='fas fa-thumbtack m-r-10 text-lighter'></i>".format_num($weblinks['submit'])."</span>            
+            <span class='pull-right m-r-5'><i title='".$locale['254']."' class='fas fa-thumbtack m-r-10 text-lighter'></i>".format_num($weblinks['submit'])."</span>
             ",
             "icon" => "<span class='admin-icon weblinks'><img alt='".$locale['271']." ".$locale['258']."' src='".get_image("ac_W")."'/></span>",
             "title" => $locale['W'],
@@ -149,8 +149,8 @@ function display_summary_widget() {
         $info = [
             "stat_icons" => "
             <span class='pull-right'>".format_num($photos['photo'])." ".$locale['261']."</span>\n
-            <span class='pull-right m-r-5'><i title='".$locale['257']."' class='fas fa-comment m-r-10 text-lighter'></i>".format_num($photos['comment'])."</span>            
-            <span class='pull-right m-r-5'><i title='".$locale['254']."' class='fas fa-thumbtack m-r-10  text-lighter'></i>".format_num($photos['submit'])."</span>            
+            <span class='pull-right m-r-5'><i title='".$locale['257']."' class='fas fa-comment m-r-10 text-lighter'></i>".format_num($photos['comment'])."</span>
+            <span class='pull-right m-r-5'><i title='".$locale['254']."' class='fas fa-thumbtack m-r-10  text-lighter'></i>".format_num($photos['submit'])."</span>
             ",
             "icon" => "<span class='admin-icon gallery'><img alt='".$locale['272']." ".$locale['258']."' src='".get_image("ac_PH")."'/></span>",
             "title" => $locale['PH'],
