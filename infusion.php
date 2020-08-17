@@ -2,10 +2,10 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| https://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: forum/infusion.php
-| Author: PHP-Fusion Development Team
+| Author: Core Development Team (coredevs@phpfusion.com)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -31,8 +31,8 @@ $inf_title = $locale['forums']['title'];
 $inf_description = $locale['forums']['description'];
 $inf_version = '3.0';
 $inf_developer = 'PHP Fusion Development Team';
-$inf_email = 'info@php-fusion.co.uk';
-$inf_weburl = 'https://www.php-fusion.co.uk';
+$inf_email = 'info@phpfusion.com';
+$inf_weburl = 'https://www.phpfusion.com';
 $inf_folder = 'forum';
 $inf_image = 'forums.svg';
 

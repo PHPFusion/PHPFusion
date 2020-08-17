@@ -87,7 +87,7 @@ $userdata = fusion_get_userdata();
  */
 $locale = fusion_get_locale();
 $tpl = \PHPFusion\Template::getInstance('forum_index_latest');
-//https://next.php-fusion.co.uk/production/infusions/forum/index.php?viewforum&forum_id=157
+//https://next.phpfusion.com/production/infusions/forum/index.php?viewforum&forum_id=157
 $site_path = fusion_get_settings("site_path");
 
 // from file, we need to check the path

@@ -2,10 +2,10 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| https://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: forum/sections/tracked.php
-| Author: PHP-Fusion Development Team
+| Author: Core Development Team (coredevs@phpfusion.com)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -56,7 +56,7 @@ $threads = ForumServer::thread(FALSE)->getThreadInfo(0,
         INNER JOIN ".DB_FORUMS." tf ON t.forum_id = tf.forum_id
         LEFT JOIN ".DB_FORUMS." ttc ON ttc.forum_id = tf.forum_cat
         ".$filter['join']."
-        WHERE $base_condition ".$filter['condition']."  
+        WHERE $base_condition ".$filter['condition']."
         GROUP BY tn.thread_id
         ".$filter['order'],
 
