@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| https://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: infusion.php
 | Author: J.Falk (Falk)
@@ -24,8 +24,8 @@ $inf_title = $locale['downloads']['title'];
 $inf_description = $locale['downloads']['description'];
 $inf_version = "1.1.1";
 $inf_developer = "PHP Fusion Development Team";
-$inf_email = "info@php-fusion.co.uk";
-$inf_weburl = "https://www.php-fusion.co.uk";
+$inf_email = "info@phpfusion.com";
+$inf_weburl = "https://www.phpfusion.com";
 $inf_folder = "downloads";
 $inf_image = "download.svg";
 
@@ -57,7 +57,7 @@ $inf_newtable[] = DB_DOWNLOADS." (
     KEY download_user (download_user),
     KEY download_cat (download_cat),
     KEY download_count (download_count),
-    KEY download_datestamp (download_datestamp)        
+    KEY download_datestamp (download_datestamp)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 $inf_newtable[] = DB_DOWNLOAD_CATS." (
