@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| https://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: infusion.php
 | Author: J.Falk (Falk)
@@ -24,8 +24,8 @@ $inf_title = $locale['blog']['title'];
 $inf_description = $locale['blog']['description'];
 $inf_version = "2.0";
 $inf_developer = "PHP Fusion Development Team";
-$inf_email = "info@php-fusion.co.uk";
-$inf_weburl = "https://www.php-fusion.co.uk";
+$inf_email = "info@phpfusion.com";
+$inf_weburl = "https://www.phpfusion.com";
 $inf_folder = "blog";
 $inf_image = "blog.svg";
 
