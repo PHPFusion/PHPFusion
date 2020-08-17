@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| https://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: Event.inc
 | Author: Frederick MC Chan
@@ -217,12 +217,12 @@ class Event {
         return "<li>
             <div class='clearfix'>
                 <div class='pull-left m-r-10'>{%avatar%}</div>
-                <div class='overflow-hide'>     
+                <div class='overflow-hide'>
                     <span class='notice-profile'>{%profile_name%}</span>
                     <span class='notice-time'>{%datetime%}</span>
-                    <span class='notice-message'>{%message%}</span>                    
+                    <span class='notice-message'>{%message%}</span>
                 </div>
-            </div>        
+            </div>
         </li>
         ";
     }

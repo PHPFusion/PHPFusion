@@ -2,10 +2,10 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| https://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: members/members_view.php
-| Author: PHP-Fusion Development Team
+| Author: Core Development Team (coredevs@phpfusion.com)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -55,7 +55,7 @@ class Members_View {
             <tfoot>
             {%list_footer%}
             </tfoot>
-        </table></div>        
+        </table></div>
         ";
     }
 

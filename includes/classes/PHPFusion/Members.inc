@@ -2,10 +2,10 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| https://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: Members.inc
-| Author: PHP-Fusion Development Team
+| Author: Core Development Team (coredevs@phpfusion.com)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -95,7 +95,7 @@ class Members {
      * @return int
      */
     private function getMemberRows() {
-        $result = dbquery("SELECT u.user_id ".$this->getSelectors()." 
+        $result = dbquery("SELECT u.user_id ".$this->getSelectors()."
         FROM ".DB_USERS." u ".$this->getJoins()."
         WHERE ".(iADMIN ? "u.user_status>='0'" : "u.user_status='0'")."
         ".$this->getConditions()." GROUP BY ".$this->getGroupBy()."

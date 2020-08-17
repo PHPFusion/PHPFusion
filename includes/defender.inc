@@ -2,10 +2,10 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| https://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: defender.inc
-| Author : Frederick MC Chan (Chan)
+| Author: Frederick MC Chan (Chan)
 | Co-Author: Dan C (JoiNNN)
 +--------------------------------------------------------+
 | This program is released as free software under the

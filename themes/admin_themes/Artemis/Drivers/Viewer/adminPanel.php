@@ -2,10 +2,10 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| https://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: adminPanel.php
-| Author: PHP-Fusion Development Team
+| Author: Core Development Team (coredevs@phpfusion.com)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -105,7 +105,7 @@ class adminPanel extends resource {
             menu_wrap.toggleClass('collapsed');
             body_wrap.toggleClass('collapsed');
             app_wrap.toggleClass('collapsed');
-            menuToggle('".self::$locale['admin_collapse']."');            
+            menuToggle('".self::$locale['admin_collapse']."');
         });
         $('#search_app').bind('keyup', function(e) {
             $.ajax({

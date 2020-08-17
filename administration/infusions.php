@@ -2,10 +2,10 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| https://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: infusions.php
-| Author: PHP-Fusion Development Team
+| Author: Core Development Team (coredevs@phpfusion.com)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -34,7 +34,7 @@ if (($folder = filter_input(INPUT_POST, 'infuse'))) {
 
 opentable($locale['400']);
 echo "<div class='text-right'>\n";
-echo "<a href='https://www.php-fusion.co.uk/infusions/marketplace/' title='".$locale['422']."' target='_blank'>".$locale['422']."</a>\n";
+echo "<a href='https://www.phpfusion.com/infusions/marketplace/' title='".$locale['422']."' target='_blank'>".$locale['422']."</a>\n";
 echo "</div>\n";
 
 $infs = [];

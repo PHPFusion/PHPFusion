@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| https://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: Router.inc
 | Author: Frederick MC Chan (Chan)
@@ -552,11 +552,11 @@ class Router extends RewriteDriver {
         }
         add_to_footer("<script type='text/javascript'>
         var el = document.getElementById('rewritestoggledebugdiv');
-        
+
         if (el) {
             el.addEventListener('click', function() {
                 var el2 = document.getElementById('rewritesdebuginfo');
-                
+
                 if (el2.style.display === 'none') {
                     el2.style.display = 'block';
                 } else {
