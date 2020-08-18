@@ -471,6 +471,14 @@ $locale['about'] = "About";
 // User status
 $locale['online'] = "Online";
 $locale['offline'] = "Offline";
+// Timer
+$locale['timer_year'] = "year|years";
+$locale['timer_month'] = "month|months";
+$locale['timer_day'] = "day|days";
+$locale['timer_hour'] = "hour|hours";
+$locale['timer_minute'] = "minute|minutes";
+$locale['timer_second'] = "second|seconds";
+$locale['timer'] = "[DAYS] [AGO]";
 // Words for formatting to single and plural forms. Count of forms is language-dependent
 $locale['fmt_submission'] = "submission|submissions";
 $locale['fmt_article'] = "article|articles";
