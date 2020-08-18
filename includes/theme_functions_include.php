@@ -944,23 +944,28 @@ if (!function_exists("timer")) {
         if ($calculated < 1) {
             return "<abbr class='atooltip' data-toggle='tooltip' data-placement='top' title='".showdate('longdate', $updated)."'>".$locale['just_now']."</abbr>\n";
         }
-        //	$timer = array($year => $locale['year'], $month => $locale['month'], $day => $locale['day'], $hour => $locale['hour'], $minute => $locale['minute'], $second => $locale['second']);
-        //	$timer_b = array($year => $locale['year_a'], $month => $locale['month_a'], $day => $locale['day_a'], $hour => $locale['hour_a'], $minute => $locale['minute_a'], $second => $locale['second_a']);
+
         $timer = [
-            $year   => $locale['fmt_year'],
-            $month  => $locale['fmt_month'],
-            $day    => $locale['fmt_day'],
-            $hour   => $locale['fmt_hour'],
-            $minute => $locale['fmt_minute'],
-            $second => $locale['fmt_second']
+            $year   => $locale['timer_year'],
+            $month  => $locale['timer_month'],
+            $day    => $locale['timer_day'],
+            $hour   => $locale['timer_hour'],
+            $minute => $locale['timer_minute'],
+            $second => $locale['timer_second']
         ];
+
         foreach ($timer as $arr => $unit) {
             $calc = $calculated / $arr;
             if ($calc >= 1) {
                 $answer = round($calc);
-                //	$string = ($answer > 1) ? $timer_b[$arr] : $unit;
                 $string = \PHPFusion\Locale::format_word($answer, $unit, ['add_count' => FALSE]);
-                return "<abbr class='atooltip' data-toggle='tooltip' data-placement='top' title='".showdate('longdate', $updated)."'>".$answer." ".$string." ".$locale['ago']."</abbr>";
+                $text = strtr($locale['timer'], [
+                    '[DAYS]'   => $answer." ".$string,
+                    '[AGO]'    => $locale['ago'],
+                    '[ANSWER]' => $answer,
+                    '[STRING]' => $string
+                ]);
+                return "<abbr class='atooltip' data-toggle='tooltip' data-placement='top' title='".showdate('longdate', $updated)."'>".$text."</abbr>";
             }
         }
 
