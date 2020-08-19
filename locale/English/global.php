@@ -478,7 +478,7 @@ $locale['timer_day'] = "day|days";
 $locale['timer_hour'] = "hour|hours";
 $locale['timer_minute'] = "minute|minutes";
 $locale['timer_second'] = "second|seconds";
-$locale['timer'] = "[DAYS] [AGO]";
+$locale['timer'] = "[DAYS] [AGO]"; // Don't translate text between []! Only change the order if you need [AGO] [DAYS].
 // Words for formatting to single and plural forms. Count of forms is language-dependent
 $locale['fmt_submission'] = "submission|submissions";
 $locale['fmt_article'] = "article|articles";
