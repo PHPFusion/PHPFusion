@@ -3,14 +3,15 @@ $locale['400'] = "PHP Info";
 //General
 $locale['401'] = "General";
 $locale['402'] = "Server software";
-$locale['403'] = "Webserver software";
+$locale['403'] = "Web-server software";
 $locale['404'] = "PHP version";
 $locale['405'] = "PHP interface";
 $locale['406'] = "MySQL Server version";
 $locale['407'] = "PHP-Fusion version";
 $locale['408'] = "Database prefix";
 $locale['409'] = "Cookie prefix";
-$locale['410'] = "Webbrowser and OS";
+$locale['410'] = "Web-browser and OS";
+$locale['411'] = "Translated by:"; // If you helped with the translation, you can write your name here. Management can update credits based on recent contributions.
 //PHP settings
 $locale['420'] = "PHP settings";
 $locale['421'] = "Yes";

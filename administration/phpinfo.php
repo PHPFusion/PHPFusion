@@ -44,6 +44,7 @@ if ($_GET['page'] == 1) {
     $phpinfo .= "<tr>\n<td class='tbl2' style='width:20%'>".$locale['408']."</td><td class='tbl2' style='text-align:right'>".DB_PREFIX."</td></tr>\n";
     $phpinfo .= "<tr>\n<td class='tbl1' style='width:20%'>".$locale['409']."</td><td class='tbl1' style='text-align:right'>".COOKIE_PREFIX."</td></tr>\n";
     $phpinfo .= "<tr>\n<td class='tbl2' style='width:20%'>".$locale['410']."</td><td class='tbl1' style='text-align:right'>".stripinput($_SERVER['HTTP_USER_AGENT'])."</td></tr>\n";
+    $phpinfo .= "<tr>\n<td>".$locale['411']."</td></tr>\n";
     $phpinfo .= "</table>\n";
 } else
     //PHP settings
