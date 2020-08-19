@@ -90,6 +90,7 @@ function general() {
     $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['408']."</td><td class='text-right'>".DB_PREFIX."</td></tr>\n";
     $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['409']."</td><td class='text-right'>".COOKIE_PREFIX."</td></tr>\n";
     $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['410']."</td><td class='text-right'>".stripinput($_SERVER['HTTP_USER_AGENT'])."</td></tr>\n";
+    $phpinfo .= "<tr>\n<td>".$locale['411']."</td></tr>\n";
     $phpinfo .= "</table>\n</div>";
     echo $phpinfo;
 }
