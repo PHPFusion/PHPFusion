@@ -12,6 +12,7 @@ $locale['PHPI_407'] = "PHP-Fusion version";
 $locale['PHPI_408'] = "Database prefix";
 $locale['PHPI_409'] = "Cookie prefix";
 $locale['PHPI_410'] = "Web-browser and OS";
+$locale['PHPI_411'] = "Translated by:"; // If you helped with the translation, you can write your name here. Management can update credits based on recent contributions.
 //PHP settings
 $locale['PHPI_420'] = "PHP settings";
 $locale['PHPI_423'] = "Safe-mode";
