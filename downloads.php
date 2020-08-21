@@ -120,7 +120,7 @@ if (fusion_get_settings('ratings_enabled') == 1) {
 $filter = array_keys($info['allowed_filters']);
 $_get_type = isset($_get_type) && in_array($_get_type, array_keys($info['allowed_filters'])) ? $_get_type : '';
 foreach ($info['allowed_filters'] as $type => $filter_name) {
-    $filter_link = INFUSIONS."downloads/downloads.php?".(isset($_get_cat_id) ? "cat_id=".(int)$_get_cat_id."&amp;" : '').($_get_archive ? "archive=$_get_archive&amp;" : '')."type=".$type;
+    $filter_link = INFUSIONS."downloads/downloads.php?".(!empty($_get_cat_id) ? "cat_id=".(int)$_get_cat_id."&amp;" : '').($_get_archive ? "archive=$_get_archive&amp;" : '')."type=".$type;
     $active = isset($_get_type) && $_get_type == $type ? 1 : 0;
     $info['download_filter'][$type] = ['title' => $filter_name, 'link' => $filter_link, 'active' => $active];
     unset($filter_link);
