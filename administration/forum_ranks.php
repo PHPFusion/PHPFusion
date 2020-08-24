@@ -126,7 +126,7 @@ if ($settings['forum_ranks']) {
     echo "</td>\n";
     echo "</tr>\n<tr>\n";
     echo "<td class='tbl'>".$locale['422']."</td>\n";
-    echo "<td class='tbl'><input type='text' id='rank_posts' name='rank_posts' value='".$rank_posts."' class='textbox' style='width:30px;'".($rank_type != 0 ? " readonly='readonly'" : "")." /></td>\n";
+    echo "<td class='tbl'><input type='text' id='rank_posts' name='rank_posts' value='".$rank_posts."' class='textbox' style='width:70px;'".($rank_type != 0 ? " readonly='readonly'" : "")." /></td>\n";
     echo "</tr>\n<tr>\n";
     echo "<td class='tbl'>".$locale['423']."</td>\n<td class='tbl'>";
     // Normal Select
