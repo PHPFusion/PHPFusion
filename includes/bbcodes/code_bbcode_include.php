@@ -16,8 +16,6 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
-add_to_head('<link rel="stylesheet" href="'.INCLUDES.'bbcodes/code/prism.css" type="text/css"/>');
-add_to_footer('<script src="'.INCLUDES.'bbcodes/code/prism.js"></script>');
 
 if (preg_match_all('#\[code(=(.*?))?\](.*?)\[/code\]#si', $text) ||
     preg_match_all('#```(.*?)```#si', $text) ||
@@ -25,6 +23,9 @@ if (preg_match_all('#\[code(=(.*?))?\](.*?)\[/code\]#si', $text) ||
     preg_match_all('#\[php\](.*?)\[/php\]#si', $text) ||
     preg_match_all('#\[geshi=(.*?)\](.*?)\[/geshi\]#si', $text)
 ) {
+    add_to_head('<link rel="stylesheet" href="'.INCLUDES.'bbcodes/code/prism.css" type="text/css"/>');
+    add_to_footer('<script src="'.INCLUDES.'bbcodes/code/prism.js"></script>');
+
     $text = preg_replace_callback(
         "#\[code(=(?P<lang>.*?))?\](?P<code>.*?)\[/code\]#si",
         function ($m) {
