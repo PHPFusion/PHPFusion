@@ -109,8 +109,28 @@ if ($_SERVER['SCRIPT_NAME'] != $_SERVER['PHP_SELF']) {
 }
 
 // Force protocol change if https turned on main settings
-if ($settings['site_protocol'] == 'https' && !server('HTTPS')) {
-    redirect('https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
+if ($settings['site_protocol'] == 'https' && !isset($_SERVER['HTTPS'])) {
+    $url = (array)parse_url(htmlspecialchars_decode($_SERVER['REQUEST_URI'])) + ['path' => '', 'query' => ''];
+    $fusion_query = [];
+    if ($url['query']) {
+        parse_str($url['query'], $fusion_query); // this is original.
+    }
+    $prefix = !empty($fusion_query ? '?' : '');
+    $site_path = $url['path'];
+    if (strpos($url['path'], '/', 1)) {
+        $site_path = ltrim($url['path'], '/');
+    }
+    if ($settings['site_path'] !== '/') {
+        $site_path = str_replace($settings['site_path'], '', $url['path']);
+    }
+    $site_path = $settings['siteurl'].$site_path.$prefix.http_build_query($fusion_query, 'flags_', '&amp;');
+    redirect($site_path);
+}
+
+// Redirect to correct path if there are double // in the current uri
+if (substr_count($_SERVER['REQUEST_URI'], '//')) {
+    $site_path = str_replace('/', '', $_SERVER['REQUEST_URI']);
+    redirect(rtrim($settings['siteurl'], '/').'/'.$site_path);
 }
 
 define("FUSION_QUERY", isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : "");
@@ -174,6 +194,7 @@ define("START_PAGE", substr(preg_replace("#(&amp;|\?)(s_action=edit&amp;shout_id
 /**
  * Login / Logout / Revalidate
  */
+$userdata = [];
 if ($_check_post_login && $_check_post_username && $_check_post_pass) {
     if (fusion_safe()) {
         $auth = new Authenticate(post("user_name"), post("user_pass"), $_check_post_remember);
