@@ -53,7 +53,7 @@ class OutputHandler {
      *
      * @var string[]
      */
-    private static $pageMeta = [];
+    public static $pageMeta = [];
     /**
      * PHP code to execute using eval replace anything in the output
      *
