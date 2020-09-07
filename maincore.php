@@ -109,25 +109,8 @@ if ($_SERVER['SCRIPT_NAME'] != $_SERVER['PHP_SELF']) {
 }
 
 // Force protocol change if https turned on main settings
-if ($settings['site_protocol'] == 'https' && !server("HTTPS")) {
-    $url = (array)parse_url(htmlspecialchars_decode(server("REQUEST_URI"))) + [
-            'path'  => '',
-            'query' => ''
-        ];
-    $fusion_query = [];
-    if ($url['query']) {
-        parse_str($url['query'], $fusion_query); // this is original.
-    }
-    $prefix = !empty($fusion_query ? '?' : '');
-    $site_path = $url["path"];
-    if (strpos($url["path"], "/", 1)) {
-        $site_path = ltrim($url["path"], "/");
-    }
-    if ($settings["site_path"] !== "/") {
-        $site_path = str_replace($settings['site_path'], '', $url['path']);
-    }
-    $site_path = $settings['siteurl'].$site_path.$prefix.http_build_query($fusion_query, 'flags_', '&amp;');
-    redirect($site_path);
+if ($settings['site_protocol'] == 'https' && !server('HTTPS')) {
+    redirect('https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
 }
 
 define("FUSION_QUERY", isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : "");
