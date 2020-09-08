@@ -117,7 +117,7 @@ if ($settings['site_protocol'] == 'https' && !isset($_SERVER['HTTPS'])) {
     }
     $prefix = !empty($fusion_query ? '?' : '');
     $site_path = $url['path'];
-    if (strpos($url['path'], '/', 1)) {
+    if (!empty($url['path']) && strpos($url['path'], '/', 1)) {
         $site_path = ltrim($url['path'], '/');
     }
     if ($settings['site_path'] !== '/') {
