@@ -1,0 +1,80 @@
+{news_item_sm.{
+<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+    <section id="news-{%news_id%}" class="news-item sm">
+        <ul class="block m-b-20">
+            <li class="list-group-item">
+                <figure class="featured-image">
+                    <a href="{%news_image_src%}">
+                        <img class="img-responsive" src="{%news_image_optimized%}">
+                    </a>
+                </figure>
+                <div class="clearfix"></div>
+                <div class="hidden-block" style="height:119px;"></div>
+                <div class="news-cat">
+                    <a href="{%news_cat_link%}">{%news_cat_name%}</a>
+                </div>
+                <div class="news-body" style="bottom:-73px;">
+                    <div class="news-body-content">
+                        <span class="author text-primary">{[by]} {%news_profile_link%}</span>
+                        <div class="news-subject">{%news_subject%}</div>
+                    </div>
+                    <div class="news-news">
+                        {%news_news%}
+                    </div>
+                    <a class="btn btn-default" href="{%news_link%}">{[news_0001]}</a>
+                </div>
+                <div class="news-meta">
+                    <span class="news-date"><i class="fas fa-clock m-r-5"></i><time datetime="{%news_phpdate%}">{%news_date%}</time></span>
+                    <div class="pull-right">
+                        <span class="news-views"><i class="fas fa-comment m-r-5"></i>{%news_comments%}</span>
+                        <span class="news-comments"><i class="fas fa-eye m-r-5"></i>{%news_reads%}</span>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </section>
+</div>
+}}
+
+{news_item_lg.{
+<div class="col-xs-12 col-sm-6 col-md-4 col-lg-6">
+    <section id="news-{%news_id%}" class="news-item lg">
+        <ul class="list-group block m-b-20">
+            <li class="list-group-item">
+                <figure class="featured-image">
+                    <a href="{%news_image_src%}">
+                        <img class="img-responsive" src="{%news_image_src%}">
+                    </a>
+                </figure>
+                <div class="clearfix"></div>
+                <div class="hidden-block" style="height:119px;"></div>
+                <div class="news-cat">
+                    <a href="{%news_cat_link%}">{%news_cat_name%}</a>
+                </div>
+                <div class="news-body">
+                    <div class="news-body-content">
+                        <span class="author text-primary">{[by]} {%news_profile_link%}</span>
+                        <div class="news-subject">{%news_subject%}</div>
+                    </div>
+                    <div class="news-news">
+                        {%news_news%}
+                    </div>
+                    <a class="btn btn-default" href="{%news_link%}">{[news_0001]}</a>
+                </div>
+                <div class="news-meta">
+                    <span class="news-date"><i class="fas fa-clock m-r-5"></i><time datetime="{%news_phpdate%}">{%news_date%}</time></span>
+                    <div class="pull-right">
+                        <span class="news-views"><i class="fas fa-comment m-r-5"></i>{%news_comments%}</span>
+                        <span class="news-comments"><i class="fas fa-eye m-r-5"></i>{%news_reads%}</span>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </section>
+</div>
+}}
+{no_news.{
+<div class="well">
+    <h4 class="text-center">{[news_0005]}</h4>
+</div>
+}}
