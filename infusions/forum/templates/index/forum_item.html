@@ -1,0 +1,51 @@
+{category_header.{
+<thead>
+<tr>
+    <th>
+        <small class='text-uppercase'>
+            <strong>{%forum_title_link%}</strong>
+        </small>
+    </th>
+    <th>
+        <small class='text-uppercase strong text-lighter'>{%threads_title%}</small>
+    </th>
+    <th>
+        <small class='text-uppercase strong text-lighter'>{%post_title%}</small>
+    </th>
+    <th class='col-xs-4'>
+        <small class='text-uppercase strong text-lighter'>{%last_thread_title%}</small>
+    </th>
+</tr>
+</thead>
+}}
+<tbody>
+{forums.{
+<tr>
+    <td>
+        <div class="pull-left">{%forum_icon%}</div>
+        <div class="overflow-hide">
+            <a title='{%forum_link_title%}' class='forum-subject' href='{%forum_link_url%}'>
+                <strong>
+                    {%forum_link_title%}
+                </strong>
+            </a>
+            <div>{%forum_description%}</div>
+            <span class='forum-moderators'><small><strong>{%forum_moderators_title%}</strong> {%forum_moderators%}</small></span>
+        </div>
+    </td>
+    <td>
+        {%forum_thread_count%}
+    </td>
+    <td>
+        {%forum_post_count%}
+    </td>
+    <td>
+        {%forum_lastpost%}
+    </td>
+</tr>
+}}
+</tbody>
+
+{no_item.{
+<div class='well text-center'>{%message%}</div>
+}}

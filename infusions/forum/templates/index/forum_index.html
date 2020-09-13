@@ -1,0 +1,59 @@
+<div class='spacer-sm'>{%breadcrumb%}</div>
+<div class='forum-header' style="background: url({%forum_bg_src%}) no-repeat; background-size:cover;">
+    <div class='banner' style='display:block; height:180px; overflow:hidden;'>
+        <h2 class='p-20 center-y text-white' style='z-index: 2'>{%title%}</h2>
+    </div>
+</div>
+<div class='spacer-sm'>
+    <div class='row'>
+        <div class='col-xs-12 col-sm-9 col-lg-9'>
+            <div class="table-responsive"><table class='table table-bordered clear forum-index-table'>
+                {forum_content.{ {%forum_content%} }}
+                {no_item.{
+                <tr>
+                    <td>{%message%}</td>
+                </tr>
+                }}
+            </table></div>
+        </div>
+        <div class='col-xs-12 col-sm-3 col-lg-3'>
+            {new_thread_link.{
+            <div class='m-b-20'>
+                <a class='btn btn-primary btn-block' href='{%new_thread_link_url%}'><i class='fa fa-comment m-r-10'></i>{%new_thread_link_title%}</a>
+            </div>
+            }}
+            <div class='spacer-sm'>
+                <h4><strong>{%tags_title%}</strong></h4>
+                <ul class="list-group">
+                    {tags.{
+                    <li class='list-group-item{%active_class%}'>
+                        <a href="{%tag_link%}">
+                            <div class="pull-left m-r-10"><i class="fa fa-square fa-lg" style="color:{%tag_color%}"></i>
+                            </div>
+                            <div class="pull-left">
+                                {%tag_title%}
+                            </div>
+                        </a>
+                    </li>
+                    }}
+                    {tags_no_item.{
+                    <li><span>{%message%}</span></li>
+                    }}
+                </ul>
+            </div>
+            <div>
+                <h4><strong>{%popular_threads_title%}</strong></h4>
+                <div>
+                    {popular_threads_item.{
+                    <div class="m-b-15">
+                        <a href='{%p_link%}'><strong>{%p_title%}</strong></a><br/>
+                        {%p_profile_link%}
+                        <span class='text-lighter'><i class='fa fa-comment'></i> {%p_count%}</span>
+                    </div>
+                    }}
+                    {no_popular_threads.{ {%p_message%} }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,26 @@
+<div class="table-responsive"><table class='table table-bordered clear forum-index-table'>
+    <thead>
+    <tr>
+        <th style='padding-top:20px;'>
+            <small class='text-uppercase strong text-lighter'>{%title1%}</small>
+        </th>
+        <th style='padding-top:20px;'>
+            <small class='text-uppercase strong text-lighter'>{%title2%}</small>
+        </th>
+        <th style='padding-top:20px;'>
+            <small class='text-uppercase strong text-lighter'>{%title3%}</small>
+        </th>
+        <th class='col-xs-4' style='padding-top:20px;'>
+            <small class='text-uppercase strong text-lighter'>{%title4%}</small>
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    {subforums.{ {%content%} }}
+    {no_items.{
+    <tr>
+        <td colspan='4'>{%message%}</td>
+    </tr>
+    }}
+    </tbody>
+</table></div>
