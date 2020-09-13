@@ -1,0 +1,17 @@
+{%opentable%}
+<div class='spacer-sm'>{%breadcrumb%}</div>
+<div class="faq-index">
+
+{categories.{
+    <div id='{%faq_cat_id%}' class='m-t-10 faq-index-item'>
+        <div class='spacer-xs'>
+            <a href='{%faq_cat_link%}' title='{%faq_cat_name%}'>{%faq_cat_name%}</a>
+            <div>{%faq_cat_description%}</div>
+        </div>
+    </div>
+}}
+{no_item.{
+    <div class='well text-center m-t-15'>{%message%}</div>
+}}
+</div>
+{%closetable%}
