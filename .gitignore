@@ -6,8 +6,6 @@
 .DS_Store
 .htaccess
 config.php
-config-copy.php
-/infusions/news/news_cats/
 header_includes.php
 footer_includes.php
 /.github/
