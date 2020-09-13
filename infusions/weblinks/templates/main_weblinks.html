@@ -1,0 +1,19 @@
+{%opentable%}
+<div class="weblinks-index">
+<div class='spacer-sm'>{%breadcrumb%}</div>
+<div class="row">
+    {categories.{
+    <div class='col-xs-12 col-sm-6 col-md-6 col-lg-6 weblink-index-item'>
+        <div class='spacer-xs'>
+            <h3><a class='display-block' href='{%cat_link%}'>{%cat_name%} ({%cat_count%})</a></h3>
+            {%cat_description%}
+            <div class="m-l-10">{%sub_categories%}</div>
+        </div>
+    </div>
+    }}
+</div>
+{no_item.{
+    <div class='well text-center m-t-15'>{%message%}</div>
+}}
+</div>
+{%closetable%}
