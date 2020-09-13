@@ -1,7 +1,3 @@
-[submodule "infusions/downloads"]
-	path = infusions/downloads
-	url = https://github.com/php-fusion/ci-Downloads.git
-	branch = Andromeda
 [submodule "infusions/faq"]
 	path = infusions/faq
 	url = https://github.com/php-fusion/ci-Faq.git
