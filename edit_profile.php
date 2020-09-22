@@ -46,7 +46,7 @@ if (isset($_POST['update_profile'])) {
 }
 
 if (fusion_get_settings('email_verification') == 1) {
-    $result = dbquery("SELECT user_email FROM ".DB_EMAIL_VERIFY." WHERE user_id='".$userdata['user_id']."'");
+    $result = dbquery("SELECT user_email FROM ".DB_EMAIL_VERIFY." WHERE user_id='".fusion_get_userdata('user_id')."'");
     if (dbrows($result)) {
         $data = dbarray($result);
         $info['email_notification'] = sprintf($locale['u200'], $data['user_email'])."\n<br />\n".$locale['u201'];
