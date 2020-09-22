@@ -24,6 +24,7 @@ add_to_meta("keywords", $locale['global_100']);
 $info = [];
 if (!iMEMBER) {
     if (isset($_GET['error']) && isnum($_GET['error'])) {
+        $action_url = FUSION_REQUEST;
         if (isset($_GET['redirect']) && strpos(urldecode($_GET['redirect']), "/") === 0) {
             $action_url = cleanurl(urldecode($_GET['redirect']));
         }
