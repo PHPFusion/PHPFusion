@@ -26,6 +26,7 @@ if (!isset($_GET['pagenum']) || !isnum($_GET['pagenum'])) {
 }
 
 $settings = fusion_get_settings();
+$aidlink = fusion_get_aidlink();
 
 $admin_images = TRUE;
 
@@ -174,7 +175,7 @@ if ($infusions_count > 0) {
 // Latest Comments
 $global_comments = [];
 $global_comments['rows'] = dbcount("('comment_id')", DB_COMMENTS);
-$_GET['c_rowstart'] = isset($_GET['c_rowstart']) && $_GET['c_rowstart'] <= $global_comments['rows'] ? $_GET['c_rowstart'] : 0;
+$_GET['c_rowstart'] = isset($_GET['c_rowstart']) && isnum($_GET['c_rowstart']) && $_GET['c_rowstart'] <= $global_comments['rows'] ? (int)$_GET['c_rowstart'] : 0;
 $comments_result = dbquery("SELECT c.*, u.user_id, u.user_name, u.user_status, u.user_avatar
     FROM ".DB_COMMENTS." c
     LEFT JOIN ".DB_USERS." u on u.user_id=c.comment_name
@@ -198,7 +199,7 @@ if (dbrows($comments_result)) {
 // Latest Ratings
 $global_ratings = [];
 $global_ratings['rows'] = dbcount("('rating_id')", DB_RATINGS);
-$_GET['r_rowstart'] = isset($_GET['r_rowstart']) && $_GET['r_rowstart'] <= $global_ratings['rows'] ? $_GET['r_rowstart'] : 0;
+$_GET['r_rowstart'] = isset($_GET['r_rowstart']) && isnum($_GET['r_rowstart']) && $_GET['r_rowstart'] <= $global_ratings['rows'] ? (int)$_GET['r_rowstart'] : 0;
 $result = dbquery("SELECT r.*, u.user_id, u.user_name, u.user_status, u.user_avatar
     FROM ".DB_RATINGS." r
     LEFT JOIN ".DB_USERS." u on u.user_id=r.rating_user
@@ -221,7 +222,7 @@ if ($global_ratings['rows'] > 10) {
 // Latest Submissions
 $global_submissions = [];
 $global_submissions['rows'] = dbcount("('submit_id')", DB_SUBMISSIONS);
-$_GET['s_rowstart'] = isset($_GET['s_rowstart']) && $_GET['s_rowstart'] <= $global_submissions['rows'] ? $_GET['s_rowstart'] : 0;
+$_GET['s_rowstart'] = isset($_GET['s_rowstart']) && isnum($_GET['s_rowstart']) && $_GET['s_rowstart'] <= $global_submissions['rows'] ? (int)$_GET['s_rowstart'] : 0;
 $result = dbquery("SELECT s.*, u.user_id, u.user_name, u.user_status, u.user_avatar
     FROM ".DB_SUBMISSIONS." s
     LEFT JOIN ".DB_USERS." u on u.user_id=s.submit_user
