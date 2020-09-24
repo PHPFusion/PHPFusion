@@ -55,7 +55,7 @@ function fusion_license($public_key, $password) {
 /**
  * cURL method to get any contents for Apache that does not support SSL
  *
- * @param $url
+ * @param string $url
  *
  * @return bool|string
  */
@@ -63,32 +63,28 @@ function fusion_get_contents($url) {
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-    //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); // PHP 7.1
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
     $data = curl_exec($ch);
     curl_close($ch);
+
     return $data;
 }
-
 
 /**
  * Get currency symbol by using a 3-letter ISO 4217 currency code
  * Note that if INTL pecl package is not installed, signs will degrade to ISO4217 code itself
  *
- * @param      $iso         = 3-letter ISO 4217
- * @param bool $description - set to false for just symbol
+ * @param string $iso         3-letter ISO 4217
+ * @param bool   $description set to false for just symbol
  *
  * @return null
  */
 function fusion_get_currency($iso = NULL, $description = TRUE) {
-    static $__currency = [];
-    $currency_symbol = [];
+    $locale = fusion_get_locale('', LOCALE.LOCALESET."currency.php");
 
-    if (empty($locale['charset'])) {
-        // Do not use $__currency and $iso in these 2 files
-        include LOCALE.LOCALESET."global.php";
-        include LOCALE.LOCALESET."currency.php";
-    }
+    static $__currency = [];
+
     if (empty($__currency)) {
         // Euro Exceptions list
         $currency_exceptions = [
@@ -129,18 +125,15 @@ function fusion_get_currency($iso = NULL, $description = TRUE) {
         }
     }
 
-    return $iso === NULL ? $__currency : (isset($currency_symbol[$iso]) ? $currency_symbol[$iso] : NULL);
+    return $iso === NULL ? $__currency : (isset($__currency[$iso]) ? $__currency[$iso] : NULL);
 }
-
 
 /**
  * Check if a given theme exists and is valid
  *
- * @param string    $theme
+ * @param string $theme
  *
- * @return boolean
- * @global string[] $settings
- *
+ * @return bool
  */
 function theme_exists($theme) {
     if ($theme == "Default") {
@@ -153,11 +146,7 @@ function theme_exists($theme) {
 /**
  * Set a valid theme
  *
- * @param string    $theme
- *
- * @global array    $locale
- *
- * @global string[] $settings
+ * @param string $theme
  */
 function set_theme($theme) {
     $locale = fusion_get_locale();
@@ -189,7 +178,7 @@ function set_theme($theme) {
 /**
  * Set the admin password when needed
  *
- * @param $password
+ * @param string $password
  *
  * @return bool
  */
@@ -202,7 +191,7 @@ function set_admin_pass($password) {
  *
  * @param string $password
  *
- * @return boolean
+ * @return bool
  */
 function check_admin_pass($password) {
     return Authenticate::validateAuthAdmin($password);
@@ -211,12 +200,10 @@ function check_admin_pass($password) {
 /**
  * Redirect browser using header or script function
  *
- * @param      $location
- * @param bool $delay
- * @param bool $script
- * @param int  $code
- *
- * @define STOP_REDIRECT to prevent redirection
+ * @param string $location Desintation URL
+ * @param bool   $delay    meta refresh delay
+ * @param bool   $script   true if you want to redirect via javascript
+ * @param int    $code
  */
 function redirect($location, $delay = FALSE, $script = FALSE, $code = 200) {
     //define('STOP_REDIRECT', true);
@@ -240,11 +227,10 @@ function redirect($location, $delay = FALSE, $script = FALSE, $code = 200) {
     }
 }
 
-
 /**
  * Read remote files in PHP
  *
- * @param $http_file
+ * @param string $http_file
  *
  * @return bool
  */
@@ -255,7 +241,7 @@ function remote_file_exists($http_file) {
 /**
  * Checks whether a string is JSON or not
  *
- * @param $string
+ * @param string $string
  *
  * @return bool
  */
@@ -269,7 +255,7 @@ function isJson($string) {
  *
  * @param int $code status header code
  *
- * @return bool      whether header was sent
+ * @return bool whether header was sent
  */
 function set_status_header($code = 200) {
     if (headers_sent()) {
@@ -379,22 +365,16 @@ function cleanurl($url) {
 /**
  * Strip Input Function, prevents HTML in unwanted places
  *
- * @param string|string[] $text
+ * @param mixed $text
  *
- * @return string|string[]
+ * @return mixed
  */
-function stripinput($text = "") {
-    if (!empty($text)) {
-        // Converts object to array
-        if (is_object($text)) {
-            return '';
-        }
-        if (!is_array($text)) {
-            return str_replace('\\', '&#092;', htmlspecialchars(stripslash(trim($text)), ENT_QUOTES));
-        }
-        foreach ($text as $i => $item) {
-            $text[$i] = stripinput($item);
-        }
+function stripinput($text) {
+    if (!is_array($text)) {
+        return str_replace('\\', '&#092;', htmlspecialchars(stripslash(trim($text)), ENT_QUOTES));
+    }
+    foreach ($text as $i => $item) {
+        $text[$i] = stripinput($item);
     }
 
     return $text;
@@ -405,7 +385,7 @@ function stripinput($text = "") {
  *
  * @param string $check_url
  *
- * @return boolean TRUE if the URL is not secure
+ * @return bool True if the URL is not secure
  */
 function stripget($check_url) {
     if (is_array($check_url)) {
@@ -520,14 +500,12 @@ function fusion_first_words($text, $limit, $suffix = '&hellip;') {
  * Pure trim function
  *
  * @param string $str
- * @param bool   $length
+ * @param int    $length
  *
  * @return string
  */
-function trim_text($str, $length = FALSE) {
-    $length = (isset($length) && (!empty($length))) ? stripinput($length) : "300";
-    $startfrom = $length;
-    for ($i = $startfrom; $i <= strlen($str); $i++) {
+function trim_text($str, $length = 300) {
+    for ($i = $length; $i <= strlen($str); $i++) {
         $spacetest = substr("$str", $i, 1);
         if ($spacetest == " ") {
             $spaceok = substr("$str", 0, $i);
@@ -543,7 +521,7 @@ function trim_text($str, $length = FALSE) {
 /**
  * Normalize characters.
  *
- * @param $string
+ * @param string $string
  *
  * @return string
  */
@@ -565,16 +543,15 @@ function random_string($length = 6) {
     for ($i = 0; $i < $length; $i++) {
         $randomString .= $characters[rand(0, $charactersLength - 1)];
     }
-
     return (string)$randomString;
 }
 
 /**
  * Validate numeric input
  *
- * @param            $value
- * @param bool|FALSE $decimal
- * @param bool       $negative
+ * @param      $value
+ * @param bool $decimal
+ * @param bool $negative
  *
  * @return bool
  */
@@ -591,9 +568,9 @@ function isnum($value, $decimal = FALSE, $negative = FALSE) {
  * Custom preg-match function
  *
  * @param string $expression
- * @param string $value
+ * @param mixed  $value
  *
- * @return boolean FALSE when $value is an array
+ * @return bool FALSE when $value is an array
  */
 function preg_check($expression, $value) {
     return !is_array($value) and preg_match($expression, $value);
@@ -602,15 +579,15 @@ function preg_check($expression, $value) {
 /**
  * Generate a clean Request URI
  *
- * @param string    $request_addition    - 'page=1&amp;ref=2' or array('page' => 1, 'ref' => 2)
- * @param array     $filter_array        - array('aid','page', ref')
- * @param bool|TRUE $keep_filtered       - true to keep filter, false to remove filter from FUSION_REQUEST
- *                                       If remove is true, to remove everything and keep $requests_array and $request
- *                                       addition. If remove is false, to keep everything else except $requests_array
+ * @param mixed $request_addition 'page=1&ref=2' or array('page' => 1, 'ref' => 2)
+ * @param array $filter_array     array('aid','page', ref')
+ * @param bool  $keep_filtered    true to keep filter, false to remove filter from FUSION_REQUEST
+ *                                If remove is true, to remove everything and keep $requests_array and $request
+ *                                addition. If remove is false, to keep everything else except $requests_array
  *
  * @return string
  */
-function clean_request($request_addition = '', array $filter_array = [], $keep_filtered = TRUE) {
+function clean_request($request_addition = '', $filter_array = [], $keep_filtered = TRUE) {
 
     $fusion_query = [];
 
@@ -710,22 +687,20 @@ function displaysmileys($textarea, $form = "inputform") {
 /**
  * Tag a user by simply just posting his name like @Chan and if found, returns a tooltip.
  *
- * @param $user_name (@Chan)
- * @param $tooltip   ("<div class='clearfix'>".($userdata['user_lastvisit']-120 < TIME ? 'Onlin' : 'Offline')."</div>";)
+ * @param string $user_name @Chan
+ * @param string $tooltip   ($userdata['user_lastvisit']-120 < TIME ? 'Onlin' : 'Offline')
  *
- * @return mixed
+ * @return string
  */
 function fusion_parse_user($user_name, $tooltip = "") {
     $user_regex = '@[-0-9A-Z_\.]{1,50}';
-    $text = preg_replace_callback("#$user_regex#im", function ($user_name) use ($tooltip) {
+    return preg_replace_callback("#$user_regex#im", function ($user_name) use ($tooltip) {
         return render_user_tags($user_name, $tooltip);
     }, $user_name);
-
-    return $text;
 }
 
 /**
- * Cache all installed bbcode
+ * Cache all installed bbcodes
  *
  * @return array
  */
@@ -746,10 +721,10 @@ function cache_bbcode() {
  * Parse and force image/ to IMAGES directory
  * Neutralize all image dir levels and convert image to pf image folder
  *
- * @param        $data
+ * @param string $data
  * @param string $prefix_
  *
- * @return mixed
+ * @return string
  */
 function parse_imageDir($data, $prefix_ = "") {
     $str = str_replace("../", "", $data);
@@ -770,7 +745,7 @@ function parse_imageDir($data, $prefix_ = "") {
  *
  * @return string
  */
-function parse_text(string $value, $parse_smileys = TRUE, $parse_bbcode = TRUE, $decode = TRUE, $default_image_folder = IMAGES, $add_line_breaks = FALSE, $descript = TRUE) {
+function parse_text($value, $parse_smileys = TRUE, $parse_bbcode = TRUE, $decode = TRUE, $default_image_folder = IMAGES, $add_line_breaks = FALSE, $descript = TRUE) {
     $charset = fusion_get_locale("charset");
     $value = stripslashes($value);
     if ($descript === TRUE) {
@@ -801,8 +776,8 @@ function parse_text(string $value, $parse_smileys = TRUE, $parse_bbcode = TRUE, 
 /**
  * Parse bbcode
  *
- * @param        $text
- * @param string $selected - The names of the required bbcodes to parse, separated by "|"
+ * @param string $text
+ * @param string $selected The names of the required bbcodes to parse, separated by "|"
  * @param bool   $descript
  *
  * @return string
@@ -914,7 +889,7 @@ function hide_email($email, $title = "", $subject = "") {
 /**
  * Encode and format code inside <code> tag
  *
- * @param $text
+ * @param string $text
  *
  * @return string
  */
@@ -937,7 +912,7 @@ function encode_code($text) {
 }
 
 /**
- * Format spaces and tabs in code bb tags
+ * Format spaces and tabs in code tag
  *
  * @param string $text
  *
@@ -990,7 +965,7 @@ function format_num($value = 0, $decimals = 0, $dec_point = ".", $thousand_sep =
 /**
  * Converts any formatted number back to float numbers in PHP
  *
- * @param $value
+ * @param mixed $value
  *
  * @return float
  */
@@ -1001,13 +976,13 @@ function format_float($value) {
 /**
  * Highlights given words in subject
  *
- * @param array  $word    The highlighted word
+ * @param array  $words   The highlighted word
  * @param string $subject The source text
  *
  * @return string
  */
-function highlight_words($word, $subject) {
-    for ($i = 0, $l = count($word); $i < $l; $i++) {
+function highlight_words($words, $subject) {
+    for ($i = 0, $l = count($words); $i < $l; $i++) {
         $word[$i] = str_replace([
             "\\",
             "+",
@@ -1030,9 +1005,9 @@ function highlight_words($word, $subject) {
             "#",
             "-",
             "_"
-        ], "", $word[$i]);
-        if (!empty($word[$i])) {
-            $subject = preg_replace("#($word[$i])(?![^<]*>)#i",
+        ], "", $words[$i]);
+        if (!empty($words[$i])) {
+            $subject = preg_replace("#($words[$i])(?![^<]*>)#i",
                 "<span style='background-color:yellow;color:#333;font-weight:bold;padding-left:2px;padding-right:2px'>\${1}</span>",
                 $subject);
         }
@@ -1044,13 +1019,13 @@ function highlight_words($word, $subject) {
 /**
  * This function sanitize text
  *
- * @param string  $text
- * @param boolean $striptags FALSE if you don't want to remove html tags. TRUE by default
- * @param bool    $strip_scripts
+ * @param string $text
+ * @param bool   $strip_tags False if you don't want to remove html tags. True by default
+ * @param bool   $strip_scripts
  *
  * @return string
  */
-function descript($text, $striptags = TRUE, $strip_scripts = TRUE) {
+function descript($text, $strip_tags = TRUE, $strip_scripts = TRUE) {
     if (is_array($text)) {
         return $text;
     }
@@ -1058,17 +1033,10 @@ function descript($text, $striptags = TRUE, $strip_scripts = TRUE) {
     $text = html_entity_decode($text, ENT_QUOTES, fusion_get_locale('charset'));
     $text = preg_replace('/&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-f]{1,6});/i', '', $text);
 
-    $on_attr = 'onafterprint|onbeforeprint|onbeforeunload|onerror|onhashchange|onload|onmessage|onoffline|ononline|onpagehide|onpageshow|onpopstate|'.
-        'onresize|onstorage|onunload|onblur|onchange|oncontextmenu|onfocus|oninput|oninvalid|onreset|onsearch|onselect|onsubmit|onkeydown|onkeypress|'.
-        'onkeyup|onclick|ondblclick|onmousedown|onmousemove|onmouseup|onmousewheel|onwheel|ondrag|ondragend|ondragenter|ondragleave|ondragover|'.
-        'ondragstart|ondrop|onscroll|oncopy|oncut|onpaste|onabort|oncanplay|oncanplaythrough|oncuechange|ondurationchange|onemptied|onended|onerror|'.
-        'onloadeddata|onloadedmetadata|onloadstart|onpause|onplay|onplaying|onprogress|onratechange|onseeked|onseeking|onstalled|onsuspend|ontimeupdate|'.
-        'onvolumechange|onwaiting|ontoggle';
-
     // Convert problematic ascii characters to their true values
     $patterns = [
         '#(&\#x)([0-9A-F]+);*#si'                           => '',
-        '#(<[^>]+[\"\'\s])*(('.$on_attr.'|xmlns)[^>]*)#is'  => "$1>",
+        '#(/\bon\w+=\S+(?=.*>))#is'                         => '',
         '#([a-z]*)=([\`\'\"]*)script:#iU'                   => '$1=$2nojscript...',
         '#([a-z]*)=([\`\'\"]*)javascript:#iU'               => '$1=$2nojavascript...',
         '#([a-z]*)=([\'\"]*)vbscript:#iU'                   => '$1=$2novbscript...',
@@ -1080,7 +1048,7 @@ function descript($text, $striptags = TRUE, $strip_scripts = TRUE) {
         $patterns["#(&\#)(0*".ord($chr)."+);*#si"] = $chr;
     }
 
-    if ($striptags) {
+    if ($strip_tags) {
         do {
             $count = 0;
             //$iframe = !defined('ENABLE_IFRAME') ? 'embed|iframe|' : '';
@@ -1160,11 +1128,10 @@ function verify_image($file) {
  * @return string
  */
 function censorwords($text) {
-    $settings['bad_words'] = trim(fusion_get_settings('bad_words'));
-    $settings['bad_words_enabled'] = (boolean)fusion_get_settings('bad_words_enabled');
-    $settings['bad_word_replace'] = fusion_get_settings('bad_word_replace');
-    if ($settings['bad_words_enabled'] && $settings['bad_words']) {
-        $words = preg_quote($settings['bad_words'], "/");
+    $settings = fusion_get_settings();
+
+    if ($settings['bad_words_enabled'] && !empty($settings['bad_words'])) {
+        $words = preg_quote(trim($settings['bad_words']), "/");
         $words = preg_replace("/\\s+/", "|", $words);
         $text = preg_replace("/".$words."/si", $settings['bad_word_replace'], $text);
     }
@@ -1175,11 +1142,9 @@ function censorwords($text) {
 /**
  * Get a user level's name by the numeric code of level
  *
- * @param int    $userlevel
+ * @param int $userlevel
  *
  * @return string
- * @global array $locale
- *
  */
 function getuserlevel($userlevel) {
     $locale = fusion_get_locale();
@@ -1195,11 +1160,9 @@ function getuserlevel($userlevel) {
 /**
  * Get a user status by the numeric code of the status
  *
- * @param int    $userstatus
+ * @param int $userstatus
  *
- * @return string|NULL NULL if the status does not exist
- * @global array $locale
- *
+ * @return string|null Null if the status does not exist
  */
 function getuserstatus($userstatus) {
     $locale = fusion_get_locale();
@@ -1210,12 +1173,12 @@ function getuserstatus($userstatus) {
 /**
  * Check if Administrator has correct rights assigned
  *
- * @param string $right The code of the right
+ * @param string $rights The code of the right
  *
- * @return boolean
+ * @return bool
  */
-function checkrights($right) {
-    if (iADMIN && in_array($right, explode(".", iUSER_RIGHTS))) {
+function checkrights($rights) {
+    if (iADMIN && in_array($rights, explode(".", iUSER_RIGHTS))) {
         return TRUE;
     } else {
         return FALSE;
@@ -1225,8 +1188,8 @@ function checkrights($right) {
 /**
  * Function to redirect on invalid page access.
  *
- * @param      $rights
- * @param bool $debug
+ * @param string $rights
+ * @param bool   $debug
  */
 function pageAccess($rights, $debug = FALSE) {
     $error = [];
@@ -1265,7 +1228,7 @@ function pageAccess($rights, $debug = FALSE) {
  *
  * @param int $group
  *
- * @return boolean
+ * @return bool
  */
 function checkgroup($group) {
     if (iSUPERADMIN) {
@@ -1286,9 +1249,9 @@ function checkgroup($group) {
 /**
  * Check access given a user level and user group
  *
- * @param $group
- * @param $user_level
- * @param $user_groups
+ * @param int    $group
+ * @param int    $user_level
+ * @param string $user_groups
  *
  * @return bool
  */
@@ -1309,7 +1272,7 @@ function checkusergroup($group, $user_level, $user_groups) {
 }
 
 /**
- * Cache groups' data into an array
+ * Cache groups data into an array
  *
  * @return array
  */
@@ -1331,7 +1294,6 @@ function cache_groups() {
  *
  * @return array structure of elements: array($levelOrGroupid, $levelnameOrGroupname, $levelGroupDescription,
  *               $levelGroupIcon)
- * @global array $locale
  */
 function getusergroups() {
     $locale = fusion_get_locale();
@@ -1353,13 +1315,11 @@ function getusergroups() {
 /**
  * Get the name of the access level or user group
  *
- * @param int     $group_id
- * @param boolean $return_desc If TRUE, group_description will be returned instead of group_name
- * @param boolean $return_icon If TRUE, group_icon will be returned instead of group_icon group_name
+ * @param int  $group_id
+ * @param bool $return_desc If true, group_description will be returned instead of group_name
+ * @param bool $return_icon If true, group_icon will be returned instead of group_icon group_name
  *
- * @return bool
- * @global array  $locale
- *
+ * @return string
  */
 function getgroupname($group_id, $return_desc = FALSE, $return_icon = FALSE) {
 
@@ -1370,11 +1330,11 @@ function getgroupname($group_id, $return_desc = FALSE, $return_icon = FALSE) {
         }
     }
 
-    return FALSE;
+    return NULL;
 }
 
 /**
- * Get All Groups Arrays
+ * Get array of all groups
  *
  * @return array
  */
@@ -1389,14 +1349,13 @@ function fusion_get_groups() {
 
 /**
  * Getting the real users_group access.
- * Return true or false. (BOOLEAN)
  *
- * @param $field
+ * @param int $group_id
  *
  * @return bool
  */
-function users_groupaccess($field) {
-    if (preg_match("(^\.{$field}$|\.{$field}\.|\.{$field}$)", fusion_get_userdata('user_groups'))) {
+function users_groupaccess($group_id) {
+    if (preg_match("(^\.{$group_id}$|\.{$group_id}\.|\.{$group_id}$)", fusion_get_userdata('user_groups'))) {
         return TRUE;
     }
 
@@ -1477,13 +1436,11 @@ function blacklist($field) {
 }
 
 /**
- * check if user was blacklisted by a member
+ * Check if user was blacklisted by a member
  *
- * @param int       $user_id
+ * @param int $user_id
  *
- * @return boolean
- * @global string[] $userdata
- *
+ * @return bool
  */
 function user_blacklisted($user_id) {
     return in_array('user_blacklist', fieldgenerator(DB_USERS)) and in_array($user_id, explode('.', fusion_get_userdata('user_blacklist')));
@@ -1492,11 +1449,11 @@ function user_blacklisted($user_id) {
 /**
  * Create a list of files or folders and store them in an array
  *
- * @param string  $folder
- * @param string  $filter     - The names of the filtered folder separated by "|", FALSE to use default filter
- * @param boolean $sort       - FALSE if you don't want to sort the result. TRUE by default
- * @param string  $type       - possible values: 'files' to list files, 'folders' to list folders
- * @param string  $ext_filter - file extensions separated by "|". Only when $type is 'files'
+ * @param string $folder
+ * @param string $filter     The names of the filtered folder separated by "|", false to use default filter
+ * @param bool   $sort       False if you don't want to sort the result. True by default
+ * @param string $type       Possible values: 'files' to list files, 'folders' to list folders
+ * @param string $ext_filter File extensions separated by "|". Only when $type is 'files'
  *
  * @return array
  */
@@ -1550,16 +1507,16 @@ function makefilelist($folder, $filter = '.|..|._DS_Store', $sort = TRUE, $type 
 /**
  * Create a selection list from an array created by makefilelist()
  *
- * @param string[] $files
- * @param string   $selected
+ * @param array  $options
+ * @param string $selected
  *
  * @return string
  */
-function makefileopts(array $files, $selected = "") {
+function makefileopts($options, $selected = "") {
     $res = "";
-    foreach ($files as $file) {
-        $sel = ($selected == $file ? " selected='selected'" : "");
-        $res .= "<option value='".$file."' $sel>".$file."</option>\n";
+    foreach ($options as $item) {
+        $sel = ($selected == $item ? " selected='selected'" : "");
+        $res .= "<option value='".$item."' $sel>".$item."</option>\n";
     }
 
     return $res;
@@ -1568,20 +1525,17 @@ function makefileopts(array $files, $selected = "") {
 /**
  * Making Page Navigation
  *
- * @param int     $start      The number of the first listed item - $_GET['rowstart']
- * @param int     $count      The number of displayed items - LIMIT on sql
- * @param int     $total      The number of all items - a dbcount of total
- * @param int     $range      The number of links before and after the current page
- * @param string  $link       The base url before the appended part
- * @param string  $getname    the variable name in the query string which stores
- *                            the number of the current page
- * @param boolean $button     Displays as button
+ * @param int    $rowstart The number of the first listed item - $_GET['rowstart']
+ * @param int    $count    The number of displayed items - LIMIT on sql
+ * @param int    $total    The number of all items - a dbcount of total
+ * @param int    $range    The number of links before and after the current page
+ * @param string $link     The base url before the appended part
+ * @param string $getname  The variable name in the query string which stores the number of the current page
+ * @param bool   $button   Displays as button
  *
- * @return boolean|string FALSE if $count is invalid
- * @global array  $locale
- *
+ * @return bool|string False if $count is invalid
  */
-function makepagenav(int $start = 0, int $count = 0, int $total = 0, int $range = 0, $link = "", $getname = "rowstart", $button = FALSE) {
+function makepagenav($start, $count, $total, $range = 3, $link = "", $getname = "rowstart", $button = FALSE) {
 
     $locale = fusion_get_locale();
     /* Bootstrap may be disabled in theme (see Gillette for example) without settings change in DB.
@@ -1676,6 +1630,8 @@ function makepagenav(int $start = 0, int $count = 0, int $total = 0, int $range 
 }
 
 /**
+ * Make page pointer
+ *
  * @param int    $start
  * @param int    $count
  * @param int    $total
@@ -1685,7 +1641,7 @@ function makepagenav(int $start = 0, int $count = 0, int $total = 0, int $range 
  *
  * @return bool|string
  */
-function makepagepointer(int $start = 0, int $count = 0, int $total = 0, int $range = 0, $link = "", $getname = "rowstart") {
+function makepagepointer($start, $count, $total, $range = 3, $link = "", $getname = "rowstart") {
     $locale = fusion_get_locale();
     if ($link == '') {
         $link = FUSION_SELF."?";
@@ -1740,12 +1696,11 @@ function makepagepointer(int $start = 0, int $count = 0, int $total = 0, int $ra
     return '<nav><small>'.$locale['global_092'].openform('pagepointer_frm', 'post', FORM_REQUEST, ['class' => 'display-inline-block m-0']).
         form_text($getname, '', $cur_page, ['width' => '30px', 'class' => 'm-0', 'inner_class' => 'input-sm']).
         closeform().$locale['global_093'].$pg_cnt.'</small>'.$res.'</span></nav>';
-
 }
 
 /**
- * @param     $total
- * @param     $count
+ * @param int $total
+ * @param int $count
  * @param int $range
  *
  * @return float|int
@@ -1764,22 +1719,24 @@ function rowstart_count($total, $count, $range = 3) {
 }
 
 /**
- * @param string $scroll_url            The ajax script that loads the content
- * @param int    $rowstart              Current rowstart - $_GET['rowstart']
- * @param int    $total_count           The total rows - dbrows($result);
- * @param string $getname               Default is 'rowstart'
- * @param string $additional_http_query '&section=some_section'
+ * Inifity sroll
+ *
+ * @param string $scroll_url The ajax script that loads the content
+ * @param int    $rowstart   The number of the first listed item - $_GET['rowstart']
+ * @param int    $count      The number of all items - a dbcount of total
+ * @param string $getname    The variable name in the query string which stores the number of the current page
+ * @param string $http_query '&section=some_section'
  *
  * @return string
  */
-function infinite_scroll($scroll_url, $rowstart = 0, $total_count = 0, $getname = 'rowstart', $additional_http_query = '') {
+function infinite_scroll($scroll_url, $rowstart, $count, $getname = 'rowstart', $http_query = '') {
     $locale = fusion_get_locale();
 
     add_to_jquery("
         var count = $rowstart+1;
         $(window).scroll(function(){
           if ($(window).scrollTop() == ($(document).height() - $(window).height())) {
-            if (count <= '$total_count') {
+            if (count <= '$count') {
                 loadInfinityContent(count);
                 count++;
             }
@@ -1790,7 +1747,7 @@ function infinite_scroll($scroll_url, $rowstart = 0, $total_count = 0, $getname 
            $.ajax({
                   url: '$scroll_url',
                   type:'GET',
-                  data: 'action=infinite_scroll&$getname='+ pageNumber +'".($additional_http_query ? "&".$additional_http_query : '')."',
+                  data: 'action=infinite_scroll&$getname='+ pageNumber +'".($http_query ? "&".$http_query : '')."',
                   success: function(html){
                       $('.infiniteLoader').hide();
                       $('#scroll_target').append(html);  // This will be the div where our content will be loaded
@@ -1812,8 +1769,8 @@ function infinite_scroll($scroll_url, $rowstart = 0, $total_count = 0, $getname 
  *
  * @param array  $tree_index dbquery_tree(DB_NEWS_CATS, "news_cat_id", "news_cat_parent") / tree_index(dbquery_tree_full(DB_NEWS_CATS, "news_cat_id", "news_cat_parent"))
  * @param array  $tree_full  dbquery_tree_full(DB_NEWS_CATS, "news_cat_id", "news_cat_parent")
- * @param        $id_col     "news_cat_id",
- * @param        $title_col  "news_cat_name",
+ * @param string $id_col     "news_cat_id",
+ * @param string $title_col  "news_cat_name",
  * @param string $getname    cat_id for $_GET['cat_id']
  * @param string $key        key for breadcrumb instance
  */
@@ -1872,14 +1829,11 @@ function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $ge
 /**
  * Format the date & time accordingly
  *
- * @param string    $format shortdate, longdate, forumdate, newsdate or date pattern for the strftime
- * @param int       $val    unix timestamp
- * @param array     $options
+ * @param string $format shortdate, longdate, forumdate, newsdate or date pattern for the strftime
+ * @param int    $val    unix timestamp
+ * @param array  $options
  *
  * @return string
- * @global string[] $settings
- * @global string[] $userdata
- *
  */
 function showdate($format, $val, $options = []) {
     $userdata = fusion_get_userdata();
@@ -1922,17 +1876,15 @@ function showdate($format, $val, $options = []) {
 }
 
 /**
- * Translate bytes into kB, MB, GB or TB by CrappoMan, lelebart fix
+ * Translate bytes into kB, MB, GB or TB
  *
- * @param int     $size   The number of bytes
- * @param int     $digits Precision
- * @param boolean $dir    TRUE if it is the size of a directory
+ * @param int  $size     The number of bytes
+ * @param int  $decimals Precision
+ * @param bool $dir      True if it is the size of a directory
  *
  * @return string
- * @global array  $locale
- *
  */
-function parsebytesize($size, $digits = 2, $dir = FALSE) {
+function parsebytesize($size, $decimals = 2, $dir = FALSE) {
     $locale = fusion_get_locale();
 
     $kb = 1024;
@@ -1947,25 +1899,25 @@ function parsebytesize($size, $digits = 2, $dir = FALSE) {
     } else if ($size < $kb) {
         return $size.$locale['global_461'];
     } else if ($size < $mb) {
-        return round($size / $kb, $digits).'kB';
+        return round($size / $kb, $decimals).'kB';
     } else if ($size < $gb) {
-        return round($size / $mb, $digits).'MB';
+        return round($size / $mb, $decimals).'MB';
     } else if ($size < $tb) {
-        return round($size / $gb, $digits).'GB';
+        return round($size / $gb, $decimals).'GB';
     } else {
-        return round($size / $tb, $digits).'TB';
+        return round($size / $tb, $decimals).'TB';
     }
 }
 
 /**
- *  Variable dump printer for debugging purposes
+ * Variable dump printer for debugging purposes
  *
- * @param        $array
+ * @param mixed  $data
  * @param bool   $modal
  * @param bool   $print
  * @param string $default_visibility
  *
- * @return bool|false|string
+ * @return string
  */
 function print_p($array, $modal = FALSE, $print = TRUE, $default_visibility = '0') {
 
@@ -2007,8 +1959,7 @@ function print_p($array, $modal = FALSE, $print = TRUE, $default_visibility = '0
  *
  * @param string $key The key of one setting
  *
- * @return string[]|string Associative array of settings or one setting by key
- *                    if $key was given
+ * @return string[]|string Associative array of settings or one setting by key if $key was given
  */
 function fusion_get_settings($key = NULL) {
     // It is initialized only once because of 'static'
@@ -2057,10 +2008,10 @@ function fusion_get_infusions($folder = NULL) {
  * Get Locale
  * Fetch a given locale key
  *
- * @param string $key          - The key of one setting
- * @param string $include_file - The full path of the file which to be included, can be either string or array
+ * @param string       $key          The key of one locale
+ * @param array|string $include_file The full path of the file which to be included
  *
- * @return null
+ * @return string|array
  */
 function fusion_get_locale($key = NULL, $include_file = '') {
     $locale = \PHPFusion\Locale::getInstance('default');
@@ -2074,7 +2025,7 @@ function fusion_get_locale($key = NULL, $include_file = '') {
 /**
  * Returns the current language on serialized locale string
  *
- * @param $string
+ * @param string $string
  *
  * @return string
  */
@@ -2083,9 +2034,9 @@ function fusion_parse_locale($string) {
 }
 
 /**
- * Fetches username
+ * Fetch username by id
  *
- * @param $user_id
+ * @param int $user_id
  *
  * @return string
  */
@@ -2099,9 +2050,9 @@ function fusion_get_username($user_id) {
 /**
  * Get a user own data
  *
- * @param string $key - The column of one user information
+ * @param string $key The column of one user information
  *
- * @return mixed
+ * @return string|array
  */
 function fusion_get_userdata($key = NULL) {
     static $userdata = [];
@@ -2116,10 +2067,10 @@ function fusion_get_userdata($key = NULL) {
 /**
  * Get any users data
  *
- * @param      $user_id - the user id
- * @param null $key     - the keys of your user id
+ * @param int    $user_id The user id
+ * @param string $key     The key of column
  *
- * @return mixed
+ * @return string|array
  */
 function fusion_get_user($user_id, $key = NULL) {
     static $user = [];
@@ -2166,8 +2117,8 @@ function fusion_get_aidlink() {
 /**
  * Get form tokens
  *
- * @param     $form_id
- * @param int $max_tokens
+ * @param string $form_id
+ * @param int    $max_tokens
  *
  * @return string
  */
@@ -2194,8 +2145,8 @@ function fusion_verify_token($token_ring = '', $key = '') {
 /**
  * Fetch PM Settings
  *
- * @param      $user_id
- * @param null $key - user_inbox, user_outbox, user_archive, user_pm_email_notify, user_pm_save_sent
+ * @param int    $user_id
+ * @param string $key user_inbox, user_outbox, user_archive, user_pm_email_notify, user_pm_save_sent
  *
  * @return array|bool|null
  */
@@ -2214,13 +2165,10 @@ function fusion_run_installer() {
     }
 }
 
-/*-------------------------
- * Language Handling
- +-------------------------/
-
 /**
  * Define Site Language
- * @param $lang
+ *
+ * @param string $lang
  */
 function define_site_language($lang) {
     if (valid_language($lang)) {
@@ -2229,7 +2177,11 @@ function define_site_language($lang) {
     }
 }
 
-// Set the requested language
+/**
+ * Set the requested language
+ *
+ * @param string $lang
+ */
 function set_language($lang) {
     $userdata = fusion_get_userdata();
     if (valid_language($lang)) {
@@ -2275,8 +2227,9 @@ function valid_language($lang, $file_check = FALSE) {
  * @param string $selected_language
  *
  * @return string
+ * @todo rename it from get_available_languages_list to a more proper name
  */
-function get_language_opts($selected_language = "") {
+function get_available_languages_list($selected_language = "") {
     $enabled_languages = fusion_get_enabled_languages();
     $res = "";
     foreach ($enabled_languages as $language) {
@@ -2377,7 +2330,6 @@ function fusion_detect_installation() {
 /**
  * Get the array of enabled languages
  *
- * @staticvar string[] $enabled_languages
  * @return string[]
  */
 function fusion_get_enabled_languages() {
@@ -2396,6 +2348,11 @@ function fusion_get_enabled_languages() {
     return (array)$enabled_languages;
 }
 
+/**
+ * Get the array of detected languages
+ *
+ * @return array
+ */
 function fusion_get_detected_language() {
     static $detected_languages = NULL;
     if ($detected_languages === NULL) {
@@ -2411,11 +2368,10 @@ function fusion_get_detected_language() {
 /**
  * Log user actions
  *
- * @param $user_id
- * @param $column_name - affected column
- * @param $new_value
- * @param $old_value
- *                     Note: Showing $action can be done using $locale in 9.1 via registration in a table
+ * @param int    $user_id
+ * @param string $column_name affected column
+ * @param string $new_value
+ * @param string $old_value
  */
 function save_user_log($user_id, $column_name, $new_value, $old_value) {
     $data = [
@@ -2432,7 +2388,7 @@ function save_user_log($user_id, $column_name, $new_value, $old_value) {
 /**
  * Minify JS Code
  *
- * @param $code
+ * @param string $code
  *
  * @return string
  */
@@ -2472,7 +2428,7 @@ function write_file($file, $data, $flags = NULL) {
 /**
  * Returns nearest data unit
  *
- * @param $total_bit
+ * @param int $total_bit
  *
  * @return int
  */
@@ -2490,7 +2446,7 @@ function calculate_byte($total_bit) {
 /**
  * Authenticate the current user with fusion cookie format param
  *
- * @param $user_cookie
+ * @param string $user_cookie
  *
  * @return bool
  * @throws Exception
@@ -2529,9 +2485,11 @@ function rrmdir($dir) {
         $objects = scandir($dir);
         foreach ($objects as $object) {
             if ($object != '.' && $object != '..') {
-                if (filetype($dir.'/'.$object) == 'dir')
+                if (filetype($dir.'/'.$object) == 'dir') {
                     rrmdir($dir.'/'.$object);
-                else unlink($dir.'/'.$object);
+                } else {
+                    unlink($dir.'/'.$object);
+                }
             }
         }
         reset($objects);
