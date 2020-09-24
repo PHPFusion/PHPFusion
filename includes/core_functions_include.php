@@ -924,17 +924,10 @@ function descript($text, $strip_tags = TRUE, $strip_scripts = TRUE) {
     $text = html_entity_decode($text, ENT_QUOTES, fusion_get_locale('charset'));
     $text = preg_replace('/&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-f]{1,6});/i', '', $text);
 
-    $on_attr = 'onafterprint|onbeforeprint|onbeforeunload|onerror|onhashchange|onload|onmessage|onoffline|ononline|onpagehide|onpageshow|onpopstate|'.
-        'onresize|onstorage|onunload|onblur|onchange|oncontextmenu|onfocus|oninput|oninvalid|onreset|onsearch|onselect|onsubmit|onkeydown|onkeypress|'.
-        'onkeyup|onclick|ondblclick|onmousedown|onmousemove|onmouseup|onmousewheel|onwheel|ondrag|ondragend|ondragenter|ondragleave|ondragover|'.
-        'ondragstart|ondrop|onscroll|oncopy|oncut|onpaste|onabort|oncanplay|oncanplaythrough|oncuechange|ondurationchange|onemptied|onended|onerror|'.
-        'onloadeddata|onloadedmetadata|onloadstart|onpause|onplay|onplaying|onprogress|onratechange|onseeked|onseeking|onstalled|onsuspend|ontimeupdate|'.
-        'onvolumechange|onwaiting|ontoggle';
-
     // Convert problematic ascii characters to their true values
     $patterns = [
         '#(&\#x)([0-9A-F]+);*#si'                           => '',
-        '#(<[^>]+[\"\'\s])*(('.$on_attr.'|xmlns)[^>]*)#is'  => "$1>",
+        '#(/\bon\w+=\S+(?=.*>))#is'                         => '',
         '#([a-z]*)=([\`\'\"]*)script:#iU'                   => '$1=$2nojscript...',
         '#([a-z]*)=([\`\'\"]*)javascript:#iU'               => '$1=$2nojavascript...',
         '#([a-z]*)=([\'\"]*)vbscript:#iU'                   => '$1=$2novbscript...',
