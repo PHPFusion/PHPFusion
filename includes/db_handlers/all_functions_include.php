@@ -108,7 +108,7 @@ register_shutdown_function(function () {
  *
  * @return mixed The result of query or FALSE on error
  */
-function dbquery($query, array $parameters = []) {
+function dbquery($query, $parameters = []) {
     // Temporary check to detect the bug in installer
     return DatabaseFactory::getConnection('default')->query($query, $parameters);
 }
@@ -116,14 +116,14 @@ function dbquery($query, array $parameters = []) {
 /**
  * Count the number of rows in a table filtered by conditions
  *
- * @param string $field Parenthesized field name
- * @param string $table Table name
+ * @param string $field      Parenthesized field name
+ * @param string $table      Table name
  * @param string $conditions conditions after "where"
  * @param array  $parameters
  *
- * @return boolean
+ * @return int
  */
-function dbcount($field, $table, $conditions = "", array $parameters = []) {
+function dbcount($field, $table, $conditions = "", $parameters = []) {
     return DatabaseFactory::getConnection('default')->count($field, $table, $conditions, $parameters);
 }
 
@@ -175,12 +175,12 @@ function dbarraynum($result) {
 /**
  * Connect to the database
  *
- * @param string  $db_host
- * @param string  $db_user
- * @param string  $db_pass
- * @param string  $db_name
- * @param int     $db_port
- * @param boolean $halt_on_error If it is TRUE, the script will halt in case of error
+ * @param string $db_host
+ * @param string $db_user
+ * @param string $db_pass
+ * @param string $db_name
+ * @param int    $db_port
+ * @param bool   $halt_on_error If it is TRUE, the script will halt in case of error
  *
  * @return array
  */
