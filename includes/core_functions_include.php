@@ -21,16 +21,6 @@ use PHPFusion\Authenticate;
 use PHPFusion\OutputHandler;
 
 /**
- * Current microtime as float to calculate script start/end time
- *
- * @return float
- * @deprecated since version 9.00, use microtime(TRUE) instead
- */
-function get_microtime() {
-    return microtime(TRUE);
-}
-
-/**
  * Get currency symbol by using a 3-letter ISO 4217 currency code
  * Note that if INTL pecl package is not installed, signs will degrade to ISO4217 code itself
  *

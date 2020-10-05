@@ -146,11 +146,10 @@ class Forum_Bounty extends ForumServer {
             $user = fusion_get_user(self::$data['thread_bounty_user']);
             $html = "<div class='list-group-item-info p-15'>\n";
             $html .= (self::get_bounty_permissions('can_edit_bounty') ? "<span class='spacer-xs'><a href='".FORUM."viewthread.php?action=editbounty&amp;thread_id=".$_GET['thread_id']."'>".self::$locale['forum_4100']."</a></span>" : '');
-            $bounty_end = self::$bounty_end - TIME;
             $html .= "<h4>".strtr(self::$locale['forum_4101'], [
                     '{%points%}'       => "<span class='label label-primary'>+".format_word(self::$data['thread_bounty'], self::$locale['fmt_points'])."</span>",
                     '{%profile_link%}' => profile_link($user['user_id'], $user['user_name'], $user['user_status']),
-                    '{%countdown%}'    => countdown($bounty_end)
+                    '{%countdown%}'    => countdown(self::$bounty_end)
                 ])."</h4>\n";
             $html .= self::$locale['forum_4102'];
             $html .= "<p class='spacer-xs text-dark'>".self::$data['thread_bounty_description']."</strong>\n</p>";

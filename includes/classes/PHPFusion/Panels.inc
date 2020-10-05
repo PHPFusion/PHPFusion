@@ -367,11 +367,11 @@ class Panels {
      * Check panel exclusions in certain page, which will be dropped sooner or later
      * Because we will need page composition database soon
      *
-     * @param $side
+     * @param string $side
      *
      * @return bool
      */
-    private static function check_panel_status($side) {
+    public static function check_panel_status($side) {
         $settings = fusion_get_settings();
 
         $exclude_list = "";
