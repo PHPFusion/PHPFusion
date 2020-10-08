@@ -21,9 +21,9 @@ class SqlHandler {
     /**
      * Add column to a specific table
      *
-     * @param $table_name
-     * @param $new_column_name
-     * @param $field_attributes
+     * @param string $table_name
+     * @param string $new_column_name
+     * @param string $field_attributes
      */
     public static function add_column($table_name, $new_column_name, $field_attributes) {
         if (!empty($field_attributes)) {
@@ -38,8 +38,8 @@ class SqlHandler {
     /**
      * Drop column of a table
      *
-     * @param $table_name
-     * @param $old_column_name
+     * @param string $table_name
+     * @param string $old_column_name
      */
     public static function drop_column($table_name, $old_column_name) {
         $result = dbquery("ALTER TABLE ".$table_name." DROP ".$old_column_name);
@@ -52,8 +52,8 @@ class SqlHandler {
     /**
      * Function to build a new table
      *
-     * @param $new_table
-     * @param $primary_column
+     * @param string $new_table
+     * @param string $primary_column
      *
      * @return bool|mixed|null|PDOStatement|resource
      */
@@ -75,8 +75,8 @@ class SqlHandler {
     /**
      * Move old table to new table.
      *
-     * @param $old_table
-     * @param $new_table
+     * @param string $old_table
+     * @param string $new_table
      */
     public static function transfer_table($old_table, $new_table) {
 
@@ -103,7 +103,7 @@ class SqlHandler {
     /**
      * Drop table
      *
-     * @param $old_table
+     * @param string $old_table
      */
     public static function drop_table($old_table) {
 
@@ -118,16 +118,13 @@ class SqlHandler {
 
     }
 
-
     /**
      * Function to rename column name
      *
-     * @param $table_name
-     * @param $old_column_name
-     * @param $new_column_name
-     * @param $field_attributes
-     *
-     * @return bool|mixed|PDOStatement|resource
+     * @param string $table_name
+     * @param string $old_column_name
+     * @param string $new_column_name
+     * @param string $field_attributes
      */
     public static function rename_column($table_name, $old_column_name, $new_column_name, $field_attributes) {
         $result = dbquery("ALTER TABLE ".$table_name." CHANGE ".$old_column_name." ".$new_column_name." ".$field_attributes."");
@@ -140,9 +137,9 @@ class SqlHandler {
     /**
      * Move a single column from one table to another
      *
-     * @param $old_table
-     * @param $new_table
-     * @param $column_name
+     * @param string $old_table
+     * @param string $new_table
+     * @param string $column_name
      */
     public static function move_column($old_table, $new_table, $column_name) {
 
@@ -178,17 +175,16 @@ class SqlHandler {
 
 /**
  * Hierarchy ID to Category Output
- * Returns cat-id relationships
  *
- * @param        $db            - Table Name
- * @param        $id_col        - ID column
- * @param        $cat_col       - Category Column
- * @param bool   $filter        - Conditions
- * @param string $query_replace - Replace the entire query
+ * @param string $db            Table name
+ * @param string $id_col        ID column
+ * @param string $cat_col       Category column
+ * @param string $filter        Conditions
+ * @param string $query_replace Replace the entire query
  *
- * @return array
+ * @return array Returns cat-id relationships
  */
-function dbquery_tree($db, $id_col, $cat_col, $filter = FALSE, $query_replace = "") {
+function dbquery_tree($db, $id_col, $cat_col, $filter = NULL, $query_replace = NULL) {
     $index = [];
     $query = "SELECT $id_col, $cat_col FROM ".$db." ".$filter;
     if (!empty($query_replace)) {
@@ -206,18 +202,17 @@ function dbquery_tree($db, $id_col, $cat_col, $filter = FALSE, $query_replace = 
 
 /**
  * Hierarchy Full Data Output
- * Returns cat-id relationships with full data
  *
- * @param      $db
- * @param      $id_col
- * @param      $cat_col
- * @param bool $filter        - replace conditional structure
- * @param      $query_replace - replace the entire query structure
+ * @param string $db
+ * @param string $id_col
+ * @param string $cat_col
+ * @param string $filter        replace conditional structure
+ * @param string $query_replace replace the entire query structure
  *
- * @return array
+ * @return array Returns cat-id relationships with full data
  */
-function dbquery_tree_full($db, $id_col, $cat_col, $filter = FALSE, $query_replace = "") {
-    $data = [];
+function dbquery_tree_full($db, $id_col, $cat_col, $filter = NULL, $query_replace = NULL) {
+    //$data = [];
     $index = [];
     $query = "SELECT * FROM ".$db." ".$filter;
     if (!empty($query_replace)) {
@@ -227,7 +222,7 @@ function dbquery_tree_full($db, $id_col, $cat_col, $filter = FALSE, $query_repla
     while ($row = dbarray($query)) {
         $id = $row[$id_col];
         $parent_id = $row[$cat_col] === NULL ? "0" : $row[$cat_col];
-        $data[$id] = $row;
+        //$data[$id] = $row;
         $index[$parent_id][$id] = $row;
     }
 
@@ -237,7 +232,7 @@ function dbquery_tree_full($db, $id_col, $cat_col, $filter = FALSE, $query_repla
 /**
  * Get index information from dbquery_tree_full.
  *
- * @param $data - array generated from dbquery_tree_full();
+ * @param array $data array generated from dbquery_tree_full();
  *
  * @return array
  */
@@ -255,7 +250,7 @@ function tree_index($data) {
 /**
  * Reduce the results of a hierarchy tree array to a non multidimensional single output value while preserving keys
  *
- * @param string $result results from dbquery_tree_full() or dbquery_tree()
+ * @param array  $result results from dbquery_tree_full() or dbquery_tree()
  * @param string $id_col the id_col
  *
  * @return array
@@ -276,12 +271,12 @@ function reduce_tree($result, $id_col) {
 /**
  * Get Tree Root ID of a Child from dbquery_tree() result
  *
- * @param array $index
- * @param       $child_id
+ * @param array $index Results from dbquery_tree()
+ * @param int   $child_id
  *
  * @return int
  */
-function get_root(array $index, $child_id) {
+function get_root($index, $child_id) {
     foreach ($index as $key => $array) {
         if (in_array($child_id, $array)) {
             if ($key == 0) {
@@ -291,6 +286,8 @@ function get_root(array $index, $child_id) {
             }
         }
     }
+
+    return NULL;
 }
 
 /**
@@ -327,27 +324,29 @@ function get_hkey($db, $id_col, $cat_col, $current_id) {
  * Get immediate Parent ID from dbquery_tree() result
  *
  * @param array $index
- * @param       $child_id
+ * @param int   $child_id
  *
  * @return int
  */
-function get_parent(array $index, $child_id) {
+function get_parent($index, $child_id) {
     foreach ($index as $key => $value) {
         if (in_array($child_id, $value)) {
             return (int)$key;
         }
     }
+
+    return NULL;
 }
 
 /**
  * Get immediate Parent Array from dbquery_tree_full() result
  *
  * @param array $data
- * @param       $child_id
+ * @param int   $child_id
  *
  * @return array
  */
-function get_parent_array(array $data, $child_id) {
+function get_parent_array($data, $child_id) {
     foreach ($data as $value) {
         if (isset($value[$child_id])) {
             return (array)$value[$child_id];
@@ -359,17 +358,14 @@ function get_parent_array(array $data, $child_id) {
  * Get all parent ID from dbquery_tree()
  *
  * @param array $index
- * @param       $child_id
+ * @param int   $child_id
  * @param array $list
  *
- * @return array
+ * @return array|int
  */
-function get_all_parent(array $index, $child_id, array &$list = []) {
-
+function get_all_parent($index, $child_id, $list = []) {
     foreach ($index as $key => $value) {
-
         if (in_array($child_id, $value)) {
-
             if ($key == 0) {
 
                 if (!empty($list)) {
@@ -378,12 +374,9 @@ function get_all_parent(array $index, $child_id, array &$list = []) {
 
                 return $key;
             } else {
-
                 $list[] = $key;
-
                 return (array)get_all_parent($index, $key, $list);
             }
-
         }
     }
 }
@@ -391,13 +384,13 @@ function get_all_parent(array $index, $child_id, array &$list = []) {
 /**
  * Get Child IDs from dbquery_tree() result
  *
- * @param       $index
- * @param       $parent_id
+ * @param array $index
+ * @param int   $parent_id
  * @param array $children
  *
  * @return array
  */
-function get_child($index, $parent_id, array &$children = []) {
+function get_child($index, $parent_id, $children = []) {
     $parent_id = $parent_id === NULL ? NULL : $parent_id;
     if (isset($index[$parent_id])) {
         foreach ($index[$parent_id] as $id) {
@@ -412,13 +405,13 @@ function get_child($index, $parent_id, array &$children = []) {
 /**
  * Get current depth from dbquery_tree() result
  *
- * @param      $index
- * @param      $child_id
- * @param bool $depth
+ * @param array $index
+ * @param int   $child_id
+ * @param int   $depth
  *
- * @return bool|int
+ * @return int
  */
-function get_depth($index, $child_id, $depth = FALSE) {
+function get_depth($index, $child_id, $depth = NULL) {
     if (!$depth) {
         $depth = 1;
     }
@@ -431,12 +424,14 @@ function get_depth($index, $child_id, $depth = FALSE) {
             }
         }
     }
+
+    return NULL;
 }
 
 /**
  * Get maximum depth of a hierarchy tree
  *
- * @param $array
+ * @param array $array
  *
  * @return int
  */
@@ -460,15 +455,15 @@ function array_depth($array) {
  * Get Hierarchy Array with injected child key
  * This is a slower model to fetch hierarchy data than dbquery_tree_full
  *
- * @param      $db
- * @param      $id_col
- * @param      $cat_col
- * @param bool $cat_value
- * @param bool $filter
+ * @param string $db
+ * @param string $id_col
+ * @param string $cat_col
+ * @param string $cat_value
+ * @param bool   $filter
  *
  * @return array
  */
-function dbtree($db, $id_col, $cat_col, $cat_value = FALSE, $filter = FALSE) {
+function dbtree($db, $id_col, $cat_col, $cat_value = NULL, $filter = FALSE) {
     $refs = [];
     $list = [];
     $col_names = fieldgenerator($db);
@@ -493,10 +488,10 @@ function dbtree($db, $id_col, $cat_col, $cat_value = FALSE, $filter = FALSE) {
 /**
  * Lighter version of dbtree() with only id and child key
  *
- * @param bool $db
- * @param      $id_col
- * @param      $cat_col
- * @param bool $cat_value
+ * @param bool   $db
+ * @param string $id_col
+ * @param string $cat_col
+ * @param bool   $cat_value
  *
  * @return array
  */
@@ -527,12 +522,12 @@ function dbtree_index($db, $id_col, $cat_col, $cat_value = FALSE) {
 /**
  * To sort key on dbtree_index results
  *
- * @param $result
- * @param $key
+ * @param array  $result
+ * @param string $key
  *
  * @return array
  */
-function sort_tree(&$result, $key) {
+function sort_tree($result, $key) {
     $current_array = [];
     $master_sort = sorter($result, $key);
     foreach ($master_sort as $data) {
@@ -553,13 +548,13 @@ function sort_tree(&$result, $key) {
 /**
  * Sort tree associative array
  *
- * @param        $array
- * @param        $key
+ * @param array  $array
+ * @param string $key
  * @param string $sort
  *
  * @return array
  */
-function sorter(&$array, $key, $sort = 'ASC') {
+function sorter($array, $key, $sort = 'ASC') {
     $sorter = [];
     $ret = [];
     reset($array);
@@ -582,19 +577,18 @@ function sorter(&$array, $key, $sort = 'ASC') {
 /**
  * Get the total max depths of dbtree()
  *
- * @param        $data
- * @param        $field
- * @param        $match
- * @param string $depth
+ * @param array  $data
+ * @param string $field
+ * @param string $match
+ * @param int    $depth
  *
  * @return int
  */
-function tree_depth($data, $field, $match, $depth = '1') {
+function tree_depth($data, $field, $match, $depth = 1) {
     if (!$depth) {
         $depth = '1';
-    } else {
-        $depth = &$depth;
     }
+
     foreach ($data as $arr) {
         if ($arr[$field] == $match) {
             return (int)$depth;
@@ -607,12 +601,16 @@ function tree_depth($data, $field, $match, $depth = '1') {
             }
         }
     }
+
+    return NULL;
 }
 
 /**
- * @param      $data - $data = dbquery_tree(...);
- * @param bool $column_name
- * @param bool $value_to_match
+ * Count result from dbquery_tree()
+ *
+ * @param array $data - $data = dbquery_tree(...);
+ * @param bool  $column_name
+ * @param bool  $value_to_match
  *
  * @return int
  * @todo: Change to count on index in favor of deprecated method
@@ -620,14 +618,13 @@ function tree_depth($data, $field, $match, $depth = '1') {
  *      $unpublish_count = tree_count($dbtree_result, "column_name", "value")-1;
  *
  */
-function tree_count($data, $column_name = FALSE, $value_to_match = FALSE) {
+function tree_count($data, $column_name = NULL, $value_to_match = NULL) {
     // Find Occurence of match in a tree.
-    //
+
     if (!isset($counter)) {
         $counter = 0;
-    } else {
-        $counter = &$counter;
     }
+
     foreach ($data as $arr) {
         if (!empty($column_name)) {
             if ($arr[$column_name] == $value_to_match) {
@@ -645,44 +642,16 @@ function tree_count($data, $column_name = FALSE, $value_to_match = FALSE) {
 }
 
 /**
- * This model will create a up to "HUNDREDS" of self joins to get a relational hierarchy
+ * Display parent nodes
+ * need dbquery_tree_data to function
  *
- * @param      $db
- * @param      $id_col
- * @param      $cat_col
- * @param bool $filter
- * @param bool $filter_order
- * @param bool $filter_show
- * @param bool $depth
+ * @param array  $data
+ * @param string $id_col
+ * @param string $cat_col
+ * @param int    $id
  *
- * @return bool|mixed|PDOStatement|resource
+ * @return array
  */
-function tree_join_method_sql_deprecated($db, $id_col, $cat_col, $filter = FALSE, $filter_order = FALSE, $filter_show = FALSE, $depth = FALSE) {
-    $selector = '';
-    $column = '';
-    $conditions = '';
-    if (!$depth) {
-        $depth = 10;
-    }
-    for ($i = 0; $depth >= $i; $i++) {
-        $prev = $i - 1;
-        $selector .= ($i == $depth) ? "t$i.$id_col as level$i" : "t$i.$id_col as level$i, ";
-        $column .= ($i == 0) ? "FROM $db AS t$i " : "LEFT JOIN $db AS t$i ON t$i.$cat_col = t$prev.$id_col ";
-        if ($i == 0) {
-            $conditions .= "WHERE t$i.$cat_col='0' OR";
-        } else {
-            $conditions .= ($i == $depth) ? " t$i.$cat_col = t$prev.$id_col " : " t$i.$cat_col= t$prev.$id_col OR ";
-        }
-    }
-    $result = dbquery("SELECT $selector $column $conditions ORDER BY t1.$cat_col ASC, t1.$id_col ASC $filter_show", 1);
-
-    return $result;
-}
-
-/*
-* Display parent nodes
-*/
-// need dbquery_tree_data to function
 function display_parent_nodes($data, $id_col, $cat_col, $id) {
     $current = $data[$id];
     $parent_id = $current[$cat_col] === NULL ? "NULL" : $current[$cat_col];
@@ -701,7 +670,7 @@ function display_parent_nodes($data, $id_col, $cat_col, $id) {
  * MYSQL Show Columns Shorthand
  * Returns available columns in a table
  *
- * @param $db
+ * @param string $db
  *
  * @return array
  */
@@ -738,7 +707,7 @@ function fieldgenerator($db) {
  *    incremented automatically, this function returns the last inserted id.
  *    In other cases it always returns 0.
  */
-function dbquery_insert($table, $inputdata, $mode, array $options = []) {
+function dbquery_insert($table, $inputdata, $mode, $options = []) {
     $options += [
         'debug'        => FALSE,
         'primary_key'  => '',
@@ -834,15 +803,15 @@ function dbquery_insert($table, $inputdata, $mode, array $options = []) {
 }
 
 /**
- * check multilang tables
+ * Check multilang tables
  *
- * @staticvar boolean[] $tables
+ * @staticvar bool $tables
  *
- * @param string $table Table name
+ * @param string $rights Multilang rights.
  *
- * @return boolean
+ * @return bool
  */
-function multilang_table($table) {
+function multilang_table($rights) {
     static $tables = NULL;
     if ($tables === NULL) {
         $tables = [];
@@ -852,14 +821,14 @@ function multilang_table($table) {
         }
     }
 
-    return isset($tables[$table]);
+    return isset($tables[$rights]);
 }
 
 /**
  * SQL statement helper to find values in between dots
  *
- * @param        $column_name
- * @param        $value
+ * @param string $column_name
+ * @param string $value
  * @param string $delim
  *
  * @return string
@@ -873,13 +842,13 @@ function in_group($column_name, $value, $delim = ',') {
 /**
  * SQL Language Value
  *
- * @param $table_col - target
+ * @param string $column - target
  *
  * @return string - calculated conditions
- * Usage: $result = dbquery("SELECT * FROM ".DB_NEWS." WHERE ".multilocale_col_select('news_subject')." = '".$data['news_subject']."'");
- * Usage: $tree_data = dbquery_tree_full(DB_NEWS_CATS, "news_cat_id", "news_cat_parent", "order by ".language_column("news_cat_name"));
+ * Usage: $result = dbquery("SELECT * FROM ".DB_NEWS." WHERE ".multilang_column('news_subject')." = '".$data['news_subject']."'");
+ * Usage: $tree_data = dbquery_tree_full(DB_NEWS_CATS, "news_cat_id", "news_cat_parent", "order by ".multilang_column("news_cat_name"));
  */
-function multilang_column($table_col) {
+function multilang_column($column) {
     $installed_lang = fusion_get_enabled_languages();
     $i = 1;
     $val_key = 2; // this is the first pair
@@ -890,28 +859,7 @@ function multilang_column($table_col) {
         $i++;
     }
 
-    return "replace(replace(replace(substring_index(substring_index($table_col, ';', ".$val_key."),':',-1), '\"', ''), '{%sc%}', ':') , '{%dq%}', '')";
-}
-
-// for sitelinks - not hierarchy
-function getcategory($cat) {
-    $presult = dbquery("SELECT link_id, link_name, link_order FROM ".DB_SITE_LINKS." WHERE link_id='$cat'");
-    if (dbrows($presult) > 0) {
-        $pdata = dbarray($presult);
-        $md[$cat] = "Menu Item Root";
-        $result = dbquery("SELECT link_id, link_name FROM ".DB_SITE_LINKS." WHERE link_cat='$cat' ORDER BY link_order ASC");
-        if (dbrows($result) > 0) {
-            while ($data = dbarray($result)) {
-                $link_id = $data['link_id'];
-                $link_name = $data['link_name'];
-                $md[$link_id] = "- ".$link_name."";
-            }
-
-            return $md;
-        }
-    }
-
-    return [];
+    return "replace(replace(replace(substring_index(substring_index($column, ';', ".$val_key."),':',-1), '\"', ''), '{%sc%}', ':') , '{%dq%}', '')";
 }
 
 /**
@@ -920,12 +868,10 @@ function getcategory($cat) {
  * However you can pass the table name with or without prefix,
  * this function only check the prefixed tables of the PHPFusion
  *
- * @staticvar boolean[] $tables
- *
  * @param string $table The name of the table with or without prefix
  *                      Pass TRUE if you want to update the cached state of the table.
  *
- * @return boolean
+ * @return bool
  */
 function db_exists($table) {
     if (strpos($table, DB_PREFIX) === FALSE) {
@@ -939,14 +885,13 @@ function db_exists($table) {
 /**
  * Determine whether column exists in a table
  *
- * @param           $table
- * @param           $column
- * @param bool|TRUE $add_prefix
+ * @param string $table
+ * @param string $column
+ * @param bool   $add_prefix
  *
  * @return bool
  */
 function column_exists($table, $column, $add_prefix = TRUE) {
-
     static $table_config = [];
 
     if ($add_prefix === TRUE) {
@@ -959,27 +904,26 @@ function column_exists($table, $column, $add_prefix = TRUE) {
         $table_config[$table] = array_flip(fieldgenerator($table));
     }
 
-    return (isset($table_config[$table][$column]) ? TRUE : FALSE);
+    return isset($table_config[$table][$column]);
 }
 
 /**
  * ID is required only for update mode.
  *
- * @param        $dbname
+ * @param string $dbname
  * @param int    $current_order
- * @param        $order_col
+ * @param string $order_col
  * @param int    $current_id
- * @param bool   $id_col
+ * @param string $id_col
  * @param int    $current_category
- * @param bool   $cat_col
+ * @param string $cat_col
  * @param bool   $multilang
  * @param string $multilang_col
  * @param string $mode
  *
- * @return bool|mixed|PDOStatement|resource
+ * @return mixed
  */
-function dbquery_order($dbname, $current_order, $order_col, $current_id = 0, $id_col = FALSE, $current_category = 0, $cat_col = FALSE, $multilang = FALSE, $multilang_col = '', $mode = 'update') {
-
+function dbquery_order($dbname, $current_order, $order_col, $current_id = 0, $id_col = NULL, $current_category = 0, $cat_col = NULL, $multilang = FALSE, $multilang_col = '', $mode = 'update') {
     $multilang_sql_1 = $multilang && $multilang_col ? "WHERE ".in_group($multilang_col, LANGUAGE) : '';
     $multilang_sql_2 = $multilang && $multilang_col ? "AND ".in_group($multilang_col, LANGUAGE) : '';
 
@@ -991,13 +935,9 @@ function dbquery_order($dbname, $current_order, $order_col, $current_id = 0, $id
         case 'save':
             if ($order_col && $current_order && $dbname) {
                 if (!empty($current_category) && (!empty($cat_col))) {
-                    $result = dbquery("UPDATE ".$dbname." SET $order_col=$order_col+1 WHERE $cat_col='".intval($current_category)."' AND $order_col>='".intval($current_order)."' $multilang_sql_2");
-
-                    return $result;
+                    return dbquery("UPDATE ".$dbname." SET $order_col=$order_col+1 WHERE $cat_col='".intval($current_category)."' AND $order_col>='".intval($current_order)."' $multilang_sql_2");
                 } else {
-                    $result = dbquery("UPDATE ".$dbname." SET $order_col=$order_col+1 WHERE $order_col>='".intval($current_order)."' $multilang_sql_2");
-
-                    return $result;
+                    return dbquery("UPDATE ".$dbname." SET $order_col=$order_col+1 WHERE $order_col>='".intval($current_order)."' $multilang_sql_2");
                 }
             } else {
                 \defender::stop();
@@ -1008,25 +948,17 @@ function dbquery_order($dbname, $current_order, $order_col, $current_id = 0, $id
                 $old_order = dbresult(dbquery("SELECT $order_col FROM ".$dbname." WHERE $id_col='".intval($current_id)."' $multilang_sql_2"), 0);
                 if (!empty($current_category) && (!empty($cat_col))) {
                     if ($current_order > $old_order) {
-                        $result = dbquery("UPDATE ".$dbname." SET $order_col=$order_col-1 WHERE $cat_col='".intval($current_category)."' AND $order_col>'$old_order' AND $order_col<='".intval($current_order)."' $multilang_sql_2");
-
-                        return $result;
+                        return dbquery("UPDATE ".$dbname." SET $order_col=$order_col-1 WHERE $cat_col='".intval($current_category)."' AND $order_col>'$old_order' AND $order_col<='".intval($current_order)."' $multilang_sql_2");
                     } else if ($current_order < $old_order) {
-                        $result = dbquery("UPDATE ".$dbname." SET $order_col=$order_col+1 WHERE $cat_col='".intval($current_category)."' AND $order_col<'$old_order' AND $order_col>='".intval($current_order)."' $multilang_sql_2");
-
-                        return $result;
+                        return dbquery("UPDATE ".$dbname." SET $order_col=$order_col+1 WHERE $cat_col='".intval($current_category)."' AND $order_col<'$old_order' AND $order_col>='".intval($current_order)."' $multilang_sql_2");
                     } else {
                         return TRUE;
                     }
                 } else {
                     if ($current_order > $old_order) {
-                        $result = dbquery("UPDATE ".$dbname." SET $order_col=$order_col-1 WHERE $order_col>'$old_order' AND $order_col<='".intval($current_order)."' $multilang_sql_2");
-
-                        return $result;
+                        return dbquery("UPDATE ".$dbname." SET $order_col=$order_col-1 WHERE $order_col>'$old_order' AND $order_col<='".intval($current_order)."' $multilang_sql_2");
                     } else if ($current_order < $old_order) {
-                        $result = dbquery("UPDATE ".$dbname." SET $order_col=$order_col+1 WHERE $order_col<'$old_order' AND $order_col>='".intval($current_order)."' $multilang_sql_2");
-
-                        return $result;
+                        return dbquery("UPDATE ".$dbname." SET $order_col=$order_col+1 WHERE $order_col<'$old_order' AND $order_col>='".intval($current_order)."' $multilang_sql_2");
                     } else {
                         return TRUE;
                     }
@@ -1039,13 +971,9 @@ function dbquery_order($dbname, $current_order, $order_col, $current_id = 0, $id
             if ($order_col && $current_order && $dbname) {
                 if (!empty($current_category) && (!empty($cat_col))) {
                     // in nested mode, $cat and $cat_col is REQUIRED.
-                    $result = dbquery("UPDATE ".$dbname." SET $order_col=$order_col-1 WHERE $cat_col='".intval($current_category)."' AND $order_col>'".intval($current_order)."' $multilang_sql_2");
-
-                    return $result;
+                    return dbquery("UPDATE ".$dbname." SET $order_col=$order_col-1 WHERE $cat_col='".intval($current_category)."' AND $order_col>'".intval($current_order)."' $multilang_sql_2");
                 } else {
-                    $result = dbquery("UPDATE ".$dbname." SET $order_col=$order_col-1 WHERE $order_col>'".intval($current_order)."' $multilang_sql_2");
-
-                    return $result;
+                    return dbquery("UPDATE ".$dbname." SET $order_col=$order_col-1 WHERE $order_col>'".intval($current_order)."' $multilang_sql_2");
                 }
             } else {
                 \defender::stop();
@@ -1054,19 +982,22 @@ function dbquery_order($dbname, $current_order, $order_col, $current_id = 0, $id
         default:
             \defender::stop();
     }
+
+    return NULL;
 }
 
 // Array Makers
+
 /**
  * To flatten ANY multidimensional array
  * Best used to flatten any hierarchy array data
  *
- * @param $result
+ * @param array $array
  *
- * @return mixed
+ * @return array
  */
-function flatten_array($result) {
-    return call_user_func_array('array_merge', $result);
+function flatten_array($array) {
+    return call_user_func_array('array_merge', $array);
 }
 
 /**
@@ -1074,18 +1005,15 @@ function flatten_array($result) {
  * $array = construct_array("a,b,c,d,e,f,g");
  * $str_to_array = construct_array($str_with_commas); // See Geomap.inc.php
  *
- * @param      $string
- * @param bool $string2
- * @param bool $delimiter (symbol of delimiter)
+ * @param string $string
+ * @param string $string2
+ * @param string $delimiter (symbol of delimiter)
  *
  * @return array
  */
-function construct_array($string, $string2 = FALSE, $delimiter = FALSE) {
+function construct_array($string, $string2 = NULL, $delimiter = ',') {
     // in event string is array. skips this.
     if (!is_array($string)) {
-        if (empty($delimiter)) {
-            $delimiter = ",";
-        }
         $value = explode("$delimiter", $string);
         if ($string2 != "") {
             $value2 = explode("$delimiter", $string2);
@@ -1100,26 +1028,20 @@ function construct_array($string, $string2 = FALSE, $delimiter = FALSE) {
     } else {
         addNotice('info', "Debug notice: There is a string injected in construct_array() function! Please recheck source codes in this page.");
     }
+
+    return NULL;
 }
 
 /**
- * To implode an array to string
- * Opposite of construct_array()
+ * Single column search
+ * used to make searches on field
+ * echo search_field(['admin_title', 'admin_link'], 'ac c d ghi');
  *
- * @param $string
- * @param $delimiter
+ * @param array  $columns
+ * @param string $text
  *
  * @return string
  */
-function deconstruct_array($string, $delimiter) {
-    $value = implode("$delimiter", $string);
-
-    return $value;
-}
-
-/* Single column search */
-/* used to make searches on field */
-// echo search_field(array('admin_title','admin_link'), 'ac c d ghi');
 function search_field($columns, $text) {
     $condition = '';
     $text = explode(" ", $text);
@@ -1138,9 +1060,6 @@ function search_field($columns, $text) {
                 }
                 $condition .= ")";
             }
-            //else {
-            //	$condition .= "($col_field LIKE '%$search_text%')";
-            //}
         }
         $condition .= ($counter == count($the_sql) - 1) ? "  " : " OR ";
     }

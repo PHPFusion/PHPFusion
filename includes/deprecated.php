@@ -231,3 +231,46 @@ if (!function_exists('tablebreak')) {
         return TRUE;
     }
 }
+
+/**
+ * for sitelinks - not hierarchy
+ *
+ * @param string $cat
+ *
+ * @return array
+ * @deprecated
+ */
+function getcategory($cat) {
+    $presult = dbquery("SELECT link_id, link_name, link_order FROM ".DB_SITE_LINKS." WHERE link_id='$cat'");
+    if (dbrows($presult) > 0) {
+        $pdata = dbarray($presult);
+        $md[$cat] = "Menu Item Root";
+        $result = dbquery("SELECT link_id, link_name FROM ".DB_SITE_LINKS." WHERE link_cat='$cat' ORDER BY link_order ASC");
+        if (dbrows($result) > 0) {
+            while ($data = dbarray($result)) {
+                $link_id = $data['link_id'];
+                $link_name = $data['link_name'];
+                $md[$link_id] = "- ".$link_name."";
+            }
+
+            return $md;
+        }
+    }
+
+    return [];
+}
+
+/**
+ * To implode an array to string
+ * Opposite of construct_array()
+ *
+ * @param array  $string
+ * @param string $delimiter
+ *
+ * @return string
+ *
+ * @deprecated
+ */
+function deconstruct_array($string, $delimiter = ',') {
+    return implode($delimiter, $string);
+}

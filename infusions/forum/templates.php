@@ -115,7 +115,7 @@ if (!function_exists('render_forum_main')) {
         $html->set_tag('popular_threads_title', $locale['forum_0273']);
         $custom_result = dbquery("SELECT t.thread_id, t.thread_subject, t.thread_author, t.thread_postcount FROM ".DB_FORUMS." tf
         INNER JOIN ".DB_FORUM_THREADS." t ON tf.forum_id=t.forum_id
-        ".(multilang_column('FO') ? " WHERE ".in_group('forum_language', LANGUAGE)." AND " : " WHERE ").groupaccess('forum_access')." and (t.thread_lastpost >=:one_week and t.thread_lastpost < :current) and t.thread_locked=:not_locked and t.thread_hidden=:not_hidden
+        ".(multilang_table('FO') ? " WHERE ".in_group('forum_language', LANGUAGE)." AND " : " WHERE ").groupaccess('forum_access')." and (t.thread_lastpost >=:one_week and t.thread_lastpost < :current) and t.thread_locked=:not_locked and t.thread_hidden=:not_hidden
         GROUP BY t.thread_id ORDER BY t.thread_postcount DESC LIMIT 10",
             [
                 ':one_week'   => TIME - (7 * 24 * 3600),
