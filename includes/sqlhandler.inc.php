@@ -1001,38 +1001,6 @@ function flatten_array($array) {
 }
 
 /**
- * Short hand to explode strings to array by using commas
- * $array = construct_array("a,b,c,d,e,f,g");
- * $str_to_array = construct_array($str_with_commas); // See Geomap.inc.php
- *
- * @param string $string
- * @param string $string2
- * @param string $delimiter (symbol of delimiter)
- *
- * @return array
- */
-function construct_array($string, $string2 = NULL, $delimiter = ',') {
-    // in event string is array. skips this.
-    if (!is_array($string)) {
-        $value = explode("$delimiter", $string);
-        if ($string2 != "") {
-            $value2 = explode("$delimiter", $string2);
-        } else {
-            $value2 = "";
-        }
-        if (is_array($value2)) {
-            $value = array_combine($value2, $value);
-        }
-
-        return $value;
-    } else {
-        addNotice('info', "Debug notice: There is a string injected in construct_array() function! Please recheck source codes in this page.");
-    }
-
-    return NULL;
-}
-
-/**
  * Single column search
  * used to make searches on field
  * echo search_field(['admin_title', 'admin_link'], 'ac c d ghi');

@@ -326,7 +326,7 @@ function form_select($input_name, $label = "", $input_value, array $options = []
     }
     if ($options['multiple']) {
         if ($input_value) {
-            $input_value = construct_array($input_value, 0, $options['delimiter']);
+            $input_value = explode('|', $input_value);
         } else {
             $input_value = [];
         }
@@ -730,7 +730,7 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
     $options['input_id'] = trim($options['input_id'], "[]");
     if ($options['multiple']) {
         if ($input_value) {
-            $input_value = construct_array($input_value, 0, $options['delimiter']);
+            $input_value = explode('|', $input_value);
         } else {
             $input_value = [];
         }

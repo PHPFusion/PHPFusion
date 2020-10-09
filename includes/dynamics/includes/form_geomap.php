@@ -27,7 +27,7 @@ function form_geo($input_name, $label = '', $input_value = FALSE, array $options
     // NOTE (remember to parse readback value as of '|' seperator)
     if (isset($input_value) && (!empty($input_value))) {
         if (!is_array($input_value)) {
-            $input_value = construct_array($input_value, "", "|");
+            $input_value = explode('|', $input_value);
         }
     } else {
         $input_value = [];

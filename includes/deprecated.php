@@ -201,37 +201,6 @@ if (!function_exists("itemoptions")) {
     }
 }
 
-if (!function_exists('opensidex')) {
-    /**
-     * @param string $title
-     * @param string $state
-     *
-     * @deprecated
-     */
-    function opensidex($title, $state = "on") {
-        openside($title, TRUE, $state);
-    }
-}
-
-if (!function_exists('closesidex')) {
-    /**
-     * @deprecated
-     */
-    function closesidex() {
-        closeside();
-    }
-}
-
-if (!function_exists('tablebreak')) {
-    /**
-     * @return bool
-     * @deprecated
-     */
-    function tablebreak() {
-        return TRUE;
-    }
-}
-
 /**
  * for sitelinks - not hierarchy
  *
@@ -258,19 +227,4 @@ function getcategory($cat) {
     }
 
     return [];
-}
-
-/**
- * To implode an array to string
- * Opposite of construct_array()
- *
- * @param array  $string
- * @param string $delimiter
- *
- * @return string
- *
- * @deprecated
- */
-function deconstruct_array($string, $delimiter = ',') {
-    return implode($delimiter, $string);
 }
