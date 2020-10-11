@@ -131,12 +131,18 @@ class ForumThreads extends ForumServer {
             if ($rows) {
 
                 while ($threads = dbarray($cthread_result)) {
-
-                    if (isset($threads['track_button'])) {
-                        $threads['track_button'] = [
-                            'link'  => clean_request('delete_track='.$threads['track_button'], ['delete_track'], FALSE),
-                            'title' => $locale['global_058'],
-                        ];
+                    if (iMEMBER) {
+                        if ($threads['user_tracked']) {
+                            $threads['track_button'] = [
+                                'link'  => INFUSIONS."forum/postify.php?post=off&amp;forum_id=".$threads['forum_id']."&amp;thread_id=".$threads['thread_id'],
+                                'title' => $locale['forum_0174']
+                            ];
+                        } else {
+                            $threads['track_button'] = [
+                                'link'  => INFUSIONS."forum/postify.php?post=on&amp;forum_id=".$threads['forum_id']."&amp;thread_id=".$threads['thread_id'],
+                                'title' => $locale['forum_0175']
+                            ];
+                        }
                     }
 
                     if (!isset($threads['attach_count'])) {
