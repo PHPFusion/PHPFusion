@@ -133,7 +133,6 @@ class FaqAdmin extends FaqAdminModel {
                 'criteria' => "ac.*, u.user_id, u.user_name, u.user_status, u.user_avatar",
                 'join'     => "LEFT JOIN ".DB_USERS." AS u ON u.user_id=ac.faq_name",
                 'where'    => "ac.faq_id='$id'".(multilang_table("FQ") ? " AND ".in_group('ac.faq_language', LANGUAGE) : ""),
-
             ];
             $result = self::FaqData($criteria);
             if (dbrows($result) > 0) {
@@ -169,16 +168,15 @@ class FaqAdmin extends FaqAdminModel {
         if ((isset($_POST['save'])) or (isset($_POST['save_and_close']))) {
 
             // Check posted Informations
-            $faq_answer = '';
-            if ($_POST['faq_answer']) {
-                $faq_answer = fusion_get_settings("allow_php_exe") ? htmlspecialchars($_POST['faq_answer']) : stripslashes($_POST['faq_answer']);
+            if (post("faq_answer")) {
+                $faq_answer = fusion_get_settings("allow_php_exe") ? htmlspecialchars(post("faq_answer")) : sanitizer("faq_answer", "", "faq_answer");
             }
 
             $this->faq_data = [
                 'faq_id'         => form_sanitizer($_POST['faq_id'], 0, 'faq_id'),
                 'faq_question'   => form_sanitizer($_POST['faq_question'], '', 'faq_question'),
                 'faq_cat_id'     => form_sanitizer($_POST['faq_cat_id'], 0, 'faq_cat_id'),
-                'faq_answer'     => form_sanitizer($faq_answer, '', 'faq_answer'),
+                'faq_answer'     => $faq_answer,
                 'faq_datestamp'  => form_sanitizer($_POST['faq_datestamp'], '', 'faq_datestamp'),
                 'faq_visibility' => form_sanitizer($_POST['faq_visibility'], 0, 'faq_visibility'),
                 'faq_status'     => isset($_POST['faq_status']) ? '1' : '0',
