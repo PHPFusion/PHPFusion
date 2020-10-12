@@ -37,7 +37,7 @@ function fusion_get_template($source_file) {
 /**
  * Load any function
  *
- * @param $function
+ * @param string $function
  *
  * @return mixed|string
  */
@@ -58,8 +58,14 @@ function fusion_get_function($function) {
     return $content;
 }
 
-// Render breadcrumbs template
 if (!function_exists("render_breadcrumbs")) {
+    /**
+     * Render breadcrumbs template
+     *
+     * @param string $key
+     *
+     * @return string
+     */
     function render_breadcrumbs($key = 'default') {
         $breadcrumbs = BreadCrumbs::getInstance($key);
         $html = "<ol class='".$breadcrumbs->getCssClasses()."'>\n";
@@ -75,8 +81,12 @@ if (!function_exists("render_breadcrumbs")) {
 }
 
 if (!function_exists('render_favicons')) {
-    function render_favicons($folder = '') {
-        $folder = ($folder == '' ? IMAGES.'favicons/' : $folder);
+    /**
+     * @param string $folder
+     *
+     * @return string
+     */
+    function render_favicons($folder = IMAGES.'favicons/') {
         $html = '';
         // Generator - https://realfavicongenerator.net/
         if (is_dir($folder)) {
