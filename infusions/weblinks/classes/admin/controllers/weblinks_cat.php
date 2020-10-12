@@ -67,17 +67,11 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
         $action = filter_input(INPUT_GET, 'action', FILTER_DEFAULT);
         $cat_id = filter_input(INPUT_GET, 'cat_id', FILTER_VALIDATE_INT);
         if (!empty($save_cat)) {
-            // Description
-            $cat_desc = "";
-            $weblink_cat_description = filter_input(INPUT_POST, 'weblink_cat_description', FILTER_DEFAULT);
-            if (!empty($weblink_cat_description)) {
-                $cat_desc = (fusion_get_settings("allow_php_exe") ? htmlspecialchars($weblink_cat_description) : $weblink_cat_description);
-            }
             // Check Fields
             $inputArray = [
                 'weblink_cat_id'          => form_sanitizer(filter_input(INPUT_POST, 'weblink_cat_id', FILTER_DEFAULT), '', 'weblink_cat_id'),
                 'weblink_cat_name'        => form_sanitizer(filter_input(INPUT_POST, 'weblink_cat_name', FILTER_DEFAULT), '', 'weblink_cat_name'),
-                'weblink_cat_description' => form_sanitizer($cat_desc, '', 'weblink_cat_description'),
+                'weblink_cat_description' => form_sanitizer(filter_input(INPUT_POST, 'weblink_cat_description', FILTER_DEFAULT), '', 'weblink_cat_description'),
                 'weblink_cat_parent'      => form_sanitizer(filter_input(INPUT_POST, 'weblink_cat_parent', FILTER_VALIDATE_INT), 0, 'weblink_cat_parent'),
                 'weblink_cat_visibility'  => form_sanitizer(filter_input(INPUT_POST, 'weblink_cat_visibility', FILTER_VALIDATE_INT), 0, 'weblink_cat_visibility'),
                 'weblink_cat_status'      => form_sanitizer(filter_input(INPUT_POST, 'weblink_cat_status', FILTER_VALIDATE_INT), 0, 'weblink_cat_status'),

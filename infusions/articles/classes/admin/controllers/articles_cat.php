@@ -64,17 +64,11 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
 
         // Save
         if ((isset($_POST['save_cat'])) || (isset($_POST['save_cat_and_close']))) {
-            // Description
-            $cat_desc = "";
-            if (isset($_POST['article_cat_description'])) {
-                $cat_desc = (fusion_get_settings("allow_php_exe") ? htmlspecialchars($_POST['article_cat_description']) : stripslashes($_POST['article_cat_description']));
-            }
-
             // Check Fields
             $inputArray = [
                 'article_cat_id'          => form_sanitizer($_POST['article_cat_id'], '', 'article_cat_id'),
                 'article_cat_name'        => form_sanitizer($_POST['article_cat_name'], '', 'article_cat_name'),
-                'article_cat_description' => form_sanitizer($cat_desc, '', 'article_cat_description'),
+                'article_cat_description' => form_sanitizer(addslashes($_POST['article_cat_description']), '', 'article_cat_description'),
                 'article_cat_parent'      => form_sanitizer($_POST['article_cat_parent'], 0, 'article_cat_parent'),
                 'article_cat_visibility'  => form_sanitizer($_POST['article_cat_visibility'], 0, 'article_cat_visibility'),
                 'article_cat_status'      => form_sanitizer($_POST['article_cat_status'], 0, 'article_cat_status'),
