@@ -134,13 +134,15 @@ class ForumThreads extends ForumServer {
                     if (iMEMBER) {
                         if ($threads['user_tracked']) {
                             $threads['track_button'] = [
-                                'link'  => INFUSIONS."forum/postify.php?post=off&amp;forum_id=".$threads['forum_id']."&amp;thread_id=".$threads['thread_id'],
-                                'title' => $locale['forum_0174']
+                                'link'    => INFUSIONS."forum/postify.php?post=off&amp;forum_id=".$threads['forum_id']."&amp;thread_id=".$threads['thread_id'],
+                                'title'   => $locale['forum_0174'],
+                                'onclick' => "onclick=\"return confirm('".$locale['global_060']."');\""
                             ];
                         } else {
                             $threads['track_button'] = [
-                                'link'  => INFUSIONS."forum/postify.php?post=on&amp;forum_id=".$threads['forum_id']."&amp;thread_id=".$threads['thread_id'],
-                                'title' => $locale['forum_0175']
+                                'link'    => INFUSIONS."forum/postify.php?post=on&amp;forum_id=".$threads['forum_id']."&amp;thread_id=".$threads['thread_id'],
+                                'title'   => $locale['forum_0175'],
+                                'onclick' => ''
                             ];
                         }
                     }

@@ -187,9 +187,7 @@ if (!function_exists('render_forum_item')) {
         ];
 
         $html->set_block('forums', $template_arr);
-        $output = $html->get_output();
-
-        return $output;
+        return $html->get_output();
     }
 }
 
@@ -371,7 +369,7 @@ if (!function_exists('render_forum_threads')) {
                         'thread_views'        => number_format($cdata['thread_views']),
                         'thread_postcount'    => number_format($cdata['thread_postcount']),
                         'thread_votecount'    => number_format($cdata['vote_count']),
-                        'track_button'        => (isset($cdata['track_button']) ? "<a class='btn btn-danger btn-sm' onclick=\"return confirm('".$locale['global_060']."');\" href='".$cdata['track_button']['link']."'>".$cdata['track_button']['title']."</a>" : '')
+                        'track_button'        => (isset($cdata['track_button']) ? "<a class='btn btn-default btn-sm' ".$cdata['track_button']['onclick']." href='".$cdata['track_button']['link']."'>".$cdata['track_button']['title']."</a>" : '')
                     ]);
                 }
             }
@@ -389,7 +387,7 @@ if (!function_exists('render_forum_threads')) {
                         'thread_views'        => number_format($cdata['thread_views']),
                         'thread_postcount'    => number_format($cdata['thread_postcount']),
                         'thread_votecount'    => number_format($cdata['vote_count']),
-                        'track_button'        => (isset($cdata['track_button']) ? "<a class='btn btn-danger btn-sm' onclick=\"return confirm('".$locale['global_060']."');\" href='".$cdata['track_button']['link']."'>".$cdata['track_button']['title']."</a>" : '')
+                        'track_button'        => (isset($cdata['track_button']) ? "<a class='btn btn-default btn-sm' ".$cdata['track_button']['onclick']." href='".$cdata['track_button']['link']."'>".$cdata['track_button']['title']."</a>" : '')
                     ]);
                 }
             }
@@ -552,7 +550,7 @@ if (!function_exists("render_section")) {
                         'thread_views'        => number_format($cdata['thread_views']),
                         'thread_postcount'    => number_format($cdata['thread_postcount']),
                         'thread_votecount'    => number_format($cdata['vote_count']),
-                        'track_button'        => (isset($cdata['track_button']) ? "<a class='btn btn-danger btn-sm' onclick=\"return confirm('".$locale['global_060']."');\" href='".$cdata['track_button']['link']."'>".$cdata['track_button']['title']."</a>" : '')
+                        'track_button'        => (isset($cdata['track_button']) ? "<a class='btn btn-default btn-sm' ".$cdata['track_button']['onclick']." href='".$cdata['track_button']['link']."'>".$cdata['track_button']['title']."</a>" : '')
                     ]);
                 }
             }
@@ -570,7 +568,7 @@ if (!function_exists("render_section")) {
                         'thread_views'        => number_format($cdata['thread_views']),
                         'thread_postcount'    => number_format($cdata['thread_postcount']),
                         'thread_votecount'    => number_format($cdata['vote_count']),
-                        'track_button'        => (isset($cdata['track_button']) ? "<a class='btn btn-danger btn-sm' onclick=\"return confirm('".$locale['global_060']."');\" href='".$cdata['track_button']['link']."'>".$cdata['track_button']['title']."</a>" : '')
+                        'track_button'        => (isset($cdata['track_button']) ? "<a class='btn btn-default btn-sm' ".$cdata['track_button']['onclick']." href='".$cdata['track_button']['link']."'>".$cdata['track_button']['title']."</a>" : '')
                     ]);
                 }
             }
@@ -848,7 +846,7 @@ if (!function_exists('render_thread_item')) {
         echo "<a class='forum-link' href='".$info['thread_link']['link']."'>".$info['thread_link']['title']."</a>\n<span class='m-l-10 m-r-10 text-lighter'>".$thead_icons."</span>\n";
         echo "<div class='text-smaller'>".$info['thread_starter']."</div>\n";
         echo $info['thread_pages'];
-        echo isset($info['track_button']) ? "<div class='forum_track'><a onclick=\"return confirm('".$locale['global_060']."');\" href='".$info['track_button']['link']."'>".$info['track_button']['name']."</a>\n</div>\n" : '';
+        echo isset($info['track_button']) ? "<div class='forum_track'><a ".$info['track_button']['onclick']." href='".$info['track_button']['link']."'>".$info['track_button']['name']."</a>\n</div>\n" : '';
         echo "</div>\n";
         echo "</div>\n"; // end grid
         echo "<div class='hidden-xs col-sm-3 col-md-3 p-l-0 p-r-0 text-center'>\n";
