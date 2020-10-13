@@ -51,6 +51,7 @@ class Panels {
 
     /**
      * Add Panel to List of Panels to be cached
+     *
      * @param     $panel_name
      * @param     $panel_content
      * @param     $panel_side
@@ -62,10 +63,10 @@ class Panels {
     public static function addPanel($panel_name, $panel_content, $panel_side, $panel_access, $panel_order = 0) {
         foreach (self::$panel_name as $p_key => $p_side) {
             if ($p_side['name'] == $panel_side) {
-                self::$panels_cache[$p_key+1][$panel_order] = [
+                self::$panels_cache[$p_key + 1][$panel_order] = [
                     'panel_id'          => str_replace(" ", "_", $panel_name).'-'.$panel_side,
                     'panel_content'     => $panel_content,
-                    'panel_side'        => $p_key+1,
+                    'panel_side'        => $p_key + 1,
                     'panel_filename'    => '',
                     'panel_type'        => 'custom',
                     'panel_access'      => $panel_access,
@@ -321,11 +322,11 @@ class Panels {
      * Check panel exclusions in certain page, which will be dropped sooner or later
      * Because we will need page composition database soon
      *
-     * @param $side
+     * @param string $side
      *
      * @return bool
      */
-    private static function check_panel_status($side) {
+    public static function check_panel_status($side) {
         $settings = fusion_get_settings();
 
         $exclude_list = "";

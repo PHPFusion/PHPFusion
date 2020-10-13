@@ -25,7 +25,7 @@ function form_name($input_name, $label = "", $input_value = FALSE, array $option
     // NOTE (remember to parse readback value as of '|' seperator)
     if (!empty($input_value)) {
         if (!is_array($input_value)) {
-            $input_value = construct_array($input_value, '', '|');
+            $input_value = explode('|', $input_value);
         }
     } else {
         $input_value['0'] = '';

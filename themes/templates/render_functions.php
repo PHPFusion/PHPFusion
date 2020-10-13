@@ -38,7 +38,7 @@ function fusion_get_template($source_file) {
 /**
  * Load any function
  *
- * @param $function
+ * @param string $function
  *
  * @return mixed|string
  */
@@ -59,8 +59,14 @@ function fusion_get_function($function) {
     return $content;
 }
 
-// Render breadcrumbs template
 if (!function_exists("render_breadcrumbs")) {
+    /**
+     * Render breadcrumbs template
+     *
+     * @param string $key
+     *
+     * @return string
+     */
     function render_breadcrumbs($key = 'default') {
         $breadcrumbs = BreadCrumbs::getInstance($key);
         $html = "<ol class='".$breadcrumbs->getCssClasses()."'>\n";
@@ -76,8 +82,12 @@ if (!function_exists("render_breadcrumbs")) {
 }
 
 if (!function_exists('render_favicons')) {
-    function render_favicons($folder = '') {
-        $folder = ($folder == '' ? IMAGES.'favicons/' : $folder);
+    /**
+     * @param string $folder
+     *
+     * @return string
+     */
+    function render_favicons($folder = IMAGES.'favicons/') {
         $html = '';
         // Generator - https://realfavicongenerator.net/
         if (is_dir($folder)) {
@@ -134,49 +144,6 @@ if (!function_exists('render_user_tags')) {
 
         return $m[0];
     }
-}
-
-// Add compatibility mode function
-if (!function_exists('opensidex')) {
-    /**
-     * Template boiler using Bootstrap 3
-     *
-     * @param $title
-     */
-    function opensidex($value) {
-        echo '<div class="sidex list-group">';
-        echo '<div class="title list-group-item"><strong>'.$value.'</strong><span class="pull-right"><span class="caret"></span></span></div>';
-        echo '<div class="body list-group-item">';
-
-        if (!defined('sidex_js')) {
-            define('sidex_js', TRUE);
-            add_to_jquery(/** @lang JavaScript */ "
-            $('body').on('click', '.sidex > .title', function(e) {
-                let sidexBody = $(this).siblings('.body');
-                sidexBody.toggleClass('display-none');
-                if (sidexBody.is(':hidden')) {
-                    $(this).closest('div').find('.pull-right').addClass('dropup');
-                } else {
-                    $(this).closest('div').find('.pull-right').removeClass('dropup');
-                }
-            });
-            ");
-        }
-    }
-}
-
-if (!function_exists('closesidex')) {
-    function closesidex($value = '') {
-        echo '</div>';
-        if ($value) {
-            echo '<div class="list-group-item">'.$value.'</div>';
-        }
-        echo '</div>';
-    }
-}
-
-if (!function_exists('tablebreak')) {
-    echo "</div><div class='list-group-item'>";
 }
 
 if (!function_exists('openside')) {
@@ -244,31 +211,4 @@ function hide_panel($side) {
  */
 function add_to_panel($panel_name, $panel_content, $panel_side, $panel_access, $panel_order) {
     Panels::getInstance()->addPanel($panel_name, $panel_content, $panel_side, $panel_access, $panel_order);
-}
-
-if (!function_exists('opensidex')) {
-    function opensidex($title, $state = "on") {
-        echo '<div class="sidex list-group">';
-        echo '<div class="title list-group-item pointer"><strong>'.$title.'</strong><span class="pull-right"><span class="caret"></span></span></div>';
-        echo '<div class="body list-group-item">';
-        if (!defined('sidex_js')) {
-            define('sidex_js', TRUE);
-            add_to_jquery("
-            $('body').on('click', '.sidex > .title', function(e) {
-                let sidexBody = $(this).siblings('.body');
-                sidexBody.toggleClass('display-none');
-                if (sidexBody.is(':hidden')) {
-                    $(this).closest('div').find('.pull-right').addClass('dropup');
-                } else {
-                    $(this).closest('div').find('.pull-right').removeClass('dropup');
-                }
-            });
-            ");
-        }
-    }
-}
-if (!function_exists('closesidex')) {
-    function closesidex() {
-        echo '</div></div>';
-    }
 }

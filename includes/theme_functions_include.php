@@ -17,6 +17,7 @@
 +--------------------------------------------------------*/
 
 use PHPFusion\Database\DatabaseFactory;
+use PHPFusion\Panels;
 use PHPFusion\SiteLinks;
 use PHPFusion\Steam;
 use PHPFusion\Template;
@@ -76,7 +77,6 @@ function profile_path($user_id) {
  * @param string $component - File prefix in /classes/PHPFusion/Steam/
  *
  * @return object
- * @throws ReflectionException
  */
 function get_fusion_steam($component = 'Layout') {
     static $fusion_steam;
@@ -91,7 +91,6 @@ function get_fusion_steam($component = 'Layout') {
  * Get responsive row class
  *
  * @return string
- * @throws ReflectionException
  */
 function grid_row() {
     $layout = get_fusion_steam('Layout');
@@ -108,7 +107,6 @@ function grid_row() {
  * @param int $desktop
  *
  * @return string
- * @throws ReflectionException
  */
 function grid_column_size($mobile = 100, $tablet = 0, $laptop = 0, $desktop = 0) {
     $layout = get_fusion_steam('Layout');
@@ -120,7 +118,6 @@ function grid_column_size($mobile = 100, $tablet = 0, $laptop = 0, $desktop = 0)
  * Get responsive container class
  *
  * @return string
- * @throws ReflectionException
  */
 function grid_container() {
     $layout = get_fusion_steam('Layout');
@@ -182,7 +179,7 @@ function fusion_table($table_id, array $options = []) {
                         }
                     }
                 } else {
-                    set_error(E_USER_NOTICE, 'Datatable parameter is incorrect. Output must contain "data" key', $options['remote_file'], 0, 'Fusion Table API Error');
+                    set_error(E_USER_NOTICE, 'Datatable parameter is incorrect. Output must contain "data" key', $options['remote_file'], 0);
                 }
             }
         }
@@ -234,6 +231,7 @@ function fusion_table($table_id, array $options = []) {
 
 /**
  * Show PHP-Fusion Performance
+ *
  * @param bool $queries
  *
  * @return string
@@ -269,6 +267,7 @@ function showrendertime($queries = TRUE) {
 
 /**
  *  Developer tools only (Translations not Required)
+ *
  * @param bool   $show_sql_performance
  * @param string $performance_threshold
  * @param bool   $filter_results
@@ -287,18 +286,18 @@ function showBenchmark($show_sql_performance = FALSE, $performance_threshold = '
             $highlighted_query = "";
             foreach ($query_log as $connectionID => $sql) {
                 $current_time = $sql[0];
-                $highlighted = $current_time > $performance_threshold ? TRUE : FALSE;
-                if ($filter_results === FALSE || $filter_results === TRUE AND $highlighted === TRUE) {
+                $highlighted = $current_time > $performance_threshold;
+                if ($filter_results === FALSE || $filter_results === TRUE and $highlighted === TRUE) {
                     $highlighted_query .= "<div class='spacer-xs m-10".($highlighted ? " alert alert-warning" : "")."'>\n";
                     $highlighted_query .= "<h5><strong>SQL run#$i : ".($highlighted ? "<span class='text-danger'>".$sql[0]."</span>" : "<span class='text-success'>".$sql[0]."</span>")." seconds</strong></h5>\n\r";
                     $highlighted_query .= "[code]".$sql[1].($sql[2] ? " [Parameters -- ".implode(',', $sql[2])." ]" : '')."[/code]\n\r";
                     $highlighted_query .= "<div>\n";
                     $end_sql = end($sql[3]);
-                    $highlighted_query .= "<kbd>".$end_sql['file']."</kbd><span class='badge pull-right'>Line #".$end_sql['line'].", ".$end_sql['function']."</span> - <a href='#' data-toggle='collapse' data-target='#trace_$connectionID'>Toggle Backtrace</a>\n";
+                    $highlighted_query .= "<kbd>".addslashes($end_sql['file'])."</kbd><span class='badge pull-right'>Line #".$end_sql['line'].", ".$end_sql['function']."</span> - <a class='pointer' href='#' data-toggle='collapse' data-target='#trace_$connectionID'>Toggle Backtrace</a>\n";
                     if (is_array($sql[3])) {
                         $highlighted_query .= "<div id='trace_$connectionID' class='alert alert-info collapse spacer-sm'>";
                         foreach ($sql[3] as $id => $debug_backtrace) {
-                            $highlighted_query .= "<kbd>Stack Trace #$id - ".$debug_backtrace['file']." @ Line ".$debug_backtrace['line']."</kbd><br/>";
+                            $highlighted_query .= "<kbd>Stack Trace #$id - ".addslashes($debug_backtrace['file'])." @ Line ".$debug_backtrace['line']."</kbd><br/>";
                             if (!empty($debug_backtrace['args'][0])) {
                                 $debug_line = $debug_backtrace['args'][0];
                                 if (is_array($debug_backtrace['args'][0])) {
@@ -322,7 +321,7 @@ function showBenchmark($show_sql_performance = FALSE, $performance_threshold = '
                                         $debug_param .= $debug_backtrace['args'][1];
                                     }
                                 }
-                                $highlighted_query .= "Statement::: <code>$debug_line</code><br/>Parameters::: <code>".($debug_param ?: "--")."</code><br/>";
+                                $highlighted_query .= "Statement::: <code>".addslashes($debug_line)."</code><br/>Parameters::: <code>".($debug_param ?: "--")."</code><br/>";
                             }
 
                         }
@@ -338,7 +337,7 @@ function showBenchmark($show_sql_performance = FALSE, $performance_threshold = '
         } else {
             $modal_body .= "<h4>Could not get any query logs</h4>";
         }
-        $modal .= parse_text($modal_body, FALSE, TRUE, FALSE);
+        $modal .= parse_textarea($modal_body, FALSE, TRUE, TRUE, NULL, FALSE, FALSE);
         $modal .= modalfooter("<h4><strong>Total Time Expended in ALL SQL Queries: ".$time." seconds</strong></h4>", FALSE);
         $modal .= closemodal();
         add_to_footer($modal);
@@ -359,6 +358,11 @@ function showBenchmark($show_sql_performance = FALSE, $performance_threshold = '
     return sprintf($locale['global_172'], $render_time)." | ".sprintf($locale['global_175'], $average_speed." ($diff)");
 }
 
+/**
+ * Show memory usage
+ *
+ * @return string
+ */
 function showMemoryUsage() {
     $locale = fusion_get_locale();
     $memory_allocated = parsebytesize(memory_get_peak_usage(TRUE));
@@ -367,6 +371,14 @@ function showMemoryUsage() {
     return $locale['global_174'].": ".$memory_used."/".$memory_allocated;
 }
 
+/**
+ * Show PHP-Fusion copyright.
+ *
+ * @param string $class
+ * @param false  $nobreak
+ *
+ * @return string
+ */
 function showcopyright($class = "", $nobreak = FALSE) {
     $link_class = $class ? " class='$class' " : "";
     $res = "Powered by <a href='https://www.phpfusion.com'".$link_class.">PHP-Fusion</a> Copyright &copy; ".date("Y")." PHP-Fusion Inc";
@@ -377,6 +389,8 @@ function showcopyright($class = "", $nobreak = FALSE) {
 }
 
 /**
+ * Visitor counter
+ *
  * @return string
  */
 function showcounter() {
@@ -389,6 +403,11 @@ function showcounter() {
     return '';
 }
 
+/**
+ * Show privacy policy
+ *
+ * @return string
+ */
 function showprivacypolicy() {
     $html = '';
     if (!empty(fusion_get_settings('privacy_policy'))) {
@@ -402,8 +421,14 @@ function showprivacypolicy() {
     return $html;
 }
 
-// Get the widget settings for the theme settings table
 if (!function_exists('get_theme_settings')) {
+    /**
+     * Get the widget settings for the theme settings table
+     *
+     * @param $theme_folder
+     *
+     * @return array|false
+     */
     function get_theme_settings($theme_folder) {
         $settings_arr = [];
         $set_result = dbquery("SELECT settings_name, settings_value FROM ".DB_SETTINGS_THEME." WHERE settings_theme=:themeset", [':themeset' => $theme_folder]);
@@ -420,78 +445,16 @@ if (!function_exists('get_theme_settings')) {
 }
 
 if (!function_exists("check_panel_status")) {
+    /**
+     * Check panel exclusions in certain page, which will be dropped sooner or later
+     * Because we will need page composition database soon
+     *
+     * @param string $side
+     *
+     * @return bool
+     */
     function check_panel_status($side) {
-        $settings = fusion_get_settings();
-
-        $exclude_list = "";
-        if ($side == "left") {
-            if ($settings['exclude_left'] != "") {
-                $exclude_list = explode("\r\n", $settings['exclude_left']);
-            }
-            if (defined("LEFT_OFF")) {
-                $exclude_list = FUSION_SELF;
-            }
-        } else if ($side == "upper") {
-            if ($settings['exclude_upper'] != "") {
-                $exclude_list = explode("\r\n", $settings['exclude_upper']);
-            }
-        } else if ($side == "aupper") {
-            if ($settings['exclude_aupper'] != "") {
-                $exclude_list = explode("\r\n", $settings['exclude_aupper']);
-            }
-        } else if ($side == "lower") {
-            if ($settings['exclude_lower'] != "") {
-                $exclude_list = explode("\r\n", $settings['exclude_lower']);
-            }
-        } else if ($side == "blower") {
-            if ($settings['exclude_blower'] != "") {
-                $exclude_list = explode("\r\n", $settings['exclude_blower']);
-            }
-        } else if ($side == "right") {
-            if ($settings['exclude_right'] != "") {
-                $exclude_list = explode("\r\n", $settings['exclude_right']);
-            }
-        } else if ($side == "user1") {
-            if ($settings['exclude_user1'] != "") {
-                $exclude_list = explode("\r\n", $settings['exclude_user1']);
-            }
-        } else if ($side == "user2") {
-            if ($settings['exclude_user2'] != "") {
-                $exclude_list = explode("\r\n", $settings['exclude_user2']);
-            }
-        } else if ($side == "user3") {
-            if ($settings['exclude_user3'] != "") {
-                $exclude_list = explode("\r\n", $settings['exclude_user3']);
-            }
-        } else if ($side == "user4") {
-            if ($settings['exclude_user4'] != "") {
-                $exclude_list = explode("\r\n", $settings['exclude_user4']);
-            }
-        }
-
-        if (is_array($exclude_list)) {
-            if (fusion_get_settings('site_seo')) {
-                $params = http_build_query(PHPFusion\Rewrite\Router::getRouterInstance()->get_FileParams());
-                $file_path = '/'.PHPFusion\Rewrite\Router::getRouterInstance()->getFilePath().($params ? "?" : '').$params;
-                $script_url = explode("/", $file_path);
-            } else {
-                $script_url = explode("/", $_SERVER['PHP_SELF']);
-            }
-
-            $url_count = count($script_url);
-            $base_url_count = substr_count(BASEDIR, "../") + (fusion_get_settings('site_seo') ? ($url_count - 1) : 1);
-
-            $match_url = "";
-            while ($base_url_count != 0) {
-                $current = $url_count - $base_url_count;
-                $match_url .= "/".$script_url[$current];
-                $base_url_count--;
-            }
-
-            return (in_array($match_url, $exclude_list)) ? FALSE : TRUE;
-        } else {
-            return TRUE;
-        }
+        return Panels::check_panel_status($side);
     }
 }
 
@@ -503,7 +466,10 @@ if (!function_exists("check_panel_status")) {
  * @return string
  */
 function fusion_sort_table($table_id) {
-    add_to_footer("<script type='text/javascript' src='".INCLUDES."jquery/tablesorter/jquery.tablesorter.min.js'></script>\n");
+    if (!defined('TABLE_SORTER')) {
+        define('TABLE_SORTER', TRUE);
+        add_to_footer("<script type='text/javascript' src='".INCLUDES."jquery/tablesorter/jquery.tablesorter.min.js'></script>\n");
+    }
     add_to_jquery("$('#".$table_id."').tablesorter();");
 
     return "tablesorter";
@@ -513,7 +479,7 @@ if (!function_exists("alert")) {
     /**
      * Creates an alert bar
      *
-     * @param        $title
+     * @param string $title
      * @param array  $options
      *
      * @return string
@@ -540,10 +506,10 @@ if (!function_exists("alert")) {
 
 if (!function_exists("label")) {
     /**
-     * Function to make label
+     * Creates label
      *
-     * @param       $label
-     * @param array $options
+     * @param string $label
+     * @param array  $options
      *
      * @return string
      */
@@ -569,12 +535,10 @@ if (!function_exists("label")) {
 
 if (!function_exists("badge")) {
     /**
-     * Function to make badge.
+     * Creates badge
      *
-     * @param       $label
-     * @param array $options
-     * class
-     * icon
+     * @param string $label
+     * @param array  $options
      *
      * @return string
      */
@@ -928,7 +892,7 @@ if (!function_exists('display_avatar')) {
                 $imgTpl = "<img class='avatar img-responsive $img_class' alt='".$name."' data-pin-nopin='true' style='display:inline; width:$size; max-height:$size;' src='%s'>";
                 $img = sprintf($imgTpl, $custom_avatar);
             } else {
-                $color = stringToColorCode($userdata['user_name']);
+                $color = string_to_color_code($userdata['user_name']);
                 $font_color = get_brightness($color) > 130 ? '000' : 'fff';
                 $first_char = substr($userdata['user_name'], 0, 1);
                 $first_char = strtoupper($first_char);
@@ -941,7 +905,7 @@ if (!function_exists('display_avatar')) {
     }
 }
 
-function stringToColorCode($text) {
+function string_to_color_code($text) {
     $min_brightness = 50; // integer between 0 and 100
     $spec = 3; // integer between 2-10, determines how unique each color will be
     $hash = sha1(md5(sha1($text)));
@@ -1048,33 +1012,33 @@ if (!function_exists("thumbnail")) {
 
 if (!function_exists("lorem_ipsum")) {
     function lorem_ipsum($length) {
-        $text = "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum aliquam felis nunc, in dignissim metus suscipit eget. Nunc scelerisque laoreet purus, in ullamcorper magna sagittis eget. Aliquam ac rhoncus orci, a lacinia ante. Integer sed erat ligula. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Fusce ullamcorper sapien mauris, et tempus mi tincidunt laoreet. Proin aliquam vulputate felis in viverra.</p>\n";
-        $text .= "<p>Duis sed lorem vitae nibh sagittis tempus sed sed enim. Mauris egestas varius purus, a varius odio vehicula quis. Donec cursus interdum libero, et ornare tellus mattis vitae. Phasellus et ligula velit. Vivamus ac turpis dictum, congue metus facilisis, ultrices lorem. Cras imperdiet lacus in tincidunt pellentesque. Sed consectetur nunc vitae fringilla volutpat. Mauris nibh justo, luctus eu dapibus in, pellentesque non urna. Nulla ullamcorper varius lacus, ut finibus eros interdum id. Proin at pellentesque sapien. Integer imperdiet, sapien nec tristique laoreet, sapien lacus porta nunc, tincidunt cursus risus mauris id quam.</p>\n";
-        $text .= "<p>Ut vulputate mauris in facilisis euismod. Ut id libero vitae neque laoreet placerat a id mi. Integer ornare risus placerat, interdum nisi sed, commodo ligula. Integer at ipsum id magna blandit volutpat. Sed euismod mi odio, vitae molestie diam ornare quis. Aenean id ligula finibus, convallis risus a, scelerisque tellus. Morbi quis pretium lectus. In convallis hendrerit sem. Vestibulum sed ultricies massa, ut tempus risus. Nunc aliquam at tellus quis lobortis. In hac habitasse platea dictumst. Vestibulum maximus, nibh at tristique viverra, eros felis ultrices nunc, et efficitur nunc augue a orci. Phasellus et metus mauris. Morbi ut ex ut urna tincidunt varius eu id diam. Aenean vestibulum risus sed augue vulputate, a luctus ligula laoreet.</p>\n";
-        $text .= "<p>Nam tempor sodales mi nec ullamcorper. Mauris tristique ligula augue, et lobortis turpis dictum vitae. Aliquam leo massa, posuere ac aliquet quis, ultricies eu elit. Etiam et justo et nulla cursus iaculis vel quis dolor. Phasellus viverra cursus metus quis luctus. Nulla massa turpis, porttitor vitae orci sed, laoreet consequat urna. Etiam congue turpis ac metus facilisis pretium. Nam auctor mi et auctor malesuada. Mauris blandit nulla quis ligula cursus, ut ullamcorper dui posuere. Fusce sed urna id quam finibus blandit tempus eu tellus. Vestibulum semper diam id ante iaculis iaculis.</p>\n";
-        $text .= "<p>Fusce suscipit maximus neque, sed consectetur elit hendrerit at. Sed luctus mi in ex auctor mollis. Suspendisse ac elementum tellus, ut malesuada purus. Mauris condimentum elit at dolor eleifend iaculis. Aenean eget faucibus mauris. Pellentesque fermentum mattis imperdiet. Donec mattis nisi id faucibus finibus. Vivamus in eleifend lorem, vel dictum nisl. Morbi ut mollis arcu.</p>\n";
+        $text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum aliquam felis nunc, in dignissim metus suscipit eget. Nunc scelerisque laoreet purus, in ullamcorper magna sagittis eget. Aliquam ac rhoncus orci, a lacinia ante. Integer sed erat ligula. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Fusce ullamcorper sapien mauris, et tempus mi tincidunt laoreet. Proin aliquam vulputate felis in viverra.";
+        $text .= "Duis sed lorem vitae nibh sagittis tempus sed sed enim. Mauris egestas varius purus, a varius odio vehicula quis. Donec cursus interdum libero, et ornare tellus mattis vitae. Phasellus et ligula velit. Vivamus ac turpis dictum, congue metus facilisis, ultrices lorem. Cras imperdiet lacus in tincidunt pellentesque. Sed consectetur nunc vitae fringilla volutpat. Mauris nibh justo, luctus eu dapibus in, pellentesque non urna. Nulla ullamcorper varius lacus, ut finibus eros interdum id. Proin at pellentesque sapien. Integer imperdiet, sapien nec tristique laoreet, sapien lacus porta nunc, tincidunt cursus risus mauris id quam.";
+        $text .= "Ut vulputate mauris in facilisis euismod. Ut id libero vitae neque laoreet placerat a id mi. Integer ornare risus placerat, interdum nisi sed, commodo ligula. Integer at ipsum id magna blandit volutpat. Sed euismod mi odio, vitae molestie diam ornare quis. Aenean id ligula finibus, convallis risus a, scelerisque tellus. Morbi quis pretium lectus. In convallis hendrerit sem. Vestibulum sed ultricies massa, ut tempus risus. Nunc aliquam at tellus quis lobortis. In hac habitasse platea dictumst. Vestibulum maximus, nibh at tristique viverra, eros felis ultrices nunc, et efficitur nunc augue a orci. Phasellus et metus mauris. Morbi ut ex ut urna tincidunt varius eu id diam. Aenean vestibulum risus sed augue vulputate, a luctus ligula laoreet.";
+        $text .= "Nam tempor sodales mi nec ullamcorper. Mauris tristique ligula augue, et lobortis turpis dictum vitae. Aliquam leo massa, posuere ac aliquet quis, ultricies eu elit. Etiam et justo et nulla cursus iaculis vel quis dolor. Phasellus viverra cursus metus quis luctus. Nulla massa turpis, porttitor vitae orci sed, laoreet consequat urna. Etiam congue turpis ac metus facilisis pretium. Nam auctor mi et auctor malesuada. Mauris blandit nulla quis ligula cursus, ut ullamcorper dui posuere. Fusce sed urna id quam finibus blandit tempus eu tellus. Vestibulum semper diam id ante iaculis iaculis.";
+        $text .= "Fusce suscipit maximus neque, sed consectetur elit hendrerit at. Sed luctus mi in ex auctor mollis. Suspendisse ac elementum tellus, ut malesuada purus. Mauris condimentum elit at dolor eleifend iaculis. Aenean eget faucibus mauris. Pellentesque fermentum mattis imperdiet. Donec mattis nisi id faucibus finibus. Vivamus in eleifend lorem, vel dictum nisl. Morbi ut mollis arcu.";
 
         return trim_text($text, $length);
     }
 }
 
 if (!function_exists("timer")) {
-    function timer($updated = FALSE) {
+    function timer($time = NULL) {
         $locale = fusion_get_locale();
-        if (!$updated) {
-            $updated = time();
+        if (!$time) {
+            $time = time();
         }
-        $updated = stripinput($updated);
+        $time = stripinput($time);
         $current = time();
-        $calculated = $current - $updated;
+        $calculated = $current - $time;
         $second = 1;
         $minute = $second * 60;
         $hour = $minute * 60;
         $day = 24 * $hour;
         $month = days_current_month() * $day;
-        $year = (date("L", $updated) > 0) ? 366 * $day : 365 * $day;
+        $year = (date("L", $time) > 0) ? 366 * $day : 365 * $day;
         if ($calculated < 1) {
-            return "<abbr class='atooltip' data-toggle='tooltip' data-placement='top' title='".showdate('longdate', $updated)."'>".$locale['just_now']."</abbr>\n";
+            return "<abbr class='atooltip' data-toggle='tooltip' data-placement='top' title='".showdate('longdate', $time)."'>".$locale['just_now']."</abbr>\n";
         }
 
         $timer = [
@@ -1097,7 +1061,7 @@ if (!function_exists("timer")) {
                     '[ANSWER]' => $answer,
                     '[STRING]' => $string
                 ]);
-                return "<abbr class='atooltip' data-toggle='tooltip' data-placement='top' title='".showdate('longdate', $updated)."'>".$text."</abbr>";
+                return "<abbr class='atooltip' data-toggle='tooltip' data-placement='top' title='".showdate('longdate', $time)."'>".$text."</abbr>";
             }
         }
 
@@ -1117,7 +1081,7 @@ if (!function_exists("days_current_month")) {
 if (!function_exists("countdown")) {
     function countdown($time) {
         $locale = fusion_get_locale();
-        $updated = stripinput($time);
+        $updated = $time - time();
         $second = 1;
         $minute = $second * 60;
         $hour = $minute * 60;
@@ -1717,12 +1681,12 @@ function set_template_path($template_path, $path) {
  *
  * @return array
  */
-function get_status_opts(array $options = array(), array $replacements = array()) {
+function get_status_opts(array $options = [], array $replacements = []) {
     $locale = fusion_get_locale();
-    $default_statuses = array(
+    $default_statuses = [
         0 => $locale["disable"],
         1 => $locale["enable"],
-    );
+    ];
     $options += $default_statuses;
     if (!empty($replacements)) {
         $options = $replacements;
