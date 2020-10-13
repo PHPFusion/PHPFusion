@@ -300,11 +300,10 @@ class ForumBounty extends ForumServer {
 
             $html .= (self::get_bounty_permissions('can_edit_bounty') ? "<div class='text-right spacer-xs'><a href='".FORUM."viewthread.php?action=editbounty&amp;thread_id=".get('thread_id', FILTER_VALIDATE_INT)."'><i class='fas fa-pencil-alt m-r-5'></i>".self::$locale['forum_4100']."</a></div>" : '');
             $html .= "<div class='alert alert-warning forum-bounty-msg'>\n";
-            $bounty_end = self::$bounty_end - TIME;
             $html .= "<p>".strtr(self::$locale['forum_4101'], [
                     '{%points%}'       => "<span class='label label-default strong m-l-5 m-r-5'>+".format_word(self::$data['thread_bounty'], self::$locale['fmt_points'])."</span>",
                     '{%profile_link%}' => profile_link($user['user_id'], $user['user_name'], $user['user_status']),
-                    '{%countdown%}'    => countdown($bounty_end)
+                    '{%countdown%}'    => countdown(self::$bounty_end)
                 ])."</p>\n";
             $html .= self::$locale['forum_4102'].'<br/>';
             $html .= "<p class='strong'>".self::$data['thread_bounty_description']."</p>\n";

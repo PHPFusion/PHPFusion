@@ -194,7 +194,7 @@ class ForumViewer {
                 $result = dbquery("SELECT forum_name, forum_id FROM ".DB_FORUMS." WHERE forum_cat=0 AND ".groupaccess('forum_access')." ORDER BY forum_name ASC LIMIT 0, $forum_limit");
                 if ($forum_rows = dbrows($result)) {
                     while ($data = dbarray($result)) {
-                        $color = "#".stringToColorCode($data['forum_name']);
+                        $color = "#".string_to_color_code($data['forum_name']);
                         $menu_arr['forum_'.$data['forum_id']] = self::sub_link_item('forum_'.$data['forum_id'],
                             "<span><i class='fas fa-circle' style='color:$color;'></i> ".$data['forum_name']."</span>", FORUM."?viewforum=true&forum_id=".$data['forum_id'], 99, iGUEST, FALSE, FALSE, "col-xs-12 col-sm-6 p-0", " text-overflow-hide");
                     }
@@ -1028,7 +1028,7 @@ class ForumViewer {
                                 $shtml->set_template(__DIR__.'/../templates/index/forum_subforums.html');
                                 foreach ($child_data['child'] as $sub_forum_id => $sub_forum_data) {
 
-                                    $sub_forum_color = stringToColorCode($sub_forum_data['forum_name']);
+                                    $sub_forum_color = string_to_color_code($sub_forum_data['forum_name']);
                                     $font_color = get_brightness($sub_forum_color) > 130 ? '000' : 'fff';
                                     $sub_forum_image = ($sub_forum_data['forum_image'] ? thumbnail($sub_forum_data['forum_image'], '10px') :
                                         "<div class='img-circle m-t-5 m-b-10' style='background:#$sub_forum_color; color:#$font_color;padding: 0 5px;font-size:12px;margin-right:10px;'>".$sub_forum_data['forum_icon']."</div>");
