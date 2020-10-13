@@ -171,10 +171,13 @@ class Forum extends ForumServer {
                     $this->forum_info['forum_description'] = parse_textarea($this->forum_info['forum_description'], TRUE, TRUE);
                     $this->forum_info['forum_rules'] = parse_textarea($this->forum_info['forum_rules'], TRUE, TRUE);
 
-                    if (!empty($this->forum_info['forum_description']))
-                        set_meta('description', $this->forum_info['forum_description']);
-                    if (!empty($this->forum_info['forum_meta']))
+                    if (!empty($this->forum_info['forum_description'])) {
+                        set_meta('description', str_replace("\n", ' ', strip_tags($this->forum_info['forum_description'])));
+                    }
+
+                    if (!empty($this->forum_info['forum_meta'])) {
                         set_meta('keywords', $this->forum_info['forum_meta']);
+                    }
 
                     /**
                      * Set Max Rows - XSS
