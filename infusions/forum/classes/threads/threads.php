@@ -132,7 +132,7 @@ class ForumThreads extends ForumServer {
 
                 while ($threads = dbarray($cthread_result)) {
                     if (iMEMBER) {
-                        if ($threads['user_tracked']) {
+                        if (isset($threads['user_tracked'])) {
                             $threads['track_button'] = [
                                 'link'    => INFUSIONS."forum/postify.php?post=off&amp;forum_id=".$threads['forum_id']."&amp;thread_id=".$threads['thread_id'],
                                 'title'   => $locale['forum_0174'],
