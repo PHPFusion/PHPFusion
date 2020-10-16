@@ -1,4 +1,0 @@
-[submodule "infusions/weblinks"]
-	path = infusions/weblinks
-	url = https://github.com/php-fusion/ci-Weblinks.git
-	branch = Babylon
