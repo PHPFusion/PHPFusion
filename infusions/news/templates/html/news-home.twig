@@ -1,0 +1,137 @@
+{% set news_item_spotlight = "col-xs-12 col-md-12 col-lg-12 col-xl-12" %}
+{% set news_item_grid = "col-xs-12 col-md-6 col-lg-3 col-xl-3" %}
+
+<div class="news-main display-block pt-5">
+    <section class="news-spotlight">
+        <div class="row">
+            <div class="{{ news_item_spotlight }}">
+                <div class="media">
+                    <img class="img-fluid" src="{{ INFUSIONS }}news/images/thumbs/blog-1.png">
+                    <div class="ml-3">
+                        <div class="label label-warning">Top Story</div>
+                        <h4>{{ lorem_ipsum(30) }}</h4>
+                        <p>YOURSAY | Something must admin his mistakes and offer a public apology</p>
+                        <a class="profile-link" href="">Geraldine Tong</a><br/>
+                        <small class="text-muted">4h ago &middot; <i class="far fa-comment"></i> 42</small>
+                    </div>
+                </div>
+            </div>
+            <div class="{{ news_item_grid }}">
+                <div class="mb-3 mt-3">
+                    <img class="img-fluid mb-2 mt-2" src="{{ INFUSIONS }}news/images/thumbs/blog-2.png">
+                    <h5>{{ lorem_ipsum(30) }}</h5>
+                    <a class="profile-link" href="">Geraldine Tong</a><br/>
+                    <small class="text-muted">4h ago &middot; <i class="far fa-comment"></i> 42</small>
+                </div>
+            </div>
+            <div class="{{ news_item_grid }}">
+                <div class="mb-3 mt-3">
+                    <img class="img-fluid mb-2 mt-2" src="{{ INFUSIONS }}news/images/thumbs/blog-3.png">
+                    <h5>{{ lorem_ipsum(30) }}</h5>
+                    <a class="profile-link" href="">Geraldine Tong</a><br/>
+                    <small class="text-muted">4h ago &middot; <i class="far fa-comment"></i> 42</small>
+                </div>
+            </div>
+            <div class="{{ news_item_grid }}">
+                <div class="mb-3 mt-3">
+                    <img class="img-fluid mb-2 mt-2" src="{{ INFUSIONS }}news/images/thumbs/blog-4.png">
+                    <h5>{{ lorem_ipsum(30) }}</h5>
+                    <a class="profile-link" href="">Geraldine Tong</a><br/>
+                    <small class="text-muted">4h ago &middot; <i class="far fa-comment"></i> 42</small>
+                </div>
+            </div>
+            <div class="{{ news_item_grid }}">
+                <div class="mb-3 mt-3">
+                    <img class="img-fluid mb-2 mt-2" src="{{ INFUSIONS }}news/images/thumbs/blog-5.png">
+                    <h5>{{ lorem_ipsum(30) }}</h5>
+                    <a class="profile-link" href="">Geraldine Tong</a><br/>
+                    <small class="text-muted">4h ago &middot; <i class="far fa-comment"></i> 42</small>
+                </div>
+            </div>
+            <div class="{{ news_item_grid }}">
+                <div class="mb-3 mt-3">
+                    <img class="img-fluid mb-2 mt-2" src="{{ INFUSIONS }}news/images/thumbs/blog-1.png">
+                    <h5>{{ lorem_ipsum(30) }}</h5>
+                    <a class="profile-link" href="">Geraldine Tong</a><br/>
+                    <small class="text-muted">4h ago &middot; <i class="far fa-comment"></i> 42</small>
+                </div>
+            </div>
+            <div class="{{ news_item_grid }}">
+                <div class="mb-3 mt-3">
+                    <img class="img-fluid mb-2 mt-2" src="{{ INFUSIONS }}news/images/thumbs/blog-2.png">
+                    <h5>{{ lorem_ipsum(30) }}</h5>
+                    <a class="profile-link" href="">Geraldine Tong</a><br/>
+                    <small class="text-muted">4h ago &middot; <i class="far fa-comment"></i> 42</small>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="news-stats mt-3 mb-5">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Most Read</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Most Commented</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Most Recent</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                <div class="row">
+                    <div class="{{ news_item_grid }}">
+                        <div class="mb-3 mt-3">
+                            <h5>{{ lorem_ipsum(30) }}</h5>
+                            <small class="text-muted">4h ago</small>
+                        </div>
+                    </div>
+                    <div class="{{ news_item_grid }}">
+                        <div class="mb-3 mt-3">
+                            <h5>{{ lorem_ipsum(30) }}</h5>
+                            <small class="text-muted">4h ago</small>
+                        </div>
+                    </div>
+                    <div class="{{ news_item_grid }}">
+                        <div class="mb-3 mt-3">
+                            <h5>{{ lorem_ipsum(30) }}</h5>
+                            <small class="text-muted">4h ago</small>
+                        </div>
+                    </div>
+                    <div class="{{ news_item_grid }}">
+                        <div class="mb-3 mt-3">
+                            <h5>{{ lorem_ipsum(30) }}</h5>
+                            <small class="text-muted">4h ago</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div>
+            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
+        </div>
+    </section>
+    <section class="news-latest">
+        <h4>News</h4>
+        <div class="mt-5">
+            <div class="media mb-5">
+                <img class="img-fluid" src="{{ INFUSIONS }}news/images/thumbs/blog-1.png">
+                <div class="ml-3">
+                    <h5>{{ lorem_ipsum(30) }}</h5>
+                    <p>{{ lorem_ipsum(300) }}</p>
+                    <a class="profile-link" href="">Geraldine Tong</a><br/>
+                    <small class="text-muted">4h ago &middot; <i class="far fa-comment"></i> 42</small>
+                </div>
+            </div>
+            <div class="media mb-5">
+                <img class="img-fluid" src="{{ INFUSIONS }}news/images/thumbs/blog-3.png">
+                <div class="ml-3">
+                    <h5>{{ lorem_ipsum(30) }}</h5>
+                    <p>{{ lorem_ipsum(300) }}</p>
+                    <a class="profile-link" href="">Geraldine Tong</a><br/>
+                    <small class="text-muted">4h ago &middot; <i class="far fa-comment"></i> 42</small>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
