@@ -1,0 +1,73 @@
+#postrating, #removerating {
+    margin-bottom: 25px;
+}
+
+.gallery_album {
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+}
+
+.gallery_album > .gallery_actions > .image_container > img {
+    width: 100% !important;
+}
+
+.gallery_album > .gallery_actions > .gallery_overlay {
+    background-color: rgb(0, 0, 0);
+    -webkit-border-radius: 6px 6px 0px 0px;
+    -moz-border-radius: 6px 6px 0px 0px;
+    border-radius: 6px 6px 0px 0px;
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    -webkit-transition: opacity 0.04s linear 0s;
+    -o-transition: opacity 0.04s linear 0s;
+    -moz-transition: opacity 0.04s linear 0s;
+    transition: opacity 0.04s linear 0s;
+    cursor: -webkit-zoom-in;
+    cursor: -moz-zoom-in;
+    cursor: zoom-in;
+}
+
+.gallery_album > .gallery_actions {
+    position: relative;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    overflow: hidden;
+    -webkit-border-radius: 6px 6px 0 0;
+    -moz-border-radius: 6px 6px 0 0;
+    border-radius: 6px 6px 0 0;
+}
+
+.gallery_album > .gallery_actions:hover {
+    opacity: 1;
+}
+
+.gallery_album > .gallery_actions:hover > .gallery_overlay {
+    opacity: 0.25;
+}
+
+.gallery_album > .gallery_actions > .gallery_buttons {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    opacity: 0;
+}
+
+.gallery_album > .gallery_actions > .gallery_writer {
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    opacity: 0;
+}
+
+.gallery_album > .gallery_actions:hover > .gallery_buttons, .gallery_album > .gallery_actions:hover > .gallery_writer {
+    opacity: 1;
+}
+
+.gallery_album .gallery_profile_link {
+    line-height: 115%;
+}
