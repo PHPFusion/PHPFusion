@@ -1,0 +1,163 @@
+{%post_html_comment%}
+<div id="{%item_marker_id%}" class="clearfix post-items{%post_class%}">
+    <div class="row">
+        <div class="col-xs-12 hidden-sm hidden-md hidden-lg">
+            <div class="pull-left m-r-15">
+                {%user_avatar%}<br/>{%user_avatar_rank%}
+            </div>
+            <div class="overflow-hide">
+                <h5 class="display-inline-block pull-right m-l-5" style="margin-top: -1px;"><a
+                        href="#{%item_marker_id%}">#{%item_id%}</a></h5>
+                <h4 class="m-0">
+                    <span class="display-inline" style="font-size:12px; color:#5CB85C"><i
+                            class="{%user_online_status%}"></i></span>
+                    {%user_profile_link%}
+                    {%user_avatar_rank%}
+                </h4>
+                <small>{%post_date%}</small>
+                <small class="pull-right">{%post_edit_reason%}</small>
+            </div>
+            <hr/>
+        </div>
+        <div class="col-xs-12 col-sm-12">
+            <div class="pull-left m-r-15 p-r-15">
+                {votebox.{
+                <div class="display-block">{%input%}{%status%}</div>
+                }}
+            </div>
+            <div class="display-block">
+                <div class="row m-0">
+                    <div class="hidden-xs pull-left">
+                        <div class="author-info">
+                            <div class="clearfix">
+                                <div class="display-block m-b-10">
+                                    {%user_avatar%}
+                                </div>
+                                <div class="overflow-hide">
+                                    <h4 class="m-0">
+                                        <span class="display-inline" style="font-size:12px; color:#5CB85C"><i
+                                                class="{%user_online_status%}"></i></span>
+                                        {%user_profile_link%}
+                                        {%user_avatar_rank%}
+                                    </h4>
+                                    <ul class="block">
+                                        {li_ip.{
+                                        <li><i class="fas fa-map-pin fa-fw m-r-10"></i>{%title%}</li>
+                                        }}
+                                        {li_post_count.{
+                                        <li><i class="fa fa-comments fa-fw m-r-10"></i>{%title%}</li>
+                                        }}
+                                        {li_um.{
+                                        <li><a href="{%link_url%}" title="{%link_title%}">{%title%}</a></li>
+                                        }}
+                                        {li_web.{
+                                        <li>{%noindex_a%}<a href="{%link_url%}" title="{%link_title%}" {%index_rel%}>{%title%}</a>{%noindex_b%}
+                                        </li>
+                                        }}
+                                    </ul>
+                                    <div class="spacer-xs">{%user_rank%}</div>
+                                    {user_profiles.{
+                                    {%profiles%}
+                                    }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="overflow-hide p-0">
+                        <div class="hidden-xs">
+                            <div class="pull-right display-inline-block m-l-15">
+                                <div class="clearfix">
+                                    <h5 class="display-inline-block pull-right m-l-5"><a href="#{%item_marker_id%}">#{%item_id%}</a>
+                                    </h5>
+                                </div>
+                            </div>
+                            <small class="date">{%post_date%}</small>
+                            <small class="pull-right">{%post_edit_reason%}</small>
+                        </div>
+                        {report_info.{
+                        <div class="report-info spacer-xs">
+                            <small><i class="fas fa-exclamation m-r-10"></i> <a class="strong" href="{%link%}">Click to
+                                view report</a></small>
+                        </div>
+                        }}
+                        <div class="post_message">{%post_message%}</div>
+                        {post_attachments.{
+                        <div class="forum_attachments">{%attach%}</div>
+                        }}
+                        {%user_signature%}
+                        {%post_reply_message%}
+                        {%post_mood_message%}
+                    </div>
+                    <div class="post-actions spacer-sm m-b-0 text-right">
+                        <div class="display-inline-block m-l-10 pull-right">{%checkbox_input%}</div>
+                        {mood_messages.{<!--forum_mood-->
+                        {%btns%}<!--//forum_mood-->
+                        }}
+                        {post_votes.{
+                        <div class="display-inline-block m-l-10 m-r-10 p-l-10">
+                            <i class="fas fa-medal m-r-5"></i> {%points%}
+                            <div class="btn-group">
+                                <a href="{%up_link%}" class="btn btn-default vote_up{%up_active%}"
+                                   title="{[forum_0510]}"><i class="fa fa-caret-up"></i></a>
+                                <a href="{%down_link%}" class="btn btn-default vote_down{%down_active%}"
+                                   title="{[forum_0511]}"><i class="fa fa-caret-down"></i></a>
+                            </div>
+                        </div>
+                        }}
+                        <div class="btn-group">
+                            {quote_btn.{
+                            <a class="btn btn-default quote-link" href="{%link_url%}" title="{%link_title%}"><i
+                                    class="fas fa-quote-left"></i></a>
+                            }}
+                            {reply_btn.{
+                            <a class="btn btn-default reply-link" href="{%link_url%}" title="{%link_title%}"><i
+                                    class="fas fa-comment-alt"></i></a>
+                            }}
+                            {edit_btn.{
+                            <a class="btn btn-default edit-link" href="{%link_url%}" title="{%link_title%}"><i
+                                    class="fas fa-edit"></i></a>
+                            }}
+                            {report_btn.{
+                            <a class="btn btn-default report-link" href="{%link_url%}" title="{%link_title%}"><i
+                                    class="fas fa-flag"></i></a>
+                            }}
+                            <a class="dropdown-toggle btn btn-default" data-toggle="dropdown"><i
+                                    class="fa fa-ellipsis-v"></i></a>
+                            <ul class="dropdown-menu forum-post-options">
+                                {li_print.{
+                                <li><a href="{%link_url%}" title="{%link_title%}">{%title%}</a></li>
+                                <li class="divider"></li>
+                                }}
+                                {li_quote.{
+                                <li><a href="{%link_url%}" title="{%link_title%}">{%title%}</a></li>
+                                }}
+                                {li_edit.{
+                                <li><a href="{%link_url%}" title="{%link_title%}">{%title%}</a></li>
+                                }}
+                                {li_admin_title.{
+                                <li class="divider"></li>
+                                <li class="dropdown-header">{%title%}</li>
+                                }}
+                                {li_edit_user.{
+                                <li><a href="{%link_url%}" title="{%link_title%}">{%title%}</a></li>
+                                }}
+                                {li_ban_user.{
+                                <li><a href="{%link_url%}" title="{%link_title%}">{%title%}</a></li>
+                                }}
+                                {li_delete_user.{
+                                <li><a href="{%link_url%}" title="{%link_title%}">{%title%}</a></li>
+                                }}
+                            </ul>
+                        </div>
+                        {bounty_btn.{
+                        <!---bounty-->
+                        <a class="btn btn-success" title="{%link_title%}" href="{%link_url%}">{%title%}</a>
+                        <!--//post_bounty-->
+                        }}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

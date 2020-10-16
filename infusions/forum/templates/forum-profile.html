@@ -1,0 +1,43 @@
+<div id="forum-profile">
+    <div class="{[row]} m-b-20 equal-height">
+        <div class="{[col(100,100,50)]}">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div style="column-count: 2">
+                        <div><strong>Reputation</strong>
+                            <h2 class="text-dark">{%reputation_count%}</h2></div>
+                        <div><strong>Posts</strong>
+                            <h2 class="text-dark">{%post_count%}</h2></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="{[col(100,100,50)]}">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div style="column-count: 2">
+                        <div><strong>Impact</strong><br/>
+                            <h2 class="display-inline text-dark">~{%affect_count%}</h2>
+                            <small>views reached</small>
+                        </div>
+                        <span title="The total of edits made to improve existing posts"><i class="fas fa-pencil-alt fa-fw m-r-10"></i>{%edit_count%} posts edit</span><br/>
+                        <span title="The total of up and down votes cast"><i class="fas fa-caret-up fa-fw m-r-10"></i>{%vote_count%} votes cast</span><br/>
+                        {mood.{
+                        <span title="The total of {%title%} post flags raised">{%icon%} {%title%}</span><br/>
+                        }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <ul class="nav nav-pills" role="tablist">
+        {navs.{
+        <li role="presentation"{%active%}>
+            <a href="{%link%}" aria-controls="{%id%}" role="tab">{%title%}</a>
+        </li>
+        }}
+    </ul>
+    <div class="tab-pane">
+        {%forum_profile_content%}
+    </div>
+</div>

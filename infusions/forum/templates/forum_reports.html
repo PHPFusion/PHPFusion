@@ -1,0 +1,61 @@
+<div class="forum">
+    <div class="forum-header">
+        <div class="{[container]}">{%forum_navs%}</div>
+    </div>
+    <div class="{[container]}">
+        {%breadcrumb%}
+        <h3>{%title%}</h3>
+        <p>{%description%}</p>
+        <hr/>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="panel panel-forum panel-default">
+                    <div class="panel-heading clearfix" style='height:60px; position:relative;'>
+                        <div class="display-block center-y">
+                            {section_links.{
+                            <a href="{%link%}" class="p-5 display-inline-block m-r-10">{%title%} <span
+                                    class="badge">{%count%}</span></a>
+                            }}
+                        </div>
+                    </div>
+                    {report_details.{
+                    <div class="panel-body">
+                        <div class="clearfix">
+                            <h4>Report Reason: {%report_comment%}</h4>
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-6">
+                                    Reported by {%user_profile_link%} &middot; {%report_date%},
+                                    {%report_time%}<br/>
+                                    Last updated on {%report_updated_date%}, {%report_updated_time%}
+                                </div>
+                                <div class="col-xs-12 col-sm-6">
+                                    <strong>Report ID:</strong> #{%report_id%}<br/>
+                                    <strong>Report Status:</strong> {%report_status%}<br/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="spacer-xs">
+                            {%report_action%}
+                        </div>
+                        <hr class="m-0"/>
+                    </div>
+                    }}
+                    <div class="panel-body p-0">
+                        {view_thread.{ {%content%} }}
+                    </div>
+                </div>
+                {view_link.{
+                <div class="spacer-xs strong">
+                    <small>
+                        <span class="m-r-10"><a href="{%post_link%}">View Post</a></span>
+                        <span class="m-r-10"><a href="{%thread_link%}">View Thread</a></span>
+                    </small>
+                </div>
+                }}
+                {view_post.{
+                {%content%}
+                }}
+            </div>
+        </div>
+    </div>
+</div>

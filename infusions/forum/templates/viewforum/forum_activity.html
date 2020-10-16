@@ -1,0 +1,83 @@
+<div class="forum">
+    <div class="forum-header">
+        <div class="row">
+            <div class="col-md-2 col-sm-6 col-xs-12">
+                <a class="header-title" href="{%baselink%}">{[forum_0000]}</a>
+            </div>
+            <div class="col-md-9 col-sm-6 col-xs-12">
+                {%forum_navs%}
+            </div>
+        </div>
+    </div>
+    <nav class="navbar navbar-default forum-navbar">
+        <div class="container-fluid">
+            <ul class="nav navbar-nav">
+                {navbar_item.{
+                <li {%active%}><a href="{%link%}">{%title%}</a></li>
+                }}
+            </ul>
+        </div>
+    </nav>
+    <div class="forum-body p-15">
+        {%breadcrumb%}
+        <div class="row clearfix">
+            <div class="col-xs-12">
+                <h3>{%title%} Subforums</h3>
+                <p>{%description%}</p>
+                <hr/>
+                {rules.{
+                <div>{%forum_rules%}</div>
+                }}
+                {pagenav.{
+                <div class="clearfix">{%pagenav%}</div>
+                }}
+                {activity.{
+                <div class="m-b-20">
+                    <strong>
+                        {%post_count%} | {%last_activity_link%} {%last_activity_info%}
+                    </strong>
+                </div>
+                }}
+                {activity_items.{
+                <div class="list-group">
+                    <div class="list-group-item">
+                        <div class="pull-left m-r-15">
+                            {%avatar%}
+                        </div>
+                        <div class="overflow-hide">
+                            <div class="m-b-10">
+                                {%profile_link%}
+                                <small class="strong">{%post_date%}, {%post_timer%}<span
+                                        class="hidden-sm hidden-md hidden-lg"><br/>{%post_link%}</span></small>
+                            </div>
+                            <small class="m-b-10 text-lighter"><strong>{%thread_link%}</strong></small>
+                            {%post_message%}
+                        </div>
+                    </div>
+                    <div class="list-group-item hidden-xs">
+                        <small class="strong">{%post_link%}<i class="fa fa-external-link-square m-l-5"></i></small>
+                    </div>
+                </div>
+                }}
+                {no_item.{
+                <div class="well text-center">{%message%}</div>
+                }}
+                <div class="clearfix spacer-xs">
+                    <small>
+                        <span>{%can_access%}</span><br/>
+                        <span>{%can_post%}</span><br/>
+                        <span>{%can_create_poll%}</span><br/>
+                        <span>{%can_upload_attach%}</span><br/>
+                        <span>{%can_download_attach%}</span><br/>
+                    </small>
+                </div>
+                {moderator_list.{
+                <hr/>
+                <div class="clearfix"><strong>{%mod_title%}</strong> {%moderators%}</div>
+                }}
+            </div>
+        </div>
+    </div>
+</div>
+
+

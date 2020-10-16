@@ -1,0 +1,33 @@
+<div class="clearfix m-t-20">
+    <h5 class="text-dark pull-left strong m-b-0">{%row_count%}</h5>
+    <ul id="nav-trigger" class="nav nav-tabs nav-right">
+        {nav_tabs.{
+        <li role="presentation" {%class%}><a href="{%link%}">{%title%}</a></li>
+        }}
+        <!--<li role="presentation"><a data-toggle="tab" href="question">Activity</a></li>-->
+        <!--<li role="presentation" class="active"><a data-toggle="tab" href="all">All</a></li>-->
+    </ul>
+    <div id="nav-body-content" class="m-t-20">
+        {thread_item.{
+        <div class="spacer-sm p-b-10 br-b-1">
+            <div class="{[row]}">
+                <div class="{[col(90)]}">
+                    <span title="{%thread_viewcount%}" class="label label-success strong m-r-10"><i class="fas fa-eye fa-fw m-r-5"></i>{%thread_views%}</span>
+                    <a href="{%post_link%}">
+                       {%thread_subject%}
+                    </a>
+                </div>
+                <div class="{[col(10)]} text-right">
+                    {%post_datestamp%}
+                </div>
+            </div>
+        </div>
+        }}
+        {no_thread_item.{
+            <p>{%message%}</p>
+        }}
+    </div>
+    {page_nav.{
+        {%nav%}
+    }}
+</div>

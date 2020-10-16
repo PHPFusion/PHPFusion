@@ -1,0 +1,28 @@
+<div class="forum">
+    <div class="forum-header">
+        <div class="row">
+            <div class="col-md-2 col-sm-6 col-xs-12">
+                <a class="header-title" href="{%baselink%}">{[forum_0000]}</a>
+            </div>
+            <div class="col-md-9 col-sm-6 col-xs-12">
+                {%forum_navs%}
+            </div>
+        </div>
+    </div>
+    <div class="forum-body p-15">
+        <div class="list-group-item">
+            <div class="{%alert_class%} text-center">
+                {message.{
+                <p class="strong">{%message%}</p>
+                }}
+                <small>Please wait <span class="delay">{%delay%}</span> second(s) while we redirect you, or you can
+                    choose any of the following links below
+                </small>
+                <hr/>
+                {links.{
+                <div class="m-r-10 display-inline-block"><a class="strong" href="{%link_url%}">{%link_title%}</a></div>
+                }}
+            </div>
+        </div>
+    </div>
+</div>

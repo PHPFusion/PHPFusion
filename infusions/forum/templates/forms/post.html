@@ -1,0 +1,53 @@
+<div class="forum">
+    <div class="forum-header">
+        <div class="row">
+            <div class="col-md-2 col-sm-6 col-xs-12">
+                <a class="header-title" href="{%baselink%}">{[forum_0000]}</a>
+            </div>
+            <div class="col-md-9 col-sm-6 col-xs-12">
+                {%forum_navs%}
+            </div>
+        </div>
+    </div>
+    <div class="forum-body p-15">
+        {%breadcrumb%}
+        <!--pre_form-->
+        <h4 class="spacer-sm">{%title%}</h4>
+        {%openform%}
+        <div class="{[row]}">
+            <div class="{[col(100)]}">
+                {%forum_subject_field%}
+                <div class="{[row]}">
+                    <div class="{[col(100,50)]}">
+                        {%forum_field%}
+                    </div>
+                    <div class="{[col(100,50)]}">
+                        {%forum_tag_field%}
+                    </div>
+                </div>
+                {%forum_message_field%}
+                {%delete%} {%sticky%} {%notify%} {%lock%} {%hide_edit%} {%smiley%} {%user_sig%}
+                {forum_attachment.{
+                <div class="spacer-sm">
+                    {%field%}
+                </div>
+                }}
+                <!-- <div class="spacer-sm">
+                    {%forum_poll_form%}
+                </div> -->
+                {%forum_edit_reason_field%}
+                {%forum_post_button%}
+                {%closeform%}
+            </div>
+        </div>
+        {lastpost.{
+        <div class="spacer-lg">
+            <div class="list-group-item">
+                {%post_items%}
+            </div>
+
+        </div>
+        }}
+    </div>
+    <!--end_form-->
+</div>

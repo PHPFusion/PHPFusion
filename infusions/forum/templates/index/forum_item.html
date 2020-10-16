@@ -1,0 +1,65 @@
+<div class="panel panel-home panel-default">
+    <div class="panel-heading">
+        {forum_stats.{
+
+        }}
+        <h4 class="forum-title">
+            <a href="{%forum_link%}">
+                {%forum_name%}
+            </a>
+        </h4>
+        <div class="forum-description">{%forum_description%}</div>
+    </div>
+    {subforums_block.{
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-6">
+                <div class="pull-left m-r-10" style="height:60px;">
+                    <div class="center-y">{%forum_image%}</div>
+                </div>
+                <div class="overflow-hide text-sm">
+                    <div class="hidden-xs hidden-sm">
+                        <h4 class="m-t-5 m-b-5"><a class="forum-title" href="{%forum_link%}">{%forum_title%}</a></h4>
+                        <div class="forum-description">{%forum_description%}</div>
+                        <div class="forum-subforums">{%forum_subforums%}</div>
+                    </div>
+                    <div class="hidden-md hidden-lg text-sm">
+                        <h4 class="m-t-0 m-b-0"><a href="{%forum_link%}" data-toggle="tooltip"
+                                                   title="{%forum_description%}" class="strong">{%forum_title%}</a></h4>
+                        <span class="m-r-10">Threads: {%forum_threadcount%}</span>
+                        <span class="m-r-10">Posts:  {%forum_postcount%}</span>
+                        <div>
+                            <a href="{%lastpost_link%}">{%lastpost_title%}</a> - {%lastpost_time%} &middot;
+                            {%lastpost_profile_link%}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="hidden-xs hidden-sm col-sm-1 text-center">
+                <small class="strong">Threads</small>
+                <br/>
+                <h2 class="text-light spacer-xs">{%forum_threadcount%}</h2>
+            </div>
+            <div class="hidden-xs hidden-sm col-sm-1 text-center">
+                <small class="strong">Posts</small>
+                <br/>
+                <h2 class="text-light spacer-xs">{%forum_postcount%}</h2>
+            </div>
+            <div class="hidden-xs hidden-sm text-sm col-md-4">
+                <div class="pull-left m-r-10">
+                    {%lastpost_avatar%}
+                </div>
+                <div class="overflow-hide">
+                    <h5 class="m-0"><a href="{%lastpost_link%}">{%lastpost_title%}</a></h5>
+                    {%lastpost_time%} &middot; {%lastpost_profile_link%}
+                </div>
+            </div>
+        </div>
+    </div>
+    }}
+    {no_subforums_block.{
+    <div class="panel-body">
+        <div class="spacer-sm">There are no forums defined.</div>
+    </div>
+    }}
+</div>

@@ -1,0 +1,41 @@
+<div class="forum">
+    <div class="forum-header">
+        <div class="row">
+            <div class="col-md-2 col-sm-6 col-xs-12">
+                <a class="header-title" href="{%baselink%}">{[forum_0000]}</a>
+            </div>
+            <div class="col-md-9 col-sm-6 col-xs-12">
+                {%forum_navs%}
+            </div>
+        </div>
+    </div>
+    <div class="p-15">
+        {%breadcrumb%}
+        <h4>{[forum_tag_0100]}</h4>
+        <p>{[forum_tag_0101]}</p>
+        <hr/>
+        <div class="row m-0">
+            {tag_block.{
+            <div class="col-xs-12 col-sm-4" style="height: 200px; max-height:200px;">
+                <div class="panel panel-home panel-default">
+                    <div class="panel-heading">
+                        <a class="forum-title" href="{%tag_link%}"><h4><i class="fas fa-square-full m-r-10"
+                                                                          style="color:{%tag_color%};"></i>{%tag_title%}
+                        </h4></a>
+                        <small>{%tag_description%}</small>
+                    </div>
+                    <div class="panel-body">
+                        <div class="pull-right">{%thread_avatar%}</div>
+                        <small><a href="{%thread_link%}" class="strong">{%thread_subject%}</a> by
+                            {%thread_profile_link%}, {%thread_activity%}
+                        </small>
+                    </div>
+                </div>
+            </div>
+            }}
+            {no_tag.{
+            <div class="well">{%message%}</div>
+            }}
+        </div>
+    </div>
+</div>

@@ -1,0 +1,20 @@
+{%breadcrumb%}
+<h4 class='spacer-sm'>{%title%}</h4>
+<div class='list-group-item'>
+    {%filter%}
+    <hr/>
+    {pagenav.{
+    <div class='text-right'>{%pagenav%}</div>
+    }}
+    {threads.{
+    <div class='forum-container list-group-item'>{%content%}</div>
+    }}
+    {no_threads.{
+    <div class='well spacer-md text-center'>{%message%}</div>
+    }}
+    {pagenav_a.{
+    <div class='text-right hidden-xs spacer-sm'>{%pagenav_a%}</div>
+    }}
+</div>
+{pagenav2.{
+<div class='hidden-sm hidden-md hidden-lg spacer-sm'>{%pagenav2%}</div>}}

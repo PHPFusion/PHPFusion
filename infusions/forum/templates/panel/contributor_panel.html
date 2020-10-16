@@ -1,0 +1,38 @@
+<div class="panel panel-home panel-default">
+    <div class="panel-heading">
+        <h5 class="m-0">Popular Contributors</h5>
+    </div>
+    <div class="panel-body">
+        <ul id="contributor-tab" class="nav nav-pills nav-sm m-b-10" role="tablist">
+            <li role="presentation" class="active"><a href="#contrib-week" aria-controls="contrib-week" role="tab"
+                                                      data-toggle="tab" data-value="week">Week</a></li>
+            <li role="presentation"><a href="#contrib-mth" aria-controls="contrib-mth" role="tab" data-toggle="tab"
+                                       data-value="month">Month</a></li>
+            <li role="presentation"><a href="#contrib-yr" aria-controls="contrib-yr" role="tab" data-toggle="tab"
+                                       data-value="year">Year</a></li>
+            <li role="presentation"><a href="#contrib-all" aria-controls="contrib-all" role="tab" data-toggle="tab"
+                                       data-value="all">All Time</a></li>
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content m-t-20">
+            <div role="tabpanel" class="tab-pane active" id="contrib-week">
+                <ul class="contributor-list block">
+                    {contributor.{
+                    <li>
+                        <div class="pull-left m-r-10">{%avatar%}</div>
+                        <div class="overflow-hide">{%profile_link%}<br/>
+                            <small class="text-lighter"><i class="fas fa-plus-circle m-r-5"></i>{%post_count%}</small>
+                        </div>
+                    </li>
+                    }}
+                </ul>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="contrib-mth">
+            </div>
+            <div role="tabpanel" class="tab-pane" id="contrib-yr">
+            </div>
+            <div role="tabpanel" class="tab-pane" id="contrib-all">
+            </div>
+        </div>
+    </div>
+</div>

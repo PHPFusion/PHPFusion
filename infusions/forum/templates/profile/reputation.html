@@ -1,0 +1,22 @@
+<div class="clearfix m-t-20">
+    <h5 class="text-dark pull-left strong m-b-0">{%row_count%}</h5>
+    <ul id="nav-trigger" class="nav nav-tabs nav-right">
+        {nav_tabs.{
+        <li role="presentation" {%class%}><a href="{%link%}">{%title%}</a></li>
+        }}
+    </ul>
+    <div id="nav-body-content" class="m-t-20">
+        {reputation_item.{
+            {%content%}
+        }}
+        {no_thread_item.{
+        <p>{%message%}</p>
+        }}
+        {chart_output.{
+        {%content%}
+        }}
+    </div>
+    {page_nav.{
+    {%nav%}
+    }}
+</div>
