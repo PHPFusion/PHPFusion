@@ -1,7 +1,3 @@
-[submodule "infusions/blog"]
-	path = infusions/blog
-	url = https://github.com/php-fusion/ci-Blog.git
-	branch = Babylon
 [submodule "infusions/downloads"]
 	path = infusions/downloads
 	url = https://github.com/php-fusion/ci-Downloads.git
