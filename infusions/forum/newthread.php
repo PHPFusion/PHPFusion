@@ -24,7 +24,7 @@ require_once "infusion_db.php";
 require_once FORUM_CLASS."autoloader.php";
 require_once INFUSIONS."forum/forum_include.php";
 require_once INCLUDES."infusions_include.php";
-require_once INFUSIONS."forum/templates.php";
+require_once INFUSIONS."forum/templates/templates.php";
 $info = \PHPFusion\Forums\ForumServer::new_thread()->get_newThreadInfo();
 display_forum_postform($info);
 require_once THEMES.'templates/footer.php';

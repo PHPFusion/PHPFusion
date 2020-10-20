@@ -413,9 +413,9 @@ class NewThread extends ForumServer {
                 if (!dbcount("(forum_id)", DB_FORUMS, in_group('forum_language', LANGUAGE))) {
                     redirect(FORUM.'index.php');
                 }
-				if (isset($_GET['forum_id']) && !isnum($_GET['forum_id'])) {
+                if (isset($_GET['forum_id']) && !isnum($_GET['forum_id'])) {
                     redirect(FORUM.'index.php');
-				}
+                }
 
                 BreadCrumbs::getInstance()->addBreadCrumb(["link" => FORUM."newthread.php?forum_id=0", "title" => self::$locale['forum_0057']]);
                 $thread_data = [
@@ -641,7 +641,7 @@ class NewThread extends ForumServer {
                     ]),
                     'tags_field'        => form_select('thread_tags[]', self::$locale['forum_tag_0100'], $thread_data['thread_tags'],
                         [
-                            'options'     => parent::tag()->get_TagOpts(),
+                            'options'     => parent::tag()->get_TagOpts(TRUE),
                             'inner_width' => '100%',
                             'multiple'    => TRUE,
                             'delimiter'   => '.',

@@ -1,8 +1,5 @@
-/*
-PHP-Fusion 9 Core Template Forum CSS
-*/
 .forum-title {
-    text-transform: uppercase !important;
+    text-transform: uppercase;
     font-weight: 700;
     margin-bottom: 15px;
 }
@@ -76,15 +73,13 @@ PHP-Fusion 9 Core Template Forum CSS
 
 .forum-pages > nav > .btn-group > a {
     background: none;
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
     box-shadow: none;
     padding: 0 5px;
     font-size: 11px;
 }
 
 .forum-icon {
-    color: #aaa;
+    color: #222;
 }
 
 .lastpost-title {
@@ -107,8 +102,6 @@ PHP-Fusion 9 Core Template Forum CSS
 .filter {
     border: 1px solid #DDD;
     padding: 8px 10px;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
     border-radius: 5px;
     margin: 15px 0;
 }
@@ -142,7 +135,7 @@ PHP-Fusion 9 Core Template Forum CSS
     display: inline-block;
 }
 
-.post_items .post_info {
+.post-item .post_info {
     color: #7089a9;
 }
 
@@ -208,51 +201,43 @@ PHP-Fusion 9 Core Template Forum CSS
     word-wrap: break-word;
 }
 
-.post_items, .forum-list {
+.post-item, .forum-list, .polls-block {
     margin: 25px 0 10px;
     padding: 10px;
     border: 1px solid #DDD;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
     border-radius: 5px;
-    -webkit-transition: border 0.3s ease-in-out;
-    -moz-transition: border 0.3s ease-in-out;
-    -ms-transition: border 0.3s ease-in-out;
-    -o-transition: border 0.3s ease-in-out;
     transition: border 0.3s ease-in-out;
 }
 
-.post_items {
+.post-item {
     padding: 20px;
 }
 
-.post_items .post_stats {
+.post-item .post_stats {
     font-size: 12px;
 }
 
-.post_items .post_profile_container {
+.post-item .post_profile_container {
     float: right;
     width: 30%;
 }
 
-.post_items .post_profiles {
+.post-item .post_profiles {
     display: block;
     list-style: none;
     padding: 15px;
     background: #f7f7f7;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
     border-radius: 5px;
-    text-align: right;
+    margin-bottom: 5px;
 }
 
-.post_items .post_profiles img {
+.post-item .post_profiles img {
     display: inline-block;
     float: left;
     margin-right: 5px;
 }
 
-.post_items .post_profiles > .title {
+.post-item .post_profiles > .title {
     text-transform: uppercase;
     color: #aaa;
     font-weight: 600;
@@ -260,11 +245,11 @@ PHP-Fusion 9 Core Template Forum CSS
     margin-bottom: 10px;
 }
 
-.post_items .post_profiles .social-link {
+.post-item .post_profiles .social-link {
     display: inline-block;
 }
 
-.post_items .post_profiles .social-link > img {
+.post-item .post_profiles .social-link > img {
     width: 20px;
     height: 20px;
 }

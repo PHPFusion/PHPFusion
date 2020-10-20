@@ -24,7 +24,7 @@ require_once INCLUDES."infusions_include.php";
 require_once FORUM_CLASS."autoloader.php";
 require_once INFUSIONS."forum/forum_include.php";
 // Load Template
-include INFUSIONS."forum/templates.php";
+include INFUSIONS."forum/templates/templates.php";
 $thread = new \PHPFusion\Forums\Threads\ViewThread();
 $thread->display_thread();
 require_once THEMES.'templates/footer.php';

@@ -132,17 +132,16 @@ class ForumThreads extends ForumServer {
 
                 while ($threads = dbarray($cthread_result)) {
                     if (iMEMBER) {
-                        if (isset($threads['user_tracked'])) {
+                        $threads['track_button'] = [
+                            "link"    => FORUM."postify.php?post=on&forum_id=".$threads['forum_id']."&thread_id=".$threads['thread_id'],
+                            "title"   => $locale['forum_0175'],
+                            "onclick" => "",
+                        ];
+                        if (isset($threads['user_tracked']) && $threads['user_tracked']) {
                             $threads['track_button'] = [
-                                'link'    => INFUSIONS."forum/postify.php?post=off&amp;forum_id=".$threads['forum_id']."&amp;thread_id=".$threads['thread_id'],
-                                'title'   => $locale['forum_0174'],
-                                'onclick' => "onclick=\"return confirm('".$locale['global_060']."');\""
-                            ];
-                        } else {
-                            $threads['track_button'] = [
-                                'link'    => INFUSIONS."forum/postify.php?post=on&amp;forum_id=".$threads['forum_id']."&amp;thread_id=".$threads['thread_id'],
-                                'title'   => $locale['forum_0175'],
-                                'onclick' => ''
+                                "link"    => FORUM."postify.php?post=off&forum_id=".$threads['forum_id']."&thread_id=".$threads['thread_id'],
+                                "title"   => $locale['forum_0174'],
+                                "onclick" => "onclick=\"return confirm('".$locale['global_060']."');\"",
                             ];
                         }
                     }
@@ -208,17 +207,17 @@ class ForumThreads extends ForumServer {
                     if (!empty($threads['thread_postcount']) && !empty($forum_settings['posts_per_page'])) {
                         if ($threads['thread_postcount'] > $forum_settings['posts_per_page']) {
                             $thread_rowstart = $forum_settings['posts_per_page'] * floor(($threads['thread_postcount'] - 1) / $forum_settings['posts_per_page']);
-                            $thread_rowstart = "&amp;rowstart=".$thread_rowstart;
+                            $thread_rowstart = "&rowstart=".$thread_rowstart;
                         }
                     }
 
                     $threads += [
                         "thread_link"         => [
-                            "link"  => FORUM."viewthread.php?thread_id=".$threads['thread_id'].$thread_rowstart."&amp;pid=".$threads['thread_lastpostid']."#post_".$threads['thread_lastpostid'],
+                            "link"  => FORUM."viewthread.php?thread_id=".$threads['thread_id'].$thread_rowstart."&pid=".$threads['thread_lastpostid']."#post_".$threads['thread_lastpostid'],
                             "title" => $threads['thread_subject']
                         ],
                         "forum_type"          => $threads['forum_type'],
-                        "thread_pages"        => makepagenav(0, $forum_settings['posts_per_page'], $threads['thread_postcount'], 3, FORUM."viewthread.php?thread_id=".$threads['thread_id']."&amp;"),
+                        "thread_pages"        => makepagenav(0, $forum_settings['posts_per_page'], $threads['thread_postcount'], 3, FORUM."viewthread.php?thread_id=".$threads['thread_id']."&"),
                         "thread_icons"        => [
                             'lock'   => $threads['thread_locked'] ? "<i class='".self::get_forumIcons('lock')."' title='".$locale['forum_0263']."'></i>" : '',
                             'sticky' => $threads['thread_sticky'] ? "<i class='".self::get_forumIcons('sticky')."' title='".$locale['forum_0103']."'></i>" : '',
@@ -261,14 +260,14 @@ class ForumThreads extends ForumServer {
                     $forum_settings['threads_per_page'],
                     $info['thread_max_rows'],
                     3,
-                    clean_request("", ["rowstart"], FALSE)."&amp;"
+                    clean_request("", ["rowstart"], FALSE)."&"
                 );
 
                 $info['threads']['pagenav2'] = makepagenav($_GET['rowstart'],
                     $forum_settings['threads_per_page'],
                     $info['thread_max_rows'],
                     3,
-                    clean_request("", ["rowstart"], FALSE)."&amp;",
+                    clean_request("", ["rowstart"], FALSE)."&",
                     'rowstart',
                     TRUE
                 );
@@ -361,7 +360,7 @@ class ForumThreads extends ForumServer {
 
             BreadCrumbs::getInstance()->addBreadCrumb(['link' => FORUM.'index.php', 'title' => $locale['forum_0000']]);
             $this->forum_breadcrumbs($forum_index, $this->thread_data['forum_id']);
-            BreadCrumbs::getInstance()->addBreadCrumb(['link' => FORUM.'viewthread.php?forum_id='.$this->thread_data['forum_id'].'&amp;thread_id='.$this->thread_data['thread_id'], 'title' => $this->thread_data['thread_subject']]);
+            BreadCrumbs::getInstance()->addBreadCrumb(['link' => FORUM.'viewthread.php?forum_id='.$this->thread_data['forum_id'].'&thread_id='.$this->thread_data['thread_id'], 'title' => $this->thread_data['thread_subject']]);
 
             // Override $_GET['forum_id'] against tampering
             $_GET['forum_id'] = intval($this->thread_data['forum_id']);
@@ -375,12 +374,12 @@ class ForumThreads extends ForumServer {
                 // only member can track the thread
                 if ($this->thread_data['user_tracked']) {
                     $this->thread_info['buttons']['notify'] = [
-                        'link'  => INFUSIONS."forum/postify.php?post=off&amp;forum_id=".$this->thread_data['forum_id']."&amp;thread_id=".$this->thread_data['thread_id'],
+                        'link'  => INFUSIONS."forum/postify.php?post=off&forum_id=".$this->thread_data['forum_id']."&thread_id=".$this->thread_data['thread_id'],
                         'title' => $locale['forum_0174']
                     ];
                 } else {
                     $this->thread_info['buttons']['notify'] = [
-                        'link'  => INFUSIONS."forum/postify.php?post=on&amp;forum_id=".$this->thread_data['forum_id']."&amp;thread_id=".$this->thread_data['thread_id'],
+                        'link'  => INFUSIONS."forum/postify.php?post=on&forum_id=".$this->thread_data['forum_id']."&thread_id=".$this->thread_data['thread_id'],
                         'title' => $locale['forum_0175']
                     ];
                 }
@@ -424,7 +423,7 @@ class ForumThreads extends ForumServer {
                 /**
                  * Thread moderation form template
                  */
-                $addition = isset($_GET['rowstart']) ? "&amp;rowstart=".intval($_GET['rowstart']) : "";
+                $addition = isset($_GET['rowstart']) ? "&rowstart=".intval($_GET['rowstart']) : "";
                 $this->thread_info['form_action'] = fusion_get_settings('siteurl')."infusions/forum/viewthread.php?thread_id=".intval($this->thread_data['thread_id']).$addition;
 
                 $this->thread_info['mod_options'] = [
@@ -480,7 +479,7 @@ class ForumThreads extends ForumServer {
                 'forum_cat'            => isset($_GET['forum_cat']) && self::verify_forum($_GET['forum_cat']) ? $_GET['forum_cat'] : 0,
                 'forum_branch'         => isset($_GET['forum_branch']) && self::verify_forum($_GET['forum_branch']) ? $_GET['forum_branch'] : 0,
                 'forum_link'           => [
-                    'link'  => FORUM.'index.php?viewforum&amp;forum_id='.$this->thread_data['forum_id'].'&amp;forum_cat='.$this->thread_data['forum_cat'].'&amp;forum_branch='.$this->thread_data['forum_branch'],
+                    'link'  => FORUM.'index.php?viewforum&forum_id='.$this->thread_data['forum_id'].'&forum_cat='.$this->thread_data['forum_cat'].'&forum_branch='.$this->thread_data['forum_branch'],
                     'title' => $this->thread_data['forum_name']
                 ],
                 'thread_attachments'   => $attachments,
@@ -519,7 +518,7 @@ class ForumThreads extends ForumServer {
              */
             $this->thread_info['buttons'] += [
                 'print'     => [
-                    'link'  => BASEDIR.'print.php?type=F&amp;item_id='.$this->thread_data['thread_id'].'&amp;rowstart='.$_GET['rowstart'],
+                    'link'  => BASEDIR.'print.php?type=F&item_id='.$this->thread_data['thread_id'].'&rowstart='.$_GET['rowstart'],
                     'title' => $locale['forum_0178']
                 ],
                 'newthread' => $this->getThreadPermission('can_post') == TRUE ?
@@ -529,16 +528,16 @@ class ForumThreads extends ForumServer {
                     ] : [],
                 'reply'     => $this->getThreadPermission('can_reply') == TRUE ?
                     [
-                        'link'  => FORUM.'viewthread.php?action=reply&amp;forum_id='.$this->thread_data['forum_id'].'&amp;thread_id='.$this->thread_data['thread_id'],
+                        'link'  => FORUM.'viewthread.php?action=reply&forum_id='.$this->thread_data['forum_id'].'&thread_id='.$this->thread_data['thread_id'],
                         'title' => $locale['forum_0360']
                     ] : [],
                 'poll'      => $this->getThreadPermission('can_create_poll') == TRUE ?
                     [
-                        'link'  => FORUM.'viewthread.php?action=newpoll&amp;forum_id='.$this->thread_data['forum_id'].'&amp;thread_id='.$this->thread_data['thread_id'],
+                        'link'  => FORUM.'viewthread.php?action=newpoll&forum_id='.$this->thread_data['forum_id'].'&thread_id='.$this->thread_data['thread_id'],
                         'title' => $locale['forum_0366']
                     ] : [],
                 'bounty'    => $this->getThreadPermission('can_start_bounty') == TRUE ? [
-                    'link'  => FORUM.'viewthread.php?action=newbounty&amp;forum_id='.$this->thread_data['forum_id'].'&amp;thread_id='.$this->thread_data['thread_id'],
+                    'link'  => FORUM.'viewthread.php?action=newbounty&forum_id='.$this->thread_data['forum_id'].'&thread_id='.$this->thread_data['thread_id'],
                     'title' => $locale['forum_0399'],
                 ] : [],
             ];
@@ -547,17 +546,17 @@ class ForumThreads extends ForumServer {
              * Generate Post Filters
              */
             $this->thread_info['post-filters'][0] = [
-                'value'  => FORUM.'viewthread.php?thread_id='.$this->thread_data['thread_id'].'&amp;sort_post=oldest',
+                'value'  => FORUM.'viewthread.php?thread_id='.$this->thread_data['thread_id'].'&sort_post=oldest',
                 'locale' => $locale['forum_0180']
             ];
             $this->thread_info['post-filters'][1] = [
-                'value'  => FORUM.'viewthread.php?thread_id='.$this->thread_data['thread_id'].'&amp;sort_post=latest',
+                'value'  => FORUM.'viewthread.php?thread_id='.$this->thread_data['thread_id'].'&sort_post=latest',
                 'locale' => $locale['forum_0181']
             ];
             if ($this->getThreadPermission("can_rate") == TRUE) {
                 $this->thread_info['allowed-post-filters'][2] = 'high';
                 $this->thread_info['post-filters'][2] = [
-                    'value'  => FORUM.'viewthread.php?thread_id='.$this->thread_info['thread_id'].'&amp;sort_post=high',
+                    'value'  => FORUM.'viewthread.php?thread_id='.$this->thread_info['thread_id'].'&sort_post=high',
                     'locale' => $locale['forum_0182']
                 ];
             }
@@ -758,7 +757,7 @@ class ForumThreads extends ForumServer {
                         }
                     }
 
-                    redirect(INFUSIONS."forum/postify.php?post=reply&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;thread_id=".intval($post_data['thread_id'])."&amp;post_id=".intval($post_data['post_id']));
+                    redirect(INFUSIONS."forum/postify.php?post=reply&error=0&forum_id=".intval($post_data['forum_id'])."&thread_id=".intval($post_data['thread_id'])."&post_id=".intval($post_data['post_id']));
                 }
             }
         }
@@ -825,7 +824,7 @@ class ForumThreads extends ForumServer {
                         $this->thread_info['posts_per_page'],
                         $this->thread_info['max_post_items'],
                         3,
-                        FORUM."viewthread.php?thread_id=".$this->thread_info['thread']['thread_id'].(isset($_GET['highlight']) ? "&amp;highlight=".urlencode($_GET['highlight']) : '')."&amp;")."</div>";
+                        FORUM."viewthread.php?thread_id=".$this->thread_info['thread']['thread_id'].(isset($_GET['highlight']) ? "&highlight=".urlencode($_GET['highlight']) : '')."&")."</div>";
             }
 
             add_to_jquery("
@@ -983,7 +982,7 @@ class ForumThreads extends ForumServer {
                                     $aFiles_Count++;
                                 } else {
                                     $current_file = FORUM.'attachments/'.$attachData['attach_name'];
-                                    $aFiles .= "<div class='display-inline-block'><i class='fa fa-paperclip'></i><a href='".INFUSIONS."forum/viewthread.php?thread_id=".$pdata['thread_id']."&amp;getfiles=".$attachData['attach_id']."'>".$attachData['attach_name']."</a>&nbsp;";
+                                    $aFiles .= "<div class='display-inline-block'><i class='fa fa-paperclip'></i><a href='".INFUSIONS."forum/viewthread.php?thread_id=".$pdata['thread_id']."&getfiles=".$attachData['attach_id']."'>".$attachData['attach_name']."</a>&nbsp;";
                                     $aFiles .= "[<span class='small'>".(file_exists($current_file) ? parsebytesize(filesize($current_file)) : $locale['na'])." / ".$attachData['attach_count'].$locale['forum_0162']."</span>]</div>\n";
                                     $aImage_Count++;
                                 }
@@ -1024,7 +1023,7 @@ class ForumThreads extends ForumServer {
                     'user_avatar_image'  => display_avatar($pdata, '50px', FALSE, FALSE, 'img-rounded'),
                     'user_post_count'    => format_word($pdata['user_posts'], $locale['fmt_post']),
                     'print'              => [
-                        'link'  => BASEDIR.'print.php?type=F&amp;item_id='.$_GET['thread_id'].'&amp;post='.$pdata['post_id'].'&amp;nr='.($i + $_GET['rowstart']),
+                        'link'  => BASEDIR.'print.php?type=F&item_id='.$_GET['thread_id'].'&post='.$pdata['post_id'].'&nr='.($i + $_GET['rowstart']),
                         'title' => $locale['forum_0179']
                     ],
                     'post_marker'        => $post_marker,
@@ -1087,7 +1086,7 @@ class ForumThreads extends ForumServer {
                  */
                 if ($this->getThreadPermission('can_award_bounty') && $pdata['post_author'] !== fusion_get_userdata('user_id')) {
                     $pdata['post_bounty'] = [
-                        'link'  => FORUM.'viewthread.php?action=award&amp;forum_id='.$pdata['forum_id'].'&amp;thread_id='.$pdata['thread_id'].'&amp;post_id='.$pdata['post_id'],
+                        'link'  => FORUM.'viewthread.php?action=award&forum_id='.$pdata['forum_id'].'&thread_id='.$pdata['thread_id'].'&post_id='.$pdata['post_id'],
                         'title' => $locale['forum_4107']
                     ];
                 }
@@ -1099,7 +1098,7 @@ class ForumThreads extends ForumServer {
                     if (!$this->thread_info['thread']['thread_locked']) {
 
                         $pdata['post_quote'] = [
-                            'link'  => INFUSIONS."forum/viewthread.php?action=reply&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id']."&amp;quote=".$pdata['post_id'],
+                            'link'  => INFUSIONS."forum/viewthread.php?action=reply&forum_id=".$pdata['forum_id']."&thread_id=".$pdata['thread_id']."&post_id=".$pdata['post_id']."&quote=".$pdata['post_id'],
                             'title' => $locale['forum_0266']
                         ];
                         if (iMOD || (
@@ -1109,17 +1108,17 @@ class ForumThreads extends ForumServer {
                             )
                         ) {
                             $pdata['post_edit'] = [
-                                'link'  => INFUSIONS."forum/viewthread.php?action=edit&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id'],
+                                'link'  => INFUSIONS."forum/viewthread.php?action=edit&forum_id=".$pdata['forum_id']."&thread_id=".$pdata['thread_id']."&post_id=".$pdata['post_id'],
                                 'title' => $locale['edit']
                             ];
                         }
                         $pdata['post_reply'] = [
-                            'link'  => INFUSIONS."forum/viewthread.php?action=reply&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id'],
+                            'link'  => INFUSIONS."forum/viewthread.php?action=reply&forum_id=".$pdata['forum_id']."&thread_id=".$pdata['thread_id']."&post_id=".$pdata['post_id'],
                             'title' => $locale['forum_0509']
                         ];
                     } else if (iMOD) {
                         $pdata['post_edit'] = [
-                            'link'  => INFUSIONS."forum/viewthread.php?action=edit&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id'],
+                            'link'  => INFUSIONS."forum/viewthread.php?action=edit&forum_id=".$pdata['forum_id']."&thread_id=".$pdata['thread_id']."&post_id=".$pdata['post_id'],
                             'title' => $locale['edit']
                         ];
                     }
@@ -1189,14 +1188,14 @@ class ForumThreads extends ForumServer {
                         if ($this->thread_info['thread']['thread_answered'] && $pdata['post_answer']) {
                             // Is Answer
                             $pdata['vote_answered'] = [
-                                'link'  => FORUM."postify.php?post=answer&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id'],
+                                'link'  => FORUM."postify.php?post=answer&forum_id=".$pdata['forum_id']."&thread_id=".$pdata['thread_id']."&post_id=".$pdata['post_id'],
                                 'title' => $locale['forum_0513'] //0513
                             ];
                             $pdata['post_answer_check'] = "<a href='".$pdata['vote_answered']['link']."' class='answer_button answer_checked' title='".$pdata['vote_answered']['title']."'><i class='fa fa-check fa-2x'></i></a>";
                         } else {
                             // Is not an answer
                             $pdata['vote_answered'] = [
-                                'link'  => FORUM."postify.php?post=answer&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id'],
+                                'link'  => FORUM."postify.php?post=answer&forum_id=".$pdata['forum_id']."&thread_id=".$pdata['thread_id']."&post_id=".$pdata['post_id'],
                                 'title' => $locale['forum_0512'] //0512
                             ];
                             $pdata['post_answer_check'] = "<a href='".$pdata['vote_answered']['link']."' class='answer_button answer_unchecked' title='".$pdata['vote_answered']['title']."'><i class='fa fa-check fa-2x'></i></a>";
@@ -1205,12 +1204,12 @@ class ForumThreads extends ForumServer {
 
                     if ($this->getThreadPermission('can_rate')) { // can vote.
                         $pdata['vote_up'] = [
-                            'link'   => INFUSIONS."forum/postify.php?post=voteup&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id'],
+                            'link'   => INFUSIONS."forum/postify.php?post=voteup&forum_id=".$pdata['forum_id']."&thread_id=".$pdata['thread_id']."&post_id=".$pdata['post_id'],
                             "title"  => $locale['forum_0510'],
                             'active' => $pdata['has_voted'] && $pdata['has_voted_points'] > 0 ? TRUE : FALSE,
                         ];
                         $pdata['vote_down'] = [
-                            'link'   => INFUSIONS."forum/postify.php?post=votedown&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id'],
+                            'link'   => INFUSIONS."forum/postify.php?post=votedown&forum_id=".$pdata['forum_id']."&thread_id=".$pdata['thread_id']."&post_id=".$pdata['post_id'],
                             "title"  => $locale['forum_0511'],
                             'active' => $pdata['has_voted'] && $pdata['has_voted_points'] < 0 ? TRUE : FALSE,
                         ];
