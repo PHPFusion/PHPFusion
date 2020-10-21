@@ -31,6 +31,7 @@ if (!function_exists('display_captcha')) {
         ob_start();
 
         echo '<div class="clearfix m-b-15">';
+        Securimage::$lame_binary_path = '';
         echo Securimage::getCaptchaHtml($options);
         echo '</div>';
 

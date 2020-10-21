@@ -23,17 +23,17 @@
  * If you found this script useful, please take a quick moment to rate it.<br />
  * http://www.hotscripts.com/rate/49400.html  Thanks.
  *
- * @link http://www.phpcaptcha.org Securimage PHP CAPTCHA
- * @link http://www.phpcaptcha.org/latest.zip Download Latest Version
- * @link http://www.phpcaptcha.org/Securimage_Docs/ Online Documentation
- * @copyright 2012 Drew Phillips
- * @author Drew Phillips <drew@drew-phillips.com>
- * @version 3.6.6 (Nov 20 2017)
- * @package Securimage
+ * @link      http://www.phpcaptcha.org Securimage PHP CAPTCHA
+ * @link      http://www.phpcaptcha.org/latest.zip Download Latest Version
+ * @link      http://www.phpcaptcha.org/Securimage_Docs/ Online Documentation
+ * @copyright 2018 Drew Phillips
+ * @author    Drew Phillips <drew@drew-phillips.com>
+ * @version   3.6.8 (May 2020)
+ * @package   Securimage
  *
  */
 
-require_once __DIR__.'/securimage.php';
+require_once dirname(__FILE__).'/securimage.php';
 
 // if using database, adjust these options as necessary and change $img = new Securimage(); to $img = new Securimage($options);
 // see test.mysql.php or test.sqlite.php for examples

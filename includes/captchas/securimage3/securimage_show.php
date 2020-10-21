@@ -3,7 +3,7 @@
  * Project: Securimage: A PHP class for creating and managing form CAPTCHA images
  * File:    securimage_show.php
  *
- * Copyright (c) 2013, Drew Phillips
+ * Copyright (c) 2018, Drew Phillips
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -33,20 +33,20 @@
  * If you found this script useful, please take a quick moment to rate it.<br />
  * http://www.hotscripts.com/rate/49400.html  Thanks.
  *
- * @link http://www.phpcaptcha.org Securimage PHP CAPTCHA
- * @link http://www.phpcaptcha.org/latest.zip Download Latest Version
- * @link http://www.phpcaptcha.org/Securimage_Docs/ Online Documentation
- * @copyright 2013 Drew Phillips
- * @author Drew Phillips <drew@drew-phillips.com>
- * @version 3.6.6 (Nov 20 2017)
- * @package Securimage
+ * @link      http://www.phpcaptcha.org Securimage PHP CAPTCHA
+ * @link      http://www.phpcaptcha.org/latest.zip Download Latest Version
+ * @link      http://www.phpcaptcha.org/Securimage_Docs/ Online Documentation
+ * @copyright 2018 Drew Phillips
+ * @author    Drew Phillips <drew@drew-phillips.com>
+ * @version   3.6.8 (May 2020)
+ * @package   Securimage
  *
  */
 
 // Remove the "//" from the following line for debugging problems
 // error_reporting(E_ALL); ini_set('display_errors', 1);
 
-require_once __DIR__.'/securimage.php';
+require_once dirname(__FILE__).'/securimage.php';
 
 $img = new Securimage();
 
