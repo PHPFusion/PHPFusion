@@ -143,7 +143,7 @@ class Infusion_Core {
                                  * if the table exist or column exist as renaming a non-existent table could not be performed.
                                  *
                                  */
-                                $filename = rtrim($upgrade_file, 'upgrade.php');
+                                $filename = rtrim($upgrade_file, 'upgrade.inc');
                                 if (version_compare($filename, $data['inf_version'], ">")) {
                                     unset($upgrades);
                                     $upgrades = self::load_upgrade(INFUSIONS.$folder, $upgrade_folder_path.$upgrade_file);

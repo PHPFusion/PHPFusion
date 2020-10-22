@@ -578,7 +578,7 @@ class Atom {
                 print_p($outputFile);
             }
             try {
-                require_once "lessc.php.php";
+                require_once "lessc.inc.php";
                 $parser = new \Less_Parser($options);
                 //$parser->SetImportDirs($directories);
                 $parser->parseFile($inputFile, $outputFolder);

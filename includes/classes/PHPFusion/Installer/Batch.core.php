@@ -491,7 +491,7 @@ class Batch_Core extends Install_Core {
 
                         foreach ($upgrade_files as $upgrade_file) {
 
-                            $filename = rtrim($upgrade_file, 'upgrade.php');
+                            $filename = rtrim($upgrade_file, 'upgrade.inc');
 
                             if (version_compare($filename, fusion_get_settings('version'), ">")) {
                                 /*
