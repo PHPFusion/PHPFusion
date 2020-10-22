@@ -48,14 +48,20 @@ if (count($languages) > 1) {
     echo "<link rel='alternate' hreflang='x-default' href='".$settings['siteurl']."'>\n";
 }
 
-if ($settings['bootstrap'] || defined('BOOTSTRAP')) {
-    echo "<meta http-equiv='X-UA-Compatible' content='IE=edge'>\n";
-    echo "<meta name='viewport' content='width=device-width, initial-scale=1.0'>\n";
-    echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/css/bootstrap.min.css'>\n";
-    echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/css/bootstrap-submenu.min.css'>\n";
+if ($settings['bootstrap'] || defined('BOOTSTRAP') || defined('BOOTSTRAP4')) {
+    if (defined('BOOTSTRAP4')) {
+        echo '<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">';
+        echo '<link rel="stylesheet" href="'.INCLUDES.'bootstrap/bootstrap4/css/bootstrap.min.css">';
+        echo '<link rel="stylesheet" href="'.INCLUDES.'bootstrap/bootstrap4/css/bootstrap-submenu.min.css">';
+    } else {
+        echo '<meta http-equiv="X-UA-Compatible" content="IE=edge">';
+        echo '<meta name="viewport" content="width=device-width, initial-scale=1">';
+        echo '<link rel="stylesheet" href="'.INCLUDES.'bootstrap/bootstrap3/css/bootstrap.min.css">';
+        echo '<link rel="stylesheet" href="'.INCLUDES.'bootstrap/bootstrap3/css/bootstrap-submenu.min.css">';
 
-    if ($locale['text-direction'] == 'rtl') {
-        echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/css/bootstrap-rtl.min.css'>\n";
+        if ($locale['text-direction'] == 'rtl') {
+            echo '<link rel="stylesheet" href="'.INCLUDES.'bootstrap/bootstrap3/css/bootstrap-rtl.min.css">';
+        }
     }
 }
 
@@ -65,7 +71,7 @@ if ($settings['entypo'] || defined('ENTYPO')) {
 
 if ($settings['fontawesome'] || defined('FONTAWESOME')) {
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-5/css/all.min.css'>\n";
-    echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-5/css/v4-shims.min.css'/>\n";
+    echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-5/css/v4-shims.min.css'>\n";
 }
 
 if (!defined('NO_DEFAULT_CSS')) {
@@ -131,14 +137,20 @@ if (function_exists("render_page")) {
 }
 
 // Load Bootstrap javascript
-if ($settings['bootstrap'] || defined('BOOTSTRAP')) {
-    echo "<script src='".INCLUDES."bootstrap/js/bootstrap.min.js'></script>\n";
-    echo "<script src='".INCLUDES."bootstrap/js/bootstrap-submenu.min.js'></script>\n";
+if ($settings['bootstrap'] || defined('BOOTSTRAP') || defined('BOOTSTRAP4')) {
+    if (defined('BOOTSTRAP4')) {
+        echo '<script src="'.INCLUDES.'bootstrap/bootstrap4/js/bootstrap.bundle.min.js"></script>';
+        echo '<script src="'.INCLUDES.'bootstrap/bootstrap4/js/bootstrap-submenu.min.js"></script>';
+    } else {
+        echo '<script src="'.INCLUDES.'bootstrap/bootstrap3/js/bootstrap.min.js"></script>';
+        echo '<script src="'.INCLUDES.'bootstrap/bootstrap3/js/bootstrap-submenu.min.js"></script>';
+    }
 }
 
 echo "<script src='".INCLUDES."jquery/holder.min.js'></script>\n";
 
 // Output lines added with add_to_footer()
+global $fusion_page_footer_tags;
 echo $fusion_page_footer_tags;
 
 $jquery_tags = '';
@@ -163,8 +175,6 @@ if (!empty($fusion_jquery_tags)) {
     echo "<script>$(function(){".$js."});</script>\n";
 }
 
-// Uncomment to guide your theme development
-//echo "<script src='".INCLUDES."jscripts/html-inspector.js'></script>\n<script> HTMLInspector.inspect() </script>\n";
 echo "</body>\n";
 echo "</html>";
 

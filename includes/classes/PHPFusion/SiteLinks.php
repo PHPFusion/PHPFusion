@@ -178,10 +178,10 @@ class SiteLinks {
             'container'            => FALSE,
             'container_fluid'      => FALSE,
             'responsive'           => TRUE,
-            'navbar_class'         => 'navbar-default',
-            'nav_class'            => '',
+            'navbar_class'         => defined('BOOTSTRAP4') ? 'navbar navbar-expand-lg navbar-light' : 'navbar-default',
+            'nav_class'            => defined('BOOTSTRAP4') ? 'navbar-nav ml-auto primary' : '',
             'additional_nav_class' => '',
-            'item_class'           => '', // $class
+            'item_class'           => defined('BOOTSTRAP4') ? 'nav-item' : '', // $class
             'locale'               => [],
             'separator'            => '', // $sep
             'links_per_page'       => '',
@@ -193,7 +193,7 @@ class SiteLinks {
             'searchbar'            => FALSE,
             'search_icon'          => 'fa fa-search',
             'searchbar_btn_class'  => 'btn-primary',
-            'caret_icon'           => 'caret',
+            'caret_icon'           => defined('BOOTSTRAP4') ? '' : 'caret',
             'link_position'        => [2, 3],
             'html_pre_content'     => '',
             'html_content'         => '',

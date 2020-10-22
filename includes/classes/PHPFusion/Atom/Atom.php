@@ -180,7 +180,7 @@ class Atom {
         if (!empty($this->theme_data)) {
             add_to_head("<link href='".THEMES.$this->theme_data['theme_file']."' rel='stylesheet' media='screen' />\n");
         } else {
-            add_to_head("<link href='".INCLUDES."bootstrap/bootstrap.css' rel='stylesheet' media='screen' />\n");
+            add_to_head("<link href='".INCLUDES."bootstrap/bootstrap3/css/bootstrap.min.css' rel='stylesheet' media='screen' />\n");
         }
     }
 

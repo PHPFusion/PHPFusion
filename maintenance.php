@@ -79,14 +79,18 @@ echo "<meta name='url' content='".$settings['siteurl']."'>\n";
 echo "<meta name='keywords' content='".$settings['keywords']."'>\n";
 echo "<meta name='image' content='".$settings['siteurl'].$settings['sitebanner']."'>\n";
 
-if ($settings['bootstrap'] || defined('BOOTSTRAP')) {
-    echo "<meta http-equiv='X-UA-Compatible' content='IE=edge'>\n";
-    echo "<meta name='viewport' content='width=device-width, initial-scale=1.0'>\n";
-    echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/css/bootstrap.min.css'>\n";
-    echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/css/bootstrap-submenu.min.css'>\n";
+if ($settings['bootstrap'] || defined('BOOTSTRAP') || defined('BOOTSTRAP4')) {
+    if (defined('BOOTSTRAP4')) {
+        echo '<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">';
+        echo '<link rel="stylesheet" href="'.INCLUDES.'bootstrap/bootstrap4/css/bootstrap.min.css">';
+    } else {
+        echo '<meta http-equiv="X-UA-Compatible" content="IE=edge">';
+        echo '<meta name="viewport" content="width=device-width, initial-scale=1">';
+        echo '<link rel="stylesheet" href="'.INCLUDES.'bootstrap/bootstrap3/css/bootstrap.min.css">';
 
-    if ($locale['text-direction'] == 'rtl') {
-        echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/css/bootstrap-rtl.min.css'>\n";
+        if ($locale['text-direction'] == 'rtl') {
+            echo '<link rel="stylesheet" href="'.INCLUDES.'bootstrap/bootstrap3/css/bootstrap-rtl.min.css">';
+        }
     }
 }
 
@@ -129,8 +133,12 @@ if (!empty($fusion_jquery_tags)) {
     echo "<script>$(function(){".$minifier->minify()."});</script>\n";
 }
 
-if ($settings['bootstrap'] || defined('BOOTSTRAP')) {
-    echo "<script src='".INCLUDES."bootstrap/js/bootstrap.min.js'></script>\n";
+if ($settings['bootstrap'] || defined('BOOTSTRAP') || defined('BOOTSTRAP4')) {
+    if (defined('BOOTSTRAP4')) {
+        echo '<script src="'.INCLUDES.'bootstrap/bootstrap4/js/bootstrap.bundle.min.js"></script>';
+    } else {
+        echo '<script src="'.INCLUDES.'bootstrap/bootstrap3/js/bootstrap.min.js"></script>';
+    }
 }
 echo "</body>\n";
 echo "</html>";
