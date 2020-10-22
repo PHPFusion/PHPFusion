@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
-| Filename: Blog.inc
+| Filename: Blog.php
 | Author: RobiNN
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -21,7 +21,7 @@ use Magazine\Core;
 use \PHPFusion\Panels;
 
 class Blog extends Core {
-    public static function render_main_blog($info) {
+    public static function renderMainBlog($info) {
         Panels::getInstance(TRUE)->hide_panel('RIGHT');
         Panels::getInstance(TRUE)->hide_panel('LEFT');
         Panels::getInstance(TRUE)->hide_panel('AU_CENTER');
@@ -30,13 +30,13 @@ class Blog extends Core {
         Panels::getInstance(TRUE)->hide_panel('BL_CENTER');
 
         if (isset($_GET['readmore']) && !empty($info['blog_item'])) {
-            self::display_blog_item($info);
+            self::displayBlogItem($info);
         } else {
-            self::display_blog_index($info);
+            self::displayBlogIndex($info);
         }
     }
 
-    private static function display_blog_index($info) {
+    private static function displayBlogIndex($info) {
         $locale = fusion_get_locale();
 
         echo '<div class="news-header">';
@@ -173,29 +173,10 @@ class Blog extends Core {
         echo '</div>';
     }
 
-    public static function display_blog_item($info) {
+    public static function displayBlogItem($info) {
         $blog_settings = get_settings('blog');
         $locale = fusion_get_locale();
         $data = $info['blog_item'];
-
-        add_to_head('<link rel="stylesheet" type="text/css" href="'.INCLUDES.'jquery/colorbox/colorbox.css"/>');
-        add_to_head('<script type="text/javascript" src="'.INCLUDES.'jquery/colorbox/jquery.colorbox.js"></script>');
-        add_to_jquery('$(".blog-image-overlay").colorbox({
-            height: "100%",
-            width: "100%",
-            maxWidth: "98%",
-            maxHeight: "98%",
-            scrolling: false,
-            overlayClose: true,
-            close: false,
-            photo: true,
-            onComplete: function(result) {
-                $("#colorbox").live("click", function() {
-                    $(this).unbind("click");
-                    $.fn.colorbox.close();
-                });
-            }
-        });');
 
         echo '<div class="news-header">';
             echo '<h1>'.$data['blog_subject'].'</h1>';

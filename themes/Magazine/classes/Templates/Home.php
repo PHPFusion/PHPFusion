@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
-| Filename: Home.inc
+| Filename: Home.php
 | Author: RobiNN
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -20,7 +20,7 @@ namespace Magazine\Templates;
 use Magazine\Core;
 
 class Home extends Core {
-    public static function display_home($info) {
+    public static function displayHome($info) {
         foreach ($info as $db_id => $content) {
             $colwidth = $content['colwidth'];
             echo '<h2>'.$content['blockTitle'].'</h2>';

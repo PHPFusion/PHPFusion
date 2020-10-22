@@ -66,11 +66,11 @@ function closeside($footer = FALSE) {
 }
 
 function opentable($title, $class = NULL, $bg = TRUE) {
-    AdminLTE\AdminPanel::OpenTable($title, $class, $bg);
+    AdminLTE\AdminPanel::openTable($title, $class, $bg);
 }
 
 function closetable($bg = TRUE) {
-    AdminLTE\AdminPanel::CloseTable($bg);
+    AdminLTE\AdminPanel::closeTable($bg);
 }
 
 \PHPFusion\OutputHandler::addHandler(function ($output = '') {

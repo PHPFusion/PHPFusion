@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
-| Filename: AdminPanel.inc
+| Filename: AdminPanel.php
 | Author: RobiNN
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -32,8 +32,8 @@ class AdminPanel {
         $this->pagenum = (int)filter_input(INPUT_GET, 'pagenum');
 
         $html = '<div class="wrapper">';
-            $html .= $this->MainHeader();
-            $html .= $this->MainSidebar();
+            $html .= $this->mainHeader();
+            $html .= $this->mainSidebar();
 
             $html .= '<div class="content-wrapper">';
                 $html .= '<div class="notices">';
@@ -43,10 +43,10 @@ class AdminPanel {
                 $html .= CONTENT;
             $html .= '</div>';
 
-            $html .= $this->MainFooter();
+            $html .= $this->mainFooter();
 
-            if (!$this->IsMobile()) {
-                $html .= $this->ControlSidebar();
+            if (!$this->isMobile()) {
+                $html .= $this->controlSidebar();
             }
 
         $html .= '</div>';
@@ -54,7 +54,7 @@ class AdminPanel {
         echo $html;
     }
 
-    private function MainHeader() {
+    private function mainHeader() {
         $aidlink = fusion_get_aidlink();
 
         $html = '<header class="main-header">';
@@ -72,7 +72,7 @@ class AdminPanel {
                         $i = 0;
 
                         foreach ($sections as $section_name) {
-                            $active = ((isset($_GET['pagenum']) && $this->pagenum === $i) || (!$this->pagenum && Admins::getInstance()->_isActive() === $i)) ? TRUE : FALSE;
+                            $active = (isset($_GET['pagenum']) && $this->pagenum === $i) || (!$this->pagenum && Admins::getInstance()->_isActive() === $i);
                             $html .= '<li'.($active ? ' class="active"' : '').'><a href="'.ADMIN.'index.php'.$aidlink.'&amp;pagenum='.$i.'" data-toggle="tooltip" data-placement="bottom" title="'.$section_name.'">'.Admins::getInstance()->get_admin_section_icons($i).'</a></li>';
                             $i++;
                         }
@@ -96,12 +96,12 @@ class AdminPanel {
                             $html .= '</li>';
                         }
 
-                        $html .= $this->MessagesMenu();
-                        $html .= $this->UserMenu();
+                        $html .= $this->messagesMenu();
+                        $html .= $this->userMenu();
 
                         $html .= '<li><a href="'.BASEDIR.'index.php"><i class="fa fa-home"></i></a></li>';
 
-                        if (!$this->IsMobile()) {
+                        if (!$this->isMobile()) {
                             $html .= '<li><a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a></li>';
                         }
                     $html .= '</ul>';
@@ -112,9 +112,9 @@ class AdminPanel {
         return $html;
     }
 
-    private function MessagesMenu() {
+    private function messagesMenu() {
         $locale = fusion_get_locale('', ALTE_LOCALE);
-        $messages = $this->Messages();
+        $messages = $this->messages();
         $msg_icon = !empty($messages) ? '<span class="label label-danger" style="margin-top: inherit;">'.count($messages).'</span>' : '';
 
         $html = '<li class="dropdown messages-menu">';
@@ -152,7 +152,7 @@ class AdminPanel {
         return $html;
     }
 
-    private function UserMenu() {
+    private function userMenu() {
         $locale = fusion_get_locale();
         $userdata = fusion_get_userdata();
 
@@ -191,10 +191,10 @@ class AdminPanel {
         return $html;
     }
 
-    private function MainSidebar() {
+    private function mainSidebar() {
         $locale = fusion_get_locale();
         $userdata = fusion_get_userdata();
-        $useronline = $userdata['user_lastvisit'] >= time() - 900 ? TRUE : FALSE;
+        $useronline = $userdata['user_lastvisit'] >= time() - 900;
 
         $html = '<aside class="main-sidebar">';
             $html .= '<section class="sidebar">';
@@ -217,9 +217,9 @@ class AdminPanel {
                 $html .= '<ul class="sidebar-menu" id="search_result" style="display: none;"></ul>';
                 $html .= '<img id="ajax-loader" style="width: 30px; display: none;" class="img-responsive center-x m-t-10" alt="Ajax Loader" src="'.ADMINLTE.'images/loader.svg"/>';
 
-                $this->SearchAjax();
+                $this->searchAjax();
 
-                $html .= $this->SidebarMenu();
+                $html .= $this->sidebarMenu();
 
             $html .= '</section>';
         $html .= '</aside>';
@@ -227,7 +227,7 @@ class AdminPanel {
         return $html;
     }
 
-    private function SearchAjax() {
+    private function searchAjax() {
         add_to_jquery('$("#search_pages").bind("keyup", function (e) {
             $.ajax({
                 url: "'.ADMIN.'includes/acp_search.php'.fusion_get_aidlink().'",
@@ -266,7 +266,7 @@ class AdminPanel {
         });');
     }
 
-    private function SidebarMenu() {
+    private function sidebarMenu() {
         $locale = fusion_get_locale();
         $aidlink = fusion_get_aidlink();
         $admin_sections = Admins::getInstance()->getAdminSections();
@@ -274,7 +274,7 @@ class AdminPanel {
 
         $html = '<ul id="adl" class="sidebar-menu" data-widget="tree">';
             foreach ($admin_sections as $i => $section_name) {
-                $active = ((isset($_GET['pagenum']) && $this->pagenum === $i) || (!$this->pagenum && Admins::getInstance()->_isActive() === $i)) ? TRUE : FALSE;
+                $active = (isset($_GET['pagenum']) && $this->pagenum === $i) || (!$this->pagenum && Admins::getInstance()->_isActive() === $i);
 
                 if (!empty($admin_pages[$i])) {
                     $html .= '<li class="treeview'.($active ? ' active' : '').'">';
@@ -288,7 +288,7 @@ class AdminPanel {
                         $html .= '<ul class="treeview-menu">';
                             foreach ($admin_pages[$i] as $key => $data) {
                                 if (checkrights($data['admin_rights'])) {
-                                    $sub_active = $data['admin_link'] == Admins::getInstance()->_currentPage() ? TRUE : FALSE;
+                                    $sub_active = $data['admin_link'] == Admins::getInstance()->_currentPage();
 
                                     $title = $data['admin_title'];
                                     if ($data['admin_page'] !== 5) {
@@ -326,7 +326,7 @@ class AdminPanel {
         return $html;
     }
 
-    private function MainFooter() {
+    private function mainFooter() {
         $locale = fusion_get_locale();
 
         $html = '<footer class="main-footer">';
@@ -346,12 +346,12 @@ class AdminPanel {
         return $html;
     }
 
-    private function ControlSidebar() {
+    private function controlSidebar() {
         $locale = fusion_get_locale('', ALTE_LOCALE);
 
         add_to_footer('<script type="text/javascript" src="'.ADMINLTE.'js/control-sidebar.min.js"></script>');
 
-        $html = '
+        return '
         <aside class="control-sidebar control-sidebar-dark">
             <div class="content">
                 <h4 class="control-sidebar-heading">'.$locale['ALT_008'].'</h4>
@@ -455,11 +455,9 @@ class AdminPanel {
         </aside>
 
         <div class="control-sidebar-bg"></div>';
-
-        return $html;
     }
 
-    public function Messages() {
+    public function messages() {
         $userdata = fusion_get_userdata();
 
         $result = dbquery("
@@ -491,15 +489,11 @@ class AdminPanel {
         return $this->messages;
     }
 
-    public function GetMessages() {
-        return $this->messages;
-    }
-
-    public function IsMobile() {
+    public function isMobile() {
         return preg_match("/(android|avantgo|blackberry|bolt|boost|cricket|docomo|fone|hiptop|mini|mobi|palm|phone|pie|tablet|up\.browser|up\.link|webos|wos)/i", $_SERVER['HTTP_USER_AGENT']);
     }
 
-    public static function OpenTable($title = FALSE, $class = NULL, $bg = TRUE) {
+    public static function openTable($title = FALSE, $class = NULL, $bg = TRUE) {
         $html = '';
 
         if (!empty($title)) {
@@ -520,7 +514,7 @@ class AdminPanel {
         echo $html;
     }
 
-    public static function CloseTable($bg = TRUE) {
+    public static function closeTable($bg = TRUE) {
         $html = '';
         if ($bg === TRUE) $html .= '</div>';
         $html .= '</section>';

@@ -23,8 +23,6 @@ class Controller {
 
     protected static $instance = NULL;
 
-    public $login_panel = "";
-
     public function __construct($license_id) {
     }
 

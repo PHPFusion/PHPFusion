@@ -152,9 +152,9 @@ class adminPanel extends resource {
         ?>
         <ul>
             <?php foreach ($sections as $i => $section_name) :
-                $active = ((isset($_GET['pagenum']) && $_GET['pagenum'] == $i) || (!isset($_GET['pagenum']) && $this->_isActive() == $i)) ? TRUE : FALSE;
-                $is_menu_action = $i + 1 == $section_count ? TRUE : FALSE;
-                $has_page = isset($pages[$i]) ? TRUE : FALSE;
+                $active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i) || (!isset($_GET['pagenum']) && $this->_isActive() == $i);
+                $is_menu_action = $i + 1 == $section_count;
+                $has_page = isset($pages[$i]);
                 $href_src = "";
                 if ($has_page) {
                     $href_src = "data-load=\"$i\"";
@@ -175,8 +175,8 @@ class adminPanel extends resource {
             ?>
         </ul>
         <?php
-        add_to_footer("<script type='text/javascript' src='".INCLUDES."jquery/jquery.cookie.js'></script>");
-        add_to_footer("<script type='text/javascript' src='".THEMES."admin_themes/Artemis/Drivers/js/leftMenu.min.js'></script>");
+        add_to_footer("<script src='".INCLUDES."jquery/jquery.cookie.js'></script>");
+        add_to_footer("<script src='".THEMES."admin_themes/Artemis/Drivers/js/leftMenu.min.js'></script>");
     }
 
     /**

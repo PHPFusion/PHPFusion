@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
-| Filename: News.inc
+| Filename: News.php
 | Author: RobiNN
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -19,11 +19,10 @@ namespace Magazine\Templates;
 
 use Magazine\Core;
 use \PHPFusion\News\NewsServer;
-use \PHPFusion\OutputHandler;
 use \PHPFusion\Panels;
 
 class News extends Core {
-        public static function display_main_news($info) {
+        public static function displayMainNews($info) {
         $locale = fusion_get_locale('', MG_LOCALE);
         $news_settings = NewsServer::get_news_settings();
 
@@ -117,7 +116,7 @@ class News extends Core {
         }
     }
 
-    public static function render_news_item($info) {
+    public static function renderNewsItem($info) {
         $locale = fusion_get_locale('', MG_LOCALE);
         $data = $info['news_item'];
 
@@ -133,22 +132,6 @@ class News extends Core {
 
             echo render_breadcrumbs();
         echo '</div>';
-
-        OutputHandler::addToHead('<link rel="stylesheet" type="text/css" href="'.INCLUDES.'jquery/colorbox/colorbox.css"/>');
-        OutputHandler::addToFooter('<script type="text/javascript" src="'.INCLUDES.'jquery/colorbox/jquery.colorbox.js"></script>');
-        OutputHandler::addToJQuery('
-            $(".news-image-overlay").colorbox({
-                height: "100%",
-                width: "100%",
-                maxWidth: "95%",
-                maxHeight: "95%",
-                scrolling: false,
-                overlayClose: true,
-                close: false,
-                photo: true,
-                onComplete: function(result) {$("#colorbox").live("click", function() {$(this).unbind("click");$.fn.colorbox.close();});}
-           });
-        ');
 
         echo '<div class="card"><div class="row">';
             echo '<div class="col-xs-12 col-sm-9">';

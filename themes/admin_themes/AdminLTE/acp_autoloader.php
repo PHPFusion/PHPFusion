@@ -18,7 +18,7 @@
 defined('IN_FUSION') || exit;
 
 spl_autoload_register(function ($class_name) {
-    $path = ADMINLTE.'classes/'.str_replace(['\\', 'AdminLTE'], ['/', ''], $class_name).'.inc';
+    $path = ADMINLTE.'classes/'.str_replace(['\\', 'AdminLTE'], ['/', ''], $class_name).'.php';
 
     if (file_exists($path)) {
         require_once $path;

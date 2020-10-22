@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
-| Filename: AdminPanel.inc
+| Filename: AdminPanel.php
 | Author: RobiNN
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -18,7 +18,6 @@
 namespace Material;
 
 use \PHPFusion\Admins;
-use \PHPFusion\OutputHandler;
 
 class AdminPanel {
     private $messages = [];
@@ -29,18 +28,17 @@ class AdminPanel {
 
         $this->pagenum = (int)filter_input(INPUT_GET, 'pagenum');
 
-        $output_handler = new OutputHandler;
-        $output_handler->addToHead('<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans"/>');
-        $output_handler->addToFooter('<script src="'.INCLUDES.'jquery/jquery.cookie.js"></script>');
-        $output_handler->addToFooter('<script src="'.MDT.'assets/js/scripts.min.js"></script>');
-        $output_handler->addToHead('<link rel="stylesheet" href="'.MDT.'assets/mCustomScrollbar/jquery.mCustomScrollbar.min.css"/>');
-        $output_handler->addToFooter('<script src="'.MDT.'assets/mCustomScrollbar/jquery.mCustomScrollbar.min.js"></script>');
-        $output_handler->addToHead('<script src="'.MDT.'assets/js/jquery.mousewheel.min.js"></script>');
-        $output_handler->addToJquery('$(".sidebar, .sidebar-sm .admin-submenu, .sidebar-sm .search-box, .messages-box").mCustomScrollbar({theme: "minimal-dark", axis: "y", scrollInertia: 550, mouseWheel: {enable: !0, axis: "y", preventDefault: !0}});');
+        add_to_head('<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans"/>');
+        add_to_footer('<script src="'.INCLUDES.'jquery/jquery.cookie.js"></script>');
+        add_to_footer('<script src="'.MDT.'assets/js/scripts.min.js"></script>');
+        add_to_head('<link rel="stylesheet" href="'.MDT.'assets/mCustomScrollbar/jquery.mCustomScrollbar.min.css"/>');
+        add_to_footer('<script src="'.MDT.'assets/mCustomScrollbar/jquery.mCustomScrollbar.min.js"></script>');
+        add_to_head('<script src="'.MDT.'assets/js/jquery.mousewheel.min.js"></script>');
+        add_to_jquery('$(".sidebar, .sidebar-sm .admin-submenu, .sidebar-sm .search-box, .messages-box").mCustomScrollbar({theme: "minimal-dark", axis: "y", scrollInertia: 550, mouseWheel: {enable: !0, axis: "y", preventDefault: !0}});');
 
         $html = '<main class="clearfix">';
-            $html .= $this->TopMenu();
-            $html .= $this->Sidebar();
+            $html .= $this->topMenu();
+            $html .= $this->sidebar();
 
             $html .= '<div class="content">';
                 $html .= '<ul id="nav-sections" class="nav nav-tabs nav-justified hidden-lg" style="margin-bottom: 20px;">';
@@ -48,7 +46,7 @@ class AdminPanel {
                     if (!empty($sections)) {
                         $i = 0;
                         foreach ($sections as $section_name) {
-                            $active = ((isset($_GET['pagenum']) && $this->pagenum === $i) || (!$this->pagenum && Admins::getInstance()->_isActive() === $i)) ? TRUE : FALSE;
+                            $active = (isset($_GET['pagenum']) && $this->pagenum === $i) || (!$this->pagenum && Admins::getInstance()->_isActive() === $i);
                             $html .= '<li'.($active ? ' class="active"' : '').'><a href="'.ADMIN.'index.php'.fusion_get_aidlink().'&amp;pagenum='.$i.'"><span class="visible-xs">'.Admins::getInstance()->get_admin_section_icons($i).'</span><span class="hidden-xs">'.$section_name.'</span></a></li>';
                             $i++;
                         }
@@ -76,9 +74,9 @@ class AdminPanel {
                 }
             $html .= '</div>';
 
-            if (!$this->IsMobile()) {
-                $html .= $this->MessagesBox();
-                $html .= $this->ThemeSettings();
+            if (!$this->isMobile()) {
+                $html .= $this->messagesBox();
+                $html .= $this->themeSettings();
             }
         $html .= '</main>';
 
@@ -87,7 +85,7 @@ class AdminPanel {
         echo $html;
     }
 
-    private function TopMenu() {
+    private function topMenu() {
         $locale = fusion_get_locale();
         $aidlink = fusion_get_aidlink();
         $settings = fusion_get_settings();
@@ -104,7 +102,7 @@ class AdminPanel {
                     $i = 0;
 
                     foreach ($sections as $section_name) {
-                        $active = ((isset($_GET['pagenum']) && $this->pagenum === $i) || (!$this->pagenum && Admins::getInstance()->_isActive() === $i)) ? TRUE : FALSE;
+                        $active = (isset($_GET['pagenum']) && $this->pagenum === $i) || (!$this->pagenum && Admins::getInstance()->_isActive() === $i);
                         $html .= '<li'.($active ? ' class="active"' : '').'><a href="'.ADMIN.'index.php'.$aidlink.'&amp;pagenum='.$i.'" data-toggle="tooltip" data-placement="bottom" title="'.$section_name.'">'.Admins::getInstance()->get_admin_section_icons($i).'</a></li>';
                         $i++;
                     }
@@ -136,10 +134,10 @@ class AdminPanel {
                     $html .= '</ul>';
                 $html .= '</li>';
 
-                $messages = $this->Messages();
+                $messages = $this->messages();
                 $messages = !empty($messages) ? '<span class="label label-danger messages">'.count($messages).'</span>' : '';
 
-                if ($this->IsMobile()) {
+                if ($this->isMobile()) {
                     $html .= '<li><a title="'.$locale['message'].'" href="'.BASEDIR.'messages.php"><i class="fa fa-envelope-o"></i>'.$messages.'</a></li>';
                 } else {
                     $html .= '<li><a title="'.$locale['message'].'" href="#" data-action="messages"><i class="fa fa-envelope-o"></i>'.$messages.'</a></li>';
@@ -152,7 +150,7 @@ class AdminPanel {
         return $html;
     }
 
-    private function Sidebar() {
+    private function sidebar() {
         $locale = fusion_get_locale('', MDT_LOCALE);
 
         $html = '<aside class="sidebar fixed">';
@@ -178,7 +176,7 @@ class AdminPanel {
         return $html;
     }
 
-    public function ThemeSettings() {
+    public function themeSettings() {
         $locale = fusion_get_locale('', MDT_LOCALE);
 
         $html = '<aside id="theme-settings" class="hidden-xs">';
@@ -209,7 +207,7 @@ class AdminPanel {
         return $html;
     }
 
-    public function MessagesBox() {
+    public function messagesBox() {
         $locale = fusion_get_locale('', MDT_LOCALE);
 
         $html = '<aside class="messages-box hidden-xs">';
@@ -219,7 +217,7 @@ class AdminPanel {
             $html .= '</div>';
             $html .= '<h3 class="title">'.$locale['material_009'].'</h3>';
 
-            $messages = $this->GetMessages();
+            $messages = $this->getMessages();
             if (!empty($messages)) {
                 $html .= '<ul>';
                     foreach ($messages as $message) {
@@ -246,7 +244,7 @@ class AdminPanel {
         return $html;
     }
 
-    public function Messages() {
+    public function messages() {
         $userdata = fusion_get_userdata();
 
         $result = dbquery("
@@ -278,11 +276,11 @@ class AdminPanel {
         return $this->messages;
     }
 
-    public function GetMessages() {
+    public function getMessages() {
         return $this->messages;
     }
 
-    public function IsMobile() {
+    public function isMobile() {
         return preg_match("/(android|avantgo|blackberry|bolt|boost|cricket|docomo|fone|hiptop|mini|mobi|palm|phone|pie|tablet|up\.browser|up\.link|webos|wos)/i", $_SERVER['HTTP_USER_AGENT']);
     }
 }

@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
-| Filename: Login.inc
+| Filename: Auth.php
 | Author: RobiNN
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -20,8 +20,8 @@ namespace Magazine\Templates;
 use Magazine\Core;
 use \PHPFusion\Panels;
 
-class Login extends Core {
-    public static function LoginForm($info) {
+class Auth extends Core {
+    public static function loginForm($info) {
         $locale = fusion_get_locale();
         $aidlink = fusion_get_aidlink();
         $userdata = fusion_get_userdata();
@@ -91,7 +91,7 @@ class Login extends Core {
         echo '</div>';
     }
 
-    public static function RegisterForm($info) {
+    public static function registerForm($info) {
         $locale = fusion_get_locale();
 
         Panels::getInstance(TRUE)->hide_panel('RIGHT');
@@ -160,7 +160,7 @@ class Login extends Core {
         echo '</div>';
     }
 
-    public static function Lostpassword($content) {
+    public static function lostpassword($content) {
         $locale = fusion_get_locale();
 
         Panels::getInstance(TRUE)->hide_panel('RIGHT');
@@ -183,7 +183,7 @@ class Login extends Core {
         echo '</div>';
     }
 
-    public static function FusionGateway($info) {
+    public static function fusionGateway($info) {
         global $locale;
 
         Panels::getInstance(TRUE)->hide_panel('RIGHT');
