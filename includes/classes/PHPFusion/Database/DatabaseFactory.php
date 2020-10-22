@@ -27,11 +27,6 @@ class DatabaseFactory {
     const DRIVER_MYSQLi = 'mysqli';
 
     /**
-     * use mysql_* functions
-     */
-    const DRIVER_MYSQL = 'mysql';
-
-    /**
      * use \PDO class
      */
     const DRIVER_PDO_MYSQL = 'pdo_mysql';
@@ -42,7 +37,7 @@ class DatabaseFactory {
     const DRIVER_DEFAULT = self::DRIVER_PDO_MYSQL;
 
     /**
-     * MySQL, MySQLi or PDOMySQL
+     * MySQLi or PDOMySQL
      *
      * @var string
      */
@@ -57,7 +52,6 @@ class DatabaseFactory {
      * @var string[]
      */
     private static $driverClasses = [
-        self::DRIVER_MYSQL     => '\PHPFusion\Database\Driver\MySQL',
         self::DRIVER_MYSQLi    => '\PHPFusion\Database\Driver\MySQLi',
         self::DRIVER_PDO_MYSQL => '\PHPFusion\Database\Driver\PDOMySQL'
     ];
