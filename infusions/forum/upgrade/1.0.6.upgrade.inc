@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
-| Filename: forum/1.0.6.upgrade.inc
+| Filename: 1.0.6.upgrade.inc
 | Author: Core Development Team (coredevs@phpfusion.com)
 | Introduction to Support Forum Type User Reputation Points
 +--------------------------------------------------------+

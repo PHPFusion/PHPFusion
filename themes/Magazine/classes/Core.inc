@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
-| Filename: Magazine/classes/Core.inc
+| Filename: Core.inc
 | Author: RobiNN
 +--------------------------------------------------------+
 | This program is released as free software under the

@@ -19,7 +19,7 @@ require_once __DIR__.'/../../maincore.php';
 pageAccess('PO');
 
 require_once THEMES.'templates/admin_header.php';
-require_once INFUSIONS.'member_poll_panel/poll_classes.inc';
+require_once INFUSIONS.'member_poll_panel/poll_classes.php';
 
 MemberPoll::getInstance()->display_admin();
 

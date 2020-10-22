@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
-| Filename: includes/core_mlang_hub_include.php
+| Filename: core_mlang_hub_include.php
 | Author: J.Falk (Falk)
 +--------------------------------------------------------+
 | This program is released as free software under the

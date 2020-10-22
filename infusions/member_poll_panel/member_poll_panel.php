@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
-require_once INFUSIONS.'member_poll_panel/poll_classes.inc';
+require_once INFUSIONS.'member_poll_panel/poll_classes.php';
 require_once INFUSIONS.'member_poll_panel/templates/poll.php';
 
 MemberPoll::getInstance()->DisplayPoll();

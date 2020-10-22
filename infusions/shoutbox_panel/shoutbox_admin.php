@@ -18,7 +18,7 @@
 require_once __DIR__.'/../../maincore.php';
 require_once THEMES.'templates/admin_header.php';
 
-require_once INFUSIONS.'shoutbox_panel/shoutbox.inc';
+require_once INFUSIONS.'shoutbox_panel/shoutbox.php';
 pageAccess('S');
 
 ShoutBox::getInstance()->DisplayAdmin();

@@ -4,7 +4,6 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
-| File Category: Core Rewrite Modules
 | Filename: custom_pages_rewrite_info.php
 | Author: Chan (Frederick MC Chan)
 +--------------------------------------------------------+

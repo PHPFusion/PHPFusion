@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
-| Filename: includes/core_functions_include.php
+| Filename: core_functions_include.php
 | Author: Core Development Team (coredevs@phpfusion.com)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -52,5 +52,5 @@ require_once __DIR__."/system_images.php";
 require_once __DIR__."/output_handling_include.php";
 require_once __DIR__."/translate_include.php";
 require_once __DIR__."/sqlhandler.inc.php";
-require_once __DIR__."/defender.inc";
-require_once __DIR__."/dynamics.inc";
+require_once __DIR__."/defender.php";
+require_once __DIR__."/dynamics.php";

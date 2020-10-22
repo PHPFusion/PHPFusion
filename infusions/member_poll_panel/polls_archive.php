@@ -21,7 +21,7 @@ if (!defined('MEMBER_POLL_PANEL_EXIST')) {
 }
 
 require_once THEMES.'templates/header.php';
-require_once INFUSIONS.'member_poll_panel/poll_classes.inc';
+require_once INFUSIONS.'member_poll_panel/poll_classes.php';
 
 MemberPoll::getInstance()->PollArchive();
 

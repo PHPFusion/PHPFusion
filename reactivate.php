@@ -5,8 +5,7 @@
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: reactivate.php
-| Author: Paul Beuk (muscapaul)
-| Co Author: Hans Krisitan Flaatten (Starefossen)
+| Author: Core Development Team (coredevs@phpfusion.com)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or

@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
-| Filename: news/news_preview.php
+| Filename: news_preview.php
 | Author: Frederick Chan MC
 +--------------------------------------------------------+
 | This program is released as free software under the

@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
-| Filename: includes/autoloader.php
+| Filename: autoloader.php
 | Author: Takács Ákos (Rimelek)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -21,14 +21,28 @@
 spl_autoload_register(function ($className) {
     $baseDir = __DIR__.'/classes/';
     $path = str_replace('\\', DIRECTORY_SEPARATOR, $className);
-    $fullPath = $baseDir.$path.'.inc';
+    $fullPath = $baseDir.$path.'.php';
     if (is_file($fullPath)) {
         require_once $fullPath;
     }
+
     $baseDir = __DIR__.'/';
-    $fullPath = $baseDir.$path.'.inc';
+    $fullPath = $baseDir.$path.'.php';
     if (is_file($fullPath)) {
         require_once $fullPath;
+    }
+});
+
+spl_autoload_register(function ($className) {
+    if (stristr($className, '_')) {
+        $className = explode('_', $className);
+        $className = $className[0].'.'.strtolower($className[1]);
+        $baseDir = __DIR__.'/classes/';
+        $path = str_replace('\\', DIRECTORY_SEPARATOR, $className);
+        $fullPath = $baseDir.$path.'.php';
+        if (is_file($fullPath)) {
+            require $fullPath;
+        }
     }
 });
 
@@ -42,25 +56,9 @@ spl_autoload_register(function ($className) {
         return;
     }
     $baseDir = __DIR__.'/classes/';
-    $fullPath = $baseDir.$className.'.class.inc';
+    $fullPath = $baseDir.$className.'.class.php';
     if (is_file($fullPath)) {
         require $fullPath;
-    }
-});
-
-/*
- * New convention to rename core files as .inc instead of.php
- */
-spl_autoload_register(function ($className) {
-    if (stristr($className, '_')) {
-        $className = explode('_', $className);
-        $className = $className[0].'.'.strtolower($className[1]);
-        $baseDir = __DIR__.'/classes/';
-        $path = str_replace('\\', DIRECTORY_SEPARATOR, $className);
-        $fullPath = $baseDir.$path.'.inc';
-        if (is_file($fullPath)) {
-            require $fullPath;
-        }
     }
 });
 
@@ -119,5 +117,5 @@ require_once __DIR__.'/core_constants_include.php';
 require_once __DIR__."/sqlhandler.inc.php";
 require_once __DIR__."/translate_include.php";
 require_once __DIR__."/output_handling_include.php";
-require_once __DIR__."/notify.inc";
+require_once __DIR__."/notify.php";
 //require_once __DIR__.'/db_handlers/all_functions_include.php';

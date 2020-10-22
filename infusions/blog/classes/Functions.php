@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
-| Filename: classes/Functions.php
+| Filename: Functions.php
 | Author: Frederick MC CHan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -18,8 +18,6 @@
 namespace PHPFusion\Blog;
 
 use PHPFusion\Feedback\Comments;
-
-defined('IN_FUSION') || exit;
 
 /**
  * Functions for Blog System

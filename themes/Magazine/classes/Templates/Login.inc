@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
-| Filename: Magazine/classes/Templates/Login.inc
+| Filename: Login.inc
 | Author: RobiNN
 +--------------------------------------------------------+
 | This program is released as free software under the

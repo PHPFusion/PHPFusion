@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
-| Filename: Material/acp_autoloader.php
+| Filename: acp_autoloader.php
 | Author: RobiNN
 +--------------------------------------------------------+
 | This program is released as free software under the

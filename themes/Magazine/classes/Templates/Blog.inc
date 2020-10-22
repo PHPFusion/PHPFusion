@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
-| Filename: Magazine/classes/Templates/Blog.inc
+| Filename: Blog.inc
 | Author: RobiNN
 +--------------------------------------------------------+
 | This program is released as free software under the
