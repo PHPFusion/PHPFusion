@@ -17,10 +17,9 @@
 +--------------------------------------------------------*/
 namespace Magazine\Templates;
 
-use Magazine\Core;
 use \PHPFusion\Panels;
 
-class Blog extends Core {
+class Blog {
     public static function renderMainBlog($info) {
         Panels::getInstance(TRUE)->hide_panel('RIGHT');
         Panels::getInstance(TRUE)->hide_panel('LEFT');

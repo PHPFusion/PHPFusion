@@ -17,12 +17,11 @@
 +--------------------------------------------------------*/
 namespace Magazine\Templates;
 
-use Magazine\Core;
 use \PHPFusion\News\NewsServer;
 use \PHPFusion\Panels;
 
-class News extends Core {
-        public static function displayMainNews($info) {
+class News  {
+    public static function displayMainNews($info) {
         $locale = fusion_get_locale('', MG_LOCALE);
         $news_settings = NewsServer::get_news_settings();
 

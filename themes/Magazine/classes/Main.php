@@ -19,7 +19,7 @@ namespace Magazine;
 
 use \PHPFusion\SiteLinks;
 
-class Main extends Core {
+class Main {
     public function __construct() {
         $settings = fusion_get_settings();
 
@@ -32,14 +32,12 @@ class Main extends Core {
             'show_header'      => '<a class="navbar-brand" href="'.BASEDIR.$settings['opening_page'].'"><img src="'.BASEDIR.$settings['sitebanner'].'" alt="'.$settings['sitename'].'" class="img-responsive"/></a>',
             'grouping'         => TRUE,
             'links_per_page'   => 10,
-            'html_pre_content' => $this->UserMenu()
+            'html_pre_content' => $this->userMenu()
         ];
 
         echo SiteLinks::setSubLinks($menu_options)->showSubLinks();
 
-        if ($this->GetParam('container') == TRUE) {
-            echo '<div class="container-fluid">';
-        }
+        echo '<div class="container-fluid">';
 
             echo defined('AU_CENTER') && AU_CENTER ? AU_CENTER : '';
             echo showbanners(1);
@@ -50,40 +48,35 @@ class Main extends Core {
                 $left    = ['sm' => 3,  'md' => 2,  'lg' => 2];
                 $right   = ['sm' => 3,  'md' => 2,  'lg' => 2];
 
-                if (defined('LEFT') && LEFT && $this->GetParam('left') == TRUE) {
+                if (defined('LEFT') && LEFT) {
                     $content['sm'] = $content['sm'] - $left['sm'];
                     $content['md'] = $content['md'] - $left['md'];
                     $content['lg'] = $content['lg'] - $left['lg'];
                 }
 
-                if (defined('RIGHT') && RIGHT && $this->GetParam('right') == TRUE || $this->GetParam('right_content')) {
+                if (defined('RIGHT') && RIGHT) {
                     $content['sm'] = $content['sm'] - $right['sm'];
                     $content['md'] = $content['md'] - $right['md'];
                     $content['lg'] = $content['lg'] - $right['lg'];
                 }
 
-                if (defined('LEFT') && LEFT  && $this->GetParam('left') == TRUE) {
+                if (defined('LEFT') && LEFT) {
                     echo '<div class="col-xs-12 col-sm-'.$left['sm'].' col-md-'.$left['md'].' col-lg-'.$left['lg'].'">';
                         echo LEFT;
                     echo '</div>';
                 }
 
                 echo '<div class="col-xs-12 col-sm-'.$content['sm'].' col-md-'.$content['md'].' col-lg-'.$content['lg'].'">';
-
-                    if ($this->GetParam('notices')) {
-                        echo renderNotices(getNotices(['all', FUSION_SELF]));
-                    }
-
+                    echo renderNotices(getNotices(['all', FUSION_SELF]));
                     echo defined('U_CENTER') && U_CENTER ? U_CENTER : '';
                     echo CONTENT;
                     echo defined('L_CENTER') && L_CENTER ? L_CENTER : '';
                     echo showbanners(2);
                 echo '</div>';
 
-                if (defined('RIGHT') && RIGHT && $this->GetParam('right') == TRUE || $this->GetParam('right_content')) {
+                if (defined('RIGHT') && RIGHT) {
                     echo '<div class="col-xs-12 col-sm-'.$right['sm'].' col-md-'.$right['md'].' col-lg-'.$right['lg'].'">';
-                        echo $this->GetParam('right_content');
-                        echo ($this->GetParam('right') == TRUE && defined('RIGHT') && RIGHT) ? RIGHT : '';
+                        echo RIGHT;
                     echo '</div>';
                 }
 
@@ -91,14 +84,12 @@ class Main extends Core {
 
             echo defined('BL_CENTER') && BL_CENTER ? BL_CENTER : '';
 
-        if ($this->GetParam('container') == TRUE) {
-            echo '</div>';
-        }
+        echo '</div>'; // .container-fluid
 
-        $this->Footer();
+        $this->footer();
     }
 
-    private function Footer() {
+    private function footer() {
         $locale = fusion_get_locale('', MG_LOCALE);
         $settings = fusion_get_settings();
         $theme_settings = get_theme_settings('Magazine');
@@ -158,7 +149,7 @@ class Main extends Core {
         echo '</div></footer>';
     }
 
-    private function UserMenu() {
+    private function userMenu() {
         $locale = fusion_get_locale('', MG_LOCALE);
         $settings = fusion_get_settings();
         $userdata = fusion_get_userdata();

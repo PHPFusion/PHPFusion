@@ -17,9 +17,7 @@
 +--------------------------------------------------------*/
 namespace Magazine\Templates;
 
-use Magazine\Core;
-
-class Home extends Core {
+class Home {
     public static function displayHome($info) {
         foreach ($info as $db_id => $content) {
             $colwidth = $content['colwidth'];

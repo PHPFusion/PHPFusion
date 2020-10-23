@@ -17,10 +17,9 @@
 +--------------------------------------------------------*/
 namespace Magazine\Templates;
 
-use Magazine\Core;
 use \PHPFusion\Panels;
 
-class Auth extends Core {
+class Auth {
     public static function loginForm($info) {
         $locale = fusion_get_locale();
         $aidlink = fusion_get_aidlink();
@@ -33,7 +32,6 @@ class Auth extends Core {
         Panels::getInstance(TRUE)->hide_panel('U_CENTER');
         Panels::getInstance(TRUE)->hide_panel('L_CENTER');
         Panels::getInstance(TRUE)->hide_panel('BL_CENTER');
-        self::SetParam('notices', FALSE);
 
         echo '<div class="panel panel-default" style="max-width: 500px; margin: 30px auto;">';
             echo '<div class="panel-heading" style="background: #fff;">';
@@ -45,8 +43,6 @@ class Auth extends Core {
             echo '</div>';
 
         echo '<div class="panel-body">';
-
-        echo renderNotices(getNotices(['all', FUSION_SELF]));
 
         if (iMEMBER) {
             $msg_count = dbcount("(message_id)", DB_MESSAGES, "message_to='".$userdata['user_id']."' AND message_read='0' AND message_folder='0'");
@@ -100,7 +96,6 @@ class Auth extends Core {
         Panels::getInstance(TRUE)->hide_panel('U_CENTER');
         Panels::getInstance(TRUE)->hide_panel('L_CENTER');
         Panels::getInstance(TRUE)->hide_panel('BL_CENTER');
-        self::SetParam('notices', FALSE);
 
         echo '<div class="panel panel-default" style="max-width: 650px; margin: 30px auto;">';
             echo '<div class="panel-heading" style="background: #fff;">';
@@ -108,9 +103,6 @@ class Auth extends Core {
             echo '</div>';
 
             echo '<div class="panel-body">';
-
-                echo renderNotices(getNotices(['all', FUSION_SELF]));
-
                 $open = '';
                 $close = '';
                 $tab_title = [];
@@ -169,7 +161,6 @@ class Auth extends Core {
         Panels::getInstance(TRUE)->hide_panel('U_CENTER');
         Panels::getInstance(TRUE)->hide_panel('L_CENTER');
         Panels::getInstance(TRUE)->hide_panel('BL_CENTER');
-        self::SetParam('notices', FALSE);
 
         echo '<div class="panel panel-default" style="max-width: 500px; margin: 30px auto;">';
             echo '<div class="panel-heading" style="background: #fff;">';
@@ -177,7 +168,6 @@ class Auth extends Core {
             echo '</div>';
 
             echo '<div class="panel-body">';
-                echo renderNotices(getNotices(['all', FUSION_SELF]));
                 echo $content;
             echo '</div>';
         echo '</div>';
