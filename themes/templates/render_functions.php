@@ -71,7 +71,7 @@ if (!function_exists("render_breadcrumbs")) {
         $html = '<ol class="'.$breadcrumbs->getCssClasses().'">';
         foreach ($breadcrumbs->toArray() as $crumb) {
             $html .= '<li class="breadcrumb-item '.$crumb['class'].($crumb['link'] ? '' : ' active').'">';
-            $html .= ($crumb['link']) ? '<a title="'.$crumb['title'].'" class="text-dark" href="'.$crumb['link'].'">'.$crumb['title'].'</a>' : $crumb['title'];
+            $html .= ($crumb['link']) ? '<a title="'.$crumb['title'].'" href="'.$crumb['link'].'">'.$crumb['title'].'</a>' : $crumb['title'];
             $html .= '</li>';
         }
         $html .= '</ol>';
