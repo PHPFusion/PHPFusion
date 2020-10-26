@@ -18,20 +18,22 @@
 /*
  * Remove all files, subdirs and ultimately the directory in a given dir
  */
-function rrmdir($dir) {
-    if (file_exists($dir) && is_dir($dir)) {
-        $objects = scandir($dir);
-        foreach ($objects as $object) {
-            if ($object != "." && $object != "..") {
-                if (filetype($dir."/".$object) == "dir") {
-                    rrmdir($dir."/".$object);
-                } else {
-                    unlink($dir."/".$object);
+if (!function_exists('rrmdir')) {
+    function rrmdir($dir) {
+        if (file_exists($dir) && is_dir($dir)) {
+            $objects = scandir($dir);
+            foreach ($objects as $object) {
+                if ($object != "." && $object != "..") {
+                    if (filetype($dir."/".$object) == "dir") {
+                        rrmdir($dir."/".$object);
+                    } else {
+                        unlink($dir."/".$object);
+                    }
                 }
             }
+            reset($objects);
+            rmdir($dir);
         }
-        reset($objects);
-        rmdir($dir);
     }
 }
 
