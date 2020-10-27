@@ -613,44 +613,4 @@ abstract class ForumServer {
             BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'], 'title' => $crumb['title']]);
         }
     }
-
-    /**
-     * Method to change template path
-     *
-     * @param string|array $key  instance key
-     *
-     * @return mixed
-     */
-    public static function get_template($key) {
-        $default_paths = [
-            'forum'            => FORUM.'templates/index/forum_index.html',
-            'forum_section'    => FORUM.'templates/forum_section.html',
-            'forum_postify'    => FORUM.'templates/forum_postify.html',
-            'forum_postform'   => FORUM.'templates/forms/post.html',
-            'forum_pollform'   => FORUM.'templates/forms/poll.html',
-            'forum_bountyform' => FORUM.'templates/forms/bounty.html',
-            'forum_qrform'     => FORUM.'templates/forms/quick_reply.html',
-            'tags_thread'      => FORUM.'templates/tags/tag_threads.html',
-            'tags'             => FORUM.'templates/tags/tag.html',
-            'viewthreads'      => FORUM.'templates/forum_threads.html',
-            'viewforum'        => FORUM.'templates/forum_viewforum.html',
-            'forums'           => FORUM.'templates/index/forum_item.html',
-            'forum_post'       => FORUM.'templates/forum_post_item.html',
-            'forum_thread'     => FORUM.'templates/viewforum/forum_thread_item.html',
-            'forum_lastpost'   => FORUM.'templates/index/forum_item_lastpost.html',
-        ];
-
-        return (isset(self::$forum_template_paths[$key]) ? self::$forum_template_paths[$key] : $default_paths[$key]);
-    }
-
-    /**
-     * Method to set new template path
-     *
-     * @param string $key          instance key
-     * @param string $file_path    path relative to basedir
-     */
-    public static function set_template($key, $file_path) {
-        self::$forum_template_paths[$key] = $file_path;
-    }
-
 }
