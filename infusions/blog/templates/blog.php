@@ -34,7 +34,7 @@ if (!function_exists('render_main_blog')) {
 
         // push the blog menu to the right panel
         if (!empty($info['blog_filter'])) {
-            $pages = "<ul class='block spacer-sm'>\n";
+            $pages = "<ul class='block blog-filter m-b-20'>\n";
             foreach ($info['blog_filter'] as $filter_key => $filter) {
                 $pages .= "<li ".(isset($_GET['type']) && $_GET['type'] == $filter_key ? "class='active strong'" : '')." ><a href='".$filter['link']."'>".$filter['title']."</a></li>\n";
             }

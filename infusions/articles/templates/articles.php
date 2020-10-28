@@ -78,7 +78,7 @@ if (!function_exists("display_main_articles")) {
             <div class="row m-t-20 m-b-20">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <!-- Display Filters -->
-                    <div class="display-inline-block">
+                    <div class="display-inline-block articles-filter">
                         <span class="text-dark strong m-r-10"><?php echo $locale['show']; ?></span>
                         <?php $i = 0;
                         foreach ($info['article_filter'] as $link => $title) {

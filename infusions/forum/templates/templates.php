@@ -26,6 +26,7 @@ if (!function_exists('render_forum')) {
 
         add_to_head("<link rel='stylesheet' href='".INFUSIONS."forum/templates/forum.css'>");
 
+        echo '<div class="forum-main-index">';
         echo render_breadcrumbs();
 
         echo '<div class="row">';
@@ -95,6 +96,8 @@ if (!function_exists('render_forum')) {
 
         echo '</div>';
         echo '</div>';
+
+        echo '</div>'; // .forum-main-index
     }
 }
 
@@ -900,6 +903,7 @@ if (!function_exists('render_thread')) {
 
         add_to_head("<link rel='stylesheet' href='".INFUSIONS."forum/templates/forum.css'>");
 
+        echo '<div class="forum-viewthread">';
         echo render_breadcrumbs();
 
         $buttons = !empty($info['buttons']) ? $info['buttons'] : [];
@@ -1053,6 +1057,8 @@ if (!function_exists('render_thread')) {
                 }
             echo '</div>';
         }
+
+        echo '</div>'; // .forum-viewthread
     }
 }
 
