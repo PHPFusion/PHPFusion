@@ -27,6 +27,7 @@ if (!function_exists('render_forum')) {
         add_to_head("<link rel='stylesheet' href='".INFUSIONS."forum/templates/forum.css'>");
 
         echo '<div class="forum-main-index">';
+        opentable('');
         echo render_breadcrumbs();
 
         echo '<div class="row">';
@@ -97,6 +98,7 @@ if (!function_exists('render_forum')) {
         echo '</div>';
         echo '</div>';
 
+        closetable();
         echo '</div>'; // .forum-main-index
     }
 }
@@ -277,12 +279,12 @@ if (!function_exists('forum_viewforum')) {
         }
 
         if (!empty($info['filters']['type'])) {
-            echo '<ul class="nav nav-tabs m-b-20">';
+            echo '<div class="m-b-20">';
             foreach ($info['filters']['type'] as $key => $tab) {
-                $active = $tab['active'] == 1;
-                echo '<li class="nav-item'.($active ? ' active' : '').'"><a class="nav-link'.($active ? ' active' : '').'" href="'.$tab['link'].'">'.$tab['icon'].''.$tab['title'].' ('.$tab['count'].')</a></li>';
+                $active = $tab['active'] == 1 ? ' strong' : '';
+                echo '<a class="m-r-10'.$active.'" href="'.$tab['link'].'">'.$tab['icon'].''.$tab['title'].' ('.$tab['count'].')</a>';
             }
-            echo '</ul>';
+            echo '</div>';
         }
 
         if (isset($_GET['view'])) {
@@ -905,6 +907,7 @@ if (!function_exists('render_thread')) {
         add_to_head("<link rel='stylesheet' href='".INFUSIONS."forum/templates/forum.css'>");
 
         echo '<div class="forum-viewthread">';
+        opentable('');
         echo render_breadcrumbs();
 
         $buttons = !empty($info['buttons']) ? $info['buttons'] : [];
@@ -1029,7 +1032,7 @@ if (!function_exists('render_thread')) {
             echo '<div class="m-t-10 p-t-5 p-b-0">'.$info['quick_reply_form'].'</div>';
         }
 
-        openside('');
+        echo '<div class="m-t-20 m-b-20">';
             $prm = $info['permissions'];
             $can = '<strong class="text-success">'.$locale['can'].'</strong>';
             $cannot = '<strong class="text-danger">'.$locale['cannot'].'</strong>';
@@ -1045,19 +1048,21 @@ if (!function_exists('render_thread')) {
             echo sprintf($locale['forum_perm_download'], $prm['can_download_attach'] ? $can : $cannot).'<br/>';
             echo $data['forum_type'] == 4 ? sprintf($locale['forum_perm_rate'], $prm['can_rate'] ? $can : $cannot).'<br/>' : '';
             echo $data['forum_type'] == 4 ? sprintf($locale['forum_perm_bounty'], $prm['can_start_bounty'] ? $can : $cannot) : '';
+        echo '</div>';
 
-            if ($info['forum_moderators']) {
-                echo '<div class="m-b-10>'.$locale['forum_0185'].' '.$info['forum_moderators'].'</div>';
-            }
+        if ($info['forum_moderators']) {
+            echo '<div class="m-b-10>'.$locale['forum_0185'].' '.$info['forum_moderators'].'</div>';
+        }
 
-            if (!empty($info['thread_users'])) {
-                echo '<div class="list-group-item"><strong>'.$locale['forum_0581'].'</strong>';
-                    foreach ($info['thread_users'] as $user_id => $user) {
-                        echo '<a href="'.BASEDIR.'profile.php?lookup='.$user_id.'">'.$user['user_name'].'</strong></a>, ';
-                    }
-                echo '</div>';
-            }
-        closeside();
+        if (!empty($info['thread_users'])) {
+            echo '<div class="list-group-item"><strong>'.$locale['forum_0581'].'</strong>';
+                foreach ($info['thread_users'] as $user_id => $user) {
+                    echo '<a href="'.BASEDIR.'profile.php?lookup='.$user_id.'">'.$user['user_name'].'</strong></a>, ';
+                }
+            echo '</div>';
+        }
+
+        closetable();
 
         echo '</div>'; // .forum-viewthread
     }
