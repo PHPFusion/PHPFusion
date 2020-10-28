@@ -34,11 +34,13 @@ if (!function_exists('render_main_blog')) {
 
         // push the blog menu to the right panel
         if (!empty($info['blog_filter'])) {
-            $pages = "<ul class='block blog-filter m-b-20'>\n";
+            $pages = fusion_get_function('openside', '');
+            $pages .= "<ul class='block blog-filter'>\n";
             foreach ($info['blog_filter'] as $filter_key => $filter) {
                 $pages .= "<li ".(isset($_GET['type']) && $_GET['type'] == $filter_key ? "class='active strong'" : '')." ><a href='".$filter['link']."'>".$filter['title']."</a></li>\n";
             }
             $pages .= "</ul>\n";
+            $pages .= fusion_get_function('closeside');
             \PHPFusion\Panels::addPanel('blog_menu_panel', $pages, \PHPFusion\Panels::PANEL_RIGHT, iGUEST, 0);
         }
 

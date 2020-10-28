@@ -219,12 +219,14 @@ if (!function_exists('display_download_menu')) {
 
         // The layout calling the above function
         ob_start();
-        echo "<ul class='block downloads-filter m-b-20'>\n";
+        openside('');
+        echo "<ul class='block downloads-filter'>\n";
         echo "<li><a title='".$locale['download_1001']."' href='".DOWNLOADS."downloads.php'>".$locale['download_1001']."</a></li>\n";
         foreach ($info['download_filter'] as $filter_key => $filter) {
             echo "<li ".($info["get"]["type"] == $filter_key ? "class='active strong'" : '')." ><a href='".$filter['link']."'>".$filter['title']."</a></li>\n";
         }
         echo "</ul>\n";
+        closeside();
         openside($locale['download_1003']);
         echo "<ul class='block'>\n";
         $download_cat_menu = display_DownloadCats($info['download_categories'], $info["get"]["cat_id"]);
