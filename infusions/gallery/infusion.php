@@ -70,13 +70,13 @@ $inf_newtable[] = DB_PHOTOS." (
 
 // Insert settings
 $settings = [
-    'thumb_w'                     => 200,
-    'thumb_h'                     => 200,
-    'photo_w'                     => 800,
-    'photo_h'                     => 600,
-    'photo_max_w'                 => 2800,
-    'photo_max_h'                 => 2600,
-    'photo_max_b'                 => 15728640,
+    'thumb_w'                     => 800,
+    'thumb_h'                     => 640,
+    'photo_w'                     => 1920,
+    'photo_h'                     => 1080,
+    'photo_max_w'                 => 5048,
+    'photo_max_h'                 => 5365,
+    'photo_max_b'                 => 25728640,
     'gallery_pagination'          => 24,
     'photo_watermark'             => 1,
     'photo_watermark_image'       => 'infusions/gallery/photos/watermark.png',
