@@ -62,7 +62,7 @@ function get_table_rows($table_name, $localeset = 'English') {
             ],
             [
                 'settings_name'  => 'sitebanner',
-                'settings_value' => 'images/php-fusion-logo.png'
+                'settings_value' => 'images/php-fusion-logo.svg'
             ],
             [
                 'settings_name'  => 'logoposition_xs',
@@ -106,11 +106,11 @@ function get_table_rows($table_name, $localeset = 'English') {
             ],
             [
                 'settings_name'  => 'keywords',
-                'settings_value' => 'PHP-Fusion, CMS, Portal, Open Source, AGPL, PHP, MySQL, HTML, CSS, JS'
+                'settings_value' => 'PHP-Fusion, CMS, Hosting, Domain, Portal, Open Source, AGPL, PHP, MySQL, HTML, CSS, JS'
             ],
             [
                 'settings_name'  => 'footer',
-                'settings_value' => "<div style=\'text-align:center\'>Copyright &copy; ".@date("Y")."</div>"
+                'settings_value' => ''
             ],
             [
                 'settings_name'  => 'opening_page',
