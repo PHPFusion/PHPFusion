@@ -47,26 +47,29 @@ class Members {
     private $rowstart = 0;
 
     private function __construct() {
-
-        if ($sortby = get("sortby")) {
+        $sortby = isset($_GET['sortby']) ? $_GET['sortby'] : $this->sortby;
+        if ($sortby) {
             if (in_array($sortby, range("A", "Z") + range(1, 9))) {
                 $this->sortby = $sortby;
             }
         }
 
-        if ($orderby = get("orderby")) {
+        $orderby = isset($_GET['orderby']) ? $_GET['orderby'] : $this->orderby;
+        if ($orderby ) {
             if (in_array($orderby, array("active", "registered", "name"))) {
                 $this->orderby = $orderby;
             }
         }
-        if ($sort_order = get("sort_order")) {
+
+        $sort_order = isset($_GET['sort_order']) ? $_GET['sort_order'] : $this->sort_order;
+        if ($sort_order) {
             if (in_array($sort_order, array("ASC", "DESC"))) {
                 $this->sort_order = $sort_order;
             }
         }
 
-        $this->search_text = $this->sortby;
-        if ($search_text = get("search_text")) {
+        $search_text = isset($_GET['search_text']) ? $_GET['search_text'] : $this->sortby;
+        if ($search_text ) {
             $search_text = stripinput(descript($search_text));
             if (preg_check("/^[-0-9A-Z_@\s]+$/i", $search_text)) {
                 $this->search_text = $search_text;
